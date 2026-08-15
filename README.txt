@@ -26,6 +26,10 @@ Die Voreinstellung passt zur normalen Workspace-Struktur:
         Libraries/
         Kernel/
         Distribution/
+        Apps/
+        Services/
+        Drivers/
+        Protocols/
 
 Aktuell verwenden die SDK-Buildstarter `CONTRACT_ROOT` und `ZIG_ROOT`. Die
 weiteren Eintraege bilden bereits die gemeinsamen Komponentenwurzeln fuer
