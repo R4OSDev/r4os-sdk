@@ -28,6 +28,7 @@ Die Voreinstellung passt zur normalen Workspace-Struktur:
         Distribution/
         Apps/
         Services/
+        Diagnostics/
         Drivers/
         Protocols/
 
