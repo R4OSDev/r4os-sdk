@@ -1,5 +1,8 @@
 * text=auto
 
+.gitattributes text eol=lf
+.gitignore text eol=lf
+
 *.zig text eol=lf
 *.zon text eol=lf
 *.c text eol=lf
@@ -12,6 +15,8 @@
 *.txt text eol=lf
 *.ini text eol=lf
 *.sh text eol=lf
+*.STATUS text eol=lf
+*.template text eol=lf
 
 *.bat text eol=crlf
 *.cmd text eol=crlf
