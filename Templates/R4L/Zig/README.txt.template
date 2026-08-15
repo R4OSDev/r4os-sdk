@@ -1,0 +1,20 @@
+{ProjectName} Runtime-R4L
+========================
+
+{Description}
+
+Die Library ist eine eigenstaendige Einheit. Contract, Baseline,
+Implementierung, Zig-/C-Bindings, Conformance-Fixtures und Tests liegen
+vollstaendig in diesem Verzeichnis. Das module.R4MF ist die Build- und
+Imagewahrheit.
+
+Build und Tests:
+
+    zig build test
+
+Contract bewusst weiterentwickeln:
+
+    R4LContractGen --write --update-baseline mit den Pfaden aus module.R4MF
+
+Normale Builds pruefen die materialisierten Contractdateien nur und schreiben
+keine Quellen um.

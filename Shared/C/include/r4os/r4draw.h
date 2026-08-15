@@ -1,0 +1,135 @@
+#ifndef R4OS_R4DRAW_H
+#define R4OS_R4DRAW_H
+
+#include "r4l.h"
+#include "r4sys.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+typedef struct R4Draw {
+    const R4XStartR4Draw *table;
+} R4Draw;
+
+static inline int r4draw_import_valid(const R4XStartImport *item) {
+    return item != 0 &&
+        item->group_id == R4L_GROUP_R4DRAW &&
+        (item->flags & R4XSTART_IMPORT_FLAG_GROUP_INTERFACE) != 0 &&
+        item->table != 0;
+}
+
+static inline int32_t r4draw_init(const R4XStartContext *ctx, R4Draw *out_draw) {
+    if (out_draw == 0) return R4OS_ERROR_INVALID;
+    out_draw->table = 0;
+    const R4XStartImport *item = r4xstart_find_import(ctx, R4L_GROUP_R4DRAW);
+    if (item == 0) return R4OS_ERROR_NOT_FOUND;
+    if (!r4draw_import_valid(item)) return R4OS_ERROR_NOT_FOUND;
+    const R4XStartR4Draw *table = (const R4XStartR4Draw *)(uintptr_t)item->table;
+    if (table->magic != R4XSTART_R4DRAW_MAGIC) return R4OS_ERROR_INVALID;
+    if (table->abi_version < R4XSTART_R4DRAW_VERSION) return R4OS_ERROR_INVALID;
+    if (table->size < R4XSTART_R4DRAW_SIZE) return R4OS_ERROR_INVALID;
+    if (table->gui_clear == 0 || table->gui_rect == 0 || table->gui_present == 0) return R4OS_ERROR_INVALID;
+    out_draw->table = table;
+    return R4OS_OK;
+}
+
+static inline int32_t r4draw_gui_clear(R4Draw *draw, uint32_t rgb) {
+    if (draw == 0 || draw->table == 0 || draw->table->gui_clear == 0) return R4OS_ERROR_INVALID;
+    R4DrawGuiClearFn fn = (R4DrawGuiClearFn)(uintptr_t)draw->table->gui_clear;
+    return fn(rgb);
+}
+
+static inline int32_t r4draw_gui_rect(R4Draw *draw, int32_t x, int32_t y, uint32_t w, uint32_t h, uint32_t rgb) {
+    if (draw == 0 || draw->table == 0 || draw->table->gui_rect == 0) return R4OS_ERROR_INVALID;
+    R4DrawGuiRectFn fn = (R4DrawGuiRectFn)(uintptr_t)draw->table->gui_rect;
+    return fn(x, y, w, h, rgb);
+}
+
+static inline int32_t r4draw_gui_draw_text(R4Draw *draw, int32_t x, int32_t y, const char *text, uint32_t fg, uint32_t bg) {
+    if (draw == 0 || draw->table == 0 || draw->table->gui_draw_text == 0) return R4OS_ERROR_INVALID;
+    R4DrawGuiDrawTextFn fn = (R4DrawGuiDrawTextFn)(uintptr_t)draw->table->gui_draw_text;
+    return fn(x, y, (const uint8_t *)(const void *)text, fg, bg);
+}
+
+static inline int32_t r4draw_gui_blend_alpha8(R4Draw *draw, int32_t x, int32_t y,
+                                               uint32_t width, uint32_t height,
+                                               uint32_t stride, uint32_t rgb,
+                                               const uint8_t *alpha, size_t alpha_len) {
+    if (draw == 0 || draw->table == 0 ||
+        draw->table->size < offsetof(R4XStartR4Draw, gui_blend_alpha8) + sizeof(uintptr_t) ||
+        draw->table->gui_blend_alpha8 == 0) return R4OS_ERR_NO_FN;
+    if (alpha == 0 || alpha_len == 0u || alpha_len > UINT32_MAX) return R4OS_ERROR_INVALID;
+    R4DrawGuiBlendAlpha8Fn fn = (R4DrawGuiBlendAlpha8Fn)(uintptr_t)draw->table->gui_blend_alpha8;
+    return fn(x, y, width, height, stride, rgb, alpha, (uint32_t)alpha_len);
+}
+
+static inline int r4draw_supports_gui_frame_contract(const R4Draw *draw) {
+    if (draw == 0 || draw->table == 0) return 0;
+    const R4XStartR4Draw *table = draw->table;
+    return table->size >= offsetof(R4XStartR4Draw, gui_frame_read) + sizeof(uintptr_t) &&
+        table->gui_frame_begin != 0 && table->gui_frame_append != 0 &&
+        table->gui_frame_commit != 0 && table->gui_frame_cancel != 0 &&
+        table->gui_frame_info != 0 && table->gui_frame_read != 0;
+}
+
+static inline int32_t r4draw_gui_frame_begin(R4Draw *draw) {
+    if (draw == 0 || !r4draw_supports_gui_frame_contract(draw)) return R4OS_ERR_NO_FN;
+    R4DrawGuiFrameBeginFn fn = (R4DrawGuiFrameBeginFn)(uintptr_t)draw->table->gui_frame_begin;
+    return fn();
+}
+
+static inline int32_t r4draw_gui_frame_append(R4Draw *draw,
+                                               const R4GuiFrameCommand *commands, uint64_t command_count,
+                                               const uint8_t *resources, uint64_t resource_len) {
+    if (draw == 0 || !r4draw_supports_gui_frame_contract(draw)) return R4OS_ERR_NO_FN;
+    R4DrawGuiFrameAppendFn fn = (R4DrawGuiFrameAppendFn)(uintptr_t)draw->table->gui_frame_append;
+    return fn(commands, command_count, resources, resource_len);
+}
+
+static inline int32_t r4draw_gui_frame_commit(R4Draw *draw) {
+    if (draw == 0 || !r4draw_supports_gui_frame_contract(draw)) return R4OS_ERR_NO_FN;
+    R4DrawGuiFrameCommitFn fn = (R4DrawGuiFrameCommitFn)(uintptr_t)draw->table->gui_frame_commit;
+    return fn();
+}
+
+static inline int32_t r4draw_gui_frame_cancel(R4Draw *draw) {
+    if (draw == 0 || !r4draw_supports_gui_frame_contract(draw)) return R4OS_ERR_NO_FN;
+    R4DrawGuiFrameCancelFn fn = (R4DrawGuiFrameCancelFn)(uintptr_t)draw->table->gui_frame_cancel;
+    return fn();
+}
+
+static inline int32_t r4draw_gui_frame_info(R4Draw *draw, const R4ProgramProcessHandle *handle, R4GuiFrameInfo *out_info) {
+    if (draw == 0 || !r4draw_supports_gui_frame_contract(draw)) return R4OS_ERR_NO_FN;
+    if (out_info == 0) return R4OS_GUI_FRAME_ERROR_INVALID;
+    R4DrawGuiFrameInfoFn fn = (R4DrawGuiFrameInfoFn)(uintptr_t)draw->table->gui_frame_info;
+    out_info->version = R4OS_GUI_FRAME_INFO_VERSION;
+    out_info->size = R4OS_GUI_FRAME_INFO_SIZE;
+    return fn(handle, out_info);
+}
+
+static inline int32_t r4draw_gui_frame_read(R4Draw *draw, const R4ProgramProcessHandle *handle,
+                                             uint64_t expected_generation,
+                                             R4GuiFrameCommand *commands, uint64_t command_capacity,
+                                             uint8_t *resources, uint64_t resource_capacity,
+                                             R4GuiFrameInfo *out_info) {
+    if (draw == 0 || !r4draw_supports_gui_frame_contract(draw)) return R4OS_ERR_NO_FN;
+    if (out_info == 0) return R4OS_GUI_FRAME_ERROR_INVALID;
+    out_info->version = R4OS_GUI_FRAME_INFO_VERSION;
+    out_info->size = R4OS_GUI_FRAME_INFO_SIZE;
+    if (handle == 0) return R4OS_GUI_FRAME_ERROR_INVALID;
+    R4DrawGuiFrameReadFn fn = (R4DrawGuiFrameReadFn)(uintptr_t)draw->table->gui_frame_read;
+    return fn(handle, expected_generation, commands, command_capacity, resources, resource_capacity, out_info);
+}
+
+static inline int32_t r4draw_gui_present(R4Draw *draw) {
+    if (draw == 0 || draw->table == 0 || draw->table->gui_present == 0) return R4OS_ERROR_INVALID;
+    R4DrawGuiPresentFn fn = (R4DrawGuiPresentFn)(uintptr_t)draw->table->gui_present;
+    return fn();
+}
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif
