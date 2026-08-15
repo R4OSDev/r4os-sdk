@@ -82,3 +82,18 @@ Test-Plan. Manifestparsing, Profilregeln, Zielkollisionen und der
 Runtime-R4L-Abhaengigkeitsschluss bleiben beim gemeinsamen R4MF-Vertrag; die
 Workspace-Orchestrierung liefert nur den Ort des bereits vom jeweiligen
 Repository gebauten Artefakts.
+
+Optional erzeugt derselbe Aufruf mit `--inventory-output` aus genau dieser
+Auswahl das installierte `MODULES.JSON`; zusammen mit Kernel-Version und
+-Artefakt enthaelt es damit keine handgepflegte zweite Komponentenliste.
+
+Plattformbruecken
+-----------------
+
+Die sechs kernelimplementierten Gruppen R4SYS, R4DESK, R4DRAW, R4NET,
+R4AUDIO und R4DEV benoetigen kleine R4L-Query-Container. Deren Manifeste und
+die generische, aus den Contract-Gruppendaten gespeiste Verpackungslogik
+liegen unter `PlatformBridges/`. Sie implementieren keine API-Funktion:
+Contract bleibt Tabellenwahrheit, Kernel bleibt Provider und das SDK erzeugt
+nur den Query-/Import-Glue fuer den allgemeinen R4M0-Lader. Optionale
+Runtime-Libraries bleiben davon vollstaendig getrennt.

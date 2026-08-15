@@ -31,6 +31,7 @@ const Options = struct {
     root: []const u8 = "Code",
     output: ?[]const u8 = null,
     image_output: ?[]const u8 = null,
+    inventory_output: ?[]const u8 = null,
     manifest_path: ?[]const u8 = null,
     name: ?[]const u8 = null,
     kind: ?manifest_contract.Kind = null,
@@ -196,7 +197,16 @@ fn run(init: std.process.Init) !void {
             try validateImageDependencyClosure(manifests, mode, includes);
             const rendered = try renderWorkspaceImagePlan(arena_allocator, io, cwd, entries, mode, includes);
             try writeOutput(io, cwd, options.output, rendered);
-            std.debug.print("ModuleCatalog workspace image plan OK: mode={s}, entries={d}.\n", .{ @tagName(mode), countImageEntries(manifests, mode, includes) });
+            if (options.inventory_output) |inventory_output| {
+                const kernel = try loadOptionalKernelComponent(arena_allocator, io, cwd, options);
+                const inventory = try renderImageInventory(arena_allocator, manifests, mode, includes, kernel);
+                try writeOutput(io, cwd, inventory_output, inventory);
+            }
+            std.debug.print("ModuleCatalog workspace image plan OK: mode={s}, entries={d}{s}.\n", .{
+                @tagName(mode),
+                countImageEntries(manifests, mode, includes),
+                if (options.inventory_output != null) ", inventory generated" else "",
+            });
         },
         .convert_r4cp => {
             const path = options.manifest_path orelse return error.MissingManifestPath;
@@ -261,6 +271,10 @@ fn parseOptions(args: []const []const u8) !Options {
             index += 1;
             if (index >= args.len) return error.MissingImageOutputValue;
             options.image_output = args[index];
+        } else if (std.mem.eql(u8, arg, "--inventory-output")) {
+            index += 1;
+            if (index >= args.len) return error.MissingImageOutputValue;
+            options.inventory_output = args[index];
         } else if (std.mem.eql(u8, arg, "--output")) {
             index += 1;
             if (index >= args.len) return error.MissingOptionValue;
@@ -296,8 +310,10 @@ fn parseOptions(args: []const []const u8) !Options {
     if ((options.image_mode != null or options.extra_manifest_count != 0 or options.image_include_target_count != 0) and !image_action) return error.InvalidImageOption;
     if (image_action and options.image_mode == null) return error.MissingImageMode;
     if ((options.workspace_map != null) != (options.action == .workspace_image_plan)) return error.InvalidWorkspaceMapOption;
+    if (options.inventory_output != null and options.action != .workspace_image_plan) return error.InvalidWorkspaceInventoryOption;
     if ((options.kernel_version_source == null) != (options.kernel_artifact == null)) return error.IncompleteKernelComponent;
-    if (options.kernel_version_source != null and options.action != .image_inventory and options.action != .inventories) return error.InvalidKernelComponentOption;
+    if (options.kernel_version_source != null and options.action != .image_inventory and options.action != .inventories and
+        (options.action != .workspace_image_plan or options.inventory_output == null)) return error.InvalidKernelComponentOption;
     if ((options.release_version_source == null) != (options.release_output == null)) return error.IncompleteReleaseManifestOption;
     if (options.release_version_source != null and
         (options.action != .inventories or options.kernel_version_source == null))
@@ -325,7 +341,7 @@ fn printUsage() void {
         \\  module-catalog image-inventory --root Code --image-mode slim|full|test [--extra-manifest FILE] [--include-target TARGET] [--kernel-version-source FILE --kernel-artifact ELF] [--output FILE]
         \\  module-catalog inventories --root Code --image-mode slim|full|test --output FILE --image-output FILE [--extra-manifest FILE] [--include-target TARGET] [--kernel-version-source FILE --kernel-artifact ELF] [--release-version-source FILE --release-output FILE]
         \\  module-catalog image-plan --root Code --image-mode slim|full|test [--extra-manifest FILE] [--include-target TARGET] [--output FILE]
-        \\  module-catalog workspace-image-plan --workspace-map FILE --image-mode slim|full|test [--include-target TARGET] [--output FILE]
+        \\  module-catalog workspace-image-plan --workspace-map FILE --image-mode slim|full|test [--include-target TARGET] [--kernel-version-source FILE --kernel-artifact ELF --inventory-output FILE] [--output FILE]
         \\  module-catalog convert-r4cp --manifest LEGACY.R4CP --output module.R4MF
         \\
     , .{});

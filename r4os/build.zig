@@ -739,6 +739,32 @@ pub const Sdk = struct {
             .module_version = opts.module_version,
         });
     }
+
+    /// Verpackt eine aus dem Plattform-Contract erzeugte Query-Bruecke. Das
+    /// Manifest bleibt Identitaets-, Versions-, Import- und Metadatenwahrheit;
+    /// der Aufrufer liefert nur die mechanisch erzeugten Code-/Datenbytes und
+    /// den fuer alle Kernelgruppen gemeinsamen Export-/Relocationvertrag.
+    pub fn addPlatformBridgeR4L(
+        self: Sdk,
+        manifest_path: std.Build.LazyPath,
+        code: std.Build.LazyPath,
+        data: std.Build.LazyPath,
+    ) BuildResult {
+        const loaded = loadCurrentR4MF(self.b, manifest_path, .{});
+        if (loaded.manifest.kind != .r4l or loaded.manifest.exports.len != 0) {
+            @panic(self.b.fmt("Platform bridge requires a legacy raw R4L manifest: {s}", .{loaded.manifest.path}));
+        }
+        return self.addR4LRaw(.{
+            .name = loaded.manifest.name,
+            .module_version = loaded.manifest.module_version.text,
+            .code = code,
+            .data = data,
+            .imports = loaded.manifest.imports,
+            .exports = &.{"Query:.data:0:1"},
+            .relocations = &.{"import_slot64:.data:16:0:0"},
+            .metadata = loaded.manifest.metadata,
+        });
+    }
 };
 
 const R4MFCatalogEntry = struct {

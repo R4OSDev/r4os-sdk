@@ -23,9 +23,14 @@ pub fn build(b: *std.Build) void {
     b.addNamedLazyPath("system_update_engine", b.path("r4os/system_update_engine.zig"));
     b.addNamedLazyPath("update_service_contract", b.path("r4os/update_service_contract.zig"));
 
-    const sdk_profile = Sdk.init(b, .{});
+    const contract_dependency = b.dependency("r4os_contract", .{});
+    const sdk_profile = Sdk.init(b, .{ .contract_dependency = contract_dependency });
     b.installArtifact(sdk_profile.builder);
     if (sdk_profile.r4l_contract_generator) |generator| b.installArtifact(generator);
+
+    for ([_][]const u8{ "R4SYS", "R4DESK", "R4DRAW", "R4NET", "R4AUDIO", "R4DEV" }) |name| {
+        addPlatformBridge(b, sdk_profile, contract_dependency, name);
+    }
 
     const module_filter = b.option([]const u8, "module-filter", "Build only matching SDK smoke R4X names") orelse "";
     _ = sdk_profile.addR4MFCatalog(&.{b.path("Smoke")}, module_filter);
@@ -91,4 +96,40 @@ pub fn build(b: *std.Build) void {
     test_step.dependOn(&run_r4x_builder_tests.step);
     test_step.dependOn(&run_r4l_contract_tests.step);
     test_step.dependOn(&run_catalog_tests.step);
+}
+
+fn addPlatformBridge(
+    b: *std.Build,
+    sdk_profile: Sdk,
+    contract_dependency: *std.Build.Dependency,
+    name: []const u8,
+) void {
+    const bridge = b.createModule(.{
+        .root_source_file = b.path("PlatformBridges/bridge_source.zig"),
+        .target = b.graph.host,
+        .optimize = .ReleaseSafe,
+    });
+    bridge.addImport("platform_group", b.createModule(.{
+        .root_source_file = contract_dependency.path(b.fmt("Generated/Groups/{s}/api_contract_generated.zig", .{name})),
+        .target = b.graph.host,
+        .optimize = .ReleaseSafe,
+    }));
+    const root = b.createModule(.{
+        .root_source_file = b.path(b.fmt("PlatformBridges/{s}/src/main.zig", .{name})),
+        .target = b.graph.host,
+        .optimize = .ReleaseSafe,
+    });
+    root.addImport("platform_bridge_source", bridge);
+    const generator = b.addExecutable(.{
+        .name = b.fmt("{s}-bridge-data", .{name}),
+        .root_module = root,
+    });
+    const run = b.addRunArtifact(generator);
+    const code = run.addOutputFileArg(b.fmt("{s}.code.bin", .{name}));
+    const data = run.addOutputFileArg(b.fmt("{s}.data.bin", .{name}));
+    _ = sdk_profile.addPlatformBridgeR4L(
+        b.path(b.fmt("PlatformBridges/{s}/module.R4MF", .{name})),
+        code,
+        data,
+    );
 }
