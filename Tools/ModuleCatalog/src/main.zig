@@ -4,10 +4,11 @@ const manifest_contract = contract_bundle.r4mf;
 const legacy_project = contract_bundle.legacy;
 const legacy_converter = contract_bundle;
 
-const Action = enum { catalog, image_inventory, inventories, validate, resolve, plan, contract_plan, image_plan, convert_r4cp };
+const Action = enum { catalog, image_inventory, inventories, validate, resolve, plan, contract_plan, image_plan, workspace_image_plan, convert_r4cp };
 const ImageMode = enum { slim, full, @"test" };
 const max_extra_manifests = 32;
 const max_image_include_targets = 32;
+const max_workspace_map_bytes = 1024 * 1024;
 const max_kernel_version_source_bytes = 256;
 const max_kernel_elf_bytes = 64 * 1024 * 1024;
 const kernel_metadata_section = ".r4os.kernel.meta";
@@ -42,6 +43,7 @@ const Options = struct {
     kernel_artifact: ?[]const u8 = null,
     release_version_source: ?[]const u8 = null,
     release_output: ?[]const u8 = null,
+    workspace_map: ?[]const u8 = null,
     extra_manifests: [max_extra_manifests][]const u8 = [_][]const u8{""} ** max_extra_manifests,
     extra_manifest_count: usize = 0,
     image_include_targets: [max_image_include_targets][]const u8 = [_][]const u8{""} ** max_image_include_targets,
@@ -179,6 +181,23 @@ fn run(init: std.process.Init) !void {
             try writeOutput(io, cwd, options.output, rendered);
             std.debug.print("ModuleCatalog image plan OK: mode={s}, entries={d}.\n", .{ @tagName(mode), countImageEntries(image_entries, mode, includes) });
         },
+        .workspace_image_plan => {
+            const mode = options.image_mode orelse return error.MissingImageMode;
+            const includes = options.image_include_targets[0..options.image_include_target_count];
+            const entries = try loadWorkspaceImageEntries(
+                arena_allocator,
+                io,
+                cwd,
+                options.workspace_map orelse return error.MissingWorkspaceMap,
+            );
+            const manifests = try workspaceManifests(arena_allocator, entries);
+            try validateCatalogCollisions(manifests);
+            try validateImageIncludes(manifests, mode, includes);
+            try validateImageDependencyClosure(manifests, mode, includes);
+            const rendered = try renderWorkspaceImagePlan(arena_allocator, io, cwd, entries, mode, includes);
+            try writeOutput(io, cwd, options.output, rendered);
+            std.debug.print("ModuleCatalog workspace image plan OK: mode={s}, entries={d}.\n", .{ @tagName(mode), countImageEntries(manifests, mode, includes) });
+        },
         .convert_r4cp => {
             const path = options.manifest_path orelse return error.MissingManifestPath;
             const output = options.output orelse return error.MissingOutput;
@@ -190,7 +209,7 @@ fn run(init: std.process.Init) !void {
 
 fn parseOptions(args: []const []const u8) !Options {
     if (args.len < 2) return error.MissingAction;
-    var options = Options{ .action = if (std.mem.eql(u8, args[1], "catalog")) .catalog else if (std.mem.eql(u8, args[1], "image-inventory")) .image_inventory else if (std.mem.eql(u8, args[1], "inventories")) .inventories else if (std.mem.eql(u8, args[1], "validate")) .validate else if (std.mem.eql(u8, args[1], "resolve")) .resolve else if (std.mem.eql(u8, args[1], "plan")) .plan else if (std.mem.eql(u8, args[1], "contract-plan")) .contract_plan else if (std.mem.eql(u8, args[1], "image-plan")) .image_plan else if (std.mem.eql(u8, args[1], "convert-r4cp")) .convert_r4cp else return error.UnknownAction };
+    var options = Options{ .action = if (std.mem.eql(u8, args[1], "catalog")) .catalog else if (std.mem.eql(u8, args[1], "image-inventory")) .image_inventory else if (std.mem.eql(u8, args[1], "inventories")) .inventories else if (std.mem.eql(u8, args[1], "validate")) .validate else if (std.mem.eql(u8, args[1], "resolve")) .resolve else if (std.mem.eql(u8, args[1], "plan")) .plan else if (std.mem.eql(u8, args[1], "contract-plan")) .contract_plan else if (std.mem.eql(u8, args[1], "image-plan")) .image_plan else if (std.mem.eql(u8, args[1], "workspace-image-plan")) .workspace_image_plan else if (std.mem.eql(u8, args[1], "convert-r4cp")) .convert_r4cp else return error.UnknownAction };
     var index: usize = 2;
     while (index < args.len) : (index += 1) {
         const arg = args[index];
@@ -246,6 +265,10 @@ fn parseOptions(args: []const []const u8) !Options {
             index += 1;
             if (index >= args.len) return error.MissingOptionValue;
             options.output = args[index];
+        } else if (std.mem.eql(u8, arg, "--workspace-map")) {
+            index += 1;
+            if (index >= args.len) return error.MissingOptionValue;
+            options.workspace_map = args[index];
         } else if (std.mem.eql(u8, arg, "--manifest")) {
             index += 1;
             if (index >= args.len) return error.MissingOptionValue;
@@ -269,9 +292,10 @@ fn parseOptions(args: []const []const u8) !Options {
     if (options.name_only and options.action != .validate) return error.InvalidOutputMode;
     if (options.artifact_only and options.action != .plan) return error.InvalidOutputMode;
     if (options.action == .convert_r4cp and options.output == null) return error.MissingOutput;
-    const image_action = options.action == .image_plan or options.action == .image_inventory or options.action == .inventories;
+    const image_action = options.action == .image_plan or options.action == .workspace_image_plan or options.action == .image_inventory or options.action == .inventories;
     if ((options.image_mode != null or options.extra_manifest_count != 0 or options.image_include_target_count != 0) and !image_action) return error.InvalidImageOption;
     if (image_action and options.image_mode == null) return error.MissingImageMode;
+    if ((options.workspace_map != null) != (options.action == .workspace_image_plan)) return error.InvalidWorkspaceMapOption;
     if ((options.kernel_version_source == null) != (options.kernel_artifact == null)) return error.IncompleteKernelComponent;
     if (options.kernel_version_source != null and options.action != .image_inventory and options.action != .inventories) return error.InvalidKernelComponentOption;
     if ((options.release_version_source == null) != (options.release_output == null)) return error.IncompleteReleaseManifestOption;
@@ -301,6 +325,7 @@ fn printUsage() void {
         \\  module-catalog image-inventory --root Code --image-mode slim|full|test [--extra-manifest FILE] [--include-target TARGET] [--kernel-version-source FILE --kernel-artifact ELF] [--output FILE]
         \\  module-catalog inventories --root Code --image-mode slim|full|test --output FILE --image-output FILE [--extra-manifest FILE] [--include-target TARGET] [--kernel-version-source FILE --kernel-artifact ELF] [--release-version-source FILE --release-output FILE]
         \\  module-catalog image-plan --root Code --image-mode slim|full|test [--extra-manifest FILE] [--include-target TARGET] [--output FILE]
+        \\  module-catalog workspace-image-plan --workspace-map FILE --image-mode slim|full|test [--include-target TARGET] [--output FILE]
         \\  module-catalog convert-r4cp --manifest LEGACY.R4CP --output module.R4MF
         \\
     , .{});
@@ -329,6 +354,97 @@ fn renderImagePlan(
         try out.appendSlice(allocator, artifact);
         try out.append(allocator, ':');
         try out.appendSlice(allocator, entry.target);
+        try out.append(allocator, '\n');
+    }
+    return out.toOwnedSlice(allocator);
+}
+
+const WorkspaceImageEntry = struct {
+    manifest: manifest_contract.Manifest,
+    artifact: []const u8,
+};
+
+/// Liest eine hostseitige Mehrrepo-Zuordnung. Jede Nutzzeile besteht aus
+/// `MANIFEST|ARTEFAKT`; Kommentare beginnen mit `#`. Die Manifestsemantik
+/// bleibt vollstaendig beim gemeinsamen R4MF-Parser. Der Workspace liefert
+/// nur den Ort des bereits vom Eigentuerrepository gebauten Artefakts.
+fn loadWorkspaceImageEntries(
+    allocator: std.mem.Allocator,
+    io: std.Io,
+    cwd: std.Io.Dir,
+    path: []const u8,
+) ![]WorkspaceImageEntry {
+    const bytes = try cwd.readFileAlloc(io, path, allocator, .limited(max_workspace_map_bytes));
+    var lines = std.mem.splitScalar(u8, bytes, '\n');
+    var entries: std.ArrayList(WorkspaceImageEntry) = .empty;
+    while (lines.next()) |raw_line| {
+        const line = std.mem.trim(u8, raw_line, " \t\r");
+        if (line.len == 0 or line[0] == '#') continue;
+        const separator = std.mem.indexOfScalar(u8, line, '|') orelse return error.InvalidWorkspaceMapLine;
+        if (std.mem.indexOfScalar(u8, line[separator + 1 ..], '|') != null) return error.InvalidWorkspaceMapLine;
+        const manifest_text = std.mem.trim(u8, line[0..separator], " \t");
+        const artifact_text = std.mem.trim(u8, line[separator + 1 ..], " \t");
+        if (manifest_text.len == 0 or artifact_text.len == 0) return error.InvalidWorkspaceMapLine;
+
+        const manifest_path = try canonicalPathAlloc(allocator, manifest_text);
+        const artifact_path = try canonicalPathAlloc(allocator, artifact_text);
+        const manifest = readManifest(allocator, io, cwd, manifest_path) catch |err| {
+            std.debug.print("Workspace manifest invalid: {s} ({s})\n", .{ manifest_path, @errorName(err) });
+            return err;
+        };
+        cwd.access(io, artifact_path, .{}) catch |err| {
+            std.debug.print("Workspace artifact missing: {s} -> {s} ({s})\n", .{ manifest_path, artifact_path, @errorName(err) });
+            return error.ImageArtifactMissing;
+        };
+        const expected_name = try std.fmt.allocPrint(allocator, "{s}.{s}", .{ manifest.name, manifest.kind.text() });
+        if (!std.ascii.eqlIgnoreCase(std.fs.path.basename(artifact_path), expected_name)) {
+            std.debug.print("Workspace artifact identity mismatch: {s} expects {s}, got {s}\n", .{ manifest_path, expected_name, artifact_path });
+            return error.WorkspaceArtifactIdentityMismatch;
+        }
+        try entries.append(allocator, .{ .manifest = manifest, .artifact = artifact_path });
+    }
+    if (entries.items.len == 0) return error.EmptyWorkspaceMap;
+    std.mem.sort(WorkspaceImageEntry, entries.items, {}, lessWorkspaceImageEntry);
+    for (entries.items, 0..) |entry, index| {
+        for (entries.items[0..index]) |prior| {
+            if (std.ascii.eqlIgnoreCase(entry.artifact, prior.artifact)) {
+                std.debug.print("Workspace artifact mapped more than once: {s}\n", .{entry.artifact});
+                return error.WorkspaceArtifactCollision;
+            }
+        }
+    }
+    return entries.toOwnedSlice(allocator);
+}
+
+fn lessWorkspaceImageEntry(_: void, a: WorkspaceImageEntry, b: WorkspaceImageEntry) bool {
+    return lessManifest({}, a.manifest, b.manifest);
+}
+
+fn workspaceManifests(allocator: std.mem.Allocator, entries: []const WorkspaceImageEntry) ![]manifest_contract.Manifest {
+    const manifests = try allocator.alloc(manifest_contract.Manifest, entries.len);
+    for (entries, 0..) |entry, index| manifests[index] = entry.manifest;
+    return manifests;
+}
+
+fn renderWorkspaceImagePlan(
+    allocator: std.mem.Allocator,
+    io: std.Io,
+    cwd: std.Io.Dir,
+    entries: []const WorkspaceImageEntry,
+    mode: ImageMode,
+    include_targets: []const []const u8,
+) ![]u8 {
+    var out: std.ArrayList(u8) = .empty;
+    for (entries) |entry| {
+        if (!imageEntryIncluded(entry.manifest, mode, include_targets)) continue;
+        if (entry.manifest.kind == .r4x) _ = try manifest_contract.derivePlan(allocator, entry.manifest);
+        cwd.access(io, entry.artifact, .{}) catch |err| {
+            std.debug.print("Workspace image artifact missing: {s} -> {s} ({s})\n", .{ entry.manifest.path, entry.artifact, @errorName(err) });
+            return error.ImageArtifactMissing;
+        };
+        try out.appendSlice(allocator, entry.artifact);
+        try out.append(allocator, ':');
+        try out.appendSlice(allocator, entry.manifest.target);
         try out.append(allocator, '\n');
     }
     return out.toOwnedSlice(allocator);

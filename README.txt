@@ -50,10 +50,12 @@ Unter Linux und macOS:
     ./Build.sh test
 
 Die Starter sind der verbindliche Einstieg, weil sie `Settings.R4S` vor der
-Zig-Paketaufloesung anwenden. Das Paketmanifest pinnt die Contract-Identitaet
-und dessen Inhalt; der gemappte lokale Checkout wird von Zig als passende
-lokale Projektvariante verwendet. Der SDK-Build benoetigt dadurch weder einen
-festen Nachbarpfad noch GitHub-Zugangsdaten.
+Zig-Paketaufloesung anwenden. Der gemappte aktuelle lokale Contract-Checkout
+wird mit Zig `--fork` als Projektvariante verwendet. URL und Commit im
+Paketmanifest dokumentieren nur den zuletzt geprueften
+Standalone-Referenzstand fuer einen direkten Build ohne Starter; sie sperren
+den normalen Workspace-Build nicht auf diesen Stand. Der SDK-Build benoetigt
+dadurch weder einen festen Nachbarpfad noch GitHub-Zugangsdaten.
 
 Herkunft und absichtliche Grenzaenderungen stehen in `PROVENANCE.txt`.
 
@@ -64,5 +66,19 @@ Modulbuilds
 ZIG_MODULE-Abhaengigkeiten aus anderen Repositories verwendet ein Modulbuild
 `Sdk.addR4MFWithOptions`: Die Namen und ihre Reihenfolge bleiben im Manifest,
 waehrend `zig_module_roots` die vom Zig-Paketmanager aufgeloesten, explizit
-gepinnten Quellpfade in derselben Reihenfolge liefert. Dadurch sind weder feste
-Nachbarpfade noch eine zweite Library-Importliste im Buildscript erforderlich.
+eingebundenen Quellpfade in derselben Reihenfolge liefert. Der jeweilige
+Buildstarter stellt mit `--fork` die aktuell gemappten lokalen SDK-, Contract-
+und Libraries-Checkouts bereit. Eine inkompatible aktuelle Aenderung bricht
+den Verbraucherbuild sichtbar; der Stand in `build.zig.zon` bleibt lediglich
+der gepruefte Standalone-Referenzstand. Dadurch sind weder feste Nachbarpfade
+noch eine zweite Library-Importliste im Buildscript erforderlich.
+
+Mehrrepo-Imageplaene
+--------------------
+
+`ModuleCatalog workspace-image-plan` liest eine explizite Textzuordnung aus
+`MANIFEST|ARTEFAKT`-Zeilen und erzeugt daraus einen Slim-, Full- oder
+Test-Plan. Manifestparsing, Profilregeln, Zielkollisionen und der
+Runtime-R4L-Abhaengigkeitsschluss bleiben beim gemeinsamen R4MF-Vertrag; die
+Workspace-Orchestrierung liefert nur den Ort des bereits vom jeweiligen
+Repository gebauten Artefakts.
