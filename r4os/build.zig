@@ -42,6 +42,13 @@ pub const ZigModuleBuild = struct {
     root_source_file: std.Build.LazyPath,
 };
 
+/// Hostseitige Pfadauflösung fuer die in module.R4MF deklarierten
+/// ZIG_MODULE-Eintraege. Die Reihenfolge entspricht exakt der
+/// Manifestreihenfolge; Namen und Importvertrag bleiben allein im Manifest.
+pub const R4MFBuildOptions = struct {
+    zig_module_roots: ?[]const std.Build.LazyPath = null,
+};
+
 /// Eine einzubettende Ressource fuer den R4M0-Ressourcenbereich (0.61.12).
 /// Als LazyPath deklariert, damit Zig die Datei als Buildinput trackt -
 /// eine geaenderte Ressource baut das Modul neu.
@@ -352,7 +359,15 @@ pub const Sdk = struct {
     /// verpackt. Legacy-R4Ls ohne EXPORT=-Deklaration bleiben waehrend der
     /// Migration auf ihrem ausdruecklichen addR4LRaw-Pfad.
     pub fn addR4MF(self: Sdk, manifest_path: std.Build.LazyPath) BuildResult {
-        const loaded = loadCurrentR4MF(self.b, manifest_path);
+        return self.addR4MFWithOptions(manifest_path, .{});
+    }
+
+    /// Wie addR4MF, aber mit expliziten, vom Hostbuild gelieferten Pfaden fuer
+    /// die im Manifest aufgefuehrten Zig-Module. Das erlaubt gepinnte
+    /// Repository-Abhaengigkeiten, ohne feste Nachbarpfade in Quellcode oder
+    /// Buildscript und ohne eine zweite Liste von Modulnamen.
+    pub fn addR4MFWithOptions(self: Sdk, manifest_path: std.Build.LazyPath, options: R4MFBuildOptions) BuildResult {
+        const loaded = loadCurrentR4MF(self.b, manifest_path, options);
         return switch (loaded.manifest.kind) {
             .r4x => self.addR4MFProgram(loaded),
             .r4d => self.addR4MFDriver(loaded),
@@ -783,7 +798,7 @@ const LoadedR4MF = struct {
     zig_modules: []const ZigModuleBuild,
 };
 
-fn loadCurrentR4MF(b: *std.Build, manifest_path: std.Build.LazyPath) LoadedR4MF {
+fn loadCurrentR4MF(b: *std.Build, manifest_path: std.Build.LazyPath, options: R4MFBuildOptions) LoadedR4MF {
     const full_path = lazyPathAbsolute(b, manifest_path);
     const bytes = std.Io.Dir.cwd().readFileAlloc(
         b.graph.io,
@@ -811,15 +826,28 @@ fn loadCurrentR4MF(b: *std.Build, manifest_path: std.Build.LazyPath) LoadedR4MF 
         std.Io.Dir.cwd().access(b.graph.io, source_paths[index], .{}) catch |err|
             @panic(b.fmt("R4MF source capability error: {s} ({s})", .{ source_paths[index], @errorName(err) }));
     }
+    if (options.zig_module_roots) |roots| {
+        if (roots.len != manifest.zig_modules.len) {
+            @panic(b.fmt(
+                "R4MF Zig-module mapping error: {s} declares {d} modules, but the host build supplied {d} roots",
+                .{ full_path, manifest.zig_modules.len, roots.len },
+            ));
+        }
+    }
     const zig_modules = b.allocator.alloc(ZigModuleBuild, manifest.zig_modules.len) catch @panic("OOM");
     for (manifest.zig_modules, 0..) |entry, index| {
         const colon = std.mem.indexOfScalar(u8, entry, ':') orelse unreachable;
-        const module_path = std.fs.path.join(b.allocator, &.{ project_path, entry[colon + 1 ..] }) catch @panic("OOM");
-        std.Io.Dir.cwd().access(b.graph.io, module_path, .{}) catch |err|
-            @panic(b.fmt("R4MF Zig-module capability error: {s} ({s})", .{ module_path, @errorName(err) }));
+        const root_source_file = if (options.zig_module_roots) |roots|
+            roots[index]
+        else blk: {
+            const module_path = std.fs.path.join(b.allocator, &.{ project_path, entry[colon + 1 ..] }) catch @panic("OOM");
+            std.Io.Dir.cwd().access(b.graph.io, module_path, .{}) catch |err|
+                @panic(b.fmt("R4MF Zig-module capability error: {s} ({s})", .{ module_path, @errorName(err) }));
+            break :blk userPath(b, module_path);
+        };
         zig_modules[index] = .{
             .name = entry[0..colon],
-            .root_source_file = userPath(b, module_path),
+            .root_source_file = root_source_file,
         };
     }
     return .{

@@ -51,3 +51,13 @@ lokale Projektvariante verwendet. Der SDK-Build benoetigt dadurch weder einen
 festen Nachbarpfad noch GitHub-Zugangsdaten.
 
 Herkunft und absichtliche Grenzaenderungen stehen in `PROVENANCE.txt`.
+
+Modulbuilds
+-----------
+
+`Sdk.addR4MF` baut ein Modul ausschliesslich aus dessen `module.R4MF`. Fuer
+ZIG_MODULE-Abhaengigkeiten aus anderen Repositories verwendet ein Modulbuild
+`Sdk.addR4MFWithOptions`: Die Namen und ihre Reihenfolge bleiben im Manifest,
+waehrend `zig_module_roots` die vom Zig-Paketmanager aufgeloesten, explizit
+gepinnten Quellpfade in derselben Reihenfolge liefert. Dadurch sind weder feste
+Nachbarpfade noch eine zweite Library-Importliste im Buildscript erforderlich.

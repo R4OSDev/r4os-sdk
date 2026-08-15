@@ -13,6 +13,7 @@ pub const AppProfile = r4os_build.AppProfile;
 pub const R4DModuleOptions = r4os_build.R4DModuleOptions;
 pub const R4PModuleOptions = r4os_build.R4PModuleOptions;
 pub const R4LModuleOptions = r4os_build.R4LModuleOptions;
+pub const R4MFBuildOptions = r4os_build.R4MFBuildOptions;
 
 pub fn sdk(b: *std.Build, dependency: *std.Build.Dependency, opts: SdkOptions) Sdk {
     return Sdk.fromDependency(b, dependency, opts);
@@ -25,6 +26,9 @@ pub fn build(b: *std.Build) void {
 
     const module_filter = b.option([]const u8, "module-filter", "Build only matching SDK smoke R4X names") orelse "";
     _ = sdk_profile.addR4MFCatalog(&.{b.path("Smoke")}, module_filter);
+    _ = sdk_profile.addR4MFWithOptions(b.path("Tests/Build/R4MFMapping/module.R4MF"), .{
+        .zig_module_roots = &.{b.path("Tests/Build/R4MFMapping/Bindings/external.zig")},
+    });
     _ = sdk_profile.addR4D(.{
         .name = "SDKSMOKE",
         .driver_name = "SDKSMOKE",
