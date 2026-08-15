@@ -20,6 +20,9 @@ pub fn sdk(b: *std.Build, dependency: *std.Build.Dependency, opts: SdkOptions) S
 }
 
 pub fn build(b: *std.Build) void {
+    b.addNamedLazyPath("system_update_engine", b.path("r4os/system_update_engine.zig"));
+    b.addNamedLazyPath("update_service_contract", b.path("r4os/update_service_contract.zig"));
+
     const sdk_profile = Sdk.init(b, .{});
     b.installArtifact(sdk_profile.builder);
     if (sdk_profile.r4l_contract_generator) |generator| b.installArtifact(generator);
