@@ -1,25 +1,22 @@
-﻿R4OS SDK BuildProfiles
-======================
+﻿R4OS SDK Build Profiles
+=======================
 
-Diese Dateien beschreiben installierbare Buildprofile fuer R4OS-interne
-Werkzeuge wie R4CODE und R4BUILD.
+These files describe installable build profiles for R4OS-internal tools such
+as R4CODE and R4BUILD.
 
-Die Profile sind keine zweite ABI-Wahrheit. Sie verweisen auf das installierte
-SDK unter C:\R4OS\SDK und auf den Contract-Snapshot unter
-C:\R4OS\SDK\Contract. Die Quelle fuer ABI und API bleibt Code/System/SDK/Contract im
-Repository.
+Profiles are not a second ABI definition. They point to the installed SDK and
+Contract under C:/R4OS/SDK; the separate Contract repository remains the API
+and ABI source of truth.
 
-Die ersten internen R4CODE-/R4BUILD-Profile sind:
+Current internal C profiles include:
 
   R4X_C_Console
   R4X_C_Desktop_OK
 
-Seit 0.51.51 baut `R4X_C_Desktop_OK` ein GUI-R4X mit R4SYS-, R4DESK- und
-R4DRAW-Imports sowie AppClass `gui`.
+R4X_C_Desktop_OK builds a GUI R4X with R4SYS, R4DESK, and R4DRAW imports and
+AppClass gui. R4X_C remains readable for external R4CodePad compatibility,
+while internal builds use the more precise profiles.
 
-`R4X_C` bleibt als bestehendes externes R4CodePad-Kompatibilitaetsprofil
-lesbar. Der interne R4OS-Buildpfad soll die praeziseren Profile verwenden.
-
-Seit 0.53.40 ist AVX2 Teil des Standard-SIMD-Profils fuer R4X/R4D/R4P-
-Artefakte, wenn R4OS XSAVE x87+SSE+YMM aktiviert. Die Profile fuehren keine
-SSE-only- oder soft-float-Ersatzroute.
+AVX2 is part of the standard SIMD profile for R4X, R4D, and R4P artifacts
+when R4OS enables the x87, SSE, and YMM XSAVE state. These profiles do not
+provide an SSE-only or soft-float fallback.

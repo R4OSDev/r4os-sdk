@@ -26,3 +26,4 @@
 *.br -text
 *.ico -text
 *.zip -text
+*.md text eol=lf

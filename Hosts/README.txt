@@ -1,16 +1,17 @@
-﻿R4OS SDK Host-Profile
-=====================
+﻿R4OS SDK Host Profiles
+======================
 
-`Code/System/SDK/Shared` enthaelt den gemeinsamen SDK-Kern fuer R4OS/x86_64:
-Bindings, Header, Startup-Stubs, Linkprofile, Templates und Buildprofile.
+Shared contains the common SDK core for the R4OS x86_64 target: bindings,
+headers, startup stubs, linker profiles, templates, and build profiles.
 
-`Code/System/SDK/Hosts` enthaelt nur Host-spezifische Huellen. Ein Host ist die
-Umgebung, in der gebaut wird, nicht das R4OS-Zielsystem.
+Hosts contains host-specific wrappers only. A host is the environment that
+runs the build, not the R4OS target system.
 
-Profile:
-- Windows: erster externer Host fuer R4CodePad und lokale Zig-Builds.
-- Linux: spaeterer externer Host mit demselben SDK-Kern.
-- R4OS: spaeteres internes Paket fuer eine IDE im laufenden R4OS.
+Profiles:
 
-Die ABI-/API-Wahrheit bleibt unter `Code/System/SDK/Contract`. Host-Profile duerfen
-Pfade und Tools konfigurieren, aber keine zweite ABI definieren.
+- Windows: external host for R4CodePad and local Zig builds.
+- Linux: external host using the same SDK core.
+- R4OS: future native package for an IDE running inside R4OS.
+
+The separate Contract repository remains the API and ABI source of truth.
+Host profiles may configure paths and tools but never define a second ABI.

@@ -1,18 +1,11 @@
-﻿R4OS SDK Host-Profil Windows
-============================
+﻿R4OS SDK Windows Host Profile
+=============================
 
-Dieses Profil ist der erste externe Host-Pfad fuer R4CodePad und fuer
-freistehende Zig-/C-Projekte auf Windows.
+This profile supports R4CodePad and standalone Zig or C projects on Windows.
+Projects bind the r4os_sdk package through build.zig.zon and keep their own
+source paths project-local. The SDK resolves r4os.zig, linker scripts,
+C headers, startup objects, and host tools from its mapped roots.
 
-Aktuelle 0.51.16-Regeln:
-- Das SDK wird als Paket `r4os_sdk` ueber `build.zig.zon` gebunden.
-- App-Projekte referenzieren nur eigene Quellen mit `b.path(...)`.
-- Der SDK-Kern loest `r4os.zig`, Linker-Script, C-Header und C-Startup aus
-  dem SDK-Root auf.
-- `R4XBuilder` wird uebergangsweise ueber Host-Konfiguration oder
-  `-Dr4os-r4xbuilder=...` angegeben, bis ein exportiertes SDK-Paket ihn
-  selbst mitliefert.
-
-Dieses Profil darf auf Windows-Tools zeigen, aber diese Pfade gehoeren nicht
-in portable `module.R4MF`-Projektdateien. `.R4CP` ist nur noch Eingabe fuer
-den ausdruecklichen Einmalkonverter und kein aktuelles Projektformat.
+Windows-specific executable paths belong in host settings, never in portable
+module.R4MF project manifests. R4CP is accepted only by the explicit one-time
+converter and is not a current project format.

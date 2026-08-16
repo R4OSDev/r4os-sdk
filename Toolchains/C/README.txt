@@ -1,44 +1,34 @@
 ﻿R4OS SDK C Toolchain
 ====================
 
-Dieser Ordner ist der installierte Zielpfad fuer die native R4OS-C-Toolchain:
+This is the installed target location for the native R4OS C toolchain:
 
-    C:\R4OS\SDK\Toolchains\C\
+    C:/R4OS/SDK/Toolchains/C
 
-Ab 0.51.48 liegt der erste Compilerpfad hier:
+R4CC.R4X is installed under bin. R4CC is an R4OS bootstrap compiler; the
+native path does not use an external host compiler or a private compiler copy
+inside R4CODE.
 
-    C:\R4OS\SDK\Toolchains\C\bin\R4CC.R4X
-
-R4CC ist ein R4OS-eigener Bootstrap-Compiler. Es wird kein fremder
-Hostcompiler und keine private Compiler-Kopie unter R4CODE genutzt.
-Seit 0.58.33 kompiliert R4CC den aktuellen R4MF-v2-App-Subset-Vertrag:
+The current R4MF v2 C application subset supports:
 
     #include <r4os/r4os.h>
     R4OS_TEXT(name, "text")
     int32_t r4_app_main(R4App *app)
     r4sys_write_line(&app->system, name)
 
-Der Compiler erzeugt in dieser Stufe rohe `.text`-Codebytes fuer
-R4XStart/R4SYS. R4BUILD verpackt diese Bytes danach mit dem R4PACK-Core zu
-einem R4M0-`.R4X` im Projekt-`out\`-Verzeichnis.
+R4CC emits raw text-section bytes for R4XStart and R4SYS. R4BUILD then uses
+the R4PACK core to create an R4M0 .R4X in the project's out directory.
 
-R4CC kann ausserdem das abgeleitete Profil `R4X_C_App_Desktop`
-kompilieren. Dieses Profil ist weiterhin ein enger Bootstrap-C-Subset, nutzt
-aber R4DESK/R4DRAW ueber die SDK-Header und erzeugt Code fuer ein gehostetes
-GUI-Fenster mit `OK`-Button.
+Supported profiles are R4X_C_App_Console and R4X_C_App_Desktop. Unsupported
+profiles or languages fail with an explicit capability error; the build never
+falls back to a host compiler or old entry point.
 
-Die einzigen unterstuetzten R4MF-Profile sind `R4X_C_App_Console` und
-`R4X_C_App_Desktop`. Andere Profile oder Sprachen liefern einen sichtbaren
-Capabilityfehler im R4BUILD-Vertrag; ein alter Einstieg oder Hostcompiler wird
-nicht als Ersatz gewaehlt.
+R4CC.STATUS records installed toolchain capabilities for R4BUILD. Worker
+builds use the same R4CC and R4PACK logic directly without host tools or a
+prebuilt example artifact.
 
-`R4CC.STATUS` ist der installierte Toolchain-Status fuer R4BUILD. R4BUILD
-liest diese Datei, weil ein Worker keinen zweiten Console-Compilerprozess aus
-einem laufenden `programRun` heraus starten soll. Der Buildpfad nutzt deshalb
-die gleiche R4CC-/R4PACK-Logik direkt im Worker, aber keine Hosttools und kein
-vorgebautes Beispielartefakt.
+Subdirectories:
 
-Unterstruktur:
-- `bin\` enthaelt ausfuehrbare Toolchain-Programme wie `R4CC.R4X`.
-- `lib\` ist fuer spaetere Runtime-/Hilfsobjekte reserviert.
-- `include-extra\` ist fuer toolchainspezifische Zusatz-Header reserviert.
+- bin contains executable toolchain programs.
+- lib is reserved for future runtime and helper objects.
+- include-extra is reserved for toolchain-specific private headers.

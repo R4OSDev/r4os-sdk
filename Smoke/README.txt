@@ -1,20 +1,19 @@
-﻿SDK-Smokes
-==========
+﻿SDK Smoke Fixtures
+==================
 
-Dieses Verzeichnis trennt die SDK-Abnahmen nach Zielart.
+This directory separates SDK acceptance fixtures by target type.
 
-`R4XStart/R4X/`
-  Normaler R4XStart/R4L-Smoke fuer neue Zig-R4X.
+R4XStart/R4X
+  Standard Zig R4XStart and R4L smoke project.
 
-`R4D/`
-  R4D-Treiber-Smoke.
+R4D
+  R4D driver smoke project.
 
-`R4P/`
-  R4P-Protokoll-Smoke.
+R4P
+  R4P protocol smoke project.
 
-`R4XStart/C/`
-  C-R4XStart-Smoke fuer Header, Startup-Stub und Linkprofil.
+R4XStart/C
+  C R4XStart smoke project for the header, startup stub, and linker profile.
 
-Historische Start-Smokes und -Artefakte gehoeren nicht zum SDK. Die
-Loader-Ablehnung wird mit der neutralen, test-only eingebundenen
-`BADSTART.R4X`-Fixture geprueft.
+Historical startup fixtures are not part of the SDK. Loader rejection uses
+the neutral test-only BADSTART.R4X fixture.
