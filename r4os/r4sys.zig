@@ -7,11 +7,10 @@ pub const name = "R4SYS";
 pub const import_query = "R4SYS:Query:1";
 pub const group = abi.R4LGroup.r4sys;
 pub const abi_version = abi.r4l_abi_version;
-pub const contract = "Code/System/SDK/Contract/API/Groups.txt";
-pub const module_project = "Code/System/Libraries/R4SYS";
-pub const artifact = "C:/R4OS/LIBS/R4SYS.R4L";
-pub const c_header = "Code/System/SDK/Shared/C/include/r4os/r4sys.h";
-pub const query_contract = "Code/System/SDK/Contract/ABI/R4LQuery.txt";
+pub const contract = "Repositories/Contract/API/Groups.txt";
+pub const provider_repository = "Repositories/Kernel";
+pub const c_header = "Repositories/SDK/Shared/C/include/r4os/r4sys.h";
+pub const query_contract = "Repositories/Contract/ABI/R4LQuery.txt";
 pub const dir_entry_result_end: i32 = -5;
 pub const dir_entry_error_io: i32 = -9;
 
@@ -1433,13 +1432,13 @@ test "r4sys exposes project and ABI metadata" {
     try std.testing.expectEqualStrings("R4SYS:Query:1", import_query);
     try std.testing.expectEqual(@as(u32, 1), @intFromEnum(group));
     try std.testing.expectEqual(abi.r4l_abi_version, abi_version);
-    try std.testing.expectEqualStrings("Code/System/Libraries/R4SYS", module_project);
-    try std.testing.expectEqualStrings("Code/System/SDK/Shared/C/include/r4os/r4sys.h", c_header);
+    try std.testing.expectEqualStrings("Repositories/Kernel", provider_repository);
+    try std.testing.expectEqualStrings("Repositories/SDK/Shared/C/include/r4os/r4sys.h", c_header);
 }
 
 test "r4sys classifies system replacement targets" {
     try std.testing.expectEqual(SystemReplaceClass.boot_kernel, classifySystemPath("/boot/r4os.elf"));
-    try std.testing.expectEqual(SystemReplaceClass.system_library, classifySystemPath("C:\\R4OS\\LIBS\\R4SYS.R4L"));
+    try std.testing.expectEqual(SystemReplaceClass.system_library, classifySystemPath("C:\\R4OS\\LIBS\\R4STD.R4L"));
     try std.testing.expectEqual(SystemReplaceClass.driver, classifySystemPath("C:/R4OS/DRIVERS/RTL8139.R4D"));
     try std.testing.expectEqual(SystemReplaceClass.protocol, classifySystemPath("C:\\R4OS\\PROTOCOLS\\NETTCP.R4P"));
     try std.testing.expectEqual(SystemReplaceClass.service, classifySystemPath("C:\\R4OS\\SERVICES\\SSHD.R4X"));
@@ -1449,7 +1448,7 @@ test "r4sys classifies system replacement targets" {
     try std.testing.expectEqual(SystemReplaceClass.config, classifySystemPath("C:\\CONFIG.R4S"));
     try std.testing.expectEqual(SystemReplaceClass.sdk, classifySystemPath("C:\\R4OS\\SDK\\Contract\\ABI\\R4LQuery.txt"));
     try std.testing.expectEqual(SystemReplaceClass.temp, classifySystemPath("C:\\TEMP\\SYSREPL.TXT"));
-    try std.testing.expectEqual(SystemReplaceClass.data, classifySystemPath("D:\\R4OS\\LIBS\\R4SYS.R4L"));
+    try std.testing.expectEqual(SystemReplaceClass.data, classifySystemPath("D:\\R4OS\\LIBS\\R4STD.R4L"));
     try std.testing.expectEqual(SystemReplaceClass.unknown, classifySystemPath("C:\\R4OS\\UNBEKANNT\\X.BIN"));
 }
 
@@ -1458,8 +1457,8 @@ test "r4sys system replacement contract keeps atomic sibling boundary" {
     try std.testing.expect(systemReplaceNeedsReboot(.system_library));
     try std.testing.expect(!systemReplaceNeedsReboot(.config));
     try std.testing.expect(!systemReplaceNeedsReboot(.temp));
-    try std.testing.expect(sameParentPath("C:\\R4OS\\LIBS\\R4SYS.R4L", "C:/R4OS/LIBS/R4SYS.NEW"));
-    try std.testing.expect(!sameParentPath("C:\\R4OS\\LIBS\\R4SYS.R4L", "C:\\R4OS\\UPDATE\\STAGED\\R4SYS.NEW"));
+    try std.testing.expect(sameParentPath("C:\\R4OS\\LIBS\\R4STD.R4L", "C:/R4OS/LIBS/R4STD.NEW"));
+    try std.testing.expect(!sameParentPath("C:\\R4OS\\LIBS\\R4STD.R4L", "C:\\R4OS\\UPDATE\\STAGED\\R4STD.NEW"));
     try std.testing.expectEqualStrings("bad-path", systemReplaceResultName(system_replace_error_bad_path));
     try std.testing.expectEqualStrings("system-library", systemReplaceClassName(.system_library));
 }

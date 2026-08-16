@@ -5,11 +5,10 @@ pub const name = "R4DRAW";
 pub const import_query = "R4DRAW:Query:1";
 pub const group = abi.R4LGroup.r4draw;
 pub const abi_version = abi.r4l_abi_version;
-pub const contract = "Code/System/SDK/Contract/API/Groups.txt";
-pub const module_project = "Code/System/Libraries/R4DRAW";
-pub const artifact = "C:/R4OS/LIBS/R4DRAW.R4L";
-pub const c_header = "Code/System/SDK/Shared/C/include/r4os/r4draw.h";
-pub const query_contract = "Code/System/SDK/Contract/ABI/R4LQuery.txt";
+pub const contract = "Repositories/Contract/API/Groups.txt";
+pub const provider_repository = "Repositories/Kernel";
+pub const c_header = "Repositories/SDK/Shared/C/include/r4os/r4draw.h";
+pub const query_contract = "Repositories/Contract/ABI/R4LQuery.txt";
 
 pub const Context = struct {
     base: program.Context,
@@ -168,6 +167,6 @@ test "r4draw exposes project and present ABI metadata" {
     try std.testing.expectEqual(abi.r4l_abi_version, abi_version);
     try std.testing.expectEqual(abi.r4xstart_r4draw_version, (abi.R4XStartR4Draw{}).abi_version);
     try std.testing.expectEqual(abi.remote_frame_format_xrgb32, (abi.RemoteFrameInfo{}).format);
-    try std.testing.expectEqualStrings("Code/System/Libraries/R4DRAW", module_project);
-    try std.testing.expectEqualStrings("Code/System/SDK/Shared/C/include/r4os/r4draw.h", c_header);
+    try std.testing.expectEqualStrings("Repositories/Kernel", provider_repository);
+    try std.testing.expectEqualStrings("Repositories/SDK/Shared/C/include/r4os/r4draw.h", c_header);
 }

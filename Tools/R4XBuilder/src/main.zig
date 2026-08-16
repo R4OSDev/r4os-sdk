@@ -96,7 +96,7 @@ const ModuleKind = enum(u16) {
     r4l = 2,
     r4d = 3,
     r4p = 4,
-    kernel_provider = 5,
+    platform_api_provider_reserved = 5,
     kernel_module_reserved = 6,
 };
 
@@ -1819,7 +1819,7 @@ fn moduleKindName(kind: u16) ?[]const u8 {
         @intFromEnum(ModuleKind.r4l) => "r4l",
         @intFromEnum(ModuleKind.r4d) => "r4d",
         @intFromEnum(ModuleKind.r4p) => "r4p",
-        @intFromEnum(ModuleKind.kernel_provider) => "kernel_provider",
+        @intFromEnum(ModuleKind.platform_api_provider_reserved) => "platform_api_provider_reserved",
         @intFromEnum(ModuleKind.kernel_module_reserved) => "kernel_module_reserved",
         else => null,
     };

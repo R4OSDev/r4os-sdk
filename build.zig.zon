@@ -24,7 +24,6 @@
         "Shared",
         "Hosts",
         "BuildProfiles",
-        "PlatformBridges",
         "Smoke",
         "Templates",
         "Tests",

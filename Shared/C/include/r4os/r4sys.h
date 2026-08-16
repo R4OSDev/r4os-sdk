@@ -60,19 +60,6 @@ static inline const R4XStartImport *r4xstart_find_import(const R4XStartContext *
         const R4XStartImport *item = r4xstart_import_at(ctx, i);
         if (item != 0 && item->group_id == group_id) return item;
     }
-
-    /* Kompatibilitaet fuer noch nicht migrierte optionale Query-R4Ls. Ihre
-     * bisherige Gruppe steht in der Query selbst; der Kernel benoetigt dafuer
-     * keine feste Liste von Librarynamen mehr. */
-    for (uint32_t i = 0; i < count; i += 1) {
-        const R4XStartImport *item = r4xstart_import_at(ctx, i);
-        if (item == 0 || item->group_id != 0 || item->table == 0 || (item->table & 7u) != 0u) continue;
-        if (!r4xstart_import_name_equal(item->symbol_name, "Query")) continue;
-        const R4LQuery *query = (const R4LQuery *)(uintptr_t)item->table;
-        if (query->magic != R4L_ABI_MAGIC || query->abi_version != R4L_ABI_VERSION ||
-            query->size < R4L_QUERY_STRUCT_SIZE || query->reserved != 0) continue;
-        if (query->group == group_id) return item;
-    }
     return 0;
 }
 

@@ -557,7 +557,7 @@ test "dependency order beats foundation priority and keeps stable ties" {
     };
     const components = [_]PlanComponent{
         .{ .package_index = 0, .kind = .r4x, .name = "APP", .target = "/R4OS/SOFTWARE/APP/APP.R4X", .version = "2.0.0" },
-        .{ .package_index = 1, .kind = .r4l, .name = "R4SYS", .target = "/R4OS/LIBS/R4SYS.R4L", .version = "2.0.0" },
+        .{ .package_index = 1, .kind = .r4l, .name = "R4STD", .target = "/R4OS/LIBS/R4STD.R4L", .version = "2.0.0" },
         .{ .package_index = 2, .kind = .r4x, .name = "TOOL", .target = "/R4OS/SOFTWARE/TOOL/TOOL.R4X", .version = "2.0.0" },
     };
     const requirements = [_]PlanRequirement{

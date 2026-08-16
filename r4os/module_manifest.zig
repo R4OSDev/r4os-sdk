@@ -5,6 +5,13 @@ pub const manifest_version: u8 = 2;
 pub const max_manifest_bytes: usize = 128 * 1024;
 pub const plan_contract_version: u8 = 1;
 
+pub fn platformApiGroupId(name: []const u8) ?u32 {
+    for (abi.r4_platform_apis) |platform_api| {
+        if (std.ascii.eqlIgnoreCase(name, platform_api.name)) return @intFromEnum(platform_api.group);
+    }
+    return null;
+}
+
 pub const Kind = enum {
     r4x,
     r4d,
@@ -308,6 +315,7 @@ fn parseV2(allocator: std.mem.Allocator, path: []const u8, text: []const u8) !Ma
     const parsed_kind = try parseKind(kind orelse return error.MissingKind);
     const parsed_name = name orelse return error.MissingName;
     try validateName(parsed_name);
+    if (parsed_kind == .r4l and platformApiGroupId(parsed_name) != null) return error.ReservedPlatformApiName;
     const parsed_module_version = try parseModuleVersion(module_version orelse return error.MissingModuleVersion);
     const parsed_language = try parseLanguage(language orelse return error.MissingLanguage);
     if (sources.items.len == 0) return error.MissingSource;
@@ -389,30 +397,37 @@ fn parseV2(allocator: std.mem.Allocator, path: []const u8, text: []const u8) !Ma
         }
     }
 
-    if (parsed_kind == .r4l) {
-        const has_local_contract = contract != null or contract_baseline != null or implementation_zig != null or
-            binding_zig != null or binding_c != null or conformance_zig != null or conformance_c != null or api_reference != null;
-        if (exports.items.len != 0) {
-            try validateRuntimeR4LExports(exports.items);
-            const contract_path = contract orelse return error.MissingR4LContract;
-            const baseline_path = contract_baseline orelse return error.MissingR4LContractBaseline;
-            const implementation_path = implementation_zig orelse return error.MissingR4LImplementationZig;
-            const zig_path = binding_zig orelse return error.MissingR4LZigBinding;
-            const c_path = binding_c orelse return error.MissingR4LCBinding;
-            const fixture_zig_path = conformance_zig orelse return error.MissingR4LZigConformance;
-            const fixture_c_path = conformance_c orelse return error.MissingR4LCConformance;
-            const api_path = api_reference orelse return error.MissingR4LApiReference;
-            try validateLocalContractPath(contract_path, ".json");
-            try validateLocalContractPath(baseline_path, ".json");
-            try validateLocalContractPath(implementation_path, ".zig");
-            try validateLocalContractPath(zig_path, ".zig");
-            try validateLocalContractPath(c_path, ".h");
-            try validateLocalContractPath(fixture_zig_path, ".zig");
-            try validateLocalContractPath(fixture_c_path, ".c");
-            try validateLocalContractPath(api_path, ".md");
-        } else if (has_local_contract) {
-            return error.R4LContractWithoutExports;
+    var is_generated_fixture = false;
+    for (metadata.items) |entry| {
+        if (std.mem.startsWith(u8, entry, "fixture.artifact-owner=")) {
+            is_generated_fixture = true;
+            break;
         }
+    }
+
+    if (parsed_kind == .r4l and !is_generated_fixture) {
+        try validateRuntimeR4LExports(exports.items);
+        const contract_path = contract orelse return error.MissingR4LContract;
+        const baseline_path = contract_baseline orelse return error.MissingR4LContractBaseline;
+        const implementation_path = implementation_zig orelse return error.MissingR4LImplementationZig;
+        const zig_path = binding_zig orelse return error.MissingR4LZigBinding;
+        const c_path = binding_c orelse return error.MissingR4LCBinding;
+        const fixture_zig_path = conformance_zig orelse return error.MissingR4LZigConformance;
+        const fixture_c_path = conformance_c orelse return error.MissingR4LCConformance;
+        const api_path = api_reference orelse return error.MissingR4LApiReference;
+        try validateLocalContractPath(contract_path, ".json");
+        try validateLocalContractPath(baseline_path, ".json");
+        try validateLocalContractPath(implementation_path, ".zig");
+        try validateLocalContractPath(zig_path, ".zig");
+        try validateLocalContractPath(c_path, ".h");
+        try validateLocalContractPath(fixture_zig_path, ".zig");
+        try validateLocalContractPath(fixture_c_path, ".c");
+        try validateLocalContractPath(api_path, ".md");
+    } else if (parsed_kind == .r4l) {
+        // Loader-Negativfixtures werden absichtlich als rohe oder formal
+        // fehlerhafte R4L-Container erzeugt. Sie sind keine Runtime-Library-
+        // Projekte und besitzen ihren Buildvertrag im angegebenen Fixture-
+        // Generator statt in diesem beschreibenden Installationsmanifest.
     } else if (exports.items.len != 0 or contract != null or contract_baseline != null or implementation_zig != null or
         binding_zig != null or binding_c != null or conformance_zig != null or conformance_c != null or api_reference != null)
     {
@@ -1393,6 +1408,28 @@ test "runtime R4L owns symbolic exports contract and language bindings" {
 
     const bad_query = std.mem.replaceOwned(u8, allocator, base, "EXPORT=Query:acme_query:1", "EXPORT=Query:acme_query:2") catch unreachable;
     try std.testing.expectError(error.InvalidR4LQueryExport, parse(allocator, "Vendor/Library/module.R4MF", bad_query));
+
+    const raw_fixture =
+        \\R4OS_MODULE_MANIFEST=2
+        \\KIND=R4L
+        \\NAME=BADTAB
+        \\VERSION=0.1.0
+        \\LANGUAGE=Zig
+        \\SOURCE=fixture.zig
+        \\TARGET=/R4OS/LIBS/BADTAB.R4L
+        \\IMAGE_SCOPE=test
+        \\META=fixture.artifact-owner=Fixtures/build.zig
+    ;
+    const parsed_fixture = try parse(allocator, "Fixtures/Manifests/R4LNegative/BADTAB.R4MF", raw_fixture);
+    try std.testing.expectEqual(Kind.r4l, parsed_fixture.kind);
+    try std.testing.expectEqual(@as(usize, 0), parsed_fixture.exports.len);
+
+    const reserved_name = std.mem.replaceOwned(u8, allocator, base, "NAME=VENDORLIB", "NAME=R4SYS") catch unreachable;
+    try std.testing.expectError(error.ReservedPlatformApiName, parse(allocator, "Vendor/Library/module.R4MF", reserved_name));
+
+    try std.testing.expectEqual(@as(?u32, 1), platformApiGroupId("r4sys"));
+    try std.testing.expectEqual(@as(?u32, 6), platformApiGroupId("R4DEV"));
+    try std.testing.expectEqual(@as(?u32, null), platformApiGroupId("R4STD"));
 
     const non_library_kind = std.mem.replaceOwned(u8, allocator, base, "KIND=R4L", "KIND=R4D") catch unreachable;
     const non_library = std.mem.replaceOwned(u8, allocator, non_library_kind, "/R4OS/LIBS/VENDORLIB.R4L", "/R4OS/DRIVERS/VENDORLIB.R4D") catch unreachable;

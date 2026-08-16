@@ -8,9 +8,9 @@
 extern "C" {
 #endif
 
-/* 0.57.3: R4AUDIO liefert seit 0.56.41 eine Kernel-Gruppentabelle
- * (group_interface) statt der R4L-Query - Init nach dem r4desk-Muster.
- * Die Tabellenfelder stehen in <r4os/r4xstart.h> (R4XStartR4Audio). */
+/* R4AUDIO is a built-in platform API provided by the kernel. It is resolved
+ * as a group_interface import and has no R4L file. The table layout is
+ * declared in <r4os/r4xstart.h> (R4XStartR4Audio). */
 
 typedef struct R4Audio {
     const R4XStartR4Audio *table;

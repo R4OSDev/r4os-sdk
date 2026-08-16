@@ -209,23 +209,6 @@ pub const Context = struct {
             const item = self.importAt(i) orelse return null;
             if (item.group_id == @intFromEnum(group)) return item;
         }
-
-        // Uebergang fuer die noch nicht migrierten tabellenlosen R4Ls: Der
-        // Kernel vergibt fuer optionale Libraries keine feste Gruppen-ID
-        // mehr. Ihre alte Query-Tabelle traegt die bisherige ID noch selbst,
-        // sodass bestehende Fassaden ohne Namensliste weiter funktionieren.
-        i = 0;
-        while (i < self.importCount()) : (i += 1) {
-            const item = self.importAt(i) orelse return null;
-            if (item.group_id != 0 or item.table == 0 or (item.table & 7) != 0) continue;
-            if (!importNameEquals(item.symbol_name, "Query")) continue;
-            const query: *const abi.R4LQuery = @ptrFromInt(item.table);
-            if (query.magic != abi.r4l_abi_magic or
-                query.abi_version != abi.r4l_abi_version or
-                query.size < abi.r4l_query_struct_size or
-                query.reserved != 0) continue;
-            if (query.group == @intFromEnum(group)) return item;
-        }
         return null;
     }
 

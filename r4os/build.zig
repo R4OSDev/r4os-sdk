@@ -739,32 +739,6 @@ pub const Sdk = struct {
             .module_version = opts.module_version,
         });
     }
-
-    /// Verpackt eine aus dem Plattform-Contract erzeugte Query-Bruecke. Das
-    /// Manifest bleibt Identitaets-, Versions-, Import- und Metadatenwahrheit;
-    /// der Aufrufer liefert nur die mechanisch erzeugten Code-/Datenbytes und
-    /// den fuer alle Kernelgruppen gemeinsamen Export-/Relocationvertrag.
-    pub fn addPlatformBridgeR4L(
-        self: Sdk,
-        manifest_path: std.Build.LazyPath,
-        code: std.Build.LazyPath,
-        data: std.Build.LazyPath,
-    ) BuildResult {
-        const loaded = loadCurrentR4MF(self.b, manifest_path, .{});
-        if (loaded.manifest.kind != .r4l or loaded.manifest.exports.len != 0) {
-            @panic(self.b.fmt("Platform bridge requires a legacy raw R4L manifest: {s}", .{loaded.manifest.path}));
-        }
-        return self.addR4LRaw(.{
-            .name = loaded.manifest.name,
-            .module_version = loaded.manifest.module_version.text,
-            .code = code,
-            .data = data,
-            .imports = loaded.manifest.imports,
-            .exports = &.{"Query:.data:0:1"},
-            .relocations = &.{"import_slot64:.data:16:0:0"},
-            .metadata = loaded.manifest.metadata,
-        });
-    }
 };
 
 const R4MFCatalogEntry = struct {
@@ -791,10 +765,6 @@ fn collectR4MFCatalogRoot(b: *std.Build, entries: *std.ArrayList(R4MFCatalogEntr
         ) catch |err| @panic(b.fmt("R4MF aggregate manifest unavailable: {s} ({s})", .{ path, @errorName(err) }));
         const manifest = module_manifest.parse(b.allocator, path, bytes) catch |err|
             @panic(b.fmt("R4MF aggregate manifest invalid: {s} ({s})", .{ path, @errorName(err) }));
-        // Nur bereits migrierte Runtime-R4Ls sind normale Compilerprojekte.
-        // EXPORT= ist der name-unabhaengige Cutovermarker; alte comptime-R4Ls
-        // besitzen ihn noch nicht und werden weiterhin explizit gebaut.
-        if (manifest.kind == .r4l and manifest.exports.len == 0) continue;
         entries.append(b.allocator, .{ .name = b.dupe(manifest.name), .path = b.dupe(path), .kind = manifest.kind }) catch @panic("OOM");
     }
 }

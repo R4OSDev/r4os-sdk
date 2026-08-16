@@ -8,11 +8,10 @@ pub const name = "R4DEV";
 pub const import_query = "R4DEV:Query:1";
 pub const group = abi.R4LGroup.r4dev;
 pub const abi_version = abi.r4l_abi_version;
-pub const contract = "Code/System/SDK/Contract/API/Groups.txt";
-pub const module_project = "Code/System/Libraries/R4DEV";
-pub const artifact = "C:/R4OS/LIBS/R4DEV.R4L";
-pub const c_header = "Code/System/SDK/Shared/C/include/r4os/r4dev.h";
-pub const query_contract = "Code/System/SDK/Contract/ABI/R4LQuery.txt";
+pub const contract = "Repositories/Contract/API/Groups.txt";
+pub const provider_repository = "Repositories/Kernel";
+pub const c_header = "Repositories/SDK/Shared/C/include/r4os/r4dev.h";
+pub const query_contract = "Repositories/Contract/ABI/R4LQuery.txt";
 pub const DriverApi = abi.DriverApi;
 pub const ProtocolApi = abi.ProtocolApi;
 pub const DriverContext = driver.Context;
@@ -243,6 +242,6 @@ test "r4dev exposes project and ABI metadata" {
     try std.testing.expectEqualStrings("R4DEV:Query:1", import_query);
     try std.testing.expectEqual(@as(u32, 6), @intFromEnum(group));
     try std.testing.expectEqual(abi.r4l_abi_version, abi_version);
-    try std.testing.expectEqualStrings("Code/System/Libraries/R4DEV", module_project);
-    try std.testing.expectEqualStrings("Code/System/SDK/Shared/C/include/r4os/r4dev.h", c_header);
+    try std.testing.expectEqualStrings("Repositories/Kernel", provider_repository);
+    try std.testing.expectEqualStrings("Repositories/SDK/Shared/C/include/r4os/r4dev.h", c_header);
 }

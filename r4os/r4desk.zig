@@ -5,11 +5,10 @@ pub const name = "R4DESK";
 pub const import_query = "R4DESK:Query:1";
 pub const group = abi.R4LGroup.r4desk;
 pub const abi_version = abi.r4l_abi_version;
-pub const contract = "Code/System/SDK/Contract/API/Groups.txt";
-pub const module_project = "Code/System/Libraries/R4DESK";
-pub const artifact = "C:/R4OS/LIBS/R4DESK.R4L";
-pub const c_header = "Code/System/SDK/Shared/C/include/r4os/r4desk.h";
-pub const query_contract = "Code/System/SDK/Contract/ABI/R4LQuery.txt";
+pub const contract = "Repositories/Contract/API/Groups.txt";
+pub const provider_repository = "Repositories/Kernel";
+pub const c_header = "Repositories/SDK/Shared/C/include/r4os/r4desk.h";
+pub const query_contract = "Repositories/Contract/ABI/R4LQuery.txt";
 
 pub const Context = struct {
     base: program.Context,
@@ -253,6 +252,6 @@ test "r4desk exposes project and remote ABI metadata" {
     try std.testing.expectEqual(abi.r4xstart_r4desk_version, (abi.R4XStartR4Desk{}).abi_version);
     try std.testing.expectEqual(abi.remote_frame_version, (abi.RemoteFrameInfo{}).version);
     try std.testing.expectEqual(abi.remote_input_version, (abi.RemoteInputEvent{}).version);
-    try std.testing.expectEqualStrings("Code/System/Libraries/R4DESK", module_project);
-    try std.testing.expectEqualStrings("Code/System/SDK/Shared/C/include/r4os/r4desk.h", c_header);
+    try std.testing.expectEqualStrings("Repositories/Kernel", provider_repository);
+    try std.testing.expectEqualStrings("Repositories/SDK/Shared/C/include/r4os/r4desk.h", c_header);
 }

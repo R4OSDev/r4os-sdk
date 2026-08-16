@@ -530,16 +530,18 @@ fn collectImageEntries(
 }
 
 /// IMPORT benennt einen Provider ueber das erste Feld vor dem Doppelpunkt.
-/// Ist diese R4L im Katalog vorhanden, muss sie im gewaehlen Image ebenfalls
-/// enthalten sein. Das gilt fuer Plattform-Querys und beliebige benannte
-/// Runtime-R4L-Exporte gleichermassen. Unbekannte Provider bleiben
-/// absichtlichen Negativfixtures vorbehalten und werden hier nicht erfunden.
+/// Die sechs Platform APIs sind im Kernel eingebaut und besitzen deshalb
+/// keinen Katalog- oder Imageeintrag. Ist ein anderer Provider als Runtime-
+/// R4L im Katalog vorhanden, muss er im gewaehlten Image ebenfalls enthalten
+/// sein. Unbekannte Provider bleiben absichtlichen Negativfixtures
+/// vorbehalten und werden hier nicht erfunden.
 fn validateImageDependencyClosure(entries: []const manifest_contract.Manifest, mode: ImageMode, include_targets: []const []const u8) !void {
     for (entries) |entry| {
         if (!imageEntryIncluded(entry, mode, include_targets)) continue;
         for (entry.imports) |import_spec| {
             const separator = std.mem.indexOfScalar(u8, import_spec, ':') orelse continue;
             const provider_name = import_spec[0..separator];
+            if (manifest_contract.platformApiGroupId(provider_name) != null) continue;
             var provider_known = false;
             var provider_selected = false;
             for (entries) |candidate| {

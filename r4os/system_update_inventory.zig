@@ -269,7 +269,7 @@ test "inventory update preserves profile and takes exact artifact versions" {
         .name = "R4SYS",
         .kind = .r4l,
         .version = "0.1.1",
-        .target = "/R4OS/LIBS/R4SYS.R4L",
+        .target = "/R4OS/LIBS/R4STD.R4L",
     }));
     var rendered: [4096]u8 = undefined;
     const text = inventory.render(rendered[0..]).?;

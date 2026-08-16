@@ -238,7 +238,7 @@ test "canonical inventory targets and derived classes" {
     try std.testing.expectEqual(InstallMode.restart, installModeFor(.r4x, "/R4OS/SERVICES/SSHD.R4X"));
     var class: DerivedClass = .{};
     includeComponent(&class, .r4x, target);
-    includeComponent(&class, .r4l, "/R4OS/LIBS/R4SYS.R4L");
+    includeComponent(&class, .r4l, "/R4OS/LIBS/R4STD.R4L");
     try std.testing.expectEqual(InstallMode.restart, class.activation);
     try std.testing.expectEqual(Priority.foundation, class.priority);
 }

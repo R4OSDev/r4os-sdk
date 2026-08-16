@@ -87,13 +87,12 @@ Optional erzeugt derselbe Aufruf mit `--inventory-output` aus genau dieser
 Auswahl das installierte `MODULES.JSON`; zusammen mit Kernel-Version und
 -Artefakt enthaelt es damit keine handgepflegte zweite Komponentenliste.
 
-Plattformbruecken
------------------
+Plattform-APIs
+--------------
 
-Die sechs kernelimplementierten Gruppen R4SYS, R4DESK, R4DRAW, R4NET,
-R4AUDIO und R4DEV benoetigen kleine R4L-Query-Container. Deren Manifeste und
-die generische, aus den Contract-Gruppendaten gespeiste Verpackungslogik
-liegen unter `PlatformBridges/`. Sie implementieren keine API-Funktion:
-Contract bleibt Tabellenwahrheit, Kernel bleibt Provider und das SDK erzeugt
-nur den Query-/Import-Glue fuer den allgemeinen R4M0-Lader. Optionale
-Runtime-Libraries bleiben davon vollstaendig getrennt.
+R4SYS, R4DESK, R4DRAW, R4NET, R4AUDIO und R4DEV sind fest eingebaute
+Plattform-APIs des Kernels. Der Contract definiert Namen, Gruppen-IDs und
+Tabellenlayouts; SDK-Fassaden konsumieren die vom Kernel aufgeloesten
+Gruppentabellen. Fuer diese sechs APIs gibt es weder R4L-Projekte noch
+R4L-Dateien im Image. Unabhaengige Runtime-R4Ls wie R4STD, R4IMG und R4FONT
+bleiben davon getrennte Module mit eigenem Contract und eigener Query-Tabelle.
