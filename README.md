@@ -5,6 +5,11 @@ module build support, templates, build profiles, and generic Runtime-R4L
 helpers. The platform API and ABI remain canonical in the separate Contract
 repository.
 
+Subsystem R4X hosts can compose the allocation-free `subsystem_host` video
+and input layer with `subsystem_runtime` for bounded guest slices, monotonic
+guest time, lifecycle control, paced frames, and buffered S16LE audio through
+the regular app audio facade.
+
 ## Dependency mapping
 
 `Settings.R4S` maps the local Contract and workspace paths. Relative and

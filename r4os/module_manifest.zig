@@ -79,6 +79,38 @@ pub const Optimization = enum {
     }
 };
 
+/// Orthogonale Aufgabe eines Moduls. Die Rolle aendert weder R4M0-Kind noch
+/// Loaderpfad; ein Subsystem bleibt ein gewoehnliches GUI-R4X.
+pub const ModuleRole = enum {
+    subsystem,
+
+    pub fn text(self: ModuleRole) []const u8 {
+        return @tagName(self);
+    }
+};
+
+/// Zuordnung einer typischen Dateiendung zu einer deklarierten Gastformat-ID.
+/// Die Endung ist nur ein Vorauswahlhinweis und keine alleinige Erkennung.
+pub const GuestExtensionEntry = struct {
+    format_id: []const u8,
+    extension: []const u8,
+};
+
+/// Optionales, spaeter erweiterbares Erkennungsmerkmal eines Gastformats.
+pub const GuestFeatureEntry = struct {
+    format_id: []const u8,
+    feature: []const u8,
+};
+
+pub const subsystem_id_max_bytes: usize = 63;
+pub const subsystem_display_name_max_bytes: usize = 96;
+pub const guest_format_id_max_bytes: usize = 63;
+pub const guest_feature_max_bytes: usize = 63;
+pub const guest_extension_max_bytes: usize = 16;
+pub const max_guest_formats: usize = 16;
+pub const max_guest_extensions: usize = 32;
+pub const max_guest_features: usize = 32;
+
 /// Version des MODULS, nicht des Manifestformats. Beide stehen in derselben
 /// Datei und werden leicht verwechselt: `Manifest.version` ist die Formatzahl
 /// (aktuell 2), `Manifest.module_version` die Version der Software selbst.
@@ -130,6 +162,12 @@ pub const Manifest = struct {
     sources: []const []const u8 = &.{},
     entry_mode: ?EntryMode = null,
     app_class: ?AppClass = null,
+    module_role: ?ModuleRole = null,
+    subsystem_id: ?[]const u8 = null,
+    subsystem_display_name: ?[]const u8 = null,
+    guest_formats: []const []const u8 = &.{},
+    guest_extensions: []const GuestExtensionEntry = &.{},
+    guest_features: []const GuestFeatureEntry = &.{},
     target: []const u8,
     image_scope: ?ImageScope = null,
     optimization: ?Optimization = null,
@@ -217,6 +255,12 @@ fn parseV2(allocator: std.mem.Allocator, path: []const u8, text: []const u8) !Ma
     var language: ?[]const u8 = null;
     var entry_mode: ?[]const u8 = null;
     var app_class: ?[]const u8 = null;
+    var module_role: ?[]const u8 = null;
+    var subsystem_id: ?[]const u8 = null;
+    var subsystem_display_name: ?[]const u8 = null;
+    var guest_formats: std.ArrayList([]const u8) = .empty;
+    var guest_extensions: std.ArrayList(GuestExtensionEntry) = .empty;
+    var guest_features: std.ArrayList(GuestFeatureEntry) = .empty;
     var target: ?[]const u8 = null;
     var image_scope: ?[]const u8 = null;
     var optimization: ?[]const u8 = null;
@@ -262,6 +306,18 @@ fn parseV2(allocator: std.mem.Allocator, path: []const u8, text: []const u8) !Ma
             try setSingle(&entry_mode, field.value);
         } else if (std.mem.eql(u8, field.key, "APP_CLASS")) {
             try setSingle(&app_class, field.value);
+        } else if (std.mem.eql(u8, field.key, "MODULE_ROLE")) {
+            try setSingle(&module_role, field.value);
+        } else if (std.mem.eql(u8, field.key, "SUBSYSTEM_ID")) {
+            try setSingle(&subsystem_id, field.value);
+        } else if (std.mem.eql(u8, field.key, "SUBSYSTEM_DISPLAY_NAME")) {
+            try setSingle(&subsystem_display_name, field.value);
+        } else if (std.mem.eql(u8, field.key, "GUEST_FORMAT")) {
+            try guest_formats.append(allocator, field.value);
+        } else if (std.mem.eql(u8, field.key, "GUEST_EXTENSION")) {
+            try guest_extensions.append(allocator, try parseGuestExtensionEntry(field.value));
+        } else if (std.mem.eql(u8, field.key, "GUEST_FEATURE")) {
+            try guest_features.append(allocator, try parseGuestFeatureEntry(field.value));
         } else if (std.mem.eql(u8, field.key, "TARGET")) {
             try setSingle(&target, field.value);
         } else if (std.mem.eql(u8, field.key, "IMAGE_SCOPE")) {
@@ -367,6 +423,8 @@ fn parseV2(allocator: std.mem.Allocator, path: []const u8, text: []const u8) !Ma
     var parsed_entry_mode: ?EntryMode = null;
     var parsed_class: ?AppClass = null;
     var parsed_optimization: ?Optimization = null;
+    var parsed_module_role: ?ModuleRole = null;
+    var parsed_subsystem_id: ?[]const u8 = null;
 
     // IMAGE_SCOPE gilt seit 0.61.6 fuer ALLE vier Modularten und ist ueberall
     // Pflicht. Vorher war es fuer Nicht-R4X sogar verboten, und R4D/R4L
@@ -395,6 +453,26 @@ fn parseV2(allocator: std.mem.Allocator, path: []const u8, text: []const u8) !Ma
         for (metadata.items) |entry| {
             if (std.mem.startsWith(u8, entry, "image.shipped=")) return error.ImageShippedSupersededByScope;
         }
+    }
+
+    if (module_role) |role_text| {
+        if (parsed_kind != .r4x) return error.ModuleRoleForbiddenForKind;
+        parsed_module_role = try parseModuleRole(role_text);
+        if (parsed_module_role.? == .subsystem) {
+            if (parsed_class.? != .gui) return error.SubsystemRequiresGuiApp;
+            parsed_subsystem_id = try normalizeContractId(
+                allocator,
+                subsystem_id orelse return error.MissingSubsystemId,
+                subsystem_id_max_bytes,
+                error.InvalidSubsystemId,
+            );
+            try validateSubsystemDisplayName(subsystem_display_name orelse return error.MissingSubsystemDisplayName);
+            if (guest_formats.items.len == 0) return error.MissingGuestFormat;
+            try normalizeGuestContract(allocator, &guest_formats, &guest_extensions, &guest_features);
+            try validateSubsystemTarget(parsed_target, parsed_subsystem_id.?, parsed_name);
+        }
+    } else if (subsystem_id != null or subsystem_display_name != null or guest_formats.items.len != 0 or guest_extensions.items.len != 0 or guest_features.items.len != 0) {
+        return error.SubsystemFieldsWithoutRole;
     }
 
     var is_generated_fixture = false;
@@ -444,6 +522,12 @@ fn parseV2(allocator: std.mem.Allocator, path: []const u8, text: []const u8) !Ma
         .sources = try sources.toOwnedSlice(allocator),
         .entry_mode = parsed_entry_mode,
         .app_class = parsed_class,
+        .module_role = parsed_module_role,
+        .subsystem_id = parsed_subsystem_id,
+        .subsystem_display_name = subsystem_display_name,
+        .guest_formats = try guest_formats.toOwnedSlice(allocator),
+        .guest_extensions = try guest_extensions.toOwnedSlice(allocator),
+        .guest_features = try guest_features.toOwnedSlice(allocator),
         .target = parsed_target,
         .image_scope = parsed_scope,
         .optimization = parsed_optimization,
@@ -622,6 +706,171 @@ fn parseOptimization(value: []const u8) !Optimization {
     return error.InvalidOptimization;
 }
 
+fn parseModuleRole(value: []const u8) !ModuleRole {
+    if (std.ascii.eqlIgnoreCase(value, "subsystem")) return .subsystem;
+    return error.InvalidModuleRole;
+}
+
+fn parseGuestExtensionEntry(value: []const u8) !GuestExtensionEntry {
+    const colon = std.mem.indexOfScalar(u8, value, ':') orelse return error.InvalidGuestExtension;
+    if (colon == 0 or colon + 1 >= value.len or std.mem.indexOfScalar(u8, value[colon + 1 ..], ':') != null) {
+        return error.InvalidGuestExtension;
+    }
+    return .{ .format_id = value[0..colon], .extension = value[colon + 1 ..] };
+}
+
+fn parseGuestFeatureEntry(value: []const u8) !GuestFeatureEntry {
+    const colon = std.mem.indexOfScalar(u8, value, ':') orelse return error.InvalidGuestFeature;
+    if (colon == 0 or colon + 1 >= value.len or std.mem.indexOfScalar(u8, value[colon + 1 ..], ':') != null) {
+        return error.InvalidGuestFeature;
+    }
+    return .{ .format_id = value[0..colon], .feature = value[colon + 1 ..] };
+}
+
+fn normalizeContractId(
+    allocator: std.mem.Allocator,
+    value: []const u8,
+    max_bytes: usize,
+    invalid_error: anyerror,
+) ![]const u8 {
+    if (value.len == 0 or value.len > max_bytes or !std.ascii.isAlphabetic(value[0]) or !std.ascii.isAlphanumeric(value[value.len - 1])) {
+        return invalid_error;
+    }
+    if (value.len > 2) for (value[1 .. value.len - 1]) |byte| {
+        if (!std.ascii.isAlphanumeric(byte) and byte != '.' and byte != '_' and byte != '-') return invalid_error;
+    };
+    const normalized = try allocator.dupe(u8, value);
+    for (normalized) |*byte| byte.* = std.ascii.toLower(byte.*);
+    return normalized;
+}
+
+fn normalizeGuestExtension(allocator: std.mem.Allocator, value: []const u8) ![]const u8 {
+    if (value.len < 2 or value.len > guest_extension_max_bytes or value[0] != '.' or !std.ascii.isAlphanumeric(value[1]) or !std.ascii.isAlphanumeric(value[value.len - 1])) {
+        return error.InvalidGuestExtension;
+    }
+    if (value.len > 3) for (value[2 .. value.len - 1]) |byte| {
+        if (!std.ascii.isAlphanumeric(byte) and byte != '.' and byte != '_' and byte != '-') return error.InvalidGuestExtension;
+    };
+    const normalized = try allocator.dupe(u8, value);
+    for (normalized) |*byte| byte.* = std.ascii.toLower(byte.*);
+    return normalized;
+}
+
+fn validKnownGuestFeature(value: []const u8) bool {
+    const magic_prefix = "probe.magic-v1.";
+    if (std.mem.startsWith(u8, value, magic_prefix)) {
+        const descriptor = value[magic_prefix.len..];
+        const separator = std.mem.indexOfScalar(u8, descriptor, '.') orelse return false;
+        const offset = parseProbeHexUnsigned(descriptor[0..separator]) orelse return false;
+        const bytes = descriptor[separator + 1 ..];
+        if (bytes.len < 2 or bytes.len > 32 or bytes.len % 2 != 0 or !validProbeHex(bytes)) return false;
+        const byte_count = bytes.len / 2;
+        return offset <= 128 * 1024 and byte_count <= 128 * 1024 - @as(usize, @intCast(offset));
+    }
+    const token_prefix = "probe.text-token-v1.";
+    if (std.mem.startsWith(u8, value, token_prefix)) {
+        const token = value[token_prefix.len..];
+        if (token.len < 2 or token.len > 42 or token.len % 2 != 0 or !validProbeHex(token)) return false;
+        var index: usize = 0;
+        while (index < token.len) : (index += 2) {
+            const byte = parseProbeHexByte(token[index .. index + 2]) orelse return false;
+            if (byte < 0x21 or byte > 0x7e) return false;
+        }
+    }
+    return true;
+}
+
+fn validProbeHex(value: []const u8) bool {
+    for (value) |byte| if (probeHexNibble(byte) == null) return false;
+    return true;
+}
+
+fn parseProbeHexUnsigned(value: []const u8) ?u64 {
+    if (value.len == 0 or value.len > 8) return null;
+    var result: u64 = 0;
+    for (value) |byte| {
+        result = std.math.mul(u64, result, 16) catch return null;
+        result = std.math.add(u64, result, probeHexNibble(byte) orelse return null) catch return null;
+    }
+    return result;
+}
+
+fn parseProbeHexByte(value: []const u8) ?u8 {
+    if (value.len != 2) return null;
+    return (probeHexNibble(value[0]) orelse return null) * 16 + (probeHexNibble(value[1]) orelse return null);
+}
+
+fn probeHexNibble(byte: u8) ?u8 {
+    return switch (byte) {
+        '0'...'9' => byte - '0',
+        'a'...'f' => byte - 'a' + 10,
+        'A'...'F' => byte - 'A' + 10,
+        else => null,
+    };
+}
+
+fn validateSubsystemDisplayName(value: []const u8) !void {
+    if (value.len == 0 or value.len > subsystem_display_name_max_bytes or
+        !std.unicode.utf8ValidateSlice(value) or
+        !std.mem.eql(u8, value, std.mem.trim(u8, value, " \t")))
+    {
+        return error.InvalidSubsystemDisplayName;
+    }
+    for (value) |byte| {
+        if (byte < 0x20 or byte == 0x7f or byte == '"' or byte == '\\') return error.InvalidSubsystemDisplayName;
+    }
+}
+
+fn normalizeGuestContract(
+    allocator: std.mem.Allocator,
+    formats: *std.ArrayList([]const u8),
+    extensions: *std.ArrayList(GuestExtensionEntry),
+    features: *std.ArrayList(GuestFeatureEntry),
+) !void {
+    if (formats.items.len > max_guest_formats) return error.TooManyGuestFormats;
+    if (extensions.items.len > max_guest_extensions) return error.TooManyGuestExtensions;
+    if (features.items.len > max_guest_features) return error.TooManyGuestFeatures;
+
+    for (formats.items, 0..) |*format_id, index| {
+        format_id.* = try normalizeContractId(allocator, format_id.*, guest_format_id_max_bytes, error.InvalidGuestFormat);
+        for (formats.items[0..index]) |prior| {
+            if (std.mem.eql(u8, format_id.*, prior)) return error.DuplicateGuestFormat;
+        }
+    }
+    for (extensions.items, 0..) |*entry, index| {
+        entry.format_id = try normalizeContractId(allocator, entry.format_id, guest_format_id_max_bytes, error.InvalidGuestFormat);
+        entry.extension = try normalizeGuestExtension(allocator, entry.extension);
+        if (!containsString(formats.items, entry.format_id)) return error.UndeclaredGuestFormat;
+        for (extensions.items[0..index]) |prior| {
+            if (std.mem.eql(u8, entry.format_id, prior.format_id) and std.mem.eql(u8, entry.extension, prior.extension)) {
+                return error.DuplicateGuestExtension;
+            }
+        }
+    }
+    for (features.items, 0..) |*entry, index| {
+        entry.format_id = try normalizeContractId(allocator, entry.format_id, guest_format_id_max_bytes, error.InvalidGuestFormat);
+        entry.feature = try normalizeContractId(allocator, entry.feature, guest_feature_max_bytes, error.InvalidGuestFeature);
+        if (!validKnownGuestFeature(entry.feature)) return error.InvalidGuestFeature;
+        if (!containsString(formats.items, entry.format_id)) return error.UndeclaredGuestFormat;
+        for (features.items[0..index]) |prior| {
+            if (std.mem.eql(u8, entry.format_id, prior.format_id) and std.mem.eql(u8, entry.feature, prior.feature)) {
+                return error.DuplicateGuestFeature;
+            }
+        }
+    }
+}
+
+fn containsString(values: []const []const u8, wanted: []const u8) bool {
+    for (values) |value| if (std.mem.eql(u8, value, wanted)) return true;
+    return false;
+}
+
+fn validateSubsystemTarget(target: []const u8, subsystem_id: []const u8, name: []const u8) !void {
+    var expected_buffer: [128]u8 = undefined;
+    const expected = std.fmt.bufPrint(expected_buffer[0..], "/R4OS/SUBSYSTEMS/{s}/{s}.R4X", .{ subsystem_id, name }) catch return error.InvalidSubsystemTarget;
+    if (!std.ascii.eqlIgnoreCase(target, expected)) return error.InvalidSubsystemTarget;
+}
+
 fn validateName(name: []const u8) !void {
     if (name.len == 0 or name.len > 31) return error.InvalidName;
     for (name) |byte| {
@@ -755,12 +1004,19 @@ fn validateMetadata(values: []const []const u8) !void {
         const eq = std.mem.indexOfScalar(u8, value, '=') orelse return error.InvalidMetadata;
         if (eq == 0 or eq + 1 >= value.len) return error.InvalidMetadata;
         const key = value[0..eq];
-        if (std.ascii.eqlIgnoreCase(key, "app.class") or std.mem.startsWith(u8, key, "r4x.")) return error.DerivedMetadataForbidden;
+        if (std.ascii.eqlIgnoreCase(key, "app.class") or
+            std.ascii.eqlIgnoreCase(key, "module.role") or
+            asciiStartsWithIgnoreCase(key, "r4x.") or
+            asciiStartsWithIgnoreCase(key, "subsystem.")) return error.DerivedMetadataForbidden;
         for (values[0..index]) |prior| {
             const prior_eq = std.mem.indexOfScalar(u8, prior, '=') orelse unreachable;
             if (std.ascii.eqlIgnoreCase(key, prior[0..prior_eq]) and !isMultiValueMetadataKey(key)) return error.DuplicateMetadataKey;
         }
     }
+}
+
+fn asciiStartsWithIgnoreCase(value: []const u8, prefix: []const u8) bool {
+    return value.len >= prefix.len and std.ascii.eqlIgnoreCase(value[0..prefix.len], prefix);
 }
 
 fn isMultiValueMetadataKey(key: []const u8) bool {
@@ -824,6 +1080,30 @@ pub fn moduleVersionMeta(allocator: std.mem.Allocator, manifest: Manifest) ![]co
     return std.fmt.allocPrint(allocator, "module.version={s}", .{manifest.module_version.text});
 }
 
+/// Vom Manifest abgeleitete R4X-Rollenmetadaten plus explizite META-Zeilen.
+/// Diese Funktion wird sowohl vom semantischen Plan als auch vom wirklichen
+/// Packagerpfad benutzt, damit der Container keine zweite Rollenwahrheit hat.
+pub fn r4xManifestMetadata(allocator: std.mem.Allocator, manifest: Manifest) ![]const []const u8 {
+    if (manifest.version != manifest_version or manifest.kind != .r4x) return error.CurrentManifestRequired;
+    if (manifest.module_role == null) return manifest.metadata;
+
+    var metadata: std.ArrayList([]const u8) = .empty;
+    try metadata.append(allocator, try std.fmt.allocPrint(allocator, "module.role={s}", .{manifest.module_role.?.text()}));
+    try metadata.append(allocator, try std.fmt.allocPrint(allocator, "subsystem.id={s}", .{manifest.subsystem_id.?}));
+    try metadata.append(allocator, try std.fmt.allocPrint(allocator, "subsystem.display_name={s}", .{manifest.subsystem_display_name.?}));
+    for (manifest.guest_formats) |format_id| {
+        try metadata.append(allocator, try std.fmt.allocPrint(allocator, "subsystem.format={s}", .{format_id}));
+    }
+    for (manifest.guest_extensions) |entry| {
+        try metadata.append(allocator, try std.fmt.allocPrint(allocator, "subsystem.extension={s}:{s}", .{ entry.format_id, entry.extension }));
+    }
+    for (manifest.guest_features) |entry| {
+        try metadata.append(allocator, try std.fmt.allocPrint(allocator, "subsystem.feature={s}:{s}", .{ entry.format_id, entry.feature }));
+    }
+    try metadata.appendSlice(allocator, manifest.metadata);
+    return metadata.toOwnedSlice(allocator);
+}
+
 pub fn derivePlan(allocator: std.mem.Allocator, manifest: Manifest) !Plan {
     if (manifest.version != manifest_version or manifest.kind != .r4x) return error.CurrentManifestRequired;
     const language = manifest.language orelse return error.MissingLanguage;
@@ -856,7 +1136,7 @@ pub fn derivePlan(allocator: std.mem.Allocator, manifest: Manifest) !Plan {
         };
         try metadata.append(allocator, try std.fmt.allocPrint(allocator, "memory.profile={s}", .{default_profile}));
     }
-    try metadata.appendSlice(allocator, manifest.metadata);
+    try metadata.appendSlice(allocator, try r4xManifestMetadata(allocator, manifest));
 
     return .{
         .source_project = source_project,
@@ -927,8 +1207,22 @@ pub fn renderContractPlan(manifest: Manifest, out: []u8) RenderResult {
     }
     for (manifest.sources) |source| if (!appendPlanLine(out, &len, "SOURCE", source)) return .{ .bytes = out[0..0], .ok = false };
     if (!appendPlanLine(out, &len, "ENTRY_MODE", entry_mode.text()) or
-        !appendPlanLine(out, &len, "APP_CLASS", app_class.text()) or
-        !appendPlanLine(out, &len, "TARGET", manifest.target) or
+        !appendPlanLine(out, &len, "APP_CLASS", app_class.text()))
+    {
+        return .{ .bytes = out[0..0], .ok = false };
+    }
+    if (manifest.module_role) |role| {
+        if (!appendPlanLine(out, &len, "MODULE_ROLE", role.text()) or
+            !appendPlanLine(out, &len, "SUBSYSTEM_ID", manifest.subsystem_id.?) or
+            !appendPlanLine(out, &len, "SUBSYSTEM_DISPLAY_NAME", manifest.subsystem_display_name.?))
+        {
+            return .{ .bytes = out[0..0], .ok = false };
+        }
+        for (manifest.guest_formats) |entry| if (!appendPlanLine(out, &len, "GUEST_FORMAT", entry)) return .{ .bytes = out[0..0], .ok = false };
+        for (manifest.guest_extensions) |entry| if (!appendMappedPlanLine(out, &len, "GUEST_EXTENSION", entry.format_id, entry.extension)) return .{ .bytes = out[0..0], .ok = false };
+        for (manifest.guest_features) |entry| if (!appendMappedPlanLine(out, &len, "GUEST_FEATURE", entry.format_id, entry.feature)) return .{ .bytes = out[0..0], .ok = false };
+    }
+    if (!appendPlanLine(out, &len, "TARGET", manifest.target) or
         !appendPlanLine(out, &len, "IMAGE_SCOPE", image_scope.text()) or
         !appendPlanLine(out, &len, "OPTIMIZE", manifest.optimization.?.text()) or
         !appendPlanLine(out, &len, "BUILD_PROFILE", buildProfileName(language, entry_mode, app_class)) or
@@ -952,6 +1246,15 @@ pub fn renderContractPlan(manifest: Manifest, out: []u8) RenderResult {
     }
     for (manifest.metadata) |entry| if (!appendPlanLine(out, &len, "META", entry)) return .{ .bytes = out[0..0], .ok = false };
     return .{ .bytes = out[0..len], .ok = true };
+}
+
+fn appendMappedPlanLine(out: []u8, len: *usize, key: []const u8, left: []const u8, right: []const u8) bool {
+    return appendPlanBytes(out, len, key) and
+        appendPlanBytes(out, len, "=") and
+        appendPlanBytes(out, len, left) and
+        appendPlanBytes(out, len, ":") and
+        appendPlanBytes(out, len, right) and
+        appendPlanBytes(out, len, "\n");
 }
 
 fn appendPlanLine(out: []u8, len: *usize, key: []const u8, value: []const u8) bool {
@@ -1022,6 +1325,124 @@ test "contract plan is deterministic and environment neutral" {
     try std.testing.expect(std.mem.indexOf(u8, a.bytes, "BUILD_PROFILE=R4X_C_App_Console\n") != null);
     try std.testing.expect(std.mem.indexOf(u8, a.bytes, "OPTIMIZE=size\n") != null);
     try std.testing.expect(std.mem.indexOf(u8, a.bytes, "artifact") == null);
+}
+
+test "subsystem role normalizes identity and guest format contract into plan metadata" {
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+    const allocator = arena.allocator();
+    const text =
+        \\R4OS_MODULE_MANIFEST=2
+        \\KIND=R4X
+        \\NAME=QBASIC
+        \\VERSION=0.66.0
+        \\LANGUAGE=Zig
+        \\SOURCE=src/main.zig
+        \\ENTRY_MODE=app
+        \\APP_CLASS=gui
+        \\MODULE_ROLE=SubSystem
+        \\SUBSYSTEM_ID=Basic.QBasic
+        \\SUBSYSTEM_DISPLAY_NAME=QBasic Runtime
+        \\GUEST_FORMAT=Basic.QBasic-Source
+        \\GUEST_EXTENSION=BASIC.QBASIC-SOURCE:.BAS
+        \\GUEST_FEATURE=basic.qbasic-source:Text.Source
+        \\GUEST_FEATURE=basic.qbasic-source:Probe.Text-Token-V1.7072696E74
+        \\TARGET=/R4OS/SUBSYSTEMS/basic.qbasic/QBASIC.R4X
+        \\IMAGE_SCOPE=test
+        \\IMPORT=R4SYS:Query:1
+        \\IMPORT=R4DESK:Query:1
+        \\IMPORT=R4DRAW:Query:1
+    ;
+    const value = try parse(allocator, "QBASIC/module.R4MF", text);
+    try std.testing.expectEqual(ModuleRole.subsystem, value.module_role.?);
+    try std.testing.expectEqualStrings("basic.qbasic", value.subsystem_id.?);
+    try std.testing.expectEqualStrings("QBasic Runtime", value.subsystem_display_name.?);
+    try std.testing.expectEqualStrings("basic.qbasic-source", value.guest_formats[0]);
+    try std.testing.expectEqualStrings(".bas", value.guest_extensions[0].extension);
+    try std.testing.expectEqualStrings("text.source", value.guest_features[0].feature);
+
+    const plan = try derivePlan(allocator, value);
+    try std.testing.expect(containsString(plan.metadata, "module.role=subsystem"));
+    try std.testing.expect(containsString(plan.metadata, "subsystem.id=basic.qbasic"));
+    try std.testing.expect(containsString(plan.metadata, "subsystem.display_name=QBasic Runtime"));
+    try std.testing.expect(containsString(plan.metadata, "subsystem.format=basic.qbasic-source"));
+    try std.testing.expect(containsString(plan.metadata, "subsystem.extension=basic.qbasic-source:.bas"));
+    try std.testing.expect(containsString(plan.metadata, "subsystem.feature=basic.qbasic-source:text.source"));
+
+    var rendered: [2048]u8 = undefined;
+    const contract_plan = renderContractPlan(value, rendered[0..]);
+    try std.testing.expect(contract_plan.ok);
+    try std.testing.expect(std.mem.indexOf(u8, contract_plan.bytes, "MODULE_ROLE=subsystem\nSUBSYSTEM_ID=basic.qbasic\nSUBSYSTEM_DISPLAY_NAME=QBasic Runtime\n") != null);
+    try std.testing.expect(std.mem.indexOf(u8, contract_plan.bytes, "GUEST_EXTENSION=basic.qbasic-source:.bas\n") != null);
+}
+
+test "subsystem role rejects incomplete forbidden and colliding contract fields" {
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+    const allocator = arena.allocator();
+    const base =
+        \\R4OS_MODULE_MANIFEST=2
+        \\KIND=R4X
+        \\NAME=SUBBAD
+        \\VERSION=0.66.0
+        \\LANGUAGE=Zig
+        \\SOURCE=src/main.zig
+        \\ENTRY_MODE=app
+        \\APP_CLASS=gui
+        \\MODULE_ROLE=subsystem
+        \\SUBSYSTEM_DISPLAY_NAME=Broken subsystem
+        \\GUEST_FORMAT=basic.source
+        \\TARGET=/R4OS/SUBSYSTEMS/basic/SubBad.R4X
+        \\IMAGE_SCOPE=none
+        \\IMPORT=R4SYS:Query:1
+        \\IMPORT=R4DESK:Query:1
+        \\IMPORT=R4DRAW:Query:1
+    ;
+    try std.testing.expectError(error.MissingSubsystemId, parse(allocator, "SubBad/module.R4MF", base));
+
+    const fields_without_role =
+        \\R4OS_MODULE_MANIFEST=2
+        \\KIND=R4X
+        \\NAME=NORMAL
+        \\VERSION=0.66.0
+        \\LANGUAGE=Zig
+        \\SOURCE=src/main.zig
+        \\ENTRY_MODE=app
+        \\APP_CLASS=console
+        \\SUBSYSTEM_ID=basic
+        \\TARGET=/R4OS/SOFTWARE/TERMINAL/NORMAL.R4X
+        \\IMAGE_SCOPE=none
+        \\IMPORT=R4SYS:Query:1
+    ;
+    try std.testing.expectError(error.SubsystemFieldsWithoutRole, parse(allocator, "Normal/module.R4MF", fields_without_role));
+
+    const driver_role =
+        \\R4OS_MODULE_MANIFEST=2
+        \\KIND=R4D
+        \\NAME=ROLEBAD
+        \\VERSION=0.66.0
+        \\LANGUAGE=Zig
+        \\SOURCE=src/main.zig
+        \\MODULE_ROLE=subsystem
+        \\SUBSYSTEM_ID=basic
+        \\GUEST_FORMAT=basic.source
+        \\TARGET=/R4OS/DRIVERS/ROLEBAD.R4D
+        \\IMAGE_SCOPE=none
+    ;
+    try std.testing.expectError(error.ModuleRoleForbiddenForKind, parse(allocator, "RoleBad/module.R4MF", driver_role));
+
+    const complete = try std.mem.replaceOwned(u8, allocator, base, "MODULE_ROLE=subsystem", "MODULE_ROLE=subsystem\nSUBSYSTEM_ID=basic");
+    const missing_display = try std.mem.replaceOwned(u8, allocator, complete, "SUBSYSTEM_DISPLAY_NAME=Broken subsystem\n", "");
+    try std.testing.expectError(error.MissingSubsystemDisplayName, parse(allocator, "SubBad/module.R4MF", missing_display));
+    const invalid_display = try std.mem.replaceOwned(u8, allocator, complete, "Broken subsystem", "Broken\"subsystem");
+    try std.testing.expectError(error.InvalidSubsystemDisplayName, parse(allocator, "SubBad/module.R4MF", invalid_display));
+    const invalid_probe = try std.mem.replaceOwned(u8, allocator, complete, "GUEST_FORMAT=basic.source", "GUEST_FORMAT=basic.source\nGUEST_FEATURE=basic.source:probe.magic-v1.zz.4d5a");
+    try std.testing.expectError(error.InvalidGuestFeature, parse(allocator, "SubBad/module.R4MF", invalid_probe));
+    const duplicate = try std.mem.replaceOwned(u8, allocator, complete, "GUEST_FORMAT=basic.source", "GUEST_FORMAT=basic.source\nGUEST_FORMAT=BASIC.SOURCE");
+    try std.testing.expectError(error.DuplicateGuestFormat, parse(allocator, "SubBad/module.R4MF", duplicate));
+
+    const wrong_target = try std.mem.replaceOwned(u8, allocator, complete, "/R4OS/SUBSYSTEMS/basic/SubBad.R4X", "/R4OS/SOFTWARE/SUBBAD.R4X");
+    try std.testing.expectError(error.InvalidSubsystemTarget, parse(allocator, "SubBad/module.R4MF", wrong_target));
 }
 
 test "malformed V2 never falls back to V1" {

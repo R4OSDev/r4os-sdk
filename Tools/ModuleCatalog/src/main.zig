@@ -650,15 +650,25 @@ fn compareIgnoreCase(a: []const u8, b: []const u8) Order {
 }
 
 fn validateCatalogCollisions(entries: []const manifest_contract.Manifest) !void {
+    return validateCatalogCollisionsWithDiagnostics(entries, true);
+}
+
+fn validateCatalogCollisionsWithDiagnostics(entries: []const manifest_contract.Manifest, diagnostics: bool) !void {
     for (entries, 0..) |entry, index| {
         for (entries[0..index]) |prior| {
             if (entry.kind == prior.kind and std.ascii.eqlIgnoreCase(entry.name, prior.name)) {
-                std.debug.print("Manifest identity collision ({s}, {s}):\n  {s}\n  {s}\n", .{ entry.kind.text(), entry.name, prior.path, entry.path });
+                if (diagnostics) std.debug.print("Manifest identity collision ({s}, {s}):\n  {s}\n  {s}\n", .{ entry.kind.text(), entry.name, prior.path, entry.path });
                 return error.ManifestIdentityCollision;
             }
             if (std.ascii.eqlIgnoreCase(entry.target, prior.target)) {
-                std.debug.print("Manifest target collision ({s}):\n  {s} {s} {s}\n  {s} {s} {s}\n", .{ entry.target, prior.kind.text(), prior.name, prior.path, entry.kind.text(), entry.name, entry.path });
+                if (diagnostics) std.debug.print("Manifest target collision ({s}):\n  {s} {s} {s}\n  {s} {s} {s}\n", .{ entry.target, prior.kind.text(), prior.name, prior.path, entry.kind.text(), entry.name, entry.path });
                 return error.ManifestTargetCollision;
+            }
+            if (entry.module_role == .subsystem and prior.module_role == .subsystem and
+                std.ascii.eqlIgnoreCase(entry.subsystem_id.?, prior.subsystem_id.?))
+            {
+                if (diagnostics) std.debug.print("Subsystem ID collision ({s}):\n  {s}\n  {s}\n", .{ entry.subsystem_id.?, prior.path, entry.path });
+                return error.SubsystemIdCollision;
             }
         }
     }
@@ -850,7 +860,7 @@ fn readU64(bytes: []const u8, offset: usize) u64 {
 
 fn renderCatalog(allocator: std.mem.Allocator, entries: []const manifest_contract.Manifest) ![]u8 {
     var out: std.ArrayList(u8) = .empty;
-    try appendFmt(&out, allocator, "{{\n  \"schema\": 2,\n  \"manifest_contract\": 2,\n  \"count\": {d},\n  \"entries\": [\n", .{entries.len});
+    try appendFmt(&out, allocator, "{{\n  \"schema\": 4,\n  \"manifest_contract\": 2,\n  \"count\": {d},\n  \"entries\": [\n", .{entries.len});
     for (entries, 0..) |entry, index| {
         const rendered = try renderEntry(allocator, entry, false);
         defer allocator.free(rendered);
@@ -881,14 +891,14 @@ fn renderImageInventory(allocator: std.mem.Allocator, entries: []const manifest_
     var out: std.ArrayList(u8) = .empty;
     const selected_count = countImageEntries(entries, mode, include_targets);
     const component_count = selected_count + @intFromBool(kernel != null);
-    try out.appendSlice(allocator, "{\n  \"schema\": 2,\n  \"profile\": ");
+    try out.appendSlice(allocator, "{\n  \"schema\": 4,\n  \"profile\": ");
     try appendJsonString(&out, allocator, @tagName(mode));
     try appendFmt(&out, allocator, ",\n  \"count\": {d},\n  \"entries\": [\n", .{component_count});
     var selected_index: usize = 0;
     if (kernel) |component| {
         try out.appendSlice(allocator, "    {\n      \"name\": \"KERNEL\",\n      \"kind\": \"KERNEL\",\n      \"version\": ");
         try appendJsonString(&out, allocator, component.version.text);
-        try out.appendSlice(allocator, ",\n      \"target\": \"/boot/r4os.elf\"\n    }");
+        try out.appendSlice(allocator, ",\n      \"target\": \"/boot/r4os.elf\",\n      \"module_role\": null,\n      \"subsystem_id\": null,\n      \"subsystem_display_name\": null,\n      \"guest_formats\": [],\n      \"guest_extensions\": [],\n      \"guest_features\": []\n    }");
         selected_index += 1;
         try out.appendSlice(allocator, if (selected_index == component_count) "\n" else ",\n");
     }
@@ -902,6 +912,18 @@ fn renderImageInventory(allocator: std.mem.Allocator, entries: []const manifest_
         try appendJsonString(&out, allocator, entry.module_version.text);
         try out.appendSlice(allocator, ",\n      \"target\": ");
         try appendJsonString(&out, allocator, entry.target);
+        try out.appendSlice(allocator, ",\n      \"module_role\": ");
+        if (entry.module_role) |role| try appendJsonString(&out, allocator, role.text()) else try out.appendSlice(allocator, "null");
+        try out.appendSlice(allocator, ",\n      \"subsystem_id\": ");
+        if (entry.subsystem_id) |id| try appendJsonString(&out, allocator, id) else try out.appendSlice(allocator, "null");
+        try out.appendSlice(allocator, ",\n      \"subsystem_display_name\": ");
+        if (entry.subsystem_display_name) |name| try appendJsonString(&out, allocator, name) else try out.appendSlice(allocator, "null");
+        try out.appendSlice(allocator, ",\n      \"guest_formats\": ");
+        try appendStringArray(&out, allocator, entry.guest_formats);
+        try out.appendSlice(allocator, ",\n      \"guest_extensions\": ");
+        try appendGuestExtensions(&out, allocator, entry.guest_extensions);
+        try out.appendSlice(allocator, ",\n      \"guest_features\": ");
+        try appendGuestFeatures(&out, allocator, entry.guest_features);
         try out.appendSlice(allocator, "\n    }");
         selected_index += 1;
         try out.appendSlice(allocator, if (selected_index == component_count) "\n" else ",\n");
@@ -978,6 +1000,18 @@ fn renderEntry(allocator: std.mem.Allocator, entry: manifest_contract.Manifest, 
     try appendJsonString(&out, allocator, entry.path);
     try out.appendSlice(allocator, ",\n  \"target\": ");
     try appendJsonString(&out, allocator, entry.target);
+    try out.appendSlice(allocator, ",\n  \"module_role\": ");
+    if (entry.module_role) |role| try appendJsonString(&out, allocator, role.text()) else try out.appendSlice(allocator, "null");
+    try out.appendSlice(allocator, ",\n  \"subsystem_id\": ");
+    if (entry.subsystem_id) |id| try appendJsonString(&out, allocator, id) else try out.appendSlice(allocator, "null");
+    try out.appendSlice(allocator, ",\n  \"subsystem_display_name\": ");
+    if (entry.subsystem_display_name) |name| try appendJsonString(&out, allocator, name) else try out.appendSlice(allocator, "null");
+    try out.appendSlice(allocator, ",\n  \"guest_formats\": ");
+    try appendStringArray(&out, allocator, entry.guest_formats);
+    try out.appendSlice(allocator, ",\n  \"guest_extensions\": ");
+    try appendGuestExtensions(&out, allocator, entry.guest_extensions);
+    try out.appendSlice(allocator, ",\n  \"guest_features\": ");
+    try appendGuestFeatures(&out, allocator, entry.guest_features);
     try out.appendSlice(allocator, ",\n  \"imports\": ");
     try appendStringArray(&out, allocator, entry.imports);
     try out.appendSlice(allocator, ",\n  \"metadata\": ");
@@ -1056,6 +1090,18 @@ fn renderPlanObject(allocator: std.mem.Allocator, entry: manifest_contract.Manif
     try appendJsonString(&out, allocator, plan.artifact);
     try out.appendSlice(allocator, ",\n    \"target\": ");
     try appendJsonString(&out, allocator, entry.target);
+    try out.appendSlice(allocator, ",\n    \"module_role\": ");
+    if (entry.module_role) |role| try appendJsonString(&out, allocator, role.text()) else try out.appendSlice(allocator, "null");
+    try out.appendSlice(allocator, ",\n    \"subsystem_id\": ");
+    if (entry.subsystem_id) |id| try appendJsonString(&out, allocator, id) else try out.appendSlice(allocator, "null");
+    try out.appendSlice(allocator, ",\n    \"subsystem_display_name\": ");
+    if (entry.subsystem_display_name) |name| try appendJsonString(&out, allocator, name) else try out.appendSlice(allocator, "null");
+    try out.appendSlice(allocator, ",\n    \"guest_formats\": ");
+    try appendStringArray(&out, allocator, entry.guest_formats);
+    try out.appendSlice(allocator, ",\n    \"guest_extensions\": ");
+    try appendGuestExtensions(&out, allocator, entry.guest_extensions);
+    try out.appendSlice(allocator, ",\n    \"guest_features\": ");
+    try appendGuestFeatures(&out, allocator, entry.guest_features);
     try out.appendSlice(allocator, ",\n    \"image_scope\": ");
     try appendJsonString(&out, allocator, entry.image_scope.?.text());
     try out.appendSlice(allocator, ",\n    \"build_profile\": ");
@@ -1090,6 +1136,28 @@ fn appendStringArray(out: *std.ArrayList(u8), allocator: std.mem.Allocator, valu
     try out.append(allocator, '[');
     for (values, 0..) |value, index| {
         if (index != 0) try out.appendSlice(allocator, ", ");
+        try appendJsonString(out, allocator, value);
+    }
+    try out.append(allocator, ']');
+}
+
+fn appendGuestExtensions(out: *std.ArrayList(u8), allocator: std.mem.Allocator, values: []const manifest_contract.GuestExtensionEntry) !void {
+    try out.append(allocator, '[');
+    for (values, 0..) |entry, index| {
+        if (index != 0) try out.appendSlice(allocator, ", ");
+        const value = try std.fmt.allocPrint(allocator, "{s}:{s}", .{ entry.format_id, entry.extension });
+        defer allocator.free(value);
+        try appendJsonString(out, allocator, value);
+    }
+    try out.append(allocator, ']');
+}
+
+fn appendGuestFeatures(out: *std.ArrayList(u8), allocator: std.mem.Allocator, values: []const manifest_contract.GuestFeatureEntry) !void {
+    try out.append(allocator, '[');
+    for (values, 0..) |entry, index| {
+        if (index != 0) try out.appendSlice(allocator, ", ");
+        const value = try std.fmt.allocPrint(allocator, "{s}:{s}", .{ entry.format_id, entry.feature });
+        defer allocator.free(value);
         try appendJsonString(out, allocator, value);
     }
     try out.append(allocator, ']');
@@ -1146,4 +1214,35 @@ fn convertR4CP(
     if (!std.mem.eql(u8, staged, converted.bytes)) return error.StagedWriteMismatch;
     try cwd.rename(temp_path, cwd, output_path, io);
     return true;
+}
+
+test "catalog rejects duplicate subsystem IDs across profiles" {
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+    const allocator = arena.allocator();
+    const cwd = std.Io.Dir.cwd();
+    const fixture_a = try cwd.readFileAlloc(std.testing.io, "Tests/Fixture/SubsystemCatalog/RepoA/module.R4MF.fixture", allocator, .limited(manifest_contract.max_manifest_bytes));
+    const fixture_b = try cwd.readFileAlloc(std.testing.io, "Tests/Fixture/SubsystemCatalog/RepoB/module.R4MF.fixture", allocator, .limited(manifest_contract.max_manifest_bytes));
+    const a = try manifest_contract.parse(allocator, "RepoA/module.R4MF", fixture_a);
+    const b = try manifest_contract.parse(allocator, "RepoB/module.R4MF", fixture_b);
+    try std.testing.expectError(error.SubsystemIdCollision, validateCatalogCollisionsWithDiagnostics(&.{ a, b }, false));
+}
+
+test "catalog and image inventory expose normalized subsystem contract" {
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+    const allocator = arena.allocator();
+    const fixture_a = try std.Io.Dir.cwd().readFileAlloc(std.testing.io, "Tests/Fixture/SubsystemCatalog/RepoA/module.R4MF.fixture", allocator, .limited(manifest_contract.max_manifest_bytes));
+    const text = try std.mem.replaceOwned(u8, allocator, fixture_a, "IMAGE_SCOPE=slim", "IMAGE_SCOPE=test");
+    const entry = try manifest_contract.parse(allocator, "RepoA/module.R4MF", text);
+
+    const catalog = try renderCatalog(allocator, &.{entry});
+    try std.testing.expect(std.mem.indexOf(u8, catalog, "\"schema\": 4") != null);
+    try std.testing.expect(std.mem.indexOf(u8, catalog, "\"module_role\": \"subsystem\"") != null);
+    try std.testing.expect(std.mem.indexOf(u8, catalog, "\"subsystem_id\": \"fixture.shared\"") != null);
+    try std.testing.expect(std.mem.indexOf(u8, catalog, "\"subsystem_display_name\": \"Fixture Host A\"") != null);
+
+    const inventory = try renderImageInventory(allocator, &.{entry}, .@"test", &.{}, null);
+    try std.testing.expect(std.mem.indexOf(u8, inventory, "\"schema\": 4") != null);
+    try std.testing.expect(std.mem.indexOf(u8, inventory, "\"guest_formats\": [\"fixture.source\"]") != null);
 }

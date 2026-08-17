@@ -33,6 +33,7 @@ pub fn build(b: *std.Build) void {
     _ = sdk_profile.addR4MFWithOptions(b.path("Tests/Build/R4MFMapping/module.R4MF"), .{
         .zig_module_roots = &.{b.path("Tests/Build/R4MFMapping/Bindings/external.zig")},
     });
+    _ = sdk_profile.addR4MF(b.path("Tests/Build/SubsystemManifest/module.R4MF"));
     _ = sdk_profile.addR4D(.{
         .name = "SDKSMOKE",
         .driver_name = "SDKSMOKE",
@@ -85,6 +86,14 @@ pub fn build(b: *std.Build) void {
     b.installArtifact(catalog);
     const catalog_tests = b.addTest(.{ .root_module = catalog_bundle });
     const run_catalog_tests = b.addRunArtifact(catalog_tests);
+    const catalog_tool_test_root = b.createModule(.{
+        .root_source_file = b.path("Tools/ModuleCatalog/src/main.zig"),
+        .target = b.graph.host,
+        .optimize = .Debug,
+    });
+    catalog_tool_test_root.addImport("contract_bundle", catalog_bundle);
+    const catalog_tool_tests = b.addTest(.{ .root_module = catalog_tool_test_root });
+    const run_catalog_tool_tests = b.addRunArtifact(catalog_tool_tests);
 
     const test_step = b.step("test", "Run SDK, build-tool and smoke tests");
     test_step.dependOn(b.getInstallStep());
@@ -92,4 +101,5 @@ pub fn build(b: *std.Build) void {
     test_step.dependOn(&run_r4x_builder_tests.step);
     test_step.dependOn(&run_r4l_contract_tests.step);
     test_step.dependOn(&run_catalog_tests.step);
+    test_step.dependOn(&run_catalog_tool_tests.step);
 }

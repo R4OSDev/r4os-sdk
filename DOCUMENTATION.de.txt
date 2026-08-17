@@ -31,6 +31,7 @@ Die Voreinstellung passt zur normalen Workspace-Struktur:
         Diagnostics/
         Drivers/
         Protocols/
+        Subsystems/
 
 Aktuell verwenden die SDK-Buildstarter `CONTRACT_ROOT` und `ZIG_ROOT`. Die
 weiteren Eintraege bilden bereits die gemeinsamen Komponentenwurzeln fuer
@@ -86,6 +87,91 @@ Repository gebauten Artefakts.
 Optional erzeugt derselbe Aufruf mit `--inventory-output` aus genau dieser
 Auswahl das installierte `MODULES.JSON`; zusammen mit Kernel-Version und
 -Artefakt enthaelt es damit keine handgepflegte zweite Komponentenliste.
+
+Subsystem-Hosts bleiben normale GUI-R4X und deklarieren im R4MF-v2-Manifest
+`MODULE_ROLE=subsystem`, eine normalisierte stabile `SUBSYSTEM_ID` sowie
+einen `SUBSYSTEM_DISPLAY_NAME`, geordnete Gastformate, Endungshinweise und
+optionale Formatmerkmale. Parser, semantischer Plan, R4M0-Packager und
+ModuleCatalog verwenden dieselbe Ableitung. Katalog und `MODULES.JSON` tragen
+die Angaben in Schema 4; doppelte Subsystem-IDs werden vor der Profilauswahl
+abgewiesen, gemeinsam angebotene Gastformate dagegen nicht. Schema 2 und 3
+bleiben lesbar und werden beim Fortschreiben in Schema 4 ueberfuehrt.
+
+`r4os.subsystem_catalog` projiziert die installierten Subsystemeintraege aus
+dem validierten `MODULES.JSON` in einen nach ID sortierten Laufzeitkatalog. Ein
+vom Verbraucher bereitgestellter Hostcheck macht eine fehlende R4X-Datei zum
+Fehler, statt den Eintrag still auszublenden. Der gemeinsame allokationsfreie
+Resolver priorisiert Benutzerzuordnung, bestaetigte versionierte Probe,
+konfigurierten Endungsstandard und erst danach die stabile Kandidatenliste.
+`probe.magic-v1` und `probe.text-token-v1` arbeiten auf hoechstens 128 KiB;
+jeder Treffer verlangt weiterhin die endgueltige Validierung durch den Host.
+Damit bleiben Katalog und Aufloesung reine Userland-Funktionen und besitzen
+keine zweite persistente Liste neben dem installierten Modulinventar.
+
+`r4os.subsystem_launch` definiert den Startvertrag zwischen einem
+Dateihandler und dem normalen R4X-Host. Der vollstaendige Argumentblock ist
+auf 127 Byte begrenzt, beginnt mit `R4SUBSYS1` und transportiert Gastpfad und
+spaetere Optionen als laengencodierte Datensaetze. `GUEST` ist genau einmal
+erforderlich; unbekannte Optionsschluessel koennen von aelteren Hosts
+uebersprungen werden. Der Pfad wird validiert, aber nicht normalisiert,
+gequotet oder in Shelltoken zerlegt. Ein Host erhaelt dadurch exakt die
+Pfadbytes, die Explorer aufgeloest hat. Der Vertrag startet oder teilt keine
+Instanz: Jeder Aufruf bleibt ein normaler, eigenstaendiger R4X-Start.
+
+`r4os.subsystem_host` ist die einkompilierte Userland-Schicht fuer das
+Fenster-, Video- und Eingabehosting eines solchen R4X. Sie ist weder Dienst
+noch Runtime-R4L und besitzt keine prozessuebergreifende Emulator-ABI.
+`Surface` verwendet ausschliesslich vom Aufrufer bereitgestellte Speicher:
+entweder acht Bit breite Indizes mit einer 256 Eintraege grossen XRGB-Palette
+oder direkt XRGB32. Auch der Konvertierungsblock von 128x128 Pixeln kommt vom
+Aufrufer; der Presenter allokiert beim Darstellen nicht.
+
+Der virtuelle Gastmodus bleibt unabhaengig von der Fenstergroesse. Der
+Presenter berechnet einen zentrierten, seitenverhaeltnistreuen Viewport mit
+schwarzem Letterboxing und Naechste-Nachbar-Skalierung. Eine ganzzahlige
+Skalierung wird verwendet, wenn sie mindestens 85 Prozent des passenden
+Viewports ausfuellt; andernfalls wird der gesamte passende Viewport
+fraktional genutzt. Voll- und Damage-Praesentation laufen ueber dieselbe
+Schnittstelle und werden automatisch in hoechstens 128x128 Pixel grosse
+R4DRAW-Raster zerlegt. Ein unveraendertes Bild erzeugt keinen GUI-Frame.
+Paletten-, Modus- und Viewportaenderungen erzwingen einen Vollframe; nach 32
+aufeinanderfolgenden Damage-Frames wird die persistente Darstellung durch
+einen neuen Vollframe verdichtet.
+
+`Host.pollInput` uebersetzt Close, Resize, Fokus, Tastencode, Text und Maus in
+eine gastneutrale Ereignisunion. Mauspositionen werden auf den virtuellen
+Bildschirm zurueckgerechnet; ein Punkt im Letterboxbereich besitzt bewusst
+keine Gastkoordinate. Resize transportiert den neuen Client-Viewport, aendert
+aber nicht die Aufloesung der Surface. Scheduling, Gastzeit und Audio bleiben
+bewusst ausserhalb dieser Video-/Eingabeschicht.
+
+`r4os.subsystem_runtime` ist die dazu passende, ebenfalls einkompilierte
+Userland-Laufzeitschicht. Ein Gast stellt drei Callbacks fuer eine begrenzte
+Ausfuehrungsscheibe, Reset und PCM-Erzeugung bereit; der Host stellt Poll und
+Present bereit. Pro Zyklus werden hoechstens die konfigurierte Anzahl
+Ereignisse und genau eine Gast-Scheibe mit festem Operationsbudget
+verarbeitet. Danach wird entweder bis zum naechsten echten Termin geschlafen
+oder kooperativ abgegeben. Ein Hostereignis kann eine Darstellung anfordern,
+ohne dafuer einen Gastschritt zu erfinden.
+
+`GuestClock` leitet Nanosekunden aus der monotonen R4SYS-Uhr ab. Pausen
+zaehlen nicht zur Gastzeit, Reset beginnt bei null und `Pacer` liefert
+driftarme Frame- oder Zyklustermine. Der Lebenszyklus umfasst Ready, Running,
+Paused, Completed, Failed und Closed sowie Pause, Fortsetzen, Reset, Mute und
+Close. Befehle werden nur zwischen Gast-Scheiben angewendet; Abschluss und
+Fehler fuehren durch denselben idempotenten Ressourcenabbau. Controller und
+Save-States koennen spaeter oberhalb der Callbacks ergaenzt werden, sind aber
+nicht Bestandteil dieses Vertrags.
+
+Die optionale Audio-Pumpe verwendet caller-eigene Queue- und Scratchspeicher.
+Der definierte Standard ist 48 kHz, Stereo, signed 16-bit little endian mit
+480 Frames je 10-ms-Quantum, zwei Zielquanten und hoechstens zwei
+Nachholquanten pro Zyklus. Unterlauf wird mit Stille aufgefuellt, Mute liefert
+Stille und setzt die Streamlautstaerke auf null. `R4AudioSink` oeffnet,
+schreibt und schliesst ausschliesslich ueber die normale App-Audiofassade und
+AUDSVC. Ein fehlender Dienst, Timeout oder Schreibfehler setzt Audio sichtbar
+auf `degraded`; Gastzeit, Video und Warteverhalten laufen weiterhin getaktet
+und nicht als Busy-Wait oder ungebremste Fehlerschleife.
 
 Plattform-APIs
 --------------

@@ -6,6 +6,7 @@
 **/zig-pkg/
 
 *.exe
+!Tests/Fixture/SubsystemResolver/*.exe
 *.obj
 *.o
 *.pdb

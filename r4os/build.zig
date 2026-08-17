@@ -582,6 +582,7 @@ pub const Sdk = struct {
             .size => .ReleaseSmall,
             .speed => .ReleaseFast,
         };
+        const manifest_metadata = module_manifest.r4xManifestMetadata(self.b.allocator, loaded.manifest) catch @panic("invalid R4MF role metadata");
         return switch (loaded.manifest.language.?) {
             .zig => if (loaded.manifest.entry_mode.? == .app) addR4AppWithOptions(self.b, .{
                 .name = loaded.manifest.name,
@@ -595,7 +596,7 @@ pub const Sdk = struct {
                 .zig_modules = loaded.zig_modules,
                 .imports = loaded.manifest.imports,
                 .module_version = loaded.manifest.module_version.text,
-                .metadata = loaded.manifest.metadata,
+                .metadata = manifest_metadata,
                 .resources = self.manifestResources(loaded),
                 .optimize = optimize,
             }) else addR4XStartWithOptions(self.b, .{
@@ -609,7 +610,7 @@ pub const Sdk = struct {
                 .zig_modules = loaded.zig_modules,
                 .imports = loaded.manifest.imports,
                 .module_version = loaded.manifest.module_version.text,
-                .metadata = loaded.manifest.metadata,
+                .metadata = manifest_metadata,
                 .resources = self.manifestResources(loaded),
                 .optimize = optimize,
             }),
@@ -627,7 +628,7 @@ pub const Sdk = struct {
                 .c_defines = loaded.manifest.c_defines,
                 .c_flags = loaded.manifest.c_flags,
                 .module_version = loaded.manifest.module_version.text,
-                .metadata = loaded.manifest.metadata,
+                .metadata = manifest_metadata,
                 .resources = self.manifestResources(loaded),
                 .optimize = optimize,
             }) else addR4XStartCWithOptions(self.b, .{
@@ -644,7 +645,7 @@ pub const Sdk = struct {
                 .c_defines = loaded.manifest.c_defines,
                 .c_flags = loaded.manifest.c_flags,
                 .module_version = loaded.manifest.module_version.text,
-                .metadata = loaded.manifest.metadata,
+                .metadata = manifest_metadata,
                 .resources = self.manifestResources(loaded),
                 .optimize = optimize,
             }),
