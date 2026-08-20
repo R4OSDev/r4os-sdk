@@ -12,6 +12,8 @@ pub const default_channels: u16 = 2;
 pub const default_quantum_frames: u32 = 480;
 pub const default_target_quanta: u16 = 2;
 pub const default_max_catchup_quanta: u16 = 2;
+const audio_open_retry_limit: u16 = 3;
+const audio_open_retry_nanoseconds: u64 = 50 * std.time.ns_per_ms;
 pub const audio_error_timeout: i32 = -9601;
 pub const audio_error_unavailable: i32 = -9602;
 pub const runtime_error_guest_audio: i32 = -9610;
@@ -204,7 +206,6 @@ pub const AudioConfig = struct {
     quantum_frames: u32 = default_quantum_frames,
     target_quanta: u16 = default_target_quanta,
     max_catchup_quanta: u16 = default_max_catchup_quanta,
-    sink_capacity_prefill: bool = false,
 
     pub fn frameBytes(self: AudioConfig) Error!usize {
         if (self.sample_rate == 0 or self.channels == 0) return Error.InvalidAudioConfiguration;
@@ -281,6 +282,7 @@ pub const AudioStats = struct {
     silence_bytes: u64 = 0,
     muted_bytes: u64 = 0,
     underflows: u64 = 0,
+    open_retries: u64 = 0,
     writes: u64 = 0,
     busy_writes: u64 = 0,
     write_failures: u64 = 0,
@@ -372,6 +374,8 @@ pub const AudioPump = struct {
     muted: bool = false,
     next_deadline_tick: u64 = 0,
     quantum_ticks: u64 = 1,
+    open_retry_ticks: u64 = 1,
+    open_retry_attempts: u16 = 0,
     resync_prefill_quanta: u16 = 0,
     stats: AudioStats = .{},
 
@@ -385,6 +389,7 @@ pub const AudioPump = struct {
         const quantum_ns_product = @as(u128, options.config.quantum_frames) * time_contract.nanoseconds_per_second;
         const quantum_ns: u64 = @intCast((quantum_ns_product + options.config.sample_rate - 1) / options.config.sample_rate);
         const quantum_ticks = time_contract.durationToTicks(.{ .nanoseconds = quantum_ns }, monotonic_hz) catch return Error.UnknownFrequency;
+        const open_retry_ticks = time_contract.durationToTicks(.{ .nanoseconds = audio_open_retry_nanoseconds }, monotonic_hz) catch return Error.UnknownFrequency;
         return .{
             .config = options.config,
             .queue = try PcmQueue.init(options.queue_storage, frame_bytes),
@@ -392,6 +397,7 @@ pub const AudioPump = struct {
             .sink = options.sink,
             .state = .ready,
             .quantum_ticks = @max(@as(u64, 1), quantum_ticks),
+            .open_retry_ticks = @max(@as(u64, 1), open_retry_ticks),
         };
     }
 
@@ -399,18 +405,32 @@ pub const AudioPump = struct {
         if (self.state == .disabled or self.state == .active or self.state == .degraded) return;
         self.queue.clear();
         self.next_deadline_tick = now +| self.quantum_ticks;
+        _ = self.tryOpen(now);
+    }
+
+    fn tryOpen(self: *AudioPump, now: u64) bool {
         const sink = self.sink orelse {
             self.degrade(audio_error_unavailable);
-            return;
+            return false;
         };
         const rc = sink.open(self.config);
         if (rc < 0) {
+            self.last_error = rc;
+            if (retryableOpenError(rc) and self.open_retry_attempts < audio_open_retry_limit) {
+                self.open_retry_attempts += 1;
+                self.stats.open_retries +%= 1;
+                self.next_deadline_tick = now +| self.open_retry_ticks;
+                return false;
+            }
             self.degrade(rc);
-            return;
+            return false;
         }
         self.state = .active;
         self.last_error = 0;
+        self.open_retry_attempts = 0;
         self.resync_prefill_quanta = self.config.target_quanta;
+        self.next_deadline_tick = now +| self.quantum_ticks;
+        return true;
     }
 
     fn reset(self: *AudioPump, now: u64) void {
@@ -464,6 +484,9 @@ pub const AudioPump = struct {
 
     fn pump(self: *AudioPump, now: u64, running: bool) void {
         if (self.state == .disabled or self.state == .closed) return;
+        if (self.state == .ready) {
+            if (now < self.next_deadline_tick or !self.tryOpen(now)) return;
+        }
         if (self.resync_prefill_quanta != 0) {
             const quanta = self.resync_prefill_quanta;
             self.resync_prefill_quanta = 0;
@@ -492,16 +515,6 @@ pub const AudioPump = struct {
             self.next_deadline_tick +|= self.quantum_ticks;
         }
         if (!sink_busy and now >= self.next_deadline_tick) self.resyncLate(now);
-
-        if (!sink_busy and self.config.sink_capacity_prefill and self.state == .active) {
-            var prefetched: u16 = 0;
-            while (prefetched < self.config.target_quanta) : (prefetched += 1) {
-                switch (self.submitQuantum(running)) {
-                    .submitted => {},
-                    .busy, .failed => break,
-                }
-            }
-        }
     }
 
     fn submitQuantum(self: *AudioPump, running: bool) SubmitResult {
@@ -573,6 +586,15 @@ pub const AudioPump = struct {
         self.state = .closed;
     }
 };
+
+fn retryableOpenError(raw: i32) bool {
+    return raw == audio_error_timeout or
+        raw == abi.service_api_result_timeout or
+        raw == abi.service_api_result_busy or
+        raw == abi.service_api_result_full or
+        raw == abi.service_api_result_no_endpoint or
+        raw == abi.service_api_result_not_running;
+}
 
 pub const Config = struct {
     slice_budget: u32 = default_slice_budget,
@@ -888,6 +910,8 @@ const FakeHost = struct {
 
 const FakeSink = struct {
     open_result: i32 = 0,
+    open_failure_result: i32 = 0,
+    open_failures_remaining: u32 = 0,
     busy_after: u32 = std.math.maxInt(u32),
     write_error_after: u32 = std.math.maxInt(u32),
     opens: u32 = 0,
@@ -943,6 +967,10 @@ fn fakeHostPresent(context: *anyopaque) i32 {
 fn fakeSinkOpen(context: *anyopaque, _: AudioConfig) i32 {
     const self: *FakeSink = @ptrCast(@alignCast(context));
     self.opens += 1;
+    if (self.open_failures_remaining != 0) {
+        self.open_failures_remaining -= 1;
+        return self.open_failure_result;
+    }
     return self.open_result;
 }
 
@@ -1089,9 +1117,8 @@ test "audio underflow is silence mute is explicit and missing audio degrades wit
 
     var queue_d: [3840]u8 = undefined;
     var scratch_d: [1920]u8 = undefined;
-    var sink_d = FakeSink{ .busy_after = 2 };
-    var runtime_d = try Runtime.init(.{}, 100, 0, .{
-        .config = .{ .sink_capacity_prefill = true },
+    var sink_d = FakeSink{ .busy_after = 1 };
+    var runtime_d = try Runtime.init(.{}, 1000, 0, .{
         .queue_storage = queue_d[0..],
         .scratch = scratch_d[0..],
         .sink = sink_d.sink(),
@@ -1099,16 +1126,38 @@ test "audio underflow is silence mute is explicit and missing audio degrades wit
     var guest_d = FakeGuest{ .audio_byte = 0x44 };
     var host_d = FakeHost{};
     _ = runtime_d.cycle(0, guest_d.driver(), host_d.driver());
-    try std.testing.expectEqual(@as(u32, 2), sink_d.writes);
+    try std.testing.expectEqual(@as(u32, 1), sink_d.writes);
+    try std.testing.expectEqual(@as(u64, 1), runtime_d.audio.stats.busy_writes);
     _ = runtime_d.cycle(1, guest_d.driver(), host_d.driver());
     try std.testing.expectEqual(AudioState.active, runtime_d.audio.state);
     try std.testing.expectEqual(@as(usize, 3840), runtime_d.audio.queue.available());
     try std.testing.expectEqual(@as(u64, 1), runtime_d.audio.stats.busy_writes);
-    sink_d.busy_after = 3;
-    _ = runtime_d.cycle(2, guest_d.driver(), host_d.driver());
-    try std.testing.expectEqual(@as(u32, 3), sink_d.writes);
+    sink_d.busy_after = 2;
+    _ = runtime_d.cycle(10, guest_d.driver(), host_d.driver());
+    try std.testing.expectEqual(@as(u32, 2), sink_d.writes);
     try std.testing.expectEqual(@as(usize, 1920), runtime_d.audio.queue.available());
-    try std.testing.expectEqual(@as(u64, 2), runtime_d.audio.stats.busy_writes);
+    try std.testing.expectEqual(@as(u64, 1), runtime_d.audio.stats.busy_writes);
+
+    var queue_e: [3840]u8 = undefined;
+    var scratch_e: [1920]u8 = undefined;
+    var sink_e = FakeSink{ .open_failure_result = audio_error_timeout, .open_failures_remaining = 1 };
+    var runtime_e = try Runtime.init(.{}, 1000, 0, .{
+        .queue_storage = queue_e[0..],
+        .scratch = scratch_e[0..],
+        .sink = sink_e.sink(),
+    });
+    var guest_e = FakeGuest{ .audio_byte = 0x55 };
+    var host_e = FakeHost{};
+    _ = runtime_e.cycle(0, guest_e.driver(), host_e.driver());
+    try std.testing.expectEqual(AudioState.ready, runtime_e.audio.state);
+    try std.testing.expectEqual(@as(u64, 1), runtime_e.audio.stats.open_retries);
+    try std.testing.expectEqual(@as(u32, 1), sink_e.opens);
+    _ = runtime_e.cycle(10, guest_e.driver(), host_e.driver());
+    try std.testing.expectEqual(@as(u32, 1), sink_e.opens);
+    _ = runtime_e.cycle(50, guest_e.driver(), host_e.driver());
+    try std.testing.expectEqual(AudioState.active, runtime_e.audio.state);
+    try std.testing.expectEqual(@as(u32, 2), sink_e.opens);
+    try std.testing.expectEqual(@as(u32, 2), sink_e.writes);
 }
 
 test "guest completion failure and reset failure converge on terminal cleanup" {
