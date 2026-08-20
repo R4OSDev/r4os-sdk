@@ -18,6 +18,7 @@ pub const Result = union(enum) {
 
 pub const WriteResult = union(enum) {
     written: usize,
+    busy: usize,
     timed_out: usize,
     failure: struct { raw: i32, written: usize },
 };
@@ -116,7 +117,11 @@ pub const AudioStream = struct {
             const called = self.connection.call(abi.audio_service_op_write_stream, payload[0 .. @sizeOf(abi.AudioServiceStreamWriteRequest) + chunk_len], std.mem.asBytes(&response), timeout);
             switch (called) {
                 .response => |meta| {
-                    if (meta.bytes != @sizeOf(abi.AudioServiceStreamResult) or !validResponse(&response, abi.audio_service_op_write_stream) or response.result < 0) {
+                    if (meta.bytes != @sizeOf(abi.AudioServiceStreamResult) or !validResponse(&response, abi.audio_service_op_write_stream)) {
+                        return .{ .failure = .{ .raw = abi.service_api_result_invalid, .written = offset } };
+                    }
+                    if (response.result == abi.service_api_result_busy) return .{ .busy = offset };
+                    if (response.result < 0) {
                         return .{ .failure = .{ .raw = if (response.result < 0) response.result else abi.service_api_result_invalid, .written = offset } };
                     }
                     const advanced: usize = @intCast(response.bytes);
