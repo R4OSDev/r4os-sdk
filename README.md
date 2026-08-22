@@ -10,6 +10,16 @@ and input layer with `subsystem_runtime` for bounded guest slices, monotonic
 guest time, lifecycle control, paced frames, and buffered S16LE audio through
 the regular app audio facade.
 
+## Service loops
+
+`r4os.ServiceLoop` is the shared main-loop mechanism for R4X services. It
+combines endpoint waits, the earliest service-owned absolute deadline, a
+bounded stop-safety check, and queue draining limited to the endpoint depth.
+Filled queues are processed without a forced tick between requests and yield
+cooperatively after the batch budget. `ServiceLoopMetrics` and `report()`
+provide passive numeric wait, wake, drain, and fairness counters without an
+API or ABI extension.
+
 ## Dependency mapping
 
 `Settings.R4S` maps the local Contract and workspace paths. Relative and
