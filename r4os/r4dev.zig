@@ -164,6 +164,14 @@ pub const Context = struct {
         return self.base.performanceBootPhase(index);
     }
 
+    pub fn performanceBootPhaseClock(self: *const Context, index: u32) ?abi.ProgramBootPhaseClockInfo {
+        return self.base.performanceBootPhaseClock(index);
+    }
+
+    pub fn performanceIrqTiming(self: *const Context, irq: u32) ?abi.ProgramIrqTimingInfo {
+        return self.base.performanceIrqTiming(irq);
+    }
+
     pub fn memoryVmReserveProbe(self: *const Context, requested_bytes: u64) ?abi.ProgramVmReserveProbe {
         return self.base.memoryVmReserveProbe(requested_bytes);
     }

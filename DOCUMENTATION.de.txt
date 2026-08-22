@@ -182,3 +182,11 @@ Tabellenlayouts; SDK-Fassaden konsumieren die vom Kernel aufgeloesten
 Gruppentabellen. Fuer diese sechs APIs gibt es weder R4L-Projekte noch
 R4L-Dateien im Image. Unabhaengige Runtime-R4Ls wie R4STD, R4IMG und R4FONT
 bleiben davon getrennte Module mit eigenem Contract und eigener Query-Tabelle.
+
+Die optionale R4SYS-Funktion `monotonic_clock` liefert einen kontinuierlichen
+Nanosekundeninstant sowie Quelle, Qualitaetsflags, Aufloesung und die getrennte
+wirksame Ereignisrate. `monotonicNanoseconds` ist der direkte Apppfad;
+`monotonicHz` und `monotonicBackend` verwenden dieselben Metadaten und fallen
+bei einem aelteren Kernel auf `TimeState` zurueck. R4DEV-Fassaden stellen die
+zugehoerigen Bootphasen- und IRQ-Zeitinformationen bereit. Jeder angehaengte
+Slot wird einzeln ueber die Tabellengroesse geprueft.

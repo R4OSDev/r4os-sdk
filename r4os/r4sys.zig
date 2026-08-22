@@ -821,6 +821,14 @@ pub const Context = struct {
         return self.base.monotonicHz();
     }
 
+    pub fn monotonicClock(self: *const Context, out: *abi.MonotonicClockInfo) i32 {
+        return self.base.monotonicClock(out);
+    }
+
+    pub fn monotonicNanoseconds(self: *const Context) ?u64 {
+        return self.base.monotonicNanoseconds();
+    }
+
     pub fn monotonicBackend(self: *const Context) abi.TimeBackend {
         return self.base.monotonicBackend();
     }

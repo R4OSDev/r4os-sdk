@@ -97,4 +97,10 @@ pub const PerformanceView = struct {
     pub fn bootPhase(self: *const PerformanceView, index: u32) ?abi.ProgramBootPhasePerformanceInfo {
         return self.raw.performanceBootPhase(index);
     }
+    pub fn bootPhaseClock(self: *const PerformanceView, index: u32) ?abi.ProgramBootPhaseClockInfo {
+        return self.raw.performanceBootPhaseClock(index);
+    }
+    pub fn irqTiming(self: *const PerformanceView, irq: u32) ?abi.ProgramIrqTimingInfo {
+        return self.raw.performanceIrqTiming(irq);
+    }
 };

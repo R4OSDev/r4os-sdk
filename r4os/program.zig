@@ -59,14 +59,16 @@ pub fn bundleValueFromR4XStart(raw: *const abi.R4XStartContext) ?Bundle {
     const xs = r4xstart.Context.init(raw);
     const candidate = Bundle{
         .raw = raw,
-        .sys = resolveGroupTable(abi.R4XStartR4Sys, xs, .r4sys, abi.r4xstart_r4sys_magic, abi.r4xstart_r4sys_version, abi.r4xstart_r4sys_size),
+        // R4SYS tail functions are append-only and optional. Accept the
+        // stable table header; tableFn checks the exact size of each slot.
+        .sys = resolveGroupTable(abi.R4XStartR4Sys, xs, .r4sys, abi.r4xstart_r4sys_magic, 1, @offsetOf(abi.R4XStartR4Sys, "write") + @sizeOf(usize)),
         .desk = resolveGroupTable(abi.R4XStartR4Desk, xs, .r4desk, abi.r4xstart_r4desk_magic, abi.r4xstart_r4desk_version, abi.r4xstart_r4desk_size),
         .draw = resolveGroupTable(abi.R4XStartR4Draw, xs, .r4draw, abi.r4xstart_r4draw_magic, abi.r4xstart_r4draw_version, abi.r4xstart_r4draw_size),
         .net = resolveGroupTable(abi.R4XStartR4Net, xs, .r4net, abi.r4xstart_r4net_magic, abi.r4xstart_r4net_version, abi.r4xstart_r4net_size),
         .audio = resolveGroupTable(abi.R4XStartR4Audio, xs, .r4audio, abi.r4xstart_r4audio_magic, abi.r4xstart_r4audio_version, abi.r4xstart_r4audio_size),
-        // R4DEV slot 34 is optional and append-only. Accept the stable table
-        // header here; tableFn performs the size check for each requested slot.
-        .dev = resolveGroupTable(abi.R4XStartR4Dev, xs, .r4dev, abi.r4xstart_r4dev_magic, abi.r4xstart_r4dev_version, @offsetOf(abi.R4XStartR4Dev, "device_inventory_summary")),
+        // R4DEV tail functions are optional and append-only. Older kernels
+        // remain usable; tableFn checks the exact size of each requested slot.
+        .dev = resolveGroupTable(abi.R4XStartR4Dev, xs, .r4dev, abi.r4xstart_r4dev_magic, 1, @offsetOf(abi.R4XStartR4Dev, "memory_summary") + @sizeOf(usize)),
     };
     if (candidate.sys == null) return null;
     return candidate;
@@ -547,6 +549,20 @@ pub const Context = struct {
         return out;
     }
 
+    pub fn performanceBootPhaseClock(self: *const Context, index: u32) ?abi.ProgramBootPhaseClockInfo {
+        var out: abi.ProgramBootPhaseClockInfo = .{};
+        const table_fn = self.devFn("performance_boot_phase_clock") orelse return null;
+        if (table_fn(index, &out) <= 0) return null;
+        return out;
+    }
+
+    pub fn performanceIrqTiming(self: *const Context, irq: u32) ?abi.ProgramIrqTimingInfo {
+        var out: abi.ProgramIrqTimingInfo = .{};
+        const table_fn = self.devFn("performance_irq_timing") orelse return null;
+        if (table_fn(irq, &out) <= 0) return null;
+        return out;
+    }
+
     pub fn memoryVmReserveProbe(self: *const Context, requested_bytes: u64) ?abi.ProgramVmReserveProbe {
         var out: abi.ProgramVmReserveProbe = .{};
         const table_fn = self.devFn("memory_vm_reserve_probe") orelse return null;
@@ -760,6 +776,23 @@ pub const Context = struct {
         return table_fn(next);
     }
 
+    pub fn monotonicClock(self: *const Context, out: *abi.MonotonicClockInfo) i32 {
+        out.* = .{};
+        const table_fn = self.sysFn("monotonic_clock") orelse return self.unavailable("sys");
+        return table_fn(out);
+    }
+
+    pub fn monotonicNanoseconds(self: *const Context) ?u64 {
+        var clock: abi.MonotonicClockInfo = .{};
+        if (self.monotonicClock(&clock) <= 0) return null;
+        if ((clock.flags & abi.monotonic_clock_flag_valid) == 0 or
+            clock.frequency_hz != abi.monotonic_clock_frequency_hz)
+        {
+            return null;
+        }
+        return clock.instant_ns;
+    }
+
     pub fn bootLogInfo(self: *const Context) ?abi.BootLogInfo {
         var out: abi.BootLogInfo = .{};
         const table_fn = self.sysFn("boot_log_info") orelse return null;
@@ -774,6 +807,9 @@ pub const Context = struct {
     }
 
     pub fn monotonicHz(self: *const Context) u32 {
+        var clock: abi.MonotonicClockInfo = .{};
+        if (self.monotonicClock(&clock) > 0 and clock.event_effective_hz != 0)
+            return clock.event_effective_hz;
         return self.timeState().monotonic_hz;
     }
 
@@ -785,7 +821,12 @@ pub const Context = struct {
     }
 
     pub fn monotonicBackend(self: *const Context) abi.TimeBackend {
-        return switch (self.timeState().monotonic_backend) {
+        var clock: abi.MonotonicClockInfo = .{};
+        const raw = if (self.monotonicClock(&clock) > 0)
+            clock.event_backend
+        else
+            self.timeState().monotonic_backend;
+        return switch (raw) {
             0 => .pit,
             1 => .hpet,
             2 => .lapic,
