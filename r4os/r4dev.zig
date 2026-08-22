@@ -168,6 +168,10 @@ pub const Context = struct {
         return self.base.performanceBootPhaseClock(index);
     }
 
+    pub fn performanceBootSummary(self: *const Context) ?abi.ProgramBootPerformanceInfo {
+        return self.base.performanceBootSummary();
+    }
+
     pub fn performanceIrqTiming(self: *const Context, irq: u32) ?abi.ProgramIrqTimingInfo {
         return self.base.performanceIrqTiming(irq);
     }

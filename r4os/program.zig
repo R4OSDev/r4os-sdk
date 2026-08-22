@@ -556,6 +556,13 @@ pub const Context = struct {
         return out;
     }
 
+    pub fn performanceBootSummary(self: *const Context) ?abi.ProgramBootPerformanceInfo {
+        var out: abi.ProgramBootPerformanceInfo = .{};
+        const table_fn = self.devFn("performance_boot_summary") orelse return null;
+        if (table_fn(&out) <= 0) return null;
+        return out;
+    }
+
     pub fn performanceIrqTiming(self: *const Context, irq: u32) ?abi.ProgramIrqTimingInfo {
         var out: abi.ProgramIrqTimingInfo = .{};
         const table_fn = self.devFn("performance_irq_timing") orelse return null;
@@ -780,6 +787,11 @@ pub const Context = struct {
         out.* = .{};
         const table_fn = self.sysFn("monotonic_clock") orelse return self.unavailable("sys");
         return table_fn(out);
+    }
+
+    pub fn bootReady(self: *const Context) i32 {
+        const table_fn = self.sysFn("boot_ready") orelse return abi.boot_ready_error_not_boot_shell;
+        return table_fn();
     }
 
     pub fn monotonicNanoseconds(self: *const Context) ?u64 {

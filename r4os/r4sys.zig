@@ -825,6 +825,10 @@ pub const Context = struct {
         return self.base.monotonicClock(out);
     }
 
+    pub fn bootReady(self: *const Context) i32 {
+        return self.base.bootReady();
+    }
+
     pub fn monotonicNanoseconds(self: *const Context) ?u64 {
         return self.base.monotonicNanoseconds();
     }
