@@ -63,6 +63,10 @@ pub const Context = struct {
         return self.base.ipcChannel(channel_id, out);
     }
 
+    pub fn ipcPerformance(self: *const Context, channel_id: u32, out: *abi.IpcPerformanceSummary) i32 {
+        return self.base.ipcPerformance(channel_id, out);
+    }
+
     pub fn netServiceRequest(self: *const Context, channel_id: u32, op: u16, request_id: u32, payload: []const u8, out: []u8) i32 {
         return self.base.netServiceRequest(channel_id, op, request_id, payload, out);
     }

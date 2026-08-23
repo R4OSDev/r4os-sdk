@@ -64,7 +64,10 @@ pub fn bundleValueFromR4XStart(raw: *const abi.R4XStartContext) ?Bundle {
         .sys = resolveGroupTable(abi.R4XStartR4Sys, xs, .r4sys, abi.r4xstart_r4sys_magic, 1, @offsetOf(abi.R4XStartR4Sys, "write") + @sizeOf(usize)),
         .desk = resolveGroupTable(abi.R4XStartR4Desk, xs, .r4desk, abi.r4xstart_r4desk_magic, abi.r4xstart_r4desk_version, abi.r4xstart_r4desk_size),
         .draw = resolveGroupTable(abi.R4XStartR4Draw, xs, .r4draw, abi.r4xstart_r4draw_magic, abi.r4xstart_r4draw_version, abi.r4xstart_r4draw_size),
-        .net = resolveGroupTable(abi.R4XStartR4Net, xs, .r4net, abi.r4xstart_r4net_magic, abi.r4xstart_r4net_version, abi.r4xstart_r4net_size),
+        // R4NET tail functions are optional and append-only. Keep older
+        // kernels usable; tableFn checks the exact size of every requested
+        // slot and netServiceRequest retains its raw-IPC fallback.
+        .net = resolveGroupTable(abi.R4XStartR4Net, xs, .r4net, abi.r4xstart_r4net_magic, 1, @offsetOf(abi.R4XStartR4Net, "tcp_connect") + @sizeOf(usize)),
         .audio = resolveGroupTable(abi.R4XStartR4Audio, xs, .r4audio, abi.r4xstart_r4audio_magic, abi.r4xstart_r4audio_version, abi.r4xstart_r4audio_size),
         // R4DEV tail functions are optional and append-only. Older kernels
         // remain usable; tableFn checks the exact size of each requested slot.
@@ -1966,6 +1969,11 @@ pub const Context = struct {
         return table_fn(channel_id, out);
     }
 
+    pub fn ipcPerformance(self: *const Context, channel_id: u32, out: *abi.IpcPerformanceSummary) i32 {
+        const table_fn = self.netFn("ipc_performance") orelse return self.unavailable("net");
+        return table_fn(channel_id, out);
+    }
+
     pub fn serviceInfo(self: *const Context, index: u32, out: *abi.ServiceInfo) i32 {
         const table_fn = self.sysFn("service_info") orelse return self.unavailable("sys");
         return table_fn(index, out);
@@ -2379,10 +2387,24 @@ pub const Context = struct {
 
     pub fn netServiceRequest(self: *const Context, channel_id: u32, op: u16, request_id: u32, payload: []const u8, out: []u8) i32 {
         if (payload.len > abi.ipc_max_message_size - abi.net_service_header_size) return abi.net_service_result_bad_request;
-        if (out.len < abi.net_service_header_size) return abi.net_service_result_bad_request;
+        if (out.len < abi.net_service_header_size or out.len > abi.ipc_max_message_size) return abi.net_service_result_bad_request;
 
-        var message: [abi.ipc_max_message_size]u8 = .{0} ** abi.ipc_max_message_size;
-        writeNetServiceHeader(message[0..], channel_id, op, request_id, self.netServiceClientId(), abi.net_service_result_ok, @intCast(payload.len)) orelse return abi.net_service_result_bad_request;
+        const client_id = self.netServiceClientId();
+        if (self.netFn("net_service_request")) |table_fn| {
+            return table_fn(
+                channel_id,
+                op,
+                request_id,
+                client_id,
+                payload.ptr,
+                @intCast(payload.len),
+                out.ptr,
+                @intCast(out.len),
+            );
+        }
+
+        var message: [abi.ipc_max_message_size]u8 = undefined;
+        writeNetServiceHeader(message[0..], channel_id, op, request_id, client_id, abi.net_service_result_ok, @intCast(payload.len)) orelse return abi.net_service_result_bad_request;
         if (payload.len != 0) @memcpy(message[abi.net_service_header_size .. abi.net_service_header_size + payload.len], payload);
         if (self.ipcSend(channel_id, message[0 .. abi.net_service_header_size + payload.len]) < 0) return abi.net_service_result_bad_service;
         var attempts: usize = 0;
@@ -4295,4 +4317,100 @@ test "program context distinguishes missing group null pointer and tombstone" {
     var sys: abi.R4XStartR4Sys = .{};
     sys.reserved_shell_run = 1;
     try std.testing.expectEqual(Context.TableFieldState.tombstone, Context.tableFieldState(abi.R4XStartR4Sys, &sys, "reserved_shell_run"));
+}
+
+var test_net_service_direct_calls: u32 = 0;
+var test_net_service_raw_send_calls: u32 = 0;
+var test_net_service_raw_recv_calls: u32 = 0;
+var test_net_service_request_id: u32 = 0;
+var test_net_service_op: u16 = 0;
+
+fn testNetServiceDirect(
+    channel_id: u32,
+    op: u16,
+    request_id: u32,
+    client_id: u16,
+    payload: [*]const u8,
+    payload_len: u32,
+    out: [*]u8,
+    out_capacity: u32,
+) callconv(.c) i32 {
+    test_net_service_direct_calls += 1;
+    if (channel_id != abi.ipc_channel_net_dns or op != abi.net_service_op_dns_status_result or request_id != 91 or client_id == 0) return -1;
+    if (payload_len != 3 or !std.mem.eql(u8, payload[0..3], "abc") or out_capacity < 3) return -1;
+    @memcpy(out[0..3], "new");
+    return 3;
+}
+
+fn testNetServiceRawSend(channel_id: u32, data: [*]const u8, len: u32) callconv(.c) i32 {
+    test_net_service_raw_send_calls += 1;
+    if (channel_id != abi.ipc_channel_net_dns or len < abi.net_service_header_size) return -1;
+    const request = data[0..len];
+    test_net_service_op = readU16(request, 8);
+    test_net_service_request_id = readU32(request, 12);
+    return @intCast(len);
+}
+
+fn testNetServiceRawRecv(channel_id: u32, out: [*]u8, max_len: u32) callconv(.c) i32 {
+    test_net_service_raw_recv_calls += 1;
+    if (channel_id != abi.ipc_channel_net_dns or max_len < abi.net_service_header_size + 3) return -1;
+    const response = out[0..max_len];
+    writeNetServiceHeader(
+        response,
+        channel_id,
+        test_net_service_op,
+        test_net_service_request_id,
+        1,
+        abi.net_service_result_ok,
+        3,
+    ) orelse return -1;
+    @memcpy(response[abi.net_service_header_size .. abi.net_service_header_size + 3], "old");
+    return @intCast(abi.net_service_header_size + 3);
+}
+
+test "network service request prefers the generation-bound tail function" {
+    test_net_service_direct_calls = 0;
+    test_net_service_raw_send_calls = 0;
+    test_net_service_raw_recv_calls = 0;
+
+    var raw: abi.R4XStartContext = .{};
+    var table: abi.R4XStartR4Net = .{};
+    table.size = @intCast(@sizeOf(abi.R4XStartR4Net));
+    table.net_service_request = @intFromPtr(&testNetServiceDirect);
+    table.ipc_send = @intFromPtr(&testNetServiceRawSend);
+    table.ipc_recv = @intFromPtr(&testNetServiceRawRecv);
+    var bundle: Bundle = .{ .raw = &raw, .net = &table };
+    const ctx = Context.initBundle(&bundle);
+    var out: [16]u8 = undefined;
+
+    const got = ctx.netServiceRequest(abi.ipc_channel_net_dns, abi.net_service_op_dns_status_result, 91, "abc", out[0..]);
+    try std.testing.expectEqual(@as(i32, 3), got);
+    try std.testing.expectEqualStrings("new", out[0..3]);
+    try std.testing.expectEqual(@as(u32, 1), test_net_service_direct_calls);
+    try std.testing.expectEqual(@as(u32, 0), test_net_service_raw_send_calls);
+    try std.testing.expectEqual(@as(u32, 0), test_net_service_raw_recv_calls);
+}
+
+test "network service request retains raw IPC fallback for an older table" {
+    test_net_service_direct_calls = 0;
+    test_net_service_raw_send_calls = 0;
+    test_net_service_raw_recv_calls = 0;
+    test_net_service_request_id = 0;
+    test_net_service_op = 0;
+
+    var raw: abi.R4XStartContext = .{};
+    var table: abi.R4XStartR4Net = .{};
+    table.size = @intCast(@offsetOf(abi.R4XStartR4Net, "net_service_request"));
+    table.ipc_send = @intFromPtr(&testNetServiceRawSend);
+    table.ipc_recv = @intFromPtr(&testNetServiceRawRecv);
+    var bundle: Bundle = .{ .raw = &raw, .net = &table };
+    const ctx = Context.initBundle(&bundle);
+    var out: [abi.net_service_header_size + 3]u8 = undefined;
+
+    const got = ctx.netServiceRequest(abi.ipc_channel_net_dns, abi.net_service_op_dns_status_result, 92, "xyz", out[0..]);
+    try std.testing.expectEqual(@as(i32, abi.net_service_header_size + 3), got);
+    try std.testing.expectEqualStrings("old", out[abi.net_service_header_size..]);
+    try std.testing.expectEqual(@as(u32, 0), test_net_service_direct_calls);
+    try std.testing.expectEqual(@as(u32, 1), test_net_service_raw_send_calls);
+    try std.testing.expectEqual(@as(u32, 1), test_net_service_raw_recv_calls);
 }

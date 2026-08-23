@@ -25,7 +25,9 @@ static inline int32_t r4net_init(const R4XStartContext *ctx, R4Net *out) {
     const R4XStartR4Net *table = (const R4XStartR4Net *)(uintptr_t)item->table;
     if (table->magic != R4XSTART_R4NET_MAGIC) return R4OS_ERROR_INVALID;
     if (table->abi_version < R4XSTART_R4NET_VERSION) return R4OS_ERROR_INVALID;
-    if (table->size < R4XSTART_R4NET_SIZE) return R4OS_ERROR_INVALID;
+    /* R4NET grows append-only. Older kernels remain valid; callers must
+     * check table->size before using a tail slot. */
+    if (table->size < offsetof(R4XStartR4Net, tcp_connect) + sizeof(uintptr_t)) return R4OS_ERROR_INVALID;
     if (table->tcp_connect == 0) return R4OS_ERROR_INVALID;
     out->table = table;
     return R4OS_OK;
