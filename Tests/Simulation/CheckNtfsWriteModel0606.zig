@@ -20,6 +20,8 @@ const CLUSTER: usize = 4096;
 const RamDevice = struct {
     image: []u8,
     flushes: u32 = 0,
+    write_attempts: u64 = 0,
+    fail_write_at: ?u64 = null,
 
     fn read(ctx: *anyopaque, lba: u64, count: u32, out: []u8) bool {
         const self: *RamDevice = @ptrCast(@alignCast(ctx));
@@ -32,11 +34,21 @@ const RamDevice = struct {
 
     fn write(ctx: *anyopaque, lba: u64, count: u32, data: []const u8) bool {
         const self: *RamDevice = @ptrCast(@alignCast(ctx));
+        self.write_attempts += 1;
+        if (self.fail_write_at == self.write_attempts) {
+            self.fail_write_at = null;
+            return false;
+        }
         const start: usize = @intCast(lba * 512);
         const len: usize = @intCast(@as(u64, count) * 512);
         if (start + len > self.image.len or data.len < len) return false;
         @memcpy(self.image[start .. start + len], data[0..len]);
         return true;
+    }
+
+    fn failWriteAfter(self: *RamDevice, attempts: u64) void {
+        std.debug.assert(attempts != 0);
+        self.fail_write_at = self.write_attempts + attempts;
     }
 
     fn flush(ctx: *anyopaque) bool {
@@ -251,6 +263,108 @@ pub fn main(init: std.process.Init) !void {
             @memcpy(disk[2048 * 512 ..], image);
             try cwd.writeFile(io, .{ .sub_path = path, .data = disk });
             std.debug.print("NTFSWRITE image written: {s}\n", .{path});
+        }
+    }
+
+    // --- Transactional allocation and cleanup fault cases -----------------
+    {
+        const image = try formatFresh(allocator, meta);
+        var dev = RamDevice{ .image = image };
+        var v = openVolume(&dev) orelse {
+            fail("transaction mount failed", .{});
+            return finish();
+        };
+        vol.flush_budget = null;
+        const initial_free = vol.freeClusterCount(&v) orelse {
+            fail("transaction free-cluster baseline unavailable", .{});
+            return finish();
+        };
+
+        // Exhaust free space, reopen four isolated holes, and prove that an
+        // undersized result buffer rejects the complete plan without setting
+        // even its first two bitmap runs.
+        var all_runs: [256]ntfs.Run = undefined;
+        const all = vol.allocateClustersForTest(&v, initial_free, all_runs[0..]);
+        if (all.status != .ok) {
+            fail("transaction full allocation failed: {s}", .{@tagName(all.status)});
+        } else {
+            var long_run: ?ntfs.Run = null;
+            for (all_runs[0..all.produced]) |run| {
+                if (run.lcn != null and run.length_clusters >= 7) {
+                    long_run = run;
+                    break;
+                }
+            }
+            if (long_run) |run| {
+                const base = run.lcn.?;
+                const sparse = [_]ntfs.Run{
+                    .{ .length_clusters = 1, .lcn = base },
+                    .{ .length_clusters = 1, .lcn = base + 2 },
+                    .{ .length_clusters = 1, .lcn = base + 4 },
+                    .{ .length_clusters = 1, .lcn = base + 6 },
+                };
+                if (!vol.freeClustersForTest(&v, sparse[0..])) {
+                    fail("transaction sparse-hole setup failed", .{});
+                } else {
+                    const before = vol.freeClusterCount(&v) orelse 0;
+                    var short_runs: [2]ntfs.Run = undefined;
+                    const rejected = vol.allocateClustersForTest(&v, 4, short_runs[0..]);
+                    const after = vol.freeClusterCount(&v) orelse 0;
+                    if (rejected.status != .record_full or rejected.produced != 0 or before != 4 or after != before) {
+                        fail("transaction run-capacity rollback mismatch status={s} before={d} after={d}", .{ @tagName(rejected.status), before, after });
+                    }
+                }
+            } else {
+                fail("transaction fixture has no long free run", .{});
+            }
+            if (!vol.freeClustersForTest(&v, all_runs[0..all.produced])) {
+                fail("transaction capacity cleanup failed", .{});
+            }
+            const restored = vol.freeClusterCount(&v) orelse 0;
+            if (restored != initial_free) fail("transaction capacity cleanup count {d} != {d}", .{ restored, initial_free });
+        }
+
+        // Failing the second bitmap-sector write must undo the already
+        // committed first sector as well as the partially attempted range.
+        const before_bitmap_fault = vol.freeClusterCount(&v) orelse 0;
+        var bitmap_runs: [256]ntfs.Run = undefined;
+        dev.failWriteAfter(2);
+        const bitmap_fault = vol.allocateClustersForTest(&v, before_bitmap_fault, bitmap_runs[0..]);
+        const after_bitmap_fault = vol.freeClusterCount(&v) orelse 0;
+        if (bitmap_fault.status != .io or bitmap_fault.produced != 0 or after_bitmap_fault != before_bitmap_fault) {
+            fail("transaction bitmap rollback mismatch status={s} before={d} after={d}", .{ @tagName(bitmap_fault.status), before_bitmap_fault, after_bitmap_fault });
+        }
+
+        // A failed release is a distinct cleanup error and must retain the
+        // dirty bit.  Once I/O works again, cleanup can be completed exactly.
+        var cleanup_runs: [8]ntfs.Run = undefined;
+        const cleanup_allocation = vol.allocateClustersForTest(&v, 2, cleanup_runs[0..]);
+        if (cleanup_allocation.status != .ok or !vol.setDirty(&v, true)) {
+            fail("transaction cleanup setup failed", .{});
+        } else {
+            dev.failWriteAfter(1);
+            const cleanup_status = vol.abortWriteFreeingForTest(&v, cleanup_runs[0..cleanup_allocation.produced], .invalid);
+            const dirty_after_cleanup_fault = vol.isDirty(&v) orelse false;
+            if (cleanup_status != .cleanup_failed or !dirty_after_cleanup_fault) {
+                fail("transaction cleanup failure hidden status={s} dirty={}", .{ @tagName(cleanup_status), dirty_after_cleanup_fault });
+            }
+            if (!vol.freeClustersForTest(&v, cleanup_runs[0..cleanup_allocation.produced]) or !vol.setDirty(&v, false)) {
+                fail("transaction cleanup recovery failed", .{});
+            }
+        }
+
+        // Dirty-clear itself is part of cleanup and therefore follows the
+        // same explicit failure contract.
+        if (!vol.setDirty(&v, true)) {
+            fail("transaction dirty-clear setup failed", .{});
+        } else {
+            dev.failWriteAfter(1);
+            const clear_status = vol.abortWriteForTest(&v, .invalid);
+            const still_dirty = vol.isDirty(&v) orelse false;
+            if (clear_status != .cleanup_failed or !still_dirty) {
+                fail("transaction dirty-clear failure hidden status={s} dirty={}", .{ @tagName(clear_status), still_dirty });
+            }
+            if (!vol.setDirty(&v, false)) fail("transaction final dirty clear failed", .{});
         }
     }
 
