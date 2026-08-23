@@ -190,3 +190,9 @@ wirksame Ereignisrate. `monotonicNanoseconds` ist der direkte Apppfad;
 bei einem aelteren Kernel auf `TimeState` zurueck. R4DEV-Fassaden stellen die
 zugehoerigen Bootphasen- und IRQ-Zeitinformationen bereit. Jeder angehaengte
 Slot wird einzeln ueber die Tabellengroesse geprueft.
+
+Der append-only R4DEV-Slot `performance_pci_inventory` liefert den kompakten
+kanonischen PCI-Snapshot mit Quelle, Kapazitaet, Configzugriffen, ECAM-
+Mappingarbeit, Such-/Detailzaehlern und Enumerationszeit. Die Zig-Fassaden in
+`r4os.program` und `r4os.r4dev` sowie der C-Helper behandeln den Slot als
+optional und bleiben damit gegenueber aelteren Kerneln lesbar.

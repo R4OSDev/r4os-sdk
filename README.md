@@ -20,6 +20,11 @@ cooperatively after the batch budget. `ServiceLoopMetrics` and `report()`
 provide passive numeric wait, wake, drain, and fairness counters without an
 API or ABI extension.
 
+The append-only R4DEV tail includes a PCI inventory performance snapshot.
+Zig and C facades expose its source, capacity, configuration-access, ECAM
+mapping, lookup, materialization, and enumeration timing counters while
+remaining optional for older kernels.
+
 ## Dependency mapping
 
 `Settings.R4S` maps the local Contract and workspace paths. Relative and

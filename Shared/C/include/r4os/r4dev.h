@@ -100,6 +100,22 @@ static inline int32_t r4dev_performance_driver_work(
     return snapshot_fn(owner, out_info);
 }
 
+static inline int32_t r4dev_performance_pci_inventory(
+    const R4Dev *dev,
+    R4ProgramPciInventoryPerformanceInfo *out_info)
+{
+    if (out_info == 0) return R4OS_ERROR_INVALID;
+    if (!r4dev_available(dev) ||
+        dev->table->size < offsetof(R4XStartR4Dev, performance_pci_inventory) + sizeof(uintptr_t) ||
+        dev->table->performance_pci_inventory == 0)
+    {
+        return R4OS_ERR_NO_FN;
+    }
+    R4DevPerformancePciInventoryFn snapshot_fn =
+        (R4DevPerformancePciInventoryFn)(uintptr_t)dev->table->performance_pci_inventory;
+    return snapshot_fn(out_info);
+}
+
 #ifdef __cplusplus
 }
 #endif

@@ -176,6 +176,10 @@ pub const Context = struct {
         return self.base.performanceDriverWork(owner);
     }
 
+    pub fn performancePciInventory(self: *const Context) ?abi.ProgramPciInventoryPerformanceInfo {
+        return self.base.performancePciInventory();
+    }
+
     pub fn performanceIrqTiming(self: *const Context, irq: u32) ?abi.ProgramIrqTimingInfo {
         return self.base.performanceIrqTiming(irq);
     }
