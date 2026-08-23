@@ -135,6 +135,10 @@ pub const Context = struct {
         return self.api.alloc_dma_region(bytes, alignment, out);
     }
 
+    pub fn allocDmaRegionConstrained(self: *const Context, bytes: u32, alignment: u32, max_phys_addr: u64, out: *abi.DmaBuffer) i32 {
+        return self.api.alloc_dma_region_constrained(bytes, alignment, max_phys_addr, out);
+    }
+
     pub fn freeDmaRegion(self: *const Context, buffer: *abi.DmaBuffer) void {
         self.api.free_dma_region(buffer);
     }
@@ -177,6 +181,10 @@ pub const Context = struct {
 
     pub fn pciEnableMsi(self: *const Context, info: abi.PciDeviceInfo) i32 {
         return self.api.pci_enable_msi(info.bus_kind, info.bus, info.device, info.function);
+    }
+
+    pub fn pciDisableMsi(self: *const Context, info: abi.PciDeviceInfo) i32 {
+        return self.api.pci_disable_msi(info.bus_kind, info.bus, info.device, info.function);
     }
 
     pub fn irqUnregister(self: *const Context, irq: u8, handler: abi.IrqHandler, context: usize) i32 {
