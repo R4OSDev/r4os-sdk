@@ -5,7 +5,10 @@ const legacy_project = contract_bundle.legacy;
 const legacy_converter = contract_bundle;
 
 const Action = enum { catalog, image_inventory, inventories, validate, resolve, plan, contract_plan, image_plan, workspace_image_plan, convert_r4cp };
-const ImageMode = enum { slim, full, @"test" };
+// ImageMode describes a selection policy, not another IMAGE_SCOPE value.
+// Benchmark deliberately reuses slim/full and admits only explicitly named
+// test diagnostics, so manifests keep the canonical slim/full/test scopes.
+const ImageMode = enum { slim, full, @"test", benchmark };
 const max_extra_manifests = 32;
 const max_image_include_targets = 32;
 const max_workspace_map_bytes = 1024 * 1024;
@@ -234,7 +237,7 @@ fn parseOptions(args: []const []const u8) !Options {
         } else if (std.mem.eql(u8, arg, "--image-mode")) {
             index += 1;
             if (index >= args.len) return error.MissingOptionValue;
-            options.image_mode = if (std.mem.eql(u8, args[index], "slim")) .slim else if (std.mem.eql(u8, args[index], "full")) .full else if (std.mem.eql(u8, args[index], "test")) .@"test" else return error.InvalidImageMode;
+            options.image_mode = if (std.mem.eql(u8, args[index], "slim")) .slim else if (std.mem.eql(u8, args[index], "full")) .full else if (std.mem.eql(u8, args[index], "test")) .@"test" else if (std.mem.eql(u8, args[index], "benchmark")) .benchmark else return error.InvalidImageMode;
         } else if (std.mem.eql(u8, arg, "--extra-manifest")) {
             index += 1;
             if (index >= args.len) return error.MissingOptionValue;
@@ -338,10 +341,10 @@ fn printUsage() void {
         \\  module-catalog resolve --root Code --name NAME [--kind R4X] [--path-only|--kind-only]
         \\  module-catalog plan --manifest FILE [--output FILE|--artifact-only]
         \\  module-catalog contract-plan --manifest FILE [--output FILE]
-        \\  module-catalog image-inventory --root Code --image-mode slim|full|test [--extra-manifest FILE] [--include-target TARGET] [--kernel-version-source FILE --kernel-artifact ELF] [--output FILE]
-        \\  module-catalog inventories --root Code --image-mode slim|full|test --output FILE --image-output FILE [--extra-manifest FILE] [--include-target TARGET] [--kernel-version-source FILE --kernel-artifact ELF] [--release-version-source FILE --release-output FILE]
-        \\  module-catalog image-plan --root Code --image-mode slim|full|test [--extra-manifest FILE] [--include-target TARGET] [--output FILE]
-        \\  module-catalog workspace-image-plan --workspace-map FILE --image-mode slim|full|test [--include-target TARGET] [--kernel-version-source FILE --kernel-artifact ELF --inventory-output FILE] [--output FILE]
+        \\  module-catalog image-inventory --root Code --image-mode slim|full|test|benchmark [--extra-manifest FILE] [--include-target TARGET] [--kernel-version-source FILE --kernel-artifact ELF] [--output FILE]
+        \\  module-catalog inventories --root Code --image-mode slim|full|test|benchmark --output FILE --image-output FILE [--extra-manifest FILE] [--include-target TARGET] [--kernel-version-source FILE --kernel-artifact ELF] [--release-version-source FILE --release-output FILE]
+        \\  module-catalog image-plan --root Code --image-mode slim|full|test|benchmark [--extra-manifest FILE] [--include-target TARGET] [--output FILE]
+        \\  module-catalog workspace-image-plan --workspace-map FILE --image-mode slim|full|test|benchmark [--include-target TARGET] [--kernel-version-source FILE --kernel-artifact ELF --inventory-output FILE] [--output FILE]
         \\  module-catalog convert-r4cp --manifest LEGACY.R4CP --output module.R4MF
         \\
     , .{});
@@ -482,9 +485,15 @@ fn imageEntryIncluded(entry: manifest_contract.Manifest, mode: ImageMode, includ
         .slim => scope == .slim,
         .full => scope == .slim or scope == .full,
         .@"test" => scope == .slim or scope == .@"test",
+        .benchmark => scope == .slim or scope == .full,
     };
     if (scoped) return true;
-    if (mode != .@"test" or scope != .full) return false;
+    const explicit_scope: manifest_contract.ImageScope = switch (mode) {
+        .@"test" => .full,
+        .benchmark => .@"test",
+        else => return false,
+    };
+    if (scope != explicit_scope) return false;
     for (include_targets) |target| {
         if (std.ascii.eqlIgnoreCase(entry.target, target)) return true;
     }
@@ -492,7 +501,12 @@ fn imageEntryIncluded(entry: manifest_contract.Manifest, mode: ImageMode, includ
 }
 
 fn validateImageIncludes(entries: []const manifest_contract.Manifest, mode: ImageMode, include_targets: []const []const u8) !void {
-    if (include_targets.len != 0 and mode != .@"test") return error.ImageIncludesRequireTestMode;
+    if (include_targets.len != 0 and mode != .@"test" and mode != .benchmark) return error.ImageIncludesRequireExplicitMode;
+    const explicit_scope: ?manifest_contract.ImageScope = switch (mode) {
+        .@"test" => .full,
+        .benchmark => .@"test",
+        else => null,
+    };
     for (include_targets, 0..) |target, index| {
         if (target.len == 0 or target[0] != '/') return error.InvalidImageIncludeTarget;
         for (include_targets[0..index]) |previous| {
@@ -505,7 +519,7 @@ fn validateImageIncludes(entries: []const manifest_contract.Manifest, mode: Imag
             match = entry;
         }
         const entry = match orelse return error.UnknownImageIncludeTarget;
-        if (entry.image_scope.? != .full) return error.ImageIncludeTargetNotOptionalFull;
+        if (entry.image_scope.? != explicit_scope.?) return error.ImageIncludeTargetWrongScope;
     }
 }
 
@@ -1245,4 +1259,26 @@ test "catalog and image inventory expose normalized subsystem contract" {
     const inventory = try renderImageInventory(allocator, &.{entry}, .@"test", &.{}, null);
     try std.testing.expect(std.mem.indexOf(u8, inventory, "\"schema\": 4") != null);
     try std.testing.expect(std.mem.indexOf(u8, inventory, "\"guest_formats\": [\"fixture.source\"]") != null);
+}
+
+test "benchmark selection is full plus explicit test diagnostics" {
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+    const allocator = arena.allocator();
+    const fixture = try std.Io.Dir.cwd().readFileAlloc(std.testing.io, "Tests/Fixture/SubsystemCatalog/RepoA/module.R4MF.fixture", allocator, .limited(manifest_contract.max_manifest_bytes));
+    const full_text = try std.mem.replaceOwned(u8, allocator, fixture, "IMAGE_SCOPE=slim", "IMAGE_SCOPE=full");
+    const test_text = try std.mem.replaceOwned(u8, allocator, fixture, "IMAGE_SCOPE=slim", "IMAGE_SCOPE=test");
+    const full_entry = try manifest_contract.parse(allocator, "Full/module.R4MF", full_text);
+    const test_entry = try manifest_contract.parse(allocator, "Test/module.R4MF", test_text);
+
+    try std.testing.expect(imageEntryIncluded(full_entry, .benchmark, &.{}));
+    try std.testing.expect(!imageEntryIncluded(test_entry, .benchmark, &.{}));
+    try std.testing.expect(imageEntryIncluded(test_entry, .benchmark, &.{test_entry.target}));
+    try validateImageIncludes(&.{test_entry}, .benchmark, &.{test_entry.target});
+    try std.testing.expectError(error.ImageIncludeTargetWrongScope, validateImageIncludes(&.{full_entry}, .benchmark, &.{full_entry.target}));
+
+    try std.testing.expect(imageEntryIncluded(test_entry, .@"test", &.{}));
+    try std.testing.expect(!imageEntryIncluded(full_entry, .@"test", &.{}));
+    try std.testing.expect(imageEntryIncluded(full_entry, .@"test", &.{full_entry.target}));
+    try validateImageIncludes(&.{full_entry}, .@"test", &.{full_entry.target});
 }
