@@ -3,6 +3,7 @@ const abi = @import("r4os_contract").abi;
 const r4net = @import("r4net.zig");
 const r4sys = @import("r4sys.zig");
 const services_facade = @import("app_services.zig");
+const service_deadline = @import("service_deadline.zig");
 const time_contract = @import("time_contract.zig");
 
 const dns_service: [*:0]const u8 = "DNSSVC";
@@ -119,7 +120,7 @@ pub const Network = struct {
         @memcpy(request[0..4], remote.address.octets[0..]);
         writeU16(request[0..], 4, remote.port);
         var response: [@sizeOf(abi.NetServiceTcpResult)]u8 = undefined;
-        const call = self.serviceCall(tcp_service, abi.net_service_op_tcp_connect_result, request[0..], response[0..], timeout);
+        const call = self.tcpServiceCall(abi.net_service_op_tcp_connect_result, request[0..], response[0..], timeout);
         const result = parseTcpCall(call, response[0..]) catch |raw| return mapTcpOpenFailure(raw);
         const state = classifyTcp(result);
         if (state != .ok) return mapTcpOpenState(state, result.result);
@@ -131,7 +132,7 @@ pub const Network = struct {
         var request: [2]u8 = undefined;
         writeU16(request[0..], 0, port);
         var response: [@sizeOf(abi.NetServiceTcpResult)]u8 = undefined;
-        const call = self.serviceCall(tcp_service, abi.net_service_op_tcp_listen_result, request[0..], response[0..], timeout);
+        const call = self.tcpServiceCall(abi.net_service_op_tcp_listen_result, request[0..], response[0..], timeout);
         const result = parseTcpCall(call, response[0..]) catch |raw| return mapListenerFailure(raw);
         return switch (classifyTcp(result)) {
             .ok => .{ .listener = .{ .network = self.*, .port = port, .owned = true } },
@@ -162,6 +163,15 @@ pub const Network = struct {
         };
         defer _ = connection.close();
         return connection.call(op, request, response, timeout);
+    }
+
+    fn tcpServiceCall(self: *const Network, op: u16, request: []const u8, response: []u8, timeout: Timeout) services_facade.ServiceCall {
+        var encoded: [abi.service_api_max_payload]u8 = undefined;
+        const deadline_tick = service_deadline.deadlineFromTimeout(timeout, self.sys.ticks(), self.sys.monotonicHz()) catch
+            return .{ .failure = abi.service_api_result_invalid };
+        const payload = service_deadline.append(encoded[0..], request, deadline_tick) orelse
+            return .{ .failure = abi.service_api_result_buffer_too_small };
+        return self.serviceCall(tcp_service, op, payload, response, timeout);
     }
 };
 
@@ -208,7 +218,7 @@ pub const TcpSocket = struct {
         writeU32(request[0..], 0, self.raw);
         @memcpy(request[4 .. 4 + data.len], data);
         var response: [@sizeOf(abi.NetServiceTcpResult)]u8 = undefined;
-        const call = self.network.serviceCall(tcp_service, abi.net_service_op_tcp_write_result, request[0 .. 4 + data.len], response[0..], timeout);
+        const call = self.network.tcpServiceCall(abi.net_service_op_tcp_write_result, request[0 .. 4 + data.len], response[0..], timeout);
         const result = parseTcpCall(call, response[0..]) catch |raw| return mapSocketFailure(raw);
         return self.finishIo(result, result.bytes);
     }
@@ -220,7 +230,7 @@ pub const TcpSocket = struct {
         writeU32(request[0..], 0, self.raw);
         writeU16(request[0..], 4, @intCast(capacity));
         var response: [@sizeOf(abi.NetServiceTcpResult) + abi.net_service_tcp_read_max]u8 = undefined;
-        const call = self.network.serviceCall(tcp_service, abi.net_service_op_tcp_read_result, request[0..], response[0..], timeout);
+        const call = self.network.tcpServiceCall(abi.net_service_op_tcp_read_result, request[0..], response[0..], timeout);
         const result = parseTcpCall(call, response[0..]) catch |raw| return mapSocketFailure(raw);
         const outcome = self.finishIo(result, result.bytes);
         switch (outcome) {
@@ -239,7 +249,7 @@ pub const TcpSocket = struct {
         var request: [4]u8 = undefined;
         writeU32(request[0..], 0, self.raw);
         var response: [@sizeOf(abi.NetServiceTcpResult)]u8 = undefined;
-        const call = self.network.serviceCall(tcp_service, abi.net_service_op_tcp_poll_result, request[0..], response[0..], timeout);
+        const call = self.network.tcpServiceCall(abi.net_service_op_tcp_poll_result, request[0..], response[0..], timeout);
         const result = parseTcpCall(call, response[0..]) catch |raw| return mapSocketFailure(raw);
         return self.finishIo(result, result.pending_rx);
     }
@@ -250,7 +260,7 @@ pub const TcpSocket = struct {
         var request: [4]u8 = undefined;
         writeU32(request[0..], 0, self.raw);
         var response: [@sizeOf(abi.NetServiceTcpResult)]u8 = undefined;
-        const call = self.network.serviceCall(tcp_service, abi.net_service_op_tcp_close_result, request[0..], response[0..], timeout);
+        const call = self.network.tcpServiceCall(abi.net_service_op_tcp_close_result, request[0..], response[0..], timeout);
         const result = parseTcpCall(call, response[0..]) catch |raw| return mapSocketFailure(raw);
         const state = classifyTcp(result);
         if (state == .ok or state == .closed) {
@@ -281,7 +291,7 @@ pub const TcpListener = struct {
         var request: [2]u8 = undefined;
         writeU16(request[0..], 0, self.port);
         var response: [@sizeOf(abi.NetServiceTcpResult)]u8 = undefined;
-        const call = self.network.serviceCall(tcp_service, abi.net_service_op_tcp_accept_poll_result, request[0..], response[0..], timeout);
+        const call = self.network.tcpServiceCall(abi.net_service_op_tcp_accept_poll_result, request[0..], response[0..], timeout);
         const result = parseTcpCall(call, response[0..]) catch |raw| return mapAcceptFailure(raw);
         const state = classifyTcp(result);
         if (state == .ok and (result.flags & abi.net_service_tcp_flag_handle_valid) != 0 and result.handle != 0) {
@@ -297,7 +307,7 @@ pub const TcpListener = struct {
         var request: [2]u8 = undefined;
         writeU16(request[0..], 0, self.port);
         var response: [@sizeOf(abi.NetServiceTcpResult)]u8 = undefined;
-        const call = self.network.serviceCall(tcp_service, abi.net_service_op_tcp_close_listen_result, request[0..], response[0..], timeout);
+        const call = self.network.tcpServiceCall(abi.net_service_op_tcp_close_listen_result, request[0..], response[0..], timeout);
         const result = parseTcpCall(call, response[0..]) catch |raw| return mapSocketFailure(raw);
         const state = classifyTcp(result);
         if (state == .ok or state == .closed) {

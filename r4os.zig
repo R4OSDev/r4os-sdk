@@ -126,6 +126,7 @@ pub const web_encoding = @import("r4os/web_encoding.zig");
 pub const web_fetch = @import("r4os/web_fetch.zig");
 pub const path = @import("r4os/path.zig");
 pub const time_contract = @import("r4os/time_contract.zig");
+pub const service_deadline = @import("r4os/service_deadline.zig");
 pub const file_stream = @import("r4os/file_stream.zig");
 pub const r4cp = @import("r4os/r4cp.zig");
 pub const r4cp_convert = @import("r4os/r4cp_convert.zig");

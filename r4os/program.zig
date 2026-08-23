@@ -2,6 +2,7 @@ const abi = @import("r4os_contract").abi;
 const std = @import("std");
 const vm_allocator = @import("vm_allocator.zig");
 const r4xstart = @import("r4xstart.zig");
+const service_deadline = @import("service_deadline.zig");
 const time_contract = @import("time_contract.zig");
 
 pub const ServiceStopPolicy = enum(u8) {
@@ -2903,7 +2904,11 @@ pub const Context = struct {
 
         var header: abi.ServiceMessageHeader = .{};
         var response: [abi.service_api_max_payload]u8 = undefined;
-        const got = self.serviceCall(info.handle, op, "", &header, response[0..], self.ticksFromMilliseconds(dhcp_r4x_service_timeout_ms));
+        var request: [service_deadline.footer_size]u8 = undefined;
+        const timeout_ticks = self.ticksFromMilliseconds(dhcp_r4x_service_timeout_ms);
+        const deadline_tick = self.ticks() +| timeout_ticks;
+        const payload = service_deadline.append(request[0..], "", deadline_tick) orelse return abi.net_tx_backend_error;
+        const got = self.serviceCall(info.handle, op, payload, &header, response[0..], timeout_ticks);
         if (got < @as(i32, @intCast(@sizeOf(abi.NetServiceDhcpResult))) or header.status != abi.service_api_result_ok) return abi.net_tx_backend_error;
         const out_bytes: [*]u8 = @ptrCast(out);
         @memcpy(out_bytes[0..@sizeOf(abi.NetServiceDhcpResult)], response[0..@sizeOf(abi.NetServiceDhcpResult)]);

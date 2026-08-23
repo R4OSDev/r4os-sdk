@@ -27,6 +27,37 @@ comptime {
 
 pub const Timeout = time_contract.Timeout;
 
+const RequestDeadline = struct {
+    deadline_tick: u64 = 0,
+    forever: bool = false,
+    valid: bool = true,
+
+    fn start(network: *const app_network.Network, timeout: Timeout) RequestDeadline {
+        const wait_ticks = time_contract.timeoutToTicks(timeout, network.sys.monotonicHz()) catch
+            return .{ .valid = false };
+        return fromTicks(network.sys.ticks(), wait_ticks);
+    }
+
+    fn fromTicks(now: u64, wait_ticks: u64) RequestDeadline {
+        if (wait_ticks == abi.io_wait_forever) return .{ .forever = true };
+        return .{ .deadline_tick = now +| wait_ticks };
+    }
+
+    fn remaining(self: RequestDeadline, network: *const app_network.Network) Timeout {
+        if (!self.valid) return time_contract.timeoutPoll();
+        if (self.forever) return time_contract.timeoutForever();
+        const now = network.sys.ticks();
+        if (now >= self.deadline_tick) return time_contract.timeoutPoll();
+        const duration = time_contract.durationFromTicks(self.deadline_tick - now, network.sys.monotonicHz()) catch
+            return time_contract.timeoutPoll();
+        return time_contract.timeoutFinite(duration);
+    }
+
+    fn expired(self: RequestDeadline, network: *const app_network.Network) bool {
+        return !self.valid or (!self.forever and network.sys.ticks() >= self.deadline_tick);
+    }
+};
+
 pub const Error = enum(u8) {
     invalid_url,
     unsupported_scheme,
@@ -352,6 +383,7 @@ pub const WebTransport = struct {
     pub fn fetch(self: *WebTransport, raw_url: []const u8, raw_response: []u8, body_out: []u8, scratch: []u8, options: FetchOptions) FetchResult {
         if (scratch.len < tls_scratch_bytes) return .{ .failure = .scratch_too_small };
         if (raw_url.len == 0 or raw_url.len > max_url_bytes) return .{ .failure = .invalid_url };
+        const deadline = RequestDeadline.start(&self.network, options.timeout);
         var url_a: [max_url_bytes]u8 = undefined;
         var url_b: [max_url_bytes]u8 = undefined;
         @memcpy(url_a[0..raw_url.len], raw_url);
@@ -367,6 +399,7 @@ pub const WebTransport = struct {
 
         while (true) {
             if (shouldStop(options)) return .{ .failure = .cancelled };
+            if (deadline.expired(&self.network)) return .{ .failure = .read_timeout };
             if (!targetAuthorized(options, current)) return .{ .failure = .policy_rejected };
             const parsed = switch (http.parseUrl(current)) {
                 .value => |value| value,
@@ -376,7 +409,7 @@ pub const WebTransport = struct {
                 var preflight_headers_buffer: [max_request_bytes]u8 = undefined;
                 const preflight_headers = corsPreflightHeaders(method, request_headers, preflight_headers_buffer[0..]) orelse return .{ .failure = .cors_preflight_failed };
                 if (preflight_headers.len > 0) {
-                    const preflight_once = self.fetchOnce(current, parsed, raw_response, body_out, scratch, options, .options, preflight_headers, "", "", false, false);
+                    const preflight_once = self.fetchOnce(current, parsed, raw_response, body_out, scratch, options, deadline, .options, preflight_headers, "", "", false, false);
                     const preflight = switch (preflight_once) {
                         .response => |value| value,
                         .failure => return .{ .failure = .cors_preflight_failed },
@@ -384,7 +417,7 @@ pub const WebTransport = struct {
                     if (!acceptsPreflight(preflight.http_response, options.origin, method, request_headers, options.credentials_include)) return .{ .failure = .cors_preflight_failed };
                 }
             }
-            const once = self.fetchOnce(current, parsed, raw_response, body_out, scratch, options, method, request_headers, content_type, body, redirects == 0, true);
+            const once = self.fetchOnce(current, parsed, raw_response, body_out, scratch, options, deadline, method, request_headers, content_type, body, redirects == 0, true);
             const response = switch (once) {
                 .response => |value| value,
                 .failure => |err| {
@@ -456,6 +489,7 @@ pub const WebTransport = struct {
         if (options.method != .get and options.method != .head) return .{ .failure = .unsupported_method };
         if (options.method == .head and options.resume_from != 0) return .{ .failure = .content_range_mismatch };
         if (http.serializedHeadersContain(options.headers, "Range")) return .{ .failure = .range_header_conflict };
+        const deadline = RequestDeadline.start(&self.network, options.timeout);
 
         var url_a: [max_url_bytes]u8 = undefined;
         var url_b: [max_url_bytes]u8 = undefined;
@@ -473,6 +507,7 @@ pub const WebTransport = struct {
 
         while (true) {
             if (downloadStopped(options)) return .{ .failure = .cancelled };
+            if (deadline.expired(&self.network)) return .{ .failure = .read_timeout };
             if (!downloadTargetAuthorized(options, current)) return .{ .failure = .policy_rejected };
             const parsed = switch (http.parseUrl(current)) {
                 .value => |value| value,
@@ -480,7 +515,7 @@ pub const WebTransport = struct {
             };
             var ranged_headers: [max_request_bytes]u8 = undefined;
             const headers = appendRangeHeader(request_headers, resume_offset, ranged_headers[0..]) orelse return .{ .failure = .request_too_large };
-            const attempt = self.downloadOnce(parsed, headers, header_buffer, io_buffer, scratch, sink, resume_offset, expected_size, options);
+            const attempt = self.downloadOnce(parsed, headers, header_buffer, io_buffer, scratch, sink, resume_offset, expected_size, options, deadline);
             switch (attempt) {
                 .response => |response| {
                     transferred += response.transferred;
@@ -571,6 +606,7 @@ pub const WebTransport = struct {
         body_out: []u8,
         scratch: []u8,
         options: FetchOptions,
+        deadline: RequestDeadline,
         method: http.Method,
         headers: []const u8,
         content_type: []const u8,
@@ -579,18 +615,18 @@ pub const WebTransport = struct {
         allow_cookies: bool,
     ) OnceResult {
         var resolver = self.network.resolver();
-        const address = switch (resolver.resolveA(url.host, null, options.timeout)) {
+        const address = switch (resolver.resolveA(url.host, null, deadline.remaining(&self.network))) {
             .address => |value| value,
             .timed_out => return .{ .failure = .dns_timeout },
             .not_found => return .{ .failure = .dns_not_found },
             else => return .{ .failure = .dns_failed },
         };
-        var socket = switch (self.network.connectTcp(.{ .address = address, .port = url.port }, options.timeout)) {
+        var socket = switch (self.network.connectTcp(.{ .address = address, .port = url.port }, deadline.remaining(&self.network))) {
             .socket => |value| value,
             .timed_out => return .{ .failure = .connect_timeout },
             else => return .{ .failure = .connect_failed },
         };
-        defer _ = socket.close(options.timeout);
+        defer _ = socket.close(deadline.remaining(&self.network));
 
         var cookie_buffer: [1024]u8 = undefined;
         const cookie = if (!allow_cookies)
@@ -613,9 +649,9 @@ pub const WebTransport = struct {
             else => return .{ .failure = .request_too_large },
         };
         return if (url.scheme == .http)
-            self.fetchPlain(&socket, request, raw_response, body_out, options)
+            self.fetchPlain(&socket, request, raw_response, body_out, options, deadline)
         else
-            self.fetchTls(&socket, url, request, raw_response, body_out, scratch, options);
+            self.fetchTls(&socket, url, request, raw_response, body_out, scratch, options, deadline);
     }
 
     fn downloadOnce(
@@ -629,20 +665,21 @@ pub const WebTransport = struct {
         resume_from: u64,
         expected_size: ?u64,
         options: DownloadOptions,
+        deadline: RequestDeadline,
     ) DownloadAttempt {
         var resolver = self.network.resolver();
-        const address = switch (resolver.resolveA(url.host, null, options.timeout)) {
+        const address = switch (resolver.resolveA(url.host, null, deadline.remaining(&self.network))) {
             .address => |value| value,
             .timed_out => return downloadFailure(.dns_timeout),
             .not_found => return downloadFailure(.dns_not_found),
             else => return downloadFailure(.dns_failed),
         };
-        var socket = switch (self.network.connectTcp(.{ .address = address, .port = url.port }, options.timeout)) {
+        var socket = switch (self.network.connectTcp(.{ .address = address, .port = url.port }, deadline.remaining(&self.network))) {
             .socket => |value| value,
             .timed_out => return downloadFailure(.connect_timeout),
             else => return downloadFailure(.connect_failed),
         };
-        defer _ = socket.close(options.timeout);
+        defer _ = socket.close(deadline.remaining(&self.network));
 
         var request_buffer: [max_request_bytes]u8 = undefined;
         const request = switch (http.buildRequest(request_buffer[0..], options.method, url, .{ .headers = headers })) {
@@ -659,9 +696,9 @@ pub const WebTransport = struct {
         };
 
         if (url.scheme == .http) {
-            if (!writeAll(&socket, request, fetch_options)) return pump.failed(if (downloadStopped(options)) .cancelled else .write_failed);
+            if (!writeAll(&socket, request, fetch_options, deadline)) return pump.failed(if (downloadStopped(options)) .cancelled else .write_failed);
             while (true) {
-                switch (readSocketBounded(&socket, io_buffer, fetch_options)) {
+                switch (readSocketBounded(&socket, io_buffer, fetch_options, deadline)) {
                     .bytes => |count| {
                         if (count == 0) continue;
                         if (pump.feed(io_buffer[0..count], false, .read_peer_closed)) |terminal| return terminal;
@@ -675,16 +712,16 @@ pub const WebTransport = struct {
             }
         }
 
-        var session = switch (self.openTlsSession(&socket, url, scratch, fetch_options)) {
+        var session = switch (self.openTlsSession(&socket, url, scratch, fetch_options, deadline)) {
             .session => |value| value,
             .failure => |failure| return pump.failed(failure),
         };
-        switch (self.writeTlsApplication(&socket, &session, request, scratch, fetch_options)) {
+        switch (self.writeTlsApplication(&socket, &session, request, scratch, fetch_options, deadline)) {
             .ok => {},
             .failure => |failure| return pump.failed(failure),
         }
         while (true) {
-            switch (self.readTlsApplication(&socket, &session, scratch, fetch_options)) {
+            switch (self.readTlsApplication(&socket, &session, scratch, fetch_options, deadline)) {
                 .bytes => |plain| {
                     if (plain.len == 0) continue;
                     if (pump.feed(plain, false, .tls_close_notify)) |terminal| return terminal;
@@ -698,9 +735,9 @@ pub const WebTransport = struct {
         }
     }
 
-    fn fetchPlain(self: *WebTransport, socket: *app_network.TcpSocket, request: []const u8, raw_response: []u8, body_out: []u8, options: FetchOptions) OnceResult {
+    fn fetchPlain(self: *WebTransport, socket: *app_network.TcpSocket, request: []const u8, raw_response: []u8, body_out: []u8, options: FetchOptions, deadline: RequestDeadline) OnceResult {
         _ = self;
-        if (!writeAll(socket, request, options)) return .{ .failure = if (shouldStop(options)) .cancelled else .write_failed };
+        if (!writeAll(socket, request, options, deadline)) return .{ .failure = if (shouldStop(options)) .cancelled else .write_failed };
         var received: usize = 0;
         while (true) {
             if (shouldStop(options)) return .{ .failure = .cancelled };
@@ -712,7 +749,7 @@ pub const WebTransport = struct {
                 .need_more => {},
             }
             if (received == raw_response.len) return .{ .failure = .response_too_large };
-            switch (readSocketBounded(socket, raw_response[received..], options)) {
+            switch (readSocketBounded(socket, raw_response[received..], options, deadline)) {
                 .bytes => |count| {
                     if (count == 0) continue;
                     received += count;
@@ -731,12 +768,12 @@ pub const WebTransport = struct {
         }
     }
 
-    fn fetchTls(self: *WebTransport, socket: *app_network.TcpSocket, url: http.ParsedUrl, request: []const u8, raw_response: []u8, body_out: []u8, scratch: []u8, options: FetchOptions) OnceResult {
-        var session = switch (self.openTlsSession(socket, url, scratch, options)) {
+    fn fetchTls(self: *WebTransport, socket: *app_network.TcpSocket, url: http.ParsedUrl, request: []const u8, raw_response: []u8, body_out: []u8, scratch: []u8, options: FetchOptions, deadline: RequestDeadline) OnceResult {
+        var session = switch (self.openTlsSession(socket, url, scratch, options, deadline)) {
             .session => |value| value,
             .failure => |failure| return .{ .failure = failure },
         };
-        switch (self.writeTlsApplication(socket, &session, request, scratch, options)) {
+        switch (self.writeTlsApplication(socket, &session, request, scratch, options, deadline)) {
             .ok => {},
             .failure => |failure| return .{ .failure = failure },
         }
@@ -749,7 +786,7 @@ pub const WebTransport = struct {
                 .failure => return .{ .failure = .malformed_response },
                 .need_more => {},
             }
-            switch (self.readTlsApplication(socket, &session, scratch, options)) {
+            switch (self.readTlsApplication(socket, &session, scratch, options, deadline)) {
                 .bytes => |plain| {
                     if (plain.len > raw_response.len - received) return .{ .failure = .response_too_large };
                     @memcpy(raw_response[received .. received + plain.len], plain);
@@ -774,7 +811,7 @@ pub const WebTransport = struct {
         }
     }
 
-    fn openTlsSession(self: *WebTransport, socket: *app_network.TcpSocket, url: http.ParsedUrl, scratch: []u8, options: FetchOptions) TlsSessionResult {
+    fn openTlsSession(self: *WebTransport, socket: *app_network.TcpSocket, url: http.ParsedUrl, scratch: []u8, options: FetchOptions, deadline: RequestDeadline) TlsSessionResult {
         var generated_entropy: [32]u8 = undefined;
         const entropy = options.entropy orelse blk: {
             if (!fillSecureEntropy(&generated_entropy)) return .{ .failure = .tls_entropy_required };
@@ -802,9 +839,9 @@ pub const WebTransport = struct {
         if (begin_result.len != tls_result_header_len + begin_state_len + hello_len) return .{ .failure = .tls_handshake_failed };
         const begin_state = begin_result[tls_result_header_len .. tls_result_header_len + begin_state_len];
         const hello = begin_result[tls_result_header_len + begin_state_len ..];
-        if (!writeAll(socket, hello, options)) return .{ .failure = if (shouldStop(options)) .cancelled else .write_failed };
+        if (!writeAll(socket, hello, options, deadline)) return .{ .failure = if (shouldStop(options)) .cancelled else .write_failed };
 
-        switch (readTlsHandshakeFlight(socket, second, third, options)) {
+        switch (readTlsHandshakeFlight(socket, second, third, options, deadline)) {
             .flight_complete => {},
             .alert => |description| return .{ .failure = tlsAlertError(description) },
             .malformed => return .{ .failure = .tls_server_flight_malformed },
@@ -854,9 +891,9 @@ pub const WebTransport = struct {
         if (client_flight_result.len != tls_result_header_len + ready_len + client_wire_len) return .{ .failure = .tls_handshake_failed };
         const ready = client_flight_result[tls_result_header_len .. tls_result_header_len + ready_len];
         const client_wire = client_flight_result[tls_result_header_len + ready_len ..];
-        if (!writeAll(socket, client_wire, options)) return .{ .failure = if (shouldStop(options)) .cancelled else .write_failed };
+        if (!writeAll(socket, client_wire, options, deadline)) return .{ .failure = if (shouldStop(options)) .cancelled else .write_failed };
 
-        const server_final = readTlsFlight(socket, second, options) orelse return .{ .failure = .tls_server_final_flight_invalid };
+        const server_final = readTlsFlight(socket, second, options, deadline) orelse return .{ .failure = .tls_server_final_flight_invalid };
         const finish_parts = TlsFlightParts{
             .state_ptr = ready.ptr,
             .state_len = ready_len,
@@ -876,7 +913,7 @@ pub const WebTransport = struct {
         return .{ .session = session };
     }
 
-    fn writeTlsApplication(self: *WebTransport, socket: *app_network.TcpSocket, session: *TlsSession, bytes: []const u8, scratch: []u8, options: FetchOptions) TlsWriteResult {
+    fn writeTlsApplication(self: *WebTransport, socket: *app_network.TcpSocket, session: *TlsSession, bytes: []const u8, scratch: []u8, options: FetchOptions, deadline: RequestDeadline) TlsWriteResult {
         const first = scratch[0..tls_workspace_bytes];
         const third = scratch[tls_workspace_bytes * 2 .. tls_workspace_bytes * 3];
         if (tls_app_header_len + bytes.len > third.len) return .{ .failure = .scratch_too_small };
@@ -886,15 +923,15 @@ pub const WebTransport = struct {
         const protected = self.protocolCall(tls_op_client_app_write, third[0 .. tls_app_header_len + bytes.len], first) orelse return .{ .failure = .tls_record_failed };
         if (protected.len <= tls_app_header_len or !startsWith(protected, "R4CX")) return .{ .failure = .tls_record_failed };
         @memcpy(session.stream_state[0..], protected[4..tls_app_header_len]);
-        if (!writeAll(socket, protected[tls_app_header_len..], options)) return .{ .failure = if (shouldStop(options)) .cancelled else .write_failed };
+        if (!writeAll(socket, protected[tls_app_header_len..], options, deadline)) return .{ .failure = if (shouldStop(options)) .cancelled else .write_failed };
         return .ok;
     }
 
-    fn readTlsApplication(self: *WebTransport, socket: *app_network.TcpSocket, session: *TlsSession, scratch: []u8, options: FetchOptions) TlsApplicationRead {
+    fn readTlsApplication(self: *WebTransport, socket: *app_network.TcpSocket, session: *TlsSession, scratch: []u8, options: FetchOptions, deadline: RequestDeadline) TlsApplicationRead {
         const first = scratch[0..tls_workspace_bytes];
         const second = scratch[tls_workspace_bytes .. tls_workspace_bytes * 2];
         const third = scratch[tls_workspace_bytes * 2 .. tls_workspace_bytes * 3];
-        const record = switch (readTlsRecord(socket, second, options)) {
+        const record = switch (readTlsRecord(socket, second, options, deadline)) {
             .record => |value| value,
             .cancelled => return .{ .failure = .cancelled },
             .timed_out => return .{ .failure = .read_timeout },
@@ -1472,12 +1509,13 @@ pub fn fillSecureEntropy(out: *[32]u8) bool {
     return web_crypto.fillSecureRandom(out[0..]);
 }
 
-fn writeAll(socket: *app_network.TcpSocket, bytes: []const u8, options: FetchOptions) bool {
+fn writeAll(socket: *app_network.TcpSocket, bytes: []const u8, options: FetchOptions, deadline: RequestDeadline) bool {
     var pos: usize = 0;
     while (pos < bytes.len) {
         if (shouldStop(options)) return false;
+        if (deadline.expired(&socket.network)) return false;
         const end = @min(bytes.len, pos + abi.net_service_tcp_write_max);
-        switch (socket.write(bytes[pos..end], options.timeout)) {
+        switch (socket.write(bytes[pos..end], deadline.remaining(&socket.network))) {
             .bytes => |count| {
                 if (count == 0) continue;
                 pos += count;
@@ -1510,32 +1548,11 @@ const BoundedSocketRead = union(enum) {
     failed,
 };
 
-const SocketReadDeadline = struct {
-    deadline_ticks: u64 = 0,
-    forever: bool = false,
-    valid: bool = true,
-
-    fn start(socket: *const app_network.TcpSocket, timeout: Timeout) SocketReadDeadline {
-        const wait_ticks = time_contract.timeoutToTicks(timeout, socket.network.sys.monotonicHz()) catch
-            return .{ .valid = false };
-        return fromTicks(socket.network.sys.ticks(), wait_ticks);
-    }
-
-    fn fromTicks(now: u64, wait_ticks: u64) SocketReadDeadline {
-        if (wait_ticks == abi.io_wait_forever) return .{ .forever = true };
-        return .{ .deadline_ticks = now +| wait_ticks };
-    }
-
-    fn expiredAt(self: SocketReadDeadline, now: u64) bool {
-        return !self.valid or (!self.forever and now >= self.deadline_ticks);
-    }
-};
-
-fn readSocketBounded(socket: *app_network.TcpSocket, out: []u8, options: FetchOptions) BoundedSocketRead {
-    const deadline = SocketReadDeadline.start(socket, options.timeout);
+fn readSocketBounded(socket: *app_network.TcpSocket, out: []u8, options: FetchOptions, deadline: RequestDeadline) BoundedSocketRead {
     while (true) {
         if (shouldStop(options)) return .cancelled;
-        switch (socket.read(out, options.timeout)) {
+        if (deadline.expired(&socket.network)) return .timed_out;
+        switch (socket.read(out, deadline.remaining(&socket.network))) {
             .bytes => |count| if (count != 0) return .{ .bytes = count },
             .would_block, .timed_out => {},
             .reset => return .reset,
@@ -1543,19 +1560,19 @@ fn readSocketBounded(socket: *app_network.TcpSocket, out: []u8, options: FetchOp
             .closed => return .closed,
             .failure => return .failed,
         }
-        if (deadline.expiredAt(socket.network.sys.ticks())) return .timed_out;
+        if (deadline.expired(&socket.network)) return .timed_out;
         socket.network.sys.sleepTicks(1);
     }
 }
 
-fn readTlsRecord(socket: *app_network.TcpSocket, out: []u8, options: FetchOptions) TlsRecordReadResult {
+fn readTlsRecord(socket: *app_network.TcpSocket, out: []u8, options: FetchOptions, deadline: RequestDeadline) TlsRecordReadResult {
     var received: usize = 0;
     var expected: ?usize = null;
     while (expected == null or received < expected.?) {
         if (shouldStop(options)) return .cancelled;
         if (received == out.len) return .buffer_too_small;
         const read_end = if (expected) |record_len| record_len else @min(out.len, @as(usize, 5));
-        switch (readSocketBounded(socket, out[received..read_end], options)) {
+        switch (readSocketBounded(socket, out[received..read_end], options, deadline)) {
             .bytes => |count| {
                 if (count == 0) continue;
                 received += count;
@@ -1573,17 +1590,16 @@ fn readTlsRecord(socket: *app_network.TcpSocket, out: []u8, options: FetchOption
     return .{ .record = out[0..expected.?] };
 }
 
-test "deferred TCPSVC timeout remains transient within caller read deadline" {
-    const finite = SocketReadDeadline.fromTicks(100, 30);
-    try std.testing.expect(!finite.expiredAt(100));
-    try std.testing.expect(!finite.expiredAt(129));
-    try std.testing.expect(finite.expiredAt(130));
+test "request deadline remains absolute across partial transport progress" {
+    const finite = RequestDeadline.fromTicks(100, 30);
+    try std.testing.expectEqual(@as(u64, 130), finite.deadline_tick);
+    try std.testing.expect(!finite.forever);
 
-    const poll = SocketReadDeadline.fromTicks(100, 0);
-    try std.testing.expect(poll.expiredAt(100));
+    const poll = RequestDeadline.fromTicks(100, 0);
+    try std.testing.expectEqual(@as(u64, 100), poll.deadline_tick);
 
-    const forever = SocketReadDeadline.fromTicks(100, abi.io_wait_forever);
-    try std.testing.expect(!forever.expiredAt(std.math.maxInt(u64)));
+    const forever = RequestDeadline.fromTicks(100, abi.io_wait_forever);
+    try std.testing.expect(forever.forever);
 }
 
 const TlsHandshakeFlightResult = union(enum) {
@@ -1593,7 +1609,7 @@ const TlsHandshakeFlightResult = union(enum) {
     read_failed,
 };
 
-fn readTlsHandshakeFlight(socket: *app_network.TcpSocket, out: []u8, record_storage: []u8, options: FetchOptions) TlsHandshakeFlightResult {
+fn readTlsHandshakeFlight(socket: *app_network.TcpSocket, out: []u8, record_storage: []u8, options: FetchOptions, deadline: RequestDeadline) TlsHandshakeFlightResult {
     if (out.len < 5 or record_storage.len < 5) return .malformed;
     out[0] = 0;
     out[1] = 0;
@@ -1601,7 +1617,7 @@ fn readTlsHandshakeFlight(socket: *app_network.TcpSocket, out: []u8, record_stor
     out[3] = 0;
     out[4] = 0;
     while (true) {
-        const record = switch (readTlsRecord(socket, record_storage, options)) {
+        const record = switch (readTlsRecord(socket, record_storage, options, deadline)) {
             .record => |value| value,
             else => return .read_failed,
         };
@@ -1718,12 +1734,12 @@ fn tlsHandshakeFlightComplete(fragment: []const u8) bool {
     return false;
 }
 
-fn readTlsFlight(socket: *app_network.TcpSocket, out: []u8, options: FetchOptions) ?[]u8 {
+fn readTlsFlight(socket: *app_network.TcpSocket, out: []u8, options: FetchOptions, deadline: RequestDeadline) ?[]u8 {
     var used: usize = 0;
     var saw_change_cipher_spec = false;
     var record_count: usize = 0;
     while (record_count < 8) : (record_count += 1) {
-        const record = switch (readTlsRecord(socket, out[used..], options)) {
+        const record = switch (readTlsRecord(socket, out[used..], options, deadline)) {
             .record => |value| value,
             else => return null,
         };
