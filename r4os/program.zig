@@ -580,6 +580,13 @@ pub const Context = struct {
         return out;
     }
 
+    pub fn performanceInput(self: *const Context) ?abi.ProgramInputPerformanceInfo {
+        var out: abi.ProgramInputPerformanceInfo = .{};
+        const table_fn = self.devFn("performance_input") orelse return null;
+        if (table_fn(&out) <= 0) return null;
+        return out;
+    }
+
     pub fn performanceIrqTiming(self: *const Context, irq: u32) ?abi.ProgramIrqTimingInfo {
         var out: abi.ProgramIrqTimingInfo = .{};
         const table_fn = self.devFn("performance_irq_timing") orelse return null;
@@ -1318,6 +1325,13 @@ pub const Context = struct {
     pub fn consolePushKey(self: *const Context, instance_id: u32, key: u8) i32 {
         const table_fn = self.deskFn("console_push_key") orelse return self.unavailable("desk");
         return table_fn(instance_id, key);
+    }
+
+    pub fn consolePushInput(self: *const Context, instance_id: u32, data: []const u8) i32 {
+        if (data.len > std.math.maxInt(u32)) return -1;
+        const table_fn = self.deskFn("console_push_input") orelse return self.unavailable("desk");
+        const data_ptr: [*]const u8 = if (data.len == 0) @ptrCast("") else data.ptr;
+        return table_fn(instance_id, data_ptr, @intCast(data.len));
     }
 
     pub fn consoleWrite(self: *const Context, stream: abi.ConsoleStream, data: []const u8) i32 {

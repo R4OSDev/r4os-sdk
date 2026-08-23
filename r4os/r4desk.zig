@@ -158,6 +158,10 @@ pub const Context = struct {
         return self.base.consolePushKey(instance_id, key);
     }
 
+    pub fn consolePushInput(self: *const Context, instance_id: u32, data: []const u8) i32 {
+        return self.base.consolePushInput(instance_id, data);
+    }
+
     pub fn consoleWrite(self: *const Context, stream: abi.ConsoleStream, data: []const u8) i32 {
         return self.base.consoleWrite(stream, data);
     }

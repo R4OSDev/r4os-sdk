@@ -180,6 +180,10 @@ pub const Context = struct {
         return self.base.performancePciInventory();
     }
 
+    pub fn performanceInput(self: *const Context) ?abi.ProgramInputPerformanceInfo {
+        return self.base.performanceInput();
+    }
+
     pub fn performanceIrqTiming(self: *const Context, irq: u32) ?abi.ProgramIrqTimingInfo {
         return self.base.performanceIrqTiming(irq);
     }

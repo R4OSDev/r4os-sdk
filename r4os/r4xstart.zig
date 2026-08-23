@@ -91,6 +91,7 @@ const GuiMinSizeFn = *const fn (u32, *abi.GuiSize) callconv(.c) i32;
 const ConsoleStateFn = *const fn (u32, *abi.ConsoleState) callconv(.c) i32;
 const ConsoleSetMetricsFn = *const fn (u32, u32, u32) callconv(.c) i32;
 const ConsolePushKeyFn = *const fn (u32, u8) callconv(.c) i32;
+const ConsolePushInputFn = *const fn (u32, [*]const u8, u32) callconv(.c) i32;
 const ConsoleWriteFn = *const fn (u32, [*]const u8, u32) callconv(.c) i32;
 const ConsoleReadFn = *const fn ([*]u8, u32) callconv(.c) i32;
 const ClipboardWriteFn = *const fn ([*]const u8, u32) callconv(.c) i32;
@@ -154,8 +155,8 @@ comptime {
     {
         @compileError("R4XStartR4Sys reserved/following ABI offset mismatch");
     }
-    if (@sizeOf(abi.R4XStartR4Desk) != abi.r4xstart_r4desk_size) {
-        @compileError("R4XStartR4Desk ABI size mismatch");
+    if (@sizeOf(abi.R4XStartR4Desk) < abi.r4xstart_r4desk_size) {
+        @compileError("R4XStartR4Desk ABI minimum size mismatch");
     }
     if (@sizeOf(abi.R4XStartR4Draw) != abi.r4xstart_r4draw_size) {
         @compileError("R4XStartR4Draw ABI size mismatch");
@@ -168,8 +169,8 @@ comptime {
     if (@sizeOf(abi.R4XStartR4Audio) != abi.r4xstart_r4audio_size) {
         @compileError("R4XStartR4Audio ABI size mismatch");
     }
-    if (@sizeOf(abi.R4XStartR4Dev) != abi.r4xstart_r4dev_size) {
-        @compileError("R4XStartR4Dev ABI size mismatch");
+    if (@sizeOf(abi.R4XStartR4Dev) < abi.r4xstart_r4dev_size) {
+        @compileError("R4XStartR4Dev ABI minimum size mismatch");
     }
 }
 
@@ -921,6 +922,13 @@ pub const R4Desk = struct {
         if (!self.hasFn("console_push_key")) return -1;
         const console_fn: ConsolePushKeyFn = @ptrFromInt(self.table.console_push_key);
         return console_fn(instance_id, key);
+    }
+
+    pub fn consolePushInput(self: *const R4Desk, instance_id: u32, data: []const u8) i32 {
+        if (!self.hasFn("console_push_input") or data.len > std.math.maxInt(u32)) return -1;
+        const console_fn: ConsolePushInputFn = @ptrFromInt(self.table.console_push_input);
+        const data_ptr: [*]const u8 = if (data.len == 0) @ptrCast("") else data.ptr;
+        return console_fn(instance_id, data_ptr, @intCast(data.len));
     }
 
     pub fn consoleWrite(self: *const R4Desk, stream: abi.ConsoleStream, data: []const u8) i32 {
