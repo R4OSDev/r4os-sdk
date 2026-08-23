@@ -83,6 +83,23 @@ static inline int32_t r4dev_execution_inventory_summary(
     return summary_fn(out_summary);
 }
 
+static inline int32_t r4dev_performance_driver_work(
+    const R4Dev *dev,
+    uint32_t owner,
+    R4ProgramDriverWorkPerformanceInfo *out_info)
+{
+    if (out_info == 0) return R4OS_ERROR_INVALID;
+    if (!r4dev_available(dev) ||
+        dev->table->size < offsetof(R4XStartR4Dev, performance_driver_work) + sizeof(uintptr_t) ||
+        dev->table->performance_driver_work == 0)
+    {
+        return R4OS_ERR_NO_FN;
+    }
+    R4DevPerformanceDriverWorkFn snapshot_fn =
+        (R4DevPerformanceDriverWorkFn)(uintptr_t)dev->table->performance_driver_work;
+    return snapshot_fn(owner, out_info);
+}
+
 #ifdef __cplusplus
 }
 #endif

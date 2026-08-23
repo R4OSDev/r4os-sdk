@@ -172,6 +172,10 @@ pub const Context = struct {
         return self.base.performanceBootSummary();
     }
 
+    pub fn performanceDriverWork(self: *const Context, owner: u32) ?abi.ProgramDriverWorkPerformanceInfo {
+        return self.base.performanceDriverWork(owner);
+    }
+
     pub fn performanceIrqTiming(self: *const Context, irq: u32) ?abi.ProgramIrqTimingInfo {
         return self.base.performanceIrqTiming(irq);
     }

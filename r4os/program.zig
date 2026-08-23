@@ -566,6 +566,13 @@ pub const Context = struct {
         return out;
     }
 
+    pub fn performanceDriverWork(self: *const Context, owner: u32) ?abi.ProgramDriverWorkPerformanceInfo {
+        var out: abi.ProgramDriverWorkPerformanceInfo = .{};
+        const table_fn = self.devFn("performance_driver_work") orelse return null;
+        if (table_fn(owner, &out) <= 0) return null;
+        return out;
+    }
+
     pub fn performanceIrqTiming(self: *const Context, irq: u32) ?abi.ProgramIrqTimingInfo {
         var out: abi.ProgramIrqTimingInfo = .{};
         const table_fn = self.devFn("performance_irq_timing") orelse return null;
