@@ -183,6 +183,23 @@ eines Clientblocks ueber vollstaendige, Busy-, Timeout- und Fehlerantworten.
 Bereits angenommene Bytes bleiben damit auch bei einem anschliessenden Fehler
 sichtbar; nur der Aufrufer entscheidet ueber Retry und Pacing.
 
+JavaScript und WebRuntime seit 0.69.30
+-------------------------------------
+
+`r4os.javascript` haelt weiterhin hoechstens 64 gleichzeitige RegExp-
+Zustaende. Normale Atomfolgen werden jedoch iterativ ausgefuehrt und
+Quantifier pruefen ihre Wiederholungsschichten bis zum allgemeinen 65.536-
+Elemente-Budget direkt gegen die verbleibende Sequenz. Dadurch begrenzt die
+32er-Tiefe nur Gruppen und Backtracking, nicht die Laenge eines linearen
+Musters. Greedy/lazy-Ergebnisse bleiben geordnet; eine Kapazitaetsgrenze, die
+sonst als falscher Nichttreffer erschiene, wird als `RangeError` gemeldet.
+
+`r4os.web_runtime` fuehrt fuer DOM-Dirtiness einen vom Reflowmarker getrennten
+Pendingzustand. Alle Attribut-, Text- und Baumoperationen bis zur Abnahme der
+Aktion teilen genau einen Queueeintrag `dom_changed`; Navigation, History und
+Formaktionen bleiben nicht koaleszierbar. `takeAction` gibt den Pendingzustand
+beim Entnehmen frei, Dokumentwechsel und Abbruch setzen beide Marker zurueck.
+
 Plattform-APIs
 --------------
 

@@ -37,6 +37,7 @@ pub const max_call_depth: usize = 64;
 pub const max_template_objects: usize = 128;
 const max_regex_captures: usize = 32;
 const max_regex_states: usize = 64;
+const max_regex_backtrack_depth: usize = 32;
 pub const default_step_budget: usize = 2_000_000;
 pub const none: u16 = std.math.maxInt(u16);
 pub const max_bytecode_instructions: usize = max_nodes * 3;
@@ -18444,13 +18445,13 @@ pub const Runtime = struct {
             if (use_last_index) try self.setProperty(receiver, "lastIndex", .{ .number = 0 });
             return .null_value;
         };
-        const found = regexFind(pattern, input, .{
+        const found = (try regexFind(pattern, input, .{
             .ignore_case = std.mem.indexOfScalar(u8, flags, 'i') != null,
             .multiline = std.mem.indexOfScalar(u8, flags, 'm') != null,
             .dot_all = std.mem.indexOfScalar(u8, flags, 's') != null,
             .unicode = unicode_mode,
             .unicode_sets = std.mem.indexOfScalar(u8, flags, 'v') != null,
-        }, start_byte, sticky) orelse {
+        }, start_byte, sticky)) orelse {
             if (use_last_index) try self.setProperty(receiver, "lastIndex", .{ .number = 0 });
             return .null_value;
         };
@@ -25321,23 +25322,62 @@ const RegexState = struct {
 const RegexStates = struct {
     values: [max_regex_states]RegexState = undefined,
     count: usize = 0,
+    limited: bool = false,
 
     fn add(self: *RegexStates, value: RegexState) void {
         for (self.values[0..self.count]) |existing| {
-            if (existing.end != value.end) continue;
-            var same = true;
-            for (existing.captures, value.captures) |left, right| {
-                if (left.start != right.start or left.end != right.end) {
-                    same = false;
-                    break;
-                }
+            if (sameState(existing, value)) return;
+        }
+        if (self.count >= self.values.len) {
+            self.limited = true;
+            return;
+        }
+        self.values[self.count] = value;
+        self.count += 1;
+    }
+
+    fn append(self: *RegexStates, source: *const RegexStates) void {
+        for (source.values[0..source.count]) |value| self.add(value);
+        self.limited = self.limited or source.limited;
+    }
+
+    fn prepend(self: *RegexStates, source: *const RegexStates) void {
+        var source_index = source.count;
+        while (source_index > 0) {
+            source_index -= 1;
+            self.prependOne(source.values[source_index]);
+        }
+        self.limited = self.limited or source.limited;
+    }
+
+    fn prependOne(self: *RegexStates, value: RegexState) void {
+        var existing_index: ?usize = null;
+        for (self.values[0..self.count], 0..) |existing, index| {
+            if (sameState(existing, value)) {
+                existing_index = index;
+                break;
             }
-            if (same) return;
         }
-        if (self.count < self.values.len) {
-            self.values[self.count] = value;
-            self.count += 1;
+        if (existing_index) |index| {
+            var move = index + 1;
+            while (move < self.count) : (move += 1) self.values[move - 1] = self.values[move];
+            self.count -= 1;
+        } else if (self.count == self.values.len) {
+            self.count -= 1;
+            self.limited = true;
         }
+        if (self.count > 0)
+            std.mem.copyBackwards(RegexState, self.values[1 .. self.count + 1], self.values[0..self.count]);
+        self.values[0] = value;
+        self.count += 1;
+    }
+
+    fn sameState(left: RegexState, right: RegexState) bool {
+        if (left.end != right.end) return false;
+        for (left.captures, right.captures) |left_capture, right_capture| {
+            if (left_capture.start != right_capture.start or left_capture.end != right_capture.end) return false;
+        }
+        return true;
     }
 };
 
@@ -25356,7 +25396,7 @@ const RegexOptions = struct {
     unicode_sets: bool = false,
 };
 
-fn regexFind(pattern: []const u8, input: []const u8, options: RegexOptions, start_from: usize, sticky: bool) ?RegexMatch {
+fn regexFind(pattern: []const u8, input: []const u8, options: RegexOptions, start_from: usize, sticky: bool) Error!?RegexMatch {
     const anchored = pattern.len > 0 and pattern[0] == '^';
     const capture_count = regexCaptureCount(pattern);
     if (capture_count > max_regex_captures) return null;
@@ -25368,7 +25408,7 @@ fn regexFind(pattern: []const u8, input: []const u8, options: RegexOptions, star
             continue;
         }
         var states = RegexStates{};
-        regexAlternatives(pattern, 0, pattern.len, input, .{ .end = input_start }, options, &states, 0);
+        try regexAlternatives(pattern, 0, pattern.len, input, .{ .end = input_start }, options, &states, 0);
         if (states.count > 0) {
             return .{
                 .start = input_start,
@@ -25377,6 +25417,7 @@ fn regexFind(pattern: []const u8, input: []const u8, options: RegexOptions, star
                 .capture_count = capture_count,
             };
         }
+        if (states.limited) return error.RangeError;
         if (sticky or (anchored and !options.multiline)) break;
         if (input_start == input.len) break;
         input_start += runtimeStringDecode(input, input_start).length;
@@ -25384,8 +25425,8 @@ fn regexFind(pattern: []const u8, input: []const u8, options: RegexOptions, star
     return null;
 }
 
-fn regexTest(pattern: []const u8, input: []const u8, ignore_case: bool) bool {
-    return regexFind(pattern, input, .{ .ignore_case = ignore_case }, 0, false) != null;
+fn regexTest(pattern: []const u8, input: []const u8, ignore_case: bool) Error!bool {
+    return (try regexFind(pattern, input, .{ .ignore_case = ignore_case }, 0, false)) != null;
 }
 
 fn regexAlternatives(
@@ -25397,8 +25438,8 @@ fn regexAlternatives(
     options: RegexOptions,
     out: *RegexStates,
     depth: usize,
-) void {
-    if (depth > 32) return;
+) Error!void {
+    if (depth > max_regex_backtrack_depth) return error.RangeError;
     var branch_start = start;
     var cursor = start;
     var group_depth: usize = 0;
@@ -25418,11 +25459,11 @@ fn regexAlternatives(
         if (in_class) continue;
         if (byte == '(') group_depth += 1 else if (byte == ')' and group_depth > 0) group_depth -= 1;
         if (byte == '|' and group_depth == 0) {
-            regexSequence(pattern, branch_start, cursor, input, input_state, options, out, depth + 1);
+            try regexSequence(pattern, branch_start, cursor, input, input_state, options, out, depth + 1);
             branch_start = cursor + 1;
         }
     }
-    regexSequence(pattern, branch_start, end, input, input_state, options, out, depth + 1);
+    try regexSequence(pattern, branch_start, end, input, input_state, options, out, depth + 1);
 }
 
 const RegexQuantifier = struct {
@@ -25509,32 +25550,60 @@ fn regexSequence(
     options: RegexOptions,
     out: *RegexStates,
     depth: usize,
-) void {
-    if (depth > 32) return;
-    if (start >= end) {
-        out.add(input_state);
+) Error!void {
+    if (depth > max_regex_backtrack_depth) return error.RangeError;
+    var cursor = start;
+    var current = input_state;
+    var atom_count: usize = 0;
+    while (cursor < end) {
+        if (atom_count >= max_items) return error.RangeError;
+        atom_count += 1;
+        const atom_end = regexAtomEnd(pattern, cursor, end, options) orelse return;
+        const quantifier = regexQuantifierAt(pattern, atom_end, end) orelse RegexQuantifier{ .minimum = 1, .maximum = 1, .next = atom_end, .greedy = true };
+        if (quantifier.minimum == 1 and quantifier.maximum != null and quantifier.maximum.? == 1) {
+            var matched = RegexStates{};
+            try regexMatchAtom(pattern, cursor, atom_end, input, current, options, &matched, depth + 1);
+            if (matched.count == 1 and !matched.limited) {
+                current = matched.values[0];
+                cursor = quantifier.next;
+                continue;
+            }
+            for (matched.values[0..matched.count]) |state|
+                try regexAlternatives(pattern, quantifier.next, end, input, state, options, out, depth + 1);
+            out.limited = out.limited or matched.limited;
+            return;
+        }
+        try regexQuantifiedSequence(pattern, cursor, atom_end, quantifier, end, input, current, options, out, depth);
         return;
     }
-    const atom_end = regexAtomEnd(pattern, start, end, options) orelse return;
-    const quantifier = regexQuantifierAt(pattern, atom_end, end) orelse RegexQuantifier{ .minimum = 1, .maximum = 1, .next = atom_end, .greedy = true };
+    out.add(current);
+}
 
-    var positions = RegexStates{};
-    var layer_starts: [max_regex_states]usize = undefined;
-    var layer_lengths: [max_regex_states]usize = undefined;
-    var layer_count: usize = 0;
+fn regexQuantifiedSequence(
+    pattern: []const u8,
+    start: usize,
+    atom_end: usize,
+    quantifier: RegexQuantifier,
+    end: usize,
+    input: []const u8,
+    input_state: RegexState,
+    options: RegexOptions,
+    out: *RegexStates,
+    depth: usize,
+) Error!void {
     var frontier = RegexStates{};
     frontier.add(input_state);
+    var ordered = RegexStates{};
     var repetitions: usize = 0;
     var no_progress = false;
-    while (frontier.count > 0 and repetitions <= max_items) {
+    while (frontier.count > 0) {
+        if (repetitions > max_items) return error.RangeError;
         if (repetitions >= quantifier.minimum) {
-            const layer_start = positions.count;
-            for (frontier.values[0..frontier.count]) |position| positions.add(position);
-            if (positions.count > layer_start and layer_count < layer_starts.len) {
-                layer_starts[layer_count] = layer_start;
-                layer_lengths[layer_count] = positions.count - layer_start;
-                layer_count += 1;
-            }
+            var layer = RegexStates{};
+            for (frontier.values[0..frontier.count]) |position|
+                try regexAlternatives(pattern, quantifier.next, end, input, position, options, &layer, depth + 1);
+            layer.limited = layer.limited or frontier.limited;
+            if (quantifier.greedy) ordered.prepend(&layer) else ordered.append(&layer);
         }
         if (quantifier.maximum) |maximum| if (repetitions >= maximum) break;
         if (no_progress and repetitions >= quantifier.minimum) break;
@@ -25542,33 +25611,20 @@ fn regexSequence(
         var advanced = false;
         for (frontier.values[0..frontier.count]) |position| {
             var matched = RegexStates{};
-            regexMatchAtom(pattern, start, atom_end, input, position, options, &matched, depth + 1);
+            try regexMatchAtom(pattern, start, atom_end, input, position, options, &matched, depth + 1);
             for (matched.values[0..matched.count]) |match_state| {
                 if (match_state.end > position.end) advanced = true;
                 following.add(match_state);
             }
+            following.limited = following.limited or matched.limited;
         }
+        following.limited = following.limited or frontier.limited;
         frontier = following;
         repetitions += 1;
         no_progress = !advanced;
     }
-    if (quantifier.greedy) {
-        var layer_index = layer_count;
-        while (layer_index > 0) {
-            layer_index -= 1;
-            const layer_start = layer_starts[layer_index];
-            for (positions.values[layer_start .. layer_start + layer_lengths[layer_index]]) |position| {
-                regexAlternatives(pattern, quantifier.next, end, input, position, options, out, depth + 1);
-            }
-        }
-    } else {
-        for (0..layer_count) |layer_index| {
-            const layer_start = layer_starts[layer_index];
-            for (positions.values[layer_start .. layer_start + layer_lengths[layer_index]]) |position| {
-                regexAlternatives(pattern, quantifier.next, end, input, position, options, out, depth + 1);
-            }
-        }
-    }
+    ordered.limited = ordered.limited or frontier.limited;
+    out.append(&ordered);
 }
 
 fn regexAtomEnd(pattern: []const u8, start: usize, end: usize, options: RegexOptions) ?usize {
@@ -25676,7 +25732,7 @@ fn regexMatchAtom(
     options: RegexOptions,
     out: *RegexStates,
     depth: usize,
-) void {
+) Error!void {
     if (input_state.end > input.len or start >= end) return;
     if (pattern[start] == '^') {
         if (regexStartAssertionMatches(input, input_state.end, options.multiline)) out.add(input_state);
@@ -25708,14 +25764,17 @@ fn regexMatchAtom(
             while (candidate_start > 0) {
                 candidate_start -= 1;
                 var candidates = RegexStates{};
-                regexAlternatives(pattern, group.body_start, end - 1, input, .{ .end = candidate_start, .captures = input_state.captures }, group_options, &candidates, depth + 1);
+                try regexAlternatives(pattern, group.body_start, end - 1, input, .{ .end = candidate_start, .captures = input_state.captures }, group_options, &candidates, depth + 1);
                 for (candidates.values[0..candidates.count]) |candidate| if (candidate.end == input_state.end) grouped.add(candidate);
+                grouped.limited = grouped.limited or candidates.limited;
             }
         } else {
-            regexAlternatives(pattern, group.body_start, end - 1, input, input_state, group_options, &grouped, depth + 1);
+            try regexAlternatives(pattern, group.body_start, end - 1, input, input_state, group_options, &grouped, depth + 1);
         }
         if (group.kind == .negative_lookahead or group.kind == .negative_lookbehind) {
-            if (grouped.count == 0) out.add(input_state);
+            if (grouped.count == 0) {
+                if (grouped.limited) out.limited = true else out.add(input_state);
+            }
             return;
         }
         for (grouped.values[0..grouped.count]) |matched| {
@@ -25724,6 +25783,7 @@ fn regexMatchAtom(
             if (group.kind != .capturing and group.kind != .noncapturing) captured.end = input_state.end;
             out.add(captured);
         }
+        out.limited = out.limited or grouped.limited;
         return;
     }
     if (pattern[start] == '\\' and start + 1 < end and pattern[start + 1] >= '1' and pattern[start + 1] <= '9') {
@@ -25734,7 +25794,7 @@ fn regexMatchAtom(
         }
         const capture_count = regexCaptureCount(pattern);
         if (capture_number > 0 and capture_number <= capture_count) {
-            regexMatchBackreference(input, input_state, input_state.captures[capture_number - 1], options, out);
+            try regexMatchBackreference(input, input_state, input_state.captures[capture_number - 1], options, out);
             return;
         }
         if (options.unicode or input_state.end >= input.len) return;
@@ -25752,7 +25812,7 @@ fn regexMatchAtom(
     }
     if (pattern[start] == '\\' and start + 3 < end and pattern[start + 1] == 'k' and pattern[start + 2] == '<') {
         const capture_index = regexNamedCaptureIndex(pattern, pattern[start + 3 .. end - 1]) orelse return;
-        regexMatchBackreference(input, input_state, input_state.captures[capture_index], options, out);
+        try regexMatchBackreference(input, input_state, input_state.captures[capture_index], options, out);
         return;
     }
     if (input_state.end >= input.len) return;
@@ -26172,7 +26232,7 @@ fn regexEndAssertionMatches(input: []const u8, position: usize, multiline: bool)
     return scalar.value == '\r' and position + scalar.length < input.len and runtimeStringDecode(input, position + scalar.length).value == '\n' and position + scalar.length + 1 == input.len;
 }
 
-fn regexMatchBackreference(input: []const u8, input_state: RegexState, capture: RegexCapture, options: RegexOptions, out: *RegexStates) void {
+fn regexMatchBackreference(input: []const u8, input_state: RegexState, capture: RegexCapture, options: RegexOptions, out: *RegexStates) Error!void {
     if (!capture.matched()) {
         out.add(input_state);
         return;
@@ -30290,10 +30350,14 @@ test "ECMAScript 2026 RegExp bounded greedy and lazy quantifiers backtrack in la
     defer destroyTestingRuntime(runtime);
     var program: Program = .{};
 
-    const value = try runtime.evaluateSource(&program, "let invalid=false;try{new RegExp('a{4,2}');}catch(reason){invalid=reason instanceof Error;}" ++
+    const value = try runtime.evaluateSource(&program, "let invalid=false;let capacity=false;let depth=false;try{new RegExp('a{4,2}');}catch(reason){invalid=reason instanceof Error;}" ++
+        "try{new RegExp('^(a+)a{65}$').test('a'.repeat(193));}catch(reason){capacity=reason instanceof RangeError;}" ++
+        "try{new RegExp('('.repeat(20)+'a'+')'.repeat(20)).test('a');}catch(reason){depth=reason instanceof RangeError;}" ++
+        "const a65='a'.repeat(65),a128='a'.repeat(128),linear='a'.repeat(64);" ++
         "return /a{2}/.exec('caa')[0]==='aa'&&/a{2,4}/.exec('aaaaa')[0]==='aaaa'&&/a{2,}/.exec('aaaa')[0]==='aaaa'&&" ++
         "/a+?/.exec('aaaa')[0]==='a'&&/a{2,4}?/.exec('aaaa')[0]==='aa'&&/a{2,4}a/.exec('aaaa')[0]==='aaaa'&&" ++
-        "/(?<x>ab){2}/.exec('abab').groups.x==='ab'&&/(a?){2}/.exec('')[0]===''&&invalid;");
+        "/(?<x>ab){2}/.exec('abab').groups.x==='ab'&&/(a?){2}/.exec('')[0]===''&&/^a+$/.test(a65)&&/^a+$/.exec(a128)[0].length===128&&/^a+?$/.exec(a128)[0].length===128&&" ++
+        "new RegExp('^'+linear+'$').test(linear)&&invalid&&capacity&&depth;");
     try std.testing.expectEqual(true, runtime.valueBoolean(value));
 }
 

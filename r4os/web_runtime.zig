@@ -961,6 +961,7 @@ pub const WebRuntime = struct {
     canvases: web_canvas.Manager = undefined,
     canvas_contexts: [web_canvas.max_surfaces]javascript.Value = [_]javascript.Value{.undefined} ** web_canvas.max_surfaces,
     dom_dirty: bool = false,
+    dom_action_pending: bool = false,
     next_event_serial: u32 = 1,
     cancelled_event_serial: u32 = 0,
 
@@ -1332,6 +1333,7 @@ pub const WebRuntime = struct {
         self.last_script_line = 0;
         self.last_script_column = 0;
         self.dom_dirty = false;
+        self.dom_action_pending = false;
         self.node_objects = [_]javascript.Value{.undefined} ** html.max_nodes;
         self.frame_document_objects = [_]javascript.Value{.undefined} ** html.max_nodes;
         self.frame_window_objects = [_]javascript.Value{.undefined} ** html.max_nodes;
@@ -1403,6 +1405,7 @@ pub const WebRuntime = struct {
         self.action_count = 0;
         self.document = null;
         self.dom_dirty = false;
+        self.dom_action_pending = false;
         self.canvases.reset();
         self.canvas_contexts = [_]javascript.Value{.undefined} ** web_canvas.max_surfaces;
         self.font_registry = null;
@@ -2715,6 +2718,7 @@ pub const WebRuntime = struct {
         var index: usize = 1;
         while (index < self.action_count) : (index += 1) self.actions[index - 1] = self.actions[index];
         self.action_count -= 1;
+        if (action.kind == .dom_changed) self.dom_action_pending = false;
         return action;
     }
 
@@ -3501,7 +3505,9 @@ pub const WebRuntime = struct {
 
     fn markDomChanged(self: *WebRuntime, node: u16) Error!void {
         self.dom_dirty = true;
+        if (self.dom_action_pending) return;
         try self.enqueueAction(.dom_changed, null, node);
+        self.dom_action_pending = true;
     }
 
     fn scheduleDynamicResources(self: *WebRuntime, root: u16, depth: usize) Error!void {
@@ -7820,7 +7826,23 @@ test "DOM queries preserve identity and structural operations expose coherent re
     );
     try std.testing.expectEqualStrings("true", harness.web.runtime.valueString(value));
     try std.testing.expect(harness.web.dom_dirty);
-    try std.testing.expect(harness.web.action_count > 0);
+    try std.testing.expectEqual(@as(usize, 1), harness.web.action_count);
+    try std.testing.expectEqual(ActionKind.dom_changed, harness.web.takeAction().?.kind);
+    try std.testing.expect(harness.web.takeAction() == null);
+    try std.testing.expect(harness.web.needsReflow());
+
+    for ([_]usize{ 15, 16, 17 }) |mutation_count| {
+        var source_buffer: [128]u8 = undefined;
+        const source = try std.fmt.bufPrint(source_buffer[0..], "for(let i=0;i<{d};i++)document.body.setAttribute('data-r',String(i));", .{mutation_count});
+        _ = try harness.web.executeSource(source);
+        try std.testing.expect(harness.web.dom_dirty);
+        try std.testing.expect(harness.web.dom_action_pending);
+        try std.testing.expectEqual(@as(usize, 1), harness.web.action_count);
+        try std.testing.expectEqual(ActionKind.dom_changed, harness.web.takeAction().?.kind);
+        try std.testing.expect(!harness.web.dom_action_pending);
+        try std.testing.expect(harness.web.takeAction() == null);
+        try std.testing.expect(harness.web.needsReflow());
+    }
 }
 
 test "DOM events capture target bubble cancel stop and honor listener options" {
