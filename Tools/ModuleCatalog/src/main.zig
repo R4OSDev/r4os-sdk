@@ -411,10 +411,6 @@ fn loadWorkspaceImageEntries(
             std.debug.print("Workspace manifest invalid: {s} ({s})\n", .{ manifest_path, @errorName(err) });
             return err;
         };
-        cwd.access(io, artifact_path, .{}) catch |err| {
-            std.debug.print("Workspace artifact missing: {s} -> {s} ({s})\n", .{ manifest_path, artifact_path, @errorName(err) });
-            return error.ImageArtifactMissing;
-        };
         const expected_name = try std.fmt.allocPrint(allocator, "{s}.{s}", .{ manifest.name, manifest.kind.text() });
         if (!std.ascii.eqlIgnoreCase(std.fs.path.basename(artifact_path), expected_name)) {
             std.debug.print("Workspace artifact identity mismatch: {s} expects {s}, got {s}\n", .{ manifest_path, expected_name, artifact_path });
@@ -488,25 +484,22 @@ fn imageEntryIncluded(entry: manifest_contract.Manifest, mode: ImageMode, includ
         .benchmark => scope == .slim or scope == .full,
     };
     if (scoped) return true;
-    const explicit_scope: manifest_contract.ImageScope = switch (mode) {
-        .@"test" => .full,
-        .benchmark => .@"test",
-        else => return false,
-    };
-    if (scope != explicit_scope) return false;
     for (include_targets) |target| {
-        if (std.ascii.eqlIgnoreCase(entry.target, target)) return true;
+        if (std.ascii.eqlIgnoreCase(entry.target, target)) return imageScopeCanBeIncludedExplicitly(mode, scope);
     }
     return false;
 }
 
+fn imageScopeCanBeIncludedExplicitly(mode: ImageMode, scope: manifest_contract.ImageScope) bool {
+    return switch (mode) {
+        .@"test" => scope == .full or scope == .none,
+        .benchmark => scope == .@"test",
+        else => false,
+    };
+}
+
 fn validateImageIncludes(entries: []const manifest_contract.Manifest, mode: ImageMode, include_targets: []const []const u8) !void {
     if (include_targets.len != 0 and mode != .@"test" and mode != .benchmark) return error.ImageIncludesRequireExplicitMode;
-    const explicit_scope: ?manifest_contract.ImageScope = switch (mode) {
-        .@"test" => .full,
-        .benchmark => .@"test",
-        else => null,
-    };
     for (include_targets, 0..) |target, index| {
         if (target.len == 0 or target[0] != '/') return error.InvalidImageIncludeTarget;
         for (include_targets[0..index]) |previous| {
@@ -519,7 +512,7 @@ fn validateImageIncludes(entries: []const manifest_contract.Manifest, mode: Imag
             match = entry;
         }
         const entry = match orelse return error.UnknownImageIncludeTarget;
-        if (entry.image_scope.? != explicit_scope.?) return error.ImageIncludeTargetWrongScope;
+        if (!imageScopeCanBeIncludedExplicitly(mode, entry.image_scope.?)) return error.ImageIncludeTargetWrongScope;
     }
 }
 
@@ -1268,8 +1261,10 @@ test "benchmark selection is full plus explicit test diagnostics" {
     const fixture = try std.Io.Dir.cwd().readFileAlloc(std.testing.io, "Tests/Fixture/SubsystemCatalog/RepoA/module.R4MF.fixture", allocator, .limited(manifest_contract.max_manifest_bytes));
     const full_text = try std.mem.replaceOwned(u8, allocator, fixture, "IMAGE_SCOPE=slim", "IMAGE_SCOPE=full");
     const test_text = try std.mem.replaceOwned(u8, allocator, fixture, "IMAGE_SCOPE=slim", "IMAGE_SCOPE=test");
+    const none_text = try std.mem.replaceOwned(u8, allocator, fixture, "IMAGE_SCOPE=slim", "IMAGE_SCOPE=none");
     const full_entry = try manifest_contract.parse(allocator, "Full/module.R4MF", full_text);
     const test_entry = try manifest_contract.parse(allocator, "Test/module.R4MF", test_text);
+    const none_entry = try manifest_contract.parse(allocator, "None/module.R4MF", none_text);
 
     try std.testing.expect(imageEntryIncluded(full_entry, .benchmark, &.{}));
     try std.testing.expect(!imageEntryIncluded(test_entry, .benchmark, &.{}));
@@ -1281,4 +1276,22 @@ test "benchmark selection is full plus explicit test diagnostics" {
     try std.testing.expect(!imageEntryIncluded(full_entry, .@"test", &.{}));
     try std.testing.expect(imageEntryIncluded(full_entry, .@"test", &.{full_entry.target}));
     try validateImageIncludes(&.{full_entry}, .@"test", &.{full_entry.target});
+    try std.testing.expect(!imageEntryIncluded(none_entry, .@"test", &.{}));
+    try std.testing.expect(imageEntryIncluded(none_entry, .@"test", &.{none_entry.target}));
+    try validateImageIncludes(&.{none_entry}, .@"test", &.{none_entry.target});
+    try std.testing.expectError(error.ImageIncludeTargetWrongScope, validateImageIncludes(&.{none_entry}, .benchmark, &.{none_entry.target}));
+}
+
+test "workspace image plan requires artifacts only for selected manifests" {
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+    const allocator = arena.allocator();
+    const fixture = try std.Io.Dir.cwd().readFileAlloc(std.testing.io, "Tests/Fixture/SubsystemCatalog/RepoA/module.R4MF.fixture", allocator, .limited(manifest_contract.max_manifest_bytes));
+    const none_text = try std.mem.replaceOwned(u8, allocator, fixture, "IMAGE_SCOPE=slim", "IMAGE_SCOPE=none");
+    const none_entry = try manifest_contract.parse(allocator, "None/module.R4MF", none_text);
+    const missing_artifact = "Tests/Fixture/SubsystemCatalog/definitely-missing/SUBSYSA.R4X";
+    const entries = [_]WorkspaceImageEntry{.{ .manifest = none_entry, .artifact = missing_artifact }};
+
+    const standard = try renderWorkspaceImagePlan(allocator, std.testing.io, std.Io.Dir.cwd(), &entries, .@"test", &.{});
+    try std.testing.expectEqualStrings("", standard);
 }

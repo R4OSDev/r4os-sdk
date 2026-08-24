@@ -83,8 +83,11 @@ Benchmark-Plan. Benchmark ist eine Auswahlregel aus `slim + full` plus
 explizit benannten `test`-Diagnosen und kein vierter `IMAGE_SCOPE`.
 Manifestparsing, Profilregeln, Zielkollisionen und der
 Runtime-R4L-Abhaengigkeitsschluss bleiben beim gemeinsamen R4MF-Vertrag; die
-Workspace-Orchestrierung liefert nur den Ort des bereits vom jeweiligen
-Repository gebauten Artefakts.
+Workspace-Orchestrierung liefert nur den erwarteten Ort des vom jeweiligen
+Repository gebauten Artefakts. Module mit `IMAGE_SCOPE=none` koennen fuer
+einen gezielten Testplan ausdruecklich aufgenommen werden. Ein Artefakt wird
+erst verlangt, wenn die Profilauswahl das zugehoerige Manifest tatsaechlich
+auswaehlt; dadurch duerfen unbeteiligte on-demand-Artefakte fehlen.
 
 Optional erzeugt derselbe Aufruf mit `--inventory-output` aus genau dieser
 Auswahl das installierte `MODULES.JSON`; zusammen mit Kernel-Version und
