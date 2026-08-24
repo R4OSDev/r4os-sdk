@@ -230,4 +230,9 @@ pub const Context = struct {
     pub fn waitTicks(self: *const Context, ticks: u64) void {
         self.api.wait_ticks(ticks);
     }
+
+    pub fn protocolDispatch(self: *const Context, role: [*:0]const u8, op: u32, in_buffer: *const abi.ProtocolBuffer, out_buffer: *abi.ProtocolBuffer) i32 {
+        const dispatch = self.api.protocol_dispatch orelse return abi.service_api_result_no_endpoint;
+        return dispatch(role, op, in_buffer, out_buffer);
+    }
 };

@@ -200,6 +200,9 @@ pub const AdvancedAudio = struct {
     pub fn midiSend(self: *const AdvancedAudio, handle: u32, channel: u8, status: u8, data1: u8, data2: u8) i32 {
         return self.raw.midiSend(handle, channel, status, data1, data2);
     }
+    pub fn midiRender(self: *const AdvancedAudio, handle: u32, frames: u16) i32 {
+        return self.raw.midiRender(handle, frames);
+    }
     pub fn midiClose(self: *const AdvancedAudio, handle: u32) i32 {
         return self.raw.midiClose(handle);
     }

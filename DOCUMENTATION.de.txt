@@ -198,3 +198,18 @@ kanonischen PCI-Snapshot mit Quelle, Kapazitaet, Configzugriffen, ECAM-
 Mappingarbeit, Such-/Detailzaehlern und Enumerationszeit. Die Zig-Fassaden in
 `r4os.program` und `r4os.r4dev` sowie der C-Helper behandeln den Slot als
 optional und bleiben damit gegenueber aelteren Kerneln lesbar.
+
+Synth- und Treibervertrag seit 0.69.28
+--------------------------------------
+
+Der append-only `SynthEngine`-Descriptor behaelt seinen v1-Praefix und fuegt
+`render_pcm` an. Der Kernel stellt Puffer, Kapazitaet, Rate, Kanalzahl und
+Format bereit; der Treiber liefert die tatsaechliche Bytelaenge oder einen
+Fehler. Erst ein MIDI-Empfaenger mit diesem produktiven Callback gilt als
+Renderer. `midiRender` kodiert 1 bis 1024 gewuenschte Frames ueber den
+bestehenden R4AUDIO-Aufruf, ohne einen zweiten ABI-Slot einzufuehren.
+
+DriverApi v18 haengt `protocol_dispatch` an. Treiber pruefen den Tabellenkopf
+und die volle aktuelle Groesse, bevor sie diesen optionalen R4P-Pfad nutzen.
+Bestehende v1-Synth-Descriptoren bleiben anhand ihres Groessenpraefixes
+registrierbar, gelten ohne PCM-Callback aber nicht als RenderBackend.

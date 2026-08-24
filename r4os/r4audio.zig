@@ -110,6 +110,10 @@ pub const Context = struct {
         return self.base.midiSend(handle, channel, status, data1, data2);
     }
 
+    pub fn midiRender(self: *const Context, handle: u32, frames: u16) i32 {
+        return self.base.midiRender(handle, frames);
+    }
+
     pub fn midiClose(self: *const Context, handle: u32) i32 {
         return self.base.midiClose(handle);
     }

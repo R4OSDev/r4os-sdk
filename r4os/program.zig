@@ -1903,6 +1903,11 @@ pub const Context = struct {
         return table_fn(handle, channel, status, data1, data2);
     }
 
+    pub fn midiRender(self: *const Context, handle: u32, frames: u16) i32 {
+        if (frames == 0 or frames > 1024) return abi.service_api_result_invalid;
+        return self.midiSend(handle, 0, 0, @truncate(frames), @truncate(frames >> 8));
+    }
+
     pub fn midiClose(self: *const Context, handle: u32) i32 {
         const table_fn = self.audioFn("midi_close") orelse return self.unavailable("audio");
         return table_fn(handle);
