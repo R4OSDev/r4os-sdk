@@ -52,6 +52,20 @@ pub fn build(b: *std.Build) void {
     const sdk_unit_tests = b.addTest(.{ .root_module = host_r4os });
     const run_sdk_unit_tests = b.addRunArtifact(sdk_unit_tests);
 
+    const ntfs_format = b.createModule(.{
+        .root_source_file = b.path("r4os/ntfs_format.zig"),
+        .target = b.graph.host,
+        .optimize = .Debug,
+    });
+    const ntfs_volume = b.createModule(.{
+        .root_source_file = b.path("r4os/ntfs_volume.zig"),
+        .target = b.graph.host,
+        .optimize = .Debug,
+    });
+    ntfs_volume.addImport("ntfs_format", ntfs_format);
+    const ntfs_volume_tests = b.addTest(.{ .root_module = ntfs_volume });
+    const run_ntfs_volume_tests = b.addRunArtifact(ntfs_volume_tests);
+
     const r4x_builder_tests = b.addTest(.{
         .root_module = b.createModule(.{
             .root_source_file = b.path("Tools/R4XBuilder/src/main.zig"),
@@ -98,6 +112,7 @@ pub fn build(b: *std.Build) void {
     const test_step = b.step("test", "Run SDK, build-tool and smoke tests");
     test_step.dependOn(b.getInstallStep());
     test_step.dependOn(&run_sdk_unit_tests.step);
+    test_step.dependOn(&run_ntfs_volume_tests.step);
     test_step.dependOn(&run_r4x_builder_tests.step);
     test_step.dependOn(&run_r4l_contract_tests.step);
     test_step.dependOn(&run_catalog_tests.step);

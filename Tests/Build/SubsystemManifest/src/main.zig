@@ -128,8 +128,7 @@ fn runSelfTest(sys: *r4os.r4sys.Context, desk: r4os.r4desk.Context, draw: r4os.r
     _ = host.setTitle("Subsystem Host Selftest");
     paintPattern(&host.video.surface, .qbasic_640x350, true, 0);
 
-    const first = host.present();
-    if (!presentedAs(first, .full)) return selfTestFail(sys, "full-640", 82);
+    if (!presentInitialFullFrame(sys, &host)) return selfTestFail(sys, "full-640", 82);
     if (!runtimeInputSelfTest(sys, &host)) return selfTestFail(sys, "runtime-input", 100);
     if (host.present() != .unchanged) return selfTestFail(sys, "unchanged", 83);
     host.video.invalidate(.{ .x = 12, .y = 14, .w = 18, .h = 16 });
@@ -658,6 +657,21 @@ fn presentedAs(result: host_api.PresentResult, mode: host_api.PresentMode) bool 
         .presented => |info| info.mode == mode and info.raster_blocks != 0,
         else => false,
     };
+}
+
+fn presentInitialFullFrame(sys: *r4os.r4sys.Context, host: *host_api.Host) bool {
+    // The spawned GUI task may be admitted after its window handle is set but
+    // before Desktop has made the corresponding window visible. Keep the
+    // admission race bounded while preserving persistent draw failures.
+    var attempt: u32 = 0;
+    while (attempt < 64) : (attempt += 1) {
+        switch (host.present()) {
+            .presented => |info| return info.mode == .full and info.raster_blocks != 0,
+            .unchanged => return false,
+            .hidden, .failure => sys.taskYield(),
+        }
+    }
+    return false;
 }
 
 fn selfTestFail(sys: *r4os.r4sys.Context, reason: []const u8, code: i32) i32 {
