@@ -23,6 +23,64 @@ pub const WriteResult = union(enum) {
     failure: struct { raw: i32, written: usize },
 };
 
+pub const WriteOutcome = enum {
+    complete,
+    retry,
+    timed_out,
+    failure,
+    invalid,
+};
+
+pub const WriteAdvance = struct {
+    accepted: usize = 0,
+    outcome: WriteOutcome,
+    raw: i32 = 0,
+};
+
+/// Tracks frame-aligned progress across interrupted stream writes. A caller
+/// still decides when to retry, but can no longer lose bytes accepted before
+/// Busy, timeout, or a hard failure.
+pub const WriteCursor = struct {
+    total: usize,
+    accepted: usize = 0,
+    frame_bytes: usize,
+
+    pub fn init(total: usize, frame_bytes: usize) ?WriteCursor {
+        if (frame_bytes == 0 or total == 0 or total % frame_bytes != 0) return null;
+        return .{ .total = total, .frame_bytes = frame_bytes };
+    }
+
+    pub fn remaining(self: *const WriteCursor) usize {
+        return self.total - self.accepted;
+    }
+
+    pub fn done(self: *const WriteCursor) bool {
+        return self.accepted == self.total;
+    }
+
+    pub fn apply(self: *WriteCursor, result: WriteResult) WriteAdvance {
+        if (self.done()) return invalidAdvance();
+        var advance: WriteAdvance = switch (result) {
+            .written => |bytes| .{ .accepted = bytes, .outcome = .complete },
+            .busy => |bytes| .{ .accepted = bytes, .outcome = .retry, .raw = abi.service_api_result_busy },
+            .timed_out => |bytes| .{ .accepted = bytes, .outcome = .timed_out, .raw = abi.service_api_result_timeout },
+            .failure => |failure| .{ .accepted = failure.written, .outcome = .failure, .raw = failure.raw },
+        };
+        if (advance.accepted > self.remaining() or advance.accepted % self.frame_bytes != 0) return invalidAdvance();
+
+        self.accepted += advance.accepted;
+        if ((advance.outcome == .complete and !self.done()) or (advance.outcome == .retry and self.done())) {
+            advance.outcome = .invalid;
+            advance.raw = abi.service_api_result_invalid;
+        }
+        return advance;
+    }
+};
+
+fn invalidAdvance() WriteAdvance {
+    return .{ .outcome = .invalid, .raw = abi.service_api_result_invalid };
+}
+
 pub const OpenResult = union(enum) {
     stream: AudioStream,
     timed_out,
@@ -222,4 +280,45 @@ pub const AdvancedAudio = struct {
 
 fn validResponse(response: *const abi.AudioServiceStreamResult, action: u16) bool {
     return response.magic == abi.audio_service_result_magic and response.version == abi.audio_service_result_version and response.action == action;
+}
+
+test "write cursor preserves partial progress and never converts errors into success" {
+    var cursor = WriteCursor.init(8192, 4) orelse return error.InvalidCursor;
+    const busy = cursor.apply(.{ .busy = 4076 });
+    try std.testing.expectEqual(@as(usize, 4076), busy.accepted);
+    try std.testing.expectEqual(WriteOutcome.retry, busy.outcome);
+    try std.testing.expectEqual(@as(usize, 4116), cursor.remaining());
+
+    const complete = cursor.apply(.{ .written = 4116 });
+    try std.testing.expectEqual(WriteOutcome.complete, complete.outcome);
+    try std.testing.expect(cursor.done());
+
+    var short_cursor = WriteCursor.init(4096, 4) orelse return error.InvalidCursor;
+    const short = short_cursor.apply(.{ .written = 2048 });
+    try std.testing.expectEqual(@as(usize, 2048), short.accepted);
+    try std.testing.expectEqual(WriteOutcome.invalid, short.outcome);
+    try std.testing.expect(!short_cursor.done());
+
+    var failed_cursor = WriteCursor.init(4096, 4) orelse return error.InvalidCursor;
+    const failed = failed_cursor.apply(.{ .failure = .{ .raw = -77, .written = 2048 } });
+    try std.testing.expectEqual(@as(usize, 2048), failed.accepted);
+    try std.testing.expectEqual(WriteOutcome.failure, failed.outcome);
+    try std.testing.expectEqual(@as(i32, -77), failed.raw);
+    try std.testing.expect(!failed_cursor.done());
+
+    var terminal_cursor = WriteCursor.init(4096, 4) orelse return error.InvalidCursor;
+    const terminal = terminal_cursor.apply(.{ .failure = .{ .raw = -88, .written = 4096 } });
+    try std.testing.expectEqual(WriteOutcome.failure, terminal.outcome);
+    try std.testing.expect(terminal_cursor.done());
+
+    var timeout_cursor = WriteCursor.init(4096, 4) orelse return error.InvalidCursor;
+    const timed_out = timeout_cursor.apply(.{ .timed_out = 1024 });
+    try std.testing.expectEqual(@as(usize, 1024), timed_out.accepted);
+    try std.testing.expectEqual(WriteOutcome.timed_out, timed_out.outcome);
+    try std.testing.expect(!timeout_cursor.done());
+
+    var invalid_cursor = WriteCursor.init(4096, 4) orelse return error.InvalidCursor;
+    const invalid = invalid_cursor.apply(.{ .busy = 1 });
+    try std.testing.expectEqual(WriteOutcome.invalid, invalid.outcome);
+    try std.testing.expectEqual(@as(usize, 0), invalid_cursor.accepted);
 }

@@ -172,8 +172,16 @@ Nachholquanten pro Zyklus. Unterlauf wird mit Stille aufgefuellt, Mute liefert
 Stille und setzt die Streamlautstaerke auf null. `R4AudioSink` oeffnet,
 schreibt und schliesst ausschliesslich ueber die normale App-Audiofassade und
 AUDSVC. Ein fehlender Dienst, Timeout oder Schreibfehler setzt Audio sichtbar
-auf `degraded`; Gastzeit, Video und Warteverhalten laufen weiterhin getaktet
-und nicht als Busy-Wait oder ungebremste Fehlerschleife.
+auf `degraded`. Dabei werden verbliebenes PCM, Vorfuellzustand und
+Audiodeadline genau einmal entfernt; danach finden weder weitere
+Gast-Audiorenders noch Scratch-Einreichungen statt. Gastzeit, Video und
+Warteverhalten laufen weiterhin getaktet und nicht als Busy-Wait oder
+ungebremste Fehlerschleife.
+
+`r4os.app_audio.WriteCursor` bewertet den frameausgerichteten Fortschritt
+eines Clientblocks ueber vollstaendige, Busy-, Timeout- und Fehlerantworten.
+Bereits angenommene Bytes bleiben damit auch bei einem anschliessenden Fehler
+sichtbar; nur der Aufrufer entscheidet ueber Retry und Pacing.
 
 Plattform-APIs
 --------------
