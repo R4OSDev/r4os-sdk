@@ -171,14 +171,18 @@ nicht Bestandteil dieses Vertrags.
 Die optionale Audio-Pumpe verwendet caller-eigene Queue- und Scratchspeicher.
 Der definierte Standard ist 48 kHz, Stereo, signed 16-bit little endian mit
 480 Frames je 10-ms-Quantum, zwei Zielquanten und hoechstens zwei
-Nachholquanten pro Zyklus. Unterlauf wird mit Stille aufgefuellt, Mute liefert
-Stille und setzt die Streamlautstaerke auf null. `R4AudioSink` oeffnet,
-schreibt und schliesst ausschliesslich ueber die normale App-Audiofassade und
-AUDSVC. Ein fehlender Dienst, Timeout oder Schreibfehler setzt Audio sichtbar
-auf `degraded`. Dabei werden verbliebenes PCM, Vorfuellzustand und
-Audiodeadline genau einmal entfernt; danach finden weder weitere
-Gast-Audiorenders noch Scratch-Einreichungen statt. Gastzeit, Video und
-Warteverhalten laufen weiterhin getaktet und nicht als Busy-Wait oder
+Nachholquanten pro Zyklus. Der Sink wird erst beim ersten Quantum mit
+mindestens einem von null verschiedenen Samplebyte geoeffnet. Leere oder
+vollstaendig stille Renderquanten werden gezaehlt, aber weder als voller
+Scratchblock hergestellt noch geschrieben. Pause, Mute, Reset und der erste
+stille Zustand schliessen einen tatsaechlich aktiven Sink genau einmal und
+entfernen die Audiodeadline; ein spaeteres Signal materialisiert ihn erneut.
+`R4AudioSink` oeffnet, schreibt und schliesst ausschliesslich ueber die normale
+App-Audiofassade und AUDSVC. Ein fehlender Dienst, Timeout oder Schreibfehler
+setzt Audio sichtbar auf `degraded`. Dabei werden verbliebenes PCM,
+Vorfuellzustand und Audiodeadline genau einmal entfernt; danach finden weder
+weitere Gast-Audiorenders noch Scratch-Einreichungen statt. Gastzeit, Video
+und Warteverhalten laufen weiterhin getaktet und nicht als Busy-Wait oder
 ungebremste Fehlerschleife.
 
 `r4os.app_audio.WriteCursor` bewertet den frameausgerichteten Fortschritt
@@ -266,3 +270,15 @@ Deskriptoren laufen unveraendert ueber den synchronen Tiefe-eins-Adapter.
 Die exakten ABI-Regeln fuer 32-Bit-Masken, Bouncekopien, Inline-Completion,
 Timeout, Kill, Flushbarrieren und Unload stehen im zentralen
 `Contract/ABI/R4DDriver.txt`.
+
+Deadline-Driverarbeit seit 0.69.42
+----------------------------------
+
+DriverApi v20 stellt ueber `DriverContext.workSubmitRequest` die versionierte
+Audio-Refill-Anforderung bereit. Sie verlangt eine absolute Tickdeadline,
+einen stabilen, von null verschiedenen Geraeteschluessel und ein Budget von
+hoechstens vier Ticks. Der Kernel kopiert die Anforderung beim Submit. Der
+Treiber behaelt nur Completionhandle und eigenen Kontext und muss jede
+Completion vor DMA- oder Modulabbau canceln beziehungsweise joinen und
+freigeben. Die normale `workSubmit`-Fassade bleibt fuer nicht deadlinefaehige
+IRQ-/Taskarbeit unveraendert.

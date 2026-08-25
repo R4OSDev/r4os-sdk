@@ -228,6 +228,10 @@ const RuntimeSelfTestHost = struct {
     paused_cycles: u32 = 0,
     saw_resize: bool = false,
     saw_focus: bool = false,
+    muted_submitted_bytes: u64 = 0,
+    muted_writes: u64 = 0,
+    muted_idle_closes: u64 = 0,
+    muted_was_active: bool = false,
 
     fn driver(self: *RuntimeSelfTestHost) runtime_api.HostDriver {
         return .{
@@ -276,13 +280,23 @@ fn runRuntimeSelfTest(sys: *r4os.r4sys.Context, host: *host_api.Host, audio: ?r4
     const result = runtime.run(sys, guest.driver(), runtime_host.driver());
     if (result != 0) return runtimeSelfTestFail(sys, "runtime-exit", 114);
     const expected_state: runtime_api.LifecycleState = if (exit_mode == .guest_completion) .completed else .closed;
-    if (runtime.state != expected_state) return runtimeSelfTestFail(sys, "lifecycle-end", 115);
+    if (runtime.state != expected_state) return runtimeSelfTestFail(sys, switch (runtime_host.phase) {
+        .warming => "lifecycle-end-warming",
+        .paused => "lifecycle-end-paused",
+        .resumed => "lifecycle-end-resumed",
+        .reset => "lifecycle-end-reset",
+        .muted => "lifecycle-end-muted",
+        .unmuted => "lifecycle-end-unmuted",
+        .done => "lifecycle-end-done",
+    }, 115);
     if (!runtime.resources_closed or runtime.audio.state != .closed) return runtimeSelfTestFail(sys, "resource-close", 116);
     if (runtime.stats.pauses != 1 or runtime.stats.resumes != 1 or runtime.stats.resets != 1) return runtimeSelfTestFail(sys, "lifecycle-counts", 117);
     if (guest.resets != 1 or guest.max_budget == 0 or guest.max_budget > runtime_slice_budget or guest.operations == 0) return runtimeSelfTestFail(sys, "slice-budget", 118);
-    if (runtime.stats.slices < 6 or runtime.stats.sleeps == 0 or runtime.clock.guest_ns == 0) return runtimeSelfTestFail(sys, "time-pacing", 119);
+    if (runtime.stats.slices < 6) return runtimeSelfTestFail(sys, "time-pacing-slices", 119);
+    if (runtime.stats.sleeps == 0) return runtimeSelfTestFail(sys, "time-pacing-sleeps", 119);
+    if (runtime.clock.guest_ns == 0) return runtimeSelfTestFail(sys, "time-pacing-clock", 119);
     if (runtime.audio.last_error != 0 or runtime.audio.stats.generated_bytes == 0 or runtime.audio.stats.submitted_bytes == 0) return runtimeSelfTestFail(sys, "audio-progress", 120);
-    if (runtime.audio.stats.muted_bytes < audio_scratch.len or runtime.audio.muted) return runtimeSelfTestFail(sys, "audio-mute", 121);
+    if (runtime.audio.stats.muted_bytes != 0 or runtime.audio.muted or runtime.audio.stats.idle_closes == 0) return runtimeSelfTestFail(sys, "audio-idle", 121);
     if (runtime.stats.presents < 4 or runtime_host.phase == .warming or runtime_host.phase == .paused or runtime_host.phase == .resumed or runtime_host.phase == .reset or runtime_host.phase == .muted) return runtimeSelfTestFail(sys, "host-progress", 122);
 
     sys.println("SUBSYSTEM runtime selftest: OK slices=bounded time=monotonic audio=s16le-buffered lifecycle=pause+resume+reset+complete+close resources=closed");
@@ -371,14 +385,30 @@ fn runtimeHostPoll(context: *anyopaque) runtime_api.HostPollResult {
         .reset => {
             if (self.guest.resets > 1) return .{ .failure = -9711 };
             if (self.guest.resets == 1 and self.guest.steps >= 2) {
+                self.muted_submitted_bytes = self.runtime.audio.stats.submitted_bytes;
+                self.muted_writes = self.runtime.audio.stats.writes;
+                self.muted_idle_closes = self.runtime.audio.stats.idle_closes;
+                self.muted_was_active = self.runtime.audio.state == .active;
                 self.phase = .muted;
                 return self.command(.mute);
             }
         },
-        .muted => if (self.runtime.audio.stats.muted_bytes >= audio_scratch.len) {
-            self.guest.allow_finish = true;
-            self.phase = .unmuted;
-            return self.command(.unmute);
+        .muted => {
+            if (!self.runtime.audio.muted or
+                self.runtime.audio.stats.submitted_bytes != self.muted_submitted_bytes or
+                self.runtime.audio.stats.writes != self.muted_writes)
+            {
+                return .{ .failure = -9712 };
+            }
+            const expected_idle_closes = self.muted_idle_closes + @intFromBool(self.muted_was_active);
+            if (self.runtime.audio.state == .ready and
+                self.runtime.audio.next_deadline_tick == 0 and
+                self.runtime.audio.stats.idle_closes == expected_idle_closes)
+            {
+                self.guest.allow_finish = true;
+                self.phase = .unmuted;
+                return self.command(.unmute);
+            }
         },
         .unmuted => if (self.exit_mode == .window_close and self.guest.steps >= 6 and !self.runtime.audio.muted) {
             self.phase = .done;

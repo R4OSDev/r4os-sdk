@@ -8,7 +8,9 @@ repository.
 Subsystem R4X hosts can compose the allocation-free `subsystem_host` video
 and input layer with `subsystem_runtime` for bounded guest slices, monotonic
 guest time, lifecycle control, paced frames, and buffered S16LE audio through
-the regular app audio facade.
+the regular app audio facade. Audio streams are materialized on the first
+non-silent quantum; silence, pause, mute, and reset submit no full zero PCM
+payload and close an active sink once without affecting guest time or video.
 
 ## Service loops
 
@@ -24,6 +26,10 @@ The append-only R4DEV tail includes a PCI inventory performance snapshot.
 Zig and C facades expose its source, capacity, configuration-access, ECAM
 mapping, lookup, materialization, and enumeration timing counters while
 remaining optional for older kernels.
+
+DriverApi v20 exposes bounded audio-refill work with an absolute tick
+deadline, a stable device key, and a maximum four-tick callback budget. It is
+separate from the existing normal Driver Work submission facade.
 
 ## Dependency mapping
 

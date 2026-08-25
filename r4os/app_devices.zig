@@ -103,4 +103,7 @@ pub const PerformanceView = struct {
     pub fn irqTiming(self: *const PerformanceView, irq: u32) ?abi.ProgramIrqTimingInfo {
         return self.raw.performanceIrqTiming(irq);
     }
+    pub fn driverWork(self: *const PerformanceView, owner: u32) ?abi.ProgramDriverWorkPerformanceInfo {
+        return self.raw.performanceDriverWork(owner);
+    }
 };

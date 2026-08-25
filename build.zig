@@ -52,6 +52,15 @@ pub fn build(b: *std.Build) void {
     const sdk_unit_tests = b.addTest(.{ .root_module = host_r4os });
     const run_sdk_unit_tests = b.addRunArtifact(sdk_unit_tests);
 
+    const subsystem_runtime_module = b.createModule(.{
+        .root_source_file = b.path("r4os/subsystem_runtime.zig"),
+        .target = b.graph.host,
+        .optimize = .Debug,
+    });
+    subsystem_runtime_module.addImport("r4os_contract", sdk_profile.profile.contract_module);
+    const subsystem_runtime_tests = b.addTest(.{ .root_module = subsystem_runtime_module });
+    const run_subsystem_runtime_tests = b.addRunArtifact(subsystem_runtime_tests);
+
     const ntfs_format = b.createModule(.{
         .root_source_file = b.path("r4os/ntfs_format.zig"),
         .target = b.graph.host,
@@ -112,6 +121,7 @@ pub fn build(b: *std.Build) void {
     const test_step = b.step("test", "Run SDK, build-tool and smoke tests");
     test_step.dependOn(b.getInstallStep());
     test_step.dependOn(&run_sdk_unit_tests.step);
+    test_step.dependOn(&run_subsystem_runtime_tests.step);
     test_step.dependOn(&run_ntfs_volume_tests.step);
     test_step.dependOn(&run_r4x_builder_tests.step);
     test_step.dependOn(&run_r4l_contract_tests.step);

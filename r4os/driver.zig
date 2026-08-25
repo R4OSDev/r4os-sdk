@@ -229,6 +229,10 @@ pub const Context = struct {
         return self.api.driver_work_submit(handler, context, flags, out_handle);
     }
 
+    pub fn workSubmitRequest(self: *const Context, request: *const abi.DriverWorkRequest, out_handle: *u32) i32 {
+        return self.api.driver_work_submit_request(request, out_handle);
+    }
+
     pub fn workCancel(self: *const Context, handle: u32) i32 {
         return self.api.driver_work_cancel(handle);
     }
