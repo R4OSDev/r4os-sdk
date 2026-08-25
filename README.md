@@ -52,6 +52,13 @@ metadata never removes the mandatory canonical flat bytes; return value 1
 means those bytes were accepted through software fallback. The current BSP
 selection is one queue and validated RX TCP/UDP checksum metadata only.
 
+JavaScript programs publish a non-zero bytecode generation after validation.
+Normal, generator, and async calls check that generation in constant time;
+the full fingerprint remains available as an explicit integrity diagnostic.
+The browser WebRuntime allocates its large JavaScript realm only when the
+first script or module needs it and releases the complete realm on document
+abort, replacement, or deinitialization.
+
 ## Dependency mapping
 
 `Settings.R4S` maps the local Contract and workspace paths. Relative and

@@ -218,6 +218,22 @@ Aktion teilen genau einen Queueeintrag `dom_changed`; Navigation, History und
 Formaktionen bleiben nicht koaleszierbar. `takeAction` gibt den Pendingzustand
 beim Entnehmen frei, Dokumentwechsel und Abbruch setzen beide Marker zurueck.
 
+Seit 0.69.51 bindet `r4os.javascript.Program` validierten Bytecode an eine
+monoton steigende, von der Parse-Generation getrennte Bytecode-Generation.
+Die normalen Evaluate-, Modul-, Funktions-, Generator- und Async-Pfade
+pruefen diese beiden Zahlen in konstanter Zeit. Ein erneuter Vollhash ist nur
+noch die ausdrueckliche Diagnose `verifyBytecodeIntegrity`; rohe Aenderungen
+muessen vorher `invalidateBytecode` aufrufen und anschliessend neu kompiliert
+werden.
+
+`r4os.web_runtime.WebRuntime` enthaelt den rund 34,7 MB grossen
+`javascript.Runtime`-Block nicht mehr eingebettet. Ein Dokument ohne Skript
+bleibt beim rund 2,66 MB grossen Grundzustand und fordert ueber den
+ProgramAllocator keine Realmbytes an. Erst die erste Quell- oder Modulladung
+materialisiert Runtime, Bindings und Plattformprogramm. Abort, Dokumentersatz
+und Deinitialisierung verwenden denselben wiederholbar sicheren Abbaupfad und
+geben Programme, dynamische Runtimebereiche und den Realmblock frei.
+
 Plattform-APIs
 --------------
 

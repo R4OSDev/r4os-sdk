@@ -887,7 +887,8 @@ pub const Dispatch = struct {
 };
 
 pub const WebRuntime = struct {
-    runtime: javascript.Runtime = undefined,
+    runtime: *javascript.Runtime = undefined,
+    runtime_memory: ?[*]u8 = null,
     programs: [max_script_programs]?*javascript.Program = [_]?*javascript.Program{null} ** max_script_programs,
     program_count: usize = 0,
     platform_program: ?*javascript.Program = null,
@@ -1017,16 +1018,64 @@ pub const WebRuntime = struct {
         self.font_document_id = 0;
         self.frame_lookup = .{};
         self.runtime = undefined;
-        self.runtime.initialize(program_allocator);
+        self.runtime_memory = null;
+    }
+
+    pub fn javascriptRuntime(self: *WebRuntime) ?*javascript.Runtime {
+        return if (self.runtime_memory != null) self.runtime else null;
+    }
+
+    pub fn javascriptRealmActive(self: *const WebRuntime) bool {
+        return self.runtime_memory != null;
+    }
+
+    pub fn javascriptRealmBytes(self: *const WebRuntime) usize {
+        return if (self.javascriptRealmActive()) @sizeOf(javascript.Runtime) else 0;
+    }
+
+    fn ensureJavascriptRealm(self: *WebRuntime) Error!void {
+        if (self.javascriptRealmActive()) return;
+        if (self.document == null or self.storage == null) return error.NotInitialized;
+        const memory = self.program_allocator.allocate(
+            self.program_allocator.context,
+            @sizeOf(javascript.Runtime),
+            @alignOf(javascript.Runtime),
+        ) orelse return error.ScriptAllocation;
+        self.runtime = @ptrCast(@alignCast(memory));
+        self.runtime_memory = memory;
+        self.runtime.* = undefined;
+        self.runtime.initialize(self.program_allocator);
         self.runtime.setExternalRootMarker(.{ .context = self, .mark = markRuntimeRoots });
         self.runtime.setClockSource(.{ .context = self, .now_milliseconds = runtimeClockNow, .offset_minutes = runtimeClockOffset });
+        errdefer self.releaseJavascriptRealm();
+
+        try self.runtime.init();
+        self.runtime.setStop(self.execution_stop);
+        self.runtime.setStepBudget(self.execution_step_budget);
+        try self.installBindings();
+        const platform_program = self.program_allocator.create(self.program_allocator.context) orelse return error.ScriptAllocation;
+        self.platform_program = platform_program;
+        // The embedded platform layer is trusted initialization, not page
+        // work. A caller cancellation or page-sized step budget must only
+        // constrain subsequently evaluated website code.
+        self.runtime.setStop(.{});
+        self.runtime.setStepBudget(javascript.default_step_budget);
+        _ = try self.runtime.evaluateNamedScriptSource(platform_program, "r4os:web-streams", web_streams_source);
+        self.runtime.setStop(self.execution_stop);
+        self.runtime.setStepBudget(self.execution_step_budget);
+        const global_object = self.runtime.global("globalThis") orelse return error.TypeError;
+        for ([_][]const u8{ "ReadableStream", "ReadableStreamDefaultReader", "ReadableStreamDefaultController", "ReadableStreamBYOBReader", "ReadableStreamBYOBRequest", "ReadableByteStreamController", "WritableStream", "WritableStreamDefaultWriter", "WritableStreamDefaultController", "TransformStream", "TransformStreamDefaultController" }) |name| {
+            try self.runtime.defineGlobal(name, try self.runtime.get(global_object, name), true);
+        }
     }
 
     pub fn setExecutionPolicy(self: *WebRuntime, stop: javascript.Stop, step_budget: usize) void {
         self.execution_stop = stop;
         self.execution_step_budget = step_budget;
-        self.runtime.setStop(stop);
-        self.runtime.setStepBudget(step_budget);
+        if (self.javascriptRealmActive()) {
+            self.runtime.setStop(stop);
+            self.runtime.setStepBudget(step_budget);
+        }
     }
 
     pub fn setScriptObserver(self: *WebRuntime, observer: ScriptObserver) void {
@@ -1045,7 +1094,7 @@ pub const WebRuntime = struct {
     pub fn setViewport(self: *WebRuntime, width: u32, height: u32) void {
         self.environment.viewport_width = width;
         self.environment.viewport_height = height;
-        if (self.document == null) return;
+        if (self.document == null or !self.javascriptRealmActive()) return;
         if (self.runtime.global("window")) |window| {
             self.runtime.set(window, "innerWidth", .{ .number = @floatFromInt(width) }) catch {};
             self.runtime.set(window, "innerHeight", .{ .number = @floatFromInt(height) }) catch {};
@@ -1245,9 +1294,8 @@ pub const WebRuntime = struct {
     }
 
     pub fn deinit(self: *WebRuntime) void {
-        self.releasePrograms();
+        self.releaseJavascriptRealm();
         self.canvases.deinit();
-        self.runtime.deinit();
         self.document = null;
         self.storage = null;
     }
@@ -1286,7 +1334,7 @@ pub const WebRuntime = struct {
         now_ms: f64,
     ) Error!void {
         if (self.document != null) self.reportOutstandingResources(.replaced);
-        self.releasePrograms();
+        self.releaseJavascriptRealm();
         self.canvases.reset();
         self.canvas_contexts = [_]javascript.Value{.undefined} ** web_canvas.max_surfaces;
         self.document = null;
@@ -1359,29 +1407,6 @@ pub const WebRuntime = struct {
             .request_start_ms = now_ms,
             .now_ms = now_ms,
         };
-        try self.runtime.init();
-        self.runtime.setStop(self.execution_stop);
-        self.runtime.setStepBudget(self.execution_step_budget);
-        try self.installBindings();
-        const platform_program = self.program_allocator.create(self.program_allocator.context) orelse return error.ScriptAllocation;
-        self.platform_program = platform_program;
-        // The embedded platform layer is trusted initialization, not page
-        // work. A caller cancellation or page-sized step budget must only
-        // constrain subsequently evaluated website code.
-        self.runtime.setStop(.{});
-        self.runtime.setStepBudget(javascript.default_step_budget);
-        const platform_result = self.runtime.evaluateNamedScriptSource(platform_program, "r4os:web-streams", web_streams_source);
-        self.runtime.setStop(self.execution_stop);
-        self.runtime.setStepBudget(self.execution_step_budget);
-        _ = platform_result catch |err| {
-            self.program_allocator.destroy(self.program_allocator.context, platform_program);
-            self.platform_program = null;
-            return err;
-        };
-        const global_object = self.runtime.global("globalThis") orelse return error.TypeError;
-        for ([_][]const u8{ "ReadableStream", "ReadableStreamDefaultReader", "ReadableStreamDefaultController", "ReadableStreamBYOBReader", "ReadableStreamBYOBRequest", "ReadableByteStreamController", "WritableStream", "WritableStreamDefaultWriter", "WritableStreamDefaultController", "TransformStream", "TransformStreamDefaultController" }) |name| {
-            try self.runtime.defineGlobal(name, try self.runtime.get(global_object, name), true);
-        }
     }
 
     pub fn abortDocument(self: *WebRuntime) void {
@@ -1410,7 +1435,7 @@ pub const WebRuntime = struct {
         self.canvas_contexts = [_]javascript.Value{.undefined} ** web_canvas.max_surfaces;
         self.font_registry = null;
         self.font_document_id = 0;
-        self.releasePrograms();
+        self.releaseJavascriptRealm();
     }
 
     pub fn executeDocumentScripts(self: *WebRuntime) Error!usize {
@@ -1473,6 +1498,9 @@ pub const WebRuntime = struct {
             .line = self.last_script_line,
             .column = self.last_script_column,
         };
+        if (!self.javascriptRealmActive()) return .{
+            .error_count = self.script_error_count,
+        };
         return .{
             .error_count = self.script_error_count,
             .phase = self.runtime.diagnosticPhase(),
@@ -1488,6 +1516,7 @@ pub const WebRuntime = struct {
     }
 
     pub fn executeNamedSource(self: *WebRuntime, source_name: []const u8, source: []const u8) Error!javascript.Value {
+        try self.ensureJavascriptRealm();
         if (self.program_count >= self.programs.len) return error.ScriptLimit;
         const program = self.program_allocator.create(self.program_allocator.context) orelse return error.ScriptAllocation;
         self.programs[self.program_count] = program;
@@ -1821,7 +1850,7 @@ pub const WebRuntime = struct {
                             .node = entry.node,
                             .source_name = evaluated_name,
                             .source = source,
-                            .steps = self.runtime.stats.steps,
+                            .steps = if (self.javascriptRealmActive()) self.runtime.stats.steps else 0,
                             .success = success,
                         });
                     }
@@ -2030,6 +2059,7 @@ pub const WebRuntime = struct {
         if (state.resource_id != entry.id) state.* = .{ .resource_id = entry.id };
         if (state.terminal_event_sent) return;
         state.terminal_event_sent = true;
+        if (!self.javascriptRealmActive()) return;
         if (state.role != .content) return;
         const event = self.makeDomEvent(if (success) "load" else "error", false, false, false, 0) catch return;
         const target = self.makeNode(entry.node) catch return;
@@ -2323,6 +2353,14 @@ pub const WebRuntime = struct {
     }
 
     fn captureScriptFailure(self: *WebRuntime, err: anyerror) void {
+        if (!self.javascriptRealmActive()) {
+            self.last_script_phase = .host;
+            self.last_script_error_name.set(@errorName(err)) catch {};
+            self.last_script_source_name = .{};
+            self.last_script_line = 0;
+            self.last_script_column = 0;
+            return;
+        }
         self.last_script_phase = self.runtime.diagnosticPhase();
         const diagnostic_name = self.runtime.diagnosticErrorName();
         self.last_script_error_name.set(if (diagnostic_name.len > 0) diagnostic_name else @errorName(err)) catch {};
@@ -2351,6 +2389,7 @@ pub const WebRuntime = struct {
     }
 
     fn registerModuleLoad(self: *WebRuntime, name: []const u8, source: []const u8) Error!usize {
+        try self.ensureJavascriptRealm();
         const parsed = try navigation.parse(name);
         if (self.findModuleLoad(parsed.bytes())) |existing| {
             if (self.modules[existing].state != .registered) return error.RequestState;
@@ -2470,10 +2509,11 @@ pub const WebRuntime = struct {
         if (self.document == null) return error.NotInitialized;
         self.queueDiscoveredResources() catch |err| if (err != error.RequestLimit) return err;
         self.timing.now_ms = now_ms;
+        if (!self.javascriptRealmActive()) return 0;
         for (&self.abort_deadlines) |*deadline| {
             if (!deadline.occupied or deadline.generation != self.generation or deadline.due_ms > now_ms) continue;
             deadline.occupied = false;
-            try self.abortSignal(&self.runtime, deadline.signal, try self.makeNamedError(&self.runtime, "TimeoutError", "The operation timed out"));
+            try self.abortSignal(self.runtime, deadline.signal, try self.makeNamedError(self.runtime, "TimeoutError", "The operation timed out"));
         }
         const fallback = if (self.program_count > 0) self.programs[self.program_count - 1] orelse return error.NotInitialized else self.platform_program orelse return 0;
         var jobs = try self.runtime.drainJobs(fallback, maximum_jobs);
@@ -2513,12 +2553,27 @@ pub const WebRuntime = struct {
         }
     }
 
+    fn releaseJavascriptRealm(self: *WebRuntime) void {
+        self.releasePrograms();
+        const memory = self.runtime_memory orelse return;
+        self.runtime.deinit();
+        self.program_allocator.free(
+            self.program_allocator.context,
+            memory,
+            @sizeOf(javascript.Runtime),
+            @alignOf(javascript.Runtime),
+        );
+        self.runtime_memory = null;
+        self.runtime = undefined;
+    }
+
     pub fn dispatchEvent(self: *WebRuntime, target: EventTarget, name: []const u8, now_ms: f64) Error!Dispatch {
         if (self.document == null) return error.NotInitialized;
         self.timing.now_ms = now_ms;
         const serial = self.next_event_serial;
         self.next_event_serial +%= 1;
         if (self.next_event_serial == 0) self.next_event_serial = 1;
+        if (!self.javascriptRealmActive()) return .{ .queued = 0, .serial = serial };
         const bubbles = !equal(name, "load") and !equal(name, "DOMContentLoaded");
         const event = try self.makeDomEvent(name, bubbles, true, true, serial);
         const root_mark = self.runtime.hostRootMark();
@@ -2588,7 +2643,7 @@ pub const WebRuntime = struct {
             if (!decision.allowed) {
                 request.state = .failed;
                 self.last_block_reason = decision.reason;
-                if (request.promise != .undefined) try self.runtime.rejectPromise(request.promise, try self.makeTypeError(&self.runtime, blockText(decision.reason)));
+                if (request.promise != .undefined) try self.runtime.rejectPromise(request.promise, try self.makeTypeError(self.runtime, blockText(decision.reason)));
                 try self.finishXhr(request, false);
                 self.failScheduledResource(request, .policy);
                 self.failModuleRequest(request);
@@ -2608,7 +2663,7 @@ pub const WebRuntime = struct {
         )) {
             request.state = .failed;
             self.last_block_reason = .cors;
-            if (request.promise != .undefined) try self.runtime.rejectPromise(request.promise, try self.makeTypeError(&self.runtime, "CORS blocked"));
+            if (request.promise != .undefined) try self.runtime.rejectPromise(request.promise, try self.makeTypeError(self.runtime, "CORS blocked"));
             try self.finishXhr(request, false);
             self.failScheduledResource(request, .policy);
             self.failModuleRequest(request);
@@ -2708,7 +2763,7 @@ pub const WebRuntime = struct {
             self.queueDiscoveredResources() catch {};
         }
         if (request.module_index != std.math.maxInt(u8)) self.failModuleRequest(request);
-        if (request.promise != .undefined) try self.runtime.rejectPromise(request.promise, try self.makeTypeError(&self.runtime, reason));
+        if (request.promise != .undefined) try self.runtime.rejectPromise(request.promise, try self.makeTypeError(self.runtime, reason));
         try self.finishXhr(request, false);
     }
 
@@ -3927,7 +3982,7 @@ pub const WebRuntime = struct {
     fn makeFailedNavigationResult(self: *WebRuntime, message: []const u8) Error!javascript.Value {
         const root_mark = self.runtime.hostRootMark();
         defer self.runtime.restoreHostRoots(root_mark);
-        const reason = try self.makeNamedError(&self.runtime, "AbortError", message);
+        const reason = try self.makeNamedError(self.runtime, "AbortError", message);
         try self.runtime.hostRoot(reason);
         const committed = try self.runtime.createPromise();
         try self.runtime.hostRoot(committed);
@@ -3995,9 +4050,9 @@ pub const WebRuntime = struct {
 
     fn constructorUrl(self: *WebRuntime, arguments: []const javascript.Value) Error!navigation.Url {
         if (arguments.len == 0) return error.TypeError;
-        const input = try coercedText(&self.runtime, arguments[0]);
+        const input = try coercedText(self.runtime, arguments[0]);
         if (arguments.len < 2 or arguments[1] == .undefined) return navigation.parse(input);
-        const base = try navigation.parse(try coercedText(&self.runtime, arguments[1]));
+        const base = try navigation.parse(try coercedText(self.runtime, arguments[1]));
         return navigation.resolve(&base, input);
     }
 
@@ -5010,6 +5065,7 @@ pub const WebRuntime = struct {
     }
 
     fn refreshTimingBindings(self: *WebRuntime) void {
+        if (!self.javascriptRealmActive()) return;
         const performance = self.runtime.global("performance") orelse return;
         const timing = self.runtime.get(performance, "timing") catch return;
         const known = struct {
@@ -7591,6 +7647,65 @@ fn testingProgramAllocator(context: *anyopaque) ProgramAllocator {
     };
 }
 
+const TestingAllocationTracker = struct {
+    active_bytes: usize = 0,
+    peak_bytes: usize = 0,
+    allocation_count: usize = 0,
+    free_count: usize = 0,
+    fail_next_allocation: bool = false,
+
+    fn record(self: *TestingAllocationTracker, length: usize) void {
+        self.active_bytes += length;
+        self.peak_bytes = @max(self.peak_bytes, self.active_bytes);
+        self.allocation_count += 1;
+    }
+
+    fn create(raw_context: *anyopaque) ?*javascript.Program {
+        const self: *TestingAllocationTracker = @ptrCast(@alignCast(raw_context));
+        const program = std.testing.allocator.create(javascript.Program) catch return null;
+        program.* = .{};
+        self.record(@sizeOf(javascript.Program));
+        return program;
+    }
+
+    fn destroy(raw_context: *anyopaque, program: *javascript.Program) void {
+        const self: *TestingAllocationTracker = @ptrCast(@alignCast(raw_context));
+        std.debug.assert(self.active_bytes >= @sizeOf(javascript.Program));
+        self.active_bytes -= @sizeOf(javascript.Program);
+        self.free_count += 1;
+        std.testing.allocator.destroy(program);
+    }
+
+    fn allocate(raw_context: *anyopaque, length: usize, alignment: usize) ?[*]u8 {
+        const self: *TestingAllocationTracker = @ptrCast(@alignCast(raw_context));
+        if (self.fail_next_allocation) {
+            self.fail_next_allocation = false;
+            return null;
+        }
+        const memory = std.testing.allocator.rawAlloc(length, .fromByteUnits(alignment), @returnAddress()) orelse return null;
+        self.record(length);
+        return memory;
+    }
+
+    fn free(raw_context: *anyopaque, memory: [*]u8, length: usize, alignment: usize) void {
+        const self: *TestingAllocationTracker = @ptrCast(@alignCast(raw_context));
+        std.debug.assert(self.active_bytes >= length);
+        self.active_bytes -= length;
+        self.free_count += 1;
+        std.testing.allocator.rawFree(memory[0..length], .fromByteUnits(alignment), @returnAddress());
+    }
+
+    fn programAllocator(self: *TestingAllocationTracker) ProgramAllocator {
+        return .{
+            .context = self,
+            .create = create,
+            .destroy = destroy,
+            .allocate = allocate,
+            .free = free,
+        };
+    }
+};
+
 const TestingStopState = struct {
     remaining: usize,
 };
@@ -7602,10 +7717,51 @@ fn testingStopRequested(context: ?*anyopaque) bool {
     return false;
 }
 
-test "browser runtime stays compact without reducing script capacity" {
+test "browser runtime allocates and releases JavaScript realm on demand" {
     try std.testing.expectEqual(@as(usize, 16), max_script_programs);
     try std.testing.expectEqual(@as(usize, 8), javascript.max_modules);
-    try std.testing.expect(@sizeOf(WebRuntime) < 40 * 1024 * 1024);
+    try std.testing.expect(@sizeOf(javascript.Runtime) > 32 * 1024 * 1024);
+    try std.testing.expect(@sizeOf(WebRuntime) < 4 * 1024 * 1024);
+
+    const allocator = std.testing.allocator;
+    const harness = try allocator.create(struct {
+        document: html.Document,
+        storage: security.BrowserStorage,
+        web: WebRuntime,
+    });
+    defer allocator.destroy(harness);
+    var tracker: TestingAllocationTracker = .{};
+    harness.web.initialize(tracker.programAllocator());
+    defer harness.web.deinit();
+    harness.document.reset();
+    harness.storage.reset();
+    _ = try harness.document.parse("<!doctype html><body><p>static</p></body>", .{ .content_type = "text/html" });
+    try harness.web.beginDocument(&harness.document, &harness.storage, "https://static.example/", "", 1, 0);
+
+    try std.testing.expect(!harness.web.javascriptRealmActive());
+    try std.testing.expectEqual(@as(usize, 0), harness.web.javascriptRealmBytes());
+    try std.testing.expectEqual(@as(usize, 0), tracker.active_bytes);
+    try std.testing.expectEqual(@as(usize, 0), try harness.web.executeDocumentScripts());
+    try std.testing.expectEqual(@as(usize, 0), try harness.web.pump(1, 8));
+    try std.testing.expectEqual(@as(usize, 0), (try harness.web.dispatchEvent(.window, "load", 1)).queued);
+    try std.testing.expectEqual(@as(usize, 0), tracker.active_bytes);
+
+    tracker.fail_next_allocation = true;
+    try std.testing.expectError(error.ScriptAllocation, harness.web.executeSource("globalThis.unreachable=true;"));
+    try std.testing.expect(!harness.web.javascriptRealmActive());
+    try std.testing.expectEqual(@as(usize, 0), tracker.active_bytes);
+
+    _ = try harness.web.executeSource("globalThis.realmActive=true;");
+    try std.testing.expect(harness.web.javascriptRealmActive());
+    try std.testing.expectEqual(@sizeOf(javascript.Runtime), harness.web.javascriptRealmBytes());
+    try std.testing.expect(tracker.peak_bytes >= @sizeOf(javascript.Runtime));
+    const global_object = harness.web.runtime.global("globalThis").?;
+    try std.testing.expect(harness.web.runtime.valueBoolean(try harness.web.runtime.get(global_object, "realmActive")));
+
+    harness.web.abortDocument();
+    try std.testing.expect(!harness.web.javascriptRealmActive());
+    try std.testing.expectEqual(@as(usize, 0), tracker.active_bytes);
+    try std.testing.expectEqual(tracker.allocation_count, tracker.free_count);
 }
 
 test "script observer reports bounded begin and finish events without changing execution" {
@@ -9185,6 +9341,7 @@ test "document readyState follows parsing and load lifecycle" {
         .{ .content_type = "text/html" },
     );
     try harness.web.beginDocument(&harness.document, &harness.storage, "https://lifecycle.example/", "", 42, 0);
+    try harness.web.ensureJavascriptRealm();
     const document_object = harness.web.runtime.global("document").?;
     try std.testing.expectEqualStrings("loading", harness.web.runtime.valueString(try harness.web.runtime.get(document_object, "readyState")));
     try std.testing.expectEqual(@as(usize, 1), try harness.web.executeDocumentScripts());

@@ -645,6 +645,8 @@ pub const Program = struct {
     bytecode_segment_count: usize = 0,
     bytecode_valid: bool = false,
     bytecode_signature: u64 = 0,
+    bytecode_generation: u64 = 0,
+    bytecode_parse_generation: u64 = 0,
     strict_mode: bool = false,
     parse_generation: u64 = 0,
     function_count: usize = 0,
@@ -666,6 +668,7 @@ pub const Program = struct {
         self.bytecode_segment_count = 0;
         self.bytecode_valid = false;
         self.bytecode_signature = 0;
+        self.bytecode_parse_generation = 0;
         self.strict_mode = false;
         self.function_count = 0;
         self.module_statement_count = 0;
@@ -827,8 +830,11 @@ pub const Program = struct {
         @memset(self.workspace.compiled.function_prologue_segments[0..self.node_count], none);
         self.root_segment = try self.compileStatementSegment(self.root);
         try self.validateBytecode();
-        self.bytecode_valid = true;
         self.bytecode_signature = self.bytecodeFingerprint();
+        self.bytecode_generation +%= 1;
+        if (self.bytecode_generation == 0) self.bytecode_generation = 1;
+        self.bytecode_parse_generation = self.parse_generation;
+        self.bytecode_valid = true;
     }
 
     fn addBytecodeSegment(self: *Program, node: u16, kind: BytecodeSegmentKind) Error!u16 {
@@ -1993,7 +1999,33 @@ pub const Program = struct {
     }
 
     pub fn bytecodeReady(self: *const Program) bool {
-        return self.bytecode_valid and self.bytecode_signature != 0 and self.bytecode_signature == self.bytecodeFingerprint();
+        return self.bytecode_valid and
+            self.bytecode_generation != 0 and
+            self.bytecode_parse_generation == self.parse_generation;
+    }
+
+    /// Returns the immutable bytecode generation used by execution caches.
+    /// Zero means that parsing or compilation has not produced executable
+    /// bytecode for the current parse generation.
+    pub fn bytecodeGeneration(self: *const Program) u64 {
+        return if (self.bytecodeReady()) self.bytecode_generation else 0;
+    }
+
+    /// Performs the expensive full-program fingerprint comparison. Normal,
+    /// generator and async calls deliberately use `bytecodeReady` instead;
+    /// trusted tooling can request this diagnostic after raw bytecode access.
+    pub fn verifyBytecodeIntegrity(self: *const Program) bool {
+        return self.bytecodeReady() and
+            self.bytecode_signature != 0 and
+            self.bytecode_signature == self.bytecodeFingerprint();
+    }
+
+    /// Invalidates bytecode before any explicit out-of-band mutation. The
+    /// next successful parse/compile publishes a new non-zero generation.
+    pub fn invalidateBytecode(self: *Program) void {
+        self.bytecode_valid = false;
+        self.bytecode_signature = 0;
+        self.bytecode_parse_generation = 0;
     }
 
     fn bytecodeFingerprint(self: *const Program) u64 {
@@ -27338,8 +27370,12 @@ test "bytecode VM evaluates closures control flow exceptions and standard types"
 
 test "bytecode compiler validates compact segments before execution" {
     var program: Program = .{};
-    const stats = try program.parseHostSource("let total=0; for(let i=0;i<8;i++){total+=i;} return total;");
+    const source = "let total=0; for(let i=0;i<8;i++){total+=i;} return total;";
+    const stats = try program.parseHostSource(source);
     try std.testing.expect(program.bytecodeReady());
+    try std.testing.expect(program.verifyBytecodeIntegrity());
+    const first_generation = program.bytecodeGeneration();
+    try std.testing.expect(first_generation != 0);
     try std.testing.expect(stats.bytecode_instructions > 0);
     try std.testing.expect(stats.bytecode_instructions <= stats.nodes * 3);
     try std.testing.expect(stats.bytecode_segments > 0);
@@ -27347,12 +27383,18 @@ test "bytecode compiler validates compact segments before execution" {
 
     const saved_flags = program.workspace.compiled.instructions[0].flags;
     program.workspace.compiled.instructions[0].flags ^= 1;
+    try std.testing.expect(program.bytecodeReady());
+    try std.testing.expect(!program.verifyBytecodeIntegrity());
+    program.invalidateBytecode();
     try std.testing.expect(!program.bytecodeReady());
     const runtime = try createTestingRuntime();
     defer destroyTestingRuntime(runtime);
     try std.testing.expectError(error.BytecodeInvalid, runtime.evaluate(&program));
     program.workspace.compiled.instructions[0].flags = saved_flags;
+    _ = try program.parseHostSource(source);
     try std.testing.expect(program.bytecodeReady());
+    try std.testing.expect(program.verifyBytecodeIntegrity());
+    try std.testing.expect(program.bytecodeGeneration() != first_generation);
 
     const invalid = try std.testing.allocator.create(Program);
     defer std.testing.allocator.destroy(invalid);
@@ -27368,6 +27410,26 @@ test "bytecode compiler validates compact segments before execution" {
     const expression_start: usize = invalid.workspace.compiled.segment_starts[expression_segment];
     invalid.workspace.compiled.instructions[expression_start].op = .binary;
     try std.testing.expectError(error.BytecodeStack, invalid.validateBytecode());
+}
+
+test "normal generator and async calls retain one bytecode generation" {
+    const runtime = try createTestingRuntime();
+    defer destroyTestingRuntime(runtime);
+    var program: Program = .{};
+    _ = try runtime.evaluateSource(
+        &program,
+        "let result=0;function normal(value){return value+1;}" ++
+            "function* values(){yield normal(1);return normal(2);}" ++
+            "async function later(){return normal(3);}" ++
+            "const iterator=values();result=iterator.next().value+iterator.next().value;" ++
+            "later().then(value=>result+=value);",
+    );
+    const generation = program.bytecodeGeneration();
+    try std.testing.expect(generation != 0);
+    _ = try runtime.drainJobs(&program, 8);
+    try std.testing.expectEqual(@as(f64, 9), try runtime.valueNumber(runtime.global("result").?));
+    try std.testing.expectEqual(generation, program.bytecodeGeneration());
+    try std.testing.expect(program.verifyBytecodeIntegrity());
 }
 
 test "ECMAScript 2026 generators suspend and resume through validated bytecode" {
