@@ -63,6 +63,9 @@ pub const StepResult = struct {
     frame_ready: bool = false,
     wake_guest_ns: u64 = 0,
     exit_code: i32 = 0,
+    /// Operations actually completed by this slice. The configured budget is
+    /// only an upper bound and is accounted separately by RuntimeStats.
+    operations: u32 = 0,
 
     pub fn progress(frame_ready: bool) StepResult {
         return .{ .frame_ready = frame_ready };
@@ -78,6 +81,12 @@ pub const StepResult = struct {
 
     pub fn fail(exit_code: i32) StepResult {
         return .{ .status = .failed, .exit_code = exit_code };
+    }
+
+    pub fn withOperations(self: StepResult, operations: u32) StepResult {
+        var result = self;
+        result.operations = operations;
+        return result;
     }
 };
 
@@ -648,9 +657,12 @@ pub const Config = struct {
 pub const RuntimeStats = struct {
     cycles: u64 = 0,
     slices: u64 = 0,
-    budgeted_operations: u64 = 0,
+    requested_operations: u64 = 0,
+    executed_operations: u64 = 0,
     input_events: u64 = 0,
+    present_attempts: u64 = 0,
     presents: u64 = 0,
+    skipped_presents: u64 = 0,
     pauses: u64 = 0,
     resumes: u64 = 0,
     resets: u64 = 0,
@@ -775,7 +787,8 @@ pub const Runtime = struct {
             self.guest_wake_ns = 0;
             const step = guest.step(self.config.slice_budget, guest_now_ns);
             self.stats.slices +%= 1;
-            self.stats.budgeted_operations +%= self.config.slice_budget;
+            self.stats.requested_operations +%= self.config.slice_budget;
+            self.stats.executed_operations +%= step.operations;
             self.present_pending = self.present_pending or step.frame_ready;
             switch (step.status) {
                 .progress => self.guest_wake_ns = step.wake_guest_ns,
@@ -795,11 +808,15 @@ pub const Runtime = struct {
         self.audio.pump(host_tick, self.state == .running);
 
         if (self.present_pending and self.state != .failed and self.state != .closed) {
+            self.stats.present_attempts +%= 1;
             const presented = host.present();
             if (presented < 0) {
                 self.fail(presented);
-            } else {
+            } else if (presented > 0) {
                 self.stats.presents +%= 1;
+                self.present_pending = false;
+            } else {
+                self.stats.skipped_presents +%= 1;
                 self.present_pending = false;
             }
         }
@@ -983,8 +1000,8 @@ fn fakeGuestStep(context: *anyopaque, budget: u32, guest_now_ns: u64) StepResult
     self.last_budget = budget;
     self.last_guest_ns = guest_now_ns;
     if (self.fail_code != 0) return StepResult.fail(self.fail_code);
-    if (self.complete_after != 0 and self.steps >= self.complete_after) return StepResult.complete(0, true);
-    return StepResult.waitUntil(guest_now_ns + 10 * std.time.ns_per_ms, true);
+    if (self.complete_after != 0 and self.steps >= self.complete_after) return StepResult.complete(0, true).withOperations(budget);
+    return StepResult.waitUntil(guest_now_ns + 10 * std.time.ns_per_ms, true).withOperations(budget);
 }
 
 fn fakeGuestReset(context: *anyopaque) i32 {
@@ -1013,7 +1030,7 @@ fn fakeHostPoll(context: *anyopaque) HostPollResult {
 fn fakeHostPresent(context: *anyopaque) i32 {
     const self: *FakeHost = @ptrCast(@alignCast(context));
     self.presents += 1;
-    return self.present_error;
+    return if (self.present_error < 0) self.present_error else 1;
 }
 
 fn fakeSinkOpen(context: *anyopaque, _: AudioConfig) i32 {
@@ -1122,6 +1139,9 @@ test "runtime bounds guest slices and applies pause resume reset and close betwe
     try std.testing.expectEqual(@as(u64, 3), runtime.audio.stats.lazy_opens);
     try std.testing.expectEqual(@as(u64, 2), runtime.audio.stats.idle_closes);
     try std.testing.expectEqual(@as(u64, 3), runtime.stats.slices);
+    try std.testing.expectEqual(@as(u64, 3 * 123), runtime.stats.requested_operations);
+    try std.testing.expectEqual(@as(u64, 3 * 123), runtime.stats.executed_operations);
+    try std.testing.expectEqual(runtime.stats.present_attempts, runtime.stats.presents + runtime.stats.skipped_presents);
 }
 
 test "silent PCM is suppressed and degraded audio leaves guest time bounded without another deadline" {

@@ -6,6 +6,14 @@ const path_contract = @import("path.zig");
 /// splitting. Unknown option records are deliberately skippable.
 pub const magic = "R4SUBSYS1";
 pub const guest_key = "GUEST";
+/// Optional diagnostic records use short wire keys so the canonical DOS
+/// guest path and a complete first-frame timeline still fit in the frozen
+/// 127-byte R4X argument budget. Unknown records remain skippable.
+pub const trace_key = "T";
+pub const trace_mode_key = "M";
+pub const trace_phases_key = "P";
+pub const trace_mode_gui = "G";
+pub const trace_mode_headless = "H";
 pub const max_options: usize = 8;
 pub const max_args_bytes: usize = 127;
 
@@ -21,6 +29,14 @@ pub const Request = struct {
 
     pub fn options(self: Request) OptionIterator {
         return .{ .remaining = self.encoded[magic.len..] };
+    }
+
+    pub fn option(self: Request, key: []const u8) Error!?[]const u8 {
+        var iterator = self.options();
+        while (try iterator.next()) |candidate| {
+            if (std.ascii.eqlIgnoreCase(candidate.key, key)) return candidate.value;
+        }
+        return null;
     }
 };
 
@@ -191,4 +207,18 @@ test "launch request rejects malformed duplicate and oversized inputs" {
     try std.testing.expectError(error.InvalidGuestPath, parse(magic ++ ";5:GUEST=12:relative.bas"));
     var tiny: [12]u8 = undefined;
     try std.testing.expectError(error.BufferTooSmall, encode("C:\\GORILLA.BAS", &.{}, tiny[0..]));
+}
+
+test "diagnostic launch options remain optional and addressable" {
+    const options_value = [_]Option{
+        .{ .key = trace_key, .value = "0123456789ABCDEF" },
+        .{ .key = trace_mode_key, .value = trace_mode_headless },
+        .{ .key = trace_phases_key, .value = "12,34,56" },
+    };
+    var storage: [max_args_bytes]u8 = undefined;
+    const request = try parse(try encode("C:\\TEMP\\GORILLA.BAS", &options_value, storage[0..]));
+    try std.testing.expectEqualStrings("0123456789ABCDEF", (try request.option(trace_key)).?);
+    try std.testing.expectEqualStrings(trace_mode_headless, (try request.option(trace_mode_key)).?);
+    try std.testing.expectEqualStrings("12,34,56", (try request.option(trace_phases_key)).?);
+    try std.testing.expect((try request.option("UNKNOWN")) == null);
 }

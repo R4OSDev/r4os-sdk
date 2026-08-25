@@ -318,8 +318,8 @@ fn runtimeGuestStep(context: *anyopaque, budget: u32, guest_now_ns: u64) runtime
     self.steps +%= 1;
     self.total_steps +%= 1;
     animate(self.host, &self.demo);
-    if (self.allow_finish and self.exit_mode == .guest_completion and self.steps >= 6) return runtime_api.StepResult.complete(0, true);
-    return runtime_api.StepResult.waitUntil(self.pacer.deadline(), true);
+    if (self.allow_finish and self.exit_mode == .guest_completion and self.steps >= 6) return runtime_api.StepResult.complete(0, true).withOperations(budget);
+    return runtime_api.StepResult.waitUntil(self.pacer.deadline(), true).withOperations(budget);
 }
 
 fn runtimeGuestReset(context: *anyopaque) i32 {
@@ -465,7 +465,8 @@ fn runtimeHostPresent(context: *anyopaque) i32 {
     const self: *RuntimeSelfTestHost = @ptrCast(@alignCast(context));
     return switch (self.host.present()) {
         .failure => |raw| raw,
-        else => 0,
+        .presented => 1,
+        .hidden, .unchanged => 0,
     };
 }
 
