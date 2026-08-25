@@ -282,3 +282,14 @@ Treiber behaelt nur Completionhandle und eigenen Kontext und muss jede
 Completion vor DMA- oder Modulabbau canceln beziehungsweise joinen und
 freigeben. Die normale `workSubmit`-Fassade bleibt fuer nicht deadlinefaehige
 IRQ-/Taskarbeit unveraendert.
+
+Kanonischer USB-Host seit 0.69.43
+---------------------------------
+
+DriverApi v21 stellt `DriverContext.activateUsbHostController` bereit.
+XHCI.R4D verwendet die Operation als ownergebundene Aktivierungsgrenze fuer
+den einzigen kernelresidenten PCI-/MMIO-/DMA-Pfad; das Modul initialisiert
+keinen zweiten Controller. UsbHostController v2 ergaenzt sichtbare
+Capability-, Aktivitaets- und Completionfelder sowie `max_burst` am
+Endpointhandle. Port-, Control-, Bulk-, Interrupt-, Reset-, Clear-Halt- und
+Polloperationen werden ueber die Registry dispatcht.

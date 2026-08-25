@@ -127,6 +127,10 @@ pub const Context = struct {
         return self.api.unregister_usb_host_controller(name);
     }
 
+    pub fn activateUsbHostController(self: *const Context, name: [*:0]const u8, source: u32) i32 {
+        return self.api.activate_usb_host_controller(name, source);
+    }
+
     pub fn netReceiveFrame(self: *const Context, adapter_index: i32, frame: []const u8) i32 {
         return self.api.net_receive_frame(adapter_index, frame.ptr, @intCast(frame.len));
     }

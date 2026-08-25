@@ -31,6 +31,11 @@ DriverApi v20 exposes bounded audio-refill work with an absolute tick
 deadline, a stable device key, and a maximum four-tick callback budget. It is
 separate from the existing normal Driver Work submission facade.
 
+DriverApi v21 additionally lets XHCI.R4D activate the sole kernel-resident
+USB-host owner. UsbHostController v2 exposes productive port, control, bulk,
+interrupt, recovery and poll callbacks plus capability and activity status;
+it does not authorize a second PCI/MMIO/DMA implementation in the module.
+
 ## Dependency mapping
 
 `Settings.R4S` maps the local Contract and workspace paths. Relative and
