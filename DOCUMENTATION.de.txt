@@ -123,6 +123,17 @@ gequotet oder in Shelltoken zerlegt. Ein Host erhaelt dadurch exakt die
 Pfadbytes, die Explorer aufgeloest hat. Der Vertrag startet oder teilt keine
 Instanz: Jeder Aufruf bleibt ein normaler, eigenstaendiger R4X-Start.
 
+Ausgehandelte Netzwerkmetadaten seit 0.69.50
+---------------------------------------------
+
+`DriverContext.netBackendQuery` liest nach erfolgreicher NetBackend-v2-
+Registrierung die unveraenderliche Auswahl aus Angebot, Annahme und Ablehnung.
+`netReceivePacket` uebergibt taskseitig einen versionierten Paketdeskriptor;
+die kanonischen Flat-Bytes sind stets vorhanden und bis zur Rueckkehr nur
+geliehen. Rueckgabe 0 bedeutet normale Annahme, 1 Annahme mit Software-
+Fallback und -4 unveraenderten Treiberbesitz wegen Queue-Backpressure. Die
+aktuelle Ein-Queue-Auswahl akzeptiert nur validierte RX-TCP-/UDP-Pruefsummen.
+
 `r4os.subsystem_host` ist die einkompilierte Userland-Schicht fuer das
 Fenster-, Video- und Eingabehosting eines solchen R4X. Sie ist weder Dienst
 noch Runtime-R4L und besitzt keine prozessuebergreifende Emulator-ABI.

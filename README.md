@@ -46,6 +46,12 @@ point for adapter RX work. `netReceiveFrame` remains task-only and copies into
 Netcore's bounded ownership queue; a busy result requires the driver to retain
 the current device buffer and schedule a retry.
 
+DriverApi v24 adds `netBackendQuery` and `netReceivePacket`. A v2 backend reads
+its immutable offered/accepted/rejected selection after registration. Packet
+metadata never removes the mandatory canonical flat bytes; return value 1
+means those bytes were accepted through software fallback. The current BSP
+selection is one queue and validated RX TCP/UDP checksum metadata only.
+
 ## Dependency mapping
 
 `Settings.R4S` maps the local Contract and workspace paths. Relative and

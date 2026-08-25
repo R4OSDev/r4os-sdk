@@ -149,6 +149,20 @@ pub const Context = struct {
         return self.api.net_schedule_rx(adapter_index);
     }
 
+    /// Reads the immutable capability selection produced during backend
+    /// registration. Optional rejected bits keep the canonical flat path;
+    /// required rejected bits prevent registration.
+    pub fn netBackendQuery(self: *const Context, adapter_index: i32, out: *abi.NetBackendNegotiation) i32 {
+        return self.api.net_backend_query(adapter_index, out);
+    }
+
+    /// Submits a task-side RX packet. The descriptor always carries the
+    /// canonical flat bytes; return 1 means those bytes were accepted with
+    /// software fallback after optional metadata was stripped.
+    pub fn netReceivePacket(self: *const Context, adapter_index: i32, packet: *const abi.NetPacket) i32 {
+        return self.api.net_receive_packet(adapter_index, packet);
+    }
+
     pub fn allocDmaRegion(self: *const Context, bytes: u32, alignment: u32, out: *abi.DmaBuffer) i32 {
         return self.api.alloc_dma_region(bytes, alignment, out);
     }
