@@ -41,6 +41,11 @@ display-blit backend. The callback borrows a validated XRGB32 source, target
 and at most eight regions for one call; the kernel retains target ownership,
 fence completion and the complete CPU fallback.
 
+DriverApi v23 exposes `DriverContext.netScheduleRx` as the IRQ-safe publication
+point for adapter RX work. `netReceiveFrame` remains task-only and copies into
+Netcore's bounded ownership queue; a busy result requires the driver to retain
+the current device buffer and schedule a retry.
+
 ## Dependency mapping
 
 `Settings.R4S` maps the local Contract and workspace paths. Relative and

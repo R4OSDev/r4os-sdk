@@ -143,6 +143,12 @@ pub const Context = struct {
         return self.api.net_receive_frame(adapter_index, frame.ptr, @intCast(frame.len));
     }
 
+    /// IRQ-safe work publication. The handler acknowledges the device cause
+    /// first, then asks Netcore to poll this adapter in the `net-rx` task.
+    pub fn netScheduleRx(self: *const Context, adapter_index: i32) i32 {
+        return self.api.net_schedule_rx(adapter_index);
+    }
+
     pub fn allocDmaRegion(self: *const Context, bytes: u32, alignment: u32, out: *abi.DmaBuffer) i32 {
         return self.api.alloc_dma_region(bytes, alignment, out);
     }

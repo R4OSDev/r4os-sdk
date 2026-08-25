@@ -303,3 +303,19 @@ pro synchronem Callback ausschliesslich geborgte, vollstaendig validierte
 XRGB32-Ziel-, Quell- und Regionsdaten. Zielmapping, Fence, Statistik und der
 vollstaendige CPU-Rueckfall bleiben Kernelbesitz. Die Zulassung wird vor dem
 Owner-Unload geschlossen; ein aktiver Callback vetoisiert den Abbau.
+
+Begrenzter Netzwerk-RX-Handoff seit 0.69.49
+--------------------------------------------
+
+DriverApi v23 stellt `DriverContext.netScheduleRx` als einzigen IRQ-sicheren
+Netzwerkaufruf bereit. Nach begrenzter Ursachenklassifikation und Quittierung
+weckt ein R4D damit den adapterbezogenen `net-rx`-Pfad. Ringcursor,
+Framekopie, R4P, Antworten und Waiter-Wakeups duerfen nicht im IRQ laufen.
+
+`DriverContext.netReceiveFrame` bleibt dem Task-/Workerkontext vorbehalten.
+Er kopiert 1 bis 1536 Bytes in die feste 64-Slot-Netcore-Queue. Erfolg
+uebertraegt den kopierten Framebesitz; bei `net_rx_handoff_busy` behaelt der
+Treiber den unveraenderten Geraetepuffer und plant eine weitere Aktivierung.
+Die uebrigen benannten Rueckgaben unterscheiden ungueltigen Adapter, Frame,
+geschlossene Admission und falschen IRQ-Kontext. Der kanonische Vertrag liegt
+in `Contract/ABI/R4DDriver.txt`.
