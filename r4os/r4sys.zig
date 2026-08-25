@@ -1382,6 +1382,18 @@ pub const Context = struct {
         return self.base.registryDeleteValue(key_path, value_name);
     }
 
+    pub fn registrySnapshotBegin(self: *const Context, key_path: [*:0]const u8, kind: u32, cursor: *abi.RegistrySnapshotCursor) i32 {
+        return self.base.registrySnapshotBegin(key_path, kind, cursor);
+    }
+
+    pub fn registrySnapshotPage(self: *const Context, cursor: *abi.RegistrySnapshotCursor, entries: []abi.RegistrySnapshotEntry, data: []u8, out_page: *abi.RegistrySnapshotPageInfo) i32 {
+        return self.base.registrySnapshotPage(cursor, entries, data, out_page);
+    }
+
+    pub fn registryBatchMutate(self: *const Context, operations: []const abi.RegistryBatchOperation, blob: []const u8, out_result: *abi.RegistryBatchResult) i32 {
+        return self.base.registryBatchMutate(operations, blob, out_result);
+    }
+
     pub fn registrySetString(self: *const Context, key_path: [*:0]const u8, value_name: [*:0]const u8, value: []const u8) i32 {
         return self.base.registrySetString(key_path, value_name, value);
     }

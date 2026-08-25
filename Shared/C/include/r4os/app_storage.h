@@ -95,6 +95,20 @@ typedef struct R4RegistryRead {
     R4RegistryValueView value;
 } R4RegistryRead;
 
+typedef struct R4RegistryBatchBuilder {
+    R4RegistryBatchOperation *operations;
+    uint32_t operation_capacity;
+    uint32_t operation_count;
+    uint8_t *blob;
+    uint32_t blob_capacity;
+    uint32_t blob_len;
+} R4RegistryBatchBuilder;
+
+typedef struct R4RegistryBatchApply {
+    int32_t raw_code;
+    R4RegistryBatchResult result;
+} R4RegistryBatchApply;
+
 static inline R4Transfer r4_transfer_raw(int32_t raw) {
     R4Transfer result = {0}; result.raw_code = raw;
     if (raw < 0) result.state = R4_TRANSFER_FAILED;
@@ -254,6 +268,138 @@ static inline R4Operation r4_stream_writer_abort(R4StreamWriter *writer) {
 static inline int r4_registry_available(const R4Registry *registry) {
     return registry != 0 && registry->system != 0 && registry->system->table != 0 &&
         registry->system->table->registry_get_value != 0 && registry->system->table->registry_set_value != 0;
+}
+
+static inline int r4_registry_snapshot_available(const R4Registry *registry) {
+    return registry != 0 && r4sys_supports_registry_snapshot(registry->system);
+}
+
+static inline int32_t r4_registry_snapshot_begin(
+    R4Registry *registry,
+    const R4RegistryPath *key,
+    uint32_t kind,
+    R4RegistrySnapshotCursor *cursor)
+{
+    if (registry == 0 || key == 0 || cursor == 0) return R4OS_REGISTRY_API_RESULT_INVALID;
+    return r4sys_registry_snapshot_begin(registry->system, key->bytes, kind, cursor);
+}
+
+static inline int32_t r4_registry_snapshot_page(
+    R4Registry *registry,
+    R4RegistrySnapshotCursor *cursor,
+    R4RegistrySnapshotEntry *entries,
+    uint32_t entry_capacity,
+    uint8_t *data,
+    uint32_t data_capacity,
+    R4RegistrySnapshotPageInfo *out_page)
+{
+    if (registry == 0) return R4OS_REGISTRY_API_RESULT_INVALID;
+    return r4sys_registry_snapshot_page(registry->system, cursor, entries, entry_capacity, data, data_capacity, out_page);
+}
+
+static inline void r4_registry_batch_builder_init(
+    R4RegistryBatchBuilder *builder,
+    R4RegistryBatchOperation *operations,
+    uint32_t operation_capacity,
+    uint8_t *blob,
+    uint32_t blob_capacity)
+{
+    if (builder == 0) return;
+    *builder = (R4RegistryBatchBuilder){operations, operation_capacity, 0u, blob, blob_capacity, 0u};
+}
+
+static inline void r4_registry_batch_builder_reset(R4RegistryBatchBuilder *builder) {
+    if (builder == 0) return;
+    builder->operation_count = 0u;
+    builder->blob_len = 0u;
+}
+
+static inline int32_t r4_registry_batch_builder_append(
+    R4RegistryBatchBuilder *builder,
+    const R4RegistryPath *key,
+    const char *name,
+    uint16_t operation,
+    uint16_t value_type,
+    const uint8_t *data,
+    uint32_t data_len)
+{
+    if (builder == 0 || builder->operations == 0 || builder->blob == 0 || key == 0 || name == 0 ||
+        (data == 0 && data_len != 0u) || builder->operation_count >= builder->operation_capacity ||
+        builder->operation_count >= R4OS_REGISTRY_BATCH_OPERATION_MAX)
+    {
+        return R4OS_REGISTRY_API_RESULT_INVALID;
+    }
+    uint32_t name_len = r4os_cstr_len(name);
+    if (name_len > 63u) return R4OS_REGISTRY_API_RESULT_INVALID;
+    for (uint32_t i = 0; i < name_len; ++i) {
+        uint8_t ch = (uint8_t)name[i];
+        if (ch < 0x20u || ch == 0x7fu || ch == '\\' || ch == '/' || ch == '=') return R4OS_REGISTRY_API_RESULT_INVALID;
+    }
+    uint64_t needed = (uint64_t)key->length + name_len + data_len;
+    if (needed > builder->blob_capacity || builder->blob_len > builder->blob_capacity - (uint32_t)needed ||
+        builder->blob_len + (uint32_t)needed > R4OS_REGISTRY_BATCH_BLOB_MAX)
+    {
+        return R4OS_REGISTRY_API_RESULT_BUFFER_TOO_SMALL;
+    }
+    uint32_t key_offset = builder->blob_len;
+    __builtin_memcpy(builder->blob + builder->blob_len, key->bytes, key->length);
+    builder->blob_len += key->length;
+    uint32_t name_offset = builder->blob_len;
+    __builtin_memcpy(builder->blob + builder->blob_len, name, name_len);
+    builder->blob_len += name_len;
+    uint32_t data_offset = builder->blob_len;
+    if (data_len != 0u) __builtin_memcpy(builder->blob + builder->blob_len, data, data_len);
+    builder->blob_len += data_len;
+    R4RegistryBatchOperation *entry = &builder->operations[builder->operation_count++];
+    *entry = (R4RegistryBatchOperation){operation, value_type, key_offset, key->length, name_offset, name_len, data_offset, data_len, 0u};
+    return R4OS_REGISTRY_API_RESULT_OK;
+}
+
+static inline int32_t r4_registry_batch_builder_set(
+    R4RegistryBatchBuilder *builder,
+    const R4RegistryPath *key,
+    const char *name,
+    uint16_t value_type,
+    const uint8_t *data,
+    uint32_t data_len)
+{
+    return r4_registry_batch_builder_append(builder, key, name, R4OS_REGISTRY_BATCH_OPERATION_SET, value_type, data, data_len);
+}
+
+static inline int32_t r4_registry_batch_builder_set_u32(R4RegistryBatchBuilder *builder, const R4RegistryPath *key, const char *name, uint32_t value) {
+    uint8_t data[4] = {(uint8_t)value, (uint8_t)(value >> 8), (uint8_t)(value >> 16), (uint8_t)(value >> 24)};
+    return r4_registry_batch_builder_set(builder, key, name, R4OS_REGISTRY_VALUE_TYPE_U32, data, 4u);
+}
+
+static inline int32_t r4_registry_batch_builder_delete(R4RegistryBatchBuilder *builder, const R4RegistryPath *key, const char *name) {
+    return r4_registry_batch_builder_append(builder, key, name, R4OS_REGISTRY_BATCH_OPERATION_DELETE, 0u, 0, 0u);
+}
+
+static inline int r4_registry_batch_available(const R4Registry *registry) {
+    return registry != 0 && r4sys_supports_registry_batch(registry->system);
+}
+
+static inline R4RegistryBatchApply r4_registry_batch_apply(R4Registry *registry, const R4RegistryBatchBuilder *builder) {
+    R4RegistryBatchApply applied = {0};
+    applied.result.version = R4OS_REGISTRY_BATCH_VERSION;
+    applied.result.size = (uint32_t)sizeof(R4RegistryBatchResult);
+    if (registry == 0 || builder == 0) {
+        applied.raw_code = R4OS_REGISTRY_API_RESULT_INVALID;
+        return applied;
+    }
+    applied.raw_code = r4sys_registry_batch_mutate(
+        registry->system,
+        builder->operations,
+        builder->operation_count,
+        builder->blob,
+        builder->blob_len,
+        &applied.result);
+    return applied;
+}
+
+static inline int r4_registry_batch_committed(const R4RegistryBatchApply *applied) {
+    return applied != 0 && applied->raw_code == R4OS_REGISTRY_API_RESULT_OK &&
+        applied->result.status == R4OS_REGISTRY_BATCH_STATUS_COMMITTED;
 }
 
 static inline R4RegistryRead r4_registry_get(R4Registry *registry, const R4RegistryPath *key, const char *name, uint8_t *out, uint32_t capacity) {

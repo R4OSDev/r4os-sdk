@@ -266,6 +266,71 @@ static inline int32_t r4sys_program_inventory_threads(
     return inventory_fn(cursor, out, capacity, out_page);
 }
 
+static inline int r4sys_supports_registry_snapshot(R4Sys *sys) {
+    if (sys == 0 || sys->table == 0) return 0;
+    if (sys->table->size < offsetof(R4XStartR4Sys, registry_snapshot_page) + sizeof(uintptr_t)) return 0;
+    return sys->table->registry_snapshot_begin != 0 && sys->table->registry_snapshot_page != 0;
+}
+
+static inline int32_t r4sys_registry_snapshot_begin(
+    R4Sys *sys,
+    const uint8_t *key_path,
+    uint32_t kind,
+    R4RegistrySnapshotCursor *cursor)
+{
+    if (key_path == 0 || cursor == 0) return R4OS_REGISTRY_API_RESULT_INVALID;
+    if (!r4sys_supports_registry_snapshot(sys)) return R4OS_ERR_NO_FN;
+    R4SysRegistrySnapshotBeginFn begin_fn =
+        (R4SysRegistrySnapshotBeginFn)(uintptr_t)sys->table->registry_snapshot_begin;
+    return begin_fn(key_path, kind, cursor);
+}
+
+static inline int32_t r4sys_registry_snapshot_page(
+    R4Sys *sys,
+    R4RegistrySnapshotCursor *cursor,
+    R4RegistrySnapshotEntry *entries,
+    uint32_t entry_capacity,
+    uint8_t *data,
+    uint32_t data_capacity,
+    R4RegistrySnapshotPageInfo *out_page)
+{
+    if (cursor == 0 || entries == 0 || data == 0 || out_page == 0 ||
+        entry_capacity == 0u || entry_capacity > R4OS_REGISTRY_SNAPSHOT_PAGE_MAX ||
+        data_capacity > R4OS_REGISTRY_SNAPSHOT_DATA_MAX)
+    {
+        return R4OS_REGISTRY_API_RESULT_INVALID;
+    }
+    if (!r4sys_supports_registry_snapshot(sys)) return R4OS_ERR_NO_FN;
+    R4SysRegistrySnapshotPageFn page_fn =
+        (R4SysRegistrySnapshotPageFn)(uintptr_t)sys->table->registry_snapshot_page;
+    return page_fn(cursor, entries, entry_capacity, data, data_capacity, out_page);
+}
+
+static inline int r4sys_supports_registry_batch(R4Sys *sys) {
+    if (sys == 0 || sys->table == 0) return 0;
+    if (sys->table->size < offsetof(R4XStartR4Sys, registry_batch_mutate) + sizeof(uintptr_t)) return 0;
+    return sys->table->registry_batch_mutate != 0;
+}
+
+static inline int32_t r4sys_registry_batch_mutate(
+    R4Sys *sys,
+    const R4RegistryBatchOperation *operations,
+    uint32_t operation_count,
+    const uint8_t *blob,
+    uint32_t blob_len,
+    R4RegistryBatchResult *out_result)
+{
+    if (operations == 0 || operation_count == 0u || blob == 0 || out_result == 0 ||
+        operation_count > R4OS_REGISTRY_BATCH_OPERATION_MAX || blob_len > R4OS_REGISTRY_BATCH_BLOB_MAX)
+    {
+        return R4OS_REGISTRY_API_RESULT_INVALID;
+    }
+    if (!r4sys_supports_registry_batch(sys)) return R4OS_ERR_NO_FN;
+    R4SysRegistryBatchMutateFn batch_fn =
+        (R4SysRegistryBatchMutateFn)(uintptr_t)sys->table->registry_batch_mutate;
+    return batch_fn(operations, operation_count, blob, blob_len, out_result);
+}
+
 static inline int r4sys_supports_thread_handles(R4Sys *sys) {
     if (sys == 0 || sys->table == 0) return 0;
     if (sys->table->size < offsetof(R4XStartR4Sys, thread_handle_status) + sizeof(uintptr_t)) return 0;

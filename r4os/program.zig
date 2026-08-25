@@ -1823,6 +1823,21 @@ pub const Context = struct {
         return table_fn(key_path, value_name);
     }
 
+    pub fn registrySnapshotBegin(self: *const Context, key_path: [*:0]const u8, kind: u32, cursor: *abi.RegistrySnapshotCursor) i32 {
+        const table_fn = self.sysFn("registry_snapshot_begin") orelse return self.unavailable("sys");
+        return table_fn(key_path, kind, cursor);
+    }
+
+    pub fn registrySnapshotPage(self: *const Context, cursor: *abi.RegistrySnapshotCursor, entries: []abi.RegistrySnapshotEntry, data: []u8, out_page: *abi.RegistrySnapshotPageInfo) i32 {
+        const table_fn = self.sysFn("registry_snapshot_page") orelse return self.unavailable("sys");
+        return table_fn(cursor, entries.ptr, @intCast(entries.len), data.ptr, @intCast(data.len), out_page);
+    }
+
+    pub fn registryBatchMutate(self: *const Context, operations: []const abi.RegistryBatchOperation, blob: []const u8, out_result: *abi.RegistryBatchResult) i32 {
+        const table_fn = self.sysFn("registry_batch_mutate") orelse return self.unavailable("sys");
+        return table_fn(operations.ptr, @intCast(operations.len), blob.ptr, @intCast(blob.len), out_result);
+    }
+
     pub fn registrySetString(self: *const Context, key_path: [*:0]const u8, value_name: [*:0]const u8, value: []const u8) i32 {
         return self.registrySetValue(key_path, value_name, abi.registry_value_type_string, value);
     }

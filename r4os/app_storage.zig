@@ -315,6 +315,137 @@ pub const OwnedStageWriter = struct {
     }
 };
 
+pub const RegistrySnapshotKind = enum(u32) {
+    keys = abi.registry_snapshot_kind_keys,
+    values = abi.registry_snapshot_kind_values,
+};
+
+pub const RegistrySnapshot = struct {
+    sys: r4sys.Context,
+    cursor: abi.RegistrySnapshotCursor,
+
+    pub fn page(self: *RegistrySnapshot, entries: []abi.RegistrySnapshotEntry, data: []u8, out_page: *abi.RegistrySnapshotPageInfo) i32 {
+        return self.sys.registrySnapshotPage(&self.cursor, entries, data, out_page);
+    }
+};
+
+pub const RegistrySnapshotOpen = union(enum) {
+    snapshot: RegistrySnapshot,
+    missing,
+    unsupported,
+    failure: i32,
+};
+
+pub const RegistryBatchBuildError = error{
+    TooManyOperations,
+    BlobTooSmall,
+    NameTooLong,
+    InvalidName,
+};
+
+pub const RegistryBatchBuilder = struct {
+    operation_storage: []abi.RegistryBatchOperation,
+    blob_storage: []u8,
+    operation_count: usize = 0,
+    blob_len: usize = 0,
+
+    pub fn init(operation_storage: []abi.RegistryBatchOperation, blob_storage: []u8) RegistryBatchBuilder {
+        return .{ .operation_storage = operation_storage, .blob_storage = blob_storage };
+    }
+
+    pub fn reset(self: *RegistryBatchBuilder) void {
+        self.operation_count = 0;
+        self.blob_len = 0;
+    }
+
+    pub fn operations(self: *const RegistryBatchBuilder) []const abi.RegistryBatchOperation {
+        return self.operation_storage[0..self.operation_count];
+    }
+
+    pub fn blob(self: *const RegistryBatchBuilder) []const u8 {
+        return self.blob_storage[0..self.blob_len];
+    }
+
+    pub fn setString(self: *RegistryBatchBuilder, key: *const RegistryPath, name: []const u8, value: []const u8) RegistryBatchBuildError!void {
+        return self.appendSet(key, name, abi.registry_value_type_string, value);
+    }
+
+    pub fn setU32(self: *RegistryBatchBuilder, key: *const RegistryPath, name: []const u8, value: u32) RegistryBatchBuildError!void {
+        var bytes: [4]u8 = undefined;
+        writeLe(u32, value, bytes[0..]);
+        return self.appendSet(key, name, abi.registry_value_type_u32, bytes[0..]);
+    }
+
+    pub fn setU64(self: *RegistryBatchBuilder, key: *const RegistryPath, name: []const u8, value: u64) RegistryBatchBuildError!void {
+        var bytes: [8]u8 = undefined;
+        writeLe(u64, value, bytes[0..]);
+        return self.appendSet(key, name, abi.registry_value_type_u64, bytes[0..]);
+    }
+
+    pub fn setBool(self: *RegistryBatchBuilder, key: *const RegistryPath, name: []const u8, value: bool) RegistryBatchBuildError!void {
+        const bytes = [_]u8{if (value) 1 else 0};
+        return self.appendSet(key, name, abi.registry_value_type_bool, bytes[0..]);
+    }
+
+    pub fn setBinary(self: *RegistryBatchBuilder, key: *const RegistryPath, name: []const u8, value: []const u8) RegistryBatchBuildError!void {
+        return self.appendSet(key, name, abi.registry_value_type_binary, value);
+    }
+
+    pub fn delete(self: *RegistryBatchBuilder, key: *const RegistryPath, name: []const u8) RegistryBatchBuildError!void {
+        return self.append(key, name, abi.registry_batch_operation_delete, 0, &.{});
+    }
+
+    fn appendSet(self: *RegistryBatchBuilder, key: *const RegistryPath, name: []const u8, value_type: u16, data: []const u8) RegistryBatchBuildError!void {
+        return self.append(key, name, abi.registry_batch_operation_set, value_type, data);
+    }
+
+    fn append(self: *RegistryBatchBuilder, key: *const RegistryPath, name: []const u8, operation: u16, value_type: u16, data: []const u8) RegistryBatchBuildError!void {
+        if (self.operation_count >= self.operation_storage.len or self.operation_count >= abi.registry_batch_operation_max)
+            return RegistryBatchBuildError.TooManyOperations;
+        if (name.len > 63) return RegistryBatchBuildError.NameTooLong;
+        for (name) |ch| {
+            if (ch < 0x20 or ch == 0x7f or ch == 0 or ch == '\\' or ch == '/' or ch == '=')
+                return RegistryBatchBuildError.InvalidName;
+        }
+        const needed = key.bytes().len + name.len + data.len;
+        if (needed > self.blob_storage.len -| self.blob_len or
+            self.blob_len + needed > abi.registry_batch_blob_max)
+            return RegistryBatchBuildError.BlobTooSmall;
+
+        const key_offset = self.appendBytes(key.bytes());
+        const name_offset = self.appendBytes(name);
+        const data_offset = self.appendBytes(data);
+        self.operation_storage[self.operation_count] = .{
+            .operation = operation,
+            .value_type = value_type,
+            .key_path_offset = @intCast(key_offset),
+            .key_path_len = @intCast(key.bytes().len),
+            .value_name_offset = @intCast(name_offset),
+            .value_name_len = @intCast(name.len),
+            .data_offset = @intCast(data_offset),
+            .data_len = @intCast(data.len),
+        };
+        self.operation_count += 1;
+    }
+
+    fn appendBytes(self: *RegistryBatchBuilder, bytes: []const u8) usize {
+        const offset = self.blob_len;
+        if (bytes.len != 0) @memcpy(self.blob_storage[offset .. offset + bytes.len], bytes);
+        self.blob_len += bytes.len;
+        return offset;
+    }
+};
+
+pub const RegistryBatchApply = struct {
+    raw_code: i32,
+    result: abi.RegistryBatchResult,
+
+    pub fn committed(self: RegistryBatchApply) bool {
+        return self.raw_code == abi.registry_api_result_ok and
+            self.result.status == abi.registry_batch_status_committed;
+    }
+};
+
 pub const RegistryValue = struct {
     info: abi.RegistryValueInfo,
     bytes: []const u8,
@@ -351,6 +482,30 @@ pub const Registry = struct {
 
     pub fn available(self: *const Registry) bool {
         return self.sys.hasFn("registry_get_value") and self.sys.hasFn("registry_set_value");
+    }
+
+    pub fn snapshotAvailable(self: *const Registry) bool {
+        return self.sys.hasFn("registry_snapshot_begin") and self.sys.hasFn("registry_snapshot_page");
+    }
+
+    pub fn batchAvailable(self: *const Registry) bool {
+        return self.sys.hasFn("registry_batch_mutate");
+    }
+
+    pub fn beginSnapshot(self: *const Registry, key: *const RegistryPath, kind: RegistrySnapshotKind) RegistrySnapshotOpen {
+        if (!self.snapshotAvailable()) return .unsupported;
+        var cursor: abi.RegistrySnapshotCursor = .{};
+        const raw = self.sys.registrySnapshotBegin(key.asZ().ptr, @intFromEnum(kind), &cursor);
+        if (raw == abi.registry_api_result_key_not_found or raw == abi.registry_api_result_hive_not_found) return .missing;
+        if (raw == abi.registry_api_result_unsupported) return .unsupported;
+        if (raw != abi.registry_api_result_ok) return .{ .failure = raw };
+        return .{ .snapshot = .{ .sys = self.sys, .cursor = cursor } };
+    }
+
+    pub fn applyBatch(self: *const Registry, builder: *const RegistryBatchBuilder) RegistryBatchApply {
+        var result: abi.RegistryBatchResult = .{};
+        const raw = self.sys.registryBatchMutate(builder.operations(), builder.blob(), &result);
+        return .{ .raw_code = raw, .result = result };
     }
 
     pub fn get(self: *const Registry, key: *const RegistryPath, name: [*:0]const u8, out: []u8) RegistryRead {
@@ -431,6 +586,11 @@ fn readLe(comptime T: type, bytes: []const u8) T {
     return value;
 }
 
+fn writeLe(comptime T: type, value: T, bytes: []u8) void {
+    var index: usize = 0;
+    while (index < @sizeOf(T)) : (index += 1) bytes[index] = @intCast(value >> @intCast(index * 8));
+}
+
 test "storage facade preserves owned create-only atomic publish options" {
     const create_only = AtomicReplaceOptions{
         .consume_stage = true,
@@ -478,4 +638,34 @@ test "directory iterator revisits the shifted live entry after removal" {
     iterator.index = 2;
     iterator.revisitAfterRemoval();
     try @import("std").testing.expectEqual(@as(u32, 2), iterator.index);
+}
+
+test "registry batch builder keeps every operation inside caller storage" {
+    var operation_storage: [2]abi.RegistryBatchOperation = undefined;
+    var blob_storage: [96]u8 = undefined;
+    var builder = RegistryBatchBuilder.init(operation_storage[0..], blob_storage[0..]);
+    const key = try RegistryPath.parse("SYSTEM\\SdkBatch");
+    try builder.setU32(&key, "Count", 46);
+    try builder.delete(&key, "Old");
+
+    try @import("std").testing.expectEqual(@as(usize, 2), builder.operations().len);
+    try @import("std").testing.expectEqual(abi.registry_batch_operation_set, builder.operations()[0].operation);
+    try @import("std").testing.expectEqual(abi.registry_value_type_u32, builder.operations()[0].value_type);
+    const data_offset: usize = @intCast(builder.operations()[0].data_offset);
+    try @import("std").testing.expectEqualSlices(u8, &.{ 46, 0, 0, 0 }, builder.blob()[data_offset .. data_offset + 4]);
+    try @import("std").testing.expectEqual(abi.registry_batch_operation_delete, builder.operations()[1].operation);
+    try @import("std").testing.expectEqual(@as(u32, 0), builder.operations()[1].data_len);
+}
+
+test "registry batch builder reports limits before modifying its cursors" {
+    var operation_storage: [1]abi.RegistryBatchOperation = undefined;
+    var blob_storage: [20]u8 = undefined;
+    var builder = RegistryBatchBuilder.init(operation_storage[0..], blob_storage[0..]);
+    const key = try RegistryPath.parse("SYSTEM\\SdkBatch");
+    try @import("std").testing.expectError(
+        RegistryBatchBuildError.BlobTooSmall,
+        builder.setString(&key, "LongName", "payload"),
+    );
+    try @import("std").testing.expectEqual(@as(usize, 0), builder.operation_count);
+    try @import("std").testing.expectEqual(@as(usize, 0), builder.blob_len);
 }
