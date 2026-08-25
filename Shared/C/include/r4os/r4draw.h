@@ -30,6 +30,54 @@ static inline int32_t r4draw_display_blit_xrgb32_stride(R4Draw *draw,
     return fn(x, y, width, height, pixels, pixel_count, source_stride_pixels);
 }
 
+static inline int r4draw_supports_display_present_regions(const R4Draw *draw) {
+    return draw != 0 && draw->table != 0 &&
+        draw->table->size >= offsetof(R4XStartR4Draw, display_present_completion) + sizeof(uintptr_t) &&
+        draw->table->display_present_regions != 0 &&
+        draw->table->display_present_capabilities != 0 &&
+        draw->table->display_present_completion != 0;
+}
+
+static inline int32_t r4draw_display_present_regions(R4Draw *draw,
+                                                      const R4DisplayPresentRequest *request,
+                                                      const uint32_t *pixels,
+                                                      uint32_t pixel_count,
+                                                      const R4DisplayDamageRect *regions,
+                                                      uint32_t region_count,
+                                                      R4DisplayPresentResult *out_result) {
+    if (!r4draw_supports_display_present_regions(draw)) return R4OS_ERR_NO_FN;
+    if (request == 0 || pixels == 0 || pixel_count == 0u || regions == 0 ||
+        region_count == 0u || region_count > R4OS_DISPLAY_DAMAGE_MAX_REGIONS || out_result == 0) {
+        return R4OS_DISPLAY_PRESENT_ERROR_INVALID;
+    }
+    R4DrawDisplayPresentRegionsFn fn =
+        (R4DrawDisplayPresentRegionsFn)(uintptr_t)draw->table->display_present_regions;
+    return fn(request, pixels, pixel_count, regions, region_count, out_result);
+}
+
+static inline int32_t r4draw_display_present_capabilities(R4Draw *draw,
+                                                           R4DisplayPresentCapabilities *out_capabilities) {
+    if (!r4draw_supports_display_present_regions(draw)) return R4OS_ERR_NO_FN;
+    if (out_capabilities == 0) return R4OS_DISPLAY_PRESENT_ERROR_INVALID;
+    out_capabilities->version = R4OS_DISPLAY_PRESENT_VERSION;
+    out_capabilities->size = (uint16_t)sizeof(*out_capabilities);
+    R4DrawDisplayPresentCapabilitiesFn fn =
+        (R4DrawDisplayPresentCapabilitiesFn)(uintptr_t)draw->table->display_present_capabilities;
+    return fn(out_capabilities);
+}
+
+static inline int32_t r4draw_display_present_completion(R4Draw *draw,
+                                                         uint64_t fence,
+                                                         R4DisplayPresentCompletion *out_completion) {
+    if (!r4draw_supports_display_present_regions(draw)) return R4OS_ERR_NO_FN;
+    if (fence == 0u || out_completion == 0) return R4OS_DISPLAY_PRESENT_ERROR_INVALID;
+    out_completion->version = R4OS_DISPLAY_PRESENT_VERSION;
+    out_completion->size = (uint16_t)sizeof(*out_completion);
+    R4DrawDisplayPresentCompletionFn fn =
+        (R4DrawDisplayPresentCompletionFn)(uintptr_t)draw->table->display_present_completion;
+    return fn(fence, out_completion);
+}
+
 static inline int r4draw_import_valid(const R4XStartImport *item) {
     return item != 0 &&
         item->group_id == R4L_GROUP_R4DRAW &&

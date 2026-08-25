@@ -293,3 +293,13 @@ keinen zweiten Controller. UsbHostController v2 ergaenzt sichtbare
 Capability-, Aktivitaets- und Completionfelder sowie `max_burst` am
 Endpointhandle. Port-, Control-, Bulk-, Interrupt-, Reset-, Clear-Halt- und
 Polloperationen werden ueber die Registry dispatcht.
+
+Kanonischer Display-Blitvertrag seit 0.69.48
+---------------------------------------------
+
+DriverApi v22 stellt `DriverContext.registerDisplayBlitBackend` und die
+zugehoerige Unregister-Operation bereit. Genau ein externer Besitzer erhaelt
+pro synchronem Callback ausschliesslich geborgte, vollstaendig validierte
+XRGB32-Ziel-, Quell- und Regionsdaten. Zielmapping, Fence, Statistik und der
+vollstaendige CPU-Rueckfall bleiben Kernelbesitz. Die Zulassung wird vor dem
+Owner-Unload geschlossen; ein aktiver Callback vetoisiert den Abbau.

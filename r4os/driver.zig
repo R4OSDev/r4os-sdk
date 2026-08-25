@@ -131,6 +131,14 @@ pub const Context = struct {
         return self.api.activate_usb_host_controller(name, source);
     }
 
+    pub fn registerDisplayBlitBackend(self: *const Context, name: [*:0]const u8, backend: *const abi.DisplayBlitBackend) i32 {
+        return self.api.register_display_blit_backend(name, backend);
+    }
+
+    pub fn unregisterDisplayBlitBackend(self: *const Context, name: [*:0]const u8) i32 {
+        return self.api.unregister_display_blit_backend(name);
+    }
+
     pub fn netReceiveFrame(self: *const Context, adapter_index: i32, frame: []const u8) i32 {
         return self.api.net_receive_frame(adapter_index, frame.ptr, @intCast(frame.len));
     }

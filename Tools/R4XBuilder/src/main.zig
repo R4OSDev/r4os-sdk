@@ -80,6 +80,7 @@ const DriverType = enum(u16) {
     input = 3,
     synth = 4,
     net = 5,
+    display = 6,
     misc = 255,
 };
 
@@ -601,6 +602,7 @@ fn parseDriverType(value: []const u8) ?DriverType {
     if (std.ascii.eqlIgnoreCase(value, "input")) return .input;
     if (std.ascii.eqlIgnoreCase(value, "synth")) return .synth;
     if (std.ascii.eqlIgnoreCase(value, "net")) return .net;
+    if (std.ascii.eqlIgnoreCase(value, "display")) return .display;
     if (std.ascii.eqlIgnoreCase(value, "misc")) return .misc;
     return null;
 }

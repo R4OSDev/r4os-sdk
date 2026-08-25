@@ -102,6 +102,7 @@ const RemoteFrameInfoFn = *const fn (*abi.RemoteFrameInfo) callconv(.c) i32;
 const RemoteFrameReadFn = *const fn (u32, [*]u32, u32, *abi.RemoteFrameInfo) callconv(.c) i32;
 const RemoteFrameWaitFn = *const fn (u32, u64, *abi.RemoteFrameInfo) callconv(.c) i32;
 const RemoteFramePublishFn = *const fn (*const abi.RemoteFrameInfo, [*]const u32, u32) callconv(.c) i32;
+const RemoteFramePublishRegionsFn = abi.R4DeskFns.remote_frame_publish_regions;
 const RemoteFrameAcquireFn = *const fn () callconv(.c) i32;
 const RemoteFrameReleaseFn = *const fn () callconv(.c) i32;
 const RemoteFrameConsumersFn = *const fn () callconv(.c) u32;
@@ -118,6 +119,9 @@ const DisplayBeginFrameRectFn = *const fn (i32, i32, u32, u32) callconv(.c) i32;
 const DisplayPresentFn = *const fn () callconv(.c) i32;
 const DisplayBlitFn = *const fn (i32, i32, u32, u32, [*]const u32, u32) callconv(.c) i32;
 const DisplayBlitStrideFn = *const fn (i32, i32, u32, u32, [*]const u32, u32, u32) callconv(.c) i32;
+const DisplayPresentRegionsFn = abi.R4DrawFns.display_present_regions;
+const DisplayPresentCapabilitiesFn = abi.R4DrawFns.display_present_capabilities;
+const DisplayPresentCompletionFn = abi.R4DrawFns.display_present_completion;
 const GuiClearFn = *const fn (u32) callconv(.c) i32;
 const GuiRectFn = *const fn (i32, i32, u32, u32, u32) callconv(.c) i32;
 const GuiDrawTextFn = *const fn (i32, i32, [*:0]const u8, u32, u32) callconv(.c) i32;
@@ -1041,6 +1045,16 @@ pub const R4Desk = struct {
         return frame_fn(info, pixels.ptr, @intCast(pixels.len));
     }
 
+    pub fn supportsRemoteFrameRegions(self: *const R4Desk) bool {
+        return self.hasFn("remote_frame_publish_regions");
+    }
+
+    pub fn remoteFramePublishRegions(self: *const R4Desk, info: *const abi.RemoteFrameInfo, pixels: []const u32, regions: []const abi.DisplayDamageRect) i32 {
+        if (!self.hasFn("remote_frame_publish_regions")) return abi.remote_frame_error_unsupported;
+        const frame_fn: RemoteFramePublishRegionsFn = @ptrFromInt(self.table.remote_frame_publish_regions);
+        return frame_fn(info, pixels.ptr, @intCast(pixels.len), regions.ptr, @intCast(regions.len));
+    }
+
     pub fn supportsRemoteFrameDemand(self: *const R4Desk) bool {
         return self.hasFn("remote_frame_acquire") and
             self.hasFn("remote_frame_release") and
@@ -1165,6 +1179,30 @@ pub const R4Draw = struct {
         if (pixels.len == 0) return -1;
         const display_fn: DisplayBlitStrideFn = @ptrFromInt(self.table.display_blit_xrgb32_stride);
         return display_fn(x, y, w, h, pixels.ptr, @intCast(pixels.len), source_stride_pixels);
+    }
+
+    pub fn supportsDisplayPresentRegions(self: *const R4Draw) bool {
+        return self.hasFn("display_present_regions") and
+            self.hasFn("display_present_capabilities") and
+            self.hasFn("display_present_completion");
+    }
+
+    pub fn displayPresentRegions(self: *const R4Draw, request: *const abi.DisplayPresentRequest, pixels: []const u32, regions: []const abi.DisplayDamageRect, out: *abi.DisplayPresentResult) i32 {
+        if (!self.hasFn("display_present_regions")) return abi.display_present_error_unavailable;
+        const display_fn: DisplayPresentRegionsFn = @ptrFromInt(self.table.display_present_regions);
+        return display_fn(request, pixels.ptr, @intCast(pixels.len), regions.ptr, @intCast(regions.len), out);
+    }
+
+    pub fn displayPresentCapabilities(self: *const R4Draw, out: *abi.DisplayPresentCapabilities) i32 {
+        if (!self.hasFn("display_present_capabilities")) return abi.display_present_error_unavailable;
+        const display_fn: DisplayPresentCapabilitiesFn = @ptrFromInt(self.table.display_present_capabilities);
+        return display_fn(out);
+    }
+
+    pub fn displayPresentCompletion(self: *const R4Draw, fence: u64, out: *abi.DisplayPresentCompletion) i32 {
+        if (!self.hasFn("display_present_completion")) return abi.display_present_error_unavailable;
+        const display_fn: DisplayPresentCompletionFn = @ptrFromInt(self.table.display_present_completion);
+        return display_fn(fence, out);
     }
 
     pub fn guiClear(self: *const R4Draw, rgb: u32) i32 {

@@ -230,6 +230,14 @@ pub const Context = struct {
         return self.base.remoteFramePublish(info, pixels);
     }
 
+    pub fn supportsRemoteFrameRegions(self: *const Context) bool {
+        return self.base.supportsRemoteFrameRegions();
+    }
+
+    pub fn remoteFramePublishRegions(self: *const Context, info: *const abi.RemoteFrameInfo, pixels: []const u32, regions: []const abi.DisplayDamageRect) i32 {
+        return self.base.remoteFramePublishRegions(info, pixels, regions);
+    }
+
     pub fn supportsRemoteFrameDemand(self: *const Context) bool {
         return self.base.supportsRemoteFrameDemand();
     }

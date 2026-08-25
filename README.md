@@ -36,6 +36,11 @@ USB-host owner. UsbHostController v2 exposes productive port, control, bulk,
 interrupt, recovery and poll callbacks plus capability and activity status;
 it does not authorize a second PCI/MMIO/DMA implementation in the module.
 
+DriverApi v22 appends owner-bound registration of exactly one synchronous
+display-blit backend. The callback borrows a validated XRGB32 source, target
+and at most eight regions for one call; the kernel retains target ownership,
+fence completion and the complete CPU fallback.
+
 ## Dependency mapping
 
 `Settings.R4S` maps the local Contract and workspace paths. Relative and

@@ -70,6 +70,22 @@ pub const Context = struct {
         return self.base.displayXrgb32BlitStride(x, y, w, h, source_stride_pixels, pixels);
     }
 
+    pub fn supportsDisplayPresentRegions(self: *const Context) bool {
+        return self.base.supportsDisplayPresentRegions();
+    }
+
+    pub fn displayPresentRegions(self: *const Context, request: *const abi.DisplayPresentRequest, pixels: []const u32, regions: []const abi.DisplayDamageRect, out: *abi.DisplayPresentResult) i32 {
+        return self.base.displayPresentRegions(request, pixels, regions, out);
+    }
+
+    pub fn displayPresentCapabilities(self: *const Context, out: *abi.DisplayPresentCapabilities) i32 {
+        return self.base.displayPresentCapabilities(out);
+    }
+
+    pub fn displayPresentCompletion(self: *const Context, fence: u64, out: *abi.DisplayPresentCompletion) i32 {
+        return self.base.displayPresentCompletion(fence, out);
+    }
+
     pub fn guiClear(self: *const Context, rgb: u32) i32 {
         return self.base.guiClear(rgb);
     }

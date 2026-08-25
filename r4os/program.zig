@@ -1383,6 +1383,27 @@ pub const Context = struct {
         return blit_fn(x, y, w, h, pixels.ptr, @intCast(pixels.len), source_stride_pixels);
     }
 
+    pub fn supportsDisplayPresentRegions(self: *const Context) bool {
+        return self.hasDrawFn("display_present_regions") and
+            self.hasDrawFn("display_present_capabilities") and
+            self.hasDrawFn("display_present_completion");
+    }
+
+    pub fn displayPresentRegions(self: *const Context, request: *const abi.DisplayPresentRequest, pixels: []const u32, regions: []const abi.DisplayDamageRect, out: *abi.DisplayPresentResult) i32 {
+        const present_fn = self.drawFn("display_present_regions") orelse return abi.display_present_error_unavailable;
+        return present_fn(request, pixels.ptr, @intCast(pixels.len), regions.ptr, @intCast(regions.len), out);
+    }
+
+    pub fn displayPresentCapabilities(self: *const Context, out: *abi.DisplayPresentCapabilities) i32 {
+        const capabilities_fn = self.drawFn("display_present_capabilities") orelse return abi.display_present_error_unavailable;
+        return capabilities_fn(out);
+    }
+
+    pub fn displayPresentCompletion(self: *const Context, fence: u64, out: *abi.DisplayPresentCompletion) i32 {
+        const completion_fn = self.drawFn("display_present_completion") orelse return abi.display_present_error_unavailable;
+        return completion_fn(fence, out);
+    }
+
     pub fn clipboardWrite(self: *const Context, data: []const u8) i32 {
         const table_fn = self.deskFn("clipboard_write") orelse return self.unavailable("desk");
         return table_fn(data.ptr, @intCast(data.len));
@@ -1457,6 +1478,15 @@ pub const Context = struct {
     pub fn remoteFramePublish(self: *const Context, info: *const abi.RemoteFrameInfo, pixels: []const u32) i32 {
         const table_fn = self.deskFn("remote_frame_publish") orelse return abi.remote_frame_error_unsupported;
         return table_fn(info, pixels.ptr, @intCast(pixels.len));
+    }
+
+    pub fn supportsRemoteFrameRegions(self: *const Context) bool {
+        return self.hasDeskFn("remote_frame_publish_regions");
+    }
+
+    pub fn remoteFramePublishRegions(self: *const Context, info: *const abi.RemoteFrameInfo, pixels: []const u32, regions: []const abi.DisplayDamageRect) i32 {
+        const table_fn = self.deskFn("remote_frame_publish_regions") orelse return abi.remote_frame_error_unsupported;
+        return table_fn(info, pixels.ptr, @intCast(pixels.len), regions.ptr, @intCast(regions.len));
     }
 
     pub fn supportsRemoteFrameDemand(self: *const Context) bool {

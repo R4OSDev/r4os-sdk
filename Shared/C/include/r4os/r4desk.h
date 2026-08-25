@@ -105,6 +105,28 @@ static inline int32_t r4desk_remote_frame_publish(R4Desk *desk, const R4RemoteFr
     return fn(info, pixels, pixel_count);
 }
 
+static inline int r4desk_supports_remote_frame_regions(const R4Desk *desk) {
+    return desk != 0 && desk->table != 0 &&
+        desk->table->size >= offsetof(R4XStartR4Desk, remote_frame_publish_regions) + sizeof(uintptr_t) &&
+        desk->table->remote_frame_publish_regions != 0;
+}
+
+static inline int32_t r4desk_remote_frame_publish_regions(R4Desk *desk,
+                                                           const R4RemoteFrameInfo *info,
+                                                           const uint32_t *pixels,
+                                                           uint32_t pixel_count,
+                                                           const R4DisplayDamageRect *regions,
+                                                           uint32_t region_count) {
+    if (!r4desk_supports_remote_frame_regions(desk)) return R4_REMOTE_FRAME_ERROR_UNSUPPORTED;
+    if (info == 0 || pixels == 0 || pixel_count == 0u || regions == 0 ||
+        region_count == 0u || region_count > R4OS_DISPLAY_DAMAGE_MAX_REGIONS) {
+        return R4OS_ERROR_INVALID;
+    }
+    R4DeskRemoteFramePublishRegionsFn fn =
+        (R4DeskRemoteFramePublishRegionsFn)(uintptr_t)desk->table->remote_frame_publish_regions;
+    return fn(info, pixels, pixel_count, regions, region_count);
+}
+
 static inline int r4desk_supports_remote_frame_demand(const R4Desk *desk) {
     return desk != 0 && desk->table != 0 &&
         desk->table->size >= offsetof(R4XStartR4Desk, remote_frame_consumers) + sizeof(uintptr_t) &&
