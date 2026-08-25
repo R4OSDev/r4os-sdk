@@ -143,6 +143,36 @@ pub const Context = struct {
         self.api.free_dma_region(buffer);
     }
 
+    pub fn pinDmaBuffer(self: *const Context, buffer: []u8, out: *abi.DmaPinnedBuffer) i32 {
+        if (buffer.len == 0 or buffer.len > abi.dma_mapping_max_bytes) return -2;
+        return self.api.dma_pin_buffer(@intFromPtr(buffer.ptr), @intCast(buffer.len), 0, out);
+    }
+
+    pub fn pinDmaConstBuffer(self: *const Context, buffer: []const u8, out: *abi.DmaPinnedBuffer) i32 {
+        if (buffer.len == 0 or buffer.len > abi.dma_mapping_max_bytes) return -2;
+        return self.api.dma_pin_buffer(@intFromPtr(buffer.ptr), @intCast(buffer.len), 0, out);
+    }
+
+    pub fn mapDmaPinned(self: *const Context, pin: *const abi.DmaPinnedBuffer, constraints: *const abi.DmaConstraints, direction: u32, out: *abi.DmaMapping) i32 {
+        return self.api.dma_map_pinned(pin, constraints, direction, out);
+    }
+
+    pub fn syncDmaForDevice(self: *const Context, mapping: *const abi.DmaMapping) i32 {
+        return self.api.dma_sync_for_device(mapping);
+    }
+
+    pub fn syncDmaForCpu(self: *const Context, mapping: *const abi.DmaMapping) i32 {
+        return self.api.dma_sync_for_cpu(mapping);
+    }
+
+    pub fn unmapDma(self: *const Context, mapping: *abi.DmaMapping) i32 {
+        return self.api.dma_unmap(mapping);
+    }
+
+    pub fn unpinDmaBuffer(self: *const Context, pin: *abi.DmaPinnedBuffer) i32 {
+        return self.api.dma_unpin_buffer(pin);
+    }
+
     pub fn pciDeviceCount(self: *const Context) u32 {
         return self.api.pci_device_count();
     }
