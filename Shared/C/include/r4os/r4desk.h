@@ -105,6 +105,31 @@ static inline int32_t r4desk_remote_frame_publish(R4Desk *desk, const R4RemoteFr
     return fn(info, pixels, pixel_count);
 }
 
+static inline int r4desk_supports_remote_frame_demand(const R4Desk *desk) {
+    return desk != 0 && desk->table != 0 &&
+        desk->table->size >= offsetof(R4XStartR4Desk, remote_frame_consumers) + sizeof(uintptr_t) &&
+        desk->table->remote_frame_acquire != 0 && desk->table->remote_frame_release != 0 &&
+        desk->table->remote_frame_consumers != 0;
+}
+
+static inline int32_t r4desk_remote_frame_acquire(R4Desk *desk) {
+    if (!r4desk_supports_remote_frame_demand(desk)) return R4_REMOTE_FRAME_ERROR_UNSUPPORTED;
+    R4DeskRemoteFrameAcquireFn fn = (R4DeskRemoteFrameAcquireFn)(uintptr_t)desk->table->remote_frame_acquire;
+    return fn();
+}
+
+static inline int32_t r4desk_remote_frame_release(R4Desk *desk) {
+    if (!r4desk_supports_remote_frame_demand(desk)) return R4_REMOTE_FRAME_ERROR_UNSUPPORTED;
+    R4DeskRemoteFrameReleaseFn fn = (R4DeskRemoteFrameReleaseFn)(uintptr_t)desk->table->remote_frame_release;
+    return fn();
+}
+
+static inline uint32_t r4desk_remote_frame_consumers(R4Desk *desk) {
+    if (!r4desk_supports_remote_frame_demand(desk)) return 0u;
+    R4DeskRemoteFrameConsumersFn fn = (R4DeskRemoteFrameConsumersFn)(uintptr_t)desk->table->remote_frame_consumers;
+    return fn();
+}
+
 static inline int32_t r4desk_remote_input_push(R4Desk *desk, const R4RemoteInputEvent *event) {
     if (desk == 0 || desk->table == 0 || desk->table->remote_input_push == 0) return R4_REMOTE_INPUT_ERROR_UNSUPPORTED;
     R4DeskRemoteInputPushFn fn = (R4DeskRemoteInputPushFn)(uintptr_t)desk->table->remote_input_push;

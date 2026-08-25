@@ -66,6 +66,10 @@ pub const Context = struct {
         return self.base.displayXrgb32Blit(x, y, w, h, pixels);
     }
 
+    pub fn displayBlitXrgb32Stride(self: *const Context, x: i32, y: i32, w: u32, h: u32, source_stride_pixels: u32, pixels: []const u32) i32 {
+        return self.base.displayXrgb32BlitStride(x, y, w, h, source_stride_pixels, pixels);
+    }
+
     pub fn guiClear(self: *const Context, rgb: u32) i32 {
         return self.base.guiClear(rgb);
     }

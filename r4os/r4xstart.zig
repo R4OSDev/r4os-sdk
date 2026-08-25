@@ -102,6 +102,9 @@ const RemoteFrameInfoFn = *const fn (*abi.RemoteFrameInfo) callconv(.c) i32;
 const RemoteFrameReadFn = *const fn (u32, [*]u32, u32, *abi.RemoteFrameInfo) callconv(.c) i32;
 const RemoteFrameWaitFn = *const fn (u32, u64, *abi.RemoteFrameInfo) callconv(.c) i32;
 const RemoteFramePublishFn = *const fn (*const abi.RemoteFrameInfo, [*]const u32, u32) callconv(.c) i32;
+const RemoteFrameAcquireFn = *const fn () callconv(.c) i32;
+const RemoteFrameReleaseFn = *const fn () callconv(.c) i32;
+const RemoteFrameConsumersFn = *const fn () callconv(.c) u32;
 const RemoteInputPushFn = *const fn (*const abi.RemoteInputEvent) callconv(.c) i32;
 const RemoteInputPollFn = *const fn (*abi.RemoteInputEvent) callconv(.c) i32;
 const RemoteInputStatusFn = *const fn (*abi.RemoteInputStatus) callconv(.c) i32;
@@ -114,6 +117,7 @@ const DisplayBeginFrameFn = *const fn () callconv(.c) i32;
 const DisplayBeginFrameRectFn = *const fn (i32, i32, u32, u32) callconv(.c) i32;
 const DisplayPresentFn = *const fn () callconv(.c) i32;
 const DisplayBlitFn = *const fn (i32, i32, u32, u32, [*]const u32, u32) callconv(.c) i32;
+const DisplayBlitStrideFn = *const fn (i32, i32, u32, u32, [*]const u32, u32, u32) callconv(.c) i32;
 const GuiClearFn = *const fn (u32) callconv(.c) i32;
 const GuiRectFn = *const fn (i32, i32, u32, u32, u32) callconv(.c) i32;
 const GuiDrawTextFn = *const fn (i32, i32, [*:0]const u8, u32, u32) callconv(.c) i32;
@@ -158,8 +162,8 @@ comptime {
     if (@sizeOf(abi.R4XStartR4Desk) < abi.r4xstart_r4desk_size) {
         @compileError("R4XStartR4Desk ABI minimum size mismatch");
     }
-    if (@sizeOf(abi.R4XStartR4Draw) != abi.r4xstart_r4draw_size) {
-        @compileError("R4XStartR4Draw ABI size mismatch");
+    if (@sizeOf(abi.R4XStartR4Draw) < abi.r4xstart_r4draw_size) {
+        @compileError("R4XStartR4Draw ABI minimum size mismatch");
     }
     // R4NET-, R4AUDIO- und R4DEV-Gruppentabellen gehoeren zum aktuellen
     // R4XStart-Bundlevertrag.
@@ -1037,6 +1041,30 @@ pub const R4Desk = struct {
         return frame_fn(info, pixels.ptr, @intCast(pixels.len));
     }
 
+    pub fn supportsRemoteFrameDemand(self: *const R4Desk) bool {
+        return self.hasFn("remote_frame_acquire") and
+            self.hasFn("remote_frame_release") and
+            self.hasFn("remote_frame_consumers");
+    }
+
+    pub fn remoteFrameAcquire(self: *const R4Desk) i32 {
+        if (!self.hasFn("remote_frame_acquire")) return abi.remote_frame_error_unsupported;
+        const frame_fn: RemoteFrameAcquireFn = @ptrFromInt(self.table.remote_frame_acquire);
+        return frame_fn();
+    }
+
+    pub fn remoteFrameRelease(self: *const R4Desk) i32 {
+        if (!self.hasFn("remote_frame_release")) return abi.remote_frame_error_unsupported;
+        const frame_fn: RemoteFrameReleaseFn = @ptrFromInt(self.table.remote_frame_release);
+        return frame_fn();
+    }
+
+    pub fn remoteFrameConsumers(self: *const R4Desk) u32 {
+        if (!self.hasFn("remote_frame_consumers")) return 0;
+        const frame_fn: RemoteFrameConsumersFn = @ptrFromInt(self.table.remote_frame_consumers);
+        return frame_fn();
+    }
+
     pub fn supportsRemoteInput(self: *const R4Desk) bool {
         return self.hasFn("remote_input_push") and
             self.hasFn("remote_input_poll") and
@@ -1130,6 +1158,13 @@ pub const R4Draw = struct {
         if (pixels.len == 0) return -1;
         const display_fn: DisplayBlitFn = @ptrFromInt(self.table.display_blit_xrgb32);
         return display_fn(x, y, w, h, pixels.ptr, @intCast(pixels.len));
+    }
+
+    pub fn displayBlitXrgb32Stride(self: *const R4Draw, x: i32, y: i32, w: u32, h: u32, source_stride_pixels: u32, pixels: []const u32) i32 {
+        if (!self.hasFn("display_blit_xrgb32_stride")) return -2;
+        if (pixels.len == 0) return -1;
+        const display_fn: DisplayBlitStrideFn = @ptrFromInt(self.table.display_blit_xrgb32_stride);
+        return display_fn(x, y, w, h, pixels.ptr, @intCast(pixels.len), source_stride_pixels);
     }
 
     pub fn guiClear(self: *const R4Draw, rgb: u32) i32 {

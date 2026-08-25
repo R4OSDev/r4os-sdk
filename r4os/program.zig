@@ -1378,6 +1378,11 @@ pub const Context = struct {
         return blit_fn(x, y, w, h, pixels.ptr, @intCast(pixels.len));
     }
 
+    pub fn displayXrgb32BlitStride(self: *const Context, x: i32, y: i32, w: u32, h: u32, source_stride_pixels: u32, pixels: []const u32) i32 {
+        const blit_fn = self.drawFn("display_blit_xrgb32_stride") orelse return self.unavailable("draw");
+        return blit_fn(x, y, w, h, pixels.ptr, @intCast(pixels.len), source_stride_pixels);
+    }
+
     pub fn clipboardWrite(self: *const Context, data: []const u8) i32 {
         const table_fn = self.deskFn("clipboard_write") orelse return self.unavailable("desk");
         return table_fn(data.ptr, @intCast(data.len));
@@ -1452,6 +1457,27 @@ pub const Context = struct {
     pub fn remoteFramePublish(self: *const Context, info: *const abi.RemoteFrameInfo, pixels: []const u32) i32 {
         const table_fn = self.deskFn("remote_frame_publish") orelse return abi.remote_frame_error_unsupported;
         return table_fn(info, pixels.ptr, @intCast(pixels.len));
+    }
+
+    pub fn supportsRemoteFrameDemand(self: *const Context) bool {
+        return self.hasDeskFn("remote_frame_acquire") and
+            self.hasDeskFn("remote_frame_release") and
+            self.hasDeskFn("remote_frame_consumers");
+    }
+
+    pub fn remoteFrameAcquire(self: *const Context) i32 {
+        const table_fn = self.deskFn("remote_frame_acquire") orelse return abi.remote_frame_error_unsupported;
+        return table_fn();
+    }
+
+    pub fn remoteFrameRelease(self: *const Context) i32 {
+        const table_fn = self.deskFn("remote_frame_release") orelse return abi.remote_frame_error_unsupported;
+        return table_fn();
+    }
+
+    pub fn remoteFrameConsumers(self: *const Context) u32 {
+        const table_fn = self.deskFn("remote_frame_consumers") orelse return 0;
+        return table_fn();
     }
 
     pub fn supportsRemoteInput(self: *const Context) bool {

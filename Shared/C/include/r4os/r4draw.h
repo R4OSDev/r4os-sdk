@@ -12,6 +12,24 @@ typedef struct R4Draw {
     const R4XStartR4Draw *table;
 } R4Draw;
 
+static inline int r4draw_supports_display_blit_stride(const R4Draw *draw) {
+    return draw != 0 && draw->table != 0 &&
+        draw->table->size >= offsetof(R4XStartR4Draw, display_blit_xrgb32_stride) + sizeof(uintptr_t) &&
+        draw->table->display_blit_xrgb32_stride != 0;
+}
+
+static inline int32_t r4draw_display_blit_xrgb32_stride(R4Draw *draw,
+                                                         int32_t x, int32_t y,
+                                                         uint32_t width, uint32_t height,
+                                                         uint32_t source_stride_pixels,
+                                                         const uint32_t *pixels,
+                                                         uint32_t pixel_count) {
+    if (!r4draw_supports_display_blit_stride(draw)) return R4OS_ERR_NO_FN;
+    if (pixels == 0 || pixel_count == 0u) return R4OS_ERROR_INVALID;
+    R4DrawDisplayBlitXrgb32StrideFn fn = (R4DrawDisplayBlitXrgb32StrideFn)(uintptr_t)draw->table->display_blit_xrgb32_stride;
+    return fn(x, y, width, height, pixels, pixel_count, source_stride_pixels);
+}
+
 static inline int r4draw_import_valid(const R4XStartImport *item) {
     return item != 0 &&
         item->group_id == R4L_GROUP_R4DRAW &&

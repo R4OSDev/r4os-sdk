@@ -230,6 +230,22 @@ pub const Context = struct {
         return self.base.remoteFramePublish(info, pixels);
     }
 
+    pub fn supportsRemoteFrameDemand(self: *const Context) bool {
+        return self.base.supportsRemoteFrameDemand();
+    }
+
+    pub fn remoteFrameAcquire(self: *const Context) i32 {
+        return self.base.remoteFrameAcquire();
+    }
+
+    pub fn remoteFrameRelease(self: *const Context) i32 {
+        return self.base.remoteFrameRelease();
+    }
+
+    pub fn remoteFrameConsumers(self: *const Context) u32 {
+        return self.base.remoteFrameConsumers();
+    }
+
     pub fn supportsRemoteInput(self: *const Context) bool {
         return self.base.supportsRemoteInput();
     }
