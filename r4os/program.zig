@@ -1080,6 +1080,21 @@ pub const Context = struct {
         return table_fn(path, data.ptr, @intCast(data.len), flags, out_request_id);
     }
 
+    pub fn ioFileWriteAt(self: *const Context, path: [*:0]const u8, offset: u64, data: []const u8, flags: u32, out_request_id: *u32) i32 {
+        const table_fn = self.sysFn("io_file_write_at") orelse return self.unavailable("sys");
+        return table_fn(path, offset, data.ptr, @intCast(data.len), flags, out_request_id);
+    }
+
+    pub fn ioFileInfo(self: *const Context, path: [*:0]const u8, flags: u32, out_request_id: *u32) i32 {
+        const table_fn = self.sysFn("io_file_info") orelse return self.unavailable("sys");
+        return table_fn(path, flags, out_request_id);
+    }
+
+    pub fn ioFileLock(self: *const Context, path: [*:0]const u8, offset: u64, length: u64, flags: u32, out_request_id: *u32) i32 {
+        const table_fn = self.sysFn("io_file_lock") orelse return self.unavailable("sys");
+        return table_fn(path, offset, length, flags, out_request_id);
+    }
+
     pub fn ioFileStreamBegin(self: *const Context, path: [*:0]const u8, flags: u32, out_request_id: *u32) i32 {
         const table_fn = self.sysFn("io_file_stream_begin") orelse return self.unavailable("sys");
         return table_fn(path, flags, out_request_id);

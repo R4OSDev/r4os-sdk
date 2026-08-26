@@ -30,6 +30,9 @@ const IoFileReadFn = *const fn ([*:0]const u8, [*]u8, u64, u32, *u32) callconv(.
 const IoFileReadAtFn = *const fn ([*:0]const u8, u64, [*]u8, u64, u32, *u32) callconv(.c) i32;
 const IoFileWriteFn = *const fn ([*:0]const u8, [*]const u8, u64, u32, *u32) callconv(.c) i32;
 const IoFileAppendFn = *const fn ([*:0]const u8, [*]const u8, u64, u32, *u32) callconv(.c) i32;
+const IoFileWriteAtFn = *const fn ([*:0]const u8, u64, [*]const u8, u64, u32, *u32) callconv(.c) i32;
+const IoFileInfoFn = *const fn ([*:0]const u8, u32, *u32) callconv(.c) i32;
+const IoFileLockFn = *const fn ([*:0]const u8, u64, u64, u32, *u32) callconv(.c) i32;
 const IoFileStreamBeginFn = *const fn ([*:0]const u8, u32, *u32) callconv(.c) i32;
 const IoFileStreamWriteFn = *const fn ([*:0]const u8, u64, [*]const u8, u64, u32, *u32) callconv(.c) i32;
 const IoFileStreamFinishFn = *const fn ([*:0]const u8, u64, u32, *u32) callconv(.c) i32;
@@ -530,6 +533,24 @@ pub const R4Sys = struct {
         if (!self.supportsAsyncIo() or !self.hasFn("io_file_append")) return abi.io_error_unsupported;
         const io_fn: IoFileAppendFn = @ptrFromInt(self.table.io_file_append);
         return io_fn(path, data.ptr, @intCast(data.len), flags, out_request_id);
+    }
+
+    pub fn ioFileWriteAt(self: *const R4Sys, path: [*:0]const u8, offset: u64, data: []const u8, flags: u32, out_request_id: *u32) i32 {
+        if (!self.supportsAsyncIo() or !self.hasFn("io_file_write_at")) return abi.io_error_unsupported;
+        const io_fn: IoFileWriteAtFn = @ptrFromInt(self.table.io_file_write_at);
+        return io_fn(path, offset, data.ptr, @intCast(data.len), flags, out_request_id);
+    }
+
+    pub fn ioFileInfo(self: *const R4Sys, path: [*:0]const u8, flags: u32, out_request_id: *u32) i32 {
+        if (!self.supportsAsyncIo() or !self.hasFn("io_file_info")) return abi.io_error_unsupported;
+        const io_fn: IoFileInfoFn = @ptrFromInt(self.table.io_file_info);
+        return io_fn(path, flags, out_request_id);
+    }
+
+    pub fn ioFileLock(self: *const R4Sys, path: [*:0]const u8, offset: u64, length: u64, flags: u32, out_request_id: *u32) i32 {
+        if (!self.supportsAsyncIo() or !self.hasFn("io_file_lock")) return abi.io_error_unsupported;
+        const io_fn: IoFileLockFn = @ptrFromInt(self.table.io_file_lock);
+        return io_fn(path, offset, length, flags, out_request_id);
     }
 
     pub fn ioFileStreamBegin(self: *const R4Sys, path: [*:0]const u8, flags: u32, out_request_id: *u32) i32 {

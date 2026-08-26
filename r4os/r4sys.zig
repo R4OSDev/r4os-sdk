@@ -1001,6 +1001,18 @@ pub const Context = struct {
         return self.base.ioFileAppend(path, data, flags, out_request_id);
     }
 
+    pub fn ioFileWriteAt(self: *const Context, path: [*:0]const u8, offset: u64, data: []const u8, flags: u32, out_request_id: *u32) i32 {
+        return self.base.ioFileWriteAt(path, offset, data, flags, out_request_id);
+    }
+
+    pub fn ioFileInfo(self: *const Context, path: [*:0]const u8, flags: u32, out_request_id: *u32) i32 {
+        return self.base.ioFileInfo(path, flags, out_request_id);
+    }
+
+    pub fn ioFileLock(self: *const Context, path: [*:0]const u8, offset: u64, length: u64, flags: u32, out_request_id: *u32) i32 {
+        return self.base.ioFileLock(path, offset, length, flags, out_request_id);
+    }
+
     pub fn ioFileStreamBegin(self: *const Context, path: [*:0]const u8, flags: u32, out_request_id: *u32) i32 {
         return self.base.ioFileStreamBegin(path, flags, out_request_id);
     }

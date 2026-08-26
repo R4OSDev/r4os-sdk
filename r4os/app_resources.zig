@@ -153,6 +153,24 @@ pub const Resources = struct {
         return self.ioOpen(raw, id, .{ .read_only = data });
     }
 
+    pub fn asyncWriteAt(self: *const Resources, path: PathZ, offset: u64, data: []const u8, flags: u32) IoOpen {
+        var id: u32 = 0;
+        const raw = self.sys.ioFileWriteAt(path.ptr, offset, data, flags, &id);
+        return self.ioOpen(raw, id, .{ .read_only = data });
+    }
+
+    pub fn asyncFileInfo(self: *const Resources, path: PathZ, flags: u32) IoOpen {
+        var id: u32 = 0;
+        const raw = self.sys.ioFileInfo(path.ptr, flags, &id);
+        return self.ioOpen(raw, id, .none);
+    }
+
+    pub fn asyncFileLock(self: *const Resources, path: PathZ, offset: u64, length: u64, flags: u32) IoOpen {
+        var id: u32 = 0;
+        const raw = self.sys.ioFileLock(path.ptr, offset, length, flags, &id);
+        return self.ioOpen(raw, id, .none);
+    }
+
     pub fn asyncStreamBegin(self: *const Resources, path: PathZ, flags: u32) IoOpen {
         var id: u32 = 0;
         const raw = self.sys.ioFileStreamBegin(path.ptr, flags, &id);
