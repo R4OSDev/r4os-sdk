@@ -14,6 +14,7 @@ pub const default_channels: u16 = 2;
 pub const default_quantum_frames: u32 = 480;
 pub const default_target_quanta: u16 = 2;
 pub const default_max_catchup_quanta: u16 = 2;
+pub const default_busy_retry_nanoseconds: u64 = 10 * std.time.ns_per_ms;
 const audio_open_retry_limit: u16 = 3;
 const audio_open_retry_nanoseconds: u64 = 50 * std.time.ns_per_ms;
 pub const audio_error_timeout: i32 = -9601;
@@ -108,11 +109,26 @@ pub const HostPollResult = union(enum) {
     failure: i32,
 };
 
+/// Progress at the service boundary of one guest audio stream. Accepted
+/// source bytes have reached AudioService; they must not be interpreted as
+/// hardware-played bytes. The current platform ABI exposes no per-stream
+/// hardware playback cursor, so `playback_frames` remains null until such a
+/// cursor exists.
+pub const AudioFeedback = struct {
+    state: AudioState,
+    muted: bool,
+    accepted_bytes: u64 = 0,
+    suppressed_bytes: u64 = 0,
+    discarded_bytes: u64 = 0,
+    playback_frames: ?u64 = null,
+};
+
 pub const GuestDriver = struct {
     context: *anyopaque,
     step_fn: *const fn (*anyopaque, u32, u64) StepResult,
     reset_fn: *const fn (*anyopaque) i32,
     render_audio_fn: *const fn (*anyopaque, []u8) i32,
+    audio_feedback_fn: ?*const fn (*anyopaque, AudioFeedback) bool = null,
 
     pub fn step(self: GuestDriver, budget: u32, guest_now_ns: u64) StepResult {
         return self.step_fn(self.context, budget, guest_now_ns);
@@ -124,6 +140,11 @@ pub const GuestDriver = struct {
 
     pub fn renderAudio(self: GuestDriver, out: []u8) i32 {
         return self.render_audio_fn(self.context, out);
+    }
+
+    /// Returns true when transport progress made an event-only guest runnable.
+    pub fn audioFeedback(self: GuestDriver, feedback: AudioFeedback) bool {
+        return if (self.audio_feedback_fn) |callback| callback(self.context, feedback) else false;
     }
 };
 
@@ -235,6 +256,7 @@ pub const AudioConfig = struct {
     quantum_frames: u32 = default_quantum_frames,
     target_quanta: u16 = default_target_quanta,
     max_catchup_quanta: u16 = default_max_catchup_quanta,
+    busy_retry_nanoseconds: u64 = default_busy_retry_nanoseconds,
 
     pub fn frameBytes(self: AudioConfig) Error!usize {
         if (self.sample_rate == 0 or self.channels == 0) return Error.InvalidAudioConfiguration;
@@ -285,6 +307,13 @@ pub const R4AudioSink = struct {
         return .{ .audio = audio };
     }
 
+    pub fn initWithTimeout(audio: app_audio.Audio, timeout_nanoseconds: u64) R4AudioSink {
+        return .{
+            .audio = audio,
+            .timeout = time_contract.timeoutFinite(.{ .nanoseconds = timeout_nanoseconds }),
+        };
+    }
+
     pub fn sink(self: *R4AudioSink) AudioSink {
         return .{
             .context = self,
@@ -320,6 +349,18 @@ pub const AudioStats = struct {
     idle_quanta: u64 = 0,
     lazy_opens: u64 = 0,
     idle_closes: u64 = 0,
+    active_cycles: u64 = 0,
+    silent_cycles: u64 = 0,
+    paused_cycles: u64 = 0,
+    muted_cycles: u64 = 0,
+    active_quanta: u64 = 0,
+    silent_quanta: u64 = 0,
+    paused_bytes: u64 = 0,
+    service_operations: u64 = 0,
+    open_operations: u64 = 0,
+    write_operations: u64 = 0,
+    close_operations: u64 = 0,
+    maximum_service_operations_per_cycle: u16 = 0,
 };
 
 pub const PcmQueue = struct {
@@ -408,21 +449,27 @@ pub const AudioPump = struct {
     muted: bool = false,
     next_deadline_tick: u64 = 0,
     quantum_ticks: u64 = 1,
+    busy_retry_ticks: u64 = 1,
     open_retry_ticks: u64 = 1,
     open_retry_attempts: u16 = 0,
     resync_prefill_quanta: u16 = 0,
+    sink_open: bool = false,
+    close_pending: bool = false,
+    render_progress_pending: bool = false,
+    service_operations_cycle: u16 = 0,
     stats: AudioStats = .{},
 
     fn init(options: AudioOptions, monotonic_hz: u32) Error!AudioPump {
         const frame_bytes = try options.config.frameBytes();
         const quantum_bytes = try options.config.quantumBytes();
         const target_bytes = try options.config.targetBytes();
-        if (options.config.max_catchup_quanta == 0) return Error.InvalidAudioConfiguration;
+        if (options.config.max_catchup_quanta == 0 or options.config.busy_retry_nanoseconds == 0) return Error.InvalidAudioConfiguration;
         if (options.queue_storage.len < target_bytes) return Error.AudioQueueTooSmall;
         if (options.scratch.len < quantum_bytes) return Error.AudioScratchTooSmall;
         const quantum_ns_product = @as(u128, options.config.quantum_frames) * time_contract.nanoseconds_per_second;
         const quantum_ns: u64 = @intCast((quantum_ns_product + options.config.sample_rate - 1) / options.config.sample_rate);
         const quantum_ticks = time_contract.durationToTicks(.{ .nanoseconds = quantum_ns }, monotonic_hz) catch return Error.UnknownFrequency;
+        const busy_retry_ticks = time_contract.durationToTicks(.{ .nanoseconds = options.config.busy_retry_nanoseconds }, monotonic_hz) catch return Error.UnknownFrequency;
         const open_retry_ticks = time_contract.durationToTicks(.{ .nanoseconds = audio_open_retry_nanoseconds }, monotonic_hz) catch return Error.UnknownFrequency;
         return .{
             .config = options.config,
@@ -431,6 +478,7 @@ pub const AudioPump = struct {
             .sink = options.sink,
             .state = .ready,
             .quantum_ticks = @max(@as(u64, 1), quantum_ticks),
+            .busy_retry_ticks = @max(@as(u64, 1), busy_retry_ticks),
             .open_retry_ticks = @max(@as(u64, 1), open_retry_ticks),
         };
     }
@@ -442,11 +490,27 @@ pub const AudioPump = struct {
         self.next_deadline_tick = 0;
     }
 
+    fn beginCycle(self: *AudioPump) void {
+        self.service_operations_cycle = 0;
+    }
+
+    fn noteServiceOperation(self: *AudioPump) void {
+        self.service_operations_cycle +|= 1;
+        self.stats.service_operations +%= 1;
+        self.stats.maximum_service_operations_per_cycle = @max(
+            self.stats.maximum_service_operations_per_cycle,
+            self.service_operations_cycle,
+        );
+    }
+
     fn tryOpen(self: *AudioPump, now: u64) bool {
+        if (self.close_pending or self.service_operations_cycle != 0) return false;
         const sink = self.sink orelse {
             self.degrade(audio_error_unavailable);
             return false;
         };
+        self.noteServiceOperation();
+        self.stats.open_operations +%= 1;
         const rc = sink.open(self.config);
         if (rc < 0) {
             self.last_error = rc;
@@ -460,11 +524,14 @@ pub const AudioPump = struct {
             return false;
         }
         self.state = .active;
+        self.sink_open = true;
         self.last_error = 0;
         self.open_retry_attempts = 0;
         self.resync_prefill_quanta = self.config.target_quanta;
         self.stats.lazy_opens +%= 1;
-        self.next_deadline_tick = now +| self.quantum_ticks;
+        // Opening consumes this cycle's one permitted service operation. The
+        // first prefill write is therefore due in a fresh host cycle.
+        self.next_deadline_tick = if (now == 0) 1 else now;
         return true;
     }
 
@@ -474,15 +541,26 @@ pub const AudioPump = struct {
         self.enterIdle();
     }
 
+    fn pause(self: *AudioPump, now: u64) void {
+        _ = now;
+        if (self.state == .disabled or self.state == .degraded or self.state == .closed) return;
+        self.stats.paused_bytes +%= self.queue.available();
+        self.enterIdle();
+    }
+
     fn setMuted(self: *AudioPump, muted: bool, now: u64) void {
         _ = now;
         if (self.muted == muted) return;
         self.muted = muted;
         if (self.state == .degraded) return;
-        if (muted) self.enterIdle();
+        if (muted) {
+            self.stats.muted_bytes +%= self.queue.available();
+            self.enterIdle();
+        }
     }
 
     fn fill(self: *AudioPump, guest: GuestDriver) i32 {
+        self.render_progress_pending = false;
         if ((self.state != .ready and self.state != .active) or self.muted) return 0;
         const target = self.config.targetBytes() catch return runtime_error_guest_audio;
         const frame_bytes = self.config.frameBytes() catch return runtime_error_guest_audio;
@@ -493,13 +571,18 @@ pub const AudioPump = struct {
             const rendered = guest.renderAudio(self.scratch[0..wanted]);
             if (rendered < 0) return rendered;
             const count: usize = @intCast(rendered);
-            if (count == 0) break;
+            if (count == 0) {
+                self.stats.silent_cycles +%= 1;
+                break;
+            }
             if (count > wanted or count % frame_bytes != 0) return runtime_error_guest_audio;
             self.stats.generated_bytes +%= count;
             if (isZeroPcm(self.scratch[0..count])) {
                 self.stats.silence_bytes +%= count;
                 self.stats.suppressed_bytes +%= count;
                 self.stats.idle_quanta +%= 1;
+                self.stats.silent_quanta +%= 1;
+                self.render_progress_pending = true;
                 break;
             }
             if (self.queue.write(self.scratch[0..count]) != count) return runtime_error_guest_audio;
@@ -520,48 +603,51 @@ pub const AudioPump = struct {
     }
 
     fn pump(self: *AudioPump, now: u64, running: bool) void {
+        if (self.close_pending) {
+            self.closeSink(false);
+            return;
+        }
         if (self.state != .ready and self.state != .active) return;
-        if (!running or self.muted) {
+        if (!running) {
             self.enterIdle();
             return;
         }
+        if (self.muted) {
+            self.stats.muted_cycles +%= 1;
+            self.enterIdle();
+            return;
+        }
+        if (self.queue.available() != 0 or self.state == .active) self.stats.active_cycles +%= 1;
         if (self.state == .ready) {
             if (self.queue.available() == 0) {
                 self.next_deadline_tick = 0;
                 return;
             }
-            if ((self.next_deadline_tick != 0 and now < self.next_deadline_tick) or !self.tryOpen(now)) return;
-        }
-        if (self.resync_prefill_quanta != 0) {
-            const quanta = self.resync_prefill_quanta;
-            self.resync_prefill_quanta = 0;
-            var submitted: u16 = 0;
-            while (submitted < quanta) {
-                switch (self.submitQuantum(running)) {
-                    .submitted => submitted += 1,
-                    .idle => break,
-                    .busy, .failed => break,
-                }
-            }
-            self.next_deadline_tick = now +| self.quantum_ticks;
+            if (self.next_deadline_tick != 0 and now < self.next_deadline_tick) return;
+            _ = self.tryOpen(now);
             return;
         }
-        var sink_busy = false;
-        var pumped: u16 = 0;
-        while (now >= self.next_deadline_tick and pumped < self.config.max_catchup_quanta) : (pumped += 1) {
+        if (self.service_operations_cycle != 0) return;
+        if (now < self.next_deadline_tick) return;
+        if (self.resync_prefill_quanta != 0) {
             switch (self.submitQuantum(running)) {
-                .submitted => {},
-                .idle => break,
-                .busy => {
-                    sink_busy = true;
-                    self.next_deadline_tick = now +| self.quantum_ticks;
-                    break;
+                .submitted => {
+                    self.resync_prefill_quanta -= 1;
+                    self.next_deadline_tick = if (self.resync_prefill_quanta == 0)
+                        now +| self.quantum_ticks
+                    else
+                        now;
                 },
-                .failed => break,
+                .busy => self.next_deadline_tick = now +| self.busy_retry_ticks,
+                .idle, .failed => {},
             }
-            self.next_deadline_tick +|= self.quantum_ticks;
+            return;
         }
-        if (!sink_busy and now >= self.next_deadline_tick) self.resyncLate(now);
+        switch (self.submitQuantum(running)) {
+            .submitted => self.next_deadline_tick +|= self.quantum_ticks,
+            .busy => self.next_deadline_tick = now +| self.busy_retry_ticks,
+            .idle, .failed => {},
+        }
     }
 
     fn submitQuantum(self: *AudioPump, running: bool) SubmitResult {
@@ -586,6 +672,8 @@ pub const AudioPump = struct {
             return .failed;
         };
         const payload = self.scratch[0..copied];
+        self.noteServiceOperation();
+        self.stats.write_operations +%= 1;
         const written = sink.write(payload);
         if (written == abi.service_api_result_busy) {
             self.stats.busy_writes +%= 1;
@@ -605,6 +693,7 @@ pub const AudioPump = struct {
         if (copied < self.scratch.len) self.stats.underflows +%= 1;
         self.stats.writes +%= 1;
         self.stats.submitted_bytes +%= copied;
+        self.stats.active_quanta +%= 1;
         return .submitted;
     }
 
@@ -615,27 +704,21 @@ pub const AudioPump = struct {
         self.resync_prefill_quanta = 0;
         self.next_deadline_tick = 0;
         self.open_retry_attempts = 0;
-        if (self.state == .active) {
-            const sink = self.sink orelse {
-                self.degrade(audio_error_unavailable);
-                return;
-            };
-            const rc = sink.close();
-            if (rc < 0) {
-                self.state = .degraded;
-                self.last_error = rc;
-                return;
+        if (self.sink_open) {
+            if (self.service_operations_cycle == 0) {
+                self.closeSink(true);
+            } else {
+                self.close_pending = true;
             }
-            self.stats.idle_closes +%= 1;
         }
-        if (self.state != .disabled and self.state != .closed) self.state = .ready;
-        self.last_error = 0;
+        if (self.state != .disabled and self.state != .degraded and self.state != .closed) {
+            self.state = .ready;
+            self.last_error = 0;
+        }
     }
 
     fn degrade(self: *AudioPump, error_code: i32) void {
-        if (self.state == .active) {
-            if (self.sink) |sink| _ = sink.close();
-        }
+        if (self.sink_open) self.close_pending = true;
         const discarded = self.queue.available();
         self.queue.clear();
         self.stats.discarded_bytes +%= discarded;
@@ -646,15 +729,38 @@ pub const AudioPump = struct {
         self.last_error = if (error_code < 0) error_code else audio_error_unavailable;
     }
 
+    fn closeSink(self: *AudioPump, idle: bool) void {
+        if (!self.sink_open) {
+            self.close_pending = false;
+            return;
+        }
+        const sink = self.sink orelse {
+            self.sink_open = false;
+            self.close_pending = false;
+            self.state = .degraded;
+            self.last_error = audio_error_unavailable;
+            return;
+        };
+        self.noteServiceOperation();
+        self.stats.close_operations +%= 1;
+        const rc = sink.close();
+        self.sink_open = false;
+        self.close_pending = false;
+        if (rc < 0) {
+            self.state = .degraded;
+            self.last_error = rc;
+            return;
+        }
+        if (idle) self.stats.idle_closes +%= 1;
+    }
+
     fn close(self: *AudioPump) void {
         if (self.state == .closed or self.state == .disabled) return;
-        if (self.state == .active) {
-            if (self.sink) |sink| {
-                const rc = sink.close();
-                if (rc < 0) self.last_error = rc;
-            }
-        }
+        if (self.sink_open) self.closeSink(false);
+        const discarded = self.queue.available();
         self.queue.clear();
+        self.stats.discarded_bytes +%= discarded;
+        self.close_pending = false;
         self.state = .closed;
     }
 };
@@ -731,6 +837,12 @@ pub const Runtime = struct {
     next_yield_tick: u64 = 0,
     started: bool = false,
     resources_closed: bool = false,
+    audio_feedback_submitted_bytes: u64 = 0,
+    audio_feedback_suppressed_bytes: u64 = 0,
+    audio_feedback_discarded_bytes: u64 = 0,
+    audio_feedback_state: AudioState = .disabled,
+    audio_feedback_muted: bool = false,
+    audio_feedback_initialized: bool = false,
     stats: RuntimeStats = .{},
 
     pub fn init(config: Config, monotonic_hz: u32, host_tick: u64, audio: ?AudioOptions) Error!Runtime {
@@ -759,7 +871,7 @@ pub const Runtime = struct {
             .none => {},
             .pause => if (self.state == .running) {
                 self.clock.pause(host_tick);
-                self.audio.reset(host_tick);
+                self.audio.pause(host_tick);
                 self.state = .paused;
                 self.stats.pauses +%= 1;
             },
@@ -797,6 +909,7 @@ pub const Runtime = struct {
 
     pub fn cycle(self: *Runtime, host_tick: u64, guest: GuestDriver, host: HostDriver) CycleResult {
         if (!self.started) self.start(host_tick);
+        self.audio.beginCycle();
         self.stats.cycles +%= 1;
         self.post_present_poll_pending = false;
         var guest_now_ns = self.clock.sync(host_tick);
@@ -845,6 +958,7 @@ pub const Runtime = struct {
         // then advance its own timeline and refill from the current point;
         // stale samples are never submitted first and replayed late.
         if (self.state == .running) self.audio.resyncLate(host_tick);
+        self.deliverAudioFeedback(guest);
 
         const guest_ready = !self.guest_waiting or
             (self.guest_wake_ns != 0 and guest_now_ns >= self.guest_wake_ns);
@@ -874,22 +988,9 @@ pub const Runtime = struct {
             }
         }
 
-        if (self.state == .running) {
-            const audio_fill = self.audio.fill(guest);
-            if (audio_fill < 0) self.fail(audio_fill);
-        }
-        self.audio.pump(host_tick, self.state == .running);
-
-        switch (self.state) {
-            .running => if (self.guest_waiting or self.guest_idle_polling) {
-                self.stats.waiting_cycles +%= 1;
-            } else {
-                self.stats.active_cycles +%= 1;
-            },
-            .paused => self.stats.paused_cycles +%= 1,
-            else => {},
-        }
-
+        // A ready frame is published before any potentially blocking audio
+        // service operation. Audio can therefore delay neither this frame nor
+        // host input handling in the current cycle.
         if (self.present_pending and self.state != .failed and self.state != .closed) {
             self.stats.present_attempts +%= 1;
             const presented = host.present();
@@ -908,6 +1009,26 @@ pub const Runtime = struct {
                 }
                 self.present_pending = false;
             }
+        }
+
+        if (self.state == .running) {
+            const audio_fill = self.audio.fill(guest);
+            if (audio_fill < 0) self.fail(audio_fill);
+        }
+        self.audio.pump(host_tick, self.state == .running);
+        self.deliverAudioFeedback(guest);
+
+        switch (self.state) {
+            .running => if (self.guest_waiting or self.guest_idle_polling) {
+                self.stats.waiting_cycles +%= 1;
+            } else {
+                self.stats.active_cycles +%= 1;
+            },
+            .paused => {
+                self.stats.paused_cycles +%= 1;
+                self.audio.stats.paused_cycles +%= 1;
+            },
+            else => {},
         }
 
         if (isTerminal(self.state)) return self.finish();
@@ -969,8 +1090,41 @@ pub const Runtime = struct {
         return .{ .finished = .{ .state = self.state, .exit_code = self.exit_code } };
     }
 
+    fn deliverAudioFeedback(self: *Runtime, guest: GuestDriver) void {
+        const accepted = self.audio.stats.submitted_bytes -| self.audio_feedback_submitted_bytes;
+        const suppressed = self.audio.stats.suppressed_bytes -| self.audio_feedback_suppressed_bytes;
+        const discarded = self.audio.stats.discarded_bytes -| self.audio_feedback_discarded_bytes;
+        const state_changed = !self.audio_feedback_initialized or
+            self.audio_feedback_state != self.audio.state or
+            self.audio_feedback_muted != self.audio.muted;
+        const unavailable_wait = self.guest_waiting and (self.audio.muted or switch (self.audio.state) {
+            .disabled, .degraded, .closed => true,
+            .ready, .active => false,
+        });
+        if (!state_changed and accepted == 0 and suppressed == 0 and discarded == 0 and !unavailable_wait) return;
+
+        self.audio_feedback_submitted_bytes = self.audio.stats.submitted_bytes;
+        self.audio_feedback_suppressed_bytes = self.audio.stats.suppressed_bytes;
+        self.audio_feedback_discarded_bytes = self.audio.stats.discarded_bytes;
+        self.audio_feedback_state = self.audio.state;
+        self.audio_feedback_muted = self.audio.muted;
+        self.audio_feedback_initialized = true;
+        if (guest.audioFeedback(.{
+            .state = self.audio.state,
+            .muted = self.audio.muted,
+            .accepted_bytes = accepted,
+            .suppressed_bytes = suppressed,
+            .discarded_bytes = discarded,
+            .playback_frames = null,
+        })) {
+            self.guest_wake_ns = 0;
+            self.guest_waiting = false;
+            self.guest_idle_polling = false;
+        }
+    }
+
     fn nextWait(self: *const Runtime, host_tick: u64) u64 {
-        if (self.host_backlog_pending or self.post_present_poll_pending) return 0;
+        if (self.host_backlog_pending or self.post_present_poll_pending or self.audio.close_pending or self.audio.render_progress_pending) return 0;
         var wait = self.config.max_wait_ticks;
         if (self.state == .running) {
             if (self.guest_idle_polling) {
@@ -1074,11 +1228,33 @@ const FakeGuest = struct {
     reset_result: i32 = 0,
     zero_progress: bool = false,
     event_waiting: bool = false,
+    feedback_calls: u32 = 0,
+    feedback_accepted_bytes: u64 = 0,
+    feedback_suppressed_bytes: u64 = 0,
+    feedback_discarded_bytes: u64 = 0,
     last_budget: u32 = 0,
     last_guest_ns: u64 = 0,
 
     fn driver(self: *FakeGuest) GuestDriver {
-        return .{ .context = self, .step_fn = fakeGuestStep, .reset_fn = fakeGuestReset, .render_audio_fn = fakeGuestAudio };
+        return .{
+            .context = self,
+            .step_fn = fakeGuestStep,
+            .reset_fn = fakeGuestReset,
+            .render_audio_fn = fakeGuestAudio,
+            .audio_feedback_fn = fakeGuestAudioFeedback,
+        };
+    }
+};
+
+const OperationOrder = struct {
+    next: u32 = 0,
+    present: u32 = 0,
+    open: u32 = 0,
+    write: u32 = 0,
+
+    fn mark(self: *OperationOrder) u32 {
+        self.next += 1;
+        return self.next;
     }
 };
 
@@ -1093,6 +1269,7 @@ const FakeHost = struct {
     handled_left: u32 = 0,
     waits: u32 = 0,
     wait_result: i32 = 1,
+    order: ?*OperationOrder = null,
 
     fn driver(self: *FakeHost) HostDriver {
         return .{ .context = self, .poll_fn = fakeHostPoll, .present_fn = fakeHostPresent, .wait_fn = fakeHostWait };
@@ -1116,6 +1293,7 @@ const FakeSink = struct {
     volumes: u32 = 0,
     bytes: u64 = 0,
     all_zero: bool = true,
+    order: ?*OperationOrder = null,
 
     fn sink(self: *FakeSink) AudioSink {
         return .{ .context = self, .open_fn = fakeSinkOpen, .write_fn = fakeSinkWrite, .volume_fn = fakeSinkVolume, .close_fn = fakeSinkClose };
@@ -1149,6 +1327,15 @@ fn fakeGuestAudio(context: *anyopaque, out: []u8) i32 {
     return @intCast(out.len);
 }
 
+fn fakeGuestAudioFeedback(context: *anyopaque, feedback: AudioFeedback) bool {
+    const self: *FakeGuest = @ptrCast(@alignCast(context));
+    self.feedback_calls += 1;
+    self.feedback_accepted_bytes +%= feedback.accepted_bytes;
+    self.feedback_suppressed_bytes +%= feedback.suppressed_bytes;
+    self.feedback_discarded_bytes +%= feedback.discarded_bytes;
+    return false;
+}
+
 fn fakeHostPoll(context: *anyopaque) HostPollResult {
     const self: *FakeHost = @ptrCast(@alignCast(context));
     if (self.ignored_left != 0) {
@@ -1168,6 +1355,7 @@ fn fakeHostPoll(context: *anyopaque) HostPollResult {
 fn fakeHostPresent(context: *anyopaque) i32 {
     const self: *FakeHost = @ptrCast(@alignCast(context));
     self.presents += 1;
+    if (self.order) |order| order.present = order.mark();
     return if (self.present_error < 0) self.present_error else self.present_result;
 }
 
@@ -1180,6 +1368,7 @@ fn fakeHostWait(context: *anyopaque, _: u64) i32 {
 fn fakeSinkOpen(context: *anyopaque, _: AudioConfig) i32 {
     const self: *FakeSink = @ptrCast(@alignCast(context));
     self.opens += 1;
+    if (self.order) |order| order.open = order.mark();
     if (self.open_failures_remaining != 0) {
         self.open_failures_remaining -= 1;
         return self.open_failure_result;
@@ -1189,6 +1378,7 @@ fn fakeSinkOpen(context: *anyopaque, _: AudioConfig) i32 {
 
 fn fakeSinkWrite(context: *anyopaque, data: []const u8) i32 {
     const self: *FakeSink = @ptrCast(@alignCast(context));
+    if (self.order) |order| order.write = order.mark();
     if (self.writes >= self.busy_after) return abi.service_api_result_busy;
     if (self.writes >= self.write_error_after) return -77;
     self.writes += 1;
@@ -1279,9 +1469,10 @@ test "runtime bounds guest slices and applies pause resume reset and close betwe
     host.push(.close);
     const closed = runtime.cycle(7, guest.driver(), host.driver());
     try std.testing.expectEqual(LifecycleState.closed, closed.finished.state);
-    try std.testing.expectEqual(@as(u32, 3), sink.closes);
-    try std.testing.expectEqual(@as(u64, 3), runtime.audio.stats.lazy_opens);
+    try std.testing.expectEqual(@as(u32, 2), sink.closes);
+    try std.testing.expectEqual(@as(u64, 2), runtime.audio.stats.lazy_opens);
     try std.testing.expectEqual(@as(u64, 2), runtime.audio.stats.idle_closes);
+    try std.testing.expectEqual(@as(u16, 1), runtime.audio.stats.maximum_service_operations_per_cycle);
     try std.testing.expectEqual(@as(u64, 3), runtime.stats.slices);
     try std.testing.expectEqual(@as(u64, 3 * 123), runtime.stats.requested_operations);
     try std.testing.expectEqual(@as(u64, 3 * 123), runtime.stats.executed_operations);
@@ -1357,119 +1548,160 @@ test "runtime reports hidden unchanged and dropped presentation outcomes separat
     try std.testing.expectEqual(@as(u64, 3), runtime.stats.skipped_presents);
 }
 
-test "silent PCM is suppressed and degraded audio leaves guest time bounded without another deadline" {
-    var queue_a: [3840]u8 = undefined;
-    var scratch_a: [1920]u8 = undefined;
-    var sink_a = FakeSink{};
-    var runtime_a = try Runtime.init(.{}, 100, 0, .{ .queue_storage = queue_a[0..], .scratch = scratch_a[0..], .sink = sink_a.sink() });
-    var guest_a = FakeGuest{ .audio_byte = 0 };
-    var host_a = FakeHost{};
-    _ = runtime_a.cycle(0, guest_a.driver(), host_a.driver());
-    _ = runtime_a.cycle(1, guest_a.driver(), host_a.driver());
-    try std.testing.expectEqual(@as(u64, 3840), runtime_a.audio.stats.suppressed_bytes);
-    try std.testing.expectEqual(@as(u64, 2), runtime_a.audio.stats.idle_quanta);
-    try std.testing.expectEqual(@as(u32, 0), sink_a.opens);
-    try std.testing.expectEqual(@as(u32, 0), sink_a.writes);
-    runtime_a.request(.mute, 1, guest_a.driver());
-    try std.testing.expect(runtime_a.audio.muted);
-    try std.testing.expectEqual(@as(u32, 0), sink_a.volumes);
-
-    var queue_s: [3840]u8 = undefined;
-    var scratch_s: [1920]u8 = undefined;
-    var sink_s = FakeSink{};
-    var runtime_s = try Runtime.init(.{}, 100, 0, .{ .queue_storage = queue_s[0..], .scratch = scratch_s[0..], .sink = sink_s.sink() });
-    var guest_s = FakeGuest{ .audio_byte = 0x22 };
-    var host_s = FakeHost{};
-    _ = runtime_s.cycle(0, guest_s.driver(), host_s.driver());
-    try std.testing.expectEqual(AudioState.active, runtime_s.audio.state);
-    guest_s.audio_byte = 0;
-    _ = runtime_s.cycle(1, guest_s.driver(), host_s.driver());
-    try std.testing.expectEqual(AudioState.ready, runtime_s.audio.state);
-    try std.testing.expectEqual(@as(u32, 1), sink_s.opens);
-    try std.testing.expectEqual(@as(u32, 1), sink_s.closes);
-    try std.testing.expectEqual(@as(u32, 2), sink_s.writes);
-    try std.testing.expectEqual(@as(u64, 1), runtime_s.audio.stats.idle_closes);
-
-    var queue_b: [3840]u8 = undefined;
-    var scratch_b: [1920]u8 = undefined;
-    var missing = FakeSink{ .open_result = -55 };
-    var runtime_b = try Runtime.init(.{}, 100, 0, .{ .queue_storage = queue_b[0..], .scratch = scratch_b[0..], .sink = missing.sink() });
-    var guest_b = FakeGuest{};
-    var host_b = FakeHost{};
-    const missing_first = runtime_b.cycle(0, guest_b.driver(), host_b.driver());
-    const missing_second = runtime_b.cycle(1, guest_b.driver(), host_b.driver());
-    try std.testing.expectEqual(AudioState.degraded, runtime_b.audio.state);
-    try std.testing.expectEqual(@as(i32, -55), runtime_b.audio.last_error);
-    try std.testing.expectEqual(LifecycleState.running, runtime_b.state);
-    try std.testing.expectEqual(@as(u64, 0), missing_first.wait);
-    try std.testing.expectEqual(@as(u64, 0), missing_second.wait);
-    try std.testing.expectEqual(@as(u32, 2), guest_b.audio_renders);
-    try std.testing.expectEqual(@as(u64, 3840), runtime_b.audio.stats.generated_bytes);
-    try std.testing.expectEqual(@as(u64, 3840), runtime_b.audio.stats.discarded_bytes);
-    const missing_late = runtime_b.cycle(50, guest_b.driver(), host_b.driver());
-    try std.testing.expectEqual(@as(u64, 0), missing_late.wait);
-    try std.testing.expectEqual(@as(u32, 2), guest_b.audio_renders);
-
-    var queue_c: [3840]u8 = undefined;
-    var scratch_c: [1920]u8 = undefined;
-    var sink_c = FakeSink{};
-    var runtime_c = try Runtime.init(.{}, 100, 0, .{ .queue_storage = queue_c[0..], .scratch = scratch_c[0..], .sink = sink_c.sink() });
-    var guest_c = FakeGuest{ .audio_byte = 0x33 };
-    var host_c = FakeHost{};
-    _ = runtime_c.cycle(0, guest_c.driver(), host_c.driver());
-    try std.testing.expectEqual(@as(usize, 0), runtime_c.audio.queue.available());
-    _ = runtime_c.cycle(1, guest_c.driver(), host_c.driver());
-    try std.testing.expectEqual(@as(usize, 1920), runtime_c.audio.queue.available());
-    _ = runtime_c.cycle(50, guest_c.driver(), host_c.driver());
-    try std.testing.expectEqual(@as(u64, 1), runtime_c.audio.stats.late_resyncs);
-    try std.testing.expectEqual(@as(u64, 1920), runtime_c.audio.stats.discarded_bytes);
-    try std.testing.expectEqual(@as(u64, 9600), runtime_c.audio.stats.submitted_bytes);
-    try std.testing.expectEqual(@as(usize, 0), runtime_c.audio.queue.available());
-    try std.testing.expectEqual(@as(u32, 5), sink_c.writes);
-
-    var queue_d: [3840]u8 = undefined;
-    var scratch_d: [1920]u8 = undefined;
-    var sink_d = FakeSink{ .busy_after = 1 };
-    var runtime_d = try Runtime.init(.{}, 1000, 0, .{
-        .queue_storage = queue_d[0..],
-        .scratch = scratch_d[0..],
-        .sink = sink_d.sink(),
+test "silent paused muted and active audio paths have separate bounded counters" {
+    var silent_queue: [3840]u8 = undefined;
+    var silent_scratch: [1920]u8 = undefined;
+    var silent_sink = FakeSink{};
+    var silent_runtime = try Runtime.init(.{}, 1000, 0, .{
+        .queue_storage = silent_queue[0..],
+        .scratch = silent_scratch[0..],
+        .sink = silent_sink.sink(),
     });
-    var guest_d = FakeGuest{ .audio_byte = 0x44 };
-    var host_d = FakeHost{};
-    _ = runtime_d.cycle(0, guest_d.driver(), host_d.driver());
-    try std.testing.expectEqual(@as(u32, 1), sink_d.writes);
-    try std.testing.expectEqual(@as(u64, 1), runtime_d.audio.stats.busy_writes);
-    _ = runtime_d.cycle(1, guest_d.driver(), host_d.driver());
-    try std.testing.expectEqual(AudioState.active, runtime_d.audio.state);
-    try std.testing.expectEqual(@as(usize, 3840), runtime_d.audio.queue.available());
-    try std.testing.expectEqual(@as(u64, 1), runtime_d.audio.stats.busy_writes);
-    sink_d.busy_after = 2;
-    _ = runtime_d.cycle(10, guest_d.driver(), host_d.driver());
-    try std.testing.expectEqual(@as(u32, 2), sink_d.writes);
-    try std.testing.expectEqual(@as(usize, 1920), runtime_d.audio.queue.available());
-    try std.testing.expectEqual(@as(u64, 1), runtime_d.audio.stats.busy_writes);
+    var silent_guest = FakeGuest{ .audio_byte = 0 };
+    var silent_host = FakeHost{};
+    _ = silent_runtime.cycle(0, silent_guest.driver(), silent_host.driver());
+    _ = silent_runtime.cycle(1, silent_guest.driver(), silent_host.driver());
+    try std.testing.expectEqual(@as(u64, 3840), silent_runtime.audio.stats.suppressed_bytes);
+    try std.testing.expectEqual(@as(u64, 2), silent_runtime.audio.stats.silent_quanta);
+    try std.testing.expectEqual(@as(u64, 3840), silent_guest.feedback_suppressed_bytes);
+    try std.testing.expectEqual(@as(u32, 0), silent_sink.opens);
+    try std.testing.expectEqual(@as(u32, 0), silent_sink.writes);
 
-    var queue_e: [3840]u8 = undefined;
-    var scratch_e: [1920]u8 = undefined;
-    var sink_e = FakeSink{ .open_failure_result = audio_error_timeout, .open_failures_remaining = 1 };
-    var runtime_e = try Runtime.init(.{}, 1000, 0, .{
-        .queue_storage = queue_e[0..],
-        .scratch = scratch_e[0..],
-        .sink = sink_e.sink(),
+    var active_queue: [3840]u8 = undefined;
+    var active_scratch: [1920]u8 = undefined;
+    var operation_order = OperationOrder{};
+    var active_sink = FakeSink{ .order = &operation_order };
+    var active_runtime = try Runtime.init(.{}, 1000, 0, .{
+        .queue_storage = active_queue[0..],
+        .scratch = active_scratch[0..],
+        .sink = active_sink.sink(),
     });
-    var guest_e = FakeGuest{ .audio_byte = 0x55 };
-    var host_e = FakeHost{};
-    _ = runtime_e.cycle(0, guest_e.driver(), host_e.driver());
-    try std.testing.expectEqual(AudioState.ready, runtime_e.audio.state);
-    try std.testing.expectEqual(@as(u64, 1), runtime_e.audio.stats.open_retries);
-    try std.testing.expectEqual(@as(u32, 1), sink_e.opens);
-    _ = runtime_e.cycle(10, guest_e.driver(), host_e.driver());
-    try std.testing.expectEqual(@as(u32, 1), sink_e.opens);
-    _ = runtime_e.cycle(50, guest_e.driver(), host_e.driver());
-    try std.testing.expectEqual(AudioState.active, runtime_e.audio.state);
-    try std.testing.expectEqual(@as(u32, 2), sink_e.opens);
-    try std.testing.expectEqual(@as(u32, 2), sink_e.writes);
+    var active_guest = FakeGuest{ .audio_byte = 0x22 };
+    var active_host = FakeHost{ .order = &operation_order };
+    _ = active_runtime.cycle(1, active_guest.driver(), active_host.driver());
+    try std.testing.expectEqual(@as(u32, 1), active_sink.opens);
+    try std.testing.expectEqual(@as(u32, 0), active_sink.writes);
+    try std.testing.expectEqual(@as(usize, 3840), active_runtime.audio.queue.available());
+    try std.testing.expect(operation_order.present < operation_order.open);
+    operation_order = .{};
+    active_runtime.present_pending = true;
+    _ = active_runtime.cycle(1, active_guest.driver(), active_host.driver());
+    try std.testing.expectEqual(@as(u32, 1), active_sink.writes);
+    try std.testing.expectEqual(@as(u64, 1920), active_guest.feedback_accepted_bytes);
+    try std.testing.expectEqual(@as(u64, 1), active_runtime.audio.stats.active_quanta);
+    try std.testing.expect(operation_order.present < operation_order.write);
+
+    active_host.push(.pause);
+    _ = active_runtime.cycle(2, active_guest.driver(), active_host.driver());
+    try std.testing.expectEqual(LifecycleState.paused, active_runtime.state);
+    try std.testing.expectEqual(@as(u64, 1920), active_runtime.audio.stats.paused_bytes);
+    try std.testing.expectEqual(@as(u64, 1), active_runtime.audio.stats.paused_cycles);
+    try std.testing.expectEqual(@as(u32, 1), active_sink.closes);
+
+    active_host.push(.resume_running);
+    _ = active_runtime.cycle(3, active_guest.driver(), active_host.driver());
+    try std.testing.expectEqual(@as(u32, 2), active_sink.opens);
+    active_host.push(.mute);
+    _ = active_runtime.cycle(4, active_guest.driver(), active_host.driver());
+    try std.testing.expectEqual(@as(u64, 3840), active_runtime.audio.stats.muted_bytes);
+    try std.testing.expectEqual(@as(u64, 1), active_runtime.audio.stats.muted_cycles);
+    try std.testing.expectEqual(@as(u32, 2), active_sink.closes);
+    try std.testing.expectEqual(@as(u16, 1), active_runtime.audio.stats.maximum_service_operations_per_cycle);
+}
+
+test "eight silent runtimes open no service sessions" {
+    var queue_storage: [8][3840]u8 = undefined;
+    var scratch_storage: [8][1920]u8 = undefined;
+    var sinks: [8]FakeSink = undefined;
+    var guests: [8]FakeGuest = undefined;
+    var hosts: [8]FakeHost = undefined;
+    var runtimes: [8]Runtime = undefined;
+    for (0..8) |index| {
+        sinks[index] = .{};
+        guests[index] = .{ .audio_byte = 0 };
+        hosts[index] = .{};
+        runtimes[index] = try Runtime.init(.{}, 1000, 0, .{
+            .queue_storage = queue_storage[index][0..],
+            .scratch = scratch_storage[index][0..],
+            .sink = sinks[index].sink(),
+        });
+        _ = runtimes[index].cycle(0, guests[index].driver(), hosts[index].driver());
+        _ = runtimes[index].cycle(1, guests[index].driver(), hosts[index].driver());
+    }
+    for (0..8) |index| {
+        try std.testing.expectEqual(@as(u32, 0), sinks[index].opens);
+        try std.testing.expectEqual(@as(u32, 0), sinks[index].writes);
+        try std.testing.expectEqual(@as(u64, 3840), runtimes[index].audio.stats.suppressed_bytes);
+        runtimes[index].shutdown();
+    }
+}
+
+test "open prefill busy and resync use at most one service operation per cycle" {
+    var busy_queue: [3840]u8 = undefined;
+    var busy_scratch: [1920]u8 = undefined;
+    var busy_sink = FakeSink{ .busy_after = 0 };
+    var busy_runtime = try Runtime.init(.{}, 1000, 0, .{
+        .queue_storage = busy_queue[0..],
+        .scratch = busy_scratch[0..],
+        .sink = busy_sink.sink(),
+    });
+    var busy_guest = FakeGuest{ .audio_byte = 0x44 };
+    var busy_host = FakeHost{};
+    _ = busy_runtime.cycle(1, busy_guest.driver(), busy_host.driver());
+    try std.testing.expectEqual(@as(u32, 1), busy_sink.opens);
+    try std.testing.expectEqual(@as(u32, 0), busy_sink.writes);
+    _ = busy_runtime.cycle(1, busy_guest.driver(), busy_host.driver());
+    try std.testing.expectEqual(@as(u64, 1), busy_runtime.audio.stats.busy_writes);
+    try std.testing.expectEqual(@as(usize, 3840), busy_runtime.audio.queue.available());
+    _ = busy_runtime.cycle(10, busy_guest.driver(), busy_host.driver());
+    try std.testing.expectEqual(@as(u64, 1), busy_runtime.audio.stats.busy_writes);
+    _ = busy_runtime.cycle(11, busy_guest.driver(), busy_host.driver());
+    try std.testing.expectEqual(@as(u64, 2), busy_runtime.audio.stats.busy_writes);
+    busy_sink.busy_after = std.math.maxInt(u32);
+    _ = busy_runtime.cycle(21, busy_guest.driver(), busy_host.driver());
+    try std.testing.expectEqual(@as(u32, 1), busy_sink.writes);
+    try std.testing.expectEqual(@as(usize, 1920), busy_runtime.audio.queue.available());
+    try std.testing.expectEqual(@as(u16, 1), busy_runtime.audio.stats.maximum_service_operations_per_cycle);
+
+    var resync_queue: [3840]u8 = undefined;
+    var resync_scratch: [1920]u8 = undefined;
+    var resync_sink = FakeSink{};
+    var resync_runtime = try Runtime.init(.{}, 1000, 0, .{
+        .queue_storage = resync_queue[0..],
+        .scratch = resync_scratch[0..],
+        .sink = resync_sink.sink(),
+    });
+    var resync_guest = FakeGuest{ .audio_byte = 0x33 };
+    var resync_host = FakeHost{};
+    _ = resync_runtime.cycle(1, resync_guest.driver(), resync_host.driver());
+    _ = resync_runtime.cycle(1, resync_guest.driver(), resync_host.driver());
+    try std.testing.expectEqual(@as(u32, 1), resync_sink.writes);
+    _ = resync_runtime.cycle(25, resync_guest.driver(), resync_host.driver());
+    try std.testing.expectEqual(@as(u64, 1), resync_runtime.audio.stats.late_resyncs);
+    try std.testing.expectEqual(@as(u64, 1920), resync_runtime.audio.stats.discarded_bytes);
+    try std.testing.expectEqual(@as(u32, 2), resync_sink.writes);
+    try std.testing.expectEqual(@as(u16, 1), resync_runtime.audio.stats.maximum_service_operations_per_cycle);
+
+    var retry_queue: [3840]u8 = undefined;
+    var retry_scratch: [1920]u8 = undefined;
+    var retry_sink = FakeSink{ .open_failure_result = audio_error_timeout, .open_failures_remaining = 1 };
+    var retry_runtime = try Runtime.init(.{}, 1000, 0, .{
+        .queue_storage = retry_queue[0..],
+        .scratch = retry_scratch[0..],
+        .sink = retry_sink.sink(),
+    });
+    var retry_guest = FakeGuest{ .audio_byte = 0x55 };
+    var retry_host = FakeHost{};
+    _ = retry_runtime.cycle(0, retry_guest.driver(), retry_host.driver());
+    try std.testing.expectEqual(@as(u32, 1), retry_sink.opens);
+    _ = retry_runtime.cycle(49, retry_guest.driver(), retry_host.driver());
+    try std.testing.expectEqual(@as(u32, 1), retry_sink.opens);
+    _ = retry_runtime.cycle(50, retry_guest.driver(), retry_host.driver());
+    try std.testing.expectEqual(@as(u32, 2), retry_sink.opens);
+    try std.testing.expectEqual(@as(u32, 0), retry_sink.writes);
+    _ = retry_runtime.cycle(50, retry_guest.driver(), retry_host.driver());
+    try std.testing.expectEqual(@as(u32, 1), retry_sink.writes);
+    try std.testing.expectEqual(@as(u16, 1), retry_runtime.audio.stats.maximum_service_operations_per_cycle);
 }
 
 test "guest completion failure and reset failure converge on terminal cleanup" {
@@ -1543,7 +1775,9 @@ test "two runtimes isolate clock queue host state and an audio failure" {
     try std.testing.expect(runtime_a.clock.guest_ns < runtime_b.clock.guest_ns);
     try std.testing.expectEqual(@as(u32, 1), guest_a.steps);
     try std.testing.expectEqual(@as(u32, 2), guest_b.steps);
-    try std.testing.expectEqual(@as(u64, 3840), runtime_a.audio.stats.submitted_bytes);
+    try std.testing.expectEqual(@as(u64, 0), runtime_a.audio.stats.submitted_bytes);
+    try std.testing.expectEqual(@as(u64, 3840), runtime_a.audio.stats.paused_bytes);
+    try std.testing.expectEqual(@as(u64, 3840), runtime_a.audio.stats.discarded_bytes);
     try std.testing.expectEqual(@as(u64, 0), runtime_b.audio.stats.submitted_bytes);
     try std.testing.expectEqual(@as(u64, 3840), runtime_b.audio.stats.discarded_bytes);
     try std.testing.expectEqual(@as(usize, 0), runtime_a.audio.queue.available());

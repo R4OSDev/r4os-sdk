@@ -183,8 +183,8 @@ Eingabeschicht.
 
 `r4os.subsystem_runtime` ist die dazu passende, ebenfalls einkompilierte
 Userland-Laufzeitschicht. Ein Gast stellt drei Callbacks fuer eine begrenzte
-Ausfuehrungsscheibe, Reset und PCM-Erzeugung bereit; der Host stellt Poll und
-Present bereit. Pro Zyklus werden hoechstens die konfigurierte Anzahl
+Ausfuehrungsscheibe, Reset und PCM-Erzeugung sowie optional einen vierten fuer
+Audiofortschritt bereit; der Host stellt Poll und Present bereit. Pro Zyklus werden hoechstens die konfigurierte Anzahl
 Ereignisse und genau eine Gast-Scheibe mit festem Operationsbudget
 verarbeitet. Danach wird entweder bis zum naechsten echten Termin geschlafen
 oder nach produktiver Gastarbeit kooperativ abgegeben. Meldet ein laufender
@@ -206,8 +206,8 @@ nicht Bestandteil dieses Vertrags.
 
 Die optionale Audio-Pumpe verwendet caller-eigene Queue- und Scratchspeicher.
 Der definierte Standard ist 48 kHz, Stereo, signed 16-bit little endian mit
-480 Frames je 10-ms-Quantum, zwei Zielquanten und hoechstens zwei
-Nachholquanten pro Zyklus. Der Sink wird erst beim ersten Quantum mit
+480 Frames je 10-ms-Quantum, zwei Zielquanten und einem begrenzten
+Catch-up-Fenster. Der Sink wird erst beim ersten Quantum mit
 mindestens einem von null verschiedenen Samplebyte geoeffnet. Leere oder
 vollstaendig stille Renderquanten werden gezaehlt, aber weder als voller
 Scratchblock hergestellt noch geschrieben. Pause, Mute, Reset und der erste
@@ -220,6 +220,16 @@ Vorfuellzustand und Audiodeadline genau einmal entfernt; danach finden weder
 weitere Gast-Audiorenders noch Scratch-Einreichungen statt. Gastzeit, Video
 und Warteverhalten laufen weiterhin getaktet und nicht als Busy-Wait oder
 ungebremste Fehlerschleife.
+
+Eine anstehende Bildpraesentation erfolgt vor dem Audiopfad. Open,
+Vorfuell-/Regelwrite und ein gegebenenfalls aufgeschobenes Close sind auf
+hoechstens einen Serviceaufruf je Hostzyklus begrenzt; Vorfuellung und Resync
+laufen deshalb ueber frische Zyklen weiter. Busy behaelt das gleiche PCM und
+verwendet eine unabhaengige 10-ms-Wiederholungsfrist. Der optionale
+Audiofeedback-Callback meldet angenommene, als Stille unterdrueckte und
+explizit verworfene Quellbytes. Er meldet keinen erfundenen
+Hardware-Ausspielstand: der aktuelle Plattformvertrag besitzt keinen
+streambezogenen Playback-Cursor.
 
 `r4os.app_audio.WriteCursor` bewertet den frameausgerichteten Fortschritt
 eines Clientblocks ueber vollstaendige, Busy-, Timeout- und Fehlerantworten.

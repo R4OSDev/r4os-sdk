@@ -311,7 +311,7 @@ fn runRuntimeSelfTest(sys: *r4os.r4sys.Context, host: *host_api.Host, audio: ?r4
     if (runtime.stats.sleeps == 0) return runtimeSelfTestFail(sys, "time-pacing-sleeps", 119);
     if (runtime.clock.guest_ns == 0) return runtimeSelfTestFail(sys, "time-pacing-clock", 119);
     if (runtime.audio.last_error != 0 or runtime.audio.stats.generated_bytes == 0 or runtime.audio.stats.submitted_bytes == 0) return runtimeSelfTestFail(sys, "audio-progress", 120);
-    if (runtime.audio.stats.muted_bytes != 0 or runtime.audio.muted or runtime.audio.stats.idle_closes == 0) return runtimeSelfTestFail(sys, "audio-idle", 121);
+    if (runtime.audio.stats.muted_bytes == 0 or runtime.audio.muted or runtime.audio.stats.idle_closes == 0) return runtimeSelfTestFail(sys, "audio-idle", 121);
     if (runtime.stats.presents < 4 or runtime_host.phase == .warming or runtime_host.phase == .paused or runtime_host.phase == .resumed or runtime_host.phase == .reset or runtime_host.phase == .muted) return runtimeSelfTestFail(sys, "host-progress", 122);
 
     sys.println("SUBSYSTEM runtime selftest: OK slices=bounded time=monotonic audio=s16le-buffered lifecycle=pause+resume+reset+complete+close resources=closed");

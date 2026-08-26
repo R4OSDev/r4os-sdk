@@ -11,6 +11,10 @@ guest time, lifecycle control, paced frames, and buffered S16LE audio through
 the regular app audio facade. Audio streams are materialized on the first
 non-silent quantum; silence, pause, mute, and reset submit no full zero PCM
 payload and close an active sink once without affecting guest time or video.
+Pending video is published before audio work, and each host cycle performs at
+most one open, write, or close service operation. Optional source-frame
+feedback distinguishes accepted, suppressed, and discarded PCM while leaving
+hardware playback explicitly unknown.
 Runnable slices with completed operations yield cooperatively; a progress
 result with zero operations and no deadline waits one bounded host tick so an
 idle guest cannot turn into an active scheduler scan loop.
