@@ -70,6 +70,12 @@ The browser WebRuntime allocates its large JavaScript realm only when the
 first script or module needs it and releases the complete realm on document
 abort, replacement, or deinitialization.
 
+Typed file and registry paths initialize only their canonical bytes and the
+required trailing zero. File normalization keeps its 160 rollback positions
+as 16-bit offsets, for a fixed 640-byte temporary instead of two native-word
+arrays; all public length, UTF-8, device-name, and normalization semantics are
+unchanged in the Zig and C facades.
+
 ## Dependency mapping
 
 `Settings.R4S` maps the local Contract and workspace paths. Relative and

@@ -37,6 +37,12 @@ Aktuell verwenden die SDK-Buildstarter `CONTRACT_ROOT` und `ZIG_ROOT`. Die
 weiteren Eintraege bilden bereits die gemeinsamen Komponentenwurzeln fuer
 kommende Werkzeuge ab.
 
+Die typisierten Datei- und Registrypfade initialisieren nur noch ihre
+kanonischen Bytes samt abschliessender Null. Die 160 Ruecksprungpositionen der
+Dateinormalisierung sind in Zig und C als 16-Bit-Offsets abgelegt und belegen
+zusammen fest 640 Byte statt zweier nativer Wortarrays. Laengen-, UTF-8-,
+Geraetenamen- und Normalisierungsvertrag bleiben unveraendert.
+
 Build
 -----
 

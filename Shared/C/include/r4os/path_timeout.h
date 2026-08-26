@@ -114,8 +114,8 @@ static inline int r4_path_normalize(const uint8_t *input, size_t len, int requir
     int absolute = len >= 3u && r4_path_alpha(input[0]) && input[1] == ':' && r4_path_separator(input[2]);
     if ((required_kind == 1 && !absolute) || (required_kind == 0 && absolute)) return R4_PATH_WRONG_KIND;
     if (!absolute && r4_path_separator(input[0])) return R4_PATH_WRONG_KIND;
-    r4_contract_zero(out, R4OS_FILE_PATH_MAX_BYTES + 1u);
-    size_t pos = 0u, index = 0u, starts[160], char_starts[160], count = 0u;
+    size_t pos = 0u, index = 0u, count = 0u;
+    uint16_t starts[160], char_starts[160];
     size_t chars = absolute ? 3u : 0u;
     if (absolute) { out[0] = r4_ascii_upper(input[0]); out[1] = ':'; out[2] = '\\'; pos = 3u; index = 3u; }
     while (index < len) {
@@ -128,8 +128,8 @@ static inline int r4_path_normalize(const uint8_t *input, size_t len, int requir
         if (segment == 2u && input[start] == '.' && input[start + 1u] == '.') {
             if (count == 0u) return R4_PATH_ROOT_TRAVERSAL;
             --count;
-            pos = starts[count];
-            chars = char_starts[count];
+            pos = (size_t)starts[count];
+            chars = (size_t)char_starts[count];
             if (absolute && pos == 2u) pos = 3u;
             if (absolute && chars < 3u) chars = 3u;
             continue;
@@ -142,8 +142,8 @@ static inline int r4_path_normalize(const uint8_t *input, size_t len, int requir
         size_t before = pos;
         size_t before_chars = chars;
         if ((absolute && pos > 3u) || (!absolute && pos > 0u)) { out[pos++] = '\\'; ++chars; }
-        starts[count] = before;
-        char_starts[count] = before_chars;
+        starts[count] = (uint16_t)before;
+        char_starts[count] = (uint16_t)before_chars;
         ++count;
         if (segment > R4OS_FILE_PATH_MAX_BYTES - pos) return R4_PATH_TOO_LONG;
         chars += segment_chars;
@@ -175,7 +175,6 @@ static inline int r4_relative_file_path(const uint8_t *input, size_t len, R4Rela
 static inline int r4_registry_path(const uint8_t *input, size_t len, R4RegistryPath *out) {
     if (input == 0 || out == 0 || len == 0) return R4_PATH_EMPTY;
     if (len > R4OS_REGISTRY_PATH_MAX_BYTES) return R4_PATH_TOO_LONG;
-    r4_contract_zero(out, sizeof(*out));
     size_t pos = 0u; int previous = 0;
     for (size_t i = 0; i < len; ++i) {
         uint8_t byte = input[i];
@@ -255,6 +254,6 @@ static inline R4Deadline r4_deadline_after(R4MonotonicInstant now, R4Duration du
 
 _Static_assert(sizeof(R4Duration) == 8u, "R4Duration size mismatch");
 _Static_assert(sizeof(R4UtcTime) == 16u, "R4UtcTime size mismatch");
+_Static_assert(sizeof(uint16_t) * 160u * 2u == 640u, "path rollback storage mismatch");
 
 #endif
-

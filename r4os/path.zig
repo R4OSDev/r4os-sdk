@@ -22,6 +22,8 @@ pub const registry_path_max: usize = abi.registry_path_max_bytes;
 /// deliberately out of contract.
 pub const file_path_max_chars: usize = abi.file_path_max_chars;
 pub const component_max_chars: usize = abi.path_component_max_chars;
+pub const path_rollback_entries: usize = 160;
+pub const path_rollback_storage_bytes: usize = 2 * path_rollback_entries * @sizeOf(u16);
 
 pub const PathZ = struct {
     ptr: [*:0]const u8,
@@ -38,7 +40,7 @@ pub const FilePath = struct {
     absolute: bool = false,
 
     pub fn parse(input: []const u8) Error!FilePath {
-        var result = FilePath{};
+        var result: FilePath = undefined;
         const normalized = try normalizeFile(input, null, &result.storage);
         result.len = @intCast(normalized.len);
         result.absolute = normalized.absolute;
@@ -59,7 +61,7 @@ pub const AbsoluteFilePath = struct {
     len: u16 = 0,
 
     pub fn parse(input: []const u8) Error!AbsoluteFilePath {
-        var result = AbsoluteFilePath{};
+        var result: AbsoluteFilePath = undefined;
         const normalized = try normalizeFile(input, true, &result.storage);
         result.len = @intCast(normalized.len);
         return result;
@@ -79,7 +81,7 @@ pub const RelativeFilePath = struct {
     len: u16 = 0,
 
     pub fn parse(input: []const u8) Error!RelativeFilePath {
-        var result = RelativeFilePath{};
+        var result: RelativeFilePath = undefined;
         const normalized = try normalizeFile(input, false, &result.storage);
         result.len = @intCast(normalized.len);
         return result;
@@ -101,7 +103,7 @@ pub const RegistryPath = struct {
     pub fn parse(input: []const u8) Error!RegistryPath {
         if (input.len == 0) return Error.Empty;
         if (input.len > registry_path_max) return Error.TooLong;
-        var result = RegistryPath{};
+        var result: RegistryPath = undefined;
         var pos: usize = 0;
         var previous_separator = false;
         for (input) |raw| {
@@ -146,7 +148,6 @@ const Normalized = struct { len: usize, absolute: bool };
 fn normalizeFile(input: []const u8, require_absolute: ?bool, out: *[file_path_max + 1:0]u8) Error!Normalized {
     if (input.len == 0) return Error.Empty;
     if (input.len > file_path_max) return Error.TooLong;
-    @memset(out[0..], 0);
 
     const absolute = input.len >= 3 and isAsciiAlpha(input[0]) and input[1] == ':' and isSeparator(input[2]);
     if (require_absolute) |required| {
@@ -169,8 +170,8 @@ fn normalizeFile(input: []const u8, require_absolute: ?bool, out: *[file_path_ma
     // may use at most file_path_max bytes and file_path_max_chars characters
     // (drive root `X:\` counts three), each component at most component_max
     // bytes and component_max_chars characters.  Nothing truncates.
-    var segment_starts: [160]usize = undefined;
-    var segment_char_starts: [160]usize = undefined;
+    var segment_starts: [path_rollback_entries]u16 = undefined;
+    var segment_char_starts: [path_rollback_entries]u16 = undefined;
     var segment_count: usize = 0;
     var chars: usize = if (absolute) 3 else 0;
     while (index < input.len) {
@@ -201,8 +202,8 @@ fn normalizeFile(input: []const u8, require_absolute: ?bool, out: *[file_path_ma
             pos += 1;
             chars += 1;
         }
-        segment_starts[segment_count] = before;
-        segment_char_starts[segment_count] = before_chars;
+        segment_starts[segment_count] = @intCast(before);
+        segment_char_starts[segment_count] = @intCast(before_chars);
         segment_count += 1;
         if (segment.len > file_path_max - pos) return Error.TooLong;
         chars += segment_chars;
@@ -286,6 +287,15 @@ test "absolute and relative paths normalize separators and dot segments" {
     try std.testing.expectEqualStrings("docs\\README.TXT", relative.bytes());
     try std.testing.expectError(Error.RootTraversal, AbsoluteFilePath.parse("C:\\..\\BOOT.R4S"));
     try std.testing.expectError(Error.RootTraversal, RelativeFilePath.parse("..\\BOOT.R4S"));
+}
+
+test "normalization writes only its canonical prefix and uses compact rollback offsets" {
+    try std.testing.expectEqual(@as(usize, 640), path_rollback_storage_bytes);
+    var storage: [file_path_max + 1:0]u8 = .{0xA5} ** (file_path_max + 1);
+    const normalized = try normalizeFile("C:/TEMP/../CONFIG/VERSION.R4S", true, &storage);
+    try std.testing.expectEqualStrings("C:\\CONFIG\\VERSION.R4S", storage[0..normalized.len]);
+    try std.testing.expectEqual(@as(u8, 0), storage[normalized.len]);
+    try std.testing.expectEqual(@as(u8, 0xA5), storage[normalized.len + 1]);
 }
 
 test "windows-parity character boundaries reject without truncation" {
