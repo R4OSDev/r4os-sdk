@@ -6,6 +6,11 @@ const path_contract = @import("path.zig");
 /// splitting. Unknown option records are deliberately skippable.
 pub const magic = "R4SUBSYS1";
 pub const guest_key = "GUEST";
+/// Optional VM-local BASIC command line. The host maps this record to
+/// COMMAND$ without re-tokenizing or applying shell quoting.
+pub const command_key = "C";
+/// Optional repeatable `NAME=VALUE` record for a guest's initial environment.
+pub const environment_key = "E";
 /// Optional diagnostic records use short wire keys so the canonical DOS
 /// guest path and a complete first-frame timeline still fit in the frozen
 /// 127-byte R4X argument budget. Unknown records remain skippable.
@@ -221,4 +226,19 @@ test "diagnostic launch options remain optional and addressable" {
     try std.testing.expectEqualStrings(trace_mode_headless, (try request.option(trace_mode_key)).?);
     try std.testing.expectEqualStrings("12,34,56", (try request.option(trace_phases_key)).?);
     try std.testing.expect((try request.option("UNKNOWN")) == null);
+}
+
+test "command and repeated environment records remain byte exact" {
+    const options_value = [_]Option{
+        .{ .key = command_key, .value = "  /quiet Mixed Case" },
+        .{ .key = environment_key, .value = "PATH=C:\\R4OS\\SOFTWARE" },
+        .{ .key = environment_key, .value = "MODE=TEST" },
+    };
+    var storage: [max_args_bytes]u8 = undefined;
+    const request = try parse(try encode("C:\\TEMP\\START.BAS", &options_value, storage[0..]));
+    try std.testing.expectEqualStrings("  /quiet Mixed Case", (try request.option(command_key)).?);
+    var iterator = request.options();
+    _ = try iterator.next();
+    try std.testing.expectEqualStrings("PATH=C:\\R4OS\\SOFTWARE", (try iterator.next()).?.value);
+    try std.testing.expectEqualStrings("MODE=TEST", (try iterator.next()).?.value);
 }

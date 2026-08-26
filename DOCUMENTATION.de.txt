@@ -131,6 +131,10 @@ uebersprungen werden. Der Pfad wird validiert, aber nicht normalisiert,
 gequotet oder in Shelltoken zerlegt. Ein Host erhaelt dadurch exakt die
 Pfadbytes, die Explorer aufgeloest hat. Der Vertrag startet oder teilt keine
 Instanz: Jeder Aufruf bleibt ein normaler, eigenstaendiger R4X-Start.
+Die oeffentlichen Optionsschluessel `C` und `E` bezeichnen eine bytegenaue
+VM-lokale Kommandozeile beziehungsweise wiederholbare `NAME=VALUE`-Eintraege
+fuer das initiale Gast-Environment. Ihre Interpretation bleibt Aufgabe des
+betroffenen Subsystemhosts; der gemeinsame Decoder tokenisiert sie nicht.
 
 Ausgehandelte Netzwerkmetadaten seit 0.69.50
 ---------------------------------------------
