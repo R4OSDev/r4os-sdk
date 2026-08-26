@@ -99,6 +99,9 @@ pub const StepResult = struct {
 
 pub const HostPollResult = union(enum) {
     idle,
+    /// A raw host event was consumed intentionally, but it neither changed
+    /// guest-visible state nor warrants waking an event-only guest.
+    ignored,
     handled,
     present,
     command: LifecycleCommand,
@@ -681,6 +684,7 @@ pub const RuntimeStats = struct {
     close_checks: u64 = 0,
     poll_budget_exhaustions: u64 = 0,
     input_events: u64 = 0,
+    ignored_input_events: u64 = 0,
     active_cycles: u64 = 0,
     waiting_cycles: u64 = 0,
     paused_cycles: u64 = 0,
@@ -810,6 +814,7 @@ pub const Runtime = struct {
             self.stats.host_polls +%= 1;
             switch (host.poll()) {
                 .idle => break,
+                .ignored => self.stats.ignored_input_events +%= 1,
                 .handled => {
                     self.stats.input_events +%= 1;
                     self.guest_waiting = false;
@@ -1084,6 +1089,7 @@ const FakeHost = struct {
     presents: u32 = 0,
     present_error: i32 = 0,
     present_result: i32 = host_presented,
+    ignored_left: u32 = 0,
     handled_left: u32 = 0,
     waits: u32 = 0,
     wait_result: i32 = 1,
@@ -1145,6 +1151,10 @@ fn fakeGuestAudio(context: *anyopaque, out: []u8) i32 {
 
 fn fakeHostPoll(context: *anyopaque) HostPollResult {
     const self: *FakeHost = @ptrCast(@alignCast(context));
+    if (self.ignored_left != 0) {
+        self.ignored_left -= 1;
+        return .ignored;
+    }
     if (self.handled_left != 0) {
         self.handled_left -= 1;
         return .handled;
@@ -1307,6 +1317,13 @@ test "event-only guest waits remain blocked until a handled host event" {
     const still_waiting = runtime.cycle(50, guest.driver(), host.driver());
     try std.testing.expectEqual(abi.io_wait_forever, still_waiting.wait);
     try std.testing.expectEqual(@as(u32, 1), guest.steps);
+
+    host.ignored_left = 1;
+    const ignored = runtime.cycle(50, guest.driver(), host.driver());
+    try std.testing.expectEqual(abi.io_wait_forever, ignored.wait);
+    try std.testing.expectEqual(@as(u32, 1), guest.steps);
+    try std.testing.expectEqual(@as(u64, 1), runtime.stats.ignored_input_events);
+    try std.testing.expectEqual(@as(u64, 0), runtime.stats.input_events);
 
     host.handled_left = 1;
     const woken = runtime.cycle(51, guest.driver(), host.driver());

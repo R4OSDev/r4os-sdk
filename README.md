@@ -14,6 +14,10 @@ payload and close an active sink once without affecting guest time or video.
 Runnable slices with completed operations yield cooperatively; a progress
 result with zero operations and no deadline waits one bounded host tick so an
 idle guest cannot turn into an active scheduler scan loop.
+Input policies can preserve the default physical-key-plus-text/pointer model
+or select one printable text event with pointer filtering before mapping.
+Stable raw-event sequences and ticks, filter counters, and an ignored-without-
+wakeup runtime result keep delivery and loss observable without event logs.
 
 ## Service loops
 

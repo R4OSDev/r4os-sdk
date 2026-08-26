@@ -177,7 +177,7 @@ fn runSelfTest(sys: *r4os.r4sys.Context, desk: r4os.r4desk.Context, draw: r4os.r
         return selfTestFail(sys, "stats", 99);
     }
 
-    sys.println("SUBSYSTEM host selftest: OK modes=640x350+320x200+256x224 formats=indexed8+xrgb32 damage=sparse indexed8=abi tiles=bounded input=translated idle=no-frame fps>=20");
+    sys.println("SUBSYSTEM host selftest: OK modes=640x350+320x200+256x224 formats=indexed8+xrgb32 damage=sparse indexed8=abi tiles=bounded input=sequenced+policy-filtered idle=no-frame fps>=20");
     return runRuntimeSelfTest(sys, &host, audio, exit_mode, variant);
 }
 
@@ -662,13 +662,21 @@ fn inputSelfTest() bool {
     const focus = translator.translate(.{ .kind = @intFromEnum(r4os.abi.GuiEventKind.focus_gained), .tick = 1 }, viewport, null) orelse return false;
     if (!focus.focus.focused) return false;
     const key = translator.translate(.{ .kind = @intFromEnum(r4os.abi.GuiEventKind.key_down), .key = 'G', .tick = 2 }, viewport, null) orelse return false;
-    if (key.key_down.code != 'G') return false;
+    if (key.key_down.code != 'G' or key.key_down.sequence != 2) return false;
     const text = translator.takePending() orelse return false;
-    if (text.text.codepoint != 'G') return false;
+    if (text.text.codepoint != 'G' or text.text.sequence != key.key_down.sequence) return false;
     const outside = translator.translate(.{ .kind = @intFromEnum(r4os.abi.GuiEventKind.mouse_move), .x = 1, .y = 1, .tick = 3 }, viewport, null) orelse return false;
     if (outside.mouse.guest != null) return false;
     const inside = translator.translate(.{ .kind = @intFromEnum(r4os.abi.GuiEventKind.mouse_down), .x = viewport.x, .y = viewport.y, .buttons = 1, .tick = 4 }, viewport, null) orelse return false;
     if (inside.mouse.guest == null or inside.mouse.guest.?.x != 0 or inside.mouse.guest.?.y != 0) return false;
+
+    var basic = host_api.InputTranslator.init(.text_only_no_pointer);
+    const basic_text = basic.translate(.{ .kind = @intFromEnum(r4os.abi.GuiEventKind.key_down), .key = 'G', .tick = 10 }, viewport, null) orelse return false;
+    if (basic_text.text.codepoint != 'G' or basic_text.text.sequence != 1 or basic.takePending() != null) return false;
+    if (basic.translate(.{ .kind = @intFromEnum(r4os.abi.GuiEventKind.mouse_move), .x = viewport.x, .y = viewport.y, .tick = 11 }, viewport, null) != null) return false;
+    const basic_enter = basic.translate(.{ .kind = @intFromEnum(r4os.abi.GuiEventKind.key_down), .key = 13, .tick = 12 }, viewport, null) orelse return false;
+    if (basic_enter.key_down.code != 13 or basic_enter.key_down.sequence != 3) return false;
+    if (basic.stats.raw_events != 3 or basic.stats.logical_events != 2 or basic.stats.pointer_ignored != 1 or basic.stats.mouse_mappings != 0) return false;
     return true;
 }
 

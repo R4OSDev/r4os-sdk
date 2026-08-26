@@ -167,11 +167,19 @@ erzwingen einen Vollframe; nach einer Vollbasis und hoechstens 31 Deltas wird
 die Kette durch einen neuen Vollframe verdichtet.
 
 `Host.pollInput` uebersetzt Close, Resize, Fokus, Tastencode, Text und Maus in
-eine gastneutrale Ereignisunion. Mauspositionen werden auf den virtuellen
-Bildschirm zurueckgerechnet; ein Punkt im Letterboxbereich besitzt bewusst
-keine Gastkoordinate. Resize transportiert den neuen Client-Viewport, aendert
-aber nicht die Aufloesung der Surface. Scheduling, Gastzeit und Audio bleiben
-bewusst ausserhalb dieser Video-/Eingabeschicht.
+eine gastneutrale Ereignisunion. Jedes rohe GUI-Ereignis erhaelt dabei eine
+monotone Host-Sequenz; alle daraus entstehenden logischen Ereignisse behalten
+dieselbe Sequenz und den urspruenglichen Tick. Ein deklaratives Eingabeprofil
+kann druckbare Keys genau einmal als Text ausgeben und Mausereignisse vor der
+Koordinatenabbildung verwerfen. Das Standardprofil behaelt die bisherige
+Key-plus-Text- und Maussemantik. Passive Zaehler trennen rohe, logische,
+wartende und gefilterte Ereignisse samt stabilem Filtergrund sowie Mausmoves,
+Mappings, WindowInfo-Aufrufe und Viewportrechnungen. Mauspositionen werden im
+Standardprofil auf den virtuellen Bildschirm zurueckgerechnet; ein Punkt im
+Letterboxbereich besitzt bewusst keine Gastkoordinate. Resize transportiert
+den neuen Client-Viewport, aendert aber nicht die Aufloesung der Surface.
+Scheduling, Gastzeit und Audio bleiben bewusst ausserhalb dieser Video-/
+Eingabeschicht.
 
 `r4os.subsystem_runtime` ist die dazu passende, ebenfalls einkompilierte
 Userland-Laufzeitschicht. Ein Gast stellt drei Callbacks fuer eine begrenzte
@@ -184,7 +192,8 @@ Gast dagegen Fortschritt ohne eine ausgefuehrte Operation und ohne eigene
 Deadline, wird dieses Idle-Polling fuer einen begrenzten Hosttick blockiert.
 `RuntimeStats.zero_progress_waits` trennt diese Faelle von produktiven
 `yields`. Ein Hostereignis kann eine Darstellung anfordern, ohne dafuer einen
-Gastschritt zu erfinden.
+Gastschritt zu erfinden. `HostPollResult.ignored` zaehlt bewusst verworfene
+Rohereignisse getrennt und weckt einen nur auf Eingabe wartenden Gast nicht.
 
 `GuestClock` leitet Nanosekunden aus der monotonen R4SYS-Uhr ab. Pausen
 zaehlen nicht zur Gastzeit, Reset beginnt bei null und `Pacer` liefert

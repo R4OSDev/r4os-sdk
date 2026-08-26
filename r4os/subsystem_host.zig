@@ -516,16 +516,86 @@ pub const MouseAction = enum {
     move,
 };
 
+pub const KeyTextMode = enum {
+    /// Preserve both the physical key event and the derived text event.
+    key_and_text,
+    /// Emit printable keys only as text. This is suitable for guests such as
+    /// BASIC whose key path accepts controls while its text path accepts
+    /// printable characters.
+    text_only,
+};
+
+pub const PointerMode = enum {
+    mapped,
+    ignored,
+};
+
+pub const InputPolicy = struct {
+    key_text_mode: KeyTextMode = .key_and_text,
+    pointer_mode: PointerMode = .mapped,
+
+    pub const text_only_no_pointer: InputPolicy = .{
+        .key_text_mode = .text_only,
+        .pointer_mode = .ignored,
+    };
+};
+
+pub const InputStamp = struct {
+    sequence: u64,
+    tick: u64,
+};
+
+pub const InputFilterReason = enum {
+    none,
+    pointer_ignored,
+    duplicate_focus,
+    missing_geometry,
+    unsupported_raw,
+};
+
+pub const InputTranslationStats = struct {
+    raw_events: u64 = 0,
+    logical_events: u64 = 0,
+    pending_text_created: u64 = 0,
+    pending_text_emitted: u64 = 0,
+    mouse_events: u64 = 0,
+    mouse_moves: u64 = 0,
+    mouse_mappings: u64 = 0,
+    filtered_events: u64 = 0,
+    pointer_ignored: u64 = 0,
+    duplicate_focus: u64 = 0,
+    missing_geometry: u64 = 0,
+    unsupported_raw: u64 = 0,
+    last_raw_sequence: u64 = 0,
+    last_raw_tick: u64 = 0,
+    last_logical_sequence: u64 = 0,
+    last_logical_tick: u64 = 0,
+    last_filtered_sequence: u64 = 0,
+    last_filtered_tick: u64 = 0,
+    last_filter_reason: InputFilterReason = .none,
+};
+
+pub const HostStats = struct {
+    window_info_calls: u64 = 0,
+    present_window_info_calls: u64 = 0,
+    input_window_info_calls: u64 = 0,
+    viewport_calculations: u64 = 0,
+    present_viewport_calculations: u64 = 0,
+    input_viewport_calculations: u64 = 0,
+};
+
 pub const KeyEvent = struct {
     code: u32,
     modifiers: u32,
     tick: u64,
+    sequence: u64 = 0,
 };
 
 pub const TextEvent = struct {
     codepoint: u32,
     modifiers: u32,
     tick: u64,
+    sequence: u64 = 0,
 };
 
 pub const MouseEvent = struct {
@@ -536,69 +606,134 @@ pub const MouseEvent = struct {
     buttons: u32,
     modifiers: u32,
     tick: u64,
+    sequence: u64 = 0,
 };
 
 pub const ResizeEvent = struct {
     client: Size,
     viewport: Viewport,
     tick: u64,
+    sequence: u64 = 0,
 };
 
 pub const FocusEvent = struct {
     focused: bool,
     tick: u64,
+    sequence: u64 = 0,
+};
+
+pub const CloseEvent = struct {
+    tick: u64,
+    sequence: u64 = 0,
 };
 
 pub const InputEvent = union(enum) {
-    close: u64,
+    close: CloseEvent,
     resize: ResizeEvent,
     focus: FocusEvent,
     key_down: KeyEvent,
     text: TextEvent,
     mouse: MouseEvent,
+
+    pub fn stamp(self: InputEvent) InputStamp {
+        return switch (self) {
+            .close => |event| .{ .sequence = event.sequence, .tick = event.tick },
+            .resize => |event| .{ .sequence = event.sequence, .tick = event.tick },
+            .focus => |event| .{ .sequence = event.sequence, .tick = event.tick },
+            .key_down => |event| .{ .sequence = event.sequence, .tick = event.tick },
+            .text => |event| .{ .sequence = event.sequence, .tick = event.tick },
+            .mouse => |event| .{ .sequence = event.sequence, .tick = event.tick },
+        };
+    }
 };
 
 pub const InputTranslator = struct {
+    policy: InputPolicy = .{},
     focused: bool = false,
     pending_text: ?TextEvent = null,
+    next_sequence: u64 = 1,
+    stats: InputTranslationStats = .{},
+
+    pub fn init(policy: InputPolicy) InputTranslator {
+        return .{ .policy = policy };
+    }
+
+    pub fn setPolicy(self: *InputTranslator, policy: InputPolicy) void {
+        self.policy = policy;
+        self.pending_text = null;
+    }
+
+    pub fn requiresViewport(self: *const InputTranslator, raw_kind: u32) bool {
+        return raw_kind == @intFromEnum(abi.GuiEventKind.resize) or
+            (self.policy.pointer_mode == .mapped and isMouseKind(raw_kind));
+    }
 
     pub fn takePending(self: *InputTranslator) ?InputEvent {
         if (self.pending_text) |value| {
             self.pending_text = null;
+            self.recordLogical(value.sequence, value.tick);
+            self.stats.pending_text_emitted +%= 1;
             return .{ .text = value };
         }
         return null;
     }
 
     pub fn translate(self: *InputTranslator, raw: abi.GuiEvent, viewport: ?Viewport, resize_size: ?Size) ?InputEvent {
+        const sequence = self.next_sequence;
+        self.next_sequence +%= 1;
+        if (self.next_sequence == 0) self.next_sequence = 1;
+        self.stats.raw_events +%= 1;
+        self.stats.last_raw_sequence = sequence;
+        self.stats.last_raw_tick = raw.tick;
         const kind = raw.kind;
-        if (kind == @intFromEnum(abi.GuiEventKind.close)) return .{ .close = raw.tick };
+        if (kind == @intFromEnum(abi.GuiEventKind.close)) return self.logical(.{ .close = .{
+            .tick = raw.tick,
+            .sequence = sequence,
+        } });
         if (kind == @intFromEnum(abi.GuiEventKind.resize)) {
-            const size = resize_size orelse return null;
-            const view = viewport orelse return null;
-            return .{ .resize = .{ .client = size, .viewport = view, .tick = raw.tick } };
+            const size = resize_size orelse return self.filtered(sequence, raw.tick, .missing_geometry);
+            const view = viewport orelse return self.filtered(sequence, raw.tick, .missing_geometry);
+            return self.logical(.{ .resize = .{
+                .client = size,
+                .viewport = view,
+                .tick = raw.tick,
+                .sequence = sequence,
+            } });
         }
         if (kind == @intFromEnum(abi.GuiEventKind.focus_gained)) {
-            if (self.focused) return null;
+            if (self.focused) return self.filtered(sequence, raw.tick, .duplicate_focus);
             self.focused = true;
-            return .{ .focus = .{ .focused = true, .tick = raw.tick } };
+            return self.logical(.{ .focus = .{ .focused = true, .tick = raw.tick, .sequence = sequence } });
         }
         if (kind == @intFromEnum(abi.GuiEventKind.focus_lost)) {
-            if (!self.focused) return null;
+            if (!self.focused) return self.filtered(sequence, raw.tick, .duplicate_focus);
             self.focused = false;
-            return .{ .focus = .{ .focused = false, .tick = raw.tick } };
+            return self.logical(.{ .focus = .{ .focused = false, .tick = raw.tick, .sequence = sequence } });
         }
         if (kind == @intFromEnum(abi.GuiEventKind.key_down)) {
-            if (isTextCodepoint(raw.key)) self.pending_text = .{
-                .codepoint = raw.key,
-                .modifiers = raw.modifiers,
-                .tick = raw.tick,
-            };
-            return .{ .key_down = .{
+            if (isTextCodepoint(raw.key) and self.policy.key_text_mode == .text_only) {
+                return self.logical(.{ .text = .{
+                    .codepoint = raw.key,
+                    .modifiers = raw.modifiers,
+                    .tick = raw.tick,
+                    .sequence = sequence,
+                } });
+            }
+            if (isTextCodepoint(raw.key)) {
+                self.pending_text = .{
+                    .codepoint = raw.key,
+                    .modifiers = raw.modifiers,
+                    .tick = raw.tick,
+                    .sequence = sequence,
+                };
+                self.stats.pending_text_created +%= 1;
+            }
+            return self.logical(.{ .key_down = .{
                 .code = raw.key,
                 .modifiers = raw.modifiers,
                 .tick = raw.tick,
-            } };
+                .sequence = sequence,
+            } });
         }
         const action: MouseAction = if (kind == @intFromEnum(abi.GuiEventKind.mouse_down))
             .down
@@ -607,16 +742,51 @@ pub const InputTranslator = struct {
         else if (kind == @intFromEnum(abi.GuiEventKind.mouse_move))
             .move
         else
-            return null;
-        return .{ .mouse = .{
+            return self.filtered(sequence, raw.tick, .unsupported_raw);
+        self.stats.mouse_events +%= 1;
+        if (action == .move) self.stats.mouse_moves +%= 1;
+        if (self.policy.pointer_mode == .ignored) return self.filtered(sequence, raw.tick, .pointer_ignored);
+        const guest = if (viewport) |value| blk: {
+            self.stats.mouse_mappings +%= 1;
+            break :blk value.mapClientPoint(raw.x, raw.y);
+        } else null;
+        return self.logical(.{ .mouse = .{
             .action = action,
             .client_x = raw.x,
             .client_y = raw.y,
-            .guest = if (viewport) |value| value.mapClientPoint(raw.x, raw.y) else null,
+            .guest = guest,
             .buttons = raw.buttons,
             .modifiers = raw.modifiers,
             .tick = raw.tick,
-        } };
+            .sequence = sequence,
+        } });
+    }
+
+    fn logical(self: *InputTranslator, event: InputEvent) InputEvent {
+        const event_stamp = event.stamp();
+        self.recordLogical(event_stamp.sequence, event_stamp.tick);
+        return event;
+    }
+
+    fn recordLogical(self: *InputTranslator, sequence: u64, tick: u64) void {
+        self.stats.logical_events +%= 1;
+        self.stats.last_logical_sequence = sequence;
+        self.stats.last_logical_tick = tick;
+    }
+
+    fn filtered(self: *InputTranslator, sequence: u64, tick: u64, reason: InputFilterReason) ?InputEvent {
+        self.stats.filtered_events +%= 1;
+        self.stats.last_filtered_sequence = sequence;
+        self.stats.last_filtered_tick = tick;
+        self.stats.last_filter_reason = reason;
+        switch (reason) {
+            .none => {},
+            .pointer_ignored => self.stats.pointer_ignored +%= 1,
+            .duplicate_focus => self.stats.duplicate_focus +%= 1,
+            .missing_geometry => self.stats.missing_geometry +%= 1,
+            .unsupported_raw => self.stats.unsupported_raw +%= 1,
+        }
+        return null;
     }
 };
 
@@ -626,6 +796,7 @@ pub const Host = struct {
     video: Presenter,
     input: InputTranslator = .{},
     input_viewport: ?Viewport = null,
+    stats: HostStats = .{},
 
     pub fn init(desk: r4desk.Context, draw: r4draw.Context, surface: Surface, scratch: []u32) Error!Host {
         if (!draw.supportsGuiFrameContract() or !draw.hasFn("gui_blit") or
@@ -646,11 +817,19 @@ pub const Host = struct {
         return self.desk.guiSetMinSize(width, height);
     }
 
+    pub fn setInputPolicy(self: *Host, policy: InputPolicy) void {
+        self.input.setPolicy(policy);
+    }
+
     pub fn present(self: *Host) PresentResult {
         var info: abi.GuiWindowInfo = .{};
+        self.stats.window_info_calls +%= 1;
+        self.stats.present_window_info_calls +%= 1;
         const window_result = self.desk.guiWindowInfo(&info);
         if (window_result < 0) return .{ .failure = window_result };
         if ((info.flags & abi.GuiWindowFlag.visible) == 0 or (info.flags & abi.GuiWindowFlag.minimized) != 0) return .hidden;
+        self.stats.viewport_calculations +%= 1;
+        self.stats.present_viewport_calculations +%= 1;
         const result = self.video.presentTo(Backend.fromDraw(&self.draw), info.client_w, info.client_h);
         switch (result) {
             .presented => |presented| self.input_viewport = presented.viewport,
@@ -662,27 +841,41 @@ pub const Host = struct {
 
     pub fn pollInput(self: *Host) ?InputEvent {
         if (self.input.takePending()) |event| return event;
-        var raw: abi.GuiEvent = .{};
-        if (self.desk.guiPollEvent(&raw) <= 0) return null;
+        while (true) {
+            var raw: abi.GuiEvent = .{};
+            if (self.desk.guiPollEvent(&raw) <= 0) return null;
 
-        var viewport = self.input_viewport orelse self.video.currentViewport();
-        var resize_size: ?Size = null;
-        const guest_mode_changed = if (viewport) |value|
-            value.guest_w != self.video.surface.width or value.guest_h != self.video.surface.height
-        else
-            true;
-        if (raw.kind == @intFromEnum(abi.GuiEventKind.resize) or guest_mode_changed) {
-            var info: abi.GuiWindowInfo = .{};
-            if (self.desk.guiWindowInfo(&info) >= 0 and info.client_w > 0 and info.client_h > 0) {
-                const size = Size{ .w = @intCast(info.client_w), .h = @intCast(info.client_h) };
-                resize_size = size;
-                viewport = calculateViewport(info.client_w, info.client_h, self.video.surface.width, self.video.surface.height) catch null;
-                self.input_viewport = viewport;
+            var viewport = self.input_viewport orelse self.video.currentViewport();
+            var resize_size: ?Size = null;
+            const guest_mode_changed = if (viewport) |value|
+                value.guest_w != self.video.surface.width or value.guest_h != self.video.surface.height
+            else
+                true;
+            if (self.input.requiresViewport(raw.kind) and
+                (raw.kind == @intFromEnum(abi.GuiEventKind.resize) or guest_mode_changed))
+            {
+                var info: abi.GuiWindowInfo = .{};
+                self.stats.window_info_calls +%= 1;
+                self.stats.input_window_info_calls +%= 1;
+                if (self.desk.guiWindowInfo(&info) >= 0 and info.client_w > 0 and info.client_h > 0) {
+                    const size = Size{ .w = @intCast(info.client_w), .h = @intCast(info.client_h) };
+                    resize_size = size;
+                    self.stats.viewport_calculations +%= 1;
+                    self.stats.input_viewport_calculations +%= 1;
+                    viewport = calculateViewport(info.client_w, info.client_h, self.video.surface.width, self.video.surface.height) catch null;
+                    self.input_viewport = viewport;
+                }
             }
+            if (self.input.translate(raw, viewport, resize_size)) |event| return event;
         }
-        return self.input.translate(raw, viewport, resize_size);
     }
 };
+
+fn isMouseKind(kind: u32) bool {
+    return kind == @intFromEnum(abi.GuiEventKind.mouse_down) or
+        kind == @intFromEnum(abi.GuiEventKind.mouse_up) or
+        kind == @intFromEnum(abi.GuiEventKind.mouse_move);
+}
 
 const RenderResult = struct {
     blocks: u32 = 0,
@@ -1289,8 +1482,10 @@ test "input translation separates text and rejects letterbox coordinates" {
         .tick = 2,
     }, viewport, null).?;
     try std.testing.expectEqual(@as(u32, 'A'), key.key_down.code);
+    try std.testing.expectEqual(@as(u64, 2), key.key_down.sequence);
     const text_event = translator.takePending().?;
     try std.testing.expectEqual(@as(u32, 'A'), text_event.text.codepoint);
+    try std.testing.expectEqual(key.key_down.sequence, text_event.text.sequence);
 
     const outside = translator.translate(.{
         .kind = @intFromEnum(abi.GuiEventKind.mouse_move),
@@ -1313,6 +1508,65 @@ test "input translation separates text and rejects letterbox coordinates" {
         .tick = 5,
     }, viewport, null).?;
     try std.testing.expect(!lost.focus.focused);
+    try std.testing.expectEqual(@as(u64, 5), translator.stats.raw_events);
+    try std.testing.expectEqual(@as(u64, 6), translator.stats.logical_events);
+    try std.testing.expectEqual(@as(u64, 1), translator.stats.pending_text_created);
+    try std.testing.expectEqual(@as(u64, 1), translator.stats.pending_text_emitted);
+    try std.testing.expectEqual(@as(u64, 2), translator.stats.mouse_mappings);
+}
+
+test "text-only pointer-free policy preserves order and filter reasons" {
+    const viewport = try calculateViewport(800, 600, 320, 200);
+    var translator = InputTranslator.init(.text_only_no_pointer);
+
+    const gained = translator.translate(.{
+        .kind = @intFromEnum(abi.GuiEventKind.focus_gained),
+        .tick = 10,
+    }, viewport, null).?;
+    try std.testing.expectEqual(@as(u64, 1), gained.focus.sequence);
+    try std.testing.expect(translator.translate(.{
+        .kind = @intFromEnum(abi.GuiEventKind.focus_gained),
+        .tick = 11,
+    }, viewport, null) == null);
+    try std.testing.expect(translator.translate(.{
+        .kind = @intFromEnum(abi.GuiEventKind.mouse_move),
+        .x = viewport.x,
+        .y = viewport.y,
+        .tick = 12,
+    }, viewport, null) == null);
+
+    const text_event = translator.translate(.{
+        .kind = @intFromEnum(abi.GuiEventKind.key_down),
+        .key = 'A',
+        .tick = 13,
+    }, viewport, null).?;
+    try std.testing.expectEqual(@as(u32, 'A'), text_event.text.codepoint);
+    try std.testing.expectEqual(@as(u64, 4), text_event.text.sequence);
+    try std.testing.expect(translator.takePending() == null);
+
+    const enter = translator.translate(.{
+        .kind = @intFromEnum(abi.GuiEventKind.key_down),
+        .key = 13,
+        .tick = 14,
+    }, viewport, null).?;
+    try std.testing.expectEqual(@as(u32, 13), enter.key_down.code);
+    try std.testing.expectEqual(@as(u64, 5), enter.key_down.sequence);
+
+    try std.testing.expect(translator.translate(.{
+        .kind = @intFromEnum(abi.GuiEventKind.resize),
+        .tick = 15,
+    }, null, null) == null);
+    try std.testing.expectEqual(@as(u64, 6), translator.stats.raw_events);
+    try std.testing.expectEqual(@as(u64, 3), translator.stats.logical_events);
+    try std.testing.expectEqual(@as(u64, 3), translator.stats.filtered_events);
+    try std.testing.expectEqual(@as(u64, 1), translator.stats.pointer_ignored);
+    try std.testing.expectEqual(@as(u64, 1), translator.stats.duplicate_focus);
+    try std.testing.expectEqual(@as(u64, 1), translator.stats.missing_geometry);
+    try std.testing.expectEqual(@as(u64, 0), translator.stats.pending_text_created);
+    try std.testing.expectEqual(@as(u64, 0), translator.stats.mouse_mappings);
+    try std.testing.expectEqual(@as(u64, 6), translator.stats.last_filtered_sequence);
+    try std.testing.expectEqual(@as(u64, 15), translator.stats.last_filtered_tick);
+    try std.testing.expectEqual(InputFilterReason.missing_geometry, translator.stats.last_filter_reason);
 }
 
 test "resize event carries unchanged guest mode and recalculated viewport" {
