@@ -108,8 +108,11 @@ vom Verbraucher bereitgestellter Hostcheck macht eine fehlende R4X-Datei zum
 Fehler, statt den Eintrag still auszublenden. Der gemeinsame allokationsfreie
 Resolver priorisiert Benutzerzuordnung, bestaetigte versionierte Probe,
 konfigurierten Endungsstandard und erst danach die stabile Kandidatenliste.
-`probe.magic-v1` und `probe.text-token-v1` arbeiten auf hoechstens 128 KiB;
-jeder Treffer verlangt weiterhin die endgueltige Validierung durch den Host.
+`probe.magic-v1` und `probe.text-token-v1` arbeiten auf hoechstens 256 KiB.
+Eine eindeutige Benutzer- oder Endungszuordnung braucht dabei keine
+Inhaltsprobe; nur unbekannte oder mehrdeutige Zuordnungen lesen das begrenzte
+Fenster bedarfsgesteuert. Jeder Treffer verlangt weiterhin die endgueltige
+Validierung durch den Host.
 Damit bleiben Katalog und Aufloesung reine Userland-Funktionen und besitzen
 keine zweite persistente Liste neben dem installierten Modulinventar.
 

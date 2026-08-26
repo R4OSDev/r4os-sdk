@@ -7,7 +7,7 @@ const inventory_contract = @import("system_update_inventory.zig");
 pub const max_entries: usize = inventory_contract.max_entries;
 pub const max_candidates: usize = 128;
 pub const max_associations: usize = 64;
-pub const max_probe_bytes: usize = 128 * 1024;
+pub const max_probe_bytes: usize = inventory_contract.max_guest_probe_bytes;
 pub const max_render_bytes: usize = 64 * 1024;
 
 pub const HostState = enum {

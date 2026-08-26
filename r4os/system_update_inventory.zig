@@ -6,6 +6,7 @@ pub const max_bytes: usize = 64 * 1024;
 pub const max_guest_formats: usize = 16;
 pub const max_guest_extensions: usize = 32;
 pub const max_guest_features: usize = 32;
+pub const max_guest_probe_bytes: usize = 256 * 1024;
 pub const subsystem_display_name_max_bytes: usize = 96;
 
 pub const ModuleRole = enum {
@@ -270,7 +271,7 @@ fn validKnownGuestFeature(value: []const u8) bool {
         const bytes = descriptor[separator + 1 ..];
         if (bytes.len < 2 or bytes.len > 32 or bytes.len % 2 != 0 or !validProbeHex(bytes)) return false;
         const byte_count = bytes.len / 2;
-        return offset <= 128 * 1024 and byte_count <= 128 * 1024 - @as(usize, @intCast(offset));
+        return offset <= max_guest_probe_bytes and byte_count <= max_guest_probe_bytes - @as(usize, @intCast(offset));
     }
     const token_prefix = "probe.text-token-v1.";
     if (std.mem.startsWith(u8, value, token_prefix)) {
@@ -288,6 +289,12 @@ fn validKnownGuestFeature(value: []const u8) bool {
 fn validProbeHex(value: []const u8) bool {
     for (value) |byte| if (probeHexNibble(byte) == null) return false;
     return true;
+}
+
+test "guest probe descriptors use the shared 256 KiB window" {
+    try std.testing.expectEqual(@as(usize, 256 * 1024), max_guest_probe_bytes);
+    try std.testing.expect(validKnownGuestFeature("probe.magic-v1.3ffff.00"));
+    try std.testing.expect(!validKnownGuestFeature("probe.magic-v1.40000.00"));
 }
 
 fn parseProbeHexUnsigned(value: []const u8) ?u64 {
