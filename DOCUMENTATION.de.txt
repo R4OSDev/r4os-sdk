@@ -167,8 +167,12 @@ Ausfuehrungsscheibe, Reset und PCM-Erzeugung bereit; der Host stellt Poll und
 Present bereit. Pro Zyklus werden hoechstens die konfigurierte Anzahl
 Ereignisse und genau eine Gast-Scheibe mit festem Operationsbudget
 verarbeitet. Danach wird entweder bis zum naechsten echten Termin geschlafen
-oder kooperativ abgegeben. Ein Hostereignis kann eine Darstellung anfordern,
-ohne dafuer einen Gastschritt zu erfinden.
+oder nach produktiver Gastarbeit kooperativ abgegeben. Meldet ein laufender
+Gast dagegen Fortschritt ohne eine ausgefuehrte Operation und ohne eigene
+Deadline, wird dieses Idle-Polling fuer einen begrenzten Hosttick blockiert.
+`RuntimeStats.zero_progress_waits` trennt diese Faelle von produktiven
+`yields`. Ein Hostereignis kann eine Darstellung anfordern, ohne dafuer einen
+Gastschritt zu erfinden.
 
 `GuestClock` leitet Nanosekunden aus der monotonen R4SYS-Uhr ab. Pausen
 zaehlen nicht zur Gastzeit, Reset beginnt bei null und `Pacer` liefert

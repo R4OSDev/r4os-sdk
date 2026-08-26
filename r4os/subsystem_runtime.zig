@@ -668,6 +668,7 @@ pub const RuntimeStats = struct {
     resets: u64 = 0,
     yields: u64 = 0,
     sleeps: u64 = 0,
+    zero_progress_waits: u64 = 0,
 };
 
 pub const CycleResult = union(enum) {
@@ -686,6 +687,7 @@ pub const Runtime = struct {
     exit_code: i32 = 0,
     guest_wake_ns: u64 = 0,
     present_pending: bool = false,
+    guest_idle_polling: bool = false,
     started: bool = false,
     resources_closed: bool = false,
     stats: RuntimeStats = .{},
@@ -734,6 +736,7 @@ pub const Runtime = struct {
                 self.clock.reset(host_tick);
                 self.audio.reset(host_tick);
                 self.guest_wake_ns = 0;
+                self.guest_idle_polling = false;
                 self.present_pending = true;
                 self.state = .running;
                 self.stats.resets +%= 1;
@@ -789,6 +792,8 @@ pub const Runtime = struct {
             self.stats.slices +%= 1;
             self.stats.requested_operations +%= self.config.slice_budget;
             self.stats.executed_operations +%= step.operations;
+            self.guest_idle_polling = step.status == .progress and step.operations == 0 and step.wake_guest_ns == 0;
+            if (self.guest_idle_polling) self.stats.zero_progress_waits +%= 1;
             self.present_pending = self.present_pending or step.frame_ready;
             switch (step.status) {
                 .progress => self.guest_wake_ns = step.wake_guest_ns,
@@ -863,7 +868,7 @@ pub const Runtime = struct {
     fn nextWait(self: *const Runtime, host_tick: u64) u64 {
         var wait = self.config.max_wait_ticks;
         if (self.state == .running) {
-            if (self.guest_wake_ns == 0) return 0;
+            if (self.guest_wake_ns == 0) return if (self.guest_idle_polling) wait else 0;
             wait = @min(wait, self.clock.ticksUntil(self.guest_wake_ns));
         }
         if ((self.audio.state == .ready or self.audio.state == .active) and self.audio.next_deadline_tick != 0) {
@@ -951,6 +956,7 @@ const FakeGuest = struct {
     complete_after: u32 = 0,
     fail_code: i32 = 0,
     reset_result: i32 = 0,
+    zero_progress: bool = false,
     last_budget: u32 = 0,
     last_guest_ns: u64 = 0,
 
@@ -1001,6 +1007,7 @@ fn fakeGuestStep(context: *anyopaque, budget: u32, guest_now_ns: u64) StepResult
     self.last_guest_ns = guest_now_ns;
     if (self.fail_code != 0) return StepResult.fail(self.fail_code);
     if (self.complete_after != 0 and self.steps >= self.complete_after) return StepResult.complete(0, true).withOperations(budget);
+    if (self.zero_progress) return StepResult.progress(false);
     return StepResult.waitUntil(guest_now_ns + 10 * std.time.ns_per_ms, true).withOperations(budget);
 }
 
@@ -1142,6 +1149,22 @@ test "runtime bounds guest slices and applies pause resume reset and close betwe
     try std.testing.expectEqual(@as(u64, 3 * 123), runtime.stats.requested_operations);
     try std.testing.expectEqual(@as(u64, 3 * 123), runtime.stats.executed_operations);
     try std.testing.expectEqual(runtime.stats.present_attempts, runtime.stats.presents + runtime.stats.skipped_presents);
+}
+
+test "zero-operation guest progress blocks for one bounded host tick" {
+    var runtime = try Runtime.init(.{ .max_wait_ticks = 1 }, 1000, 0, null);
+    var guest = FakeGuest{ .zero_progress = true, .audio_enabled = false };
+    var host = FakeHost{};
+
+    const first = runtime.cycle(0, guest.driver(), host.driver());
+    try std.testing.expectEqual(@as(u64, 1), first.wait);
+    try std.testing.expectEqual(@as(u64, 1), runtime.stats.zero_progress_waits);
+    try std.testing.expectEqual(@as(u64, 0), runtime.stats.executed_operations);
+
+    const second = runtime.cycle(1, guest.driver(), host.driver());
+    try std.testing.expectEqual(@as(u64, 1), second.wait);
+    try std.testing.expectEqual(@as(u64, 2), runtime.stats.zero_progress_waits);
+    try std.testing.expectEqual(@as(u32, 2), guest.steps);
 }
 
 test "silent PCM is suppressed and degraded audio leaves guest time bounded without another deadline" {
