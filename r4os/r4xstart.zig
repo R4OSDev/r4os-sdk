@@ -94,6 +94,7 @@ const ConsolePushKeyFn = *const fn (u32, u8) callconv(.c) i32;
 const ConsolePushInputFn = *const fn (u32, [*]const u8, u32) callconv(.c) i32;
 const ConsoleWriteFn = *const fn (u32, [*]const u8, u32) callconv(.c) i32;
 const ConsoleReadFn = *const fn ([*]u8, u32) callconv(.c) i32;
+const ConsoleInputWaitFn = abi.R4DeskFns.console_input_wait;
 const ClipboardWriteFn = *const fn ([*]const u8, u32) callconv(.c) i32;
 const ClipboardReadFn = *const fn ([*]u8, u32) callconv(.c) i32;
 const ClipboardRevisionFn = *const fn () callconv(.c) u32;
@@ -961,6 +962,13 @@ pub const R4Desk = struct {
         if (!self.hasFn("console_read") or out.len == 0) return 0;
         const console_fn: ConsoleReadFn = @ptrFromInt(self.table.console_read);
         return console_fn(out.ptr, @intCast(out.len));
+    }
+
+    pub fn consoleInputWait(self: *const R4Desk, last_generation: u64, timeout_ticks: u64, out_generation: *u64) i32 {
+        out_generation.* = last_generation;
+        if (!self.hasFn("console_input_wait")) return abi.console_input_wait_error_unsupported;
+        const console_fn: ConsoleInputWaitFn = @ptrFromInt(self.table.console_input_wait);
+        return console_fn(last_generation, timeout_ticks, out_generation);
     }
 
     pub fn supportsClipboardContract(self: *const R4Desk) bool {

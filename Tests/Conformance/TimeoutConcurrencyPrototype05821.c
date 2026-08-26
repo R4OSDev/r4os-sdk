@@ -18,5 +18,8 @@ int main(void) {
     if (!r4_stop_flag_requested(&stop)) return 7;
     if (r4_wait_classify(-8, -8, -9, -10) != R4_WAIT_TIMED_OUT) return 8;
     if (R4_SERVICE_STOP_KILL_AFTER_GRACE != R4OS_SERVICE_STOP_POLICY_KILL_AFTER_GRACE) return 9;
+    R4Desk desk = {0};
+    uint64_t generation = 99u;
+    if (r4desk_console_input_wait(&desk, 7u, 0u, &generation) != R4OS_CONSOLE_INPUT_WAIT_ERROR_UNSUPPORTED || generation != 7u) return 10;
     return 0;
 }

@@ -25,4 +25,6 @@ test "cooperative stop and wait outcomes are explicit" {
     try std.testing.expect(@hasDecl(r4os.program.Context, "ioWaitTimeout"));
     try std.testing.expect(@hasDecl(r4os.program.Context, "threadJoinTimeout"));
     try std.testing.expect(@hasDecl(r4os.program.Context, "serviceStopWithPolicy"));
+    try std.testing.expect(@hasDecl(r4os.program.Context, "consoleInputWait"));
+    try std.testing.expect(@hasDecl(r4os.r4desk.Context, "consoleInputWait"));
 }

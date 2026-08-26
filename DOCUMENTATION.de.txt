@@ -288,6 +288,12 @@ Gruppentabellen. Fuer diese sechs APIs gibt es weder R4L-Projekte noch
 R4L-Dateien im Image. Unabhaengige Runtime-R4Ls wie R4STD, R4IMG und R4FONT
 bleiben davon getrennte Module mit eigenem Contract und eigener Query-Tabelle.
 
+Seit 0.69.67 nutzt `Context.write` den vorhandenen R4SYS-Write-Slot als
+zusammenhaengenden Batch und faellt nur bei fehlendem oder fehlschlagendem Slot
+auf `putc` zurueck. `consoleInputWait` kapselt den optionalen,
+generationstreuen R4DESK-Inputwait; `consoleRead` und `readKey` bleiben
+unveraendert als Bulk- beziehungsweise Pollvarianten verfuegbar.
+
 Die optionale R4SYS-Funktion `monotonic_clock` liefert einen kontinuierlichen
 Nanosekundeninstant sowie Quelle, Qualitaetsflags, Aufloesung und die getrennte
 wirksame Ereignisrate. `monotonicNanoseconds` ist der direkte Apppfad;

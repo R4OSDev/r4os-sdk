@@ -700,6 +700,20 @@ pub const Context = struct {
     }
 
     pub fn write(self: *const Context, value: []const u8) void {
+        if (value.len == 0) return;
+        if (self.sysFn("write")) |write_fn| {
+            var offset: usize = 0;
+            while (offset < value.len) {
+                const count = @min(value.len - offset, std.math.maxInt(i32));
+                const written = write_fn(value[offset..].ptr, @intCast(count));
+                if (written <= 0) {
+                    for (value[offset..]) |ch| self.putc(ch);
+                    return;
+                }
+                offset += @min(count, @as(usize, @intCast(written)));
+            }
+            return;
+        }
         for (value) |ch| self.putc(ch);
     }
 
@@ -1381,6 +1395,12 @@ pub const Context = struct {
     pub fn consoleRead(self: *const Context, out: []u8) i32 {
         const table_fn = self.deskFn("console_read") orelse return self.unavailable("desk");
         return table_fn(out.ptr, @intCast(out.len));
+    }
+
+    pub fn consoleInputWait(self: *const Context, last_generation: u64, timeout_ticks: u64, out_generation: *u64) i32 {
+        out_generation.* = last_generation;
+        const table_fn = self.deskFn("console_input_wait") orelse return abi.console_input_wait_error_unsupported;
+        return table_fn(last_generation, timeout_ticks, out_generation);
     }
 
     pub fn displayRevision(self: *const Context) u32 {
@@ -4350,7 +4370,12 @@ fn fallbackUtf8SequenceLength(value: [*:0]const u8, start: usize, limit: usize) 
     return expected;
 }
 
+var test_table_write_calls: u32 = 0;
+var test_table_write_length: u32 = 0;
+
 fn testTableWrite(_: [*]const u8, len: u32) callconv(.c) i32 {
+    test_table_write_calls += 1;
+    test_table_write_length = len;
     return @intCast(len);
 }
 
@@ -4438,6 +4463,11 @@ test "program context accepts present fields in a shorter append-only table" {
     try std.testing.expect(!ctx.hasSysFn("putc"));
     try std.testing.expectEqual(Context.TableFieldState.available, Context.tableFieldState(abi.R4XStartR4Sys, bundle.sys, "write"));
     try std.testing.expectEqual(Context.TableFieldState.beyond_size, Context.tableFieldState(abi.R4XStartR4Sys, bundle.sys, "putc"));
+    test_table_write_calls = 0;
+    test_table_write_length = 0;
+    ctx.write("one-batched-write");
+    try std.testing.expectEqual(@as(u32, 1), test_table_write_calls);
+    try std.testing.expectEqual(@as(u32, 17), test_table_write_length);
 }
 
 test "program context distinguishes missing group null pointer and tombstone" {

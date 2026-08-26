@@ -178,6 +178,10 @@ pub const Context = struct {
         return self.base.consoleRead(out);
     }
 
+    pub fn consoleInputWait(self: *const Context, last_generation: u64, timeout_ticks: u64, out_generation: *u64) i32 {
+        return self.base.consoleInputWait(last_generation, timeout_ticks, out_generation);
+    }
+
     pub fn clipboardWrite(self: *const Context, data: []const u8) i32 {
         return self.base.clipboardWrite(data);
     }

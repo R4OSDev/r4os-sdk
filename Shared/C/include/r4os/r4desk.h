@@ -45,6 +45,16 @@ static inline uint32_t r4desk_read_key_codepoint(R4Desk *desk) {
     return legacy_fn();
 }
 
+static inline int32_t r4desk_console_input_wait(R4Desk *desk, uint64_t last_generation, uint64_t timeout_ticks, uint64_t *out_generation) {
+    if (out_generation == 0) return R4OS_CONSOLE_INPUT_WAIT_ERROR_INVALID;
+    *out_generation = last_generation;
+    if (desk == 0 || desk->table == 0 ||
+        desk->table->size < offsetof(R4XStartR4Desk, console_input_wait) + sizeof(uintptr_t) ||
+        desk->table->console_input_wait == 0) return R4OS_CONSOLE_INPUT_WAIT_ERROR_UNSUPPORTED;
+    R4DeskConsoleInputWaitFn fn = (R4DeskConsoleInputWaitFn)(uintptr_t)desk->table->console_input_wait;
+    return fn(last_generation, timeout_ticks, out_generation);
+}
+
 static inline int32_t r4desk_program_window_id(R4Desk *desk) {
     if (desk == 0 || desk->table == 0 || desk->table->program_window_id == 0) return -1;
     R4DeskProgramWindowIdFn fn = (R4DeskProgramWindowIdFn)(uintptr_t)desk->table->program_window_id;
