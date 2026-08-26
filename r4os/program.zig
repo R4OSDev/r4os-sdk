@@ -1240,9 +1240,22 @@ pub const Context = struct {
             self.hasDrawFn("gui_frame_read");
     }
 
+    pub fn supportsGuiFrameDamageContract(self: *const Context) bool {
+        return self.supportsGuiFrameContract() and
+            self.hasDrawFn("gui_frame_begin_damage") and
+            self.hasDrawFn("gui_frame_generation_info") and
+            self.hasDrawFn("gui_frame_generation_read");
+    }
+
     pub fn guiFrameBegin(self: *const Context) i32 {
         const table_fn = self.drawFn("gui_frame_begin") orelse return self.unavailable("draw");
         return table_fn();
+    }
+
+    pub fn guiFrameBeginDamage(self: *const Context, regions: []const abi.DisplayDamageRect) i32 {
+        if (regions.len == 0 or regions.len > abi.gui_frame_max_damage_regions) return abi.gui_frame_error_invalid;
+        const table_fn = self.drawFn("gui_frame_begin_damage") orelse return self.unavailable("draw");
+        return table_fn(regions.ptr, @intCast(regions.len));
     }
 
     pub fn guiFrameAppend(self: *const Context, commands: []const abi.GuiFrameCommand, resources: []const u8) i32 {
@@ -1276,6 +1289,23 @@ pub const Context = struct {
         out.version = abi.gui_frame_info_version;
         out.size = abi.gui_frame_info_size;
         return table_fn(handle, expected_generation, command_ptr, @intCast(commands.len), resource_ptr, @intCast(resources.len), out);
+    }
+
+    pub fn guiFrameGenerationInfo(self: *const Context, handle: *const abi.ProgramProcessHandle, generation: u64, out: *abi.GuiFrameGenerationInfo) i32 {
+        const table_fn = self.drawFn("gui_frame_generation_info") orelse return self.unavailable("draw");
+        out.version = abi.gui_frame_generation_info_version;
+        out.size = abi.gui_frame_generation_info_size;
+        return table_fn(handle, generation, out);
+    }
+
+    pub fn guiFrameGenerationRead(self: *const Context, handle: *const abi.ProgramProcessHandle, generation: u64, commands: []abi.GuiFrameCommand, resources: []u8, regions: []abi.DisplayDamageRect, out: *abi.GuiFrameGenerationInfo) i32 {
+        const table_fn = self.drawFn("gui_frame_generation_read") orelse return self.unavailable("draw");
+        const command_ptr: ?[*]abi.GuiFrameCommand = if (commands.len == 0) null else commands.ptr;
+        const resource_ptr: ?[*]u8 = if (resources.len == 0) null else resources.ptr;
+        const region_ptr: ?[*]abi.DisplayDamageRect = if (regions.len == 0) null else regions.ptr;
+        out.version = abi.gui_frame_generation_info_version;
+        out.size = abi.gui_frame_generation_info_size;
+        return table_fn(handle, generation, command_ptr, @intCast(commands.len), resource_ptr, @intCast(resources.len), region_ptr, @intCast(regions.len), out);
     }
 
     pub fn guiSetTitle(self: *const Context, value: [*:0]const u8) i32 {

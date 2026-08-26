@@ -11,6 +11,7 @@ pub const palette_entries: usize = 256;
 pub const letterbox_rgb: u32 = 0x000000;
 pub const integer_preference_percent: u32 = 85;
 pub const max_damage_chain: u32 = 32;
+pub const max_damage_regions: usize = abi.gui_frame_max_damage_regions;
 
 pub const Error = error{
     InvalidSize,
@@ -208,10 +209,12 @@ const DamageKind = enum {
 
 const Damage = struct {
     kind: DamageKind = .full,
-    rect: Rect = .{ .x = 0, .y = 0, .w = 0, .h = 0 },
+    regions: [max_damage_regions]Rect = .{Rect{ .x = 0, .y = 0, .w = 0, .h = 0 }} ** max_damage_regions,
+    count: usize = 0,
 
     fn markFull(self: *Damage) void {
         self.kind = .full;
+        self.count = 0;
     }
 
     fn clear(self: *Damage) void {
@@ -220,15 +223,41 @@ const Damage = struct {
 
     fn mark(self: *Damage, requested: Rect, width: u32, height: u32) void {
         const value = clipRect(requested, width, height) orelse return;
-        switch (self.kind) {
-            .full => return,
-            .none => {
-                self.kind = .rect;
-                self.rect = value;
-            },
-            .rect => self.rect = mergeRect(self.rect, value),
+        if (self.kind == .full) return;
+        self.kind = .rect;
+
+        var merged = value;
+        var index: usize = 0;
+        while (index < self.count) {
+            if (!rectsTouchOrOverlap(self.regions[index], merged)) {
+                index += 1;
+                continue;
+            }
+            merged = mergeRect(self.regions[index], merged);
+            self.count -= 1;
+            self.regions[index] = self.regions[self.count];
         }
-        if (rectIsFull(self.rect, width, height)) self.kind = .full;
+        if (self.count < self.regions.len) {
+            self.regions[self.count] = merged;
+            self.count += 1;
+        } else {
+            var best_index: usize = 0;
+            var best_growth: u64 = std.math.maxInt(u64);
+            for (self.regions[0..self.count], 0..) |existing, candidate| {
+                const combined = mergeRect(existing, merged);
+                const growth = rectArea(combined) - rectArea(existing);
+                if (growth < best_growth) {
+                    best_growth = growth;
+                    best_index = candidate;
+                }
+            }
+            self.regions[best_index] = mergeRect(self.regions[best_index], merged);
+        }
+        if (self.count == 1 and rectIsFull(self.regions[0], width, height)) self.markFull();
+    }
+
+    fn slice(self: *const Damage) []const Rect {
+        return self.regions[0..self.count];
     }
 };
 
@@ -240,6 +269,7 @@ pub const PresentMode = enum {
 pub const PresentInfo = struct {
     mode: PresentMode,
     viewport: Viewport,
+    damage_regions: u32,
     raster_blocks: u32,
     sampled_pixels: u64,
 };
@@ -257,19 +287,31 @@ pub const PresentStats = struct {
     full_frames: u64 = 0,
     damage_frames: u64 = 0,
     compacted_frames: u64 = 0,
+    damage_regions: u64 = 0,
+    indexed8_frames: u64 = 0,
+    indexed8_blocks: u64 = 0,
+    indexed8_resource_bytes: u64 = 0,
+    xrgb_fallback_frames: u64 = 0,
     raster_blocks: u64 = 0,
     sampled_pixels: u64 = 0,
+};
+
+pub const IndexedBatch = struct {
+    command: abi.GuiFrameCommand,
+    resource: []const u8,
 };
 
 pub const Backend = struct {
     context: *anyopaque,
     begin_full_fn: *const fn (*anyopaque) i32,
-    begin_damage_fn: *const fn (*anyopaque) i32,
+    begin_damage_fn: *const fn (*anyopaque, []const abi.DisplayDamageRect) i32,
     clear_fn: *const fn (*anyopaque, u32) i32,
     raster_fn: *const fn (*anyopaque, i32, i32, u32, u32, u32, []const u32) i32,
+    indexed8_fn: *const fn (*anyopaque, IndexedBatch) i32,
     commit_full_fn: *const fn (*anyopaque) i32,
     commit_damage_fn: *const fn (*anyopaque) i32,
     cancel_fn: *const fn (*anyopaque) i32,
+    supports_indexed8: bool = false,
 
     pub fn fromDraw(draw: *const r4draw.Context) Backend {
         return .{
@@ -278,16 +320,18 @@ pub const Backend = struct {
             .begin_damage_fn = drawBeginDamage,
             .clear_fn = drawClear,
             .raster_fn = drawRaster,
+            .indexed8_fn = drawIndexed8,
             .commit_full_fn = drawCommitFull,
             .commit_damage_fn = drawCommitDamage,
             .cancel_fn = drawCancel,
+            .supports_indexed8 = draw.supportsGuiFrameDamageContract(),
         };
     }
 
-    fn begin(self: Backend, mode: PresentMode) i32 {
+    fn begin(self: Backend, mode: PresentMode, regions: []const abi.DisplayDamageRect) i32 {
         return switch (mode) {
             .full => self.begin_full_fn(self.context),
-            .damage => self.begin_damage_fn(self.context),
+            .damage => self.begin_damage_fn(self.context, regions),
         };
     }
 
@@ -297,6 +341,10 @@ pub const Backend = struct {
 
     fn raster(self: Backend, x: i32, y: i32, w: u32, h: u32, scale: u32, pixels: []const u32) i32 {
         return self.raster_fn(self.context, x, y, w, h, scale, pixels);
+    }
+
+    fn indexed8(self: Backend, batch: IndexedBatch) i32 {
+        return self.indexed8_fn(self.context, batch);
     }
 
     fn commit(self: Backend, mode: PresentMode) i32 {
@@ -374,12 +422,32 @@ pub const Presenter = struct {
             mode = .full;
             compacted = true;
         }
-        const source_damage = switch (mode) {
-            .full => Rect.full(self.surface.width, self.surface.height),
-            .damage => self.damage.rect,
+        var full_region = [_]Rect{Rect.full(self.surface.width, self.surface.height)};
+        const source_regions: []const Rect = switch (mode) {
+            .full => full_region[0..],
+            .damage => self.damage.slice(),
         };
+        var destination_regions: [max_damage_regions]abi.DisplayDamageRect = undefined;
+        var destination_count: usize = 0;
+        if (mode == .damage) {
+            for (source_regions) |source_region| {
+                const mapped = mapDamageToViewport(source_region, self.surface.width, self.surface.height, viewport.w, viewport.h) orelse continue;
+                destination_regions[destination_count] = .{
+                    .x = viewport.x + @as(i32, @intCast(mapped.x)),
+                    .y = viewport.y + @as(i32, @intCast(mapped.y)),
+                    .w = mapped.w,
+                    .h = mapped.h,
+                };
+                destination_count += 1;
+            }
+            if (destination_count == 0) {
+                self.damage.clear();
+                self.stats.skipped_frames +%= 1;
+                return .unchanged;
+            }
+        }
 
-        const begun = backend.begin(mode);
+        const begun = backend.begin(mode, destination_regions[0..destination_count]);
         if (begun < 0) return .{ .failure = begun };
         if (mode == .full) {
             const cleared = backend.clear(letterbox_rgb);
@@ -389,10 +457,18 @@ pub const Presenter = struct {
             }
         }
 
-        const rendered = if (viewport.isInteger())
-            renderInteger(self.surface, viewport, source_damage, self.scratch, backend)
-        else
-            renderFractional(self.surface, viewport, source_damage, self.scratch, backend);
+        const use_indexed8 = self.surface.format() == .indexed8 and backend.supports_indexed8;
+        var rendered = RenderResult{};
+        for (source_regions) |source_region| {
+            const region_result = if (use_indexed8)
+                renderIndexed8(self.surface, viewport, source_region, self.scratch, backend)
+            else if (viewport.isInteger())
+                renderInteger(self.surface, viewport, source_region, self.scratch, backend)
+            else
+                renderFractional(self.surface, viewport, source_region, self.scratch, backend);
+            rendered.add(region_result);
+            if (rendered.failure != 0) break;
+        }
         if (rendered.failure != 0) {
             backend.cancel();
             return .{ .failure = rendered.failure };
@@ -407,12 +483,16 @@ pub const Presenter = struct {
         self.last_viewport = viewport;
         self.damage.clear();
         self.stats.published_frames +%= 1;
+        self.stats.damage_regions +%= source_regions.len;
         self.stats.raster_blocks +%= rendered.blocks;
         self.stats.sampled_pixels +%= rendered.sampled_pixels;
+        self.stats.indexed8_blocks +%= rendered.indexed8_blocks;
+        self.stats.indexed8_resource_bytes +%= rendered.indexed8_resource_bytes;
+        if (use_indexed8) self.stats.indexed8_frames +%= 1 else if (self.surface.format() == .indexed8) self.stats.xrgb_fallback_frames +%= 1;
         switch (mode) {
             .full => {
                 self.stats.full_frames +%= 1;
-                self.damage_chain = 0;
+                self.damage_chain = 1;
                 if (compacted) self.stats.compacted_frames +%= 1;
             },
             .damage => {
@@ -423,6 +503,7 @@ pub const Presenter = struct {
         return .{ .presented = .{
             .mode = mode,
             .viewport = viewport,
+            .damage_regions = @intCast(source_regions.len),
             .raster_blocks = rendered.blocks,
             .sampled_pixels = rendered.sampled_pixels,
         } };
@@ -606,7 +687,17 @@ pub const Host = struct {
 const RenderResult = struct {
     blocks: u32 = 0,
     sampled_pixels: u64 = 0,
+    indexed8_blocks: u64 = 0,
+    indexed8_resource_bytes: u64 = 0,
     failure: i32 = 0,
+
+    fn add(self: *RenderResult, other: RenderResult) void {
+        self.blocks +|= other.blocks;
+        self.sampled_pixels +|= other.sampled_pixels;
+        self.indexed8_blocks +|= other.indexed8_blocks;
+        self.indexed8_resource_bytes +|= other.indexed8_resource_bytes;
+        if (self.failure == 0) self.failure = other.failure;
+    }
 };
 
 fn renderInteger(surface: Surface, viewport: Viewport, damage: Rect, scratch: []u32, backend: Backend) RenderResult {
@@ -677,6 +768,105 @@ fn renderFractional(surface: Surface, viewport: Viewport, damage: Rect, scratch:
     return result;
 }
 
+fn renderIndexed8(surface: Surface, viewport: Viewport, damage: Rect, scratch: []u32, backend: Backend) RenderResult {
+    const destination = mapDamageToViewport(damage, surface.width, surface.height, viewport.w, viewport.h) orelse return .{};
+    const indexed = switch (surface.storage) {
+        .indexed8 => |value| value,
+        .xrgb32 => return .{},
+    };
+    const resource_scratch = std.mem.sliceAsBytes(scratch);
+    var result = RenderResult{};
+    var tile_y = destination.y;
+    const destination_bottom = destination.y + destination.h;
+    const destination_right = destination.x + destination.w;
+    while (tile_y < destination_bottom) {
+        const tile_h = indexedTileExtent(tile_y, destination_bottom - tile_y, surface.height, viewport.h);
+        var tile_x = destination.x;
+        while (tile_x < destination_right) {
+            const tile_w = indexedTileExtent(tile_x, destination_right - tile_x, surface.width, viewport.w);
+            const source = sourceRectForDestination(tile_x, tile_y, tile_w, tile_h, surface.width, surface.height, viewport.w, viewport.h);
+            const pixel_bytes = @as(usize, source.w) * @as(usize, source.h);
+            const resource_len = @as(usize, abi.gui_indexed8_pixels_offset) + pixel_bytes;
+            if (resource_len > resource_scratch.len) return .{ .failure = abi.gui_frame_error_overflow };
+
+            var header = abi.GuiIndexed8Resource{
+                .source_x = source.x,
+                .source_y = source.y,
+                .source_w = source.w,
+                .source_h = source.h,
+                .guest_w = surface.width,
+                .guest_h = surface.height,
+                .viewport_x = viewport.x,
+                .viewport_y = viewport.y,
+                .viewport_w = viewport.w,
+                .viewport_h = viewport.h,
+                .pixel_stride = source.w,
+            };
+            @memcpy(resource_scratch[0..@sizeOf(abi.GuiIndexed8Resource)], std.mem.asBytes(&header));
+            var palette_index: usize = 0;
+            while (palette_index < palette_entries) : (palette_index += 1) {
+                var color = indexed.palette[palette_index] & 0x00FF_FFFF;
+                const offset = @as(usize, abi.gui_indexed8_palette_offset) + palette_index * @sizeOf(u32);
+                @memcpy(resource_scratch[offset .. offset + @sizeOf(u32)], std.mem.asBytes(&color));
+            }
+            var row: u32 = 0;
+            while (row < source.h) : (row += 1) {
+                const source_offset = @as(usize, source.y + row) * @as(usize, surface.width) + source.x;
+                const destination_offset = @as(usize, abi.gui_indexed8_pixels_offset) + @as(usize, row) * @as(usize, source.w);
+                @memcpy(
+                    resource_scratch[destination_offset .. destination_offset + source.w],
+                    indexed.pixels[source_offset .. source_offset + source.w],
+                );
+            }
+            const command = abi.GuiFrameCommand{
+                .kind = abi.gui_frame_command_kind_indexed8,
+                .x = viewport.x + @as(i32, @intCast(tile_x)),
+                .y = viewport.y + @as(i32, @intCast(tile_y)),
+                .w = tile_w,
+                .h = tile_h,
+                .resource_bytes = resource_len,
+            };
+            const raw = backend.indexed8(.{ .command = command, .resource = resource_scratch[0..resource_len] });
+            if (raw < 0) {
+                result.failure = raw;
+                return result;
+            }
+            result.blocks +|= 1;
+            result.indexed8_blocks +|= 1;
+            result.indexed8_resource_bytes +|= resource_len;
+            result.sampled_pixels +|= @as(u64, tile_w) * tile_h;
+            tile_x += tile_w;
+        }
+        tile_y += tile_h;
+    }
+    return result;
+}
+
+fn indexedTileExtent(start: u32, remaining: u32, source_size: u32, destination_size: u32) u32 {
+    var extent = @min(tile_max_width, remaining);
+    while (extent > 1 and sourceSpan(start, extent, source_size, destination_size) > tile_max_width) {
+        extent = @max(@as(u32, 1), extent / 2);
+    }
+    return extent;
+}
+
+fn sourceSpan(start: u32, extent: u32, source_size: u32, destination_size: u32) u32 {
+    const first = (@as(u64, start) * source_size) / destination_size;
+    const last = (@as(u64, start + extent - 1) * source_size) / destination_size;
+    return @intCast(last - first + 1);
+}
+
+fn sourceRectForDestination(x: u32, y: u32, w: u32, h: u32, source_w: u32, source_h: u32, destination_w: u32, destination_h: u32) Rect {
+    const first_x: u32 = @intCast((@as(u64, x) * source_w) / destination_w);
+    const first_y: u32 = @intCast((@as(u64, y) * source_h) / destination_h);
+    return .{
+        .x = first_x,
+        .y = first_y,
+        .w = sourceSpan(x, w, source_w, destination_w),
+        .h = sourceSpan(y, h, source_h, destination_h),
+    };
+}
+
 fn fillGuestTile(surface: Surface, start_x: u32, start_y: u32, width: u32, height: u32, out: []u32) void {
     var y: u32 = 0;
     while (y < height) : (y += 1) {
@@ -688,13 +878,35 @@ fn fillGuestTile(surface: Surface, start_x: u32, start_y: u32, width: u32, heigh
 }
 
 fn fillScaledTile(surface: Surface, viewport: Viewport, start_x: u32, start_y: u32, width: u32, height: u32, out: []u32) void {
+    const x_step = surface.width / viewport.w;
+    const x_remainder_step = surface.width % viewport.w;
+    const x_start_numerator = @as(u64, start_x) * surface.width;
+    const x_start: u32 = @intCast(x_start_numerator / viewport.w);
+    const x_start_remainder: u32 = @intCast(x_start_numerator % viewport.w);
+    const y_step = surface.height / viewport.h;
+    const y_remainder_step = surface.height % viewport.h;
+    const y_start_numerator = @as(u64, start_y) * surface.height;
+    var source_y: u32 = @intCast(y_start_numerator / viewport.h);
+    var y_remainder: u32 = @intCast(y_start_numerator % viewport.h);
     var y: u32 = 0;
     while (y < height) : (y += 1) {
-        const source_y: u32 = @intCast((@as(u64, start_y + y) * surface.height) / viewport.h);
+        var source_x = x_start;
+        var x_remainder = x_start_remainder;
         var x: u32 = 0;
         while (x < width) : (x += 1) {
-            const source_x: u32 = @intCast((@as(u64, start_x + x) * surface.width) / viewport.w);
             out[@as(usize, y) * @as(usize, width) + @as(usize, x)] = surface.colorAt(source_x, source_y);
+            source_x += x_step;
+            x_remainder += x_remainder_step;
+            if (x_remainder >= viewport.w) {
+                x_remainder -= viewport.w;
+                source_x += 1;
+            }
+        }
+        source_y += y_step;
+        y_remainder += y_remainder_step;
+        if (y_remainder >= viewport.h) {
+            y_remainder -= viewport.h;
+            source_y += 1;
         }
     }
 }
@@ -725,6 +937,19 @@ fn mergeRect(a: Rect, b: Rect) Rect {
     const right = @max(@as(u64, a.x) + a.w, @as(u64, b.x) + b.w);
     const bottom = @max(@as(u64, a.y) + a.h, @as(u64, b.y) + b.h);
     return .{ .x = x, .y = y, .w = @intCast(right - x), .h = @intCast(bottom - y) };
+}
+
+fn rectArea(value: Rect) u64 {
+    return @as(u64, value.w) * value.h;
+}
+
+fn rectsTouchOrOverlap(a: Rect, b: Rect) bool {
+    const a_right = @as(u64, a.x) + a.w;
+    const a_bottom = @as(u64, a.y) + a.h;
+    const b_right = @as(u64, b.x) + b.w;
+    const b_bottom = @as(u64, b.y) + b.h;
+    return @as(u64, a.x) <= b_right and @as(u64, b.x) <= a_right and
+        @as(u64, a.y) <= b_bottom and @as(u64, b.y) <= a_bottom;
 }
 
 fn rectIsFull(value: Rect, width: u32, height: u32) bool {
@@ -771,8 +996,10 @@ fn drawBeginFull(context: *anyopaque) i32 {
     return drawContext(context).guiFrameBegin();
 }
 
-fn drawBeginDamage(_: *anyopaque) i32 {
-    return 0;
+fn drawBeginDamage(context: *anyopaque, regions: []const abi.DisplayDamageRect) i32 {
+    const draw = drawContext(context);
+    if (!draw.supportsGuiFrameDamageContract()) return 0;
+    return draw.guiFrameBeginDamage(regions);
 }
 
 fn drawClear(context: *anyopaque, rgb: u32) i32 {
@@ -783,12 +1010,17 @@ fn drawRaster(context: *anyopaque, x: i32, y: i32, width: u32, height: u32, scal
     return drawContext(context).guiBlit(x, y, width, height, scale, pixels);
 }
 
+fn drawIndexed8(context: *anyopaque, batch: IndexedBatch) i32 {
+    return drawContext(context).guiFrameAppend(&.{batch.command}, batch.resource);
+}
+
 fn drawCommitFull(context: *anyopaque) i32 {
     return drawContext(context).guiFrameCommit();
 }
 
 fn drawCommitDamage(context: *anyopaque) i32 {
-    return drawContext(context).guiPresent();
+    const draw = drawContext(context);
+    return if (draw.supportsGuiFrameDamageContract()) draw.guiFrameCommit() else draw.guiPresent();
 }
 
 fn drawCancel(context: *anyopaque) i32 {
@@ -802,12 +1034,19 @@ const FakeBackend = struct {
     commits: u32 = 0,
     cancels: u32 = 0,
     rasters: u32 = 0,
+    indexed8_rasters: u32 = 0,
+    damage_regions: u32 = 0,
+    indexed8_resource_bytes: u64 = 0,
+    indexed8_enabled: bool = false,
     max_w: u32 = 0,
     max_h: u32 = 0,
     last_scale: u32 = 0,
     invalid_raster: bool = false,
     captured: [16]u32 = .{0} ** 16,
     captured_len: usize = 0,
+    captured_indexed_command: abi.GuiFrameCommand = .{},
+    captured_indexed: [abi.gui_indexed8_pixels_offset + 16]u8 = .{0} ** (abi.gui_indexed8_pixels_offset + 16),
+    captured_indexed_len: usize = 0,
 
     fn backend(self: *FakeBackend) Backend {
         return .{
@@ -816,9 +1055,11 @@ const FakeBackend = struct {
             .begin_damage_fn = fakeBeginDamage,
             .clear_fn = fakeClear,
             .raster_fn = fakeRaster,
+            .indexed8_fn = fakeIndexed8,
             .commit_full_fn = fakeCommit,
             .commit_damage_fn = fakeCommit,
             .cancel_fn = fakeCancel,
+            .supports_indexed8 = self.indexed8_enabled,
         };
     }
 };
@@ -832,8 +1073,10 @@ fn fakeBeginFull(context: *anyopaque) i32 {
     return 0;
 }
 
-fn fakeBeginDamage(context: *anyopaque) i32 {
-    fakeState(context).damage_begins += 1;
+fn fakeBeginDamage(context: *anyopaque, regions: []const abi.DisplayDamageRect) i32 {
+    const self = fakeState(context);
+    self.damage_begins += 1;
+    self.damage_regions += @intCast(regions.len);
     return 0;
 }
 
@@ -853,6 +1096,23 @@ fn fakeRaster(context: *anyopaque, _: i32, _: i32, width: u32, height: u32, scal
     if (self.captured_len == 0) {
         self.captured_len = @min(self.captured.len, pixels.len);
         @memcpy(self.captured[0..self.captured_len], pixels[0..self.captured_len]);
+    }
+    return 0;
+}
+
+fn fakeIndexed8(context: *anyopaque, batch: IndexedBatch) i32 {
+    const self = fakeState(context);
+    self.indexed8_rasters += 1;
+    self.indexed8_resource_bytes +%= batch.resource.len;
+    if (batch.command.w == 0 or batch.command.h == 0 or
+        batch.command.w > tile_max_width or batch.command.h > tile_max_height or
+        batch.command.kind != abi.gui_frame_command_kind_indexed8 or
+        batch.command.resource_bytes != batch.resource.len or
+        batch.resource.len < abi.gui_indexed8_pixels_offset) self.invalid_raster = true;
+    if (self.captured_indexed_len == 0) {
+        self.captured_indexed_command = batch.command;
+        self.captured_indexed_len = @min(self.captured_indexed.len, batch.resource.len);
+        @memcpy(self.captured_indexed[0..self.captured_indexed_len], batch.resource[0..self.captured_indexed_len]);
     }
     return 0;
 }
@@ -933,7 +1193,7 @@ test "bounded damage chains compact into a fresh full frame" {
 
     try std.testing.expect(presenter.presentTo(fake.backend(), 8, 8) == .presented);
     var index: u32 = 0;
-    while (index < max_damage_chain) : (index += 1) {
+    while (index + 1 < max_damage_chain) : (index += 1) {
         presenter.invalidate(.{ .x = index % 8, .y = 0, .w = 1, .h = 1 });
         const result = presenter.presentTo(fake.backend(), 8, 8);
         try std.testing.expect(result.presented.mode == .damage);
@@ -972,6 +1232,45 @@ test "indexed palette and fractional nearest neighbour scaling produce xrgb tile
     }, fake.captured[0..9]);
     try std.testing.expect(presenter.setPaletteEntry(1, 0xAA123456));
     try std.testing.expectEqual(@as(u32, 0x00123456), palette_values[1]);
+}
+
+test "indexed8 contract preserves sparse damage and source pixels" {
+    var indices = [_]u8{
+        0, 1, 2, 3,
+        1, 2, 3, 0,
+        2, 3, 0, 1,
+        3, 0, 1, 2,
+    };
+    var palette_values = [_]u32{0} ** palette_entries;
+    palette_values[0] = 0x00000000;
+    palette_values[1] = 0x00FF0000;
+    palette_values[2] = 0x0000FF00;
+    palette_values[3] = 0x000000FF;
+    var scratch: [tile_max_pixels]u32 = undefined;
+    var presenter = try Presenter.init(try Surface.initIndexed8(indices[0..], palette_values[0..], 4, 4), scratch[0..]);
+    var fake = FakeBackend{ .indexed8_enabled = true };
+    const first = presenter.presentTo(fake.backend(), 3, 3);
+    try std.testing.expect(first == .presented);
+    try std.testing.expectEqual(@as(u32, 1), fake.indexed8_rasters);
+    try std.testing.expectEqual(@as(u32, 0), fake.rasters);
+    try std.testing.expect(!fake.invalid_raster);
+    try std.testing.expectEqual(@as(u32, 3), fake.captured_indexed_command.w);
+    try std.testing.expectEqual(@as(u32, 3), fake.captured_indexed_command.h);
+    var header: abi.GuiIndexed8Resource = .{};
+    @memcpy(std.mem.asBytes(&header), fake.captured_indexed[0..@sizeOf(abi.GuiIndexed8Resource)]);
+    try std.testing.expectEqual(@as(u32, 4), header.source_w);
+    try std.testing.expectEqual(@as(u32, 4), header.source_h);
+    try std.testing.expectEqualSlices(u8, indices[0..], fake.captured_indexed[abi.gui_indexed8_pixels_offset .. abi.gui_indexed8_pixels_offset + indices.len]);
+
+    presenter.invalidate(.{ .x = 0, .y = 0, .w = 1, .h = 1 });
+    presenter.invalidate(.{ .x = 3, .y = 3, .w = 1, .h = 1 });
+    const sparse = presenter.presentTo(fake.backend(), 3, 3);
+    try std.testing.expectEqual(PresentMode.damage, sparse.presented.mode);
+    try std.testing.expectEqual(@as(u32, 2), sparse.presented.damage_regions);
+    try std.testing.expectEqual(@as(u32, 2), fake.damage_regions);
+    try std.testing.expectEqual(@as(u64, 2), presenter.stats.damage_regions - 1);
+    try std.testing.expectEqual(@as(u64, 2), presenter.stats.indexed8_frames);
+    try std.testing.expectEqual(@as(u64, 0), presenter.stats.xrgb_fallback_frames);
 }
 
 test "input translation separates text and rejects letterbox coordinates" {

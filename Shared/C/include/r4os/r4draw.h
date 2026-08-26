@@ -139,10 +139,29 @@ static inline int r4draw_supports_gui_frame_contract(const R4Draw *draw) {
         table->gui_frame_info != 0 && table->gui_frame_read != 0;
 }
 
+static inline int r4draw_supports_gui_frame_damage_contract(const R4Draw *draw) {
+    if (!r4draw_supports_gui_frame_contract(draw)) return 0;
+    const R4XStartR4Draw *table = draw->table;
+    return table->size >= offsetof(R4XStartR4Draw, gui_frame_generation_read) + sizeof(uintptr_t) &&
+        table->gui_frame_begin_damage != 0 && table->gui_frame_generation_info != 0 &&
+        table->gui_frame_generation_read != 0;
+}
+
 static inline int32_t r4draw_gui_frame_begin(R4Draw *draw) {
     if (draw == 0 || !r4draw_supports_gui_frame_contract(draw)) return R4OS_ERR_NO_FN;
     R4DrawGuiFrameBeginFn fn = (R4DrawGuiFrameBeginFn)(uintptr_t)draw->table->gui_frame_begin;
     return fn();
+}
+
+static inline int32_t r4draw_gui_frame_begin_damage(R4Draw *draw,
+                                                     const R4DisplayDamageRect *regions,
+                                                     uint32_t region_count) {
+    if (draw == 0 || !r4draw_supports_gui_frame_damage_contract(draw)) return R4OS_ERR_NO_FN;
+    if (regions == 0 || region_count == 0u || region_count > R4OS_GUI_FRAME_MAX_DAMAGE_REGIONS) {
+        return R4OS_GUI_FRAME_ERROR_INVALID;
+    }
+    R4DrawGuiFrameBeginDamageFn fn = (R4DrawGuiFrameBeginDamageFn)(uintptr_t)draw->table->gui_frame_begin_damage;
+    return fn(regions, region_count);
 }
 
 static inline int32_t r4draw_gui_frame_append(R4Draw *draw,
@@ -186,6 +205,38 @@ static inline int32_t r4draw_gui_frame_read(R4Draw *draw, const R4ProgramProcess
     if (handle == 0) return R4OS_GUI_FRAME_ERROR_INVALID;
     R4DrawGuiFrameReadFn fn = (R4DrawGuiFrameReadFn)(uintptr_t)draw->table->gui_frame_read;
     return fn(handle, expected_generation, commands, command_capacity, resources, resource_capacity, out_info);
+}
+
+static inline int32_t r4draw_gui_frame_generation_info(R4Draw *draw,
+                                                        const R4ProgramProcessHandle *handle,
+                                                        uint64_t generation,
+                                                        R4GuiFrameGenerationInfo *out_info) {
+    if (draw == 0 || !r4draw_supports_gui_frame_damage_contract(draw)) return R4OS_ERR_NO_FN;
+    if (handle == 0 || generation == 0u || out_info == 0) return R4OS_GUI_FRAME_ERROR_INVALID;
+    out_info->version = R4OS_GUI_FRAME_GENERATION_INFO_VERSION;
+    out_info->size = R4OS_GUI_FRAME_GENERATION_INFO_SIZE;
+    R4DrawGuiFrameGenerationInfoFn fn = (R4DrawGuiFrameGenerationInfoFn)(uintptr_t)draw->table->gui_frame_generation_info;
+    return fn(handle, generation, out_info);
+}
+
+static inline int32_t r4draw_gui_frame_generation_read(R4Draw *draw,
+                                                        const R4ProgramProcessHandle *handle,
+                                                        uint64_t generation,
+                                                        R4GuiFrameCommand *commands,
+                                                        uint64_t command_capacity,
+                                                        uint8_t *resources,
+                                                        uint64_t resource_capacity,
+                                                        R4DisplayDamageRect *regions,
+                                                        uint32_t region_capacity,
+                                                        R4GuiFrameGenerationInfo *out_info) {
+    if (draw == 0 || !r4draw_supports_gui_frame_damage_contract(draw)) return R4OS_ERR_NO_FN;
+    if (handle == 0 || generation == 0u || out_info == 0 ||
+        (commands == 0 && command_capacity != 0u) || (resources == 0 && resource_capacity != 0u) ||
+        (regions == 0 && region_capacity != 0u)) return R4OS_GUI_FRAME_ERROR_INVALID;
+    out_info->version = R4OS_GUI_FRAME_GENERATION_INFO_VERSION;
+    out_info->size = R4OS_GUI_FRAME_GENERATION_INFO_SIZE;
+    R4DrawGuiFrameGenerationReadFn fn = (R4DrawGuiFrameGenerationReadFn)(uintptr_t)draw->table->gui_frame_generation_read;
+    return fn(handle, generation, commands, command_capacity, resources, resource_capacity, regions, region_capacity, out_info);
 }
 
 static inline int32_t r4draw_gui_present(R4Draw *draw) {

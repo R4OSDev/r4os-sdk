@@ -139,8 +139,8 @@ Fenster-, Video- und Eingabehosting eines solchen R4X. Sie ist weder Dienst
 noch Runtime-R4L und besitzt keine prozessuebergreifende Emulator-ABI.
 `Surface` verwendet ausschliesslich vom Aufrufer bereitgestellte Speicher:
 entweder acht Bit breite Indizes mit einer 256 Eintraege grossen XRGB-Palette
-oder direkt XRGB32. Auch der Konvertierungsblock von 128x128 Pixeln kommt vom
-Aufrufer; der Presenter allokiert beim Darstellen nicht.
+oder direkt XRGB32. Auch der 128x128-Pixel-Scratch fuer den kompatiblen
+XRGB-Pfad kommt vom Aufrufer; der Presenter allokiert beim Darstellen nicht.
 
 Der virtuelle Gastmodus bleibt unabhaengig von der Fenstergroesse. Der
 Presenter berechnet einen zentrierten, seitenverhaeltnistreuen Viewport mit
@@ -148,11 +148,23 @@ schwarzem Letterboxing und Naechste-Nachbar-Skalierung. Eine ganzzahlige
 Skalierung wird verwendet, wenn sie mindestens 85 Prozent des passenden
 Viewports ausfuellt; andernfalls wird der gesamte passende Viewport
 fraktional genutzt. Voll- und Damage-Praesentation laufen ueber dieselbe
-Schnittstelle und werden automatisch in hoechstens 128x128 Pixel grosse
-R4DRAW-Raster zerlegt. Ein unveraendertes Bild erzeugt keinen GUI-Frame.
-Paletten-, Modus- und Viewportaenderungen erzwingen einen Vollframe; nach 32
-aufeinanderfolgenden Damage-Frames wird die persistente Darstellung durch
-einen neuen Vollframe verdichtet.
+Schnittstelle. Bis zu acht getrennte Gastregionen bleiben erhalten;
+ueberlappende oder beruehrende Rechtecke werden vereinigt und erst bei
+Ueberlauf mit dem kleinsten Flaechenzuwachs zusammengefasst. Ein
+unveraendertes Bild erzeugt keinen GUI-Frame. Die fraktionale
+Naechste-Nachbar-Abbildung fuehrt Quellenquotient und Rest inkrementell fort,
+statt pro Zielpixel eine 64-Bit-Division zu wiederholen.
+
+Mit R4DRAW-v5 transportiert eine Indexed8-Surface ihre 256-Eintrag-Palette
+und den benoetigten indizierten Quellausschnitt in einem versionierten
+`GuiIndexed8Resource`; Ziel- und Quelltiles bleiben jeweils hoechstens
+128x128 Pixel gross. Die vorzeitige XRGB32-Expansion entfaellt. XRGB-Surfaces
+und aeltere R4DRAW-Tabellen verwenden weiterhin den sicheren Rasterfallback.
+Damage-Begin publiziert eine append-only Generation mit bis zu acht Regionen,
+waehrend Leser die lokale Generation oder den abgeflachten Gesamtframe
+generationstreu abfragen koennen. Paletten-, Modus- und Viewportaenderungen
+erzwingen einen Vollframe; nach einer Vollbasis und hoechstens 31 Deltas wird
+die Kette durch einen neuen Vollframe verdichtet.
 
 `Host.pollInput` uebersetzt Close, Resize, Fokus, Tastencode, Text und Maus in
 eine gastneutrale Ereignisunion. Mauspositionen werden auf den virtuellen

@@ -118,8 +118,16 @@ pub const Context = struct {
         return self.base.supportsGuiFrameContract();
     }
 
+    pub fn supportsGuiFrameDamageContract(self: *const Context) bool {
+        return self.base.supportsGuiFrameDamageContract();
+    }
+
     pub fn guiFrameBegin(self: *const Context) i32 {
         return self.base.guiFrameBegin();
+    }
+
+    pub fn guiFrameBeginDamage(self: *const Context, regions: []const abi.DisplayDamageRect) i32 {
+        return self.base.guiFrameBeginDamage(regions);
     }
 
     pub fn guiFrameAppend(self: *const Context, commands: []const abi.GuiFrameCommand, resources: []const u8) i32 {
@@ -140,6 +148,14 @@ pub const Context = struct {
 
     pub fn guiFrameRead(self: *const Context, handle: *const abi.ProgramProcessHandle, expected_generation: u64, commands: []abi.GuiFrameCommand, resources: []u8, out: *abi.GuiFrameInfo) i32 {
         return self.base.guiFrameRead(handle, expected_generation, commands, resources, out);
+    }
+
+    pub fn guiFrameGenerationInfo(self: *const Context, handle: *const abi.ProgramProcessHandle, generation: u64, out: *abi.GuiFrameGenerationInfo) i32 {
+        return self.base.guiFrameGenerationInfo(handle, generation, out);
+    }
+
+    pub fn guiFrameGenerationRead(self: *const Context, handle: *const abi.ProgramProcessHandle, generation: u64, commands: []abi.GuiFrameCommand, resources: []u8, regions: []abi.DisplayDamageRect, out: *abi.GuiFrameGenerationInfo) i32 {
+        return self.base.guiFrameGenerationRead(handle, generation, commands, resources, regions, out);
     }
 
     pub fn guiPresent(self: *const Context) i32 {
