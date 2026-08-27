@@ -4565,7 +4565,7 @@ test "network service request prefers the generation-bound tail function" {
     table.ipc_recv = @intFromPtr(&testNetServiceRawRecv);
     var bundle: Bundle = .{ .raw = &raw, .net = &table };
     const ctx = Context.initBundle(&bundle);
-    var out: [16]u8 = undefined;
+    var out: [abi.net_service_header_size + 16]u8 = undefined;
 
     const got = ctx.netServiceRequest(abi.ipc_channel_net_dns, abi.net_service_op_dns_status_result, 91, "abc", out[0..]);
     try std.testing.expectEqual(@as(i32, 3), got);

@@ -302,6 +302,7 @@ pub const R4AudioSink = struct {
     audio: app_audio.Audio,
     stream: ?app_audio.AudioStream = null,
     timeout: time_contract.Timeout = time_contract.timeoutFinite(.{ .nanoseconds = 100 * std.time.ns_per_ms }),
+    close_timeout: time_contract.Timeout = time_contract.timeoutFinite(.{ .nanoseconds = 100 * std.time.ns_per_ms }),
 
     pub fn init(audio: app_audio.Audio) R4AudioSink {
         return .{ .audio = audio };
@@ -311,6 +312,17 @@ pub const R4AudioSink = struct {
         return .{
             .audio = audio,
             .timeout = time_contract.timeoutFinite(.{ .nanoseconds = timeout_nanoseconds }),
+            .close_timeout = time_contract.timeoutFinite(.{ .nanoseconds = timeout_nanoseconds }),
+        };
+    }
+
+    /// Keeps short interactive Open/Write/Volume calls independent from a
+    /// normal Close that may drain already accepted PCM in the audio service.
+    pub fn initWithTimeouts(audio: app_audio.Audio, timeout_nanoseconds: u64, close_timeout_nanoseconds: u64) R4AudioSink {
+        return .{
+            .audio = audio,
+            .timeout = time_contract.timeoutFinite(.{ .nanoseconds = timeout_nanoseconds }),
+            .close_timeout = time_contract.timeoutFinite(.{ .nanoseconds = close_timeout_nanoseconds }),
         };
     }
 
@@ -1188,7 +1200,7 @@ fn r4AudioVolume(context: *anyopaque, volume: u32) i32 {
 fn r4AudioClose(context: *anyopaque) i32 {
     const self: *R4AudioSink = @ptrCast(@alignCast(context));
     var stream = &(self.stream orelse return 0);
-    const result: i32 = switch (stream.close(self.timeout)) {
+    const result: i32 = switch (stream.close(self.close_timeout)) {
         .ok => 0,
         .timed_out => audio_error_timeout,
         .failure => |raw| raw,
@@ -1215,6 +1227,21 @@ fn isZeroPcm(data: []const u8) bool {
         if (byte != 0) return false;
     }
     return true;
+}
+
+test "R4AudioSink separates interactive and draining close timeouts" {
+    const app = app_audio.Audio{
+        .sys = .{ .base = .{} },
+        .raw = .{ .base = .{} },
+    };
+    const split = R4AudioSink.initWithTimeouts(app, 25 * std.time.ns_per_ms, 500 * std.time.ns_per_ms);
+    try std.testing.expectEqual(abi.timeout_kind_finite, split.timeout.kind);
+    try std.testing.expectEqual(@as(u64, 25 * std.time.ns_per_ms), split.timeout.nanoseconds);
+    try std.testing.expectEqual(abi.timeout_kind_finite, split.close_timeout.kind);
+    try std.testing.expectEqual(@as(u64, 500 * std.time.ns_per_ms), split.close_timeout.nanoseconds);
+
+    const compatible = R4AudioSink.initWithTimeout(app, 25 * std.time.ns_per_ms);
+    try std.testing.expectEqual(compatible.timeout.nanoseconds, compatible.close_timeout.nanoseconds);
 }
 
 const FakeGuest = struct {

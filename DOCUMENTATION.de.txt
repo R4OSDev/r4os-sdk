@@ -227,7 +227,10 @@ Scratchblock hergestellt noch geschrieben. Pause, Mute, Reset und der erste
 stille Zustand schliessen einen tatsaechlich aktiven Sink genau einmal und
 entfernen die Audiodeadline; ein spaeteres Signal materialisiert ihn erneut.
 `R4AudioSink` oeffnet, schreibt und schliesst ausschliesslich ueber die normale
-App-Audiofassade und AUDSVC. Ein fehlender Dienst, Timeout oder Schreibfehler
+App-Audiofassade und AUDSVC. `initWithTimeouts` trennt das Budget fuer kurze
+Open-/Write-/Volume-Aufrufe vom Budget des normal drainierenden Close;
+`initWithTimeout` bleibt kompatibel und setzt beide Budgets gleich. Ein
+fehlender Dienst, Timeout oder Schreibfehler
 setzt Audio sichtbar auf `degraded`. Dabei werden verbliebenes PCM,
 Vorfuellzustand und Audiodeadline genau einmal entfernt; danach finden weder
 weitere Gast-Audiorenders noch Scratch-Einreichungen statt. Gastzeit, Video
