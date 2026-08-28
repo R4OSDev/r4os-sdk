@@ -16,6 +16,7 @@
 #include "app_gui.h"
 #include "app_resources.h"
 #include "app_services.h"
+#include "app_tray.h"
 #include "app_network.h"
 #include "app_audio.h"
 #include "app_devices.h"

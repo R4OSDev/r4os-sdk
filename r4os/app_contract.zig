@@ -9,6 +9,7 @@ const r4dev = @import("r4dev.zig");
 const storage = @import("app_storage.zig");
 const resource_facade = @import("app_resources.zig");
 const service_facade = @import("app_services.zig");
+const tray_facade = @import("app_tray.zig");
 const network_facade = @import("app_network.zig");
 const audio_facade = @import("app_audio.zig");
 const device_facade = @import("app_devices.zig");
@@ -203,6 +204,10 @@ pub const App = struct {
     pub fn services(self: *const App) ?service_facade.Services {
         const result = service_facade.Services{ .sys = self.system() };
         return if (result.available()) result else null;
+    }
+
+    pub fn tray(self: *const App) tray_facade.OpenResult {
+        return tray_facade.Tray.open(self.system(), self.raw.instance_id);
     }
 
     pub fn window(self: *const App, timers: []@import("app_gui.zig").Timer) ?@import("app_gui.zig").Window {
