@@ -2413,6 +2413,14 @@ pub const Context = struct {
         return self.audioServiceCallStatus(abi.audio_service_op_set_master_volume, bytes[0..@sizeOf(abi.AudioServiceVolumeRequest)], out);
     }
 
+    pub fn audioServiceMasterState(self: *const Context, out: *abi.AudioServiceMasterState) i32 {
+        return self.audioServiceCallMasterState(abi.audio_service_op_master_status, "", out);
+    }
+
+    pub fn audioServiceSetMasterState(self: *const Context, request: *const abi.AudioServiceMasterRequest, out: *abi.AudioServiceMasterState) i32 {
+        return self.audioServiceCallMasterState(abi.audio_service_op_set_master_state, std.mem.asBytes(request), out);
+    }
+
     pub fn audioServiceOpenStream(self: *const Context, rate: u32, channels: u16, format: abi.AudioFormat) i32 {
         var result: abi.AudioServiceStreamResult = .{};
         return self.audioServiceOpenStreamResult(rate, channels, format, 0x0001_0000, &result);
@@ -2533,6 +2541,25 @@ pub const Context = struct {
         const out_bytes: [*]u8 = @ptrCast(out);
         @memcpy(out_bytes[0..@sizeOf(abi.AudioServiceStatus)], response[0..]);
         if (out.magic != abi.audio_service_status_magic or out.version != abi.audio_service_status_version) return abi.service_api_result_invalid;
+        return abi.service_api_result_ok;
+    }
+
+    fn audioServiceCallMasterState(self: *const Context, op: u16, payload: []const u8, out: *abi.AudioServiceMasterState) i32 {
+        var info: abi.ServiceInfo = .{};
+        const handle_rc = self.serviceOpen(audio_r4x_service_name, &info);
+        if (handle_rc != abi.service_api_result_ok) return handle_rc;
+        if (info.handle == 0) return abi.service_api_result_no_endpoint;
+        defer _ = self.serviceClose(info.handle);
+
+        var header: abi.ServiceMessageHeader = .{};
+        var response: [@sizeOf(abi.AudioServiceMasterState)]u8 = .{0} ** @sizeOf(abi.AudioServiceMasterState);
+        const got = self.serviceCall(info.handle, op, payload, &header, response[0..], self.ticksFromMilliseconds(audio_r4x_service_timeout_ms));
+        if (got < 0) return got;
+        if (header.status != abi.service_api_result_ok) return header.status;
+        if (got != @as(i32, @intCast(@sizeOf(abi.AudioServiceMasterState)))) return abi.service_api_result_buffer_too_small;
+        const out_bytes: [*]u8 = @ptrCast(out);
+        @memcpy(out_bytes[0..@sizeOf(abi.AudioServiceMasterState)], response[0..]);
+        if (out.magic != abi.audio_master_state_magic or out.version != abi.audio_master_state_version or out.size != @sizeOf(abi.AudioServiceMasterState)) return abi.service_api_result_invalid;
         return abi.service_api_result_ok;
     }
 

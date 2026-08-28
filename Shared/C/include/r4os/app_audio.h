@@ -72,6 +72,38 @@ static inline int r4_audio_response_valid(const R4AudioWireResult *response, uin
     return response->magic == R4OS_AUDIO_SERVICE_RESULT_MAGIC && response->version == R4OS_AUDIO_SERVICE_RESULT_VERSION && response->action == action;
 }
 
+static inline int r4_audio_master_state_valid(const R4AudioServiceMasterState *state) {
+    return state != 0 && state->magic == R4OS_AUDIO_MASTER_STATE_MAGIC && state->version == R4OS_AUDIO_MASTER_STATE_VERSION && state->size == sizeof(R4AudioServiceMasterState);
+}
+
+static inline R4AudioResult r4_audio_master_call(R4AudioFacade *audio, uint16_t op, const void *request, uint32_t request_size, R4Timeout timeout, R4AudioServiceMasterState *out) {
+    if (!r4_audio_available(audio) || out == 0) return r4_audio_result(R4_AUDIO_RESULT_NO_SERVICE, R4OS_ERR_NO_FN, 0u);
+    R4Services services = r4_app_services(audio->app);
+    R4ServiceConnection connection;
+    int32_t opened = r4_services_open(&services, "AUDSVC", &connection);
+    if (opened != R4OS_SERVICE_API_RESULT_OK) return r4_audio_result(R4_AUDIO_RESULT_NO_SERVICE, opened, 0u);
+    *out = (R4AudioServiceMasterState){0};
+    R4ServiceCallResult call = r4_service_connection_call_struct(&connection, op, request, request_size, out, sizeof(*out), timeout);
+    (void)r4_service_connection_close(&connection);
+    if (call.kind == R4_SERVICE_CALL_TIMED_OUT) return r4_audio_result(R4_AUDIO_RESULT_TIMED_OUT, R4OS_SERVICE_API_RESULT_TIMEOUT, 0u);
+    if (call.kind != R4_SERVICE_CALL_RESPONSE || !r4_audio_master_state_valid(out)) return r4_audio_result(R4_AUDIO_RESULT_FAILED, call.kind == R4_SERVICE_CALL_RESPONSE ? R4OS_SERVICE_API_RESULT_INVALID : call.raw_code, 0u);
+    return r4_audio_result(R4_AUDIO_RESULT_OK, R4OS_OK, 0u);
+}
+
+static inline R4AudioResult r4_audio_master_status(R4AudioFacade *audio, R4Timeout timeout, R4AudioServiceMasterState *out) {
+    return r4_audio_master_call(audio, R4OS_AUDIO_SERVICE_OP_MASTER_STATUS, 0, 0u, timeout, out);
+}
+
+static inline R4AudioResult r4_audio_set_master_state(R4AudioFacade *audio, uint32_t update_flags, uint32_t fixed_volume, int muted, uint64_t expected_revision, R4Timeout timeout, R4AudioServiceMasterState *out) {
+    const uint32_t allowed = R4OS_AUDIO_MASTER_REQUEST_FLAG_SET_VOLUME | R4OS_AUDIO_MASTER_REQUEST_FLAG_SET_MUTED;
+    if ((update_flags & allowed) == 0u || (update_flags & ~allowed) != 0u) return r4_audio_result(R4_AUDIO_RESULT_FAILED, R4OS_SERVICE_API_RESULT_INVALID, 0u);
+    R4AudioServiceMasterRequest request = {0};
+    request.magic = R4OS_AUDIO_MASTER_REQUEST_MAGIC; request.version = R4OS_AUDIO_MASTER_REQUEST_VERSION; request.size = (uint16_t)sizeof(request);
+    request.flags = update_flags; request.fixed_volume = fixed_volume; request.expected_revision = expected_revision;
+    if ((update_flags & R4OS_AUDIO_MASTER_REQUEST_FLAG_SET_MUTED) != 0u && muted) request.flags |= R4OS_AUDIO_MASTER_REQUEST_FLAG_MUTED;
+    return r4_audio_master_call(audio, R4OS_AUDIO_SERVICE_OP_SET_MASTER_STATE, &request, sizeof(request), timeout, out);
+}
+
 static inline R4AudioResult r4_audio_open_stream(R4AudioFacade *audio, uint32_t rate, uint16_t channels, uint16_t format, uint32_t fixed_volume, R4Timeout timeout, R4AudioStream *out) {
     if (out != 0) *out = (R4AudioStream){0};
     if (!r4_audio_available(audio) || out == 0) return r4_audio_result(R4_AUDIO_RESULT_NO_SERVICE, R4OS_ERR_NO_FN, 0u);

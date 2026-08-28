@@ -10,6 +10,12 @@ pub const default_volume: u32 = 0x0001_0000;
 pub const max_write_payload: usize = abi.service_api_max_payload - @sizeOf(abi.AudioServiceStreamWriteRequest);
 pub const PcmFormat = enum(u16) { s16le = @intFromEnum(abi.AudioFormat.s16le), _ };
 
+pub const MasterUpdate = struct {
+    volume_fixed: ?u32 = null,
+    muted: ?bool = null,
+    expected_revision: u64 = 0,
+};
+
 pub const Result = union(enum) {
     ok,
     timed_out,
@@ -142,6 +148,42 @@ pub const Audio = struct {
         defer _ = connection.close();
         return switch (connection.call(abi.audio_service_op_status, "", std.mem.asBytes(out), timeout)) {
             .response => |response| if (response.bytes == @sizeOf(abi.AudioServiceStatus) and out.magic == abi.audio_service_status_magic and out.version == abi.audio_service_status_version) .ok else .{ .failure = abi.service_api_result_invalid },
+            .timed_out => .timed_out,
+            .remote_failure => |raw| .{ .failure = raw },
+            .failure => |raw| .{ .failure = raw },
+        };
+    }
+
+    pub fn masterState(self: *const Audio, timeout: Timeout, out: *abi.AudioServiceMasterState) Result {
+        return self.callMaster(abi.audio_service_op_master_status, "", timeout, out);
+    }
+
+    pub fn setMasterState(self: *const Audio, update: MasterUpdate, timeout: Timeout, out: *abi.AudioServiceMasterState) Result {
+        if (update.volume_fixed == null and update.muted == null) return .{ .failure = abi.service_api_result_invalid };
+        var request = abi.AudioServiceMasterRequest{ .expected_revision = update.expected_revision };
+        if (update.volume_fixed) |volume| {
+            request.flags |= abi.audio_master_request_flag_set_volume;
+            request.fixed_volume = volume;
+        }
+        if (update.muted) |muted| {
+            request.flags |= abi.audio_master_request_flag_set_muted;
+            if (muted) request.flags |= abi.audio_master_request_flag_muted;
+        }
+        return self.callMaster(abi.audio_service_op_set_master_state, std.mem.asBytes(&request), timeout, out);
+    }
+
+    fn callMaster(self: *const Audio, op: u16, payload: []const u8, timeout: Timeout, out: *abi.AudioServiceMasterState) Result {
+        var services = services_facade.Services{ .sys = self.sys };
+        var connection = switch (services.open("AUDSVC")) {
+            .connection => |value| value,
+            .failure => |raw| return .{ .failure = raw },
+        };
+        defer _ = connection.close();
+        return switch (connection.call(op, payload, std.mem.asBytes(out), timeout)) {
+            .response => |response| if (response.bytes == @sizeOf(abi.AudioServiceMasterState) and
+                out.magic == abi.audio_master_state_magic and
+                out.version == abi.audio_master_state_version and
+                out.size == @sizeOf(abi.AudioServiceMasterState)) .ok else .{ .failure = abi.service_api_result_invalid },
             .timed_out => .timed_out,
             .remote_failure => |raw| .{ .failure = raw },
             .failure => |raw| .{ .failure = raw },

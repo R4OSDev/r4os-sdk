@@ -16,6 +16,18 @@ static int32_t fake_service_call(uint32_t handle, uint16_t op, const uint8_t *re
     (void)handle; (void)timeout;
     *header = (R4ServiceMessageHeader){0}; header->magic = R4OS_SERVICE_API_MAGIC; header->version = R4OS_SERVICE_API_VERSION; header->op = op; header->status = 0;
     if (timeout_next) { timeout_next = 0; return R4OS_SERVICE_API_RESULT_TIMEOUT; }
+    if (op == R4OS_AUDIO_SERVICE_OP_MASTER_STATUS || op == R4OS_AUDIO_SERVICE_OP_SET_MASTER_STATE) {
+        if (capacity < sizeof(R4AudioServiceMasterState)) return R4OS_SERVICE_API_RESULT_BUFFER_TOO_SMALL;
+        R4AudioServiceMasterState state = {0}; state.magic = R4OS_AUDIO_MASTER_STATE_MAGIC; state.version = R4OS_AUDIO_MASTER_STATE_VERSION; state.size = sizeof(state); state.master_revision = 4u; state.selected_volume_fixed = 0x8000u; state.last_audible_volume_fixed = 0x8000u;
+        if (op == R4OS_AUDIO_SERVICE_OP_SET_MASTER_STATE) {
+            R4AudioServiceMasterRequest master;
+            if (request_len != sizeof(master)) return R4OS_SERVICE_API_RESULT_INVALID;
+            memcpy(&master, request, sizeof(master));
+            if (master.magic != R4OS_AUDIO_MASTER_REQUEST_MAGIC || master.version != R4OS_AUDIO_MASTER_REQUEST_VERSION || master.size != sizeof(master)) return R4OS_SERVICE_API_RESULT_INVALID;
+            if ((master.flags & R4OS_AUDIO_MASTER_REQUEST_FLAG_MUTED) != 0u) state.flags |= R4OS_AUDIO_MASTER_STATE_FLAG_MUTED;
+        }
+        memcpy(response, &state, sizeof(state)); return (int32_t)sizeof(state);
+    }
     if (capacity < sizeof(R4AudioWireResult)) return R4OS_SERVICE_API_RESULT_BUFFER_TOO_SMALL;
     R4AudioWireResult result = {0}; result.magic = R4OS_AUDIO_SERVICE_RESULT_MAGIC; result.version = R4OS_AUDIO_SERVICE_RESULT_VERSION; result.action = op; result.stream_id = 91u;
     if (op == R4OS_AUDIO_SERVICE_OP_OPEN_STREAM) stream_open = 1;
@@ -68,6 +80,9 @@ int main(void) {
     init_app(&app, &sys, &raw_audio, &raw_dev); stream_open = 0; open_connections = 0u;
     R4AudioFacade audio = r4_app_audio(&app); R4AudioStream stream;
     if (!r4_audio_available(&audio)) return 1;
+    R4AudioServiceMasterState master;
+    if (r4_audio_master_status(&audio, forever_timeout(), &master).kind != R4_AUDIO_RESULT_OK || master.selected_volume_fixed != 0x8000u) return 21;
+    if (r4_audio_set_master_state(&audio, R4OS_AUDIO_MASTER_REQUEST_FLAG_SET_VOLUME | R4OS_AUDIO_MASTER_REQUEST_FLAG_SET_MUTED, 0x8000u, 1, master.master_revision, forever_timeout(), &master).kind != R4_AUDIO_RESULT_OK || (master.flags & R4OS_AUDIO_MASTER_STATE_FLAG_MUTED) == 0u) return 22;
     if (r4_audio_open_stream(&audio, 48000u, 2u, 2u, 0x10000u, poll_timeout(), &stream).kind != R4_AUDIO_RESULT_FAILED) return 2;
     timeout_next = 1; if (r4_audio_open_stream(&audio, 48000u, 2u, R4_AUDIO_FORMAT_S16LE, 0x10000u, poll_timeout(), &stream).kind != R4_AUDIO_RESULT_TIMED_OUT) return 3;
     if (r4_audio_open_stream(&audio, 48000u, 2u, R4_AUDIO_FORMAT_S16LE, 0x10000u, forever_timeout(), &stream).kind != R4_AUDIO_RESULT_OK) return 4;

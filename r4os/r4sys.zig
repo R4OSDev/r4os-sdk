@@ -805,6 +805,14 @@ pub const Context = struct {
         return self.base.audioServiceSetMasterVolume(fixed_volume, out);
     }
 
+    pub fn audioServiceMasterState(self: *const Context, out: *abi.AudioServiceMasterState) i32 {
+        return self.base.audioServiceMasterState(out);
+    }
+
+    pub fn audioServiceSetMasterState(self: *const Context, request: *const abi.AudioServiceMasterRequest, out: *abi.AudioServiceMasterState) i32 {
+        return self.base.audioServiceSetMasterState(request, out);
+    }
+
     pub fn audioServiceOpenStream(self: *const Context, rate: u32, channels: u16, format: abi.AudioFormat) i32 {
         return self.base.audioServiceOpenStream(rate, channels, format);
     }
