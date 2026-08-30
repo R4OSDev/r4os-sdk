@@ -98,6 +98,7 @@ const ConsolePushInputFn = *const fn (u32, [*]const u8, u32) callconv(.c) i32;
 const ConsoleWriteFn = *const fn (u32, [*]const u8, u32) callconv(.c) i32;
 const ConsoleReadFn = *const fn ([*]u8, u32) callconv(.c) i32;
 const ConsoleInputWaitFn = abi.R4DeskFns.console_input_wait;
+const PhysicalKeyPollFn = abi.R4DeskFns.physical_key_poll;
 const ClipboardWriteFn = *const fn ([*]const u8, u32) callconv(.c) i32;
 const ClipboardReadFn = *const fn ([*]u8, u32) callconv(.c) i32;
 const ClipboardRevisionFn = *const fn () callconv(.c) u32;
@@ -990,6 +991,13 @@ pub const R4Desk = struct {
         if (!self.hasFn("console_input_wait")) return abi.console_input_wait_error_unsupported;
         const console_fn: ConsoleInputWaitFn = @ptrFromInt(self.table.console_input_wait);
         return console_fn(last_generation, timeout_ticks, out_generation);
+    }
+
+    pub fn physicalKeyPoll(self: *const R4Desk, out: *abi.PhysicalKeyEvent) i32 {
+        out.* = .{};
+        if (!self.hasFn("physical_key_poll")) return abi.physical_key_poll_error_unsupported;
+        const poll_fn: PhysicalKeyPollFn = @ptrFromInt(self.table.physical_key_poll);
+        return poll_fn(out);
     }
 
     pub fn supportsClipboardContract(self: *const R4Desk) bool {

@@ -549,6 +549,9 @@ pub const InputFilterReason = enum {
     none,
     pointer_ignored,
     duplicate_focus,
+    duplicate_physical_down,
+    unexpected_physical_up,
+    invalid_physical_key,
     missing_geometry,
     unsupported_raw,
 };
@@ -561,9 +564,16 @@ pub const InputTranslationStats = struct {
     mouse_events: u64 = 0,
     mouse_moves: u64 = 0,
     mouse_mappings: u64 = 0,
+    physical_key_downs: u64 = 0,
+    physical_key_ups: u64 = 0,
+    physical_key_repeats: u64 = 0,
+    synthesized_physical_key_ups: u64 = 0,
     filtered_events: u64 = 0,
     pointer_ignored: u64 = 0,
     duplicate_focus: u64 = 0,
+    duplicate_physical_down: u64 = 0,
+    unexpected_physical_up: u64 = 0,
+    invalid_physical_key: u64 = 0,
     missing_geometry: u64 = 0,
     unsupported_raw: u64 = 0,
     last_raw_sequence: u64 = 0,
@@ -587,6 +597,14 @@ pub const HostStats = struct {
 pub const KeyEvent = struct {
     code: u32,
     modifiers: u32,
+    tick: u64,
+    sequence: u64 = 0,
+};
+
+pub const PhysicalKeyEvent = struct {
+    key: u32,
+    modifiers: u32,
+    flags: u32,
     tick: u64,
     sequence: u64 = 0,
 };
@@ -632,6 +650,8 @@ pub const InputEvent = union(enum) {
     resize: ResizeEvent,
     focus: FocusEvent,
     key_down: KeyEvent,
+    physical_key_down: PhysicalKeyEvent,
+    physical_key_up: PhysicalKeyEvent,
     text: TextEvent,
     mouse: MouseEvent,
 
@@ -641,6 +661,8 @@ pub const InputEvent = union(enum) {
             .resize => |event| .{ .sequence = event.sequence, .tick = event.tick },
             .focus => |event| .{ .sequence = event.sequence, .tick = event.tick },
             .key_down => |event| .{ .sequence = event.sequence, .tick = event.tick },
+            .physical_key_down => |event| .{ .sequence = event.sequence, .tick = event.tick },
+            .physical_key_up => |event| .{ .sequence = event.sequence, .tick = event.tick },
             .text => |event| .{ .sequence = event.sequence, .tick = event.tick },
             .mouse => |event| .{ .sequence = event.sequence, .tick = event.tick },
         };
@@ -651,6 +673,9 @@ pub const InputTranslator = struct {
     policy: InputPolicy = .{},
     focused: bool = false,
     pending_text: ?TextEvent = null,
+    held_physical_keys: [256]bool = .{false} ** 256,
+    pending_release_cursor: ?u16 = null,
+    pending_release_tick: u64 = 0,
     next_sequence: u64 = 1,
     stats: InputTranslationStats = .{},
 
@@ -675,13 +700,29 @@ pub const InputTranslator = struct {
             self.stats.pending_text_emitted +%= 1;
             return .{ .text = value };
         }
+        if (self.pending_release_cursor) |start| {
+            var index: usize = start;
+            while (index < self.held_physical_keys.len) : (index += 1) {
+                if (!self.held_physical_keys[index]) continue;
+                self.held_physical_keys[index] = false;
+                self.pending_release_cursor = @intCast(index + 1);
+                self.stats.synthesized_physical_key_ups +%= 1;
+                return self.logical(.{ .physical_key_up = .{
+                    .key = @intCast(index),
+                    .modifiers = 0,
+                    .flags = 0,
+                    .tick = self.pending_release_tick,
+                    .sequence = self.allocateSequence(),
+                } });
+            }
+            self.pending_release_cursor = null;
+            self.pending_release_tick = 0;
+        }
         return null;
     }
 
     pub fn translate(self: *InputTranslator, raw: abi.GuiEvent, viewport: ?Viewport, resize_size: ?Size) ?InputEvent {
-        const sequence = self.next_sequence;
-        self.next_sequence +%= 1;
-        if (self.next_sequence == 0) self.next_sequence = 1;
+        const sequence = self.allocateSequence();
         self.stats.raw_events +%= 1;
         self.stats.last_raw_sequence = sequence;
         self.stats.last_raw_tick = raw.tick;
@@ -708,7 +749,55 @@ pub const InputTranslator = struct {
         if (kind == @intFromEnum(abi.GuiEventKind.focus_lost)) {
             if (!self.focused) return self.filtered(sequence, raw.tick, .duplicate_focus);
             self.focused = false;
+            self.releaseHeldPhysicalKeys(raw.tick);
             return self.logical(.{ .focus = .{ .focused = false, .tick = raw.tick, .sequence = sequence } });
+        }
+        if (kind == @intFromEnum(abi.GuiEventKind.physical_key_reset)) {
+            self.releaseHeldPhysicalKeys(raw.tick);
+            return self.takePending() orelse self.filtered(sequence, raw.tick, .unexpected_physical_up);
+        }
+        if (kind == @intFromEnum(abi.GuiEventKind.physical_key_down) or
+            kind == @intFromEnum(abi.GuiEventKind.physical_key_up))
+        {
+            if (raw.key == 0 or raw.key >= @as(u32, @intCast(self.held_physical_keys.len))) {
+                return self.filtered(sequence, raw.tick, .invalid_physical_key);
+            }
+            const index: usize = @intCast(raw.key);
+            if (kind == @intFromEnum(abi.GuiEventKind.physical_key_down)) {
+                if (self.held_physical_keys[index]) {
+                    if ((raw.buttons & abi.physical_key_flag_repeat) == 0) {
+                        return self.filtered(sequence, raw.tick, .duplicate_physical_down);
+                    }
+                    self.stats.physical_key_downs +%= 1;
+                    self.stats.physical_key_repeats +%= 1;
+                    return self.logical(.{ .physical_key_down = .{
+                        .key = raw.key,
+                        .modifiers = raw.modifiers,
+                        .flags = raw.buttons,
+                        .tick = raw.tick,
+                        .sequence = sequence,
+                    } });
+                }
+                self.held_physical_keys[index] = true;
+                self.stats.physical_key_downs +%= 1;
+                return self.logical(.{ .physical_key_down = .{
+                    .key = raw.key,
+                    .modifiers = raw.modifiers,
+                    .flags = raw.buttons,
+                    .tick = raw.tick,
+                    .sequence = sequence,
+                } });
+            }
+            if (!self.held_physical_keys[index]) return self.filtered(sequence, raw.tick, .unexpected_physical_up);
+            self.held_physical_keys[index] = false;
+            self.stats.physical_key_ups +%= 1;
+            return self.logical(.{ .physical_key_up = .{
+                .key = raw.key,
+                .modifiers = raw.modifiers,
+                .flags = raw.buttons,
+                .tick = raw.tick,
+                .sequence = sequence,
+            } });
         }
         if (kind == @intFromEnum(abi.GuiEventKind.key_down)) {
             if (isTextCodepoint(raw.key) and self.policy.key_text_mode == .text_only) {
@@ -768,6 +857,24 @@ pub const InputTranslator = struct {
         return event;
     }
 
+    fn allocateSequence(self: *InputTranslator) u64 {
+        const sequence = self.next_sequence;
+        self.next_sequence +%= 1;
+        if (self.next_sequence == 0) self.next_sequence = 1;
+        return sequence;
+    }
+
+    fn releaseHeldPhysicalKeys(self: *InputTranslator, tick: u64) void {
+        for (self.held_physical_keys) |held| {
+            if (!held) continue;
+            if (self.pending_release_cursor == null) self.pending_release_cursor = 0;
+            self.pending_release_tick = tick;
+            return;
+        }
+        self.pending_release_cursor = null;
+        self.pending_release_tick = 0;
+    }
+
     fn recordLogical(self: *InputTranslator, sequence: u64, tick: u64) void {
         self.stats.logical_events +%= 1;
         self.stats.last_logical_sequence = sequence;
@@ -783,6 +890,9 @@ pub const InputTranslator = struct {
             .none => {},
             .pointer_ignored => self.stats.pointer_ignored +%= 1,
             .duplicate_focus => self.stats.duplicate_focus +%= 1,
+            .duplicate_physical_down => self.stats.duplicate_physical_down +%= 1,
+            .unexpected_physical_up => self.stats.unexpected_physical_up +%= 1,
+            .invalid_physical_key => self.stats.invalid_physical_key +%= 1,
             .missing_geometry => self.stats.missing_geometry +%= 1,
             .unsupported_raw => self.stats.unsupported_raw +%= 1,
         }
@@ -1513,6 +1623,66 @@ test "input translation separates text and rejects letterbox coordinates" {
     try std.testing.expectEqual(@as(u64, 1), translator.stats.pending_text_created);
     try std.testing.expectEqual(@as(u64, 1), translator.stats.pending_text_emitted);
     try std.testing.expectEqual(@as(u64, 2), translator.stats.mouse_mappings);
+}
+
+test "physical key transitions preserve sides and focus loss releases held keys once" {
+    var translator = InputTranslator{};
+    const gained = translator.translate(.{
+        .kind = @intFromEnum(abi.GuiEventKind.focus_gained),
+        .tick = 10,
+    }, null, null).?;
+    try std.testing.expect(gained.focus.focused);
+
+    const left_alt = translator.translate(.{
+        .kind = @intFromEnum(abi.GuiEventKind.physical_key_down),
+        .key = abi.physical_key_usage_left_alt,
+        .modifiers = abi.physical_key_modifier_left_alt,
+        .tick = 11,
+    }, null, null).?;
+    try std.testing.expectEqual(abi.physical_key_usage_left_alt, left_alt.physical_key_down.key);
+    try std.testing.expectEqual(abi.physical_key_modifier_left_alt, left_alt.physical_key_down.modifiers);
+
+    const right_control = translator.translate(.{
+        .kind = @intFromEnum(abi.GuiEventKind.physical_key_down),
+        .key = abi.physical_key_usage_right_control,
+        .modifiers = abi.physical_key_modifier_left_alt | abi.physical_key_modifier_right_control,
+        .tick = 12,
+    }, null, null).?;
+    try std.testing.expectEqual(abi.physical_key_usage_right_control, right_control.physical_key_down.key);
+    try std.testing.expect(translator.translate(.{
+        .kind = @intFromEnum(abi.GuiEventKind.physical_key_down),
+        .key = abi.physical_key_usage_right_control,
+        .tick = 13,
+    }, null, null) == null);
+    const repeat = translator.translate(.{
+        .kind = @intFromEnum(abi.GuiEventKind.physical_key_down),
+        .key = abi.physical_key_usage_right_control,
+        .flags = abi.physical_key_flag_repeat,
+        .tick = 13,
+    }, null, null).?;
+    try std.testing.expectEqual(abi.physical_key_flag_repeat, repeat.physical_key_down.flags);
+
+    const lost = translator.translate(.{
+        .kind = @intFromEnum(abi.GuiEventKind.focus_lost),
+        .tick = 14,
+    }, null, null).?;
+    try std.testing.expect(!lost.focus.focused);
+    const release_left_alt = translator.takePending().?;
+    const release_right_control = translator.takePending().?;
+    try std.testing.expectEqual(abi.physical_key_usage_left_alt, release_left_alt.physical_key_up.key);
+    try std.testing.expectEqual(abi.physical_key_usage_right_control, release_right_control.physical_key_up.key);
+    try std.testing.expectEqual(@as(u64, 14), release_left_alt.physical_key_up.tick);
+    try std.testing.expect(translator.takePending() == null);
+    try std.testing.expect(translator.translate(.{
+        .kind = @intFromEnum(abi.GuiEventKind.physical_key_up),
+        .key = abi.physical_key_usage_right_control,
+        .tick = 15,
+    }, null, null) == null);
+    try std.testing.expectEqual(@as(u64, 3), translator.stats.physical_key_downs);
+    try std.testing.expectEqual(@as(u64, 1), translator.stats.physical_key_repeats);
+    try std.testing.expectEqual(@as(u64, 2), translator.stats.synthesized_physical_key_ups);
+    try std.testing.expectEqual(@as(u64, 1), translator.stats.duplicate_physical_down);
+    try std.testing.expectEqual(@as(u64, 1), translator.stats.unexpected_physical_up);
 }
 
 test "text-only pointer-free policy preserves order and filter reasons" {

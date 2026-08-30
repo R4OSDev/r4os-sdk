@@ -182,6 +182,10 @@ pub const Context = struct {
         return self.base.consoleInputWait(last_generation, timeout_ticks, out_generation);
     }
 
+    pub fn physicalKeyPoll(self: *const Context, out: *abi.PhysicalKeyEvent) i32 {
+        return self.base.physicalKeyPoll(out);
+    }
+
     pub fn clipboardWrite(self: *const Context, data: []const u8) i32 {
         return self.base.clipboardWrite(data);
     }

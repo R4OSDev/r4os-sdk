@@ -90,6 +90,7 @@ fn runInteractive(sys: *r4os.r4sys.Context, desk: r4os.r4desk.Context, draw: r4o
                     }
                     should_present = true;
                 },
+                .physical_key_down, .physical_key_up => {},
                 .text => |text| {
                     paintTextIndicator(&host.video.surface, text.codepoint);
                     host.video.invalidate(.{ .x = 8, .y = 8, .w = 20, .h = 12 });
@@ -463,6 +464,7 @@ fn runtimeHostInput(self: *RuntimeSelfTestHost, event: host_api.InputEvent) runt
             r4os.gui.Key.escape => return self.command(.close),
             else => return .handled,
         },
+        .physical_key_down, .physical_key_up => return .handled,
         .text => |text| {
             paintTextIndicator(&self.host.video.surface, text.codepoint);
             self.host.video.invalidate(.{ .x = 8, .y = 8, .w = 20, .h = 12 });

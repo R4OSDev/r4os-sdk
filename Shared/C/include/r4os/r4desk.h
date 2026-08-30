@@ -55,6 +55,16 @@ static inline int32_t r4desk_console_input_wait(R4Desk *desk, uint64_t last_gene
     return fn(last_generation, timeout_ticks, out_generation);
 }
 
+static inline int32_t r4desk_physical_key_poll(R4Desk *desk, R4PhysicalKeyEvent *out_event) {
+    if (out_event == 0) return R4OS_PHYSICAL_KEY_POLL_ERROR_INVALID;
+    *out_event = (R4PhysicalKeyEvent){0};
+    if (desk == 0 || desk->table == 0 ||
+        desk->table->size < offsetof(R4XStartR4Desk, physical_key_poll) + sizeof(uintptr_t) ||
+        desk->table->physical_key_poll == 0) return R4OS_PHYSICAL_KEY_POLL_ERROR_UNSUPPORTED;
+    R4DeskPhysicalKeyPollFn fn = (R4DeskPhysicalKeyPollFn)(uintptr_t)desk->table->physical_key_poll;
+    return fn(out_event);
+}
+
 static inline int32_t r4desk_program_window_id(R4Desk *desk) {
     if (desk == 0 || desk->table == 0 || desk->table->program_window_id == 0) return -1;
     R4DeskProgramWindowIdFn fn = (R4DeskProgramWindowIdFn)(uintptr_t)desk->table->program_window_id;

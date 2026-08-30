@@ -1418,6 +1418,12 @@ pub const Context = struct {
         return table_fn(last_generation, timeout_ticks, out_generation);
     }
 
+    pub fn physicalKeyPoll(self: *const Context, out: *abi.PhysicalKeyEvent) i32 {
+        out.* = .{};
+        const table_fn = self.deskFn("physical_key_poll") orelse return abi.physical_key_poll_error_unsupported;
+        return table_fn(out);
+    }
+
     pub fn displayRevision(self: *const Context) u32 {
         const table_fn = self.drawFn("display_revision") orelse return 0;
         return table_fn();
