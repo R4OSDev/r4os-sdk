@@ -1,3 +1,4 @@
+const std = @import("std");
 const r4os = @import("r4os");
 
 const host_api = r4os.subsystem_host;
@@ -272,7 +273,11 @@ fn runRuntimeSelfTest(sys: *r4os.r4sys.Context, host: *host_api.Host, audio: ?r4
     var audio_adapter: runtime_api.R4AudioSink = undefined;
     var sink: ?runtime_api.AudioSink = null;
     if (audio) |available| {
-        audio_adapter = runtime_api.R4AudioSink.init(available);
+        audio_adapter = runtime_api.R4AudioSink.initWithTimeouts(
+            available,
+            100 * std.time.ns_per_ms,
+            500 * std.time.ns_per_ms,
+        );
         sink = audio_adapter.sink();
     }
 
@@ -311,7 +316,9 @@ fn runRuntimeSelfTest(sys: *r4os.r4sys.Context, host: *host_api.Host, audio: ?r4
     if (runtime.stats.slices < 6) return runtimeSelfTestFail(sys, "time-pacing-slices", 119);
     if (runtime.stats.sleeps == 0) return runtimeSelfTestFail(sys, "time-pacing-sleeps", 119);
     if (runtime.clock.guest_ns == 0) return runtimeSelfTestFail(sys, "time-pacing-clock", 119);
-    if (runtime.audio.last_error != 0 or runtime.audio.stats.generated_bytes == 0 or runtime.audio.stats.submitted_bytes == 0) return runtimeSelfTestFail(sys, "audio-progress", 120);
+    if (runtime.audio.last_error != 0) return runtimeSelfTestFail(sys, "audio-close", 120);
+    if (runtime.audio.stats.generated_bytes == 0) return runtimeSelfTestFail(sys, "audio-generate", 120);
+    if (runtime.audio.stats.submitted_bytes == 0) return runtimeSelfTestFail(sys, "audio-submit", 120);
     if (runtime.audio.stats.muted_bytes == 0 or runtime.audio.muted or runtime.audio.stats.idle_closes == 0) return runtimeSelfTestFail(sys, "audio-idle", 121);
     if (runtime.stats.presents < 4 or runtime_host.phase == .warming or runtime_host.phase == .paused or runtime_host.phase == .resumed or runtime_host.phase == .reset or runtime_host.phase == .muted) return runtimeSelfTestFail(sys, "host-progress", 122);
 
@@ -421,14 +428,26 @@ fn runtimeHostPoll(context: *anyopaque) runtime_api.HostPollResult {
                 self.runtime.audio.next_deadline_tick == 0 and
                 self.runtime.audio.stats.idle_closes == expected_idle_closes)
             {
-                self.guest.allow_finish = true;
                 self.phase = .unmuted;
                 return self.command(.unmute);
             }
         },
-        .unmuted => if (self.exit_mode == .window_close and self.guest.steps >= 6 and !self.runtime.audio.muted) {
-            self.phase = .done;
-            return self.command(.close);
+        .unmuted => {
+            // On hardware-assisted hosts the six guest steps can finish
+            // before the asynchronous audio service confirms its first
+            // write. Keep both completion variants alive until transport
+            // progress is observable instead of relying on TCG latency.
+            if (self.runtime.audio.muted or
+                self.runtime.audio.stats.generated_bytes == 0 or
+                self.runtime.audio.stats.submitted_bytes == 0)
+            {
+                return .idle;
+            }
+            self.guest.allow_finish = true;
+            if (self.exit_mode == .window_close and self.guest.steps >= 6) {
+                self.phase = .done;
+                return self.command(.close);
+            }
         },
         .done => {},
     }
