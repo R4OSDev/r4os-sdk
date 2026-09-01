@@ -1685,6 +1685,83 @@ test "physical key transitions preserve sides and focus loss releases held keys 
     try std.testing.expectEqual(@as(u64, 1), translator.stats.unexpected_physical_up);
 }
 
+test "keypad and right control transport stays physical through repeat and focus release" {
+    var translator = InputTranslator{};
+    _ = translator.translate(.{
+        .kind = @intFromEnum(abi.GuiEventKind.focus_gained),
+        .tick = 20,
+    }, null, null).?;
+
+    const keypad = [_]u32{
+        abi.physical_key_usage_keypad_2,
+        abi.physical_key_usage_keypad_4,
+        abi.physical_key_usage_keypad_6,
+        abi.physical_key_usage_keypad_7,
+        abi.physical_key_usage_keypad_8,
+        abi.physical_key_usage_keypad_9,
+    };
+    for (keypad, 0..) |usage, index| {
+        const translated = translator.translate(.{
+            .kind = @intFromEnum(abi.GuiEventKind.physical_key_down),
+            .key = usage,
+            .tick = 21 + index,
+        }, null, null).?;
+        try std.testing.expectEqual(usage, translated.physical_key_down.key);
+    }
+    const right_control = translator.translate(.{
+        .kind = @intFromEnum(abi.GuiEventKind.physical_key_down),
+        .key = abi.physical_key_usage_right_control,
+        .modifiers = abi.physical_key_modifier_right_control,
+        .tick = 30,
+    }, null, null).?;
+    try std.testing.expectEqual(abi.physical_key_usage_right_control, right_control.physical_key_down.key);
+    try std.testing.expect(abi.physical_key_usage_right_control != abi.physical_key_usage_left_control);
+
+    try std.testing.expect(translator.translate(.{
+        .kind = @intFromEnum(abi.GuiEventKind.physical_key_down),
+        .key = abi.physical_key_usage_keypad_8,
+        .tick = 31,
+    }, null, null) == null);
+    const repeated = translator.translate(.{
+        .kind = @intFromEnum(abi.GuiEventKind.physical_key_down),
+        .key = abi.physical_key_usage_keypad_8,
+        .flags = abi.physical_key_flag_repeat,
+        .tick = 32,
+    }, null, null).?;
+    try std.testing.expectEqual(abi.physical_key_flag_repeat, repeated.physical_key_down.flags);
+
+    const numeric_row_8: u32 = 0x25;
+    const row = translator.translate(.{
+        .kind = @intFromEnum(abi.GuiEventKind.physical_key_down),
+        .key = numeric_row_8,
+        .tick = 33,
+    }, null, null).?;
+    try std.testing.expectEqual(numeric_row_8, row.physical_key_down.key);
+    try std.testing.expect(numeric_row_8 != abi.physical_key_usage_keypad_8);
+    try std.testing.expect(abi.physical_key_usage_up != abi.physical_key_usage_keypad_8);
+
+    _ = translator.translate(.{
+        .kind = @intFromEnum(abi.GuiEventKind.focus_lost),
+        .tick = 40,
+    }, null, null).?;
+    const expected_releases = [_]u32{
+        numeric_row_8,
+        abi.physical_key_usage_keypad_2,
+        abi.physical_key_usage_keypad_4,
+        abi.physical_key_usage_keypad_6,
+        abi.physical_key_usage_keypad_7,
+        abi.physical_key_usage_keypad_8,
+        abi.physical_key_usage_keypad_9,
+        abi.physical_key_usage_right_control,
+    };
+    for (expected_releases) |usage| {
+        const released = translator.takePending().?;
+        try std.testing.expectEqual(usage, released.physical_key_up.key);
+        try std.testing.expectEqual(@as(u64, 40), released.physical_key_up.tick);
+    }
+    try std.testing.expect(translator.takePending() == null);
+}
+
 test "text-only pointer-free policy preserves order and filter reasons" {
     const viewport = try calculateViewport(800, 600, 320, 200);
     var translator = InputTranslator.init(.text_only_no_pointer);
