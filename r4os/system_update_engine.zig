@@ -501,6 +501,9 @@ pub fn runTerminal(r4_app: *r4os.App) i32 {
     if (equalsIgnoreCase(command, "COMMIT")) {
         return engine.commitBatch().exit_code;
     }
+    if (equalsIgnoreCase(command, "ABORT-BATCH")) {
+        return abortPreparedBatchCommand(&ctx);
+    }
     if (equalsIgnoreCase(command, "RESUME-BATCH")) {
         return engine.resumeBatch().exit_code;
     }
@@ -650,6 +653,7 @@ fn printUsage(ctx: *const r4os.r4sys.Context) void {
     ctx.println("  SYSUPD APPLY  C:\\R4OS\\UPDATE\\INBOX\\UPDATE.R4U");
     ctx.println("  SYSUPD STAGE  C:\\R4OS\\UPDATE\\INBOX\\UPDATE.R4U");
     ctx.println("  SYSUPD COMMIT");
+    ctx.println("  SYSUPD ABORT-BATCH");
     ctx.println("  SYSUPD RESUME-BATCH");
     ctx.println("  SYSUPD RESUME");
     ctx.println("  SYSUPD STATUS");
@@ -1525,6 +1529,194 @@ fn appendGeneratedPayload(
     }
     info.staged_bytes += bytes.len;
     return .ok;
+}
+
+/// Discards only a restart batch that has not acquired a durable transaction
+/// journal. Every private stage is reconstructed from the still-bound package
+/// and removed by size+checksum; targets and retained backups are untouched.
+fn abortPreparedBatchCommand(ctx: *const r4os.r4sys.Context) i32 {
+    if (!ensureUpdateDirectories(ctx)) {
+        fail(ctx, "ABORT-BATCH", "update-dirs");
+        return 1;
+    }
+    switch (readNewestValidBatchInto(ctx, &batch_journal_workspace)) {
+        .found => {},
+        .not_found => {
+            ctx.println("SYSUPD ABORT-BATCH result: OK state=Idle");
+            return 0;
+        },
+        .io => {
+            fail(ctx, "ABORT-BATCH", "batch-read");
+            return 1;
+        },
+    }
+    if (!batchPreparationAbortable(batch_journal_workspace.phase)) {
+        fail(ctx, "ABORT-BATCH", "batch-not-abortable");
+        return 1;
+    }
+
+    switch (acquireUpdateLock(ctx, false)) {
+        .acquired => {},
+        .busy => {
+            fail(ctx, "ABORT-BATCH", "transaction-active");
+            return 1;
+        },
+        .io => {
+            fail(ctx, "ABORT-BATCH", "lock-io");
+            return 1;
+        },
+    }
+    defer releaseUpdateLock(ctx);
+    switch (readNewestValidBatchInto(ctx, &batch_journal_workspace)) {
+        .found => {},
+        .not_found, .io => {
+            fail(ctx, "ABORT-BATCH", "batch-reread");
+            return 1;
+        },
+    }
+    const batch = &batch_journal_workspace;
+    if (!batchPreparationAbortable(batch.phase)) {
+        fail(ctx, "ABORT-BATCH", "batch-not-abortable");
+        return 1;
+    }
+
+    var transaction_generation: u64 = 1;
+    switch (readNewestValidJournalInto(ctx, &command_journal_workspace)) {
+        .found => {
+            if (!phaseTerminal(command_journal_workspace.phase)) {
+                fail(ctx, "ABORT-BATCH", "resume-required");
+                return 1;
+            }
+            if (command_journal_workspace.transaction_generation == std.math.maxInt(u64)) {
+                fail(ctx, "ABORT-BATCH", "transaction-generation-exhausted");
+                return 1;
+            }
+            transaction_generation = command_journal_workspace.transaction_generation + 1;
+        },
+        .not_found => {},
+        .io => {
+            fail(ctx, "ABORT-BATCH", "journal-read");
+            return 1;
+        },
+    }
+
+    batch_info_workspace = .{
+        .source_path = batch.packages[packageIndexAtOrder(batch, 0) orelse return 1].pathText(),
+        .package = "RESTART-BATCH",
+        .package_version = batch.targetReleaseText(),
+        .release = batch.targetReleaseText(),
+        .activation = .restart,
+        .reboot = true,
+        .transaction_generation = transaction_generation,
+    };
+    const info = &batch_info_workspace;
+    var payload_base: usize = 0;
+    var component_base: usize = 0;
+    var order: usize = 0;
+    while (order < batch.package_count) : (order += 1) {
+        const package_index = packageIndexAtOrder(batch, order) orelse {
+            fail(ctx, "ABORT-BATCH", "batch-order");
+            return 1;
+        };
+        const binding = &batch.packages[package_index];
+        primary_info_workspace = .{ .transaction_generation = transaction_generation };
+        command_path_workspace = .{0} ** max_path;
+        const package_info = &primary_info_workspace;
+        const status = readAndVerifyPackage(
+            ctx,
+            binding.pathText(),
+            command_path_workspace[0..],
+            command_manifest_workspace[0..],
+            package_info,
+            false,
+            .deferred_batch,
+            "ABORT-BATCH",
+        );
+        if (status != .ok or !batchEntryMatchesInfo(binding, package_info)) {
+            if (status == .ok) fail(ctx, "ABORT-BATCH", "package-binding-changed");
+            return 1;
+        }
+        if (!assignInternalPathsAt(ctx, package_info, "ABORT-BATCH", payload_base) or
+            !copyPackageIntoBatch(info, package_info, payload_base, component_base))
+        {
+            fail(ctx, "ABORT-BATCH", "batch-copy");
+            return 1;
+        }
+        payload_base += package_info.payload_count;
+        component_base += package_info.component_count;
+    }
+    info.payload_count = @intCast(payload_base);
+    info.component_count = @intCast(component_base);
+
+    const inventory = switch (prepareBatchInventoryData(ctx, info, "ABORT-BATCH")) {
+        .ready => |bytes| bytes,
+        .failed, .io => return 1,
+    };
+    if (info.payload_count >= max_payloads) {
+        fail(ctx, "ABORT-BATCH", "batch-capacity");
+        return 1;
+    }
+    const inventory_index: usize = @intCast(info.payload_count);
+    var inventory_entry = &info.payloads[inventory_index];
+    inventory_entry.* = .{ .size = inventory.len, .checksum = checksum(inventory), .class = .config };
+    inventory_entry.target_len = copyTextZ(inventory_entry.target_path[0..], inventory_path) orelse return 1;
+    inventory_entry.stage_len = buildInternal83Name(
+        inventory_entry.stage_path[0..],
+        inventory_entry.targetText(),
+        'S',
+        transaction_generation,
+        inventory_index,
+    ) orelse return 1;
+    inventory_entry.backup_len = buildInternal83Name(
+        inventory_entry.backup_path[0..],
+        inventory_entry.targetText(),
+        'B',
+        transaction_generation,
+        inventory_index,
+    ) orelse return 1;
+    info.payload_count += 1;
+
+    switch (deleteStagedPayloads(ctx, info)) {
+        .ok => {},
+        .conflict => {
+            fail(ctx, "ABORT-BATCH", "stage-conflict");
+            return 1;
+        },
+        .io => {
+            fail(ctx, "ABORT-BATCH", "stage-delete");
+            return 1;
+        },
+        else => unreachable,
+    }
+
+    const aborted_package_count = batch.package_count;
+    for (batch_journal_paths) |path| {
+        if (ctx.fileDelete(path) < 0) {
+            fail(ctx, "ABORT-BATCH", "batch-delete");
+            return 1;
+        }
+    }
+    switch (readNewestValidBatchInto(ctx, &batch_journal_workspace)) {
+        .not_found => {},
+        .found => {
+            fail(ctx, "ABORT-BATCH", "batch-delete-incomplete");
+            return 1;
+        },
+        .io => {
+            fail(ctx, "ABORT-BATCH", "batch-delete-read");
+            return 1;
+        },
+    }
+    ctx.write("SYSUPD ABORT-BATCH result: OK state=Idle packages=");
+    ctx.printU64(aborted_package_count);
+    ctx.write(" stages=");
+    ctx.printU64(info.payload_count);
+    ctx.println("");
+    return 0;
+}
+
+fn batchPreparationAbortable(phase: system_update_batch.Phase) bool {
+    return phase == .staged or phase == .verifying or phase == .staging;
 }
 
 fn commitBatchCommand(ctx: *const r4os.r4sys.Context) i32 {

@@ -237,6 +237,7 @@ pub fn classifySystemPath(path_raw: []const u8) SystemReplaceClass {
     if (pathHasPrefix(path, "C:\\R4OS\\PROTOCOLS\\") and endsWithIgnoreCase(path, ".R4P")) return .protocol;
     if (pathHasPrefix(path, "C:\\R4OS\\SERVICES\\") and endsWithIgnoreCase(path, ".R4X")) return .service;
     if (pathHasPrefix(path, "C:\\R4OS\\SOFTWARE\\")) return .software;
+    if (pathHasPrefix(path, "C:\\R4OS\\SUBSYSTEMS\\") and endsWithIgnoreCase(path, ".R4X")) return .software;
     if (pathHasPrefix(path, "C:\\R4OS\\FONTS\\") and endsWithIgnoreCase(path, ".R4F")) return .font;
     if (pathHasPrefix(path, "C:\\R4OS\\CONFIG\\")) return .config;
     if (pathHasPrefix(path, "C:\\R4OS\\SDK\\")) return .sdk;
@@ -1499,6 +1500,8 @@ test "r4sys classifies system replacement targets" {
     try std.testing.expectEqual(SystemReplaceClass.protocol, classifySystemPath("C:\\R4OS\\PROTOCOLS\\NETTCP.R4P"));
     try std.testing.expectEqual(SystemReplaceClass.service, classifySystemPath("C:\\R4OS\\SERVICES\\SSHD.R4X"));
     try std.testing.expectEqual(SystemReplaceClass.software, classifySystemPath("C:\\R4OS\\SOFTWARE\\TERMINAL\\TERMINAL.R4X"));
+    try std.testing.expectEqual(SystemReplaceClass.software, classifySystemPath("C:\\R4OS\\SUBSYSTEMS\\r4os.gb\\R4GB.R4X"));
+    try std.testing.expectEqual(SystemReplaceClass.unknown, classifySystemPath("C:\\R4OS\\SUBSYSTEMS\\r4os.gb\\README.TXT"));
     try std.testing.expectEqual(SystemReplaceClass.font, classifySystemPath("C:\\R4OS\\FONTS\\TERMINAL8.R4F"));
     try std.testing.expectEqual(SystemReplaceClass.config, classifySystemPath("C:\\R4OS\\CONFIG\\VERSION.R4S"));
     try std.testing.expectEqual(SystemReplaceClass.config, classifySystemPath("C:\\CONFIG.R4S"));
