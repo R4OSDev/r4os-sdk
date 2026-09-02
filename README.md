@@ -23,6 +23,15 @@ or select one printable text event with pointer filtering before mapping.
 Stable raw-event sequences and ticks, filter counters, and an ignored-without-
 wakeup runtime result keep delivery and loss observable without event logs.
 
+`r4os.subsystem_persistence` is the source-level companion for cartridge
+subsystems. Consumers supply only their canonical save directories, exact RTC
+record size and validator; the helper supplies one digest lease, exact reads,
+immutable coalesced snapshots, a serial joinable worker, same-directory atomic
+stage/target/last-good publication, bounded retry/recovery and drain-before-
+release. Cartridge battery policy, memory sizing, codecs and guest clocks stay
+with the subsystem. The helper is compiled into each consumer and creates no
+R4L or platform ABI.
+
 ## Service loops
 
 `r4os.ServiceLoop` is the shared main-loop mechanism for R4X services. It

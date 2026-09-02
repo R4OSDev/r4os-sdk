@@ -217,6 +217,19 @@ Fehler fuehren durch denselben idempotenten Ressourcenabbau. Controller und
 Save-States koennen spaeter oberhalb der Callbacks ergaenzt werden, sind aber
 nicht Bestandteil dieses Vertrags.
 
+`r4os.subsystem_persistence` ist ein einkompilierter SDK-Quellhelfer und kein
+R4L- oder Plattform-ABI-Vertrag. Das konsumierende Subsystem liefert nur den
+kanonischen Save-Verzeichnisbaum, die exakte RTC-Satzlaenge und dessen
+Validator. Der Helfer besitzt pro 32-Byte-Gastidentitaet eine create-only
+Writer-Lease, exakte Reads, unveraenderliche SRAM-/RTC-Snapshots, einen
+seriellen joinbaren und pro Dateityp zusammenfassenden Worker sowie die
+gleichverzeichnige Stage-/Ziel-/Last-Good-Veroeffentlichung. Verlorene
+Dateisystembestaetigungen und transiente Sichtbarkeit werden begrenzt
+wiederholt; ein Neustart uebernimmt nur exakt lange und bei RTC inhaltlich
+gueltige Stages. Close und Fehler drainen und joinen vor Lease-Freigabe.
+Batteriepolitik, Speicherlaenge, RTC-Codec und Gastzeit bleiben vollstaendig
+beim jeweiligen Subsystem.
+
 Die optionale Audio-Pumpe verwendet caller-eigene Queue- und Scratchspeicher.
 Der definierte Standard ist 48 kHz, Stereo, signed 16-bit little endian mit
 480 Frames je 10-ms-Quantum, zwei Zielquanten und einem begrenzten

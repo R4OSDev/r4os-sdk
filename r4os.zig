@@ -8,6 +8,7 @@ pub const subsystem_catalog = @import("r4os/subsystem_catalog.zig");
 pub const subsystem_launch = @import("r4os/subsystem_launch.zig");
 pub const subsystem_host = @import("r4os/subsystem_host.zig");
 pub const subsystem_runtime = @import("r4os/subsystem_runtime.zig");
+pub const subsystem_persistence = @import("r4os/subsystem_persistence.zig");
 pub const system_update_recovery = @import("r4os/system_update_recovery.zig");
 pub const system_update_batch = @import("r4os/system_update_batch.zig");
 pub const update_catalog = @import("r4os/update_catalog.zig");
