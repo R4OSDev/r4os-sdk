@@ -187,6 +187,13 @@ setzt das SDK die Bitmap daraus zusammen; die Pixel bleiben exakt, waehrend
 proportionale Einzelglyphmetriken auf Face-Breite und maximalen Advance
 zurueckfallen.
 
+R4DRAW-v7 haengt `font_revision` an. Der von `fontRevision()` gelieferte
+Wert ist ungleich null und aendert sich nach jedem erfolgreich abgeschlossenen
+Reload des Fontkatalogs. Caches duerfen damit Font-ID, Revision und Codepoint
+als Schluessel verwenden und muessen bei einem Revisionswechsel ihre alten
+Layouts und Abdeckungen verwerfen. Fehlt der optionale Slot in einer aelteren
+Tabelle, liefert die SDK-Fassade die stabile Kompatibilitaetsrevision 1.
+
 `Host.pollInput` uebersetzt Close, Resize, Fokus, Tastencode, Text und Maus in
 eine gastneutrale Ereignisunion. Jedes rohe GUI-Ereignis erhaelt dabei eine
 monotone Host-Sequenz; alle daraus entstehenden logischen Ereignisse behalten

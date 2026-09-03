@@ -182,6 +182,10 @@ pub const Context = struct {
         return self.base.fontGlyphBitmap(font_id, codepoint, out);
     }
 
+    pub fn fontRevision(self: *const Context) u32 {
+        return self.base.fontRevision();
+    }
+
     pub fn fontReload(self: *const Context) i32 {
         return self.base.fontReload();
     }

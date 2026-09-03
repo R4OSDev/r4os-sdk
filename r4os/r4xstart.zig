@@ -148,6 +148,7 @@ const FontInfoFn = *const fn (u32, *abi.GuiFontInfo) callconv(.c) i32;
 const FontMeasureFn = *const fn (u32, [*:0]const u8, *abi.GuiTextMetrics) callconv(.c) i32;
 const FontGlyphRowFn = *const fn (u32, u32, u32) callconv(.c) u64;
 const FontGlyphBitmapFn = abi.R4DrawFns.font_glyph_bitmap;
+const FontRevisionFn = abi.R4DrawFns.font_revision;
 const FontReloadFn = *const fn () callconv(.c) i32;
 const GuiSetFontFn = *const fn (u32) callconv(.c) i32;
 const GuiFontFn = *const fn (u32, *abi.GuiFontInfo) callconv(.c) i32;
@@ -1446,6 +1447,15 @@ pub const R4Draw = struct {
         return 0;
     }
 
+    /// Returns the generation paired with live font ids. Legacy tables use a
+    /// stable generation because they cannot report catalogue reloads.
+    pub fn fontRevision(self: *const R4Draw) u32 {
+        if (!self.hasFn("font_revision")) return 1;
+        const font_fn: FontRevisionFn = @ptrFromInt(self.table.font_revision);
+        const revision = font_fn();
+        return if (revision == 0) 1 else revision;
+    }
+
     pub fn fontReload(self: *const R4Draw) i32 {
         if (!self.hasFn("font_reload")) return -1;
         const font_fn: FontReloadFn = @ptrFromInt(self.table.font_reload);
@@ -1574,6 +1584,10 @@ fn testBulkGlyphBitmap(_: u32, _: u32, out: *abi.GuiGlyphBitmap) callconv(.c) i3
     return 0;
 }
 
+fn testFontRevision() callconv(.c) u32 {
+    return 19;
+}
+
 fn testLegacyFontInfo(font_id: u32, out: *abi.GuiFontInfo) callconv(.c) i32 {
     if (font_id != 7) return 0;
     out.* = .{
@@ -1595,6 +1609,7 @@ fn testLegacyGlyphRow(_: u32, _: u32, row: u32) callconv(.c) u64 {
 test "R4DRAW bulk glyph dispatch and legacy row fallback stay compatible" {
     var current_table = abi.R4XStartR4Draw{
         .font_glyph_bitmap = @intFromPtr(&testBulkGlyphBitmap),
+        .font_revision = @intFromPtr(&testFontRevision),
     };
     const current = R4Draw{ .table = &current_table };
     var bitmap: abi.GuiGlyphBitmap = .{};
@@ -1602,6 +1617,7 @@ test "R4DRAW bulk glyph dispatch and legacy row fallback stay compatible" {
     try std.testing.expectEqual(@as(u32, 7), bitmap.width);
     try std.testing.expectEqual(@as(u64, 0x55), bitmap.rows[0]);
     try std.testing.expectEqual(@as(u64, 0x2A), bitmap.rows[1]);
+    try std.testing.expectEqual(@as(u32, 19), current.fontRevision());
 
     var legacy_table = abi.R4XStartR4Draw{
         .abi_version = 5,
@@ -1612,6 +1628,8 @@ test "R4DRAW bulk glyph dispatch and legacy row fallback stay compatible" {
     const legacy = R4Draw{ .table = &legacy_table };
     bitmap = .{};
     try std.testing.expect(!legacy.hasFn("font_glyph_bitmap"));
+    try std.testing.expect(!legacy.hasFn("font_revision"));
+    try std.testing.expectEqual(@as(u32, 1), legacy.fontRevision());
     try std.testing.expectEqual(@as(i32, 0), legacy.fontGlyphBitmap(7, 0x1F642, &bitmap));
     try std.testing.expectEqual(@as(u32, 11), bitmap.width);
     try std.testing.expectEqual(@as(u32, 3), bitmap.height);

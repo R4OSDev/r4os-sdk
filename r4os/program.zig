@@ -1680,6 +1680,14 @@ pub const Context = struct {
         return 0;
     }
 
+    /// Returns the non-zero generation paired with live font catalogue ids.
+    /// Pre-v7 R4DRAW tables expose no reload generation and use stable 1.
+    pub fn fontRevision(self: *const Context) u32 {
+        const table_fn = self.drawFn("font_revision") orelse return 1;
+        const revision = table_fn();
+        return if (revision == 0) 1 else revision;
+    }
+
     /// Rebuilds the R4DRAW catalogue from C:\R4OS\FONTS.  Returns the number
     /// of renderable fonts, or a negative draw error when the scan failed.
     pub fn fontReload(self: *const Context) i32 {
