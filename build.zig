@@ -52,6 +52,15 @@ pub fn build(b: *std.Build) void {
     const sdk_unit_tests = b.addTest(.{ .root_module = host_r4os });
     const run_sdk_unit_tests = b.addRunArtifact(sdk_unit_tests);
 
+    const vm_allocator_module = b.createModule(.{
+        .root_source_file = b.path("r4os/vm_allocator.zig"),
+        .target = b.graph.host,
+        .optimize = .Debug,
+    });
+    vm_allocator_module.addImport("r4os_contract", sdk_profile.profile.contract_module);
+    const vm_allocator_tests = b.addTest(.{ .root_module = vm_allocator_module });
+    const run_vm_allocator_tests = b.addRunArtifact(vm_allocator_tests);
+
     const subsystem_runtime_module = b.createModule(.{
         .root_source_file = b.path("r4os/subsystem_runtime.zig"),
         .target = b.graph.host,
@@ -121,6 +130,7 @@ pub fn build(b: *std.Build) void {
     const test_step = b.step("test", "Run SDK, build-tool and smoke tests");
     test_step.dependOn(b.getInstallStep());
     test_step.dependOn(&run_sdk_unit_tests.step);
+    test_step.dependOn(&run_vm_allocator_tests.step);
     test_step.dependOn(&run_subsystem_runtime_tests.step);
     test_step.dependOn(&run_ntfs_volume_tests.step);
     test_step.dependOn(&run_r4x_builder_tests.step);
