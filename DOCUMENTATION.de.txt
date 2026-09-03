@@ -179,6 +179,14 @@ generationstreu abfragen koennen. Paletten-, Modus- und Viewportaenderungen
 erzwingen einen Vollframe; nach einer Vollbasis und hoechstens 31 Deltas wird
 die Kette durch einen neuen Vollframe verdichtet.
 
+R4DRAW-v6 liefert mit `font_glyph_bitmap` eine komplette, auf 40 Zeilen
+begrenzte Glyph-Bitmap samt Layoutmetriken in einem Aufruf. Dadurch entfallen
+bei aktuellen Kerneln die wiederholte Glyphsuche und ein ABI-Aufruf je Zeile.
+Der alte `font_glyph_row`-Slot bleibt erhalten. Fehlt der neue optionale Slot,
+setzt das SDK die Bitmap daraus zusammen; die Pixel bleiben exakt, waehrend
+proportionale Einzelglyphmetriken auf Face-Breite und maximalen Advance
+zurueckfallen.
+
 `Host.pollInput` uebersetzt Close, Resize, Fokus, Tastencode, Text und Maus in
 eine gastneutrale Ereignisunion. Jedes rohe GUI-Ereignis erhaelt dabei eine
 monotone Host-Sequenz; alle daraus entstehenden logischen Ereignisse behalten

@@ -178,6 +178,10 @@ pub const Context = struct {
         return self.base.fontGlyphRow(font_id, codepoint, row);
     }
 
+    pub fn fontGlyphBitmap(self: *const Context, font_id: u32, codepoint: u32, out: *abi.GuiGlyphBitmap) i32 {
+        return self.base.fontGlyphBitmap(font_id, codepoint, out);
+    }
+
     pub fn fontReload(self: *const Context) i32 {
         return self.base.fontReload();
     }

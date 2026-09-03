@@ -1655,6 +1655,31 @@ pub const Context = struct {
         return table_fn(font_id, codepoint, row);
     }
 
+    /// Retrieves a complete cached glyph in one R4DRAW-v6 call. On older
+    /// kernels the SDK composes the fixed-capacity result from font_info and
+    /// font_glyph_row; proportional glyph metrics then degrade to face width
+    /// and maximum advance while pixels remain exact.
+    pub fn fontGlyphBitmap(self: *const Context, font_id: u32, codepoint: u32, out: *abi.GuiGlyphBitmap) i32 {
+        if (codepoint > 0x10FFFF) return -1;
+        if (self.drawFn("font_glyph_bitmap")) |table_fn| return table_fn(font_id, codepoint, out);
+        if (!self.hasDrawFn("font_glyph_row")) return self.unavailable("draw");
+
+        var info: abi.GuiFontInfo = .{};
+        const info_result = self.fontInfo(font_id, &info);
+        if (info_result <= 0) return if (info_result < 0) info_result else -2;
+        var bitmap = abi.GuiGlyphBitmap{
+            .width = @min(info.width, 64),
+            .height = @min(info.height, @as(u32, @typeInfo(@TypeOf((abi.GuiGlyphBitmap{}).rows)).array.len)),
+            .advance = info.max_advance,
+            .line_height = info.line_height,
+            .baseline = info.baseline,
+        };
+        var row: u32 = 0;
+        while (row < bitmap.height) : (row += 1) bitmap.rows[row] = self.fontGlyphRow(font_id, codepoint, row);
+        out.* = bitmap;
+        return 0;
+    }
+
     /// Rebuilds the R4DRAW catalogue from C:\R4OS\FONTS.  Returns the number
     /// of renderable fonts, or a negative draw error when the scan failed.
     pub fn fontReload(self: *const Context) i32 {

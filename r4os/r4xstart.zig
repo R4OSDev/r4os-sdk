@@ -147,6 +147,7 @@ const FontCountFn = *const fn () callconv(.c) u32;
 const FontInfoFn = *const fn (u32, *abi.GuiFontInfo) callconv(.c) i32;
 const FontMeasureFn = *const fn (u32, [*:0]const u8, *abi.GuiTextMetrics) callconv(.c) i32;
 const FontGlyphRowFn = *const fn (u32, u32, u32) callconv(.c) u64;
+const FontGlyphBitmapFn = abi.R4DrawFns.font_glyph_bitmap;
 const FontReloadFn = *const fn () callconv(.c) i32;
 const GuiSetFontFn = *const fn (u32) callconv(.c) i32;
 const GuiFontFn = *const fn (u32, *abi.GuiFontInfo) callconv(.c) i32;
@@ -1417,6 +1418,34 @@ pub const R4Draw = struct {
         return font_fn(font_id, codepoint, row);
     }
 
+    /// Retrieves one complete glyph snapshot. R4DRAW-v6 resolves and copies
+    /// it in one call; older tables are supported through their bounded row
+    /// query. The legacy fallback cannot recover proportional per-glyph
+    /// metrics, so it reports the face width and maximum advance.
+    pub fn fontGlyphBitmap(self: *const R4Draw, font_id: u32, codepoint: u32, out: *abi.GuiGlyphBitmap) i32 {
+        if (codepoint > 0x10FFFF) return -1;
+        if (self.hasFn("font_glyph_bitmap")) {
+            const font_fn: FontGlyphBitmapFn = @ptrFromInt(self.table.font_glyph_bitmap);
+            return font_fn(font_id, codepoint, out);
+        }
+        if (!self.hasFn("font_glyph_row")) return abi.err_no_fn;
+
+        var info: abi.GuiFontInfo = .{};
+        const info_result = self.fontInfo(font_id, &info);
+        if (info_result <= 0) return if (info_result < 0) info_result else -2;
+        var bitmap = abi.GuiGlyphBitmap{
+            .width = @min(info.width, 64),
+            .height = @min(info.height, @as(u32, bitmap_row_capacity)),
+            .advance = info.max_advance,
+            .line_height = info.line_height,
+            .baseline = info.baseline,
+        };
+        var row: u32 = 0;
+        while (row < bitmap.height) : (row += 1) bitmap.rows[row] = self.fontGlyphRow(font_id, codepoint, row);
+        out.* = bitmap;
+        return 0;
+    }
+
     pub fn fontReload(self: *const R4Draw) i32 {
         if (!self.hasFn("font_reload")) return -1;
         const font_fn: FontReloadFn = @ptrFromInt(self.table.font_reload);
@@ -1529,4 +1558,67 @@ fn copyFixedZ(out: []u8, value: []const u8) void {
     if (out.len == 0) return;
     const count = @min(value.len, out.len - 1);
     if (count > 0) @memcpy(out[0..count], value[0..count]);
+}
+
+const bitmap_row_capacity: usize = @typeInfo(@TypeOf((abi.GuiGlyphBitmap{}).rows)).array.len;
+
+fn testBulkGlyphBitmap(_: u32, _: u32, out: *abi.GuiGlyphBitmap) callconv(.c) i32 {
+    out.* = .{
+        .width = 7,
+        .height = 2,
+        .advance = 9,
+        .line_height = 12,
+        .baseline = 10,
+        .rows = .{ 0x55, 0x2A } ++ .{0} ** (bitmap_row_capacity - 2),
+    };
+    return 0;
+}
+
+fn testLegacyFontInfo(font_id: u32, out: *abi.GuiFontInfo) callconv(.c) i32 {
+    if (font_id != 7) return 0;
+    out.* = .{
+        .id = font_id,
+        .flags = abi.gui_font_flag_renderable,
+        .width = 11,
+        .height = 3,
+        .max_advance = 12,
+        .line_height = 4,
+        .baseline = 2,
+    };
+    return 1;
+}
+
+fn testLegacyGlyphRow(_: u32, _: u32, row: u32) callconv(.c) u64 {
+    return @as(u64, 1) << @intCast(row);
+}
+
+test "R4DRAW bulk glyph dispatch and legacy row fallback stay compatible" {
+    var current_table = abi.R4XStartR4Draw{
+        .font_glyph_bitmap = @intFromPtr(&testBulkGlyphBitmap),
+    };
+    const current = R4Draw{ .table = &current_table };
+    var bitmap: abi.GuiGlyphBitmap = .{};
+    try std.testing.expectEqual(@as(i32, 0), current.fontGlyphBitmap(0, 'A', &bitmap));
+    try std.testing.expectEqual(@as(u32, 7), bitmap.width);
+    try std.testing.expectEqual(@as(u64, 0x55), bitmap.rows[0]);
+    try std.testing.expectEqual(@as(u64, 0x2A), bitmap.rows[1]);
+
+    var legacy_table = abi.R4XStartR4Draw{
+        .abi_version = 5,
+        .size = @intCast(@offsetOf(abi.R4XStartR4Draw, "font_glyph_bitmap")),
+        .font_info = @intFromPtr(&testLegacyFontInfo),
+        .font_glyph_row = @intFromPtr(&testLegacyGlyphRow),
+    };
+    const legacy = R4Draw{ .table = &legacy_table };
+    bitmap = .{};
+    try std.testing.expect(!legacy.hasFn("font_glyph_bitmap"));
+    try std.testing.expectEqual(@as(i32, 0), legacy.fontGlyphBitmap(7, 0x1F642, &bitmap));
+    try std.testing.expectEqual(@as(u32, 11), bitmap.width);
+    try std.testing.expectEqual(@as(u32, 3), bitmap.height);
+    try std.testing.expectEqual(@as(u32, 12), bitmap.advance);
+    try std.testing.expectEqual(@as(i32, 2), bitmap.baseline);
+    try std.testing.expectEqual(@as(u64, 1), bitmap.rows[0]);
+    try std.testing.expectEqual(@as(u64, 2), bitmap.rows[1]);
+    try std.testing.expectEqual(@as(u64, 4), bitmap.rows[2]);
+    try std.testing.expectEqual(@as(u64, 0), bitmap.rows[3]);
 }
