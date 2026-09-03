@@ -5,8 +5,15 @@ const Alignment = std.mem.Alignment;
 
 const page_size: usize = 4096;
 const small_region_reserve: usize = 64 * 1024 * 1024;
-const small_region_grow: usize = 64 * 1024;
+const small_region_initial_commit: usize = 64 * 1024;
+const small_region_max_grow: usize = 1024 * 1024;
+const small_region_retain: usize = 256 * 1024;
+const small_region_decommit_threshold: usize = 512 * 1024;
 const large_threshold: usize = 1024 * 1024;
+const direct_cache_first_size: usize = 2 * 1024 * 1024;
+const direct_cache_class_count: usize = 3;
+const direct_cache_max_region: usize = direct_cache_first_size << (direct_cache_class_count - 1);
+const direct_cache_max_bytes: usize = direct_cache_first_size * ((1 << direct_cache_class_count) - 1);
 const max_small_regions: usize = 32;
 const block_magic: u32 = 0x33414D52; // "RMA3"
 const retired_block_magic: u32 = 0x58414D52; // "RMAX"
@@ -47,6 +54,8 @@ const size_class_count: usize = 20;
 comptime {
     if (min_free_block > first_size_class_limit) @compileError("first VM allocator size class is smaller than a free block");
     if ((first_size_class_limit << (size_class_count - 1)) < small_region_reserve) @compileError("VM allocator size classes do not cover a small region");
+    if (small_region_initial_commit < min_free_block or small_region_retain < small_region_initial_commit) @compileError("invalid VM allocator small-region retention policy");
+    if (direct_cache_max_bytes > 16 * 1024 * 1024) @compileError("direct VM cache exceeds its per-process RAM budget");
 }
 
 const SmallRegion = struct {
@@ -55,6 +64,7 @@ const SmallRegion = struct {
     base: usize = 0,
     reserve_size: usize = 0,
     committed_size: usize = 0,
+    next_commit_size: usize = small_region_initial_commit,
     active_allocations: u32 = 0,
     allocations: u64 = 0,
     frees: u64 = 0,
@@ -64,14 +74,31 @@ const SmallRegion = struct {
     free_heads: [size_class_count]usize = .{0} ** size_class_count,
 };
 
+const DirectCacheEntry = struct {
+    used: bool = false,
+    region_id: u32 = 0,
+    base: usize = 0,
+    reserve_size: usize = 0,
+    alignment: usize = 0,
+};
+
 const State = struct {
     small_regions: [max_small_regions]SmallRegion = .{SmallRegion{}} ** max_small_regions,
+    direct_cache: [direct_cache_class_count]DirectCacheEntry = .{DirectCacheEntry{}} ** direct_cache_class_count,
     direct_active: u32 = 0,
+    direct_cached: u32 = 0,
     direct_allocations: u64 = 0,
     direct_frees: u64 = 0,
     direct_active_bytes: u64 = 0,
     direct_peak_active_bytes: u64 = 0,
     direct_reserved_bytes: u64 = 0,
+    direct_cached_bytes: u64 = 0,
+    peak_committed_bytes: u64 = 0,
+    direct_cache_hits: u64 = 0,
+    direct_cache_misses: u64 = 0,
+    direct_cache_evictions: u64 = 0,
+    trim_calls: u64 = 0,
+    trim_reclaimed_bytes: u64 = 0,
     allocation_errors: u64 = 0,
     allocation_search_steps: u64 = 0,
     class_search_steps: u64 = 0,
@@ -83,12 +110,14 @@ const State = struct {
     vm_reserve_calls: u64 = 0,
     vm_commit_calls: u64 = 0,
     vm_decommit_calls: u64 = 0,
+    vm_decommit_bytes: u64 = 0,
     vm_release_calls: u64 = 0,
 };
 
 pub const Stats = struct {
     small_regions: u32 = 0,
     direct_active: u32 = 0,
+    direct_cached: u32 = 0,
     active_allocations: u64 = 0,
     allocations: u64 = 0,
     frees: u64 = 0,
@@ -96,6 +125,8 @@ pub const Stats = struct {
     peak_active_bytes: u64 = 0,
     reserved_bytes: u64 = 0,
     committed_bytes: u64 = 0,
+    peak_committed_bytes: u64 = 0,
+    cached_bytes: u64 = 0,
     decommits: u64 = 0,
     allocation_errors: u64 = 0,
     allocation_search_steps: u64 = 0,
@@ -105,9 +136,15 @@ pub const Stats = struct {
     splits: u64 = 0,
     coalesces: u64 = 0,
     corruptions: u64 = 0,
+    direct_cache_hits: u64 = 0,
+    direct_cache_misses: u64 = 0,
+    direct_cache_evictions: u64 = 0,
+    trim_calls: u64 = 0,
+    trim_reclaimed_bytes: u64 = 0,
     vm_reserve_calls: u64 = 0,
     vm_commit_calls: u64 = 0,
     vm_decommit_calls: u64 = 0,
+    vm_decommit_bytes: u64 = 0,
     vm_release_calls: u64 = 0,
 };
 
@@ -116,6 +153,11 @@ const AllocationLayout = struct {
     backref_addr: usize,
     allocated_size: usize,
     remaining_size: usize,
+};
+
+const DirectActivation = struct {
+    entry: DirectCacheEntry,
+    layout: AllocationLayout,
 };
 
 var state: State = .{};
@@ -140,6 +182,7 @@ pub fn stats() Stats {
     defer releaseAllocatorLock();
     var out: Stats = .{
         .direct_active = state.direct_active,
+        .direct_cached = state.direct_cached,
         .active_allocations = state.direct_active,
         .allocations = state.direct_allocations,
         .frees = state.direct_frees,
@@ -147,6 +190,8 @@ pub fn stats() Stats {
         .peak_active_bytes = state.direct_peak_active_bytes,
         .reserved_bytes = state.direct_reserved_bytes,
         .committed_bytes = state.direct_reserved_bytes,
+        .peak_committed_bytes = state.peak_committed_bytes,
+        .cached_bytes = state.direct_cached_bytes,
         .allocation_errors = state.allocation_errors,
         .allocation_search_steps = state.allocation_search_steps,
         .class_search_steps = state.class_search_steps,
@@ -155,9 +200,15 @@ pub fn stats() Stats {
         .splits = state.splits,
         .coalesces = state.coalesces,
         .corruptions = state.corruptions,
+        .direct_cache_hits = state.direct_cache_hits,
+        .direct_cache_misses = state.direct_cache_misses,
+        .direct_cache_evictions = state.direct_cache_evictions,
+        .trim_calls = state.trim_calls,
+        .trim_reclaimed_bytes = state.trim_reclaimed_bytes,
         .vm_reserve_calls = state.vm_reserve_calls,
         .vm_commit_calls = state.vm_commit_calls,
         .vm_decommit_calls = state.vm_decommit_calls,
+        .vm_decommit_bytes = state.vm_decommit_bytes,
         .vm_release_calls = state.vm_release_calls,
     };
     for (state.small_regions) |region| {
@@ -173,6 +224,16 @@ pub fn stats() Stats {
         out.decommits +%= region.decommits;
     }
     return out;
+}
+
+/// Releases all reusable direct regions and reduces free small-region tails
+/// to the one-page metadata minimum. Allocation failures invoke the same
+/// bounded reclaim path before one retry.
+pub fn trim(api: *const abi.R4XStartR4Sys) void {
+    acquireAllocatorLock(api);
+    defer releaseAllocatorLock();
+    if (!supportsVmApi(api)) return;
+    _ = trimLocked(api, null);
 }
 
 fn allocatorAlloc(ptr: *anyopaque, len: usize, alignment: Alignment, ret_addr: usize) ?[*]u8 {
@@ -227,14 +288,13 @@ fn allocatorFree(ptr: *anyopaque, memory: []u8, alignment: Alignment, ret_addr: 
         const region_id = header.region_id;
         const block_size = header.block_size;
         const requested_size = header.requested_size;
-        if (vmRelease(api, region_id) != abi.vm_ok) return;
-        if (state.direct_active > 0) state.direct_active -= 1;
-        state.direct_frees +%= 1;
-        if (state.direct_active_bytes >= requested_size) {
-            state.direct_active_bytes -= requested_size;
-        } else {
-            state.direct_active_bytes = 0;
+        const effective_alignment = @max(byte_alignment, page_size);
+        if (cacheDirectRegion(header, effective_alignment)) {
+            accountDirectFree(requested_size);
+            return;
         }
+        if (vmRelease(api, region_id) != abi.vm_ok) return;
+        accountDirectFree(requested_size);
         if (state.direct_reserved_bytes >= block_size) {
             state.direct_reserved_bytes -= block_size;
         } else {
@@ -337,26 +397,53 @@ fn allocDirect(api: *const abi.R4XStartR4Sys, len: usize, alignment: usize) ?[*]
     const effective_alignment = @max(alignment, page_size);
     const need = conservativeBlockNeed(len, effective_alignment) orelse return null;
     const reserve_size = alignForward(need, page_size) orelse return null;
+    if (len >= large_threshold) {
+        if (takeCachedDirect(reserve_size, effective_alignment, len)) |cached| {
+            return activateDirect(cached.entry.region_id, cached.entry.base, cached.entry.reserve_size, len, cached.layout);
+        }
+    }
+    if (len >= large_threshold and directCacheClass(reserve_size) != null) state.direct_cache_misses +%= 1;
+
     const reserve_alignment: u64 = @intCast(effective_alignment);
-    var info: abi.ProgramVmRegionInfo = .{};
-    if (vmReserve(api, reserve_size, reserve_alignment, abi.vm_region_flags_default, &info) != abi.vm_ok) return null;
-    if (!validReservedRegion(info, reserve_size, effective_alignment)) {
-        _ = vmRelease(api, info.id);
-        return null;
+    var retried = false;
+    while (true) {
+        var info: abi.ProgramVmRegionInfo = .{};
+        if (vmReserve(api, reserve_size, reserve_alignment, abi.vm_region_flags_default, &info) != abi.vm_ok) {
+            if (!retried and trimDirectCachesLocked(api) > 0) {
+                retried = true;
+                continue;
+            }
+            return null;
+        }
+        if (!validReservedRegion(info, reserve_size, effective_alignment)) {
+            _ = vmRelease(api, info.id);
+            return null;
+        }
+        const base: usize = @intCast(info.base);
+        const layout = layoutInBlock(base, reserve_size, len, effective_alignment) orelse {
+            recordCorruption();
+            _ = vmRelease(api, info.id);
+            return null;
+        };
+        if (vmCommit(api, info.id, 0, reserve_size, 0) != abi.vm_ok) {
+            _ = vmRelease(api, info.id);
+            if (!retried and trimLocked(api, null) > 0) {
+                retried = true;
+                continue;
+            }
+            return null;
+        }
+        state.direct_reserved_bytes +%= reserve_size;
+        updatePeakCommitted();
+        return activateDirect(info.id, base, reserve_size, len, layout);
     }
-    if (vmCommit(api, info.id, 0, reserve_size, 0) != abi.vm_ok) {
-        _ = vmRelease(api, info.id);
-        return null;
-    }
-    const base: usize = @intCast(info.base);
-    const layout = layoutInBlock(base, reserve_size, len, effective_alignment) orelse {
-        _ = vmRelease(api, info.id);
-        return null;
-    };
+}
+
+fn activateDirect(region_id: u32, base: usize, reserve_size: usize, len: usize, layout: AllocationLayout) [*]u8 {
     const header = headerAt(base);
     header.* = .{
         .flags = block_flag_used | block_flag_direct,
-        .region_id = info.id,
+        .region_id = region_id,
         .block_size = reserve_size,
         .requested_size = len,
         .user_addr = layout.user_addr,
@@ -366,44 +453,118 @@ fn allocDirect(api: *const abi.R4XStartR4Sys, len: usize, alignment: usize) ?[*]
     state.direct_active += 1;
     state.direct_allocations +%= 1;
     state.direct_active_bytes +%= len;
-    state.direct_reserved_bytes +%= reserve_size;
     if (state.direct_active_bytes > state.direct_peak_active_bytes) state.direct_peak_active_bytes = state.direct_active_bytes;
     return @ptrFromInt(layout.user_addr);
 }
 
+fn accountDirectFree(requested_size: usize) void {
+    if (state.direct_active > 0) state.direct_active -= 1;
+    state.direct_frees +%= 1;
+    if (state.direct_active_bytes >= requested_size) {
+        state.direct_active_bytes -= requested_size;
+    } else {
+        state.direct_active_bytes = 0;
+    }
+}
+
+fn directCacheClass(reserve_size: usize) ?usize {
+    var limit = direct_cache_first_size;
+    for (0..direct_cache_class_count) |class_index| {
+        if (reserve_size <= limit) return class_index;
+        limit <<= 1;
+    }
+    return null;
+}
+
+fn takeCachedDirect(reserve_size: usize, alignment: usize, len: usize) ?DirectActivation {
+    const first_class = directCacheClass(reserve_size) orelse return null;
+    var class_index = first_class;
+    while (class_index < direct_cache_class_count) : (class_index += 1) {
+        const entry = state.direct_cache[class_index];
+        if (!entry.used or entry.reserve_size < reserve_size or entry.alignment < alignment or (entry.base & (alignment - 1)) != 0) continue;
+        const layout = layoutInBlock(entry.base, entry.reserve_size, len, alignment) orelse {
+            recordCorruption();
+            continue;
+        };
+        state.direct_cache[class_index] = .{};
+        if (state.direct_cached > 0) state.direct_cached -= 1;
+        if (state.direct_cached_bytes >= entry.reserve_size) state.direct_cached_bytes -= entry.reserve_size;
+        state.direct_cache_hits +%= 1;
+        return .{ .entry = entry, .layout = layout };
+    }
+    return null;
+}
+
+fn cacheDirectRegion(header: *BlockHeader, alignment: usize) bool {
+    if (header.requested_size < large_threshold) return false;
+    const class_index = directCacheClass(header.block_size) orelse return false;
+    if (state.direct_cache[class_index].used) return false;
+    if (state.direct_cached_bytes + header.block_size > direct_cache_max_bytes) return false;
+    const base = @intFromPtr(header);
+    state.direct_cache[class_index] = .{
+        .used = true,
+        .region_id = header.region_id,
+        .base = base,
+        .reserve_size = header.block_size,
+        .alignment = alignment,
+    };
+    state.direct_cached += 1;
+    state.direct_cached_bytes +%= header.block_size;
+    header.magic = retired_block_magic;
+    return true;
+}
+
 fn createSmallRegion(api: *const abi.R4XStartR4Sys) ?usize {
     const slot = freeSmallRegionSlot() orelse return null;
-    var info: abi.ProgramVmRegionInfo = .{};
-    if (vmReserve(api, small_region_reserve, page_size, abi.vm_region_flags_default, &info) != abi.vm_ok) return null;
-    if (!validReservedRegion(info, small_region_reserve, page_size)) {
-        _ = vmRelease(api, info.id);
-        return null;
+    var retried = false;
+    while (true) {
+        var info: abi.ProgramVmRegionInfo = .{};
+        if (vmReserve(api, small_region_reserve, page_size, abi.vm_region_flags_default, &info) != abi.vm_ok) {
+            if (!retried and trimDirectCachesLocked(api) > 0) {
+                retried = true;
+                continue;
+            }
+            return null;
+        }
+        if (!validReservedRegion(info, small_region_reserve, page_size)) {
+            _ = vmRelease(api, info.id);
+            return null;
+        }
+        if (vmCommit(api, info.id, 0, small_region_initial_commit, 0) != abi.vm_ok) {
+            _ = vmRelease(api, info.id);
+            if (!retried and trimLocked(api, null) > 0) {
+                retried = true;
+                continue;
+            }
+            return null;
+        }
+        const base: usize = @intCast(info.base);
+        state.small_regions[slot] = .{
+            .used = true,
+            .region_id = info.id,
+            .base = base,
+            .reserve_size = @intCast(info.len),
+            .committed_size = small_region_initial_commit,
+        };
+        const header = initFreeBlock(info.id, base, small_region_initial_commit);
+        if (!insertFree(&state.small_regions[slot], header)) {
+            _ = vmRelease(api, info.id);
+            state.small_regions[slot] = .{};
+            return null;
+        }
+        updatePeakCommitted();
+        return slot;
     }
-    if (vmCommit(api, info.id, 0, page_size, 0) != abi.vm_ok) {
-        _ = vmRelease(api, info.id);
-        return null;
-    }
-    const base: usize = @intCast(info.base);
-    state.small_regions[slot] = .{
-        .used = true,
-        .region_id = info.id,
-        .base = base,
-        .reserve_size = @intCast(info.len),
-        .committed_size = page_size,
-    };
-    const header = initFreeBlock(info.id, base, page_size);
-    if (!insertFree(&state.small_regions[slot], header)) {
-        _ = vmRelease(api, info.id);
-        state.small_regions[slot] = .{};
-        return null;
-    }
-    return slot;
 }
 
 fn growSmallRegion(api: *const abi.R4XStartR4Sys, region_index: usize, needed: usize) bool {
+    return growSmallRegionAttempt(api, region_index, needed, true);
+}
+
+fn growSmallRegionAttempt(api: *const abi.R4XStartR4Sys, region_index: usize, needed: usize, allow_reclaim: bool) bool {
     const region = &state.small_regions[region_index];
     if (!region.used or region.committed_size >= region.reserve_size) return false;
-    const wanted = @max(needed, small_region_grow);
+    const wanted = @max(needed, region.next_commit_size);
     var add = alignForward(wanted, page_size) orelse return false;
     const available = region.reserve_size - region.committed_size;
     if (add > available) add = alignDown(available, page_size);
@@ -412,7 +573,12 @@ fn growSmallRegion(api: *const abi.R4XStartR4Sys, region_index: usize, needed: u
     const last = lastBlock(region.*) orelse return false;
     const extend_last = !isUsed(last.header);
     if (extend_last and !canRemoveFree(region.*, last.header)) return false;
-    if (vmCommit(api, region.region_id, old_committed, add, 0) != abi.vm_ok) return false;
+    if (vmCommit(api, region.region_id, old_committed, add, 0) != abi.vm_ok) {
+        if (allow_reclaim and trimLocked(api, region.region_id) > 0) {
+            return growSmallRegionAttempt(api, region_index, needed, false);
+        }
+        return false;
+    }
     const new_block_addr = region.base + old_committed;
     if (extend_last) {
         if (!removeFree(region, last.header)) {
@@ -423,11 +589,22 @@ fn growSmallRegion(api: *const abi.R4XStartR4Sys, region_index: usize, needed: u
         region.committed_size = old_committed + add;
         last.header.block_size += add;
         writeFooter(last.header);
-        return insertFree(region, last.header);
+        if (!insertFree(region, last.header)) return false;
+        advanceCommitGrowth(region, add);
+        updatePeakCommitted();
+        return true;
     }
     region.committed_size = old_committed + add;
     const header = initFreeBlock(region.region_id, new_block_addr, add);
-    return insertFree(region, header);
+    if (!insertFree(region, header)) return false;
+    advanceCommitGrowth(region, add);
+    updatePeakCommitted();
+    return true;
+}
+
+fn advanceCommitGrowth(region: *SmallRegion, committed: usize) void {
+    const doubled = if (committed > small_region_max_grow / 2) small_region_max_grow else committed * 2;
+    region.next_commit_size = @max(region.next_commit_size, doubled);
 }
 
 fn freeSmallBlock(api: *const abi.R4XStartR4Sys, region_index: usize, header: *BlockHeader, old_len: usize) void {
@@ -482,7 +659,7 @@ fn freeSmallBlock(api: *const abi.R4XStartR4Sys, region_index: usize, header: *B
     } else {
         region.active_bytes = 0;
     }
-    decommitTopFree(api, region_index);
+    _ = decommitTopFree(api, region_index, false);
 }
 
 fn growSmallBlock(api: *const abi.R4XStartR4Sys, header: *BlockHeader, alignment: usize, old_len: usize, new_len: usize) bool {
@@ -572,26 +749,75 @@ fn accountResize(region: *SmallRegion, old_len: usize, new_len: usize) void {
     if (region.active_bytes > region.peak_active_bytes) region.peak_active_bytes = region.active_bytes;
 }
 
-fn decommitTopFree(api: *const abi.R4XStartR4Sys, region_index: usize) void {
+fn decommitTopFree(api: *const abi.R4XStartR4Sys, region_index: usize, pressure: bool) usize {
     const region = &state.small_regions[region_index];
-    if (region.committed_size <= page_size) return;
-    const last = lastBlock(region.*) orelse return;
-    if (isUsed(last.header)) return;
-    if (!canRemoveFree(region.*, last.header)) return;
-    const keep_until = alignForward(last.addr + min_free_block, page_size) orelse return;
+    if (region.committed_size <= page_size) return 0;
+    const last = lastBlock(region.*) orelse return 0;
+    if (isUsed(last.header)) return 0;
+    if (!canRemoveFree(region.*, last.header)) return 0;
+    const natural_keep = alignForward(last.addr + min_free_block, page_size) orelse return 0;
+    const policy_keep = region.base + if (pressure) page_size else small_region_retain;
+    const keep_until = @max(natural_keep, policy_keep);
     const committed_end = region.base + region.committed_size;
-    if (keep_until >= committed_end or keep_until < region.base + page_size) return;
+    if (keep_until >= committed_end or keep_until < region.base + page_size) return 0;
     const len = committed_end - keep_until;
-    if (!removeFree(region, last.header)) return;
+    if (!pressure and len < small_region_decommit_threshold) return 0;
+    if (!removeFree(region, last.header)) return 0;
     if (vmDecommit(api, region.region_id, keep_until - region.base, len) != abi.vm_ok) {
         _ = insertFree(region, last.header);
-        return;
+        return 0;
     }
     region.committed_size = keep_until - region.base;
     last.header.block_size = keep_until - last.addr;
     writeFooter(last.header);
-    _ = insertFree(region, last.header);
+    if (!insertFree(region, last.header)) return 0;
     region.decommits +%= 1;
+    if (pressure) region.next_commit_size = small_region_initial_commit;
+    return len;
+}
+
+fn trimLocked(api: *const abi.R4XStartR4Sys, excluded_region_id: ?u32) usize {
+    state.trim_calls +%= 1;
+    var reclaimed = releaseDirectCachesLocked(api);
+    for (0..state.small_regions.len) |region_index| {
+        const region = state.small_regions[region_index];
+        if (!region.used) continue;
+        if (excluded_region_id) |excluded| if (region.region_id == excluded) continue;
+        reclaimed +|= decommitTopFree(api, region_index, true);
+    }
+    state.trim_reclaimed_bytes +%= reclaimed;
+    return reclaimed;
+}
+
+fn trimDirectCachesLocked(api: *const abi.R4XStartR4Sys) usize {
+    const reclaimed = releaseDirectCachesLocked(api);
+    if (reclaimed == 0) return 0;
+    state.trim_calls +%= 1;
+    state.trim_reclaimed_bytes +%= reclaimed;
+    return reclaimed;
+}
+
+fn releaseDirectCachesLocked(api: *const abi.R4XStartR4Sys) usize {
+    var reclaimed: usize = 0;
+    for (&state.direct_cache) |*entry| {
+        if (!entry.used) continue;
+        if (vmRelease(api, entry.region_id) != abi.vm_ok) continue;
+        reclaimed +|= entry.reserve_size;
+        if (state.direct_reserved_bytes >= entry.reserve_size) state.direct_reserved_bytes -= entry.reserve_size;
+        if (state.direct_cached_bytes >= entry.reserve_size) state.direct_cached_bytes -= entry.reserve_size;
+        if (state.direct_cached > 0) state.direct_cached -= 1;
+        state.direct_cache_evictions +%= 1;
+        entry.* = .{};
+    }
+    return reclaimed;
+}
+
+fn updatePeakCommitted() void {
+    var committed = state.direct_reserved_bytes;
+    for (state.small_regions) |region| {
+        if (region.used) committed +%= region.committed_size;
+    }
+    if (committed > state.peak_committed_bytes) state.peak_committed_bytes = committed;
 }
 
 fn layoutInBlock(block_addr: usize, block_size: usize, len: usize, alignment: usize) ?AllocationLayout {
@@ -945,6 +1171,7 @@ fn vmCommit(api: *const abi.R4XStartR4Sys, region_id: u32, offset: usize, len: u
 
 fn vmDecommit(api: *const abi.R4XStartR4Sys, region_id: u32, offset: usize, len: usize) i32 {
     state.vm_decommit_calls +%= 1;
+    state.vm_decommit_bytes +%= len;
     return vmFn(api, "vm_decommit")(region_id, @intCast(offset), @intCast(len));
 }
 
@@ -957,7 +1184,7 @@ fn validReservedRegion(info: abi.ProgramVmRegionInfo, required_size: usize, alig
     if (info.base > std.math.maxInt(usize) or info.len > std.math.maxInt(usize)) return false;
     const base: usize = @intCast(info.base);
     const len: usize = @intCast(info.len);
-    return len >= required_size and (base & (alignment - 1)) == 0;
+    return len >= required_size and checkedAdd(base, len) != null and (base & (alignment - 1)) == 0;
 }
 
 fn recordCorruption() void {
@@ -1017,6 +1244,7 @@ var test_vm_table: abi.R4XStartR4Sys = .{};
 var test_vm_active: bool = false;
 var test_vm_reserved_size: usize = 0;
 var test_vm_committed: usize = 0;
+var test_vm_peak_committed: usize = 0;
 var test_vm_fail_commit: bool = false;
 var test_vm_fail_decommit: bool = false;
 var test_vm_fail_release: bool = false;
@@ -1045,6 +1273,7 @@ fn testVmCommit(id: u32, offset: u64, len: u64, _: u64) callconv(.c) i32 {
     const end = checkedAdd(@intCast(offset), @intCast(len)) orelse return abi.vm_error_invalid_range;
     if (!test_vm_active or id != 1 or len == 0 or end > test_vm_reserved_size) return abi.vm_error_invalid_range;
     if (end > test_vm_committed) test_vm_committed = end;
+    if (test_vm_committed > test_vm_peak_committed) test_vm_peak_committed = test_vm_committed;
     return abi.vm_ok;
 }
 
@@ -1078,6 +1307,7 @@ fn resetTestVm() void {
     test_vm_active = false;
     test_vm_reserved_size = 0;
     test_vm_committed = 0;
+    test_vm_peak_committed = 0;
     test_vm_fail_commit = false;
     test_vm_fail_decommit = false;
     test_vm_fail_release = false;
@@ -1189,6 +1419,7 @@ test "VM allocator mixed fragmentation workload exposes bounded search metrics" 
     try std.testing.expectEqual(@as(u64, 1), test_vm_reserve_calls);
     try std.testing.expectEqual(test_vm_reserve_calls, measured.vm_reserve_calls);
     try std.testing.expectEqual(test_vm_commit_calls, measured.vm_commit_calls);
+    try std.testing.expect(measured.vm_commit_calls <= 5);
     try std.testing.expectEqual(test_vm_decommit_calls, measured.vm_decommit_calls);
     try std.testing.expectEqual(test_vm_release_calls, measured.vm_release_calls);
     try expectTestRegionIntegrity(0);
@@ -1219,17 +1450,19 @@ test "VM allocator rolls back VM failures and preserves direct ownership" {
     const small = allocatorAlloc(@ptrCast(&test_vm_table), 128, .fromByteUnits(16), 0) orelse return error.OutOfMemory;
     const committed_before_failure = state.small_regions[0].committed_size;
     test_vm_fail_commit = true;
-    try std.testing.expectEqual(@as(?[*]u8, null), allocatorAlloc(@ptrCast(&test_vm_table), 32 * 1024, .fromByteUnits(64), 0));
+    try std.testing.expectEqual(@as(?[*]u8, null), allocatorAlloc(@ptrCast(&test_vm_table), 192 * 1024, .fromByteUnits(64), 0));
     try std.testing.expectEqual(committed_before_failure, state.small_regions[0].committed_size);
     try std.testing.expectEqual(@as(u64, 1), stats().active_allocations);
     try expectTestRegionIntegrity(0);
 
     test_vm_fail_commit = false;
-    const large_small = allocatorAlloc(@ptrCast(&test_vm_table), 32 * 1024, .fromByteUnits(64), 0) orelse return error.OutOfMemory;
+    const large_small_len = 768 * 1024;
+    const large_small = allocatorAlloc(@ptrCast(&test_vm_table), large_small_len, .fromByteUnits(64), 0) orelse return error.OutOfMemory;
     const committed_before_decommit = state.small_regions[0].committed_size;
     test_vm_fail_decommit = true;
-    allocatorFree(@ptrCast(&test_vm_table), large_small[0 .. 32 * 1024], .fromByteUnits(64), 0);
+    allocatorFree(@ptrCast(&test_vm_table), large_small[0..large_small_len], .fromByteUnits(64), 0);
     try std.testing.expectEqual(committed_before_decommit, state.small_regions[0].committed_size);
+    try std.testing.expectEqual(@as(u64, 1), test_vm_decommit_calls);
     try std.testing.expectEqual(@as(u64, 1), stats().active_allocations);
     try expectTestRegionIntegrity(0);
     test_vm_fail_decommit = false;
@@ -1249,7 +1482,7 @@ test "VM allocator rolls back VM failures and preserves direct ownership" {
     try expectTestRegionIntegrity(0);
 
     resetTestVm();
-    const direct_len = large_threshold;
+    const direct_len = direct_cache_max_region + page_size;
     const direct = allocatorAlloc(@ptrCast(&test_vm_table), direct_len, .fromByteUnits(64), 0) orelse return error.OutOfMemory;
     @memset(direct[0..256], 0xA5);
     try std.testing.expectEqual(@as(u32, 1), stats().direct_active);
@@ -1268,6 +1501,24 @@ test "VM allocator rolls back VM failures and preserves direct ownership" {
     try std.testing.expectEqual(test_vm_reserve_calls, stats().vm_reserve_calls);
     try std.testing.expectEqual(test_vm_commit_calls, stats().vm_commit_calls);
     try std.testing.expectEqual(test_vm_release_calls, stats().vm_release_calls);
+
+    resetTestVm();
+    const cached_len = large_threshold + 128 * 1024;
+    const cached = allocatorAlloc(@ptrCast(&test_vm_table), cached_len, .fromByteUnits(64), 0) orelse return error.OutOfMemory;
+    allocatorFree(@ptrCast(&test_vm_table), cached[0..cached_len], .fromByteUnits(64), 0);
+    try std.testing.expectEqual(@as(u32, 1), stats().direct_cached);
+    const oversized_len = direct_cache_max_region + page_size;
+    const oversized = allocatorAlloc(@ptrCast(&test_vm_table), oversized_len, .fromByteUnits(64), 0) orelse return error.OutOfMemory;
+    const reclaimed = stats();
+    try std.testing.expectEqual(@as(u32, 0), reclaimed.direct_cached);
+    try std.testing.expectEqual(@as(u64, 1), reclaimed.trim_calls);
+    try std.testing.expect(reclaimed.trim_reclaimed_bytes >= cached_len);
+    try std.testing.expectEqual(@as(u64, 3), reclaimed.vm_reserve_calls);
+    try std.testing.expectEqual(@as(u64, 2), reclaimed.vm_commit_calls);
+    try std.testing.expectEqual(@as(u64, 1), reclaimed.vm_release_calls);
+    allocatorFree(@ptrCast(&test_vm_table), oversized[0..oversized_len], .fromByteUnits(64), 0);
+    try std.testing.expectEqual(@as(u64, 0), stats().active_allocations);
+    try std.testing.expect(!test_vm_active);
 }
 
 test "VM allocator rejects damaged boundary tags and repeated frees fail closed" {
@@ -1359,4 +1610,76 @@ test "VM allocator serializes concurrent R4X thread traffic" {
     try std.testing.expectEqual(@as(u64, 0), stats().active_allocations);
     try std.testing.expectEqual(@as(u64, 0), stats().corruptions);
     try expectTestRegionIntegrity(0);
+}
+
+test "VM allocator reports small and direct churn VM traffic" {
+    // The committed 0.75.2 implementation needed 1/129/128/0
+    // reserve/commit/decommit/release calls for this exact small workload.
+    const small_cycles = 128;
+    const small_len = 192 * 1024;
+    resetTestVm();
+    for (0..small_cycles) |_| {
+        const memory = allocatorAlloc(@ptrCast(&test_vm_table), small_len, .fromByteUnits(64), 0) orelse return error.OutOfMemory;
+        memory[0] = 0x41;
+        memory[small_len - 1] = 0x42;
+        allocatorFree(@ptrCast(&test_vm_table), memory[0..small_len], .fromByteUnits(64), 0);
+    }
+    const small = stats();
+    try std.testing.expectEqual(@as(u64, 0), small.active_allocations);
+    try std.testing.expectEqual(@as(u64, small_cycles), small.allocations);
+    try std.testing.expectEqual(@as(u64, small_cycles), small.frees);
+    try std.testing.expectEqual(@as(u64, 1), small.vm_reserve_calls);
+    try std.testing.expectEqual(@as(u64, 2), small.vm_commit_calls);
+    try std.testing.expectEqual(@as(u64, 0), small.vm_decommit_calls);
+    try std.testing.expectEqual(@as(u64, 0), small.vm_release_calls);
+    try std.testing.expect(small.peak_committed_bytes <= 320 * 1024);
+    try std.testing.expect(small.committed_bytes <= 320 * 1024);
+    try std.testing.expectEqual(small.peak_committed_bytes, test_vm_peak_committed);
+    trim(&test_vm_table);
+    const small_trimmed = stats();
+    try std.testing.expectEqual(@as(u64, 1), small_trimmed.vm_decommit_calls);
+    try std.testing.expectEqual(@as(u64, page_size), small_trimmed.committed_bytes);
+    try std.testing.expect(small_trimmed.trim_reclaimed_bytes >= small.committed_bytes - page_size);
+    try expectTestRegionIntegrity(0);
+
+    // The committed 0.75.2 implementation needed 64/64/0/64 VM calls for
+    // the exact direct workload and retained no region between iterations.
+    const direct_cycles = 64;
+    const direct_len = large_threshold + 128 * 1024;
+    const direct_need = conservativeBlockNeed(direct_len, page_size).?;
+    const expected_direct_reserve = alignForward(direct_need, page_size).?;
+    resetTestVm();
+    for (0..direct_cycles) |_| {
+        const memory = allocatorAlloc(@ptrCast(&test_vm_table), direct_len, .fromByteUnits(64), 0) orelse return error.OutOfMemory;
+        memory[0] = 0x51;
+        memory[direct_len - 1] = 0x52;
+        allocatorFree(@ptrCast(&test_vm_table), memory[0..direct_len], .fromByteUnits(64), 0);
+    }
+    const direct = stats();
+    try std.testing.expectEqual(@as(u64, 0), direct.active_allocations);
+    try std.testing.expectEqual(@as(u64, direct_cycles), direct.allocations);
+    try std.testing.expectEqual(@as(u64, direct_cycles), direct.frees);
+    try std.testing.expectEqual(@as(u64, 1), direct.vm_reserve_calls);
+    try std.testing.expectEqual(@as(u64, 1), direct.vm_commit_calls);
+    try std.testing.expectEqual(@as(u64, 0), direct.vm_decommit_calls);
+    try std.testing.expectEqual(@as(u64, 0), direct.vm_release_calls);
+    try std.testing.expectEqual(@as(u64, direct_cycles - 1), direct.direct_cache_hits);
+    try std.testing.expectEqual(@as(u64, 1), direct.direct_cache_misses);
+    try std.testing.expectEqual(@as(u32, 1), direct.direct_cached);
+    try std.testing.expectEqual(@as(u64, expected_direct_reserve), direct.cached_bytes);
+    try std.testing.expectEqual(@as(u64, expected_direct_reserve), direct.peak_committed_bytes);
+    try std.testing.expectEqual(direct.peak_committed_bytes, test_vm_peak_committed);
+
+    test_vm_fail_release = true;
+    trim(&test_vm_table);
+    try std.testing.expectEqual(@as(u32, 1), stats().direct_cached);
+    try std.testing.expect(test_vm_active);
+    test_vm_fail_release = false;
+    trim(&test_vm_table);
+    const direct_trimmed = stats();
+    try std.testing.expectEqual(@as(u32, 0), direct_trimmed.direct_cached);
+    try std.testing.expectEqual(@as(u64, 0), direct_trimmed.cached_bytes);
+    try std.testing.expectEqual(@as(u64, 0), direct_trimmed.committed_bytes);
+    try std.testing.expectEqual(@as(u64, 2), direct_trimmed.vm_release_calls);
+    try std.testing.expect(!test_vm_active);
 }

@@ -1482,6 +1482,10 @@ pub const Context = struct {
     pub fn allocatorStats(self: *const Context) @import("vm_allocator.zig").Stats {
         return self.base.allocatorStats();
     }
+
+    pub fn allocatorTrim(self: *const Context) void {
+        self.base.allocatorTrim();
+    }
 };
 
 test "r4sys exposes project and ABI metadata" {

@@ -394,6 +394,12 @@ pub const Context = struct {
         return vm_allocator.stats();
     }
 
+    pub fn allocatorTrim(self: *const Context) void {
+        const b = self.bundle orelse return;
+        const t = b.sys orelse return;
+        vm_allocator.trim(t);
+    }
+
     pub fn memorySummary(self: *const Context) ?abi.ProgramMemorySummary {
         var out: abi.ProgramMemorySummary = .{};
         const table_fn = self.devFn("memory_summary") orelse return null;
