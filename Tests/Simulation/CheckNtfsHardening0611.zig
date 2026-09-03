@@ -328,7 +328,7 @@ fn fail(comptime fmt: []const u8, args: anytype) void {
     std.debug.print("FAIL: " ++ fmt ++ "\n", args);
 }
 
-fn openVolumeDevice(device: vol.Device) ?vol.Volume {
+fn openVolumeDeviceWithCache(device: vol.Device, metadata_cache: ?*vol.MetadataCache) ?vol.Volume {
     const info = vol.mount(device, 0, &scratch, mft_runs[0..]) orelse return null;
     mft_run_count = info.mft_run_count;
     var v = vol.Volume{
@@ -343,15 +343,26 @@ fn openVolumeDevice(device: vol.Device) ?vol.Volume {
         .upcase = &[_]u8{},
         .scratch = &scratch,
         .now_filetime = 132_100_000_000_000_000,
+        .metadata_cache = metadata_cache,
+        .metadata_cache_now_ticks = 1,
     };
+    if (metadata_cache) |cache| cache.beginMount(1000);
     const got = vol.readFileRange(&v, ntfs.MFT_RECORD_UPCASE, 0, upcase_buf[0..]) orelse return null;
     if (got != ntfs.UPCASE_BYTES) return null;
     v.upcase = upcase_buf[0..];
     return v;
 }
 
+fn openVolumeDevice(device: vol.Device) ?vol.Volume {
+    return openVolumeDeviceWithCache(device, null);
+}
+
 fn openVolume(dev: *RamDevice) ?vol.Volume {
     return openVolumeDevice(dev.device());
+}
+
+fn openVolumeWithCache(dev: *RamDevice, metadata_cache: *vol.MetadataCache) ?vol.Volume {
+    return openVolumeDeviceWithCache(dev.device(), metadata_cache);
 }
 
 fn loadMeta(allocator: std.mem.Allocator, io: anytype, dir: std.Io.Dir) !mkfs.Meta {
@@ -691,6 +702,7 @@ fn runCrashSweep(allocator: std.mem.Allocator, meta: mkfs.Meta, crash_runs: usiz
     defer allocator.free(template);
     const image = try allocator.alloc(u8, template.len);
     defer allocator.free(image);
+    var observed_recovery_invalidations: usize = 0;
 
     var run: usize = 0;
     while (run < crash_runs) : (run += 1) {
@@ -698,7 +710,8 @@ fn runCrashSweep(allocator: std.mem.Allocator, meta: mkfs.Meta, crash_runs: usiz
         const budget: u32 = @intCast(1 + (run / kinds.len) % 14);
         @memcpy(image, template);
         var dev = RamDevice{ .image = image };
-        var v = openVolume(&dev) orelse {
+        var metadata_cache = vol.MetadataCache{};
+        var v = openVolumeWithCache(&dev, &metadata_cache) orelse {
             fail("crash {s} budget {d}: mount failed", .{ kind, budget });
             continue;
         };
@@ -748,6 +761,7 @@ fn runCrashSweep(allocator: std.mem.Allocator, meta: mkfs.Meta, crash_runs: usiz
         var crash_content: [3000]u8 = undefined;
         patternFill(0xE5, crash_content[0..]);
         vol.flush_budget = budget;
+        const cache_before_failure = metadata_cache.summary();
         var rc_ok = false;
         if (std.mem.eql(u8, kind, "create")) {
             rc_ok = vol.createFile(&v, work, "CNEW.DAT", crash_content[0..]) == .ok;
@@ -765,6 +779,12 @@ fn runCrashSweep(allocator: std.mem.Allocator, meta: mkfs.Meta, crash_runs: usiz
             rc_ok = vol.replaceFileAtomic(&v, work, "T.TXT", "S.TXT", "B.TXT", true) == .ok;
         }
         vol.flush_budget = null;
+        const cache_after_failure = metadata_cache.summary();
+        const recovered_failure = !rc_ok and
+            cache_after_failure.recovery_invalidations > cache_before_failure.recovery_invalidations;
+        if (recovered_failure) {
+            observed_recovery_invalidations += 1;
+        }
 
         if (run == crashed_dump_run) {
             if (crashed_out) |path| try dumpImage(allocator, io, cwd, image, path);
@@ -797,22 +817,23 @@ fn runCrashSweep(allocator: std.mem.Allocator, meta: mkfs.Meta, crash_runs: usiz
             fail("crash {s} budget {d}: dirty flag unreadable", .{ kind, budget });
             break :blk true;
         };
-        if (!dirty and !rc_ok) {
-            // Budget exhausted exactly on the final clear flush: the
-            // operation must have reached its complete new state.
-        }
         const complete = !dirty;
+        // A failed operation that emitted a recovery invalidation may have
+        // completed a clean rollback to the old state. Without recovery, a
+        // clean volume means the mutation reached its complete new state
+        // even if the final durability acknowledgement was lost.
+        const requires_new_state = complete and (rc_ok or !recovered_failure);
         if (std.mem.eql(u8, kind, "create")) {
             const present = readAndCheck(&v2, work2, "CNEW.DAT", crash_content[0..]);
             const absent = vol.lookupInDirectory(&v2, work2, "CNEW.DAT") == null;
             if (!present and !absent) fail("crash create budget {d}: partial file visible", .{budget});
-            if (complete and !present) fail("crash create budget {d}: clean volume without new state", .{budget});
+            if (requires_new_state and !present) fail("crash create budget {d}: clean volume without new state", .{budget});
         } else if (std.mem.eql(u8, kind, "delete")) {
             patternFill(@intCast(11 + 7), content[0..]);
             const present = readAndCheck(&v2, work2, "F0011.DAT", content[0..]);
             const absent = vol.lookupInDirectory(&v2, work2, "F0011.DAT") == null;
             if (!present and !absent) fail("crash delete budget {d}: damaged victim visible", .{budget});
-            if (complete and !absent) fail("crash delete budget {d}: clean volume without deletion", .{budget});
+            if (requires_new_state and !absent) fail("crash delete budget {d}: clean volume without deletion", .{budget});
         } else if (std.mem.eql(u8, kind, "append")) {
             const found = vol.lookupInDirectory(&v2, work2, "GROW.BIN") orelse {
                 fail("crash append budget {d}: file lost", .{budget});
@@ -828,7 +849,7 @@ fn runCrashSweep(allocator: std.mem.Allocator, meta: mkfs.Meta, crash_runs: usiz
                     fail("crash append budget {d}: content mismatch at size {d}", .{ budget, size });
                 }
             }
-            if (complete and size != grow_new.len) fail("crash append budget {d}: clean volume without new size", .{budget});
+            if (requires_new_state and size != grow_new.len) fail("crash append budget {d}: clean volume without new size", .{budget});
         } else if (std.mem.eql(u8, kind, "rename")) {
             const old_present = readAndCheck(&v2, work2, "RN.TXT", "rename crash victim");
             const new_present = readAndCheck(&v2, root, "RN2.TXT", "rename crash victim");
@@ -836,13 +857,13 @@ fn runCrashSweep(allocator: std.mem.Allocator, meta: mkfs.Meta, crash_runs: usiz
             // The remove->insert window may leave the record temporarily
             // unreferenced (classic NTFS rename crash window; chkdsk
             // reconnects orphans).  Partial/wrong content is never allowed.
-            if (complete and !new_present) fail("crash rename budget {d}: clean volume without new name", .{budget});
+            if (requires_new_state and !new_present) fail("crash rename budget {d}: clean volume without new name", .{budget});
         } else if (std.mem.eql(u8, kind, "mkdir")) {
             const present = vol.lookupInDirectory(&v2, work2, "SUB") != null;
-            if (complete and !present) fail("crash mkdir budget {d}: clean volume without directory", .{budget});
+            if (requires_new_state and !present) fail("crash mkdir budget {d}: clean volume without directory", .{budget});
         } else if (std.mem.eql(u8, kind, "rmdir")) {
             const present = vol.lookupInDirectory(&v2, work2, "GONE") != null;
-            if (complete and present) fail("crash rmdir budget {d}: clean volume with directory", .{budget});
+            if (requires_new_state and present) fail("crash rmdir budget {d}: clean volume with directory", .{budget});
         } else {
             // replace: target holds old or new content, never a mix; the
             // rename chain may be mid-flight (target briefly absent).
@@ -850,7 +871,7 @@ fn runCrashSweep(allocator: std.mem.Allocator, meta: mkfs.Meta, crash_runs: usiz
             const t_new = readAndCheck(&v2, work2, "T.TXT", repl_new[0..]);
             const t_absent = vol.lookupInDirectory(&v2, work2, "T.TXT") == null;
             if (!t_old and !t_new and !t_absent) fail("crash replace budget {d}: target content mixed", .{budget});
-            if (complete and !t_new) fail("crash replace budget {d}: clean volume without new target", .{budget});
+            if (requires_new_state and !t_new) fail("crash replace budget {d}: clean volume without new target", .{budget});
             // Idempotent completion: re-running the same replace must
             // converge to the new target (0.60.8 contract under crash).
             if (!t_new) {
@@ -875,7 +896,13 @@ fn runCrashSweep(allocator: std.mem.Allocator, meta: mkfs.Meta, crash_runs: usiz
         const clean = vol.isDirty(&v3) orelse true;
         if (clean) fail("crash {s} budget {d}: dirty after clean recovery op", .{ kind, budget });
     }
-    std.debug.print("hardening crash sweep: ok ({d} runs across {d} kinds)\n", .{ crash_runs, 7 });
+    if (crash_runs >= kinds.len and observed_recovery_invalidations == 0) {
+        fail("crash sweep: no failed mutation emitted a recovery invalidation", .{});
+    }
+    std.debug.print(
+        "hardening crash sweep: ok ({d} runs across {d} kinds, recovery-invalidations={d})\n",
+        .{ crash_runs, kinds.len, observed_recovery_invalidations },
+    );
 }
 
 // ---- family 2b: deferred stream batching (0.60.14) -------------------------
@@ -1181,6 +1208,143 @@ fn runDirtyMatrix(allocator: std.mem.Allocator, meta: mkfs.Meta) !void {
     std.debug.print("hardening dirty matrix: ok\n", .{});
 }
 
+// ---- family 5: metadata-cache invalidation (0.75.7) -----------------------
+
+fn cacheEntryCount(summary: vol.MetadataCacheSummary) u32 {
+    return summary.record_entries + summary.attribute_entries + summary.index_entries + summary.path_entries;
+}
+
+fn runMetadataInvalidation(allocator: std.mem.Allocator, meta: mkfs.Meta) !void {
+    const image = try formatFresh(allocator, meta, 24 * 1024 * 1024);
+    defer allocator.free(image);
+    var dev = RamDevice{ .image = image };
+    var metadata_cache = vol.MetadataCache{};
+    var v = openVolumeWithCache(&dev, &metadata_cache) orelse return fail("metadata cache: mount failed", .{});
+    vol.flush_budget = null;
+    const root = ntfs.MFT_RECORD_ROOT;
+
+    var expected: [16384]u8 = undefined;
+    const initial_len: usize = 8192;
+    const append_len: usize = 5000;
+    patternFill(0x7510, expected[0..initial_len]);
+    if (vol.createFile(&v, root, "PAYLOAD.BIN", expected[0..initial_len]) != .ok)
+        return fail("metadata cache: payload create failed", .{});
+    if (vol.createFile(&v, root, "KEEP.TXT", "unrelated-cache-sentinel") != .ok)
+        return fail("metadata cache: sentinel create failed", .{});
+
+    const payload = vol.lookupInDirectory(&v, root, "PAYLOAD.BIN") orelse
+        return fail("metadata cache: initial lookup failed", .{});
+    _ = vol.lookupInDirectory(&v, root, "PAYLOAD.BIN") orelse
+        return fail("metadata cache: repeated initial lookup failed", .{});
+    if (!readAndCheck(&v, root, "PAYLOAD.BIN", expected[0..initial_len]) or
+        !readAndCheck(&v, root, "KEEP.TXT", "unrelated-cache-sentinel") or
+        !readAndCheck(&v, root, "KEEP.TXT", "unrelated-cache-sentinel"))
+    {
+        return fail("metadata cache: warmup read failed", .{});
+    }
+
+    const before_payload = metadata_cache.summary();
+    var patch_data: [512]u8 = undefined;
+    patternFill(0x7520, patch_data[0..]);
+    if (vol.writeFileAt(&v, payload.record, 1024, patch_data[0..]) != .ok)
+        return fail("metadata cache: in-place write failed", .{});
+    @memcpy(expected[1024 .. 1024 + patch_data.len], patch_data[0..]);
+    const after_payload = metadata_cache.summary();
+    const payload_retained = after_payload.payload_write_retentions > before_payload.payload_write_retentions and
+        after_payload.targeted_invalidations == before_payload.targeted_invalidations and
+        after_payload.global_mutation_invalidations == before_payload.global_mutation_invalidations and
+        after_payload.content_generation == before_payload.content_generation and
+        cacheEntryCount(after_payload) == cacheEntryCount(before_payload);
+    if (!payload_retained or !readAndCheck(&v, root, "PAYLOAD.BIN", expected[0..initial_len]) or
+        !readAndCheck(&v, root, "KEEP.TXT", "unrelated-cache-sentinel"))
+    {
+        return fail("metadata cache: pure payload write discarded or corrupted cached metadata", .{});
+    }
+
+    const before_append = metadata_cache.summary();
+    patternFill(0x7530, expected[initial_len .. initial_len + append_len]);
+    if (vol.appendFileAtOffset(&v, root, "PAYLOAD.BIN", initial_len, expected[initial_len .. initial_len + append_len]) != .ok)
+        return fail("metadata cache: append/resize failed", .{});
+    const after_append = metadata_cache.summary();
+    const resized = vol.lookupInDirectory(&v, root, "PAYLOAD.BIN") orelse
+        return fail("metadata cache: resized lookup failed", .{});
+    const resize_ok = resized.entry.size == initial_len + append_len and
+        after_append.payload_write_retentions > before_append.payload_write_retentions and
+        after_append.targeted_invalidations > before_append.targeted_invalidations and
+        after_append.global_mutation_invalidations == before_append.global_mutation_invalidations and
+        after_append.recovery_invalidations == before_append.recovery_invalidations and
+        after_append.content_generation == before_append.content_generation and
+        readAndCheck(&v, root, "PAYLOAD.BIN", expected[0 .. initial_len + append_len]);
+    if (!resize_ok) return fail("metadata cache: stale append/resize metadata", .{});
+
+    const before_rename = metadata_cache.summary();
+    if (vol.renameEntry(&v, root, "PAYLOAD.BIN", root, "RENAMED.BIN") != .ok)
+        return fail("metadata cache: rename failed", .{});
+    const after_rename = metadata_cache.summary();
+    const old_absent = vol.lookupInDirectory(&v, root, "PAYLOAD.BIN") == null;
+    const renamed = vol.lookupInDirectory(&v, root, "RENAMED.BIN") orelse
+        return fail("metadata cache: renamed lookup failed", .{});
+    const rename_ok = old_absent and renamed.entry.size == initial_len + append_len and
+        after_rename.targeted_invalidations > before_rename.targeted_invalidations and
+        after_rename.global_mutation_invalidations == before_rename.global_mutation_invalidations and
+        after_rename.recovery_invalidations == before_rename.recovery_invalidations and
+        after_rename.content_generation == before_rename.content_generation and
+        readAndCheck(&v, root, "RENAMED.BIN", expected[0 .. initial_len + append_len]);
+    if (!rename_ok) return fail("metadata cache: stale rename metadata", .{});
+
+    _ = vol.lookupInDirectory(&v, root, "RENAMED.BIN") orelse
+        return fail("metadata cache: pre-delete lookup failed", .{});
+    const before_delete = metadata_cache.summary();
+    if (vol.deleteFile(&v, root, "RENAMED.BIN") != .ok)
+        return fail("metadata cache: delete failed", .{});
+    const after_delete = metadata_cache.summary();
+    const delete_ok = vol.lookupInDirectory(&v, root, "RENAMED.BIN") == null and
+        vol.lookupInDirectory(&v, root, "RENAMED.BIN") == null and
+        after_delete.targeted_invalidations > before_delete.targeted_invalidations and
+        after_delete.global_mutation_invalidations == before_delete.global_mutation_invalidations and
+        after_delete.recovery_invalidations == before_delete.recovery_invalidations and
+        after_delete.content_generation == before_delete.content_generation;
+    if (!delete_ok) return fail("metadata cache: stale delete metadata", .{});
+
+    if (!readAndCheck(&v, root, "KEEP.TXT", "unrelated-cache-sentinel"))
+        return fail("metadata cache: sentinel missing before recovery", .{});
+    const before_recovery = metadata_cache.summary();
+    if (vol.abortWriteForTest(&v, .io) != .io)
+        return fail("metadata cache: recovery seam changed status", .{});
+    const after_recovery = metadata_cache.summary();
+    const recovery_ok = after_recovery.recovery_invalidations > before_recovery.recovery_invalidations and
+        after_recovery.global_mutation_invalidations > before_recovery.global_mutation_invalidations and
+        after_recovery.content_generation > before_recovery.content_generation and
+        readAndCheck(&v, root, "KEEP.TXT", "unrelated-cache-sentinel");
+    if (!recovery_ok) return fail("metadata cache: recovery did not reject stale entries", .{});
+
+    const final = metadata_cache.summary();
+    const invalidated_parts = final.mutation_invalidated_record_entries +
+        final.mutation_invalidated_attribute_entries +
+        final.mutation_invalidated_index_entries +
+        final.mutation_invalidated_path_entries;
+    const counters_ok = final.version == 2 and
+        final.targeted_invalidations == final.targeted_record_invalidations +
+            final.targeted_attribute_invalidations + final.targeted_directory_invalidations and
+        final.global_mutation_invalidations >= final.recovery_invalidations and
+        invalidated_parts > 0 and invalidated_parts <= final.invalidated_entries;
+    if (!counters_ok) return fail("metadata cache: counter invariants failed", .{});
+
+    std.debug.print(
+        "hardening metadata cache: ok (payload-keep={d}, system-keep={d}, targeted={d}/{d}/{d}, global={d}, recovery={d}, invalidated={d})\n",
+        .{
+            final.payload_write_retentions,
+            final.system_write_retentions,
+            final.targeted_record_invalidations,
+            final.targeted_attribute_invalidations,
+            final.targeted_directory_invalidations,
+            final.global_mutation_invalidations,
+            final.recovery_invalidations,
+            invalidated_parts,
+        },
+    );
+}
+
 // ---- main ------------------------------------------------------------------
 
 pub fn main(init: std.process.Init) !void {
@@ -1215,6 +1379,7 @@ pub fn main(init: std.process.Init) !void {
     try runDeferredStream(allocator, meta);
     try runCachedPackageCopy(allocator, meta);
     try runDirtyMatrix(allocator, meta);
+    try runMetadataInvalidation(allocator, meta);
 
     if (failures != 0) {
         std.debug.print("NTFSHARDEN result: FAILED ({d})\n", .{failures});
