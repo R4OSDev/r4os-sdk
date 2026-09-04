@@ -126,6 +126,10 @@ pub const Context = struct {
         return self.base.supportsGuiFrameStreamingContract();
     }
 
+    pub fn supportsGuiSharedRasterContract(self: *const Context) bool {
+        return self.base.supportsGuiSharedRasterContract();
+    }
+
     pub fn guiFrameBegin(self: *const Context) i32 {
         return self.base.guiFrameBegin();
     }
@@ -168,6 +172,37 @@ pub const Context = struct {
 
     pub fn guiFrameStreamInfo(self: *const Context, handle: *const abi.ProgramProcessHandle, out: *abi.GuiFrameStreamInfo) i32 {
         return self.base.guiFrameStreamInfo(handle, out);
+    }
+
+    pub fn guiSharedRasterCreate(self: *const Context, info: *const abi.GuiSharedRasterCreateInfo, out_handle: *abi.GuiSharedRasterHandle) i32 {
+        return self.base.guiSharedRasterCreate(info, out_handle);
+    }
+
+    pub fn guiSharedRasterDestroy(self: *const Context, handle: *const abi.GuiSharedRasterHandle) i32 {
+        return self.base.guiSharedRasterDestroy(handle);
+    }
+
+    pub fn guiSharedRasterMapWrite(self: *const Context, handle: *const abi.GuiSharedRasterHandle, out_map: *abi.GuiSharedRasterWriteMap) i32 {
+        return self.base.guiSharedRasterMapWrite(handle, out_map);
+    }
+
+    pub fn guiSharedRasterPublish(self: *const Context, map: *const abi.GuiSharedRasterWriteMap, out_generation: *u64) i32 {
+        return self.base.guiSharedRasterPublish(map, out_generation);
+    }
+
+    pub fn guiSharedRasterAcquire(
+        self: *const Context,
+        frame_owner: *const abi.ProgramProcessHandle,
+        frame_generation: u64,
+        raster_handle: *const abi.GuiSharedRasterHandle,
+        raster_generation: u64,
+        out_map: *abi.GuiSharedRasterMap,
+    ) i32 {
+        return self.base.guiSharedRasterAcquire(frame_owner, frame_generation, raster_handle, raster_generation, out_map);
+    }
+
+    pub fn guiSharedRasterRelease(self: *const Context, lease: *const abi.GuiSharedRasterLease) i32 {
+        return self.base.guiSharedRasterRelease(lease);
     }
 
     pub fn guiPresent(self: *const Context) i32 {

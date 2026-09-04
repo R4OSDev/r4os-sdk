@@ -1288,6 +1288,16 @@ pub const Context = struct {
             self.hasDrawFn("gui_frame_stream_info");
     }
 
+    pub fn supportsGuiSharedRasterContract(self: *const Context) bool {
+        return self.supportsGuiFrameStreamingContract() and
+            self.hasDrawFn("gui_shared_raster_create") and
+            self.hasDrawFn("gui_shared_raster_destroy") and
+            self.hasDrawFn("gui_shared_raster_map_write") and
+            self.hasDrawFn("gui_shared_raster_publish") and
+            self.hasDrawFn("gui_shared_raster_acquire") and
+            self.hasDrawFn("gui_shared_raster_release");
+    }
+
     pub fn guiFrameBegin(self: *const Context) i32 {
         const table_fn = self.drawFn("gui_frame_begin") orelse return self.unavailable("draw");
         return table_fn();
@@ -1360,6 +1370,47 @@ pub const Context = struct {
         out.version = abi.gui_frame_stream_info_version;
         out.size = abi.gui_frame_stream_info_size;
         return table_fn(handle, out);
+    }
+
+    pub fn guiSharedRasterCreate(self: *const Context, info: *const abi.GuiSharedRasterCreateInfo, out_handle: *abi.GuiSharedRasterHandle) i32 {
+        const table_fn = self.drawFn("gui_shared_raster_create") orelse return self.unavailable("draw");
+        return table_fn(info, out_handle);
+    }
+
+    pub fn guiSharedRasterDestroy(self: *const Context, handle: *const abi.GuiSharedRasterHandle) i32 {
+        const table_fn = self.drawFn("gui_shared_raster_destroy") orelse return self.unavailable("draw");
+        return table_fn(handle);
+    }
+
+    pub fn guiSharedRasterMapWrite(self: *const Context, handle: *const abi.GuiSharedRasterHandle, out_map: *abi.GuiSharedRasterWriteMap) i32 {
+        const table_fn = self.drawFn("gui_shared_raster_map_write") orelse return self.unavailable("draw");
+        out_map.version = abi.gui_shared_raster_write_map_version;
+        out_map.size = abi.gui_shared_raster_write_map_size;
+        return table_fn(handle, out_map);
+    }
+
+    pub fn guiSharedRasterPublish(self: *const Context, map: *const abi.GuiSharedRasterWriteMap, out_generation: *u64) i32 {
+        const table_fn = self.drawFn("gui_shared_raster_publish") orelse return self.unavailable("draw");
+        return table_fn(map, out_generation);
+    }
+
+    pub fn guiSharedRasterAcquire(
+        self: *const Context,
+        frame_owner: *const abi.ProgramProcessHandle,
+        frame_generation: u64,
+        raster_handle: *const abi.GuiSharedRasterHandle,
+        raster_generation: u64,
+        out_map: *abi.GuiSharedRasterMap,
+    ) i32 {
+        const table_fn = self.drawFn("gui_shared_raster_acquire") orelse return self.unavailable("draw");
+        out_map.version = abi.gui_shared_raster_map_version;
+        out_map.size = abi.gui_shared_raster_map_size;
+        return table_fn(frame_owner, frame_generation, raster_handle, raster_generation, out_map);
+    }
+
+    pub fn guiSharedRasterRelease(self: *const Context, lease: *const abi.GuiSharedRasterLease) i32 {
+        const table_fn = self.drawFn("gui_shared_raster_release") orelse return self.unavailable("draw");
+        return table_fn(lease);
     }
 
     pub fn guiSetTitle(self: *const Context, value: [*:0]const u8) i32 {

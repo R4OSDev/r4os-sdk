@@ -296,6 +296,12 @@ pub const PresentStats = struct {
     xrgb32_nearest_frames: u64 = 0,
     xrgb32_nearest_blocks: u64 = 0,
     xrgb32_nearest_resource_bytes: u64 = 0,
+    shared_raster_frames: u64 = 0,
+    shared_raster_blocks: u64 = 0,
+    shared_raster_descriptor_bytes: u64 = 0,
+    shared_raster_published_bytes: u64 = 0,
+    shared_raster_fallback_frames: u64 = 0,
+    shared_raster_backpressure_fallbacks: u64 = 0,
     xrgb_fallback_frames: u64 = 0,
     raster_blocks: u64 = 0,
     sampled_pixels: u64 = 0,
@@ -311,6 +317,11 @@ pub const Xrgb32Batch = struct {
     resource: []const u8,
 };
 
+pub const SharedRasterBatch = struct {
+    command: abi.GuiFrameCommand,
+    resource: abi.GuiSharedRasterResource,
+};
+
 pub const Backend = struct {
     context: *anyopaque,
     begin_full_fn: *const fn (*anyopaque) i32,
@@ -320,11 +331,17 @@ pub const Backend = struct {
     raster_fn: *const fn (*anyopaque, i32, i32, u32, u32, u32, []const u32) i32,
     indexed8_fn: *const fn (*anyopaque, IndexedBatch) i32,
     xrgb32_nearest_fn: *const fn (*anyopaque, Xrgb32Batch) i32,
+    shared_raster_create_fn: *const fn (*anyopaque, *const abi.GuiSharedRasterCreateInfo, *abi.GuiSharedRasterHandle) i32,
+    shared_raster_destroy_fn: *const fn (*anyopaque, *const abi.GuiSharedRasterHandle) i32,
+    shared_raster_map_write_fn: *const fn (*anyopaque, *const abi.GuiSharedRasterHandle, *abi.GuiSharedRasterWriteMap) i32,
+    shared_raster_publish_fn: *const fn (*anyopaque, *const abi.GuiSharedRasterWriteMap, *u64) i32,
+    shared_raster_fn: *const fn (*anyopaque, SharedRasterBatch) i32,
     commit_full_fn: *const fn (*anyopaque) i32,
     commit_damage_fn: *const fn (*anyopaque) i32,
     cancel_fn: *const fn (*anyopaque) i32,
     supports_indexed8: bool = false,
     supports_xrgb32_nearest: bool = false,
+    supports_shared_raster: bool = false,
 
     pub fn fromDraw(draw: *const r4draw.Context) Backend {
         return .{
@@ -336,11 +353,17 @@ pub const Backend = struct {
             .raster_fn = drawRaster,
             .indexed8_fn = drawIndexed8,
             .xrgb32_nearest_fn = drawXrgb32Nearest,
+            .shared_raster_create_fn = drawSharedRasterCreate,
+            .shared_raster_destroy_fn = drawSharedRasterDestroy,
+            .shared_raster_map_write_fn = drawSharedRasterMapWrite,
+            .shared_raster_publish_fn = drawSharedRasterPublish,
+            .shared_raster_fn = drawSharedRaster,
             .commit_full_fn = drawCommitFull,
             .commit_damage_fn = drawCommitDamage,
             .cancel_fn = drawCancel,
             .supports_indexed8 = draw.supportsGuiFrameDamageContract(),
             .supports_xrgb32_nearest = draw.supportsGuiFrameStreamingContract(),
+            .supports_shared_raster = draw.supportsGuiSharedRasterContract(),
         };
     }
 
@@ -368,6 +391,26 @@ pub const Backend = struct {
         return self.xrgb32_nearest_fn(self.context, batch);
     }
 
+    fn sharedRasterCreate(self: Backend, info: *const abi.GuiSharedRasterCreateInfo, out_handle: *abi.GuiSharedRasterHandle) i32 {
+        return self.shared_raster_create_fn(self.context, info, out_handle);
+    }
+
+    fn sharedRasterDestroy(self: Backend, handle: *const abi.GuiSharedRasterHandle) i32 {
+        return self.shared_raster_destroy_fn(self.context, handle);
+    }
+
+    fn sharedRasterMapWrite(self: Backend, handle: *const abi.GuiSharedRasterHandle, out_map: *abi.GuiSharedRasterWriteMap) i32 {
+        return self.shared_raster_map_write_fn(self.context, handle, out_map);
+    }
+
+    fn sharedRasterPublish(self: Backend, map: *const abi.GuiSharedRasterWriteMap, out_generation: *u64) i32 {
+        return self.shared_raster_publish_fn(self.context, map, out_generation);
+    }
+
+    fn sharedRaster(self: Backend, batch: SharedRasterBatch) i32 {
+        return self.shared_raster_fn(self.context, batch);
+    }
+
     fn commit(self: Backend, mode: PresentMode) i32 {
         return switch (mode) {
             .full => self.commit_full_fn(self.context),
@@ -389,6 +432,8 @@ pub const Presenter = struct {
     has_frame: bool = false,
     damage_chain: u32 = 0,
     stats: PresentStats = .{},
+    shared_handle: abi.GuiSharedRasterHandle = .{},
+    shared_info: abi.GuiSharedRasterCreateInfo = .{},
 
     pub fn init(surface: Surface, scratch: []u32) Error!Presenter {
         _ = try requiredPixels(surface.width, surface.height);
@@ -439,10 +484,12 @@ pub const Presenter = struct {
         }
 
         const use_xrgb32_nearest = self.surface.format() == .xrgb32 and backend.supports_xrgb32_nearest;
+        const shared_info = sharedRasterCreateInfo(self.surface);
+        const wants_shared_raster = backend.supports_shared_raster and shared_info != null;
         var compacted = false;
         var mode: PresentMode = if (!self.has_frame or geometry_changed or self.damage.kind == .full)
             .full
-        else if (use_xrgb32_nearest)
+        else if (wants_shared_raster or use_xrgb32_nearest)
             .replace
         else
             .damage;
@@ -479,38 +526,69 @@ pub const Presenter = struct {
             }
         }
 
-        const begun = backend.begin(mode, destination_regions[0..destination_count]);
-        if (begun < 0) return .{ .failure = begun };
-        if (mode != .damage) {
-            const cleared = backend.clear(letterbox_rgb);
-            if (cleared < 0) {
-                backend.cancel();
-                return .{ .failure = cleared };
+        const use_indexed8 = self.surface.format() == .indexed8 and backend.supports_indexed8;
+        var shared_generation: ?u64 = null;
+        if (wants_shared_raster) {
+            const prepared = self.prepareSharedRaster(backend, shared_info.?);
+            if (prepared.result == abi.gui_frame_result_ok) {
+                shared_generation = prepared.generation;
+            } else {
+                self.stats.shared_raster_fallback_frames +%= 1;
+                if (prepared.result == abi.gui_frame_error_state) self.stats.shared_raster_backpressure_fallbacks +%= 1;
             }
         }
 
-        const use_indexed8 = self.surface.format() == .indexed8 and backend.supports_indexed8;
         var rendered = RenderResult{};
-        for (render_regions) |source_region| {
-            const region_result = if (use_xrgb32_nearest)
-                renderXrgb32Nearest(self.surface, viewport, source_region, self.scratch, backend)
-            else if (use_indexed8)
-                renderIndexed8(self.surface, viewport, source_region, self.scratch, backend)
-            else if (viewport.isInteger())
-                renderInteger(self.surface, viewport, source_region, self.scratch, backend)
-            else
-                renderFractional(self.surface, viewport, source_region, self.scratch, backend);
-            rendered.add(region_result);
-            if (rendered.failure != 0) break;
-        }
-        if (rendered.failure != 0) {
-            backend.cancel();
-            return .{ .failure = rendered.failure };
-        }
-        const committed = backend.commit(mode);
-        if (committed < 0) {
-            backend.cancel();
-            return .{ .failure = committed };
+        var committed_shared_raster = false;
+        while (true) {
+            const begun = backend.begin(mode, destination_regions[0..destination_count]);
+            if (begun < 0) return .{ .failure = begun };
+            if (mode != .damage) {
+                const cleared = backend.clear(letterbox_rgb);
+                if (cleared < 0) {
+                    backend.cancel();
+                    return .{ .failure = cleared };
+                }
+            }
+
+            rendered = .{};
+            if (shared_generation) |generation| {
+                rendered = renderSharedRaster(self.surface, viewport, self.shared_handle, generation, backend);
+            } else {
+                for (render_regions) |source_region| {
+                    const region_result = if (use_xrgb32_nearest)
+                        renderXrgb32Nearest(self.surface, viewport, source_region, self.scratch, backend)
+                    else if (use_indexed8)
+                        renderIndexed8(self.surface, viewport, source_region, self.scratch, backend)
+                    else if (viewport.isInteger())
+                        renderInteger(self.surface, viewport, source_region, self.scratch, backend)
+                    else
+                        renderFractional(self.surface, viewport, source_region, self.scratch, backend);
+                    rendered.add(region_result);
+                    if (rendered.failure != 0) break;
+                }
+            }
+            if (rendered.failure != 0) {
+                backend.cancel();
+                if (shared_generation != null) {
+                    shared_generation = null;
+                    self.stats.shared_raster_fallback_frames +%= 1;
+                    continue;
+                }
+                return .{ .failure = rendered.failure };
+            }
+            const committed = backend.commit(mode);
+            if (committed < 0) {
+                backend.cancel();
+                if (shared_generation != null) {
+                    shared_generation = null;
+                    self.stats.shared_raster_fallback_frames +%= 1;
+                    continue;
+                }
+                return .{ .failure = committed };
+            }
+            committed_shared_raster = shared_generation != null;
+            break;
         }
 
         self.has_frame = true;
@@ -524,8 +602,14 @@ pub const Presenter = struct {
         self.stats.indexed8_resource_bytes +%= rendered.indexed8_resource_bytes;
         self.stats.xrgb32_nearest_blocks +%= rendered.xrgb32_nearest_blocks;
         self.stats.xrgb32_nearest_resource_bytes +%= rendered.xrgb32_nearest_resource_bytes;
-        if (use_indexed8) self.stats.indexed8_frames +%= 1 else if (self.surface.format() == .indexed8) self.stats.xrgb_fallback_frames +%= 1;
-        if (use_xrgb32_nearest) self.stats.xrgb32_nearest_frames +%= 1 else if (self.surface.format() == .xrgb32) self.stats.xrgb_fallback_frames +%= 1;
+        self.stats.shared_raster_blocks +%= rendered.shared_raster_blocks;
+        self.stats.shared_raster_descriptor_bytes +%= rendered.shared_raster_descriptor_bytes;
+        if (committed_shared_raster) {
+            self.stats.shared_raster_frames +%= 1;
+        } else {
+            if (use_indexed8) self.stats.indexed8_frames +%= 1 else if (self.surface.format() == .indexed8) self.stats.xrgb_fallback_frames +%= 1;
+            if (use_xrgb32_nearest) self.stats.xrgb32_nearest_frames +%= 1 else if (self.surface.format() == .xrgb32) self.stats.xrgb_fallback_frames +%= 1;
+        }
         switch (mode) {
             .full => {
                 self.stats.full_frames +%= 1;
@@ -549,7 +633,117 @@ pub const Presenter = struct {
             .sampled_pixels = rendered.sampled_pixels,
         } };
     }
+
+    pub fn deinit(self: *Presenter, backend: Backend) void {
+        self.dropSharedRaster(backend);
+    }
+
+    fn dropSharedRaster(self: *Presenter, backend: Backend) void {
+        if (self.shared_handle.id != 0) _ = backend.sharedRasterDestroy(&self.shared_handle);
+        self.shared_handle = .{};
+        self.shared_info = .{};
+    }
+
+    fn prepareSharedRaster(self: *Presenter, backend: Backend, info: abi.GuiSharedRasterCreateInfo) SharedRasterPrepareResult {
+        if (self.shared_handle.id != 0 and !sameSharedRasterInfo(self.shared_info, info)) self.dropSharedRaster(backend);
+        if (self.shared_handle.id == 0) {
+            var handle: abi.GuiSharedRasterHandle = .{};
+            const created = backend.sharedRasterCreate(&info, &handle);
+            if (created != abi.gui_frame_result_ok) return .{ .result = created };
+            if (handle.id == 0 or handle.generation == 0) return .{ .result = abi.gui_frame_error_invalid };
+            self.shared_handle = handle;
+            self.shared_info = info;
+        }
+
+        var map: abi.GuiSharedRasterWriteMap = .{};
+        const mapped = backend.sharedRasterMapWrite(&self.shared_handle, &map);
+        if (mapped != abi.gui_frame_result_ok) return .{ .result = mapped };
+        if (!validSharedRasterWriteMap(map, self.shared_handle, info)) {
+            self.dropSharedRaster(backend);
+            return .{ .result = abi.gui_frame_error_invalid };
+        }
+        const destination_pointer: [*]u8 = @ptrFromInt(map.data_address);
+        if (!copySurfaceToSharedRaster(self.surface, destination_pointer[0..@as(usize, @intCast(map.byte_length))], info)) {
+            self.dropSharedRaster(backend);
+            return .{ .result = abi.gui_frame_error_invalid };
+        }
+        var generation: u64 = 0;
+        const published = backend.sharedRasterPublish(&map, &generation);
+        if (published != abi.gui_frame_result_ok or generation == 0) {
+            self.dropSharedRaster(backend);
+            return .{ .result = if (published == abi.gui_frame_result_ok) abi.gui_frame_error_invalid else published };
+        }
+        self.stats.shared_raster_published_bytes +%= info.data_bytes;
+        return .{ .result = abi.gui_frame_result_ok, .generation = generation };
+    }
 };
+
+const SharedRasterPrepareResult = struct {
+    result: i32,
+    generation: u64 = 0,
+};
+
+fn sharedRasterCreateInfo(surface: Surface) ?abi.GuiSharedRasterCreateInfo {
+    const pixel_count = std.math.mul(u64, surface.width, surface.height) catch return null;
+    return switch (surface.storage) {
+        .xrgb32 => blk: {
+            const stride = std.math.mul(u64, surface.width, @sizeOf(u32)) catch return null;
+            const data_bytes = std.math.mul(u64, pixel_count, @sizeOf(u32)) catch return null;
+            if (stride > std.math.maxInt(u32) or data_bytes > abi.gui_shared_raster_max_bytes) return null;
+            break :blk .{
+                .format = abi.gui_shared_raster_format_xrgb32,
+                .width = surface.width,
+                .height = surface.height,
+                .stride_bytes = @intCast(stride),
+                .data_bytes = data_bytes,
+            };
+        },
+        .indexed8 => blk: {
+            const data_bytes = std.math.add(u64, abi.gui_indexed8_pixels_offset, pixel_count) catch return null;
+            if (data_bytes > abi.gui_shared_raster_max_bytes) return null;
+            break :blk .{
+                .format = abi.gui_shared_raster_format_indexed8,
+                .width = surface.width,
+                .height = surface.height,
+                .stride_bytes = surface.width,
+                .data_offset = abi.gui_indexed8_pixels_offset,
+                .data_bytes = data_bytes,
+            };
+        },
+    };
+}
+
+fn sameSharedRasterInfo(a: abi.GuiSharedRasterCreateInfo, b: abi.GuiSharedRasterCreateInfo) bool {
+    return a.version == b.version and a.size == b.size and a.format == b.format and a.width == b.width and
+        a.height == b.height and a.stride_bytes == b.stride_bytes and a.data_offset == b.data_offset and
+        a.flags == b.flags and a.data_bytes == b.data_bytes;
+}
+
+fn validSharedRasterWriteMap(map: abi.GuiSharedRasterWriteMap, handle: abi.GuiSharedRasterHandle, info: abi.GuiSharedRasterCreateInfo) bool {
+    return map.version >= abi.gui_shared_raster_write_map_version and map.size >= abi.gui_shared_raster_write_map_size and
+        map.handle.id == handle.id and map.handle.generation == handle.generation and map.data_address != 0 and
+        map.byte_length == info.data_bytes and map.write_token != 0 and map.buffer_index < abi.gui_shared_raster_buffer_count and
+        map.reserved0 == 0;
+}
+
+fn copySurfaceToSharedRaster(surface: Surface, destination: []u8, info: abi.GuiSharedRasterCreateInfo) bool {
+    if (destination.len != info.data_bytes) return false;
+    switch (surface.storage) {
+        .xrgb32 => |pixels| {
+            const source = std.mem.sliceAsBytes(pixels);
+            if (source.len != destination.len) return false;
+            @memcpy(destination, source);
+        },
+        .indexed8 => |indexed| {
+            const palette = std.mem.sliceAsBytes(indexed.palette);
+            const data_offset: usize = @intCast(info.data_offset);
+            if (palette.len != data_offset or data_offset + indexed.pixels.len != destination.len) return false;
+            @memcpy(destination[0..data_offset], palette);
+            @memcpy(destination[data_offset..], indexed.pixels);
+        },
+    }
+    return true;
+}
 
 pub const MouseAction = enum {
     down,
@@ -1035,6 +1229,8 @@ const RenderResult = struct {
     indexed8_resource_bytes: u64 = 0,
     xrgb32_nearest_blocks: u64 = 0,
     xrgb32_nearest_resource_bytes: u64 = 0,
+    shared_raster_blocks: u64 = 0,
+    shared_raster_descriptor_bytes: u64 = 0,
     failure: i32 = 0,
 
     fn add(self: *RenderResult, other: RenderResult) void {
@@ -1044,9 +1240,60 @@ const RenderResult = struct {
         self.indexed8_resource_bytes +|= other.indexed8_resource_bytes;
         self.xrgb32_nearest_blocks +|= other.xrgb32_nearest_blocks;
         self.xrgb32_nearest_resource_bytes +|= other.xrgb32_nearest_resource_bytes;
+        self.shared_raster_blocks +|= other.shared_raster_blocks;
+        self.shared_raster_descriptor_bytes +|= other.shared_raster_descriptor_bytes;
         if (self.failure == 0) self.failure = other.failure;
     }
 };
+
+fn renderSharedRaster(surface: Surface, viewport: Viewport, handle: abi.GuiSharedRasterHandle, generation: u64, backend: Backend) RenderResult {
+    var result = RenderResult{};
+    const format: u32 = switch (surface.storage) {
+        .indexed8 => abi.gui_shared_raster_format_indexed8,
+        .xrgb32 => abi.gui_shared_raster_format_xrgb32,
+    };
+    var tile_y: u32 = 0;
+    while (tile_y < viewport.h) {
+        const tile_h = @min(tile_max_height, viewport.h - tile_y);
+        var tile_x: u32 = 0;
+        while (tile_x < viewport.w) {
+            const tile_w = @min(tile_max_width, viewport.w - tile_x);
+            const command = abi.GuiFrameCommand{
+                .kind = abi.gui_frame_command_kind_shared_raster,
+                .x = viewport.x + @as(i32, @intCast(tile_x)),
+                .y = viewport.y + @as(i32, @intCast(tile_y)),
+                .w = tile_w,
+                .h = tile_h,
+                .resource_bytes = abi.gui_shared_raster_resource_size,
+            };
+            const resource = abi.GuiSharedRasterResource{
+                .handle = handle,
+                .raster_generation = generation,
+                .format = format,
+                .source_w = surface.width,
+                .source_h = surface.height,
+                .guest_w = surface.width,
+                .guest_h = surface.height,
+                .viewport_x = viewport.x,
+                .viewport_y = viewport.y,
+                .viewport_w = viewport.w,
+                .viewport_h = viewport.h,
+            };
+            const raw = backend.sharedRaster(.{ .command = command, .resource = resource });
+            if (raw < 0) {
+                result.failure = raw;
+                return result;
+            }
+            result.blocks +|= 1;
+            result.shared_raster_blocks +|= 1;
+            result.shared_raster_descriptor_bytes +|= abi.gui_shared_raster_resource_size;
+            result.sampled_pixels +|= @as(u64, tile_w) * tile_h;
+            tile_x += tile_w;
+        }
+        tile_y += tile_h;
+    }
+    return result;
+}
 
 fn renderInteger(surface: Surface, viewport: Viewport, damage: Rect, scratch: []u32, backend: Backend) RenderResult {
     const source = clipRect(damage, surface.width, surface.height) orelse return .{};
@@ -1450,6 +1697,26 @@ fn drawXrgb32Nearest(context: *anyopaque, batch: Xrgb32Batch) i32 {
     return drawContext(context).guiFrameAppend(&.{batch.command}, batch.resource);
 }
 
+fn drawSharedRasterCreate(context: *anyopaque, info: *const abi.GuiSharedRasterCreateInfo, out_handle: *abi.GuiSharedRasterHandle) i32 {
+    return drawContext(context).guiSharedRasterCreate(info, out_handle);
+}
+
+fn drawSharedRasterDestroy(context: *anyopaque, handle: *const abi.GuiSharedRasterHandle) i32 {
+    return drawContext(context).guiSharedRasterDestroy(handle);
+}
+
+fn drawSharedRasterMapWrite(context: *anyopaque, handle: *const abi.GuiSharedRasterHandle, out_map: *abi.GuiSharedRasterWriteMap) i32 {
+    return drawContext(context).guiSharedRasterMapWrite(handle, out_map);
+}
+
+fn drawSharedRasterPublish(context: *anyopaque, map: *const abi.GuiSharedRasterWriteMap, out_generation: *u64) i32 {
+    return drawContext(context).guiSharedRasterPublish(map, out_generation);
+}
+
+fn drawSharedRaster(context: *anyopaque, batch: SharedRasterBatch) i32 {
+    return drawContext(context).guiFrameAppend(&.{batch.command}, std.mem.asBytes(&batch.resource));
+}
+
 fn drawCommitFull(context: *anyopaque) i32 {
     return drawContext(context).guiFrameCommit();
 }
@@ -1473,11 +1740,24 @@ const FakeBackend = struct {
     rasters: u32 = 0,
     indexed8_rasters: u32 = 0,
     xrgb32_nearest_rasters: u32 = 0,
+    shared_raster_creates: u32 = 0,
+    shared_raster_destroys: u32 = 0,
+    shared_raster_maps: u32 = 0,
+    shared_raster_publishes: u32 = 0,
+    shared_raster_commands: u32 = 0,
     damage_regions: u32 = 0,
     indexed8_resource_bytes: u64 = 0,
     xrgb32_nearest_resource_bytes: u64 = 0,
+    shared_raster_descriptor_bytes: u64 = 0,
     indexed8_enabled: bool = false,
     xrgb32_nearest_enabled: bool = false,
+    shared_raster_enabled: bool = false,
+    shared_raster_map_result: i32 = abi.gui_frame_result_ok,
+    shared_raster_append_result: i32 = abi.gui_frame_result_ok,
+    shared_raster_memory: []u8 = &.{},
+    shared_raster_info: abi.GuiSharedRasterCreateInfo = .{},
+    shared_raster_handle: abi.GuiSharedRasterHandle = .{},
+    shared_raster_generation: u64 = 0,
     max_w: u32 = 0,
     max_h: u32 = 0,
     last_scale: u32 = 0,
@@ -1501,11 +1781,17 @@ const FakeBackend = struct {
             .raster_fn = fakeRaster,
             .indexed8_fn = fakeIndexed8,
             .xrgb32_nearest_fn = fakeXrgb32Nearest,
+            .shared_raster_create_fn = fakeSharedRasterCreate,
+            .shared_raster_destroy_fn = fakeSharedRasterDestroy,
+            .shared_raster_map_write_fn = fakeSharedRasterMapWrite,
+            .shared_raster_publish_fn = fakeSharedRasterPublish,
+            .shared_raster_fn = fakeSharedRaster,
             .commit_full_fn = fakeCommit,
             .commit_damage_fn = fakeCommit,
             .cancel_fn = fakeCancel,
             .supports_indexed8 = self.indexed8_enabled,
             .supports_xrgb32_nearest = self.xrgb32_nearest_enabled,
+            .supports_shared_raster = self.shared_raster_enabled,
         };
     }
 };
@@ -1585,6 +1871,66 @@ fn fakeXrgb32Nearest(context: *anyopaque, batch: Xrgb32Batch) i32 {
         @memcpy(self.captured_xrgb32[0..self.captured_xrgb32_len], batch.resource[0..self.captured_xrgb32_len]);
     }
     return 0;
+}
+
+fn fakeSharedRasterCreate(context: *anyopaque, info: *const abi.GuiSharedRasterCreateInfo, out_handle: *abi.GuiSharedRasterHandle) i32 {
+    const self = fakeState(context);
+    if (!self.shared_raster_enabled) return abi.err_no_fn;
+    if (info.data_bytes > self.shared_raster_memory.len) return abi.gui_frame_error_oom;
+    self.shared_raster_creates += 1;
+    self.shared_raster_handle = .{ .id = 1, .generation = self.shared_raster_creates };
+    self.shared_raster_info = info.*;
+    out_handle.* = self.shared_raster_handle;
+    return abi.gui_frame_result_ok;
+}
+
+fn fakeSharedRasterDestroy(context: *anyopaque, handle: *const abi.GuiSharedRasterHandle) i32 {
+    const self = fakeState(context);
+    if (handle.id != self.shared_raster_handle.id or handle.generation != self.shared_raster_handle.generation) return abi.gui_frame_error_stale;
+    self.shared_raster_destroys += 1;
+    self.shared_raster_handle = .{};
+    return abi.gui_frame_result_ok;
+}
+
+fn fakeSharedRasterMapWrite(context: *anyopaque, handle: *const abi.GuiSharedRasterHandle, out_map: *abi.GuiSharedRasterWriteMap) i32 {
+    const self = fakeState(context);
+    if (self.shared_raster_map_result != abi.gui_frame_result_ok) return self.shared_raster_map_result;
+    if (handle.id != self.shared_raster_handle.id or handle.generation != self.shared_raster_handle.generation) return abi.gui_frame_error_stale;
+    self.shared_raster_maps += 1;
+    out_map.* = .{
+        .handle = handle.*,
+        .data_address = @intFromPtr(self.shared_raster_memory.ptr),
+        .byte_length = self.shared_raster_info.data_bytes,
+        .write_token = self.shared_raster_maps,
+    };
+    return abi.gui_frame_result_ok;
+}
+
+fn fakeSharedRasterPublish(context: *anyopaque, map: *const abi.GuiSharedRasterWriteMap, out_generation: *u64) i32 {
+    const self = fakeState(context);
+    if (map.handle.id != self.shared_raster_handle.id or map.handle.generation != self.shared_raster_handle.generation or map.write_token == 0) {
+        return abi.gui_frame_error_stale;
+    }
+    self.shared_raster_publishes += 1;
+    self.shared_raster_generation += 1;
+    out_generation.* = self.shared_raster_generation;
+    return abi.gui_frame_result_ok;
+}
+
+fn fakeSharedRaster(context: *anyopaque, batch: SharedRasterBatch) i32 {
+    const self = fakeState(context);
+    if (self.shared_raster_append_result != abi.gui_frame_result_ok) return self.shared_raster_append_result;
+    self.shared_raster_commands += 1;
+    self.shared_raster_descriptor_bytes +%= @sizeOf(abi.GuiSharedRasterResource);
+    if (batch.command.kind != abi.gui_frame_command_kind_shared_raster or
+        batch.command.resource_bytes != abi.gui_shared_raster_resource_size or
+        batch.resource.handle.id != self.shared_raster_handle.id or
+        batch.resource.handle.generation != self.shared_raster_handle.generation or
+        batch.resource.raster_generation != self.shared_raster_generation or batch.resource.format != self.shared_raster_info.format)
+    {
+        self.invalid_raster = true;
+    }
+    return abi.gui_frame_result_ok;
 }
 
 fn fakeCommit(context: *anyopaque) i32 {
@@ -1712,6 +2058,79 @@ test "native xrgb32 transport keeps sixty four full-motion generations standalon
     var first_pixel: u32 = undefined;
     @memcpy(std.mem.asBytes(&first_pixel), fake.captured_xrgb32[abi.gui_xrgb32_pixels_offset .. abi.gui_xrgb32_pixels_offset + @sizeOf(u32)]);
     try std.testing.expectEqual(@as(u32, 0x00112233), first_pixel);
+}
+
+test "shared raster transport publishes sixty four full-motion frames with bounded descriptors" {
+    const width: u32 = 256;
+    const height: u32 = 224;
+    const pixels = try std.testing.allocator.alloc(u32, @as(usize, width) * height);
+    defer std.testing.allocator.free(pixels);
+    @memset(pixels, 0xAA112233);
+    const shared_memory = try std.testing.allocator.alloc(u8, pixels.len * @sizeOf(u32));
+    defer std.testing.allocator.free(shared_memory);
+    var scratch: [tile_max_pixels]u32 = undefined;
+    var presenter = try Presenter.init(try Surface.initXrgb32(pixels, width, height), scratch[0..]);
+    var fake = FakeBackend{
+        .xrgb32_nearest_enabled = true,
+        .shared_raster_enabled = true,
+        .shared_raster_memory = shared_memory,
+    };
+    defer presenter.deinit(fake.backend());
+
+    var frame: u32 = 0;
+    while (frame < 64) : (frame += 1) {
+        if (frame != 0) {
+            pixels[frame] = 0xFF00_0000 | frame;
+            presenter.invalidate(.{ .x = frame, .y = 0, .w = 1, .h = 1 });
+        }
+        const result = presenter.presentTo(fake.backend(), width, height);
+        try std.testing.expect(result == .presented);
+        try std.testing.expectEqual(if (frame == 0) PresentMode.full else PresentMode.replace, result.presented.mode);
+        try std.testing.expectEqual(@as(u32, 4), result.presented.raster_blocks);
+    }
+
+    const frame_bytes = @as(u64, width) * height * @sizeOf(u32);
+    const descriptor_bytes = @as(u64, 64 * 4) * abi.gui_shared_raster_resource_size;
+    try std.testing.expectEqual(@as(u32, 1), fake.shared_raster_creates);
+    try std.testing.expectEqual(@as(u32, 64), fake.shared_raster_maps);
+    try std.testing.expectEqual(@as(u32, 64), fake.shared_raster_publishes);
+    try std.testing.expectEqual(@as(u32, 256), fake.shared_raster_commands);
+    try std.testing.expectEqual(descriptor_bytes, fake.shared_raster_descriptor_bytes);
+    try std.testing.expect(descriptor_bytes * 100 < frame_bytes * 64);
+    try std.testing.expectEqual(@as(u32, 0), fake.xrgb32_nearest_rasters);
+    try std.testing.expectEqual(@as(u64, 64), presenter.stats.shared_raster_frames);
+    try std.testing.expectEqual(frame_bytes * 64, presenter.stats.shared_raster_published_bytes);
+    try std.testing.expectEqualSlices(u8, std.mem.sliceAsBytes(pixels), shared_memory);
+    try std.testing.expect(!fake.invalid_raster);
+}
+
+test "shared raster backpressure falls back for the frame and preserves indexed bytes" {
+    var palette: [palette_entries]u32 = .{0} ** palette_entries;
+    palette[1] = 0xAA112233;
+    palette[2] = 0xBB445566;
+    var indices = [_]u8{ 1, 2, 2, 1 };
+    var shared_memory: [abi.gui_indexed8_pixels_offset + indices.len]u8 = undefined;
+    var scratch: [tile_max_pixels]u32 = undefined;
+    var presenter = try Presenter.init(try Surface.initIndexed8(indices[0..], palette[0..], 2, 2), scratch[0..]);
+    var fake = FakeBackend{
+        .indexed8_enabled = true,
+        .shared_raster_enabled = true,
+        .shared_raster_memory = shared_memory[0..],
+    };
+    defer presenter.deinit(fake.backend());
+
+    try std.testing.expect(presenter.presentTo(fake.backend(), 2, 2) == .presented);
+    try std.testing.expectEqualSlices(u8, std.mem.sliceAsBytes(palette[0..]), shared_memory[0..abi.gui_indexed8_pixels_offset]);
+    try std.testing.expectEqualSlices(u8, indices[0..], shared_memory[abi.gui_indexed8_pixels_offset..]);
+    fake.shared_raster_map_result = abi.gui_frame_error_state;
+    indices[0] = 2;
+    presenter.invalidate(.{ .x = 0, .y = 0, .w = 1, .h = 1 });
+    const fallback = presenter.presentTo(fake.backend(), 2, 2);
+    try std.testing.expect(fallback == .presented);
+    try std.testing.expectEqual(PresentMode.replace, fallback.presented.mode);
+    try std.testing.expectEqual(@as(u32, 1), fake.indexed8_rasters);
+    try std.testing.expectEqual(@as(u64, 1), presenter.stats.shared_raster_fallback_frames);
+    try std.testing.expectEqual(@as(u64, 1), presenter.stats.shared_raster_backpressure_fallbacks);
 }
 
 test "native xrgb32 transport keeps wide full-motion work bounded" {
