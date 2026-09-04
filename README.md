@@ -23,6 +23,14 @@ or select one printable text event with pointer filtering before mapping.
 Stable raw-event sequences and ticks, filter counters, and an ignored-without-
 wakeup runtime result keep delivery and loss observable without event logs.
 
+Draw-heavy Zig apps can attach a caller-owned `FrameCanvas` command/resource
+buffer with `PaintContext.bufferedCanvas`. Existing Canvas widgets then share
+bounded `gui_frame_append` chunks, while old R4DRAW tables retain the direct
+draw path. Flush failures cancel the whole private frame, oversized individual
+resources keep their ordering through a direct chunk or established draw
+fallback, and per-frame statistics expose commands, bytes, flushes and actual
+draw transitions without another ABI.
+
 `r4os.subsystem_persistence` is the source-level companion for cartridge
 subsystems. Consumers supply only their canonical save directories, exact RTC
 record size and validator; the helper supplies one digest lease, exact reads,

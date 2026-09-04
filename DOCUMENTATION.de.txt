@@ -43,6 +43,26 @@ Dateinormalisierung sind in Zig und C als 16-Bit-Offsets abgelegt und belegen
 zusammen fest 640 Byte statt zweier nativer Wortarrays. Laengen-, UTF-8-,
 Geraetenamen- und Normalisierungsvertrag bleiben unveraendert.
 
+Gebündelte GUI-Frames
+--------------------
+
+Zeichenintensive Zig-Anwendungen koennen an einen offenen `PaintContext` mit
+`bufferedCanvas` einen `FrameCanvas` sowie eigene begrenzte Command- und
+Ressourcenpuffer binden. Alle vorhandenen Canvas-Widgets verwenden diesen
+Pfad ohne eigene Batchlogik. Volle Puffer werden geordnet ueber
+`gui_frame_append` geleert; XRGB wird normalisiert, Alpha8 aus seinem Stride
+kompakt kopiert und Ressourcenoffsets werden je Chunk neu bezogen. Vor einem
+zu grossen Einzelobjekt wird zuerst der bisherige Chunk geleert. Das Objekt
+geht danach als einzelner Chunk oder, wenn eine Konvertierung noetig ist,
+ueber den bestehenden Draw-Aufruf in dieselbe private Transaktion.
+
+Ein Fehler wird bis `present` festgehalten und fuehrt zum Abbruch des ganzen
+Frames, sodass kein erfolgreicher Praefix sichtbar wird. Fehlt der aktuelle
+Framevertrag, bleiben die bisherigen einzelnen Draw-Aufrufe samt PRESENT
+erhalten. `FrameCanvas.stats` zaehlt fuer genau diesen Frame logische Commands,
+Ressourcenbytes, Flushes, direkte Chunks, Legacy-Aufrufe und Fehler; die
+abgeleiteten Draw-Uebergaenge benoetigen keinen weiteren Plattformaufruf.
+
 Build
 -----
 

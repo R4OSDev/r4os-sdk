@@ -2071,11 +2071,322 @@ pub fn TextField(comptime capacity: usize) type {
     };
 }
 
+/// Per-frame accounting for the buffered Canvas path.  Every append or legacy
+/// draw call is one R4DRAW transition and one entry into the frame mutation
+/// path; BEGIN, COMMIT and PRESENT are deliberately not included.
+pub const FrameCanvasStats = struct {
+    logical_commands: u64 = 0,
+    resource_bytes: u64 = 0,
+    flushes: u64 = 0,
+    append_calls: u64 = 0,
+    direct_chunks: u64 = 0,
+    legacy_calls: u64 = 0,
+    failed_calls: u64 = 0,
+
+    pub fn drawTransitions(self: FrameCanvasStats) u64 {
+        return self.append_calls +| self.legacy_calls;
+    }
+
+    pub fn frameMutationEntries(self: FrameCanvasStats) u64 {
+        return self.drawTransitions();
+    }
+};
+
+/// Bounded command builder used by Canvas inside an app_gui PaintContext.
+/// Both slices remain caller-owned.  R4DRAW snapshots every flushed chunk,
+/// therefore the same storage can be reused until the final transactional
+/// commit.  A failed chunk is latched so PaintContext can cancel the complete
+/// frame instead of publishing a prefix.
+pub const FrameCanvas = struct {
+    ctx: *const r4draw.Context,
+    commands: []abi.GuiFrameCommand,
+    resources: []u8,
+    transactional: bool,
+    command_len: usize = 0,
+    resource_len: usize = 0,
+    active: bool = true,
+    submitted: bool = false,
+    failure: i32 = 0,
+    stats: FrameCanvasStats = .{},
+
+    const Reservation = struct {
+        command: *abi.GuiFrameCommand,
+        resource: []u8,
+    };
+
+    pub fn init(ctx: *const r4draw.Context, commands: []abi.GuiFrameCommand, resources: []u8, transactional: bool) FrameCanvas {
+        return .{
+            .ctx = ctx,
+            .commands = commands,
+            .resources = resources,
+            .transactional = transactional,
+        };
+    }
+
+    pub fn bind(self: *FrameCanvas, canvas: Canvas) Canvas {
+        var result = canvas;
+        result.frame_canvas = self;
+        return result;
+    }
+
+    pub fn finish(self: *FrameCanvas) i32 {
+        if (!self.active) return abi.gui_frame_error_state;
+        if (self.failure < 0) return self.failure;
+        return self.flush();
+    }
+
+    pub fn complete(self: *FrameCanvas) void {
+        self.command_len = 0;
+        self.resource_len = 0;
+        self.active = false;
+    }
+
+    pub fn cancel(self: *FrameCanvas) void {
+        self.complete();
+    }
+
+    pub fn clear(self: *FrameCanvas, rgb: u32) i32 {
+        if (!self.beginLogicalCommand(0)) return self.currentFailure();
+        if (!self.transactional) return self.legacyResult(self.ctx.guiClear(rgb));
+
+        // Legacy CLEAR starts a fresh frame.  Pending commands have not crossed
+        // the ABI yet and can simply be forgotten.  Once a chunk was submitted,
+        // use the legacy operation inside the same private transaction to retain
+        // the exact reset semantics.
+        self.command_len = 0;
+        self.resource_len = 0;
+        if (self.submitted) return self.legacyResult(self.ctx.guiClear(rgb));
+        return self.queueWithoutAccounting(.{ .kind = abi.gui_frame_command_kind_clear, .rgb = rgb }, &.{});
+    }
+
+    pub fn rect(self: *FrameCanvas, x: i32, y: i32, w: u32, h: u32, rgb: u32) i32 {
+        if (!self.beginLogicalCommand(0)) return self.currentFailure();
+        if (!self.transactional) return self.legacyResult(self.ctx.guiRect(x, y, w, h, rgb));
+        return self.queueWithoutAccounting(.{ .kind = abi.gui_frame_command_kind_rect, .x = x, .y = y, .w = w, .h = h, .rgb = rgb }, &.{});
+    }
+
+    pub fn text(self: *FrameCanvas, x: i32, y: i32, value: [*:0]const u8, fg: u32, bg: u32, font: FontMetrics) i32 {
+        const resource = std.mem.span(value);
+        if (!self.beginLogicalCommand(resource.len)) return self.currentFailure();
+        if (!self.transactional) return self.legacyResult(self.ctx.guiDrawTextEx(x, y, value, fg, bg, font.id, 0));
+        const text_width = fallbackTextWidthZ(value, font.max_advance);
+        return self.queueWithoutAccounting(.{
+            .kind = abi.gui_frame_command_kind_text,
+            .x = x,
+            .y = y,
+            .fg = fg,
+            .bg = bg,
+            .font_id = font.id,
+            .text_w = @intCast(@max(0, text_width)),
+            .text_h = @intCast(@max(1, font.height)),
+            .baseline = font.baseline,
+            .line_height = @intCast(@max(1, font.line_height)),
+        }, resource);
+    }
+
+    pub fn raster(self: *FrameCanvas, x: i32, y: i32, width: u32, height: u32, scale: u32, pixels: []const u32) i32 {
+        const pixel_count_u64 = @as(u64, width) * @as(u64, height);
+        const resource_bytes_u64 = std.math.mul(u64, pixel_count_u64, @sizeOf(u32)) catch {
+            if (!self.beginLogicalCommand(0)) return self.currentFailure();
+            if (!self.flushBeforeLegacy()) return self.failure;
+            return self.legacyResult(self.ctx.guiBlit(x, y, width, height, scale, pixels));
+        };
+        const resource_bytes = std.math.cast(usize, resource_bytes_u64) orelse {
+            if (!self.beginLogicalCommand(0)) return self.currentFailure();
+            if (!self.flushBeforeLegacy()) return self.failure;
+            return self.legacyResult(self.ctx.guiBlit(x, y, width, height, scale, pixels));
+        };
+        if (!self.beginLogicalCommand(resource_bytes)) return self.currentFailure();
+        if (!self.transactional or width == 0 or height == 0 or width > abi.gui_raster_max_width or height > abi.gui_raster_max_height or
+            pixel_count_u64 > abi.gui_raster_max_pixels or pixels.len < pixel_count_u64)
+        {
+            if (!self.flushBeforeLegacy()) return self.failure;
+            return self.legacyResult(self.ctx.guiBlit(x, y, width, height, scale, pixels));
+        }
+
+        const reservation = self.reserve(resource_bytes) orelse {
+            if (self.failure < 0) return self.failure;
+            return self.legacyResult(self.ctx.guiBlit(x, y, width, height, scale, pixels));
+        };
+        const scale_value = if (scale == 0) @as(u32, 1) else @min(scale, @as(u32, 16));
+        reservation.command.* = .{
+            .kind = abi.gui_frame_command_kind_raster,
+            .x = x,
+            .y = y,
+            .w = width,
+            .h = height,
+            .resource_offset = @intCast(self.resource_len - resource_bytes),
+            .resource_bytes = @intCast(resource_bytes),
+            .parameter0 = scale_value,
+        };
+        for (pixels[0..@intCast(pixel_count_u64)], 0..) |pixel, index| {
+            const color = pixel & 0x00FF_FFFF;
+            const offset = index * @sizeOf(u32);
+            reservation.resource[offset] = @truncate(color);
+            reservation.resource[offset + 1] = @truncate(color >> 8);
+            reservation.resource[offset + 2] = @truncate(color >> 16);
+            reservation.resource[offset + 3] = 0;
+        }
+        return abi.gui_frame_result_ok;
+    }
+
+    pub fn alpha8(self: *FrameCanvas, x: i32, y: i32, width: u32, height: u32, stride: u32, rgb: u32, alpha: []const u8) i32 {
+        const resource_bytes_u64 = @as(u64, width) * @as(u64, height);
+        const resource_bytes = std.math.cast(usize, resource_bytes_u64) orelse {
+            if (!self.beginLogicalCommand(0)) return self.currentFailure();
+            if (!self.flushBeforeLegacy()) return self.failure;
+            return self.legacyResult(self.ctx.guiBlendAlpha8(x, y, width, height, stride, rgb, alpha));
+        };
+        if (!self.beginLogicalCommand(resource_bytes)) return self.currentFailure();
+        if (!self.transactional or width == 0 or height == 0 or width > abi.gui_alpha8_max_width or height > abi.gui_alpha8_max_height or
+            resource_bytes_u64 > abi.gui_alpha8_max_pixels or stride < width)
+        {
+            if (!self.flushBeforeLegacy()) return self.failure;
+            return self.legacyResult(self.ctx.guiBlendAlpha8(x, y, width, height, stride, rgb, alpha));
+        }
+        const source_bytes = std.math.add(u64, std.math.mul(u64, height - 1, stride) catch {
+            if (!self.flushBeforeLegacy()) return self.failure;
+            return self.legacyResult(self.ctx.guiBlendAlpha8(x, y, width, height, stride, rgb, alpha));
+        }, width) catch {
+            if (!self.flushBeforeLegacy()) return self.failure;
+            return self.legacyResult(self.ctx.guiBlendAlpha8(x, y, width, height, stride, rgb, alpha));
+        };
+        if (source_bytes > alpha.len) {
+            if (!self.flushBeforeLegacy()) return self.failure;
+            return self.legacyResult(self.ctx.guiBlendAlpha8(x, y, width, height, stride, rgb, alpha));
+        }
+
+        const reservation = self.reserve(resource_bytes) orelse {
+            if (self.failure < 0) return self.failure;
+            return self.legacyResult(self.ctx.guiBlendAlpha8(x, y, width, height, stride, rgb, alpha));
+        };
+        reservation.command.* = .{
+            .kind = abi.gui_frame_command_kind_alpha8,
+            .x = x,
+            .y = y,
+            .w = width,
+            .h = height,
+            .rgb = rgb & 0x00FF_FFFF,
+            .resource_offset = @intCast(self.resource_len - resource_bytes),
+            .resource_bytes = @intCast(resource_bytes),
+        };
+        const row_bytes: usize = @intCast(width);
+        const source_stride: usize = @intCast(stride);
+        for (0..@as(usize, @intCast(height))) |row| {
+            const source_offset = row * source_stride;
+            const target_offset = row * row_bytes;
+            @memcpy(reservation.resource[target_offset .. target_offset + row_bytes], alpha[source_offset .. source_offset + row_bytes]);
+        }
+        return abi.gui_frame_result_ok;
+    }
+
+    /// Adds a prebuilt shape or another GuiFrameCommand resource.  The builder
+    /// owns offset rebasing; callers describe exactly one command/resource pair.
+    pub fn appendCommand(self: *FrameCanvas, command: abi.GuiFrameCommand, resource: []const u8) i32 {
+        if (!self.beginLogicalCommand(resource.len)) return self.currentFailure();
+        if (!self.transactional) {
+            var direct = command;
+            direct.resource_offset = 0;
+            direct.resource_bytes = @intCast(resource.len);
+            return self.legacyResult(self.ctx.guiFrameAppend((&[_]abi.GuiFrameCommand{direct})[0..], resource));
+        }
+        return self.queueWithoutAccounting(command, resource);
+    }
+
+    fn beginLogicalCommand(self: *FrameCanvas, resource_bytes: usize) bool {
+        if (!self.active) {
+            if (self.failure >= 0) self.failure = abi.gui_frame_error_state;
+            return false;
+        }
+        if (self.failure < 0) return false;
+        self.stats.logical_commands +|= 1;
+        self.stats.resource_bytes +|= @intCast(resource_bytes);
+        return true;
+    }
+
+    fn currentFailure(self: *const FrameCanvas) i32 {
+        return if (self.failure < 0) self.failure else abi.gui_frame_error_state;
+    }
+
+    fn latchFailure(self: *FrameCanvas, raw: i32) i32 {
+        if (raw < 0 and self.failure >= 0) self.failure = raw;
+        if (raw < 0) self.stats.failed_calls +|= 1;
+        return raw;
+    }
+
+    fn legacyResult(self: *FrameCanvas, raw: i32) i32 {
+        self.stats.legacy_calls +|= 1;
+        if (raw >= 0) self.submitted = true;
+        return self.latchFailure(raw);
+    }
+
+    fn appendResult(self: *FrameCanvas, raw: i32, direct: bool) i32 {
+        self.stats.append_calls +|= 1;
+        if (direct) self.stats.direct_chunks +|= 1 else self.stats.flushes +|= 1;
+        if (raw >= 0) self.submitted = true;
+        return self.latchFailure(raw);
+    }
+
+    fn reserve(self: *FrameCanvas, resource_bytes: usize) ?Reservation {
+        if (self.commands.len == 0 or resource_bytes > self.resources.len) {
+            if (self.command_len != 0 and self.flush() < 0) return null;
+            return null;
+        }
+        if (self.command_len == self.commands.len or resource_bytes > self.resources.len - self.resource_len) {
+            if (self.flush() < 0) return null;
+        }
+        if (self.command_len == self.commands.len or resource_bytes > self.resources.len - self.resource_len) return null;
+        const command = &self.commands[self.command_len];
+        const start = self.resource_len;
+        self.command_len += 1;
+        self.resource_len += resource_bytes;
+        return .{ .command = command, .resource = self.resources[start..self.resource_len] };
+    }
+
+    fn flushBeforeLegacy(self: *FrameCanvas) bool {
+        if (!self.transactional or self.command_len == 0) return self.failure >= 0;
+        return self.flush() >= 0;
+    }
+
+    fn queueWithoutAccounting(self: *FrameCanvas, source_command: abi.GuiFrameCommand, resource: []const u8) i32 {
+        if (self.failure < 0) return self.failure;
+        if (self.reserve(resource.len)) |reservation| {
+            var command = source_command;
+            command.resource_offset = @intCast(self.resource_len - resource.len);
+            command.resource_bytes = @intCast(resource.len);
+            reservation.command.* = command;
+            @memcpy(reservation.resource, resource);
+            return abi.gui_frame_result_ok;
+        }
+        if (self.failure < 0) return self.failure;
+
+        var command = source_command;
+        command.resource_offset = 0;
+        command.resource_bytes = @intCast(resource.len);
+        const direct = [_]abi.GuiFrameCommand{command};
+        return self.appendResult(self.ctx.guiFrameAppend(direct[0..], resource), true);
+    }
+
+    fn flush(self: *FrameCanvas) i32 {
+        if (self.failure < 0) return self.failure;
+        if (self.command_len == 0) {
+            self.resource_len = 0;
+            return abi.gui_frame_result_ok;
+        }
+        const command_len = self.command_len;
+        const resource_len = self.resource_len;
+        self.command_len = 0;
+        self.resource_len = 0;
+        return self.appendResult(self.ctx.guiFrameAppend(self.commands[0..command_len], self.resources[0..resource_len]), false);
+    }
+};
+
 pub const Canvas = struct {
     ctx: *const r4draw.Context,
     w: i32,
     h: i32,
     font: FontMetrics = .{},
+    frame_canvas: ?*FrameCanvas = null,
 
     pub fn init(ctx: *const r4draw.Context, info: abi.GuiWindowInfo) Canvas {
         return initSize(ctx, info.client_w, info.client_h);
@@ -2102,15 +2413,18 @@ pub const Canvas = struct {
     }
 
     pub fn clear(self: Canvas, rgb: u32) i32 {
+        if (self.frame_canvas) |frame| return frame.clear(rgb);
         return self.ctx.guiClear(rgb);
     }
 
     pub fn rect(self: Canvas, item: Rect, rgb: u32) i32 {
         if (item.isEmpty()) return 0;
+        if (self.frame_canvas) |frame| return frame.rect(item.x, item.y, @intCast(item.w), @intCast(item.h), rgb);
         return self.ctx.guiRect(item.x, item.y, @intCast(item.w), @intCast(item.h), rgb);
     }
 
     pub fn raster(self: Canvas, x: i32, y: i32, width: u32, height: u32, scale: u32, pixels: []const u32) i32 {
+        if (self.frame_canvas) |frame| return frame.raster(x, y, width, height, scale, pixels);
         return self.ctx.guiBlit(x, y, width, height, scale, pixels);
     }
 
@@ -2135,6 +2449,16 @@ pub const Canvas = struct {
         const source_offset = source_y * @as(usize, stride) + source_x;
         const visible_bytes = @as(usize, visible_height - 1) * @as(usize, stride) + @as(usize, visible_width);
         if (source_offset > alpha.len or visible_bytes > alpha.len - source_offset) return -3;
+        const visible = alpha[source_offset .. source_offset + visible_bytes];
+        if (self.frame_canvas) |frame| return frame.alpha8(
+            @intCast(left),
+            @intCast(top),
+            visible_width,
+            visible_height,
+            stride,
+            rgb,
+            visible,
+        );
         return self.ctx.guiBlendAlpha8(
             @intCast(left),
             @intCast(top),
@@ -2142,16 +2466,30 @@ pub const Canvas = struct {
             visible_height,
             stride,
             rgb,
-            alpha[source_offset .. source_offset + visible_bytes],
+            visible,
         );
     }
 
     pub fn text(self: Canvas, x: i32, y: i32, value: [*:0]const u8, fg: u32, bg: u32) i32 {
+        if (self.frame_canvas) |frame| return frame.text(x, y, value, fg, bg, self.font);
         return self.ctx.guiDrawTextEx(x, y, value, fg, bg, self.font.id, 0);
     }
 
     pub fn textFont(self: Canvas, font_id: u32, x: i32, y: i32, value: [*:0]const u8, fg: u32, bg: u32) i32 {
+        if (self.frame_canvas) |frame| {
+            var metrics = self.font;
+            metrics.id = font_id;
+            return frame.text(x, y, value, fg, bg, metrics);
+        }
         return self.ctx.guiDrawTextEx(x, y, value, fg, bg, font_id, 0);
+    }
+
+    pub fn frameCommand(self: Canvas, command: abi.GuiFrameCommand, resource: []const u8) i32 {
+        if (self.frame_canvas) |frame| return frame.appendCommand(command, resource);
+        var direct = command;
+        direct.resource_offset = 0;
+        direct.resource_bytes = @intCast(resource.len);
+        return self.ctx.guiFrameAppend((&[_]abi.GuiFrameCommand{direct})[0..], resource);
     }
 
     pub fn textWidthZ(self: Canvas, value: [*:0]const u8) i32 {

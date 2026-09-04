@@ -6,6 +6,8 @@ const r4sys = @import("r4sys.zig");
 const time_contract = @import("time_contract.zig");
 
 pub const Canvas = gui.Canvas;
+pub const FrameCanvas = gui.FrameCanvas;
+pub const FrameCanvasStats = gui.FrameCanvasStats;
 
 pub const CommandId = struct {
     value: u32,
@@ -214,16 +216,44 @@ pub const PaintContext = struct {
     canvas: Canvas,
     active: bool = true,
     transactional: bool = false,
+    frame_canvas: ?*FrameCanvas = null,
+
+    /// Attaches caller-owned bounded command/resource storage to this paint.
+    /// The returned Canvas can be passed through all existing widget helpers.
+    pub fn bufferedCanvas(self: *PaintContext, builder: *FrameCanvas, commands: []abi.GuiFrameCommand, resources: []u8) Canvas {
+        if (self.frame_canvas) |previous| previous.cancel();
+        builder.* = FrameCanvas.init(self.canvas.ctx, commands, resources, self.transactional);
+        if (!self.active) builder.cancel();
+        self.frame_canvas = builder;
+        return builder.bind(self.canvas);
+    }
 
     pub fn present(self: *PaintContext) i32 {
         if (!self.active) return abi.err_no_fn;
+        if (self.frame_canvas) |builder| {
+            const flushed = builder.finish();
+            if (flushed < 0) {
+                if (self.transactional) _ = self.canvas.ctx.guiFrameCancel();
+                builder.cancel();
+                self.active = false;
+                return flushed;
+            }
+        }
         const raw = if (self.transactional) self.canvas.ctx.guiFrameCommit() else self.canvas.present();
-        if (raw >= 0) self.active = false;
+        if (raw >= 0) {
+            self.active = false;
+            if (self.frame_canvas) |builder| builder.complete();
+        } else if (self.transactional) {
+            _ = self.canvas.ctx.guiFrameCancel();
+            self.active = false;
+            if (self.frame_canvas) |builder| builder.cancel();
+        }
         return raw;
     }
 
     pub fn discard(self: *PaintContext) void {
         if (self.active and self.transactional) _ = self.canvas.ctx.guiFrameCancel();
+        if (self.frame_canvas) |builder| builder.cancel();
         self.active = false;
     }
 };

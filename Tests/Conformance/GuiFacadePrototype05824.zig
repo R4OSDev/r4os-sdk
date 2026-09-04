@@ -14,8 +14,15 @@ var alpha8_height: u32 = 0;
 var alpha8_stride: u32 = 0;
 var alpha8_first: u8 = 0;
 var frame_begin_count: u32 = 0;
+var frame_append_count: u32 = 0;
 var frame_commit_count: u32 = 0;
 var frame_cancel_count: u32 = 0;
+var frame_append_fail_at: u32 = 0;
+var captured_command_count: usize = 0;
+var captured_resource_len: usize = 0;
+var captured_commands = [_]r4os.abi.GuiFrameCommand{.{}} ** 128;
+var captured_resources: [8192]u8 = .{0} ** 8192;
+var raster_count: u32 = 0;
 var event_index: usize = 0;
 
 const raw_events = [_]r4os.abi.GuiEvent{
@@ -110,6 +117,23 @@ fn fakeText(x: i32, y: i32, text: [*:0]const u8, fg: u32, bg: u32) callconv(.c) 
     return 0;
 }
 
+fn fakeTextEx(x: i32, y: i32, text: [*:0]const u8, fg: u32, bg: u32, font_id: u32, flags: u32) callconv(.c) i32 {
+    _ = font_id;
+    _ = flags;
+    return fakeText(x, y, text, fg, bg);
+}
+
+fn fakeBlit(x: i32, y: i32, width: u32, height: u32, scale: u32, pixels: [*]const u32, pixel_count: u32) callconv(.c) i32 {
+    _ = x;
+    _ = y;
+    _ = scale;
+    _ = pixels;
+    if (@as(u64, width) * @as(u64, height) > pixel_count) return -3;
+    raster_count += 1;
+    draw_count += 1;
+    return 0;
+}
+
 fn fakeAlpha8(x: i32, y: i32, width: u32, height: u32, stride: u32, rgb: u32, alpha: [*]const u8, alpha_len: u32) callconv(.c) i32 {
     _ = rgb;
     if (alpha_len < width) return -1;
@@ -135,6 +159,24 @@ fn fakeFrameBegin() callconv(.c) i32 {
 
 fn fakeFrameAppend(commands: ?[*]const r4os.abi.GuiFrameCommand, command_count: u64, resources: ?[*]const u8, resource_len: u64) callconv(.c) i32 {
     if ((commands == null and command_count != 0) or (resources == null and resource_len != 0)) return r4os.abi.gui_frame_error_invalid;
+    frame_append_count += 1;
+    if (frame_append_fail_at != 0 and frame_append_count == frame_append_fail_at) return r4os.abi.gui_frame_error_oom;
+    const command_len = std.math.cast(usize, command_count) orelse return r4os.abi.gui_frame_error_overflow;
+    const resource_bytes = std.math.cast(usize, resource_len) orelse return r4os.abi.gui_frame_error_overflow;
+    if (command_len > captured_commands.len - captured_command_count or resource_bytes > captured_resources.len - captured_resource_len) return r4os.abi.gui_frame_error_overflow;
+    const source_resources: []const u8 = if (resource_bytes == 0) &.{} else resources.?[0..resource_bytes];
+    for (if (command_len == 0) (&[_]r4os.abi.GuiFrameCommand{})[0..] else commands.?[0..command_len]) |source| {
+        if (source.resource_bytes != 0) {
+            const end = std.math.add(u64, source.resource_offset, source.resource_bytes) catch return r4os.abi.gui_frame_error_overflow;
+            if (end > resource_len) return r4os.abi.gui_frame_error_invalid;
+        }
+        var command = source;
+        if (command.resource_bytes != 0) command.resource_offset += captured_resource_len;
+        captured_commands[captured_command_count] = command;
+        captured_command_count += 1;
+    }
+    @memcpy(captured_resources[captured_resource_len .. captured_resource_len + resource_bytes], source_resources);
+    captured_resource_len += resource_bytes;
     return r4os.abi.gui_frame_result_ok;
 }
 
@@ -146,6 +188,15 @@ fn fakeFrameCommit() callconv(.c) i32 {
 fn fakeFrameCancel() callconv(.c) i32 {
     frame_cancel_count += 1;
     return r4os.abi.gui_frame_result_ok;
+}
+
+fn resetFrameCapture() void {
+    frame_append_count = 0;
+    frame_append_fail_at = 0;
+    captured_command_count = 0;
+    captured_resource_len = 0;
+    @memset(captured_commands[0..], .{});
+    @memset(captured_resources[0..], 0);
 }
 
 fn fakeFrameInfo(handle: ?*const r4os.abi.ProgramProcessHandle, out: *r4os.abi.GuiFrameInfo) callconv(.c) i32 {
@@ -183,9 +234,61 @@ fn makeTables(draw_available: bool) struct { r4os.abi.R4XStartR4Sys, r4os.abi.R4
     draw.gui_clear = @intFromPtr(&fakeClear);
     draw.gui_rect = @intFromPtr(&fakeRect);
     draw.gui_draw_text = @intFromPtr(&fakeText);
+    draw.gui_draw_text_ex = @intFromPtr(&fakeTextEx);
+    draw.gui_blit = @intFromPtr(&fakeBlit);
     draw.gui_blend_alpha8 = @intFromPtr(&fakeAlpha8);
     if (draw_available) draw.gui_present = @intFromPtr(&fakePresent);
     return .{ sys, desk, draw };
+}
+
+fn enableFrameContract(draw: *r4os.abi.R4XStartR4Draw) void {
+    draw.gui_frame_begin = @intFromPtr(&fakeFrameBegin);
+    draw.gui_frame_append = @intFromPtr(&fakeFrameAppend);
+    draw.gui_frame_commit = @intFromPtr(&fakeFrameCommit);
+    draw.gui_frame_cancel = @intFromPtr(&fakeFrameCancel);
+    draw.gui_frame_info = @intFromPtr(&fakeFrameInfo);
+    draw.gui_frame_read = @intFromPtr(&fakeFrameRead);
+}
+
+fn readCapturedXrgb(command: r4os.abi.GuiFrameCommand, pixel_index: usize) u32 {
+    const start: usize = @intCast(command.resource_offset + pixel_index * 4);
+    return @as(u32, captured_resources[start]) |
+        (@as(u32, captured_resources[start + 1]) << 8) |
+        (@as(u32, captured_resources[start + 2]) << 16);
+}
+
+fn replayCaptured(width: usize, height: usize, output: []u32) void {
+    std.debug.assert(output.len == width * height);
+    for (captured_commands[0..captured_command_count]) |command| switch (command.kind) {
+        r4os.abi.gui_frame_command_kind_clear => @memset(output, command.rgb & 0x00FF_FFFF),
+        r4os.abi.gui_frame_command_kind_rect => {
+            const left: usize = @intCast(@max(0, command.x));
+            const top: usize = @intCast(@max(0, command.y));
+            const right = @min(width, left + command.w);
+            const bottom = @min(height, top + command.h);
+            for (top..bottom) |row| @memset(output[row * width + left .. row * width + right], command.rgb & 0x00FF_FFFF);
+        },
+        r4os.abi.gui_frame_command_kind_raster => {
+            if (command.parameter0 != 1) continue;
+            for (0..@as(usize, @intCast(command.h))) |row| for (0..@as(usize, @intCast(command.w))) |column| {
+                const target_x = command.x + @as(i32, @intCast(column));
+                const target_y = command.y + @as(i32, @intCast(row));
+                if (target_x < 0 or target_y < 0 or target_x >= width or target_y >= height) continue;
+                output[@as(usize, @intCast(target_y)) * width + @as(usize, @intCast(target_x))] = readCapturedXrgb(command, row * command.w + column);
+            };
+        },
+        r4os.abi.gui_frame_command_kind_alpha8 => {
+            const start: usize = @intCast(command.resource_offset);
+            for (0..@as(usize, @intCast(command.h))) |row| for (0..@as(usize, @intCast(command.w))) |column| {
+                const target_x = command.x + @as(i32, @intCast(column));
+                const target_y = command.y + @as(i32, @intCast(row));
+                if (target_x < 0 or target_y < 0 or target_x >= width or target_y >= height) continue;
+                const alpha = captured_resources[start + row * command.w + column];
+                if (alpha == 255) output[@as(usize, @intCast(target_y)) * width + @as(usize, @intCast(target_x))] = command.rgb & 0x00FF_FFFF;
+            };
+        },
+        else => {},
+    };
 }
 
 fn makeApp(tables: anytype, imports: *[3]r4os.abi.R4XStartImport, context: *r4os.abi.R4XStartContext) !r4os.App {
@@ -310,13 +413,9 @@ test "transactional paint and immutable snapshot use the complete frame facade" 
     frame_begin_count = 0;
     frame_commit_count = 0;
     frame_cancel_count = 0;
+    resetFrameCapture();
     var tables = makeTables(true);
-    tables[2].gui_frame_begin = @intFromPtr(&fakeFrameBegin);
-    tables[2].gui_frame_append = @intFromPtr(&fakeFrameAppend);
-    tables[2].gui_frame_commit = @intFromPtr(&fakeFrameCommit);
-    tables[2].gui_frame_cancel = @intFromPtr(&fakeFrameCancel);
-    tables[2].gui_frame_info = @intFromPtr(&fakeFrameInfo);
-    tables[2].gui_frame_read = @intFromPtr(&fakeFrameRead);
+    enableFrameContract(&tables[2]);
     var imports: [3]r4os.abi.R4XStartImport = undefined;
     var context: r4os.abi.R4XStartContext = undefined;
     var app = try makeApp(&tables, &imports, &context);
@@ -364,4 +463,166 @@ test "transactional paint and immutable snapshot use the complete frame facade" 
     };
     cancelled.discard();
     try std.testing.expectEqual(@as(u32, 2), frame_cancel_count);
+}
+
+test "buffered Canvas keeps pixels identical while collapsing draw transitions" {
+    frame_begin_count = 0;
+    frame_commit_count = 0;
+    frame_cancel_count = 0;
+    draw_count = 0;
+    alpha8_count = 0;
+    raster_count = 0;
+    resetFrameCapture();
+    var tables = makeTables(true);
+    enableFrameContract(&tables[2]);
+    var imports: [3]r4os.abi.R4XStartImport = undefined;
+    var context: r4os.abi.R4XStartContext = undefined;
+    var app = try makeApp(&tables, &imports, &context);
+    var timers: [1]r4os.Timer = .{.{}};
+    var window = app.window(timers[0..]) orelse return error.WindowMissing;
+    var paint = switch (r4os.app_gui.beginPaintForSize(&window.draw, 4, 3)) {
+        .paint => |value| value,
+        .failure => return error.Paint,
+    };
+    defer paint.discard();
+
+    var command_buffer: [8]r4os.abi.GuiFrameCommand = undefined;
+    var resource_buffer: [64]u8 = undefined;
+    var builder: r4os.FrameCanvas = undefined;
+    const canvas = paint.bufferedCanvas(&builder, command_buffer[0..], resource_buffer[0..]);
+    try std.testing.expectEqual(@as(i32, 0), canvas.clear(0));
+    try std.testing.expectEqual(@as(i32, 0), canvas.rect(.{ .x = 2, .y = 1, .w = 2, .h = 1 }, 0xCC0000));
+    const raster = [_]u32{ 0xAA112233, 0xFF445566 };
+    try std.testing.expectEqual(@as(i32, 0), canvas.raster(0, 0, 2, 1, 1, raster[0..]));
+    const alpha = [_]u8{ 0, 255, 77, 255, 0 };
+    try std.testing.expectEqual(@as(i32, 0), canvas.blendAlpha8(0, 1, 2, 2, 3, 0xFFFFFF, alpha[0..]));
+    try std.testing.expectEqual(@as(i32, 0), paint.present());
+
+    try std.testing.expectEqual(@as(u64, 4), builder.stats.logical_commands);
+    try std.testing.expectEqual(@as(u64, 12), builder.stats.resource_bytes);
+    try std.testing.expectEqual(@as(u64, 1), builder.stats.flushes);
+    try std.testing.expectEqual(@as(u64, 1), builder.stats.append_calls);
+    try std.testing.expectEqual(@as(u64, 0), builder.stats.direct_chunks);
+    try std.testing.expectEqual(@as(u64, 0), builder.stats.legacy_calls);
+    try std.testing.expectEqual(@as(u64, 1), builder.stats.drawTransitions());
+    try std.testing.expectEqual(builder.stats.drawTransitions(), builder.stats.frameMutationEntries());
+    try std.testing.expectEqual(@as(u32, 0), draw_count);
+    try std.testing.expectEqual(@as(u32, 0), alpha8_count);
+    try std.testing.expectEqual(@as(u32, 0), raster_count);
+    try std.testing.expectEqual(@as(u32, 1), frame_commit_count);
+    try std.testing.expectEqual(@as(usize, 4), captured_command_count);
+    try std.testing.expectEqual(@as(usize, 12), captured_resource_len);
+    try std.testing.expectEqualSlices(u8, &.{ 0x33, 0x22, 0x11, 0, 0x66, 0x55, 0x44, 0 }, captured_resources[0..8]);
+    try std.testing.expectEqualSlices(u8, &.{ 0, 255, 255, 0 }, captured_resources[8..12]);
+
+    var pixels: [12]u32 = undefined;
+    replayCaptured(4, 3, pixels[0..]);
+    const expected = [_]u32{
+        0x112233, 0x445566, 0,        0,
+        0,        0xFFFFFF, 0xCC0000, 0xCC0000,
+        0xFFFFFF, 0,        0,        0,
+    };
+    try std.testing.expectEqualSlices(u32, expected[0..], pixels[0..]);
+    try std.testing.expectEqual(
+        std.hash.Wyhash.hash(0, std.mem.sliceAsBytes(expected[0..])),
+        std.hash.Wyhash.hash(0, std.mem.sliceAsBytes(pixels[0..])),
+    );
+}
+
+test "buffered Canvas covers widgets partial flush direct fallback and old tables" {
+    frame_begin_count = 0;
+    frame_commit_count = 0;
+    frame_cancel_count = 0;
+    draw_count = 0;
+    present_count = 0;
+    resetFrameCapture();
+    var tables = makeTables(true);
+    enableFrameContract(&tables[2]);
+    var imports: [3]r4os.abi.R4XStartImport = undefined;
+    var context: r4os.abi.R4XStartContext = undefined;
+    var app = try makeApp(&tables, &imports, &context);
+    var timers: [1]r4os.Timer = .{.{}};
+    var window = app.window(timers[0..]) orelse return error.WindowMissing;
+
+    var paint = switch (window.beginPaint()) {
+        .paint => |value| value,
+        .failure => return error.Paint,
+    };
+    defer paint.discard();
+    var commands: [3]r4os.abi.GuiFrameCommand = undefined;
+    var resources: [4]u8 = undefined;
+    var builder: r4os.FrameCanvas = undefined;
+    const canvas = paint.bufferedCanvas(&builder, commands[0..], resources[0..]);
+    var scratch: [32]u8 = undefined;
+    try std.testing.expect(canvas.button(.{ .rect = .{ .x = 4, .y = 4, .w = 60, .h = 20 }, .text = "OK", .focused = true }, scratch[0..]) >= 0);
+    try std.testing.expectEqual(@as(i32, 0), canvas.text(4, 30, "oversized", 0, 0xFFFFFF));
+    var shape_storage: [@sizeOf(r4os.abi.GuiShapeResource)]u8 = undefined;
+    const shape_resource = try r4os.gui_shapes.roundedRect(shape_storage[0..], .{ .x = 1, .y = 1, .w = 12, .h = 8, .fill_argb = 0xFF336699 });
+    const shape_command = try r4os.gui_shapes.command(r4os.abi.gui_frame_command_kind_rounded_rect, 0, 0, 16, 12, 0, shape_resource.len);
+    try std.testing.expectEqual(@as(i32, 0), canvas.frameCommand(shape_command, shape_resource));
+    try std.testing.expectEqual(@as(i32, 0), paint.present());
+    try std.testing.expect(builder.stats.logical_commands > 4);
+    try std.testing.expect(builder.stats.flushes >= 1);
+    try std.testing.expectEqual(@as(u64, 2), builder.stats.direct_chunks);
+    try std.testing.expect(builder.stats.drawTransitions() < builder.stats.logical_commands);
+
+    // The same facade on an old table uses the established draw calls and
+    // PRESENT.  No batch operation is attempted.
+    resetFrameCapture();
+    draw_count = 0;
+    present_count = 0;
+    var legacy_tables = makeTables(true);
+    var legacy_imports: [3]r4os.abi.R4XStartImport = undefined;
+    var legacy_context: r4os.abi.R4XStartContext = undefined;
+    var legacy_app = try makeApp(&legacy_tables, &legacy_imports, &legacy_context);
+    var legacy_window = legacy_app.window(timers[0..]) orelse return error.WindowMissing;
+    var legacy_paint = switch (legacy_window.beginPaint()) {
+        .paint => |value| value,
+        .failure => return error.Paint,
+    };
+    defer legacy_paint.discard();
+    var legacy_builder: r4os.FrameCanvas = undefined;
+    const legacy_canvas = legacy_paint.bufferedCanvas(&legacy_builder, commands[0..], resources[0..]);
+    try std.testing.expectEqual(@as(i32, 0), legacy_canvas.clear(0));
+    try std.testing.expectEqual(@as(i32, 0), legacy_canvas.rect(.{ .x = 1, .y = 1, .w = 2, .h = 2 }, 1));
+    try std.testing.expectEqual(@as(i32, 0), legacy_canvas.text(1, 1, "old", 1, 0));
+    try std.testing.expectEqual(@as(i32, 0), legacy_paint.present());
+    try std.testing.expectEqual(@as(u64, 3), legacy_builder.stats.legacy_calls);
+    try std.testing.expectEqual(@as(u64, 3), legacy_builder.stats.drawTransitions());
+    try std.testing.expectEqual(@as(u32, 3), draw_count);
+    try std.testing.expectEqual(@as(u32, 1), present_count);
+    try std.testing.expectEqual(@as(u32, 0), frame_append_count);
+}
+
+test "buffered Canvas cancels a transactional frame after a partial flush failure" {
+    frame_begin_count = 0;
+    frame_commit_count = 0;
+    frame_cancel_count = 0;
+    resetFrameCapture();
+    frame_append_fail_at = 2;
+    var tables = makeTables(true);
+    enableFrameContract(&tables[2]);
+    var imports: [3]r4os.abi.R4XStartImport = undefined;
+    var context: r4os.abi.R4XStartContext = undefined;
+    var app = try makeApp(&tables, &imports, &context);
+    var timers: [1]r4os.Timer = .{.{}};
+    var window = app.window(timers[0..]) orelse return error.WindowMissing;
+    var paint = switch (window.beginPaint()) {
+        .paint => |value| value,
+        .failure => return error.Paint,
+    };
+    defer paint.discard();
+    var commands: [1]r4os.abi.GuiFrameCommand = undefined;
+    var resources: [1]u8 = undefined;
+    var builder: r4os.FrameCanvas = undefined;
+    const canvas = paint.bufferedCanvas(&builder, commands[0..], resources[0..]);
+    try std.testing.expectEqual(@as(i32, 0), canvas.rect(.{ .x = 0, .y = 0, .w = 1, .h = 1 }, 1));
+    try std.testing.expectEqual(@as(i32, 0), canvas.rect(.{ .x = 1, .y = 0, .w = 1, .h = 1 }, 2));
+    try std.testing.expectEqual(@as(i32, r4os.abi.gui_frame_error_oom), canvas.rect(.{ .x = 2, .y = 0, .w = 1, .h = 1 }, 3));
+    try std.testing.expectEqual(@as(i32, r4os.abi.gui_frame_error_oom), paint.present());
+    try std.testing.expectEqual(@as(u32, 2), frame_append_count);
+    try std.testing.expectEqual(@as(u32, 0), frame_commit_count);
+    try std.testing.expectEqual(@as(u32, 1), frame_cancel_count);
+    try std.testing.expectEqual(@as(u64, 1), builder.stats.failed_calls);
+    try std.testing.expectEqual(@as(i32, r4os.abi.err_no_fn), paint.present());
 }
