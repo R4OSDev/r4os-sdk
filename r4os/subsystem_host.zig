@@ -322,20 +322,48 @@ pub const SharedRasterBatch = struct {
     resource: abi.GuiSharedRasterResource,
 };
 
+fn unavailableBeginReplace(_: *anyopaque, _: []const abi.DisplayDamageRect) i32 {
+    return abi.err_no_fn;
+}
+
+fn unavailableXrgb32Nearest(_: *anyopaque, _: Xrgb32Batch) i32 {
+    return abi.err_no_fn;
+}
+
+fn unavailableSharedRasterCreate(_: *anyopaque, _: *const abi.GuiSharedRasterCreateInfo, _: *abi.GuiSharedRasterHandle) i32 {
+    return abi.err_no_fn;
+}
+
+fn unavailableSharedRasterDestroy(_: *anyopaque, _: *const abi.GuiSharedRasterHandle) i32 {
+    return abi.err_no_fn;
+}
+
+fn unavailableSharedRasterMapWrite(_: *anyopaque, _: *const abi.GuiSharedRasterHandle, _: *abi.GuiSharedRasterWriteMap) i32 {
+    return abi.err_no_fn;
+}
+
+fn unavailableSharedRasterPublish(_: *anyopaque, _: *const abi.GuiSharedRasterWriteMap, _: *u64) i32 {
+    return abi.err_no_fn;
+}
+
+fn unavailableSharedRaster(_: *anyopaque, _: SharedRasterBatch) i32 {
+    return abi.err_no_fn;
+}
+
 pub const Backend = struct {
     context: *anyopaque,
     begin_full_fn: *const fn (*anyopaque) i32,
     begin_damage_fn: *const fn (*anyopaque, []const abi.DisplayDamageRect) i32,
-    begin_replace_fn: *const fn (*anyopaque, []const abi.DisplayDamageRect) i32,
+    begin_replace_fn: *const fn (*anyopaque, []const abi.DisplayDamageRect) i32 = unavailableBeginReplace,
     clear_fn: *const fn (*anyopaque, u32) i32,
     raster_fn: *const fn (*anyopaque, i32, i32, u32, u32, u32, []const u32) i32,
     indexed8_fn: *const fn (*anyopaque, IndexedBatch) i32,
-    xrgb32_nearest_fn: *const fn (*anyopaque, Xrgb32Batch) i32,
-    shared_raster_create_fn: *const fn (*anyopaque, *const abi.GuiSharedRasterCreateInfo, *abi.GuiSharedRasterHandle) i32,
-    shared_raster_destroy_fn: *const fn (*anyopaque, *const abi.GuiSharedRasterHandle) i32,
-    shared_raster_map_write_fn: *const fn (*anyopaque, *const abi.GuiSharedRasterHandle, *abi.GuiSharedRasterWriteMap) i32,
-    shared_raster_publish_fn: *const fn (*anyopaque, *const abi.GuiSharedRasterWriteMap, *u64) i32,
-    shared_raster_fn: *const fn (*anyopaque, SharedRasterBatch) i32,
+    xrgb32_nearest_fn: *const fn (*anyopaque, Xrgb32Batch) i32 = unavailableXrgb32Nearest,
+    shared_raster_create_fn: *const fn (*anyopaque, *const abi.GuiSharedRasterCreateInfo, *abi.GuiSharedRasterHandle) i32 = unavailableSharedRasterCreate,
+    shared_raster_destroy_fn: *const fn (*anyopaque, *const abi.GuiSharedRasterHandle) i32 = unavailableSharedRasterDestroy,
+    shared_raster_map_write_fn: *const fn (*anyopaque, *const abi.GuiSharedRasterHandle, *abi.GuiSharedRasterWriteMap) i32 = unavailableSharedRasterMapWrite,
+    shared_raster_publish_fn: *const fn (*anyopaque, *const abi.GuiSharedRasterWriteMap, *u64) i32 = unavailableSharedRasterPublish,
+    shared_raster_fn: *const fn (*anyopaque, SharedRasterBatch) i32 = unavailableSharedRaster,
     commit_full_fn: *const fn (*anyopaque) i32,
     commit_damage_fn: *const fn (*anyopaque) i32,
     cancel_fn: *const fn (*anyopaque) i32,
@@ -1941,6 +1969,24 @@ fn fakeCommit(context: *anyopaque) i32 {
 fn fakeCancel(context: *anyopaque) i32 {
     fakeState(context).cancels += 1;
     return 0;
+}
+
+test "legacy backend initializers keep optional streaming hooks unavailable" {
+    var fake = FakeBackend{};
+    const backend = Backend{
+        .context = &fake,
+        .begin_full_fn = fakeBeginFull,
+        .begin_damage_fn = fakeBeginDamage,
+        .clear_fn = fakeClear,
+        .raster_fn = fakeRaster,
+        .indexed8_fn = fakeIndexed8,
+        .commit_full_fn = fakeCommit,
+        .commit_damage_fn = fakeCommit,
+        .cancel_fn = fakeCancel,
+    };
+    try std.testing.expect(!backend.supports_xrgb32_nearest);
+    try std.testing.expect(!backend.supports_shared_raster);
+    try std.testing.expectEqual(abi.err_no_fn, backend.begin(.replace, &.{}));
 }
 
 test "viewport preserves aspect ratio maps letterbox and prefers useful integer scales" {

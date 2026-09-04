@@ -225,6 +225,16 @@ zerlegt. `gui_frame_stream_info` weist Live-, Freigabe-, Koaleszenz-, XRGB32-
 und Speicherzaehler aus. Fehlen die optionalen Slots, bleiben der bestehende
 Damagevertrag und der begrenzte Rasterfallback unveraendert nutzbar.
 
+R4DRAW-v9 transportiert XRGB32-, Indexed8- und Alpha8-Raster ueber
+generationengebundene Shared-Ressourcen. Der Producer beschreibt den Inhalt
+einmal; die hoechstens 128x128 Pixel grossen Zielbloecke verweisen danach nur
+noch ueber feste 80-Byte-Deskriptoren darauf. Drei begrenzte Puffer verhindern
+unbeschraenkte Retention. Backpressure oder ein fehlender optionaler Slot
+fallen fuer genau diesen Frame auf den kopierenden Pfad zurueck. Manuell
+erzeugte `subsystem_host.Backend`-Werte muessen die optionalen v8/v9-Callbacks
+nicht mit Platzhaltern fuellen: Deren Defaults liefern `err_no_fn`, waehrend
+die zugehoerigen Capability-Flags false bleiben.
+
 `Host.pollInput` uebersetzt Close, Resize, Fokus, Tastencode, Text und Maus in
 eine gastneutrale Ereignisunion. Jedes rohe GUI-Ereignis erhaelt dabei eine
 monotone Host-Sequenz; alle daraus entstehenden logischen Ereignisse behalten
