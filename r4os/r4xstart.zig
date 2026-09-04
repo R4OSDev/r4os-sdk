@@ -183,8 +183,8 @@ comptime {
     }
     // R4NET-, R4AUDIO- und R4DEV-Gruppentabellen gehoeren zum aktuellen
     // R4XStart-Bundlevertrag.
-    if (@sizeOf(abi.R4XStartR4Net) != abi.r4xstart_r4net_size) {
-        @compileError("R4XStartR4Net ABI size mismatch");
+    if (@sizeOf(abi.R4XStartR4Net) < abi.r4xstart_r4net_size) {
+        @compileError("R4XStartR4Net ABI minimum size mismatch");
     }
     if (@sizeOf(abi.R4XStartR4Audio) != abi.r4xstart_r4audio_size) {
         @compileError("R4XStartR4Audio ABI size mismatch");

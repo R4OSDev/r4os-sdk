@@ -551,6 +551,10 @@ pub const Context = struct {
         return self.base.tcpSummary(out);
     }
 
+    pub fn tcpPerformance(self: *const Context, out: *abi.TcpPerformanceInfo) i32 {
+        return self.base.tcpPerformance(out);
+    }
+
     pub fn tcpConnection(self: *const Context, index: u32, out: *abi.TcpConnectionInfo) i32 {
         return self.base.tcpConnection(index, out);
     }

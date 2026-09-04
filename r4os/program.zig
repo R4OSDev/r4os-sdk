@@ -3420,22 +3420,21 @@ pub const Context = struct {
 
     pub fn tcpWritePacedServiceBounded(self: *const Context, handle: u32, data: []const u8, wait_ticks: u64, service_wait_ticks: u64) i32 {
         var offset: usize = 0;
-        var tx_remaining: usize = 0;
         while (offset < data.len) {
-            if (tx_remaining == 0) {
+            const chunk_len = @min(data.len - offset, abi.net_service_tcp_write_max);
+            const written = self.tcpWriteChunkServiceWait(handle, data[offset .. offset + chunk_len], service_wait_ticks);
+            if (written == 0) {
+                // Poll only after the optimistic write proved that the
+                // remote window/catalog cannot currently accept progress.
                 const window = self.tcpWaitForTxWindowServiceBounded(handle, wait_ticks, service_wait_ticks);
                 if (window < 0) return -1;
                 if (window == 0) return -1;
-                tx_remaining = @intCast(window);
+                continue;
             }
-
-            const chunk_len = @min(@min(data.len - offset, abi.net_service_tcp_write_max), tx_remaining);
-            const written = self.tcpWriteChunkServiceWait(handle, data[offset .. offset + chunk_len], service_wait_ticks);
-            if (written <= 0) return -1;
+            if (written < 0) return -1;
             const written_len: usize = @intCast(written);
             if (written_len == 0 or written_len > chunk_len) return -1;
             offset += written_len;
-            tx_remaining -|= written_len;
         }
         return @intCast(data.len);
     }
@@ -3874,6 +3873,11 @@ pub const Context = struct {
 
     pub fn tcpSummary(self: *const Context, out: *abi.TcpSummary) i32 {
         const table_fn = self.netFn("tcp_summary") orelse return self.unavailable("net");
+        return table_fn(out);
+    }
+
+    pub fn tcpPerformance(self: *const Context, out: *abi.TcpPerformanceInfo) i32 {
+        const table_fn = self.netFn("tcp_performance") orelse return self.unavailable("net");
         return table_fn(out);
     }
 
