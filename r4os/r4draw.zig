@@ -122,12 +122,20 @@ pub const Context = struct {
         return self.base.supportsGuiFrameDamageContract();
     }
 
+    pub fn supportsGuiFrameStreamingContract(self: *const Context) bool {
+        return self.base.supportsGuiFrameStreamingContract();
+    }
+
     pub fn guiFrameBegin(self: *const Context) i32 {
         return self.base.guiFrameBegin();
     }
 
     pub fn guiFrameBeginDamage(self: *const Context, regions: []const abi.DisplayDamageRect) i32 {
         return self.base.guiFrameBeginDamage(regions);
+    }
+
+    pub fn guiFrameBeginReplace(self: *const Context, regions: []const abi.DisplayDamageRect) i32 {
+        return self.base.guiFrameBeginReplace(regions);
     }
 
     pub fn guiFrameAppend(self: *const Context, commands: []const abi.GuiFrameCommand, resources: []const u8) i32 {
@@ -156,6 +164,10 @@ pub const Context = struct {
 
     pub fn guiFrameGenerationRead(self: *const Context, handle: *const abi.ProgramProcessHandle, generation: u64, commands: []abi.GuiFrameCommand, resources: []u8, regions: []abi.DisplayDamageRect, out: *abi.GuiFrameGenerationInfo) i32 {
         return self.base.guiFrameGenerationRead(handle, generation, commands, resources, regions, out);
+    }
+
+    pub fn guiFrameStreamInfo(self: *const Context, handle: *const abi.ProgramProcessHandle, out: *abi.GuiFrameStreamInfo) i32 {
+        return self.base.guiFrameStreamInfo(handle, out);
     }
 
     pub fn guiPresent(self: *const Context) i32 {

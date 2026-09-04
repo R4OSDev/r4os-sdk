@@ -147,6 +147,13 @@ static inline int r4draw_supports_gui_frame_damage_contract(const R4Draw *draw) 
         table->gui_frame_generation_read != 0;
 }
 
+static inline int r4draw_supports_gui_frame_streaming_contract(const R4Draw *draw) {
+    if (!r4draw_supports_gui_frame_damage_contract(draw)) return 0;
+    const R4XStartR4Draw *table = draw->table;
+    return table->size >= offsetof(R4XStartR4Draw, gui_frame_stream_info) + sizeof(uintptr_t) &&
+        table->gui_frame_begin_replace != 0 && table->gui_frame_stream_info != 0;
+}
+
 static inline int32_t r4draw_gui_frame_begin(R4Draw *draw) {
     if (draw == 0 || !r4draw_supports_gui_frame_contract(draw)) return R4OS_ERR_NO_FN;
     R4DrawGuiFrameBeginFn fn = (R4DrawGuiFrameBeginFn)(uintptr_t)draw->table->gui_frame_begin;
@@ -161,6 +168,17 @@ static inline int32_t r4draw_gui_frame_begin_damage(R4Draw *draw,
         return R4OS_GUI_FRAME_ERROR_INVALID;
     }
     R4DrawGuiFrameBeginDamageFn fn = (R4DrawGuiFrameBeginDamageFn)(uintptr_t)draw->table->gui_frame_begin_damage;
+    return fn(regions, region_count);
+}
+
+static inline int32_t r4draw_gui_frame_begin_replace(R4Draw *draw,
+                                                      const R4DisplayDamageRect *regions,
+                                                      uint32_t region_count) {
+    if (draw == 0 || !r4draw_supports_gui_frame_streaming_contract(draw)) return R4OS_ERR_NO_FN;
+    if (regions == 0 || region_count == 0u || region_count > R4OS_GUI_FRAME_MAX_DAMAGE_REGIONS) {
+        return R4OS_GUI_FRAME_ERROR_INVALID;
+    }
+    R4DrawGuiFrameBeginReplaceFn fn = (R4DrawGuiFrameBeginReplaceFn)(uintptr_t)draw->table->gui_frame_begin_replace;
     return fn(regions, region_count);
 }
 
@@ -237,6 +255,17 @@ static inline int32_t r4draw_gui_frame_generation_read(R4Draw *draw,
     out_info->size = R4OS_GUI_FRAME_GENERATION_INFO_SIZE;
     R4DrawGuiFrameGenerationReadFn fn = (R4DrawGuiFrameGenerationReadFn)(uintptr_t)draw->table->gui_frame_generation_read;
     return fn(handle, generation, commands, command_capacity, resources, resource_capacity, regions, region_capacity, out_info);
+}
+
+static inline int32_t r4draw_gui_frame_stream_info(R4Draw *draw,
+                                                    const R4ProgramProcessHandle *handle,
+                                                    R4GuiFrameStreamInfo *out_info) {
+    if (draw == 0 || !r4draw_supports_gui_frame_streaming_contract(draw)) return R4OS_ERR_NO_FN;
+    if (handle == 0 || out_info == 0) return R4OS_GUI_FRAME_ERROR_INVALID;
+    out_info->version = R4OS_GUI_FRAME_STREAM_INFO_VERSION;
+    out_info->size = R4OS_GUI_FRAME_STREAM_INFO_SIZE;
+    R4DrawGuiFrameStreamInfoFn fn = (R4DrawGuiFrameStreamInfoFn)(uintptr_t)draw->table->gui_frame_stream_info;
+    return fn(handle, out_info);
 }
 
 static inline int32_t r4draw_gui_present(R4Draw *draw) {

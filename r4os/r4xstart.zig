@@ -143,6 +143,8 @@ const GuiFrameReadFn = abi.R4DrawFns.gui_frame_read;
 const GuiFrameBeginDamageFn = abi.R4DrawFns.gui_frame_begin_damage;
 const GuiFrameGenerationInfoFn = abi.R4DrawFns.gui_frame_generation_info;
 const GuiFrameGenerationReadFn = abi.R4DrawFns.gui_frame_generation_read;
+const GuiFrameBeginReplaceFn = abi.R4DrawFns.gui_frame_begin_replace;
+const GuiFrameStreamInfoFn = abi.R4DrawFns.gui_frame_stream_info;
 const FontCountFn = *const fn () callconv(.c) u32;
 const FontInfoFn = *const fn (u32, *abi.GuiFontInfo) callconv(.c) i32;
 const FontMeasureFn = *const fn (u32, [*:0]const u8, *abi.GuiTextMetrics) callconv(.c) i32;
@@ -1308,6 +1310,12 @@ pub const R4Draw = struct {
             self.hasFn("gui_frame_generation_read");
     }
 
+    pub fn supportsGuiFrameStreamingContract(self: *const R4Draw) bool {
+        return self.supportsGuiFrameDamageContract() and
+            self.hasFn("gui_frame_begin_replace") and
+            self.hasFn("gui_frame_stream_info");
+    }
+
     pub fn guiFrameBegin(self: *const R4Draw) i32 {
         if (!self.hasFn("gui_frame_begin")) return abi.err_no_fn;
         const gui_fn: GuiFrameBeginFn = @ptrFromInt(self.table.gui_frame_begin);
@@ -1318,6 +1326,13 @@ pub const R4Draw = struct {
         if (!self.hasFn("gui_frame_begin_damage")) return abi.err_no_fn;
         if (regions.len == 0 or regions.len > abi.gui_frame_max_damage_regions) return abi.gui_frame_error_invalid;
         const gui_fn: GuiFrameBeginDamageFn = @ptrFromInt(self.table.gui_frame_begin_damage);
+        return gui_fn(regions.ptr, @intCast(regions.len));
+    }
+
+    pub fn guiFrameBeginReplace(self: *const R4Draw, regions: []const abi.DisplayDamageRect) i32 {
+        if (!self.hasFn("gui_frame_begin_replace")) return abi.err_no_fn;
+        if (regions.len == 0 or regions.len > abi.gui_frame_max_damage_regions) return abi.gui_frame_error_invalid;
+        const gui_fn: GuiFrameBeginReplaceFn = @ptrFromInt(self.table.gui_frame_begin_replace);
         return gui_fn(regions.ptr, @intCast(regions.len));
     }
 
@@ -1376,6 +1391,14 @@ pub const R4Draw = struct {
         out.version = abi.gui_frame_generation_info_version;
         out.size = abi.gui_frame_generation_info_size;
         return gui_fn(handle, generation, command_ptr, @intCast(commands.len), resource_ptr, @intCast(resources.len), region_ptr, @intCast(regions.len), out);
+    }
+
+    pub fn guiFrameStreamInfo(self: *const R4Draw, handle: *const abi.ProgramProcessHandle, out: *abi.GuiFrameStreamInfo) i32 {
+        if (!self.hasFn("gui_frame_stream_info")) return abi.err_no_fn;
+        const gui_fn: GuiFrameStreamInfoFn = @ptrFromInt(self.table.gui_frame_stream_info);
+        out.version = abi.gui_frame_stream_info_version;
+        out.size = abi.gui_frame_stream_info_size;
+        return gui_fn(handle, out);
     }
 
     pub fn guiPresent(self: *const R4Draw) i32 {

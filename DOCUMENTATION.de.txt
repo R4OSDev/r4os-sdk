@@ -191,13 +191,13 @@ statt pro Zielpixel eine 64-Bit-Division zu wiederholen.
 Mit R4DRAW-v5 transportiert eine Indexed8-Surface ihre 256-Eintrag-Palette
 und den benoetigten indizierten Quellausschnitt in einem versionierten
 `GuiIndexed8Resource`; Ziel- und Quelltiles bleiben jeweils hoechstens
-128x128 Pixel gross. Die vorzeitige XRGB32-Expansion entfaellt. XRGB-Surfaces
-und aeltere R4DRAW-Tabellen verwenden weiterhin den sicheren Rasterfallback.
-Damage-Begin publiziert eine append-only Generation mit bis zu acht Regionen,
-waehrend Leser die lokale Generation oder den abgeflachten Gesamtframe
-generationstreu abfragen koennen. Paletten-, Modus- und Viewportaenderungen
-erzwingen einen Vollframe; nach einer Vollbasis und hoechstens 31 Deltas wird
-die Kette durch einen neuen Vollframe verdichtet.
+128x128 Pixel gross. Die vorzeitige XRGB32-Expansion entfaellt. Aeltere
+R4DRAW-Tabellen verwenden weiterhin den sicheren Rasterfallback. Damage-Begin
+publiziert eine append-only Generation mit bis zu acht Regionen, waehrend
+Leser die lokale Generation oder den abgeflachten Gesamtframe generationstreu
+abfragen koennen. Paletten-, Modus- und Viewportaenderungen erzwingen einen
+Vollframe; nach einer Vollbasis und hoechstens 31 Deltas wird die Kette durch
+einen neuen Vollframe verdichtet.
 
 R4DRAW-v6 liefert mit `font_glyph_bitmap` eine komplette, auf 40 Zeilen
 begrenzte Glyph-Bitmap samt Layoutmetriken in einem Aufruf. Dadurch entfallen
@@ -213,6 +213,17 @@ Reload des Fontkatalogs. Caches duerfen damit Font-ID, Revision und Codepoint
 als Schluessel verwenden und muessen bei einem Revisionswechsel ihre alten
 Layouts und Abdeckungen verwerfen. Fehlt der optionale Slot in einer aelteren
 Tabelle, liefert die SDK-Fassade die stabile Kompatibilitaetsrevision 1.
+
+R4DRAW-v8 ergaenzt vollstaendig ersetzende GUI-Generationen und native
+XRGB32-Quelltiles. Fuer einen geaenderten XRGB32-Frame publiziert der
+Subsystem-Presenter weiterhin die exakten Damage-Regionen, transportiert aber
+einen eigenstaendigen vollstaendigen Zustand. Damit muss kein Leser
+ueberdeckte Damagegenerationen erneut abspielen. `GuiXrgb32Resource` erhaelt
+Gast- und Viewportgeometrie bis zum Desktop; Kacheln bleiben hoechstens
+128x128 Pixel gross und werden weder in Farblaeufe noch in `fillRect`-Aufrufe
+zerlegt. `gui_frame_stream_info` weist Live-, Freigabe-, Koaleszenz-, XRGB32-
+und Speicherzaehler aus. Fehlen die optionalen Slots, bleiben der bestehende
+Damagevertrag und der begrenzte Rasterfallback unveraendert nutzbar.
 
 `Host.pollInput` uebersetzt Close, Resize, Fokus, Tastencode, Text und Maus in
 eine gastneutrale Ereignisunion. Jedes rohe GUI-Ereignis erhaelt dabei eine
