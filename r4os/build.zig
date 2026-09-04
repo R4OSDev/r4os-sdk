@@ -154,6 +154,13 @@ fn extraProtocolMetadata(b: *std.Build, loaded: LoadedR4MF) []const []const u8 {
     return out.toOwnedSlice(b.allocator) catch @panic("OOM");
 }
 
+fn manifestOptimizeMode(manifest: module_manifest.Manifest) std.builtin.OptimizeMode {
+    return switch (manifest.optimization orelse .size) {
+        .size => .ReleaseSmall,
+        .speed => .ReleaseFast,
+    };
+}
+
 fn manifestImportValue(raw_line: []const u8) ?[]const u8 {
     var line = std.mem.trim(u8, raw_line, " \t\r");
     if (line.len >= 3 and line[0] == 0xEF and line[1] == 0xBB and line[2] == 0xBF) line = line[3..];
@@ -444,6 +451,7 @@ pub const Sdk = struct {
             .linker_script = self.profile.linker_script,
             .builder = self.builder,
             .resources = self.manifestResources(loaded),
+            .optimize = manifestOptimizeMode(loaded.manifest),
         });
     }
 
@@ -469,6 +477,7 @@ pub const Sdk = struct {
             .linker_script = self.profile.linker_script,
             .builder = self.builder,
             .resources = self.manifestResources(loaded),
+            .optimize = manifestOptimizeMode(loaded.manifest),
         });
     }
 
@@ -477,6 +486,7 @@ pub const Sdk = struct {
             @panic(self.b.fmt("R4MF runtime-R4L requires EXPORT declarations: {s}", .{loaded.manifest.path}));
         }
         const contract_check = self.addR4LContractCheck(loaded);
+        const optimize = manifestOptimizeMode(loaded.manifest);
         self.b.getInstallStep().dependOn(&contract_check.step);
         const implementation_module = [_]ZigModuleBuild{.{
             .name = "r4l_contract",
@@ -510,7 +520,7 @@ pub const Sdk = struct {
                 .c_include_roots = c_include_roots,
                 .c_defines = loaded.manifest.c_defines,
                 .c_flags = loaded.manifest.c_flags,
-                .optimize = .ReleaseSmall,
+                .optimize = optimize,
             }),
             .c => addCModule(self.b, .{
                 .name = loaded.manifest.name,
@@ -525,7 +535,7 @@ pub const Sdk = struct {
                 .entry_symbol = "r4l_entry",
                 .strip = false,
                 .emit_relocs = true,
-                .optimize = .ReleaseSmall,
+                .optimize = optimize,
             }),
         };
         const exports = self.b.allocator.alloc([]const u8, loaded.manifest.exports.len) catch @panic("OOM");
@@ -578,10 +588,7 @@ pub const Sdk = struct {
             .gui => .desktop,
             .service => .service,
         };
-        const optimize: std.builtin.OptimizeMode = switch (loaded.manifest.optimization.?) {
-            .size => .ReleaseSmall,
-            .speed => .ReleaseFast,
-        };
+        const optimize = manifestOptimizeMode(loaded.manifest);
         const manifest_metadata = module_manifest.r4xManifestMetadata(self.b.allocator, loaded.manifest) catch @panic("invalid R4MF role metadata");
         return switch (loaded.manifest.language.?) {
             .zig => if (loaded.manifest.entry_mode.? == .app) addR4AppWithOptions(self.b, .{

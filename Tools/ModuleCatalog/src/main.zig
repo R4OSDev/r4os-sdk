@@ -1043,6 +1043,8 @@ fn renderEntry(allocator: std.mem.Allocator, entry: manifest_contract.Manifest, 
     try out.appendSlice(allocator, "]");
     try out.appendSlice(allocator, ",\n  \"image_scope\": ");
     try appendJsonString(&out, allocator, entry.image_scope.?.text());
+    try out.appendSlice(allocator, ",\n  \"optimization\": ");
+    try appendJsonString(&out, allocator, entry.optimization.?.text());
     if (entry.kind == .r4x) {
         try out.appendSlice(allocator, ",\n  \"package\": ");
         if (entry.package) |package| try appendJsonString(&out, allocator, package) else try out.appendSlice(allocator, "null");
@@ -1052,8 +1054,6 @@ fn renderEntry(allocator: std.mem.Allocator, entry: manifest_contract.Manifest, 
         try appendJsonString(&out, allocator, entry.entry_mode.?.text());
         try out.appendSlice(allocator, ",\n  \"app_class\": ");
         try appendJsonString(&out, allocator, entry.app_class.?.text());
-        try out.appendSlice(allocator, ",\n  \"optimization\": ");
-        try appendJsonString(&out, allocator, entry.optimization.?.text());
         const plan = try manifest_contract.derivePlan(allocator, entry);
         try out.appendSlice(allocator, ",\n  \"plan\": ");
         const rendered_plan = try renderPlanObject(allocator, entry, plan);
@@ -1252,6 +1252,30 @@ test "catalog and image inventory expose normalized subsystem contract" {
     const inventory = try renderImageInventory(allocator, &.{entry}, .@"test", &.{}, null);
     try std.testing.expect(std.mem.indexOf(u8, inventory, "\"schema\": 4") != null);
     try std.testing.expect(std.mem.indexOf(u8, inventory, "\"guest_formats\": [\"fixture.source\"]") != null);
+}
+
+test "catalog exposes common optimization for non-R4X modules" {
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+    const allocator = arena.allocator();
+    const driver_text =
+        \\R4OS_MODULE_MANIFEST=2
+        \\KIND=R4D
+        \\NAME=FASTDRV
+        \\VERSION=0.1.0
+        \\LANGUAGE=Zig
+        \\SOURCE=src/main.zig
+        \\TARGET=/R4OS/DRIVERS/FASTDRV.R4D
+        \\IMAGE_SCOPE=slim
+        \\OPTIMIZE=speed
+        \\IMPORT=R4DEV:Query:1
+        \\META=r4d.name=FASTDRV
+        \\META=r4d.type=test
+    ;
+    const driver = try manifest_contract.parse(allocator, "FastDrv/module.R4MF", driver_text);
+    const catalog = try renderCatalog(allocator, &.{driver});
+    try std.testing.expect(std.mem.indexOf(u8, catalog, "\"kind\": \"R4D\"") != null);
+    try std.testing.expect(std.mem.indexOf(u8, catalog, "\"optimization\": \"speed\"") != null);
 }
 
 test "benchmark selection is full plus explicit test diagnostics" {

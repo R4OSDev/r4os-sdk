@@ -432,11 +432,13 @@ fn parseV2(allocator: std.mem.Allocator, path: []const u8, text: []const u8) !Ma
     // R4P gar nichts sagten - ihre Platzierung stand in einer Liste im
     // Buildscript. Ein Mechanismus statt zweier plus einer Liste.
     const parsed_scope = try parseImageScope(image_scope orelse return error.MissingImageScope);
+    // Code-generation policy is one common module fact. Omission remains the
+    // stable ReleaseSmall default for every current R4M0 kind.
+    parsed_optimization = try parseOptimization(optimization orelse "size");
 
     if (parsed_kind == .r4x) {
         parsed_entry_mode = try parseEntryMode(entry_mode orelse return error.MissingEntryMode);
         parsed_class = try parseAppClass(app_class orelse return error.MissingAppClass);
-        parsed_optimization = try parseOptimization(optimization orelse "size");
         if (package) |value| try validateName(value);
         if (imports.items.len == 0) return error.MissingImport;
         for (imports.items) |entry| try validateR4XImport(entry);
@@ -445,7 +447,6 @@ fn parseV2(allocator: std.mem.Allocator, path: []const u8, text: []const u8) !Ma
         if (entry_mode != null) return error.NonR4XEntryModeForbidden;
         if (app_class != null) return error.NonR4XAppClassForbidden;
         if (package != null) return error.NonR4XPackageForbidden;
-        if (optimization != null) return error.NonR4XOptimizationForbidden;
         if (zig_modules.items.len != 0) return error.NonR4XZigModuleForbidden;
         // image.shipped ist durch IMAGE_SCOPE abgeloest und darf nicht
         // danebenstehen - zwei Quellen fuer dieselbe Aussage waeren genau
@@ -1503,6 +1504,7 @@ test "runtime R4L accepts one Zig root followed by library-owned C sources" {
         \\C_FLAG=-fno-builtin
         \\TARGET=/R4OS/LIBS/MIXEDLIB.R4L
         \\IMAGE_SCOPE=test
+        \\OPTIMIZE=speed
         \\EXPORT=API_V1:mixedlib_api_v1:1
         \\EXPORT=Query:mixedlib_query:1
         \\CONTRACT=Contract/LibraryContract.json
@@ -1522,6 +1524,7 @@ test "runtime R4L accepts one Zig root followed by library-owned C sources" {
     try std.testing.expectEqualStrings("CODEC_CONFIG", value.c_defines[0].name);
     try std.testing.expectEqualStrings("<codec_config.h>", value.c_defines[0].value);
     try std.testing.expectEqualStrings("-fno-builtin", value.c_flags[0]);
+    try std.testing.expectEqual(Optimization.speed, value.optimization.?);
 
     const wrong_root = std.mem.replaceOwned(u8, allocator, text, "Source/main.zig", "Source/main.c") catch unreachable;
     defer allocator.free(wrong_root);
@@ -1672,10 +1675,19 @@ test "V1 is rejected and non-R4X uses the current common schema" {
     // Seit 0.61.6 traegt AUCH ein Nicht-R4X seinen Imagescope selbst, statt
     // ihn ueber META=image.shipped oder eine Liste im Buildscript zu regeln.
     try std.testing.expectEqual(ImageScope.slim, current.image_scope.?);
+    try std.testing.expectEqual(Optimization.size, current.optimization.?);
     const forbidden = driver ++ "\nAPP_CLASS=service\n";
     try std.testing.expectError(error.NonR4XAppClassForbidden, parse(allocator, "Code/System/Driver/Example/module.R4MF", forbidden));
     const optimized_driver = driver ++ "\nOPTIMIZE=speed\n";
-    try std.testing.expectError(error.NonR4XOptimizationForbidden, parse(allocator, "Code/System/Driver/Example/module.R4MF", optimized_driver));
+    const optimized = try parse(allocator, "Code/System/Driver/Example/module.R4MF", optimized_driver);
+    try std.testing.expectEqual(Optimization.speed, optimized.optimization.?);
+
+    const protocol = try std.mem.replaceOwned(u8, allocator, optimized_driver, "KIND=R4D", "KIND=R4P");
+    defer allocator.free(protocol);
+    const protocol_target = try std.mem.replaceOwned(u8, allocator, protocol, "/R4OS/DRIVERS/EXAMPLE.R4D", "/R4OS/PROTOCOLS/EXAMPLE.R4P");
+    defer allocator.free(protocol_target);
+    const optimized_protocol = try parse(allocator, "Code/System/Protocol/Example/module.R4MF", protocol_target);
+    try std.testing.expectEqual(Optimization.speed, optimized_protocol.optimization.?);
 }
 
 test "image scope is mandatory for every kind and supersedes image.shipped" {
