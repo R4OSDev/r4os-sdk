@@ -166,6 +166,7 @@ fn fakeFrameAppend(commands: ?[*]const r4os.abi.GuiFrameCommand, command_count: 
     if (command_len > captured_commands.len - captured_command_count or resource_bytes > captured_resources.len - captured_resource_len) return r4os.abi.gui_frame_error_overflow;
     const source_resources: []const u8 = if (resource_bytes == 0) &.{} else resources.?[0..resource_bytes];
     for (if (command_len == 0) (&[_]r4os.abi.GuiFrameCommand{})[0..] else commands.?[0..command_len]) |source| {
+        if (source.resource_bytes == 0 and source.resource_offset != 0) return r4os.abi.gui_frame_error_invalid;
         if (source.resource_bytes != 0) {
             const end = std.math.add(u64, source.resource_offset, source.resource_bytes) catch return r4os.abi.gui_frame_error_overflow;
             if (end > resource_len) return r4os.abi.gui_frame_error_invalid;
@@ -433,6 +434,17 @@ test "transactional paint and immutable snapshot use the complete frame facade" 
     try std.testing.expectEqual(@as(u32, 1), frame_begin_count);
     try std.testing.expectEqual(@as(u32, 1), frame_cancel_count);
 
+    var full_hd = switch (r4os.app_gui.beginPaintForSize(&window.draw, 1920, 1080)) {
+        .paint => |value| value,
+        .failure => return error.Paint,
+    };
+    try std.testing.expectEqual(@as(i32, 1920), full_hd.canvas.w);
+    try std.testing.expectEqual(@as(i32, 1080), full_hd.canvas.h);
+    try std.testing.expectEqual(r4os.gui.Rect{ .w = 1920, .h = 1080 }, full_hd.canvas.bounds());
+    full_hd.discard();
+    try std.testing.expectEqual(@as(u32, 2), frame_begin_count);
+    try std.testing.expectEqual(@as(u32, 2), frame_cancel_count);
+
     var paint = switch (window.beginPaint()) {
         .paint => |value| value,
         .failure => return error.Paint,
@@ -440,7 +452,7 @@ test "transactional paint and immutable snapshot use the complete frame facade" 
     const command = [_]r4os.abi.GuiFrameCommand{.{ .kind = r4os.abi.gui_frame_command_kind_text, .resource_bytes = 4 }};
     try std.testing.expectEqual(@as(i32, 0), window.draw.guiFrameAppend(command[0..], "R4OS"));
     try std.testing.expectEqual(@as(i32, 0), paint.present());
-    try std.testing.expectEqual(@as(u32, 2), frame_begin_count);
+    try std.testing.expectEqual(@as(u32, 3), frame_begin_count);
     try std.testing.expectEqual(@as(u32, 1), frame_commit_count);
 
     const handle = r4os.abi.ProgramProcessHandle{ .instance_id = 4, .generation = 9 };
@@ -462,7 +474,7 @@ test "transactional paint and immutable snapshot use the complete frame facade" 
         .failure => return error.Paint,
     };
     cancelled.discard();
-    try std.testing.expectEqual(@as(u32, 2), frame_cancel_count);
+    try std.testing.expectEqual(@as(u32, 3), frame_cancel_count);
 }
 
 test "buffered Canvas keeps pixels identical while collapsing draw transitions" {
@@ -496,9 +508,12 @@ test "buffered Canvas keeps pixels identical while collapsing draw transitions" 
     try std.testing.expectEqual(@as(i32, 0), canvas.raster(0, 0, 2, 1, 1, raster[0..]));
     const alpha = [_]u8{ 0, 255, 77, 255, 0 };
     try std.testing.expectEqual(@as(i32, 0), canvas.blendAlpha8(0, 1, 2, 2, 3, 0xFFFFFF, alpha[0..]));
+    // A resource-less command after resource-bearing commands must retain the
+    // ABI-mandated zero resource offset instead of inheriting the cursor.
+    try std.testing.expectEqual(@as(i32, 0), canvas.rect(.{ .x = 3, .y = 2, .w = 1, .h = 1 }, 0x010203));
     try std.testing.expectEqual(@as(i32, 0), paint.present());
 
-    try std.testing.expectEqual(@as(u64, 4), builder.stats.logical_commands);
+    try std.testing.expectEqual(@as(u64, 5), builder.stats.logical_commands);
     try std.testing.expectEqual(@as(u64, 12), builder.stats.resource_bytes);
     try std.testing.expectEqual(@as(u64, 1), builder.stats.flushes);
     try std.testing.expectEqual(@as(u64, 1), builder.stats.append_calls);
@@ -510,8 +525,10 @@ test "buffered Canvas keeps pixels identical while collapsing draw transitions" 
     try std.testing.expectEqual(@as(u32, 0), alpha8_count);
     try std.testing.expectEqual(@as(u32, 0), raster_count);
     try std.testing.expectEqual(@as(u32, 1), frame_commit_count);
-    try std.testing.expectEqual(@as(usize, 4), captured_command_count);
+    try std.testing.expectEqual(@as(usize, 5), captured_command_count);
     try std.testing.expectEqual(@as(usize, 12), captured_resource_len);
+    try std.testing.expectEqual(@as(u64, 0), captured_commands[4].resource_offset);
+    try std.testing.expectEqual(@as(u64, 0), captured_commands[4].resource_bytes);
     try std.testing.expectEqualSlices(u8, &.{ 0x33, 0x22, 0x11, 0, 0x66, 0x55, 0x44, 0 }, captured_resources[0..8]);
     try std.testing.expectEqualSlices(u8, &.{ 0, 255, 255, 0 }, captured_resources[8..12]);
 
@@ -520,7 +537,7 @@ test "buffered Canvas keeps pixels identical while collapsing draw transitions" 
     const expected = [_]u32{
         0x112233, 0x445566, 0,        0,
         0,        0xFFFFFF, 0xCC0000, 0xCC0000,
-        0xFFFFFF, 0,        0,        0,
+        0xFFFFFF, 0,        0,        0x010203,
     };
     try std.testing.expectEqualSlices(u32, expected[0..], pixels[0..]);
     try std.testing.expectEqual(

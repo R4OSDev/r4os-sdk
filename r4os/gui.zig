@@ -2352,7 +2352,10 @@ pub const FrameCanvas = struct {
         if (self.failure < 0) return self.failure;
         if (self.reserve(resource.len)) |reservation| {
             var command = source_command;
-            command.resource_offset = @intCast(self.resource_len - resource.len);
+            // Resource-less commands must keep the canonical zero offset. A
+            // running cursor is meaningful only when this command references
+            // bytes from the batch resource buffer.
+            command.resource_offset = if (resource.len == 0) 0 else @intCast(self.resource_len - resource.len);
             command.resource_bytes = @intCast(resource.len);
             reservation.command.* = command;
             @memcpy(reservation.resource, resource);
@@ -2396,8 +2399,11 @@ pub const Canvas = struct {
         const metrics = currentFontMetrics(ctx);
         return .{
             .ctx = ctx,
-            .w = clampI32(w, 1, 1600),
-            .h = clampI32(h, 1, 1000),
+            // Window geometry is already bounded by the desktop.  Preserve
+            // the complete client area so maximized and high-resolution
+            // windows do not silently lose their right or bottom edge.
+            .w = @max(w, 1),
+            .h = @max(h, 1),
             .font = metrics,
         };
     }
@@ -4439,12 +4445,6 @@ fn normalizeTextAreaByte(ch: u8) ?u8 {
 
 fn clampU32ToI32(value: u32) i32 {
     return if (value > @as(u32, @intCast(std.math.maxInt(i32)))) std.math.maxInt(i32) else @intCast(value);
-}
-
-fn clampI32(value: i32, min_value: i32, max_value: i32) i32 {
-    if (value < min_value) return min_value;
-    if (value > max_value) return max_value;
-    return value;
 }
 
 test "rect inset keeps non-negative size" {
