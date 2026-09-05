@@ -107,6 +107,9 @@ pub fn prepare(allocator: std.mem.Allocator, original: []const u8, hidden: u64, 
     @memset(depth, 0);
     var fat = Fat{ .bytes = bytes, .geo = checked.geometry, .directory_depth = depth };
     try fat.audit(allocator, owners);
+    const original_directories = try allocator.dupe(u8, depth);
+    defer allocator.free(original_directories);
+    fat.original_directories = original_directories;
     var changed_files: usize = 0;
     for (changes) |change| if (try fat.replace(change)) {
         changed_files += 1;
@@ -300,6 +303,7 @@ const Fat = struct {
     bytes: []u8,
     geo: format.Geometry,
     directory_depth: []u8,
+    original_directories: []const u8 = &.{},
     free_hint: u32 = 2,
 
     fn verifyChildren(self: *Fat, parent: u32, depth: u8, path: []u8, length: usize, expected: []const []const u8, found: []bool, entries: *usize) !void {
@@ -411,7 +415,12 @@ const Fat = struct {
         var searched: u32 = 0;
         while (searched < self.geo.clusters) : (searched += 1) {
             if (cluster >= self.geo.clusters + 2) cluster = 2;
-            if (self.value(cluster) == 0) {
+            // Until namespace publication the original directory graph must
+            // remain readable. Reusing an old directory as early payload
+            // would destroy its entries while the old FAT still owns all
+            // their chains. A failed payload write then creates orphans.
+            const payload_safe = depth != 0 or self.original_directories.len == 0 or self.original_directories[cluster] == 0;
+            if (self.value(cluster) == 0 and payload_safe) {
                 self.set(cluster, 0x0fff_ffff);
                 self.directory_depth[cluster] = depth;
                 const offset = try self.clusterOffset(cluster);
