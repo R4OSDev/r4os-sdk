@@ -712,3 +712,31 @@ vmCommitFlags mit abi.vm_commit_flag_resident stellt physische, gepinnte RAM-
 Seiten vor Erfolg bereit, hoechstens abi.vm_commit_resident_max_bytes pro
 Aufruf. Flags 0 und der normale Allocator bleiben lazy. Fehler koennen eine
 teilweise belegte Region hinterlassen; Aufrufer geben sie kontrolliert frei.
+
+0.76.17: Installationslayout und Limine-Bootcode
+--------------------------------------------
+
+storage_tools.installation besitzt das gemeinsame 512-Byte-GPT-Layout mit
+1-MB-Ausrichtung: BIOSBOOT 1 MB, BOOT 128 MB, SYSTEM 1024 MB, RECOVERY 512 MB
+und DATA bis vor die echte Sicherungstabelle am Geraeteende. Mindestens
+16 MB DATA muessen passen. Identifiers.fromEntropy benoetigt sieben frische
+16-Byte-Werte vom Host bzw. Gast, setzt UUIDv4-Bits und prueft Eindeutigkeit.
+Layout.bind akzeptiert nur einen frisch gelesenen leeren Plan; dessen
+Fingerprint bleibt fuer commit erhalten. manifest und limineConfig binden
+alle Rollen und Eintraege an dieselben IDs. Das Menue hat fuenf Sekunden und
+standardmaessig R4OS lokal bzw. Recovery auf vorbereitetem USB.
+
+storage_tools.limine.installBios verwendet ausschliesslich den gemeinsamen
+Device-Adapter mit exklusivem Claim. Es revalidiert den GPT-Plan, verlangt
+genau eine geeignete BIOSBOOT-Partition und verweigert erkennbare
+Dateisystemsignaturen dort. Stage 2 wird geschrieben, geflusht und gelesen,
+bevor der angepasste MBR veroeffentlicht wird. Zeitstempel, Disksignatur und
+Partitionstabelle im MBR bleiben erhalten; ein weiterer Flush/Readback
+bestaetigt Stage 1. Es wird kein Linux-/Windows-Limine-Programm gestartet.
+Das ist eine Boot-Einrichtung unter Aufruferkontrolle, keine atomare
+Vollinstallation und kein allgemeiner Bootloader-Updater.
+
+Der genaue Limine-12.0.1-Code, bios-hdd.bin, BSD-2-Clause-Lizenz und die
+Herkunft mit SHA-256 liegen unter r4os/storage_tools/limine/. Der bestehende
+storage-tools-test prueft Standard- und groessere Medien, GUIDs/Verweise,
+Bootcodeerhaltung, Schreib-/Flush-/Readback-Fehler sowie ungueltige Geometrie.

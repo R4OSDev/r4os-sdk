@@ -8,6 +8,109 @@ const expectError = std.testing.expectError;
 const table = tools.partition;
 const disk_guid = table.guid.parse("00112233-4455-6677-8899-aabbccddeeff").?;
 
+const BootFixture = struct {
+    // Sparse logical disk: GPT metadata and the BIOSBOOT extent only.
+    // Any accidental access elsewhere is an error, not a zero-filled pass.
+    bytes: [131][512]u8 = .{.{0} ** 512} ** 131,
+    sectors: u64 = tools.installation.standard_bytes / 512,
+    writes: usize = 0,
+    flushes: usize = 0,
+    fail_write: ?usize = null,
+    fail_flush: ?usize = null,
+    corrupt_stage: bool = false,
+    fn slot(self: *BootFixture, lba: u64) ?*[512]u8 {
+        const index = if (lba < 34) lba else if (lba >= self.sectors - 33 and lba < self.sectors)
+            34 + lba - (self.sectors - 33)
+        else if (lba >= 2048 and lba < 2112) 67 + lba - 2048 else return null;
+        return &self.bytes[@intCast(index)];
+    }
+    fn device(self: *BootFixture, progress: *tools.io.Progress) tools.io.Device {
+        return .{ .context = self, .sectors = self.sectors, .exclusive = true, .read_fn = read, .write_fn = write, .flush_fn = flush, .progress = progress };
+    }
+    fn read(raw: *anyopaque, lba: u64, out: []u8) i32 {
+        const self: *BootFixture = @ptrCast(@alignCast(raw));
+        for (0..out.len / 512) |i| @memcpy(out[i * 512 ..][0..512], self.slot(lba + i) orelse return -1);
+        if (self.corrupt_stage and self.flushes != 0 and lba == 2048) out[0] ^= 1;
+        return 0;
+    }
+    fn write(raw: *anyopaque, lba: u64, bytes: []const u8) i32 {
+        const self: *BootFixture = @ptrCast(@alignCast(raw));
+        self.writes += 1;
+        if (self.fail_write == self.writes) return -2;
+        for (0..bytes.len / 512) |i| @memcpy(self.slot(lba + i) orelse return -1, bytes[i * 512 ..][0..512]);
+        return 0;
+    }
+    fn flush(raw: *anyopaque) i32 {
+        const self: *BootFixture = @ptrCast(@alignCast(raw));
+        self.flushes += 1;
+        return if (self.fail_flush == self.flushes) -3 else 0;
+    }
+};
+
+test "five-role layout, GUID boot references and Limine GPT publication" {
+    const a = std.testing.allocator;
+    var entropy: [7][16]u8 = .{.{0} ** 16} ** 7;
+    for (&entropy, 0..) |*id, i| id[0] = @intCast(i + 1);
+    const ids = try tools.installation.Identifiers.fromEntropy(entropy);
+    var work: [tools.io.scratch_bytes]u8 = undefined;
+    for ([_]u64{ tools.installation.standard_bytes / 512, 16 * 1024 * 2048 }) |sectors| {
+        var fixture = BootFixture{ .sectors = sectors };
+        var progress = tools.io.Progress{};
+        const device = fixture.device(&progress);
+        const layout = try tools.installation.Layout.prepare(sectors, 512, ids);
+        try eq(sectors - 1, layout.part(.DATA).first + layout.part(.DATA).count + 32);
+        var plan = try table.Plan.read(device, &work);
+        try layout.bind(&plan);
+        try plan.commit(device, &work);
+        const actual = try table.Plan.read(device, &work);
+        try eq(sectors - 33, actual.backup_array);
+        for (actual.entries, 0..) |entry, i| {
+            try eq(i < 5, entry.present);
+            if (i < 5) {
+                try eq(tools.installation.first_lbas[i], entry.first);
+                try expect(table.guid.eql(ids.partitions[i], entry.unique_guid));
+            }
+        }
+        const manifest = try layout.manifest(a, "0.76.17", "0.1.97", &tools.installation.boot_paths);
+        defer a.free(manifest);
+        const json = try std.json.parseFromSlice(std.json.Value, a, manifest, .{});
+        defer json.deinit();
+        try eq(@as(usize, 5), json.value.object.get("partitions").?.object.count());
+        for ([_]tools.installation.Medium{ .local, .usb }) |medium| {
+            const config = try layout.limineConfig(a, medium);
+            defer a.free(config);
+            try expect(std.mem.indexOf(u8, config, if (medium == .local) "default_entry: 1" else "default_entry: 2") != null);
+            try eq(@as(usize, 3), std.mem.count(u8, config, "protocol: limine"));
+            try expect(std.mem.indexOf(u8, config, &table.guid.format(ids.partitions[1])) != null);
+            try expect(std.mem.indexOf(u8, config, ":/CURRENT/runtime.img") != null);
+            try expect(std.mem.indexOf(u8, config, ":/PREVIOUS/runtime.img") != null);
+        }
+        const before = fixture.bytes;
+        fixture.writes = 0;
+        fixture.flushes = 0;
+        progress = .{};
+        try tools.limine.installBios(device, &actual, &work);
+        try expect(progress.flushed and progress.verified);
+        try std.testing.expectEqualSlices(u8, before[0][218..224], fixture.bytes[0][218..224]);
+        try std.testing.expectEqualSlices(u8, before[0][440..510], fixture.bytes[0][440..510]);
+        try eq(@as(u64, 2048 * 512), std.mem.readInt(u64, fixture.bytes[0][0x1a4..][0..8], .little));
+        try std.testing.expectEqualSlices(u8, std.mem.sliceAsBytes(before[1..67]), std.mem.sliceAsBytes(fixture.bytes[1..67]));
+        try std.testing.expectEqualSlices(u8, tools.limine.payload[512..], std.mem.sliceAsBytes(fixture.bytes[67..])[0 .. tools.limine.payload.len - 512]);
+        for (0..5) |failure| {
+            fixture = .{ .sectors = sectors, .bytes = before };
+            progress = .{};
+            if (failure < 2) fixture.fail_write = failure + 1 else if (failure < 4) fixture.fail_flush = failure - 1 else fixture.corrupt_stage = true;
+            if (tools.limine.installBios(device, &actual, &work)) |_| return error.BootFaultAccepted else |_| {}
+            try expect(!progress.verified);
+            if (failure == 0 or failure == 2 or failure == 4) try std.testing.expectEqualSlices(u8, &before[0], &fixture.bytes[0]);
+        }
+    }
+    try expectError(error.Geometry, tools.installation.Layout.prepare(4194304, 4096, ids));
+    try expectError(error.Geometry, tools.installation.Layout.prepare(tools.installation.first_lbas[4] + 32, 512, ids));
+    entropy[1] = entropy[0];
+    try expectError(error.DuplicateGuid, tools.installation.Identifiers.fromEntropy(entropy));
+}
+
 const Fixture = struct {
     bytes: []u8,
     writes: usize = 0,
