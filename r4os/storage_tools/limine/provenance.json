@@ -5,6 +5,11 @@
   "source": "Workspace DevKit/Boot/Limine; version declared by limine.c",
   "license": "BSD-2-Clause",
   "extraction": "bios-hdd.bin contains exactly the ordered uint8_t elements of binary_limine_hdd_bin_data in limine-bios-hdd.h, without changes.",
+  "biosSystemCompanion": {
+    "pathInPackage": "boot/limine-bios.sys",
+    "source": "DevKit/Boot/Limine/limine-bios.sys from the same Limine 12.0.1 distribution",
+    "sha256": "c325db0e68c0954bc1c6b32148fe311e9e6a9de89c47621397cf4f17a707c43d"
+  },
   "files": [
     {
       "path": "limine.c",

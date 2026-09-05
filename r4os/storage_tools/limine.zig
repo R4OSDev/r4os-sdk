@@ -6,6 +6,14 @@ const std = @import("std");
 const io = @import("io.zig");
 const partition = @import("partition.zig");
 pub const payload = @embedFile("limine/bios-hdd.bin");
+// Matching stage-three companion from the same recorded DevKit release.
+// A newer incompatible BIOS companion needs an explicit Recovery refresh.
+pub const bios_system_sha256 = "c325db0e68c0954bc1c6b32148fe311e9e6a9de89c47621397cf4f17a707c43d";
+pub fn supportsBiosSystem(bytes: []const u8) bool {
+    var digest: [32]u8 = undefined;
+    std.crypto.hash.sha2.Sha256.hash(bytes, &digest, .{});
+    return std.mem.eql(u8, &std.fmt.bytesToHex(digest, .lower), bios_system_sha256);
+}
 const padded_bytes = std.mem.alignForward(usize, payload.len - 512, 512);
 
 pub fn installBios(device: io.Device, table: *const partition.Plan, work: []u8) !void {

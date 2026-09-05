@@ -3,6 +3,8 @@ pub const io = @import("storage_tools/io.zig");
 pub const host_file = @import("storage_tools/host_file.zig");
 pub const partition = @import("storage_tools/partition.zig");
 pub const fat32 = @import("storage_tools/fat32.zig");
+pub const fat32_image = @import("storage_tools/fat32_image.zig");
+pub const fat32_view = @import("storage_tools/fat32_view.zig");
 pub const ntfs_format = @import("ntfs_format.zig");
 pub const ntfs = @import("ntfs_builder.zig").WithFormat(ntfs_format);
 

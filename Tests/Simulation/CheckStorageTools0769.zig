@@ -157,6 +157,85 @@ fn newPlan(device: tools.io.Device, work: []u8) !table.Plan {
     return plan;
 }
 
+fn fatAllocationCase(allocator: std.mem.Allocator, bytes: []u8) !void {
+    _ = try tools.fat32_image.buildInto(allocator, bytes, 4096, 1, "BOOT", 42, &.{
+        .{ .path = "boot/long name first.dat", .bytes = "first" },
+        .{ .path = "BOOT/long name second.dat", .bytes = "second" },
+        .{ .path = "boot/empty.dat", .bytes = "" },
+    });
+    const view = try tools.fat32_view.View.init(bytes, 4096);
+    try view.matches("BOOT/long name first.dat", "first");
+    try view.matches("boot/long name second.dat", "second");
+    try view.matches("boot/empty.dat", "");
+}
+
+test "prepared FAT file trees, long root chains, bounded import and publication faults" {
+    const a = std.testing.allocator;
+    const bytes = try a.alloc(u8, 64 * 1024 * 1024);
+    defer a.free(bytes);
+    try std.testing.checkAllAllocationFailures(a, fatAllocationCase, .{bytes});
+    var names: [40][64]u8 = undefined;
+    var files: [40]tools.fat32_image.File = undefined;
+    const content = [_]u8{0x35} ** 6000;
+    for (&files, 0..) |*file, i| file.* = .{
+        .path = try std.fmt.bufPrint(&names[i], "Root long file number {d}.bin", .{i}),
+        .bytes = &content,
+    };
+    var prepared = try tools.fat32_image.prepare(a, bytes.len / 512, 4096, "BOOT", 71, &files);
+    defer prepared.deinit();
+    const view = try tools.fat32_view.View.init(prepared.bytes, 4096);
+    for (files) |file| try view.matches(file.path, file.bytes);
+    const copy = try view.readFile(a, files[39].path, content.len);
+    defer a.free(copy);
+    try std.testing.expectEqualSlices(u8, &content, copy);
+    try expectError(error.SourceFileMissing, view.matches("MISSING", ""));
+    try expectError(error.SourceFat, view.readFile(a, files[0].path, 5999));
+    try expectError(error.DuplicatePath, tools.fat32_image.buildInto(a, bytes, 4096, 1, "BOOT", 1, &.{
+        .{ .path = "boot", .bytes = "" }, .{ .path = "BOOT/file", .bytes = "x" },
+    }));
+    try expectError(error.Path, tools.fat32_image.buildInto(a, bytes, 4096, 1, "BOOT", 1, &.{.{ .path = "../escape", .bytes = "" }}));
+    // File bytes can fit in the partition size while filesystem metadata
+    // makes the complete prepared image too large. No device I/O is exposed.
+    try expectError(error.ImageFull, tools.fat32_image.buildInto(a, bytes, 4096, 1, "RECOVERY", 1, &.{.{ .path = "INSTALL/RELEASE.ZIP", .bytes = bytes }}));
+    var work: [tools.io.scratch_bytes]u8 = undefined;
+    for (0..5) |fault| {
+        @memset(bytes, 0xa5);
+        var fixture = Fixture{ .bytes = bytes };
+        var progress = tools.io.Progress{};
+        var device = fixture.device(&progress);
+        switch (fault) {
+            1 => fixture.fail_write = 2,
+            2 => fixture.fail_flush = 1,
+            3 => fixture.corrupt_after_flush = true,
+            4 => device.continue_fn = struct {
+                fn proceed(_: ?*anyopaque, _: tools.io.Phase, written: u64) bool {
+                    return written < 4;
+                }
+            }.proceed,
+            else => {},
+        }
+        if (fault == 0) {
+            var readonly = device;
+            readonly.exclusive = false;
+            try expectError(error.ExclusiveRequired, prepared.execute(readonly, false, &work));
+            try expect(!progress.write_attempted);
+            try prepared.execute(device, false, &work);
+            try expect(progress.flushed and progress.verified);
+            const observed = try tools.fat32_view.View.init(bytes, 4096);
+            for (files) |file| try observed.matches(file.path, file.bytes);
+            try eq(@as(u8, 0xa5), bytes[@as(usize, prepared.stats.used_sectors) * 512]);
+        } else {
+            const errors = [_]anyerror{ error.WriteFailed, error.FlushFailed, error.VerifyFailed, error.Cancelled };
+            try expectError(errors[fault - 1], prepared.execute(device, false, &work));
+            try expect(progress.write_attempted and !progress.verified);
+            try eq(@as(u8, 0), bytes[510]);
+        }
+    }
+    @memcpy(bytes, prepared.bytes);
+    bytes[32 * 512 + 8] ^= 1;
+    try expectError(error.SourceFat, tools.fat32_view.View.init(bytes, 4096));
+}
+
 test "GPT/MBR roundtrip, geometry, free space, attributes and stale plans" {
     const bytes = try std.testing.allocator.alloc(u8, 16 * 1024 * 1024);
     defer std.testing.allocator.free(bytes);
