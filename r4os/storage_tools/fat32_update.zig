@@ -431,7 +431,7 @@ const Fat = struct {
             for (0..4) |i| short[7 - i] = "0123456789ABCDEF"[(serial >> @as(u5, @intCast(i * 4))) & 15];
             var iterator = Iterator{ .fat = self, .cluster = parent };
             var used = false;
-            while (try iterator.next()) |entry| if (std.mem.eql(u8, entry.raw[0..11], &short)) {
+            while (try iterator.next()) |entry| if (std.ascii.eqlIgnoreCase(entry.raw[0..11], &short)) {
                 used = true;
                 break;
             };

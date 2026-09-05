@@ -271,8 +271,19 @@ test "FAT file replacement preserves boot config and foreign data with bounded f
         .{ .path = "boot/limine.conf", .bytes = "custom configuration\r\n" },
         .{ .path = "boot/FOREIGN-LONG.txt", .bytes = "Unicode neighbour" },
         .{ .path = "FOREIGN/KEEP.BIN", .bytes = "foreign boot payload" },
+        .{ .path = "R4UP0001.BIN", .bytes = "preserve short alias" },
     });
     defer original.deinit();
+    const source_root = @as(usize, original.stats.geometry.data_start) * 512;
+    var alias_found = false;
+    for (0..16) |slot| {
+        const raw = original.bytes[source_root + slot * 32 ..][0..32];
+        if (std.mem.eql(u8, raw[0..11], "R4UP0001BIN")) {
+            raw[0] = 'r'; // Existing aliases are case-insensitive too.
+            alias_found = true;
+        }
+    }
+    try expect(alias_found);
     // Keep a valid non-ASCII LFN next to managed files. Its UTF-16 name,
     // short alias and payload must survive without blocking ASCII lookup.
     var unicode_at: ?usize = null;
@@ -327,6 +338,11 @@ test "FAT file replacement preserves boot config and foreign data with bounded f
     try view.matches("boot/installation description.json", "new manifest");
     try view.matches("boot/limine.conf", "custom configuration\r\n");
     try view.matches("FOREIGN/KEEP.BIN", "foreign boot payload");
+    try view.matches("R4UP0001.BIN", "preserve short alias");
+    for (0..16) |slot| {
+        const raw = bytes[source_root + slot * 32 ..][0..32];
+        try expect(!std.mem.eql(u8, raw[0..11], "R4UP0001BIN"));
+    }
     const writes = fixture.writes;
     const flushes = fixture.flushes;
     for (0..writes + flushes) |fault| {
