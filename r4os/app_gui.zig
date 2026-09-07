@@ -70,6 +70,23 @@ pub const Message = union(enum) {
     clipboard: ClipboardMessage,
     timer: TimerMessage,
     unknown: abi.GuiEvent,
+
+    /// Bridge existing raw GUI handlers onto the shared event loop. Synthetic
+    /// timer, clipboard and command messages remain explicit to the caller.
+    pub fn guiEvent(self: Message) ?abi.GuiEvent {
+        return switch (self) {
+            .close => |id| .{ .kind = @intFromEnum(abi.GuiEventKind.close), .window_id = id },
+            .resize => |value| .{ .kind = @intFromEnum(abi.GuiEventKind.resize), .window_id = value.window_id, .tick = value.tick },
+            .key => |value| .{ .kind = @intFromEnum(abi.GuiEventKind.key_down), .window_id = value.window_id, .key = value.codepoint, .modifiers = value.modifiers, .tick = value.tick },
+            .mouse => |value| .{ .kind = @intFromEnum(switch (value.action) {
+                .down => abi.GuiEventKind.mouse_down,
+                .up => abi.GuiEventKind.mouse_up,
+                .move => abi.GuiEventKind.mouse_move,
+            }), .window_id = value.window_id, .x = value.x, .y = value.y, .buttons = value.buttons, .modifiers = value.modifiers, .tick = value.tick },
+            .unknown => |value| value,
+            else => null,
+        };
+    }
 };
 
 pub const WaitResult = union(enum) {
@@ -120,6 +137,7 @@ pub const EventLoop = struct {
     activity_sequence: u64 = 0,
     clipboard_revision: u32 = 0,
     pending_command: ?CommandId = null,
+    close_delivered: bool = false,
 
     pub fn init(sys: r4sys.Context, desk: r4desk.Context, timers: []Timer) EventLoop {
         return .{
@@ -138,7 +156,10 @@ pub const EventLoop = struct {
 
     pub fn poll(self: *EventLoop) ?Message {
         var raw: abi.GuiEvent = .{};
-        if (self.desk.guiPollEvent(&raw) > 0) return self.translate(raw);
+        if (self.desk.guiPollEvent(&raw) > 0) {
+            if (raw.kind == @intFromEnum(abi.GuiEventKind.close)) self.close_delivered = true;
+            return self.translate(raw);
+        }
         if (self.pending_command) |command| {
             self.pending_command = null;
             return .{ .command = command };
@@ -154,8 +175,20 @@ pub const EventLoop = struct {
         for (self.timers) |*timer| {
             if (timer.takeIfDue(now)) |message| return .{ .timer = message };
         }
-        if (self.sys.programShouldClose()) return .{ .close = self.desk.programWindowId() };
+        // An editor can keep running to resolve a Save dialog. A persistent
+        // lifecycle flag must not turn that dialog into a busy close loop.
+        if (self.takeClose(self.sys.programShouldClose())) return .{ .close = self.desk.programWindowId() };
         return null;
+    }
+
+    fn takeClose(self: *EventLoop, requested: bool) bool {
+        if (!requested) {
+            self.close_delivered = false;
+            return false;
+        }
+        if (self.close_delivered) return false;
+        self.close_delivered = true;
+        return true;
     }
 
     pub fn wait(self: *EventLoop, timeout: time_contract.Timeout) WaitResult {
@@ -327,4 +360,28 @@ fn mouseMessage(raw: abi.GuiEvent, action: MouseAction) MouseMessage {
         .modifiers = raw.modifiers,
         .tick = raw.tick,
     };
+}
+
+test "GUI compatibility messages preserve input and close dialogs do not spin" {
+    const std = @import("std");
+    var loop = EventLoop{ .sys = undefined, .desk = undefined, .timers = &.{} };
+    const input = abi.GuiEvent{ .kind = @intFromEnum(abi.GuiEventKind.key_down), .window_id = 3, .key = 0x10437, .modifiers = 7, .tick = 123 };
+    const key = loop.translate(input).guiEvent().?;
+    try std.testing.expectEqual(input.key, key.key);
+    try std.testing.expectEqual(input.modifiers, key.modifiers);
+    try std.testing.expectEqual(input.tick, key.tick);
+    const mouse = abi.GuiEvent{ .kind = @intFromEnum(abi.GuiEventKind.mouse_up), .window_id = 2, .x = -4, .y = 20, .buttons = 2, .modifiers = 1, .tick = 400 };
+    try std.testing.expectEqualDeep(mouse, loop.translate(mouse).guiEvent().?);
+    try std.testing.expect(loop.takeClose(true));
+    for (0..100) |_| try std.testing.expect(!loop.takeClose(true));
+    try std.testing.expect(!loop.takeClose(false));
+    try std.testing.expect(loop.takeClose(true));
+    var timer = Timer{ .id = .{ .value = 1 }, .deadline_tick = 100, .interval_ticks = 100, .active = true };
+    try std.testing.expect(timer.takeIfDue(99) == null);
+    try std.testing.expectEqual(@as(u64, 100), timer.takeIfDue(100).?.tick);
+    try std.testing.expectEqual(@as(u64, 200), timer.deadline_tick);
+    _ = timer.takeIfDue(451);
+    try std.testing.expectEqual(@as(u64, 500), timer.deadline_tick);
+    timer.cancel();
+    try std.testing.expect(timer.takeIfDue(1000) == null);
 }
