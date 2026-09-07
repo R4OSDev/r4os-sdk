@@ -2114,6 +2114,16 @@ pub const Context = struct {
         return table_fn(rate, channels, @intFromEnum(format));
     }
 
+    pub fn audioOutputInfo(self: *const Context, index: u32, out: *abi.AudioOutputInfo) i32 {
+        const callback = self.audioFn("audio_output_info") orelse return self.unavailable("audio");
+        return callback(index, out);
+    }
+
+    pub fn audioSelectOutput(self: *const Context, id: *const [64]u8) i32 {
+        const callback = self.audioFn("audio_select_output") orelse return self.unavailable("audio");
+        return callback(id);
+    }
+
     pub fn audioWrite(self: *const Context, stream_id: u32, data: []const u8) i32 {
         const table_fn = self.audioFn("audio_write") orelse return self.unavailable("audio");
         return table_fn(stream_id, data.ptr, @intCast(data.len));

@@ -1,5 +1,16 @@
 const abi = @import("r4os_contract").abi;
 
+/// Version 3 adds the canonical output callbacks to the unchanged v2 prefix.
+pub const AudioOutputBackend = extern struct {
+    base: abi.AudioBackend = .{ .version = abi.audio_backend_outputs_version, .size = 96 },
+    outputs: abi.AudioOutputExtension,
+};
+
+comptime {
+    if (@sizeOf(abi.AudioBackend) != 72 or @offsetOf(AudioOutputBackend, "outputs") != 72 or @sizeOf(AudioOutputBackend) != 96)
+        @compileError("audio output backend prefix drift");
+}
+
 pub const r4d_shutdown_entry_offset: u32 = 5;
 
 pub fn entriesAsm(comptime init_target: []const u8, comptime shutdown_target: []const u8) []const u8 {
@@ -92,6 +103,10 @@ pub const Context = struct {
     }
 
     pub fn registerAudioOutputBackend(self: *const Context, name: [*:0]const u8, backend: *const abi.AudioBackend) i32 {
+        return self.api.register_audio_output_backend(name, backend);
+    }
+
+    pub fn registerAudioOutputs(self: *const Context, name: [*:0]const u8, backend: *const AudioOutputBackend) i32 {
         return self.api.register_audio_output_backend(name, backend);
     }
 

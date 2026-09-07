@@ -30,6 +30,14 @@ pub const Context = struct {
         return self.base.audioOpenStream(rate, channels, format);
     }
 
+    pub fn audioOutputInfo(self: *const Context, index: u32, out: *abi.AudioOutputInfo) i32 {
+        return self.base.audioOutputInfo(index, out);
+    }
+
+    pub fn audioSelectOutput(self: *const Context, id: *const [64]u8) i32 {
+        return self.base.audioSelectOutput(id);
+    }
+
     pub fn audioWrite(self: *const Context, stream_id: u32, data: []const u8) i32 {
         return self.base.audioWrite(stream_id, data);
     }
