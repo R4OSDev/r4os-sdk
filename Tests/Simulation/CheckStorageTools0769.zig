@@ -437,6 +437,59 @@ test "FAT file replacement preserves boot config and foreign data with bounded f
     try expectError(error.SourceAllocation, tools.fat32_update.prepare(a, bytes, 4096, &.{.{ .path = "boot/r4os.elf", .bytes = "new" }}));
 }
 
+test "FAT delta plans own touched sectors and preserve sequential source generations" {
+    const a = std.testing.allocator;
+    var original = try tools.fat32_image.prepare(a, 64 * 2048, 4096, "BOOT", 17, &.{
+        .{ .path = "CURRENT/old.txt", .bytes = "old current" },
+        .{ .path = "PREVIOUS/obsolete.txt", .bytes = "old previous" },
+        .{ .path = "INSTALL/KEEP.ZIP", .bytes = "retained download" },
+    });
+    defer original.deinit();
+    const first = [_]tools.fat32_update.Change{
+        .{ .path = "PREVIOUS", .bytes = null },
+        .{ .path = "PREVIOUS/old.txt", .bytes = "old current" },
+    };
+    const second = [_]tools.fat32_update.Change{
+        .{ .path = "CURRENT", .bytes = null },
+        .{ .path = "CURRENT/new/long name.txt", .bytes = "new current" },
+        .{ .path = "state.r4s", .bytes = "unconfirmed" },
+    };
+    var reference1 = try tools.fat32_update.prepare(a, original.bytes, 4096, &first);
+    defer reference1.deinit();
+    var reference2 = try tools.fat32_update.prepare(a, reference1.bytes, 4096, &second);
+    defer reference2.deinit();
+    const scratch = try a.dupe(u8, original.bytes);
+    defer a.free(scratch);
+    var delta1 = try tools.fat32_update.prepareDelta(a, scratch, 4096, &first);
+    defer delta1.deinit();
+    try expectEqualSlices(u8, reference1.bytes, scratch);
+    var delta2 = try tools.fat32_update.prepareDelta(a, scratch, 4096, &second);
+    defer delta2.deinit();
+    try expectEqualSlices(u8, reference2.bytes, scratch);
+    try expect(delta1.bytes.len + delta2.bytes.len < 1024 * 1024);
+    @memset(scratch, 0x55); // Both plans are independent of preparation storage.
+    var memory = tools.io.Memory{ .bytes = original.bytes };
+    var work: [tools.io.scratch_bytes]u8 = undefined;
+    try expectError(error.SourceChanged, delta2.execute(memory.device(), &work));
+    try delta1.execute(memory.device(), &work);
+    try expectEqualSlices(u8, reference1.bytes, original.bytes);
+    try (try tools.fat32_view.View.init(original.bytes, 4096)).matches("CURRENT/old.txt", "old current");
+    try delta2.execute(memory.device(), &work);
+    try expectEqualSlices(u8, reference2.bytes, original.bytes);
+    try (try tools.fat32_view.View.init(original.bytes, 4096)).matches("INSTALL/KEEP.ZIP", "retained download");
+    var no_memory: [0]u8 = .{};
+    var fixed = std.heap.FixedBufferAllocator.init(&no_memory);
+    var no_op = try tools.fat32_update.prepareDelta(fixed.allocator(), original.bytes, 4096, &.{});
+    defer no_op.deinit();
+    try eq(@as(usize, 0), no_op.bytes.len);
+    try eq(@as(usize, 0), no_op.writes.len);
+    try no_op.execute(memory.device(), &work);
+    try expectError(error.OutOfMemory, tools.fat32_update.prepareDelta(fixed.allocator(), original.bytes, 4096, &first));
+    try expectEqualSlices(u8, reference2.bytes, original.bytes);
+    try expectError(error.SourceAlias, tools.fat32_update.prepareDelta(a, original.bytes, 4096, &.{.{ .path = "CURRENT/alias", .bytes = original.bytes[0..512] }}));
+    std.debug.print("delta payloads={d}+{d} volume={d} no_op_allocations=0\n", .{ delta1.bytes.len, delta2.bytes.len, original.bytes.len });
+}
+
 test "GPT/MBR roundtrip, geometry, free space, attributes and stale plans" {
     const bytes = try std.testing.allocator.alloc(u8, 16 * 1024 * 1024);
     defer std.testing.allocator.free(bytes);
