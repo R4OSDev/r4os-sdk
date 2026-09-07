@@ -13,7 +13,7 @@ const r4os = R4os;
 
 pub const digest_bytes: usize = 32;
 pub const digest_hex_bytes: usize = digest_bytes * 2;
-pub const FileKind = enum { sram, rtc };
+pub const FileKind = enum { sram, rtc, sram_delta };
 
 pub fn digestHex(digest: *const [digest_bytes]u8, out: *[digest_hex_bytes]u8) []const u8 {
     const alphabet = "0123456789ABCDEF";
@@ -48,6 +48,8 @@ pub const Backend = struct {
     read_exact_fn: *const fn (*anyopaque, *const [digest_bytes]u8, FileKind, []u8) ReadResult,
     write_atomic_fn: *const fn (*anyopaque, *const [digest_bytes]u8, FileKind, []const u8) BackendError!void,
     poll_fn: ?*const fn (*anyopaque) BackendError!void = null,
+    drain_fn: ?*const fn (*anyopaque) BackendError!void = null,
+    pending_fn: ?*const fn (*anyopaque) bool = null,
 
     pub fn acquire(self: Backend, digest: *const [digest_bytes]u8, generation: u64) BackendError!void {
         return self.acquire_fn(self.context, digest, generation);
@@ -63,6 +65,16 @@ pub const Backend = struct {
 
     pub fn writeAtomic(self: Backend, digest: *const [digest_bytes]u8, kind: FileKind, bytes: []const u8) BackendError!void {
         return self.write_atomic_fn(self.context, digest, kind, bytes);
+    }
+
+    /// A baseline checkpoint must follow all older deltas. Async backends
+    /// provide both callbacks; synchronous stores are already drained.
+    pub fn drain(self: Backend) BackendError!void {
+        if (self.drain_fn) |callback| try callback(self.context) else try self.poll();
+    }
+
+    pub fn pending(self: Backend) bool {
+        return if (self.pending_fn) |callback| callback(self.context) else false;
     }
 
     pub fn poll(self: Backend) BackendError!void {
@@ -84,7 +96,7 @@ pub fn R4osStore(comptime Config: type) type {
         }
     }
     return struct {
-        const PathRole = enum { sram, rtc, lock, atomic_lock, sram_stage, rtc_stage, sram_backup, rtc_backup };
+        const PathRole = enum { sram, rtc, lock, atomic_lock, sram_stage, rtc_stage, sram_backup, rtc_backup, sram_delta, delta_stage, delta_backup };
         const create_retry_attempts: usize = 8;
         const create_retry_delay_ms: u64 = 25;
 
@@ -170,6 +182,9 @@ pub fn R4osStore(comptime Config: type) type {
                     PathRole.rtc_stage,
                     PathRole.sram_backup,
                     PathRole.rtc_backup,
+                    PathRole.sram_delta,
+                    PathRole.delta_stage,
+                    PathRole.delta_backup,
                 }) |role| {
                     const path = makePath(digest, role) catch continue;
                     _ = self.files.delete(path.asZ());
@@ -188,9 +203,21 @@ pub fn R4osStore(comptime Config: type) type {
                 if (self.lock_writer != null) return error.Busy;
                 try ensureSaveRoot(&self.files);
                 const transaction = makePath(digest, .atomic_lock) catch return error.Io;
-                const target = makePath(digest, if (kind == .sram) .sram else .rtc) catch return error.Io;
-                const stage = makePath(digest, if (kind == .sram) .sram_stage else .rtc_stage) catch return error.Io;
-                const backup = makePath(digest, if (kind == .sram) .sram_backup else .rtc_backup) catch return error.Io;
+                const target = makePath(digest, switch (kind) {
+                    .sram => .sram,
+                    .rtc => .rtc,
+                    .sram_delta => .sram_delta,
+                }) catch return error.Io;
+                const stage = makePath(digest, switch (kind) {
+                    .sram => .sram_stage,
+                    .rtc => .rtc_stage,
+                    .sram_delta => .delta_stage,
+                }) catch return error.Io;
+                const backup = makePath(digest, switch (kind) {
+                    .sram => .sram_backup,
+                    .rtc => .rtc_backup,
+                    .sram_delta => .delta_backup,
+                }) catch return error.Io;
                 try removeAtomicScratch(self, &transaction);
                 try removeAtomicScratch(self, &stage);
                 try removeAtomicScratch(self, &backup);
@@ -286,9 +313,21 @@ pub fn R4osStore(comptime Config: type) type {
                 digest: *const [digest_bytes]u8,
                 kind: FileKind,
             ) BackendError!RecoveryTestState {
-                const target = makePath(digest, if (kind == .sram) .sram else .rtc) catch return error.Io;
-                const stage = makePath(digest, if (kind == .sram) .sram_stage else .rtc_stage) catch return error.Io;
-                const backup = makePath(digest, if (kind == .sram) .sram_backup else .rtc_backup) catch return error.Io;
+                const target = makePath(digest, switch (kind) {
+                    .sram => .sram,
+                    .rtc => .rtc,
+                    .sram_delta => .sram_delta,
+                }) catch return error.Io;
+                const stage = makePath(digest, switch (kind) {
+                    .sram => .sram_stage,
+                    .rtc => .rtc_stage,
+                    .sram_delta => .delta_stage,
+                }) catch return error.Io;
+                const backup = makePath(digest, switch (kind) {
+                    .sram => .sram_backup,
+                    .rtc => .rtc_backup,
+                    .sram_delta => .delta_backup,
+                }) catch return error.Io;
                 return .{
                     .target_size = try pathSizeWithRetry(self, &target, .atomic_recover),
                     .stage_size = try pathSizeWithRetry(self, &stage, .atomic_recover),
@@ -344,7 +383,11 @@ pub fn R4osStore(comptime Config: type) type {
                     return .io;
                 }
                 recoverPendingKind(self, digest, kind, out.len) catch return .io;
-                const path = makePath(digest, if (kind == .sram) .sram else .rtc) catch return .io;
+                const path = makePath(digest, switch (kind) {
+                    .sram => .sram,
+                    .rtc => .rtc,
+                    .sram_delta => .sram_delta,
+                }) catch return .io;
                 const info = info_retry: {
                     for (0..create_retry_attempts) |attempt| {
                         switch (self.files.info(path.asZ())) {
@@ -387,9 +430,21 @@ pub fn R4osStore(comptime Config: type) type {
                 const self: *Store = @ptrCast(@alignCast(context));
                 if (self.lock_writer == null or !std.mem.eql(u8, self.lock_digest[0..], digest[0..])) return error.Busy;
                 const transaction = makePath(digest, .atomic_lock) catch return error.Io;
-                const target = makePath(digest, if (kind == .sram) .sram else .rtc) catch return error.Io;
-                const stage = makePath(digest, if (kind == .sram) .sram_stage else .rtc_stage) catch return error.Io;
-                const backup = makePath(digest, if (kind == .sram) .sram_backup else .rtc_backup) catch return error.Io;
+                const target = makePath(digest, switch (kind) {
+                    .sram => .sram,
+                    .rtc => .rtc,
+                    .sram_delta => .sram_delta,
+                }) catch return error.Io;
+                const stage = makePath(digest, switch (kind) {
+                    .sram => .sram_stage,
+                    .rtc => .rtc_stage,
+                    .sram_delta => .delta_stage,
+                }) catch return error.Io;
+                const backup = makePath(digest, switch (kind) {
+                    .sram => .sram_backup,
+                    .rtc => .rtc_backup,
+                    .sram_delta => .delta_backup,
+                }) catch return error.Io;
                 try beginAtomicTransaction(self, &transaction);
                 var transaction_held = true;
                 defer if (transaction_held) {
@@ -410,7 +465,7 @@ pub fn R4osStore(comptime Config: type) type {
                     self.recordFailure(.atomic_publish, r4os.abi.file_stream_error_size_mismatch);
                     return error.Io;
                 }
-                if (kind == .rtc) try validateRtcRecordAt(self, &target, .atomic_publish);
+                if (kind != .sram) try validateRecordAt(self, kind, &target, .atomic_publish);
                 try removeAtomicScratch(self, &backup);
                 if (!abortOwnedPathWithRetryAtStage(self, &transaction, .atomic_release)) return error.Io;
                 transaction_held = false;
@@ -458,7 +513,7 @@ pub fn R4osStore(comptime Config: type) type {
                     self.recordFailure(.atomic_stage_verify, r4os.abi.file_stream_error_size_mismatch);
                     return error.Io;
                 }
-                if (kind == .rtc) try validateRtcRecordAt(self, stage, .atomic_stage_verify);
+                if (kind != .sram) try validateRecordAt(self, kind, stage, .atomic_stage_verify);
                 return;
             }
             unreachable;
@@ -546,18 +601,20 @@ pub fn R4osStore(comptime Config: type) type {
             coalesced: u64 = 0,
             errors: u64 = 0,
             maximum_queued: u8 = 0,
+            snapshot_bytes: u64 = 0,
+            written_bytes: u64 = 0,
         };
 
         /// Product persistence wrapper. The emulation thread only copies an immutable
-        /// SRAM/RTC snapshot; a joinable app thread performs the slow atomic namespace
-        /// transaction. One worker serializes both file kinds so Store and its writer
+        /// SRAM/RTC or bounded delta snapshot; a joinable app thread performs the
+        /// atomic namespace transaction. One worker serializes all kinds so the writer
         /// lease never need cross-thread locking. New snapshots are coalesced per kind,
         /// while close drains every accepted write before releasing the cartridge.
         pub const AsyncStore = struct {
             allocator: std.mem.Allocator,
             store: Store,
             active: ?ActiveWrite = null,
-            pending: [2]?*AsyncWriteJob = .{ null, null },
+            pending: [3]?*AsyncWriteJob = .{ null, null, null },
             next_sequence: u64 = 1,
             latched_failure: ?BackendError = null,
             stats: AsyncStats = .{},
@@ -574,6 +631,8 @@ pub fn R4osStore(comptime Config: type) type {
                     .read_exact_fn = readExact,
                     .write_atomic_fn = writeAtomic,
                     .poll_fn = poll,
+                    .drain_fn = drainBackend,
+                    .pending_fn = pendingBackend,
                 };
             }
 
@@ -640,6 +699,7 @@ pub fn R4osStore(comptime Config: type) type {
 
                 const job = try self.createJob(digest, kind, bytes);
                 self.stats.enqueued +%= 1;
+                self.stats.snapshot_bytes +%= bytes.len;
                 if (self.active == null) {
                     self.startJob(job) catch |fault| {
                         self.destroyJob(job);
@@ -710,6 +770,7 @@ pub fn R4osStore(comptime Config: type) type {
                     self.stats.completed +%= 1;
                     const job = active.job;
                     const result = if (rc == r4os.abi.thread_ok and exit_code == 0) job.result else AsyncWriteResult.io;
+                    if (result == .ok) self.stats.written_bytes +%= job.bytes.len;
                     if (rc != r4os.abi.thread_ok or exit_code != 0) self.store.recordFailure(.async_join, if (rc != r4os.abi.thread_ok) rc else exit_code);
                     self.destroyJob(job);
                     if (asyncResultFault(result)) |fault| {
@@ -730,6 +791,16 @@ pub fn R4osStore(comptime Config: type) type {
                     };
                 };
                 if (self.latched_failure) |fault| return fault;
+            }
+
+            fn drainBackend(context: *anyopaque) BackendError!void {
+                const self: *AsyncStore = @ptrCast(@alignCast(context));
+                try self.drain();
+            }
+
+            fn pendingBackend(context: *anyopaque) bool {
+                const self: *AsyncStore = @ptrCast(@alignCast(context));
+                return self.active != null or self.pendingCount() != 0;
             }
 
             fn drain(self: *AsyncStore) BackendError!void {
@@ -799,6 +870,7 @@ pub fn R4osStore(comptime Config: type) type {
             return switch (kind) {
                 .sram => 0,
                 .rtc => 1,
+                .sram_delta => 2,
             };
         }
 
@@ -871,9 +943,21 @@ pub fn R4osStore(comptime Config: type) type {
                 _ = abortOwnedPathWithRetryAtStage(self, &transaction, .atomic_release);
             };
 
-            const target = makePath(digest, if (kind == .sram) .sram else .rtc) catch return error.Io;
-            const stage = makePath(digest, if (kind == .sram) .sram_stage else .rtc_stage) catch return error.Io;
-            const backup = makePath(digest, if (kind == .sram) .sram_backup else .rtc_backup) catch return error.Io;
+            const target = makePath(digest, switch (kind) {
+                .sram => .sram,
+                .rtc => .rtc,
+                .sram_delta => .sram_delta,
+            }) catch return error.Io;
+            const stage = makePath(digest, switch (kind) {
+                .sram => .sram_stage,
+                .rtc => .rtc_stage,
+                .sram_delta => .delta_stage,
+            }) catch return error.Io;
+            const backup = makePath(digest, switch (kind) {
+                .sram => .sram_backup,
+                .rtc => .rtc_backup,
+                .sram_delta => .delta_backup,
+            }) catch return error.Io;
             try recoverAtomicKind(self, kind, expected_size, &target, &stage, &backup);
             if (!abortOwnedPathWithRetryAtStage(self, &transaction, .atomic_release)) return error.Io;
             transaction_held = false;
@@ -903,7 +987,7 @@ pub fn R4osStore(comptime Config: type) type {
                         self.recordFailure(.atomic_recover, r4os.abi.file_stream_error_size_mismatch);
                         return error.Io;
                     }
-                    if (kind == .rtc) try validateRtcRecordAt(self, stage, .atomic_recover);
+                    if (kind != .sram) try validateRecordAt(self, kind, stage, .atomic_recover);
                     try replaceAtomicWithRetry(self, target, stage, backup, .atomic_recover);
                     const target_size = try pathSizeVisibleWithRetry(self, target, .atomic_recover);
                     if (target_size == null) {
@@ -914,7 +998,7 @@ pub fn R4osStore(comptime Config: type) type {
                         self.recordFailure(.atomic_recover, r4os.abi.file_stream_error_size_mismatch);
                         return error.Io;
                     }
-                    if (kind == .rtc) try validateRtcRecordAt(self, target, .atomic_recover);
+                    if (kind != .sram) try validateRecordAt(self, kind, target, .atomic_recover);
                     try removeAtomicScratch(self, backup);
                 },
                 .cleanup_backup => {
@@ -922,7 +1006,7 @@ pub fn R4osStore(comptime Config: type) type {
                         self.recordFailure(.atomic_recover, r4os.abi.file_stream_error_size_mismatch);
                         return error.Io;
                     }
-                    if (kind == .rtc) try validateRtcRecordAt(self, target, .atomic_recover);
+                    if (kind != .sram) try validateRecordAt(self, kind, target, .atomic_recover);
                     try removeAtomicScratch(self, backup);
                 },
                 .orphan_backup => {
@@ -992,12 +1076,17 @@ pub fn R4osStore(comptime Config: type) type {
             unreachable;
         }
 
-        fn validateRtcRecordAt(
+        fn validateRecordAt(
             self: *Store,
+            kind: FileKind,
             path: *const r4os.AbsoluteFilePath,
             failure_stage: FailureStage,
         ) BackendError!void {
-            var encoded: [Config.rtc_record_bytes]u8 = undefined;
+            const delta_bytes = if (@hasDecl(Config, "delta_record_bytes")) Config.delta_record_bytes else 0;
+            var buffer: [@max(Config.rtc_record_bytes, delta_bytes)]u8 = undefined;
+            const length = if (kind == .rtc) Config.rtc_record_bytes else delta_bytes;
+            if (length == 0) return error.Unsupported;
+            const encoded = buffer[0..length];
             var offset: usize = 0;
             while (offset < encoded.len) {
                 const transferred = read_retry: {
@@ -1025,7 +1114,8 @@ pub fn R4osStore(comptime Config: type) type {
                 }
                 offset += transferred;
             }
-            if (!Config.validateRtc(encoded[0..])) {
+            const valid = if (kind == .rtc) Config.validateRtc(encoded) else if (@hasDecl(Config, "validateDelta")) Config.validateDelta(encoded) else false;
+            if (!valid) {
                 self.recordFailure(failure_stage, r4os.abi.file_stream_error_invalid);
                 return error.Io;
             }
@@ -1153,7 +1243,11 @@ pub fn R4osStore(comptime Config: type) type {
         /// Exposes only the two durable data names for product diagnostics. Atomic
         /// staging, backups and writer leases remain private implementation details.
         pub fn dataPath(digest: *const [digest_bytes]u8, kind: FileKind) !r4os.AbsoluteFilePath {
-            return makePath(digest, if (kind == .sram) .sram else .rtc);
+            return makePath(digest, switch (kind) {
+                .sram => .sram,
+                .rtc => .rtc,
+                .sram_delta => .sram_delta,
+            });
         }
 
         fn ensureSaveRoot(files: *const r4os.app_storage.Files) BackendError!void {
@@ -1252,7 +1346,7 @@ pub fn R4osStore(comptime Config: type) type {
         }
 
         fn makePath(digest: *const [digest_bytes]u8, role: PathRole) !r4os.AbsoluteFilePath {
-            if (role == .atomic_lock or role == .sram_stage or role == .rtc_stage or role == .sram_backup or role == .rtc_backup) {
+            if (role == .atomic_lock or role == .sram_stage or role == .rtc_stage or role == .sram_backup or role == .rtc_backup or role == .delta_stage or role == .delta_backup) {
                 var token: [10]u8 = undefined;
                 makeAtomicToken(digest, &token);
                 const discriminator: u8 = switch (role) {
@@ -1261,6 +1355,8 @@ pub fn R4osStore(comptime Config: type) type {
                     .sram_backup => 'B',
                     .rtc_stage => 'T',
                     .rtc_backup => 'R',
+                    .delta_stage => 'D',
+                    .delta_backup => 'E',
                     else => unreachable,
                 };
                 var short_raw: [160]u8 = undefined;
@@ -1278,6 +1374,9 @@ pub fn R4osStore(comptime Config: type) type {
             const suffix = switch (role) {
                 .sram => ".SAV",
                 .rtc => ".RTC",
+                .sram_delta => ".SDJ",
+                .delta_stage => unreachable,
+                .delta_backup => unreachable,
                 .lock => ".LCK",
                 .atomic_lock => unreachable,
                 .sram_stage => ".SAV.NEW",
