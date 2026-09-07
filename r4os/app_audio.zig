@@ -208,7 +208,8 @@ pub const AudioStream = struct {
         if (!self.valid()) return .{ .failure = .{ .raw = abi.err_closed, .written = 0 } };
         var offset: usize = 0;
         while (offset < data.len) {
-            const chunk_len = @min(max_write_payload, data.len - offset);
+            // Keep room for the header: an inferred u12 wraps 4096 to zero.
+            const chunk_len: usize = @min(max_write_payload, data.len - offset);
             var payload: [abi.service_api_max_payload]u8 = undefined;
             const request = abi.AudioServiceStreamWriteRequest{ .stream_id = self.stream_id, .byte_count = @intCast(chunk_len) };
             @memcpy(payload[0..@sizeOf(abi.AudioServiceStreamWriteRequest)], std.mem.asBytes(&request));
@@ -363,4 +364,65 @@ test "write cursor preserves partial progress and never converts errors into suc
     const invalid = invalid_cursor.apply(.{ .busy = 1 });
     try std.testing.expectEqual(WriteOutcome.invalid, invalid.outcome);
     try std.testing.expectEqual(@as(usize, 0), invalid_cursor.accepted);
+}
+
+test "packet limits keep the complete header and PCM in both audio writers" {
+    const program = @import("program.zig");
+    const Capture = struct {
+        var expected: []const u8 = &.{};
+        var accepted: usize = 0;
+        var calls: usize = 0;
+        var largest: usize = 0;
+        fn open(_: [*:0]const u8, out: *abi.ServiceInfo) callconv(.c) i32 {
+            out.* = .{ .handle = 1 };
+            return 0;
+        }
+        fn close(_: u32) callconv(.c) i32 { return 0; }
+        fn clock(out: *abi.MonotonicClockInfo) callconv(.c) i32 {
+            out.* = .{ .event_effective_hz = 1000 };
+            return 1;
+        }
+        fn call(_: u32, op: u16, bytes: [*]const u8, len: u32, header: *abi.ServiceMessageHeader, response: [*]u8, capacity: u32, _: u64) callconv(.c) i32 {
+            const header_size = @sizeOf(abi.AudioServiceStreamWriteRequest);
+            if (op != abi.audio_service_op_write_stream or len < header_size or capacity < @sizeOf(abi.AudioServiceStreamResult)) return -1;
+            const request = std.mem.bytesToValue(abi.AudioServiceStreamWriteRequest, bytes[0..header_size]);
+            const data = bytes[header_size..len];
+            if (request.magic != abi.audio_service_request_magic or request.version != abi.audio_service_request_version or
+                request.stream_id != 7 or request.byte_count != data.len or data.len > expected.len - accepted or
+                !std.mem.eql(u8, data, expected[accepted..][0..data.len])) return -1;
+            accepted += data.len;
+            calls += 1;
+            largest = @max(largest, len);
+            const result = abi.AudioServiceStreamResult{ .action = op, .result = @intCast(data.len), .stream_id = 7, .bytes = @intCast(data.len) };
+            @memcpy(response[0..@sizeOf(@TypeOf(result))], std.mem.asBytes(&result));
+            header.* = .{ .op = op, .status = 0, .payload_len = @sizeOf(@TypeOf(result)) };
+            return @sizeOf(@TypeOf(result));
+        }
+    };
+    var raw: abi.R4XStartContext = .{};
+    var table: abi.R4XStartR4Sys = .{};
+    table.service_open = @intFromPtr(&Capture.open);
+    table.service_close = @intFromPtr(&Capture.close);
+    table.service_call = @intFromPtr(&Capture.call);
+    table.monotonic_clock = @intFromPtr(&Capture.clock);
+    var bundle: program.Bundle = .{ .raw = &raw, .sys = &table };
+    const sys = r4sys.Context.init(&bundle);
+    var data: [max_write_payload + 4]u8 = undefined;
+    for (&data, 0..) |*byte, i| byte.* = @truncate(i * 137 + 19);
+    Capture.expected = data[0..1024];
+    Capture.accepted = 0;
+    Capture.calls = 0;
+    Capture.largest = 0;
+    try std.testing.expectEqual(@as(i32, 1024), sys.audioServiceWrite(7, data[0..1024]));
+    try std.testing.expectEqual(@as(usize, 2), Capture.calls);
+    try std.testing.expectEqual(@as(usize, 1024), Capture.largest);
+    Capture.expected = &data;
+    Capture.accepted = 0;
+    Capture.calls = 0;
+    Capture.largest = 0;
+    var stream = AudioStream{ .connection = .{ .sys = sys, .raw = 1 }, .stream_id = 7, .owned = true };
+    const result = stream.write(&data, .{ .kind = abi.timeout_kind_forever });
+    try std.testing.expectEqual(data.len, result.written);
+    try std.testing.expectEqual(@as(usize, 2), Capture.calls);
+    try std.testing.expectEqual(@as(usize, abi.service_api_max_payload), Capture.largest);
 }

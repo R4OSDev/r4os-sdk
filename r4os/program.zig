@@ -2564,7 +2564,9 @@ pub const Context = struct {
         var offset: usize = 0;
         var total: i32 = 0;
         while (offset < data.len) {
-            const chunk_len = @min(max_chunk, data.len - offset);
+            // @min narrows the inferred integer; the following header addition
+            // must still represent the complete 1024-byte request.
+            const chunk_len: usize = @min(max_chunk, data.len - offset);
             var request = abi.AudioServiceStreamWriteRequest{
                 .stream_id = stream_id,
                 .byte_count = @intCast(chunk_len),
