@@ -20,6 +20,8 @@ const journal_max: usize = system_update_recovery.journal_max;
 const io_chunk: usize = 65536;
 var stream_io_buf: [io_chunk]u8 = undefined;
 var checksum_io_buf: [io_chunk]u8 = undefined;
+var payload_passes: u32 = 0;
+var payload_read_bytes: u64 = 0;
 var inventory_source_buf: [system_update_inventory.max_bytes]u8 = undefined;
 var inventory_render_buf: [system_update_inventory.max_bytes]u8 = undefined;
 var inventory_workspace: system_update_inventory.Inventory = undefined;
@@ -188,6 +190,10 @@ pub const Result = struct {
     batch_package_count: u32 = 0,
     batch_current_package: u32 = 0,
     restart_required: bool = false,
+
+    /// Actual payload stream attempts and bytes read by this engine call.
+    payload_passes: u32 = 0,
+    payload_read_bytes: u64 = 0,
 
     pub fn packageText(self: *const Result) []const u8 {
         return self.package[0..self.package_len];
@@ -463,6 +469,7 @@ pub const Engine = struct {
 pub fn runTerminal(r4_app: *r4os.App) i32 {
     var engine = Engine.init(r4_app);
     const ctx = engine.ctx;
+    defer printPayloadWork(&ctx);
     const args = trim(spanZ(ctx.argsRaw()));
     if (args.len == 0 or equalsIgnoreCase(args, "/?") or equalsIgnoreCase(args, "-?") or equalsIgnoreCase(args, "--help")) {
         printUsage(&ctx);
@@ -531,6 +538,17 @@ fn refreshActiveKernelVersion(r4_app: *const r4os.App) void {
 
 fn resetTypedResult() void {
     clearTypedReason();
+    payload_passes = 0;
+    payload_read_bytes = 0;
+}
+
+fn printPayloadWork(ctx: *const r4os.r4sys.Context) void {
+    if (payload_passes == 0) return;
+    ctx.write("SYSUPD I/O: payload-passes=");
+    ctx.printU64(payload_passes);
+    ctx.write(" payload-read-bytes=");
+    ctx.printU64(payload_read_bytes);
+    ctx.println("");
 }
 
 fn clearTypedReason() void {
@@ -549,6 +567,8 @@ fn typedResult(
         .operation = operation,
         .state = stateForResult(operation, exit_code, journal, batch),
         .exit_code = exit_code,
+        .payload_passes = payload_passes,
+        .payload_read_bytes = payload_read_bytes,
     };
     if (info) |package_info| {
         result.package_len = copyTypedText(result.package[0..], package_info.package);
@@ -793,7 +813,7 @@ fn applyCommand(ctx: *const r4os.r4sys.Context, path_raw: []const u8) i32 {
         return 1;
     };
 
-    const verify_status = readAndVerifyPackage(ctx, path_raw, path_buf, manifest_buf, info, false, .current, "APPLY");
+    const verify_status = readPackageMetadata(ctx, path_raw, path_buf, manifest_buf, info, .current, "APPLY");
     if (verify_status != .ok) return packageVerifyExitCode(verify_status);
     if (!packageIsPureLiveR4x(info)) {
         fail(ctx, "APPLY", "restart-required");
@@ -1052,13 +1072,12 @@ fn stageCommand(ctx: *const r4os.r4sys.Context, path_raw: []const u8) i32 {
     command_path_workspace = .{0} ** max_path;
     primary_info_workspace = .{};
     const info = &primary_info_workspace;
-    const verify_status = readAndVerifyPackage(
+    const verify_status = readPackageMetadata(
         ctx,
         path_raw,
         command_path_workspace[0..],
         command_manifest_workspace[0..],
         info,
-        false,
         .deferred_batch,
         "STAGE",
     );
@@ -1077,7 +1096,7 @@ fn stageCommand(ctx: *const r4os.r4sys.Context, path_raw: []const u8) i32 {
     if (packageIsPureLiveR4x(info) and !pending_batch) {
         switch (allRequirementsCurrentlySatisfied(ctx, info)) {
             .satisfied => {},
-            .missing => return stageRestartPackage(ctx, info),
+            .missing => return verifyAndStageRestartPackage(ctx, info),
             .io => {
                 fail(ctx, "STAGE", "requirement-read");
                 return 1;
@@ -1085,13 +1104,21 @@ fn stageCommand(ctx: *const r4os.r4sys.Context, path_raw: []const u8) i32 {
         }
         switch (packageProgramRunningStatus(ctx, info)) {
             .satisfied => return applyCommand(ctx, path_raw),
-            .missing => return stageRestartPackage(ctx, info),
+            .missing => return verifyAndStageRestartPackage(ctx, info),
             .io => {
                 fail(ctx, "STAGE", "program-state");
                 return 1;
             },
         }
     }
+    return verifyAndStageRestartPackage(ctx, info);
+}
+
+// Restart journals retain a verified digest. Live APPLY verifies the same
+// bytes while writing its private stages, before any target replacement.
+fn verifyAndStageRestartPackage(ctx: *const r4os.r4sys.Context, info: *PackageInfo) i32 {
+    const status = streamPackagePayloadsWithTransientRetry(ctx, command_path_workspace[0..].ptr, info.header, command_manifest_workspace[0..@intCast(info.header.manifest_len)], info, false, "STAGE");
+    if (status != .ok) return packageVerifyExitCode(status);
     return stageRestartPackage(ctx, info);
 }
 
@@ -1251,13 +1278,12 @@ fn preverifyBatch(
         primary_info_workspace = .{};
         command_path_workspace = .{0} ** max_path;
         const entry = &batch.packages[package_index];
-        const status = readAndVerifyPackage(
+        const status = readPackageMetadata(
             ctx,
             entry.pathText(),
             command_path_workspace[0..],
             command_manifest_workspace[0..],
             &primary_info_workspace,
-            false,
             .deferred_batch,
             "COMMIT",
         );
@@ -1860,13 +1886,12 @@ fn commitPreparedBatchLocked(
         primary_info_workspace = .{ .transaction_generation = transaction_generation };
         command_path_workspace = .{0} ** max_path;
         const package_info = &primary_info_workspace;
-        const status = readAndVerifyPackage(
+        const status = readPackageMetadata(
             ctx,
             binding.pathText(),
             command_path_workspace[0..],
             command_manifest_workspace[0..],
             package_info,
-            false,
             .deferred_batch,
             "COMMIT",
         );
@@ -1972,6 +1997,7 @@ fn commitPreparedBatchLocked(
     ctx.printU64(batch.package_count);
     ctx.write(" release=");
     ctx.println(batch.targetReleaseText());
+    printPayloadWork(ctx);
     ctx.systemReboot();
 }
 
@@ -2650,6 +2676,20 @@ fn readAndVerifyPackage(
     requirement_policy: RequirementPolicy,
     command: []const u8,
 ) PackageVerifyStatus {
+    const status = readPackageMetadata(ctx, path_raw, path_buf, manifest_buf, info, requirement_policy, command);
+    if (status != .ok) return status;
+    return streamPackagePayloadsWithTransientRetry(ctx, @ptrCast(path_buf.ptr), info.header, manifest_buf[0..@intCast(info.header.manifest_len)], info, stage_payloads, command);
+}
+
+fn readPackageMetadata(
+    ctx: *const r4os.r4sys.Context,
+    path_raw: []const u8,
+    path_buf: []u8,
+    manifest_buf: []u8,
+    info: *PackageInfo,
+    requirement_policy: RequirementPolicy,
+    command: []const u8,
+) PackageVerifyStatus {
     const package_path = normalizePackagePath(path_buf, path_raw) orelse {
         fail(ctx, command, "bad-package-path");
         return .invalid;
@@ -2734,7 +2774,7 @@ fn readAndVerifyPackage(
         const requirement_status = validateRequirements(ctx, info, command);
         if (requirement_status != .ok) return requirement_status;
     }
-    return streamPackagePayloadsWithTransientRetry(ctx, package_path.ptr, header, manifest, info, stage_payloads, command);
+    return .ok;
 }
 
 fn packageVerifyExitCode(status: PackageVerifyStatus) i32 {
@@ -3436,6 +3476,7 @@ fn streamPackagePayloads(
     stage_payloads: bool,
     command: []const u8,
 ) PackageVerifyStatus {
+    payload_passes +|= 1;
     const payload_base = std.math.add(
         u64,
         @as(u64, @intCast(header_size)),
@@ -3509,7 +3550,9 @@ fn streamPackagePayloads(
                 fail(ctx, command, "payload-offset");
                 return .invalid;
             }
-            if (!readExactAt(ctx, package_path, absolute, buf[0..want]).ok) {
+            const read = readExactAt(ctx, package_path, absolute, buf[0..want]);
+            payload_read_bytes +|= read.completed;
+            if (!read.ok) {
                 if (write_stage and !settlePrivateStageOrFail(ctx, entry, command)) return .conflict;
                 fail(ctx, command, "payload-read");
                 return .io;
@@ -3561,6 +3604,53 @@ fn streamPackagePayloads(
     if (package_hash != header.package_checksum) {
         if (stage_payloads) _ = deleteStagedPayloads(ctx, info);
         fail(ctx, command, "package-checksum");
+        return .invalid;
+    }
+    return confirmPackageMetadata(ctx, package_path, header, manifest, info.package_length, command);
+}
+
+fn confirmPackageMetadata(
+    ctx: *const r4os.r4sys.Context,
+    path: [*:0]const u8,
+    header: Header,
+    manifest: []const u8,
+    expected_size: u64,
+    command: []const u8,
+) PackageVerifyStatus {
+    var bytes: [header_size]u8 = undefined;
+    if (!readExactAt(ctx, path, 0, &bytes).ok) {
+        fail(ctx, command, "header-read");
+        return .io;
+    }
+    const current = parseHeader(&bytes) orelse {
+        fail(ctx, command, "package-binding-changed");
+        return .invalid;
+    };
+    if (!std.meta.eql(current, header)) {
+        fail(ctx, command, "package-binding-changed");
+        return .invalid;
+    }
+    var offset: usize = 0;
+    while (offset < manifest.len) {
+        const count = @min(stream_io_buf.len, manifest.len - offset);
+        const chunk = stream_io_buf[0..count];
+        if (!readExactAt(ctx, path, header_size + offset, chunk).ok) {
+            fail(ctx, command, "manifest-read");
+            return .io;
+        }
+        if (!std.mem.eql(u8, chunk, manifest[offset..][0..count])) {
+            fail(ctx, command, "package-binding-changed");
+            return .invalid;
+        }
+        offset += count;
+    }
+    var file_info: r4os.abi.FileInfo = .{};
+    if (fileInfoStatus(ctx, path, &file_info) != .found) {
+        fail(ctx, command, "package-info");
+        return .io;
+    }
+    if (file_info.is_dir != 0 or file_info.size != expected_size) {
+        fail(ctx, command, "package-binding-changed");
         return .invalid;
     }
     return .ok;
