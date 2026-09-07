@@ -452,6 +452,12 @@ pub const Backend = struct {
     }
 };
 
+/// App-owned client overlay appended inside the same video transaction.
+pub const FrameOverlay = struct {
+    context: *anyopaque,
+    append_fn: *const fn (*anyopaque) i32,
+};
+
 pub const Presenter = struct {
     surface: Surface,
     scratch: []u32,
@@ -462,6 +468,8 @@ pub const Presenter = struct {
     stats: PresentStats = .{},
     shared_handle: abi.GuiSharedRasterHandle = .{},
     shared_info: abi.GuiSharedRasterCreateInfo = .{},
+    shared_generation: u64 = 0,
+    client_damage: ?Rect = null,
 
     pub fn init(surface: Surface, scratch: []u32) Error!Presenter {
         _ = try requiredPixels(surface.width, surface.height);
@@ -475,6 +483,7 @@ pub const Presenter = struct {
         self.damage.markFull();
         self.last_viewport = null;
         self.damage_chain = 0;
+        self.shared_generation = 0;
     }
 
     pub fn invalidateAll(self: *Presenter) void {
@@ -483,6 +492,11 @@ pub const Presenter = struct {
 
     pub fn invalidate(self: *Presenter, rect: Rect) void {
         self.damage.mark(rect, self.surface.width, self.surface.height);
+    }
+
+    pub fn invalidateClient(self: *Presenter, rect: Rect) void {
+        const clipped = clipRect(rect, std.math.maxInt(i32), std.math.maxInt(i32)) orelse return;
+        self.client_damage = if (self.client_damage) |old| mergeRect(old, clipped) else clipped;
     }
 
     pub fn setPaletteEntry(self: *Presenter, index: u8, rgb: u32) bool {
@@ -501,12 +515,16 @@ pub const Presenter = struct {
     }
 
     pub fn presentTo(self: *Presenter, backend: Backend, client_w: i32, client_h: i32) PresentResult {
+        return self.presentToWithOverlay(backend, client_w, client_h, null);
+    }
+
+    pub fn presentToWithOverlay(self: *Presenter, backend: Backend, client_w: i32, client_h: i32, overlay: ?FrameOverlay) PresentResult {
         const viewport = calculateViewport(client_w, client_h, self.surface.width, self.surface.height) catch {
             self.stats.skipped_frames +%= 1;
             return .hidden;
         };
         const geometry_changed = if (self.last_viewport) |last| !viewportEqual(last, viewport) else true;
-        if (self.damage.kind == .none and !geometry_changed and self.has_frame) {
+        if (self.damage.kind == .none and self.client_damage == null and !geometry_changed and self.has_frame) {
             self.stats.skipped_frames +%= 1;
             return .unchanged;
         }
@@ -515,7 +533,8 @@ pub const Presenter = struct {
         const shared_info = sharedRasterCreateInfo(self.surface);
         const wants_shared_raster = backend.supports_shared_raster and shared_info != null;
         var compacted = false;
-        var mode: PresentMode = if (!self.has_frame or geometry_changed or self.damage.kind == .full)
+        var mode: PresentMode = if (!self.has_frame or geometry_changed or self.damage.kind == .full or
+            (self.client_damage != null and !wants_shared_raster and !use_xrgb32_nearest))
             .full
         else if (wants_shared_raster or use_xrgb32_nearest)
             .replace
@@ -547,8 +566,21 @@ pub const Presenter = struct {
                 };
                 destination_count += 1;
             }
+            if (self.client_damage) |requested| {
+                if (clipRect(requested, @intCast(client_w), @intCast(client_h))) |rect| {
+                    var combined = rect;
+                    if (destination_count == destination_regions.len) {
+                        destination_count -= 1;
+                        const old = destination_regions[destination_count];
+                        combined = mergeRect(rect, .{ .x = @intCast(old.x), .y = @intCast(old.y), .w = old.w, .h = old.h });
+                    }
+                    destination_regions[destination_count] = .{ .x = @intCast(combined.x), .y = @intCast(combined.y), .w = combined.w, .h = combined.h };
+                    destination_count += 1;
+                }
+            }
             if (destination_count == 0) {
                 self.damage.clear();
+                self.client_damage = null;
                 self.stats.skipped_frames +%= 1;
                 return .unchanged;
             }
@@ -557,7 +589,11 @@ pub const Presenter = struct {
         const use_indexed8 = self.surface.format() == .indexed8 and backend.supports_indexed8;
         var shared_generation: ?u64 = null;
         if (wants_shared_raster) {
-            const prepared = self.prepareSharedRaster(backend, shared_info.?);
+            const prepared: SharedRasterPrepareResult = if (self.damage.kind == .none and
+                self.shared_handle.id != 0 and self.shared_generation != 0 and sameSharedRasterInfo(self.shared_info, shared_info.?))
+                .{ .result = abi.gui_frame_result_ok, .generation = self.shared_generation }
+            else
+                self.prepareSharedRaster(backend, shared_info.?);
             if (prepared.result == abi.gui_frame_result_ok) {
                 shared_generation = prepared.generation;
             } else {
@@ -605,6 +641,13 @@ pub const Presenter = struct {
                 }
                 return .{ .failure = rendered.failure };
             }
+            if (overlay) |value| {
+                const appended = value.append_fn(value.context);
+                if (appended < 0) {
+                    backend.cancel();
+                    return .{ .failure = appended };
+                }
+            }
             const committed = backend.commit(mode);
             if (committed < 0) {
                 backend.cancel();
@@ -622,6 +665,8 @@ pub const Presenter = struct {
         self.has_frame = true;
         self.last_viewport = viewport;
         self.damage.clear();
+        self.client_damage = null;
+        self.shared_generation = if (committed_shared_raster) shared_generation.? else 0;
         self.stats.published_frames +%= 1;
         self.stats.damage_regions +%= changed_regions.len;
         self.stats.raster_blocks +%= rendered.blocks;
@@ -670,6 +715,7 @@ pub const Presenter = struct {
         if (self.shared_handle.id != 0) _ = backend.sharedRasterDestroy(&self.shared_handle);
         self.shared_handle = .{};
         self.shared_info = .{};
+        self.shared_generation = 0;
     }
 
     fn prepareSharedRaster(self: *Presenter, backend: Backend, info: abi.GuiSharedRasterCreateInfo) SharedRasterPrepareResult {
@@ -1170,6 +1216,7 @@ pub const Host = struct {
     input: InputTranslator = .{},
     input_viewport: ?Viewport = null,
     stats: HostStats = .{},
+    overlay: ?FrameOverlay = null,
 
     pub fn init(desk: r4desk.Context, draw: r4draw.Context, surface: Surface, scratch: []u32) Error!Host {
         if (!draw.supportsGuiFrameContract() or !draw.hasFn("gui_blit") or
@@ -1203,7 +1250,7 @@ pub const Host = struct {
         if ((info.flags & abi.GuiWindowFlag.visible) == 0 or (info.flags & abi.GuiWindowFlag.minimized) != 0) return .hidden;
         self.stats.viewport_calculations +%= 1;
         self.stats.present_viewport_calculations +%= 1;
-        const result = self.video.presentTo(Backend.fromDraw(&self.draw), info.client_w, info.client_h);
+        const result = self.video.presentToWithOverlay(Backend.fromDraw(&self.draw), info.client_w, info.client_h, self.overlay);
         switch (result) {
             .presented => |presented| self.input_viewport = presented.viewport,
             .unchanged => self.input_viewport = self.video.currentViewport(),
@@ -1774,6 +1821,7 @@ const FakeBackend = struct {
     shared_raster_publishes: u32 = 0,
     shared_raster_commands: u32 = 0,
     damage_regions: u32 = 0,
+    last_damage: abi.DisplayDamageRect = .{},
     indexed8_resource_bytes: u64 = 0,
     xrgb32_nearest_resource_bytes: u64 = 0,
     shared_raster_descriptor_bytes: u64 = 0,
@@ -1844,6 +1892,7 @@ fn fakeBeginReplace(context: *anyopaque, regions: []const abi.DisplayDamageRect)
     const self = fakeState(context);
     self.replace_begins += 1;
     self.damage_regions += @intCast(regions.len);
+    if (regions.len != 0) self.last_damage = regions[0];
     return 0;
 }
 
@@ -2177,6 +2226,53 @@ test "shared raster backpressure falls back for the frame and preserves indexed 
     try std.testing.expectEqual(@as(u32, 1), fake.indexed8_rasters);
     try std.testing.expectEqual(@as(u64, 1), presenter.stats.shared_raster_fallback_frames);
     try std.testing.expectEqual(@as(u64, 1), presenter.stats.shared_raster_backpressure_fallbacks);
+}
+
+test "client overlay updates letterbox damage atomically without copying unchanged guest pixels" {
+    var pixels = [_]u32{ 0x112233, 0x223344, 0x334455, 0x445566 };
+    const original = pixels;
+    var memory: [16]u8 = undefined;
+    var scratch: [tile_max_pixels]u32 = undefined;
+    var presenter = try Presenter.init(try Surface.initXrgb32(&pixels, 2, 2), &scratch);
+    var fake = FakeBackend{ .shared_raster_enabled = true, .shared_raster_memory = &memory };
+    defer presenter.deinit(fake.backend());
+    const Overlay = struct {
+        calls: u32 = 0,
+        result: i32 = 0,
+        fn append(context: *anyopaque) i32 {
+            const self: *@This() = @ptrCast(@alignCast(context));
+            self.calls += 1;
+            return self.result;
+        }
+    };
+    var state = Overlay{};
+    const overlay = FrameOverlay{ .context = &state, .append_fn = Overlay.append };
+    try std.testing.expect(presenter.presentTo(fake.backend(), 300, 200) == .presented);
+    presenter.invalidateClient(.{ .x = 8, .y = 8, .w = 104, .h = 24 });
+    const shown = presenter.presentToWithOverlay(fake.backend(), 300, 200, overlay);
+    try std.testing.expectEqual(PresentMode.replace, shown.presented.mode);
+    try std.testing.expectEqual(@as(i32, 50), shown.presented.viewport.x);
+    try std.testing.expectEqual(abi.DisplayDamageRect{ .x = 8, .y = 8, .w = 104, .h = 24 }, fake.last_damage);
+    try std.testing.expectEqual(@as(u32, 1), fake.shared_raster_maps);
+    try std.testing.expectEqual(@as(u32, 1), state.calls);
+    try std.testing.expect(presenter.presentToWithOverlay(fake.backend(), 300, 200, overlay) == .unchanged);
+    state.result = -987;
+    presenter.invalidateClient(.{ .x = 8, .y = 8, .w = 104, .h = 24 });
+    try std.testing.expectEqual(@as(i32, -987), presenter.presentToWithOverlay(fake.backend(), 300, 200, overlay).failure);
+    try std.testing.expectEqual(@as(u32, 2), fake.commits);
+    try std.testing.expectEqual(@as(u32, 1), fake.cancels);
+    try std.testing.expect(presenter.client_damage != null);
+    state.result = 0;
+    try std.testing.expect(presenter.presentToWithOverlay(fake.backend(), 300, 200, overlay) == .presented);
+    presenter.invalidateClient(.{ .x = 8, .y = 8, .w = 104, .h = 24 });
+    try std.testing.expect(presenter.presentTo(fake.backend(), 300, 200) == .presented);
+    try std.testing.expectEqual(@as(u32, 3), state.calls);
+    try std.testing.expectEqual(@as(u32, 1), fake.shared_raster_publishes);
+    try std.testing.expectEqualSlices(u32, &original, &pixels);
+    try std.testing.expect(presenter.presentTo(fake.backend(), 400, 200) == .presented);
+    fake.shared_raster_enabled = false;
+    presenter.invalidateClient(.{ .x = 8, .y = 8, .w = 104, .h = 24 });
+    try std.testing.expectEqual(PresentMode.full, presenter.presentTo(fake.backend(), 400, 200).presented.mode);
 }
 
 test "native xrgb32 transport keeps wide full-motion work bounded" {
