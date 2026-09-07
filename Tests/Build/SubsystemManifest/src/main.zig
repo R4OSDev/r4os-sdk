@@ -133,10 +133,18 @@ fn runSelfTest(sys: *r4os.r4sys.Context, desk: r4os.r4desk.Context, draw: r4os.r
     if (!presentInitialFullFrame(sys, &host)) return selfTestFail(sys, "full-640", 82);
     if (!runtimeInputSelfTest(sys, &host)) return selfTestFail(sys, "runtime-input", 100);
     if (host.present() != .unchanged) return selfTestFail(sys, "unchanged", 83);
-    host.video.invalidate(.{ .x = 12, .y = 14, .w = 18, .h = 16 });
-    host.video.invalidate(.{ .x = 580, .y = 310, .w = 12, .h = 10 });
+    // Damage hints alone correctly produce no frame when pixels are unchanged.
+    // Change both regions before asserting a sparse two-region presentation.
+    const damage_a = host_api.Rect{ .x = 12, .y = 14, .w = 18, .h = 16 };
+    const damage_b = host_api.Rect{ .x = 580, .y = 310, .w = 12, .h = 10 };
+    paintRect(&host.video.surface, damage_a, 15);
+    paintRect(&host.video.surface, damage_b, 15);
+    host.video.invalidate(damage_a);
+    host.video.invalidate(damage_b);
     const sparse_damage_ok = switch (host.present()) {
-        .presented => |info| info.mode == .damage and info.damage_regions == 2 and info.raster_blocks >= 2,
+        // Shared rasters publish a replacement snapshot with the same exact
+        // damage rectangles; both incremental protocols preserve sparse damage.
+        .presented => |info| (info.mode == .damage or info.mode == .replace) and info.damage_regions == 2 and info.raster_blocks >= 2,
         else => false,
     };
     if (!sparse_damage_ok) return selfTestFail(sys, "damage-regions", 84);
@@ -169,11 +177,12 @@ fn runSelfTest(sys: *r4os.r4sys.Context, desk: r4os.r4desk.Context, draw: r4os.r
     if (elapsed != 0 and @as(u64, animation_frames) * hz < elapsed * 20) return selfTestFail(sys, "animation-fps", 98);
     if (host.video.stats.skipped_frames == 0 or
         host.video.stats.full_frames < animation_frames + 4 or
-        host.video.stats.damage_frames == 0 or
+        host.video.stats.damage_frames + host.video.stats.replacement_frames == 0 or
         host.video.stats.damage_regions <= host.video.stats.published_frames or
-        host.video.stats.indexed8_frames == 0 or
-        host.video.stats.indexed8_blocks == 0 or
-        host.video.stats.indexed8_resource_bytes <= host.video.stats.indexed8_blocks or
+        host.video.stats.indexed8_frames + host.video.stats.shared_raster_frames == 0 or
+        host.video.stats.indexed8_blocks + host.video.stats.shared_raster_blocks == 0 or
+        host.video.stats.indexed8_resource_bytes + host.video.stats.shared_raster_descriptor_bytes <=
+            host.video.stats.indexed8_blocks + host.video.stats.shared_raster_blocks or
         host.video.stats.xrgb_fallback_frames != 0)
     {
         return selfTestFail(sys, "stats", 99);
