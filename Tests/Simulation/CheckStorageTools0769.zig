@@ -206,6 +206,21 @@ test "prepared FAT file trees, long root chains, bounded import and publication 
     };
     var prepared = try tools.fat32_image.prepare(a, bytes.len / 512, 4096, "BOOT", 71, &files);
     defer prepared.deinit();
+    var streamed = try tools.fat32_image.prepareStreamed(a, bytes.len / 512, 4096, prepared.stats.geometry.sectors_per_cluster, "BOOT", 71, &files);
+    defer streamed.deinit();
+    try std.testing.expect(streamed.metadata.len < 2 * 1024 * 1024);
+    var stream_work: [tools.io.scratch_bytes]u8 = undefined;
+    var stream_progress = tools.io.Progress{};
+    @memset(bytes, 0xa5);
+    var stream_target = Fixture{ .bytes = bytes };
+    try streamed.execute(stream_target.device(&stream_progress), true, &stream_work);
+    try std.testing.expectEqualSlices(u8, prepared.bytes, bytes);
+    // A failed write must not publish the primary boot signature.
+    @memset(bytes, 0);
+    stream_target = .{ .bytes = bytes, .fail_write = 4 };
+    stream_progress = .{};
+    try expectError(error.WriteFailed, streamed.execute(stream_target.device(&stream_progress), false, &stream_work));
+    try std.testing.expectEqual(@as(u8, 0), bytes[510]);
     const view = try tools.fat32_view.View.init(prepared.bytes, 4096);
     for (files) |file| try view.matches(file.path, file.bytes);
     const copy = try view.readFile(a, files[39].path, content.len);

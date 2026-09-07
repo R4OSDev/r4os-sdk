@@ -4,7 +4,7 @@ const manifest_contract = contract_bundle.r4mf;
 const legacy_project = contract_bundle.legacy;
 const legacy_converter = contract_bundle;
 
-const Action = enum { catalog, image_inventory, inventories, validate, resolve, plan, contract_plan, image_plan, workspace_image_plan, convert_r4cp };
+const Action = enum { catalog, image_inventory, inventories, validate, resolve, plan, contract_plan, image_plan, workspace_image_plan, workspace_build_plan, convert_r4cp };
 // ImageMode describes a selection policy, not another IMAGE_SCOPE value.
 // Benchmark deliberately reuses slim/full and admits only explicitly named
 // test diagnostics, so manifests keep the canonical slim/full/test scopes.
@@ -185,7 +185,7 @@ fn run(init: std.process.Init) !void {
             try writeOutput(io, cwd, options.output, rendered);
             std.debug.print("ModuleCatalog image plan OK: mode={s}, entries={d}.\n", .{ @tagName(mode), countImageEntries(image_entries, mode, includes) });
         },
-        .workspace_image_plan => {
+        .workspace_image_plan, .workspace_build_plan => {
             const mode = options.image_mode orelse return error.MissingImageMode;
             const includes = options.image_include_targets[0..options.image_include_target_count];
             const entries = try loadWorkspaceImageEntries(
@@ -198,14 +198,18 @@ fn run(init: std.process.Init) !void {
             try validateCatalogCollisions(manifests);
             try validateImageIncludes(manifests, mode, includes);
             try validateImageDependencyClosure(manifests, mode, includes);
-            const rendered = try renderWorkspaceImagePlan(arena_allocator, io, cwd, entries, mode, includes);
+            const rendered = if (options.action == .workspace_build_plan)
+                try renderWorkspaceBuildPlan(arena_allocator, entries, mode, includes)
+            else
+                try renderWorkspaceImagePlan(arena_allocator, io, cwd, entries, mode, includes);
             try writeOutput(io, cwd, options.output, rendered);
             if (options.inventory_output) |inventory_output| {
                 const kernel = try loadOptionalKernelComponent(arena_allocator, io, cwd, options);
                 const inventory = try renderImageInventory(arena_allocator, manifests, mode, includes, kernel);
                 try writeOutput(io, cwd, inventory_output, inventory);
             }
-            std.debug.print("ModuleCatalog workspace image plan OK: mode={s}, entries={d}{s}.\n", .{
+            std.debug.print("ModuleCatalog workspace {s} plan OK: mode={s}, entries={d}{s}.\n", .{
+                if (options.action == .workspace_build_plan) "build" else "image",
                 @tagName(mode),
                 countImageEntries(manifests, mode, includes),
                 if (options.inventory_output != null) ", inventory generated" else "",
@@ -222,7 +226,7 @@ fn run(init: std.process.Init) !void {
 
 fn parseOptions(args: []const []const u8) !Options {
     if (args.len < 2) return error.MissingAction;
-    var options = Options{ .action = if (std.mem.eql(u8, args[1], "catalog")) .catalog else if (std.mem.eql(u8, args[1], "image-inventory")) .image_inventory else if (std.mem.eql(u8, args[1], "inventories")) .inventories else if (std.mem.eql(u8, args[1], "validate")) .validate else if (std.mem.eql(u8, args[1], "resolve")) .resolve else if (std.mem.eql(u8, args[1], "plan")) .plan else if (std.mem.eql(u8, args[1], "contract-plan")) .contract_plan else if (std.mem.eql(u8, args[1], "image-plan")) .image_plan else if (std.mem.eql(u8, args[1], "workspace-image-plan")) .workspace_image_plan else if (std.mem.eql(u8, args[1], "convert-r4cp")) .convert_r4cp else return error.UnknownAction };
+    var options = Options{ .action = if (std.mem.eql(u8, args[1], "catalog")) .catalog else if (std.mem.eql(u8, args[1], "image-inventory")) .image_inventory else if (std.mem.eql(u8, args[1], "inventories")) .inventories else if (std.mem.eql(u8, args[1], "validate")) .validate else if (std.mem.eql(u8, args[1], "resolve")) .resolve else if (std.mem.eql(u8, args[1], "plan")) .plan else if (std.mem.eql(u8, args[1], "contract-plan")) .contract_plan else if (std.mem.eql(u8, args[1], "image-plan")) .image_plan else if (std.mem.eql(u8, args[1], "workspace-image-plan")) .workspace_image_plan else if (std.mem.eql(u8, args[1], "workspace-build-plan")) .workspace_build_plan else if (std.mem.eql(u8, args[1], "convert-r4cp")) .convert_r4cp else return error.UnknownAction };
     var index: usize = 2;
     while (index < args.len) : (index += 1) {
         const arg = args[index];
@@ -309,10 +313,11 @@ fn parseOptions(args: []const []const u8) !Options {
     if (options.name_only and options.action != .validate) return error.InvalidOutputMode;
     if (options.artifact_only and options.action != .plan) return error.InvalidOutputMode;
     if (options.action == .convert_r4cp and options.output == null) return error.MissingOutput;
-    const image_action = options.action == .image_plan or options.action == .workspace_image_plan or options.action == .image_inventory or options.action == .inventories;
+    const workspace_action = options.action == .workspace_image_plan or options.action == .workspace_build_plan;
+    const image_action = options.action == .image_plan or workspace_action or options.action == .image_inventory or options.action == .inventories;
     if ((options.image_mode != null or options.extra_manifest_count != 0 or options.image_include_target_count != 0) and !image_action) return error.InvalidImageOption;
     if (image_action and options.image_mode == null) return error.MissingImageMode;
-    if ((options.workspace_map != null) != (options.action == .workspace_image_plan)) return error.InvalidWorkspaceMapOption;
+    if ((options.workspace_map != null) != workspace_action) return error.InvalidWorkspaceMapOption;
     if (options.inventory_output != null and options.action != .workspace_image_plan) return error.InvalidWorkspaceInventoryOption;
     if ((options.kernel_version_source == null) != (options.kernel_artifact == null)) return error.IncompleteKernelComponent;
     if (options.kernel_version_source != null and options.action != .image_inventory and options.action != .inventories and
@@ -345,6 +350,7 @@ fn printUsage() void {
         \\  module-catalog inventories --root Code --image-mode slim|full|test|benchmark --output FILE --image-output FILE [--extra-manifest FILE] [--include-target TARGET] [--kernel-version-source FILE --kernel-artifact ELF] [--release-version-source FILE --release-output FILE]
         \\  module-catalog image-plan --root Code --image-mode slim|full|test|benchmark [--extra-manifest FILE] [--include-target TARGET] [--output FILE]
         \\  module-catalog workspace-image-plan --workspace-map FILE --image-mode slim|full|test|benchmark [--include-target TARGET] [--kernel-version-source FILE --kernel-artifact ELF --inventory-output FILE] [--output FILE]
+        \\  module-catalog workspace-build-plan --workspace-map FILE --image-mode slim|full|test|benchmark [--include-target TARGET] [--output FILE]
         \\  module-catalog convert-r4cp --manifest LEGACY.R4CP --output module.R4MF
         \\
     , .{});
@@ -439,6 +445,19 @@ fn workspaceManifests(allocator: std.mem.Allocator, entries: []const WorkspaceIm
     const manifests = try allocator.alloc(manifest_contract.Manifest, entries.len);
     for (entries, 0..) |entry, index| manifests[index] = entry.manifest;
     return manifests;
+}
+
+/// The same validated selection as the image plan, without requiring built
+/// artifacts. Every selected manifest is mapped to its source owner by the host.
+fn renderWorkspaceBuildPlan(allocator: std.mem.Allocator, entries: []const WorkspaceImageEntry, mode: ImageMode, includes: []const []const u8) ![]u8 {
+    var out: std.ArrayList(u8) = .empty;
+    for (entries) |entry| {
+        if (!imageEntryIncluded(entry.manifest, mode, includes)) continue;
+        if (entry.manifest.kind == .r4x) _ = try manifest_contract.derivePlan(allocator, entry.manifest);
+        try out.appendSlice(allocator, entry.manifest.path);
+        try out.append(allocator, '\n');
+    }
+    return out.toOwnedSlice(allocator);
 }
 
 fn renderWorkspaceImagePlan(
@@ -1318,4 +1337,8 @@ test "workspace image plan requires artifacts only for selected manifests" {
 
     const standard = try renderWorkspaceImagePlan(allocator, std.testing.io, std.Io.Dir.cwd(), &entries, .@"test", &.{});
     try std.testing.expectEqualStrings("", standard);
+    const build = try renderWorkspaceBuildPlan(allocator, &entries, .@"test", &.{none_entry.target});
+    try std.testing.expectEqualStrings("None/module.R4MF\n", build);
+    const excluded = try renderWorkspaceBuildPlan(allocator, &entries, .full, &.{});
+    try std.testing.expectEqualStrings("", excluded);
 }
