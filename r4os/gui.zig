@@ -1661,8 +1661,9 @@ pub fn TextArea(comptime capacity: usize) type {
         pub fn moveVertical(self: *Self, delta: i32, extend_selection: bool, view: TextAreaView) bool {
             if (delta == 0) return false;
             const wrap_cols = view.effectiveWrapCols();
-            const point = textAreaVisualPoint(self.value(), self.cursor, wrap_cols);
-            const last_line = textAreaVisualLineCount(self.value(), wrap_cols) - 1;
+            const layout = textAreaLayout(self.value(), self.cursor, wrap_cols, 0, 0);
+            const point = layout.caret;
+            const last_line = layout.total_lines - 1;
             const base_col = self.preferred_col orelse point.column;
             var target_line = point.line;
             if (delta < 0) {
@@ -1774,19 +1775,25 @@ pub fn TextArea(comptime capacity: usize) type {
         }
 
         pub fn clampScroll(self: *Self, view: TextAreaView) void {
-            const line_count = textAreaVisualLineCount(self.value(), view.effectiveWrapCols());
+            const layout = textAreaLayout(self.value(), self.cursor, view.effectiveWrapCols(), 0, 0);
+            self.clampScrollWithLayout(view, &layout);
+        }
+
+        fn clampScrollWithLayout(self: *Self, view: TextAreaView, layout: *const TextAreaLayout) void {
+            const line_count = layout.total_lines;
             const rows = view.effectiveVisibleRows();
             const max_first = if (line_count > rows) line_count - rows else 0;
             if (self.scroll_line > max_first) self.scroll_line = max_first;
             const max_col = if (view.wrap_cols == 0) blk: {
-                const widest_line = textAreaVisualMaxColumns(self.value(), 0);
+                const widest_line = layout.max_columns;
                 break :blk if (widest_line > view.effectiveVisibleCols()) widest_line - view.effectiveVisibleCols() else 0;
             } else 0;
             if (self.scroll_col > max_col) self.scroll_col = max_col;
         }
 
         pub fn ensureCursorVisible(self: *Self, view: TextAreaView) void {
-            const point = textAreaVisualPoint(self.value(), self.cursor, view.effectiveWrapCols());
+            const layout = textAreaLayout(self.value(), self.cursor, view.effectiveWrapCols(), 0, 0);
+            const point = layout.caret;
             const rows = view.effectiveVisibleRows();
             const cols = view.effectiveVisibleCols();
             if (point.line < self.scroll_line) {
@@ -1799,7 +1806,7 @@ pub fn TextArea(comptime capacity: usize) type {
             } else if (point.column >= self.scroll_col + cols) {
                 self.scroll_col = point.column + 1 - cols;
             }
-            self.clampScroll(view);
+            self.clampScrollWithLayout(view, &layout);
         }
 
         pub fn draw(self: *const Self, canvas: Canvas, rect: Rect, scratch: []u8) i32 {
@@ -2664,39 +2671,61 @@ pub fn copyEllipsized(out: []u8, value: []const u8, width_px: i32) []const u8 {
 }
 
 pub fn copyEllipsizedForCanvas(canvas: Canvas, out: []u8, value: []const u8, width_px: i32) []const u8 {
+    return copyEllipsizedMeasured(canvas, out, value, width_px);
+}
+
+fn ellipsisCandidate(out: []u8, value: []const u8, keep: usize) [:0]u8 {
+    @memcpy(out[0..keep], value[0..keep]);
+    @memcpy(out[keep..][0..3], "...");
+    out[keep + 3] = 0;
+    return out[0 .. keep + 3 :0];
+}
+
+fn copyEllipsizedMeasured(measure: anytype, out: []u8, value: []const u8, width_px: i32) []const u8 {
     if (out.len == 0) return out[0..0];
-    @memset(out, 0);
+    out[0] = 0;
     if (width_px <= 0) return out[0..0];
-
-    if (value.len <= out.len - 1) {
-        if (value.len > 0) @memcpy(out[0..value.len], value);
+    if (value.len < out.len) {
+        @memcpy(out[0..value.len], value);
         out[value.len] = 0;
-        if (canvas.textWidthZ(@ptrCast(out.ptr)) <= width_px) return out[0..value.len];
+        if (measure.textWidthZ(@ptrCast(out.ptr)) <= width_px) return out[0..value.len];
     }
-
-    var dots: [4]u8 = .{ '.', '.', '.', 0 };
-    const ellipsis_w = canvas.textWidthZ(@ptrCast(&dots));
-    if (ellipsis_w > width_px or out.len < 4) {
-        const dot_capacity = @min(canvas.charsForWidth(width_px), @min(@as(usize, 3), out.len - 1));
-        @memset(out[0..dot_capacity], '.');
-        out[dot_capacity] = 0;
-        return out[0..dot_capacity];
+    const dots: [:0]const u8 = "...";
+    if (out.len < 4 or measure.textWidthZ(dots.ptr) > width_px) {
+        var count = @min(@as(usize, 3), out.len - 1);
+        while (count > 0) : (count -= 1) {
+            @memset(out[0..count], '.');
+            out[count] = 0;
+            if (measure.textWidthZ(@ptrCast(out.ptr)) <= width_px) return out[0..count];
+        }
+        out[0] = 0;
+        return out[0..0];
     }
+    var high = utf8FloorBoundary(value, @min(value.len, out.len - 4));
+    if (measure.textWidthZ(ellipsisCandidate(out, value, high).ptr) <= width_px) return out[0 .. high + 3];
 
-    var keep = @min(value.len, out.len - 4);
-    keep = utf8PrefixBytes(value, std.math.maxInt(usize), keep);
-    while (keep > 0) : (keep = utf8PreviousIndex(value, keep)) {
-        @memset(out, 0);
-        @memcpy(out[0..keep], value[0..keep]);
-        @memcpy(out[keep .. keep + 3], "...");
-        out[keep + 3] = 0;
-        if (canvas.textWidthZ(@ptrCast(out.ptr)) <= width_px) return out[0 .. keep + 3];
+    // R4DRAW's rendered glyph advances are nonnegative. Search one logical
+    // line at a time: a newline can move the dots onto a shorter line, so the
+    // candidate widths across that boundary need not be monotone. Measure
+    // complete candidates, retaining proportional metrics and dot spacing.
+    var low: usize = 0;
+    while (std.mem.lastIndexOfScalar(u8, value[0..high], '\n')) |newline| {
+        low = newline + 1;
+        if (measure.textWidthZ(ellipsisCandidate(out, value, low).ptr) <= width_px) break;
+        high = newline;
+        low = 0;
     }
-
-    @memset(out, 0);
-    @memcpy(out[0..3], "...");
-    out[3] = 0;
-    return out[0..3];
+    while (low < high) {
+        const midpoint = low + (high - low + 1) / 2;
+        var middle = utf8FloorBoundary(value, midpoint);
+        if (middle <= low) middle = utf8NextIndex(value, low);
+        if (measure.textWidthZ(ellipsisCandidate(out, value, middle).ptr) <= width_px) {
+            low = middle;
+        } else {
+            high = utf8PreviousIndex(value, middle);
+        }
+    }
+    return ellipsisCandidate(out, value, low);
 }
 
 pub fn spanZ(value: [*:0]const u8) []const u8 {
@@ -2803,6 +2832,73 @@ pub fn textAreaVisualLineCount(value: []const u8, wrap_cols: usize) usize {
     return textAreaVisualPoint(value, value.len, wrap_cols).line + 1;
 }
 
+/// One current-document traversal supplies visible rows, caret and both
+/// scroll extents. It retains at most 128 ranges and is never reused across
+/// edits, wrap changes or geometry changes.
+pub const TextAreaLayout = struct {
+    ranges: [128]TextRange = .{TextRange{ .start = 0, .end = 0 }} ** 128,
+    range_count: usize = 0,
+    first_line: usize,
+    total_lines: usize = 1,
+    max_columns: usize = 0,
+    caret: TextAreaPoint = .{ .line = 0, .column = 0 },
+    visited_bytes: usize = 0,
+
+    fn finishLine(self: *TextAreaLayout, line: usize, start: usize, end: usize, column: usize, rows: usize) void {
+        self.max_columns = @max(self.max_columns, column);
+        if (line >= self.first_line and line - self.first_line < @min(rows, self.ranges.len)) {
+            self.ranges[line - self.first_line] = .{ .start = start, .end = end };
+            self.range_count = line - self.first_line + 1;
+        }
+    }
+};
+
+pub fn textAreaLayout(value: []const u8, cursor: usize, wrap_cols: usize, first_line: usize, rows: usize) TextAreaLayout {
+    var result = TextAreaLayout{ .first_line = first_line };
+    const cols = effectiveTextAreaWrapCols(wrap_cols);
+    const caret_index = @min(cursor, value.len);
+    var caret_found = false;
+    var line: usize = 0;
+    var column: usize = 0;
+    var start: usize = 0;
+    var i: usize = 0;
+    while (i < value.len) {
+        const ch = value[i];
+        if (ch != '\r' and ch != '\n' and column >= cols) {
+            result.finishLine(line, start, i, column, rows);
+            line += 1;
+            column = 0;
+            start = i;
+        }
+        if (!caret_found and i >= caret_index) {
+            result.caret = .{ .line = line, .column = column };
+            caret_found = true;
+        }
+        const next = utf8NextIndex(value, i);
+        result.visited_bytes += next - i;
+        if (ch == '\n') {
+            result.finishLine(line, start, i, column, rows);
+            line += 1;
+            column = 0;
+            start = next;
+        } else if (ch != '\r') {
+            column += 1;
+        }
+        if (!caret_found and caret_index > i and caret_index < next) {
+            result.caret = if (value[caret_index] != '\r' and value[caret_index] != '\n' and column >= cols)
+                .{ .line = line + 1, .column = 0 }
+            else
+                .{ .line = line, .column = column };
+            caret_found = true;
+        }
+        i = next;
+    }
+    if (!caret_found) result.caret = .{ .line = line, .column = column };
+    result.finishLine(line, start, value.len, column, rows);
+    result.total_lines = line + 1;
+    return result;
+}
+
 pub fn textAreaVisualMaxColumns(value: []const u8, wrap_cols: usize) usize {
     const cols = effectiveTextAreaWrapCols(wrap_cols);
     var widest: usize = 0;
@@ -2894,26 +2990,20 @@ fn utf8NextIndex(value: []const u8, index: usize) usize {
 fn utf8PreviousIndex(value: []const u8, index: usize) usize {
     const target = @min(index, value.len);
     if (target == 0) return 0;
-    var current: usize = 0;
-    var previous: usize = 0;
-    while (current < target) {
-        previous = current;
-        const next = utf8NextIndex(value, current);
-        if (next >= target) return previous;
-        current = next;
+    // A UTF-8 scalar spans at most four bytes. Invalid bytes keep the same
+    // one-byte fallback as the forward decoder, including interior indices.
+    var candidate = target -| 4;
+    while (candidate < target) : (candidate += 1) {
+        if (utf8NextIndex(value, candidate) >= target) return candidate;
     }
-    return previous;
+    unreachable;
 }
 
 fn utf8FloorBoundary(value: []const u8, index: usize) usize {
     const target = @min(index, value.len);
-    var current: usize = 0;
-    while (current < target) {
-        const next = utf8NextIndex(value, current);
-        if (next > target) return current;
-        current = next;
-    }
-    return current;
+    if (target == 0) return 0;
+    const previous = utf8PreviousIndex(value, target);
+    return if (utf8NextIndex(value, previous) == target) target else previous;
 }
 
 fn utf8ScalarCount(value: []const u8) usize {
@@ -3078,6 +3168,13 @@ pub fn drawTextAreaEx(canvas: Canvas, rect: Rect, scratch: []u8, value: []const 
 
 pub fn drawTextAreaExWithWrap(canvas: Canvas, rect: Rect, scratch: []u8, value: []const u8, cursor: usize, selection: TextRange, scroll_line: usize, scroll_col: usize, word_wrap: bool, focused: bool, disabled: bool, palette: Palette) i32 {
     if (rect.isEmpty()) return 0;
+    const view = textAreaViewForRect(canvas, rect);
+    const layout = textAreaLayout(value, cursor, if (word_wrap) view.visible_cols else 0, scroll_line, view.visible_rows);
+    return drawTextAreaWithLayout(canvas, rect, scratch, value, selection, scroll_col, focused, disabled, palette, &layout);
+}
+
+pub fn drawTextAreaWithLayout(canvas: Canvas, rect: Rect, scratch: []u8, value: []const u8, selection: TextRange, scroll_col: usize, focused: bool, disabled: bool, palette: Palette, layout: *const TextAreaLayout) i32 {
+    if (rect.isEmpty()) return 0;
     const bg = if (disabled) palette.face else palette.client_bg;
     drawInsetFrame(canvas, rect, palette, true);
 
@@ -3090,13 +3187,12 @@ pub fn drawTextAreaExWithWrap(canvas: Canvas, rect: Rect, scratch: []u8, value: 
     const visible_rows_raw: usize = @intCast(@max(1, @divTrunc(text_rect.h, line_h)));
     const visible_rows: usize = @min(@as(usize, 128), visible_rows_raw);
     const visible_text_cols = if (scratch.len == 0) @as(usize, 0) else @min(visible_cols, scratch.len - 1);
-    const wrap_cols = if (word_wrap) visible_cols else 0;
+    const scroll_line = layout.first_line;
     const text_color = if (disabled) palette.disabled_text else palette.text;
 
     var row: usize = 0;
-    while (row < visible_rows) : (row += 1) {
-        const visual_line = scroll_line + row;
-        const line_range = textAreaVisualLineRange(value, visual_line, wrap_cols);
+    while (row < @min(visible_rows, layout.range_count)) : (row += 1) {
+        const line_range = layout.ranges[row];
         const draw_start = utf8ByteIndexForColumns(value, line_range.start, line_range.end, scroll_col);
         const draw_end = utf8ByteIndexForColumns(value, draw_start, line_range.end, visible_text_cols);
         const y = text_rect.y + @as(i32, @intCast(row)) * line_h;
@@ -3118,7 +3214,7 @@ pub fn drawTextAreaExWithWrap(canvas: Canvas, rect: Rect, scratch: []u8, value: 
     }
 
     if (focused and !disabled) {
-        const caret = textAreaVisualPoint(value, @min(cursor, value.len), wrap_cols);
+        const caret = layout.caret;
         if (caret.line >= scroll_line and caret.line < scroll_line + visible_rows and caret.column >= scroll_col and caret.column <= scroll_col + visible_cols) {
             const row_y = text_rect.y + @as(i32, @intCast(caret.line - scroll_line)) * line_h;
             const raw_x = text_rect.x + @as(i32, @intCast(caret.column - scroll_col)) * char_w;
@@ -4489,6 +4585,47 @@ test "layout helpers split common app regions" {
     try std.testing.expectEqual(Rect{ .x = 10, .y = 42, .w = 60, .h = 58 }, cursor.remaining());
 }
 
+test "text area shared layout preserves ranges caret and scroll extents" {
+    const values = [_][]const u8{ "", "A\nB", "AB\r\nC", "\n\n", "A\xc3\xa4\xf0\x9f\x98\x80\nXYZ", "\xc3(\x80" };
+    for (values) |value| for ([_]usize{ 0, 1, 2, 80 }) |wrap| {
+        const total = textAreaVisualLineCount(value, wrap);
+        for (0..value.len + 1) |cursor| for (0..total + 1) |first| {
+            const layout = textAreaLayout(value, cursor, wrap, first, 3);
+            try std.testing.expectEqual(total, layout.total_lines);
+            try std.testing.expectEqual(textAreaVisualMaxColumns(value, wrap), layout.max_columns);
+            try std.testing.expectEqual(textAreaVisualPoint(value, cursor, wrap), layout.caret);
+            try std.testing.expectEqual(value.len, layout.visited_bytes);
+            for (layout.ranges[0..layout.range_count], 0..) |range, row| {
+                try std.testing.expectEqual(textAreaVisualLineRange(value, first + row, wrap), range);
+            }
+        };
+    };
+}
+
+test "text area long edit wrap and scroll use one traversal per layout" {
+    var area = TextArea(65536){};
+    @memset(area.buffer[0..65535], 'A');
+    area.len = 65535;
+    area.cursor = area.len;
+    for ([_]usize{ 80, 40, 0 }) |wrap| {
+        var view = TextAreaView.init(80, 30);
+        view.wrap_cols = wrap;
+        area.ensureCursorVisible(view);
+        const layout = textAreaLayout(area.value(), area.cursor, view.effectiveWrapCols(), area.scroll_line, 30);
+        try std.testing.expectEqual(@as(usize, 65535), layout.visited_bytes);
+        try std.testing.expect(layout.caret.line >= area.scroll_line);
+        try std.testing.expect(layout.caret.line < area.scroll_line + 30);
+        for (layout.ranges[0..layout.range_count], 0..) |range, row|
+            try std.testing.expectEqual(textAreaVisualLineRange(area.value(), area.scroll_line + row, wrap), range);
+    }
+    const view = TextAreaView.init(80, 30);
+    try std.testing.expect(area.deleteBackward(view));
+    try std.testing.expect(area.insertSlice("\n", view));
+    const layout = textAreaLayout(area.value(), area.cursor, 80, area.scroll_line, 30);
+    try std.testing.expectEqual(textAreaVisualPoint(area.value(), area.cursor, 80), layout.caret);
+    try std.testing.expectEqual(@as(usize, 65535), layout.visited_bytes);
+}
+
 test "copy ellipsized keeps output nul terminated" {
     var out: [8]u8 = .{0xAA} ** 8;
     try std.testing.expectEqualStrings("R4OS", copyEllipsized(out[0..], "R4OS", 64));
@@ -4499,6 +4636,99 @@ test "copy ellipsized keeps output nul terminated" {
 
     try std.testing.expectEqualStrings("..", copyEllipsized(out[0..], "R4OS", 16));
     try std.testing.expectEqual(@as(u8, 0), out[2]);
+}
+
+const EllipsisTestMeter = struct {
+    calls: usize = 0,
+    bytes: usize = 0,
+    proportional: bool = false,
+
+    pub fn textWidthZ(self: *@This(), ptr: [*:0]const u8) i32 {
+        self.calls += 1;
+        const value = std.mem.span(ptr);
+        self.bytes += value.len;
+        var width: i32 = 0;
+        var widest: i32 = 0;
+        var previous: u8 = 0;
+        var i: usize = 0;
+        while (i < value.len) {
+            const ch = value[i];
+            i = utf8NextIndex(value, i);
+            if (ch == '\r') continue;
+            if (ch == '\n') {
+                widest = @max(widest, width);
+                width = 0;
+                previous = 0;
+                continue;
+            }
+            width += if (!self.proportional) @as(i32, 8) else switch (ch) {
+                'W' => @as(i32, 13),
+                'i', '.' => @as(i32, 3),
+                else => @as(i32, 7),
+            };
+            if (self.proportional and previous == 'A' and ch == 'V') width -= 4;
+            if (self.proportional and previous == 'V' and ch == '.') width -= 1;
+            previous = ch;
+        }
+        return @max(widest, width);
+    }
+};
+
+test "measured ellipsizing bounds font calls for a long label" {
+    var meter = EllipsisTestMeter{};
+    var out: [260]u8 = undefined;
+    const label = [_]u8{'A'} ** 256;
+    try std.testing.expectEqualStrings("A...", copyEllipsizedMeasured(&meter, &out, &label, 32));
+    try std.testing.expect(meter.calls <= 12);
+    try std.testing.expect(meter.bytes < 1100);
+    std.debug.print("font calls={d} measured bytes={d} (old calls=258)\n", .{ meter.calls, meter.bytes });
+}
+
+test "measured ellipsizing matches exhaustive proportional utf8 and newline candidates" {
+    for ([_][]const u8{ "AVWiAV", "Gr\xc3\xbc\xc3\x9feAV", "WW\niiWWWW", "W\nWWWW\niii", "A\xf0\x9f\x98\x80V", "\xc3(\x80" }) |value| {
+        for ([_]usize{ 1, 3, 8, 64 }) |capacity| for ([_]i32{ 0, 1, 6, 8, 12, 17, 32, 80 }) |width| {
+            var meter = EllipsisTestMeter{ .proportional = true };
+            var actual: [64]u8 = undefined;
+            var expected: [64]u8 = undefined;
+            var candidate: [64]u8 = undefined;
+            var expected_len: usize = 0;
+            const fits_full = value.len < capacity and meter.textWidthZ(blk: {
+                @memcpy(candidate[0..value.len], value);
+                candidate[value.len] = 0;
+                break :blk @as([*:0]const u8, @ptrCast(&candidate));
+            }) <= width and width > 0;
+            if (fits_full) {
+                @memcpy(expected[0..value.len], value);
+                expected_len = value.len;
+            } else if (width > 0) {
+                const dot_limit: usize = @min(@as(usize, 3), capacity - 1);
+                for (0..dot_limit) |dot_index| {
+                    const count: usize = dot_index + 1;
+                    @memset(candidate[0..count], '.');
+                    candidate[count] = 0;
+                    if (meter.textWidthZ(@ptrCast(&candidate)) <= width) {
+                        @memcpy(expected[0..count], candidate[0..count]);
+                        expected_len = count;
+                    }
+                }
+                if (expected_len == 3) {
+                    var keep: usize = 0;
+                    while (keep <= value.len and keep + 4 <= capacity) {
+                        const fitted = ellipsisCandidate(&candidate, value, keep);
+                        if (meter.textWidthZ(fitted.ptr) <= width) {
+                            @memcpy(expected[0..fitted.len], fitted);
+                            expected_len = fitted.len;
+                        }
+                        if (keep == value.len) break;
+                        keep = utf8NextIndex(value, keep);
+                    }
+                }
+            }
+            const fitted = copyEllipsizedMeasured(&meter, actual[0..capacity], value, width);
+            try std.testing.expectEqualStrings(expected[0..expected_len], fitted);
+            try std.testing.expectEqual(@as(u8, 0), actual[fitted.len]);
+        };
+    }
 }
 
 test "text metrics and ellipsizing keep utf8 scalars intact" {
