@@ -158,6 +158,34 @@ pub const Audio = struct {
         return self.callMaster(abi.audio_service_op_master_status, "", timeout, out);
     }
 
+    pub fn outputs(self: *const Audio, request: *const abi.AudioServiceOutputRequest, timeout: Timeout, out: *abi.AudioServiceOutputState) Result {
+        return self.callOutputs(abi.audio_service_op_outputs, request, timeout, out);
+    }
+
+    pub fn selectOutput(self: *const Audio, request: *const abi.AudioServiceOutputRequest, timeout: Timeout, out: *abi.AudioServiceOutputState) Result {
+        return self.callOutputs(abi.audio_service_op_select_output, request, timeout, out);
+    }
+
+    fn callOutputs(self: *const Audio, op: u16, request: *const abi.AudioServiceOutputRequest, timeout: Timeout, out: *abi.AudioServiceOutputState) Result {
+        var services = services_facade.Services{ .sys = self.sys };
+        var connection = switch (services.open("AUDSVC")) {
+            .connection => |value| value,
+            .failure => |raw| return .{ .failure = raw },
+        };
+        defer _ = connection.close();
+        return switch (connection.call(op, std.mem.asBytes(request), std.mem.asBytes(out), timeout)) {
+            .response => |response| if (response.bytes == @sizeOf(abi.AudioServiceOutputState) and
+                out.magic == abi.audio_output_control_magic and out.version == 1 and out.size == @sizeOf(abi.AudioServiceOutputState) and
+                out.count <= out.outputs.len and out.total <= 256 and out.index <= 256 and out.count <= out.total -| out.index)
+                .ok
+            else
+                .{ .failure = abi.service_api_result_invalid },
+            .timed_out => .timed_out,
+            .remote_failure => |raw| .{ .failure = raw },
+            .failure => |raw| .{ .failure = raw },
+        };
+    }
+
     pub fn setMasterState(self: *const Audio, update: MasterUpdate, timeout: Timeout, out: *abi.AudioServiceMasterState) Result {
         if (update.volume_fixed == null and update.muted == null) return .{ .failure = abi.service_api_result_invalid };
         var request = abi.AudioServiceMasterRequest{ .expected_revision = update.expected_revision };
@@ -377,7 +405,9 @@ test "packet limits keep the complete header and PCM in both audio writers" {
             out.* = .{ .handle = 1 };
             return 0;
         }
-        fn close(_: u32) callconv(.c) i32 { return 0; }
+        fn close(_: u32) callconv(.c) i32 {
+            return 0;
+        }
         fn clock(out: *abi.MonotonicClockInfo) callconv(.c) i32 {
             out.* = .{ .event_effective_hz = 1000 };
             return 1;
