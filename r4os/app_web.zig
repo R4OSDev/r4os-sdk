@@ -156,8 +156,12 @@ pub const FetchOptions = struct {
     progress: ?*const fn (?*anyopaque) callconv(.c) bool = null,
     progress_context: ?*anyopaque = null,
     cookie: []const u8 = "",
+    initial_cookie: ?[]const u8 = null,
     origin: []const u8 = "",
     headers: []const u8 = "",
+    // Cache validators are transport metadata, not author request headers.
+    conditional_headers: []const u8 = "",
+    cache_headers: []const u8 = "",
     method: http.Method = .get,
     content_type: []const u8 = "",
     body: []const u8 = "",
@@ -425,7 +429,13 @@ pub const WebTransport = struct {
                     if (!acceptsPreflight(preflight.http_response, options.origin, method, request_headers, options.credentials_include)) return .{ .failure = .cors_preflight_failed };
                 }
             }
-            const once = self.fetchOnce(current, parsed, raw_response, body_out, scratch, options, deadline, method, request_headers, content_type, body, redirects == 0, true);
+            var conditional_buffer: [max_request_bytes]u8 = undefined;
+            const validators = if (redirects == 0) options.conditional_headers else "";
+            const transport_headers = if (validators.len != 0 or options.cache_headers.len != 0)
+                std.fmt.bufPrint(&conditional_buffer, "{s}{s}{s}", .{ request_headers, options.cache_headers, validators }) catch return .{ .failure = .request_too_large }
+            else
+                request_headers;
+            const once = self.fetchOnce(current, parsed, raw_response, body_out, scratch, options, deadline, method, transport_headers, content_type, body, redirects == 0, true);
             const response = switch (once) {
                 .response => |value| value,
                 .failure => |err| {
@@ -644,6 +654,8 @@ pub const WebTransport = struct {
         var cookie_buffer: [1024]u8 = undefined;
         const cookie = if (!allow_cookies)
             ""
+        else if (allow_legacy_cookie and options.initial_cookie != null)
+            options.initial_cookie.?
         else if (options.cookie_provider) |provider|
             provider(options.cookie_context, raw_url, cookie_buffer[0..])
         else if (allow_legacy_cookie)

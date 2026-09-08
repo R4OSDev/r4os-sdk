@@ -8,6 +8,7 @@ const security = @import("web_security.zig");
 const web_url = @import("web_url.zig");
 const web_encoding = @import("web_encoding.zig");
 const web_fetch = @import("web_fetch.zig");
+pub const RequestCacheMode = @import("web_response_cache.zig").Mode;
 const web_images = @import("web_images.zig");
 const web_fonts = @import("web_fonts.zig");
 const web_font_cache = @import("web_font_cache.zig");
@@ -148,6 +149,7 @@ pub const PendingRequest = struct {
     credentials: security.CredentialsMode = .same_origin,
     method: http.Method = .get,
     redirect: FetchRedirectMode = .follow,
+    cache_mode: RequestCacheMode = .normal,
     request_headers: [web_fetch.max_serialized_bytes]u8 = undefined,
     request_headers_len: usize = 0,
     signal: javascript.Value = .undefined,
@@ -172,6 +174,7 @@ pub const PendingRequest = struct {
     body: [max_response_body_bytes]u8 = undefined,
     body_len: usize = 0,
     response_byte_count: usize = 0,
+    response_identity: u64 = 0,
 
     pub fn bodyBytes(self: *const PendingRequest) []const u8 {
         return self.body[0..self.body_len];
@@ -196,6 +199,7 @@ pub const ResponseMeta = struct {
     set_cookie_count: usize = 0,
     manual_redirect: bool = false,
     cookies_processed: bool = false,
+    response_identity: u64 = 0,
 };
 
 const RequestQueueOptions = struct {
@@ -203,6 +207,7 @@ const RequestQueueOptions = struct {
     credentials: security.CredentialsMode = .same_origin,
     method: http.Method = .get,
     redirect: FetchRedirectMode = .follow,
+    cache_mode: RequestCacheMode = .normal,
     headers: []const u8 = "",
     body: []const u8 = "",
     signal: javascript.Value = .undefined,
@@ -242,6 +247,7 @@ pub const ResourceCompletion = struct {
     content_security_policy: []const u8,
     body: []const u8,
     byte_count: usize,
+    response_identity: u64 = 0,
     /// Populated for `kind == .font`; otherwise the sentinel values remain.
     font_face_index: u16 = std.math.maxInt(u16),
     font_source_index: u8 = std.math.maxInt(u8),
@@ -1916,6 +1922,7 @@ pub const WebRuntime = struct {
                                 .content_security_policy = if (request) |value| value.response_csp[0..value.response_csp_len] else "",
                                 .body = body,
                                 .byte_count = body.len,
+                                .response_identity = if (request) |value| value.response_identity else 0,
                                 .font_face_index = if (entry.kind == .font and self.font_resources[resource_index].resource_id == entry.id)
                                     self.font_resources[resource_index].face_index
                                 else
@@ -2614,27 +2621,54 @@ pub const WebRuntime = struct {
         return decision.allowed;
     }
 
-    pub fn takeRequest(self: *WebRuntime) ?*PendingRequest {
-        for (&self.requests) |*request| {
-            if (request.state != .queued or request.generation != self.generation) continue;
-            request.state = .in_flight;
-            if (request.resource_index != std.math.maxInt(u8)) {
-                const resource_index = self.resources.beginFetch(request.id, request.generation) catch {
-                    request.state = .aborted;
-                    continue;
-                };
-                self.reportResourceTransition(resource_index, .fetching, .none, null);
-            }
-            if (request.module_index != std.math.maxInt(u8)) {
-                if (request.module_index >= self.module_count or self.modules[request.module_index].state != .queued) {
-                    request.state = .aborted;
-                    continue;
-                }
-                self.modules[request.module_index].state = .fetching;
-            }
-            return request;
+    fn beginRequest(self: *WebRuntime, request: *PendingRequest) bool {
+        if (request.state != .queued or request.generation != self.generation) return false;
+        request.state = .in_flight;
+        if (request.resource_index != std.math.maxInt(u8)) {
+            const resource_index = self.resources.beginFetch(request.id, request.generation) catch {
+                request.state = .aborted;
+                return false;
+            };
+            self.reportResourceTransition(resource_index, .fetching, .none, null);
         }
+        if (request.module_index != std.math.maxInt(u8)) {
+            if (request.module_index >= self.module_count or self.modules[request.module_index].state != .queued) {
+                request.state = .aborted;
+                return false;
+            }
+            self.modules[request.module_index].state = .fetching;
+        }
+        return true;
+    }
+
+    pub fn takeRequest(self: *WebRuntime) ?*PendingRequest {
+        for (&self.requests) |*request| if (self.beginRequest(request)) return request;
         return null;
+    }
+
+    /// Snapshot already queued, identical resource consumers before transport.
+    /// Each retains its own ID, scheduler entry, DOM application and abort state.
+    pub fn joinResourceRequests(self: *WebRuntime, source: *const PendingRequest, ids: *[max_requests]u32) usize {
+        ids[0] = source.id;
+        var count: usize = 1;
+        if (source.state != .in_flight or source.method != .get or source.body_len != 0 or
+            source.resource_index == std.math.maxInt(u8) or source.kind == .font or source.cache_mode == .no_store) return count;
+        for (&self.requests) |*request| {
+            if (request == source or request.state != .queued or request.generation != source.generation or
+                request.kind != source.kind or request.resource_index == std.math.maxInt(u8) or
+                request.method != source.method or request.body_len != 0 or request.mode != source.mode or
+                request.credentials != source.credentials or request.redirect != source.redirect or request.cache_mode != source.cache_mode or
+                !std.mem.eql(u8, request.url.bytes(), source.url.bytes()) or !std.mem.eql(u8, request.requestHeaders(), source.requestHeaders())) continue;
+            if (!self.beginRequest(request)) continue;
+            ids[count] = request.id;
+            count += 1;
+        }
+        return count;
+    }
+
+    pub fn requestInFlight(self: *WebRuntime, id: u32, generation: u32) bool {
+        const request = self.findRequest(id) orelse return false;
+        return generation == self.generation and request.generation == generation and request.state == .in_flight;
     }
 
     pub fn completeRequest(self: *WebRuntime, id: u32, generation: u32, meta: ResponseMeta, body: []const u8) Error!void {
@@ -2693,6 +2727,7 @@ pub const WebRuntime = struct {
         if (!font_response and body.len > 0) @memcpy(request.body[0..body.len], body);
         request.body_len = if (font_response) 0 else body.len;
         request.response_byte_count = body.len;
+        request.response_identity = meta.response_identity;
         request.status = meta.status;
         request.secure = meta.secure;
         request.redirected = meta.redirected;
@@ -4760,6 +4795,7 @@ pub const WebRuntime = struct {
                 .credentials = options.credentials,
                 .method = options.method,
                 .redirect = options.redirect,
+                .cache_mode = options.cache_mode,
                 .signal = options.signal,
                 .url = url,
                 .target_origin = decision.target,
@@ -6278,6 +6314,7 @@ fn dispatchHost(
                 .credentials = try securityCredentialsMode(runtime.valueString(try self.requestField(runtime, record, .credentials))),
                 .method = try httpMethod(runtime.valueString(try self.requestField(runtime, record, .method))),
                 .redirect = try fetchRedirectMode(runtime.valueString(try self.requestField(runtime, record, .redirect))),
+                .cache_mode = RequestCacheMode.parse(runtime.valueString(try self.requestField(runtime, record, .cache))) orelse return error.TypeError,
                 .headers = try headers_value.serialize(serialized[0..]),
                 .body = body_bytes,
                 .signal = signal,
@@ -10571,4 +10608,95 @@ test "stream tee follows demand joins concurrent pulls and preserves cancellatio
     try std.testing.expect(harness.web.runtime.valueBoolean(try harness.web.runtime.get(global, "byteTee")));
     try std.testing.expectEqual(@as(f64, 3), try harness.web.runtime.valueNumber(try harness.web.runtime.get(global, "teeCloseChecks")));
     std.debug.print("STREAMTEE idle_pulls=1 concurrent=2 fast=5 cancel_once errors=2 independent_byte_branches close_checks=3\n", .{});
+}
+
+test "web cache modes reach request owners without losing fetch context" {
+    const allocator = std.testing.allocator;
+    const harness = try allocator.create(struct { document: html.Document, storage: security.BrowserStorage, web: WebRuntime });
+    defer allocator.destroy(harness);
+    harness.web.initialize(testingProgramAllocator(harness));
+    defer harness.web.deinit();
+    harness.document.reset();
+    try harness.web.beginDocument(&harness.document, &harness.storage, "https://cache.example/", "", 1, 0);
+    const names = [_][]const u8{ "default", "no-store", "reload", "no-cache", "force-cache", "only-if-cached" };
+    for (names) |name| {
+        var source: [256]u8 = undefined;
+        _ = try harness.web.executeSource(try std.fmt.bufPrint(&source, "fetch('/value',{{cache:'{s}',mode:'same-origin',credentials:'omit'}});", .{name}));
+        const request = harness.web.takeRequest().?;
+        try std.testing.expectEqual(RequestCacheMode.parse(name).?, request.cache_mode);
+        try std.testing.expectEqual(security.RequestMode.same_origin, request.mode);
+        try std.testing.expectEqual(security.CredentialsMode.omit, request.credentials);
+        try harness.web.completeRequest(request.id, request.generation, .{ .status = 200, .secure = true }, "one");
+        _ = try harness.web.pump(1, 32);
+    }
+}
+
+test "web cache resource cohorts preserve distinct DOM uses scripts abort and generation" {
+    const Harness = struct {
+        document: html.Document,
+        storage: security.BrowserStorage,
+        web: WebRuntime,
+        nodes: [4]u16 = undefined,
+        identities: [4]u64 = undefined,
+        completions: usize = 0,
+        fn complete(raw: ?*anyopaque, completion: ResourceCompletion) bool {
+            const self: *@This() = @ptrCast(@alignCast(raw.?));
+            if (completion.kind != .image or completion.body.len != 2 or self.completions == self.nodes.len) return false;
+            self.nodes[self.completions] = completion.node;
+            self.identities[self.completions] = completion.response_identity;
+            self.completions += 1;
+            return std.mem.eql(u8, completion.body, "BM");
+        }
+    };
+    const allocator = std.testing.allocator;
+    const harness = try allocator.create(Harness);
+    defer allocator.destroy(harness);
+    harness.completions = 0;
+    harness.web.initialize(testingProgramAllocator(harness));
+    defer harness.web.deinit();
+    harness.web.setEnvironment(.{ .viewport_width = 800, .viewport_height = 600 });
+    harness.web.setResourceHandler(.{ .context = harness, .complete = Harness.complete });
+    _ = try harness.document.parse("<picture><source media='(min-width:600px)' srcset='same.png'><img id='first' src='replacement.png'></picture><img id='second' src='same.png'><script src='same.js'></script><script src='same.js'></script>", .{ .content_type = "text/html" });
+    try harness.web.beginDocument(&harness.document, &harness.storage, "https://cache.example/", "", 51, 0);
+    _ = try harness.web.executeDocumentScripts();
+    const first = harness.web.takeRequest().?;
+    try std.testing.expectEqual(RequestKind.image, first.kind);
+    var ids: [max_requests]u32 = undefined;
+    const count = harness.web.joinResourceRequests(first, &ids);
+    try std.testing.expectEqual(@as(usize, 2), count);
+    const generation = first.generation;
+    // Replacing the first DOM use cancels that ID, not the retained second use.
+    harness.web.setEnvironment(.{ .viewport_width = 400, .viewport_height = 600 });
+    try std.testing.expect(!harness.web.requestInFlight(ids[0], generation));
+    try std.testing.expect(harness.web.requestInFlight(ids[1], generation));
+    for (ids[0..count]) |id| if (harness.web.requestInFlight(id, generation)) {
+        try harness.web.completeRequest(id, generation, .{ .status = 200, .secure = true, .content_type = "image/png", .response_identity = 70 }, "BM");
+    };
+    try std.testing.expectEqual(@as(usize, 1), harness.completions);
+    try std.testing.expectEqual(@as(u64, 70), harness.identities[0]);
+    var script_transports: usize = 0;
+    while (harness.web.takeRequest()) |request| {
+        const kind = request.kind;
+        const request_generation = request.generation;
+        const members = harness.web.joinResourceRequests(request, &ids);
+        if (kind == .script) {
+            script_transports += 1;
+            try std.testing.expectEqual(@as(usize, 2), members);
+        }
+        for (ids[0..members]) |id| if (harness.web.requestInFlight(id, request_generation)) {
+            try harness.web.completeRequest(id, request_generation, .{ .status = 200, .secure = true, .content_type = if (kind == .script) "text/javascript" else "image/png", .response_identity = 71 }, if (kind == .script) "globalThis.sharedScriptRuns=(globalThis.sharedScriptRuns||0)+1;" else "BM");
+        };
+    }
+    try std.testing.expectEqual(@as(usize, 1), script_transports);
+    try std.testing.expectEqual(@as(usize, 2), harness.completions);
+    try std.testing.expect(harness.nodes[0] != harness.nodes[1]);
+    const global = harness.web.runtime.global("globalThis").?;
+    try std.testing.expectEqual(@as(f64, 2), try harness.web.runtime.valueNumber(try harness.web.runtime.get(global, "sharedScriptRuns")));
+    _ = try harness.web.executeSource("fetch('/pending');");
+    const old = harness.web.takeRequest().?;
+    const old_id = old.id;
+    harness.web.abortDocument();
+    try harness.web.beginDocument(&harness.document, &harness.storage, "https://cache.example/next", "", 52, 0);
+    try std.testing.expect(!harness.web.requestInFlight(old_id, generation));
+    std.debug.print("HTTPCOHORT image_members=2 retained_after_replace=1 script_fetches=1 script_runs=2 generations_isolated\n", .{});
 }
