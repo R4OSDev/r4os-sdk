@@ -527,6 +527,12 @@ pub const Registry = struct {
         return .{ .value = .{ .info = info, .bytes = out[0..@as(usize, @intCast(raw))] } };
     }
 
+    /// Generic tools retain the on-disk type tag; the Registry owner validates
+    /// the tag and payload and serializes the mutation with every writer.
+    pub fn setValue(self: *const Registry, key: *const RegistryPath, name: [*:0]const u8, value_type: u16, value: []const u8) Operation {
+        return classifyRegistryOperation(self.sys.registrySetValue(key.asZ().ptr, name, value_type, value));
+    }
+
     pub fn setString(self: *const Registry, key: *const RegistryPath, name: [*:0]const u8, value: []const u8) Operation {
         return classifyRegistryOperation(self.sys.registrySetString(key.asZ().ptr, name, value));
     }
