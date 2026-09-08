@@ -256,6 +256,7 @@ pub const Layout = struct {
     interaction: InteractionState = .{},
     image_resolver: ImageResolver = .{},
     font_provider: FontProvider = .{},
+    sibling_index: css.SiblingIndex = .{},
 
     pub fn reset(self: *Layout, viewport: Viewport) void {
         self.op_count = 0;
@@ -267,6 +268,7 @@ pub const Layout = struct {
             .height = clamp(viewport.height, 1, 8192),
         };
         self.interaction = .{};
+        self.sibling_index.document = null;
     }
 
     pub fn reflow(self: *Layout, document: *const html.Document, sheet: *const css.Stylesheet, viewport: Viewport) Error!LayoutStats {
@@ -304,6 +306,8 @@ pub const Layout = struct {
         font_provider: FontProvider,
     ) Error!LayoutStats {
         self.reset(viewport);
+        self.sibling_index.prepare(document);
+        defer self.sibling_index.document = null;
         self.interaction = interaction;
         self.image_resolver = image_resolver;
         self.font_provider = font_provider;
@@ -313,7 +317,7 @@ pub const Layout = struct {
         var child = if (document.node_count > 0) document.nodes[0].first_child else html.none;
         while (child != html.none) {
             if (document.nodes[child].kind == .element) {
-                const style = sheet.computeForViewportSize(document, child, &root_style, elementState(document, child, self.interaction), .none, self.viewport.width, self.viewport.height);
+                const style = sheet.computeForViewportSizeWithSiblings(document, child, &root_style, elementState(document, child, self.interaction), .none, self.viewport.width, self.viewport.height, &self.sibling_index);
                 if (style.display != .none) {
                     if (isBlockDisplay(style.display)) {
                         y = try self.layoutBlock(document, sheet, child, 0, y, available, &root_style, 0, 0xFFFFFF);
@@ -475,7 +479,7 @@ pub const Layout = struct {
         forced_box_height: ?i32,
     ) Error!i32 {
         if (depth >= max_layout_depth) return error.DepthLimit;
-        const style = sheet.computeForViewportSize(document, node_index, parent_style, elementState(document, node_index, self.interaction), .none, self.viewport.width, self.viewport.height);
+        const style = sheet.computeForViewportSizeWithSiblings(document, node_index, parent_style, elementState(document, node_index, self.interaction), .none, self.viewport.width, self.viewport.height, &self.sibling_index);
         if (style.display == .none) return normal_y;
         if (style.display == .contents) {
             var flow = Flow.init(self, document, sheet, containing_x, normal_y, available_width, style, inherited_background);
@@ -589,13 +593,13 @@ pub const Layout = struct {
             content_bottom = try self.layoutColumns(document, sheet, node_index, content_x, content_y, content_width, &style, depth + 1, background);
         } else {
             var flow = Flow.init(self, document, sheet, content_x, content_y, content_width, style, background);
-            const before = sheet.computeForViewportSize(document, node_index, &style, elementState(document, node_index, self.interaction), .before, self.viewport.width, self.viewport.height);
+            const before = sheet.computeForViewportSizeWithSiblings(document, node_index, &style, elementState(document, node_index, self.interaction), .before, self.viewport.width, self.viewport.height, &self.sibling_index);
             try flow.emitGeneratedContent(&before, node_index);
 
             var child = document.nodes[node_index].first_child;
             while (child != html.none) {
                 if (document.nodes[child].kind == .element) {
-                    const child_style = sheet.computeForViewportSize(document, child, &style, elementState(document, child, self.interaction), .none, self.viewport.width, self.viewport.height);
+                    const child_style = sheet.computeForViewportSizeWithSiblings(document, child, &style, elementState(document, child, self.interaction), .none, self.viewport.width, self.viewport.height, &self.sibling_index);
                     if (isBlockDisplay(child_style.display)) {
                         flow.flushLine();
                         flow.y = try self.layoutBlock(document, sheet, child, content_x, flow.y, content_width, &style, depth + 1, background);
@@ -609,7 +613,7 @@ pub const Layout = struct {
                 child = document.nodes[child].next_sibling;
             }
 
-            const after = sheet.computeForViewportSize(document, node_index, &style, elementState(document, node_index, self.interaction), .after, self.viewport.width, self.viewport.height);
+            const after = sheet.computeForViewportSizeWithSiblings(document, node_index, &style, elementState(document, node_index, self.interaction), .after, self.viewport.width, self.viewport.height, &self.sibling_index);
             try flow.emitGeneratedContent(&after, node_index);
             content_bottom = flow.finish();
         }
@@ -688,7 +692,7 @@ pub const Layout = struct {
         var child = document.nodes[parent].first_child;
         while (child != html.none) {
             if (document.nodes[child].kind == .element) {
-                const child_style = sheet.computeForViewportSize(document, child, style, elementState(document, child, self.interaction), .none, self.viewport.width, self.viewport.height);
+                const child_style = sheet.computeForViewportSizeWithSiblings(document, child, style, elementState(document, child, self.interaction), .none, self.viewport.width, self.viewport.height, &self.sibling_index);
                 if (child_style.display != .none and child_style.position != .absolute and child_style.position != .fixed) {
                     child_count += 1;
                     const base = flexItemBaseWidthForViewport(self, document, sheet, child, &child_style, width, depth);
@@ -740,7 +744,7 @@ pub const Layout = struct {
         child = document.nodes[parent].first_child;
         while (child != html.none) {
             if (document.nodes[child].kind == .element) {
-                const child_style = sheet.computeForViewportSize(document, child, style, elementState(document, child, self.interaction), .none, self.viewport.width, self.viewport.height);
+                const child_style = sheet.computeForViewportSizeWithSiblings(document, child, style, elementState(document, child, self.interaction), .none, self.viewport.width, self.viewport.height, &self.sibling_index);
                 if (child_style.display != .none) {
                     if (child_style.position == .absolute or child_style.position == .fixed) {
                         _ = try self.layoutBlock(document, sheet, child, x, y, width, style, depth, background);
@@ -841,7 +845,7 @@ pub const Layout = struct {
         var child = document.nodes[parent].first_child;
         while (child != html.none) {
             if (document.nodes[child].kind == .element) {
-                const child_style = sheet.computeForViewportSize(document, child, style, elementState(document, child, self.interaction), .none, self.viewport.width, self.viewport.height);
+                const child_style = sheet.computeForViewportSizeWithSiblings(document, child, style, elementState(document, child, self.interaction), .none, self.viewport.width, self.viewport.height, &self.sibling_index);
                 if (child_style.display != .none and child_style.position != .absolute and child_style.position != .fixed) {
                     child_count += 1;
                     natural_total += try self.measureBlockHeight(document, sheet, child, width, style, depth, background);
@@ -891,7 +895,7 @@ pub const Layout = struct {
         child = document.nodes[parent].first_child;
         while (child != html.none) {
             if (document.nodes[child].kind == .element) {
-                const child_style = sheet.computeForViewportSize(document, child, style, elementState(document, child, self.interaction), .none, self.viewport.width, self.viewport.height);
+                const child_style = sheet.computeForViewportSizeWithSiblings(document, child, style, elementState(document, child, self.interaction), .none, self.viewport.width, self.viewport.height, &self.sibling_index);
                 if (child_style.display != .none) {
                     if (child_style.position == .absolute or child_style.position == .fixed) {
                         _ = try self.layoutBlock(document, sheet, child, x, cursor_y, width, style, depth, background);
@@ -991,7 +995,7 @@ pub const Layout = struct {
         var child = document.nodes[parent].first_child;
         while (child != html.none) {
             if (document.nodes[child].kind == .element) {
-                const child_style = sheet.computeForViewportSize(document, child, style, elementState(document, child, self.interaction), .none, self.viewport.width, self.viewport.height);
+                const child_style = sheet.computeForViewportSizeWithSiblings(document, child, style, elementState(document, child, self.interaction), .none, self.viewport.width, self.viewport.height, &self.sibling_index);
                 if (child_style.display != .none and child_style.position != .absolute and child_style.position != .fixed) child_count += 1;
             }
             child = document.nodes[child].next_sibling;
@@ -1007,7 +1011,7 @@ pub const Layout = struct {
         child = document.nodes[parent].first_child;
         while (child != html.none) {
             if (document.nodes[child].kind == .element) {
-                const child_style = sheet.computeForViewportSize(document, child, style, elementState(document, child, self.interaction), .none, self.viewport.width, self.viewport.height);
+                const child_style = sheet.computeForViewportSizeWithSiblings(document, child, style, elementState(document, child, self.interaction), .none, self.viewport.width, self.viewport.height, &self.sibling_index);
                 if (child_style.display != .none) {
                     if (child_style.position == .absolute or child_style.position == .fixed) {
                         _ = try self.layoutBlock(document, sheet, child, x, row_y, width, style, depth, background);
@@ -1252,7 +1256,7 @@ const Flow = struct {
         switch (node.kind) {
             .text => try self.emitValue(self.document.nodeValue(node_index), &self.style, node_index),
             .element => {
-                const style = self.sheet.computeForViewportSize(self.document, node_index, &self.style, elementState(self.document, node_index, self.layout.interaction), .none, self.layout.viewport.width, self.layout.viewport.height);
+                const style = self.sheet.computeForViewportSizeWithSiblings(self.document, node_index, &self.style, elementState(self.document, node_index, self.layout.interaction), .none, self.layout.viewport.width, self.layout.viewport.height, &self.layout.sibling_index);
                 if (style.display == .none) return;
                 if (isBlockDisplay(style.display)) {
                     self.flushLine();
@@ -1279,7 +1283,7 @@ const Flow = struct {
             try self.emitInlineBlock(node_index, &style, depth);
             return;
         }
-        const before = self.sheet.computeForViewportSize(self.document, node_index, &style, elementState(self.document, node_index, self.layout.interaction), .before, self.layout.viewport.width, self.layout.viewport.height);
+        const before = self.sheet.computeForViewportSizeWithSiblings(self.document, node_index, &style, elementState(self.document, node_index, self.layout.interaction), .before, self.layout.viewport.width, self.layout.viewport.height, &self.layout.sibling_index);
         try self.emitGeneratedContent(&before, node_index);
         if (equalsIgnoreCase(name, "input")) {
             const input_type = self.document.attribute(node_index, "type") orelse "text";
@@ -1316,7 +1320,7 @@ const Flow = struct {
                 if (self.document.nodes[child].kind == .text) {
                     try self.emitValue(self.document.nodeValue(child), &style, node_index);
                 } else if (self.document.nodes[child].kind == .element) {
-                    const child_style = self.sheet.computeForViewportSize(self.document, child, &style, elementState(self.document, child, self.layout.interaction), .none, self.layout.viewport.width, self.layout.viewport.height);
+                    const child_style = self.sheet.computeForViewportSizeWithSiblings(self.document, child, &style, elementState(self.document, child, self.layout.interaction), .none, self.layout.viewport.width, self.layout.viewport.height, &self.layout.sibling_index);
                     if (isBlockDisplay(child_style.display)) {
                         self.flushLine();
                         self.y = try self.layout.layoutBlock(self.document, self.sheet, child, self.x, self.y, self.width, &style, depth + 1, self.background);
@@ -1328,7 +1332,7 @@ const Flow = struct {
                 child = self.document.nodes[child].next_sibling;
             }
         }
-        const after = self.sheet.computeForViewportSize(self.document, node_index, &style, elementState(self.document, node_index, self.layout.interaction), .after, self.layout.viewport.width, self.layout.viewport.height);
+        const after = self.sheet.computeForViewportSizeWithSiblings(self.document, node_index, &style, elementState(self.document, node_index, self.layout.interaction), .after, self.layout.viewport.width, self.layout.viewport.height, &self.layout.sibling_index);
         try self.emitGeneratedContent(&after, node_index);
     }
 
@@ -1932,7 +1936,7 @@ fn preferredInlineOuterWidth(
         if (document.nodes[child].kind == .text) {
             line_width += measureCollapsedText(layout, style, document.nodeValue(child));
         } else if (document.nodes[child].kind == .element) {
-            const child_style = sheet.computeForViewportSize(document, child, style, elementState(document, child, layout.interaction), .none, viewport.width, viewport.height);
+            const child_style = sheet.computeForViewportSizeWithSiblings(document, child, style, elementState(document, child, layout.interaction), .none, viewport.width, viewport.height, &layout.sibling_index);
             if (child_style.display != .none and child_style.position != .absolute and child_style.position != .fixed) {
                 const child_width = preferredInlineOuterWidth(layout, document, sheet, child, &child_style, basis, depth + 1);
                 if (isBlockDisplay(child_style.display) and !flex_row) {
@@ -3423,4 +3427,38 @@ test "semantic page regions produce deterministic responsive color and visibilit
     try std.testing.expect(layoutContainsText(&portrait, "Main"));
     try std.testing.expect(!layoutContainsText(&portrait, "Footer"));
     try std.testing.expect(landscape_stats.structural_hash != portrait_stats.structural_hash);
+}
+
+test "reflow rebuilds sibling matching for DOM and stylesheet changes" {
+    const document = try std.testing.allocator.create(html.Document);
+    defer std.testing.allocator.destroy(document);
+    const sheet = try std.testing.allocator.create(css.Stylesheet);
+    defer std.testing.allocator.destroy(sheet);
+    const layout = try std.testing.allocator.create(Layout);
+    defer std.testing.allocator.destroy(layout);
+    _ = try document.parse("<body><span>A</span>gap<!--gap--><em>B</em><span>C</span></body>", .{});
+    _ = try sheet.parse("span:first-of-type{color:#112233}span:last-of-type{color:#445566}");
+    const body = document.nodes[0].first_child;
+    const a = document.nodes[body].first_child;
+    const c = document.nodes[body].last_child;
+    for (0..3) |pass| {
+        if (pass == 1) try document.insertBefore(body, c, a);
+        if (pass == 2) try sheet.append("span:first-of-type{color:#778899}");
+        _ = try layout.reflow(document, sheet, .{ .width = 300, .height = 100 });
+        var seen_a = false;
+        var seen_c = false;
+        for (layout.ops[0..layout.op_count]) |op| {
+            if (op.kind != .text) continue;
+            if (std.mem.eql(u8, layout.text(op), "A")) {
+                try std.testing.expectEqual(@as(u32, if (pass == 0) 0x112233 else 0x445566), op.color);
+                seen_a = true;
+            }
+            if (std.mem.eql(u8, layout.text(op), "C")) {
+                try std.testing.expectEqual(@as(u32, if (pass == 0) 0x445566 else if (pass == 1) 0x112233 else 0x778899), op.color);
+                seen_c = true;
+            }
+        }
+        try std.testing.expect(seen_a and seen_c);
+        try std.testing.expectEqual(@as(?*const html.Document, null), layout.sibling_index.document);
+    }
 }
