@@ -401,6 +401,9 @@ test "packet limits keep the complete header and PCM in both audio writers" {
         var accepted: usize = 0;
         var calls: usize = 0;
         var largest: usize = 0;
+        var next_limit: ?usize = null;
+        var fail_call: usize = 0;
+        var report_extra: bool = false;
         fn open(_: [*:0]const u8, out: *abi.ServiceInfo) callconv(.c) i32 {
             out.* = .{ .handle = 1 };
             return 0;
@@ -420,10 +423,18 @@ test "packet limits keep the complete header and PCM in both audio writers" {
             if (request.magic != abi.audio_service_request_magic or request.version != abi.audio_service_request_version or
                 request.stream_id != 7 or request.byte_count != data.len or data.len > expected.len - accepted or
                 !std.mem.eql(u8, data, expected[accepted..][0..data.len])) return -1;
-            accepted += data.len;
             calls += 1;
             largest = @max(largest, len);
-            const result = abi.AudioServiceStreamResult{ .action = op, .result = @intCast(data.len), .stream_id = 7, .bytes = @intCast(data.len) };
+            const failed = calls == fail_call;
+            const count = if (failed) 0 else @min(data.len, next_limit orelse data.len);
+            next_limit = null;
+            accepted += count;
+            const result = abi.AudioServiceStreamResult{
+                .action = op,
+                .result = if (failed) abi.service_api_result_busy else @intCast(count),
+                .stream_id = 7,
+                .bytes = @intCast(if (report_extra) data.len + 1 else count),
+            };
             @memcpy(response[0..@sizeOf(@TypeOf(result))], std.mem.asBytes(&result));
             header.* = .{ .op = op, .status = 0, .payload_len = @sizeOf(@TypeOf(result)) };
             return @sizeOf(@TypeOf(result));
@@ -446,6 +457,40 @@ test "packet limits keep the complete header and PCM in both audio writers" {
     try std.testing.expectEqual(@as(i32, 1024), sys.audioServiceWrite(7, data[0..1024]));
     try std.testing.expectEqual(@as(usize, 2), Capture.calls);
     try std.testing.expectEqual(@as(usize, 1024), Capture.largest);
+
+    // A short reply commits exactly its prefix; the next call must begin with
+    // the first unaccepted sample, even when the request spans several packets.
+    Capture.expected = data[0..2008];
+    Capture.accepted = 0;
+    Capture.calls = 0;
+    Capture.next_limit = 400;
+    try std.testing.expectEqual(@as(i32, 400), sys.audioServiceWrite(7, Capture.expected));
+    try std.testing.expectEqual(@as(usize, 1), Capture.calls);
+    try std.testing.expectEqual(@as(i32, 1608), sys.audioServiceWrite(7, Capture.expected[400..]));
+    try std.testing.expectEqual(Capture.expected.len, Capture.accepted);
+
+    Capture.accepted = 0;
+    Capture.calls = 0;
+    Capture.fail_call = 2;
+    try std.testing.expectEqual(@as(i32, 1004), sys.audioServiceWrite(7, Capture.expected));
+    try std.testing.expectEqual(@as(usize, 1004), Capture.accepted);
+    Capture.fail_call = 0;
+    try std.testing.expectEqual(@as(i32, 1004), sys.audioServiceWrite(7, Capture.expected[1004..]));
+    try std.testing.expectEqual(Capture.expected.len, Capture.accepted);
+
+    Capture.accepted = 0;
+    Capture.calls = 0;
+    Capture.fail_call = 1;
+    try std.testing.expectEqual(abi.service_api_result_busy, sys.audioServiceWrite(7, Capture.expected));
+    try std.testing.expectEqual(@as(usize, 0), Capture.accepted);
+    Capture.fail_call = 0;
+    Capture.next_limit = 0;
+    try std.testing.expectEqual(@as(i32, 0), sys.audioServiceWrite(7, Capture.expected));
+    try std.testing.expectEqual(@as(usize, 2), Capture.calls);
+    Capture.report_extra = true;
+    try std.testing.expectEqual(abi.service_api_result_invalid, sys.audioServiceWrite(7, Capture.expected));
+    Capture.report_extra = false;
+
     Capture.expected = &data;
     Capture.accepted = 0;
     Capture.calls = 0;

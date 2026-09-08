@@ -2593,10 +2593,14 @@ pub const Context = struct {
 
             var result: abi.AudioServiceStreamResult = .{};
             const rc = self.audioServiceCallResult(abi.audio_service_op_write_stream, payload[0 .. header_size + chunk_len], &result);
-            if (rc != abi.service_api_result_ok) return rc;
-            if (result.result < 0) return result.result;
+            if (rc != abi.service_api_result_ok) return if (total != 0) total else rc;
+            if (result.result < 0) return if (total != 0) total else result.result;
+            if (result.bytes > chunk_len) return if (total != 0) total else abi.service_api_result_invalid;
             total += @intCast(result.bytes);
-            offset += chunk_len;
+            offset += result.bytes;
+            // A short/empty acceptance returns its contiguous prefix. The
+            // caller retains the untouched suffix and chooses when to retry.
+            if (result.bytes < chunk_len) break;
         }
         return total;
     }
