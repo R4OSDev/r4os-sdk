@@ -7,7 +7,7 @@ const system_update_inventory = r4os.system_update_inventory;
 const system_update_batch = r4os.system_update_batch;
 
 const header_size: usize = r4u_manifest.header_size;
-const manifest_max: usize = 32 * 1024;
+const manifest_max: usize = r4u_manifest.manifest_max_bytes;
 // Worst case: 32 payloads x 4 paths x up to 1023 bytes (0.60.19 limits)
 // plus header lines. R4U_JOURNAL=4 binds release, package, concrete
 // components and the durable inventory completion phase; v2/v3 journals
@@ -26,7 +26,7 @@ var inventory_source_buf: [system_update_inventory.max_bytes]u8 = undefined;
 var inventory_render_buf: [system_update_inventory.max_bytes]u8 = undefined;
 var inventory_workspace: system_update_inventory.Inventory = undefined;
 const checksum_seed: u32 = system_update_recovery.checksum_seed;
-const max_package_payloads: usize = system_update_recovery.max_package_payloads;
+const max_package_payloads: usize = r4u_manifest.max_package_payloads;
 const max_payloads: usize = system_update_recovery.max_payloads;
 const max_path: usize = system_update_recovery.max_path;
 comptime {

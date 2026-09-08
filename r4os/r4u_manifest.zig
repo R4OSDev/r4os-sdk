@@ -4,6 +4,9 @@ pub const manifest_version: u16 = 2;
 pub const header_magic = "R4U2";
 pub const header_version: u16 = 2;
 pub const header_size: usize = 64;
+// The updater's journal owner is also the authority for package capacity.
+pub const max_package_payloads = @import("system_update_recovery.zig").max_package_payloads;
+pub const manifest_max_bytes: usize = 32 * 1024;
 pub const title_max_bytes: usize = 96;
 pub const description_max_bytes: usize = 2048;
 pub const package_name_max_bytes: usize = 48;
