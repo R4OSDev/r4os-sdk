@@ -139,6 +139,8 @@ pub const FetchRedirectMode = enum(u8) {
 
 pub const PendingRequest = struct {
     state: RequestState = .free,
+    // Terminal response processing may still call JavaScript or collect.
+    delivering: bool = false,
     id: u32 = 0,
     generation: u32 = 0,
     kind: RequestKind = .fetch,
@@ -1045,7 +1047,7 @@ pub const WebRuntime = struct {
         self.runtime_memory = memory;
         self.runtime.* = undefined;
         self.runtime.initialize(self.program_allocator);
-        self.runtime.setExternalRootMarker(.{ .context = self, .mark = markRuntimeRoots });
+        self.runtime.setExternalRootMarker(.{ .context = self, .mark = markRuntimeRoots, .mark_weak = markRuntimeWeakRoots, .sweep = sweepRuntimeWeakRoots });
         self.runtime.setClockSource(.{ .context = self, .now_milliseconds = runtimeClockNow, .offset_minutes = runtimeClockOffset });
         errdefer self.releaseJavascriptRealm();
 
@@ -2512,6 +2514,11 @@ pub const WebRuntime = struct {
         if (!self.javascriptRealmActive()) return 0;
         for (&self.abort_deadlines) |*deadline| {
             if (!deadline.occupied or deadline.generation != self.generation or deadline.due_ms > now_ms) continue;
+            const root_mark = self.runtime.hostRootMark();
+            defer self.runtime.restoreHostRoots(root_mark);
+            // Error creation may collect after the deadline stops being a
+            // root and before abortSignal establishes its own delivery roots.
+            try self.runtime.hostRoot(deadline.signal);
             deadline.occupied = false;
             try self.abortSignal(self.runtime, deadline.signal, try self.makeNamedError(self.runtime, "TimeoutError", "The operation timed out"));
         }
@@ -2632,6 +2639,8 @@ pub const WebRuntime = struct {
 
     pub fn completeRequest(self: *WebRuntime, id: u32, generation: u32, meta: ResponseMeta, body: []const u8) Error!void {
         const request = self.findRequest(id) orelse return error.RequestNotFound;
+        request.delivering = true;
+        defer request.delivering = false;
         if (generation != self.generation or request.generation != generation) {
             request.state = .aborted;
             return error.StaleGeneration;
@@ -2749,6 +2758,8 @@ pub const WebRuntime = struct {
 
     fn failRequestWithFailure(self: *WebRuntime, id: u32, generation: u32, reason: []const u8, failure: ResourceFailure) Error!void {
         const request = self.findRequest(id) orelse return error.RequestNotFound;
+        request.delivering = true;
+        defer request.delivering = false;
         if (generation != self.generation or request.generation != generation) {
             request.state = .aborted;
             return error.StaleGeneration;
@@ -3603,11 +3614,12 @@ pub const WebRuntime = struct {
     }
 
     fn observerIndex(self: *WebRuntime, runtime: *javascript.Runtime, receiver: javascript.Value) Error!usize {
-        _ = self;
         const state = try runtime.hostState(receiver, host_object_mutation_observer);
         const number = try runtime.valueNumber(state[0]);
-        if (number < 0 or number >= max_mutation_observers) return error.TypeError;
-        return @intFromFloat(number);
+        if (!std.math.isFinite(number) or @trunc(number) != number or number < 0 or number >= max_mutation_observers) return error.TypeError;
+        const index: usize = @intFromFloat(number);
+        if (!self.mutation_observers[index].occupied or !runtime.sameValue(receiver, self.mutation_observers[index].object)) return error.StaleGeneration;
+        return index;
     }
 
     fn mutationTarget(self: *WebRuntime, runtime: *javascript.Runtime, value: javascript.Value) Error!u16 {
@@ -3740,7 +3752,7 @@ pub const WebRuntime = struct {
         old_value: ?[]const u8,
     ) Error!void {
         const document = self.document orelse return error.NotInitialized;
-        for (&self.mutation_observers, 0..) |*observer, observer_index| {
+        for (&self.mutation_observers) |*observer| {
             if (!observer.occupied) continue;
             var matched = false;
             var include_old_value = false;
@@ -3767,7 +3779,7 @@ pub const WebRuntime = struct {
             };
             if (!observer.delivery_queued) {
                 observer.delivery_queued = true;
-                try self.runtime.enqueueMicrotask(observer.delivery, .{ .number = @floatFromInt(observer_index) });
+                try self.runtime.enqueueMicrotask(observer.delivery, observer.object);
             }
         }
     }
@@ -4416,7 +4428,7 @@ pub const WebRuntime = struct {
         const record = try self.runtime.createArray(&.{ .{ .boolean = aborted }, reason, .null_value, .{ .number = 0 } });
         try self.runtime.hostRoot(record);
         try self.runtime.setHostPropertyHooks(signal, host_object_abort_signal, self, null, null);
-        try self.runtime.setHostState(signal, host_object_abort_signal, record, .undefined);
+        try self.runtime.setHostState(signal, host_object_abort_signal, record, .{ .number = if (aborted) 1 else 0 });
         return signal;
     }
 
@@ -4463,8 +4475,18 @@ pub const WebRuntime = struct {
         try runtime.hostRoot(reason);
         const record = try self.abortSignalRecord(runtime, signal);
         if (runtime.valueBoolean(try self.abortField(runtime, record, abort_aborted))) return;
+        // Pending dependent delivery is real work even if callbacks collect.
+        for (&self.abort_followers) |*follower| if (follower.occupied and follower.generation == self.generation and runtime.sameValue(follower.source, signal)) {
+            try runtime.hostRoot(follower.target);
+        };
+        defer for (&self.abort_followers) |*follower| if (follower.occupied and follower.generation == self.generation and
+            (runtime.sameValue(follower.source, signal) or runtime.sameValue(follower.target, signal)))
+        {
+            follower.* = .{};
+        };
         try self.setAbortField(runtime, record, abort_aborted, .{ .boolean = true });
         try self.setAbortField(runtime, record, abort_reason, reason);
+        try self.syncAbortSignalFlags(runtime, signal);
         for (&self.requests) |*request| {
             if (!runtime.sameValue(request.signal, signal) or (request.state != .queued and request.state != .in_flight)) continue;
             request.state = .aborted;
@@ -4604,26 +4626,99 @@ pub const WebRuntime = struct {
         self.program_allocator.free(self.program_allocator.context, memory, length, alignment);
     }
 
+    fn requestPinsJavascript(request: *const PendingRequest) bool {
+        return request.delivering or request.state == .queued or request.state == .in_flight;
+    }
+
+    fn listenerXhrIndex(listener: *const Listener) ?usize {
+        const first = eventTargetToken(.{ .xhr = 0 });
+        if (listener.target < first or listener.target >= first + max_xhr) return null;
+        return @intCast(listener.target - first);
+    }
+
+    fn abortSignalFlags(runtime: *javascript.Runtime, signal: javascript.Value) u2 {
+        const state = runtime.hostState(signal, host_object_abort_signal) catch return 1;
+        // Flags are maintained by host setters; no property access during GC.
+        if (state[1] != .number) return 1;
+        return @intFromFloat(state[1].number);
+    }
+
+    fn syncAbortSignalFlags(self: *WebRuntime, runtime: *javascript.Runtime, signal: javascript.Value) Error!void {
+        const record = try self.abortSignalRecord(runtime, signal);
+        const aborted = runtime.valueBoolean(try self.abortField(runtime, record, abort_aborted));
+        var interested = runtime.valueCallable(try self.abortField(runtime, record, abort_onabort));
+        const count: usize = @intFromFloat(try runtime.valueNumber(try self.abortField(runtime, record, abort_listener_count)));
+        for (0..count) |index| {
+            const callback = try self.abortField(runtime, record, abort_listener_base + index);
+            if (callback != .undefined and callback != .null_value) interested = true;
+        }
+        const flags: u2 = @as(u2, @intFromBool(aborted)) | (@as(u2, @intFromBool(interested)) << 1);
+        try runtime.setHostState(signal, host_object_abort_signal, record, .{ .number = @floatFromInt(flags) });
+    }
+
+    fn markRuntimeWeakRoots(runtime: *javascript.Runtime, context: ?*anyopaque) void {
+        const self: *WebRuntime = @ptrCast(@alignCast(context orelse return));
+        for (&self.listeners) |*listener| {
+            if (!listener.occupied) continue;
+            const index = listenerXhrIndex(listener) orelse continue;
+            const xhr = &self.xhrs[index];
+            if (xhr.occupied and xhr.generation == self.generation and runtime.externalMarked(xhr.object)) runtime.markExternal(listener.callback);
+        }
+        for (&self.mutation_observers) |*observer| {
+            if (!observer.occupied or !runtime.externalMarked(observer.object)) continue;
+            runtime.markExternal(observer.callback);
+            runtime.markExternal(observer.delivery);
+            for (observer.records[0..observer.record_count]) |record| runtime.markExternal(record);
+        }
+        for (&self.abort_followers) |*follower| {
+            if (!follower.occupied or follower.generation != self.generation) continue;
+            const source_flags = abortSignalFlags(runtime, follower.source);
+            const target_flags = abortSignalFlags(runtime, follower.target);
+            if ((source_flags & 1) != 0 or (target_flags & 1) != 0) continue;
+            if (runtime.externalMarked(follower.target)) runtime.markExternal(follower.source);
+            // A reachable source retains a dependent with actual event
+            // listeners. Unrooted cycles do not create their own roots.
+            if ((target_flags & 2) != 0 and runtime.externalMarked(follower.source)) runtime.markExternal(follower.target);
+        }
+    }
+
+    fn sweepRuntimeWeakRoots(runtime: *javascript.Runtime, context: ?*anyopaque) void {
+        const self: *WebRuntime = @ptrCast(@alignCast(context orelse return));
+        for (&self.requests) |*request| if (!requestPinsJavascript(request)) {
+            request.promise = .undefined;
+            request.xhr = .undefined;
+            request.signal = .undefined;
+        };
+        for (&self.xhrs, 0..) |*xhr, index| {
+            if (!xhr.occupied or runtime.externalMarked(xhr.object)) continue;
+            const target = eventTargetToken(.{ .xhr = @intCast(index) });
+            for (&self.listeners) |*listener| if (listener.occupied and listener.target == target) {
+                listener.* = .{};
+            };
+            xhr.* = .{};
+        }
+        for (&self.mutation_observers) |*observer| if (observer.occupied and !runtime.externalMarked(observer.object)) {
+            observer.* = .{};
+        };
+        for (&self.abort_followers) |*follower| if (follower.occupied and
+            (follower.generation != self.generation or !runtime.externalMarked(follower.source) or !runtime.externalMarked(follower.target)))
+        {
+            follower.* = .{};
+        };
+    }
+
     fn markRuntimeRoots(runtime: *javascript.Runtime, context: ?*anyopaque) void {
         const self: *WebRuntime = @ptrCast(@alignCast(context orelse return));
-        for (&self.listeners) |*listener| if (listener.occupied) runtime.markExternal(listener.callback);
+        for (&self.listeners) |*listener| if (listener.occupied and listenerXhrIndex(listener) == null) runtime.markExternal(listener.callback);
         for (&self.timers) |*timer| if (timer.occupied) runtime.markExternal(timer.callback);
         for (&self.abort_deadlines) |*deadline| if (deadline.occupied) runtime.markExternal(deadline.signal);
-        for (&self.abort_followers) |*follower| if (follower.occupied) {
-            runtime.markExternal(follower.source);
-            runtime.markExternal(follower.target);
-        };
-        for (&self.requests) |*request| if (request.state != .free) {
+        for (&self.requests) |*request| if (requestPinsJavascript(request)) {
             runtime.markExternal(request.promise);
             runtime.markExternal(request.xhr);
             runtime.markExternal(request.signal);
         };
-        for (&self.xhrs) |*xhr| if (xhr.occupied) runtime.markExternal(xhr.object);
-        for (&self.mutation_observers) |*observer| if (observer.occupied) {
+        for (&self.mutation_observers) |*observer| if (observer.occupied and observer.registration_count != 0) {
             runtime.markExternal(observer.object);
-            runtime.markExternal(observer.callback);
-            runtime.markExternal(observer.delivery);
-            for (observer.records[0..observer.record_count]) |record| runtime.markExternal(record);
         };
         for (self.history_states[0..self.history_count]) |state| runtime.markExternal(state);
         for (self.navigation_entry_objects[0..self.history_count]) |entry| runtime.markExternal(entry);
@@ -4652,7 +4747,7 @@ pub const WebRuntime = struct {
             return error.SecurityBlocked;
         }
         for (&self.requests) |*request| {
-            if (request.state != .free and request.state != .complete and request.state != .failed and request.state != .aborted) continue;
+            if (request.delivering or (request.state != .free and request.state != .complete and request.state != .failed and request.state != .aborted)) continue;
             const id = self.next_request_id;
             self.next_request_id +%= 1;
             if (options.headers.len > request.request_headers.len or options.body.len > request.body.len) return error.ResponseTooLarge;
@@ -5003,8 +5098,10 @@ pub const WebRuntime = struct {
 
     fn xhrIndex(self: *WebRuntime, receiver: javascript.Value) Error!u16 {
         const number = try self.runtime.valueNumber(try self.runtime.get(receiver, "_xhr"));
-        if (number < 0 or number >= max_xhr) return error.TypeError;
-        return @intFromFloat(number);
+        if (!std.math.isFinite(number) or @trunc(number) != number or number < 0 or number >= max_xhr) return error.TypeError;
+        const index: u16 = @intFromFloat(number);
+        if (!self.xhrs[index].occupied or self.xhrs[index].generation != self.generation or !self.runtime.sameValue(self.xhrs[index].object, receiver)) return error.StaleGeneration;
+        return index;
     }
 
     fn receiverEventTarget(self: *WebRuntime, receiver: javascript.Value) Error!u32 {
@@ -5879,26 +5976,27 @@ fn dispatchHost(
         .mutation_observer_constructor => {
             if (!runtime.hostCallIsConstruct() or arguments.len == 0 or !runtime.valueCallable(arguments[0])) return error.TypeError;
             var observer_index: ?usize = null;
-            for (&self.mutation_observers, 0..) |*observer, index| if (!observer.occupied) {
-                observer_index = index;
-                break;
-            };
+            for (0..2) |attempt| {
+                for (&self.mutation_observers, 0..) |*observer, index| if (!observer.occupied) {
+                    observer_index = index;
+                    break;
+                };
+                if (observer_index != null) break;
+                if (attempt == 0) runtime.collectGarbage();
+            }
             const index = observer_index orelse return error.MutationLimit;
             const root_mark = runtime.hostRootMark();
             defer runtime.restoreHostRoots(root_mark);
             const object = try runtime.createObject();
             try runtime.hostRoot(object);
+            self.mutation_observers[index] = .{ .occupied = true, .object = object, .callback = arguments[0] };
+            errdefer self.mutation_observers[index] = .{};
             if (runtime.global("MutationObserver")) |constructor| try runtime.setPrototype(object, try runtime.get(constructor, "prototype"));
             const delivery = try runtime.createHostFunction(@intFromEnum(HostOp.mutation_observer_deliver), self, hostDispatch);
             try runtime.hostRoot(delivery);
             try runtime.setHostPropertyHooks(object, host_object_mutation_observer, self, null, null);
             try runtime.setHostState(object, host_object_mutation_observer, .{ .number = @floatFromInt(index) }, arguments[0]);
-            self.mutation_observers[index] = .{
-                .occupied = true,
-                .object = object,
-                .callback = arguments[0],
-                .delivery = delivery,
-            };
+            self.mutation_observers[index].delivery = delivery;
             return object;
         },
         .mutation_observer_observe => {
@@ -5932,9 +6030,7 @@ fn dispatchHost(
         },
         .mutation_observer_deliver => {
             if (arguments.len == 0) return .undefined;
-            const number = try runtime.valueNumber(arguments[0]);
-            if (number < 0 or number >= self.mutation_observers.len) return .undefined;
-            const index: usize = @intFromFloat(number);
+            const index = self.observerIndex(runtime, arguments[0]) catch return .undefined;
             var observer = &self.mutation_observers[index];
             if (!observer.occupied) return .undefined;
             observer.delivery_queued = false;
@@ -6249,9 +6345,14 @@ fn dispatchHost(
                 needed += 1;
             }
             var free: usize = 0;
-            for (self.abort_followers) |follower| if (!follower.occupied) {
-                free += 1;
-            };
+            for (0..2) |attempt| {
+                free = 0;
+                for (self.abort_followers) |follower| if (!follower.occupied) {
+                    free += 1;
+                };
+                if (free >= needed) break;
+                if (attempt == 0) runtime.collectGarbage();
+            }
             if (free < needed) return error.AbortLimit;
             index = 0;
             while (index < length) : (index += 1) {
@@ -6278,6 +6379,7 @@ fn dispatchHost(
             const record = try self.abortSignalRecord(runtime, receiver);
             const value = if (arguments.len == 0 or !runtime.valueCallable(arguments[0])) javascript.Value.null_value else arguments[0];
             try self.setAbortField(runtime, record, abort_onabort, value);
+            try self.syncAbortSignalFlags(runtime, receiver);
             return .undefined;
         },
         .abort_signal_throw_if_aborted => {
@@ -6307,6 +6409,7 @@ fn dispatchHost(
                 false;
             try self.setAbortField(runtime, record, abort_listener_once_base + count, .{ .boolean = once });
             try self.setAbortField(runtime, record, abort_listener_count, .{ .number = @floatFromInt(count + 1) });
+            try self.syncAbortSignalFlags(runtime, receiver);
             return .undefined;
         },
         .abort_signal_remove_event_listener => {
@@ -6317,6 +6420,7 @@ fn dispatchHost(
             while (index < count) : (index += 1) {
                 if (runtime.sameValue(try self.abortField(runtime, record, abort_listener_base + index), arguments[1])) try self.setAbortField(runtime, record, abort_listener_base + index, .undefined);
             }
+            try self.syncAbortSignalFlags(runtime, receiver);
             return .undefined;
         },
         .request_constructor => {
@@ -6719,20 +6823,27 @@ fn dispatchHost(
         },
         .xhr_constructor => {
             if (!runtime.hostCallIsConstruct()) return error.TypeError;
-            for (&self.xhrs, 0..) |*xhr, index| {
-                if (xhr.occupied) continue;
-                const object = try runtime.createObject();
-                xhr.* = .{ .occupied = true, .generation = self.generation, .object = object };
-                try runtime.set(object, "_xhr", .{ .number = @floatFromInt(index) });
-                try runtime.set(object, "_event_target", .{ .number = @floatFromInt(eventTargetToken(.{ .xhr = @intCast(index) })) });
-                try runtime.set(object, "readyState", .{ .number = 0 });
-                try runtime.set(object, "status", .{ .number = 0 });
-                try runtime.set(object, "responseText", try runtime.makeString(""));
-                try self.bind(object, "open", .xhr_open);
-                try self.bind(object, "send", .xhr_send);
-                try self.bind(object, "abort", .xhr_abort);
-                try self.bind(object, "addEventListener", .add_event_listener);
-                return object;
+            for (0..2) |attempt| {
+                for (&self.xhrs, 0..) |*xhr, index| {
+                    if (xhr.occupied) continue;
+                    const root_mark = runtime.hostRootMark();
+                    defer runtime.restoreHostRoots(root_mark);
+                    const object = try runtime.createObject();
+                    try runtime.hostRoot(object);
+                    errdefer xhr.* = .{};
+                    xhr.* = .{ .occupied = true, .generation = self.generation, .object = object };
+                    try runtime.set(object, "_xhr", .{ .number = @floatFromInt(index) });
+                    try runtime.set(object, "_event_target", .{ .number = @floatFromInt(eventTargetToken(.{ .xhr = @intCast(index) })) });
+                    try runtime.set(object, "readyState", .{ .number = 0 });
+                    try runtime.set(object, "status", .{ .number = 0 });
+                    try runtime.set(object, "responseText", try runtime.makeString(""));
+                    try self.bind(object, "open", .xhr_open);
+                    try self.bind(object, "send", .xhr_send);
+                    try self.bind(object, "abort", .xhr_abort);
+                    try self.bind(object, "addEventListener", .add_event_listener);
+                    return object;
+                }
+                if (attempt == 0) runtime.collectGarbage();
             }
             return error.XhrLimit;
         },
@@ -7257,11 +7368,8 @@ fn dispatchHost(
 }
 
 fn xhrFor(self: *WebRuntime, runtime: *javascript.Runtime, receiver: javascript.Value) Error!*Xhr {
-    const index_number = try runtime.valueNumber(try runtime.get(receiver, "_xhr"));
-    if (index_number < 0 or index_number >= max_xhr) return error.TypeError;
-    const index: usize = @intFromFloat(index_number);
-    if (!self.xhrs[index].occupied or self.xhrs[index].generation != self.generation) return error.StaleGeneration;
-    return &self.xhrs[index];
+    _ = runtime;
+    return &self.xhrs[try self.xhrIndex(receiver)];
 }
 
 fn executableScript(document: *const html.Document, node: u16) bool {
@@ -10226,4 +10334,136 @@ test "mixed content CSP navigation XHR and timing remain bounded" {
     try std.testing.expectEqual(ActionKind.push_state, history_action.kind);
     try std.testing.expectEqualStrings("https://secure.example/state", history_action.url.bytes());
     try std.testing.expectEqualStrings("navigation", harness.web.runtime.valueString(harness.web.runtime.global("entryType").?));
+}
+
+fn drainLifecycleJobs(web: *WebRuntime) Error!void {
+    for (0..12) |_| {
+        if (web.runtime.microtask_count + web.runtime.task_count == 0) return;
+        _ = try web.pump(1, 64);
+    }
+    return error.JobLimit;
+}
+
+fn lifecycleRegistryCounts(web: *const WebRuntime) [3]usize {
+    var counts = [_]usize{0} ** 3;
+    for (web.xhrs) |xhr| if (xhr.occupied) {
+        counts[0] += 1;
+    };
+    for (web.mutation_observers) |observer| if (observer.occupied) {
+        counts[1] += 1;
+    };
+    for (web.abort_followers) |follower| if (follower.occupied) {
+        counts[2] += 1;
+    };
+    return counts;
+}
+
+test "web stream owners are reclaimed within one document after jobs finish" {
+    const allocator = std.testing.allocator;
+    const harness = try allocator.create(struct { document: html.Document, storage: security.BrowserStorage, web: WebRuntime });
+    defer allocator.destroy(harness);
+    harness.web.initialize(testingProgramAllocator(harness));
+    defer harness.web.deinit();
+    harness.document.reset();
+    try harness.web.beginDocument(&harness.document, &harness.storage, "https://runtime.example/", "", 1, 0);
+    _ = try harness.web.executeSource("globalThis.keptStream=new ReadableStream({start(c){c.close();}});globalThis.streamCompletions=0;" ++
+        "function discardStreams(){" ++
+        "const s=new ReadableStream({start(c){c.close();}}),r=s.getReader();r.read().then(function(v){if(v.done)globalThis.streamCompletions++;r.releaseLock();});" ++
+        "const w=new WritableStream(),writer=w.getWriter();writer.close().then(function(){globalThis.streamCompletions++;writer.releaseLock();});" ++
+        "const t=new TransformStream(),tr=t.readable.getReader(),tw=t.writable.getWriter();tr.read().then(function(v){if(v.done)globalThis.streamCompletions++;tr.releaseLock();});tw.close().then(function(){tw.releaseLock();});" ++
+        "const b=new ReadableStream({type:'bytes',pull(c){c.byobRequest.respond(1);c.close();}}),br=b.getReader({mode:'byob'});br.read(new Uint8Array(1)).then(function(v){if(v.value.length===1)globalThis.streamCompletions++;br.releaseLock();});}" ++
+        "discardStreams();");
+    try drainLifecycleJobs(&harness.web);
+    harness.web.runtime.collectGarbage();
+    const baseline = harness.web.runtime.stats.live_cells;
+    const function = harness.web.runtime.global("discardStreams").?;
+    const program = harness.web.programs[harness.web.program_count - 1].?;
+    var peak: usize = baseline;
+    for (0..16) |_| {
+        _ = try harness.web.runtime.callValue(program, function, .undefined, &.{});
+        harness.web.runtime.collectGarbage();
+        peak = @max(peak, harness.web.runtime.stats.live_cells);
+        try drainLifecycleJobs(&harness.web);
+        harness.web.runtime.collectGarbage();
+        try std.testing.expect(harness.web.runtime.stats.live_cells <= baseline + 8);
+    }
+    const final = harness.web.runtime.stats.live_cells;
+    try std.testing.expect(peak > final);
+    const global = harness.web.runtime.global("globalThis").?;
+    try std.testing.expectEqual(@as(f64, 17 * 4), try harness.web.runtime.valueNumber(try harness.web.runtime.get(global, "streamCompletions")));
+    _ = try harness.web.executeSource("var keptClosed=false;const keptReader=globalThis.keptStream.getReader();keptReader.read().then(function(v){keptClosed=v.done;keptReader.releaseLock();});");
+    harness.web.runtime.collectGarbage();
+    try drainLifecycleJobs(&harness.web);
+    try std.testing.expect(harness.web.runtime.valueBoolean(harness.web.runtime.global("keptClosed").?));
+    std.debug.print("LIFECYCLE streams baseline={d} pending_peak={d} final={d} completions=68\n", .{ baseline, peak, final });
+}
+
+test "web host registries reclaim discarded owners and retain weakly reached live owners" {
+    const allocator = std.testing.allocator;
+    const harness = try allocator.create(struct { document: html.Document, storage: security.BrowserStorage, web: WebRuntime });
+    defer allocator.destroy(harness);
+    harness.web.initialize(testingProgramAllocator(harness));
+    defer harness.web.deinit();
+    _ = try harness.document.parse("<!doctype html><body><main id='root'></main></body>", .{ .content_type = "text/html" });
+    try harness.web.beginDocument(&harness.document, &harness.storage, "https://runtime.example/", "", 1, 0);
+    _ = try harness.web.executeSource("var sourceOne=new AbortController(),sourceTwo=new AbortController(),savedXhr=new XMLHttpRequest(),savedSignal=AbortSignal.any([sourceOne.signal,sourceTwo.signal]);" ++
+        "var savedKey={},savedObservers=new WeakMap(),savedCalls=0;savedObservers.set(savedKey,new MutationObserver(function(){savedCalls++;}));" ++
+        "function discardOwners(){const xhr=new XMLHttpRequest();xhr.addEventListener('load',function(){return xhr.status;});let observer;observer=new MutationObserver(function(){observer.disconnect();});observer.disconnect();AbortSignal.any([sourceOne.signal,sourceTwo.signal]);}" ++
+        "for(let i=0;i<64;i++)discardOwners();");
+    const before = lifecycleRegistryCounts(&harness.web);
+    harness.web.runtime.collectGarbage();
+    try std.testing.expectEqual([3]usize{ 1, 1, 2 }, lifecycleRegistryCounts(&harness.web));
+    _ = try harness.web.executeSource("savedXhr.open('GET','/still-live');savedObservers.get(savedKey).observe(document.getElementById('root'),{attributes:true});document.getElementById('root').setAttribute('data-check','ok');" ++
+        "sourceOne.abort('still-live');");
+    harness.web.runtime.collectGarbage();
+    try drainLifecycleJobs(&harness.web);
+    try std.testing.expectEqual(@as(f64, 1), try harness.web.runtime.valueNumber(harness.web.runtime.global("savedCalls").?));
+    const retained = harness.web.runtime.global("savedSignal").?;
+    try std.testing.expect(harness.web.runtime.valueBoolean(try harness.web.runtime.get(retained, "aborted")));
+    try std.testing.expectEqualStrings("still-live", harness.web.runtime.valueString(try harness.web.runtime.get(retained, "reason")));
+    _ = try harness.web.executeSource("savedObservers.get(savedKey).disconnect();savedObservers=null;savedKey=null;savedXhr=null;savedSignal=null;");
+    harness.web.runtime.collectGarbage();
+    try std.testing.expectEqual([3]usize{ 0, 0, 0 }, lifecycleRegistryCounts(&harness.web));
+    std.debug.print("LIFECYCLE registries before={d}/{d}/{d} retained=1/1/2 final=0/0/0 cycles=64\n", .{ before[0], before[1], before[2] });
+}
+
+test "web pending callbacks own their request observer and dependent signal until delivery" {
+    const allocator = std.testing.allocator;
+    const harness = try allocator.create(struct { document: html.Document, storage: security.BrowserStorage, web: WebRuntime });
+    defer allocator.destroy(harness);
+    harness.web.initialize(testingProgramAllocator(harness));
+    defer harness.web.deinit();
+    _ = try harness.document.parse("<!doctype html><body><main id='root'></main></body>", .{ .content_type = "text/html" });
+    try harness.web.beginDocument(&harness.document, &harness.storage, "https://runtime.example/", "", 1, 0);
+    _ = try harness.web.executeSource("var xhrCalls=0,observerCalls=0,droppedCalls=0,signalCalls=0,timeoutCalls=0;var controller=new AbortController();");
+    const Collect = struct {
+        fn call(runtime: *javascript.Runtime, _: ?*anyopaque, _: u16, _: javascript.Value, _: []const javascript.Value) javascript.Error!javascript.Value {
+            runtime.collectGarbage();
+            return .undefined;
+        }
+    };
+    try harness.web.runtime.defineGlobal("collectInCallback", try harness.web.runtime.createHostFunction(0, null, Collect.call), true);
+    _ = try harness.web.executeSource("(function(){const x=new XMLHttpRequest();x.addEventListener('load',function(){collectInCallback();if(x.status===200&&x.responseText==='ok')xhrCalls++;const next=new XMLHttpRequest();next.open('GET','/next');next.send();});x.open('GET','/first');x.send();})();" ++
+        "(function(){const o=new MutationObserver(function(records,self){observerCalls++;self.disconnect();collectInCallback();});o.observe(document.getElementById('root'),{attributes:true});document.getElementById('root').setAttribute('data-first','x');})();" ++
+        "(function(){const o=new MutationObserver(function(){droppedCalls++;});o.observe(document.getElementById('root'),{attributes:true});document.getElementById('root').setAttribute('data-second','y');o.disconnect();})();" ++
+        "AbortSignal.any([controller.signal]).addEventListener('abort',function(){collectInCallback();signalCalls++;},{once:true});" ++
+        "AbortSignal.any([AbortSignal.timeout(5)]).onabort=function(){collectInCallback();timeoutCalls++;};");
+    harness.web.runtime.collectGarbage();
+    try std.testing.expectEqual([3]usize{ 1, 2, 2 }, lifecycleRegistryCounts(&harness.web));
+    const first = harness.web.takeRequest().?;
+    const first_id = first.id;
+    try harness.web.completeRequest(first_id, 1, .{ .status = 200, .secure = true }, "ok");
+    try std.testing.expectEqual(first_id, first.id);
+    const second = harness.web.takeRequest().?;
+    try std.testing.expect(second != first and second.id != first_id);
+    try harness.web.completeRequest(second.id, 1, .{ .status = 200, .secure = true }, "next");
+    try drainLifecycleJobs(&harness.web);
+    _ = try harness.web.executeSource("controller.abort('finished');");
+    _ = try harness.web.pump(6, 16);
+    harness.web.runtime.collectGarbage();
+    try std.testing.expectEqual([3]usize{ 0, 0, 0 }, lifecycleRegistryCounts(&harness.web));
+    for ([_][]const u8{ "xhrCalls", "observerCalls", "signalCalls", "timeoutCalls" }) |name|
+        try std.testing.expectEqual(@as(f64, 1), try harness.web.runtime.valueNumber(harness.web.runtime.global(name).?));
+    try std.testing.expectEqual(@as(f64, 0), try harness.web.runtime.valueNumber(harness.web.runtime.global("droppedCalls").?));
+    std.debug.print("LIFECYCLE pending=1/2/2 final=0/0/0 callbacks=1/1/1/1 dropped=0 request_slot_preserved timeout_completed\n", .{});
 }

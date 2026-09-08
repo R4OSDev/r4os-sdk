@@ -5892,6 +5892,11 @@ pub const ProgramAllocator = struct {
 pub const ExternalRootMarker = struct {
     context: ?*anyopaque = null,
     mark: ?*const fn (runtime: *Runtime, context: ?*anyopaque) void = null,
+    // Conditional host edges participate in the same fixed point as WeakMap.
+    // These callbacks may inspect/mark/reset metadata, never allocate, call
+    // JavaScript or recursively collect. Sweep runs before cell-ID reuse.
+    mark_weak: ?*const fn (runtime: *Runtime, context: ?*anyopaque) void = null,
+    sweep: ?*const fn (runtime: *Runtime, context: ?*anyopaque) void = null,
 };
 
 pub const Module = struct {
@@ -6716,6 +6721,11 @@ pub const Runtime = struct {
         self.markValue(value);
     }
 
+    /// Only meaningful in the external GC callbacks, before cell reuse.
+    pub fn externalMarked(self: *const Runtime, value: Value) bool {
+        return value == .cell and value.cell < self.cells.len and self.cells[value.cell].occupied and self.cells[value.cell].marked;
+    }
+
     pub fn evaluate(self: *Runtime, program: *const Program) Error!Value {
         self.clearSuccessfulDiagnostic();
         if (!program.bytecodeReady()) {
@@ -7075,6 +7085,7 @@ pub const Runtime = struct {
         self.drainMarkQueue();
         self.markWeakMapValues();
         self.clearDeadWeakEntries();
+        if (self.external_root_marker.sweep) |sweep| sweep(self, self.external_root_marker.context);
 
         var collected: usize = 0;
         for (&self.cells, 0..) |*cell, cell_index| {
@@ -7160,6 +7171,7 @@ pub const Runtime = struct {
                         self.markValue(self.itemStorageConst(@intCast(index))[slot + 1]);
                 }
             }
+            if (self.external_root_marker.mark_weak) |mark| mark(self, self.external_root_marker.context);
             self.drainMarkQueue();
             if (self.gc_mark_progress == progress) break;
         }

@@ -1,18 +1,18 @@
 (function (global) {
   'use strict';
 
-  // The whole platform program is released with its document. Strong maps
-  // keep internal slots alive while queued R4JS promise jobs still own only a
-  // reader, writer or controller; document teardown bounds their lifetime.
-  const readableState = new Map();
-  const readerState = new Map();
-  const controllerState = new Map();
-  const byobRequestState = new Map();
-  const writableState = new Map();
-  const writerState = new Map();
-  const writableControllerState = new Map();
-  const transformState = new Map();
-  const transformControllerState = new Map();
+  // Internal slots follow reachable owners and queued jobs through WeakMap
+  // ephemerons. Closed objects retain their state while referenced, and an
+  // unreachable owner/state cycle can be collected within the same document.
+  const readableState = new WeakMap();
+  const readerState = new WeakMap();
+  const controllerState = new WeakMap();
+  const byobRequestState = new WeakMap();
+  const writableState = new WeakMap();
+  const writerState = new WeakMap();
+  const writableControllerState = new WeakMap();
+  const transformState = new WeakMap();
+  const transformControllerState = new WeakMap();
   const activePipeThroughOperations = new Set();
 
   function typeError(message) { return new TypeError(message); }
