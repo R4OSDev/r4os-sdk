@@ -1,4 +1,5 @@
 const std = @import("std");
+const web_url = @import("web_url.zig");
 
 pub const max_header_bytes: usize = 16 * 1024;
 pub const max_header_count: usize = 64;
@@ -33,6 +34,7 @@ pub const UrlError = enum(u8) {
     bad_port,
     fragment_forbidden,
     output_too_small,
+    invalid_target,
 };
 
 pub const ParsedUrl = struct {
@@ -91,6 +93,7 @@ pub fn parseUrl(raw_input: []const u8) UrlResult {
     else
         raw[authority_end..];
 
+    if (!validRequestTarget(path, query_only)) return .{ .failure = .invalid_target };
     return .{ .value = .{
         .scheme = scheme,
         .host = host,
@@ -145,11 +148,15 @@ pub fn buildGetRequest(out: []u8, url: ParsedUrl, options: RequestOptions) Build
 }
 
 pub fn buildRequest(out: []u8, method: Method, url: ParsedUrl, options: RequestOptions) BuildResult {
+    if (!validRequestTarget(url.path, url.query_only)) return .{ .invalid_url = .invalid_target };
+    if (url.host.len == 0) return .{ .invalid_url = .missing_host };
+    for (url.host) |byte| if (!isHostByte(byte)) return .{ .invalid_url = .missing_host };
+    if (url.port == 0) return .{ .invalid_url = .bad_port };
     var pos: usize = 0;
     if (!append(out, &pos, method.text()) or
         !appendByte(out, &pos, ' ') or
         (url.query_only and !appendByte(out, &pos, '/')) or
-        !append(out, &pos, url.path) or
+        !appendRequestTarget(out, &pos, url.path) or
         !append(out, &pos, " HTTP/1.1\r\nHost: ") or
         !append(out, &pos, url.host))
     {
@@ -191,7 +198,7 @@ fn appendSerializedHeaders(out: []u8, pos: *usize, serialized: []const u8) bool 
         const relative_end = std.mem.indexOfScalar(u8, serialized[cursor..], '\n') orelse return false;
         const line = serialized[cursor .. cursor + relative_end];
         const colon = std.mem.indexOfScalar(u8, line, ':') orelse return false;
-        if (colon == 0 or !append(out, pos, line[0..colon]) or !append(out, pos, ": ") or !appendHeaderValue(out, pos, line[colon + 1 ..]) or !append(out, pos, "\r\n")) return false;
+        if (colon == 0 or !isHeaderName(line[0..colon]) or !append(out, pos, line[0..colon]) or !append(out, pos, ": ") or !appendHeaderValue(out, pos, line[colon + 1 ..]) or !append(out, pos, "\r\n")) return false;
         cursor += relative_end + 1;
     }
     return true;
@@ -325,7 +332,11 @@ pub const ResponseDecoder = struct {
                 if (input.len >= max_header_bytes) return self.fail(.header_too_large);
                 return self.more(eof);
             }
-            self.head = parseHead(input) orelse return self.fail(.malformed_header);
+            self.head = switch (parseHead(input)) {
+                .value => |value| value,
+                .need_more => return self.more(eof),
+                .failure => |err| return self.fail(err),
+            };
             self.cursor = self.head.?.body_start;
         }
         const head = self.head.?;
@@ -464,15 +475,20 @@ pub fn responseAllowsReuse(input: []const u8, response: Response) bool {
     return true;
 }
 
-fn parseHead(input: []const u8) ?ParsedHead {
-    const end = indexOf(input, "\r\n\r\n") orelse return null;
+const HeadResult = union(enum) { value: ParsedHead, need_more, failure: ResponseError };
+
+fn parseHead(input: []const u8) HeadResult {
+    const end = indexOf(input, "\r\n\r\n") orelse return .need_more;
     const body_start = end + 4;
-    if (body_start > max_header_bytes) return null;
-    const status_end = indexOf(input[0..end], "\r\n") orelse return null;
+    if (body_start > max_header_bytes) return .{ .failure = .header_too_large };
+    const status_end = indexOf(input[0..body_start], "\r\n") orelse return .{ .failure = .malformed_status };
     const status_line = input[0..status_end];
-    if (!startsWith(status_line, "HTTP/1.1 ") and !startsWith(status_line, "HTTP/1.0 ")) return null;
-    if (status_line.len < 12 or !isDigit(status_line[9]) or !isDigit(status_line[10]) or !isDigit(status_line[11])) return null;
+    if (!startsWith(status_line, "HTTP/")) return .{ .failure = .malformed_status };
+    if (!startsWith(status_line, "HTTP/1.1 ") and !startsWith(status_line, "HTTP/1.0 ")) return .{ .failure = .unsupported_version };
+    if (status_line.len < 13 or !isDigit(status_line[9]) or !isDigit(status_line[10]) or !isDigit(status_line[11]) or
+        status_line[12] != ' ' or hasForbiddenHeaderByte(status_line[13..])) return .{ .failure = .malformed_status };
     const status = @as(u16, status_line[9] - '0') * 100 + @as(u16, status_line[10] - '0') * 10 + @as(u16, status_line[11] - '0');
+    if (status < 100 or status > 599) return .{ .failure = .malformed_status };
 
     var cursor = status_end + 2;
     var count: usize = 0;
@@ -489,20 +505,20 @@ fn parseHead(input: []const u8) ?ParsedHead {
     var content_range: ?ContentRange = null;
     while (cursor < end) {
         count += 1;
-        if (count > max_header_count) return null;
-        const relative_end = indexOf(input[cursor..body_start], "\r\n") orelse return null;
+        if (count > max_header_count) return .{ .failure = .too_many_headers };
+        const relative_end = indexOf(input[cursor..body_start], "\r\n") orelse return .{ .failure = .malformed_header };
         const line_end = cursor + relative_end;
         const line = input[cursor..line_end];
-        const colon = indexOfByte(line, ':') orelse return null;
+        const colon = indexOfByte(line, ':') orelse return .{ .failure = .malformed_header };
         const name = line[0..colon];
-        const value = trimAscii(line[colon + 1 ..]);
-        if (name.len == 0 or !isHeaderName(name) or hasForbiddenHeaderByte(value)) return null;
+        const value = std.mem.trim(u8, line[colon + 1 ..], " \t");
+        if (name.len == 0 or !isHeaderName(name) or hasForbiddenHeaderByte(value)) return .{ .failure = .malformed_header };
         if (equalsIgnoreCase(name, "Content-Length")) {
-            const parsed = parseDecimal(value) orelse return null;
-            if (content_length != null and content_length.? != parsed) return null;
+            const parsed = parseDecimal(value) orelse return .{ .failure = .invalid_content_length };
+            if (content_length != null and content_length.? != parsed) return .{ .failure = .conflicting_length };
             content_length = parsed;
         } else if (equalsIgnoreCase(name, "Transfer-Encoding")) {
-            if (!equalsIgnoreCase(value, "chunked")) return null;
+            if (chunked or !equalsIgnoreCase(value, "chunked")) return .{ .failure = .unsupported_transfer_encoding };
             chunked = true;
         } else if (equalsIgnoreCase(name, "Location")) {
             location = value;
@@ -521,18 +537,18 @@ fn parseHead(input: []const u8) ?ParsedHead {
                 set_cookie_count += 1;
             }
         } else if (equalsIgnoreCase(name, "Content-Range")) {
-            if (content_range != null) return null;
-            content_range = parseContentRange(value) orelse return null;
+            if (content_range != null) return .{ .failure = .malformed_header };
+            content_range = parseContentRange(value) orelse return .{ .failure = .malformed_header };
         }
         cursor = line_end + 2;
     }
-    if (chunked and content_length != null) return null;
-    return .{
+    if (chunked and content_length != null) return .{ .failure = .conflicting_length };
+    return .{ .value = .{
         .status = status,
         .body_start = body_start,
         .transfer = if (chunked) .chunked else if (content_length != null) .content_length else .close_delimited,
         .content_length = content_length orelse 0,
-        .headers = input[status_end + 2 .. end],
+        .headers = input[@min(status_end + 2, end)..end],
         .location = location,
         .content_type = content_type,
         .content_security_policy = content_security_policy,
@@ -542,7 +558,7 @@ fn parseHead(input: []const u8) ?ParsedHead {
         .set_cookies = set_cookies,
         .set_cookie_count = set_cookie_count,
         .content_range = content_range,
-    };
+    } };
 }
 
 pub const StreamResponse = struct {
@@ -578,6 +594,7 @@ pub const StreamDecoder = struct {
     head: ?ParsedHead = null,
     received: u64 = 0,
     done: bool = false,
+    failure: ?ResponseError = null,
 
     pub fn init(header_buffer: []u8, method: Method) StreamDecoder {
         return .{ .header_buffer = header_buffer, .method = method };
@@ -601,6 +618,7 @@ pub const StreamDecoder = struct {
 
     pub fn push(self: *StreamDecoder, input: []const u8, eof: bool, stop_requested: bool) StreamDecodeResult {
         if (stop_requested) return .aborted;
+        if (self.failure) |err| return .{ .failure = err };
         if (self.done) return if (input.len == 0) .complete else .{ .failure = .unexpected_body };
         var body = input;
         if (self.head == null) {
@@ -612,7 +630,14 @@ pub const StreamDecoder = struct {
                 self.header_buffer[self.header_len] = input[consumed];
                 self.header_len += 1;
                 if (self.header_len >= 4 and std.mem.eql(u8, self.header_buffer[self.header_len - 4 .. self.header_len], "\r\n\r\n")) {
-                    self.head = parseHead(self.header_buffer[0..self.header_len]) orelse return .{ .failure = .malformed_header };
+                    self.head = switch (parseHead(self.header_buffer[0..self.header_len])) {
+                        .value => |value| value,
+                        .need_more => return if (eof) .{ .failure = .transport_closed_early } else .need_more,
+                        .failure => |err| {
+                            self.failure = err;
+                            return .{ .failure = err };
+                        },
+                    };
                     body = input[consumed + 1 ..];
                     break;
                 }
@@ -653,39 +678,44 @@ pub fn resolveRedirect(base: ParsedUrl, location_input: []const u8, out: []u8) R
     const location = trimAscii(location_input);
     if (location.len == 0) return .{ .invalid = .missing_host };
     if (indexOfByte(location, '#') != null) return .{ .invalid = .fragment_forbidden };
-    if (indexOf(location, "://") != null) {
-        const parsed = parseUrl(location);
-        return switch (parsed) {
-            .value => if (copyInto(out, location)) |bytes| .{ .url = bytes } else .output_too_small,
-            .failure => |err| .{ .invalid = err },
-        };
-    }
-
+    if (!validRequestTarget(base.path, base.query_only)) return .{ .invalid = .invalid_target };
     var pos: usize = 0;
     if (!append(out, &pos, base.scheme.text()) or !append(out, &pos, "://") or !append(out, &pos, base.host)) return .output_too_small;
     if (base.explicit_port or base.port != base.scheme.defaultPort()) {
         if (!appendByte(out, &pos, ':') or !appendUnsigned(out, &pos, base.port)) return .output_too_small;
     }
-    if (startsWith(location, "//")) {
-        pos = 0;
-        if (!append(out, &pos, base.scheme.text()) or !appendByte(out, &pos, ':') or !append(out, &pos, location)) return .output_too_small;
-    } else if (location[0] == '/') {
-        if (!append(out, &pos, location)) return .output_too_small;
-    } else if (location[0] == '?') {
-        const query = indexOfByte(base.path, '?') orelse base.path.len;
-        if ((base.query_only and !appendByte(out, &pos, '/')) or
-            !append(out, &pos, base.path[0..query]) or
-            !append(out, &pos, location))
-        {
-            return .output_too_small;
+    const resolved = web_url.resolveReference(out[0..pos], base.path, location, out) catch |err| return switch (err) {
+        error.TooLong => .output_too_small,
+        else => .{ .invalid = .missing_host },
+    };
+    return switch (parseUrl(resolved)) {
+        .value => .{ .url = resolved },
+        .failure => |err| .{ .invalid = err },
+    };
+}
+
+fn validRequestTarget(path: []const u8, query_only: bool) bool {
+    if (path.len == 0 or path[0] != (if (query_only) @as(u8, '?') else '/')) return false;
+    var index: usize = 0;
+    while (index < path.len) : (index += 1) {
+        const byte = path[index];
+        if (byte <= 0x20 or byte == 0x7f or byte == '#') return false;
+        if (byte == '%') {
+            if (path.len - index < 3 or !std.ascii.isHex(path[index + 1]) or !std.ascii.isHex(path[index + 2])) return false;
+            index += 2;
         }
-    } else {
-        const query = indexOfByte(base.path, '?') orelse base.path.len;
-        const path_only = base.path[0..query];
-        const slash = lastIndexOfByte(path_only, '/') orelse 0;
-        if (!append(out, &pos, path_only[0 .. slash + 1]) or !append(out, &pos, location)) return .output_too_small;
     }
-    return .{ .url = out[0..pos] };
+    return true;
+}
+
+fn appendRequestTarget(out: []u8, pos: *usize, path: []const u8) bool {
+    const digits = "0123456789ABCDEF";
+    for (path) |byte| {
+        if (std.ascii.isAlphanumeric(byte) or indexOfByte("-._~!$&'()*+,;=:@/?%", byte) != null) {
+            if (!appendByte(out, pos, byte)) return false;
+        } else if (!append(out, pos, &.{ '%', digits[byte >> 4], digits[byte & 15] })) return false;
+    }
+    return true;
 }
 
 fn parsePort(value: []const u8) ?u16 {
@@ -816,12 +846,6 @@ fn appendUnsigned(out: []u8, pos: *usize, value: anytype) bool {
     return append(out, pos, text);
 }
 
-fn copyInto(out: []u8, value: []const u8) ?[]u8 {
-    if (value.len > out.len) return null;
-    if (value.len > 0) @memcpy(out[0..value.len], value);
-    return out[0..value.len];
-}
-
 fn indexOf(value: []const u8, needle: []const u8) ?usize {
     return std.mem.indexOf(u8, value, needle);
 }
@@ -858,6 +882,26 @@ test "URL parser separates HTTP and HTTPS authority" {
 }
 
 test "GET request prevents header injection and requests identity transfer" {
+    // Both the parser and the serializer validate the target, including
+    // callers constructing ParsedUrl directly. No output is published.
+    var path = "/left?x=Ay".*;
+    var invalid_out: [512]u8 = undefined;
+    for (0..34) |index| {
+        const byte: u8 = if (index < 33) @intCast(index) else 0x7f;
+        path[8] = byte;
+        @memset(&invalid_out, 0xa5);
+        const candidate = ParsedUrl{ .scheme = .https, .host = "example.test", .port = 443, .path = &path, .explicit_port = false, .query_only = false };
+        try std.testing.expectEqual(UrlError.invalid_target, buildGetRequest(&invalid_out, candidate, .{}).invalid_url);
+        try std.testing.expect(std.mem.allEqual(u8, &invalid_out, 0xa5));
+        var raw: [128]u8 = undefined;
+        const text = try std.fmt.bufPrint(&raw, "https://example.test{s}", .{path});
+        try std.testing.expectEqual(UrlError.invalid_target, parseUrl(text).failure);
+    }
+    const encoded = parseUrl("https://example.test/ä?q=%0D%0A&x=[one]").value;
+    const encoded_bytes = buildGetRequest(&invalid_out, encoded, .{}).bytes;
+    try std.testing.expect(std.mem.startsWith(u8, encoded_bytes, "GET /%C3%A4?q=%0D%0A&x=%5Bone%5D HTTP/1.1\r\n"));
+    try std.testing.expectEqual(UrlError.invalid_target, parseUrl("https://example.test/%G0").failure);
+
     const url = switch (parseUrl("http://example.com/a")) {
         .value => |value| value,
         else => return error.TestUnexpectedResult,
@@ -913,6 +957,7 @@ test "request methods and validated custom headers reach the wire once" {
     try std.testing.expectEqual(@as(usize, 1), std.mem.count(u8, request, "content-type: application/json\r\n"));
     try std.testing.expect(std.mem.indexOf(u8, request, "x-request: r4\r\nContent-Length: 11\r\n") != null);
     try std.testing.expect(std.mem.endsWith(u8, request, "\r\n\r\n{\"ok\":true}"));
+    try std.testing.expect(buildRequest(&output, .get, parsed, .{ .headers = "bad name:value\n" }) == .output_too_small);
 }
 
 test "query-only URL keeps slash in request and redirect" {
@@ -986,7 +1031,21 @@ test "redirect resolution and cancellation stay explicit" {
         .url => |value| value,
         else => return error.TestUnexpectedResult,
     };
-    try std.testing.expectEqualStrings("https://example.com/a/b/../next?q=1", redirected);
+    try std.testing.expectEqualStrings("https://example.com/a/next?q=1", redirected);
+    const examples = [_][2][]const u8{
+        .{ "./next", "https://example.com/a/b/next" },
+        .{ "../../../next", "https://example.com/next" },
+        .{ "../next?keep=/../x", "https://example.com/a/next?keep=/../x" },
+        .{ "../a//b", "https://example.com/a/a//b" },
+        .{ "/a/./b/../", "https://example.com/a/" },
+        .{ "//other.test/a/../b", "https://other.test/b" },
+        .{ "https://other.test/a/../b", "https://other.test/b" },
+        .{ "?q=/../x", "https://example.com/a/b/index.html?q=/../x" },
+    };
+    for (examples) |example| try std.testing.expectEqualStrings(example[1], resolveRedirect(base, example[0], &url_buffer).url);
+    const query_base = parseUrl("https://example.com?q=1").value;
+    try std.testing.expectEqualStrings("https://example.com/next", resolveRedirect(query_base, "next", &url_buffer).url);
+
     var body: [8]u8 = undefined;
     try std.testing.expect(switch (decodeResponse("", body[0..], false, true)) {
         .aborted => true,
@@ -1167,4 +1226,41 @@ test "incremental response framing excludes incomplete closed cancelled and swit
         const response = closed_decoder.decode(closed, &out, true, false).complete;
         try std.testing.expect(!responseAllowsReuse(closed, response));
     }
+}
+
+test "complete response heads retain precise errors before and after EOF" {
+    const Case = struct { bytes: []const u8, expected: ResponseError };
+    const cases = [_]Case{
+        .{ .bytes = "NOTHTTP 200 OK\r\n\r\n", .expected = .malformed_status },
+        .{ .bytes = "HTTP/2 200 OK\r\nContent-Length: nope\r\n\r\n", .expected = .unsupported_version },
+        .{ .bytes = "HTTP/1.1 20x OK\r\n\r\n", .expected = .malformed_status },
+        .{ .bytes = "HTTP/1.1 2000 OK\r\n\r\n", .expected = .malformed_status },
+        .{ .bytes = "HTTP/1.1 200 OK\r\nNoColon\r\n\r\n", .expected = .malformed_header },
+        .{ .bytes = "HTTP/1.1 200 OK\r\nX: a\rb\r\n\r\n", .expected = .malformed_header },
+        .{ .bytes = "HTTP/1.1 200 OK\r\nContent-Length: nope\r\n\r\n", .expected = .invalid_content_length },
+        .{ .bytes = "HTTP/1.1 200 OK\r\nContent-Length: 1\r\nContent-Length: 2\r\n\r\n", .expected = .conflicting_length },
+        .{ .bytes = "HTTP/1.1 200 OK\r\nTransfer-Encoding: gzip\r\n\r\n", .expected = .unsupported_transfer_encoding },
+        .{ .bytes = "HTTP/1.1 200 OK\r\nTransfer-Encoding: chunked\r\nContent-Length: 0\r\n\r\n", .expected = .conflicting_length },
+        .{ .bytes = "HTTP/1.1 200 OK\r\n" ++ "X: v\r\n" ** (max_header_count + 1) ++ "\r\n", .expected = .too_many_headers },
+    };
+    var body: [16]u8 = undefined;
+    var header: [1024]u8 = undefined;
+    for (cases) |case| {
+        var decoder = ResponseDecoder.init(.get);
+        try std.testing.expectEqual(case.expected, decoder.decode(case.bytes, &body, false, false).failure);
+        try std.testing.expectEqual(case.expected, decoder.decode(case.bytes, &body, true, false).failure);
+        try std.testing.expectEqual(case.expected, decodeResponse(case.bytes, &body, true, false).failure);
+        var stream = StreamDecoder.init(&header, .get);
+        try std.testing.expectEqual(case.expected, stream.push(case.bytes, false, false).failure);
+        try std.testing.expectEqual(case.expected, stream.push("", true, false).failure);
+    }
+    const partial = "HTTP/1.1 200 OK\r\nContent-Length: 0\r\n";
+    try std.testing.expect(decodeResponse(partial, &body, false, false) == .need_more);
+    try std.testing.expectEqual(ResponseError.transport_closed_early, decodeResponse(partial, &body, true, false).failure);
+    const bare = "HTTP/1.1 204 No Content\r\n\r\n";
+    const response = decodeResponse(bare, &body, false, false).complete;
+    try std.testing.expectEqual(@as(u16, 204), response.status);
+    try std.testing.expectEqual(@as(usize, 0), response.headers.len);
+    var stream = StreamDecoder.init(&header, .get);
+    try std.testing.expect(stream.push(bare, false, false) == .complete);
 }
