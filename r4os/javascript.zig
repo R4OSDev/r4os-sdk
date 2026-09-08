@@ -14210,44 +14210,195 @@ pub const Runtime = struct {
         try self.pushRoot(values);
         var value_count: usize = 0;
         for (0..length) |item_index| {
+            try self.checkpoint();
             if (!try self.arrayLikeHas(receiver, item_index)) continue;
             try self.setSparseArrayItem(values, value_count, try self.arrayLikeGet(receiver, item_index));
             value_count += 1;
         }
         try self.sortDenseArray(program, values.cell, comparator);
-        for (0..value_count) |item_index| try self.arrayLikeSet(receiver, item_index, self.itemStorageConst(values.cell)[item_index]);
-        for (value_count..length) |item_index| try self.arrayLikeDelete(receiver, item_index);
+        for (0..value_count) |item_index| {
+            try self.checkpoint();
+            try self.arrayLikeSet(receiver, item_index, self.itemStorageConst(values.cell)[item_index]);
+        }
+        for (value_count..length) |item_index| {
+            try self.checkpoint();
+            try self.arrayLikeDelete(receiver, item_index);
+        }
         try self.arrayLikeSetLength(receiver, length);
         return receiver;
     }
 
-    fn sortDenseArray(self: *Runtime, program: *const Program, index: u16, comparator: Value) Error!void {
-        var outer: usize = 1;
-        while (outer < self.cells[index].item_count) : (outer += 1) {
-            var inner = outer;
-            while (inner > 0) {
-                const left = self.itemStorageConst(index)[inner - 1];
-                const right = self.itemStorageConst(index)[inner];
-                const order = if (left == .undefined)
-                    if (right == .undefined) @as(f64, 0) else @as(f64, 1)
-                else if (right == .undefined)
-                    @as(f64, -1)
-                else if (comparator != .undefined)
-                    try self.toNumber(try self.call(program, comparator, .undefined, &.{ left, right }, false))
-                else blk: {
-                    const left_text = (try self.toString(left)).bytes(self.strings[0..self.string_len]);
-                    const right_text = (try self.toString(right)).bytes(self.strings[0..self.string_len]);
-                    break :blk switch (std.mem.order(u8, left_text, right_text)) {
-                        .lt => @as(f64, -1),
-                        .eq => @as(f64, 0),
-                        .gt => @as(f64, 1),
-                    };
+    const SortSource = union(enum) {
+        array: u16,
+        typed: struct { bytes: []const u8, element: TypedArrayElement },
+    };
+
+    const SortOrder = struct {
+        memory: []u16 = &.{},
+        indices: []u16 = &.{},
+
+        fn deinit(self: SortOrder, runtime: *Runtime) void {
+            if (self.memory.len != 0) runtime.program_allocator.free(runtime.program_allocator.context, @ptrCast(self.memory.ptr), self.memory.len * @sizeOf(u16), @alignOf(u16));
+        }
+    };
+
+    fn sortOrderAfter(self: *Runtime, program: *const Program, source: SortSource, comparator: Value, left_index: usize, right_index: usize) Error!bool {
+        const root_base = self.root_count;
+        defer self.root_count = root_base;
+        var left: Value = undefined;
+        var right: Value = undefined;
+        switch (source) {
+            .array => |index| {
+                left = self.itemStorageConst(index)[left_index];
+                right = self.itemStorageConst(index)[right_index];
+                // Undefined never reaches the user comparator; holes were
+                // skipped when gathering sort() and read by toSorted().
+                if (left == .undefined) return right != .undefined;
+                if (right == .undefined) return false;
+            },
+            .typed => |typed| {
+                const size = typed.element.byteSize();
+                const left_bits = readDataViewBits(typed.bytes, left_index * size, size, true);
+                const right_bits = readDataViewBits(typed.bytes, right_index * size, size, true);
+                if (comparator == .undefined) switch (typed.element) {
+                    .bigint64 => return @as(i64, @bitCast(left_bits)) > @as(i64, @bitCast(right_bits)),
+                    .biguint64 => return left_bits > right_bits,
+                    else => {},
                 };
-                if (!(order > 0)) break;
-                self.itemStorage(index)[inner - 1] = right;
-                self.itemStorage(index)[inner] = left;
-                inner -= 1;
+                left = try self.typedArrayValueFromBits(typed.element, left_bits);
+                try self.pushRoot(left);
+                right = try self.typedArrayValueFromBits(typed.element, right_bits);
+                try self.pushRoot(right);
+                if (comparator == .undefined) return (try self.typedArrayDefaultOrder(left, right)) == .gt;
+            },
+        }
+        if (comparator != .undefined)
+            return (try self.toNumber(try self.call(program, comparator, .undefined, &.{ left, right }, false))) > 0;
+        // String conversion may grow the arena. Resolve both byte slices only
+        // after both conversions have finished.
+        const left_text = try self.toString(left);
+        const right_text = try self.toString(right);
+        return std.mem.order(u8, self.stringBytes(left_text), self.stringBytes(right_text)) == .gt;
+    }
+
+    fn stableSortOrder(self: *Runtime, program: *const Program, source: SortSource, length: usize, comparator: Value) Error!SortOrder {
+        if (length == 0) return .{};
+        if (length > max_items) {
+            self.diagnostic_limit_required = length;
+            self.diagnostic_limit_available = max_items;
+            return error.ItemLimit;
+        }
+        // At the existing 65,536-element limit every original index fits u16.
+        // Both merge runs together occupy at most 256 KB; no Value copies.
+        const bytes = length * 2 * @sizeOf(u16);
+        const raw = self.program_allocator.allocate(self.program_allocator.context, bytes, @alignOf(u16)) orelse return error.ProgramAllocation;
+        errdefer self.program_allocator.free(self.program_allocator.context, raw, bytes, @alignOf(u16));
+        const memory = @as([*]u16, @ptrCast(@alignCast(raw)))[0 .. length * 2];
+        var input = memory[0..length];
+        var output = memory[length..];
+        for (input, 0..) |*index, position| {
+            try self.checkpoint();
+            index.* = @intCast(position);
+        }
+        var ordered = true;
+        for (1..length) |position| {
+            try self.checkpoint();
+            if (try self.sortOrderAfter(program, source, comparator, position - 1, position)) {
+                ordered = false;
+                break;
             }
+        }
+        if (ordered) return .{ .memory = memory, .indices = input };
+        var width: usize = 1;
+        while (width < length) : (width *= 2) {
+            var start: usize = 0;
+            while (start < length) : (start += width * 2) {
+                const middle = @min(start + width, length);
+                const end = @min(start + width * 2, length);
+                var left = start;
+                var right = middle;
+                for (start..end) |destination| {
+                    try self.checkpoint();
+                    if (left < middle and (right == end or !try self.sortOrderAfter(program, source, comparator, input[left], input[right]))) {
+                        // Taking the left run on equality preserves stability,
+                        // including comparator NaN and equal signed zeros.
+                        output[destination] = input[left];
+                        left += 1;
+                    } else {
+                        output[destination] = input[right];
+                        right += 1;
+                    }
+                }
+            }
+            std.mem.swap([]u16, &input, &output);
+        }
+        return .{ .memory = memory, .indices = input };
+    }
+
+    fn sortDenseArray(self: *Runtime, program: *const Program, index: u16, comparator: Value) Error!void {
+        const order = try self.stableSortOrder(program, .{ .array = index }, self.cells[index].item_count, comparator);
+        defer order.deinit(self);
+        const root_base = self.root_count;
+        defer self.root_count = root_base;
+        // Apply the permutation in place after all comparisons. The saved
+        // cycle value stays rooted if a checkpoint performs collection.
+        for (order.indices, 0..) |_, start| {
+            try self.checkpoint();
+            if (order.indices[start] == start) continue;
+            self.root_count = root_base;
+            const saved = self.itemStorageConst(index)[start];
+            try self.pushRoot(saved);
+            var current = start;
+            while (true) {
+                try self.checkpoint();
+                const next = order.indices[current];
+                order.indices[current] = @intCast(current);
+                if (next == start) {
+                    self.itemStorage(index)[current] = saved;
+                    break;
+                }
+                self.itemStorage(index)[current] = self.itemStorageConst(index)[next];
+                current = next;
+            }
+        }
+    }
+
+    fn sortTypedArray(self: *Runtime, program: *const Program, index: u16, comparator: Value) Error!void {
+        const captured = try self.typedArrayRange(index);
+        const length = captured.length;
+        if (length > max_items) {
+            self.diagnostic_limit_required = length;
+            self.diagnostic_limit_available = max_items;
+            return error.ItemLimit;
+        }
+        if (length == 0) return;
+        const size = captured.element.byteSize();
+        const byte_length = length * size;
+        const raw = self.program_allocator.allocate(self.program_allocator.context, byte_length, @alignOf(u8)) orelse return error.ProgramAllocation;
+        defer self.program_allocator.free(self.program_allocator.context, raw, byte_length, @alignOf(u8));
+        const snapshot = raw[0..byte_length];
+        // Keep original values independent of comparator mutations, resizing
+        // or detachment without materializing a complete JavaScript array.
+        for (0..length) |item| {
+            try self.checkpoint();
+            const offset = item * size;
+            @memcpy(snapshot[offset .. offset + size], arrayBufferBytes(captured.storage)[captured.offset + offset .. captured.offset + offset + size]);
+        }
+        const order = try self.stableSortOrder(program, .{ .typed = .{ .bytes = snapshot, .element = captured.element } }, length, comparator);
+        defer order.deinit(self);
+        for (order.indices, 0..) |original, destination| {
+            try self.checkpoint();
+            // Match integer-indexed writes after comparator side effects:
+            // detached/out-of-bounds views ignore writes; immutable ones fail.
+            const current = self.typedArrayRange(index) catch |err| switch (err) {
+                error.TypeError => continue,
+                else => return err,
+            };
+            if (destination >= current.length) continue;
+            if (current.storage.immutable) return error.TypeError;
+            const from = @as(usize, original) * size;
+            const to = current.offset + destination * size;
+            @memcpy(arrayBufferBytes(current.storage)[to .. to + size], snapshot[from .. from + size]);
         }
     }
 
@@ -14313,7 +14464,10 @@ pub const Runtime = struct {
         try self.pushRoot(receiver);
         try self.pushRoot(comparator);
         try self.pushRoot(result);
-        for (0..length) |item_index| try self.setSparseArrayItem(result, item_index, try self.arrayLikeGet(receiver, item_index));
+        for (0..length) |item_index| {
+            try self.checkpoint();
+            try self.setSparseArrayItem(result, item_index, try self.arrayLikeGet(receiver, item_index));
+        }
         try self.sortDenseArray(program, result.cell, comparator);
         return result;
     }
@@ -17889,46 +18043,16 @@ pub const Runtime = struct {
         return std.math.order(a, b);
     }
 
-    fn sortTypedValues(self: *Runtime, program: *const Program, values: u16, comparator: Value) Error!void {
-        var outer: usize = 1;
-        while (outer < self.cells[values].item_count) : (outer += 1) {
-            var inner = outer;
-            while (inner > 0) {
-                const left = self.itemStorageConst(values)[inner - 1];
-                const right = self.itemStorageConst(values)[inner];
-                const order = if (comparator == .undefined)
-                    try self.typedArrayDefaultOrder(left, right)
-                else blk: {
-                    const number = try self.toNumber(try self.call(program, comparator, .undefined, &.{ left, right }, false));
-                    break :blk if (std.math.isNan(number) or number == 0)
-                        std.math.Order.eq
-                    else if (number < 0)
-                        std.math.Order.lt
-                    else
-                        std.math.Order.gt;
-                };
-                if (order != .gt) break;
-                self.itemStorage(values)[inner - 1] = right;
-                self.itemStorage(values)[inner] = left;
-                inner -= 1;
-            }
-        }
-    }
-
     fn nativeTypedArraySort(self: *Runtime, program: *const Program, receiver: Value, arguments: []const Value) Error!Value {
         const source = try self.typedArrayIndex(receiver);
-        const length = (try self.typedArrayRange(source)).length;
+        _ = try self.typedArrayRange(source);
         const comparator = if (arguments.len > 0) arguments[0] else Value.undefined;
         if (comparator != .undefined and !self.isCallableValue(comparator)) return error.TypeError;
         const root_base = self.root_count;
         defer self.root_count = root_base;
         try self.pushRoot(receiver);
         try self.pushRoot(comparator);
-        const values = try self.createSparseArray(length);
-        try self.pushRoot(values);
-        for (0..length) |item_index| try self.setSparseArrayItem(values, item_index, try self.typedArrayRead(source, item_index));
-        try self.sortTypedValues(program, values.cell, comparator);
-        for (0..length) |item_index| _ = try self.typedArrayWrite(source, item_index, self.itemStorageConst(values.cell)[item_index]);
+        try self.sortTypedArray(program, source, comparator);
         return receiver;
     }
 
@@ -17971,6 +18095,11 @@ pub const Runtime = struct {
         }
         const comparator = if (method == .sorted and arguments.len > 0) arguments[0] else Value.undefined;
         if (comparator != .undefined and !self.isCallableValue(comparator)) return error.TypeError;
+        if (method == .sorted and length > max_items) {
+            self.diagnostic_limit_required = length;
+            self.diagnostic_limit_available = max_items;
+            return error.ItemLimit;
+        }
         const root_base = self.root_count;
         defer self.root_count = root_base;
         try self.pushRoot(receiver);
@@ -17978,17 +18107,21 @@ pub const Runtime = struct {
         try self.pushRoot(comparator);
         const result = try self.createTypedArrayLength(range.element, length);
         try self.pushRoot(result);
+        if (method == .sorted) {
+            const target = try self.typedArrayRange(result.cell);
+            const size = range.element.byteSize();
+            for (0..length) |item_index| {
+                try self.checkpoint();
+                const offset = item_index * size;
+                @memcpy(arrayBufferBytes(target.storage)[offset .. offset + size], arrayBufferBytes(range.storage)[range.offset + offset .. range.offset + offset + size]);
+            }
+            try self.sortTypedArray(program, result.cell, comparator);
+            return result;
+        }
         for (0..length) |item_index| {
             const source_index = if (method == .reversed) length - item_index - 1 else item_index;
             const value = if (method == .with_value and item_index == replace_index) replacement else try self.arrayLikeGet(receiver, source_index);
             if (!try self.typedArrayWrite(result.cell, item_index, value)) return error.TypeError;
-        }
-        if (method == .sorted) {
-            const values = try self.createSparseArray(length);
-            try self.pushRoot(values);
-            for (0..length) |item_index| try self.setSparseArrayItem(values, item_index, try self.typedArrayRead(result.cell, item_index));
-            try self.sortTypedValues(program, values.cell, comparator);
-            for (0..length) |item_index| _ = try self.typedArrayWrite(result.cell, item_index, self.itemStorageConst(values.cell)[item_index]);
         }
         return result;
     }
@@ -23437,6 +23570,8 @@ pub const Runtime = struct {
         if (a == .string and b == .string and !self.isSymbolValue(a) and !self.isSymbolValue(b))
             return self.compareRuntimeStrings(a.string, b.string);
         if (self.isSymbolValue(a) or self.isSymbolValue(b)) return error.TypeError;
+        if (a == .bigint and b == .bigint)
+            return BigIntCore.Const.order(try self.bigIntConst(a), try self.bigIntConst(b));
         if (a == .bigint) {
             if (b == .string) {
                 const parsed = self.createBigIntFromString(self.stringBytes(b.string)) catch |err| switch (err) {
@@ -31246,4 +31381,118 @@ test "accessor owners release and reuse slots through GC and property changes" {
     runtime.collectGarbage();
     value = try runtime.evaluateSource(&program, "return kept.alive+replacements[0].value;");
     try std.testing.expectEqual(@as(f64, 19), try runtime.valueNumber(value));
+}
+
+test "stable native sorting preserves holes ties errors and typed snapshots" {
+    const runtime = try createTestingRuntime();
+    defer destroyTestingRuntime(runtime);
+    const Collect = struct {
+        fn call(owner: *Runtime, _: ?*anyopaque, _: u16, _: Value, _: []const Value) Error!Value {
+            owner.collectGarbage();
+            return .undefined;
+        }
+    };
+    try runtime.defineGlobal("collectDuringSort", try runtime.createHostFunction(0, null, Collect.call), true);
+    var program: Program = .{};
+    const value = try runtime.evaluateSource(&program, "const records=[{k:2,id:'a'},{k:1,id:'b'},{k:2,id:'c'},{k:1,id:'d'}];records.sort(function(a,b){collectDuringSort();return a.k-b.k;});" ++
+        "const sparse=[3,,undefined,1,2,,undefined];let undefinedCompared=false;sparse.sort(function(a,b){undefinedCompared=undefinedCompared||a===undefined||b===undefined;return a-b;});" ++
+        "const copied=[3,,1].toSorted();const words=[20,3,100].sort();const equal=[3,2,1].sort(function(){return NaN;});" ++
+        "const failed=[3,2,1];let thrown=false;try{failed.sort(function(){throw 'sort-failed';});}catch(reason){thrown=reason==='sort-failed';}" ++
+        "const typed=new Uint16Array([3,1,2]);typed.sort(function(a,b){typed.fill(99);return a-b;});" ++
+        "const typedFailed=new Uint8Array([3,2,1]);let typedThrown=false;try{typedFailed.sort(function(){typedFailed[0]=9;throw 'typed-failed';});}catch(reason){typedThrown=reason==='typed-failed';}" ++
+        "const ties=new Uint8Array([21,12,22,11]);ties.sort(function(a,b){return Math.floor(a/10)-Math.floor(b/10);});" ++
+        "const floats=new Float64Array([NaN,0,-0,Infinity,-Infinity,2,-1]).sort();const same=new Float32Array([3,2,1]).sort(function(){return NaN;});" ++
+        "const signed=new BigInt64Array([9223372036854775807n,-1n,-9223372036854775808n,0n]).sort();" ++
+        "const unsigned=new BigUint64Array([18446744073709551615n,0n,9223372036854775808n]).sort();" ++
+        "const bigCustom=new BigInt64Array([3n,1n,2n]).sort(function(a,b){collectDuringSort();return a<b?-1:a>b?1:0;});" ++
+        "const original=new Uint8Array([3,1,2]);const sortedCopy=original.toSorted(function(a,b){original.fill(9);return a-b;});" ++
+        "return records.map(function(x){return x.id;}).join('')==='bdac'&&!undefinedCompared&&sparse.length===7&&sparse.slice(0,3).join(',')==='1,2,3'&&Object.hasOwn(sparse,3)&&Object.hasOwn(sparse,4)&&!Object.hasOwn(sparse,5)&&!Object.hasOwn(sparse,6)&&" ++
+        "copied.length===3&&copied[0]===1&&copied[1]===3&&Object.hasOwn(copied,2)&&copied[2]===undefined&&words.join(',')==='100,20,3'&&equal.join(',')==='3,2,1'&&thrown&&failed.join(',')==='3,2,1'&&" ++
+        "typed.join(',')==='1,2,3'&&typedThrown&&typedFailed.join(',')==='9,2,1'&&ties.join(',')==='12,11,21,22'&&floats[0]===-Infinity&&floats[1]===-1&&1/floats[2]===-Infinity&&1/floats[3]===Infinity&&floats[4]===2&&floats[5]===Infinity&&Number.isNaN(floats[6])&&same.join(',')==='3,2,1'&&" ++
+        "signed.join(',')==='-9223372036854775808,-1,0,9223372036854775807'&&unsigned.join(',')==='0,9223372036854775808,18446744073709551615'&&bigCustom.join(',')==='1,2,3'&&original.join(',')==='9,9,9'&&sortedCopy.join(',')==='1,2,3';");
+    try std.testing.expectEqual(true, runtime.valueBoolean(value));
+
+    const nan_values = try runtime.createTypedArrayLength(.float64, 3);
+    try runtime.pushRoot(nan_values);
+    const range = try runtime.typedArrayRange(nan_values.cell);
+    const first_nan: u64 = 0x7ff8000000000001;
+    const second_nan: u64 = 0xfff8000000000042;
+    Runtime.writeDataViewBits(Runtime.arrayBufferBytes(range.storage), 0, 8, true, first_nan);
+    Runtime.writeDataViewBits(Runtime.arrayBufferBytes(range.storage), 8, 8, true, @bitCast(@as(f64, 1)));
+    Runtime.writeDataViewBits(Runtime.arrayBufferBytes(range.storage), 16, 8, true, second_nan);
+    _ = try runtime.nativeTypedArraySort(&program, nan_values, &.{});
+    try std.testing.expectEqual(first_nan, Runtime.readDataViewBits(Runtime.arrayBufferBytes(range.storage), 8, 8, true));
+    try std.testing.expectEqual(second_nan, Runtime.readDataViewBits(Runtime.arrayBufferBytes(range.storage), 16, 8, true));
+}
+
+test "native merge sorting bounds comparisons for reverse and ordered inputs" {
+    const runtime = try createTestingRuntime();
+    defer destroyTestingRuntime(runtime);
+    const Counter = struct {
+        fn call(_: *Runtime, context: ?*anyopaque, _: u16, _: Value, arguments: []const Value) Error!Value {
+            const count: *usize = @ptrCast(@alignCast(context.?));
+            count.* += 1;
+            return .{ .number = arguments[0].number - arguments[1].number };
+        }
+    };
+    var comparisons: usize = 0;
+    const comparator = try runtime.createHostFunction(0, &comparisons, Counter.call);
+    try runtime.pushRoot(comparator);
+    var program: Program = .{};
+    for ([_]usize{ 256, 512 }) |length| {
+        const root_base = runtime.root_count;
+        defer runtime.root_count = root_base;
+        const array = try runtime.createSparseArray(length);
+        try runtime.pushRoot(array);
+        const typed = try runtime.createTypedArrayLength(.int16, length);
+        try runtime.pushRoot(typed);
+        for (0..length) |index| {
+            const value = Value{ .number = @floatFromInt(length - index - 1) };
+            try runtime.setSparseArrayItem(array, index, value);
+            _ = try runtime.typedArrayWrite(typed.cell, index, value);
+        }
+        for ([_]Value{ array, typed }) |input| {
+            for (0..2) |ordered| {
+                comparisons = 0;
+                if (input.cell == array.cell) {
+                    _ = try runtime.nativeArraySort(&program, input, &.{comparator});
+                } else {
+                    _ = try runtime.nativeTypedArraySort(&program, input, &.{comparator});
+                }
+                try std.testing.expect(comparisons > 0 and comparisons <= length * std.math.log2_int(usize, length));
+                if (ordered == 1) try std.testing.expectEqual(length - 1, comparisons);
+                for (0..length) |index| {
+                    const value = if (input.cell == array.cell) runtime.itemStorageConst(array.cell)[index] else try runtime.typedArrayRead(typed.cell, index);
+                    try std.testing.expectEqual(@as(f64, @floatFromInt(index)), value.number);
+                }
+            }
+        }
+    }
+}
+
+test "native sorting budget abort releases scratch and runtime remains usable" {
+    const runtime = try createTestingRuntime();
+    defer destroyTestingRuntime(runtime);
+    const Counter = struct {
+        fn call(_: *Runtime, context: ?*anyopaque, _: u16, _: Value, arguments: []const Value) Error!Value {
+            const count: *usize = @ptrCast(@alignCast(context.?));
+            count.* += 1;
+            return .{ .number = arguments[0].number - arguments[1].number };
+        }
+    };
+    var comparisons: usize = 0;
+    const comparator = try runtime.createHostFunction(0, &comparisons, Counter.call);
+    try runtime.pushRoot(comparator);
+    const array = try runtime.createTypedArrayLength(.int16, 128);
+    try runtime.pushRoot(array);
+    for (0..128) |index| _ = try runtime.typedArrayWrite(array.cell, index, .{ .number = @floatFromInt(127 - index) });
+    var program: Program = .{};
+    const roots = runtime.root_count;
+    runtime.setStepBudget(runtime.stats.steps + 128 * 2 + 32);
+    try std.testing.expectError(error.StepLimit, runtime.nativeTypedArraySort(&program, array, &.{comparator}));
+    try std.testing.expect(comparisons > 0);
+    try std.testing.expectEqual(roots, runtime.root_count);
+    for (0..128) |index| try std.testing.expectEqual(@as(f64, @floatFromInt(127 - index)), (try runtime.typedArrayRead(array.cell, index)).number);
+    runtime.setStepBudget(default_step_budget);
+    try std.testing.expectEqual(@as(f64, 42), (try runtime.evaluateSource(&program, "return 6*7;")).number);
 }
