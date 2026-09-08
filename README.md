@@ -170,3 +170,12 @@ acht teilweisen Scratchallokationen. Ein lokaler SMP4-Gast verwendet eine
 frisch erzeugte private246-Byte-Hive, prueft beide vorhandenen Selbsttests,
 Originalbytes, Cachegeneration1 und Bereinigung. Keine regulaere Installation
 wird als Testbestand verwendet. Belege unter Temp/roadmap-078-execution/07864.
+
+
+`r4os.document_save.Saver` is a caller-owned synchronous policy for small
+editable documents. It stages 64 KB chunks in create-only 8.3 siblings,
+confirms stream completion and uses `Files.replaceAtomic` without an
+overwrite fallback. Its result distinguishes a confirmed save (including a
+retained backup) from an unconfirmed save with retained copies. Callers
+publish their path, Dirty flag and history only for a committed result.
+The helper preserves relative-path semantics and adds no kernel ABI.

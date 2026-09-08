@@ -18,6 +18,7 @@ pub const system_update_batch = @import("r4os/system_update_batch.zig");
 pub const update_catalog = @import("r4os/update_catalog.zig");
 pub const app_contract = @import("r4os/app_contract.zig");
 pub const app_storage = @import("r4os/app_storage.zig");
+pub const document_save = @import("r4os/document_save.zig");
 pub const app_gui = @import("r4os/app_gui.zig");
 pub const app_resources = @import("r4os/app_resources.zig");
 pub const app_services = @import("r4os/app_services.zig");
