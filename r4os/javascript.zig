@@ -5675,8 +5675,10 @@ pub const Property = struct {
 };
 
 const initial_accessor_capacity: usize = 128;
+const accessor_none = std.math.maxInt(usize);
 
 pub const Accessor = struct {
+    next: usize = accessor_none,
     occupied: bool = false,
     owner: u16 = none,
     key: StringRef = .{},
@@ -5734,10 +5736,39 @@ const PromiseCapability = struct {
     reject: Value,
 };
 
-// Environments, arrays and promises use mutually exclusive payloads. Keeping
-// all three arrays in every Cell made the fixed 256-cell runtime several MB
-// larger than necessary and penalized even an empty browser process.
+const collection_none = std.math.maxInt(u32);
+
+const CollectionCursor = struct {
+    last_slot: u32 = collection_none,
+    last_serial: u64 = 0,
+};
+
+const CollectionEntry = struct {
+    hash: u64 = 0,
+    serial: u64 = 0,
+    previous: u32 = collection_none,
+    next: u32 = collection_none,
+    bucket_next: u32 = collection_none,
+};
+
+// Native collection tags exclusively own this host_context payload. Values
+// remain in Cell item storage so strong/weak GC tracing keeps one source.
+const CollectionStorage = struct {
+    entries: ?[*]CollectionEntry = null,
+    buckets: ?[*]u32 = null,
+    capacity: usize = 0,
+    entry_count: usize = 0,
+    live_count: usize = 0,
+    head: u32 = collection_none,
+    tail: u32 = collection_none,
+    free_head: u32 = collection_none,
+    serial: u64 = 0,
+};
+
+// Environments, arrays, promises and collection iterators share mutually
+// exclusive inline storage to keep the per-cell footprint bounded.
 const CellStorage = union {
+    collection_cursor: CollectionCursor,
     bindings: [max_inline_bindings]Binding,
     items: [max_inline_items]Value,
 };
@@ -5783,6 +5814,7 @@ pub const Cell = struct {
     receiver: Value = .undefined,
     regex_source: StringRef = .{},
     regex_flags: StringRef = .{},
+    first_accessor: usize = accessor_none,
     property_count: usize = 0,
     binding_count: usize = 0,
     item_count: usize = 0,
@@ -6277,6 +6309,7 @@ pub const Runtime = struct {
     cells: [max_cells]Cell = undefined,
     accessor_memory: ?[*]Accessor = null,
     accessor_capacity: usize = 0,
+    free_accessor: usize = accessor_none,
     modules: [max_modules]Module = undefined,
     module_count: usize = 0,
     dynamic_programs: [max_dynamic_programs]?*Program = [_]?*Program{null} ** max_dynamic_programs,
@@ -6397,6 +6430,7 @@ pub const Runtime = struct {
         self.string_len = 0;
         self.accessor_memory = null;
         self.accessor_capacity = 0;
+        self.free_accessor = accessor_none;
         for (&self.cells) |*cell| {
             cell.occupied = false;
             cell.generation = 0;
@@ -7043,7 +7077,7 @@ pub const Runtime = struct {
         self.clearDeadWeakEntries();
 
         var collected: usize = 0;
-        for (&self.cells) |*cell| {
+        for (&self.cells, 0..) |*cell, cell_index| {
             if (cell.occupied and !cell.marked) {
                 if (cell.kind == .generator) self.releaseGeneratorState(cell);
                 if (cell.kind == .promise and cell.host_context != null) self.releaseAsyncState(cell);
@@ -7052,12 +7086,10 @@ pub const Runtime = struct {
                 self.releaseBindingStorage(cell);
                 self.releaseItemStorage(cell);
                 self.releasePropertyStorage(cell);
+                self.releaseOwnedAccessors(@intCast(cell_index));
                 cell.occupied = false;
                 collected += 1;
             }
-        }
-        for (self.accessorStorage()) |*accessor| {
-            if (accessor.occupied and (accessor.owner >= self.cells.len or !self.cells[accessor.owner].occupied)) accessor.occupied = false;
         }
         self.stats.collections += 1;
         self.stats.collected_cells += collected;
@@ -7086,11 +7118,13 @@ pub const Runtime = struct {
                 self.markSymbolRef(property.key);
                 self.markValue(property.value);
             }
-            for (self.accessorStorage()) |*accessor| if (accessor.occupied and accessor.owner == index) {
+            var accessors = self.ownedAccessorIndices(index);
+            while (accessors.next()) |slot| {
+                const accessor = &self.accessorStorage()[slot];
                 self.markSymbolRef(accessor.key);
                 self.markValue(accessor.getter);
                 self.markValue(accessor.setter);
-            };
+            }
             switch (cell.kind) {
                 .environment => {
                     for (self.bindingStorageConst(index)[0..cell.binding_count]) |binding| self.markValue(binding.value);
@@ -12748,9 +12782,11 @@ pub const Runtime = struct {
             property.writable = false;
             property.configurable = false;
         }
-        for (self.accessorStorage()) |*accessor| if (accessor.occupied and accessor.owner == index) {
+        var accessors = self.ownedAccessorIndices(index);
+        while (accessors.next()) |slot| {
+            const accessor = &self.accessorStorage()[slot];
             accessor.configurable = false;
-        };
+        }
         return arguments[0];
     }
 
@@ -12778,9 +12814,11 @@ pub const Runtime = struct {
         if (!prevent_only) {
             self.cells[index].sealed = true;
             for (self.propertyStorage(index)[0..self.cells[index].property_count]) |*property| property.configurable = false;
-            for (self.accessorStorage()) |*accessor| if (accessor.occupied and accessor.owner == index) {
+            var accessors = self.ownedAccessorIndices(index);
+            while (accessors.next()) |slot| {
+                const accessor = &self.accessorStorage()[slot];
                 accessor.configurable = false;
-            };
+            }
         }
         return arguments[0];
     }
@@ -12807,8 +12845,10 @@ pub const Runtime = struct {
             if (property.configurable) return .{ .boolean = false };
             if (property.writable) frozen = false;
         }
-        for (self.accessorStorage()) |*accessor| if (accessor.occupied and accessor.owner == index and accessor.configurable)
-            return .{ .boolean = false };
+        var accessors = self.ownedAccessorIndices(index);
+        while (accessors.next()) |slot| {
+            if (self.accessorStorageConst()[slot].configurable) return .{ .boolean = false };
+        }
         return .{ .boolean = query == .sealed or frozen or self.cells[index].frozen };
     }
 
@@ -14373,14 +14413,131 @@ pub const Runtime = struct {
         return self.strictEqual(left, right) or (left == .number and right == .number and std.math.isNan(left.number) and std.math.isNan(right.number));
     }
 
+    fn collectionStorage(self: *const Runtime, index: u16) ?*const CollectionStorage {
+        return @ptrCast(@alignCast(self.cells[index].host_context orelse return null));
+    }
+
+    fn ensureCollectionStorage(self: *Runtime, index: u16) Error!*CollectionStorage {
+        if (self.cells[index].host_context) |raw| return @ptrCast(@alignCast(raw));
+        const raw = self.program_allocator.allocate(self.program_allocator.context, @sizeOf(CollectionStorage), @alignOf(CollectionStorage)) orelse return error.ProgramAllocation;
+        const storage: *CollectionStorage = @ptrCast(@alignCast(raw));
+        storage.* = .{};
+        self.cells[index].host_context = raw;
+        return storage;
+    }
+
+    fn collectionKeyHash(self: *const Runtime, key: Value) u64 {
+        var hash = std.hash.Wyhash.init(0);
+        const tag: u8 = @intFromEnum(std.meta.activeTag(key));
+        hash.update(&.{tag});
+        switch (key) {
+            .undefined, .null_value => {},
+            .boolean => |value| hash.update(&.{@intFromBool(value)}),
+            .number => |value| {
+                const bits: u64 = if (std.math.isNan(value)) 0x7ff8000000000000 else if (value == 0) 0 else @bitCast(value);
+                hash.update(std.mem.asBytes(&bits));
+            },
+            .string => |value| hash.update(self.stringBytes(value)),
+            .cell => |value| hash.update(std.mem.asBytes(&value)),
+            .bigint => {
+                const value = self.bigIntConst(key) catch return hash.final();
+                var length = value.limbs.len;
+                while (length > 0 and value.limbs[length - 1] == 0) length -= 1;
+                hash.update(&.{@intFromBool(length == 0 or value.positive)});
+                hash.update(std.mem.sliceAsBytes(value.limbs[0..length]));
+            },
+        }
+        return hash.final();
+    }
+
+    fn growCollectionStorage(self: *Runtime, storage: *CollectionStorage, required: usize, limit: usize) Error!void {
+        if (required <= storage.capacity) return;
+        if (required > limit) return error.RangeError;
+        var capacity = @max(storage.capacity, 8);
+        while (capacity < required) capacity = @min(limit, capacity * 2);
+        const entry_bytes = capacity * @sizeOf(CollectionEntry);
+        const entry_raw = self.program_allocator.allocate(self.program_allocator.context, entry_bytes, @alignOf(CollectionEntry)) orelse return error.ProgramAllocation;
+        errdefer self.program_allocator.free(self.program_allocator.context, entry_raw, entry_bytes, @alignOf(CollectionEntry));
+        const entries: [*]CollectionEntry = @ptrCast(@alignCast(entry_raw));
+        const bucket_bytes = capacity * 2 * @sizeOf(u32);
+        const bucket_raw = self.program_allocator.allocate(self.program_allocator.context, bucket_bytes, @alignOf(u32)) orelse return error.ProgramAllocation;
+        const buckets: [*]u32 = @ptrCast(@alignCast(bucket_raw));
+        @memset(entries[0..capacity], .{});
+        @memset(buckets[0 .. capacity * 2], collection_none);
+        if (storage.entries) |old| @memcpy(entries[0..storage.entry_count], old[0..storage.entry_count]);
+        var entry = storage.head;
+        while (entry != collection_none) {
+            const bucket: usize = @intCast(entries[entry].hash & (capacity * 2 - 1));
+            entries[entry].bucket_next = buckets[bucket];
+            buckets[bucket] = entry;
+            entry = entries[entry].next;
+        }
+        if (storage.entries) |old| self.program_allocator.free(self.program_allocator.context, @ptrCast(old), storage.capacity * @sizeOf(CollectionEntry), @alignOf(CollectionEntry));
+        if (storage.buckets) |old| self.program_allocator.free(self.program_allocator.context, @ptrCast(old), storage.capacity * 2 * @sizeOf(u32), @alignOf(u32));
+        storage.entries = entries;
+        storage.buckets = buckets;
+        storage.capacity = capacity;
+    }
+
+    fn releaseCollectionStorage(self: *Runtime, cell: *Cell) void {
+        const raw = cell.host_context orelse return;
+        const storage: *CollectionStorage = @ptrCast(@alignCast(raw));
+        if (storage.entries) |entries| self.program_allocator.free(self.program_allocator.context, @ptrCast(entries), storage.capacity * @sizeOf(CollectionEntry), @alignOf(CollectionEntry));
+        if (storage.buckets) |buckets| self.program_allocator.free(self.program_allocator.context, @ptrCast(buckets), storage.capacity * 2 * @sizeOf(u32), @alignOf(u32));
+        self.program_allocator.free(self.program_allocator.context, @ptrCast(raw), @sizeOf(CollectionStorage), @alignOf(CollectionStorage));
+        cell.host_context = null;
+    }
+
     fn collectionFind(self: *const Runtime, index: u16, key: Value) ?usize {
+        const storage = self.collectionStorage(index) orelse return null;
+        if (storage.live_count == 0) return null;
+        const hash = self.collectionKeyHash(key);
+        var entry = storage.buckets.?[@intCast(hash & (storage.capacity * 2 - 1))];
         const stride: usize = if (isMapCollectionTag(self.cells[index].host_tag)) 2 else 1;
-        var slot: usize = 0;
-        while (slot < self.cells[index].item_count) : (slot += stride) {
-            if (!self.arrayItemPresent(index, slot)) continue;
-            if (self.sameValueZero(self.itemStorageConst(index)[slot], key)) return slot;
+        while (entry != collection_none) {
+            const item = storage.entries.?[entry];
+            const slot = @as(usize, entry) * stride;
+            if (item.hash == hash and self.sameValueZero(self.itemStorageConst(index)[slot], key)) return slot;
+            entry = item.bucket_next;
         }
         return null;
+    }
+
+    fn removeCollectionEntry(self: *Runtime, index: u16, slot: usize) void {
+        const storage: *CollectionStorage = @ptrCast(@alignCast(self.cells[index].host_context.?));
+        const stride: usize = if (isMapCollectionTag(self.cells[index].host_tag)) 2 else 1;
+        const entry: u32 = @intCast(slot / stride);
+        const item = storage.entries.?[entry];
+        var bucket_link = &storage.buckets.?[@intCast(item.hash & (storage.capacity * 2 - 1))];
+        while (bucket_link.* != entry) bucket_link = &storage.entries.?[bucket_link.*].bucket_next;
+        bucket_link.* = item.bucket_next;
+        if (item.previous == collection_none) storage.head = item.next else storage.entries.?[item.previous].next = item.next;
+        if (item.next == collection_none) storage.tail = item.previous else storage.entries.?[item.next].previous = item.previous;
+        storage.entries.?[entry] = .{ .next = storage.free_head };
+        storage.free_head = entry;
+        storage.live_count -= 1;
+        for (slot..slot + stride) |position| {
+            self.itemStorage(index)[position] = .undefined;
+            self.setArrayItemPresent(index, position, false);
+        }
+    }
+
+    fn nextCollectionEntry(self: *const Runtime, index: u16, cursor: *CollectionCursor) ?usize {
+        const storage = self.collectionStorage(index) orelse return null;
+        const stride: usize = if (isMapCollectionTag(self.cells[index].host_tag)) 2 else 1;
+        var next = storage.head;
+        if (cursor.last_slot < storage.entry_count and cursor.last_serial != 0 and
+            storage.entries.?[cursor.last_slot].serial == cursor.last_serial)
+        {
+            next = storage.entries.?[cursor.last_slot].next;
+        } else {
+            // Deletion/reuse or clear invalidates the old position. Only live
+            // entries are considered; a new insertion always has a later serial.
+            while (next != collection_none and storage.entries.?[next].serial <= cursor.last_serial) next = storage.entries.?[next].next;
+        }
+        if (next == collection_none) return null;
+        cursor.* = .{ .last_slot = next, .last_serial = storage.entries.?[next].serial };
+        return @as(usize, next) * stride;
     }
 
     fn createCollection(self: *Runtime, prototype: Value, map: bool) Error!Value {
@@ -14397,13 +14554,32 @@ pub const Runtime = struct {
             return;
         }
         const stride: usize = if (isMapCollectionTag(self.cells[index].host_tag)) 2 else 1;
-        const start = self.cells[index].item_count;
-        try self.extendArrayItems(index, start + stride);
-        self.itemStorage(index)[start] = key;
-        self.setArrayItemPresent(index, start, true);
+        const storage = try self.ensureCollectionStorage(index);
+        if (storage.live_count >= max_items / stride) {
+            self.diagnostic_limit_required = (storage.live_count + 1) * stride;
+            self.diagnostic_limit_available = max_items;
+            return error.RangeError;
+        }
+        const serial = std.math.add(u64, storage.serial, 1) catch return error.RangeError;
+        const entry: u32 = if (storage.free_head != collection_none) storage.free_head else @intCast(storage.entry_count);
+        try self.growCollectionStorage(storage, @as(usize, entry) + 1, max_items / stride);
+        const slot = @as(usize, entry) * stride;
+        try self.ensureItemCapacity(index, slot + stride);
+        const hash = self.collectionKeyHash(key);
+        const bucket: usize = @intCast(hash & (storage.capacity * 2 - 1));
+        if (storage.free_head != collection_none) storage.free_head = storage.entries.?[entry].next else storage.entry_count += 1;
+        storage.entries.?[entry] = .{ .hash = hash, .serial = serial, .previous = storage.tail, .bucket_next = storage.buckets.?[bucket] };
+        if (storage.tail == collection_none) storage.head = entry else storage.entries.?[storage.tail].next = entry;
+        storage.tail = entry;
+        storage.buckets.?[bucket] = entry;
+        storage.serial = serial;
+        storage.live_count += 1;
+        self.cells[index].item_count = @max(self.cells[index].item_count, slot + stride);
+        self.itemStorage(index)[slot] = key;
+        self.setArrayItemPresent(index, slot, true);
         if (stride == 2) {
-            self.itemStorage(index)[start + 1] = map_value;
-            self.setArrayItemPresent(index, start + 1, true);
+            self.itemStorage(index)[slot + 1] = map_value;
+            self.setArrayItemPresent(index, slot + 1, true);
         }
     }
 
@@ -14463,12 +14639,7 @@ pub const Runtime = struct {
     fn nativeCollectionDelete(self: *Runtime, receiver: Value, arguments: []const Value) Error!Value {
         const index = try self.collectionIndex(receiver, null);
         const slot = self.collectionFind(index, canonicalCollectionKey(if (arguments.len > 0) arguments[0] else .undefined)) orelse return .{ .boolean = false };
-        self.itemStorage(index)[slot] = .undefined;
-        self.setArrayItemPresent(index, slot, false);
-        if (self.cells[index].host_tag == map_tag) {
-            self.itemStorage(index)[slot + 1] = .undefined;
-            self.setArrayItemPresent(index, slot + 1, false);
-        }
+        self.removeCollectionEntry(index, slot);
         return .{ .boolean = true };
     }
 
@@ -14478,18 +14649,23 @@ pub const Runtime = struct {
             self.itemStorage(index)[slot] = .undefined;
             self.setArrayItemPresent(index, slot, false);
         }
+        self.cells[index].item_count = 0;
+        if (self.cells[index].host_context) |raw| {
+            const storage: *CollectionStorage = @ptrCast(@alignCast(raw));
+            if (storage.buckets) |buckets| @memset(buckets[0 .. storage.capacity * 2], collection_none);
+            storage.entry_count = 0;
+            storage.live_count = 0;
+            storage.head = collection_none;
+            storage.tail = collection_none;
+            storage.free_head = collection_none;
+            // Keep the serial: an active iterator must see entries added after clear.
+        }
         return .undefined;
     }
 
     fn nativeCollectionSize(self: *Runtime, receiver: Value) Error!Value {
         const index = try self.collectionIndex(receiver, null);
-        const stride: usize = if (self.cells[index].host_tag == map_tag) 2 else 1;
-        var size: usize = 0;
-        var slot: usize = 0;
-        while (slot < self.cells[index].item_count) : (slot += stride) if (self.arrayItemPresent(index, slot)) {
-            size += 1;
-        };
-        return .{ .number = @floatFromInt(size) };
+        return .{ .number = @floatFromInt(if (self.collectionStorage(index)) |storage| storage.live_count else @as(usize, 0)) };
     }
 
     fn nativeMapGetOrInsert(self: *Runtime, receiver: Value, arguments: []const Value, computed: bool, program: *const Program) Error!Value {
@@ -14608,12 +14784,7 @@ pub const Runtime = struct {
     }
 
     fn clearWeakCollectionEntry(self: *Runtime, index: u16, slot: usize) void {
-        self.itemStorage(index)[slot] = .undefined;
-        self.setArrayItemPresent(index, slot, false);
-        if (self.cells[index].host_tag == weak_map_tag) {
-            self.itemStorage(index)[slot + 1] = .undefined;
-            self.setArrayItemPresent(index, slot + 1, false);
-        }
+        self.removeCollectionEntry(index, slot);
     }
 
     fn nativeCollectionForEach(self: *Runtime, program: *const Program, receiver: Value, arguments: []const Value) Error!Value {
@@ -14621,9 +14792,8 @@ pub const Runtime = struct {
         if (arguments.len == 0 or !self.isCallableValue(arguments[0])) return error.TypeError;
         const this_arg = if (arguments.len > 1) arguments[1] else Value.undefined;
         const stride: usize = if (self.cells[index].host_tag == map_tag) 2 else 1;
-        var slot: usize = 0;
-        while (slot < self.cells[index].item_count) : (slot += stride) {
-            if (!self.arrayItemPresent(index, slot)) continue;
+        var cursor = CollectionCursor{};
+        while (self.nextCollectionEntry(index, &cursor)) |slot| {
             const key = self.itemStorageConst(index)[slot];
             const value = if (stride == 2) self.itemStorageConst(index)[slot + 1] else key;
             _ = try self.call(program, arguments[0], this_arg, &.{ value, key, receiver }, false);
@@ -14638,7 +14808,7 @@ pub const Runtime = struct {
         self.cells[iterator.cell].prototype = if (self.cells[index].host_tag == map_tag) self.map_iterator_prototype else self.set_iterator_prototype;
         self.cells[iterator.cell].receiver = receiver;
         self.cells[iterator.cell].node = kind;
-        self.cells[iterator.cell].array_length = 0;
+        self.cells[iterator.cell].storage = .{ .collection_cursor = .{} };
         return iterator;
     }
 
@@ -14649,13 +14819,10 @@ pub const Runtime = struct {
         if (source == .undefined) return self.createIteratorResult(.undefined, true);
         const collection = try self.collectionIndex(source, self.cells[iterator].host_tag == map_iterator_tag);
         const stride: usize = if (self.cells[collection].host_tag == map_tag) 2 else 1;
-        var slot = self.cells[iterator].array_length;
-        while (slot < self.cells[collection].item_count and !self.arrayItemPresent(collection, slot)) slot += stride;
-        if (slot >= self.cells[collection].item_count) {
+        const slot = self.nextCollectionEntry(collection, &self.cells[iterator].storage.collection_cursor) orelse {
             self.cells[iterator].receiver = .undefined;
             return self.createIteratorResult(.undefined, true);
-        }
-        self.cells[iterator].array_length = slot + stride;
+        };
         const key = self.itemStorageConst(collection)[slot];
         const value = if (stride == 2) self.itemStorageConst(collection)[slot + 1] else key;
         const result = switch (self.cells[iterator].node) {
@@ -14719,9 +14886,9 @@ pub const Runtime = struct {
     }
 
     fn copySetEntries(self: *Runtime, source: u16, destination: u16) Error!void {
-        var slot: usize = 0;
-        while (slot < self.cells[source].item_count) : (slot += 1)
-            if (self.arrayItemPresent(source, slot)) try self.appendCollectionEntry(destination, self.itemStorageConst(source)[slot], .undefined);
+        var entries = CollectionCursor{};
+        while (self.nextCollectionEntry(source, &entries)) |slot|
+            try self.appendCollectionEntry(destination, self.itemStorageConst(source)[slot], .undefined);
     }
 
     fn nativeSetComposition(self: *Runtime, program: *const Program, receiver: Value, arguments: []const Value, operation: SetComposition) Error!Value {
@@ -14734,10 +14901,12 @@ pub const Runtime = struct {
         try self.pushRoot(result);
         if (operation == .union_set or operation == .symmetric_difference) try self.copySetEntries(source, result.cell);
         if (operation == .difference or operation == .intersection) {
-            var slot: usize = 0;
-            while (slot < self.cells[source].item_count) : (slot += 1) {
-                if (!self.arrayItemPresent(source, slot)) continue;
+            var entries = CollectionCursor{};
+            const entry_roots = self.root_count;
+            while (self.nextCollectionEntry(source, &entries)) |slot| {
+                self.root_count = entry_roots;
                 const value = self.itemStorageConst(source)[slot];
+                try self.pushRoot(value);
                 const present = self.truthy(try self.call(program, other.has, other.object, &.{value}, false));
                 if ((operation == .difference and !present) or (operation == .intersection and present)) try self.appendCollectionEntry(result.cell, value, .undefined);
             }
@@ -14766,9 +14935,8 @@ pub const Runtime = struct {
         if (arguments.len == 0) return error.TypeError;
         const other = try self.getSetRecord(arguments[0]);
         if (relation == .subset or relation == .disjoint) {
-            var slot: usize = 0;
-            while (slot < self.cells[source].item_count) : (slot += 1) {
-                if (!self.arrayItemPresent(source, slot)) continue;
+            var entries = CollectionCursor{};
+            while (self.nextCollectionEntry(source, &entries)) |slot| {
                 const present = self.truthy(try self.call(program, other.has, other.object, &.{self.itemStorageConst(source)[slot]}, false));
                 if ((relation == .subset and !present) or (relation == .disjoint and present)) return .{ .boolean = false };
             }
@@ -20985,6 +21153,7 @@ pub const Runtime = struct {
                     cell.receiver = .undefined;
                     cell.regex_source = .{};
                     cell.regex_flags = .{};
+                    cell.first_accessor = accessor_none;
                     cell.property_count = 0;
                     cell.binding_count = 0;
                     cell.item_count = 0;
@@ -21643,11 +21812,36 @@ pub const Runtime = struct {
         return if (self.accessor_memory) |memory| memory[0..self.accessor_capacity] else &.{};
     }
 
-    fn allocateAccessor(self: *Runtime) Error!*Accessor {
-        for (self.accessorStorage()) |*accessor| {
-            if (!accessor.occupied) return accessor;
-        }
+    // Indices survive pool relocation. Property markers retain enumeration
+    // order; this owner list serves lookup, integrity changes and GC marking.
+    const AccessorIterator = struct {
+        runtime: *const Runtime,
+        cursor: usize,
 
+        fn next(self: *AccessorIterator) ?usize {
+            const index = self.cursor;
+            if (index == accessor_none) return null;
+            self.cursor = self.runtime.accessorStorageConst()[index].next;
+            return index;
+        }
+    };
+
+    fn ownedAccessorIndices(self: *const Runtime, owner: u16) AccessorIterator {
+        return .{ .runtime = self, .cursor = if (owner < self.cells.len and self.cells[owner].occupied) self.cells[owner].first_accessor else accessor_none };
+    }
+
+    fn allocateAccessor(self: *Runtime, definition: Accessor) Error!void {
+        if (self.free_accessor == accessor_none) try self.growAccessorStorage();
+        const slot = self.free_accessor;
+        self.free_accessor = self.accessorStorage()[slot].next;
+        var stored = definition;
+        stored.occupied = true;
+        stored.next = self.cells[stored.owner].first_accessor;
+        self.accessorStorage()[slot] = stored;
+        self.cells[stored.owner].first_accessor = slot;
+    }
+
+    fn growAccessorStorage(self: *Runtime) Error!void {
         const old_capacity = self.accessor_capacity;
         if (old_capacity == std.math.maxInt(usize)) return error.ProgramAllocation;
         const required = old_capacity + 1;
@@ -21669,7 +21863,9 @@ pub const Runtime = struct {
         const memory: [*]Accessor = @ptrCast(@alignCast(raw));
         const old_accessors = self.accessorStorageConst();
         if (old_accessors.len > 0) @memcpy(memory[0..old_accessors.len], old_accessors);
-        for (memory[old_capacity..capacity]) |*accessor| accessor.* = .{};
+        for (memory[old_capacity..capacity], old_capacity..) |*accessor, index| {
+            accessor.* = .{ .next = if (index + 1 < capacity) index + 1 else accessor_none };
+        }
         if (self.accessor_memory) |old_memory| {
             self.program_allocator.free(
                 self.program_allocator.context,
@@ -21680,7 +21876,22 @@ pub const Runtime = struct {
         }
         self.accessor_memory = memory;
         self.accessor_capacity = capacity;
-        return &memory[old_capacity];
+        self.free_accessor = old_capacity;
+    }
+
+    fn releaseAccessor(self: *Runtime, accessor: *Accessor) void {
+        const slot = (@intFromPtr(accessor) - @intFromPtr(self.accessor_memory.?)) / @sizeOf(Accessor);
+        var link = &self.cells[accessor.owner].first_accessor;
+        while (link.* != slot) link = &self.accessorStorage()[link.*].next;
+        link.* = accessor.next;
+        accessor.* = .{ .next = self.free_accessor };
+        self.free_accessor = slot;
+    }
+
+    fn releaseOwnedAccessors(self: *Runtime, owner: u16) void {
+        while (self.cells[owner].first_accessor != accessor_none) {
+            self.releaseAccessor(&self.accessorStorage()[self.cells[owner].first_accessor]);
+        }
     }
 
     fn releaseAccessorStorage(self: *Runtime) void {
@@ -21693,6 +21904,7 @@ pub const Runtime = struct {
         );
         self.accessor_memory = null;
         self.accessor_capacity = 0;
+        self.free_accessor = accessor_none;
     }
 
     fn bindingStorage(self: *Runtime, index: u16) []Binding {
@@ -21881,6 +22093,7 @@ pub const Runtime = struct {
     }
 
     fn releaseItemStorage(self: *Runtime, cell: *Cell) void {
+        if (isPresenceCollectionTag(cell.host_tag)) self.releaseCollectionStorage(cell);
         if (cell.item_memory) |memory| {
             self.program_allocator.free(
                 self.program_allocator.context,
@@ -22320,9 +22533,7 @@ pub const Runtime = struct {
                 self.clearArgumentMapping(cell_index, item_index);
             }
         }
-        for (self.accessorStorage()) |*accessor| {
-            if (accessor.occupied and accessor.owner == cell_index and equals(self.stringBytes(accessor.key), name)) accessor.occupied = false;
-        }
+        if (self.findAccessorMutable(cell_index, name)) |accessor| self.releaseAccessor(accessor);
         var property_index: usize = 0;
         while (property_index < cell.property_count) : (property_index += 1) {
             if (!equals(self.stringBytes(self.propertyStorageConst(cell_index)[property_index].key), name)) continue;
@@ -22369,7 +22580,7 @@ pub const Runtime = struct {
                 if (!self.cells[index].array_length_writable and item_index >= self.effectiveArrayLength(index)) return error.TypeError;
                 if (self.findAccessorMutable(index, name)) |accessor| {
                     if (!accessor.configurable) return error.TypeError;
-                    accessor.occupied = false;
+                    self.releaseAccessor(accessor);
                     for (self.propertyStorage(index)[0..self.cells[index].property_count]) |*property| {
                         if (!equals(self.stringBytes(property.key), name)) continue;
                         property.value = value;
@@ -22395,7 +22606,7 @@ pub const Runtime = struct {
                 return;
             }
         }
-        if (self.findAccessorMutable(index, name)) |accessor| accessor.occupied = false;
+        if (self.findAccessorMutable(index, name)) |accessor| self.releaseAccessor(accessor);
         var cell = &self.cells[index];
         for (self.propertyStorage(index)[0..cell.property_count]) |*property| {
             if (!equals(self.stringBytes(property.key), name)) continue;
@@ -22458,14 +22669,13 @@ pub const Runtime = struct {
                 accessor.setter = callable;
             return;
         }
-        const accessor = try self.allocateAccessor();
-        accessor.* = .{
+        try self.allocateAccessor(.{
             .occupied = true,
             .owner = index,
             .key = try self.storeString(name),
             .getter = if (getter) callable else .undefined,
             .setter = if (getter) .undefined else callable,
-        };
+        });
     }
 
     fn setProperty(self: *Runtime, object: Value, name: []const u8, value: Value) Error!void {
@@ -22708,8 +22918,7 @@ pub const Runtime = struct {
                 if (has_configurable) accessor.configurable = configurable;
                 return;
             }
-            const accessor = try self.allocateAccessor();
-            accessor.* = .{
+            try self.allocateAccessor(.{
                 .occupied = true,
                 .owner = index,
                 .key = try self.storeString(name),
@@ -22717,11 +22926,11 @@ pub const Runtime = struct {
                 .setter = setter,
                 .enumerable = enumerable,
                 .configurable = configurable,
-            };
+            });
             return;
         }
 
-        if (existing_accessor) |accessor| accessor.occupied = false;
+        if (existing_accessor) |accessor| self.releaseAccessor(accessor);
         if (property_index) |existing_index| {
             var property = &self.propertyStorage(index)[existing_index];
             if (has_value) property.value = value;
@@ -22741,18 +22950,23 @@ pub const Runtime = struct {
         cell.property_count += 1;
     }
 
-    fn findAccessor(self: *const Runtime, owner: u16, name: []const u8) ?*const Accessor {
-        for (self.accessorStorageConst()) |*accessor| {
-            if (accessor.occupied and accessor.owner == owner and equals(self.stringBytes(accessor.key), name)) return accessor;
+    fn findAccessorIndex(self: *const Runtime, owner: u16, name: []const u8) ?usize {
+        var accessors = self.ownedAccessorIndices(owner);
+        while (accessors.next()) |slot| {
+            const accessor = self.accessorStorageConst()[slot];
+            if (equals(self.stringBytes(accessor.key), name)) return slot;
         }
         return null;
     }
 
+    fn findAccessor(self: *const Runtime, owner: u16, name: []const u8) ?*const Accessor {
+        const slot = self.findAccessorIndex(owner, name) orelse return null;
+        return &self.accessorStorageConst()[slot];
+    }
+
     fn findAccessorMutable(self: *Runtime, owner: u16, name: []const u8) ?*Accessor {
-        for (self.accessorStorage()) |*accessor| {
-            if (accessor.occupied and accessor.owner == owner and equals(self.stringBytes(accessor.key), name)) return accessor;
-        }
-        return null;
+        const slot = self.findAccessorIndex(owner, name) orelse return null;
+        return &self.accessorStorage()[slot];
     }
 
     fn hasProperty(self: *Runtime, object: Value, name: []const u8) Error!bool {
@@ -30905,4 +31119,131 @@ test "runtime workspaces remain compact" {
     try std.testing.expect(@sizeOf(Program) < 6 * 1024 * 1024);
     try std.testing.expect(@sizeOf(Cell) < 12 * 1024);
     try std.testing.expect(@sizeOf(Runtime) < 64 * 1024 * 1024);
+}
+
+test "indexed collections reuse small live storage and keep mutation order" {
+    const runtime = try createTestingRuntime();
+    defer destroyTestingRuntime(runtime);
+    var program = Program{};
+    var value = try runtime.evaluateSource(&program, "var churnMap=new Map([['held',1]]);var churnSet=new Set(['held']);" ++
+        "for(let i=0;i<512;i++){churnMap.set(i,i);churnSet.add(i);churnMap.delete(i);churnSet.delete(i);}" ++
+        "const m=new Map([['a',1],['b',2],['c',3]]);const it=m.keys();let trace=it.next().value;" ++
+        "m.delete('a');m.set('a',4);m.delete('b');trace+=it.next().value+it.next().value;" ++
+        "m.clear();m.set('d',5);trace+=it.next().value;const done=it.next().done;m.set('e',6);" ++
+        "const s=new Set(['a','b']);let seen='';s.forEach(function(key){seen+=key;if(key==='a'){s.clear();s.add('c');}});" ++
+        "const order=new Set([1,2,3]);order.delete(1);order.add(1);" ++
+        "const keys=new Map();keys.set(42n,'big');keys.set('ab','text');keys.set(-0,'zero');keys.set(NaN,'nan');" ++
+        "return trace==='acad'&&done&&it.next().done&&seen==='ac'&&[...order.union(new Set([4]))].join(',')==='2,3,1,4'&&" ++
+        "keys.get(40n+2n)==='big'&&keys.get('a'+'b')==='text'&&keys.get(+0)==='zero'&&keys.get(Number('bad'))==='nan';");
+    try std.testing.expect(runtime.valueBoolean(value));
+    for ([_][]const u8{ "churnMap", "churnSet" }) |name| {
+        const index = runtime.global(name).?.cell;
+        try std.testing.expectEqual(@as(usize, 1), runtime.collectionStorage(index).?.live_count);
+        try std.testing.expect(runtime.cells[index].item_count <= 4);
+        try std.testing.expect(runtime.collectionStorage(index).?.capacity <= 8);
+    }
+    const map = runtime.global("churnMap").?;
+    const nan1: Value = .{ .number = @bitCast(@as(u64, 0x7ff8000000000001)) };
+    const nan2: Value = .{ .number = @bitCast(@as(u64, 0xfff8000000000002)) };
+    _ = try runtime.nativeMapSet(map, &.{ nan1, .{ .number = 7 } });
+    _ = try runtime.nativeMapSet(map, &.{ nan2, .{ .number = 9 } });
+    value = try runtime.nativeMapGet(map, &.{nan1});
+    try std.testing.expectEqual(@as(f64, 9), try runtime.valueNumber(value));
+    try std.testing.expectEqual(@as(usize, 2), runtime.collectionStorage(map.cell).?.live_count);
+}
+
+test "collection live limit is catchable and deleting an entry makes room" {
+    const runtime = try createTestingRuntime();
+    defer destroyTestingRuntime(runtime);
+    var program = Program{};
+    _ = try runtime.evaluateSource(&program, "var fullMap=new Map();");
+    const map = runtime.global("fullMap").?;
+    for (0..max_items / 2) |key| try runtime.appendCollectionEntry(map.cell, .{ .number = @floatFromInt(key) }, .{ .number = @floatFromInt(key) });
+    var value = try runtime.evaluateSource(&program, "let caught=false;try{fullMap.set(999999,1);}catch(e){caught=e instanceof RangeError;}return caught&&fullMap.size===32768&&fullMap.get(32767)===32767&&!fullMap.has(999999);");
+    try std.testing.expect(runtime.valueBoolean(value));
+    _ = try runtime.nativeCollectionDelete(map, &.{.{ .number = 0 }});
+    _ = try runtime.nativeMapSet(map, &.{ .{ .number = 999999 }, .{ .number = 4 } });
+    value = try runtime.evaluateSource(&program, "return fullMap.size===32768&&fullMap.get(999999)===4&&fullMap.keys().next().value===1;");
+    try std.testing.expect(runtime.valueBoolean(value));
+    try std.testing.expectEqual(max_items, runtime.cells[map.cell].item_count);
+}
+
+test "collection index and items survive each growth allocation failure" {
+    const Fault = struct {
+        base: ProgramAllocator,
+        fail_at: usize,
+        calls: usize = 0,
+        fn create(raw: *anyopaque) ?*Program {
+            const self: *@This() = @ptrCast(@alignCast(raw));
+            return self.base.create(self.base.context);
+        }
+        fn destroy(raw: *anyopaque, program: *Program) void {
+            const self: *@This() = @ptrCast(@alignCast(raw));
+            self.base.destroy(self.base.context, program);
+        }
+        fn allocate(raw: *anyopaque, length: usize, alignment: usize) ?[*]u8 {
+            const self: *@This() = @ptrCast(@alignCast(raw));
+            const fail = self.calls == self.fail_at;
+            self.calls += 1;
+            if (fail) return null;
+            return self.base.allocate(self.base.context, length, alignment);
+        }
+        fn free(raw: *anyopaque, memory: [*]u8, length: usize, alignment: usize) void {
+            const self: *@This() = @ptrCast(@alignCast(raw));
+            self.base.free(self.base.context, memory, length, alignment);
+        }
+    };
+    const runtime = try createTestingRuntime();
+    defer destroyTestingRuntime(runtime);
+    const base = runtime.program_allocator;
+    const prototype = try runtime.getProperty(runtime.global("Map").?, "prototype");
+    for (0..4) |failure| {
+        const map = try runtime.createCollection(prototype, true);
+        for (0..8) |key| try runtime.appendCollectionEntry(map.cell, .{ .number = @floatFromInt(key) }, .{ .number = @floatFromInt(key + 10) });
+        var fault = Fault{ .base = base, .fail_at = failure };
+        runtime.program_allocator = .{ .context = &fault, .create = Fault.create, .destroy = Fault.destroy, .allocate = Fault.allocate, .free = Fault.free };
+        const result = runtime.appendCollectionEntry(map.cell, .{ .number = 8 }, .{ .number = 18 });
+        runtime.program_allocator = base;
+        try std.testing.expectError(error.ProgramAllocation, result);
+        try std.testing.expectEqual(@as(usize, 8), runtime.collectionStorage(map.cell).?.live_count);
+        try std.testing.expectEqual(@as(usize, 16), runtime.cells[map.cell].item_count);
+        try std.testing.expect(runtime.collectionFind(map.cell, .{ .number = 8 }) == null);
+        for (0..8) |key| {
+            const value = try runtime.nativeMapGet(map, &.{.{ .number = @floatFromInt(key) }});
+            try std.testing.expectEqual(@as(f64, @floatFromInt(key + 10)), try runtime.valueNumber(value));
+        }
+        try runtime.appendCollectionEntry(map.cell, .{ .number = 8 }, .{ .number = 18 });
+        try std.testing.expectEqual(@as(usize, 9), runtime.collectionStorage(map.cell).?.live_count);
+    }
+}
+
+test "accessor owners release and reuse slots through GC and property changes" {
+    // Keep defining programs alive while their getter functions remain live.
+    const setup = try std.testing.allocator.create(Program);
+    setup.* = .{};
+    defer std.testing.allocator.destroy(setup);
+    const actions = try std.testing.allocator.create(Program);
+    actions.* = .{};
+    defer std.testing.allocator.destroy(actions);
+    const runtime = try createTestingRuntime();
+    defer destroyTestingRuntime(runtime);
+    var program = Program{};
+    _ = try runtime.evaluateSource(setup, "var ordinary={value:3};var kept={get alive(){return 17;}};var abandoned=[];" ++
+        "for(let i=0;i<256;i++){const o={};Object.defineProperty(o,'value',{get:function(){return 1;},configurable:true});abandoned.push(o);}");
+    const capacity = runtime.accessor_capacity;
+    try std.testing.expect(capacity > initial_accessor_capacity);
+    _ = try runtime.evaluateSource(&program, "abandoned=null;");
+    runtime.collectGarbage();
+    var value = try runtime.evaluateSource(actions, "var replacements=[];for(let i=0;i<128;i++)replacements.push({get value(){return 2;}});" ++
+        "const p={get x(){return 5;}};const q={get x(){return 9;}};const o=Object.create(p);let trace=o.x;Object.setPrototypeOf(o,q);trace+=o.x;" ++
+        "Object.defineProperty(o,'x',{get:function(){return 11;},configurable:true});trace+=o.x;" ++
+        "Object.defineProperty(o,'x',{value:13,configurable:true,writable:true});trace+=o.x;delete o.x;trace+=o.x;" ++
+        "const a=[];Object.defineProperty(a,'0',{get:function(){return 6;},configurable:true});const first=a[0];" ++
+        "Object.defineProperty(a,'0',{value:8,configurable:true,writable:true});" ++
+        "return ordinary.value===3&&kept.alive===17&&replacements[127].value===2&&trace===47&&first===6&&a[0]===8;");
+    try std.testing.expect(runtime.valueBoolean(value));
+    try std.testing.expectEqual(capacity, runtime.accessor_capacity);
+    runtime.collectGarbage();
+    value = try runtime.evaluateSource(&program, "return kept.alive+replacements[0].value;");
+    try std.testing.expectEqual(@as(f64, 19), try runtime.valueNumber(value));
 }
