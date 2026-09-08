@@ -75,7 +75,7 @@ fn fakeCall(handle: u32, op: u16, request: [*]const u8, request_len: u32, header
             .result = 0,
             .flags = r4os.abi.net_service_tcp_flag_ok | r4os.abi.net_service_tcp_flag_handle_valid,
             .handle = 501,
-            .bytes = if (op == r4os.abi.net_service_op_tcp_write_result) request_len - 4 else 0,
+            .bytes = if (op == r4os.abi.net_service_op_tcp_write_result) @intCast(r4os.service_deadline.split(request[0..request_len]).payload.len - 4) else 0,
             .pending_rx = if (op == r4os.abi.net_service_op_tcp_poll_result) 2 else 0,
             .remote_ip = .{ 10, 0, 2, 2 },
             .remote_port = 1234,
