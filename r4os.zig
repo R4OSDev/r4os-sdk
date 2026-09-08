@@ -140,6 +140,7 @@ pub const app_web_jobs = @import("r4os/app_web_jobs.zig");
 pub const web_runtime_jobs = @import("r4os/web_runtime_jobs.zig");
 pub const web_resources = @import("r4os/web_resources.zig");
 pub const web_documents = @import("r4os/web_documents.zig");
+pub const secure_random = @import("r4os/secure_random.zig");
 pub const web_crypto = @import("r4os/web_crypto.zig");
 pub const web_canvas = @import("r4os/web_canvas.zig");
 pub const web_url = @import("r4os/web_url.zig");
