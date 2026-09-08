@@ -10467,3 +10467,108 @@ test "web pending callbacks own their request observer and dependent signal unti
     try std.testing.expectEqual(@as(f64, 0), try harness.web.runtime.valueNumber(harness.web.runtime.global("droppedCalls").?));
     std.debug.print("LIFECYCLE pending=1/2/2 final=0/0/0 callbacks=1/1/1/1 dropped=0 request_slot_preserved timeout_completed\n", .{});
 }
+
+test "stream rings preserve queued and pending FIFO order and release consumed values" {
+    const allocator = std.testing.allocator;
+    const harness = try allocator.create(struct { document: html.Document, storage: security.BrowserStorage, web: WebRuntime });
+    defer allocator.destroy(harness);
+    harness.web.initialize(testingProgramAllocator(harness));
+    defer harness.web.deinit();
+    harness.document.reset();
+    try harness.web.beginDocument(&harness.document, &harness.storage, "https://runtime.example/", "", 1, 0);
+    _ = try harness.web.executeSource("globalThis.fifoDone=0;globalThis.fifoCorrect=true;" ++
+        "function checkFifo(n,pending){let c,next=0;const s=new ReadableStream({start(x){c=x;}}),r=s.getReader();" ++
+        "function readOne(){r.read().then(v=>{if(v.value!==next++||v.done)globalThis.fifoCorrect=false;globalThis.fifoDone++;});}" ++
+        "if(pending){for(let i=0;i<n;i++)readOne();for(let i=0;i<n;i++)c.enqueue(i);}" ++
+        "else{for(let i=0;i<n/2;i++)c.enqueue(i);for(let i=0;i<n/4;i++)readOne();for(let i=n/2;i<n;i++)c.enqueue(i);for(let i=n/4;i<n;i++)readOne();}c.close();}" ++
+        "checkFifo(32,false);checkFifo(32,true);" ++
+        "globalThis.queueKey={kept:1};globalThis.queueKept=new ReadableStream({start(c){c.enqueue(globalThis.queueKey);}});globalThis.queueReader=globalThis.queueKept.getReader();");
+    const global = harness.web.runtime.global("globalThis").?;
+    const key = try harness.web.runtime.get(global, "queueKey");
+    _ = try harness.web.executeSource("globalThis.queueKey=null;globalThis.queueReader.read();");
+    try drainLifecycleJobs(&harness.web);
+    harness.web.runtime.collectGarbage();
+    try std.testing.expect(!harness.web.runtime.cells[key.cell].occupied);
+    try std.testing.expect(harness.web.runtime.valueBoolean(try harness.web.runtime.get(global, "fifoCorrect")));
+    try std.testing.expectEqual(@as(f64, 64), try harness.web.runtime.valueNumber(try harness.web.runtime.get(global, "fifoDone")));
+    _ = try harness.web.executeSource("checkFifo(64,false);");
+    try drainLifecycleJobs(&harness.web);
+    _ = try harness.web.executeSource("checkFifo(64,true);");
+    try drainLifecycleJobs(&harness.web);
+    try std.testing.expect(harness.web.runtime.valueBoolean(try harness.web.runtime.get(global, "fifoCorrect")));
+    try std.testing.expectEqual(@as(f64, 192), try harness.web.runtime.valueNumber(try harness.web.runtime.get(global, "fifoDone")));
+    std.debug.print("STREAMFIFO queued_and_pending=32/64 completions=192 consumed_reference_released\n", .{});
+}
+
+test "byte streams transfer ownership preserve view kinds and complete aligned pending reads" {
+    const allocator = std.testing.allocator;
+    const harness = try allocator.create(struct { document: html.Document, storage: security.BrowserStorage, web: WebRuntime });
+    defer allocator.destroy(harness);
+    harness.web.initialize(testingProgramAllocator(harness));
+    defer harness.web.deinit();
+    harness.document.reset();
+    try harness.web.beginDocument(&harness.document, &harness.storage, "https://runtime.example/", "", 1, 0);
+    _ = try harness.web.executeSource("globalThis.byteChecks=[];const donor=new Uint8Array([9,1,2,3,8]);const s=new ReadableStream({type:'bytes',start(c){c.enqueue(donor.subarray(1,4));c.close();}});globalThis.byteChecks.push(donor.buffer.byteLength===0);" ++
+        "const input=new Uint16Array(new ArrayBuffer(8),2,2),r=s.getReader({mode:'byob'});input.constructor=Uint8Array;const first=r.read(input);globalThis.byteChecks.push(input.buffer.byteLength===0);first.then(v=>{globalThis.byteChecks.push(v.value instanceof Uint16Array&&v.value.byteOffset===2&&v.value.byteLength===2&&v.value[0]===513&&!v.done);return r.read(new DataView(new ArrayBuffer(4),1,2));}).then(v=>{globalThis.byteChecks.push(v.value instanceof DataView&&v.value.byteOffset===1&&v.value.byteLength===1&&v.value.getUint8(0)===3);return r.read(new Uint8Array(2));}).then(v=>globalThis.byteChecks.push(v.done&&v.value.byteLength===0));" ++
+        "let c;const closed=new ReadableStream({type:'bytes',start(x){c=x;}}),cr=closed.getReader({mode:'byob'}),closedInput=new Uint8Array(3);cr.read(closedInput).then(v=>globalThis.byteChecks.push(v.done&&v.value.byteLength===0&&v.value.buffer!==closedInput.buffer));const oldRequest=c.byobRequest,oldView=oldRequest.view;c.close();oldRequest.respond(0);globalThis.byteChecks.push(oldView.buffer.byteLength===0&&oldRequest.view===null);" ++
+        "let partial;const ps=new ReadableStream({type:'bytes',start(x){partial=x;}}),pr=ps.getReader({mode:'byob'});pr.read(new Uint16Array(2),{min:2}).then(v=>globalThis.byteChecks.push(v.value.length===2&&v.value[0]===513&&v.value[1]===1027));" ++
+        "const q1=partial.byobRequest,a=q1.view;a[0]=1;q1.respond(1);globalThis.byteChecks.push(a.buffer.byteLength===0&&q1.view===null);const q2=partial.byobRequest,b=q2.view;b.set(new Uint8Array([2,3,4]));const replacementOffset=b.byteOffset,replacement=b.buffer.transfer();q2.respondWithNewView(new Uint8Array(replacement,replacementOffset,3));globalThis.byteChecks.push(replacement.byteLength===0);partial.close();" ++
+        "let pending;const many=new ReadableStream({type:'bytes',start(x){pending=x;}}),mr=many.getReader({mode:'byob'});mr.read(new Uint8Array(1)).then(v=>globalThis.byteChecks.push(v.value[0]===4));mr.read(new Uint8Array(1)).then(v=>globalThis.byteChecks.push(v.value[0]===5));mr.read(new Uint8Array(1)).then(v=>globalThis.byteChecks.push(v.value[0]===6));pending.enqueue(new Uint8Array([4,5,6]));pending.close();" ++
+        "let tail;const ts=new ReadableStream({type:'bytes',start(x){tail=x;}}),tr=ts.getReader({mode:'byob'});tr.read(new Uint16Array(2)).then(v=>globalThis.byteChecks.push(v.value.length===1&&v.value[0]===513));const tq=tail.byobRequest;tq.view.set(new Uint8Array([1,2,3]));tq.respond(3);tail.close();tr.read(new Uint8Array(1)).then(v=>globalThis.byteChecks.push(v.value[0]===3));");
+    try drainLifecycleJobs(&harness.web);
+    const value = try harness.web.executeSource("globalThis.byteChecks.length+':'+globalThis.byteChecks.every(x=>x)");
+    try std.testing.expectEqualStrings("15:true", harness.web.runtime.valueString(value));
+    std.debug.print("STREAMBYTES checks=15 offsets_kinds_transfer_partial_pending_and_tail_valid\n", .{});
+}
+
+test "byte streams reject detached and incomplete inputs and copy a large BYOB block" {
+    const allocator = std.testing.allocator;
+    const harness = try allocator.create(struct { document: html.Document, storage: security.BrowserStorage, web: WebRuntime });
+    defer allocator.destroy(harness);
+    harness.web.initialize(testingProgramAllocator(harness));
+    defer harness.web.deinit();
+    harness.document.reset();
+    try harness.web.beginDocument(&harness.document, &harness.storage, "https://runtime.example/", "", 1, 0);
+    _ = try harness.web.executeSource("globalThis.byteFailures=0;let c;const s=new ReadableStream({type:'bytes',start(x){c=x;}}),r=s.getReader({mode:'byob'});const empty=new Uint8Array(0);r.read(empty).catch(e=>{if(e instanceof TypeError)globalThis.byteFailures++;});r.read(new Uint16Array(2)).catch(e=>{if(e instanceof TypeError)globalThis.byteFailures++;});const q=c.byobRequest;q.view[0]=1;q.respond(1);try{c.close();}catch(e){if(e instanceof TypeError)globalThis.byteFailures++;}" ++
+        "let dc;const ds=new ReadableStream({type:'bytes',start(x){dc=x;}}),dr=ds.getReader({mode:'byob'}),detached=new Uint8Array(2);dr.read(detached);dr.read(detached).catch(e=>{if(e instanceof TypeError)globalThis.byteFailures++;});const dq=dc.byobRequest;dq.view.buffer.transfer();try{dq.respond(1);}catch(e){if(e instanceof TypeError)globalThis.byteFailures++;}dr.cancel();" ++
+        "const tooShort=new ReadableStream({type:'bytes',start(c){c.enqueue(new Uint8Array([1,2]));c.close();}});tooShort.getReader({mode:'byob'}).read(new Uint8Array(4),{min:3}).catch(e=>{if(e instanceof TypeError)globalThis.byteFailures++;});" ++
+        "globalThis.largeCopy=false;const large=new Uint8Array(131072);large[0]=7;large[65536]=23;large[131071]=99;const ls=new ReadableStream({type:'bytes',start(c){c.enqueue(large);c.close();}}),lr=ls.getReader({mode:'byob'}),target=new Uint8Array(new ArrayBuffer(131080),4,131072);lr.read(target,{min:131072}).then(v=>{globalThis.largeCopy=large.buffer.byteLength===0&&target.buffer.byteLength===0&&v.value.byteOffset===4&&v.value.length===131072&&v.value[0]===7&&v.value[65536]===23&&v.value[131071]===99;});");
+    try drainLifecycleJobs(&harness.web);
+    const global = harness.web.runtime.global("globalThis").?;
+    try std.testing.expectEqual(@as(f64, 6), try harness.web.runtime.valueNumber(try harness.web.runtime.get(global, "byteFailures")));
+    try std.testing.expect(harness.web.runtime.valueBoolean(try harness.web.runtime.get(global, "largeCopy")));
+    std.debug.print("STREAMBYTES failures=6 copy=131072 passed\n", .{});
+}
+
+test "stream tee follows demand joins concurrent pulls and preserves cancellation and errors" {
+    const allocator = std.testing.allocator;
+    const harness = try allocator.create(struct { document: html.Document, storage: security.BrowserStorage, web: WebRuntime });
+    defer allocator.destroy(harness);
+    harness.web.initialize(testingProgramAllocator(harness));
+    defer harness.web.deinit();
+    harness.document.reset();
+    try harness.web.beginDocument(&harness.document, &harness.storage, "https://runtime.example/", "", 1, 0);
+    _ = try harness.web.executeSource("var pulls=0,cancels=0,reasons='';const source=new ReadableStream({pull(c){c.enqueue(++pulls);},cancel(r){cancels++;reasons=r.join(',');}},{highWaterMark:0}),branches=source.tee();");
+    try drainLifecycleJobs(&harness.web);
+    try std.testing.expectEqual(@as(f64, 1), try harness.web.runtime.valueNumber(harness.web.runtime.global("pulls").?));
+    _ = try harness.web.executeSource("globalThis.teePairs='';const a=branches[0].getReader(),b=branches[1].getReader();Promise.all([a.read(),b.read()]).then(v=>{globalThis.teePairs=v[0].value+','+v[1].value;});");
+    try drainLifecycleJobs(&harness.web);
+    try std.testing.expectEqual(@as(f64, 2), try harness.web.runtime.valueNumber(harness.web.runtime.global("pulls").?));
+    _ = try harness.web.executeSource("globalThis.fastValues='';a.read().then(v=>{globalThis.fastValues+=v.value;return a.read();}).then(v=>{globalThis.fastValues+=','+v.value;return a.read();}).then(v=>{globalThis.fastValues+=','+v.value;});");
+    try drainLifecycleJobs(&harness.web);
+    try std.testing.expectEqual(@as(f64, 5), try harness.web.runtime.valueNumber(harness.web.runtime.global("pulls").?));
+    _ = try harness.web.executeSource("a.cancel('fast');b.cancel('unused');" ++
+        "globalThis.teeErrors=0;let ec;const es=new ReadableStream({start(c){ec=c;}}),eb=es.tee();const er0=eb[0].getReader(),er1=eb[1].getReader();er0.closed.catch(e=>{if(e==='end-error')globalThis.teeErrors++;});er1.closed.catch(e=>{if(e==='end-error')globalThis.teeErrors++;});ec.error('end-error');" ++
+        "globalThis.byteTee=false;const bs=new ReadableStream({type:'bytes',start(c){c.enqueue(new Uint8Array([7,8]));c.close();}}),bb=bs.tee();Promise.all([bb[0].getReader().read(),bb[1].getReader({mode:'byob'}).read(new Uint8Array(4))]).then(v=>{v[0].value[0]=99;globalThis.byteTee=v[0].value.buffer!==v[1].value.buffer&&v[1].value[0]===7&&v[1].value[1]===8;});" ++
+        "globalThis.teeCloseChecks=0;const shortSource=new ReadableStream({type:'bytes',start(c){c.enqueue(new Uint8Array([42]));c.close();}}),shortBranches=shortSource.tee(),shortLeft=shortBranches[0].getReader({mode:'byob'}),shortRight=shortBranches[1].getReader();shortLeft.read(new Uint16Array(1)).catch(e=>{if(e instanceof TypeError)globalThis.teeCloseChecks++;});shortRight.read().then(v=>{if(v.value[0]===42)globalThis.teeCloseChecks++;return shortRight.read();}).then(v=>{if(v.done)globalThis.teeCloseChecks++;});");
+    try drainLifecycleJobs(&harness.web);
+    const global = harness.web.runtime.global("globalThis").?;
+    try std.testing.expectEqualStrings("1,1", harness.web.runtime.valueString(try harness.web.runtime.get(global, "teePairs")));
+    try std.testing.expectEqualStrings("2,3,4", harness.web.runtime.valueString(try harness.web.runtime.get(global, "fastValues")));
+    try std.testing.expectEqual(@as(f64, 1), try harness.web.runtime.valueNumber(harness.web.runtime.global("cancels").?));
+    try std.testing.expectEqualStrings("fast,unused", harness.web.runtime.valueString(harness.web.runtime.global("reasons").?));
+    try std.testing.expectEqual(@as(f64, 2), try harness.web.runtime.valueNumber(try harness.web.runtime.get(global, "teeErrors")));
+    try std.testing.expect(harness.web.runtime.valueBoolean(try harness.web.runtime.get(global, "byteTee")));
+    try std.testing.expectEqual(@as(f64, 3), try harness.web.runtime.valueNumber(try harness.web.runtime.get(global, "teeCloseChecks")));
+    std.debug.print("STREAMTEE idle_pulls=1 concurrent=2 fast=5 cancel_once errors=2 independent_byte_branches close_checks=3\n", .{});
+}

@@ -18019,19 +18019,44 @@ pub const Runtime = struct {
 
     fn nativeTypedArraySet(self: *Runtime, receiver: Value, arguments: []const Value) Error!Value {
         const target = try self.typedArrayIndex(receiver);
-        const target_range = try self.typedArrayRange(target);
-        if (target_range.storage.immutable) return error.TypeError;
+        if ((try self.typedArrayRange(target)).storage.immutable) return error.TypeError;
         const source = if (arguments.len > 0) arguments[0] else Value.undefined;
         if (source.isNullish()) return error.TypeError;
-        const offset = try self.toIndex(if (arguments.len > 1) arguments[1] else .undefined);
-        const source_length = try self.arrayLikeLength(source);
-        if (offset > target_range.length or source_length > target_range.length - offset) return error.RangeError;
-        if (self.typedArrayElement(source)) |source_element|
-            if (source_element.isBigInt() != target_range.element.isBigInt()) return error.TypeError;
         const root_base = self.root_count;
         defer self.root_count = root_base;
         try self.pushRoot(receiver);
         try self.pushRoot(source);
+        const offset = try self.toIndex(if (arguments.len > 1) arguments[1] else .undefined);
+        // Offset coercion can detach or resize either buffer. Resolve ranges
+        // afterwards, and avoid a Value array for an identical element kind.
+        const target_range = try self.typedArrayRange(target);
+        if (target_range.storage.immutable) return error.TypeError;
+        if (self.typedArrayElement(source)) |source_element| {
+            const source_range = try self.typedArrayRange(source.cell);
+            if (source_element.isBigInt() != target_range.element.isBigInt()) return error.TypeError;
+            if (offset > target_range.length or source_range.length > target_range.length - offset) return error.RangeError;
+            if (source_element == target_range.element) {
+                const size = source_element.byteSize();
+                const count = source_range.length * size;
+                const target_offset = target_range.offset + offset * size;
+                const backwards = source_range.storage == target_range.storage and
+                    target_offset > source_range.offset and target_offset - source_range.offset < count;
+                const destination = arrayBufferBytes(target_range.storage)[target_offset .. target_offset + count];
+                const bytes = arrayBufferBytes(source_range.storage)[source_range.offset .. source_range.offset + count];
+                var remaining = count;
+                while (remaining > 0) {
+                    try self.checkpoint();
+                    const chunk = @min(remaining, 4096);
+                    const start = if (backwards) remaining - chunk else count - remaining;
+                    if (backwards) std.mem.copyBackwards(u8, destination[start .. start + chunk], bytes[start .. start + chunk]) else std.mem.copyForwards(u8, destination[start .. start + chunk], bytes[start .. start + chunk]);
+                    remaining -= chunk;
+                }
+                return .undefined;
+            }
+        }
+        const source_length = try self.arrayLikeLength(source);
+        const current = try self.typedArrayRange(target);
+        if (offset > current.length or source_length > current.length - offset) return error.RangeError;
         const values = try self.createSparseArray(source_length);
         try self.pushRoot(values);
         for (0..source_length) |item_index| try self.setSparseArrayItem(values, item_index, try self.arrayLikeGet(source, item_index));
@@ -31507,4 +31532,51 @@ test "native sorting budget abort releases scratch and runtime remains usable" {
     for (0..128) |index| try std.testing.expectEqual(@as(f64, @floatFromInt(127 - index)), (try runtime.typedArrayRead(array.cell, index)).number);
     runtime.setStepBudget(default_step_budget);
     try std.testing.expectEqual(@as(f64, 42), (try runtime.evaluateSource(&program, "return 6*7;")).number);
+}
+
+test "typed array block set preserves overlap bits bounds and coercion lifetime" {
+    const runtime = try createTestingRuntime();
+    defer destroyTestingRuntime(runtime);
+    var program: Program = .{};
+    const value = try runtime.evaluateSource(&program, "const x=new Uint8Array([1,2,3,4,5,6]);x.set(x.subarray(0,4),2);const backward=x.join(',');x.set(x.subarray(2),0);" ++
+        "const bits=new Uint32Array([0x7fc00023,0x80000000]),floats=new Float32Array(bits.buffer),copy=new Float32Array(2);copy.set(floats);" ++
+        "const target=new Uint8Array(4),source=new Uint8Array([7,8]);let detached=false,shrunk=false,mixed=false,bounds=false;" ++
+        "try{target.set(source,{valueOf(){source.buffer.transfer();return 0;}});}catch(e){detached=e instanceof TypeError;}" ++
+        "const b=new ArrayBuffer(4,{maxByteLength:8}),tracked=new Uint8Array(b);try{tracked.set(new Uint8Array(3),{valueOf(){b.resize(2);return 0;}});}catch(e){shrunk=e instanceof RangeError;}" ++
+        "try{target.set(new BigInt64Array(1));}catch(e){mixed=e instanceof TypeError;}try{target.set(new Uint8Array(2),3);}catch(e){bounds=e instanceof RangeError;}" ++
+        "const big=new BigUint64Array([9007199254740993n,18446744073709551615n]),bigCopy=new BigUint64Array(2);bigCopy.set(big);" ++
+        "const converted=new Uint16Array(2);converted.set(new Uint8Array([8,9]));" ++
+        "return backward==='1,2,1,2,3,4'&&x.join(',')==='1,2,3,4,3,4'&&new Uint32Array(copy.buffer).join(',')==='2143289379,2147483648'&&detached&&shrunk&&mixed&&bounds&&bigCopy[0]===9007199254740993n&&bigCopy[1]===18446744073709551615n&&converted.join(',')==='8,9';");
+    try std.testing.expect(runtime.valueBoolean(value));
+}
+
+test "typed array block set exceeds Value array capacity with bounded copy work" {
+    const runtime = try createTestingRuntime();
+    defer destroyTestingRuntime(runtime);
+    const length = 128 * 1024;
+    const source = try runtime.createTypedArrayLength(.uint8, length);
+    try runtime.pushRoot(source);
+    const target = try runtime.createTypedArrayLength(.uint8, length + 16);
+    try runtime.pushRoot(target);
+    const bytes = Runtime.arrayBufferBytes((try runtime.typedArrayRange(source.cell)).storage)[0..length];
+    for (bytes, 0..) |*byte, index| byte.* = @truncate(index * 13 + 7);
+    const before = runtime.stats;
+    _ = try runtime.nativeTypedArraySet(target, &.{ source, .{ .number = 8 } });
+    const actual = Runtime.arrayBufferBytes((try runtime.typedArrayRange(target.cell)).storage);
+    try std.testing.expectEqualSlices(u8, bytes, actual[8 .. length + 8]);
+    try std.testing.expectEqual(@as(u8, 0), actual[7]);
+    try std.testing.expectEqual(@as(u8, 0), actual[length + 8]);
+    try std.testing.expectEqual(before.allocations, runtime.stats.allocations);
+    try std.testing.expectEqual(@as(usize, 32), runtime.stats.steps - before.steps);
+    // Cross-page overlap uses the direction of the whole span, not each page.
+    const overlap = try runtime.createTypedArrayView(.uint8, runtime.cells[target.cell].receiver, 8, length, false);
+    try runtime.pushRoot(overlap);
+    _ = try runtime.nativeTypedArraySet(target, &.{ overlap, .{ .number = 9 } });
+    try std.testing.expectEqualSlices(u8, bytes, actual[9 .. length + 9]);
+    const roots = runtime.root_count;
+    runtime.setStepBudget(runtime.stats.steps + 1);
+    try std.testing.expectError(error.StepLimit, runtime.nativeTypedArraySet(target, &.{source}));
+    try std.testing.expectEqual(roots, runtime.root_count);
+    runtime.setStepBudget(default_step_budget);
+    std.debug.print("STREAMCOPY bytes=131072 blocks=32 temporary_value_cells=0 overlap_preserved budget_stop_valid\n", .{});
 }
