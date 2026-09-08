@@ -286,36 +286,150 @@ const ParsedHead = struct {
     content_range: ?ContentRange,
 };
 
-pub fn decodeResponse(input: []const u8, body_out: []u8, eof: bool, stop_requested: bool) DecodeResult {
-    if (stop_requested) return .aborted;
-    const head = parseHead(input) orelse {
-        if (input.len > max_header_bytes) return .{ .failure = .header_too_large };
-        return if (eof) .{ .failure = .transport_closed_early } else .need_more;
-    };
-    if (head.status == 204 or head.status == 304 or (head.status >= 100 and head.status < 200)) {
-        return .{ .complete = .{
-            .status = head.status,
-            .transfer = .none,
-            .body = body_out[0..0],
-            .headers = head.headers,
-            .location = head.location,
-            .content_type = head.content_type,
-            .content_security_policy = head.content_security_policy,
-            .access_control_allow_origin = head.access_control_allow_origin,
-            .access_control_allow_credentials = head.access_control_allow_credentials,
-            .set_cookie = head.set_cookie,
-            .set_cookies = head.set_cookies,
-            .set_cookie_count = head.set_cookie_count,
-            .content_range = head.content_range,
-            .consumed = head.body_start,
-        } };
+/// Incremental decoder over stable caller buffers. `input` grows from the
+/// same base; completed payload bytes are copied once and remain private
+/// until the entire message (including chunk trailers) is complete.
+pub const ResponseDecoder = struct {
+    method: Method = .get,
+    head: ?ParsedHead = null,
+    cursor: usize = 0,
+    written: usize = 0,
+    copied_bytes: u64 = 0,
+    seen_input: usize = 0,
+    header_scan: usize = 0,
+    line_scan: usize = 0,
+    remaining: usize = 0,
+    trailer_start: usize = 0,
+    trailer_count: usize = 0,
+    phase: enum { size, data, data_crlf, trailers } = .size,
+    done: bool = false,
+    cancelled: bool = false,
+    failure: ?ResponseError = null,
+
+    pub fn init(method: Method) ResponseDecoder {
+        return .{ .method = method };
     }
 
-    return switch (head.transfer) {
-        .none => .{ .complete = .{
+    pub fn decode(self: *ResponseDecoder, input: []const u8, out: []u8, eof: bool, stop_requested: bool) DecodeResult {
+        if (stop_requested) self.cancelled = true;
+        if (self.cancelled) return .aborted;
+        if (self.failure) |err| return .{ .failure = err };
+        if (input.len < self.seen_input or self.cursor > input.len or self.written > out.len) return self.fail(.unexpected_body);
+        self.seen_input = input.len;
+        if (self.done) return self.result(out);
+        if (self.head == null) {
+            const limit = @min(input.len, max_header_bytes);
+            if (self.header_scan > limit) return self.fail(.malformed_header);
+            if (indexOf(input[self.header_scan..limit], "\r\n\r\n") == null) {
+                self.header_scan = limit -| 3;
+                if (input.len >= max_header_bytes) return self.fail(.header_too_large);
+                return self.more(eof);
+            }
+            self.head = parseHead(input) orelse return self.fail(.malformed_header);
+            self.cursor = self.head.?.body_start;
+        }
+        const head = self.head.?;
+        if (self.method == .head or head.status == 204 or head.status == 304 or (head.status >= 100 and head.status < 200) or head.transfer == .none) {
+            self.done = true;
+            return self.result(out);
+        }
+        switch (head.transfer) {
+            .content_length => {
+                if (head.content_length > out.len) return self.fail(.body_too_large);
+                self.copy(input, out, @min(input.len - self.cursor, head.content_length - self.written));
+                if (self.written != head.content_length) return self.more(eof);
+                self.done = true;
+                return self.result(out);
+            },
+            .close_delimited => {
+                const take = input.len - self.cursor;
+                if (take > out.len - self.written) return self.fail(.body_too_large);
+                self.copy(input, out, take);
+                if (!eof) return .need_more;
+                self.done = true;
+                return self.result(out);
+            },
+            .chunked => while (true) switch (self.phase) {
+                .size => {
+                    const end = self.lineEnd(input) orelse {
+                        if (input.len - self.cursor >= max_header_bytes) return self.fail(.malformed_chunk);
+                        return self.more(eof);
+                    };
+                    if (end - self.cursor > max_header_bytes) return self.fail(.malformed_chunk);
+                    var size_text = input[self.cursor..end];
+                    if (indexOfByte(size_text, ';')) |semi| size_text = size_text[0..semi];
+                    self.remaining = parseHex(trimAscii(size_text)) orelse return self.fail(.malformed_chunk);
+                    if (self.remaining > out.len - self.written) return self.fail(.body_too_large);
+                    self.cursor = end + 2;
+                    self.line_scan = 0;
+                    self.phase = if (self.remaining == 0) .trailers else .data;
+                    if (self.remaining == 0) self.trailer_start = self.cursor;
+                },
+                .data => {
+                    const take = @min(input.len - self.cursor, self.remaining);
+                    self.copy(input, out, take);
+                    self.remaining -= take;
+                    if (self.remaining != 0) return self.more(eof);
+                    self.phase = .data_crlf;
+                },
+                .data_crlf => {
+                    if (input.len - self.cursor < 2) return self.more(eof);
+                    if (!std.mem.eql(u8, input[self.cursor .. self.cursor + 2], "\r\n")) return self.fail(.malformed_chunk);
+                    self.cursor += 2;
+                    self.phase = .size;
+                },
+                .trailers => {
+                    const end = self.lineEnd(input) orelse {
+                        if (input.len - self.trailer_start >= max_header_bytes) return self.fail(.header_too_large);
+                        return self.more(eof);
+                    };
+                    if (end + 2 - self.trailer_start > max_header_bytes) return self.fail(.header_too_large);
+                    const line = input[self.cursor..end];
+                    self.cursor = end + 2;
+                    self.line_scan = 0;
+                    if (line.len == 0) {
+                        self.done = true;
+                        return self.result(out);
+                    }
+                    self.trailer_count += 1;
+                    if (self.trailer_count > max_header_count) return self.fail(.too_many_headers);
+                    const colon = indexOfByte(line, ':') orelse return self.fail(.malformed_header);
+                    if (!isHeaderName(line[0..colon]) or hasForbiddenHeaderByte(line[colon + 1 ..])) return self.fail(.malformed_header);
+                    // Trailer fields do not change framing or previously
+                    // accepted response metadata.
+                },
+            },
+            .none => unreachable,
+        }
+    }
+
+    fn lineEnd(self: *ResponseDecoder, input: []const u8) ?usize {
+        const start = @max(self.cursor, self.line_scan);
+        const limit = @min(input.len, self.cursor +| max_header_bytes);
+        if (indexOf(input[start..limit], "\r\n")) |relative| return start + relative;
+        self.line_scan = @max(self.cursor, limit -| 1);
+        return null;
+    }
+    fn copy(self: *ResponseDecoder, input: []const u8, out: []u8, take: usize) void {
+        @memcpy(out[self.written .. self.written + take], input[self.cursor .. self.cursor + take]);
+        self.cursor += take;
+        self.written += take;
+        self.copied_bytes +|= take;
+    }
+    fn fail(self: *ResponseDecoder, err: ResponseError) DecodeResult {
+        self.failure = err;
+        return .{ .failure = err };
+    }
+    fn more(self: *ResponseDecoder, eof: bool) DecodeResult {
+        return if (eof) self.fail(.transport_closed_early) else .need_more;
+    }
+    fn result(self: *const ResponseDecoder, out: []u8) DecodeResult {
+        const head = self.head.?;
+        const no_body = self.method == .head or head.status == 204 or head.status == 304 or (head.status >= 100 and head.status < 200);
+        return .{ .complete = .{
             .status = head.status,
-            .transfer = .none,
-            .body = body_out[0..0],
+            .transfer = if (no_body) .none else head.transfer,
+            .body = out[0..self.written],
             .headers = head.headers,
             .location = head.location,
             .content_type = head.content_type,
@@ -326,12 +440,28 @@ pub fn decodeResponse(input: []const u8, body_out: []u8, eof: bool, stop_request
             .set_cookies = head.set_cookies,
             .set_cookie_count = head.set_cookie_count,
             .content_range = head.content_range,
-            .consumed = head.body_start,
-        } },
-        .content_length => decodeContentLength(input, body_out, head),
-        .chunked => decodeChunked(input, body_out, head),
-        .close_delimited => decodeCloseDelimited(input, body_out, head, eof),
-    };
+            .consumed = self.cursor,
+        } };
+    }
+};
+
+pub fn decodeResponse(input: []const u8, body_out: []u8, eof: bool, stop_requested: bool) DecodeResult {
+    var decoder: ResponseDecoder = .{};
+    return decoder.decode(input, body_out, eof, stop_requested);
+}
+
+/// A connection is eligible only after consuming exactly one self-delimited
+/// message. Extra received bytes, close framing and protocol switches retire it.
+pub fn responseAllowsReuse(input: []const u8, response: Response) bool {
+    if (response.consumed != input.len or response.transfer == .close_delimited or response.status < 200 or !startsWith(input, "HTTP/1.1 ")) return false;
+    var lines = std.mem.splitSequence(u8, response.headers, "\r\n");
+    while (lines.next()) |line| {
+        const colon = indexOfByte(line, ':') orelse continue;
+        if (!equalsIgnoreCase(line[0..colon], "Connection")) continue;
+        var tokens = std.mem.splitScalar(u8, line[colon + 1 ..], ',');
+        while (tokens.next()) |token| if (equalsIgnoreCase(trimAscii(token), "close") or equalsIgnoreCase(trimAscii(token), "upgrade")) return false;
+    }
+    return true;
 }
 
 fn parseHead(input: []const u8) ?ParsedHead {
@@ -413,95 +543,6 @@ fn parseHead(input: []const u8) ?ParsedHead {
         .set_cookie_count = set_cookie_count,
         .content_range = content_range,
     };
-}
-
-fn decodeContentLength(input: []const u8, out: []u8, head: ParsedHead) DecodeResult {
-    if (head.content_length > out.len) return .{ .failure = .body_too_large };
-    if (input.len < head.body_start + head.content_length) return .need_more;
-    if (head.content_length > 0) @memcpy(out[0..head.content_length], input[head.body_start .. head.body_start + head.content_length]);
-    return .{ .complete = .{
-        .status = head.status,
-        .transfer = .content_length,
-        .body = out[0..head.content_length],
-        .headers = head.headers,
-        .location = head.location,
-        .content_type = head.content_type,
-        .content_security_policy = head.content_security_policy,
-        .access_control_allow_origin = head.access_control_allow_origin,
-        .access_control_allow_credentials = head.access_control_allow_credentials,
-        .set_cookie = head.set_cookie,
-        .set_cookies = head.set_cookies,
-        .set_cookie_count = head.set_cookie_count,
-        .content_range = head.content_range,
-        .consumed = head.body_start + head.content_length,
-    } };
-}
-
-fn decodeCloseDelimited(input: []const u8, out: []u8, head: ParsedHead, eof: bool) DecodeResult {
-    const available = input.len - head.body_start;
-    if (available > out.len) return .{ .failure = .body_too_large };
-    if (!eof) return .need_more;
-    if (available > 0) @memcpy(out[0..available], input[head.body_start..]);
-    return .{ .complete = .{
-        .status = head.status,
-        .transfer = .close_delimited,
-        .body = out[0..available],
-        .headers = head.headers,
-        .location = head.location,
-        .content_type = head.content_type,
-        .content_security_policy = head.content_security_policy,
-        .access_control_allow_origin = head.access_control_allow_origin,
-        .access_control_allow_credentials = head.access_control_allow_credentials,
-        .set_cookie = head.set_cookie,
-        .set_cookies = head.set_cookies,
-        .set_cookie_count = head.set_cookie_count,
-        .content_range = head.content_range,
-        .consumed = input.len,
-    } };
-}
-
-fn decodeChunked(input: []const u8, out: []u8, head: ParsedHead) DecodeResult {
-    var cursor = head.body_start;
-    var written: usize = 0;
-    while (true) {
-        const line_rel = indexOf(input[cursor..], "\r\n") orelse return .need_more;
-        const line_end = cursor + line_rel;
-        var size_text = input[cursor..line_end];
-        if (indexOfByte(size_text, ';')) |semi| size_text = size_text[0..semi];
-        const chunk_size = parseHex(trimAscii(size_text)) orelse return .{ .failure = .malformed_chunk };
-        cursor = line_end + 2;
-        if (chunk_size == 0) {
-            if (input.len < cursor + 2) return .need_more;
-            if (input[cursor] == '\r' and input[cursor + 1] == '\n') {
-                cursor += 2;
-            } else {
-                const trailers_end = indexOf(input[cursor..], "\r\n\r\n") orelse return .need_more;
-                cursor += trailers_end + 4;
-            }
-            return .{ .complete = .{
-                .status = head.status,
-                .transfer = .chunked,
-                .body = out[0..written],
-                .headers = head.headers,
-                .location = head.location,
-                .content_type = head.content_type,
-                .content_security_policy = head.content_security_policy,
-                .access_control_allow_origin = head.access_control_allow_origin,
-                .access_control_allow_credentials = head.access_control_allow_credentials,
-                .set_cookie = head.set_cookie,
-                .set_cookies = head.set_cookies,
-                .set_cookie_count = head.set_cookie_count,
-                .content_range = head.content_range,
-                .consumed = cursor,
-            } };
-        }
-        if (chunk_size > out.len - written) return .{ .failure = .body_too_large };
-        if (input.len < cursor + chunk_size + 2) return .need_more;
-        if (input[cursor + chunk_size] != '\r' or input[cursor + chunk_size + 1] != '\n') return .{ .failure = .malformed_chunk };
-        @memcpy(out[written .. written + chunk_size], input[cursor .. cursor + chunk_size]);
-        written += chunk_size;
-        cursor += chunk_size + 2;
-    }
 }
 
 pub const StreamResponse = struct {
@@ -1033,4 +1074,97 @@ test "stream decoder exposes ranges and fails closed on truncation and abort" {
         .failure => |failure| failure == .malformed_header,
         else => false,
     });
+}
+
+test "incremental response preserves chunk boundaries and copies payload once" {
+    const wire = "HTTP/1.1 200 OK\r\nTransfer-Encoding: chunked\r\nContent-Type: text/plain\r\n\r\n4;ext=yes\r\nWiki\r\n5\r\npedia\r\n0\r\nX-Trace: end\r\n\r\n";
+    for (0..wire.len + 1) |split| {
+        var out: [32]u8 = undefined;
+        var decoder: ResponseDecoder = .{};
+        const partial = decoder.decode(wire[0..split], &out, false, false);
+        try std.testing.expect(if (split == wire.len) partial == .complete else partial == .need_more);
+        const complete = decoder.decode(wire, &out, false, false).complete;
+        try std.testing.expectEqualStrings("Wikipedia", complete.body);
+        try std.testing.expectEqual(wire.len, complete.consumed);
+        try std.testing.expectEqual(@as(u64, 9), decoder.copied_bytes);
+        try std.testing.expect(responseAllowsReuse(wire, complete));
+    }
+    var out: [32]u8 = undefined;
+    var decoder: ResponseDecoder = .{};
+    for (1..wire.len + 1) |end| {
+        const result = decoder.decode(wire[0..end], &out, false, false);
+        try std.testing.expect(if (end == wire.len) result == .complete else result == .need_more);
+    }
+    try std.testing.expectEqual(@as(u64, 9), decoder.copied_bytes);
+    const with_next = wire ++ "HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n";
+    const first = decoder.decode(with_next, &out, false, false).complete;
+    try std.testing.expectEqual(wire.len, first.consumed);
+    try std.testing.expect(!responseAllowsReuse(with_next, first));
+}
+
+test "incremental response one megabyte uses one payload copy across 256 arrivals" {
+    const chunks = 256;
+    const chunk_bytes = 4096;
+    const head = "HTTP/1.1 200 OK\r\nTransfer-Encoding: chunked\r\n\r\n";
+    const wire = try std.testing.allocator.alloc(u8, head.len + chunks * (chunk_bytes + 8) + 5);
+    defer std.testing.allocator.free(wire);
+    const out = try std.testing.allocator.alloc(u8, chunks * chunk_bytes);
+    defer std.testing.allocator.free(out);
+    @memcpy(wire[0..head.len], head);
+    var decoder: ResponseDecoder = .{};
+    var cursor: usize = head.len;
+    for (0..chunks) |i| {
+        @memcpy(wire[cursor .. cursor + 6], "1000\r\n");
+        cursor += 6;
+        @memset(wire[cursor .. cursor + chunk_bytes], @intCast(i));
+        cursor += chunk_bytes;
+        @memcpy(wire[cursor .. cursor + 2], "\r\n");
+        cursor += 2;
+        if (i == chunks - 1) {
+            @memcpy(wire[cursor .. cursor + 5], "0\r\n\r\n");
+            cursor += 5;
+        }
+        const result = decoder.decode(wire[0..cursor], out, false, false);
+        try std.testing.expect(if (i == chunks - 1) result == .complete else result == .need_more);
+    }
+    try std.testing.expectEqual(@as(u64, chunks * chunk_bytes), decoder.copied_bytes);
+    for (out, 0..) |byte, index| try std.testing.expectEqual(@as(u8, @intCast(index / chunk_bytes)), byte);
+    std.debug.print("HTTPPROGRESS arrivals=256 payload=1048576 copied={d}\n", .{decoder.copied_bytes});
+}
+
+test "incremental response framing excludes incomplete closed cancelled and switched connections" {
+    var out: [16]u8 = undefined;
+    const fixed = "HTTP/1.1 200 OK\r\nContent-Length: 4\r\n\r\ntest";
+    var decoder: ResponseDecoder = .{};
+    try std.testing.expect(decoder.decode(fixed[0 .. fixed.len - 2], &out, false, false) == .need_more);
+    try std.testing.expectEqualStrings("te", out[0..2]);
+    try std.testing.expectEqualStrings("test", decoder.decode(fixed, &out, false, false).complete.body);
+    try std.testing.expectEqual(@as(u64, 4), decoder.copied_bytes);
+    var truncated: ResponseDecoder = .{};
+    try std.testing.expectEqual(ResponseError.transport_closed_early, truncated.decode(fixed[0 .. fixed.len - 1], &out, true, false).failure);
+    try std.testing.expect(truncated.decode(fixed, &out, false, false) == .failure);
+    var aborted: ResponseDecoder = .{};
+    try std.testing.expect(aborted.decode(fixed, &out, false, true) == .aborted);
+    try std.testing.expect(aborted.decode(fixed, &out, false, false) == .aborted);
+    for ([_][]const u8{
+        "HTTP/1.1 200 OK\r\nTransfer-Encoding: chunked\r\n\r\n1\r\naXX",
+        "HTTP/1.1 200 OK\r\nTransfer-Encoding: chunked\r\n\r\n0\r\nbad-trailer\r\n\r\n",
+    }) |invalid| {
+        var invalid_decoder: ResponseDecoder = .{};
+        try std.testing.expect(invalid_decoder.decode(invalid, &out, true, false) == .failure);
+    }
+    var head = ResponseDecoder.init(.head);
+    const head_wire = "HTTP/1.1 200 OK\r\nContent-Length: 1000\r\n\r\n";
+    const head_response = head.decode(head_wire, &out, false, false).complete;
+    try std.testing.expect(head_response.body.len == 0 and responseAllowsReuse(head_wire, head_response));
+    for ([_][]const u8{
+        "HTTP/1.1 200 OK\r\nConnection: keep-alive, Close\r\nContent-Length: 0\r\n\r\n",
+        "HTTP/1.0 200 OK\r\nContent-Length: 0\r\n\r\n",
+        "HTTP/1.1 101 Switching Protocols\r\nUpgrade: other\r\n\r\n",
+        "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nend",
+    }) |closed| {
+        var closed_decoder: ResponseDecoder = .{};
+        const response = closed_decoder.decode(closed, &out, true, false).complete;
+        try std.testing.expect(!responseAllowsReuse(closed, response));
+    }
 }
