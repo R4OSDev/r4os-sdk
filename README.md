@@ -125,3 +125,12 @@ Detailed German migration notes are preserved in
 
 Original R4OS material is licensed under Apache License 2.0. See `LICENSE`,
 `NOTICE`, and `THIRD_PARTY_NOTICES.md`.
+
+## File copies
+
+`Files.copy` / `file_stream.copy` and C `r4_files_copy` submit one optional
+`file_copy_buffered` request with caller-owned scratch space. It checks
+backend file identity before replacement and keeps the paired filesystem
+request throughout copying. Results preserve exact completed byte/chunk
+counts; old providers return unavailable without an unsafe truncate/read
+fallback. Failure cleanup can fail and progress is not a retry offset.

@@ -794,3 +794,17 @@ installierten Stage-1/Stage-2-Code mit realem BIOSBOOT-Verweis. Nur die vom
 Installer erhaltenen Zeitstempel-/Signatur-/MBR-Tabellenfelder sind variabel.
 Das erlaubt vor einem Austausch des passenden Stage-3-Begleiters die
 Kompatibilitaetspruefung, ohne MBR oder BIOSBOOT zu aendern.
+
+0.78.28: Zusammenhaengende Dateikopien
+--------------------------------------
+Files.copy/file_stream.copy und C r4_files_copy verwenden den optionalen
+R4SYS-Slot file_copy_buffered. Eine gepaarte Dateisystem-Anfrage haelt
+Quellidentitaet, Zielpruefung und alle Chunks zusammen. Der Aufrufer besitzt
+den nichtleeren Puffer exklusiv bis zur Rueckkehr. Alte Provider melden
+fehlende Funktion; es gibt keinen getrennten Truncate-/Read-Ersatzablauf.
+Bytefortschritt, Quellgroesse, Chunkanzahl und groesster Chunk stammen aus
+tatsaechlich abgeschlossenen Appends. Erfolg umfasst den finalen Flush.
+Bei Fehler wird die unvollstaendige Zieldatei unter derselben Anfrage zu
+entfernen versucht; auch Cleanup kann scheitern. Fortschritt ist kein
+dauerhaft gespeicherter Wiederaufnahmeoffset. Identische Dateiobjekte
+einschliesslich FAT-Kurzname und Fallvarianten bleiben unveraendert.
