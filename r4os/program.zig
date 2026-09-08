@@ -1872,6 +1872,16 @@ pub const Context = struct {
         return table_fn(path, out.ptr, @intCast(out.len));
     }
 
+    pub fn directoryChangeBegin(self: *const Context, path: [*:0]const u8, cursor: *abi.DirectoryChangeCursor) i32 {
+        const table_fn = self.sysFn("directory_change_begin") orelse return self.unavailable("sys");
+        return table_fn(path, cursor);
+    }
+
+    pub fn directoryChangePoll(self: *const Context, cursor: *abi.DirectoryChangeCursor) i32 {
+        const table_fn = self.sysFn("directory_change_poll") orelse return self.unavailable("sys");
+        return table_fn(cursor);
+    }
+
     pub fn dirEntry(self: *const Context, path: [*:0]const u8, index: u32, out: []u8) i32 {
         const table_fn = self.sysFn("dir_entry") orelse return self.unavailable("sys");
         return table_fn(path, index, out.ptr, @intCast(out.len));

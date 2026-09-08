@@ -43,6 +43,7 @@ pub const AppProfile = app_contract.AppProfile;
 pub const AppEntryFn = app_contract.AppEntryFn;
 pub const Console = app_storage.Console;
 pub const Files = app_storage.Files;
+pub const directory_page = @import("r4os/directory_page.zig");
 pub const DirectoryIterator = app_storage.DirectoryIterator;
 pub const StreamReader = app_storage.StreamReader;
 pub const StreamWriter = app_storage.StreamWriter;

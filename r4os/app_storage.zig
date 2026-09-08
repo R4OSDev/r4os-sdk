@@ -135,6 +135,16 @@ pub const Files = struct {
         return classifyPresenceOperation(self.sys.dirDelete(directory.ptr));
     }
 
+    pub fn beginDirectoryChanges(self: *const Files, directory: PathZ, cursor: *abi.DirectoryChangeCursor) i32 {
+        return self.sys.directoryChangeBegin(directory.ptr, cursor);
+    }
+
+    /// No directory scan, retained kernel handle or I/O. Consume the cursor
+    /// before reloading; a change during that reload is seen on the next poll.
+    pub fn pollDirectoryChanges(self: *const Files, cursor: *abi.DirectoryChangeCursor) i32 {
+        return self.sys.directoryChangePoll(cursor);
+    }
+
     pub fn iterate(self: Files, directory: PathZ) DirectoryIterator {
         return .{ .files = self, .directory = directory };
     }

@@ -1238,6 +1238,14 @@ pub const Context = struct {
         return self.base.dirList(path, out);
     }
 
+    pub fn directoryChangeBegin(self: *const Context, path: [*:0]const u8, cursor: *abi.DirectoryChangeCursor) i32 {
+        return self.base.directoryChangeBegin(path, cursor);
+    }
+
+    pub fn directoryChangePoll(self: *const Context, cursor: *abi.DirectoryChangeCursor) i32 {
+        return self.base.directoryChangePoll(cursor);
+    }
+
     pub fn dirEntry(self: *const Context, path: [*:0]const u8, index: u32, out: []u8) i32 {
         return self.base.dirEntry(path, index, out);
     }
