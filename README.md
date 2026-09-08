@@ -216,3 +216,27 @@ References: RFC 9112 sections 3.2, 4 and 5
 (https://www.rfc-editor.org/rfc/rfc9112.html), RFC 3986 section 5.2
 (https://www.rfc-editor.org/rfc/rfc3986.html), and the WHATWG URL fragment state
 (https://url.spec.whatwg.org/#fragment-state).
+
+
+Global bindings and primitive conversion (0.78.71)
+-------------------------------------------------
+The realm has one stable global object and a separate declarative lexical
+environment. Script var and function declarations use global object
+properties; reads and writes through names and globalThis see the same
+values. let/const remain lexical. Standard intrinsics are non-enumerable,
+writable and configurable, except undefined, NaN and Infinity, which are
+immutable. Host defineGlobal keeps its explicit constant flag.
+
+Script this is the stable realm object even after globalThis is reassigned.
+Module this is undefined; arrows preserve their defining environment across
+Script/module calls. A global identifier call does not implicitly bind an
+object receiver. Strict writes to immutable globals fail; sloppy writes
+leave their values unchanged. Function declarations are instantiated once
+per statement list and can be redeclared in a later Script.
+
+Array and function conversion observes Symbol.toPrimitive, then ordinary
+valueOf/toString in hint order. Null and undefined mean an absent exotic
+converter. Custom methods and thrown errors are observable. Function source
+formatting belongs to Function.prototype.toString, avoiding recursive
+conversion through that method. Values and converters remain rooted during
+calls. This is a targeted language correction, not full ECMAScript support.

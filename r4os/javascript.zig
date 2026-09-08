@@ -1300,6 +1300,8 @@ pub const Program = struct {
         }
         current = first;
         while (current != none) : (current = self.nodes[current].next) {
+            // Already instantiated by this list's declaration pass.
+            if (self.nodes[current].kind == .function_declaration) continue;
             try self.emitBytecode(.block, current, 0, try self.segmentForNode(current), none);
         }
     }
@@ -5797,6 +5799,7 @@ pub const Cell = struct {
     sealed: bool = false,
     extensible: bool = true,
     object_environment: bool = false,
+    strict_environment: ?bool = null,
     kind: CellKind = .object,
     parent: u16 = none,
     prototype: u16 = none,
@@ -6320,6 +6323,8 @@ pub const Runtime = struct {
     dynamic_programs: [max_dynamic_programs]?*Program = [_]?*Program{null} ** max_dynamic_programs,
     dynamic_program_count: usize = 0,
     global_env: u16 = none,
+    global_object_env: u16 = none,
+    global_object: u16 = none,
     object_prototype: u16 = none,
     function_prototype: u16 = none,
     array_prototype: u16 = none,
@@ -6488,6 +6493,8 @@ pub const Runtime = struct {
         for (&self.cells) |*cell| cell.occupied = false;
         self.module_count = 0;
         self.global_env = none;
+        self.global_object_env = none;
+        self.global_object = none;
         self.object_prototype = none;
         self.function_prototype = none;
         self.array_prototype = none;
@@ -6578,7 +6585,13 @@ pub const Runtime = struct {
         self.stats = .{};
         self.global_env = try self.allocateCell(.environment);
         self.active_env = self.global_env;
+        self.global_object_env = try self.allocateCell(.environment);
+        self.cells[self.global_env].parent = self.global_object_env;
+        self.global_object = try self.allocateCell(.object);
+        self.cells[self.global_object_env].object_environment = true;
+        self.cells[self.global_object_env].receiver = self.globalObject();
         try self.installIntrinsics();
+        self.cells[self.global_object].prototype = self.object_prototype;
         self.stats.live_cells = self.countLiveCells();
         self.scheduleNextCollection();
     }
@@ -6806,7 +6819,100 @@ pub const Runtime = struct {
     }
 
     pub fn defineGlobal(self: *Runtime, name: []const u8, value: Value, constant: bool) Error!void {
-        try self.defineBinding(self.global_env, name, value, constant);
+        try self.defineOwnDataProperty(self.globalObject(), name, value);
+        for (self.propertyStorage(self.global_object)[0..self.cells[self.global_object].property_count]) |*property| {
+            if (!equals(self.stringBytes(property.key), name)) continue;
+            property.writable = !constant;
+            property.enumerable = false;
+            property.configurable = !constant;
+            return;
+        }
+        return error.TypeError;
+    }
+
+    fn defineBuiltinGlobal(self: *Runtime, name: []const u8, value: Value, _: bool) Error!void {
+        const readonly = equals(name, "undefined") or equals(name, "NaN") or equals(name, "Infinity");
+        try self.defineGlobal(name, value, readonly);
+    }
+
+    fn globalObject(self: *const Runtime) Value {
+        return .{ .cell = self.global_object };
+    }
+
+    // The object environment's name list records var/function declarations
+    // only. It is never consulted as a second store of their values.
+    fn recordGlobalDeclaration(self: *Runtime, name: []const u8) Error!void {
+        if (self.lookupOwn(self.global_object_env, name) != null) return;
+        const index = self.global_object_env;
+        const count = self.cells[index].binding_count;
+        try self.ensureBindingCapacity(index, count + 1);
+        self.bindingStorage(index)[count] = .{ .name = try self.storeString(name) };
+        self.cells[index].binding_count += 1;
+    }
+
+    fn declareGlobal(self: *Runtime, name: []const u8, value: Value, function: bool) Error!void {
+        if (self.lookupOwn(self.global_env, name) != null) return error.SyntaxError;
+        const object = self.globalObject();
+        const exists = try self.hasOwnProperty(object, name);
+        const root_base = self.root_count;
+        defer self.root_count = root_base;
+        try self.pushRoot(value);
+        if (function or !exists) {
+            if (function and exists) {
+                if (self.findAccessor(self.global_object, name)) |accessor| {
+                    if (!accessor.configurable) return error.SyntaxError;
+                } else for (self.propertyStorageConst(self.global_object)[0..self.cells[self.global_object].property_count]) |property| {
+                    if (equals(self.stringBytes(property.key), name) and !property.configurable and (!property.writable or !property.enumerable)) return error.SyntaxError;
+                }
+            }
+            const descriptor = try self.createObject();
+            try self.pushRoot(descriptor);
+            try self.defineOwnDataProperty(descriptor, "value", value);
+            try self.defineOwnDataProperty(descriptor, "writable", .{ .boolean = true });
+            try self.defineOwnDataProperty(descriptor, "enumerable", .{ .boolean = true });
+            try self.defineOwnDataProperty(descriptor, "configurable", .{ .boolean = false });
+            try self.defineDescriptor(object, name, descriptor);
+        }
+        try self.recordGlobalDeclaration(name);
+    }
+
+    fn hoistVariable(self: *Runtime, environment: u16, name: []const u8) Error!void {
+        if (environment == self.global_env) return self.declareGlobal(name, .undefined, false);
+        if (self.lookupOwn(environment, name) == null) try self.defineBinding(environment, name, .undefined, false);
+    }
+
+    fn strictExecution(self: *const Runtime) bool {
+        var current = self.active_env;
+        while (current != none) {
+            if (self.cells[current].strict_environment) |strict| return strict;
+            current = self.cells[current].parent;
+        }
+        return if (self.active_program) |program| program.strict_mode else false;
+    }
+
+    fn checkGlobalWrite(self: *Runtime, name: []const u8) Error!void {
+        if (self.strictExecution()) {
+            var index = self.global_object;
+            while (index != none) : (index = self.cells[index].prototype) {
+                if (self.findAccessor(index, name)) |accessor| {
+                    if (accessor.setter == .undefined) return error.TypeError;
+                    return;
+                }
+                var found = false;
+                for (self.propertyStorageConst(index)[0..self.cells[index].property_count]) |property| {
+                    if (!equals(self.stringBytes(property.key), name)) continue;
+                    if (!property.writable) return error.TypeError;
+                    found = true;
+                    break;
+                }
+                if (found) break;
+            }
+            if (!self.cells[self.global_object].extensible and !try self.hasOwnProperty(self.globalObject(), name)) return error.TypeError;
+        }
+    }
+
+    fn assignGlobal(self: *Runtime, name: []const u8, value: Value) Error!void {
+        try self.setProperty(self.globalObject(), name, value);
     }
 
     pub fn registerModule(self: *Runtime, name: []const u8, source: []const u8) Error!void {
@@ -7543,7 +7649,7 @@ pub const Runtime = struct {
             switch (instruction.op) {
                 .hoist_var => {
                     const name = program.text(node.text);
-                    if (self.lookupOwn(environment, name) == null) try self.defineBinding(environment, name, .undefined, false);
+                    try self.hoistVariable(environment, name);
                 },
                 .function_declaration => {
                     const value = try self.bytecodeFunctionDeclaration(program, instruction.a, environment);
@@ -7770,9 +7876,14 @@ pub const Runtime = struct {
     fn bytecodeFunctionDeclaration(self: *Runtime, program: *const Program, index: u16, environment: u16) Error!Value {
         const node = program.nodes[index];
         const name = program.text(node.text);
-        if (self.lookupOwn(environment, name)) |existing| return existing;
+        if (environment != self.global_env) {
+            if (self.lookupOwn(environment, name)) |existing| return existing;
+        }
         const function = try self.createFunction(program, index, environment, node.flags);
-        try self.defineBinding(environment, name, function, true);
+        if (environment == self.global_env)
+            try self.declareGlobal(name, function, true)
+        else
+            try self.defineBinding(environment, name, function, true);
         if (node.flags & flag_exported != 0 and self.active_exports != none)
             try self.registerModuleExport(name, name, none, .local, true);
         return function;
@@ -8489,7 +8600,7 @@ pub const Runtime = struct {
             .identifier => {
                 const name = program.text(pattern.text);
                 if (options.binding) {
-                    if (options.var_binding and self.lookup(environment, name) != null)
+                    if (options.var_binding)
                         try self.assignLexicalBinding(environment, name, value)
                     else
                         try self.defineBinding(environment, name, value, options.constant);
@@ -9738,7 +9849,7 @@ pub const Runtime = struct {
         const pattern = program.nodes[index];
         if (pattern.kind == .identifier) {
             const name = program.text(pattern.text);
-            if (self.lookupOwn(environment, name) == null) try self.defineBinding(environment, name, .undefined, false);
+            try self.hoistVariable(environment, name);
             return;
         }
         if (!isPatternKind(pattern.kind)) return error.BytecodeInvalid;
@@ -10105,6 +10216,8 @@ pub const Runtime = struct {
         self.cells[module.exports].sealed = true;
         module.environment = try self.allocateCell(.environment);
         self.cells[module.environment].parent = self.global_env;
+        self.cells[module.environment].strict_environment = true;
+        try self.defineBinding(module.environment, "this", .undefined, true);
         module.state = .evaluating;
         const environment = module.environment;
         const previous_env = self.active_env;
@@ -11226,6 +11339,7 @@ pub const Runtime = struct {
         const environment = try self.allocateCell(.environment);
         self.call_environments[frame_index] = environment;
         self.cells[environment].parent = function.parent;
+        self.cells[environment].strict_environment = strict_function;
         const previous_active_env = self.active_env;
         self.active_env = environment;
         defer self.active_env = previous_active_env;
@@ -11234,7 +11348,7 @@ pub const Runtime = struct {
         else if (construct)
             Value.undefined
         else if (!strict_function and receiver.isNullish())
-            self.global("globalThis") orelse receiver
+            self.globalObject()
         else
             receiver;
         if (!arrow) {
@@ -11425,11 +11539,17 @@ pub const Runtime = struct {
 
     fn nativeFunctionToString(self: *Runtime, receiver: Value) Error!Value {
         if (!self.isCallableValue(receiver)) return error.TypeError;
-        if (receiver == .cell and self.cells[receiver.cell].kind == .proxy)
-            return .{ .string = try self.storeString("function () { [native code] }") };
-        const primitive = try self.toPrimitive(receiver, .string);
-        if (primitive != .string) return error.TypeError;
-        return primitive;
+        const function = &self.cells[receiver.cell];
+        if (function.kind == .function) {
+            if (function.program_ref) |program| {
+                if (function.node < program.node_count) {
+                    const source = program.nodes[function.node].source.bytes(program.source[0..program.source_len]);
+                    if (source.len > 0) return .{ .string = try self.storeString(source) };
+                }
+            }
+            return .{ .string = try self.storeString("function(){}") };
+        }
+        return .{ .string = try self.storeString("function () { [native code] }") };
     }
 
     fn finishNativeConstruction(self: *Runtime, id: NativeId, result: Value, new_target: Value) Error!Value {
@@ -19996,9 +20116,9 @@ pub const Runtime = struct {
     }
 
     fn installIntrinsics(self: *Runtime) Error!void {
-        try self.defineGlobal("undefined", .undefined, true);
-        try self.defineGlobal("NaN", .{ .number = std.math.nan(f64) }, true);
-        try self.defineGlobal("Infinity", .{ .number = std.math.inf(f64) }, true);
+        try self.defineBuiltinGlobal("undefined", .undefined, true);
+        try self.defineBuiltinGlobal("NaN", .{ .number = std.math.nan(f64) }, true);
+        try self.defineBuiltinGlobal("Infinity", .{ .number = std.math.inf(f64) }, true);
         const object = try self.createNative(.object_constructor, .undefined);
         try self.setProperty(object, "assign", try self.createNative(.object_assign, .undefined));
         try self.setProperty(object, "keys", try self.createNative(.object_keys, .undefined));
@@ -20039,7 +20159,7 @@ pub const Runtime = struct {
         try self.defineOwnAccessor(object_prototype, "__proto__", try self.createNative(.object_proto_getter, .undefined), true);
         try self.defineOwnAccessor(object_prototype, "__proto__", try self.createNative(.object_proto_setter, .undefined), false);
         try self.setProperty(object, "prototype", object_prototype);
-        try self.defineGlobal("Object", object, true);
+        try self.defineBuiltinGlobal("Object", object, true);
 
         const function_prototype = try self.createNative(.function_prototype, .undefined);
         self.function_prototype = function_prototype.cell;
@@ -20083,7 +20203,7 @@ pub const Runtime = struct {
             if (self.findAccessorMutable(function_prototype.cell, name)) |accessor| accessor.configurable = false;
         }
         try self.setProperty(function, "prototype", function_prototype);
-        try self.defineGlobal("Function", function, true);
+        try self.defineBuiltinGlobal("Function", function, true);
 
         const proxy_constructor = try self.createNative(.proxy_constructor, .undefined);
         try self.defineFunctionMetadata(proxy_constructor, "length", .{ .number = 2 });
@@ -20093,7 +20213,7 @@ pub const Runtime = struct {
         try self.defineFunctionMetadata(proxy_revocable, "name", .{ .string = try self.storeString("revocable") });
         try self.setProperty(proxy_constructor, "revocable", proxy_revocable);
         try self.makeOwnPropertyNonEnumerable(proxy_constructor, "revocable");
-        try self.defineGlobal("Proxy", proxy_constructor, true);
+        try self.defineBuiltinGlobal("Proxy", proxy_constructor, true);
 
         const reflect: Value = .{ .cell = try self.allocateCell(.object) };
         self.cells[reflect.cell].prototype = self.object_prototype;
@@ -20116,7 +20236,7 @@ pub const Runtime = struct {
             try self.setProperty(reflect, method.name, try self.createNative(method.id, .undefined));
             try self.finalizeBuiltinMethod(reflect, method.name, method.length);
         }
-        try self.defineGlobal("Reflect", reflect, true);
+        try self.defineBuiltinGlobal("Reflect", reflect, true);
 
         const array = try self.createNative(.array_constructor, .undefined);
         try self.setProperty(array, "isArray", try self.createNative(.array_is_array, .undefined));
@@ -20219,7 +20339,7 @@ pub const Runtime = struct {
         for (array_prototype_methods) |method| try self.finalizeBuiltinMethod(array_prototype, method.name, method.length);
         try self.makeOwnPropertyNonEnumerable(array_prototype, "constructor");
         try self.makeOwnPropertyNonEnumerable(array, "prototype");
-        try self.defineGlobal("Array", array, true);
+        try self.defineBuiltinGlobal("Array", array, true);
 
         const iterator_prototype: Value = .{ .cell = try self.allocateCell(.object) };
         self.iterator_prototype = iterator_prototype.cell;
@@ -20272,7 +20392,7 @@ pub const Runtime = struct {
         try self.setProperty(iterator_wrapper_prototype, "return", try self.createNative(.iterator_wrapper_return, .undefined));
         try self.finalizeBuiltinMethod(iterator_wrapper_prototype, "next", 0);
         try self.finalizeBuiltinMethod(iterator_wrapper_prototype, "return", 0);
-        try self.defineGlobal("Iterator", iterator, true);
+        try self.defineBuiltinGlobal("Iterator", iterator, true);
 
         const array_iterator_prototype: Value = .{ .cell = try self.allocateCell(.object) };
         self.array_iterator_prototype = array_iterator_prototype.cell;
@@ -20308,7 +20428,7 @@ pub const Runtime = struct {
         };
         for (map_methods) |method| try self.finalizeBuiltinMethod(map_prototype, method.name, method.length);
         try self.makeOwnPropertyNonEnumerable(map_prototype, "constructor");
-        try self.defineGlobal("Map", map, true);
+        try self.defineBuiltinGlobal("Map", map, true);
         const map_iterator_prototype: Value = .{ .cell = try self.allocateCell(.object) };
         self.map_iterator_prototype = map_iterator_prototype.cell;
         self.cells[map_iterator_prototype.cell].prototype = iterator_prototype.cell;
@@ -20349,7 +20469,7 @@ pub const Runtime = struct {
         for (set_methods) |method| try self.finalizeBuiltinMethod(set_prototype, method.name, method.length);
         try self.makeOwnPropertyNonEnumerable(set_prototype, "keys");
         try self.makeOwnPropertyNonEnumerable(set_prototype, "constructor");
-        try self.defineGlobal("Set", set_constructor_value, true);
+        try self.defineBuiltinGlobal("Set", set_constructor_value, true);
         const set_iterator_prototype: Value = .{ .cell = try self.allocateCell(.object) };
         self.set_iterator_prototype = set_iterator_prototype.cell;
         self.cells[set_iterator_prototype.cell].prototype = iterator_prototype.cell;
@@ -20375,7 +20495,7 @@ pub const Runtime = struct {
         };
         for (weak_map_methods) |method| try self.finalizeBuiltinMethod(weak_map_prototype, method.name, method.length);
         try self.makeOwnPropertyNonEnumerable(weak_map_prototype, "constructor");
-        try self.defineGlobal("WeakMap", weak_map, true);
+        try self.defineBuiltinGlobal("WeakMap", weak_map, true);
 
         const weak_set_prototype: Value = .{ .cell = try self.allocateCell(.object) };
         const weak_set = try self.createNative(.weak_set_constructor, weak_set_prototype);
@@ -20392,7 +20512,7 @@ pub const Runtime = struct {
         };
         for (weak_set_methods) |method| try self.finalizeBuiltinMethod(weak_set_prototype, method.name, method.length);
         try self.makeOwnPropertyNonEnumerable(weak_set_prototype, "constructor");
-        try self.defineGlobal("WeakSet", weak_set, true);
+        try self.defineBuiltinGlobal("WeakSet", weak_set, true);
         const string = try self.createNative(.string_constructor, .undefined);
         try self.defineFunctionMetadata(string, "name", .{ .string = try self.storeString("String") });
         try self.defineFunctionMetadata(string, "length", .{ .number = 1 });
@@ -20490,7 +20610,7 @@ pub const Runtime = struct {
         try self.makeOwnPropertyNonEnumerable(string_prototype, "trimRight");
         try self.makeOwnPropertyNonEnumerable(string_prototype, "constructor");
         try self.makeOwnPropertyNonEnumerable(string, "prototype");
-        try self.defineGlobal("String", string, true);
+        try self.defineBuiltinGlobal("String", string, true);
         const regex = try self.createNative(.regex_constructor, .undefined);
         try self.defineFunctionMetadata(regex, "name", .{ .string = try self.storeString("RegExp") });
         try self.defineFunctionMetadata(regex, "length", .{ .number = 2 });
@@ -20518,7 +20638,7 @@ pub const Runtime = struct {
         try self.finalizeBuiltinMethod(regex_prototype, "toString", 0);
         try self.makeOwnPropertyNonEnumerable(regex_prototype, "constructor");
         try self.makeOwnPropertyNonEnumerable(regex, "prototype");
-        try self.defineGlobal("RegExp", regex, true);
+        try self.defineBuiltinGlobal("RegExp", regex, true);
         const number = try self.createNative(.number_constructor, .undefined);
         try self.setProperty(number, "isFinite", try self.createNative(.number_is_finite, .undefined));
         try self.setProperty(number, "isInteger", try self.createNative(.number_is_integer, .undefined));
@@ -20546,7 +20666,7 @@ pub const Runtime = struct {
         try self.setProperty(number_prototype, "toString", try self.createNative(.number_to_string, .undefined));
         try self.setProperty(number_prototype, "valueOf", try self.createNative(.number_value_of, .undefined));
         try self.setProperty(number, "prototype", number_prototype);
-        try self.defineGlobal("Number", number, true);
+        try self.defineBuiltinGlobal("Number", number, true);
         const bigint = try self.createNative(.bigint_constructor, .undefined);
         try self.defineFunctionMetadata(bigint, "name", .{ .string = try self.storeString("BigInt") });
         try self.defineFunctionMetadata(bigint, "length", .{ .number = 1 });
@@ -20568,7 +20688,7 @@ pub const Runtime = struct {
         try self.makeOwnPropertyNonEnumerable(bigint_prototype, "constructor");
         try self.setProperty(bigint, "prototype", bigint_prototype);
         try self.finalizeBuiltinConstant(bigint, "prototype");
-        try self.defineGlobal("BigInt", bigint, true);
+        try self.defineBuiltinGlobal("BigInt", bigint, true);
         const array_buffer = try self.createNative(.array_buffer_constructor, .undefined);
         try self.defineFunctionMetadata(array_buffer, "name", .{ .string = try self.storeString("ArrayBuffer") });
         try self.defineFunctionMetadata(array_buffer, "length", .{ .number = 1 });
@@ -20597,7 +20717,7 @@ pub const Runtime = struct {
         try self.makeOwnPropertyNonEnumerable(array_buffer_prototype, "constructor");
         try self.setProperty(array_buffer, "prototype", array_buffer_prototype);
         try self.finalizeBuiltinConstant(array_buffer, "prototype");
-        try self.defineGlobal("ArrayBuffer", array_buffer, true);
+        try self.defineBuiltinGlobal("ArrayBuffer", array_buffer, true);
         const shared_array_buffer = try self.createNative(.shared_array_buffer_constructor, .undefined);
         try self.defineFunctionMetadata(shared_array_buffer, "name", .{ .string = try self.storeString("SharedArrayBuffer") });
         try self.defineFunctionMetadata(shared_array_buffer, "length", .{ .number = 1 });
@@ -20614,7 +20734,7 @@ pub const Runtime = struct {
         try self.makeOwnPropertyNonEnumerable(shared_array_buffer_prototype, "constructor");
         try self.setProperty(shared_array_buffer, "prototype", shared_array_buffer_prototype);
         try self.finalizeBuiltinConstant(shared_array_buffer, "prototype");
-        try self.defineGlobal("SharedArrayBuffer", shared_array_buffer, true);
+        try self.defineBuiltinGlobal("SharedArrayBuffer", shared_array_buffer, true);
         const atomics: Value = .{ .cell = try self.allocateCell(.object) };
         const atomics_methods = [_]struct { name: []const u8, id: NativeId, length: usize }{
             .{ .name = "add", .id = .atomics_add, .length = 3 },
@@ -20636,7 +20756,7 @@ pub const Runtime = struct {
             try self.setProperty(atomics, method.name, try self.createNative(method.id, .undefined));
             try self.finalizeBuiltinMethod(atomics, method.name, method.length);
         }
-        try self.defineGlobal("Atomics", atomics, true);
+        try self.defineBuiltinGlobal("Atomics", atomics, true);
         const data_view = try self.createNative(.data_view_constructor, .undefined);
         try self.defineFunctionMetadata(data_view, "name", .{ .string = try self.storeString("DataView") });
         try self.defineFunctionMetadata(data_view, "length", .{ .number = 1 });
@@ -20677,7 +20797,7 @@ pub const Runtime = struct {
         try self.makeOwnPropertyNonEnumerable(data_view_prototype, "constructor");
         try self.setProperty(data_view, "prototype", data_view_prototype);
         try self.finalizeBuiltinConstant(data_view, "prototype");
-        try self.defineGlobal("DataView", data_view, true);
+        try self.defineBuiltinGlobal("DataView", data_view, true);
         const typed_array_constructor = try self.createNative(.typed_array_constructor, .undefined);
         try self.defineFunctionMetadata(typed_array_constructor, "name", .{ .string = try self.storeString("TypedArray") });
         try self.defineFunctionMetadata(typed_array_constructor, "length", .{ .number = 0 });
@@ -20759,7 +20879,7 @@ pub const Runtime = struct {
             try self.makeOwnPropertyNonEnumerable(prototype, "constructor");
             try self.defineOwnDataProperty(constructor, "prototype", prototype);
             try self.finalizeBuiltinConstant(constructor, "prototype");
-            try self.defineGlobal(element.name(), constructor, true);
+            try self.defineBuiltinGlobal(element.name(), constructor, true);
         }
         const boolean = try self.createNative(.boolean_constructor, .undefined);
         const boolean_prototype: Value = .{ .cell = try self.allocateCell(.object) };
@@ -20770,7 +20890,7 @@ pub const Runtime = struct {
         try self.setProperty(boolean_prototype, "toString", try self.createNative(.boolean_to_string, .undefined));
         try self.setProperty(boolean_prototype, "valueOf", try self.createNative(.boolean_value_of, .undefined));
         try self.setProperty(boolean, "prototype", boolean_prototype);
-        try self.defineGlobal("Boolean", boolean, true);
+        try self.defineBuiltinGlobal("Boolean", boolean, true);
         const error_prototype = try self.installErrorConstructor("Error", .error_constructor, .{ .cell = self.object_prototype }, 1, true);
         _ = try self.installErrorConstructor("EvalError", .error_constructor, error_prototype, 1, false);
         _ = try self.installErrorConstructor("RangeError", .error_constructor, error_prototype, 1, false);
@@ -20849,7 +20969,7 @@ pub const Runtime = struct {
         try self.setProperty(date_prototype, "toGMTString", to_gmt_string);
         try self.makeOwnPropertyNonEnumerable(date_prototype, "toGMTString");
         try self.makeOwnPropertyNonEnumerable(date_prototype, "constructor");
-        try self.defineGlobal("Date", date_constructor_value, true);
+        try self.defineBuiltinGlobal("Date", date_constructor_value, true);
         const symbol = try self.createNative(.symbol_constructor, .undefined);
         try self.defineFunctionMetadata(symbol, "name", .{ .string = try self.storeString("Symbol") });
         try self.defineFunctionMetadata(symbol, "length", .{ .number = 0 });
@@ -21054,15 +21174,15 @@ pub const Runtime = struct {
         try self.makeOwnPropertyNonEnumerable(regex, self.stringBytes(self.symbol_species));
         for ([_][]const u8{ "iterator", "asyncIterator", "hasInstance", "isConcatSpreadable", "match", "matchAll", "replace", "search", "split", "species", "toPrimitive", "toStringTag", "unscopables", "dispose", "asyncDispose" }) |name|
             try self.finalizeBuiltinConstant(symbol, name);
-        try self.defineGlobal("Symbol", symbol, true);
-        try self.defineGlobal("atob", try self.createNative(.base64_decode, .undefined), true);
-        try self.defineGlobal("btoa", try self.createNative(.base64_encode, .undefined), true);
-        try self.defineGlobal("parseInt", try self.createNative(.parse_int, .undefined), true);
-        try self.defineGlobal("parseFloat", try self.createNative(.number_parse_float, .undefined), true);
-        try self.defineGlobal("isNaN", try self.createNative(.is_nan, .undefined), true);
-        try self.defineGlobal("eval", try self.createNative(.dynamic_eval, .undefined), true);
-        try self.defineGlobal("queueMicrotask", try self.createNative(.queue_microtask, .undefined), true);
-        try self.defineGlobal("queueTask", try self.createNative(.queue_task, .undefined), true);
+        try self.defineBuiltinGlobal("Symbol", symbol, true);
+        try self.defineBuiltinGlobal("atob", try self.createNative(.base64_decode, .undefined), true);
+        try self.defineBuiltinGlobal("btoa", try self.createNative(.base64_encode, .undefined), true);
+        try self.defineBuiltinGlobal("parseInt", try self.createNative(.parse_int, .undefined), true);
+        try self.defineBuiltinGlobal("parseFloat", try self.createNative(.number_parse_float, .undefined), true);
+        try self.defineBuiltinGlobal("isNaN", try self.createNative(.is_nan, .undefined), true);
+        try self.defineBuiltinGlobal("eval", try self.createNative(.dynamic_eval, .undefined), true);
+        try self.defineBuiltinGlobal("queueMicrotask", try self.createNative(.queue_microtask, .undefined), true);
+        try self.defineBuiltinGlobal("queueTask", try self.createNative(.queue_task, .undefined), true);
 
         const math: Value = .{ .cell = try self.allocateCell(.object) };
         try self.setProperty(math, "abs", try self.createNative(.math_abs, .undefined));
@@ -21089,14 +21209,14 @@ pub const Runtime = struct {
         try self.setProperty(math, "PI", .{ .number = std.math.pi });
         try self.setProperty(math, "SQRT1_2", .{ .number = 1.0 / std.math.sqrt2 });
         try self.setProperty(math, "SQRT2", .{ .number = std.math.sqrt2 });
-        try self.defineGlobal("Math", math, true);
+        try self.defineBuiltinGlobal("Math", math, true);
 
         const json: Value = .{ .cell = try self.allocateCell(.object) };
         try self.setProperty(json, "parse", try self.createNative(.json_parse, .undefined));
         try self.setProperty(json, "stringify", try self.createNative(.json_stringify, .undefined));
         try self.setProperty(json, "rawJSON", try self.createNative(.json_raw, .undefined));
         try self.setProperty(json, "isRawJSON", try self.createNative(.json_is_raw, .undefined));
-        try self.defineGlobal("JSON", json, true);
+        try self.defineBuiltinGlobal("JSON", json, true);
 
         const promise = try self.createNative(.promise_constructor, .undefined);
         try self.defineFunctionMetadata(promise, "name", .{ .string = try self.storeString("Promise") });
@@ -21134,11 +21254,9 @@ pub const Runtime = struct {
         try self.defineFunctionMetadata(promise_species_getter, "length", .{ .number = 0 });
         try self.defineOwnAccessor(promise, self.stringBytes(self.symbol_species), promise_species_getter, true);
         try self.makeOwnPropertyNonEnumerable(promise, self.stringBytes(self.symbol_species));
-        try self.defineGlobal("Promise", promise, true);
+        try self.defineBuiltinGlobal("Promise", promise, true);
 
-        const global_object: Value = .{ .cell = try self.allocateCell(.object) };
-        try self.setProperty(global_object, "globalThis", global_object);
-        try self.defineGlobal("globalThis", global_object, true);
+        try self.defineBuiltinGlobal("globalThis", self.globalObject(), false);
     }
 
     fn installErrorConstructor(self: *Runtime, name: []const u8, id: NativeId, parent: Value, length: usize, install_to_string: bool) Error!Value {
@@ -21164,7 +21282,7 @@ pub const Runtime = struct {
         }
         try self.defineOwnDataProperty(constructor, "prototype", prototype);
         try self.finalizeBuiltinConstant(constructor, "prototype");
-        try self.defineGlobal(name, constructor, true);
+        try self.defineBuiltinGlobal(name, constructor, true);
         return prototype;
     }
 
@@ -22298,6 +22416,14 @@ pub const Runtime = struct {
         while (target != none and target < self.cells.len and self.cells[target].kind == .environment and self.cells[target].object_environment)
             target = self.cells[target].parent;
         if (target == none or target >= self.cells.len or self.cells[target].kind != .environment) return error.TypeError;
+        if (target == self.global_env) {
+            if (self.lookupOwn(target, name) != null or self.lookupOwn(self.global_object_env, name) != null) return error.SyntaxError;
+            if (self.findAccessor(self.global_object, name)) |accessor| {
+                if (!accessor.configurable) return error.SyntaxError;
+            } else for (self.propertyStorageConst(self.global_object)[0..self.cells[self.global_object].property_count]) |property| {
+                if (equals(self.stringBytes(property.key), name) and !property.configurable) return error.SyntaxError;
+            }
+        }
         var cell = &self.cells[target];
         for (self.bindingStorage(target)[0..cell.binding_count]) |*binding| {
             if (equals(self.stringBytes(binding.name), name)) {
@@ -22341,6 +22467,10 @@ pub const Runtime = struct {
         var current = environment;
         while (current != none) {
             const cell = &self.cells[current];
+            if (current == self.global_object_env) {
+                if (!try self.hasProperty(self.globalObject(), name) and self.strictExecution()) return error.UnknownIdentifier;
+                return self.assignGlobal(name, value);
+            }
             if (cell.object_environment and try self.objectEnvironmentHasBinding(cell.receiver, name)) {
                 if (cell.receiver == .cell) try self.setProperty(cell.receiver, name, value);
                 return;
@@ -22360,6 +22490,7 @@ pub const Runtime = struct {
     fn assignLexicalBinding(self: *Runtime, environment: u16, name: []const u8, value: Value) Error!void {
         var current = environment;
         while (current != none) {
+            if (current == self.global_object_env) return self.assignGlobal(name, value);
             const cell = &self.cells[current];
             for (self.bindingStorage(current)[0..cell.binding_count]) |*binding| {
                 if (equals(self.stringBytes(binding.name), name)) {
@@ -22376,6 +22507,10 @@ pub const Runtime = struct {
     fn resolveBinding(self: *Runtime, environment: u16, name: []const u8) Error!?ResolvedBinding {
         var current = environment;
         while (current != none) {
+            if (current == self.global_object_env) {
+                if (!try self.hasProperty(self.globalObject(), name)) return null;
+                return .{ .value = try self.getProperty(self.globalObject(), name) };
+            }
             const cell = &self.cells[current];
             if (cell.object_environment and try self.objectEnvironmentHasBinding(cell.receiver, name)) {
                 return .{ .value = try self.getProperty(cell.receiver, name), .receiver = cell.receiver, .object = true };
@@ -22401,6 +22536,10 @@ pub const Runtime = struct {
     fn lookup(self: *Runtime, environment: u16, name: []const u8) ?Value {
         var current = environment;
         while (current != none) {
+            if (current == self.global_object_env) {
+                if (!(self.hasProperty(self.globalObject(), name) catch return null)) return null;
+                return self.getProperty(self.globalObject(), name) catch null;
+            }
             const cell = &self.cells[current];
             for (self.bindingStorageConst(current)[0..cell.binding_count]) |binding| {
                 if (equals(self.stringBytes(binding.name), name)) return self.bindingValue(binding);
@@ -22423,7 +22562,7 @@ pub const Runtime = struct {
             if (function_environment) return error.TypeError;
             current = cell.parent;
         }
-        return if (self.active_module != none) .undefined else self.global("globalThis") orelse .undefined;
+        return self.globalObject();
     }
 
     fn lookupRequired(self: *Runtime, program: *const Program, ref: StringRef, environment: u16) Error!Value {
@@ -22850,6 +22989,7 @@ pub const Runtime = struct {
 
     fn setProperty(self: *Runtime, object: Value, name: []const u8, value: Value) Error!void {
         const index = try self.expectObject(object);
+        if (index == self.global_object) try self.checkGlobalWrite(name);
         if (self.cells[index].kind == .proxy) {
             _ = try self.proxySet(object, name, value, object);
             return;
@@ -23679,10 +23819,14 @@ pub const Runtime = struct {
             else => return value,
         };
         if (index >= self.cells.len or !self.cells[index].occupied) return error.NotObject;
+        const root_base = self.root_count;
+        defer self.root_count = root_base;
+        try self.pushRoot(value);
         if (self.symbol_to_primitive.len != 0) {
             const exotic = try self.getProperty(value, self.stringBytes(self.symbol_to_primitive));
-            if (exotic != .undefined) {
+            if (!exotic.isNullish()) {
                 if (!self.isCallableValue(exotic)) return error.TypeError;
+                try self.pushRoot(exotic);
                 const program = self.diagnostic_program orelse return error.TypeError;
                 const hint_value: Value = .{ .string = try self.storeString(switch (hint) {
                     .default => "default",
@@ -23694,26 +23838,7 @@ pub const Runtime = struct {
                 return result;
             }
         }
-        if (self.cells[index].kind == .array) return .{ .string = try self.arrayToString(index, 0) };
-        if (self.cells[index].kind == .function) {
-            const function = &self.cells[index];
-            if (function.program_ref) |function_program| {
-                if (function.node < function_program.node_count) {
-                    const source = function_program.nodes[function.node].source.bytes(function_program.source[0..function_program.source_len]);
-                    if (source.len > 0) return .{ .string = try self.storeString(source) };
-                }
-            }
-            return .{ .string = try self.storeString("function(){}") };
-        }
-        if (switch (self.cells[index].kind) {
-            .bound_function, .native_function, .host_function => true,
-            else => false,
-        }) return .{ .string = try self.storeString("function () { [native code] }") };
-
         const program = self.diagnostic_program orelse return .{ .string = try self.storeString("[object Object]") };
-        const root_base = self.root_count;
-        defer self.root_count = root_base;
-        try self.pushRoot(value);
         const prefer_string = hint == .string;
         const first = if (prefer_string) "toString" else "valueOf";
         const second = if (prefer_string) "valueOf" else "toString";
@@ -31579,4 +31704,75 @@ test "typed array block set exceeds Value array capacity with bounded copy work"
     try std.testing.expectEqual(roots, runtime.root_count);
     runtime.setStepBudget(default_step_budget);
     std.debug.print("STREAMCOPY bytes=131072 blocks=32 temporary_value_cells=0 overlap_preserved budget_stop_valid\n", .{});
+}
+
+test "global script bindings share object properties and standard descriptors" {
+    const runtime = try createTestingRuntime();
+    defer destroyTestingRuntime(runtime);
+    var program: Program = .{};
+    const value = try runtime.evaluateSource(&program, "var declaredVar=7;function declaredFunction(){return 9;}let lexical=11;const constant=12;replacement=30;function replacement(){return 1;}" ++
+        "const nativeObject=Object,realm=globalThis;" ++
+        "const same=replacement===30&&globalThis.declaredVar===declaredVar&&globalThis.declaredFunction===declaredFunction&&globalThis.Object===Object&&this===globalThis;" ++
+        "globalThis.declaredVar=8;const byProperty=declaredVar;declaredVar=10;const byName=globalThis.declaredVar;" ++
+        "globalThis.added=15;const addedByName=added;added=16;globalThis.lexical=99;" ++
+        "const variable=nativeObject.getOwnPropertyDescriptor(globalThis,'declaredVar'),intrinsic=nativeObject.getOwnPropertyDescriptor(globalThis,'Object'),immutable=nativeObject.getOwnPropertyDescriptor(globalThis,'undefined'),global=nativeObject.getOwnPropertyDescriptor(globalThis,'globalThis');" ++
+        "undefined=4;NaN=1;Infinity=2;Object=23;const replaced=globalThis.Object===23;globalThis.Object=nativeObject;" ++
+        "globalThis.strictReceiver=function(){'use strict';return this;};const receiver=strictReceiver()===undefined;" ++
+        "globalThis[Symbol.unscopables]={added:true};const visible=added===16;" ++
+        "globalThis={};const stable=this===realm&&this!==globalThis;realm.globalThis=realm;" ++
+        "return [same,byProperty,byName,addedByName,added,lexical,constant,globalThis.lexical,typeof globalThis.constant,variable.writable,variable.enumerable,variable.configurable,intrinsic.writable,intrinsic.enumerable,intrinsic.configurable,immutable.value===undefined,immutable.writable,immutable.enumerable,immutable.configurable,global.writable,global.enumerable,global.configurable,replaced,receiver,visible,stable,undefined===void 0,Number.isNaN(NaN),Infinity>1].join(':');");
+    try std.testing.expectEqualStrings("true:8:10:15:16:11:12:99:undefined:true:true:false:true:false:true:true:false:false:false:true:false:true:true:true:true:true:true:true:true", runtime.valueString(value));
+}
+
+test "global declarations persist while script module and function this remain distinct" {
+    const programs = try std.testing.allocator.alloc(Program, 4);
+    defer std.testing.allocator.free(programs);
+    for (programs) |*program| program.* = .{};
+    const runtime = try createTestingRuntime();
+    defer destroyTestingRuntime(runtime);
+    const first = &programs[0];
+    const second = &programs[1];
+    _ = try runtime.evaluateNamedScriptSource(first, "first.js", "var shared=3;function redeclared(){return 1;}let privateName=4;globalThis.savedRealm=this;globalThis.scriptArrow=()=>this;let accessorCalls=0;Object.defineProperty(globalThis,'accessorVar',{get(){accessorCalls++;return 9;},set(v){accessorCalls+=v;},configurable:true});");
+    const value = try runtime.evaluateNamedScriptSource(second, "second.js", "var shared;function redeclared(){return 2;}shared=5;var accessorVar=3;[accessorCalls,shared,globalThis.shared,redeclared(),globalThis.redeclared===redeclared,privateName,typeof globalThis.privateName,this===savedRealm].join(':');");
+    try std.testing.expectEqualStrings("3:5:5:2:true:4:undefined:true", runtime.valueString(value));
+    try runtime.registerModule("realm-module", "export const top=this;export const arrow=()=>this;export const scriptRealm=scriptArrow()===savedRealm;export var localOnly=7;");
+    const module = try runtime.evaluateModule("realm-module");
+    try std.testing.expect((try runtime.get(module, "top")) == .undefined);
+    try std.testing.expect((try runtime.get(module, "scriptRealm")).boolean);
+    try runtime.defineGlobal("fromModule", try runtime.get(module, "arrow"), true);
+    const third = &programs[2];
+    const distinct = try runtime.evaluateNamedScriptSource(third, "third.js", "fromModule()===undefined&&typeof localOnly==='undefined'&&this===savedRealm;");
+    try std.testing.expect(distinct == .boolean and distinct.boolean);
+    const conflict = &programs[3];
+    try std.testing.expectError(error.SyntaxError, runtime.evaluateNamedScriptSource(conflict, "conflict.js", "let shared=9;"));
+}
+
+test "immutable global assignment follows strict and sloppy script rules" {
+    const runtime = try createTestingRuntime();
+    defer destroyTestingRuntime(runtime);
+    var program: Program = .{};
+    const value = try runtime.evaluateSource(&program, "let strictName=false,strictProperty=false;" ++
+        "function strictWrite(){'use strict';undefined=4;}" ++
+        "function strictPropertyWrite(){'use strict';globalThis.Infinity=0;}" ++
+        "try{strictWrite();}catch(error){strictName=error instanceof TypeError;}" ++
+        "try{strictPropertyWrite();}catch(error){strictProperty=error instanceof TypeError;}" ++
+        "return [strictName,strictProperty,undefined===void 0,Infinity>1].join(':');");
+    try std.testing.expectEqualStrings("true:true:true:true", runtime.valueString(value));
+}
+
+test "array and function primitive conversion observes hints order and failures" {
+    const runtime = try createTestingRuntime();
+    defer destroyTestingRuntime(runtime);
+    var program: Program = .{};
+    const value = try runtime.evaluateSource(&program, "let order='';const array=[1,2];function callable(){}" ++
+        "array.valueOf=function(){order+='av';return 41;};array.toString=function(){order+='as';return 'array-custom';};" ++
+        "callable.valueOf=function(){order+='fv';return 42;};callable.toString=function(){order+='fs';return 'function-custom';};" ++
+        "const results=[array+1,String(array),callable+1,String(callable),order];" ++
+        "order='';array.valueOf=function(){order+='v';return {};};array.toString=function(){order+='s';return 17;};const fallback=+array;" ++
+        "array[Symbol.toPrimitive]=function(hint){order+=hint;return 6;};const exotic=array+1;" ++
+        "array[Symbol.toPrimitive]=null;const ordinary=+array;" ++
+        "let nonprimitive=false,thrown=false;array.valueOf=function(){return {};};array.toString=function(){return {};};try{String(array);}catch(e){nonprimitive=e instanceof TypeError;}" ++
+        "callable.valueOf=function(){throw 'observed';};try{callable+1;}catch(e){thrown=e==='observed';}" ++
+        "return results.join('|')+':'+[fallback,exotic,ordinary,order,nonprimitive,thrown,String([3,4]),String(function plain(){}).indexOf('function plain')===0].join(':');");
+    try std.testing.expectEqualStrings("42|array-custom|43|function-custom|avasfvfs:17:7:17:vsdefaultvs:true:true:3,4:true", runtime.valueString(value));
 }
