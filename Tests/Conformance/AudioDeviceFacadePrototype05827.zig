@@ -193,12 +193,19 @@ fn initFacades() struct { audio: r4os.Audio, devices: r4os.Devices } {
     dev_table.performance_storage = @intFromPtr(&fakePerformanceStorage);
     dev_table.performance_boot_phase = @intFromPtr(&fakePerformanceBoot);
     dev_table.hardware_summary = @intFromPtr(&fakeHardware);
+    dev_table.display_state = @intFromPtr(&fakeDisplayState);
     const bundle = r4os.program.Bundle{ .raw = &context, .sys = &sys_table, .audio = &audio_table, .dev = &dev_table };
     const sys = r4os.r4sys.Context.init(&bundle);
     return .{
         .audio = .{ .sys = sys, .raw = r4os.r4audio.Context.init(&bundle) },
         .devices = .{ .raw = r4os.r4dev.Context.init(&bundle) },
     };
+}
+
+fn fakeDisplayState(out: *r4os.abi.DisplayStateInfo) callconv(.c) i32 {
+    if (out.version != 1 or out.size < @sizeOf(r4os.abi.DisplayStateInfo)) return -1;
+    out.* = .{ .state = r4os.abi.display_state_bootfb, .device_generation = 7, .policy = r4os.abi.display_policy_software_once };
+    return 1;
 }
 
 test "PCM lifecycle validates format timeout progress and double close" {
@@ -250,6 +257,13 @@ test "advanced synth operations and R4DEV views stay explicit" {
     try std.testing.expectEqual(@as(i32, 0), advanced.midiSend(12, 0, 0x90, 60, 100));
     try std.testing.expectEqual(@as(i32, 0), advanced.opl3Reset());
     const inventory = facades.devices.inventory();
+    const display_state = facades.devices.display().?;
+    try std.testing.expectEqual(@as(u64, 7), display_state.device_generation);
+    try std.testing.expectEqual(r4os.abi.display_policy_software_once, display_state.policy);
+    const full_size = dev_table.size;
+    dev_table.size = @offsetOf(r4os.abi.R4XStartR4Dev, "display_state");
+    try std.testing.expectEqual(@as(?r4os.abi.DisplayStateInfo, null), facades.devices.display());
+    dev_table.size = full_size;
     try std.testing.expectEqual(@as(u32, 2), inventory.summary().?.total);
     try std.testing.expectEqual(@as(u32, 4), inventory.hardware().?.cpu_logical_processors);
     const memory = facades.devices.memory();

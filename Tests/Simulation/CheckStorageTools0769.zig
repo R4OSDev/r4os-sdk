@@ -81,7 +81,13 @@ test "five-role layout, GUID boot references and Limine GPT publication" {
             const config = try layout.limineConfig(a, medium);
             defer a.free(config);
             try expect(std.mem.indexOf(u8, config, if (medium == .local) "default_entry: 1" else "default_entry: 2") != null);
-            try eq(@as(usize, 3), std.mem.count(u8, config, "protocol: limine"));
+            try eq(@as(usize, 4), std.mem.count(u8, config, "protocol: limine"));
+            try eq(@as(usize, 1), std.mem.count(u8, config, "cmdline: r4os.graphics=software"));
+            const recovery_previous = std.mem.indexOf(u8, config, "/R4OS Recovery Previous\n").?;
+            const software_entry = std.mem.indexOf(u8, config, "/R4OS Software Graphics\n").?;
+            try expect(software_entry > recovery_previous);
+            try expect(std.mem.indexOf(u8, config[software_entry..], ":/boot/r4os.elf") != null);
+            try eq(@as(usize, 5), std.mem.count(u8, config[software_entry..], "module_path:"));
             try expect(std.mem.indexOf(u8, config, &table.guid.format(ids.partitions[1])) != null);
             try expect(std.mem.indexOf(u8, config, ":/CURRENT/runtime.img") != null);
             try expect(std.mem.indexOf(u8, config, ":/PREVIOUS/runtime.img") != null);

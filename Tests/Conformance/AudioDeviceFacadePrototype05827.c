@@ -64,6 +64,12 @@ static int32_t fake_task(uint32_t index, R4ProgramTaskPerformanceInfo *out) { *o
 static int32_t fake_storage(uint32_t index, R4ProgramStoragePerformanceInfo *out) { *out = (R4ProgramStoragePerformanceInfo){0}; out->index = index; return 1; }
 static int32_t fake_boot(uint32_t index, R4ProgramBootPhasePerformanceInfo *out) { (void)index; *out = (R4ProgramBootPhasePerformanceInfo){0}; return 1; }
 static int32_t fake_hardware(R4HardwareSummary *out) { *out = (R4HardwareSummary){0}; out->cpu_logical_processors = 4u; return 1; }
+static int32_t fake_display_state(R4DisplayStateInfo *out) {
+    if (out->version != 1u || out->size < sizeof(*out)) return -1;
+    *out = (R4DisplayStateInfo){0}; out->version = 1u; out->size = sizeof(*out);
+    out->device_generation = 7u; out->state = R4OS_DISPLAY_STATE_BOOTFB; out->policy = R4OS_DISPLAY_POLICY_SOFTWARE_ONCE;
+    return 1;
+}
 
 static R4Timeout poll_timeout(void) { R4Timeout value = {0}; value.kind = R4OS_TIMEOUT_KIND_POLL; return value; }
 static R4Timeout forever_timeout(void) { R4Timeout value = {0}; value.kind = R4OS_TIMEOUT_KIND_FOREVER; return value; }
@@ -73,6 +79,10 @@ static void init_app(R4App *app, R4XStartR4Sys *sys, R4XStartR4Audio *audio, R4X
     *audio = (R4XStartR4Audio){0}; audio->audio_open_stream = (uintptr_t)&fake_audio_open; audio->sid_acquire = (uintptr_t)&fake_sid_acquire; audio->sid_write_register = (uintptr_t)&fake_sid_write; audio->sid_release = (uintptr_t)&fake_sid_release; audio->midi_open_synth = (uintptr_t)&fake_midi_open; audio->midi_send = (uintptr_t)&fake_midi_send; audio->midi_close = (uintptr_t)&fake_midi_close; audio->opl3_write_register = (uintptr_t)&fake_opl_write; audio->opl3_reset = (uintptr_t)&fake_opl_simple; audio->opl3_render_block = (uintptr_t)&fake_opl_simple; audio->opl3_stop = (uintptr_t)&fake_opl_simple;
     *dev = (R4XStartR4Dev){0}; dev->size = R4XSTART_R4DEV_SIZE; dev->device_inventory_summary = (uintptr_t)&fake_inventory_summary; dev->device_inventory_record = (uintptr_t)&fake_inventory_record; dev->memory_summary = (uintptr_t)&fake_memory_summary; dev->memory_block_count = (uintptr_t)&fake_memory_count; dev->memory_block = (uintptr_t)&fake_memory_block; dev->memory_pressure_snapshot = (uintptr_t)&fake_pressure; dev->performance_summary = (uintptr_t)&fake_performance; dev->performance_task = (uintptr_t)&fake_task; dev->performance_storage = (uintptr_t)&fake_storage; dev->performance_boot_phase = (uintptr_t)&fake_boot; dev->hardware_summary = (uintptr_t)&fake_hardware; dev->program_instance_storage_summary = (uintptr_t)&fake_program_instance_storage_legacy; dev->program_instance_storage_summary_v2 = (uintptr_t)&fake_program_instance_storage_v2; dev->program_instance_storage_self_test = (uintptr_t)&fake_program_instance_storage_self_test; dev->execution_inventory_summary = (uintptr_t)&fake_execution_inventory;
     *app = (R4App){0}; app->system.table = sys; app->audio.table = audio; app->devices.table = dev;
+    dev->display_state = (uintptr_t)&fake_display_state;
+    /* The generated SIZE constant is the supported minimum prefix. This mock
+       supplies the complete current provider, including the optional tail. */
+    dev->size = sizeof(*dev);
 }
 
 int main(void) {
@@ -94,6 +104,11 @@ int main(void) {
     if (r4_audio_sid_acquire(&advanced) != 11 || r4_audio_sid_write_register(&advanced, 11u, 0u, 1u) != 0 || r4_audio_midi_open_synth(&advanced, (const uint8_t *)"OPL3") != 12 || r4_audio_midi_send(&advanced, 12u, 0u, 0x90u, 60u, 100u) != 0 || r4_audio_opl3_reset(&advanced) != 0) return 8;
 
     R4Devices devices = r4_app_devices(&app); if (!r4_devices_available(&devices)) return 9;
+    R4DisplayStateInfo display_state;
+    if (r4_devices_display(&devices, &display_state) != 1 || display_state.device_generation != 7u || display_state.policy != R4OS_DISPLAY_POLICY_SOFTWARE_ONCE) return 30;
+    raw_dev.size = offsetof(R4XStartR4Dev, display_state);
+    if (r4_devices_display(&devices, &display_state) != R4OS_ERR_NO_FN) return 31;
+    raw_dev.size = sizeof(raw_dev);
     R4DeviceInventoryView inventory = r4_devices_inventory(devices); R4DeviceInventorySummary inv; R4HardwareSummary hardware;
     if (r4_device_inventory_summary(&inventory, &inv) <= 0 || inv.total != 2u || r4_device_hardware_summary(&inventory, &hardware) <= 0 || hardware.cpu_logical_processors != 4u) return 10;
     R4MemoryView memory = r4_devices_memory(devices); R4ProgramMemorySummary mem;

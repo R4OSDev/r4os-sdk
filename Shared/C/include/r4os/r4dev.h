@@ -16,6 +16,14 @@ typedef struct R4Dev {
     const R4XStartR4Dev *table;
 } R4Dev;
 
+static inline int32_t r4dev_display_state(const R4Dev *dev, R4DisplayStateInfo *out) {
+    if (out == 0) return R4OS_ERROR_INVALID;
+    if (dev == 0 || dev->table == 0 ||
+        dev->table->size < offsetof(R4XStartR4Dev, display_state) + sizeof(uintptr_t) ||
+        dev->table->display_state == 0u) return R4OS_ERR_NO_FN;
+    return ((R4DevDisplayStateFn)(uintptr_t)dev->table->display_state)(out);
+}
+
 static inline int32_t r4dev_init(const R4XStartContext *ctx, R4Dev *out) {
     if (out == 0) return R4OS_ERROR_INVALID;
     out->table = 0;

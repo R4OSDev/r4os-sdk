@@ -202,7 +202,7 @@ static inline R4FileCopyResult r4_files_copy(R4Files *files, const R4FilePath *s
     R4FileCopyResult result = {0};
     result.progress.version = 1u;
     result.progress.size = sizeof(R4FileCopyProgress);
-    result.raw_code = r4sys_file_copy_buffered(files == 0 ? 0 : files->system, source == 0 ? 0 : source->bytes, target == 0 ? 0 : target->bytes, buffer, capacity, &result.progress);
+    result.raw_code = r4sys_file_copy_buffered(files == 0 ? 0 : files->system, source == 0 ? 0 : (const char *)source->bytes, target == 0 ? 0 : (const char *)target->bytes, buffer, capacity, &result.progress);
     result.ok = result.raw_code == R4OS_FILE_STREAM_RESULT_OK;
     return result;
 }

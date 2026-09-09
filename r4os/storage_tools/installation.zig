@@ -129,7 +129,14 @@ pub const Layout = struct {
             "    path: guid({s}):/CURRENT/recovery.elf\n    module_path: guid({s}):/CURRENT/runtime.img\n" ++
             "    module_string: recovery.runtime=1\n    resolution: 1280x720x32\n\n/R4OS Recovery Previous\n    protocol: limine\n" ++
             "    path: guid({s}):/PREVIOUS/recovery.elf\n    module_path: guid({s}):/PREVIOUS/runtime.img\n" ++
-            "    module_string: recovery.runtime=1\n    resolution: 1280x720x32\n", .{ @as(u8, if (medium == .local) 1 else 2), boot, boot, boot, boot, boot, boot, recovery, recovery, recovery, recovery });
+            "    module_string: recovery.runtime=1\n    resolution: 1280x720x32\n\n/R4OS Software Graphics\n" ++
+            "    protocol: limine\n    path: guid({s}):/boot/r4os.elf\n    cmdline: r4os.graphics=software\n" ++
+            "    module_path: guid({s}):/boot/preload.r4i\n    module_string: r4os.preload.image=PRELOAD.R4I\n" ++
+            "    module_path: guid({s}):/boot/preload/hidreport.r4p\n    module_string: r4os.preload.usb-r4p=HIDREPORT\n" ++
+            "    module_path: guid({s}):/boot/preload/usbhid.r4p\n    module_string: r4os.preload.usb-r4p=USBHID\n" ++
+            "    module_path: guid({s}):/boot/preload/usbbot.r4p\n    module_string: r4os.preload.usb-r4p=USBBOT\n" ++
+            "    module_path: guid({s}):/boot/preload/usbscsi.r4p\n    module_string: r4os.preload.usb-r4p=USBSCSI\n" ++
+            "    resolution: 1280x720x32\n", .{ @as(u8, if (medium == .local) 1 else 2), boot, boot, boot, boot, boot, boot, recovery, recovery, recovery, recovery, boot, boot, boot, boot, boot, boot });
     }
 };
 

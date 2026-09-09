@@ -17,6 +17,10 @@ pub const Devices = struct {
     pub fn performance(self: *const Devices) PerformanceView {
         return .{ .raw = self.raw };
     }
+
+    pub fn display(self: *const Devices) ?abi.DisplayStateInfo {
+        return self.raw.displayState();
+    }
 };
 
 pub const DeviceInventoryView = struct {

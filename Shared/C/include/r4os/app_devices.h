@@ -14,6 +14,15 @@ static inline R4DeviceInventoryView r4_devices_inventory(R4Devices devices) { R4
 static inline R4MemoryView r4_devices_memory(R4Devices devices) { R4MemoryView value = {devices.app}; return value; }
 static inline R4PerformanceView r4_devices_performance(R4Devices devices) { R4PerformanceView value = {devices.app}; return value; }
 
+static inline int32_t r4_devices_display(R4Devices *devices, R4DisplayStateInfo *out) {
+    if (out == 0) return R4OS_ERROR_INVALID;
+    if (devices == 0 || devices->app == 0) return R4OS_ERR_NO_FN;
+    *out = (R4DisplayStateInfo){0};
+    out->version = 1u;
+    out->size = (uint32_t)sizeof(*out);
+    return r4dev_display_state(&devices->app->devices, out);
+}
+
 static inline int32_t r4_device_inventory_summary(R4DeviceInventoryView *view, R4DeviceInventorySummary *out) { const R4XStartR4Dev *table = view != 0 && view->app != 0 ? view->app->devices.table : 0; return table != 0 && table->device_inventory_summary != 0u && out != 0 ? ((R4DevDeviceInventorySummaryFn)(uintptr_t)table->device_inventory_summary)(out) : R4OS_ERR_NO_FN; }
 static inline int32_t r4_device_inventory_record(R4DeviceInventoryView *view, uint32_t index, R4DeviceInventoryRecord *out) { const R4XStartR4Dev *table = view != 0 && view->app != 0 ? view->app->devices.table : 0; return table != 0 && table->device_inventory_record != 0u && out != 0 ? ((R4DevDeviceInventoryRecordFn)(uintptr_t)table->device_inventory_record)(index, out) : R4OS_ERR_NO_FN; }
 static inline int32_t r4_device_hardware_summary(R4DeviceInventoryView *view, R4HardwareSummary *out) { const R4XStartR4Dev *table = view != 0 && view->app != 0 ? view->app->devices.table : 0; return table != 0 && table->hardware_summary != 0u && out != 0 ? ((R4DevHardwareSummaryFn)(uintptr_t)table->hardware_summary)(out) : R4OS_ERR_NO_FN; }

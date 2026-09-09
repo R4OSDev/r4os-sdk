@@ -667,6 +667,13 @@ pub const Context = struct {
         return out;
     }
 
+    pub fn displayState(self: *const Context) ?abi.DisplayStateInfo {
+        var out: abi.DisplayStateInfo = .{};
+        const table_fn = self.devFn("display_state") orelse return null;
+        if (table_fn(&out) <= 0) return null;
+        return out;
+    }
+
     pub fn hardwareSummary(self: *const Context) ?abi.HardwareSummary {
         var out: abi.HardwareSummary = .{};
         const table_fn = self.devFn("hardware_summary") orelse return null;

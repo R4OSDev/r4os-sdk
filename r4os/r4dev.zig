@@ -39,6 +39,10 @@ pub fn protocolEntriesAsm(
 pub const Context = struct {
     base: program.Context,
 
+    pub fn displayState(self: *const Context) ?abi.DisplayStateInfo {
+        return self.base.displayState();
+    }
+
     pub fn init(bundle: *const program.Bundle) Context {
         return .{ .base = program.Context.initBundle(bundle) };
     }
