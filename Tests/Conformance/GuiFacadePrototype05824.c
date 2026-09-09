@@ -2,6 +2,30 @@
 #include <stdint.h>
 
 #include <r4os/r4os.h>
+#include <r4os/driver_memory.h>
+
+static int32_t gfx_map_probe(const R4GfxBufferHandle *ref, uint32_t access, uint64_t offset, uint64_t bytes, R4GfxBufferMap *out) {
+    assert(ref->generation == 99 && access == 1 && offset == UINT64_C(0x100000003) && bytes == UINT64_C(0x200000000));
+    assert(out->version == 1 && out->size == sizeof(*out));
+    out->byte_length = bytes;
+    return 1;
+}
+static void gfx_facade_probe(void) {
+    R4XStartR4Draw table = {0};
+    table.size = offsetof(R4XStartR4Draw, gfx_buffer_map);
+    table.gfx_buffer_map = (uintptr_t)gfx_map_probe;
+    const R4Draw draw = { &table };
+    R4GfxBufferHandle ref = { .id = 7, .generation = 99 };
+    R4GfxBufferMap output = { .byte_length = 37 };
+    assert(r4draw_gfx_buffer_map(&draw, &ref, 1, UINT64_C(0x100000003), UINT64_C(0x200000000), &output) == R4OS_ERR_NO_FN);
+    assert(output.byte_length == 37);
+    table.size = sizeof(table);
+    assert(r4draw_gfx_buffer_map(&draw, &ref, 1, UINT64_C(0x100000003), UINT64_C(0x200000000), &output) == 1);
+    R4GfxDriverMemoryApi memory = { .version = 1, .size = sizeof(memory), .buffer_map = (uintptr_t)gfx_map_probe };
+    assert(r4driver_memory_buffer_map(&memory, &ref, 1, UINT64_C(0x100000003), UINT64_C(0x200000000), &output) == 1);
+    memory.size = offsetof(R4GfxDriverMemoryApi, buffer_map);
+    assert(r4driver_memory_buffer_map(&memory, &ref, 1, 0, 0, &output) == R4OS_ERR_NO_FN);
+}
 
 static uint64_t now_ticks = 100u;
 static uint32_t activity_waits;
@@ -153,6 +177,7 @@ static R4App make_app(R4XStartR4Sys *sys, R4XStartR4Desk *desk, R4XStartR4Draw *
 }
 
 int main(void) {
+    gfx_facade_probe();
     R4XStartR4Sys sys;
     R4XStartR4Desk desk;
     R4XStartR4Draw draw;

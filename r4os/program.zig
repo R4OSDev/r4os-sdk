@@ -1420,6 +1420,58 @@ pub const Context = struct {
         return table_fn(lease);
     }
 
+    pub fn gfxBufferCreate(self: *const Context, descriptor: *const abi.GfxBufferDescriptor, output: *abi.GfxBufferReference) i32 {
+        const table_fn = self.drawFn("gfx_buffer_create") orelse return self.unavailable("draw");
+        output.version = 1;
+        output.size = @sizeOf(abi.GfxBufferReference);
+        return table_fn(descriptor, output);
+    }
+
+    pub fn gfxBufferDescribe(self: *const Context, reference: *const abi.GfxBufferHandle, output: *abi.GfxBufferDescriptor) i32 {
+        const table_fn = self.drawFn("gfx_buffer_describe") orelse return self.unavailable("draw");
+        output.version = 1;
+        output.size = @sizeOf(abi.GfxBufferDescriptor);
+        return table_fn(reference, output);
+    }
+
+    pub fn gfxBufferImport(self: *const Context, source_reference: *const abi.GfxBufferHandle, output: *abi.GfxBufferReference) i32 {
+        const table_fn = self.drawFn("gfx_buffer_import") orelse return self.unavailable("draw");
+        output.version = 1;
+        output.size = @sizeOf(abi.GfxBufferReference);
+        return table_fn(source_reference, output);
+    }
+
+    pub fn gfxBufferRelease(self: *const Context, reference: *const abi.GfxBufferHandle) i32 {
+        const table_fn = self.drawFn("gfx_buffer_release") orelse return self.unavailable("draw");
+        return table_fn(reference);
+    }
+
+    pub fn gfxBufferMap(self: *const Context, reference: *const abi.GfxBufferHandle, access: u32, offset: u64, byte_length: u64, output: *abi.GfxBufferMap) i32 {
+        const table_fn = self.drawFn("gfx_buffer_map") orelse return self.unavailable("draw");
+        output.version = 1;
+        output.size = @sizeOf(abi.GfxBufferMap);
+        return table_fn(reference, access, offset, byte_length, output);
+    }
+
+    pub fn gfxBufferUnmap(self: *const Context, lease: *const abi.GfxBufferHandle) i32 {
+        const table_fn = self.drawFn("gfx_buffer_unmap") orelse return self.unavailable("draw");
+        return table_fn(lease);
+    }
+
+    pub fn gfxBufferExportRaster(self: *const Context, lease: *const abi.GuiSharedRasterLease, output: *abi.GfxBufferReference) i32 {
+        const table_fn = self.drawFn("gfx_buffer_export_raster") orelse return self.unavailable("draw");
+        output.version = 1;
+        output.size = @sizeOf(abi.GfxBufferReference);
+        return table_fn(lease, output);
+    }
+
+    pub fn gfxBufferStats(self: *const Context, output: *abi.GfxBufferStats) i32 {
+        const table_fn = self.drawFn("gfx_buffer_stats") orelse return self.unavailable("draw");
+        output.version = 1;
+        output.size = @sizeOf(abi.GfxBufferStats);
+        return table_fn(output);
+    }
+
     pub fn guiSetTitle(self: *const Context, value: [*:0]const u8) i32 {
         const table_fn = self.deskFn("gui_set_title") orelse return self.unavailable("desk");
         return table_fn(value);

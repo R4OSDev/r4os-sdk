@@ -26,6 +26,42 @@ pub const Context = struct {
         return self.base.hasDrawFn(field);
     }
 
+    pub fn gfxBufferCreate(self: *const Context, descriptor: *const abi.GfxBufferDescriptor, output: *abi.GfxBufferReference) i32 {
+        return self.base.gfxBufferCreate(descriptor, output);
+    }
+
+    pub fn gfxBufferDescribe(self: *const Context, reference: *const abi.GfxBufferHandle, output: *abi.GfxBufferDescriptor) i32 {
+        return self.base.gfxBufferDescribe(reference, output);
+    }
+
+    pub fn gfxBufferImport(self: *const Context, source_reference: *const abi.GfxBufferHandle, output: *abi.GfxBufferReference) i32 {
+        return self.base.gfxBufferImport(source_reference, output);
+    }
+
+    pub fn gfxBufferRelease(self: *const Context, reference: *const abi.GfxBufferHandle) i32 {
+        return self.base.gfxBufferRelease(reference);
+    }
+
+    pub fn gfxBufferMap(self: *const Context, reference: *const abi.GfxBufferHandle, access: u32, offset: u64, byte_length: u64, output: *abi.GfxBufferMap) i32 {
+        return self.base.gfxBufferMap(reference, access, offset, byte_length, output);
+    }
+
+    pub fn gfxBufferUnmap(self: *const Context, lease: *const abi.GfxBufferHandle) i32 {
+        return self.base.gfxBufferUnmap(lease);
+    }
+
+    pub fn gfxBufferExportRaster(self: *const Context, lease: *const abi.GuiSharedRasterLease, output: *abi.GfxBufferReference) i32 {
+        return self.base.gfxBufferExportRaster(lease, output);
+    }
+
+    pub fn gfxBufferStats(self: *const Context, output: *abi.GfxBufferStats) i32 {
+        return self.base.gfxBufferStats(output);
+    }
+
+    pub fn buffers(self: *const Context) @import("gfx_buffers.zig").Context {
+        return .{ .base = self.base };
+    }
+
     pub fn screenWidth(self: *const Context) u32 {
         return self.base.screenWidth();
     }

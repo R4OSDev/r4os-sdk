@@ -1,6 +1,38 @@
 const std = @import("std");
 const r4os = @import("r4os");
 
+fn gfxMapProbe(ref: *const r4os.abi.GfxBufferHandle, access: u32, offset: u64, bytes: u64, out: *r4os.abi.GfxBufferMap) callconv(.c) i32 {
+    std.debug.assert(ref.generation == 99 and access == 1 and offset == 0x100000003 and bytes == 0x200000000);
+    std.debug.assert(out.version == 1 and out.size == @sizeOf(r4os.abi.GfxBufferMap));
+    out.byte_length = bytes;
+    return 1;
+}
+test "graphics buffer optional tails preserve 64-bit offsets in Zig and R4D calls" {
+    var tables = makeTables(true);
+    tables[2].gfx_buffer_map = @intFromPtr(&gfxMapProbe);
+    tables[2].size = @offsetOf(r4os.abi.R4XStartR4Draw, "gfx_buffer_map");
+    var imports: [3]r4os.abi.R4XStartImport = undefined;
+    var context: r4os.abi.R4XStartContext = undefined;
+    var app = try makeApp(&tables, &imports, &context);
+    const draw = app.drawing().?;
+    const buffers = draw.buffers();
+    const ref: r4os.abi.GfxBufferHandle = .{ .id = 7, .generation = 99 };
+    var output: r4os.abi.GfxBufferMap = .{ .byte_length = 37 };
+    try std.testing.expectEqual(r4os.abi.err_no_fn, buffers.map(&ref, 1, 0x100000003, 0x200000000, &output));
+    try std.testing.expectEqual(@as(u64, 37), output.byte_length);
+    tables[2].size = @sizeOf(r4os.abi.R4XStartR4Draw);
+    try std.testing.expectEqual(@as(i32, 1), buffers.map(&ref, 1, 0x100000003, 0x200000000, &output));
+    var old_driver: r4os.abi.DriverApi = undefined;
+    old_driver.magic = r4os.abi.driver_magic;
+    old_driver.version = 24;
+    old_driver.size = @offsetOf(r4os.abi.DriverApi, "gfx_memory_query");
+    const old_context = r4os.r4dev.DriverContext.init(&old_driver);
+    try std.testing.expect(old_context.apiCompatible());
+    try std.testing.expect(old_context.memory() == null);
+    const memory = @import("r4os").driver_memory.Context{ .table = .{ .buffer_map = @intFromPtr(&gfxMapProbe) } };
+    try std.testing.expectEqual(@as(i32, 1), memory.bufferMap(&ref, 1, 0x100000003, 0x200000000, &output));
+}
+
 var now_ticks: u64 = 100;
 var activity_waits: u32 = 0;
 var clipboard_revision: u32 = 7;

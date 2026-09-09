@@ -68,6 +68,13 @@ pub fn entriesAsm(comptime init_target: []const u8, comptime shutdown_target: []
 }
 
 pub const Context = struct {
+    pub fn memory(self: *const Context) ?@import("driver_memory.zig").Context {
+        if (!self.supportsDriverApi(25, @offsetOf(abi.DriverApi, "gfx_memory_query") + @sizeOf(usize))) return null;
+        const query = self.api.gfx_memory_query orelse return null;
+        var table: abi.GfxDriverMemoryApi = .{};
+        if (query(&table) != abi.gfx_buffer_result_ok or table.version != 1 or table.size < @sizeOf(abi.GfxDriverMemoryApi)) return null;
+        return .{ .table = table };
+    }
     api: *const abi.DriverApi,
 
     pub fn init(api: *const abi.DriverApi) Context {
@@ -95,7 +102,9 @@ pub const Context = struct {
     }
 
     pub fn apiCompatible(self: *const Context) bool {
-        return self.supportsDriverApi(abi.driver_api_version, @intCast(@sizeOf(abi.DriverApi)));
+        // The v25 memory query is optional. Existing drivers keep the v24
+        // minimum; memory() negotiates the additional tail independently.
+        return self.supportsDriverApi(24, @offsetOf(abi.DriverApi, "gfx_memory_query"));
     }
 
     pub fn logInfo(self: *const Context, text: [*:0]const u8) void {

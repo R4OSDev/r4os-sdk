@@ -274,6 +274,62 @@ static inline int32_t r4draw_gui_present(R4Draw *draw) {
     return fn();
 }
 
+
+/* Generation-bound graphics buffers. Check each optional tail independently. */
+static inline int32_t r4draw_gfx_buffer_create(const R4Draw *draw, const R4GfxBufferDescriptor * descriptor, R4GfxBufferReference * output) {
+    if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_buffer_create) + sizeof(uintptr_t) || draw->table->gfx_buffer_create == 0) return R4OS_ERR_NO_FN;
+    if (descriptor == 0 || output == 0) return R4OS_GFX_BUFFER_ERROR_INVALID;
+    output->version = 1; output->size = sizeof(R4GfxBufferReference);
+    return ((R4DrawGfxBufferCreateFn)(uintptr_t)draw->table->gfx_buffer_create)(descriptor, output);
+}
+
+static inline int32_t r4draw_gfx_buffer_describe(const R4Draw *draw, const R4GfxBufferHandle * reference, R4GfxBufferDescriptor * output) {
+    if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_buffer_describe) + sizeof(uintptr_t) || draw->table->gfx_buffer_describe == 0) return R4OS_ERR_NO_FN;
+    if (reference == 0 || output == 0) return R4OS_GFX_BUFFER_ERROR_INVALID;
+    output->version = 1; output->size = sizeof(R4GfxBufferDescriptor);
+    return ((R4DrawGfxBufferDescribeFn)(uintptr_t)draw->table->gfx_buffer_describe)(reference, output);
+}
+
+static inline int32_t r4draw_gfx_buffer_import(const R4Draw *draw, const R4GfxBufferHandle * source_reference, R4GfxBufferReference * output) {
+    if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_buffer_import) + sizeof(uintptr_t) || draw->table->gfx_buffer_import == 0) return R4OS_ERR_NO_FN;
+    if (source_reference == 0 || output == 0) return R4OS_GFX_BUFFER_ERROR_INVALID;
+    output->version = 1; output->size = sizeof(R4GfxBufferReference);
+    return ((R4DrawGfxBufferImportFn)(uintptr_t)draw->table->gfx_buffer_import)(source_reference, output);
+}
+
+static inline int32_t r4draw_gfx_buffer_release(const R4Draw *draw, const R4GfxBufferHandle * reference) {
+    if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_buffer_release) + sizeof(uintptr_t) || draw->table->gfx_buffer_release == 0) return R4OS_ERR_NO_FN;
+    if (reference == 0) return R4OS_GFX_BUFFER_ERROR_INVALID;
+    return ((R4DrawGfxBufferReleaseFn)(uintptr_t)draw->table->gfx_buffer_release)(reference);
+}
+
+static inline int32_t r4draw_gfx_buffer_map(const R4Draw *draw, const R4GfxBufferHandle * reference, uint32_t access, uint64_t offset, uint64_t byte_length, R4GfxBufferMap * output) {
+    if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_buffer_map) + sizeof(uintptr_t) || draw->table->gfx_buffer_map == 0) return R4OS_ERR_NO_FN;
+    if (reference == 0 || output == 0) return R4OS_GFX_BUFFER_ERROR_INVALID;
+    output->version = 1; output->size = sizeof(R4GfxBufferMap);
+    return ((R4DrawGfxBufferMapFn)(uintptr_t)draw->table->gfx_buffer_map)(reference, access, offset, byte_length, output);
+}
+
+static inline int32_t r4draw_gfx_buffer_unmap(const R4Draw *draw, const R4GfxBufferHandle * lease) {
+    if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_buffer_unmap) + sizeof(uintptr_t) || draw->table->gfx_buffer_unmap == 0) return R4OS_ERR_NO_FN;
+    if (lease == 0) return R4OS_GFX_BUFFER_ERROR_INVALID;
+    return ((R4DrawGfxBufferUnmapFn)(uintptr_t)draw->table->gfx_buffer_unmap)(lease);
+}
+
+static inline int32_t r4draw_gfx_buffer_export_raster(const R4Draw *draw, const R4GuiSharedRasterLease * lease, R4GfxBufferReference * output) {
+    if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_buffer_export_raster) + sizeof(uintptr_t) || draw->table->gfx_buffer_export_raster == 0) return R4OS_ERR_NO_FN;
+    if (lease == 0 || output == 0) return R4OS_GFX_BUFFER_ERROR_INVALID;
+    output->version = 1; output->size = sizeof(R4GfxBufferReference);
+    return ((R4DrawGfxBufferExportRasterFn)(uintptr_t)draw->table->gfx_buffer_export_raster)(lease, output);
+}
+
+static inline int32_t r4draw_gfx_buffer_stats(const R4Draw *draw, R4GfxBufferStats * output) {
+    if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_buffer_stats) + sizeof(uintptr_t) || draw->table->gfx_buffer_stats == 0) return R4OS_ERR_NO_FN;
+    if (output == 0) return R4OS_GFX_BUFFER_ERROR_INVALID;
+    output->version = 1; output->size = sizeof(R4GfxBufferStats);
+    return ((R4DrawGfxBufferStatsFn)(uintptr_t)draw->table->gfx_buffer_stats)(output);
+}
+
 #ifdef __cplusplus
 }
 #endif
