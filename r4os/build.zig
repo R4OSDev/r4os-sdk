@@ -865,8 +865,9 @@ fn loadCurrentR4MF(b: *std.Build, manifest_path: std.Build.LazyPath, options: R4
 
 fn resolvedResourcePath(b: *std.Build, project_path: []const u8, relative: []const u8) std.Build.LazyPath {
     const full = std.fs.path.join(b.allocator, &.{ project_path, relative }) catch @panic("OOM");
-    std.Io.Dir.cwd().access(b.graph.io, full, .{}) catch |err|
-        @panic(b.fmt("R4MF resource capability error: {s} ({s})", .{ full, @errorName(err) }));
+    // Resource inputs are checked and hashed by the selected packaging step.
+    // Eager access here would prevent a project's provisioning or host-test
+    // step from running before its explicitly supplied resources exist.
     return userPath(b, full);
 }
 
