@@ -290,3 +290,11 @@ can report output-lost with retained ownership; callers must inspect outcome
 and the resulting generation. Device access 4 is physical backing residency,
 not GPU-VA or data-access permission. Display upload operation 2 belongs only
 to the kernel's bound native source queue and never implies visible VBlank.
+
+R4D callers can negotiate DriverApi32 through `DriverContext.threads()`.
+`DriverThreadContext` and `r4os/driver_threads.h` expose start, cooperative stop,
+finite join, release, status, current handle, tick sleep and owner statistics.
+All slots are checked by version, size and availability. Handles, context and
+timeout values keep their full 64-bit width. Timeout/cancellation retains the
+target; completed callbacks still require successful task/stack release.
+The ordinary resource-facade conformance fixture covers both Zig and C.

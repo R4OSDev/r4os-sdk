@@ -1,6 +1,53 @@
 #include <r4os/r4os.h>
 #include <r4os/driver_resources.h>
 #include <r4os/driver_heap.h>
+#include <r4os/driver_threads.h>
+
+static int32_t driver_thread_handler(uintptr_t value) { return value == UINT64_C(0x100000000037) ? 79 : -1; }
+static int32_t driver_thread_start_probe(const R4DriverThreadRequest *input, uint64_t *output) {
+    if (input->version != 1 || input->size != 32 || input->reserved != 0 || input->flags != R4OS_DRIVER_THREAD_FLAG_PARALLEL) return -77;
+    if (((R4DriverThreadHandler)(uintptr_t)input->handler)(input->context) != 79) return -78;
+    *output = UINT64_C(0x200000000079);
+    return 0;
+}
+static int32_t driver_thread_join_probe(uint64_t handle, uint64_t timeout, int32_t *result) {
+    return handle == UINT64_C(0x200000000079) && timeout == UINT64_C(0x300000000091) && *result == 0 ? R4OS_DRIVER_THREAD_ERROR_TIMEOUT : -77;
+}
+static int32_t driver_thread_stop_probe(uint64_t handle) { return handle == UINT64_C(0x200000000079) ? R4OS_DRIVER_THREAD_ERROR_CLOSED : -77; }
+static int32_t driver_thread_release_probe(uint64_t handle) { return handle == UINT64_C(0x200000000079) ? R4OS_DRIVER_THREAD_ERROR_BUSY : -77; }
+static int32_t driver_thread_status_probe(uint64_t handle, R4DriverThreadStatus *output) {
+    if (handle != UINT64_C(0x200000000079)) return -77;
+    *output = (R4DriverThreadStatus){ .version = 1, .size = sizeof(*output), .handle = handle, .task_generation = UINT64_C(0x200000000001), .result = -79 };
+    return 0;
+}
+static uint64_t driver_thread_current_probe(void) { return UINT64_C(0x200000000079); }
+static int32_t driver_thread_sleep_probe(uint64_t ticks) { return ticks == UINT64_MAX ? R4OS_DRIVER_THREAD_ERROR_CANCELLED : -77; }
+static int32_t driver_thread_stats_probe(R4DriverThreadStats *output) {
+    *output = (R4DriverThreadStats){ .version = 1, .size = sizeof(*output), .records = UINT64_C(0x100000000003), .closing = 1 };
+    return 0;
+}
+static int driver_thread_checks(void) {
+    R4DriverThreadApi api = { .version = 1, .size = sizeof(api), .start = (uint64_t)(uintptr_t)&driver_thread_start_probe, .stop = (uint64_t)(uintptr_t)&driver_thread_stop_probe, .join = (uint64_t)(uintptr_t)&driver_thread_join_probe, .release = (uint64_t)(uintptr_t)&driver_thread_release_probe, .status = (uint64_t)(uintptr_t)&driver_thread_status_probe, .current = (uint64_t)(uintptr_t)&driver_thread_current_probe, .sleep_ticks = (uint64_t)(uintptr_t)&driver_thread_sleep_probe, .stats = (uint64_t)(uintptr_t)&driver_thread_stats_probe };
+    uint64_t handle = 99;
+    int32_t result = 123;
+    R4DriverThreadStatus status = { .version = 1, .size = sizeof(status) };
+    R4DriverThreadStats stats = { .version = 1, .size = sizeof(stats) };
+    if (r4driver_thread_start(&api, driver_thread_handler, UINT64_C(0x100000000037), R4OS_DRIVER_THREAD_FLAG_PARALLEL, &handle) != 0 || handle != UINT64_C(0x200000000079)) return 1;
+    if (r4driver_thread_join(&api, handle, UINT64_C(0x300000000091), &result) != R4OS_DRIVER_THREAD_ERROR_TIMEOUT || result != 0) return 1;
+    if (r4driver_thread_stop(&api, handle) != R4OS_DRIVER_THREAD_ERROR_CLOSED || r4driver_thread_release(&api, handle) != R4OS_DRIVER_THREAD_ERROR_BUSY) return 1;
+    if (r4driver_thread_status(&api, handle, &status) != 0 || status.task_generation != UINT64_C(0x200000000001) || status.result != -79) return 1;
+    if (r4driver_thread_current(&api) != handle || r4driver_thread_sleep_ticks(&api, UINT64_MAX) != R4OS_DRIVER_THREAD_ERROR_CANCELLED) return 1;
+    if (r4driver_thread_stats(&api, &stats) != 0 || stats.records != UINT64_C(0x100000000003)) return 1;
+    if (r4driver_thread_start(&api, driver_thread_handler, 0, 0, 0) != R4OS_DRIVER_THREAD_ERROR_INVALID || r4driver_thread_join(&api, 1, 1, 0) != R4OS_DRIVER_THREAD_ERROR_INVALID) return 1;
+    if (r4driver_thread_status(&api, 1, 0) != R4OS_DRIVER_THREAD_ERROR_INVALID || r4driver_thread_stats(&api, 0) != R4OS_DRIVER_THREAD_ERROR_INVALID) return 1;
+    api.size = offsetof(R4DriverThreadApi, join);
+    result = 123;
+    if (r4driver_thread_join(&api, handle, 1, &result) != R4OS_ERR_NO_FN || result != 0 || r4driver_thread_release(&api, handle) != R4OS_ERR_NO_FN) return 1;
+    api.version = 2;
+    if (r4driver_thread_start(&api, driver_thread_handler, 0, 0, &handle) != R4OS_ERR_NO_FN || handle != 0 || r4driver_thread_current(&api) != 0) return 1;
+    if (r4driver_thread_stop(0, 1) != R4OS_ERR_NO_FN || r4driver_thread_stats(0, &stats) != R4OS_ERR_NO_FN) return 1;
+    return 0;
+}
 
 static int32_t driver_heap_allocate_probe(uint64_t bytes, uint32_t alignment, R4DriverHeapAllocation *out) {
     if (bytes != UINT64_C(0x100000001) || alignment != 4096) return -77;
@@ -153,6 +200,7 @@ static void init_app(R4App *app, R4XStartR4Sys *table, R4XStartR4Desk *desk) {
 
 int main(void) {
     if (driver_heap_checks() != 0) return 80;
+    if (driver_thread_checks() != 0) return 81;
     if (driver_resource_checks() != 0) return 79;
     R4App app; R4XStartR4Sys table; R4XStartR4Desk desk; init_app(&app, &table, &desk); R4Resources resources = r4_app_resources(&app);
     R4PerformanceView performance = r4_devices_performance(r4_app_devices(&app));

@@ -1,6 +1,93 @@
 const std = @import("std");
 const r4os = @import("r4os");
 
+const driver_thread_handle: u64 = 0x2000000000079;
+fn driverThreadHandler(value: usize) callconv(.c) i32 {
+    return if (value == 0x100000000037) 79 else -1;
+}
+fn driverThreadStart(input: *const r4os.abi.DriverThreadRequest, output: *u64) callconv(.c) i32 {
+    std.debug.assert(input.version == 1 and input.size == 32 and input.reserved == 0 and input.flags == r4os.abi.driver_thread_flag_parallel);
+    const callback: *const fn (usize) callconv(.c) i32 = @ptrFromInt(input.handler);
+    std.debug.assert(callback(input.context) == 79);
+    output.* = driver_thread_handle;
+    return 0;
+}
+fn driverThreadStop(handle: u64) callconv(.c) i32 {
+    std.debug.assert(handle == driver_thread_handle);
+    return r4os.abi.driver_thread_error_closed;
+}
+fn driverThreadJoin(handle: u64, timeout: u64, output: *i32) callconv(.c) i32 {
+    std.debug.assert(handle == driver_thread_handle and timeout == 0x300000000091 and output.* == 0);
+    return r4os.abi.driver_thread_error_timeout;
+}
+fn driverThreadRelease(handle: u64) callconv(.c) i32 {
+    std.debug.assert(handle == driver_thread_handle);
+    return r4os.abi.driver_thread_error_busy;
+}
+fn driverThreadStatus(handle: u64, output: *r4os.abi.DriverThreadStatus) callconv(.c) i32 {
+    std.debug.assert(handle == driver_thread_handle);
+    output.* = .{ .handle = handle, .owner_epoch = 0x100000000001, .task_generation = 0x200000000001, .task_id = 17, .result = -79 };
+    return 0;
+}
+fn driverThreadCurrent() callconv(.c) u64 {
+    return driver_thread_handle;
+}
+fn driverThreadSleep(ticks: u64) callconv(.c) i32 {
+    std.debug.assert(ticks == std.math.maxInt(u64));
+    return r4os.abi.driver_thread_error_cancelled;
+}
+fn driverThreadStats(output: *r4os.abi.DriverThreadStats) callconv(.c) i32 {
+    output.* = .{ .owner_epoch = 0x100000000001, .records = 0x100000000003, .waiters = 2, .closing = 1 };
+    return 0;
+}
+fn driverThreadQuery(output: *r4os.abi.DriverThreadApi) callconv(.c) i32 {
+    output.* = .{ .start = @intFromPtr(&driverThreadStart), .stop = @intFromPtr(&driverThreadStop), .join = @intFromPtr(&driverThreadJoin), .release = @intFromPtr(&driverThreadRelease), .status = @intFromPtr(&driverThreadStatus), .current = @intFromPtr(&driverThreadCurrent), .sleep_ticks = @intFromPtr(&driverThreadSleep), .stats = @intFromPtr(&driverThreadStats) };
+    return 0;
+}
+test "driver threads preserve v31 prefix, full identities, optional callbacks and provider errors" {
+    const a = r4os.abi;
+    try std.testing.expectEqual(@as(usize, 616), @offsetOf(a.DriverApi, "thread_query"));
+    try std.testing.expectEqual(@as(usize, 624), @sizeOf(a.DriverApi));
+    var api: a.DriverApi = undefined;
+    api.version = 31;
+    api.size = 616;
+    const driver = r4os.r4dev.DriverContext.init(&api);
+    try std.testing.expect(driver.threads() == null);
+    api.version = 32;
+    try std.testing.expect(driver.threads() == null);
+    api.size = 624;
+    api.thread_query = null;
+    try std.testing.expect(driver.threads() == null);
+    api.thread_query = driverThreadQuery;
+    var service = driver.threads() orelse return error.NoThreads;
+    var handle: u64 = 99;
+    try std.testing.expectEqual(@as(i32, 0), service.start(driverThreadHandler, 0x100000000037, a.driver_thread_flag_parallel, &handle));
+    try std.testing.expectEqual(driver_thread_handle, handle);
+    try std.testing.expectEqual(a.driver_thread_error_closed, service.stop(handle));
+    var result: i32 = 123;
+    try std.testing.expectEqual(a.driver_thread_error_timeout, service.join(handle, 0x300000000091, &result));
+    try std.testing.expectEqual(@as(i32, 0), result);
+    try std.testing.expectEqual(a.driver_thread_error_busy, service.release(handle));
+    var status: a.DriverThreadStatus = .{};
+    try std.testing.expectEqual(@as(i32, 0), service.status(handle, &status));
+    try std.testing.expectEqual(@as(u64, 0x200000000001), status.task_generation);
+    try std.testing.expectEqual(@as(i32, -79), status.result);
+    try std.testing.expectEqual(handle, service.current());
+    try std.testing.expectEqual(a.driver_thread_error_cancelled, service.sleepTicks(std.math.maxInt(u64)));
+    var stats: a.DriverThreadStats = .{};
+    try std.testing.expectEqual(@as(i32, 0), service.stats(&stats));
+    try std.testing.expectEqual(@as(u64, 0x100000000003), stats.records);
+    service.table.size = @offsetOf(a.DriverThreadApi, "join");
+    try std.testing.expectEqual(a.driver_thread_error_closed, service.stop(handle));
+    result = 123;
+    try std.testing.expectEqual(a.err_no_fn, service.join(handle, 1, &result));
+    try std.testing.expectEqual(@as(i32, 0), result);
+    service.table.version = 2;
+    try std.testing.expectEqual(a.err_no_fn, service.start(driverThreadHandler, 0, 0, &handle));
+    try std.testing.expectEqual(@as(u64, 0), handle);
+    try std.testing.expectEqual(@as(u64, 0), service.current());
+}
+
 fn driverClockProbe(out: *r4os.abi.MonotonicClockInfo) callconv(.c) i32 {
     out.* = .{ .flags = r4os.abi.monotonic_clock_flag_valid, .instant_ns = 0x10000000003, .resolution_ns = 10000001 };
     return 1;
@@ -8,7 +95,7 @@ fn driverClockProbe(out: *r4os.abi.MonotonicClockInfo) callconv(.c) i32 {
 test "driver monotonic clock preserves the old table prefix and nanosecond payload" {
     const a = r4os.abi;
     try std.testing.expectEqual(@as(usize, 608), @offsetOf(a.DriverApi, "monotonic_clock"));
-    try std.testing.expectEqual(@as(usize, 616), @sizeOf(a.DriverApi));
+    try std.testing.expectEqual(@as(usize, 616), @offsetOf(a.DriverApi, "monotonic_clock") + @sizeOf(u64));
     var api: a.DriverApi = undefined;
     api.version = 30;
     api.size = @offsetOf(a.DriverApi, "monotonic_clock");

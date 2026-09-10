@@ -405,6 +405,14 @@ pub const Context = struct {
         return callback(output);
     }
 
+    pub fn threads(self: *const Context) ?@import("driver_threads.zig").Context {
+        if (self.api.version < 32 or self.api.size < @offsetOf(abi.DriverApi, "thread_query") + 8) return null;
+        const query = self.api.thread_query orelse return null;
+        var table: abi.DriverThreadApi = .{};
+        if (query(&table) != 0 or table.version != 1 or table.size < @sizeOf(abi.DriverThreadApi)) return null;
+        return .{ .table = table };
+    }
+
     pub fn waitTicks(self: *const Context, ticks: u64) void {
         self.api.wait_ticks(ticks);
     }
