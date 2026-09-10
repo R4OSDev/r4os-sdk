@@ -4,6 +4,16 @@
 #include <r4os/r4os.h>
 #include <r4os/driver_memory.h>
 #include <r4os/driver_queue.h>
+#include <r4os/driver_outputs.h>
+
+static int32_t output_test_probe(const R4GfxAtomicState *state, R4GfxAtomicResult *out) {
+    assert(state->topology_revision == UINT64_C(0x100000007) && state->assignments[7].output.connection_generation == UINT64_C(0x200000009));
+    assert(out->version == 1 && out->size == sizeof(*out)); out->topology_revision = state->topology_revision; return 1;
+}
+static int32_t output_publish_probe(const R4GfxOutputPublication *publication, R4GfxOutputId *out) {
+    assert(publication->info.edid_bytes == 128 && publication->edid[127] == 0x79);
+    out->connection_generation = UINT64_C(0x40000000d); return 1;
+}
 
 static int32_t gfx_wait_probe(const R4GfxFence *fence, uint64_t ticks, uint32_t wait_for, R4GfxFenceStatus *out) {
     assert(fence->point == UINT64_C(0x100000007) && fence->reset_generation == UINT64_C(0x200000001));
@@ -49,6 +59,19 @@ static void gfx_facade_probe(void) {
     assert(r4driver_queue_complete(&native, &fence, 6, 0) == -4);
     native.size = offsetof(R4GfxDriverQueueApi, complete);
     assert(r4driver_queue_complete(&native, &fence, 6, 0) == R4OS_ERR_NO_FN);
+    R4GfxAtomicState state = {.topology_revision = UINT64_C(0x100000007)};
+    state.assignments[7].output.connection_generation = UINT64_C(0x200000009);
+    R4GfxAtomicResult atomic_result = {.commit_sequence = 77};
+    table.abi_version = 11; table.size = 536; table.gfx_atomic_test = (uintptr_t)output_test_probe;
+    assert(r4draw_gfx_atomic_test(&draw, &state, &atomic_result) == R4OS_ERR_NO_FN && atomic_result.commit_sequence == 77);
+    table.size = sizeof(table);
+    assert(r4draw_gfx_atomic_test(&draw, &state, &atomic_result) == 1 && atomic_result.topology_revision == state.topology_revision);
+    R4GfxDriverOutputApi output_driver = {.version = 1, .size = sizeof(output_driver), .publish = (uintptr_t)output_publish_probe};
+    R4GfxOutputPublication publication = {0}; publication.info.edid_bytes = 128; publication.edid[127] = 0x79;
+    R4GfxOutputId identity = {0};
+    assert(r4driver_output_publish(&output_driver, &publication, &identity) == 1 && identity.connection_generation == UINT64_C(0x40000000d));
+    output_driver.size = offsetof(R4GfxDriverOutputApi, publish);
+    assert(r4driver_output_publish(&output_driver, &publication, &identity) == R4OS_ERR_NO_FN && identity.connection_generation == UINT64_C(0x40000000d));
 }
 
 static uint64_t now_ticks = 100u;

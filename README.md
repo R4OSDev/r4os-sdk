@@ -270,3 +270,13 @@ This does not claim to validate decompressed or decrypted file contents.
 Reference: Microsoft ATTRIBUTE_RECORD_HEADER
 https://learn.microsoft.com/en-us/windows/win32/devnotes/attribute-record-header
 and the existing local NTFS layout references.
+
+R4DRAW ABI12 appends generation-bound connector/mode/EDID queries and atomic
+test/commit envelopes. C and Zig facades check optional table tails before
+access; DriverApi27 appends an owner-bound output publication interface.
+Native hardware commits require a separately negotiated backend; the
+firmware fallback retains only its actual boot geometry and unknown refresh.
+Zig R4D manifests may declare compiled ZIG_MODULE helpers as R4X already do;
+this adds no runtime imports or application entry/class to drivers.
+Thin owner launchers can share Tools/BuildModule.ps1 through their configured
+SDK_ROOT; it resolves dependency forks and forwards an explicit argument array.

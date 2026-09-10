@@ -333,6 +333,43 @@ static inline int32_t r4draw_gfx_buffer_stats(const R4Draw *draw, R4GfxBufferSta
 
 
 /* Asynchronous graphics queues and exact fences. Check each optional tail independently. */
+static inline int32_t r4draw_gfx_output_revision(const R4Draw *draw, R4GfxDisplayRevision * output) {
+    if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_output_revision) + sizeof(uintptr_t) || draw->table->gfx_output_revision == 0) return R4OS_ERR_NO_FN;
+    if (output == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    output->version = 1; output->size = sizeof(*output);
+    return ((R4DrawGfxOutputRevisionFn)(uintptr_t)draw->table->gfx_output_revision)(output);
+}
+static inline int32_t r4draw_gfx_output_info(const R4Draw *draw, uint32_t index, R4GfxOutputInfo * output) {
+    if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_output_info) + sizeof(uintptr_t) || draw->table->gfx_output_info == 0) return R4OS_ERR_NO_FN;
+    if (output == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    output->version = 1; output->size = sizeof(*output);
+    return ((R4DrawGfxOutputInfoFn)(uintptr_t)draw->table->gfx_output_info)(index, output);
+}
+static inline int32_t r4draw_gfx_output_mode(const R4Draw *draw, const R4GfxOutputId * identity, uint32_t index, R4GfxOutputMode * output) {
+    if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_output_mode) + sizeof(uintptr_t) || draw->table->gfx_output_mode == 0) return R4OS_ERR_NO_FN;
+    if (output == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    output->version = 1; output->size = sizeof(*output);
+    return ((R4DrawGfxOutputModeFn)(uintptr_t)draw->table->gfx_output_mode)(identity, index, output);
+}
+static inline int32_t r4draw_gfx_output_edid(const R4Draw *draw, const R4GfxOutputId * identity, uint32_t index, R4GfxEdidBlock * output) {
+    if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_output_edid) + sizeof(uintptr_t) || draw->table->gfx_output_edid == 0) return R4OS_ERR_NO_FN;
+    if (output == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    output->version = 1; output->size = sizeof(*output);
+    return ((R4DrawGfxOutputEdidFn)(uintptr_t)draw->table->gfx_output_edid)(identity, index, output);
+}
+static inline int32_t r4draw_gfx_atomic_test(const R4Draw *draw, const R4GfxAtomicState * state, R4GfxAtomicResult * output) {
+    if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_atomic_test) + sizeof(uintptr_t) || draw->table->gfx_atomic_test == 0) return R4OS_ERR_NO_FN;
+    if (output == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    output->version = 1; output->size = sizeof(*output);
+    return ((R4DrawGfxAtomicTestFn)(uintptr_t)draw->table->gfx_atomic_test)(state, output);
+}
+static inline int32_t r4draw_gfx_atomic_commit(const R4Draw *draw, const R4GfxAtomicState * state, R4GfxAtomicResult * output) {
+    if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_atomic_commit) + sizeof(uintptr_t) || draw->table->gfx_atomic_commit == 0) return R4OS_ERR_NO_FN;
+    if (output == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    output->version = 1; output->size = sizeof(*output);
+    return ((R4DrawGfxAtomicCommitFn)(uintptr_t)draw->table->gfx_atomic_commit)(state, output);
+}
+
 static inline int32_t r4draw_gfx_queue_open(const R4Draw *draw, const R4GfxQueueConfig * config, R4GfxQueueHandle * output) {
     if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_queue_open) + sizeof(uintptr_t) || draw->table->gfx_queue_open == 0) return R4OS_ERR_NO_FN;
     if (config == 0 || output == 0) return R4OS_GFX_QUEUE_ERROR_INVALID;

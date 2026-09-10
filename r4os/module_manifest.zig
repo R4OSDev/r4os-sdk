@@ -447,7 +447,9 @@ fn parseV2(allocator: std.mem.Allocator, path: []const u8, text: []const u8) !Ma
         if (entry_mode != null) return error.NonR4XEntryModeForbidden;
         if (app_class != null) return error.NonR4XAppClassForbidden;
         if (package != null) return error.NonR4XPackageForbidden;
-        if (zig_modules.items.len != 0) return error.NonR4XZigModuleForbidden;
+        // R4D uses the same compiled-library mechanism as R4X. This adds no
+        // runtime import or application entry point to a driver container.
+        if (parsed_kind != .r4d and zig_modules.items.len != 0) return error.NonR4XZigModuleForbidden;
         // image.shipped ist durch IMAGE_SCOPE abgeloest und darf nicht
         // danebenstehen - zwei Quellen fuer dieselbe Aussage waeren genau
         // die Doppelung, die diese Unterversion abschafft.
@@ -1599,6 +1601,22 @@ test "V2 keeps package grouping out of the build plan and validates Zig modules"
     const c_module = std.mem.replaceOwned(u8, allocator, c_language, "src/main.zig", "src/main.c") catch unreachable;
     defer allocator.free(c_module);
     try std.testing.expectError(error.CForbidsZigModule, parse(allocator, "App/module.R4MF", c_module));
+    const driver_text =
+        \\R4OS_MODULE_MANIFEST=2
+        \\KIND=R4D
+        \\NAME=DISPLAYTEST
+        \\VERSION=0.1.0
+        \\LANGUAGE=Zig
+        \\SOURCE=src/main.zig
+        \\TARGET=/R4OS/DRIVERS/DISPLAYTEST.R4D
+        \\IMAGE_SCOPE=test
+        \\ZIG_MODULE=edid:../../Libraries/R4GFX/Display/edid.zig
+        \\META=r4d.name=DisplayTest
+        \\META=r4d.type=display
+    ;
+    const driver = try parse(allocator, "Driver/module.R4MF", driver_text);
+    try std.testing.expectEqualStrings("edid:../../Libraries/R4GFX/Display/edid.zig", driver.zig_modules[0]);
+    try std.testing.expectError(error.NonR4XEntryModeForbidden, parse(allocator, "Driver/module.R4MF", driver_text ++ "\nENTRY_MODE=app\n"));
 }
 
 test "V2 rejects duplicate fields path escape invalid target scope and missing profile imports" {

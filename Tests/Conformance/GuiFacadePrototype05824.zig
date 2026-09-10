@@ -58,7 +58,50 @@ test "graphics buffer optional tails preserve 64-bit offsets in Zig and R4D call
     try std.testing.expectEqual(r4os.abi.err_no_fn, native.complete(&fence, 6, 0));
     try std.testing.expectEqual(@as(usize, 560), @offsetOf(r4os.abi.DriverApi, "gfx_memory_query"));
     try std.testing.expectEqual(@as(usize, 568), @offsetOf(r4os.abi.DriverApi, "gfx_queue_query"));
-    try std.testing.expectEqual(@as(usize, 576), @sizeOf(r4os.abi.DriverApi));
+    try std.testing.expectEqual(@as(usize, 576), @offsetOf(r4os.abi.DriverApi, "gfx_output_query"));
+    try std.testing.expectEqual(@as(usize, 584), @sizeOf(r4os.abi.DriverApi));
+}
+
+fn outputTestProbe(state: *const r4os.abi.GfxAtomicState, out: *r4os.abi.GfxAtomicResult) callconv(.c) i32 {
+    std.debug.assert(state.topology_revision == 0x100000007 and state.assignments[7].output.connection_generation == 0x200000009);
+    std.debug.assert(out.version == 1 and out.size == @sizeOf(r4os.abi.GfxAtomicResult));
+    out.topology_revision = state.topology_revision;
+    return 1;
+}
+fn outputPublishProbe(publication: *const r4os.abi.GfxOutputPublication, out: *r4os.abi.GfxOutputId) callconv(.c) i32 {
+    std.debug.assert(publication.info.edid_bytes == 128 and publication.edid[127] == 0x79);
+    out.* = .{ .adapter_id = 3, .connector_id = 17, .device_generation = 0x30000000b, .connection_generation = 0x40000000d };
+    return 1;
+}
+test "old display and driver prefixes hide output tails while C/Zig preserve receiver generations" {
+    const a = r4os.abi;
+    var tables = makeTables(true);
+    tables[2].abi_version = 11; tables[2].size = 536;
+    tables[2].gfx_atomic_test = @intFromPtr(&outputTestProbe);
+    var imports: [3]a.R4XStartImport = undefined;
+    var context: a.R4XStartContext = undefined;
+    var app = try makeApp(&tables, &imports, &context);
+    const outputs = app.drawing().?.outputs();
+    var state = a.GfxAtomicState{ .topology_revision = 0x100000007 };
+    state.assignments[7].output.connection_generation = 0x200000009;
+    var result = a.GfxAtomicResult{ .commit_sequence = 77 };
+    const before = result;
+    try std.testing.expectEqual(a.err_no_fn, outputs.testState(&state, &result));
+    try std.testing.expectEqualDeep(before, result);
+    tables[2].size = @sizeOf(a.R4XStartR4Draw);
+    try std.testing.expectEqual(@as(i32, 1), outputs.testState(&state, &result));
+    try std.testing.expectEqual(state.topology_revision, result.topology_revision);
+    var old_driver: a.DriverApi = undefined;
+    old_driver.magic = a.driver_magic; old_driver.version = 26; old_driver.size = 576;
+    try std.testing.expect(r4os.r4dev.DriverContext.init(&old_driver).graphicsOutputs() == null);
+    var native = r4os.driver_outputs.Context{ .table = .{ .publish = @intFromPtr(&outputPublishProbe) } };
+    var publication = a.GfxOutputPublication{}; publication.info.edid_bytes = 128; publication.edid[127] = 0x79;
+    var identity: a.GfxOutputId = .{};
+    try std.testing.expectEqual(@as(i32, 1), native.publish(&publication, &identity));
+    try std.testing.expectEqual(@as(u64, 0x40000000d), identity.connection_generation);
+    native.table.size = @offsetOf(a.GfxDriverOutputApi, "publish");
+    try std.testing.expectEqual(a.err_no_fn, native.publish(&publication, &identity));
+    try std.testing.expectEqual(@as(u64, 0x40000000d), identity.connection_generation);
 }
 
 var now_ticks: u64 = 100;

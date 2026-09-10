@@ -12,6 +12,7 @@ pub const query_contract = "Repositories/Contract/ABI/R4LQuery.txt";
 
 pub const Context = struct {
     base: program.Context,
+    pub fn outputs(self: *const Context) @import("gfx_outputs.zig").Context { return .{ .base = self.base }; }
 
     pub fn init(bundle: *const program.Bundle) Context {
         return .{ .base = program.Context.initBundle(bundle) };
@@ -61,6 +62,13 @@ pub const Context = struct {
     pub fn buffers(self: *const Context) @import("gfx_buffers.zig").Context {
         return .{ .base = self.base };
     }
+
+    pub fn gfxOutputRevision(self: *const Context, output: *abi.GfxDisplayRevision) i32 { return self.base.gfxOutputRevision(output); }
+    pub fn gfxOutputInfo(self: *const Context, index: u32, output: *abi.GfxOutputInfo) i32 { return self.base.gfxOutputInfo(index, output); }
+    pub fn gfxOutputMode(self: *const Context, identity: *const abi.GfxOutputId, index: u32, output: *abi.GfxOutputMode) i32 { return self.base.gfxOutputMode(identity, index, output); }
+    pub fn gfxOutputEdid(self: *const Context, identity: *const abi.GfxOutputId, index: u32, output: *abi.GfxEdidBlock) i32 { return self.base.gfxOutputEdid(identity, index, output); }
+    pub fn gfxAtomicTest(self: *const Context, state: *const abi.GfxAtomicState, output: *abi.GfxAtomicResult) i32 { return self.base.gfxAtomicTest(state, output); }
+    pub fn gfxAtomicCommit(self: *const Context, state: *const abi.GfxAtomicState, output: *abi.GfxAtomicResult) i32 { return self.base.gfxAtomicCommit(state, output); }
 
     pub fn gfxQueueOpen(self: *const Context, config: *const abi.GfxQueueConfig, output: *abi.GfxQueueHandle) i32 {
         return self.base.gfxQueueOpen(config, output);

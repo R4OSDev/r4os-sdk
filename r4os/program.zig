@@ -1472,6 +1472,37 @@ pub const Context = struct {
         return table_fn(output);
     }
 
+    pub fn gfxOutputRevision(self: *const Context, output: *abi.GfxDisplayRevision) i32 {
+        const table_fn = self.drawFn("gfx_output_revision") orelse return self.unavailable("draw");
+        output.version = 1; output.size = @sizeOf(abi.GfxDisplayRevision);
+        return table_fn(output);
+    }
+    pub fn gfxOutputInfo(self: *const Context, index: u32, output: *abi.GfxOutputInfo) i32 {
+        const table_fn = self.drawFn("gfx_output_info") orelse return self.unavailable("draw");
+        output.version = 1; output.size = @sizeOf(abi.GfxOutputInfo);
+        return table_fn(index, output);
+    }
+    pub fn gfxOutputMode(self: *const Context, identity: *const abi.GfxOutputId, index: u32, output: *abi.GfxOutputMode) i32 {
+        const table_fn = self.drawFn("gfx_output_mode") orelse return self.unavailable("draw");
+        output.version = 1; output.size = @sizeOf(abi.GfxOutputMode);
+        return table_fn(identity, index, output);
+    }
+    pub fn gfxOutputEdid(self: *const Context, identity: *const abi.GfxOutputId, index: u32, output: *abi.GfxEdidBlock) i32 {
+        const table_fn = self.drawFn("gfx_output_edid") orelse return self.unavailable("draw");
+        output.version = 1; output.size = @sizeOf(abi.GfxEdidBlock);
+        return table_fn(identity, index, output);
+    }
+    pub fn gfxAtomicTest(self: *const Context, state: *const abi.GfxAtomicState, output: *abi.GfxAtomicResult) i32 {
+        const table_fn = self.drawFn("gfx_atomic_test") orelse return self.unavailable("draw");
+        output.version = 1; output.size = @sizeOf(abi.GfxAtomicResult);
+        return table_fn(state, output);
+    }
+    pub fn gfxAtomicCommit(self: *const Context, state: *const abi.GfxAtomicState, output: *abi.GfxAtomicResult) i32 {
+        const table_fn = self.drawFn("gfx_atomic_commit") orelse return self.unavailable("draw");
+        output.version = 1; output.size = @sizeOf(abi.GfxAtomicResult);
+        return table_fn(state, output);
+    }
+
     pub fn gfxQueueOpen(self: *const Context, config: *const abi.GfxQueueConfig, output: *abi.GfxQueueHandle) i32 {
         const table_fn = self.drawFn("gfx_queue_open") orelse return self.unavailable("draw");
         output.version = 1;

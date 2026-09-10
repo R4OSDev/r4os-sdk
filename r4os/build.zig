@@ -441,6 +441,7 @@ pub const Sdk = struct {
 
     fn addR4MFDriver(self: Sdk, loaded: LoadedR4MF) BuildResult {
         return addR4DWithOptions(self.b, .{
+            .zig_modules = loaded.zig_modules,
             .name = loaded.manifest.name,
             .driver_name = self.manifestMeta(loaded, "r4d.name"),
             .driver_type = self.manifestMeta(loaded, "r4d.type"),
@@ -966,6 +967,7 @@ pub const R4CAppBuildOptions = struct {
 };
 
 pub const R4DOptions = struct {
+    zig_modules: []const ZigModuleBuild = &.{},
     // Modulversion aus module.R4MF; null bei Aufrufern ohne Manifest.
     module_version: ?[]const u8 = null,
     name: []const u8,
@@ -1270,6 +1272,7 @@ pub fn addR4D(b: *std.Build, opts: R4DOptions) BuildResult {
 
 fn addR4DWithOptions(b: *std.Build, opts: R4DOptions) BuildResult {
     const elf = addRawModule(b, .{
+        .zig_modules = opts.zig_modules,
         .name = opts.name,
         .root_source_file = opts.root_source_file,
         .r4os_module = opts.r4os_module,
