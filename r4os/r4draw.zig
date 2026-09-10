@@ -62,6 +62,41 @@ pub const Context = struct {
         return .{ .base = self.base };
     }
 
+    pub fn gfxQueueOpen(self: *const Context, config: *const abi.GfxQueueConfig, output: *abi.GfxQueueHandle) i32 {
+        return self.base.gfxQueueOpen(config, output);
+    }
+    pub fn gfxQueueBackend(self: *const Context, index: u32, output: *abi.GfxBackendBinding) i32 {
+        return self.base.gfxQueueBackend(index, output);
+    }
+
+    pub fn gfxQueueClose(self: *const Context, queue: *const abi.GfxQueueHandle) i32 {
+        return self.base.gfxQueueClose(queue);
+    }
+
+    pub fn gfxQueueSubmit(self: *const Context, queue: *const abi.GfxQueueHandle, submission: *const abi.GfxSubmission, output: *abi.GfxFenceStatus) i32 {
+        return self.base.gfxQueueSubmit(queue, submission, output);
+    }
+
+    pub fn gfxFenceQuery(self: *const Context, fence: *const abi.GfxFence, output: *abi.GfxFenceStatus) i32 {
+        return self.base.gfxFenceQuery(fence, output);
+    }
+
+    pub fn gfxFenceWait(self: *const Context, fence: *const abi.GfxFence, timeout_ticks: u64, wait_for: u32, output: *abi.GfxFenceStatus) i32 {
+        return self.base.gfxFenceWait(fence, timeout_ticks, wait_for, output);
+    }
+
+    pub fn gfxFenceCancel(self: *const Context, fence: *const abi.GfxFence) i32 {
+        return self.base.gfxFenceCancel(fence);
+    }
+
+    pub fn gfxFenceRelease(self: *const Context, fence: *const abi.GfxFence) i32 {
+        return self.base.gfxFenceRelease(fence);
+    }
+
+    pub fn queues(self: *const Context) @import("gfx_queue.zig").Context {
+        return .{ .base = self.base };
+    }
+
     pub fn screenWidth(self: *const Context) u32 {
         return self.base.screenWidth();
     }

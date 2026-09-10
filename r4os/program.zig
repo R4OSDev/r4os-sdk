@@ -64,7 +64,7 @@ pub fn bundleValueFromR4XStart(raw: *const abi.R4XStartContext) ?Bundle {
         // stable table header; tableFn checks the exact size of each slot.
         .sys = resolveGroupTable(abi.R4XStartR4Sys, xs, .r4sys, abi.r4xstart_r4sys_magic, 1, @offsetOf(abi.R4XStartR4Sys, "write") + @sizeOf(usize)),
         .desk = resolveGroupTable(abi.R4XStartR4Desk, xs, .r4desk, abi.r4xstart_r4desk_magic, abi.r4xstart_r4desk_version, abi.r4xstart_r4desk_size),
-        .draw = resolveGroupTable(abi.R4XStartR4Draw, xs, .r4draw, abi.r4xstart_r4draw_magic, abi.r4xstart_r4draw_version, abi.r4xstart_r4draw_size),
+        .draw = resolveGroupTable(abi.R4XStartR4Draw, xs, .r4draw, abi.r4xstart_r4draw_magic, 1, @offsetOf(abi.R4XStartR4Draw, "clear") + @sizeOf(usize)),
         // R4NET tail functions are optional and append-only. Keep older
         // kernels usable; tableFn checks the exact size of every requested
         // slot and netServiceRequest retains its raw-IPC fallback.
@@ -1470,6 +1470,55 @@ pub const Context = struct {
         output.version = 1;
         output.size = @sizeOf(abi.GfxBufferStats);
         return table_fn(output);
+    }
+
+    pub fn gfxQueueOpen(self: *const Context, config: *const abi.GfxQueueConfig, output: *abi.GfxQueueHandle) i32 {
+        const table_fn = self.drawFn("gfx_queue_open") orelse return self.unavailable("draw");
+        output.version = 1;
+        output.size = @sizeOf(abi.GfxQueueHandle);
+        return table_fn(config, output);
+    }
+    pub fn gfxQueueBackend(self: *const Context, index: u32, output: *abi.GfxBackendBinding) i32 {
+        const table_fn = self.drawFn("gfx_queue_backend") orelse return self.unavailable("draw");
+        output.version = 1;
+        output.size = @sizeOf(abi.GfxBackendBinding);
+        return table_fn(index, output);
+    }
+
+    pub fn gfxQueueClose(self: *const Context, queue: *const abi.GfxQueueHandle) i32 {
+        const table_fn = self.drawFn("gfx_queue_close") orelse return self.unavailable("draw");
+        return table_fn(queue);
+    }
+
+    pub fn gfxQueueSubmit(self: *const Context, queue: *const abi.GfxQueueHandle, submission: *const abi.GfxSubmission, output: *abi.GfxFenceStatus) i32 {
+        const table_fn = self.drawFn("gfx_queue_submit") orelse return self.unavailable("draw");
+        output.version = 1;
+        output.size = @sizeOf(abi.GfxFenceStatus);
+        return table_fn(queue, submission, output);
+    }
+
+    pub fn gfxFenceQuery(self: *const Context, fence: *const abi.GfxFence, output: *abi.GfxFenceStatus) i32 {
+        const table_fn = self.drawFn("gfx_fence_query") orelse return self.unavailable("draw");
+        output.version = 1;
+        output.size = @sizeOf(abi.GfxFenceStatus);
+        return table_fn(fence, output);
+    }
+
+    pub fn gfxFenceWait(self: *const Context, fence: *const abi.GfxFence, timeout_ticks: u64, wait_for: u32, output: *abi.GfxFenceStatus) i32 {
+        const table_fn = self.drawFn("gfx_fence_wait") orelse return self.unavailable("draw");
+        output.version = 1;
+        output.size = @sizeOf(abi.GfxFenceStatus);
+        return table_fn(fence, timeout_ticks, wait_for, output);
+    }
+
+    pub fn gfxFenceCancel(self: *const Context, fence: *const abi.GfxFence) i32 {
+        const table_fn = self.drawFn("gfx_fence_cancel") orelse return self.unavailable("draw");
+        return table_fn(fence);
+    }
+
+    pub fn gfxFenceRelease(self: *const Context, fence: *const abi.GfxFence) i32 {
+        const table_fn = self.drawFn("gfx_fence_release") orelse return self.unavailable("draw");
+        return table_fn(fence);
     }
 
     pub fn guiSetTitle(self: *const Context, value: [*:0]const u8) i32 {

@@ -7,8 +7,19 @@ fn gfxMapProbe(ref: *const r4os.abi.GfxBufferHandle, access: u32, offset: u64, b
     out.byte_length = bytes;
     return 1;
 }
+fn gfxWaitProbe(fence: *const r4os.abi.GfxFence, ticks: u64, wait_for: u32, out: *r4os.abi.GfxFenceStatus) callconv(.c) i32 {
+    std.debug.assert(fence.point == 0x100000007 and fence.reset_generation == 0x200000001 and ticks == 0x300000003 and wait_for == 1);
+    std.debug.assert(out.version == 1 and out.size == 80);
+    out.fence = fence.*;
+    return 1;
+}
+fn gfxCompleteProbe(fence: *const r4os.abi.GfxFence, result: u32, quiesced: u32) callconv(.c) i32 {
+    std.debug.assert(fence.point == 0x100000007 and result == 6 and quiesced == 0);
+    return -4;
+}
 test "graphics buffer optional tails preserve 64-bit offsets in Zig and R4D calls" {
     var tables = makeTables(true);
+    tables[2].abi_version = 10; // A new facade must accept an older prefix.
     tables[2].gfx_buffer_map = @intFromPtr(&gfxMapProbe);
     tables[2].size = @offsetOf(r4os.abi.R4XStartR4Draw, "gfx_buffer_map");
     var imports: [3]r4os.abi.R4XStartImport = undefined;
@@ -29,8 +40,25 @@ test "graphics buffer optional tails preserve 64-bit offsets in Zig and R4D call
     const old_context = r4os.r4dev.DriverContext.init(&old_driver);
     try std.testing.expect(old_context.apiCompatible());
     try std.testing.expect(old_context.memory() == null);
+    try std.testing.expect(old_context.graphicsQueue() == null);
     const memory = @import("r4os").driver_memory.Context{ .table = .{ .buffer_map = @intFromPtr(&gfxMapProbe) } };
     try std.testing.expectEqual(@as(i32, 1), memory.bufferMap(&ref, 1, 0x100000003, 0x200000000, &output));
+    const queues = draw.queues();
+    const fence: r4os.abi.GfxFence = .{ .slot = 7, .timeline = 23, .point = 0x100000007, .reset_generation = 0x200000001 };
+    var result: r4os.abi.GfxFenceStatus = .{ .deadline_ns = 123 };
+    tables[2].gfx_fence_wait = @intFromPtr(&gfxWaitProbe);
+    tables[2].size = @offsetOf(r4os.abi.R4XStartR4Draw, "gfx_fence_wait");
+    try std.testing.expectEqual(r4os.abi.err_no_fn, queues.wait(&fence, 0x300000003, 1, &result));
+    try std.testing.expectEqual(@as(u64, 123), result.deadline_ns);
+    tables[2].size += 8;
+    try std.testing.expectEqual(@as(i32, 1), queues.wait(&fence, 0x300000003, 1, &result));
+    var native = r4os.driver_queue.Context{ .table = .{ .complete = @intFromPtr(&gfxCompleteProbe) } };
+    try std.testing.expectEqual(@as(i32, -4), native.complete(&fence, 6, 0));
+    native.table.size = @offsetOf(r4os.abi.GfxDriverQueueApi, "complete");
+    try std.testing.expectEqual(r4os.abi.err_no_fn, native.complete(&fence, 6, 0));
+    try std.testing.expectEqual(@as(usize, 560), @offsetOf(r4os.abi.DriverApi, "gfx_memory_query"));
+    try std.testing.expectEqual(@as(usize, 568), @offsetOf(r4os.abi.DriverApi, "gfx_queue_query"));
+    try std.testing.expectEqual(@as(usize, 576), @sizeOf(r4os.abi.DriverApi));
 }
 
 var now_ticks: u64 = 100;

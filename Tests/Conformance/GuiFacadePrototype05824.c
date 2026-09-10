@@ -3,6 +3,18 @@
 
 #include <r4os/r4os.h>
 #include <r4os/driver_memory.h>
+#include <r4os/driver_queue.h>
+
+static int32_t gfx_wait_probe(const R4GfxFence *fence, uint64_t ticks, uint32_t wait_for, R4GfxFenceStatus *out) {
+    assert(fence->point == UINT64_C(0x100000007) && fence->reset_generation == UINT64_C(0x200000001));
+    assert(ticks == UINT64_C(0x300000003) && wait_for == 1 && out->version == 1 && out->size == 80);
+    out->fence = *fence;
+    return 1;
+}
+static int32_t gfx_complete_probe(const R4GfxFence *fence, uint32_t result, uint32_t quiesced) {
+    assert(fence->point == UINT64_C(0x100000007) && result == 6 && quiesced == 0);
+    return -4;
+}
 
 static int32_t gfx_map_probe(const R4GfxBufferHandle *ref, uint32_t access, uint64_t offset, uint64_t bytes, R4GfxBufferMap *out) {
     assert(ref->generation == 99 && access == 1 && offset == UINT64_C(0x100000003) && bytes == UINT64_C(0x200000000));
@@ -25,6 +37,18 @@ static void gfx_facade_probe(void) {
     assert(r4driver_memory_buffer_map(&memory, &ref, 1, UINT64_C(0x100000003), UINT64_C(0x200000000), &output) == 1);
     memory.size = offsetof(R4GfxDriverMemoryApi, buffer_map);
     assert(r4driver_memory_buffer_map(&memory, &ref, 1, 0, 0, &output) == R4OS_ERR_NO_FN);
+    R4GfxFence fence = {.slot = 7, .timeline = 23, .point = UINT64_C(0x100000007), .reset_generation = UINT64_C(0x200000001)};
+    R4GfxFenceStatus result = {.deadline_ns = 123};
+    table.gfx_fence_wait = (uintptr_t)gfx_wait_probe;
+    table.size = offsetof(R4XStartR4Draw, gfx_fence_wait);
+    assert(r4draw_gfx_fence_wait(&draw, &fence, UINT64_C(0x300000003), 1, &result) == R4OS_ERR_NO_FN);
+    assert(result.deadline_ns == 123);
+    table.size += sizeof(uintptr_t);
+    assert(r4draw_gfx_fence_wait(&draw, &fence, UINT64_C(0x300000003), 1, &result) == 1);
+    R4GfxDriverQueueApi native = {.version = 1, .size = sizeof(native), .complete = (uintptr_t)gfx_complete_probe};
+    assert(r4driver_queue_complete(&native, &fence, 6, 0) == -4);
+    native.size = offsetof(R4GfxDriverQueueApi, complete);
+    assert(r4driver_queue_complete(&native, &fence, 6, 0) == R4OS_ERR_NO_FN);
 }
 
 static uint64_t now_ticks = 100u;
@@ -182,6 +206,17 @@ int main(void) {
     R4XStartR4Desk desk;
     R4XStartR4Draw draw;
     R4App app = make_app(&sys, &desk, &draw, 1);
+    draw.magic = R4XSTART_R4DRAW_MAGIC;
+    draw.abi_version = 10;
+    draw.size = offsetof(R4XStartR4Draw, gfx_queue_open);
+    const R4XStartImport draw_import = {.group_id = R4L_GROUP_R4DRAW, .flags = R4XSTART_IMPORT_FLAG_GROUP_INTERFACE, .table = (uintptr_t)&draw};
+    const R4XStartContext old_start = {.magic = R4XSTART_MAGIC, .abi_major = R4XSTART_ABI_MAJOR, .size = sizeof(R4XStartContext), .flags = R4XSTART_FLAG_IMPORTS_VALID, .imports = (uintptr_t)&draw_import, .import_count = 1};
+    R4Draw old_draw;
+    assert(r4draw_init(&old_start, &old_draw) == R4OS_OK);
+    R4GfxQueueConfig old_config = {0};
+    R4GfxQueueHandle untouched = {.timeline = 77};
+    assert(r4draw_gfx_queue_open(&old_draw, &old_config, &untouched) == R4OS_ERR_NO_FN && untouched.timeline == 77);
+    draw.size = R4XSTART_R4DRAW_SIZE;
     R4Timer timers[1] = {{0}};
     R4Window window;
     assert(r4_window_open(&app, timers, 1u, &window));
