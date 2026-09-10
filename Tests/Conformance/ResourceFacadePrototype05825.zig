@@ -40,8 +40,17 @@ fn driverThreadStats(output: *r4os.abi.DriverThreadStats) callconv(.c) i32 {
     output.* = .{ .owner_epoch = 0x100000000001, .records = 0x100000000003, .waiters = 2, .closing = 1 };
     return 0;
 }
+fn driverThreadAbort(result: i32) callconv(.c) i32 {
+    std.debug.assert(result == -76001);
+    return r4os.abi.driver_thread_error_busy;
+}
 fn driverThreadQuery(output: *r4os.abi.DriverThreadApi) callconv(.c) i32 {
     output.* = .{ .start = @intFromPtr(&driverThreadStart), .stop = @intFromPtr(&driverThreadStop), .join = @intFromPtr(&driverThreadJoin), .release = @intFromPtr(&driverThreadRelease), .status = @intFromPtr(&driverThreadStatus), .current = @intFromPtr(&driverThreadCurrent), .sleep_ticks = @intFromPtr(&driverThreadSleep), .stats = @intFromPtr(&driverThreadStats) };
+    return 0;
+}
+fn driverThreadLegacyQuery(output: *r4os.abi.DriverThreadApi) callconv(.c) i32 {
+    var legacy: r4os.abi.DriverThreadApi = .{ .size = r4os.abi.driver_thread_api_min_bytes, .current = @intFromPtr(&driverThreadCurrent) };
+    @memcpy(@as([*]u8, @ptrCast(output))[0..r4os.abi.driver_thread_api_min_bytes], std.mem.asBytes(&legacy)[0..r4os.abi.driver_thread_api_min_bytes]);
     return 0;
 }
 test "driver threads preserve v31 prefix, full identities, optional callbacks and provider errors" {
@@ -60,6 +69,17 @@ test "driver threads preserve v31 prefix, full identities, optional callbacks an
     try std.testing.expect(driver.threads() == null);
     api.thread_query = driverThreadQuery;
     var service = driver.threads() orelse return error.NoThreads;
+    try std.testing.expect(!service.canAbort());
+    try std.testing.expectEqual(a.err_no_fn, service.abortCurrent(-76001));
+    service.table.abort_current = @intFromPtr(&driverThreadAbort);
+    try std.testing.expect(service.canAbort());
+    try std.testing.expectEqual(a.driver_thread_error_busy, service.abortCurrent(-76001));
+    service.table.size = a.driver_thread_api_min_bytes;
+    try std.testing.expect(!service.canAbort());
+    var rejected_handle: u64 = 99;
+    try std.testing.expectEqual(a.err_no_fn, service.start(driverThreadHandler, 0, a.driver_thread_flag_abortable, &rejected_handle));
+    try std.testing.expectEqual(@as(u64, 0), rejected_handle);
+    service.table.size = @sizeOf(a.DriverThreadApi);
     var handle: u64 = 99;
     try std.testing.expectEqual(@as(i32, 0), service.start(driverThreadHandler, 0x100000000037, a.driver_thread_flag_parallel, &handle));
     try std.testing.expectEqual(driver_thread_handle, handle);
@@ -86,6 +106,11 @@ test "driver threads preserve v31 prefix, full identities, optional callbacks an
     try std.testing.expectEqual(a.err_no_fn, service.start(driverThreadHandler, 0, 0, &handle));
     try std.testing.expectEqual(@as(u64, 0), handle);
     try std.testing.expectEqual(@as(u64, 0), service.current());
+    api.thread_query = driverThreadLegacyQuery;
+    const legacy = driver.threads() orelse return error.LegacyThreadsRejected;
+    try std.testing.expectEqual(driver_thread_handle, legacy.current());
+    try std.testing.expect(!legacy.canAbort());
+    try std.testing.expectEqual(a.err_no_fn, legacy.abortCurrent(-76001));
 }
 
 const semaphore_handle: u64 = 0x1000000000079;

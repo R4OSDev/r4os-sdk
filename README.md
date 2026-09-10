@@ -317,3 +317,18 @@ Zero timeout tries once; UINT64_MAX requires a real permit. Close/stop never
 substitutes for successful acquisition. The same resource facade fixture
 checks full-width counters/handles/timeouts and optional table boundaries in
 Zig and C; callers keep ownership on busy, timeout and failed destruction.
+
+The version-1 DriverThreadApi now has an optional `abort_current` slot at
+offset 72, total 80 bytes. `DriverContext.threads()` continues to accept the
+complete old 72-byte prefix. `canAbort()` checks the tail; an abortable start
+is rejected before dispatch if it is absent. The C facade follows the same
+size/slot checks. Flag 2 opts a dedicated Task into synchronous self-abort;
+flag 4 is status-only and cannot be requested at creation.
+
+`abortCurrent(negative_result)` returns only on refusal. An accepted call
+bypasses module defers and returns to the kernel's enclosing Task boundary.
+The owner must quiesce peers and explicitly recover retained resources.
+Calls from Init/Work, non-abortable Tasks, IRQ or kernel critical sections
+are not admitted; this does not provide remote termination or an exception
+handler. DriverApi remains version 33, 632 bytes; existing service offsets
+and module import names are unchanged.

@@ -409,7 +409,7 @@ pub const Context = struct {
         if (self.api.version < 32 or self.api.size < @offsetOf(abi.DriverApi, "thread_query") + 8) return null;
         const query = self.api.thread_query orelse return null;
         var table: abi.DriverThreadApi = .{};
-        if (query(&table) != 0 or table.version != 1 or table.size < @sizeOf(abi.DriverThreadApi)) return null;
+        if (query(&table) != 0 or table.version != 1 or table.size < abi.driver_thread_api_min_bytes) return null;
         return .{ .table = table };
     }
 

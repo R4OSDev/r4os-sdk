@@ -8,10 +8,20 @@
 typedef int32_t (*R4DriverThreadHandler)(uintptr_t context);
 #define R4DRIVER_THREAD_HAS(table, member) ((table) != 0 && (table)->version == 1 && (table)->size >= offsetof(R4DriverThreadApi, member) + sizeof(uint64_t) && (table)->member != 0)
 
+/* Synchronous self-abort of an explicitly abortable dedicated callback.
+ * Accepted negative results do not return. Refusals return normally; no
+ * foreign Task or kernel owner is unwound. Module defers are bypassed. */
+static inline int32_t r4driver_thread_abort_current(const R4DriverThreadApi *table, int32_t result) {
+    if (!R4DRIVER_THREAD_HAS(table, abort_current)) return R4OS_ERR_NO_FN;
+    typedef int32_t (*Callback)(int32_t);
+    return ((Callback)(uintptr_t)table->abort_current)(result);
+}
+
 static inline int32_t r4driver_thread_start(const R4DriverThreadApi *table, R4DriverThreadHandler handler, uintptr_t context, uint32_t flags, uint64_t *handle) {
     if (handle == 0) return R4OS_DRIVER_THREAD_ERROR_INVALID;
     *handle = 0;
     if (!R4DRIVER_THREAD_HAS(table, start)) return R4OS_ERR_NO_FN;
+    if ((flags & R4OS_DRIVER_THREAD_FLAG_ABORTABLE) && !R4DRIVER_THREAD_HAS(table, abort_current)) return R4OS_ERR_NO_FN;
     const R4DriverThreadRequest request = { .version = 1, .size = sizeof(request), .handler = (uint64_t)(uintptr_t)handler, .context = context, .flags = flags };
     typedef int32_t (*Callback)(const R4DriverThreadRequest *, uint64_t *);
     return ((Callback)(uintptr_t)table->start)(&request, handle);

@@ -8,6 +8,7 @@ pub const Context = struct {
     pub fn start(self: *const Context, handler: Handler, context: usize, flags: u32, handle: *u64) i32 {
         handle.* = 0;
         if (!self.has("start")) return a.err_no_fn;
+        if (flags & a.driver_thread_flag_abortable != 0 and !self.canAbort()) return a.err_no_fn;
         const request: a.DriverThreadRequest = .{ .handler = @intFromPtr(handler), .context = context, .flags = flags };
         const callback: *const fn (*const a.DriverThreadRequest, *u64) callconv(.c) i32 = @ptrFromInt(self.table.start);
         return callback(&request, handle);
@@ -47,6 +48,17 @@ pub const Context = struct {
         if (!self.has("stats")) return a.err_no_fn;
         const callback: *const fn (*a.DriverThreadStats) callconv(.c) i32 = @ptrFromInt(self.table.stats);
         return callback(output);
+    }
+    pub fn canAbort(self: *const Context) bool {
+        return self.has("abort_current");
+    }
+    /// Only a negative result in the current abortable dedicated Task is
+    /// accepted. Success does not return; refusals keep the callback running.
+    /// Module defers are bypassed, so resource recovery belongs to its owner.
+    pub fn abortCurrent(self: *const Context, result: i32) i32 {
+        if (!self.has("abort_current")) return a.err_no_fn;
+        const callback: *const fn (i32) callconv(.c) i32 = @ptrFromInt(self.table.abort_current);
+        return callback(result);
     }
     fn has(self: *const Context, comptime field: []const u8) bool {
         return self.table.version == 1 and self.table.size >= @offsetOf(a.DriverThreadApi, field) + 8 and @field(self.table, field) != 0;

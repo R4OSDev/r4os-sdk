@@ -52,6 +52,7 @@ static int32_t driver_thread_status_probe(uint64_t handle, R4DriverThreadStatus 
     return 0;
 }
 static uint64_t driver_thread_current_probe(void) { return UINT64_C(0x200000000079); }
+static int32_t driver_thread_abort_probe(int32_t result) { return result == -76001 ? R4OS_DRIVER_THREAD_ERROR_BUSY : -77; }
 static int32_t driver_thread_sleep_probe(uint64_t ticks) { return ticks == UINT64_MAX ? R4OS_DRIVER_THREAD_ERROR_CANCELLED : -77; }
 static int32_t driver_thread_stats_probe(R4DriverThreadStats *output) {
     *output = (R4DriverThreadStats){ .version = 1, .size = sizeof(*output), .records = UINT64_C(0x100000000003), .closing = 1 };
@@ -61,6 +62,13 @@ static int driver_thread_checks(void) {
     R4DriverThreadApi api = { .version = 1, .size = sizeof(api), .start = (uint64_t)(uintptr_t)&driver_thread_start_probe, .stop = (uint64_t)(uintptr_t)&driver_thread_stop_probe, .join = (uint64_t)(uintptr_t)&driver_thread_join_probe, .release = (uint64_t)(uintptr_t)&driver_thread_release_probe, .status = (uint64_t)(uintptr_t)&driver_thread_status_probe, .current = (uint64_t)(uintptr_t)&driver_thread_current_probe, .sleep_ticks = (uint64_t)(uintptr_t)&driver_thread_sleep_probe, .stats = (uint64_t)(uintptr_t)&driver_thread_stats_probe };
     uint64_t handle = 99;
     int32_t result = 123;
+    if (r4driver_thread_abort_current(&api, -76001) != R4OS_ERR_NO_FN) return 1;
+    api.abort_current = (uint64_t)(uintptr_t)&driver_thread_abort_probe;
+    if (r4driver_thread_abort_current(&api, -76001) != R4OS_DRIVER_THREAD_ERROR_BUSY) return 1;
+    api.size = R4OS_DRIVER_THREAD_API_MIN_BYTES;
+    if (r4driver_thread_abort_current(&api, -76001) != R4OS_ERR_NO_FN) return 1;
+    if (r4driver_thread_start(&api, driver_thread_handler, 0, R4OS_DRIVER_THREAD_FLAG_ABORTABLE, &handle) != R4OS_ERR_NO_FN || handle != 0) return 1;
+    api.size = sizeof(api);
     R4DriverThreadStatus status = { .version = 1, .size = sizeof(status) };
     R4DriverThreadStats stats = { .version = 1, .size = sizeof(stats) };
     if (r4driver_thread_start(&api, driver_thread_handler, UINT64_C(0x100000000037), R4OS_DRIVER_THREAD_FLAG_PARALLEL, &handle) != 0 || handle != UINT64_C(0x200000000079)) return 1;
