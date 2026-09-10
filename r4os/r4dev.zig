@@ -18,6 +18,7 @@ pub const DriverContext = driver.Context;
 pub const DriverResourceContext = @import("driver_resources.zig").Context;
 pub const DriverHeapContext = @import("driver_heap.zig").Context;
 pub const DriverThreadContext = @import("driver_threads.zig").Context;
+pub const DriverSemaphoreContext = @import("driver_semaphores.zig").Context;
 pub const SharedDmaBuffer = driver.SharedDmaBuffer;
 pub const AudioOutputBackend = driver.AudioOutputBackend;
 pub const ProtocolContext = protocol.Context;

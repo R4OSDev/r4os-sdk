@@ -413,6 +413,14 @@ pub const Context = struct {
         return .{ .table = table };
     }
 
+    pub fn semaphores(self: *const Context) ?@import("driver_semaphores.zig").Context {
+        if (self.api.version < 33 or self.api.size < @offsetOf(abi.DriverApi, "semaphore_query") + 8) return null;
+        const query = self.api.semaphore_query orelse return null;
+        var table: abi.DriverSemaphoreApi = .{};
+        if (query(&table) != 0 or table.version != 1 or table.size < @sizeOf(abi.DriverSemaphoreApi)) return null;
+        return .{ .table = table };
+    }
+
     pub fn waitTicks(self: *const Context, ticks: u64) void {
         self.api.wait_ticks(ticks);
     }

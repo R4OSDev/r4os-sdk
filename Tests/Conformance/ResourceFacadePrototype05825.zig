@@ -47,7 +47,7 @@ fn driverThreadQuery(output: *r4os.abi.DriverThreadApi) callconv(.c) i32 {
 test "driver threads preserve v31 prefix, full identities, optional callbacks and provider errors" {
     const a = r4os.abi;
     try std.testing.expectEqual(@as(usize, 616), @offsetOf(a.DriverApi, "thread_query"));
-    try std.testing.expectEqual(@as(usize, 624), @sizeOf(a.DriverApi));
+    try std.testing.expectEqual(@as(usize, 624), @offsetOf(a.DriverApi, "thread_query") + @sizeOf(u64));
     var api: a.DriverApi = undefined;
     api.version = 31;
     api.size = 616;
@@ -86,6 +86,83 @@ test "driver threads preserve v31 prefix, full identities, optional callbacks an
     try std.testing.expectEqual(a.err_no_fn, service.start(driverThreadHandler, 0, 0, &handle));
     try std.testing.expectEqual(@as(u64, 0), handle);
     try std.testing.expectEqual(@as(u64, 0), service.current());
+}
+
+const semaphore_handle: u64 = 0x1000000000079;
+fn semaphoreCreate(initial: u32, maximum: u32, handle: *u64) callconv(.c) i32 {
+    std.debug.assert(initial == 0x80000001 and maximum == 0xffffffff and handle.* == 0);
+    handle.* = semaphore_handle;
+    return 0;
+}
+fn semaphoreAcquire(handle: u64, ticks: u64) callconv(.c) i32 {
+    std.debug.assert(handle == semaphore_handle and ticks == std.math.maxInt(u64));
+    return r4os.abi.driver_semaphore_error_timeout;
+}
+fn semaphoreRelease(handle: u64) callconv(.c) i32 {
+    std.debug.assert(handle == semaphore_handle);
+    return r4os.abi.driver_semaphore_error_overflow;
+}
+fn semaphoreDestroy(handle: u64) callconv(.c) i32 {
+    std.debug.assert(handle == semaphore_handle);
+    return r4os.abi.driver_semaphore_error_busy;
+}
+fn semaphoreStatus(handle: u64, output: *r4os.abi.DriverSemaphoreStatus) callconv(.c) i32 {
+    std.debug.assert(handle == semaphore_handle);
+    output.* = .{ .handle = handle, .owner_epoch = 0x200000000079, .maximum = 0xffffffff, .queued_waiters = 3, .active_acquires = 4 };
+    return 0;
+}
+fn semaphoreStats(output: *r4os.abi.DriverSemaphoreStats) callconv(.c) i32 {
+    output.* = .{ .records = 0x300000000079, .closing = 1 };
+    return 0;
+}
+fn semaphoreFlags() callconv(.c) u32 {
+    return r4os.abi.driver_semaphore_context_irq;
+}
+fn semaphoreQuery(output: *r4os.abi.DriverSemaphoreApi) callconv(.c) i32 {
+    output.* = .{ .create = @intFromPtr(&semaphoreCreate), .acquire = @intFromPtr(&semaphoreAcquire), .release = @intFromPtr(&semaphoreRelease), .destroy = @intFromPtr(&semaphoreDestroy), .status = @intFromPtr(&semaphoreStatus), .stats = @intFromPtr(&semaphoreStats), .context_flags = @intFromPtr(&semaphoreFlags) };
+    return 0;
+}
+test "driver semaphores preserve v32 prefix, full counters and deadlines, and failed operation ownership" {
+    const a = r4os.abi;
+    try std.testing.expectEqual(@as(usize, 624), @offsetOf(a.DriverApi, "semaphore_query"));
+    try std.testing.expectEqual(@as(usize, 632), @sizeOf(a.DriverApi));
+    var api: a.DriverApi = undefined;
+    api.version = 32;
+    api.size = 624;
+    const driver = r4os.r4dev.DriverContext.init(&api);
+    try std.testing.expect(driver.semaphores() == null);
+    api.version = 33;
+    try std.testing.expect(driver.semaphores() == null);
+    api.size = 632;
+    api.semaphore_query = null;
+    try std.testing.expect(driver.semaphores() == null);
+    api.semaphore_query = semaphoreQuery;
+    var sem = driver.semaphores() orelse return error.NoSemaphores;
+    var handle: u64 = 79;
+    try std.testing.expectEqual(@as(i32, 0), sem.create(0x80000001, 0xffffffff, &handle));
+    try std.testing.expectEqual(semaphore_handle, handle);
+    try std.testing.expectEqual(a.driver_semaphore_error_timeout, sem.acquire(handle, std.math.maxInt(u64)));
+    try std.testing.expectEqual(a.driver_semaphore_error_overflow, sem.release(handle));
+    try std.testing.expectEqual(a.driver_semaphore_error_busy, sem.destroy(handle));
+    var status: a.DriverSemaphoreStatus = .{};
+    try std.testing.expectEqual(@as(i32, 0), sem.status(handle, &status));
+    try std.testing.expectEqual(@as(u64, 0x200000000079), status.owner_epoch);
+    try std.testing.expectEqual(@as(u32, 0xffffffff), status.maximum);
+    var stats: a.DriverSemaphoreStats = .{};
+    try std.testing.expectEqual(@as(i32, 0), sem.stats(&stats));
+    try std.testing.expectEqual(@as(u64, 0x300000000079), stats.records);
+    try std.testing.expectEqual(a.driver_semaphore_context_irq, sem.contextFlags());
+    sem.table.size = @offsetOf(a.DriverSemaphoreApi, "destroy");
+    try std.testing.expectEqual(a.driver_semaphore_error_overflow, sem.release(handle));
+    try std.testing.expectEqual(a.err_no_fn, sem.destroy(handle));
+    try std.testing.expectEqual(@as(u32, 0), sem.contextFlags());
+    sem.table.version = 2;
+    try std.testing.expectEqual(a.err_no_fn, sem.create(0, 1, &handle));
+    try std.testing.expectEqual(@as(u64, 0), handle);
+    sem.table = .{};
+    try std.testing.expectEqual(a.err_no_fn, sem.acquire(semaphore_handle, 0));
+    try std.testing.expectEqual(a.err_no_fn, sem.status(semaphore_handle, &status));
+    try std.testing.expectEqual(a.err_no_fn, sem.stats(&stats));
 }
 
 fn driverClockProbe(out: *r4os.abi.MonotonicClockInfo) callconv(.c) i32 {

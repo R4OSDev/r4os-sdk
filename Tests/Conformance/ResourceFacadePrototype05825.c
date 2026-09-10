@@ -2,6 +2,37 @@
 #include <r4os/driver_resources.h>
 #include <r4os/driver_heap.h>
 #include <r4os/driver_threads.h>
+#include <r4os/driver_semaphores.h>
+
+static int32_t semaphore_create_probe(uint32_t initial, uint32_t maximum, uint64_t *output) {
+    if (initial != UINT32_C(0x80000001) || maximum != UINT32_MAX || *output != 0) return -77;
+    *output = UINT64_C(0x100000000079); return 0;
+}
+static int32_t semaphore_acquire_probe(uint64_t handle, uint64_t ticks) { return handle == UINT64_C(0x100000000079) && ticks == UINT64_MAX ? R4OS_DRIVER_SEMAPHORE_ERROR_TIMEOUT : -77; }
+static int32_t semaphore_release_probe(uint64_t handle) { return handle == UINT64_C(0x100000000079) ? R4OS_DRIVER_SEMAPHORE_ERROR_OVERFLOW : -77; }
+static int32_t semaphore_destroy_probe(uint64_t handle) { return handle == UINT64_C(0x100000000079) ? R4OS_DRIVER_SEMAPHORE_ERROR_BUSY : -77; }
+static int32_t semaphore_status_probe(uint64_t handle, R4DriverSemaphoreStatus *output) {
+    if (handle != UINT64_C(0x100000000079)) return -77;
+    *output = (R4DriverSemaphoreStatus){ .version = 1, .size = sizeof(*output), .handle = handle, .owner_epoch = UINT64_C(0x200000000079), .maximum = UINT32_MAX, .queued_waiters = 3, .active_acquires = 4 }; return 0;
+}
+static int32_t semaphore_stats_probe(R4DriverSemaphoreStats *output) { *output = (R4DriverSemaphoreStats){ .version = 1, .size = sizeof(*output), .records = UINT64_C(0x300000000079), .closing = 1 }; return 0; }
+static uint32_t semaphore_context_probe(void) { return R4OS_DRIVER_SEMAPHORE_CONTEXT_IRQ; }
+static int semaphore_checks(void) {
+    R4DriverSemaphoreApi api = { .version = 1, .size = sizeof(api), .create = (uint64_t)(uintptr_t)&semaphore_create_probe, .acquire = (uint64_t)(uintptr_t)&semaphore_acquire_probe, .release = (uint64_t)(uintptr_t)&semaphore_release_probe, .destroy = (uint64_t)(uintptr_t)&semaphore_destroy_probe, .status = (uint64_t)(uintptr_t)&semaphore_status_probe, .stats = (uint64_t)(uintptr_t)&semaphore_stats_probe, .context_flags = (uint64_t)(uintptr_t)&semaphore_context_probe };
+    uint64_t handle = 79;
+    if (r4driver_semaphore_create(&api, UINT32_C(0x80000001), UINT32_MAX, &handle) != 0 || handle != UINT64_C(0x100000000079)) return 1;
+    if (r4driver_semaphore_acquire(&api, handle, UINT64_MAX) != R4OS_DRIVER_SEMAPHORE_ERROR_TIMEOUT || r4driver_semaphore_release(&api, handle) != R4OS_DRIVER_SEMAPHORE_ERROR_OVERFLOW || r4driver_semaphore_destroy(&api, handle) != R4OS_DRIVER_SEMAPHORE_ERROR_BUSY) return 2;
+    R4DriverSemaphoreStatus status = {0}; R4DriverSemaphoreStats stats = {0};
+    if (r4driver_semaphore_status(&api, handle, &status) != 0 || status.owner_epoch != UINT64_C(0x200000000079) || status.maximum != UINT32_MAX || r4driver_semaphore_stats(&api, &stats) != 0 || stats.records != UINT64_C(0x300000000079) || r4driver_semaphore_context_flags(&api) != R4OS_DRIVER_SEMAPHORE_CONTEXT_IRQ) return 3;
+    if (r4driver_semaphore_create(&api, 0, 1, 0) != R4OS_DRIVER_SEMAPHORE_ERROR_INVALID || r4driver_semaphore_status(&api, handle, 0) != R4OS_DRIVER_SEMAPHORE_ERROR_INVALID || r4driver_semaphore_stats(&api, 0) != R4OS_DRIVER_SEMAPHORE_ERROR_INVALID) return 4;
+    api.size = offsetof(R4DriverSemaphoreApi, destroy);
+    if (r4driver_semaphore_destroy(&api, handle) != R4OS_ERR_NO_FN || r4driver_semaphore_context_flags(&api) != 0 || r4driver_semaphore_release(&api, handle) != R4OS_DRIVER_SEMAPHORE_ERROR_OVERFLOW) return 5;
+    api.version = 2;
+    if (r4driver_semaphore_create(&api, 0, 1, &handle) != R4OS_ERR_NO_FN || handle != 0) return 6;
+    api = (R4DriverSemaphoreApi){ .version = 1, .size = sizeof(api) };
+    if (r4driver_semaphore_acquire(&api, 1, 0) != R4OS_ERR_NO_FN || r4driver_semaphore_status(&api, 1, &status) != R4OS_ERR_NO_FN || r4driver_semaphore_stats(&api, &stats) != R4OS_ERR_NO_FN || r4driver_semaphore_release(0, 1) != R4OS_ERR_NO_FN) return 7;
+    return 0;
+}
 
 static int32_t driver_thread_handler(uintptr_t value) { return value == UINT64_C(0x100000000037) ? 79 : -1; }
 static int32_t driver_thread_start_probe(const R4DriverThreadRequest *input, uint64_t *output) {
@@ -199,6 +230,7 @@ static void init_app(R4App *app, R4XStartR4Sys *table, R4XStartR4Desk *desk) {
 }
 
 int main(void) {
+    if (semaphore_checks() != 0) return 82;
     if (driver_heap_checks() != 0) return 80;
     if (driver_thread_checks() != 0) return 81;
     if (driver_resource_checks() != 0) return 79;

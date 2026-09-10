@@ -298,3 +298,11 @@ All slots are checked by version, size and availability. Handles, context and
 timeout values keep their full 64-bit width. Timeout/cancellation retains the
 target; completed callbacks still require successful task/stack release.
 The ordinary resource-facade conformance fixture covers both Zig and C.
+
+DriverApi33 is negotiated through `DriverContext.semaphores()`.
+`DriverSemaphoreContext` and `r4os/driver_semaphores.h` provide typed create,
+acquire, single release, destroy, snapshots and current execution flags.
+Zero timeout tries once; UINT64_MAX requires a real permit. Close/stop never
+substitutes for successful acquisition. The same resource facade fixture
+checks full-width counters/handles/timeouts and optional table boundaries in
+Zig and C; callers keep ownership on busy, timeout and failed destruction.
