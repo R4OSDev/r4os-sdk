@@ -5,6 +5,15 @@
 #include <r4os/driver_memory.h>
 #include <r4os/driver_queue.h>
 #include <r4os/driver_outputs.h>
+#include <r4os/driver_display.h>
+
+static int32_t display_transition_probe(uint64_t generation, uint32_t operation, R4GfxNativeState *output) {
+    assert(generation == UINT64_C(0x100000007) && operation == 2);
+    output->generation = generation + 1; output->outcome = 3; output->retained = 1; return 1;
+}
+static int32_t display_schedule_probe(const R4GfxBackendBinding *binding) {
+    assert(binding->reset_generation == UINT64_C(0x30000000b)); return -4;
+}
 
 static int32_t output_test_probe(const R4GfxAtomicState *state, R4GfxAtomicResult *out) {
     assert(state->topology_revision == UINT64_C(0x100000007) && state->assignments[7].output.connection_generation == UINT64_C(0x200000009));
@@ -72,6 +81,17 @@ static void gfx_facade_probe(void) {
     assert(r4driver_output_publish(&output_driver, &publication, &identity) == 1 && identity.connection_generation == UINT64_C(0x40000000d));
     output_driver.size = offsetof(R4GfxDriverOutputApi, publish);
     assert(r4driver_output_publish(&output_driver, &publication, &identity) == R4OS_ERR_NO_FN && identity.connection_generation == UINT64_C(0x40000000d));
+    R4GfxDriverDisplayApi display = {.version = 1, .size = sizeof(display), .transition = (uintptr_t)display_transition_probe, .schedule = (uintptr_t)display_schedule_probe};
+    R4GfxNativeState outcome = {0};
+    assert(r4driver_display_transition(&display, UINT64_C(0x100000007), 2, &outcome) == 1);
+    assert(outcome.generation == UINT64_C(0x100000008) && outcome.outcome == 3 && outcome.retained == 1);
+    R4GfxBackendBinding binding = {.reset_generation = UINT64_C(0x30000000b)};
+    assert(r4driver_display_schedule(&display, &binding) == -4);
+    display.size = offsetof(R4GfxDriverDisplayApi, schedule);
+    assert(r4driver_display_schedule(&display, &binding) == R4OS_ERR_NO_FN);
+    display.size = offsetof(R4GfxDriverDisplayApi, transition);
+    assert(r4driver_display_transition(&display, 0, 0, &outcome) == R4OS_ERR_NO_FN);
+    assert(outcome.generation == UINT64_C(0x100000008) && outcome.retained == 1);
 }
 
 static uint64_t now_ticks = 100u;

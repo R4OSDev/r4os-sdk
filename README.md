@@ -280,3 +280,13 @@ Zig R4D manifests may declare compiled ZIG_MODULE helpers as R4X already do;
 this adds no runtime imports or application entry/class to drivers.
 Thin owner launchers can share Tools/BuildModule.ps1 through their configured
 SDK_ROOT; it resolves dependency forks and forwards an explicit argument array.
+
+DriverApi28 retains the complete v27/584-byte prefix and appends the optional
+`graphicsDisplay()` query at offset 584 (total 592 bytes). The Zig
+`driver_display` helper and C `r4os/driver_display.h` negotiate a 40-byte table
+for boot geometry, owner-bound prepare/commit/abort/restore, and an IRQ-safe
+coalesced notification of the existing graphics worker. A handled transition
+can report output-lost with retained ownership; callers must inspect outcome
+and the resulting generation. Device access 4 is physical backing residency,
+not GPU-VA or data-access permission. Display upload operation 2 belongs only
+to the kernel's bound native source queue and never implies visible VBlank.

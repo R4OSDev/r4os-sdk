@@ -26,6 +26,7 @@ pub const gfx_queue = @import("r4os/gfx_queue.zig");
 pub const driver_memory = @import("r4os/driver_memory.zig");
 pub const driver_queue = @import("r4os/driver_queue.zig");
 pub const driver_outputs = @import("r4os/driver_outputs.zig");
+pub const driver_display = @import("r4os/driver_display.zig");
 pub const app_resources = @import("r4os/app_resources.zig");
 pub const app_services = @import("r4os/app_services.zig");
 pub const app_tray = @import("r4os/app_tray.zig");

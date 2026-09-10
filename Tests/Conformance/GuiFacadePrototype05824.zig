@@ -59,7 +59,8 @@ test "graphics buffer optional tails preserve 64-bit offsets in Zig and R4D call
     try std.testing.expectEqual(@as(usize, 560), @offsetOf(r4os.abi.DriverApi, "gfx_memory_query"));
     try std.testing.expectEqual(@as(usize, 568), @offsetOf(r4os.abi.DriverApi, "gfx_queue_query"));
     try std.testing.expectEqual(@as(usize, 576), @offsetOf(r4os.abi.DriverApi, "gfx_output_query"));
-    try std.testing.expectEqual(@as(usize, 584), @sizeOf(r4os.abi.DriverApi));
+    try std.testing.expectEqual(@as(usize, 584), @offsetOf(r4os.abi.DriverApi, "gfx_display_query"));
+    try std.testing.expectEqual(@as(usize, 592), @sizeOf(r4os.abi.DriverApi));
 }
 
 fn outputTestProbe(state: *const r4os.abi.GfxAtomicState, out: *r4os.abi.GfxAtomicResult) callconv(.c) i32 {
@@ -72,6 +73,15 @@ fn outputPublishProbe(publication: *const r4os.abi.GfxOutputPublication, out: *r
     std.debug.assert(publication.info.edid_bytes == 128 and publication.edid[127] == 0x79);
     out.* = .{ .adapter_id = 3, .connector_id = 17, .device_generation = 0x30000000b, .connection_generation = 0x40000000d };
     return 1;
+}
+fn displayTransitionProbe(generation: u64, operation: u32, output: *r4os.abi.GfxNativeState) callconv(.c) i32 {
+    std.debug.assert(generation == 0x100000007 and operation == 2);
+    output.generation = generation + 1; output.outcome = 3; output.retained = 1;
+    return 1;
+}
+fn displayScheduleProbe(binding: *const r4os.abi.GfxBackendBinding) callconv(.c) i32 {
+    std.debug.assert(binding.reset_generation == 0x30000000b);
+    return -4;
 }
 test "old display and driver prefixes hide output tails while C/Zig preserve receiver generations" {
     const a = r4os.abi;
@@ -102,6 +112,19 @@ test "old display and driver prefixes hide output tails while C/Zig preserve rec
     native.table.size = @offsetOf(a.GfxDriverOutputApi, "publish");
     try std.testing.expectEqual(a.err_no_fn, native.publish(&publication, &identity));
     try std.testing.expectEqual(@as(u64, 0x40000000d), identity.connection_generation);
+    old_driver.version = 27; old_driver.size = 584;
+    try std.testing.expect(r4os.r4dev.DriverContext.init(&old_driver).graphicsDisplay() == null);
+    var display = r4os.driver_display.Context{ .table = .{ .transition = @intFromPtr(&displayTransitionProbe), .schedule = @intFromPtr(&displayScheduleProbe) } };
+    var outcome = a.GfxNativeState{};
+    try std.testing.expectEqual(@as(i32, 1), display.transition(0x100000007, 2, &outcome));
+    try std.testing.expect(outcome.generation == 0x100000008 and outcome.outcome == 3 and outcome.retained == 1);
+    const binding = a.GfxBackendBinding{ .reset_generation = 0x30000000b };
+    try std.testing.expectEqual(@as(i32, -4), display.schedule(&binding));
+    display.table.size = @offsetOf(a.GfxDriverDisplayApi, "schedule");
+    try std.testing.expectEqual(a.err_no_fn, display.schedule(&binding));
+    display.table.size = @offsetOf(a.GfxDriverDisplayApi, "transition");
+    try std.testing.expectEqual(a.err_no_fn, display.transition(0, 0, &outcome));
+    try std.testing.expect(outcome.generation == 0x100000008 and outcome.retained == 1);
 }
 
 var now_ticks: u64 = 100;
