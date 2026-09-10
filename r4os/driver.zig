@@ -68,6 +68,13 @@ pub fn entriesAsm(comptime init_target: []const u8, comptime shutdown_target: []
 }
 
 pub const Context = struct {
+    pub fn heap(self: *const Context) ?@import("driver_heap.zig").Context {
+        if (!self.supportsDriverApi(30, @offsetOf(abi.DriverApi, "heap_query") + @sizeOf(usize))) return null;
+        const query = self.api.heap_query orelse return null;
+        var table: abi.DriverHeapApi = .{};
+        if (query(&table) != abi.driver_heap_ok or table.version != 1 or table.size < @sizeOf(abi.DriverHeapApi)) return null;
+        return .{ .table = table };
+    }
     pub fn resources(self: *const Context) ?@import("driver_resources.zig").Context {
         if (!self.supportsDriverApi(29, @offsetOf(abi.DriverApi, "resource_query") + @sizeOf(usize))) return null;
         const query = self.api.resource_query orelse return null;

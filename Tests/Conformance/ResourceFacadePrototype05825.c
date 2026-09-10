@@ -1,5 +1,28 @@
 #include <r4os/r4os.h>
 #include <r4os/driver_resources.h>
+#include <r4os/driver_heap.h>
+
+static int32_t driver_heap_allocate_probe(uint64_t bytes, uint32_t alignment, R4DriverHeapAllocation *out) {
+    if (bytes != UINT64_C(0x100000001) || alignment != 4096) return -77;
+    *out = (R4DriverHeapAllocation){ .version = 1, .size = sizeof(*out), .handle = UINT64_C(0x200000003), .cpu_address = UINT64_C(0xffffc00000001000), .byte_length = bytes, .alignment = alignment };
+    return 0;
+}
+static int32_t driver_heap_release_probe(uint64_t handle) {
+    return handle == UINT64_C(0x200000003) ? R4OS_DRIVER_HEAP_ERROR_RELEASE : -77;
+}
+static int driver_heap_checks(void) {
+    R4DriverHeapApi api = { .version = 1, .size = sizeof(api), .allocate = (uint64_t)(uintptr_t)&driver_heap_allocate_probe, .release = (uint64_t)(uintptr_t)&driver_heap_release_probe };
+    R4DriverHeapAllocation allocation = { .version = 1, .size = sizeof(allocation) };
+    if (r4driver_heap_allocate(&api, UINT64_C(0x100000001), 4096, &allocation) != 0 || allocation.byte_length != UINT64_C(0x100000001) || allocation.cpu_address != UINT64_C(0xffffc00000001000)) return 1;
+    if (r4driver_heap_release(&api, allocation.handle) != R4OS_DRIVER_HEAP_ERROR_RELEASE) return 1;
+    if (r4driver_heap_stats(&api, 0) != R4OS_ERR_NO_FN) return 1;
+    if (r4driver_heap_allocate(&api, 1, 16, 0) != R4OS_DRIVER_HEAP_ERROR_INVALID) return 1;
+    api.size = offsetof(R4DriverHeapApi, release);
+    if (r4driver_heap_release(&api, 1) != R4OS_ERR_NO_FN) return 1;
+    api.version = 2;
+    if (r4driver_heap_allocate(&api, 1, 16, &allocation) != R4OS_ERR_NO_FN || r4driver_heap_release(0, 1) != R4OS_ERR_NO_FN) return 1;
+    return 0;
+}
 
 static int32_t driver_resource_probe(uint64_t handle, uint64_t offset, uint8_t *out, uint32_t bytes, uint64_t deadline) {
     if (handle != UINT64_C(0x100000001) || offset != UINT64_C(0x200000003) || deadline != UINT64_C(0x300000005) || bytes != 1) return -77;
@@ -129,6 +152,7 @@ static void init_app(R4App *app, R4XStartR4Sys *table, R4XStartR4Desk *desk) {
 }
 
 int main(void) {
+    if (driver_heap_checks() != 0) return 80;
     if (driver_resource_checks() != 0) return 79;
     R4App app; R4XStartR4Sys table; R4XStartR4Desk desk; init_app(&app, &table, &desk); R4Resources resources = r4_app_resources(&app);
     R4PerformanceView performance = r4_devices_performance(r4_app_devices(&app));

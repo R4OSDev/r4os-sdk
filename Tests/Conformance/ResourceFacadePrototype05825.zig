@@ -1,6 +1,49 @@
 const std = @import("std");
 const r4os = @import("r4os");
 
+fn driverHeapAllocateProbe(bytes: u64, alignment: u32, out: *r4os.abi.DriverHeapAllocation) callconv(.c) i32 {
+    std.debug.assert(bytes == 0x100000001 and alignment == 4096);
+    out.* = .{ .handle = 0x200000003, .cpu_address = 0xffffc00000001000, .byte_length = bytes, .alignment = alignment };
+    return 0;
+}
+fn driverHeapReleaseProbe(handle: u64) callconv(.c) i32 {
+    std.debug.assert(handle == 0x200000003);
+    return r4os.abi.driver_heap_error_release;
+}
+fn driverHeapQueryProbe(out: *r4os.abi.DriverHeapApi) callconv(.c) i32 {
+    out.* = .{ .allocate = @intFromPtr(&driverHeapAllocateProbe), .release = @intFromPtr(&driverHeapReleaseProbe) };
+    return 0;
+}
+test "driver CPU heap facade preserves v29 prefix, optional functions and full 64-bit identities" {
+    const a = r4os.abi;
+    try std.testing.expectEqual(@as(usize, 600), @offsetOf(a.DriverApi, "heap_query"));
+    try std.testing.expectEqual(@as(usize, 608), @sizeOf(a.DriverApi));
+    var api: a.DriverApi = undefined;
+    api.magic = a.driver_magic;
+    api.version = 29;
+    api.size = @offsetOf(a.DriverApi, "heap_query");
+    const driver = r4os.r4dev.DriverContext.init(&api);
+    try std.testing.expect(driver.apiCompatible() and driver.heap() == null);
+    api.version = 30;
+    try std.testing.expect(driver.heap() == null);
+    api.size += 8;
+    api.heap_query = null;
+    try std.testing.expect(driver.heap() == null);
+    api.heap_query = driverHeapQueryProbe;
+    var heap = driver.heap().?;
+    var allocation: a.DriverHeapAllocation = .{};
+    try std.testing.expectEqual(a.driver_heap_ok, heap.allocate(0x100000001, 4096, &allocation));
+    try std.testing.expectEqual(@as(u64, 0x100000001), allocation.byte_length);
+    try std.testing.expectEqual(@as(u64, 0xffffc00000001000), allocation.cpu_address);
+    try std.testing.expectEqual(a.driver_heap_error_release, heap.release(allocation.handle));
+    var stats: a.DriverHeapStats = .{};
+    try std.testing.expectEqual(a.err_no_fn, heap.stats(&stats));
+    heap.table.size = @offsetOf(a.DriverHeapApi, "release");
+    try std.testing.expectEqual(a.err_no_fn, heap.release(1));
+    heap.table.version = 2;
+    try std.testing.expectEqual(a.err_no_fn, heap.allocate(1, 16, &allocation));
+}
+
 fn driverResourceReadProbe(handle: u64, offset: u64, out: [*]u8, bytes: u32, deadline: u64) callconv(.c) i32 {
     std.debug.assert(handle == 0x100000001 and offset == 0x200000003 and deadline == 0x300000005 and bytes == 1);
     out[0] = 79;
