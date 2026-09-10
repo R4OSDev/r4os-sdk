@@ -1,6 +1,40 @@
 const std = @import("std");
 const r4os = @import("r4os");
 
+fn driverResourceReadProbe(handle: u64, offset: u64, out: [*]u8, bytes: u32, deadline: u64) callconv(.c) i32 {
+    std.debug.assert(handle == 0x100000001 and offset == 0x200000003 and deadline == 0x300000005 and bytes == 1);
+    out[0] = 79;
+    return 1;
+}
+fn driverResourceQueryProbe(out: *r4os.abi.DriverResourceApi) callconv(.c) i32 {
+    out.* = .{ .read_at = @intFromPtr(&driverResourceReadProbe) };
+    return 0;
+}
+test "driver resource facade preserves old prefix, optional slots and 64-bit ranges" {
+    const a = r4os.abi;
+    var api: a.DriverApi = undefined;
+    api.magic = a.driver_magic;
+    api.version = 28;
+    api.size = @offsetOf(a.DriverApi, "resource_query");
+    const driver = r4os.r4dev.DriverContext.init(&api);
+    try std.testing.expect(driver.resources() == null);
+    api.version = 29;
+    try std.testing.expect(driver.resources() == null);
+    api.size += 8;
+    api.resource_query = null;
+    try std.testing.expect(driver.resources() == null);
+    api.resource_query = driverResourceQueryProbe;
+    var driver_resources = driver.resources().?;
+    var byte: [1]u8 = .{0};
+    try std.testing.expectEqual(@as(i32, 1), driver_resources.readAt(0x100000001, 0x200000003, &byte, 0x300000005));
+    try std.testing.expectEqual(@as(u8, 79), byte[0]);
+    driver_resources.table.size = @offsetOf(a.DriverResourceApi, "read_at");
+    try std.testing.expectEqual(a.err_no_fn, driver_resources.readAt(1, 0, &byte, 10));
+    try std.testing.expectEqual(std.math.maxInt(u64), driver_resources.nowNs());
+    var info: a.DriverResourceInfo = .{};
+    try std.testing.expectEqual(a.err_no_fn, driver_resources.stat("firmware", &info));
+}
+
 var now_ticks: u64 = 10;
 var process_active = false;
 var process_done = false;

@@ -68,6 +68,13 @@ pub fn entriesAsm(comptime init_target: []const u8, comptime shutdown_target: []
 }
 
 pub const Context = struct {
+    pub fn resources(self: *const Context) ?@import("driver_resources.zig").Context {
+        if (!self.supportsDriverApi(29, @offsetOf(abi.DriverApi, "resource_query") + @sizeOf(usize))) return null;
+        const query = self.api.resource_query orelse return null;
+        var table: abi.DriverResourceApi = .{};
+        if (query(&table) != abi.driver_resource_ok or table.version != 1 or table.size < @sizeOf(abi.DriverResourceApi)) return null;
+        return .{ .table = table };
+    }
     pub fn graphicsDisplay(self: *const Context) ?@import("driver_display.zig").Context {
         if (!self.supportsDriverApi(28, @offsetOf(abi.DriverApi, "gfx_display_query") + @sizeOf(usize))) return null;
         const query = self.api.gfx_display_query orelse return null;

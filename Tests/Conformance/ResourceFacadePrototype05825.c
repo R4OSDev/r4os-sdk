@@ -1,4 +1,20 @@
 #include <r4os/r4os.h>
+#include <r4os/driver_resources.h>
+
+static int32_t driver_resource_probe(uint64_t handle, uint64_t offset, uint8_t *out, uint32_t bytes, uint64_t deadline) {
+    if (handle != UINT64_C(0x100000001) || offset != UINT64_C(0x200000003) || deadline != UINT64_C(0x300000005) || bytes != 1) return -77;
+    out[0] = 79;
+    return 1;
+}
+static int driver_resource_checks(void) {
+    uint8_t byte = 0;
+    R4DriverResourceApi api = { .version = 1, .size = sizeof(api), .read_at = (uint64_t)(uintptr_t)&driver_resource_probe };
+    if (r4driver_resource_read_at(&api, UINT64_C(0x100000001), UINT64_C(0x200000003), &byte, 1, UINT64_C(0x300000005)) != 1 || byte != 79) return 1;
+    api.size = offsetof(R4DriverResourceApi, read_at);
+    if (r4driver_resource_read_at(&api, 1, 0, &byte, 1, 10) != R4OS_ERR_NO_FN) return 1;
+    if (r4driver_resource_stat(0, 0, 0, 0) != R4OS_ERR_NO_FN || r4driver_resource_now_ns(&api) != UINT64_MAX) return 1;
+    return 0;
+}
 
 _Static_assert(sizeof(struct R4Process) == sizeof(R4OS_ProcessHandle), "legacy R4Process tag layout drifted");
 _Static_assert(sizeof(((struct R4Process *)0)->raw) == sizeof(uint32_t), "legacy R4Process.raw is no longer uint32_t");
@@ -113,6 +129,7 @@ static void init_app(R4App *app, R4XStartR4Sys *table, R4XStartR4Desk *desk) {
 }
 
 int main(void) {
+    if (driver_resource_checks() != 0) return 79;
     R4App app; R4XStartR4Sys table; R4XStartR4Desk desk; init_app(&app, &table, &desk); R4Resources resources = r4_app_resources(&app);
     R4PerformanceView performance = r4_devices_performance(r4_app_devices(&app));
     R4ProgramRegistrySummary registry_v1 = {0}; R4ProgramRegistrySelfTestResult registry_test_v1 = {0};

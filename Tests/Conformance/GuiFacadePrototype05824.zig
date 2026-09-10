@@ -60,7 +60,8 @@ test "graphics buffer optional tails preserve 64-bit offsets in Zig and R4D call
     try std.testing.expectEqual(@as(usize, 568), @offsetOf(r4os.abi.DriverApi, "gfx_queue_query"));
     try std.testing.expectEqual(@as(usize, 576), @offsetOf(r4os.abi.DriverApi, "gfx_output_query"));
     try std.testing.expectEqual(@as(usize, 584), @offsetOf(r4os.abi.DriverApi, "gfx_display_query"));
-    try std.testing.expectEqual(@as(usize, 592), @sizeOf(r4os.abi.DriverApi));
+    try std.testing.expectEqual(@as(usize, 592), @offsetOf(r4os.abi.DriverApi, "resource_query"));
+    try std.testing.expectEqual(@as(usize, 600), @sizeOf(r4os.abi.DriverApi));
 }
 
 fn outputTestProbe(state: *const r4os.abi.GfxAtomicState, out: *r4os.abi.GfxAtomicResult) callconv(.c) i32 {
