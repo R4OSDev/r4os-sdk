@@ -52,6 +52,16 @@ pub const Context = struct {
     pub fn canAbort(self: *const Context) bool {
         return self.has("abort_current");
     }
+    pub fn hasCurrentRequest(self: *const Context) bool {
+        return self.has("current_request");
+    }
+    /// Current Task's original handler, context and creation flags. No other
+    /// Task can be selected; caller-owned context must outlive Task retirement.
+    pub fn currentRequest(self: *const Context, output: *a.DriverThreadRequest) i32 {
+        if (!self.hasCurrentRequest()) return a.err_no_fn;
+        const callback: *const fn (*a.DriverThreadRequest) callconv(.c) i32 = @ptrFromInt(self.table.current_request);
+        return callback(output);
+    }
     /// Only a negative result in the current abortable dedicated Task is
     /// accepted. Success does not return; refusals keep the callback running.
     /// Module defers are bypassed, so resource recovery belongs to its owner.

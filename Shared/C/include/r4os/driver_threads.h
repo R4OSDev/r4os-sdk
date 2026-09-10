@@ -8,6 +8,15 @@
 typedef int32_t (*R4DriverThreadHandler)(uintptr_t context);
 #define R4DRIVER_THREAD_HAS(table, member) ((table) != 0 && (table)->version == 1 && (table)->size >= offsetof(R4DriverThreadApi, member) + sizeof(uint64_t) && (table)->member != 0)
 
+/* Original start request of the actual current dedicated Task. Context
+ * ownership stays with its caller until Task retirement. */
+static inline int32_t r4driver_thread_current_request(const R4DriverThreadApi *table, R4DriverThreadRequest *output) {
+    if (output == 0) return R4OS_DRIVER_THREAD_ERROR_INVALID;
+    if (!R4DRIVER_THREAD_HAS(table, current_request)) return R4OS_ERR_NO_FN;
+    typedef int32_t (*Callback)(R4DriverThreadRequest *);
+    return ((Callback)(uintptr_t)table->current_request)(output);
+}
+
 /* Synchronous self-abort of an explicitly abortable dedicated callback.
  * Accepted negative results do not return. Refusals return normally; no
  * foreign Task or kernel owner is unwound. Module defers are bypassed. */

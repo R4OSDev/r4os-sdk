@@ -318,8 +318,8 @@ substitutes for successful acquisition. The same resource facade fixture
 checks full-width counters/handles/timeouts and optional table boundaries in
 Zig and C; callers keep ownership on busy, timeout and failed destruction.
 
-The version-1 DriverThreadApi now has an optional `abort_current` slot at
-offset 72, total 80 bytes. `DriverContext.threads()` continues to accept the
+The version-1 DriverThreadApi has optional `abort_current` at offset 72
+and `current_request` at offset 80, total 88 bytes. `DriverContext.threads()` continues to accept the
 complete old 72-byte prefix. `canAbort()` checks the tail; an abortable start
 is rejected before dispatch if it is absent. The C facade follows the same
 size/slot checks. Flag 2 opts a dedicated Task into synchronous self-abort;
@@ -332,3 +332,18 @@ Calls from Init/Work, non-abortable Tasks, IRQ or kernel critical sections
 are not admitted; this does not provide remote termination or an exception
 handler. DriverApi remains version 33, 632 bytes; existing service offsets
 and module import names are unchanged.
+
+`hasCurrentRequest()` / `currentRequest()` expose the immutable start request
+of the actual running dedicated Task. They preserve the original full-width
+handler/context and creation flags, never computed status flags. The kernel
+resets a valid output before a missing context/owner result; an invalid fixed
+32-byte request prefix remains untouched. The caller retains the referenced
+context through Task retirement. No allocation, wait, CPU-local binding or
+new unwind guard is involved. C uses `r4driver_thread_current_request`.
+
+Thread query returns the largest complete prefix fitting the caller: 72 for
+capacities 72..79, 80 for 80..87, and 88 from 88 upward. The sleeping flag 8
+is status-only: the real backing Task is blocked in this service's sleep
+queue. It does not describe semaphore or arbitrary application waits and
+cannot be requested at creation. Original minimum size/version/imports and
+DriverApi33/632 remain unchanged.

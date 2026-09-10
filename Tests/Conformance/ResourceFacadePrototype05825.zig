@@ -44,6 +44,10 @@ fn driverThreadAbort(result: i32) callconv(.c) i32 {
     std.debug.assert(result == -76001);
     return r4os.abi.driver_thread_error_busy;
 }
+fn driverThreadRequest(output: *r4os.abi.DriverThreadRequest) callconv(.c) i32 {
+    output.* = .{ .handler = 0xffffc00000007900, .context = 0x200000000079, .flags = r4os.abi.driver_thread_flag_abortable };
+    return r4os.abi.driver_thread_error_context;
+}
 fn driverThreadQuery(output: *r4os.abi.DriverThreadApi) callconv(.c) i32 {
     output.* = .{ .start = @intFromPtr(&driverThreadStart), .stop = @intFromPtr(&driverThreadStop), .join = @intFromPtr(&driverThreadJoin), .release = @intFromPtr(&driverThreadRelease), .status = @intFromPtr(&driverThreadStatus), .current = @intFromPtr(&driverThreadCurrent), .sleep_ticks = @intFromPtr(&driverThreadSleep), .stats = @intFromPtr(&driverThreadStats) };
     return 0;
@@ -69,6 +73,22 @@ test "driver threads preserve v31 prefix, full identities, optional callbacks an
     try std.testing.expect(driver.threads() == null);
     api.thread_query = driverThreadQuery;
     var service = driver.threads() orelse return error.NoThreads;
+    var request: a.DriverThreadRequest = .{};
+    try std.testing.expect(!service.hasCurrentRequest());
+    try std.testing.expectEqual(a.err_no_fn, service.currentRequest(&request));
+    service.table.current_request = @intFromPtr(&driverThreadRequest);
+    for ([_]u32{ 72, 80, 87 }) |capacity| {
+        service.table.size = capacity;
+        try std.testing.expect(!service.hasCurrentRequest());
+        try std.testing.expectEqual(a.err_no_fn, service.currentRequest(&request));
+        try std.testing.expectEqual(@as(u64, 0), request.handler);
+    }
+    service.table.size = 88;
+    try std.testing.expect(service.hasCurrentRequest());
+    try std.testing.expectEqual(a.driver_thread_error_context, service.currentRequest(&request));
+    try std.testing.expectEqual(@as(u64, 0xffffc00000007900), request.handler);
+    try std.testing.expectEqual(@as(u64, 0x200000000079), request.context);
+    try std.testing.expectEqual(a.driver_thread_flag_abortable, request.flags);
     try std.testing.expect(!service.canAbort());
     try std.testing.expectEqual(a.err_no_fn, service.abortCurrent(-76001));
     service.table.abort_current = @intFromPtr(&driverThreadAbort);
@@ -110,6 +130,8 @@ test "driver threads preserve v31 prefix, full identities, optional callbacks an
     const legacy = driver.threads() orelse return error.LegacyThreadsRejected;
     try std.testing.expectEqual(driver_thread_handle, legacy.current());
     try std.testing.expect(!legacy.canAbort());
+    try std.testing.expect(!legacy.hasCurrentRequest());
+    try std.testing.expectEqual(a.err_no_fn, legacy.currentRequest(&request));
     try std.testing.expectEqual(a.err_no_fn, legacy.abortCurrent(-76001));
 }
 

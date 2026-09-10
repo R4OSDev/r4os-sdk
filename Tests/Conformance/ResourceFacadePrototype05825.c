@@ -58,10 +58,25 @@ static int32_t driver_thread_stats_probe(R4DriverThreadStats *output) {
     *output = (R4DriverThreadStats){ .version = 1, .size = sizeof(*output), .records = UINT64_C(0x100000000003), .closing = 1 };
     return 0;
 }
+static int32_t driver_thread_request_probe(R4DriverThreadRequest *output) {
+    *output = (R4DriverThreadRequest){ .version = 1, .size = sizeof(*output), .handler = UINT64_C(0xffffc00000007900), .context = UINT64_C(0x200000000079), .flags = R4OS_DRIVER_THREAD_FLAG_ABORTABLE };
+    return R4OS_DRIVER_THREAD_ERROR_CONTEXT;
+}
 static int driver_thread_checks(void) {
     R4DriverThreadApi api = { .version = 1, .size = sizeof(api), .start = (uint64_t)(uintptr_t)&driver_thread_start_probe, .stop = (uint64_t)(uintptr_t)&driver_thread_stop_probe, .join = (uint64_t)(uintptr_t)&driver_thread_join_probe, .release = (uint64_t)(uintptr_t)&driver_thread_release_probe, .status = (uint64_t)(uintptr_t)&driver_thread_status_probe, .current = (uint64_t)(uintptr_t)&driver_thread_current_probe, .sleep_ticks = (uint64_t)(uintptr_t)&driver_thread_sleep_probe, .stats = (uint64_t)(uintptr_t)&driver_thread_stats_probe };
     uint64_t handle = 99;
     int32_t result = 123;
+    R4DriverThreadRequest request = {0};
+    if (r4driver_thread_current_request(&api, &request) != R4OS_ERR_NO_FN) return 1;
+    api.current_request = (uint64_t)(uintptr_t)&driver_thread_request_probe;
+    const uint32_t capacities[] = {72, 80, 87};
+    for (unsigned i = 0; i < sizeof(capacities) / sizeof(capacities[0]); ++i) {
+        api.size = capacities[i];
+        if (r4driver_thread_current_request(&api, &request) != R4OS_ERR_NO_FN || request.handler != 0) return 1;
+    }
+    api.size = 88;
+    if (r4driver_thread_current_request(&api, &request) != R4OS_DRIVER_THREAD_ERROR_CONTEXT || request.handler != UINT64_C(0xffffc00000007900) || request.context != UINT64_C(0x200000000079) || request.flags != R4OS_DRIVER_THREAD_FLAG_ABORTABLE) return 1;
+    if (r4driver_thread_current_request(&api, 0) != R4OS_DRIVER_THREAD_ERROR_INVALID || r4driver_thread_current_request(0, &request) != R4OS_ERR_NO_FN) return 1;
     if (r4driver_thread_abort_current(&api, -76001) != R4OS_ERR_NO_FN) return 1;
     api.abort_current = (uint64_t)(uintptr_t)&driver_thread_abort_probe;
     if (r4driver_thread_abort_current(&api, -76001) != R4OS_DRIVER_THREAD_ERROR_BUSY) return 1;
