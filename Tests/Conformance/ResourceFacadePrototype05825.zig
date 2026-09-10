@@ -1,6 +1,32 @@
 const std = @import("std");
 const r4os = @import("r4os");
 
+fn driverClockProbe(out: *r4os.abi.MonotonicClockInfo) callconv(.c) i32 {
+    out.* = .{ .flags = r4os.abi.monotonic_clock_flag_valid, .instant_ns = 0x10000000003, .resolution_ns = 10000001 };
+    return 1;
+}
+test "driver monotonic clock preserves the old table prefix and nanosecond payload" {
+    const a = r4os.abi;
+    try std.testing.expectEqual(@as(usize, 608), @offsetOf(a.DriverApi, "monotonic_clock"));
+    try std.testing.expectEqual(@as(usize, 616), @sizeOf(a.DriverApi));
+    var api: a.DriverApi = undefined;
+    api.version = 30;
+    api.size = @offsetOf(a.DriverApi, "monotonic_clock");
+    const driver = r4os.r4dev.DriverContext.init(&api);
+    var clock: a.MonotonicClockInfo = .{ .instant_ns = 77 };
+    try std.testing.expectEqual(a.err_no_fn, driver.monotonicClock(&clock));
+    try std.testing.expectEqual(@as(u64, 0), clock.instant_ns);
+    api.version = 31;
+    try std.testing.expectEqual(a.err_no_fn, driver.monotonicClock(&clock));
+    api.size += 8;
+    api.monotonic_clock = null;
+    try std.testing.expectEqual(a.err_no_fn, driver.monotonicClock(&clock));
+    api.monotonic_clock = driverClockProbe;
+    try std.testing.expectEqual(@as(i32, 1), driver.monotonicClock(&clock));
+    try std.testing.expectEqual(@as(u64, 0x10000000003), clock.instant_ns);
+    try std.testing.expectEqual(@as(u64, 10000001), clock.resolution_ns);
+}
+
 fn driverHeapAllocateProbe(bytes: u64, alignment: u32, out: *r4os.abi.DriverHeapAllocation) callconv(.c) i32 {
     std.debug.assert(bytes == 0x100000001 and alignment == 4096);
     out.* = .{ .handle = 0x200000003, .cpu_address = 0xffffc00000001000, .byte_length = bytes, .alignment = alignment };
@@ -17,7 +43,7 @@ fn driverHeapQueryProbe(out: *r4os.abi.DriverHeapApi) callconv(.c) i32 {
 test "driver CPU heap facade preserves v29 prefix, optional functions and full 64-bit identities" {
     const a = r4os.abi;
     try std.testing.expectEqual(@as(usize, 600), @offsetOf(a.DriverApi, "heap_query"));
-    try std.testing.expectEqual(@as(usize, 608), @sizeOf(a.DriverApi));
+    try std.testing.expectEqual(@as(usize, 608), @offsetOf(a.DriverApi, "heap_query") + @sizeOf(u64));
     var api: a.DriverApi = undefined;
     api.magic = a.driver_magic;
     api.version = 29;

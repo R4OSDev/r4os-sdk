@@ -396,6 +396,15 @@ pub const Context = struct {
         return self.api.timer_frequency();
     }
 
+    /// Same fixed-layout snapshot and 1/0 availability result as R4SYS.
+    /// Read-only, also during shutdown; no driver owner guard or wait.
+    pub fn monotonicClock(self: *const Context, output: *abi.MonotonicClockInfo) i32 {
+        output.* = .{};
+        if (self.api.version < 31 or self.api.size < @offsetOf(abi.DriverApi, "monotonic_clock") + 8) return abi.err_no_fn;
+        const callback = self.api.monotonic_clock orelse return abi.err_no_fn;
+        return callback(output);
+    }
+
     pub fn waitTicks(self: *const Context, ticks: u64) void {
         self.api.wait_ticks(ticks);
     }
