@@ -1,6 +1,6 @@
 const std = @import("std");
 const contract_build = @import("r4os_contract");
-const module_manifest = @import("module_manifest.zig");
+pub const module_manifest = @import("module_manifest.zig");
 
 pub const BuildResult = struct {
     code: std.Build.LazyPath,
@@ -193,6 +193,10 @@ pub const R4DModuleOptions = struct {
     driver_name: []const u8,
     driver_type: []const u8 = "misc",
     root_source_file: std.Build.LazyPath,
+    c_source_files: []const std.Build.LazyPath = &.{},
+    c_include_roots: []const std.Build.LazyPath = &.{},
+    c_defines: []const module_manifest.CDefineEntry = &.{},
+    c_flags: []const []const u8 = &.{},
     optimize: std.builtin.OptimizeMode = .ReleaseSmall,
 };
 
@@ -440,8 +444,23 @@ pub const Sdk = struct {
     }
 
     fn addR4MFDriver(self: Sdk, loaded: LoadedR4MF) BuildResult {
+        const companion_count = loaded.source_paths.len - 1;
+        const sources = self.b.allocator.alloc(std.Build.LazyPath, companion_count) catch @panic("OOM");
+        const includes = self.manifestCIncludeRoots(loaded);
+        const roots = self.b.allocator.alloc(std.Build.LazyPath, companion_count + includes.len + 2) catch @panic("OOM");
+        roots[0] = self.profile.c_include_root;
+        roots[1] = self.profile.contract_c_include_root;
+        for (loaded.source_paths[1..], 0..) |path, index| {
+            sources[index] = userPath(self.b, path);
+            roots[index + 2] = userPath(self.b, std.fs.path.dirname(path) orelse loaded.project_path);
+        }
+        for (includes, companion_count + 2..) |include, index| roots[index] = include;
         return addR4DWithOptions(self.b, .{
             .zig_modules = loaded.zig_modules,
+            .c_source_files = sources,
+            .c_include_roots = roots,
+            .c_defines = loaded.manifest.c_defines,
+            .c_flags = loaded.manifest.c_flags,
             .name = loaded.manifest.name,
             .driver_name = self.manifestMeta(loaded, "r4d.name"),
             .driver_type = self.manifestMeta(loaded, "r4d.type"),
@@ -702,6 +721,10 @@ pub const Sdk = struct {
 
     pub fn addR4D(self: Sdk, opts: R4DModuleOptions) BuildResult {
         return addR4DWithOptions(self.b, .{
+            .c_source_files = opts.c_source_files,
+            .c_include_roots = opts.c_include_roots,
+            .c_defines = opts.c_defines,
+            .c_flags = opts.c_flags,
             .name = opts.name,
             .driver_name = opts.driver_name,
             .driver_type = opts.driver_type,
@@ -969,6 +992,10 @@ pub const R4CAppBuildOptions = struct {
 
 pub const R4DOptions = struct {
     zig_modules: []const ZigModuleBuild = &.{},
+    c_source_files: []const std.Build.LazyPath = &.{},
+    c_include_roots: []const std.Build.LazyPath = &.{},
+    c_defines: []const module_manifest.CDefineEntry = &.{},
+    c_flags: []const []const u8 = &.{},
     // Modulversion aus module.R4MF; null bei Aufrufern ohne Manifest.
     module_version: ?[]const u8 = null,
     name: []const u8,
@@ -1274,6 +1301,10 @@ pub fn addR4D(b: *std.Build, opts: R4DOptions) BuildResult {
 fn addR4DWithOptions(b: *std.Build, opts: R4DOptions) BuildResult {
     const elf = addRawModule(b, .{
         .zig_modules = opts.zig_modules,
+        .c_source_files = opts.c_source_files,
+        .c_include_roots = opts.c_include_roots,
+        .c_defines = opts.c_defines,
+        .c_flags = opts.c_flags,
         .name = opts.name,
         .root_source_file = opts.root_source_file,
         .r4os_module = opts.r4os_module,
@@ -1495,7 +1526,7 @@ const RawOptions = struct {
     app_source_file: ?std.Build.LazyPath = null,
     app_profile: ?AppProfile = null,
     zig_modules: []const ZigModuleBuild = &.{},
-    /// Zusaetzliche C-Quellen eines gemischten Zig/R4L-Projekts. Die
+    /// Zusaetzliche C-Quellen eines gemischten Zig/R4L- oder Zig/R4D-Projekts. Die
     /// Manifestreihenfolge bleibt erhalten; Include-Wurzeln sind aus den
     /// jeweiligen Quellverzeichnissen abgeleitet.
     c_source_files: []const std.Build.LazyPath = &.{},

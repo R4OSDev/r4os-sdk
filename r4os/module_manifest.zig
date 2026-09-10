@@ -375,13 +375,13 @@ fn parseV2(allocator: std.mem.Allocator, path: []const u8, text: []const u8) !Ma
     const parsed_module_version = try parseModuleVersion(module_version orelse return error.MissingModuleVersion);
     const parsed_language = try parseLanguage(language orelse return error.MissingLanguage);
     if (sources.items.len == 0) return error.MissingSource;
-    // Ein Zig-Projekt besitzt genau eine Rootquelle. Runtime-R4Ls duerfen
-    // dahinter zusaetzliche C-Quellen deklarieren: Sie werden in dasselbe
-    // Library-Artefakt gelinkt und bleiben damit Eigentum der Library statt
-    // an jeden Verbraucher angehaengt zu werden.
-    if (parsed_language == .zig and parsed_kind != .r4l and sources.items.len != 1) return error.ZigRequiresSingleSource;
+    // One Zig root, followed by optional C companions in R4L/R4D. They are
+    // linked into the same owning artifact; no extra runtime module or source
+    // injection into a consumer is implied by a companion source.
+    const allows_c_companions = parsed_kind == .r4l or parsed_kind == .r4d;
+    if (parsed_language == .zig and !allows_c_companions and sources.items.len != 1) return error.ZigRequiresSingleSource;
     for (sources.items, 0..) |source, index| {
-        const source_language: Language = if (parsed_language == .zig and parsed_kind == .r4l and index != 0) .c else parsed_language;
+        const source_language: Language = if (parsed_language == .zig and allows_c_companions and index != 0) .c else parsed_language;
         try validateSource(source, source_language);
     }
     ensureUnique(sources.items, false) catch return error.DuplicateSource;
@@ -391,7 +391,7 @@ fn parseV2(allocator: std.mem.Allocator, path: []const u8, text: []const u8) !Ma
     if (parsed_language == .c and zig_modules.items.len != 0) return error.CForbidsZigModule;
     try validateZigModules(zig_modules.items);
     try validateCConfiguration(c_includes.items, c_defines.items, c_flags.items);
-    const has_c_source = parsed_language == .c or (parsed_kind == .r4l and parsed_language == .zig and sources.items.len > 1);
+    const has_c_source = parsed_language == .c or (allows_c_companions and parsed_language == .zig and sources.items.len > 1);
     if (!has_c_source and (c_includes.items.len != 0 or c_defines.items.len != 0 or c_flags.items.len != 0)) {
         return error.CConfigurationWithoutCSource;
     }
@@ -1540,6 +1540,50 @@ test "runtime R4L accepts one Zig root followed by library-owned C sources" {
     const no_c_source = std.mem.replaceOwned(u8, allocator, text, "SOURCE=ThirdParty/codec.c", "") catch unreachable;
     defer allocator.free(no_c_source);
     try std.testing.expectError(error.CConfigurationWithoutCSource, parse(allocator, "MixedLib/module.R4MF", no_c_source));
+}
+
+test "R4D accepts ordered C companions without changing driver identity or entry contracts" {
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+    const allocator = arena.allocator();
+    const text =
+        \\R4OS_MODULE_MANIFEST=2
+        \\KIND=R4D
+        \\NAME=MIXEDDRIVER
+        \\VERSION=0.1.0
+        \\LANGUAGE=Zig
+        \\SOURCE=src/main.zig
+        \\SOURCE=src/native.c
+        \\SOURCE=src/helpers.c
+        \\C_INCLUDE=ThirdParty/include
+        \\C_DEFINE=NATIVE_WIDTH=64
+        \\C_FLAG=-mno-sse
+        \\TARGET=/R4OS/DRIVERS/MIXEDDRIVER.R4D
+        \\IMAGE_SCOPE=none
+        \\IMPORT=R4DEV:Query:1
+        \\META=r4d.name=MIXEDDRIVER
+        \\META=r4d.type=display
+    ;
+    const value = try parse(allocator, "MixedDriver/module.R4MF", text);
+    try std.testing.expectEqual(Kind.r4d, value.kind);
+    try std.testing.expectEqualStrings("src/main.zig", value.sources[0]);
+    try std.testing.expectEqualStrings("src/native.c", value.sources[1]);
+    try std.testing.expectEqualStrings("src/helpers.c", value.sources[2]);
+    try std.testing.expect(value.entry_mode == null and value.app_class == null);
+    try std.testing.expectEqualStrings("R4DEV:Query:1", value.imports[0]);
+    try std.testing.expectEqualStrings("ThirdParty/include", value.c_includes[0]);
+    try std.testing.expectEqualStrings("64", value.c_defines[0].value);
+    try std.testing.expectEqualStrings("-mno-sse", value.c_flags[0]);
+    const wrong = try std.mem.replaceOwned(u8, allocator, text, "src/helpers.c", "src/second.zig");
+    try std.testing.expectError(error.SourceLanguageMismatch, parse(allocator, "MixedDriver/module.R4MF", wrong));
+    const escaped = try std.mem.replaceOwned(u8, allocator, text, "src/helpers.c", "../helpers.c");
+    try std.testing.expectError(error.SourcePathEscape, parse(allocator, "MixedDriver/module.R4MF", escaped));
+    const duplicate = try std.mem.replaceOwned(u8, allocator, text, "src/helpers.c", "src/native.c");
+    try std.testing.expectError(error.DuplicateSource, parse(allocator, "MixedDriver/module.R4MF", duplicate));
+    for ([_][]const u8{ "R4X", "R4P" }) |kind| {
+        const other = try std.mem.replaceOwned(u8, allocator, text, "KIND=R4D", try std.fmt.allocPrint(allocator, "KIND={s}", .{kind}));
+        try std.testing.expectError(error.ZigRequiresSingleSource, parse(allocator, "MixedDriver/module.R4MF", other));
+    }
 }
 
 test "R4X accepts named Runtime-R4L imports without a profile group bit" {

@@ -5,6 +5,17 @@ module build support, templates, build profiles, and generic Runtime-R4L
 helpers. The platform API and ABI remain canonical in the separate Contract
 repository.
 
+Mixed Zig/C drivers use one Zig root followed by ordered C `SOURCE` entries
+in their canonical `module.R4MF`, with `C_INCLUDE`, `C_DEFINE` and `C_FLAG`
+for their C inputs. The SDK builds those companions into the same R4D ELF
+and container, preserving the driver's entry and dependency contracts. The
+existing mixed R4L path remains available; Zig R4X/R4P still have one source.
+`R4DModuleOptions` and `R4DOptions` also expose the four corresponding C
+options for direct build callers. Consumers that need the canonical parser
+in a host build can use `build_api.module_manifest` instead of parsing a
+second manifest format. After changing SDK manifest semantics, rebuild the
+SDK host tools before running an image plan with an installed ModuleCatalog.
+
 Subsystem R4X hosts can compose the allocation-free `subsystem_host` video
 and input layer with `subsystem_runtime` for bounded guest slices, monotonic
 guest time, lifecycle control, paced frames, and buffered S16LE audio through
