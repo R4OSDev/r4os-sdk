@@ -5,6 +5,7 @@ const r4u_manifest = r4os.r4u_manifest;
 const r4u_artifact = r4os.r4u_artifact;
 const system_update_inventory = r4os.system_update_inventory;
 const system_update_batch = r4os.system_update_batch;
+const system_update_backup = r4os.system_update_backup;
 
 const header_size: usize = r4u_manifest.header_size;
 const manifest_max: usize = r4u_manifest.manifest_max_bytes;
@@ -508,6 +509,9 @@ pub fn runTerminal(r4_app: *r4os.App) i32 {
     if (equalsIgnoreCase(command, "COMMIT")) {
         return engine.commitBatch().exit_code;
     }
+    if (equalsIgnoreCase(command, "ARCHIVE-BOOT-BACKUP")) {
+        return archiveBootBackupCommand(&ctx, trim(args[pos..]));
+    }
     if (equalsIgnoreCase(command, "ABORT-BATCH")) {
         return abortPreparedBatchCommand(&ctx);
     }
@@ -674,6 +678,7 @@ fn printUsage(ctx: *const r4os.r4sys.Context) void {
     ctx.println("  SYSUPD STAGE  C:\\R4OS\\UPDATE\\INBOX\\UPDATE.R4U");
     ctx.println("  SYSUPD COMMIT");
     ctx.println("  SYSUPD ABORT-BATCH");
+    ctx.println("  SYSUPD ARCHIVE-BOOT-BACKUP Bxxxxxxx.R4U");
     ctx.println("  SYSUPD RESUME-BATCH");
     ctx.println("  SYSUPD RESUME");
     ctx.println("  SYSUPD STATUS");
@@ -4546,6 +4551,176 @@ fn bindPreviousBackups(ctx: *const r4os.r4sys.Context, info: *PackageInfo, previ
         }
     }
     return true;
+}
+
+const BootBackupArchiveIo = struct {
+    ctx: *const r4os.r4sys.Context,
+    name: []const u8,
+    source: [:0]const u8,
+    destination: [:0]const u8,
+    size: u64,
+    checksum: u32,
+    first_cluster: u32,
+
+    pub fn unreferenced(self: *const BootBackupArchiveIo) bool {
+        // Both durable slots must parse. A damaged older slot cannot be
+        // silently ignored when deciding whether one of its backups is free.
+        var found: usize = 0;
+        for (journal_paths, 0..) |path, slot| {
+            var info: r4os.abi.FileInfo = .{};
+            switch (fileInfoStatus(self.ctx, path, &info)) {
+                .not_found => continue,
+                .io => return false,
+                .found => {},
+            }
+            if (info.is_dir != 0 or info.size == 0 or info.size > journal_max) return false;
+            const bytes = journal_read_buffers[slot][0..@intCast(info.size)];
+            if (!readExactAt(self.ctx, path, 0, bytes).ok or !parseJournalInto(bytes, @intCast(slot), &previous_journal_workspace)) return false;
+            found += 1;
+            if (system_update_backup.referenced(&previous_journal_workspace, self.source)) return false;
+        }
+        if (found == 0) return false;
+        // A leftover ownership alias must not be deleted as an independent
+        // FAT chain. Inspect the real, internally mounted boot namespace.
+        var source_info: r4os.abi.FileInfo = .{};
+        if (fileInfoStatus(self.ctx, self.source.ptr, &source_info) != .found or source_info.first_cluster != self.first_cluster) return false;
+        var names: [max_path]u8 = undefined;
+        var complete = false;
+        for (2..1026) |index| {
+            @memset(&names, 0xff);
+            const kind = self.ctx.dirEntry("\\boot", @intCast(index), &names);
+            if (kind == r4os.r4sys.dir_entry_result_end) {
+                complete = true;
+                break;
+            }
+            if (kind != 0 and kind != 1) return false;
+            const length = std.mem.indexOfScalar(u8, &names, 0) orelse return false;
+            const path = names[0..length :0];
+            if (system_update_backup.samePath(path, self.source)) continue;
+            var sibling: r4os.abi.FileInfo = .{};
+            if (fileInfoStatus(self.ctx, path.ptr, &sibling) != .found or sibling.first_cluster == self.first_cluster) return false;
+        }
+        if (!complete) return false;
+        // Also retain explicitly configured boot targets, independently of
+        // journal lifetime. No automatic parsing or rewriting of boot policy.
+        var config: [4096]u8 = undefined;
+        var info: r4os.abi.FileInfo = .{};
+        if (fileInfoStatus(self.ctx, "\\boot\\limine.conf", &info) != .found or info.is_dir != 0 or info.size == 0 or info.size > config.len) return false;
+        const bytes = config[0..@intCast(info.size)];
+        if (!readExactAt(self.ctx, "\\boot\\limine.conf", 0, bytes).ok) return false;
+        if (bytes.len >= self.name.len) {
+            for (0..bytes.len - self.name.len + 1) |at| {
+                if (equalsIgnoreCase(bytes[at..][0..self.name.len], self.name)) return false;
+            }
+        }
+        return true;
+    }
+
+    pub fn copy(self: *const BootBackupArchiveIo) bool {
+        switch (payloadPathState(self.ctx, self.destination.ptr, self.size, self.checksum)) {
+            .match => return true,
+            .other, .io => return false,
+            .not_found => {},
+        }
+        var writer: r4os.file_stream.WriterState = undefined;
+        if (!r4os.file_stream.begin(self.ctx, &writer, self.destination.ptr, r4os.abi.file_stream_open_create)) return false;
+        var complete = false;
+        defer if (!complete) {
+            _ = r4os.file_stream.abort(self.ctx, &writer);
+        };
+        while (writer.offset < self.size) {
+            const bytes = stream_io_buf[0..@intCast(@min(self.size - writer.offset, stream_io_buf.len))];
+            if (!readExactAt(self.ctx, self.source.ptr, writer.offset, bytes).ok or !r4os.file_stream.write(self.ctx, &writer, bytes)) return false;
+        }
+        if (!r4os.file_stream.finish(self.ctx, &writer)) return false;
+        complete = true;
+        return true;
+    }
+    pub fn verify(self: *const BootBackupArchiveIo) bool {
+        if (payloadPathState(self.ctx, self.source.ptr, self.size, self.checksum) != .match or
+            payloadPathState(self.ctx, self.destination.ptr, self.size, self.checksum) != .match) return false;
+        var done: u64 = 0;
+        while (done < self.size) {
+            const count: usize = @intCast(@min(self.size - done, stream_io_buf.len));
+            if (!readExactAt(self.ctx, self.source.ptr, done, stream_io_buf[0..count]).ok or
+                !readExactAt(self.ctx, self.destination.ptr, done, checksum_io_buf[0..count]).ok or
+                !std.mem.eql(u8, stream_io_buf[0..count], checksum_io_buf[0..count])) return false;
+            done += count;
+        }
+        return true;
+    }
+    pub fn remove(self: *const BootBackupArchiveIo) bool {
+        return deleteFileIfMatching(self.ctx, self.source.ptr, self.size, self.checksum) == .ok;
+    }
+};
+
+fn archiveBootBackupCommand(ctx: *const r4os.r4sys.Context, name: []const u8) i32 {
+    const command = "ARCHIVE-BOOT-BACKUP";
+    if (!system_update_backup.validName(name)) {
+        fail(ctx, command, "backup-name");
+        return 1;
+    }
+    if (!ensureUpdateDirectories(ctx)) {
+        fail(ctx, command, "update-dirs");
+        return 1;
+    }
+    switch (acquireUpdateLock(ctx, true)) {
+        .acquired => {},
+        .busy => {
+            fail(ctx, command, "update-active");
+            return 1;
+        },
+        .io => {
+            fail(ctx, command, "lock-io");
+            return 1;
+        },
+    }
+    defer releaseUpdateLock(ctx);
+    const storage = r4os.storage.Context{ .sys = ctx };
+    var inventory: r4os.abi.StorageInventory = .{};
+    var boot: r4os.abi.StorageVolumeInfo = .{};
+    if (storage.inventory(&inventory) != 0 or storage.volume(inventory.generation, 26, &boot) != 1 or
+        boot.letter != 0 or boot.filesystem != r4os.abi.storage_filesystem_fat32)
+    {
+        fail(ctx, command, "boot-volume");
+        return 1;
+    }
+    var source_buffer: [64]u8 = undefined;
+    var destination_buffer: [96]u8 = undefined;
+    const source = std.fmt.bufPrintZ(&source_buffer, "\\boot\\{s}", .{name}) catch return 1;
+    const destination = std.fmt.bufPrintZ(&destination_buffer, "C:\\R4OS\\UPDATE\\ARCHIVE\\{s}", .{name}) catch return 1;
+    var info: r4os.abi.FileInfo = .{};
+    if (fileInfoStatus(ctx, source.ptr, &info) != .found or info.is_dir != 0 or info.first_cluster < 2 or info.size == 0 or info.size > 512 * 1024 * 1024) {
+        fail(ctx, command, "backup-info");
+        return 1;
+    }
+    const digest = checksumFileRange(ctx, source.ptr, 0, info.size) orelse {
+        fail(ctx, command, "backup-read");
+        return 1;
+    };
+    var io = BootBackupArchiveIo{ .ctx = ctx, .name = name, .source = source, .destination = destination, .size = info.size, .checksum = digest, .first_cluster = info.first_cluster };
+    if (!io.unreferenced()) {
+        fail(ctx, command, "referenced-or-unproven");
+        return 1;
+    }
+    if (!ensureDirectory(ctx, "C:\\R4OS\\UPDATE\\ARCHIVE")) {
+        fail(ctx, command, "archive-directory");
+        return 1;
+    }
+    system_update_backup.archive(&io) catch |err| {
+        fail(ctx, command, @errorName(err));
+        return 1;
+    };
+    ctx.write("SYSUPD ARCHIVE-BOOT-BACKUP result: OK source=");
+    ctx.write(source);
+    ctx.write(" archive=");
+    ctx.write(destination);
+    ctx.write(" bytes=");
+    ctx.printU64(info.size);
+    ctx.write(" checksum=");
+    ctx.printU64(digest);
+    ctx.println(" journal=unchanged");
+    return 0;
 }
 
 fn acquireUpdateLock(ctx: *const r4os.r4sys.Context, allow_resume: bool) UpdateLockStatus {

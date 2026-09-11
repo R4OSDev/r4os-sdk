@@ -15,6 +15,7 @@ pub const subsystem_runtime = @import("r4os/subsystem_runtime.zig");
 pub const subsystem_persistence = @import("r4os/subsystem_persistence.zig");
 pub const system_update_recovery = @import("r4os/system_update_recovery.zig");
 pub const system_update_batch = @import("r4os/system_update_batch.zig");
+pub const system_update_backup = @import("r4os/system_update_backup.zig");
 pub const update_catalog = @import("r4os/update_catalog.zig");
 pub const app_contract = @import("r4os/app_contract.zig");
 pub const app_storage = @import("r4os/app_storage.zig");

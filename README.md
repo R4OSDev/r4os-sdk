@@ -5,6 +5,13 @@ module build support, templates, build profiles, and generic Runtime-R4L
 helpers. The platform API and ABI remain canonical in the separate Contract
 repository.
 
+The shared update engine exposes SYSUPD's explicit `ARCHIVE-BOOT-BACKUP`
+maintenance command. Its `system_update_backup` helper orders reference
+checks, durable copy, complete comparison and conditional removal. Both
+journal slots, boot configuration and sibling FAT identities must exclude
+the candidate. Active stages, targets and retained journal backups stay
+bound; no general cleanup or raw filesystem write is exposed.
+
 Mixed Zig/C drivers use one Zig root followed by ordered C `SOURCE` entries
 in their canonical `module.R4MF`, with `C_INCLUDE`, `C_DEFINE` and `C_FLAG`
 for their C inputs. The SDK builds those companions into the same R4D ELF
