@@ -53,6 +53,14 @@ test "five-role layout, GUID boot references and Limine GPT publication" {
     var entropy: [7][16]u8 = .{.{0} ** 16} ** 7;
     for (&entropy, 0..) |*id, i| id[0] = @intCast(i + 1);
     const ids = try tools.installation.Identifiers.fromEntropy(entropy);
+    const setup = tools.installation;
+    try eq(@as(u64, 12 * 1024 * 1024 * 1024), setup.standard_bytes);
+    const legacy = try setup.Layout.prepareSource(setup.legacy_bytes, ids);
+    try eq(@as(u64, 1024 * 2048), legacy.part(.SYSTEM).count);
+    try eq(@as(u64, 2363392), legacy.part(.RECOVERY).first);
+    const current = try setup.Layout.prepareSource(setup.standard_bytes, ids);
+    try eq(@as(u64, 10 * 1024 * 2048), current.part(.SYSTEM).count);
+    try std.testing.expectError(error.Geometry, setup.sourceRanges(setup.standard_bytes - 512));
     var work: [tools.io.scratch_bytes]u8 = undefined;
     for ([_]u64{ tools.installation.standard_bytes / 512, 16 * 1024 * 2048 }) |sectors| {
         var fixture = BootFixture{ .sectors = sectors };
