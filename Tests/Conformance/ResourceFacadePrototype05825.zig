@@ -10,6 +10,7 @@ fn dmaRangeCpu(mapping: *const r4os.abi.DmaMapping, offset: u32, bytes: u32) cal
     return -702;
 }
 test "driver DMA range facade keeps the v33 prefix and negotiates each optional callback" {
+    try bootDisplayFacade();
     const a = r4os.abi;
     const t = std.testing;
     try t.expectEqual(@as(usize, 632), @offsetOf(a.DriverApi, "dma_sync_range_for_device"));
@@ -38,6 +39,56 @@ test "driver DMA range facade keeps the v33 prefix and negotiates each optional 
     api.dma_sync_range_for_cpu = null;
     try t.expectEqual(a.err_no_fn, ctx.syncDmaRangeForDevice(&mapping, 0xfffffff0, 7));
     try t.expectEqual(a.err_no_fn, ctx.syncDmaRangeForCpu(&mapping, 3, 0xffffffff));
+}
+
+fn bootHoldProbe(input: *const r4os.abi.GfxBootHoldRequest, output: *r4os.abi.GfxNativeState) callconv(.c) i32 {
+    std.debug.assert(input.generation == 0x100000000079 and input.reference.generation == 0x200000079);
+    output.* = .{ .generation = input.generation + 1, .retained = 1 };
+    return r4os.abi.gfx_output_ok;
+}
+fn bootFinishProbe(generation: u64, operation: u32, output: *r4os.abi.GfxNativeState) callconv(.c) i32 {
+    std.debug.assert(generation == 0x10000000007a and operation == 2);
+    output.* = .{ .generation = generation, .retained = 1, .outcome = r4os.abi.gfx_output_outcome_lost };
+    return r4os.abi.gfx_output_ok;
+}
+fn bootLegacyQuery(output: *r4os.abi.GfxDriverDisplayApi) callconv(.c) i32 {
+    const legacy: r4os.abi.GfxDriverDisplayApi = .{ .size = 40 };
+    @memcpy(@as([*]u8, @ptrCast(output))[0..40], std.mem.asBytes(&legacy)[0..40]);
+    return r4os.abi.gfx_output_ok;
+}
+fn bootDisplayFacade() !void {
+    const a = r4os.abi;
+    const t = std.testing;
+    try t.expectEqual(@as(usize, 40), @offsetOf(a.GfxDriverDisplayApi, "boot_hold"));
+    try t.expectEqual(@as(usize, 48), @offsetOf(a.GfxDriverDisplayApi, "boot_finish"));
+    try t.expectEqual(@as(usize, 56), @sizeOf(a.GfxDriverDisplayApi));
+    try t.expectEqual(@as(usize, 56), @sizeOf(a.GfxBootHoldRequest));
+    var table = r4os.driver_display.Context{ .table = .{ .boot_hold = @intFromPtr(&bootHoldProbe), .boot_finish = @intFromPtr(&bootFinishProbe) } };
+    var state: a.GfxNativeState = .{ .generation = 79 };
+    const request: a.GfxBootHoldRequest = .{ .generation = 0x100000000079, .reference = .{ .id = 7, .generation = 0x200000079 } };
+    for ([_]u32{40,47}) |size| {
+        table.table.size = size;
+        try t.expectEqual(a.err_no_fn, table.bootHold(&request, &state));
+        try t.expectEqual(@as(u64, 79), state.generation);
+    }
+    table.table.size = 48;
+    try t.expectEqual(a.gfx_output_ok, table.bootHold(&request, &state));
+    try t.expectEqual(@as(u64, 0x10000000007a), state.generation);
+    table.table.size = 55;
+    try t.expectEqual(a.err_no_fn, table.bootFinish(state.generation, 2, &state));
+    table.table.size = 56;
+    try t.expectEqual(a.gfx_output_ok, table.bootFinish(state.generation, 2, &state));
+    try t.expectEqual(@as(u32, 1), state.retained);
+    try t.expectEqual(a.gfx_output_outcome_lost, state.outcome);
+    table.table.boot_finish = 0;
+    try t.expectEqual(a.err_no_fn, table.bootFinish(state.generation, 2, &state));
+    var api: a.DriverApi = undefined;
+    api.magic = a.driver_magic; api.reserved = 0;
+    api.version = 28; api.size = 592; api.gfx_display_query = bootLegacyQuery;
+    const context = r4os.r4dev.DriverContext.init(&api);
+    const old = context.graphicsDisplay() orelse return error.LegacyDisplayRejected;
+    try t.expectEqual(@as(u32, 40), old.table.size);
+    try t.expectEqual(a.err_no_fn, old.bootHold(&request, &state));
 }
 
 const driver_thread_handle: u64 = 0x2000000000079;

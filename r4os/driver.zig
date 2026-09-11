@@ -86,7 +86,7 @@ pub const Context = struct {
         if (!self.supportsDriverApi(28, @offsetOf(abi.DriverApi, "gfx_display_query") + @sizeOf(usize))) return null;
         const query = self.api.gfx_display_query orelse return null;
         var table: abi.GfxDriverDisplayApi = .{};
-        if (query(&table) != abi.gfx_output_ok or table.version != 1 or table.size < @sizeOf(abi.GfxDriverDisplayApi)) return null;
+        if (query(&table) != abi.gfx_output_ok or table.version != 1 or table.size < 40) return null;
         return .{ .table = table };
     }
     pub fn graphicsOutputs(self: *const Context) ?@import("driver_outputs.zig").Context {

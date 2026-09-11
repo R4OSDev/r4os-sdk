@@ -3,6 +3,34 @@
 #include <r4os/driver_heap.h>
 #include <r4os/driver_threads.h>
 #include <r4os/driver_semaphores.h>
+#include <r4os/driver_display.h>
+
+static int32_t boot_hold_probe(const R4GfxBootHoldRequest *input, R4GfxNativeState *output) {
+    if (input->generation != UINT64_C(0x100000000079) || input->reference.generation != UINT64_C(0x200000079)) return -77;
+    output->generation = input->generation + 1; output->retained = 1; return R4OS_GFX_OUTPUT_OK;
+}
+static int32_t boot_finish_probe(uint64_t generation, uint32_t operation, R4GfxNativeState *output) {
+    if (generation != UINT64_C(0x10000000007a) || operation != 2) return -77;
+    output->outcome = R4OS_GFX_OUTPUT_OUTCOME_LOST; output->retained = 1; return R4OS_GFX_OUTPUT_OK;
+}
+static int boot_display_checks(void) {
+    _Static_assert(offsetof(R4GfxDriverDisplayApi, boot_hold) == 40, "old display prefix");
+    _Static_assert(offsetof(R4GfxDriverDisplayApi, boot_finish) == 48, "finish offset");
+    _Static_assert(sizeof(R4GfxDriverDisplayApi) == 56 && sizeof(R4GfxBootHoldRequest) == 56, "boot hold layout");
+    R4GfxDriverDisplayApi table = { .version = 1, .size = 40, .boot_hold = (uint64_t)(uintptr_t)&boot_hold_probe, .boot_finish = (uint64_t)(uintptr_t)&boot_finish_probe };
+    R4GfxBootHoldRequest request = { .version = 1, .size = sizeof(request), .generation = UINT64_C(0x100000000079), .reference = { .id = 7, .generation = UINT64_C(0x200000079) } };
+    R4GfxNativeState state = { .version = 1, .size = sizeof(state), .generation = 79 };
+    if (r4driver_display_boot_hold(&table, &request, &state) != R4OS_ERR_NO_FN || state.generation != 79) return 1;
+    table.size = 48;
+    if (r4driver_display_boot_hold(&table, &request, &state) != R4OS_GFX_OUTPUT_OK || state.generation != request.generation + 1) return 2;
+    table.size = 55;
+    if (r4driver_display_boot_finish(&table, state.generation, 2, &state) != R4OS_ERR_NO_FN) return 3;
+    table.size = 56;
+    if (r4driver_display_boot_finish(&table, state.generation, 2, &state) != R4OS_GFX_OUTPUT_OK || state.retained != 1 || state.outcome != R4OS_GFX_OUTPUT_OUTCOME_LOST) return 4;
+    table.boot_finish = 0;
+    if (r4driver_display_boot_finish(&table, state.generation, 2, &state) != R4OS_ERR_NO_FN) return 5;
+    return 0;
+}
 
 static int32_t semaphore_create_probe(uint32_t initial, uint32_t maximum, uint64_t *output) {
     if (initial != UINT32_C(0x80000001) || maximum != UINT32_MAX || *output != 0) return -77;
@@ -253,6 +281,7 @@ static void init_app(R4App *app, R4XStartR4Sys *table, R4XStartR4Desk *desk) {
 }
 
 int main(void) {
+    if (boot_display_checks() != 0) return 83;
     if (semaphore_checks() != 0) return 82;
     if (driver_heap_checks() != 0) return 80;
     if (driver_thread_checks() != 0) return 81;
