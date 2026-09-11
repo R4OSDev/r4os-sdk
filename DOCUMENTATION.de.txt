@@ -717,11 +717,11 @@ teilweise belegte Region hinterlassen; Aufrufer geben sie kontrolliert frei.
 --------------------------------------------
 
 storage_tools.installation besitzt das gemeinsame 512-Byte-GPT-Layout mit
-1-MB-Ausrichtung: BIOSBOOT 1 MB, BOOT 128 MB, SYSTEM 10240 MB, RECOVERY 512 MB
+1-MB-Ausrichtung: BIOSBOOT 1 MB, BOOT 128 MB, SYSTEM 10240 MB, RECOVERY 5120 MB
 und DATA bis vor die echte Sicherungstabelle am Geraeteende. Mindestens
 16 MB DATA muessen passen. Identifiers.fromEntropy benoetigt sieben frische
 16-Byte-Werte vom Host bzw. Gast, setzt UUIDv4-Bits und prueft Eindeutigkeit.
-Das Standardimage ist 12288 MB gross. sourceRanges/prepareSource lesen
+Das Standardimage ist 16384 MB gross. sourceRanges/prepareSource lesen
 die alten 2048-MB-Releaseimages weiterhin mit ihrer 1024-MB-SYSTEM-Geometrie;
 Neuinstallation und USB benutzen immer den neuen Standard. Updateziele
 behalten ihre eigene Geometrie. sparse_image erlaubt bis 16 GB logischen
@@ -924,3 +924,12 @@ das war eine Fixturegrenze, keine Aenderung am Dateisystem.
 
 R4PART 0.1.5 und Recovery 0.1.55/Menue 0.1.20 uebernehmen den Formatter.
 Keine neue Gast-, Hardware- oder Release-Gesamtpruefung fuer diese Grenzen.
+
+FAT-Selbstupdates grosser Recovery-Volumes (0.79.9):
+fat32_update.Backing und prepareBacking verwenden dieselbe Belegungspruefung
+und Schreibreihenfolge wie prepareDelta. Bis 8 GB Quellumfang, nur
+Metadaten und benoetigte Datencluster resident; andere Inhalte und
+SHA256 laufen blockweise. Die Quelle bleibt bis Planabschluss geborgt,
+Schreibplaene sind unabhaengig. Der bestehende Delta-Fall vergleicht beide
+Wege samt falscher Generation und Schreibfehler; eine 5-GB-Quelle mit
+Datei jenseits 4 GB bleibt im festen 64-MB-Vorbereitungsbudget.

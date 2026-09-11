@@ -54,15 +54,17 @@ test "five-role layout, GUID boot references and Limine GPT publication" {
     for (&entropy, 0..) |*id, i| id[0] = @intCast(i + 1);
     const ids = try tools.installation.Identifiers.fromEntropy(entropy);
     const setup = tools.installation;
-    try eq(@as(u64, 12 * 1024 * 1024 * 1024), setup.standard_bytes);
+    try eq(@as(u64, 16 * 1024 * 1024 * 1024), setup.standard_bytes);
     const legacy = try setup.Layout.prepareSource(setup.legacy_bytes, ids);
     try eq(@as(u64, 1024 * 2048), legacy.part(.SYSTEM).count);
     try eq(@as(u64, 2363392), legacy.part(.RECOVERY).first);
     const current = try setup.Layout.prepareSource(setup.standard_bytes, ids);
     try eq(@as(u64, 10 * 1024 * 2048), current.part(.SYSTEM).count);
+    try eq(@as(u64, 5 * 1024 * 2048), current.part(.RECOVERY).count);
+    try eq(@as(u64, 512 * 2048), legacy.part(.RECOVERY).count);
     try std.testing.expectError(error.Geometry, setup.sourceRanges(setup.standard_bytes - 512));
     var work: [tools.io.scratch_bytes]u8 = undefined;
-    for ([_]u64{ tools.installation.standard_bytes / 512, 16 * 1024 * 2048 }) |sectors| {
+    for ([_]u64{ tools.installation.standard_bytes / 512, 32 * 1024 * 2048 }) |sectors| {
         var fixture = BootFixture{ .sectors = sectors };
         var progress = tools.io.Progress{};
         const device = fixture.device(&progress);
@@ -472,6 +474,34 @@ test "FAT delta plans own touched sectors and preserve sequential source generat
     defer reference1.deinit();
     var reference2 = try tools.fat32_update.prepare(a, reference1.bytes, 4096, &second);
     defer reference2.deinit();
+    {
+        var backing = try tools.fat32_update.Backing.init(a, tools.byte_source.Source.slice(original.bytes), 4096);
+        defer backing.deinit();
+        var streamed1 = try tools.fat32_update.prepareBacking(a, &backing, &first);
+        defer streamed1.deinit();
+        var streamed2 = try tools.fat32_update.prepareBacking(a, &backing, &second);
+        defer streamed2.deinit();
+        try tools.fat32_update.verifyTreeBacking(&backing, "CURRENT", &.{"new/long name.txt"});
+        const view = try tools.fat32_view.View.initSource(backing.source(), 4096);
+        try view.matches("INSTALL/KEEP.ZIP", "retained download");
+        const disk = try a.dupe(u8, original.bytes);
+        defer a.free(disk);
+        var memory = tools.io.Memory{ .bytes = disk };
+        var work: [tools.io.scratch_bytes]u8 = undefined;
+        // Plan 2 must not publish before the verified fallback generation.
+        try expectError(error.SourceChanged, streamed2.execute(memory.device(), &work));
+        try streamed1.execute(memory.device(), &work);
+        try expectEqualSlices(u8, reference1.bytes, disk);
+        try streamed2.execute(memory.device(), &work);
+        try expectEqualSlices(u8, reference2.bytes, disk);
+        // Streaming plans preserve the same failure publication boundaries.
+        @memcpy(disk, original.bytes);
+        var fixture = Fixture{ .bytes = disk, .fail_write = 1 };
+        var progress = tools.io.Progress{};
+        try expectError(error.WriteFailed, streamed1.execute(fixture.device(&progress), &work));
+        try expect(progress.write_attempted and !progress.verified);
+        try expectEqualSlices(u8, original.bytes[0..512], disk[0..512]);
+    }
     const scratch = try a.dupe(u8, original.bytes);
     defer a.free(scratch);
     var delta1 = try tools.fat32_update.prepareDelta(a, scratch, 4096, &first);
@@ -502,6 +532,68 @@ test "FAT delta plans own touched sectors and preserve sequential source generat
     try expectEqualSlices(u8, reference2.bytes, original.bytes);
     try expectError(error.SourceAlias, tools.fat32_update.prepareDelta(a, original.bytes, 4096, &.{.{ .path = "CURRENT/alias", .bytes = original.bytes[0..512] }}));
     std.debug.print("delta payloads={d}+{d} volume={d} no_op_allocations=0\n", .{ delta1.bytes.len, delta2.bytes.len, original.bytes.len });
+}
+
+const LargeFatSource = struct {
+    plan: *const tools.fat32_image.Streamed,
+    fn source(self: *const LargeFatSource) tools.byte_source.Source {
+        return .{ .context = self, .length = @as(usize, self.plan.stats.geometry.sectors) * 512, .read_fn = read };
+    }
+    fn overlay(out: []u8, at: usize, start: usize, bytes: []const u8) void {
+        const first = @max(at, start);
+        const last = @min(at + out.len, start + bytes.len);
+        if (first < last) @memcpy(out[first - at ..][0 .. last - first], bytes[first - start ..][0 .. last - first]);
+    }
+    fn read(raw: *const anyopaque, at: usize, out: []u8) !void {
+        const self: *const LargeFatSource = @ptrCast(@alignCast(raw));
+        @memset(out, 0);
+        overlay(out, at, 0, self.plan.metadata);
+        for (self.plan.segments.items) |segment| overlay(out, at, @intCast(segment.offset), segment.bytes);
+    }
+};
+
+test "5 GB FAT preparation reads beyond 4 GB with a 64 MB RAM budget" {
+    const a = std.testing.allocator;
+    var plan = try tools.fat32_image.prepareStreamed(a, 5 * 1024 * 2048, 4096, 8, "RECOVERY", 17, &.{.{ .path = "KEEP.BIN", .bytes = "payload above 4 GB" }});
+    defer plan.deinit();
+    const geo = plan.stats.geometry;
+    const cluster_bytes = @as(usize, geo.sectors_per_cluster) * 512;
+    const high_cluster: u32 = @intCast(2 + (4 * 1024 * 1024 * 1024) / cluster_bytes);
+    const high_offset = @as(usize, geo.data_start) * 512 + @as(usize, high_cluster - 2) * cluster_bytes;
+    var moved = false;
+    for (plan.segments.items) |*segment| {
+        if (!segment.owned) continue;
+        var at: usize = 0;
+        while (at + 32 <= segment.bytes.len) : (at += 32) {
+            const raw = @constCast(segment.bytes[at..][0..32]);
+            if (!std.mem.eql(u8, raw[0..11], "KEEP    BIN")) continue;
+            const old_cluster = (@as(u32, std.mem.readInt(u16, raw[20..22], .little)) << 16) | std.mem.readInt(u16, raw[26..28], .little);
+            for (0..2) |copy| {
+                const base = (32 + copy * @as(usize, geo.sectors_per_fat)) * 512;
+                std.mem.writeInt(u32, plan.metadata[base + @as(usize, old_cluster) * 4 ..][0..4], 0, .little);
+                std.mem.writeInt(u32, plan.metadata[base + @as(usize, high_cluster) * 4 ..][0..4], 0x0fff_ffff, .little);
+            }
+            std.mem.writeInt(u16, raw[20..22], @truncate(high_cluster >> 16), .little);
+            std.mem.writeInt(u16, raw[26..28], @truncate(high_cluster), .little);
+            moved = true;
+        }
+    }
+    try expect(moved);
+    for (plan.segments.items) |*segment| if (!segment.owned) {
+        segment.offset = high_offset;
+    };
+    const original = LargeFatSource{ .plan = &plan };
+    const budget = try a.alloc(u8, 64 * 1024 * 1024);
+    defer a.free(budget);
+    var fixed = std.heap.FixedBufferAllocator.init(budget);
+    var backing = try tools.fat32_update.Backing.init(fixed.allocator(), original.source(), 4096);
+    defer backing.deinit();
+    try (try tools.fat32_view.View.initSource(backing.source(), 4096)).matches("KEEP.BIN", "payload above 4 GB");
+    var update = try tools.fat32_update.prepareBacking(fixed.allocator(), &backing, &.{.{ .path = "KEEP.BIN", .bytes = "replacement" }});
+    defer update.deinit();
+    try (try tools.fat32_view.View.initSource(backing.source(), 4096)).matches("KEEP.BIN", "replacement");
+    try expect(update.bytes.len < 1024 * 1024);
+    std.debug.print("5 GB FAT backing: RAM={d} bytes, high source offset={d}\n", .{ fixed.end_index, high_offset });
 }
 
 test "GPT/MBR roundtrip, geometry, free space, attributes and stale plans" {
