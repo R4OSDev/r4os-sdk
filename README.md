@@ -346,4 +346,14 @@ capacities 72..79, 80 for 80..87, and 88 from 88 upward. The sleeping flag 8
 is status-only: the real backing Task is blocked in this service's sleep
 queue. It does not describe semaphore or arbitrary application waits and
 cannot be requested at creation. Original minimum size/version/imports and
-DriverApi33/632 remain unchanged.
+DriverApi33/632 remain unchanged for this thread-service extension.
+
+DriverApi34 separately appends `syncDmaRangeForDevice` and `syncDmaRangeForCpu`
+through optional slots at 632/640 (total 648 bytes). The context checks the
+provider version, size and callback before dispatch; old tables return
+`err_no_fn`. Offsets and nonzero lengths are byte ranges of an existing mapping.
+The kernel validates its actual retained bounds and preserves other bytes.
+Callers still own publication order, per-field exclusion and device quiescence
+before unmap. Dedicated threads and IRQ/storage callbacks are not admitted.
+The existing resource facade test covers old prefixes, partial/null tails,
+full-width arguments and provider errors.

@@ -300,6 +300,18 @@ pub const Context = struct {
         return self.api.dma_sync_for_cpu(mapping);
     }
 
+    pub fn syncDmaRangeForDevice(self: *const Context, mapping: *const abi.DmaMapping, offset: u32, bytes: u32) i32 {
+        if (!self.supportsDriverApi(34, @offsetOf(abi.DriverApi, "dma_sync_range_for_device") + 8)) return abi.err_no_fn;
+        const callback = self.api.dma_sync_range_for_device orelse return abi.err_no_fn;
+        return callback(mapping, offset, bytes);
+    }
+
+    pub fn syncDmaRangeForCpu(self: *const Context, mapping: *const abi.DmaMapping, offset: u32, bytes: u32) i32 {
+        if (!self.supportsDriverApi(34, @offsetOf(abi.DriverApi, "dma_sync_range_for_cpu") + 8)) return abi.err_no_fn;
+        const callback = self.api.dma_sync_range_for_cpu orelse return abi.err_no_fn;
+        return callback(mapping, offset, bytes);
+    }
+
     pub fn unmapDma(self: *const Context, mapping: *abi.DmaMapping) i32 {
         return self.api.dma_unmap(mapping);
     }

@@ -1,6 +1,45 @@
 const std = @import("std");
 const r4os = @import("r4os");
 
+fn dmaRangeDevice(mapping: *const r4os.abi.DmaMapping, offset: u32, bytes: u32) callconv(.c) i32 {
+    std.debug.assert(mapping.handle == 0x700000000079 and offset == 0xfffffff0 and bytes == 7);
+    return -701;
+}
+fn dmaRangeCpu(mapping: *const r4os.abi.DmaMapping, offset: u32, bytes: u32) callconv(.c) i32 {
+    std.debug.assert(mapping.handle == 0x700000000079 and offset == 3 and bytes == 0xffffffff);
+    return -702;
+}
+test "driver DMA range facade keeps the v33 prefix and negotiates each optional callback" {
+    const a = r4os.abi;
+    const t = std.testing;
+    try t.expectEqual(@as(usize, 632), @offsetOf(a.DriverApi, "dma_sync_range_for_device"));
+    try t.expectEqual(@as(usize, 640), @offsetOf(a.DriverApi, "dma_sync_range_for_cpu"));
+    try t.expectEqual(@as(usize, 648), @sizeOf(a.DriverApi));
+    var api: a.DriverApi = undefined;
+    api.magic = a.driver_magic;
+    api.reserved = 0;
+    api.version = 33;
+    api.size = @sizeOf(a.DriverApi);
+    api.dma_sync_range_for_device = &dmaRangeDevice;
+    api.dma_sync_range_for_cpu = &dmaRangeCpu;
+    var ctx = r4os.r4dev.DriverContext.init(&api);
+    const mapping = a.DmaMapping{ .handle = 0x700000000079 };
+    try t.expectEqual(a.err_no_fn, ctx.syncDmaRangeForDevice(&mapping, 0xfffffff0, 7));
+    try t.expectEqual(a.err_no_fn, ctx.syncDmaRangeForCpu(&mapping, 3, 0xffffffff));
+    api.version = 34;
+    api.size = 639;
+    try t.expectEqual(a.err_no_fn, ctx.syncDmaRangeForDevice(&mapping, 0xfffffff0, 7));
+    api.size = 640;
+    try t.expectEqual(@as(i32, -701), ctx.syncDmaRangeForDevice(&mapping, 0xfffffff0, 7));
+    try t.expectEqual(a.err_no_fn, ctx.syncDmaRangeForCpu(&mapping, 3, 0xffffffff));
+    api.size = 648;
+    try t.expectEqual(@as(i32, -702), ctx.syncDmaRangeForCpu(&mapping, 3, 0xffffffff));
+    api.dma_sync_range_for_device = null;
+    api.dma_sync_range_for_cpu = null;
+    try t.expectEqual(a.err_no_fn, ctx.syncDmaRangeForDevice(&mapping, 0xfffffff0, 7));
+    try t.expectEqual(a.err_no_fn, ctx.syncDmaRangeForCpu(&mapping, 3, 0xffffffff));
+}
+
 const driver_thread_handle: u64 = 0x2000000000079;
 fn driverThreadHandler(value: usize) callconv(.c) i32 {
     return if (value == 0x100000000037) 79 else -1;
@@ -172,7 +211,7 @@ fn semaphoreQuery(output: *r4os.abi.DriverSemaphoreApi) callconv(.c) i32 {
 test "driver semaphores preserve v32 prefix, full counters and deadlines, and failed operation ownership" {
     const a = r4os.abi;
     try std.testing.expectEqual(@as(usize, 624), @offsetOf(a.DriverApi, "semaphore_query"));
-    try std.testing.expectEqual(@as(usize, 632), @sizeOf(a.DriverApi));
+    try std.testing.expectEqual(@as(usize, 632), @offsetOf(a.DriverApi, "semaphore_query") + @sizeOf(u64));
     var api: a.DriverApi = undefined;
     api.version = 32;
     api.size = 624;
