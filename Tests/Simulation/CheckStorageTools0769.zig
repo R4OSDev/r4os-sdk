@@ -488,9 +488,18 @@ test "FAT delta plans own touched sectors and preserve sequential source generat
         defer a.free(disk);
         var memory = tools.io.Memory{ .bytes = disk };
         var work: [tools.io.scratch_bytes]u8 = undefined;
+        const cache_at = std.mem.indexOf(u8, disk, "retained download").?;
+        disk[cache_at] ^= 1;
+        try expectError(error.SourceChanged, streamed1.execute(memory.device(), &work));
+        disk[cache_at] ^= 1;
         // Plan 2 must not publish before the verified fallback generation.
         try expectError(error.SourceChanged, streamed2.execute(memory.device(), &work));
+        // Unallocated contents are not source state. They stay byte-identical
+        // unless a changed file deliberately allocates those sectors.
+        disk[disk.len - 1] = 0x65;
         try streamed1.execute(memory.device(), &work);
+        try eq(@as(u8, 0x65), disk[disk.len - 1]);
+        disk[disk.len - 1] = original.bytes[disk.len - 1];
         try expectEqualSlices(u8, reference1.bytes, disk);
         try streamed2.execute(memory.device(), &work);
         try expectEqualSlices(u8, reference2.bytes, disk);
@@ -536,6 +545,7 @@ test "FAT delta plans own touched sectors and preserve sequential source generat
 
 const LargeFatSource = struct {
     plan: *const tools.fat32_image.Streamed,
+    read_bytes: usize = 0,
     fn source(self: *const LargeFatSource) tools.byte_source.Source {
         return .{ .context = self, .length = @as(usize, self.plan.stats.geometry.sectors) * 512, .read_fn = read };
     }
@@ -545,7 +555,8 @@ const LargeFatSource = struct {
         if (first < last) @memcpy(out[first - at ..][0 .. last - first], bytes[first - start ..][0 .. last - first]);
     }
     fn read(raw: *const anyopaque, at: usize, out: []u8) !void {
-        const self: *const LargeFatSource = @ptrCast(@alignCast(raw));
+        const self: *LargeFatSource = @ptrCast(@alignCast(@constCast(raw)));
+        self.read_bytes += out.len;
         @memset(out, 0);
         overlay(out, at, 0, self.plan.metadata);
         for (self.plan.segments.items) |segment| overlay(out, at, @intCast(segment.offset), segment.bytes);
@@ -582,7 +593,7 @@ test "5 GB FAT preparation reads beyond 4 GB with a 64 MB RAM budget" {
     for (plan.segments.items) |*segment| if (!segment.owned) {
         segment.offset = high_offset;
     };
-    const original = LargeFatSource{ .plan = &plan };
+    var original = LargeFatSource{ .plan = &plan };
     const budget = try a.alloc(u8, 64 * 1024 * 1024);
     defer a.free(budget);
     var fixed = std.heap.FixedBufferAllocator.init(budget);
@@ -593,7 +604,8 @@ test "5 GB FAT preparation reads beyond 4 GB with a 64 MB RAM budget" {
     defer update.deinit();
     try (try tools.fat32_view.View.initSource(backing.source(), 4096)).matches("KEEP.BIN", "replacement");
     try expect(update.bytes.len < 1024 * 1024);
-    std.debug.print("5 GB FAT backing: RAM={d} bytes, high source offset={d}\n", .{ fixed.end_index, high_offset });
+    try expect(original.read_bytes < 64 * 1024 * 1024);
+    std.debug.print("5 GB FAT backing: RAM={d} bytes, source reads={d}, high source offset={d}\n", .{ fixed.end_index, original.read_bytes, high_offset });
 }
 
 test "GPT/MBR roundtrip, geometry, free space, attributes and stale plans" {

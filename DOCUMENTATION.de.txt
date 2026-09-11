@@ -928,8 +928,10 @@ Keine neue Gast-, Hardware- oder Release-Gesamtpruefung fuer diese Grenzen.
 FAT-Selbstupdates grosser Recovery-Volumes (0.79.9):
 fat32_update.Backing und prepareBacking verwenden dieselbe Belegungspruefung
 und Schreibreihenfolge wie prepareDelta. Bis 8 GB Quellumfang, nur
-Metadaten und benoetigte Datencluster resident; andere Inhalte und
-SHA256 laufen blockweise. Die Quelle bleibt bis Planabschluss geborgt,
+Metadaten und benoetigte Datencluster resident. Der SHA256 bindet die
+Metadaten und alle belegten Cluster samt ihren Positionen; freie Bereiche
+werden weder gelesen noch pauschal geschrieben. Auch unbekannte Dateien
+und INSTALL-Inhalte bleiben Teil der blockweisen Vorpruefung. Die Quelle bleibt bis Planabschluss geborgt,
 Schreibplaene sind unabhaengig. Der bestehende Delta-Fall vergleicht beide
 Wege samt falscher Generation und Schreibfehler; eine 5-GB-Quelle mit
 Datei jenseits 4 GB bleibt im festen 64-MB-Vorbereitungsbudget.
