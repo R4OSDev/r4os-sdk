@@ -26,6 +26,11 @@ pub const Context = struct {
         const callback: *const fn (*const abi.GfxNativeRegistration, *abi.GfxNativeState) callconv(.c) i32 = @ptrFromInt(self.table.prepare);
         return callback(input, output);
     }
+    pub fn prepareHeld(self: *const Context, input: *const abi.GfxNativeRegistration, generation: u64, output: *abi.GfxNativeState) i32 {
+        if (self.table.version != 1 or self.table.size < @offsetOf(abi.GfxDriverDisplayApi, "prepare_held") + 8 or self.table.prepare_held == 0) return abi.err_no_fn;
+        const callback: *const fn (*const abi.GfxNativeRegistration, u64, *abi.GfxNativeState) callconv(.c) i32 = @ptrFromInt(self.table.prepare_held);
+        return callback(input, generation, output);
+    }
     pub fn transition(self: *const Context, generation: u64, operation: u32, output: *abi.GfxNativeState) i32 {
         if (self.table.version != 1 or self.table.size < @offsetOf(abi.GfxDriverDisplayApi, "transition") + 8 or self.table.transition == 0) return abi.err_no_fn;
         const callback: *const fn (u64, u32, *abi.GfxNativeState) callconv(.c) i32 = @ptrFromInt(self.table.transition);

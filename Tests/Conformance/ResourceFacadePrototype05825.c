@@ -13,11 +13,17 @@ static int32_t boot_finish_probe(uint64_t generation, uint32_t operation, R4GfxN
     if (generation != UINT64_C(0x10000000007a) || operation != 2) return -77;
     output->outcome = R4OS_GFX_OUTPUT_OUTCOME_LOST; output->retained = 1; return R4OS_GFX_OUTPUT_OK;
 }
+static int32_t prepare_held_probe(const R4GfxNativeRegistration *input, uint64_t generation, R4GfxNativeState *output) {
+    if (generation != UINT64_C(0x10000000007a) || input->context != UINT64_C(0x200000000079)) return -77;
+    output->generation = generation; output->retained = 1; output->outcome = R4OS_GFX_OUTPUT_OUTCOME_VALIDATED;
+    return R4OS_GFX_OUTPUT_OK;
+}
 static int boot_display_checks(void) {
     _Static_assert(offsetof(R4GfxDriverDisplayApi, boot_hold) == 40, "old display prefix");
     _Static_assert(offsetof(R4GfxDriverDisplayApi, boot_finish) == 48, "finish offset");
-    _Static_assert(sizeof(R4GfxDriverDisplayApi) == 56 && sizeof(R4GfxBootHoldRequest) == 56, "boot hold layout");
-    R4GfxDriverDisplayApi table = { .version = 1, .size = 40, .boot_hold = (uint64_t)(uintptr_t)&boot_hold_probe, .boot_finish = (uint64_t)(uintptr_t)&boot_finish_probe };
+    _Static_assert(offsetof(R4GfxDriverDisplayApi, prepare_held) == 56, "held native tail");
+    _Static_assert(sizeof(R4GfxDriverDisplayApi) == 64 && sizeof(R4GfxBootHoldRequest) == 56, "boot hold layout");
+    R4GfxDriverDisplayApi table = { .version = 1, .size = 40, .boot_hold = (uint64_t)(uintptr_t)&boot_hold_probe, .boot_finish = (uint64_t)(uintptr_t)&boot_finish_probe, .prepare_held = (uint64_t)(uintptr_t)&prepare_held_probe };
     R4GfxBootHoldRequest request = { .version = 1, .size = sizeof(request), .generation = UINT64_C(0x100000000079), .reference = { .id = 7, .generation = UINT64_C(0x200000079) } };
     R4GfxNativeState state = { .version = 1, .size = sizeof(state), .generation = 79 };
     if (r4driver_display_boot_hold(&table, &request, &state) != R4OS_ERR_NO_FN || state.generation != 79) return 1;
@@ -29,6 +35,16 @@ static int boot_display_checks(void) {
     if (r4driver_display_boot_finish(&table, state.generation, 2, &state) != R4OS_GFX_OUTPUT_OK || state.retained != 1 || state.outcome != R4OS_GFX_OUTPUT_OUTCOME_LOST) return 4;
     table.boot_finish = 0;
     if (r4driver_display_boot_finish(&table, state.generation, 2, &state) != R4OS_ERR_NO_FN) return 5;
+    R4GfxNativeRegistration candidate = { .version = 1, .size = sizeof(candidate), .context = UINT64_C(0x200000000079) };
+    if (r4driver_display_prepare_held(&table, &candidate, state.generation, &state) != R4OS_ERR_NO_FN || state.outcome != R4OS_GFX_OUTPUT_OUTCOME_LOST) return 6;
+    table.size = 63;
+    if (r4driver_display_prepare_held(&table, &candidate, state.generation, &state) != R4OS_ERR_NO_FN) return 7;
+    table.size = 64;
+    if (r4driver_display_prepare_held(&table, 0, state.generation, &state) != R4OS_GFX_OUTPUT_ERROR_INVALID ||
+        r4driver_display_prepare_held(&table, &candidate, state.generation, 0) != R4OS_GFX_OUTPUT_ERROR_INVALID) return 10;
+    if (r4driver_display_prepare_held(&table, &candidate, state.generation, &state) != R4OS_GFX_OUTPUT_OK || state.generation != UINT64_C(0x10000000007a) || state.outcome != R4OS_GFX_OUTPUT_OUTCOME_VALIDATED || state.retained != 1) return 8;
+    table.prepare_held = 0;
+    if (r4driver_display_prepare_held(&table, &candidate, state.generation, &state) != R4OS_ERR_NO_FN) return 9;
     return 0;
 }
 

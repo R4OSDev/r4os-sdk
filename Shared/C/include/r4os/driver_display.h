@@ -21,6 +21,12 @@ static inline int32_t r4driver_display_boot_info(const R4GfxDriverDisplayApi *ta
     typedef int32_t (*Callback)(R4GfxNativeBootInfo *);
     return ((Callback)(uintptr_t)table->boot_info)(output);
 }
+static inline int32_t r4driver_display_prepare_held(const R4GfxDriverDisplayApi *table, const R4GfxNativeRegistration *input, uint64_t generation, R4GfxNativeState *output) {
+    if (table == 0 || table->version != 1 || table->size < offsetof(R4GfxDriverDisplayApi, prepare_held) + sizeof(uint64_t) || table->prepare_held == 0) return R4OS_ERR_NO_FN;
+    if (input == 0 || output == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    typedef int32_t (*Callback)(const R4GfxNativeRegistration *, uint64_t, R4GfxNativeState *);
+    return ((Callback)(uintptr_t)table->prepare_held)(input, generation, output);
+}
 static inline int32_t r4driver_display_prepare(const R4GfxDriverDisplayApi *table, const R4GfxNativeRegistration *input, R4GfxNativeState *output) {
     if (table == 0 || table->version != 1 || table->size < offsetof(R4GfxDriverDisplayApi, prepare) + sizeof(uint64_t) || table->prepare == 0) return R4OS_ERR_NO_FN;
     if (input == 0 || output == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
