@@ -62,7 +62,28 @@ static int32_t gfx_map_probe(const R4GfxBufferHandle *ref, uint32_t access, uint
     out->byte_length = bytes;
     return 1;
 }
+_Static_assert(sizeof(R4GfxOwnedBufferReservation)==88 && sizeof(R4GfxOwnedBufferRelease)==80 && offsetof(R4GfxDriverMemoryApi,buffer_reserve)==112 && sizeof(R4GfxDriverMemoryApi)==152, "owned BO ABI");
+static int32_t owned_reserve(const R4GfxBufferDescriptor *d, uint64_t c, R4GfxOwnedBufferReservation *o){assert(d && c==UINT64_C(0x100000003) && o->size==88);o->cookie=c;return 1;}
+static int32_t owned_commit(const R4GfxOwnedBufferReservation *r,R4GfxBufferReference *o){assert(r->cookie==UINT64_C(0x100000003) && o->size==48);return 1;}
+static int32_t owned_abort(const R4GfxOwnedBufferReservation *r,uint32_t q){assert(r->cookie==UINT64_C(0x100000003) && q==0);return -4;}
+static int32_t owned_take(uint32_t a,uint64_t g,R4GfxOwnedBufferRelease *o){assert(a==17 && g==UINT64_C(0x300000007) && o->size==80);o->attempt=UINT64_C(0x400000009);return 1;}
+static int32_t owned_finish(const R4GfxOwnedBufferRelease *r,uint32_t q){assert(r->attempt==UINT64_C(0x400000009) && q==1);return 1;}
+static void owned_facade_probe(void){
+    R4GfxDriverMemoryApi m={.version=1,.size=152,.buffer_reserve=(uintptr_t)owned_reserve,.buffer_commit=(uintptr_t)owned_commit,.buffer_abort=(uintptr_t)owned_abort,.buffer_take_release=(uintptr_t)owned_take,.buffer_finish_release=(uintptr_t)owned_finish};
+    R4GfxBufferDescriptor d={0};R4GfxOwnedBufferReservation r={0};R4GfxBufferReference ref={0};R4GfxOwnedBufferRelease rel={0};
+    for(unsigned i=112;i<120;++i){m.size=i;assert(r4driver_memory_buffer_reserve(&m,&d,UINT64_C(0x100000003),&r)==R4OS_ERR_NO_FN && r.cookie==0);}
+    m.size=120;assert(r4driver_memory_buffer_reserve(&m,&d,UINT64_C(0x100000003),&r)==1);
+    for(unsigned i=120;i<128;++i){m.size=i;assert(r4driver_memory_buffer_commit(&m,&r,&ref)==R4OS_ERR_NO_FN);}
+    m.size=128;assert(r4driver_memory_buffer_commit(&m,&r,&ref)==1);
+    for(unsigned i=128;i<136;++i){m.size=i;assert(r4driver_memory_buffer_abort(&m,&r,0)==R4OS_ERR_NO_FN);}
+    m.size=136;assert(r4driver_memory_buffer_abort(&m,&r,0)==-4);
+    for(unsigned i=136;i<144;++i){m.size=i;assert(r4driver_memory_buffer_take_release(&m,17,UINT64_C(0x300000007),&rel)==R4OS_ERR_NO_FN);}
+    m.size=144;assert(r4driver_memory_buffer_take_release(&m,17,UINT64_C(0x300000007),&rel)==1);
+    for(unsigned i=144;i<152;++i){m.size=i;assert(r4driver_memory_buffer_finish_release(&m,&rel,1)==R4OS_ERR_NO_FN);}
+    m.size=152;assert(r4driver_memory_buffer_finish_release(&m,&rel,1)==1);
+}
 static void gfx_facade_probe(void) {
+    owned_facade_probe();
     R4XStartR4Draw table = {0};
     table.size = offsetof(R4XStartR4Draw, gfx_buffer_map);
     table.gfx_buffer_map = (uintptr_t)gfx_map_probe;

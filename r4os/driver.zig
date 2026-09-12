@@ -107,7 +107,7 @@ pub const Context = struct {
         if (!self.supportsDriverApi(25, @offsetOf(abi.DriverApi, "gfx_memory_query") + @sizeOf(usize))) return null;
         const query = self.api.gfx_memory_query orelse return null;
         var table: abi.GfxDriverMemoryApi = .{};
-        if (query(&table) != abi.gfx_buffer_result_ok or table.version != 1 or table.size < @sizeOf(abi.GfxDriverMemoryApi)) return null;
+        if (query(&table) != abi.gfx_buffer_result_ok or table.version != 1 or table.size < 112) return null;
         return .{ .table = table };
     }
     api: *const abi.DriverApi,

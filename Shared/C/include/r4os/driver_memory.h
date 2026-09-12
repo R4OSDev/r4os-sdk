@@ -99,5 +99,41 @@ static inline int32_t r4driver_memory_buffer_stats(const R4GfxDriverMemoryApi *t
     return ((Callback)(uintptr_t)table->buffer_stats)(output);
 }
 
+
+static inline int32_t r4driver_memory_buffer_reserve(const R4GfxDriverMemoryApi *table, const R4GfxBufferDescriptor * input, uint64_t cookie, R4GfxOwnedBufferReservation * output) {
+    if (table == 0 || table->version != 1 || table->size < offsetof(R4GfxDriverMemoryApi, buffer_reserve) + sizeof(uint64_t) || table->buffer_reserve == 0) return R4OS_ERR_NO_FN;
+    if (output == 0) return R4OS_ERROR_INVALID;
+    output->version = 1; output->size = sizeof(*output);
+    typedef int32_t (*Callback)(const R4GfxBufferDescriptor *, uint64_t, R4GfxOwnedBufferReservation *);
+    return ((Callback)(uintptr_t)table->buffer_reserve)(input, cookie, output);
+}
+
+static inline int32_t r4driver_memory_buffer_commit(const R4GfxDriverMemoryApi *table, const R4GfxOwnedBufferReservation * input, R4GfxBufferReference * output) {
+    if (table == 0 || table->version != 1 || table->size < offsetof(R4GfxDriverMemoryApi, buffer_commit) + sizeof(uint64_t) || table->buffer_commit == 0) return R4OS_ERR_NO_FN;
+    if (output == 0) return R4OS_ERROR_INVALID;
+    output->version = 1; output->size = sizeof(*output);
+    typedef int32_t (*Callback)(const R4GfxOwnedBufferReservation *, R4GfxBufferReference *);
+    return ((Callback)(uintptr_t)table->buffer_commit)(input, output);
+}
+
+static inline int32_t r4driver_memory_buffer_abort(const R4GfxDriverMemoryApi *table, const R4GfxOwnedBufferReservation * input, uint32_t quiesced) {
+    if (table == 0 || table->version != 1 || table->size < offsetof(R4GfxDriverMemoryApi, buffer_abort) + sizeof(uint64_t) || table->buffer_abort == 0) return R4OS_ERR_NO_FN;
+    typedef int32_t (*Callback)(const R4GfxOwnedBufferReservation *, uint32_t);
+    return ((Callback)(uintptr_t)table->buffer_abort)(input, quiesced);
+}
+
+static inline int32_t r4driver_memory_buffer_take_release(const R4GfxDriverMemoryApi *table, uint32_t adapter, uint64_t generation, R4GfxOwnedBufferRelease * output) {
+    if (table == 0 || table->version != 1 || table->size < offsetof(R4GfxDriverMemoryApi, buffer_take_release) + sizeof(uint64_t) || table->buffer_take_release == 0) return R4OS_ERR_NO_FN;
+    if (output == 0) return R4OS_ERROR_INVALID;
+    output->version = 1; output->size = sizeof(*output);
+    typedef int32_t (*Callback)(uint32_t, uint64_t, R4GfxOwnedBufferRelease *);
+    return ((Callback)(uintptr_t)table->buffer_take_release)(adapter, generation, output);
+}
+
+static inline int32_t r4driver_memory_buffer_finish_release(const R4GfxDriverMemoryApi *table, const R4GfxOwnedBufferRelease * input, uint32_t quiesced) {
+    if (table == 0 || table->version != 1 || table->size < offsetof(R4GfxDriverMemoryApi, buffer_finish_release) + sizeof(uint64_t) || table->buffer_finish_release == 0) return R4OS_ERR_NO_FN;
+    typedef int32_t (*Callback)(const R4GfxOwnedBufferRelease *, uint32_t);
+    return ((Callback)(uintptr_t)table->buffer_finish_release)(input, quiesced);
+}
 #endif
 

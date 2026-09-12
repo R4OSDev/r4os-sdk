@@ -81,4 +81,34 @@ pub const Context = struct {
         const callback: *const fn (*abi.GfxBufferStats) callconv(.c) i32 = @ptrFromInt(self.table.buffer_stats);
         return callback(output);
     }
+
+    pub fn bufferReserve(self: *const Context, input: *const abi.GfxBufferDescriptor, cookie: u64, output: *abi.GfxOwnedBufferReservation) i32 {
+        if (self.table.version != 1 or self.table.size < @offsetOf(abi.GfxDriverMemoryApi, "buffer_reserve") + 8 or self.table.buffer_reserve == 0) return abi.err_no_fn;
+        const callback: *const fn (*const abi.GfxBufferDescriptor, u64, *abi.GfxOwnedBufferReservation) callconv(.c) i32 = @ptrFromInt(self.table.buffer_reserve);
+        return callback(input, cookie, output);
+    }
+
+    pub fn bufferCommit(self: *const Context, input: *const abi.GfxOwnedBufferReservation, output: *abi.GfxBufferReference) i32 {
+        if (self.table.version != 1 or self.table.size < @offsetOf(abi.GfxDriverMemoryApi, "buffer_commit") + 8 or self.table.buffer_commit == 0) return abi.err_no_fn;
+        const callback: *const fn (*const abi.GfxOwnedBufferReservation, *abi.GfxBufferReference) callconv(.c) i32 = @ptrFromInt(self.table.buffer_commit);
+        return callback(input, output);
+    }
+
+    pub fn bufferAbort(self: *const Context, input: *const abi.GfxOwnedBufferReservation, quiesced: u32) i32 {
+        if (self.table.version != 1 or self.table.size < @offsetOf(abi.GfxDriverMemoryApi, "buffer_abort") + 8 or self.table.buffer_abort == 0) return abi.err_no_fn;
+        const callback: *const fn (*const abi.GfxOwnedBufferReservation, u32) callconv(.c) i32 = @ptrFromInt(self.table.buffer_abort);
+        return callback(input, quiesced);
+    }
+
+    pub fn bufferTakeRelease(self: *const Context, adapter: u32, generation: u64, output: *abi.GfxOwnedBufferRelease) i32 {
+        if (self.table.version != 1 or self.table.size < @offsetOf(abi.GfxDriverMemoryApi, "buffer_take_release") + 8 or self.table.buffer_take_release == 0) return abi.err_no_fn;
+        const callback: *const fn (u32, u64, *abi.GfxOwnedBufferRelease) callconv(.c) i32 = @ptrFromInt(self.table.buffer_take_release);
+        return callback(adapter, generation, output);
+    }
+
+    pub fn bufferFinishRelease(self: *const Context, input: *const abi.GfxOwnedBufferRelease, quiesced: u32) i32 {
+        if (self.table.version != 1 or self.table.size < @offsetOf(abi.GfxDriverMemoryApi, "buffer_finish_release") + 8 or self.table.buffer_finish_release == 0) return abi.err_no_fn;
+        const callback: *const fn (*const abi.GfxOwnedBufferRelease, u32) callconv(.c) i32 = @ptrFromInt(self.table.buffer_finish_release);
+        return callback(input, quiesced);
+    }
 };

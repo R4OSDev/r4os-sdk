@@ -28,7 +28,50 @@ fn gfxQueuePrefixProbe(out: *r4os.abi.GfxDriverQueueApi) callconv(.c) i32 {
     out.* = .{ .size = 56, .complete = @intFromPtr(&gfxCompleteProbe) };
     return 1;
 }
+fn ownedReserveProbe(_: *const r4os.abi.GfxBufferDescriptor, cookie: u64, out: *r4os.abi.GfxOwnedBufferReservation) callconv(.c) i32 {
+    std.debug.assert(cookie == 0x100000003 and out.size == 88);
+    out.cookie = cookie; out.driver_generation = 0x200000005; return 1;
+}
+fn ownedCommitProbe(in: *const r4os.abi.GfxOwnedBufferReservation, out: *r4os.abi.GfxBufferReference) callconv(.c) i32 {
+    std.debug.assert(in.cookie == 0x100000003 and in.driver_generation == 0x200000005 and out.size == 48); return 1;
+}
+fn ownedAbortProbe(in: *const r4os.abi.GfxOwnedBufferReservation, quiesced: u32) callconv(.c) i32 {
+    std.debug.assert(in.cookie == 0x100000003 and quiesced == 0); return -4;
+}
+fn ownedTakeProbe(adapter: u32, generation: u64, out: *r4os.abi.GfxOwnedBufferRelease) callconv(.c) i32 {
+    std.debug.assert(adapter == 17 and generation == 0x300000007 and out.size == 80);
+    out.cookie = 0x100000003; out.attempt = 0x400000009; return 1;
+}
+fn ownedFinishProbe(in: *const r4os.abi.GfxOwnedBufferRelease, quiesced: u32) callconv(.c) i32 {
+    std.debug.assert(in.cookie == 0x100000003 and in.attempt == 0x400000009 and quiesced == 1); return 1;
+}
+fn memoryPrefixProbe(out: *r4os.abi.GfxDriverMemoryApi) callconv(.c) i32 {
+    const value: r4os.abi.GfxDriverMemoryApi = .{ .size = 112, .buffer_map = @intFromPtr(&gfxMapProbe) };
+    @memcpy(@as([*]u8, @ptrCast(out))[0..112], std.mem.asBytes(&value)[0..112]); return 1;
+}
+fn ownedFacadeProbe() !void {
+    const a = r4os.abi;
+    var native = r4os.driver_memory.Context{ .table = .{ .buffer_reserve = @intFromPtr(&ownedReserveProbe), .buffer_commit = @intFromPtr(&ownedCommitProbe),
+        .buffer_abort = @intFromPtr(&ownedAbortProbe), .buffer_take_release = @intFromPtr(&ownedTakeProbe), .buffer_finish_release = @intFromPtr(&ownedFinishProbe) } };
+    var reservation: a.GfxOwnedBufferReservation = .{}; var reference: a.GfxBufferReference = .{}; var release: a.GfxOwnedBufferRelease = .{};
+    for (112..120) |size| { native.table.size = @intCast(size); try std.testing.expectEqual(a.err_no_fn, native.bufferReserve(&.{}, 0x100000003, &reservation)); }
+    try std.testing.expect(reservation.cookie == 0);
+    native.table.size = 120; try std.testing.expectEqual(@as(i32, 1), native.bufferReserve(&.{}, 0x100000003, &reservation));
+    for (120..128) |size| { native.table.size = @intCast(size); try std.testing.expectEqual(a.err_no_fn, native.bufferCommit(&reservation, &reference)); }
+    native.table.size = 128; try std.testing.expectEqual(@as(i32, 1), native.bufferCommit(&reservation, &reference));
+    for (128..136) |size| { native.table.size = @intCast(size); try std.testing.expectEqual(a.err_no_fn, native.bufferAbort(&reservation, 0)); }
+    native.table.size = 136; try std.testing.expectEqual(@as(i32, -4), native.bufferAbort(&reservation, 0));
+    for (136..144) |size| { native.table.size = @intCast(size); try std.testing.expectEqual(a.err_no_fn, native.bufferTakeRelease(17, 0x300000007, &release)); }
+    native.table.size = 144; try std.testing.expectEqual(@as(i32, 1), native.bufferTakeRelease(17, 0x300000007, &release));
+    for (144..152) |size| { native.table.size = @intCast(size); try std.testing.expectEqual(a.err_no_fn, native.bufferFinishRelease(&release, 1)); }
+    native.table.size = 152; try std.testing.expectEqual(@as(i32, 1), native.bufferFinishRelease(&release, 1));
+    var api: a.DriverApi = undefined; api.magic = a.driver_magic; api.version = 25; api.size = 568; api.gfx_memory_query = &memoryPrefixProbe;
+    const ctx = r4os.r4dev.DriverContext.init(&api); const old = ctx.memory().?;
+    try std.testing.expect(old.table.size == 112 and old.table.buffer_reserve == 0);
+    try std.testing.expectEqual(a.err_no_fn, old.bufferReserve(&.{}, 0, &reservation));
+}
 test "graphics buffer optional tails preserve 64-bit offsets in Zig and R4D calls" {
+    try ownedFacadeProbe();
     var tables = makeTables(true);
     tables[2].abi_version = 10; // A new facade must accept an older prefix.
     tables[2].gfx_buffer_map = @intFromPtr(&gfxMapProbe);
