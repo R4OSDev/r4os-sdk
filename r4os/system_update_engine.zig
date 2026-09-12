@@ -3481,6 +3481,19 @@ fn streamPackagePayloads(
     stage_payloads: bool,
     command: []const u8,
 ) PackageVerifyStatus {
+    if (stage_payloads) {
+        // APPLY already owns its prepare journal; COMMIT owns the durable
+        // package-bound batch in staging. VERIFY never provisions parents.
+        // Complete the directory preflight before the first mkdir or stream.
+        for (info.payloads[0..info.payload_count]) |*entry| {
+            const status = targetParents(ctx, entry, false, command);
+            if (status != .ok) return status;
+        }
+        for (info.payloads[0..info.payload_count]) |*entry| {
+            const status = targetParents(ctx, entry, true, command);
+            if (status != .ok) return status;
+        }
+    }
     payload_passes +|= 1;
     const payload_base = std.math.add(
         u64,
@@ -5105,6 +5118,58 @@ fn ensureDirectory(ctx: *const r4os.r4sys.Context, path: [:0]const u8) bool {
     return fileInfoStatus(ctx, path, &info) == .found and info.is_dir != 0;
 }
 
+/// Provision only normalized, admitted C: payload ancestors, in root-to-leaf
+/// order. The internal boot volume keeps its existing kernel-update path.
+/// Empty parents are shared namespace, not owned payloads: abort/rollback
+/// removes checked stage/target files but never deletes a directory by name.
+/// This remains replay-compatible with the existing journal and boot core.
+fn targetParents(ctx: *const r4os.r4sys.Context, entry: *const PayloadEntry, create: bool, command: []const u8) PackageVerifyStatus {
+    if (entry.class == .boot_kernel) return .ok;
+    const target = entry.targetText();
+    if (target.len < 4 or target.len >= max_path or !startsWithIgnoreCase(target, "C:\\")) {
+        fail(ctx, command, "parent-path");
+        return .invalid;
+    }
+    var prefix: [max_path:0]u8 = .{0} ** max_path;
+    @memcpy(prefix[0..target.len], target);
+    var index: usize = 3;
+    while (index < target.len) : (index += 1) {
+        if (target[index] != '\\') continue;
+        prefix[index] = 0;
+        defer prefix[index] = '\\';
+        var info: r4os.abi.FileInfo = .{};
+        switch (fileInfoStatus(ctx, &prefix, &info)) {
+            .found => {
+                if (info.is_dir == 0) {
+                    fail(ctx, command, "parent-type");
+                    return .conflict;
+                }
+                continue;
+            },
+            .io => {
+                fail(ctx, command, "parent-info");
+                return .io;
+            },
+            .not_found => if (!create) return .ok,
+        }
+        // A create may succeed while its completion is lost. Verify the
+        // resulting object even after a reported error; retries are bounded
+        // by the ordinary package-stage retry, and never replace a file.
+        _ = ctx.dirCreate(&prefix);
+        switch (fileInfoStatus(ctx, &prefix, &info)) {
+            .found => if (info.is_dir == 0) {
+                fail(ctx, command, "parent-type");
+                return .conflict;
+            },
+            .not_found, .io => {
+                fail(ctx, command, "parent-create");
+                return .io;
+            },
+        }
+    }
+    return .ok;
+}
+
 fn printApplyReplaceFailure(ctx: *const r4os.r4sys.Context, phase: []const u8, entry: *const PayloadEntry, result: i32) void {
     ctx.write("SYSUPD APPLY result: FAILED reason=");
     ctx.write(phase);
@@ -5538,6 +5603,7 @@ fn validatePackageTargets(ctx: *const r4os.r4sys.Context, info: *const PackageIn
     var index: usize = 0;
     while (index < info.payload_count) : (index += 1) {
         const entry = &info.payloads[index];
+        if (targetParents(ctx, entry, false, command) != .ok) return false;
         if (!validateShortName83Text(baseName(entry.targetText()))) {
             var target_info: r4os.abi.FileInfo = .{};
             switch (fileInfoStatus(ctx, entry.targetPtr(), &target_info)) {
