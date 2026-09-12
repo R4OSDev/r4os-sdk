@@ -17,6 +17,17 @@ fn gfxCompleteProbe(fence: *const r4os.abi.GfxFence, result: u32, quiesced: u32)
     std.debug.assert(fence.point == 0x100000007 and result == 6 and quiesced == 0);
     return -4;
 }
+fn gfxRetainProbe(fence: *const r4os.abi.GfxFence, which: u32, out: *r4os.abi.GfxBufferReference) callconv(.c) i32 {
+    std.debug.assert(fence.point == 0x100000007 and fence.reset_generation == 0x200000001 and which == 1);
+    std.debug.assert(out.version == 1 and out.size == 48);
+    out.reference.generation = 0x400000009;
+    out.flags = r4os.abi.gfx_buffer_reference_mapping_only;
+    return 1;
+}
+fn gfxQueuePrefixProbe(out: *r4os.abi.GfxDriverQueueApi) callconv(.c) i32 {
+    out.* = .{ .size = 56, .complete = @intFromPtr(&gfxCompleteProbe) };
+    return 1;
+}
 test "graphics buffer optional tails preserve 64-bit offsets in Zig and R4D calls" {
     var tables = makeTables(true);
     tables[2].abi_version = 10; // A new facade must accept an older prefix.
@@ -56,6 +67,23 @@ test "graphics buffer optional tails preserve 64-bit offsets in Zig and R4D call
     try std.testing.expectEqual(@as(i32, -4), native.complete(&fence, 6, 0));
     native.table.size = @offsetOf(r4os.abi.GfxDriverQueueApi, "complete");
     try std.testing.expectEqual(r4os.abi.err_no_fn, native.complete(&fence, 6, 0));
+    var retained: r4os.abi.GfxBufferReference = .{ .flags = 79 };
+    native.table.retain_resource = @intFromPtr(&gfxRetainProbe);
+    for (56..64) |size| {
+        native.table.size = @intCast(size);
+        try std.testing.expectEqual(r4os.abi.err_no_fn, native.retainResource(&fence, 1, &retained));
+        try std.testing.expectEqual(@as(u32, 79), retained.flags);
+    }
+    native.table.size = 64;
+    try std.testing.expectEqual(@as(i32, 1), native.retainResource(&fence, 1, &retained));
+    try std.testing.expectEqual(@as(u64, 0x400000009), retained.reference.generation);
+    try std.testing.expectEqual(r4os.abi.gfx_buffer_reference_mapping_only, retained.flags);
+    old_driver.version = 26;
+    old_driver.size = 576;
+    old_driver.gfx_queue_query = &gfxQueuePrefixProbe;
+    const prefix = old_context.graphicsQueue().?;
+    try std.testing.expectEqual(@as(i32, -4), prefix.complete(&fence, 6, 0));
+    try std.testing.expectEqual(r4os.abi.err_no_fn, prefix.retainResource(&fence, 1, &retained));
     try std.testing.expectEqual(@as(usize, 560), @offsetOf(r4os.abi.DriverApi, "gfx_memory_query"));
     try std.testing.expectEqual(@as(usize, 568), @offsetOf(r4os.abi.DriverApi, "gfx_queue_query"));
     try std.testing.expectEqual(@as(usize, 576), @offsetOf(r4os.abi.DriverApi, "gfx_output_query"));

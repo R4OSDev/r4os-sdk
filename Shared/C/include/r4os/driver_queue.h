@@ -48,4 +48,15 @@ static inline int32_t r4driver_queue_segment(const R4GfxDriverQueueApi *table, c
     return ((Callback)(uintptr_t)table->segment)(input, which, offset, mask, output);
 }
 
+/* Mapping-only reference for source=0 or target=1 of an active native job.
+ * Release with driver_memory_buffer_release after confirmed device unmaps.
+ * Queue execution ownership and job extents are unchanged. */
+static inline int32_t r4driver_queue_retain_resource(const R4GfxDriverQueueApi *table, const R4GfxFence *input, uint32_t which, R4GfxBufferReference *output) {
+    if (table == 0 || table->version != 1 || table->size < offsetof(R4GfxDriverQueueApi, retain_resource) + sizeof(uint64_t) || table->retain_resource == 0) return R4OS_ERR_NO_FN;
+    if (output == 0) return R4OS_GFX_QUEUE_ERROR_INVALID;
+    output->version = 1; output->size = sizeof(*output);
+    typedef int32_t (*Callback)(const R4GfxFence *, uint32_t, R4GfxBufferReference *);
+    return ((Callback)(uintptr_t)table->retain_resource)(input, which, output);
+}
+
 #endif

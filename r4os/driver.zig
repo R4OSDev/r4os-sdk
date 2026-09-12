@@ -100,7 +100,7 @@ pub const Context = struct {
         if (!self.supportsDriverApi(26, @offsetOf(abi.DriverApi, "gfx_queue_query") + @sizeOf(usize))) return null;
         const query = self.api.gfx_queue_query orelse return null;
         var table: abi.GfxDriverQueueApi = .{};
-        if (query(&table) != abi.gfx_queue_ok or table.version != 1 or table.size < @sizeOf(abi.GfxDriverQueueApi)) return null;
+        if (query(&table) != abi.gfx_queue_ok or table.version != 1 or table.size < 56) return null;
         return .{ .table = table };
     }
     pub fn memory(self: *const Context) ?@import("driver_memory.zig").Context {

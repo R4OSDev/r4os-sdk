@@ -91,6 +91,14 @@ USB-host owner. UsbHostController v2 exposes productive port, control, bulk,
 interrupt, recovery and poll callbacks plus capability and activity status;
 it does not authorize a second PCI/MMIO/DMA implementation in the module.
 
+The optional `driver_queue.retainResource` tail (table 1/64) retains source
+or target backing of an active native job, including after producer exit.
+The 56-byte prefix remains supported. Mapping-only references (flag 2) allow
+describe, DMA/GPU residency and release; execution stays with the validated
+queue extent. CPU maps, sharing and new execution are rejected. Actual
+Work/start ownership is checked on every call. Mapping and fence lifetimes
+remain independent. See Contract/ABI/R4DDriver.txt.
+
 The optional `driver_outputs` receiver-source tail registers immutable
 receiver generations independently of execution queues. The original 24-byte
 output table prefix stays valid; all three receiver callbacks require the

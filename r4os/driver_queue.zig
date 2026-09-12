@@ -46,4 +46,15 @@ pub const Context = struct {
         const callback: *const fn (*const abi.GfxFence, u32, u64, u64, *abi.GfxDmaSegment) callconv(.c) i32 = @ptrFromInt(self.table.segment);
         return callback(input, which, offset, mask, output);
     }
+
+    // Source=0, target=1 of an active job. The returned reference retains
+    // backing only: describe, DMA/GPU residency and release are supported.
+    // CPU maps, sharing and additional execution through it are forbidden.
+    pub fn retainResource(self: *const Context, input: *const abi.GfxFence, which: u32, output: *abi.GfxBufferReference) i32 {
+        if (self.table.version != 1 or self.table.size < @offsetOf(abi.GfxDriverQueueApi, "retain_resource") + 8 or self.table.retain_resource == 0) return abi.err_no_fn;
+        output.version = 1;
+        output.size = @sizeOf(abi.GfxBufferReference);
+        const callback: *const fn (*const abi.GfxFence, u32, *abi.GfxBufferReference) callconv(.c) i32 = @ptrFromInt(self.table.retain_resource);
+        return callback(input, which, output);
+    }
 };

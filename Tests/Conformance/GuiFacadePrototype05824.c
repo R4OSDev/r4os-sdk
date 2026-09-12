@@ -48,6 +48,13 @@ static int32_t gfx_complete_probe(const R4GfxFence *fence, uint32_t result, uint
     assert(fence->point == UINT64_C(0x100000007) && result == 6 && quiesced == 0);
     return -4;
 }
+static int32_t gfx_retain_probe(const R4GfxFence *fence, uint32_t which, R4GfxBufferReference *out) {
+    assert(fence->point == UINT64_C(0x100000007) && fence->reset_generation == UINT64_C(0x200000001) && which == 1);
+    assert(out->version == 1 && out->size == 48);
+    out->reference.generation = UINT64_C(0x400000009);
+    out->flags = R4OS_GFX_BUFFER_REFERENCE_MAPPING_ONLY;
+    return 1;
+}
 
 static int32_t gfx_map_probe(const R4GfxBufferHandle *ref, uint32_t access, uint64_t offset, uint64_t bytes, R4GfxBufferMap *out) {
     assert(ref->generation == 99 && access == 1 && offset == UINT64_C(0x100000003) && bytes == UINT64_C(0x200000000));
@@ -82,6 +89,15 @@ static void gfx_facade_probe(void) {
     assert(r4driver_queue_complete(&native, &fence, 6, 0) == -4);
     native.size = offsetof(R4GfxDriverQueueApi, complete);
     assert(r4driver_queue_complete(&native, &fence, 6, 0) == R4OS_ERR_NO_FN);
+    R4GfxBufferReference retained = {.flags = 79};
+    native.retain_resource = (uintptr_t)gfx_retain_probe;
+    for (unsigned size = 56; size < 64; ++size) {
+        native.size = size;
+        assert(r4driver_queue_retain_resource(&native, &fence, 1, &retained) == R4OS_ERR_NO_FN && retained.flags == 79);
+    }
+    native.size = 64;
+    assert(r4driver_queue_retain_resource(&native, &fence, 1, &retained) == 1);
+    assert(retained.reference.generation == UINT64_C(0x400000009) && retained.flags == R4OS_GFX_BUFFER_REFERENCE_MAPPING_ONLY);
     R4GfxAtomicState state = {.topology_revision = UINT64_C(0x100000007)};
     state.assignments[7].output.connection_generation = UINT64_C(0x200000009);
     R4GfxAtomicResult atomic_result = {.commit_sequence = 77};
