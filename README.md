@@ -91,6 +91,15 @@ USB-host owner. UsbHostController v2 exposes productive port, control, bulk,
 interrupt, recovery and poll callbacks plus capability and activity status;
 it does not authorize a second PCI/MMIO/DMA implementation in the module.
 
+The optional `driver_outputs` receiver-source tail registers immutable
+receiver generations independently of execution queues. The original 24-byte
+output table prefix stays valid; all three receiver callbacks require the
+complete 48-byte tail. Receiver-only catalog entries carry zero source/routing
+limits and cannot participate in an atomic scanout commit. Registration and
+publication require the actual Init/Work owner; closed/stale sources cannot
+publish. Caller records must stay resident and exclusively borrowed through
+the call. Close revokes metadata without claiming GPU quiescence.
+
 DriverApi v22 appends owner-bound registration of exactly one synchronous
 display-blit backend. The callback borrows a validated XRGB32 source, target
 and at most eight regions for one call; the kernel retains target ownership,

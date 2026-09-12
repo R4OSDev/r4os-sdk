@@ -7,6 +7,11 @@
 #include <r4os/driver_outputs.h>
 #include <r4os/driver_display.h>
 
+_Static_assert(sizeof(R4GfxReceiverSource) == 16, "receiver source layout");
+_Static_assert(sizeof(R4GfxReceiverInfo) == 8224 && offsetof(R4GfxReceiverInfo, modes) == 32 && offsetof(R4GfxReceiverInfo, edid) == 4128, "receiver record layout");
+_Static_assert(sizeof(R4GfxReceiverUpdate) == 48 && offsetof(R4GfxReceiverUpdate, receivers) == 40, "receiver update layout");
+_Static_assert(sizeof(R4GfxDriverOutputApi) == 48 && offsetof(R4GfxDriverOutputApi, register_source) == 24, "legacy output prefix");
+
 static int32_t display_transition_probe(uint64_t generation, uint32_t operation, R4GfxNativeState *output) {
     assert(generation == UINT64_C(0x100000007) && operation == 2);
     output->generation = generation + 1; output->outcome = 3; output->retained = 1; return 1;
@@ -22,6 +27,15 @@ static int32_t output_test_probe(const R4GfxAtomicState *state, R4GfxAtomicResul
 static int32_t output_publish_probe(const R4GfxOutputPublication *publication, R4GfxOutputId *out) {
     assert(publication->info.edid_bytes == 128 && publication->edid[127] == 0x79);
     out->connection_generation = UINT64_C(0x40000000d); return 1;
+}
+static int32_t receiver_register_probe(uint32_t adapter, R4GfxReceiverSource *out) {
+    assert(adapter == 17); out->adapter_id = adapter; out->generation = UINT64_C(0x100000079); return 1;
+}
+static int32_t receiver_replace_probe(const R4GfxReceiverUpdate *input) {
+    assert(input->source.generation == UINT64_C(0x100000079) && input->sequence == UINT64_C(0x200000001) && input->count == 0 && input->receivers == 0); return -4;
+}
+static int32_t receiver_close_probe(const R4GfxReceiverSource *input) {
+    assert(input->generation == UINT64_C(0x100000079)); return 1;
 }
 
 static int32_t gfx_wait_probe(const R4GfxFence *fence, uint64_t ticks, uint32_t wait_for, R4GfxFenceStatus *out) {
@@ -79,6 +93,23 @@ static void gfx_facade_probe(void) {
     R4GfxOutputPublication publication = {0}; publication.info.edid_bytes = 128; publication.edid[127] = 0x79;
     R4GfxOutputId identity = {0};
     assert(r4driver_output_publish(&output_driver, &publication, &identity) == 1 && identity.connection_generation == UINT64_C(0x40000000d));
+    output_driver.register_source = (uintptr_t)receiver_register_probe;
+    output_driver.replace_receivers = (uintptr_t)receiver_replace_probe;
+    output_driver.close_source = (uintptr_t)receiver_close_probe;
+    R4GfxReceiverSource receiver_source = {0};
+    assert(r4driver_output_supports_receivers(&output_driver));
+    assert(r4driver_output_register_source(&output_driver, 17, &receiver_source) == 1);
+    R4GfxReceiverUpdate update = {.version = 1, .size = sizeof(update), .source = receiver_source, .sequence = UINT64_C(0x200000001)};
+    assert(r4driver_output_replace_receivers(&output_driver, &update) == -4);
+    assert(r4driver_output_close_source(&output_driver, &receiver_source) == 1);
+    for (unsigned size = 24; size < 48; ++size) {
+        output_driver.size = size;
+        assert(!r4driver_output_supports_receivers(&output_driver));
+        assert(r4driver_output_register_source(&output_driver, 17, &receiver_source) == R4OS_ERR_NO_FN);
+        assert(r4driver_output_replace_receivers(&output_driver, &update) == R4OS_ERR_NO_FN);
+        assert(r4driver_output_close_source(&output_driver, &receiver_source) == R4OS_ERR_NO_FN);
+        assert(receiver_source.generation == UINT64_C(0x100000079));
+    }
     output_driver.size = offsetof(R4GfxDriverOutputApi, publish);
     assert(r4driver_output_publish(&output_driver, &publication, &identity) == R4OS_ERR_NO_FN && identity.connection_generation == UINT64_C(0x40000000d));
     R4GfxDriverDisplayApi display = {.version = 1, .size = sizeof(display), .transition = (uintptr_t)display_transition_probe, .schedule = (uintptr_t)display_schedule_probe};

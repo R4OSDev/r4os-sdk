@@ -61,7 +61,9 @@ test "graphics buffer optional tails preserve 64-bit offsets in Zig and R4D call
     try std.testing.expectEqual(@as(usize, 576), @offsetOf(r4os.abi.DriverApi, "gfx_output_query"));
     try std.testing.expectEqual(@as(usize, 584), @offsetOf(r4os.abi.DriverApi, "gfx_display_query"));
     try std.testing.expectEqual(@as(usize, 592), @offsetOf(r4os.abi.DriverApi, "resource_query"));
-    try std.testing.expectEqual(@as(usize, 600), @sizeOf(r4os.abi.DriverApi));
+    // v29's resource query is still the end of that historical 600-byte
+    // prefix; newer optional DriverApi services may follow it.
+    try std.testing.expectEqual(@as(usize, 600), @offsetOf(r4os.abi.DriverApi, "resource_query") + @sizeOf(usize));
 }
 
 fn outputTestProbe(state: *const r4os.abi.GfxAtomicState, out: *r4os.abi.GfxAtomicResult) callconv(.c) i32 {
@@ -73,6 +75,19 @@ fn outputTestProbe(state: *const r4os.abi.GfxAtomicState, out: *r4os.abi.GfxAtom
 fn outputPublishProbe(publication: *const r4os.abi.GfxOutputPublication, out: *r4os.abi.GfxOutputId) callconv(.c) i32 {
     std.debug.assert(publication.info.edid_bytes == 128 and publication.edid[127] == 0x79);
     out.* = .{ .adapter_id = 3, .connector_id = 17, .device_generation = 0x30000000b, .connection_generation = 0x40000000d };
+    return 1;
+}
+fn receiverRegisterProbe(adapter: u32, out: *r4os.abi.GfxReceiverSource) callconv(.c) i32 {
+    std.debug.assert(adapter == 17);
+    out.* = .{ .adapter_id = adapter, .generation = 0x100000079 };
+    return 1;
+}
+fn receiverReplaceProbe(input: *const r4os.abi.GfxReceiverUpdate) callconv(.c) i32 {
+    std.debug.assert(input.source.generation == 0x100000079 and input.sequence == 0x200000001 and input.count == 0 and input.receivers == 0);
+    return -4;
+}
+fn receiverCloseProbe(input: *const r4os.abi.GfxReceiverSource) callconv(.c) i32 {
+    std.debug.assert(input.generation == 0x100000079);
     return 1;
 }
 fn displayTransitionProbe(generation: u64, operation: u32, output: *r4os.abi.GfxNativeState) callconv(.c) i32 {
@@ -110,6 +125,21 @@ test "old display and driver prefixes hide output tails while C/Zig preserve rec
     var identity: a.GfxOutputId = .{};
     try std.testing.expectEqual(@as(i32, 1), native.publish(&publication, &identity));
     try std.testing.expectEqual(@as(u64, 0x40000000d), identity.connection_generation);
+    native.table = .{ .register_source = @intFromPtr(&receiverRegisterProbe), .replace_receivers = @intFromPtr(&receiverReplaceProbe), .close_source = @intFromPtr(&receiverCloseProbe) };
+    var source: a.GfxReceiverSource = .{};
+    try std.testing.expect(native.supportsReceivers());
+    try std.testing.expectEqual(@as(i32, 1), native.registerSource(17, &source));
+    const update: a.GfxReceiverUpdate = .{ .source = source, .sequence = 0x200000001 };
+    try std.testing.expectEqual(@as(i32, -4), native.replaceReceivers(&update));
+    try std.testing.expectEqual(@as(i32, 1), native.closeSource(&source));
+    for ([_]u32{ 24, 32, 40, 47 }) |prefix| {
+        native.table.size = prefix;
+        try std.testing.expect(!native.supportsReceivers());
+        try std.testing.expectEqual(a.err_no_fn, native.registerSource(17, &source));
+        try std.testing.expectEqual(a.err_no_fn, native.replaceReceivers(&update));
+        try std.testing.expectEqual(a.err_no_fn, native.closeSource(&source));
+        try std.testing.expectEqual(@as(u64, 0x100000079), source.generation);
+    }
     native.table.size = @offsetOf(a.GfxDriverOutputApi, "publish");
     try std.testing.expectEqual(a.err_no_fn, native.publish(&publication, &identity));
     try std.testing.expectEqual(@as(u64, 0x40000000d), identity.connection_generation);
