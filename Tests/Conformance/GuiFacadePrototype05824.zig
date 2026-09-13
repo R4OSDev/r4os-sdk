@@ -29,14 +29,16 @@ fn gfxQueuePrefixProbe(out: *r4os.abi.GfxDriverQueueApi) callconv(.c) i32 {
     return 1;
 }
 fn gfxProfileProbe(input: *const r4os.abi.GfxBackendRegistration, profile: *const r4os.abi.GfxBackendProfile, out: *r4os.abi.GfxBackendBinding) callconv(.c) i32 {
+    std.debug.assert(input.operations == 13 and input.memory_generation == 0x500000018);
     std.debug.assert(input.adapter_id == 17 and profile.interface_id_hi == 0x300000017 and profile.data_bytes == 64 and profile.data[63] == 91);
     std.debug.assert(out.version == 1 and out.size == 32);
     out.* = .{ .adapter_id = 17, .device_generation = 0x100000017, .reset_generation = 0x200000017 };
     return 1;
 }
 fn gfxBackendInfoProbe(index: u32, out: *r4os.abi.GfxBackendInfo) callconv(.c) i32 {
-    std.debug.assert(index == 16 and out.version == 1 and out.size == 136);
+    std.debug.assert(index == 16 and out.version == 1 and out.size == @sizeOf(r4os.abi.GfxBackendInfo));
     out.* = .{ .binding = .{ .adapter_id = 17, .device_generation = 0x100000017, .reset_generation = 0x200000017 },
+        .operations = 13, .memory_generation = 0x500000018,
         .profile = .{ .interface_id_hi = 0x300000017, .revision = 1, .data_bytes = 64, .data = @splat(91) } };
     return 1;
 }
@@ -140,6 +142,7 @@ test "graphics buffer optional tails preserve 64-bit offsets in Zig and R4D call
     try std.testing.expect(info.binding.adapter_id == 0);
     tables[2].size = 648;
     try std.testing.expectEqual(@as(i32, 1), queues.backendInfo(16, &info));
+    try std.testing.expect(info.operations == 13 and info.memory_generation == 0x500000018);
     var binding: r4os.abi.GfxBackendBinding = .{};
     native.table.register_profile = @intFromPtr(&gfxProfileProbe);
     for (64..72) |size| {
@@ -148,7 +151,7 @@ test "graphics buffer optional tails preserve 64-bit offsets in Zig and R4D call
         try std.testing.expect(binding.device_generation == 0);
     }
     native.table.size = 72;
-    try std.testing.expectEqual(@as(i32, 1), native.registerProfile(&.{ .adapter_id = 17 }, &info.profile, &binding));
+    try std.testing.expectEqual(@as(i32, 1), native.registerProfile(&.{ .adapter_id = 17, .operations = info.operations, .memory_generation = info.memory_generation }, &info.profile, &binding));
     try std.testing.expectEqualDeep(info.binding, binding);
     old_driver.version = 26;
     old_driver.size = 576;

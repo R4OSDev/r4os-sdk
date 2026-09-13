@@ -184,12 +184,14 @@ static void owned_facade_probe(void){
     m.size=152;assert(r4driver_memory_buffer_finish_release(&m,&rel,1)==1);
 }
 static int32_t profile_register_probe(const R4GfxBackendRegistration *input, const R4GfxBackendProfile *profile, R4GfxBackendBinding *out) {
+    assert(input->operations == 13 && input->memory_generation == UINT64_C(0x500000018));
     assert(input->adapter_id == 17 && profile->interface_id_hi == UINT64_C(0x300000017) && profile->data_bytes == 64 && profile->data[63] == 91);
     assert(out->version == 1 && out->size == 32);
     out->adapter_id = 17; out->device_generation = UINT64_C(0x100000017); out->reset_generation = UINT64_C(0x200000017); return 1;
 }
 static int32_t backend_info_probe(uint32_t index, R4GfxBackendInfo *out) {
-    assert(index == 16 && out->version == 1 && out->size == 136);
+    assert(index == 16 && out->version == 1 && out->size == sizeof(*out));
+    out->operations = 13; out->memory_generation = UINT64_C(0x500000018);
     out->binding.device_generation = UINT64_C(0x100000017); out->binding.reset_generation = UINT64_C(0x200000017);
     out->profile.interface_id_hi = UINT64_C(0x300000017); out->profile.data_bytes = 64; out->profile.data[63] = 91; return 1;
 }
@@ -198,8 +200,9 @@ static void backend_profile_probe(void) {
     R4Draw draw = {&table}; R4GfxBackendInfo info = {0};
     assert(r4draw_gfx_queue_backend_info(&draw, 16, &info) == R4OS_ERR_NO_FN && info.binding.device_generation == 0);
     table.size = 648; assert(r4draw_gfx_queue_backend_info(&draw, 16, &info) == 1);
+    assert(info.operations == 13 && info.memory_generation == UINT64_C(0x500000018));
     R4GfxDriverQueueApi driver = {.version = 1, .register_profile = (uintptr_t)profile_register_probe};
-    R4GfxBackendRegistration registration = {.adapter_id = 17}; R4GfxBackendBinding binding = {0};
+    R4GfxBackendRegistration registration = {.adapter_id = 17, .operations = info.operations, .memory_generation = info.memory_generation}; R4GfxBackendBinding binding = {0};
     for (unsigned size = 64; size < 72; ++size) {
         driver.size = size;
         assert(r4driver_queue_register_profile(&driver, &registration, &info.profile, &binding) == R4OS_ERR_NO_FN && binding.device_generation == 0);
