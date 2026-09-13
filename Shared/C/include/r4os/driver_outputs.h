@@ -2,6 +2,29 @@
 #define R4OS_DRIVER_OUTPUTS_H
 #include "r4draw.h"
 
+static inline int r4driver_output_supports_hotplug(const R4GfxDriverOutputApi *table) {
+    return table != 0 && table->version == 1 && table->size >= offsetof(R4GfxDriverOutputApi, mode_status) + sizeof(uint64_t) &&
+        table->output_pause != 0 && table->mode_restore != 0 && table->mode_status != 0;
+}
+static inline int32_t r4driver_output_pause(const R4GfxDriverOutputApi *table, const R4GfxOutputId *output, uint32_t paused) {
+    if (!r4driver_output_supports_hotplug(table)) return R4OS_ERR_NO_FN;
+    if (output == 0 || paused > 1) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    typedef int32_t (*Callback)(const R4GfxOutputId *, uint32_t);
+    return ((Callback)(uintptr_t)table->output_pause)(output, paused);
+}
+static inline int32_t r4driver_output_restore_mode(const R4GfxDriverOutputApi *table, const R4GfxAtomicState *input, R4GfxModeStatus *output) {
+    if (!r4driver_output_supports_hotplug(table)) return R4OS_ERR_NO_FN;
+    if (input == 0 || output == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    typedef int32_t (*Callback)(const R4GfxAtomicState *, R4GfxModeStatus *);
+    return ((Callback)(uintptr_t)table->mode_restore)(input, output);
+}
+static inline int32_t r4driver_output_mode_status(const R4GfxDriverOutputApi *table, uint64_t ticket, R4GfxModeStatus *output) {
+    if (!r4driver_output_supports_hotplug(table)) return R4OS_ERR_NO_FN;
+    if (output == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    typedef int32_t (*Callback)(uint64_t, R4GfxModeStatus *);
+    return ((Callback)(uintptr_t)table->mode_status)(ticket, output);
+}
+
 static inline int r4driver_output_supports_audio(const R4GfxDriverOutputApi *table) {
     return table != 0 && table->version == 1 && table->size >= offsetof(R4GfxDriverOutputApi, audio_query) + sizeof(uint64_t) &&
         table->audio_publish != 0 && table->audio_query != 0;

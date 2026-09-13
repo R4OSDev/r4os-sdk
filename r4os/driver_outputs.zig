@@ -1,6 +1,25 @@
 const abi = @import("r4os_contract").abi;
 pub const Context = struct {
     table: abi.GfxDriverOutputApi,
+    pub fn supportsHotplug(self: *const Context) bool {
+        return self.table.version == 1 and self.table.size >= @offsetOf(abi.GfxDriverOutputApi, "mode_status") + 8 and
+            self.table.output_pause != 0 and self.table.mode_restore != 0 and self.table.mode_status != 0;
+    }
+    pub fn pauseOutput(self: *const Context, output: *const abi.GfxOutputId, paused: bool) i32 {
+        if (!self.supportsHotplug()) return abi.err_no_fn;
+        const callback: *const fn (*const abi.GfxOutputId, u32) callconv(.c) i32 = @ptrFromInt(self.table.output_pause);
+        return callback(output, @intFromBool(paused));
+    }
+    pub fn restoreMode(self: *const Context, input: *const abi.GfxAtomicState, output: *abi.GfxModeStatus) i32 {
+        if (!self.supportsHotplug()) return abi.err_no_fn;
+        const callback: *const fn (*const abi.GfxAtomicState, *abi.GfxModeStatus) callconv(.c) i32 = @ptrFromInt(self.table.mode_restore);
+        return callback(input, output);
+    }
+    pub fn modeStatus(self: *const Context, ticket: u64, output: *abi.GfxModeStatus) i32 {
+        if (!self.supportsHotplug()) return abi.err_no_fn;
+        const callback: *const fn (u64, *abi.GfxModeStatus) callconv(.c) i32 = @ptrFromInt(self.table.mode_status);
+        return callback(ticket, output);
+    }
     pub fn supportsAudio(self: *const Context) bool {
         return self.table.version == 1 and self.table.size >= @offsetOf(abi.GfxDriverOutputApi, "audio_query") + 8 and
             self.table.audio_publish != 0 and self.table.audio_query != 0;

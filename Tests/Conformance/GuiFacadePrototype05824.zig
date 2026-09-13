@@ -176,6 +176,14 @@ fn outputPublishProbe(publication: *const r4os.abi.GfxOutputPublication, out: *r
     out.* = .{ .adapter_id = 3, .connector_id = 17, .device_generation = 0x30000000b, .connection_generation = 0x40000000d };
     return 1;
 }
+fn outputPauseProbe(output: *const r4os.abi.GfxOutputId, paused: u32) callconv(.c) i32 {
+    std.debug.assert(output.connection_generation == 0x40000000d and paused <= 1);
+    return if (paused == 1) 1 else r4os.abi.gfx_output_error_busy;
+}
+fn modeRestoreProbe(input: *const r4os.abi.GfxAtomicState, out: *r4os.abi.GfxModeStatus) callconv(.c) i32 {
+    std.debug.assert(input.topology_revision == 0 and input.count == 1);
+    out.ticket = 0x200000079; return 1;
+}
 fn audioRoutePublishProbe(input: *const r4os.abi.GfxAudioRoute) callconv(.c) i32 {
     std.debug.assert(input.source.generation == 0x100000079 and input.revision == 0x200000015 and input.eld[95] == 0x79);
     return r4os.abi.gfx_output_error_stale;
@@ -343,6 +351,25 @@ test "old display and driver prefixes hide output tails while C/Zig preserve rec
     old_driver.magic = a.driver_magic; old_driver.version = 26; old_driver.size = 576;
     try std.testing.expect(r4os.r4dev.DriverContext.init(&old_driver).graphicsOutputs() == null);
     var native = r4os.driver_outputs.Context{ .table = .{ .publish = @intFromPtr(&outputPublishProbe) } };
+    var hotplug = r4os.driver_outputs.Context{ .table = .{ .output_pause = @intFromPtr(&outputPauseProbe),
+        .mode_restore = @intFromPtr(&modeRestoreProbe), .mode_status = @intFromPtr(&modeStatusProbe) } };
+    const port: a.GfxOutputId = .{ .connection_generation = 0x40000000d };
+    var restored: a.GfxModeStatus = .{};
+    for (24..112) |bytes| {
+        hotplug.table.size = @intCast(bytes);
+        try std.testing.expect(!hotplug.supportsHotplug());
+        try std.testing.expectEqual(a.err_no_fn, hotplug.pauseOutput(&port, true));
+        try std.testing.expectEqual(a.err_no_fn, hotplug.restoreMode(&.{.count=1}, &restored));
+        try std.testing.expectEqual(a.err_no_fn, hotplug.modeStatus(0x200000079, &restored));
+        try std.testing.expect(restored.ticket == 0);
+    }
+    hotplug.table.size = 112;
+    try std.testing.expectEqual(a.gfx_output_ok, hotplug.pauseOutput(&port, true));
+    try std.testing.expectEqual(a.gfx_output_error_busy, hotplug.pauseOutput(&port, false));
+    try std.testing.expectEqual(a.gfx_output_ok, hotplug.restoreMode(&.{.count=1}, &restored));
+    try std.testing.expectEqual(a.gfx_output_ok, hotplug.modeStatus(restored.ticket, &restored));
+    hotplug.table.mode_status = 0;
+    try std.testing.expect(!hotplug.supportsHotplug());
     var audio_routes: r4os.driver_outputs.Context = .{ .table = .{ .audio_publish = @intFromPtr(&audioRoutePublishProbe), .audio_query = @intFromPtr(&audioRouteQueryProbe) } };
     var audio_route: a.GfxAudioRoute = .{};
     for ([_]u32{ 24, 48, 72, 79, 80, 87 }) |prefix| {

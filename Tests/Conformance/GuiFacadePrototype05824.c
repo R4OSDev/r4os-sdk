@@ -11,7 +11,7 @@
 _Static_assert(sizeof(R4GfxReceiverSource) == 16, "receiver source layout");
 _Static_assert(sizeof(R4GfxReceiverInfo) == 8224 && offsetof(R4GfxReceiverInfo, modes) == 32 && offsetof(R4GfxReceiverInfo, edid) == 4128, "receiver record layout");
 _Static_assert(sizeof(R4GfxReceiverUpdate) == 48 && offsetof(R4GfxReceiverUpdate, receivers) == 40, "receiver update layout");
-_Static_assert(sizeof(R4GfxDriverOutputApi) == 88 && offsetof(R4GfxDriverOutputApi, register_source) == 24 && offsetof(R4GfxDriverOutputApi, mode_enable) == 48 && offsetof(R4GfxDriverOutputApi, audio_publish) == 72, "legacy output prefix and optional mode/audio tails");
+_Static_assert(sizeof(R4GfxDriverOutputApi) == 112 && offsetof(R4GfxDriverOutputApi, register_source) == 24 && offsetof(R4GfxDriverOutputApi, mode_enable) == 48 && offsetof(R4GfxDriverOutputApi, audio_publish) == 72 && offsetof(R4GfxDriverOutputApi, output_pause) == 88 && offsetof(R4GfxDriverOutputApi, mode_restore) == 96 && offsetof(R4GfxDriverOutputApi, mode_status) == 104, "legacy output prefix and optional mode/audio/hotplug tails");
 
 static int32_t cursor_info_probe(R4DisplayCursorInfo *out) {
     assert(out->version == 1 && out->size == 80); out->display_generation = UINT64_C(0x100000079); return 1;
@@ -110,6 +110,14 @@ static int32_t mode_resolve_probe(uint64_t ticket, uint32_t action, R4GfxModeSta
 static int32_t output_publish_probe(const R4GfxOutputPublication *publication, R4GfxOutputId *out) {
     assert(publication->info.edid_bytes == 128 && publication->edid[127] == 0x79);
     out->connection_generation = UINT64_C(0x40000000d); return 1;
+}
+static int32_t output_pause_probe(const R4GfxOutputId *output, uint32_t paused) {
+    assert(output->connection_generation == UINT64_C(0x40000000d) && paused <= 1);
+    return paused ? 1 : R4OS_GFX_OUTPUT_ERROR_BUSY;
+}
+static int32_t mode_restore_probe(const R4GfxAtomicState *input, R4GfxModeStatus *out) {
+    assert(input->topology_revision == 0 && input->count == 1);
+    out->ticket = UINT64_C(0x200000079); return 1;
 }
 static int32_t audio_route_publish_probe(const R4GfxAudioRoute *input) {
     assert(input->source.generation == UINT64_C(0x100000079) && input->revision == UINT64_C(0x200000015) && input->eld[95] == 0x79);
@@ -241,6 +249,24 @@ static void gfx_facade_probe(void) {
     R4GfxDriverModeCompletion completion = {.ticket = mode_job.ticket, .sequence = mode_job.sequence, .quiesced = 1};
     assert(r4driver_output_complete_mode(&modes, &completion) == -3);
     R4GfxDriverOutputApi output_driver = {.version = 1, .size = sizeof(output_driver), .publish = (uintptr_t)output_publish_probe};
+    R4GfxDriverOutputApi hotplug = {.version=1,.size=112,.output_pause=(uintptr_t)output_pause_probe,
+        .mode_restore=(uintptr_t)mode_restore_probe,.mode_status=(uintptr_t)mode_status_probe};
+    R4GfxOutputId port = {.connection_generation=UINT64_C(0x40000000d)};
+    R4GfxAtomicState reconnect = {.count=1};
+    R4GfxModeStatus restored = {.version=1,.size=sizeof(restored)};
+    for (unsigned bytes=24;bytes<112;++bytes) {
+        hotplug.size=bytes;
+        assert(!r4driver_output_supports_hotplug(&hotplug));
+        assert(r4driver_output_pause(&hotplug,&port,1)==R4OS_ERR_NO_FN);
+        assert(r4driver_output_restore_mode(&hotplug,&reconnect,&restored)==R4OS_ERR_NO_FN);
+        assert(r4driver_output_mode_status(&hotplug,UINT64_C(0x200000079),&restored)==R4OS_ERR_NO_FN && restored.ticket==0);
+    }
+    hotplug.size=112;
+    assert(r4driver_output_pause(&hotplug,&port,1)==1);
+    assert(r4driver_output_pause(&hotplug,&port,0)==R4OS_GFX_OUTPUT_ERROR_BUSY);
+    assert(r4driver_output_restore_mode(&hotplug,&reconnect,&restored)==1);
+    assert(r4driver_output_mode_status(&hotplug,restored.ticket,&restored)==1);
+    hotplug.mode_status=0; assert(!r4driver_output_supports_hotplug(&hotplug));
     R4GfxOutputPublication publication = {0}; publication.info.edid_bytes = 128; publication.edid[127] = 0x79;
     R4GfxOutputId identity = {0};
     assert(r4driver_output_publish(&output_driver, &publication, &identity) == 1 && identity.connection_generation == UINT64_C(0x40000000d));
