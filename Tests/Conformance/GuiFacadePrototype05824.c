@@ -211,6 +211,10 @@ static int32_t backend_info_probe(uint32_t index, R4GfxBackendInfo *out) {
     out->binding.device_generation = UINT64_C(0x100000017); out->binding.reset_generation = UINT64_C(0x200000017);
     out->profile.interface_id_hi = UINT64_C(0x300000017); out->profile.data_bytes = 64; out->profile.data[63] = 91; return 1;
 }
+static int32_t operations_probe(const R4GfxBackendBinding *binding, uint64_t operations) {
+    assert(binding->device_generation == UINT64_C(0x100000019) && operations == 29);
+    return 1;
+}
 static void backend_profile_probe(void) {
     R4XStartR4Draw table = {.size = 640, .gfx_queue_backend_info = (uintptr_t)backend_info_probe};
     R4Draw draw = {&table}; R4GfxBackendInfo info = {0};
@@ -225,6 +229,14 @@ static void backend_profile_probe(void) {
     }
     driver.size = 72; assert(r4driver_queue_register_profile(&driver, &registration, &info.profile, &binding) == 1);
     assert(binding.device_generation == info.binding.device_generation && binding.reset_generation == info.binding.reset_generation);
+    driver.update_operations = (uintptr_t)operations_probe;
+    binding.device_generation = UINT64_C(0x100000019);
+    for (unsigned n = 72; n < 80; ++n) {
+        driver.size = n;
+        assert(r4driver_queue_update_operations(&driver, &binding, 29) == R4OS_ERR_NO_FN);
+    }
+    driver.size = 80;
+    assert(r4driver_queue_update_operations(&driver, &binding, 29) == 1);
 }
 static void gfx_facade_probe(void) {
     owned_facade_probe();

@@ -88,6 +88,10 @@ fn nativeCompleteProbe(provider: *const r4os.abi.GfxBufferHandle, request: *cons
     std.debug.assert(provider.generation == 0x100000019 and request.generation == 0x200000019 and result == -6 and reference.id == 0);
     return 1;
 }
+fn gfxOperationsProbe(binding: *const r4os.abi.GfxBackendBinding, operations: u64) callconv(.c) i32 {
+    std.debug.assert(binding.device_generation == 0x100000019 and operations == 29);
+    return 1;
+}
 fn nativeTakeProbe(_: *const r4os.abi.GfxBufferHandle, output: *r4os.abi.GfxNativeJob) callconv(.c) i32 {
     std.debug.assert(output.version == 1 and output.size == 88);
     output.request.generation = 99; return -4;
@@ -149,6 +153,13 @@ test "graphics buffer optional tails preserve 64-bit offsets in Zig and R4D call
     tables[2].size += 8;
     try std.testing.expectEqual(@as(i32, 1), queues.wait(&fence, 0x300000003, 1, &result));
     var native = r4os.driver_queue.Context{ .table = .{ .complete = @intFromPtr(&gfxCompleteProbe) } };
+    native.table.update_operations = @intFromPtr(&gfxOperationsProbe);
+    for (72..80) |size| {
+        native.table.size = @intCast(size);
+        try std.testing.expectEqual(r4os.abi.err_no_fn, native.updateOperations(&.{ .device_generation = 0x100000019 }, 29));
+    }
+    native.table.size = 80;
+    try std.testing.expectEqual(@as(i32, 1), native.updateOperations(&.{ .device_generation = 0x100000019 }, 29));
     try std.testing.expectEqual(@as(i32, -4), native.complete(&fence, 6, 0));
     native.table.size = @offsetOf(r4os.abi.GfxDriverQueueApi, "complete");
     try std.testing.expectEqual(r4os.abi.err_no_fn, native.complete(&fence, 6, 0));
