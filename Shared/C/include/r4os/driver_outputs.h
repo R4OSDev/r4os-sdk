@@ -2,6 +2,29 @@
 #define R4OS_DRIVER_OUTPUTS_H
 #include "r4draw.h"
 
+static inline int r4driver_output_supports_modes(const R4GfxDriverOutputApi *table) {
+    return table != 0 && table->version == 1 && table->size >= offsetof(R4GfxDriverOutputApi, mode_complete) + sizeof(uint64_t) &&
+        table->mode_enable != 0 && table->mode_take != 0 && table->mode_complete != 0;
+}
+static inline int32_t r4driver_output_enable_modes(const R4GfxDriverOutputApi *table, const R4GfxBackendBinding *backend) {
+    if (!r4driver_output_supports_modes(table)) return R4OS_ERR_NO_FN;
+    if (backend == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    typedef int32_t (*Callback)(const R4GfxBackendBinding *);
+    return ((Callback)(uintptr_t)table->mode_enable)(backend);
+}
+static inline int32_t r4driver_output_take_mode(const R4GfxDriverOutputApi *table, const R4GfxBackendBinding *backend, R4GfxDriverModeJob *output) {
+    if (!r4driver_output_supports_modes(table)) return R4OS_ERR_NO_FN;
+    if (backend == 0 || output == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    typedef int32_t (*Callback)(const R4GfxBackendBinding *, R4GfxDriverModeJob *);
+    return ((Callback)(uintptr_t)table->mode_take)(backend, output);
+}
+static inline int32_t r4driver_output_complete_mode(const R4GfxDriverOutputApi *table, const R4GfxDriverModeCompletion *input) {
+    if (!r4driver_output_supports_modes(table)) return R4OS_ERR_NO_FN;
+    if (input == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    typedef int32_t (*Callback)(const R4GfxDriverModeCompletion *);
+    return ((Callback)(uintptr_t)table->mode_complete)(input);
+}
+
 static inline int r4driver_output_supports_receivers(const R4GfxDriverOutputApi *table) {
     return table != 0 && table->version == 1 && table->size >= offsetof(R4GfxDriverOutputApi, close_source) + sizeof(uint64_t) &&
         table->register_source != 0 && table->replace_receivers != 0 && table->close_source != 0;

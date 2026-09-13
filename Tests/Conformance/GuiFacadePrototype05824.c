@@ -10,7 +10,7 @@
 _Static_assert(sizeof(R4GfxReceiverSource) == 16, "receiver source layout");
 _Static_assert(sizeof(R4GfxReceiverInfo) == 8224 && offsetof(R4GfxReceiverInfo, modes) == 32 && offsetof(R4GfxReceiverInfo, edid) == 4128, "receiver record layout");
 _Static_assert(sizeof(R4GfxReceiverUpdate) == 48 && offsetof(R4GfxReceiverUpdate, receivers) == 40, "receiver update layout");
-_Static_assert(sizeof(R4GfxDriverOutputApi) == 48 && offsetof(R4GfxDriverOutputApi, register_source) == 24, "legacy output prefix");
+_Static_assert(sizeof(R4GfxDriverOutputApi) == 72 && offsetof(R4GfxDriverOutputApi, register_source) == 24 && offsetof(R4GfxDriverOutputApi, mode_enable) == 48, "legacy output prefix and mode tail");
 
 static int32_t display_transition_probe(uint64_t generation, uint32_t operation, R4GfxNativeState *output) {
     assert(generation == UINT64_C(0x100000007) && operation == 2);
@@ -23,6 +23,26 @@ static int32_t display_schedule_probe(const R4GfxBackendBinding *binding) {
 static int32_t output_test_probe(const R4GfxAtomicState *state, R4GfxAtomicResult *out) {
     assert(state->topology_revision == UINT64_C(0x100000007) && state->assignments[7].output.connection_generation == UINT64_C(0x200000009));
     assert(out->version == 1 && out->size == sizeof(*out)); out->topology_revision = state->topology_revision; return 1;
+}
+static int32_t mode_enable_probe(const R4GfxBackendBinding *backend) {
+    assert(backend->device_generation == UINT64_C(0x100000079)); return 1;
+}
+static int32_t mode_take_probe(const R4GfxBackendBinding *backend, R4GfxDriverModeJob *output) {
+    assert(backend->device_generation == UINT64_C(0x100000079));
+    output->ticket = UINT64_C(0x200000079); output->sequence = 3; return 1;
+}
+static int32_t mode_complete_probe(const R4GfxDriverModeCompletion *input) {
+    assert(input->ticket == UINT64_C(0x200000079) && input->sequence == 3 && input->quiesced == 1); return -3;
+}
+static int32_t mode_submit_probe(const R4GfxAtomicState *state, uint32_t ms, R4GfxModeStatus *output) {
+    assert(state->topology_revision == UINT64_C(0x100000007) && ms == 15000 && output->size == 88);
+    output->ticket = UINT64_C(0x200000079); output->phase = 1; output->retained = 3; return 1;
+}
+static int32_t mode_status_probe(uint64_t ticket, R4GfxModeStatus *output) {
+    assert(ticket == UINT64_C(0x200000079) && output->size == 88); output->phase = 3; return 1;
+}
+static int32_t mode_resolve_probe(uint64_t ticket, uint32_t action, R4GfxModeStatus *output) {
+    assert(ticket == UINT64_C(0x200000079) && action == 2 && output->size == 88); output->phase = 5; return 1;
 }
 static int32_t output_publish_probe(const R4GfxOutputPublication *publication, R4GfxOutputId *out) {
     assert(publication->info.edid_bytes == 128 && publication->edid[127] == 0x79);
@@ -126,6 +146,27 @@ static void gfx_facade_probe(void) {
     assert(r4draw_gfx_atomic_test(&draw, &state, &atomic_result) == R4OS_ERR_NO_FN && atomic_result.commit_sequence == 77);
     table.size = sizeof(table);
     assert(r4draw_gfx_atomic_test(&draw, &state, &atomic_result) == 1 && atomic_result.topology_revision == state.topology_revision);
+    table.gfx_atomic_submit = (uintptr_t)mode_submit_probe;
+    table.gfx_atomic_status = (uintptr_t)mode_status_probe;
+    table.gfx_atomic_resolve = (uintptr_t)mode_resolve_probe;
+    R4GfxModeStatus mode_status = {0};
+    table.size = 584;
+    assert(r4draw_gfx_atomic_submit(&draw, &state, 15000, &mode_status) == R4OS_ERR_NO_FN && mode_status.ticket == 0);
+    table.size = sizeof(table);
+    assert(r4draw_gfx_atomic_submit(&draw, &state, 15000, &mode_status) == 1);
+    assert(r4draw_gfx_atomic_status(&draw, mode_status.ticket, &mode_status) == 1);
+    assert(r4draw_gfx_atomic_resolve(&draw, mode_status.ticket, 2, &mode_status) == 1 && mode_status.phase == 5 && mode_status.retained == 3);
+    R4GfxDriverOutputApi modes = {.version = 1, .size = 72, .mode_enable = (uintptr_t)mode_enable_probe, .mode_take = (uintptr_t)mode_take_probe, .mode_complete = (uintptr_t)mode_complete_probe};
+    R4GfxBackendBinding mode_binding = {.device_generation = UINT64_C(0x100000079)};
+    R4GfxDriverModeJob mode_job = {0};
+    for (unsigned bytes = 24; bytes < 72; ++bytes) {
+        modes.size = bytes;
+        assert(!r4driver_output_supports_modes(&modes) && r4driver_output_take_mode(&modes, &mode_binding, &mode_job) == R4OS_ERR_NO_FN);
+    }
+    modes.size = 72;
+    assert(r4driver_output_enable_modes(&modes, &mode_binding) == 1 && r4driver_output_take_mode(&modes, &mode_binding, &mode_job) == 1);
+    R4GfxDriverModeCompletion completion = {.ticket = mode_job.ticket, .sequence = mode_job.sequence, .quiesced = 1};
+    assert(r4driver_output_complete_mode(&modes, &completion) == -3);
     R4GfxDriverOutputApi output_driver = {.version = 1, .size = sizeof(output_driver), .publish = (uintptr_t)output_publish_probe};
     R4GfxOutputPublication publication = {0}; publication.info.edid_bytes = 128; publication.edid[127] = 0x79;
     R4GfxOutputId identity = {0};

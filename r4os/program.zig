@@ -1502,6 +1502,21 @@ pub const Context = struct {
         output.version = 1; output.size = @sizeOf(abi.GfxAtomicResult);
         return table_fn(state, output);
     }
+    pub fn gfxAtomicSubmit(self: *const Context, state: *const abi.GfxAtomicState, confirmation_ms: u32, output: *abi.GfxModeStatus) i32 {
+        const table_fn = self.drawFn("gfx_atomic_submit") orelse return self.unavailable("draw");
+        output.version = 1; output.size = @sizeOf(abi.GfxModeStatus);
+        return table_fn(state, confirmation_ms, output);
+    }
+    pub fn gfxAtomicStatus(self: *const Context, ticket: u64, output: *abi.GfxModeStatus) i32 {
+        const table_fn = self.drawFn("gfx_atomic_status") orelse return self.unavailable("draw");
+        output.version = 1; output.size = @sizeOf(abi.GfxModeStatus);
+        return table_fn(ticket, output);
+    }
+    pub fn gfxAtomicResolve(self: *const Context, ticket: u64, action: u32, output: *abi.GfxModeStatus) i32 {
+        const table_fn = self.drawFn("gfx_atomic_resolve") orelse return self.unavailable("draw");
+        output.version = 1; output.size = @sizeOf(abi.GfxModeStatus);
+        return table_fn(ticket, action, output);
+    }
 
     pub fn gfxQueueOpen(self: *const Context, config: *const abi.GfxQueueConfig, output: *abi.GfxQueueHandle) i32 {
         const table_fn = self.drawFn("gfx_queue_open") orelse return self.unavailable("draw");

@@ -143,6 +143,34 @@ fn outputTestProbe(state: *const r4os.abi.GfxAtomicState, out: *r4os.abi.GfxAtom
     out.topology_revision = state.topology_revision;
     return 1;
 }
+fn modeEnableProbe(input: *const r4os.abi.GfxBackendBinding) callconv(.c) i32 {
+    std.debug.assert(input.device_generation == 0x100000079);
+    return 1;
+}
+fn modeTakeProbe(input: *const r4os.abi.GfxBackendBinding, output: *r4os.abi.GfxDriverModeJob) callconv(.c) i32 {
+    std.debug.assert(input.device_generation == 0x100000079);
+    output.* = .{ .ticket = 0x200000079, .sequence = 3, .operation = 1, .backend = input.* };
+    return 1;
+}
+fn modeCompleteProbe(input: *const r4os.abi.GfxDriverModeCompletion) callconv(.c) i32 {
+    std.debug.assert(input.ticket == 0x200000079 and input.sequence == 3 and input.quiesced == 1);
+    return -3;
+}
+fn modeSubmitProbe(input: *const r4os.abi.GfxAtomicState, milliseconds: u32, output: *r4os.abi.GfxModeStatus) callconv(.c) i32 {
+    std.debug.assert(input.topology_revision == 0x100000007 and milliseconds == 15000 and output.size == 88);
+    output.* = .{ .ticket = 0x200000079, .phase = 1, .retained = 3 };
+    return 1;
+}
+fn modeStatusProbe(ticket: u64, output: *r4os.abi.GfxModeStatus) callconv(.c) i32 {
+    std.debug.assert(ticket == 0x200000079 and output.size == 88);
+    output.phase = 3;
+    return 1;
+}
+fn modeResolveProbe(ticket: u64, action: u32, output: *r4os.abi.GfxModeStatus) callconv(.c) i32 {
+    std.debug.assert(ticket == 0x200000079 and action == 2 and output.size == 88);
+    output.phase = 5;
+    return 1;
+}
 fn outputPublishProbe(publication: *const r4os.abi.GfxOutputPublication, out: *r4os.abi.GfxOutputId) callconv(.c) i32 {
     std.debug.assert(publication.info.edid_bytes == 128 and publication.edid[127] == 0x79);
     out.* = .{ .adapter_id = 3, .connector_id = 17, .device_generation = 0x30000000b, .connection_generation = 0x40000000d };
@@ -188,6 +216,31 @@ test "old display and driver prefixes hide output tails while C/Zig preserve rec
     tables[2].size = @sizeOf(a.R4XStartR4Draw);
     try std.testing.expectEqual(@as(i32, 1), outputs.testState(&state, &result));
     try std.testing.expectEqual(state.topology_revision, result.topology_revision);
+    tables[2].gfx_atomic_submit = @intFromPtr(&modeSubmitProbe);
+    tables[2].gfx_atomic_status = @intFromPtr(&modeStatusProbe);
+    tables[2].gfx_atomic_resolve = @intFromPtr(&modeResolveProbe);
+    var mode_status: a.GfxModeStatus = .{};
+    tables[2].size = 584;
+    try std.testing.expectEqual(a.err_no_fn, outputs.submit(&state, 15000, &mode_status));
+    try std.testing.expectEqual(@as(u64, 0), mode_status.ticket);
+    tables[2].size = @sizeOf(a.R4XStartR4Draw);
+    try std.testing.expectEqual(a.gfx_output_ok, outputs.submit(&state, 15000, &mode_status));
+    try std.testing.expectEqual(a.gfx_output_ok, outputs.status(mode_status.ticket, &mode_status));
+    try std.testing.expectEqual(a.gfx_output_ok, outputs.resolve(mode_status.ticket, 2, &mode_status));
+    try std.testing.expect(mode_status.ticket == 0x200000079 and mode_status.phase == 5 and mode_status.retained == 3);
+    var mode_driver: r4os.driver_outputs.Context = .{ .table = .{ .mode_enable = @intFromPtr(&modeEnableProbe),
+        .mode_take = @intFromPtr(&modeTakeProbe), .mode_complete = @intFromPtr(&modeCompleteProbe) } };
+    const mode_binding: a.GfxBackendBinding = .{ .device_generation = 0x100000079 };
+    var mode_job: a.GfxDriverModeJob = .{};
+    for ([_]u32{ 24, 48, 56, 64, 71 }) |bytes| {
+        mode_driver.table.size = bytes;
+        try std.testing.expect(!mode_driver.supportsModes());
+        try std.testing.expectEqual(a.err_no_fn, mode_driver.takeMode(&mode_binding, &mode_job));
+    }
+    mode_driver.table.size = 72;
+    try std.testing.expectEqual(a.gfx_output_ok, mode_driver.enableModes(&mode_binding));
+    try std.testing.expectEqual(a.gfx_output_ok, mode_driver.takeMode(&mode_binding, &mode_job));
+    try std.testing.expectEqual(a.gfx_output_error_stale, mode_driver.completeMode(&.{ .ticket = mode_job.ticket, .sequence = mode_job.sequence, .quiesced = 1 }));
     var old_driver: a.DriverApi = undefined;
     old_driver.magic = a.driver_magic; old_driver.version = 26; old_driver.size = 576;
     try std.testing.expect(r4os.r4dev.DriverContext.init(&old_driver).graphicsOutputs() == null);

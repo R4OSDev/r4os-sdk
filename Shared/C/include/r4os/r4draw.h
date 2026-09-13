@@ -369,6 +369,24 @@ static inline int32_t r4draw_gfx_atomic_commit(const R4Draw *draw, const R4GfxAt
     output->version = 1; output->size = sizeof(*output);
     return ((R4DrawGfxAtomicCommitFn)(uintptr_t)draw->table->gfx_atomic_commit)(state, output);
 }
+static inline int32_t r4draw_gfx_atomic_submit(const R4Draw *draw, const R4GfxAtomicState *state, uint32_t confirmation_ms, R4GfxModeStatus *output) {
+    if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_atomic_submit) + sizeof(uintptr_t) || draw->table->gfx_atomic_submit == 0) return R4OS_ERR_NO_FN;
+    if (state == 0 || output == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    output->version = 1; output->size = sizeof(*output);
+    return ((R4DrawGfxAtomicSubmitFn)(uintptr_t)draw->table->gfx_atomic_submit)(state, confirmation_ms, output);
+}
+static inline int32_t r4draw_gfx_atomic_status(const R4Draw *draw, uint64_t ticket, R4GfxModeStatus *output) {
+    if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_atomic_status) + sizeof(uintptr_t) || draw->table->gfx_atomic_status == 0) return R4OS_ERR_NO_FN;
+    if (output == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    output->version = 1; output->size = sizeof(*output);
+    return ((R4DrawGfxAtomicStatusFn)(uintptr_t)draw->table->gfx_atomic_status)(ticket, output);
+}
+static inline int32_t r4draw_gfx_atomic_resolve(const R4Draw *draw, uint64_t ticket, uint32_t action, R4GfxModeStatus *output) {
+    if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_atomic_resolve) + sizeof(uintptr_t) || draw->table->gfx_atomic_resolve == 0) return R4OS_ERR_NO_FN;
+    if (output == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    output->version = 1; output->size = sizeof(*output);
+    return ((R4DrawGfxAtomicResolveFn)(uintptr_t)draw->table->gfx_atomic_resolve)(ticket, action, output);
+}
 
 static inline int32_t r4draw_gfx_queue_open(const R4Draw *draw, const R4GfxQueueConfig * config, R4GfxQueueHandle * output) {
     if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_queue_open) + sizeof(uintptr_t) || draw->table->gfx_queue_open == 0) return R4OS_ERR_NO_FN;

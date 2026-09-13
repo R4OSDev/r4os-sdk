@@ -8,4 +8,7 @@ pub const Context = struct {
     pub fn edid(self: *const Context, identity: *const abi.GfxOutputId, index: u32, output: *abi.GfxEdidBlock) i32 { return self.base.gfxOutputEdid(identity, index, output); }
     pub fn testState(self: *const Context, state: *const abi.GfxAtomicState, output: *abi.GfxAtomicResult) i32 { return self.base.gfxAtomicTest(state, output); }
     pub fn commit(self: *const Context, state: *const abi.GfxAtomicState, output: *abi.GfxAtomicResult) i32 { return self.base.gfxAtomicCommit(state, output); }
+    pub fn submit(self: *const Context, state: *const abi.GfxAtomicState, confirmation_ms: u32, output: *abi.GfxModeStatus) i32 { return self.base.gfxAtomicSubmit(state, confirmation_ms, output); }
+    pub fn status(self: *const Context, ticket: u64, output: *abi.GfxModeStatus) i32 { return self.base.gfxAtomicStatus(ticket, output); }
+    pub fn resolve(self: *const Context, ticket: u64, action: u32, output: *abi.GfxModeStatus) i32 { return self.base.gfxAtomicResolve(ticket, action, output); }
 };
