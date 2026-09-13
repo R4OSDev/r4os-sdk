@@ -167,6 +167,18 @@ pub const Context = struct {
     pub fn supportsDisplayPresentationStats(self: *const Context) bool {
         return self.base.supportsDisplayPresentationStats();
     }
+    pub fn supportsDisplayCursor(self: *const Context) bool {
+        return self.base.supportsDisplayCursor();
+    }
+    pub fn displayCursorInfo(self: *const Context, out: *abi.DisplayCursorInfo) i32 {
+        return self.base.displayCursorInfo(out);
+    }
+    pub fn displayCursorSubmit(self: *const Context, input: *const abi.DisplayCursorRequest, out: *abi.DisplayCursorStatus) i32 {
+        return self.base.displayCursorSubmit(input, out);
+    }
+    pub fn displayCursorStatus(self: *const Context, out: *abi.DisplayCursorStatus) i32 {
+        return self.base.displayCursorStatus(out);
+    }
     pub fn displayPresentationStats(self: *const Context, head_id: u32, out: *abi.DisplayPresentationStats) i32 {
         return self.base.displayPresentationStats(head_id, out);
     }

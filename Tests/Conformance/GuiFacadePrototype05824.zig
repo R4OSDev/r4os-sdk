@@ -207,7 +207,65 @@ fn presentationPublishProbe(input: *const r4os.abi.DisplayPresentationStats) cal
     std.debug.assert(input.version == 1 and input.size == 208 and input.visible_sequence == 0x100000079 and input.source_point == 0x200000079);
     return r4os.abi.gfx_output_error_stale;
 }
+fn cursorInfoProbe(out: *r4os.abi.DisplayCursorInfo) callconv(.c) i32 {
+    std.debug.assert(out.version == 1 and out.size == 80); out.display_generation = 0x100000079; return 1;
+}
+fn cursorStatusProbe(out: *r4os.abi.DisplayCursorStatus) callconv(.c) i32 {
+    std.debug.assert(out.version == 1 and out.size == 72); out.completed = 0x200000079; return 1;
+}
+fn cursorSubmitProbe(input: *const r4os.abi.DisplayCursorRequest, out: *r4os.abi.DisplayCursorStatus) callconv(.c) i32 {
+    std.debug.assert(input.display_generation == 0x100000079 and input.image_sequence == 0x300000079 and input.x == -17);
+    return cursorStatusProbe(out);
+}
+fn cursorConfigureProbe(input: *const r4os.abi.DisplayCursorInfo) callconv(.c) i32 {
+    std.debug.assert(input.display_generation == 0x100000079); return 1;
+}
+fn cursorTakeProbe(input: *const r4os.abi.GfxBackendBinding, out: *r4os.abi.GfxDriverCursorJob) callconv(.c) i32 {
+    std.debug.assert(input.reset_generation == 0x400000079 and out.version == 1 and out.size == 160);
+    out.sequence = 0x200000079; out.barrier_point = 0x500000079; return 1;
+}
+fn cursorCompleteProbe(input: *const r4os.abi.GfxDriverCursorCompletion) callconv(.c) i32 {
+    std.debug.assert(input.sequence == 0x200000079 and input.display_generation == 0x100000079); return -4;
+}
+fn cursorFacadeProbe() !void {
+    const a = r4os.abi; const t = std.testing;
+    var tables = makeTables(true); var imports: [3]a.R4XStartImport = undefined; var context: a.R4XStartContext = undefined;
+    var app = try makeApp(&tables, &imports, &context); const draw = app.drawing().?;
+    tables[2].display_cursor_info = @intFromPtr(&cursorInfoProbe); tables[2].display_cursor_submit = @intFromPtr(&cursorSubmitProbe);
+    tables[2].display_cursor_status = @intFromPtr(&cursorStatusProbe);
+    var info: a.DisplayCursorInfo = .{}; var status: a.DisplayCursorStatus = .{ .completed=79 };
+    const request: a.DisplayCursorRequest = .{ .display_generation=0x100000079,.image_sequence=0x300000079,.x=-17 };
+    for (616..640) |size| {
+        tables[2].size = @intCast(size); try t.expect(!draw.supportsDisplayCursor());
+        try t.expectEqual(a.err_no_fn, draw.displayCursorInfo(&info));
+        try t.expectEqual(a.err_no_fn, draw.displayCursorSubmit(&request, &status));
+        try t.expectEqual(a.err_no_fn, draw.displayCursorStatus(&status));
+        try t.expect(status.completed == 79 and info.display_generation == 0);
+    }
+    tables[2].size = 640;
+    try t.expectEqual(a.gfx_output_ok, draw.displayCursorInfo(&info));
+    try t.expectEqual(a.gfx_output_ok, draw.displayCursorSubmit(&request, &status));
+    try t.expectEqual(a.gfx_output_ok, draw.displayCursorStatus(&status));
+    var driver: r4os.driver_display.Context = .{ .table=.{.cursor_configure=@intFromPtr(&cursorConfigureProbe),
+        .cursor_take=@intFromPtr(&cursorTakeProbe),.cursor_complete=@intFromPtr(&cursorCompleteProbe)} };
+    var job: a.GfxDriverCursorJob = .{};
+    const binding: a.GfxBackendBinding = .{ .reset_generation=0x400000079 };
+    const receipt: a.GfxDriverCursorCompletion = .{ .sequence=0x200000079,.display_generation=0x100000079 };
+    for (72..96) |size| {
+        driver.table.size = @intCast(size); try t.expect(!driver.supportsCursor());
+        try t.expectEqual(a.err_no_fn, driver.cursorConfigure(&info));
+        try t.expectEqual(a.err_no_fn, driver.cursorTake(&binding, &job));
+        try t.expectEqual(a.err_no_fn, driver.cursorComplete(&receipt));
+        try t.expect(job.sequence == 0);
+    }
+    driver.table.size = 96;
+    try t.expectEqual(a.gfx_output_ok, driver.cursorConfigure(&info));
+    try t.expectEqual(a.gfx_output_ok, driver.cursorTake(&binding, &job));
+    try t.expect(job.sequence == 0x200000079 and job.barrier_point == 0x500000079);
+    try t.expectEqual(a.gfx_output_error_busy, driver.cursorComplete(&receipt));
+}
 test "old display and driver prefixes hide output tails while C/Zig preserve receiver generations" {
+    try cursorFacadeProbe();
     const a = r4os.abi;
     var tables = makeTables(true);
     tables[2].abi_version = 11; tables[2].size = 536;

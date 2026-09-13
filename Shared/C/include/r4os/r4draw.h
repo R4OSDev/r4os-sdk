@@ -84,6 +84,29 @@ static inline int r4draw_supports_display_presentation_stats(const R4Draw *draw)
         draw->table->display_presentation_stats != 0;
 }
 
+static inline int r4draw_supports_display_cursor(const R4Draw *draw) {
+    return draw != 0 && draw->table != 0 && draw->table->size >= offsetof(R4XStartR4Draw, display_cursor_status) + sizeof(uintptr_t) &&
+        draw->table->display_cursor_info != 0 && draw->table->display_cursor_submit != 0 && draw->table->display_cursor_status != 0;
+}
+static inline int32_t r4draw_display_cursor_info(const R4Draw *draw, R4DisplayCursorInfo *output) {
+    if (!r4draw_supports_display_cursor(draw)) return R4OS_ERR_NO_FN;
+    if (output == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    output->version = 1; output->size = sizeof(*output);
+    return ((R4DrawDisplayCursorInfoFn)(uintptr_t)draw->table->display_cursor_info)(output);
+}
+static inline int32_t r4draw_display_cursor_submit(const R4Draw *draw, const R4DisplayCursorRequest *input, R4DisplayCursorStatus *output) {
+    if (!r4draw_supports_display_cursor(draw)) return R4OS_ERR_NO_FN;
+    if (input == 0 || output == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    output->version = 1; output->size = sizeof(*output);
+    return ((R4DrawDisplayCursorSubmitFn)(uintptr_t)draw->table->display_cursor_submit)(input, output);
+}
+static inline int32_t r4draw_display_cursor_status(const R4Draw *draw, R4DisplayCursorStatus *output) {
+    if (!r4draw_supports_display_cursor(draw)) return R4OS_ERR_NO_FN;
+    if (output == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    output->version = 1; output->size = sizeof(*output);
+    return ((R4DrawDisplayCursorStatusFn)(uintptr_t)draw->table->display_cursor_status)(output);
+}
+
 static inline int32_t r4draw_display_presentation_stats(const R4Draw *draw, uint32_t head_id,
                                                         R4DisplayPresentationStats *output) {
     if (!r4draw_supports_display_presentation_stats(draw)) return R4OS_ERR_NO_FN;

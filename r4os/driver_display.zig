@@ -1,6 +1,25 @@
 const abi = @import("r4os_contract").abi;
 pub const Context = struct {
     table: abi.GfxDriverDisplayApi,
+    pub fn supportsCursor(self: *const Context) bool {
+        return self.table.version == 1 and self.table.size >= @offsetOf(abi.GfxDriverDisplayApi, "cursor_complete") + 8 and
+            self.table.cursor_configure != 0 and self.table.cursor_take != 0 and self.table.cursor_complete != 0;
+    }
+    pub fn cursorConfigure(self: *const Context, input: *const abi.DisplayCursorInfo) i32 {
+        if (!self.supportsCursor()) return abi.err_no_fn;
+        const callback: *const fn (*const abi.DisplayCursorInfo) callconv(.c) i32 = @ptrFromInt(self.table.cursor_configure);
+        return callback(input);
+    }
+    pub fn cursorTake(self: *const Context, backend: *const abi.GfxBackendBinding, out: *abi.GfxDriverCursorJob) i32 {
+        if (!self.supportsCursor()) return abi.err_no_fn;
+        const callback: *const fn (*const abi.GfxBackendBinding, *abi.GfxDriverCursorJob) callconv(.c) i32 = @ptrFromInt(self.table.cursor_take);
+        return callback(backend, out);
+    }
+    pub fn cursorComplete(self: *const Context, input: *const abi.GfxDriverCursorCompletion) i32 {
+        if (!self.supportsCursor()) return abi.err_no_fn;
+        const callback: *const fn (*const abi.GfxDriverCursorCompletion) callconv(.c) i32 = @ptrFromInt(self.table.cursor_complete);
+        return callback(input);
+    }
     pub fn supportsPresentationStats(self: *const Context) bool {
         return self.table.version == 1 and self.table.size >= @offsetOf(abi.GfxDriverDisplayApi, "presentation_stats") + 8 and self.table.presentation_stats != 0;
     }

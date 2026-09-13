@@ -1253,6 +1253,24 @@ pub const R4Draw = struct {
     pub fn supportsDisplayPresentationStats(self: *const R4Draw) bool {
         return self.hasFn("display_presentation_stats");
     }
+    pub fn supportsDisplayCursor(self: *const R4Draw) bool {
+        return self.hasFn("display_cursor_info") and self.hasFn("display_cursor_submit") and self.hasFn("display_cursor_status");
+    }
+    pub fn displayCursorInfo(self: *const R4Draw, out: *abi.DisplayCursorInfo) i32 {
+        if (!self.supportsDisplayCursor()) return abi.err_no_fn;
+        const callback: abi.R4DrawFns.display_cursor_info = @ptrFromInt(self.table.display_cursor_info);
+        return callback(out);
+    }
+    pub fn displayCursorSubmit(self: *const R4Draw, input: *const abi.DisplayCursorRequest, out: *abi.DisplayCursorStatus) i32 {
+        if (!self.supportsDisplayCursor()) return abi.err_no_fn;
+        const callback: abi.R4DrawFns.display_cursor_submit = @ptrFromInt(self.table.display_cursor_submit);
+        return callback(input, out);
+    }
+    pub fn displayCursorStatus(self: *const R4Draw, out: *abi.DisplayCursorStatus) i32 {
+        if (!self.supportsDisplayCursor()) return abi.err_no_fn;
+        const callback: abi.R4DrawFns.display_cursor_status = @ptrFromInt(self.table.display_cursor_status);
+        return callback(out);
+    }
     pub fn displayPresentationStats(self: *const R4Draw, head_id: u32, out: *abi.DisplayPresentationStats) i32 {
         if (!self.supportsDisplayPresentationStats()) return abi.err_no_fn;
         const callback: abi.R4DrawFns.display_presentation_stats = @ptrFromInt(self.table.display_presentation_stats);

@@ -2,6 +2,30 @@
 #define R4OS_DRIVER_DISPLAY_H
 #include "r4draw.h"
 
+static inline int r4driver_display_supports_cursor(const R4GfxDriverDisplayApi *table) {
+    return table != 0 && table->version == 1 && table->size >= offsetof(R4GfxDriverDisplayApi, cursor_complete) + sizeof(uint64_t) &&
+        table->cursor_configure != 0 && table->cursor_take != 0 && table->cursor_complete != 0;
+}
+static inline int32_t r4driver_display_cursor_configure(const R4GfxDriverDisplayApi *table, const R4DisplayCursorInfo *input) {
+    if (!r4driver_display_supports_cursor(table)) return R4OS_ERR_NO_FN;
+    if (input == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    typedef int32_t (*Callback)(const R4DisplayCursorInfo *);
+    return ((Callback)(uintptr_t)table->cursor_configure)(input);
+}
+static inline int32_t r4driver_display_cursor_take(const R4GfxDriverDisplayApi *table, const R4GfxBackendBinding *backend, R4GfxDriverCursorJob *output) {
+    if (!r4driver_display_supports_cursor(table)) return R4OS_ERR_NO_FN;
+    if (backend == 0 || output == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    output->version = 1; output->size = sizeof(*output);
+    typedef int32_t (*Callback)(const R4GfxBackendBinding *, R4GfxDriverCursorJob *);
+    return ((Callback)(uintptr_t)table->cursor_take)(backend, output);
+}
+static inline int32_t r4driver_display_cursor_complete(const R4GfxDriverDisplayApi *table, const R4GfxDriverCursorCompletion *input) {
+    if (!r4driver_display_supports_cursor(table)) return R4OS_ERR_NO_FN;
+    if (input == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    typedef int32_t (*Callback)(const R4GfxDriverCursorCompletion *);
+    return ((Callback)(uintptr_t)table->cursor_complete)(input);
+}
+
 static inline int r4driver_display_supports_presentation_stats(const R4GfxDriverDisplayApi *table) {
     return table != 0 && table->version == 1 && table->size >= offsetof(R4GfxDriverDisplayApi, presentation_stats) + sizeof(uint64_t) && table->presentation_stats != 0;
 }

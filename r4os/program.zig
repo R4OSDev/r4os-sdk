@@ -1707,6 +1707,24 @@ pub const Context = struct {
     pub fn supportsDisplayPresentationStats(self: *const Context) bool {
         return self.hasDrawFn("display_presentation_stats");
     }
+    pub fn supportsDisplayCursor(self: *const Context) bool {
+        return self.hasDrawFn("display_cursor_info") and self.hasDrawFn("display_cursor_submit") and self.hasDrawFn("display_cursor_status");
+    }
+    pub fn displayCursorInfo(self: *const Context, out: *abi.DisplayCursorInfo) i32 {
+        if (!self.supportsDisplayCursor()) return abi.err_no_fn;
+        const callback = self.drawFn("display_cursor_info") orelse return abi.err_no_fn;
+        return callback(out);
+    }
+    pub fn displayCursorSubmit(self: *const Context, input: *const abi.DisplayCursorRequest, out: *abi.DisplayCursorStatus) i32 {
+        if (!self.supportsDisplayCursor()) return abi.err_no_fn;
+        const callback = self.drawFn("display_cursor_submit") orelse return abi.err_no_fn;
+        return callback(input, out);
+    }
+    pub fn displayCursorStatus(self: *const Context, out: *abi.DisplayCursorStatus) i32 {
+        if (!self.supportsDisplayCursor()) return abi.err_no_fn;
+        const callback = self.drawFn("display_cursor_status") orelse return abi.err_no_fn;
+        return callback(out);
+    }
     pub fn displayPresentationStats(self: *const Context, head_id: u32, out: *abi.DisplayPresentationStats) i32 {
         const callback = self.drawFn("display_presentation_stats") orelse return abi.err_no_fn;
         return callback(head_id, out);

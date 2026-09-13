@@ -12,6 +12,59 @@ _Static_assert(sizeof(R4GfxReceiverInfo) == 8224 && offsetof(R4GfxReceiverInfo, 
 _Static_assert(sizeof(R4GfxReceiverUpdate) == 48 && offsetof(R4GfxReceiverUpdate, receivers) == 40, "receiver update layout");
 _Static_assert(sizeof(R4GfxDriverOutputApi) == 72 && offsetof(R4GfxDriverOutputApi, register_source) == 24 && offsetof(R4GfxDriverOutputApi, mode_enable) == 48, "legacy output prefix and mode tail");
 
+static int32_t cursor_info_probe(R4DisplayCursorInfo *out) {
+    assert(out->version == 1 && out->size == 80); out->display_generation = UINT64_C(0x100000079); return 1;
+}
+static int32_t cursor_status_probe(R4DisplayCursorStatus *out) {
+    assert(out->version == 1 && out->size == 72); out->completed = UINT64_C(0x200000079); return 1;
+}
+static int32_t cursor_submit_probe(const R4DisplayCursorRequest *in, R4DisplayCursorStatus *out) {
+    assert(in->display_generation == UINT64_C(0x100000079) && in->image_sequence == UINT64_C(0x300000079) && in->x == -17);
+    return cursor_status_probe(out);
+}
+static int32_t cursor_configure_probe(const R4DisplayCursorInfo *in) {
+    assert(in->display_generation == UINT64_C(0x100000079)); return 1;
+}
+static int32_t cursor_take_probe(const R4GfxBackendBinding *in, R4GfxDriverCursorJob *out) {
+    assert(in->reset_generation == UINT64_C(0x400000079) && out->version == 1 && out->size == 160);
+    out->sequence = UINT64_C(0x200000079); out->barrier_point = UINT64_C(0x500000079); return 1;
+}
+static int32_t cursor_complete_probe(const R4GfxDriverCursorCompletion *in) {
+    assert(in->sequence == UINT64_C(0x200000079) && in->display_generation == UINT64_C(0x100000079)); return -4;
+}
+static void cursor_facade_probe(void) {
+    R4XStartR4Draw table = {.size=sizeof(table),.display_cursor_info=(uintptr_t)cursor_info_probe,
+        .display_cursor_submit=(uintptr_t)cursor_submit_probe,.display_cursor_status=(uintptr_t)cursor_status_probe};
+    R4Draw draw = {.table=&table};
+    R4DisplayCursorInfo info = {0}; R4DisplayCursorStatus status = {.completed=79};
+    R4DisplayCursorRequest request = {.display_generation=UINT64_C(0x100000079),.image_sequence=UINT64_C(0x300000079),.x=-17};
+    for (unsigned size=616; size<640; ++size) {
+        table.size=size; assert(!r4draw_supports_display_cursor(&draw));
+        assert(r4draw_display_cursor_info(&draw,&info)==R4OS_ERR_NO_FN);
+        assert(r4draw_display_cursor_submit(&draw,&request,&status)==R4OS_ERR_NO_FN);
+        assert(r4draw_display_cursor_status(&draw,&status)==R4OS_ERR_NO_FN);
+        assert(info.display_generation==0 && status.completed==79);
+    }
+    table.size=640;
+    assert(r4draw_display_cursor_info(&draw,&info)==1);
+    assert(r4draw_display_cursor_submit(&draw,&request,&status)==1);
+    assert(r4draw_display_cursor_status(&draw,&status)==1);
+    R4GfxDriverDisplayApi driver = {.version=1,.size=96,.cursor_configure=(uintptr_t)cursor_configure_probe,
+        .cursor_take=(uintptr_t)cursor_take_probe,.cursor_complete=(uintptr_t)cursor_complete_probe};
+    R4GfxDriverCursorJob job={0}; R4GfxBackendBinding binding={.reset_generation=UINT64_C(0x400000079)};
+    R4GfxDriverCursorCompletion receipt={.sequence=UINT64_C(0x200000079),.display_generation=UINT64_C(0x100000079)};
+    for (unsigned size=72; size<96; ++size) {
+        driver.size=size; assert(!r4driver_display_supports_cursor(&driver));
+        assert(r4driver_display_cursor_configure(&driver,&info)==R4OS_ERR_NO_FN);
+        assert(r4driver_display_cursor_take(&driver,&binding,&job)==R4OS_ERR_NO_FN);
+        assert(r4driver_display_cursor_complete(&driver,&receipt)==R4OS_ERR_NO_FN && job.sequence==0);
+    }
+    driver.size=96;
+    assert(r4driver_display_cursor_configure(&driver,&info)==1);
+    assert(r4driver_display_cursor_take(&driver,&binding,&job)==1 && job.sequence==UINT64_C(0x200000079) && job.barrier_point==UINT64_C(0x500000079));
+    assert(r4driver_display_cursor_complete(&driver,&receipt)==R4OS_GFX_OUTPUT_ERROR_BUSY);
+}
+
 static int32_t display_transition_probe(uint64_t generation, uint32_t operation, R4GfxNativeState *output) {
     assert(generation == UINT64_C(0x100000007) && operation == 2);
     output->generation = generation + 1; output->outcome = 3; output->retained = 1; return 1;
@@ -382,6 +435,7 @@ static R4App make_app(R4XStartR4Sys *sys, R4XStartR4Desk *desk, R4XStartR4Draw *
 }
 
 int main(void) {
+    cursor_facade_probe();
     gfx_facade_probe();
     R4XStartR4Sys sys;
     R4XStartR4Desk desk;
