@@ -447,9 +447,12 @@ fn parseV2(allocator: std.mem.Allocator, path: []const u8, text: []const u8) !Ma
         if (entry_mode != null) return error.NonR4XEntryModeForbidden;
         if (app_class != null) return error.NonR4XAppClassForbidden;
         if (package != null) return error.NonR4XPackageForbidden;
-        // R4D uses the same compiled-library mechanism as R4X. This adds no
-        // runtime import or application entry point to a driver container.
-        if (parsed_kind != .r4d and zig_modules.items.len != 0) return error.NonR4XZigModuleForbidden;
+        // R4D and R4L share the R4X compiled-library mechanism. This adds no
+        // runtime import or application entry point to their containers.
+        if (parsed_kind != .r4d and parsed_kind != .r4l and zig_modules.items.len != 0) return error.NonR4XZigModuleForbidden;
+        if (parsed_kind == .r4l) for (zig_modules.items) |module| {
+            if (std.mem.startsWith(u8, module, "r4l_contract:")) return error.ReservedZigModuleName;
+        };
         // image.shipped ist durch IMAGE_SCOPE abgeloest und darf nicht
         // danebenstehen - zwei Quellen fuer dieselbe Aussage waeren genau
         // die Doppelung, die diese Unterversion abschafft.
@@ -979,11 +982,23 @@ fn validateImportSyntax(value: []const u8) !void {
     const group = parts.next() orelse return error.InvalidImport;
     const symbol = parts.next() orelse return error.InvalidImport;
     const major = parts.next() orelse return error.InvalidImport;
+    const flags_text = parts.next();
     if (parts.next() != null or group.len == 0 or symbol.len == 0 or major.len == 0) return error.InvalidImport;
+    const flags = if (flags_text) |text| std.fmt.parseUnsigned(u32, text, 10) catch return error.InvalidImport else 0;
+    if (flags > 1 or (flags != 0 and isPlatformGroup(group))) return error.InvalidImport;
     for (group) |byte| if (!std.ascii.isAlphanumeric(byte) and byte != '_' and byte != '-') return error.InvalidImport;
     for (symbol) |byte| if (!std.ascii.isAlphanumeric(byte) and byte != '_') return error.InvalidImport;
     const parsed_major = std.fmt.parseUnsigned(u16, major, 10) catch return error.InvalidImport;
     if (parsed_major == 0) return error.InvalidImport;
+}
+
+/// R4M0 import bit 0 permits an absent/incompatible Runtime-R4L provider.
+/// Call only after manifest validation; platform imports remain mandatory.
+pub fn importIsOptional(value: []const u8) bool {
+    var parts = std.mem.splitScalar(u8, value, ':');
+    _ = parts.next(); _ = parts.next(); _ = parts.next();
+    const text = parts.next() orelse return false;
+    return (std.fmt.parseUnsigned(u32, text, 10) catch return false) == 1;
 }
 
 fn validateR4XImport(value: []const u8) !void {
@@ -991,6 +1006,7 @@ fn validateR4XImport(value: []const u8) !void {
     const group = parts.next() orelse return error.InvalidImport;
     const symbol = parts.next() orelse return error.InvalidImport;
     const major = parts.next() orelse return error.InvalidImport;
+    _ = parts.next(); // Optional flags were checked by validateImportSyntax.
     if (parts.next() != null) return error.InvalidImport;
 
     // Nur die sechs kernelimplementierten Plattformgruppen besitzen den
@@ -1608,6 +1624,16 @@ test "R4X accepts named Runtime-R4L imports without a profile group bit" {
     try std.testing.expectEqual(@as(usize, 2), value.imports.len);
     try std.testing.expectEqualStrings("ACME-CODEC:API_V1:2", value.imports[1]);
 
+    const optional_text = try std.mem.replaceOwned(u8, allocator, text, "ACME-CODEC:API_V1:2", "ACME-CODEC:API_V1:2:1");
+    const optional = try parse(allocator, "Named/module.R4MF", optional_text);
+    try std.testing.expect(importIsOptional(optional.imports[1]) and !importIsOptional(optional.imports[0]));
+    for ([_][]const u8{ "ACME-CODEC:API_V1:2:2", "ACME-CODEC:API_V1:2:1:0", "ACME-CODEC:API_V1:2:" }) |bad| {
+        const invalid = try std.mem.replaceOwned(u8, allocator, text, "ACME-CODEC:API_V1:2", bad);
+        try std.testing.expectError(error.InvalidImport, parse(allocator, "Named/module.R4MF", invalid));
+    }
+    const optional_platform = try std.mem.replaceOwned(u8, allocator, text, "R4SYS:Query:1", "R4SYS:Query:1:1");
+    try std.testing.expectError(error.InvalidImport, parse(allocator, "Named/module.R4MF", optional_platform));
+
     const invalid_platform = std.mem.replaceOwned(u8, allocator, text, "R4SYS:Query:1", "R4SYS:API_V1:1") catch unreachable;
     defer allocator.free(invalid_platform);
     try std.testing.expectError(error.InvalidImport, parse(allocator, "Named/module.R4MF", invalid_platform));
@@ -1888,6 +1914,9 @@ test "runtime R4L owns symbolic exports contract and language bindings" {
     try std.testing.expectEqualStrings("acme_api_v1", parsed.exports[0].symbol);
     try std.testing.expectEqual(@as(u16, 2), parsed.exports[0].revision);
     try std.testing.expectEqualStrings("Bindings/C/acmecalc.h", parsed.binding_c.?);
+    const compiled = try parse(allocator, "Vendor/Library/module.R4MF", base ++ "\nZIG_MODULE=backend:../Backend/Bindings/Zig/backend.zig\n");
+    try std.testing.expectEqualStrings("backend:../Backend/Bindings/Zig/backend.zig", compiled.zig_modules[0]);
+    try std.testing.expectError(error.ReservedZigModuleName, parse(allocator, "Vendor/Library/module.R4MF", base ++ "\nZIG_MODULE=r4l_contract:Other.zig\n"));
 
     const duplicate = base ++ "\nEXPORT=api_v1:another_symbol:3\n";
     try std.testing.expectError(error.DuplicateExportName, parse(allocator, "Vendor/Library/module.R4MF", duplicate));

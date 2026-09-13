@@ -508,10 +508,12 @@ pub const Sdk = struct {
         const contract_check = self.addR4LContractCheck(loaded);
         const optimize = manifestOptimizeMode(loaded.manifest);
         self.b.getInstallStep().dependOn(&contract_check.step);
-        const implementation_module = [_]ZigModuleBuild{.{
+        const implementation_modules = self.b.allocator.alloc(ZigModuleBuild, loaded.zig_modules.len + 1) catch @panic("OOM");
+        implementation_modules[0] = .{
             .name = "r4l_contract",
             .root_source_file = resolvedProjectPath(self.b, loaded.project_path, loaded.manifest.implementation_zig.?),
-        }};
+        };
+        @memcpy(implementation_modules[1..], loaded.zig_modules);
         const companion_count = loaded.source_paths.len - 1;
         const c_source_files = self.b.allocator.alloc(std.Build.LazyPath, companion_count) catch @panic("OOM");
         const explicit_include_roots = self.manifestCIncludeRoots(loaded);
@@ -535,7 +537,7 @@ pub const Sdk = struct {
                 .contract_module = self.profile.contract_module,
                 .linker_script = self.profile.linker_script,
                 .entry_symbol = "r4l_entry",
-                .zig_modules = &implementation_module,
+                .zig_modules = implementation_modules,
                 .c_source_files = c_source_files,
                 .c_include_roots = c_include_roots,
                 .c_defines = loaded.manifest.c_defines,

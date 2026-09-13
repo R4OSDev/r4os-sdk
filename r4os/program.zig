@@ -1530,6 +1530,12 @@ pub const Context = struct {
         output.size = @sizeOf(abi.GfxBackendBinding);
         return table_fn(index, output);
     }
+    pub fn gfxQueueBackendInfo(self: *const Context, index: u32, output: *abi.GfxBackendInfo) i32 {
+        const table_fn = self.drawFn("gfx_queue_backend_info") orelse return self.unavailable("draw");
+        output.version = 1;
+        output.size = @sizeOf(abi.GfxBackendInfo);
+        return table_fn(index, output);
+    }
 
     pub fn gfxQueueClose(self: *const Context, queue: *const abi.GfxQueueHandle) i32 {
         const table_fn = self.drawFn("gfx_queue_close") orelse return self.unavailable("draw");

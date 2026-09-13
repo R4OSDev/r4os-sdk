@@ -3,6 +3,14 @@ const abi = @import("r4os_contract").abi;
 pub const Context = struct {
     table: abi.GfxDriverQueueApi,
 
+    pub fn registerProfile(self: *const Context, input: *const abi.GfxBackendRegistration, profile: *const abi.GfxBackendProfile, output: *abi.GfxBackendBinding) i32 {
+        if (self.table.version != 1 or self.table.size < @offsetOf(abi.GfxDriverQueueApi, "register_profile") + 8 or self.table.register_profile == 0) return abi.err_no_fn;
+        output.version = 1;
+        output.size = @sizeOf(abi.GfxBackendBinding);
+        const callback: *const fn (*const abi.GfxBackendRegistration, *const abi.GfxBackendProfile, *abi.GfxBackendBinding) callconv(.c) i32 = @ptrFromInt(self.table.register_profile);
+        return callback(input, profile, output);
+    }
+
     pub fn register(self: *const Context, input: *const abi.GfxBackendRegistration, output: *abi.GfxBackendBinding) i32 {
         if (self.table.version != 1 or self.table.size < @offsetOf(abi.GfxDriverQueueApi, "register_backend") + 8 or self.table.register_backend == 0) return abi.err_no_fn;
         output.version = 1;

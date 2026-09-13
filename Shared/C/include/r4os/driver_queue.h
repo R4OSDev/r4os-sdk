@@ -4,6 +4,14 @@
 
 /* Native callbacks require the actual bound R4D work/IRQ owner. */
 
+static inline int32_t r4driver_queue_register_profile(const R4GfxDriverQueueApi *table, const R4GfxBackendRegistration *input, const R4GfxBackendProfile *profile, R4GfxBackendBinding *output) {
+    if (table == 0 || table->version != 1 || table->size < offsetof(R4GfxDriverQueueApi, register_profile) + sizeof(uint64_t) || table->register_profile == 0) return R4OS_ERR_NO_FN;
+    if (output == 0) return R4OS_GFX_QUEUE_ERROR_INVALID;
+    output->version = 1; output->size = sizeof(*output);
+    typedef int32_t (*Callback)(const R4GfxBackendRegistration *, const R4GfxBackendProfile *, R4GfxBackendBinding *);
+    return ((Callback)(uintptr_t)table->register_profile)(input, profile, output);
+}
+
 static inline int32_t r4driver_queue_register_backend(const R4GfxDriverQueueApi *table, const R4GfxBackendRegistration * input, R4GfxBackendBinding * output) {
     if (table == 0 || table->version != 1 || table->size < offsetof(R4GfxDriverQueueApi, register_backend) + sizeof(uint64_t) || table->register_backend == 0) return R4OS_ERR_NO_FN;
     if (output == 0) return R4OS_GFX_QUEUE_ERROR_INVALID;

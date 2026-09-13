@@ -6,6 +6,9 @@ pub const Context = struct {
     pub fn backend(self: *const Context, index: u32, output: *abi.GfxBackendBinding) i32 {
         return self.base.gfxQueueBackend(index, output);
     }
+    pub fn backendInfo(self: *const Context, index: u32, output: *abi.GfxBackendInfo) i32 {
+        return self.base.gfxQueueBackendInfo(index, output);
+    }
 
     pub fn open(self: *const Context, config: *const abi.GfxQueueConfig, output: *abi.GfxQueueHandle) i32 {
         return self.base.gfxQueueOpen(config, output);

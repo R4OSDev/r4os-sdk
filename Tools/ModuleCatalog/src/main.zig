@@ -565,6 +565,7 @@ fn validateImageDependencyClosure(entries: []const manifest_contract.Manifest, m
     for (entries) |entry| {
         if (!imageEntryIncluded(entry, mode, include_targets)) continue;
         for (entry.imports) |import_spec| {
+            if (manifest_contract.importIsOptional(import_spec)) continue;
             const separator = std.mem.indexOfScalar(u8, import_spec, ':') orelse continue;
             const provider_name = import_spec[0..separator];
             if (manifest_contract.platformApiGroupId(provider_name) != null) continue;
@@ -1295,6 +1296,16 @@ test "catalog exposes common optimization for non-R4X modules" {
     const catalog = try renderCatalog(allocator, &.{driver});
     try std.testing.expect(std.mem.indexOf(u8, catalog, "\"kind\": \"R4D\"") != null);
     try std.testing.expect(std.mem.indexOf(u8, catalog, "\"optimization\": \"speed\"") != null);
+    // A known but excluded optional library may be absent from this image.
+    var provider = driver;
+    provider.kind = .r4l;
+    provider.name = "R4NV";
+    provider.image_scope = .none;
+    var consumer = driver;
+    consumer.imports = &.{"R4NV:API_V1:1:1"};
+    try validateImageDependencyClosure(&.{consumer, provider}, .slim, &.{});
+    consumer.imports = &.{"R4NV:API_V1:1"};
+    try std.testing.expectError(error.ImageDependencyMissing, validateImageDependencyClosure(&.{consumer, provider}, .slim, &.{}));
 }
 
 test "benchmark selection is full plus explicit test diagnostics" {

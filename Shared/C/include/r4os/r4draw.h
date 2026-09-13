@@ -440,6 +440,13 @@ static inline int32_t r4draw_gfx_queue_backend(const R4Draw *draw, uint32_t inde
     return ((R4DrawGfxQueueBackendFn)(uintptr_t)draw->table->gfx_queue_backend)(index, output);
 }
 
+static inline int32_t r4draw_gfx_queue_backend_info(const R4Draw *draw, uint32_t index, R4GfxBackendInfo *output) {
+    if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_queue_backend_info) + sizeof(uintptr_t) || draw->table->gfx_queue_backend_info == 0) return R4OS_ERR_NO_FN;
+    if (output == 0) return R4OS_GFX_QUEUE_ERROR_INVALID;
+    output->version = 1; output->size = sizeof(*output);
+    return ((R4DrawGfxQueueBackendInfoFn)(uintptr_t)draw->table->gfx_queue_backend_info)(index, output);
+}
+
 static inline int32_t r4draw_gfx_queue_close(const R4Draw *draw, const R4GfxQueueHandle * queue) {
     if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_queue_close) + sizeof(uintptr_t) || draw->table->gfx_queue_close == 0) return R4OS_ERR_NO_FN;
     if (queue == 0) return R4OS_GFX_QUEUE_ERROR_INVALID;

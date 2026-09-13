@@ -126,6 +126,9 @@ pub fn build(b: *std.Build) void {
     catalog_tool_test_root.addImport("contract_bundle", catalog_bundle);
     const catalog_tool_tests = b.addTest(.{ .root_module = catalog_tool_test_root });
     const run_catalog_tool_tests = b.addRunArtifact(catalog_tool_tests);
+    const module_test_step = b.step("module-test", "Run the existing manifest and module catalog tests");
+    module_test_step.dependOn(&run_catalog_tests.step);
+    module_test_step.dependOn(&run_catalog_tool_tests.step);
 
     const test_step = b.step("test", "Run SDK, build-tool and smoke tests");
     const storage_tools = b.createModule(.{
