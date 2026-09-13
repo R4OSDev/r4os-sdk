@@ -4,6 +4,36 @@ const abi = @import("r4os_contract").abi;
 pub const Context = struct {
     table: abi.GfxDriverMemoryApi,
 
+    pub fn nativeRegister(self: *const Context, input: *const abi.GfxNativeProvider, output: *abi.GfxBufferHandle) i32 {
+        if (self.table.version != 1 or self.table.size < @offsetOf(abi.GfxDriverMemoryApi, "native_register") + 8 or self.table.native_register == 0) return abi.err_no_fn;
+        const callback: *const fn (*const abi.GfxNativeProvider, *abi.GfxBufferHandle) callconv(.c) i32 = @ptrFromInt(self.table.native_register);
+        var temporary: abi.GfxBufferHandle = .{};
+        const rc = callback(input, &temporary);
+        if (rc == 1) output.* = temporary;
+        return rc;
+    }
+
+    pub fn nativeUnregister(self: *const Context, provider: *const abi.GfxBufferHandle) i32 {
+        if (self.table.version != 1 or self.table.size < @offsetOf(abi.GfxDriverMemoryApi, "native_unregister") + 8 or self.table.native_unregister == 0) return abi.err_no_fn;
+        const callback: *const fn (*const abi.GfxBufferHandle) callconv(.c) i32 = @ptrFromInt(self.table.native_unregister);
+        return callback(provider);
+    }
+
+    pub fn nativeTake(self: *const Context, provider: *const abi.GfxBufferHandle, output: *abi.GfxNativeJob) i32 {
+        if (self.table.version != 1 or self.table.size < @offsetOf(abi.GfxDriverMemoryApi, "native_take") + 8 or self.table.native_take == 0) return abi.err_no_fn;
+        const callback: *const fn (*const abi.GfxBufferHandle, *abi.GfxNativeJob) callconv(.c) i32 = @ptrFromInt(self.table.native_take);
+        var temporary: abi.GfxNativeJob = .{};
+        const rc = callback(provider, &temporary);
+        if (rc == 1) output.* = temporary;
+        return rc;
+    }
+
+    pub fn nativeComplete(self: *const Context, provider: *const abi.GfxBufferHandle, request: *const abi.GfxBufferHandle, result: i32, reference: *const abi.GfxBufferHandle) i32 {
+        if (self.table.version != 1 or self.table.size < @offsetOf(abi.GfxDriverMemoryApi, "native_complete") + 8 or self.table.native_complete == 0) return abi.err_no_fn;
+        const callback: *const fn (*const abi.GfxBufferHandle, *const abi.GfxBufferHandle, i32, *const abi.GfxBufferHandle) callconv(.c) i32 = @ptrFromInt(self.table.native_complete);
+        return callback(provider, request, result, reference);
+    }
+
     pub fn bufferCreate(self: *const Context, input: *const abi.GfxBufferDescriptor, output: *abi.GfxBufferReference) i32 {
         if (self.table.version != 1 or self.table.size < @offsetOf(abi.GfxDriverMemoryApi, "buffer_create") + 8 or self.table.buffer_create == 0) return abi.err_no_fn;
         const callback: *const fn (*const abi.GfxBufferDescriptor, *abi.GfxBufferReference) callconv(.c) i32 = @ptrFromInt(self.table.buffer_create);

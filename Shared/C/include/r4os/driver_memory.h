@@ -5,6 +5,45 @@
 /* Obtained by the R4D v25 gfx_memory_query tail. Calls require the current
  * driver callback context. No global CPU pointer is a DMA or GPU address. */
 
+static inline int32_t r4driver_memory_native_register(const R4GfxDriverMemoryApi *table, const R4GfxNativeProvider * input, R4GfxBufferHandle * output) {
+    if (table == 0 || table->version != 1 || table->size < offsetof(R4GfxDriverMemoryApi, native_register) + sizeof(uint64_t) || table->native_register == 0) return R4OS_ERR_NO_FN;
+    if (input == 0 || output == 0) return R4OS_GFX_BUFFER_ERROR_INVALID;
+    typedef int32_t (*Callback)(const R4GfxNativeProvider *, R4GfxBufferHandle *);
+    Callback callback = (Callback)(uintptr_t)table->native_register;
+    R4GfxBufferHandle temporary = {0};
+    int32_t rc = callback(input, &temporary);
+    if (rc == 1) *output = temporary;
+    return rc;
+}
+
+static inline int32_t r4driver_memory_native_unregister(const R4GfxDriverMemoryApi *table, const R4GfxBufferHandle * provider) {
+    if (table == 0 || table->version != 1 || table->size < offsetof(R4GfxDriverMemoryApi, native_unregister) + sizeof(uint64_t) || table->native_unregister == 0) return R4OS_ERR_NO_FN;
+    if (provider == 0) return R4OS_GFX_BUFFER_ERROR_INVALID;
+    typedef int32_t (*Callback)(const R4GfxBufferHandle *);
+    Callback callback = (Callback)(uintptr_t)table->native_unregister;
+    return callback(provider);
+}
+
+static inline int32_t r4driver_memory_native_take(const R4GfxDriverMemoryApi *table, const R4GfxBufferHandle * provider, R4GfxNativeJob * output) {
+    if (table == 0 || table->version != 1 || table->size < offsetof(R4GfxDriverMemoryApi, native_take) + sizeof(uint64_t) || table->native_take == 0) return R4OS_ERR_NO_FN;
+    if (provider == 0 || output == 0) return R4OS_GFX_BUFFER_ERROR_INVALID;
+    typedef int32_t (*Callback)(const R4GfxBufferHandle *, R4GfxNativeJob *);
+    Callback callback = (Callback)(uintptr_t)table->native_take;
+    R4GfxNativeJob temporary = {0};
+    temporary.version = 1; temporary.size = sizeof(temporary);
+    int32_t rc = callback(provider, &temporary);
+    if (rc == 1) *output = temporary;
+    return rc;
+}
+
+static inline int32_t r4driver_memory_native_complete(const R4GfxDriverMemoryApi *table, const R4GfxBufferHandle * provider, const R4GfxBufferHandle * request, int32_t result, const R4GfxBufferHandle * reference) {
+    if (table == 0 || table->version != 1 || table->size < offsetof(R4GfxDriverMemoryApi, native_complete) + sizeof(uint64_t) || table->native_complete == 0) return R4OS_ERR_NO_FN;
+    if (provider == 0 || request == 0 || reference == 0) return R4OS_GFX_BUFFER_ERROR_INVALID;
+    typedef int32_t (*Callback)(const R4GfxBufferHandle *, const R4GfxBufferHandle *, int32_t, const R4GfxBufferHandle *);
+    Callback callback = (Callback)(uintptr_t)table->native_complete;
+    return callback(provider, request, result, reference);
+}
+
 static inline int32_t r4driver_memory_buffer_create(const R4GfxDriverMemoryApi *table, const R4GfxBufferDescriptor * input, R4GfxBufferReference * output) {
     if (table == 0 || table->version != 1 || table->size < offsetof(R4GfxDriverMemoryApi, buffer_create) + sizeof(uint64_t) || table->buffer_create == 0) return R4OS_ERR_NO_FN;
     if (output == 0) return R4OS_ERROR_INVALID;

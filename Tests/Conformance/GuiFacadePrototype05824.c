@@ -163,13 +163,29 @@ static int32_t gfx_map_probe(const R4GfxBufferHandle *ref, uint32_t access, uint
     out->byte_length = bytes;
     return 1;
 }
-_Static_assert(sizeof(R4GfxOwnedBufferReservation)==88 && sizeof(R4GfxOwnedBufferRelease)==80 && offsetof(R4GfxDriverMemoryApi,buffer_reserve)==112 && sizeof(R4GfxDriverMemoryApi)==152, "owned BO ABI");
+_Static_assert(sizeof(R4GfxOwnedBufferReservation)==88 && sizeof(R4GfxOwnedBufferRelease)==80 && offsetof(R4GfxDriverMemoryApi,buffer_reserve)==112 && offsetof(R4GfxDriverMemoryApi,native_register)==152 && sizeof(R4GfxDriverMemoryApi)==184, "owned BO ABI");
 static int32_t owned_reserve(const R4GfxBufferDescriptor *d, uint64_t c, R4GfxOwnedBufferReservation *o){assert(d && c==UINT64_C(0x100000003) && o->size==88);o->cookie=c;return 1;}
 static int32_t owned_commit(const R4GfxOwnedBufferReservation *r,R4GfxBufferReference *o){assert(r->cookie==UINT64_C(0x100000003) && o->size==48);return 1;}
 static int32_t owned_abort(const R4GfxOwnedBufferReservation *r,uint32_t q){assert(r->cookie==UINT64_C(0x100000003) && q==0);return -4;}
 static int32_t owned_take(uint32_t a,uint64_t g,R4GfxOwnedBufferRelease *o){assert(a==17 && g==UINT64_C(0x300000007) && o->size==80);o->attempt=UINT64_C(0x400000009);return 1;}
 static int32_t owned_finish(const R4GfxOwnedBufferRelease *r,uint32_t q){assert(r->attempt==UINT64_C(0x400000009) && q==1);return 1;}
+static int32_t native_complete_probe(const R4GfxBufferHandle *p, const R4GfxBufferHandle *r, int32_t result, const R4GfxBufferHandle *ref) {
+    assert(p->generation==UINT64_C(0x100000019) && r->generation==UINT64_C(0x200000019) && result==-6 && ref->id==0); return 1;
+}
+static int32_t native_take_probe(const R4GfxBufferHandle *p, R4GfxNativeJob *out) {
+    assert(p && out->version==1 && out->size==88); out->request.generation=99; return -4;
+}
+static void native_facade_probe(void) {
+    R4GfxDriverMemoryApi m={.version=1,.size=184,.native_complete=(uintptr_t)native_complete_probe,.native_take=(uintptr_t)native_take_probe};
+    R4GfxBufferHandle p={.id=1,.generation=UINT64_C(0x100000019)},r={.id=2,.generation=UINT64_C(0x200000019)},ref={0};
+    for(unsigned n=176;n<184;++n){m.size=n;assert(r4driver_memory_native_complete(&m,&p,&r,-6,&ref)==R4OS_ERR_NO_FN);}
+    m.size=184;assert(r4driver_memory_native_complete(&m,&p,&r,-6,&ref)==1);
+    R4GfxNativeJob out={.version=1,.size=88,.request={.generation=77}},before=out;
+    assert(r4driver_memory_native_take(&m,&p,&out)==-4 && memcmp(&out,&before,sizeof(out))==0);
+    m.size=152;assert(r4driver_memory_native_take(&m,&p,&out)==R4OS_ERR_NO_FN && memcmp(&out,&before,sizeof(out))==0);
+}
 static void owned_facade_probe(void){
+    native_facade_probe();
     R4GfxDriverMemoryApi m={.version=1,.size=152,.buffer_reserve=(uintptr_t)owned_reserve,.buffer_commit=(uintptr_t)owned_commit,.buffer_abort=(uintptr_t)owned_abort,.buffer_take_release=(uintptr_t)owned_take,.buffer_finish_release=(uintptr_t)owned_finish};
     R4GfxBufferDescriptor d={0};R4GfxOwnedBufferReservation r={0};R4GfxBufferReference ref={0};R4GfxOwnedBufferRelease rel={0};
     for(unsigned i=112;i<120;++i){m.size=i;assert(r4driver_memory_buffer_reserve(&m,&d,UINT64_C(0x100000003),&r)==R4OS_ERR_NO_FN && r.cookie==0);}

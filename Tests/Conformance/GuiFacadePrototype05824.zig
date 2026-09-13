@@ -84,8 +84,36 @@ fn ownedFacadeProbe() !void {
     try std.testing.expect(old.table.size == 112 and old.table.buffer_reserve == 0);
     try std.testing.expectEqual(a.err_no_fn, old.bufferReserve(&.{}, 0, &reservation));
 }
+fn nativeCompleteProbe(provider: *const r4os.abi.GfxBufferHandle, request: *const r4os.abi.GfxBufferHandle, result: i32, reference: *const r4os.abi.GfxBufferHandle) callconv(.c) i32 {
+    std.debug.assert(provider.generation == 0x100000019 and request.generation == 0x200000019 and result == -6 and reference.id == 0);
+    return 1;
+}
+fn nativeTakeProbe(_: *const r4os.abi.GfxBufferHandle, output: *r4os.abi.GfxNativeJob) callconv(.c) i32 {
+    std.debug.assert(output.version == 1 and output.size == 88);
+    output.request.generation = 99; return -4;
+}
+fn nativeFacadeProbe() !void {
+    const a = r4os.abi;
+    var memory: r4os.driver_memory.Context = .{ .table = .{ .native_take = @intFromPtr(&nativeTakeProbe), .native_complete = @intFromPtr(&nativeCompleteProbe) } };
+    const provider: a.GfxBufferHandle = .{ .id = 1, .generation = 0x100000019 };
+    const request: a.GfxBufferHandle = .{ .id = 2, .generation = 0x200000019 };
+    for (176..184) |bytes| {
+        memory.table.size = @intCast(bytes);
+        try std.testing.expectEqual(a.err_no_fn, memory.nativeComplete(&provider, &request, -6, &.{}));
+    }
+    memory.table.size = 184;
+    try std.testing.expectEqual(@as(i32, 1), memory.nativeComplete(&provider, &request, -6, &.{}));
+    var output: a.GfxNativeJob = .{ .request = .{ .generation = 77 } };
+    const unchanged = output;
+    try std.testing.expectEqual(@as(i32, -4), memory.nativeTake(&provider, &output));
+    try std.testing.expectEqualDeep(unchanged, output);
+    memory.table.size = 152;
+    try std.testing.expectEqual(a.err_no_fn, memory.nativeTake(&provider, &output));
+    try std.testing.expectEqualDeep(unchanged, output);
+}
 test "graphics buffer optional tails preserve 64-bit offsets in Zig and R4D calls" {
     try ownedFacadeProbe();
+    try nativeFacadeProbe();
     var tables = makeTables(true);
     tables[2].abi_version = 10; // A new facade must accept an older prefix.
     tables[2].gfx_buffer_map = @intFromPtr(&gfxMapProbe);

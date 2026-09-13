@@ -1420,6 +1420,43 @@ pub const Context = struct {
         return table_fn(lease);
     }
 
+    pub fn gfxNativeStart(self: *const Context, input: *const abi.GfxNativeAllocation, output: *abi.GfxNativeStatus) i32 {
+        const callback = self.drawFn("gfx_native_start") orelse return self.unavailable("draw");
+        var temporary: abi.GfxNativeStatus = .{};
+        const rc = callback(input, &temporary);
+        if (rc == 1) output.* = temporary;
+        return rc;
+    }
+
+    pub fn gfxNativeQuery(self: *const Context, request: *const abi.GfxBufferHandle, output: *abi.GfxNativeStatus) i32 {
+        const callback = self.drawFn("gfx_native_query") orelse return self.unavailable("draw");
+        var temporary: abi.GfxNativeStatus = .{};
+        const rc = callback(request, &temporary);
+        if (rc == 1) output.* = temporary;
+        return rc;
+    }
+
+    pub fn gfxNativeReceive(self: *const Context, request: *const abi.GfxBufferHandle, output: *abi.GfxBufferReference) i32 {
+        const callback = self.drawFn("gfx_native_receive") orelse return self.unavailable("draw");
+        var temporary: abi.GfxBufferReference = .{};
+        const rc = callback(request, &temporary);
+        if (rc == 1) output.* = temporary;
+        return rc;
+    }
+
+    pub fn gfxNativeClose(self: *const Context, request: *const abi.GfxBufferHandle) i32 {
+        const callback = self.drawFn("gfx_native_close") orelse return self.unavailable("draw");
+        return callback(request);
+    }
+
+    pub fn gfxNativeWait(self: *const Context, request: *const abi.GfxBufferHandle, timeout_ticks: u64, output: *abi.GfxNativeStatus) i32 {
+        const callback = self.drawFn("gfx_native_wait") orelse return self.unavailable("draw");
+        var temporary: abi.GfxNativeStatus = .{};
+        const rc = callback(request, timeout_ticks, &temporary);
+        if (rc == 1) output.* = temporary;
+        return rc;
+    }
+
     pub fn gfxBufferCreate(self: *const Context, descriptor: *const abi.GfxBufferDescriptor, output: *abi.GfxBufferReference) i32 {
         const table_fn = self.drawFn("gfx_buffer_create") orelse return self.unavailable("draw");
         output.version = 1;
