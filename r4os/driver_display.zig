@@ -1,6 +1,14 @@
 const abi = @import("r4os_contract").abi;
 pub const Context = struct {
     table: abi.GfxDriverDisplayApi,
+    pub fn supportsPresentationStats(self: *const Context) bool {
+        return self.table.version == 1 and self.table.size >= @offsetOf(abi.GfxDriverDisplayApi, "presentation_stats") + 8 and self.table.presentation_stats != 0;
+    }
+    pub fn presentationStats(self: *const Context, input: *const abi.DisplayPresentationStats) i32 {
+        if (!self.supportsPresentationStats()) return abi.err_no_fn;
+        const callback: *const fn (*const abi.DisplayPresentationStats) callconv(.c) i32 = @ptrFromInt(self.table.presentation_stats);
+        return callback(input);
+    }
     pub fn bootHold(self: *const Context, input: *const abi.GfxBootHoldRequest, output: *abi.GfxNativeState) i32 {
         if (self.table.version != 1 or self.table.size < @offsetOf(abi.GfxDriverDisplayApi, "boot_hold") + 8 or self.table.boot_hold == 0) return abi.err_no_fn;
         const callback: *const fn (*const abi.GfxBootHoldRequest, *abi.GfxNativeState) callconv(.c) i32 = @ptrFromInt(self.table.boot_hold);

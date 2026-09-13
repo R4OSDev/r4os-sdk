@@ -78,6 +78,21 @@ static inline int32_t r4draw_display_present_completion(R4Draw *draw,
     return fn(fence, out_completion);
 }
 
+static inline int r4draw_supports_display_presentation_stats(const R4Draw *draw) {
+    return draw != 0 && draw->table != 0 &&
+        draw->table->size >= offsetof(R4XStartR4Draw, display_presentation_stats) + sizeof(uintptr_t) &&
+        draw->table->display_presentation_stats != 0;
+}
+
+static inline int32_t r4draw_display_presentation_stats(const R4Draw *draw, uint32_t head_id,
+                                                        R4DisplayPresentationStats *output) {
+    if (!r4draw_supports_display_presentation_stats(draw)) return R4OS_ERR_NO_FN;
+    if (output == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    output->version = 1u;
+    output->size = (uint32_t)sizeof(*output);
+    return ((R4DrawDisplayPresentationStatsFn)(uintptr_t)draw->table->display_presentation_stats)(head_id, output);
+}
+
 static inline int r4draw_import_valid(const R4XStartImport *item) {
     return item != 0 &&
         item->group_id == R4L_GROUP_R4DRAW &&

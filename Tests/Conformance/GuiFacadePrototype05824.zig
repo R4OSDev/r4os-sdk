@@ -198,6 +198,15 @@ fn displayScheduleProbe(binding: *const r4os.abi.GfxBackendBinding) callconv(.c)
     std.debug.assert(binding.reset_generation == 0x30000000b);
     return -4;
 }
+fn presentationReadProbe(head: u32, output: *r4os.abi.DisplayPresentationStats) callconv(.c) i32 {
+    std.debug.assert(head == 3 and output.version == 1 and output.size == 208);
+    output.visible_sequence = 0x100000079; output.source_point = 0x200000079;
+    return r4os.abi.gfx_output_ok;
+}
+fn presentationPublishProbe(input: *const r4os.abi.DisplayPresentationStats) callconv(.c) i32 {
+    std.debug.assert(input.version == 1 and input.size == 208 and input.visible_sequence == 0x100000079 and input.source_point == 0x200000079);
+    return r4os.abi.gfx_output_error_stale;
+}
 test "old display and driver prefixes hide output tails while C/Zig preserve receiver generations" {
     const a = r4os.abi;
     var tables = makeTables(true);
@@ -207,6 +216,27 @@ test "old display and driver prefixes hide output tails while C/Zig preserve rec
     var context: a.R4XStartContext = undefined;
     var app = try makeApp(&tables, &imports, &context);
     const outputs = app.drawing().?.outputs();
+    const draw = app.drawing().?;
+    var statistics: a.DisplayPresentationStats = .{ .visible_sequence = 79 };
+    tables[2].display_presentation_stats = @intFromPtr(&presentationReadProbe);
+    for (608..616) |bytes| {
+        tables[2].size = @intCast(bytes);
+        try std.testing.expect(!draw.supportsDisplayPresentationStats());
+        try std.testing.expectEqual(a.err_no_fn, draw.displayPresentationStats(3, &statistics));
+        try std.testing.expectEqual(@as(u64, 79), statistics.visible_sequence);
+    }
+    tables[2].size = 616;
+    try std.testing.expect(draw.supportsDisplayPresentationStats());
+    try std.testing.expectEqual(a.gfx_output_ok, draw.displayPresentationStats(3, &statistics));
+    var statistics_driver: r4os.driver_display.Context = .{ .table = .{ .presentation_stats = @intFromPtr(&presentationPublishProbe) } };
+    for (64..72) |bytes| {
+        statistics_driver.table.size = @intCast(bytes);
+        try std.testing.expect(!statistics_driver.supportsPresentationStats());
+        try std.testing.expectEqual(a.err_no_fn, statistics_driver.presentationStats(&statistics));
+    }
+    statistics_driver.table.size = 72;
+    try std.testing.expectEqual(a.gfx_output_error_stale, statistics_driver.presentationStats(&statistics));
+    tables[2].size = 536;
     var state = a.GfxAtomicState{ .topology_revision = 0x100000007 };
     state.assignments[7].output.connection_generation = 0x200000009;
     var result = a.GfxAtomicResult{ .commit_sequence = 77 };

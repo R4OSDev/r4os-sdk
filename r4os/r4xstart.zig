@@ -1250,6 +1250,14 @@ pub const R4Draw = struct {
         const display_fn: DisplayPresentCompletionFn = @ptrFromInt(self.table.display_present_completion);
         return display_fn(fence, out);
     }
+    pub fn supportsDisplayPresentationStats(self: *const R4Draw) bool {
+        return self.hasFn("display_presentation_stats");
+    }
+    pub fn displayPresentationStats(self: *const R4Draw, head_id: u32, out: *abi.DisplayPresentationStats) i32 {
+        if (!self.supportsDisplayPresentationStats()) return abi.err_no_fn;
+        const callback: abi.R4DrawFns.display_presentation_stats = @ptrFromInt(self.table.display_presentation_stats);
+        return callback(head_id, out);
+    }
 
     pub fn guiClear(self: *const R4Draw, rgb: u32) i32 {
         if (!self.hasFn("gui_clear")) return -1;

@@ -164,6 +164,12 @@ pub const Context = struct {
     pub fn displayPresentCompletion(self: *const Context, fence: u64, out: *abi.DisplayPresentCompletion) i32 {
         return self.base.displayPresentCompletion(fence, out);
     }
+    pub fn supportsDisplayPresentationStats(self: *const Context) bool {
+        return self.base.supportsDisplayPresentationStats();
+    }
+    pub fn displayPresentationStats(self: *const Context, head_id: u32, out: *abi.DisplayPresentationStats) i32 {
+        return self.base.displayPresentationStats(head_id, out);
+    }
 
     pub fn guiClear(self: *const Context, rgb: u32) i32 {
         return self.base.guiClear(rgb);

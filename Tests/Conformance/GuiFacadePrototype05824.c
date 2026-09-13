@@ -19,6 +19,15 @@ static int32_t display_transition_probe(uint64_t generation, uint32_t operation,
 static int32_t display_schedule_probe(const R4GfxBackendBinding *binding) {
     assert(binding->reset_generation == UINT64_C(0x30000000b)); return -4;
 }
+static int32_t presentation_read_probe(uint32_t head, R4DisplayPresentationStats *output) {
+    assert(head == 3 && output->version == 1 && output->size == 208);
+    output->visible_sequence = UINT64_C(0x100000079); output->source_point = UINT64_C(0x200000079);
+    return R4OS_GFX_OUTPUT_OK;
+}
+static int32_t presentation_publish_probe(const R4DisplayPresentationStats *input) {
+    assert(input->version == 1 && input->size == 208 && input->visible_sequence == UINT64_C(0x100000079) && input->source_point == UINT64_C(0x200000079));
+    return R4OS_GFX_OUTPUT_ERROR_STALE;
+}
 
 static int32_t output_test_probe(const R4GfxAtomicState *state, R4GfxAtomicResult *out) {
     assert(state->topology_revision == UINT64_C(0x100000007) && state->assignments[7].output.connection_generation == UINT64_C(0x200000009));
@@ -201,6 +210,26 @@ static void gfx_facade_probe(void) {
     display.size = offsetof(R4GfxDriverDisplayApi, transition);
     assert(r4driver_display_transition(&display, 0, 0, &outcome) == R4OS_ERR_NO_FN);
     assert(outcome.generation == UINT64_C(0x100000008) && outcome.retained == 1);
+    R4DisplayPresentationStats statistics = {.visible_sequence = 79};
+    table.display_presentation_stats = (uintptr_t)presentation_read_probe;
+    for (unsigned bytes = 608; bytes < 616; ++bytes) {
+        table.size = bytes;
+        assert(!r4draw_supports_display_presentation_stats(&draw));
+        assert(r4draw_display_presentation_stats(&draw, 3, &statistics) == R4OS_ERR_NO_FN && statistics.visible_sequence == 79);
+    }
+    table.size = 616;
+    assert(r4draw_supports_display_presentation_stats(&draw));
+    assert(r4draw_display_presentation_stats(&draw, 3, &statistics) == R4OS_GFX_OUTPUT_OK);
+    assert(r4draw_display_presentation_stats(&draw, 3, 0) == R4OS_GFX_OUTPUT_ERROR_INVALID);
+    display.presentation_stats = (uintptr_t)presentation_publish_probe;
+    for (unsigned bytes = 64; bytes < 72; ++bytes) {
+        display.size = bytes;
+        assert(!r4driver_display_supports_presentation_stats(&display));
+        assert(r4driver_display_presentation_stats(&display, &statistics) == R4OS_ERR_NO_FN);
+    }
+    display.size = 72;
+    assert(r4driver_display_presentation_stats(&display, &statistics) == R4OS_GFX_OUTPUT_ERROR_STALE);
+    assert(r4driver_display_presentation_stats(&display, 0) == R4OS_GFX_OUTPUT_ERROR_INVALID);
 }
 
 static uint64_t now_ticks = 100u;

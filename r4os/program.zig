@@ -1704,6 +1704,13 @@ pub const Context = struct {
         const completion_fn = self.drawFn("display_present_completion") orelse return abi.display_present_error_unavailable;
         return completion_fn(fence, out);
     }
+    pub fn supportsDisplayPresentationStats(self: *const Context) bool {
+        return self.hasDrawFn("display_presentation_stats");
+    }
+    pub fn displayPresentationStats(self: *const Context, head_id: u32, out: *abi.DisplayPresentationStats) i32 {
+        const callback = self.drawFn("display_presentation_stats") orelse return abi.err_no_fn;
+        return callback(head_id, out);
+    }
 
     pub fn clipboardWrite(self: *const Context, data: []const u8) i32 {
         const table_fn = self.deskFn("clipboard_write") orelse return self.unavailable("desk");
