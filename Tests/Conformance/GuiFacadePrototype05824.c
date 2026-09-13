@@ -5,12 +5,13 @@
 #include <r4os/driver_memory.h>
 #include <r4os/driver_queue.h>
 #include <r4os/driver_outputs.h>
+#include <string.h>
 #include <r4os/driver_display.h>
 
 _Static_assert(sizeof(R4GfxReceiverSource) == 16, "receiver source layout");
 _Static_assert(sizeof(R4GfxReceiverInfo) == 8224 && offsetof(R4GfxReceiverInfo, modes) == 32 && offsetof(R4GfxReceiverInfo, edid) == 4128, "receiver record layout");
 _Static_assert(sizeof(R4GfxReceiverUpdate) == 48 && offsetof(R4GfxReceiverUpdate, receivers) == 40, "receiver update layout");
-_Static_assert(sizeof(R4GfxDriverOutputApi) == 72 && offsetof(R4GfxDriverOutputApi, register_source) == 24 && offsetof(R4GfxDriverOutputApi, mode_enable) == 48, "legacy output prefix and mode tail");
+_Static_assert(sizeof(R4GfxDriverOutputApi) == 88 && offsetof(R4GfxDriverOutputApi, register_source) == 24 && offsetof(R4GfxDriverOutputApi, mode_enable) == 48 && offsetof(R4GfxDriverOutputApi, audio_publish) == 72, "legacy output prefix and optional mode/audio tails");
 
 static int32_t cursor_info_probe(R4DisplayCursorInfo *out) {
     assert(out->version == 1 && out->size == 80); out->display_generation = UINT64_C(0x100000079); return 1;
@@ -109,6 +110,16 @@ static int32_t mode_resolve_probe(uint64_t ticket, uint32_t action, R4GfxModeSta
 static int32_t output_publish_probe(const R4GfxOutputPublication *publication, R4GfxOutputId *out) {
     assert(publication->info.edid_bytes == 128 && publication->edid[127] == 0x79);
     out->connection_generation = UINT64_C(0x40000000d); return 1;
+}
+static int32_t audio_route_publish_probe(const R4GfxAudioRoute *input) {
+    assert(input->source.generation == UINT64_C(0x100000079) && input->revision == UINT64_C(0x200000015) && input->eld[95] == 0x79);
+    return R4OS_GFX_OUTPUT_ERROR_STALE;
+}
+static int32_t audio_route_query_probe(uint32_t location, uint32_t device, uint32_t index, R4GfxAudioRoute *output) {
+    assert(location == 0x01000901 && device == 0x228e10de && output->size == 176);
+    if(index != 0)return 0;
+    output->source.generation = UINT64_C(0x100000079); output->revision = UINT64_C(0x200000015); output->eld[95] = 0x79;
+    return 1;
 }
 static int32_t receiver_register_probe(uint32_t adapter, R4GfxReceiverSource *out) {
     assert(adapter == 17); out->adapter_id = adapter; out->generation = UINT64_C(0x100000079); return 1;
@@ -233,6 +244,23 @@ static void gfx_facade_probe(void) {
     R4GfxOutputPublication publication = {0}; publication.info.edid_bytes = 128; publication.edid[127] = 0x79;
     R4GfxOutputId identity = {0};
     assert(r4driver_output_publish(&output_driver, &publication, &identity) == 1 && identity.connection_generation == UINT64_C(0x40000000d));
+    R4GfxDriverOutputApi audio_routes = {0}; audio_routes.version = 1;
+    audio_routes.audio_publish = (uint64_t)(uintptr_t)&audio_route_publish_probe;
+    audio_routes.audio_query = (uint64_t)(uintptr_t)&audio_route_query_probe;
+    R4GfxAudioRoute audio_route = {0}; audio_route.version = 1; audio_route.size = sizeof(audio_route);
+    const uint32_t audio_prefixes[] = {24,48,72,79,80,87};
+    for(size_t i=0;i<sizeof(audio_prefixes)/sizeof(audio_prefixes[0]);i++) {
+        audio_routes.size = audio_prefixes[i];
+        assert(!r4driver_output_supports_audio(&audio_routes));
+        assert(r4driver_output_query_audio(&audio_routes,0x01000901,0x228e10de,0,&audio_route) == R4OS_ERR_NO_FN);
+        assert(r4driver_output_publish_audio(&audio_routes,&audio_route) == R4OS_ERR_NO_FN);
+        assert(audio_route.source.generation == 0 && audio_route.revision == 0 && audio_route.eld[95] == 0);
+    }
+    audio_routes.size = 88;
+    assert(r4driver_output_query_audio(&audio_routes,0x01000901,0x228e10de,0,&audio_route) == 1);
+    const R4GfxAudioRoute audio_before = audio_route;
+    assert(r4driver_output_query_audio(&audio_routes,0x01000901,0x228e10de,1,&audio_route) == 0 && memcmp(&audio_before,&audio_route,sizeof(audio_route)) == 0);
+    assert(r4driver_output_publish_audio(&audio_routes,&audio_route) == R4OS_GFX_OUTPUT_ERROR_STALE);
     output_driver.register_source = (uintptr_t)receiver_register_probe;
     output_driver.replace_receivers = (uintptr_t)receiver_replace_probe;
     output_driver.close_source = (uintptr_t)receiver_close_probe;

@@ -176,6 +176,16 @@ fn outputPublishProbe(publication: *const r4os.abi.GfxOutputPublication, out: *r
     out.* = .{ .adapter_id = 3, .connector_id = 17, .device_generation = 0x30000000b, .connection_generation = 0x40000000d };
     return 1;
 }
+fn audioRoutePublishProbe(input: *const r4os.abi.GfxAudioRoute) callconv(.c) i32 {
+    std.debug.assert(input.source.generation == 0x100000079 and input.revision == 0x200000015 and input.eld[95] == 0x79);
+    return r4os.abi.gfx_output_error_stale;
+}
+fn audioRouteQueryProbe(location: u32, device: u32, index: u32, output: *r4os.abi.GfxAudioRoute) callconv(.c) i32 {
+    std.debug.assert(location == 0x01000901 and device == 0x228e10de and output.size == 176);
+    if (index != 0) return 0;
+    output.source.generation = 0x100000079; output.revision = 0x200000015; output.eld[95] = 0x79;
+    return 1;
+}
 fn receiverRegisterProbe(adapter: u32, out: *r4os.abi.GfxReceiverSource) callconv(.c) i32 {
     std.debug.assert(adapter == 17);
     out.* = .{ .adapter_id = adapter, .generation = 0x100000079 };
@@ -333,6 +343,21 @@ test "old display and driver prefixes hide output tails while C/Zig preserve rec
     old_driver.magic = a.driver_magic; old_driver.version = 26; old_driver.size = 576;
     try std.testing.expect(r4os.r4dev.DriverContext.init(&old_driver).graphicsOutputs() == null);
     var native = r4os.driver_outputs.Context{ .table = .{ .publish = @intFromPtr(&outputPublishProbe) } };
+    var audio_routes: r4os.driver_outputs.Context = .{ .table = .{ .audio_publish = @intFromPtr(&audioRoutePublishProbe), .audio_query = @intFromPtr(&audioRouteQueryProbe) } };
+    var audio_route: a.GfxAudioRoute = .{};
+    for ([_]u32{ 24, 48, 72, 79, 80, 87 }) |prefix| {
+        audio_routes.table.size = prefix;
+        try std.testing.expect(!audio_routes.supportsAudio());
+        try std.testing.expectEqual(a.err_no_fn, audio_routes.queryAudio(0x01000901, 0x228e10de, 0, &audio_route));
+        try std.testing.expectEqual(a.err_no_fn, audio_routes.publishAudio(&audio_route));
+        try std.testing.expectEqualDeep(a.GfxAudioRoute{}, audio_route);
+    }
+    audio_routes.table.size = 88;
+    try std.testing.expectEqual(@as(i32, 1), audio_routes.queryAudio(0x01000901, 0x228e10de, 0, &audio_route));
+    const audio_before = audio_route;
+    try std.testing.expectEqual(@as(i32, 0), audio_routes.queryAudio(0x01000901, 0x228e10de, 1, &audio_route));
+    try std.testing.expectEqualDeep(audio_before, audio_route);
+    try std.testing.expectEqual(a.gfx_output_error_stale, audio_routes.publishAudio(&audio_route));
     var publication = a.GfxOutputPublication{}; publication.info.edid_bytes = 128; publication.edid[127] = 0x79;
     var identity: a.GfxOutputId = .{};
     try std.testing.expectEqual(@as(i32, 1), native.publish(&publication, &identity));

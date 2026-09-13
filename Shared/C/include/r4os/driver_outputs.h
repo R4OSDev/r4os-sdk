@@ -2,6 +2,23 @@
 #define R4OS_DRIVER_OUTPUTS_H
 #include "r4draw.h"
 
+static inline int r4driver_output_supports_audio(const R4GfxDriverOutputApi *table) {
+    return table != 0 && table->version == 1 && table->size >= offsetof(R4GfxDriverOutputApi, audio_query) + sizeof(uint64_t) &&
+        table->audio_publish != 0 && table->audio_query != 0;
+}
+static inline int32_t r4driver_output_publish_audio(const R4GfxDriverOutputApi *table, const R4GfxAudioRoute *input) {
+    if (!r4driver_output_supports_audio(table)) return R4OS_ERR_NO_FN;
+    if (input == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    typedef int32_t (*Callback)(const R4GfxAudioRoute *);
+    return ((Callback)(uintptr_t)table->audio_publish)(input);
+}
+static inline int32_t r4driver_output_query_audio(const R4GfxDriverOutputApi *table, uint32_t location, uint32_t device, uint32_t index, R4GfxAudioRoute *output) {
+    if (!r4driver_output_supports_audio(table)) return R4OS_ERR_NO_FN;
+    if (output == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    typedef int32_t (*Callback)(uint32_t, uint32_t, uint32_t, R4GfxAudioRoute *);
+    return ((Callback)(uintptr_t)table->audio_query)(location, device, index, output);
+}
+
 static inline int r4driver_output_supports_modes(const R4GfxDriverOutputApi *table) {
     return table != 0 && table->version == 1 && table->size >= offsetof(R4GfxDriverOutputApi, mode_complete) + sizeof(uint64_t) &&
         table->mode_enable != 0 && table->mode_take != 0 && table->mode_complete != 0;

@@ -1,6 +1,20 @@
 const abi = @import("r4os_contract").abi;
 pub const Context = struct {
     table: abi.GfxDriverOutputApi,
+    pub fn supportsAudio(self: *const Context) bool {
+        return self.table.version == 1 and self.table.size >= @offsetOf(abi.GfxDriverOutputApi, "audio_query") + 8 and
+            self.table.audio_publish != 0 and self.table.audio_query != 0;
+    }
+    pub fn publishAudio(self: *const Context, input: *const abi.GfxAudioRoute) i32 {
+        if (!self.supportsAudio()) return abi.err_no_fn;
+        const callback: *const fn (*const abi.GfxAudioRoute) callconv(.c) i32 = @ptrFromInt(self.table.audio_publish);
+        return callback(input);
+    }
+    pub fn queryAudio(self: *const Context, location: u32, device: u32, index: u32, output: *abi.GfxAudioRoute) i32 {
+        if (!self.supportsAudio()) return abi.err_no_fn;
+        const callback: *const fn (u32, u32, u32, *abi.GfxAudioRoute) callconv(.c) i32 = @ptrFromInt(self.table.audio_query);
+        return callback(location, device, index, output);
+    }
     pub fn supportsModes(self: *const Context) bool {
         return self.table.version == 1 and self.table.size >= @offsetOf(abi.GfxDriverOutputApi, "mode_complete") + 8 and
             self.table.mode_enable != 0 and self.table.mode_take != 0 and self.table.mode_complete != 0;
