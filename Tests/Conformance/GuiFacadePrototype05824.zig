@@ -90,6 +90,7 @@ fn colorReadProbe(fence: *const r4os.abi.GfxFence, output: *r4os.abi.GfxRenderCo
 }
 fn colorFacadeProbe() !void {
     try modeColorFacadeProbe();
+    try refreshFacadeProbe();
     const a = r4os.abi; const t = std.testing;
     var tables = makeTables(true);
     var imports: [3]a.R4XStartImport = undefined; var raw: a.R4XStartContext = undefined;
@@ -159,6 +160,57 @@ fn modeColorFacadeProbe() !void {
     driver.table.size = 128;
     try t.expectEqual(@as(i32, 1), driver.readModeColor(submitted.ticket, 2, &color));
     try t.expect(tested.commit_sequence == color.ticket and color.sequence == 2 and color.signal.metadata.max_cll == 1000);
+}
+fn refreshReadProbe(target: *const r4os.abi.GfxOutputTarget, output: *r4os.abi.GfxOutputRefresh) callconv(.c) i32 {
+    std.debug.assert(output.version == 1 and output.size == 272);
+    output.* = .{ .target = target.*, .status = .{ .sequence = 0x200000079 } };
+    return if (target.head_id == 7) r4os.abi.gfx_output_error_stale else 1;
+}
+fn refreshIntentProbe(input: *const r4os.abi.GfxRefreshRequest, output: *r4os.abi.GfxRefreshRequest) callconv(.c) i32 {
+    std.debug.assert(output.version == 1 and output.size == 88);
+    output.* = input.*; output.sequence = 0x300000079;
+    return if (input.target.head_id == 7) r4os.abi.gfx_output_error_stale else 1;
+}
+fn refreshDriverReadProbe(target: *const r4os.abi.GfxOutputTarget, output: *r4os.abi.GfxRefreshRequest) callconv(.c) i32 {
+    return refreshIntentProbe(&.{ .target = target.* }, output);
+}
+fn refreshPublishProbe(input: *const r4os.abi.GfxOutputRefresh) callconv(.c) i32 { return if (input.status.sequence == 0x200000079) 1 else -3; }
+fn refreshFacadeProbe() !void {
+    const a = r4os.abi; const t = std.testing;
+    var tables = makeTables(true);
+    var imports: [3]a.R4XStartImport = undefined; var raw: a.R4XStartContext = undefined;
+    var app = try makeApp(&tables, &imports, &raw);
+    const outputs = app.drawing().?.outputs();
+    tables[2].gfx_output_refresh = @intFromPtr(&refreshReadProbe);
+    tables[2].gfx_refresh_request = @intFromPtr(&refreshIntentProbe);
+    var request: a.GfxRefreshRequest = .{ .target = .{ .display_generation = 0x400000079 } };
+    var read: a.GfxOutputRefresh = .{ .status = .{ .sequence = 79 } };
+    var intent: a.GfxRefreshRequest = .{ .sequence = 79 };
+    tables[2].size = 791;
+    try t.expectEqual(a.err_no_fn, outputs.refresh(&request.target, &read));
+    try t.expect(read.status.sequence == 79);
+    tables[2].size = 792;
+    try t.expectEqual(@as(i32, 1), outputs.refresh(&request.target, &read));
+    try t.expect(read.target.display_generation == request.target.display_generation);
+    try t.expectEqual(a.err_no_fn, outputs.requestRefresh(&request, &intent));
+    try t.expect(intent.sequence == 79);
+    tables[2].size = 800;
+    try t.expectEqual(@as(i32, 1), outputs.requestRefresh(&request, &intent));
+    var driver: r4os.driver_outputs.Context = .{ .table = .{ .refresh_publish = @intFromPtr(&refreshPublishProbe), .refresh_read = @intFromPtr(&refreshDriverReadProbe) } };
+    for (128..144) |bytes| {
+        driver.table.size = @intCast(bytes);
+        try t.expect(!driver.supportsRefresh());
+        try t.expectEqual(a.err_no_fn, driver.readRefresh(&request.target, &intent));
+    }
+    driver.table.size = 144;
+    try t.expectEqual(@as(i32, 1), driver.publishRefresh(&read));
+    try t.expectEqual(@as(i32, 1), driver.readRefresh(&request.target, &intent));
+    const old_read = read; const old_intent = intent;
+    request.target.head_id = 7;
+    try t.expectEqual(a.gfx_output_error_stale, outputs.refresh(&request.target, &read));
+    try t.expectEqual(a.gfx_output_error_stale, outputs.requestRefresh(&request, &intent));
+    try t.expectEqual(a.gfx_output_error_stale, driver.readRefresh(&request.target, &intent));
+    try t.expect(std.meta.eql(read, old_read) and std.meta.eql(intent, old_intent));
 }
 fn gfxProfileProbe(input: *const r4os.abi.GfxBackendRegistration, profile: *const r4os.abi.GfxBackendProfile, out: *r4os.abi.GfxBackendBinding) callconv(.c) i32 {
     std.debug.assert(input.operations == 13 and input.memory_generation == 0x500000018);

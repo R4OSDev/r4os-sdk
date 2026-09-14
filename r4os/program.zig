@@ -1528,6 +1528,20 @@ pub const Context = struct {
         output.version = 1; output.size = @sizeOf(abi.GfxOutputColorState);
         return table_fn(identity, output);
     }
+    pub fn gfxOutputRefresh(self: *const Context, target: *const abi.GfxOutputTarget, output: *abi.GfxOutputRefresh) i32 {
+        const table_fn = self.drawFn("gfx_output_refresh") orelse return self.unavailable("draw");
+        var value: abi.GfxOutputRefresh = .{};
+        const code = table_fn(target, &value);
+        if (code == abi.gfx_output_ok) output.* = value;
+        return code;
+    }
+    pub fn gfxRefreshRequest(self: *const Context, input: *const abi.GfxRefreshRequest, output: *abi.GfxRefreshRequest) i32 {
+        const table_fn = self.drawFn("gfx_refresh_request") orelse return self.unavailable("draw");
+        var value: abi.GfxRefreshRequest = .{};
+        const code = table_fn(input, &value);
+        if (code == abi.gfx_output_ok) output.* = value;
+        return code;
+    }
     pub fn gfxOutputMode(self: *const Context, identity: *const abi.GfxOutputId, index: u32, output: *abi.GfxOutputMode) i32 {
         const table_fn = self.drawFn("gfx_output_mode") orelse return self.unavailable("draw");
         output.version = 1; output.size = @sizeOf(abi.GfxOutputMode);

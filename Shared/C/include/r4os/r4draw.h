@@ -467,6 +467,22 @@ static inline int32_t r4draw_gfx_output_color(const R4Draw *draw, const R4GfxOut
     output->version = 1; output->size = sizeof(*output);
     return ((R4DrawGfxOutputColorFn)(uintptr_t)draw->table->gfx_output_color)(identity, output);
 }
+static inline int32_t r4draw_gfx_output_refresh(const R4Draw *draw, const R4GfxOutputTarget *target, R4GfxOutputRefresh *output) {
+    if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_output_refresh) + sizeof(uintptr_t) || draw->table->gfx_output_refresh == 0) return R4OS_ERR_NO_FN;
+    if (target == 0 || output == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    R4GfxOutputRefresh value = {0}; value.version = 1; value.size = sizeof(value);
+    int32_t code = ((R4DrawGfxOutputRefreshFn)(uintptr_t)draw->table->gfx_output_refresh)(target, &value);
+    if (code == R4OS_GFX_OUTPUT_OK) *output = value;
+    return code;
+}
+static inline int32_t r4draw_gfx_refresh_request(const R4Draw *draw, const R4GfxRefreshRequest *input, R4GfxRefreshRequest *output) {
+    if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_refresh_request) + sizeof(uintptr_t) || draw->table->gfx_refresh_request == 0) return R4OS_ERR_NO_FN;
+    if (input == 0 || output == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    R4GfxRefreshRequest value = {0}; value.version = 1; value.size = sizeof(value);
+    int32_t code = ((R4DrawGfxRefreshRequestFn)(uintptr_t)draw->table->gfx_refresh_request)(input, &value);
+    if (code == R4OS_GFX_OUTPUT_OK) *output = value;
+    return code;
+}
 static inline int32_t r4draw_gfx_atomic_test(const R4Draw *draw, const R4GfxAtomicState * state, R4GfxAtomicResult * output) {
     if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_atomic_test) + sizeof(uintptr_t) || draw->table->gfx_atomic_test == 0) return R4OS_ERR_NO_FN;
     if (output == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;

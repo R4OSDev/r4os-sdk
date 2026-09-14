@@ -13,6 +13,12 @@ pub const query_contract = "Repositories/Contract/ABI/R4LQuery.txt";
 pub const Context = struct {
     base: program.Context,
     pub fn outputs(self: *const Context) @import("gfx_outputs.zig").Context { return .{ .base = self.base }; }
+    pub fn gfxOutputRefresh(self: *const Context, target: *const abi.GfxOutputTarget, output: *abi.GfxOutputRefresh) i32 {
+        return self.base.gfxOutputRefresh(target, output);
+    }
+    pub fn gfxRefreshRequest(self: *const Context, input: *const abi.GfxRefreshRequest, output: *abi.GfxRefreshRequest) i32 {
+        return self.base.gfxRefreshRequest(input, output);
+    }
 
     pub fn init(bundle: *const program.Bundle) Context {
         return .{ .base = program.Context.initBundle(bundle) };

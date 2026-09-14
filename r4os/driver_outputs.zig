@@ -1,5 +1,22 @@
 const abi = @import("r4os_contract").abi;
 pub const Context = struct {
+    pub fn supportsRefresh(self: *const Context) bool {
+        return self.table.version == 1 and self.table.size >= @offsetOf(abi.GfxDriverOutputApi, "refresh_read") + 8 and
+            self.table.refresh_publish != 0 and self.table.refresh_read != 0;
+    }
+    pub fn publishRefresh(self: *const Context, input: *const abi.GfxOutputRefresh) i32 {
+        if (!self.supportsRefresh()) return abi.err_no_fn;
+        const callback: *const fn (*const abi.GfxOutputRefresh) callconv(.c) i32 = @ptrFromInt(self.table.refresh_publish);
+        return callback(input);
+    }
+    pub fn readRefresh(self: *const Context, target: *const abi.GfxOutputTarget, output: *abi.GfxRefreshRequest) i32 {
+        if (!self.supportsRefresh()) return abi.err_no_fn;
+        const callback: *const fn (*const abi.GfxOutputTarget, *abi.GfxRefreshRequest) callconv(.c) i32 = @ptrFromInt(self.table.refresh_read);
+        var value: abi.GfxRefreshRequest = .{};
+        const code = callback(target, &value);
+        if (code == abi.gfx_output_ok) output.* = value;
+        return code;
+    }
     table: abi.GfxDriverOutputApi,
     pub fn supportsModeColor(self: *const Context) bool {
         return self.supportsModes() and self.table.size >= @offsetOf(abi.GfxDriverOutputApi, "mode_read_color") + 8 and self.table.mode_read_color != 0;
