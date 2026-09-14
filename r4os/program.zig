@@ -760,6 +760,10 @@ pub const Context = struct {
     pub fn mouseState(self: *const Context, out: *abi.Mouse) void {
         if (self.deskFn("mouse_state")) |table_fn| table_fn(out);
     }
+    pub fn mouseMotion(self: *const Context, out: *abi.MouseMotion) i32 {
+        const table_fn = self.deskFn("mouse_motion") orelse return abi.err_no_fn;
+        return table_fn(out);
+    }
 
     pub fn mouseShow(self: *const Context) void {
         if (self.deskFn("mouse_show")) |table_fn| table_fn();
@@ -1590,7 +1594,17 @@ pub const Context = struct {
         output.version = 1; output.size = @sizeOf(abi.GfxFenceStatus);
         return table_fn(queue, submission, list, output);
     }
+    pub fn gfxQueueSubmitRenderGridList(self: *const Context, queue: *const abi.GfxQueueHandle, submission: *const abi.GfxSubmission, list: *const abi.GfxRenderGridList, output: *abi.GfxFenceStatus) i32 {
+        const callback = self.drawFn("gfx_queue_submit_render_grid_list") orelse return self.unavailable("draw");
+        output.version = 1; output.size = @sizeOf(abi.GfxFenceStatus);
+        return callback(queue, submission, list, output);
+    }
 
+    pub fn gfxQueueSubmitOutput(self: *const Context, queue: *const abi.GfxQueueHandle, submission: *const abi.GfxSubmission, target: *const abi.GfxOutputTarget, output: *abi.GfxFenceStatus) i32 {
+        const callback = self.drawFn("gfx_queue_submit_output") orelse return abi.err_no_fn;
+        output.version = 1; output.size = @sizeOf(abi.GfxFenceStatus);
+        return callback(queue, submission, target, output);
+    }
     pub fn gfxFenceQuery(self: *const Context, fence: *const abi.GfxFence, output: *abi.GfxFenceStatus) i32 {
         const table_fn = self.drawFn("gfx_fence_query") orelse return self.unavailable("draw");
         output.version = 1;
@@ -1781,6 +1795,21 @@ pub const Context = struct {
         const callback = self.drawFn("display_presentation_info") orelse return abi.err_no_fn;
         out.version = 1; out.size = @sizeOf(abi.DisplayPresentationInfo);
         return callback(head_id, out);
+    }
+    pub fn displayOutputTarget(self: *const Context, adapter_id: u32, head_id: u32, out: *abi.GfxOutputTarget) i32 {
+        const callback = self.drawFn("display_output_target") orelse return abi.err_no_fn;
+        out.version = 1; out.size = @sizeOf(abi.GfxOutputTarget);
+        return callback(adapter_id, head_id, out);
+    }
+    pub fn displayOutputPresentationInfo(self: *const Context, target: *const abi.GfxOutputTarget, out: *abi.DisplayPresentationInfo) i32 {
+        const callback = self.drawFn("display_output_presentation_info") orelse return abi.err_no_fn;
+        out.version = 1; out.size = @sizeOf(abi.DisplayPresentationInfo);
+        return callback(target, out);
+    }
+    pub fn displayOutputPresentationFeedback(self: *const Context, target: *const abi.GfxOutputTarget, source: *const abi.GfxFence, out: *abi.DisplayPresentationStats) i32 {
+        const callback = self.drawFn("display_output_presentation_feedback") orelse return abi.err_no_fn;
+        out.version = 1; out.size = @sizeOf(abi.DisplayPresentationStats);
+        return callback(target, source, out);
     }
     pub fn displayPresentationFeedback(self: *const Context, head_id: u32, source: *const abi.GfxFence, out: *abi.DisplayPresentationStats) i32 {
         const callback = self.drawFn("display_presentation_feedback") orelse return abi.err_no_fn;

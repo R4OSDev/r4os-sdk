@@ -801,6 +801,11 @@ pub const R4Desk = struct {
         const mouse_fn: MouseStateFn = @ptrFromInt(self.table.mouse_state);
         mouse_fn(out);
     }
+    pub fn mouseMotion(self: *const R4Desk, out: *abi.MouseMotion) i32 {
+        if (!self.hasFn("mouse_motion")) return abi.err_no_fn;
+        const function: abi.R4DeskFns.mouse_motion = @ptrFromInt(self.table.mouse_motion);
+        return function(out);
+    }
 
     pub fn mouseShow(self: *const R4Desk) void {
         if (!self.hasFn("mouse_show")) return;
@@ -1261,6 +1266,24 @@ pub const R4Draw = struct {
         out.version = 1; out.size = @sizeOf(abi.DisplayPresentationInfo);
         const callback: abi.R4DrawFns.display_presentation_info = @ptrFromInt(self.table.display_presentation_info);
         return callback(head_id, out);
+    }
+    pub fn displayOutputTarget(self: *const R4Draw, adapter_id: u32, head_id: u32, out: *abi.GfxOutputTarget) i32 {
+        if (!self.hasFn("display_output_target")) return abi.err_no_fn;
+        out.version = 1; out.size = @sizeOf(abi.GfxOutputTarget);
+        const callback: abi.R4DrawFns.display_output_target = @ptrFromInt(self.table.display_output_target);
+        return callback(adapter_id, head_id, out);
+    }
+    pub fn displayOutputPresentationInfo(self: *const R4Draw, target: *const abi.GfxOutputTarget, out: *abi.DisplayPresentationInfo) i32 {
+        if (!self.hasFn("display_output_presentation_info")) return abi.err_no_fn;
+        out.version = 1; out.size = @sizeOf(abi.DisplayPresentationInfo);
+        const callback: abi.R4DrawFns.display_output_presentation_info = @ptrFromInt(self.table.display_output_presentation_info);
+        return callback(target, out);
+    }
+    pub fn displayOutputPresentationFeedback(self: *const R4Draw, target: *const abi.GfxOutputTarget, fence: *const abi.GfxFence, out: *abi.DisplayPresentationStats) i32 {
+        if (!self.hasFn("display_output_presentation_feedback")) return abi.err_no_fn;
+        out.version = 1; out.size = @sizeOf(abi.DisplayPresentationStats);
+        const callback: abi.R4DrawFns.display_output_presentation_feedback = @ptrFromInt(self.table.display_output_presentation_feedback);
+        return callback(target, fence, out);
     }
     pub fn displayPresentationFeedback(self: *const R4Draw, head_id: u32, fence: *const abi.GfxFence, out: *abi.DisplayPresentationStats) i32 {
         if (!self.hasFn("display_presentation_feedback")) return abi.err_no_fn;

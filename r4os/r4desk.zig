@@ -37,6 +37,7 @@ pub const Context = struct {
     pub fn mouseState(self: *const Context, out: *abi.Mouse) void {
         self.base.mouseState(out);
     }
+    pub fn mouseMotion(self: *const Context, out: *abi.MouseMotion) i32 { return self.base.mouseMotion(out); }
 
     pub fn mouseShow(self: *const Context) void {
         self.base.mouseShow();

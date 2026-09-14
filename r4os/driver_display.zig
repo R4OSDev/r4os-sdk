@@ -1,6 +1,21 @@
 const abi = @import("r4os_contract").abi;
 pub const Context = struct {
     table: abi.GfxDriverDisplayApi,
+    pub fn supportsOutputs(self: *const Context) bool {
+        return self.table.version == 1 and self.table.size >= @offsetOf(abi.GfxDriverDisplayApi, "output_transition") + 8 and
+            self.table.output_register != 0 and self.table.output_transition != 0;
+    }
+    pub fn outputRegister(self: *const Context, input: *const abi.GfxAdditionalOutput, output: *abi.GfxOutputTarget) i32 {
+        if (!self.supportsOutputs()) return abi.err_no_fn;
+        output.version = 1; output.size = @sizeOf(abi.GfxOutputTarget);
+        const callback: *const fn (*const abi.GfxAdditionalOutput, *abi.GfxOutputTarget) callconv(.c) i32 = @ptrFromInt(self.table.output_register);
+        return callback(input, output);
+    }
+    pub fn outputTransition(self: *const Context, input: *const abi.GfxOutputTarget, operation: u32, quiesced: bool) i32 {
+        if (!self.supportsOutputs()) return abi.err_no_fn;
+        const callback: *const fn (*const abi.GfxOutputTarget, u32, u32) callconv(.c) i32 = @ptrFromInt(self.table.output_transition);
+        return callback(input, operation, @intFromBool(quiesced));
+    }
     pub fn supportsCursor(self: *const Context) bool {
         return self.table.version == 1 and self.table.size >= @offsetOf(abi.GfxDriverDisplayApi, "cursor_complete") + 8 and
             self.table.cursor_configure != 0 and self.table.cursor_take != 0 and self.table.cursor_complete != 0;

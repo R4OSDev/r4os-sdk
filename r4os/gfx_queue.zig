@@ -24,7 +24,13 @@ pub const Context = struct {
     pub fn submitRenderList(self: *const Context, queue: *const abi.GfxQueueHandle, submission: *const abi.GfxSubmission, list: *const abi.GfxRenderList, output: *abi.GfxFenceStatus) i32 {
         return self.base.gfxQueueSubmitRenderList(queue, submission, list, output);
     }
+    pub fn submitRenderGridList(self: *const Context, queue: *const abi.GfxQueueHandle, submission: *const abi.GfxSubmission, list: *const abi.GfxRenderGridList, output: *abi.GfxFenceStatus) i32 {
+        return self.base.gfxQueueSubmitRenderGridList(queue, submission, list, output);
+    }
 
+    pub fn submitOutput(self: *const Context, queue: *const abi.GfxQueueHandle, submission: *const abi.GfxSubmission, target: *const abi.GfxOutputTarget, output: *abi.GfxFenceStatus) i32 {
+        return self.base.gfxQueueSubmitOutput(queue, submission, target, output);
+    }
     pub fn query(self: *const Context, fence: *const abi.GfxFence, output: *abi.GfxFenceStatus) i32 {
         return self.base.gfxFenceQuery(fence, output);
     }

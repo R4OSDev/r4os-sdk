@@ -27,6 +27,15 @@ pub const Context = struct {
     pub fn supportsRenderList(self: *const Context) bool {
         return self.table.version == 1 and self.table.size >= @offsetOf(abi.GfxDriverQueueApi, "read_render_list") + 8 and self.table.read_render_list != 0;
     }
+    pub fn supportsRenderGridList(self: *const Context) bool {
+        return self.table.version == 1 and self.table.size >= @offsetOf(abi.GfxDriverQueueApi, "read_render_grid_list") + 8 and self.table.read_render_grid_list != 0;
+    }
+    pub fn readRenderGridList(self: *const Context, fence: *const abi.GfxFence, output: *abi.GfxRenderGridList) i32 {
+        if (!self.supportsRenderGridList()) return abi.err_no_fn;
+        output.version = 1; output.size = @sizeOf(abi.GfxRenderGridList);
+        const callback: *const fn (*const abi.GfxFence, *abi.GfxRenderGridList) callconv(.c) i32 = @ptrFromInt(self.table.read_render_grid_list);
+        return callback(fence, output);
+    }
     pub fn readRenderList(self: *const Context, fence: *const abi.GfxFence, output: *abi.GfxRenderList) i32 {
         if (!self.supportsRenderList()) return abi.err_no_fn;
         output.version = 1; output.size = @sizeOf(abi.GfxRenderList);

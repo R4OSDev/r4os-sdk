@@ -215,7 +215,48 @@ static int32_t operations_probe(const R4GfxBackendBinding *binding, uint64_t ope
     assert(binding->device_generation == UINT64_C(0x100000019) && operations == 29);
     return 1;
 }
+static int32_t motion_probe(R4MouseMotion *output) {
+    *output = (R4MouseMotion){.version = 1, .size = sizeof(*output), .motion_x = UINT32_C(0xfffffff1), .motion_y = UINT32_C(0x80000003)};
+    return 1;
+}
+static int32_t grid_submit_probe(const R4GfxQueueHandle *queue, const R4GfxSubmission *request,
+    const R4GfxRenderGridList *list, R4GfxFenceStatus *output) {
+    assert(queue->timeline == UINT64_C(0x200000017) && request->operation == R4OS_GFX_QUEUE_OPERATION_RENDER_GRID_LIST);
+    assert(list->version == 1 && list->size == 2320 && list->count == 1 && list->grids[0].scale == 180 && list->grids[0].rotation == 3);
+    output->fence = (R4GfxFence){.slot = 7, .timeline = queue->timeline, .point = UINT64_C(0x300000019)};
+    return 1;
+}
+static int32_t grid_read_probe(const R4GfxFence *fence, R4GfxRenderGridList *output) {
+    assert(fence->timeline == UINT64_C(0x200000017) && fence->point == UINT64_C(0x300000019) && output->version == 1 && output->size == 2320);
+    *output = (R4GfxRenderGridList){.version = 1, .size = sizeof(*output), .count = 1};
+    output->grids[0] = (R4GfxSampleGrid){.enabled = 1, .scale = 180, .rotation = 3}; return 1;
+}
+static void grid_facade_probe(void) {
+    R4XStartR4Desk desk_table = {.size = offsetof(R4XStartR4Desk, mouse_motion), .mouse_motion = (uintptr_t)motion_probe};
+    const R4Desk desk = {&desk_table}; R4MouseMotion motion = {.motion_x = 79};
+    assert(r4desk_mouse_motion(&desk, &motion) == R4OS_ERR_NO_FN && motion.motion_x == 79);
+    desk_table.size += 8;
+    assert(r4desk_mouse_motion(&desk, &motion) == 1 && motion.motion_x == UINT32_C(0xfffffff1));
+    R4XStartR4Draw table = {.size = offsetof(R4XStartR4Draw, gfx_queue_submit_render_grid_list), .gfx_queue_submit_render_grid_list = (uintptr_t)grid_submit_probe};
+    const R4Draw draw = {&table};
+    const R4GfxQueueHandle queue = {.timeline = UINT64_C(0x200000017)};
+    const R4GfxSubmission request = {.operation = R4OS_GFX_QUEUE_OPERATION_RENDER_GRID_LIST};
+    R4GfxRenderGridList list = {.version = 1, .size = sizeof(list), .count = 1, .grids = {{.enabled = 1, .scale = 180, .rotation = 3}}};
+    R4GfxFenceStatus result = {.deadline_ns = 79};
+    assert(r4draw_gfx_queue_submit_render_grid_list(&draw, &queue, &request, &list, &result) == R4OS_ERR_NO_FN && result.deadline_ns == 79 && result.fence.point == 0);
+    table.size += 8;
+    assert(r4draw_gfx_queue_submit_render_grid_list(&draw, &queue, &request, &list, &result) == 1);
+    R4GfxDriverQueueApi driver = {.version = 1, .read_render_grid_list = (uintptr_t)grid_read_probe};
+    list.count = 79;
+    for (unsigned size = 112; size < 120; ++size) {
+        driver.size = size;
+        assert(r4driver_queue_read_render_grid_list(&driver, &result.fence, &list) == R4OS_ERR_NO_FN && list.count == 79);
+    }
+    driver.size = 120;
+    assert(r4driver_queue_read_render_grid_list(&driver, &result.fence, &list) == 1 && list.count == 1 && list.grids[0].rotation == 3 && list.grids[0].scale == 180);
+}
 static void backend_profile_probe(void) {
+    grid_facade_probe();
     R4XStartR4Draw table = {.size = 640, .gfx_queue_backend_info = (uintptr_t)backend_info_probe};
     R4Draw draw = {&table}; R4GfxBackendInfo info = {0};
     assert(r4draw_gfx_queue_backend_info(&draw, 16, &info) == R4OS_ERR_NO_FN && info.binding.device_generation == 0);

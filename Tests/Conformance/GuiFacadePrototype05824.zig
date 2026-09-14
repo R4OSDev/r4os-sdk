@@ -28,6 +28,55 @@ fn gfxQueuePrefixProbe(out: *r4os.abi.GfxDriverQueueApi) callconv(.c) i32 {
     out.* = .{ .size = 56, .complete = @intFromPtr(&gfxCompleteProbe) };
     return 1;
 }
+fn motionProbe(out: *r4os.abi.MouseMotion) callconv(.c) i32 {
+    out.* = .{ .mouse = std.mem.zeroes(r4os.abi.Mouse), .motion_x = 0xfffffff1, .motion_y = 0x80000003 };
+    return 1;
+}
+fn gridSubmitProbe(queue: *const r4os.abi.GfxQueueHandle, request: *const r4os.abi.GfxSubmission,
+    list: *const r4os.abi.GfxRenderGridList, output: *r4os.abi.GfxFenceStatus) callconv(.c) i32 {
+    std.debug.assert(queue.timeline == 0x200000017 and request.operation == r4os.abi.gfx_queue_operation_render_grid_list and
+        list.version == 1 and list.size == 2320 and list.count == 1 and list.grids[0].scale == 180 and list.grids[0].rotation == 3);
+    output.fence = .{ .slot = 7, .timeline = queue.timeline, .point = 0x300000019 }; return 1;
+}
+fn gridReadProbe(fence: *const r4os.abi.GfxFence, output: *r4os.abi.GfxRenderGridList) callconv(.c) i32 {
+    std.debug.assert(fence.timeline == 0x200000017 and fence.point == 0x300000019 and output.version == 1 and output.size == 2320);
+    output.* = .{ .count = 1 }; output.grids[0] = .{ .enabled = 1, .scale = 180, .rotation = 3 }; return 1;
+}
+fn gridFacadeProbe() !void {
+    const a = r4os.abi; const t = std.testing;
+    var tables = makeTables(true);
+    var imports: [3]a.R4XStartImport = undefined; var raw: a.R4XStartContext = undefined;
+    var app = try makeApp(&tables, &imports, &raw);
+    const legacy: r4os.r4xstart.R4Desk = .{ .raw = &raw, .table = &tables[1] };
+    tables[1].mouse_motion = @intFromPtr(&motionProbe);
+    tables[1].size = @offsetOf(a.R4XStartR4Desk, "mouse_motion");
+    var motion: a.MouseMotion = .{ .mouse = std.mem.zeroes(a.Mouse), .motion_x = 79 };
+    try t.expectEqual(a.err_no_fn, legacy.mouseMotion(&motion)); try t.expectEqual(@as(u32, 79), motion.motion_x);
+    tables[1].size += 8;
+    try t.expectEqual(@as(i32, 1), legacy.mouseMotion(&motion)); try t.expectEqual(@as(u32, 0xfffffff1), motion.motion_x);
+    const queues = app.drawing().?.queues();
+    tables[2].gfx_queue_submit_render_grid_list = @intFromPtr(&gridSubmitProbe);
+    var list: a.GfxRenderGridList = .{ .count = 1 }; list.grids[0] = .{ .enabled = 1, .scale = 180, .rotation = 3 };
+    const queue: a.GfxQueueHandle = .{ .timeline = 0x200000017 };
+    const request: a.GfxSubmission = .{ .operation = a.gfx_queue_operation_render_grid_list };
+    var result: a.GfxFenceStatus = .{ .deadline_ns = 79 };
+    tables[2].size = @offsetOf(a.R4XStartR4Draw, "gfx_queue_submit_render_grid_list");
+    try t.expectEqual(a.err_no_fn, queues.submitRenderGridList(&queue, &request, &list, &result));
+    try t.expect(result.deadline_ns == 79 and result.fence.point == 0);
+    tables[2].size += 8;
+    try t.expectEqual(@as(i32, 1), queues.submitRenderGridList(&queue, &request, &list, &result));
+    var driver: r4os.driver_queue.Context = .{ .table = .{ .read_render_grid_list = @intFromPtr(&gridReadProbe) } };
+    list.count = 79;
+    for (112..120) |size| {
+        driver.table.size = @intCast(size);
+        try t.expect(!driver.supportsRenderGridList());
+        try t.expectEqual(a.err_no_fn, driver.readRenderGridList(&result.fence, &list)); try t.expectEqual(@as(u32, 79), list.count);
+    }
+    driver.table.size = 120;
+    try t.expect(driver.supportsRenderGridList());
+    try t.expectEqual(@as(i32, 1), driver.readRenderGridList(&result.fence, &list));
+    try t.expect(list.count == 1 and list.grids[0].rotation == 3 and list.grids[0].scale == 180);
+}
 fn gfxProfileProbe(input: *const r4os.abi.GfxBackendRegistration, profile: *const r4os.abi.GfxBackendProfile, out: *r4os.abi.GfxBackendBinding) callconv(.c) i32 {
     std.debug.assert(input.operations == 13 and input.memory_generation == 0x500000018);
     std.debug.assert(input.adapter_id == 17 and profile.interface_id_hi == 0x300000017 and profile.data_bytes == 64 and profile.data[63] == 91);
@@ -116,6 +165,7 @@ fn nativeFacadeProbe() !void {
     try std.testing.expectEqualDeep(unchanged, output);
 }
 test "graphics buffer optional tails preserve 64-bit offsets in Zig and R4D calls" {
+    try gridFacadeProbe();
     try ownedFacadeProbe();
     try nativeFacadeProbe();
     var tables = makeTables(true);

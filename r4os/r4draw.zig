@@ -196,6 +196,15 @@ pub const Context = struct {
     pub fn displayPresentationInfo(self: *const Context, head_id: u32, out: *abi.DisplayPresentationInfo) i32 {
         return self.base.displayPresentationInfo(head_id, out);
     }
+    pub fn displayOutputTarget(self: *const Context, adapter_id: u32, head_id: u32, out: *abi.GfxOutputTarget) i32 {
+        return self.base.displayOutputTarget(adapter_id, head_id, out);
+    }
+    pub fn displayOutputPresentationInfo(self: *const Context, target: *const abi.GfxOutputTarget, out: *abi.DisplayPresentationInfo) i32 {
+        return self.base.displayOutputPresentationInfo(target, out);
+    }
+    pub fn displayOutputPresentationFeedback(self: *const Context, target: *const abi.GfxOutputTarget, source: *const abi.GfxFence, out: *abi.DisplayPresentationStats) i32 {
+        return self.base.displayOutputPresentationFeedback(target, source, out);
+    }
     pub fn displayPresentationFeedback(self: *const Context, head_id: u32, source: *const abi.GfxFence, out: *abi.DisplayPresentationStats) i32 {
         return self.base.displayPresentationFeedback(head_id, source, out);
     }

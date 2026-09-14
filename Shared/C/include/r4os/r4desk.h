@@ -34,6 +34,12 @@ static inline int32_t r4desk_init(const R4XStartContext *ctx, R4Desk *out_desk) 
     return R4OS_OK;
 }
 
+static inline int32_t r4desk_mouse_motion(const R4Desk *desk, R4MouseMotion *output) {
+    if (!desk || !desk->table || desk->table->size < offsetof(R4XStartR4Desk, mouse_motion) + sizeof(uintptr_t) || !desk->table->mouse_motion) return R4OS_ERR_NO_FN;
+    if (!output) return R4OS_ERROR_INVALID;
+    return ((R4DeskMouseMotionFn)(uintptr_t)desk->table->mouse_motion)(output);
+}
+
 static inline uint32_t r4desk_read_key_codepoint(R4Desk *desk) {
     if (desk == 0 || desk->table == 0) return 0;
     if (desk->table->read_key_codepoint != 0) {
