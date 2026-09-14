@@ -21,6 +21,9 @@ pub const Context = struct {
     pub fn submit(self: *const Context, queue: *const abi.GfxQueueHandle, submission: *const abi.GfxSubmission, output: *abi.GfxFenceStatus) i32 {
         return self.base.gfxQueueSubmit(queue, submission, output);
     }
+    pub fn submitRenderList(self: *const Context, queue: *const abi.GfxQueueHandle, submission: *const abi.GfxSubmission, list: *const abi.GfxRenderList, output: *abi.GfxFenceStatus) i32 {
+        return self.base.gfxQueueSubmitRenderList(queue, submission, list, output);
+    }
 
     pub fn query(self: *const Context, fence: *const abi.GfxFence, output: *abi.GfxFenceStatus) i32 {
         return self.base.gfxFenceQuery(fence, output);

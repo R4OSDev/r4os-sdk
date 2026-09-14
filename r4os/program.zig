@@ -1585,6 +1585,11 @@ pub const Context = struct {
         output.size = @sizeOf(abi.GfxFenceStatus);
         return table_fn(queue, submission, output);
     }
+    pub fn gfxQueueSubmitRenderList(self: *const Context, queue: *const abi.GfxQueueHandle, submission: *const abi.GfxSubmission, list: *const abi.GfxRenderList, output: *abi.GfxFenceStatus) i32 {
+        const table_fn = self.drawFn("gfx_queue_submit_render_list") orelse return self.unavailable("draw");
+        output.version = 1; output.size = @sizeOf(abi.GfxFenceStatus);
+        return table_fn(queue, submission, list, output);
+    }
 
     pub fn gfxFenceQuery(self: *const Context, fence: *const abi.GfxFence, output: *abi.GfxFenceStatus) i32 {
         const table_fn = self.drawFn("gfx_fence_query") orelse return self.unavailable("draw");

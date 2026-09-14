@@ -3,6 +3,16 @@ const abi = @import("r4os_contract").abi;
 pub const Context = struct {
     table: abi.GfxDriverQueueApi,
 
+    pub fn supportsRenderList(self: *const Context) bool {
+        return self.table.version == 1 and self.table.size >= @offsetOf(abi.GfxDriverQueueApi, "read_render_list") + 8 and self.table.read_render_list != 0;
+    }
+    pub fn readRenderList(self: *const Context, fence: *const abi.GfxFence, output: *abi.GfxRenderList) i32 {
+        if (!self.supportsRenderList()) return abi.err_no_fn;
+        output.version = 1; output.size = @sizeOf(abi.GfxRenderList);
+        const callback: *const fn (*const abi.GfxFence, *abi.GfxRenderList) callconv(.c) i32 = @ptrFromInt(self.table.read_render_list);
+        return callback(fence, output);
+    }
+
     pub fn updateOperations(self: *const Context, input: *const abi.GfxBackendBinding, operations: u64) i32 {
         if (self.table.version != 1 or self.table.size < @offsetOf(abi.GfxDriverQueueApi, "update_operations") + 8 or self.table.update_operations == 0) return abi.err_no_fn;
         const callback: *const fn (*const abi.GfxBackendBinding, u64) callconv(.c) i32 = @ptrFromInt(self.table.update_operations);

@@ -511,6 +511,13 @@ static inline int32_t r4draw_gfx_queue_submit(const R4Draw *draw, const R4GfxQue
     return ((R4DrawGfxQueueSubmitFn)(uintptr_t)draw->table->gfx_queue_submit)(queue, submission, output);
 }
 
+static inline int32_t r4draw_gfx_queue_submit_render_list(const R4Draw *draw, const R4GfxQueueHandle *queue, const R4GfxSubmission *submission, const R4GfxRenderList *list, R4GfxFenceStatus *output) {
+    if (!draw || !draw->table || draw->table->size < offsetof(R4XStartR4Draw, gfx_queue_submit_render_list) + sizeof(uintptr_t) || !draw->table->gfx_queue_submit_render_list) return R4OS_ERR_NO_FN;
+    if (!queue || !submission || !list || !output) return R4OS_GFX_QUEUE_ERROR_INVALID;
+    output->version = 1; output->size = sizeof(*output);
+    return ((R4DrawGfxQueueSubmitRenderListFn)(uintptr_t)draw->table->gfx_queue_submit_render_list)(queue, submission, list, output);
+}
+
 static inline int32_t r4draw_gfx_fence_query(const R4Draw *draw, const R4GfxFence * fence, R4GfxFenceStatus * output) {
     if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_fence_query) + sizeof(uintptr_t) || draw->table->gfx_fence_query == 0) return R4OS_ERR_NO_FN;
     if (fence == 0 || output == 0) return R4OS_GFX_QUEUE_ERROR_INVALID;
