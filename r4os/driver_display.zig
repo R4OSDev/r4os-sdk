@@ -23,6 +23,14 @@ pub const Context = struct {
     pub fn supportsPresentationStats(self: *const Context) bool {
         return self.table.version == 1 and self.table.size >= @offsetOf(abi.GfxDriverDisplayApi, "presentation_stats") + 8 and self.table.presentation_stats != 0;
     }
+    pub fn supportsPresentationInfo(self: *const Context) bool {
+        return self.table.version == 1 and self.table.size >= @offsetOf(abi.GfxDriverDisplayApi, "presentation_info") + 8 and self.table.presentation_info != 0;
+    }
+    pub fn presentationInfo(self: *const Context, input: *const abi.DisplayPresentationInfo) i32 {
+        if (!self.supportsPresentationInfo()) return abi.err_no_fn;
+        const callback: *const fn (*const abi.DisplayPresentationInfo) callconv(.c) i32 = @ptrFromInt(self.table.presentation_info);
+        return callback(input);
+    }
     pub fn presentationStats(self: *const Context, input: *const abi.DisplayPresentationStats) i32 {
         if (!self.supportsPresentationStats()) return abi.err_no_fn;
         const callback: *const fn (*const abi.DisplayPresentationStats) callconv(.c) i32 = @ptrFromInt(self.table.presentation_stats);

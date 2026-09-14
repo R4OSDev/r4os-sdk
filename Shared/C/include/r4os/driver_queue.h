@@ -4,6 +4,27 @@
 
 /* Native callbacks require the actual bound R4D work/IRQ owner. */
 
+static inline int r4driver_queue_supports_scanout(const R4GfxDriverQueueApi *table) {
+    return table && table->version == 1 && table->size >= offsetof(R4GfxDriverQueueApi, scanout_retire_requested) + 8 &&
+        table->retain_scanout && table->begin_scanout && table->scanout_retire_requested;
+}
+static inline int32_t r4driver_queue_retain_scanout(const R4GfxDriverQueueApi *table, const R4GfxFence *fence, R4GfxBufferReference *output) {
+    if (!r4driver_queue_supports_scanout(table)) return R4OS_ERR_NO_FN;
+    if (!fence || !output) return R4OS_GFX_QUEUE_ERROR_INVALID;
+    output->version = 1; output->size = sizeof(*output);
+    return ((int32_t (*)(const R4GfxFence *, R4GfxBufferReference *))(uintptr_t)table->retain_scanout)(fence, output);
+}
+static inline int32_t r4driver_queue_begin_scanout(const R4GfxDriverQueueApi *table, const R4GfxFence *fence) {
+    if (!r4driver_queue_supports_scanout(table)) return R4OS_ERR_NO_FN;
+    if (!fence) return R4OS_GFX_QUEUE_ERROR_INVALID;
+    return ((int32_t (*)(const R4GfxFence *))(uintptr_t)table->begin_scanout)(fence);
+}
+static inline int32_t r4driver_queue_scanout_retire_requested(const R4GfxDriverQueueApi *table, const R4GfxFence *fence) {
+    if (!r4driver_queue_supports_scanout(table)) return R4OS_ERR_NO_FN;
+    if (!fence) return R4OS_GFX_QUEUE_ERROR_INVALID;
+    return ((int32_t (*)(const R4GfxFence *))(uintptr_t)table->scanout_retire_requested)(fence);
+}
+
 static inline int32_t r4driver_queue_read_render_list(const R4GfxDriverQueueApi *table, const R4GfxFence *fence, R4GfxRenderList *output) {
     if (!table || table->version != 1 || table->size < offsetof(R4GfxDriverQueueApi, read_render_list) + sizeof(uint64_t) || !table->read_render_list) return R4OS_ERR_NO_FN;
     if (!fence || !output) return R4OS_GFX_QUEUE_ERROR_INVALID;

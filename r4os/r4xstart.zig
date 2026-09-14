@@ -1253,6 +1253,21 @@ pub const R4Draw = struct {
     pub fn supportsDisplayPresentationStats(self: *const R4Draw) bool {
         return self.hasFn("display_presentation_stats");
     }
+    pub fn supportsDisplayPresentationInfo(self: *const R4Draw) bool {
+        return self.hasFn("display_presentation_info");
+    }
+    pub fn displayPresentationInfo(self: *const R4Draw, head_id: u32, out: *abi.DisplayPresentationInfo) i32 {
+        if (!self.supportsDisplayPresentationInfo()) return abi.err_no_fn;
+        out.version = 1; out.size = @sizeOf(abi.DisplayPresentationInfo);
+        const callback: abi.R4DrawFns.display_presentation_info = @ptrFromInt(self.table.display_presentation_info);
+        return callback(head_id, out);
+    }
+    pub fn displayPresentationFeedback(self: *const R4Draw, head_id: u32, fence: *const abi.GfxFence, out: *abi.DisplayPresentationStats) i32 {
+        if (!self.hasFn("display_presentation_feedback")) return abi.err_no_fn;
+        out.version = 1; out.size = @sizeOf(abi.DisplayPresentationStats);
+        const callback: abi.R4DrawFns.display_presentation_feedback = @ptrFromInt(self.table.display_presentation_feedback);
+        return callback(head_id, fence, out);
+    }
     pub fn supportsDisplayCursor(self: *const R4Draw) bool {
         return self.hasFn("display_cursor_info") and self.hasFn("display_cursor_submit") and self.hasFn("display_cursor_status");
     }

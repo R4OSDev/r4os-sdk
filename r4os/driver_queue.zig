@@ -3,6 +3,27 @@ const abi = @import("r4os_contract").abi;
 pub const Context = struct {
     table: abi.GfxDriverQueueApi,
 
+    pub fn supportsScanout(self: *const Context) bool {
+        return self.table.version == 1 and self.table.size >= @offsetOf(abi.GfxDriverQueueApi, "scanout_retire_requested") + 8 and
+            self.table.retain_scanout != 0 and self.table.begin_scanout != 0 and self.table.scanout_retire_requested != 0;
+    }
+    pub fn retainScanout(self: *const Context, fence: *const abi.GfxFence, output: *abi.GfxBufferReference) i32 {
+        if (!self.supportsScanout()) return abi.err_no_fn;
+        output.version = 1; output.size = @sizeOf(abi.GfxBufferReference);
+        const callback: *const fn (*const abi.GfxFence, *abi.GfxBufferReference) callconv(.c) i32 = @ptrFromInt(self.table.retain_scanout);
+        return callback(fence, output);
+    }
+    pub fn beginScanout(self: *const Context, fence: *const abi.GfxFence) i32 {
+        if (!self.supportsScanout()) return abi.err_no_fn;
+        const callback: *const fn (*const abi.GfxFence) callconv(.c) i32 = @ptrFromInt(self.table.begin_scanout);
+        return callback(fence);
+    }
+    pub fn scanoutRetireRequested(self: *const Context, fence: *const abi.GfxFence) i32 {
+        if (!self.supportsScanout()) return abi.err_no_fn;
+        const callback: *const fn (*const abi.GfxFence) callconv(.c) i32 = @ptrFromInt(self.table.scanout_retire_requested);
+        return callback(fence);
+    }
+
     pub fn supportsRenderList(self: *const Context) bool {
         return self.table.version == 1 and self.table.size >= @offsetOf(abi.GfxDriverQueueApi, "read_render_list") + 8 and self.table.read_render_list != 0;
     }

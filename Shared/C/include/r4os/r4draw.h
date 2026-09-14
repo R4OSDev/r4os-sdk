@@ -83,6 +83,21 @@ static inline int r4draw_supports_display_presentation_stats(const R4Draw *draw)
         draw->table->size >= offsetof(R4XStartR4Draw, display_presentation_stats) + sizeof(uintptr_t) &&
         draw->table->display_presentation_stats != 0;
 }
+static inline int r4draw_supports_display_presentation_info(const R4Draw *draw) {
+    return draw != 0 && draw->table != 0 && draw->table->size >= offsetof(R4XStartR4Draw, display_presentation_info) + sizeof(uintptr_t) && draw->table->display_presentation_info != 0;
+}
+static inline int32_t r4draw_display_presentation_info(const R4Draw *draw, uint32_t head_id, R4DisplayPresentationInfo *output) {
+    if (!r4draw_supports_display_presentation_info(draw)) return R4OS_ERR_NO_FN;
+    if (output == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    output->version = 1; output->size = sizeof(*output);
+    return ((R4DrawDisplayPresentationInfoFn)(uintptr_t)draw->table->display_presentation_info)(head_id, output);
+}
+static inline int32_t r4draw_display_presentation_feedback(const R4Draw *draw, uint32_t head_id, const R4GfxFence *source, R4DisplayPresentationStats *output) {
+    if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, display_presentation_feedback) + sizeof(uintptr_t) || draw->table->display_presentation_feedback == 0) return R4OS_ERR_NO_FN;
+    if (source == 0 || output == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    output->version = 1; output->size = sizeof(*output);
+    return ((R4DrawDisplayPresentationFeedbackFn)(uintptr_t)draw->table->display_presentation_feedback)(head_id, source, output);
+}
 
 static inline int r4draw_supports_display_cursor(const R4Draw *draw) {
     return draw != 0 && draw->table != 0 && draw->table->size >= offsetof(R4XStartR4Draw, display_cursor_status) + sizeof(uintptr_t) &&

@@ -1777,6 +1777,16 @@ pub const Context = struct {
         const callback = self.drawFn("display_presentation_stats") orelse return abi.err_no_fn;
         return callback(head_id, out);
     }
+    pub fn displayPresentationInfo(self: *const Context, head_id: u32, out: *abi.DisplayPresentationInfo) i32 {
+        const callback = self.drawFn("display_presentation_info") orelse return abi.err_no_fn;
+        out.version = 1; out.size = @sizeOf(abi.DisplayPresentationInfo);
+        return callback(head_id, out);
+    }
+    pub fn displayPresentationFeedback(self: *const Context, head_id: u32, source: *const abi.GfxFence, out: *abi.DisplayPresentationStats) i32 {
+        const callback = self.drawFn("display_presentation_feedback") orelse return abi.err_no_fn;
+        out.version = 1; out.size = @sizeOf(abi.DisplayPresentationStats);
+        return callback(head_id, source, out);
+    }
 
     pub fn clipboardWrite(self: *const Context, data: []const u8) i32 {
         const table_fn = self.deskFn("clipboard_write") orelse return self.unavailable("desk");

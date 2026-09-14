@@ -29,6 +29,15 @@ static inline int32_t r4driver_display_cursor_complete(const R4GfxDriverDisplayA
 static inline int r4driver_display_supports_presentation_stats(const R4GfxDriverDisplayApi *table) {
     return table != 0 && table->version == 1 && table->size >= offsetof(R4GfxDriverDisplayApi, presentation_stats) + sizeof(uint64_t) && table->presentation_stats != 0;
 }
+static inline int r4driver_display_supports_presentation_info(const R4GfxDriverDisplayApi *table) {
+    return table != 0 && table->version == 1 && table->size >= offsetof(R4GfxDriverDisplayApi, presentation_info) + sizeof(uint64_t) && table->presentation_info != 0;
+}
+static inline int32_t r4driver_display_presentation_info(const R4GfxDriverDisplayApi *table, const R4DisplayPresentationInfo *input) {
+    if (!r4driver_display_supports_presentation_info(table)) return R4OS_ERR_NO_FN;
+    if (input == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    typedef int32_t (*Callback)(const R4DisplayPresentationInfo *);
+    return ((Callback)(uintptr_t)table->presentation_info)(input);
+}
 static inline int32_t r4driver_display_presentation_stats(const R4GfxDriverDisplayApi *table, const R4DisplayPresentationStats *input) {
     if (!r4driver_display_supports_presentation_stats(table)) return R4OS_ERR_NO_FN;
     if (input == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
