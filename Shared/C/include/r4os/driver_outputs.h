@@ -2,6 +2,27 @@
 #define R4OS_DRIVER_OUTPUTS_H
 #include "r4draw.h"
 
+static inline int r4driver_output_supports_mode_color(const R4GfxDriverOutputApi *table) {
+    return table != 0 && table->version == 1 && table->size >= offsetof(R4GfxDriverOutputApi, mode_read_color) + sizeof(uint64_t) &&
+        table->mode_enable != 0 && table->mode_take != 0 && table->mode_complete != 0 && table->mode_read_color != 0;
+}
+static inline int32_t r4driver_output_read_mode_color(const R4GfxDriverOutputApi *table, uint64_t ticket, uint64_t sequence, R4GfxDriverModeColor *output) {
+    if (!r4driver_output_supports_mode_color(table)) return R4OS_ERR_NO_FN;
+    if (output == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    typedef int32_t (*Callback)(uint64_t, uint64_t, R4GfxDriverModeColor *);
+    return ((Callback)(uintptr_t)table->mode_read_color)(ticket, sequence, output);
+}
+
+static inline int r4driver_output_supports_color(const R4GfxDriverOutputApi *table) {
+    return table != 0 && table->version == 1 && table->size >= offsetof(R4GfxDriverOutputApi, color_publish) + sizeof(uint64_t) && table->color_publish != 0;
+}
+static inline int32_t r4driver_output_publish_color(const R4GfxDriverOutputApi *table, const R4GfxOutputColorState *input) {
+    if (!r4driver_output_supports_color(table)) return R4OS_ERR_NO_FN;
+    if (input == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    typedef int32_t (*Callback)(const R4GfxOutputColorState *);
+    return ((Callback)(uintptr_t)table->color_publish)(input);
+}
+
 static inline int r4driver_output_supports_hotplug(const R4GfxDriverOutputApi *table) {
     return table != 0 && table->version == 1 && table->size >= offsetof(R4GfxDriverOutputApi, mode_status) + sizeof(uint64_t) &&
         table->output_pause != 0 && table->mode_restore != 0 && table->mode_status != 0;

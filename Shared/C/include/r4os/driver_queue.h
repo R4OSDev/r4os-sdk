@@ -37,6 +37,12 @@ static inline int32_t r4driver_queue_read_render_grid_list(const R4GfxDriverQueu
     output->version = 1; output->size = sizeof(*output);
     return ((int32_t (*)(const R4GfxFence *, R4GfxRenderGridList *))(uintptr_t)table->read_render_grid_list)(fence, output);
 }
+static inline int32_t r4driver_queue_read_render_color_list(const R4GfxDriverQueueApi *table, const R4GfxFence *fence, R4GfxRenderColorList *output) {
+    if (!table || table->version != 1 || table->size < offsetof(R4GfxDriverQueueApi, read_render_color_list) + sizeof(uint64_t) || !table->read_render_color_list) return R4OS_ERR_NO_FN;
+    if (!fence || !output) return R4OS_GFX_QUEUE_ERROR_INVALID;
+    output->version = 1; output->size = sizeof(*output);
+    return ((int32_t (*)(const R4GfxFence *, R4GfxRenderColorList *))(uintptr_t)table->read_render_color_list)(fence, output);
+}
 
 static inline int32_t r4driver_queue_update_operations(const R4GfxDriverQueueApi *table, const R4GfxBackendBinding *input, uint64_t operations) {
     if (!table || table->version != 1 || table->size < offsetof(R4GfxDriverQueueApi, update_operations) + 8 || !table->update_operations) return R4OS_ERR_NO_FN;

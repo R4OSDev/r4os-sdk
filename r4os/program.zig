@@ -1523,6 +1523,11 @@ pub const Context = struct {
         output.version = 1; output.size = @sizeOf(abi.GfxOutputInfo);
         return table_fn(index, output);
     }
+    pub fn gfxOutputColor(self: *const Context, identity: *const abi.GfxOutputId, output: *abi.GfxOutputColorState) i32 {
+        const table_fn = self.drawFn("gfx_output_color") orelse return self.unavailable("draw");
+        output.version = 1; output.size = @sizeOf(abi.GfxOutputColorState);
+        return table_fn(identity, output);
+    }
     pub fn gfxOutputMode(self: *const Context, identity: *const abi.GfxOutputId, index: u32, output: *abi.GfxOutputMode) i32 {
         const table_fn = self.drawFn("gfx_output_mode") orelse return self.unavailable("draw");
         output.version = 1; output.size = @sizeOf(abi.GfxOutputMode);
@@ -1537,6 +1542,16 @@ pub const Context = struct {
         const table_fn = self.drawFn("gfx_atomic_test") orelse return self.unavailable("draw");
         output.version = 1; output.size = @sizeOf(abi.GfxAtomicResult);
         return table_fn(state, output);
+    }
+    pub fn gfxAtomicTestColor(self: *const Context, request: *const abi.GfxModeColorRequest, output: *abi.GfxAtomicResult) i32 {
+        const table_fn = self.drawFn("gfx_atomic_test_color") orelse return self.unavailable("draw");
+        output.version = 1; output.size = @sizeOf(abi.GfxAtomicResult);
+        return table_fn(request, output);
+    }
+    pub fn gfxAtomicSubmitColor(self: *const Context, request: *const abi.GfxModeColorRequest, confirmation_ms: u32, output: *abi.GfxModeStatus) i32 {
+        const table_fn = self.drawFn("gfx_atomic_submit_color") orelse return self.unavailable("draw");
+        output.version = 1; output.size = @sizeOf(abi.GfxModeStatus);
+        return table_fn(request, confirmation_ms, output);
     }
     pub fn gfxAtomicCommit(self: *const Context, state: *const abi.GfxAtomicState, output: *abi.GfxAtomicResult) i32 {
         const table_fn = self.drawFn("gfx_atomic_commit") orelse return self.unavailable("draw");
@@ -1604,6 +1619,11 @@ pub const Context = struct {
         const callback = self.drawFn("gfx_queue_submit_output") orelse return abi.err_no_fn;
         output.version = 1; output.size = @sizeOf(abi.GfxFenceStatus);
         return callback(queue, submission, target, output);
+    }
+    pub fn gfxQueueSubmitRenderColorList(self: *const Context, queue: *const abi.GfxQueueHandle, submission: *const abi.GfxSubmission, list: *const abi.GfxRenderColorList, output: *abi.GfxFenceStatus) i32 {
+        const callback = self.drawFn("gfx_queue_submit_render_color_list") orelse return self.unavailable("draw");
+        output.version = 1; output.size = @sizeOf(abi.GfxFenceStatus);
+        return callback(queue, submission, list, output);
     }
     pub fn gfxFenceQuery(self: *const Context, fence: *const abi.GfxFence, output: *abi.GfxFenceStatus) i32 {
         const table_fn = self.drawFn("gfx_fence_query") orelse return self.unavailable("draw");

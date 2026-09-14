@@ -1,6 +1,22 @@
 const abi = @import("r4os_contract").abi;
 pub const Context = struct {
     table: abi.GfxDriverOutputApi,
+    pub fn supportsModeColor(self: *const Context) bool {
+        return self.supportsModes() and self.table.size >= @offsetOf(abi.GfxDriverOutputApi, "mode_read_color") + 8 and self.table.mode_read_color != 0;
+    }
+    pub fn readModeColor(self: *const Context, ticket: u64, sequence: u64, output: *abi.GfxDriverModeColor) i32 {
+        if (!self.supportsModeColor()) return abi.err_no_fn;
+        const callback: *const fn (u64, u64, *abi.GfxDriverModeColor) callconv(.c) i32 = @ptrFromInt(self.table.mode_read_color);
+        return callback(ticket, sequence, output);
+    }
+    pub fn supportsColor(self: *const Context) bool {
+        return self.table.version == 1 and self.table.size >= @offsetOf(abi.GfxDriverOutputApi, "color_publish") + 8 and self.table.color_publish != 0;
+    }
+    pub fn publishColor(self: *const Context, input: *const abi.GfxOutputColorState) i32 {
+        if (!self.supportsColor()) return abi.err_no_fn;
+        const callback: *const fn (*const abi.GfxOutputColorState) callconv(.c) i32 = @ptrFromInt(self.table.color_publish);
+        return callback(input);
+    }
     pub fn supportsHotplug(self: *const Context) bool {
         return self.table.version == 1 and self.table.size >= @offsetOf(abi.GfxDriverOutputApi, "mode_status") + 8 and
             self.table.output_pause != 0 and self.table.mode_restore != 0 and self.table.mode_status != 0;

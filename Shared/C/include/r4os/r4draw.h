@@ -461,11 +461,29 @@ static inline int32_t r4draw_gfx_output_edid(const R4Draw *draw, const R4GfxOutp
     output->version = 1; output->size = sizeof(*output);
     return ((R4DrawGfxOutputEdidFn)(uintptr_t)draw->table->gfx_output_edid)(identity, index, output);
 }
+static inline int32_t r4draw_gfx_output_color(const R4Draw *draw, const R4GfxOutputId *identity, R4GfxOutputColorState *output) {
+    if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_output_color) + sizeof(uintptr_t) || draw->table->gfx_output_color == 0) return R4OS_ERR_NO_FN;
+    if (identity == 0 || output == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    output->version = 1; output->size = sizeof(*output);
+    return ((R4DrawGfxOutputColorFn)(uintptr_t)draw->table->gfx_output_color)(identity, output);
+}
 static inline int32_t r4draw_gfx_atomic_test(const R4Draw *draw, const R4GfxAtomicState * state, R4GfxAtomicResult * output) {
     if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_atomic_test) + sizeof(uintptr_t) || draw->table->gfx_atomic_test == 0) return R4OS_ERR_NO_FN;
     if (output == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
     output->version = 1; output->size = sizeof(*output);
     return ((R4DrawGfxAtomicTestFn)(uintptr_t)draw->table->gfx_atomic_test)(state, output);
+}
+static inline int32_t r4draw_gfx_atomic_test_color(const R4Draw *draw, const R4GfxModeColorRequest *request, R4GfxAtomicResult *output) {
+    if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_atomic_test_color) + sizeof(uintptr_t) || draw->table->gfx_atomic_test_color == 0) return R4OS_ERR_NO_FN;
+    if (request == 0 || output == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    output->version = 1; output->size = sizeof(*output);
+    return ((R4DrawGfxAtomicTestColorFn)(uintptr_t)draw->table->gfx_atomic_test_color)(request, output);
+}
+static inline int32_t r4draw_gfx_atomic_submit_color(const R4Draw *draw, const R4GfxModeColorRequest *request, uint32_t confirmation_ms, R4GfxModeStatus *output) {
+    if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_atomic_submit_color) + sizeof(uintptr_t) || draw->table->gfx_atomic_submit_color == 0) return R4OS_ERR_NO_FN;
+    if (request == 0 || output == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    output->version = 1; output->size = sizeof(*output);
+    return ((R4DrawGfxAtomicSubmitColorFn)(uintptr_t)draw->table->gfx_atomic_submit_color)(request, confirmation_ms, output);
 }
 static inline int32_t r4draw_gfx_atomic_commit(const R4Draw *draw, const R4GfxAtomicState * state, R4GfxAtomicResult * output) {
     if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_atomic_commit) + sizeof(uintptr_t) || draw->table->gfx_atomic_commit == 0) return R4OS_ERR_NO_FN;
@@ -537,6 +555,12 @@ static inline int32_t r4draw_gfx_queue_submit_render_grid_list(const R4Draw *dra
     if (!queue || !submission || !list || !output) return R4OS_GFX_QUEUE_ERROR_INVALID;
     output->version = 1; output->size = sizeof(*output);
     return ((R4DrawGfxQueueSubmitRenderGridListFn)(uintptr_t)draw->table->gfx_queue_submit_render_grid_list)(queue, submission, list, output);
+}
+static inline int32_t r4draw_gfx_queue_submit_render_color_list(const R4Draw *draw, const R4GfxQueueHandle *queue, const R4GfxSubmission *submission, const R4GfxRenderColorList *list, R4GfxFenceStatus *output) {
+    if (!draw || !draw->table || draw->table->size < offsetof(R4XStartR4Draw, gfx_queue_submit_render_color_list) + sizeof(uintptr_t) || !draw->table->gfx_queue_submit_render_color_list) return R4OS_ERR_NO_FN;
+    if (!queue || !submission || !list || !output) return R4OS_GFX_QUEUE_ERROR_INVALID;
+    output->version = 1; output->size = sizeof(*output);
+    return ((R4DrawGfxQueueSubmitRenderColorListFn)(uintptr_t)draw->table->gfx_queue_submit_render_color_list)(queue, submission, list, output);
 }
 
 static inline int32_t r4draw_gfx_fence_query(const R4Draw *draw, const R4GfxFence * fence, R4GfxFenceStatus * output) {

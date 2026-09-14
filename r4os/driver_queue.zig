@@ -30,6 +30,15 @@ pub const Context = struct {
     pub fn supportsRenderGridList(self: *const Context) bool {
         return self.table.version == 1 and self.table.size >= @offsetOf(abi.GfxDriverQueueApi, "read_render_grid_list") + 8 and self.table.read_render_grid_list != 0;
     }
+    pub fn supportsRenderColorList(self: *const Context) bool {
+        return self.table.version == 1 and self.table.size >= @offsetOf(abi.GfxDriverQueueApi, "read_render_color_list") + 8 and self.table.read_render_color_list != 0;
+    }
+    pub fn readRenderColorList(self: *const Context, fence: *const abi.GfxFence, output: *abi.GfxRenderColorList) i32 {
+        if (!self.supportsRenderColorList()) return abi.err_no_fn;
+        output.version = 1; output.size = @sizeOf(abi.GfxRenderColorList);
+        const callback: *const fn (*const abi.GfxFence, *abi.GfxRenderColorList) callconv(.c) i32 = @ptrFromInt(self.table.read_render_color_list);
+        return callback(fence, output);
+    }
     pub fn readRenderGridList(self: *const Context, fence: *const abi.GfxFence, output: *abi.GfxRenderGridList) i32 {
         if (!self.supportsRenderGridList()) return abi.err_no_fn;
         output.version = 1; output.size = @sizeOf(abi.GfxRenderGridList);

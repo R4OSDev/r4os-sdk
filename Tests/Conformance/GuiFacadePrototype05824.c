@@ -11,7 +11,8 @@
 _Static_assert(sizeof(R4GfxReceiverSource) == 16, "receiver source layout");
 _Static_assert(sizeof(R4GfxReceiverInfo) == 8224 && offsetof(R4GfxReceiverInfo, modes) == 32 && offsetof(R4GfxReceiverInfo, edid) == 4128, "receiver record layout");
 _Static_assert(sizeof(R4GfxReceiverUpdate) == 48 && offsetof(R4GfxReceiverUpdate, receivers) == 40, "receiver update layout");
-_Static_assert(sizeof(R4GfxDriverOutputApi) == 112 && offsetof(R4GfxDriverOutputApi, register_source) == 24 && offsetof(R4GfxDriverOutputApi, mode_enable) == 48 && offsetof(R4GfxDriverOutputApi, audio_publish) == 72 && offsetof(R4GfxDriverOutputApi, output_pause) == 88 && offsetof(R4GfxDriverOutputApi, mode_restore) == 96 && offsetof(R4GfxDriverOutputApi, mode_status) == 104, "legacy output prefix and optional mode/audio/hotplug tails");
+_Static_assert(sizeof(R4GfxDriverOutputApi) == 128 && offsetof(R4GfxDriverOutputApi, register_source) == 24 && offsetof(R4GfxDriverOutputApi, mode_enable) == 48 && offsetof(R4GfxDriverOutputApi, audio_publish) == 72 && offsetof(R4GfxDriverOutputApi, output_pause) == 88 && offsetof(R4GfxDriverOutputApi, mode_restore) == 96 && offsetof(R4GfxDriverOutputApi, mode_status) == 104 && offsetof(R4GfxDriverOutputApi, color_publish) == 112 && offsetof(R4GfxDriverOutputApi, mode_read_color) == 120, "legacy output prefix and optional tails");
+_Static_assert(sizeof(R4GfxOutputColorState) == 128 && offsetof(R4GfxOutputColorState, revision) == 32 && offsetof(R4GfxOutputColorState, max_tmds_clock_hz) == 112, "output color layout");
 
 static int32_t cursor_info_probe(R4DisplayCursorInfo *out) {
     assert(out->version == 1 && out->size == 80); out->display_generation = UINT64_C(0x100000079); return 1;
@@ -110,6 +111,13 @@ static int32_t mode_resolve_probe(uint64_t ticket, uint32_t action, R4GfxModeSta
 static int32_t output_publish_probe(const R4GfxOutputPublication *publication, R4GfxOutputId *out) {
     assert(publication->info.edid_bytes == 128 && publication->edid[127] == 0x79);
     out->connection_generation = UINT64_C(0x40000000d); return 1;
+}
+static int32_t output_color_publish_probe(const R4GfxOutputColorState *input) {
+    assert(input->identity.connection_generation == UINT64_C(0x40000000d) && input->formats == 1); return -3;
+}
+static int32_t output_color_probe(const R4GfxOutputId *identity, R4GfxOutputColorState *output) {
+    assert(output->version == 1 && output->size == 128);
+    output->identity = *identity; output->revision = UINT64_C(0x600000007); output->formats = 1; return 1;
 }
 static int32_t output_pause_probe(const R4GfxOutputId *output, uint32_t paused) {
     assert(output->connection_generation == UINT64_C(0x40000000d) && paused <= 1);
@@ -255,7 +263,72 @@ static void grid_facade_probe(void) {
     driver.size = 120;
     assert(r4driver_queue_read_render_grid_list(&driver, &result.fence, &list) == 1 && list.count == 1 && list.grids[0].rotation == 3 && list.grids[0].scale == 180);
 }
+static int32_t color_submit_probe(const R4GfxQueueHandle *queue, const R4GfxSubmission *request,
+    const R4GfxRenderColorList *list, R4GfxFenceStatus *output) {
+    assert(queue->timeline == UINT64_C(0x200000017) && request->operation == R4OS_GFX_QUEUE_OPERATION_RENDER_COLOR_LIST);
+    assert(list->size == 1568 && list->count == 1 && list->program.size == 272 && list->program.words[63] == UINT32_C(0x12345678));
+    output->fence = (R4GfxFence){.slot = 7, .timeline = queue->timeline, .point = UINT64_C(0x300000019)}; return 1;
+}
+static int32_t color_read_probe(const R4GfxFence *fence, R4GfxRenderColorList *output) {
+    assert(fence->point == UINT64_C(0x300000019) && output->version == 1 && output->size == 1568);
+    *output = (R4GfxRenderColorList){.version = 1, .size = sizeof(*output), .count = 1};
+    output->program.words[63] = UINT32_C(0x87654321); return 1;
+}
+static void color_facade_probe(void) {
+    R4XStartR4Draw table = {.size = 760, .gfx_queue_submit_render_color_list = (uintptr_t)color_submit_probe};
+    const R4Draw draw = {&table};
+    const R4GfxQueueHandle queue = {.timeline = UINT64_C(0x200000017)};
+    const R4GfxSubmission request = {.operation = R4OS_GFX_QUEUE_OPERATION_RENDER_COLOR_LIST};
+    R4GfxRenderColorList list = {.version = 1, .size = sizeof(list), .count = 1, .program = {.version = 1, .size = 272}};
+    list.program.words[63] = UINT32_C(0x12345678);
+    R4GfxFenceStatus result = {.deadline_ns = 79};
+    assert(r4draw_gfx_queue_submit_render_color_list(&draw, &queue, &request, &list, &result) == R4OS_ERR_NO_FN && result.deadline_ns == 79 && result.fence.point == 0);
+    table.size = 768;
+    assert(r4draw_gfx_queue_submit_render_color_list(&draw, &queue, &request, &list, &result) == 1);
+    R4GfxDriverQueueApi driver = {.version = 1, .read_render_color_list = (uintptr_t)color_read_probe};
+    for (unsigned size = 120; size < 128; ++size) {
+        driver.size = size;
+        assert(r4driver_queue_read_render_color_list(&driver, &result.fence, &list) == R4OS_ERR_NO_FN && list.program.words[63] == UINT32_C(0x12345678));
+    }
+    driver.size = 128;
+    assert(r4driver_queue_read_render_color_list(&driver, &result.fence, &list) == 1 && list.program.words[63] == UINT32_C(0x87654321));
+}
+static int32_t mode_color_test_probe(const R4GfxModeColorRequest *request, R4GfxAtomicResult *output) {
+    assert(request->size == 1344 && request->image.id == 23 && request->image.generation == UINT64_C(0x200000017) && request->signal.metadata.max_cll == 1000);
+    output->commit_sequence = UINT64_C(0x300000019); return 1;
+}
+static int32_t mode_color_submit_probe(const R4GfxModeColorRequest *request, uint32_t timeout, R4GfxModeStatus *output) {
+    assert(request->image.id == 23 && request->image.generation == UINT64_C(0x200000017) && timeout == 15000);
+    output->ticket = UINT64_C(0x300000019); return 1;
+}
+static int32_t mode_color_read_probe(uint64_t ticket, uint64_t sequence, R4GfxDriverModeColor *output) {
+    assert(ticket == UINT64_C(0x300000019) && sequence == 2);
+    *output = (R4GfxDriverModeColor){.version = 1, .size = sizeof(*output), .ticket = ticket, .sequence = sequence, .signal = {.metadata = {.max_cll = 1000}}}; return 1;
+}
+static void mode_color_facade_probe(void) {
+    R4XStartR4Draw table = {.size = 768, .gfx_atomic_test_color = (uintptr_t)mode_color_test_probe, .gfx_atomic_submit_color = (uintptr_t)mode_color_submit_probe};
+    const R4Draw draw = {&table};
+    const R4GfxModeColorRequest request = {.version = 1, .size = sizeof(request), .image = {.id = 23, .generation = UINT64_C(0x200000017)}, .signal = {.metadata = {.max_cll = 1000}}};
+    R4GfxAtomicResult tested = {.commit_sequence = 79}; R4GfxModeStatus submitted = {.ticket = 79};
+    assert(r4draw_gfx_atomic_test_color(&draw, &request, &tested) == R4OS_ERR_NO_FN);
+    assert(r4draw_gfx_atomic_submit_color(&draw, &request, 15000, &submitted) == R4OS_ERR_NO_FN && tested.commit_sequence == 79 && submitted.ticket == 79);
+    table.size = 776;
+    assert(r4draw_gfx_atomic_test_color(&draw, &request, &tested) == 1);
+    assert(r4draw_gfx_atomic_submit_color(&draw, &request, 15000, &submitted) == R4OS_ERR_NO_FN && submitted.ticket == 79);
+    table.size = 784;
+    assert(r4draw_gfx_atomic_submit_color(&draw, &request, 15000, &submitted) == 1);
+    R4GfxDriverOutputApi driver = {.version = 1, .mode_enable = 1, .mode_take = 1, .mode_complete = 1, .mode_read_color = (uintptr_t)mode_color_read_probe};
+    R4GfxDriverModeColor color = {.ticket = 79};
+    for (unsigned size = 120; size < 128; ++size) {
+        driver.size = size;
+        assert(r4driver_output_read_mode_color(&driver, submitted.ticket, 2, &color) == R4OS_ERR_NO_FN && color.ticket == 79);
+    }
+    driver.size = 128;
+    assert(r4driver_output_read_mode_color(&driver, submitted.ticket, 2, &color) == 1 && color.ticket == tested.commit_sequence && color.sequence == 2 && color.signal.metadata.max_cll == 1000);
+}
 static void backend_profile_probe(void) {
+    mode_color_facade_probe();
+    color_facade_probe();
     grid_facade_probe();
     R4XStartR4Draw table = {.size = 640, .gfx_queue_backend_info = (uintptr_t)backend_info_probe};
     R4Draw draw = {&table}; R4GfxBackendInfo info = {0};
@@ -349,6 +422,20 @@ static void gfx_facade_probe(void) {
     R4GfxDriverOutputApi hotplug = {.version=1,.size=112,.output_pause=(uintptr_t)output_pause_probe,
         .mode_restore=(uintptr_t)mode_restore_probe,.mode_status=(uintptr_t)mode_status_probe};
     R4GfxOutputId port = {.connection_generation=UINT64_C(0x40000000d)};
+    R4GfxOutputColorState color_state = {.formats=7};
+    R4GfxOutputColorState color_before = color_state;
+    R4XStartR4Draw color_table = {.size=752,.gfx_output_color=(uintptr_t)output_color_probe};
+    R4Draw color_draw = {.table=&color_table};
+    assert(r4draw_gfx_output_color(&color_draw,&port,&color_state)==R4OS_ERR_NO_FN && memcmp(&color_before,&color_state,sizeof(color_state))==0);
+    color_table.size=sizeof(color_table);
+    assert(r4draw_gfx_output_color(&color_draw,&port,&color_state)==1 && color_state.revision==UINT64_C(0x600000007));
+    R4GfxDriverOutputApi color_driver={.version=1,.color_publish=(uintptr_t)output_color_publish_probe};
+    for (unsigned bytes=24;bytes<120;++bytes) {
+        color_driver.size=bytes;
+        assert(!r4driver_output_supports_color(&color_driver) && r4driver_output_publish_color(&color_driver,&color_state)==R4OS_ERR_NO_FN);
+    }
+    color_driver.size=120;
+    assert(r4driver_output_publish_color(&color_driver,&color_state)==-3);
     R4GfxAtomicState reconnect = {.count=1};
     R4GfxModeStatus restored = {.version=1,.size=sizeof(restored)};
     for (unsigned bytes=24;bytes<112;++bytes) {

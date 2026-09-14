@@ -43,6 +43,7 @@ fn gridReadProbe(fence: *const r4os.abi.GfxFence, output: *r4os.abi.GfxRenderGri
     output.* = .{ .count = 1 }; output.grids[0] = .{ .enabled = 1, .scale = 180, .rotation = 3 }; return 1;
 }
 fn gridFacadeProbe() !void {
+    try colorFacadeProbe();
     const a = r4os.abi; const t = std.testing;
     var tables = makeTables(true);
     var imports: [3]a.R4XStartImport = undefined; var raw: a.R4XStartContext = undefined;
@@ -76,6 +77,88 @@ fn gridFacadeProbe() !void {
     try t.expect(driver.supportsRenderGridList());
     try t.expectEqual(@as(i32, 1), driver.readRenderGridList(&result.fence, &list));
     try t.expect(list.count == 1 and list.grids[0].rotation == 3 and list.grids[0].scale == 180);
+}
+fn colorSubmitProbe(queue: *const r4os.abi.GfxQueueHandle, request: *const r4os.abi.GfxSubmission,
+    list: *const r4os.abi.GfxRenderColorList, output: *r4os.abi.GfxFenceStatus) callconv(.c) i32 {
+    std.debug.assert(queue.timeline == 0x200000017 and request.operation == r4os.abi.gfx_queue_operation_render_color_list and
+        list.size == 1568 and list.count == 1 and list.program.size == 272 and list.program.words[63] == 0x12345678);
+    output.fence = .{ .slot = 7, .timeline = queue.timeline, .point = 0x300000019 }; return 1;
+}
+fn colorReadProbe(fence: *const r4os.abi.GfxFence, output: *r4os.abi.GfxRenderColorList) callconv(.c) i32 {
+    std.debug.assert(fence.point == 0x300000019 and output.version == 1 and output.size == 1568);
+    output.* = .{ .count = 1 }; output.program.words[63] = 0x87654321; return 1;
+}
+fn colorFacadeProbe() !void {
+    try modeColorFacadeProbe();
+    const a = r4os.abi; const t = std.testing;
+    var tables = makeTables(true);
+    var imports: [3]a.R4XStartImport = undefined; var raw: a.R4XStartContext = undefined;
+    var app = try makeApp(&tables, &imports, &raw);
+    const queues = app.drawing().?.queues();
+    tables[2].gfx_queue_submit_render_color_list = @intFromPtr(&colorSubmitProbe);
+    var list: a.GfxRenderColorList = .{ .count = 1 }; list.program.words[63] = 0x12345678;
+    const queue: a.GfxQueueHandle = .{ .timeline = 0x200000017 };
+    const request: a.GfxSubmission = .{ .operation = a.gfx_queue_operation_render_color_list };
+    var result: a.GfxFenceStatus = .{ .deadline_ns = 79 };
+    tables[2].size = 760;
+    try t.expectEqual(a.err_no_fn, queues.submitRenderColorList(&queue, &request, &list, &result));
+    try t.expect(result.deadline_ns == 79 and result.fence.point == 0);
+    tables[2].size = 768;
+    try t.expectEqual(@as(i32, 1), queues.submitRenderColorList(&queue, &request, &list, &result));
+    var driver: r4os.driver_queue.Context = .{ .table = .{ .read_render_color_list = @intFromPtr(&colorReadProbe) } };
+    for (120..128) |size| {
+        driver.table.size = @intCast(size);
+        try t.expect(!driver.supportsRenderColorList());
+        try t.expectEqual(a.err_no_fn, driver.readRenderColorList(&result.fence, &list));
+        try t.expectEqual(@as(u32,0x12345678), list.program.words[63]);
+    }
+    driver.table.size = 128;
+    try t.expect(driver.supportsRenderColorList());
+    try t.expectEqual(@as(i32, 1), driver.readRenderColorList(&result.fence, &list));
+    try t.expectEqual(@as(u32,0x87654321), list.program.words[63]);
+}
+fn modeColorTestProbe(request: *const r4os.abi.GfxModeColorRequest, output: *r4os.abi.GfxAtomicResult) callconv(.c) i32 {
+    std.debug.assert(request.size == 1344 and request.image.id == 23 and request.image.generation == 0x200000017 and request.signal.metadata.max_cll == 1000);
+    output.commit_sequence = 0x300000019; return 1;
+}
+fn modeColorSubmitProbe(request: *const r4os.abi.GfxModeColorRequest, timeout: u32, output: *r4os.abi.GfxModeStatus) callconv(.c) i32 {
+    std.debug.assert(request.image.id == 23 and request.image.generation == 0x200000017 and timeout == 15000);
+    output.ticket = 0x300000019; return 1;
+}
+fn modeColorReadProbe(ticket: u64, sequence: u64, output: *r4os.abi.GfxDriverModeColor) callconv(.c) i32 {
+    std.debug.assert(ticket == 0x300000019 and sequence == 2);
+    output.* = .{ .ticket = ticket, .sequence = sequence, .signal = .{ .metadata = .{ .max_cll = 1000 } } }; return 1;
+}
+fn modeColorFacadeProbe() !void {
+    const a = r4os.abi; const t = std.testing;
+    var tables = makeTables(true);
+    var imports: [3]a.R4XStartImport = undefined; var raw: a.R4XStartContext = undefined;
+    var app = try makeApp(&tables, &imports, &raw);
+    const outputs = app.drawing().?.outputs();
+    tables[2].gfx_atomic_test_color = @intFromPtr(&modeColorTestProbe);
+    tables[2].gfx_atomic_submit_color = @intFromPtr(&modeColorSubmitProbe);
+    const request: a.GfxModeColorRequest = .{ .image = .{ .id = 23, .generation = 0x200000017 }, .signal = .{ .metadata = .{ .max_cll = 1000 } } };
+    var tested: a.GfxAtomicResult = .{ .commit_sequence = 79 }; var submitted: a.GfxModeStatus = .{ .ticket = 79 };
+    tables[2].size = 768;
+    try t.expectEqual(a.err_no_fn, outputs.testColor(&request, &tested));
+    try t.expectEqual(a.err_no_fn, outputs.submitColor(&request, 15000, &submitted));
+    try t.expect(tested.commit_sequence == 79 and submitted.ticket == 79);
+    tables[2].size = 776;
+    try t.expectEqual(@as(i32, 1), outputs.testColor(&request, &tested));
+    try t.expectEqual(a.err_no_fn, outputs.submitColor(&request, 15000, &submitted));
+    tables[2].size = 784;
+    try t.expectEqual(@as(i32, 1), outputs.submitColor(&request, 15000, &submitted));
+    var driver: r4os.driver_outputs.Context = .{ .table = .{ .mode_enable = 1, .mode_take = 1, .mode_complete = 1,
+        .mode_read_color = @intFromPtr(&modeColorReadProbe) } };
+    var color: a.GfxDriverModeColor = .{ .ticket = 79 };
+    for (120..128) |size| {
+        driver.table.size = @intCast(size);
+        try t.expectEqual(a.err_no_fn, driver.readModeColor(submitted.ticket, 2, &color));
+        try t.expectEqual(@as(u64, 79), color.ticket);
+    }
+    driver.table.size = 128;
+    try t.expectEqual(@as(i32, 1), driver.readModeColor(submitted.ticket, 2, &color));
+    try t.expect(tested.commit_sequence == color.ticket and color.sequence == 2 and color.signal.metadata.max_cll == 1000);
 }
 fn gfxProfileProbe(input: *const r4os.abi.GfxBackendRegistration, profile: *const r4os.abi.GfxBackendProfile, out: *r4os.abi.GfxBackendBinding) callconv(.c) i32 {
     std.debug.assert(input.operations == 13 and input.memory_generation == 0x500000018);
@@ -301,6 +384,15 @@ fn outputPauseProbe(output: *const r4os.abi.GfxOutputId, paused: u32) callconv(.
     std.debug.assert(output.connection_generation == 0x40000000d and paused <= 1);
     return if (paused == 1) 1 else r4os.abi.gfx_output_error_busy;
 }
+fn outputColorProbe(identity: *const r4os.abi.GfxOutputId, output: *r4os.abi.GfxOutputColorState) callconv(.c) i32 {
+    std.debug.assert(output.version == 1 and output.size == 128);
+    output.* = .{ .identity = identity.*, .revision = 0x600000007, .flags = r4os.abi.gfx_output_color_known, .formats = 1 };
+    return r4os.abi.gfx_output_ok;
+}
+fn outputColorPublishProbe(input: *const r4os.abi.GfxOutputColorState) callconv(.c) i32 {
+    std.debug.assert(input.identity.connection_generation == 0x40000000d and input.formats == 1);
+    return r4os.abi.gfx_output_error_stale;
+}
 fn modeRestoreProbe(input: *const r4os.abi.GfxAtomicState, out: *r4os.abi.GfxModeStatus) callconv(.c) i32 {
     std.debug.assert(input.topology_revision == 0 and input.count == 1);
     out.ticket = 0x200000079; return 1;
@@ -475,6 +567,23 @@ test "old display and driver prefixes hide output tails while C/Zig preserve rec
     var hotplug = r4os.driver_outputs.Context{ .table = .{ .output_pause = @intFromPtr(&outputPauseProbe),
         .mode_restore = @intFromPtr(&modeRestoreProbe), .mode_status = @intFromPtr(&modeStatusProbe) } };
     const port: a.GfxOutputId = .{ .connection_generation = 0x40000000d };
+    var color_state: a.GfxOutputColorState = .{ .formats = 7 };
+    const color_before = color_state;
+    tables[2].gfx_output_color = @intFromPtr(&outputColorProbe);
+    tables[2].size = 752;
+    try std.testing.expectEqual(a.err_no_fn, outputs.color(&port, &color_state));
+    try std.testing.expectEqualDeep(color_before, color_state);
+    tables[2].size = @sizeOf(a.R4XStartR4Draw);
+    try std.testing.expectEqual(a.gfx_output_ok, outputs.color(&port, &color_state));
+    try std.testing.expect(color_state.revision == 0x600000007 and std.meta.eql(color_state.identity, port) and color_state.formats == 1);
+    var color_driver: r4os.driver_outputs.Context = .{ .table = .{ .color_publish = @intFromPtr(&outputColorPublishProbe) } };
+    for ([_]u32{ 24, 112, 119 }) |bytes| {
+        color_driver.table.size = bytes;
+        try std.testing.expect(!color_driver.supportsColor());
+        try std.testing.expectEqual(a.err_no_fn, color_driver.publishColor(&color_state));
+    }
+    color_driver.table.size = 120;
+    try std.testing.expectEqual(a.gfx_output_error_stale, color_driver.publishColor(&color_state));
     var restored: a.GfxModeStatus = .{};
     for (24..112) |bytes| {
         hotplug.table.size = @intCast(bytes);
