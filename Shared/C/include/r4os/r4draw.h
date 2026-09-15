@@ -464,8 +464,13 @@ static inline int32_t r4draw_gfx_output_edid(const R4Draw *draw, const R4GfxOutp
 static inline int32_t r4draw_gfx_output_color(const R4Draw *draw, const R4GfxOutputId *identity, R4GfxOutputColorState *output) {
     if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_output_color) + sizeof(uintptr_t) || draw->table->gfx_output_color == 0) return R4OS_ERR_NO_FN;
     if (identity == 0 || output == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
-    output->version = 1; output->size = sizeof(*output);
-    return ((R4DrawGfxOutputColorFn)(uintptr_t)draw->table->gfx_output_color)(identity, output);
+    R4GfxOutputColorState value = {0}; value.version = 1; value.size = sizeof(value);
+    int32_t code = ((R4DrawGfxOutputColorFn)(uintptr_t)draw->table->gfx_output_color)(identity, &value);
+    if (code == R4OS_GFX_OUTPUT_OK) {
+        if (value.version != 1 || value.size < 128) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+        *output = value;
+    }
+    return code;
 }
 static inline int32_t r4draw_gfx_output_refresh(const R4Draw *draw, const R4GfxOutputTarget *target, R4GfxOutputRefresh *output) {
     if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_output_refresh) + sizeof(uintptr_t) || draw->table->gfx_output_refresh == 0) return R4OS_ERR_NO_FN;

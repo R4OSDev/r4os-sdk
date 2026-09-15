@@ -1525,8 +1525,15 @@ pub const Context = struct {
     }
     pub fn gfxOutputColor(self: *const Context, identity: *const abi.GfxOutputId, output: *abi.GfxOutputColorState) i32 {
         const table_fn = self.drawFn("gfx_output_color") orelse return self.unavailable("draw");
-        output.version = 1; output.size = @sizeOf(abi.GfxOutputColorState);
-        return table_fn(identity, output);
+        var value: abi.GfxOutputColorState = .{};
+        const code = table_fn(identity, &value);
+        if (code == abi.gfx_output_ok) {
+            if (value.version != 1 or value.size < 128) return abi.gfx_output_error_invalid;
+            // An older provider writes the original prefix. Initialize the
+            // whole local value so optional link facts cannot survive a query.
+            output.* = value;
+        }
+        return code;
     }
     pub fn gfxOutputRefresh(self: *const Context, target: *const abi.GfxOutputTarget, output: *abi.GfxOutputRefresh) i32 {
         const table_fn = self.drawFn("gfx_output_refresh") orelse return self.unavailable("draw");

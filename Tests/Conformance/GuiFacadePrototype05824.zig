@@ -436,10 +436,14 @@ fn outputPauseProbe(output: *const r4os.abi.GfxOutputId, paused: u32) callconv(.
     std.debug.assert(output.connection_generation == 0x40000000d and paused <= 1);
     return if (paused == 1) 1 else r4os.abi.gfx_output_error_busy;
 }
+var color_probe_prefix: u32 = @sizeOf(r4os.abi.GfxOutputColorState);
+var color_probe_status: i32 = r4os.abi.gfx_output_ok;
 fn outputColorProbe(identity: *const r4os.abi.GfxOutputId, output: *r4os.abi.GfxOutputColorState) callconv(.c) i32 {
-    std.debug.assert(output.version == 1 and output.size == 128);
-    output.* = .{ .identity = identity.*, .revision = 0x600000007, .flags = r4os.abi.gfx_output_color_known, .formats = 1 };
-    return r4os.abi.gfx_output_ok;
+    std.debug.assert(output.version == 1 and output.size == @sizeOf(r4os.abi.GfxOutputColorState));
+    const value: r4os.abi.GfxOutputColorState = .{ .size = color_probe_prefix, .identity = identity.*, .revision = 0x600000007,
+        .flags = r4os.abi.gfx_output_color_known, .formats = 1, .max_frl_rate = 6 };
+    @memcpy(std.mem.asBytes(output)[0..color_probe_prefix], std.mem.asBytes(&value)[0..color_probe_prefix]);
+    return color_probe_status;
 }
 fn outputColorPublishProbe(input: *const r4os.abi.GfxOutputColorState) callconv(.c) i32 {
     std.debug.assert(input.identity.connection_generation == 0x40000000d and input.formats == 1);
@@ -628,6 +632,16 @@ test "old display and driver prefixes hide output tails while C/Zig preserve rec
     tables[2].size = @sizeOf(a.R4XStartR4Draw);
     try std.testing.expectEqual(a.gfx_output_ok, outputs.color(&port, &color_state));
     try std.testing.expect(color_state.revision == 0x600000007 and std.meta.eql(color_state.identity, port) and color_state.formats == 1);
+    try std.testing.expect(color_state.max_frl_rate == 6);
+    color_probe_prefix = 128;
+    try std.testing.expectEqual(a.gfx_output_ok, outputs.color(&port, &color_state));
+    try std.testing.expect(color_state.size == 128 and color_state.max_frl_rate == 0 and color_state.dsc_depths == 0);
+    color_probe_prefix = @sizeOf(a.GfxOutputColorState);
+    const legacy_color = color_state;
+    color_probe_status = a.gfx_output_error_busy;
+    try std.testing.expectEqual(a.gfx_output_error_busy, outputs.color(&port, &color_state));
+    try std.testing.expectEqualDeep(legacy_color, color_state);
+    color_probe_status = a.gfx_output_ok;
     var color_driver: r4os.driver_outputs.Context = .{ .table = .{ .color_publish = @intFromPtr(&outputColorPublishProbe) } };
     for ([_]u32{ 24, 112, 119 }) |bytes| {
         color_driver.table.size = bytes;

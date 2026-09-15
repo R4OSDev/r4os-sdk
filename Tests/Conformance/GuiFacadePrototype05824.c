@@ -12,7 +12,7 @@ _Static_assert(sizeof(R4GfxReceiverSource) == 16, "receiver source layout");
 _Static_assert(sizeof(R4GfxReceiverInfo) == 8224 && offsetof(R4GfxReceiverInfo, modes) == 32 && offsetof(R4GfxReceiverInfo, edid) == 4128, "receiver record layout");
 _Static_assert(sizeof(R4GfxReceiverUpdate) == 48 && offsetof(R4GfxReceiverUpdate, receivers) == 40, "receiver update layout");
 _Static_assert(sizeof(R4GfxDriverOutputApi) == 144 && offsetof(R4GfxDriverOutputApi, register_source) == 24 && offsetof(R4GfxDriverOutputApi, mode_enable) == 48 && offsetof(R4GfxDriverOutputApi, audio_publish) == 72 && offsetof(R4GfxDriverOutputApi, output_pause) == 88 && offsetof(R4GfxDriverOutputApi, mode_restore) == 96 && offsetof(R4GfxDriverOutputApi, mode_status) == 104 && offsetof(R4GfxDriverOutputApi, color_publish) == 112 && offsetof(R4GfxDriverOutputApi, mode_read_color) == 120 && offsetof(R4GfxDriverOutputApi, refresh_publish) == 128 && offsetof(R4GfxDriverOutputApi, refresh_read) == 136, "legacy output prefix and optional tails");
-_Static_assert(sizeof(R4GfxOutputColorState) == 128 && offsetof(R4GfxOutputColorState, revision) == 32 && offsetof(R4GfxOutputColorState, max_tmds_clock_hz) == 112, "output color layout");
+_Static_assert(sizeof(R4GfxOutputColorState) == 192 && offsetof(R4GfxOutputColorState, revision) == 32 && offsetof(R4GfxOutputColorState, max_tmds_clock_hz) == 112 && offsetof(R4GfxOutputColorState, link_kind) == 128, "output color compatible prefix and link tail");
 
 static int32_t cursor_info_probe(R4DisplayCursorInfo *out) {
     assert(out->version == 1 && out->size == 80); out->display_generation = UINT64_C(0x100000079); return 1;
@@ -115,9 +115,13 @@ static int32_t output_publish_probe(const R4GfxOutputPublication *publication, R
 static int32_t output_color_publish_probe(const R4GfxOutputColorState *input) {
     assert(input->identity.connection_generation == UINT64_C(0x40000000d) && input->formats == 1); return -3;
 }
+static uint32_t color_probe_prefix = sizeof(R4GfxOutputColorState);
+static int32_t color_probe_status = R4OS_GFX_OUTPUT_OK;
 static int32_t output_color_probe(const R4GfxOutputId *identity, R4GfxOutputColorState *output) {
-    assert(output->version == 1 && output->size == 128);
-    output->identity = *identity; output->revision = UINT64_C(0x600000007); output->formats = 1; return 1;
+    assert(output->version == 1 && output->size == sizeof(*output));
+    R4GfxOutputColorState value = {.version=1,.size=color_probe_prefix,.identity=*identity,.revision=UINT64_C(0x600000007),.formats=1,.max_frl_rate=6};
+    memcpy(output,&value,color_probe_prefix);
+    return color_probe_status;
 }
 static int32_t output_pause_probe(const R4GfxOutputId *output, uint32_t paused) {
     assert(output->connection_generation == UINT64_C(0x40000000d) && paused <= 1);
@@ -471,6 +475,13 @@ static void gfx_facade_probe(void) {
     assert(r4draw_gfx_output_color(&color_draw,&port,&color_state)==R4OS_ERR_NO_FN && memcmp(&color_before,&color_state,sizeof(color_state))==0);
     color_table.size=sizeof(color_table);
     assert(r4draw_gfx_output_color(&color_draw,&port,&color_state)==1 && color_state.revision==UINT64_C(0x600000007));
+    assert(color_state.max_frl_rate==6);
+    color_probe_prefix=128;
+    assert(r4draw_gfx_output_color(&color_draw,&port,&color_state)==1 && color_state.size==128 && color_state.max_frl_rate==0 && color_state.dsc_depths==0);
+    color_probe_prefix=sizeof(R4GfxOutputColorState); color_probe_status=R4OS_GFX_OUTPUT_ERROR_BUSY;
+    color_before=color_state;
+    assert(r4draw_gfx_output_color(&color_draw,&port,&color_state)==R4OS_GFX_OUTPUT_ERROR_BUSY && memcmp(&color_before,&color_state,sizeof(color_state))==0);
+    color_probe_status=R4OS_GFX_OUTPUT_OK;
     R4GfxDriverOutputApi color_driver={.version=1,.color_publish=(uintptr_t)output_color_publish_probe};
     for (unsigned bytes=24;bytes<120;++bytes) {
         color_driver.size=bytes;
