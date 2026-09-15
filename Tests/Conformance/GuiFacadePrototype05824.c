@@ -15,6 +15,32 @@ _Static_assert(sizeof(R4GfxDriverOutputApi) == 160 && offsetof(R4GfxDriverOutput
 _Static_assert(sizeof(R4GfxOutputPower) == 96 && sizeof(R4GfxPowerRequest) == 64, "screen power payloads");
 _Static_assert(sizeof(R4GfxOutputColorState) == 192 && offsetof(R4GfxOutputColorState, revision) == 32 && offsetof(R4GfxOutputColorState, max_tmds_clock_hz) == 112 && offsetof(R4GfxOutputColorState, link_kind) == 128, "output color compatible prefix and link tail");
 
+static int32_t capture_acquire_probe(uint32_t expected, R4RemoteFrameInfo *info, R4RemoteFrameLease *lease) {
+    assert(expected == 73); info->revision = expected;
+    *lease = (R4RemoteFrameLease){.version=1,.size=48,.id=UINT64_C(0x100000003),.epoch=UINT64_C(0x200000009)}; return 0;
+}
+static int32_t capture_release_probe(const R4RemoteFrameLease *lease) {
+    assert(lease->id == UINT64_C(0x100000003) && lease->epoch == UINT64_C(0x200000009)); return 0;
+}
+static int32_t capture_reset_probe(void) { return 0; }
+static int32_t capture_stats_probe(R4RemoteFrameCaptureStats *out) { out->snapshot_copy_bytes=UINT64_C(0x300000007); return 0; }
+static void capture_facade_probe(void) {
+    R4XStartR4Desk table = {.size=496,.remote_frame_snapshot_acquire=(uintptr_t)capture_acquire_probe,
+        .remote_frame_snapshot_release=(uintptr_t)capture_release_probe,.remote_frame_source_reset=(uintptr_t)capture_reset_probe,
+        .remote_frame_capture_stats=(uintptr_t)capture_stats_probe};
+    R4Desk desk={.table=&table}; R4RemoteFrameInfo info={.revision=17}; R4RemoteFrameLease lease={.id=19};
+    R4RemoteFrameCaptureStats stats={.snapshot_copy_bytes=23};
+    assert(r4desk_remote_frame_snapshot_acquire(&desk,73,&info,&lease)==R4OS_ERR_NO_FN && info.revision==17 && lease.id==19);
+    assert(r4desk_remote_frame_snapshot_release(&desk,&lease)==R4OS_ERR_NO_FN);
+    assert(r4desk_remote_frame_source_reset(&desk)==R4OS_ERR_NO_FN);
+    assert(r4desk_remote_frame_capture_stats(&desk,&stats)==R4OS_ERR_NO_FN && stats.snapshot_copy_bytes==23);
+    table.size=sizeof(table);
+    assert(r4desk_remote_frame_snapshot_acquire(&desk,73,&info,&lease)==0 && info.revision==73);
+    assert(r4desk_remote_frame_snapshot_release(&desk,&lease)==0);
+    assert(r4desk_remote_frame_source_reset(&desk)==0);
+    assert(r4desk_remote_frame_capture_stats(&desk,&stats)==0 && stats.snapshot_copy_bytes==UINT64_C(0x300000007));
+}
+
 static int32_t cursor_info_probe(R4DisplayCursorInfo *out) {
     assert(out->version == 1 && out->size == 80); out->display_generation = UINT64_C(0x100000079); return 1;
 }
@@ -880,6 +906,7 @@ static void stats_facade_probe(void) {
     assert(r4driver_memory_buffer_stats(&memory, &stats) == 1 && stats.size == 56 && stats.device_bytes == 0);
 }
 int main(void) {
+    capture_facade_probe();
     stats_facade_probe();
     cursor_facade_probe();
     gfx_facade_probe();

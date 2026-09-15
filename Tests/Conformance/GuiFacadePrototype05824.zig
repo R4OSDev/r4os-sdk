@@ -43,6 +43,7 @@ fn gridReadProbe(fence: *const r4os.abi.GfxFence, output: *r4os.abi.GfxRenderGri
     output.* = .{ .count = 1 }; output.grids[0] = .{ .enabled = 1, .scale = 180, .rotation = 3 }; return 1;
 }
 fn gridFacadeProbe() !void {
+    try captureFacadeProbe();
     try colorFacadeProbe();
     const a = r4os.abi; const t = std.testing;
     var tables = makeTables(true);
@@ -77,6 +78,41 @@ fn gridFacadeProbe() !void {
     try t.expect(driver.supportsRenderGridList());
     try t.expectEqual(@as(i32, 1), driver.readRenderGridList(&result.fence, &list));
     try t.expect(list.count == 1 and list.grids[0].rotation == 3 and list.grids[0].scale == 180);
+}
+
+fn captureAcquireProbe(expected: u32, info: *r4os.abi.RemoteFrameInfo, lease: *r4os.abi.RemoteFrameLease) callconv(.c) i32 {
+    std.debug.assert(expected == 73);
+    info.* = .{ .revision = expected, .width = 2, .height = 1, .frame_pixels = 2 };
+    lease.* = .{ .id = 0x100000003, .epoch = 0x200000009, .capacity_pixels = 2 };
+    return 0;
+}
+fn captureReleaseProbe(lease: *const r4os.abi.RemoteFrameLease) callconv(.c) i32 {
+    std.debug.assert(lease.id == 0x100000003 and lease.epoch == 0x200000009); return 0;
+}
+fn captureResetProbe() callconv(.c) i32 { return 0; }
+fn captureStatsProbe(out: *r4os.abi.RemoteFrameCaptureStats) callconv(.c) i32 { out.* = .{ .snapshot_copy_bytes = 0x300000007, .leases = 2 }; return 0; }
+fn captureFacadeProbe() !void {
+    const a = r4os.abi; const t = std.testing;
+    var tables = makeTables(true);
+    var imports: [3]a.R4XStartImport = undefined; var raw: a.R4XStartContext = undefined;
+    var app = try makeApp(&tables, &imports, &raw);
+    const desk = app.desktop().?;
+    const direct: r4os.r4xstart.R4Desk = .{ .raw = &raw, .table = &tables[1] };
+    tables[1].remote_frame_snapshot_acquire = @intFromPtr(&captureAcquireProbe);
+    tables[1].remote_frame_snapshot_release = @intFromPtr(&captureReleaseProbe);
+    tables[1].remote_frame_source_reset = @intFromPtr(&captureResetProbe);
+    tables[1].remote_frame_capture_stats = @intFromPtr(&captureStatsProbe);
+    tables[1].size = 496;
+    var info: a.RemoteFrameInfo = .{ .revision = 17 }; var lease: a.RemoteFrameLease = .{ .id = 19 };
+    try t.expect(desk.remoteFrameSnapshotAcquire(73, &info, &lease) < 0 and info.revision == 17 and lease.id == 19);
+    try t.expect(direct.remoteFrameSnapshotRelease(&lease) < 0 and desk.remoteFrameSourceReset() < 0);
+    tables[1].size = @sizeOf(a.R4XStartR4Desk);
+    try t.expect(desk.remoteFrameSnapshotAcquire(73, &info, &lease) == 0 and info.revision == 73 and lease.capacity_pixels == 2);
+    try t.expect(direct.remoteFrameSnapshotRelease(&lease) == 0 and desk.remoteFrameSourceReset() == 0);
+    try t.expect(direct.remoteFrameSnapshotAcquire(73, &info, &lease) == 0 and desk.remoteFrameSnapshotRelease(&lease) == 0);
+    var stats: a.RemoteFrameCaptureStats = .{};
+    try t.expect(desk.remoteFrameCaptureStats(&stats) == 0 and stats.snapshot_copy_bytes == 0x300000007);
+    try t.expect(direct.remoteFrameCaptureStats(&stats) == 0 and direct.remoteFrameSourceReset() == 0);
 }
 fn colorSubmitProbe(queue: *const r4os.abi.GfxQueueHandle, request: *const r4os.abi.GfxSubmission,
     list: *const r4os.abi.GfxRenderColorList, output: *r4os.abi.GfxFenceStatus) callconv(.c) i32 {

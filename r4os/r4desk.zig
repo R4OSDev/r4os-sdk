@@ -38,6 +38,12 @@ pub const Context = struct {
         self.base.mouseState(out);
     }
     pub fn mouseMotion(self: *const Context, out: *abi.MouseMotion) i32 { return self.base.mouseMotion(out); }
+    pub fn remoteFrameSnapshotAcquire(self: *const Context, expected: u32, info: *abi.RemoteFrameInfo, lease: *abi.RemoteFrameLease) i32 {
+        return self.base.remoteFrameSnapshotAcquire(expected, info, lease);
+    }
+    pub fn remoteFrameSnapshotRelease(self: *const Context, lease: *const abi.RemoteFrameLease) i32 { return self.base.remoteFrameSnapshotRelease(lease); }
+    pub fn remoteFrameSourceReset(self: *const Context) i32 { return self.base.remoteFrameSourceReset(); }
+    pub fn remoteFrameCaptureStats(self: *const Context, out: *abi.RemoteFrameCaptureStats) i32 { return self.base.remoteFrameCaptureStats(out); }
 
     pub fn mouseShow(self: *const Context) void {
         self.base.mouseShow();

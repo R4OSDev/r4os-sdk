@@ -1084,6 +1084,27 @@ pub const R4Desk = struct {
         return self.hasFn("remote_frame_map");
     }
 
+    pub fn remoteFrameSnapshotAcquire(self: *const R4Desk, expected: u32, info: *abi.RemoteFrameInfo, lease: *abi.RemoteFrameLease) i32 {
+        if (!self.hasFn("remote_frame_snapshot_acquire")) return abi.remote_frame_error_unsupported;
+        const function: abi.R4DeskFns.remote_frame_snapshot_acquire = @ptrFromInt(self.table.remote_frame_snapshot_acquire);
+        return function(expected, info, lease);
+    }
+    pub fn remoteFrameSnapshotRelease(self: *const R4Desk, lease: *const abi.RemoteFrameLease) i32 {
+        if (!self.hasFn("remote_frame_snapshot_release")) return abi.remote_frame_error_unsupported;
+        const function: abi.R4DeskFns.remote_frame_snapshot_release = @ptrFromInt(self.table.remote_frame_snapshot_release);
+        return function(lease);
+    }
+    pub fn remoteFrameSourceReset(self: *const R4Desk) i32 {
+        if (!self.hasFn("remote_frame_source_reset")) return abi.remote_frame_error_unsupported;
+        const function: abi.R4DeskFns.remote_frame_source_reset = @ptrFromInt(self.table.remote_frame_source_reset);
+        return function();
+    }
+    pub fn remoteFrameCaptureStats(self: *const R4Desk, out: *abi.RemoteFrameCaptureStats) i32 {
+        if (!self.hasFn("remote_frame_capture_stats")) return abi.remote_frame_error_unsupported;
+        const function: abi.R4DeskFns.remote_frame_capture_stats = @ptrFromInt(self.table.remote_frame_capture_stats);
+        return function(out);
+    }
+
     pub fn remoteFrameMap(self: *const R4Desk, out: *abi.RemoteFrameMapInfo) i32 {
         if (!self.hasFn("remote_frame_map")) return abi.remote_frame_error_unsupported;
         const map_fn: *const fn (*abi.RemoteFrameMapInfo) callconv(.c) i32 = @ptrFromInt(self.table.remote_frame_map);

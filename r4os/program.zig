@@ -1953,6 +1953,23 @@ pub const Context = struct {
         return self.hasDeskFn("remote_frame_map");
     }
 
+    pub fn remoteFrameSnapshotAcquire(self: *const Context, expected: u32, info: *abi.RemoteFrameInfo, lease: *abi.RemoteFrameLease) i32 {
+        const function = self.deskFn("remote_frame_snapshot_acquire") orelse return abi.remote_frame_error_unsupported;
+        return function(expected, info, lease);
+    }
+    pub fn remoteFrameSnapshotRelease(self: *const Context, lease: *const abi.RemoteFrameLease) i32 {
+        const function = self.deskFn("remote_frame_snapshot_release") orelse return abi.remote_frame_error_unsupported;
+        return function(lease);
+    }
+    pub fn remoteFrameSourceReset(self: *const Context) i32 {
+        const function = self.deskFn("remote_frame_source_reset") orelse return abi.remote_frame_error_unsupported;
+        return function();
+    }
+    pub fn remoteFrameCaptureStats(self: *const Context, out: *abi.RemoteFrameCaptureStats) i32 {
+        const function = self.deskFn("remote_frame_capture_stats") orelse return abi.remote_frame_error_unsupported;
+        return function(out);
+    }
+
     pub fn remoteFrameMap(self: *const Context, out: *abi.RemoteFrameMapInfo) i32 {
         const table_fn = self.deskFn("remote_frame_map") orelse return abi.remote_frame_error_unsupported;
         return table_fn(out);

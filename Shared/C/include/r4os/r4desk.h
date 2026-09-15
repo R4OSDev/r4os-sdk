@@ -51,6 +51,26 @@ static inline uint32_t r4desk_read_key_codepoint(R4Desk *desk) {
     return legacy_fn();
 }
 
+static inline int32_t r4desk_remote_frame_snapshot_acquire(const R4Desk *desk, uint32_t expected, R4RemoteFrameInfo *info, R4RemoteFrameLease *lease) {
+    if (!desk || !desk->table || desk->table->size < offsetof(R4XStartR4Desk, remote_frame_snapshot_acquire) + sizeof(uintptr_t) || !desk->table->remote_frame_snapshot_acquire) return R4OS_ERR_NO_FN;
+    if (!info || !lease) return R4OS_ERROR_INVALID;
+    return ((R4DeskRemoteFrameSnapshotAcquireFn)(uintptr_t)desk->table->remote_frame_snapshot_acquire)(expected, info, lease);
+}
+static inline int32_t r4desk_remote_frame_snapshot_release(const R4Desk *desk, const R4RemoteFrameLease *lease) {
+    if (!desk || !desk->table || desk->table->size < offsetof(R4XStartR4Desk, remote_frame_snapshot_release) + sizeof(uintptr_t) || !desk->table->remote_frame_snapshot_release) return R4OS_ERR_NO_FN;
+    if (!lease) return R4OS_ERROR_INVALID;
+    return ((R4DeskRemoteFrameSnapshotReleaseFn)(uintptr_t)desk->table->remote_frame_snapshot_release)(lease);
+}
+static inline int32_t r4desk_remote_frame_source_reset(const R4Desk *desk) {
+    if (!desk || !desk->table || desk->table->size < offsetof(R4XStartR4Desk, remote_frame_source_reset) + sizeof(uintptr_t) || !desk->table->remote_frame_source_reset) return R4OS_ERR_NO_FN;
+    return ((R4DeskRemoteFrameSourceResetFn)(uintptr_t)desk->table->remote_frame_source_reset)();
+}
+static inline int32_t r4desk_remote_frame_capture_stats(const R4Desk *desk, R4RemoteFrameCaptureStats *output) {
+    if (!desk || !desk->table || desk->table->size < offsetof(R4XStartR4Desk, remote_frame_capture_stats) + sizeof(uintptr_t) || !desk->table->remote_frame_capture_stats) return R4OS_ERR_NO_FN;
+    if (!output) return R4OS_ERROR_INVALID;
+    return ((R4DeskRemoteFrameCaptureStatsFn)(uintptr_t)desk->table->remote_frame_capture_stats)(output);
+}
+
 static inline int32_t r4desk_console_input_wait(R4Desk *desk, uint64_t last_generation, uint64_t timeout_ticks, uint64_t *out_generation) {
     if (out_generation == 0) return R4OS_CONSOLE_INPUT_WAIT_ERROR_INVALID;
     *out_generation = last_generation;
