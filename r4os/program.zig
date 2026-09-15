@@ -1088,6 +1088,16 @@ pub const Context = struct {
         return function(handle);
     }
 
+    pub fn programLocalGet(self: *const Context, key: u64, out_value: *u64) i32 {
+        const callback = self.sysFn("program_local_get") orelse return self.unavailable("sys");
+        return callback(key, out_value);
+    }
+
+    pub fn programLocalPublish(self: *const Context, key: u64, value: u64, out_value: *u64) i32 {
+        const callback = self.sysFn("program_local_publish") orelse return self.unavailable("sys");
+        return callback(key, value, out_value);
+    }
+
     pub fn threadStatus(self: *const Context, thread_id: u32, out: *abi.ProgramThreadInfo) i32 {
         const table_fn = self.sysFn("thread_status") orelse return self.unavailable("sys");
         return table_fn(thread_id, out);

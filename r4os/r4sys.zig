@@ -1005,6 +1005,14 @@ pub const Context = struct {
         return self.base.notificationClose(handle);
     }
 
+    pub fn programLocalGet(self: *const Context, key: u64, out_value: *u64) i32 {
+        return self.base.programLocalGet(key, out_value);
+    }
+
+    pub fn programLocalPublish(self: *const Context, key: u64, value: u64, out_value: *u64) i32 {
+        return self.base.programLocalPublish(key, value, out_value);
+    }
+
     pub fn threadStatus(self: *const Context, thread_id: u32, out: *abi.ProgramThreadInfo) i32 {
         return self.base.threadStatus(thread_id, out);
     }

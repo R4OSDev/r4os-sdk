@@ -86,6 +86,7 @@ const DirectCacheEntry = struct {
 };
 
 const State = struct {
+    allocator_lock: u32 = 0,
     small_regions: [max_small_regions]SmallRegion = .{SmallRegion{}} ** max_small_regions,
     direct_cache: [direct_cache_class_count]DirectCacheEntry = .{DirectCacheEntry{}} ** direct_cache_class_count,
     direct_active: u32 = 0,
@@ -164,14 +165,70 @@ const DirectActivation = struct {
 };
 
 var state: State = .{};
-var allocator_lock: u32 = 0;
 
-const vtable = std.mem.Allocator.VTable{
-    .alloc = allocatorAlloc,
-    .resize = allocatorResize,
-    .remap = allocatorRemap,
-    .free = allocatorFree,
+const vtable = AllocatorContext(false).vtable;
+
+/// Caller-owned VM heap for shared runtime libraries. Keep this object at a
+/// stable address until every allocation and concurrent caller has retired.
+/// The existing per-R4X default below remains independent of explicit heaps.
+pub const Heap = struct {
+    api: *const abi.R4XStartR4Sys,
+    storage: State = .{},
+
+    pub fn allocator(self: *Heap) std.mem.Allocator {
+        return .{ .ptr = self, .vtable = &AllocatorContext(true).vtable };
+    }
+    pub fn stats(self: *Heap) Stats {
+        return stateStats(&self.storage);
+    }
+    pub fn trim(self: *Heap) void {
+        stateTrim(&self.storage, self.api);
+    }
 };
+
+fn AllocatorContext(comptime explicit: bool) type {
+    return struct {
+        const vtable: std.mem.Allocator.VTable = .{
+            .alloc = alloc,
+            .resize = resize,
+            .remap = remap,
+            .free = free,
+        };
+        fn storage(ptr: *anyopaque) *State {
+            if (explicit) {
+                const value: *Heap = @ptrCast(@alignCast(ptr));
+                return &value.storage;
+            }
+            return &state;
+        }
+        fn api(ptr: *anyopaque) *anyopaque {
+            if (explicit) {
+                const value: *Heap = @ptrCast(@alignCast(ptr));
+                return @constCast(value.api);
+            }
+            return ptr;
+        }
+        fn alloc(ptr: *anyopaque, len: usize, alignment: Alignment, ret: usize) ?[*]u8 {
+            return allocatorAlloc(storage(ptr), api(ptr), len, alignment, ret);
+        }
+        fn resize(ptr: *anyopaque, memory: []u8, alignment: Alignment, len: usize, ret: usize) bool {
+            return allocatorResize(storage(ptr), api(ptr), memory, alignment, len, ret);
+        }
+        fn remap(ptr: *anyopaque, memory: []u8, alignment: Alignment, len: usize, ret: usize) ?[*]u8 {
+            return allocatorRemap(storage(ptr), api(ptr), memory, alignment, len, ret);
+        }
+        fn free(ptr: *anyopaque, memory: []u8, alignment: Alignment, ret: usize) void {
+            allocatorFree(storage(ptr), api(ptr), memory, alignment, ret);
+        }
+    };
+}
+
+pub fn stats() Stats {
+    return stateStats(&state);
+}
+pub fn trim(api: *const abi.R4XStartR4Sys) void {
+    stateTrim(&state, api);
+}
 
 // 0.56.41 (B2): der Allokator laeuft ueber die R4SYS-Gruppentabelle
 // (vm_reserve/commit/decommit/release seit v5 enthalten); der
@@ -180,41 +237,41 @@ pub fn allocator(api: *const abi.R4XStartR4Sys) std.mem.Allocator {
     return .{ .ptr = @constCast(api), .vtable = &vtable };
 }
 
-pub fn stats() Stats {
-    acquireAllocatorLock(null);
-    defer releaseAllocatorLock();
+fn stateStats(heap_state: *State) Stats {
+    acquireAllocatorLock(heap_state, null);
+    defer releaseAllocatorLock(heap_state);
     var out: Stats = .{
-        .direct_active = state.direct_active,
-        .direct_cached = state.direct_cached,
-        .active_allocations = state.direct_active,
-        .allocations = state.direct_allocations,
-        .frees = state.direct_frees,
-        .active_bytes = state.direct_active_bytes,
-        .peak_active_bytes = state.direct_peak_active_bytes,
-        .reserved_bytes = state.direct_reserved_bytes,
-        .committed_bytes = state.direct_reserved_bytes,
-        .peak_committed_bytes = state.peak_committed_bytes,
-        .cached_bytes = state.direct_cached_bytes,
-        .allocation_errors = state.allocation_errors,
-        .allocation_search_steps = state.allocation_search_steps,
-        .class_search_steps = state.class_search_steps,
-        .backward_search_steps = state.backward_search_steps,
-        .end_search_steps = state.end_search_steps,
-        .splits = state.splits,
-        .coalesces = state.coalesces,
-        .corruptions = state.corruptions,
-        .direct_cache_hits = state.direct_cache_hits,
-        .direct_cache_misses = state.direct_cache_misses,
-        .direct_cache_evictions = state.direct_cache_evictions,
-        .trim_calls = state.trim_calls,
-        .trim_reclaimed_bytes = state.trim_reclaimed_bytes,
-        .vm_reserve_calls = state.vm_reserve_calls,
-        .vm_commit_calls = state.vm_commit_calls,
-        .vm_decommit_calls = state.vm_decommit_calls,
-        .vm_decommit_bytes = state.vm_decommit_bytes,
-        .vm_release_calls = state.vm_release_calls,
+        .direct_active = heap_state.direct_active,
+        .direct_cached = heap_state.direct_cached,
+        .active_allocations = heap_state.direct_active,
+        .allocations = heap_state.direct_allocations,
+        .frees = heap_state.direct_frees,
+        .active_bytes = heap_state.direct_active_bytes,
+        .peak_active_bytes = heap_state.direct_peak_active_bytes,
+        .reserved_bytes = heap_state.direct_reserved_bytes,
+        .committed_bytes = heap_state.direct_reserved_bytes,
+        .peak_committed_bytes = heap_state.peak_committed_bytes,
+        .cached_bytes = heap_state.direct_cached_bytes,
+        .allocation_errors = heap_state.allocation_errors,
+        .allocation_search_steps = heap_state.allocation_search_steps,
+        .class_search_steps = heap_state.class_search_steps,
+        .backward_search_steps = heap_state.backward_search_steps,
+        .end_search_steps = heap_state.end_search_steps,
+        .splits = heap_state.splits,
+        .coalesces = heap_state.coalesces,
+        .corruptions = heap_state.corruptions,
+        .direct_cache_hits = heap_state.direct_cache_hits,
+        .direct_cache_misses = heap_state.direct_cache_misses,
+        .direct_cache_evictions = heap_state.direct_cache_evictions,
+        .trim_calls = heap_state.trim_calls,
+        .trim_reclaimed_bytes = heap_state.trim_reclaimed_bytes,
+        .vm_reserve_calls = heap_state.vm_reserve_calls,
+        .vm_commit_calls = heap_state.vm_commit_calls,
+        .vm_decommit_calls = heap_state.vm_decommit_calls,
+        .vm_decommit_bytes = heap_state.vm_decommit_bytes,
+        .vm_release_calls = heap_state.vm_release_calls,
     };
-    for (state.small_regions) |region| {
+    for (heap_state.small_regions) |region| {
         if (!region.used) continue;
         out.small_regions += 1;
         out.active_allocations += region.active_allocations;
@@ -232,156 +289,156 @@ pub fn stats() Stats {
 /// Releases all reusable direct regions and reduces free small-region tails
 /// to the one-page metadata minimum. Allocation failures invoke the same
 /// bounded reclaim path before one retry.
-pub fn trim(api: *const abi.R4XStartR4Sys) void {
-    acquireAllocatorLock(api);
-    defer releaseAllocatorLock();
+fn stateTrim(heap_state: *State, api: *const abi.R4XStartR4Sys) void {
+    acquireAllocatorLock(heap_state, api);
+    defer releaseAllocatorLock(heap_state);
     if (!supportsVmApi(api)) return;
-    _ = trimLocked(api, null);
+    _ = trimLocked(heap_state, api, null);
 }
 
-fn allocatorAlloc(ptr: *anyopaque, len: usize, alignment: Alignment, ret_addr: usize) ?[*]u8 {
+fn allocatorAlloc(heap_state: *State, ptr: *anyopaque, len: usize, alignment: Alignment, ret_addr: usize) ?[*]u8 {
     _ = ret_addr;
     const api = apiFromPtr(ptr);
-    acquireAllocatorLock(api);
-    defer releaseAllocatorLock();
-    if (len == 0 or !supportsVmApi(api)) return failAlloc();
-    const byte_alignment = normalizeAlignment(alignment.toByteUnits()) orelse return failAlloc();
-    if (len >= large_threshold or byte_alignment > page_size) return allocDirect(api, len, byte_alignment) orelse failAlloc();
-    return allocSmall(api, len, byte_alignment) orelse failAlloc();
+    acquireAllocatorLock(heap_state, api);
+    defer releaseAllocatorLock(heap_state);
+    if (len == 0 or !supportsVmApi(api)) return failAlloc(heap_state);
+    const byte_alignment = normalizeAlignment(alignment.toByteUnits()) orelse return failAlloc(heap_state);
+    if (len >= large_threshold or byte_alignment > page_size) return allocDirect(heap_state, api, len, byte_alignment) orelse failAlloc(heap_state);
+    return allocSmall(heap_state, api, len, byte_alignment) orelse failAlloc(heap_state);
 }
 
-fn allocatorResize(ptr: *anyopaque, memory: []u8, alignment: Alignment, new_len: usize, ret_addr: usize) bool {
+fn allocatorResize(heap_state: *State, ptr: *anyopaque, memory: []u8, alignment: Alignment, new_len: usize, ret_addr: usize) bool {
     _ = ret_addr;
     if (new_len == memory.len) return true;
     if (memory.len == 0) return new_len == 0;
     const api = apiFromPtr(ptr);
-    acquireAllocatorLock(api);
-    defer releaseAllocatorLock();
+    acquireAllocatorLock(heap_state, api);
+    defer releaseAllocatorLock(heap_state);
     if (!supportsVmApi(api)) return false;
     const byte_alignment = normalizeAlignment(alignment.toByteUnits()) orelse return false;
-    const header = headerFromUser(memory.ptr, byte_alignment) orelse return false;
+    const header = headerFromUser(heap_state, memory.ptr, byte_alignment) orelse return false;
     if (!isUsed(header)) return false;
     if (new_len <= memory.len) {
-        shrinkBlock(header, memory.len, new_len);
+        shrinkBlock(heap_state, header, memory.len, new_len);
         return true;
     }
     if (isDirect(header)) return false;
-    return growSmallBlock(api, header, byte_alignment, memory.len, new_len);
+    return growSmallBlock(heap_state, api, header, byte_alignment, memory.len, new_len);
 }
 
-fn allocatorRemap(ptr: *anyopaque, memory: []u8, alignment: Alignment, new_len: usize, ret_addr: usize) ?[*]u8 {
+fn allocatorRemap(heap_state: *State, ptr: *anyopaque, memory: []u8, alignment: Alignment, new_len: usize, ret_addr: usize) ?[*]u8 {
     if (new_len == 0) return null;
-    if (allocatorResize(ptr, memory, alignment, new_len, ret_addr)) return memory.ptr;
-    const next = allocatorAlloc(ptr, new_len, alignment, ret_addr) orelse return null;
+    if (allocatorResize(heap_state, ptr, memory, alignment, new_len, ret_addr)) return memory.ptr;
+    const next = allocatorAlloc(heap_state, ptr, new_len, alignment, ret_addr) orelse return null;
     @memcpy(next[0..@min(memory.len, new_len)], memory[0..@min(memory.len, new_len)]);
-    allocatorFree(ptr, memory, alignment, ret_addr);
+    allocatorFree(heap_state, ptr, memory, alignment, ret_addr);
     return next;
 }
 
-fn allocatorFree(ptr: *anyopaque, memory: []u8, alignment: Alignment, ret_addr: usize) void {
+fn allocatorFree(heap_state: *State, ptr: *anyopaque, memory: []u8, alignment: Alignment, ret_addr: usize) void {
     _ = ret_addr;
     if (memory.len == 0) return;
     const api = apiFromPtr(ptr);
-    acquireAllocatorLock(api);
-    defer releaseAllocatorLock();
+    acquireAllocatorLock(heap_state, api);
+    defer releaseAllocatorLock(heap_state);
     const byte_alignment = normalizeAlignment(alignment.toByteUnits()) orelse return;
-    const header = headerFromUser(memory.ptr, byte_alignment) orelse return;
+    const header = headerFromUser(heap_state, memory.ptr, byte_alignment) orelse return;
     if (!isUsed(header)) return;
     if (isDirect(header)) {
         const region_id = header.region_id;
         const block_size = header.block_size;
         const requested_size = header.requested_size;
         const effective_alignment = @max(byte_alignment, page_size);
-        if (cacheDirectRegion(header, effective_alignment)) {
-            accountDirectFree(requested_size);
+        if (cacheDirectRegion(heap_state, header, effective_alignment)) {
+            accountDirectFree(heap_state, requested_size);
             return;
         }
-        if (vmRelease(api, region_id) != abi.vm_ok) return;
-        accountDirectFree(requested_size);
-        if (state.direct_reserved_bytes >= block_size) {
-            state.direct_reserved_bytes -= block_size;
+        if (vmRelease(heap_state, api, region_id) != abi.vm_ok) return;
+        accountDirectFree(heap_state, requested_size);
+        if (heap_state.direct_reserved_bytes >= block_size) {
+            heap_state.direct_reserved_bytes -= block_size;
         } else {
-            state.direct_reserved_bytes = 0;
+            heap_state.direct_reserved_bytes = 0;
         }
         return;
     }
-    const region_index = findSmallRegion(header.region_id) orelse return;
-    freeSmallBlock(api, region_index, header, header.requested_size);
+    const region_index = findSmallRegion(heap_state, header.region_id) orelse return;
+    freeSmallBlock(heap_state, api, region_index, header, header.requested_size);
 }
 
-fn allocSmall(api: *const abi.R4XStartR4Sys, len: usize, alignment: usize) ?[*]u8 {
-    if (tryAllocExistingSmall(len, alignment)) |ptr| return ptr;
+fn allocSmall(heap_state: *State, api: *const abi.R4XStartR4Sys, len: usize, alignment: usize) ?[*]u8 {
+    if (tryAllocExistingSmall(heap_state, len, alignment)) |ptr| return ptr;
 
     const needed = conservativeBlockNeed(len, alignment) orelse return null;
     var i: usize = 0;
-    while (i < state.small_regions.len) : (i += 1) {
-        if (!state.small_regions[i].used) continue;
-        if (growSmallRegion(api, i, needed)) {
-            if (tryAllocFromRegion(i, len, alignment)) |ptr| return ptr;
+    while (i < heap_state.small_regions.len) : (i += 1) {
+        if (!heap_state.small_regions[i].used) continue;
+        if (growSmallRegion(heap_state, api, i, needed)) {
+            if (tryAllocFromRegion(heap_state, i, len, alignment)) |ptr| return ptr;
         }
     }
 
-    const region_index = createSmallRegion(api) orelse return null;
-    if (tryAllocFromRegion(region_index, len, alignment)) |ptr| return ptr;
+    const region_index = createSmallRegion(heap_state, api) orelse return null;
+    if (tryAllocFromRegion(heap_state, region_index, len, alignment)) |ptr| return ptr;
     // 0.56.34f: Eine frische Region committet nur EINE Seite; ohne dieses
     // Nachwachsen scheiterte JEDE Erstallokation groesser ~4KB dauerhaft
     // (Befund: REG "scratch-memory" - hive_buffer 32KB ist REGs erste
     // Allokation; alle spaeteren Groessen gingen nur, wenn vorher eine
     // kleine Allokation die Region angelegt hatte).
-    if (growSmallRegion(api, region_index, needed)) {
-        if (tryAllocFromRegion(region_index, len, alignment)) |ptr| return ptr;
+    if (growSmallRegion(heap_state, api, region_index, needed)) {
+        if (tryAllocFromRegion(heap_state, region_index, len, alignment)) |ptr| return ptr;
     }
     return null;
 }
 
-fn tryAllocExistingSmall(len: usize, alignment: usize) ?[*]u8 {
+fn tryAllocExistingSmall(heap_state: *State, len: usize, alignment: usize) ?[*]u8 {
     var i: usize = 0;
-    while (i < state.small_regions.len) : (i += 1) {
-        if (!state.small_regions[i].used) continue;
-        if (tryAllocFromRegion(i, len, alignment)) |ptr| return ptr;
+    while (i < heap_state.small_regions.len) : (i += 1) {
+        if (!heap_state.small_regions[i].used) continue;
+        if (tryAllocFromRegion(heap_state, i, len, alignment)) |ptr| return ptr;
     }
     return null;
 }
 
-fn tryAllocFromRegion(region_index: usize, len: usize, alignment: usize) ?[*]u8 {
-    const region = &state.small_regions[region_index];
+fn tryAllocFromRegion(heap_state: *State, region_index: usize, len: usize, alignment: usize) ?[*]u8 {
+    const region = &heap_state.small_regions[region_index];
     const needed = conservativeBlockNeed(len, alignment) orelse return null;
     var class_index = sizeClass(needed);
     while (class_index < size_class_count) : (class_index += 1) {
-        state.class_search_steps +%= 1;
+        heap_state.class_search_steps +%= 1;
         var addr = region.free_heads[class_index];
         var previous: usize = 0;
         var visits: usize = 0;
         const visit_limit = region.committed_size / min_free_block + 1;
         while (addr != 0 and visits < visit_limit) : (visits += 1) {
-            state.allocation_search_steps +%= 1;
-            const header = validatedFreeNode(region.*, addr, class_index, previous) orelse return null;
+            heap_state.allocation_search_steps +%= 1;
+            const header = validatedFreeNode(heap_state, region.*, addr, class_index, previous) orelse return null;
             const next = freeLinks(header).next;
             if (layoutInBlock(addr, header.block_size, len, alignment)) |layout| {
-                if (!removeFree(region, header)) return null;
-                allocateFromFreeBlock(region, header, addr, layout, len);
+                if (!removeFree(heap_state, region, header)) return null;
+                allocateFromFreeBlock(heap_state, region, header, addr, layout, len);
                 return @ptrFromInt(layout.user_addr);
             }
             previous = addr;
             addr = next;
         }
         if (addr != 0) {
-            recordCorruption();
+            recordCorruption(heap_state);
             return null;
         }
     }
     return null;
 }
 
-fn allocateFromFreeBlock(region: *SmallRegion, header: *BlockHeader, header_addr: usize, layout: AllocationLayout, len: usize) void {
+fn allocateFromFreeBlock(heap_state: *State, region: *SmallRegion, header: *BlockHeader, header_addr: usize, layout: AllocationLayout, len: usize) void {
     const region_id = header.region_id;
     if (layout.remaining_size >= min_free_block) {
-        state.splits +%= 1;
+        heap_state.splits +%= 1;
         const next_addr = header_addr + layout.allocated_size;
         header.block_size = layout.allocated_size;
         writeFooter(header);
         const next = initFreeBlock(region_id, next_addr, layout.remaining_size);
-        _ = insertFree(region, next);
+        _ = insertFree(heap_state, region, next);
     }
     header.magic = block_magic;
     header.flags = block_flag_used;
@@ -396,53 +453,53 @@ fn allocateFromFreeBlock(region: *SmallRegion, header: *BlockHeader, header_addr
     if (region.active_bytes > region.peak_active_bytes) region.peak_active_bytes = region.active_bytes;
 }
 
-fn allocDirect(api: *const abi.R4XStartR4Sys, len: usize, alignment: usize) ?[*]u8 {
+fn allocDirect(heap_state: *State, api: *const abi.R4XStartR4Sys, len: usize, alignment: usize) ?[*]u8 {
     const effective_alignment = @max(alignment, page_size);
     const need = conservativeBlockNeed(len, effective_alignment) orelse return null;
     const reserve_size = alignForward(need, page_size) orelse return null;
     if (len >= large_threshold) {
-        if (takeCachedDirect(reserve_size, effective_alignment, len)) |cached| {
-            return activateDirect(cached.entry.region_id, cached.entry.base, cached.entry.reserve_size, len, cached.layout);
+        if (takeCachedDirect(heap_state, reserve_size, effective_alignment, len)) |cached| {
+            return activateDirect(heap_state, cached.entry.region_id, cached.entry.base, cached.entry.reserve_size, len, cached.layout);
         }
     }
-    if (len >= large_threshold and directCacheClass(reserve_size) != null) state.direct_cache_misses +%= 1;
+    if (len >= large_threshold and directCacheClass(reserve_size) != null) heap_state.direct_cache_misses +%= 1;
 
     const reserve_alignment: u64 = @intCast(effective_alignment);
     var retried = false;
     while (true) {
         var info: abi.ProgramVmRegionInfo = .{};
-        if (vmReserve(api, reserve_size, reserve_alignment, abi.vm_region_flags_default, &info) != abi.vm_ok) {
-            if (!retried and trimDirectCachesLocked(api) > 0) {
+        if (vmReserve(heap_state, api, reserve_size, reserve_alignment, abi.vm_region_flags_default, &info) != abi.vm_ok) {
+            if (!retried and trimDirectCachesLocked(heap_state, api) > 0) {
                 retried = true;
                 continue;
             }
             return null;
         }
         if (!validReservedRegion(info, reserve_size, effective_alignment)) {
-            _ = vmRelease(api, info.id);
+            _ = vmRelease(heap_state, api, info.id);
             return null;
         }
         const base: usize = @intCast(info.base);
         const layout = layoutInBlock(base, reserve_size, len, effective_alignment) orelse {
-            recordCorruption();
-            _ = vmRelease(api, info.id);
+            recordCorruption(heap_state);
+            _ = vmRelease(heap_state, api, info.id);
             return null;
         };
-        if (vmCommit(api, info.id, 0, reserve_size, 0) != abi.vm_ok) {
-            _ = vmRelease(api, info.id);
-            if (!retried and trimLocked(api, null) > 0) {
+        if (vmCommit(heap_state, api, info.id, 0, reserve_size, 0) != abi.vm_ok) {
+            _ = vmRelease(heap_state, api, info.id);
+            if (!retried and trimLocked(heap_state, api, null) > 0) {
                 retried = true;
                 continue;
             }
             return null;
         }
-        state.direct_reserved_bytes +%= reserve_size;
-        updatePeakCommitted();
-        return activateDirect(info.id, base, reserve_size, len, layout);
+        heap_state.direct_reserved_bytes +%= reserve_size;
+        updatePeakCommitted(heap_state);
+        return activateDirect(heap_state, info.id, base, reserve_size, len, layout);
     }
 }
 
-fn activateDirect(region_id: u32, base: usize, reserve_size: usize, len: usize, layout: AllocationLayout) [*]u8 {
+fn activateDirect(heap_state: *State, region_id: u32, base: usize, reserve_size: usize, len: usize, layout: AllocationLayout) [*]u8 {
     const header = headerAt(base);
     header.* = .{
         .flags = block_flag_used | block_flag_direct,
@@ -453,20 +510,20 @@ fn activateDirect(region_id: u32, base: usize, reserve_size: usize, len: usize, 
     };
     writeFooter(header);
     writeBackref(layout.backref_addr, base);
-    state.direct_active += 1;
-    state.direct_allocations +%= 1;
-    state.direct_active_bytes +%= len;
-    if (state.direct_active_bytes > state.direct_peak_active_bytes) state.direct_peak_active_bytes = state.direct_active_bytes;
+    heap_state.direct_active += 1;
+    heap_state.direct_allocations +%= 1;
+    heap_state.direct_active_bytes +%= len;
+    if (heap_state.direct_active_bytes > heap_state.direct_peak_active_bytes) heap_state.direct_peak_active_bytes = heap_state.direct_active_bytes;
     return @ptrFromInt(layout.user_addr);
 }
 
-fn accountDirectFree(requested_size: usize) void {
-    if (state.direct_active > 0) state.direct_active -= 1;
-    state.direct_frees +%= 1;
-    if (state.direct_active_bytes >= requested_size) {
-        state.direct_active_bytes -= requested_size;
+fn accountDirectFree(heap_state: *State, requested_size: usize) void {
+    if (heap_state.direct_active > 0) heap_state.direct_active -= 1;
+    heap_state.direct_frees +%= 1;
+    if (heap_state.direct_active_bytes >= requested_size) {
+        heap_state.direct_active_bytes -= requested_size;
     } else {
-        state.direct_active_bytes = 0;
+        heap_state.direct_active_bytes = 0;
     }
 }
 
@@ -479,70 +536,70 @@ fn directCacheClass(reserve_size: usize) ?usize {
     return null;
 }
 
-fn takeCachedDirect(reserve_size: usize, alignment: usize, len: usize) ?DirectActivation {
+fn takeCachedDirect(heap_state: *State, reserve_size: usize, alignment: usize, len: usize) ?DirectActivation {
     const first_class = directCacheClass(reserve_size) orelse return null;
     var class_index = first_class;
     while (class_index < direct_cache_class_count) : (class_index += 1) {
-        const entry = state.direct_cache[class_index];
+        const entry = heap_state.direct_cache[class_index];
         if (!entry.used or entry.retiring or entry.reserve_size < reserve_size or entry.alignment < alignment or (entry.base & (alignment - 1)) != 0) continue;
         const layout = layoutInBlock(entry.base, entry.reserve_size, len, alignment) orelse {
-            recordCorruption();
+            recordCorruption(heap_state);
             continue;
         };
-        state.direct_cache[class_index] = .{};
-        if (state.direct_cached > 0) state.direct_cached -= 1;
-        if (state.direct_cached_bytes >= entry.reserve_size) state.direct_cached_bytes -= entry.reserve_size;
-        state.direct_cache_hits +%= 1;
+        heap_state.direct_cache[class_index] = .{};
+        if (heap_state.direct_cached > 0) heap_state.direct_cached -= 1;
+        if (heap_state.direct_cached_bytes >= entry.reserve_size) heap_state.direct_cached_bytes -= entry.reserve_size;
+        heap_state.direct_cache_hits +%= 1;
         return .{ .entry = entry, .layout = layout };
     }
     return null;
 }
 
-fn cacheDirectRegion(header: *BlockHeader, alignment: usize) bool {
+fn cacheDirectRegion(heap_state: *State, header: *BlockHeader, alignment: usize) bool {
     if (header.requested_size < large_threshold) return false;
     const class_index = directCacheClass(header.block_size) orelse return false;
-    if (state.direct_cache[class_index].used) return false;
-    if (state.direct_cached_bytes + header.block_size > direct_cache_max_bytes) return false;
+    if (heap_state.direct_cache[class_index].used) return false;
+    if (heap_state.direct_cached_bytes + header.block_size > direct_cache_max_bytes) return false;
     const base = @intFromPtr(header);
-    state.direct_cache[class_index] = .{
+    heap_state.direct_cache[class_index] = .{
         .used = true,
         .region_id = header.region_id,
         .base = base,
         .reserve_size = header.block_size,
         .alignment = alignment,
     };
-    state.direct_cached += 1;
-    state.direct_cached_bytes +%= header.block_size;
+    heap_state.direct_cached += 1;
+    heap_state.direct_cached_bytes +%= header.block_size;
     header.magic = retired_block_magic;
     return true;
 }
 
-fn createSmallRegion(api: *const abi.R4XStartR4Sys) ?usize {
-    const slot = freeSmallRegionSlot() orelse return null;
+fn createSmallRegion(heap_state: *State, api: *const abi.R4XStartR4Sys) ?usize {
+    const slot = freeSmallRegionSlot(heap_state) orelse return null;
     var retried = false;
     while (true) {
         var info: abi.ProgramVmRegionInfo = .{};
-        if (vmReserve(api, small_region_reserve, page_size, abi.vm_region_flags_default, &info) != abi.vm_ok) {
-            if (!retried and trimDirectCachesLocked(api) > 0) {
+        if (vmReserve(heap_state, api, small_region_reserve, page_size, abi.vm_region_flags_default, &info) != abi.vm_ok) {
+            if (!retried and trimDirectCachesLocked(heap_state, api) > 0) {
                 retried = true;
                 continue;
             }
             return null;
         }
         if (!validReservedRegion(info, small_region_reserve, page_size)) {
-            _ = vmRelease(api, info.id);
+            _ = vmRelease(heap_state, api, info.id);
             return null;
         }
-        if (vmCommit(api, info.id, 0, small_region_initial_commit, 0) != abi.vm_ok) {
-            _ = vmRelease(api, info.id);
-            if (!retried and trimLocked(api, null) > 0) {
+        if (vmCommit(heap_state, api, info.id, 0, small_region_initial_commit, 0) != abi.vm_ok) {
+            _ = vmRelease(heap_state, api, info.id);
+            if (!retried and trimLocked(heap_state, api, null) > 0) {
                 retried = true;
                 continue;
             }
             return null;
         }
         const base: usize = @intCast(info.base);
-        state.small_regions[slot] = .{
+        heap_state.small_regions[slot] = .{
             .used = true,
             .region_id = info.id,
             .base = base,
@@ -550,24 +607,24 @@ fn createSmallRegion(api: *const abi.R4XStartR4Sys) ?usize {
             .committed_size = small_region_initial_commit,
         };
         const header = initFreeBlock(info.id, base, small_region_initial_commit);
-        if (!insertFree(&state.small_regions[slot], header)) {
-            _ = vmRelease(api, info.id);
-            state.small_regions[slot] = .{};
+        if (!insertFree(heap_state, &heap_state.small_regions[slot], header)) {
+            _ = vmRelease(heap_state, api, info.id);
+            heap_state.small_regions[slot] = .{};
             return null;
         }
-        updatePeakCommitted();
+        updatePeakCommitted(heap_state);
         return slot;
     }
 }
 
-fn growSmallRegion(api: *const abi.R4XStartR4Sys, region_index: usize, needed: usize) bool {
-    return growSmallRegionAttempt(api, region_index, needed, true);
+fn growSmallRegion(heap_state: *State, api: *const abi.R4XStartR4Sys, region_index: usize, needed: usize) bool {
+    return growSmallRegionAttempt(heap_state, api, region_index, needed, true);
 }
 
-fn growSmallRegionAttempt(api: *const abi.R4XStartR4Sys, region_index: usize, needed: usize, allow_reclaim: bool) bool {
-    const region = &state.small_regions[region_index];
+fn growSmallRegionAttempt(heap_state: *State, api: *const abi.R4XStartR4Sys, region_index: usize, needed: usize, allow_reclaim: bool) bool {
+    const region = &heap_state.small_regions[region_index];
     if (!region.used) return false;
-    _ = finishPendingDecommit(api, region);
+    _ = finishPendingDecommit(heap_state, api, region);
     if (region.pending_decommit_len != 0 or region.committed_size >= region.reserve_size) return false;
     const wanted = @max(needed, region.next_commit_size);
     var add = alignForward(wanted, page_size) orelse return false;
@@ -575,35 +632,35 @@ fn growSmallRegionAttempt(api: *const abi.R4XStartR4Sys, region_index: usize, ne
     if (add > available) add = alignDown(available, page_size);
     if (add == 0) return false;
     const old_committed = region.committed_size;
-    const last = lastBlock(region.*) orelse return false;
+    const last = lastBlock(heap_state, region.*) orelse return false;
     const extend_last = !isUsed(last.header);
-    if (extend_last and !canRemoveFree(region.*, last.header)) return false;
-    if (vmCommit(api, region.region_id, old_committed, add, 0) != abi.vm_ok) {
-        if (allow_reclaim and trimLocked(api, region.region_id) > 0) {
-            return growSmallRegionAttempt(api, region_index, needed, false);
+    if (extend_last and !canRemoveFree(heap_state, region.*, last.header)) return false;
+    if (vmCommit(heap_state, api, region.region_id, old_committed, add, 0) != abi.vm_ok) {
+        if (allow_reclaim and trimLocked(heap_state, api, region.region_id) > 0) {
+            return growSmallRegionAttempt(heap_state, api, region_index, needed, false);
         }
         return false;
     }
     const new_block_addr = region.base + old_committed;
     if (extend_last) {
-        if (!removeFree(region, last.header)) {
-            _ = vmDecommit(api, region.region_id, old_committed, add);
+        if (!removeFree(heap_state, region, last.header)) {
+            _ = vmDecommit(heap_state, api, region.region_id, old_committed, add);
             return false;
         }
         footerFromHeader(last.header).magic = 0;
         region.committed_size = old_committed + add;
         last.header.block_size += add;
         writeFooter(last.header);
-        if (!insertFree(region, last.header)) return false;
+        if (!insertFree(heap_state, region, last.header)) return false;
         advanceCommitGrowth(region, add);
-        updatePeakCommitted();
+        updatePeakCommitted(heap_state);
         return true;
     }
     region.committed_size = old_committed + add;
     const header = initFreeBlock(region.region_id, new_block_addr, add);
-    if (!insertFree(region, header)) return false;
+    if (!insertFree(heap_state, region, header)) return false;
     advanceCommitGrowth(region, add);
-    updatePeakCommitted();
+    updatePeakCommitted(heap_state);
     return true;
 }
 
@@ -612,16 +669,16 @@ fn advanceCommitGrowth(region: *SmallRegion, committed: usize) void {
     region.next_commit_size = @max(region.next_commit_size, doubled);
 }
 
-fn freeSmallBlock(api: *const abi.R4XStartR4Sys, region_index: usize, header: *BlockHeader, old_len: usize) void {
-    const region = &state.small_regions[region_index];
+fn freeSmallBlock(heap_state: *State, api: *const abi.R4XStartR4Sys, region_index: usize, header: *BlockHeader, old_len: usize) void {
+    const region = &heap_state.small_regions[region_index];
     const header_addr = @intFromPtr(header);
-    const previous = previousBlock(region.*, header_addr) catch return;
-    const next = nextBlock(region.*, header) catch return;
+    const previous = previousBlock(heap_state, region.*, header_addr) catch return;
+    const next = nextBlock(heap_state, region.*, header) catch return;
     if (previous) |candidate| {
-        if (!isUsed(candidate) and !canRemoveFree(region.*, candidate)) return;
+        if (!isUsed(candidate) and !canRemoveFree(heap_state, region.*, candidate)) return;
     }
     if (next) |candidate| {
-        if (!isUsed(candidate) and !canRemoveFree(region.*, candidate)) return;
+        if (!isUsed(candidate) and !canRemoveFree(heap_state, region.*, candidate)) return;
     }
 
     var merged = header;
@@ -631,21 +688,21 @@ fn freeSmallBlock(api: *const abi.R4XStartR4Sys, region_index: usize, header: *B
     header.user_addr = 0;
     if (previous) |candidate| {
         if (!isUsed(candidate)) {
-            if (!removeFree(region, candidate)) return;
+            if (!removeFree(heap_state, region, candidate)) return;
             footerFromHeader(candidate).magic = 0;
             header.magic = retired_block_magic;
             merged = candidate;
             merged_size += candidate.block_size;
-            state.coalesces +%= 1;
+            heap_state.coalesces +%= 1;
         }
     }
     if (next) |candidate| {
         if (!isUsed(candidate)) {
-            if (!removeFree(region, candidate)) return;
+            if (!removeFree(heap_state, region, candidate)) return;
             footerFromHeader(merged).magic = 0;
             candidate.magic = retired_block_magic;
             merged_size += candidate.block_size;
-            state.coalesces +%= 1;
+            heap_state.coalesces +%= 1;
         }
     }
     merged.magic = block_magic;
@@ -655,7 +712,7 @@ fn freeSmallBlock(api: *const abi.R4XStartR4Sys, region_index: usize, header: *B
     merged.requested_size = 0;
     merged.user_addr = 0;
     writeFooter(merged);
-    if (!insertFree(region, merged)) return;
+    if (!insertFree(heap_state, region, merged)) return;
 
     if (region.active_allocations > 0) region.active_allocations -= 1;
     region.frees +%= 1;
@@ -664,13 +721,13 @@ fn freeSmallBlock(api: *const abi.R4XStartR4Sys, region_index: usize, header: *B
     } else {
         region.active_bytes = 0;
     }
-    _ = decommitTopFree(api, region_index, false);
+    _ = decommitTopFree(heap_state, api, region_index, false);
 }
 
-fn growSmallBlock(api: *const abi.R4XStartR4Sys, header: *BlockHeader, alignment: usize, old_len: usize, new_len: usize) bool {
+fn growSmallBlock(heap_state: *State, api: *const abi.R4XStartR4Sys, header: *BlockHeader, alignment: usize, old_len: usize, new_len: usize) bool {
     _ = alignment;
-    const region_index = findSmallRegion(header.region_id) orelse return false;
-    const region = &state.small_regions[region_index];
+    const region_index = findSmallRegion(heap_state, header.region_id) orelse return false;
+    const region = &heap_state.small_regions[region_index];
     const header_addr = @intFromPtr(header);
     const user_addr = header.user_addr;
     if (canHoldUser(header_addr, header.block_size, user_addr, new_len)) {
@@ -679,12 +736,12 @@ fn growSmallBlock(api: *const abi.R4XStartR4Sys, header: *BlockHeader, alignment
         return true;
     }
 
-    var next = (nextBlock(region.*, header) catch return false) orelse blk: {
+    var next = (nextBlock(heap_state, region.*, header) catch return false) orelse blk: {
         const required_end = requiredBlockEnd(user_addr, new_len) orelse return false;
         const committed_end = region.base + region.committed_size;
         const need = checkedSub(required_end, committed_end) orelse min_free_block;
-        if (!growSmallRegion(api, region_index, @max(need, min_free_block))) return false;
-        break :blk (nextBlock(region.*, header) catch return false) orelse return false;
+        if (!growSmallRegion(heap_state, api, region_index, @max(need, min_free_block))) return false;
+        break :blk (nextBlock(heap_state, region.*, header) catch return false) orelse return false;
     };
     if (isUsed(next)) return false;
 
@@ -693,39 +750,39 @@ fn growSmallBlock(api: *const abi.R4XStartR4Sys, header: *BlockHeader, alignment
         if (next_end != region.base + region.committed_size) return false;
         const required_end = requiredBlockEnd(user_addr, new_len) orelse return false;
         const need = checkedSub(required_end, next_end) orelse return false;
-        if (!growSmallRegion(api, region_index, need)) return false;
-        next = (nextBlock(region.*, header) catch return false) orelse return false;
+        if (!growSmallRegion(heap_state, api, region_index, need)) return false;
+        next = (nextBlock(heap_state, region.*, header) catch return false) orelse return false;
         if (isUsed(next) or !canHoldUser(header_addr, header.block_size + next.block_size, user_addr, new_len)) return false;
     }
 
-    if (!removeFree(region, next)) return false;
+    if (!removeFree(heap_state, region, next)) return false;
     footerFromHeader(header).magic = 0;
     next.magic = retired_block_magic;
     header.block_size += next.block_size;
     writeFooter(header);
-    state.coalesces +%= 1;
-    splitAfterResize(region, header, user_addr, new_len);
+    heap_state.coalesces +%= 1;
+    splitAfterResize(heap_state, region, header, user_addr, new_len);
     accountResize(region, old_len, new_len);
     header.requested_size = new_len;
     return true;
 }
 
-fn shrinkBlock(header: *BlockHeader, old_len: usize, new_len: usize) void {
+fn shrinkBlock(heap_state: *State, header: *BlockHeader, old_len: usize, new_len: usize) void {
     if (isDirect(header)) {
-        if (old_len > new_len and state.direct_active_bytes >= old_len - new_len) state.direct_active_bytes -= old_len - new_len;
+        if (old_len > new_len and heap_state.direct_active_bytes >= old_len - new_len) heap_state.direct_active_bytes -= old_len - new_len;
         header.requested_size = new_len;
         return;
     }
-    const region_index = findSmallRegion(header.region_id) orelse {
+    const region_index = findSmallRegion(heap_state, header.region_id) orelse {
         header.requested_size = new_len;
         return;
     };
-    var region = &state.small_regions[region_index];
+    var region = &heap_state.small_regions[region_index];
     if (old_len > new_len and region.active_bytes >= old_len - new_len) region.active_bytes -= old_len - new_len;
     header.requested_size = new_len;
 }
 
-fn splitAfterResize(region: *SmallRegion, header: *BlockHeader, user_addr: usize, new_len: usize) void {
+fn splitAfterResize(heap_state: *State, region: *SmallRegion, header: *BlockHeader, user_addr: usize, new_len: usize) void {
     const header_addr = @intFromPtr(header);
     const block_end = header_addr + header.block_size;
     var split_addr = requiredBlockEnd(user_addr, new_len) orelse block_end;
@@ -733,13 +790,13 @@ fn splitAfterResize(region: *SmallRegion, header: *BlockHeader, user_addr: usize
         split_addr = block_end;
     }
     if (split_addr < block_end) {
-        state.splits +%= 1;
+        heap_state.splits +%= 1;
         const old_size = header.block_size;
         footerFromHeader(header).magic = 0;
         header.block_size = split_addr - header_addr;
         writeFooter(header);
         const free = initFreeBlock(header.region_id, split_addr, old_size - header.block_size);
-        _ = insertFree(region, free);
+        _ = insertFree(heap_state, region, free);
     }
 }
 
@@ -754,14 +811,14 @@ fn accountResize(region: *SmallRegion, old_len: usize, new_len: usize) void {
     if (region.active_bytes > region.peak_active_bytes) region.peak_active_bytes = region.active_bytes;
 }
 
-fn decommitTopFree(api: *const abi.R4XStartR4Sys, region_index: usize, pressure: bool) usize {
-    const region = &state.small_regions[region_index];
-    const completed = finishPendingDecommit(api, region);
+fn decommitTopFree(heap_state: *State, api: *const abi.R4XStartR4Sys, region_index: usize, pressure: bool) usize {
+    const region = &heap_state.small_regions[region_index];
+    const completed = finishPendingDecommit(heap_state, api, region);
     if (region.pending_decommit_len != 0 or completed != 0) return completed;
     if (region.committed_size <= page_size) return 0;
-    const last = lastBlock(region.*) orelse return 0;
+    const last = lastBlock(heap_state, region.*) orelse return 0;
     if (isUsed(last.header)) return 0;
-    if (!canRemoveFree(region.*, last.header)) return 0;
+    if (!canRemoveFree(heap_state, region.*, last.header)) return 0;
     const natural_keep = alignForward(last.addr + min_free_block, page_size) orelse return 0;
     const policy_keep = region.base + if (pressure) page_size else small_region_retain;
     const keep_until = @max(natural_keep, policy_keep);
@@ -769,7 +826,7 @@ fn decommitTopFree(api: *const abi.R4XStartR4Sys, region_index: usize, pressure:
     if (keep_until >= committed_end or keep_until < region.base + page_size) return 0;
     const len = committed_end - keep_until;
     if (!pressure and len < small_region_decommit_threshold) return 0;
-    if (!removeFree(region, last.header)) return 0;
+    if (!removeFree(heap_state, region, last.header)) return 0;
     // Keep valid boundary tags entirely below the retired tail. The exact
     // VM request remains outside that memory and must finish before growth.
     region.committed_size = keep_until - region.base;
@@ -778,65 +835,65 @@ fn decommitTopFree(api: *const abi.R4XStartR4Sys, region_index: usize, pressure:
     region.pending_decommit_offset = keep_until - region.base;
     region.pending_decommit_len = len;
     if (pressure) region.next_commit_size = small_region_initial_commit;
-    if (!insertFree(region, last.header)) return 0;
-    return finishPendingDecommit(api, region);
+    if (!insertFree(heap_state, region, last.header)) return 0;
+    return finishPendingDecommit(heap_state, api, region);
 }
 
-fn finishPendingDecommit(api: *const abi.R4XStartR4Sys, region: *SmallRegion) usize {
+fn finishPendingDecommit(heap_state: *State, api: *const abi.R4XStartR4Sys, region: *SmallRegion) usize {
     const len = region.pending_decommit_len;
     if (len == 0) return 0;
-    if (vmDecommit(api, region.region_id, region.pending_decommit_offset, len) != abi.vm_ok) return 0;
+    if (vmDecommit(heap_state, api, region.region_id, region.pending_decommit_offset, len) != abi.vm_ok) return 0;
     region.pending_decommit_offset = 0;
     region.pending_decommit_len = 0;
     region.decommits +%= 1;
     return len;
 }
 
-fn trimLocked(api: *const abi.R4XStartR4Sys, excluded_region_id: ?u32) usize {
-    state.trim_calls +%= 1;
-    var reclaimed = releaseDirectCachesLocked(api);
-    for (0..state.small_regions.len) |region_index| {
-        const region = state.small_regions[region_index];
+fn trimLocked(heap_state: *State, api: *const abi.R4XStartR4Sys, excluded_region_id: ?u32) usize {
+    heap_state.trim_calls +%= 1;
+    var reclaimed = releaseDirectCachesLocked(heap_state, api);
+    for (0..heap_state.small_regions.len) |region_index| {
+        const region = heap_state.small_regions[region_index];
         if (!region.used) continue;
         if (excluded_region_id) |excluded| if (region.region_id == excluded) continue;
-        reclaimed +|= decommitTopFree(api, region_index, true);
+        reclaimed +|= decommitTopFree(heap_state, api, region_index, true);
     }
-    state.trim_reclaimed_bytes +%= reclaimed;
+    heap_state.trim_reclaimed_bytes +%= reclaimed;
     return reclaimed;
 }
 
-fn trimDirectCachesLocked(api: *const abi.R4XStartR4Sys) usize {
-    const reclaimed = releaseDirectCachesLocked(api);
+fn trimDirectCachesLocked(heap_state: *State, api: *const abi.R4XStartR4Sys) usize {
+    const reclaimed = releaseDirectCachesLocked(heap_state, api);
     if (reclaimed == 0) return 0;
-    state.trim_calls +%= 1;
-    state.trim_reclaimed_bytes +%= reclaimed;
+    heap_state.trim_calls +%= 1;
+    heap_state.trim_reclaimed_bytes +%= reclaimed;
     return reclaimed;
 }
 
-fn releaseDirectCachesLocked(api: *const abi.R4XStartR4Sys) usize {
+fn releaseDirectCachesLocked(heap_state: *State, api: *const abi.R4XStartR4Sys) usize {
     var reclaimed: usize = 0;
-    for (&state.direct_cache) |*entry| {
+    for (&heap_state.direct_cache) |*entry| {
         if (!entry.used) continue;
         // A failed release may already have removed some pages. The stored
         // identity remains retryable, but its memory must never be reused.
         entry.retiring = true;
-        if (vmRelease(api, entry.region_id) != abi.vm_ok) continue;
+        if (vmRelease(heap_state, api, entry.region_id) != abi.vm_ok) continue;
         reclaimed +|= entry.reserve_size;
-        if (state.direct_reserved_bytes >= entry.reserve_size) state.direct_reserved_bytes -= entry.reserve_size;
-        if (state.direct_cached_bytes >= entry.reserve_size) state.direct_cached_bytes -= entry.reserve_size;
-        if (state.direct_cached > 0) state.direct_cached -= 1;
-        state.direct_cache_evictions +%= 1;
+        if (heap_state.direct_reserved_bytes >= entry.reserve_size) heap_state.direct_reserved_bytes -= entry.reserve_size;
+        if (heap_state.direct_cached_bytes >= entry.reserve_size) heap_state.direct_cached_bytes -= entry.reserve_size;
+        if (heap_state.direct_cached > 0) heap_state.direct_cached -= 1;
+        heap_state.direct_cache_evictions +%= 1;
         entry.* = .{};
     }
     return reclaimed;
 }
 
-fn updatePeakCommitted() void {
-    var committed = state.direct_reserved_bytes;
-    for (state.small_regions) |region| {
+fn updatePeakCommitted(heap_state: *State) void {
+    var committed = heap_state.direct_reserved_bytes;
+    for (heap_state.small_regions) |region| {
         if (region.used) committed +%= region.committed_size;
     }
-    if (committed > state.peak_committed_bytes) state.peak_committed_bytes = committed;
+    if (committed > heap_state.peak_committed_bytes) heap_state.peak_committed_bytes = committed;
 }
 
 fn layoutInBlock(block_addr: usize, block_size: usize, len: usize, alignment: usize) ?AllocationLayout {
@@ -872,19 +929,19 @@ fn requiredBlockEnd(user_addr: usize, len: usize) ?usize {
     return alignForward(footer_end, @alignOf(BlockHeader));
 }
 
-fn headerFromUser(ptr: [*]u8, alignment: usize) ?*BlockHeader {
+fn headerFromUser(heap_state: *State, ptr: [*]u8, alignment: usize) ?*BlockHeader {
     const user_addr = @intFromPtr(ptr);
-    if (findSmallRegionContaining(user_addr)) |region_index| {
-        const region = state.small_regions[region_index];
-        const committed_end = checkedAdd(region.base, region.committed_size) orelse return corruptNull();
-        const backref_addr = checkedSub(user_addr, @sizeOf(usize)) orelse return corruptNull();
-        if (backref_addr < region.base + @sizeOf(BlockHeader) or backref_addr + @sizeOf(usize) > committed_end) return corruptNull();
+    if (findSmallRegionContaining(heap_state, user_addr)) |region_index| {
+        const region = heap_state.small_regions[region_index];
+        const committed_end = checkedAdd(region.base, region.committed_size) orelse return corruptNull(heap_state);
+        const backref_addr = checkedSub(user_addr, @sizeOf(usize)) orelse return corruptNull(heap_state);
+        if (backref_addr < region.base + @sizeOf(BlockHeader) or backref_addr + @sizeOf(usize) > committed_end) return corruptNull(heap_state);
         const header_addr = (@as(*const usize, @ptrFromInt(backref_addr))).*;
-        if (header_addr < region.base or header_addr + @sizeOf(BlockHeader) > committed_end) return corruptNull();
+        if (header_addr < region.base or header_addr + @sizeOf(BlockHeader) > committed_end) return corruptNull(heap_state);
         const header = headerAt(header_addr);
         if (header.magic == retired_block_magic) return null;
-        if (!validSmallBlock(region, header_addr, header)) return corruptNull();
-        if (isUsed(header) and header.user_addr != user_addr) return corruptNull();
+        if (!validSmallBlock(region, header_addr, header)) return corruptNull(heap_state);
+        if (isUsed(header) and header.user_addr != user_addr) return corruptNull(heap_state);
         return header;
     }
 
@@ -892,7 +949,7 @@ fn headerFromUser(ptr: [*]u8, alignment: usize) ?*BlockHeader {
     const header_addr = checkedSub(user_addr, effective_alignment) orelse return null;
     const header = headerAt(header_addr);
     if (header.magic == retired_block_magic) return null;
-    if (!validDirectBlock(header_addr, header, user_addr, effective_alignment)) return corruptNull();
+    if (!validDirectBlock(header_addr, header, user_addr, effective_alignment)) return corruptNull(heap_state);
     return header;
 }
 
@@ -973,30 +1030,30 @@ fn validDirectBlock(header_addr: usize, header: *const BlockHeader, user_addr: u
     return footer.magic == footer_magic and footer.block_size == header.block_size;
 }
 
-fn validatedFreeNode(region: SmallRegion, addr: usize, class_index: usize, expected_previous: usize) ?*BlockHeader {
+fn validatedFreeNode(heap_state: *State, region: SmallRegion, addr: usize, class_index: usize, expected_previous: usize) ?*BlockHeader {
     const header = headerAt(addr);
     if (!validSmallBlock(region, addr, header) or isUsed(header) or
         (header.flags & block_flag_listed) == 0 or sizeClass(header.block_size) != class_index)
     {
-        return corruptNull();
+        return corruptNull(heap_state);
     }
     const links = freeLinks(header);
-    if (links.previous != expected_previous or links.next == addr) return corruptNull();
+    if (links.previous != expected_previous or links.next == addr) return corruptNull(heap_state);
     if (links.next != 0) {
         const next = headerAt(links.next);
         if (!validSmallBlock(region, links.next, next) or isUsed(next) or
             (next.flags & block_flag_listed) == 0 or sizeClass(next.block_size) != class_index or
             freeLinks(next).previous != addr)
         {
-            return corruptNull();
+            return corruptNull(heap_state);
         }
     }
     return header;
 }
 
-fn insertFree(region: *SmallRegion, header: *BlockHeader) bool {
+fn insertFree(heap_state: *State, region: *SmallRegion, header: *BlockHeader) bool {
     const addr = @intFromPtr(header);
-    if (!validSmallBlock(region.*, addr, header) or isUsed(header) or (header.flags & block_flag_listed) != 0) return corruptFalse();
+    if (!validSmallBlock(region.*, addr, header) or isUsed(header) or (header.flags & block_flag_listed) != 0) return corruptFalse(heap_state);
     const class_index = sizeClass(header.block_size);
     const old_head = region.free_heads[class_index];
     if (old_head != 0) {
@@ -1005,7 +1062,7 @@ fn insertFree(region: *SmallRegion, header: *BlockHeader) bool {
             (old.flags & block_flag_listed) == 0 or sizeClass(old.block_size) != class_index or
             freeLinks(old).previous != 0)
         {
-            return corruptFalse();
+            return corruptFalse(heap_state);
         }
     }
     freeLinks(header).* = .{ .next = old_head };
@@ -1044,13 +1101,13 @@ fn freeNodeRemovable(region: SmallRegion, header: *const BlockHeader) bool {
     return true;
 }
 
-fn canRemoveFree(region: SmallRegion, header: *const BlockHeader) bool {
+fn canRemoveFree(heap_state: *State, region: SmallRegion, header: *const BlockHeader) bool {
     if (freeNodeRemovable(region, header)) return true;
-    return corruptFalse();
+    return corruptFalse(heap_state);
 }
 
-fn removeFree(region: *SmallRegion, header: *BlockHeader) bool {
-    if (!canRemoveFree(region.*, header)) return false;
+fn removeFree(heap_state: *State, region: *SmallRegion, header: *BlockHeader) bool {
+    if (!canRemoveFree(heap_state, region.*, header)) return false;
     const class_index = sizeClass(header.block_size);
     const links = freeLinks(header).*;
     if (links.previous == 0) {
@@ -1066,25 +1123,25 @@ fn removeFree(region: *SmallRegion, header: *BlockHeader) bool {
 
 const NeighborError = error{Corrupt};
 
-fn previousBlock(region: SmallRegion, header_addr: usize) NeighborError!?*BlockHeader {
+fn previousBlock(heap_state: *State, region: SmallRegion, header_addr: usize) NeighborError!?*BlockHeader {
     if (header_addr == region.base) return null;
-    state.backward_search_steps +%= 1;
-    if (header_addr < region.base + @sizeOf(BlockFooter)) return corruptNeighbor();
+    heap_state.backward_search_steps +%= 1;
+    if (header_addr < region.base + @sizeOf(BlockFooter)) return corruptNeighbor(heap_state);
     const footer: *const BlockFooter = @ptrFromInt(header_addr - @sizeOf(BlockFooter));
-    if (footer.magic != footer_magic or footer.block_size < min_free_block or footer.block_size > header_addr - region.base) return corruptNeighbor();
+    if (footer.magic != footer_magic or footer.block_size < min_free_block or footer.block_size > header_addr - region.base) return corruptNeighbor(heap_state);
     const previous_addr = header_addr - footer.block_size;
     const previous = headerAt(previous_addr);
-    if (!validSmallBlock(region, previous_addr, previous) or previous_addr + previous.block_size != header_addr) return corruptNeighbor();
+    if (!validSmallBlock(region, previous_addr, previous) or previous_addr + previous.block_size != header_addr) return corruptNeighbor(heap_state);
     return previous;
 }
 
-fn nextBlock(region: SmallRegion, header: *const BlockHeader) NeighborError!?*BlockHeader {
-    const next_addr = checkedAdd(@intFromPtr(header), header.block_size) orelse return corruptNeighbor();
-    const committed_end = checkedAdd(region.base, region.committed_size) orelse return corruptNeighbor();
+fn nextBlock(heap_state: *State, region: SmallRegion, header: *const BlockHeader) NeighborError!?*BlockHeader {
+    const next_addr = checkedAdd(@intFromPtr(header), header.block_size) orelse return corruptNeighbor(heap_state);
+    const committed_end = checkedAdd(region.base, region.committed_size) orelse return corruptNeighbor(heap_state);
     if (next_addr == committed_end) return null;
-    if (next_addr > committed_end or next_addr + @sizeOf(BlockHeader) > committed_end) return corruptNeighbor();
+    if (next_addr > committed_end or next_addr + @sizeOf(BlockHeader) > committed_end) return corruptNeighbor(heap_state);
     const next = headerAt(next_addr);
-    if (!validSmallBlock(region, next_addr, next)) return corruptNeighbor();
+    if (!validSmallBlock(region, next_addr, next)) return corruptNeighbor(heap_state);
     return next;
 }
 
@@ -1093,25 +1150,25 @@ const LastBlock = struct {
     header: *BlockHeader,
 };
 
-fn lastBlock(region: SmallRegion) ?LastBlock {
-    state.end_search_steps +%= 1;
+fn lastBlock(heap_state: *State, region: SmallRegion) ?LastBlock {
+    heap_state.end_search_steps +%= 1;
     const end = checkedAdd(region.base, region.committed_size) orelse {
-        recordCorruption();
+        recordCorruption(heap_state);
         return null;
     };
     if (region.committed_size < min_free_block) {
-        recordCorruption();
+        recordCorruption(heap_state);
         return null;
     }
     const footer: *const BlockFooter = @ptrFromInt(end - @sizeOf(BlockFooter));
     if (footer.magic != footer_magic or footer.block_size < min_free_block or footer.block_size > region.committed_size) {
-        recordCorruption();
+        recordCorruption(heap_state);
         return null;
     }
     const addr = end - footer.block_size;
     const header = headerAt(addr);
     if (!validSmallBlock(region, addr, header) or addr + header.block_size != end) {
-        recordCorruption();
+        recordCorruption(heap_state);
         return null;
     }
     return .{ .addr = addr, .header = header };
@@ -1124,26 +1181,26 @@ fn canHoldUser(header_addr: usize, block_size: usize, user_addr: usize, len: usi
     return user_end <= payload_end;
 }
 
-fn freeSmallRegionSlot() ?usize {
+fn freeSmallRegionSlot(heap_state: *State) ?usize {
     var i: usize = 0;
-    while (i < state.small_regions.len) : (i += 1) {
-        if (!state.small_regions[i].used) return i;
+    while (i < heap_state.small_regions.len) : (i += 1) {
+        if (!heap_state.small_regions[i].used) return i;
     }
     return null;
 }
 
-fn findSmallRegion(region_id: u32) ?usize {
+fn findSmallRegion(heap_state: *State, region_id: u32) ?usize {
     var i: usize = 0;
-    while (i < state.small_regions.len) : (i += 1) {
-        if (state.small_regions[i].used and state.small_regions[i].region_id == region_id) return i;
+    while (i < heap_state.small_regions.len) : (i += 1) {
+        if (heap_state.small_regions[i].used and heap_state.small_regions[i].region_id == region_id) return i;
     }
     return null;
 }
 
-fn findSmallRegionContaining(addr: usize) ?usize {
+fn findSmallRegionContaining(heap_state: *State, addr: usize) ?usize {
     var i: usize = 0;
-    while (i < state.small_regions.len) : (i += 1) {
-        const region = state.small_regions[i];
+    while (i < heap_state.small_regions.len) : (i += 1) {
+        const region = heap_state.small_regions[i];
         if (!region.used) continue;
         const end = checkedAdd(region.base, region.committed_size) orelse continue;
         if (addr >= region.base and addr < end) return i;
@@ -1166,36 +1223,36 @@ fn vmFn(api: *const abi.R4XStartR4Sys, comptime field: []const u8) @field(abi.R4
     return @ptrFromInt(@field(api.*, field));
 }
 
-fn acquireAllocatorLock(api: ?*const abi.R4XStartR4Sys) void {
-    while (@cmpxchgWeak(u32, &allocator_lock, 0, 1, .acquire, .monotonic) != null) {
+fn acquireAllocatorLock(heap_state: *State, api: ?*const abi.R4XStartR4Sys) void {
+    while (@cmpxchgWeak(u32, &heap_state.allocator_lock, 0, 1, .acquire, .monotonic) != null) {
         const table = api orelse continue;
         if (table.size < abi.r4xstart_r4sys_size or table.task_yield == 0) continue;
         vmFn(table, "task_yield")();
     }
 }
 
-fn releaseAllocatorLock() void {
-    @atomicStore(u32, &allocator_lock, 0, .release);
+fn releaseAllocatorLock(heap_state: *State) void {
+    @atomicStore(u32, &heap_state.allocator_lock, 0, .release);
 }
 
-fn vmReserve(api: *const abi.R4XStartR4Sys, size: usize, alignment: u64, flags: u64, out: *abi.ProgramVmRegionInfo) i32 {
-    state.vm_reserve_calls +%= 1;
+fn vmReserve(heap_state: *State, api: *const abi.R4XStartR4Sys, size: usize, alignment: u64, flags: u64, out: *abi.ProgramVmRegionInfo) i32 {
+    heap_state.vm_reserve_calls +%= 1;
     return vmFn(api, "vm_reserve")(@intCast(size), alignment, flags, out);
 }
 
-fn vmCommit(api: *const abi.R4XStartR4Sys, region_id: u32, offset: usize, len: usize, flags: u64) i32 {
-    state.vm_commit_calls +%= 1;
+fn vmCommit(heap_state: *State, api: *const abi.R4XStartR4Sys, region_id: u32, offset: usize, len: usize, flags: u64) i32 {
+    heap_state.vm_commit_calls +%= 1;
     return vmFn(api, "vm_commit")(region_id, @intCast(offset), @intCast(len), flags);
 }
 
-fn vmDecommit(api: *const abi.R4XStartR4Sys, region_id: u32, offset: usize, len: usize) i32 {
-    state.vm_decommit_calls +%= 1;
-    state.vm_decommit_bytes +%= len;
+fn vmDecommit(heap_state: *State, api: *const abi.R4XStartR4Sys, region_id: u32, offset: usize, len: usize) i32 {
+    heap_state.vm_decommit_calls +%= 1;
+    heap_state.vm_decommit_bytes +%= len;
     return vmFn(api, "vm_decommit")(region_id, @intCast(offset), @intCast(len));
 }
 
-fn vmRelease(api: *const abi.R4XStartR4Sys, region_id: u32) i32 {
-    state.vm_release_calls +%= 1;
+fn vmRelease(heap_state: *State, api: *const abi.R4XStartR4Sys, region_id: u32) i32 {
+    heap_state.vm_release_calls +%= 1;
     return vmFn(api, "vm_release")(region_id);
 }
 
@@ -1206,22 +1263,22 @@ fn validReservedRegion(info: abi.ProgramVmRegionInfo, required_size: usize, alig
     return len >= required_size and checkedAdd(base, len) != null and (base & (alignment - 1)) == 0;
 }
 
-fn recordCorruption() void {
-    state.corruptions +%= 1;
+fn recordCorruption(heap_state: *State) void {
+    heap_state.corruptions +%= 1;
 }
 
-fn corruptNull() ?*BlockHeader {
-    recordCorruption();
+fn corruptNull(heap_state: *State) ?*BlockHeader {
+    recordCorruption(heap_state);
     return null;
 }
 
-fn corruptFalse() bool {
-    recordCorruption();
+fn corruptFalse(heap_state: *State) bool {
+    recordCorruption(heap_state);
     return false;
 }
 
-fn corruptNeighbor() NeighborError {
-    recordCorruption();
+fn corruptNeighbor(heap_state: *State) NeighborError {
+    recordCorruption(heap_state);
     return error.Corrupt;
 }
 
@@ -1252,8 +1309,8 @@ fn checkedSub(a: usize, b: usize) ?usize {
     return a - b;
 }
 
-fn failAlloc() ?[*]u8 {
-    state.allocation_errors +%= 1;
+fn failAlloc(heap_state: *State) ?[*]u8 {
+    heap_state.allocation_errors +%= 1;
     return null;
 }
 
@@ -1316,7 +1373,7 @@ fn testVmRelease(id: u32) callconv(.c) i32 {
 }
 
 fn resetTestVm() void {
-    @atomicStore(u32, &allocator_lock, 0, .release);
+    @atomicStore(u32, &state.allocator_lock, 0, .release);
     state = .{};
     test_vm_table = .{};
     test_vm_table.vm_reserve = @intFromPtr(&testVmReserve);
@@ -1367,7 +1424,7 @@ fn expectTestRegionIntegrity(region_index: usize) !void {
         var visits: usize = 0;
         const visit_limit = region.committed_size / min_free_block + 1;
         while (current != 0 and visits < visit_limit) : (visits += 1) {
-            const header = validatedFreeNode(region, current, class_index, previous) orelse return error.CorruptMetadata;
+            const header = validatedFreeNode(&state, region, current, class_index, previous) orelse return error.CorruptMetadata;
             listed_free += 1;
             previous = current;
             current = freeLinks(header).next;
@@ -1375,6 +1432,28 @@ fn expectTestRegionIntegrity(region_index: usize) !void {
         try std.testing.expectEqual(@as(usize, 0), current);
     }
     try std.testing.expectEqual(physical_free, listed_free);
+}
+
+test "explicit VM heaps keep allocation state separate from each other and the R4X default" {
+    resetTestVm();
+    var first: Heap = .{ .api = &test_vm_table };
+    var second: Heap = .{ .api = &test_vm_table };
+    const a1 = first.allocator();
+    const a2 = second.allocator();
+    const memory = try a1.alloc(u8, 128);
+    @memset(memory, 0xA5);
+    // This backend has one VM reservation. Reusing first's free list here
+    // would incorrectly succeed instead of exposing the independent OOM.
+    try std.testing.expectError(error.OutOfMemory, a2.alloc(u8, 64));
+    try std.testing.expectEqual(@as(u64, 1), first.stats().active_allocations);
+    try std.testing.expectEqual(@as(u64, 0), first.stats().allocation_errors);
+    try std.testing.expectEqual(@as(u64, 0), second.stats().active_allocations);
+    try std.testing.expectEqual(@as(u64, 1), second.stats().allocation_errors);
+    try std.testing.expectEqual(@as(u64, 0), stats().active_allocations);
+    try std.testing.expectEqual(@as(u64, 0), stats().allocation_errors);
+    try std.testing.expectEqual(@as(u8, 0xA5), memory[127]);
+    a1.free(memory);
+    try std.testing.expectEqual(@as(u64, 0), first.stats().active_allocations);
 }
 
 test "VM allocator mixed fragmentation workload exposes bounded search metrics" {
@@ -1390,7 +1469,7 @@ test "VM allocator mixed fragmentation workload exposes bounded search metrics" 
     for (0..allocation_count) |i| {
         const len = lengths[i % lengths.len];
         const alignment = alignments[i % alignments.len];
-        const memory = allocatorAlloc(@ptrCast(&test_vm_table), len, .fromByteUnits(alignment), 0) orelse return error.OutOfMemory;
+        const memory = allocatorAlloc(&state, @ptrCast(&test_vm_table), len, .fromByteUnits(alignment), 0) orelse return error.OutOfMemory;
         try std.testing.expectEqual(@as(usize, 0), @intFromPtr(memory) & (alignment - 1));
         @memset(memory[0..len], @intCast(i % 251));
         pointers[i] = memory;
@@ -1401,7 +1480,7 @@ test "VM allocator mixed fragmentation workload exposes bounded search metrics" 
     for (0..allocation_count) |i| {
         if ((i & 1) != 0) continue;
         const memory = pointers[i].?;
-        allocatorFree(@ptrCast(&test_vm_table), memory[0..sizes[i]], .fromByteUnits(aligns[i]), 0);
+        allocatorFree(&state, @ptrCast(&test_vm_table), memory[0..sizes[i]], .fromByteUnits(aligns[i]), 0);
         pointers[i] = null;
     }
 
@@ -1409,12 +1488,12 @@ test "VM allocator mixed fragmentation workload exposes bounded search metrics" 
     const first_backref_addr = state.small_regions[0].base + @sizeOf(BlockHeader);
     const first_user_addr = alignForward(first_backref_addr + @sizeOf(usize), aligns[0]).?;
     const first_freed: [*]u8 = @ptrFromInt(first_user_addr);
-    allocatorFree(@ptrCast(&test_vm_table), first_freed[0..sizes[0]], .fromByteUnits(aligns[0]), 0);
+    allocatorFree(&state, @ptrCast(&test_vm_table), first_freed[0..sizes[0]], .fromByteUnits(aligns[0]), 0);
     try std.testing.expectEqual(frees_before_repeat, stats().frees);
 
     for (0..allocation_count) |i| {
         if ((i & 1) != 0) continue;
-        const memory = allocatorAlloc(@ptrCast(&test_vm_table), sizes[i], .fromByteUnits(aligns[i]), 0) orelse return error.OutOfMemory;
+        const memory = allocatorAlloc(&state, @ptrCast(&test_vm_table), sizes[i], .fromByteUnits(aligns[i]), 0) orelse return error.OutOfMemory;
         try std.testing.expectEqual(@as(usize, 0), @intFromPtr(memory) & (aligns[i] - 1));
         pointers[i] = memory;
     }
@@ -1445,7 +1524,7 @@ test "VM allocator mixed fragmentation workload exposes bounded search metrics" 
 
     for (0..allocation_count) |i| {
         const memory = pointers[i].?;
-        allocatorFree(@ptrCast(&test_vm_table), memory[0..sizes[i]], .fromByteUnits(aligns[i]), 0);
+        allocatorFree(&state, @ptrCast(&test_vm_table), memory[0..sizes[i]], .fromByteUnits(aligns[i]), 0);
     }
     const complete = stats();
     try std.testing.expectEqual(@as(u64, allocation_count + allocation_count / 2), complete.frees);
@@ -1458,7 +1537,7 @@ test "VM allocator mixed fragmentation workload exposes bounded search metrics" 
 test "VM allocator rolls back VM failures and preserves direct ownership" {
     resetTestVm();
     test_vm_fail_commit = true;
-    try std.testing.expectEqual(@as(?[*]u8, null), allocatorAlloc(@ptrCast(&test_vm_table), 128, .fromByteUnits(16), 0));
+    try std.testing.expectEqual(@as(?[*]u8, null), allocatorAlloc(&state, @ptrCast(&test_vm_table), 128, .fromByteUnits(16), 0));
     try std.testing.expect(!test_vm_active);
     try std.testing.expectEqual(@as(u64, 1), test_vm_reserve_calls);
     try std.testing.expectEqual(@as(u64, 1), test_vm_commit_calls);
@@ -1466,56 +1545,56 @@ test "VM allocator rolls back VM failures and preserves direct ownership" {
     try std.testing.expectEqual(@as(u32, 0), stats().small_regions);
 
     resetTestVm();
-    const small = allocatorAlloc(@ptrCast(&test_vm_table), 128, .fromByteUnits(16), 0) orelse return error.OutOfMemory;
+    const small = allocatorAlloc(&state, @ptrCast(&test_vm_table), 128, .fromByteUnits(16), 0) orelse return error.OutOfMemory;
     const committed_before_failure = state.small_regions[0].committed_size;
     test_vm_fail_commit = true;
-    try std.testing.expectEqual(@as(?[*]u8, null), allocatorAlloc(@ptrCast(&test_vm_table), 192 * 1024, .fromByteUnits(64), 0));
+    try std.testing.expectEqual(@as(?[*]u8, null), allocatorAlloc(&state, @ptrCast(&test_vm_table), 192 * 1024, .fromByteUnits(64), 0));
     try std.testing.expectEqual(committed_before_failure, state.small_regions[0].committed_size);
     try std.testing.expectEqual(@as(u64, 1), stats().active_allocations);
     try expectTestRegionIntegrity(0);
 
     test_vm_fail_commit = false;
     const large_small_len = 768 * 1024;
-    const large_small = allocatorAlloc(@ptrCast(&test_vm_table), large_small_len, .fromByteUnits(64), 0) orelse return error.OutOfMemory;
+    const large_small = allocatorAlloc(&state, @ptrCast(&test_vm_table), large_small_len, .fromByteUnits(64), 0) orelse return error.OutOfMemory;
     const committed_before_decommit = state.small_regions[0].committed_size;
     test_vm_fail_decommit = true;
-    allocatorFree(@ptrCast(&test_vm_table), large_small[0..large_small_len], .fromByteUnits(64), 0);
+    allocatorFree(&state, @ptrCast(&test_vm_table), large_small[0..large_small_len], .fromByteUnits(64), 0);
     try std.testing.expect(state.small_regions[0].committed_size < committed_before_decommit);
     try std.testing.expectEqual(committed_before_decommit - state.small_regions[0].committed_size, state.small_regions[0].pending_decommit_len);
     try std.testing.expectEqual(@as(u64, 1), test_vm_decommit_calls);
     try std.testing.expectEqual(@as(u64, 1), stats().active_allocations);
     try expectTestRegionIntegrity(0);
     test_vm_fail_decommit = false;
-    allocatorFree(@ptrCast(&test_vm_table), small[0..128], .fromByteUnits(16), 0);
+    allocatorFree(&state, @ptrCast(&test_vm_table), small[0..128], .fromByteUnits(16), 0);
     try std.testing.expectEqual(@as(u64, 0), stats().active_allocations);
     try expectTestRegionIntegrity(0);
 
     resetTestVm();
-    const resized = allocatorAlloc(@ptrCast(&test_vm_table), 256, .fromByteUnits(64), 0) orelse return error.OutOfMemory;
+    const resized = allocatorAlloc(&state, @ptrCast(&test_vm_table), 256, .fromByteUnits(64), 0) orelse return error.OutOfMemory;
     @memset(resized[0..256], 0x5A);
-    try std.testing.expect(allocatorResize(@ptrCast(&test_vm_table), resized[0..256], .fromByteUnits(64), 48 * 1024, 0));
+    try std.testing.expect(allocatorResize(&state, @ptrCast(&test_vm_table), resized[0..256], .fromByteUnits(64), 48 * 1024, 0));
     for (resized[0..256]) |byte| try std.testing.expectEqual(@as(u8, 0x5A), byte);
-    try std.testing.expect(allocatorResize(@ptrCast(&test_vm_table), resized[0 .. 48 * 1024], .fromByteUnits(64), 64, 0));
+    try std.testing.expect(allocatorResize(&state, @ptrCast(&test_vm_table), resized[0 .. 48 * 1024], .fromByteUnits(64), 64, 0));
     try std.testing.expectEqual(@as(u64, 64), stats().active_bytes);
-    allocatorFree(@ptrCast(&test_vm_table), resized[0..64], .fromByteUnits(64), 0);
+    allocatorFree(&state, @ptrCast(&test_vm_table), resized[0..64], .fromByteUnits(64), 0);
     try std.testing.expectEqual(@as(u64, 0), stats().active_allocations);
     try expectTestRegionIntegrity(0);
 
     resetTestVm();
     const direct_len = direct_cache_max_region + page_size;
-    const direct = allocatorAlloc(@ptrCast(&test_vm_table), direct_len, .fromByteUnits(64), 0) orelse return error.OutOfMemory;
+    const direct = allocatorAlloc(&state, @ptrCast(&test_vm_table), direct_len, .fromByteUnits(64), 0) orelse return error.OutOfMemory;
     @memset(direct[0..256], 0xA5);
     try std.testing.expectEqual(@as(u32, 1), stats().direct_active);
-    try std.testing.expect(allocatorResize(@ptrCast(&test_vm_table), direct[0..direct_len], .fromByteUnits(64), direct_len / 2, 0));
+    try std.testing.expect(allocatorResize(&state, @ptrCast(&test_vm_table), direct[0..direct_len], .fromByteUnits(64), direct_len / 2, 0));
     try std.testing.expectEqual(@as(u64, direct_len / 2), stats().active_bytes);
     for (direct[0..256]) |byte| try std.testing.expectEqual(@as(u8, 0xA5), byte);
 
     test_vm_fail_release = true;
-    allocatorFree(@ptrCast(&test_vm_table), direct[0 .. direct_len / 2], .fromByteUnits(64), 0);
+    allocatorFree(&state, @ptrCast(&test_vm_table), direct[0 .. direct_len / 2], .fromByteUnits(64), 0);
     try std.testing.expectEqual(@as(u32, 1), stats().direct_active);
     try std.testing.expect(test_vm_active);
     test_vm_fail_release = false;
-    allocatorFree(@ptrCast(&test_vm_table), direct[0 .. direct_len / 2], .fromByteUnits(64), 0);
+    allocatorFree(&state, @ptrCast(&test_vm_table), direct[0 .. direct_len / 2], .fromByteUnits(64), 0);
     try std.testing.expectEqual(@as(u32, 0), stats().direct_active);
     try std.testing.expect(!test_vm_active);
     try std.testing.expectEqual(test_vm_reserve_calls, stats().vm_reserve_calls);
@@ -1524,11 +1603,11 @@ test "VM allocator rolls back VM failures and preserves direct ownership" {
 
     resetTestVm();
     const cached_len = large_threshold + 128 * 1024;
-    const cached = allocatorAlloc(@ptrCast(&test_vm_table), cached_len, .fromByteUnits(64), 0) orelse return error.OutOfMemory;
-    allocatorFree(@ptrCast(&test_vm_table), cached[0..cached_len], .fromByteUnits(64), 0);
+    const cached = allocatorAlloc(&state, @ptrCast(&test_vm_table), cached_len, .fromByteUnits(64), 0) orelse return error.OutOfMemory;
+    allocatorFree(&state, @ptrCast(&test_vm_table), cached[0..cached_len], .fromByteUnits(64), 0);
     try std.testing.expectEqual(@as(u32, 1), stats().direct_cached);
     const oversized_len = direct_cache_max_region + page_size;
-    const oversized = allocatorAlloc(@ptrCast(&test_vm_table), oversized_len, .fromByteUnits(64), 0) orelse return error.OutOfMemory;
+    const oversized = allocatorAlloc(&state, @ptrCast(&test_vm_table), oversized_len, .fromByteUnits(64), 0) orelse return error.OutOfMemory;
     const reclaimed = stats();
     try std.testing.expectEqual(@as(u32, 0), reclaimed.direct_cached);
     try std.testing.expectEqual(@as(u64, 1), reclaimed.trim_calls);
@@ -1536,38 +1615,38 @@ test "VM allocator rolls back VM failures and preserves direct ownership" {
     try std.testing.expectEqual(@as(u64, 3), reclaimed.vm_reserve_calls);
     try std.testing.expectEqual(@as(u64, 2), reclaimed.vm_commit_calls);
     try std.testing.expectEqual(@as(u64, 1), reclaimed.vm_release_calls);
-    allocatorFree(@ptrCast(&test_vm_table), oversized[0..oversized_len], .fromByteUnits(64), 0);
+    allocatorFree(&state, @ptrCast(&test_vm_table), oversized[0..oversized_len], .fromByteUnits(64), 0);
     try std.testing.expectEqual(@as(u64, 0), stats().active_allocations);
     try std.testing.expect(!test_vm_active);
 }
 
 test "VM allocator rejects damaged boundary tags and repeated frees fail closed" {
     resetTestVm();
-    const first = allocatorAlloc(@ptrCast(&test_vm_table), 192, .fromByteUnits(64), 0) orelse return error.OutOfMemory;
-    const second = allocatorAlloc(@ptrCast(&test_vm_table), 96, .fromByteUnits(16), 0) orelse return error.OutOfMemory;
-    const header = headerFromUser(first, 64) orelse return error.MissingHeader;
+    const first = allocatorAlloc(&state, @ptrCast(&test_vm_table), 192, .fromByteUnits(64), 0) orelse return error.OutOfMemory;
+    const second = allocatorAlloc(&state, @ptrCast(&test_vm_table), 96, .fromByteUnits(16), 0) orelse return error.OutOfMemory;
+    const header = headerFromUser(&state, first, 64) orelse return error.MissingHeader;
     const footer = footerFromHeader(header);
 
     footer.magic = 0;
-    allocatorFree(@ptrCast(&test_vm_table), first[0..192], .fromByteUnits(64), 0);
+    allocatorFree(&state, @ptrCast(&test_vm_table), first[0..192], .fromByteUnits(64), 0);
     try std.testing.expectEqual(@as(u64, 1), stats().corruptions);
     try std.testing.expectEqual(@as(u64, 2), stats().active_allocations);
     footer.magic = footer_magic;
 
     header.magic = 0;
-    allocatorFree(@ptrCast(&test_vm_table), first[0..192], .fromByteUnits(64), 0);
+    allocatorFree(&state, @ptrCast(&test_vm_table), first[0..192], .fromByteUnits(64), 0);
     try std.testing.expectEqual(@as(u64, 2), stats().corruptions);
     try std.testing.expectEqual(@as(u64, 2), stats().active_allocations);
     header.magic = block_magic;
 
-    allocatorFree(@ptrCast(&test_vm_table), first[0..192], .fromByteUnits(64), 0);
+    allocatorFree(&state, @ptrCast(&test_vm_table), first[0..192], .fromByteUnits(64), 0);
     const after_first_free = stats();
     try std.testing.expectEqual(@as(u64, 1), after_first_free.frees);
-    allocatorFree(@ptrCast(&test_vm_table), first[0..192], .fromByteUnits(64), 0);
+    allocatorFree(&state, @ptrCast(&test_vm_table), first[0..192], .fromByteUnits(64), 0);
     try std.testing.expectEqual(after_first_free.frees, stats().frees);
     try std.testing.expectEqual(after_first_free.corruptions, stats().corruptions);
 
-    allocatorFree(@ptrCast(&test_vm_table), second[0..96], .fromByteUnits(16), 0);
+    allocatorFree(&state, @ptrCast(&test_vm_table), second[0..96], .fromByteUnits(16), 0);
     try std.testing.expectEqual(@as(u64, 0), stats().active_allocations);
     try std.testing.expectEqual(@as(u64, 2), stats().corruptions);
     try expectTestRegionIntegrity(0);
@@ -1591,13 +1670,13 @@ fn concurrentAllocatorWorker(worker_index: usize, failed: *u32) void {
                 @atomicStore(u32, failed, 1, .release);
                 break;
             }
-            allocatorFree(@ptrCast(&test_vm_table), memory[0..sizes[slot]], .fromByteUnits(alignments[slot]), 0);
+            allocatorFree(&state, @ptrCast(&test_vm_table), memory[0..sizes[slot]], .fromByteUnits(alignments[slot]), 0);
             pointers[slot] = null;
         } else {
             const len = 1 + @as(usize, @intCast((value >> 16) % 8192));
             const worker_alignments = [_]usize{ 8, 16, 64, 256 };
             const alignment = worker_alignments[@as(usize, @intCast(value & 3))];
-            const memory = allocatorAlloc(@ptrCast(&test_vm_table), len, .fromByteUnits(alignment), 0) orelse {
+            const memory = allocatorAlloc(&state, @ptrCast(&test_vm_table), len, .fromByteUnits(alignment), 0) orelse {
                 @atomicStore(u32, failed, 1, .release);
                 break;
             };
@@ -1612,7 +1691,7 @@ fn concurrentAllocatorWorker(worker_index: usize, failed: *u32) void {
 
     for (0..slot_count) |slot| {
         if (pointers[slot]) |memory| {
-            allocatorFree(@ptrCast(&test_vm_table), memory[0..sizes[slot]], .fromByteUnits(alignments[slot]), 0);
+            allocatorFree(&state, @ptrCast(&test_vm_table), memory[0..sizes[slot]], .fromByteUnits(alignments[slot]), 0);
         }
     }
 }
@@ -1639,10 +1718,10 @@ test "VM allocator reports small and direct churn VM traffic" {
     const small_len = 192 * 1024;
     resetTestVm();
     for (0..small_cycles) |_| {
-        const memory = allocatorAlloc(@ptrCast(&test_vm_table), small_len, .fromByteUnits(64), 0) orelse return error.OutOfMemory;
+        const memory = allocatorAlloc(&state, @ptrCast(&test_vm_table), small_len, .fromByteUnits(64), 0) orelse return error.OutOfMemory;
         memory[0] = 0x41;
         memory[small_len - 1] = 0x42;
-        allocatorFree(@ptrCast(&test_vm_table), memory[0..small_len], .fromByteUnits(64), 0);
+        allocatorFree(&state, @ptrCast(&test_vm_table), memory[0..small_len], .fromByteUnits(64), 0);
     }
     const small = stats();
     try std.testing.expectEqual(@as(u64, 0), small.active_allocations);
@@ -1670,10 +1749,10 @@ test "VM allocator reports small and direct churn VM traffic" {
     const expected_direct_reserve = alignForward(direct_need, page_size).?;
     resetTestVm();
     for (0..direct_cycles) |_| {
-        const memory = allocatorAlloc(@ptrCast(&test_vm_table), direct_len, .fromByteUnits(64), 0) orelse return error.OutOfMemory;
+        const memory = allocatorAlloc(&state, @ptrCast(&test_vm_table), direct_len, .fromByteUnits(64), 0) orelse return error.OutOfMemory;
         memory[0] = 0x51;
         memory[direct_len - 1] = 0x52;
-        allocatorFree(@ptrCast(&test_vm_table), memory[0..direct_len], .fromByteUnits(64), 0);
+        allocatorFree(&state, @ptrCast(&test_vm_table), memory[0..direct_len], .fromByteUnits(64), 0);
     }
     const direct = stats();
     try std.testing.expectEqual(@as(u64, 0), direct.active_allocations);
