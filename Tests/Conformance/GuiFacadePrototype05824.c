@@ -74,6 +74,19 @@ static int32_t display_transition_probe(uint64_t generation, uint32_t operation,
 static int32_t display_schedule_probe(const R4GfxBackendBinding *binding) {
     assert(binding->reset_generation == UINT64_C(0x30000000b)); return -4;
 }
+static int32_t display_device_reset_probe(const R4GfxBackendBinding *binding, uint64_t generation, uint32_t quiesced, R4GfxNativeState *output) {
+    assert(binding->reset_generation == UINT64_C(0x30000000b) && generation == UINT64_C(0x100000007) && quiesced <= 1);
+    assert(output->version == 1 && output->size == sizeof(*output));
+    if (quiesced) return R4OS_GFX_OUTPUT_ERROR_BUSY;
+    *output = (R4GfxNativeState){.version=1,.size=sizeof(*output),.generation=generation+1,.outcome=R4OS_GFX_OUTPUT_OUTCOME_LOST,.retained=1};
+    return R4OS_GFX_OUTPUT_OK;
+}
+static int32_t display_prepare_reset_probe(const R4GfxNativeRegistration *input, uint64_t held_generation, uint64_t reset_generation, R4GfxNativeState *output) {
+    assert(input->backend.reset_generation == UINT64_C(0x30000000b) && held_generation == UINT64_C(0x200000079) && reset_generation == UINT64_C(0x100000008));
+    assert(output->version == 1 && output->size == sizeof(*output));
+    *output = (R4GfxNativeState){.version=1,.size=sizeof(*output),.generation=reset_generation+1,.outcome=R4OS_GFX_OUTPUT_OUTCOME_VALIDATED,.retained=1};
+    return R4OS_GFX_OUTPUT_OK;
+}
 static int32_t presentation_read_probe(uint32_t head, R4DisplayPresentationStats *output) {
     assert(head == 3 && output->version == 1 && output->size == 208);
     output->visible_sequence = UINT64_C(0x100000079); output->source_point = UINT64_C(0x200000079);
@@ -175,7 +188,20 @@ static int32_t gfx_map_probe(const R4GfxBufferHandle *ref, uint32_t access, uint
     out->byte_length = bytes;
     return 1;
 }
-_Static_assert(sizeof(R4GfxOwnedBufferReservation)==88 && sizeof(R4GfxOwnedBufferRelease)==80 && offsetof(R4GfxDriverMemoryApi,buffer_reserve)==112 && offsetof(R4GfxDriverMemoryApi,native_register)==152 && sizeof(R4GfxDriverMemoryApi)==200 && offsetof(R4GfxDriverMemoryApi,memory_budget)==184 && offsetof(R4GfxDriverMemoryApi,telemetry_exchange)==192, "owned BO ABI and optional telemetry tail");
+_Static_assert(sizeof(R4GfxOwnedBufferReservation)==88 && sizeof(R4GfxOwnedBufferRelease)==80 && offsetof(R4GfxDriverMemoryApi,buffer_reserve)==112 && offsetof(R4GfxDriverMemoryApi,native_register)==152 && sizeof(R4GfxDriverMemoryApi)==208 && offsetof(R4GfxDriverMemoryApi,memory_budget)==184 && offsetof(R4GfxDriverMemoryApi,telemetry_exchange)==192 && offsetof(R4GfxDriverMemoryApi,device_lost)==200, "owned BO ABI and optional device-loss tail");
+static int32_t device_lost_probe(uint32_t adapter, uint64_t generation, uint32_t quiesced) {
+    assert(adapter==17 && generation==UINT64_C(0x300000007) && quiesced<=1);
+    return quiesced ? 1 : R4OS_GFX_BUFFER_ERROR_BUSY;
+}
+static void device_lost_facade_probe(void) {
+    R4GfxDriverMemoryApi m={.version=1,.size=208,.device_lost=(uintptr_t)device_lost_probe};
+    for(unsigned n=200;n<208;++n){m.size=n;assert(r4driver_memory_device_lost(&m,17,UINT64_C(0x300000007),1)==R4OS_ERR_NO_FN);}
+    m.size=208;
+    assert(r4driver_memory_device_lost(&m,17,UINT64_C(0x300000007),0)==R4OS_GFX_BUFFER_ERROR_BUSY);
+    assert(r4driver_memory_device_lost(&m,17,UINT64_C(0x300000007),1)==1);
+    assert(r4driver_memory_device_lost(&m,17,UINT64_C(0x300000007),2)==R4OS_GFX_BUFFER_ERROR_INVALID);
+    m.device_lost=0;assert(r4driver_memory_device_lost(&m,17,UINT64_C(0x300000007),1)==R4OS_ERR_NO_FN);
+}
 static int32_t owned_reserve(const R4GfxBufferDescriptor *d, uint64_t c, R4GfxOwnedBufferReservation *o){assert(d && c==UINT64_C(0x100000003) && o->size==88);o->cookie=c;return 1;}
 static int32_t owned_commit(const R4GfxOwnedBufferReservation *r,R4GfxBufferReference *o){assert(r->cookie==UINT64_C(0x100000003) && o->size==48);return 1;}
 static int32_t owned_abort(const R4GfxOwnedBufferReservation *r,uint32_t q){assert(r->cookie==UINT64_C(0x100000003) && q==0);return -4;}
@@ -197,6 +223,7 @@ static void native_facade_probe(void) {
     m.size=152;assert(r4driver_memory_native_take(&m,&p,&out)==R4OS_ERR_NO_FN && memcmp(&out,&before,sizeof(out))==0);
 }
 static void owned_facade_probe(void){
+    device_lost_facade_probe();
     native_facade_probe();
     R4GfxDriverMemoryApi m={.version=1,.size=152,.buffer_reserve=(uintptr_t)owned_reserve,.buffer_commit=(uintptr_t)owned_commit,.buffer_abort=(uintptr_t)owned_abort,.buffer_take_release=(uintptr_t)owned_take,.buffer_finish_release=(uintptr_t)owned_finish};
     R4GfxBufferDescriptor d={0};R4GfxOwnedBufferReservation r={0};R4GfxBufferReference ref={0};R4GfxOwnedBufferRelease rel={0};
@@ -554,6 +581,23 @@ static void gfx_facade_probe(void) {
     display.size = offsetof(R4GfxDriverDisplayApi, transition);
     assert(r4driver_display_transition(&display, 0, 0, &outcome) == R4OS_ERR_NO_FN);
     assert(outcome.generation == UINT64_C(0x100000008) && outcome.retained == 1);
+    display = (R4GfxDriverDisplayApi){.version=1,.device_reset=(uintptr_t)display_device_reset_probe,.prepare_reset=(uintptr_t)display_prepare_reset_probe};
+    R4GfxNativeRegistration reset_registration = {.backend=binding};
+    for (unsigned prefix=40; prefix<136; ++prefix) {
+        display.size=prefix;
+        assert(!r4driver_display_supports_reset(&display));
+        assert(r4driver_display_device_reset(&display,&binding,UINT64_C(0x100000007),0,&outcome)==R4OS_ERR_NO_FN);
+        assert(r4driver_display_prepare_reset(&display,&reset_registration,UINT64_C(0x200000079),UINT64_C(0x100000008),&outcome)==R4OS_ERR_NO_FN);
+        assert(outcome.generation==UINT64_C(0x100000008));
+    }
+    display.size=136;
+    assert(r4driver_display_device_reset(&display,&binding,UINT64_C(0x100000007),0,&outcome)==R4OS_GFX_OUTPUT_OK);
+    assert(r4driver_display_device_reset(&display,&binding,UINT64_C(0x100000007),1,&outcome)==R4OS_GFX_OUTPUT_ERROR_BUSY);
+    assert(r4driver_display_device_reset(&display,&binding,UINT64_C(0x100000007),2,&outcome)==R4OS_GFX_OUTPUT_ERROR_INVALID);
+    assert(outcome.generation==UINT64_C(0x100000008) && outcome.retained==1);
+    assert(r4driver_display_prepare_reset(&display,&reset_registration,UINT64_C(0x200000079),UINT64_C(0x100000008),&outcome)==R4OS_GFX_OUTPUT_OK);
+    assert(outcome.generation==UINT64_C(0x100000009) && outcome.retained==1);
+    display.device_reset=0; assert(!r4driver_display_supports_reset(&display));
     R4DisplayPresentationStats statistics = {.visible_sequence = 79};
     table.display_presentation_stats = (uintptr_t)presentation_read_probe;
     for (unsigned bytes = 608; bytes < 616; ++bytes) {

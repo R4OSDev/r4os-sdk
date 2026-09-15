@@ -5,6 +5,13 @@
 /* Obtained by the R4D v25 gfx_memory_query tail. Calls require the current
  * driver callback context. No global CPU pointer is a DMA or GPU address. */
 
+static inline int32_t r4driver_memory_device_lost(const R4GfxDriverMemoryApi *table, uint32_t adapter, uint64_t generation, uint32_t quiesced) {
+    if (table == 0 || table->version != 1 || table->size < offsetof(R4GfxDriverMemoryApi, device_lost) + sizeof(uint64_t) || table->device_lost == 0) return R4OS_ERR_NO_FN;
+    if (quiesced > 1) return R4OS_GFX_BUFFER_ERROR_INVALID;
+    typedef int32_t (*Callback)(uint32_t, uint64_t, uint32_t);
+    return ((Callback)(uintptr_t)table->device_lost)(adapter, generation, quiesced);
+}
+
 static inline int32_t r4driver_telemetry_exchange(const R4GfxDriverMemoryApi *table, const R4GfxTelemetryState *input, R4GfxTelemetryDemand *output) {
     if (table == 0 || table->version != 1 || table->size < offsetof(R4GfxDriverMemoryApi, telemetry_exchange) + sizeof(uint64_t) || table->telemetry_exchange == 0) return R4OS_ERR_NO_FN;
     if (input == 0 || output == 0) return R4OS_GFX_BUFFER_ERROR_INVALID;

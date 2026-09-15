@@ -2,6 +2,22 @@
 #define R4OS_DRIVER_DISPLAY_H
 #include "r4draw.h"
 
+static inline int r4driver_display_supports_reset(const R4GfxDriverDisplayApi *table) {
+    return table != 0 && table->version == 1 && table->size >= offsetof(R4GfxDriverDisplayApi, prepare_reset) + sizeof(uint64_t) &&
+        table->device_reset != 0 && table->prepare_reset != 0;
+}
+static inline int32_t r4driver_display_device_reset(const R4GfxDriverDisplayApi *table, const R4GfxBackendBinding *backend, uint64_t generation, uint32_t quiesced, R4GfxNativeState *output) {
+    if (!r4driver_display_supports_reset(table)) return R4OS_ERR_NO_FN;
+    if (backend == 0 || output == 0 || quiesced > 1) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    output->version = 1; output->size = sizeof(*output);
+    return ((int32_t (*)(const R4GfxBackendBinding *, uint64_t, uint32_t, R4GfxNativeState *))(uintptr_t)table->device_reset)(backend, generation, quiesced, output);
+}
+static inline int32_t r4driver_display_prepare_reset(const R4GfxDriverDisplayApi *table, const R4GfxNativeRegistration *input, uint64_t held_generation, uint64_t reset_generation, R4GfxNativeState *output) {
+    if (!r4driver_display_supports_reset(table)) return R4OS_ERR_NO_FN;
+    if (input == 0 || output == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    output->version = 1; output->size = sizeof(*output);
+    return ((int32_t (*)(const R4GfxNativeRegistration *, uint64_t, uint64_t, R4GfxNativeState *))(uintptr_t)table->prepare_reset)(input, held_generation, reset_generation, output);
+}
 static inline int r4driver_display_supports_cursor(const R4GfxDriverDisplayApi *table) {
     return table != 0 && table->version == 1 && table->size >= offsetof(R4GfxDriverDisplayApi, cursor_complete) + sizeof(uint64_t) &&
         table->cursor_configure != 0 && table->cursor_take != 0 && table->cursor_complete != 0;

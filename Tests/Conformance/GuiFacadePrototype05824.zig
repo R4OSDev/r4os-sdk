@@ -248,6 +248,7 @@ fn memoryPrefixProbe(out: *r4os.abi.GfxDriverMemoryApi) callconv(.c) i32 {
     @memcpy(@as([*]u8, @ptrCast(out))[0..112], std.mem.asBytes(&value)[0..112]); return 1;
 }
 fn ownedFacadeProbe() !void {
+    try deviceLostFacadeProbe();
     const a = r4os.abi;
     var native = r4os.driver_memory.Context{ .table = .{ .buffer_reserve = @intFromPtr(&ownedReserveProbe), .buffer_commit = @intFromPtr(&ownedCommitProbe),
         .buffer_abort = @intFromPtr(&ownedAbortProbe), .buffer_take_release = @intFromPtr(&ownedTakeProbe), .buffer_finish_release = @intFromPtr(&ownedFinishProbe) } };
@@ -267,6 +268,23 @@ fn ownedFacadeProbe() !void {
     const ctx = r4os.r4dev.DriverContext.init(&api); const old = ctx.memory().?;
     try std.testing.expect(old.table.size == 112 and old.table.buffer_reserve == 0);
     try std.testing.expectEqual(a.err_no_fn, old.bufferReserve(&.{}, 0, &reservation));
+}
+fn deviceLostProbe(adapter: u32, generation: u64, quiesced: u32) callconv(.c) i32 {
+    std.debug.assert(adapter == 17 and generation == 0x300000007 and quiesced <= 1);
+    return if (quiesced == 1) 1 else r4os.abi.gfx_buffer_error_busy;
+}
+fn deviceLostFacadeProbe() !void {
+    const a = r4os.abi;
+    var memory: r4os.driver_memory.Context = .{ .table = .{ .device_lost = @intFromPtr(&deviceLostProbe) } };
+    for (200..208) |bytes| {
+        memory.table.size = @intCast(bytes);
+        try std.testing.expectEqual(a.err_no_fn, memory.deviceLost(17, 0x300000007, true));
+    }
+    memory.table.size = 208;
+    try std.testing.expectEqual(a.gfx_buffer_error_busy, memory.deviceLost(17, 0x300000007, false));
+    try std.testing.expectEqual(@as(i32, 1), memory.deviceLost(17, 0x300000007, true));
+    memory.table.device_lost = 0;
+    try std.testing.expectEqual(a.err_no_fn, memory.deviceLost(17, 0x300000007, true));
 }
 fn nativeCompleteProbe(provider: *const r4os.abi.GfxBufferHandle, request: *const r4os.abi.GfxBufferHandle, result: i32, reference: *const r4os.abi.GfxBufferHandle) callconv(.c) i32 {
     std.debug.assert(provider.generation == 0x100000019 and request.generation == 0x200000019 and result == -6 and reference.id == 0);
@@ -587,6 +605,19 @@ fn displayScheduleProbe(binding: *const r4os.abi.GfxBackendBinding) callconv(.c)
     std.debug.assert(binding.reset_generation == 0x30000000b);
     return -4;
 }
+fn displayDeviceResetProbe(binding: *const r4os.abi.GfxBackendBinding, generation: u64, quiesced: u32, output: *r4os.abi.GfxNativeState) callconv(.c) i32 {
+    std.debug.assert(binding.reset_generation == 0x30000000b and generation == 0x100000007 and quiesced <= 1);
+    std.debug.assert(output.version == 1 and output.size == @sizeOf(r4os.abi.GfxNativeState));
+    if (quiesced == 1) return r4os.abi.gfx_output_error_busy;
+    output.* = .{ .generation = generation + 1, .outcome = r4os.abi.gfx_output_outcome_lost, .retained = 1 };
+    return r4os.abi.gfx_output_ok;
+}
+fn displayPrepareResetProbe(input: *const r4os.abi.GfxNativeRegistration, held_generation: u64, reset_generation: u64, output: *r4os.abi.GfxNativeState) callconv(.c) i32 {
+    std.debug.assert(input.backend.reset_generation == 0x30000000b and held_generation == 0x200000079 and reset_generation == 0x100000008);
+    std.debug.assert(output.version == 1 and output.size == @sizeOf(r4os.abi.GfxNativeState));
+    output.* = .{ .generation = reset_generation + 1, .outcome = r4os.abi.gfx_output_outcome_validated, .retained = 1 };
+    return r4os.abi.gfx_output_ok;
+}
 fn presentationReadProbe(head: u32, output: *r4os.abi.DisplayPresentationStats) callconv(.c) i32 {
     std.debug.assert(head == 3 and output.version == 1 and output.size == 208);
     output.visible_sequence = 0x100000079; output.source_point = 0x200000079;
@@ -818,6 +849,23 @@ test "old display and driver prefixes hide output tails while C/Zig preserve rec
     display.table.size = @offsetOf(a.GfxDriverDisplayApi, "transition");
     try std.testing.expectEqual(a.err_no_fn, display.transition(0, 0, &outcome));
     try std.testing.expect(outcome.generation == 0x100000008 and outcome.retained == 1);
+    display.table = .{ .device_reset = @intFromPtr(&displayDeviceResetProbe), .prepare_reset = @intFromPtr(&displayPrepareResetProbe) };
+    const registration: a.GfxNativeRegistration = .{ .backend = binding };
+    for (40..136) |prefix| {
+        display.table.size = @intCast(prefix);
+        try std.testing.expect(!display.supportsReset());
+        try std.testing.expectEqual(a.err_no_fn, display.deviceReset(&binding, 0x100000007, false, &outcome));
+        try std.testing.expectEqual(a.err_no_fn, display.prepareReset(&registration, 0x200000079, 0x100000008, &outcome));
+        try std.testing.expect(outcome.generation == 0x100000008);
+    }
+    display.table.size = 136;
+    try std.testing.expectEqual(a.gfx_output_ok, display.deviceReset(&binding, 0x100000007, false, &outcome));
+    try std.testing.expectEqual(a.gfx_output_error_busy, display.deviceReset(&binding, 0x100000007, true, &outcome));
+    try std.testing.expect(outcome.generation == 0x100000008 and outcome.retained == 1);
+    try std.testing.expectEqual(a.gfx_output_ok, display.prepareReset(&registration, 0x200000079, 0x100000008, &outcome));
+    try std.testing.expect(outcome.generation == 0x100000009 and outcome.retained == 1);
+    display.table.device_reset = 0;
+    try std.testing.expect(!display.supportsReset());
 }
 
 var now_ticks: u64 = 100;

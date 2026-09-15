@@ -1,6 +1,22 @@
 const abi = @import("r4os_contract").abi;
 pub const Context = struct {
     table: abi.GfxDriverDisplayApi,
+    pub fn supportsReset(self: *const Context) bool {
+        return self.table.version == 1 and self.table.size >= @offsetOf(abi.GfxDriverDisplayApi, "prepare_reset") + 8 and
+            self.table.device_reset != 0 and self.table.prepare_reset != 0;
+    }
+    pub fn deviceReset(self: *const Context, backend: *const abi.GfxBackendBinding, generation: u64, quiesced: bool, output: *abi.GfxNativeState) i32 {
+        if (!self.supportsReset()) return abi.err_no_fn;
+        output.version = 1; output.size = @sizeOf(abi.GfxNativeState);
+        const callback: *const fn (*const abi.GfxBackendBinding, u64, u32, *abi.GfxNativeState) callconv(.c) i32 = @ptrFromInt(self.table.device_reset);
+        return callback(backend, generation, @intFromBool(quiesced), output);
+    }
+    pub fn prepareReset(self: *const Context, input: *const abi.GfxNativeRegistration, held_generation: u64, reset_generation: u64, output: *abi.GfxNativeState) i32 {
+        if (!self.supportsReset()) return abi.err_no_fn;
+        output.version = 1; output.size = @sizeOf(abi.GfxNativeState);
+        const callback: *const fn (*const abi.GfxNativeRegistration, u64, u64, *abi.GfxNativeState) callconv(.c) i32 = @ptrFromInt(self.table.prepare_reset);
+        return callback(input, held_generation, reset_generation, output);
+    }
     pub fn supportsOutputs(self: *const Context) bool {
         return self.table.version == 1 and self.table.size >= @offsetOf(abi.GfxDriverDisplayApi, "output_transition") + 8 and
             self.table.output_register != 0 and self.table.output_transition != 0;
