@@ -312,6 +312,7 @@ fn budgetProbe(input: *const r4os.abi.GfxDeviceBudgetRequest, output: *r4os.abi.
     return budget_probe_rc;
 }
 fn budgetFacadeProbe() !void {
+    try telemetryFacadeProbe();
     const a = r4os.abi; const t = std.testing;
     var tables = makeTables(true);
     tables[2].gfx_memory_budget = @intFromPtr(&budgetProbe);
@@ -344,6 +345,50 @@ fn budgetFacadeProbe() !void {
     output = unchanged;
     try t.expectEqual(@as(i32, 1), draw.gfxMemoryBudget(&input, &output));
     try t.expect(output.charged_bytes == 0x100000003 and output.memory_generation == 0x200000007);
+}
+fn telemetryProbe(input: *const r4os.abi.GfxTelemetryRequest, output: *r4os.abi.GfxTelemetryState) callconv(.c) i32 {
+    output.* = .{ .adapter_id = input.adapter_id, .memory_generation = input.memory_generation };
+    output.metrics[5] = .{ .status = r4os.abi.gfx_telemetry_fresh, .source_stamp = 9, .values = .{-12500,0,0,0} };
+    return budget_probe_rc;
+}
+fn telemetryDriverProbe(input: *const r4os.abi.GfxTelemetryState, output: *r4os.abi.GfxTelemetryDemand) callconv(.c) i32 {
+    output.* = .{ .adapter_id = input.adapter_id, .memory_generation = input.memory_generation, .metric_mask = 0x201, .until_ns = 0x200000001 };
+    return budget_probe_rc;
+}
+fn telemetryFacadeProbe() !void {
+    const a = r4os.abi; const t = std.testing;
+    var tables = makeTables(true);
+    tables[2].gfx_telemetry = @intFromPtr(&telemetryProbe);
+    var imports: [3]a.R4XStartImport = undefined; var raw: a.R4XStartContext = undefined;
+    var app = try makeApp(&tables, &imports, &raw);
+    const draw = app.drawing().?;
+    var driver: r4os.driver_memory.Context = .{ .table = .{ .telemetry_exchange = @intFromPtr(&telemetryDriverProbe) } };
+    const request: a.GfxTelemetryRequest = .{ .adapter_id = 3, .memory_generation = 0x200000007, .metric_mask = 0x201 };
+    var state: a.GfxTelemetryState = .{ .adapter_id = 79 };
+    const unchanged = state;
+    var demand: a.GfxTelemetryDemand = .{ .until_ns = 79 };
+    const original_demand = demand;
+    for (808..816) |bytes| {
+        tables[2].size = @intCast(bytes);
+        try t.expectEqual(a.err_no_fn, draw.gfxTelemetry(&request, &state));
+        try t.expectEqualDeep(unchanged, state);
+    }
+    for (192..200) |bytes| {
+        driver.table.size = @intCast(bytes);
+        try t.expectEqual(a.err_no_fn, driver.telemetryExchange(&state, &demand));
+        try t.expectEqualDeep(original_demand, demand);
+    }
+    tables[2].size = 816; driver.table.size = 200;
+    budget_probe_rc = a.gfx_buffer_error_stale;
+    try t.expectEqual(budget_probe_rc, draw.gfxTelemetry(&request, &state));
+    try t.expectEqualDeep(unchanged, state);
+    try t.expectEqual(budget_probe_rc, driver.telemetryExchange(&state, &demand));
+    try t.expectEqualDeep(original_demand, demand);
+    budget_probe_rc = 1;
+    try t.expectEqual(@as(i32, 1), draw.gfxTelemetry(&request, &state));
+    try t.expect(state.adapter_id == 3 and state.metrics[5].values[0] == -12500 and state.metrics[6].status == a.gfx_telemetry_unavailable);
+    try t.expectEqual(@as(i32, 1), driver.telemetryExchange(&state, &demand));
+    try t.expect(demand.until_ns == 0x200000001 and demand.metric_mask == 0x201 and demand.memory_generation == request.memory_generation);
 }
 test "graphics buffer optional tails preserve 64-bit offsets in Zig and R4D calls" {
     try budgetFacadeProbe();

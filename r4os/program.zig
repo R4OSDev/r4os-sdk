@@ -1514,6 +1514,14 @@ pub const Context = struct {
         return rc;
     }
 
+    pub fn gfxTelemetry(self: *const Context, input: *const abi.GfxTelemetryRequest, output: *abi.GfxTelemetryState) i32 {
+        const callback = self.drawFn("gfx_telemetry") orelse return self.unavailable("draw");
+        var temporary: abi.GfxTelemetryState = .{};
+        const rc = callback(input, &temporary);
+        if (rc == abi.gfx_buffer_result_ok) output.* = temporary;
+        return rc;
+    }
+
     pub fn gfxBufferStats(self: *const Context, output: *abi.GfxBufferStats) i32 {
         const table_fn = self.drawFn("gfx_buffer_stats") orelse return self.unavailable("draw");
         output.* = .{};

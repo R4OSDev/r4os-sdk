@@ -79,6 +79,10 @@ pub const Context = struct {
         return self.base.gfxMemoryBudget(input, output);
     }
 
+    pub fn gfxTelemetry(self: *const Context, input: *const abi.GfxTelemetryRequest, output: *abi.GfxTelemetryState) i32 {
+        return self.base.gfxTelemetry(input, output);
+    }
+
     pub fn buffers(self: *const Context) @import("gfx_buffers.zig").Context {
         return .{ .base = self.base };
     }

@@ -175,7 +175,7 @@ static int32_t gfx_map_probe(const R4GfxBufferHandle *ref, uint32_t access, uint
     out->byte_length = bytes;
     return 1;
 }
-_Static_assert(sizeof(R4GfxOwnedBufferReservation)==88 && sizeof(R4GfxOwnedBufferRelease)==80 && offsetof(R4GfxDriverMemoryApi,buffer_reserve)==112 && offsetof(R4GfxDriverMemoryApi,native_register)==152 && sizeof(R4GfxDriverMemoryApi)==192 && offsetof(R4GfxDriverMemoryApi,memory_budget)==184, "owned BO ABI");
+_Static_assert(sizeof(R4GfxOwnedBufferReservation)==88 && sizeof(R4GfxOwnedBufferRelease)==80 && offsetof(R4GfxDriverMemoryApi,buffer_reserve)==112 && offsetof(R4GfxDriverMemoryApi,native_register)==152 && sizeof(R4GfxDriverMemoryApi)==200 && offsetof(R4GfxDriverMemoryApi,memory_budget)==184 && offsetof(R4GfxDriverMemoryApi,telemetry_exchange)==192, "owned BO ABI and optional telemetry tail");
 static int32_t owned_reserve(const R4GfxBufferDescriptor *d, uint64_t c, R4GfxOwnedBufferReservation *o){assert(d && c==UINT64_C(0x100000003) && o->size==88);o->cookie=c;return 1;}
 static int32_t owned_commit(const R4GfxOwnedBufferReservation *r,R4GfxBufferReference *o){assert(r->cookie==UINT64_C(0x100000003) && o->size==48);return 1;}
 static int32_t owned_abort(const R4GfxOwnedBufferReservation *r,uint32_t q){assert(r->cookie==UINT64_C(0x100000003) && q==0);return -4;}
@@ -756,7 +756,33 @@ static void budget_facade_probe(void) {
     output=unchanged;
     assert(r4draw_gfx_memory_budget(&draw,&input,&output)==1 && output.limit_bytes==UINT64_C(0x400000000));
 }
+static int32_t telemetry_probe(const R4GfxTelemetryRequest *input, R4GfxTelemetryState *output) {
+    *output = (R4GfxTelemetryState){.version=1, .size=sizeof(*output), .adapter_id=input->adapter_id, .memory_generation=input->memory_generation};
+    output->metrics[5] = (R4GfxTelemetryMetric){.status=R4OS_GFX_TELEMETRY_FRESH, .source_stamp=9, .values={-12500,0,0,0}};
+    return budget_probe_rc;
+}
+static int32_t telemetry_driver_probe(const R4GfxTelemetryState *input, R4GfxTelemetryDemand *output) {
+    *output = (R4GfxTelemetryDemand){.version=1, .size=sizeof(*output), .adapter_id=input->adapter_id, .memory_generation=input->memory_generation, .metric_mask=0x201, .until_ns=UINT64_C(0x200000001)};
+    return budget_probe_rc;
+}
+static void telemetry_facade_probe(void) {
+    R4XStartR4Draw table = {.size=sizeof(table), .gfx_telemetry=(uintptr_t)telemetry_probe};
+    R4Draw draw = {.table=&table};
+    R4GfxDriverMemoryApi driver = {.version=1, .size=sizeof(driver), .telemetry_exchange=(uintptr_t)telemetry_driver_probe};
+    R4GfxTelemetryRequest request = {.version=1, .size=sizeof(request), .adapter_id=3, .memory_generation=UINT64_C(0x200000007), .metric_mask=0x201};
+    R4GfxTelemetryState state = {.adapter_id=79}, unchanged = state;
+    R4GfxTelemetryDemand demand = {.until_ns=79}, original = demand;
+    for(unsigned n=808;n<816;++n){table.size=n;assert(r4draw_gfx_telemetry(&draw,&request,&state)==R4OS_ERR_NO_FN);assert(memcmp(&state,&unchanged,sizeof(state))==0);}
+    for(unsigned n=192;n<200;++n){driver.size=n;assert(r4driver_telemetry_exchange(&driver,&state,&demand)==R4OS_ERR_NO_FN);assert(memcmp(&demand,&original,sizeof(demand))==0);}
+    table.size=816;driver.size=200;budget_probe_rc=R4OS_GFX_BUFFER_ERROR_STALE;
+    assert(r4draw_gfx_telemetry(&draw,&request,&state)==budget_probe_rc && memcmp(&state,&unchanged,sizeof(state))==0);
+    assert(r4driver_telemetry_exchange(&driver,&state,&demand)==budget_probe_rc && memcmp(&demand,&original,sizeof(demand))==0);
+    budget_probe_rc=1;
+    assert(r4draw_gfx_telemetry(&draw,&request,&state)==1 && state.metrics[5].values[0]==-12500 && state.metrics[6].status==R4OS_GFX_TELEMETRY_UNAVAILABLE);
+    assert(r4driver_telemetry_exchange(&driver,&state,&demand)==1 && demand.metric_mask==0x201 && demand.until_ns==UINT64_C(0x200000001));
+}
 static void stats_facade_probe(void) {
+    telemetry_facade_probe();
     budget_facade_probe();
     _Static_assert(sizeof(R4GfxBufferStats) == 136 && offsetof(R4GfxBufferStats, system_bytes) == 56, "statistics prefix");
     R4XStartR4Draw table = {.size=sizeof(table), .gfx_buffer_stats=(uintptr_t)old_stats_probe};

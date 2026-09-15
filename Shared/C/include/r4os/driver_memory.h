@@ -5,6 +5,17 @@
 /* Obtained by the R4D v25 gfx_memory_query tail. Calls require the current
  * driver callback context. No global CPU pointer is a DMA or GPU address. */
 
+static inline int32_t r4driver_telemetry_exchange(const R4GfxDriverMemoryApi *table, const R4GfxTelemetryState *input, R4GfxTelemetryDemand *output) {
+    if (table == 0 || table->version != 1 || table->size < offsetof(R4GfxDriverMemoryApi, telemetry_exchange) + sizeof(uint64_t) || table->telemetry_exchange == 0) return R4OS_ERR_NO_FN;
+    if (input == 0 || output == 0) return R4OS_GFX_BUFFER_ERROR_INVALID;
+    typedef int32_t (*Callback)(const R4GfxTelemetryState *, R4GfxTelemetryDemand *);
+    R4GfxTelemetryDemand temporary = {0};
+    temporary.version = 1; temporary.size = sizeof(temporary);
+    int32_t rc = ((Callback)(uintptr_t)table->telemetry_exchange)(input, &temporary);
+    if (rc == R4OS_GFX_BUFFER_RESULT_OK) *output = temporary;
+    return rc;
+}
+
 static inline int32_t r4driver_memory_budget(const R4GfxDriverMemoryApi *table, const R4GfxDeviceBudgetRequest *input, R4GfxDeviceBudgetState *output) {
     if (table == 0 || table->version != 1 || table->size < offsetof(R4GfxDriverMemoryApi, memory_budget) + sizeof(uint64_t) || table->memory_budget == 0) return R4OS_ERR_NO_FN;
     if (input == 0 || output == 0) return R4OS_GFX_BUFFER_ERROR_INVALID;

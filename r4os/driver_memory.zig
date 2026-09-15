@@ -4,6 +4,15 @@ const abi = @import("r4os_contract").abi;
 pub const Context = struct {
     table: abi.GfxDriverMemoryApi,
 
+    pub fn telemetryExchange(self: *const Context, input: *const abi.GfxTelemetryState, output: *abi.GfxTelemetryDemand) i32 {
+        if (self.table.version != 1 or self.table.size < @offsetOf(abi.GfxDriverMemoryApi, "telemetry_exchange") + 8 or self.table.telemetry_exchange == 0) return abi.err_no_fn;
+        const callback: *const fn (*const abi.GfxTelemetryState, *abi.GfxTelemetryDemand) callconv(.c) i32 = @ptrFromInt(self.table.telemetry_exchange);
+        var temporary: abi.GfxTelemetryDemand = .{};
+        const rc = callback(input, &temporary);
+        if (rc == abi.gfx_buffer_result_ok) output.* = temporary;
+        return rc;
+    }
+
     pub fn memoryBudget(self: *const Context, input: *const abi.GfxDeviceBudgetRequest, output: *abi.GfxDeviceBudgetState) i32 {
         if (self.table.version != 1 or self.table.size < @offsetOf(abi.GfxDriverMemoryApi, "memory_budget") + 8 or self.table.memory_budget == 0) return abi.err_no_fn;
         const callback: *const fn (*const abi.GfxDeviceBudgetRequest, *abi.GfxDeviceBudgetState) callconv(.c) i32 = @ptrFromInt(self.table.memory_budget);
