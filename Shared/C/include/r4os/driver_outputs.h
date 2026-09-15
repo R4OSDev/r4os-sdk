@@ -2,6 +2,26 @@
 #define R4OS_DRIVER_OUTPUTS_H
 #include "r4draw.h"
 
+static inline int r4driver_output_supports_power(const R4GfxDriverOutputApi *table) {
+    return table != 0 && table->version == 1 && table->size >= offsetof(R4GfxDriverOutputApi, power_read) + sizeof(uint64_t) &&
+        table->power_publish != 0 && table->power_read != 0;
+}
+static inline int32_t r4driver_output_publish_power(const R4GfxDriverOutputApi *table, const R4GfxOutputPower *input) {
+    if (!r4driver_output_supports_power(table)) return R4OS_ERR_NO_FN;
+    if (input == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    typedef int32_t (*Callback)(const R4GfxOutputPower *);
+    return ((Callback)(uintptr_t)table->power_publish)(input);
+}
+static inline int32_t r4driver_output_read_power(const R4GfxDriverOutputApi *table, const R4GfxOutputId *identity, R4GfxPowerRequest *output) {
+    if (!r4driver_output_supports_power(table)) return R4OS_ERR_NO_FN;
+    if (identity == 0 || output == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    typedef int32_t (*Callback)(const R4GfxOutputId *, R4GfxPowerRequest *);
+    R4GfxPowerRequest value = {0}; value.version = 1; value.size = sizeof(value);
+    int32_t code = ((Callback)(uintptr_t)table->power_read)(identity, &value);
+    if (code == R4OS_GFX_OUTPUT_OK) *output = value;
+    return code;
+}
+
 static inline int r4driver_output_supports_refresh(const R4GfxDriverOutputApi *table) {
     return table != 0 && table->version == 1 && table->size >= offsetof(R4GfxDriverOutputApi, refresh_read) + sizeof(uint64_t) &&
         table->refresh_publish != 0 && table->refresh_read != 0;

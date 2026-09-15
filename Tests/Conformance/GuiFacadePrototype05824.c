@@ -11,7 +11,8 @@
 _Static_assert(sizeof(R4GfxReceiverSource) == 16, "receiver source layout");
 _Static_assert(sizeof(R4GfxReceiverInfo) == 8224 && offsetof(R4GfxReceiverInfo, modes) == 32 && offsetof(R4GfxReceiverInfo, edid) == 4128, "receiver record layout");
 _Static_assert(sizeof(R4GfxReceiverUpdate) == 48 && offsetof(R4GfxReceiverUpdate, receivers) == 40, "receiver update layout");
-_Static_assert(sizeof(R4GfxDriverOutputApi) == 144 && offsetof(R4GfxDriverOutputApi, register_source) == 24 && offsetof(R4GfxDriverOutputApi, mode_enable) == 48 && offsetof(R4GfxDriverOutputApi, audio_publish) == 72 && offsetof(R4GfxDriverOutputApi, output_pause) == 88 && offsetof(R4GfxDriverOutputApi, mode_restore) == 96 && offsetof(R4GfxDriverOutputApi, mode_status) == 104 && offsetof(R4GfxDriverOutputApi, color_publish) == 112 && offsetof(R4GfxDriverOutputApi, mode_read_color) == 120 && offsetof(R4GfxDriverOutputApi, refresh_publish) == 128 && offsetof(R4GfxDriverOutputApi, refresh_read) == 136, "legacy output prefix and optional tails");
+_Static_assert(sizeof(R4GfxDriverOutputApi) == 160 && offsetof(R4GfxDriverOutputApi, register_source) == 24 && offsetof(R4GfxDriverOutputApi, mode_enable) == 48 && offsetof(R4GfxDriverOutputApi, audio_publish) == 72 && offsetof(R4GfxDriverOutputApi, output_pause) == 88 && offsetof(R4GfxDriverOutputApi, mode_restore) == 96 && offsetof(R4GfxDriverOutputApi, mode_status) == 104 && offsetof(R4GfxDriverOutputApi, color_publish) == 112 && offsetof(R4GfxDriverOutputApi, mode_read_color) == 120 && offsetof(R4GfxDriverOutputApi, refresh_publish) == 128 && offsetof(R4GfxDriverOutputApi, refresh_read) == 136 && offsetof(R4GfxDriverOutputApi, power_publish) == 144 && offsetof(R4GfxDriverOutputApi, power_read) == 152, "legacy output prefix and optional tails");
+_Static_assert(sizeof(R4GfxOutputPower) == 96 && sizeof(R4GfxPowerRequest) == 64, "screen power payloads");
 _Static_assert(sizeof(R4GfxOutputColorState) == 192 && offsetof(R4GfxOutputColorState, revision) == 32 && offsetof(R4GfxOutputColorState, max_tmds_clock_hz) == 112 && offsetof(R4GfxOutputColorState, link_kind) == 128, "output color compatible prefix and link tail");
 
 static int32_t cursor_info_probe(R4DisplayCursorInfo *out) {
@@ -398,7 +399,48 @@ static void mode_color_facade_probe(void) {
     driver.size = 128;
     assert(r4driver_output_read_mode_color(&driver, submitted.ticket, 2, &color) == 1 && color.ticket == tested.commit_sequence && color.sequence == 2 && color.signal.metadata.max_cll == 1000);
 }
+static int32_t power_read_probe(const R4GfxOutputId *identity, R4GfxOutputPower *output) {
+    assert(output->version == 1 && output->size == 96);
+    output->identity = *identity; output->sequence = UINT64_C(0x200000079);
+    return identity->connector_id == 7 ? -3 : 1;
+}
+static int32_t power_intent_probe(const R4GfxPowerRequest *input, R4GfxPowerRequest *output) {
+    assert(output->version == 1 && output->size == 64);
+    *output = *input; output->sequence = UINT64_C(0x300000079);
+    return input->identity.connector_id == 7 ? -3 : 1;
+}
+static int32_t power_driver_read_probe(const R4GfxOutputId *identity, R4GfxPowerRequest *output) {
+    R4GfxPowerRequest input = {.version=1, .size=sizeof(input), .identity=*identity};
+    return power_intent_probe(&input, output);
+}
+static int32_t power_publish_probe(const R4GfxOutputPower *input) { return input->sequence == UINT64_C(0x200000079) ? 1 : -3; }
+static void power_facade_probe(void) {
+    R4XStartR4Draw table = {.gfx_output_power=(uintptr_t)power_read_probe, .gfx_power_request=(uintptr_t)power_intent_probe};
+    R4Draw draw = {.table=&table};
+    R4GfxPowerRequest request = {.version=1, .size=sizeof(request), .identity={.connection_generation=UINT64_C(0x400000079)}};
+    R4GfxOutputPower read = {.sequence=79}; R4GfxPowerRequest intent = {.sequence=79};
+    for (unsigned size=816; size<824; ++size) {
+        table.size=size; assert(r4draw_gfx_output_power(&draw,&request.identity,&read)==R4OS_ERR_NO_FN && read.sequence==79);
+    }
+    table.size=824; assert(r4draw_gfx_output_power(&draw,&request.identity,&read)==1 && read.identity.connection_generation==request.identity.connection_generation);
+    for (unsigned size=824; size<832; ++size) {
+        table.size=size; assert(r4draw_gfx_power_request(&draw,&request,&intent)==R4OS_ERR_NO_FN && intent.sequence==79);
+    }
+    table.size=832; assert(r4draw_gfx_power_request(&draw,&request,&intent)==1);
+    R4GfxDriverOutputApi driver = {.version=1, .power_publish=(uintptr_t)power_publish_probe, .power_read=(uintptr_t)power_driver_read_probe};
+    for (unsigned size=144; size<160; ++size) {
+        driver.size=size; assert(!r4driver_output_supports_power(&driver) && r4driver_output_read_power(&driver,&request.identity,&intent)==R4OS_ERR_NO_FN);
+    }
+    driver.size=160; assert(r4driver_output_publish_power(&driver,&read)==1 && r4driver_output_read_power(&driver,&request.identity,&intent)==1);
+    R4GfxOutputPower old_read=read; R4GfxPowerRequest old_intent=intent;
+    request.identity.connector_id=7;
+    assert(r4draw_gfx_output_power(&draw,&request.identity,&read)==-3);
+    assert(r4draw_gfx_power_request(&draw,&request,&intent)==-3);
+    assert(r4driver_output_read_power(&driver,&request.identity,&intent)==-3);
+    assert(memcmp(&read,&old_read,sizeof(read))==0 && memcmp(&intent,&old_intent,sizeof(intent))==0);
+}
 static void backend_profile_probe(void) {
+    power_facade_probe();
     mode_color_facade_probe();
     refresh_facade_probe();
     color_facade_probe();

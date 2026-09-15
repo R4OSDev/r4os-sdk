@@ -1,5 +1,22 @@
 const abi = @import("r4os_contract").abi;
 pub const Context = struct {
+    pub fn supportsPower(self: *const Context) bool {
+        return self.table.version == 1 and self.table.size >= @offsetOf(abi.GfxDriverOutputApi, "power_read") + 8 and
+            self.table.power_publish != 0 and self.table.power_read != 0;
+    }
+    pub fn publishPower(self: *const Context, input: *const abi.GfxOutputPower) i32 {
+        if (!self.supportsPower()) return abi.err_no_fn;
+        const callback: *const fn (*const abi.GfxOutputPower) callconv(.c) i32 = @ptrFromInt(self.table.power_publish);
+        return callback(input);
+    }
+    pub fn readPower(self: *const Context, identity: *const abi.GfxOutputId, output: *abi.GfxPowerRequest) i32 {
+        if (!self.supportsPower()) return abi.err_no_fn;
+        const callback: *const fn (*const abi.GfxOutputId, *abi.GfxPowerRequest) callconv(.c) i32 = @ptrFromInt(self.table.power_read);
+        var value: abi.GfxPowerRequest = .{};
+        const code = callback(identity, &value);
+        if (code == abi.gfx_output_ok) output.* = value;
+        return code;
+    }
     pub fn supportsRefresh(self: *const Context) bool {
         return self.table.version == 1 and self.table.size >= @offsetOf(abi.GfxDriverOutputApi, "refresh_read") + 8 and
             self.table.refresh_publish != 0 and self.table.refresh_read != 0;

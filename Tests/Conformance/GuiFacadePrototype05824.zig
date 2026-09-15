@@ -91,6 +91,7 @@ fn colorReadProbe(fence: *const r4os.abi.GfxFence, output: *r4os.abi.GfxRenderCo
 fn colorFacadeProbe() !void {
     try modeColorFacadeProbe();
     try refreshFacadeProbe();
+    try powerFacadeProbe();
     const a = r4os.abi; const t = std.testing;
     var tables = makeTables(true);
     var imports: [3]a.R4XStartImport = undefined; var raw: a.R4XStartContext = undefined;
@@ -210,6 +211,62 @@ fn refreshFacadeProbe() !void {
     try t.expectEqual(a.gfx_output_error_stale, outputs.refresh(&request.target, &read));
     try t.expectEqual(a.gfx_output_error_stale, outputs.requestRefresh(&request, &intent));
     try t.expectEqual(a.gfx_output_error_stale, driver.readRefresh(&request.target, &intent));
+    try t.expect(std.meta.eql(read, old_read) and std.meta.eql(intent, old_intent));
+}
+fn powerReadProbe(identity: *const r4os.abi.GfxOutputId, output: *r4os.abi.GfxOutputPower) callconv(.c) i32 {
+    std.debug.assert(output.version == 1 and output.size == 96);
+    output.* = .{ .identity = identity.*, .sequence = 0x200000079 };
+    return if (identity.connector_id == 7) r4os.abi.gfx_output_error_stale else 1;
+}
+fn powerIntentProbe(input: *const r4os.abi.GfxPowerRequest, output: *r4os.abi.GfxPowerRequest) callconv(.c) i32 {
+    std.debug.assert(output.version == 1 and output.size == 64);
+    output.* = input.*; output.sequence = 0x300000079;
+    return if (input.identity.connector_id == 7) r4os.abi.gfx_output_error_stale else 1;
+}
+fn powerDriverReadProbe(identity: *const r4os.abi.GfxOutputId, output: *r4os.abi.GfxPowerRequest) callconv(.c) i32 {
+    return powerIntentProbe(&.{ .identity = identity.* }, output);
+}
+fn powerPublishProbe(input: *const r4os.abi.GfxOutputPower) callconv(.c) i32 { return if (input.sequence == 0x200000079) 1 else -3; }
+fn powerFacadeProbe() !void {
+    const a = r4os.abi; const t = std.testing;
+    var tables = makeTables(true);
+    var imports: [3]a.R4XStartImport = undefined; var raw: a.R4XStartContext = undefined;
+    var app = try makeApp(&tables, &imports, &raw);
+    const outputs = app.drawing().?.outputs();
+    tables[2].gfx_output_power = @intFromPtr(&powerReadProbe);
+    tables[2].gfx_power_request = @intFromPtr(&powerIntentProbe);
+    var request: a.GfxPowerRequest = .{ .identity = .{ .connection_generation = 0x400000079 } };
+    var read: a.GfxOutputPower = .{ .sequence = 79 };
+    var intent: a.GfxPowerRequest = .{ .sequence = 79 };
+    for (816..824) |size| {
+        tables[2].size = @intCast(size);
+        try t.expectEqual(a.err_no_fn, outputs.power(&request.identity, &read));
+        try t.expect(read.sequence == 79);
+    }
+    tables[2].size = 824;
+    try t.expectEqual(@as(i32, 1), outputs.power(&request.identity, &read));
+    try t.expect(read.identity.connection_generation == request.identity.connection_generation);
+    for (824..832) |size| {
+        tables[2].size = @intCast(size);
+        try t.expectEqual(a.err_no_fn, outputs.requestPower(&request, &intent));
+        try t.expect(intent.sequence == 79);
+    }
+    tables[2].size = 832;
+    try t.expectEqual(@as(i32, 1), outputs.requestPower(&request, &intent));
+    var driver: r4os.driver_outputs.Context = .{ .table = .{ .power_publish = @intFromPtr(&powerPublishProbe), .power_read = @intFromPtr(&powerDriverReadProbe) } };
+    for (144..160) |size| {
+        driver.table.size = @intCast(size);
+        try t.expect(!driver.supportsPower());
+        try t.expectEqual(a.err_no_fn, driver.readPower(&request.identity, &intent));
+    }
+    driver.table.size = 160;
+    try t.expectEqual(@as(i32, 1), driver.publishPower(&read));
+    try t.expectEqual(@as(i32, 1), driver.readPower(&request.identity, &intent));
+    const old_read = read; const old_intent = intent;
+    request.identity.connector_id = 7;
+    try t.expectEqual(a.gfx_output_error_stale, outputs.power(&request.identity, &read));
+    try t.expectEqual(a.gfx_output_error_stale, outputs.requestPower(&request, &intent));
+    try t.expectEqual(a.gfx_output_error_stale, driver.readPower(&request.identity, &intent));
     try t.expect(std.meta.eql(read, old_read) and std.meta.eql(intent, old_intent));
 }
 fn gfxProfileProbe(input: *const r4os.abi.GfxBackendRegistration, profile: *const r4os.abi.GfxBackendProfile, out: *r4os.abi.GfxBackendBinding) callconv(.c) i32 {

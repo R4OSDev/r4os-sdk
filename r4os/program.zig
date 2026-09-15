@@ -1557,6 +1557,20 @@ pub const Context = struct {
         if (code == abi.gfx_output_ok) output.* = value;
         return code;
     }
+    pub fn gfxOutputPower(self: *const Context, identity: *const abi.GfxOutputId, output: *abi.GfxOutputPower) i32 {
+        const table_fn = self.drawFn("gfx_output_power") orelse return self.unavailable("draw");
+        var value: abi.GfxOutputPower = .{};
+        const code = table_fn(identity, &value);
+        if (code == abi.gfx_output_ok) output.* = value;
+        return code;
+    }
+    pub fn gfxPowerRequest(self: *const Context, input: *const abi.GfxPowerRequest, output: *abi.GfxPowerRequest) i32 {
+        const table_fn = self.drawFn("gfx_power_request") orelse return self.unavailable("draw");
+        var value: abi.GfxPowerRequest = .{};
+        const code = table_fn(input, &value);
+        if (code == abi.gfx_output_ok) output.* = value;
+        return code;
+    }
     pub fn gfxRefreshRequest(self: *const Context, input: *const abi.GfxRefreshRequest, output: *abi.GfxRefreshRequest) i32 {
         const table_fn = self.drawFn("gfx_refresh_request") orelse return self.unavailable("draw");
         var value: abi.GfxRefreshRequest = .{};
