@@ -47,6 +47,9 @@ pub const ZigModuleBuild = struct {
 /// Manifestreihenfolge; Namen und Importvertrag bleiben allein im Manifest.
 pub const R4MFBuildOptions = struct {
     zig_module_roots: ?[]const std.Build.LazyPath = null,
+    /// Owning R4L build supplies exactly one tracked artifact per declared
+    /// NATIVE_ARCHIVE, in manifest order; no host library search paths.
+    native_archives: []const std.Build.LazyPath = &.{},
 };
 
 /// Eine einzubettende Ressource fuer den R4M0-Ressourcenbereich (0.61.12).
@@ -538,6 +541,7 @@ pub const Sdk = struct {
                 .linker_script = self.profile.linker_script,
                 .entry_symbol = "r4l_entry",
                 .zig_modules = implementation_modules,
+                .native_archives = loaded.native_archives,
                 .c_source_files = c_source_files,
                 .c_include_roots = c_include_roots,
                 .c_defines = loaded.manifest.c_defines,
@@ -826,6 +830,7 @@ const LoadedR4MF = struct {
     project_path: []const u8,
     source_paths: []const []const u8,
     zig_modules: []const ZigModuleBuild,
+    native_archives: []const std.Build.LazyPath,
 };
 
 fn loadCurrentR4MF(b: *std.Build, manifest_path: std.Build.LazyPath, options: R4MFBuildOptions) LoadedR4MF {
@@ -842,6 +847,8 @@ fn loadCurrentR4MF(b: *std.Build, manifest_path: std.Build.LazyPath, options: R4
     };
     const manifest = module_manifest.parse(b.allocator, canonical_path, bytes) catch |err|
         @panic(b.fmt("R4MF current-contract error: {s} ({s})", .{ full_path, @errorName(err) }));
+    if (options.native_archives.len != manifest.native_archives.len)
+        @panic(b.fmt("R4MF native-archive mapping error: {s} declares {d}, build supplies {d}", .{ full_path, manifest.native_archives.len, options.native_archives.len }));
     // derivePlan prueft den R4X-Startvertrag und die Profilimporte; fuer R4D
     // R4P und R4L gibt es keinen solchen Vertrag.
     if (manifest.kind == .r4x) {
@@ -885,6 +892,7 @@ fn loadCurrentR4MF(b: *std.Build, manifest_path: std.Build.LazyPath, options: R4
         .project_path = project_path,
         .source_paths = source_paths,
         .zig_modules = zig_modules,
+        .native_archives = options.native_archives,
     };
 }
 
@@ -1528,6 +1536,7 @@ const RawOptions = struct {
     app_source_file: ?std.Build.LazyPath = null,
     app_profile: ?AppProfile = null,
     zig_modules: []const ZigModuleBuild = &.{},
+    native_archives: []const std.Build.LazyPath = &.{},
     /// Zusaetzliche C-Quellen eines gemischten Zig/R4L- oder Zig/R4D-Projekts. Die
     /// Manifestreihenfolge bleibt erhalten; Include-Wurzeln sind aus den
     /// jeweiligen Quellverzeichnissen abgeleitet.
@@ -1582,6 +1591,7 @@ fn addRawModule(b: *std.Build, opts: RawOptions) std.Build.LazyPath {
     });
     exe.entry = .{ .symbol_name = opts.entry_symbol };
     exe.link_emit_relocs = true;
+    for (opts.native_archives) |archive| exe.root_module.addObjectFile(archive);
     for (opts.c_include_roots) |include_root| exe.root_module.addIncludePath(include_root);
     for (opts.c_defines) |entry| exe.root_module.addCMacro(entry.name, entry.value);
     const base_c_flags: []const []const u8 = &.{

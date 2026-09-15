@@ -173,6 +173,9 @@ pub const Manifest = struct {
     optimization: ?Optimization = null,
     package: ?[]const u8 = null,
     zig_modules: []const []const u8 = &.{},
+    /// Logical native archive names, resolved to tracked LazyPaths by the
+    /// owning library build. No host linker or system library search paths.
+    native_archives: []const []const u8 = &.{},
     c_includes: []const []const u8 = &.{},
     c_defines: []const CDefineEntry = &.{},
     c_flags: []const []const u8 = &.{},
@@ -267,6 +270,7 @@ fn parseV2(allocator: std.mem.Allocator, path: []const u8, text: []const u8) !Ma
     var package: ?[]const u8 = null;
     var sources: std.ArrayList([]const u8) = .empty;
     var zig_modules: std.ArrayList([]const u8) = .empty;
+    var native_archives: std.ArrayList([]const u8) = .empty;
     var c_includes: std.ArrayList([]const u8) = .empty;
     var c_defines: std.ArrayList(CDefineEntry) = .empty;
     var c_flags: std.ArrayList([]const u8) = .empty;
@@ -328,6 +332,8 @@ fn parseV2(allocator: std.mem.Allocator, path: []const u8, text: []const u8) !Ma
             try setSingle(&package, field.value);
         } else if (std.mem.eql(u8, field.key, "ZIG_MODULE")) {
             try zig_modules.append(allocator, field.value);
+        } else if (std.mem.eql(u8, field.key, "NATIVE_ARCHIVE")) {
+            try native_archives.append(allocator, field.value);
         } else if (std.mem.eql(u8, field.key, "C_INCLUDE")) {
             try c_includes.append(allocator, field.value);
         } else if (std.mem.eql(u8, field.key, "C_DEFINE")) {
@@ -390,6 +396,9 @@ fn parseV2(allocator: std.mem.Allocator, path: []const u8, text: []const u8) !Ma
     try validateTarget(parsed_target, parsed_kind);
     if (parsed_language == .c and zig_modules.items.len != 0) return error.CForbidsZigModule;
     try validateZigModules(zig_modules.items);
+    if (native_archives.items.len != 0 and (parsed_kind != .r4l or parsed_language != .zig)) return error.NativeArchiveRequiresZigLibrary;
+    for (native_archives.items) |archive| try validateName(archive);
+    ensureUnique(native_archives.items, true) catch return error.DuplicateNativeArchive;
     try validateCConfiguration(c_includes.items, c_defines.items, c_flags.items);
     const has_c_source = parsed_language == .c or (allows_c_companions and parsed_language == .zig and sources.items.len > 1);
     if (!has_c_source and (c_includes.items.len != 0 or c_defines.items.len != 0 or c_flags.items.len != 0)) {
@@ -539,6 +548,7 @@ fn parseV2(allocator: std.mem.Allocator, path: []const u8, text: []const u8) !Ma
         .optimization = parsed_optimization,
         .package = package,
         .zig_modules = try zig_modules.toOwnedSlice(allocator),
+        .native_archives = try native_archives.toOwnedSlice(allocator),
         .c_includes = try c_includes.toOwnedSlice(allocator),
         .c_defines = try c_defines.toOwnedSlice(allocator),
         .c_flags = try c_flags.toOwnedSlice(allocator),
@@ -1517,6 +1527,7 @@ test "runtime R4L accepts one Zig root followed by library-owned C sources" {
         \\LANGUAGE=Zig
         \\SOURCE=Source/main.zig
         \\SOURCE=ThirdParty/codec.c
+        \\NATIVE_ARCHIVE=CODEC_NATIVE
         \\C_INCLUDE=ThirdParty/include
         \\C_DEFINE=CODEC_CONFIG=<codec_config.h>
         \\C_FLAG=-fno-builtin
@@ -1538,6 +1549,11 @@ test "runtime R4L accepts one Zig root followed by library-owned C sources" {
     try std.testing.expectEqual(@as(usize, 2), value.sources.len);
     try std.testing.expectEqualStrings("Source/main.zig", value.sources[0]);
     try std.testing.expectEqualStrings("ThirdParty/codec.c", value.sources[1]);
+    try std.testing.expectEqualStrings("CODEC_NATIVE", value.native_archives[0]);
+    const duplicate_archive = try std.fmt.allocPrint(allocator, "{s}\nNATIVE_ARCHIVE=codec_native\n", .{text});
+    try std.testing.expectError(error.DuplicateNativeArchive, parse(allocator, "MixedLib/module.R4MF", duplicate_archive));
+    const archive_path = try std.mem.replaceOwned(u8, allocator, text, "NATIVE_ARCHIVE=CODEC_NATIVE", "NATIVE_ARCHIVE=../codec.a");
+    try std.testing.expectError(error.InvalidName, parse(allocator, "MixedLib/module.R4MF", archive_path));
     try std.testing.expectEqualStrings("ThirdParty/include", value.c_includes[0]);
     try std.testing.expectEqualStrings("CODEC_CONFIG", value.c_defines[0].name);
     try std.testing.expectEqualStrings("<codec_config.h>", value.c_defines[0].value);
