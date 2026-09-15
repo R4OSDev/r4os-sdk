@@ -45,4 +45,8 @@ pub const Context = struct {
     pub fn stats(self: *const Context, output: *abi.GfxBufferStats) i32 {
         return self.base.gfxBufferStats(output);
     }
+
+    pub fn memoryBudget(self: *const Context, input: *const abi.GfxDeviceBudgetRequest, output: *abi.GfxDeviceBudgetState) i32 {
+        return self.base.gfxMemoryBudget(input, output);
+    }
 };

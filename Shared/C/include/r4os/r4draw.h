@@ -428,9 +428,20 @@ static inline int32_t r4draw_gfx_buffer_export_raster(const R4Draw *draw, const 
     return ((R4DrawGfxBufferExportRasterFn)(uintptr_t)draw->table->gfx_buffer_export_raster)(lease, output);
 }
 
+static inline int32_t r4draw_gfx_memory_budget(const R4Draw *draw, const R4GfxDeviceBudgetRequest *input, R4GfxDeviceBudgetState *output) {
+    if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_memory_budget) + sizeof(uintptr_t) || draw->table->gfx_memory_budget == 0) return R4OS_ERR_NO_FN;
+    if (input == 0 || output == 0) return R4OS_GFX_BUFFER_ERROR_INVALID;
+    R4GfxDeviceBudgetState temporary = {0};
+    temporary.version = 1; temporary.size = sizeof(temporary);
+    int32_t rc = ((R4DrawGfxMemoryBudgetFn)(uintptr_t)draw->table->gfx_memory_budget)(input, &temporary);
+    if (rc == R4OS_GFX_BUFFER_RESULT_OK) *output = temporary;
+    return rc;
+}
+
 static inline int32_t r4draw_gfx_buffer_stats(const R4Draw *draw, R4GfxBufferStats * output) {
     if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_buffer_stats) + sizeof(uintptr_t) || draw->table->gfx_buffer_stats == 0) return R4OS_ERR_NO_FN;
     if (output == 0) return R4OS_GFX_BUFFER_ERROR_INVALID;
+    *output = (R4GfxBufferStats){0};
     output->version = 1; output->size = sizeof(R4GfxBufferStats);
     return ((R4DrawGfxBufferStatsFn)(uintptr_t)draw->table->gfx_buffer_stats)(output);
 }

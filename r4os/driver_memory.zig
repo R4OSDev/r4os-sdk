@@ -4,6 +4,15 @@ const abi = @import("r4os_contract").abi;
 pub const Context = struct {
     table: abi.GfxDriverMemoryApi,
 
+    pub fn memoryBudget(self: *const Context, input: *const abi.GfxDeviceBudgetRequest, output: *abi.GfxDeviceBudgetState) i32 {
+        if (self.table.version != 1 or self.table.size < @offsetOf(abi.GfxDriverMemoryApi, "memory_budget") + 8 or self.table.memory_budget == 0) return abi.err_no_fn;
+        const callback: *const fn (*const abi.GfxDeviceBudgetRequest, *abi.GfxDeviceBudgetState) callconv(.c) i32 = @ptrFromInt(self.table.memory_budget);
+        var temporary: abi.GfxDeviceBudgetState = .{};
+        const rc = callback(input, &temporary);
+        if (rc == abi.gfx_buffer_result_ok) output.* = temporary;
+        return rc;
+    }
+
     pub fn nativeRegister(self: *const Context, input: *const abi.GfxNativeProvider, output: *abi.GfxBufferHandle) i32 {
         if (self.table.version != 1 or self.table.size < @offsetOf(abi.GfxDriverMemoryApi, "native_register") + 8 or self.table.native_register == 0) return abi.err_no_fn;
         const callback: *const fn (*const abi.GfxNativeProvider, *abi.GfxBufferHandle) callconv(.c) i32 = @ptrFromInt(self.table.native_register);
@@ -109,6 +118,7 @@ pub const Context = struct {
     pub fn bufferStats(self: *const Context, output: *abi.GfxBufferStats) i32 {
         if (self.table.version != 1 or self.table.size < @offsetOf(abi.GfxDriverMemoryApi, "buffer_stats") + 8 or self.table.buffer_stats == 0) return abi.err_no_fn;
         const callback: *const fn (*abi.GfxBufferStats) callconv(.c) i32 = @ptrFromInt(self.table.buffer_stats);
+        output.* = .{};
         return callback(output);
     }
 

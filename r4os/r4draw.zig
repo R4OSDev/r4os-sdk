@@ -75,6 +75,10 @@ pub const Context = struct {
         return self.base.gfxBufferStats(output);
     }
 
+    pub fn gfxMemoryBudget(self: *const Context, input: *const abi.GfxDeviceBudgetRequest, output: *abi.GfxDeviceBudgetState) i32 {
+        return self.base.gfxMemoryBudget(input, output);
+    }
+
     pub fn buffers(self: *const Context) @import("gfx_buffers.zig").Context {
         return .{ .base = self.base };
     }

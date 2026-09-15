@@ -1506,10 +1506,17 @@ pub const Context = struct {
         return table_fn(lease, output);
     }
 
+    pub fn gfxMemoryBudget(self: *const Context, input: *const abi.GfxDeviceBudgetRequest, output: *abi.GfxDeviceBudgetState) i32 {
+        const callback = self.drawFn("gfx_memory_budget") orelse return self.unavailable("draw");
+        var temporary: abi.GfxDeviceBudgetState = .{};
+        const rc = callback(input, &temporary);
+        if (rc == abi.gfx_buffer_result_ok) output.* = temporary;
+        return rc;
+    }
+
     pub fn gfxBufferStats(self: *const Context, output: *abi.GfxBufferStats) i32 {
         const table_fn = self.drawFn("gfx_buffer_stats") orelse return self.unavailable("draw");
-        output.version = 1;
-        output.size = @sizeOf(abi.GfxBufferStats);
+        output.* = .{};
         return table_fn(output);
     }
 

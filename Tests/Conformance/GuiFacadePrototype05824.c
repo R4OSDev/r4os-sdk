@@ -175,7 +175,7 @@ static int32_t gfx_map_probe(const R4GfxBufferHandle *ref, uint32_t access, uint
     out->byte_length = bytes;
     return 1;
 }
-_Static_assert(sizeof(R4GfxOwnedBufferReservation)==88 && sizeof(R4GfxOwnedBufferRelease)==80 && offsetof(R4GfxDriverMemoryApi,buffer_reserve)==112 && offsetof(R4GfxDriverMemoryApi,native_register)==152 && sizeof(R4GfxDriverMemoryApi)==184, "owned BO ABI");
+_Static_assert(sizeof(R4GfxOwnedBufferReservation)==88 && sizeof(R4GfxOwnedBufferRelease)==80 && offsetof(R4GfxDriverMemoryApi,buffer_reserve)==112 && offsetof(R4GfxDriverMemoryApi,native_register)==152 && sizeof(R4GfxDriverMemoryApi)==192 && offsetof(R4GfxDriverMemoryApi,memory_budget)==184, "owned BO ABI");
 static int32_t owned_reserve(const R4GfxBufferDescriptor *d, uint64_t c, R4GfxOwnedBufferReservation *o){assert(d && c==UINT64_C(0x100000003) && o->size==88);o->cookie=c;return 1;}
 static int32_t owned_commit(const R4GfxOwnedBufferReservation *r,R4GfxBufferReference *o){assert(r->cookie==UINT64_C(0x100000003) && o->size==48);return 1;}
 static int32_t owned_abort(const R4GfxOwnedBufferReservation *r,uint32_t q){assert(r->cookie==UINT64_C(0x100000003) && q==0);return -4;}
@@ -725,7 +725,50 @@ static R4App make_app(R4XStartR4Sys *sys, R4XStartR4Desk *desk, R4XStartR4Draw *
     return app;
 }
 
+static int32_t old_stats_probe(R4GfxBufferStats *output) {
+    assert(output->version == 1 && output->size == 136);
+    const R4GfxBufferStats legacy = {.version=1, .size=56, .committed_bytes=UINT64_C(0x100000003)};
+    memcpy(output, &legacy, 56);
+    return 1;
+}
+static int32_t budget_probe_rc = 1;
+static int32_t budget_probe(const R4GfxDeviceBudgetRequest *input, R4GfxDeviceBudgetState *output) {
+    assert(input->adapter_id == 3 && input->memory_generation == UINT64_C(0x200000007) && output->version == 1 && output->size == 64);
+    output->adapter_id = input->adapter_id; output->memory_generation = input->memory_generation;
+    output->limit_bytes = UINT64_C(0x400000000); output->charged_bytes = UINT64_C(0x100000003);
+    return budget_probe_rc;
+}
+static void budget_facade_probe(void) {
+    _Static_assert(sizeof(R4GfxDeviceBudgetRequest)==32 && sizeof(R4GfxDeviceBudgetState)==64 && offsetof(R4XStartR4Draw,gfx_memory_budget)==800, "memory budget ABI");
+    R4GfxDeviceBudgetRequest input = {.version=1,.size=32,.adapter_id=3,.memory_generation=UINT64_C(0x200000007)};
+    R4GfxDeviceBudgetState output = {.charged_bytes=79};
+    const R4GfxDeviceBudgetState unchanged = output;
+    R4GfxDriverMemoryApi memory = {.version=1,.size=192,.memory_budget=(uintptr_t)budget_probe};
+    R4XStartR4Draw table = {.size=808,.gfx_memory_budget=(uintptr_t)budget_probe};
+    R4Draw draw = {.table=&table};
+    for(unsigned n=184;n<192;++n){memory.size=n;assert(r4driver_memory_budget(&memory,&input,&output)==R4OS_ERR_NO_FN);assert(memcmp(&unchanged,&output,sizeof(output))==0);}
+    for(unsigned n=800;n<808;++n){table.size=n;assert(r4draw_gfx_memory_budget(&draw,&input,&output)==R4OS_ERR_NO_FN);assert(memcmp(&unchanged,&output,sizeof(output))==0);}
+    memory.size=192;table.size=808;budget_probe_rc=R4OS_GFX_BUFFER_ERROR_STALE;
+    assert(r4driver_memory_budget(&memory,&input,&output)==budget_probe_rc && memcmp(&unchanged,&output,sizeof(output))==0);
+    assert(r4draw_gfx_memory_budget(&draw,&input,&output)==budget_probe_rc && memcmp(&unchanged,&output,sizeof(output))==0);
+    budget_probe_rc=1;
+    assert(r4driver_memory_budget(&memory,&input,&output)==1 && output.charged_bytes==UINT64_C(0x100000003));
+    output=unchanged;
+    assert(r4draw_gfx_memory_budget(&draw,&input,&output)==1 && output.limit_bytes==UINT64_C(0x400000000));
+}
+static void stats_facade_probe(void) {
+    budget_facade_probe();
+    _Static_assert(sizeof(R4GfxBufferStats) == 136 && offsetof(R4GfxBufferStats, system_bytes) == 56, "statistics prefix");
+    R4XStartR4Draw table = {.size=sizeof(table), .gfx_buffer_stats=(uintptr_t)old_stats_probe};
+    R4Draw draw = {.table=&table};
+    R4GfxBufferStats stats = {.device_bytes=79};
+    assert(r4draw_gfx_buffer_stats(&draw, &stats) == 1 && stats.size == 56 && stats.device_bytes == 0 && stats.committed_bytes == UINT64_C(0x100000003));
+    R4GfxDriverMemoryApi memory = {.version=1, .size=sizeof(memory), .buffer_stats=(uintptr_t)old_stats_probe};
+    stats.device_bytes=79;
+    assert(r4driver_memory_buffer_stats(&memory, &stats) == 1 && stats.size == 56 && stats.device_bytes == 0);
+}
 int main(void) {
+    stats_facade_probe();
     cursor_facade_probe();
     gfx_facade_probe();
     R4XStartR4Sys sys;

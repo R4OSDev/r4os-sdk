@@ -299,7 +299,54 @@ fn nativeFacadeProbe() !void {
     try std.testing.expectEqual(a.err_no_fn, memory.nativeTake(&provider, &output));
     try std.testing.expectEqualDeep(unchanged, output);
 }
+fn oldStatsProbe(output: *r4os.abi.GfxBufferStats) callconv(.c) i32 {
+    std.debug.assert(output.version == 1 and output.size == 136);
+    var old: r4os.abi.GfxBufferStats = .{ .size = 56, .committed_bytes = 0x100000003 };
+    @memcpy(@as([*]u8, @ptrCast(output))[0..56], std.mem.asBytes(&old)[0..56]);
+    return 1;
+}
+var budget_probe_rc: i32 = 1;
+fn budgetProbe(input: *const r4os.abi.GfxDeviceBudgetRequest, output: *r4os.abi.GfxDeviceBudgetState) callconv(.c) i32 {
+    std.debug.assert(input.adapter_id == 3 and input.memory_generation == 0x200000007 and output.version == 1 and output.size == 64);
+    output.* = .{ .adapter_id = input.adapter_id, .memory_generation = input.memory_generation, .limit_bytes = 0x400000000, .charged_bytes = 0x100000003 };
+    return budget_probe_rc;
+}
+fn budgetFacadeProbe() !void {
+    const a = r4os.abi; const t = std.testing;
+    var tables = makeTables(true);
+    tables[2].gfx_memory_budget = @intFromPtr(&budgetProbe);
+    var imports: [3]a.R4XStartImport = undefined; var raw: a.R4XStartContext = undefined;
+    var app = try makeApp(&tables, &imports, &raw);
+    const draw = app.drawing().?;
+    var driver: r4os.driver_memory.Context = .{ .table = .{ .memory_budget = @intFromPtr(&budgetProbe) } };
+    const input: a.GfxDeviceBudgetRequest = .{ .adapter_id = 3, .memory_generation = 0x200000007 };
+    var output: a.GfxDeviceBudgetState = .{ .charged_bytes = 79 };
+    const unchanged = output;
+    for (184..192) |bytes| {
+        driver.table.size = @intCast(bytes);
+        try t.expectEqual(a.err_no_fn, driver.memoryBudget(&input, &output));
+        try t.expectEqualDeep(unchanged, output);
+    }
+    for (800..808) |bytes| {
+        tables[2].size = @intCast(bytes);
+        try t.expectEqual(a.err_no_fn, draw.gfxMemoryBudget(&input, &output));
+        try t.expectEqualDeep(unchanged, output);
+    }
+    driver.table.size = 192; tables[2].size = 808;
+    budget_probe_rc = a.gfx_buffer_error_stale;
+    try t.expectEqual(budget_probe_rc, driver.memoryBudget(&input, &output));
+    try t.expectEqualDeep(unchanged, output);
+    try t.expectEqual(budget_probe_rc, draw.gfxMemoryBudget(&input, &output));
+    try t.expectEqualDeep(unchanged, output);
+    budget_probe_rc = 1;
+    try t.expectEqual(@as(i32, 1), driver.memoryBudget(&input, &output));
+    try t.expect(output.charged_bytes == 0x100000003 and output.limit_bytes == 0x400000000);
+    output = unchanged;
+    try t.expectEqual(@as(i32, 1), draw.gfxMemoryBudget(&input, &output));
+    try t.expect(output.charged_bytes == 0x100000003 and output.memory_generation == 0x200000007);
+}
 test "graphics buffer optional tails preserve 64-bit offsets in Zig and R4D calls" {
+    try budgetFacadeProbe();
     try gridFacadeProbe();
     try ownedFacadeProbe();
     try nativeFacadeProbe();
@@ -312,6 +359,16 @@ test "graphics buffer optional tails preserve 64-bit offsets in Zig and R4D call
     var app = try makeApp(&tables, &imports, &context);
     const draw = app.drawing().?;
     const buffers = draw.buffers();
+    tables[2].gfx_buffer_stats = @intFromPtr(&oldStatsProbe);
+    var stats: r4os.abi.GfxBufferStats = .{ .device_bytes = 79 };
+    tables[2].size = @offsetOf(r4os.abi.R4XStartR4Draw, "gfx_buffer_stats") + 8;
+    try std.testing.expectEqual(@as(i32, 1), buffers.stats(&stats));
+    try std.testing.expect(stats.size == 56 and stats.committed_bytes == 0x100000003 and stats.device_bytes == 0);
+    stats.device_bytes = 79;
+    const stats_driver = r4os.driver_memory.Context{ .table = .{ .buffer_stats = @intFromPtr(&oldStatsProbe) } };
+    try std.testing.expectEqual(@as(i32, 1), stats_driver.bufferStats(&stats));
+    try std.testing.expect(stats.size == 56 and stats.device_bytes == 0);
+    tables[2].size = @offsetOf(r4os.abi.R4XStartR4Draw, "gfx_buffer_map");
     const ref: r4os.abi.GfxBufferHandle = .{ .id = 7, .generation = 99 };
     var output: r4os.abi.GfxBufferMap = .{ .byte_length = 37 };
     try std.testing.expectEqual(r4os.abi.err_no_fn, buffers.map(&ref, 1, 0x100000003, 0x200000000, &output));
