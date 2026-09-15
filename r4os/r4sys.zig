@@ -989,6 +989,22 @@ pub const Context = struct {
         return self.base.threadCurrent();
     }
 
+    pub fn notificationCreate(self: *const Context, output: *u64) i32 {
+        return self.base.notificationCreate(output);
+    }
+    pub fn notificationQuery(self: *const Context, handle: u64, sequence: *u64) i32 {
+        return self.base.notificationQuery(handle, sequence);
+    }
+    pub fn notificationNotify(self: *const Context, handle: u64, count: u32) i32 {
+        return self.base.notificationNotify(handle, count);
+    }
+    pub fn notificationWait(self: *const Context, handle: u64, observed: u64, timeout_ticks: u64) i32 {
+        return self.base.notificationWait(handle, observed, timeout_ticks);
+    }
+    pub fn notificationClose(self: *const Context, handle: u64) i32 {
+        return self.base.notificationClose(handle);
+    }
+
     pub fn threadStatus(self: *const Context, thread_id: u32, out: *abi.ProgramThreadInfo) i32 {
         return self.base.threadStatus(thread_id, out);
     }

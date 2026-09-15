@@ -1067,6 +1067,27 @@ pub const Context = struct {
         return table_fn();
     }
 
+    pub fn notificationCreate(self: *const Context, output: *u64) i32 {
+        const function = self.sysFn("notification_create") orelse return self.unavailable("sys");
+        return function(output);
+    }
+    pub fn notificationQuery(self: *const Context, handle: u64, sequence: *u64) i32 {
+        const function = self.sysFn("notification_query") orelse return self.unavailable("sys");
+        return function(handle, sequence);
+    }
+    pub fn notificationNotify(self: *const Context, handle: u64, count: u32) i32 {
+        const function = self.sysFn("notification_notify") orelse return self.unavailable("sys");
+        return function(handle, count);
+    }
+    pub fn notificationWait(self: *const Context, handle: u64, observed: u64, timeout_ticks: u64) i32 {
+        const function = self.sysFn("notification_wait") orelse return self.unavailable("sys");
+        return function(handle, observed, timeout_ticks);
+    }
+    pub fn notificationClose(self: *const Context, handle: u64) i32 {
+        const function = self.sysFn("notification_close") orelse return self.unavailable("sys");
+        return function(handle);
+    }
+
     pub fn threadStatus(self: *const Context, thread_id: u32, out: *abi.ProgramThreadInfo) i32 {
         const table_fn = self.sysFn("thread_status") orelse return self.unavailable("sys");
         return table_fn(thread_id, out);
