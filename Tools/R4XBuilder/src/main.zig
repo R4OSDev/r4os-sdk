@@ -46,6 +46,10 @@ const RSRC_TYPE_HELP: u16 = 2;
 const RSRC_TYPE_FILE: u16 = 3;
 const RSRC_MAX_NAME_LEN: usize = 63;
 const ELF_ET_REL: u16 = 1;
+const ELF_ET_EXEC: u16 = 2;
+const ELF_ET_DYN: u16 = 3;
+const ELF_SHT_PROGBITS: u32 = 1;
+const ELF_STB_WEAK: u8 = 2;
 const ELF_SHT_SYMTAB: u32 = 2;
 const ELF_SHT_RELA: u32 = 4;
 const ELF_SHT_NOBITS: u32 = 8;
@@ -1191,12 +1195,33 @@ fn parseElfRelocations(a: std.mem.Allocator, elf: []const u8, sections: []const 
             const sym_off: usize = @intCast(symtab.file_off + symbol_index * symtab.entsize);
             const sym_section_index = rU16(elf, sym_off + 6);
             const sym_value = rU64(elf, sym_off + 8);
-            if (sym_section_index == 0 or sym_section_index >= shnum) return error.UnsupportedElfRelocationTarget;
+            const patch_offset64 = try elfSectionOffset(elf_type, patch_value, patch_header.addr);
+            const patch_size = relocationPatchSize(r4m_kind);
+            const patch_mem_size = sections[@intCast(patch_section_index)].mem_size;
+            if (patch_offset64 > patch_mem_size or patch_size > patch_mem_size - patch_offset64)
+                return error.BadElfRelocationRange;
+            if (sym_section_index == 0) {
+                // A final ELF may retain --emit-relocs records for optional
+                // weak entrypoints already resolved to NULL. Keep that literal
+                // zero; it is neither a load-address fixup nor an R4M import.
+                // Localized or strong undefined symbols are never accepted.
+                if ((elf_type != ELF_ET_EXEC and elf_type != ELF_ET_DYN) or
+                    elf[sym_off + 4] >> 4 != ELF_STB_WEAK or sym_value != 0 or
+                    elf_reloc_type != ELF_R_X86_64_64 or addend64 != 0 or
+                    patch_header.sh_type != ELF_SHT_PROGBITS or
+                    patch_offset64 > patch_header.size or
+                    patch_size > patch_header.size - patch_offset64)
+                    return error.UnsupportedElfRelocationTarget;
+                try checkRangeU64(elf.len, patch_header.file_off, patch_header.size);
+                const patch_file_offset: usize = @intCast(patch_header.file_off + patch_offset64);
+                if (rU64(elf, patch_file_offset) != 0) return error.UnsupportedElfRelocationTarget;
+                continue;
+            }
+            if (sym_section_index >= shnum) return error.UnsupportedElfRelocationTarget;
             const target_header = readElfSectionHeader(elf, shoff, shentsize, shstr, sym_section_index) orelse return error.BadElfSectionTable;
             const target_name = r4mElfSectionName(target_header.name) orelse return error.UnsupportedElfRelocationTarget;
             const target_section_index = resolveSectionIndex(sections, target_name) orelse return error.UnsupportedElfRelocationTarget;
 
-            const patch_offset64 = try elfSectionOffset(elf_type, patch_value, patch_header.addr);
             const target_offset64 = try elfSectionOffset(elf_type, sym_value, target_header.addr);
             if (patch_offset64 > std.math.maxInt(u32) or target_offset64 > std.math.maxInt(u32)) return error.BadElfRelocationRange;
             if (patch_offset64 >= sections[@intCast(patch_section_index)].mem_size) return error.BadElfRelocationRange;
@@ -1838,4 +1863,78 @@ test "ELF exports retain a symbolic source until section resolution" {
     try std.testing.expectEqualStrings(".data", fixed.section.?);
     try std.testing.expectEqual(@as(u32, 40), fixed.offset);
     try std.testing.expect(fixed.elf_symbol == null);
+}
+
+test "linked weak NULL entrypoints remain NULL without a module relocation" {
+    // A complete small ELF exercises the real parser, including section/file
+    // bounds. A defined pointer in the same format must still be relocated.
+    var elf = [_]u8{0} ** 640;
+    @memcpy(elf[0..6], "\x7fELF\x02\x01");
+    wU16(&elf, 16, ELF_ET_EXEC);
+    wU16(&elf, 18, 0x3e);
+    wU32(&elf, 40, 64); // section table
+    wU16(&elf, 58, 64);
+    wU16(&elf, 60, 5);
+    wU16(&elf, 62, 1);
+    const names = "\x00.shstrtab\x00.rodata\x00.symtab\x00.rela.rodata\x00";
+    @memcpy(elf[384..][0..names.len], names);
+    for ([_]u32{ 1, 11, 19, 27 }, [_]u32{ 3, 1, 2, 4 }, [_]u32{ 384, 448, 480, 544 }, [_]u32{ names.len, 16, 48, 24 }, 1..) |name, kind, offset, size, i| {
+        const sh = 64 + i * 64;
+        wU32(&elf, sh, name);
+        wU32(&elf, sh + 4, kind);
+        wU32(&elf, sh + 24, offset);
+        wU32(&elf, sh + 32, size);
+    }
+    wU32(&elf, 192 + 16, 0x1000); // .rodata address
+    wU32(&elf, 256 + 56, 24); // symbol entry size
+    wU32(&elf, 320 + 40, 3); // relocation symbol table
+    wU32(&elf, 320 + 44, 2); // relocation patch section
+    wU32(&elf, 320 + 56, 24);
+    elf[504 + 4] = ELF_STB_WEAK << 4;
+    wU32(&elf, 544, 0x1000); // patch address
+    wU32(&elf, 544 + 8, ELF_R_X86_64_64);
+    wU32(&elf, 544 + 12, 1); // symbol index
+    const valid = elf;
+    const sections = [_]InputSection{.{ .name = ".rodata", .data = elf[448..464], .mem_size = 16, .alignment = 8, .flags = R4M_SECTION_FLAG_ALLOC }};
+    for ([_]u16{ ELF_ET_EXEC, ELF_ET_DYN }) |kind| {
+        wU16(&elf, 16, kind);
+        const relocs = try parseElfRelocations(std.testing.allocator, &elf, &sections);
+        defer std.testing.allocator.free(relocs);
+        try std.testing.expectEqual(@as(usize, 0), relocs.len);
+        try std.testing.expectEqual(@as(u64, 0), rU64(&elf, 448));
+    }
+    // None of these unresolved or inconsistent inputs may silently disappear.
+    const invalid = [_]struct { offset: usize, byte: u8 }{
+        .{ .offset = 16, .byte = ELF_ET_REL },
+        .{ .offset = 16, .byte = 4 },
+        .{ .offset = 508, .byte = 0 }, // local undefined
+        .{ .offset = 508, .byte = 1 << 4 }, // strong undefined
+        .{ .offset = 512, .byte = 1 }, // nonzero undefined symbol value
+        .{ .offset = 560, .byte = 1 }, // nonzero addend
+        .{ .offset = 448, .byte = 1 }, // unresolved/nonzero final pointer
+        .{ .offset = 552, .byte = ELF_R_X86_64_PC32 },
+        .{ .offset = 196, .byte = ELF_SHT_NOBITS },
+        .{ .offset = 224, .byte = 7 }, // fewer than eight file-backed bytes
+    };
+    for (invalid) |change| {
+        elf = valid;
+        elf[change.offset] = change.byte;
+        if (rU16(&elf, 16) == ELF_ET_REL) wU32(&elf, 544, 0);
+        try std.testing.expectError(error.UnsupportedElfRelocationTarget, parseElfRelocations(std.testing.allocator, &elf, &sections));
+    }
+    elf = valid;
+    wU32(&elf, 544, 0x1009); // pointer crosses patch section end
+    try std.testing.expectError(error.BadElfRelocationRange, parseElfRelocations(std.testing.allocator, &elf, &sections));
+    elf = valid;
+    wU32(&elf, 192 + 24, 636); // truncated file data
+    try std.testing.expectError(error.BadR4MRange, parseElfRelocations(std.testing.allocator, &elf, &sections));
+    elf = valid;
+    wU16(&elf, 504 + 6, 2);
+    wU32(&elf, 504 + 8, 0x1000);
+    wU32(&elf, 448, 0x1000);
+    const relocs = try parseElfRelocations(std.testing.allocator, &elf, &sections);
+    defer std.testing.allocator.free(relocs);
+    try std.testing.expectEqual(@as(usize, 1), relocs.len);
+    try std.testing.expectEqual(R4M_RELOC_ABS64, relocs[0].kind);
+    try std.testing.expectEqualStrings(".rodata", relocs[0].target_section);
 }
