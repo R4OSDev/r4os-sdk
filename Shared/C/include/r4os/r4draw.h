@@ -461,6 +461,15 @@ static inline int32_t r4draw_gfx_buffer_unmap(const R4Draw *draw, const R4GfxBuf
     return ((R4DrawGfxBufferUnmapFn)(uintptr_t)draw->table->gfx_buffer_unmap)(lease);
 }
 
+static inline int32_t r4draw_gfx_buffer_map_persistent(const R4Draw *draw, const R4GfxBufferHandle *reference, uint32_t access, uint64_t offset, uint64_t byte_length, R4GfxBufferMap *output) {
+    if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_buffer_map_persistent) + sizeof(uintptr_t) || draw->table->gfx_buffer_map_persistent == 0) return R4OS_ERR_NO_FN;
+    if (output == 0) return R4OS_GFX_BUFFER_ERROR_INVALID;
+    R4GfxBufferMap temporary = { .version = 1, .size = sizeof(temporary) };
+    int32_t rc = ((R4DrawGfxBufferMapPersistentFn)(uintptr_t)draw->table->gfx_buffer_map_persistent)(reference, access, offset, byte_length, &temporary);
+    if (rc == R4OS_GFX_BUFFER_RESULT_OK) *output = temporary;
+    return rc;
+}
+
 static inline int32_t r4draw_gfx_buffer_export_raster(const R4Draw *draw, const R4GuiSharedRasterLease * lease, R4GfxBufferReference * output) {
     if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_buffer_export_raster) + sizeof(uintptr_t) || draw->table->gfx_buffer_export_raster == 0) return R4OS_ERR_NO_FN;
     if (lease == 0 || output == 0) return R4OS_GFX_BUFFER_ERROR_INVALID;

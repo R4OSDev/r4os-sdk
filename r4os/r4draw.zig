@@ -69,6 +69,9 @@ pub const Context = struct {
     pub fn gfxBufferMap(self: *const Context, reference: *const abi.GfxBufferHandle, access: u32, offset: u64, byte_length: u64, output: *abi.GfxBufferMap) i32 {
         return self.base.gfxBufferMap(reference, access, offset, byte_length, output);
     }
+    pub fn gfxBufferMapPersistent(self: *const Context, reference: *const abi.GfxBufferHandle, access: u32, offset: u64, byte_length: u64, output: *abi.GfxBufferMap) i32 {
+        return self.base.gfxBufferMapPersistent(reference, access, offset, byte_length, output);
+    }
 
     pub fn gfxBufferUnmap(self: *const Context, lease: *const abi.GfxBufferHandle) i32 {
         return self.base.gfxBufferUnmap(lease);

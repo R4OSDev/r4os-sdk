@@ -1555,6 +1555,13 @@ pub const Context = struct {
         const table_fn = self.drawFn("gfx_buffer_unmap") orelse return self.unavailable("draw");
         return table_fn(lease);
     }
+    pub fn gfxBufferMapPersistent(self: *const Context, reference: *const abi.GfxBufferHandle, access: u32, offset: u64, byte_length: u64, output: *abi.GfxBufferMap) i32 {
+        const callback = self.drawFn("gfx_buffer_map_persistent") orelse return self.unavailable("draw");
+        var temporary: abi.GfxBufferMap = .{};
+        const rc = callback(reference, access, offset, byte_length, &temporary);
+        if (rc == abi.gfx_buffer_result_ok) output.* = temporary;
+        return rc;
+    }
 
     pub fn gfxBufferExportRaster(self: *const Context, lease: *const abi.GuiSharedRasterLease, output: *abi.GfxBufferReference) i32 {
         const table_fn = self.drawFn("gfx_buffer_export_raster") orelse return self.unavailable("draw");

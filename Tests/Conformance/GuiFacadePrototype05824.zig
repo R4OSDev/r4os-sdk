@@ -592,6 +592,15 @@ test "graphics buffer optional tails preserve 64-bit offsets in Zig and R4D call
     try std.testing.expectEqual(@as(u64, 37), output.byte_length);
     tables[2].size = @sizeOf(r4os.abi.R4XStartR4Draw);
     try std.testing.expectEqual(@as(i32, 1), buffers.map(&ref, 1, 0x100000003, 0x200000000, &output));
+    tables[2].gfx_buffer_map_persistent = @intFromPtr(&gfxMapProbe);
+    const saved_output = output;
+    for (864..872) |size| {
+        tables[2].size = @intCast(size);
+        try std.testing.expectEqual(r4os.abi.err_no_fn, buffers.mapPersistent(&ref, 1, 0x100000003, 0x200000000, &output));
+        try std.testing.expectEqualDeep(saved_output, output);
+    }
+    tables[2].size = @sizeOf(r4os.abi.R4XStartR4Draw);
+    try std.testing.expectEqual(@as(i32, 1), buffers.mapPersistent(&ref, 1, 0x100000003, 0x200000000, &output));
     var old_driver: r4os.abi.DriverApi = undefined;
     old_driver.magic = r4os.abi.driver_magic;
     old_driver.version = 24;

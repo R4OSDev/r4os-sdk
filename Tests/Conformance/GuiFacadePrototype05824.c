@@ -505,6 +505,15 @@ static void gfx_facade_probe(void) {
     assert(output.byte_length == 37);
     table.size = sizeof(table);
     assert(r4draw_gfx_buffer_map(&draw, &ref, 1, UINT64_C(0x100000003), UINT64_C(0x200000000), &output) == 1);
+    table.gfx_buffer_map_persistent = (uintptr_t)gfx_map_probe;
+    const R4GfxBufferMap saved = output;
+    for (unsigned size = 864; size < 872; size++) {
+        table.size = size;
+        assert(r4draw_gfx_buffer_map_persistent(&draw, &ref, 1, UINT64_C(0x100000003), UINT64_C(0x200000000), &output) == R4OS_ERR_NO_FN);
+        assert(memcmp(&saved, &output, sizeof(saved)) == 0);
+    }
+    table.size = sizeof(table);
+    assert(r4draw_gfx_buffer_map_persistent(&draw, &ref, 1, UINT64_C(0x100000003), UINT64_C(0x200000000), &output) == 1);
     R4GfxDriverMemoryApi memory = { .version = 1, .size = sizeof(memory), .buffer_map = (uintptr_t)gfx_map_probe };
     assert(r4driver_memory_buffer_map(&memory, &ref, 1, UINT64_C(0x100000003), UINT64_C(0x200000000), &output) == 1);
     memory.size = offsetof(R4GfxDriverMemoryApi, buffer_map);
