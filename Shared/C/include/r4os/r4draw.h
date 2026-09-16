@@ -660,6 +660,16 @@ static inline int32_t r4draw_gfx_queue_submit(const R4Draw *draw, const R4GfxQue
     return ((R4DrawGfxQueueSubmitFn)(uintptr_t)draw->table->gfx_queue_submit)(queue, submission, output);
 }
 
+static inline int32_t r4draw_gfx_queue_submit_native(const R4Draw *draw, const R4GfxQueueHandle *queue, const R4GfxSubmission *submission, const R4GfxNativeSubmission *native, R4GfxFenceStatus *output) {
+    if (!draw || !draw->table || draw->table->size < offsetof(R4XStartR4Draw, gfx_queue_submit_native) + sizeof(uintptr_t) || !draw->table->gfx_queue_submit_native) return R4OS_ERR_NO_FN;
+    if (!queue || !submission || !native || !output) return R4OS_GFX_QUEUE_ERROR_INVALID;
+    R4GfxFenceStatus temporary = {0};
+    temporary.version = 1; temporary.size = sizeof(temporary);
+    int32_t rc = ((R4DrawGfxQueueSubmitNativeFn)(uintptr_t)draw->table->gfx_queue_submit_native)(queue, submission, native, &temporary);
+    if (rc == R4OS_GFX_QUEUE_OK) *output = temporary;
+    return rc;
+}
+
 static inline int32_t r4draw_gfx_queue_submit_render_list(const R4Draw *draw, const R4GfxQueueHandle *queue, const R4GfxSubmission *submission, const R4GfxRenderList *list, R4GfxFenceStatus *output) {
     if (!draw || !draw->table || draw->table->size < offsetof(R4XStartR4Draw, gfx_queue_submit_render_list) + sizeof(uintptr_t) || !draw->table->gfx_queue_submit_render_list) return R4OS_ERR_NO_FN;
     if (!queue || !submission || !list || !output) return R4OS_GFX_QUEUE_ERROR_INVALID;

@@ -70,6 +70,28 @@ pub const Context = struct {
         const callback: *const fn (*const abi.GfxBackendBinding, *const abi.GfxBackendProperties) callconv(.c) i32 = @ptrFromInt(self.table.publish_properties);
         return callback(binding, properties);
     }
+    pub fn nativeInfo(self: *const Context, fence: *const abi.GfxFence, output: *abi.GfxNativeJobInfo) i32 {
+        if (self.table.version != 1 or self.table.size < @offsetOf(abi.GfxDriverQueueApi, "read_native_info") + 8 or self.table.read_native_info == 0) return abi.err_no_fn;
+        const callback: *const fn (*const abi.GfxFence, *abi.GfxNativeJobInfo) callconv(.c) i32 = @ptrFromInt(self.table.read_native_info);
+        var temporary: abi.GfxNativeJobInfo = .{};
+        const rc = callback(fence, &temporary);
+        if (rc == 1) output.* = temporary;
+        return rc;
+    }
+    pub fn nativeData(self: *const Context, fence: *const abi.GfxFence, offset: u32, output: []u8) i32 {
+        if (self.table.version != 1 or self.table.size < @offsetOf(abi.GfxDriverQueueApi, "read_native_data") + 8 or self.table.read_native_data == 0) return abi.err_no_fn;
+        if (output.len == 0 or output.len > abi.gfx_native_read_capacity) return abi.gfx_queue_error_invalid;
+        const callback: *const fn (*const abi.GfxFence, u32, [*]u8, u32) callconv(.c) i32 = @ptrFromInt(self.table.read_native_data);
+        return callback(fence, offset, output.ptr, @intCast(output.len));
+    }
+    pub fn nativeBinding(self: *const Context, fence: *const abi.GfxFence, index: u32, output: *abi.GfxNativeBinding) i32 {
+        if (self.table.version != 1 or self.table.size < @offsetOf(abi.GfxDriverQueueApi, "read_native_binding") + 8 or self.table.read_native_binding == 0) return abi.err_no_fn;
+        const callback: *const fn (*const abi.GfxFence, u32, *abi.GfxNativeBinding) callconv(.c) i32 = @ptrFromInt(self.table.read_native_binding);
+        var temporary: abi.GfxNativeBinding = .{};
+        const rc = callback(fence, index, &temporary);
+        if (rc == 1) output.* = temporary;
+        return rc;
+    }
 
     pub fn register(self: *const Context, input: *const abi.GfxBackendRegistration, output: *abi.GfxBackendBinding) i32 {
         if (self.table.version != 1 or self.table.size < @offsetOf(abi.GfxDriverQueueApi, "register_backend") + 8 or self.table.register_backend == 0) return abi.err_no_fn;

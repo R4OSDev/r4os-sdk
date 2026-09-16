@@ -24,6 +24,9 @@ pub const Context = struct {
     pub fn submit(self: *const Context, queue: *const abi.GfxQueueHandle, submission: *const abi.GfxSubmission, output: *abi.GfxFenceStatus) i32 {
         return self.base.gfxQueueSubmit(queue, submission, output);
     }
+    pub fn submitNative(self: *const Context, queue: *const abi.GfxQueueHandle, submission: *const abi.GfxSubmission, native: *const abi.GfxNativeSubmission, output: *abi.GfxFenceStatus) i32 {
+        return self.base.gfxQueueSubmitNative(queue, submission, native, output);
+    }
     pub fn submitRenderList(self: *const Context, queue: *const abi.GfxQueueHandle, submission: *const abi.GfxSubmission, list: *const abi.GfxRenderList, output: *abi.GfxFenceStatus) i32 {
         return self.base.gfxQueueSubmitRenderList(queue, submission, list, output);
     }

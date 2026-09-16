@@ -1,6 +1,20 @@
 const std = @import("std");
 const r4os = @import("r4os");
 
+fn nativeSubmitProbe(queue: *const r4os.abi.GfxQueueHandle, submission: *const r4os.abi.GfxSubmission,
+    native: *const r4os.abi.GfxNativeSubmission, out: *r4os.abi.GfxFenceStatus) callconv(.c) i32
+{
+    std.debug.assert(queue.timeline == 0x100000003 and submission.operation == r4os.abi.gfx_queue_operation_native);
+    std.debug.assert(native.commands == 0x200000009 and out.version == 1 and out.size == 80);
+    out.fence.point = 0x300000007;
+    return if (native.revision == 1) 1 else -3;
+}
+fn nativeInfoProbe(fence: *const r4os.abi.GfxFence, out: *r4os.abi.GfxNativeJobInfo) callconv(.c) i32 {
+    std.debug.assert(out.version == 1 and out.size == 40);
+    out.command_bytes = 2051;
+    return if (fence.slot == 7) 1 else -3;
+}
+
 fn gfxMapProbe(ref: *const r4os.abi.GfxBufferHandle, access: u32, offset: u64, bytes: u64, out: *r4os.abi.GfxBufferMap) callconv(.c) i32 {
     std.debug.assert(ref.generation == 99 and access == 1 and offset == 0x100000003 and bytes == 0x200000000);
     std.debug.assert(out.version == 1 and out.size == @sizeOf(r4os.abi.GfxBufferMap));
@@ -670,6 +684,38 @@ test "graphics buffer optional tails preserve 64-bit offsets in Zig and R4D call
     native.table.size = 72;
     try std.testing.expectEqual(@as(i32, 1), native.registerProfile(&.{ .adapter_id = 17, .operations = info.operations, .memory_generation = info.memory_generation }, &info.profile, &binding));
     try std.testing.expectEqualDeep(info.binding, binding);
+    tables[2].gfx_queue_submit_native = @intFromPtr(&nativeSubmitProbe);
+    const raw_queue: r4os.abi.GfxQueueHandle = .{ .timeline = 0x100000003 };
+    const raw_submission: r4os.abi.GfxSubmission = .{ .operation = r4os.abi.gfx_queue_operation_native };
+    var raw_input: r4os.abi.GfxNativeSubmission = .{ .commands = 0x200000009, .revision = 1 };
+    var raw_output: r4os.abi.GfxFenceStatus = .{ .version = 0, .size = 0 };
+    const saved_raw = raw_output;
+    for (880..888) |size| {
+        tables[2].size = @intCast(size);
+        try std.testing.expectEqual(r4os.abi.err_no_fn, queues.submitNative(&raw_queue, &raw_submission, &raw_input, &raw_output));
+        try std.testing.expectEqualDeep(saved_raw, raw_output);
+    }
+    tables[2].size = 888; raw_input.revision = 2;
+    try std.testing.expectEqual(@as(i32, -3), queues.submitNative(&raw_queue, &raw_submission, &raw_input, &raw_output));
+    try std.testing.expectEqualDeep(saved_raw, raw_output);
+    raw_input.revision = 1;
+    try std.testing.expectEqual(@as(i32, 1), queues.submitNative(&raw_queue, &raw_submission, &raw_input, &raw_output));
+    try std.testing.expectEqual(@as(u64, 0x300000007), raw_output.fence.point);
+    native.table.read_native_info = @intFromPtr(&nativeInfoProbe);
+    var raw_fence: r4os.abi.GfxFence = .{ .slot = 7 };
+    var raw_info: r4os.abi.GfxNativeJobInfo = .{ .version = 0, .size = 0 };
+    const saved_info = raw_info;
+    for (136..144) |size| {
+        native.table.size = @intCast(size);
+        try std.testing.expectEqual(r4os.abi.err_no_fn, native.nativeInfo(&raw_fence, &raw_info));
+        try std.testing.expectEqualDeep(saved_info, raw_info);
+    }
+    native.table.size = 144; raw_fence.slot = 8;
+    try std.testing.expectEqual(@as(i32, -3), native.nativeInfo(&raw_fence, &raw_info));
+    try std.testing.expectEqualDeep(saved_info, raw_info);
+    raw_fence.slot = 7;
+    try std.testing.expectEqual(@as(i32, 1), native.nativeInfo(&raw_fence, &raw_info));
+    try std.testing.expectEqual(@as(u32, 2051), raw_info.command_bytes);
     tables[2].gfx_queue_backend_properties = @intFromPtr(&propertiesReadProbe);
     var properties: r4os.abi.GfxBackendProperties = .{ .data = @splat(0xa5) };
     for (872..880) |size| {

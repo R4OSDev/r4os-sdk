@@ -3,6 +3,28 @@
 #include "r4draw.h"
 
 /* Native callbacks require the actual bound R4D work/IRQ owner. */
+static inline int32_t r4driver_queue_native_info(const R4GfxDriverQueueApi *table, const R4GfxFence *fence, R4GfxNativeJobInfo *output) {
+    if (!table || table->version != 1 || table->size < offsetof(R4GfxDriverQueueApi, read_native_info) + 8 || !table->read_native_info) return R4OS_ERR_NO_FN;
+    if (!fence || !output) return R4OS_GFX_QUEUE_ERROR_INVALID;
+    R4GfxNativeJobInfo temporary = {0}; temporary.version = 1; temporary.size = sizeof(temporary);
+    int32_t rc = ((int32_t (*)(const R4GfxFence *, R4GfxNativeJobInfo *))(uintptr_t)table->read_native_info)(fence, &temporary);
+    if (rc == R4OS_GFX_QUEUE_OK) *output = temporary;
+    return rc;
+}
+static inline int32_t r4driver_queue_native_data(const R4GfxDriverQueueApi *table, const R4GfxFence *fence, uint32_t offset, uint8_t *output, uint32_t count) {
+    if (!table || table->version != 1 || table->size < offsetof(R4GfxDriverQueueApi, read_native_data) + 8 || !table->read_native_data) return R4OS_ERR_NO_FN;
+    if (!fence || !output || !count || count > R4OS_GFX_NATIVE_READ_CAPACITY) return R4OS_GFX_QUEUE_ERROR_INVALID;
+    return ((int32_t (*)(const R4GfxFence *, uint32_t, uint8_t *, uint32_t))(uintptr_t)table->read_native_data)(fence, offset, output, count);
+}
+static inline int32_t r4driver_queue_native_binding(const R4GfxDriverQueueApi *table, const R4GfxFence *fence, uint32_t index, R4GfxNativeBinding *output) {
+    if (!table || table->version != 1 || table->size < offsetof(R4GfxDriverQueueApi, read_native_binding) + 8 || !table->read_native_binding) return R4OS_ERR_NO_FN;
+    if (!fence || !output) return R4OS_GFX_QUEUE_ERROR_INVALID;
+    R4GfxNativeBinding temporary = {0}; temporary.version = 1; temporary.size = sizeof(temporary);
+    int32_t rc = ((int32_t (*)(const R4GfxFence *, uint32_t, R4GfxNativeBinding *))(uintptr_t)table->read_native_binding)(fence, index, &temporary);
+    if (rc == R4OS_GFX_QUEUE_OK) *output = temporary;
+    return rc;
+}
+
 static inline int32_t r4driver_queue_publish_properties(const R4GfxDriverQueueApi *table, const R4GfxBackendBinding *binding, const R4GfxBackendProperties *properties) {
     if (!table || table->version != 1 || table->size < offsetof(R4GfxDriverQueueApi, publish_properties) + sizeof(uint64_t) || !table->publish_properties) return R4OS_ERR_NO_FN;
     if (!binding || !properties) return R4OS_GFX_QUEUE_ERROR_INVALID;

@@ -474,7 +474,43 @@ static int32_t properties_publish_probe(const R4GfxBackendBinding *binding, cons
     assert(binding->device_generation == UINT64_C(0x100000017) && input->data[255] == 0x35);
     return 1;
 }
+static int32_t native_submit_probe(const R4GfxQueueHandle *queue, const R4GfxSubmission *submission, const R4GfxNativeSubmission *native, R4GfxFenceStatus *out) {
+    assert(queue->timeline == UINT64_C(0x100000003) && submission->operation == R4OS_GFX_QUEUE_OPERATION_NATIVE);
+    assert(native->commands == UINT64_C(0x200000009) && out->version == 1 && out->size == 80);
+    out->fence.point = UINT64_C(0x300000007);
+    return native->revision == 1 ? 1 : -3;
+}
+static int32_t native_info_probe(const R4GfxFence *fence, R4GfxNativeJobInfo *out) {
+    assert(out->version == 1 && out->size == 40);
+    out->command_bytes = 2051;
+    return fence->slot == 7 ? 1 : -3;
+}
 static void properties_facade_probe(void) {
+    R4XStartR4Draw raw = {.gfx_queue_submit_native = (uintptr_t)native_submit_probe};
+    R4Draw raw_draw = {&raw};
+    R4GfxQueueHandle queue = {.timeline=UINT64_C(0x100000003)};
+    R4GfxSubmission submission = {.operation=R4OS_GFX_QUEUE_OPERATION_NATIVE};
+    R4GfxNativeSubmission input = {.commands=UINT64_C(0x200000009),.revision=1};
+    R4GfxFenceStatus out = {0}, before = out;
+    for (unsigned size=880; size<888; size++) {
+        raw.size=size;
+        assert(r4draw_gfx_queue_submit_native(&raw_draw,&queue,&submission,&input,&out)==R4OS_ERR_NO_FN && memcmp(&out,&before,sizeof(out))==0);
+    }
+    raw.size=888;
+    input.revision=2;
+    assert(r4draw_gfx_queue_submit_native(&raw_draw,&queue,&submission,&input,&out)==-3 && memcmp(&out,&before,sizeof(out))==0);
+    input.revision=1;
+    assert(r4draw_gfx_queue_submit_native(&raw_draw,&queue,&submission,&input,&out)==1 && out.fence.point==UINT64_C(0x300000007));
+    R4GfxDriverQueueApi native_driver = {.version=1,.read_native_info=(uintptr_t)native_info_probe};
+    R4GfxNativeJobInfo job={0}, saved_job=job;
+    R4GfxFence fence={.slot=7};
+    for (unsigned size=136; size<144; size++) {
+        native_driver.size=size;
+        assert(r4driver_queue_native_info(&native_driver,&fence,&job)==R4OS_ERR_NO_FN && memcmp(&job,&saved_job,sizeof(job))==0);
+    }
+    native_driver.size=144; fence.slot=8;
+    assert(r4driver_queue_native_info(&native_driver,&fence,&job)==-3 && memcmp(&job,&saved_job,sizeof(job))==0);
+    fence.slot=7; assert(r4driver_queue_native_info(&native_driver,&fence,&job)==1 && job.command_bytes==2051);
     R4XStartR4Draw table = {.gfx_queue_backend_properties = (uintptr_t)properties_read_probe};
     R4Draw draw = {&table};
     R4GfxBackendBinding binding = {.adapter_id=17, .device_generation=UINT64_C(0x100000017)};

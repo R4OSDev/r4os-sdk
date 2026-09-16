@@ -1746,6 +1746,13 @@ pub const Context = struct {
         output.version = 1; output.size = @sizeOf(abi.GfxFenceStatus);
         return callback(queue, submission, list, output);
     }
+    pub fn gfxQueueSubmitNative(self: *const Context, queue: *const abi.GfxQueueHandle, submission: *const abi.GfxSubmission, native: *const abi.GfxNativeSubmission, output: *abi.GfxFenceStatus) i32 {
+        const callback = self.drawFn("gfx_queue_submit_native") orelse return self.unavailable("draw");
+        var temporary: abi.GfxFenceStatus = .{};
+        const rc = callback(queue, submission, native, &temporary);
+        if (rc == 1) output.* = temporary;
+        return rc;
+    }
     pub fn gfxFenceQuery(self: *const Context, fence: *const abi.GfxFence, output: *abi.GfxFenceStatus) i32 {
         const table_fn = self.drawFn("gfx_fence_query") orelse return self.unavailable("draw");
         output.version = 1;
