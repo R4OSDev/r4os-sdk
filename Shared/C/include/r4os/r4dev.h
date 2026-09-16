@@ -16,6 +16,14 @@ typedef struct R4Dev {
     const R4XStartR4Dev *table;
 } R4Dev;
 
+static inline int32_t r4dev_memory_pressure_snapshot(const R4Dev *dev, R4ProgramMemoryPressureSnapshot *out) {
+    if (out == 0) return R4OS_ERROR_INVALID;
+    if (dev == 0 || dev->table == 0 ||
+        dev->table->size < offsetof(R4XStartR4Dev, memory_pressure_snapshot) + sizeof(uintptr_t) ||
+        dev->table->memory_pressure_snapshot == 0u) return R4OS_ERR_NO_FN;
+    return ((R4DevMemoryPressureSnapshotFn)(uintptr_t)dev->table->memory_pressure_snapshot)(out);
+}
+
 static inline int32_t r4dev_display_state(const R4Dev *dev, R4DisplayStateInfo *out) {
     if (out == 0) return R4OS_ERROR_INVALID;
     if (dev == 0 || dev->table == 0 ||
