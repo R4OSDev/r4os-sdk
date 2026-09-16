@@ -1706,6 +1706,13 @@ pub const Context = struct {
         output.size = @sizeOf(abi.GfxBackendInfo);
         return table_fn(index, output);
     }
+    pub fn gfxQueueBackendProperties(self: *const Context, binding: *const abi.GfxBackendBinding, output: *abi.GfxBackendProperties) i32 {
+        const table_fn = self.drawFn("gfx_queue_backend_properties") orelse return self.unavailable("draw");
+        var result: abi.GfxBackendProperties = .{};
+        const code = table_fn(binding, &result);
+        if (code == 1) output.* = result;
+        return code;
+    }
 
     pub fn gfxQueueClose(self: *const Context, queue: *const abi.GfxQueueHandle) i32 {
         const table_fn = self.drawFn("gfx_queue_close") orelse return self.unavailable("draw");

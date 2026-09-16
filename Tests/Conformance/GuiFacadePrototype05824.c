@@ -465,7 +465,38 @@ static void power_facade_probe(void) {
     assert(r4driver_output_read_power(&driver,&request.identity,&intent)==-3);
     assert(memcmp(&read,&old_read,sizeof(read))==0 && memcmp(&intent,&old_intent,sizeof(intent))==0);
 }
+static int32_t properties_read_probe(const R4GfxBackendBinding *binding, R4GfxBackendProperties *out) {
+    assert(binding->device_generation == UINT64_C(0x100000017) && out->version == 1 && out->size == 288);
+    out->data[255] = 0x35;
+    return binding->adapter_id == 17 ? 1 : -3;
+}
+static int32_t properties_publish_probe(const R4GfxBackendBinding *binding, const R4GfxBackendProperties *input) {
+    assert(binding->device_generation == UINT64_C(0x100000017) && input->data[255] == 0x35);
+    return 1;
+}
+static void properties_facade_probe(void) {
+    R4XStartR4Draw table = {.gfx_queue_backend_properties = (uintptr_t)properties_read_probe};
+    R4Draw draw = {&table};
+    R4GfxBackendBinding binding = {.adapter_id=17, .device_generation=UINT64_C(0x100000017)};
+    R4GfxBackendProperties properties = {0}; properties.data[255]=0xa5;
+    for (unsigned size=872; size<880; size++) {
+        table.size=size;
+        assert(r4draw_gfx_queue_backend_properties(&draw,&binding,&properties)==R4OS_ERR_NO_FN && properties.data[255]==0xa5);
+    }
+    table.size=880;
+    assert(r4draw_gfx_queue_backend_properties(&draw,&binding,&properties)==1 && properties.data[255]==0x35);
+    binding.adapter_id=18; properties.data[255]=0xa5;
+    assert(r4draw_gfx_queue_backend_properties(&draw,&binding,&properties)==-3 && properties.data[255]==0xa5);
+    binding.adapter_id=17; properties.data[255]=0x35;
+    R4GfxDriverQueueApi driver = {.version=1,.publish_properties=(uintptr_t)properties_publish_probe};
+    for (unsigned size=128; size<136; size++) {
+        driver.size=size;
+        assert(r4driver_queue_publish_properties(&driver,&binding,&properties)==R4OS_ERR_NO_FN);
+    }
+    driver.size=136; assert(r4driver_queue_publish_properties(&driver,&binding,&properties)==1);
+}
 static void backend_profile_probe(void) {
+    properties_facade_probe();
     power_facade_probe();
     mode_color_facade_probe();
     refresh_facade_probe();

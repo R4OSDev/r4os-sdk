@@ -3,6 +3,11 @@
 #include "r4draw.h"
 
 /* Native callbacks require the actual bound R4D work/IRQ owner. */
+static inline int32_t r4driver_queue_publish_properties(const R4GfxDriverQueueApi *table, const R4GfxBackendBinding *binding, const R4GfxBackendProperties *properties) {
+    if (!table || table->version != 1 || table->size < offsetof(R4GfxDriverQueueApi, publish_properties) + sizeof(uint64_t) || !table->publish_properties) return R4OS_ERR_NO_FN;
+    if (!binding || !properties) return R4OS_GFX_QUEUE_ERROR_INVALID;
+    return ((int32_t (*)(const R4GfxBackendBinding *, const R4GfxBackendProperties *))(uintptr_t)table->publish_properties)(binding, properties);
+}
 
 static inline int r4driver_queue_supports_scanout(const R4GfxDriverQueueApi *table) {
     return table && table->version == 1 && table->size >= offsetof(R4GfxDriverQueueApi, scanout_retire_requested) + 8 &&

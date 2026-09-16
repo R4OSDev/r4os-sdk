@@ -25,6 +25,7 @@ fn gfxRetainProbe(fence: *const r4os.abi.GfxFence, which: u32, out: *r4os.abi.Gf
     return 1;
 }
 fn gfxQueuePrefixProbe(out: *r4os.abi.GfxDriverQueueApi) callconv(.c) i32 {
+    std.debug.assert(out.version == 1 and out.size == @sizeOf(r4os.abi.GfxDriverQueueApi));
     out.* = .{ .size = 56, .complete = @intFromPtr(&gfxCompleteProbe) };
     return 1;
 }
@@ -310,6 +311,15 @@ fn gfxProfileProbe(input: *const r4os.abi.GfxBackendRegistration, profile: *cons
     std.debug.assert(input.adapter_id == 17 and profile.interface_id_hi == 0x300000017 and profile.data_bytes == 64 and profile.data[63] == 91);
     std.debug.assert(out.version == 1 and out.size == 32);
     out.* = .{ .adapter_id = 17, .device_generation = 0x100000017, .reset_generation = 0x200000017 };
+    return 1;
+}
+fn propertiesReadProbe(binding: *const r4os.abi.GfxBackendBinding, out: *r4os.abi.GfxBackendProperties) callconv(.c) i32 {
+    std.debug.assert(binding.device_generation == 0x100000017 and out.version == 1 and out.size == 288);
+    out.data[255] = 0x35;
+    return if (binding.adapter_id == 17) 1 else -3;
+}
+fn propertiesPublishProbe(binding: *const r4os.abi.GfxBackendBinding, input: *const r4os.abi.GfxBackendProperties) callconv(.c) i32 {
+    std.debug.assert(binding.device_generation == 0x100000017 and input.data[255] == 0x35);
     return 1;
 }
 fn gfxBackendInfoProbe(index: u32, out: *r4os.abi.GfxBackendInfo) callconv(.c) i32 {
@@ -660,6 +670,27 @@ test "graphics buffer optional tails preserve 64-bit offsets in Zig and R4D call
     native.table.size = 72;
     try std.testing.expectEqual(@as(i32, 1), native.registerProfile(&.{ .adapter_id = 17, .operations = info.operations, .memory_generation = info.memory_generation }, &info.profile, &binding));
     try std.testing.expectEqualDeep(info.binding, binding);
+    tables[2].gfx_queue_backend_properties = @intFromPtr(&propertiesReadProbe);
+    var properties: r4os.abi.GfxBackendProperties = .{ .data = @splat(0xa5) };
+    for (872..880) |size| {
+        tables[2].size = @intCast(size);
+        try std.testing.expectEqual(r4os.abi.err_no_fn, queues.backendProperties(&binding, &properties));
+        try std.testing.expect(properties.data[255] == 0xa5);
+    }
+    tables[2].size = 880;
+    try std.testing.expectEqual(@as(i32, 1), queues.backendProperties(&binding, &properties));
+    try std.testing.expect(properties.data[255] == 0x35);
+    binding.adapter_id = 18; properties.data[255] = 0xa5;
+    try std.testing.expectEqual(@as(i32, -3), queues.backendProperties(&binding, &properties));
+    try std.testing.expect(properties.data[255] == 0xa5);
+    binding.adapter_id = 17; properties.data[255] = 0x35;
+    native.table.publish_properties = @intFromPtr(&propertiesPublishProbe);
+    for (128..136) |size| {
+        native.table.size = @intCast(size);
+        try std.testing.expectEqual(r4os.abi.err_no_fn, native.publishProperties(&binding, &properties));
+    }
+    native.table.size = 136;
+    try std.testing.expectEqual(@as(i32, 1), native.publishProperties(&binding, &properties));
     old_driver.version = 26;
     old_driver.size = 576;
     old_driver.gfx_queue_query = &gfxQueuePrefixProbe;

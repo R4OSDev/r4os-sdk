@@ -638,6 +638,15 @@ static inline int32_t r4draw_gfx_queue_backend_info(const R4Draw *draw, uint32_t
     return ((R4DrawGfxQueueBackendInfoFn)(uintptr_t)draw->table->gfx_queue_backend_info)(index, output);
 }
 
+static inline int32_t r4draw_gfx_queue_backend_properties(const R4Draw *draw, const R4GfxBackendBinding *binding, R4GfxBackendProperties *output) {
+    if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_queue_backend_properties) + sizeof(uintptr_t) || draw->table->gfx_queue_backend_properties == 0) return R4OS_ERR_NO_FN;
+    if (binding == 0 || output == 0) return R4OS_GFX_QUEUE_ERROR_INVALID;
+    R4GfxBackendProperties result = { .version = 1, .size = sizeof(result) };
+    int32_t code = ((R4DrawGfxQueueBackendPropertiesFn)(uintptr_t)draw->table->gfx_queue_backend_properties)(binding, &result);
+    if (code == 1) *output = result;
+    return code;
+}
+
 static inline int32_t r4draw_gfx_queue_close(const R4Draw *draw, const R4GfxQueueHandle * queue) {
     if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_queue_close) + sizeof(uintptr_t) || draw->table->gfx_queue_close == 0) return R4OS_ERR_NO_FN;
     if (queue == 0) return R4OS_GFX_QUEUE_ERROR_INVALID;

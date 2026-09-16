@@ -65,6 +65,11 @@ pub const Context = struct {
         const callback: *const fn (*const abi.GfxBackendRegistration, *const abi.GfxBackendProfile, *abi.GfxBackendBinding) callconv(.c) i32 = @ptrFromInt(self.table.register_profile);
         return callback(input, profile, output);
     }
+    pub fn publishProperties(self: *const Context, binding: *const abi.GfxBackendBinding, properties: *const abi.GfxBackendProperties) i32 {
+        if (self.table.version != 1 or self.table.size < @offsetOf(abi.GfxDriverQueueApi, "publish_properties") + 8 or self.table.publish_properties == 0) return abi.err_no_fn;
+        const callback: *const fn (*const abi.GfxBackendBinding, *const abi.GfxBackendProperties) callconv(.c) i32 = @ptrFromInt(self.table.publish_properties);
+        return callback(binding, properties);
+    }
 
     pub fn register(self: *const Context, input: *const abi.GfxBackendRegistration, output: *abi.GfxBackendBinding) i32 {
         if (self.table.version != 1 or self.table.size < @offsetOf(abi.GfxDriverQueueApi, "register_backend") + 8 or self.table.register_backend == 0) return abi.err_no_fn;
