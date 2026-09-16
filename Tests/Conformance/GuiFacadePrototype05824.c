@@ -485,6 +485,11 @@ static int32_t native_info_probe(const R4GfxFence *fence, R4GfxNativeJobInfo *ou
     out->command_bytes = 2051;
     return fence->slot == 7 ? 1 : -3;
 }
+static int32_t queue_owner_probe(const R4GfxBackendBinding *binding, uint64_t timeline, R4GfxQueueOwnerInfo *out) {
+    assert(binding->device_generation == UINT64_C(0x100000017) && timeline == UINT64_C(0x200000009) && out->version == 1 && out->size == 48);
+    out->timeline=timeline; out->producer_generation=UINT64_C(0x300000005); out->closing=1;
+    return binding->adapter_id == 17 ? 1 : binding->adapter_id == 18 ? 0 : -3;
+}
 static void properties_facade_probe(void) {
     R4XStartR4Draw raw = {.gfx_queue_submit_native = (uintptr_t)native_submit_probe};
     R4Draw raw_draw = {&raw};
@@ -530,6 +535,18 @@ static void properties_facade_probe(void) {
         assert(r4driver_queue_publish_properties(&driver,&binding,&properties)==R4OS_ERR_NO_FN);
     }
     driver.size=136; assert(r4driver_queue_publish_properties(&driver,&binding,&properties)==1);
+    driver.queue_owner_info=(uintptr_t)queue_owner_probe;
+    R4GfxQueueOwnerInfo owner={0}, saved_owner=owner;
+    for (unsigned size=160; size<168; size++) {
+        driver.size=size;
+        assert(r4driver_queue_owner_info(&driver,&binding,UINT64_C(0x200000009),&owner)==R4OS_ERR_NO_FN && memcmp(&owner,&saved_owner,sizeof(owner))==0);
+    }
+    driver.size=168; binding.adapter_id=18;
+    assert(r4driver_queue_owner_info(&driver,&binding,UINT64_C(0x200000009),&owner)==0 && memcmp(&owner,&saved_owner,sizeof(owner))==0);
+    binding.adapter_id=19;
+    assert(r4driver_queue_owner_info(&driver,&binding,UINT64_C(0x200000009),&owner)==-3 && memcmp(&owner,&saved_owner,sizeof(owner))==0);
+    binding.adapter_id=17;
+    assert(r4driver_queue_owner_info(&driver,&binding,UINT64_C(0x200000009),&owner)==1 && owner.producer_generation==UINT64_C(0x300000005) && owner.closing==1);
 }
 static void backend_profile_probe(void) {
     properties_facade_probe();

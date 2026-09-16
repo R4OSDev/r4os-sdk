@@ -3,6 +3,16 @@ const abi = @import("r4os_contract").abi;
 pub const Context = struct {
     table: abi.GfxDriverQueueApi,
 
+    /// Logical lifetime only. Neither closure nor job counts prove GPU stop.
+    pub fn queueOwnerInfo(self: *const Context, binding: *const abi.GfxBackendBinding, timeline: u64, output: *abi.GfxQueueOwnerInfo) i32 {
+        if (self.table.version != 1 or self.table.size < @offsetOf(abi.GfxDriverQueueApi, "queue_owner_info") + 8 or self.table.queue_owner_info == 0) return abi.err_no_fn;
+        const callback: *const fn (*const abi.GfxBackendBinding, u64, *abi.GfxQueueOwnerInfo) callconv(.c) i32 = @ptrFromInt(self.table.queue_owner_info);
+        var temporary: abi.GfxQueueOwnerInfo = .{};
+        const rc = callback(binding, timeline, &temporary);
+        if (rc == 1) output.* = temporary;
+        return rc;
+    }
+
     pub fn supportsScanout(self: *const Context) bool {
         return self.table.version == 1 and self.table.size >= @offsetOf(abi.GfxDriverQueueApi, "scanout_retire_requested") + 8 and
             self.table.retain_scanout != 0 and self.table.begin_scanout != 0 and self.table.scanout_retire_requested != 0;

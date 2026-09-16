@@ -3,6 +3,16 @@
 #include "r4draw.h"
 
 /* Native callbacks require the actual bound R4D work/IRQ owner. */
+/* Logical queue closure never proves physical GPU quiescence. */
+static inline int32_t r4driver_queue_owner_info(const R4GfxDriverQueueApi *table, const R4GfxBackendBinding *binding, uint64_t timeline, R4GfxQueueOwnerInfo *output) {
+    if (!table || table->version != 1 || table->size < offsetof(R4GfxDriverQueueApi, queue_owner_info) + 8 || !table->queue_owner_info) return R4OS_ERR_NO_FN;
+    if (!binding || !output || !timeline) return R4OS_GFX_QUEUE_ERROR_INVALID;
+    R4GfxQueueOwnerInfo temporary = {0}; temporary.version = 1; temporary.size = sizeof(temporary);
+    int32_t rc = ((int32_t (*)(const R4GfxBackendBinding *, uint64_t, R4GfxQueueOwnerInfo *))(uintptr_t)table->queue_owner_info)(binding, timeline, &temporary);
+    if (rc == R4OS_GFX_QUEUE_OK) *output = temporary;
+    return rc;
+}
+
 static inline int32_t r4driver_queue_native_info(const R4GfxDriverQueueApi *table, const R4GfxFence *fence, R4GfxNativeJobInfo *output) {
     if (!table || table->version != 1 || table->size < offsetof(R4GfxDriverQueueApi, read_native_info) + 8 || !table->read_native_info) return R4OS_ERR_NO_FN;
     if (!fence || !output) return R4OS_GFX_QUEUE_ERROR_INVALID;

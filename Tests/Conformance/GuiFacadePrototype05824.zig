@@ -14,6 +14,11 @@ fn nativeInfoProbe(fence: *const r4os.abi.GfxFence, out: *r4os.abi.GfxNativeJobI
     out.command_bytes = 2051;
     return if (fence.slot == 7) 1 else -3;
 }
+fn queueOwnerProbe(binding: *const r4os.abi.GfxBackendBinding, timeline: u64, out: *r4os.abi.GfxQueueOwnerInfo) callconv(.c) i32 {
+    std.debug.assert(binding.device_generation == 0x100000017 and timeline == 0x200000009 and out.version == 1 and out.size == 48);
+    out.timeline = timeline; out.producer_generation = 0x300000005; out.closing = 1;
+    return if (binding.adapter_id == 17) 1 else if (binding.adapter_id == 18) 0 else -3;
+}
 
 fn gfxMapProbe(ref: *const r4os.abi.GfxBufferHandle, access: u32, offset: u64, bytes: u64, out: *r4os.abi.GfxBufferMap) callconv(.c) i32 {
     std.debug.assert(ref.generation == 99 and access == 1 and offset == 0x100000003 and bytes == 0x200000000);
@@ -737,6 +742,24 @@ test "graphics buffer optional tails preserve 64-bit offsets in Zig and R4D call
     }
     native.table.size = 136;
     try std.testing.expectEqual(@as(i32, 1), native.publishProperties(&binding, &properties));
+    native.table.queue_owner_info = @intFromPtr(&queueOwnerProbe);
+    var queue_owner: r4os.abi.GfxQueueOwnerInfo = .{ .version = 0, .size = 0 };
+    const saved_owner = queue_owner;
+    for (160..168) |size| {
+        native.table.size = @intCast(size);
+        try std.testing.expectEqual(r4os.abi.err_no_fn, native.queueOwnerInfo(&binding, 0x200000009, &queue_owner));
+        try std.testing.expectEqualDeep(saved_owner, queue_owner);
+    }
+    native.table.size = 168; binding.adapter_id = 18;
+    try std.testing.expectEqual(@as(i32, 0), native.queueOwnerInfo(&binding, 0x200000009, &queue_owner));
+    try std.testing.expectEqualDeep(saved_owner, queue_owner);
+    binding.adapter_id = 19;
+    try std.testing.expectEqual(@as(i32, -3), native.queueOwnerInfo(&binding, 0x200000009, &queue_owner));
+    try std.testing.expectEqualDeep(saved_owner, queue_owner);
+    binding.adapter_id = 17;
+    try std.testing.expectEqual(@as(i32, 1), native.queueOwnerInfo(&binding, 0x200000009, &queue_owner));
+    try std.testing.expectEqual(@as(u64, 0x300000005), queue_owner.producer_generation);
+    try std.testing.expectEqual(@as(u32, 1), queue_owner.closing);
     old_driver.version = 26;
     old_driver.size = 576;
     old_driver.gfx_queue_query = &gfxQueuePrefixProbe;
