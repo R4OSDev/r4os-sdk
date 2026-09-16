@@ -1557,8 +1557,10 @@ const COptions = struct {
     startup_source_file: ?std.Build.LazyPath,
     linker_script: std.Build.LazyPath,
     entry_symbol: []const u8 = "R4XStart",
-    strip: bool = true,
-    emit_relocs: bool = false,
+    // PIC still permits absolute pointers in constant C aggregates and tables.
+    // Keep symbols/relocations until R4M conversion, as for Zig modules.
+    strip: bool = false,
+    emit_relocs: bool = true,
     optimize: std.builtin.OptimizeMode,
     app_profile: ?AppProfile = null,
 };

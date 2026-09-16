@@ -5,6 +5,15 @@ Dieses Repository enthaelt das hostneutrale Kern-SDK von R4OS: Zig- und
 C-Fassaden, Buildprofile, Templates, Smokeprojekte sowie die generischen
 Werkzeuge R4XBuilder, R4LContractGen und ModuleCatalog.
 
+C-Module und Relokationen
+------------------------
+
+Auch positionsunabhaengiger C-Code kann absolute Zeiger in konstanten
+Strukturen oder Tabellen enthalten. Der gemeinsame C-Build bewahrt daher
+Symbole und ELF-Relokationen bis zur R4M0-Konvertierung, genau wie Zig.
+Erst R4XBuilder erzeugt daraus die verbindlichen Loader-Patchrecords;
+ein vorzeitiges Strippen wuerde solche Zeiger unbrauchbar machen.
+
 Pfade
 -----
 
