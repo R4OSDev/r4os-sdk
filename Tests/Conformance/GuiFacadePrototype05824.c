@@ -215,7 +215,7 @@ static int32_t gfx_map_probe(const R4GfxBufferHandle *ref, uint32_t access, uint
     out->byte_length = bytes;
     return 1;
 }
-_Static_assert(sizeof(R4GfxOwnedBufferReservation)==88 && sizeof(R4GfxOwnedBufferRelease)==80 && offsetof(R4GfxDriverMemoryApi,buffer_reserve)==112 && offsetof(R4GfxDriverMemoryApi,native_register)==152 && sizeof(R4GfxDriverMemoryApi)==208 && offsetof(R4GfxDriverMemoryApi,memory_budget)==184 && offsetof(R4GfxDriverMemoryApi,telemetry_exchange)==192 && offsetof(R4GfxDriverMemoryApi,device_lost)==200, "owned BO ABI and optional device-loss tail");
+_Static_assert(sizeof(R4GfxOwnedBufferReservation)==88 && sizeof(R4GfxOwnedBufferRelease)==80 && offsetof(R4GfxDriverMemoryApi,buffer_reserve)==112 && offsetof(R4GfxDriverMemoryApi,native_register)==152 && sizeof(R4GfxDriverMemoryApi)==240 && offsetof(R4GfxDriverMemoryApi,virtual_register)==208 && offsetof(R4GfxDriverMemoryApi,virtual_complete)==232 && offsetof(R4GfxDriverMemoryApi,memory_budget)==184 && offsetof(R4GfxDriverMemoryApi,telemetry_exchange)==192 && offsetof(R4GfxDriverMemoryApi,device_lost)==200, "owned BO ABI and optional device-loss tail");
 static int32_t device_lost_probe(uint32_t adapter, uint64_t generation, uint32_t quiesced) {
     assert(adapter==17 && generation==UINT64_C(0x300000007) && quiesced<=1);
     return quiesced ? 1 : R4OS_GFX_BUFFER_ERROR_BUSY;
@@ -905,7 +905,51 @@ static void stats_facade_probe(void) {
     stats.device_bytes=79;
     assert(r4driver_memory_buffer_stats(&memory, &stats) == 1 && stats.size == 56 && stats.device_bytes == 0);
 }
+static int32_t virtual_start_probe(const R4GfxVirtualRequest *input, R4GfxVirtualStatus *output) {
+    assert(input->memory_generation == UINT64_C(0x100000035) && input->byte_offset == UINT64_C(0x200000035) && output->size == 80);
+    output->address = UINT64_C(0x300000035); return -4;
+}
+static int32_t virtual_wait_probe(const R4GfxBufferHandle *handle, uint32_t until, uint64_t ticks, R4GfxVirtualStatus *output) {
+    assert(handle->generation == UINT64_C(0x400000035) && until == 1 && ticks == UINT64_C(0x500000035) && output->version == 1 && output->size == 80);
+    output->address = UINT64_C(0x600000035); return 1;
+}
+static int32_t virtual_close_probe(const R4GfxBufferHandle *handle, uint32_t mode) {
+    assert(handle->generation == UINT64_C(0x400000035) && mode == 1); return 1;
+}
+static int32_t virtual_take_probe(const R4GfxBufferHandle *provider, R4GfxVirtualJob *output) {
+    assert(provider->generation == UINT64_C(0x400000035) && output->version == 1 && output->size == 248);
+    output->token.opaque2 = UINT64_C(0x700000035); return -4;
+}
+static int32_t virtual_complete_probe(const R4GfxBufferHandle *provider, const R4GfxVirtualCompletion *input) {
+    assert(provider->generation == UINT64_C(0x400000035) && input->operation == 1 && input->token.opaque2 == UINT64_C(0x800000035)); return 1;
+}
+static void virtual_facade_probe(void) {
+    R4XStartR4Draw table = {.size = sizeof(table), .gfx_virtual_start = (uintptr_t)virtual_start_probe, .gfx_virtual_wait = (uintptr_t)virtual_wait_probe, .gfx_virtual_close = (uintptr_t)virtual_close_probe};
+    R4Draw draw = {.table = &table};
+    R4GfxBufferHandle handle = {.generation = UINT64_C(0x400000035)};
+    R4GfxVirtualRequest input = {.memory_generation = UINT64_C(0x100000035), .byte_offset = UINT64_C(0x200000035)};
+    R4GfxVirtualStatus output = {.address = 77};
+    for (unsigned size = 832; size < 840; ++size) {
+        table.size = size; assert(r4draw_gfx_virtual_start(&draw, &input, &output) == R4OS_ERR_NO_FN && output.address == 77);
+    }
+    table.size = 840; assert(r4draw_gfx_virtual_start(&draw, &input, &output) == -4 && output.address == 77);
+    for (unsigned size = 856; size < 864; ++size) {
+        table.size = size; assert(r4draw_gfx_virtual_wait(&draw, &handle, 1, UINT64_C(0x500000035), &output) == R4OS_ERR_NO_FN);
+    }
+    table.size = 864;
+    assert(r4draw_gfx_virtual_wait(&draw, &handle, 1, UINT64_C(0x500000035), &output) == 1 && output.address == UINT64_C(0x600000035));
+    assert(r4draw_gfx_virtual_close(&draw, &handle, 1) == 1);
+    R4GfxDriverMemoryApi driver = {.version = 1, .size = sizeof(driver), .virtual_take = (uintptr_t)virtual_take_probe, .virtual_complete = (uintptr_t)virtual_complete_probe};
+    R4GfxVirtualCompletion completion = {.operation = 1, .token = {.opaque2 = UINT64_C(0x800000035)}};
+    for (unsigned size = 232; size < 240; ++size) {
+        driver.size = size; assert(r4driver_memory_virtual_complete(&driver, &handle, &completion) == R4OS_ERR_NO_FN);
+    }
+    driver.size = 240; assert(r4driver_memory_virtual_complete(&driver, &handle, &completion) == 1);
+    R4GfxVirtualJob job = {.token = {.opaque2 = 79}}, saved = job;
+    assert(r4driver_memory_virtual_take(&driver, &handle, &job) == -4 && memcmp(&job, &saved, sizeof(job)) == 0);
+}
 int main(void) {
+    virtual_facade_probe();
     capture_facade_probe();
     stats_facade_probe();
     cursor_facade_probe();

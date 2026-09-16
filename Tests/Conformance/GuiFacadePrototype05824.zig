@@ -410,6 +410,66 @@ fn nativeFacadeProbe() !void {
     try std.testing.expectEqual(a.err_no_fn, memory.nativeTake(&provider, &output));
     try std.testing.expectEqualDeep(unchanged, output);
 }
+fn virtualStartProbe(input: *const r4os.abi.GfxVirtualRequest, output: *r4os.abi.GfxVirtualStatus) callconv(.c) i32 {
+    std.debug.assert(input.memory_generation == 0x100000035 and input.byte_offset == 0x200000035 and output.size == 80);
+    output.address = 0x300000035; return -4;
+}
+fn virtualWaitProbe(handle: *const r4os.abi.GfxBufferHandle, until: u32, timeout: u64, output: *r4os.abi.GfxVirtualStatus) callconv(.c) i32 {
+    std.debug.assert(handle.generation == 0x400000035 and until == 1 and timeout == 0x500000035 and output.version == 1 and output.size == 80);
+    output.address = 0x600000035; return 1;
+}
+fn virtualCloseProbe(handle: *const r4os.abi.GfxBufferHandle, mode: u32) callconv(.c) i32 {
+    std.debug.assert(handle.generation == 0x400000035 and mode == 1); return 1;
+}
+fn virtualTakeProbe(provider: *const r4os.abi.GfxBufferHandle, output: *r4os.abi.GfxVirtualJob) callconv(.c) i32 {
+    std.debug.assert(provider.generation == 0x400000035 and output.version == 1 and output.size == 248);
+    output.token.opaque2 = 0x700000035; return -4;
+}
+fn virtualCompleteProbe(provider: *const r4os.abi.GfxBufferHandle, input: *const r4os.abi.GfxVirtualCompletion) callconv(.c) i32 {
+    std.debug.assert(provider.generation == 0x400000035 and input.token.opaque2 == 0x800000035 and input.operation == 1); return 1;
+}
+fn virtualFacadeProbe() !void {
+    const a = r4os.abi; const t = std.testing;
+    var tables = makeTables(true);
+    tables[2].gfx_virtual_start = @intFromPtr(&virtualStartProbe);
+    tables[2].gfx_virtual_wait = @intFromPtr(&virtualWaitProbe);
+    tables[2].gfx_virtual_close = @intFromPtr(&virtualCloseProbe);
+    var imports: [3]a.R4XStartImport = undefined; var raw: a.R4XStartContext = undefined;
+    var app = try makeApp(&tables, &imports, &raw);
+    const draw = app.drawing().?;
+    const handle: a.GfxBufferHandle = .{ .generation = 0x400000035 };
+    const input: a.GfxVirtualRequest = .{ .memory_generation = 0x100000035, .byte_offset = 0x200000035 };
+    var status: a.GfxVirtualStatus = .{ .address = 77 };
+    const unchanged = status;
+    for (832..840) |size| {
+        tables[2].size = @intCast(size);
+        try t.expectEqual(a.err_no_fn, draw.gfxVirtualStart(&input, &status));
+        try t.expectEqualDeep(unchanged, status);
+    }
+    tables[2].size = 840;
+    try t.expectEqual(@as(i32, -4), draw.gfxVirtualStart(&input, &status));
+    try t.expectEqualDeep(unchanged, status);
+    for (856..864) |size| {
+        tables[2].size = @intCast(size);
+        try t.expectEqual(a.err_no_fn, draw.gfxVirtualWait(&handle, 1, 0x500000035, &status));
+    }
+    tables[2].size = 864;
+    try t.expectEqual(@as(i32, 1), draw.gfxVirtualWait(&handle, 1, 0x500000035, &status));
+    try t.expect(status.address == 0x600000035);
+    try t.expectEqual(@as(i32, 1), draw.gfxVirtualClose(&handle, 1));
+    var driver: r4os.driver_memory.Context = .{ .table = .{ .virtual_take = @intFromPtr(&virtualTakeProbe), .virtual_complete = @intFromPtr(&virtualCompleteProbe) } };
+    const completion: a.GfxVirtualCompletion = .{ .operation = 1, .token = .{ .opaque2 = 0x800000035 } };
+    for (232..240) |size| {
+        driver.table.size = @intCast(size);
+        try t.expectEqual(a.err_no_fn, driver.virtualComplete(&handle, &completion));
+    }
+    driver.table.size = 240;
+    try t.expectEqual(@as(i32, 1), driver.virtualComplete(&handle, &completion));
+    var job: a.GfxVirtualJob = .{ .token = .{ .opaque2 = 79 } };
+    const old = job;
+    try t.expectEqual(@as(i32, -4), driver.virtualTake(&handle, &job));
+    try t.expectEqualDeep(old, job);
+}
 fn oldStatsProbe(output: *r4os.abi.GfxBufferStats) callconv(.c) i32 {
     std.debug.assert(output.version == 1 and output.size == 136);
     var old: r4os.abi.GfxBufferStats = .{ .size = 56, .committed_bytes = 0x100000003 };
@@ -506,6 +566,7 @@ test "graphics buffer optional tails preserve 64-bit offsets in Zig and R4D call
     try gridFacadeProbe();
     try ownedFacadeProbe();
     try nativeFacadeProbe();
+    try virtualFacadeProbe();
     var tables = makeTables(true);
     tables[2].abi_version = 10; // A new facade must accept an older prefix.
     tables[2].gfx_buffer_map = @intFromPtr(&gfxMapProbe);

@@ -35,6 +35,11 @@ pub const Context = struct {
         return self.base.hasDrawFn(field);
     }
 
+    pub fn gfxVirtualStart(self: *const Context, input: *const abi.GfxVirtualRequest, output: *abi.GfxVirtualStatus) i32 { return self.base.gfxVirtualStart(input, output); }
+    pub fn gfxVirtualQuery(self: *const Context, request: *const abi.GfxBufferHandle, output: *abi.GfxVirtualStatus) i32 { return self.base.gfxVirtualQuery(request, output); }
+    pub fn gfxVirtualClose(self: *const Context, request: *const abi.GfxBufferHandle, mode: u32) i32 { return self.base.gfxVirtualClose(request, mode); }
+    pub fn gfxVirtualWait(self: *const Context, request: *const abi.GfxBufferHandle, until: u32, timeout_ticks: u64, output: *abi.GfxVirtualStatus) i32 { return self.base.gfxVirtualWait(request, until, timeout_ticks, output); }
+
     pub fn gfxNativeStart(self: *const Context, input: *const abi.GfxNativeAllocation, output: *abi.GfxNativeStatus) i32 { return self.base.gfxNativeStart(input, output); }
 
     pub fn gfxNativeQuery(self: *const Context, request: *const abi.GfxBufferHandle, output: *abi.GfxNativeStatus) i32 { return self.base.gfxNativeQuery(request, output); }

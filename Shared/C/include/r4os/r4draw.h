@@ -330,6 +330,46 @@ static inline int32_t r4draw_gui_present(R4Draw *draw) {
 
 
 /* Generation-bound graphics buffers. Check each optional tail independently. */
+static inline int32_t r4draw_gfx_virtual_start(const R4Draw *draw, const R4GfxVirtualRequest * input, R4GfxVirtualStatus * output) {
+    if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_virtual_start) + sizeof(uintptr_t) || draw->table->gfx_virtual_start == 0) return R4OS_ERR_NO_FN;
+    if (input == 0 || output == 0) return R4OS_GFX_BUFFER_ERROR_INVALID;
+    R4DrawGfxVirtualStartFn callback = (R4DrawGfxVirtualStartFn)(uintptr_t)draw->table->gfx_virtual_start;
+    R4GfxVirtualStatus temporary = {0};
+    temporary.version = 1; temporary.size = sizeof(temporary);
+    int32_t rc = callback(input, &temporary);
+    if (rc == 1) *output = temporary;
+    return rc;
+}
+
+static inline int32_t r4draw_gfx_virtual_query(const R4Draw *draw, const R4GfxBufferHandle * request, R4GfxVirtualStatus * output) {
+    if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_virtual_query) + sizeof(uintptr_t) || draw->table->gfx_virtual_query == 0) return R4OS_ERR_NO_FN;
+    if (request == 0 || output == 0) return R4OS_GFX_BUFFER_ERROR_INVALID;
+    R4DrawGfxVirtualQueryFn callback = (R4DrawGfxVirtualQueryFn)(uintptr_t)draw->table->gfx_virtual_query;
+    R4GfxVirtualStatus temporary = {0};
+    temporary.version = 1; temporary.size = sizeof(temporary);
+    int32_t rc = callback(request, &temporary);
+    if (rc == 1) *output = temporary;
+    return rc;
+}
+
+static inline int32_t r4draw_gfx_virtual_close(const R4Draw *draw, const R4GfxBufferHandle * request, uint32_t mode) {
+    if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_virtual_close) + sizeof(uintptr_t) || draw->table->gfx_virtual_close == 0) return R4OS_ERR_NO_FN;
+    if (request == 0) return R4OS_GFX_BUFFER_ERROR_INVALID;
+    R4DrawGfxVirtualCloseFn callback = (R4DrawGfxVirtualCloseFn)(uintptr_t)draw->table->gfx_virtual_close;
+    return callback(request, mode);
+}
+
+static inline int32_t r4draw_gfx_virtual_wait(const R4Draw *draw, const R4GfxBufferHandle * request, uint32_t until, uint64_t timeout_ticks, R4GfxVirtualStatus * output) {
+    if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_virtual_wait) + sizeof(uintptr_t) || draw->table->gfx_virtual_wait == 0) return R4OS_ERR_NO_FN;
+    if (request == 0 || output == 0) return R4OS_GFX_BUFFER_ERROR_INVALID;
+    R4DrawGfxVirtualWaitFn callback = (R4DrawGfxVirtualWaitFn)(uintptr_t)draw->table->gfx_virtual_wait;
+    R4GfxVirtualStatus temporary = {0};
+    temporary.version = 1; temporary.size = sizeof(temporary);
+    int32_t rc = callback(request, until, timeout_ticks, &temporary);
+    if (rc == 1) *output = temporary;
+    return rc;
+}
+
 static inline int32_t r4draw_gfx_native_start(const R4Draw *draw, const R4GfxNativeAllocation * input, R4GfxNativeStatus * output) {
     if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_native_start) + sizeof(uintptr_t) || draw->table->gfx_native_start == 0) return R4OS_ERR_NO_FN;
     if (input == 0 || output == 0) return R4OS_GFX_BUFFER_ERROR_INVALID;

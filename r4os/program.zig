@@ -1455,6 +1455,32 @@ pub const Context = struct {
         return table_fn(lease);
     }
 
+    pub fn gfxVirtualStart(self: *const Context, input: *const abi.GfxVirtualRequest, output: *abi.GfxVirtualStatus) i32 {
+        const callback = self.drawFn("gfx_virtual_start") orelse return self.unavailable("draw");
+        var temporary: abi.GfxVirtualStatus = .{};
+        const rc = callback(input, &temporary);
+        if (rc == 1) output.* = temporary;
+        return rc;
+    }
+    pub fn gfxVirtualQuery(self: *const Context, request: *const abi.GfxBufferHandle, output: *abi.GfxVirtualStatus) i32 {
+        const callback = self.drawFn("gfx_virtual_query") orelse return self.unavailable("draw");
+        var temporary: abi.GfxVirtualStatus = .{};
+        const rc = callback(request, &temporary);
+        if (rc == 1) output.* = temporary;
+        return rc;
+    }
+    pub fn gfxVirtualClose(self: *const Context, request: *const abi.GfxBufferHandle, mode: u32) i32 {
+        const callback = self.drawFn("gfx_virtual_close") orelse return self.unavailable("draw");
+        return callback(request, mode);
+    }
+    pub fn gfxVirtualWait(self: *const Context, request: *const abi.GfxBufferHandle, until: u32, timeout_ticks: u64, output: *abi.GfxVirtualStatus) i32 {
+        const callback = self.drawFn("gfx_virtual_wait") orelse return self.unavailable("draw");
+        var temporary: abi.GfxVirtualStatus = .{};
+        const rc = callback(request, until, timeout_ticks, &temporary);
+        if (rc == 1) output.* = temporary;
+        return rc;
+    }
+
     pub fn gfxNativeStart(self: *const Context, input: *const abi.GfxNativeAllocation, output: *abi.GfxNativeStatus) i32 {
         const callback = self.drawFn("gfx_native_start") orelse return self.unavailable("draw");
         var temporary: abi.GfxNativeStatus = .{};

@@ -34,6 +34,44 @@ static inline int32_t r4driver_memory_budget(const R4GfxDriverMemoryApi *table, 
     return rc;
 }
 
+static inline int32_t r4driver_memory_virtual_register(const R4GfxDriverMemoryApi *table, const R4GfxNativeProvider * input, R4GfxBufferHandle * output) {
+    if (table == 0 || table->version != 1 || table->size < offsetof(R4GfxDriverMemoryApi, virtual_register) + sizeof(uint64_t) || table->virtual_register == 0) return R4OS_ERR_NO_FN;
+    if (input == 0 || output == 0) return R4OS_GFX_BUFFER_ERROR_INVALID;
+    typedef int32_t (*Callback)(const R4GfxNativeProvider *, R4GfxBufferHandle *);
+    Callback callback = (Callback)(uintptr_t)table->virtual_register;
+    R4GfxBufferHandle temporary = {0};
+    int32_t rc = callback(input, &temporary);
+    if (rc == 1) *output = temporary;
+    return rc;
+}
+
+static inline int32_t r4driver_memory_virtual_unregister(const R4GfxDriverMemoryApi *table, const R4GfxBufferHandle * provider) {
+    if (table == 0 || table->version != 1 || table->size < offsetof(R4GfxDriverMemoryApi, virtual_unregister) + sizeof(uint64_t) || table->virtual_unregister == 0) return R4OS_ERR_NO_FN;
+    if (provider == 0) return R4OS_GFX_BUFFER_ERROR_INVALID;
+    typedef int32_t (*Callback)(const R4GfxBufferHandle *);
+    Callback callback = (Callback)(uintptr_t)table->virtual_unregister;
+    return callback(provider);
+}
+
+static inline int32_t r4driver_memory_virtual_take(const R4GfxDriverMemoryApi *table, const R4GfxBufferHandle * provider, R4GfxVirtualJob * output) {
+    if (table == 0 || table->version != 1 || table->size < offsetof(R4GfxDriverMemoryApi, virtual_take) + sizeof(uint64_t) || table->virtual_take == 0) return R4OS_ERR_NO_FN;
+    if (provider == 0 || output == 0) return R4OS_GFX_BUFFER_ERROR_INVALID;
+    typedef int32_t (*Callback)(const R4GfxBufferHandle *, R4GfxVirtualJob *);
+    Callback callback = (Callback)(uintptr_t)table->virtual_take;
+    R4GfxVirtualJob temporary = {0};
+    temporary.version = 1; temporary.size = sizeof(temporary);
+    int32_t rc = callback(provider, &temporary);
+    if (rc == 1) *output = temporary;
+    return rc;
+}
+
+static inline int32_t r4driver_memory_virtual_complete(const R4GfxDriverMemoryApi *table, const R4GfxBufferHandle *provider, const R4GfxVirtualCompletion *completion) {
+    if (table == 0 || table->version != 1 || table->size < offsetof(R4GfxDriverMemoryApi, virtual_complete) + sizeof(uint64_t) || table->virtual_complete == 0) return R4OS_ERR_NO_FN;
+    if (provider == 0 || completion == 0) return R4OS_GFX_BUFFER_ERROR_INVALID;
+    typedef int32_t (*Callback)(const R4GfxBufferHandle *, const R4GfxVirtualCompletion *);
+    return ((Callback)(uintptr_t)table->virtual_complete)(provider, completion);
+}
+
 static inline int32_t r4driver_memory_native_register(const R4GfxDriverMemoryApi *table, const R4GfxNativeProvider * input, R4GfxBufferHandle * output) {
     if (table == 0 || table->version != 1 || table->size < offsetof(R4GfxDriverMemoryApi, native_register) + sizeof(uint64_t) || table->native_register == 0) return R4OS_ERR_NO_FN;
     if (input == 0 || output == 0) return R4OS_GFX_BUFFER_ERROR_INVALID;

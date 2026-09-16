@@ -28,6 +28,36 @@ pub const Context = struct {
         return rc;
     }
 
+    pub fn virtualRegister(self: *const Context, input: *const abi.GfxNativeProvider, output: *abi.GfxBufferHandle) i32 {
+        if (self.table.version != 1 or self.table.size < @offsetOf(abi.GfxDriverMemoryApi, "virtual_register") + 8 or self.table.virtual_register == 0) return abi.err_no_fn;
+        const callback: *const fn (*const abi.GfxNativeProvider, *abi.GfxBufferHandle) callconv(.c) i32 = @ptrFromInt(self.table.virtual_register);
+        var temporary: abi.GfxBufferHandle = .{};
+        const rc = callback(input, &temporary);
+        if (rc == 1) output.* = temporary;
+        return rc;
+    }
+
+    pub fn virtualUnregister(self: *const Context, provider: *const abi.GfxBufferHandle) i32 {
+        if (self.table.version != 1 or self.table.size < @offsetOf(abi.GfxDriverMemoryApi, "virtual_unregister") + 8 or self.table.virtual_unregister == 0) return abi.err_no_fn;
+        const callback: *const fn (*const abi.GfxBufferHandle) callconv(.c) i32 = @ptrFromInt(self.table.virtual_unregister);
+        return callback(provider);
+    }
+
+    pub fn virtualTake(self: *const Context, provider: *const abi.GfxBufferHandle, output: *abi.GfxVirtualJob) i32 {
+        if (self.table.version != 1 or self.table.size < @offsetOf(abi.GfxDriverMemoryApi, "virtual_take") + 8 or self.table.virtual_take == 0) return abi.err_no_fn;
+        const callback: *const fn (*const abi.GfxBufferHandle, *abi.GfxVirtualJob) callconv(.c) i32 = @ptrFromInt(self.table.virtual_take);
+        var temporary: abi.GfxVirtualJob = .{};
+        const rc = callback(provider, &temporary);
+        if (rc == 1) output.* = temporary;
+        return rc;
+    }
+
+    pub fn virtualComplete(self: *const Context, provider: *const abi.GfxBufferHandle, completion: *const abi.GfxVirtualCompletion) i32 {
+        if (self.table.version != 1 or self.table.size < @offsetOf(abi.GfxDriverMemoryApi, "virtual_complete") + 8 or self.table.virtual_complete == 0) return abi.err_no_fn;
+        const callback: *const fn (*const abi.GfxBufferHandle, *const abi.GfxVirtualCompletion) callconv(.c) i32 = @ptrFromInt(self.table.virtual_complete);
+        return callback(provider, completion);
+    }
+
     pub fn nativeRegister(self: *const Context, input: *const abi.GfxNativeProvider, output: *abi.GfxBufferHandle) i32 {
         if (self.table.version != 1 or self.table.size < @offsetOf(abi.GfxDriverMemoryApi, "native_register") + 8 or self.table.native_register == 0) return abi.err_no_fn;
         const callback: *const fn (*const abi.GfxNativeProvider, *abi.GfxBufferHandle) callconv(.c) i32 = @ptrFromInt(self.table.native_register);
