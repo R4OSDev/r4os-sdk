@@ -1746,6 +1746,10 @@ pub const Context = struct {
         output.version = 1; output.size = @sizeOf(abi.GfxFenceStatus);
         return callback(queue, submission, list, output);
     }
+    pub fn gfxQueueSubmitRenderColorGridList(self: *const Context, queue: *const abi.GfxQueueHandle, submission: *const abi.GfxSubmission, list: *const abi.GfxRenderColorGridList, output: *abi.GfxFenceStatus) i32 {
+        const callback = self.drawFn("gfx_queue_submit_render_color_grid_list") orelse return self.unavailable("draw");
+        return callback(queue, submission, list, output);
+    }
     pub fn gfxQueueSubmitNative(self: *const Context, queue: *const abi.GfxQueueHandle, submission: *const abi.GfxSubmission, native: *const abi.GfxNativeSubmission, output: *abi.GfxFenceStatus) i32 {
         const callback = self.drawFn("gfx_queue_submit_native") orelse return self.unavailable("draw");
         var temporary: abi.GfxFenceStatus = .{};

@@ -40,6 +40,9 @@ pub const Context = struct {
     pub fn submitRenderColorList(self: *const Context, queue: *const abi.GfxQueueHandle, submission: *const abi.GfxSubmission, list: *const abi.GfxRenderColorList, output: *abi.GfxFenceStatus) i32 {
         return self.base.gfxQueueSubmitRenderColorList(queue, submission, list, output);
     }
+    pub fn submitRenderColorGridList(self: *const Context, queue: *const abi.GfxQueueHandle, submission: *const abi.GfxSubmission, list: *const abi.GfxRenderColorGridList, output: *abi.GfxFenceStatus) i32 {
+        return self.base.gfxQueueSubmitRenderColorGridList(queue, submission, list, output);
+    }
     pub fn query(self: *const Context, fence: *const abi.GfxFence, output: *abi.GfxFenceStatus) i32 {
         return self.base.gfxFenceQuery(fence, output);
     }
