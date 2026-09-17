@@ -977,6 +977,10 @@ pub const Context = struct {
         self.base.threadExit(exit_code);
     }
 
+    pub fn programExit(self: *const Context, exit_code: i32, reason: u32) i32 {
+        return self.base.programExit(exit_code, reason);
+    }
+
     pub fn threadJoin(self: *const Context, thread_id: u32, timeout_ticks: u64, out_exit_code: *i32) i32 {
         return self.base.threadJoin(thread_id, timeout_ticks, out_exit_code);
     }
@@ -987,6 +991,14 @@ pub const Context = struct {
 
     pub fn threadCurrent(self: *const Context) u32 {
         return self.base.threadCurrent();
+    }
+
+    pub fn threadCurrentHandle(self: *const Context, out: *abi.ProgramJoinHandle) i32 {
+        return self.base.threadCurrentHandle(out);
+    }
+
+    pub fn cpuCapacity(self: *const Context, out: *abi.CpuCapacity) i32 {
+        return self.base.cpuCapacity(out);
     }
 
     pub fn notificationCreate(self: *const Context, output: *u64) i32 {

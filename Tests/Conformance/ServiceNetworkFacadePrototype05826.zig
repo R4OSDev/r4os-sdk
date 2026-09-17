@@ -10,6 +10,9 @@ var reply_mode: ReplyMode = .ok;
 var endpoint_ready = false;
 var open_handles: u32 = 0;
 var endpoint_registered = false;
+var window_reply: r4os.abi.WindowModeReply = .{};
+var window_timeout = false;
+var window_request: r4os.abi.WindowModeRequest = .{};
 
 fn fakeOpen(name_z: [*:0]const u8, out: *r4os.abi.ServiceInfo) callconv(.c) i32 {
     const name = std.mem.span(name_z);
@@ -55,6 +58,12 @@ fn socketStatus() u32 {
 fn fakeCall(handle: u32, op: u16, request: [*]const u8, request_len: u32, header: *r4os.abi.ServiceMessageHeader, response: [*]u8, capacity: u32, _: u64) callconv(.c) i32 {
     header.* = .{ .op = op, .request_id = 77, .status = r4os.abi.service_api_result_ok };
     if (handle == 104) {
+        if (op == r4os.abi.window_mode_op_query or op == r4os.abi.window_mode_op_request) {
+            if (request_len != @sizeOf(r4os.abi.WindowModeRequest)) return r4os.abi.service_api_result_invalid;
+            @memcpy(std.mem.asBytes(&window_request), request[0..request_len]);
+            if (window_timeout) return r4os.abi.service_api_result_timeout;
+            return writeReply(r4os.abi.WindowModeReply, response, capacity, &window_reply, "");
+        }
         if (op == 7) {
             if (request_len > capacity) return r4os.abi.service_api_result_buffer_too_small;
             @memcpy(response[0..request_len], request[0..request_len]);
@@ -217,6 +226,7 @@ test "service connection and endpoint own complete lifecycles" {
     try std.testing.expectEqual(r4os.abi.service_api_result_ok, endpoint.reply(message.header.request_id, 0, "OK"));
     try std.testing.expectEqual(r4os.abi.service_api_result_ok, endpoint.unregister());
     try std.testing.expectEqual(r4os.abi.err_closed, endpoint.unregister());
+    try checkWindowModes();
 }
 
 test "resolver TCP and UDP classify lifecycle outcomes without fallback" {
@@ -325,4 +335,45 @@ test "resolver TCP and UDP classify lifecycle outcomes without fallback" {
         else => false,
     });
     try std.testing.expectEqual(@as(u32, 0), open_handles);
+}
+
+
+fn checkWindowModes() !void {
+    const t = std.testing;
+    reply_mode = .ok;
+    window_timeout = false;
+    const sys = initFacades().services.sys;
+    const owner: r4os.abi.ProgramProcessHandle = .{ .instance_id = 7, .generation = 21 };
+    const identity: r4os.abi.WindowModeIdentity = .{ .owner = owner, .window_id = 0, .serial = 1,
+        .service = .{ .instance_id = 8, .generation = 22 }, .desktop = .{ .instance_id = 9, .generation = 23 } };
+    var client: r4os.window_mode.Client = .{ .owner = owner, .window_id = 0 };
+    window_reply = .{ .identity = identity };
+    try t.expect(client.poll(&sys));
+    window_timeout = true;
+    try t.expect(!client.set(&sys, .fullscreen));
+    const accepted = window_request;
+    try t.expectEqualDeep(accepted, client.pending.?);
+    window_timeout = false;
+    window_reply = .{ .result = -3 };
+    try t.expect(client.poll(&sys));
+    try t.expectEqual(@as(i32, -3), client.state.result);
+    try t.expect(client.pending != null);
+    window_reply = .{ .identity = identity, .phase = 1, .request_id = accepted.request_id, .requested_mode = 1 };
+    try t.expect(client.retry(&sys));
+    try t.expectEqualDeep(accepted, window_request);
+    try t.expect(client.pending != null and client.state.mode == 0);
+    window_reply.phase = 2; window_reply.mode = 1;
+    try t.expect(client.poll(&sys));
+    try t.expect(client.pending == null and client.state.mode == 1);
+    window_timeout = true;
+    try t.expect(!client.set(&sys, .windowed));
+    const old = client.pending.?;
+    window_timeout = false;
+    window_reply = .{ .identity = identity };
+    window_reply.identity.service.generation += 1;
+    try t.expect(client.poll(&sys));
+    try t.expect(client.pending == null and client.last_error == -4);
+    try t.expectEqual(@as(u32, 0), window_request.action);
+    try t.expect(window_request.request_id != old.request_id);
+    try t.expectEqual(@as(u32, 0), open_handles);
 }

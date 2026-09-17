@@ -20,6 +20,7 @@ pub const update_catalog = @import("r4os/update_catalog.zig");
 pub const app_contract = @import("r4os/app_contract.zig");
 pub const app_storage = @import("r4os/app_storage.zig");
 pub const document_save = @import("r4os/document_save.zig");
+pub const window_mode = @import("r4os/window_mode.zig");
 pub const app_gui = @import("r4os/app_gui.zig");
 pub const gfx_buffers = @import("r4os/gfx_buffers.zig");
 pub const gfx_outputs = @import("r4os/gfx_outputs.zig");

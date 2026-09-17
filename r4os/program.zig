@@ -1047,6 +1047,13 @@ pub const Context = struct {
         while (true) self.taskYield();
     }
 
+    /// Terminates the entire calling program; returns only on admission error.
+    /// User callbacks/defers are not run. Reason is natural or failed.
+    pub fn programExit(self: *const Context, exit_code: i32, reason: u32) i32 {
+        const function = self.sysFn("program_exit") orelse return self.unavailable("sys");
+        return function(exit_code, reason);
+    }
+
     pub fn threadJoin(self: *const Context, thread_id: u32, timeout_ticks: u64, out_exit_code: *i32) i32 {
         const table_fn = self.sysFn("thread_join") orelse return self.unavailable("sys");
         return table_fn(thread_id, timeout_ticks, out_exit_code);
@@ -1065,6 +1072,17 @@ pub const Context = struct {
     pub fn threadCurrent(self: *const Context) u32 {
         const table_fn = self.sysFn("thread_current") orelse return 0;
         return table_fn();
+    }
+
+    /// Borrow the current identity without creating a join lease or retaining it.
+    pub fn threadCurrentHandle(self: *const Context, out: *abi.ProgramJoinHandle) i32 {
+        const table_fn = self.sysFn("thread_current_handle") orelse return self.unavailable("sys");
+        return table_fn(out);
+    }
+
+    pub fn cpuCapacity(self: *const Context, out: *abi.CpuCapacity) i32 {
+        const query = self.sysFn("cpu_capacity") orelse return self.unavailable("sys");
+        return query(out);
     }
 
     pub fn notificationCreate(self: *const Context, output: *u64) i32 {

@@ -67,7 +67,8 @@ fn bootDisplayFacade() !void {
     try t.expectEqual(@as(usize, 40), @offsetOf(a.GfxDriverDisplayApi, "boot_hold"));
     try t.expectEqual(@as(usize, 48), @offsetOf(a.GfxDriverDisplayApi, "boot_finish"));
     try t.expectEqual(@as(usize, 56), @offsetOf(a.GfxDriverDisplayApi, "prepare_held"));
-    try t.expectEqual(@as(usize, 64), @sizeOf(a.GfxDriverDisplayApi));
+    // This fixture verifies the original 64-byte prefix; later slots append.
+    try t.expect(@sizeOf(a.GfxDriverDisplayApi) >= 64);
     try t.expectEqual(@as(usize, 56), @sizeOf(a.GfxBootHoldRequest));
     var table = r4os.driver_display.Context{ .table = .{ .boot_hold = @intFromPtr(&bootHoldProbe), .boot_finish = @intFromPtr(&bootFinishProbe), .prepare_held = @intFromPtr(&prepareHeldProbe) } };
     var state: a.GfxNativeState = .{ .generation = 79 };
@@ -766,8 +767,79 @@ test "ProcessHandle raw remains u32 source compatible" {
     try std.testing.expectEqual(@as(u32, 0), process.raw);
 }
 
+fn fakeCurrentIdentity(out: *r4os.abi.ProgramJoinHandle) callconv(.c) i32 {
+    out.* = .{ .thread_id = 17, .instance_id = 31, .thread_generation = 0x10000007939, .instance_generation = 0x20000007939 };
+    return r4os.abi.thread_ok;
+}
+fn currentIdentityFacade(sys: *const r4os.r4sys.Context) !void {
+    const a = r4os.abi;
+    const t = std.testing;
+    var output: a.ProgramJoinHandle = .{ .thread_generation = 79 };
+    fake_table.thread_current_handle = @intFromPtr(&fakeCurrentIdentity);
+    for ([_]u32{ 1224, 1231 }) |size| {
+        fake_table.size = size;
+        try t.expectEqual(a.err_no_fn, sys.threadCurrentHandle(&output));
+        try t.expectEqual(@as(u64, 79), output.thread_generation);
+    }
+    fake_table.size = 1232;
+    fake_table.thread_current_handle = 0;
+    try t.expectEqual(a.err_no_fn, sys.threadCurrentHandle(&output));
+    try t.expectEqual(@as(u64, 79), output.thread_generation);
+    fake_table.thread_current_handle = @intFromPtr(&fakeCurrentIdentity);
+    try t.expectEqual(a.thread_ok, sys.threadCurrentHandle(&output));
+    try t.expectEqual(@as(u32, 17), output.thread_id);
+    try t.expectEqual(@as(u32, 31), output.instance_id);
+    try t.expectEqual(@as(u64, 0x10000007939), output.thread_generation);
+    try t.expectEqual(@as(u64, 0x20000007939), output.instance_generation);
+    try t.expectEqual(@as(u64, 0), output.reserved);
+}
+
+fn fakeCpuCapacity(out: *r4os.abi.CpuCapacity) callconv(.c) i32 {
+    out.* = .{ .available_cpus = 3, .configured_cpus = 4 };
+    return r4os.abi.thread_ok;
+}
+fn cpuCapacityFacade(sys: *const r4os.r4sys.Context) !void {
+    const a = r4os.abi;
+    const t = std.testing;
+    var output: a.CpuCapacity = .{ .available_cpus = 79 };
+    fake_table.cpu_capacity = @intFromPtr(&fakeCpuCapacity);
+    for ([_]u32{ 1232, 1239 }) |size| {
+        fake_table.size = size;
+        try t.expectEqual(a.err_no_fn, sys.cpuCapacity(&output));
+        try t.expectEqual(@as(u32, 79), output.available_cpus);
+    }
+    fake_table.size = 1240;
+    fake_table.cpu_capacity = 0;
+    try t.expectEqual(a.err_no_fn, sys.cpuCapacity(&output));
+    try t.expectEqual(@as(u32, 79), output.available_cpus);
+    fake_table.cpu_capacity = @intFromPtr(&fakeCpuCapacity);
+    try t.expectEqual(a.thread_ok, sys.cpuCapacity(&output));
+    try t.expectEqual(@as(u32, 3), output.available_cpus);
+    try t.expectEqual(@as(u32, 4), output.configured_cpus);
+}
+
+fn fakeProgramExit(code: i32, reason: u32) callconv(.c) i32 {
+    return if (code == -73 and reason == r4os.abi.program_exit_reason_failed) r4os.abi.thread_error_busy else r4os.abi.thread_error_invalid;
+}
+fn programExitFacade(sys: *const r4os.r4sys.Context) !void {
+    const a = r4os.abi;
+    fake_table.program_exit = @intFromPtr(&fakeProgramExit);
+    for ([_]u32{ 1240, 1247 }) |size| {
+        fake_table.size = size;
+        try std.testing.expectEqual(a.err_no_fn, sys.programExit(-73, a.program_exit_reason_failed));
+    }
+    fake_table.size = 1248;
+    fake_table.program_exit = 0;
+    try std.testing.expectEqual(a.err_no_fn, sys.programExit(-73, a.program_exit_reason_failed));
+    fake_table.program_exit = @intFromPtr(&fakeProgramExit);
+    try std.testing.expectEqual(a.thread_error_busy, sys.programExit(-73, a.program_exit_reason_failed));
+}
+
 test "process thread VM and I/O resources invalidate and retain timeout state" {
     var api = resources();
+    try currentIdentityFacade(&api.sys);
+    try cpuCapacityFacade(&api.sys);
+    try programExitFacade(&api.sys);
     const path = r4os.FilePath.parse("C:\\TEST.R4X") catch unreachable;
     try std.testing.expectEqual(r4os.abi.program_handle_error_invalid, switch (api.openProcess(0)) {
         .failure => |raw| raw,

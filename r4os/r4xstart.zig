@@ -53,6 +53,7 @@ const ProgramInventoryThreadsFn = *const fn (*abi.ProgramInventoryCursor, [*]abi
 const ThreadCreateHandleFn = *const fn (abi.ThreadEntryFn, u64, u64, u32, *abi.ProgramJoinHandle) callconv(.c) i32;
 const ThreadHandleJoinFn = *const fn (*const abi.ProgramJoinHandle, u64, *i32) callconv(.c) i32;
 const ThreadHandleStatusFn = *const fn (*const abi.ProgramJoinHandle, *abi.ProgramThreadInfo) callconv(.c) i32;
+const ThreadCurrentHandleFn = *const fn (*abi.ProgramJoinHandle) callconv(.c) i32;
 const ServiceStatusFn = *const fn ([*:0]const u8, *abi.ServiceInfo) callconv(.c) i32;
 const ServiceOpenFn = *const fn ([*:0]const u8, *abi.ServiceInfo) callconv(.c) i32;
 const ServiceCloseFn = *const fn (u32) callconv(.c) i32;
@@ -494,6 +495,24 @@ pub const R4Sys = struct {
         if (!self.supportsThreads()) return 0;
         const current_fn: ThreadCurrentFn = @ptrFromInt(self.table.thread_current);
         return current_fn();
+    }
+
+    pub fn threadCurrentHandle(self: *const R4Sys, out: *abi.ProgramJoinHandle) i32 {
+        if (!self.hasFn("thread_current_handle")) return abi.thread_error_unsupported;
+        const current_fn: ThreadCurrentHandleFn = @ptrFromInt(self.table.thread_current_handle);
+        return current_fn(out);
+    }
+
+    pub fn cpuCapacity(self: *const R4Sys, out: *abi.CpuCapacity) i32 {
+        if (!self.hasFn("cpu_capacity")) return abi.thread_error_unsupported;
+        const query: abi.R4SysFns.cpu_capacity = @ptrFromInt(self.table.cpu_capacity);
+        return query(out);
+    }
+
+    pub fn programExit(self: *const R4Sys, exit_code: i32, reason: u32) i32 {
+        if (!self.hasFn("program_exit")) return abi.thread_error_unsupported;
+        const terminate: abi.R4SysFns.program_exit = @ptrFromInt(self.table.program_exit);
+        return terminate(exit_code, reason);
     }
 
     pub fn threadStatus(self: *const R4Sys, thread_id: u32, out: *abi.ProgramThreadInfo) i32 {

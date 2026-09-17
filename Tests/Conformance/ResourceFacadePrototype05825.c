@@ -22,7 +22,7 @@ static int boot_display_checks(void) {
     _Static_assert(offsetof(R4GfxDriverDisplayApi, boot_hold) == 40, "old display prefix");
     _Static_assert(offsetof(R4GfxDriverDisplayApi, boot_finish) == 48, "finish offset");
     _Static_assert(offsetof(R4GfxDriverDisplayApi, prepare_held) == 56, "held native tail");
-    _Static_assert(sizeof(R4GfxDriverDisplayApi) == 64 && sizeof(R4GfxBootHoldRequest) == 56, "boot hold layout");
+    _Static_assert(sizeof(R4GfxDriverDisplayApi) >= 64 && sizeof(R4GfxBootHoldRequest) == 56, "boot hold prefix and payload layout");
     R4GfxDriverDisplayApi table = { .version = 1, .size = 40, .boot_hold = (uint64_t)(uintptr_t)&boot_hold_probe, .boot_finish = (uint64_t)(uintptr_t)&boot_finish_probe, .prepare_held = (uint64_t)(uintptr_t)&prepare_held_probe };
     R4GfxBootHoldRequest request = { .version = 1, .size = sizeof(request), .generation = UINT64_C(0x100000000079), .reference = { .id = 7, .generation = UINT64_C(0x200000079) } };
     R4GfxNativeState state = { .version = 1, .size = sizeof(state), .generation = 79 };
@@ -296,7 +296,75 @@ static void init_app(R4App *app, R4XStartR4Sys *table, R4XStartR4Desk *desk) {
     *app = (R4App){0}; app->system.table = table; app->desktop.table = desk;
 }
 
+static int32_t current_identity_probe(R4ProgramJoinHandle *out) {
+    *out = (R4ProgramJoinHandle){ .thread_id = 17, .instance_id = 31,
+        .thread_generation = UINT64_C(0x10000007939), .instance_generation = UINT64_C(0x20000007939) };
+    return R4OS_THREAD_OK;
+}
+static int current_identity_checks(void) {
+    R4XStartR4Sys table = {0};
+    R4Sys sys = { .table = &table };
+    R4ProgramJoinHandle output = { .thread_generation = 79 };
+    table.thread_current_handle = (uintptr_t)&current_identity_probe;
+    const uint32_t short_sizes[] = {1224, 1231};
+    for (unsigned i = 0; i < 2; ++i) {
+        table.size = short_sizes[i];
+        if (r4sys_thread_current_handle(&sys, &output) != R4OS_THREAD_ERROR_UNSUPPORTED || output.thread_generation != 79) return 1;
+    }
+    table.size = 1232; table.thread_current_handle = 0;
+    if (r4sys_thread_current_handle(&sys, &output) != R4OS_THREAD_ERROR_UNSUPPORTED || output.thread_generation != 79) return 2;
+    table.thread_current_handle = (uintptr_t)&current_identity_probe;
+    if (r4sys_thread_current_handle(&sys, 0) != R4OS_THREAD_ERROR_INVALID) return 3;
+    if (r4sys_thread_current_handle(&sys, &output) != R4OS_THREAD_OK || output.thread_id != 17 || output.instance_id != 31 ||
+        output.thread_generation != UINT64_C(0x10000007939) || output.instance_generation != UINT64_C(0x20000007939) || output.reserved != 0) return 4;
+    return 0;
+}
+
+static int32_t cpu_capacity_probe(R4CpuCapacity *output) {
+    *output = (R4CpuCapacity){ .available_cpus = 3, .configured_cpus = 4 };
+    return R4OS_THREAD_OK;
+}
+static int cpu_capacity_checks(void) {
+    R4XStartR4Sys table = {0};
+    R4Sys sys = { .table = &table };
+    R4CpuCapacity output = { .available_cpus = 79 };
+    table.cpu_capacity = (uintptr_t)&cpu_capacity_probe;
+    const uint32_t short_sizes[] = {1232, 1239};
+    for (unsigned i = 0; i < 2; ++i) {
+        table.size = short_sizes[i];
+        if (r4sys_cpu_capacity(&sys, &output) != R4OS_THREAD_ERROR_UNSUPPORTED || output.available_cpus != 79) return 1;
+    }
+    table.size = 1240; table.cpu_capacity = 0;
+    if (r4sys_cpu_capacity(&sys, &output) != R4OS_THREAD_ERROR_UNSUPPORTED || output.available_cpus != 79) return 2;
+    table.cpu_capacity = (uintptr_t)&cpu_capacity_probe;
+    if (r4sys_cpu_capacity(&sys, 0) != R4OS_THREAD_ERROR_INVALID) return 3;
+    if (r4sys_cpu_capacity(&sys, &output) != R4OS_THREAD_OK || output.available_cpus != 3 || output.configured_cpus != 4) return 4;
+    return 0;
+}
+
+static int32_t program_exit_probe(int32_t code, uint32_t reason) {
+    return code == -73 && reason == R4OS_PROGRAM_EXIT_REASON_FAILED ? R4OS_THREAD_ERROR_BUSY : R4OS_THREAD_ERROR_INVALID;
+}
+static int program_exit_checks(void) {
+    R4XStartR4Sys table = {0};
+    R4Sys sys = { .table = &table };
+    table.program_exit = (uintptr_t)&program_exit_probe;
+    const uint32_t short_sizes[] = {1240, 1247};
+    for (unsigned i = 0; i < 2; ++i) {
+        table.size = short_sizes[i];
+        if (r4sys_program_exit(&sys, -73, R4OS_PROGRAM_EXIT_REASON_FAILED) != R4OS_THREAD_ERROR_UNSUPPORTED) return 1;
+    }
+    table.size = 1248; table.program_exit = 0;
+    if (r4sys_program_exit(&sys, -73, R4OS_PROGRAM_EXIT_REASON_FAILED) != R4OS_THREAD_ERROR_UNSUPPORTED) return 2;
+    table.program_exit = (uintptr_t)&program_exit_probe;
+    if (r4sys_program_exit(&sys, -73, R4OS_PROGRAM_EXIT_REASON_FAILED) != R4OS_THREAD_ERROR_BUSY) return 3;
+    return 0;
+}
+
 int main(void) {
+    if (program_exit_checks() != 0) return 86;
+    if (cpu_capacity_checks() != 0) return 85;
+    if (current_identity_checks() != 0) return 84;
     if (boot_display_checks() != 0) return 83;
     if (semaphore_checks() != 0) return 82;
     if (driver_heap_checks() != 0) return 80;

@@ -192,6 +192,36 @@ static inline uint32_t r4sys_thread_current(R4Sys *sys) {
     return current_fn();
 }
 
+/* Borrow an exact identity; this does not create a join lease or pin. */
+static inline int32_t r4sys_thread_current_handle(R4Sys *sys, R4ProgramJoinHandle *out_handle) {
+    if (out_handle == 0) return R4OS_THREAD_ERROR_INVALID;
+    if (sys == 0 || sys->table == 0 ||
+        sys->table->size < offsetof(R4XStartR4Sys, thread_current_handle) + sizeof(uintptr_t) ||
+        sys->table->thread_current_handle == 0) return R4OS_THREAD_ERROR_UNSUPPORTED;
+    R4SysThreadCurrentHandleFn current_fn = (R4SysThreadCurrentHandleFn)(uintptr_t)sys->table->thread_current_handle;
+    return current_fn(out_handle);
+}
+
+/* Advisory scheduler capacity, without an affinity or hardware topology claim. */
+static inline int32_t r4sys_cpu_capacity(R4Sys *sys, R4CpuCapacity *output) {
+    if (output == 0) return R4OS_THREAD_ERROR_INVALID;
+    if (sys == 0 || sys->table == 0 ||
+        sys->table->size < offsetof(R4XStartR4Sys, cpu_capacity) + sizeof(uintptr_t) ||
+        sys->table->cpu_capacity == 0) return R4OS_THREAD_ERROR_UNSUPPORTED;
+    R4SysCpuCapacityFn query = (R4SysCpuCapacityFn)(uintptr_t)sys->table->cpu_capacity;
+    return query(output);
+}
+
+/* Process-wide even from a worker; returns only on admission error.
+ * Does not run user destructors. Reason is NATURAL or FAILED. */
+static inline int32_t r4sys_program_exit(R4Sys *sys, int32_t exit_code, uint32_t reason) {
+    if (sys == 0 || sys->table == 0 ||
+        sys->table->size < offsetof(R4XStartR4Sys, program_exit) + sizeof(uintptr_t) ||
+        sys->table->program_exit == 0) return R4OS_THREAD_ERROR_UNSUPPORTED;
+    R4SysProgramExitFn terminate = (R4SysProgramExitFn)(uintptr_t)sys->table->program_exit;
+    return terminate(exit_code, reason);
+}
+
 static inline int32_t r4sys_thread_status(R4Sys *sys, uint32_t thread_id, R4ProgramThreadInfo *out_info) {
     if (!r4sys_supports_threads(sys) || out_info == 0) return R4OS_THREAD_ERROR_UNSUPPORTED;
     R4SysThreadStatusFn status_fn = (R4SysThreadStatusFn)(uintptr_t)sys->table->thread_status;
