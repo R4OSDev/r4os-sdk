@@ -2027,6 +2027,11 @@ pub const Context = struct {
         return self.desktopActivityWait(last_seq, timeout_ticks_value, out_seq);
     }
 
+    pub fn desktopActivityNotify(self: *const Context) i32 {
+        const function = self.deskFn("desktop_activity_notify") orelse return abi.remote_frame_error_unsupported;
+        return function();
+    }
+
     pub fn supportsRemoteFrameMap(self: *const Context) bool {
         return self.hasDeskFn("remote_frame_map");
     }

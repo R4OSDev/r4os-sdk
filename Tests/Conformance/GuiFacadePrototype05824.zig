@@ -1221,6 +1221,8 @@ fn fakeActivityWait(last_sequence: u64, timeout_ticks: u64, out_sequence: *u64) 
     return 0;
 }
 
+fn fakeActivityNotify() callconv(.c) i32 { return 0; }
+
 fn fakeClear(rgb: u32) callconv(.c) i32 {
     _ = rgb;
     draw_count += 1;
@@ -1532,6 +1534,18 @@ test "command clipboard timer wait and missing draw capability stay explicit" {
     }
     try std.testing.expect(activity_waits > 0);
     try std.testing.expect(window.waitMessage(r4os.time_contract.timeoutPoll()) == .timed_out);
+
+    const desk = app.desktop().?;
+    const raw_desk: r4os.r4xstart.R4Desk = .{ .raw = &context, .table = &tables[1] };
+    try std.testing.expectEqual(r4os.abi.remote_frame_error_unsupported, desk.desktopActivityNotify());
+    tables[1].desktop_activity_notify = @intFromPtr(&fakeActivityNotify);
+    try std.testing.expectEqual(@as(i32, 0), desk.desktopActivityNotify());
+    try std.testing.expectEqual(@as(i32, 0), raw_desk.desktopActivityNotify());
+    // An old prefix must hide the optional pointer even if memory beyond its
+    // advertised size happens to contain a callable address.
+    tables[1].size = @offsetOf(r4os.abi.R4XStartR4Desk, "desktop_activity_notify");
+    try std.testing.expectEqual(r4os.abi.remote_frame_error_unsupported, desk.desktopActivityNotify());
+    try std.testing.expectEqual(r4os.abi.remote_frame_error_unsupported, raw_desk.desktopActivityNotify());
 
     var missing_tables = makeTables(false);
     var missing_imports: [3]r4os.abi.R4XStartImport = undefined;

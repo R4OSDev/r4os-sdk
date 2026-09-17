@@ -1080,6 +1080,12 @@ pub const R4Desk = struct {
         return wait_fn(last_seq, timeout_ticks, out_seq);
     }
 
+    pub fn desktopActivityNotify(self: *const R4Desk) i32 {
+        if (!self.hasFn("desktop_activity_notify")) return abi.remote_frame_error_unsupported;
+        const function: abi.R4DeskFns.desktop_activity_notify = @ptrFromInt(self.table.desktop_activity_notify);
+        return function();
+    }
+
     pub fn supportsRemoteFrameMap(self: *const R4Desk) bool {
         return self.hasFn("remote_frame_map");
     }

@@ -233,6 +233,10 @@ pub const Context = struct {
         return self.base.desktopActivityWait(last_seq, timeout_ticks, out_seq);
     }
 
+    pub fn desktopActivityNotify(self: *const Context) i32 {
+        return self.base.desktopActivityNotify();
+    }
+
     pub fn supportsRemoteFrameMap(self: *const Context) bool {
         return self.base.supportsRemoteFrameMap();
     }
