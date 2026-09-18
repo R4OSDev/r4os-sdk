@@ -401,7 +401,11 @@ fn parseV2(allocator: std.mem.Allocator, path: []const u8, text: []const u8) !Ma
     ensureUnique(native_archives.items, true) catch return error.DuplicateNativeArchive;
     try validateCConfiguration(c_includes.items, c_defines.items, c_flags.items);
     const has_c_source = parsed_language == .c or (allows_c_companions and parsed_language == .zig and sources.items.len > 1);
-    if (!has_c_source and (c_includes.items.len != 0 or c_defines.items.len != 0 or c_flags.items.len != 0)) {
+    // A native-archive R4L can translate its C headers with @cImport even
+    // when the archive supplies every C object. C_FLAG still requires a C
+    // compilation unit; includes/macros apply to the Zig root's translation.
+    const native_headers = parsed_language == .zig and parsed_kind == .r4l and native_archives.items.len != 0;
+    if (!has_c_source and (c_flags.items.len != 0 or (!native_headers and (c_includes.items.len != 0 or c_defines.items.len != 0)))) {
         return error.CConfigurationWithoutCSource;
     }
     ensureUnique(imports.items, true) catch return error.DuplicateImport;
@@ -1006,7 +1010,9 @@ fn validateImportSyntax(value: []const u8) !void {
 /// Call only after manifest validation; platform imports remain mandatory.
 pub fn importIsOptional(value: []const u8) bool {
     var parts = std.mem.splitScalar(u8, value, ':');
-    _ = parts.next(); _ = parts.next(); _ = parts.next();
+    _ = parts.next();
+    _ = parts.next();
+    _ = parts.next();
     const text = parts.next() orelse return false;
     return (std.fmt.parseUnsigned(u32, text, 10) catch return false) == 1;
 }
@@ -1572,6 +1578,13 @@ test "runtime R4L accepts one Zig root followed by library-owned C sources" {
     const no_c_source = std.mem.replaceOwned(u8, allocator, text, "SOURCE=ThirdParty/codec.c", "") catch unreachable;
     defer allocator.free(no_c_source);
     try std.testing.expectError(error.CConfigurationWithoutCSource, parse(allocator, "MixedLib/module.R4MF", no_c_source));
+    const headers_only = try std.mem.replaceOwned(u8, allocator, no_c_source, "C_FLAG=-fno-builtin", "");
+    const native_header_module = try parse(allocator, "MixedLib/module.R4MF", headers_only);
+    try std.testing.expectEqual(@as(usize, 1), native_header_module.sources.len);
+    try std.testing.expectEqualStrings("ThirdParty/include", native_header_module.c_includes[0]);
+    try std.testing.expectEqualStrings("CODEC_CONFIG", native_header_module.c_defines[0].name);
+    const no_archive = try std.mem.replaceOwned(u8, allocator, headers_only, "NATIVE_ARCHIVE=CODEC_NATIVE", "");
+    try std.testing.expectError(error.CConfigurationWithoutCSource, parse(allocator, "MixedLib/module.R4MF", no_archive));
 }
 
 test "R4D accepts ordered C companions without changing driver identity or entry contracts" {

@@ -234,11 +234,24 @@ pub const AudioStream = struct {
     }
 
     pub fn write(self: *AudioStream, data: []const u8, timeout: Timeout) WriteResult {
+        return self.writeBounded(data, timeout, std.math.maxInt(u32));
+    }
+
+    /// One service call at most, including short successful writes. Event-loop
+    /// producers retain the reported prefix and retry the remainder later.
+    pub fn writeOnce(self: *AudioStream, data: []const u8, timeout: Timeout) WriteResult {
+        return self.writeBounded(data, timeout, 1);
+    }
+
+    fn writeBounded(self: *AudioStream, data: []const u8, timeout: Timeout, max_calls: u32) WriteResult {
         if (!self.valid()) return .{ .failure = .{ .raw = abi.err_closed, .written = 0 } };
         if (self.frame_bytes == 0 or data.len % self.frame_bytes != 0)
             return .{ .failure = .{ .raw = abi.service_api_result_invalid, .written = 0 } };
         var offset: usize = 0;
+        var calls: u32 = 0;
         while (offset < data.len) {
+            if (calls == max_calls) return .{ .busy = offset };
+            calls += 1;
             // Keep room for the header: an inferred u12 wraps 4096 to zero.
             const chunk_len: usize = @min(max_write_payload, data.len - offset);
             var payload: [abi.service_api_max_payload]u8 = undefined;
