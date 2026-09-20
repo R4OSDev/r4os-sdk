@@ -12,6 +12,7 @@
         },
     },
     .paths = .{
+        "Examples",
         "LICENSE",
         "NOTICE",
         "build.zig",
