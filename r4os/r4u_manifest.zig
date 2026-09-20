@@ -1,4 +1,5 @@
 const std = @import("std");
+pub const paths = @import("system_update_paths.zig");
 
 pub const manifest_version: u16 = 2;
 pub const header_magic = "R4U2";
@@ -87,6 +88,15 @@ pub const DerivedClass = struct {
     activation: InstallMode = .live,
     priority: Priority = .normal,
 };
+
+pub fn kernelSupportsCompanions(version: []const u8) bool {
+    return (compareVersions(version, paths.companion_recovery_kernel) orelse -1) >= 0;
+}
+
+pub fn companionRecoveryRequirement(kind: ComponentKind, name: []const u8, target: []const u8, version: []const u8, state: RequirementState) bool {
+    return kind == .kernel and state == .active and std.ascii.eqlIgnoreCase(name, "KERNEL") and
+        targetEquals(target, "/boot/r4os.elf") and kernelSupportsCompanions(version);
+}
 
 pub fn componentKindForPayload(value: []const u8, target: []const u8) ?ComponentKind {
     if (std.ascii.eqlIgnoreCase(value, "boot-kernel")) return .kernel;
@@ -244,4 +254,15 @@ test "canonical inventory targets and derived classes" {
     includeComponent(&class, .r4l, "/R4OS/LIBS/R4STD.R4L");
     try std.testing.expectEqual(InstallMode.restart, class.activation);
     try std.testing.expectEqual(Priority.foundation, class.priority);
+    try std.testing.expectEqual(paths.CompanionKind.license, paths.companionKind("c:\\r4os\\licenses\\gfx\\NOTICE.TXT").?);
+    try std.testing.expectEqual(paths.CompanionKind.source, paths.companionKind("C:/R4OS/SOURCES/R4VIDEO/SOURCE.ZIP").?);
+    for ([_][]const u8{
+        "D:/R4OS/LICENSES/NOTICE.TXT",    "C:/R4OS/LICENSES-OTHER/NOTICE.TXT",
+        "C:/R4OS/LICENSES/../LIBS/X.R4L", "C:/R4OS/SOURCES/",
+        "C:/R4OS/SOURCES/FILE. ",
+    }) |path| try std.testing.expect(paths.companionKind(path) == null);
+    try std.testing.expect(componentKindForPayload("license", "/R4OS/LICENSES/GFX.TXT") == null);
+    try std.testing.expect(companionRecoveryRequirement(.kernel, "KERNEL", "/boot/r4os.elf", "0.1.199", .active));
+    try std.testing.expect(!companionRecoveryRequirement(.kernel, "KERNEL", "/boot/r4os.elf", "0.1.198", .active));
+    try std.testing.expect(!companionRecoveryRequirement(.kernel, "KERNEL", "/boot/r4os.elf", "0.1.199", .installed));
 }

@@ -47,6 +47,14 @@ pub const Context = struct {
         return self.base.displayState();
     }
 
+    pub fn driverModuleInfo(self: *const Context, owner: u32) ?abi.DriverModuleInfo {
+        return self.base.driverModuleInfo(owner);
+    }
+
+    pub fn driverModuleInfoRaw(self: *const Context, owner: u32, out: *abi.DriverModuleInfo) i32 {
+        return self.base.driverModuleInfoRaw(owner, out);
+    }
+
     pub fn init(bundle: *const program.Bundle) Context {
         return .{ .base = program.Context.initBundle(bundle) };
     }

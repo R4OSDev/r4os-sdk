@@ -674,6 +674,17 @@ pub const Context = struct {
         return out;
     }
 
+    pub fn driverModuleInfo(self: *const Context, owner: u32) ?abi.DriverModuleInfo {
+        var out: abi.DriverModuleInfo = .{};
+        if (self.driverModuleInfoRaw(owner, &out) != 1) return null;
+        return out;
+    }
+
+    pub fn driverModuleInfoRaw(self: *const Context, owner: u32, out: *abi.DriverModuleInfo) i32 {
+        const table_fn = self.devFn("driver_module_info") orelse return self.unavailable("dev");
+        return table_fn(owner, out);
+    }
+
     pub fn hardwareSummary(self: *const Context) ?abi.HardwareSummary {
         var out: abi.HardwareSummary = .{};
         const table_fn = self.devFn("hardware_summary") orelse return null;

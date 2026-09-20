@@ -2,6 +2,7 @@ const abi = @import("r4os_contract").abi;
 const program = @import("program.zig");
 const std = @import("std");
 const time_contract = @import("time_contract.zig");
+const update_paths = @import("system_update_paths.zig");
 
 pub const name = "R4SYS";
 pub const import_query = "R4SYS:Query:1";
@@ -115,6 +116,8 @@ pub const SystemReplaceClass = enum(u8) {
     /// Payload on another mounted volume (NTFS data disk, boot partition):
     /// plain atomic file replacement without service/driver semantics.
     data,
+    license,
+    source,
 };
 
 pub const SystemReplacePlan = struct {
@@ -182,6 +185,8 @@ pub fn systemReplaceClassName(class: SystemReplaceClass) []const u8 {
         .sdk => "sdk",
         .temp => "temp",
         .data => "data",
+        .license => "license",
+        .source => "source",
         .unknown => "unknown",
     };
 }
@@ -226,13 +231,17 @@ pub fn systemReplaceNeedsReboot(class: SystemReplaceClass) bool {
         .font,
         .sdk,
         => true,
-        .config, .temp, .data, .unknown => false,
+        .config, .temp, .data, .license, .source, .unknown => false,
     };
 }
 
 pub fn classifySystemPath(path_raw: []const u8) SystemReplaceClass {
     const path = trimPath(path_raw);
     if (path.len == 0) return .unknown;
+    if (update_paths.companionKind(path)) |kind| return switch (kind) {
+        .license => .license,
+        .source => .source,
+    };
     if (pathEquals(path, "/boot/r4os.elf") or pathEquals(path, "\\boot\\r4os.elf")) return .boot_kernel;
     if (pathEquals(path, "C:\\CONFIG.R4S")) return .config;
     if (pathHasPrefix(path, "C:\\R4OS\\LIBS\\") and endsWithIgnoreCase(path, ".R4L")) return .system_library;
@@ -1561,6 +1570,11 @@ test "r4sys classifies system replacement targets" {
     try std.testing.expectEqual(SystemReplaceClass.config, classifySystemPath("C:\\R4OS\\CONFIG\\VERSION.R4S"));
     try std.testing.expectEqual(SystemReplaceClass.config, classifySystemPath("C:\\CONFIG.R4S"));
     try std.testing.expectEqual(SystemReplaceClass.sdk, classifySystemPath("C:\\R4OS\\SDK\\Contract\\ABI\\R4LQuery.txt"));
+    try std.testing.expectEqual(SystemReplaceClass.license, classifySystemPath("C:/R4OS/LICENSES/GFX/NOTICE.TXT"));
+    try std.testing.expectEqual(SystemReplaceClass.source, classifySystemPath("C:/R4OS/SOURCES/R4VIDEO/SOURCE.ZIP"));
+    try std.testing.expectEqual(SystemReplaceClass.unknown, classifySystemPath("C:/R4OS/LICENSES/../LIBS/X.R4L"));
+    try std.testing.expect(!systemReplaceNeedsReboot(.license));
+    try std.testing.expect(!systemReplaceNeedsReboot(.source));
     try std.testing.expectEqual(SystemReplaceClass.temp, classifySystemPath("C:\\TEMP\\SYSREPL.TXT"));
     try std.testing.expectEqual(SystemReplaceClass.data, classifySystemPath("D:\\R4OS\\LIBS\\R4STD.R4L"));
     try std.testing.expectEqual(SystemReplaceClass.unknown, classifySystemPath("C:\\R4OS\\UNBEKANNT\\X.BIN"));

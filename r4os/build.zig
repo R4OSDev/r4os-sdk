@@ -195,6 +195,7 @@ pub const R4DModuleOptions = struct {
     name: []const u8,
     driver_name: []const u8,
     driver_type: []const u8 = "misc",
+    metadata: []const []const u8 = &.{},
     root_source_file: std.Build.LazyPath,
     c_source_files: []const std.Build.LazyPath = &.{},
     c_include_roots: []const std.Build.LazyPath = &.{},
@@ -467,6 +468,7 @@ pub const Sdk = struct {
             .name = loaded.manifest.name,
             .driver_name = self.manifestMeta(loaded, "r4d.name"),
             .driver_type = self.manifestMeta(loaded, "r4d.type"),
+            .metadata = loaded.manifest.metadata,
             .module_version = loaded.manifest.module_version.text,
             .root_source_file = userPath(self.b, loaded.source_paths[0]),
             .r4os_module = self.profile.r4os_module,
@@ -734,6 +736,7 @@ pub const Sdk = struct {
             .name = opts.name,
             .driver_name = opts.driver_name,
             .driver_type = opts.driver_type,
+            .metadata = opts.metadata,
             .module_version = opts.module_version,
             .root_source_file = opts.root_source_file,
             .r4os_module = self.profile.r4os_module,
@@ -1011,6 +1014,7 @@ pub const R4DOptions = struct {
     name: []const u8,
     driver_name: []const u8,
     driver_type: []const u8 = "misc",
+    metadata: []const []const u8 = &.{},
     root_source_file: std.Build.LazyPath,
     r4os_module: std.Build.LazyPath,
     contract_module: *std.Build.Module,
@@ -1330,10 +1334,28 @@ fn addR4DWithOptions(b: *std.Build, opts: R4DOptions) BuildResult {
     exports[0] = "DriverInit:.text:0:1";
     exports[1] = "DriverShutdown:.text:5:1";
     const version_count: usize = if (opts.module_version == null) 0 else 1;
-    const metadata = b.allocator.alloc([]const u8, 2 + version_count) catch @panic("OOM");
+    const metadata = b.allocator.alloc([]const u8, 2 + version_count + opts.metadata.len) catch @panic("OOM");
     metadata[0] = b.fmt("r4d.name={s}", .{opts.driver_name});
     metadata[1] = b.fmt("r4d.type={s}", .{opts.driver_type});
     if (opts.module_version) |value| metadata[2] = b.fmt("module.version={s}", .{value});
+    var metadata_count: usize = 2 + version_count;
+    for (opts.metadata) |entry| {
+        // Canonical identity is generated once; retain all other manifest
+        // labels, including the locally verified firmware bundle version.
+        var identity = false;
+        for (metadata[0 .. 2 + version_count]) |canonical| {
+            const equals = std.mem.indexOfScalar(u8, canonical, '=') orelse unreachable;
+            if (std.mem.startsWith(u8, entry, canonical[0 .. equals + 1])) {
+                if (!std.mem.eql(u8, entry, canonical)) @panic("conflicting R4D identity metadata");
+                identity = true;
+            }
+        }
+        if (std.mem.startsWith(u8, entry, "module.name=")) {
+            if (!std.mem.eql(u8, entry[12..], b.fmt("R4D_{s}", .{opts.name}))) @panic("conflicting R4D module name");
+            identity = true;
+        }
+        if (!identity) { metadata[metadata_count] = entry; metadata_count += 1; }
+    }
 
     return addR4MElf(b, .{
         .name = opts.name,
@@ -1344,7 +1366,7 @@ fn addR4DWithOptions(b: *std.Build, opts: R4DOptions) BuildResult {
         .builder = opts.builder,
         .imports = imports,
         .exports = exports,
-        .metadata = metadata,
+        .metadata = metadata[0..metadata_count],
         .resources = opts.resources,
     });
 }

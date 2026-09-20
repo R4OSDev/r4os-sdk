@@ -21,6 +21,10 @@ pub const Devices = struct {
     pub fn display(self: *const Devices) ?abi.DisplayStateInfo {
         return self.raw.displayState();
     }
+
+    pub fn driverModule(self: *const Devices, owner: u32) ?abi.DriverModuleInfo {
+        return self.raw.driverModuleInfo(owner);
+    }
 };
 
 pub const DeviceInventoryView = struct {
