@@ -17,6 +17,23 @@ pub const Context = struct {
         if (code == abi.gfx_output_ok) output.* = value;
         return code;
     }
+    pub fn supportsBrightness(self: *const Context) bool {
+        return self.table.version == 1 and self.table.size >= @offsetOf(abi.GfxDriverOutputApi, "brightness_read") + 8 and
+            self.table.brightness_publish != 0 and self.table.brightness_read != 0;
+    }
+    pub fn publishBrightness(self: *const Context, input: *const abi.GfxOutputBrightness) i32 {
+        if (!self.supportsBrightness()) return abi.err_no_fn;
+        const callback: *const fn (*const abi.GfxOutputBrightness) callconv(.c) i32 = @ptrFromInt(self.table.brightness_publish);
+        return callback(input);
+    }
+    pub fn readBrightness(self: *const Context, identity: *const abi.GfxOutputId, output: *abi.GfxBrightnessRequest) i32 {
+        if (!self.supportsBrightness()) return abi.err_no_fn;
+        const callback: *const fn (*const abi.GfxOutputId, *abi.GfxBrightnessRequest) callconv(.c) i32 = @ptrFromInt(self.table.brightness_read);
+        var value: abi.GfxBrightnessRequest = .{};
+        const code = callback(identity, &value);
+        if (code == abi.gfx_output_ok) output.* = value;
+        return code;
+    }
     pub fn supportsRefresh(self: *const Context) bool {
         return self.table.version == 1 and self.table.size >= @offsetOf(abi.GfxDriverOutputApi, "refresh_read") + 8 and
             self.table.refresh_publish != 0 and self.table.refresh_read != 0;

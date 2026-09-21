@@ -558,6 +558,22 @@ static inline int32_t r4draw_gfx_power_request(const R4Draw *draw, const R4GfxPo
     if (code == R4OS_GFX_OUTPUT_OK) *output = value;
     return code;
 }
+static inline int32_t r4draw_gfx_output_brightness(const R4Draw *draw, const R4GfxOutputId *identity, R4GfxOutputBrightness *output) {
+    if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_output_brightness) + sizeof(uintptr_t) || draw->table->gfx_output_brightness == 0) return R4OS_ERR_NO_FN;
+    if (identity == 0 || output == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    R4GfxOutputBrightness value = {0}; value.version = 1; value.size = sizeof(value);
+    int32_t code = ((R4DrawGfxOutputBrightnessFn)(uintptr_t)draw->table->gfx_output_brightness)(identity, &value);
+    if (code == R4OS_GFX_OUTPUT_OK) *output = value;
+    return code;
+}
+static inline int32_t r4draw_gfx_brightness_request(const R4Draw *draw, const R4GfxBrightnessRequest *input, R4GfxBrightnessRequest *output) {
+    if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_brightness_request) + sizeof(uintptr_t) || draw->table->gfx_brightness_request == 0) return R4OS_ERR_NO_FN;
+    if (input == 0 || output == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    R4GfxBrightnessRequest value = {0}; value.version = 1; value.size = sizeof(value);
+    int32_t code = ((R4DrawGfxBrightnessRequestFn)(uintptr_t)draw->table->gfx_brightness_request)(input, &value);
+    if (code == R4OS_GFX_OUTPUT_OK) *output = value;
+    return code;
+}
 static inline int32_t r4draw_gfx_output_refresh(const R4Draw *draw, const R4GfxOutputTarget *target, R4GfxOutputRefresh *output) {
     if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_output_refresh) + sizeof(uintptr_t) || draw->table->gfx_output_refresh == 0) return R4OS_ERR_NO_FN;
     if (target == 0 || output == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;

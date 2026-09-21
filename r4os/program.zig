@@ -1664,6 +1664,20 @@ pub const Context = struct {
         if (code == abi.gfx_output_ok) output.* = value;
         return code;
     }
+    pub fn gfxOutputBrightness(self: *const Context, identity: *const abi.GfxOutputId, output: *abi.GfxOutputBrightness) i32 {
+        const table_fn = self.drawFn("gfx_output_brightness") orelse return self.unavailable("draw");
+        var value: abi.GfxOutputBrightness = .{};
+        const code = table_fn(identity, &value);
+        if (code == abi.gfx_output_ok) output.* = value;
+        return code;
+    }
+    pub fn gfxBrightnessRequest(self: *const Context, input: *const abi.GfxBrightnessRequest, output: *abi.GfxBrightnessRequest) i32 {
+        const table_fn = self.drawFn("gfx_brightness_request") orelse return self.unavailable("draw");
+        var value: abi.GfxBrightnessRequest = .{};
+        const code = table_fn(input, &value);
+        if (code == abi.gfx_output_ok) output.* = value;
+        return code;
+    }
     pub fn gfxRefreshRequest(self: *const Context, input: *const abi.GfxRefreshRequest, output: *abi.GfxRefreshRequest) i32 {
         const table_fn = self.drawFn("gfx_refresh_request") orelse return self.unavailable("draw");
         var value: abi.GfxRefreshRequest = .{};

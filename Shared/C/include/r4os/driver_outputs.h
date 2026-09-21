@@ -21,6 +21,25 @@ static inline int32_t r4driver_output_read_power(const R4GfxDriverOutputApi *tab
     if (code == R4OS_GFX_OUTPUT_OK) *output = value;
     return code;
 }
+static inline int r4driver_output_supports_brightness(const R4GfxDriverOutputApi *table) {
+    return table != 0 && table->version == 1 && table->size >= offsetof(R4GfxDriverOutputApi, brightness_read) + sizeof(uint64_t) &&
+        table->brightness_publish != 0 && table->brightness_read != 0;
+}
+static inline int32_t r4driver_output_publish_brightness(const R4GfxDriverOutputApi *table, const R4GfxOutputBrightness *input) {
+    if (!r4driver_output_supports_brightness(table)) return R4OS_ERR_NO_FN;
+    if (input == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    typedef int32_t (*Callback)(const R4GfxOutputBrightness *);
+    return ((Callback)(uintptr_t)table->brightness_publish)(input);
+}
+static inline int32_t r4driver_output_read_brightness(const R4GfxDriverOutputApi *table, const R4GfxOutputId *identity, R4GfxBrightnessRequest *output) {
+    if (!r4driver_output_supports_brightness(table)) return R4OS_ERR_NO_FN;
+    if (identity == 0 || output == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    typedef int32_t (*Callback)(const R4GfxOutputId *, R4GfxBrightnessRequest *);
+    R4GfxBrightnessRequest value = {0}; value.version = 1; value.size = sizeof(value);
+    int32_t code = ((Callback)(uintptr_t)table->brightness_read)(identity, &value);
+    if (code == R4OS_GFX_OUTPUT_OK) *output = value;
+    return code;
+}
 
 static inline int r4driver_output_supports_refresh(const R4GfxDriverOutputApi *table) {
     return table != 0 && table->version == 1 && table->size >= offsetof(R4GfxDriverOutputApi, refresh_read) + sizeof(uint64_t) &&

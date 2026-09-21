@@ -14,6 +14,8 @@ pub const Context = struct {
     base: program.Context,
     pub fn gfxOutputPower(self: *const Context, identity: *const abi.GfxOutputId, output: *abi.GfxOutputPower) i32 { return self.base.gfxOutputPower(identity, output); }
     pub fn gfxPowerRequest(self: *const Context, input: *const abi.GfxPowerRequest, output: *abi.GfxPowerRequest) i32 { return self.base.gfxPowerRequest(input, output); }
+    pub fn gfxOutputBrightness(self: *const Context, identity: *const abi.GfxOutputId, output: *abi.GfxOutputBrightness) i32 { return self.base.gfxOutputBrightness(identity, output); }
+    pub fn gfxBrightnessRequest(self: *const Context, input: *const abi.GfxBrightnessRequest, output: *abi.GfxBrightnessRequest) i32 { return self.base.gfxBrightnessRequest(input, output); }
     pub fn outputs(self: *const Context) @import("gfx_outputs.zig").Context { return .{ .base = self.base }; }
     pub fn gfxOutputRefresh(self: *const Context, target: *const abi.GfxOutputTarget, output: *abi.GfxOutputRefresh) i32 {
         return self.base.gfxOutputRefresh(target, output);

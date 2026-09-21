@@ -3,6 +3,8 @@ const program = @import("program.zig");
 pub const Context = struct {
     pub fn power(self: *const Context, identity: *const abi.GfxOutputId, output: *abi.GfxOutputPower) i32 { return self.base.gfxOutputPower(identity, output); }
     pub fn requestPower(self: *const Context, input: *const abi.GfxPowerRequest, output: *abi.GfxPowerRequest) i32 { return self.base.gfxPowerRequest(input, output); }
+    pub fn brightness(self: *const Context, identity: *const abi.GfxOutputId, output: *abi.GfxOutputBrightness) i32 { return self.base.gfxOutputBrightness(identity, output); }
+    pub fn requestBrightness(self: *const Context, input: *const abi.GfxBrightnessRequest, output: *abi.GfxBrightnessRequest) i32 { return self.base.gfxBrightnessRequest(input, output); }
     base: program.Context,
     pub fn revision(self: *const Context, output: *abi.GfxDisplayRevision) i32 { return self.base.gfxOutputRevision(output); }
     pub fn info(self: *const Context, index: u32, output: *abi.GfxOutputInfo) i32 { return self.base.gfxOutputInfo(index, output); }

@@ -148,6 +148,7 @@ fn colorFacadeProbe() !void {
     try modeColorFacadeProbe();
     try refreshFacadeProbe();
     try powerFacadeProbe();
+    try brightnessFacadeProbe();
     const a = r4os.abi; const t = std.testing;
     var tables = makeTables(true);
     var imports: [3]a.R4XStartImport = undefined; var raw: a.R4XStartContext = undefined;
@@ -323,6 +324,62 @@ fn powerFacadeProbe() !void {
     try t.expectEqual(a.gfx_output_error_stale, outputs.power(&request.identity, &read));
     try t.expectEqual(a.gfx_output_error_stale, outputs.requestPower(&request, &intent));
     try t.expectEqual(a.gfx_output_error_stale, driver.readPower(&request.identity, &intent));
+    try t.expect(std.meta.eql(read, old_read) and std.meta.eql(intent, old_intent));
+}
+fn brightnessReadProbe(identity: *const r4os.abi.GfxOutputId, output: *r4os.abi.GfxOutputBrightness) callconv(.c) i32 {
+    std.debug.assert(output.version == 1 and output.size == 88);
+    output.* = .{ .identity = identity.*, .sequence = 0x200000079 };
+    return if (identity.connector_id == 7) r4os.abi.gfx_output_error_stale else 1;
+}
+fn brightnessIntentProbe(input: *const r4os.abi.GfxBrightnessRequest, output: *r4os.abi.GfxBrightnessRequest) callconv(.c) i32 {
+    std.debug.assert(output.version == 1 and output.size == 48);
+    output.* = input.*; output.sequence = 0x300000079;
+    return if (input.identity.connector_id == 7) r4os.abi.gfx_output_error_stale else 1;
+}
+fn brightnessDriverReadProbe(identity: *const r4os.abi.GfxOutputId, output: *r4os.abi.GfxBrightnessRequest) callconv(.c) i32 {
+    return brightnessIntentProbe(&.{ .identity = identity.* }, output);
+}
+fn brightnessPublishProbe(input: *const r4os.abi.GfxOutputBrightness) callconv(.c) i32 { return if (input.sequence == 0x200000079) 1 else -3; }
+fn brightnessFacadeProbe() !void {
+    const a = r4os.abi; const t = std.testing;
+    var tables = makeTables(true);
+    var imports: [3]a.R4XStartImport = undefined; var raw: a.R4XStartContext = undefined;
+    var app = try makeApp(&tables, &imports, &raw);
+    const outputs = app.drawing().?.outputs();
+    tables[2].gfx_output_brightness = @intFromPtr(&brightnessReadProbe);
+    tables[2].gfx_brightness_request = @intFromPtr(&brightnessIntentProbe);
+    var request: a.GfxBrightnessRequest = .{ .identity = .{ .connection_generation = 0x400000079 } };
+    var read: a.GfxOutputBrightness = .{ .sequence = 79 };
+    var intent: a.GfxBrightnessRequest = .{ .sequence = 79 };
+    for (896..904) |size| {
+        tables[2].size = @intCast(size);
+        try t.expectEqual(a.err_no_fn, outputs.brightness(&request.identity, &read));
+        try t.expect(read.sequence == 79);
+    }
+    tables[2].size = 904;
+    try t.expectEqual(@as(i32, 1), outputs.brightness(&request.identity, &read));
+    try t.expect(read.identity.connection_generation == request.identity.connection_generation);
+    for (904..912) |size| {
+        tables[2].size = @intCast(size);
+        try t.expectEqual(a.err_no_fn, outputs.requestBrightness(&request, &intent));
+        try t.expect(intent.sequence == 79);
+    }
+    tables[2].size = 912;
+    try t.expectEqual(@as(i32, 1), outputs.requestBrightness(&request, &intent));
+    var driver: r4os.driver_outputs.Context = .{ .table = .{ .brightness_publish = @intFromPtr(&brightnessPublishProbe), .brightness_read = @intFromPtr(&brightnessDriverReadProbe) } };
+    for (160..176) |size| {
+        driver.table.size = @intCast(size);
+        try t.expect(!driver.supportsBrightness());
+        try t.expectEqual(a.err_no_fn, driver.readBrightness(&request.identity, &intent));
+    }
+    driver.table.size = 176;
+    try t.expectEqual(@as(i32, 1), driver.publishBrightness(&read));
+    try t.expectEqual(@as(i32, 1), driver.readBrightness(&request.identity, &intent));
+    const old_read = read; const old_intent = intent;
+    request.identity.connector_id = 7;
+    try t.expectEqual(a.gfx_output_error_stale, outputs.brightness(&request.identity, &read));
+    try t.expectEqual(a.gfx_output_error_stale, outputs.requestBrightness(&request, &intent));
+    try t.expectEqual(a.gfx_output_error_stale, driver.readBrightness(&request.identity, &intent));
     try t.expect(std.meta.eql(read, old_read) and std.meta.eql(intent, old_intent));
 }
 fn gfxProfileProbe(input: *const r4os.abi.GfxBackendRegistration, profile: *const r4os.abi.GfxBackendProfile, out: *r4os.abi.GfxBackendBinding) callconv(.c) i32 {
