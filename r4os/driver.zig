@@ -79,7 +79,7 @@ pub const Context = struct {
         if (!self.supportsDriverApi(29, @offsetOf(abi.DriverApi, "resource_query") + @sizeOf(usize))) return null;
         const query = self.api.resource_query orelse return null;
         var table: abi.DriverResourceApi = .{};
-        if (query(&table) != abi.driver_resource_ok or table.version != 1 or table.size < @sizeOf(abi.DriverResourceApi)) return null;
+        if (query(&table) != abi.driver_resource_ok or table.version != 1 or table.size < 32) return null;
         return .{ .table = table };
     }
     pub fn graphicsDisplay(self: *const Context) ?@import("driver_display.zig").Context {

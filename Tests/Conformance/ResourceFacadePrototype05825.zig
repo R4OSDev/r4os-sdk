@@ -397,7 +397,13 @@ fn driverResourceReadProbe(handle: u64, offset: u64, out: [*]u8, bytes: u32, dea
     return 1;
 }
 fn driverResourceQueryProbe(out: *r4os.abi.DriverResourceApi) callconv(.c) i32 {
-    out.* = .{ .read_at = @intFromPtr(&driverResourceReadProbe) };
+    const legacy: r4os.abi.DriverResourceApi = .{ .size = 32, .read_at = @intFromPtr(&driverResourceReadProbe) };
+    @memcpy(@as([*]u8, @ptrCast(out))[0..32], std.mem.asBytes(&legacy)[0..32]);
+    return 0;
+}
+fn driverResourceAcpiStatProbe(signature: u32, index: u32, output: *r4os.abi.DriverFirmwareTableInfo) callconv(.c) i32 {
+    std.debug.assert(signature == std.mem.readInt(u32, "VFCT", .little) and index == 3);
+    output.* = .{ .handle = 0x100000001, .generation = 1, .byte_length = 4096, .signature = signature, .revision = 1 };
     return 0;
 }
 test "driver resource facade preserves old prefix, optional slots and 64-bit ranges" {
@@ -418,6 +424,21 @@ test "driver resource facade preserves old prefix, optional slots and 64-bit ran
     var byte: [1]u8 = .{0};
     try std.testing.expectEqual(@as(i32, 1), driver_resources.readAt(0x100000001, 0x200000003, &byte, 0x300000005));
     try std.testing.expectEqual(@as(u8, 79), byte[0]);
+    try std.testing.expectEqual(@as(u32, 32), driver_resources.table.size);
+    try std.testing.expect(!driver_resources.supportsAcpi());
+    var firmware: a.DriverFirmwareTableInfo = .{};
+    try std.testing.expectEqual(a.err_no_fn, driver_resources.acpiStat("VFCT".*, 3, &firmware));
+    driver_resources.table.acpi_stat = @intFromPtr(&driverResourceAcpiStatProbe);
+    driver_resources.table.acpi_read_at = @intFromPtr(&driverResourceReadProbe);
+    driver_resources.table.size = 40;
+    try std.testing.expect(!driver_resources.supportsAcpi());
+    try std.testing.expectEqual(a.driver_resource_ok, driver_resources.acpiStat("VFCT".*, 3, &firmware));
+    try std.testing.expectEqual(@as(u64, 0x100000001), firmware.handle);
+    try std.testing.expectEqual(a.err_no_fn, driver_resources.acpiReadAt(firmware.handle, 0x200000003, &byte, 0x300000005));
+    driver_resources.table.size = 48;
+    try std.testing.expect(driver_resources.supportsAcpi());
+    try std.testing.expectEqual(@as(i32, 1), driver_resources.acpiReadAt(firmware.handle, 0x200000003, &byte, 0x300000005));
+    try std.testing.expectEqual(a.driver_resource_error_invalid, driver_resources.acpiReadAt(firmware.handle, 0, byte[0..0], 10));
     driver_resources.table.size = @offsetOf(a.DriverResourceApi, "read_at");
     try std.testing.expectEqual(a.err_no_fn, driver_resources.readAt(1, 0, &byte, 10));
     try std.testing.expectEqual(std.math.maxInt(u64), driver_resources.nowNs());

@@ -401,11 +401,11 @@ fn parseV2(allocator: std.mem.Allocator, path: []const u8, text: []const u8) !Ma
     ensureUnique(native_archives.items, true) catch return error.DuplicateNativeArchive;
     try validateCConfiguration(c_includes.items, c_defines.items, c_flags.items);
     const has_c_source = parsed_language == .c or (allows_c_companions and parsed_language == .zig and sources.items.len > 1);
-    // A native-archive R4L can translate its C headers with @cImport even
-    // when the archive supplies every C object. C_FLAG still requires a C
-    // compilation unit; includes/macros apply to the Zig root's translation.
-    const native_headers = parsed_language == .zig and parsed_kind == .r4l and native_archives.items.len != 0;
-    if (!has_c_source and (c_flags.items.len != 0 or (!native_headers and (c_includes.items.len != 0 or c_defines.items.len != 0)))) {
+    // R4D/R4L Zig roots can translate data headers with @cImport without a C object
+    // or native archive. C_FLAG still requires an actual C compilation unit;
+    // include roots and macros also apply to the Zig root's translation.
+    const zig_headers = parsed_language == .zig and (parsed_kind == .r4d or parsed_kind == .r4l);
+    if (!has_c_source and (c_flags.items.len != 0 or (!zig_headers and (c_includes.items.len != 0 or c_defines.items.len != 0)))) {
         return error.CConfigurationWithoutCSource;
     }
     ensureUnique(imports.items, true) catch return error.DuplicateImport;
@@ -1584,7 +1584,9 @@ test "runtime R4L accepts one Zig root followed by library-owned C sources" {
     try std.testing.expectEqualStrings("ThirdParty/include", native_header_module.c_includes[0]);
     try std.testing.expectEqualStrings("CODEC_CONFIG", native_header_module.c_defines[0].name);
     const no_archive = try std.mem.replaceOwned(u8, allocator, headers_only, "NATIVE_ARCHIVE=CODEC_NATIVE", "");
-    try std.testing.expectError(error.CConfigurationWithoutCSource, parse(allocator, "MixedLib/module.R4MF", no_archive));
+    const zig_header_module = try parse(allocator, "MixedLib/module.R4MF", no_archive);
+    try std.testing.expectEqual(@as(usize, 0), zig_header_module.native_archives.len);
+    try std.testing.expectEqualStrings("ThirdParty/include", zig_header_module.c_includes[0]);
 }
 
 test "R4D accepts ordered C companions without changing driver identity or entry contracts" {
@@ -1619,6 +1621,13 @@ test "R4D accepts ordered C companions without changing driver identity or entry
     try std.testing.expectEqualStrings("ThirdParty/include", value.c_includes[0]);
     try std.testing.expectEqualStrings("64", value.c_defines[0].value);
     try std.testing.expectEqualStrings("-mno-sse", value.c_flags[0]);
+    const without_native = try std.mem.replaceOwned(u8, allocator, text, "SOURCE=src/native.c", "");
+    const without_helpers = try std.mem.replaceOwned(u8, allocator, without_native, "SOURCE=src/helpers.c", "");
+    try std.testing.expectError(error.CConfigurationWithoutCSource, parse(allocator, "HeaderDriver/module.R4MF", without_helpers));
+    const only_headers = try std.mem.replaceOwned(u8, allocator, without_helpers, "C_FLAG=-mno-sse", "");
+    const header_driver = try parse(allocator, "HeaderDriver/module.R4MF", only_headers);
+    try std.testing.expectEqual(@as(usize, 1), header_driver.sources.len);
+    try std.testing.expectEqualStrings("ThirdParty/include", header_driver.c_includes[0]);
     const wrong = try std.mem.replaceOwned(u8, allocator, text, "src/helpers.c", "src/second.zig");
     try std.testing.expectError(error.SourceLanguageMismatch, parse(allocator, "MixedDriver/module.R4MF", wrong));
     const escaped = try std.mem.replaceOwned(u8, allocator, text, "src/helpers.c", "../helpers.c");
