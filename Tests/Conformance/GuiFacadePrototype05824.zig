@@ -370,6 +370,7 @@ fn memoryPrefixProbe(out: *r4os.abi.GfxDriverMemoryApi) callconv(.c) i32 {
     @memcpy(@as([*]u8, @ptrCast(out))[0..112], std.mem.asBytes(&value)[0..112]); return 1;
 }
 fn ownedFacadeProbe() !void {
+    try reservedSpanFacadeProbe();
     try deviceLostFacadeProbe();
     const a = r4os.abi;
     var native = r4os.driver_memory.Context{ .table = .{ .buffer_reserve = @intFromPtr(&ownedReserveProbe), .buffer_commit = @intFromPtr(&ownedCommitProbe),
@@ -1786,4 +1787,21 @@ test "buffered Canvas cancels a transactional frame after a partial flush failur
     try std.testing.expectEqual(@as(u32, 1), frame_cancel_count);
     try std.testing.expectEqual(@as(u64, 1), builder.stats.failed_calls);
     try std.testing.expectEqual(@as(i32, r4os.abi.err_no_fn), paint.present());
+}
+
+fn reservedSpanProbe(base: u64, bytes: u64) callconv(.c) i32 {
+    std.debug.assert(base == 0x200000000 and bytes == 0x20000000);
+    return r4os.abi.gfx_buffer_error_unsupported;
+}
+fn reservedSpanFacadeProbe() !void {
+    const a = r4os.abi;
+    var memory: r4os.driver_memory.Context = .{ .table = .{ .reserved_span = @intFromPtr(&reservedSpanProbe) } };
+    for (240..248) |bytes| {
+        memory.table.size = @intCast(bytes);
+        try std.testing.expectEqual(a.err_no_fn, memory.reservedSpan(0x200000000, 0x20000000));
+    }
+    memory.table.size = 248;
+    try std.testing.expectEqual(a.gfx_buffer_error_unsupported, memory.reservedSpan(0x200000000, 0x20000000));
+    memory.table.reserved_span = 0;
+    try std.testing.expectEqual(a.err_no_fn, memory.reservedSpan(0x200000000, 0x20000000));
 }

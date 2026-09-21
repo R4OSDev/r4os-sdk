@@ -5,6 +5,13 @@
 /* Obtained by the R4D v25 gfx_memory_query tail. Calls require the current
  * driver callback context. No global CPU pointer is a DMA or GPU address. */
 
+/* Immutable boot-map coverage proof; does not allocate or map memory. */
+static inline int32_t r4driver_memory_reserved_span(const R4GfxDriverMemoryApi *table, uint64_t base, uint64_t bytes) {
+    if (table == 0 || table->version != 1 || table->size < offsetof(R4GfxDriverMemoryApi, reserved_span) + sizeof(uint64_t) || table->reserved_span == 0) return R4OS_ERR_NO_FN;
+    typedef int32_t (*Callback)(uint64_t, uint64_t);
+    return ((Callback)(uintptr_t)table->reserved_span)(base, bytes);
+}
+
 static inline int32_t r4driver_memory_device_lost(const R4GfxDriverMemoryApi *table, uint32_t adapter, uint64_t generation, uint32_t quiesced) {
     if (table == 0 || table->version != 1 || table->size < offsetof(R4GfxDriverMemoryApi, device_lost) + sizeof(uint64_t) || table->device_lost == 0) return R4OS_ERR_NO_FN;
     if (quiesced > 1) return R4OS_GFX_BUFFER_ERROR_INVALID;

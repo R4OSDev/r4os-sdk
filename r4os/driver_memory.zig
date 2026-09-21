@@ -4,6 +4,12 @@ const abi = @import("r4os_contract").abi;
 pub const Context = struct {
     table: abi.GfxDriverMemoryApi,
 
+    pub fn reservedSpan(self: *const Context, physical_base: u64, bytes: u64) i32 {
+        if (self.table.version != 1 or self.table.size < @offsetOf(abi.GfxDriverMemoryApi, "reserved_span") + 8 or self.table.reserved_span == 0) return abi.err_no_fn;
+        const callback: *const fn (u64, u64) callconv(.c) i32 = @ptrFromInt(self.table.reserved_span);
+        return callback(physical_base, bytes);
+    }
+
     pub fn deviceLost(self: *const Context, adapter: u32, generation: u64, quiesced: bool) i32 {
         if (self.table.version != 1 or self.table.size < @offsetOf(abi.GfxDriverMemoryApi, "device_lost") + 8 or self.table.device_lost == 0) return abi.err_no_fn;
         const callback: *const fn (u32, u64, u32) callconv(.c) i32 = @ptrFromInt(self.table.device_lost);
