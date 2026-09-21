@@ -461,6 +461,7 @@ pub const Sdk = struct {
         for (includes, companion_count + 2..) |include, index| roots[index] = include;
         return addR4DWithOptions(self.b, .{
             .zig_modules = loaded.zig_modules,
+            .native_archives = loaded.native_archives,
             .c_source_files = sources,
             .c_include_roots = roots,
             .c_defines = loaded.manifest.c_defines,
@@ -1005,6 +1006,7 @@ pub const R4CAppBuildOptions = struct {
 
 pub const R4DOptions = struct {
     zig_modules: []const ZigModuleBuild = &.{},
+    native_archives: []const std.Build.LazyPath = &.{},
     c_source_files: []const std.Build.LazyPath = &.{},
     c_include_roots: []const std.Build.LazyPath = &.{},
     c_defines: []const module_manifest.CDefineEntry = &.{},
@@ -1315,6 +1317,7 @@ pub fn addR4D(b: *std.Build, opts: R4DOptions) BuildResult {
 fn addR4DWithOptions(b: *std.Build, opts: R4DOptions) BuildResult {
     const elf = addRawModule(b, .{
         .zig_modules = opts.zig_modules,
+        .native_archives = opts.native_archives,
         .c_source_files = opts.c_source_files,
         .c_include_roots = opts.c_include_roots,
         .c_defines = opts.c_defines,

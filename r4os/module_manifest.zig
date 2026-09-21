@@ -396,7 +396,7 @@ fn parseV2(allocator: std.mem.Allocator, path: []const u8, text: []const u8) !Ma
     try validateTarget(parsed_target, parsed_kind);
     if (parsed_language == .c and zig_modules.items.len != 0) return error.CForbidsZigModule;
     try validateZigModules(zig_modules.items);
-    if (native_archives.items.len != 0 and (parsed_kind != .r4l or parsed_language != .zig)) return error.NativeArchiveRequiresZigLibrary;
+    if (native_archives.items.len != 0 and ((parsed_kind != .r4l and parsed_kind != .r4d) or parsed_language != .zig)) return error.NativeArchiveRequiresZigLibraryOrDriver;
     for (native_archives.items) |archive| try validateName(archive);
     ensureUnique(native_archives.items, true) catch return error.DuplicateNativeArchive;
     try validateCConfiguration(c_includes.items, c_defines.items, c_flags.items);
@@ -1612,6 +1612,11 @@ test "R4D accepts ordered C companions without changing driver identity or entry
         \\META=r4d.type=display
     ;
     const value = try parse(allocator, "MixedDriver/module.R4MF", text);
+    const archived = try std.fmt.allocPrint(allocator, "{s}\nNATIVE_ARCHIVE=AMD_ADDR\n", .{text});
+    const archived_driver = try parse(allocator, "MixedDriver/module.R4MF", archived);
+    try std.testing.expectEqualStrings("AMD_ADDR", archived_driver.native_archives[0]);
+    const duplicate_archive = try std.fmt.allocPrint(allocator, "{s}\nNATIVE_ARCHIVE=amd_addr\n", .{archived});
+    try std.testing.expectError(error.DuplicateNativeArchive, parse(allocator,"MixedDriver/module.R4MF",duplicate_archive));
     try std.testing.expectEqual(Kind.r4d, value.kind);
     try std.testing.expectEqualStrings("src/main.zig", value.sources[0]);
     try std.testing.expectEqualStrings("src/native.c", value.sources[1]);
