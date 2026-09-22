@@ -647,6 +647,18 @@ fn telemetryFacadeProbe() !void {
     try t.expect(state.adapter_id == 3 and state.metrics[5].values[0] == -12500 and state.metrics[6].status == a.gfx_telemetry_unavailable);
     try t.expectEqual(@as(i32, 1), driver.telemetryExchange(&state, &demand));
     try t.expect(demand.until_ns == 0x200000001 and demand.metric_mask == 0x201 and demand.memory_generation == request.memory_generation);
+    var line: [128]u8 = undefined;
+    try t.expectEqualStrings("GPU temp: -12.5 C", r4os.gfx_telemetry.formatLine(&line, &state, 5));
+    state.source = a.gfx_telemetry_source_smu10;
+    state.metrics[0] = .{ .status = a.gfx_telemetry_fresh, .flags = a.gfx_telemetry_partial_values |
+        a.gfx_telemetry_current_clocks | a.gfx_telemetry_fabric_clock | (3 << 8), .values = .{800000000,1200000000,0,0} };
+    try t.expectEqualStrings("GPU clock: 800.0 MHz", r4os.gfx_telemetry.formatLine(&line, &state, 1));
+    try t.expectEqualStrings("Fabric clock: 1200.0 MHz", r4os.gfx_telemetry.formatLine(&line, &state, 2));
+    try t.expectEqualStrings("Video clock: unknown (unavailable)", r4os.gfx_telemetry.formatLine(&line, &state, 3));
+    try t.expectEqualStrings("APU temp: -12.5 C", r4os.gfx_telemetry.formatLine(&line, &state, 5));
+    state.metrics[2] = .{ .status = a.gfx_telemetry_fresh, .flags = a.gfx_telemetry_partial_values | (1 << 8), .values = .{37,0,0,0} };
+    try t.expectEqualStrings("Memory busy: unknown (unavailable)", r4os.gfx_telemetry.formatLine(&line, &state, 13));
+
 }
 test "graphics buffer optional tails preserve 64-bit offsets in Zig and R4D calls" {
     try budgetFacadeProbe();

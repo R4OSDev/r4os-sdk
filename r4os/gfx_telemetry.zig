@@ -30,7 +30,15 @@ pub fn policyName(value: u32) []const u8 {
 }
 pub fn formatLine(output: []u8, state: *const a.GfxTelemetryState, index: usize) []const u8 {
     if (index >= fields.len) return "unknown metric";
-    const field = fields[index]; const metric = state.metrics[field.metric];
+    var field = fields[index]; const metric = state.metrics[field.metric];
+    if (field.metric == 0 and (metric.flags & a.gfx_telemetry_current_clocks != 0 or state.source == a.gfx_telemetry_source_smu10)) field.label = switch (field.value) {
+        0 => "GPU clock", 1 => "Memory clock", 2 => "Video clock", else => "SM clock",
+    };
+    if (field.metric == 0 and field.value == 1 and (metric.flags & a.gfx_telemetry_fabric_clock != 0 or state.source == a.gfx_telemetry_source_smu10)) field.label = "Fabric clock";
+    if (state.source == a.gfx_telemetry_source_smu10 and field.metric == 5) field.label = "APU temp";
+    if (metric.status == a.gfx_telemetry_fresh and metric.flags & a.gfx_telemetry_partial_values != 0 and
+        metric.flags & (@as(u32, 1) << @intCast(8 + field.value)) == 0)
+        return std.fmt.bufPrint(output, "{s}: unknown (unavailable)", .{field.label}) catch "unknown";
     const status = if (metric.status == a.gfx_telemetry_fresh and field.metric == 9 and field.value == 1 and metric.flags & a.gfx_telemetry_timer_delta_valid == 0)
         a.gfx_telemetry_unavailable else metric.status;
     if (status != a.gfx_telemetry_fresh) return std.fmt.bufPrint(output, "{s}: unknown ({s})", .{field.label,statusName(status)}) catch "unknown";
