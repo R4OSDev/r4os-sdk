@@ -850,6 +850,12 @@ pub const Context = struct {
         return table_fn(next);
     }
 
+    pub fn platformInputSnapshot(self: *const Context, out: *abi.PlatformInputSnapshot) i32 {
+        out.* = .{};
+        const table_fn = self.sysFn("platform_input_snapshot") orelse return self.unavailable("sys");
+        return table_fn(out);
+    }
+
     pub fn monotonicClock(self: *const Context, out: *abi.MonotonicClockInfo) i32 {
         out.* = .{};
         const table_fn = self.sysFn("monotonic_clock") orelse return self.unavailable("sys");

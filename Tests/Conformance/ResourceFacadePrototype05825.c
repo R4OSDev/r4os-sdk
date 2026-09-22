@@ -5,6 +5,40 @@
 #include <r4os/driver_semaphores.h>
 #include <r4os/driver_display.h>
 
+static uint64_t platform_root_probe(void) { return UINT64_C(0x100000080035); }
+static int32_t platform_view_probe(uint64_t physical, uint64_t bytes, uint64_t *out) {
+    if (physical != UINT64_C(0x100000080035) || bytes != 65536) return -1;
+    *out = UINT64_C(0xffff800000080035); return 0;
+}
+static int32_t platform_input_probe(uint32_t kind, uint32_t value) { return kind == 3 && value == 2 ? 0 : -1; }
+static int32_t platform_query_probe(R4DriverPlatformApi *out) {
+    if(out->version != 1 || out->size != 32) return -1;
+    *out = (R4DriverPlatformApi){.version=1,.size=32,.rsdp=(uintptr_t)&platform_root_probe,.physical_view=(uintptr_t)&platform_view_probe,.input_submit=(uintptr_t)&platform_input_probe}; return 0;
+}
+static int32_t platform_snapshot_probe(R4PlatformInputSnapshot *out) {
+    if(out->version != 1 || out->size != 64) return -1;
+    out->brightness_up = UINT64_C(0x200000080035); return 1;
+}
+static int platform_checks(void) {
+    R4DriverResourceApi resource = {.version=1,.size=48,.platform_query=(uintptr_t)&platform_query_probe};
+    R4DriverPlatformApi platform;
+    if(r4driver_resource_platform(&resource,&platform) != R4OS_ERR_NO_FN) return 1;
+    resource.size=55;
+    if(r4driver_resource_platform(&resource,&platform) != R4OS_ERR_NO_FN) return 2;
+    resource.size=56;
+    if(r4driver_resource_platform(&resource,&platform) != 0 || r4driver_platform_rsdp(&platform) != UINT64_C(0x100000080035)) return 3;
+    uint64_t view=0;
+    if(r4driver_platform_view(&platform,UINT64_C(0x100000080035),65536,&view) != 0 || view != UINT64_C(0xffff800000080035) || r4driver_platform_input(&platform,3,2) != 0) return 4;
+    R4XStartR4Sys table = {.size=1248,.platform_input_snapshot=(uintptr_t)&platform_snapshot_probe};
+    R4Sys sys={.table=&table}; R4PlatformInputSnapshot snapshot;
+    if(r4sys_platform_input_snapshot(&sys,&snapshot) != R4OS_ERR_NO_FN) return 5;
+    table.size=1256;
+    if(r4sys_platform_input_snapshot(&sys,&snapshot) != 1 || snapshot.brightness_up != UINT64_C(0x200000080035)) return 6;
+    table.platform_input_snapshot=0;
+    if(r4sys_platform_input_snapshot(&sys,&snapshot) != R4OS_ERR_NO_FN || r4sys_platform_input_snapshot(&sys,0) != R4OS_ERROR_INVALID) return 7;
+    return 0;
+}
+
 static int32_t boot_hold_probe(const R4GfxBootHoldRequest *input, R4GfxNativeState *output) {
     if (input->generation != UINT64_C(0x100000000079) || input->reference.generation != UINT64_C(0x200000079)) return -77;
     output->generation = input->generation + 1; output->retained = 1; return R4OS_GFX_OUTPUT_OK;
@@ -362,6 +396,7 @@ static int program_exit_checks(void) {
 }
 
 int main(void) {
+    if (platform_checks()) return 100;
     if (program_exit_checks() != 0) return 86;
     if (cpu_capacity_checks() != 0) return 85;
     if (current_identity_checks() != 0) return 84;

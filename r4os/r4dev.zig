@@ -16,6 +16,7 @@ pub const DriverApi = abi.DriverApi;
 pub const ProtocolApi = abi.ProtocolApi;
 pub const DriverContext = driver.Context;
 pub const DriverResourceContext = @import("driver_resources.zig").Context;
+pub const DriverPlatformContext = @import("driver_resources.zig").Platform;
 pub const DriverHeapContext = @import("driver_heap.zig").Context;
 pub const DriverThreadContext = @import("driver_threads.zig").Context;
 pub const DriverSemaphoreContext = @import("driver_semaphores.zig").Context;

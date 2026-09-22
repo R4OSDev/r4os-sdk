@@ -6,6 +6,14 @@ const abi = @import("r4os_contract").abi;
 /// No close is needed. Read failure can leave partial bytes in output.
 pub const Context = struct {
     table: abi.DriverResourceApi,
+    pub fn platform(self: *const Context) ?Platform {
+        if (!self.has("platform_query")) return null;
+        var result: abi.DriverPlatformApi = .{};
+        const callback: *const fn (*abi.DriverPlatformApi) callconv(.c) i32 = @ptrFromInt(self.table.platform_query);
+        if (callback(&result) != abi.driver_resource_ok or result.version != 1 or result.size < @sizeOf(abi.DriverPlatformApi) or
+            result.rsdp == 0 or result.physical_view == 0 or result.input_submit == 0) return null;
+        return .{ .table = result };
+    }
     pub fn supportsAcpi(self: *const Context) bool { return self.has("acpi_stat") and self.has("acpi_read_at"); }
     pub fn acpiStat(self: *const Context, signature: [4]u8, index: u32, output: *abi.DriverFirmwareTableInfo) i32 {
         if (!self.has("acpi_stat")) return abi.err_no_fn;
@@ -37,5 +45,23 @@ pub const Context = struct {
     }
     fn has(self: *const Context, comptime field: []const u8) bool {
         return self.table.version == 1 and self.table.size >= @offsetOf(abi.DriverResourceApi, field) + 8 and @field(self.table, field) != 0;
+    }
+};
+
+pub const Platform = struct {
+    table: abi.DriverPlatformApi,
+    pub fn rsdp(self: *const Platform) u64 {
+        const callback: *const fn () callconv(.c) u64 = @ptrFromInt(self.table.rsdp);
+        return callback();
+    }
+    pub fn physicalView(self: *const Platform, physical: u64, bytes: u64) ?[*]u8 {
+        var address: u64 = 0;
+        const callback: *const fn (u64, u64, *u64) callconv(.c) i32 = @ptrFromInt(self.table.physical_view);
+        if (callback(physical, bytes, &address) != abi.driver_resource_ok or address == 0) return null;
+        return @ptrFromInt(address);
+    }
+    pub fn input(self: *const Platform, kind: u32, value: u32) i32 {
+        const callback: *const fn (u32, u32) callconv(.c) i32 = @ptrFromInt(self.table.input_submit);
+        return callback(kind, value);
     }
 };

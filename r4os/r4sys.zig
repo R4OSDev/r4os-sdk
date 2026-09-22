@@ -850,6 +850,10 @@ pub const Context = struct {
         return self.base.monotonicHz();
     }
 
+    pub fn platformInputSnapshot(self: *const Context, out: *abi.PlatformInputSnapshot) i32 {
+        return self.base.platformInputSnapshot(out);
+    }
+
     pub fn monotonicClock(self: *const Context, out: *abi.MonotonicClockInfo) i32 {
         return self.base.monotonicClock(out);
     }

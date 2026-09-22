@@ -11,6 +11,7 @@ fn dmaRangeCpu(mapping: *const r4os.abi.DmaMapping, offset: u32, bytes: u32) cal
 }
 test "driver DMA range facade keeps the v33 prefix and negotiates each optional callback" {
     try bootDisplayFacade();
+    try platformFacade();
     const a = r4os.abi;
     const t = std.testing;
     try t.expectEqual(@as(usize, 632), @offsetOf(a.DriverApi, "dma_sync_range_for_device"));
@@ -1056,4 +1057,42 @@ test "sequential stress reuses every resource slot" {
         _ = request.close();
     }
     try std.testing.expectEqual(@as(u32, 0), process_slots + thread_slots + vm_slots + io_slots);
+}
+
+fn platformRootProbe() callconv(.c) u64 { return 0x100000080035; }
+fn platformViewProbe(physical: u64, bytes: u64, out: *u64) callconv(.c) i32 {
+    std.debug.assert(physical == 0x100000080035 and bytes == 65536);
+    out.* = 0xffff800000080035; return 0;
+}
+fn platformInputProbe(kind: u32, value: u32) callconv(.c) i32 {
+    std.debug.assert(kind == 3 and value == 2); return 0;
+}
+fn platformQueryProbe(out: *r4os.abi.DriverPlatformApi) callconv(.c) i32 {
+    std.debug.assert(out.version == 1 and out.size == 32);
+    out.* = .{ .rsdp = @intFromPtr(&platformRootProbe), .physical_view = @intFromPtr(&platformViewProbe), .input_submit = @intFromPtr(&platformInputProbe) }; return 0;
+}
+fn platformSnapshotProbe(out: *r4os.abi.PlatformInputSnapshot) callconv(.c) i32 {
+    std.debug.assert(out.version == 1 and out.size == 64);
+    out.* = .{ .sequence = 0x100000080035, .brightness_up = 0x200000080035, .lid_state = 2, .capabilities = 3, .sources = 1 }; return 1;
+}
+fn platformFacade() !void {
+    const a = r4os.abi; const t = std.testing;
+    var resource_ctx: r4os.r4dev.DriverResourceContext = .{ .table = .{ .platform_query = @intFromPtr(&platformQueryProbe) } };
+    for ([_]u32{32, 48, 55}) |size| { resource_ctx.table.size = size; try t.expect(resource_ctx.platform() == null); }
+    resource_ctx.table.size = 56;
+    const platform = resource_ctx.platform() orelse return error.MissingPlatform;
+    try t.expectEqual(@as(u64, 0x100000080035), platform.rsdp());
+    try t.expectEqual(@as(u64, 0xffff800000080035), @intFromPtr(platform.physicalView(0x100000080035, 65536).?));
+    try t.expectEqual(@as(i32, 0), platform.input(3, 2));
+    var sys: a.R4XStartR4Sys = .{ .size = 1248, .platform_input_snapshot = @intFromPtr(&platformSnapshotProbe) };
+    const raw: r4os.abi.R4XStartContext = .{};
+    const bundle: r4os.program.Bundle = .{ .raw = &raw, .sys = &sys };
+    const ctx = r4os.program.Context.initBundle(&bundle);
+    var snapshot: a.PlatformInputSnapshot = .{};
+    try t.expectEqual(a.err_no_fn, ctx.platformInputSnapshot(&snapshot));
+    sys.size = 1256;
+    try t.expectEqual(@as(i32, 1), ctx.platformInputSnapshot(&snapshot));
+    try t.expectEqual(@as(u64, 0x200000080035), snapshot.brightness_up);
+    sys.platform_input_snapshot = 0;
+    try t.expectEqual(a.err_no_fn, ctx.platformInputSnapshot(&snapshot));
 }

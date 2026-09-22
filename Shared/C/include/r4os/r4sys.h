@@ -21,6 +21,14 @@ typedef struct R4Sys {
 } R4Sys;
 
 #define R4SYS_DIR_ENTRY_RESULT_END (-5)
+static inline int32_t r4sys_platform_input_snapshot(R4Sys *sys, R4PlatformInputSnapshot *output) {
+    if (!output) return R4OS_ERROR_INVALID;
+    *output = (R4PlatformInputSnapshot){.version = 1, .size = sizeof(*output)};
+    if (!sys || !sys->table) return R4OS_ERR_NO_GROUP;
+    if (sys->table->size < offsetof(R4XStartR4Sys, platform_input_snapshot) + sizeof(uintptr_t) || !sys->table->platform_input_snapshot) return R4OS_ERR_NO_FN;
+    return ((R4SysPlatformInputSnapshotFn)(uintptr_t)sys->table->platform_input_snapshot)(output);
+}
+
 #define R4SYS_DIR_ENTRY_ERROR_IO (-9)
 #define R4SYS_FILE_REPLACE_ATOMIC_OK 0
 #define R4SYS_FILE_REPLACE_ATOMIC_ERROR_INVALID (-1)
