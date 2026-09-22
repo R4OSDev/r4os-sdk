@@ -511,14 +511,14 @@ fn imageEntryIncluded(entry: manifest_contract.Manifest, mode: ImageMode, includ
 
 fn imageScopeCanBeIncludedExplicitly(mode: ImageMode, scope: manifest_contract.ImageScope) bool {
     return switch (mode) {
+        .slim => scope == .full or scope == .@"test" or scope == .none,
+        .full => scope == .@"test" or scope == .none,
         .@"test" => scope == .full or scope == .none,
         .benchmark => scope == .@"test",
-        else => false,
     };
 }
 
 fn validateImageIncludes(entries: []const manifest_contract.Manifest, mode: ImageMode, include_targets: []const []const u8) !void {
-    if (include_targets.len != 0 and mode != .@"test" and mode != .benchmark) return error.ImageIncludesRequireExplicitMode;
     for (include_targets, 0..) |target, index| {
         if (target.len == 0 or target[0] != '/') return error.InvalidImageIncludeTarget;
         for (include_targets[0..index]) |previous| {
@@ -1320,6 +1320,14 @@ test "benchmark selection is full plus explicit test diagnostics" {
     const test_entry = try manifest_contract.parse(allocator, "Test/module.R4MF", test_text);
     const none_entry = try manifest_contract.parse(allocator, "None/module.R4MF", none_text);
 
+    // Explicit product composition does not change ordinary profile membership.
+    for ([_]ImageMode{ .slim, .full }) |mode| {
+        try std.testing.expect(!imageEntryIncluded(none_entry, mode, &.{}));
+        try std.testing.expect(imageEntryIncluded(none_entry, mode, &.{none_entry.target}));
+        try validateImageIncludes(&.{none_entry}, mode, &.{none_entry.target});
+        try std.testing.expectError(error.UnknownImageIncludeTarget, validateImageIncludes(&.{none_entry}, mode, &.{"/UNKNOWN.R4X"}));
+        try std.testing.expectError(error.DuplicateImageIncludeTarget, validateImageIncludes(&.{none_entry}, mode, &.{none_entry.target, none_entry.target}));
+    }
     try std.testing.expect(imageEntryIncluded(full_entry, .benchmark, &.{}));
     try std.testing.expect(!imageEntryIncluded(test_entry, .benchmark, &.{}));
     try std.testing.expect(imageEntryIncluded(test_entry, .benchmark, &.{test_entry.target}));

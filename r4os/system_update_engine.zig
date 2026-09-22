@@ -699,34 +699,58 @@ fn rollbackLastCommand(ctx: *const r4os.r4sys.Context) i32 {
     const command = "ROLLBACK-LAST";
     switch (acquireUpdateLock(ctx, true)) {
         .acquired => {},
-        .busy => { fail(ctx, command, "transaction-active"); return 1; },
-        .io => { fail(ctx, command, "lock-io"); return 1; },
+        .busy => {
+            fail(ctx, command, "transaction-active");
+            return 1;
+        },
+        .io => {
+            fail(ctx, command, "lock-io");
+            return 1;
+        },
     }
     defer releaseUpdateLock(ctx);
     const journal = &command_journal_workspace;
     switch (readNewestValidJournalInto(ctx, journal)) {
         .found => {},
-        .not_found => { fail(ctx, command, "journal-not-found"); return 1; },
-        .io => { fail(ctx, command, "journal-read"); return 1; },
+        .not_found => {
+            fail(ctx, command, "journal-not-found");
+            return 1;
+        },
+        .io => {
+            fail(ctx, command, "journal-read");
+            return 1;
+        },
     }
     const batch = &batch_journal_workspace;
     switch (readNewestValidBatchInto(ctx, batch)) {
         .found => {
             if (journal.batch) {
                 if ((batch.phase != .installed and batch.phase != .pending_restart and batch.phase != .rolling_back) or
-                    !lastGoodBatchMatches(batch, journal)) {
-                    fail(ctx, command, "batch-binding"); return 1;
+                    !lastGoodBatchMatches(batch, journal))
+                {
+                    fail(ctx, command, "batch-binding");
+                    return 1;
                 }
             } else if (!system_update_batch.phaseTerminal(batch.phase)) {
-                fail(ctx, command, "restart-batch-pending"); return 1;
+                fail(ctx, command, "restart-batch-pending");
+                return 1;
             }
         },
-        .not_found => if (journal.batch) { fail(ctx, command, "batch-not-found"); return 1; },
-        .io => { fail(ctx, command, "batch-read"); return 1; },
+        .not_found => if (journal.batch) {
+            fail(ctx, command, "batch-not-found");
+            return 1;
+        },
+        .io => {
+            fail(ctx, command, "batch-read");
+            return 1;
+        },
     }
     var io = SysUpdRecoveryIo{ .ctx = ctx };
     const checked = system_update_recovery.checkLastGood(&io, journal);
-    if (checked != .ok) { fail(ctx, command, system_update_recovery.replayStatusName(checked)); return 1; }
+    if (checked != .ok) {
+        fail(ctx, command, system_update_recovery.replayStatusName(checked));
+        return 1;
+    }
     // The normal boot recovery owns all file mutations. Never unload a live
     // GPU or switch its resources underneath outstanding jobs. Batch intent
     // precedes the decisive journal write: interruption before it changes no
@@ -734,11 +758,17 @@ fn rollbackLastCommand(ctx: *const r4os.r4sys.Context) i32 {
     if (journal.batch) {
         batch.phase = .rolling_back;
         setBatchReason(batch, "rollback-requested");
-        if (!writeInactiveBatchJournal(ctx, batch)) { fail(ctx, command, "batch-intent-io"); return 1; }
+        if (!writeInactiveBatchJournal(ctx, batch)) {
+            fail(ctx, command, "batch-intent-io");
+            return 1;
+        }
     }
     journal.phase = .rollback;
     journal.rollback_markers_present = true;
-    if (!writeInactiveJournal(ctx, journal)) { fail(ctx, command, "rollback-intent-io"); return 1; }
+    if (!writeInactiveJournal(ctx, journal)) {
+        fail(ctx, command, "rollback-intent-io");
+        return 1;
+    }
     ctx.println("SYSUPD ROLLBACK-LAST result: OK state=Pending rollback; rebooting");
     ctx.systemReboot();
 }
@@ -746,7 +776,9 @@ fn rollbackLastCommand(ctx: *const r4os.r4sys.Context) i32 {
 fn lastGoodBatchMatches(batch: *const system_update_batch.BatchJournal, journal: *const TransactionJournal) bool {
     if (!std.mem.eql(u8, journal.sourceReleaseText(), batch.sourceReleaseText()) or
         !std.mem.eql(u8, journal.releaseText(), batch.targetReleaseText())) return false;
-    var digest: u32 = 0; var manifest: u32 = 0; var components: u32 = checksum_seed;
+    var digest: u32 = 0;
+    var manifest: u32 = 0;
+    var components: u32 = checksum_seed;
     var bytes: u64 = 0;
     for (0..batch.package_count) |order| {
         const entry = &batch.packages[packageIndexAtOrder(batch, order) orelse return false];
@@ -1314,6 +1346,7 @@ const BatchPlanSummary = struct {
     component_count: usize = 0,
     requirement_count: usize = 0,
     companions: bool = false,
+    preloads: bool = false,
 };
 
 fn batchEntryMatchesInfo(
@@ -1367,6 +1400,7 @@ fn preverifyBatch(
             return null;
         }
         summary.companions = summary.companions or packageHasCompanions(&primary_info_workspace);
+        summary.preloads = summary.preloads or packageHasPreloads(&primary_info_workspace);
         if (summary.payload_count + primary_info_workspace.payload_count > max_package_payloads or
             summary.component_count + primary_info_workspace.component_count > system_update_batch.max_components or
             summary.requirement_count + primary_info_workspace.requirement_count > system_update_batch.max_requirements)
@@ -1420,7 +1454,7 @@ fn preverifyBatch(
     // with a kernel that cannot replay the companion paths in this batch.
     if (summary.companions) {
         for (batch_plan_components[0..summary.component_count]) |component| {
-            if (component.kind == .kernel and !r4u_manifest.kernelSupportsCompanions(component.version)) {
+            if (component.kind == .kernel and !r4u_manifest.kernelSupportsCompanionSet(component.version, summary.preloads)) {
                 fail(ctx, "COMMIT", "companion-recovery-kernel-downgrade");
                 return null;
             }
@@ -3071,6 +3105,7 @@ fn verifyManifest(
             }
         } else {
             has_unversioned_payload = true;
+            r4u_manifest.includeCompanion(&derived_class, payload.targetText());
             if (payload.component_index != null) {
                 fail(ctx, command, "component-unversioned");
                 return .invalid;
@@ -3105,16 +3140,22 @@ fn packageHasCompanions(info: *const PackageInfo) bool {
     return false;
 }
 
+fn packageHasPreloads(info: *const PackageInfo) bool {
+    for (info.payloads[0..info.payload_count]) |*payload| if (r4u_manifest.paths.preloadTarget(payload.targetText())) return true;
+    return false;
+}
+
 fn validateCompanionRecovery(ctx: *const r4os.r4sys.Context, info: *const PackageInfo, command: []const u8) bool {
     if (!packageHasCompanions(info)) return true;
+    const preload = packageHasPreloads(info);
     for (info.components[0..info.component_count]) |*component| {
-        if (component.kind == .kernel and !r4u_manifest.kernelSupportsCompanions(component.version)) {
+        if (component.kind == .kernel and !r4u_manifest.kernelSupportsCompanionSet(component.version, preload)) {
             fail(ctx, command, "companion-recovery-kernel-downgrade");
             return false;
         }
     }
     for (info.requirements[0..info.requirement_count]) |*requirement| {
-        if (r4u_manifest.companionRecoveryRequirement(requirement.kind, requirement.name, requirement.targetText(), requirement.version, requirement.state)) return true;
+        if (r4u_manifest.companionSetRecoveryRequirement(requirement.kind, requirement.name, requirement.targetText(), requirement.version, requirement.state, preload)) return true;
     }
     fail(ctx, command, "companion-recovery-requirement");
     return false;
@@ -5352,6 +5393,7 @@ fn validRollbackBackup(value: []const u8) bool {
 }
 
 fn kindMatchesTarget(kind: []const u8, target: []const u8) bool {
+    if (r4u_manifest.paths.preloadTarget(target)) return equalsIgnoreCase(kind, "preload");
     const class = r4os.r4sys.classifySystemPath(target);
     return equalsIgnoreCase(kind, r4os.r4sys.systemReplaceClassName(class));
 }

@@ -98,6 +98,19 @@ pub fn companionRecoveryRequirement(kind: ComponentKind, name: []const u8, targe
         targetEquals(target, "/boot/r4os.elf") and kernelSupportsCompanions(version);
 }
 
+pub fn kernelSupportsCompanionSet(version: []const u8, preload: bool) bool {
+    return (compareVersions(version, if (preload) paths.preload_recovery_kernel else paths.companion_recovery_kernel) orelse -1) >= 0;
+}
+pub fn companionSetRecoveryRequirement(kind: ComponentKind, name: []const u8, target: []const u8, version: []const u8, state: RequirementState, preload: bool) bool {
+    return companionRecoveryRequirement(kind, name, target, version, state) and kernelSupportsCompanionSet(version, preload);
+}
+pub fn includeCompanion(class: *DerivedClass, target: []const u8) void {
+    if (paths.preloadTarget(target)) {
+        class.activation = .restart;
+        class.priority = .foundation;
+    }
+}
+
 pub fn componentKindForPayload(value: []const u8, target: []const u8) ?ComponentKind {
     if (std.ascii.eqlIgnoreCase(value, "boot-kernel")) return .kernel;
     if (std.ascii.eqlIgnoreCase(value, "system-library")) return .r4l;
@@ -261,6 +274,20 @@ test "canonical inventory targets and derived classes" {
         "C:/R4OS/LICENSES/../LIBS/X.R4L", "C:/R4OS/SOURCES/",
         "C:/R4OS/SOURCES/FILE. ",
     }) |path| try std.testing.expect(paths.companionKind(path) == null);
+    for ([_][]const u8{ "/boot/preload.r4i", "\\BOOT\\PRELOAD\\HIDREPORT.R4P", "/boot/preload/usbhid.r4p", "/boot/preload/usbbot.r4p", "/boot/preload/usbscsi.r4p" }) |path| {
+        try std.testing.expectEqual(paths.CompanionKind.preload, paths.companionKind(path).?);
+        var preload_class: DerivedClass = .{};
+        includeCompanion(&preload_class, path);
+        try std.testing.expectEqual(InstallMode.restart, preload_class.activation);
+        try std.testing.expectEqual(Priority.foundation, preload_class.priority);
+        try std.testing.expect(componentKindForPayload("preload", path) == null);
+    }
+    for ([_][]const u8{ "C:/boot/preload.r4i", "/boot/limine.conf", "/boot/preload/../r4os.elf", "/boot/preload/unknown.r4p", "/boot/preload.r4i.bak" }) |path|
+        try std.testing.expect(paths.companionKind(path) == null);
+    try std.testing.expect(!kernelSupportsCompanionSet("0.1.207", true));
+    try std.testing.expect(kernelSupportsCompanionSet("0.1.208", true));
+    try std.testing.expect(!companionSetRecoveryRequirement(.kernel, "KERNEL", "/boot/r4os.elf", "0.1.208", .installed, true));
+    try std.testing.expect(companionSetRecoveryRequirement(.kernel, "KERNEL", "/boot/r4os.elf", "0.1.208", .active, true));
     try std.testing.expect(componentKindForPayload("license", "/R4OS/LICENSES/GFX.TXT") == null);
     try std.testing.expect(companionRecoveryRequirement(.kernel, "KERNEL", "/boot/r4os.elf", "0.1.199", .active));
     try std.testing.expect(!companionRecoveryRequirement(.kernel, "KERNEL", "/boot/r4os.elf", "0.1.198", .active));

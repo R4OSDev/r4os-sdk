@@ -241,6 +241,7 @@ pub fn classifySystemPath(path_raw: []const u8) SystemReplaceClass {
     if (update_paths.companionKind(path)) |kind| return switch (kind) {
         .license => .license,
         .source => .source,
+        .preload => .boot_kernel,
     };
     if (pathEquals(path, "/boot/r4os.elf") or pathEquals(path, "\\boot\\r4os.elf")) return .boot_kernel;
     if (pathEquals(path, "C:\\CONFIG.R4S")) return .config;
@@ -1563,6 +1564,9 @@ test "r4sys exposes project and ABI metadata" {
 
 test "r4sys classifies system replacement targets" {
     try std.testing.expectEqual(SystemReplaceClass.boot_kernel, classifySystemPath("/boot/r4os.elf"));
+    try std.testing.expectEqual(SystemReplaceClass.boot_kernel, classifySystemPath("/boot/preload.r4i"));
+    try std.testing.expectEqual(SystemReplaceClass.boot_kernel, classifySystemPath("/boot/preload/hidreport.r4p"));
+    try std.testing.expectEqual(SystemReplaceClass.unknown, classifySystemPath("/boot/preload/unknown.r4p"));
     try std.testing.expectEqual(SystemReplaceClass.system_library, classifySystemPath("C:\\R4OS\\LIBS\\R4STD.R4L"));
     try std.testing.expectEqual(SystemReplaceClass.driver, classifySystemPath("C:/R4OS/DRIVERS/RTL8139.R4D"));
     try std.testing.expectEqual(SystemReplaceClass.protocol, classifySystemPath("C:\\R4OS\\PROTOCOLS\\NETTCP.R4P"));
