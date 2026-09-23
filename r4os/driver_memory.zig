@@ -10,6 +10,14 @@ pub const Context = struct {
         return callback(physical_base, bytes);
     }
 
+    /// Proves absence of system memory; callers separately measure the actual
+    /// device storage. It does not authorize a mapping or transfer ownership.
+    pub fn unmanagedSpan(self: *const Context, physical_base: u64, bytes: u64) i32 {
+        if (self.table.version != 1 or self.table.size < @offsetOf(abi.GfxDriverMemoryApi, "unmanaged_span") + 8 or self.table.unmanaged_span == 0) return abi.err_no_fn;
+        const callback: *const fn (u64, u64) callconv(.c) i32 = @ptrFromInt(self.table.unmanaged_span);
+        return callback(physical_base, bytes);
+    }
+
     pub fn deviceLost(self: *const Context, adapter: u32, generation: u64, quiesced: bool) i32 {
         if (self.table.version != 1 or self.table.size < @offsetOf(abi.GfxDriverMemoryApi, "device_lost") + 8 or self.table.device_lost == 0) return abi.err_no_fn;
         const callback: *const fn (u32, u64, u32) callconv(.c) i32 = @ptrFromInt(self.table.device_lost);

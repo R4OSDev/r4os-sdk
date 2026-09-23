@@ -380,6 +380,17 @@ pub const Context = struct {
         return self.api.driver_work_submit_request(request, out_handle);
     }
 
+    /// Execute one bounded hardware slice on BSP under the existing driver
+    /// lifecycle owner. Waits stay in the caller's dedicated pacing task.
+    /// A completion with driver_work_owner_busy ran no callback and may be
+    /// retried after releasing that completion. Context must outlive completion.
+    pub fn workSubmitOwned(self: *const Context, handler: abi.DriverWorkHandler, context: usize, out_handle: *u32) i32 {
+        out_handle.* = 0;
+        if (!self.supportsDriverApi(abi.driver_api_owned_work_version, @offsetOf(abi.DriverApi, "driver_work_submit_owned") + 8)) return abi.err_no_fn;
+        const callback = self.api.driver_work_submit_owned orelse return abi.err_no_fn;
+        return callback(handler, context, out_handle);
+    }
+
     pub fn workCancel(self: *const Context, handle: u32) i32 {
         return self.api.driver_work_cancel(handle);
     }

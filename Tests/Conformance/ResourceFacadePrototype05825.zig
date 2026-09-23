@@ -12,11 +12,13 @@ fn dmaRangeCpu(mapping: *const r4os.abi.DmaMapping, offset: u32, bytes: u32) cal
 test "driver DMA range facade keeps the v33 prefix and negotiates each optional callback" {
     try bootDisplayFacade();
     try platformFacade();
+    try ownedWorkFacade();
     const a = r4os.abi;
     const t = std.testing;
     try t.expectEqual(@as(usize, 632), @offsetOf(a.DriverApi, "dma_sync_range_for_device"));
     try t.expectEqual(@as(usize, 640), @offsetOf(a.DriverApi, "dma_sync_range_for_cpu"));
-    try t.expectEqual(@as(usize, 648), @sizeOf(a.DriverApi));
+    try t.expectEqual(@as(usize, 648), @offsetOf(a.DriverApi, "driver_work_submit_owned"));
+    try t.expectEqual(@as(usize, 656), @sizeOf(a.DriverApi));
     var api: a.DriverApi = undefined;
     api.magic = a.driver_magic;
     api.reserved = 0;
@@ -40,6 +42,30 @@ test "driver DMA range facade keeps the v33 prefix and negotiates each optional 
     api.dma_sync_range_for_cpu = null;
     try t.expectEqual(a.err_no_fn, ctx.syncDmaRangeForDevice(&mapping, 0xfffffff0, 7));
     try t.expectEqual(a.err_no_fn, ctx.syncDmaRangeForCpu(&mapping, 3, 0xffffffff));
+}
+
+fn ownedHandler(raw: usize) callconv(.c) i32 { return @intCast(raw); }
+fn ownedSubmit(handler: r4os.abi.DriverWorkHandler, raw: usize, out: *u32) callconv(.c) i32 {
+    std.debug.assert(handler == &ownedHandler and raw == 79);
+    out.* = 313; return 0;
+}
+fn ownedWorkFacade() !void {
+    const a = r4os.abi; const t = std.testing;
+    var api: a.DriverApi = undefined;
+    api.magic = a.driver_magic; api.version = 35; api.size = @sizeOf(a.DriverApi);
+    api.driver_work_submit_owned = &ownedSubmit;
+    const ctx = r4os.r4dev.DriverContext.init(&api);
+    var handle: u32 = 99;
+    try t.expectEqual(a.err_no_fn, ctx.workSubmitOwned(ownedHandler, 79, &handle));
+    try t.expectEqual(@as(u32, 0), handle);
+    api.version = a.driver_api_owned_work_version; api.size = 655;
+    try t.expectEqual(a.err_no_fn, ctx.workSubmitOwned(ownedHandler, 79, &handle));
+    api.size = 656;
+    try t.expectEqual(@as(i32, 0), ctx.workSubmitOwned(ownedHandler, 79, &handle));
+    try t.expectEqual(@as(u32, 313), handle);
+    api.driver_work_submit_owned = null;
+    try t.expectEqual(a.err_no_fn, ctx.workSubmitOwned(ownedHandler, 79, &handle));
+    try t.expectEqual(@as(u32, 0), handle);
 }
 
 fn bootHoldProbe(input: *const r4os.abi.GfxBootHoldRequest, output: *r4os.abi.GfxNativeState) callconv(.c) i32 {

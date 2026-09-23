@@ -1873,4 +1873,15 @@ fn reservedSpanFacadeProbe() !void {
     try std.testing.expectEqual(a.gfx_buffer_error_unsupported, memory.reservedSpan(0x200000000, 0x20000000));
     memory.table.reserved_span = 0;
     try std.testing.expectEqual(a.err_no_fn, memory.reservedSpan(0x200000000, 0x20000000));
+    memory.table.unmanaged_span = @intFromPtr(&reservedSpanProbe);
+    for (248..256) |bytes| {
+        memory.table.size = @intCast(bytes);
+        try std.testing.expectEqual(a.err_no_fn, memory.unmanagedSpan(0x200000000, 0x20000000));
+    }
+    memory.table.size = 256;
+    try std.testing.expectEqual(a.gfx_buffer_error_unsupported, memory.unmanagedSpan(0x200000000, 0x20000000));
+    memory.table.version = 2;
+    try std.testing.expectEqual(a.err_no_fn, memory.unmanagedSpan(0x200000000, 0x20000000));
+    memory.table.version = 1; memory.table.unmanaged_span = 0;
+    try std.testing.expectEqual(a.err_no_fn, memory.unmanagedSpan(0x200000000, 0x20000000));
 }

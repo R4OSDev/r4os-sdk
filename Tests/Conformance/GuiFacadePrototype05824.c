@@ -215,7 +215,7 @@ static int32_t gfx_map_probe(const R4GfxBufferHandle *ref, uint32_t access, uint
     out->byte_length = bytes;
     return 1;
 }
-_Static_assert(sizeof(R4GfxOwnedBufferReservation)==88 && sizeof(R4GfxOwnedBufferRelease)==80 && offsetof(R4GfxDriverMemoryApi,buffer_reserve)==112 && offsetof(R4GfxDriverMemoryApi,native_register)==152 && sizeof(R4GfxDriverMemoryApi)==248 && offsetof(R4GfxDriverMemoryApi,reserved_span)==240 && offsetof(R4GfxDriverMemoryApi,virtual_register)==208 && offsetof(R4GfxDriverMemoryApi,virtual_complete)==232 && offsetof(R4GfxDriverMemoryApi,memory_budget)==184 && offsetof(R4GfxDriverMemoryApi,telemetry_exchange)==192 && offsetof(R4GfxDriverMemoryApi,device_lost)==200, "owned BO ABI and optional device-loss tail");
+_Static_assert(sizeof(R4GfxOwnedBufferReservation)==88 && sizeof(R4GfxOwnedBufferRelease)==80 && offsetof(R4GfxDriverMemoryApi,buffer_reserve)==112 && offsetof(R4GfxDriverMemoryApi,native_register)==152 && sizeof(R4GfxDriverMemoryApi)==256 && offsetof(R4GfxDriverMemoryApi,unmanaged_span)==248 && offsetof(R4GfxDriverMemoryApi,reserved_span)==240 && offsetof(R4GfxDriverMemoryApi,virtual_register)==208 && offsetof(R4GfxDriverMemoryApi,virtual_complete)==232 && offsetof(R4GfxDriverMemoryApi,memory_budget)==184 && offsetof(R4GfxDriverMemoryApi,telemetry_exchange)==192 && offsetof(R4GfxDriverMemoryApi,device_lost)==200, "owned BO ABI and optional unmanaged-span tail");
 static int32_t device_lost_probe(uint32_t adapter, uint64_t generation, uint32_t quiesced) {
     assert(adapter==17 && generation==UINT64_C(0x300000007) && quiesced<=1);
     return quiesced ? 1 : R4OS_GFX_BUFFER_ERROR_BUSY;
@@ -258,6 +258,11 @@ static void reserved_span_facade_probe(void) {
     for(unsigned n=240;n<248;++n){m.size=n;assert(r4driver_memory_reserved_span(&m,UINT64_C(0x200000000),UINT64_C(0x20000000))==R4OS_ERR_NO_FN);}
     m.size=248;assert(r4driver_memory_reserved_span(&m,UINT64_C(0x200000000),UINT64_C(0x20000000))==R4OS_GFX_BUFFER_ERROR_UNSUPPORTED);
     m.reserved_span=0;assert(r4driver_memory_reserved_span(&m,0,0)==R4OS_ERR_NO_FN);
+    m.unmanaged_span=(uintptr_t)reserved_span_probe;
+    for(unsigned n=248;n<256;++n){m.size=n;assert(r4driver_memory_unmanaged_span(&m,UINT64_C(0x200000000),UINT64_C(0x20000000))==R4OS_ERR_NO_FN);}
+    m.size=256;assert(r4driver_memory_unmanaged_span(&m,UINT64_C(0x200000000),UINT64_C(0x20000000))==R4OS_GFX_BUFFER_ERROR_UNSUPPORTED);
+    m.version=2;assert(r4driver_memory_unmanaged_span(&m,0,0)==R4OS_ERR_NO_FN);
+    m.version=1;m.unmanaged_span=0;assert(r4driver_memory_unmanaged_span(&m,0,0)==R4OS_ERR_NO_FN);
 }
 static void owned_facade_probe(void){
     reserved_span_facade_probe();
