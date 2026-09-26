@@ -87,6 +87,30 @@ pub fn OrderedPage(comptime T: type, comptime capacity: usize) type {
     };
 }
 
+pub fn Snapshot(comptime T: type, comptime max_bytes: usize) type {
+    return struct {
+        const Self = @This();
+        pub const limit = max_bytes / @sizeOf(T);
+        values: std.ArrayList(T) = .empty,
+
+        pub fn append(self: *Self, allocator: std.mem.Allocator, value: T) !void {
+            if (self.values.items.len == limit) return error.OutOfMemory;
+            if (self.values.items.len == self.values.capacity) {
+                const capacity = @min(limit, @max(64, self.values.capacity * 2));
+                try self.values.ensureTotalCapacityPrecise(allocator, capacity);
+            }
+            self.values.appendAssumeCapacity(value);
+        }
+        pub fn deinit(self: *Self, allocator: std.mem.Allocator) void {
+            self.values.deinit(allocator);
+            self.* = .{};
+        }
+        pub fn sort(self: *Self, context: anytype, comptime less: fn (@TypeOf(context), T, T) bool) void {
+            std.sort.heap(T, self.values.items, context, less);
+        }
+    };
+}
+
 fn copyZ(out: []u8, value: []const u8) void {
     @memset(out, 0);
     const count = @min(value.len, out.len - 1);

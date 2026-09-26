@@ -12,6 +12,7 @@
 // intact.
 
 const std = @import("std");
+pub const ntfs_work_counters = true;
 const ntfs = @import("ntfs_format");
 const vol = @import("ntfs_volume");
 const mkfs = @import("ntfs_mkfs");
@@ -138,7 +139,32 @@ fn readAndCheck(v: *vol.Volume, dir: u64, name: []const u8, expected: []const u8
 fn countEntries(v: *vol.Volume, dir: u64) ?usize {
     var sink = vol.EnumSink{ .wanted = 10_000_000 };
     if (!vol.enumerateDirectory(v, dir, &sink)) return null;
-    return sink.seen;
+    const before = v.scratch.work.directory_entries;
+    var cursor: vol.DirectoryCursor = .{};
+    var count: usize = 0;
+    while (true) {
+        var entry: vol.Entry = undefined;
+        switch (vol.nextDirectoryEntry(v, dir, &cursor, &entry)) {
+            .again => continue,
+            .not_found => break,
+            .io => return null,
+            .found => {},
+        }
+        if (count % 197 == 0) {
+            var reference = vol.EnumSink{ .wanted = count };
+            if (!vol.enumerateDirectory(v, dir, &reference)) return null;
+            const expected = reference.found orelse return null;
+            if (entry.record != expected.record or entry.sequence != expected.sequence or
+                !std.mem.eql(u8, entry.name[0..entry.name_len], expected.name[0..expected.name_len])) return null;
+        }
+        count += 1;
+    }
+    const visited = v.scratch.work.directory_entries - before;
+    if (count != sink.seen or visited > count * 3 + 64) return null;
+    if (count == TREE_FILES) std.debug.print("NTFS cursor: {d} entries, {d} physical visits; legacy prefix selections would visit at least {d} names\n", .{ count, visited, count * (count + 1) / 2 });
+    var after: vol.Entry = undefined;
+    if (vol.nextDirectoryEntry(v, dir, &cursor, &after) != .not_found) return null;
+    return count;
 }
 
 fn treeName(buf: []u8, i: usize) []const u8 {

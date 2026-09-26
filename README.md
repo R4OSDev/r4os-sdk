@@ -381,3 +381,12 @@ Callers still own publication order, per-field exclusion and device quiescence
 before unmap. Dedicated threads and IRQ/storage callbacks are not admitted.
 The existing resource facade test covers old prefixes, partial/null tails,
 full-width arguments and provider errors.
+
+
+Directory continuation (0.81.26)
+-------------------------------
+Zig and C storage iterators use the optional R4SYS directory_next tail with
+caller-owned continuation and per-entry metadata. Restart is an explicit
+failure requiring a fresh complete result generation. Old providers and
+intentional live-index deletion retain their previous fallback semantics.
+No cursor allocation, retained mount loan or explicit close is required.

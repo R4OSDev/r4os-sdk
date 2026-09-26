@@ -338,3 +338,65 @@ test "missing capability and long paths fail before hidden fallback" {
     var too_long: [r4os.path.file_path_max + 1]u8 = .{'A'} ** (r4os.path.file_path_max + 1);
     try std.testing.expectError(error.TooLong, r4os.FilePath.parse(too_long[0..]));
 }
+
+var resume_calls: usize = 0;
+var resume_stale = false;
+fn fakeDirectoryNext(_: [*:0]const u8, cursor: *r4os.abi.DirectoryScanCursor, out: [*]u8, capacity: u32, info: *r4os.abi.FileInfo) callconv(.c) i32 {
+    resume_calls += 1;
+    if (resume_stale) return -10;
+    if (cursor.backend[0] == 0) {
+        cursor.backend[0] = 1;
+        cursor.change.mount_generation = 1;
+        return 2;
+    }
+    if (cursor.backend[0] > 1) return -5;
+    _ = copyOut("C:\\ONE.TXT\x00", out, capacity);
+    cursor.backend[0] = 2;
+    info.* = .{ .exists = 1, .size = 123 };
+    return 0;
+}
+fn snapshotLess(_: void, a: u32, b: u32) bool {
+    return a < b;
+}
+test "directory continuation carries metadata preserves restart and bounds complete snapshots" {
+    var table = makeSys(true);
+    table.size = @sizeOf(r4os.abi.R4XStartR4Sys);
+    table.directory_next = @intFromPtr(&fakeDirectoryNext);
+    var imports: [1]r4os.abi.R4XStartImport = undefined;
+    var context: r4os.abi.R4XStartContext = undefined;
+    const app = try makeApp(&table, &imports, &context);
+    const files = r4os.Files{ .sys = app.system() };
+    var it = files.iterate(.{ .ptr = "C:\\", .len = 3 });
+    var path: [128]u8 = undefined;
+    resume_calls = 0;
+    resume_stale = false;
+    const item = it.next(&path).entry;
+    try std.testing.expectEqual(@as(u64, 123), item.info.?.size);
+    try std.testing.expectEqualStrings("C:\\ONE.TXT", item.path);
+    try std.testing.expectEqual(@as(usize, 2), resume_calls);
+    resume_stale = true;
+    try std.testing.expectEqual(@as(i32, -10), it.next(&path).failure);
+    resume_stale = false;
+    try std.testing.expect(it.next(&path) == .end);
+    const calls = resume_calls;
+    try std.testing.expect(it.next(&path) == .end);
+    try std.testing.expectEqual(calls, resume_calls);
+    // Legacy deletion traversal is deliberately not an implicit restart.
+    it.revisitAfterRemoval();
+    try std.testing.expectEqualStrings("C:\\ONE.TXT", it.next(&path).entry.path);
+    try std.testing.expectEqual(calls, resume_calls);
+    const allocator = std.testing.allocator;
+    var snapshot = r4os.directory_page.Snapshot(u32, 257 * 4){};
+    defer snapshot.deinit(allocator);
+    for (0..257) |i| try snapshot.append(allocator, @intCast(256 - i));
+    snapshot.sort({}, snapshotLess);
+    for (snapshot.values.items, 0..) |value, i| try std.testing.expectEqual(i, value);
+    try std.testing.expectError(error.OutOfMemory, snapshot.append(allocator, 999));
+    try std.testing.expectEqual(@as(usize, 257), snapshot.values.items.len);
+    var no_memory = std.heap.FixedBufferAllocator.init(&.{});
+    var candidate = r4os.directory_page.Snapshot(u32, 4096){};
+    defer candidate.deinit(no_memory.allocator());
+    try std.testing.expectError(error.OutOfMemory, candidate.append(no_memory.allocator(), 1));
+    try std.testing.expectEqual(@as(usize, 0), candidate.values.items.len);
+    try std.testing.expectEqual(@as(u32, 256), snapshot.values.items[256]);
+}
