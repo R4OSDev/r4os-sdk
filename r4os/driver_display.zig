@@ -1,6 +1,16 @@
 const abi = @import("r4os_contract").abi;
 pub const Context = struct {
     table: abi.GfxDriverDisplayApi,
+    pub fn supportsTerminalRelease(self: *const Context) bool {
+        return self.table.version == 1 and self.table.size >= @offsetOf(abi.GfxDriverDisplayApi, "terminal_release") + 8 and
+            self.table.terminal_release != 0;
+    }
+    pub fn releaseTerminal(self: *const Context, backend: *const abi.GfxBackendBinding, reset_generation: u64, output: *abi.GfxNativeState) i32 {
+        if (!self.supportsTerminalRelease()) return abi.err_no_fn;
+        output.version = 1; output.size = @sizeOf(abi.GfxNativeState);
+        const callback: *const fn (*const abi.GfxBackendBinding, u64, *abi.GfxNativeState) callconv(.c) i32 = @ptrFromInt(self.table.terminal_release);
+        return callback(backend, reset_generation, output);
+    }
     pub fn supportsReset(self: *const Context) bool {
         return self.table.version == 1 and self.table.size >= @offsetOf(abi.GfxDriverDisplayApi, "prepare_reset") + 8 and
             self.table.device_reset != 0 and self.table.prepare_reset != 0;

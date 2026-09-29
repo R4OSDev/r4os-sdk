@@ -88,6 +88,12 @@ fn bootLegacyQuery(output: *r4os.abi.GfxDriverDisplayApi) callconv(.c) i32 {
     @memcpy(@as([*]u8, @ptrCast(output))[0..40], std.mem.asBytes(&legacy)[0..40]);
     return r4os.abi.gfx_output_ok;
 }
+fn terminalReleaseProbe(input: *const r4os.abi.GfxBackendBinding, generation: u64, output: *r4os.abi.GfxNativeState) callconv(.c) i32 {
+    std.debug.assert(input.adapter_id == 79 and input.device_generation == 0x200000082 and generation == 0x100000000082);
+    std.debug.assert(output.version == 1 and output.size == @sizeOf(r4os.abi.GfxNativeState));
+    output.* = .{ .generation = generation, .retained = 0, .outcome = r4os.abi.gfx_output_outcome_lost };
+    return r4os.abi.gfx_output_ok;
+}
 fn bootDisplayFacade() !void {
     const a = r4os.abi;
     const t = std.testing;
@@ -136,6 +142,29 @@ fn bootDisplayFacade() !void {
     try t.expectEqual(@as(u32, 40), old.table.size);
     try t.expectEqual(a.err_no_fn, old.bootHold(&request, &state));
     try t.expectEqual(a.err_no_fn, old.prepareHeld(&candidate, state.generation, &state));
+    try t.expectEqual(@as(usize, 120), @offsetOf(a.GfxDriverDisplayApi, "device_reset"));
+    try t.expectEqual(@as(usize, 128), @offsetOf(a.GfxDriverDisplayApi, "prepare_reset"));
+    try t.expectEqual(@as(usize, 136), @offsetOf(a.GfxDriverDisplayApi, "terminal_release"));
+    const backend: a.GfxBackendBinding = .{ .adapter_id = 79, .device_generation = 0x200000082, .reset_generation = 7 };
+    table.table.terminal_release = @intFromPtr(&terminalReleaseProbe);
+    const saved_state = state;
+    for ([_]u32{ 40, 136, 137, 143 }) |capacity| {
+        table.table.size = capacity;
+        try t.expect(!table.supportsTerminalRelease());
+        try t.expectEqual(a.err_no_fn, table.releaseTerminal(&backend, 0x100000000082, &state));
+        try t.expectEqualDeep(saved_state, state);
+    }
+    table.table.size = @sizeOf(a.GfxDriverDisplayApi);
+    table.table.version = 2;
+    try t.expectEqual(a.err_no_fn, table.releaseTerminal(&backend, 0x100000000082, &state));
+    table.table.version = 1;
+    try t.expect(table.supportsTerminalRelease());
+    try t.expectEqual(a.gfx_output_ok, table.releaseTerminal(&backend, 0x100000000082, &state));
+    try t.expectEqual(@as(u32, 0), state.retained);
+    try t.expectEqual(@as(u64, 0x100000000082), state.generation);
+    try t.expectEqual(a.gfx_output_outcome_lost, state.outcome);
+    table.table.terminal_release = 0;
+    try t.expectEqual(a.err_no_fn, table.releaseTerminal(&backend, 0x100000000082, &state));
 }
 
 const driver_thread_handle: u64 = 0x2000000000079;
