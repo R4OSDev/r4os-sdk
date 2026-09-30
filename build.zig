@@ -52,6 +52,25 @@ pub fn build(b: *std.Build) void {
     const sdk_unit_tests = b.addTest(.{ .root_module = host_r4os });
     const run_sdk_unit_tests = b.addRunArtifact(sdk_unit_tests);
 
+    const update_engine = b.createModule(.{
+        .root_source_file = b.path("r4os/system_update_engine.zig"),
+        .target = b.graph.host,
+        .optimize = .Debug,
+    });
+    update_engine.addImport("r4os", host_r4os);
+    const update_status = b.createModule(.{
+        .root_source_file = b.path("Tests/Simulation/CheckSystemUpdateStatus.zig"),
+        .target = b.graph.host,
+        .optimize = .Debug,
+    });
+    update_status.addImport("r4os", host_r4os);
+    update_status.addImport("update_engine", update_engine);
+    const update_status_tests = b.addTest(.{
+        .root_module = update_status,
+        .filters = &.{"status resnapshots"},
+    });
+    const run_update_status_tests = b.addRunArtifact(update_status_tests);
+
     const vm_allocator_module = b.createModule(.{
         .root_source_file = b.path("r4os/vm_allocator.zig"),
         .target = b.graph.host,
@@ -147,6 +166,7 @@ pub fn build(b: *std.Build) void {
     test_step.dependOn(&storage_tests.step);
     test_step.dependOn(b.getInstallStep());
     test_step.dependOn(&run_sdk_unit_tests.step);
+    test_step.dependOn(&run_update_status_tests.step);
     test_step.dependOn(&run_vm_allocator_tests.step);
     test_step.dependOn(&run_subsystem_runtime_tests.step);
     test_step.dependOn(&run_ntfs_volume_tests.step);

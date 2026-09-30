@@ -2698,52 +2698,71 @@ fn resumeTransaction(ctx: *const r4os.r4sys.Context) i32 {
     return 0;
 }
 
+fn readStatusSnapshot(ctx: *const r4os.r4sys.Context) ?[]const u8 {
+    last_status_has_batch = false;
+    last_status_has_journal = false;
+    const has_batch = switch (readNewestValidBatchInto(ctx, &batch_journal_workspace)) {
+        .found => true,
+        .not_found => false,
+        .io => return "batch-read",
+    };
+    const has_journal = switch (readNewestValidJournalInto(ctx, &command_journal_workspace)) {
+        .found => true,
+        .not_found => false,
+        .io => return "journal-read",
+    };
+    // Publish both flags only after a complete observation. Failed attempts
+    // must not leave partial batch metadata in the typed status result.
+    last_status_has_batch = has_batch;
+    last_status_has_journal = has_journal;
+    return null;
+}
+
 fn statusCommand(ctx: *const r4os.r4sys.Context) i32 {
     // STATUS is the documented first remote step: it materializes the
     // update tree and reports whether the directories really exist.
     const dirs_ok = ensureUpdateDirectories(ctx);
-    switch (readNewestValidBatchInto(ctx, &batch_journal_workspace)) {
-        .found => last_status_has_batch = true,
-        .not_found => {},
-        .io => {
-            fail(ctx, "STATUS", "batch-read");
-            return 1;
-        },
+    var failure: ?[]const u8 = null;
+    for (0..transient_read_attempt_limit) |attempt| {
+        failure = readStatusSnapshot(ctx);
+        if (failure == null) break;
+        // STATUS does not hold the writer lease. Replacement can shorten a
+        // journal between stat and read; retrying the old byte range cannot
+        // recover. Re-read metadata and both journal sets, with the existing
+        // finite read budget. Mutation/recovery readers stay unchanged.
+        if (attempt + 1 < transient_read_attempt_limit) ctx.sleepTicks(transient_io_retry_delay_ticks);
     }
-    switch (readNewestValidJournalInto(ctx, &command_journal_workspace)) {
-        .found => last_status_has_journal = true,
-        .not_found => {
-            ctx.write("SYSUPD STATUS: ");
-            if (last_status_has_batch) {
-                ctx.write("batch state=");
-                ctx.write(batch_journal_workspace.phase.text());
-                ctx.write(" batch=");
-                ctx.printU64(batch_journal_workspace.batch_generation);
-                ctx.write(" progress=");
-                ctx.printU64(batch_journal_workspace.current_package);
-                ctx.write("/");
-                ctx.printU64(batch_journal_workspace.package_count);
-                ctx.write(" release=");
-                ctx.write(batch_journal_workspace.targetReleaseText());
-                if (batch_journal_workspace.reason_len != 0) {
-                    ctx.write(" reason=");
-                    ctx.write(batch_journal_workspace.reasonText());
-                }
-            } else {
-                ctx.write("idle");
+    if (failure) |reason| {
+        fail(ctx, "STATUS", reason);
+        return 1;
+    }
+    if (!last_status_has_journal) {
+        ctx.write("SYSUPD STATUS: ");
+        if (last_status_has_batch) {
+            ctx.write("batch state=");
+            ctx.write(batch_journal_workspace.phase.text());
+            ctx.write(" batch=");
+            ctx.printU64(batch_journal_workspace.batch_generation);
+            ctx.write(" progress=");
+            ctx.printU64(batch_journal_workspace.current_package);
+            ctx.write("/");
+            ctx.printU64(batch_journal_workspace.package_count);
+            ctx.write(" release=");
+            ctx.write(batch_journal_workspace.targetReleaseText());
+            if (batch_journal_workspace.reason_len != 0) {
+                ctx.write(" reason=");
+                ctx.write(batch_journal_workspace.reasonText());
             }
-            ctx.write(" inbox=");
-            ctx.write(default_inbox);
-            ctx.write(" staged=");
-            ctx.write(staged_root);
-            ctx.write(" dirs=");
-            ctx.println(if (dirs_ok) "ok" else "missing");
-            return if (dirs_ok) 0 else 1;
-        },
-        .io => {
-            fail(ctx, "STATUS", "journal-read");
-            return 1;
-        },
+        } else {
+            ctx.write("idle");
+        }
+        ctx.write(" inbox=");
+        ctx.write(default_inbox);
+        ctx.write(" staged=");
+        ctx.write(staged_root);
+        ctx.write(" dirs=");
+        ctx.println(if (dirs_ok) "ok" else "missing");
+        return if (dirs_ok) 0 else 1;
     }
     const journal = &command_journal_workspace;
     ctx.write("SYSUPD STATUS: journal state=");
