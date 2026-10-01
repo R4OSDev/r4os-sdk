@@ -2,6 +2,17 @@
 #define R4OS_DRIVER_DISPLAY_H
 #include "r4draw.h"
 
+static inline int r4driver_display_supports_headless_resume(const R4GfxDriverDisplayApi *table) {
+    return table != 0 && table->version == 1 && table->size >= offsetof(R4GfxDriverDisplayApi, resume_headless) + sizeof(uint64_t) &&
+        table->resume_headless != 0;
+}
+static inline int32_t r4driver_display_resume_headless(const R4GfxDriverDisplayApi *table, const R4GfxBackendBinding *backend, uint64_t generation, R4GfxNativeState *output) {
+    if (!r4driver_display_supports_headless_resume(table)) return R4OS_ERR_NO_FN;
+    if (backend == 0 || output == 0) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+    output->version = 1; output->size = sizeof(*output);
+    return ((int32_t (*)(const R4GfxBackendBinding *, uint64_t, R4GfxNativeState *))(uintptr_t)table->resume_headless)(backend, generation, output);
+}
+
 static inline int r4driver_display_supports_reset(const R4GfxDriverDisplayApi *table) {
     return table != 0 && table->version == 1 && table->size >= offsetof(R4GfxDriverDisplayApi, prepare_reset) + sizeof(uint64_t) &&
         table->device_reset != 0 && table->prepare_reset != 0;

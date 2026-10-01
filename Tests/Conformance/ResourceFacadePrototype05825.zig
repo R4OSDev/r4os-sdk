@@ -165,6 +165,24 @@ fn bootDisplayFacade() !void {
     try t.expectEqual(a.gfx_output_outcome_lost, state.outcome);
     table.table.terminal_release = 0;
     try t.expectEqual(a.err_no_fn, table.releaseTerminal(&backend, 0x100000000082, &state));
+    try t.expectEqual(@as(usize, 144), @offsetOf(a.GfxDriverDisplayApi, "resume_headless"));
+    table.table.resume_headless = @intFromPtr(&terminalReleaseProbe);
+    const saved_resume = state;
+    for ([_]u32{40, 136, 144, 145, 151}) |capacity| {
+        table.table.size = capacity;
+        try t.expect(!table.supportsHeadlessResume());
+        try t.expectEqual(a.err_no_fn, table.resumeHeadless(&backend, 0x100000000082, &state));
+        try t.expectEqualDeep(saved_resume, state);
+    }
+    table.table.size = 152;
+    table.table.version = 2;
+    try t.expectEqual(a.err_no_fn, table.resumeHeadless(&backend, 0x100000000082, &state));
+    table.table.version = 1;
+    try t.expect(table.supportsHeadlessResume());
+    try t.expectEqual(a.gfx_output_ok, table.resumeHeadless(&backend, 0x100000000082, &state));
+    try t.expectEqual(@as(u64, 0x100000000082), state.generation);
+    table.table.resume_headless = 0;
+    try t.expectEqual(a.err_no_fn, table.resumeHeadless(&backend, 0x100000000082, &state));
 }
 
 const driver_thread_handle: u64 = 0x2000000000079;

@@ -52,6 +52,11 @@ static int32_t prepare_held_probe(const R4GfxNativeRegistration *input, uint64_t
     output->generation = generation; output->retained = 1; output->outcome = R4OS_GFX_OUTPUT_OUTCOME_VALIDATED;
     return R4OS_GFX_OUTPUT_OK;
 }
+static int32_t headless_resume_probe(const R4GfxBackendBinding *input, uint64_t generation, R4GfxNativeState *output) {
+    if (input->adapter_id != 79 || generation != UINT64_C(0x10000000007a) || output->version != 1 || output->size != sizeof(*output)) return -77;
+    output->generation = generation; output->retained = 1; output->state = R4OS_DISPLAY_STATE_RECOVERING;
+    output->outcome = R4OS_GFX_OUTPUT_OUTCOME_LOST; return R4OS_GFX_OUTPUT_OK;
+}
 static int boot_display_checks(void) {
     _Static_assert(offsetof(R4GfxDriverDisplayApi, boot_hold) == 40, "old display prefix");
     _Static_assert(offsetof(R4GfxDriverDisplayApi, boot_finish) == 48, "finish offset");
@@ -79,6 +84,27 @@ static int boot_display_checks(void) {
     if (r4driver_display_prepare_held(&table, &candidate, state.generation, &state) != R4OS_GFX_OUTPUT_OK || state.generation != UINT64_C(0x10000000007a) || state.outcome != R4OS_GFX_OUTPUT_OUTCOME_VALIDATED || state.retained != 1) return 8;
     table.prepare_held = 0;
     if (r4driver_display_prepare_held(&table, &candidate, state.generation, &state) != R4OS_ERR_NO_FN) return 9;
+    _Static_assert(offsetof(R4GfxDriverDisplayApi, resume_headless) == 144, "headless resume tail");
+    R4GfxBackendBinding backend = { .version = 1, .size = sizeof(backend), .adapter_id = 79 };
+    if (r4driver_display_resume_headless(&table, &backend, state.generation, &state) != R4OS_ERR_NO_FN) return 11;
+    table.resume_headless = (uint64_t)(uintptr_t)&headless_resume_probe;
+    const uint32_t capacities[] = {40, 136, 144, 145, 151};
+    for (unsigned i=0; i<sizeof(capacities)/sizeof(capacities[0]); ++i) {
+        table.size = capacities[i];
+        if (r4driver_display_supports_headless_resume(&table) ||
+            r4driver_display_resume_headless(&table, &backend, state.generation, &state) != R4OS_ERR_NO_FN ||
+            state.generation != UINT64_C(0x10000000007a)) return 12;
+    }
+    table.size = 152; table.version = 2;
+    if (r4driver_display_resume_headless(&table, &backend, state.generation, &state) != R4OS_ERR_NO_FN) return 13;
+    table.version = 1;
+    if (r4driver_display_resume_headless(&table, 0, state.generation, &state) != R4OS_GFX_OUTPUT_ERROR_INVALID ||
+        r4driver_display_resume_headless(&table, &backend, state.generation, 0) != R4OS_GFX_OUTPUT_ERROR_INVALID) return 14;
+    if (!r4driver_display_supports_headless_resume(&table) ||
+        r4driver_display_resume_headless(&table, &backend, state.generation, &state) != R4OS_GFX_OUTPUT_OK ||
+        state.retained != 1 || state.state != R4OS_DISPLAY_STATE_RECOVERING || state.outcome != R4OS_GFX_OUTPUT_OUTCOME_LOST) return 15;
+    table.resume_headless = 0;
+    if (r4driver_display_resume_headless(&table, &backend, state.generation, &state) != R4OS_ERR_NO_FN) return 16;
     return 0;
 }
 

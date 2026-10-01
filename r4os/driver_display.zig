@@ -1,6 +1,16 @@
 const abi = @import("r4os_contract").abi;
 pub const Context = struct {
     table: abi.GfxDriverDisplayApi,
+    pub fn supportsHeadlessResume(self: *const Context) bool {
+        return self.table.version == 1 and self.table.size >= @offsetOf(abi.GfxDriverDisplayApi, "resume_headless") + 8 and
+            self.table.resume_headless != 0;
+    }
+    pub fn resumeHeadless(self: *const Context, input: *const abi.GfxBackendBinding, generation: u64, output: *abi.GfxNativeState) i32 {
+        if (!self.supportsHeadlessResume()) return abi.err_no_fn;
+        output.* = .{};
+        const callback: *const fn (*const abi.GfxBackendBinding, u64, *abi.GfxNativeState) callconv(.c) i32 = @ptrFromInt(self.table.resume_headless);
+        return callback(input, generation, output);
+    }
     pub fn supportsTerminalRelease(self: *const Context) bool {
         return self.table.version == 1 and self.table.size >= @offsetOf(abi.GfxDriverDisplayApi, "terminal_release") + 8 and
             self.table.terminal_release != 0;
