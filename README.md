@@ -390,3 +390,22 @@ caller-owned continuation and per-entry metadata. Restart is an explicit
 failure requiring a fresh complete result generation. Old providers and
 intentional live-index deletion retain their previous fallback semantics.
 No cursor allocation, retained mount loan or explicit close is required.
+
+
+Fragmented NTFS directory allocation (0.82.28)
+---------------------------------------------
+The INDEX_ALLOCATION owner checks AttrScratch.runs.len (256) when growing
+an I30 index. MAX_DATA_RUNS (24) belongs to a different file payload buffer.
+Record, bitmap, run coverage, reservation, flush and rollback checks remain
+unchanged. Kernel Support uses the exact same source; no ABI or buffer grows.
+The existing CheckNtfsTreeModel0607 adds 1200 resident files interleaved with
+1200 separately allocated payloads:60fragmented index runs, exact contents
+and cold remount pass. The original code rejects file498 with24runs despite
+free clusters. The whole existing tree/churn/append/crash suite still passes.
+On OssiPC, read-only metadata confirmed TEMP had24runs/25full index blocks;
+CPU-only new writes failed with FileWrite=-4. Whole-hash-installed Kernel240
+now writes36files plus progress/completion successfully, with exact full
+readbacks and27actual index runs. Evidence: Temp/Ossi08228/FileIO28C and
+Update28A-Installed.json. Host models, SMP4 and hardware are separate proofs.
+
+Abgeschlossener Beleg0.82.28: ExFiles/Reports/OssiGPU/20261003-profile08228/Final08228/Result08228.json; urspruengliche Fehler und neue CPU-/Metadaten-/GPU-Belege getrennt erhalten.
