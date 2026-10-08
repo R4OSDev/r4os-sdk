@@ -2417,42 +2417,6 @@ fn resumeBatchCommand(ctx: *const r4os.r4sys.Context) i32 {
         return 0;
     }
 
-    switch (readNewestValidJournalInto(ctx, &command_journal_workspace)) {
-        .not_found => {
-            if (batch_journal_workspace.phase == .staged or
-                batch_journal_workspace.phase == .verifying or
-                batch_journal_workspace.phase == .staging)
-            {
-                batch_journal_workspace.phase = .staged;
-                batch_journal_workspace.current_package = 0;
-                if (!writeInactiveBatchJournal(ctx, &batch_journal_workspace)) return 1;
-                return commitBatchCommand(ctx);
-            }
-            fail(ctx, "RESUME-BATCH", "transaction-not-found");
-            return 1;
-        },
-        .found => {},
-        .io => {
-            fail(ctx, "RESUME-BATCH", "journal-read");
-            return 1;
-        },
-    }
-    if (!command_journal_workspace.batch and
-        phaseTerminal(command_journal_workspace.phase) and
-        (batch_journal_workspace.phase == .staged or
-            batch_journal_workspace.phase == .verifying or
-            batch_journal_workspace.phase == .staging))
-    {
-        batch_journal_workspace.phase = .staged;
-        batch_journal_workspace.current_package = 0;
-        setBatchReason(&batch_journal_workspace, "prepare-retry");
-        if (!writeInactiveBatchJournal(ctx, &batch_journal_workspace)) return 1;
-        return commitBatchCommand(ctx);
-    }
-    if (!command_journal_workspace.batch) {
-        fail(ctx, "RESUME-BATCH", "not-batch-transaction");
-        return 1;
-    }
     switch (acquireUpdateLock(ctx, true)) {
         .acquired => {},
         .busy => {
@@ -2464,17 +2428,64 @@ fn resumeBatchCommand(ctx: *const r4os.r4sys.Context) i32 {
             return 1;
         },
     }
-    defer releaseUpdateLock(ctx);
+    var lock_held = true;
+    defer if (lock_held) releaseUpdateLock(ctx);
     switch (readNewestValidBatchInto(ctx, &batch_journal_workspace)) {
         .found => {},
         .not_found, .io => return 1,
     }
+    if (system_update_batch.phaseTerminal(batch_journal_workspace.phase)) {
+        ctx.write("SYSUPD RESUME-BATCH result: OK state=");
+        ctx.println(batch_journal_workspace.phase.text());
+        return 0;
+    }
+
     switch (readNewestValidJournalInto(ctx, &command_journal_workspace)) {
+        .not_found => {
+            if (batch_journal_workspace.phase == .staged or
+                batch_journal_workspace.phase == .verifying or
+                batch_journal_workspace.phase == .staging)
+            {
+                batch_journal_workspace.phase = .staged;
+                batch_journal_workspace.current_package = 0;
+                if (!writeInactiveBatchJournal(ctx, &batch_journal_workspace)) return 1;
+                releaseUpdateLock(ctx); lock_held = false;
+                return commitBatchCommand(ctx);
+            }
+            fail(ctx, "RESUME-BATCH", "transaction-not-found");
+            return 1;
+        },
         .found => {},
-        .not_found, .io => return 1,
+        .io => {
+            fail(ctx, "RESUME-BATCH", "journal-read");
+            return 1;
+        },
+    }
+    // A preparatory batch has not bound its own transaction yet. A previous
+    // terminal batch cannot certify it, even for the same package/release.
+    if (phaseTerminal(command_journal_workspace.phase) and
+        (batch_journal_workspace.phase == .staged or
+            batch_journal_workspace.phase == .verifying or
+            batch_journal_workspace.phase == .staging))
+    {
+        batch_journal_workspace.phase = .staged;
+        batch_journal_workspace.current_package = 0;
+        setBatchReason(&batch_journal_workspace, "prepare-retry");
+        if (!writeInactiveBatchJournal(ctx, &batch_journal_workspace)) return 1;
+        releaseUpdateLock(ctx); lock_held = false;
+        return commitBatchCommand(ctx);
+    }
+    if (!command_journal_workspace.batch) {
+        fail(ctx, "RESUME-BATCH", "not-batch-transaction");
+        return 1;
     }
     const journal = &command_journal_workspace;
-    if (!journal.batch) return 1;
+    // Re-read under the update lease and bind all combined package digests
+    // before forward replay, post-boot verification, cleanup or rollback.
+    if (!lastGoodBatchMatches(&batch_journal_workspace, journal)) {
+        fail(ctx, "RESUME-BATCH", "transaction-binding");
+        return 1;
+    }
     if (journal.phase == .stage or journal.phase == .commit) {
         batch_journal_workspace.phase = .committing;
         if (!writeInactiveBatchJournal(ctx, &batch_journal_workspace)) return 1;
