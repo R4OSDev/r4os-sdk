@@ -10,6 +10,7 @@ fn dmaRangeCpu(mapping: *const r4os.abi.DmaMapping, offset: u32, bytes: u32) cal
     return -702;
 }
 test "driver DMA range facade keeps the v33 prefix and negotiates each optional callback" {
+    try audioIdleFacade();
     try bootDisplayFacade();
     try platformFacade();
     try ownedWorkFacade();
@@ -42,6 +43,35 @@ test "driver DMA range facade keeps the v33 prefix and negotiates each optional 
     api.dma_sync_range_for_cpu = null;
     try t.expectEqual(a.err_no_fn, ctx.syncDmaRangeForDevice(&mapping, 0xfffffff0, 7));
     try t.expectEqual(a.err_no_fn, ctx.syncDmaRangeForCpu(&mapping, 3, 0xffffffff));
+}
+
+fn audioIdleRegister(_: [*:0]const u8, raw: *const anyopaque) callconv(.c) i32 {
+    const descriptor: *const r4os.r4dev.AudioOutputIdleBackend = @ptrCast(@alignCast(raw));
+    std.debug.assert(descriptor.base.base.version == r4os.abi.audio_backend_idle_version);
+    std.debug.assert(descriptor.base.base.size == 104);
+    std.debug.assert(@intFromPtr(descriptor.base.base.context) == 0x100000000082);
+    return descriptor.idle.?(descriptor.base.base.context);
+}
+
+fn audioIdleProbe(raw: ?*anyopaque) callconv(.c) i32 {
+    std.debug.assert(@intFromPtr(raw) == 0x100000000082);
+    return -744;
+}
+
+fn audioIdleFacade() !void {
+    const a = r4os.abi;
+    try std.testing.expectEqual(@as(usize, 72), @sizeOf(a.AudioBackend));
+    try std.testing.expectEqual(@as(usize, 96), @sizeOf(r4os.r4dev.AudioOutputBackend));
+    try std.testing.expectEqual(@as(usize, 96), @offsetOf(r4os.r4dev.AudioOutputIdleBackend, "idle"));
+    try std.testing.expectEqual(@as(usize, 104), @sizeOf(r4os.r4dev.AudioOutputIdleBackend));
+    var api: a.DriverApi = undefined;
+    api.register_audio_output_backend = audioIdleRegister;
+    const ctx = r4os.r4dev.DriverContext.init(&api);
+    const descriptor: r4os.r4dev.AudioOutputIdleBackend = .{
+        .base = .{ .base = .{ .version = a.audio_backend_idle_version, .size = 104, .context = @ptrFromInt(0x100000000082) }, .outputs = undefined },
+        .idle = audioIdleProbe,
+    };
+    try std.testing.expectEqual(@as(i32, -744), ctx.registerAudioOutputIdle("probe", &descriptor));
 }
 
 fn ownedHandler(raw: usize) callconv(.c) i32 { return @intCast(raw); }

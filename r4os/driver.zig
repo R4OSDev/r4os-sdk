@@ -50,9 +50,19 @@ pub const AudioOutputBackend = extern struct {
     outputs: abi.AudioOutputExtension,
 };
 
+/// Version 4 distinguishes completed application PCM from a physical Stop.
+/// The optional idle callback drains all caller data; a silent carrier may
+/// remain owned by the selected output. Stop/shutdown must still stop DMA.
+pub const AudioOutputIdleBackend = extern struct {
+    base: AudioOutputBackend,
+    idle: ?*const fn (?*anyopaque) callconv(.c) i32 = null,
+};
+
 comptime {
     if (@sizeOf(abi.AudioBackend) != 72 or @offsetOf(AudioOutputBackend, "outputs") != 72 or @sizeOf(AudioOutputBackend) != 96)
         @compileError("audio output backend prefix drift");
+    if (@offsetOf(AudioOutputIdleBackend, "idle") != 96 or @sizeOf(AudioOutputIdleBackend) != 104)
+        @compileError("audio idle backend prefix drift");
 }
 
 pub const r4d_shutdown_entry_offset: u32 = 5;
@@ -195,6 +205,10 @@ pub const Context = struct {
     }
 
     pub fn registerAudioOutputs(self: *const Context, name: [*:0]const u8, backend: *const AudioOutputBackend) i32 {
+        return self.api.register_audio_output_backend(name, backend);
+    }
+
+    pub fn registerAudioOutputIdle(self: *const Context, name: [*:0]const u8, backend: *const AudioOutputIdleBackend) i32 {
         return self.api.register_audio_output_backend(name, backend);
     }
 
