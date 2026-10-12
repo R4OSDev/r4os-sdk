@@ -204,6 +204,18 @@ pub const Context = struct {
         return self.base.performanceInput();
     }
 
+    pub fn performanceInstrumentation(self: *const Context) ?abi.ProgramInstrumentationInfo {
+        return self.base.performanceInstrumentation();
+    }
+
+    pub fn performanceLock(self: *const Context, index: u32) ?abi.ProgramLockPerformanceInfo {
+        return self.base.performanceLock(index);
+    }
+
+    pub fn performanceStack(self: *const Context, index: u32) ?abi.ProgramStackPerformanceInfo {
+        return self.base.performanceStack(index);
+    }
+
     pub fn performanceIrqTiming(self: *const Context, irq: u32) ?abi.ProgramIrqTimingInfo {
         return self.base.performanceIrqTiming(irq);
     }

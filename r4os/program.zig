@@ -594,6 +594,27 @@ pub const Context = struct {
         return out;
     }
 
+    pub fn performanceInstrumentation(self: *const Context) ?abi.ProgramInstrumentationInfo {
+        var out: abi.ProgramInstrumentationInfo = .{};
+        const table_fn = self.devFn("performance_instrumentation") orelse return null;
+        if (table_fn(&out) <= 0) return null;
+        return out;
+    }
+
+    pub fn performanceLock(self: *const Context, index: u32) ?abi.ProgramLockPerformanceInfo {
+        var out: abi.ProgramLockPerformanceInfo = .{};
+        const table_fn = self.devFn("performance_lock") orelse return null;
+        if (table_fn(index, &out) <= 0) return null;
+        return out;
+    }
+
+    pub fn performanceStack(self: *const Context, index: u32) ?abi.ProgramStackPerformanceInfo {
+        var out: abi.ProgramStackPerformanceInfo = .{};
+        const table_fn = self.devFn("performance_stack") orelse return null;
+        if (table_fn(index, &out) <= 0) return null;
+        return out;
+    }
+
     pub fn performanceIrqTiming(self: *const Context, irq: u32) ?abi.ProgramIrqTimingInfo {
         var out: abi.ProgramIrqTimingInfo = .{};
         const table_fn = self.devFn("performance_irq_timing") orelse return null;

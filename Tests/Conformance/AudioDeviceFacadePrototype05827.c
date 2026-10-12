@@ -74,6 +74,24 @@ static int32_t fake_display_state(R4DisplayStateInfo *out) {
 static R4Timeout poll_timeout(void) { R4Timeout value = {0}; value.kind = R4OS_TIMEOUT_KIND_POLL; return value; }
 static R4Timeout forever_timeout(void) { R4Timeout value = {0}; value.kind = R4OS_TIMEOUT_KIND_FOREVER; return value; }
 
+static int32_t fake_instrumentation(R4ProgramInstrumentationInfo *out) {
+    if (out->version != 1u || out->size != sizeof(*out)) return -1;
+    out->mode = 0u; out->lock_count = 11u; out->stack_group_count = 13u;
+    return 1;
+}
+static int32_t fake_lock(uint32_t index, R4ProgramLockPerformanceInfo *out) {
+    if (out->version != 1u || out->size != sizeof(*out)) return -1;
+    if (index >= 11u) return 0;
+    out->index = index; out->acquisitions = 17u;
+    return 1;
+}
+static int32_t fake_stack(uint32_t index, R4ProgramStackPerformanceInfo *out) {
+    if (out->version != 1u || out->size != sizeof(*out)) return -1;
+    if (index >= 13u) return 0;
+    out->index = index; out->created = 9u;
+    return 1;
+}
+
 static void init_app(R4App *app, R4XStartR4Sys *sys, R4XStartR4Audio *audio, R4XStartR4Dev *dev) {
     *sys = (R4XStartR4Sys){0}; sys->service_open = (uintptr_t)&fake_service_open; sys->service_close = (uintptr_t)&fake_service_close; sys->service_call = (uintptr_t)&fake_service_call;
     *audio = (R4XStartR4Audio){0}; audio->audio_open_stream = (uintptr_t)&fake_audio_open; audio->sid_acquire = (uintptr_t)&fake_sid_acquire; audio->sid_write_register = (uintptr_t)&fake_sid_write; audio->sid_release = (uintptr_t)&fake_sid_release; audio->midi_open_synth = (uintptr_t)&fake_midi_open; audio->midi_send = (uintptr_t)&fake_midi_send; audio->midi_close = (uintptr_t)&fake_midi_close; audio->opl3_write_register = (uintptr_t)&fake_opl_write; audio->opl3_reset = (uintptr_t)&fake_opl_simple; audio->opl3_render_block = (uintptr_t)&fake_opl_simple; audio->opl3_stop = (uintptr_t)&fake_opl_simple;
@@ -114,6 +132,22 @@ int main(void) {
     R4MemoryView memory = r4_devices_memory(devices); R4ProgramMemorySummary mem;
     if (r4_memory_summary(&memory, &mem) != 0 || mem.physical_bytes != 64u * 1024u * 1024u || r4_memory_block_count(&memory) != 3u) return 11;
     R4PerformanceView performance = r4_devices_performance(devices); R4ProgramPerformanceSummary perf;
+    R4ProgramInstrumentationInfo instrumentation;
+    R4ProgramLockPerformanceInfo lock;
+    R4ProgramStackPerformanceInfo stack;
+    if (r4_performance_instrumentation(&performance, &instrumentation) != R4OS_ERR_NO_FN) return 32;
+    raw_dev.performance_instrumentation = (uintptr_t)&fake_instrumentation;
+    raw_dev.performance_lock = (uintptr_t)&fake_lock;
+    raw_dev.performance_stack = (uintptr_t)&fake_stack;
+    if (r4_performance_instrumentation(&performance, &instrumentation) != 1 || instrumentation.mode != 0u) return 33;
+    if (r4_performance_lock(&performance, 10u, &lock) != 1 || lock.acquisitions != 17u) return 34;
+    if (r4_performance_stack(&performance, 12u, &stack) != 1 || stack.created != 9u) return 35;
+    if (r4_performance_lock(&performance, 11u, &lock) != 0 || r4_performance_stack(&performance, 13u, &stack) != 0) return 36;
+    raw_dev.size = offsetof(R4XStartR4Dev, performance_instrumentation);
+    if (r4_performance_instrumentation(&performance, &instrumentation) != R4OS_ERR_NO_FN ||
+        r4_performance_lock(&performance, 0u, &lock) != R4OS_ERR_NO_FN ||
+        r4_performance_stack(&performance, 0u, &stack) != R4OS_ERR_NO_FN) return 37;
+    raw_dev.size = sizeof(raw_dev);
     if (r4_performance_summary(&performance, &perf) <= 0 || perf.audio_stream_writes != 9u) return 12;
     R4ProgramInstanceStorageSummary instance_storage; R4ProgramInstanceStorageSelfTestResult storage_test;
     if (r4_program_instance_storage_summary(&performance, &instance_storage) <= 0 || instance_storage.version != 2u || instance_storage.size != sizeof(instance_storage) || instance_storage.active_instances != 4u || instance_storage.current_payload_bytes != 4096u || instance_storage.current_gui_frame_bytes != 8192u) return 13;

@@ -108,6 +108,18 @@ pub const PerformanceView = struct {
     pub fn bootPhaseClock(self: *const PerformanceView, index: u32) ?abi.ProgramBootPhaseClockInfo {
         return self.raw.performanceBootPhaseClock(index);
     }
+    pub fn instrumentation(self: *const PerformanceView) ?abi.ProgramInstrumentationInfo {
+        return self.raw.performanceInstrumentation();
+    }
+
+    pub fn lock(self: *const PerformanceView, index: u32) ?abi.ProgramLockPerformanceInfo {
+        return self.raw.performanceLock(index);
+    }
+
+    pub fn stack(self: *const PerformanceView, index: u32) ?abi.ProgramStackPerformanceInfo {
+        return self.raw.performanceStack(index);
+    }
+
     pub fn irqTiming(self: *const PerformanceView, irq: u32) ?abi.ProgramIrqTimingInfo {
         return self.raw.performanceIrqTiming(irq);
     }

@@ -24,6 +24,30 @@ static inline int32_t r4dev_memory_pressure_snapshot(const R4Dev *dev, R4Program
     return ((R4DevMemoryPressureSnapshotFn)(uintptr_t)dev->table->memory_pressure_snapshot)(out);
 }
 
+static inline int32_t r4dev_performance_instrumentation(const R4Dev *dev, R4ProgramInstrumentationInfo *out) {
+    if (out == 0) return R4OS_ERROR_INVALID;
+    if (dev == 0 || dev->table == 0 ||
+        dev->table->size < offsetof(R4XStartR4Dev, performance_instrumentation) + sizeof(uintptr_t) ||
+        dev->table->performance_instrumentation == 0u) return R4OS_ERR_NO_FN;
+    return ((R4DevPerformanceInstrumentationFn)(uintptr_t)dev->table->performance_instrumentation)(out);
+}
+
+static inline int32_t r4dev_performance_lock(const R4Dev *dev, uint32_t index, R4ProgramLockPerformanceInfo *out) {
+    if (out == 0) return R4OS_ERROR_INVALID;
+    if (dev == 0 || dev->table == 0 ||
+        dev->table->size < offsetof(R4XStartR4Dev, performance_lock) + sizeof(uintptr_t) ||
+        dev->table->performance_lock == 0u) return R4OS_ERR_NO_FN;
+    return ((R4DevPerformanceLockFn)(uintptr_t)dev->table->performance_lock)(index, out);
+}
+
+static inline int32_t r4dev_performance_stack(const R4Dev *dev, uint32_t index, R4ProgramStackPerformanceInfo *out) {
+    if (out == 0) return R4OS_ERROR_INVALID;
+    if (dev == 0 || dev->table == 0 ||
+        dev->table->size < offsetof(R4XStartR4Dev, performance_stack) + sizeof(uintptr_t) ||
+        dev->table->performance_stack == 0u) return R4OS_ERR_NO_FN;
+    return ((R4DevPerformanceStackFn)(uintptr_t)dev->table->performance_stack)(index, out);
+}
+
 static inline int32_t r4dev_display_state(const R4Dev *dev, R4DisplayStateInfo *out) {
     if (out == 0) return R4OS_ERROR_INVALID;
     if (dev == 0 || dev->table == 0 ||

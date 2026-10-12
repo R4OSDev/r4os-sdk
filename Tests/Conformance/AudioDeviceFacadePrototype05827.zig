@@ -9,6 +9,44 @@ var timeout_next = false;
 var stream_open = false;
 var open_connections: u32 = 0;
 
+fn fakeInstrumentation(out: *r4os.abi.ProgramInstrumentationInfo) callconv(.c) i32 {
+    if (out.version != 1 or out.size != @sizeOf(r4os.abi.ProgramInstrumentationInfo)) return -1;
+    out.* = .{ .mode = 0, .lock_count = 11, .stack_group_count = 13 };
+    return 1;
+}
+
+fn fakeLock(index: u32, out: *r4os.abi.ProgramLockPerformanceInfo) callconv(.c) i32 {
+    if (out.version != 1 or out.size != @sizeOf(r4os.abi.ProgramLockPerformanceInfo)) return -1;
+    if (index >= 11) return 0;
+    out.* = .{ .index = index, .acquisitions = 17 };
+    return 1;
+}
+
+fn fakeStack(index: u32, out: *r4os.abi.ProgramStackPerformanceInfo) callconv(.c) i32 {
+    if (out.version != 1 or out.size != @sizeOf(r4os.abi.ProgramStackPerformanceInfo)) return -1;
+    if (index >= 13) return 0;
+    out.* = .{ .index = index, .created = 9 };
+    return 1;
+}
+
+test "instrumentation views distinguish missing slots, end of list and disabled details" {
+    const facades = initFacades();
+    const performance = facades.devices.performance();
+    try std.testing.expect(performance.instrumentation() == null);
+    dev_table.performance_instrumentation = @intFromPtr(&fakeInstrumentation);
+    dev_table.performance_lock = @intFromPtr(&fakeLock);
+    dev_table.performance_stack = @intFromPtr(&fakeStack);
+    try std.testing.expectEqual(@as(u32, 0), performance.instrumentation().?.mode);
+    try std.testing.expectEqual(@as(u64, 17), performance.lock(10).?.acquisitions);
+    try std.testing.expectEqual(@as(u64, 9), performance.stack(12).?.created);
+    try std.testing.expect(performance.lock(11) == null);
+    try std.testing.expect(performance.stack(13) == null);
+    dev_table.size = @offsetOf(r4os.abi.R4XStartR4Dev, "performance_instrumentation");
+    try std.testing.expect(performance.instrumentation() == null);
+    try std.testing.expect(performance.lock(0) == null);
+    try std.testing.expect(performance.stack(0) == null);
+}
+
 fn fakeServiceOpen(_: [*:0]const u8, out: *r4os.abi.ServiceInfo) callconv(.c) i32 {
     out.* = .{ .handle = 77 };
     open_connections += 1;
