@@ -120,6 +120,10 @@ pub const PerformanceView = struct {
         return self.raw.performanceStack(index);
     }
 
+    pub fn stackFault(self: *const PerformanceView, cpu: u32, out: *abi.ProgramStackFaultInfo) i32 {
+        return self.raw.stackFault(cpu, out);
+    }
+
     pub fn irqTiming(self: *const PerformanceView, irq: u32) ?abi.ProgramIrqTimingInfo {
         return self.raw.performanceIrqTiming(irq);
     }

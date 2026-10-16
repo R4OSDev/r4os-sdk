@@ -615,6 +615,13 @@ pub const Context = struct {
         return out;
     }
 
+    /// 1 coherent record (sequence 0: none), 0 end, negative unavailable/error.
+    /// Output is unchanged on failure, including missing optional slots.
+    pub fn stackFault(self: *const Context, index: u32, out: *abi.ProgramStackFaultInfo) i32 {
+        const table_fn = self.devFn("stack_fault") orelse return abi.err_no_fn;
+        return table_fn(index, out);
+    }
+
     pub fn performanceIrqTiming(self: *const Context, irq: u32) ?abi.ProgramIrqTimingInfo {
         var out: abi.ProgramIrqTimingInfo = .{};
         const table_fn = self.devFn("performance_irq_timing") orelse return null;

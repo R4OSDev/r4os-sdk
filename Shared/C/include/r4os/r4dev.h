@@ -48,6 +48,14 @@ static inline int32_t r4dev_performance_stack(const R4Dev *dev, uint32_t index, 
     return ((R4DevPerformanceStackFn)(uintptr_t)dev->table->performance_stack)(index, out);
 }
 
+static inline int32_t r4dev_stack_fault(const R4Dev *dev, uint32_t index, R4ProgramStackFaultInfo *out) {
+    if (out == 0) return R4OS_ERROR_INVALID;
+    if (dev == 0 || dev->table == 0 ||
+        dev->table->size < offsetof(R4XStartR4Dev, stack_fault) + sizeof(uintptr_t) ||
+        dev->table->stack_fault == 0u) return R4OS_ERR_NO_FN;
+    return ((R4DevStackFaultFn)(uintptr_t)dev->table->stack_fault)(index, out);
+}
+
 static inline int32_t r4dev_display_state(const R4Dev *dev, R4DisplayStateInfo *out) {
     if (out == 0) return R4OS_ERROR_INVALID;
     if (dev == 0 || dev->table == 0 ||

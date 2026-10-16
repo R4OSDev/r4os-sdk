@@ -944,3 +944,13 @@ und INSTALL-Inhalte bleiben Teil der blockweisen Vorpruefung. Die Quelle bleibt 
 Schreibplaene sind unabhaengig. Der bestehende Delta-Fall vergleicht beide
 Wege samt falscher Generation und Schreibfehler; eine 5-GB-Quelle mit
 Datei jenseits 4 GB bleibt im festen 64-MB-Vorbereitungsbudget.
+
+Stackfehler (0.84.1)
+--------------------
+devices.performance().stackFault(cpu, &info) liest den letzten residenten
+Kernel-Stackfehler je CPU. info mit Defaultheader initialisieren. Status 1
+liefert einen kohaerenten Datensatz, sequence=0 bedeutet bisher keinen Fehler;
+0 beendet die CPU-Slotliste, negative Statuswerte lassen die Ausgabe intakt.
+Verfuegbarkeitsflags beachten: Commit ist kein Hochwasser. Die C-Fassade
+r4_performance_stack_fault verwendet denselben caller-initialisierten Header.
+R4DEV v14 ergaenzt nur den optionalen Slot; alte Tabellen bleiben erkennbar.

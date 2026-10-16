@@ -92,6 +92,15 @@ static int32_t fake_stack(uint32_t index, R4ProgramStackPerformanceInfo *out) {
     return 1;
 }
 
+static int32_t fake_stack_fault(uint32_t index, R4ProgramStackFaultInfo *out) {
+    if (out->version != 1u || out->size < sizeof(*out)) return -1;
+    if (index >= 4u) return 0;
+    *out = (R4ProgramStackFaultInfo){0}; out->version = 1u; out->size = sizeof(*out);
+    out->cpu_index = index; out->sequence = 2u; out->flags = R4OS_STACK_FAULT_FLAG_TASK;
+    out->task_id = 71u; out->task_generation = 93u;
+    return 1;
+}
+
 static void init_app(R4App *app, R4XStartR4Sys *sys, R4XStartR4Audio *audio, R4XStartR4Dev *dev) {
     *sys = (R4XStartR4Sys){0}; sys->service_open = (uintptr_t)&fake_service_open; sys->service_close = (uintptr_t)&fake_service_close; sys->service_call = (uintptr_t)&fake_service_call;
     *audio = (R4XStartR4Audio){0}; audio->audio_open_stream = (uintptr_t)&fake_audio_open; audio->sid_acquire = (uintptr_t)&fake_sid_acquire; audio->sid_write_register = (uintptr_t)&fake_sid_write; audio->sid_release = (uintptr_t)&fake_sid_release; audio->midi_open_synth = (uintptr_t)&fake_midi_open; audio->midi_send = (uintptr_t)&fake_midi_send; audio->midi_close = (uintptr_t)&fake_midi_close; audio->opl3_write_register = (uintptr_t)&fake_opl_write; audio->opl3_reset = (uintptr_t)&fake_opl_simple; audio->opl3_render_block = (uintptr_t)&fake_opl_simple; audio->opl3_stop = (uintptr_t)&fake_opl_simple;
@@ -147,6 +156,16 @@ int main(void) {
     if (r4_performance_instrumentation(&performance, &instrumentation) != R4OS_ERR_NO_FN ||
         r4_performance_lock(&performance, 0u, &lock) != R4OS_ERR_NO_FN ||
         r4_performance_stack(&performance, 0u, &stack) != R4OS_ERR_NO_FN) return 37;
+    raw_dev.size = sizeof(raw_dev);
+    R4ProgramStackFaultInfo fault = {0}; fault.version = 1u; fault.size = sizeof(fault); fault.task_id = 123u;
+    if (r4_performance_stack_fault(&performance, 0u, &fault) != R4OS_ERR_NO_FN || fault.task_id != 123u) return 38;
+    raw_dev.stack_fault = (uintptr_t)&fake_stack_fault;
+    if (r4_performance_stack_fault(&performance, 3u, &fault) != 1 || fault.task_id != 71u || fault.task_generation != 93u) return 39;
+    if (r4_performance_stack_fault(&performance, 4u, &fault) != 0 || fault.task_id != 71u) return 40;
+    fault.version = 0u;
+    if (r4_performance_stack_fault(&performance, 0u, &fault) != -1 || fault.task_id != 71u) return 41;
+    raw_dev.size = offsetof(R4XStartR4Dev, stack_fault);
+    if (r4_performance_stack_fault(&performance, 0u, &fault) != R4OS_ERR_NO_FN || fault.task_id != 71u) return 42;
     raw_dev.size = sizeof(raw_dev);
     if (r4_performance_summary(&performance, &perf) <= 0 || perf.audio_stream_writes != 9u) return 12;
     R4ProgramInstanceStorageSummary instance_storage; R4ProgramInstanceStorageSelfTestResult storage_test;

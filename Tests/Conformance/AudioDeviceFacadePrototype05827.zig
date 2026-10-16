@@ -29,6 +29,34 @@ fn fakeStack(index: u32, out: *r4os.abi.ProgramStackPerformanceInfo) callconv(.c
     return 1;
 }
 
+fn fakeStackFault(index: u32, out: *r4os.abi.ProgramStackFaultInfo) callconv(.c) i32 {
+    if (out.version != 1 or out.size < @sizeOf(r4os.abi.ProgramStackFaultInfo)) return -1;
+    if (index >= 4) return 0;
+    out.* = .{ .cpu_index = index, .sequence = 2,
+        .flags = r4os.abi.stack_fault_flag_task, .task_id = 71, .task_generation = 93 };
+    return 1;
+}
+
+test "stack fault view preserves output for old tables, end and invalid headers" {
+    const facades = initFacades();
+    const performance = facades.devices.performance();
+    var out: r4os.abi.ProgramStackFaultInfo = .{ .task_id = 123 };
+    try std.testing.expectEqual(r4os.abi.err_no_fn, performance.stackFault(0, &out));
+    try std.testing.expectEqual(@as(u32, 123), out.task_id);
+    dev_table.stack_fault = @intFromPtr(&fakeStackFault);
+    try std.testing.expectEqual(@as(i32, 1), performance.stackFault(3, &out));
+    try std.testing.expectEqual(@as(u32, 71), out.task_id);
+    try std.testing.expectEqual(@as(u64, 93), out.task_generation);
+    try std.testing.expectEqual(@as(i32, 0), performance.stackFault(4, &out));
+    try std.testing.expectEqual(@as(u32, 71), out.task_id);
+    out.version = 0;
+    try std.testing.expectEqual(@as(i32, -1), performance.stackFault(0, &out));
+    try std.testing.expectEqual(@as(u32, 71), out.task_id);
+    dev_table.size = @offsetOf(r4os.abi.R4XStartR4Dev, "stack_fault");
+    try std.testing.expectEqual(r4os.abi.err_no_fn, performance.stackFault(0, &out));
+    try std.testing.expectEqual(@as(u32, 71), out.task_id);
+}
+
 test "instrumentation views distinguish missing slots, end of list and disabled details" {
     const facades = initFacades();
     const performance = facades.devices.performance();

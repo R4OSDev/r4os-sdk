@@ -216,6 +216,10 @@ pub const Context = struct {
         return self.base.performanceStack(index);
     }
 
+    pub fn stackFault(self: *const Context, index: u32, out: *abi.ProgramStackFaultInfo) i32 {
+        return self.base.stackFault(index, out);
+    }
+
     pub fn performanceIrqTiming(self: *const Context, irq: u32) ?abi.ProgramIrqTimingInfo {
         return self.base.performanceIrqTiming(irq);
     }

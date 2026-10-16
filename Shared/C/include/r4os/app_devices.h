@@ -57,6 +57,13 @@ static inline int32_t r4_performance_stack(R4PerformanceView *view, uint32_t ind
     return r4dev_performance_stack(&view->app->devices, index, out);
 }
 
+/* Caller initializes the version/capacity header; failed reads preserve it. */
+static inline int32_t r4_performance_stack_fault(R4PerformanceView *view, uint32_t cpu, R4ProgramStackFaultInfo *out) {
+    if (out == 0) return R4OS_ERROR_INVALID;
+    if (view == 0 || view->app == 0) return R4OS_ERR_NO_FN;
+    return r4dev_stack_fault(&view->app->devices, cpu, out);
+}
+
 static inline int32_t r4_performance_summary(R4PerformanceView *view, R4ProgramPerformanceSummary *out) { const R4XStartR4Dev *table = view != 0 && view->app != 0 ? view->app->devices.table : 0; return table != 0 && table->performance_summary != 0u && out != 0 ? ((R4DevPerformanceSummaryFn)(uintptr_t)table->performance_summary)(out) : R4OS_ERR_NO_FN; }
 static inline int32_t r4_program_instance_storage_summary(R4PerformanceView *view, R4ProgramInstanceStorageSummary *out) {
     if (view == 0 || view->app == 0 || out == 0) return R4OS_ERR_NO_FN;
