@@ -447,6 +447,16 @@ pub const Context = struct {
         return table_fn(selection, out);
     }
 
+    pub fn kernelSmpCheck(self: *const Context, out: *abi.ProgramKernelSmpCheck) i32 {
+        const table_fn = self.devFn("smp_kernel_check") orelse return self.unavailable("dev");
+        return table_fn(out);
+    }
+
+    pub fn smpTlbSnapshot(self: *const Context, out: *abi.ProgramSmpTlbSnapshot) i32 {
+        const table_fn = self.devFn("performance_smp_tlb") orelse return self.unavailable("dev");
+        return table_fn(out);
+    }
+
     pub fn memoryBackingStoreProbe(self: *const Context, path: [*:0]const u8, requested_bytes: u64, flags: u32) ?abi.ProgramMemoryBackingStoreProbe {
         var out: abi.ProgramMemoryBackingStoreProbe = .{};
         const table_fn = self.devFn("memory_backing_store_probe") orelse return null;

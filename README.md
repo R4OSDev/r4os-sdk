@@ -441,3 +441,9 @@ roles/fairness/inheritance, real deadlines or IRQ/FPU work through optional
 R4DEV v16. Reports prove exact own task generations and work releases;
 unavailable hardware and isolated boot injections stay explicit. Missing
 capabilities retain the existing error and leave caller output unchanged.
+
+`r4dev.Context.kernelSmpCheck` explicitly runs owned functional CPU/clock,
+remote-TLB, mapping and heap/mutex checks through optional R4DEV v17.
+`smpTlbSnapshot` only reads current CPU/clock registration and real remote
+invalidation counters. Fixed v1 records are224/184bytes. Missing capabilities
+leave output unchanged; global timeout injection stays isolated boot-only.
