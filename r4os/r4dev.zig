@@ -106,14 +106,19 @@ pub const Context = struct {
         return self.base.kernelSchedulerCheck(selection, out);
     }
 
-    /// Explicit owned synthetic blockqueue work; raw status leaves unavailable
-    /// distinct from a passing check. This never selects a physical disk.
+    /// Existing bounded local USB ring/router cases; no live controller work.
+    pub fn kernelUsbCheck(self: *const Context, out: *abi.ProgramKernelUsbCheck) i32 {
+        return self.base.kernelUsbCheck(out);
+    }
+
     /// Explicit one-request read-only NVMe IRQ proof. Missing capabilities are
     /// unavailable; passive counter progress is not an own completion receipt.
     pub fn kernelNvmeCheck(self: *const Context, out: *abi.ProgramKernelNvmeCheck) i32 {
         return self.base.kernelNvmeCheck(out);
     }
 
+    /// Explicit owned synthetic blockqueue work; raw status leaves unavailable
+    /// distinct from a passing check. This never selects a physical disk.
     pub fn kernelBlockQueueCheck(self: *const Context, out: *abi.ProgramKernelBlockQueueCheck) i32 {
         return self.base.kernelBlockQueueCheck(out);
     }

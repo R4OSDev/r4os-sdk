@@ -461,3 +461,8 @@ they cannot prove this request completed. Old storage requests retain their
 request with its synchronous104-byte callback record. The callback data must
 be copied before return; the resident cookie and buffer survive until actual
 completion. Missing slots leave caller output unchanged.
+
+R4DEV v20 adds optional `kernelUsbCheck(out)` for the existing bounded local
+USB ring-cycle and event-router cases. Its fixed32-byte report contains case
+masks; it needs no USB hardware and performs no live controller/queue work.
+The call is reentrant and retains nothing. Missing slots preserve output.
