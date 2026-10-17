@@ -497,3 +497,10 @@ Since Kernel0.1.305 the untyped DriverApi audio/synth registration slots are
 reserved: always-1, no argument reads or side effects. The SDK retains
 registerSynthEngineEx and the typed AudioBackend helpers. DriverApi36/656,
 slot offsets96/120 and current descriptor/Idle/Stop/cleanup contracts stay fixed.
+
+SerialLink retirement (0.84.34 / SDK0.64.34)
+-----------------------------------------
+The current R4NET and program Contexts no longer expose SerialLink methods.
+Frozen ABI types and slots remain at Contract for binary compatibility; the
+kernel stubs return err_no_fn without UART or buffer access. COM1 debugging
+remains independent. General serial/COM access is a separate platform facility.
