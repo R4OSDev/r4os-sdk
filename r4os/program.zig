@@ -433,6 +433,13 @@ pub const Context = struct {
         return out;
     }
 
+    /// Explicit bounded work; absence stays err_no_fn. Global heap usage in
+    /// the report is observational; use its exact own cleanup receipts.
+    pub fn kernelHeapCheck(self: *const Context, out: *abi.ProgramKernelHeapCheck) i32 {
+        const table_fn = self.devFn("memory_kernel_heap_check") orelse return self.unavailable("dev");
+        return table_fn(out);
+    }
+
     pub fn memoryBackingStoreProbe(self: *const Context, path: [*:0]const u8, requested_bytes: u64, flags: u32) ?abi.ProgramMemoryBackingStoreProbe {
         var out: abi.ProgramMemoryBackingStoreProbe = .{};
         const table_fn = self.devFn("memory_backing_store_probe") orelse return null;

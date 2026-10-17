@@ -98,6 +98,10 @@ pub const Context = struct {
         return self.base.memoryReclaimProbe(requested_frames);
     }
 
+    pub fn kernelHeapCheck(self: *const Context, out: *abi.ProgramKernelHeapCheck) i32 {
+        return self.base.kernelHeapCheck(out);
+    }
+
     pub fn memoryBackingStoreProbe(self: *const Context, path: [*:0]const u8, requested_bytes: u64, flags: u32) ?abi.ProgramMemoryBackingStoreProbe {
         return self.base.memoryBackingStoreProbe(path, requested_bytes, flags);
     }

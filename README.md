@@ -82,6 +82,13 @@ Zig and C facades expose its source, capacity, configuration-access, ECAM
 mapping, lookup, materialization, and enumeration timing counters while
 remaining optional for older kernels.
 
+`r4dev.Context.kernelHeapCheck` explicitly runs the bounded kernel-heap
+diagnostic through optional R4DEV v15. The fixed result separates its own
+allocations and VM reservations from concurrent global observations.
+Missing groups/functions preserve the caller output and return the existing
+availability errors. A normal app has no reason to start this diagnostic;
+Spectra owns `CHECK MEMORY /KERNELHEAP`, JSON presentation and export.
+
 DriverApi v20 exposes bounded audio-refill work with an absolute tick
 deadline, a stable device key, and a maximum four-tick callback budget. It is
 separate from the existing normal Driver Work submission facade.
