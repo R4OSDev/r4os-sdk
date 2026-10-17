@@ -447,6 +447,13 @@ pub const Context = struct {
         return table_fn(selection, out);
     }
 
+    /// Explicit owned synthetic blockqueue work; raw status leaves unavailable
+    /// distinct from a passing check. This never selects a physical disk.
+    pub fn kernelBlockQueueCheck(self: *const Context, out: *abi.ProgramKernelBlockQueueCheck) i32 {
+        const table_fn = self.devFn("storage_block_queue_check") orelse return self.unavailable("dev");
+        return table_fn(out);
+    }
+
     pub fn kernelSmpCheck(self: *const Context, out: *abi.ProgramKernelSmpCheck) i32 {
         const table_fn = self.devFn("smp_kernel_check") orelse return self.unavailable("dev");
         return table_fn(out);

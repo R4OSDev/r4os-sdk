@@ -106,6 +106,12 @@ pub const Context = struct {
         return self.base.kernelSchedulerCheck(selection, out);
     }
 
+    /// Explicit owned synthetic blockqueue work; raw status leaves unavailable
+    /// distinct from a passing check. This never selects a physical disk.
+    pub fn kernelBlockQueueCheck(self: *const Context, out: *abi.ProgramKernelBlockQueueCheck) i32 {
+        return self.base.kernelBlockQueueCheck(out);
+    }
+
     pub fn kernelSmpCheck(self: *const Context, out: *abi.ProgramKernelSmpCheck) i32 {
         return self.base.kernelSmpCheck(out);
     }

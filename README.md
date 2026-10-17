@@ -447,3 +447,7 @@ remote-TLB, mapping and heap/mutex checks through optional R4DEV v17.
 `smpTlbSnapshot` only reads current CPU/clock registration and real remote
 invalidation counters. Fixed v1 records are224/184bytes. Missing capabilities
 leave output unchanged; global timeout injection stays isolated boot-only.
+
+R4DEV v18 adds optional `kernelBlockQueueCheck(out)`: explicit owned synthetic
+blockqueue cases and exact task/device/completion receipts. It returns raw
+status; missing slots preserve caller output. No physical disk is selected.
