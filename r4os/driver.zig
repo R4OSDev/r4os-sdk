@@ -192,10 +192,6 @@ pub const Context = struct {
         return self.api.get_option(driver_name, key);
     }
 
-    pub fn registerSynthEngine(self: *const Context, name: [*:0]const u8, engine: *const anyopaque) i32 {
-        return self.api.register_synth_engine(name, engine);
-    }
-
     pub fn registerSynthEngineEx(self: *const Context, name: [*:0]const u8, engine: *const abi.SynthEngine) i32 {
         return self.api.register_synth_engine_v2(name, engine);
     }

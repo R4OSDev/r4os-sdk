@@ -470,3 +470,8 @@ R4DEV v20 adds optional `kernelUsbCheck(out)` for the existing bounded local
 USB ring-cycle and event-router cases. Its fixed32-byte report contains case
 masks; it needs no USB hardware and performs no live controller/queue work.
 The call is reentrant and retains nothing. Missing slots preserve output.
+
+Since Kernel0.1.305 the untyped DriverApi audio/synth registration slots are
+reserved: always-1, no argument reads or side effects. The SDK retains
+registerSynthEngineEx and the typed AudioBackend helpers. DriverApi36/656,
+slot offsets96/120 and current descriptor/Idle/Stop/cleanup contracts stay fixed.

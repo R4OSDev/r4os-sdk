@@ -979,3 +979,9 @@ jeweiligen Register-/SIMD-/Alignmentvertrag ohne neue Runtime-API-Imports.
 Probes aendern keine Reserve-/Commitbudgets und umgehen keine Ownerregel.
 Kernel-VM und Faultpfad bleiben zustaendig; vor no-sleep-/Runtime-Ownern muss
 der Aufrufer weiterhin ausreichend residenten Spielraum vorbereiten.
+
+Seit Kernel0.1.305 sind die alten untypisierten Audio-/Synth-Anmeldeslots
+reserviert: immer-1, ohne Argumentzugriff oder Seiteneffekt. Der SDK-Helper
+registerSynthEngine entfaellt; registerSynthEngineEx und die typisierten
+AudioBackend-v2/v3/v4-Helper bleiben. DriverApi36/656 samt Slotpositionen
+96/120 und alle bestehenden Idle-/Stop-/Besitz-/Abbauvertraege bleiben stabil.
