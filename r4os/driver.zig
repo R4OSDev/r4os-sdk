@@ -216,6 +216,8 @@ pub const Context = struct {
         return self.api.unregister_audio_backend(name);
     }
 
+    /// Kernel 0.1.304 requires the complete v2 NetBackend header. Optional
+    /// packet metadata/callbacks may remain absent; canonical flat I/O stays valid.
     pub fn registerNetBackend(self: *const Context, name: [*:0]const u8, backend: *const abi.NetBackend) i32 {
         return self.api.register_net_backend(name, backend);
     }

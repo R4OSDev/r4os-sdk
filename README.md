@@ -130,6 +130,10 @@ its immutable offered/accepted/rejected selection after registration. Packet
 metadata never removes the mandatory canonical flat bytes; return value 1
 means those bytes were accepted through software fallback. The current BSP
 selection is one queue and validated RX TCP/UDP checksum metadata only.
+Since Kernel0.1.304 registration requires version2 and the complete120-byte
+NetBackend. V1/short descriptors are rejected before registration or callbacks.
+Flat callbacks, absent transmit_packet and existing poll paths remain valid;
+optional features are not required. The v2 layout and DriverApi slots stay fixed.
 
 JavaScript programs publish a non-zero bytecode generation after validation.
 Normal, generator, and async calls check that generation in constant time;

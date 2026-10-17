@@ -175,6 +175,11 @@ die kanonischen Flat-Bytes sind stets vorhanden und bis zur Rueckkehr nur
 geliehen. Rueckgabe 0 bedeutet normale Annahme, 1 Annahme mit Software-
 Fallback und -4 unveraenderten Treiberbesitz wegen Queue-Backpressure. Die
 aktuelle Ein-Queue-Auswahl akzeptiert nur validierte RX-TCP-/UDP-Pruefsummen.
+Seit Kernel0.1.304 wird ausschliesslich der vollstaendige120-Byte-NetBackend
+mit version=2 angenommen. Alte v1-/Kurzdeskriptoren werden vor Registrierung
+und Callbacks abgelehnt. Einfache Flat-Callbacks, fehlendes transmit_packet,
+einzelne Queues und benoetigte Pollpfade bleiben gueltige v2-Ausfuehrungen;
+oeffentliche Tabellenfelder und Slots sind unveraendert.
 
 `r4os.subsystem_host` ist die einkompilierte Userland-Schicht fuer das
 Fenster-, Video- und Eingabehosting eines solchen R4X. Sie ist weder Dienst
