@@ -108,6 +108,12 @@ pub const Context = struct {
 
     /// Explicit owned synthetic blockqueue work; raw status leaves unavailable
     /// distinct from a passing check. This never selects a physical disk.
+    /// Explicit one-request read-only NVMe IRQ proof. Missing capabilities are
+    /// unavailable; passive counter progress is not an own completion receipt.
+    pub fn kernelNvmeCheck(self: *const Context, out: *abi.ProgramKernelNvmeCheck) i32 {
+        return self.base.kernelNvmeCheck(out);
+    }
+
     pub fn kernelBlockQueueCheck(self: *const Context, out: *abi.ProgramKernelBlockQueueCheck) i32 {
         return self.base.kernelBlockQueueCheck(out);
     }

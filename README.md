@@ -451,3 +451,13 @@ leave output unchanged; global timeout injection stays isolated boot-only.
 R4DEV v18 adds optional `kernelBlockQueueCheck(out)`: explicit owned synthetic
 blockqueue cases and exact task/device/completion receipts. It returns raw
 status; missing slots preserve caller output. No physical disk is selected.
+
+R4DEV v19 adds optional `kernelNvmeCheck(out)`: one explicit read-only NVMe
+request with matching native ticket, driver CQE/IRQ-worker and DMA-release
+receipts. Its fixed296-byte result distinguishes unavailable hardware or
+capabilities, failure and retained resources. Passive counters are descriptive;
+they cannot prove this request completed. Old storage requests retain their
+56-byte layout; only capable backends receive the optional80-byte observed
+request with its synchronous104-byte callback record. The callback data must
+be copied before return; the resident cookie and buffer survive until actual
+completion. Missing slots leave caller output unchanged.
