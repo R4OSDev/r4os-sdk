@@ -537,6 +537,7 @@ pub const Sdk = struct {
         for (explicit_include_roots, 2..) |include_root, index| c_library_include_roots[index] = include_root;
         const elf = switch (loaded.manifest.language.?) {
             .zig => addRawModule(self.b, .{
+                .builder = self.builder,
                 .name = loaded.manifest.name,
                 .root_source_file = userPath(self.b, loaded.source_paths[0]),
                 .r4os_module = self.profile.r4os_module,
@@ -1171,6 +1172,7 @@ fn hasMetadataPrefix(entries: []const []const u8, prefix: []const u8) bool {
 
 fn addR4XStartWithOptions(b: *std.Build, opts: R4XOptions) BuildResult {
     const elf = addRawModule(b, .{
+        .builder = opts.builder,
         .name = opts.name,
         .root_source_file = opts.root_source_file,
         .r4os_module = opts.r4os_module,
@@ -1204,6 +1206,7 @@ fn addR4XStartWithOptions(b: *std.Build, opts: R4XOptions) BuildResult {
 fn addR4AppWithOptions(b: *std.Build, opts: R4AppBuildOptions) BuildResult {
     const app_class = appClassForProfile(opts.profile);
     const elf = addRawModule(b, .{
+        .builder = opts.builder,
         .name = opts.name,
         .root_source_file = opts.startup_source_file,
         .app_source_file = opts.root_source_file,
@@ -1316,6 +1319,7 @@ pub fn addR4D(b: *std.Build, opts: R4DOptions) BuildResult {
 
 fn addR4DWithOptions(b: *std.Build, opts: R4DOptions) BuildResult {
     const elf = addRawModule(b, .{
+        .builder = opts.builder,
         .zig_modules = opts.zig_modules,
         .native_archives = opts.native_archives,
         .c_source_files = opts.c_source_files,
@@ -1357,7 +1361,10 @@ fn addR4DWithOptions(b: *std.Build, opts: R4DOptions) BuildResult {
             if (!std.mem.eql(u8, entry[12..], b.fmt("R4D_{s}", .{opts.name}))) @panic("conflicting R4D module name");
             identity = true;
         }
-        if (!identity) { metadata[metadata_count] = entry; metadata_count += 1; }
+        if (!identity) {
+            metadata[metadata_count] = entry;
+            metadata_count += 1;
+        }
     }
 
     return addR4MElf(b, .{
@@ -1380,6 +1387,7 @@ pub fn addR4P(b: *std.Build, opts: R4POptions) BuildResult {
 
 fn addR4PWithOptions(b: *std.Build, opts: R4POptions) BuildResult {
     const elf = addRawModule(b, .{
+        .builder = opts.builder,
         .name = opts.name,
         .root_source_file = opts.root_source_file,
         .r4os_module = opts.r4os_module,
@@ -1550,6 +1558,7 @@ pub fn addR4MElf(b: *std.Build, opts: R4MElfOptions) BuildResult {
 }
 
 const RawOptions = struct {
+    builder: *std.Build.Step.Compile,
     name: []const u8,
     root_source_file: std.Build.LazyPath,
     r4os_module: std.Build.LazyPath,
@@ -1601,8 +1610,8 @@ fn addRawModule(b: *std.Build, opts: RawOptions) std.Build.LazyPath {
         }),
     });
 
-    const exe = b.addExecutable(.{
-        .name = b.fmt("{s}.elf", .{opts.name}),
+    const exe = b.addObject(.{
+        .name = b.fmt("{s}-zig-ir", .{opts.name}),
         .root_module = b.createModule(.{
             .root_source_file = opts.root_source_file,
             .target = target,
@@ -1612,20 +1621,45 @@ fn addRawModule(b: *std.Build, opts: RawOptions) std.Build.LazyPath {
             .pic = true,
             .red_zone = false,
             .sanitize_c = .off,
-            .stack_check = false,
+            .stack_check = true,
             .stack_protector = false,
         }),
     });
-    exe.entry = .{ .symbol_name = opts.entry_symbol };
-    exe.link_emit_relocs = true;
-    for (opts.native_archives) |archive| exe.root_module.addObjectFile(archive);
-    for (opts.c_include_roots) |include_root| exe.root_module.addIncludePath(include_root);
-    for (opts.c_defines) |entry| exe.root_module.addCMacro(entry.name, entry.value);
+    const linked = b.addExecutable(.{
+        .name = b.fmt("{s}.elf", .{opts.name}),
+        .root_module = b.createModule(.{
+            .target = target,
+            .optimize = opts.optimize,
+            .single_threaded = false,
+            .strip = false,
+            .pic = true,
+            .red_zone = false,
+            .sanitize_c = .off,
+            .stack_check = true,
+            .stack_protector = false,
+        }),
+    });
+    linked.entry = .{ .symbol_name = opts.entry_symbol };
+    linked.link_emit_relocs = true;
+    linked.bundle_compiler_rt = true;
+    for (opts.native_archives) |archive| linked.root_module.addObjectFile(archive);
+    for (opts.c_include_roots) |include_root| {
+        exe.root_module.addIncludePath(include_root);
+        linked.root_module.addIncludePath(include_root);
+    }
+    for (opts.c_defines) |entry| {
+        exe.root_module.addCMacro(entry.name, entry.value);
+        linked.root_module.addCMacro(entry.name, entry.value);
+    }
     const base_c_flags: []const []const u8 = &.{
         "-std=c11",
         "-ffreestanding",
         "-fno-builtin",
         "-fno-stack-protector",
+        // The freestanding driver ignores the ordinary stack-clash flag.
+        // Pass it to Clang directly so C/C++ also touch every stack page.
+        "-Xclang",
+        "-fstack-clash-protection",
         "-fno-unwind-tables",
         "-fno-asynchronous-unwind-tables",
         "-mno-red-zone",
@@ -1638,7 +1672,7 @@ fn addRawModule(b: *std.Build, opts: RawOptions) std.Build.LazyPath {
     for (base_c_flags, 0..) |flag, index| c_flags[index] = flag;
     for (opts.c_flags, base_c_flags.len..) |flag, index| c_flags[index] = flag;
     for (opts.c_source_files) |source_file| {
-        exe.root_module.addCSourceFile(.{
+        linked.root_module.addCSourceFile(.{
             .file = source_file,
             .flags = c_flags,
         });
@@ -1651,7 +1685,7 @@ fn addRawModule(b: *std.Build, opts: RawOptions) std.Build.LazyPath {
         .strip = false,
         .red_zone = false,
         .sanitize_c = .off,
-        .stack_check = false,
+        .stack_check = true,
         .stack_protector = false,
     });
     r4os_module.addImport("r4os_contract", opts.contract_module);
@@ -1666,7 +1700,7 @@ fn addRawModule(b: *std.Build, opts: RawOptions) std.Build.LazyPath {
             .strip = false,
             .red_zone = false,
             .sanitize_c = .off,
-            .stack_check = false,
+            .stack_check = true,
             .stack_protector = false,
         });
         dependencies[index].addImport("r4os", r4os_module);
@@ -1686,7 +1720,7 @@ fn addRawModule(b: *std.Build, opts: RawOptions) std.Build.LazyPath {
             .strip = false,
             .red_zone = false,
             .sanitize_c = .off,
-            .stack_check = false,
+            .stack_check = true,
             .stack_protector = false,
         });
         app_module.addImport("r4os", r4os_module);
@@ -1705,12 +1739,32 @@ fn addRawModule(b: *std.Build, opts: RawOptions) std.Build.LazyPath {
             .strip = false,
             .red_zone = false,
             .sanitize_c = .off,
-            .stack_check = false,
+            .stack_check = true,
             .stack_protector = false,
         }));
     }
-    exe.setLinkerScript(opts.linker_script);
-    return exe.getEmittedBin();
+    // Keep the optimized Zig IR and its ABI/target attributes. Change only
+    // the probe strategy before machine code emission: LLVM inline probes
+    // cover large realignment gaps as well as ordinary/dynamic frames.
+    const probes = b.addRunArtifact(opts.builder);
+    probes.addArg("--stack-probes");
+    probes.addFileArg(exe.getEmittedLlvmIr());
+    const inline_ir = probes.addOutputFileArg(b.fmt("{s}-probed.ll", .{opts.name}));
+    const codegen = b.addSystemCommand(&.{
+        b.graph.zig_exe, "cc",            "-target", "x86_64-freestanding-none",
+        switch (opts.optimize) {
+            .Debug => "-O0",
+            .ReleaseSmall => "-Oz",
+            .ReleaseFast, .ReleaseSafe => "-O3",
+        },
+        "-fPIC",         "-mno-red-zone", "-Xclang", "-disable-llvm-passes",
+        "-c",
+    });
+    codegen.addFileArg(inline_ir);
+    codegen.addArg("-o");
+    linked.root_module.addObjectFile(codegen.addOutputFileArg(b.fmt("{s}-probed.o", .{opts.name})));
+    linked.setLinkerScript(opts.linker_script);
+    return linked.getEmittedBin();
 }
 
 fn addCModule(b: *std.Build, opts: COptions) std.Build.LazyPath {
@@ -1732,7 +1786,7 @@ fn addCModule(b: *std.Build, opts: COptions) std.Build.LazyPath {
         .pic = true,
         .red_zone = false,
         .sanitize_c = .off,
-        .stack_check = false,
+        .stack_check = true,
         .stack_protector = false,
         .link_libc = false,
     });
@@ -1741,6 +1795,10 @@ fn addCModule(b: *std.Build, opts: COptions) std.Build.LazyPath {
         "-ffreestanding",
         "-fno-builtin",
         "-fno-stack-protector",
+        // The freestanding driver ignores the ordinary stack-clash flag.
+        // Pass it to Clang directly so C/C++ also touch every stack page.
+        "-Xclang",
+        "-fstack-clash-protection",
         "-fno-unwind-tables",
         "-fno-asynchronous-unwind-tables",
         "-mno-red-zone",

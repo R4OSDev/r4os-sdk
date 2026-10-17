@@ -409,3 +409,12 @@ readbacks and27actual index runs. Evidence: Temp/Ossi08228/FileIO28C and
 Update28A-Installed.json. Host models, SMP4 and hardware are separate proofs.
 
 Abgeschlossener Beleg0.82.28: ExFiles/Reports/OssiGPU/20261003-profile08228/Final08228/Result08228.json; urspruengliche Fehler und neue CPU-/Metadaten-/GPU-Belege getrennt erhalten.
+
+Freestanding Zig modules emit optimized LLVM IR with stack checks enabled.
+The existing builder changes only the probe strategy to LLVM inline probes
+before machine code generation; this covers large realignment gaps as well
+as ordinary and dynamic frames. Other IR/ABI/target attributes stay intact,
+and the codegen stage does not rerun LLVM optimization passes. Native C/C++
+uses `-Xclang -fstack-clash-protection` with the freestanding target.
+Probes allocate or wait nowhere. The kernel retains stack VM/fault ownership;
+callers must still prepare resident headroom before a no-sleep owner region.

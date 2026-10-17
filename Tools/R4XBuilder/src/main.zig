@@ -178,6 +178,11 @@ pub fn main(init: std.process.Init) !void {
     const io = init.io;
     const cwd = std.Io.Dir.cwd();
 
+    if (args.len == 4 and std.mem.eql(u8, args[1], "--stack-probes")) {
+        try @import("stack_probes.zig").run(io, args[2], args[3]);
+        return;
+    }
+
     var output_path: ?[]const u8 = null;
     var code_path: ?[]const u8 = null;
     var rodata_path: ?[]const u8 = null;
