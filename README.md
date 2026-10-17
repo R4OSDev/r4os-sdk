@@ -161,6 +161,16 @@ Detailed German migration notes are preserved in
 Original R4OS material is licensed under Apache License 2.0. See `LICENSE`,
 `NOTICE`, and `THIRD_PARTY_NOTICES.md`.
 
+## File transfer counts
+
+Kernel 0.1.291 bounds each R4SYS read/write/append/stream-write request,
+including its read-buffer capacity, to `2147483647` bytes because byte results
+are signed 32-bit values. Oversized requests return `io_error_too_large`
+(`-10`) before queue admission or file mutation; an async request ID remains
+zero. Existing 64-bit file sizes, modern range offsets, finish sizes and
+lock ranges retain their previous types and limits. Split larger transfers
+into suitable chunks. See `Docs/API/FileTransferLimits.txt` in the workspace.
+
 ## File copies
 
 `Files.copy` / `file_stream.copy` and C `r4_files_copy` submit one optional
