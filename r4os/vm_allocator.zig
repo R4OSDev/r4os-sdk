@@ -1396,7 +1396,7 @@ fn vmFn(api: *const abi.R4XStartR4Sys, comptime field: []const u8) @field(abi.R4
 }
 
 fn acquireAllocatorLock(heap_state: *State, api: ?*const abi.R4XStartR4Sys) void {
-    if (api) |table| if (@atomicLoad(usize, &heap_state.wait_api, .acquire) == 0) {
+    if (api) |table| if (@atomicLoad(usize, &heap_state.wait_api, .acquire) == 0 and supportsVmApi(table)) {
         _ = @cmpxchgStrong(usize, &heap_state.wait_api, 0, @intFromPtr(table), .release, .monotonic);
     };
     var spins: usize = 0;
@@ -1997,6 +1997,13 @@ const HandoffWorker = struct {
 };
 
 test "VM allocator keeps free capacity live across exact VM handoffs and notification enrollment" {
+    resetTestVm();
+    var unavailable: abi.R4XStartR4Sys = .{};
+    try std.testing.expectError(error.OutOfMemory, allocator(&unavailable).alloc(u8, 128));
+    try std.testing.expectEqual(@as(usize, 0), @atomicLoad(usize, &state.wait_api, .acquire));
+    const recovered = try allocator(&test_vm_table).alloc(u8, 128);
+    try std.testing.expectEqual(@intFromPtr(&test_vm_table), @atomicLoad(usize, &state.wait_api, .acquire));
+    allocator(&test_vm_table).free(recovered);
     resetTestVm();
     test_wait.install(&test_vm_table);
     try test_wait.checkRevisionContract(&test_vm_table);
