@@ -19,7 +19,8 @@ test "driver DMA range facade keeps the v33 prefix and negotiates each optional 
     try t.expectEqual(@as(usize, 632), @offsetOf(a.DriverApi, "dma_sync_range_for_device"));
     try t.expectEqual(@as(usize, 640), @offsetOf(a.DriverApi, "dma_sync_range_for_cpu"));
     try t.expectEqual(@as(usize, 648), @offsetOf(a.DriverApi, "driver_work_submit_owned"));
-    try t.expectEqual(@as(usize, 656), @sizeOf(a.DriverApi));
+    try t.expectEqual(@as(usize, 656), @offsetOf(a.DriverApi, "serial_query"));
+    try t.expectEqual(@as(usize, 664), @sizeOf(a.DriverApi));
     var api: a.DriverApi = undefined;
     api.magic = a.driver_magic;
     api.reserved = 0;
@@ -74,21 +75,28 @@ fn audioIdleFacade() !void {
     try std.testing.expectEqual(@as(i32, -744), ctx.registerAudioOutputIdle("probe", &descriptor));
 }
 
-fn ownedHandler(raw: usize) callconv(.c) i32 { return @intCast(raw); }
+fn ownedHandler(raw: usize) callconv(.c) i32 {
+    return @intCast(raw);
+}
 fn ownedSubmit(handler: r4os.abi.DriverWorkHandler, raw: usize, out: *u32) callconv(.c) i32 {
     std.debug.assert(handler == &ownedHandler and raw == 79);
-    out.* = 313; return 0;
+    out.* = 313;
+    return 0;
 }
 fn ownedWorkFacade() !void {
-    const a = r4os.abi; const t = std.testing;
+    const a = r4os.abi;
+    const t = std.testing;
     var api: a.DriverApi = undefined;
-    api.magic = a.driver_magic; api.version = 35; api.size = @sizeOf(a.DriverApi);
+    api.magic = a.driver_magic;
+    api.version = 35;
+    api.size = @sizeOf(a.DriverApi);
     api.driver_work_submit_owned = &ownedSubmit;
     const ctx = r4os.r4dev.DriverContext.init(&api);
     var handle: u32 = 99;
     try t.expectEqual(a.err_no_fn, ctx.workSubmitOwned(ownedHandler, 79, &handle));
     try t.expectEqual(@as(u32, 0), handle);
-    api.version = a.driver_api_owned_work_version; api.size = 655;
+    api.version = a.driver_api_owned_work_version;
+    api.size = 655;
     try t.expectEqual(a.err_no_fn, ctx.workSubmitOwned(ownedHandler, 79, &handle));
     api.size = 656;
     try t.expectEqual(@as(i32, 0), ctx.workSubmitOwned(ownedHandler, 79, &handle));
@@ -136,7 +144,7 @@ fn bootDisplayFacade() !void {
     var table = r4os.driver_display.Context{ .table = .{ .boot_hold = @intFromPtr(&bootHoldProbe), .boot_finish = @intFromPtr(&bootFinishProbe), .prepare_held = @intFromPtr(&prepareHeldProbe) } };
     var state: a.GfxNativeState = .{ .generation = 79 };
     const request: a.GfxBootHoldRequest = .{ .generation = 0x100000000079, .reference = .{ .id = 7, .generation = 0x200000079 } };
-    for ([_]u32{40,47}) |size| {
+    for ([_]u32{ 40, 47 }) |size| {
         table.table.size = size;
         try t.expectEqual(a.err_no_fn, table.bootHold(&request, &state));
         try t.expectEqual(@as(u64, 79), state.generation);
@@ -165,8 +173,11 @@ fn bootDisplayFacade() !void {
     table.table.prepare_held = 0;
     try t.expectEqual(a.err_no_fn, table.prepareHeld(&candidate, state.generation, &state));
     var api: a.DriverApi = undefined;
-    api.magic = a.driver_magic; api.reserved = 0;
-    api.version = 28; api.size = 592; api.gfx_display_query = bootLegacyQuery;
+    api.magic = a.driver_magic;
+    api.reserved = 0;
+    api.version = 28;
+    api.size = 592;
+    api.gfx_display_query = bootLegacyQuery;
     const context = r4os.r4dev.DriverContext.init(&api);
     const old = context.graphicsDisplay() orelse return error.LegacyDisplayRejected;
     try t.expectEqual(@as(u32, 40), old.table.size);
@@ -198,7 +209,7 @@ fn bootDisplayFacade() !void {
     try t.expectEqual(@as(usize, 144), @offsetOf(a.GfxDriverDisplayApi, "resume_headless"));
     table.table.resume_headless = @intFromPtr(&terminalReleaseProbe);
     const saved_resume = state;
-    for ([_]u32{40, 136, 144, 145, 151}) |capacity| {
+    for ([_]u32{ 40, 136, 144, 145, 151 }) |capacity| {
         table.table.size = capacity;
         try t.expect(!table.supportsHeadlessResume());
         try t.expectEqual(a.err_no_fn, table.resumeHeadless(&backend, 0x100000000082, &state));
@@ -1162,26 +1173,36 @@ test "sequential stress reuses every resource slot" {
     try std.testing.expectEqual(@as(u32, 0), process_slots + thread_slots + vm_slots + io_slots);
 }
 
-fn platformRootProbe() callconv(.c) u64 { return 0x100000080035; }
+fn platformRootProbe() callconv(.c) u64 {
+    return 0x100000080035;
+}
 fn platformViewProbe(physical: u64, bytes: u64, out: *u64) callconv(.c) i32 {
     std.debug.assert(physical == 0x100000080035 and bytes == 65536);
-    out.* = 0xffff800000080035; return 0;
+    out.* = 0xffff800000080035;
+    return 0;
 }
 fn platformInputProbe(kind: u32, value: u32) callconv(.c) i32 {
-    std.debug.assert(kind == 3 and value == 2); return 0;
+    std.debug.assert(kind == 3 and value == 2);
+    return 0;
 }
 fn platformQueryProbe(out: *r4os.abi.DriverPlatformApi) callconv(.c) i32 {
     std.debug.assert(out.version == 1 and out.size == 32);
-    out.* = .{ .rsdp = @intFromPtr(&platformRootProbe), .physical_view = @intFromPtr(&platformViewProbe), .input_submit = @intFromPtr(&platformInputProbe) }; return 0;
+    out.* = .{ .rsdp = @intFromPtr(&platformRootProbe), .physical_view = @intFromPtr(&platformViewProbe), .input_submit = @intFromPtr(&platformInputProbe) };
+    return 0;
 }
 fn platformSnapshotProbe(out: *r4os.abi.PlatformInputSnapshot) callconv(.c) i32 {
     std.debug.assert(out.version == 1 and out.size == 64);
-    out.* = .{ .sequence = 0x100000080035, .brightness_up = 0x200000080035, .lid_state = 2, .capabilities = 3, .sources = 1 }; return 1;
+    out.* = .{ .sequence = 0x100000080035, .brightness_up = 0x200000080035, .lid_state = 2, .capabilities = 3, .sources = 1 };
+    return 1;
 }
 fn platformFacade() !void {
-    const a = r4os.abi; const t = std.testing;
+    const a = r4os.abi;
+    const t = std.testing;
     var resource_ctx: r4os.r4dev.DriverResourceContext = .{ .table = .{ .platform_query = @intFromPtr(&platformQueryProbe) } };
-    for ([_]u32{32, 48, 55}) |size| { resource_ctx.table.size = size; try t.expect(resource_ctx.platform() == null); }
+    for ([_]u32{ 32, 48, 55 }) |size| {
+        resource_ctx.table.size = size;
+        try t.expect(resource_ctx.platform() == null);
+    }
     resource_ctx.table.size = 56;
     const platform = resource_ctx.platform() orelse return error.MissingPlatform;
     try t.expectEqual(@as(u64, 0x100000080035), platform.rsdp());

@@ -78,6 +78,14 @@ pub fn entriesAsm(comptime init_target: []const u8, comptime shutdown_target: []
 }
 
 pub const Context = struct {
+    pub fn serial(self: *const Context) ?@import("driver_serial.zig").Context {
+        if (!self.supportsDriverApi(abi.driver_api_serial_version, @offsetOf(abi.DriverApi, "serial_query") + 8)) return null;
+        const query = self.api.serial_query orelse return null;
+        var table: abi.DriverSerialApi = .{};
+        if (query(&table) != abi.serial_ok or table.version != 1 or table.size < @sizeOf(abi.DriverSerialApi)) return null;
+        return .{ .table = table };
+    }
+
     pub fn heap(self: *const Context) ?@import("driver_heap.zig").Context {
         if (!self.supportsDriverApi(30, @offsetOf(abi.DriverApi, "heap_query") + @sizeOf(usize))) return null;
         const query = self.api.heap_query orelse return null;

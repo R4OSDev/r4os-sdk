@@ -15,6 +15,7 @@ pub const query_contract = "Repositories/Contract/ABI/R4LQuery.txt";
 pub const DriverApi = abi.DriverApi;
 pub const ProtocolApi = abi.ProtocolApi;
 pub const DriverContext = driver.Context;
+pub const DriverSerialContext = @import("driver_serial.zig").Context;
 pub const DriverResourceContext = @import("driver_resources.zig").Context;
 pub const DriverPlatformContext = @import("driver_resources.zig").Platform;
 pub const DriverHeapContext = @import("driver_heap.zig").Context;
@@ -43,6 +44,11 @@ pub fn protocolEntriesAsm(
 }
 
 pub const Context = struct {
+    pub fn serial(self: *const Context) ?@import("serial.zig").Context {
+        const bundle = self.base.bundle orelse return null;
+        return @import("serial.zig").Context.init(bundle.dev orelse return null);
+    }
+
     base: program.Context,
 
     pub fn displayState(self: *const Context) ?abi.DisplayStateInfo {

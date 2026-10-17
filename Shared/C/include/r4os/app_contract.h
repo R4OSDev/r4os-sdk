@@ -7,6 +7,7 @@
 #include "r4net.h"
 #include "r4audio.h"
 #include "r4dev.h"
+#include "serial.h"
 #include "path_timeout.h"
 
 enum {
@@ -40,6 +41,8 @@ typedef struct R4App {
     R4AppProfile profile;
     uint8_t reserved[3];
 } R4App;
+
+static inline int32_t r4app_serial(const R4App *app,R4Serial *out){return r4serial_init(app?&app->devices:0,out);}
 
 typedef struct R4OutcomeU64 {
     R4Status status;

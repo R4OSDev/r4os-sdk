@@ -498,9 +498,27 @@ reserved: always-1, no argument reads or side effects. The SDK retains
 registerSynthEngineEx and the typed AudioBackend helpers. DriverApi36/656,
 slot offsets96/120 and current descriptor/Idle/Stop/cleanup contracts stay fixed.
 
-SerialLink retirement (0.84.34 / SDK0.64.34)
+SerialLink retirement (0.84.34 / SDK0.64.35)
 -----------------------------------------
 The current R4NET and program Contexts no longer expose SerialLink methods.
 Frozen ABI types and slots remain at Contract for binary compatibility; the
 kernel stubs return err_no_fn without UART or buffer access. COM1 debugging
 remains independent. General serial/COM access is a separate platform facility.
+# Serial COM API (0.64.35)
+
+`app.serial()` returns the optional typed COM context when the running R4DEV
+table supports the complete serial tail (ABI 21). Enumerate with `count` and
+`portAt`, then open the exact `port_id` and `generation`, or use `openNumber`.
+Port count is dynamic; enumeration indices are not stable COM identities.
+`read`, `write`, `drain`, `status`, `configure`, `cancel` and `close` use the
+exclusive handle of the exact process instance. C equivalents are in
+`r4os/serial.h`; driver backend wrappers are in `r4os/driver_serial.h`.
+
+Use finite system tick budgets. Zero means poll. A read returns available
+bytes; a write counts bytes accepted by the provider, and `drain` separately
+waits for the physical sender. Always inspect both the return code and
+`info.completed`: partial data remains meaningful after timeout or cancellation.
+A failed close keeps the same handle and ownership for a later close attempt.
+COM1 can remain busy while kernel debugging owns it. Backend registration is
+restricted to lifecycle-owned driver initialization or owned Work; cached
+notifications and shutdown operations retain their existing owner context.

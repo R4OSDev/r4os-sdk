@@ -1,3 +1,5 @@
+pub const serial = @import("r4os/serial.zig");
+pub const driver_serial = @import("r4os/driver_serial.zig");
 pub const abi = @import("r4os_contract").abi;
 pub const program = @import("r4os/program.zig");
 pub const runtime_context = @import("r4os/runtime_context.zig");
