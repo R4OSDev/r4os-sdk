@@ -435,3 +435,9 @@ and the codegen stage does not rerun LLVM optimization passes. Native C/C++
 uses `-Xclang -fstack-clash-protection` with the freestanding target.
 Probes allocate or wait nowhere. The kernel retains stack VM/fault ownership;
 callers must still prepare resident headroom before a no-sleep owner region.
+
+`r4dev.Context.kernelSchedulerCheck` explicitly selects native synchronization,
+roles/fairness/inheritance, real deadlines or IRQ/FPU work through optional
+R4DEV v16. Reports prove exact own task generations and work releases;
+unavailable hardware and isolated boot injections stay explicit. Missing
+capabilities retain the existing error and leave caller output unchanged.

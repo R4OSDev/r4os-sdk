@@ -102,6 +102,10 @@ pub const Context = struct {
         return self.base.kernelHeapCheck(out);
     }
 
+    pub fn kernelSchedulerCheck(self: *const Context, selection: u32, out: *abi.ProgramKernelSchedulerCheck) i32 {
+        return self.base.kernelSchedulerCheck(selection, out);
+    }
+
     pub fn memoryBackingStoreProbe(self: *const Context, path: [*:0]const u8, requested_bytes: u64, flags: u32) ?abi.ProgramMemoryBackingStoreProbe {
         return self.base.memoryBackingStoreProbe(path, requested_bytes, flags);
     }
