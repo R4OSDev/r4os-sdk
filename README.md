@@ -5,6 +5,11 @@ module build support, templates, build profiles, and generic Runtime-R4L
 helpers. The platform API and ABI remain canonical in the separate Contract
 repository.
 
+The shared update engine and recovery core accept only `R4U_JOURNAL=5`.
+Formats 2–4 are unsupported; no compatibility conversion authorizes file
+changes. V5 checksums, exact identities, copy selection, restart batches and
+rollback remain supported, including new targets with `old_known=false`.
+
 The shared update engine exposes SYSUPD's explicit `ARCHIVE-BOOT-BACKUP`
 maintenance command. Its `system_update_backup` helper orders reference
 checks, durable copy, complete comparison and conditional removal. Both

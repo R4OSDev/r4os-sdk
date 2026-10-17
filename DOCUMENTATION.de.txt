@@ -5,6 +5,15 @@ Dieses Repository enthaelt das hostneutrale Kern-SDK von R4OS: Zig- und
 C-Fassaden, Buildprofile, Templates, Smokeprojekte sowie die generischen
 Werkzeuge R4XBuilder, R4LContractGen und ModuleCatalog.
 
+SYSUPD-Journale
+---------------
+
+Update-Engine und Recovery lesen und schreiben ausschliesslich R4U_JOURNAL=5.
+V2-v4 werden ohne Dateiaustausch abgelehnt. V5 behaelt Checksummen, genaue
+Dateiidentitaeten, Kopienauswahl, Wiederaufnahme und Rueckrollen einschliesslich
+neuer Zieldateien mit old_known=false. COMPONENT_BINDING=legacy bleibt ein
+gueltiger v5-Zustand; der Name ist keine alte Formatversion.
+
 C-Module und Relokationen
 ------------------------
 
