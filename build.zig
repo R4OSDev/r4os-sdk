@@ -79,6 +79,7 @@ pub fn build(b: *std.Build) void {
     vm_allocator_module.addImport("r4os_contract", sdk_profile.profile.contract_module);
     const vm_allocator_tests = b.addTest(.{ .root_module = vm_allocator_module });
     const run_vm_allocator_tests = b.addRunArtifact(vm_allocator_tests);
+    b.step("vm-allocator-test", "Run the existing VM allocator ownership and concurrency tests").dependOn(&run_vm_allocator_tests.step);
 
     const subsystem_runtime_module = b.createModule(.{
         .root_source_file = b.path("r4os/subsystem_runtime.zig"),

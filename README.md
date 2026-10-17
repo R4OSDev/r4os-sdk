@@ -155,6 +155,23 @@ unchanged in the Zig and C facades.
 
 ## Dependency mapping
 
+The VM allocator keeps its existing bins, boundary tags, direct cache and
+retention policy. Reserve, commit, decommit and release run with private
+operation identity outside the shared metadata lock. Other threads can use
+existing free blocks while that work waits; completion rebinds current block
+metadata. Failed releases and decommits retain their exact retry identity.
+The default allocator and explicit `vm_allocator.Heap` objects use the same
+path. Keep an explicit heap at a stable address until all concurrent calls
+and allocations have retired, including their notification cleanup.
+
+Long contention uses the existing optional R4SYS notifications, observing a
+revision before rechecking the predicate. Notifications close after their last
+waiter; a failed close keeps the handle for retry. Older or partial tables
+fall back to `sleep_ticks` where available, then the existing yield support.
+No new kernel allocator API is required. Focused host validation of these
+existing cases is available through `./Build.sh vm-allocator-test` (Windows:
+`Build.bat vm-allocator-test`).
+
 `Settings.R4S` maps the local Contract and workspace paths. Relative and
 absolute mappings are supported. Use the repository build starters so those
 mappings are applied before Zig resolves packages.
