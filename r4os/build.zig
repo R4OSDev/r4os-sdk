@@ -1600,15 +1600,7 @@ const COptions = struct {
 };
 
 fn addRawModule(b: *std.Build, opts: RawOptions) std.Build.LazyPath {
-    const target = b.resolveTargetQuery(.{
-        .cpu_arch = .x86_64,
-        .os_tag = .freestanding,
-        .abi = .none,
-        .ofmt = .elf,
-        .cpu_features_add = std.Target.x86.featureSet(&.{
-            .mmx, .sse, .sse2, .sse3, .ssse3, .sse4_1, .sse4_2, .avx, .avx2, .aes, .pclmul,
-        }),
-    });
+    const target = contract_build.module_cpu.target(b);
 
     const exe = b.addObject(.{
         .name = b.fmt("{s}-zig-ir", .{opts.name}),
@@ -1663,14 +1655,12 @@ fn addRawModule(b: *std.Build, opts: RawOptions) std.Build.LazyPath {
         "-fno-unwind-tables",
         "-fno-asynchronous-unwind-tables",
         "-mno-red-zone",
-        "-msse2",
-        "-mavx2",
-        "-maes",
-        "-mpclmul",
     };
-    const c_flags = b.allocator.alloc([]const u8, base_c_flags.len + opts.c_flags.len) catch @panic("OOM");
+    const cpu_c_flags = contract_build.module_cpu.cFlags(b.allocator);
+    const c_flags = b.allocator.alloc([]const u8, base_c_flags.len + cpu_c_flags.len + opts.c_flags.len) catch @panic("OOM");
     for (base_c_flags, 0..) |flag, index| c_flags[index] = flag;
-    for (opts.c_flags, base_c_flags.len..) |flag, index| c_flags[index] = flag;
+    for (cpu_c_flags, base_c_flags.len..) |flag, index| c_flags[index] = flag;
+    for (opts.c_flags, base_c_flags.len + cpu_c_flags.len..) |flag, index| c_flags[index] = flag;
     for (opts.c_source_files) |source_file| {
         linked.root_module.addCSourceFile(.{
             .file = source_file,
@@ -1768,15 +1758,7 @@ fn addRawModule(b: *std.Build, opts: RawOptions) std.Build.LazyPath {
 }
 
 fn addCModule(b: *std.Build, opts: COptions) std.Build.LazyPath {
-    const target = b.resolveTargetQuery(.{
-        .cpu_arch = .x86_64,
-        .os_tag = .freestanding,
-        .abi = .none,
-        .ofmt = .elf,
-        .cpu_features_add = std.Target.x86.featureSet(&.{
-            .mmx, .sse, .sse2, .sse3, .ssse3, .sse4_1, .sse4_2, .avx, .avx2, .aes, .pclmul,
-        }),
-    });
+    const target = contract_build.module_cpu.target(b);
 
     const c_mod = b.createModule(.{
         .target = target,
@@ -1802,16 +1784,15 @@ fn addCModule(b: *std.Build, opts: COptions) std.Build.LazyPath {
         "-fno-unwind-tables",
         "-fno-asynchronous-unwind-tables",
         "-mno-red-zone",
-        "-msse2",
-        "-mavx2",
-        "-maes",
-        "-mpclmul",
     };
+    const cpu_c_flags = contract_build.module_cpu.cFlags(b.allocator);
+    const base_flag_count = base_c_flags.len + cpu_c_flags.len;
     const profile_flag_count: usize = if (opts.app_profile != null) 1 else 0;
-    const c_flags = b.allocator.alloc([]const u8, base_c_flags.len + profile_flag_count + opts.c_flags.len) catch @panic("OOM");
+    const c_flags = b.allocator.alloc([]const u8, base_flag_count + profile_flag_count + opts.c_flags.len) catch @panic("OOM");
     for (base_c_flags, 0..) |flag, index| c_flags[index] = flag;
-    if (opts.app_profile) |profile| c_flags[base_c_flags.len] = b.fmt("-DR4OS_APP_PROFILE={d}", .{@intFromEnum(profile)});
-    for (opts.c_flags, base_c_flags.len + profile_flag_count..) |flag, index| c_flags[index] = flag;
+    for (cpu_c_flags, base_c_flags.len..) |flag, index| c_flags[index] = flag;
+    if (opts.app_profile) |profile| c_flags[base_flag_count] = b.fmt("-DR4OS_APP_PROFILE={d}", .{@intFromEnum(profile)});
+    for (opts.c_flags, base_flag_count + profile_flag_count..) |flag, index| c_flags[index] = flag;
     c_mod.addIncludePath(opts.include_root);
     for (opts.extra_include_roots) |include_root| c_mod.addIncludePath(include_root);
     for (opts.c_defines) |entry| c_mod.addCMacro(entry.name, entry.value);
