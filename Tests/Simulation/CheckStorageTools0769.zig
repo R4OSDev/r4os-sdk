@@ -54,16 +54,35 @@ test "five-role layout, GUID boot references and Limine GPT publication" {
     for (&entropy, 0..) |*id, i| id[0] = @intCast(i + 1);
     const ids = try tools.installation.Identifiers.fromEntropy(entropy);
     const setup = tools.installation;
-    try eq(@as(u64, 16 * 1024 * 1024 * 1024), setup.standard_bytes);
+    try eq(@as(u64, 22 * 1024 * 1024 * 1024), setup.standard_bytes);
     const legacy = try setup.Layout.prepareSource(setup.legacy_bytes, ids);
     try eq(@as(u64, 1024 * 2048), legacy.part(.SYSTEM).count);
     try eq(@as(u64, 2363392), legacy.part(.RECOVERY).first);
-    const current = try setup.Layout.prepareSource(setup.standard_bytes, ids);
-    try eq(@as(u64, 10 * 1024 * 2048), current.part(.SYSTEM).count);
-    try eq(@as(u64, 5 * 1024 * 2048), current.part(.RECOVERY).count);
     try eq(@as(u64, 512 * 2048), legacy.part(.RECOVERY).count);
+    const previous = try setup.Layout.prepareSource(setup.previous_bytes, ids);
+    try eq(@as(u64, 10 * 1024 * 2048), previous.part(.SYSTEM).count);
+    try eq(@as(u64, 21237760), previous.part(.RECOVERY).first);
+    const current = try setup.Layout.prepareSource(setup.standard_bytes, ids);
+    try eq(@as(u64, 16 * 1024 * 2048), current.part(.SYSTEM).count);
+    try eq(@as(u64, 33820672), current.part(.RECOVERY).first);
+    try eq(@as(u64, 5 * 1024 * 2048), current.part(.RECOVERY).count);
+    try eq(previous.part(.DATA).count, current.part(.DATA).count);
+    const sparse = try tools.sparse_image.Image.init(a, setup.standard_bytes);
+    defer sparse.deinit();
+    try expectError(error.ImageLimit, tools.sparse_image.Image.init(a, setup.standard_bytes + 1));
     try std.testing.expectError(error.Geometry, setup.sourceRanges(setup.standard_bytes - 512));
     var work: [tools.io.scratch_bytes]u8 = undefined;
+    for ([_]u64{ setup.legacy_bytes, setup.previous_bytes }) |bytes| {
+        var source = BootFixture{ .sectors = bytes / 512 };
+        var progress = tools.io.Progress{};
+        const source_layout = try setup.Layout.prepareSource(bytes, ids);
+        var source_plan = try table.Plan.read(source.device(&progress), &work);
+        try source_layout.bind(&source_plan);
+        try source_plan.commit(source.device(&progress), &work);
+        const readback = try table.Plan.read(source.device(&progress), &work);
+        try eq(source_layout.part(.SYSTEM).count, readback.entries[2].count);
+        try expectError(error.Geometry, setup.Layout.prepare(bytes / 512, 512, ids));
+    }
     for ([_]u64{ tools.installation.standard_bytes / 512, 32 * 1024 * 2048 }) |sectors| {
         var fixture = BootFixture{ .sectors = sectors };
         var progress = tools.io.Progress{};
