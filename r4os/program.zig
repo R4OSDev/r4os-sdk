@@ -476,6 +476,15 @@ pub const Context = struct {
         const table_fn = self.devFn("performance_smp_tlb") orelse return self.unavailable("dev");
         return table_fn(out);
     }
+    pub fn cpuTopology(self: *const Context, index: u32, out: *abi.CpuTopologyInfo) i32 {
+        const table_fn = self.devFn("cpu_topology") orelse return self.unavailable("dev");
+        return table_fn(index, out);
+    }
+
+    pub fn cpuCacheTopology(self: *const Context, index: u32, ordinal: u32, out: *abi.CpuCacheTopologyInfo) i32 {
+        const table_fn = self.devFn("cpu_cache_topology") orelse return self.unavailable("dev");
+        return table_fn(index, ordinal, out);
+    }
 
     pub fn memoryBackingStoreProbe(self: *const Context, path: [*:0]const u8, requested_bytes: u64, flags: u32) ?abi.ProgramMemoryBackingStoreProbe {
         var out: abi.ProgramMemoryBackingStoreProbe = .{};

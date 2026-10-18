@@ -16,6 +16,22 @@ typedef struct R4Dev {
     const R4XStartR4Dev *table;
 } R4Dev;
 
+static inline int32_t r4dev_cpu_topology(const R4Dev *dev, uint32_t cpu_index, R4CpuTopologyInfo *out) {
+    if (out == 0) return R4OS_ERROR_INVALID;
+    if (dev == 0 || dev->table == 0 ||
+        dev->table->size < offsetof(R4XStartR4Dev, cpu_topology) + sizeof(uintptr_t) ||
+        dev->table->cpu_topology == 0u) return R4OS_ERR_NO_FN;
+    return ((R4DevCpuTopologyFn)(uintptr_t)dev->table->cpu_topology)(cpu_index, out);
+}
+
+static inline int32_t r4dev_cpu_cache_topology(const R4Dev *dev, uint32_t cpu_index, uint32_t cache_index, R4CpuCacheTopologyInfo *out) {
+    if (out == 0) return R4OS_ERROR_INVALID;
+    if (dev == 0 || dev->table == 0 ||
+        dev->table->size < offsetof(R4XStartR4Dev, cpu_cache_topology) + sizeof(uintptr_t) ||
+        dev->table->cpu_cache_topology == 0u) return R4OS_ERR_NO_FN;
+    return ((R4DevCpuCacheTopologyFn)(uintptr_t)dev->table->cpu_cache_topology)(cpu_index, cache_index, out);
+}
+
 static inline int32_t r4dev_memory_pressure_snapshot(const R4Dev *dev, R4ProgramMemoryPressureSnapshot *out) {
     if (out == 0) return R4OS_ERROR_INVALID;
     if (dev == 0 || dev->table == 0 ||

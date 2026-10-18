@@ -137,6 +137,14 @@ pub const Context = struct {
         return self.base.smpTlbSnapshot(out);
     }
 
+    pub fn cpuTopology(self: *const Context, index: u32, out: *abi.CpuTopologyInfo) i32 {
+        return self.base.cpuTopology(index, out);
+    }
+
+    pub fn cpuCacheTopology(self: *const Context, index: u32, ordinal: u32, out: *abi.CpuCacheTopologyInfo) i32 {
+        return self.base.cpuCacheTopology(index, ordinal, out);
+    }
+
     pub fn memoryBackingStoreProbe(self: *const Context, path: [*:0]const u8, requested_bytes: u64, flags: u32) ?abi.ProgramMemoryBackingStoreProbe {
         return self.base.memoryBackingStoreProbe(path, requested_bytes, flags);
     }
