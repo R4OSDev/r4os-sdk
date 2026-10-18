@@ -954,6 +954,60 @@ fn cpuCapacityFacade(sys: *const r4os.r4sys.Context) !void {
     try t.expectEqual(@as(u32, 4), output.configured_cpus);
 }
 
+var placement_calls: u32 = 0;
+fn fakePlacementGet(handle: *const r4os.abi.ProgramJoinHandle, info: *r4os.abi.ThreadPlacementInfo, cpus: ?[*]u64, count: u32) callconv(.c) i32 {
+    std.debug.assert(handle.thread_generation == 0x10000007939);
+    placement_calls += 1;
+    info.cpu_word_count = 2;
+    if (count != 0) {
+        std.debug.assert(count == 3);
+        cpus.?[0] = 1;
+        cpus.?[1] = 1 << 13;
+    }
+    return 37;
+}
+fn fakePlacementSet(handle: *const r4os.abi.ProgramJoinHandle, request: *const r4os.abi.ThreadPlacementRequest, cpus: ?[*]const u64, count: u32) callconv(.c) i32 {
+    std.debug.assert(handle.thread_generation == 0x10000007939 and request.work_class == r4os.abi.thread_placement_class_batch);
+    std.debug.assert(count == 2 and cpus.?[1] == 1 << 13);
+    placement_calls += 1;
+    return 41;
+}
+fn placementFacade(sys: *const r4os.r4sys.Context) !void {
+    const a = r4os.abi;
+    const t = std.testing;
+    const handle: a.ProgramJoinHandle = .{ .thread_generation = 0x10000007939 };
+    var info: a.ThreadPlacementInfo = .{};
+    var words: [3]u64 = .{ 79, 79, 79 };
+    const request: a.ThreadPlacementRequest = .{ .work_class = a.thread_placement_class_batch };
+    placement_calls = 0;
+    fake_table.thread_placement_get = @intFromPtr(&fakePlacementGet);
+    fake_table.thread_placement_set = @intFromPtr(&fakePlacementSet);
+    for ([_]u32{ 1264, 1271 }) |size| {
+        fake_table.size = size;
+        try t.expectEqual(a.err_no_fn, sys.threadPlacementGet(&handle, &info, &words));
+    }
+    for ([_]u32{ 1272, 1279 }) |size| {
+        fake_table.size = size;
+        try t.expectEqual(a.err_no_fn, sys.threadPlacementSet(&handle, &request, words[0..2]));
+    }
+    fake_table.size = 1280;
+    fake_table.thread_placement_get = 0;
+    fake_table.thread_placement_set = 0;
+    try t.expectEqual(a.err_no_fn, sys.threadPlacementGet(&handle, &info, &words));
+    try t.expectEqual(a.err_no_fn, sys.threadPlacementSet(&handle, &request, words[0..2]));
+    try t.expectEqual(@as(u32, 0), placement_calls);
+    try t.expectEqualDeep([_]u64{ 79, 79, 79 }, words);
+    fake_table.thread_placement_get = @intFromPtr(&fakePlacementGet);
+    fake_table.thread_placement_set = @intFromPtr(&fakePlacementSet);
+    try t.expectEqual(@as(i32, 37), sys.threadPlacementGet(&handle, &info, &.{}));
+    try t.expectEqual(@as(u32, 2), info.cpu_word_count);
+    try t.expectEqual(@as(i32, 37), sys.threadPlacementGet(&handle, &info, &words));
+    try t.expectEqualDeep([_]u64{ 1, 1 << 13, 79 }, words);
+    try t.expectEqual(@as(i32, 41), sys.threadPlacementSet(&handle, &request, words[0..2]));
+    // CPU77 crosses the first word: the SDK forwards full vectors unchanged.
+    try t.expectEqual(@as(u32, 3), placement_calls);
+}
+
 fn fakeProgramExit(code: i32, reason: u32) callconv(.c) i32 {
     return if (code == -73 and reason == r4os.abi.program_exit_reason_failed) r4os.abi.thread_error_busy else r4os.abi.thread_error_invalid;
 }
@@ -975,6 +1029,7 @@ test "process thread VM and I/O resources invalidate and retain timeout state" {
     var api = resources();
     try currentIdentityFacade(&api.sys);
     try cpuCapacityFacade(&api.sys);
+    try placementFacade(&api.sys);
     try programExitFacade(&api.sys);
     const path = r4os.FilePath.parse("C:\\TEST.R4X") catch unreachable;
     try std.testing.expectEqual(r4os.abi.program_handle_error_invalid, switch (api.openProcess(0)) {

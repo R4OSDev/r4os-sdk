@@ -1011,6 +1011,13 @@ pub const Context = struct {
         return self.base.threadCurrentHandle(out);
     }
 
+    pub fn threadPlacementGet(self: *const Context, handle: *const abi.ProgramJoinHandle, info: *abi.ThreadPlacementInfo, cpus: []u64) i32 {
+        return self.base.threadPlacementGet(handle, info, cpus);
+    }
+    pub fn threadPlacementSet(self: *const Context, handle: *const abi.ProgramJoinHandle, request: *const abi.ThreadPlacementRequest, cpus: []const u64) i32 {
+        return self.base.threadPlacementSet(handle, request, cpus);
+    }
+
     pub fn cpuCapacity(self: *const Context, out: *abi.CpuCapacity) i32 {
         return self.base.cpuCapacity(out);
     }

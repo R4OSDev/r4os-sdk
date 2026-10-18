@@ -1,14 +1,14 @@
 .{
     .name = .r4os_sdk,
-    .version = "0.64.37",
+    .version = "0.64.38",
     .fingerprint = 0x8e8330db02f37336,
     .minimum_zig_version = "0.16.0",
     .dependencies = .{
         // The identity is pinned here. Build.bat and Build.sh map the actual
         // checkout from Settings.R4S and provide it as a local Zig fork.
         .r4os_contract = .{
-            .url = "https://github.com/R4OSDev/r4os-contract/archive/6d2feb313aa8892e8a3df7cb7f2e9545e4544362.tar.gz",
-            .hash = "r4os_contract-0.64.21-ELhbYeI6-QAWm-PxPeHxW4aGUF3VfEEDxfOJSQTPqkZe",
+            .url = "https://github.com/R4OSDev/r4os-contract/archive/2bc11312485a2e48b487a8833a079c0969278231.tar.gz",
+            .hash = "r4os_contract-0.64.22-ELhbYedM-gCmMZ9xGd1M0jU8F7PbOM_xb6D0WwSVMCfh",
         },
     },
     .paths = .{

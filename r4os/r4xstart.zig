@@ -503,6 +503,21 @@ pub const R4Sys = struct {
         return current_fn(out);
     }
 
+    /// Query metadata with an empty vector; otherwise preserve unused tail words.
+    pub fn threadPlacementGet(self: *const R4Sys, handle: *const abi.ProgramJoinHandle, info: *abi.ThreadPlacementInfo, cpus: []u64) i32 {
+        if (cpus.len > std.math.maxInt(u32)) return abi.thread_placement_error_capacity;
+        if (!self.hasFn("thread_placement_get")) return abi.thread_error_unsupported;
+        const function: abi.R4SysFns.thread_placement_get = @ptrFromInt(self.table.thread_placement_get);
+        return function(handle, info, if (cpus.len == 0) null else cpus.ptr, @intCast(cpus.len));
+    }
+    /// CPU sets are hard admission; preferred CPU and bounded work class are hints.
+    pub fn threadPlacementSet(self: *const R4Sys, handle: *const abi.ProgramJoinHandle, request: *const abi.ThreadPlacementRequest, cpus: []const u64) i32 {
+        if (cpus.len > std.math.maxInt(u32)) return abi.thread_placement_error_capacity;
+        if (!self.hasFn("thread_placement_set")) return abi.thread_error_unsupported;
+        const function: abi.R4SysFns.thread_placement_set = @ptrFromInt(self.table.thread_placement_set);
+        return function(handle, request, if (cpus.len == 0) null else cpus.ptr, @intCast(cpus.len));
+    }
+
     pub fn cpuCapacity(self: *const R4Sys, out: *abi.CpuCapacity) i32 {
         if (!self.hasFn("cpu_capacity")) return abi.thread_error_unsupported;
         const query: abi.R4SysFns.cpu_capacity = @ptrFromInt(self.table.cpu_capacity);
@@ -1309,31 +1324,36 @@ pub const R4Draw = struct {
     }
     pub fn displayPresentationInfo(self: *const R4Draw, head_id: u32, out: *abi.DisplayPresentationInfo) i32 {
         if (!self.supportsDisplayPresentationInfo()) return abi.err_no_fn;
-        out.version = 1; out.size = @sizeOf(abi.DisplayPresentationInfo);
+        out.version = 1;
+        out.size = @sizeOf(abi.DisplayPresentationInfo);
         const callback: abi.R4DrawFns.display_presentation_info = @ptrFromInt(self.table.display_presentation_info);
         return callback(head_id, out);
     }
     pub fn displayOutputTarget(self: *const R4Draw, adapter_id: u32, head_id: u32, out: *abi.GfxOutputTarget) i32 {
         if (!self.hasFn("display_output_target")) return abi.err_no_fn;
-        out.version = 1; out.size = @sizeOf(abi.GfxOutputTarget);
+        out.version = 1;
+        out.size = @sizeOf(abi.GfxOutputTarget);
         const callback: abi.R4DrawFns.display_output_target = @ptrFromInt(self.table.display_output_target);
         return callback(adapter_id, head_id, out);
     }
     pub fn displayOutputPresentationInfo(self: *const R4Draw, target: *const abi.GfxOutputTarget, out: *abi.DisplayPresentationInfo) i32 {
         if (!self.hasFn("display_output_presentation_info")) return abi.err_no_fn;
-        out.version = 1; out.size = @sizeOf(abi.DisplayPresentationInfo);
+        out.version = 1;
+        out.size = @sizeOf(abi.DisplayPresentationInfo);
         const callback: abi.R4DrawFns.display_output_presentation_info = @ptrFromInt(self.table.display_output_presentation_info);
         return callback(target, out);
     }
     pub fn displayOutputPresentationFeedback(self: *const R4Draw, target: *const abi.GfxOutputTarget, fence: *const abi.GfxFence, out: *abi.DisplayPresentationStats) i32 {
         if (!self.hasFn("display_output_presentation_feedback")) return abi.err_no_fn;
-        out.version = 1; out.size = @sizeOf(abi.DisplayPresentationStats);
+        out.version = 1;
+        out.size = @sizeOf(abi.DisplayPresentationStats);
         const callback: abi.R4DrawFns.display_output_presentation_feedback = @ptrFromInt(self.table.display_output_presentation_feedback);
         return callback(target, fence, out);
     }
     pub fn displayPresentationFeedback(self: *const R4Draw, head_id: u32, fence: *const abi.GfxFence, out: *abi.DisplayPresentationStats) i32 {
         if (!self.hasFn("display_presentation_feedback")) return abi.err_no_fn;
-        out.version = 1; out.size = @sizeOf(abi.DisplayPresentationStats);
+        out.version = 1;
+        out.size = @sizeOf(abi.DisplayPresentationStats);
         const callback: abi.R4DrawFns.display_presentation_feedback = @ptrFromInt(self.table.display_presentation_feedback);
         return callback(head_id, fence, out);
     }

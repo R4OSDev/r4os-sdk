@@ -323,6 +323,15 @@ pub const JoinHandle = struct {
             self.handle.reserved == 0;
     }
 
+    pub fn placement(self: *const JoinHandle, info: *abi.ThreadPlacementInfo, cpus: []u64) i32 {
+        if (!self.valid()) return abi.thread_error_invalid;
+        return self.sys.threadPlacementGet(&self.handle, info, cpus);
+    }
+    pub fn setPlacement(self: *const JoinHandle, request: *const abi.ThreadPlacementRequest, cpus: []const u64) i32 {
+        if (!self.valid()) return abi.thread_error_invalid;
+        return self.sys.threadPlacementSet(&self.handle, request, cpus);
+    }
+
     pub fn status(self: *const JoinHandle) ThreadInfo {
         if (!self.valid()) return .{ .failure = abi.err_closed };
         var info: abi.ProgramThreadInfo = .{};

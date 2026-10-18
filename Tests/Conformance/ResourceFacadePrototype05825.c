@@ -402,6 +402,38 @@ static int cpu_capacity_checks(void) {
     return 0;
 }
 
+static unsigned placement_calls;
+static int32_t placement_get_probe(const R4ProgramJoinHandle *handle, R4ThreadPlacementInfo *info, uint64_t *cpus, uint32_t count) {
+    if (handle->thread_generation != UINT64_C(0x10000007939)) return -99;
+    ++placement_calls; info->cpu_word_count = 2;
+    if (count) { if (count != 3) return -99; cpus[0] = 1; cpus[1] = UINT64_C(1) << 13; }
+    return 37;
+}
+static int32_t placement_set_probe(const R4ProgramJoinHandle *handle, const R4ThreadPlacementRequest *request, const uint64_t *cpus, uint32_t count) {
+    if (handle->thread_generation != UINT64_C(0x10000007939) || request->work_class != R4OS_THREAD_PLACEMENT_CLASS_BATCH || count != 2 || cpus[1] != (UINT64_C(1) << 13)) return -99;
+    ++placement_calls; return 41;
+}
+static int placement_checks(void) {
+    R4XStartR4Sys table = {0}; R4Sys sys = {.table = &table};
+    R4ProgramJoinHandle handle = {.thread_generation = UINT64_C(0x10000007939)};
+    R4ThreadPlacementInfo info = {.version = 1, .size = 64};
+    R4ThreadPlacementRequest request = {.version = 1, .size = 32, .work_class = R4OS_THREAD_PLACEMENT_CLASS_BATCH};
+    uint64_t words[3] = {79,79,79}; placement_calls = 0;
+    table.thread_placement_get = (uintptr_t)&placement_get_probe;
+    table.thread_placement_set = (uintptr_t)&placement_set_probe;
+    table.size = 1271;
+    if (r4sys_thread_placement_get(&sys,&handle,&info,words,3) != R4OS_THREAD_ERROR_UNSUPPORTED) return 1;
+    table.size = 1279;
+    if (r4sys_thread_placement_set(&sys,&handle,&request,words,2) != R4OS_THREAD_ERROR_UNSUPPORTED) return 2;
+    table.size = 1280; table.thread_placement_get = 0; table.thread_placement_set = 0;
+    if (r4sys_thread_placement_get(&sys,&handle,&info,words,3) != R4OS_THREAD_ERROR_UNSUPPORTED || r4sys_thread_placement_set(&sys,&handle,&request,words,2) != R4OS_THREAD_ERROR_UNSUPPORTED || placement_calls || words[0] != 79) return 3;
+    table.thread_placement_get = (uintptr_t)&placement_get_probe; table.thread_placement_set = (uintptr_t)&placement_set_probe;
+    if (r4sys_thread_placement_get(&sys,&handle,&info,0,0) != 37 || info.cpu_word_count != 2) return 4;
+    if (r4sys_thread_placement_get(&sys,&handle,&info,words,3) != 37 || words[0] != 1 || words[1] != (UINT64_C(1)<<13) || words[2] != 79) return 5;
+    if (r4sys_thread_placement_set(&sys,&handle,&request,words,2) != 41 || placement_calls != 3) return 6;
+    return 0;
+}
+
 static int32_t program_exit_probe(int32_t code, uint32_t reason) {
     return code == -73 && reason == R4OS_PROGRAM_EXIT_REASON_FAILED ? R4OS_THREAD_ERROR_BUSY : R4OS_THREAD_ERROR_INVALID;
 }
@@ -424,6 +456,7 @@ static int program_exit_checks(void) {
 int main(void) {
     if (platform_checks()) return 100;
     if (program_exit_checks() != 0) return 86;
+    if (placement_checks() != 0) return 87;
     if (cpu_capacity_checks() != 0) return 85;
     if (current_identity_checks() != 0) return 84;
     if (boot_display_checks() != 0) return 83;

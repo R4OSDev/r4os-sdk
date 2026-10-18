@@ -210,6 +210,25 @@ static inline int32_t r4sys_thread_current_handle(R4Sys *sys, R4ProgramJoinHandl
     return current_fn(out_handle);
 }
 
+/* word_capacity0 queries metadata. Explicit sets use the discovered length.
+ * New functions remain optional on older kernels; failures preserve outputs. */
+static inline int32_t r4sys_thread_placement_get(R4Sys *sys, const R4ProgramJoinHandle *handle,
+    R4ThreadPlacementInfo *info, uint64_t *cpus, uint32_t word_capacity) {
+    if (sys == 0 || sys->table == 0 ||
+        sys->table->size < offsetof(R4XStartR4Sys, thread_placement_get) + sizeof(uintptr_t) ||
+        sys->table->thread_placement_get == 0) return R4OS_THREAD_ERROR_UNSUPPORTED;
+    R4SysThreadPlacementGetFn query = (R4SysThreadPlacementGetFn)(uintptr_t)sys->table->thread_placement_get;
+    return query(handle, info, cpus, word_capacity);
+}
+static inline int32_t r4sys_thread_placement_set(R4Sys *sys, const R4ProgramJoinHandle *handle,
+    const R4ThreadPlacementRequest *request, const uint64_t *cpus, uint32_t word_count) {
+    if (sys == 0 || sys->table == 0 ||
+        sys->table->size < offsetof(R4XStartR4Sys, thread_placement_set) + sizeof(uintptr_t) ||
+        sys->table->thread_placement_set == 0) return R4OS_THREAD_ERROR_UNSUPPORTED;
+    R4SysThreadPlacementSetFn change = (R4SysThreadPlacementSetFn)(uintptr_t)sys->table->thread_placement_set;
+    return change(handle, request, cpus, word_count);
+}
+
 /* Advisory scheduler capacity, without an affinity or hardware topology claim. */
 static inline int32_t r4sys_cpu_capacity(R4Sys *sys, R4CpuCapacity *output) {
     if (output == 0) return R4OS_THREAD_ERROR_INVALID;

@@ -1178,6 +1178,19 @@ pub const Context = struct {
         return table_fn(out);
     }
 
+    /// Query metadata with an empty vector; otherwise preserve unused tail words.
+    pub fn threadPlacementGet(self: *const Context, handle: *const abi.ProgramJoinHandle, info: *abi.ThreadPlacementInfo, cpus: []u64) i32 {
+        if (cpus.len > std.math.maxInt(u32)) return abi.thread_placement_error_capacity;
+        const function = self.sysFn("thread_placement_get") orelse return self.unavailable("sys");
+        return function(handle, info, if (cpus.len == 0) null else cpus.ptr, @intCast(cpus.len));
+    }
+    /// CPU sets are hard admission; preferred CPU and bounded work class are hints.
+    pub fn threadPlacementSet(self: *const Context, handle: *const abi.ProgramJoinHandle, request: *const abi.ThreadPlacementRequest, cpus: []const u64) i32 {
+        if (cpus.len > std.math.maxInt(u32)) return abi.thread_placement_error_capacity;
+        const function = self.sysFn("thread_placement_set") orelse return self.unavailable("sys");
+        return function(handle, request, if (cpus.len == 0) null else cpus.ptr, @intCast(cpus.len));
+    }
+
     pub fn cpuCapacity(self: *const Context, out: *abi.CpuCapacity) i32 {
         const query = self.sysFn("cpu_capacity") orelse return self.unavailable("sys");
         return query(out);
