@@ -52,7 +52,7 @@ static inline int32_t r4_power_profiles_cpu(R4PowerProfiles *client,uint32_t cpu
     if(result.kind==R4_SERVICE_CALL_TIMED_OUT)return R4OS_SERVICE_API_RESULT_TIMEOUT;
     if(result.kind!=R4_SERVICE_CALL_RESPONSE)return result.raw_code;
     if(value.version!=1||value.size!=sizeof(value)||value.cpu_index!=cpu||value.service_generation!=client->info.service_generation||value.reserved0||value.reserved1||
-        value.backend>R4OS_POWER_PROFILE_BACKEND_CPPC||value.state>R4OS_POWER_PROFILE_STATE_QUIESCED)return R4OS_SERVICE_API_RESULT_INVALID;
+        value.backend>R4OS_POWER_PROFILE_BACKEND_ACPI_PSS||value.state>R4OS_POWER_PROFILE_STATE_QUIESCED)return R4OS_SERVICE_API_RESULT_INVALID;
     *out=value;return R4OS_SERVICE_API_RESULT_OK;
 }
 #endif

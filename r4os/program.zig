@@ -494,6 +494,10 @@ pub const Context = struct {
         const function = self.devFn("cpu_cppc") orelse return self.unavailable("dev");
         return function(request, out);
     }
+    pub fn cpuFirmwarePerformance(self: *const Context, request: *const abi.CpuPerformanceRequest, out: *abi.CpuFirmwareInfo) i32 {
+        const function = self.devFn("cpu_firmware_performance") orelse return self.unavailable("dev");
+        return function(request, out);
+    }
 
     pub fn cpuPerformanceHint(self: *const Context, cpu: u32, epoch: u64, out: *abi.CpuPerformanceHintInfo) i32 {
         const function = self.devFn("cpu_performance_hint") orelse return self.unavailable("dev");
@@ -5296,6 +5300,32 @@ test "net socket drain keeps stack request alive until busy async close complete
     try std.testing.expectEqual(@as(u32, 0), guarded.request.service_handle);
 }
 
+fn testFirmwarePerformance(request: *const abi.CpuPerformanceRequest, out: *abi.CpuFirmwareInfo) callconv(.c) i32 {
+    out.* = .{ .cpu_index = request.cpu_index, .epoch = request.epoch, .backend = abi.cpu_firmware_backend_pss, .state = abi.cpu_performance_state_uncertain, .lease = 71, .provider_generation = 29, .firmware_generation = 30 };
+    return 0;
+}
+test "firmware transport negotiates its own optional slot and preserves an uncertain whole-domain receipt" {
+    var raw: abi.R4XStartContext = .{};
+    var table: abi.R4XStartR4Dev = .{};
+    var bundle: Bundle = .{ .raw = &raw, .dev = &table };
+    const ctx = Context.initBundle(&bundle);
+    const request: abi.CpuPerformanceRequest = .{ .cpu_index = 2, .epoch = 19 };
+    var out: abi.CpuFirmwareInfo = .{ .lease = 99 };
+    table.size = 640;
+    table.cpu_firmware_performance = @intFromPtr(&testFirmwarePerformance);
+    try std.testing.expectEqual(abi.err_no_fn, ctx.cpuFirmwarePerformance(&request, &out));
+    try std.testing.expectEqual(@as(u64, 99), out.lease);
+    table.size = @sizeOf(abi.R4XStartR4Dev);
+    table.cpu_firmware_performance = 0;
+    try std.testing.expectEqual(abi.err_no_fn, ctx.cpuFirmwarePerformance(&request, &out));
+    try std.testing.expectEqual(@as(u64, 99), out.lease);
+    table.cpu_firmware_performance = @intFromPtr(&testFirmwarePerformance);
+    try std.testing.expectEqual(@as(i32, 0), ctx.cpuFirmwarePerformance(&request, &out));
+    try std.testing.expectEqual(@as(u64, 71), out.lease);
+    try std.testing.expectEqual(abi.cpu_performance_state_uncertain, out.state);
+    try std.testing.expectEqual(@as(u32, 2), out.cpu_index);
+    try std.testing.expectEqual(@as(u64, 19), out.epoch);
+}
 test "program context accepts present fields in a shorter append-only table" {
     var raw: abi.R4XStartContext = .{};
     var table: abi.R4XStartR4Sys = .{};

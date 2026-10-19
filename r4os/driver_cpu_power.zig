@@ -4,6 +4,31 @@ const a = @import("r4os_contract").abi;
 /// No arbitrary MSR address or cross-CPU dispatch.
 pub const Context = struct {
     table: a.DriverCpuPowerApi,
+    pub fn firmwareRegister(self: *const Context, role: u32, backend: *const a.CpuFirmwareBackend, cookie: *u64) i32 {
+        if (!self.has("firmware_register")) return a.err_no_fn;
+        const call: *const fn (u32, *const a.CpuFirmwareBackend, *u64) callconv(.c) i32 = @ptrFromInt(self.table.firmware_register);
+        return call(role, backend, cookie);
+    }
+    pub fn firmwareUnregister(self: *const Context, role: u32, cookie: u64) i32 {
+        if (!self.has("firmware_unregister")) return a.err_no_fn;
+        const call: *const fn (u32, u64) callconv(.c) i32 = @ptrFromInt(self.table.firmware_unregister);
+        return call(role, cookie);
+    }
+    pub fn firmwareExecute(self: *const Context, request: *const a.CpuPerformanceRequest, out: *a.CpuFirmwareInfo) i32 {
+        if (!self.has("firmware_execute")) return a.err_no_fn;
+        const call: *const fn (*const a.CpuPerformanceRequest, *a.CpuFirmwareInfo) callconv(.c) i32 = @ptrFromInt(self.table.firmware_execute);
+        return call(request, out);
+    }
+    pub fn firmwareControl(self: *const Context, operation: u32, cpu: u32, epoch: u64, mask: u64, expected: u64, out: *u64) i32 {
+        if (!self.has("firmware_control")) return a.err_no_fn;
+        const call: *const fn (u32, u32, u64, u64, u64, *u64) callconv(.c) i32 = @ptrFromInt(self.table.firmware_control);
+        return call(operation, cpu, epoch, mask, expected, out);
+    }
+    pub fn firmwareCpuInfo(self: *const Context, cpu: u32, out: *a.CpuCapabilitiesInfo) i32 {
+        if (!self.has("firmware_cpu_info")) return a.err_no_fn;
+        const call: *const fn (u32, *a.CpuCapabilitiesInfo) callconv(.c) i32 = @ptrFromInt(self.table.firmware_cpu_info);
+        return call(cpu, out);
+    }
     pub fn has(self: *const Context, comptime field: []const u8) bool {
         return self.table.version == 1 and self.table.size >= @offsetOf(a.DriverCpuPowerApi, field) + 8 and @field(self.table, field) != 0;
     }

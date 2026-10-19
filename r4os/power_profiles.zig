@@ -92,7 +92,7 @@ pub const Client = struct {
         return switch (peer.callTyped(a.PowerProfileRequest, a.PowerCpuProfileInfo, a.power_profile_op_cpu, &request, timeout)) {
             .value => |value| if (value.version == 1 and value.size == @sizeOf(a.PowerCpuProfileInfo) and
                 value.cpu_index == index and value.service_generation == self.info.service_generation and value.reserved0 == 0 and value.reserved1 == 0 and
-                value.backend <= a.power_profile_backend_cppc and value.state <= a.power_profile_state_quiesced)
+                value.backend <= a.power_profile_backend_acpi_pss and value.state <= a.power_profile_state_quiesced)
                 .{ .value = value }
             else
                 .{ .failure = a.service_api_result_invalid },

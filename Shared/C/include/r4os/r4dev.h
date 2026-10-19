@@ -61,6 +61,13 @@ static inline int32_t r4dev_cpu_cppc(const R4Dev *dev, const R4CpuPerformanceReq
     if (!dev || !dev->table || dev->table->size < offsetof(R4XStartR4Dev, cpu_cppc) + sizeof(uintptr_t) || !dev->table->cpu_cppc) return R4OS_ERR_NO_FN;
     return ((R4DevCpuCppcFn)(uintptr_t)dev->table->cpu_cppc)(request, out);
 }
+/* Separately negotiated firmware call: may wait for the real external worker.
+ * No implicit retry after timeout/uncertainty, and no local-register Session. */
+static inline int32_t r4dev_cpu_firmware_performance(const R4Dev *dev, const R4CpuPerformanceRequest *request, R4CpuFirmwareInfo *out) {
+    if (!request || !out) return R4OS_CPU_CAPABILITIES_ERROR_INVALID;
+    if (!dev || !dev->table || dev->table->size < offsetof(R4XStartR4Dev, cpu_firmware_performance) + sizeof(uintptr_t) || !dev->table->cpu_firmware_performance) return R4OS_ERR_NO_FN;
+    return ((R4DevCpuFirmwarePerformanceFn)(uintptr_t)dev->table->cpu_firmware_performance)(request, out);
+}
 
 /* Optional independently typed AMD CPPC/catalogue observation. */
 static inline int32_t r4dev_cpu_performance_hint(const R4Dev *dev, uint32_t cpu, uint64_t epoch, R4CpuPerformanceHintInfo *out) {
