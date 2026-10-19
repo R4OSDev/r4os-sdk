@@ -129,6 +129,13 @@ pub const Context = struct {
         return self.base.kernelBlockQueueCheck(out);
     }
 
+    pub fn cpuLifecycle(self: *const Context, operation: u32, cpu: u32, expected_epoch: u64, out: *abi.CpuLifecycleInfo) i32 {
+        return self.base.cpuLifecycle(operation, cpu, expected_epoch, out);
+    }
+    pub fn kernelCpuLifecycleCheck(self: *const Context, out: *abi.ProgramKernelCpuLifecycleCheck) i32 {
+        return self.base.kernelCpuLifecycleCheck(out);
+    }
+
     pub fn kernelSmpCheck(self: *const Context, out: *abi.ProgramKernelSmpCheck) i32 {
         return self.base.kernelSmpCheck(out);
     }

@@ -9,6 +9,40 @@ var timeout_next = false;
 var stream_open = false;
 var open_connections: u32 = 0;
 
+fn fakeCpuLifecycle(op: u32, cpu: u32, epoch: u64, out: *r4os.abi.CpuLifecycleInfo) callconv(.c) i32 {
+    std.debug.assert(op == 2 and cpu == 63 and epoch == 0x1234_5678_85ab_cdef);
+    out.epoch = epoch + 1;
+    return -63;
+}
+fn fakeCpuLifecycleCheck(out: *r4os.abi.ProgramKernelCpuLifecycleCheck) callconv(.c) i32 {
+    out.new_epoch = 0x1234_5678_85ab_cdf0;
+    return 1;
+}
+test "CPU lifecycle facades negotiate both optional slots and forward full epochs without truncation" {
+    const a = r4os.abi;
+    const t = std.testing;
+    const facade = initFacades().devices.raw;
+    var info: a.CpuLifecycleInfo = .{ .epoch = 71 };
+    var report: a.ProgramKernelCpuLifecycleCheck = .{ .new_epoch = 72 };
+    dev_table.cpu_lifecycle = @intFromPtr(&fakeCpuLifecycle);
+    dev_table.kernel_cpu_lifecycle_check = @intFromPtr(&fakeCpuLifecycleCheck);
+    for ([_]u32{ 552, 553, 559 }) |size| {
+        dev_table.size = size;
+        try t.expectEqual(a.err_no_fn, facade.cpuLifecycle(2, 63, 0x1234_5678_85ab_cdef, &info));
+        try t.expectEqual(@as(u64, 71), info.epoch);
+    }
+    dev_table.size = 560;
+    try t.expectEqual(@as(i32, -63), facade.cpuLifecycle(2, 63, 0x1234_5678_85ab_cdef, &info));
+    try t.expectEqual(@as(u64, 0x1234_5678_85ab_cdf0), info.epoch);
+    try t.expectEqual(a.err_no_fn, facade.kernelCpuLifecycleCheck(&report));
+    try t.expectEqual(@as(u64, 72), report.new_epoch);
+    dev_table.size = 568;
+    try t.expectEqual(@as(i32, 1), facade.kernelCpuLifecycleCheck(&report));
+    dev_table.cpu_lifecycle = 0; dev_table.kernel_cpu_lifecycle_check = 0;
+    try t.expectEqual(a.err_no_fn, facade.cpuLifecycle(2, 63, 0x1234_5678_85ab_cdef, &info));
+    try t.expectEqual(a.err_no_fn, facade.kernelCpuLifecycleCheck(&report));
+}
+
 fn fakeInstrumentation(out: *r4os.abi.ProgramInstrumentationInfo) callconv(.c) i32 {
     if (out.version != 1 or out.size != @sizeOf(r4os.abi.ProgramInstrumentationInfo)) return -1;
     out.* = .{ .mode = 0, .lock_count = 11, .stack_group_count = 13 };

@@ -5,6 +5,36 @@ static int timeout_next;
 static int stream_open;
 static uint32_t open_connections;
 
+static int32_t fake_cpu_lifecycle(uint32_t operation, uint32_t cpu, uint64_t epoch, R4CpuLifecycleInfo *out) {
+    if (operation != 2u || cpu != 63u || epoch != UINT64_C(0x1234567885abcdef)) return -99;
+    out->epoch = epoch + 1u;
+    return -63;
+}
+static int32_t fake_cpu_lifecycle_check(R4ProgramKernelCpuLifecycleCheck *out) {
+    out->new_epoch = UINT64_C(0x1234567885abcdf0);
+    return 1;
+}
+static int cpu_lifecycle_facade_probe(void) {
+    R4XStartR4Dev table = {0};
+    R4Dev dev = { &table };
+    R4CpuLifecycleInfo info = {0}; info.epoch = 71u;
+    R4ProgramKernelCpuLifecycleCheck check = {0}; check.new_epoch = 72u;
+    table.cpu_lifecycle = (uintptr_t)&fake_cpu_lifecycle;
+    table.kernel_cpu_lifecycle_check = (uintptr_t)&fake_cpu_lifecycle_check;
+    for (uint32_t size = 552u; size < 560u; ++size) {
+        table.size = size;
+        if (r4dev_cpu_lifecycle(&dev, 2u, 63u, UINT64_C(0x1234567885abcdef), &info) != R4OS_ERR_NO_FN || info.epoch != 71u) return 1;
+    }
+    table.size = 560u;
+    if (r4dev_cpu_lifecycle(&dev, 2u, 63u, UINT64_C(0x1234567885abcdef), &info) != -63 || info.epoch != UINT64_C(0x1234567885abcdf0)) return 2;
+    if (r4dev_kernel_cpu_lifecycle_check(&dev, &check) != R4OS_ERR_NO_FN || check.new_epoch != 72u) return 3;
+    table.size = 568u;
+    if (r4dev_kernel_cpu_lifecycle_check(&dev, &check) != 1 || check.new_epoch != UINT64_C(0x1234567885abcdf0)) return 4;
+    table.cpu_lifecycle = 0u; table.kernel_cpu_lifecycle_check = 0u;
+    if (r4dev_cpu_lifecycle(&dev, 2u, 63u, UINT64_C(0x1234567885abcdef), &info) != R4OS_ERR_NO_FN || r4dev_kernel_cpu_lifecycle_check(&dev, &check) != R4OS_ERR_NO_FN) return 5;
+    return 0;
+}
+
 static int32_t fake_service_open(const uint8_t *name, R4ServiceInfo *out) {
     (void)name; *out = (R4ServiceInfo){0}; out->handle = 77u; ++open_connections; return 0;
 }
@@ -113,6 +143,7 @@ static void init_app(R4App *app, R4XStartR4Sys *sys, R4XStartR4Audio *audio, R4X
 }
 
 int main(void) {
+    if (cpu_lifecycle_facade_probe() != 0) return 63;
     R4App app; R4XStartR4Sys sys; R4XStartR4Audio raw_audio; R4XStartR4Dev raw_dev;
     init_app(&app, &sys, &raw_audio, &raw_dev); stream_open = 0; open_connections = 0u;
     R4AudioFacade audio = r4_app_audio(&app); R4AudioStream stream;

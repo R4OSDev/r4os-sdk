@@ -16,6 +16,24 @@ typedef struct R4Dev {
     const R4XStartR4Dev *table;
 } R4Dev;
 
+/* Query is passive. Offline/online require the exact current epoch; errors
+ * preserve output and may require a fresh query after a partial safe drain. */
+static inline int32_t r4dev_cpu_lifecycle(const R4Dev *dev, uint32_t operation, uint32_t cpu,
+    uint64_t expected_epoch, R4CpuLifecycleInfo *out) {
+    if (out == 0) return R4OS_CPU_LIFECYCLE_ERROR_INVALID;
+    if (dev == 0 || dev->table == 0 ||
+        dev->table->size < offsetof(R4XStartR4Dev, cpu_lifecycle) + sizeof(uintptr_t) ||
+        dev->table->cpu_lifecycle == 0u) return R4OS_ERR_NO_FN;
+    return ((R4DevCpuLifecycleFn)(uintptr_t)dev->table->cpu_lifecycle)(operation, cpu, expected_epoch, out);
+}
+static inline int32_t r4dev_kernel_cpu_lifecycle_check(const R4Dev *dev, R4ProgramKernelCpuLifecycleCheck *out) {
+    if (out == 0) return R4OS_CPU_LIFECYCLE_ERROR_INVALID;
+    if (dev == 0 || dev->table == 0 ||
+        dev->table->size < offsetof(R4XStartR4Dev, kernel_cpu_lifecycle_check) + sizeof(uintptr_t) ||
+        dev->table->kernel_cpu_lifecycle_check == 0u) return R4OS_ERR_NO_FN;
+    return ((R4DevKernelCpuLifecycleCheckFn)(uintptr_t)dev->table->kernel_cpu_lifecycle_check)(out);
+}
+
 static inline int32_t r4dev_cpu_topology(const R4Dev *dev, uint32_t cpu_index, R4CpuTopologyInfo *out) {
     if (out == 0) return R4OS_ERROR_INVALID;
     if (dev == 0 || dev->table == 0 ||

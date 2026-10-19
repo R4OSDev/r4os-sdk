@@ -467,6 +467,16 @@ pub const Context = struct {
         return table_fn(out);
     }
 
+    /// Explicit mutation requires an exact queried epoch; query is passive.
+    pub fn cpuLifecycle(self: *const Context, operation: u32, cpu: u32, expected_epoch: u64, out: *abi.CpuLifecycleInfo) i32 {
+        const function = self.devFn("cpu_lifecycle") orelse return self.unavailable("dev");
+        return function(operation, cpu, expected_epoch, out);
+    }
+    pub fn kernelCpuLifecycleCheck(self: *const Context, out: *abi.ProgramKernelCpuLifecycleCheck) i32 {
+        const function = self.devFn("kernel_cpu_lifecycle_check") orelse return self.unavailable("dev");
+        return function(out);
+    }
+
     pub fn kernelSmpCheck(self: *const Context, out: *abi.ProgramKernelSmpCheck) i32 {
         const table_fn = self.devFn("smp_kernel_check") orelse return self.unavailable("dev");
         return table_fn(out);
