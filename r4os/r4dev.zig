@@ -143,6 +143,10 @@ pub const Context = struct {
     pub fn cpuPowerInfo(self: *const Context, cpu: u32, epoch: u64, out: *abi.CpuPowerInfo) i32 {
         return self.base.cpuPowerInfo(cpu, epoch, out);
     }
+    pub fn cpuPerformance(self: *const Context, request: *const abi.CpuPerformanceRequest, out: *abi.CpuPerformanceInfo) i32 {
+        return self.base.cpuPerformance(request, out);
+    }
+
     pub fn cpuPowerCapture(self: *const Context, cpu: u32, epoch: u64, out: *abi.CpuPowerInfo) i32 {
         return self.base.cpuPowerCapture(cpu, epoch, out);
     }

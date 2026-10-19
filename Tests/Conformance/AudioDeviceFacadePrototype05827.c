@@ -98,6 +98,16 @@ static int cpu_power_facade_probe(void) {
     return 0;
 }
 
+static int32_t fake_cpu_performance(const R4CpuPerformanceRequest *request,R4CpuPerformanceInfo *out){
+    if(request->cpu_index!=63||request->epoch!=CPU_CATALOG_EPOCH)return -99;out->lease=request->epoch;return -96;
+}
+static int cpu_performance_facade_probe(void){
+    R4XStartR4Dev table={.cpu_performance=(uintptr_t)&fake_cpu_performance};R4Dev dev={&table};R4CpuPerformanceRequest request={.cpu_index=63,.epoch=CPU_CATALOG_EPOCH};R4CpuPerformanceInfo out={.lease=71};
+    for(uint32_t size=616;size<624;size++){table.size=size;if(r4dev_cpu_performance(&dev,&request,&out)!=R4OS_ERR_NO_FN||out.lease!=71)return 1;}
+    table.size=624;if(r4dev_cpu_performance(&dev,&request,&out)!=-96||out.lease!=CPU_CATALOG_EPOCH)return 2;
+    table.cpu_performance=0;if(r4dev_cpu_performance(&dev,&request,&out)!=R4OS_ERR_NO_FN||out.lease!=CPU_CATALOG_EPOCH)return 3;return 0;
+}
+
 static int32_t fake_service_open(const uint8_t *name, R4ServiceInfo *out) {
     (void)name; *out = (R4ServiceInfo){0}; out->handle = 77u; ++open_connections; return 0;
 }
@@ -209,6 +219,7 @@ int main(void) {
     if (cpu_lifecycle_facade_probe() != 0) return 63;
     if (cpu_catalogue_facade_probe() != 0) return 64;
     if (cpu_power_facade_probe() != 0) return 65;
+    if (cpu_performance_facade_probe() != 0) return 66;
     R4App app; R4XStartR4Sys sys; R4XStartR4Audio raw_audio; R4XStartR4Dev raw_dev;
     init_app(&app, &sys, &raw_audio, &raw_dev); stream_open = 0; open_connections = 0u;
     R4AudioFacade audio = r4_app_audio(&app); R4AudioStream stream;

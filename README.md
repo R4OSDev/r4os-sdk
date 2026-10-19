@@ -539,3 +539,12 @@ Their buffers and context must remain valid until a real successful join or
 terminal process retirement; a timeout never releases them. The existing
 instance-generation, VM, FPU, placement and join/exit contracts still apply.
 This is an ownership contract in the trusted single-user system.
+
+CPU performance (0.64.43): `cpuPerformance` negotiates the optional R4DEV26
+624-byte tail. It returns a receipt whose state and error must be checked; a
+request readback is not achieved frequency. The optional112-byte
+`DriverCpuPowerContext` tail retains exact hardware-control tokens until real
+return. Existing64/72-byte observation tables remain supported. The provider
+requires explicit local release before CPU offline or driver unload; uncertain
+state keeps its resources. HWP package activation requires separate reset-only
+consent. No governor or implicit policy runs in these facades.

@@ -154,6 +154,31 @@ test "passive CPU power and explicit capture preserve old table boundaries and f
     try t.expectEqual(epoch, value.provider_generation);
 }
 
+fn fakeCpuPerformance(request: *const r4os.abi.CpuPerformanceRequest, out: *r4os.abi.CpuPerformanceInfo) callconv(.c) i32 {
+    std.debug.assert(request.cpu_index == 63 and request.epoch == 0x1234_5678_85ab_cdef);
+    out.lease = request.epoch;
+    return -96;
+}
+test "explicit CPU performance facade negotiates appended624 boundary without changing legacy output" {
+    const a = r4os.abi;
+    const t = std.testing;
+    const facade = initFacades().devices.raw;
+    const request: a.CpuPerformanceRequest = .{ .cpu_index = 63, .epoch = 0x1234_5678_85ab_cdef };
+    var value: a.CpuPerformanceInfo = .{ .lease = 71 };
+    dev_table.cpu_performance = @intFromPtr(&fakeCpuPerformance);
+    for (616..624) |size| {
+        dev_table.size = @intCast(size);
+        try t.expectEqual(a.err_no_fn, facade.cpuPerformance(&request, &value));
+        try t.expectEqual(@as(u64, 71), value.lease);
+    }
+    dev_table.size = 624;
+    try t.expectEqual(@as(i32, -96), facade.cpuPerformance(&request, &value));
+    try t.expectEqual(0x1234_5678_85ab_cdef, value.lease);
+    dev_table.cpu_performance = 0;
+    try t.expectEqual(a.err_no_fn, facade.cpuPerformance(&request, &value));
+    try t.expectEqual(0x1234_5678_85ab_cdef, value.lease);
+}
+
 fn fakeInstrumentation(out: *r4os.abi.ProgramInstrumentationInfo) callconv(.c) i32 {
     if (out.version != 1 or out.size != @sizeOf(r4os.abi.ProgramInstrumentationInfo)) return -1;
     out.* = .{ .mode = 0, .lock_count = 11, .stack_group_count = 13 };

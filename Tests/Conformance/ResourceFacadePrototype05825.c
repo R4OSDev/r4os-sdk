@@ -15,7 +15,7 @@ static int32_t power_read(uint32_t cpu,uint64_t epoch,uint32_t id,R4CpuRegisterI
 static int32_t power_clock(R4MonotonicClockInfo *out){out->instant_ns=UINT64_C(0x1234567885abcdef);return 1;}
 static int32_t power_pair(uint32_t cpu,uint64_t epoch,R4CpuPowerCounters *out){if(cpu!=63)return -99;out->aperf=epoch;out->mperf=epoch+1;return -88;}
 static int32_t power_query(R4DriverCpuPowerApi *out){
-    if(out->version!=1||out->size!=72)return -99;
+    if(out->version!=1||out->size!=sizeof(R4DriverCpuPowerApi))return -99;
     *out=(R4DriverCpuPowerApi){.version=1,.size=72,.register_backend=(uintptr_t)&power_register,.unregister_backend=(uintptr_t)&power_unregister,
         .current_cpu=(uintptr_t)&power_current,.capabilities=(uintptr_t)&power_cap,.topology=(uintptr_t)&power_topology,
         .register_read=(uintptr_t)&power_read,.clock=(uintptr_t)&power_clock,.counters_read=(uintptr_t)&power_pair};
@@ -49,6 +49,20 @@ static int power_checks(void){
         r4driver_cpu_power_unregister(&ctx,identity)!=R4OS_ERR_NO_FN||r4driver_cpu_power_capabilities(&ctx,63,&cap)!=R4OS_ERR_NO_FN||cap.epoch!=63||
         r4driver_cpu_power_topology(&ctx,63,&topo)!=R4OS_ERR_NO_FN||topo.start_epoch!=63||r4driver_cpu_power_read(&ctx,63,identity,17,&raw)!=R4OS_ERR_NO_FN||raw.value!=identity||
         r4driver_cpu_power_clock(&ctx,&clock)!=R4OS_ERR_NO_FN||clock.instant_ns!=identity||r4driver_cpu_power_counters(&ctx,63,identity,&pair)!=R4OS_ERR_NO_FN||pair.aperf!=identity)return 7;
+    return 0;
+}
+
+static int32_t control_write(uint32_t cpu,uint64_t epoch,uint64_t token,uint32_t id,uint64_t expected,uint64_t requested,R4CpuRegisterWriteInfo *out){
+    if(cpu!=63||epoch!=UINT64_C(0x1234567885abcdef)||token!=epoch||id!=20||expected!=epoch+1||requested!=epoch+2)return -99;
+    out->observed_after=requested;return -95;
+}
+static int control_checks(void){
+    uint64_t identity=UINT64_C(0x1234567885abcdef);R4CpuRegisterWriteInfo out={.observed_after=71};
+    R4DriverCpuPowerApi table={.version=1,.size=112,.register_compare_write=(uintptr_t)&control_write};
+    if(r4driver_cpu_power_compare_write(&table,63,identity,identity,20,identity+1,identity+2,&out)!=-95||out.observed_after!=identity+2)return 1;
+    for(uint32_t size=72;size<112;size++){table.size=size;if(r4driver_cpu_power_compare_write(&table,63,identity,identity,20,identity+1,identity+2,&out)!=R4OS_ERR_NO_FN||out.observed_after!=identity+2)return 2;}
+    table.size=112;table.register_compare_write=0;
+    if(r4driver_cpu_power_compare_write(&table,63,identity,identity,20,identity+1,identity+2,&out)!=R4OS_ERR_NO_FN||out.observed_after!=identity+2)return 3;
     return 0;
 }
 
@@ -517,6 +531,7 @@ int main(void) {
     if (driver_thread_checks() != 0) return 81;
     if (driver_resource_checks() != 0) return 79;
     if (power_checks() != 0) return 89;
+    if (control_checks() != 0) return 90;
     R4App app; R4XStartR4Sys table; R4XStartR4Desk desk; init_app(&app, &table, &desk); R4Resources resources = r4_app_resources(&app);
     R4ProgramJoinHandle refused = {0};
     if (r4sys_compute_worker_create(&app.system, unused_thread, 85u, 262144u, &refused) != R4OS_THREAD_ERROR_UNSUPPORTED || refused.thread_id != 0u) return 88;

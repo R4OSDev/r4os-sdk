@@ -47,6 +47,14 @@ static inline int32_t r4dev_cpu_power_info(const R4Dev *dev, uint32_t cpu, uint6
         dev->table->cpu_power_info == 0u) return R4OS_ERR_NO_FN;
     return ((R4DevCpuPowerInfoFn)(uintptr_t)dev->table->cpu_power_info)(cpu, epoch, out);
 }
+/* Explicit local operation; return0 provides a receipt, whose state/error must
+ * be checked. A request readback is not achieved physical performance. */
+static inline int32_t r4dev_cpu_performance(const R4Dev *dev, const R4CpuPerformanceRequest *request, R4CpuPerformanceInfo *out) {
+    if (!request || !out) return R4OS_CPU_CAPABILITIES_ERROR_INVALID;
+    if (!dev || !dev->table || dev->table->size < offsetof(R4XStartR4Dev, cpu_performance) + sizeof(uintptr_t) || !dev->table->cpu_performance) return R4OS_ERR_NO_FN;
+    return ((R4DevCpuPerformanceFn)(uintptr_t)dev->table->cpu_performance)(request, out);
+}
+
 static inline int32_t r4dev_cpu_power_capture(const R4Dev *dev, uint32_t cpu, uint64_t epoch, R4CpuPowerInfo *out) {
     if (out == 0) return R4OS_CPU_CAPABILITIES_ERROR_INVALID;
     if (dev == 0 || dev->table == 0 ||

@@ -43,5 +43,35 @@ static inline int32_t r4driver_cpu_power_counters(const R4DriverCpuPowerApi *t, 
     typedef int32_t (*Fn)(uint32_t, uint64_t, R4CpuPowerCounters *);
     return ((Fn)(uintptr_t)t->counters_read)(cpu, epoch, out);
 }
+static inline int32_t r4driver_cpu_power_feature(const R4DriverCpuPowerApi *t, uint32_t cpu, uint64_t epoch, uint32_t ordinal, R4CpuFeatureInfo *out) {
+    if (!out) return R4OS_CPU_CAPABILITIES_ERROR_INVALID;
+    if (!R4_CPU_POWER_HAS(t, feature)) return R4OS_ERR_NO_FN;
+    typedef int32_t (*Fn)(uint32_t, uint64_t, uint32_t, R4CpuFeatureInfo *);
+    return ((Fn)(uintptr_t)t->feature)(cpu, epoch, ordinal, out);
+}
+static inline int32_t r4driver_cpu_power_register_performance(const R4DriverCpuPowerApi *t, uint64_t cookie, const R4CpuPerformanceBackend *backend) {
+    if (!backend) return R4OS_CPU_CAPABILITIES_ERROR_INVALID;
+    if (!R4_CPU_POWER_HAS(t, register_performance)) return R4OS_ERR_NO_FN;
+    typedef int32_t (*Fn)(uint64_t, const R4CpuPerformanceBackend *);
+    return ((Fn)(uintptr_t)t->register_performance)(cookie, backend);
+}
+static inline int32_t r4driver_cpu_power_control_acquire(const R4DriverCpuPowerApi *t, uint32_t cpu, uint64_t epoch, uint64_t *token) {
+    if (!token) return R4OS_CPU_CAPABILITIES_ERROR_INVALID;
+    if (!R4_CPU_POWER_HAS(t, control_acquire)) return R4OS_ERR_NO_FN;
+    typedef int32_t (*Fn)(uint32_t, uint64_t, uint64_t *);
+    return ((Fn)(uintptr_t)t->control_acquire)(cpu, epoch, token);
+}
+static inline int32_t r4driver_cpu_power_control_release(const R4DriverCpuPowerApi *t, uint32_t cpu, uint64_t epoch, uint64_t token) {
+    if (0) return R4OS_CPU_CAPABILITIES_ERROR_INVALID;
+    if (!R4_CPU_POWER_HAS(t, control_release)) return R4OS_ERR_NO_FN;
+    typedef int32_t (*Fn)(uint32_t, uint64_t, uint64_t);
+    return ((Fn)(uintptr_t)t->control_release)(cpu, epoch, token);
+}
+static inline int32_t r4driver_cpu_power_compare_write(const R4DriverCpuPowerApi *t, uint32_t cpu, uint64_t epoch, uint64_t token, uint32_t id, uint64_t expected, uint64_t requested, R4CpuRegisterWriteInfo *out) {
+    if (!out) return R4OS_CPU_CAPABILITIES_ERROR_INVALID;
+    if (!R4_CPU_POWER_HAS(t, register_compare_write)) return R4OS_ERR_NO_FN;
+    typedef int32_t (*Fn)(uint32_t, uint64_t, uint64_t, uint32_t, uint64_t, uint64_t, R4CpuRegisterWriteInfo *);
+    return ((Fn)(uintptr_t)t->register_compare_write)(cpu, epoch, token, id, expected, requested, out);
+}
 #undef R4_CPU_POWER_HAS
 #endif

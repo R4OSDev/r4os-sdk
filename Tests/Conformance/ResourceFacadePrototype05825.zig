@@ -37,7 +37,7 @@ fn powerPair(cpu: u32, epoch: u64, out: *r4os.abi.CpuPowerCounters) callconv(.c)
     return -88;
 }
 fn powerQuery(out: *r4os.abi.DriverCpuPowerApi) callconv(.c) i32 {
-    std.debug.assert(out.version == 1 and out.size == 72);
+    std.debug.assert(out.version == 1 and out.size == @sizeOf(r4os.abi.DriverCpuPowerApi));
     out.* = .{ .register_backend = @intFromPtr(&powerRegister), .unregister_backend = @intFromPtr(&powerUnregister), .current_cpu = @intFromPtr(&powerCurrent), .capabilities = @intFromPtr(&powerCap), .topology = @intFromPtr(&powerTopology), .register_read = @intFromPtr(&powerRead), .clock = @intFromPtr(&powerClock) };
     switch (power_query_mode) {
         1 => out.version = 2,
@@ -124,6 +124,67 @@ test "driver CPU power query validates the full optional tail and keeps typed 64
     try t.expectEqual(identity, clock.instant_ns);
     try t.expectEqual(a.err_no_fn, missing.countersRead(63, identity, &pair));
     try t.expectEqual(identity, pair.aperf);
+}
+
+const control_identity: u64 = 0x1234_5678_85ab_cdef;
+fn controlFeature(cpu: u32, epoch: u64, ordinal: u32, out: *r4os.abi.CpuFeatureInfo) callconv(.c) i32 {
+    std.debug.assert(cpu == 63 and epoch == control_identity and ordinal == 54);
+    out.epoch = epoch;
+    return -91;
+}
+fn controlRegister(cookie: u64, backend: *const r4os.abi.CpuPerformanceBackend) callconv(.c) i32 {
+    std.debug.assert(cookie == control_identity and backend.context == cookie);
+    return -92;
+}
+fn controlAcquire(cpu: u32, epoch: u64, token: *u64) callconv(.c) i32 {
+    std.debug.assert(cpu == 63 and epoch == control_identity);
+    token.* = epoch;
+    return -93;
+}
+fn controlRelease(cpu: u32, epoch: u64, token: u64) callconv(.c) i32 {
+    std.debug.assert(cpu == 63 and epoch == control_identity and token == epoch);
+    return -94;
+}
+fn controlWrite(cpu: u32, epoch: u64, token: u64, id: u32, expected: u64, requested: u64, out: *r4os.abi.CpuRegisterWriteInfo) callconv(.c) i32 {
+    std.debug.assert(cpu == 63 and epoch == control_identity and token == epoch and id == 20 and expected == epoch + 1 and requested == epoch + 2);
+    out.observed_after = requested;
+    return -95;
+}
+test "optional CPU control tail preserves legacy72 boundaries and full stack arguments" {
+    const a = r4os.abi;
+    const t = std.testing;
+    const Ctx = r4os.r4dev.DriverCpuPowerContext;
+    var ctx = Ctx{ .table = .{ .feature = @intFromPtr(&controlFeature), .register_performance = @intFromPtr(&controlRegister), .control_acquire = @intFromPtr(&controlAcquire), .control_release = @intFromPtr(&controlRelease), .register_compare_write = @intFromPtr(&controlWrite) } };
+    var feature: a.CpuFeatureInfo = .{};
+    const backend: a.CpuPerformanceBackend = .{ .context = control_identity };
+    var token: u64 = 71;
+    var receipt: a.CpuRegisterWriteInfo = .{};
+    try t.expectEqual(@as(i32, -91), ctx.feature(63, control_identity, 54, &feature));
+    try t.expectEqual(control_identity, feature.epoch);
+    try t.expectEqual(@as(i32, -92), ctx.registerPerformance(control_identity, &backend));
+    try t.expectEqual(@as(i32, -93), ctx.controlAcquire(63, control_identity, &token));
+    try t.expectEqual(control_identity, token);
+    try t.expectEqual(@as(i32, -94), ctx.controlRelease(63, control_identity, token));
+    try t.expectEqual(@as(i32, -95), ctx.registerCompareWrite(63, control_identity, token, 20, control_identity + 1, control_identity + 2, &receipt));
+    try t.expectEqual(control_identity + 2, receipt.observed_after);
+    inline for (.{ "feature", "register_performance", "control_acquire", "control_release", "register_compare_write" }) |field| {
+        const slot = @field(ctx.table, field);
+        ctx.table.size = @offsetOf(a.DriverCpuPowerApi, field) + 7;
+        try t.expect(!ctx.has(field));
+        ctx.table.size = @sizeOf(a.DriverCpuPowerApi);
+        @field(ctx.table, field) = 0;
+        try t.expect(!ctx.has(field));
+        @field(ctx.table, field) = slot;
+    }
+    ctx.table.size = 72;
+    try t.expectEqual(a.err_no_fn, ctx.feature(63, control_identity, 54, &feature));
+    try t.expectEqual(control_identity, feature.epoch);
+    try t.expectEqual(a.err_no_fn, ctx.registerPerformance(control_identity, &backend));
+    try t.expectEqual(a.err_no_fn, ctx.controlAcquire(63, control_identity, &token));
+    try t.expectEqual(control_identity, token);
+    try t.expectEqual(a.err_no_fn, ctx.controlRelease(63, control_identity, token));
+    try t.expectEqual(a.err_no_fn, ctx.registerCompareWrite(63, control_identity, token, 20, control_identity + 1, control_identity + 2, &receipt));
+    try t.expectEqual(control_identity + 2, receipt.observed_after);
 }
 
 fn dmaRangeDevice(mapping: *const r4os.abi.DmaMapping, offset: u32, bytes: u32) callconv(.c) i32 {

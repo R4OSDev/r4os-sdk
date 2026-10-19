@@ -1,11 +1,38 @@
 const a = @import("r4os_contract").abi;
-/// Authenticated passive CPU mechanism, obtained during driver init. No
-/// arbitrary MSR address, cross-CPU dispatch or power-control operation.
+/// Authenticated optional CPU mechanism, obtained during driver init. Explicit
+/// controls retain exact hardware membership until the owner proves return.
+/// No arbitrary MSR address or cross-CPU dispatch.
 pub const Context = struct {
     table: a.DriverCpuPowerApi,
     pub fn has(self: *const Context, comptime field: []const u8) bool {
         return self.table.version == 1 and self.table.size >= @offsetOf(a.DriverCpuPowerApi, field) + 8 and @field(self.table, field) != 0;
     }
+    pub fn feature(self: *const Context, cpu: u32, epoch: u64, ordinal: u32, out: *a.CpuFeatureInfo) i32 {
+        if (!self.has("feature")) return a.err_no_fn;
+        const call: *const fn (u32, u64, u32, *a.CpuFeatureInfo) callconv(.c) i32 = @ptrFromInt(self.table.feature);
+        return call(cpu, epoch, ordinal, out);
+    }
+    pub fn registerPerformance(self: *const Context, cookie: u64, backend: *const a.CpuPerformanceBackend) i32 {
+        if (!self.has("register_performance")) return a.err_no_fn;
+        const call: *const fn (u64, *const a.CpuPerformanceBackend) callconv(.c) i32 = @ptrFromInt(self.table.register_performance);
+        return call(cookie, backend);
+    }
+    pub fn controlAcquire(self: *const Context, cpu: u32, epoch: u64, token: *u64) i32 {
+        if (!self.has("control_acquire")) return a.err_no_fn;
+        const call: *const fn (u32, u64, *u64) callconv(.c) i32 = @ptrFromInt(self.table.control_acquire);
+        return call(cpu, epoch, token);
+    }
+    pub fn controlRelease(self: *const Context, cpu: u32, epoch: u64, token: u64) i32 {
+        if (!self.has("control_release")) return a.err_no_fn;
+        const call: *const fn (u32, u64, u64) callconv(.c) i32 = @ptrFromInt(self.table.control_release);
+        return call(cpu, epoch, token);
+    }
+    pub fn registerCompareWrite(self: *const Context, cpu: u32, epoch: u64, token: u64, id: u32, expected: u64, requested: u64, out: *a.CpuRegisterWriteInfo) i32 {
+        if (!self.has("register_compare_write")) return a.err_no_fn;
+        const call: *const fn (u32, u64, u64, u32, u64, u64, *a.CpuRegisterWriteInfo) callconv(.c) i32 = @ptrFromInt(self.table.register_compare_write);
+        return call(cpu, epoch, token, id, expected, requested, out);
+    }
+
     pub fn register(self: *const Context, backend: *const a.CpuPowerBackend, cookie: *u64) i32 {
         if (!self.has("register_backend")) return a.err_no_fn;
         const call: *const fn (*const a.CpuPowerBackend, *u64) callconv(.c) i32 = @ptrFromInt(self.table.register_backend);
