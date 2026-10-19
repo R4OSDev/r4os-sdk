@@ -187,6 +187,43 @@ test "optional CPU control tail preserves legacy72 boundaries and full stack arg
     try t.expectEqual(control_identity + 2, receipt.observed_after);
 }
 
+fn cppcRegister(cookie: u64, backend: *const r4os.abi.CpuCppcBackend) callconv(.c) i32 {
+    std.debug.assert(cookie == control_identity and backend.context == cookie);
+    return -97;
+}
+fn cppcRank(input: *const r4os.abi.CpuPerformanceHint, sequence: *u64) callconv(.c) i32 {
+    std.debug.assert(input.cpu_index == 63 and input.epoch == control_identity);
+    sequence.* = input.epoch;
+    return -98;
+}
+test "CPPC mechanism128 independently negotiates both optional slots without touching refused output" {
+    const a = r4os.abi;
+    const t = std.testing;
+    var ctx = r4os.r4dev.DriverCpuPowerContext{ .table = .{ .register_cppc = @intFromPtr(&cppcRegister), .rank_publish = @intFromPtr(&cppcRank) } };
+    const backend: a.CpuCppcBackend = .{ .context = control_identity };
+    const input: a.CpuPerformanceHint = .{ .cpu_index = 63, .epoch = control_identity };
+    var sequence: u64 = 71;
+    for (112..120) |size| {
+        ctx.table.size = @intCast(size);
+        try t.expectEqual(a.err_no_fn, ctx.registerCppc(control_identity, &backend));
+    }
+    ctx.table.size = 120;
+    try t.expectEqual(@as(i32, -97), ctx.registerCppc(control_identity, &backend));
+    for (112..128) |size| {
+        ctx.table.size = @intCast(size);
+        try t.expectEqual(a.err_no_fn, ctx.rankPublish(&input, &sequence));
+        try t.expectEqual(@as(u64, 71), sequence);
+    }
+    ctx.table.size = 128;
+    try t.expectEqual(@as(i32, -98), ctx.rankPublish(&input, &sequence));
+    try t.expectEqual(control_identity, sequence);
+    ctx.table.register_cppc = 0;
+    ctx.table.rank_publish = 0;
+    try t.expectEqual(a.err_no_fn, ctx.registerCppc(control_identity, &backend));
+    try t.expectEqual(a.err_no_fn, ctx.rankPublish(&input, &sequence));
+    try t.expectEqual(control_identity, sequence);
+}
+
 fn dmaRangeDevice(mapping: *const r4os.abi.DmaMapping, offset: u32, bytes: u32) callconv(.c) i32 {
     std.debug.assert(mapping.handle == 0x700000000079 and offset == 0xfffffff0 and bytes == 7);
     return -701;

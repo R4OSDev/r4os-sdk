@@ -147,6 +147,14 @@ pub const Context = struct {
         return self.base.cpuPerformance(request, out);
     }
 
+    pub fn cpuCppc(self: *const Context, request: *const abi.CpuPerformanceRequest, out: *abi.CpuCppcInfo) i32 {
+        return self.base.cpuCppc(request, out);
+    }
+
+    pub fn cpuPerformanceHint(self: *const Context, cpu: u32, epoch: u64, out: *abi.CpuPerformanceHintInfo) i32 {
+        return self.base.cpuPerformanceHint(cpu, epoch, out);
+    }
+
     pub fn cpuPowerCapture(self: *const Context, cpu: u32, epoch: u64, out: *abi.CpuPowerInfo) i32 {
         return self.base.cpuPowerCapture(cpu, epoch, out);
     }

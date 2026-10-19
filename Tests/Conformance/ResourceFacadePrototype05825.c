@@ -66,6 +66,19 @@ static int control_checks(void){
     return 0;
 }
 
+static int32_t cppc_register(uint64_t cookie,const R4CpuCppcBackend *b){return cookie==b->context?-97:-99;}
+static int32_t cppc_rank(const R4CpuPerformanceHint *in,uint64_t *seq){if(in->cpu_index!=63)return -99;*seq=in->epoch;return -98;}
+static int cppc_checks(void){
+    const uint64_t identity=UINT64_C(0x1234567885abcdef);R4CpuCppcBackend backend={.context=identity};R4CpuPerformanceHint in={.cpu_index=63,.epoch=identity};uint64_t sequence=71;
+    R4DriverCpuPowerApi t={.version=1,.size=128,.register_cppc=(uintptr_t)&cppc_register,.rank_publish=(uintptr_t)&cppc_rank};
+    for(uint32_t size=112;size<120;size++){t.size=size;if(r4driver_cpu_power_register_cppc(&t,identity,&backend)!=R4OS_ERR_NO_FN)return 1;}
+    t.size=120;if(r4driver_cpu_power_register_cppc(&t,identity,&backend)!=-97)return 2;
+    for(uint32_t size=112;size<128;size++){t.size=size;if(r4driver_cpu_power_rank_publish(&t,&in,&sequence)!=R4OS_ERR_NO_FN||sequence!=71)return 3;}
+    t.size=128;if(r4driver_cpu_power_rank_publish(&t,&in,&sequence)!=-98||sequence!=identity)return 4;
+    t.rank_publish=0;t.register_cppc=0;if(r4driver_cpu_power_rank_publish(&t,&in,&sequence)!=R4OS_ERR_NO_FN||sequence!=identity||r4driver_cpu_power_register_cppc(&t,identity,&backend)!=R4OS_ERR_NO_FN)return 5;
+    return 0;
+}
+
 static uint64_t platform_root_probe(void) { return UINT64_C(0x100000080035); }
 static int32_t platform_view_probe(uint64_t physical, uint64_t bytes, uint64_t *out) {
     if (physical != UINT64_C(0x100000080035) || bytes != 65536) return -1;
@@ -532,6 +545,7 @@ int main(void) {
     if (driver_resource_checks() != 0) return 79;
     if (power_checks() != 0) return 89;
     if (control_checks() != 0) return 90;
+    if (cppc_checks() != 0) return 91;
     R4App app; R4XStartR4Sys table; R4XStartR4Desk desk; init_app(&app, &table, &desk); R4Resources resources = r4_app_resources(&app);
     R4ProgramJoinHandle refused = {0};
     if (r4sys_compute_worker_create(&app.system, unused_thread, 85u, 262144u, &refused) != R4OS_THREAD_ERROR_UNSUPPORTED || refused.thread_id != 0u) return 88;

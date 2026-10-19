@@ -55,6 +55,20 @@ static inline int32_t r4dev_cpu_performance(const R4Dev *dev, const R4CpuPerform
     return ((R4DevCpuPerformanceFn)(uintptr_t)dev->table->cpu_performance)(request, out);
 }
 
+/* Optional independently typed AMD CPPC/catalogue observation. */
+static inline int32_t r4dev_cpu_cppc(const R4Dev *dev, const R4CpuPerformanceRequest *request, R4CpuCppcInfo *out) {
+    if (!request || !out) return R4OS_CPU_CAPABILITIES_ERROR_INVALID;
+    if (!dev || !dev->table || dev->table->size < offsetof(R4XStartR4Dev, cpu_cppc) + sizeof(uintptr_t) || !dev->table->cpu_cppc) return R4OS_ERR_NO_FN;
+    return ((R4DevCpuCppcFn)(uintptr_t)dev->table->cpu_cppc)(request, out);
+}
+
+/* Optional independently typed AMD CPPC/catalogue observation. */
+static inline int32_t r4dev_cpu_performance_hint(const R4Dev *dev, uint32_t cpu, uint64_t epoch, R4CpuPerformanceHintInfo *out) {
+    if (!out) return R4OS_CPU_CAPABILITIES_ERROR_INVALID;
+    if (!dev || !dev->table || dev->table->size < offsetof(R4XStartR4Dev, cpu_performance_hint) + sizeof(uintptr_t) || !dev->table->cpu_performance_hint) return R4OS_ERR_NO_FN;
+    return ((R4DevCpuPerformanceHintFn)(uintptr_t)dev->table->cpu_performance_hint)(cpu, epoch, out);
+}
+
 static inline int32_t r4dev_cpu_power_capture(const R4Dev *dev, uint32_t cpu, uint64_t epoch, R4CpuPowerInfo *out) {
     if (out == 0) return R4OS_CPU_CAPABILITIES_ERROR_INVALID;
     if (dev == 0 || dev->table == 0 ||

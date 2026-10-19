@@ -108,6 +108,19 @@ static int cpu_performance_facade_probe(void){
     table.cpu_performance=0;if(r4dev_cpu_performance(&dev,&request,&out)!=R4OS_ERR_NO_FN||out.lease!=CPU_CATALOG_EPOCH)return 3;return 0;
 }
 
+static int32_t fake_cppc(const R4CpuPerformanceRequest *in,R4CpuCppcInfo *out){if(in->cpu_index!=63)return -99;out->lease=in->epoch;return -97;}
+static int32_t fake_rank(uint32_t cpu,uint64_t epoch,R4CpuPerformanceHintInfo *out){if(cpu!=63)return -99;out->sequence=epoch;return -98;}
+static int cppc_facade_probe(void){
+    R4XStartR4Dev table={.cpu_cppc=(uintptr_t)&fake_cppc,.cpu_performance_hint=(uintptr_t)&fake_rank};R4Dev dev={&table};
+    R4CpuPerformanceRequest in={.cpu_index=63,.epoch=CPU_CATALOG_EPOCH};R4CpuCppcInfo out={.lease=71};R4CpuPerformanceHintInfo rank={.sequence=72};
+    for(uint32_t size=624;size<632;size++){table.size=size;if(r4dev_cpu_cppc(&dev,&in,&out)!=R4OS_ERR_NO_FN||out.lease!=71)return 1;}
+    table.size=632;if(r4dev_cpu_cppc(&dev,&in,&out)!=-97||out.lease!=CPU_CATALOG_EPOCH)return 2;
+    for(uint32_t size=624;size<640;size++){table.size=size;if(r4dev_cpu_performance_hint(&dev,63,in.epoch,&rank)!=R4OS_ERR_NO_FN||rank.sequence!=72)return 3;}
+    table.size=640;if(r4dev_cpu_performance_hint(&dev,63,in.epoch,&rank)!=-98||rank.sequence!=in.epoch)return 4;
+    table.cpu_cppc=0;table.cpu_performance_hint=0;if(r4dev_cpu_cppc(&dev,&in,&out)!=R4OS_ERR_NO_FN||r4dev_cpu_performance_hint(&dev,63,in.epoch,&rank)!=R4OS_ERR_NO_FN||out.lease!=in.epoch||rank.sequence!=in.epoch)return 5;
+    return 0;
+}
+
 static int32_t fake_service_open(const uint8_t *name, R4ServiceInfo *out) {
     (void)name; *out = (R4ServiceInfo){0}; out->handle = 77u; ++open_connections; return 0;
 }
@@ -220,6 +233,7 @@ int main(void) {
     if (cpu_catalogue_facade_probe() != 0) return 64;
     if (cpu_power_facade_probe() != 0) return 65;
     if (cpu_performance_facade_probe() != 0) return 66;
+    if (cppc_facade_probe() != 0) return 67;
     R4App app; R4XStartR4Sys sys; R4XStartR4Audio raw_audio; R4XStartR4Dev raw_dev;
     init_app(&app, &sys, &raw_audio, &raw_dev); stream_open = 0; open_connections = 0u;
     R4AudioFacade audio = r4_app_audio(&app); R4AudioStream stream;

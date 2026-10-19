@@ -73,5 +73,18 @@ static inline int32_t r4driver_cpu_power_compare_write(const R4DriverCpuPowerApi
     typedef int32_t (*Fn)(uint32_t, uint64_t, uint64_t, uint32_t, uint64_t, uint64_t, R4CpuRegisterWriteInfo *);
     return ((Fn)(uintptr_t)t->register_compare_write)(cpu, epoch, token, id, expected, requested, out);
 }
+static inline int32_t r4driver_cpu_power_register_cppc(const R4DriverCpuPowerApi *t, uint64_t cookie, const R4CpuCppcBackend *backend) {
+    if (!backend) return R4OS_CPU_CAPABILITIES_ERROR_INVALID;
+    if (!R4_CPU_POWER_HAS(t, register_cppc)) return R4OS_ERR_NO_FN;
+    typedef int32_t (*Fn)(uint64_t, const R4CpuCppcBackend *);
+    return ((Fn)(uintptr_t)t->register_cppc)(cookie, backend);
+}
+static inline int32_t r4driver_cpu_power_rank_publish(const R4DriverCpuPowerApi *t, const R4CpuPerformanceHint *input, uint64_t *sequence) {
+    if (!input || !sequence) return R4OS_CPU_CAPABILITIES_ERROR_INVALID;
+    if (!R4_CPU_POWER_HAS(t, rank_publish)) return R4OS_ERR_NO_FN;
+    typedef int32_t (*Fn)(const R4CpuPerformanceHint *, uint64_t *);
+    return ((Fn)(uintptr_t)t->rank_publish)(input, sequence);
+}
+
 #undef R4_CPU_POWER_HAS
 #endif

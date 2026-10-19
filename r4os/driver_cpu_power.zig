@@ -33,6 +33,17 @@ pub const Context = struct {
         return call(cpu, epoch, token, id, expected, requested, out);
     }
 
+    pub fn registerCppc(self: *const Context, cookie: u64, backend: *const a.CpuCppcBackend) i32 {
+        if (!self.has("register_cppc")) return a.err_no_fn;
+        const call: *const fn (u64, *const a.CpuCppcBackend) callconv(.c) i32 = @ptrFromInt(self.table.register_cppc);
+        return call(cookie, backend);
+    }
+    pub fn rankPublish(self: *const Context, input: *const a.CpuPerformanceHint, sequence: *u64) i32 {
+        if (!self.has("rank_publish")) return a.err_no_fn;
+        const call: *const fn (*const a.CpuPerformanceHint, *u64) callconv(.c) i32 = @ptrFromInt(self.table.rank_publish);
+        return call(input, sequence);
+    }
+
     pub fn register(self: *const Context, backend: *const a.CpuPowerBackend, cookie: *u64) i32 {
         if (!self.has("register_backend")) return a.err_no_fn;
         const call: *const fn (*const a.CpuPowerBackend, *u64) callconv(.c) i32 = @ptrFromInt(self.table.register_backend);

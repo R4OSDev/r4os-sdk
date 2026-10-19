@@ -179,6 +179,48 @@ test "explicit CPU performance facade negotiates appended624 boundary without ch
     try t.expectEqual(0x1234_5678_85ab_cdef, value.lease);
 }
 
+fn fakeCppc(request: *const r4os.abi.CpuPerformanceRequest, out: *r4os.abi.CpuCppcInfo) callconv(.c) i32 {
+    std.debug.assert(request.cpu_index == 63 and request.epoch == 0x1234_5678_85ab_cdef);
+    out.lease = request.epoch;
+    return -97;
+}
+fn fakeRank(cpu: u32, epoch: u64, out: *r4os.abi.CpuPerformanceHintInfo) callconv(.c) i32 {
+    std.debug.assert(cpu == 63 and epoch == 0x1234_5678_85ab_cdef);
+    out.sequence = epoch;
+    return -98;
+}
+test "typed CPPC/catalogue facades preserve624/632 legacy boundaries and full epoch data" {
+    const a = r4os.abi;
+    const t = std.testing;
+    const facade = initFacades().devices.raw;
+    const request: a.CpuPerformanceRequest = .{ .cpu_index = 63, .epoch = 0x1234_5678_85ab_cdef };
+    var out: a.CpuCppcInfo = .{ .lease = 71 };
+    var rank: a.CpuPerformanceHintInfo = .{ .sequence = 72 };
+    dev_table.cpu_cppc = @intFromPtr(&fakeCppc);
+    dev_table.cpu_performance_hint = @intFromPtr(&fakeRank);
+    for (624..632) |size| {
+        dev_table.size = @intCast(size);
+        try t.expectEqual(a.err_no_fn, facade.cpuCppc(&request, &out));
+        try t.expectEqual(@as(u64, 71), out.lease);
+    }
+    dev_table.size = 632;
+    try t.expectEqual(@as(i32, -97), facade.cpuCppc(&request, &out));
+    try t.expectEqual(request.epoch, out.lease);
+    for (624..640) |size| {
+        dev_table.size = @intCast(size);
+        try t.expectEqual(a.err_no_fn, facade.cpuPerformanceHint(63, request.epoch, &rank));
+        try t.expectEqual(@as(u64, 72), rank.sequence);
+    }
+    dev_table.size = 640;
+    try t.expectEqual(@as(i32, -98), facade.cpuPerformanceHint(63, request.epoch, &rank));
+    try t.expectEqual(request.epoch, rank.sequence);
+    dev_table.cpu_cppc = 0;
+    dev_table.cpu_performance_hint = 0;
+    try t.expectEqual(a.err_no_fn, facade.cpuCppc(&request, &out));
+    try t.expectEqual(a.err_no_fn, facade.cpuPerformanceHint(63, request.epoch, &rank));
+    try t.expectEqual(request.epoch, rank.sequence);
+}
+
 fn fakeInstrumentation(out: *r4os.abi.ProgramInstrumentationInfo) callconv(.c) i32 {
     if (out.version != 1 or out.size != @sizeOf(r4os.abi.ProgramInstrumentationInfo)) return -1;
     out.* = .{ .mode = 0, .lock_count = 11, .stack_group_count = 13 };

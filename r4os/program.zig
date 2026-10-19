@@ -490,6 +490,16 @@ pub const Context = struct {
         return function(request, out);
     }
 
+    pub fn cpuCppc(self: *const Context, request: *const abi.CpuPerformanceRequest, out: *abi.CpuCppcInfo) i32 {
+        const function = self.devFn("cpu_cppc") orelse return self.unavailable("dev");
+        return function(request, out);
+    }
+
+    pub fn cpuPerformanceHint(self: *const Context, cpu: u32, epoch: u64, out: *abi.CpuPerformanceHintInfo) i32 {
+        const function = self.devFn("cpu_performance_hint") orelse return self.unavailable("dev");
+        return function(cpu, epoch, out);
+    }
+
     pub fn cpuPowerCapture(self: *const Context, cpu: u32, epoch: u64, out: *abi.CpuPowerInfo) i32 {
         const function = self.devFn("cpu_power_capture") orelse return self.unavailable("dev");
         return function(cpu, epoch, out);
