@@ -481,6 +481,14 @@ pub const Context = struct {
         const function = self.devFn("cpu_register_read") orelse return self.unavailable("dev");
         return function(cpu, epoch, id, out);
     }
+    pub fn cpuPowerInfo(self: *const Context, cpu: u32, epoch: u64, out: *abi.CpuPowerInfo) i32 {
+        const function = self.devFn("cpu_power_info") orelse return self.unavailable("dev");
+        return function(cpu, epoch, out);
+    }
+    pub fn cpuPowerCapture(self: *const Context, cpu: u32, epoch: u64, out: *abi.CpuPowerInfo) i32 {
+        const function = self.devFn("cpu_power_capture") orelse return self.unavailable("dev");
+        return function(cpu, epoch, out);
+    }
     pub fn kernelCpuRegisterCheck(self: *const Context, cpu: u32, epoch: u64, out: *abi.ProgramKernelCpuRegisterCheck) i32 {
         const function = self.devFn("kernel_cpu_register_check") orelse return self.unavailable("dev");
         return function(cpu, epoch, out);

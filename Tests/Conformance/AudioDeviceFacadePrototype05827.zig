@@ -119,6 +119,41 @@ test "CPU catalogue optional boundaries preserve old clients and forward full ep
     try t.expectEqual(a.err_no_fn, facade.kernelCpuRegisterCheck(63, epoch, &report));
 }
 
+fn fakeCpuPower(cpu: u32, epoch: u64, out: *r4os.abi.CpuPowerInfo) callconv(.c) i32 {
+    std.debug.assert(cpu == 63 and epoch == 0x1234_5678_85ab_cdef);
+    out.provider_generation = epoch;
+    return -77;
+}
+test "passive CPU power and explicit capture preserve old table boundaries and full epochs" {
+    const a = r4os.abi;
+    const t = std.testing;
+    const facade = initFacades().devices.raw;
+    const epoch: u64 = 0x1234_5678_85ab_cdef;
+    var value: a.CpuPowerInfo = .{ .provider_generation = 71 };
+    dev_table.cpu_power_info = @intFromPtr(&fakeCpuPower);
+    dev_table.cpu_power_capture = @intFromPtr(&fakeCpuPower);
+    for (600..608) |size| {
+        dev_table.size = @intCast(size);
+        try t.expectEqual(a.err_no_fn, facade.cpuPowerInfo(63, epoch, &value));
+        try t.expectEqual(@as(u64, 71), value.provider_generation);
+    }
+    dev_table.size = 608;
+    try t.expectEqual(@as(i32, -77), facade.cpuPowerInfo(63, epoch, &value));
+    try t.expectEqual(epoch, value.provider_generation);
+    for (608..616) |size| {
+        dev_table.size = @intCast(size);
+        try t.expectEqual(a.err_no_fn, facade.cpuPowerCapture(63, epoch, &value));
+        try t.expectEqual(epoch, value.provider_generation);
+    }
+    dev_table.size = 616;
+    try t.expectEqual(@as(i32, -77), facade.cpuPowerCapture(63, epoch, &value));
+    dev_table.cpu_power_info = 0;
+    dev_table.cpu_power_capture = 0;
+    try t.expectEqual(a.err_no_fn, facade.cpuPowerInfo(63, epoch, &value));
+    try t.expectEqual(a.err_no_fn, facade.cpuPowerCapture(63, epoch, &value));
+    try t.expectEqual(epoch, value.provider_generation);
+}
+
 fn fakeInstrumentation(out: *r4os.abi.ProgramInstrumentationInfo) callconv(.c) i32 {
     if (out.version != 1 or out.size != @sizeOf(r4os.abi.ProgramInstrumentationInfo)) return -1;
     out.* = .{ .mode = 0, .lock_count = 11, .stack_group_count = 13 };

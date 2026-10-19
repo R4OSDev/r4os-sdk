@@ -76,6 +76,28 @@ static int cpu_catalogue_facade_probe(void) {
     return 0;
 }
 
+static int32_t fake_cpu_power(uint32_t cpu, uint64_t epoch, R4CpuPowerInfo *out) {
+    if(cpu!=63 || epoch!=CPU_CATALOG_EPOCH) return -99;
+    out->provider_generation=epoch; return -77;
+}
+static int cpu_power_facade_probe(void) {
+    R4XStartR4Dev table={0}; R4Dev dev={&table}; R4CpuPowerInfo value={.provider_generation=71};
+    table.cpu_power_info=(uintptr_t)&fake_cpu_power; table.cpu_power_capture=(uintptr_t)&fake_cpu_power;
+    for(uint32_t size=600;size<608;size++){ table.size=size;
+        if(r4dev_cpu_power_info(&dev,63,CPU_CATALOG_EPOCH,&value)!=R4OS_ERR_NO_FN || value.provider_generation!=71) return 1; }
+    table.size=608;
+    if(r4dev_cpu_power_info(&dev,63,CPU_CATALOG_EPOCH,&value)!=-77 || value.provider_generation!=CPU_CATALOG_EPOCH) return 2;
+    for(uint32_t size=608;size<616;size++){ table.size=size;
+        if(r4dev_cpu_power_capture(&dev,63,CPU_CATALOG_EPOCH,&value)!=R4OS_ERR_NO_FN || value.provider_generation!=CPU_CATALOG_EPOCH) return 3; }
+    table.size=616;
+    if(r4dev_cpu_power_capture(&dev,63,CPU_CATALOG_EPOCH,&value)!=-77) return 4;
+    table.cpu_power_info=0; table.cpu_power_capture=0;
+    if(r4dev_cpu_power_info(&dev,63,CPU_CATALOG_EPOCH,&value)!=R4OS_ERR_NO_FN ||
+        r4dev_cpu_power_capture(&dev,63,CPU_CATALOG_EPOCH,&value)!=R4OS_ERR_NO_FN ||
+        value.provider_generation!=CPU_CATALOG_EPOCH || r4dev_cpu_power_capture(&dev,63,CPU_CATALOG_EPOCH,0)!=R4OS_CPU_CAPABILITIES_ERROR_INVALID) return 5;
+    return 0;
+}
+
 static int32_t fake_service_open(const uint8_t *name, R4ServiceInfo *out) {
     (void)name; *out = (R4ServiceInfo){0}; out->handle = 77u; ++open_connections; return 0;
 }
@@ -186,6 +208,7 @@ static void init_app(R4App *app, R4XStartR4Sys *sys, R4XStartR4Audio *audio, R4X
 int main(void) {
     if (cpu_lifecycle_facade_probe() != 0) return 63;
     if (cpu_catalogue_facade_probe() != 0) return 64;
+    if (cpu_power_facade_probe() != 0) return 65;
     R4App app; R4XStartR4Sys sys; R4XStartR4Audio raw_audio; R4XStartR4Dev raw_dev;
     init_app(&app, &sys, &raw_audio, &raw_dev); stream_open = 0; open_connections = 0u;
     R4AudioFacade audio = r4_app_audio(&app); R4AudioStream stream;

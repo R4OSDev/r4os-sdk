@@ -1,6 +1,131 @@
 const std = @import("std");
 const r4os = @import("r4os");
 
+var power_query_mode: u32 = 0;
+fn powerRegister(backend: *const r4os.abi.CpuPowerBackend, cookie: *u64) callconv(.c) i32 {
+    std.debug.assert(backend.context == 0x1234_5678_85ab_cdef);
+    cookie.* = backend.context;
+    return 0;
+}
+fn powerUnregister(cookie: u64) callconv(.c) i32 {
+    return if (cookie == 0x1234_5678_85ab_cdef) -83 else -99;
+}
+fn powerCurrent() callconv(.c) u32 {
+    return 63;
+}
+fn powerCap(cpu: u32, out: *r4os.abi.CpuCapabilitiesInfo) callconv(.c) i32 {
+    out.epoch = cpu;
+    return -84;
+}
+fn powerTopology(cpu: u32, out: *r4os.abi.CpuTopologyInfo) callconv(.c) i32 {
+    out.start_epoch = cpu;
+    return -85;
+}
+fn powerRead(cpu: u32, epoch: u64, id: u32, out: *r4os.abi.CpuRegisterInfo) callconv(.c) i32 {
+    std.debug.assert(cpu == 63 and id == 17);
+    out.value = epoch;
+    return -86;
+}
+fn powerClock(out: *r4os.abi.MonotonicClockInfo) callconv(.c) i32 {
+    out.instant_ns = 0x1234_5678_85ab_cdef;
+    return 1;
+}
+fn powerPair(cpu: u32, epoch: u64, out: *r4os.abi.CpuPowerCounters) callconv(.c) i32 {
+    std.debug.assert(cpu == 63);
+    out.aperf = epoch;
+    out.mperf = epoch + 1;
+    return -88;
+}
+fn powerQuery(out: *r4os.abi.DriverCpuPowerApi) callconv(.c) i32 {
+    std.debug.assert(out.version == 1 and out.size == 72);
+    out.* = .{ .register_backend = @intFromPtr(&powerRegister), .unregister_backend = @intFromPtr(&powerUnregister), .current_cpu = @intFromPtr(&powerCurrent), .capabilities = @intFromPtr(&powerCap), .topology = @intFromPtr(&powerTopology), .register_read = @intFromPtr(&powerRead), .clock = @intFromPtr(&powerClock) };
+    switch (power_query_mode) {
+        1 => out.version = 2,
+        2 => out.size = 63,
+        3 => out.clock = 0,
+        4 => return -87,
+        5 => out.size = 64,
+        else => {},
+    }
+    out.counters_read = @intFromPtr(&powerPair);
+    return 0;
+}
+test "driver CPU power query validates the full optional tail and keeps typed 64-bit calls" {
+    const a = r4os.abi;
+    const t = std.testing;
+    const Ctx = @import("r4os").r4dev.DriverCpuPowerContext;
+    var power_resources = @import("r4os").r4dev.DriverResourceContext{ .table = .{ .cpu_power_query = @intFromPtr(&powerQuery) } };
+    for (56..64) |size| {
+        power_resources.table.size = @intCast(size);
+        try t.expect(power_resources.cpuPower() == null);
+    }
+    power_resources.table.size = 64;
+    for (1..5) |mode| {
+        power_query_mode = @intCast(mode);
+        try t.expect(power_resources.cpuPower() == null);
+    }
+    power_query_mode = 0;
+    var ctx = power_resources.cpuPower().?;
+    const identity: u64 = 0x1234_5678_85ab_cdef;
+    const backend: a.CpuPowerBackend = .{ .context = identity };
+    var cookie: u64 = 71;
+    try t.expectEqual(@as(i32, 0), ctx.register(&backend, &cookie));
+    try t.expectEqual(identity, cookie);
+    try t.expectEqual(@as(i32, -83), ctx.unregister(cookie));
+    try t.expectEqual(@as(u32, 63), ctx.currentCpu());
+    var cap: a.CpuCapabilitiesInfo = .{};
+    var topo: a.CpuTopologyInfo = .{};
+    var raw: a.CpuRegisterInfo = .{};
+    var clock: a.MonotonicClockInfo = .{};
+    var pair: a.CpuPowerCounters = .{};
+    try t.expectEqual(@as(i32, -88), ctx.countersRead(63, identity, &pair));
+    try t.expectEqual(identity, pair.aperf);
+    try t.expectEqual(identity + 1, pair.mperf);
+    power_query_mode = 5;
+    const legacy = power_resources.cpuPower().?;
+    try t.expectEqual(@as(u32, 63), legacy.currentCpu());
+    try t.expectEqual(a.err_no_fn, legacy.countersRead(63, identity, &pair));
+    try t.expectEqual(identity, pair.aperf);
+    for (64..72) |size| {
+        ctx.table.size = @intCast(size);
+        try t.expectEqual(a.err_no_fn, ctx.countersRead(63, identity, &pair));
+        try t.expectEqual(identity, pair.aperf);
+    }
+    ctx.table.size = 72;
+    try t.expectEqual(@as(i32, -84), ctx.capabilities(63, &cap));
+    try t.expectEqual(@as(u64, 63), cap.epoch);
+    try t.expectEqual(@as(i32, -85), ctx.topology(63, &topo));
+    try t.expectEqual(@as(u64, 63), topo.start_epoch);
+    try t.expectEqual(@as(i32, -86), ctx.registerRead(63, identity, 17, &raw));
+    try t.expectEqual(identity, raw.value);
+    try t.expectEqual(@as(i32, 1), ctx.clock(&clock));
+    try t.expectEqual(identity, clock.instant_ns);
+    inline for (.{ "register_backend", "unregister_backend", "current_cpu", "capabilities", "topology", "register_read", "clock", "counters_read" }) |field| {
+        const old = @field(ctx.table, field);
+        @field(ctx.table, field) = 0;
+        try t.expect(!ctx.has(field));
+        @field(ctx.table, field) = old;
+        ctx.table.size = @offsetOf(a.DriverCpuPowerApi, field) + 7;
+        try t.expect(!ctx.has(field));
+        ctx.table.size = 72;
+    }
+    const missing = Ctx{ .table = .{} };
+    try t.expectEqual(a.err_no_fn, missing.register(&backend, &cookie));
+    try t.expectEqual(identity, cookie);
+    try t.expectEqual(a.err_no_fn, missing.unregister(identity));
+    try t.expectEqual(a.cpu_power_cpu_none, missing.currentCpu());
+    try t.expectEqual(a.err_no_fn, missing.capabilities(63, &cap));
+    try t.expectEqual(@as(u64, 63), cap.epoch);
+    try t.expectEqual(a.err_no_fn, missing.topology(63, &topo));
+    try t.expectEqual(@as(u64, 63), topo.start_epoch);
+    try t.expectEqual(a.err_no_fn, missing.registerRead(63, identity, 17, &raw));
+    try t.expectEqual(identity, raw.value);
+    try t.expectEqual(a.err_no_fn, missing.clock(&clock));
+    try t.expectEqual(identity, clock.instant_ns);
+    try t.expectEqual(a.err_no_fn, missing.countersRead(63, identity, &pair));
+    try t.expectEqual(identity, pair.aperf);
+}
+
 fn dmaRangeDevice(mapping: *const r4os.abi.DmaMapping, offset: u32, bytes: u32) callconv(.c) i32 {
     std.debug.assert(mapping.handle == 0x700000000079 and offset == 0xfffffff0 and bytes == 7);
     return -701;

@@ -6,6 +6,17 @@ const abi = @import("r4os_contract").abi;
 /// No close is needed. Read failure can leave partial bytes in output.
 pub const Context = struct {
     table: abi.DriverResourceApi,
+    pub fn cpuPower(self: *const Context) ?@import("driver_cpu_power.zig").Context {
+        if (!self.has("cpu_power_query")) return null;
+        var result: abi.DriverCpuPowerApi = .{};
+        const callback: *const fn (*abi.DriverCpuPowerApi) callconv(.c) i32 = @ptrFromInt(self.table.cpu_power_query);
+        if (callback(&result) != abi.cpu_capabilities_ok or result.version != 1 or result.size < 64) return null;
+        const ctx = @import("driver_cpu_power.zig").Context{ .table = result };
+        inline for (.{ "register_backend", "unregister_backend", "current_cpu", "capabilities", "topology", "register_read", "clock" }) |field| {
+            if (!ctx.has(field)) return null;
+        }
+        return ctx;
+    }
     pub fn platform(self: *const Context) ?Platform {
         if (!self.has("platform_query")) return null;
         var result: abi.DriverPlatformApi = .{};
@@ -14,7 +25,9 @@ pub const Context = struct {
             result.rsdp == 0 or result.physical_view == 0 or result.input_submit == 0) return null;
         return .{ .table = result };
     }
-    pub fn supportsAcpi(self: *const Context) bool { return self.has("acpi_stat") and self.has("acpi_read_at"); }
+    pub fn supportsAcpi(self: *const Context) bool {
+        return self.has("acpi_stat") and self.has("acpi_read_at");
+    }
     pub fn acpiStat(self: *const Context, signature: [4]u8, index: u32, output: *abi.DriverFirmwareTableInfo) i32 {
         if (!self.has("acpi_stat")) return abi.err_no_fn;
         const callback: *const fn (u32, u32, *abi.DriverFirmwareTableInfo) callconv(.c) i32 = @ptrFromInt(self.table.acpi_stat);

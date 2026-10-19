@@ -17,6 +17,7 @@ pub const ProtocolApi = abi.ProtocolApi;
 pub const DriverContext = driver.Context;
 pub const DriverSerialContext = @import("driver_serial.zig").Context;
 pub const DriverResourceContext = @import("driver_resources.zig").Context;
+pub const DriverCpuPowerContext = @import("driver_cpu_power.zig").Context;
 pub const DriverPlatformContext = @import("driver_resources.zig").Platform;
 pub const DriverHeapContext = @import("driver_heap.zig").Context;
 pub const DriverThreadContext = @import("driver_threads.zig").Context;
@@ -138,6 +139,12 @@ pub const Context = struct {
     }
     pub fn cpuRegisterRead(self: *const Context, cpu: u32, epoch: u64, id: u32, out: *abi.CpuRegisterInfo) i32 {
         return self.base.cpuRegisterRead(cpu, epoch, id, out);
+    }
+    pub fn cpuPowerInfo(self: *const Context, cpu: u32, epoch: u64, out: *abi.CpuPowerInfo) i32 {
+        return self.base.cpuPowerInfo(cpu, epoch, out);
+    }
+    pub fn cpuPowerCapture(self: *const Context, cpu: u32, epoch: u64, out: *abi.CpuPowerInfo) i32 {
+        return self.base.cpuPowerCapture(cpu, epoch, out);
     }
     pub fn kernelCpuRegisterCheck(self: *const Context, cpu: u32, epoch: u64, out: *abi.ProgramKernelCpuRegisterCheck) i32 {
         return self.base.kernelCpuRegisterCheck(cpu, epoch, out);

@@ -40,6 +40,20 @@ static inline int32_t r4dev_cpu_register_read(const R4Dev *dev, uint32_t cpu, ui
         dev->table->cpu_register_read == 0u) return R4OS_ERR_NO_FN;
     return ((R4DevCpuRegisterReadFn)(uintptr_t)dev->table->cpu_register_read)(cpu, epoch, id, out);
 }
+static inline int32_t r4dev_cpu_power_info(const R4Dev *dev, uint32_t cpu, uint64_t epoch, R4CpuPowerInfo *out) {
+    if (out == 0) return R4OS_CPU_CAPABILITIES_ERROR_INVALID;
+    if (dev == 0 || dev->table == 0 ||
+        dev->table->size < offsetof(R4XStartR4Dev, cpu_power_info) + sizeof(uintptr_t) ||
+        dev->table->cpu_power_info == 0u) return R4OS_ERR_NO_FN;
+    return ((R4DevCpuPowerInfoFn)(uintptr_t)dev->table->cpu_power_info)(cpu, epoch, out);
+}
+static inline int32_t r4dev_cpu_power_capture(const R4Dev *dev, uint32_t cpu, uint64_t epoch, R4CpuPowerInfo *out) {
+    if (out == 0) return R4OS_CPU_CAPABILITIES_ERROR_INVALID;
+    if (dev == 0 || dev->table == 0 ||
+        dev->table->size < offsetof(R4XStartR4Dev, cpu_power_capture) + sizeof(uintptr_t) ||
+        dev->table->cpu_power_capture == 0u) return R4OS_ERR_NO_FN;
+    return ((R4DevCpuPowerCaptureFn)(uintptr_t)dev->table->cpu_power_capture)(cpu, epoch, out);
+}
 static inline int32_t r4dev_kernel_cpu_register_check(const R4Dev *dev, uint32_t cpu, uint64_t epoch, R4ProgramKernelCpuRegisterCheck *out) {
     if (out == 0) return R4OS_CPU_CAPABILITIES_ERROR_INVALID;
     if (dev == 0 || dev->table == 0 ||
