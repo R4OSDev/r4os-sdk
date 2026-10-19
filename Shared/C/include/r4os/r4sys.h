@@ -20,6 +20,16 @@ typedef struct R4Sys {
     const R4XStartR4Sys *table;
 } R4Sys;
 
+/* Optional explicit blocking orderly transition; accepted work is terminal.
+ * Old raw slots remain independent immediate operations. No automatic retry. */
+static inline int32_t r4sys_system_power_transition(const R4Sys *sys,uint32_t action,uint64_t timeout_ticks){
+    if(action>R4OS_POWER_TRANSITION_ACTION_POWEROFF)return R4OS_POWER_TRANSITION_ERROR_INVALID;
+    const R4XStartR4Sys *table=sys?sys->table:0;
+    if(!table||table->size<offsetof(R4XStartR4Sys,system_power_transition)+sizeof(uintptr_t)||!table->system_power_transition)return R4OS_ERR_NO_FN;
+    return ((R4SysSystemPowerTransitionFn)(uintptr_t)table->system_power_transition)(action,timeout_ticks);
+}
+
+
 #define R4SYS_DIR_ENTRY_RESULT_END (-5)
 static inline int32_t r4sys_platform_input_snapshot(R4Sys *sys, R4PlatformInputSnapshot *output) {
     if (!output) return R4OS_ERROR_INVALID;

@@ -7,8 +7,19 @@ static uint32_t open_handles;
 static int endpoint_registered;
 static int endpoint_ready;
 
+static uint32_t power_mode,power_calls;static uint64_t power_revision=UINT64_C(0x123456781234abcd);
+static R4PowerProfileRequest power_last;static const uint64_t power_generation=UINT64_C(0x12345678abcd4321);
+static int32_t power_call(uint16_t op,const uint8_t *in,uint32_t len,R4ServiceMessageHeader *header,uint8_t *response,uint32_t capacity){
+    ++power_calls;if(len!=sizeof(power_last))return R4OS_SERVICE_API_RESULT_INVALID;memcpy(&power_last,in,len);
+    if(power_mode==3){header->status=R4OS_SERVICE_API_RESULT_TIMEOUT;return 0;}
+    if(op!=R4OS_POWER_PROFILE_OP_STATUS&&op!=R4OS_POWER_PROFILE_OP_CPU){if(power_last.expected_service_generation!=power_generation||power_last.expected_revision!=power_revision)return -99;++power_revision;}
+    if(op==R4OS_POWER_PROFILE_OP_CPU){R4PowerCpuProfileInfo value={.version=1,.size=sizeof(value),.cpu_index=power_last.cpu_index,.service_generation=power_mode==1?power_generation+1:power_generation};if(capacity<sizeof(value))return -99;memcpy(response,&value,sizeof(value));return sizeof(value);}
+    R4PowerProfileInfo value={.version=1,.size=sizeof(value),.state=R4OS_POWER_PROFILE_STATE_UNSUPPORTED,.selected_profile=power_last.profile,.configured_cpus=4,.online_cpus=4,.service_instance_id=55,.service_generation=power_mode==1?power_generation+1:power_generation,.revision=power_revision};
+    if(capacity<sizeof(value))return -99;memcpy(response,&value,sizeof(value));return sizeof(value)-(power_mode==2?1:0);
+}
 static int32_t fake_open(const uint8_t *name, R4ServiceInfo *out) {
     if (reply_mode == MODE_NO_SERVICE || strcmp((const char *)name, "STOPPED") == 0) return R4OS_SERVICE_API_RESULT_NOT_RUNNING;
+    if(strcmp((const char *)name,"POWERSVC")==0){*out=(R4ServiceInfo){.handle=105,.instance_id=power_mode==5?56:55};++open_handles;return 0;}
     *out = (R4ServiceInfo){0};
     out->handle = strcmp((const char *)name, "DNSSVC") == 0 ? 101u : (strcmp((const char *)name, "TCPSVC") == 0 ? 102u : (strcmp((const char *)name, "UDPSVC") == 0 ? 103u : 104u));
     ++open_handles;
@@ -16,7 +27,7 @@ static int32_t fake_open(const uint8_t *name, R4ServiceInfo *out) {
 }
 
 static int32_t fake_close(uint32_t handle) {
-    if (handle < 101u || handle > 104u || open_handles == 0u) return R4OS_SERVICE_API_RESULT_BAD_HANDLE;
+    if (handle < 101u || handle > 105u || open_handles == 0u) return R4OS_SERVICE_API_RESULT_BAD_HANDLE;
     --open_handles;
     return R4OS_SERVICE_API_RESULT_OK;
 }
@@ -38,6 +49,7 @@ static uint32_t service_status(void) {
 static int32_t fake_call(uint32_t handle, uint16_t op, const uint8_t *request, uint32_t request_len, R4ServiceMessageHeader *header, uint8_t *response, uint32_t capacity, uint64_t timeout) {
     (void)timeout;
     *header = (R4ServiceMessageHeader){0}; header->magic = R4OS_SERVICE_API_MAGIC; header->version = R4OS_SERVICE_API_VERSION; header->op = op; header->status = R4OS_SERVICE_API_RESULT_OK;
+    if(handle==105u)return power_call(op,request,request_len,header,response,capacity);
     if (handle == 104u) {
         if (op == 7u) { if (request_len > capacity) return R4OS_SERVICE_API_RESULT_BUFFER_TOO_SMALL; memcpy(response, request, request_len); return (int32_t)request_len; }
         header->status = R4OS_SERVICE_API_RESULT_INVALID; return 0;
@@ -80,7 +92,32 @@ static void init_app(R4App *app, R4XStartR4Sys *sys, R4XStartR4Net *net) {
     *app = (R4App){0}; app->system.table = sys; app->network.table = net;
 }
 
+static int power_checks(void){
+    R4App app;R4XStartR4Sys sys;R4XStartR4Net net;init_app(&app,&sys,&net);reply_mode=MODE_OK;power_mode=0;open_handles=0;power_calls=0;
+    R4PowerProfiles client={0};R4PowerProfileInfo out={.revision=71};R4Timeout timeout=poll_timeout();
+    if(r4_power_profiles_open(&app,&client,timeout)!=0||client.info.service_generation!=power_generation||open_handles)return 1;
+    uint32_t calls=power_calls;if(r4_power_profiles_select(&client,99,0,&out,timeout)!=R4OS_SERVICE_API_RESULT_INVALID||calls!=power_calls||out.revision!=71)return 2;
+    if(r4_power_profiles_select(&client,R4OS_POWER_PROFILE_PERFORMANCE,0,&out,timeout)!=0||out.state!=R4OS_POWER_PROFILE_STATE_UNSUPPORTED||power_last.expected_service_generation!=power_generation||open_handles)return 3;
+    R4PowerProfileInfo saved=out;power_mode=3;calls=power_calls;
+    if(r4_power_profiles_quiesce(&client,&out,timeout)!=R4OS_SERVICE_API_RESULT_TIMEOUT||calls+1!=power_calls||memcmp(&out,&saved,sizeof(out))||open_handles)return 4;
+    power_mode=1;if(r4_power_profiles_status(&client,&out,timeout)!=R4OS_SERVICE_API_RESULT_INVALID||memcmp(&out,&saved,sizeof(out))||memcmp(&client.info,&saved,sizeof(saved)))return 5;
+    power_mode=2;if(r4_power_profiles_status(&client,&out,timeout)!=R4OS_SERVICE_API_RESULT_BUFFER_TOO_SMALL||memcmp(&out,&saved,sizeof(out)))return 6;
+    power_mode=5;calls=power_calls;if(r4_power_profiles_resume(&client,&out,timeout)!=R4OS_SERVICE_API_RESULT_NOT_RUNNING||calls!=power_calls||open_handles)return 7;
+    power_mode=0;R4PowerCpuProfileInfo cpu={0};if(r4_power_profiles_cpu(&client,3,&cpu,timeout)!=0||cpu.cpu_index!=3||cpu.service_generation!=power_generation||power_last.expected_revision||open_handles)return 8;
+    power_mode=1;R4PowerCpuProfileInfo old=cpu;if(r4_power_profiles_cpu(&client,3,&cpu,timeout)!=R4OS_SERVICE_API_RESULT_INVALID||memcmp(&cpu,&old,sizeof(old)))return 9;
+    power_mode=0;if(r4_power_profiles_cpu(&client,4,&cpu,timeout)!=R4OS_SERVICE_API_RESULT_INVALID||open_handles)return 10;return 0;
+}
+static int32_t fake_power_transition(uint32_t action,uint64_t budget){return action==R4OS_POWER_TRANSITION_ACTION_POWEROFF&&budget==UINT64_C(0x12345678abcd4321)?R4OS_POWER_TRANSITION_ERROR_RETAINED:-99;}
+static int system_power_checks(void){
+    R4App app;R4XStartR4Sys table;R4XStartR4Net net;init_app(&app,&table,&net);table.system_power_transition=(uintptr_t)&fake_power_transition;
+    for(uint32_t size=1280;size<1288;size++){table.size=size;if(r4sys_system_power_transition(&app.system,R4OS_POWER_TRANSITION_ACTION_POWEROFF,UINT64_C(0x12345678abcd4321))!=R4OS_ERR_NO_FN)return 1;}
+    table.size=1288;if(r4sys_system_power_transition(&app.system,R4OS_POWER_TRANSITION_ACTION_POWEROFF,UINT64_C(0x12345678abcd4321))!=R4OS_POWER_TRANSITION_ERROR_RETAINED)return 2;
+    if(r4sys_system_power_transition(&app.system,3,0)!=R4OS_POWER_TRANSITION_ERROR_INVALID)return 3;
+    table.system_power_transition=0;if(r4sys_system_power_transition(&app.system,R4OS_POWER_TRANSITION_ACTION_POWEROFF,0)!=R4OS_ERR_NO_FN)return 4;return 0;
+}
 int main(void) {
+    if(system_power_checks()!=0)return 101;
+    if(power_checks()!=0)return 100;
     R4App app; R4XStartR4Sys sys; R4XStartR4Net net; init_app(&app, &sys, &net); reply_mode = MODE_OK;
     R4Services services = r4_app_services(&app); R4ServiceConnection connection; uint32_t request = 123u, response = 0u;
     if (!r4_services_available(&services) || r4_services_open(&services, "EXAMPLE", &connection) != 0) return 1;

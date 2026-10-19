@@ -1051,13 +1051,25 @@ pub const Context = struct {
         };
     }
 
+    /// Explicit bounded orderly transition. Accepted terminal work never
+    /// returns; refusal returns its error with resources retained.
+    pub fn systemPowerTransition(self: *const Context, action: u32, timeout_ticks: u64) i32 {
+        if (action > abi.power_transition_action_poweroff) return abi.power_transition_error_invalid;
+        const function = self.sysFn("system_power_transition") orelse return self.unavailable("sys");
+        return function(action, timeout_ticks);
+    }
+
     pub fn systemHalt(self: *const Context) noreturn {
-        if (self.sysFn("system_halt")) |table_fn| table_fn();
+        if (self.sysFn("system_power_transition")) |function| {
+            _ = function(abi.power_transition_action_halt, self.ticksFromMilliseconds(5000));
+        } else if (self.sysFn("system_halt")) |table_fn| table_fn();
         while (true) self.taskYield();
     }
 
     pub fn systemReboot(self: *const Context) noreturn {
-        if (self.sysFn("system_reboot")) |table_fn| table_fn();
+        if (self.sysFn("system_power_transition")) |function| {
+            _ = function(abi.power_transition_action_reboot, self.ticksFromMilliseconds(5000));
+        } else if (self.sysFn("system_reboot")) |table_fn| table_fn();
         while (true) self.taskYield();
     }
 
@@ -2453,7 +2465,9 @@ pub const Context = struct {
     }
 
     pub fn systemPoweroff(self: *const Context) noreturn {
-        if (self.sysFn("system_poweroff")) |table_fn| table_fn();
+        if (self.sysFn("system_power_transition")) |function| {
+            _ = function(abi.power_transition_action_poweroff, self.ticksFromMilliseconds(5000));
+        } else if (self.sysFn("system_poweroff")) |table_fn| table_fn();
         while (true) self.taskYield();
     }
 

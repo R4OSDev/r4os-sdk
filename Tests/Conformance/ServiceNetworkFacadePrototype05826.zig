@@ -18,13 +18,18 @@ fn fakeOpen(name_z: [*:0]const u8, out: *r4os.abi.ServiceInfo) callconv(.c) i32 
     const name = std.mem.span(name_z);
     if (reply_mode == .no_service or std.mem.eql(u8, name, "STOPPED")) return r4os.abi.service_api_result_not_running;
     const handle: u32 = if (std.mem.eql(u8, name, "DNSSVC")) 101 else if (std.mem.eql(u8, name, "TCPSVC")) 102 else if (std.mem.eql(u8, name, "UDPSVC")) 103 else 104;
+    if (std.mem.eql(u8, name, "POWERSVC")) {
+        out.* = .{ .handle = 105, .instance_id = if (power_mode == 5) 56 else 55 };
+        open_handles += 1;
+        return 0;
+    }
     out.* = .{ .handle = handle };
     open_handles += 1;
     return r4os.abi.service_api_result_ok;
 }
 
 fn fakeClose(handle: u32) callconv(.c) i32 {
-    if (handle < 101 or handle > 104 or open_handles == 0) return r4os.abi.service_api_result_bad_handle;
+    if (handle < 101 or handle > 105 or open_handles == 0) return r4os.abi.service_api_result_bad_handle;
     open_handles -= 1;
     return r4os.abi.service_api_result_ok;
 }
@@ -57,6 +62,7 @@ fn socketStatus() u32 {
 
 fn fakeCall(handle: u32, op: u16, request: [*]const u8, request_len: u32, header: *r4os.abi.ServiceMessageHeader, response: [*]u8, capacity: u32, _: u64) callconv(.c) i32 {
     header.* = .{ .op = op, .request_id = 77, .status = r4os.abi.service_api_result_ok };
+    if (handle == 105) return powerCall(op, request, request_len, header, response, capacity);
     if (handle == 104) {
         if (op == r4os.abi.window_mode_op_query or op == r4os.abi.window_mode_op_request) {
             if (request_len != @sizeOf(r4os.abi.WindowModeRequest)) return r4os.abi.service_api_result_invalid;
@@ -337,15 +343,13 @@ test "resolver TCP and UDP classify lifecycle outcomes without fallback" {
     try std.testing.expectEqual(@as(u32, 0), open_handles);
 }
 
-
 fn checkWindowModes() !void {
     const t = std.testing;
     reply_mode = .ok;
     window_timeout = false;
     const sys = initFacades().services.sys;
     const owner: r4os.abi.ProgramProcessHandle = .{ .instance_id = 7, .generation = 21 };
-    const identity: r4os.abi.WindowModeIdentity = .{ .owner = owner, .window_id = 0, .serial = 1,
-        .service = .{ .instance_id = 8, .generation = 22 }, .desktop = .{ .instance_id = 9, .generation = 23 } };
+    const identity: r4os.abi.WindowModeIdentity = .{ .owner = owner, .window_id = 0, .serial = 1, .service = .{ .instance_id = 8, .generation = 22 }, .desktop = .{ .instance_id = 9, .generation = 23 } };
     var client: r4os.window_mode.Client = .{ .owner = owner, .window_id = 0 };
     window_reply = .{ .identity = identity };
     try t.expect(client.poll(&sys));
@@ -362,7 +366,8 @@ fn checkWindowModes() !void {
     try t.expect(client.retry(&sys));
     try t.expectEqualDeep(accepted, window_request);
     try t.expect(client.pending != null and client.state.mode == 0);
-    window_reply.phase = 2; window_reply.mode = 1;
+    window_reply.phase = 2;
+    window_reply.mode = 1;
     try t.expect(client.poll(&sys));
     try t.expect(client.pending == null and client.state.mode == 1);
     window_timeout = true;
@@ -376,4 +381,140 @@ fn checkWindowModes() !void {
     try t.expectEqual(@as(u32, 0), window_request.action);
     try t.expect(window_request.request_id != old.request_id);
     try t.expectEqual(@as(u32, 0), open_handles);
+}
+
+const power_generation: u64 = 0x1234_5678_abcd_4321;
+var power_revision: u64 = 0x1234_5678_1234_abcd;
+var power_calls: u32 = 0;
+var power_mode: u32 = 0;
+var power_last: r4os.abi.PowerProfileRequest = .{};
+fn powerCall(op: u16, request: [*]const u8, len: u32, header: *r4os.abi.ServiceMessageHeader, response: [*]u8, capacity: u32) i32 {
+    const a = r4os.abi;
+    power_calls += 1;
+    if (len != @sizeOf(a.PowerProfileRequest)) return a.service_api_result_invalid;
+    @memcpy(std.mem.asBytes(&power_last), request[0..len]);
+    if (power_mode == 3) {
+        header.status = a.service_api_result_timeout;
+        return 0;
+    }
+    if (op != a.power_profile_op_status and op != a.power_profile_op_cpu) {
+        std.debug.assert(power_last.expected_service_generation == power_generation and power_last.expected_revision == power_revision);
+        power_revision += 1;
+    }
+    if (op == a.power_profile_op_cpu) {
+        const cpu: a.PowerCpuProfileInfo = .{ .cpu_index = power_last.cpu_index, .service_generation = if (power_mode == 1) power_generation + 1 else power_generation };
+        return writeReply(a.PowerCpuProfileInfo, response, capacity, &cpu, "");
+    }
+    const info: a.PowerProfileInfo = .{ .state = a.power_profile_state_unsupported, .selected_profile = power_last.profile, .configured_cpus = 4, .online_cpus = 4, .service_instance_id = 55, .service_generation = if (power_mode == 1) power_generation + 1 else power_generation, .revision = power_revision };
+    const count = writeReply(a.PowerProfileInfo, response, capacity, &info, "");
+    return if (power_mode == 2) count - 1 else count;
+}
+test "power profile client binds full service generations and revisions without handle leaks or timeout retries" {
+    const a = r4os.abi;
+    const testp = std.testing;
+    const timeout = r4os.time_contract.timeoutPoll();
+    reply_mode = .ok;
+    open_handles = 0;
+    power_calls = 0;
+    power_mode = 0;
+    power_revision = 0x1234_5678_1234_abcd;
+    const sys = initFacades().services.sys;
+    var client = switch (r4os.power_profiles.Client.open(sys, timeout)) {
+        .client => |v| v,
+        else => return error.PowerOpen,
+    };
+    try testp.expectEqual(power_generation, client.info.service_generation);
+    try testp.expectEqual(@as(u32, 0), open_handles);
+    const before = power_calls;
+    try testp.expectEqual(a.service_api_result_invalid, switch (client.select(99, false, timeout)) {
+        .failure => |e| e,
+        else => 0,
+    });
+    try testp.expectEqual(before, power_calls);
+    try testp.expectEqual(a.power_profile_state_unsupported, switch (client.select(a.power_profile_performance, false, timeout)) {
+        .value => |v| v.state,
+        else => 999,
+    });
+    try testp.expectEqual(power_generation, power_last.expected_service_generation);
+    try testp.expectEqual(@as(u32, 0), open_handles);
+    const saved = client.info;
+    power_mode = 3;
+    const calls = power_calls;
+    try testp.expect(switch (client.quiesce(timeout)) {
+        .timed_out => true,
+        else => false,
+    });
+    try testp.expectEqual(calls + 1, power_calls);
+    try testp.expectEqualDeep(saved, client.info);
+    try testp.expectEqual(@as(u32, 0), open_handles);
+    power_mode = 1;
+    try testp.expectEqual(a.service_api_result_invalid, switch (client.status(timeout)) {
+        .failure => |e| e,
+        else => 0,
+    });
+    try testp.expectEqualDeep(saved, client.info);
+    power_mode = 2;
+    try testp.expectEqual(a.service_api_result_buffer_too_small, switch (client.status(timeout)) {
+        .failure => |e| e,
+        else => 0,
+    });
+    try testp.expectEqualDeep(saved, client.info);
+    power_mode = 5;
+    const old_calls = power_calls;
+    try testp.expectEqual(a.service_api_result_not_running, switch (client.resumeProfile(timeout)) {
+        .failure => |e| e,
+        else => 0,
+    });
+    try testp.expectEqual(old_calls, power_calls);
+    try testp.expectEqual(@as(u32, 0), open_handles);
+    power_mode = 0;
+}
+test "power perCPU client rejects stale independent record and preserves exact CPU queries" {
+    const a = r4os.abi;
+    const testp = std.testing;
+    reply_mode = .ok;
+    power_mode = 0;
+    open_handles = 0;
+    const timeout = r4os.time_contract.timeoutPoll();
+    var client = switch (r4os.power_profiles.Client.open(initFacades().services.sys, timeout)) {
+        .client => |v| v,
+        else => return error.PowerOpen,
+    };
+    try testp.expectEqual(@as(u32, 3), switch (client.cpu(3, timeout)) {
+        .value => |v| v.cpu_index,
+        else => 99,
+    });
+    try testp.expectEqual(power_generation, power_last.expected_service_generation);
+    try testp.expectEqual(@as(u64, 0), power_last.expected_revision);
+    power_mode = 1;
+    try testp.expectEqual(a.service_api_result_invalid, switch (client.cpu(3, timeout)) {
+        .failure => |e| e,
+        else => 0,
+    });
+    power_mode = 0;
+    try testp.expectEqual(a.service_api_result_invalid, switch (client.cpu(4, timeout)) {
+        .failure => |e| e,
+        else => 0,
+    });
+    try testp.expectEqual(@as(u32, 0), open_handles);
+}
+
+fn fakePowerTransition(action: u32, budget: u64) callconv(.c) i32 {
+    std.debug.assert(action == r4os.abi.power_transition_action_poweroff and budget == 0x1234_5678_abcd_4321);
+    return r4os.abi.power_transition_error_retained;
+}
+test "explicit blocking system transition negotiates1280/1288 and forwards full wait budget" {
+    const a = r4os.abi;
+    const t = std.testing;
+    const sys = initFacades().services.sys;
+    sys_table.system_power_transition = @intFromPtr(&fakePowerTransition);
+    for (1280..1288) |size| {
+        sys_table.size = @intCast(size);
+        try t.expectEqual(a.err_no_fn, sys.systemPowerTransition(a.power_transition_action_poweroff, 0x1234_5678_abcd_4321));
+    }
+    sys_table.size = 1288;
+    try t.expectEqual(a.power_transition_error_retained, sys.systemPowerTransition(a.power_transition_action_poweroff, 0x1234_5678_abcd_4321));
+    try t.expectEqual(a.power_transition_error_invalid, sys.systemPowerTransition(3, 0));
+    sys_table.system_power_transition = 0;
+    try t.expectEqual(a.err_no_fn, sys.systemPowerTransition(a.power_transition_action_poweroff, 0));
 }

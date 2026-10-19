@@ -35,6 +35,7 @@ pub const driver_outputs = @import("r4os/driver_outputs.zig");
 pub const driver_display = @import("r4os/driver_display.zig");
 pub const app_resources = @import("r4os/app_resources.zig");
 pub const app_services = @import("r4os/app_services.zig");
+pub const power_profiles = @import("r4os/power_profiles.zig");
 pub const app_tray = @import("r4os/app_tray.zig");
 pub const app_network = @import("r4os/app_network.zig");
 pub const app_audio = @import("r4os/app_audio.zig");

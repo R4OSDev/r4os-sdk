@@ -871,6 +871,10 @@ pub const Context = struct {
         return self.base.monotonicBackend();
     }
 
+    pub fn systemPowerTransition(self: *const Context, action: u32, timeout_ticks: u64) i32 {
+        return self.base.systemPowerTransition(action, timeout_ticks);
+    }
+
     pub fn systemHalt(self: *const Context) noreturn {
         self.base.systemHalt();
     }
