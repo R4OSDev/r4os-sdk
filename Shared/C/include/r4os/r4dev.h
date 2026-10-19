@@ -73,6 +73,12 @@ static inline int32_t r4dev_cpu_idle_info(const R4Dev *dev, uint32_t cpu, R4CpuI
     if (!dev || !dev->table || dev->table->size < offsetof(R4XStartR4Dev, cpu_idle_info) + sizeof(uintptr_t) || !dev->table->cpu_idle_info) return R4OS_ERR_NO_FN;
     return ((R4DevCpuIdleInfoFn)(uintptr_t)dev->table->cpu_idle_info)(cpu, out);
 }
+/* Passive early microcode receipt; no hardware work or reload endpoint. */
+static inline int32_t r4dev_cpu_microcode_info(const R4Dev *dev, uint32_t cpu, R4CpuMicrocodeInfo *out) {
+    if (!out) return R4OS_CPU_CAPABILITIES_ERROR_INVALID;
+    if (!dev || !dev->table || dev->table->size < offsetof(R4XStartR4Dev, cpu_microcode_info) + sizeof(uintptr_t) || !dev->table->cpu_microcode_info) return R4OS_ERR_NO_FN;
+    return ((R4DevCpuMicrocodeInfoFn)(uintptr_t)dev->table->cpu_microcode_info)(cpu, out);
+}
 /* Passive resident MCA copies; no hardware reads or implicit work. */
 static inline int32_t r4dev_cpu_machine_info(const R4Dev *dev, uint32_t cpu, R4CpuMachineInfo *out) {
     if (!out) return R4OS_CPU_CAPABILITIES_ERROR_INVALID;

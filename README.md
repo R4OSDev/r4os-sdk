@@ -562,3 +562,11 @@ flags and the exact original epoch/sequence before interpreting a bank; no
 snapshot is a current-health or generic repair promise. C uses the matching
 `r4dev_cpu_machine_info` / `r4dev_cpu_machine_bank` facades. Older tables refuse
 without touching output or caller tail.
+
+Early microcode observations (0.64.49): `cpuMicrocodeInfo` negotiates the
+optional R4DEV31 slot82 at672bytes, complete table680bytes. Its independent
+144-byte record separates actual revision validity, virtual origin, exact
+firmware binding, prerequisites, failed load/readback and common post-baseline
+capture. A supplied package or virtual revision is not native update success.
+This facade only copies resident evidence; no public reload or arbitrary
+data/register endpoint exists. The C facade is `r4dev_cpu_microcode_info`.

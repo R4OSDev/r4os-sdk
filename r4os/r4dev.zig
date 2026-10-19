@@ -159,6 +159,9 @@ pub const Context = struct {
     pub fn cpuMachineInfo(self: *const Context, cpu: u32, out: *abi.CpuMachineInfo) i32 {
         return self.base.cpuMachineInfo(cpu, out);
     }
+    pub fn cpuMicrocodeInfo(self: *const Context, cpu: u32, out: *abi.CpuMicrocodeInfo) i32 {
+        return self.base.cpuMicrocodeInfo(cpu, out);
+    }
     pub fn cpuMachineBank(self: *const Context, cpu: u32, epoch: u64, sequence: u64, index: u32, out: *abi.CpuMachineBank) i32 {
         return self.base.cpuMachineBank(cpu, epoch, sequence, index, out);
     }

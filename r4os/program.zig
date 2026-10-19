@@ -511,6 +511,11 @@ pub const Context = struct {
         const function = self.devFn("cpu_machine_bank") orelse return self.unavailable("dev");
         return function(cpu, epoch, sequence, index, out);
     }
+    /// Passive early revision/admission receipt; never loads microcode.
+    pub fn cpuMicrocodeInfo(self: *const Context, cpu: u32, out: *abi.CpuMicrocodeInfo) i32 {
+        const function = self.devFn("cpu_microcode_info") orelse return self.unavailable("dev");
+        return function(cpu, out);
+    }
 
     pub fn cpuPerformanceHint(self: *const Context, cpu: u32, epoch: u64, out: *abi.CpuPerformanceHintInfo) i32 {
         const function = self.devFn("cpu_performance_hint") orelse return self.unavailable("dev");
@@ -5313,6 +5318,39 @@ test "net socket drain keeps stack request alive until busy async close complete
     try std.testing.expectEqual(@as(u32, 0), guarded.request.service_handle);
 }
 
+fn testMicrocodeInfo(cpu: u32, out: *abi.CpuMicrocodeInfo) callconv(.c) i32 {
+    if (cpu != 2) return abi.cpu_capabilities_error_index;
+    out.* = .{ .cpu_index = cpu, .epoch = 0x8533, .sequence = 4, .status = abi.cpu_microcode_status_virtual_cpu, .flags = abi.cpu_microcode_flag_virtual | abi.cpu_microcode_flag_after_valid, .after_revision = 0 };
+    return 0;
+}
+test "early microcode optional slot refuses every old/truncated prefix without modifying output or tail" {
+    var raw: abi.R4XStartContext = .{};
+    var table: abi.R4XStartR4Dev = .{};
+    var bundle: Bundle = .{ .raw = &raw, .dev = &table };
+    const ctx = Context.initBundle(&bundle);
+    const sentinel: u64 = 0x8533_1234_9876_abcd;
+    var guarded: extern struct { value: abi.CpuMicrocodeInfo = .{ .epoch = sentinel }, tail: u64 = sentinel } = .{};
+    const before = guarded;
+    table.cpu_microcode_info = @intFromPtr(&testMicrocodeInfo);
+    for (672..680) |size| {
+        table.size = @intCast(size);
+        try std.testing.expectEqual(abi.err_no_fn, ctx.cpuMicrocodeInfo(2, &guarded.value));
+        try std.testing.expectEqualSlices(u8, std.mem.asBytes(&before), std.mem.asBytes(&guarded));
+    }
+    table.size = @sizeOf(abi.R4XStartR4Dev);
+    table.cpu_microcode_info = 0;
+    try std.testing.expectEqual(abi.err_no_fn, ctx.cpuMicrocodeInfo(2, &guarded.value));
+    try std.testing.expectEqualSlices(u8, std.mem.asBytes(&before), std.mem.asBytes(&guarded));
+    table.cpu_microcode_info = @intFromPtr(&testMicrocodeInfo);
+    try std.testing.expectEqual(abi.cpu_capabilities_error_index, ctx.cpuMicrocodeInfo(3, &guarded.value));
+    try std.testing.expectEqualSlices(u8, std.mem.asBytes(&before), std.mem.asBytes(&guarded));
+    try std.testing.expectEqual(@as(i32, 0), ctx.cpuMicrocodeInfo(2, &guarded.value));
+    try std.testing.expectEqual(@as(u64, 0x8533), guarded.value.epoch);
+    try std.testing.expectEqual(abi.cpu_microcode_status_virtual_cpu, guarded.value.status);
+    try std.testing.expectEqual(@as(u32, 0), guarded.value.after_revision);
+    try std.testing.expect(guarded.value.flags & abi.cpu_microcode_flag_after_valid != 0);
+    try std.testing.expectEqual(sentinel, guarded.tail);
+}
 fn testMachineInfo(cpu: u32, out: *abi.CpuMachineInfo) callconv(.c) i32 {
     if (cpu != 2) return abi.cpu_capabilities_error_index;
     out.* = .{ .cpu_index = cpu, .epoch = 0x8532, .sequence = 12, .origin = 1, .stored_banks = 1 };
