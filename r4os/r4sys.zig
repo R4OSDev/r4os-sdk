@@ -987,6 +987,10 @@ pub const Context = struct {
         return self.base.threadCreateHandle(entry, arg, stack_reserve_bytes, flags, out_handle);
     }
 
+    pub fn computeWorkerCreate(self: *const Context, entry: abi.ThreadEntryFn, arg: u64, stack_reserve_bytes: u64, out_handle: *abi.ProgramJoinHandle) i32 {
+        return self.base.computeWorkerCreate(entry, arg, stack_reserve_bytes, out_handle);
+    }
+
     pub fn threadExit(self: *const Context, exit_code: i32) noreturn {
         self.base.threadExit(exit_code);
     }

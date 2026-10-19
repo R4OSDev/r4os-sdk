@@ -453,6 +453,11 @@ static int program_exit_checks(void) {
     return 0;
 }
 
+static int32_t compute_create_probe(R4ThreadEntryFn entry, uint64_t arg, uint64_t stack, uint32_t flags, R4ProgramJoinHandle *out) {
+    if (flags != R4OS_THREAD_CREATE_FLAG_COMPUTE_WORKER || arg != 85u || stack != 262144u) return -99;
+    return fake_thread_create_handle(entry, arg, stack, 0u, out);
+}
+
 int main(void) {
     if (platform_checks()) return 100;
     if (program_exit_checks() != 0) return 86;
@@ -465,6 +470,14 @@ int main(void) {
     if (driver_thread_checks() != 0) return 81;
     if (driver_resource_checks() != 0) return 79;
     R4App app; R4XStartR4Sys table; R4XStartR4Desk desk; init_app(&app, &table, &desk); R4Resources resources = r4_app_resources(&app);
+    R4ProgramJoinHandle refused = {0};
+    if (r4sys_compute_worker_create(&app.system, unused_thread, 85u, 262144u, &refused) != R4OS_THREAD_ERROR_UNSUPPORTED || refused.thread_id != 0u) return 88;
+    table.thread_create_handle = (uintptr_t)&compute_create_probe;
+    R4JoinHandle compute;
+    if (r4_resources_create_compute_worker(&resources, unused_thread, 85u, 262144u, &compute) != 0) return 88;
+    R4ResourceWait compute_result = r4_join_wait(&compute, forever_timeout());
+    if (compute_result.kind != R4_RESOURCE_WAIT_EXITED || compute_result.value != 85 || r4_join_handle_valid(&compute)) return 88;
+    table.thread_create_handle = (uintptr_t)&fake_thread_create_handle;
     R4PerformanceView performance = r4_devices_performance(r4_app_devices(&app));
     R4ProgramRegistrySummary registry_v1 = {0}; R4ProgramRegistrySelfTestResult registry_test_v1 = {0};
     R4ProgramRegistrySummaryV2 registry_v2 = {0}; R4ProgramRegistrySelfTestResultV2 registry_test_v2 = {0};

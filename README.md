@@ -522,3 +522,20 @@ A failed close keeps the same handle and ownership for a later close attempt.
 COM1 can remain busy while kernel debugging owns it. Backend registration is
 restricted to lifecycle-owned driver initialization or owned Work; cached
 notifications and shutdown operations retain their existing owner context.
+
+## Compute workers
+
+Since 0.85.18, an R4X may declare `META=runtime.workers=owned-v1` after
+reviewing its worker entry points and reachable libraries/APIs. Zig
+`sys.computeWorkerCreate` / `resources.createComputeWorker` and C
+`r4sys_compute_worker_create` / `r4_resources_create_compute_worker` forward
+the explicit creation flag through the existing generation-safe thread slot.
+Older providers refuse that flag; callers may execute preparation serially.
+
+This declaration does not move the foreground main thread. Compute descendants
+retain their role even with zero creation flags. They do not produce console
+or GUI output, consume stdin, launch a console descendant or claim a prompt.
+Their buffers and context must remain valid until a real successful join or
+terminal process retirement; a timeout never releases them. The existing
+instance-generation, VM, FPU, placement and join/exit contracts still apply.
+This is an ownership contract in the trusted single-user system.

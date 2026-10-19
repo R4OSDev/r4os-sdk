@@ -248,13 +248,21 @@ static inline R4ResourceWait r4_process_wait(R4Process *process, R4Timeout timeo
     result.kind = R4_RESOURCE_WAIT_EXITED; result.value = completion.exit_code; return result;
 }
 
-static inline int32_t r4_resources_create_thread(R4Resources *resources, R4ThreadEntryFn entry, uintptr_t arg, uint64_t stack_reserve_bytes, R4JoinHandle *out) {
+static inline int32_t r4_resources_create_thread_flags(R4Resources *resources, R4ThreadEntryFn entry, uintptr_t arg, uint64_t stack_reserve_bytes, uint32_t flags, R4JoinHandle *out) {
     if (out != 0) *out = (R4JoinHandle){0};
     if (resources == 0 || resources->app == 0 || out == 0) return R4OS_THREAD_ERROR_UNSUPPORTED;
     R4ProgramJoinHandle handle = {0};
-    int32_t raw = r4sys_thread_create_handle(&resources->app->system, entry, arg, stack_reserve_bytes, 0u, &handle);
+    int32_t raw = r4sys_thread_create_handle(&resources->app->system, entry, arg, stack_reserve_bytes, flags, &handle);
     if (raw != R4OS_THREAD_OK) return raw;
     out->app = resources->app; out->handle = handle; out->owned = 1u; return raw;
+}
+
+static inline int32_t r4_resources_create_thread(R4Resources *resources, R4ThreadEntryFn entry, uintptr_t arg, uint64_t stack_reserve_bytes, R4JoinHandle *out) {
+    return r4_resources_create_thread_flags(resources, entry, arg, stack_reserve_bytes, 0u, out);
+}
+
+static inline int32_t r4_resources_create_compute_worker(R4Resources *resources, R4ThreadEntryFn entry, uintptr_t arg, uint64_t stack_reserve_bytes, R4JoinHandle *out) {
+    return r4_resources_create_thread_flags(resources, entry, arg, stack_reserve_bytes, R4OS_THREAD_CREATE_FLAG_COMPUTE_WORKER, out);
 }
 
 static inline int32_t r4_join_status(R4JoinHandle *handle, R4ProgramThreadInfo *out) {

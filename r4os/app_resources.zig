@@ -116,8 +116,16 @@ pub const Resources = struct {
     }
 
     pub fn createThread(self: *const Resources, entry: abi.ThreadEntryFn, arg: u64, stack_reserve_bytes: u64) JoinOpen {
+        return self.createThreadFlags(entry, arg, stack_reserve_bytes, 0);
+    }
+
+    pub fn createComputeWorker(self: *const Resources, entry: abi.ThreadEntryFn, arg: u64, stack_reserve_bytes: u64) JoinOpen {
+        return self.createThreadFlags(entry, arg, stack_reserve_bytes, abi.thread_create_flag_compute_worker);
+    }
+
+    fn createThreadFlags(self: *const Resources, entry: abi.ThreadEntryFn, arg: u64, stack_reserve_bytes: u64, flags: u32) JoinOpen {
         var handle: abi.ProgramJoinHandle = .{};
-        const raw = self.sys.threadCreateHandle(entry, arg, stack_reserve_bytes, 0, &handle);
+        const raw = self.sys.threadCreateHandle(entry, arg, stack_reserve_bytes, flags, &handle);
         if (raw != abi.thread_ok) return .{ .failure = raw };
         return .{ .handle = .{ .sys = self.sys, .handle = handle, .owned = true } };
     }

@@ -1140,6 +1140,12 @@ pub const Context = struct {
         return table_fn(entry, arg, stack_reserve_bytes, flags, out_handle);
     }
 
+    /// Requires the module's runtime.workers=owned-v1 declaration. An older
+    /// provider returns unsupported; callers may prepare their work serially.
+    pub fn computeWorkerCreate(self: *const Context, entry: abi.ThreadEntryFn, arg: u64, stack_reserve_bytes: u64, out_handle: *abi.ProgramJoinHandle) i32 {
+        return self.threadCreateHandle(entry, arg, stack_reserve_bytes, abi.thread_create_flag_compute_worker, out_handle);
+    }
+
     pub fn threadExit(self: *const Context, exit_code: i32) noreturn {
         if (self.sysFn("thread_exit")) |table_fn| table_fn(exit_code);
         while (true) self.taskYield();

@@ -1039,6 +1039,9 @@ fn validateMetadata(values: []const []const u8) !void {
         const eq = std.mem.indexOfScalar(u8, value, '=') orelse return error.InvalidMetadata;
         if (eq == 0 or eq + 1 >= value.len) return error.InvalidMetadata;
         const key = value[0..eq];
+        if (std.ascii.eqlIgnoreCase(key, "runtime.workers") and
+            !std.mem.eql(u8, value[eq + 1 ..], "bsp") and
+            !std.mem.eql(u8, value[eq + 1 ..], "owned-v1")) return error.InvalidMetadata;
         if (std.ascii.eqlIgnoreCase(key, "app.class") or
             std.ascii.eqlIgnoreCase(key, "module.role") or
             asciiStartsWithIgnoreCase(key, "r4x.") or
@@ -1304,6 +1307,9 @@ fn appendPlanBytes(out: []u8, len: *usize, value: []const u8) bool {
 }
 
 test "V2 derives profile build and fixed start contract from the SDK profile source" {
+    try validateMetadata(&.{ "runtime.parallel=bsp", "runtime.workers=owned-v1" });
+    try std.testing.expectError(error.InvalidMetadata, validateMetadata(&.{"runtime.workers=maybe"}));
+    try std.testing.expectError(error.DuplicateMetadataKey, validateMetadata(&.{ "runtime.workers=bsp", "runtime.workers=owned-v1" }));
     var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
     defer arena.deinit();
     const allocator = arena.allocator();
@@ -1616,7 +1622,7 @@ test "R4D accepts ordered C companions without changing driver identity or entry
     const archived_driver = try parse(allocator, "MixedDriver/module.R4MF", archived);
     try std.testing.expectEqualStrings("AMD_ADDR", archived_driver.native_archives[0]);
     const duplicate_archive = try std.fmt.allocPrint(allocator, "{s}\nNATIVE_ARCHIVE=amd_addr\n", .{archived});
-    try std.testing.expectError(error.DuplicateNativeArchive, parse(allocator,"MixedDriver/module.R4MF",duplicate_archive));
+    try std.testing.expectError(error.DuplicateNativeArchive, parse(allocator, "MixedDriver/module.R4MF", duplicate_archive));
     try std.testing.expectEqual(Kind.r4d, value.kind);
     try std.testing.expectEqualStrings("src/main.zig", value.sources[0]);
     try std.testing.expectEqualStrings("src/native.c", value.sources[1]);

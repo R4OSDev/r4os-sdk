@@ -419,6 +419,15 @@ static inline int32_t r4sys_thread_create_handle(
     return create_fn(entry, (uint64_t)arg, stack_reserve_bytes, flags, out_handle);
 }
 
+/* Requires META=runtime.workers=owned-v1; old providers return unsupported. */
+static inline int32_t r4sys_compute_worker_create(
+    R4Sys *sys, R4ThreadEntryFn entry, uintptr_t arg, uint64_t stack_reserve_bytes,
+    R4ProgramJoinHandle *out_handle)
+{
+    return r4sys_thread_create_handle(sys, entry, arg, stack_reserve_bytes,
+        R4OS_THREAD_CREATE_FLAG_COMPUTE_WORKER, out_handle);
+}
+
 static inline int32_t r4sys_thread_handle_join(
     R4Sys *sys,
     const R4ProgramJoinHandle *handle,

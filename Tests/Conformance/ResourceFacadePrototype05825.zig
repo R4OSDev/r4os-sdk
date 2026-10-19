@@ -736,6 +736,11 @@ fn fakeThreadCreateHandle(entry: r4os.abi.ThreadEntryFn, arg: u64, stack: u64, f
     out.* = .{ .thread_id = id, .instance_id = 1, .thread_generation = 5, .instance_generation = 9 };
     return status;
 }
+fn fakeComputeCreate(entry: r4os.abi.ThreadEntryFn, arg: u64, stack: u64, flags: u32, out: *r4os.abi.ProgramJoinHandle) callconv(.c) i32 {
+    std.debug.assert(flags == r4os.abi.thread_create_flag_compute_worker);
+    std.debug.assert(entry == &unusedThread and arg == 85 and stack == 256 * 1024);
+    return fakeThreadCreateHandle(entry, arg, stack, 0, out);
+}
 fn fakeThreadExit(_: i32) callconv(.c) void {}
 fn fakeThreadCurrent() callconv(.c) u32 {
     return 1;
@@ -1027,6 +1032,20 @@ fn programExitFacade(sys: *const r4os.r4sys.Context) !void {
 
 test "process thread VM and I/O resources invalidate and retain timeout state" {
     var api = resources();
+    var refused: r4os.abi.ProgramJoinHandle = .{};
+    try std.testing.expectEqual(r4os.abi.thread_error_unsupported, api.sys.computeWorkerCreate(unusedThread, 85, 256 * 1024, &refused));
+    try std.testing.expectEqual(@as(u32, 0), refused.thread_id);
+    fake_table.thread_create_handle = @intFromPtr(&fakeComputeCreate);
+    var compute = switch (api.createComputeWorker(unusedThread, 85, 256 * 1024)) {
+        .handle => |value| value,
+        .failure => return error.ComputeWorker,
+    };
+    try std.testing.expectEqual(@as(i32, 85), switch (compute.join(r4os.time_contract.timeoutForever())) {
+        .exited => |code| code,
+        else => -1,
+    });
+    try std.testing.expect(!compute.valid());
+    fake_table.thread_create_handle = @intFromPtr(&fakeThreadCreateHandle);
     try currentIdentityFacade(&api.sys);
     try cpuCapacityFacade(&api.sys);
     try placementFacade(&api.sys);
