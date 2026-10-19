@@ -35,6 +35,47 @@ static int cpu_lifecycle_facade_probe(void) {
     return 0;
 }
 
+#define CPU_CATALOG_EPOCH UINT64_C(0x1234567885abcdef)
+static int32_t fake_cpu_capabilities(uint32_t cpu, R4CpuCapabilitiesInfo *out) {
+    if (cpu != 63u) return -99; out->epoch = CPU_CATALOG_EPOCH; return 0;
+}
+static int32_t fake_cpu_feature(uint32_t cpu, uint64_t epoch, uint32_t index, R4CpuFeatureInfo *out) {
+    if (cpu != 63u || epoch != CPU_CATALOG_EPOCH || index != 37u) return -99; out->epoch = epoch; return 0;
+}
+static int32_t fake_cpu_register(uint32_t cpu, uint64_t epoch, uint32_t id, R4CpuRegisterInfo *out) {
+    if (cpu != 63u || epoch != CPU_CATALOG_EPOCH || id != 7u) return -99; out->value = epoch; return 0;
+}
+static int32_t fake_cpu_register_check(uint32_t cpu, uint64_t epoch, R4ProgramKernelCpuRegisterCheck *out) {
+    if (cpu != 63u || epoch != CPU_CATALOG_EPOCH) return -99; out->epoch = epoch; return 0;
+}
+static int cpu_catalogue_facade_probe(void) {
+    R4XStartR4Dev table = {0}; R4Dev dev = { &table };
+    R4CpuCapabilitiesInfo cap = {0}; cap.epoch = 71;
+    R4CpuFeatureInfo feature = {0}; feature.epoch = 72;
+    R4CpuRegisterInfo reg = {0}; reg.value = 73;
+    R4ProgramKernelCpuRegisterCheck report = {0}; report.epoch = 74;
+    table.cpu_capabilities = (uintptr_t)&fake_cpu_capabilities;
+    table.cpu_feature = (uintptr_t)&fake_cpu_feature;
+    table.cpu_register_read = (uintptr_t)&fake_cpu_register;
+    table.kernel_cpu_register_check = (uintptr_t)&fake_cpu_register_check;
+    for (uint32_t size = 568; size < 576; ++size) { table.size = size;
+        if (r4dev_cpu_capabilities(&dev, 63, &cap) != R4OS_ERR_NO_FN || cap.epoch != 71) return 1; }
+    table.size = 576; if (r4dev_cpu_capabilities(&dev, 63, &cap) != 0 || cap.epoch != CPU_CATALOG_EPOCH) return 2;
+    for (uint32_t size = 576; size < 584; ++size) { table.size = size;
+        if (r4dev_cpu_feature(&dev, 63, CPU_CATALOG_EPOCH, 37, &feature) != R4OS_ERR_NO_FN || feature.epoch != 72) return 3; }
+    table.size = 584; if (r4dev_cpu_feature(&dev, 63, CPU_CATALOG_EPOCH, 37, &feature) != 0 || feature.epoch != CPU_CATALOG_EPOCH) return 4;
+    for (uint32_t size = 584; size < 592; ++size) { table.size = size;
+        if (r4dev_cpu_register_read(&dev, 63, CPU_CATALOG_EPOCH, 7, &reg) != R4OS_ERR_NO_FN || reg.value != 73) return 5; }
+    table.size = 592; if (r4dev_cpu_register_read(&dev, 63, CPU_CATALOG_EPOCH, 7, &reg) != 0 || reg.value != CPU_CATALOG_EPOCH) return 6;
+    for (uint32_t size = 592; size < 600; ++size) { table.size = size;
+        if (r4dev_kernel_cpu_register_check(&dev, 63, CPU_CATALOG_EPOCH, &report) != R4OS_ERR_NO_FN || report.epoch != 74) return 7; }
+    table.size = 600; if (r4dev_kernel_cpu_register_check(&dev, 63, CPU_CATALOG_EPOCH, &report) != 0 || report.epoch != CPU_CATALOG_EPOCH) return 8;
+    table.cpu_capabilities = table.cpu_feature = table.cpu_register_read = table.kernel_cpu_register_check = 0;
+    if (r4dev_cpu_capabilities(&dev, 63, &cap) != R4OS_ERR_NO_FN || r4dev_cpu_feature(&dev, 63, CPU_CATALOG_EPOCH, 37, &feature) != R4OS_ERR_NO_FN ||
+        r4dev_cpu_register_read(&dev, 63, CPU_CATALOG_EPOCH, 7, &reg) != R4OS_ERR_NO_FN || r4dev_kernel_cpu_register_check(&dev, 63, CPU_CATALOG_EPOCH, &report) != R4OS_ERR_NO_FN) return 9;
+    return 0;
+}
+
 static int32_t fake_service_open(const uint8_t *name, R4ServiceInfo *out) {
     (void)name; *out = (R4ServiceInfo){0}; out->handle = 77u; ++open_connections; return 0;
 }
@@ -144,6 +185,7 @@ static void init_app(R4App *app, R4XStartR4Sys *sys, R4XStartR4Audio *audio, R4X
 
 int main(void) {
     if (cpu_lifecycle_facade_probe() != 0) return 63;
+    if (cpu_catalogue_facade_probe() != 0) return 64;
     R4App app; R4XStartR4Sys sys; R4XStartR4Audio raw_audio; R4XStartR4Dev raw_dev;
     init_app(&app, &sys, &raw_audio, &raw_dev); stream_open = 0; open_connections = 0u;
     R4AudioFacade audio = r4_app_audio(&app); R4AudioStream stream;

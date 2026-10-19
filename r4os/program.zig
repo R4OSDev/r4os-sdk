@@ -468,6 +468,24 @@ pub const Context = struct {
     }
 
     /// Explicit mutation requires an exact queried epoch; query is passive.
+    /// Passive capture/feature queries; register work is always explicit.
+    pub fn cpuCapabilities(self: *const Context, cpu: u32, out: *abi.CpuCapabilitiesInfo) i32 {
+        const function = self.devFn("cpu_capabilities") orelse return self.unavailable("dev");
+        return function(cpu, out);
+    }
+    pub fn cpuFeature(self: *const Context, cpu: u32, epoch: u64, index: u32, out: *abi.CpuFeatureInfo) i32 {
+        const function = self.devFn("cpu_feature") orelse return self.unavailable("dev");
+        return function(cpu, epoch, index, out);
+    }
+    pub fn cpuRegisterRead(self: *const Context, cpu: u32, epoch: u64, id: u32, out: *abi.CpuRegisterInfo) i32 {
+        const function = self.devFn("cpu_register_read") orelse return self.unavailable("dev");
+        return function(cpu, epoch, id, out);
+    }
+    pub fn kernelCpuRegisterCheck(self: *const Context, cpu: u32, epoch: u64, out: *abi.ProgramKernelCpuRegisterCheck) i32 {
+        const function = self.devFn("kernel_cpu_register_check") orelse return self.unavailable("dev");
+        return function(cpu, epoch, out);
+    }
+
     pub fn cpuLifecycle(self: *const Context, operation: u32, cpu: u32, expected_epoch: u64, out: *abi.CpuLifecycleInfo) i32 {
         const function = self.devFn("cpu_lifecycle") orelse return self.unavailable("dev");
         return function(operation, cpu, expected_epoch, out);

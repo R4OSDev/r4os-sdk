@@ -18,6 +18,36 @@ typedef struct R4Dev {
 
 /* Query is passive. Offline/online require the exact current epoch; errors
  * preserve output and may require a fresh query after a partial safe drain. */
+/* Optional catalogue prefix; errors from old providers preserve caller buffers. */
+static inline int32_t r4dev_cpu_capabilities(const R4Dev *dev, uint32_t cpu, R4CpuCapabilitiesInfo *out) {
+    if (out == 0) return R4OS_CPU_CAPABILITIES_ERROR_INVALID;
+    if (dev == 0 || dev->table == 0 ||
+        dev->table->size < offsetof(R4XStartR4Dev, cpu_capabilities) + sizeof(uintptr_t) ||
+        dev->table->cpu_capabilities == 0u) return R4OS_ERR_NO_FN;
+    return ((R4DevCpuCapabilitiesFn)(uintptr_t)dev->table->cpu_capabilities)(cpu, out);
+}
+static inline int32_t r4dev_cpu_feature(const R4Dev *dev, uint32_t cpu, uint64_t epoch, uint32_t index, R4CpuFeatureInfo *out) {
+    if (out == 0) return R4OS_CPU_CAPABILITIES_ERROR_INVALID;
+    if (dev == 0 || dev->table == 0 ||
+        dev->table->size < offsetof(R4XStartR4Dev, cpu_feature) + sizeof(uintptr_t) ||
+        dev->table->cpu_feature == 0u) return R4OS_ERR_NO_FN;
+    return ((R4DevCpuFeatureFn)(uintptr_t)dev->table->cpu_feature)(cpu, epoch, index, out);
+}
+static inline int32_t r4dev_cpu_register_read(const R4Dev *dev, uint32_t cpu, uint64_t epoch, uint32_t id, R4CpuRegisterInfo *out) {
+    if (out == 0) return R4OS_CPU_CAPABILITIES_ERROR_INVALID;
+    if (dev == 0 || dev->table == 0 ||
+        dev->table->size < offsetof(R4XStartR4Dev, cpu_register_read) + sizeof(uintptr_t) ||
+        dev->table->cpu_register_read == 0u) return R4OS_ERR_NO_FN;
+    return ((R4DevCpuRegisterReadFn)(uintptr_t)dev->table->cpu_register_read)(cpu, epoch, id, out);
+}
+static inline int32_t r4dev_kernel_cpu_register_check(const R4Dev *dev, uint32_t cpu, uint64_t epoch, R4ProgramKernelCpuRegisterCheck *out) {
+    if (out == 0) return R4OS_CPU_CAPABILITIES_ERROR_INVALID;
+    if (dev == 0 || dev->table == 0 ||
+        dev->table->size < offsetof(R4XStartR4Dev, kernel_cpu_register_check) + sizeof(uintptr_t) ||
+        dev->table->kernel_cpu_register_check == 0u) return R4OS_ERR_NO_FN;
+    return ((R4DevKernelCpuRegisterCheckFn)(uintptr_t)dev->table->kernel_cpu_register_check)(cpu, epoch, out);
+}
+
 static inline int32_t r4dev_cpu_lifecycle(const R4Dev *dev, uint32_t operation, uint32_t cpu,
     uint64_t expected_epoch, R4CpuLifecycleInfo *out) {
     if (out == 0) return R4OS_CPU_LIFECYCLE_ERROR_INVALID;

@@ -38,9 +38,85 @@ test "CPU lifecycle facades negotiate both optional slots and forward full epoch
     try t.expectEqual(@as(u64, 72), report.new_epoch);
     dev_table.size = 568;
     try t.expectEqual(@as(i32, 1), facade.kernelCpuLifecycleCheck(&report));
-    dev_table.cpu_lifecycle = 0; dev_table.kernel_cpu_lifecycle_check = 0;
+    dev_table.cpu_lifecycle = 0;
+    dev_table.kernel_cpu_lifecycle_check = 0;
     try t.expectEqual(a.err_no_fn, facade.cpuLifecycle(2, 63, 0x1234_5678_85ab_cdef, &info));
     try t.expectEqual(a.err_no_fn, facade.kernelCpuLifecycleCheck(&report));
+}
+
+fn fakeCpuCapabilities(cpu: u32, out: *r4os.abi.CpuCapabilitiesInfo) callconv(.c) i32 {
+    std.debug.assert(cpu == 63);
+    out.epoch = 0x1234_5678_85ab_cdef;
+    return 0;
+}
+fn fakeCpuFeature(cpu: u32, epoch: u64, index: u32, out: *r4os.abi.CpuFeatureInfo) callconv(.c) i32 {
+    std.debug.assert(cpu == 63 and epoch == 0x1234_5678_85ab_cdef and index == 37);
+    out.epoch = epoch;
+    return 0;
+}
+fn fakeCpuRegister(cpu: u32, epoch: u64, id: u32, out: *r4os.abi.CpuRegisterInfo) callconv(.c) i32 {
+    std.debug.assert(cpu == 63 and epoch == 0x1234_5678_85ab_cdef and id == 7);
+    out.value = epoch;
+    return 0;
+}
+fn fakeCpuRegisterCheck(cpu: u32, epoch: u64, out: *r4os.abi.ProgramKernelCpuRegisterCheck) callconv(.c) i32 {
+    std.debug.assert(cpu == 63 and epoch == 0x1234_5678_85ab_cdef);
+    out.epoch = epoch;
+    return 0;
+}
+test "CPU catalogue optional boundaries preserve old clients and forward full epochs" {
+    const a = r4os.abi;
+    const t = std.testing;
+    const facade = initFacades().devices.raw;
+    const epoch: u64 = 0x1234_5678_85ab_cdef;
+    var cap: a.CpuCapabilitiesInfo = .{ .epoch = 71 };
+    var feature: a.CpuFeatureInfo = .{ .epoch = 72 };
+    var reg: a.CpuRegisterInfo = .{ .value = 73 };
+    var report: a.ProgramKernelCpuRegisterCheck = .{ .epoch = 74 };
+    dev_table.cpu_capabilities = @intFromPtr(&fakeCpuCapabilities);
+    dev_table.cpu_feature = @intFromPtr(&fakeCpuFeature);
+    dev_table.cpu_register_read = @intFromPtr(&fakeCpuRegister);
+    dev_table.kernel_cpu_register_check = @intFromPtr(&fakeCpuRegisterCheck);
+    for (568..576) |size| {
+        dev_table.size = @intCast(size);
+        try t.expectEqual(a.err_no_fn, facade.cpuCapabilities(63, &cap));
+        try t.expectEqual(@as(u64, 71), cap.epoch);
+    }
+    dev_table.size = 576;
+    try t.expectEqual(@as(i32, 0), facade.cpuCapabilities(63, &cap));
+    try t.expectEqual(epoch, cap.epoch);
+    for (576..584) |size| {
+        dev_table.size = @intCast(size);
+        try t.expectEqual(a.err_no_fn, facade.cpuFeature(63, epoch, 37, &feature));
+        try t.expectEqual(@as(u64, 72), feature.epoch);
+    }
+    dev_table.size = 584;
+    try t.expectEqual(@as(i32, 0), facade.cpuFeature(63, epoch, 37, &feature));
+    try t.expectEqual(epoch, feature.epoch);
+    for (584..592) |size| {
+        dev_table.size = @intCast(size);
+        try t.expectEqual(a.err_no_fn, facade.cpuRegisterRead(63, epoch, 7, &reg));
+        try t.expectEqual(@as(u64, 73), reg.value);
+    }
+    dev_table.size = 592;
+    try t.expectEqual(@as(i32, 0), facade.cpuRegisterRead(63, epoch, 7, &reg));
+    try t.expectEqual(epoch, reg.value);
+    for (592..600) |size| {
+        dev_table.size = @intCast(size);
+        try t.expectEqual(a.err_no_fn, facade.kernelCpuRegisterCheck(63, epoch, &report));
+        try t.expectEqual(@as(u64, 74), report.epoch);
+    }
+    dev_table.size = 600;
+    try t.expectEqual(@as(i32, 0), facade.kernelCpuRegisterCheck(63, epoch, &report));
+    try t.expectEqual(epoch, report.epoch);
+    dev_table.cpu_capabilities = 0;
+    dev_table.cpu_feature = 0;
+    dev_table.cpu_register_read = 0;
+    dev_table.kernel_cpu_register_check = 0;
+    try t.expectEqual(a.err_no_fn, facade.cpuCapabilities(63, &cap));
+    try t.expectEqual(a.err_no_fn, facade.cpuFeature(63, epoch, 37, &feature));
+    try t.expectEqual(a.err_no_fn, facade.cpuRegisterRead(63, epoch, 7, &reg));
+    try t.expectEqual(a.err_no_fn, facade.kernelCpuRegisterCheck(63, epoch, &report));
 }
 
 fn fakeInstrumentation(out: *r4os.abi.ProgramInstrumentationInfo) callconv(.c) i32 {
@@ -66,8 +142,7 @@ fn fakeStack(index: u32, out: *r4os.abi.ProgramStackPerformanceInfo) callconv(.c
 fn fakeStackFault(index: u32, out: *r4os.abi.ProgramStackFaultInfo) callconv(.c) i32 {
     if (out.version != 1 or out.size < @sizeOf(r4os.abi.ProgramStackFaultInfo)) return -1;
     if (index >= 4) return 0;
-    out.* = .{ .cpu_index = index, .sequence = 2,
-        .flags = r4os.abi.stack_fault_flag_task, .task_id = 71, .task_generation = 93 };
+    out.* = .{ .cpu_index = index, .sequence = 2, .flags = r4os.abi.stack_fault_flag_task, .task_id = 71, .task_generation = 93 };
     return 1;
 }
 

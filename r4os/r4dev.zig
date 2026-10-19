@@ -129,6 +129,20 @@ pub const Context = struct {
         return self.base.kernelBlockQueueCheck(out);
     }
 
+    /// Passive capture/feature queries; register work is always explicit.
+    pub fn cpuCapabilities(self: *const Context, cpu: u32, out: *abi.CpuCapabilitiesInfo) i32 {
+        return self.base.cpuCapabilities(cpu, out);
+    }
+    pub fn cpuFeature(self: *const Context, cpu: u32, epoch: u64, index: u32, out: *abi.CpuFeatureInfo) i32 {
+        return self.base.cpuFeature(cpu, epoch, index, out);
+    }
+    pub fn cpuRegisterRead(self: *const Context, cpu: u32, epoch: u64, id: u32, out: *abi.CpuRegisterInfo) i32 {
+        return self.base.cpuRegisterRead(cpu, epoch, id, out);
+    }
+    pub fn kernelCpuRegisterCheck(self: *const Context, cpu: u32, epoch: u64, out: *abi.ProgramKernelCpuRegisterCheck) i32 {
+        return self.base.kernelCpuRegisterCheck(cpu, epoch, out);
+    }
+
     pub fn cpuLifecycle(self: *const Context, operation: u32, cpu: u32, expected_epoch: u64, out: *abi.CpuLifecycleInfo) i32 {
         return self.base.cpuLifecycle(operation, cpu, expected_epoch, out);
     }
