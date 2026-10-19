@@ -156,6 +156,12 @@ pub const Context = struct {
     pub fn cpuIdleInfo(self: *const Context, cpu: u32, out: *abi.CpuIdleInfo) i32 {
         return self.base.cpuIdleInfo(cpu, out);
     }
+    pub fn cpuMachineInfo(self: *const Context, cpu: u32, out: *abi.CpuMachineInfo) i32 {
+        return self.base.cpuMachineInfo(cpu, out);
+    }
+    pub fn cpuMachineBank(self: *const Context, cpu: u32, epoch: u64, sequence: u64, index: u32, out: *abi.CpuMachineBank) i32 {
+        return self.base.cpuMachineBank(cpu, epoch, sequence, index, out);
+    }
 
     pub fn cpuPerformanceHint(self: *const Context, cpu: u32, epoch: u64, out: *abi.CpuPerformanceHintInfo) i32 {
         return self.base.cpuPerformanceHint(cpu, epoch, out);

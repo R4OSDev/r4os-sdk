@@ -554,3 +554,11 @@ return. Existing64/72-byte observation tables remain supported. The provider
 requires explicit local release before CPU offline or driver unload; uncertain
 state keeps its resources. HWP package activation requires separate reset-only
 consent. No governor or implicit policy runs in these facades.
+
+Machine Check observations (0.64.48): `cpuMachineInfo` and `cpuMachineBank`
+negotiate the independent optional R4DEV30 tail. They only copy retained
+boot-passive or terminal raw evidence. Check origin, validity/fault/truncation
+flags and the exact original epoch/sequence before interpreting a bank; no
+snapshot is a current-health or generic repair promise. C uses the matching
+`r4dev_cpu_machine_info` / `r4dev_cpu_machine_bank` facades. Older tables refuse
+without touching output or caller tail.

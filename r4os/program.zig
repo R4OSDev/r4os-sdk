@@ -502,6 +502,15 @@ pub const Context = struct {
         const function = self.devFn("cpu_idle_info") orelse return self.unavailable("dev");
         return function(cpu, out);
     }
+    /// Passive boot/terminal MCA receipt; never initiates a hardware read.
+    pub fn cpuMachineInfo(self: *const Context, cpu: u32, out: *abi.CpuMachineInfo) i32 {
+        const function = self.devFn("cpu_machine_info") orelse return self.unavailable("dev");
+        return function(cpu, out);
+    }
+    pub fn cpuMachineBank(self: *const Context, cpu: u32, epoch: u64, sequence: u64, index: u32, out: *abi.CpuMachineBank) i32 {
+        const function = self.devFn("cpu_machine_bank") orelse return self.unavailable("dev");
+        return function(cpu, epoch, sequence, index, out);
+    }
 
     pub fn cpuPerformanceHint(self: *const Context, cpu: u32, epoch: u64, out: *abi.CpuPerformanceHintInfo) i32 {
         const function = self.devFn("cpu_performance_hint") orelse return self.unavailable("dev");
@@ -5304,6 +5313,60 @@ test "net socket drain keeps stack request alive until busy async close complete
     try std.testing.expectEqual(@as(u32, 0), guarded.request.service_handle);
 }
 
+fn testMachineInfo(cpu: u32, out: *abi.CpuMachineInfo) callconv(.c) i32 {
+    if (cpu != 2) return abi.cpu_capabilities_error_index;
+    out.* = .{ .cpu_index = cpu, .epoch = 0x8532, .sequence = 12, .origin = 1, .stored_banks = 1 };
+    return 0;
+}
+fn testMachineBank(cpu: u32, epoch: u64, sequence: u64, index: u32, out: *abi.CpuMachineBank) callconv(.c) i32 {
+    if (cpu != 2) return abi.cpu_capabilities_error_index;
+    if (epoch != 0x8532) return abi.cpu_capabilities_error_epoch;
+    if (sequence != 12) return abi.cpu_capabilities_error_busy;
+    if (index != 0) return abi.cpu_capabilities_end;
+    out.* = .{ .cpu_index = cpu, .epoch = epoch, .sequence = sequence, .bank_index = index, .status = 0x9400000000001234 };
+    return 0;
+}
+test "MCA optional prefixes and exact snapshot identity preserve all refused outputs and tails" {
+    var raw: abi.R4XStartContext = .{};
+    var table: abi.R4XStartR4Dev = .{};
+    var bundle: Bundle = .{ .raw = &raw, .dev = &table };
+    const ctx = Context.initBundle(&bundle);
+    const sentinel: u64 = 0x8532_1234_9876_abcd;
+    var info: extern struct { value: abi.CpuMachineInfo = .{ .epoch = sentinel }, tail: u64 = sentinel } = .{};
+    var bank: extern struct { value: abi.CpuMachineBank = .{ .status = sentinel }, tail: u64 = sentinel } = .{};
+    table.cpu_machine_info = @intFromPtr(&testMachineInfo);
+    table.cpu_machine_bank = @intFromPtr(&testMachineBank);
+    for (656..664) |size| {
+        table.size = @intCast(size);
+        try std.testing.expectEqual(abi.err_no_fn, ctx.cpuMachineInfo(2, &info.value));
+        try std.testing.expectEqual(sentinel, info.value.epoch);
+    }
+    for (664..672) |size| {
+        table.size = @intCast(size);
+        try std.testing.expectEqual(abi.err_no_fn, ctx.cpuMachineBank(2, 0x8532, 12, 0, &bank.value));
+        try std.testing.expectEqual(sentinel, bank.value.status);
+    }
+    table.size = @sizeOf(abi.R4XStartR4Dev);
+    table.cpu_machine_info = 0;
+    try std.testing.expectEqual(abi.err_no_fn, ctx.cpuMachineInfo(2, &info.value));
+    table.cpu_machine_info = @intFromPtr(&testMachineInfo);
+    try std.testing.expectEqual(abi.cpu_capabilities_error_index, ctx.cpuMachineInfo(3, &info.value));
+    try std.testing.expectEqual(sentinel, info.value.epoch);
+    try std.testing.expectEqual(@as(i32, 0), ctx.cpuMachineInfo(2, &info.value));
+    try std.testing.expectEqual(@as(u64, 0x8532), info.value.epoch);
+    table.cpu_machine_bank = 0;
+    try std.testing.expectEqual(abi.err_no_fn, ctx.cpuMachineBank(2, 0x8532, 12, 0, &bank.value));
+    table.cpu_machine_bank = @intFromPtr(&testMachineBank);
+    try std.testing.expectEqual(abi.cpu_capabilities_error_index, ctx.cpuMachineBank(3, 0x8532, 12, 0, &bank.value));
+    try std.testing.expectEqual(abi.cpu_capabilities_error_epoch, ctx.cpuMachineBank(2, 0x8533, 12, 0, &bank.value));
+    try std.testing.expectEqual(abi.cpu_capabilities_error_busy, ctx.cpuMachineBank(2, 0x8532, 14, 0, &bank.value));
+    try std.testing.expectEqual(abi.cpu_capabilities_end, ctx.cpuMachineBank(2, 0x8532, 12, 1, &bank.value));
+    try std.testing.expectEqual(sentinel, bank.value.status);
+    try std.testing.expectEqual(@as(i32, 0), ctx.cpuMachineBank(2, 0x8532, 12, 0, &bank.value));
+    try std.testing.expectEqual(@as(u64, 0x9400000000001234), bank.value.status);
+    try std.testing.expectEqual(sentinel, info.tail);
+    try std.testing.expectEqual(sentinel, bank.tail);
+}
 fn testIdleInfo(cpu: u32, out: *abi.CpuIdleInfo) callconv(.c) i32 {
     if (cpu != 2) return -4;
     out.* = .{ .cpu_index = cpu, .epoch = 0x85_31_1234_5678, .reason = abi.cpu_idle_reason_hypervisor, .hlt_fallbacks = 91 };

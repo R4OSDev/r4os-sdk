@@ -73,6 +73,17 @@ static inline int32_t r4dev_cpu_idle_info(const R4Dev *dev, uint32_t cpu, R4CpuI
     if (!dev || !dev->table || dev->table->size < offsetof(R4XStartR4Dev, cpu_idle_info) + sizeof(uintptr_t) || !dev->table->cpu_idle_info) return R4OS_ERR_NO_FN;
     return ((R4DevCpuIdleInfoFn)(uintptr_t)dev->table->cpu_idle_info)(cpu, out);
 }
+/* Passive resident MCA copies; no hardware reads or implicit work. */
+static inline int32_t r4dev_cpu_machine_info(const R4Dev *dev, uint32_t cpu, R4CpuMachineInfo *out) {
+    if (!out) return R4OS_CPU_CAPABILITIES_ERROR_INVALID;
+    if (!dev || !dev->table || dev->table->size < offsetof(R4XStartR4Dev, cpu_machine_info) + sizeof(uintptr_t) || !dev->table->cpu_machine_info) return R4OS_ERR_NO_FN;
+    return ((R4DevCpuMachineInfoFn)(uintptr_t)dev->table->cpu_machine_info)(cpu, out);
+}
+static inline int32_t r4dev_cpu_machine_bank(const R4Dev *dev, uint32_t cpu, uint64_t epoch, uint64_t sequence, uint32_t bank, R4CpuMachineBank *out) {
+    if (!out) return R4OS_CPU_CAPABILITIES_ERROR_INVALID;
+    if (!dev || !dev->table || dev->table->size < offsetof(R4XStartR4Dev, cpu_machine_bank) + sizeof(uintptr_t) || !dev->table->cpu_machine_bank) return R4OS_ERR_NO_FN;
+    return ((R4DevCpuMachineBankFn)(uintptr_t)dev->table->cpu_machine_bank)(cpu, epoch, sequence, bank, out);
+}
 
 /* Optional independently typed AMD CPPC/catalogue observation. */
 static inline int32_t r4dev_cpu_performance_hint(const R4Dev *dev, uint32_t cpu, uint64_t epoch, R4CpuPerformanceHintInfo *out) {
