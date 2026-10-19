@@ -517,6 +517,23 @@ pub const Context = struct {
         return function(cpu, out);
     }
 
+    pub fn cpuPmuInfo(self: *const Context, cpu: u32, out: *abi.CpuPmuInfo) i32 {
+        const function = self.devFn("cpu_pmu_info") orelse return self.unavailable("dev");
+        return function(cpu, out);
+    }
+    /// Explicit short pure resident work, no allocation/fault/block/yield/API
+    /// call inside work. The wire borrows a copied typed callback slot; it
+    /// never exposes a host-dependent optional-by-value function ABI.
+    pub fn cpuPmuMeasure(self: *const Context, cpu: u32, epoch: u64, event: u32, iterations: u32, work: ?abi.PmuWorkFn, context: u64, out: *abi.CpuPmuResult) i32 {
+        const function = self.devFn("cpu_pmu_measure") orelse return self.unavailable("dev");
+        const callback = work orelse return abi.cpu_capabilities_error_invalid;
+        return function(cpu, epoch, event, iterations, &callback, context, out);
+    }
+    pub fn cpuPmuResult(self: *const Context, cpu: u32, epoch: u64, generation: u64, out: *abi.CpuPmuResult) i32 {
+        const function = self.devFn("cpu_pmu_result") orelse return self.unavailable("dev");
+        return function(cpu, epoch, generation, out);
+    }
+
     pub fn cpuPerformanceHint(self: *const Context, cpu: u32, epoch: u64, out: *abi.CpuPerformanceHintInfo) i32 {
         const function = self.devFn("cpu_performance_hint") orelse return self.unavailable("dev");
         return function(cpu, epoch, out);
@@ -5322,6 +5339,87 @@ fn testMicrocodeInfo(cpu: u32, out: *abi.CpuMicrocodeInfo) callconv(.c) i32 {
     if (cpu != 2) return abi.cpu_capabilities_error_index;
     out.* = .{ .cpu_index = cpu, .epoch = 0x8533, .sequence = 4, .status = abi.cpu_microcode_status_virtual_cpu, .flags = abi.cpu_microcode_flag_virtual | abi.cpu_microcode_flag_after_valid, .after_revision = 0 };
     return 0;
+}
+
+var test_pmu_calls: u32 = 0;
+var test_pmu_callbacks: u32 = 0;
+fn testPmuWork(context: u64, iterations: u32) callconv(.c) i32 {
+    test_pmu_callbacks += 1;
+    return if (context == 0x8534 and iterations == 4096) -34 else -1;
+}
+fn testPmuInfo(cpu: u32, out: *abi.CpuPmuInfo) callconv(.c) i32 {
+    test_pmu_calls += 1;
+    if (cpu != 2) return abi.cpu_capabilities_error_index;
+    out.* = .{ .cpu_index = cpu, .epoch = 7, .counter_width = 48 };
+    return 0;
+}
+fn testPmuMeasure(cpu: u32, epoch: u64, event: u32, iterations: u32, slot: ?*const abi.PmuWorkFn, context: u64, out: *abi.CpuPmuResult) callconv(.c) i32 {
+    test_pmu_calls += 1;
+    if (cpu != 2) return abi.cpu_capabilities_error_index;
+    if (epoch != 7) return abi.cpu_capabilities_error_epoch;
+    const callback = slot orelse return abi.cpu_capabilities_error_invalid;
+    const result = callback.*(context, iterations);
+    // ABI-only peer: deliberately no physical/raw count-valid flag.
+    out.* = .{ .cpu_index = cpu, .epoch = epoch, .generation = 11, .sequence = 6, .event_id = event, .iterations = iterations, .callback_result = result, .status = abi.cpu_pmu_status_callback_aborted, .flags = abi.cpu_pmu_result_flag_callback_started | abi.cpu_pmu_result_flag_callback_returned };
+    return 0;
+}
+fn testPmuResult(cpu: u32, epoch: u64, generation: u64, out: *abi.CpuPmuResult) callconv(.c) i32 {
+    test_pmu_calls += 1;
+    if (cpu != 2) return abi.cpu_capabilities_error_index;
+    if (epoch != 7 or generation != 11) return abi.cpu_capabilities_error_epoch;
+    out.* = .{ .cpu_index = cpu, .epoch = epoch, .generation = generation, .sequence = 6, .status = abi.cpu_pmu_status_callback_aborted, .callback_result = -34 };
+    return 0;
+}
+test "PMU three optional tails preserve all old prefixes, callback transport and failed outputs" {
+    var raw: abi.R4XStartContext = .{};
+    var table: abi.R4XStartR4Dev = .{};
+    var bundle: Bundle = .{ .raw = &raw, .dev = &table };
+    const ctx = Context.initBundle(&bundle);
+    const sentinel: u64 = 0x8534_1234_9876_abcd;
+    var info: extern struct { value: abi.CpuPmuInfo = .{ .epoch = sentinel }, tail: u64 = sentinel } = .{};
+    var result: extern struct { value: abi.CpuPmuResult = .{ .epoch = sentinel }, tail: u64 = sentinel } = .{};
+    const before_info = info;
+    const before_result = result;
+    table.cpu_pmu_info = @intFromPtr(&testPmuInfo);
+    table.cpu_pmu_measure = @intFromPtr(&testPmuMeasure);
+    table.cpu_pmu_result = @intFromPtr(&testPmuResult);
+    test_pmu_calls = 0;
+    test_pmu_callbacks = 0;
+    for (680..704) |size| {
+        table.size = @intCast(size);
+        if (size < 688) try std.testing.expectEqual(abi.err_no_fn, ctx.cpuPmuInfo(2, &info.value));
+        if (size < 696) try std.testing.expectEqual(abi.err_no_fn, ctx.cpuPmuMeasure(2, 7, 1, 4096, testPmuWork, 0x8534, &result.value));
+        try std.testing.expectEqual(abi.err_no_fn, ctx.cpuPmuResult(2, 7, 11, &result.value));
+        try std.testing.expectEqualSlices(u8, std.mem.asBytes(&before_info), std.mem.asBytes(&info));
+        try std.testing.expectEqualSlices(u8, std.mem.asBytes(&before_result), std.mem.asBytes(&result));
+    }
+    try std.testing.expectEqual(@as(u32, 0), test_pmu_calls);
+    table.size = @sizeOf(abi.R4XStartR4Dev);
+    table.cpu_pmu_info = 0; table.cpu_pmu_measure = 0; table.cpu_pmu_result = 0;
+    try std.testing.expectEqual(abi.err_no_fn, ctx.cpuPmuInfo(2, &info.value));
+    try std.testing.expectEqual(abi.err_no_fn, ctx.cpuPmuMeasure(2, 7, 1, 4096, testPmuWork, 0x8534, &result.value));
+    try std.testing.expectEqual(abi.err_no_fn, ctx.cpuPmuResult(2, 7, 11, &result.value));
+    table.cpu_pmu_info = @intFromPtr(&testPmuInfo); table.cpu_pmu_measure = @intFromPtr(&testPmuMeasure); table.cpu_pmu_result = @intFromPtr(&testPmuResult);
+    try std.testing.expectEqual(abi.cpu_capabilities_error_invalid, ctx.cpuPmuMeasure(2, 7, 1, 4096, null, 0x8534, &result.value));
+    try std.testing.expectEqual(@as(u32, 0), test_pmu_calls);
+    try std.testing.expectEqual(abi.cpu_capabilities_error_index, ctx.cpuPmuInfo(3, &info.value));
+    try std.testing.expectEqual(abi.cpu_capabilities_error_index, ctx.cpuPmuMeasure(3, 7, 1, 4096, testPmuWork, 0x8534, &result.value));
+    try std.testing.expectEqual(abi.cpu_capabilities_error_epoch, ctx.cpuPmuMeasure(2, 8, 1, 4096, testPmuWork, 0x8534, &result.value));
+    try std.testing.expectEqual(abi.cpu_capabilities_error_epoch, ctx.cpuPmuResult(2, 8, 11, &result.value));
+    try std.testing.expectEqualSlices(u8, std.mem.asBytes(&before_info), std.mem.asBytes(&info));
+    try std.testing.expectEqualSlices(u8, std.mem.asBytes(&before_result), std.mem.asBytes(&result));
+    try std.testing.expectEqual(@as(u32, 0), test_pmu_callbacks);
+    info.value.size = @sizeOf(@TypeOf(info)); result.value.size = @sizeOf(@TypeOf(result));
+    try std.testing.expectEqual(@as(i32, 0), ctx.cpuPmuInfo(2, &info.value));
+    try std.testing.expectEqual(@as(i32, 0), ctx.cpuPmuMeasure(2, 7, 1, 4096, testPmuWork, 0x8534, &result.value));
+    try std.testing.expectEqual(@as(u32, 1), test_pmu_callbacks);
+    try std.testing.expectEqual(@as(i32, -34), result.value.callback_result);
+    try std.testing.expectEqual(@as(u32, 256), result.value.size);
+    try std.testing.expectEqual(sentinel, result.tail);
+    try std.testing.expectEqual(sentinel, info.tail);
+    try std.testing.expectEqual(@as(i32, 0), ctx.cpuPmuResult(2, 7, 11, &result.value));
+    try std.testing.expectEqual(@as(u64, 11), result.value.generation);
+    try std.testing.expectEqual(sentinel, result.tail);
 }
 test "early microcode optional slot refuses every old/truncated prefix without modifying output or tail" {
     var raw: abi.R4XStartContext = .{};

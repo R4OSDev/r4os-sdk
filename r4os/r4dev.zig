@@ -162,6 +162,16 @@ pub const Context = struct {
     pub fn cpuMicrocodeInfo(self: *const Context, cpu: u32, out: *abi.CpuMicrocodeInfo) i32 {
         return self.base.cpuMicrocodeInfo(cpu, out);
     }
+
+    pub fn cpuPmuInfo(self: *const Context, cpu: u32, out: *abi.CpuPmuInfo) i32 {
+        return self.base.cpuPmuInfo(cpu, out);
+    }
+    pub fn cpuPmuMeasure(self: *const Context, cpu: u32, epoch: u64, event: u32, iterations: u32, work: ?abi.PmuWorkFn, context: u64, out: *abi.CpuPmuResult) i32 {
+        return self.base.cpuPmuMeasure(cpu, epoch, event, iterations, work, context, out);
+    }
+    pub fn cpuPmuResult(self: *const Context, cpu: u32, epoch: u64, generation: u64, out: *abi.CpuPmuResult) i32 {
+        return self.base.cpuPmuResult(cpu, epoch, generation, out);
+    }
     pub fn cpuMachineBank(self: *const Context, cpu: u32, epoch: u64, sequence: u64, index: u32, out: *abi.CpuMachineBank) i32 {
         return self.base.cpuMachineBank(cpu, epoch, sequence, index, out);
     }

@@ -570,3 +570,19 @@ firmware binding, prerequisites, failed load/readback and common post-baseline
 capture. A supplied package or virtual revision is not native update success.
 This facade only copies resident evidence; no public reload or arbitrary
 data/register endpoint exists. The C facade is `r4dev_cpu_microcode_info`.
+
+PMU scopes (0.64.50): `cpuPmuInfo` and `cpuPmuResult` passively copy cached
+interface facts and exact original CPU/epoch/generation receipts. Three
+optional R4DEV32 slots follow the preserved680-byte prefix; complete704.
+Separate128/256-byte records keep raw validity, restoration, IF and scope
+independent. `cpuPmuMeasure` explicitly invokes1..4096 iterations of trusted
+pure resident work: no allocation, fault, blocking, yield or API/placement
+call inside the callback. Warm its code/data/stack first. The facade passes
+a local typed callback slot; no optional-by-value wire ABI is introduced.
+Native support needs the exact qualified architecture/model; virtual or
+unsupported requests return unavailable before hardware/work. Intel overflow
+never becomes valid absolute count; AMD legacy exposes modulo-only data.
+Inspect result status/flags: return0 means a receipt, not valid measurements.
+Failed copies preserve output/tails. No arbitrary event/MSR interface or
+change to STANDARD workloads/reference/scoring. C facades use the same
+`r4dev_cpu_pmu_info`, `_measure` and `_result` names.

@@ -79,6 +79,25 @@ static inline int32_t r4dev_cpu_microcode_info(const R4Dev *dev, uint32_t cpu, R
     if (!dev || !dev->table || dev->table->size < offsetof(R4XStartR4Dev, cpu_microcode_info) + sizeof(uintptr_t) || !dev->table->cpu_microcode_info) return R4OS_ERR_NO_FN;
     return ((R4DevCpuMicrocodeInfoFn)(uintptr_t)dev->table->cpu_microcode_info)(cpu, out);
 }
+/* Passive discovery/retained copies; only measure explicitly runs pure work. */
+static inline int32_t r4dev_cpu_pmu_info(const R4Dev *dev, uint32_t cpu, R4CpuPmuInfo *out) {
+    if (!out) return R4OS_CPU_CAPABILITIES_ERROR_INVALID;
+    if (!dev || !dev->table || dev->table->size < offsetof(R4XStartR4Dev, cpu_pmu_info) + sizeof(uintptr_t) || !dev->table->cpu_pmu_info) return R4OS_ERR_NO_FN;
+    return ((R4DevCpuPmuInfoFn)(uintptr_t)dev->table->cpu_pmu_info)(cpu, out);
+}
+/* work must be resident/pure/bounded: no allocation, fault, block, yield or
+ * API/placement call. A local copied typed slot keeps the wire ABI portable. */
+static inline int32_t r4dev_cpu_pmu_measure(const R4Dev *dev, uint32_t cpu, uint64_t epoch, uint32_t event, uint32_t iterations, R4PmuWorkFn work, uint64_t context, R4CpuPmuResult *out) {
+    if (!out) return R4OS_CPU_CAPABILITIES_ERROR_INVALID;
+    if (!dev || !dev->table || dev->table->size < offsetof(R4XStartR4Dev, cpu_pmu_measure) + sizeof(uintptr_t) || !dev->table->cpu_pmu_measure) return R4OS_ERR_NO_FN;
+    if (!work) return R4OS_CPU_CAPABILITIES_ERROR_INVALID;
+    return ((R4DevCpuPmuMeasureFn)(uintptr_t)dev->table->cpu_pmu_measure)(cpu, epoch, event, iterations, &work, context, out);
+}
+static inline int32_t r4dev_cpu_pmu_result(const R4Dev *dev, uint32_t cpu, uint64_t epoch, uint64_t generation, R4CpuPmuResult *out) {
+    if (!out) return R4OS_CPU_CAPABILITIES_ERROR_INVALID;
+    if (!dev || !dev->table || dev->table->size < offsetof(R4XStartR4Dev, cpu_pmu_result) + sizeof(uintptr_t) || !dev->table->cpu_pmu_result) return R4OS_ERR_NO_FN;
+    return ((R4DevCpuPmuResultFn)(uintptr_t)dev->table->cpu_pmu_result)(cpu, epoch, generation, out);
+}
 /* Passive resident MCA copies; no hardware reads or implicit work. */
 static inline int32_t r4dev_cpu_machine_info(const R4Dev *dev, uint32_t cpu, R4CpuMachineInfo *out) {
     if (!out) return R4OS_CPU_CAPABILITIES_ERROR_INVALID;
