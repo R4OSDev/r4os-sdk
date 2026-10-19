@@ -153,6 +153,9 @@ pub const Context = struct {
     pub fn cpuFirmwarePerformance(self: *const Context, request: *const abi.CpuPerformanceRequest, out: *abi.CpuFirmwareInfo) i32 {
         return self.base.cpuFirmwarePerformance(request, out);
     }
+    pub fn cpuIdleInfo(self: *const Context, cpu: u32, out: *abi.CpuIdleInfo) i32 {
+        return self.base.cpuIdleInfo(cpu, out);
+    }
 
     pub fn cpuPerformanceHint(self: *const Context, cpu: u32, epoch: u64, out: *abi.CpuPerformanceHintInfo) i32 {
         return self.base.cpuPerformanceHint(cpu, epoch, out);

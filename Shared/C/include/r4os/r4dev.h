@@ -68,6 +68,11 @@ static inline int32_t r4dev_cpu_firmware_performance(const R4Dev *dev, const R4C
     if (!dev || !dev->table || dev->table->size < offsetof(R4XStartR4Dev, cpu_firmware_performance) + sizeof(uintptr_t) || !dev->table->cpu_firmware_performance) return R4OS_ERR_NO_FN;
     return ((R4DevCpuFirmwarePerformanceFn)(uintptr_t)dev->table->cpu_firmware_performance)(request, out);
 }
+static inline int32_t r4dev_cpu_idle_info(const R4Dev *dev, uint32_t cpu, R4CpuIdleInfo *out) {
+    if (!out) return R4OS_CPU_CAPABILITIES_ERROR_INVALID;
+    if (!dev || !dev->table || dev->table->size < offsetof(R4XStartR4Dev, cpu_idle_info) + sizeof(uintptr_t) || !dev->table->cpu_idle_info) return R4OS_ERR_NO_FN;
+    return ((R4DevCpuIdleInfoFn)(uintptr_t)dev->table->cpu_idle_info)(cpu, out);
+}
 
 /* Optional independently typed AMD CPPC/catalogue observation. */
 static inline int32_t r4dev_cpu_performance_hint(const R4Dev *dev, uint32_t cpu, uint64_t epoch, R4CpuPerformanceHintInfo *out) {

@@ -4,6 +4,16 @@ const a = @import("r4os_contract").abi;
 /// No arbitrary MSR address or cross-CPU dispatch.
 pub const Context = struct {
     table: a.DriverCpuPowerApi,
+    pub fn idlePublish(self: *const Context, descriptor: *const a.CpuIdleDescriptor) i32 {
+        if (!self.has("idle_publish")) return a.err_no_fn;
+        const call: *const fn (*const a.CpuIdleDescriptor) callconv(.c) i32 = @ptrFromInt(self.table.idle_publish);
+        return call(descriptor);
+    }
+    pub fn idlePolicy(self: *const Context, policy: *const a.CpuIdlePolicy) i32 {
+        if (!self.has("idle_policy")) return a.err_no_fn;
+        const call: *const fn (*const a.CpuIdlePolicy) callconv(.c) i32 = @ptrFromInt(self.table.idle_policy);
+        return call(policy);
+    }
     pub fn firmwareRegister(self: *const Context, role: u32, backend: *const a.CpuFirmwareBackend, cookie: *u64) i32 {
         if (!self.has("firmware_register")) return a.err_no_fn;
         const call: *const fn (u32, *const a.CpuFirmwareBackend, *u64) callconv(.c) i32 = @ptrFromInt(self.table.firmware_register);

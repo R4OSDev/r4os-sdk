@@ -1,6 +1,35 @@
 const std = @import("std");
 const r4os = @import("r4os");
 
+fn idleDeclaration(v: *const r4os.abi.CpuIdleDescriptor) callconv(.c) i32 {
+    return if (v.cpu_index == 2 and v.epoch == 0x85_31_1234_5678 and v.firmware_generation == 49) -2 else -99;
+}
+fn idlePolicy(v: *const r4os.abi.CpuIdlePolicy) callconv(.c) i32 {
+    return if (v.provider_generation == 0x85_31_1234_5678 and v.enabled == 1 and v.maximum_latency_us == 100) -4 else -99;
+}
+test "idle tail refuses old prefixes without dispatch and preserves exact declaration and policy identity" {
+    const a = r4os.abi;
+    const Ctx = r4os.r4dev.DriverCpuPowerContext;
+    var ctx: Ctx = .{ .table = .{ .idle_publish = @intFromPtr(&idleDeclaration), .idle_policy = @intFromPtr(&idlePolicy) } };
+    const descriptor: a.CpuIdleDescriptor = .{ .cpu_index = 2, .epoch = 0x85_31_1234_5678, .firmware_generation = 49 };
+    const policy: a.CpuIdlePolicy = .{ .provider_generation = 0x85_31_1234_5678, .enabled = 1, .maximum_latency_us = 100, .residency_factor = 4 };
+    for (168..176) |size| {
+        ctx.table.size = @intCast(size);
+        try std.testing.expectEqual(a.err_no_fn, ctx.idlePublish(&descriptor));
+    }
+    for (176..184) |size| {
+        ctx.table.size = @intCast(size);
+        try std.testing.expectEqual(a.err_no_fn, ctx.idlePolicy(&policy));
+    }
+    ctx.table.size = 184;
+    try std.testing.expectEqual(@as(i32, -2), ctx.idlePublish(&descriptor));
+    try std.testing.expectEqual(@as(i32, -4), ctx.idlePolicy(&policy));
+    ctx.table.idle_publish = 0;
+    ctx.table.idle_policy = 0;
+    try std.testing.expectEqual(a.err_no_fn, ctx.idlePublish(&descriptor));
+    try std.testing.expectEqual(a.err_no_fn, ctx.idlePolicy(&policy));
+}
+
 var power_query_mode: u32 = 0;
 fn powerRegister(backend: *const r4os.abi.CpuPowerBackend, cookie: *u64) callconv(.c) i32 {
     std.debug.assert(backend.context == 0x1234_5678_85ab_cdef);

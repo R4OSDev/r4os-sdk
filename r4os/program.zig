@@ -498,6 +498,10 @@ pub const Context = struct {
         const function = self.devFn("cpu_firmware_performance") orelse return self.unavailable("dev");
         return function(request, out);
     }
+    pub fn cpuIdleInfo(self: *const Context, cpu: u32, out: *abi.CpuIdleInfo) i32 {
+        const function = self.devFn("cpu_idle_info") orelse return self.unavailable("dev");
+        return function(cpu, out);
+    }
 
     pub fn cpuPerformanceHint(self: *const Context, cpu: u32, epoch: u64, out: *abi.CpuPerformanceHintInfo) i32 {
         const function = self.devFn("cpu_performance_hint") orelse return self.unavailable("dev");
@@ -5300,6 +5304,34 @@ test "net socket drain keeps stack request alive until busy async close complete
     try std.testing.expectEqual(@as(u32, 0), guarded.request.service_handle);
 }
 
+fn testIdleInfo(cpu: u32, out: *abi.CpuIdleInfo) callconv(.c) i32 {
+    if (cpu != 2) return -4;
+    out.* = .{ .cpu_index = cpu, .epoch = 0x85_31_1234_5678, .reason = abi.cpu_idle_reason_hypervisor, .hlt_fallbacks = 91 };
+    return 0;
+}
+test "passive idle optional slot preserves failed output and hardware metrics remain unavailable" {
+    var raw: abi.R4XStartContext = .{};
+    var table: abi.R4XStartR4Dev = .{};
+    var bundle: Bundle = .{ .raw = &raw, .dev = &table };
+    const ctx = Context.initBundle(&bundle);
+    const sentinel: u64 = 0x8531_9876_1234_5678;
+    var v: extern struct { info: abi.CpuIdleInfo, tail: u64 } = .{ .info = .{ .epoch = sentinel }, .tail = sentinel };
+    table.size = 648;
+    table.cpu_idle_info = @intFromPtr(&testIdleInfo);
+    try std.testing.expectEqual(abi.err_no_fn, ctx.cpuIdleInfo(2, &v.info));
+    try std.testing.expectEqual(sentinel, v.info.epoch);
+    table.size = @sizeOf(abi.R4XStartR4Dev);
+    table.cpu_idle_info = 0;
+    try std.testing.expectEqual(abi.err_no_fn, ctx.cpuIdleInfo(2, &v.info));
+    table.cpu_idle_info = @intFromPtr(&testIdleInfo);
+    try std.testing.expectEqual(@as(i32, -4), ctx.cpuIdleInfo(3, &v.info));
+    try std.testing.expectEqual(sentinel, v.info.epoch);
+    try std.testing.expectEqual(@as(i32, 0), ctx.cpuIdleInfo(2, &v.info));
+    try std.testing.expectEqual(@as(u64, 0x85_31_1234_5678), v.info.epoch);
+    try std.testing.expectEqual(@as(u64, 91), v.info.hlt_fallbacks);
+    try std.testing.expectEqual(@as(u64, 0), v.info.residency_ns | v.info.wake_latency_ns | v.info.energy_uj);
+    try std.testing.expectEqual(sentinel, v.tail);
+}
 fn testFirmwarePerformance(request: *const abi.CpuPerformanceRequest, out: *abi.CpuFirmwareInfo) callconv(.c) i32 {
     out.* = .{ .cpu_index = request.cpu_index, .epoch = request.epoch, .backend = abi.cpu_firmware_backend_pss, .state = abi.cpu_performance_state_uncertain, .lease = 71, .provider_generation = 29, .firmware_generation = 30 };
     return 0;

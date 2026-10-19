@@ -5,6 +5,12 @@ module build support, templates, build profiles, and generic Runtime-R4L
 helpers. The platform API and ABI remain canonical in the separate Contract
 repository.
 
+The optional `cpuIdleInfo` facade reads the separate R4DEV v29 idle receipt.
+Driver CPU mechanisms negotiate `idlePublish` and `idlePolicy` individually
+after the preserved168-byte prefix. Old tables return `err_no_fn` without
+changing output. ACPI declarations and software attempts do not represent
+measured hardware residency, wake latency or energy.
+
 The shared update engine and recovery core accept only `R4U_JOURNAL=5`.
 Formats 2–4 are unsupported; no compatibility conversion authorizes file
 changes. V5 checksums, exact identities, copy selection, restart batches and
