@@ -1,4 +1,5 @@
 const std = @import("std");
+const grapheme = @import("r4std_grapheme");
 const bounded_text = @import("bounded_text.zig");
 const abi = @import("r4os_contract").abi;
 const r4sys = @import("r4sys.zig");
@@ -1462,6 +1463,7 @@ pub fn TextArea(comptime capacity: usize) type {
         }
 
         pub fn set(self: *Self, value_text: []const u8) void {
+            if (!grapheme.valid(value_text)) return;
             self.clear();
             _ = self.insertSliceRaw(value_text);
             self.cursor = self.len;
@@ -1497,12 +1499,13 @@ pub fn TextArea(comptime capacity: usize) type {
 
         pub fn selectionRange(self: *const Self) TextRange {
             const anchor = self.selection_anchor orelse self.cursor;
-            return TextRange.normalized(@min(anchor, self.len), @min(self.cursor, self.len));
+            const range = TextRange.normalized(@min(anchor, self.len), @min(self.cursor, self.len));
+            return .{ .start = graphemeFloor(self.value(), range.start), .end = if (range.isEmpty()) graphemeFloor(self.value(), range.end) else graphemeCeil(self.value(), range.end) };
         }
 
         pub fn setSelection(self: *Self, start: usize, end: usize) void {
-            self.selection_anchor = utf8FloorBoundary(self.value(), start);
-            self.cursor = utf8FloorBoundary(self.value(), end);
+            self.selection_anchor = if (start <= end) graphemeFloor(self.value(), start) else graphemeCeil(self.value(), start);
+            self.cursor = if (start < end) graphemeCeil(self.value(), end) else graphemeFloor(self.value(), end);
             self.preferred_col = null;
         }
 
@@ -1551,8 +1554,12 @@ pub fn TextArea(comptime capacity: usize) type {
 
         pub fn pasteSlice(self: *Self, value_text: []const u8, view: TextAreaView) bool {
             if (self.disabled) return false;
+            const range = self.selectionRange();
+            const cap = self.available() + range.count();
+            const end = editablePrefix(value_text, cap, true) orelse return false;
+            if (end == 0) return false;
             const deleted = self.deleteSelection();
-            const inserted = self.insertSliceRaw(value_text);
+            const inserted = self.insertSliceRaw(value_text[0..end]);
             const changed = deleted or inserted > 0;
             if (changed) self.afterEdit(view);
             return changed;
@@ -1561,6 +1568,8 @@ pub fn TextArea(comptime capacity: usize) type {
         pub fn insertByte(self: *Self, ch: u8, view: TextAreaView) bool {
             if (self.disabled) return false;
             const normalized = normalizeTextAreaByte(ch) orelse return false;
+            const range = self.selectionRange();
+            if (self.available() + range.count() == 0) return false;
             _ = self.deleteSelection();
             if (!self.insertByteRaw(normalized)) return false;
             self.afterEdit(view);
@@ -1569,8 +1578,12 @@ pub fn TextArea(comptime capacity: usize) type {
 
         pub fn insertSlice(self: *Self, value_text: []const u8, view: TextAreaView) bool {
             if (self.disabled) return false;
+            const range = self.selectionRange();
+            const cap = self.available() + range.count();
+            const end = editablePrefix(value_text, cap, true) orelse return false;
+            if (end == 0) return false;
             const deleted = self.deleteSelection();
-            const inserted = self.insertSliceRaw(value_text);
+            const inserted = self.insertSliceRaw(value_text[0..end]);
             const changed = deleted or inserted > 0;
             if (changed) self.afterEdit(view);
             return changed;
@@ -1593,7 +1606,7 @@ pub fn TextArea(comptime capacity: usize) type {
                 return true;
             }
             if (self.cursor == 0) return false;
-            const target = utf8PreviousIndex(self.value(), self.cursor);
+            const target = graphemePrevious(self.value(), self.cursor);
             self.removeRange(target, self.cursor);
             self.cursor = @min(target, self.len);
             self.afterEdit(view);
@@ -1607,14 +1620,14 @@ pub fn TextArea(comptime capacity: usize) type {
                 return true;
             }
             if (self.cursor >= self.len) return false;
-            self.removeRange(self.cursor, utf8NextIndex(self.value(), self.cursor));
+            self.removeRange(self.cursor, graphemeNext(self.value(), self.cursor));
             self.afterEdit(view);
             return true;
         }
 
         pub fn removeRange(self: *Self, start: usize, end: usize) void {
-            const safe_start = @min(start, self.len);
-            const safe_end = @min(end, self.len);
+            const safe_start = graphemeFloor(self.value(), start);
+            const safe_end = graphemeCeil(self.value(), end);
             if (safe_start >= safe_end) return;
             const count = safe_end - safe_start;
             var index = safe_start;
@@ -1633,7 +1646,7 @@ pub fn TextArea(comptime capacity: usize) type {
         }
 
         pub fn moveCursorTo(self: *Self, index: usize, extend_selection: bool, view: TextAreaView) bool {
-            const target = utf8FloorBoundary(self.value(), index);
+            const target = graphemeFloor(self.value(), index);
             if (target == self.cursor and (extend_selection or !self.hasSelection())) return false;
             self.setCursorInternal(target, extend_selection);
             self.preferred_col = null;
@@ -1644,13 +1657,13 @@ pub fn TextArea(comptime capacity: usize) type {
         pub fn moveLeft(self: *Self, extend_selection: bool, view: TextAreaView) bool {
             if (!extend_selection and self.hasSelection()) return self.moveCursorTo(self.selectionRange().start, false, view);
             if (self.cursor == 0) return false;
-            return self.moveCursorTo(utf8PreviousIndex(self.value(), self.cursor), extend_selection, view);
+            return self.moveCursorTo(graphemePrevious(self.value(), self.cursor), extend_selection, view);
         }
 
         pub fn moveRight(self: *Self, extend_selection: bool, view: TextAreaView) bool {
             if (!extend_selection and self.hasSelection()) return self.moveCursorTo(self.selectionRange().end, false, view);
             if (self.cursor >= self.len) return false;
-            return self.moveCursorTo(utf8NextIndex(self.value(), self.cursor), extend_selection, view);
+            return self.moveCursorTo(graphemeNext(self.value(), self.cursor), extend_selection, view);
         }
 
         pub fn moveHome(self: *Self, extend_selection: bool, view: TextAreaView) bool {
@@ -1733,7 +1746,7 @@ pub fn TextArea(comptime capacity: usize) type {
         }
 
         pub fn beginMouseSelection(self: *Self, index: usize, view: TextAreaView) void {
-            const safe_index = @min(index, self.len);
+            const safe_index = graphemeFloor(self.value(), index);
             self.cursor = safe_index;
             self.selection_anchor = safe_index;
             self.preferred_col = null;
@@ -1819,13 +1832,14 @@ pub fn TextArea(comptime capacity: usize) type {
         }
 
         fn afterEdit(self: *Self, view: TextAreaView) void {
+            self.cursor = graphemeCeil(self.value(), self.cursor);
             self.preferred_col = null;
             self.ensureCursorVisible(view);
         }
 
         fn setCursorInternal(self: *Self, index: usize, extend_selection: bool) void {
             const old_cursor = self.cursor;
-            self.cursor = @min(index, self.len);
+            self.cursor = graphemeFloor(self.value(), index);
             if (extend_selection) {
                 if (self.selection_anchor == null) self.selection_anchor = old_cursor;
             } else {
@@ -1834,28 +1848,15 @@ pub fn TextArea(comptime capacity: usize) type {
         }
 
         fn insertSliceRaw(self: *Self, value_text: []const u8) usize {
-            var inserted: usize = 0;
+            const end = editablePrefix(value_text, self.available(), true) orelse return 0;
             var i: usize = 0;
-            while (i < value_text.len) {
-                const source_index = i;
+            var inserted: usize = 0;
+            while (i < end) {
                 var ch = value_text[i];
                 i += 1;
                 if (ch == '\r') {
-                    if (i < value_text.len and value_text[i] == '\n') i += 1;
+                    if (i < end and value_text[i] == '\n') i += 1;
                     ch = '\n';
-                }
-                if (ch >= 0x80) {
-                    const sequence_len = utf8SequenceLengthAt(value_text, source_index);
-                    if (sequence_len > 1) {
-                        if (self.len + sequence_len >= self.buffer.len) break;
-                        var offset: usize = 0;
-                        while (offset < sequence_len) : (offset += 1) {
-                            _ = self.insertByteRaw(value_text[source_index + offset]);
-                        }
-                        i = source_index + sequence_len;
-                        inserted += sequence_len;
-                        continue;
-                    }
                 }
                 const normalized = normalizeTextAreaByte(ch) orelse continue;
                 if (!self.insertByteRaw(normalized)) break;
@@ -1895,9 +1896,10 @@ pub fn TextField(comptime capacity: usize) type {
         }
 
         pub fn set(self: *Self, value_text: []const u8) void {
-            @memset(self.buffer[0..], 0);
-            self.len = utf8PrefixBytes(value_text, std.math.maxInt(usize), self.buffer.len - 1);
-            @memcpy(self.buffer[0..self.len], value_text[0..self.len]);
+            if (!bounded_text.valid(value_text)) return;
+            const end = grapheme.prefix(value_text, self.buffer.len - 1) catch return;
+            if (!bounded_text.assignZ(&self.buffer, value_text[0..end])) return;
+            self.len = end;
             self.cursor = self.len;
             self.selection_anchor = null;
         }
@@ -1913,8 +1915,8 @@ pub fn TextField(comptime capacity: usize) type {
         }
 
         pub fn setSelection(self: *Self, start: usize, end: usize) void {
-            self.selection_anchor = utf8FloorBoundary(self.value(), start);
-            self.cursor = utf8FloorBoundary(self.value(), end);
+            self.selection_anchor = if (start <= end) graphemeFloor(self.value(), start) else graphemeCeil(self.value(), start);
+            self.cursor = if (start < end) graphemeCeil(self.value(), end) else graphemeFloor(self.value(), end);
         }
 
         /// Preflight replacement capacity before the existing scalar editor
@@ -1972,13 +1974,13 @@ pub fn TextField(comptime capacity: usize) type {
                 },
                 Key.left => {
                     if (self.cursor == 0) return false;
-                    self.cursor = utf8PreviousIndex(self.value(), self.cursor);
+                    self.cursor = graphemePrevious(self.value(), self.cursor);
                     self.clearSelection();
                     return true;
                 },
                 Key.right => {
                     if (self.cursor >= self.len) return false;
-                    self.cursor = utf8NextIndex(self.value(), self.cursor);
+                    self.cursor = graphemeNext(self.value(), self.cursor);
                     self.clearSelection();
                     return true;
                 },
@@ -1997,26 +1999,34 @@ pub fn TextField(comptime capacity: usize) type {
                 Key.backspace => {
                     if (self.deleteSelection()) return true;
                     if (self.cursor == 0) return false;
-                    const target = utf8PreviousIndex(self.value(), self.cursor);
+                    const target = graphemePrevious(self.value(), self.cursor);
                     self.removeRange(target, self.cursor);
-                    self.cursor = target;
+                    self.cursor = graphemeFloor(self.value(), target);
                     return true;
                 },
                 Key.delete => {
                     if (self.deleteSelection()) return true;
                     if (self.cursor >= self.len) return false;
-                    self.removeRange(self.cursor, utf8NextIndex(self.value(), self.cursor));
+                    self.removeRange(self.cursor, graphemeNext(self.value(), self.cursor));
+                    self.cursor = graphemeFloor(self.value(), self.cursor);
                     return true;
                 },
                 else => {},
             }
             if (!isTextCodepoint(codepoint)) return false;
-            _ = self.deleteSelection();
             var encoded: [4]u8 = undefined;
             const encoded_len = encodeUtf8Codepoint(codepoint, &encoded);
-            if (encoded_len == 0 or self.len + encoded_len >= self.buffer.len) return false;
+            const range = self.selectionRange();
+            if (encoded_len == 0 or self.len - (range.end - range.start) + encoded_len >= self.buffer.len) return false;
+            _ = self.deleteSelection();
             for (encoded[0..encoded_len]) |ch| _ = self.insertPrintable(ch);
+            self.cursor = graphemeCeil(self.value(), self.cursor);
             return true;
+        }
+
+        pub fn handleClipboardCodepoint(self: *Self, ctx: *const r4desk.Context, codepoint: u32) bool {
+            if (codepoint == Key.ctrl_c or codepoint == Key.ctrl_x or codepoint == Key.ctrl_v) return self.handleClipboardKey(ctx, @intCast(codepoint));
+            return self.handleCodepointChecked(codepoint);
         }
 
         pub fn handleClipboardKey(self: *Self, ctx: *const r4desk.Context, key: u8) bool {
@@ -2044,29 +2054,20 @@ pub fn TextField(comptime capacity: usize) type {
             var data: [clipboard_buffer_size]u8 = .{0} ** clipboard_buffer_size;
             const len = ctx.clipboardRead(data[0..]);
             if (len <= 0) return false;
-            _ = self.deleteSelection();
-            const input_len = @min(data.len, @as(usize, @intCast(len)));
-            const input = data[0..input_len];
-            var changed = false;
-            var i: usize = 0;
-            while (i < input.len) {
-                const ch = data[i];
-                if (ch == 0) break;
-                if (ch < 0x20 or ch == 0x7F) {
-                    i += 1;
-                    continue;
-                }
-                const sequence_len = utf8SequenceLengthAt(input, i);
-                if (sequence_len > 1) {
-                    if (self.len + sequence_len >= self.buffer.len) break;
-                    var offset: usize = 0;
-                    while (offset < sequence_len) : (offset += 1) changed = self.insertPrintable(input[i + offset]) or changed;
-                    i += sequence_len;
-                    continue;
-                }
-                changed = self.insertPrintable(ch) or changed;
-                i += 1;
-            }
+            if (@as(usize, @intCast(len)) > data.len) return false;
+            return self.pasteSlice(data[0..@intCast(len)]);
+        }
+
+        pub fn pasteSlice(self: *Self, input: []const u8) bool {
+            if (self.disabled) return false;
+            const range = self.selectionRange();
+            const cap = capacity - 1 - self.len + range.end - range.start;
+            const end = editablePrefix(input, cap, false) orelse return false;
+            if (end == 0) return false;
+            const deleted = self.deleteSelection();
+            var changed = deleted;
+            for (input[0..end]) |ch| changed = self.insertPrintable(ch) or changed;
+            self.cursor = graphemeCeil(self.value(), self.cursor);
             return changed;
         }
 
@@ -2078,7 +2079,7 @@ pub fn TextField(comptime capacity: usize) type {
             if (!self.hasSelection()) return false;
             const range = self.selectionRange();
             self.removeRange(range.start, range.end);
-            self.cursor = range.start;
+            self.cursor = graphemeFloor(self.value(), range.start);
             self.clearSelection();
             return true;
         }
@@ -2697,7 +2698,7 @@ pub fn copyEllipsized(out: []u8, value: []const u8, width_px: i32) []const u8 {
         return out[0..dot_count];
     }
 
-    const keep = utf8PrefixBytes(value, capacity_chars - 3, out.len - 4);
+    const keep = graphemeFloor(value, utf8PrefixBytes(value, capacity_chars - 3, out.len - 4));
     @memcpy(out[0..keep], value[0..keep]);
     @memcpy(out[keep .. keep + 3], "...");
     out[keep + 3] = 0;
@@ -2735,7 +2736,7 @@ fn copyEllipsizedMeasured(measure: anytype, out: []u8, value: []const u8, width_
         out[0] = 0;
         return out[0..0];
     }
-    var high = utf8FloorBoundary(value, @min(value.len, out.len - 4));
+    var high = displayFloor(value, @min(value.len, out.len - 4));
     if (measure.textWidthZ(ellipsisCandidate(out, value, high).ptr) <= width_px) return out[0 .. high + 3];
 
     // R4DRAW's rendered glyph advances are nonnegative. Search one logical
@@ -2751,12 +2752,12 @@ fn copyEllipsizedMeasured(measure: anytype, out: []u8, value: []const u8, width_
     }
     while (low < high) {
         const midpoint = low + (high - low + 1) / 2;
-        var middle = utf8FloorBoundary(value, midpoint);
-        if (middle <= low) middle = utf8NextIndex(value, low);
+        var middle = displayFloor(value, midpoint);
+        if (middle <= low) middle = displayNext(value, low);
         if (measure.textWidthZ(ellipsisCandidate(out, value, middle).ptr) <= width_px) {
             low = middle;
         } else {
-            high = utf8PreviousIndex(value, middle);
+            high = displayPrevious(value, middle);
         }
     }
     return ellipsisCandidate(out, value, low);
@@ -2782,84 +2783,37 @@ pub fn textAreaViewForRect(canvas: Canvas, rect: Rect) TextAreaView {
 }
 
 pub fn textAreaVisualPoint(value: []const u8, index: usize, wrap_cols: usize) TextAreaPoint {
-    const cols = effectiveTextAreaWrapCols(wrap_cols);
-    const safe_index = @min(index, value.len);
-    var line: usize = 0;
-    var column: usize = 0;
-    var i: usize = 0;
-    while (i < safe_index) {
-        const ch = value[i];
-        const next = utf8NextIndex(value, i);
-        if (ch == '\r') {
-            i = next;
-            continue;
-        }
-        if (ch != '\n' and column >= cols) {
-            line += 1;
-            column = 0;
-        }
-        if (ch == '\n') {
-            line += 1;
-            column = 0;
-        } else {
-            column += 1;
-        }
-        i = next;
-    }
-    if (safe_index < value.len and value[safe_index] != '\r' and value[safe_index] != '\n' and column >= cols) {
-        line += 1;
-        column = 0;
-    }
-    return .{ .line = line, .column = column };
+    return textAreaLayout(value, index, wrap_cols, 0, 0).caret;
 }
 
+// One scalar still occupies one current bitmap renderer cell. A cluster can
+// span several such cells; wrapping and hit testing never cut that cluster.
 pub fn textAreaIndexForVisualPosition(value: []const u8, target_line: usize, target_column: usize, wrap_cols: usize) usize {
     const cols = effectiveTextAreaWrapCols(wrap_cols);
     var line: usize = 0;
     var column: usize = 0;
-    var i: usize = 0;
-    while (i < value.len) {
-        const ch = value[i];
-        if (ch != '\r' and ch != '\n' and column >= cols) {
+    var it = DisplayIterator{ .inner = .{ .bytes = value } };
+    while (it.next()) |range| {
+        const ch = value[range.start];
+        const width = utf8VisualColumnCount(value[range.start..range.end]);
+        if (ch != '\r' and ch != '\n' and column != 0 and (column >= cols or width > cols - column)) {
             line += 1;
             column = 0;
         }
-        if (line > target_line) return i;
-        if (line == target_line and column >= target_column) return i;
-        if (ch == '\r') {
-            i += 1;
-            continue;
-        }
-        if (ch == '\n') {
-            if (line == target_line) return i;
+        if (line > target_line) return range.start;
+        if (line == target_line and (column >= target_column or target_column - column < width)) return range.start;
+        if (ch == '\r' or ch == '\n') {
+            if (line == target_line) return range.start;
             line += 1;
             column = 0;
-            i += 1;
-            continue;
-        }
-        column += 1;
-        i = utf8NextIndex(value, i);
+        } else column += width;
     }
     return value.len;
 }
 
 pub fn textAreaVisualLineRange(value: []const u8, visual_line: usize, wrap_cols: usize) TextRange {
-    const cols = effectiveTextAreaWrapCols(wrap_cols);
-    const start = textAreaIndexForVisualPosition(value, visual_line, 0, cols);
-    var end = start;
-    var column: usize = 0;
-    while (end < value.len) {
-        const ch = value[end];
-        if (ch == '\r') {
-            end = utf8NextIndex(value, end);
-            continue;
-        }
-        if (ch == '\n') return .{ .start = start, .end = end };
-        if (column >= cols) return .{ .start = start, .end = end };
-        column += 1;
-        end = utf8NextIndex(value, end);
-    }
-    return .{ .start = start, .end = end };
+    const layout = textAreaLayout(value, 0, wrap_cols, visual_line, 1);
+    return if (layout.range_count == 0) .{ .start = value.len, .end = value.len } else layout.ranges[0];
 }
 
 pub fn textAreaVisualLineCount(value: []const u8, wrap_cols: usize) usize {
@@ -2895,37 +2849,27 @@ pub fn textAreaLayout(value: []const u8, cursor: usize, wrap_cols: usize, first_
     var line: usize = 0;
     var column: usize = 0;
     var start: usize = 0;
-    var i: usize = 0;
-    while (i < value.len) {
-        const ch = value[i];
-        if (ch != '\r' and ch != '\n' and column >= cols) {
-            result.finishLine(line, start, i, column, rows);
+    var it = DisplayIterator{ .inner = .{ .bytes = value } };
+    while (it.next()) |range| {
+        const ch = value[range.start];
+        const width = utf8VisualColumnCount(value[range.start..range.end]);
+        if (ch != '\r' and ch != '\n' and column != 0 and (column >= cols or width > cols - column)) {
+            result.finishLine(line, start, range.start, column, rows);
             line += 1;
             column = 0;
-            start = i;
+            start = range.start;
         }
-        if (!caret_found and i >= caret_index) {
+        if (!caret_found and caret_index < range.end) {
             result.caret = .{ .line = line, .column = column };
             caret_found = true;
         }
-        const next = utf8NextIndex(value, i);
-        result.visited_bytes += next - i;
-        if (ch == '\n') {
-            result.finishLine(line, start, i, column, rows);
+        result.visited_bytes += range.end - range.start;
+        if (ch == '\r' or ch == '\n') {
+            result.finishLine(line, start, range.start, column, rows);
             line += 1;
             column = 0;
-            start = next;
-        } else if (ch != '\r') {
-            column += 1;
-        }
-        if (!caret_found and caret_index > i and caret_index < next) {
-            result.caret = if (value[caret_index] != '\r' and value[caret_index] != '\n' and column >= cols)
-                .{ .line = line + 1, .column = 0 }
-            else
-                .{ .line = line, .column = column };
-            caret_found = true;
-        }
-        i = next;
+            start = range.end;
+        } else column += width;
     }
     if (!caret_found) result.caret = .{ .line = line, .column = column };
     result.finishLine(line, start, value.len, column, rows);
@@ -2934,26 +2878,7 @@ pub fn textAreaLayout(value: []const u8, cursor: usize, wrap_cols: usize, first_
 }
 
 pub fn textAreaVisualMaxColumns(value: []const u8, wrap_cols: usize) usize {
-    const cols = effectiveTextAreaWrapCols(wrap_cols);
-    var widest: usize = 0;
-    var column: usize = 0;
-    var i: usize = 0;
-    while (i < value.len) {
-        const ch = value[i];
-        i = utf8NextIndex(value, i);
-        if (ch == '\r') continue;
-        if (ch == '\n') {
-            widest = @max(widest, column);
-            column = 0;
-            continue;
-        }
-        if (column >= cols) {
-            widest = @max(widest, column);
-            column = 0;
-        }
-        column += 1;
-    }
-    return @max(widest, column);
+    return textAreaLayout(value, 0, wrap_cols, 0, 0).max_columns;
 }
 
 fn utf8SequenceLengthAt(value: []const u8, index: usize) usize {
@@ -3073,16 +2998,16 @@ fn utf8PrefixBytes(value: []const u8, max_scalars: usize, max_bytes: usize) usiz
 }
 
 fn utf8ByteIndexForColumns(value: []const u8, start: usize, end: usize, columns: usize) usize {
-    var index = @min(start, value.len);
+    const safe_start = @min(start, value.len);
     const safe_end = @min(end, value.len);
+    var it = DisplayIterator{ .inner = .{ .bytes = value[safe_start..safe_end] } };
     var used: usize = 0;
-    while (index < safe_end and used < columns) {
-        const ch = value[index];
-        const next = @min(safe_end, utf8NextIndex(value, index));
-        index = next;
-        if (ch == '\r') continue;
-        if (ch == '\n') break;
-        used += 1;
+    var index = safe_start;
+    while (it.next()) |range| {
+        const width = utf8VisualColumnCount(it.inner.bytes[range.start..range.end]);
+        if (width > columns - used) break;
+        used += width;
+        index = safe_start + range.end;
     }
     return index;
 }
@@ -3179,7 +3104,7 @@ pub fn drawTextFieldEx(canvas: Canvas, rect: Rect, scratch: []u8, value: []const
     }
 
     if (focused and !disabled and text_rect.h > 2) {
-        const caret_byte = @min(cursor, visible_value_end);
+        const caret_byte = graphemeFloor(value, @min(cursor, visible_value_end));
         const caret_chars = if (cursor > visible_value_end and !fitted_is_full) utf8ScalarCount(fitted) else utf8ScalarCount(value[0..caret_byte]);
         const caret_text_w = @min(@as(i32, @intCast(caret_chars)) * canvas.font.max_advance, @max(0, text_rect.w - 1));
         _ = canvas.rect(.{
@@ -5466,4 +5391,129 @@ test "checked text fields preserve selected Unicode on capacity and preload erro
     try std.testing.expect(field.handleCodepointChecked(0x20ac));
     try std.testing.expectEqualStrings("ä€", field.value());
     try std.testing.expect(bounded_text.valid(field.value()));
+}
+
+fn graphemeFloor(value: []const u8, index: usize) usize {
+    return grapheme.floor(value, index) catch 0;
+}
+fn graphemeCeil(value: []const u8, index: usize) usize {
+    return grapheme.ceil(value, index) catch 0;
+}
+fn graphemePrevious(value: []const u8, index: usize) usize {
+    return grapheme.previous(value, index) catch 0;
+}
+fn graphemeNext(value: []const u8, index: usize) usize {
+    return grapheme.next(value, index) catch value.len;
+}
+
+// Input filtering is the pre-existing widget policy, distinct from Unicode
+// normalization. Check full UTF8 and budget complete original clusters before
+// any selection is removed. CRLF contributes one LF in multiline editors.
+fn editablePrefix(value: []const u8, capacity: usize, multiline: bool) ?usize {
+    if (!grapheme.valid(value)) return null;
+    var it = grapheme.Iterator{ .bytes = value };
+    var used: usize = 0;
+    var end: usize = 0;
+    while (it.next() catch return null) |range| {
+        var needed: usize = 0;
+        var i = range.start;
+        while (i < range.end) : (i += 1) {
+            const ch = value[i];
+            if (multiline and ch == '\r') {
+                if (i + 1 < range.end and value[i + 1] == '\n') i += 1;
+                needed += 1;
+            } else if ((multiline and (ch == '\n' or ch == '\t')) or (ch >= 0x20 and ch != 0x7f)) needed += 1;
+        }
+        if (needed > capacity - used) break;
+        used += needed;
+        end = range.end;
+    }
+    return if (used == 0) 0 else end;
+}
+
+/// Pure shared production-widget checks, also called by the real app fixtures.
+pub fn checkGraphemeEditing() bool {
+    const clusters = [_][]const u8{ "a\u{301}", "\u{1f1e9}\u{1f1ea}", "\u{1f469}\u{200d}\u{1f4bb}", "\u{915}\u{94d}\u{915}" };
+    const view = TextAreaView.init(2, 4);
+    for (clusters) |cluster| {
+        var field = TextField(64){};
+        if (!field.setExact(cluster)) return false;
+        if (!field.handleKey(Key.left) or field.cursor != 0) return false;
+        if (!field.handleKey(Key.right) or field.cursor != cluster.len) return false;
+        if (!field.handleKey(Key.backspace) or field.len != 0) return false;
+        field.set(cluster);
+        field.setSelection(1, cluster.len - 1);
+        if (!std.mem.eql(u8, field.clipboardValue(), cluster)) return false;
+        if (!field.handleKey(Key.delete) or field.len != 0) return false;
+        var area = TextArea(64){};
+        area.set(cluster);
+        if (!area.moveLeft(false, view) or area.cursor != 0) return false;
+        if (!area.deleteForward(view) or area.len != 0) return false;
+        area.set(cluster);
+        area.beginMouseSelection(1, view);
+        if (area.cursor != 0) return false;
+        area.setSelection(1, cluster.len);
+        if (!std.mem.eql(u8, area.selectedValue(), cluster)) return false;
+        for (0..cluster.len) |capacity| {
+            var storage: [32]u8 = .{0xa5} ** 32;
+            if (!bounded_text.labelZ(storage[0 .. capacity + 1], cluster)) return false;
+            const label = std.mem.sliceTo(storage[0 .. capacity + 1], 0);
+            if (label.len > 3 or (label.len != 0 and label[0] != '.')) return false;
+        }
+    }
+    var field = TextField(4){};
+    field.set("abc");
+    field.setSelection(1, 2);
+    const saved = field;
+    if (field.pasteSlice("\u{1f469}\u{200d}\u{1f4bb}")) return false;
+    if (!std.mem.eql(u8, &saved.buffer, &field.buffer) or field.cursor != saved.cursor or field.selection_anchor != saved.selection_anchor) return false;
+    if (field.pasteSlice("x\xc3")) return false;
+    if (!std.mem.eql(u8, &saved.buffer, &field.buffer)) return false;
+    // Inserting before an existing combining mark merges clusters. The cursor
+    // must land after the whole new cluster, not inside its unchanged bytes.
+    var merged = TextField(16){};
+    merged.set("\u{301}z");
+    merged.setSelection(0, 0);
+    if (!merged.handleCodepoint('a') or merged.cursor != "a\u{301}".len or !std.mem.eql(u8, merged.value(), "a\u{301}z")) return false;
+    var area = TextArea(8){};
+    area.set("abc");
+    area.setSelection(1, 2);
+    if (area.pasteSlice("\u{1f469}\u{200d}\u{1f4bb}", view) or !std.mem.eql(u8, area.value(), "abc")) return false;
+    if (area.pasteSlice("x\xc3", view) or !std.mem.eql(u8, area.value(), "abc")) return false;
+    // Prefix truncation cannot strand a base by cutting off its combining mark.
+    var small = TextField(3){};
+    small.set("a\u{301}z");
+    if (small.len != 0) return false;
+    const text = "x" ++ "a\u{301}" ++ "z";
+    const layout = textAreaLayout(text, text.len, 2, 0, 4);
+    if (layout.total_lines != 3 or layout.visited_bytes != text.len or layout.ranges[1].start != 1 or layout.ranges[1].end != 4) return false;
+    if (textAreaIndexForVisualPosition(text, 1, 1, 2) != 1) return false;
+    return true;
+}
+
+test "grapheme editors keep combining RI ZWJ Indic clusters exact across deletion selection capacity and layout" {
+    try std.testing.expect(checkGraphemeEditing());
+}
+
+// Legacy malformed bytes may still be displayed from a foreign source, one
+// replacement cell each. This path never admits them into an editable field.
+const DisplayIterator = struct {
+    inner: grapheme.Iterator,
+    fn next(self: *DisplayIterator) ?grapheme.Range {
+        const start = self.inner.offset;
+        return self.inner.next() catch {
+            if (self.inner.offset == start) self.inner.offset += 1;
+            self.inner.state = .{};
+            return .{ .start = start, .end = self.inner.offset };
+        };
+    }
+};
+fn displayFloor(value: []const u8, index: usize) usize {
+    return grapheme.floor(value, index) catch utf8FloorBoundary(value, index);
+}
+fn displayNext(value: []const u8, index: usize) usize {
+    return grapheme.next(value, index) catch utf8NextIndex(value, index);
+}
+fn displayPrevious(value: []const u8, index: usize) usize {
+    return grapheme.previous(value, index) catch utf8PreviousIndex(value, index);
 }

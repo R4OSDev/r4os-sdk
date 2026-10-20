@@ -57,9 +57,10 @@ pub fn build(b: *std.Build) void {
         .optimize = .Debug,
     });
     dialog_root.addImport("r4os_contract", sdk_profile.profile.contract_module);
+    dialog_root.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = b.graph.host, .optimize = .Debug }));
     const dialog_tests = b.addTest(.{ .root_module = dialog_root, .filters = &.{
-        "bounded text",        "checked text fields", "text fields navigate",
-        "text area selection", "text area inserts",   "text area visual",
+        "bounded text", "text field",  "text fields",
+        "text area",    "ellipsizing", "grapheme",
     } });
     b.step("dialog-text-test", "Actual bounded Unicode dialog and existing scalar widget cases").dependOn(&b.addRunArtifact(dialog_tests).step);
 

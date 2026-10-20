@@ -631,3 +631,10 @@ Byte offsets remain separate from Unicode scalars; FileDialog/InputDialog
 accept the actual cursor and selection. DirectoryPage retains exact full
 path identities; overlong presentation labels use whole scalars plus ... .
 No normalization, glyph coverage, display width or grapheme claim.
+
+0.64.56: Shared text widgets use the external R4STD Unicode17.0.0/UAX29rev47
+default extended grapheme boundaries for editing and bounded clipping.
+Rendering still measures scalar glyph advances; shaping, BiDi and grapheme
+display width are separate capabilities. The SDK build injects the pinned
+Libraries23 text module. Direct low-level build options can supply its
+grapheme_source; normal Sdk profiles provide it automatically.

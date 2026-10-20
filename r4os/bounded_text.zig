@@ -1,6 +1,7 @@
 //! Caller-owned UTF8 UI buffer moves. No encoding guess, normalization,
 //! glyph or display-width promise. Failed exact assignment changes no byte.
 const std = @import("std");
+const grapheme = @import("r4std_grapheme");
 
 pub fn valid(value: []const u8) bool {
     return std.unicode.utf8ValidateSlice(value) and std.mem.indexOfScalar(u8, value, 0) == null;
@@ -13,14 +14,13 @@ pub fn assignZ(out: []u8, value: []const u8) bool {
     return true;
 }
 
-/// Presentation only: an overlong label gets a whole-scalar prefix and ... .
+/// Presentation only: an overlong label gets a whole-grapheme prefix and ... .
 /// Never use the result as a file identity or as editable input.
 pub fn labelZ(out: []u8, value: []const u8) bool {
     if (out.len == 0 or !valid(value)) return false;
     if (value.len < out.len) return assignZ(out, value);
     const dots: usize = if (out.len >= 4) 3 else 0;
-    var end = @min(value.len, out.len - 1 - dots);
-    while (end > 0 and end < value.len and value[end] & 0xc0 == 0x80) end -= 1;
+    const end = grapheme.prefix(value, out.len - 1 - dots) catch return false;
     copy(out[0..end], value[0..end]);
     @memset(out[end .. end + dots], '.');
     @memset(out[end + dots ..], 0);
@@ -64,4 +64,30 @@ test "bounded text exact values and presentation labels keep complete UTF8" {
     try std.testing.expectEqualStrings(value, std.mem.sliceTo(&storage, 0));
     try std.testing.expect(assignZ(storage[2..], storage[0..value.len]));
     try std.testing.expectEqualStrings(value, std.mem.sliceTo(storage[2..], 0));
+}
+
+/// A bounded file candidate may include one lookahead byte after capacity.
+/// At a truncated tail only a boundary proved by the next complete scalar is
+/// publishable. The open final cluster (also a split UTF8 scalar) is omitted.
+/// Malformed complete prefixes fail; they never become a replacement document.
+pub fn loadPrefix(value: []const u8, capacity: usize, truncated: bool) ?usize {
+    var it = grapheme.Iterator{ .bytes = value };
+    var end: usize = 0;
+    while (it.next() catch |err| {
+        if (truncated and err == error.Incomplete) return end;
+        return null;
+    }) |range| {
+        if (range.end <= capacity and (!truncated or range.end < value.len)) end = range.end;
+    }
+    return end;
+}
+
+test "bounded text file candidate preserves clusters across 512 byte and capacity cuts" {
+    const text = "x" ** 511 ++ "a\u{301}" ++ "z";
+    try std.testing.expectEqual(@as(?usize, text.len), loadPrefix(text, text.len, false));
+    try std.testing.expectEqual(@as(?usize, 511), loadPrefix(text[0..513], 512, true));
+    try std.testing.expectEqual(@as(?usize, 511), loadPrefix(text[0..514], 513, true));
+    try std.testing.expectEqual(@as(?usize, 514), loadPrefix(text, 514, true));
+    try std.testing.expectEqual(@as(?usize, null), loadPrefix("x\xc3", 2, false));
+    try std.testing.expectEqual(@as(?usize, null), loadPrefix("x\xe0\x80", 3, true));
 }

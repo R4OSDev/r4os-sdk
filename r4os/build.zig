@@ -1,5 +1,6 @@
 const std = @import("std");
 const contract_build = @import("r4os_contract");
+const libraries_build = @import("r4os_libraries");
 pub const module_manifest = @import("module_manifest.zig");
 
 pub const BuildResult = struct {
@@ -18,6 +19,7 @@ pub const default_r4l_contract_generator_source = "Tools/R4LContractGen/src/main
 pub const SdkOptions = struct {
     root: ?std.Build.LazyPath = null,
     contract_dependency: ?*std.Build.Dependency = null,
+    libraries_dependency: ?*std.Build.Dependency = null,
     r4x_builder_source: ?std.Build.LazyPath = null,
     r4l_contract_generator_source: ?std.Build.LazyPath = null,
 };
@@ -26,6 +28,7 @@ pub const HostProfile = struct {
     sdk_root: std.Build.LazyPath,
     r4x_builder_source: std.Build.LazyPath,
     r4os_module: std.Build.LazyPath,
+    grapheme_source: ?std.Build.LazyPath = null,
     contract_module: *std.Build.Module,
     linker_script: std.Build.LazyPath,
     c_include_root: std.Build.LazyPath,
@@ -243,6 +246,7 @@ pub const Sdk = struct {
         if (resolved_opts.contract_dependency == null) {
             resolved_opts.contract_dependency = b.dependencyFromBuildZig(contract_build, .{});
         }
+        if (resolved_opts.libraries_dependency == null) resolved_opts.libraries_dependency = b.dependencyFromBuildZig(libraries_build, .{});
         return initFromRoot(b, root, resolved_opts);
     }
 
@@ -252,6 +256,7 @@ pub const Sdk = struct {
         if (dep_opts.contract_dependency == null) {
             dep_opts.contract_dependency = dependency.builder.dependencyFromBuildZig(contract_build, .{});
         }
+        if (dep_opts.libraries_dependency == null) dep_opts.libraries_dependency = dependency.builder.dependencyFromBuildZig(libraries_build, .{});
         return initFromRoot(b, dep_opts.root.?, dep_opts);
     }
 
@@ -268,6 +273,7 @@ pub const Sdk = struct {
             .sdk_root = root,
             .r4x_builder_source = builder_source,
             .r4os_module = root.path(b, "r4os.zig"),
+            .grapheme_source = (opts.libraries_dependency orelse @panic("R4OS SDK requires r4os_libraries")).namedLazyPath("r4std_grapheme"),
             .contract_module = contract_dependency.module("r4os_contract"),
             .linker_script = root.path(b, "r4os/linker/r4os_module.ld"),
             .c_include_root = root.path(b, "Shared/C/include"),
@@ -295,6 +301,7 @@ pub const Sdk = struct {
             .optimize = optimize,
         });
         module.addImport("r4os_contract", self.profile.contract_module);
+        module.addImport("r4std_grapheme", self.b.createModule(.{ .root_source_file = self.profile.grapheme_source.?, .target = target, .optimize = optimize }));
         return module;
     }
 
@@ -304,6 +311,7 @@ pub const Sdk = struct {
             .name = opts.name,
             .root_source_file = opts.root_source_file,
             .r4os_module = self.profile.r4os_module,
+            .grapheme_source = self.profile.grapheme_source,
             .contract_module = self.profile.contract_module,
             .version_module = opts.version_module,
             .linker_script = self.profile.linker_script,
@@ -322,6 +330,7 @@ pub const Sdk = struct {
             .root_source_file = opts.root_source_file,
             .startup_source_file = self.profile.zig_app_startup_source_file,
             .r4os_module = self.profile.r4os_module,
+            .grapheme_source = self.profile.grapheme_source,
             .contract_module = self.profile.contract_module,
             .version_module = opts.version_module,
             .linker_script = self.profile.linker_script,
@@ -473,6 +482,7 @@ pub const Sdk = struct {
             .module_version = loaded.manifest.module_version.text,
             .root_source_file = userPath(self.b, loaded.source_paths[0]),
             .r4os_module = self.profile.r4os_module,
+            .grapheme_source = self.profile.grapheme_source,
             .contract_module = self.profile.contract_module,
             .linker_script = self.profile.linker_script,
             .builder = self.builder,
@@ -499,6 +509,7 @@ pub const Sdk = struct {
             .module_version = loaded.manifest.module_version.text,
             .root_source_file = userPath(self.b, loaded.source_paths[0]),
             .r4os_module = self.profile.r4os_module,
+            .grapheme_source = self.profile.grapheme_source,
             .contract_module = self.profile.contract_module,
             .linker_script = self.profile.linker_script,
             .builder = self.builder,
@@ -541,6 +552,7 @@ pub const Sdk = struct {
                 .name = loaded.manifest.name,
                 .root_source_file = userPath(self.b, loaded.source_paths[0]),
                 .r4os_module = self.profile.r4os_module,
+                .grapheme_source = self.profile.grapheme_source,
                 .contract_module = self.profile.contract_module,
                 .linker_script = self.profile.linker_script,
                 .entry_symbol = "r4l_entry",
@@ -626,6 +638,7 @@ pub const Sdk = struct {
                 .root_source_file = userPath(self.b, loaded.source_paths[0]),
                 .startup_source_file = self.profile.zig_app_startup_source_file,
                 .r4os_module = self.profile.r4os_module,
+                .grapheme_source = self.profile.grapheme_source,
                 .contract_module = self.profile.contract_module,
                 .linker_script = self.profile.linker_script,
                 .builder = self.builder,
@@ -640,6 +653,7 @@ pub const Sdk = struct {
                 .name = loaded.manifest.name,
                 .root_source_file = userPath(self.b, loaded.source_paths[0]),
                 .r4os_module = self.profile.r4os_module,
+                .grapheme_source = self.profile.grapheme_source,
                 .contract_module = self.profile.contract_module,
                 .linker_script = self.profile.linker_script,
                 .builder = self.builder,
@@ -718,6 +732,7 @@ pub const Sdk = struct {
             .name = opts.name,
             .root_source_file = opts.root_source_file,
             .r4os_module = self.profile.r4os_module,
+            .grapheme_source = self.profile.grapheme_source,
             .contract_module = self.profile.contract_module,
             .version_module = opts.version_module,
             .linker_script = self.profile.linker_script,
@@ -742,6 +757,7 @@ pub const Sdk = struct {
             .module_version = opts.module_version,
             .root_source_file = opts.root_source_file,
             .r4os_module = self.profile.r4os_module,
+            .grapheme_source = self.profile.grapheme_source,
             .contract_module = self.profile.contract_module,
             .linker_script = self.profile.linker_script,
             .builder = self.builder,
@@ -760,6 +776,7 @@ pub const Sdk = struct {
             .module_version = opts.module_version,
             .root_source_file = opts.root_source_file,
             .r4os_module = self.profile.r4os_module,
+            .grapheme_source = self.profile.grapheme_source,
             .contract_module = self.profile.contract_module,
             .linker_script = self.profile.linker_script,
             .builder = self.builder,
@@ -932,6 +949,7 @@ pub const R4XOptions = struct {
     name: []const u8,
     root_source_file: std.Build.LazyPath,
     r4os_module: std.Build.LazyPath,
+    grapheme_source: ?std.Build.LazyPath = null,
     contract_module: *std.Build.Module,
     version_module: ?std.Build.LazyPath = null,
     linker_script: std.Build.LazyPath,
@@ -951,6 +969,7 @@ pub const R4AppBuildOptions = struct {
     root_source_file: std.Build.LazyPath,
     startup_source_file: std.Build.LazyPath,
     r4os_module: std.Build.LazyPath,
+    grapheme_source: ?std.Build.LazyPath = null,
     contract_module: *std.Build.Module,
     version_module: ?std.Build.LazyPath = null,
     linker_script: std.Build.LazyPath,
@@ -1020,6 +1039,7 @@ pub const R4DOptions = struct {
     metadata: []const []const u8 = &.{},
     root_source_file: std.Build.LazyPath,
     r4os_module: std.Build.LazyPath,
+    grapheme_source: ?std.Build.LazyPath = null,
     contract_module: *std.Build.Module,
     linker_script: std.Build.LazyPath,
     builder: *std.Build.Step.Compile,
@@ -1038,6 +1058,7 @@ pub const R4POptions = struct {
     metadata: []const []const u8 = &.{},
     root_source_file: std.Build.LazyPath,
     r4os_module: std.Build.LazyPath,
+    grapheme_source: ?std.Build.LazyPath = null,
     contract_module: *std.Build.Module,
     linker_script: std.Build.LazyPath,
     builder: *std.Build.Step.Compile,
@@ -1176,6 +1197,7 @@ fn addR4XStartWithOptions(b: *std.Build, opts: R4XOptions) BuildResult {
         .name = opts.name,
         .root_source_file = opts.root_source_file,
         .r4os_module = opts.r4os_module,
+        .grapheme_source = opts.grapheme_source,
         .contract_module = opts.contract_module,
         .version_module = opts.version_module,
         .linker_script = opts.linker_script,
@@ -1213,6 +1235,7 @@ fn addR4AppWithOptions(b: *std.Build, opts: R4AppBuildOptions) BuildResult {
         .app_profile = opts.profile,
         .zig_modules = opts.zig_modules,
         .r4os_module = opts.r4os_module,
+        .grapheme_source = opts.grapheme_source,
         .contract_module = opts.contract_module,
         .version_module = opts.version_module,
         .linker_script = opts.linker_script,
@@ -1329,6 +1352,7 @@ fn addR4DWithOptions(b: *std.Build, opts: R4DOptions) BuildResult {
         .name = opts.name,
         .root_source_file = opts.root_source_file,
         .r4os_module = opts.r4os_module,
+        .grapheme_source = opts.grapheme_source,
         .contract_module = opts.contract_module,
         .linker_script = opts.linker_script,
         .entry_symbol = "r4d_init_entry",
@@ -1391,6 +1415,7 @@ fn addR4PWithOptions(b: *std.Build, opts: R4POptions) BuildResult {
         .name = opts.name,
         .root_source_file = opts.root_source_file,
         .r4os_module = opts.r4os_module,
+        .grapheme_source = opts.grapheme_source,
         .contract_module = opts.contract_module,
         .linker_script = opts.linker_script,
         .entry_symbol = "r4p_init_entry",
@@ -1562,6 +1587,7 @@ const RawOptions = struct {
     name: []const u8,
     root_source_file: std.Build.LazyPath,
     r4os_module: std.Build.LazyPath,
+    grapheme_source: ?std.Build.LazyPath = null,
     contract_module: *std.Build.Module,
     version_module: ?std.Build.LazyPath = null,
     linker_script: std.Build.LazyPath,
@@ -1679,6 +1705,7 @@ fn addRawModule(b: *std.Build, opts: RawOptions) std.Build.LazyPath {
         .stack_protector = false,
     });
     r4os_module.addImport("r4os_contract", opts.contract_module);
+    if (opts.grapheme_source) |source| r4os_module.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = source, .target = target, .optimize = opts.optimize }));
     exe.root_module.addImport("r4os", r4os_module);
     const dependencies = b.allocator.alloc(*std.Build.Module, opts.zig_modules.len) catch @panic("OOM");
     for (opts.zig_modules, 0..) |module, index| {

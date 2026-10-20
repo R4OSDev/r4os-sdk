@@ -177,3 +177,6 @@ pub const r4cp = @import("r4os/r4cp.zig");
 pub const r4cp_convert = @import("r4os/r4cp_convert.zig");
 pub const r4mf = @import("r4os/module_manifest.zig");
 pub const lowlevel = @import("r4os/lowlevel.zig");
+
+/// Pinned external R4STD extended-grapheme boundaries; no display-width policy.
+pub const grapheme = @import("r4std_grapheme");
