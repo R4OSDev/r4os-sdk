@@ -163,6 +163,10 @@ pub const Context = struct {
         return self.base.cpuMicrocodeInfo(cpu, out);
     }
 
+    pub fn fpuObservation(self: *const Context, request: *const abi.FpuObservationRequest, out: *abi.FpuObservationInfo) i32 {
+        return self.base.fpuObservation(request, out);
+    }
+
     pub fn cpuAccelerationInfo(self: *const Context, out: *abi.CpuAccelerationInfo) i32 {
         return self.base.cpuAccelerationInfo(out);
     }

@@ -641,3 +641,8 @@ Tools/Sync-R4stdGrapheme.ps1 and SOURCE.json verify its upstream bytes.
 This avoids a second Libraries build identity when older consumers use
 local forks. Direct low-level build options can supply its
 grapheme_source; normal Sdk profiles provide it automatically.
+
+0.64.58: optional R4DEV34 fpuObservation copies integer metadata for the exact
+native task generation and retained module RIP interval. Begin/end surround
+userland work; no kernel ownership or register liveness crosses an ordinary
+SysV call. Rejection preserves output, and no event is synthesized.

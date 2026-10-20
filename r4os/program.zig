@@ -268,6 +268,38 @@ fn tcpLifecycleTerminal(cause: u32) bool {
     };
 }
 
+test "optional FPU observation respects old table tails and typed forwarding" {
+    const Provider = struct {
+        var calls: u32 = 0;
+        fn call(request: *const abi.FpuObservationRequest, out: *abi.FpuObservationInfo) callconv(.c) i32 {
+            calls += 1;
+            if (request.operation != abi.fpu_observation_end or request.task_generation != 23 or request.token != 17) return -91;
+            out.* = .{ .task_generation = request.task_generation, .token = request.token, .flags = abi.fpu_observation_flag_closed };
+            return 7;
+        }
+    };
+    Provider.calls = 0;
+    var raw: abi.R4XStartContext = .{};
+    var table: abi.R4XStartR4Dev = .{ .size = @offsetOf(abi.R4XStartR4Dev, "fpu_observation"), .fpu_observation = @intFromPtr(&Provider.call) };
+    var bundle: Bundle = .{ .raw = &raw, .dev = &table };
+    const context = Context.initBundle(&bundle);
+    const request: abi.FpuObservationRequest = .{ .operation = abi.fpu_observation_end, .task_generation = 23, .token = 17 };
+    var info: abi.FpuObservationInfo = .{ .token = 0xabc };
+    const sentinel = info;
+    try std.testing.expectEqual(abi.err_no_fn, context.fpuObservation(&request, &info));
+    try std.testing.expectEqualSlices(u8, std.mem.asBytes(&sentinel), std.mem.asBytes(&info));
+    try std.testing.expectEqual(@as(u32, 0), Provider.calls);
+    table.size = @sizeOf(abi.R4XStartR4Dev);
+    table.fpu_observation = 0;
+    try std.testing.expectEqual(abi.err_no_fn, context.fpuObservation(&request, &info));
+    try std.testing.expectEqual(@as(u32, 0), Provider.calls);
+    table.fpu_observation = @intFromPtr(&Provider.call);
+    try std.testing.expectEqual(@as(i32, 7), context.fpuObservation(&request, &info));
+    try std.testing.expectEqual(@as(u32, 1), Provider.calls);
+    try std.testing.expectEqual(@as(u64, 23), info.task_generation);
+    try std.testing.expectEqual(@as(u64, 17), info.token);
+}
+
 pub fn entryAsm(comptime target: []const u8) []const u8 {
     return ".section .text.r4x_entry,\"ax\"\n" ++
         ".global r4x_entry\n" ++
@@ -515,6 +547,13 @@ pub const Context = struct {
     pub fn cpuMicrocodeInfo(self: *const Context, cpu: u32, out: *abi.CpuMicrocodeInfo) i32 {
         const function = self.devFn("cpu_microcode_info") orelse return self.unavailable("dev");
         return function(cpu, out);
+    }
+
+    /// Explicit own-task live-instruction observation; no register liveness is
+    /// promised across this ordinary SysV API call. Invoke outside the burst.
+    pub fn fpuObservation(self: *const Context, request: *const abi.FpuObservationRequest, out: *abi.FpuObservationInfo) i32 {
+        const function = self.devFn("fpu_observation") orelse return self.unavailable("dev");
+        return function(request, out);
     }
 
     pub fn cpuAccelerationInfo(self: *const Context, out: *abi.CpuAccelerationInfo) i32 {
