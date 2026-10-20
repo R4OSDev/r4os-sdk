@@ -44,3 +44,10 @@ Copyright (c) Zig contributors, MIT (Expat). The complete original permission
 and warranty notice is retained in the source. R4OS adds a bounded staged
 callback; the kernel grants the exact CPU/OS execution window. Streaming,
 padding and the fallback continue to use `std.crypto.hash.sha2.Sha256`.
+
+Shared/Generated/R4STD_Grapheme is a byte-exact static consumer snapshot
+of R4STD from R4OSDev/r4os-libraries. SOURCE.json pins its original paths,
+commit and hashes; the source/table generators remain with R4STD. The
+included Unicode License v3 covers Unicode-derived tables/test data;
+R4STD-LICENSE.txt covers the R4OS implementation. Original relative source
+comments refer to the upstream layout. Regenerate with Tools/Sync-R4stdGrapheme.ps1.
