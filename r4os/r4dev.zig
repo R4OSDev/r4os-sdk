@@ -163,6 +163,15 @@ pub const Context = struct {
         return self.base.cpuMicrocodeInfo(cpu, out);
     }
 
+    pub fn cpuAccelerationInfo(self: *const Context, out: *abi.CpuAccelerationInfo) i32 {
+        return self.base.cpuAccelerationInfo(out);
+    }
+    pub fn cpuAccelerationWorkFunction(self: *const Context) ?abi.R4DevFns.cpu_acceleration_work {
+        return self.base.cpuAccelerationWorkFunction();
+    }
+    pub fn cpuAccelerationWork(self: *const Context, kind: u32, iterations: u32, work: ?abi.CpuPureWorkFn, context: u64, out: *abi.CpuAccelerationWork) i32 {
+        return self.base.cpuAccelerationWork(kind, iterations, work, context, out);
+    }
     pub fn cpuPmuInfo(self: *const Context, cpu: u32, out: *abi.CpuPmuInfo) i32 {
         return self.base.cpuPmuInfo(cpu, out);
     }

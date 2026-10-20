@@ -79,6 +79,18 @@ static inline int32_t r4dev_cpu_microcode_info(const R4Dev *dev, uint32_t cpu, R
     if (!dev || !dev->table || dev->table->size < offsetof(R4XStartR4Dev, cpu_microcode_info) + sizeof(uintptr_t) || !dev->table->cpu_microcode_info) return R4OS_ERR_NO_FN;
     return ((R4DevCpuMicrocodeInfoFn)(uintptr_t)dev->table->cpu_microcode_info)(cpu, out);
 }
+/* Cached hints never authorize optional ISA; work needs a fresh exact grant.
+ * Callback must be resident, bounded, pure, without API/fault/wait/yield. */
+static inline int32_t r4dev_cpu_acceleration_info(const R4Dev *dev, R4CpuAccelerationInfo *out) {
+    if (!out) return R4OS_CPU_CAPABILITIES_ERROR_INVALID;
+    if (!dev || !dev->table || dev->table->size < offsetof(R4XStartR4Dev, cpu_acceleration_info) + sizeof(uintptr_t) || !dev->table->cpu_acceleration_info) return R4OS_ERR_NO_FN;
+    return ((R4DevCpuAccelerationInfoFn)(uintptr_t)dev->table->cpu_acceleration_info)(out);
+}
+static inline int32_t r4dev_cpu_acceleration_work(const R4Dev *dev, uint32_t kind, uint32_t iterations, R4CpuPureWorkFn work, uint64_t context, R4CpuAccelerationWork *out) {
+    if (!out || !work) return R4OS_CPU_CAPABILITIES_ERROR_INVALID;
+    if (!dev || !dev->table || dev->table->size < offsetof(R4XStartR4Dev, cpu_acceleration_work) + sizeof(uintptr_t) || !dev->table->cpu_acceleration_work) return R4OS_ERR_NO_FN;
+    return ((R4DevCpuAccelerationWorkFn)(uintptr_t)dev->table->cpu_acceleration_work)(kind, iterations, &work, context, out);
+}
 /* Passive discovery/retained copies; only measure explicitly runs pure work. */
 static inline int32_t r4dev_cpu_pmu_info(const R4Dev *dev, uint32_t cpu, R4CpuPmuInfo *out) {
     if (!out) return R4OS_CPU_CAPABILITIES_ERROR_INVALID;

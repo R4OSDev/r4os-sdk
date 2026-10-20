@@ -517,6 +517,18 @@ pub const Context = struct {
         return function(cpu, out);
     }
 
+    pub fn cpuAccelerationInfo(self: *const Context, out: *abi.CpuAccelerationInfo) i32 {
+        const function = self.devFn("cpu_acceleration_info") orelse return self.unavailable("dev");
+        return function(out);
+    }
+    pub fn cpuAccelerationWorkFunction(self: *const Context) ?abi.R4DevFns.cpu_acceleration_work {
+        return self.devFn("cpu_acceleration_work");
+    }
+    pub fn cpuAccelerationWork(self: *const Context, kind: u32, iterations: u32, work: ?abi.CpuPureWorkFn, context: u64, out: *abi.CpuAccelerationWork) i32 {
+        const function = self.cpuAccelerationWorkFunction() orelse return self.unavailable("dev");
+        const callback = work orelse return abi.cpu_capabilities_error_invalid;
+        return function(kind, iterations, &callback, context, out);
+    }
     pub fn cpuPmuInfo(self: *const Context, cpu: u32, out: *abi.CpuPmuInfo) i32 {
         const function = self.devFn("cpu_pmu_info") orelse return self.unavailable("dev");
         return function(cpu, out);

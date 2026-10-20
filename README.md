@@ -586,3 +586,24 @@ Inspect result status/flags: return0 means a receipt, not valid measurements.
 Failed copies preserve output/tails. No arbitrary event/MSR interface or
 change to STANDARD workloads/reference/scoring. C facades use the same
 `r4dev_cpu_pmu_info`, `_measure` and `_result` names.
+
+Optional CPU leaves (0.64.51): `cpuAccelerationInfo` copies cached dispatch
+hints, and `cpuAccelerationWork` grants one exact CPU/epoch/OS/task/IF window
+for resident pure work, with a copied typed callback slot. R4DEV33/720 keeps
+the complete old704-byte prefix; old and null providers preserve output.
+Legacy `ProtocolApi` keeps its88-byte/version1 prefix and appends independently
+size-checked nullable info/work functions at88/96. Inspect every work receipt:
+return0 alone never accepts a result. Unlike native PMU, ordinary exposed ISA
+may run on a virtual CPU after its real OS-state admission.
+
+`cpu_memory.Policy` selects REP MOVSB only for larger forward copies with a
+complete common ERMS hint. Short copies and backward overlap keep the normal
+path, DF stays clear, and no cache flush or speculative page read is added.
+`crypto_sha256.Sha256(provider)` keeps standard streaming, padding and fallback;
+only8..64 full blocks are staged on the caller stack for the guarded SHA-NI
+leaf. A rejected, incomplete or over-budget receipt never commits its state.
+The provider returns a resident optional work-function pointer and may prefilter
+missing SHA from cached info; this hint never replaces the mandatory grant.
+No optional instruction is executed for warmup. XCR0=7/common AVX2 baseline
+remains sufficient, without an additional XSTATE component. Explicit per-CPU
+Spectra observations are separate from STANDARD and do not promise a speedup.

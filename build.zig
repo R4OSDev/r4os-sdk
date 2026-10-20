@@ -51,6 +51,16 @@ pub fn build(b: *std.Build) void {
     const host_r4os = sdk_profile.createR4osModule(b.graph.host, .Debug);
     const sdk_unit_tests = b.addTest(.{ .root_module = host_r4os });
     const run_sdk_unit_tests = b.addRunArtifact(sdk_unit_tests);
+    const cpu_tests_root = b.createModule(.{
+        .root_source_file = b.path("r4os/cpu_acceleration_tests.zig"),
+        // Independent software SHA oracle; never select the host's optional
+        // SHA backend while testing a synthetic executor and its rollback.
+        .target = b.resolveTargetQuery(.{ .cpu_arch = .x86_64, .os_tag = b.graph.host.result.os.tag, .abi = b.graph.host.result.abi, .cpu_model = .baseline }),
+        .optimize = .ReleaseSafe,
+    });
+    cpu_tests_root.addImport("r4os_contract", sdk_profile.profile.contract_module);
+    const cpu_tests = b.addRunArtifact(b.addTest(.{ .root_module = cpu_tests_root }));
+    b.step("cpu-acceleration-test", "Exact dispatch, SHA fallback/rollback, memory alignment/overlap/guard pages").dependOn(&cpu_tests.step);
 
     const update_engine = b.createModule(.{
         .root_source_file = b.path("r4os/system_update_engine.zig"),
@@ -151,6 +161,7 @@ pub fn build(b: *std.Build) void {
     module_test_step.dependOn(&run_catalog_tool_tests.step);
 
     const test_step = b.step("test", "Run SDK, build-tool and smoke tests");
+    test_step.dependOn(&cpu_tests.step);
     const storage_tools = b.createModule(.{
         .root_source_file = b.path("r4os/storage_tools.zig"),
         .target = b.graph.host,
