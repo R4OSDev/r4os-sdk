@@ -989,6 +989,21 @@ Probes aendern keine Reserve-/Commitbudgets und umgehen keine Ownerregel.
 Kernel-VM und Faultpfad bleiben zustaendig; vor no-sleep-/Runtime-Ownern muss
 der Aufrufer weiterhin ausreichend residenten Spielraum vorbereiten.
 
+Getrennte Konsoleneingabe (SDK 0.64.53)
+-------------------------------------
+R4DESK16 haengt consoleReadEvents/consolePushEvents an den bestehenden536-Byte-
+Praefix an. ConsoleInputEvent ist ein16-Byte-Datensatz: version=1, kind,
+value, flags=0. kind=1 transportiert einen Unicode-Skalar, kind=2 eine
+logische Taste und kind=3 ein Byte eines UTF-8-Streams. Bytes80/81 sind
+damit keine Navigationstasten. Der Codec bleibt beim externen Textbesitzer.
+Aufrufe transportieren hoechstens64 Ereignisse; Rueckgaben zaehlen ganze
+Ereignisse. Ein nicht angenommener Rest bleibt beim Caller. Push verwendet
+den genauen ProgramProcessHandle einschliesslich Generation. Ungueltige
+Batches werden vor der Queueaenderung abgelehnt. Negative Rueckgaben sind
+Fehler,0 bedeutet leer/voll. Alte Tabellen liefern err_no_fn; alte
+Bytefunktionen bleiben verfuegbar. input_events.Queue ist eine optionale
+Callerqueue; ihr Besitzer muss sie an seine genaue Zielgeneration binden.
+
 Gemeinsame Entropie (SDK 0.64.52)
 --------------------------------
 secure_random bindet optionale residente Funktionen vor App-Workern bzw.

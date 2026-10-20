@@ -699,6 +699,14 @@ pub const Context = struct {
         return self.base.readKey();
     }
 
+    pub fn consolePushEvents(self: *const Context, handle: abi.ProgramProcessHandle, events: []const abi.ConsoleInputEvent) i32 {
+        return self.base.consolePushEvents(handle, events);
+    }
+
+    pub fn consoleReadEvents(self: *const Context, out: []abi.ConsoleInputEvent) i32 {
+        return self.base.consoleReadEvents(out);
+    }
+
     pub fn consoleRead(self: *const Context, out: []u8) i32 {
         return self.base.consoleRead(out);
     }

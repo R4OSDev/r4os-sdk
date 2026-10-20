@@ -63,7 +63,7 @@ pub fn bundleValueFromR4XStart(raw: *const abi.R4XStartContext) ?Bundle {
         // R4SYS tail functions are append-only and optional. Accept the
         // stable table header; tableFn checks the exact size of each slot.
         .sys = resolveGroupTable(abi.R4XStartR4Sys, xs, .r4sys, abi.r4xstart_r4sys_magic, 1, @offsetOf(abi.R4XStartR4Sys, "write") + @sizeOf(usize)),
-        .desk = resolveGroupTable(abi.R4XStartR4Desk, xs, .r4desk, abi.r4xstart_r4desk_magic, abi.r4xstart_r4desk_version, abi.r4xstart_r4desk_size),
+        .desk = resolveGroupTable(abi.R4XStartR4Desk, xs, .r4desk, abi.r4xstart_r4desk_magic, 1, @offsetOf(abi.R4XStartR4Desk, "read_key") + @sizeOf(usize)),
         .draw = resolveGroupTable(abi.R4XStartR4Draw, xs, .r4draw, abi.r4xstart_r4draw_magic, 1, @offsetOf(abi.R4XStartR4Draw, "clear") + @sizeOf(usize)),
         // R4NET tail functions are optional and append-only. Keep older
         // kernels usable; tableFn checks the exact size of every requested
@@ -2140,6 +2140,19 @@ pub const Context = struct {
 
     pub fn stderr(self: *const Context, data: []const u8) i32 {
         return self.consoleWrite(.stderr, data);
+    }
+
+    /// Counts complete events. An unaccepted suffix remains caller-owned.
+    pub fn consolePushEvents(self: *const Context, handle: abi.ProgramProcessHandle, events: []const abi.ConsoleInputEvent) i32 {
+        if (events.len > abi.console_input_event_batch_max) return abi.console_input_wait_error_invalid;
+        const table_fn = self.deskFn("console_push_events") orelse return self.unavailable("desk");
+        return table_fn(&handle, events.ptr, @intCast(events.len));
+    }
+
+    pub fn consoleReadEvents(self: *const Context, out: []abi.ConsoleInputEvent) i32 {
+        if (out.len > abi.console_input_event_batch_max) return abi.console_input_wait_error_invalid;
+        const table_fn = self.deskFn("console_read_events") orelse return self.unavailable("desk");
+        return table_fn(out.ptr, @intCast(out.len));
     }
 
     pub fn consoleRead(self: *const Context, out: []u8) i32 {

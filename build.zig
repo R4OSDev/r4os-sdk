@@ -169,6 +169,15 @@ pub fn build(b: *std.Build) void {
     module_test_step.dependOn(&run_catalog_tool_tests.step);
 
     const test_step = b.step("test", "Run SDK, build-tool and smoke tests");
+    const input_events_root = b.createModule(.{
+        .root_source_file = b.path("r4os/input_events_tests.zig"),
+        .target = b.graph.host,
+        .optimize = .ReleaseSafe,
+    });
+    input_events_root.addImport("r4os_contract", sdk_profile.profile.contract_module);
+    const input_events_tests = b.addRunArtifact(b.addTest(.{ .root_module = input_events_root }));
+    b.step("input-events-test", "Typed console events, retained producer queue and inaccessible legacy table tail").dependOn(&input_events_tests.step);
+    test_step.dependOn(&input_events_tests.step);
     test_step.dependOn(&cpu_tests.step);
     const storage_tools = b.createModule(.{
         .root_source_file = b.path("r4os/storage_tools.zig"),
