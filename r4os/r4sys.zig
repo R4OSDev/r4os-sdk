@@ -707,6 +707,14 @@ pub const Context = struct {
         return self.base.consoleReadEvents(out);
     }
 
+    pub fn consoleTextInfo(self: *const Context, handle: abi.ProgramProcessHandle, out: *abi.ConsoleTextInfo) i32 {
+        return self.base.consoleTextInfo(handle, out);
+    }
+
+    pub fn consoleSetEncoding(self: *const Context, handle: abi.ProgramProcessHandle, encoding: u32) i32 {
+        return self.base.consoleSetEncoding(handle, encoding);
+    }
+
     pub fn consoleRead(self: *const Context, out: []u8) i32 {
         return self.base.consoleRead(out);
     }

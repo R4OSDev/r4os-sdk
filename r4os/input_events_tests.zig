@@ -46,3 +46,45 @@ test "old R4DESK table at inaccessible page refuses absent event tail without to
     try std.testing.expectEqual(@as(u32, 0x401), output[0].value);
 }
 test { _ = events; }
+
+fn textInfo(handle: *const abi.ProgramProcessHandle, out: *abi.ConsoleTextInfo) callconv(.c) i32 {
+    if (handle.instance_id != 39 or handle.generation != 0xfedcba9876543210) return -1;
+    out.* = .{ .encoding = 437, .pending_bytes = 3, .decode_errors = 7 };
+    return 0;
+}
+fn setEncoding(handle: *const abi.ProgramProcessHandle, encoding: u32) callconv(.c) i32 {
+    return if (handle.instance_id == 39 and handle.generation == 0xfedcba9876543210 and encoding == 437) 0 else -2;
+}
+test "console text wrappers retain exact generation encoding fixed metadata and caller tail" {
+    const raw: abi.R4XStartContext = .{};
+    const table: abi.R4XStartR4Desk = .{ .console_text_info = @intFromPtr(&textInfo), .console_set_encoding = @intFromPtr(&setEncoding) };
+    const bundle: program.Bundle = .{ .raw = &raw, .desk = &table };
+    const ctx = program.Context.initBundle(&bundle);
+    const handle: abi.ProgramProcessHandle = .{ .instance_id = 39, .generation = 0xfedcba9876543210 };
+    var guarded = [_]abi.ConsoleTextInfo{ .{}, .{ .decode_errors = 0xfeed1234 } };
+    try std.testing.expectEqual(@as(i32, 0), ctx.consoleTextInfo(handle, &guarded[0]));
+    try std.testing.expectEqual(@as(u32, 437), guarded[0].encoding);
+    try std.testing.expectEqual(@as(u32, 65001), guarded[0].transcript_encoding);
+    try std.testing.expectEqual(@as(u32, 3), guarded[0].pending_bytes);
+    try std.testing.expectEqual(@as(u32, 0xfeed1234), guarded[1].decode_errors);
+    try std.testing.expectEqual(@as(i32, 0), ctx.consoleSetEncoding(handle, 437));
+}
+test "R4DESK16 ending at inaccessible page refuses both console text slots" {
+    if (builtin.os.tag != .linux) return error.SkipZigTest;
+    const page = 4096;
+    const region = try std.posix.mmap(null, page * 2, .{ .READ = true, .WRITE = true }, .{ .TYPE = .PRIVATE, .ANONYMOUS = true }, -1, 0);
+    defer std.posix.munmap(region);
+    try std.testing.expectEqual(@as(usize, 0), std.os.linux.mprotect(region.ptr + page, page, .{}));
+    const old: *abi.R4XStartR4Desk = @ptrCast(@alignCast(region.ptr + page - 552));
+    @memset(region[page - 552 .. page], 0);
+    old.magic = abi.r4xstart_r4desk_magic;
+    old.abi_version = 16;
+    old.size = 552;
+    const raw: abi.R4XStartContext = .{};
+    const bundle: program.Bundle = .{ .raw = &raw, .desk = old };
+    const ctx = program.Context.initBundle(&bundle);
+    var output: abi.ConsoleTextInfo = .{ .decode_errors = 0x12345678 };
+    try std.testing.expectEqual(abi.err_no_fn, ctx.consoleTextInfo(.{}, &output));
+    try std.testing.expectEqual(abi.err_no_fn, ctx.consoleSetEncoding(.{}, 437));
+    try std.testing.expectEqual(@as(u32, 0x12345678), output.decode_errors);
+}

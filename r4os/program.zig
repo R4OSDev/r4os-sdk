@@ -2155,6 +2155,19 @@ pub const Context = struct {
         return table_fn(out.ptr, @intCast(out.len));
     }
 
+    /// Snapshot metadata for the exact generation; errors leave output untouched.
+    pub fn consoleTextInfo(self: *const Context, handle: abi.ProgramProcessHandle, out: *abi.ConsoleTextInfo) i32 {
+        const table_fn = self.deskFn("console_text_info") orelse return self.unavailable("desk");
+        return table_fn(&handle, out);
+    }
+
+    /// Existing transcript bytes remain canonical UTF8. A pending prefix refuses
+    /// the switch with -2; unsupported encodings return -1.
+    pub fn consoleSetEncoding(self: *const Context, handle: abi.ProgramProcessHandle, encoding: u32) i32 {
+        const table_fn = self.deskFn("console_set_encoding") orelse return self.unavailable("desk");
+        return table_fn(&handle, encoding);
+    }
+
     pub fn consoleRead(self: *const Context, out: []u8) i32 {
         const table_fn = self.deskFn("console_read") orelse return self.unavailable("desk");
         return table_fn(out.ptr, @intCast(out.len));
