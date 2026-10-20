@@ -61,6 +61,14 @@ pub fn build(b: *std.Build) void {
     cpu_tests_root.addImport("r4os_contract", sdk_profile.profile.contract_module);
     const cpu_tests = b.addRunArtifact(b.addTest(.{ .root_module = cpu_tests_root }));
     b.step("cpu-acceleration-test", "Exact dispatch, SHA fallback/rollback, memory alignment/overlap/guard pages").dependOn(&cpu_tests.step);
+    const entropy_tests_root = b.createModule(.{
+        .root_source_file = b.path("r4os/secure_random.zig"),
+        .target = b.resolveTargetQuery(.{ .cpu_arch = .x86_64, .os_tag = b.graph.host.result.os.tag, .abi = b.graph.host.result.abi, .cpu_model = .baseline }),
+        .optimize = .ReleaseSafe,
+    });
+    entropy_tests_root.addImport("r4os_contract", sdk_profile.profile.contract_module);
+    const entropy_tests = b.addRunArtifact(b.addTest(.{ .root_module = entropy_tests_root }));
+    b.step("entropy-test", "Shared entropy CF bound, source fallback and whole-output failure").dependOn(&entropy_tests.step);
 
     const update_engine = b.createModule(.{
         .root_source_file = b.path("r4os/system_update_engine.zig"),

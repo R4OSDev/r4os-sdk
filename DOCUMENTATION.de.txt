@@ -989,6 +989,23 @@ Probes aendern keine Reserve-/Commitbudgets und umgehen keine Ownerregel.
 Kernel-VM und Faultpfad bleiben zustaendig; vor no-sleep-/Runtime-Ownern muss
 der Aufrufer weiterhin ausreichend residenten Spielraum vorbereiten.
 
+Gemeinsame Entropie (SDK 0.64.52)
+--------------------------------
+secure_random bindet optionale residente Funktionen vor App-Workern bzw.
+Protokollcallbacks. RDRAND braucht eine frische genaue CPU-Freigabe und CF;
+zehn Fehlversuche pro Wort beenden den Hardwareversuch. Ein angemeldeter
+Treiber ist die Alternative. Sein Maximum begrenzt jeden Teilaufruf; bei
+unvollstaendigem Ergebnis wird die gesamte Ausgabe geloescht. WebCrypto
+verwendet denselben Pfad. Kein Pool, Zeitwert oder Identifikator als Ersatz.
+Neue Verbraucher brauchen die passenden Kernelfunktionen. Alte Binaermodule
+behalten ihren eingebetteten SDK-Stand. Alte ProtocolApi-Praefixe werden ohne
+Zugriff auf fehlende Erweiterungen sicher abgelehnt.
+driver_resources.Context.entropy() wird im R4D-Init zwischengespeichert.
+Unregister schliesst nur die Aufnahme; physischer DMA-Stillstand und echte
+Ressourcenquittungen bleiben Pflicht des Treibers. Gezielte Pruefung:
+Build.sh entropy-test bzw. Build.bat entropy-test; Linux prueft alte Tabellen
+zusaetzlich an einer echten unzugreifbaren Seitengrenze.
+
 Seit Kernel0.1.305 sind die alten untypisierten Audio-/Synth-Anmeldeslots
 reserviert: immer-1, ohne Argumentzugriff oder Seiteneffekt. Der SDK-Helper
 registerSynthEngine entfaellt; registerSynthEngineEx und die typisierten

@@ -24,5 +24,6 @@ pub fn accepted(v: *const abi.CpuAccelerationWork, kind: u32, iterations: u32) b
         v.original_if == 512 and v.final_if == 512 and
         v.end_ns >= v.begin_ns and v.end_ns - v.begin_ns <= abi.cpu_accel_max_window_ns and
         (v.clock_source == 1 or v.clock_source == 2) and
-        (kind != abi.cpu_accel_work_kind_sha256 or (v.granted_mask & abi.cpu_accel_feature_sha != 0 and v.xcr0 & 7 == 7));
+        (kind != abi.cpu_accel_work_kind_sha256 or (v.granted_mask & abi.cpu_accel_feature_sha != 0 and v.xcr0 & 7 == 7)) and
+        (kind != abi.cpu_accel_work_kind_rdrand or v.granted_mask & abi.cpu_accel_feature_rdrand != 0);
 }

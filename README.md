@@ -607,3 +607,19 @@ missing SHA from cached info; this hint never replaces the mandatory grant.
 No optional instruction is executed for warmup. XCR0=7/common AVX2 baseline
 remains sufficient, without an additional XSTATE component. Explicit per-CPU
 Spectra observations are separate from STANDARD and do not promise a speedup.
+
+`secure_random` binds optional resident source functions before App workers or
+protocol callbacks start. Hardware words use work kind RDRAND, an exact fresh
+CPU grant, and at most ten carry-flag attempts per word. A registered driver is
+the alternative; its declared maximum bounds every request. Every incomplete
+operation clears the entire caller output, including earlier successful chunks.
+No clock/ID substitute or entropy pool is introduced. WebCrypto keeps this same
+shared implementation. Legacy ProtocolApi prefixes fail safely without reading
+absent fields. Newly compiled consumers need the matching kernel facilities;
+already compiled applications retain their embedded SDK implementation.
+
+`driver_resources.Context.entropy()` caches the optional registration table
+during driver init. Unregister closes admission; it never acknowledges physical
+DMA stop. The driver must obtain its real reset and resource-release receipts.
+`Build.sh entropy-test` (`Build.bat entropy-test` on Windows) checks bounded CF
+failure, whole-output rollback, device limits, and optional-table boundaries.

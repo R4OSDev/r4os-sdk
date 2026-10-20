@@ -521,6 +521,19 @@ pub const Context = struct {
         const function = self.devFn("cpu_acceleration_info") orelse return self.unavailable("dev");
         return function(out);
     }
+    pub fn cpuAccelerationInfoFunction(self: *const Context) ?abi.R4DevFns.cpu_acceleration_info {
+        return self.devFn("cpu_acceleration_info");
+    }
+    pub fn entropyInfoFunction(self: *const Context) ?abi.R4SysFns.entropy_source_info {
+        return self.sysFn("entropy_source_info");
+    }
+    pub fn entropyFillFunction(self: *const Context) ?abi.R4SysFns.entropy_fill {
+        return self.sysFn("entropy_fill");
+    }
+    pub fn entropySourceInfo(self: *const Context, out: *abi.EntropySourceInfo) i32 {
+        const function = self.entropyInfoFunction() orelse return self.unavailable("sys");
+        return function(out);
+    }
     pub fn cpuAccelerationWorkFunction(self: *const Context) ?abi.R4DevFns.cpu_acceleration_work {
         return self.devFn("cpu_acceleration_work");
     }
@@ -5407,11 +5420,15 @@ test "PMU three optional tails preserve all old prefixes, callback transport and
     }
     try std.testing.expectEqual(@as(u32, 0), test_pmu_calls);
     table.size = @sizeOf(abi.R4XStartR4Dev);
-    table.cpu_pmu_info = 0; table.cpu_pmu_measure = 0; table.cpu_pmu_result = 0;
+    table.cpu_pmu_info = 0;
+    table.cpu_pmu_measure = 0;
+    table.cpu_pmu_result = 0;
     try std.testing.expectEqual(abi.err_no_fn, ctx.cpuPmuInfo(2, &info.value));
     try std.testing.expectEqual(abi.err_no_fn, ctx.cpuPmuMeasure(2, 7, 1, 4096, testPmuWork, 0x8534, &result.value));
     try std.testing.expectEqual(abi.err_no_fn, ctx.cpuPmuResult(2, 7, 11, &result.value));
-    table.cpu_pmu_info = @intFromPtr(&testPmuInfo); table.cpu_pmu_measure = @intFromPtr(&testPmuMeasure); table.cpu_pmu_result = @intFromPtr(&testPmuResult);
+    table.cpu_pmu_info = @intFromPtr(&testPmuInfo);
+    table.cpu_pmu_measure = @intFromPtr(&testPmuMeasure);
+    table.cpu_pmu_result = @intFromPtr(&testPmuResult);
     try std.testing.expectEqual(abi.cpu_capabilities_error_invalid, ctx.cpuPmuMeasure(2, 7, 1, 4096, null, 0x8534, &result.value));
     try std.testing.expectEqual(@as(u32, 0), test_pmu_calls);
     try std.testing.expectEqual(abi.cpu_capabilities_error_index, ctx.cpuPmuInfo(3, &info.value));
@@ -5421,7 +5438,8 @@ test "PMU three optional tails preserve all old prefixes, callback transport and
     try std.testing.expectEqualSlices(u8, std.mem.asBytes(&before_info), std.mem.asBytes(&info));
     try std.testing.expectEqualSlices(u8, std.mem.asBytes(&before_result), std.mem.asBytes(&result));
     try std.testing.expectEqual(@as(u32, 0), test_pmu_callbacks);
-    info.value.size = @sizeOf(@TypeOf(info)); result.value.size = @sizeOf(@TypeOf(result));
+    info.value.size = @sizeOf(@TypeOf(info));
+    result.value.size = @sizeOf(@TypeOf(result));
     try std.testing.expectEqual(@as(i32, 0), ctx.cpuPmuInfo(2, &info.value));
     try std.testing.expectEqual(@as(i32, 0), ctx.cpuPmuMeasure(2, 7, 1, 4096, testPmuWork, 0x8534, &result.value));
     try std.testing.expectEqual(@as(u32, 1), test_pmu_callbacks);

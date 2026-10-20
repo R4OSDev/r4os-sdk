@@ -6,6 +6,14 @@ const abi = @import("r4os_contract").abi;
 /// No close is needed. Read failure can leave partial bytes in output.
 pub const Context = struct {
     table: abi.DriverResourceApi,
+    pub fn entropy(self: *const Context) ?@import("driver_entropy.zig").Context {
+        if (!self.has("entropy_query")) return null;
+        var result: abi.DriverEntropyApi = .{};
+        const callback: *const fn (*abi.DriverEntropyApi) callconv(.c) i32 = @ptrFromInt(self.table.entropy_query);
+        if (callback(&result) != 0 or result.version != 1 or result.size < 32 or
+            result.register_backend == 0 or result.unregister_backend == 0) return null;
+        return .{ .table = result };
+    }
     pub fn cpuPower(self: *const Context) ?@import("driver_cpu_power.zig").Context {
         if (!self.has("cpu_power_query")) return null;
         var result: abi.DriverCpuPowerApi = .{};
