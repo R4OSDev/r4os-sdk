@@ -1,5 +1,6 @@
 const std = @import("std");
 const storage = @import("app_storage.zig");
+const text = @import("bounded_text.zig");
 
 /// Bounded dialog pages own paths and kinds. Labels are presentation only;
 /// activating a row never enumerates its old filesystem index again.
@@ -24,7 +25,7 @@ pub fn DialogPage(comptime capacity: usize, comptime path_bytes: usize, comptime
         pub fn load(self: *Self, files: storage.Files, directory: storage.PathZ, number: u32, extension: []const u8) bool {
             if (directory.len >= path_bytes) return false;
             var next = Self{ .number = number };
-            copyZ(&next.directory, directory.bytes());
+            if (!text.assignZ(&next.directory, directory.bytes())) return false;
             var iterator = files.iterate(directory);
             iterator.index = 1; // Parent row; omit the redundant current-directory row.
             var path: [path_bytes]u8 = undefined;
@@ -32,8 +33,8 @@ pub fn DialogPage(comptime capacity: usize, comptime path_bytes: usize, comptime
                 .entry => |entry| entry,
                 else => return false,
             };
-            next.add(.directory, parent.path, "[DIR] ..");
-            if (number != 0) next.add(.previous, "", "<< Previous page");
+            if (!next.add(.directory, parent.path, "[DIR] ..")) return false;
+            if (number != 0 and !next.add(.previous, "", "<< Previous page")) return false;
             const first = @as(u64, number) * page_size;
             var seen: u64 = 0;
             while (true) {
@@ -47,23 +48,23 @@ pub fn DialogPage(comptime capacity: usize, comptime path_bytes: usize, comptime
                     const name = tail(entry.path);
                     var label: [label_bytes]u8 = .{0} ** label_bytes;
                     const prefix = if (entry.kind == .directory) "[DIR] " else "";
-                    copyZ(&label, prefix);
-                    copyZ(label[prefix.len..], name);
-                    next.add(if (entry.kind == .directory) .directory else .file, entry.path, std.mem.sliceTo(&label, 0));
+                    if (prefix.len >= label.len or !text.assignZ(&label, prefix) or
+                        !text.labelZ(label[prefix.len..], name)) return false;
+                    if (!next.add(if (entry.kind == .directory) .directory else .file, entry.path, std.mem.sliceTo(&label, 0))) return false;
                 }
                 seen += 1;
             }
-            if (seen > first + page_size) next.add(.next, "", "Next page >>");
+            if (seen > first + page_size and !next.add(.next, "", "Next page >>")) return false;
             self.* = next;
             return true;
         }
 
-        fn add(self: *Self, kind: Kind, path: []const u8, label: []const u8) void {
+        fn add(self: *Self, kind: Kind, path: []const u8, label: []const u8) bool {
             const row = &self.rows[self.count];
             row.kind = kind;
-            copyZ(&row.path, path);
-            copyZ(&row.label, label);
+            if (!text.assignZ(&row.path, path) or !text.assignZ(&row.label, label)) return false;
             self.count += 1;
+            return true;
         }
     };
 }
@@ -109,12 +110,6 @@ pub fn Snapshot(comptime T: type, comptime max_bytes: usize) type {
             std.sort.heap(T, self.values.items, context, less);
         }
     };
-}
-
-fn copyZ(out: []u8, value: []const u8) void {
-    @memset(out, 0);
-    const count = @min(value.len, out.len - 1);
-    @memcpy(out[0..count], value[0..count]);
 }
 
 fn tail(path: []const u8) []const u8 {

@@ -623,3 +623,11 @@ during driver init. Unregister closes admission; it never acknowledges physical
 DMA stop. The driver must obtain its real reset and resource-release receipts.
 `Build.sh entropy-test` (`Build.bat entropy-test` on Windows) checks bounded CF
 failure, whole-output rollback, device limits, and optional-table boundaries.
+
+Unicode dialog buffers (0.85.43): bounded_text.assignZ and TextField.setExact
+reject invalid/overlong input without changing the previous value. Use
+handleCodepointChecked to retain selected text on a capacity failure.
+Byte offsets remain separate from Unicode scalars; FileDialog/InputDialog
+accept the actual cursor and selection. DirectoryPage retains exact full
+path identities; overlong presentation labels use whole scalars plus ... .
+No normalization, glyph coverage, display width or grapheme claim.

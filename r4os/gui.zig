@@ -1,4 +1,5 @@
 const std = @import("std");
+const bounded_text = @import("bounded_text.zig");
 const abi = @import("r4os_contract").abi;
 const r4sys = @import("r4sys.zig");
 const r4desk = @import("r4desk.zig");
@@ -1287,6 +1288,8 @@ pub const FileDialog = struct {
     items: []const []const u8,
     mode: FileDialogMode = .open,
     file_name: []const u8 = "",
+    file_name_cursor: ?usize = null,
+    file_name_selection: TextRange = .{},
     selected_index: usize = 0,
     hover_index: ?usize = null,
     first_index: usize = 0,
@@ -1298,7 +1301,7 @@ pub const FileDialog = struct {
     palette: Palette = default_palette,
 
     pub fn draw(self: FileDialog, canvas: Canvas, scratch: []u8) i32 {
-        return drawFileDialogEx(canvas, self.rect, scratch, self.title, self.path, self.items, self.selected_index, self.hover_index, self.first_index, self.max_visible_rows, self.mode, self.file_name, self.ok_text, self.cancel_text, self.focus_action, self.pressed_action, self.palette);
+        return drawFileDialogText(canvas, self.rect, scratch, self.title, self.path, self.items, self.selected_index, self.hover_index, self.first_index, self.max_visible_rows, self.mode, self.file_name, self.ok_text, self.cancel_text, self.focus_action, self.pressed_action, self.palette, self.file_name_cursor, self.file_name_selection);
     }
 
     pub fn listRect(self: FileDialog) Rect {
@@ -1374,6 +1377,8 @@ pub const InputDialog = struct {
     title: []const u8,
     label: []const u8,
     value: []const u8,
+    value_cursor: ?usize = null,
+    value_selection: TextRange = .{},
     ok_text: []const u8 = "OK",
     cancel_text: []const u8 = "Cancel",
     focus_action: DialogAction = .select,
@@ -1895,6 +1900,35 @@ pub fn TextField(comptime capacity: usize) type {
             @memcpy(self.buffer[0..self.len], value_text[0..self.len]);
             self.cursor = self.len;
             self.selection_anchor = null;
+        }
+
+        /// Exact editable preload. Invalid/overlong input preserves value,
+        /// cursor and selection; callers must report the failed assignment.
+        pub fn setExact(self: *Self, value_text: []const u8) bool {
+            if (!bounded_text.assignZ(&self.buffer, value_text)) return false;
+            self.len = value_text.len;
+            self.cursor = self.len;
+            self.selection_anchor = null;
+            return true;
+        }
+
+        pub fn setSelection(self: *Self, start: usize, end: usize) void {
+            self.selection_anchor = utf8FloorBoundary(self.value(), start);
+            self.cursor = utf8FloorBoundary(self.value(), end);
+        }
+
+        /// Preflight replacement capacity before the existing scalar editor
+        /// may delete a selection. Navigation retains its existing contract.
+        pub fn handleCodepointChecked(self: *Self, codepoint: u32) bool {
+            if (self.disabled) return false;
+            if (isTextCodepoint(codepoint)) {
+                var encoded: [4]u8 = undefined;
+                const bytes = encodeUtf8Codepoint(codepoint, &encoded);
+                const range = self.selectionRange();
+                const retained = self.len - (range.end - range.start);
+                if (bytes == 0 or bytes >= capacity - retained) return false;
+            }
+            return self.handleCodepoint(codepoint);
         }
 
         pub fn clear(self: *Self) void {
@@ -3975,8 +4009,12 @@ pub fn drawFileDialog(canvas: Canvas, rect: Rect, scratch: []u8, title: []const 
 }
 
 pub fn drawFileDialogEx(canvas: Canvas, rect: Rect, scratch: []u8, title: []const u8, path: []const u8, items: []const []const u8, selected_index: usize, hover_index: ?usize, first_index: usize, max_visible_rows: usize, mode: FileDialogMode, file_name: []const u8, ok_text: []const u8, cancel_text: []const u8, focus_action: DialogAction, pressed_action: DialogAction, palette: Palette) i32 {
+    return drawFileDialogText(canvas, rect, scratch, title, path, items, selected_index, hover_index, first_index, max_visible_rows, mode, file_name, ok_text, cancel_text, focus_action, pressed_action, palette, null, .{});
+}
+
+fn drawFileDialogText(canvas: Canvas, rect: Rect, scratch: []u8, title: []const u8, path: []const u8, items: []const []const u8, selected_index: usize, hover_index: ?usize, first_index: usize, max_visible_rows: usize, mode: FileDialogMode, file_name: []const u8, ok_text: []const u8, cancel_text: []const u8, focus_action: DialogAction, pressed_action: DialogAction, palette: Palette, text_cursor: ?usize, text_selection: TextRange) i32 {
     if (rect.isEmpty()) return 0;
-    const selected_file = if (file_name.len != 0) file_name else if (selected_index < items.len) items[selected_index] else "";
+    const selected_file = if (mode == .save or file_name.len != 0) file_name else if (selected_index < items.len) items[selected_index] else "";
     const file_label = switch (mode) {
         .open => "File:",
         .save => "Name:",
@@ -3987,7 +4025,7 @@ pub fn drawFileDialogEx(canvas: Canvas, rect: Rect, scratch: []u8, title: []cons
     _ = drawTextInRect(canvas, .{ .x = rect.x + 10, .y = rect.y + 29, .w = 44, .h = 16 }, scratch, "Path:", .left, palette.text, palette.face);
     _ = drawTextField(canvas, .{ .x = rect.x + 56, .y = rect.y + 26, .w = @max(0, rect.w - 68), .h = default_metrics.text_field_h }, scratch, path, false, true, palette);
     _ = drawTextInRect(canvas, .{ .x = rect.x + 10, .y = rect.y + 55, .w = 44, .h = 16 }, scratch, file_label, .left, palette.text, palette.face);
-    _ = drawTextField(canvas, fileDialogFileNameRect(rect), scratch, selected_file, focus_action == .select and mode == .save, file_disabled, palette);
+    _ = drawTextFieldEx(canvas, fileDialogFileNameRect(rect), scratch, selected_file, text_cursor orelse selected_file.len, text_selection, focus_action == .select and mode == .save, file_disabled, palette);
     const visible_limit = if (max_visible_rows == 0) visibleListRows(fileDialogListRect(rect), default_metrics.list_row_h) else max_visible_rows;
     _ = (List{ .rect = fileDialogListRect(rect), .items = items, .selected_index = selected_index, .hover_index = hover_index, .first_index = first_index, .focused = focus_action == .select }).draw(canvas, scratch);
     if (items.len > visible_limit and visible_limit > 0) {
@@ -4064,7 +4102,7 @@ pub fn drawInputDialog(canvas: Canvas, item: InputDialog, scratch: []u8) i32 {
     if (item.rect.isEmpty()) return 0;
     _ = drawDialogFrame(canvas, item.rect, scratch, item.title, item.palette);
     _ = drawTextInRect(canvas, inputDialogLabelRect(item.rect), scratch, item.label, .left, item.palette.text, item.palette.face);
-    _ = drawTextField(canvas, item.valueRect(), scratch, item.value, item.focus_action == .select, false, item.palette);
+    _ = drawTextFieldEx(canvas, item.valueRect(), scratch, item.value, item.value_cursor orelse item.value.len, item.value_selection, item.focus_action == .select, false, item.palette);
     const buttons = [_]DialogButton{
         .{ .action = .ok, .text = item.ok_text, .role = .default },
         .{ .action = .cancel, .text = item.cancel_text, .role = .cancel },
@@ -5401,4 +5439,31 @@ test "text area clamps horizontal scroll without word wrap" {
     area.scrollTo(0, 99, view);
     try std.testing.expectEqual(@as(usize, 2), area.scroll_col);
     try std.testing.expectEqual(@as(usize, 6), textAreaVisualMaxColumns(area.value(), view.wrap_cols));
+}
+
+test "checked text fields preserve selected Unicode on capacity and preload errors" {
+    var field = TextField(8){};
+    try std.testing.expect(field.setExact("ä€a"));
+    field.setSelection(0, 2);
+    const before = field;
+    try std.testing.expect(!field.handleCodepointChecked(0x1f642));
+    try std.testing.expectEqualDeep(before, field);
+    try std.testing.expect(!field.setExact("ä€🙂"));
+    try std.testing.expectEqualDeep(before, field);
+    try std.testing.expect(!field.setExact("\xc1\xa1"));
+    try std.testing.expectEqualDeep(before, field);
+    try std.testing.expect(!field.handleCodepointChecked(0xd800));
+    try std.testing.expectEqualDeep(before, field);
+    try std.testing.expect(field.handleCodepointChecked('z'));
+    try std.testing.expectEqualStrings("z€a", field.value());
+    try std.testing.expect(field.handleCodepointChecked(Key.end));
+    try std.testing.expect(field.handleCodepointChecked(Key.backspace));
+    try std.testing.expect(field.handleCodepointChecked(Key.backspace));
+    try std.testing.expectEqualStrings("z", field.value());
+    try std.testing.expect(field.setExact("ä🙂"));
+    field.setSelection(3, 6);
+    try std.testing.expectEqual(@as(usize, 2), field.selectionRange().start);
+    try std.testing.expect(field.handleCodepointChecked(0x20ac));
+    try std.testing.expectEqualStrings("ä€", field.value());
+    try std.testing.expect(bounded_text.valid(field.value()));
 }

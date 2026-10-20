@@ -51,6 +51,18 @@ pub fn build(b: *std.Build) void {
     const host_r4os = sdk_profile.createR4osModule(b.graph.host, .Debug);
     const sdk_unit_tests = b.addTest(.{ .root_module = host_r4os });
     const run_sdk_unit_tests = b.addRunArtifact(sdk_unit_tests);
+    const dialog_root = b.createModule(.{
+        .root_source_file = b.path("r4os/gui.zig"),
+        .target = b.graph.host,
+        .optimize = .Debug,
+    });
+    dialog_root.addImport("r4os_contract", sdk_profile.profile.contract_module);
+    const dialog_tests = b.addTest(.{ .root_module = dialog_root, .filters = &.{
+        "bounded text",        "checked text fields", "text fields navigate",
+        "text area selection", "text area inserts",   "text area visual",
+    } });
+    b.step("dialog-text-test", "Actual bounded Unicode dialog and existing scalar widget cases").dependOn(&b.addRunArtifact(dialog_tests).step);
+
     const cpu_tests_root = b.createModule(.{
         .root_source_file = b.path("r4os/cpu_acceleration_tests.zig"),
         // Independent software SHA oracle; never select the host's optional

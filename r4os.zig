@@ -142,6 +142,7 @@ pub const clipboard = @import("r4os/clipboard.zig");
 pub const r4d = @import("r4os/driver.zig");
 pub const r4p = @import("r4os/protocol.zig");
 pub const gui = @import("r4os/gui.zig");
+pub const bounded_text = @import("r4os/bounded_text.zig");
 pub const gui_shapes = @import("r4os/gui_shapes.zig");
 pub const ico = @import("r4os/ico.zig");
 pub const raster = @import("r4os/raster.zig");
