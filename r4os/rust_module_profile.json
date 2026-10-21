@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "id": "r4os-rust-r4x-v1",
+  "target": "x86_64-unknown-none",
+  "code_model": "kernel",
+  "relocation_model": "pie",
+  "lto": "fat",
+  "codegen_units": 1,
+  "red_zone": false,
+  "panic": "abort",
+  "stack_probes": "pinned target inline, 4096-byte steps",
+  "linker_script": "r4os/linker/r4os_module.ld",
+  "dependencies": ["r4os-contract", "r4os-sdk"],
+  "allowed_runtime_relocations": ["R_X86_64_64", "R_X86_64_PC32", "R_X86_64_PLT32"],
+  "optimization": {"size": "z", "speed": "3"}
+}

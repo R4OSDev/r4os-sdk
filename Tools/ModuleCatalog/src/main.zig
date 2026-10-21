@@ -1128,28 +1128,29 @@ fn renderPlanObject(allocator: std.mem.Allocator, entry: manifest_contract.Manif
     try appendStringArray(&out, allocator, entry.sources);
     if (entry.language == .rust) {
         const cargo = entry.rust_cargo orelse return error.RustCargoManifestMissing;
-        try out.appendSlice(allocator, ",\n    \"rust_project\": {\"schema\":1,\"profile\":\"r4os-rust-r4x-v1\",\"tools\":\"r4os-rust-tools-v1\",\"cargo_manifest\":\"Cargo.toml\",\"cargo_lock\":\"Cargo.lock\",\"target\":\"x86_64-unknown-none\",\"declared_inputs\":[\"module.R4MF\",\"Cargo.toml\",\"Cargo.lock\"],\"compiler_inputs\":\"observed at build time from rustc dep-info\",\"native_rust_compiler\":false,\"cargo_package\":");
-        try appendJsonString(&out, allocator, cargo.name);
-        try out.appendSlice(allocator, ",\"cargo_version\":");
-        try appendJsonString(&out, allocator, cargo.version);
-        try out.appendSlice(allocator, ",\"source\":");
-        try appendJsonString(&out, allocator, cargo.source);
-        try out.appendSlice(allocator, ",\"module_version\":");
-        try appendJsonString(&out, allocator, entry.module_version.text);
-        try out.appendSlice(allocator, ",\"icons\":");
-        try appendStringArray(&out, allocator, entry.icons);
-        try out.appendSlice(allocator, ",\"help\":");
-        if (entry.help) |help| try appendJsonString(&out, allocator, help) else try out.appendSlice(allocator, "null");
-        try out.appendSlice(allocator, ",\"resources\":[");
-        for (entry.resources, 0..) |resource, index| {
-            if (index != 0) try out.appendSlice(allocator, ",");
-            try out.appendSlice(allocator, "{\"name\":");
-            try appendJsonString(&out, allocator, resource.name);
-            try out.appendSlice(allocator, ",\"path\":");
-            try appendJsonString(&out, allocator, resource.path);
-            try out.appendSlice(allocator, "}");
-        }
-        try out.appendSlice(allocator, "]}");
+        const descriptor = .{
+            .schema = manifest_contract.capabilities.rust_build_plan_schema,
+            .profile = manifest_contract.capabilities.rust_profile,
+            .tools = manifest_contract.capabilities.rust_tools,
+            .host_build_qualified = manifest_contract.capabilities.rust_host_builder,
+            .cargo_manifest = "Cargo.toml",
+            .cargo_lock = "Cargo.lock",
+            .target = "x86_64-unknown-none",
+            .declared_inputs = [_][]const u8{ "module.R4MF", "Cargo.toml", "Cargo.lock" },
+            .compiler_inputs = "observed at build time from rustc dep-info",
+            .native_rust_compiler = false,
+            .cargo_package = cargo.name,
+            .cargo_version = cargo.version,
+            .source = cargo.source,
+            .module_version = entry.module_version.text,
+            .icons = entry.icons,
+            .help = entry.help,
+            .resources = entry.resources,
+        };
+        const json = try std.json.Stringify.valueAlloc(allocator, descriptor, .{});
+        defer allocator.free(json);
+        try out.appendSlice(allocator, ",\n    \"rust_project\": ");
+        try out.appendSlice(allocator, json);
     }
 
     try out.appendSlice(allocator, ",\n    \"zig_modules\": ");

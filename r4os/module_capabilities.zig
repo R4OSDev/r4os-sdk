@@ -5,7 +5,7 @@ pub const rust_tools = "r4os-rust-tools-v1";
 pub const rust_build_plan_schema: u32 = 1;
 // Admission and availability are different facts. The host driver changes
 // this only after source -> ELF -> R4M0 and real R4XStart qualification.
-pub const rust_host_builder = false;
+pub const rust_host_builder = true;
 
 pub const Execution = enum { host, native_r4os };
 pub const Decision = struct {

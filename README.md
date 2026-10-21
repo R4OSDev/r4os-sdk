@@ -5,13 +5,14 @@ module build support, templates, build profiles, and generic Runtime-R4L
 helpers. The platform API and ABI remain canonical in the separate Contract
 repository.
 
-The agreed Rust host-module project profile is defined by the Contract's
-`Module/RustModuleV1.txt` (roadmap 0.86.33). Current generated Rust ABI bindings
-are available; the current SDK parser/build path is still Zig/C. The planned
-minimum is independently installed Windows/Linux host development for Rust
-R4X console, GUI and service apps. Native guest Rust compilation and other
-module kinds are separate capabilities. No ready Rust module builder is
-claimed by this contract decision.
+Rust host modules use the Contract's `Module/RustModuleV1.txt` and the matched
+isolated tool profile. SDK0.64.60 supplies the actual no_std source-to-R4M0
+builder and normal R4X startup, with console/hosted GUI/service helpers in
+[Rust/README.txt](Rust/README.txt). Module/Cargo identities remain separate.
+The common entry/exit/panic and Linux build path are qualified; complete
+three-class templates and final GUI/service runtime qualification follow in
+0.86.37-.40. Windows tools/PS7 are prepared, not execution-qualified.
+Native guest Rust and other module roles remain separate explicit capabilities.
 
 The optional `cpuIdleInfo` facade reads the separate R4DEV v29 idle receipt.
 Driver CPU mechanisms negotiate `idlePublish` and `idlePolicy` individually

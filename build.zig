@@ -24,6 +24,15 @@ pub fn build(b: *std.Build) void {
     b.addNamedLazyPath("update_service_contract", b.path("r4os/update_service_contract.zig"));
 
     const contract_dependency = b.dependency("r4os_contract", .{});
+    if (b.option(bool, "catalog-only", "Build only the selected host ModuleCatalog") orelse false) {
+        const target = b.standardTargetOptions(.{});
+        const bundle = b.createModule(.{ .root_source_file = b.path("r4os/r4cp_convert.zig"), .target = target, .optimize = .ReleaseSafe });
+        bundle.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
+        const root = b.createModule(.{ .root_source_file = b.path("Tools/ModuleCatalog/src/main.zig"), .target = target, .optimize = .ReleaseSafe });
+        root.addImport("contract_bundle", bundle);
+        b.installArtifact(b.addExecutable(.{ .name = "module-catalog", .root_module = root }));
+        return;
+    }
     const sdk_profile = Sdk.init(b, .{ .contract_dependency = contract_dependency });
     b.installArtifact(sdk_profile.builder);
     if (sdk_profile.r4l_contract_generator) |generator| b.installArtifact(generator);
