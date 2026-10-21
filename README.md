@@ -14,6 +14,9 @@ build/container/local KVM-SMP4 console, visible GUI close and service
 registration/status/stop checks. The release's Studio-Handoff.json pins exact
 component archives, source revisions, tool hashes and separate evidence.
 Windows tools/PS7 are prepared, not execution-qualified.
+SDK0.64.65 corrects the capability catalog's linker origin: rust-lld is
+provided by the pinned rustc host archive. llvm-tools-preview supplies the
+separate inspection tools. Module codegen and Rust helper sources are unchanged.
 Native guest Rust and other module roles remain separate explicit capabilities.
 
 

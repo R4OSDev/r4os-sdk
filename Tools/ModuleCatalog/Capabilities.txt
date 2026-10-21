@@ -79,8 +79,12 @@ Tools
 -----
 tools binds Rust/Cargo/rustup and target IDs, required versus optional components,
 upstream bootstrap/release/component URLs/SHA256 and exported host binaries.
-rust-lld comes from the exact llvm-tools-preview archive; check reports its
-installed binary SHA. r4xbuilder is pinned by SDK source plus exported file hash.
+rust-lld comes from the exact rustc archive; linker.source_component and
+linker.exact_sources identify that required host component and its URL/SHA.
+check reports the installed binary SHA. llvm-tools-preview separately supplies
+the profile's LLVM inspection tools. r4xbuilder is pinned by SDK source plus
+exported file hash. SDK0.64.65 corrects the linker origin label from0.64.64;
+compiler, linker bytes, module codegen and runtime semantics are unchanged.
 No Zig is needed by the exported Rust build. Host C is Zig's bundled Clang on
 Windows/Linux; native R4CC is a separate, smaller compiler inside R4OS.
 zig_host is copied from the single DevKit/Setup/ZigToolchain.json pin also read

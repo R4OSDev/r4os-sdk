@@ -20,6 +20,11 @@ try{
 }finally{$process.Dispose()}
 $data=$json|ConvertFrom-Json -AsHashtable
 if($data.schema -ne 1 -or $data.formats.manifest -ne 2 -or $data.formats.semantic_plan -ne 1 -or $data.tools.local_availability_queried){throw 'Capability format/availability mismatch'}
+if($data.tools.linker.source_component -cne 'rustc' -or $data.tools.linker.exact_sources -cne 'tools.hosts.*.required[component=rustc]'){throw 'Linker archive ownership differs from the rustc component manifest'}
+foreach($hostName in @('Linux','Windows')){
+    $provider=@($data.tools.hosts[$hostName].required|Where-Object {$_.component -ceq $data.tools.linker.source_component})
+    if($provider.Count -ne 1 -or $provider[0].target -cne $data.tools.hosts[$hostName].triple -or !$provider[0].url -or $provider[0].sha256 -cnotmatch '^[0-9a-f]{64}$'){throw 'Linker provider lacks an exact required host archive'}
+}
 foreach($class in @('console','gui','service')){
     $row=@($data.support|Where-Object {$_.language -ceq 'Rust' -and $_.kind -ceq 'R4X' -and $_.app_class -ceq $class -and $_.entry_mode -ceq 'app' -and $null -eq $_.role -and $_.execution -ceq 'host'})
     if($row.Count -ne 1 -or !$row[0].supported){throw "Missing Rust $class host admission"}
