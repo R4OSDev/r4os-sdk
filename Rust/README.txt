@@ -108,3 +108,34 @@ Qualification is recorded separately as build, ELF/container and actual guest
 results in Docs/API/RustContractBindings.txt. Host memory bounds/overlap cases
 and source/error/tool cases are reusable SDK tests; no broad image/hardware
 matrix or extra normal STANDARD follows from host/fixture-only work.
+
+Other module roles (0.86.38)
+---------------------------
+The shared SDK module_capabilities.zig Decision supplies supported/code/reason,
+owner_contract and missing_steps. Installation of a compiler does not change
+these support decisions. Further Rust roles are deliberately separate work:
+
+R4L: current R4MF requires library-owned contract/baseline, IMPLEMENTATION_ZIG,
+Zig/C bindings/conformance and regular Query/table export generation. The R4L
+contract generator emits Zig/C only. Rust needs its real implementation and
+local contract/generator/build/consumer qualification; fake Zig SOURCE or
+unused IMPLEMENTATION_ZIG entries are forbidden.
+
+R4D: the current driver builder owns r4d_init_entry, DriverInit/DriverShutdown,
+R4DEV callbacks and metadata. Rust needs an actual driver startup/packager and
+per-device IRQ/DMA/resource cleanup proof. R4XStart/app class is unrelated.
+
+R4P: the protocol builder owns separate init/register/export stubs, role/category/
+dependency metadata and teardown. Raw Rust callback layouts alone do not provide
+that builder or qualified registration/hot removal/shutdown ownership.
+
+Subsystem: a normal GUI R4X with MODULE_ROLE=subsystem additionally owns ID,
+display name, guest formats/target/catalog and resolver/host/video/input/audio/
+persistence/cleanup contracts. Existing subsystem_launch/host/runtime helpers
+are Zig; the Rust window helper is not an equivalent subsystem host facade.
+
+Rust lowlevel needs separate raw-entry stack/ABI/panic qualification. Native
+R4OS Rust builds need a compiler/toolchain port; R4CC implements the native C
+subset and is not a Rust compiler. Stable machine reason codes live in the
+shared Decision, not in an IDE-maintained matrix. No new driver/protocol/library/
+subsystem implementation or hardware claim is included in this SDK delivery.
