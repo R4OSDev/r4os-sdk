@@ -45,9 +45,10 @@ roots require Zig in the existing owner builders; declared C companions do
 not imply a C root builder. Rust native compilation remains unsupported.
 
 qualification separates Linux host builds, actual Windows execution, cross-host
-byte identity, common R4X startup tests and runtime class checks. In0.86.39
-the final GUI/service runtime check is still pending0.86.40, even though all
-three templates really compile. Do not reinterpret "supported" as hardware
+byte identity, common R4X startup tests and runtime class checks. SDK0.64.64
+qualifies console/gui/service in local KVM-SMP4; exact final package artifact
+hashes and separate observations live in release Studio-Handoff.json.
+Do not reinterpret "supported" as hardware
 or runtime-test coverage. local_availability_queried=false means no installation
 probe was made. Setup/Rust.sh check separately reports actual tools/versions/
 components/linker hash and a nonzero result for missing or wrong installation.

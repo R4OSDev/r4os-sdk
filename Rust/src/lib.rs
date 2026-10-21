@@ -386,10 +386,11 @@ impl Service<'_, '_> {
             )
         }
     }
-    /// Clear the handle only after its exact unregister acknowledgement.
+    /// Clear the handle after unregister or acknowledgement that it is retired.
     pub fn close(&mut self) -> Result<(), i32> {
         let rc = self.unregister();
-        if rc >= 0 {
+        // The service owner may retire this exact endpoint before waking Stop.
+        if rc >= 0 || rc == abi::service_api_result_bad_handle {
             self.handle = 0;
             Ok(())
         } else {

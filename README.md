@@ -9,9 +9,11 @@ Rust host modules use the Contract's `Module/RustModuleV1.txt` and the matched
 isolated tool profile. SDK0.64.60 supplies the actual no_std source-to-R4M0
 builder and normal R4X startup, with console/hosted GUI/service helpers in
 [Rust/README.txt](Rust/README.txt). Module/Cargo identities remain separate.
-The common entry/exit/panic and Linux build path are qualified; complete
-three-class templates and final GUI/service runtime qualification follow in
-0.86.37-.40. Windows tools/PS7 are prepared, not execution-qualified.
+SDK0.64.64 completes the three independent Rust templates and the Linux
+build/container/local KVM-SMP4 console, visible GUI close and service
+registration/status/stop checks. The release's Studio-Handoff.json pins exact
+component archives, source revisions, tool hashes and separate evidence.
+Windows tools/PS7 are prepared, not execution-qualified.
 Native guest Rust and other module roles remain separate explicit capabilities.
 
 

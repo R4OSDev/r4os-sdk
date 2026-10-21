@@ -45,8 +45,13 @@ missing tools or compiler errors cannot leave an old successful container.
 All three templates were really compiled from individually staged SDK,
 Contract and tools in /tmp, outside the complete checkout. Console output,
 hosted window and bounded service registration/wait/stop are actual Rust code.
-The common startup/panic evidence is reused; final visible GUI/service/console
-runtime qualification belongs to0.86.40. Windows remains prepared, not run.
+The common startup/panic evidence is reused. SDK0.64.64 binds final independent
+package builds, path reproducibility and visible GUI/service/console runtime
+qualification in release Studio-Handoff.json. Launch GUI through the regular
+desktop host, for example its Run dialog; an SSH console is not a visible GUI
+host. The service answers STATUS/op1 and rejects unknown requests in bounded
+batches. Stop also accepts an endpoint already retired by its owner.
+Windows remains prepared, not run.
 
 Capability interface1
 ---------------------

@@ -103,6 +103,11 @@ no private framebuffer. Poll/wait checks optional table slots; idle waits leave
 the scheduler ready list. Service registers its exact named endpoint, waits
 with bounded timeout, receives/replies optionally, and unregisters before the
 handle is cleared. The normal process owner remains responsible for final exit.
+The service owner can retire that exact endpoint while requesting Stop;
+close treats its bad_handle acknowledgement as already retired and clears
+the private handle. Other failures remain errors. The official service
+template drains bounded request batches, answers STATUS/op1 and rejects
+unknown operations; merely waiting on an unread request would stay ready.
 
 Qualification is recorded separately as build, ELF/container and actual guest
 results in Docs/API/RustContractBindings.txt. Host memory bounds/overlap cases

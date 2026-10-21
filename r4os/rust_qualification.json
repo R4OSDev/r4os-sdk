@@ -4,7 +4,8 @@
   "windows_host_execution": false,
   "cross_host_byte_identity": false,
   "common_r4x_startup": {"scope": "local QEMU/KVM SMP4, 0.86.36", "normal_exit": true, "invalid_context": true, "panic_exit": true},
-  "runtime_classes": ["console"],
-  "gui_service_final_runtime_pending": true,
+  "runtime_classes": ["console", "gui", "service"],
+  "runtime_scope": "local QEMU/KVM SMP4, Kernel0.1.381; exact final package artifact hashes in release Studio-Handoff.json",
+  "gui_service_final_runtime_pending": false,
   "evidence": "Docs/API/RustContractBindings.txt"
 }
