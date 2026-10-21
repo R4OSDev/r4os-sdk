@@ -53,17 +53,29 @@ selected components. Builds run offline/locked, without a registry fetch.
 
 Use #![no_std], a function fn main(app: &mut r4os_sdk::App<'_>) -> i32 and
 r4os_sdk::app!(main). The macro's R4XStart derives class/import order/name from
-the builder's manifest environment. It validates the real context/imports and
-size-checks append-only table slots using generated ABI types and callback
-signatures. No copied layouts or new R4L runtime. Direct float/vector C ABI and
+generated startup-info.rs input from the common ModuleCatalog manifest parser.
+There is no Rust-specific import grammar or hard-coded import capacity.
+It validates the exact ordered declarations, including absent optional named
+providers, required groups, pointer alignment and the current Contract table
+defaults (version and complete size). An unresolved optional import remains a
+record with table/resolved_version/flags zero. Query revision1 is distinct from
+the actual platform table version. No app-window operation runs at admission.
+All six checked immutable API views, start_context and named import lookup are
+instance-bound; App is neither Send nor Sync. A raw constructor caller must
+pin the full context/imports/tables until that entry ends. Thread callbacks
+keep the kernel's existing exact instance ownership; they must not reuse a
+finished root App. Local R4L resolvers still validate their own table headers.
+Callback signatures come from the generated Contract. No copied layouts or new R4L runtime. Direct float/vector C ABI and
 alloc are outside this profile. Rust module/include inputs come from rustc
 dep-info; the receipt distinguishes those from declared manifest/Cargo/resources.
-Input directory/file symlinks are outside the v1 project tree.
+The generated startup input has owner=generated in compiler_inputs and its
+exact hash in the same receipt. Input directory/file symlinks are outside the
+v1 project tree.
 
 Default output is project/build; -OutputRoot selects another owned directory.
 Its marker binds it to exactly one project and an exclusive build lock. Invalid
 sources, compile/link errors or missing tools remove previous successful R4X,
-ELF and build.json outputs. An output directory containing unrelated files is
+ELF, generated startup-info.rs and build.json outputs. An output directory containing unrelated files is
 rejected. build.json schema1 records exact source/tool/profile/ELF/R4M0 hashes,
 selected Cargo package/target, imports, version and resource inputs. Cargo's
 reusable target cache lives below the explicitly selected cache root. Temporary

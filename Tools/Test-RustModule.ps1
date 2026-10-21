@@ -19,9 +19,12 @@ function Run([string]$Name,[bool]$Expected,[string[]]$Extra=@()){
     & $pwsh @arguments @Extra > (Join-Path $WorkRoot ($Name+'.log')) 2>&1
     $code=$LASTEXITCODE
     if(($code -eq 0) -ne $Expected){throw "Unexpected $Name exit: $code"}
-    if(!$Expected -and (@(Get-ChildItem -LiteralPath $output -Filter '*.R4X' -ErrorAction SilentlyContinue).Count -ne 0 -or (Test-Path -LiteralPath (Join-Path $output 'build.json')))){throw "Stale success after $Name"}
+    if(!$Expected -and (@(Get-ChildItem -LiteralPath $output -Filter '*.R4X' -ErrorAction SilentlyContinue).Count -ne 0 -or (Test-Path -LiteralPath (Join-Path $output 'build.json')) -or (Test-Path -LiteralPath (Join-Path $output 'startup-info.rs')))){throw "Stale success after $Name"}
 }
 Run baseline $true
+$receipt=Get-Content -Raw -LiteralPath (Join-Path $output 'build.json')|ConvertFrom-Json
+$generated=@($receipt.compiler_inputs|Where-Object owner -CEQ 'generated')
+if($generated.Count -ne 1 -or $generated[0].path -cne 'startup-info.rs' -or $generated[0].sha256 -cne (Get-FileHash -LiteralPath (Join-Path $output 'startup-info.rs') -Algorithm SHA256).Hash.ToLowerInvariant()){throw 'Generated startup input not bound.'}
 $artifact=Join-Path $output 'RUSTSTART.R4X';$originalHash=(Get-FileHash -LiteralPath $artifact -Algorithm SHA256).Hash.ToLowerInvariant()
 $source=Join-Path $project 'src/main.rs';$original=[IO.File]::ReadAllText($source);$utf8=[Text.UTF8Encoding]::new($false)
 if(!$original.Contains("    7`n}")){throw 'Startup fixture return site changed.'}

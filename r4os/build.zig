@@ -1256,13 +1256,19 @@ fn addR4AppWithOptions(b: *std.Build, opts: R4AppBuildOptions) BuildResult {
 
 fn addR4AppCWithOptions(b: *std.Build, opts: R4CAppBuildOptions) BuildResult {
     const app_class = appClassForProfile(opts.profile);
+    const definitions = b.allocator.alloc(module_manifest.CDefineEntry, opts.c_defines.len + 1) catch @panic("OOM");
+    @memcpy(definitions[0..opts.c_defines.len], opts.c_defines);
+    definitions[opts.c_defines.len] = .{
+        .name = "R4OS_STARTUP_INFO",
+        .value = module_manifest.startup_metadata.c(b.allocator, @enumFromInt(@intFromEnum(opts.profile)), opts.imports) catch @panic("Invalid startup imports"),
+    };
     const elf = addCModule(b, .{
         .name = opts.name,
         .source_root = opts.source_root,
         .sources = opts.sources,
         .include_root = opts.include_root,
         .extra_include_roots = opts.extra_include_roots,
-        .c_defines = opts.c_defines,
+        .c_defines = definitions,
         .c_flags = opts.c_flags,
         .startup_source_file = opts.startup_source_file,
         .linker_script = opts.linker_script,

@@ -4,7 +4,7 @@ const manifest_contract = contract_bundle.r4mf;
 const legacy_project = contract_bundle.legacy;
 const legacy_converter = contract_bundle;
 
-const Action = enum { capabilities, catalog, image_inventory, inventories, validate, resolve, plan, contract_plan, image_plan, workspace_image_plan, workspace_build_plan, convert_r4cp };
+const Action = enum { capabilities, catalog, image_inventory, inventories, validate, resolve, plan, contract_plan, startup_info, image_plan, workspace_image_plan, workspace_build_plan, convert_r4cp };
 // ImageMode describes a selection policy, not another IMAGE_SCOPE value.
 // Benchmark deliberately reuses slim/full and admits only explicitly named
 // test diagnostics, so manifests keep the canonical slim/full/test scopes.
@@ -181,6 +181,20 @@ fn run(init: std.process.Init) !void {
             if (!rendered.ok) return error.ContractPlanTooLarge;
             try writeOutput(io, cwd, options.output, rendered.bytes);
         },
+        .startup_info => {
+            const path = options.manifest_path orelse return error.MissingManifestPath;
+            const value = try readManifest(arena_allocator, io, cwd, path);
+            try validateSourceFiles(arena_allocator, io, cwd, value);
+            if (value.kind != .r4x or value.entry_mode != .app) return error.StartupInfoRequiresApp;
+            const profile = try manifest_contract.startup_metadata.profileForClass(value.app_class.?.text());
+            const rendered = switch (value.language.?) {
+                .rust => try manifest_contract.startup_metadata.rust(allocator, profile, value.imports),
+                .c => try manifest_contract.startup_metadata.c(allocator, profile, value.imports),
+                .zig => return error.StartupInfoRequiresRustOrC,
+            };
+            defer allocator.free(rendered);
+            try writeOutput(io, cwd, options.output, rendered);
+        },
         .image_plan => {
             const entries = try discoverCatalog(arena_allocator, io, cwd, options.root);
             const image_entries = try collectImageEntries(arena_allocator, io, cwd, entries, options);
@@ -233,7 +247,7 @@ fn run(init: std.process.Init) !void {
 
 fn parseOptions(args: []const []const u8) !Options {
     if (args.len < 2) return error.MissingAction;
-    var options = Options{ .action = if (std.mem.eql(u8, args[1], "capabilities")) .capabilities else if (std.mem.eql(u8, args[1], "catalog")) .catalog else if (std.mem.eql(u8, args[1], "image-inventory")) .image_inventory else if (std.mem.eql(u8, args[1], "inventories")) .inventories else if (std.mem.eql(u8, args[1], "validate")) .validate else if (std.mem.eql(u8, args[1], "resolve")) .resolve else if (std.mem.eql(u8, args[1], "plan")) .plan else if (std.mem.eql(u8, args[1], "contract-plan")) .contract_plan else if (std.mem.eql(u8, args[1], "image-plan")) .image_plan else if (std.mem.eql(u8, args[1], "workspace-image-plan")) .workspace_image_plan else if (std.mem.eql(u8, args[1], "workspace-build-plan")) .workspace_build_plan else if (std.mem.eql(u8, args[1], "convert-r4cp")) .convert_r4cp else return error.UnknownAction };
+    var options = Options{ .action = if (std.mem.eql(u8, args[1], "capabilities")) .capabilities else if (std.mem.eql(u8, args[1], "catalog")) .catalog else if (std.mem.eql(u8, args[1], "image-inventory")) .image_inventory else if (std.mem.eql(u8, args[1], "inventories")) .inventories else if (std.mem.eql(u8, args[1], "validate")) .validate else if (std.mem.eql(u8, args[1], "resolve")) .resolve else if (std.mem.eql(u8, args[1], "plan")) .plan else if (std.mem.eql(u8, args[1], "contract-plan")) .contract_plan else if (std.mem.eql(u8, args[1], "startup-info")) .startup_info else if (std.mem.eql(u8, args[1], "image-plan")) .image_plan else if (std.mem.eql(u8, args[1], "workspace-image-plan")) .workspace_image_plan else if (std.mem.eql(u8, args[1], "workspace-build-plan")) .workspace_build_plan else if (std.mem.eql(u8, args[1], "convert-r4cp")) .convert_r4cp else return error.UnknownAction };
     var index: usize = 2;
     while (index < args.len) : (index += 1) {
         const arg = args[index];
@@ -362,6 +376,7 @@ fn printUsage() void {
         \\  module-catalog resolve --root Code --name NAME [--kind R4X] [--path-only|--kind-only]
         \\  module-catalog plan --manifest FILE [--output FILE|--artifact-only]
         \\  module-catalog contract-plan --manifest FILE [--output FILE]
+        \\  module-catalog startup-info --manifest FILE [--output FILE]
         \\  module-catalog image-inventory --root Code --image-mode slim|full|test|benchmark [--extra-manifest FILE] [--include-target TARGET] [--kernel-version-source FILE --kernel-artifact ELF] [--output FILE]
         \\  module-catalog inventories --root Code --image-mode slim|full|test|benchmark --output FILE --image-output FILE [--extra-manifest FILE] [--include-target TARGET] [--kernel-version-source FILE --kernel-artifact ELF] [--release-version-source FILE --release-output FILE]
         \\  module-catalog image-plan --root Code --image-mode slim|full|test|benchmark [--extra-manifest FILE] [--include-target TARGET] [--output FILE]

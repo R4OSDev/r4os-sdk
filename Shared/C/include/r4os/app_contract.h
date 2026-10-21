@@ -9,6 +9,7 @@
 #include "r4dev.h"
 #include "serial.h"
 #include "path_timeout.h"
+#include "startup.h"
 
 enum {
     R4_STATUS_PROGRESS_VALID = 0x00000001u,
@@ -127,6 +128,14 @@ static inline R4Status r4_app_init(const R4XStartContext *context, R4AppProfile 
     }
     out_app->context = context;
     return r4_status_ok();
+}
+
+static inline R4Status r4_app_init_declared(const R4XStartContext *context, const R4StartupInfo *info, R4App *out_app) {
+    if (out_app == 0) return r4_status_failure(R4_ERROR_DOMAIN_CONTRACT, R4OS_ERROR_INVALID);
+    *out_app = (R4App){0};
+    const int32_t raw = r4xstart_validate_declared(context, info);
+    if (raw < 0) return r4_status_failure(R4_ERROR_DOMAIN_CONTRACT, raw);
+    return r4_app_init(context, info->profile, out_app);
 }
 
 static inline int r4_app_has_group(const R4App *app, uint32_t group_id) {

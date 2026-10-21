@@ -6,6 +6,8 @@ use core::sync::atomic::{AtomicPtr, Ordering};
 use core::{ffi::CStr, marker::PhantomData, mem, ptr};
 pub use r4os_contract as abi;
 mod memory;
+mod startup;
+pub use startup::{ImportSpec, StartupInfo};
 
 static PANIC_CONTEXT: AtomicPtr<abi::R4XStartContext> = AtomicPtr::new(ptr::null_mut());
 
@@ -22,82 +24,32 @@ impl<'a> App<'a> {
     /// exact R4X call. The public entry macro supplies manifest-derived facts.
     pub unsafe fn from_raw(
         raw: *const abi::R4XStartContext,
-        class: &str,
-        imports: &str,
+        expected: &StartupInfo<'_>,
         name: &'static CStr,
     ) -> Result<Self, i32> {
-        if raw.is_null() {
-            return Err(-10);
-        }
-        let c = unsafe { &*raw };
-        let expected = match class {
-            "console" => abi::R4XStartAppClass::console,
-            "gui" => abi::R4XStartAppClass::gui,
-            "service" => abi::R4XStartAppClass::service,
-            _ => return Err(-11),
-        };
-        if c.magic != abi::r4xstart_magic
-            || c.abi_major != abi::r4xstart_abi_major
-            || c.size < abi::r4xstart_context_size
-            || c.app_class != expected.0
-            || c.imports == 0
-            || c.flags & abi::r4xstart_flag_imports_valid == 0
-        {
-            return Err(-12);
-        }
-        if imports.split(';').count() != c.import_count as usize || c.import_count > 16 {
-            return Err(-13);
-        }
-        let entries = unsafe {
-            core::slice::from_raw_parts(
-                c.imports as *const abi::R4XStartImport,
-                c.import_count as usize,
-            )
-        };
-        for (entry, spec) in entries.iter().zip(imports.split(';')) {
-            let mut parts = spec.split(':');
-            let provider = parts.next().ok_or(-14)?;
-            let symbol = parts.next().ok_or(-14)?;
-            let version = parts.next().ok_or(-14)?.parse::<u32>().map_err(|_| -14)?;
-            if parts.next().is_some()
-                || entry.min_version != version
-                || entry.resolved_version < version
-                || entry.table == 0
-                || !unsafe { name_equals(entry.module_name, provider.as_bytes()) }
-                || !unsafe { name_equals(entry.symbol_name, symbol.as_bytes()) }
-            {
-                return Err(-14);
-            }
-        }
-        let app = Self {
-            context: c,
+        let context = unsafe { startup::validate(raw, expected) }?;
+        Ok(Self {
+            context,
             name,
             _local: PhantomData,
-        };
-        // Access only fields included by the actual append-only table size.
-        if app
-            .sys_slot(mem::offset_of!(abi::R4XStartR4Sys, write))
-            .is_none()
-            || app
-                .sys_slot(mem::offset_of!(abi::R4XStartR4Sys, sleep_ticks))
-                .is_none()
-        {
-            return Err(-15);
-        }
-        if expected == abi::R4XStartAppClass::gui
-            && (app
-                .desk_slot(mem::offset_of!(abi::R4XStartR4Desk, gui_window_info))
-                .is_none()
-                || app
-                    .draw_slot(mem::offset_of!(abi::R4XStartR4Draw, gui_clear))
-                    .is_none()
-                || app
-                    .draw_slot(mem::offset_of!(abi::R4XStartR4Draw, gui_present))
-                    .is_none())
-        {
-            return Err(-16);
-        }
-        Ok(app)
+        })
+    }
+
+    /// Immutable loader context, pinned until this exact entry returns.
+    pub fn start_context(&self) -> &abi::R4XStartContext {
+        self.context
+    }
+
+    pub fn imports(&self) -> &[abi::R4XStartImport] {
+        unsafe { startup::entries(self.context) }
+    }
+
+    /// An unresolved optional provider remains an entry with a zero address.
+    pub fn import(&self, module: &str, symbol: &str) -> Option<&abi::R4XStartImport> {
+        self.imports().iter().find(|entry| unsafe {
+            startup::name_equals(entry.module_name, module.as_bytes())
+                && startup::name_equals(entry.symbol_name, symbol.as_bytes())
+        })
     }
 
     pub fn name(&self) -> &'static CStr {
@@ -107,7 +59,7 @@ impl<'a> App<'a> {
         self.context.instance_id
     }
     pub fn args(&self) -> &[u8] {
-        if self.context.args == 0 || self.context.args_len == 0 || self.context.args_len > 4096 {
+        if self.context.args == 0 || self.context.args_len == 0 {
             return &[];
         }
         unsafe {
@@ -156,13 +108,7 @@ impl<'a> App<'a> {
         minimum: u32,
         offset: usize,
     ) -> Option<usize> {
-        let entries = unsafe {
-            core::slice::from_raw_parts(
-                self.context.imports as *const abi::R4XStartImport,
-                self.context.import_count as usize,
-            )
-        };
-        let entry = entries.iter().find(|e| e.group_id == group.0)?;
+        let entry = self.imports().iter().find(|e| e.group_id == group.0)?;
         if entry.flags & abi::r4xstart_import_flag_group_interface == 0 || entry.table == 0 {
             return None;
         }
@@ -199,7 +145,7 @@ impl<'a> App<'a> {
         self.table_slot(
             abi::R4LGroup::r4sys,
             abi::r4xstart_r4sys_magic,
-            abi::r4xstart_r4sys_version,
+            abi::R4XStartR4Sys::default().abi_version,
             offset,
         )
     }
@@ -207,7 +153,7 @@ impl<'a> App<'a> {
         self.table_slot(
             abi::R4LGroup::r4desk,
             abi::r4xstart_r4desk_magic,
-            abi::r4xstart_r4desk_version,
+            abi::R4XStartR4Desk::default().abi_version,
             offset,
         )
     }
@@ -215,9 +161,70 @@ impl<'a> App<'a> {
         self.table_slot(
             abi::R4LGroup::r4draw,
             abi::r4xstart_r4draw_magic,
-            abi::r4xstart_r4draw_version,
+            abi::R4XStartR4Draw::default().abi_version,
             offset,
         )
+    }
+
+    pub fn system_api(&self) -> Option<&abi::R4XStartR4Sys> {
+        unsafe {
+            startup::table(
+                self.context,
+                abi::R4LGroup::r4sys,
+                abi::r4xstart_r4sys_magic,
+                abi::R4XStartR4Sys::default().abi_version,
+            )
+        }
+    }
+    pub fn desktop_api(&self) -> Option<&abi::R4XStartR4Desk> {
+        unsafe {
+            startup::table(
+                self.context,
+                abi::R4LGroup::r4desk,
+                abi::r4xstart_r4desk_magic,
+                abi::R4XStartR4Desk::default().abi_version,
+            )
+        }
+    }
+    pub fn drawing_api(&self) -> Option<&abi::R4XStartR4Draw> {
+        unsafe {
+            startup::table(
+                self.context,
+                abi::R4LGroup::r4draw,
+                abi::r4xstart_r4draw_magic,
+                abi::R4XStartR4Draw::default().abi_version,
+            )
+        }
+    }
+    pub fn network_api(&self) -> Option<&abi::R4XStartR4Net> {
+        unsafe {
+            startup::table(
+                self.context,
+                abi::R4LGroup::r4net,
+                abi::r4xstart_r4net_magic,
+                abi::R4XStartR4Net::default().abi_version,
+            )
+        }
+    }
+    pub fn audio_api(&self) -> Option<&abi::R4XStartR4Audio> {
+        unsafe {
+            startup::table(
+                self.context,
+                abi::R4LGroup::r4audio,
+                abi::r4xstart_r4audio_magic,
+                abi::R4XStartR4Audio::default().abi_version,
+            )
+        }
+    }
+    pub fn device_api(&self) -> Option<&abi::R4XStartR4Dev> {
+        unsafe {
+            startup::table(
+                self.context,
+                abi::R4LGroup::r4dev,
+                abi::r4xstart_r4dev_magic,
+                abi::R4XStartR4Dev::default().abi_version,
+            )
+        }
     }
 
     /// The regular R4OS host creates/binds the GUI window before R4XStart.
@@ -418,30 +425,16 @@ impl Drop for Service<'_, '_> {
 fn check(rc: i32) -> Result<(), i32> {
     if rc < 0 { Err(rc) } else { Ok(()) }
 }
-unsafe fn name_equals(address: u64, expected: &[u8]) -> bool {
-    if address == 0 || expected.len() > 63 {
-        return false;
-    }
-    let p = address as *const u8;
-    for (index, value) in expected.iter().enumerate() {
-        if unsafe { *p.add(index) } != *value {
-            return false;
-        }
-    }
-    unsafe { *p.add(expected.len()) == 0 }
-}
-
 /// # Safety
 /// Called only by the SDK entry macro under the loader's R4XStart contract.
 #[doc(hidden)]
 pub unsafe fn start(
     raw: *const abi::R4XStartContext,
-    class: &str,
-    imports: &str,
+    expected: &StartupInfo<'_>,
     name: &'static CStr,
     main: fn(&mut App<'_>) -> i32,
 ) -> i32 {
-    let mut app = match unsafe { App::from_raw(raw, class, imports, name) } {
+    let mut app = match unsafe { App::from_raw(raw, expected, name) } {
         Ok(a) => a,
         Err(e) => return e,
     };
@@ -480,11 +473,12 @@ macro_rules! app {
         #[unsafe(no_mangle)]
         #[unsafe(link_section = ".text.r4xstart_entry")]
         pub unsafe extern "C" fn R4XStart(raw: *const $crate::abi::R4XStartContext) -> i32 {
+            use $crate as __r4os_startup;
+            let startup = include!(env!("R4OS_STARTUP_INFO_FILE"));
             unsafe {
                 $crate::start(
                     raw,
-                    env!("R4OS_APP_CLASS"),
-                    env!("R4OS_IMPORTS"),
+                    &startup,
                     core::ffi::CStr::from_bytes_with_nul_unchecked(
                         concat!(env!("R4OS_MODULE_NAME"), "\0").as_bytes(),
                     ),

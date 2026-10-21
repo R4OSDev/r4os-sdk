@@ -3,16 +3,19 @@ const abi = @import("r4os_contract").abi;
 
 pub const capabilities = @import("module_capabilities.zig");
 pub const rust_project = @import("rust_project.zig");
+pub const import_spec = @import("import_spec.zig");
+pub const startup_metadata = @import("startup_metadata.zig");
+
+test {
+    std.testing.refAllDecls(startup_metadata);
+}
 
 pub const manifest_version: u8 = 2;
 pub const max_manifest_bytes: usize = 128 * 1024;
 pub const plan_contract_version: u8 = 1;
 
 pub fn platformApiGroupId(name: []const u8) ?u32 {
-    for (abi.r4_platform_apis) |platform_api| {
-        if (std.ascii.eqlIgnoreCase(name, platform_api.name)) return @intFromEnum(platform_api.group);
-    }
-    return null;
+    return import_spec.platformGroupId(name);
 }
 
 pub const Kind = enum {
@@ -1008,18 +1011,7 @@ fn validateTarget(target: []const u8, kind: Kind) !void {
 }
 
 fn validateImportSyntax(value: []const u8) !void {
-    var parts = std.mem.splitScalar(u8, value, ':');
-    const group = parts.next() orelse return error.InvalidImport;
-    const symbol = parts.next() orelse return error.InvalidImport;
-    const major = parts.next() orelse return error.InvalidImport;
-    const flags_text = parts.next();
-    if (parts.next() != null or group.len == 0 or symbol.len == 0 or major.len == 0) return error.InvalidImport;
-    const flags = if (flags_text) |text| std.fmt.parseUnsigned(u32, text, 10) catch return error.InvalidImport else 0;
-    if (flags > 1 or (flags != 0 and isPlatformGroup(group))) return error.InvalidImport;
-    for (group) |byte| if (!std.ascii.isAlphanumeric(byte) and byte != '_' and byte != '-') return error.InvalidImport;
-    for (symbol) |byte| if (!std.ascii.isAlphanumeric(byte) and byte != '_') return error.InvalidImport;
-    const parsed_major = std.fmt.parseUnsigned(u16, major, 10) catch return error.InvalidImport;
-    if (parsed_major == 0) return error.InvalidImport;
+    _ = try import_spec.parse(value);
 }
 
 /// R4M0 import bit 0 permits an absent/incompatible Runtime-R4L provider.

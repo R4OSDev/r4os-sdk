@@ -268,22 +268,31 @@
       "semantics": "Geborgter genauer R4XStart-Kontext, Manifestreihenfolge und Imports; required/optional und nicht aufgeloeste optionale Tabellen unterscheiden. Keine Leihe ueber Instanzende; Exit/Panic beim vorhandenen Owner.",
       "current_only": "current_function",
       "rust": {
-        "state": "qualified_console_gui_service_subset",
+        "state": "qualified_current_generated_startup",
         "source": "Repositories/SDK/Rust/src/lib.rs",
-        "gap": "App::from_raw akzeptiert nur drei Importteile und verlangt table!=0; Desktop-Imports mit optionalem vierten Teil fehlen. Allgemeine sechs Gruppen, freie R4L-Imports, Desktophost ohne gehostetes Einzelwindow und vollstaendige Status-/Profilfassaden fehlen."
+        "gap": "Start/optionale und benannte Imports/sechs gepruefte Plattformansichten geschlossen49. Hoehere Status-/Library-/Thread-/Desktophost-Fassaden bleiben in den zugeordneten folgenden Matrixzeilen."
       },
       "c": {
-        "state": "existing_facade_review_required",
+        "state": "qualified_current_generated_startup",
         "sources": [
           "Repositories/SDK/Shared/C/include/r4os/r4xstart.h",
-          "Repositories/SDK/Shared/C/include/r4os/app_contract.h"
+          "Repositories/SDK/Shared/C/include/r4os/app_contract.h",
+          "Repositories/SDK/Shared/C/include/r4os/startup.h"
         ],
-        "gap": "Bestehende C-Fassade erhalten; nur fehlende aktuelle Funktionen/hoeheren Hilfen und deren Semantik gegen die verlinkten Zig-Deklarationen schliessen."
+        "gap": "Gemeinsame generierte Manifestfakten und r4_app_init_declared fuer normalen Appstart umgesetzt49; bestehende manuelle/Lowlevel-Fassade erhalten. Hoehere Fassaden bleiben eigene Matrixzeilen."
       },
       "evidence": [
-        "source_inventory"
+        "source_inventory",
+        "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.49"
       ],
-      "shared_core": "Gemeinsame R4XStart-/Manifestwahrheit, keine neue Prozess- oder Kernelruntime."
+      "shared_core": "SDK/r4os/import_spec.zig und startup_metadata.zig mit aktuellen Contractdefaults; ModuleCatalog/C-Appbuilder projizieren denselben Datensatz. Keine neue Prozess-/Kernelruntime oder Runtime-Zweitgrammatik.",
+      "qualification": {
+        "subversion": "0.86.49",
+        "sdk_package": "0.64.68",
+        "contract_package": "0.64.42",
+        "checks": ["Manifest/catalog32/32", "Rust current-context semantic case and warning-free Clippy", "extended existing C entry conformance", "Rust output lifecycle including generated hash/failed cleanup", "real Desktop16-import Rust host without app window", "SMP4 normal/bad-context/panic/C/visible-GUI-close/service-status-stop and regular shutdown"],
+        "scope": "Nur Host-/SDK-/Testfixturearbeit; normale Kernel-/Produktartefakte unveraendert, kein STANDARD. Windowskatalog crossgebaut, keine Windows-/Hardwareausfuehrung. Lokale R4L-Resolver und hoeherer Desktophost bleiben52/56."
+      }
     },
     {
       "id": "allocation",

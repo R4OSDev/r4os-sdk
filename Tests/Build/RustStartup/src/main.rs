@@ -14,6 +14,16 @@ fn main(app: &mut App<'_>) -> i32 {
     if ZERO.load(Ordering::Relaxed) == 0 || stack_probe(7) != 7 {
         return 22;
     }
+    if app.system_api().is_none()
+        || app
+            .import("R4STD", "SETTINGS_V1")
+            .is_none_or(|entry| entry.table == 0)
+        || app
+            .import("SDKABSENT", "API_V1")
+            .is_none_or(|entry| entry.table != 0 || entry.resolved_version != 0)
+    {
+        return 26;
+    }
     core::hint::black_box(&INITIALIZED_POINTER);
     let pointer = INITIALIZED_POINTER.load(Ordering::Relaxed);
     if pointer != DATA_POINTER.as_ptr().cast_mut() {
@@ -26,9 +36,12 @@ fn main(app: &mut App<'_>) -> i32 {
     }
     if app.args() == b"/BADCTX" {
         let invalid = r4os_sdk::abi::R4XStartContext::default();
-        if unsafe { r4os_sdk::App::from_raw(&invalid, "console", "R4SYS:Query:1", c"RUSTSTART") }
-            .is_ok()
-        {
+        let expected = r4os_sdk::StartupInfo {
+            app_class: r4os_sdk::abi::R4XStartAppClass::console,
+            required_groups: 0,
+            imports: &[],
+        };
+        if unsafe { r4os_sdk::App::from_raw(&invalid, &expected, c"RUSTSTART") }.is_ok() {
             return 25;
         }
         let _ = app.write("[RUSTSTART] bad-context rejected\n");

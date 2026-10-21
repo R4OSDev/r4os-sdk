@@ -26,6 +26,14 @@ R4ErrorDomain/u16. Existing enum value names remain; use the typedef names,
 not enum tags. This does not qualify new module roles or complete the higher
 Rust/C SDK facades. Their scope and evidence live in Inventory/LanguageParity.json.
 
+SDK0.64.68 generates normal Rust/C startup facts from the common manifest
+parser and current Contract table defaults. Optional missing providers and
+named library exports are supported. Rust exposes all six checked platform
+views and the instance-bound import context. Startup does not query an app
+window, allowing the desktop-host role. Generated Rust compiler inputs are
+included in build receipts and removed with failed output; local library
+resolvers and higher facades remain separate work.
+
 SDK0.64.66 leaves project version selection and project locks to the caller.
 Generators and builds use explicit component directories; technical SDK/Contract
 dependency hashes, Cargo.lock and the pinned toolchain remain enforced.
