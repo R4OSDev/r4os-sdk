@@ -18,6 +18,14 @@ SDK0.64.65 corrects the capability catalog's linker origin: rust-lld is
 provided by the pinned rustc host archive. llvm-tools-preview supplies the
 separate inspection tools. Module codegen and Rust helper sources are unchanged.
 Native guest Rust and other module roles remain separate explicit capabilities.
+SDK0.64.67 binds Contract0.64.42's complete technical C projection. Driver,
+protocol, DMA/USB and service records now come from the canonical Contract;
+the three manually duplicated network reply records are removed from the SDK.
+Wire enums use exact-width integer typedefs, including R4AppProfile/u8 and
+R4ErrorDomain/u16. Existing enum value names remain; use the typedef names,
+not enum tags. This does not qualify new module roles or complete the higher
+Rust/C SDK facades. Their scope and evidence live in Inventory/LanguageParity.json.
+
 SDK0.64.66 leaves project version selection and project locks to the caller.
 Generators and builds use explicit component directories; technical SDK/Contract
 dependency hashes, Cargo.lock and the pinned toolchain remain enforced.

@@ -20,7 +20,7 @@
     },
     {
       "path": "Repositories/Contract/Generated/Inventory/API.json",
-      "sha256": "d6978ae5d7efe59c64ed42d7365a18149e5fd57ccbf608015c31c1e2788d7f8c"
+      "sha256": "d8a0d41b8dff43462a4a5b4e54299dc14fea8becb41e071bf4c6f294098b9bd0"
     },
     {
       "path": "Repositories/Contract/Generated/Inventory/RustABI.json",
@@ -145,21 +145,114 @@
       "semantics": "Contract bleibt einzige Layout-/Slot-/Callbackwahrheit. Groessengepruefte Tabellen, nullable Funktionszeiger, unbekannte Wirewerte und aktuelle optionale Gruppen behalten.",
       "current_only": "current_function",
       "rust": {
-        "state": "generated_raw_abi_present",
-        "source": "Repositories/SDK/Rust/src/lib.rs",
-        "gap": "Rust-Rohprojektion vorhanden; C-technische Gesamtprojektion und die wirklich verwendeten Aufrufformen mit vorhandenen Interopfixtures abgleichen. Rohzugang ist keine SDK-Funktionsparitaet."
+        "state": "generated_raw_abi_current_interop_qualified",
+        "source": "Repositories/Contract/Generated/SDK/Rust/src/lib.rs",
+        "gap": "Keine fehlende zentrale aktuelle Roh-Aufrufform nachgewiesen; hoehere SDK-Fassaden und lokale Library-/externe GL/Vulkan-Vertraege bleiben getrennte Wellen.",
+        "sdk_access": "r4os_sdk::abi re-export"
       },
       "c": {
-        "state": "existing_facade_review_required",
+        "state": "full_current_raw_projection_qualified",
         "sources": [
-          "Repositories/SDK/Shared/C/include/r4os/abi.h"
+          "Repositories/SDK/Shared/C/include/r4os/abi.h",
+          "Repositories/Contract/Generated/SDK/C/include/r4os/abi_generated.h",
+          "Repositories/Contract/Generated/SDK/C/include/r4os/abi_technical_generated.h"
         ],
-        "gap": "Bestehende C-Fassade erhalten; nur fehlende aktuelle Funktionen/hoeheren Hilfen und deren Semantik gegen die verlinkten Zig-Deklarationen schliessen."
+        "gap": "Zentrale C-Rohprojektion geschlossen; gleiche Sprache/Helfer-/Rollenparitaet damit noch nicht behauptet."
       },
       "evidence": [
-        "source_inventory"
+        "source_inventory",
+        "central_abi_interop"
       ],
-      "shared_core": "Contract-Generatoren und vorhandene Layout-/Callbackfixtures wiederverwenden."
+      "shared_core": "Contract-Generatoren und vorhandene Layout-/Callbackfixtures wiederverwenden.",
+      "qualification": {
+        "subversion": "0.86.48",
+        "contract_package": "0.64.42",
+        "contract_commit": "5124d6839574c565c11f81468d211433c7eff42d",
+        "sdk_package": "0.64.67",
+        "c_technical_added": {
+          "structs": 92,
+          "callback_aliases": 10,
+          "constants": 35
+        },
+        "all_c_integer_enums": 20,
+        "all_layouts": {
+          "structs": 464,
+          "fields": 7904
+        },
+        "call_forms": {
+          "callback_declarations": 646,
+          "returns": {
+            "int": 606,
+            "void": 37,
+            "pointer": 2,
+            "optional_pointer": 1
+          },
+          "parameters": {
+            "pointer": 715,
+            "int": 736,
+            "optional_pointer": 64
+          },
+          "max_parameters": 14,
+          "by_value_structs": 0,
+          "direct_floats": 0,
+          "direct_vectors": 0
+        },
+        "checks": {
+          "canonical_generation_check": "passed",
+          "rust_host_and_bare_layouts": "passed",
+          "clippy": "passed",
+          "native_interop_cases_passed": 7,
+          "existing_c_facade_cases_passed": 8,
+          "c_facade_assertions": "-O1 -UNDEBUG",
+          "windows_execution": false,
+          "guest_or_hardware_execution": false,
+          "normal_sdk_C_R4X_build": {
+            "command": "./Repositories/SDK/Build.sh -Dmodule-filter=APPCCON -j2",
+            "result": "passed",
+            "artifact": "APPCCON.R4X",
+            "sha256": "8cfa649582aefad7296d9d76ccf9b75b6c3aa079525b6bcd27976e9a1d7090c1",
+            "container_inspection": "r4x console, 2sections/1entry/1import/1export/15rel32, unknown0",
+            "scope": "Build/Container, keine Gastausfuehrung; obligatorische SDK-Besitzer-Smokes ebenfalls strukturell geprueft."
+          }
+        },
+        "raw_sources": [
+          {
+            "path": "Repositories/Contract/Generated/SDK/Zig/abi.zig",
+            "sha256": "d3c45669cca76f8fda8ef7f2a21b3d1090db2cb8f0d105042242f551edde22e2"
+          },
+          {
+            "path": "Repositories/Contract/Generated/SDK/Rust/src/lib.rs",
+            "sha256": "0b96d1f4f55d14f2d129d874b7cf85c3dbef00b3d8a654600250bd71e4194354"
+          },
+          {
+            "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_generated.h",
+            "sha256": "41990ffe635977bc99581ab363be582d712496a334439b5584d16abd6fe8c555"
+          },
+          {
+            "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_technical_generated.h",
+            "sha256": "c48357c163910366a8bfecb09ad8fd2b3a8780cb0efd34e7d1484169383b26ef"
+          }
+        ],
+        "test_sources": [
+          {
+            "path": "Repositories/Contract/Tools/Test-RustABI.ps1",
+            "sha256": "dac870c71cf5df9a1c4405d3f179bc80bc410a63339d44cd9d6dbe67bb07e55d"
+          },
+          {
+            "path": "Repositories/Contract/Tests/RustInterop/interop.zig",
+            "sha256": "a5b12f7cde150611f4fe197e1225df59da880ea2277c76ebf9ce04001325844d"
+          },
+          {
+            "path": "Repositories/Contract/Tests/RustInterop/interop.c",
+            "sha256": "fd94aa12b3230cd408c87f2ad09c340de33d76ae7991caea3de2ba58948f06c0"
+          },
+          {
+            "path": "Repositories/Contract/Tests/RustInterop/src/lib.rs",
+            "sha256": "2b28fac6dfc0adea2d9edc291f2f9244b0262d9462a969173af2b4d46396b902"
+          }
+        ],
+        "scope": "ABI-Schema/Baseline/Slots und Zig/Rust-Bytes unveraendert; keine neue normale Produktlaufzeit und kein STANDARD. Daten hinter Zeigern sind kein direkter Float-/SIMD-Aufruf. Rollen/hoehere Fassaden bleiben49-72."
+      }
     },
     {
       "id": "startup",
@@ -388,7 +481,22 @@
           "Repositories/SDK/Shared/C/include/r4os/r4net.h",
           "Repositories/SDK/Shared/C/include/r4os/app_network.h"
         ],
-        "gap": "Bestehende C-Fassade erhalten; nur fehlende aktuelle Funktionen/hoeheren Hilfen und deren Semantik gegen die verlinkten Zig-Deklarationen schliessen."
+        "gap": "Bestehende C-Fassade erhalten; nur fehlende aktuelle Funktionen/hoeheren Hilfen und deren Semantik gegen die verlinkten Zig-Deklarationen schliessen.",
+        "canonical_wire_replies": {
+          "since": "0.86.48",
+          "sdk_package": "0.64.67",
+          "contract_package": "0.64.42",
+          "source": {
+            "path": "Repositories/SDK/Shared/C/include/r4os/app_network.h",
+            "sha256": "9ce904d1000f1841d8f8cce511cfb13beeddd21a53e9f44231d5694332a9f6ba"
+          },
+          "records": [
+            "R4NetServiceDnsResult",
+            "R4NetServiceTcpResult",
+            "R4NetServiceUdpResult"
+          ],
+          "proof": "Alle bisherigen Felder/Typen identisch; SDK-Duplikate und doppelte Layoutasserts entfernt. Bestehende Service/Netzwerk-C-Fassade mit aktiven Assertions bestanden, keine Algorithmusaenderung."
+        }
       },
       "evidence": [
         "source_inventory"
@@ -14082,12 +14190,13 @@
       "limit": "Deklarationsliste/Quellpruefung belegt Umfang und Zuordnung, keine funktionale Paritaet oder neue Build-/Gastqualifikation. Nicht jeder oeffentliche Syntaxname einer Hilfsdatei ist ein eigener exportierter SDK-Root."
     },
     "central_abi_interop": {
-      "kind": "existing_bounded_interop_evidence",
+      "kind": "current_linux_host_and_bare_layout_plus_bare_object_execution",
       "document": "Docs/API/RustContractBindings.txt",
       "sources": [
         "Repositories/Contract/Tools/Test-RustABI.ps1"
       ],
-      "scope": "Zentrale repr(C)-Layouts, Integer-/Zeiger-/Callbackformen und bereits belegter CPU-/FPU-Zustand; direkte Float-/SIMD-Aufrufe nicht daraus ableiten. Aktueller Generator meldet beide direkt0 und lehnt neue ungepruefte Float-Callbacks ab."
+      "scope": "Alle C/Zig/Rust-Rawlayouts und Enumtypbreiten; sieben vorhandene/erweiterte Callbackfaelle einschliesslich verschachteltem Const-Callbackslot, nullable/sentinel-Rueckgaben, Stackargumenten und SIMD-faehigem C-Verbraucher. Kein direkter Float-/Vektor-/Struct-By-Value-Aufruf im aktuellen zentralen Vertrag; keine neue Hardware-/Rollenfreigabe.",
+      "performed_in": "0.86.48"
     },
     "rust_qualified_classes": {
       "kind": "existing_linux_KVM4_runtime_and_host_evidence",
@@ -14343,5 +14452,5 @@
     }
   ],
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
-  "open_acceptance": "Keine Sprache wurde durch47 neu als vollstaendig gleichwertig freigegeben. SDK-/lokale Library-/Rollenparitaet und Windows-/Linux-Abnahme bleiben verbindliche Arbeit48-72."
+  "open_acceptance": "Hoehere SDK-Fassaden, lokale Librarybindings, Rollen und Windows-/Linux-Gesamtabnahme49-72 bleiben verbindlich. Vollstaendige SDK-Sprachparitaet ist durch die qualifizierte zentrale Rohprojektion allein nicht erreicht."
 }
