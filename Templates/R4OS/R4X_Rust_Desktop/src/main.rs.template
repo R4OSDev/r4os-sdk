@@ -1,0 +1,26 @@
+#![no_std]
+use r4os_sdk::{App, abi};
+
+fn draw(app: &App<'_>) -> Result<(), i32> {
+    app.clear(0x0024384c)?;
+    app.text(16,20,c"Hello from Rust",0x00ffffff,0x0024384c)?;
+    app.text(16,48,c"{ProjectName}",0x008fe0ff,0x0024384c)?;
+    app.present()
+}
+
+fn main(app: &mut App<'_>) -> i32 {
+    if app.window_info().is_err() || app.set_title(c"{ProjectName} - Rust").is_err() || draw(app).is_err() {return 2;}
+    let _=app.write("[RUST] {ProjectName}: window ready\n");
+    while !app.should_close() {
+        match app.wait_event(2) {
+            Ok(Some(event)) if event.kind==abi::GuiEventKind::close.0 => break,
+            Ok(Some(event)) if event.kind==abi::GuiEventKind::resize.0 || event.kind==abi::GuiEventKind::font_changed.0 => if draw(app).is_err(){return 3;},
+            Ok(_) => {},
+            Err(_) => return 4,
+        }
+    }
+    let _=app.write("[RUST] {ProjectName}: window closed\n");
+    0
+}
+
+r4os_sdk::app!(main);

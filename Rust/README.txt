@@ -28,6 +28,17 @@ Describe/check output is JSON. A technical/dirty profile needs -Technical and
 does not qualify a release. Install/runtime presence and semantic support are
 different facts; the matched ModuleCatalog supplies build admission.
 
+Official projects
+-----------------
+SDK0.64.61 adds complete Console, Desktop and Service projects under
+Templates/R4OS/R4X_Rust_*. New-RustProject.sh/.bat uses their actual template.ini
+file maps and module manifests. Select the exact stable TemplateId, a new
+Directory and explicit ContractRoot/ToolsRoot; ProjectName is optional.
+Shared Build.ps1 invokes this SDK driver with ProjectPin=r4os-project.json.
+The pin is checked inside the owned output lifecycle, so a mismatch invalidates
+previous success before it fails. No paths to a complete workspace are saved.
+See Templates/R4OS/README.txt for commands and current qualification.
+
 Project and outputs
 -------------------
 module.R4MF is the module truth: LANGUAGE=Rust, one canonical .rs SOURCE,

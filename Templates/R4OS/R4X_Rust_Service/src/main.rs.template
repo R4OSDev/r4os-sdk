@@ -1,0 +1,15 @@
+#![no_std]
+use r4os_sdk::App;
+
+fn main(app: &mut App<'_>) -> i32 {
+    let mut service=match app.register_service(){Ok(service)=>service,Err(_)=>return 2};
+    let _=app.write("[RUST] {ProjectName}: service ready\n");
+    while !app.should_close() {
+        if service.wait(20).is_err() && !app.should_close(){return 3;}
+    }
+    if service.close().is_err(){return 4;}
+    let _=app.write("[RUST] {ProjectName}: service stopped\n");
+    0
+}
+
+r4os_sdk::app!(main);
