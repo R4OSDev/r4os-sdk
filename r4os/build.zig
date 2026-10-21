@@ -391,6 +391,14 @@ pub const Sdk = struct {
     /// Buildscript und ohne eine zweite Liste von Modulnamen.
     pub fn addR4MFWithOptions(self: Sdk, manifest_path: std.Build.LazyPath, options: R4MFBuildOptions) BuildResult {
         const loaded = loadCurrentR4MF(self.b, manifest_path, options);
+        const admission = module_manifest.capabilities.query(.{
+            .language = loaded.manifest.language.?.text(),
+            .kind = loaded.manifest.kind.text(),
+            .app_class = if (loaded.manifest.app_class) |c| c.text() else null,
+            .entry_mode = if (loaded.manifest.entry_mode) |e| e.text() else null,
+            .role = if (loaded.manifest.module_role) |r| r.text() else null,
+        });
+        if (!admission.supported) @panic(self.b.fmt("R4MF build admission: {s}: {s}", .{ admission.code, admission.reason }));
         return switch (loaded.manifest.kind) {
             .r4x => self.addR4MFProgram(loaded),
             .r4d => self.addR4MFDriver(loaded),

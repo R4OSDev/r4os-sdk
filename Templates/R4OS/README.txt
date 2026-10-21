@@ -47,3 +47,13 @@ Contract and tools in /tmp, outside the complete checkout. Console output,
 hosted window and bounded service registration/wait/stop are actual Rust code.
 The common startup/panic evidence is reused; final visible GUI/service/console
 runtime qualification belongs to0.86.40. Windows remains prepared, not run.
+
+Capability interface1
+---------------------
+module-catalog capabilities --json reads these same definitions and the host
+Zig/C/R4L template.ini file maps. Execution selects host versus native R4OS;
+language/class/imports/targets still come from the manifest. Host C reuses this
+canonical console source instead of an absent second file. Host build.zig.zon
+accepts exact SDK URL/hash inputs; no fixed neighboring SDK path. The R4L file
+map includes its real local contract/generator preparation. See
+Tools/ModuleCatalog/Capabilities.txt for sample expansion, tokens and limits.

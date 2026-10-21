@@ -14,6 +14,15 @@ three-class templates and final GUI/service runtime qualification follow in
 0.86.37-.40. Windows tools/PS7 are prepared, not execution-qualified.
 Native guest Rust and other module roles remain separate explicit capabilities.
 
+
+Studio and other host consumers can read the versioned compiler-free capability
+interface using `module-catalog capabilities --json` from the exported toolset.
+[Capabilities.txt](Tools/ModuleCatalog/Capabilities.txt) defines schema1, exact
+component identities, shared support/admission, real template file maps,
+required tools and separate qualification/availability. The C host is Zig/Clang;
+R4CC is the smaller native guest C compiler. No Rust compiler is needed to read
+this interface. Existing manifest2, semantic plan1 and runtime catalog4 remain.
+
 The optional `cpuIdleInfo` facade reads the separate R4DEV v29 idle receipt.
 Driver CPU mechanisms negotiate `idlePublish` and `idlePolicy` individually
 after the preserved168-byte prefix. Old tables return `err_no_fn` without

@@ -1,4 +1,4 @@
-# R4OS app project manifest (erzeugt von New-R4XProject.ps1).
+# Host project; template.ini owns its file map.
 R4OS_MODULE_MANIFEST=2
 KIND=R4X
 NAME={ProjectName}
@@ -7,6 +7,6 @@ LANGUAGE=C
 SOURCE=src/main.c
 ENTRY_MODE=app
 APP_CLASS=console
-TARGET={Target}
-IMAGE_SCOPE={ImageScope}
-{ImportLines}
+TARGET=/SOFTWARE/{ProjectName}/{ProjectName}.R4X
+IMAGE_SCOPE=none
+IMPORT=R4SYS:Query:1

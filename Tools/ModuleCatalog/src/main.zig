@@ -4,7 +4,7 @@ const manifest_contract = contract_bundle.r4mf;
 const legacy_project = contract_bundle.legacy;
 const legacy_converter = contract_bundle;
 
-const Action = enum { catalog, image_inventory, inventories, validate, resolve, plan, contract_plan, image_plan, workspace_image_plan, workspace_build_plan, convert_r4cp };
+const Action = enum { capabilities, catalog, image_inventory, inventories, validate, resolve, plan, contract_plan, image_plan, workspace_image_plan, workspace_build_plan, convert_r4cp };
 // ImageMode describes a selection policy, not another IMAGE_SCOPE value.
 // Benchmark deliberately reuses slim/full and admits only explicitly named
 // test diagnostics, so manifests keep the canonical slim/full/test scopes.
@@ -32,6 +32,8 @@ const KernelComponent = struct {
 const Options = struct {
     action: Action,
     root: []const u8 = "Code",
+    json: bool = false,
+    capability_profile: ?[]const u8 = null,
     output: ?[]const u8 = null,
     image_output: ?[]const u8 = null,
     inventory_output: ?[]const u8 = null,
@@ -73,6 +75,10 @@ fn run(init: std.process.Init) !void {
     };
 
     switch (options.action) {
+        .capabilities => {
+            const rendered = try @import("capabilities.zig").render(allocator, io, cwd, options.capability_profile);
+            try writeOutput(io, cwd, options.output, rendered);
+        },
         .catalog => {
             const entries = try discoverCatalog(arena_allocator, io, cwd, options.root);
             const rendered = try renderCatalog(allocator, entries);
@@ -227,11 +233,17 @@ fn run(init: std.process.Init) !void {
 
 fn parseOptions(args: []const []const u8) !Options {
     if (args.len < 2) return error.MissingAction;
-    var options = Options{ .action = if (std.mem.eql(u8, args[1], "catalog")) .catalog else if (std.mem.eql(u8, args[1], "image-inventory")) .image_inventory else if (std.mem.eql(u8, args[1], "inventories")) .inventories else if (std.mem.eql(u8, args[1], "validate")) .validate else if (std.mem.eql(u8, args[1], "resolve")) .resolve else if (std.mem.eql(u8, args[1], "plan")) .plan else if (std.mem.eql(u8, args[1], "contract-plan")) .contract_plan else if (std.mem.eql(u8, args[1], "image-plan")) .image_plan else if (std.mem.eql(u8, args[1], "workspace-image-plan")) .workspace_image_plan else if (std.mem.eql(u8, args[1], "workspace-build-plan")) .workspace_build_plan else if (std.mem.eql(u8, args[1], "convert-r4cp")) .convert_r4cp else return error.UnknownAction };
+    var options = Options{ .action = if (std.mem.eql(u8, args[1], "capabilities")) .capabilities else if (std.mem.eql(u8, args[1], "catalog")) .catalog else if (std.mem.eql(u8, args[1], "image-inventory")) .image_inventory else if (std.mem.eql(u8, args[1], "inventories")) .inventories else if (std.mem.eql(u8, args[1], "validate")) .validate else if (std.mem.eql(u8, args[1], "resolve")) .resolve else if (std.mem.eql(u8, args[1], "plan")) .plan else if (std.mem.eql(u8, args[1], "contract-plan")) .contract_plan else if (std.mem.eql(u8, args[1], "image-plan")) .image_plan else if (std.mem.eql(u8, args[1], "workspace-image-plan")) .workspace_image_plan else if (std.mem.eql(u8, args[1], "workspace-build-plan")) .workspace_build_plan else if (std.mem.eql(u8, args[1], "convert-r4cp")) .convert_r4cp else return error.UnknownAction };
     var index: usize = 2;
     while (index < args.len) : (index += 1) {
         const arg = args[index];
-        if (std.mem.eql(u8, arg, "--path-only")) {
+        if (std.mem.eql(u8, arg, "--json")) {
+            options.json = true;
+        } else if (std.mem.eql(u8, arg, "--profile")) {
+            index += 1;
+            if (index >= args.len) return error.MissingOptionValue;
+            options.capability_profile = args[index];
+        } else if (std.mem.eql(u8, arg, "--path-only")) {
             options.path_only = true;
         } else if (std.mem.eql(u8, arg, "--kind-only")) {
             options.kind_only = true;
@@ -307,6 +319,8 @@ fn parseOptions(args: []const []const u8) !Options {
             return error.UnknownOption;
         }
     }
+    if (options.action == .capabilities and !options.json) return error.CapabilitiesRequiresJson;
+    if (options.action != .capabilities and (options.json or options.capability_profile != null)) return error.InvalidCapabilityOption;
     const compact_modes = @intFromBool(options.path_only) + @intFromBool(options.kind_only) + @intFromBool(options.name_only) + @intFromBool(options.artifact_only);
     if (compact_modes > 1 or (options.output != null and compact_modes != 0)) return error.ConflictingOutputMode;
     if (options.path_only and options.action != .resolve) return error.InvalidOutputMode;
@@ -342,6 +356,7 @@ fn parseKindOption(value: []const u8) ?manifest_contract.Kind {
 fn printUsage() void {
     std.debug.print(
         \\ModuleCatalog usage:
+        \\  module-catalog capabilities --json [--profile RustToolsProfile.json] [--output FILE]
         \\  module-catalog catalog [--root Code] [--output FILE]
         \\  module-catalog validate --manifest FILE [--kind-only|--name-only]
         \\  module-catalog resolve --root Code --name NAME [--kind R4X] [--path-only|--kind-only]

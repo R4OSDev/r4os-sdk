@@ -1,0 +1,98 @@
+﻿ModuleCatalog capability interface1
+===================================
+
+Public query (SDK0.64.63 and matched toolset):
+
+  bin/<host-triple>/module-catalog capabilities --json
+  module-catalog capabilities --json --profile /TOOLS/RustToolsProfile.json
+  module-catalog capabilities --json --profile /TOOLS/RustToolsProfile.json --output FILE
+
+The packaged executable locates RustToolsProfile.json two directory levels
+above its host binary directory. Developer/install locations can pass --profile.
+No Rust/Zig compiler, tool installation, registry download or build is invoked.
+The query validates exported file hashes and reads the canonical exported
+template/profile snapshots. It works with an empty PATH and missing Cargo/
+rustup homes. Success writes JSON to stdout (or --output), no success text on
+stderr. Exit0 means success; exit1 means invalid CLI, missing/invalid profile,
+file/hash or template/manifest error. Diagnostics/usage stay on stderr.
+
+Top-level schema is1, interface="r4os-sdk-capabilities". Additive fields and
+rows may appear within1; clients ignore unknown fields and use stable IDs.
+Incompatible meanings, required-field removal or encoding changes need a new
+schema. Do not infer order or a closed enum from the current array ordering.
+
+Identity and formats
+--------------------
+sdk and contract contain package version, exact source commit/dirty marker,
+input hashes and separately named Rust crates. sdk.rust_crate and
+contract.binding_crate are currently each0.1.0; those are not SDK/Contract or
+module versions. devkit binds the producer source. technical=true denotes a
+development/dirty export, not a completed frozen integration. Final packages
+carry clean commits. formats names manifest2, semantic_plan1, source_catalog4,
+installed_catalog4, rust_build_plan1 and the unchanged R4M0/R4XStart contracts.
+cpu projects canonical Contract/CpuBaseline.json. rust_codegen is the selected
+module codegen profile, separately qualified from the normal kernel profile.
+
+Support and evidence
+--------------------
+support rows project the same module_capabilities.query used by SDK build
+admission. Language/kind/class/entry enums come from the shared manifest parser.
+Each row identifies language, kind, app_class, entry_mode, role, execution and
+hosts; supported/code/reason are distinct from installed-tool availability.
+owner_contract/missing_steps explain unsupported Rust roles. Native C rows
+state one source, exact class imports and the R4CC subset. C driver/protocol
+roots require Zig in the existing owner builders; declared C companions do
+not imply a C root builder. Rust native compilation remains unsupported.
+
+qualification separates Linux host builds, actual Windows execution, cross-host
+byte identity, common R4X startup tests and runtime class checks. In0.86.39
+the final GUI/service runtime check is still pending0.86.40, even though all
+three templates really compile. Do not reinterpret "supported" as hardware
+or runtime-test coverage. local_availability_queried=false means no installation
+probe was made. Setup/Rust.sh check separately reports actual tools/versions/
+components/linker hash and a nonzero result for missing or wrong installation.
+
+Template projection
+-------------------
+templates reads real template.ini definitions and File=source|target maps.
+Language, kind, class, imports, target, role, module version and resources come
+from each parsed module.R4MF.template. Facts are a sample expansion using the
+definition's DefaultProjectName; R4L also uses sample0.1.0/none/library target
+for its explicit input placeholders. Raw input_tokens and source file hashes
+remain visible, so sample values are not a second editable manifest truth.
+files includes actual canonical source paths/targets/hash; input_tokens shows
+all template substitutions, not only interactive user inputs.
+
+Rust creator is Tools/New-RustProject.ps1. project_creation lists required/
+optional inputs, derived tokens and emitted pin metadata. Shared Cargo/lock/
+PS7/.sh/.bat sources are mapped by each template; no class/import table lives
+in an IDE. The native C creator remains R4CODE/R4BUILD. Host Zig/C templates
+have explicit PackageName/Fingerprint/SdkUrl/SdkHash inputs instead of a fixed
+SDK neighbor path. Their C source reuses the existing canonical C template.
+The existing Zig R4L template additionally requires local library contract,
+baseline, generated bindings and conformance; its description/components state
+that raw copying alone is not complete project creation. Rust R4L remains a
+different unsupported combination.
+
+Tools
+-----
+tools binds Rust/Cargo/rustup and target IDs, required versus optional components,
+upstream bootstrap/release/component URLs/SHA256 and exported host binaries.
+rust-lld comes from the exact llvm-tools-preview archive; check reports its
+installed binary SHA. r4xbuilder is pinned by SDK source plus exported file hash.
+No Zig is needed by the exported Rust build. Host C is Zig's bundled Clang on
+Windows/Linux; native R4CC is a separate, smaller compiler inside R4OS.
+zig_host is copied from the single DevKit/Setup/ZigToolchain.json pin also read
+by Setup.ps1; this catalog does not maintain another compiler-version list.
+
+Studio integration
+------------------
+Read JSON before presenting project choices. Match the requested combination
+and inspect its supported/code/reason and qualification. Select a template by
+ID, collect its real inputs, install only necessary tools from the selected
+profile, then invoke the SDK creator/build driver with explicit component roots.
+Keep exact source/profile/package pins. Build.json schema1 is a separate
+source/tool/ELF/container receipt, not this capability schema or semantic plan1.
+An actual complete capability JSON is included with the final SDK Rust release
+handoff; the query above reproduces it without a compiler. No Studio GUI,
+installer/update service or native Rust compiler is implemented by this API.
