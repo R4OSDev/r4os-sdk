@@ -5,6 +5,14 @@ module build support, templates, build profiles, and generic Runtime-R4L
 helpers. The platform API and ABI remain canonical in the separate Contract
 repository.
 
+The agreed Rust host-module project profile is defined by the Contract's
+`Module/RustModuleV1.txt` (roadmap 0.86.33). Current generated Rust ABI bindings
+are available; the current SDK parser/build path is still Zig/C. The planned
+minimum is independently installed Windows/Linux host development for Rust
+R4X console, GUI and service apps. Native guest Rust compilation and other
+module kinds are separate capabilities. No ready Rust module builder is
+claimed by this contract decision.
+
 The optional `cpuIdleInfo` facade reads the separate R4DEV v29 idle receipt.
 Driver CPU mechanisms negotiate `idlePublish` and `idlePolicy` individually
 after the preserved168-byte prefix. Old tables return `err_no_fn` without
