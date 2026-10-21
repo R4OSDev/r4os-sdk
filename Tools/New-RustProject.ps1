@@ -59,8 +59,6 @@ try{
     if($IsLinux){& chmod 755 $catalog (Join-Path $stage 'Build.sh');if($LASTEXITCODE -ne 0){throw 'Cannot prepare template executables.'}}
     $json=@(& $catalog plan --manifest (Join-Path $stage 'module.R4MF') 2>&1);if($LASTEXITCODE -ne 0){throw ($json -join "`n")};$plan=($json -join "`n")|ConvertFrom-Json -AsHashtable
     if($plan.plan.language -cne 'Rust' -or !$plan.plan.rust_project.host_build_qualified){throw 'Template lacks qualified Rust host build admission.'}
-    $pin=[ordered]@{schema=1;template=$TemplateId;sdk=$toolProfile.sdk;contract=$toolProfile.contract;tools_profile_sha256=Hash $toolManifest;technical=[bool]$Technical}
-    [IO.File]::WriteAllText((Join-Path $stage 'r4os-project.json'),($pin|ConvertTo-Json -Depth 20)+"`n",[Text.UTF8Encoding]::new($false))
     [IO.Directory]::Move($stage,$Directory);$stage=''
     Write-Host "Rust project created: $Directory ($TemplateId)"
 }finally{if($stage -and (Test-Path -LiteralPath $stage)){Remove-Item -LiteralPath $stage -Recurse -Force}}

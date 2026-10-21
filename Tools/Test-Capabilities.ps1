@@ -19,7 +19,8 @@ try{
     if($process.ExitCode -ne 0 -or $diagnostics){throw "Compiler-free catalog failed: $diagnostics"}
 }finally{$process.Dispose()}
 $data=$json|ConvertFrom-Json -AsHashtable
-if($data.schema -ne 1 -or $data.formats.manifest -ne 2 -or $data.formats.semantic_plan -ne 1 -or $data.tools.local_availability_queried){throw 'Capability format/availability mismatch'}
+if($data.schema -ne 2 -or $data.formats.manifest -ne 2 -or $data.formats.semantic_plan -ne 1 -or $data.tools.local_availability_queried){throw 'Capability format/availability mismatch'}
+if($data.project_creation.ContainsKey('emitted_metadata_file') -or $data.project_creation.ContainsKey('pin_schema')){throw 'Capability catalog must not define a caller project lock'}
 if($data.tools.linker.source_component -cne 'rustc' -or $data.tools.linker.exact_sources -cne 'tools.hosts.*.required[component=rustc]'){throw 'Linker archive ownership differs from the rustc component manifest'}
 foreach($hostName in @('Linux','Windows')){
     $provider=@($data.tools.hosts[$hostName].required|Where-Object {$_.component -ceq $data.tools.linker.source_component})
@@ -46,5 +47,5 @@ $rejection=@(& $catalog validate --manifest $negative 2>&1);if($LASTEXITCODE -eq
 $native=@($data.support|Where-Object {$_.language -ceq 'Rust' -and $_.kind -ceq 'R4X' -and $_.app_class -ceq 'console' -and $_.entry_mode -ceq 'app' -and $null -eq $_.role -and $_.execution -ceq 'native_r4os'})
 if($native.Count -ne 1 -or $native[0].supported -or $native[0].code -cne 'rust-native-compiler-unavailable'){throw 'Native Rust capability confusion'}
 [IO.File]::WriteAllText((Join-Path $WorkRoot 'capabilities.json'),$json,[Text.UTF8Encoding]::new($false))
-@{result='PASS';schema=1;compiler_free=$true;support_rows=$data.support.Count;templates=$data.templates.Count;negative='RustR4LUnsupported';zig_c_manifests=$true}|ConvertTo-Json|Set-Content -LiteralPath (Join-Path $WorkRoot 'result.json') -Encoding utf8NoBOM
+@{result='PASS';schema=2;compiler_free=$true;support_rows=$data.support.Count;templates=$data.templates.Count;negative='RustR4LUnsupported';zig_c_manifests=$true}|ConvertTo-Json|Set-Content -LiteralPath (Join-Path $WorkRoot 'result.json') -Encoding utf8NoBOM
 Write-Host 'Compiler-free capabilities, template matrix, negative Rust and existing Zig/C PASS.'

@@ -11,18 +11,24 @@ builder and normal R4X startup, with console/hosted GUI/service helpers in
 [Rust/README.txt](Rust/README.txt). Module/Cargo identities remain separate.
 SDK0.64.64 completes the three independent Rust templates and the Linux
 build/container/local KVM-SMP4 console, visible GUI close and service
-registration/status/stop checks. The release's Studio-Handoff.json pins exact
-component archives, source revisions, tool hashes and separate evidence.
+registration/status/stop checks. Release metadata identifies exact component
+archives, source revisions, tool hashes and separate evidence.
 Windows tools/PS7 are prepared, not execution-qualified.
 SDK0.64.65 corrects the capability catalog's linker origin: rust-lld is
 provided by the pinned rustc host archive. llvm-tools-preview supplies the
 separate inspection tools. Module codegen and Rust helper sources are unchanged.
 Native guest Rust and other module roles remain separate explicit capabilities.
+SDK0.64.66 leaves project version selection and project locks to the caller.
+Generators and builds use explicit component directories; technical SDK/Contract
+dependency hashes, Cargo.lock and the pinned toolchain remain enforced.
+The general release manifest is SDK-Release.json. Capability schema2 removes
+the former project-pin metadata; existing generated wrappers need the migration
+described in [Templates/R4OS/README.txt](Templates/R4OS/README.txt).
 
 
-Studio and other host consumers can read the versioned compiler-free capability
+Host consumers can read the versioned compiler-free capability
 interface using `module-catalog capabilities --json` from the exported toolset.
-[Capabilities.txt](Tools/ModuleCatalog/Capabilities.txt) defines schema1, exact
+[Capabilities.txt](Tools/ModuleCatalog/Capabilities.txt) defines schema2, exact
 component identities, shared support/admission, real template file maps,
 required tools and separate qualification/availability. The C host is Zig/Clang;
 R4CC is the smaller native guest C compiler. No Rust compiler is needed to read

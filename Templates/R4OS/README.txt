@@ -37,17 +37,25 @@ Create an independent project with the matched standalone components:
 
 The script derives SDK from its own location, accepts -SdkRoot explicitly,
 and needs no compiler to create/validate the project. It refuses an existing
-destination. Project pins bind exact SDK/Contract/profile identities without
-host paths; Build.sh/Build.bat call one Build.ps1 and the SDK driver. That driver
-checks the pin after invalidating previous owned success outputs. Wrong pins,
-missing tools or compiler errors cannot leave an old successful container.
+destination. Build.sh/Build.bat call one Build.ps1 and the SDK driver with
+explicit SDK/Contract/tool directories. The caller owns version selection and
+any project lock. Technical component/profile checks remain in the driver;
+component mismatches, missing tools or compiler errors invalidate previous
+owned success outputs. No project pin file is created or consumed.
+
+Migration from SDK0.64.61-.65: remove -ProjectPin and its value from an existing
+project's Build.ps1, or invoke the SDK driver directly with component roots.
+Any existing project metadata remains under its external owner's control;
+the SDK does not read, migrate or delete it. Cargo.lock remains required for
+the actual Rust dependencies.
 
 All three templates were really compiled from individually staged SDK,
 Contract and tools in /tmp, outside the complete checkout. Console output,
 hosted window and bounded service registration/wait/stop are actual Rust code.
 The common startup/panic evidence is reused. SDK0.64.64 binds final independent
 package builds, path reproducibility and visible GUI/service/console runtime
-qualification in release Studio-Handoff.json. Launch GUI through the regular
+qualification in that release's metadata. SDK0.64.66 publishes the general
+component/package/evidence manifest as SDK-Release.json. Launch GUI through the regular
 desktop host, for example its Run dialog; an SSH console is not a visible GUI
 host. The service answers STATUS/op1 and rejects unknown requests in bounded
 batches. Stop also accepts an endpoint already retired by its owner.

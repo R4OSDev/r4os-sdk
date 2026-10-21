@@ -34,9 +34,11 @@ SDK0.64.61 adds complete Console, Desktop and Service projects under
 Templates/R4OS/R4X_Rust_*. New-RustProject.sh/.bat uses their actual template.ini
 file maps and module manifests. Select the exact stable TemplateId, a new
 Directory and explicit ContractRoot/ToolsRoot; ProjectName is optional.
-Shared Build.ps1 invokes this SDK driver with ProjectPin=r4os-project.json.
-The pin is checked inside the owned output lifecycle, so a mismatch invalidates
-previous success before it fails. No paths to a complete workspace are saved.
+Shared Build.ps1 passes the explicitly selected component directories to the
+SDK driver. Component version selection and project locks belong to the caller;
+the SDK neither creates nor reads such a file. The driver still checks matched
+SDK/Contract source hashes and the required toolchain inside its owned output
+lifecycle, so a technical component mismatch invalidates previous success.
 See Templates/R4OS/README.txt for commands and current qualification.
 
 Project and outputs

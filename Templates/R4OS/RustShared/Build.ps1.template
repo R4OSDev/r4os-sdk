@@ -6,7 +6,7 @@ param(
     [switch]$Technical
 )
 $ErrorActionPreference='Stop';Set-StrictMode -Version Latest
-$arguments=@('-NoLogo','-NoProfile','-File',(Join-Path $SdkRoot 'Tools/Build-RustModule.ps1'),'-ProjectRoot',$PSScriptRoot,'-SdkRoot',$SdkRoot,'-ContractRoot',$ContractRoot,'-ToolsRoot',$ToolsRoot,'-ProjectPin',(Join-Path $PSScriptRoot 'r4os-project.json'))
+$arguments=@('-NoLogo','-NoProfile','-File',(Join-Path $SdkRoot 'Tools/Build-RustModule.ps1'),'-ProjectRoot',$PSScriptRoot,'-SdkRoot',$SdkRoot,'-ContractRoot',$ContractRoot,'-ToolsRoot',$ToolsRoot)
 if($InstallRoot){$arguments+=@('-InstallRoot',$InstallRoot)};if($CacheRoot){$arguments+=@('-CacheRoot',$CacheRoot)};if($OutputRoot){$arguments+=@('-OutputRoot',$OutputRoot)};if($Technical){$arguments+='-Technical'}
 & pwsh @arguments
 exit $LASTEXITCODE

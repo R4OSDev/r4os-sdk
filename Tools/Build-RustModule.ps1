@@ -3,7 +3,7 @@ param(
     [Parameter(Mandatory)][string]$ContractRoot,
     [Parameter(Mandatory)][string]$ToolsRoot,
     [string]$SdkRoot='', [string]$InstallRoot='', [string]$CacheRoot='',
-    [string]$OutputRoot='', [string]$ProjectPin='', [switch]$Technical
+    [string]$OutputRoot='', [switch]$Technical
 )
 $ErrorActionPreference='Stop';Set-StrictMode -Version Latest
 $SdkRoot=if($SdkRoot){[IO.Path]::GetFullPath($SdkRoot)}else{[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))}
@@ -85,10 +85,6 @@ try{
     $phase='profile'
     $rustToolProfilePath=Join-Path $ToolsRoot 'RustToolsProfile.json'
     $rustToolProfile=Get-Content -Raw -LiteralPath $rustToolProfilePath|ConvertFrom-Json -AsHashtable
-    if($ProjectPin){
-        $projectIdentity=Get-Content -Raw -LiteralPath ([IO.Path]::GetFullPath($ProjectPin))|ConvertFrom-Json -AsHashtable
-        if($projectIdentity.schema -ne 1 -or $projectIdentity.tools_profile_sha256 -cne (Hash $rustToolProfilePath)){throw 'RustProjectComponentPinMismatch'}
-    }
     if($rustToolProfile.schema -ne 1 -or $rustToolProfile.id -cne 'r4os-rust-tools-v1' -or ($rustToolProfile.technical -and !$Technical)){throw 'RustToolProfileUnsupportedOrTechnical'}
     Check-Inputs $SdkRoot $rustToolProfile.sdk.inputs;Check-Inputs $ContractRoot $rustToolProfile.contract.inputs
     $runner=Join-Path $ToolsRoot 'Setup/Rust.ps1'

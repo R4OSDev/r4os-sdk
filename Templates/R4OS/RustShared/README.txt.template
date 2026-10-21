@@ -1,14 +1,16 @@
 ﻿{DisplayName}: {ProjectName}
 ================================
 
-This complete project uses SDK template {TemplateId} and the exact SDK,
-Contract and RustToolsProfile identities in r4os-project.json. Those pins
-contain no host workspace paths. Select the separate component directories:
+This complete project uses SDK template {TemplateId}. Select the separate
+component directories when invoking the build:
 
   ./Build.sh -SdkRoot /SDK -ContractRoot /CONTRACT -ToolsRoot /TOOLS -InstallRoot /install -CacheRoot /cache
 
 Windows: Build.bat with the same parameters. Both call this project's Build.ps1
 and the SDK-owned PS7 driver. No complete R4OS workspace or Settings.R4S.
+The caller owns component version selection and any project lock. The SDK
+checks the selected components against the tool profile's source hashes and
+required toolchain; it neither creates nor reads a project pin file.
 Cargo.lock is included; builds are offline/locked. module.R4MF owns module
 class, identity, imports, version, resources and target. Change that manifest
 for module facts; Cargo's crate identity remains separate.
