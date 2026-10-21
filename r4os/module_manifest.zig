@@ -1,6 +1,9 @@
 const std = @import("std");
 const abi = @import("r4os_contract").abi;
 
+pub const capabilities = @import("module_capabilities.zig");
+pub const rust_project = @import("rust_project.zig");
+
 pub const manifest_version: u8 = 2;
 pub const max_manifest_bytes: usize = 128 * 1024;
 pub const plan_contract_version: u8 = 1;
@@ -31,11 +34,13 @@ pub const Kind = enum {
 pub const Language = enum {
     zig,
     c,
+    rust,
 
     pub fn text(self: Language) []const u8 {
         return switch (self) {
             .zig => "Zig",
             .c => "C",
+            .rust => "Rust",
         };
     }
 };
@@ -159,6 +164,8 @@ pub const Manifest = struct {
     name: []const u8,
     module_version: ModuleVersion,
     language: ?Language = null,
+    /// Filled by file-aware consumers after shared Cargo validation.
+    rust_cargo: ?rust_project.Cargo = null,
     sources: []const []const u8 = &.{},
     entry_mode: ?EntryMode = null,
     app_class: ?AppClass = null,
@@ -380,6 +387,12 @@ fn parseV2(allocator: std.mem.Allocator, path: []const u8, text: []const u8) !Ma
     if (parsed_kind == .r4l and platformApiGroupId(parsed_name) != null) return error.ReservedPlatformApiName;
     const parsed_module_version = try parseModuleVersion(module_version orelse return error.MissingModuleVersion);
     const parsed_language = try parseLanguage(language orelse return error.MissingLanguage);
+    if (parsed_language == .rust) {
+        const admission = capabilities.rust(parsed_kind.text(), entry_mode orelse "", module_role, .host);
+        if (admission.failure) |err| return err;
+        if (sources.items.len != 1) return error.RustRequiresSingleSource;
+        if (zig_modules.items.len != 0 or native_archives.items.len != 0 or c_includes.items.len != 0 or c_defines.items.len != 0 or c_flags.items.len != 0) return error.RustForbidsForeignBuildFields;
+    }
     if (sources.items.len == 0) return error.MissingSource;
     // One Zig root, followed by optional C companions in R4L/R4D. They are
     // linked into the same owning artifact; no extra runtime module or source
@@ -696,6 +709,7 @@ fn parseKind(value: []const u8) !Kind {
 fn parseLanguage(value: []const u8) !Language {
     if (std.ascii.eqlIgnoreCase(value, "Zig")) return .zig;
     if (std.ascii.eqlIgnoreCase(value, "C")) return .c;
+    if (std.ascii.eqlIgnoreCase(value, "Rust")) return .rust;
     return error.InvalidLanguage;
 }
 
@@ -904,6 +918,8 @@ fn validateSource(source: []const u8, language: Language) !void {
     const extension = std.fs.path.extension(source);
     if (language == .zig and !std.ascii.eqlIgnoreCase(extension, ".zig")) return error.SourceLanguageMismatch;
     if (language == .c and !std.ascii.eqlIgnoreCase(extension, ".c")) return error.SourceLanguageMismatch;
+    if (language == .rust and !std.mem.eql(u8, extension, ".rs")) return error.SourceLanguageMismatch;
+    if (language == .rust and std.mem.indexOf(u8, source, "//") != null) return error.NonCanonicalSourcePath;
 }
 
 fn validateZigModules(values: []const []const u8) !void {
@@ -1190,6 +1206,11 @@ pub fn derivePlan(allocator: std.mem.Allocator, manifest: Manifest) !Plan {
 
 pub fn buildProfileName(language: Language, entry_mode: EntryMode, app_class: AppClass) []const u8 {
     return switch (language) {
+        .rust => switch (app_class) {
+            .console => "R4X_Rust_App_Console",
+            .gui => "R4X_Rust_App_Desktop",
+            .service => "R4X_Rust_App_Service",
+        },
         .zig => switch (entry_mode) {
             .app => switch (app_class) {
                 .console => "R4X_Zig_App_Console",
@@ -2052,4 +2073,28 @@ test "module version is mandatory and has exactly one spelling" {
         const text = try std.fmt.allocPrint(allocator, "{s}\nVERSION={s}\n", .{ kopf, wert });
         try std.testing.expectError(error.BadModuleVersion, parse(allocator, pfad, text));
     }
+}
+
+test "Rust R4X classes share admission and preserve semantic plan v1" {
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+    const a = arena.allocator();
+    const base = "R4OS_MODULE_MANIFEST=2\nKIND=R4X\nNAME=RUSTTEST\nVERSION=0.1.0\nLANGUAGE=Rust\nSOURCE=src/main.rs\nENTRY_MODE=app\nTARGET=/SOFTWARE/RUSTTEST.R4X\nIMAGE_SCOPE=none\nIMPORT=R4SYS:Query:1\n";
+    inline for (.{ "console", "gui", "service" }) |class| {
+        const extra = if (comptime std.mem.eql(u8, class, "gui")) "IMPORT=R4DESK:Query:1\nIMPORT=R4DRAW:Query:1\n" else "";
+        const text = try std.fmt.allocPrint(a, "{s}APP_CLASS={s}\n{s}", .{ base, class, extra });
+        const manifest = try parse(a, "Rust/module.R4MF", text);
+        try std.testing.expectEqual(Language.rust, manifest.language.?);
+        var buffer: [4096]u8 = undefined;
+        const plan = renderContractPlan(manifest, &buffer);
+        try std.testing.expect(plan.ok);
+        try std.testing.expect(std.mem.startsWith(u8, plan.bytes, "R4MF_PLAN=1\n"));
+        const wrong = try std.mem.replaceOwned(u8, a, text, "main.rs", "main.c");
+        try std.testing.expectError(error.SourceLanguageMismatch, parse(a, "Rust/module.R4MF", wrong));
+        const escape = try std.mem.replaceOwned(u8, a, text, "src/main.rs", "../main.rs");
+        try std.testing.expectError(error.SourcePathEscape, parse(a, "Rust/module.R4MF", escape));
+        const low = try std.mem.replaceOwned(u8, a, text, "ENTRY_MODE=app", "ENTRY_MODE=lowlevel");
+        try std.testing.expectError(error.RustLowlevelUnsupported, parse(a, "Rust/module.R4MF", low));
+    }
+    _ = rust_project;
 }

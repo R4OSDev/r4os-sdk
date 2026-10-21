@@ -546,6 +546,7 @@ pub const Sdk = struct {
         c_library_include_roots[1] = self.profile.contract_c_include_root;
         for (explicit_include_roots, 2..) |include_root, index| c_library_include_roots[index] = include_root;
         const elf = switch (loaded.manifest.language.?) {
+            .rust => @panic("Rust R4L is not qualified"),
             .zig => addRawModule(self.b, .{
                 .builder = self.builder,
                 .name = loaded.manifest.name,
@@ -632,6 +633,7 @@ pub const Sdk = struct {
         const optimize = manifestOptimizeMode(loaded.manifest);
         const manifest_metadata = module_manifest.r4xManifestMetadata(self.b.allocator, loaded.manifest) catch @panic("invalid R4MF role metadata");
         return switch (loaded.manifest.language.?) {
+            .rust => @panic("Rust modules use SDK Tools/Build-RustModule.ps1 and the isolated tool profile; no Zig/C fallback"),
             .zig => if (loaded.manifest.entry_mode.? == .app) addR4AppWithOptions(self.b, .{
                 .name = loaded.manifest.name,
                 .root_source_file = userPath(self.b, loaded.source_paths[0]),

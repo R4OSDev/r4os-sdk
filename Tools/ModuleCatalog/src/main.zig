@@ -154,6 +154,7 @@ fn run(init: std.process.Init) !void {
         .plan => {
             const path = options.manifest_path orelse return error.MissingManifestPath;
             const value = try readManifest(arena_allocator, io, cwd, path);
+            try validateSourceFiles(arena_allocator, io, cwd, value);
             const plan = try manifest_contract.derivePlan(arena_allocator, value);
             if (options.artifact_only) {
                 try std.Io.File.stdout().writeStreamingAll(io, plan.artifact);
@@ -622,7 +623,13 @@ fn discoverCatalog(
 
 fn readManifest(allocator: std.mem.Allocator, io: std.Io, cwd: std.Io.Dir, path: []const u8) !manifest_contract.Manifest {
     const bytes = try cwd.readFileAlloc(io, path, allocator, .limited(manifest_contract.max_manifest_bytes));
-    return manifest_contract.parse(allocator, path, bytes);
+    var manifest = try manifest_contract.parse(allocator, path, bytes);
+    if (manifest.language == .rust) {
+        const cargo_path = try std.fs.path.join(allocator, &.{ std.fs.path.dirname(path) orelse ".", "Cargo.toml" });
+        const cargo = cwd.readFileAlloc(io, cargo_path, allocator, .limited(manifest_contract.max_manifest_bytes)) catch return error.RustCargoManifestMissing;
+        manifest.rust_cargo = try manifest_contract.rust_project.parseCargo(manifest.sources[0], cargo);
+    }
+    return manifest;
 }
 
 fn validateSourceFiles(allocator: std.mem.Allocator, io: std.Io, cwd: std.Io.Dir, value: manifest_contract.Manifest) !void {
@@ -634,6 +641,18 @@ fn validateSourceFiles(allocator: std.mem.Allocator, io: std.Io, cwd: std.Io.Dir
             return error.ManifestSourceMissing;
         };
     }
+    if (value.language == .rust) {
+        const lock = try std.fs.path.join(allocator, &.{ project, "Cargo.lock" });
+        const lock_text = cwd.readFileAlloc(io, lock, allocator, .limited(1024 * 1024)) catch return error.RustCargoLockMissing;
+        if (lock_text.len == 0) return error.RustCargoLockMissing;
+        for (manifest_contract.rust_project.forbidden_inputs) |forbidden| {
+            // SOURCE may be src/main.rs as an explicit library root.
+            if (std.mem.eql(u8, forbidden, value.sources[0])) continue;
+            const path = try std.fs.path.join(allocator, &.{ project, forbidden });
+            if (cwd.access(io, path, .{})) |_| return error.RustProjectOverrideOrImplicitTarget else |err| if (err != error.FileNotFound) return err;
+        }
+    }
+
     for (value.zig_modules) |entry| {
         const colon = std.mem.indexOfScalar(u8, entry, ':') orelse unreachable;
         const path = try std.fs.path.join(allocator, &.{ project, entry[colon + 1 ..] });
@@ -1107,6 +1126,32 @@ fn renderPlanObject(allocator: std.mem.Allocator, entry: manifest_contract.Manif
     try appendJsonString(&out, allocator, entry.language.?.text());
     try out.appendSlice(allocator, ",\n    \"sources\": ");
     try appendStringArray(&out, allocator, entry.sources);
+    if (entry.language == .rust) {
+        const cargo = entry.rust_cargo orelse return error.RustCargoManifestMissing;
+        try out.appendSlice(allocator, ",\n    \"rust_project\": {\"schema\":1,\"profile\":\"r4os-rust-r4x-v1\",\"tools\":\"r4os-rust-tools-v1\",\"cargo_manifest\":\"Cargo.toml\",\"cargo_lock\":\"Cargo.lock\",\"target\":\"x86_64-unknown-none\",\"declared_inputs\":[\"module.R4MF\",\"Cargo.toml\",\"Cargo.lock\"],\"compiler_inputs\":\"observed at build time from rustc dep-info\",\"native_rust_compiler\":false,\"cargo_package\":");
+        try appendJsonString(&out, allocator, cargo.name);
+        try out.appendSlice(allocator, ",\"cargo_version\":");
+        try appendJsonString(&out, allocator, cargo.version);
+        try out.appendSlice(allocator, ",\"source\":");
+        try appendJsonString(&out, allocator, cargo.source);
+        try out.appendSlice(allocator, ",\"module_version\":");
+        try appendJsonString(&out, allocator, entry.module_version.text);
+        try out.appendSlice(allocator, ",\"icons\":");
+        try appendStringArray(&out, allocator, entry.icons);
+        try out.appendSlice(allocator, ",\"help\":");
+        if (entry.help) |help| try appendJsonString(&out, allocator, help) else try out.appendSlice(allocator, "null");
+        try out.appendSlice(allocator, ",\"resources\":[");
+        for (entry.resources, 0..) |resource, index| {
+            if (index != 0) try out.appendSlice(allocator, ",");
+            try out.appendSlice(allocator, "{\"name\":");
+            try appendJsonString(&out, allocator, resource.name);
+            try out.appendSlice(allocator, ",\"path\":");
+            try appendJsonString(&out, allocator, resource.path);
+            try out.appendSlice(allocator, "}");
+        }
+        try out.appendSlice(allocator, "]}");
+    }
+
     try out.appendSlice(allocator, ",\n    \"zig_modules\": ");
     try appendStringArray(&out, allocator, entry.zig_modules);
     try out.appendSlice(allocator, ",\n    \"entry_mode\": ");
@@ -1303,9 +1348,9 @@ test "catalog exposes common optimization for non-R4X modules" {
     provider.image_scope = .none;
     var consumer = driver;
     consumer.imports = &.{"R4NV:API_V1:1:1"};
-    try validateImageDependencyClosure(&.{consumer, provider}, .slim, &.{});
+    try validateImageDependencyClosure(&.{ consumer, provider }, .slim, &.{});
     consumer.imports = &.{"R4NV:API_V1:1"};
-    try std.testing.expectError(error.ImageDependencyMissing, validateImageDependencyClosure(&.{consumer, provider}, .slim, &.{}));
+    try std.testing.expectError(error.ImageDependencyMissing, validateImageDependencyClosure(&.{ consumer, provider }, .slim, &.{}));
 }
 
 test "benchmark selection is full plus explicit test diagnostics" {
@@ -1326,7 +1371,7 @@ test "benchmark selection is full plus explicit test diagnostics" {
         try std.testing.expect(imageEntryIncluded(none_entry, mode, &.{none_entry.target}));
         try validateImageIncludes(&.{none_entry}, mode, &.{none_entry.target});
         try std.testing.expectError(error.UnknownImageIncludeTarget, validateImageIncludes(&.{none_entry}, mode, &.{"/UNKNOWN.R4X"}));
-        try std.testing.expectError(error.DuplicateImageIncludeTarget, validateImageIncludes(&.{none_entry}, mode, &.{none_entry.target, none_entry.target}));
+        try std.testing.expectError(error.DuplicateImageIncludeTarget, validateImageIncludes(&.{none_entry}, mode, &.{ none_entry.target, none_entry.target }));
     }
     try std.testing.expect(imageEntryIncluded(full_entry, .benchmark, &.{}));
     try std.testing.expect(!imageEntryIncluded(test_entry, .benchmark, &.{}));
