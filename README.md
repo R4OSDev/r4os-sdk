@@ -38,6 +38,15 @@ async-I/O facades, reusing the existing C resource owner. Safe owned I/O keeps
 all native buffer addresses until exact close ACK, including drop/forget;
 borrowed asynchronous admission is explicitly unsafe. Generation, partial
 progress, optional-slot and CPU-placement metadata retain their contracts.
+SDK0.64.74 adds typed Rust/C service connections, endpoints, bounded service
+loops, tray calls, clocks, request deadlines, serial ownership and sockets.
+A compiler-typed scalar bridge reuses all 157 existing R4NET context methods;
+C/Rust share the original service-loop and networking owners. Owned async
+network requests keep stable buffers through actual close ACK, even after
+drop/forget; raw borrowed admission is unsafe. Rust service templates now use
+the common loop. Native release/negative consumers and a mixed-language
+KVM SMP4 service/TCP/UDP/tray fixture qualify this group; physical serial
+hardware and Windows execution remain separate qualifications.
 Other facade groups remain in their respective parity waves.
 SDK0.64.67 binds Contract0.64.42's complete technical C projection. Driver,
 protocol, DMA/USB and service records now come from the canonical Contract;

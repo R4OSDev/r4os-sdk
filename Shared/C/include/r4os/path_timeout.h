@@ -238,6 +238,8 @@ static inline int r4_timeout_deadline(R4Timeout timeout, R4MonotonicInstant now,
 }
 
 static inline int r4_remaining_ticks(R4Deadline deadline, R4MonotonicInstant now, uint32_t hz, uint64_t *out_ticks) {
+    if (out_ticks == 0) return R4OS_ERROR_INVALID;
+    if (now.nanoseconds >= deadline.nanoseconds) { *out_ticks = 0u; return R4OS_OK; }
     R4Duration remaining = { deadline.nanoseconds > now.nanoseconds ? deadline.nanoseconds - now.nanoseconds : 0 };
     return r4_duration_to_ticks(remaining, hz, out_ticks);
 }

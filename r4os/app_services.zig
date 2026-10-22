@@ -419,7 +419,7 @@ pub fn replyIfPending(sys: r4sys.Context, handle: u32, request_id: u32, status: 
     return completedReplyResult(sys.serviceEndpointReply(handle, request_id, status, payload));
 }
 
-fn completedReplyResult(raw: i32) i32 {
+pub fn completedReplyResult(raw: i32) i32 {
     return if (raw == abi.service_api_result_not_found) abi.service_api_result_ok else raw;
 }
 

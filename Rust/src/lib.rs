@@ -10,17 +10,33 @@ pub mod c_facades;
 pub mod directory_page;
 pub mod heap;
 mod memory;
+pub mod network;
+#[path = "generated/network.rs"]
+mod network_methods;
 pub mod path;
 pub mod physical_storage;
 pub mod r4l;
 pub mod registry_diagnostics;
 pub mod registry_hive;
 pub mod resources;
+pub mod serial;
+pub mod services;
 mod startup;
 pub mod storage;
+pub mod time;
 pub use startup::{ImportSpec, StartupInfo};
 
 static PANIC_CONTEXT: AtomicPtr<abi::R4XStartContext> = AtomicPtr::new(ptr::null_mut());
+
+fn facade_app(app: &App<'_>) -> storage::Result<c_facades::R4App> {
+    let mut value = unsafe { mem::zeroed() };
+    let rc = unsafe { c_facades::R4SdkAppFacade(app.start_context(), &mut value) };
+    if rc == 0 {
+        Ok(value)
+    } else {
+        Err(storage::Error::Raw(rc))
+    }
+}
 
 pub struct App<'a> {
     context: &'a abi::R4XStartContext,

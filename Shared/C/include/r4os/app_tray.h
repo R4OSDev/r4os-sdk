@@ -47,7 +47,7 @@ static inline int r4_tray_owner_valid(R4ProgramProcessHandle owner) {
 static inline int32_t r4_app_tray(R4App *app, R4Tray *out) {
     if (out != 0) *out = (R4Tray){0};
     if (app == 0 || out == 0 || app->context == 0 || app->system.table == 0 ||
-        app->system.table->program_open_handle == 0 || app->context->instance_id == 0u ||
+        !R4_SERVICES_HAS(app->system.table, program_open_handle) || app->context->instance_id == 0u ||
         app->context->instance_id > UINT32_MAX)
     {
         return R4OS_ERR_NO_FN;
@@ -152,8 +152,8 @@ static inline R4TrayCallResult r4_tray_upsert(R4Tray *tray, const R4TrayItem *it
     request.icon_width = (uint16_t)R4OS_TRAY_ICON_WIDTH;
     request.icon_height = (uint16_t)R4OS_TRAY_ICON_HEIGHT;
     request.icon_format = R4OS_TRAY_ICON_FORMAT_ARGB32;
-    for (uint16_t i = 0; i < item->tooltip_length; ++i) request.tooltip[i] = item->tooltip[i];
-    for (uint16_t i = 0; i < R4OS_TRAY_ICON_PIXEL_COUNT; ++i) request.icon[i] = item->icon[i];
+    for (uint32_t i = 0; i < item->tooltip_length; ++i) request.tooltip[i] = item->tooltip[i];
+    for (uint32_t i = 0; i < R4OS_TRAY_ICON_PIXEL_COUNT; ++i) request.icon[i] = item->icon[i];
     return r4_tray_call(tray, R4OS_TRAY_SERVICE_OP_UPSERT, &request, timeout);
 }
 

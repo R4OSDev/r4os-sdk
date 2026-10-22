@@ -1,7 +1,7 @@
 #include <r4os/r4os.h>
 #include <string.h>
 
-enum ReplyMode { MODE_OK, MODE_WOULD_BLOCK, MODE_TIMEOUT, MODE_RESET, MODE_PEER_CLOSE, MODE_NO_SERVICE };
+enum ReplyMode { MODE_OK, MODE_WOULD_BLOCK, MODE_TIMEOUT, MODE_RESET, MODE_PEER_CLOSE, MODE_NO_SERVICE, MODE_SHORT };
 static enum ReplyMode reply_mode;
 static uint32_t open_handles;
 static int endpoint_registered;
@@ -63,6 +63,9 @@ static int32_t fake_call(uint32_t handle, uint16_t op, const uint8_t *request, u
         R4NetServiceTcpResult result = {0}; result.magic = R4OS_NET_SERVICE_TCP_RESULT_MAGIC; result.version = R4OS_NET_SERVICE_TCP_RESULT_VERSION; result.action = op; result.flags = R4OS_NET_SERVICE_TCP_FLAG_OK | R4OS_NET_SERVICE_TCP_FLAG_HANDLE_VALID; result.handle = 501u; result.remote_ip[0] = 10u; result.remote_ip[2] = 2u; result.remote_ip[3] = 2u; result.remote_port = 1234u; result.lifecycle_cause = lifecycle(); result.service_status = service_status();
         const char *payload = (op == R4OS_NET_SERVICE_OP_TCP_READ_RESULT && reply_mode == MODE_OK) ? "OK" : ""; uint32_t payload_len = (uint32_t)strlen(payload);
         result.bytes = op == R4OS_NET_SERVICE_OP_TCP_WRITE_RESULT ? request_len - 4u : payload_len;
+        if(reply_mode==MODE_SHORT&&op==R4OS_NET_SERVICE_OP_TCP_WRITE_RESULT&&result.bytes>2)result.bytes=2;
+        result.pending_rx=op==R4OS_NET_SERVICE_OP_TCP_POLL_RESULT?4:0;
+        if(payload_len)result.flags|=R4OS_NET_SERVICE_TCP_FLAG_DATA;
         if (op == R4OS_NET_SERVICE_OP_TCP_CLOSE_RESULT || op == R4OS_NET_SERVICE_OP_TCP_CLOSE_LISTEN_RESULT) result.lifecycle_cause = R4OS_NET_SERVICE_SOCKET_LIFECYCLE_LOCAL_CLOSE;
         if (sizeof(result) + payload_len > capacity) return R4OS_SERVICE_API_RESULT_BUFFER_TOO_SMALL; memcpy(response, &result, sizeof(result)); memcpy(response + sizeof(result), payload, payload_len); return (int32_t)(sizeof(result) + payload_len);
     }
@@ -70,6 +73,7 @@ static int32_t fake_call(uint32_t handle, uint16_t op, const uint8_t *request, u
         R4NetServiceUdpResult result = {0}; result.magic = R4OS_NET_SERVICE_UDP_RESULT_MAGIC; result.version = R4OS_NET_SERVICE_UDP_RESULT_VERSION; result.action = op; result.flags = R4OS_NET_SERVICE_UDP_FLAG_OK | R4OS_NET_SERVICE_UDP_FLAG_HANDLE_VALID; result.handle = 601u; result.source_ip[0] = 10u; result.source_ip[2] = 2u; result.source_ip[3] = 3u; result.source_port = 7000u; result.dest_port = 8000u; result.lifecycle_cause = lifecycle(); result.service_status = service_status();
         const char *payload = (op == R4OS_NET_SERVICE_OP_UDP_RECV_RESULT && reply_mode == MODE_OK) ? "UDP" : ""; uint32_t payload_len = (uint32_t)strlen(payload);
         result.bytes = op == R4OS_NET_SERVICE_OP_UDP_SENDTO_RESULT ? request_len - 10u : payload_len;
+        if(payload_len)result.flags|=R4OS_NET_SERVICE_UDP_FLAG_DATA;
         if (op == R4OS_NET_SERVICE_OP_UDP_CLOSE_RESULT) result.lifecycle_cause = R4OS_NET_SERVICE_SOCKET_LIFECYCLE_LOCAL_CLOSE;
         if (sizeof(result) + payload_len > capacity) return R4OS_SERVICE_API_RESULT_BUFFER_TOO_SMALL; memcpy(response, &result, sizeof(result)); memcpy(response + sizeof(result), payload, payload_len); return (int32_t)(sizeof(result) + payload_len);
     }
@@ -87,8 +91,8 @@ static R4Timeout poll_timeout(void) { R4Timeout value = {0}; value.kind = R4OS_T
 static R4Timeout forever_timeout(void) { R4Timeout value = {0}; value.kind = R4OS_TIMEOUT_KIND_FOREVER; return value; }
 
 static void init_app(R4App *app, R4XStartR4Sys *sys, R4XStartR4Net *net) {
-    *sys = (R4XStartR4Sys){0}; sys->service_open = (uintptr_t)&fake_open; sys->service_close = (uintptr_t)&fake_close; sys->service_call = (uintptr_t)&fake_call; sys->service_endpoint_register = (uintptr_t)&fake_register; sys->service_endpoint_unregister = (uintptr_t)&fake_unregister; sys->service_endpoint_wait = (uintptr_t)&fake_wait; sys->service_endpoint_recv = (uintptr_t)&fake_recv; sys->service_endpoint_reply = (uintptr_t)&fake_reply;
-    *net = (R4XStartR4Net){0}; net->tcp_connect = (uintptr_t)&fake_tcp_marker;
+    *sys = (R4XStartR4Sys){.magic=R4XSTART_R4SYS_MAGIC,.abi_version=R4XSTART_R4SYS_VERSION,.size=sizeof(*sys)}; sys->service_open = (uintptr_t)&fake_open; sys->service_close = (uintptr_t)&fake_close; sys->service_call = (uintptr_t)&fake_call; sys->service_endpoint_register = (uintptr_t)&fake_register; sys->service_endpoint_unregister = (uintptr_t)&fake_unregister; sys->service_endpoint_wait = (uintptr_t)&fake_wait; sys->service_endpoint_recv = (uintptr_t)&fake_recv; sys->service_endpoint_reply = (uintptr_t)&fake_reply;
+    *net = (R4XStartR4Net){.magic=R4XSTART_R4NET_MAGIC,.abi_version=R4XSTART_R4NET_VERSION,.size=sizeof(*net)}; net->tcp_connect = (uintptr_t)&fake_tcp_marker;
     *app = (R4App){0}; app->system.table = sys; app->network.table = net;
 }
 
@@ -115,9 +119,7 @@ static int system_power_checks(void){
     if(r4sys_system_power_transition(&app.system,3,0)!=R4OS_POWER_TRANSITION_ERROR_INVALID)return 3;
     table.system_power_transition=0;if(r4sys_system_power_transition(&app.system,R4OS_POWER_TRANSITION_ACTION_POWEROFF,0)!=R4OS_ERR_NO_FN)return 4;return 0;
 }
-int main(void) {
-    if(system_power_checks()!=0)return 101;
-    if(power_checks()!=0)return 100;
+static int service_network_checks(void) {
     R4App app; R4XStartR4Sys sys; R4XStartR4Net net; init_app(&app, &sys, &net); reply_mode = MODE_OK;
     R4Services services = r4_app_services(&app); R4ServiceConnection connection; uint32_t request = 123u, response = 0u;
     if (!r4_services_available(&services) || r4_services_open(&services, "EXAMPLE", &connection) != 0) return 1;
@@ -132,6 +134,7 @@ int main(void) {
     if (!r4_network_available(&network) || r4_resolver_resolve_a(&resolver, (const uint8_t *)"r4os.local", 10u, 0, forever_timeout(), &address).kind != R4_NET_RESULT_OK || address.octets[3] != 15u) return 8;
     R4SocketAddress remote = {r4_ipv4(10u, 0u, 2u, 2u), 1234u, 0u}; R4TcpSocket socket;
     if (r4_network_connect_tcp(&network, remote, forever_timeout(), &socket).kind != R4_NET_RESULT_OK || r4_tcp_socket_write(&socket, (const uint8_t *)"GET", 3u, forever_timeout()).bytes != 3u) return 9;
+    if(r4_tcp_socket_poll(&socket,forever_timeout()).bytes!=4)return 17;
     uint8_t buffer[8] = {0}; if (r4_tcp_socket_read(&socket, buffer, sizeof(buffer), forever_timeout()).bytes != 2u || memcmp(buffer, "OK", 2u) != 0) return 10;
     reply_mode = MODE_WOULD_BLOCK; if (r4_tcp_socket_read(&socket, buffer, sizeof(buffer), poll_timeout()).kind != R4_NET_RESULT_WOULD_BLOCK) return 11;
     reply_mode = MODE_PEER_CLOSE; if (r4_tcp_socket_read(&socket, buffer, sizeof(buffer), forever_timeout()).kind != R4_NET_RESULT_PEER_CLOSED) return 12;
@@ -140,4 +143,9 @@ int main(void) {
     reply_mode = MODE_TIMEOUT; resolver = r4_network_resolver(network); if (r4_resolver_resolve_a(&resolver, (const uint8_t *)"r4os.local", 10u, 0, forever_timeout(), &address).kind != R4_NET_RESULT_TIMED_OUT) return 15;
     reply_mode = MODE_NO_SERVICE; if (r4_network_connect_tcp(&network, remote, forever_timeout(), &socket).kind != R4_NET_RESULT_NO_SERVICE || open_handles != 0u) return 16;
     return 0;
+}
+int main(void) {
+    if(system_power_checks()!=0)return 101;
+    if(power_checks()!=0)return 100;
+    return service_network_checks();
 }

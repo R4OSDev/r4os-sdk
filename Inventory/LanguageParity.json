@@ -491,23 +491,32 @@
       "semantics": "Endpunkt-/Connection-/Requesteigentum, begrenzte Batches, Requestfristen, Stop/Abmeldung und bereits quittiertes Ende unterscheiden; IPC-Rueckgaben/Teilantworten nicht verschlucken.",
       "current_only": "current_function",
       "rust": {
-        "state": "qualified_service_subset",
-        "source": "Repositories/SDK/Rust/src/lib.rs",
-        "gap": "Rust hat register/wait/receive/reply/close fuer die Dienstvorlage; Connections, Request-/Stop-/Tray-/Loop-/Fristenhelfer fehlen. C-Fassaden erhalten und gezielt vervollstaendigen."
+        "state": "paritaet_abgenommen",
+        "source": "Repositories/SDK/Rust/src/services.rs",
+        "gap": "SDK74/Contract44: getypte Connections/Endpunkte, Serviceverwaltung, gemeinsam begrenzte Loop/Batch/Drain/Metriken, Tray mit Prozessidentitaet und Desktopepoche, normale/leere/abgebrochene Requests und genauer Stop/Remove.",
+        "sources": [
+          "Repositories/SDK/Rust/src/services.rs",
+          "Repositories/SDK/Rust/src/services/tray.rs"
+        ]
       },
       "c": {
-        "state": "existing_facade_review_required",
+        "state": "paritaet_abgenommen",
         "sources": [
           "Repositories/SDK/Shared/C/include/r4os/app_services.h",
           "Repositories/SDK/Shared/C/include/r4os/app_tray.h",
           "Repositories/SDK/Shared/C/include/r4os/path_timeout.h"
         ],
-        "gap": "Bestehende C-Fassade erhalten; nur fehlende aktuelle Funktionen/hoeheren Hilfen und deren Semantik gegen die verlinkten Zig-Deklarationen schliessen."
+        "gap": "Bestehende aktuelle C-Besitzer erhalten; gemeinsame Zig-Loop/Deadline/Netzwerkbridge, fehlender TCP-Poll, gepackter Socketstatus und abgelaufener Poll ohne Frequenz vervollstaendigt. Slot-/Request-/Close-Quittungen bleiben explizit; keine Altkernel-Emulation."
       },
       "evidence": [
-        "source_inventory"
+        "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.55",
+        "Repositories/SDK/Tools/Test-RustServices.ps1",
+        "Repositories/SDK/Tests/Simulation/RustServices.rs",
+        "Repositories/SDK/Tests/Simulation/ServiceNetworkCallbacks.c",
+        "Repositories/SDK/Tests/Build/RustServices",
+        "Repositories/SDK/Tests/Simulation/NetworkPeer.py"
       ],
-      "shared_core": null
+      "shared_core": "Vorhandene C-AppServices/AppTray/AppNetwork/Serial/Timeout-Besitzer, Zig-ServiceLoop/-Deadline/-R4NET-Besitzer und native R4SYS/R4NET/R4DEV-Callbacks. Rust fuegt Leihen/Typen/echte Abschlussretention hinzu; keine zweite Netzwerk- oder Schedulingimplementierung."
     },
     {
       "id": "network",
@@ -520,17 +529,22 @@
       "semantics": "Resolver, TCP/UDP/Listener, Socketgeneration, half-close, Cancel/Ende/Fehler und gehaltene Asyncpuffer sowie R4NET/R4SYS-Optionzulassung erhalten.",
       "current_only": "current_function",
       "rust": {
-        "state": "missing_higher_facade",
-        "source": "Repositories/SDK/Rust/src/lib.rs",
-        "gap": "Netzwerk und Adressen als gleichwertige typisierte Rust-Fassade mit denselben Fehler-/Besitz-/Waitregeln ergaenzen."
+        "state": "paritaet_abgenommen",
+        "source": "Repositories/SDK/Rust/src/network.rs",
+        "gap": "SDK74: getypte Resolver/TCP/UDP/Listener beim C-AppNetwork-Owner, 157 compilerprojizierte R4NET-Methoden und sichere OwnedRequests mit stabilen Rohallokationen bis Close-ACK, einschliesslich Drop-BUSY/forget. Borrowaufnahme unsafe; native Status-/Teilbyte-/Terminaldaten bleiben.",
+        "sources": [
+          "Repositories/SDK/Rust/src/network.rs",
+          "Repositories/SDK/Rust/src/network/sockets.rs",
+          "Repositories/SDK/Rust/src/generated/network.rs"
+        ]
       },
       "c": {
-        "state": "existing_facade_review_required",
+        "state": "paritaet_abgenommen",
         "sources": [
           "Repositories/SDK/Shared/C/include/r4os/r4net.h",
           "Repositories/SDK/Shared/C/include/r4os/app_network.h"
         ],
-        "gap": "Bestehende C-Fassade erhalten; nur fehlende aktuelle Funktionen/hoeheren Hilfen und deren Semantik gegen die verlinkten Zig-Deklarationen schliessen.",
+        "gap": "Bestehende aktuelle C-Besitzer erhalten; gemeinsame Zig-Loop/Deadline/Netzwerkbridge, fehlender TCP-Poll, gepackter Socketstatus und abgelaufener Poll ohne Frequenz vervollstaendigt. Slot-/Request-/Close-Quittungen bleiben explizit; keine Altkernel-Emulation.",
         "canonical_wire_replies": {
           "since": "0.86.48",
           "sdk_package": "0.64.67",
@@ -548,9 +562,14 @@
         }
       },
       "evidence": [
-        "source_inventory"
+        "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.55",
+        "Repositories/SDK/Tools/Test-RustServices.ps1",
+        "Repositories/SDK/Tests/Simulation/RustServices.rs",
+        "Repositories/SDK/Tests/Simulation/ServiceNetworkCallbacks.c",
+        "Repositories/SDK/Tests/Build/RustServices",
+        "Repositories/SDK/Tests/Simulation/NetworkPeer.py"
       ],
-      "shared_core": null
+      "shared_core": "Vorhandene C-AppServices/AppTray/AppNetwork/Serial/Timeout-Besitzer, Zig-ServiceLoop/-Deadline/-R4NET-Besitzer und native R4SYS/R4NET/R4DEV-Callbacks. Rust fuegt Leihen/Typen/echte Abschlussretention hinzu; keine zweite Netzwerk- oder Schedulingimplementierung."
     },
     {
       "id": "time-serial",
@@ -563,22 +582,31 @@
       "semantics": "Monotone Fristen, Sattigung, Frequenz und Waitarten unterscheiden; Serialbesitz/Laengen/Timeout/Fehler erhalten. Optionale Deadline-Trailer sind ein Daten-/Protokollvertrag.",
       "current_only": "current_function_and_protocol_data",
       "rust": {
-        "state": "missing_higher_facade",
-        "source": "Repositories/SDK/Rust/src/lib.rs",
-        "gap": "Zeit, Timeouts und Serial als gleichwertige typisierte Rust-Fassade mit denselben Fehler-/Besitz-/Waitregeln ergaenzen."
+        "state": "paritaet_abgenommen",
+        "source": "Repositories/SDK/Rust/src/time.rs",
+        "gap": "SDK74: skalare Clocks, Dauer-/Tick-/Fristkonvertierung/Sattigung, gueltige optionale Requestfooter, Serienportidentitaet, find/openNumber, partielle IO und Handleerhalt bei fehlgeschlagenem Close. Physische Serialhardware bleibt unqualifiziert.",
+        "sources": [
+          "Repositories/SDK/Rust/src/time.rs",
+          "Repositories/SDK/Rust/src/serial.rs"
+        ]
       },
       "c": {
-        "state": "existing_facade_review_required",
+        "state": "paritaet_abgenommen",
         "sources": [
           "Repositories/SDK/Shared/C/include/r4os/serial.h",
           "Repositories/SDK/Shared/C/include/r4os/path_timeout.h"
         ],
-        "gap": "Bestehende C-Fassade erhalten; nur fehlende aktuelle Funktionen/hoeheren Hilfen und deren Semantik gegen die verlinkten Zig-Deklarationen schliessen."
+        "gap": "Bestehende aktuelle C-Besitzer erhalten; gemeinsame Zig-Loop/Deadline/Netzwerkbridge, fehlender TCP-Poll, gepackter Socketstatus und abgelaufener Poll ohne Frequenz vervollstaendigt. Slot-/Request-/Close-Quittungen bleiben explizit; keine Altkernel-Emulation."
       },
       "evidence": [
-        "source_inventory"
+        "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.55",
+        "Repositories/SDK/Tools/Test-RustServices.ps1",
+        "Repositories/SDK/Tests/Simulation/RustServices.rs",
+        "Repositories/SDK/Tests/Simulation/ServiceNetworkCallbacks.c",
+        "Repositories/SDK/Tests/Build/RustServices",
+        "Repositories/SDK/Tests/Simulation/NetworkPeer.py"
       ],
-      "shared_core": null
+      "shared_core": "Vorhandene C-AppServices/AppTray/AppNetwork/Serial/Timeout-Besitzer, Zig-ServiceLoop/-Deadline/-R4NET-Besitzer und native R4SYS/R4NET/R4DEV-Callbacks. Rust fuegt Leihen/Typen/echte Abschlussretention hinzu; keine zweite Netzwerk- oder Schedulingimplementierung."
     },
     {
       "id": "gui",
@@ -47003,6 +47031,35 @@
         "spectra": "1687bf3ffc267a663e04280579c0774eb4427dbe4165e9338cb09f253fd32bd7"
       },
       "limit": "Kein Hardware-/Windows-/Rust-SIMDbeleg. Borrowed IO unsafe; fehlgeschlagenes Drop-Close behaelt Rohspeicher, Kernelinstance-Reaper bleibt Besitzer."
+    },
+    "service_network_current_55": {
+      "kind": "native_release_and_real_KVM_SMP4_function",
+      "sdk": "0.64.74",
+      "contract": "0.64.44",
+      "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.55",
+      "guest": "Full0.86.42/Kernel0.1.381/KVM/SMP4",
+      "exit": 0,
+      "projection": {
+        "functions": 457,
+        "records": 559,
+        "canonical_aliases": 464,
+        "r4net_methods": 157
+      },
+      "standard": "none: SDK/header/template/fixture-only; only CNETD image_scope=none consumes changed C sockets. Normal artifacts unchanged to53.",
+      "unchanged_normal_artifacts": {
+        "kernel": "e06111b9363b44712fe69ded9ddfc3edb1f60c5c271c59a42238a816b0882340",
+        "desktop": "2b493582b26d800f6ddf67d306e192b37a727a654b202bd98b06ad3dd8901421",
+        "spectra": "1687bf3ffc267a663e04280579c0774eb4427dbe4165e9338cb09f253fd32bd7"
+      },
+      "limit": "Keine physische Serial-/Netzhardware-, Windows- oder Rust-SIMDqualifikation. Aktive Rohrequests bleiben affine, stabile Leihen bis zur nativen Closequittung.",
+      "client": {
+        "bytes": 53924,
+        "sha256": "47b1c07eeb73a70b5fa4038b12a4dc59de0a099d759c7ea260d4648d4680f9d1"
+      },
+      "service": {
+        "bytes": 12851,
+        "sha256": "14e568bdc3a5366bbb09846733537c78141755b94ee64d56759118c97d9bc6e6"
+      }
     }
   },
   "wave_bindings": [
@@ -47084,7 +47141,8 @@
         "time-serial"
       ],
       "entry_rule": "Nur diese betroffenen Zeilen gegen ihren aktuellen Besitzer und gueltige Vorbelege nachpruefen; bereits erreichte Teilziele belegen, alte Kandidaten verwerfen, Pflichtfunktion erhalten.",
-      "current_only_cleanup": "Im ohnehin beruehrten Besitzer alte OS-Ersatzpfade entfernen;78-82 nur noch nachgewiesenen Rest zuweisen."
+      "current_only_cleanup": "Im ohnehin beruehrten Besitzer alte OS-Ersatzpfade entfernen;78-82 nur noch nachgewiesenen Rest zuweisen.",
+      "result": "SDK74: services/network/time-serial beim aktuellen Besitzer geschlossen; native Release/Negative/Drift und echte KVM4-Funktion. Physische Serial-/Netzhardware, Windows und Rust-SIMD weiterhin separat."
     },
     {
       "version": "0.86.56",

@@ -2,9 +2,15 @@
 #define R4OS_FACADES_H
 #include "app_storage.h"
 #include "app_resources.h"
+#include "app_network.h"
+#include "app_tray.h"
 #include "storage.h"
 #include "storage_helpers.h"
 #include "directory_page.h"
+#include "serial.h"
+#include "service_helpers.h"
+#include "net_bridge.h"
+#include "net_request.h"
 
 int32_t R4SdkAppFacade(const R4XStartContext *, R4App *);
 

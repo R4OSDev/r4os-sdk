@@ -60,19 +60,26 @@ typedef struct R4EndpointReceiveResult {
     R4ServiceMessageHeader header;
 } R4EndpointReceiveResult;
 
+#define R4_SERVICES_HAS(table, field) ((table) != 0 && (table)->size >= offsetof(R4XStartR4Sys, field) + sizeof(uintptr_t) && (table)->field != 0)
+
 static inline R4Services r4_app_services(R4App *app) { R4Services value = {app}; return value; }
 static inline int r4_service_connection_valid(const R4ServiceConnection *connection) { return connection != 0 && connection->app != 0 && connection->raw != 0u; }
 static inline int r4_service_endpoint_valid(const R4ServiceEndpoint *endpoint) { return endpoint != 0 && endpoint->app != 0 && endpoint->raw != 0u; }
 
 static inline int r4_services_available(const R4Services *services) {
     const R4XStartR4Sys *table = services != 0 && services->app != 0 ? services->app->system.table : 0;
-    return table != 0 && table->service_open != 0 && table->service_close != 0 && table->service_call != 0 &&
-        table->service_endpoint_register != 0 && table->service_endpoint_unregister != 0 &&
-        table->service_endpoint_wait != 0 && table->service_endpoint_recv != 0 && table->service_endpoint_reply != 0;
+    return R4_SERVICES_HAS(table, service_open) &&
+        R4_SERVICES_HAS(table, service_close) &&
+        R4_SERVICES_HAS(table, service_call) &&
+        R4_SERVICES_HAS(table, service_endpoint_register) &&
+        R4_SERVICES_HAS(table, service_endpoint_unregister) &&
+        R4_SERVICES_HAS(table, service_endpoint_wait) &&
+        R4_SERVICES_HAS(table, service_endpoint_recv) &&
+        R4_SERVICES_HAS(table, service_endpoint_reply);
 }
 
 static inline uint32_t r4_services_monotonic_hz(R4App *app) {
-    if (app == 0 || app->system.table == 0 || app->system.table->time_state == 0) return 0u;
+    if (app == 0 || !R4SYS_HAS(&app->system, time_state)) return 0u;
     R4TimeState state = {0};
     ((R4SysTimeStateFn)(uintptr_t)app->system.table->time_state)(&state);
     return state.monotonic_hz;
@@ -81,7 +88,7 @@ static inline uint32_t r4_services_monotonic_hz(R4App *app) {
 static inline int32_t r4_services_open(R4Services *services, const char *name, R4ServiceConnection *out) {
     if (out != 0) *out = (R4ServiceConnection){0};
     const R4XStartR4Sys *table = services != 0 && services->app != 0 ? services->app->system.table : 0;
-    if (table == 0 || table->service_open == 0 || name == 0 || out == 0) return R4OS_ERR_NO_FN;
+    if (!R4_SERVICES_HAS(table, service_open) || name == 0 || out == 0) return R4OS_ERR_NO_FN;
     R4ServiceInfo info = {0};
     int32_t raw = ((R4SysServiceOpenFn)(uintptr_t)table->service_open)((const uint8_t *)name, &info);
     if (raw != R4OS_SERVICE_API_RESULT_OK || info.handle == 0u) return raw == R4OS_SERVICE_API_RESULT_OK ? R4OS_SERVICE_API_RESULT_NO_ENDPOINT : raw;
@@ -94,7 +101,7 @@ static inline R4ServiceCallResult r4_service_connection_call(R4ServiceConnection
     if (!r4_service_connection_valid(connection)) return result;
     if (request_len > R4OS_SERVICE_API_MAX_PAYLOAD || response_capacity > R4OS_SERVICE_API_MAX_PAYLOAD || (request_len != 0u && request == 0) || (response_capacity != 0u && response == 0)) { result.raw_code = R4OS_SERVICE_API_RESULT_INVALID; return result; }
     const R4XStartR4Sys *table = connection->app->system.table;
-    if (table == 0 || table->service_call == 0) { result.raw_code = R4OS_ERR_NO_FN; return result; }
+    if (!R4_SERVICES_HAS(table, service_call)) { result.raw_code = R4OS_ERR_NO_FN; return result; }
     uint64_t ticks = 0u;
     if (r4_timeout_to_ticks(timeout, r4_services_monotonic_hz(connection->app), &ticks) != R4OS_OK) { result.raw_code = R4OS_SERVICE_API_RESULT_INVALID; return result; }
     R4ServiceMessageHeader header = {0};
@@ -118,7 +125,7 @@ static inline int32_t r4_service_connection_close(R4ServiceConnection *connectio
     if (!r4_service_connection_valid(connection)) return R4OS_ERR_CLOSED;
     if (!connection->owned) return R4OS_ERR_NOT_OWNED;
     const R4XStartR4Sys *table = connection->app->system.table;
-    if (table == 0 || table->service_close == 0) return R4OS_ERR_NO_FN;
+    if (!R4_SERVICES_HAS(table, service_close)) return R4OS_ERR_NO_FN;
     int32_t raw = ((R4SysServiceCloseFn)(uintptr_t)table->service_close)(connection->raw);
     if (raw == R4OS_SERVICE_API_RESULT_OK || raw == R4OS_SERVICE_API_RESULT_BAD_HANDLE) {
         *connection = (R4ServiceConnection){0};
@@ -130,7 +137,7 @@ static inline int32_t r4_service_connection_close(R4ServiceConnection *connectio
 static inline int32_t r4_services_register(R4Services *services, const char *name, uint32_t flags, R4ServiceEndpoint *out) {
     if (out != 0) *out = (R4ServiceEndpoint){0};
     const R4XStartR4Sys *table = services != 0 && services->app != 0 ? services->app->system.table : 0;
-    if (table == 0 || table->service_endpoint_register == 0 || name == 0 || out == 0) return R4OS_ERR_NO_FN;
+    if (!R4_SERVICES_HAS(table, service_endpoint_register) || name == 0 || out == 0) return R4OS_ERR_NO_FN;
     R4ServiceInfo info = {0};
     int32_t raw = ((R4SysServiceEndpointRegisterFn)(uintptr_t)table->service_endpoint_register)((const uint8_t *)name, flags, &info);
     if (raw != R4OS_SERVICE_API_RESULT_OK || info.handle == 0u) return raw == R4OS_SERVICE_API_RESULT_OK ? R4OS_SERVICE_API_RESULT_NO_ENDPOINT : raw;
@@ -142,7 +149,7 @@ static inline R4EndpointWaitResult r4_service_endpoint_wait(R4ServiceEndpoint *e
     R4EndpointWaitResult result = {R4_ENDPOINT_WAIT_FAILED, R4OS_ERR_CLOSED, 0u};
     if (!r4_service_endpoint_valid(endpoint)) return result;
     const R4XStartR4Sys *table = endpoint->app->system.table;
-    if (table == 0 || table->service_endpoint_wait == 0) { result.raw_code = R4OS_ERR_NO_FN; return result; }
+    if (!R4_SERVICES_HAS(table, service_endpoint_wait)) { result.raw_code = R4OS_ERR_NO_FN; return result; }
     uint64_t ticks = 0u;
     if (r4_timeout_to_ticks(timeout, r4_services_monotonic_hz(endpoint->app), &ticks) != R4OS_OK) { result.raw_code = R4OS_SERVICE_API_RESULT_INVALID; return result; }
     int32_t raw = ((R4SysServiceEndpointWaitFn)(uintptr_t)table->service_endpoint_wait)(endpoint->raw, ticks);
@@ -159,7 +166,7 @@ static inline R4EndpointReceiveResult r4_service_endpoint_recv(R4ServiceEndpoint
     if (!r4_service_endpoint_valid(endpoint)) return result;
     if (capacity > R4OS_SERVICE_API_MAX_PAYLOAD || (capacity != 0u && out == 0)) { result.raw_code = R4OS_SERVICE_API_RESULT_INVALID; return result; }
     const R4XStartR4Sys *table = endpoint->app->system.table;
-    if (table == 0 || table->service_endpoint_recv == 0) { result.raw_code = R4OS_ERR_NO_FN; return result; }
+    if (!R4_SERVICES_HAS(table, service_endpoint_recv)) { result.raw_code = R4OS_ERR_NO_FN; return result; }
     R4ServiceMessageHeader header = {0};
     int32_t raw = ((R4SysServiceEndpointRecvFn)(uintptr_t)table->service_endpoint_recv)(endpoint->raw, &header, (uint8_t *)out, capacity);
     result.header = header; result.raw_code = raw;
@@ -174,7 +181,7 @@ static inline int32_t r4_service_endpoint_reply(R4ServiceEndpoint *endpoint, uin
     if (!r4_service_endpoint_valid(endpoint)) return R4OS_ERR_CLOSED;
     if (payload_len > R4OS_SERVICE_API_MAX_PAYLOAD || (payload_len != 0u && payload == 0)) return R4OS_SERVICE_API_RESULT_PAYLOAD_TOO_LARGE;
     const R4XStartR4Sys *table = endpoint->app->system.table;
-    if (table == 0 || table->service_endpoint_reply == 0) return R4OS_ERR_NO_FN;
+    if (!R4_SERVICES_HAS(table, service_endpoint_reply)) return R4OS_ERR_NO_FN;
     int32_t raw = ((R4SysServiceEndpointReplyFn)(uintptr_t)table->service_endpoint_reply)(endpoint->raw, request_id, status, (const uint8_t *)payload, payload_len);
     if (raw == R4OS_SERVICE_API_RESULT_BAD_HANDLE || raw == R4OS_SERVICE_API_RESULT_NOT_RUNNING) endpoint->raw = 0u;
     return raw;
@@ -184,7 +191,7 @@ static inline int32_t r4_service_endpoint_unregister(R4ServiceEndpoint *endpoint
     if (!r4_service_endpoint_valid(endpoint)) return R4OS_ERR_CLOSED;
     if (!endpoint->owned) return R4OS_ERR_NOT_OWNED;
     const R4XStartR4Sys *table = endpoint->app->system.table;
-    if (table == 0 || table->service_endpoint_unregister == 0) return R4OS_ERR_NO_FN;
+    if (!R4_SERVICES_HAS(table, service_endpoint_unregister)) return R4OS_ERR_NO_FN;
     int32_t raw = ((R4SysServiceEndpointUnregisterFn)(uintptr_t)table->service_endpoint_unregister)(endpoint->raw);
     if (raw == R4OS_SERVICE_API_RESULT_OK || raw == R4OS_SERVICE_API_RESULT_BAD_HANDLE) {
         *endpoint = (R4ServiceEndpoint){0};

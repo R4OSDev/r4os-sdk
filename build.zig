@@ -38,6 +38,15 @@ pub fn build(b: *std.Build) void {
         return;
     }
     const sdk_profile = Sdk.init(b, .{ .contract_dependency = contract_dependency });
+    if (b.option(bool, "net-bridge-generator-only", "Build the compiler-typed SDK network bridge generator") orelse false) {
+        const root = b.createModule(.{ .root_source_file = b.path("Tools/NetBridgeGen/src/main.zig"), .target = b.graph.host, .optimize = .ReleaseSafe });
+        const bridge = b.createModule(.{ .root_source_file = b.path("r4os/net_bridge_support.zig"), .target = b.graph.host, .optimize = .ReleaseSafe });
+        bridge.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
+        bridge.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = b.graph.host, .optimize = .ReleaseSafe }));
+        root.addImport("bridge", bridge);
+        b.installArtifact(b.addExecutable(.{ .name = "net-bridge-gen", .root_module = root }));
+        return;
+    }
     if (b.option(bool, "facade-generator-only", "Build the compiler-typed SDK C/Rust facade projector") orelse false) {
         const root = b.createModule(.{ .root_source_file = b.path("Tools/CFacadeGen/src/main.zig"), .target = b.graph.host, .optimize = .ReleaseSafe, .link_libc = true });
         root.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
@@ -50,7 +59,7 @@ pub fn build(b: *std.Build) void {
         const native = b.option(bool, "facade-host-test", "Use native ABI for facade interop only") orelse false;
         const object = r4os_build.addFacadeRuntime(b, b.path("Shared/C/src/facades.c"), sdk_profile.profile.c_include_root, sdk_profile.profile.contract_c_include_root, native);
         b.getInstallStep().dependOn(&b.addInstallFile(object, "lib/r4sdk_facades.o").step);
-        const storage_runtime = r4os_build.addStorageRuntimeObject(b, b.path("r4os/storage_runtime.zig"), sdk_profile.profile.contract_module, sdk_profile.profile.grapheme_source.?, sdk_profile.builder, native);
+        const storage_runtime = r4os_build.addStorageRuntimeObject(b, b.path("r4os/facade_runtime.zig"), sdk_profile.profile.contract_module, sdk_profile.profile.grapheme_source.?, sdk_profile.builder, native);
         b.getInstallStep().dependOn(&b.addInstallFile(storage_runtime, "lib/r4sdk_storage.o").step);
         return;
     }
@@ -105,6 +114,10 @@ pub fn build(b: *std.Build) void {
     resource_cases.addImport("r4os", host_r4os);
     const resource_parity = b.addRunArtifact(b.addTest(.{ .root_module = resource_cases, .filters = &.{ "process thread VM and I/O resources", "program handles reject stale copies", "sequential stress reuses" } }));
     b.step("resource-parity-test", "Existing process/thread/VM/I/O resource lifecycle cases only").dependOn(&resource_parity.step);
+    const service_cases = b.createModule(.{ .root_source_file = b.path("Tests/Conformance/ServiceNetworkFacadePrototype05826.zig"), .target = b.graph.host, .optimize = .Debug });
+    service_cases.addImport("r4os", host_r4os);
+    const service_parity = b.addRunArtifact(b.addTest(.{ .root_module = service_cases, .filters = &.{ "service connection and endpoint", "resolver TCP and UDP", "service loop", "service deadline suffix", "net socket drain", "duration conversion", "duration and deadline", "tagged timeout", "deadline budget" } }));
+    b.step("service-parity-test", "Existing service/network, bounded drain and absolute deadline owner cases").dependOn(&service_parity.step);
     const sdk_unit_tests = b.addTest(.{ .root_module = host_r4os });
     const run_sdk_unit_tests = b.addRunArtifact(sdk_unit_tests);
     const dialog_root = b.createModule(.{

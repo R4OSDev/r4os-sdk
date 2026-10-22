@@ -348,7 +348,7 @@ pub const Sdk = struct {
     }
 
     pub fn addStorageRuntime(self: Sdk) std.Build.LazyPath {
-        return addStorageRuntimeObject(self.b, self.profile.sdk_root.path(self.b, "r4os/storage_runtime.zig"), self.profile.contract_module, self.profile.grapheme_source.?, self.builder, false);
+        return addStorageRuntimeObject(self.b, self.profile.sdk_root.path(self.b, "r4os/facade_runtime.zig"), self.profile.contract_module, self.profile.grapheme_source.?, self.builder, false);
     }
 
     pub fn addR4XStartC(self: Sdk, opts: R4XCAppOptions) BuildResult {

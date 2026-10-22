@@ -1,5 +1,14 @@
 /* Scalar exports of existing SDK facade algorithms. Rust links this SDK-owned
  * object; C retains the same inline owner, without a third path parser. */
+#include <r4os/r4dev.h>
+/* Export the existing scalar time and serial owners before App includes their
+ * headers. Supporting platform functions remain private. */
+#define static
+#define inline
+#include <r4os/path_timeout.h>
+#include <r4os/serial.h>
+#undef inline
+#undef static
 #include <r4os/app_contract.h>
 #include <r4os/heap.h>
 /* Emit the existing inline facade bodies once for foreign-language callers.
@@ -8,6 +17,8 @@
 #define inline
 #include <r4os/app_storage.h>
 #include <r4os/app_resources.h>
+#include <r4os/app_network.h>
+#include <r4os/app_tray.h>
 #include <r4os/storage.h>
 #include <r4os/directory_page.h>
 #undef inline

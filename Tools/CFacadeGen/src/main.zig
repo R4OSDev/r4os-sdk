@@ -16,7 +16,7 @@ fn typeCandidate(name: []const u8) bool {
 }
 fn selected(comptime name: []const u8) bool {
     if (starts(name, "R4SdkHeap")) return false;
-    inline for (.{ "r4_files_", "r4_console_", "r4_stream_", "r4_directory_", "r4_registry_", "r4_storage_", "r4_dialog_", "r4_ordered_", "r4_snapshot_", "r4_resources_", "r4_resource_", "r4_process_", "r4os_process_", "r4os_spawn_", "r4_join_", "r4_vm_region_", "r4_io_", "r4_notification_", "R4Sdk" }) |prefix| {
+    inline for (.{ "r4_files_", "r4_console_", "r4_stream_", "r4_directory_", "r4_registry_", "r4_storage_", "r4_dialog_", "r4_ordered_", "r4_snapshot_", "r4_resources_", "r4_resource_", "r4_process_", "r4os_process_", "r4os_spawn_", "r4_join_", "r4_vm_region_", "r4_io_", "r4_notification_", "r4_services_", "r4_service_", "r4_network_", "r4_net_", "r4_tcp_", "r4_udp_", "r4_resolver_", "r4_ipv4", "r4_tray_", "r4_app_tray", "r4serial_", "r4_duration_", "r4_timeout_", "r4_remaining_ticks", "r4_monotonic_resolution_ns", "r4_deadline_after", "R4Sdk" }) |prefix| {
         if (starts(name, prefix)) return true;
     }
     return false;
@@ -101,7 +101,7 @@ fn emit(w: *std.Io.Writer) !void {
         "#![allow(non_camel_case_types, non_snake_case, dead_code)]\n");
     for (records) |record| {
         if (record.owner) |owner| try w.print("pub type {s} = crate::abi::{s};\n", .{ record.name, owner }) else {
-            try w.print("#[repr(C)]\n#[derive(Clone, Copy)]\npub {s} {s} {{\n", .{ if (record.is_union) "union" else "struct", record.name });
+            try w.print("#[repr(C, align({d}))]\n#[derive(Clone, Copy)]\npub {s} {s} {{\n", .{ record.alignment, if (record.is_union) "union" else "struct", record.name });
             for (record.fields) |field| try w.print("    pub r#{s}: {s},\n", .{ field.name, field.rust });
             try w.writeAll("}\n");
         }
