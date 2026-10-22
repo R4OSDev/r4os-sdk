@@ -62,6 +62,23 @@ pinned context without a window or host claim. Resource close and native
 completion remain explicit; no drop/submit/copy implies scanout visibility.
 Original native oracles and a real Rust/C KVM4 offscreen CPU-copy consumer
 qualify this group. Native GPU/hardware and higher R4GFX helpers remain separate.
+SDK0.64.80 adds `data` and `r4os/data_helpers.h`: typed calls into the original
+JSON/ZIP protocol facades, raster/ICO, encoding/URL, manifest/project/artifact
+metadata and CPU/hash/entropy owners. Rust provides pinned context/arena
+storage, borrowed JSON/manifest/image views and streaming codec/hash wrappers.
+The complete native operations remain in `data::raw`; retain ZIP work, archive,
+entry and output storage through their final step. Protocol calls still require
+R4DEV and the installed JSON/R4ZIP providers; no parser is embedded in an app.
+`Data::sha256` selects the caller's executor per instance, retaining fresh OS
+admission and the original software path. `readU64` now rejects overflow.
+Named enum tags and immutable string constants are generated from their owners.
+Build the data header with `-Ddata-bridge-generator-only=true`; its tool supports
+`write`/`check` for the header and `r4os/generated/data_fingerprint.zig`.
+The existing facade generator then projects this same C boundary to Rust.
+`Tools/Test-RustData.ps1` is the small native consumer gate;
+`Tests/Build/RustData` reuses the selected R4Zip owner's fixtures with an explicit
+`-DependencyRoot` and uses real protocols in the guest. Qualification and limits:
+[Language parity matrix](Inventory/LanguageParity.json).
 SDK0.64.67 binds Contract0.64.42's complete technical C projection. Driver,
 protocol, DMA/USB and service records now come from the canonical Contract;
 the three manually duplicated network reply records are removed from the SDK.

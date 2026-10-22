@@ -26,7 +26,12 @@ pub fn Sha256(comptime provider: fn () ?acceleration.WorkFn) type {
                 self.inner.update(input);
                 return;
             }
-            const execute = provider() orelse {
+            self.updateWithExecutor(input, provider());
+        }
+        /// Instance-selected executor for foreign-language consumers. Every
+        /// admitted batch still requires the same fresh kernel receipt.
+        pub fn updateWithExecutor(self: *Self, input: []const u8, executor: ?acceleration.WorkFn) void {
+            const execute = executor orelse {
                 self.inner.update(input);
                 return;
             };

@@ -823,19 +823,30 @@
       "semantics": "Callerallokation/Laengen/Ueberlauf/UTF-8/Wirewerte, Formatfehler und Teiloutput erhalten. RDRAND/ISA nur mit frischer OS-Zulassung und echten Fehlerquittungen; Softwarepfad ist aktuelle Hardwarepolitik.",
       "current_only": "current_function",
       "rust": {
-        "state": "missing_higher_facade",
-        "source": "Repositories/SDK/Rust/src/lib.rs",
-        "gap": "JSON, ZIP, Raster, ICO, Hash, Entropie und CPU-Hilfen als gleichwertige typisierte Rust-Fassade mit denselben Fehler-/Besitz-/Waitregeln ergaenzen."
+        "state": "original_data_helpers_qualified",
+        "source": "Repositories/SDK/Rust/src/data/mod.rs",
+        "gap": "",
+        "raw": "Repositories/SDK/Rust/src/c_facades.rs"
       },
       "c": {
-        "state": "missing_higher_facade",
-        "sources": [],
-        "gap": "Kein entsprechender hoeherer C-Einstieg im SDK-Headerbestand; gleiche Fachfunktion bereitstellen."
+        "state": "original_data_helpers_qualified",
+        "sources": [
+          "Repositories/SDK/Shared/C/include/r4os/data_helpers.h"
+        ],
+        "gap": ""
       },
       "evidence": [
-        "source_inventory"
+        "source_inventory",
+        "data_current_61"
       ],
-      "shared_core": "Grosse Parser/Codec-/Kryptokerne einmal beim SDK-/Librarybesitzer; besitzereigene C-ABI bzw. passende existierende R4L in61 begruenden. Kein Kopieren von JSON/ZIP/Entropiealgorithmen in drei Sprachen."
+      "shared_core": "Grosse Parser/Codec-/Kryptokerne einmal beim SDK-/Librarybesitzer; besitzereigene C-ABI bzw. passende existierende R4L in61 begruenden. Kein Kopieren von JSON/ZIP/Entropiealgorithmen in drei Sprachen.",
+      "qualification": {
+        "performed_in": "0.86.61",
+        "sdk": "0.64.80",
+        "libraries_package": "0.64.27",
+        "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.61",
+        "scope": "All eleven data-crypto modules plus public project/manifest/version/update/artifact metadata, concrete arena/reader/hash/context adapters. Existing bounded text53, time55 and chart56 paths retained; update/recovery and web engines keep their later waves. JSON/ZIP parsers remain installed R4P providers, not embedded app copies."
+      }
     },
     {
       "id": "web-document",
@@ -1140,7 +1151,9 @@
       "line": 10,
       "expression": "@import(\"r4os/version_info.zig\")",
       "capability": "update-storage",
-      "wave": "0.86.64"
+      "wave": "0.86.64",
+      "pure_helper_evidence": "data_current_61",
+      "entry_note": "Public pure metadata/parser/render helpers available61; original wave retains any file/build/update/recovery integration, not a duplicate algorithm implementation."
     },
     {
       "name": "r4u_manifest",
@@ -1148,7 +1161,9 @@
       "line": 11,
       "expression": "@import(\"r4os/r4u_manifest.zig\")",
       "capability": "update-storage",
-      "wave": "0.86.64"
+      "wave": "0.86.64",
+      "pure_helper_evidence": "data_current_61",
+      "entry_note": "Public pure metadata/parser/render helpers available61; original wave retains any file/build/update/recovery integration, not a duplicate algorithm implementation."
     },
     {
       "name": "r4u_artifact",
@@ -1156,7 +1171,9 @@
       "line": 12,
       "expression": "@import(\"r4os/r4u_artifact.zig\")",
       "capability": "update-storage",
-      "wave": "0.86.64"
+      "wave": "0.86.64",
+      "pure_helper_evidence": "data_current_61",
+      "entry_note": "Public pure metadata/parser/render helpers available61; original wave retains any file/build/update/recovery integration, not a duplicate algorithm implementation."
     },
     {
       "name": "system_update_inventory",
@@ -2468,7 +2485,9 @@
       "line": 176,
       "expression": "@import(\"r4os/r4cp.zig\")",
       "capability": "project-build",
-      "wave": "0.86.51"
+      "wave": "0.86.51",
+      "pure_helper_evidence": "data_current_61",
+      "entry_note": "Public pure metadata/parser/render helpers available61; original wave retains any file/build/update/recovery integration, not a duplicate algorithm implementation."
     },
     {
       "name": "r4cp_convert",
@@ -2476,7 +2495,9 @@
       "line": 177,
       "expression": "@import(\"r4os/r4cp_convert.zig\")",
       "capability": "project-build",
-      "wave": "0.86.51"
+      "wave": "0.86.51",
+      "pure_helper_evidence": "data_current_61",
+      "entry_note": "Public pure metadata/parser/render helpers available61; original wave retains any file/build/update/recovery integration, not a duplicate algorithm implementation."
     },
     {
       "name": "r4mf",
@@ -2484,7 +2505,9 @@
       "line": 178,
       "expression": "@import(\"r4os/module_manifest.zig\")",
       "capability": "project-build",
-      "wave": "0.86.51"
+      "wave": "0.86.51",
+      "pure_helper_evidence": "data_current_61",
+      "entry_note": "Public pure metadata/parser/render helpers available61; original wave retains any file/build/update/recovery integration, not a duplicate algorithm implementation."
     },
     {
       "name": "lowlevel",
@@ -45398,7 +45421,8 @@
       "evidence": [
         "source_inventory",
         "local_contract_and_baseline",
-        "language_libraries_current_60"
+        "language_libraries_current_60",
+        "library_projection_current_61"
       ],
       "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten."
     },
@@ -45502,7 +45526,8 @@
       "evidence": [
         "source_inventory",
         "local_contract_and_baseline",
-        "language_libraries_current_60"
+        "language_libraries_current_60",
+        "library_projection_current_61"
       ],
       "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten.",
       "higher_helper_review": "Current public Zig binding contains generated local contract only; no additional higher consumer helper is omitted. Binding52 evidence remains."
@@ -45583,7 +45608,8 @@
       "evidence": [
         "source_inventory",
         "local_contract_and_baseline",
-        "language_libraries_current_60"
+        "language_libraries_current_60",
+        "library_projection_current_61"
       ],
       "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten."
     },
@@ -45667,7 +45693,8 @@
       "evidence": [
         "source_inventory",
         "local_contract_and_baseline",
-        "language_libraries_current_59"
+        "language_libraries_current_59",
+        "library_projection_current_61"
       ],
       "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten."
     },
@@ -45840,7 +45867,8 @@
       "evidence": [
         "source_inventory",
         "local_contract_and_baseline",
-        "language_libraries_current_60"
+        "language_libraries_current_60",
+        "library_projection_current_61"
       ],
       "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten."
     },
@@ -45910,7 +45938,8 @@
       "evidence": [
         "source_inventory",
         "local_contract_and_baseline",
-        "language_libraries_current_60"
+        "language_libraries_current_60",
+        "library_projection_current_61"
       ],
       "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten.",
       "higher_helper_review": "Current public Zig binding contains generated local contract only; no additional higher consumer helper is omitted. Binding52 evidence remains."
@@ -46010,7 +46039,8 @@
       "evidence": [
         "source_inventory",
         "local_contract_and_baseline",
-        "language_libraries_current_59"
+        "language_libraries_current_59",
+        "library_projection_current_61"
       ],
       "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten."
     },
@@ -46083,7 +46113,8 @@
       "evidence": [
         "source_inventory",
         "local_contract_and_baseline",
-        "language_libraries_current_60"
+        "language_libraries_current_60",
+        "library_projection_current_61"
       ],
       "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten."
     },
@@ -46175,7 +46206,8 @@
       "evidence": [
         "source_inventory",
         "local_contract_and_baseline",
-        "language_libraries_current_60"
+        "language_libraries_current_60",
+        "library_projection_current_61"
       ],
       "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten.",
       "higher_helper_review": "Current public Zig binding contains generated local contract only; no additional higher consumer helper is omitted. Binding52 evidence remains."
@@ -46357,7 +46389,8 @@
       "evidence": [
         "source_inventory",
         "local_contract_and_baseline",
-        "language_libraries_current_59"
+        "language_libraries_current_59",
+        "library_projection_current_61"
       ],
       "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten."
     },
@@ -46439,7 +46472,8 @@
       "evidence": [
         "source_inventory",
         "local_contract_and_baseline",
-        "language_libraries_current_60"
+        "language_libraries_current_60",
+        "library_projection_current_61"
       ],
       "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten."
     },
@@ -46507,7 +46541,8 @@
       "evidence": [
         "source_inventory",
         "local_contract_and_baseline",
-        "language_libraries_current_60"
+        "language_libraries_current_60",
+        "library_projection_current_61"
       ],
       "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten.",
       "higher_helper_review": "Current public Zig binding contains generated local contract only; no additional higher consumer helper is omitted. Binding52 evidence remains."
@@ -47489,6 +47524,150 @@
       "normal_artifacts": "unchanged; hashes at platform_current_58.unchanged_normal_artifacts",
       "standard": "none: optional helper/foreign-language and IMAGE_SCOPE=none test work only; normal kernel/provider/module implementations unchanged",
       "limits": "No physical GPU/scanout/display/color qualification, actual ACO/NAK worker compilation/join with provider, native video/encode/playback, external GL/Vulkan direct-FP ABI, Windows, Rust SIMD/FP or performance qualification. Raw asynchronous owners retain original stable addresses, all inputs, real join/close/completion requirements; timeout/cancel never frees. Existing local contracts/baselines/provider artifacts unchanged."
+    },
+    "data_current_61": {
+      "kind": "original_SDK_data_owners_native_Rust_C_and_real_KVM_SMP4_protocol_consumer",
+      "performed_in": "0.86.61",
+      "sdk": "0.64.80",
+      "libraries_package": "0.64.27",
+      "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.61",
+      "scope": "All eleven data-crypto modules plus public project/manifest/version/update/artifact metadata, concrete arena/reader/hash/context adapters. Existing bounded text53, time55 and chart56 paths retained; update/recovery and web engines keep their later waves. JSON/ZIP parsers remain installed R4P providers, not embedded app copies.",
+      "projection": {
+        "native_types": 185,
+        "native_functions": 167,
+        "C_inline_operations": 985,
+        "C_Rust_function_closure": "all985 matched; five additional transport entries",
+        "fingerprint": 17129968839081907690,
+        "new_C_string_getters": 7
+      },
+      "consumer": {
+        "bytes": 532948,
+        "sha256": "8cd0fde463f0a54784c738a2f7a14f07bedebdcb6403c7f7e129b8d82ccc2c43",
+        "file": "DATAPROBE.R4X",
+        "readback": "exact DATA61A.R4X bytes",
+        "exit": 0,
+        "result": "DATA61 SHA batch receipts: accepted=0 refused=22 (software remains valid)\nPASS DATA61 Rust/C real JSON/ZIP protocols, u64 overflow, full/stream CRC bytes, shared SHA/codec/URL/raster/ICO/manifest and exact heap release"
+      },
+      "guest": "Full0.86.42/Kernel0.1.381/KVM/SMP4 with original JSON/R4ZIP providers and selected embedded SDK80 objects; own module deleted, regular shutdown exit0",
+      "checks": [
+        "existing selected owner cases for JSON/ZIP status, ICO/raster, encoding/URL/hash/version/manifest/artifact; original CPU and entropy21 cases passed",
+        "five native release C/Rust data cases and five actual unsafe/Unpin/JSON-source/arena-reset/URL-view compiler negatives",
+        "exact C/Rust current manifest and bounded arena/plan; old manifest version rejected; original ICO fixtures shared without duplicated byte arrays",
+        "streaming SHA digest/peek, known vector, unsupported digest/short output, exact overlap copy, codec/BOM/fatal/stream state, URL mutation/serialization",
+        "real JSON protocol u64 max and controlled overflow failure, token iteration/edit, real ZIP full/stream 90000-byte output with original fixture/CRC",
+        "guest SHA actual selected CPU executor: accepted0/refused22, exact original software digest retained; no accepted SHA-NI execution claim",
+        "both projections, warning-free SDK/library Clippy, every prior generated SDK facade line preserved",
+        "all library C inline functions now have Rust declarations, including30 previously omitted color/native JPEG helpers; native enum/type and resident string constants projected"
+      ],
+      "normal_module_rebuilds": {
+        "SSHD": {
+          "file": "Artifacts/Modules/SshService/SSHD.R4X",
+          "sha256": "d5cd0a5765a82fd053f69dbd42d0f1c6b732b97a12638413e0613f1dd94d9782",
+          "after_sha256": "1c98f6b14a6d281d8f21a2b14ad0d87e41dad805fb10f80ae7fc3512199b96ff",
+          "bytes": 427399
+        },
+        "R4TLS": {
+          "file": "Artifacts/Modules/R4Tls/R4TLS.R4P",
+          "sha256": "b7fa363e9f87ed4fc6274903c61adc1737aa04578ff5094abf21e68df34ee3f5",
+          "after_sha256": "e65e55f5d6d202a56c80cc50b09db3cb129a2b3a9dcb978a373e8122faa104f8",
+          "bytes": 317394
+        }
+      },
+      "sdk_runtimes": {
+        "facades": {
+          "sha256": "d1d967ff5c361aa1ac2becc0e49cd8bcd5a85621612a63a3bedb803e31e3b0ff",
+          "path": "Runtime/r4sdk_facades.o",
+          "cpu_baseline_sha256": "eeeee03aa8fd41051c09e61e9d70ca35660f2b413c3f878fb6e5a3bb51aad10c"
+        },
+        "storage": {
+          "sha256": "7cf191f0db7c33552ce056d2c1933c833bafcfa853252ac1fa7651513c891de9",
+          "path": "Runtime/r4sdk_storage.o",
+          "cpu_baseline_sha256": "eeeee03aa8fd41051c09e61e9d70ca35660f2b413c3f878fb6e5a3bb51aad10c"
+        }
+      },
+      "standard": {
+        "run_id": "834d40d5-88d5-434c-8444-51b8933274a1",
+        "release_version": "0.86.61",
+        "sha256": "56ac3f2af7f44be14390339eb76c252fc5549bd45e520b91a717aa14b6cb06b4",
+        "full_readback": "valid",
+        "metrics": 5,
+        "samples": 30,
+        "workers": 4,
+        "valid_score_areas": 6
+      },
+      "kernel": "0.1.381 unchanged; BOOT SHA256 e06111b9363b44712fe69ded9ddfc3edb1f60c5c271c59a42238a816b0882340",
+      "limits": "Linux host/bare target and local KVM4 only. No new physical SHA/RDRAND/entropy/GPU/video/native-JPEG, direct Rust SIMD/FP or Windows qualification; rejected acceleration is valid current software policy. No release image upload/hardware update. Unsafe ZIP jobs retain exact context/archive/work/output addresses through final step.",
+      "current_sources": [
+        {
+          "path": "Repositories/SDK/r4os/data_helper_owners.zig",
+          "sha256": "163402f543c6f062a725c39e835bf77bc20cba26275c8ce816930a5bdd7242fb"
+        },
+        {
+          "path": "Repositories/SDK/r4os/data_helper_adapters.zig",
+          "sha256": "28c466dee6694d41e1e1f0053e0891ab2edac4423d9a4ec5711c893c871b8e32"
+        },
+        {
+          "path": "Repositories/SDK/r4os/data_bridge_schema.zig",
+          "sha256": "f310064967547109a8930339a44afaaf2ad744742e35c965699166a38389f091"
+        },
+        {
+          "path": "Repositories/SDK/r4os/data_value_bridge.zig",
+          "sha256": "1b88aa758b503888f94239bff32c9f47a8515979ccbb3190f6ff0930925ad498"
+        },
+        {
+          "path": "Repositories/SDK/r4os/crypto_sha256.zig",
+          "sha256": "f92562f09d18caebc1d1549cebff5a4f15e5da252490e5605cf185d068308f94"
+        },
+        {
+          "path": "Repositories/SDK/r4os/json.zig",
+          "sha256": "7d6b07a0f627df12599b49313e5a19c8df3e685bdf11aacc0398adb072ca1b73"
+        },
+        {
+          "path": "Repositories/SDK/Shared/C/include/r4os/data_helpers.h",
+          "sha256": "64f6a05584a142e92a1f8f42654a6400682458672ba8f32d0bdbbe18e1c9c3a0"
+        },
+        {
+          "path": "Repositories/SDK/Tools/DataBridgeGen/src/main.zig",
+          "sha256": "95ece7ee89dd8e366f91f45de2e9089278fb418a94b4d0fd570694eb3b4f07f8"
+        },
+        {
+          "path": "Repositories/SDK/Tools/DataBridgeGen/src/c_header.zig",
+          "sha256": "74e16702374d56458d22a94f3122c8fc85f2910a2d8fbbffc06f99992921992f"
+        },
+        {
+          "path": "Repositories/SDK/Tools/Test-RustData.ps1",
+          "sha256": "13a8ed639ef007889c48ef5a2249d07e701d64bf99cffa2ba5bdc644001ca582"
+        }
+      ]
+    },
+    "library_projection_current_61": {
+      "performed_in": "0.86.61",
+      "libraries_package": "0.64.27",
+      "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.61",
+      "C_inline_operations": 4492,
+      "Rust_functions_including_transport": 4497,
+      "layouts": 1124,
+      "native_fingerprint_unchanged": 6999400729378588851,
+      "new_C_string_getters": 45,
+      "correction": "Rust selector previously omitted30 R4ImgColor/R4ImgNativeJpeg operation declarations; now projects whole public R4 namespace. All header function names are present in Rust; native layouts/implementations unchanged. Enum tags and string/type constants now projected. Existing shared native media/text/font and ownership cases passed; final projection/Clippy complete. No native JPEG or hardware execution qualification.",
+      "sources": [
+        {
+          "path": "Repositories/Libraries/Shared/Language/c_header.zig",
+          "sha256": "309204894d63c50cd0391764c15478b2d838b83567e96256edade561d76f40b6"
+        },
+        {
+          "path": "Repositories/Libraries/Shared/Language/rust_gen.zig",
+          "sha256": "de1ccccadc39cdb0361c6f7b93ed40151d8e2575023f244aa2f576d77e1f4aa9"
+        },
+        {
+          "path": "Repositories/Libraries/Shared/C/include/r4libraries/helpers.h",
+          "sha256": "f5bdf3a31811ee7d8d545815cf642b64bbb740a0ed7fcf1ab792fec931614d53"
+        },
+        {
+          "path": "Repositories/Libraries/Shared/Rust/src/raw.rs",
+          "sha256": "0eecd4f8a19d146fda30f13869bfebf60353fa5f87e752cd42c21dbb61edf11c"
+        }
+      ]
     }
   },
   "wave_bindings": [

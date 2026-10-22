@@ -7,4 +7,5 @@ comptime {
     _ = @import("gui_value_bridge.zig");
     _ = @import("graphics_runtime.zig");
     _ = @import("platform_runtime.zig");
+    _ = @import("data_value_bridge.zig");
 }

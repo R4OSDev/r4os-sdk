@@ -7,6 +7,7 @@ use core::{ffi::CStr, marker::PhantomData, mem, ptr};
 pub use r4os_contract as abi;
 pub mod bounded_text;
 pub mod c_facades;
+pub mod data;
 pub mod directory_page;
 pub mod heap;
 pub mod gui;
