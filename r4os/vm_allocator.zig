@@ -96,6 +96,8 @@ const State = struct {
     preparing_slot: ?usize = null,
     retired_reservation: ?abi.ProgramVmRegionInfo = null,
     retiring_direct: ?DirectRetirement = null,
+    retiring_direct_head: usize = 0,
+    direct_retiring: u32 = 0,
     small_regions: [max_small_regions]SmallRegion = .{SmallRegion{}} ** max_small_regions,
     direct_cache: [direct_cache_class_count]DirectCacheEntry = .{DirectCacheEntry{}} ** direct_cache_class_count,
     direct_active: u32 = 0,
@@ -142,6 +144,7 @@ pub const Stats = struct {
     direct_active: u32 = 0,
     direct_cached: u32 = 0,
     active_allocations: u64 = 0,
+    direct_retiring: u32 = 0,
     allocations: u64 = 0,
     frees: u64 = 0,
     active_bytes: u64 = 0,
@@ -249,6 +252,43 @@ pub fn trim(api: *const abi.R4XStartR4Sys) void {
     stateTrim(&state, api);
 }
 
+pub const Shutdown = enum { done, busy, pending };
+
+/// Irreversible teardown for an externally closed, quiescent R4X heap.
+/// No allocation/resize may enter after this call, even when a VM release
+/// fails: that release may already have unmapped part of its exact region.
+/// Live allocations return busy; callers must allow their frees and retry.
+/// The normal Zig allocator and its trim policy do not call this path.
+pub fn shutdown(api: *const abi.R4XStartR4Sys) Shutdown {
+    const result = shutdownState(&state, api);
+    if (result != .done) return result;
+    state.lock_wait.prune(api);
+    state.vm_wait.prune(api);
+    return if (state.lock_wait.handle == 0 and state.vm_wait.handle == 0) .done else .pending;
+}
+
+fn shutdownState(heap_state: *State, api: *const abi.R4XStartR4Sys) Shutdown {
+    acquireAllocatorLock(heap_state, api);
+    defer releaseAllocatorLock(heap_state);
+    if (!supportsVmApi(api) or heap_state.vm_operation != 0) return .busy;
+    for (heap_state.small_regions) |region| if (region.active_allocations != 0) return .busy;
+    if (heap_state.direct_active != heap_state.direct_retiring) return .busy;
+    if (!beginVm(heap_state)) return .busy;
+    defer endVm(heap_state, api);
+    if (!finishRetiredReservation(heap_state, api) or !finishDirectRetirement(heap_state, api)) return .pending;
+    _ = releaseDirectCachesLocked(heap_state, api);
+    if (heap_state.direct_cached != 0) return .pending;
+    for (&heap_state.small_regions) |*region| {
+        if (!region.used) continue;
+        const id = region.region_id;
+        // Only the value identity crosses release; never read its old pages.
+        if (vmRelease(heap_state, api, id) != abi.vm_ok) return .pending;
+        std.debug.assert(region.region_id == id and region.active_allocations == 0);
+        region.* = .{};
+    }
+    return .done;
+}
+
 // 0.56.41 (B2): der Allokator laeuft ueber die R4SYS-Gruppentabelle
 // (vm_reserve/commit/decommit/release seit v5 enthalten); der
 // Parameter heisst weiter api, traegt aber den Tabellenzeiger.
@@ -262,6 +302,7 @@ fn stateStats(heap_state: *State) Stats {
     var out: Stats = .{
         .direct_active = heap_state.direct_active,
         .direct_cached = heap_state.direct_cached,
+        .direct_retiring = heap_state.direct_retiring,
         .active_allocations = heap_state.direct_active,
         .allocations = heap_state.direct_allocations,
         .frees = heap_state.direct_frees,
@@ -314,6 +355,8 @@ fn stateTrim(heap_state: *State, api: *const abi.R4XStartR4Sys) void {
     if (!supportsVmApi(api)) return;
     while (!beginVm(heap_state)) waitForVm(heap_state, api);
     defer endVm(heap_state, api);
+    _ = finishRetiredReservation(heap_state, api);
+    _ = finishDirectRetirement(heap_state, api);
     _ = trimLocked(heap_state, api, null);
 }
 
@@ -449,18 +492,29 @@ fn allocatorFree(heap_state: *State, ptr: *anyopaque, memory: []u8, alignment: A
             continue;
         }
         defer endVm(heap_state, api);
-        if (!finishDirectRetirement(heap_state, api)) return;
-        // Only value identity crosses a VM call. A partial release must never
-        // make the old header readable or eligible for the direct cache.
-        heap_state.retiring_direct = direct;
-        headerAt(direct.base).magic = retired_block_magic;
+        // Queue only still-resident headers. Before any physical release the
+        // head is detached into the exact value record below. A failed older
+        // release must not lose this second logical free.
+        const header = headerAt(direct.base);
+        header.magic = retired_block_magic;
+        header.free_next = heap_state.retiring_direct_head;
+        heap_state.retiring_direct_head = direct.base;
+        heap_state.direct_retiring += 1;
         _ = finishDirectRetirement(heap_state, api);
         return;
     }
 }
 
 fn finishDirectRetirement(heap_state: *State, api: *const abi.R4XStartR4Sys) bool {
-    if (heap_state.retiring_direct) |entry| {
+    while (true) {
+        if (heap_state.retiring_direct == null) {
+            if (heap_state.retiring_direct_head == 0) return true;
+            const header = headerAt(heap_state.retiring_direct_head);
+            std.debug.assert(header.magic == retired_block_magic and isDirect(header));
+            heap_state.retiring_direct_head = header.free_next;
+            heap_state.retiring_direct = .{ .region_id = header.region_id, .base = @intFromPtr(header), .reserve_size = header.block_size, .requested_size = header.requested_size, .user_addr = header.user_addr };
+        }
+        const entry = heap_state.retiring_direct.?;
         if (vmRelease(heap_state, api, entry.region_id) != abi.vm_ok) return false;
         accountDirectFree(heap_state, entry.requested_size);
         if (heap_state.direct_reserved_bytes >= entry.reserve_size) {
@@ -469,8 +523,9 @@ fn finishDirectRetirement(heap_state: *State, api: *const abi.R4XStartR4Sys) boo
             heap_state.direct_reserved_bytes = 0;
         }
         heap_state.retiring_direct = null;
+        std.debug.assert(heap_state.direct_retiring != 0);
+        heap_state.direct_retiring -= 1;
     }
-    return true;
 }
 
 fn finishRetiredReservation(heap_state: *State, api: *const abi.R4XStartR4Sys) bool {
@@ -1887,6 +1942,40 @@ test "VM allocator rolls back VM failures and preserves direct ownership" {
     try std.testing.expectEqual(@as(u64, 1), reclaimed.vm_release_calls);
     allocatorFree(&state, @ptrCast(&test_vm_table), oversized[0..oversized_len], .fromByteUnits(64), 0);
     try std.testing.expectEqual(@as(u64, 0), stats().active_allocations);
+    try std.testing.expect(!test_vm_active);
+}
+
+test "VM allocator keeps multiple failed direct frees and closes only after real release" {
+    resetTestVm();
+    test_vm_multiple = true;
+    const length = direct_cache_max_region + page_size;
+    const a = allocator(&test_vm_table);
+    const first = try a.alloc(u8, length);
+    const second = try a.alloc(u8, length);
+    try std.testing.expectEqual(Shutdown.busy, shutdown(&test_vm_table));
+    test_vm_fail_release = true;
+    a.free(first);
+    a.free(second);
+    try std.testing.expectEqual(@as(u32, 2), stats().direct_retiring);
+    try std.testing.expectEqual(@as(u32, 2), stats().direct_active);
+    try std.testing.expectEqual(Shutdown.pending, shutdown(&test_vm_table));
+    const old_base = state.retiring_direct.?.base;
+    @memset(@as([*]u8, @ptrFromInt(old_base))[0..page_size], 0);
+    test_vm_fail_release = false;
+    try std.testing.expectEqual(Shutdown.done, shutdown(&test_vm_table));
+    try std.testing.expectEqual(@as(u64, 0), stats().active_allocations);
+    try std.testing.expectEqual(@as(u64, 0), stats().reserved_bytes);
+    try std.testing.expect(!test_vm_active and test_vm_second_size == 0);
+    try std.testing.expectEqual(@as(usize, 0), state.retiring_direct_head);
+
+    resetTestVm();
+    const small = try a.alloc(u8, 128);
+    try std.testing.expectEqual(Shutdown.busy, shutdown(&test_vm_table));
+    a.free(small);
+    test_vm_fail_release = true;
+    try std.testing.expectEqual(Shutdown.pending, shutdown(&test_vm_table));
+    test_vm_fail_release = false;
+    try std.testing.expectEqual(Shutdown.done, shutdown(&test_vm_table));
     try std.testing.expect(!test_vm_active);
 }
 

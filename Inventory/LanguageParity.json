@@ -304,19 +304,25 @@
       "semantics": "R4SYS-VM-Owner, Alignment/Nullgroesse, checked Groessen, Failure-Retry, Metadatenlock ohne unzulaessige Waitleihe; exakte Freigabe/Trim/Stats.",
       "current_only": "current_function",
       "rust": {
-        "state": "no_alloc_profile",
-        "source": "Repositories/SDK/Rust/src/lib.rs",
-        "gap": "Rust besitzt nur Compiler-Speicherbuiltins, keinen alloc/GlobalAlloc. Allgemeine C-Userland-Allokation fehlt; DriverHeap ist ein anderer Besitzervertrag."
+        "state": "qualified_R4X_alloc_and_borrowed_buffers",
+        "source": "Repositories/SDK/Rust/src/heap.rs",
+        "gap": "R4X Box/Vec/String mit optionalem alloc sowie initialisierte, geliehene Buffer auf gemeinsamem SDK-Heap qualifiziert. Library-Caller-Heaps und DriverHeap bleiben eigene Rollenvertraege in66/67."
       },
       "c": {
-        "state": "missing_higher_facade",
-        "sources": [],
-        "gap": "Kein entsprechender hoeherer C-Einstieg im SDK-Headerbestand; gleiche Fachfunktion bereitstellen."
+        "state": "qualified_R4X_pooled_heap_and_existing_direct_VM",
+        "sources": [
+          "Repositories/SDK/Shared/C/include/r4os/heap.h",
+          "Repositories/SDK/Shared/C/include/r4os/r4sys.h"
+        ],
+        "gap": "Expliziter Instanz-/Generationsheap mit Alignment, malloc/calloc/realloc/free, Stats und quittiertem Finish; bestehende direkte VM-Primitiven erhalten und Ueberlauf korrigiert. Kein impliziter R4L-globaler Heap."
       },
       "evidence": [
-        "source_inventory"
+        "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.50",
+        "Repositories/SDK/Tests/Simulation/RustHeap.rs",
+        "Repositories/SDK/Tests/Build/RustHeap",
+        "Repositories/SDK/Smoke/AppEntry/C/Console"
       ],
-      "shared_core": "Vorhandenen VM-Allocator als fachlichen Kern wiederverwenden oder notwendige besitzereigene sprachneutrale Extraktion in50 begruenden, keine drei Heapalgorithmen."
+      "shared_core": "SDK/r4os/vm_allocator.zig ueber pro R4X gelinktes heap_runtime.zig; echte Stackprobes, gehashter CPU-/Quellvertrag. Ein Algorithmus fuer Zig/C/Rust; Kernel besitzt VM/Taskabbau. SDK69/Contract42. Normale Consumer Desktop137/Spectra49 wegen Direct-Retirement-Korrektur neu gebunden; finaler STANDARD im gemeinsamen Fachbeleg."
     },
     {
       "id": "project-build",

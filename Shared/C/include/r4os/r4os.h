@@ -12,6 +12,7 @@
 #include "r4desk.h"
 #include "r4draw.h"
 #include "app_contract.h"
+#include "heap.h"
 #include "app_storage.h"
 #include "storage.h"
 #include "app_gui.h"

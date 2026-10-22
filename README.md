@@ -34,6 +34,14 @@ window, allowing the desktop-host role. Generated Rust compiler inputs are
 included in build receipts and removed with failed output; local library
 resolvers and higher facades remain separate work.
 
+SDK0.64.69 adds instance-bound pooled C/Rust heaps backed by the existing
+Zig VM allocator. Rust's optional `alloc` feature supplies Box/Vec/String
+through the pinned target liballoc and a matched prebuilt SDK runtime object;
+exported Rust consumers still need no Zig compiler. Heap release retains
+pending VM identities, including multiple failed direct frees. Fully linked,
+proven local GOTPCREL slots close onto existing R4M0 REL32/ABS64 relocations;
+relaxed GOTPCRELX and address-limited ABS32 remain rejected.
+
 SDK0.64.66 leaves project version selection and project locks to the caller.
 Generators and builds use explicit component directories; technical SDK/Contract
 dependency hashes, Cargo.lock and the pinned toolchain remain enforced.

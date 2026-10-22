@@ -35,7 +35,9 @@ if($originalHash -ceq $changedHash){throw 'Changed Rust source did not change it
 [IO.File]::WriteAllText($source,$original+"`nintentional syntax error`n",$utf8)
 Run compile-error $false
 [IO.File]::WriteAllText($source,$original,$utf8)
+[IO.File]::WriteAllText((Join-Path $output 'failed-link.elf'),'old owned diagnostic',$utf8)
 Run restored $true
+if(Test-Path -LiteralPath (Join-Path $output 'failed-link.elf')){throw 'Successful restore retained obsolete failed-link diagnostics.'}
 if((Get-FileHash -LiteralPath $artifact -Algorithm SHA256).Hash.ToLowerInvariant() -cne $originalHash){throw 'Restored inputs changed bytes.'}
 # Select an empty installation, without changing/removing the real toolchain.
 $empty=Join-Path $WorkRoot 'Missing Tools'

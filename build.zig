@@ -24,6 +24,10 @@ pub fn build(b: *std.Build) void {
     b.addNamedLazyPath("update_service_contract", b.path("r4os/update_service_contract.zig"));
 
     const contract_dependency = b.dependency("r4os_contract", .{});
+    if (b.option(bool, "packager-only", "Build only the selected host R4M0 packager") orelse false) {
+        b.installArtifact(r4os_build.addR4XBuilder(b, b.path("Tools/R4XBuilder/src/main.zig")));
+        return;
+    }
     if (b.option(bool, "catalog-only", "Build only the selected host ModuleCatalog") orelse false) {
         const target = b.standardTargetOptions(.{});
         const bundle = b.createModule(.{ .root_source_file = b.path("r4os/r4cp_convert.zig"), .target = target, .optimize = .ReleaseSafe });
@@ -34,6 +38,16 @@ pub fn build(b: *std.Build) void {
         return;
     }
     const sdk_profile = Sdk.init(b, .{ .contract_dependency = contract_dependency });
+    if (b.option(bool, "heap-host-test-only", "Build the native SDK heap object for its host interop test") orelse false) {
+        const root = b.createModule(.{ .root_source_file = b.path("r4os/heap_runtime.zig"), .target = b.graph.host, .optimize = .ReleaseSafe, .pic = true, .single_threaded = false, .stack_check = false });
+        root.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
+        const object = b.addObject(.{ .name = "r4sdk_heap_host", .root_module = root });
+        b.getInstallStep().dependOn(&b.addInstallFile(object.getEmittedBin(), "lib/r4sdk_heap_host.o").step);
+        return;
+    }
+    const heap_runtime = sdk_profile.addHeapRuntime();
+    b.getInstallStep().dependOn(&b.addInstallFile(heap_runtime, "lib/r4sdk_heap.o").step);
+    if (b.option(bool, "heap-runtime-only", "Build only the module CPU-profile shared C/Rust heap object") orelse false) return;
     b.installArtifact(sdk_profile.builder);
     if (sdk_profile.r4l_contract_generator) |generator| b.installArtifact(generator);
 
@@ -152,6 +166,7 @@ pub fn build(b: *std.Build) void {
         }),
     });
     const run_r4x_builder_tests = b.addRunArtifact(r4x_builder_tests);
+    b.step("packager-test", "Run existing R4M0/ELF packager ownership and relocation cases").dependOn(&run_r4x_builder_tests.step);
 
     const r4l_contract_tests = b.addTest(.{
         .root_module = b.createModule(.{

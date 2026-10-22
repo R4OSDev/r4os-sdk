@@ -97,6 +97,8 @@ try{
     $hostName=if($IsWindows){'Windows'}elseif($IsLinux){'Linux'}else{throw 'Unsupported Rust host'}
     $catalog=Canonical $ToolsRoot $rustToolProfile.hosts[$hostName].catalog
     $packager=Canonical $ToolsRoot $rustToolProfile.hosts[$hostName].packager
+    $heapRuntime=Canonical $ToolsRoot $rustToolProfile.runtime.heap.path
+    if((Hash $heapRuntime) -cne $rustToolProfile.runtime.heap.sha256){throw 'MatchedHeapRuntimeMismatch'}
     if($IsLinux){& chmod 755 $catalog $packager;if($LASTEXITCODE -ne 0){throw 'Cannot prepare executable host tools'}}
     $phase='manifest'
     $manifest=Join-Path $ProjectRoot 'module.R4MF'
@@ -125,6 +127,7 @@ try{
     $cargo=Join-Path $description.toolchain ('bin/cargo'+$(if($IsWindows){'.exe'}else{''}))
     $targetDir=Join-Path $CacheRoot ('Projects/'+[Convert]::ToHexString([Security.Cryptography.SHA256]::HashData([Text.Encoding]::UTF8.GetBytes($ProjectRoot+'|'+$description.toolset_manifest_sha256))).ToLowerInvariant())
     $cpuPath=Join-Path $ContractRoot 'Module/CpuBaseline.json';$cpu=Get-Content -Raw -LiteralPath $cpuPath|ConvertFrom-Json -AsHashtable
+    if((Hash $cpuPath) -cne $rustToolProfile.runtime.heap.cpu_baseline_sha256){throw 'HeapRuntimeCpuContractMismatch'}
     if($cpu.format -ne 1 -or $cpu.xcr0_mask -ne 7){throw 'Unsupported CPU baseline'}
     $mapping=@{'-msse2'='sse2';'-mavx2'='avx2';'-maes'='aes';'-mpclmul'='pclmulqdq'}
     $features=@(foreach($requirement in $cpu.requirements){if($requirement.ContainsKey('c_flag')){if(!$mapping.ContainsKey($requirement.c_flag)){throw 'Unmapped canonical CPU requirement'};'+'+$mapping[$requirement.c_flag]}})
@@ -143,13 +146,22 @@ try{
     $target=$package.targets[0]
     if($target.kind.Count -ne 1 -or $target.kind[0] -cne 'staticlib' -or $target.crate_types.Count -ne 1 -or $target.crate_types[0] -cne 'staticlib' -or !(SamePath $target.src_path $source) -or $target.edition -cne '2024'){throw 'RustCargoTargetMismatch'}
     $allowed=@{$ProjectRoot=$package.name;(Join-Path $SdkRoot 'Rust')='r4os-sdk';(Join-Path $ContractRoot 'Generated/SDK/Rust')='r4os-contract'}
+    $sdkFeatureNames=@()
     foreach($dep in $metadata.packages){
         $directory=[IO.Path]::GetDirectoryName([IO.Path]::GetFullPath($dep.manifest_path))
         if(!$allowed.ContainsKey($directory) -or $allowed[$directory] -cne $dep.name -or $null -ne $dep.source){throw 'RustCargoDependencyOutsideSelectedRoots'}
         if($directory -cne $ProjectRoot -and $dep.version -cne '0.1.0'){throw 'RustCargoBindingVersionMismatch'}
         foreach($t in $dep.targets){if($t.kind -contains 'custom-build' -or $t.kind -contains 'proc-macro'){throw 'RustCargoHostBuildStepForbidden'}}
-        foreach($d in $dep.dependencies){if($null -ne $d.kind -or $d.rename -or $d.features.Count -ne 0 -or $d.optional){throw 'RustCargoDependencyExtensionUnsupported'}}
-        foreach($node in $metadata.resolve.nodes){if($node.id -ceq $dep.id -and $node.features.Count){throw 'RustCargoFeatureUnsupported'}}
+        foreach($d in $dep.dependencies){
+            $sdkFeatures=$d.name -ceq 'r4os-sdk' -and @($d.features|Where-Object {$_ -cne 'alloc'}).Count -eq 0
+            if($null -ne $d.kind -or $d.rename -or (!$sdkFeatures -and $d.features.Count -ne 0) -or $d.optional){throw 'RustCargoDependencyExtensionUnsupported'}
+        }
+        foreach($node in $metadata.resolve.nodes){
+            if($node.id -ceq $dep.id -and $node.features.Count){
+                if($dep.name -cne 'r4os-sdk' -or @($node.features|Where-Object {$_ -cnotin @('default','alloc')}).Count){throw 'RustCargoFeatureUnsupported'}
+                $sdkFeatureNames=@($node.features)
+            }
+        }
     }
     $phase='compile'
     $messages=Invoke-Tool $cargo (@('build','--release','--lib','--locked','--offline','--target',$codegen.target,'--manifest-path',(Join-Path $ProjectRoot 'Cargo.toml'),'--message-format=json-render-diagnostics')+$patches) $work $envForCargo (Join-Path $work 'cargo')
@@ -161,7 +173,7 @@ try{
     if(!$archive -or !(Test-Path -LiteralPath $archive -PathType Leaf)){throw 'RustArchiveMissing'}
     $phase='link'
     $linked=Join-Path $work 'module.elf';$script=Canonical $SdkRoot $codegen.linker_script
-    Invoke-Tool $description.linker @('-flavor','gnu','--emit-relocs','--gc-sections','--no-undefined','--strip-debug','--entry','R4XStart','-T',$script,'-o',$linked,$archive) $work|Out-Null
+    Invoke-Tool $description.linker @('-flavor','gnu','--emit-relocs','--gc-sections','--no-undefined','--strip-debug','--entry','R4XStart','-T',$script,'-o',$linked,$archive,$heapRuntime) $work|Out-Null
     $phase='package'
     $candidate=Join-Path $work 'module.R4X'
     $packArgs=@('--r4m','--kind','r4x','--elf',$linked,'--output',$candidate,'--module-name',$facts.name,'--app-class',$facts.app_class,'--export','R4XStart:@R4XStart:1')
@@ -191,8 +203,11 @@ try{
     if(!@($observed|Where-Object {$_.owner -ceq 'project' -and $_.path -ceq $rust.source}).Count){throw 'RustCompilerSourceNotObserved'}
     if(!@($observed|Where-Object owner -CEQ 'generated').Count){throw 'RustCompilerStartupInfoNotObserved'}
     $result=[ordered]@{schema=1;profile=$rust.profile;status='success';technical=[bool]$Technical;module=@{name=$facts.name;version=$rust.module_version;kind='R4X';app_class=$facts.app_class;target=$facts.target;imports=$facts.imports};cargo=@{name=$package.name;version=$package.version;source=$rust.source;target=$codegen.target;lock_sha256=Hash (Join-Path $ProjectRoot 'Cargo.lock')};sdk=$rustToolProfile.sdk;contract=$rustToolProfile.contract;tools=@{profile_sha256=Hash $rustToolProfilePath;pin_sha256=$description.pin_sha256;rust=$description.rust_version;cargo=$description.cargo_version;linker_sha256=$description.linker_sha256;packager_sha256=Hash $packager;catalog_sha256=Hash $catalog};cpu=@{id=$cpu.name;sha256=Hash $cpuPath;features=$features};codegen=@{profile_sha256=Hash $codegenPath;code_model=$codegen.code_model;relocation_model=$codegen.relocation_model;lto=$codegen.lto;red_zone=$false;panic='abort';stack_probes=$codegen.stack_probes};declared_inputs=$declared;compiler_inputs=$observed;elf=@{file=[IO.Path]::GetFileName($elf);sha256=Hash $linked};artifact=@{file=[IO.Path]::GetFileName($artifact);sha256=Hash $candidate;bytes=([IO.FileInfo]$candidate).Length};container_inspection=$inspection.Trim()}
+    $result['memory']=@{sdk_features=$sdkFeatureNames;heap_runtime=@{path=$rustToolProfile.runtime.heap.path;sha256=Hash $heapRuntime;owner='SDK/r4os/vm_allocator.zig';instance_checked=$true};alloc_sysroot_component='rust-std/'+$codegen.target;root_return_releases_heap=$false}
     Copy-Item -LiteralPath $linked -Destination $elf;Copy-Item -LiteralPath $candidate -Destination $artifact
     Write-Json $receipt $result;Write-Json $ownerFile @{schema=1;project=$ProjectRoot;status='success';artifact=[IO.Path]::GetFileName($artifact);elf=[IO.Path]::GetFileName($elf)}
+    $failedLink=Join-Path $OutputRoot 'failed-link.elf'
+    if(Test-Path -LiteralPath $failedLink){[IO.File]::Delete($failedLink)}
     $success=$true;Write-Host "Rust R4X built: $artifact";Write-Output ($result|ConvertTo-Json -Depth 40)
 }catch{
     if($Technical -and $work -and (Test-Path -LiteralPath (Join-Path $work 'module.elf'))){Copy-Item -LiteralPath (Join-Path $work 'module.elf') -Destination (Join-Path $OutputRoot 'failed-link.elf') -Force}

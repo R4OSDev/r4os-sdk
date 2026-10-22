@@ -65,8 +65,8 @@ instance-bound; App is neither Send nor Sync. A raw constructor caller must
 pin the full context/imports/tables until that entry ends. Thread callbacks
 keep the kernel's existing exact instance ownership; they must not reuse a
 finished root App. Local R4L resolvers still validate their own table headers.
-Callback signatures come from the generated Contract. No copied layouts or new R4L runtime. Direct float/vector C ABI and
-alloc are outside this profile. Rust module/include inputs come from rustc
+Callback signatures come from the generated Contract. No copied layouts or new R4L runtime. Direct float/vector C ABI remains
+outside this profile. Rust module/include inputs come from rustc
 dep-info; the receipt distinguishes those from declared manifest/Cargo/resources.
 The generated startup input has owner=generated in compiler_inputs and its
 exact hash in the same receipt. Input directory/file symlinks are outside the
@@ -127,6 +127,53 @@ Qualification is recorded separately as build, ELF/container and actual guest
 results in Docs/API/RustContractBindings.txt. Host memory bounds/overlap cases
 and source/error/tool cases are reusable SDK tests; no broad image/hardware
 matrix or extra normal STANDARD follows from host/fixture-only work.
+
+Pooled allocation (SDK0.64.69)
+------------------------------
+Select r4os-sdk = { version = "=0.1.0", features = ["alloc"] } in Cargo.toml.
+Use extern crate alloc and alloc::boxed::Box, alloc::vec::Vec or
+alloc::string::String normally. app! installs the instance allocator before
+main. The pinned rust-std target already contains liballoc; no new compiler,
+unstable allocator handler or Rust sources are needed. Allocation failure in
+infallible collections follows the existing terminal panic path; fallible
+collection APIs retain their ordinary failure semantics.
+
+app.heap() supplies an explicit borrowed Heap. allocate(size,alignment) returns
+an owned Buffer with initialized bytes and fallible resize; new bytes on growth
+are zeroed before safe slice access. Its drop returns ownership to
+the common allocator. Zero-length buffers require no VM region. Invalid
+alignment/overflow fail before VM work, and failed growth preserves the old
+buffer. Heap and Buffer do not grant Send/Sync to App; normal global allocations
+can be used by threads of the same exact kernel instance/generation.
+
+The same r4os/vm_allocator.zig pool is compiled by the SDK publisher into
+Runtime/r4sdk_heap.o. The tools export and build receipt bind its hash and CPU
+profile to the matched SDK/Contract. Rust consumers link this machine object
+with the pinned linker, without running Zig. C's heap.h and normal C builder
+use the same core. This is an R4X-image heap, not a shared R4L-global allocator;
+library-owned caller heaps remain a separate role contract.
+
+stats() captures every metric of that core under one lock. Metric names come
+from the owner; active_bytes includes the small C/Rust allocation prefix.
+Logical free may retain cached or pending VM regions. Unsafe finish_instance
+irreversibly closes allocation admission; first join allocator users and drop
+their buffers. Runtime(1) means busy/live and Runtime(2) means a physical release
+is pending; exact identities stay retryable even after partial unmapping.
+Success requires every region/notification release ACK. Root return never
+automatically destroys an allocator still usable by workers: the kernel retains
+the image/VM owner until actual task retirement. Let the kernel perform normal
+instance cleanup, or explicitly finish only after quiescence.
+
+Ordinary thread APIs accept reserve=0 for the kernel's memory-profile default.
+The allocation fixture uses that default and the existing owned-v1 compute
+worker contract. A hand-picked 64KB reserve was insufficient for its VM call
+chain; a small reserve is not a guarantee that arbitrary kernel calls fit.
+
+The ELF/R4M0 packager closes only proven local unrelaxed GOTPCREL slots: the
+final linked slot must contain the exact module-owned symbol, with the supported
+-4 addend. It emits ordinary relative patches and full-width slot definitions.
+Every nonzero GOT slot must close; GOTPCRELX/ABS32 remain rejected. Module ABI,
+loader and kernel are unchanged. Evidence: Docs/SDK/LanguageParity.txt.
 
 Other module roles (0.86.38)
 ---------------------------

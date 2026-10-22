@@ -5,6 +5,7 @@
 use core::sync::atomic::{AtomicPtr, Ordering};
 use core::{ffi::CStr, marker::PhantomData, mem, ptr};
 pub use r4os_contract as abi;
+pub mod heap;
 mod memory;
 mod startup;
 pub use startup::{ImportSpec, StartupInfo};
@@ -57,6 +58,9 @@ impl<'a> App<'a> {
     }
     pub fn instance_id(&self) -> u64 {
         self.context.instance_id
+    }
+    pub fn heap(&self) -> Result<heap::Heap<'_>, heap::Error> {
+        heap::Heap::new(self)
     }
     pub fn args(&self) -> &[u8] {
         if self.context.args == 0 || self.context.args_len == 0 {
@@ -427,6 +431,9 @@ fn check(rc: i32) -> Result<(), i32> {
 }
 /// # Safety
 /// Called only by the SDK entry macro under the loader's R4XStart contract.
+/// Platform providers must remain resident until all tasks of this exact
+/// instance retire. Optional alloc retains only that provider identity across
+/// workers, never a root App/Context loan.
 #[doc(hidden)]
 pub unsafe fn start(
     raw: *const abi::R4XStartContext,
@@ -439,6 +446,11 @@ pub unsafe fn start(
         Err(e) => return e,
     };
     PANIC_CONTEXT.store(raw.cast_mut(), Ordering::Release);
+    #[cfg(all(feature = "alloc", target_os = "none"))]
+    if heap::install(&app).is_err() {
+        PANIC_CONTEXT.store(ptr::null_mut(), Ordering::Release);
+        return -17;
+    }
     let code = main(&mut app);
     PANIC_CONTEXT.store(ptr::null_mut(), Ordering::Release);
     code

@@ -37,6 +37,7 @@ pub const HostProfile = struct {
     c_startup_source_file: std.Build.LazyPath,
     zig_app_startup_source_file: std.Build.LazyPath,
     c_app_startup_source_file: std.Build.LazyPath,
+    heap_runtime_source_file: std.Build.LazyPath,
 };
 
 pub const AppProfile = enum(u8) { console, desktop, service };
@@ -280,6 +281,7 @@ pub const Sdk = struct {
             .c_startup_source_file = root.path(b, "Shared/C/src/r4xstart_startup.c"),
             .zig_app_startup_source_file = root.path(b, "Shared/Zig/r4app_startup.zig"),
             .c_app_startup_source_file = root.path(b, "Shared/C/src/r4app_startup.c"),
+            .heap_runtime_source_file = root.path(b, "r4os/heap_runtime.zig"),
         };
         return .{
             .b = b,
@@ -341,6 +343,10 @@ pub const Sdk = struct {
         });
     }
 
+    pub fn addHeapRuntime(self: Sdk) std.Build.LazyPath {
+        return heapRuntime(self.b, self.profile.heap_runtime_source_file, self.profile.contract_module, self.builder);
+    }
+
     pub fn addR4XStartC(self: Sdk, opts: R4XCAppOptions) BuildResult {
         const imports = manifestImportsFor(self.b, opts.source_root, 1);
         return addR4XStartCWithOptions(self.b, .{
@@ -350,6 +356,7 @@ pub const Sdk = struct {
             .include_root = self.profile.c_include_root,
             .extra_include_roots = &.{self.profile.contract_c_include_root},
             .startup_source_file = self.profile.c_startup_source_file,
+            .heap_runtime = self.addHeapRuntime(),
             .linker_script = self.profile.linker_script,
             .builder = self.builder,
             .app_class = opts.app_class,
@@ -368,6 +375,7 @@ pub const Sdk = struct {
             .include_root = self.profile.c_include_root,
             .extra_include_roots = &.{self.profile.contract_c_include_root},
             .startup_source_file = self.profile.c_app_startup_source_file,
+            .heap_runtime = self.addHeapRuntime(),
             .linker_script = self.profile.linker_script,
             .builder = self.builder,
             .profile = opts.profile,
@@ -680,6 +688,7 @@ pub const Sdk = struct {
                 .sources = loaded.manifest.sources,
                 .include_root = self.profile.c_include_root,
                 .startup_source_file = self.profile.c_app_startup_source_file,
+                .heap_runtime = self.addHeapRuntime(),
                 .linker_script = self.profile.linker_script,
                 .builder = self.builder,
                 .profile = profile,
@@ -697,6 +706,7 @@ pub const Sdk = struct {
                 .sources = loaded.manifest.sources,
                 .include_root = self.profile.c_include_root,
                 .startup_source_file = self.profile.c_startup_source_file,
+                .heap_runtime = self.addHeapRuntime(),
                 .linker_script = self.profile.linker_script,
                 .builder = self.builder,
                 .app_class = loaded.manifest.app_class.?.text(),
@@ -999,6 +1009,7 @@ pub const R4XCOptions = struct {
     sources: []const []const u8,
     include_root: std.Build.LazyPath,
     startup_source_file: std.Build.LazyPath,
+    heap_runtime: std.Build.LazyPath,
     linker_script: std.Build.LazyPath,
     builder: *std.Build.Step.Compile,
     app_class: []const u8 = "auto",
@@ -1019,6 +1030,7 @@ pub const R4CAppBuildOptions = struct {
     sources: []const []const u8,
     include_root: std.Build.LazyPath,
     startup_source_file: std.Build.LazyPath,
+    heap_runtime: std.Build.LazyPath,
     linker_script: std.Build.LazyPath,
     builder: *std.Build.Step.Compile,
     profile: AppProfile,
@@ -1271,6 +1283,7 @@ fn addR4AppCWithOptions(b: *std.Build, opts: R4CAppBuildOptions) BuildResult {
         .c_defines = definitions,
         .c_flags = opts.c_flags,
         .startup_source_file = opts.startup_source_file,
+        .heap_runtime = opts.heap_runtime,
         .linker_script = opts.linker_script,
         .optimize = opts.optimize,
         .app_profile = opts.profile,
@@ -1322,6 +1335,7 @@ fn addR4XStartCWithOptions(b: *std.Build, opts: R4XCOptions) BuildResult {
         .c_defines = opts.c_defines,
         .c_flags = opts.c_flags,
         .startup_source_file = opts.startup_source_file,
+        .heap_runtime = opts.heap_runtime,
         .linker_script = opts.linker_script,
         .optimize = opts.optimize,
     });
@@ -1630,6 +1644,7 @@ const COptions = struct {
     c_defines: []const module_manifest.CDefineEntry = &.{},
     c_flags: []const []const u8 = &.{},
     startup_source_file: ?std.Build.LazyPath,
+    heap_runtime: ?std.Build.LazyPath = null,
     linker_script: std.Build.LazyPath,
     entry_symbol: []const u8 = "R4XStart",
     // PIC still permits absolute pointers in constant C aggregates and tables.
@@ -1855,8 +1870,34 @@ fn addCModule(b: *std.Build, opts: COptions) std.Build.LazyPath {
     });
     exe.entry = .{ .symbol_name = opts.entry_symbol };
     exe.link_emit_relocs = opts.emit_relocs;
+    exe.link_gc_sections = true;
+    exe.bundle_compiler_rt = true;
+    if (opts.heap_runtime) |runtime| exe.root_module.addObjectFile(runtime);
     exe.setLinkerScript(opts.linker_script);
     return exe.getEmittedBin();
+}
+
+fn heapRuntime(b: *std.Build, source: std.Build.LazyPath, contract: *std.Build.Module, builder: *std.Build.Step.Compile) std.Build.LazyPath {
+    const root = b.createModule(.{
+        .root_source_file = source,
+        .target = contract_build.module_cpu.target(b),
+        .optimize = .ReleaseSafe,
+        .single_threaded = false,
+        .pic = true,
+        .red_zone = false,
+        .stack_check = true,
+        .stack_protector = false,
+    });
+    root.addImport("r4os_contract", contract);
+    const object = b.addObject(.{ .name = "r4sdk-heap", .root_module = root });
+    const probes = b.addRunArtifact(builder);
+    probes.addArg("--stack-probes");
+    probes.addFileArg(object.getEmittedLlvmIr());
+    const ir = probes.addOutputFileArg("r4sdk-heap-probed.ll");
+    const codegen = b.addSystemCommand(&.{ b.graph.zig_exe, "cc", "-target", "x86_64-freestanding-none", "-O3", "-fPIC", "-mno-red-zone", "-ffunction-sections", "-fdata-sections", "-Xclang", "-disable-llvm-passes", "-c" });
+    codegen.addFileArg(ir);
+    codegen.addArg("-o");
+    return codegen.addOutputFileArg("r4sdk_heap.o");
 }
 
 fn lazyPathOption(b: *std.Build, name: []const u8, description: []const u8) ?std.Build.LazyPath {

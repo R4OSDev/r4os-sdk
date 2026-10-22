@@ -686,7 +686,12 @@ static inline void *r4sys_vm_alloc(R4Sys *sys, uint64_t size, uint64_t alignment
     if (alignment < sizeof(uintptr_t)) alignment = sizeof(uintptr_t);
     if ((alignment & (alignment - 1u)) != 0) return 0;
     uint64_t reserve_alignment = alignment > 4096u ? alignment : 4096u;
-    uint64_t need = sizeof(R4SysVmAllocation) + sizeof(uintptr_t) + alignment - 1u + size;
+    const uint64_t overhead = sizeof(R4SysVmAllocation) + sizeof(uintptr_t);
+    if (size > UINT64_MAX - overhead) return 0;
+    uint64_t need = size + overhead;
+    if (need > UINT64_MAX - (alignment - 1u)) return 0;
+    need += alignment - 1u;
+    if (need > UINT64_MAX - 4095u) return 0;
     uint64_t region_size = r4sys_align_up_u64(need, 4096u);
     R4ProgramVmRegionInfo info;
     if (r4sys_vm_reserve(sys, region_size, reserve_alignment, R4OS_VM_REGION_FLAGS_DEFAULT, &info) != R4OS_VM_OK) return 0;

@@ -10,5 +10,9 @@ build = false
 [lib]
 path = "src/lib.rs"
 
+[features]
+default = []
+alloc = []
+
 [dependencies]
 r4os-contract = { version = "=0.1.0" }

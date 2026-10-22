@@ -56,6 +56,7 @@ const ELF_SHT_NOBITS: u32 = 8;
 const ELF_R_X86_64_64: u32 = 1;
 const ELF_R_X86_64_PC32: u32 = 2;
 const ELF_R_X86_64_PLT32: u32 = 4;
+const ELF_R_X86_64_GOTPCREL: u32 = 9;
 const ELF_R_X86_64_REX_GOTPCRELX: u32 = 42;
 
 const RelaxedGotPcRelxForm = enum {
@@ -1152,7 +1153,10 @@ fn parseElfRelocations(a: std.mem.Allocator, elf: []const u8, sections: []const 
         if (section_count > std.math.maxInt(usize) - relocation_capacity) return error.TooManyRelocations;
         relocation_capacity += @intCast(section_count);
     }
-    const out = try a.alloc(ModuleRelocation, relocation_capacity);
+    // A closed GOT reference needs its relative patch and one full-width
+    // definition for the linker-created GOT slot (deduplicated below).
+    const capacity = std.math.mul(usize, relocation_capacity, 2) catch return error.TooManyRelocations;
+    const out = try a.alloc(ModuleRelocation, capacity);
     errdefer a.free(out);
     var count: usize = 0;
 
@@ -1182,6 +1186,32 @@ fn parseElfRelocations(a: std.mem.Allocator, elf: []const u8, sections: []const 
             const addend64 = rI64(elf, rel_off + 16);
             const symbol_index = info >> 32;
             const elf_reloc_type: u32 = @intCast(info & 0xffff_ffff);
+            if (elf_reloc_type == ELF_R_X86_64_GOTPCREL) {
+                if (symbol_index >= sym_count) return error.BadElfRelocation;
+                const sym_off: usize = @intCast(symtab.file_off + symbol_index * symtab.entsize);
+                const target_index = rU16(elf, sym_off + 6);
+                const target_value = rU64(elf, sym_off + 8);
+                if (target_index == 0 or target_index >= shnum) return error.UnsupportedElfRelocationTarget;
+                const target = readElfSectionHeader(elf, shoff, shentsize, shstr, target_index) orelse return error.BadElfSectionTable;
+                const target_name = r4mElfSectionName(target.name) orelse return error.UnsupportedElfRelocationTarget;
+                const target_section = resolveSectionIndex(sections, target_name) orelse return error.UnsupportedElfRelocationTarget;
+                const target_offset = try elfSectionOffset(elf_type, target_value, target.addr);
+                if (target_offset >= sections[target_section].mem_size) return error.BadElfRelocationRange;
+                var got: ?ElfSectionHeader = null;
+                for (0..shnum) |header_index| {
+                    const header = readElfSectionHeader(elf, shoff, shentsize, shstr, header_index) orelse return error.BadElfSectionTable;
+                    if (!std.mem.eql(u8, header.name, ".got")) continue;
+                    if (got != null) return error.UnclosedElfGot;
+                    got = header;
+                }
+                const got_header = got orelse return error.UnclosedElfGot;
+                const got_section = resolveSectionIndex(sections, ".got") orelse return error.UnclosedElfGot;
+                const pair = try closedGotReference(elf, elf_type, patch_header, sections[patch_section_index], patch_value, addend64, got_header, sections[got_section], target_value, sections[target_section], target_offset);
+                try appendGotDefinition(out, &count, pair.definition);
+                out[count] = pair.reference;
+                count += 1;
+                continue;
+            }
             const r4m_kind = r4mRelocKindFromElf(elf_reloc_type) orelse {
                 if (elf_reloc_type == 0) continue;
                 // R_X86_64_REX_GOTPCRELX is a linker-relaxation hint, not a
@@ -1231,7 +1261,7 @@ fn parseElfRelocations(a: std.mem.Allocator, elf: []const u8, sections: []const 
             if (patch_offset64 > std.math.maxInt(u32) or target_offset64 > std.math.maxInt(u32)) return error.BadElfRelocationRange;
             if (patch_offset64 >= sections[@intCast(patch_section_index)].mem_size) return error.BadElfRelocationRange;
             if (target_offset64 >= sections[@intCast(target_section_index)].mem_size) return error.BadElfRelocationRange;
-            out[count] = .{
+            const relocation: ModuleRelocation = .{
                 .kind = r4m_kind,
                 .patch_section = sections[@intCast(patch_section_index)].name,
                 .patch_offset = @intCast(patch_offset64),
@@ -1239,11 +1269,65 @@ fn parseElfRelocations(a: std.mem.Allocator, elf: []const u8, sections: []const 
                 .target_offset = @intCast(target_offset64),
                 .addend = @intCast(r4m_addend64),
             };
-            count += 1;
+            if (std.mem.eql(u8, patch_name, ".got")) {
+                if (r4m_kind != R4M_RELOC_ABS64 or patch_offset64 % 8 != 0) return error.UnclosedElfGot;
+                try appendGotDefinition(out, &count, relocation);
+            } else {
+                out[count] = relocation;
+                count += 1;
+            }
         }
     }
 
+    for (sections) |section| {
+        if (!std.mem.eql(u8, section.name, ".got")) continue;
+        if (section.data.len % 8 != 0 or section.alignment < 8) return error.UnclosedElfGot;
+        var offset: usize = 0;
+        while (offset < section.data.len) : (offset += 8) {
+            if (rU64(section.data, offset) == 0) continue;
+            var found = false;
+            for (out[0..count]) |relocation| {
+                if (std.mem.eql(u8, relocation.patch_section, ".got") and relocation.patch_offset == offset and relocation.kind == R4M_RELOC_ABS64) found = true;
+            }
+            if (!found) return error.UnclosedElfGot;
+        }
+    }
     return try a.realloc(out, count);
+}
+
+const ClosedGot = struct { reference: ModuleRelocation, definition: ModuleRelocation };
+
+fn closedGotReference(elf: []const u8, elf_type: u16, patch: ElfSectionHeader, patch_section: InputSection, patch_value: u64, addend: i64, got: ElfSectionHeader, got_section: InputSection, symbol_value: u64, target: InputSection, target_offset: u64) !ClosedGot {
+    // Only the unrelaxed, fully linked form is admitted. GOTPCRELX remains
+    // rejected: a relaxation hint can describe an absolute signed-32 patch.
+    if ((elf_type != ELF_ET_EXEC and elf_type != ELF_ET_DYN) or addend != -4 or
+        patch.sh_type != ELF_SHT_PROGBITS or got.sh_type != ELF_SHT_PROGBITS or
+        (got.flags & 7) != 3 or got.alignment < 8 or got.addr % 8 != 0 or got.size % 8 != 0)
+        return error.UnclosedElfGot;
+    const patch_offset = try elfSectionOffset(elf_type, patch_value, patch.addr);
+    if (patch_offset > patch.size or 4 > patch.size - patch_offset or patch_offset > std.math.maxInt(u32) or patch_offset + 4 > patch_section.mem_size) return error.BadElfRelocationRange;
+    try checkRangeU64(elf.len, patch.file_off, patch.size);
+    try checkRangeU64(elf.len, got.file_off, got.size);
+    const displacement: i32 = @bitCast(rU32(elf, @intCast(patch.file_off + patch_offset)));
+    const slot_address = @as(i128, patch_value) + displacement + 4;
+    const slot_offset = slot_address - @as(i128, got.addr);
+    if (slot_offset < 0 or slot_offset > std.math.maxInt(u32) or slot_offset + 8 > got.size or slot_offset + 8 > got_section.mem_size or @mod(slot_offset, 8) != 0 or target_offset > std.math.maxInt(u32)) return error.UnclosedElfGot;
+    if (rU64(elf, @intCast(got.file_off + @as(u64, @intCast(slot_offset)))) != symbol_value) return error.UnclosedElfGot;
+    return .{
+        .reference = .{ .kind = R4M_RELOC_REL32, .patch_section = patch_section.name, .patch_offset = @intCast(patch_offset), .target_section = got_section.name, .target_offset = @intCast(slot_offset), .addend = 0 },
+        .definition = .{ .kind = R4M_RELOC_ABS64, .patch_section = got_section.name, .patch_offset = @intCast(slot_offset), .target_section = target.name, .target_offset = @intCast(target_offset), .addend = 0 },
+    };
+}
+
+fn appendGotDefinition(out: []ModuleRelocation, count: *usize, candidate: ModuleRelocation) !void {
+    for (out[0..count.*]) |existing| {
+        if (!std.mem.eql(u8, existing.patch_section, candidate.patch_section) or existing.patch_offset != candidate.patch_offset) continue;
+        if (existing.kind != candidate.kind or existing.target_offset != candidate.target_offset or existing.addend != candidate.addend or !std.mem.eql(u8, existing.target_section, candidate.target_section)) return error.UnclosedElfGot;
+        return;
+    }
+    if (count.* == out.len) return error.TooManyRelocations;
+    out[count.*] = candidate;
+    count.* += 1;
 }
 
 fn readElfSectionHeader(elf: []const u8, shoff: usize, shentsize: u16, shstr: []const u8, index: usize) ?ElfSectionHeader {
@@ -1302,6 +1386,44 @@ test "REX GOTPCRELX is not blindly mapped to an R4M relocation" {
     try std.testing.expectEqual(RelaxedGotPcRelxForm.absolute_imm32, classifyRelaxedGotPcRelx(.{ 0x48, 0x81, 0xff }));
 }
 
+test "closed unrelaxed GOT uses relative slot and full-width owned definition" {
+    var elf = [_]u8{0} ** 32;
+    wU32(&elf, 0, 0xffc);
+    wU32(&elf, 16, 0x1020);
+    const patch: ElfSectionHeader = .{ .name = ".text", .sh_type = ELF_SHT_PROGBITS, .flags = 6, .addr = 0x1000, .file_off = 0, .size = 16, .link = 0, .info = 0, .alignment = 16, .entsize = 0 };
+    var got: ElfSectionHeader = .{ .name = ".got", .sh_type = ELF_SHT_PROGBITS, .flags = 3, .addr = 0x2000, .file_off = 16, .size = 8, .link = 0, .info = 0, .alignment = 8, .entsize = 0 };
+    const text: InputSection = .{ .name = ".text", .data = elf[0..16], .mem_size = 64, .alignment = 16, .flags = R4M_SECTION_FLAG_ALLOC | R4M_SECTION_FLAG_EXEC };
+    const slots: InputSection = .{ .name = ".got", .data = elf[16..24], .mem_size = 8, .alignment = 8, .flags = R4M_SECTION_FLAG_ALLOC | R4M_SECTION_FLAG_WRITE };
+    const pair = try closedGotReference(&elf, ELF_ET_EXEC, patch, text, 0x1000, -4, got, slots, 0x1020, text, 32);
+    try std.testing.expectEqual(R4M_RELOC_REL32, pair.reference.kind);
+    try std.testing.expectEqualStrings(".got", pair.reference.target_section);
+    try std.testing.expectEqual(@as(u32, 0), pair.reference.target_offset);
+    try std.testing.expectEqual(R4M_RELOC_ABS64, pair.definition.kind);
+    try std.testing.expectEqual(@as(u32, 32), pair.definition.target_offset);
+    // A different, high-half module layout keeps only an internal relative
+    // displacement; the function address retains its full 64 bits.
+    const image_base: u64 = 0xFFFFFF1000010000;
+    const got_placement: u64 = 0x5000;
+    const displacement = got_placement - 4;
+    try std.testing.expectEqual(image_base + got_placement, image_base + 4 + displacement);
+    try std.testing.expect(image_base + pair.definition.target_offset > std.math.maxInt(u32));
+    var output: [4]ModuleRelocation = undefined;
+    var count: usize = 0;
+    try appendGotDefinition(&output, &count, pair.definition);
+    try appendGotDefinition(&output, &count, pair.definition);
+    try std.testing.expectEqual(@as(usize, 1), count);
+    var conflicting = pair.definition;
+    conflicting.target_offset += 1;
+    try std.testing.expectError(error.UnclosedElfGot, appendGotDefinition(&output, &count, conflicting));
+    try std.testing.expectError(error.UnclosedElfGot, closedGotReference(&elf, ELF_ET_REL, patch, text, 0x1000, -4, got, slots, 0x1020, text, 32));
+    try std.testing.expectError(error.UnclosedElfGot, closedGotReference(&elf, ELF_ET_EXEC, patch, text, 0x1000, 0, got, slots, 0x1020, text, 32));
+    wU32(&elf, 16, 0x1021);
+    try std.testing.expectError(error.UnclosedElfGot, closedGotReference(&elf, ELF_ET_EXEC, patch, text, 0x1000, -4, got, slots, 0x1020, text, 32));
+    wU32(&elf, 16, 0x1020);
+    got.flags = 7;
+    try std.testing.expectError(error.UnclosedElfGot, closedGotReference(&elf, ELF_ET_EXEC, patch, text, 0x1000, -4, got, slots, 0x1020, text, 32));
+}
+
 test "portable ELF relocation mapping remains full-width or relative" {
     try std.testing.expectEqual(@as(?u32, R4M_RELOC_ABS64), r4mRelocKindFromElf(ELF_R_X86_64_64));
     try std.testing.expectEqual(@as(?u32, R4M_RELOC_REL32), r4mRelocKindFromElf(ELF_R_X86_64_PC32));
@@ -1333,6 +1455,7 @@ fn elfSectionName(strings: []const u8, off_u32: u32) ?[]const u8 {
 }
 
 fn r4mElfSectionName(name: []const u8) ?[]const u8 {
+    if (std.mem.eql(u8, name, ".got")) return ".got";
     if (std.mem.eql(u8, name, ".text") or std.mem.startsWith(u8, name, ".text.")) return ".text";
     if (std.mem.eql(u8, name, ".rodata") or std.mem.startsWith(u8, name, ".rodata.")) return ".rodata";
     if (std.mem.eql(u8, name, ".data") or std.mem.startsWith(u8, name, ".data.")) return ".data";
