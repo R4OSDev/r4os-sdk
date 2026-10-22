@@ -28,6 +28,7 @@ pub mod services;
 mod startup;
 pub mod storage;
 pub mod time;
+pub mod web;
 pub use startup::{ImportSpec, StartupInfo};
 
 static PANIC_CONTEXT: AtomicPtr<abi::R4XStartContext> = AtomicPtr::new(ptr::null_mut());

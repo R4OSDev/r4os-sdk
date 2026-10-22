@@ -837,7 +837,8 @@
       },
       "evidence": [
         "source_inventory",
-        "data_current_61"
+        "data_current_61",
+        "web_current_62"
       ],
       "shared_core": "Grosse Parser/Codec-/Kryptokerne einmal beim SDK-/Librarybesitzer; besitzereigene C-ABI bzw. passende existierende R4L in61 begruenden. Kein Kopieren von JSON/ZIP/Entropiealgorithmen in drei Sprachen.",
       "qualification": {
@@ -871,19 +872,29 @@
       "semantics": "Dokument-/Knoten-/Script-/Bild-/Fontgeneration, Bounds, Lebensdauer von Views, Fehler/Budgets und Text-/Layoutsemantik erhalten. Komplette Fachfunktion, nicht nur ein minimales Web-Subset.",
       "current_only": "current_function",
       "rust": {
-        "state": "missing_higher_facade",
-        "source": "Repositories/SDK/Rust/src/lib.rs",
-        "gap": "HTML, CSS, Layout, Schrift, Canvas und JavaScript als gleichwertige typisierte Rust-Fassade mit denselben Fehler-/Besitz-/Waitregeln ergaenzen."
+        "state": "original_web_helpers_qualified",
+        "source": "Repositories/SDK/Rust/src/web/mod.rs",
+        "raw": "Repositories/SDK/Rust/src/c_facades.rs",
+        "gap": ""
       },
       "c": {
-        "state": "missing_higher_facade",
-        "sources": [],
-        "gap": "Kein entsprechender hoeherer C-Einstieg im SDK-Headerbestand; gleiche Fachfunktion bereitstellen."
+        "state": "original_web_helpers_qualified",
+        "sources": [
+          "Repositories/SDK/Shared/C/include/r4os/web_helpers.h"
+        ],
+        "gap": ""
       },
       "evidence": [
-        "source_inventory"
+        "source_inventory",
+        "web_current_62"
       ],
-      "shared_core": "HTML/CSS/JavaScript einschliesslich Unicode-/Regex-/Normalisierungsdaten sowie Layout einmal beim fachlichen Besitzer mit sprachneutralem Zugang halten; notwendige Extraktion in62 begruenden, keine drei Engines."
+      "shared_core": "HTML/CSS/JavaScript einschliesslich Unicode-/Regex-/Normalisierungsdaten sowie Layout einmal beim fachlichen Besitzer mit sprachneutralem Zugang halten; notwendige Extraktion in62 begruenden, keine drei Engines.",
+      "qualification": {
+        "performed_in": "0.86.62",
+        "sdk": "0.64.81",
+        "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.62",
+        "scope": "All14 current web-document modules reuse their original engines and data. Shared compiler-reflected transport, exact Zig-to-C callback adapters, concrete allocator/run specializations, safe borrowed Rust document/layout/script/canvas plus full typed unsafe owner operations. Transport/jobs63 remains open."
+      }
     },
     {
       "id": "web-transport",
@@ -47550,7 +47561,7 @@
       },
       "guest": "Full0.86.42/Kernel0.1.381/KVM/SMP4 with original JSON/R4ZIP providers and selected embedded SDK80 objects; own module deleted, regular shutdown exit0",
       "checks": [
-        "existing selected owner cases for JSON/ZIP status, ICO/raster, encoding/URL/hash/version/manifest/artifact; original CPU and entropy21 cases passed",
+        "Correction62: the former dependency-module selector ran only an empty collection test, so selected original owner cases were not executed in61. Original CPU/entropy21, separate native consumers and real guest61 remain valid; corrected package-root owner selector and45-case data regression now qualified in web_current_62.",
         "five native release C/Rust data cases and five actual unsafe/Unpin/JSON-source/arena-reset/URL-view compiler negatives",
         "exact C/Rust current manifest and bounded arena/plan; old manifest version rejected; original ICO fixtures shared without duplicated byte arrays",
         "streaming SHA digest/peek, known vector, unsupported digest/short output, exact overlap copy, codec/BOM/fatal/stream state, URL mutation/serialization",
@@ -47638,7 +47649,8 @@
           "path": "Repositories/SDK/Tools/Test-RustData.ps1",
           "sha256": "13a8ed639ef007889c48ef5a2249d07e701d64bf99cffa2ba5bdc644001ca582"
         }
-      ]
+      ],
+      "owner_selector_correction": "0.86.62: corrected at same-package test root; consult web_current_62 for actual data owner summary."
     },
     "library_projection_current_61": {
       "performed_in": "0.86.61",
@@ -47668,6 +47680,173 @@
           "sha256": "0eecd4f8a19d146fda30f13869bfebf60353fa5f87e752cd42c21dbb61edf11c"
         }
       ]
+    },
+    "web_current_62": {
+      "kind": "original_web_owners_native_Rust_C_and_real_KVM_SMP4_consumer",
+      "performed_in": "0.86.62",
+      "sdk": "0.64.81",
+      "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.62",
+      "scope": "All14 current web-document modules reuse their original engines and data. Shared compiler-reflected transport, exact Zig-to-C callback adapters, concrete allocator/run specializations, safe borrowed Rust document/layout/script/canvas plus full typed unsafe owner operations. Transport/jobs63 remains open.",
+      "projection": {
+        "types": 671,
+        "functions": 460,
+        "c_inline_operations": 4972,
+        "rust_transport_and_operations": 4977,
+        "missing_old_rust_lines": [],
+        "missing_c_operations_in_rust": [],
+        "native_fingerprint": 17145349120571270290
+      },
+      "callback_contract": "31 enabled kinds; native Zig hooks keep exact signatures. Inner C invoke uses scalar Slot/pointer data, optional values, resident named errors and supplied aggregate/float output. Descriptor/user/program/document/asset/root loans and original GC/reentrancy rules remain. Program create initializes native defaults before publication.",
+      "checks": {
+        "owner_summaries": {
+          "web": 22,
+          "data": 45,
+          "includes_collection_entries": true,
+          "entry": "Repositories/SDK/test_owners.zig"
+        },
+        "native_web_cases": 5,
+        "native_web_real_compiler_negatives": [
+          "E0133",
+          "E0503",
+          "E0502",
+          "E0499",
+          "E0277"
+        ],
+        "data_regression": "five current native C/Rust cases and five actual compiler negatives passed; data header/fingerprint unchanged",
+        "boundary_stack": "Direct object copies remove former ~45 MB constructor temporaries; four native cases retain ordinary2 MB Rust test threads.",
+        "original_browser_stack": "Only the full WebRuntime case runs on an8 MB native thread, matching original Zig owner stack. Existing dispatchHost frame exceeds2 MB; real bare stack probes/guest separately qualified. No production stack policy changed.",
+        "functional": "Same existing offline layout hash in C/Rust; host callbacks and optional property result, TypeError, exact Cancelled, GC mark/weak/sweep, budget recovery, UTF8/MIME/bounds, GET form, data URL, font/cache hash/activation/stale epoch, exact canvas/background pixels, DOM script and observer/monotonic callback, realm abort/release.",
+        "projections_and_clippy": "both native schema projections and all4972 C inline operations present in Rust; all prior SDK Rust projection lines retained; final SDK Clippy warning-free"
+      },
+      "consumer": {
+        "file": "WEBPROBE.R4X",
+        "bytes": 12247623,
+        "sha256": "e4e1f68d4a49080a5c865b6e41e2e42da10388f7df8fe74f565240d6b015b973",
+        "readback": "exact WEB62A.R4X bytes",
+        "exit": 0,
+        "result": "PASS WEB62 C/layout, host/get/set, exception, cancellation, GC and pixels\nPASS WEB62 case=2\nPASS WEB62 case=3\nPASS WEB62 case=4\nPASS WEB62 case=5\nPASS WEB62 Rust/C original document/layout/script/form/font/image/background/canvas/runtime; hash=faf070d6cc5ce758; exact heap release"
+      },
+      "guest": "Full0.86.42/Kernel0.1.381/KVM/SMP4; current embedded SDK81 runtimes, browser memory profile, IMAGE_SCOPE=none; own module deleted; regular shutdown exit0",
+      "limits": "Linux/native and local KVM4 only. No external network/transport-job qualification63, hardware font/GPU/browser performance, Windows or direct Rust FP/SIMD ABI qualification; no hardware/update/release publication.",
+      "sdk_runtimes": {
+        "facades": {
+          "sha256": "3b9fed441f0c1fb242595c8a4a167de42eb2478330340e7523024b98d1a6f1ec",
+          "path": "Runtime/r4sdk_facades.o",
+          "bytes": 13227552
+        },
+        "storage": {
+          "sha256": "e11a9c09535a9c9b4d73d23b6b1e8acf36f2f9634e98f2ddbdb2a954d07fcac2",
+          "path": "Runtime/r4sdk_storage.o",
+          "bytes": 34832920
+        }
+      },
+      "current_sources": [
+        {
+          "path": "Repositories/SDK/r4os/native_bridge_schema.zig",
+          "sha256": "2987534203b0fe329b40d2c6071c878bc4d93a9886b7958f6b1a51357f0c8477"
+        },
+        {
+          "path": "Repositories/SDK/r4os/native_value_bridge.zig",
+          "sha256": "d53c4da8c0a06b98ae4479e8cb39f2a67b043254ea97faa04fe6f56d1c9b2f2d"
+        },
+        {
+          "path": "Repositories/SDK/r4os/web_helper_owners.zig",
+          "sha256": "418717ec5cef40435fb17998e96179f75124bd709c589dc2a010dae30ec122ae"
+        },
+        {
+          "path": "Repositories/SDK/r4os/web_helper_adapters.zig",
+          "sha256": "39fb37683559a08d756dc69241f63d91172bd7acafc8103b13fcf0c355e016b9"
+        },
+        {
+          "path": "Repositories/SDK/r4os/web_callback_bridge.zig",
+          "sha256": "bd3c59db55b7d9ca5e5b3a8285106b6bce087d30acfff11f3b253eca78158e8c"
+        },
+        {
+          "path": "Repositories/SDK/r4os/web_bridge_schema.zig",
+          "sha256": "9d137fa67c615ececc3a69d203d9be4868bda0469ac44afb1e61763e37dfb346"
+        },
+        {
+          "path": "Repositories/SDK/r4os/web_value_bridge.zig",
+          "sha256": "af2311ef2b20d8486fe79724636d06330022833902cd0aa76795833f676aa0e6"
+        },
+        {
+          "path": "Repositories/SDK/r4os/web_bridge_names.zig",
+          "sha256": "1a46b190191107287a00608c0c30d036b25eca5a0131a4f7163bb598756d2343"
+        },
+        {
+          "path": "Repositories/SDK/r4os/data_bridge_schema.zig",
+          "sha256": "228efae98d78aa5d750b929bcbc778c97bd57c6734acfb23f99b208fe8f7a5a3"
+        },
+        {
+          "path": "Repositories/SDK/r4os/data_value_bridge.zig",
+          "sha256": "e454d49f359370681d987cee176c8bbb4b35f159504510ac3f18323f2403bc91"
+        },
+        {
+          "path": "Repositories/SDK/Tools/DataBridgeGen/src/main.zig",
+          "sha256": "8354739db097fcfdbaeda820e574d029d78bdbd928e07a561ca13c02b5e22841"
+        },
+        {
+          "path": "Repositories/SDK/Tools/DataBridgeGen/src/c_header.zig",
+          "sha256": "582dd2de2f01cf49c7ecbdb3efcfbb7d96e61bc5c11722b158140eb8abcf461e"
+        },
+        {
+          "path": "Repositories/SDK/Shared/C/include/r4os/web_helpers.h",
+          "sha256": "d3cb43641ea1a6e932a20a0a7d0a611c0f9661096c471118ab155245443991f9"
+        },
+        {
+          "path": "Repositories/SDK/Rust/src/c_facades.rs",
+          "sha256": "9f7ec9a2bf6517faf3bdd1917b57e65a47216b7c7c0f0b177a0839f6310fb949"
+        },
+        {
+          "path": "Repositories/SDK/Rust/src/web/mod.rs",
+          "sha256": "66d3e7aa21edb53afdaf2347ed1f4d5b98b0bf74e4a0abe3fe325e85573a8071"
+        },
+        {
+          "path": "Repositories/SDK/Rust/src/web/document.rs",
+          "sha256": "095078193f97cc4e9889d6d05c8c2652e12e9ddb5d042ec807e447e661b231d9"
+        },
+        {
+          "path": "Repositories/SDK/Rust/src/web/script.rs",
+          "sha256": "d60980cb964c89477228337fdedd325a0e16a947ff82a9b4b493cd2e8618eeb2"
+        },
+        {
+          "path": "Repositories/SDK/Rust/src/web/canvas.rs",
+          "sha256": "6a1176de9144cd30e0fb2fb5e5f11f653d48105d68a6cb6ab9b1635455fbd69b"
+        },
+        {
+          "path": "Repositories/SDK/Tests/Simulation/WebParity.c",
+          "sha256": "499016e7292d22c553655a56d4fc86ab586978fe609acc94fed1ad44a88f2ded"
+        },
+        {
+          "path": "Repositories/SDK/Tests/Simulation/WebCases.rs",
+          "sha256": "d14191b0861dec5af812c74ee20056ca112adb37bd326935e89188872dbe3529"
+        },
+        {
+          "path": "Repositories/SDK/Tests/Simulation/RustWeb.rs",
+          "sha256": "4b7523c7828d5c4b41b200a6ed7f85e94be99b2c9375cf77d3fea636e9889651"
+        },
+        {
+          "path": "Repositories/SDK/Tools/Test-RustWeb.ps1",
+          "sha256": "af4d6cb6bb3a75a6d963cb72df01440f133123fbf801f95e800eda4759d73278"
+        },
+        {
+          "path": "Repositories/SDK/test_owners.zig",
+          "sha256": "0a80a386c5db728c8baf3c9424de870f190b4e0f871155889324efc49f0fa22f"
+        }
+      ],
+      "standard": {
+        "run_id": "05393744-9dfa-422d-967c-4eea21f641cc",
+        "release_version": "0.86.62",
+        "sha256": "5d43cd3ecd546f661a0491fe6781fc89948888a332398e3f30266b3b6d3afcc6",
+        "full_readback": "valid",
+        "metrics": 5,
+        "samples": 30,
+        "workers": 4,
+        "valid_score_areas": 6,
+        "purpose": "Exactly one mandatory normal regression for shared SDK runtime change; no web speed claim."
+      },
+      "kernel": "0.1.381 unchanged; STANDARD BOOT SHA256 e06111b9363b44712fe69ded9ddfc3edb1f60c5c271c59a42238a816b0882340",
+      "benchmark_image_source_sha256": "a6bf70060d144ea14290528045adffe8281f48f0dbb6891e1fc507e97f51a703"
     }
   },
   "wave_bindings": [

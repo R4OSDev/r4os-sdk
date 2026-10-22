@@ -23,6 +23,7 @@
 #include <r4os/directory_page.h>
 #include <r4os/gui_bridge.h>
 #include <r4os/data_helpers.h>
+#include <r4os/web_helpers.h>
 #undef inline
 #undef static
 #include <r4os/facades.h>

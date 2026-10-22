@@ -31,6 +31,11 @@ pub struct Arena<'s, 'b> {
     _local: PhantomData<*mut ()>,
 }
 impl<'s, 'b> Arena<'s, 'b> {
+    pub(crate) fn allocator(&mut self) -> Result<MaybeUninit<c::R4SdkDataAllocator>> {
+        let mut value = MaybeUninit::uninit();
+        required(unsafe { c::R4SdkData_allocator(0, self.native, value.as_mut_ptr()) })?;
+        Ok(value)
+    }
     pub fn open(storage: Pin<&'s mut ArenaStorage>, bytes: &'b mut [u8]) -> Result<Self> {
         let native = unsafe { storage.get_unchecked_mut() }.native.as_mut_ptr();
         super::result(unsafe {

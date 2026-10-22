@@ -38,12 +38,31 @@ pub fn build(b: *std.Build) void {
         return;
     }
     const sdk_profile = Sdk.init(b, .{ .contract_dependency = contract_dependency });
+    if (b.option(bool, "web-bridge-generator-only", "Build the compiler-typed SDK web helper generator") orelse false) {
+        const root = b.createModule(.{ .root_source_file = b.path("Tools/DataBridgeGen/src/main.zig"), .target = b.graph.host, .optimize = .Debug, .strip = true });
+        const schema = b.createModule(.{ .root_source_file = b.path("r4os/web_bridge_schema.zig"), .target = b.graph.host, .optimize = .Debug });
+        schema.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
+        schema.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = b.graph.host, .optimize = .ReleaseSafe }));
+        const options = b.createModule(.{ .root_source_file = b.path("r4os/web_bridge_names.zig"), .target = b.graph.host, .optimize = .Debug });
+        options.addImport("schema", schema);
+        root.addImport("schema", schema);
+        root.addImport("options", options);
+        b.installArtifact(b.addExecutable(.{ .name = "web-bridge-gen", .root_module = root, .use_llvm = true }));
+        return;
+    }
+    if (b.option(bool, "web-bridge-runtime-only", "Build only the SDK web owner boundary") orelse false) {
+        const native = b.option(bool, "web-bridge-host-test", "Native ABI for web helper interop") orelse false;
+        const object = r4os_build.addStorageRuntimeObject(b, b.path("r4os/web_value_bridge.zig"), sdk_profile.profile.contract_module, sdk_profile.profile.grapheme_source.?, sdk_profile.builder, native);
+        b.getInstallStep().dependOn(&b.addInstallFile(object, "lib/r4sdk_web.o").step);
+        return;
+    }
     if (b.option(bool, "data-bridge-generator-only", "Build the compiler-typed SDK data helper generator") orelse false) {
         const root = b.createModule(.{ .root_source_file = b.path("Tools/DataBridgeGen/src/main.zig"), .target = b.graph.host, .optimize = .Debug, .strip = true });
         const schema = b.createModule(.{ .root_source_file = b.path("r4os/data_bridge_schema.zig"), .target = b.graph.host, .optimize = .Debug });
         schema.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
         schema.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = b.graph.host, .optimize = .ReleaseSafe }));
         root.addImport("schema", schema);
+        root.addImport("options", b.createModule(.{ .root_source_file = b.path("Tools/DataBridgeGen/src/options.zig"), .target = b.graph.host, .optimize = .Debug }));
         b.installArtifact(b.addExecutable(.{ .name = "data-bridge-gen", .root_module = root, .use_llvm = true }));
         return;
     }
@@ -194,10 +213,21 @@ pub fn build(b: *std.Build) void {
 
     const host_r4os = sdk_profile.createR4osModule(b.graph.host, .Debug);
     const data_target = b.resolveTargetQuery(.{ .cpu_arch = .x86_64, .os_tag = b.graph.host.result.os.tag, .abi = b.graph.host.result.abi, .cpu_model = .baseline });
-    const data_cases = b.createModule(.{ .root_source_file = b.path("Tests/Simulation/DataOwners.zig"), .target = data_target, .optimize = .ReleaseSafe });
-    data_cases.addImport("r4os", sdk_profile.createR4osModule(data_target, .ReleaseSafe));
+    const data_cases = b.createModule(.{ .root_source_file = b.path("test_owners.zig"), .target = data_target, .optimize = .ReleaseSafe });
+    data_cases.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
+    data_cases.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = data_target, .optimize = .ReleaseSafe }));
     const data_tests = b.addRunArtifact(b.addTest(.{ .root_module = data_cases, .filters = &.{ "protocol status", "ZIP protocol status", "parse Windows ICO", "parse 8bpp", "raster ", "Encoding labels", "TextEncoder", "TextDecoder", "URL", "SHA-256 digest", "release and installed", "semantic versions", "R4M0 metadata", "metadata reads", "V2 derives profile", "contract plan is deterministic" } }));
     b.step("data-parity-test", "Existing bounded data, codec, raster, metadata and protocol facade owner cases").dependOn(&data_tests.step);
+    const web_cases = data_cases;
+    const web_tests = b.addRunArtifact(b.addTest(.{ .root_module = web_cases, .filters = &.{
+        "HTML parser builds DOM",                  "loaded document MIME",              "CSS parser handles selectors cascade",
+        "layout creates deterministic responsive", "font provider drives proportional", "catalogue enumeration retries",
+        "font face parser preserves descriptors",  "font cache prepares SHA-256",       "font activation rejects stale epochs",
+        "data URL percent and base64",             "background no-repeat composition",  "GET submission uses UTF-8",
+        "URL parsing normalization",               "bytecode VM evaluates closures",    "browser runtime allocates and releases",
+        "web runtime bounds scripts",              "Canvas 2D keeps bounded",           "offline browser fixtures exercise",
+    } }));
+    b.step("web-parity-test", "Existing web parse/layout/script/font/form/canvas cases and exact realm teardown").dependOn(&web_tests.step);
     const gui_cases = b.createModule(.{ .root_source_file = b.path("Tests/Conformance/GuiFacadePrototype05824.zig"), .target = b.graph.host, .optimize = .Debug });
     gui_cases.addImport("r4os", host_r4os);
     const gui_parity = b.addRunArtifact(b.addTest(.{ .root_module = gui_cases, .filters = &.{ "raw GUI events", "command clipboard timer", "transactional paint", "buffered Canvas" } }));

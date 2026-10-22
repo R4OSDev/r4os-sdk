@@ -8,4 +8,5 @@ comptime {
     _ = @import("graphics_runtime.zig");
     _ = @import("platform_runtime.zig");
     _ = @import("data_value_bridge.zig");
+    _ = @import("web_value_bridge.zig");
 }

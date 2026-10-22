@@ -779,3 +779,37 @@ R4IMG images and R4FONT resources; C uses each owner's `*_helpers.h` header.
 The original library algorithms, data and resource acknowledgements remain
 at their owners. The core SDK only builds/links the selected boundary and
 records its actual source inputs. See Libraries/Shared/Rust/README.md.
+
+SDK0.64.81 adds the original HTML/CSS/layout/font/image/form/navigation/
+JavaScript/canvas/WebRuntime owners to Rust and C. Rust `web` supplies
+borrowed document/layout helpers and RAII script/canvas owners; `web::raw`
+and `Shared/C/include/r4os/web_helpers.h` retain every typed native operation.
+Use caller-owned `MaybeUninit` storage, typically heap allocated for the
+large realm/program/layout values. Native objects stay at their borrowed
+address through all referenced documents, programs, fonts, assets and jobs.
+
+Web hooks have Zig calling conventions. Never cast a C/Rust function to a
+Zig hook: use `web_callback_bridge.Table`, the typed adapter factories and
+Rust `web::Callbacks`. Its one C callback has signature
+`R4SdkWebSlot (*)(void *user,uint32_t kind,const R4SdkWebSlot *args,
+uint32_t count,void *output)`. The enabled mask uses the generated Kind
+constants. Arguments borrow only that invocation; aggregate/float results
+initialize the supplied exact output and return its pointer with PRESENT.
+Optional absence clears PRESENT; native errors carry a resident error name
+with NATIVE_ERROR. Do not retain callback arguments, allocate or run JavaScript
+from GC root hooks, recursively collect, or overlap Rust mutable references
+on a reentrant callback. Descriptor/user storage stays alive until all native
+retainers have closed. Program-allocation callbacks initialize `Program`
+defaults before returning it; Memory's original allocator adapter does this.
+The existing full WebRuntime host dispatcher needs more than2 MB of stack;
+its native owner case uses8 MB, and the real R4X consumer uses SDK stack probes
+and the browser memory profile. Basic document/script/canvas cases also run
+on ordinary2 MB native Rust test threads. This does not qualify direct
+floating-point ABI, Windows, physical rendering or external transport jobs.
+
+`web-parity-test` and `data-parity-test` select original owner cases through
+`test_owners.zig` in the same test package. Merely importing the SDK as a
+dependency does not collect its internal tests. Check actual test counts.
+The bounded foreign-language consumers and actual unsafe/borrow negatives
+are run by `Tools/Test-RustWeb.ps1`; the shared IMAGE_SCOPE=none RustWeb
+fixture also runs in R4OS. Finished work directories remain disposable.
