@@ -9,6 +9,7 @@ pub mod bounded_text;
 pub mod c_facades;
 pub mod directory_page;
 pub mod heap;
+pub mod gui;
 mod memory;
 pub mod network;
 #[path = "generated/network.rs"]

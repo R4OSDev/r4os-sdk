@@ -1429,12 +1429,24 @@ pub const InputDialog = struct {
     }
 };
 
-pub fn TextArea(comptime capacity: usize) type {
-    if (capacity < 2) @compileError("TextArea capacity must be at least 2 bytes");
+/// Fixed arrays retain their original public type/layout. An explicit []u8
+/// storage parameter lets foreign callers borrow a runtime-sized buffer and
+/// use the same editor, without a second Unicode/editing implementation.
+pub fn borrowedTextArea(buffer: []u8) ?TextArea([]u8) {
+    if (buffer.len < 2) return null;
+    var result = TextArea([]u8){ .buffer = buffer };
+    result.clear();
+    return result;
+}
+
+pub fn TextArea(comptime capacity: anytype) type {
+    const Buffer = if (@TypeOf(capacity) == type) capacity else [capacity]u8;
+    if (Buffer != []u8 and @typeInfo(Buffer) != .array) @compileError("TextArea storage must be a byte array or []u8");
+    if (Buffer != []u8 and @typeInfo(Buffer).array.len < 2) @compileError("TextArea capacity must be at least 2 bytes");
     return struct {
         const Self = @This();
 
-        buffer: [capacity]u8 = .{0} ** capacity,
+        buffer: Buffer = if (Buffer == []u8) @constCast(&.{}) else @splat(0),
         len: usize = 0,
         cursor: usize = 0,
         selection_anchor: ?usize = null,
@@ -1446,8 +1458,7 @@ pub fn TextArea(comptime capacity: usize) type {
         palette: Palette = default_palette,
 
         pub fn maxTextLen(self: *const Self) usize {
-            _ = self;
-            return capacity - 1;
+            return self.buffer.len - 1;
         }
 
         pub fn value(self: *const Self) []const u8 {
@@ -1878,12 +1889,21 @@ pub fn TextArea(comptime capacity: usize) type {
     };
 }
 
-pub fn TextField(comptime capacity: usize) type {
-    if (capacity == 0) @compileError("TextField capacity must be greater than zero");
+pub fn borrowedTextField(buffer: []u8) ?TextField([]u8) {
+    if (buffer.len == 0) return null;
+    var result = TextField([]u8){ .buffer = buffer };
+    result.clear();
+    return result;
+}
+
+pub fn TextField(comptime capacity: anytype) type {
+    const Buffer = if (@TypeOf(capacity) == type) capacity else [capacity]u8;
+    if (Buffer != []u8 and @typeInfo(Buffer) != .array) @compileError("TextField storage must be a byte array or []u8");
+    if (Buffer != []u8 and @typeInfo(Buffer).array.len == 0) @compileError("TextField capacity must be greater than zero");
     return struct {
         const Self = @This();
 
-        buffer: [capacity]u8 = .{0} ** capacity,
+        buffer: Buffer = if (Buffer == []u8) @constCast(&.{}) else @splat(0),
         len: usize = 0,
         cursor: usize = 0,
         selection_anchor: ?usize = null,
@@ -1898,7 +1918,7 @@ pub fn TextField(comptime capacity: usize) type {
         pub fn set(self: *Self, value_text: []const u8) void {
             if (!bounded_text.valid(value_text)) return;
             const end = grapheme.prefix(value_text, self.buffer.len - 1) catch return;
-            if (!bounded_text.assignZ(&self.buffer, value_text[0..end])) return;
+            if (!bounded_text.assignZ(self.buffer[0..], value_text[0..end])) return;
             self.len = end;
             self.cursor = self.len;
             self.selection_anchor = null;
@@ -1907,7 +1927,7 @@ pub fn TextField(comptime capacity: usize) type {
         /// Exact editable preload. Invalid/overlong input preserves value,
         /// cursor and selection; callers must report the failed assignment.
         pub fn setExact(self: *Self, value_text: []const u8) bool {
-            if (!bounded_text.assignZ(&self.buffer, value_text)) return false;
+            if (!bounded_text.assignZ(self.buffer[0..], value_text)) return false;
             self.len = value_text.len;
             self.cursor = self.len;
             self.selection_anchor = null;
@@ -1928,7 +1948,7 @@ pub fn TextField(comptime capacity: usize) type {
                 const bytes = encodeUtf8Codepoint(codepoint, &encoded);
                 const range = self.selectionRange();
                 const retained = self.len - (range.end - range.start);
-                if (bytes == 0 or bytes >= capacity - retained) return false;
+                if (bytes == 0 or bytes >= self.buffer.len - retained) return false;
             }
             return self.handleCodepoint(codepoint);
         }
@@ -2061,7 +2081,7 @@ pub fn TextField(comptime capacity: usize) type {
         pub fn pasteSlice(self: *Self, input: []const u8) bool {
             if (self.disabled) return false;
             const range = self.selectionRange();
-            const cap = capacity - 1 - self.len + range.end - range.start;
+            const cap = self.buffer.len - 1 - self.len + range.end - range.start;
             const end = editablePrefix(input, cap, false) orelse return false;
             if (end == 0) return false;
             const deleted = self.deleteSelection();
@@ -5489,6 +5509,31 @@ pub fn checkGraphemeEditing() bool {
     if (layout.total_lines != 3 or layout.visited_bytes != text.len or layout.ranges[1].start != 1 or layout.ranges[1].end != 4) return false;
     if (textAreaIndexForVisualPosition(text, 1, 1, 2) != 1) return false;
     return true;
+}
+
+test "borrowed text fields and text area use the original grapheme editing contract" {
+    var field_bytes: [32]u8 = undefined;
+    var area_bytes: [64]u8 = undefined;
+    var field = borrowedTextField(&field_bytes).?;
+    var area = borrowedTextArea(&area_bytes).?;
+    try std.testing.expect(borrowedTextField(&.{}) == null);
+    var too_short: [1]u8 = undefined;
+    try std.testing.expect(borrowedTextArea(&too_short) == null);
+    try std.testing.expect(field.setExact("A\u{301}B"));
+    field.setSelection(0, 1);
+    try std.testing.expectEqualStrings("A\u{301}", field.value()[field.selectionRange().start..field.selectionRange().end]);
+    try std.testing.expect(field.pasteSlice("\u{1f600}"));
+    try std.testing.expectEqualStrings("\u{1f600}B", field.value());
+    field.selectAll();
+    const prior = field_bytes;
+    try std.testing.expect(!field.setExact("this string does not fit in the borrowed text field"));
+    try std.testing.expectEqualSlices(u8, &prior, &field_bytes);
+    area.set("first\nA\u{301}B");
+    try std.testing.expectEqualStrings("first\nA\u{301}B", area.value());
+    area.selectAll();
+    try std.testing.expect(area.pasteSlice("new\n\u{1f600}", .{}));
+    try std.testing.expectEqualStrings("new\n\u{1f600}", area.value());
+    try std.testing.expectEqual(@as(usize, 63), area.maxTextLen());
 }
 
 test "grapheme editors keep combining RI ZWJ Indic clusters exact across deletion selection capacity and layout" {

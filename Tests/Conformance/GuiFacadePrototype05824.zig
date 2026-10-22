@@ -1224,6 +1224,7 @@ var captured_commands = [_]r4os.abi.GuiFrameCommand{.{}} ** 128;
 var captured_resources: [8192]u8 = .{0} ** 8192;
 var raster_count: u32 = 0;
 var event_index: usize = 0;
+var interop_codepoint: u32 = 0;
 
 const raw_events = [_]r4os.abi.GuiEvent{
     .{ .kind = @intFromEnum(r4os.abi.GuiEventKind.resize), .window_id = 4, .tick = 10 },
@@ -1268,6 +1269,7 @@ fn fakeWindowInfo(out: *r4os.abi.GuiWindowInfo) callconv(.c) i32 {
 fn fakePollEvent(out: *r4os.abi.GuiEvent) callconv(.c) i32 {
     if (event_index >= raw_events.len) return 0;
     out.* = raw_events[event_index];
+    if (interop_codepoint != 0 and out.kind == @intFromEnum(r4os.abi.GuiEventKind.key_down)) out.key = interop_codepoint;
     event_index += 1;
     return 1;
 }
@@ -1493,6 +1495,23 @@ fn replayCaptured(width: usize, height: usize, output: []u32) void {
         else => {},
     };
 }
+
+// Language interop reuses the original callbacks, capture and pixel oracle.
+// These exports belong to the test object, never the SDK product runtime.
+pub export fn sdk_gui_oracle_tables(sys:*r4os.abi.R4XStartR4Sys,desk:*r4os.abi.R4XStartR4Desk,draw:*r4os.abi.R4XStartR4Draw) callconv(.c) void {
+    var tables=makeTables(true);enableFrameContract(&tables[2]);
+    sys.*=tables[0];desk.*=tables[1];draw.*=tables[2];
+    event_index=0;interop_codepoint=0x1f642;now_ticks=100;clipboard_revision=7;
+    activity_waits=0;frame_begin_count=0;frame_append_count=0;frame_commit_count=0;frame_cancel_count=0;frame_append_fail_at=0;
+    draw_count=0;alpha8_count=0;raster_count=0;present_count=0;resetFrameCapture();
+}
+pub export fn sdk_gui_oracle_pixels(out:[*]u32,count:usize) callconv(.c) i32 {
+    if(count!=12)return -1;
+    replayCaptured(4,3,out[0..count]);
+    return if(captured_command_count==5 and captured_resource_len==12 and captured_commands[4].resource_offset==0 and frame_append_count==1 and frame_commit_count==1 and draw_count==0 and raster_count==0)0 else -2;
+}
+pub export fn sdk_gui_oracle_fail_append(at:u32) callconv(.c) void {frame_append_fail_at=at;}
+pub export fn sdk_gui_oracle_cancelled() callconv(.c) u32 {return frame_cancel_count;}
 
 fn makeApp(tables: anytype, imports: *[3]r4os.abi.R4XStartImport, context: *r4os.abi.R4XStartContext) !r4os.App {
     imports.* = .{

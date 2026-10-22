@@ -11,6 +11,7 @@
 #include "service_helpers.h"
 #include "net_bridge.h"
 #include "net_request.h"
+#include "gui_bridge.h"
 
 int32_t R4SdkAppFacade(const R4XStartContext *, R4App *);
 

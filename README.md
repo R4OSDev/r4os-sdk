@@ -47,6 +47,13 @@ drop/forget; raw borrowed admission is unsafe. Rust service templates now use
 the common loop. Native release/negative consumers and a mixed-language
 KVM SMP4 service/TCP/UDP/tray fixture qualify this group; physical serial
 hardware and Windows execution remain separate qualifications.
+SDK0.64.75 adds the full shared GUI/input/Canvas/FrameCanvas/widget/shape,
+clipboard and WindowService host boundary for C and Rust. Compiler-generated
+typed calls execute the original Zig owners; opaque native storage has a
+checked layout/dispatch fingerprint. Rust offers pinned, allocation-free
+sessions, exclusive paint loans, typed events and borrowed Unicode editors.
+Host admission does not require an app window; exact process/epoch bindings
+and explicit service reconnection remain separate from Desktop startup policy.
 Other facade groups remain in their respective parity waves.
 SDK0.64.67 binds Contract0.64.42's complete technical C projection. Driver,
 protocol, DMA/USB and service records now come from the canonical Contract;

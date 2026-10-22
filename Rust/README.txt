@@ -131,7 +131,8 @@ Helpers
 App provides console write, arguments, bounded sleep and close state. GUI uses
 the regular host-created R4DESK window and R4DRAW clear/text/present operations;
 no private framebuffer. Poll/wait checks optional table slots; idle waits leave
-the scheduler ready list. Service registers its exact named endpoint, waits
+the scheduler ready list. SDK0.64.75 adds the shared gui module below.
+Service registers its exact named endpoint, waits
 with bounded timeout, receives/replies optionally, and unregisters before the
 handle is cleared. The normal process owner remains responsible for final exit.
 The service owner can retire that exact endpoint while requesting Stop;
@@ -144,6 +145,56 @@ Qualification is recorded separately as build, ELF/container and actual guest
 results in Docs/API/RustContractBindings.txt. Host memory bounds/overlap cases
 and source/error/tool cases are reusable SDK tests; no broad image/hardware
 matrix or extra normal STANDARD follows from host/fixture-only work.
+
+Shared GUI owners (SDK0.64.75)
+------------------------------
+gui::Session uses pinned SessionStorage and caller-owned TimerStorage; no
+allocator is required. Session::open(Role::Window) uses the regular host-bound
+app window. Role::DesktopHost admits an independent host without querying an
+app window. claim_host performs one exact WINSVC exchange, without startup
+retries or output reset. Raw window-info success alone does not prove a hosted
+binding; the regular window admission checks program_window_id. Closing the
+local connection does not release the process's host binding; process retirement
+remains with WINSVC.
+Explicit reconnection and exact owner/epoch checks prevent silent reuse of an
+old service generation. Graphics/output ownership is a separate facade group.
+
+Inside a function returning storage::Result<()>:
+
+  let mut storage = core::pin::pin!(gui::SessionStorage::new());
+  let mut timers = [core::mem::MaybeUninit::uninit(); 1];
+  let mut ui = gui::Session::open(storage.as_mut(), app, gui::Role::Window, &mut timers)?;
+  let mut commands = [abi::GuiFrameCommand::default(); 32];
+  let mut resources = [0u8; 2048];
+  let mut paint = ui.begin(&mut commands, &mut resources)?;
+  paint.clear(0x24384c)?;
+  paint.text(16, 20, c"Shared GUI", 0xffffff, 0x24384c)?;
+  paint.present()?;
+
+next(Timeout) returns typed semantic EventKind values, with full Unicode
+codepoints and modifiers. They differ from the raw ABI GuiEventKind values.
+The original loop owns timers, clipboard notices, command admission and close
+delivery. Native activity/deadline waits remain blocking, never sleep polling.
+TextField/TextArea and InputQueue borrow their caller buffers and execute the
+same native editing/grapheme/retained-prefix owners as Zig's fixed arrays.
+
+gui::raw exposes the complete compiler-typed C GUI boundary, including all
+widgets/dialogs, glyphs, shapes/charts, frame/remote/shared-raster operations
+and desktop-window/process bindings. C includes <r4os/gui_bridge.h>. Keep
+private objects in MaybeUninit: padding and inactive union storage are not
+initialized byte arrays. Constructors, fields, optional/error tags and native
+getters preserve their owner invariants. No native context/frame may move while
+loaned. Resource views borrow their exact owner; asynchronous generation/read
+leases require actual release ACK before reuse. Unsafe raw access cannot relax
+these rules. Float data crosses through pointers; no new scalar FP ABI claim.
+The generated fingerprint binds layouts, enum/event values and dispatch to
+the matched runtime. Runtime entry rejects a different fingerprint.
+Current window-paint entry requires the frame callbacks. Missing whole-glyph
+or font-revision callbacks stay unavailable; no row emulation or invented
+revision is added. Actual zero revisions remain zero. Explicit immediate
+FrameCanvas work and absent fonts remain separate valid cases.
+Host interop reuses the existing pixel/frame/input oracles; the small RustGui
+and RustGui/Host fixtures cover real hosted operation and separate host entry.
 
 Pooled allocation (SDK0.64.69)
 ------------------------------

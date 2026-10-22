@@ -4,4 +4,5 @@ comptime {
     _ = @import("services_runtime.zig");
     _ = @import("generated/net_facade.zig");
     _ = @import("net_request_runtime.zig");
+    _ = @import("gui_value_bridge.zig");
 }

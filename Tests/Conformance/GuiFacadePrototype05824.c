@@ -866,7 +866,8 @@ static const R4GuiEvent events[] = {
 };
 
 static uint64_t fake_ticks(void) { return now_ticks; }
-static uint32_t fake_should_close(void) { return 0u; }
+static uint32_t close_requested;
+static uint32_t fake_should_close(void) { return close_requested; }
 static void fake_time_state(R4TimeState *out) {
     *out = (R4TimeState){0};
     out->monotonic_ticks = now_ticks;
@@ -960,10 +961,12 @@ static int32_t fake_frame_read(const R4ProgramProcessHandle *handle, uint64_t ex
 
 static R4App make_app(R4XStartR4Sys *sys, R4XStartR4Desk *desk, R4XStartR4Draw *draw, int drawing_available) {
     *sys = (R4XStartR4Sys){0};
+    sys->size = sizeof(*sys);
     sys->ticks = (uintptr_t)&fake_ticks;
     sys->time_state = (uintptr_t)&fake_time_state;
     sys->program_should_close = (uintptr_t)&fake_should_close;
     *desk = (R4XStartR4Desk){0};
+    desk->size = sizeof(*desk);
     desk->program_window_id = (uintptr_t)&fake_window_id;
     desk->gui_window_info = (uintptr_t)&fake_window_info;
     desk->gui_poll_event = (uintptr_t)&fake_poll_event;
@@ -1132,6 +1135,11 @@ int main(void) {
     assert(r4_event_loop_poll(&window.events, &message) && message.kind == R4_MESSAGE_MOUSE && message.value.mouse.action == R4_MOUSE_UP);
     assert(r4_event_loop_poll(&window.events, &message) && message.kind == R4_MESSAGE_MOUSE && message.value.mouse.action == R4_MOUSE_MOVE);
     assert(r4_event_loop_poll(&window.events, &message) && message.kind == R4_MESSAGE_CLOSE && message.value.close_window_id == 4);
+    close_requested=1;
+    for(unsigned i=0;i<100;i++)assert(!r4_event_loop_poll(&window.events,&message));
+    close_requested=0;assert(!r4_event_loop_poll(&window.events,&message));
+    close_requested=1;assert(r4_event_loop_poll(&window.events,&message) && message.kind==R4_MESSAGE_CLOSE);
+    assert(!r4_event_loop_poll(&window.events,&message));close_requested=0;
 
     R4PaintContext paint;
     assert(r4_window_begin_paint(&window, &paint));
@@ -1184,6 +1192,10 @@ int main(void) {
     assert(next.state == R4_MESSAGE_NEXT_MESSAGE && next.message.kind == R4_MESSAGE_TIMER && next.message.value.timer.id.value == 9u);
     assert(activity_waits > 0u);
     assert(r4_window_wait_message(&window, r4_timeout_poll()).state == R4_MESSAGE_NEXT_TIMED_OUT);
+    timers[0]=(R4Timer){.id={17},.deadline_tick=0,.interval_ticks=1,.active=1};now_ticks=UINT64_MAX;
+    assert(r4_event_loop_poll(&window.events,&message) && message.kind==R4_MESSAGE_TIMER && timers[0].deadline_tick==UINT64_MAX);
+    uint32_t full_sys_size=sys.size;sys.size=offsetof(R4XStartR4Sys,time_state);
+    assert(r4_gui_monotonic_hz(&app)==0);sys.size=full_sys_size;
 
     R4App missing_draw = make_app(&sys, &desk, &draw, 0);
     assert(!r4_window_open(&missing_draw, timers, 1u, &window));

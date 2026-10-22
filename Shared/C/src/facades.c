@@ -21,6 +21,7 @@
 #include <r4os/app_tray.h>
 #include <r4os/storage.h>
 #include <r4os/directory_page.h>
+#include <r4os/gui_bridge.h>
 #undef inline
 #undef static
 #include <r4os/facades.h>

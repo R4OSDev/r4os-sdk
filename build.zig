@@ -38,6 +38,27 @@ pub fn build(b: *std.Build) void {
         return;
     }
     const sdk_profile = Sdk.init(b, .{ .contract_dependency = contract_dependency });
+    if (b.option(bool, "gui-oracle-only", "Build existing GUI callbacks/pixel oracle for language interop") orelse false) {
+        const oracle = b.createModule(.{ .root_source_file = b.path("Tests/Conformance/GuiFacadePrototype05824.zig"), .target = b.graph.host, .optimize = .Debug, .pic = true });
+        oracle.addImport("r4os", sdk_profile.createR4osModule(b.graph.host, .Debug));
+        b.getInstallStep().dependOn(&b.addInstallFile(b.addObject(.{ .name = "r4sdk_gui_oracle", .root_module = oracle }).getEmittedBin(), "lib/r4sdk_gui_oracle.o").step);
+        return;
+    }
+    if (b.option(bool, "gui-bridge-runtime-only", "Build only the shared GUI owner boundary") orelse false) {
+        const native = b.option(bool, "gui-bridge-host-test", "Use native ABI for GUI bridge interop") orelse false;
+        const object = r4os_build.addStorageRuntimeObject(b, b.path("r4os/gui_value_bridge.zig"), sdk_profile.profile.contract_module, sdk_profile.profile.grapheme_source.?, sdk_profile.builder, native);
+        b.getInstallStep().dependOn(&b.addInstallFile(object, "lib/r4sdk_gui.o").step);
+        return;
+    }
+    if (b.option(bool, "gui-bridge-generator-only", "Build the compiler-typed GUI bridge generator") orelse false) {
+        const root = b.createModule(.{ .root_source_file = b.path("Tools/GuiBridgeGen/src/main.zig"), .target = b.graph.host, .optimize = .Debug });
+        const schema = b.createModule(.{ .root_source_file = b.path("r4os/gui_bridge_schema.zig"), .target = b.graph.host, .optimize = .Debug });
+        schema.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
+        schema.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = b.graph.host, .optimize = .ReleaseSafe }));
+        root.addImport("schema", schema);
+        b.installArtifact(b.addExecutable(.{ .name = "gui-bridge-gen", .root_module = root }));
+        return;
+    }
     if (b.option(bool, "net-bridge-generator-only", "Build the compiler-typed SDK network bridge generator") orelse false) {
         const root = b.createModule(.{ .root_source_file = b.path("Tools/NetBridgeGen/src/main.zig"), .target = b.graph.host, .optimize = .ReleaseSafe });
         const bridge = b.createModule(.{ .root_source_file = b.path("r4os/net_bridge_support.zig"), .target = b.graph.host, .optimize = .ReleaseSafe });
@@ -106,6 +127,10 @@ pub fn build(b: *std.Build) void {
     });
 
     const host_r4os = sdk_profile.createR4osModule(b.graph.host, .Debug);
+    const gui_cases = b.createModule(.{ .root_source_file = b.path("Tests/Conformance/GuiFacadePrototype05824.zig"), .target = b.graph.host, .optimize = .Debug });
+    gui_cases.addImport("r4os", host_r4os);
+    const gui_parity = b.addRunArtifact(b.addTest(.{ .root_module = gui_cases, .filters = &.{ "raw GUI events", "command clipboard timer", "transactional paint", "buffered Canvas" } }));
+    b.step("gui-parity-test", "Existing GUI events, frame/immutable generation, pixel and failure oracles").dependOn(&gui_parity.step);
     const storage_cases = b.createModule(.{ .root_source_file = b.path("Tests/Conformance/StorageFacadePrototype05823.zig"), .target = b.graph.host, .optimize = .Debug });
     storage_cases.addImport("r4os", host_r4os);
     const storage_parity = b.addRunArtifact(b.addTest(.{ .root_module = storage_cases }));

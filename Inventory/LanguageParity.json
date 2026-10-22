@@ -625,20 +625,28 @@
       "semantics": "GUI-Nachrichten/Unicode/Modifier/Close, Timer/Clipboard, Paint/Present und Ressourcenbesitz; gehostete App und Desktophost sind verschiedene Rollen. Kein Schlafpolling oder Abschneiden von UTF-8. Aktuelle CPU/GPU-Ausgaben und abgerundete/alpha-Pixel erhalten.",
       "current_only": "current_function",
       "rust": {
-        "state": "qualified_hosted_window_subset",
-        "source": "Repositories/SDK/Rust/src/lib.rs",
-        "gap": "Rust kann ein gehostetes Fenster zeichnen/pollen/warten/schliessen, besitzt keine EventLoop/Canvas/FrameCanvas/Dialog/Widget-/Desktophost-Paritaet. Gleichnamige Rust-Desktopvorlage ist kein R4DESK-Host."
+        "state": "paritaet_abgenommen",
+        "sources": [
+          "Repositories/SDK/Rust/src/gui/mod.rs",
+          "Repositories/SDK/Rust/src/gui/session.rs",
+          "Repositories/SDK/Rust/src/gui/text.rs",
+          "Repositories/SDK/Rust/src/gui/input.rs",
+          "Repositories/SDK/Rust/src/c_facades.rs"
+        ],
+        "gap": null
       },
       "c": {
-        "state": "existing_facade_review_required",
+        "state": "paritaet_abgenommen",
         "sources": [
+          "Repositories/SDK/Shared/C/include/r4os/gui_bridge.h",
           "Repositories/SDK/Shared/C/include/r4os/r4desk.h",
           "Repositories/SDK/Shared/C/include/r4os/app_gui.h"
         ],
-        "gap": "Bestehende C-Fassade erhalten; nur fehlende aktuelle Funktionen/hoeheren Hilfen und deren Semantik gegen die verlinkten Zig-Deklarationen schliessen."
+        "gap": null
       },
       "evidence": [
-        "source_inventory"
+        "source_inventory",
+        "gui_current_56"
       ],
       "shared_core": "Gemeinsame GUI-/Rasterkerne beim Besitzer; keine unabhaengigen Widget-/Unicodealgorithmen pro Sprache."
     },
@@ -46914,7 +46922,8 @@
         "Repositories/SDK/r4os/program.zig",
         "Docs/SDK/README.txt"
       ],
-      "rule": "Glyph-Row-Ersatz fuer alte Whole-Glyph-Tabellen, erfundene Fontrevision1 und Ersatz fuer fehlende alte Commandstreamfunktionen nicht neu anbieten. Fehlende Fonts, Softwareausgabe, einzelne optionale Hardware- oder Backendfunktionen sind weiterhin gueltige Fehler-/Funktionsfaelle."
+      "rule": "Glyph-Row-Ersatz fuer alte Whole-Glyph-Tabellen, erfundene Fontrevision1 und Ersatz fuer fehlende alte Commandstreamfunktionen nicht neu anbieten. Fehlende Fonts, Softwareausgabe, einzelne optionale Hardware- oder Backendfunktionen sind weiterhin gueltige Fehler-/Funktionsfaelle.",
+      "result_56": "New Rust/C bridge rejects missing whole-glyph/font-revision/frame callbacks without row emulation or invented revision. Explicit immediate FrameCanvas remains current behavior. Existing Zig legacy helpers remain residual wave78."
     },
     {
       "id": "subsystem-copy",
@@ -47060,6 +47069,56 @@
         "bytes": 12851,
         "sha256": "14e568bdc3a5366bbb09846733537c78141755b94ee64d56759118c97d9bc6e6"
       }
+    },
+    "gui_current_56": {
+      "kind": "native_release_oracles_and_real_KVM_SMP4_function",
+      "sdk": "0.64.75",
+      "contract": "0.64.44",
+      "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.56",
+      "guest": "Full0.86.42/Kernel0.1.381/KVM/SMP4",
+      "exit": 0,
+      "projection": {
+        "native_types": 259,
+        "native_functions": 533,
+        "functions": 2361,
+        "layout_assertions": 778,
+        "canonical_aliases": 464
+      },
+      "checks": [
+        "original six GUI/frame/pixel oracles and text/input cases",
+        "C/Rust release interop: pixels/resources/damage, UTF32/modifiers, graphemes, bounded queues, 64-bit generation/read leases and failed-release retention",
+        "native host firstclaim/reconnect/old reply/transport failure; actual GUI host eligibility/no appwindow/live owner protection",
+        "fingerprint/layout drift; E0133/E0277/E0499; clippy -Dwarnings",
+        "current-only whole glyph/font revision/window paint admission; original service/network retention after MaybeUninit adjustment"
+      ],
+      "gui": {
+        "bytes": 485053,
+        "sha256": "0a2180e622887e41aed4a204165ab41025b3431a87d72a04bc58375c16edaa35",
+        "readback": "complete",
+        "result": "PASS GUI56 Rust/C frames, UTF32 input, fullscreen/restore and normal close"
+      },
+      "host": {
+        "bytes": 439969,
+        "sha256": "76ad7f6c636782a10557a6bc78de0b865a0d8f07e44c89b8f58d6a8cce0f793f",
+        "readback": "complete",
+        "result": "HOST56 result=00"
+      },
+      "winsvc_after": {
+        "windows": 0,
+        "restarts": 0,
+        "busy": 0,
+        "timeout": 0,
+        "cancel": 0
+      },
+      "standard": "none: fixed-array normal consumers rebuilt byte identical; SDK foreign-language bridges and image_scope=none fixtures do not change normal runtime artifacts.",
+      "unchanged_normal_artifacts": {
+        "kernel": "e06111b9363b44712fe69ded9ddfc3edb1f60c5c271c59a42238a816b0882340",
+        "desktop": "2b493582b26d800f6ddf67d306e192b37a727a654b202bd98b06ad3dd8901421",
+        "notepad": "efd90aa6cfd23e8f973a8e3ab1cd8d6e1e1492280b2f80cb5ba835965de7760d",
+        "paint": "5acce77372cd98842592d9c3de3c6f373abb47f7ed4b848b7bc3b43bd3205c0c",
+        "spectra": "1687bf3ffc267a663e04280579c0774eb4427dbe4165e9338cb09f253fd32bd7"
+      },
+      "limit": "No live Desktop replacement, native GPU/physical input/Windows/performance or Rust by-value FP-ABI qualification. Actual host checks existing-owner refusal; first claim/reconnect uses native ABI peers. Float bridge arguments/results use pointers. Source Full remains unchanged; own guest files and snapshot removed after regular shutdown."
     }
   },
   "wave_bindings": [

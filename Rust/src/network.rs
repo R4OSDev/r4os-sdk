@@ -71,8 +71,10 @@ impl<'a> OwnedRequest<'a> {
     fn new(network: &'a Network<'a>) -> Self {
         // Transfer ownership before giving a native worker any address. A
         // moved Rust Box must never assert unique access to loaned buffers.
-        let value = alloc::boxed::Box::new(unsafe { core::mem::zeroed() });
-        let raw = core::ptr::NonNull::new(alloc::boxed::Box::into_raw(value)).unwrap();
+        // Native private storage may contain uninitialized padding. Keep it
+        // MaybeUninit for its complete lifetime; only native getters inspect it.
+        let value = alloc::boxed::Box::new(core::mem::MaybeUninit::<RawRequest>::zeroed());
+        let raw = core::ptr::NonNull::new(alloc::boxed::Box::into_raw(value).cast()).unwrap();
         unsafe { c::R4SdkNetRequestInit(raw.as_ptr()) };
         Self { network, raw }
     }
@@ -159,7 +161,11 @@ impl Drop for OwnedRequest<'_> {
         // BUSY or another error retains the allocation for the native instance
         // reaper. Neither Drop nor mem::forget can free active worker storage.
         if !self.active() {
-            unsafe { drop(alloc::boxed::Box::from_raw(self.raw.as_ptr())) };
+            unsafe {
+                drop(alloc::boxed::Box::from_raw(
+                    self.raw.as_ptr().cast::<core::mem::MaybeUninit<RawRequest>>(),
+                ))
+            };
         }
     }
 }

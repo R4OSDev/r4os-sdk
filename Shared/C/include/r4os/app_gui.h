@@ -102,6 +102,7 @@ typedef struct R4EventLoop {
     uint32_t clipboard_revision;
     R4CommandId pending_command;
     uint8_t has_pending_command;
+    uint8_t close_delivered;
 } R4EventLoop;
 
 typedef struct R4Window {
@@ -120,9 +121,17 @@ typedef struct R4PaintContext {
 typedef struct R4Canvas { R4PaintContext *paint; } R4Canvas;
 
 static inline uint32_t r4_gui_monotonic_hz(R4App *app) {
-    if (app == 0 || app->system.table == 0 || app->system.table->time_state == 0) return 0u;
+    if (app == 0 || !R4SYS_HAS(&app->system,time_state)) return 0u;
     R4TimeState state = {0}; ((R4SysTimeStateFn)(uintptr_t)app->system.table->time_state)(&state); return state.monotonic_hz;
 }
+static inline int r4_gui_desk_slot(const R4Desk *desk,size_t offset) {
+    return desk && desk->table && offset <= desk->table->size && sizeof(uintptr_t) <= desk->table->size-offset;
+}
+#define R4_GUI_DESK_HAS(desk,field) (r4_gui_desk_slot((desk),offsetof(R4XStartR4Desk,field)) && (desk)->table->field != 0)
+static inline int r4_gui_draw_slot(const R4Draw *draw,size_t offset) {
+    return draw && draw->table && offset <= draw->table->size && sizeof(uintptr_t) <= draw->table->size-offset;
+}
+#define R4_GUI_DRAW_HAS(draw,field) (r4_gui_draw_slot((draw),offsetof(R4XStartR4Draw,field)) && (draw)->table->field != 0)
 
 static inline int r4_timer_start(R4Timer *timer, R4App *app, R4TimerId id, R4Duration duration, int repeating) {
     if (timer == 0 || app == 0) return 0;
@@ -134,12 +143,12 @@ static inline int r4_timer_start(R4Timer *timer, R4App *app, R4TimerId id, R4Dur
 static inline void r4_timer_cancel(R4Timer *timer) { if (timer != 0) timer->active = 0u; }
 
 static inline int r4_window_open(R4App *app, R4Timer *timers, uint32_t timer_count, R4Window *out) {
-    if (app == 0 || out == 0 || !r4_app_has_group(app, R4L_GROUP_R4DESK) || !r4_app_has_group(app, R4L_GROUP_R4DRAW)) return 0;
+    if (app == 0 || out == 0 || (timer_count != 0 && timers == 0) || !r4_app_has_group(app, R4L_GROUP_R4DESK) || !r4_app_has_group(app, R4L_GROUP_R4DRAW)) return 0;
     const R4XStartR4Desk *desk = app->desktop.table; const R4XStartR4Draw *draw = app->drawing.table;
-    if (desk == 0 || draw == 0 || desk->program_window_id == 0 || desk->gui_window_info == 0 || desk->gui_poll_event == 0 || desk->desktop_activity_wait == 0 || draw->gui_clear == 0 || draw->gui_rect == 0 || draw->gui_present == 0) return 0;
+    if (desk == 0 || draw == 0 || !R4_GUI_DESK_HAS(&app->desktop,program_window_id) || !R4_GUI_DESK_HAS(&app->desktop,gui_window_info) || !R4_GUI_DESK_HAS(&app->desktop,gui_poll_event) || !R4_GUI_DESK_HAS(&app->desktop,desktop_activity_wait) || !R4_GUI_DRAW_HAS(&app->drawing,gui_clear) || !R4_GUI_DRAW_HAS(&app->drawing,gui_rect) || !R4_GUI_DRAW_HAS(&app->drawing,gui_draw_text) || !R4_GUI_DRAW_HAS(&app->drawing,gui_present)) return 0;
     int32_t id = r4desk_program_window_id(&app->desktop); if (id < 0) return 0;
     *out = (R4Window){0}; out->app = app; out->id = id; out->events.app = app; out->events.timers = timers; out->events.timer_count = timer_count;
-    if (desk->clipboard_revision != 0) out->events.clipboard_revision = ((R4DeskClipboardRevisionFn)(uintptr_t)desk->clipboard_revision)();
+    if (R4_GUI_DESK_HAS(&app->desktop,clipboard_revision)) out->events.clipboard_revision = ((R4DeskClipboardRevisionFn)(uintptr_t)desk->clipboard_revision)();
     return 1;
 }
 
@@ -180,9 +189,9 @@ static inline int r4_event_loop_post_command(R4EventLoop *loop, R4CommandId comm
 static inline int r4_event_loop_poll(R4EventLoop *loop, R4Message *out) {
     if (loop == 0 || out == 0 || loop->app == 0) return 0;
     R4GuiEvent raw = {0};
-    if (r4desk_gui_poll_event(&loop->app->desktop, &raw) > 0) { *out = r4_message_translate(loop, raw); return 1; }
+    if (r4desk_gui_poll_event(&loop->app->desktop, &raw) > 0) { if(raw.kind==R4_GUI_RAW_EVENT_CLOSE)loop->close_delivered=1; *out = r4_message_translate(loop, raw); return 1; }
     if (loop->has_pending_command) { *out = (R4Message){0}; out->kind = R4_MESSAGE_COMMAND; out->value.command = loop->pending_command; loop->has_pending_command = 0u; return 1; }
-    if (loop->app->desktop.table->clipboard_revision != 0) {
+    if (R4_GUI_DESK_HAS(&loop->app->desktop,clipboard_revision)) {
         uint32_t revision = ((R4DeskClipboardRevisionFn)(uintptr_t)loop->app->desktop.table->clipboard_revision)();
         if (revision != loop->clipboard_revision) { loop->clipboard_revision = revision; *out = (R4Message){0}; out->kind = R4_MESSAGE_CLIPBOARD; out->value.clipboard.revision = revision; return 1; }
     }
@@ -190,10 +199,10 @@ static inline int r4_event_loop_poll(R4EventLoop *loop, R4Message *out) {
     for (uint32_t i = 0; i < loop->timer_count; ++i) {
         R4Timer *timer = &loop->timers[i]; if (!timer->active || now < timer->deadline_tick) continue;
         *out = (R4Message){0}; out->kind = R4_MESSAGE_TIMER; out->value.timer = (R4TimerMessage){timer->id, now};
-        if (timer->interval_ticks == 0u) timer->active = 0u; else { uint64_t periods = (now - timer->deadline_tick) / timer->interval_ticks + 1u; timer->deadline_tick = periods > (UINT64_MAX - timer->deadline_tick) / timer->interval_ticks ? UINT64_MAX : timer->deadline_tick + periods * timer->interval_ticks; }
+        if (timer->interval_ticks == 0u) timer->active = 0u; else { uint64_t quotient = (now - timer->deadline_tick) / timer->interval_ticks; uint64_t periods = quotient==UINT64_MAX ? UINT64_MAX : quotient+1u; timer->deadline_tick = periods > (UINT64_MAX - timer->deadline_tick) / timer->interval_ticks ? UINT64_MAX : timer->deadline_tick + periods * timer->interval_ticks; }
         return 1;
     }
-    if (r4_app_should_close(loop->app)) { *out = (R4Message){0}; out->kind = R4_MESSAGE_CLOSE; out->value.close_window_id = r4desk_program_window_id(&loop->app->desktop); return 1; }
+    if (r4_app_should_close(loop->app)) { if(!loop->close_delivered){loop->close_delivered=1; *out = (R4Message){0}; out->kind = R4_MESSAGE_CLOSE; out->value.close_window_id = r4desk_program_window_id(&loop->app->desktop); return 1;} } else loop->close_delivered=0;
     return 0;
 }
 
@@ -205,7 +214,7 @@ static inline uint64_t r4_event_loop_timer_delay(R4EventLoop *loop, uint64_t now
 
 static inline R4MessageNext r4_event_loop_wait(R4EventLoop *loop, R4Timeout timeout) {
     R4MessageNext result = {0};
-    if (loop == 0 || loop->app == 0 || loop->app->desktop.table == 0 || loop->app->desktop.table->desktop_activity_wait == 0) { result.state = R4_MESSAGE_NEXT_FAILED; result.raw_code = R4OS_ERR_NO_FN; return result; }
+    if (loop == 0 || loop->app == 0 || !R4_GUI_DESK_HAS(&loop->app->desktop,desktop_activity_wait)) { result.state = R4_MESSAGE_NEXT_FAILED; result.raw_code = R4OS_ERR_NO_FN; return result; }
     uint64_t budget = 0u; if (r4_timeout_to_ticks(timeout, r4_gui_monotonic_hz(loop->app), &budget) != R4OS_OK) { result.state = R4_MESSAGE_NEXT_FAILED; result.raw_code = R4_REMOTE_FRAME_ERROR_INVALID; return result; }
     uint64_t started = r4_app_ticks(loop->app); int forever = timeout.kind == R4OS_TIMEOUT_KIND_FOREVER; uint64_t deadline = forever || UINT64_MAX - started < budget ? UINT64_MAX : started + budget;
     for (;;) {

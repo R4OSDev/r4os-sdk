@@ -23,38 +23,54 @@ pub fn valid(event: abi.ConsoleInputEvent) bool {
 /// Caller-owned pending events. Failed admission leaves the old queue intact;
 /// only an explicitly acknowledged prefix may be consumed. Bind the enclosing
 /// producer to its exact process handle and clear it when that binding closes.
-pub fn Queue(comptime capacity: usize) type {
+pub fn borrowedQueue(buffer: []abi.ConsoleInputEvent) ?Queue([]abi.ConsoleInputEvent) {
+    if (buffer.len == 0) return null;
+    return .{ .data = buffer };
+}
+pub fn Queue(comptime capacity: anytype) type {
+    const Buffer = if (@TypeOf(capacity) == type) capacity else [capacity]abi.ConsoleInputEvent;
+    if (Buffer != []abi.ConsoleInputEvent and (@typeInfo(Buffer) != .array or @typeInfo(Buffer).array.child != abi.ConsoleInputEvent or @typeInfo(Buffer).array.len == 0)) @compileError("Queue needs a nonempty event array or an admitted borrowed event slice");
     return struct {
         const Self = @This();
-        data: [capacity]abi.ConsoleInputEvent = undefined,
+        data: Buffer = if (Buffer == []abi.ConsoleInputEvent) @constCast(&.{}) else undefined,
         head: usize = 0,
         len: usize = 0,
 
         pub fn append(self: *Self, events: []const abi.ConsoleInputEvent) bool {
-            if (events.len > capacity - self.len) return false;
+            if (events.len > self.data.len - self.len) return false;
             for (events) |event| if (!valid(event)) return false;
             for (events) |event| {
-                self.data[(self.head + self.len) % capacity] = event;
+                self.data[(self.head + self.len) % self.data.len] = event;
                 self.len += 1;
             }
             return true;
         }
         pub fn peek(self: *const Self) []const abi.ConsoleInputEvent {
-            return self.data[self.head..][0..@min(self.len, capacity - self.head)];
+            return self.data[self.head..][0..@min(self.len, self.data.len - self.head)];
         }
         pub fn consume(self: *Self, count: usize) bool {
             if (count > self.len) return false;
-            self.head = (self.head + count) % capacity;
+            self.head = (self.head + count) % self.data.len;
             self.len -= count;
             return true;
         }
-        pub fn clear(self: *Self) void { self.head = 0; self.len = 0; }
+        pub fn clear(self: *Self) void {
+            self.head = 0;
+            self.len = 0;
+        }
     };
 }
 
 test "console event validation and retained full/partial/wrapped producer queue" {
+    var fixed: Queue(3) = .{};
+    try retainedQueueCases(&fixed);
+    var data: [3]abi.ConsoleInputEvent = undefined;
+    var borrowed = borrowedQueue(&data).?;
+    try retainedQueueCases(&borrowed);
+    try @import("std").testing.expect(borrowedQueue(&.{}) == null);
+}
+fn retainedQueueCases(queue: anytype) !void {
     const std = @import("std");
-    var queue: Queue(3) = .{};
     const initial = [_]abi.ConsoleInputEvent{ text(0x401).?, key(0x80), utf8Byte(0x81) };
     try std.testing.expect(queue.append(&initial));
     try std.testing.expect(!queue.append(&.{text(0x1f600).?}));
