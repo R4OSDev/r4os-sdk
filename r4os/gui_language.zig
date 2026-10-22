@@ -2,6 +2,9 @@
 //! rendering implementation and all clipping/Unicode work remain in gui.zig.
 const g = @import("gui.zig");
 pub const telemetry_field_count = @import("gfx_telemetry.zig").fields.len;
+pub fn formatKernelVersion(value: @import("r4os_contract").abi.KernelVersion, buffer: []u8) ?[]const u8 {
+    return @import("r4dev.zig").formatKernelVersion(value, buffer);
+}
 pub fn telemetryField(index: usize) ?@import("gfx_telemetry.zig").Field {
     return if (index < telemetry_field_count) @import("gfx_telemetry.zig").fields[index] else null;
 }

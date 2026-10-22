@@ -1,0 +1,256 @@
+#![cfg(test)]
+#[path = "RustGraphics.rs"]
+mod visual_regression;
+use core::{mem::MaybeUninit, pin::pin};
+use r4os_sdk::{
+    App, ImportSpec, StartupInfo, abi,
+    platform::{
+        Platform, PlatformStorage, Resampler, WriteCursor, WriteKind, WriteProgress, raw as c,
+    },
+    resources::Timeout,
+};
+unsafe extern "C" {
+    fn sdk_audio_c_case() -> i32;
+    fn sdk_platform_oracle_tables(
+        sys: *mut abi::R4XStartR4Sys,
+        audio: *mut abi::R4XStartR4Audio,
+        dev: *mut abi::R4XStartR4Dev,
+    );
+    fn sdk_platform_oracle_mode(mode: u32);
+    fn sdk_platform_oracle_connections() -> u32;
+}
+#[test]
+fn original_platform_owners_preserve_frames_progress_and_explicit_close() {
+    assert_eq!(unsafe { sdk_audio_c_case() }, 0);
+    let (mut sys, mut audio, mut dev) = (
+        abi::R4XStartR4Sys::default(),
+        abi::R4XStartR4Audio::default(),
+        abi::R4XStartR4Dev::default(),
+    );
+    unsafe { sdk_platform_oracle_tables(&mut sys, &mut audio, &mut dev) };
+    let records = [
+        (
+            abi::R4LGroup::r4sys,
+            c"R4SYS",
+            &sys as *const _ as u64,
+            sys.magic,
+            sys.abi_version,
+            sys.size,
+        ),
+        (
+            abi::R4LGroup::r4audio,
+            c"R4AUDIO",
+            &audio as *const _ as u64,
+            audio.magic,
+            audio.abi_version,
+            audio.size,
+        ),
+        (
+            abi::R4LGroup::r4dev,
+            c"R4DEV",
+            &dev as *const _ as u64,
+            dev.magic,
+            dev.abi_version,
+            dev.size,
+        ),
+    ];
+    let imports = records.map(|(group, name, table, _, _, _)| abi::R4XStartImport {
+        group_id: group.0,
+        module_name: name.as_ptr() as u64,
+        symbol_name: c"Query".as_ptr() as u64,
+        flags: abi::r4xstart_import_flag_group_interface,
+        min_version: 1,
+        resolved_version: 1,
+        table,
+    });
+    let specs = records.map(|(group, name, _, magic, version, size)| ImportSpec {
+        module_name: name.to_bytes(),
+        symbol_name: b"Query",
+        group_id: group.0,
+        minimum: 1,
+        optional: false,
+        magic,
+        version,
+        size,
+    });
+    let context = abi::R4XStartContext {
+        app_class: abi::R4XStartAppClass::console.0,
+        instance_id: 42,
+        flags: abi::r4xstart_flag_imports_valid,
+        imports: imports.as_ptr() as u64,
+        import_count: 3,
+        ..Default::default()
+    };
+    let expected = StartupInfo {
+        app_class: abi::R4XStartAppClass::console,
+        required_groups: records.iter().fold(0, |m, r| m | (1 << r.0.0)),
+        imports: &specs,
+    };
+    let app = unsafe { App::from_raw(&context, &expected, c"PlatformParity") }.unwrap();
+    let mut storage = pin!(PlatformStorage::new());
+    let platform = Platform::open(storage.as_mut(), &app).unwrap();
+    let audio = platform.audio().unwrap();
+    let mut invalid_format = MaybeUninit::uninit();
+    let raw = unsafe {
+        c::R4SdkAudioAudio_openStream(
+            0,
+            audio.native(),
+            48000,
+            2,
+            2,
+            0x10000,
+            &abi::R4Timeout {
+                kind: abi::timeout_kind_forever,
+                ..Default::default()
+            },
+            invalid_format.as_mut_ptr(),
+        )
+    };
+    assert_eq!(raw.status, 0);
+    assert_eq!(
+        unsafe { c::R4SdkAudioOpenResult_get_failure(invalid_format.as_ptr()) }.bits as i32,
+        abi::service_api_result_invalid
+    );
+    assert!(
+        audio
+            .open_stream(192001, 2, 0x10000, Timeout::Forever)
+            .is_err()
+    );
+    assert!(
+        audio
+            .open_stream(48000, 3, 0x10000, Timeout::Forever)
+            .is_err()
+    );
+    let mut stream = audio
+        .open_stream(48000, 2, 0x10000, Timeout::Forever)
+        .unwrap();
+    assert!(stream.valid().unwrap());
+    let input = [0u8; 16];
+    unsafe { sdk_platform_oracle_mode(1) };
+    let p = stream.write(&input, Timeout::Forever, true).unwrap();
+    assert_eq!(p.accepted, 4);
+    assert_eq!(p.kind, WriteKind::Retry);
+    let mut cursor = WriteCursor::new(16, 4).unwrap().unwrap();
+    assert!(WriteCursor::new(15, 4).unwrap().is_none());
+    cursor.apply(p).unwrap();
+    assert_eq!(cursor.remaining().unwrap(), 12);
+    assert_eq!(
+        cursor
+            .apply(WriteProgress {
+                accepted: 3,
+                kind: WriteKind::Retry,
+                raw: 0
+            })
+            .unwrap()
+            .kind,
+        WriteKind::Invalid
+    );
+    assert_eq!(cursor.remaining().unwrap(), 12);
+    for (mode, kind) in [
+        (2, WriteKind::Retry),
+        (3, WriteKind::TimedOut),
+        (4, WriteKind::Failure),
+    ] {
+        unsafe { sdk_platform_oracle_mode(mode) };
+        let p = stream.write(&input, Timeout::Forever, false).unwrap();
+        assert_eq!(p.kind, kind);
+        assert_eq!(p.accepted, if mode == 4 { 0 } else { 4 });
+    }
+    unsafe { sdk_platform_oracle_mode(0) };
+    let p = stream.write(&input[..12], Timeout::Forever, false).unwrap();
+    assert_eq!(p.kind, WriteKind::Complete);
+    cursor.apply(p).unwrap();
+    assert_eq!(cursor.remaining().unwrap(), 0);
+    assert_eq!(
+        stream
+            .write(&input[..3], Timeout::Forever, false)
+            .unwrap()
+            .kind,
+        WriteKind::Failure
+    );
+    stream.set_volume(0x8000, Timeout::Forever).unwrap();
+    stream.close(Timeout::Forever).unwrap();
+    assert!(!stream.valid().unwrap());
+    assert!(stream.close(Timeout::Forever).is_err());
+    assert_eq!(unsafe { sdk_platform_oracle_connections() }, 0);
+    assert!(platform.devices().memory().unwrap().is_some());
+    assert!(platform.devices().inventory().is_ok());
+    assert!(matches!(
+        platform.devices().record(9999),
+        Err(r4os_sdk::storage::Error::Unavailable)
+    ));
+    let mut summary = abi::ProgramInstanceStorageSummary::default();
+    let raw_dev = unsafe { platform.devices().native() };
+    let current =
+        unsafe { c::R4SdkGfxDeviceContext_programInstanceStorageSummary(0, raw_dev, &mut summary) };
+    assert_eq!(current.bits as i32, 1);
+    assert_eq!(summary.version, 2);
+    dev.program_instance_storage_summary_v2 = 0;
+    assert_eq!(dev.program_instance_storage_summary_v2, 0);
+    let unavailable =
+        unsafe { c::R4SdkGfxDeviceContext_programInstanceStorageSummary(0, raw_dev, &mut summary) };
+    assert_eq!(unavailable.bits as i32, abi::err_no_fn);
+    let mut perf = MaybeUninit::uninit();
+    let owner = unsafe { c::R4SdkPlatformDevices(platform.native()) };
+    assert_eq!(
+        unsafe { c::R4SdkDevicesDevices_performance(0, owner, perf.as_mut_ptr()) }.status,
+        0
+    );
+    assert_eq!(
+        unsafe {
+            c::R4SdkDevicesPerformanceView_programInstanceStorage(0, perf.as_ptr(), &mut summary)
+        }
+        .flags
+            & 1,
+        0
+    );
+    let mut resampler = Resampler::new().unwrap();
+    resampler.begin(48000, 2, 1).unwrap();
+    let direct = resampler
+        .take_direct(&input, 48000, 2, 1, 12)
+        .unwrap()
+        .unwrap();
+    assert_eq!(direct, &input[..12]);
+    assert_eq!(direct.as_ptr(), input.as_ptr());
+    let mut out = [0u8; 64];
+    resampler.begin(48000, 1, 2).unwrap();
+    let count = resampler
+        .convert(&[0, 128, 255], 48000, 1, 2, &mut out)
+        .unwrap();
+    let tail = resampler.finish(&mut out[count..]).unwrap();
+    assert_eq!(count + tail, 12);
+    assert_eq!(&out[..4], &[0, 128, 0, 128]);
+    assert_eq!(resampler.pending_tail_bytes().unwrap(), 0);
+    let mut native = MaybeUninit::uninit();
+    assert_eq!(
+        unsafe {
+            c::R4SdkPlatformOpenNative(
+                c::R4SdkGui_ABI_FINGERPRINT ^ 1,
+                native.as_mut_ptr(),
+                &context,
+            )
+        },
+        abi::io_error_invalid
+    );
+    let no_audio_imports = [imports[0], imports[2]];
+    let no_audio_specs = [specs[0], specs[2]];
+    let no_audio_context = abi::R4XStartContext {
+        imports: no_audio_imports.as_ptr() as u64,
+        import_count: 2,
+        ..context
+    };
+    let no_audio_expected = StartupInfo {
+        app_class: abi::R4XStartAppClass::console,
+        required_groups: (1 << abi::R4LGroup::r4sys.0) | (1 << abi::R4LGroup::r4dev.0),
+        imports: &no_audio_specs,
+    };
+    let app_without_audio =
+        unsafe { App::from_raw(&no_audio_context, &no_audio_expected, c"NoAudio") }.unwrap();
+    let mut no_audio_storage = pin!(PlatformStorage::new());
+    let no_audio_platform = Platform::open(no_audio_storage.as_mut(), &app_without_audio).unwrap();
+    assert!(matches!(
+        no_audio_platform.audio(),
+        Err(r4os_sdk::storage::Error::Unavailable)
+    ));
+    assert!(no_audio_platform.devices().memory().unwrap().is_some());
+}

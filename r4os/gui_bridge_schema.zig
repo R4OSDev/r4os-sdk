@@ -23,8 +23,14 @@ pub const gfx_telemetry = @import("gfx_telemetry.zig");
 pub const graphics_status = @import("graphics_status.zig");
 pub const gfx = @import("graphics_support.zig");
 pub const dev = @import("r4dev.zig");
+pub const audio = @import("r4audio.zig");
+pub const app_audio = @import("app_audio.zig");
+pub const app_devices = @import("app_devices.zig");
+pub const pcm = @import("audio_pcm.zig");
+pub const power = @import("power_profiles.zig");
+pub const platform = @import("platform_support.zig");
 // One typed transport for visual owners, never a second renderer.
-pub const modules = .{ gui, app_gui, shapes, chart, clipboard, input, mode, language, gfx_buffers, gfx_outputs, gfx_queue, gfx_telemetry, graphics_status };
+pub const modules = .{ gui, app_gui, shapes, chart, clipboard, input, mode, language, gfx_buffers, gfx_outputs, gfx_queue, gfx_telemetry, graphics_status, app_audio, app_devices, pcm, power };
 pub const Function = struct { owner: type, name: []const u8 };
 
 fn contains(comptime list: []const type, comptime T: type) bool {
@@ -32,7 +38,7 @@ fn contains(comptime list: []const type, comptime T: type) bool {
     return false;
 }
 pub fn context(comptime T: type) bool {
-    return T == program.Context or T == sys.Context or T == desk.Context or T == draw.Context or T == session.Session or T == gfx.Context or T == dev.Context or T == gfx_buffers.Context or T == gfx_outputs.Context or T == gfx_queue.Context;
+    return T == program.Context or T == sys.Context or T == desk.Context or T == draw.Context or T == session.Session or T == gfx.Context or T == dev.Context or T == gfx_buffers.Context or T == gfx_outputs.Context or T == gfx_queue.Context or T == audio.Context or T == platform.Context;
 }
 pub fn canonical(comptime T: type) bool {
     const full = @typeName(T);
@@ -71,7 +77,9 @@ fn walkFunction(comptime F: type, comptime list: *[]const type) void {
     if (f.return_type.? != type) walk(f.return_type.?, list);
 }
 fn exportedMethod(comptime T: type, comptime name: []const u8) bool {
-    if (T == program.Context or T == sys.Context or T == dev.Context or T == gfx.Context) return false;
+    if (T == program.Context or T == gfx.Context or T == platform.Context) return false;
+    if (T == sys.Context) return std.mem.eql(u8, name, "timeState") or std.mem.eql(u8, name, "monotonicHz") or std.mem.eql(u8, name, "monotonicClock") or std.mem.eql(u8, name, "monotonicNanoseconds") or std.mem.eql(u8, name, "monotonicBackend");
+    if (T == dev.Context or T == audio.Context) return !std.mem.eql(u8, name, "init") and !std.mem.eql(u8, name, "fromProgram") and !std.mem.eql(u8, name, "hasFn");
     if (T == draw.Context) return !std.mem.eql(u8, name, "init") and !std.mem.eql(u8, name, "fromProgram") and !std.mem.eql(u8, name, "hasFn");
     if (T == desk.Context) return !std.mem.eql(u8, name, "init") and !std.mem.eql(u8, name, "fromProgram") and !std.mem.eql(u8, name, "hasFn");
     return true;
@@ -80,8 +88,8 @@ pub const types = blk: {
     @setEvalBranchQuota(32_000_000);
     var result: []const type = &.{};
     for (modules) |M| for (@typeInfo(M).@"struct".decls) |decl| {
-        const value = @field(M, decl.name);
-        if (@TypeOf(value) == type) walk(value, &result) else if (@typeInfo(@TypeOf(value)) == .@"fn") walkFunction(@TypeOf(value), &result);
+        const Value = @TypeOf(@field(M, decl.name));
+        if (Value == type) walk(@field(M, decl.name), &result) else if (@typeInfo(Value) == .@"fn") walkFunction(Value, &result);
     };
     walk(gui.TextField([]u8), &result);
     walk(gui.TextArea([]u8), &result);
@@ -90,6 +98,8 @@ pub const types = blk: {
     walk(draw.Context, &result);
     walk(session.Session, &result);
     walk(gfx.Context, &result);
+    walk(platform.Context, &result);
+    walk(audio.Context, &result);
     var index: usize = 0;
     while (index < result.len) : (index += 1) {
         const T = result[index];

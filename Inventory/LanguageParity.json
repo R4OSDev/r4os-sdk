@@ -647,7 +647,8 @@
       "evidence": [
         "source_inventory",
         "gui_current_56",
-        "graphics_current_57"
+        "graphics_current_57",
+        "platform_current_58"
       ],
       "shared_core": "Gemeinsame GUI-/Rasterkerne beim Besitzer; keine unabhaengigen Widget-/Unicodealgorithmen pro Sprache."
     },
@@ -684,7 +685,8 @@
       },
       "evidence": [
         "source_inventory",
-        "graphics_current_57"
+        "graphics_current_57",
+        "platform_current_58"
       ],
       "shared_core": "Kernel-API nur binden; R4GFX-Owner/Renderer und dessen C-ABI wiederverwenden."
     },
@@ -700,22 +702,28 @@
       "semantics": "Genaue Stream-/Device-/Generation, S16LE/Format, Druck/Teilschreiben, Completion und Close; stiller physischer Ring ist kein Audiostopp.",
       "current_only": "current_function",
       "rust": {
-        "state": "missing_higher_facade",
-        "source": "Repositories/SDK/Rust/src/lib.rs",
-        "gap": "Audio und PCM als gleichwertige typisierte Rust-Fassade mit denselben Fehler-/Besitz-/Waitregeln ergaenzen."
+        "state": "paritaet_abgenommen",
+        "sources": [
+          "Repositories/SDK/Rust/src/platform/audio.rs",
+          "Repositories/SDK/Rust/src/platform/pcm.rs",
+          "Repositories/SDK/Rust/src/c_facades.rs"
+        ],
+        "gap": null
       },
       "c": {
-        "state": "existing_facade_review_required",
+        "state": "paritaet_abgenommen",
         "sources": [
           "Repositories/SDK/Shared/C/include/r4os/r4audio.h",
-          "Repositories/SDK/Shared/C/include/r4os/app_audio.h"
+          "Repositories/SDK/Shared/C/include/r4os/app_audio.h",
+          "Repositories/SDK/Shared/C/include/r4os/gui_bridge.h"
         ],
-        "gap": "Bestehende C-Fassade erhalten; nur fehlende aktuelle Funktionen/hoeheren Hilfen und deren Semantik gegen die verlinkten Zig-Deklarationen schliessen."
+        "gap": null
       },
       "evidence": [
-        "source_inventory"
+        "source_inventory",
+        "platform_current_58"
       ],
-      "shared_core": null
+      "shared_core": "Existing Zig Audio/PCM/Device/Power owners through one compiler-typed native boundary; current legacy C audio loop aligned, no third Rust algorithm."
     },
     {
       "id": "devices-power",
@@ -729,23 +737,30 @@
       "semantics": "Passive Inventare/Zaehler von ausdruecklicher Arbeit trennen. Aktuelle optionale Hardware/Transport-/Energieanfragen und asynchrone Status-/Fehlersemantik erhalten.",
       "current_only": "current_function",
       "rust": {
-        "state": "missing_higher_facade",
-        "source": "Repositories/SDK/Rust/src/lib.rs",
-        "gap": "Geraete, Diagnose und Energie als gleichwertige typisierte Rust-Fassade mit denselben Fehler-/Besitz-/Waitregeln ergaenzen."
+        "state": "paritaet_abgenommen",
+        "sources": [
+          "Repositories/SDK/Rust/src/platform/devices.rs",
+          "Repositories/SDK/Rust/src/platform/power.rs",
+          "Repositories/SDK/Rust/src/platform/mod.rs",
+          "Repositories/SDK/Rust/src/c_facades.rs"
+        ],
+        "gap": null
       },
       "c": {
-        "state": "existing_facade_review_required",
+        "state": "paritaet_abgenommen",
         "sources": [
           "Repositories/SDK/Shared/C/include/r4os/r4dev.h",
           "Repositories/SDK/Shared/C/include/r4os/app_devices.h",
-          "Repositories/SDK/Shared/C/include/r4os/power_profiles.h"
+          "Repositories/SDK/Shared/C/include/r4os/power_profiles.h",
+          "Repositories/SDK/Shared/C/include/r4os/gui_bridge.h"
         ],
-        "gap": "Bestehende C-Fassade erhalten; nur fehlende aktuelle Funktionen/hoeheren Hilfen und deren Semantik gegen die verlinkten Zig-Deklarationen schliessen."
+        "gap": null
       },
       "evidence": [
-        "source_inventory"
+        "source_inventory",
+        "platform_current_58"
       ],
-      "shared_core": null
+      "shared_core": "Existing Zig Audio/PCM/Device/Power owners through one compiler-typed native boundary; current legacy C audio loop aligned, no third Rust algorithm."
     },
     {
       "id": "text-primitives",
@@ -46972,6 +46987,17 @@
         "Repositories/SDK/r4os/app_storage.zig"
       ],
       "rule": "R4CP-Konvertierung, optionale Request-Deadline-Trailer, alte Nutzdaten/Dateiformate sowie DirectoryIterator.legacy_after_removal sind nicht allein wegen ihres Namens Alt-OS. Letzteres ist bei Verzeichnisveraenderung zu pruefen; keine blinde Loeschung."
+    },
+    {
+      "id": "device-summary-default",
+      "decision": "current_v2_default_preserve_explicit_v1_data",
+      "wave": "0.86.58",
+      "residual_wave": "0.86.78",
+      "sources": [
+        "Repositories/SDK/r4os/gui_value_bridge.zig",
+        "Repositories/SDK/Shared/C/include/r4os/app_devices.h"
+      ],
+      "rule": "New foreign/default summaries use V2 directly, including the higher PerformanceView; missing old provider is not emulated. Explicit V1 records are current data functionality. Remaining original Zig default/provider fallbacks stay residual78; no new fallback ported."
     }
   ],
   "evidence": {
@@ -47170,6 +47196,64 @@
         "spectra": "1687bf3ffc267a663e04280579c0774eb4427dbe4165e9338cb09f253fd32bd7"
       },
       "limit": "No native GPU, physical scanout/cursor/EDID, Windows, Rust SIMD/FP ABI or performance qualification. R4GFX higher library helpers remain60. Submission needs explicit future monotonic deadline; the initial zero-deadline fixture was correctly rejected, then corrected. No native completion is inferred from success/submit/copy; own guest files/snapshot removed after regular shutdown."
+    },
+    "platform_current_58": {
+      "kind": "native_original_owner_cases_release_Rust_C_and_real_KVM_SMP4_silent_consumer",
+      "sdk": "0.64.77",
+      "contract": "0.64.44",
+      "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.58",
+      "guest": "Full0.86.42/Kernel0.1.381/KVM/SMP4",
+      "exit": 0,
+      "projection": {
+        "native_types": 656,
+        "native_functions": 893,
+        "functions": 3383,
+        "layout_assertions": 1021,
+        "canonical_aliases": 464
+      },
+      "checks": [
+        "9 existing Audio/Device + 3 PCM + 2 Power Zig owner cases; existing C cases with bounded parity deltas",
+        "release Rust/C: preserved partial Busy/timeout, invalid frames, exact/double close, shared conversion/direct borrow and optional missing Audio independent from devices",
+        "inventory end unavailable, CPU capability canonical success0, default V2-only without old provider emulation; explicit V1 data remains",
+        "non-exhaustive enum unsupported PCM value reaches native service error, not transport failure",
+        "existing GUI/graphics/host regression, projection drift, clippy -Dwarnings and real E0133/E0277/E0505 consumers"
+      ],
+      "consumer": {
+        "bytes": 760770,
+        "sha256": "41f28b0f0fece1d835a2342a01858d53ebb7b9802ee98a85ac66089cf2db4b3d",
+        "readback": "complete",
+        "result": "PASS PLATFORM58 Rust/C silent PCM, device/clock/status, power receipts and stream close"
+      },
+      "observed": {
+        "audio": "own Rust and C S16LE silent streams, accepted bytes and exact close/double-close",
+        "devices": "passive inventory/memory/instrumentation/CPU capabilities/current clock",
+        "power": "status and CPU receipts only, 4 configured CPUs; no profile selection"
+      },
+      "standard": "none: changed existing C helpers have only conformance consumers in current product source; shared new SDK boundary/Rust facade and image_scope=none fixture only. Normal artifacts unchanged.",
+      "unchanged_normal_artifacts": {
+        "kernel": "e06111b9363b44712fe69ded9ddfc3edb1f60c5c271c59a42238a816b0882340",
+        "desktop": "2b493582b26d800f6ddf67d306e192b37a727a654b202bd98b06ad3dd8901421",
+        "notepad": "efd90aa6cfd23e8f973a8e3ab1cd8d6e1e1492280b2f80cb5ba835965de7760d",
+        "paint": "5acce77372cd98842592d9c3de3c6f373abb47f7ed4b848b7bc3b43bd3205c0c",
+        "spectra": "1687bf3ffc267a663e04280579c0774eb4427dbe4165e9338cb09f253fd32bd7"
+      },
+      "limit": "No heard audio/physical DMA-stop, hardware PMU/fault/energy/frequency, Windows, new Rust SIMD/FP or performance qualification. PCM acceptance and policy receipts remain distinct. Ending context does not release resources; explicit original close/stop/wait owners remain. Own guest files/snapshot removed after regular shutdown.",
+      "services_after": {
+        "AUDSVC": {
+          "restarts": 0,
+          "open": 0,
+          "busy": 0,
+          "timeout": 0,
+          "cancel": 0
+        },
+        "POWERSVC": {
+          "restarts": 0,
+          "open": 0,
+          "busy": 0,
+          "timeout": 0,
+          "cancel": 0
+        }
+      }
     }
   },
   "wave_bindings": [

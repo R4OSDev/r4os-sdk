@@ -42,6 +42,9 @@ pub fn build(b: *std.Build) void {
         const oracle = b.createModule(.{ .root_source_file = b.path("Tests/Conformance/GuiFacadePrototype05824.zig"), .target = b.graph.host, .optimize = .Debug, .pic = true });
         oracle.addImport("r4os", sdk_profile.createR4osModule(b.graph.host, .Debug));
         b.getInstallStep().dependOn(&b.addInstallFile(b.addObject(.{ .name = "r4sdk_gui_oracle", .root_module = oracle }).getEmittedBin(), "lib/r4sdk_gui_oracle.o").step);
+        const platform_oracle = b.createModule(.{ .root_source_file = b.path("Tests/Conformance/AudioDeviceFacadePrototype05827.zig"), .target = b.graph.host, .optimize = .Debug, .pic = true });
+        platform_oracle.addImport("r4os", sdk_profile.createR4osModule(b.graph.host, .Debug));
+        b.getInstallStep().dependOn(&b.addInstallFile(b.addObject(.{ .name = "r4sdk_platform_oracle", .root_module = platform_oracle }).getEmittedBin(), "lib/r4sdk_platform_oracle.o").step);
         return;
     }
     if (b.option(bool, "gui-bridge-runtime-only", "Build only the shared GUI owner boundary") orelse false) {
@@ -145,6 +148,13 @@ pub fn build(b: *std.Build) void {
     service_cases.addImport("r4os", host_r4os);
     const service_parity = b.addRunArtifact(b.addTest(.{ .root_module = service_cases, .filters = &.{ "service connection and endpoint", "resolver TCP and UDP", "service loop", "service deadline suffix", "net socket drain", "duration conversion", "duration and deadline", "tagged timeout", "deadline budget" } }));
     b.step("service-parity-test", "Existing service/network, bounded drain and absolute deadline owner cases").dependOn(&service_parity.step);
+    const platform_cases = b.createModule(.{ .root_source_file = b.path("Tests/Conformance/AudioDeviceFacadePrototype05827.zig"), .target = b.graph.host, .optimize = .Debug });
+    platform_cases.addImport("r4os", host_r4os);
+    const platform_step = b.step("platform-parity-test", "Existing Audio/Device/PCM/Power owner cases");
+    platform_step.dependOn(&b.addRunArtifact(b.addTest(.{ .root_module = platform_cases })).step);
+    const pcm_cases = b.createModule(.{ .root_source_file = b.path("r4os/audio_pcm.zig"), .target = b.graph.host, .optimize = .Debug });
+    platform_step.dependOn(&b.addRunArtifact(b.addTest(.{ .root_module = pcm_cases })).step);
+    platform_step.dependOn(&b.addRunArtifact(b.addTest(.{ .root_module = service_cases, .filters = &.{ "power profile client", "power perCPU client" } })).step);
     const sdk_unit_tests = b.addTest(.{ .root_module = host_r4os });
     const run_sdk_unit_tests = b.addRunArtifact(sdk_unit_tests);
     const dialog_root = b.createModule(.{

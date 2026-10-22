@@ -395,3 +395,40 @@ C mapping/fill and a Rust CPU-copy queue with original 4x3 pixels, explicit
 fence/resource release and stale-handle confirmation. This qualifies software
 Offscreen work, not native GPU, scanout, physical cursor/EDID, Windows or a
 Rust floating-point/SIMD ABI. General R4GFX helpers remain their library wave.
+
+Platform Audio/Device/Power owners (SDK0.64.77)
+---------------------------------------------
+platform::Platform::open(Pin<&mut PlatformStorage>, &app) admits the current
+R4SYS and supplied optional R4AUDIO/R4DEV tables. It requires no GUI/graphics
+imports. Keep the exact pinned storage and App alive through its borrowed
+Audio, Stream, Devices and Power views. Native private data stays MaybeUninit.
+The historical C transport name gui_bridge.h also hosts these SDK-local calls;
+R4SdkGfxDeviceContext is the general R4DEV context, without a graphics role.
+platform::raw reaches the complete current typed helpers, including Advanced
+Audio, PCM conversion, device/CPU/memory/performance/clock/error views and
+power actions. Callback addresses retain the ABI declared by Contract and
+need the original unsafe native lifetimes; they are not new work permissions.
+
+Audio open_stream uses S16LE through AUDSVC. Stream::write returns accepted
+bytes plus Complete/Retry/TimedOut/Failure, preserving partial progress; once
+bounds work to one service call. WriteCursor uses the original frame-aligned
+Zig cursor. Close explicitly and inspect its receipt. Drop is not a stream
+close, audible playback or a physical DMA-stop receipt. Missing Audio stays
+Unavailable while independent device reads remain usable. Advanced methods
+and other exact native result variants remain reachable through raw.
+Resampler uses the original Zig PCM core; take_direct borrows the input slice
+without copying and conversion retains sample/phase state, never input pointers.
+
+Devices distinguishes end/unavailable from valid zero-valued data; inventory
+records use positive success, CPU capability queries use their canonical zero
+success code. Instrumentation mode/flags determine whether detail zeroes were
+measured. Clock metadata retains validity/backend/epoch flags. Power status
+and CPU receipts preserve service generations/revisions and actual masks;
+select/quiesce/resume/reload remain explicit, with no automatic mutation retry.
+Accepted policy state is not a physical clock or energy measurement.
+
+Test-RustGui.ps1 -Platform reuses existing Audio/Device, PCM and Power cases,
+plus release C/Rust and the existing visual regression. Its real RustPlatform
+fixture checks passive current data and its own silent PCM streams on KVM4.
+This adds no hardware playback/PMU/power/fault, Windows, Rust SIMD/FP or
+performance qualification. General R4X/module roles remain later parity waves.

@@ -33,6 +33,13 @@ fn decode(comptime T: type, value: Slot) Error!T {
         .int => |n| if (n.bits == 0) 0 else if (n.signedness == .signed) @bitCast(@as(std.meta.Int(.unsigned, n.bits), @truncate(value.bits))) else @intCast(value.bits & std.math.maxInt(T)),
         .float => (try object(T, value.ptr)).*, // No floating-point C ABI.
         .@"enum" => |e| blk: {
+            // A non-exhaustive enum admits unknown representable values. Let
+            // its original owner reject an unsupported format/operation with
+            // the native error, rather than inventing a transport failure.
+            if (!e.is_exhaustive) {
+                if (@typeInfo(e.tag_type).int.signedness == .unsigned and value.bits > std.math.maxInt(e.tag_type)) return error.InvalidArgument;
+                break :blk @enumFromInt(try decode(e.tag_type, value));
+            }
             inline for (e.fields) |field| if (value.bits == field.value) break :blk @field(T, field.name);
             break :blk error.InvalidArgument;
         },
@@ -106,6 +113,14 @@ pub export fn R4SdkGuiInvoke(fingerprint: u64, operation: u32, values: ?[*]const
             }
             if (comptime entry.owner == schema.app_gui and std.mem.eql(u8, entry.name, "beginPaintForSize")) {
                 if (!args[0].supportsGuiFrameContract()) return .{ .status = abi.err_no_fn };
+            }
+            if (comptime entry.owner == schema.dev.Context and std.mem.eql(u8, entry.name, "programInstanceStorageSummary")) {
+                return store(info.return_type.?, args[0].programInstanceStorageSummaryV2(args[1]), output) catch failed();
+            }
+            if (comptime entry.owner == schema.app_devices.PerformanceView and std.mem.eql(u8, entry.name, "programInstanceStorage")) {
+                var summary: abi.ProgramInstanceStorageSummary = .{};
+                const result: ?abi.ProgramInstanceStorageSummary = if (args[0].raw.programInstanceStorageSummaryV2(&summary) > 0) summary else null;
+                return store(info.return_type.?, result, output) catch failed();
             }
             return store(info.return_type.?, @call(.auto, function, args), output) catch failed();
         }

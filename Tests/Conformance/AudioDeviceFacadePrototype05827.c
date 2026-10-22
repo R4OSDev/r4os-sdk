@@ -218,8 +218,8 @@ static int32_t fake_stack_fault(uint32_t index, R4ProgramStackFaultInfo *out) {
 }
 
 static void init_app(R4App *app, R4XStartR4Sys *sys, R4XStartR4Audio *audio, R4XStartR4Dev *dev) {
-    *sys = (R4XStartR4Sys){0}; sys->service_open = (uintptr_t)&fake_service_open; sys->service_close = (uintptr_t)&fake_service_close; sys->service_call = (uintptr_t)&fake_service_call;
-    *audio = (R4XStartR4Audio){0}; audio->audio_open_stream = (uintptr_t)&fake_audio_open; audio->sid_acquire = (uintptr_t)&fake_sid_acquire; audio->sid_write_register = (uintptr_t)&fake_sid_write; audio->sid_release = (uintptr_t)&fake_sid_release; audio->midi_open_synth = (uintptr_t)&fake_midi_open; audio->midi_send = (uintptr_t)&fake_midi_send; audio->midi_close = (uintptr_t)&fake_midi_close; audio->opl3_write_register = (uintptr_t)&fake_opl_write; audio->opl3_reset = (uintptr_t)&fake_opl_simple; audio->opl3_render_block = (uintptr_t)&fake_opl_simple; audio->opl3_stop = (uintptr_t)&fake_opl_simple;
+    *sys = (R4XStartR4Sys){0}; sys->size=sizeof(*sys); sys->service_open = (uintptr_t)&fake_service_open; sys->service_close = (uintptr_t)&fake_service_close; sys->service_call = (uintptr_t)&fake_service_call;
+    *audio = (R4XStartR4Audio){0}; audio->size=sizeof(*audio); audio->audio_open_stream = (uintptr_t)&fake_audio_open; audio->sid_acquire = (uintptr_t)&fake_sid_acquire; audio->sid_write_register = (uintptr_t)&fake_sid_write; audio->sid_release = (uintptr_t)&fake_sid_release; audio->midi_open_synth = (uintptr_t)&fake_midi_open; audio->midi_send = (uintptr_t)&fake_midi_send; audio->midi_close = (uintptr_t)&fake_midi_close; audio->opl3_write_register = (uintptr_t)&fake_opl_write; audio->opl3_reset = (uintptr_t)&fake_opl_simple; audio->opl3_render_block = (uintptr_t)&fake_opl_simple; audio->opl3_stop = (uintptr_t)&fake_opl_simple;
     *dev = (R4XStartR4Dev){0}; dev->size = R4XSTART_R4DEV_SIZE; dev->device_inventory_summary = (uintptr_t)&fake_inventory_summary; dev->device_inventory_record = (uintptr_t)&fake_inventory_record; dev->memory_summary = (uintptr_t)&fake_memory_summary; dev->memory_block_count = (uintptr_t)&fake_memory_count; dev->memory_block = (uintptr_t)&fake_memory_block; dev->memory_pressure_snapshot = (uintptr_t)&fake_pressure; dev->performance_summary = (uintptr_t)&fake_performance; dev->performance_task = (uintptr_t)&fake_task; dev->performance_storage = (uintptr_t)&fake_storage; dev->performance_boot_phase = (uintptr_t)&fake_boot; dev->hardware_summary = (uintptr_t)&fake_hardware; dev->program_instance_storage_summary = (uintptr_t)&fake_program_instance_storage_legacy; dev->program_instance_storage_summary_v2 = (uintptr_t)&fake_program_instance_storage_v2; dev->program_instance_storage_self_test = (uintptr_t)&fake_program_instance_storage_self_test; dev->execution_inventory_summary = (uintptr_t)&fake_execution_inventory;
     *app = (R4App){0}; app->system.table = sys; app->audio.table = audio; app->devices.table = dev;
     dev->display_state = (uintptr_t)&fake_display_state;
@@ -238,6 +238,8 @@ int main(void) {
     init_app(&app, &sys, &raw_audio, &raw_dev); stream_open = 0; open_connections = 0u;
     R4AudioFacade audio = r4_app_audio(&app); R4AudioStream stream;
     if (!r4_audio_available(&audio)) return 1;
+    if (r4_audio_open_stream(&audio,192001u,2u,R4_AUDIO_FORMAT_S16LE,0x10000u,forever_timeout(),&stream).raw_code!=R4OS_SERVICE_API_RESULT_INVALID) return 71;
+    if (r4_audio_open_stream(&audio,48000u,3u,R4_AUDIO_FORMAT_S16LE,0x10000u,forever_timeout(),&stream).raw_code!=R4OS_SERVICE_API_RESULT_INVALID) return 72;
     R4AudioServiceMasterState master;
     if (r4_audio_master_status(&audio, forever_timeout(), &master).kind != R4_AUDIO_RESULT_OK || master.selected_volume_fixed != 0x8000u) return 21;
     if (r4_audio_set_master_state(&audio, R4OS_AUDIO_MASTER_REQUEST_FLAG_SET_VOLUME | R4OS_AUDIO_MASTER_REQUEST_FLAG_SET_MUTED, 0x8000u, 1, master.master_revision, forever_timeout(), &master).kind != R4_AUDIO_RESULT_OK || (master.flags & R4OS_AUDIO_MASTER_STATE_FLAG_MUTED) == 0u) return 22;
@@ -246,6 +248,11 @@ int main(void) {
     if (r4_audio_open_stream(&audio, 48000u, 2u, R4_AUDIO_FORMAT_S16LE, 0x10000u, forever_timeout(), &stream).kind != R4_AUDIO_RESULT_OK) return 4;
     uint8_t pcm[2048]; memset(pcm, 1, sizeof(pcm)); R4AudioResult wrote = r4_audio_stream_write(&stream, pcm, sizeof(pcm), forever_timeout());
     if (wrote.kind != R4_AUDIO_RESULT_OK || wrote.bytes != sizeof(pcm)) return 5;
+    if(r4_audio_stream_write(&stream,pcm,3u,forever_timeout()).raw_code!=R4OS_SERVICE_API_RESULT_INVALID)return 73;
+    uint8_t partial[4096]={0};
+    R4AudioResult once=r4_audio_stream_write_once(&stream,partial,sizeof(partial),forever_timeout());
+    if(once.kind!=R4_AUDIO_RESULT_BUSY || once.bytes!=4076u)return 74;
+    if(r4_audio_stream_write(&stream,partial+once.bytes,sizeof(partial)-once.bytes,forever_timeout()).bytes!=20u)return 75;
     if (r4_audio_stream_set_volume(&stream, 0x8000u, forever_timeout()).kind != R4_AUDIO_RESULT_OK) return 6;
     if (r4_audio_stream_close(&stream, forever_timeout()).kind != R4_AUDIO_RESULT_OK || r4_audio_stream_close(&stream, forever_timeout()).raw_code != R4OS_ERR_CLOSED || open_connections != 0u) return 7;
     R4AdvancedAudio advanced = r4_audio_advanced(audio);
@@ -302,6 +309,6 @@ int main(void) {
     memset(&instance_storage, 0xB6, sizeof(instance_storage)); instance_storage.version = 0u; instance_storage.size = sizeof(instance_storage) - 1u;
     if (r4dev_program_instance_storage_summary_v2(&app.devices, &instance_storage) != -1 || instance_storage.version != 0u || instance_storage.size != sizeof(instance_storage) - 1u || ((uint8_t *)&instance_storage)[8] != 0xB6u) return 19;
     raw_dev.size = 288u;
-    if (r4_program_instance_storage_summary(&performance, &instance_storage) <= 0 || instance_storage.version != 1u || instance_storage.size != 256u || instance_storage.current_gui_frame_bytes != 0u) return 20;
+    if (r4_program_instance_storage_summary(&performance, &instance_storage) != R4OS_ERR_NO_FN) return 20;
     return 0;
 }

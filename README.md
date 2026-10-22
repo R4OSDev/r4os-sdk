@@ -743,3 +743,14 @@ grapheme_source; normal Sdk profiles provide it automatically.
 native task generation and retained module RIP interval. Begin/end surround
 userland work; no kernel ownership or register liveness crosses an ordinary
 SysV call. Rejection preserves output, and no event is synthesized.
+
+SDK0.64.77 adds shared Rust/C Audio/PCM, Device/diagnostic/clock and Power
+owners under Rust `platform` and the existing typed native boundary. Pinned
+contexts are independent of GUI imports; stream writes retain frame-aligned
+partial progress and explicit close receipts. C audio gains rate/channel/frame
+checks, bounded write-once and Busy progress. Current storage-summary defaults
+no longer emulate missing V2 through V1; explicit V1 data views remain valid.
+The same Zig PCM and service/policy algorithms execute from each language.
+Native owner cases and a real Rust/C KVM4 silent-stream/status consumer qualify
+this group. Audio admission, hardware status and policy acceptance do not
+prove audible playback, physical frequency, DMA stop or performance.

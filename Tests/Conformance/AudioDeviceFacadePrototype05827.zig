@@ -314,11 +314,16 @@ fn fakeServiceCall(_: u32, op: u16, request: [*]const u8, request_len: u32, head
     switch (op) {
         r4os.abi.audio_service_op_open_stream => stream_open = true,
         r4os.abi.audio_service_op_write_stream => {
+            platform_write_calls+=1;
+            if(platform_write_mode==3 and platform_write_calls==2)return r4os.abi.service_api_result_timeout;
             if (!stream_open or request_len < @sizeOf(r4os.abi.AudioServiceStreamWriteRequest)) result.result = -1 else {
                 var wire: r4os.abi.AudioServiceStreamWriteRequest = .{};
                 @memcpy(std.mem.asBytes(&wire), request[0..@sizeOf(r4os.abi.AudioServiceStreamWriteRequest)]);
                 result.bytes = wire.byte_count;
                 result.result = @intCast(wire.byte_count);
+                if(platform_write_mode!=0) {result.bytes=@min(wire.byte_count,4);result.result=@intCast(result.bytes);}
+                if(platform_write_mode==2 and platform_write_calls==2){result.result=r4os.abi.service_api_result_busy;result.bytes=0;}
+                if(platform_write_mode==4){result.bytes=3;result.result=3;}
             }
         },
         r4os.abi.audio_service_op_set_stream_volume => if (!stream_open) {
@@ -332,6 +337,15 @@ fn fakeServiceCall(_: u32, op: u16, request: [*]const u8, request_len: u32, head
         else => result.result = r4os.abi.service_api_result_bad_op,
     }
     return copyResponse(response, capacity, &result);
+}
+
+var platform_write_mode:u32=0;
+var platform_write_calls:u32=0;
+pub export fn sdk_platform_oracle_mode(mode:u32) callconv(.c) void {platform_write_mode=mode;platform_write_calls=0;}
+pub export fn sdk_platform_oracle_connections() callconv(.c) u32{return open_connections;}
+pub export fn sdk_platform_oracle_tables(sys:*r4os.abi.R4XStartR4Sys,audio:*r4os.abi.R4XStartR4Audio,dev:*r4os.abi.R4XStartR4Dev) callconv(.c) void {
+    _=initFacades();sys.*=sys_table;audio.*=audio_table;dev.*=dev_table;
+    stream_open=false;open_connections=0;timeout_next=false;platform_write_mode=0;platform_write_calls=0;
 }
 
 fn fakeAudioOpen(_: u32, _: u16, _: u16) callconv(.c) i32 {
@@ -367,6 +381,7 @@ fn fakeInventorySummary(out: *r4os.abi.DeviceInventorySummary) callconv(.c) i32 
     return 1;
 }
 fn fakeInventoryRecord(index: u32, out: *r4os.abi.DeviceInventoryRecord) callconv(.c) i32 {
+    if(index>=2)return 0;
     out.* = .{ .bus = @intCast(index + 1) };
     return 1;
 }

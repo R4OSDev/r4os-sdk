@@ -1,2 +1,2 @@
 // Generated from the compiler-typed GUI catalogue. Do not edit.
-pub const fingerprint:u64=1545604035554452250;
+pub const fingerprint:u64=18398806697023023014;

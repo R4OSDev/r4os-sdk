@@ -22,6 +22,15 @@ pub fn name(comptime T: type) []const u8 {
         if (T == s.sys.Context) break :blk "R4SdkGuiSystemContext";
         if (T == s.desk.Context) break :blk "R4SdkGuiDesktopContext";
         if (T == s.draw.Context) break :blk "R4SdkGuiDrawContext";
+        if (T == s.audio.Context) break :blk "R4SdkAudioContext";
+        if (T == s.platform.Context) break :blk "R4SdkPlatformContext";
+        if (T == s.power.Reply) break :blk "R4SdkPowerReply";
+        if (T == s.power.CpuReply) break :blk "R4SdkPowerCpuReply";
+        if (T == @FieldType(s.app_audio.WriteResult, "failure")) break :blk "R4SdkAudioWriteFailure";
+        if (T == s.app_audio) break :blk "R4SdkAudio";
+        if (T == s.app_devices) break :blk "R4SdkDevices";
+        if (T == s.pcm) break :blk "R4SdkPcm";
+        if (T == s.power) break :blk "R4SdkPower";
         if (T == s.dev.Context) break :blk "R4SdkGfxDeviceContext";
         if (T == s.gfx.Context) break :blk "R4SdkGfxContext";
         if (T == s.gfx_buffers) break :blk "R4SdkGfxBuffers";
@@ -41,7 +50,7 @@ pub fn name(comptime T: type) []const u8 {
             break :blk if (std.mem.startsWith(u8, last, "R4")) last else "R4" ++ last;
         }
         const prefixes = .{ .{ "gui.", "R4SdkGui" }, .{ "app_gui.", "R4SdkGui" }, .{ "gui_shapes.", "R4SdkGuiShape" }, .{ "chart.", "R4SdkGuiChart" }, .{ "clipboard.", "R4SdkGuiClipboard" }, .{ "window_mode.", "R4SdkGuiWindowMode" }, .{ "input_events.", "R4SdkGuiInput" } };
-        for (prefixes ++ .{ .{ "gfx_buffers.", "R4SdkGfxBuffers" }, .{ "gfx_outputs.", "R4SdkGfxOutputs" }, .{ "gfx_queue.", "R4SdkGfxQueue" }, .{ "gfx_telemetry.", "R4SdkGfxTelemetry" }, .{ "graphics_status.", "R4SdkGraphicsStatus" } }) |entry| if (std.mem.startsWith(u8, full, entry[0])) break :blk entry[1] ++ clean(full[entry[0].len..]);
+        for (prefixes ++ .{ .{ "gfx_buffers.", "R4SdkGfxBuffers" }, .{ "gfx_outputs.", "R4SdkGfxOutputs" }, .{ "gfx_queue.", "R4SdkGfxQueue" }, .{ "gfx_telemetry.", "R4SdkGfxTelemetry" }, .{ "graphics_status.", "R4SdkGraphicsStatus" }, .{ "app_audio.", "R4SdkAudio" }, .{ "app_devices.", "R4SdkDevices" }, .{ "audio_pcm.", "R4SdkPcm" }, .{ "power_profiles.", "R4SdkPower" } }) |entry| if (std.mem.startsWith(u8, full, entry[0])) break :blk entry[1] ++ clean(full[entry[0].len..]);
         break :blk std.fmt.comptimePrint("R4SdkGuiType{d}", .{s.typeId(T)});
     };
 }
@@ -65,7 +74,7 @@ fn param(comptime T: type) []const u8 {
         .int => integer(T),
         .@"enum" => "uint32_t",
         .float => "const " ++ storage(T) ++ " *",
-        .pointer => |p| (if (p.is_const) "const " else "") ++ storage(p.child) ++ " *",
+        .pointer => |p| if (@typeInfo(p.child) == .@"fn") "uintptr_t" else (if (p.is_const) "const " else "") ++ storage(p.child) ++ " *",
         .optional => "R4SdkGuiSlot",
         else => "const " ++ storage(T) ++ " *",
     };
@@ -93,7 +102,7 @@ fn argument(w: *std.Io.Writer, comptime T: type, comptime index: usize) !void {
         .bool, .int, .@"enum" => try w.print("(R4SdkGuiSlot){{.bits=(uint64_t)(int64_t)p{d},.flags=R4SDK_GUI_PRESENT}};\n", .{index}),
         .optional => try w.print("p{d};\n", .{index}),
         .pointer => |p| {
-            try w.print("(R4SdkGuiSlot){{.ptr=(void *)p{d},", .{index});
+            try w.print("(R4SdkGuiSlot){{.ptr=(void *){s}p{d},", .{ if (@typeInfo(p.child) == .@"fn") "(uintptr_t)" else "", index });
             if (p.size == .slice) try w.print(".length=n{d},", .{index});
             try w.writeAll(".flags=R4SDK_GUI_PRESENT};\n");
         },
@@ -130,6 +139,7 @@ pub fn emit(w: *std.Io.Writer) !void {
     }
     try w.print("#define R4SdkGui_ABI_FINGERPRINT UINT64_C({d})\nint32_t R4SdkGuiVerifyAbi(uint64_t);\n", .{s.fingerprint});
     inline for (s.modules) |M| try constants(w, M);
+    try w.writeAll("int32_t R4SdkPlatformOpenNative(uint64_t,R4SdkPlatformContext *,const R4XStartContext *);\nstatic inline int32_t R4SdkPlatformOpen(R4SdkPlatformContext *p,const R4XStartContext *s) { return R4SdkPlatformOpenNative(R4SdkGui_ABI_FINGERPRINT,p,s); }\nR4SdkGuiSystemContext *R4SdkPlatformSystem(R4SdkPlatformContext *);\nR4SdkGfxDeviceContext *R4SdkPlatformDevice(R4SdkPlatformContext *);\nR4SdkAudioAudio *R4SdkPlatformAudio(R4SdkPlatformContext *);\nR4SdkAudioContext *R4SdkPlatformAudioRaw(R4SdkPlatformContext *);\nR4SdkDevicesDevices *R4SdkPlatformDevices(R4SdkPlatformContext *);\n");
     try w.writeAll("/* Offscreen graphics admission is independent of GUI windows/host claims.\n * Keep this context pinned while any borrowed native subcontext is used.\n * Resources require explicit native close/unmap/fence/reset acknowledgements. */\nint32_t R4SdkGfxOpenNative(uint64_t,R4SdkGfxContext *,const R4XStartContext *);\nstatic inline int32_t R4SdkGfxOpen(R4SdkGfxContext *s,const R4XStartContext *ctx) { return R4SdkGfxOpenNative(R4SdkGui_ABI_FINGERPRINT,s,ctx); }\nR4SdkGuiDrawContext *R4SdkGfxDraw(R4SdkGfxContext *);\nR4SdkGfxDeviceContext *R4SdkGfxDevice(R4SdkGfxContext *);\n");
     try constants(w, s.session.EventKind);
     inline for (s.types) |T| if (comptime !s.canonical(T) and !s.context(T)) try constants(w, T);
@@ -151,6 +161,9 @@ pub fn emit(w: *std.Io.Writer) !void {
     inline for (s.types, 0..) |T, id| {
         if (comptime s.canonical(T) or s.context(T)) continue;
         const info = @typeInfo(T);
+        if (info == .@"union") {
+            if (info.@"union".tag_type) |Tag| inline for (@typeInfo(Tag).@"enum".fields) |field| try w.print("#define {s}_TAG_{s} {d}u\n", .{ name(T), field.name, field.value });
+        }
         if (info == .@"struct") {
             const fields = comptime fieldList(T);
             try w.print("static inline R4SdkGuiSlot {s}_create({s} *output", .{ name(T), name(T) });

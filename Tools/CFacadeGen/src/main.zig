@@ -110,7 +110,7 @@ fn emit(w: *std.Io.Writer) !void {
         try w.writeAll(" };\n");
     }
     inline for (@typeInfo(c).@"struct".decls) |decl| {
-        if (comptime !starts(decl.name, "R4SdkGui") and !starts(decl.name, "R4SdkGfx") and !starts(decl.name, "R4SdkGraphics")) continue;
+        if (comptime !starts(decl.name, "R4Sdk")) continue;
         const value = @field(c, decl.name);
         switch (@typeInfo(@TypeOf(value))) {
             .comptime_int => try w.print("pub const {s}: {s} = {d};\n", .{ decl.name, if (value < 0) "i64" else "u64", value }),
