@@ -392,7 +392,7 @@ contracts. Three synthetic Zig/C/Rust hosts pass equal work/video and real
 save/window cleanup in local KVM4. Start GUI consumers through Desktop Run;
 SSH alone does not bind their application window before ProgramEntry.
 
-Rust lowlevel needs separate raw-entry stack/ABI/panic qualification. Native
+Rust lowlevel is a separate raw-context R4X profile since SDK0.64.88. Native
 R4OS Rust builds need a compiler/toolchain port; R4CC implements the native C
 subset and is not a Rust compiler. Stable machine reason codes live in the
 shared Decision, not in an IDE-maintained matrix. Lowlevel support and physical hardware qualification remain separate work.
@@ -475,3 +475,22 @@ explicitly closed and retain exact handles on refusal; Drop never proves
 hardware retirement. Rings/reset epochs stay with the actual per-device
 owner. Advanced original helpers remain typed and unsafe through driver::raw.
 Use the driver heap explicitly; the R4X-global alloc feature is refused.
+
+Explicit lowlevel R4X (SDK0.64.88)
+---------------------------------
+ENTRY_MODE=lowlevel uses profile r4os-rust-r4x-lowlevel-v1 for console/gui/service.
+Use unsafe extern "C" fn raw(*const abi::R4XStartContext)->i32 and
+lowlevel_entry!(raw). The exact loader context reaches your handler; no normal
+App-main adapter runs. The common manifest-owned StartupInfo is checked at
+admission and may be borrowed again with unsafe lowlevel_context!(raw).
+lowlevel::initialize_runtime(&view) explicitly binds SDK entropy and optional
+SDK global allocation when those helpers are wanted. Raw entry itself does
+not initialize them, create a window or register a service endpoint. Per-class
+launch rules and caller/resource/task lifetimes remain with their real owners.
+The validated panic scope uses the original failed process exit. A missing
+terminal callback or an explicitly invalid instruction is a real module fault;
+the current kernel may stop terminally, with no resource-recovery claim.
+The pinned integer Rust backend, no-redzone and 4096-byte inline stack probes
+remain unchanged. Native Zig/C objects retain the full canonical CPU baseline;
+this profile does not qualify direct Rust SIMD/FP. See lowlevel_current_69 in
+the SDK matrix and Docs/SDK/LanguageParity.txt for exact evidence and limits.

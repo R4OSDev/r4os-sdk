@@ -28,13 +28,19 @@ foreach($class in @('console','gui','service')){
     $plan=(Run plan $manifest $true)|ConvertFrom-Json
     if($plan.plan.language -cne 'Rust' -or $plan.plan.rust_project.schema -ne 2 -or $plan.plan.rust_project.source -cne 'src/main.rs' -or $plan.plan.rust_project.module_version -cne '0.1.0'){throw 'Rust plan identity drift.'}
     Run contract-plan $manifest $true 'R4MF_PLAN=1'|Out-Null
+    [IO.File]::WriteAllText($manifest,$text.Replace('ENTRY_MODE=app','ENTRY_MODE=lowlevel'),$utf8)
+    $raw=(Run plan $manifest $true)|ConvertFrom-Json
+    if($raw.plan.entry_mode -cne 'lowlevel' -or $raw.plan.rust_project.profile -cne 'r4os-rust-r4x-lowlevel-v1' -or !$raw.plan.build_profile.Contains('_LowLevel_')){throw 'Raw Rust profile lost its explicit entry mode.'}
+    Run contract-plan $manifest $true 'ENTRY_MODE=lowlevel'|Out-Null
+    Run startup-info $manifest $true 'StartupInfo'|Out-Null
+    [IO.File]::WriteAllText($manifest,$text,$utf8)
 }
 $manifest=Join-Path $WorkRoot 'console/module.R4MF'
 $cases=@(
     @{find='src/main.rs';replace='../main.rs';error='SourcePathEscape'},
     @{find='src/main.rs';replace='src/main.c';error='SourceLanguageMismatch'},
     @{find='VERSION=0.1.0';replace='VERSION=bad';error='BadModuleVersion'},
-    @{find='ENTRY_MODE=app';replace='ENTRY_MODE=lowlevel';error='RustLowlevelUnsupported'},
+    @{find='ENTRY_MODE=app';replace='ENTRY_MODE=unknown';error='RustLowlevelUnsupported'},
     @{find='SOURCE=src/main.rs';replace="SOURCE=src/main.rs`nSOURCE=other.rs";error='SourceLanguageMismatch'},
     @{find='SOURCE=src/main.rs';replace="SOURCE=src/main.rs`nC_FLAG=-O2";error='CConfigurationWithoutCSource'}
 )

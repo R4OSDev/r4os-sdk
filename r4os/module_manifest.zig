@@ -1203,10 +1203,17 @@ pub fn derivePlan(allocator: std.mem.Allocator, manifest: Manifest) !Plan {
 
 pub fn buildProfileName(language: Language, entry_mode: EntryMode, app_class: AppClass) []const u8 {
     return switch (language) {
-        .rust => switch (app_class) {
-            .console => "R4X_Rust_App_Console",
-            .gui => "R4X_Rust_App_Desktop",
-            .service => "R4X_Rust_App_Service",
+        .rust => switch (entry_mode) {
+            .app => switch (app_class) {
+                .console => "R4X_Rust_App_Console",
+                .gui => "R4X_Rust_App_Desktop",
+                .service => "R4X_Rust_App_Service",
+            },
+            .lowlevel => switch (app_class) {
+                .console => "R4X_Rust_LowLevel_Console",
+                .gui => "R4X_Rust_LowLevel_Desktop",
+                .service => "R4X_Rust_LowLevel_Service",
+            },
         },
         .zig => switch (entry_mode) {
             .app => switch (app_class) {
@@ -2130,7 +2137,11 @@ test "Rust R4X classes share admission and preserve semantic plan v1" {
         const escape = try std.mem.replaceOwned(u8, a, text, "src/main.rs", "../main.rs");
         try std.testing.expectError(error.SourcePathEscape, parse(a, "Rust/module.R4MF", escape));
         const low = try std.mem.replaceOwned(u8, a, text, "ENTRY_MODE=app", "ENTRY_MODE=lowlevel");
-        try std.testing.expectError(error.RustLowlevelUnsupported, parse(a, "Rust/module.R4MF", low));
+        const raw = try parse(a, "Rust/module.R4MF", low);
+        try std.testing.expectEqual(EntryMode.lowlevel, raw.entry_mode.?);
+        const raw_plan = try derivePlan(a, raw);
+        try std.testing.expect(std.mem.indexOf(u8, raw_plan.build_profile, "_LowLevel_") != null);
+        try std.testing.expect(!capabilities.query(.{ .language = "Rust", .kind = "R4X", .entry_mode = "lowlevel", .execution = .native_r4os }).supported);
     }
     _ = rust_project;
 }

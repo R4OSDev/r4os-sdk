@@ -13,6 +13,7 @@ pub mod driver;
 pub mod heap;
 pub mod gui;
 pub mod graphics;
+pub mod lowlevel;
 mod memory;
 pub mod network;
 #[path = "generated/network.rs"]

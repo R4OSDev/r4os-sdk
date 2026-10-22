@@ -144,7 +144,7 @@ try{
     if(!$rust.host_build_qualified -and !$Technical){throw 'RustHostBuilderNotYetQualified'}
     $codegenPath=Join-Path $SdkRoot 'r4os/rust_module_profile.json'
     $codegen=Get-Content -Raw -LiteralPath $codegenPath|ConvertFrom-Json -AsHashtable
-    $expectedProfile=if($isLibrary){'r4os-rust-r4l-v1'}elseif($isDriver){'r4os-rust-r4d-v1'}elseif($isProtocol){'r4os-rust-r4p-v1'}else{$codegen.id}
+    $expectedProfile=if($isLibrary){'r4os-rust-r4l-v1'}elseif($isDriver){'r4os-rust-r4d-v1'}elseif($isProtocol){'r4os-rust-r4p-v1'}elseif($facts.entry_mode -ceq 'lowlevel'){'r4os-rust-r4x-lowlevel-v1'}else{$codegen.id}
     if($rust.schema -ne 2 -or $codegen.schema -ne 2 -or $rust.profile -cne $expectedProfile -or $codegen.target -cne $description.kernel_target){throw 'RustModuleProfileMismatch'}
     if($DependencyRootsJson){
         $decoded=ConvertFrom-Json -InputObject $DependencyRootsJson -NoEnumerate

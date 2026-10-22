@@ -197,7 +197,7 @@ fn run(init: std.process.Init) !void {
             const path = options.manifest_path orelse return error.MissingManifestPath;
             const value = try readManifest(arena_allocator, io, cwd, path);
             try validateSourceFiles(arena_allocator, io, cwd, value);
-            if (value.kind != .r4x or value.entry_mode != .app) return error.StartupInfoRequiresApp;
+            if (value.kind != .r4x) return error.StartupInfoRequiresR4X;
             const profile = try manifest_contract.startup_metadata.profileForClass(value.app_class.?.text());
             const rendered = switch (value.language.?) {
                 .rust => try manifest_contract.startup_metadata.rust(allocator, profile, value.imports),
@@ -1173,7 +1173,7 @@ fn renderPlanObject(allocator: std.mem.Allocator, entry: manifest_contract.Manif
     if (entry.language == .rust) {
         const descriptor = .{
             .schema = manifest_contract.capabilities.rust_build_plan_schema,
-            .profile = manifest_contract.capabilities.rust_profile,
+            .profile = if (entry.entry_mode == .lowlevel) "r4os-rust-r4x-lowlevel-v1" else manifest_contract.capabilities.rust_profile,
             .tools = manifest_contract.capabilities.rust_tools,
             .host_build_qualified = manifest_contract.capabilities.rust_host_builder,
             .cargo_manifest = "Cargo.toml",

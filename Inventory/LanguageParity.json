@@ -1113,22 +1113,22 @@
       "semantics": "Raw Entry/ABI/Stack/CPU/FPU/Exit nur fuer explizite Rollen, getrennt vom normalen App-Start. Technische Toolchain-/CPU-Pins und optionale ISA-Grenzen erhalten.",
       "current_only": "current_function",
       "rust": {
-        "state": "missing_higher_facade",
-        "source": "Repositories/SDK/Rust/src/lib.rs",
-        "gap": "Rust raw-entry und Rollenprofile nicht zugelassen; benoetigte aktuelle Zig-/C-Spezialprofile erfassen/qualifizieren, nicht normalen Appstart duplizieren."
+        "state": "explicit_raw_context_host_profile_qualified",
+        "source": "Repositories/SDK/Rust/src/lowlevel.rs",
+        "gap": "Direct Rust FP/SIMD still excluded by pinned backend policy. Arbitrary unhandled exceptions remain terminal under original kernel contract."
       },
       "c": {
-        "state": "existing_facade_review_required",
+        "state": "existing_original_raw_entry_and_stack_return_qualified",
         "sources": [
           "Repositories/SDK/Shared/C/include/r4os/r4m0.h",
           "Repositories/SDK/Shared/C/include/r4os/r4xstart.h"
         ],
-        "gap": "Bestehende C-Fassade erhalten; nur fehlende aktuelle Funktionen/hoeheren Hilfen und deren Semantik gegen die verlinkten Zig-Deklarationen schliessen."
+        "gap": "Original C lowlevel startup/ABI retained; native R4CC is a separate limited app profile."
       },
       "evidence": [
-        "source_inventory"
+        "lowlevel_current_69"
       ],
-      "shared_core": null
+      "shared_core": "Original R4XStartContext/manifest metadata, existing App::from_raw admission, original Kernel entry/stack/runtime/fault owners; no normal App main adapter."
     }
   ],
   "public_exports": [
@@ -46775,8 +46775,8 @@
       "entry_mode": "lowlevel",
       "wave": "0.86.69",
       "zig": "current_reference",
-      "rust": "explicitly_unqualified",
-      "c": "source_builder_present",
+      "rust": "real_host_lowlevel_profile_and_kvm4_three_class_raw_entry_qualified",
+      "c": "existing_host_lowlevel_root_and_kvm4_stack_return_qualified",
       "owner": "Repositories/SDK",
       "canonical_sources": [
         "Repositories/SDK/r4os/module_capabilities.zig",
@@ -46784,7 +46784,7 @@
         "Repositories/SDK/r4os/module_manifest.zig"
       ],
       "evidence": [
-        "source_inventory"
+        "lowlevel_current_69"
       ],
       "target": "Gleiche echte Rolle/Artefakt-/Start-/Export-/Lifecyclefunktion, keine Umbenennung einer App oder dauerhafte Zig-Fachbruecke."
     },
@@ -46799,7 +46799,11 @@
       "canonical_sources": [
         "Repositories/SDK/r4os/module_capabilities.zig",
         "Repositories/SDK/BuildProfiles/README.txt"
-      ]
+      ],
+      "evidence": [
+        "lowlevel_current_69"
+      ],
+      "qualification": "Actual capability/manifest admission retains native-r4cc-profile-unsupported and rust/native-zig compiler unavailable; no new native port claimed."
     }
   ],
   "templates": [
@@ -47228,7 +47232,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/module_capabilities.zig",
-        "sha256": "14265a531c83108ff1b8f6427e831597af218d5b4657b6a25d1821dd7b57662e"
+        "sha256": "3cd07dbb5dda1998e793ad7019e4b20e6a49d9683645bc1540932e0b70e79c58"
       },
       {
         "path": "DevKit/Setup/RustToolchain.json",
@@ -49273,6 +49277,147 @@
           "path": "Repositories/SDK/Tools/Test-RustProtocols.ps1",
           "bytes": 4361,
           "sha256": "3a16156ebb8232b3c67f3158251eb52e2739ef506f8bf4b4e893c5e45b0290aa"
+        }
+      ]
+    },
+    "lowlevel_current_69": {
+      "complete": true,
+      "performed_in": "0.86.69",
+      "sdk": "0.64.88",
+      "contract": "0.64.44",
+      "profile": "r4os-rust-r4x-lowlevel-v1",
+      "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.69",
+      "scope": "Remaining Zig-public lowlevel/raw-context host R4X profile for Rust/C; original class metadata and R4XStart ABI. Native C subset retained; no native Zig/Rust compiler port.",
+      "implementation": "lowlevel_entry!(unsafe extern C raw(context)->i32), explicit lowlevel_context! and initialize_runtime. Shared manifest-derived immutable admission facts; no normal App main call or implicit heap/entropy initialization. Scoped panic owner uses original program_exit; kernel owns stack/tasks and lifetime.",
+      "artifacts": {
+        "Console": {
+          "path": "Temp/SDK69/RustConsole/RAW69RC.R4X",
+          "bytes": 12652,
+          "sha256": "c9d3031df839bcd1de677f743521a656ff5a796640d31dcc644855f96e085218"
+        },
+        "Gui": {
+          "path": "Temp/SDK69/RustGui/RAW69RG.R4X",
+          "bytes": 12787,
+          "sha256": "19b31232b3ab22d887f69fb872eaec8e0bdbd9c8cb391d74bc07a2e72f02a160"
+        },
+        "Service": {
+          "path": "Temp/SDK69/RustService/RAW69RS.R4X",
+          "bytes": 12653,
+          "sha256": "977227af0216c039d1087eefd4211d7daee89b7cc2b7a275ffbf80bdb37727fd"
+        }
+      },
+      "c": {
+        "path": "Temp/SDK69/C/RAW69C.R4X",
+        "bytes": 8480,
+        "sha256": "3c40cac5230967d5b4f955a4074db60efa701d158f92b6ef42d5c6a1b6101eb4"
+      },
+      "checks": {
+        "existing_manifest_generator": 21,
+        "existing_project_cases": "Three real raw profiles, metadata generation, unknown-entry negative; existing Zig/C app plans byte-identical to catalog68.",
+        "original_c_entry": "Existing AppEntryPrototype05822 C declaration/context/admission cases pass.",
+        "clippy": "SDK alloc feature D warnings, pass",
+        "bare_stack": "All three Rust raw handlers and original C consumer touch/verify24KB; final Rust ELF retains six4096-byte probe steps before stack work.",
+        "runtime": {
+          "environment": "Owned private Full42, unchanged Kernel381, KVM SMP4",
+          "source_image_sha256": "41cd183a57e24af229ff90d1cf6b08f5241a5f56af6ddd4251aeb92b91beb882",
+          "source_kernel_sha256": "e06111b9363b44712fe69ded9ddfc3edb1f60c5c271c59a42238a816b0882340",
+          "console": "Real raw C/Rust entries pass, exact raw identity/imports/instance, normal return0 and actual caller return37.",
+          "gui": "Real Desktop Run launches the GUI-class raw entry; exact result file read back after checks and return. Terminal/selftest launch is not treated as GUI qualification.",
+          "service": "Original SERVMAN INSTALL/START uses actual service class; exact result file and stopped/ExitCode0 read back, no endpoint implied by a one-shot raw ABI fixture.",
+          "panic": {
+            "exit": 255,
+            "output": "[RUST] panic at src/main.rs:32: raw69 panic qualification",
+            "semantics": "Validated panic scope calls original failed process exit, never success/unwind; SSH encodes negative termination as255."
+          },
+          "result_files": {
+            "C": {
+              "path": "Temp/SDK69VM/result-C.txt",
+              "bytes": 82,
+              "sha256": "fc1b147a0161a963cc53db2a1d1d34ed2be03e29376c952b9ecb717281a38bfc"
+            },
+            "G": {
+              "path": "Temp/SDK69VM/result-G.txt",
+              "bytes": 82,
+              "sha256": "42b3a0424822a909202505483e52bab1f31a8521198d249eb45bd94a18348152"
+            },
+            "S": {
+              "path": "Temp/SDK69VM/result-S.txt",
+              "bytes": 82,
+              "sha256": "957916988631b43a2d34098da8f20fa5e98a524325bf9a11f1ecd3dada08931a"
+            }
+          },
+          "qemu_exit": 0
+        }
+      },
+      "terminal_fault": {
+        "instruction": "deliberate UD2 in true raw R4X handler",
+        "outcome": "terminal program-main unknown-fault; SSH timeout, no recovery or resource-free claim",
+        "marker": [
+          "[STACKFAULT] kind=program-main reason=unknown vm_error=0 available=0000000F task=75/75 instance=30/30 thread=43/43 tag= fault=0x0000000000000000 rsp=0xFFFFFF40053FFF60",
+          "[STACKFAULT] reserve=0xFFFFFF4005000000 bytes=4194304 committed=0xFFFFFF40053F0000 bytes=65536 guard=0xFFFFFF40053EF000 bytes=4096 top=0xFFFFFF4005400000"
+        ],
+        "qemu_pid": 1080428,
+        "stop": "SIGTERM only this verified disposable QEMU"
+      },
+      "terminal_fault_binding": {
+        "artifact_sha256": "0cb537bd97cb741cea9974d2b0d5dc256be25deb02454aa38ca8782b9dea39e8",
+        "scope": "First SDK88 raw prototype before result-file marker added. Deliberate UD2 and same exception route; terminal outcome is not a normal or resource-recovered exit.",
+        "source": "Repositories/Kernel/Rust/arch/tables.rs:445; only selected page-fault boundaries recover, unhandled vector6 follows original terminal crash route."
+      },
+      "normal_runtime": {
+        "r4std": {
+          "path": "Repositories/Libraries/R4STD/zig-out/R4STD.R4L",
+          "bytes": 54433,
+          "sha256": "4455c6d212355fc9aac1d8d1026225e6ac4043a3c53b32a7a76721560a4e1836"
+        },
+        "normal_artifacts_changed": false,
+        "standard": "No new STANDARD: host/build paths, new uninstalled SDK Rust helper and IMAGE_SCOPE=none fixtures only; normal installed R4STD byte-identical."
+      },
+      "limits": [
+        "No direct Rust FP/SIMD enablement: pinned integer codegen remains; required hardware/native C/Zig ISA baseline unchanged.",
+        "No new CPU/XSAVE/context-save or kernel exception implementation; preceding same-profile qualification is inherited, not a new hardware claim.",
+        "No native Rust/Zig compiler; native R4CC remains bounded one-source app console/gui.",
+        "No Windows execution, physical hardware, performance or release publication claim.",
+        "Unchecked invalid instructions may stop the machine terminally; no isolation or resource-retirement claim."
+      ],
+      "hurdles": [
+        "Startup metadata initially restricted to app mode; now emits the same original context facts for explicit raw R4X too.",
+        "Terminal forces console routing for selftests and refuses ordinary service launches. Real Desktop Run/SERVMAN used instead.",
+        "SFTP overwrite of existing module paths was refused despite interactive transport exit0; distinct TEMP upload, shell COPY and exact readbacks used.",
+        "Deliberate UD2 terminal fault stopped only the disposable QEMU; bounded SSH timeout recorded, verified guest stopped once, then remaining checks used normal boot."
+      ],
+      "publication": "Development SDK88/Product69, final SDK release72; no Full/Slim/OssiPC update",
+      "cleanup": "Own finished guests/work removed after compact proof; reusable fixtures retained",
+      "source_files": [
+        {
+          "path": "Repositories/SDK/Rust/src/lowlevel.rs",
+          "bytes": 3024,
+          "sha256": "cf773e8857efbb7ef7b4b079b2953d70a9ebc68a765a5c8726ec9ef42180c943"
+        },
+        {
+          "path": "Repositories/SDK/r4os/module_capabilities.zig",
+          "bytes": 6292,
+          "sha256": "3cd07dbb5dda1998e793ad7019e4b20e6a49d9683645bc1540932e0b70e79c58"
+        },
+        {
+          "path": "Repositories/SDK/r4os/module_manifest.zig",
+          "bytes": 107737,
+          "sha256": "6016668272016da51f59eb318f671b3041e944330c8ab181ac1be4f8e78fa82f"
+        },
+        {
+          "path": "Repositories/SDK/Tools/ModuleCatalog/src/main.zig",
+          "bytes": 86391,
+          "sha256": "2a30193a6386d98fc546d3ab018683e6f1b8b525712e3f89d98f1f83a4c850ee"
+        },
+        {
+          "path": "Repositories/SDK/Tools/Build-RustModule.ps1",
+          "bytes": 27886,
+          "sha256": "059a977372f6c1ce84ec784036a3b4f161d5a86ec81b945709faf92c72562227"
+        },
+        {
+          "path": "Repositories/SDK/Tools/Test-RustProjects.ps1",
+          "bytes": 4442,
+          "sha256": "b4cc78176eaa56e09bc996d72420ea325a64cf68da22d1f4fcb3c41bba745e19"
         }
       ]
     }
