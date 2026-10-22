@@ -899,3 +899,10 @@ use `R4D_ENTRIES(init, shutdown)` in C; Rust uses `driver_entry!` and
 DriverApi37/664. Driver resources retire explicitly after real quiescence;
 no Drop frees active DMA/callback state. See Docs/SDK/LanguageParity.txt and
 the `drivers_current_67` matrix evidence for the exact local qualification.
+
+SDK0.64.87 adds genuine C/Rust R4P roots using `r4os/protocol.h` and
+`R4P_ENTRIES`, or `protocol_entry!` and `protocol::Protocol`. The original
+resident loader, PPI identity, role/dependency metadata and explicit provider
+resource close remain authoritative. Logical Gate receipts do not unload code;
+the loader currently does not call ProtocolShutdown automatically. See the
+`protocols_current_68` matrix evidence and Docs/SDK/LanguageParity.txt.

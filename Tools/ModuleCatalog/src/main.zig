@@ -167,8 +167,8 @@ fn run(init: std.process.Init) !void {
                 try writeOutput(io, cwd, options.output, rendered);
                 return;
             }
-            if (value.kind == .r4d) {
-                const rendered = if (options.artifact_only) try std.fmt.allocPrint(allocator, "Code/zig-out/{s}.R4D\n", .{value.name}) else try renderDriverPlan(allocator, value);
+            if (value.kind == .r4d or value.kind == .r4p) {
+                const rendered = if (options.artifact_only) try std.fmt.allocPrint(allocator, "Code/zig-out/{s}.{s}\n", .{ value.name, value.kind.text() }) else try renderOwnerPlan(allocator, value);
                 defer allocator.free(rendered);
                 try writeOutput(io, cwd, options.output, rendered);
                 return;
@@ -1467,28 +1467,37 @@ fn renderLibraryPlan(a: std.mem.Allocator, entry: manifest_contract.Manifest) ![
     return std.json.Stringify.valueAlloc(a, .{ .schema = @as(u32, 1), .manifest = entry.path, .plan = .{ .kind = "R4L", .name = entry.name, .language = entry.language.?.text(), .sources = entry.sources, .entry_mode = @as(?[]const u8, null), .app_class = @as(?[]const u8, null), .target = entry.target, .optimization = entry.optimization.?.text(), .imports = entry.imports, .metadata = metadata.items, .exports = exports.items, .library_contract = library_contract, .rust_project = if (entry.language == .rust) rust_project else null } }, .{ .whitespace = .indent_2 });
 }
 
-fn renderDriverPlan(a: std.mem.Allocator, entry: manifest_contract.Manifest) ![]u8 {
-    if (entry.kind != .r4d) return error.DriverPlanRequiresR4D;
+fn ownerMeta(entry: manifest_contract.Manifest, key: []const u8) ![]const u8 {
+    var found: ?[]const u8 = null;
+    for (entry.metadata) |value| if (std.mem.startsWith(u8, value, key) and value.len > key.len and value[key.len] == '=') {
+        if (found != null or value.len == key.len + 1) return error.OwnerIdentityInvalid;
+        found = value[key.len + 1 ..];
+    };
+    return found orelse error.OwnerIdentityMissing;
+}
+
+fn renderOwnerPlan(a: std.mem.Allocator, entry: manifest_contract.Manifest) ![]u8 {
+    const driver = entry.kind == .r4d;
+    if (!driver and entry.kind != .r4p) return error.OwnerPlanRequiresDriverOrProtocol;
     var metadata: std.ArrayList([]const u8) = .empty;
     try metadata.append(a, try manifest_contract.moduleVersionMeta(a, entry));
-    try metadata.append(a, try std.fmt.allocPrint(a, "module.name=R4D_{s}", .{entry.name}));
-    var has_name = false;
-    var has_type = false;
+    try metadata.append(a, try std.fmt.allocPrint(a, "module.name={s}_{s}", .{ entry.kind.text(), entry.name }));
+    _ = try ownerMeta(entry, if (driver) "r4d.name" else "r4p.name");
+    _ = try ownerMeta(entry, if (driver) "r4d.type" else "r4p.role");
+    if (!driver) _ = try ownerMeta(entry, "r4p.category");
     for (entry.metadata) |value| {
         if (std.mem.startsWith(u8, value, "module.name=")) {
-            if (!std.mem.eql(u8, value, metadata.items[1])) return error.DriverIdentityConflict;
+            if (!std.mem.eql(u8, value, metadata.items[1])) return error.OwnerIdentityConflict;
             continue;
         }
         if (std.mem.startsWith(u8, value, "module.version=")) {
-            if (!std.mem.eql(u8, value, metadata.items[0])) return error.DriverIdentityConflict;
+            if (!std.mem.eql(u8, value, metadata.items[0])) return error.OwnerIdentityConflict;
             continue;
         }
-        if (std.mem.startsWith(u8, value, "r4d.name=")) has_name = value.len > 9;
-        if (std.mem.startsWith(u8, value, "r4d.type=")) has_type = value.len > 9;
         try metadata.append(a, value);
     }
-    if (!has_name or !has_type) return error.DriverIdentityMissing;
-    if (entry.imports.len != 1 or !std.mem.eql(u8, entry.imports[0], "R4DEV:Query:1")) return error.DriverImportsMismatch;
-    const rust_project = .{ .schema = manifest_contract.capabilities.rust_build_plan_schema, .profile = "r4os-rust-r4d-v1", .tools = manifest_contract.capabilities.rust_tools, .host_build_qualified = manifest_contract.capabilities.rust_host_builder, .cargo_manifest = "Cargo.toml", .cargo_lock = "Cargo.lock", .target = "x86_64-unknown-none", .source = entry.sources[0], .c_sources = entry.sources[1..], .c_includes = entry.c_includes, .c_defines = entry.c_defines, .c_flags = entry.c_flags, .module_version = entry.module_version.text, .icons = entry.icons, .help = entry.help, .resources = entry.resources };
-    return std.json.Stringify.valueAlloc(a, .{ .schema = @as(u32, 1), .manifest = entry.path, .plan = .{ .kind = "R4D", .name = entry.name, .language = entry.language.?.text(), .sources = entry.sources, .entry_mode = @as(?[]const u8, null), .app_class = @as(?[]const u8, null), .target = entry.target, .optimization = entry.optimization.?.text(), .imports = entry.imports, .metadata = metadata.items, .exports = &[_][]const u8{ "DriverInit:@r4d_init_entry:1", "DriverShutdown:@r4d_shutdown_entry:1" }, .rust_project = if (entry.language == .rust) rust_project else null } }, .{ .whitespace = .indent_2 });
+    if (entry.imports.len != 1 or !std.mem.eql(u8, entry.imports[0], "R4DEV:Query:1")) return error.OwnerImportsMismatch;
+    const rust_project = .{ .schema = manifest_contract.capabilities.rust_build_plan_schema, .profile = if (driver) "r4os-rust-r4d-v1" else "r4os-rust-r4p-v1", .tools = manifest_contract.capabilities.rust_tools, .host_build_qualified = manifest_contract.capabilities.rust_host_builder, .cargo_manifest = "Cargo.toml", .cargo_lock = "Cargo.lock", .target = "x86_64-unknown-none", .source = entry.sources[0], .c_sources = entry.sources[1..], .c_includes = entry.c_includes, .c_defines = entry.c_defines, .c_flags = entry.c_flags, .module_version = entry.module_version.text, .icons = entry.icons, .help = entry.help, .resources = entry.resources };
+    const exports: []const []const u8 = if (driver) &.{ "DriverInit:@r4d_init_entry:1", "DriverShutdown:@r4d_shutdown_entry:1" } else &.{ "ProtocolInit:@r4p_init_entry:1", "ProtocolShutdown:@r4p_shutdown_entry:1", "ProtocolQuery:@r4p_query_entry:1", "ProtocolDispatch:@r4p_dispatch_entry:1", "ProtocolRole:@r4p_init_entry:1" };
+    return std.json.Stringify.valueAlloc(a, .{ .schema = @as(u32, 1), .manifest = entry.path, .plan = .{ .kind = entry.kind.text(), .name = entry.name, .language = entry.language.?.text(), .sources = entry.sources, .entry_mode = @as(?[]const u8, null), .app_class = @as(?[]const u8, null), .target = entry.target, .optimization = entry.optimization.?.text(), .imports = entry.imports, .metadata = metadata.items, .exports = exports, .rust_project = if (entry.language == .rust) rust_project else null } }, .{ .whitespace = .indent_2 });
 }

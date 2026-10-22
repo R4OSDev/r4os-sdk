@@ -1084,22 +1084,24 @@
       "modules": [
         "r4p"
       ],
-      "semantics": "Registrierung/Callbacks/Entropie und genaue Borrow-/Hotremove-/Shutdownquittungen; keine App-Entry-Umbenennung.",
+      "semantics": "Original ProtocolApi1/120 and four entrypoints, actual per-module PPI callback identity, dependency activation and explicit logical provider/session retirement. Resident code; no automatic loader shutdown/unload.",
       "current_only": "current_function",
       "rust": {
-        "state": "missing_higher_facade",
-        "source": "Repositories/SDK/Rust/src/lib.rs",
-        "gap": "Protokollrollen als gleichwertige typisierte Rust-Fassade mit denselben Fehler-/Besitz-/Waitregeln ergaenzen."
+        "state": "current_typed_context_and_real_r4p_lifecycle_qualified",
+        "source": "Repositories/SDK/Rust/src/protocol.rs",
+        "gap": "Advanced optional ABI callbacks remain unsafe; physical readiness and module code unload are outside the original resident contract."
       },
       "c": {
-        "state": "missing_higher_facade",
-        "sources": [],
-        "gap": "Kein entsprechender hoeherer C-Einstieg im SDK-Headerbestand; gleiche Fachfunktion bereitstellen."
+        "state": "current_context_and_genuine_c_r4p_root_qualified",
+        "sources": [
+          "Repositories/SDK/Shared/C/include/r4os/protocol.h"
+        ],
+        "gap": "Caller preserves exact PPI scope, stable backing and linear logical leases; no automatic destructor."
       },
       "evidence": [
-        "source_inventory"
+        "protocols_current_68"
       ],
-      "shared_core": "Bestehenden ProtocolApi-/Metadaten-/Buildervertrag erweitern statt neuen Dispatchvertrag erfinden."
+      "shared_core": "Original ProtocolApi and SDK protocol.Context thin forwarders; native exact-argument oracle verifies the same nine methods, no second protocol dispatcher."
     },
     {
       "id": "lowlevel",
@@ -46753,8 +46755,8 @@
       "entry_mode": null,
       "wave": "0.86.68",
       "zig": "current_reference",
-      "rust": "explicitly_unqualified",
-      "c": "zig_owner_root_required",
+      "rust": "real_host_r4p_root_and_kvm4_dispatch_close_qualified",
+      "c": "real_host_c_r4p_root_and_kvm4_dispatch_close_qualified",
       "owner": "Repositories/SDK",
       "canonical_sources": [
         "Repositories/SDK/r4os/module_capabilities.zig",
@@ -46762,7 +46764,7 @@
         "Repositories/SDK/r4os/module_manifest.zig"
       ],
       "evidence": [
-        "source_inventory"
+        "protocols_current_68"
       ],
       "target": "Gleiche echte Rolle/Artefakt-/Start-/Export-/Lifecyclefunktion, keine Umbenennung einer App oder dauerhafte Zig-Fachbruecke."
     },
@@ -47226,7 +47228,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/module_capabilities.zig",
-        "sha256": "2534b7eb10cfe120ed5591b7b1a035ede573ebea4aeaa3a6521c1d2a5890a2d3"
+        "sha256": "14265a531c83108ff1b8f6427e831597af218d5b4657b6a25d1821dd7b57662e"
       },
       {
         "path": "DevKit/Setup/RustToolchain.json",
@@ -49141,6 +49143,136 @@
           "path": "Repositories/SDK/Tools/Test-RustDrivers.ps1",
           "bytes": 4455,
           "sha256": "ce8b032fb981c21d9722d4ec349c82965de58d069541f12d66f81f8051eb3651"
+        }
+      ]
+    },
+    "protocols_current_68": {
+      "complete": true,
+      "performed_in": "0.86.68",
+      "sdk": "0.64.87",
+      "contract": "0.64.44",
+      "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.68",
+      "profile": "r4os-rust-r4p-v1",
+      "contract_facts": {
+        "api_version": 1,
+        "api_bytes": 120,
+        "entry_offsets": [
+          0,
+          5,
+          10,
+          15
+        ],
+        "role_alias_offset": 0,
+        "import_name": "R4DEV:Query:1"
+      },
+      "scope": "True C/Rust R4P roots using original loader, per-module serialized PPI execution, canonical metadata/dependency activation. Explicit provider/session resource close; code stays resident, loader does not automatically call ProtocolShutdown.",
+      "checks": {
+        "original_zig_owner": 1,
+        "native_c_rust": 1,
+        "compiler_negatives": 4,
+        "existing_manifest_generator": 21,
+        "clippy": "SDK alloc feature, D warnings passed",
+        "r4d_plan_regression": "Exact semantic JSON match with final67 catalog",
+        "actual_negative": [
+          "Original R4DEV import mismatch refused",
+          "R4X global alloc feature refused at cargo-metadata; no R4P artifact"
+        ]
+      },
+      "providers": {
+        "C": {
+          "path": "Temp/SDK68/CProtocolFinal/P68C.R4P",
+          "bytes": 12495,
+          "sha256": "4182ff9bcffd22b30fef082829cc5d757386696d2b4e16deb1e4dbcd01c42cbf"
+        },
+        "Rust": {
+          "path": "Temp/SDK68/RustProtocolFinal/P68R.R4P",
+          "bytes": 12591,
+          "sha256": "682d575e1a5350941e5ac853e2c7a7f9ed92b381c1bf3a587baf4bad107ac871"
+        }
+      },
+      "client": {
+        "path": "Temp/SDK68/Client/P68CLI.R4X",
+        "bytes": 12610,
+        "sha256": "1511b1e944609375786af0e15576fd1bc70209baad56b72499548ac31776f88a"
+      },
+      "runtime": {
+        "environment": "Owned private unchanged Full42 clone; KVM SMP4, Kernel381",
+        "source_image_sha256": "41cd183a57e24af229ff90d1cf6b08f5241a5f56af6ddd4251aeb92b91beb882",
+        "source_kernel_sha256": "e06111b9363b44712fe69ded9ddfc3edb1f60c5c271c59a42238a816b0882340",
+        "kernel_binding": "Inherited unchanged normal image; no new kernel qualification",
+        "canonical_readback": "Both installed canonical protocol paths byte-exact",
+        "client_exit": 0,
+        "client_result": "PASS Protocol68 true C/Rust R4P dependency/dispatch/cancel; stale epoch/ticket output unchanged; close Busy backing retained, finish then exact shutdown, other role isolated",
+        "owner_markers": [
+          "[LOG1] source=Protocol severity=Info slot=15 text=PASS P68C Init wrong-role rejected current PPI borrowed",
+          "[LOG1] source=Protocol severity=Info slot=16 text=PASS P68R Init dependency active wrong-role rejected current PPI borrowed",
+          "[LOG1] source=Protocol severity=Info slot=15 text=PASS P68C explicit ProtocolShutdown backing=closed calls=0",
+          "[LOG1] source=Protocol severity=Info slot=16 text=PASS P68R explicit ProtocolShutdown backing=closed calls=0"
+        ],
+        "qualification": "Rust-first call lazily activates C dependency. Wrong role registration rejected. Both modules own distinct live64-byte backing; exact epoch/ticket cancellation, duplicate/stale refusal, new work, close Busy retains backing, new admission denied, existing completion drains, explicit same exported shutdown owner frees resources, further dispatch disabled. Closing C leaves Rust pending/backing intact.",
+        "qemu_exit": 0
+      },
+      "normal_runtime": {
+        "r4std": {
+          "path": "Repositories/Libraries/R4STD/zig-out/R4STD.R4L",
+          "bytes": 54433,
+          "sha256": "4455c6d212355fc9aac1d8d1026225e6ac4043a3c53b32a7a76721560a4e1836"
+        },
+        "normal_artifacts_changed": false,
+        "standard": "Not required: host build/SDK and IMAGE_SCOPE=none fixtures only; normal R4STD byte-identical."
+      },
+      "limits": [
+        "No module code unload or automatic kernel ProtocolShutdown claim",
+        "Logical provider/session epochs are not Kernel/hardware generations",
+        "No Windows execution, physical device hotplug/reset, direct Rust FP or performance qualification",
+        "No release publication or OssiPC update"
+      ],
+      "hurdles": [
+        "C static entry bodies referenced only by assembler were eliminated. Typed used function roots now keep all four genuine bodies; container verifies exact five-byte jumps.",
+        "Initial native original-owner oracle omitted mandatory header fields and used an uncast Zig pointer comparison; corrected test only."
+      ],
+      "publication": "Development sources SDK87/Product68; final SDK publication remains72, Full/Slim/OssiPC42 unchanged",
+      "cleanup": "Only compact evidence and reusable sources retained; own completed guest/work disposable",
+      "source_files": [
+        {
+          "path": "Repositories/SDK/Shared/C/include/r4os/protocol.h",
+          "bytes": 5250,
+          "sha256": "103e8d4cd31b124bcb6820c557b025c07faed856736c45a3e44de887d694334a"
+        },
+        {
+          "path": "Repositories/SDK/Rust/src/protocol.rs",
+          "bytes": 7537,
+          "sha256": "012d39f87069a8a1d22f37e843c2f016167a0043cadbc036d0d0b6b5badcf3b4"
+        },
+        {
+          "path": "Repositories/SDK/r4os/build.zig",
+          "bytes": 91219,
+          "sha256": "23ba84ed8878faebfdc2b8ad54311368d8b2c6d102bbfadaabdd1f51cdb9ec9f"
+        },
+        {
+          "path": "Repositories/SDK/r4os/module_capabilities.zig",
+          "bytes": 5958,
+          "sha256": "14265a531c83108ff1b8f6427e831597af218d5b4657b6a25d1821dd7b57662e"
+        },
+        {
+          "path": "Repositories/SDK/r4os/module_manifest.zig",
+          "bytes": 107105,
+          "sha256": "a58f3f297658dcc849ab26b32c8a0f9d507c09e22e3245dc366d3f121aab23cf"
+        },
+        {
+          "path": "Repositories/SDK/Tools/ModuleCatalog/src/main.zig",
+          "bytes": 86351,
+          "sha256": "9a5a7eecee1a2bcfb7b84882a268ef9cdfffc030075338291106088263e76744"
+        },
+        {
+          "path": "Repositories/SDK/Tools/Build-RustModule.ps1",
+          "bytes": 27816,
+          "sha256": "8ffc5ff341275fa11abc98ad531822ae19cd8cdb431c4f29fa5a7d81bc0c03ac"
+        },
+        {
+          "path": "Repositories/SDK/Tools/Test-RustProtocols.ps1",
+          "bytes": 4361,
+          "sha256": "3a16156ebb8232b3c67f3158251eb52e2739ef506f8bf4b4e893c5e45b0290aa"
         }
       ]
     }

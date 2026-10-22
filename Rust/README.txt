@@ -369,9 +369,17 @@ close explicitly; local KVM4 validates DMA/IRQ/work/task/heap and independent
 RAM backends through init, hot removal, public IO and actual warm-reset shutdown.
 Physical device readiness and Windows execution remain separate qualification.
 
-R4P: the protocol builder owns separate init/register/export stubs, role/category/
-dependency metadata and teardown. Raw Rust callback layouts alone do not provide
-that builder or qualified registration/hot removal/shutdown ownership.
+R4P (SDK0.64.87): ordinary Rust/C roots use four exact five-byte entry
+jumps and the original R4DEV/ProtocolApi1/120 contract. Role/category/dependencies
+and the ProtocolRole alias come from module.R4MF. protocol_entry! checks Init,
+Shutdown, Query and Dispatch signatures; protocol::Protocol borrows the exact
+current PPI context. The loader serializes real callbacks and keeps code
+resident; it does not automatically invoke the bound Shutdown entry. Providers
+close resources explicitly through their own dispatch/Shutdown owner. Gate
+tracks logical session admission, Busy and exact provider epochs; it never
+proves hardware quiescence or module unload. Allocation releases explicitly,
+never in Drop. R4P rejects the R4X global allocator feature. See the shared
+LanguageParity report/matrix for the exact guest scope and remaining limits.
 
 Subsystem (qualified since SDK0.64.84): a normal GUI R4X with
 MODULE_ROLE=subsystem owns canonical ID/display name/formats/target and the
@@ -387,7 +395,7 @@ SSH alone does not bind their application window before ProgramEntry.
 Rust lowlevel needs separate raw-entry stack/ABI/panic qualification. Native
 R4OS Rust builds need a compiler/toolchain port; R4CC implements the native C
 subset and is not a Rust compiler. Stable machine reason codes live in the
-shared Decision, not in an IDE-maintained matrix. Protocol/lowlevel support and physical hardware qualification remain separate work.
+shared Decision, not in an IDE-maintained matrix. Lowlevel support and physical hardware qualification remain separate work.
 
 Graphics owners (SDK0.64.76)
 ---------------------------

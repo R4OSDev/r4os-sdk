@@ -1668,6 +1668,20 @@ test "R4D accepts ordered C companions without changing driver identity or entry
         try std.testing.expect(capabilities.query(.{ .language = language[0], .kind = "R4D" }).supported);
         try std.testing.expect(!capabilities.query(.{ .language = language[0], .kind = "R4D", .execution = .native_r4os }).supported);
     }
+    // The protocol role uses its original four-entry ABI, independent of R4X.
+    inline for (.{ .{ "C", "c" }, .{ "Rust", "rs" } }) |language| {
+        const protocol_kind = try std.mem.replaceOwned(u8, allocator, text, "KIND=R4D", "KIND=R4P");
+        const protocol_target = try std.mem.replaceOwned(u8, allocator, protocol_kind, "/DRIVERS/MIXEDDRIVER.R4D", "/PROTOCOLS/MIXEDDRIVER.R4P");
+        const protocol_language = try std.mem.replaceOwned(u8, allocator, protocol_target, "LANGUAGE=Zig", "LANGUAGE=" ++ language[0]);
+        const protocol_root = try std.mem.replaceOwned(u8, allocator, protocol_language, "src/main.zig", "src/main." ++ language[1]);
+        const own = try parse(allocator, "OwnProtocol/module.R4MF", protocol_root);
+        try std.testing.expectEqual(Kind.r4p, own.kind);
+        try std.testing.expectEqualStrings("src/main." ++ language[1], own.sources[0]);
+        try std.testing.expectEqualStrings("src/native.c", own.sources[1]);
+        try std.testing.expect(own.entry_mode == null and own.app_class == null);
+        try std.testing.expect(capabilities.query(.{ .language = language[0], .kind = "R4P" }).supported);
+        try std.testing.expect(!capabilities.query(.{ .language = language[0], .kind = "R4P", .execution = .native_r4os }).supported);
+    }
     const wrong = try std.mem.replaceOwned(u8, allocator, text, "src/helpers.c", "src/second.zig");
     try std.testing.expectError(error.SourceLanguageMismatch, parse(allocator, "MixedDriver/module.R4MF", wrong));
     const escaped = try std.mem.replaceOwned(u8, allocator, text, "src/helpers.c", "../helpers.c");

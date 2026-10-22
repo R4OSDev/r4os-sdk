@@ -21,6 +21,7 @@ pub mod path;
 pub mod physical_storage;
 pub mod platform;
 pub mod r4l;
+pub mod protocol;
 pub mod registry_diagnostics;
 pub mod registry_hive;
 pub mod resources;

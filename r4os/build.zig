@@ -543,7 +543,7 @@ pub const Sdk = struct {
                 deps.append(self.b.allocator, entry["r4p.dep=".len..]) catch @panic("OOM");
             }
         }
-        return addR4PWithOptions(self.b, .{
+        const options: R4POptions = .{
             .name = loaded.manifest.name,
             .protocol_name = self.manifestMeta(loaded, "r4p.name"),
             .role = self.manifestMeta(loaded, "r4p.role"),
@@ -559,7 +559,27 @@ pub const Sdk = struct {
             .builder = self.builder,
             .resources = self.manifestResources(loaded),
             .optimize = manifestOptimizeMode(loaded.manifest),
-        });
+        };
+        return switch (loaded.manifest.language.?) {
+            .zig => addR4PWithOptions(self.b, options),
+            .rust => @panic("Rust R4P projects use SDK Tools/Build-RustModule.ps1 and matched host tools"),
+            .c => blk: {
+                if (loaded.manifest.imports.len != 1 or !std.mem.eql(u8, loaded.manifest.imports[0], "R4DEV:Query:1")) @panic("C R4P requires the original exact R4DEV:Query:1 import");
+                break :blk packageR4P(self.b, options, addCModule(self.b, .{
+                    .name = loaded.manifest.name,
+                    .source_root = userPath(self.b, loaded.project_path),
+                    .sources = loaded.manifest.sources,
+                    .include_root = self.profile.c_include_root,
+                    .extra_include_roots = self.withContractCIncludeRoot(self.manifestCIncludeRoots(loaded)),
+                    .c_defines = loaded.manifest.c_defines,
+                    .c_flags = loaded.manifest.c_flags,
+                    .startup_source_file = null,
+                    .linker_script = self.profile.linker_script,
+                    .entry_symbol = "r4p_init_entry",
+                    .optimize = manifestOptimizeMode(loaded.manifest),
+                }));
+            },
+        };
     }
 
     fn addR4MFLibrary(self: Sdk, loaded: LoadedR4MF) BuildResult {
@@ -1492,6 +1512,10 @@ fn addR4PWithOptions(b: *std.Build, opts: R4POptions) BuildResult {
         .optimize = opts.optimize,
     });
 
+    return packageR4P(b, opts, elf);
+}
+
+fn packageR4P(b: *std.Build, opts: R4POptions, elf: std.Build.LazyPath) BuildResult {
     const imports = b.allocator.alloc([]const u8, 1) catch @panic("OOM");
     imports[0] = "R4DEV:Query:1";
     const exports = b.allocator.alloc([]const u8, 5) catch @panic("OOM");
