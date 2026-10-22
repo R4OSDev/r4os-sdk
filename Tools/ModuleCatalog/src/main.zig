@@ -161,6 +161,12 @@ fn run(init: std.process.Init) !void {
             const path = options.manifest_path orelse return error.MissingManifestPath;
             const value = try readManifest(arena_allocator, io, cwd, path);
             try validateSourceFiles(arena_allocator, io, cwd, value);
+            if (value.kind == .r4l) {
+                const rendered = if (options.artifact_only) try std.fmt.allocPrint(allocator, "Code/zig-out/{s}.R4L\n", .{value.name}) else try renderLibraryPlan(allocator, value);
+                defer allocator.free(rendered);
+                try writeOutput(io, cwd, options.output, rendered);
+                return;
+            }
             const plan = try manifest_contract.derivePlan(arena_allocator, value);
             if (options.artifact_only) {
                 try std.Io.File.stdout().writeStreamingAll(io, plan.artifact);
@@ -1440,4 +1446,17 @@ test "workspace image plan requires artifacts only for selected manifests" {
     try std.testing.expectEqualStrings("None/module.R4MF\n", build);
     const excluded = try renderWorkspaceBuildPlan(allocator, &entries, .full, &.{});
     try std.testing.expectEqualStrings("", excluded);
+}
+
+/// Additive explicit R4L host plan; existing R4X plan bytes/meaning stay intact.
+fn renderLibraryPlan(a: std.mem.Allocator, entry: manifest_contract.Manifest) ![]u8 {
+    if (entry.kind != .r4l) return error.LibraryPlanRequiresR4L;
+    var exports: std.ArrayList([]const u8) = .empty;
+    for (entry.exports) |value| try exports.append(a, try std.fmt.allocPrint(a, "{s}:@{s}:{d}", .{ value.name, value.symbol, value.revision }));
+    var metadata: std.ArrayList([]const u8) = .empty;
+    try metadata.append(a, try manifest_contract.moduleVersionMeta(a, entry));
+    try metadata.appendSlice(a, entry.metadata);
+    const library_contract = .{ .contract = entry.contract, .baseline = entry.contract_baseline, .implementation_zig = entry.implementation_zig, .binding_zig = entry.binding_zig, .binding_c = entry.binding_c, .binding_rust = entry.binding_rust, .fixture_zig = entry.conformance_zig, .fixture_c = entry.conformance_c, .docs = entry.api_reference };
+    const rust_project = .{ .schema = manifest_contract.capabilities.rust_build_plan_schema, .profile = "r4os-rust-r4l-v1", .tools = manifest_contract.capabilities.rust_tools, .host_build_qualified = manifest_contract.capabilities.rust_host_builder, .cargo_manifest = "Cargo.toml", .cargo_lock = "Cargo.lock", .target = "x86_64-unknown-none", .source = entry.sources[0], .c_sources = entry.sources[1..], .c_includes = entry.c_includes, .c_defines = entry.c_defines, .c_flags = entry.c_flags, .module_version = entry.module_version.text, .icons = entry.icons, .help = entry.help, .resources = entry.resources };
+    return std.json.Stringify.valueAlloc(a, .{ .schema = @as(u32, 1), .manifest = entry.path, .plan = .{ .kind = "R4L", .name = entry.name, .language = entry.language.?.text(), .sources = entry.sources, .entry_mode = @as(?[]const u8, null), .app_class = @as(?[]const u8, null), .target = entry.target, .optimization = entry.optimization.?.text(), .imports = entry.imports, .metadata = metadata.items, .exports = exports.items, .library_contract = library_contract, .rust_project = if (entry.language == .rust) rust_project else null } }, .{ .whitespace = .indent_2 });
 }

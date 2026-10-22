@@ -353,3 +353,41 @@ mod tests {
         assert!(interface.slot_address(32).is_none());
     }
 }
+
+/// Const provider header from the generated library-owned expectation.
+/// Use the exact current table size/revision/flags; the loader verifies exports.
+pub const fn provider_header(expected: Expectation) -> InterfaceHeader {
+    InterfaceHeader {
+        magic: INTERFACE_MAGIC,
+        header_version: HEADER_VERSION,
+        flags: expected.known_required_flags as u16,
+        size: expected.required_size,
+        abi_major: expected.abi_major,
+        abi_minor: expected.min_revision,
+        interface_id_lo: expected.interface_id_lo,
+        interface_id_hi: expected.interface_id_hi,
+    }
+}
+/// Ordinary standalone R4L query metadata. No kernel bridge or private heap.
+pub const PROVIDER_QUERY: abi::R4LQuery = abi::R4LQuery {
+    magic: abi::r4l_abi_magic,
+    abi_version: abi::r4l_abi_version,
+    size: abi::r4l_query_struct_size,
+    group: 0,
+    kernel_bridge: 0,
+    reserved: 0,
+};
+/// Normal provider entry and Query export. API tables are declared by the
+/// library's generated contract and explicitly exported by its own manifest.
+/// Library state/allocators/callbacks belong to each explicit caller/session;
+/// never use an R4X-global allocator as a shared library heap.
+#[macro_export]
+macro_rules! r4l_provider {
+    ($query:ident) => {
+        #[unsafe(no_mangle)]
+        pub extern "C" fn r4l_entry() {}
+        #[unsafe(no_mangle)]
+        #[unsafe(link_section = ".data.r4l_exports")]
+        pub static $query: $crate::abi::R4LQuery = $crate::r4l::PROVIDER_QUERY;
+    };
+}

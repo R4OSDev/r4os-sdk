@@ -26,7 +26,10 @@ pub const Decision = struct {
 };
 
 pub fn rust(kind: []const u8, entry: []const u8, role: ?[]const u8, execution: Execution) Decision {
-    if (std.mem.eql(u8, kind, "R4L")) return .{ .supported = false, .code = "rust-r4l-contract-unqualified", .reason = "Rust R4L provider entry/export/build lifecycle is not yet qualified; generated Rust consumer bindings are available.", .failure = error.RustR4LUnsupported, .owner_contract = "Contract/Module/R4MFv2.txt", .missing_steps = &.{ "Rust provider implementation entry and Query export build", "Regular Query/table exports and library-owned baseline validation", "Qualified Rust R4L build and consumer lifecycle" } };
+    if (std.mem.eql(u8, kind, "R4L")) {
+        if (execution == .native_r4os) return .{ .supported = false, .code = "rust-native-compiler-unavailable", .reason = "Rust providers require the pinned host compiler.", .failure = error.RustNativeCompilerUnavailable };
+        return .{ .supported = true, .code = "supported", .reason = "Rust R4L provider with library-owned contract/baseline, generated typed tables, declared Query/exports and caller-owned resources." };
+    }
     if (std.mem.eql(u8, kind, "R4D")) return .{ .supported = false, .code = "rust-driver-lifecycle-unqualified", .reason = "Rust driver entry, metadata, callbacks and teardown are not qualified.", .failure = error.RustR4DUnsupported, .owner_contract = "Contract/ABI/R4DDriver.txt", .missing_steps = &.{ "Rust DriverInit/DriverShutdown entry and metadata packaging", "R4DEV callback admission and exact per-device IRQ/DMA/resource teardown" } };
     if (std.mem.eql(u8, kind, "R4P")) return .{ .supported = false, .code = "rust-protocol-lifecycle-unqualified", .reason = "Rust protocol registration, callbacks and teardown are not qualified.", .failure = error.RustR4PUnsupported, .owner_contract = "SDK/r4os/build.zig:addR4MFProtocol", .missing_steps = &.{ "Rust protocol-specific entry/registration/export and metadata builder", "Qualified callback ownership, hot removal and shutdown lifecycle" } };
     if (role) |value| if (!std.mem.eql(u8, value, "subsystem")) return .{ .supported = false, .code = "rust-unknown-module-role", .reason = "Only the manifest-defined subsystem role is supported.", .failure = error.RustSubsystemUnsupported, .owner_contract = "Contract/Module/R4MFv2.txt" };

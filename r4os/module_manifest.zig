@@ -524,7 +524,8 @@ fn parseV2(allocator: std.mem.Allocator, path: []const u8, text: []const u8) !Ma
         try validateRuntimeR4LExports(exports.items);
         const contract_path = contract orelse return error.MissingR4LContract;
         const baseline_path = contract_baseline orelse return error.MissingR4LContractBaseline;
-        const implementation_path = implementation_zig orelse return error.MissingR4LImplementationZig;
+        if (parsed_language == .zig and implementation_zig == null) return error.MissingR4LImplementationZig;
+        if (parsed_language == .rust and binding_rust == null) return error.MissingR4LRustBinding;
         const zig_path = binding_zig orelse return error.MissingR4LZigBinding;
         const c_path = binding_c orelse return error.MissingR4LCBinding;
         const fixture_zig_path = conformance_zig orelse return error.MissingR4LZigConformance;
@@ -532,7 +533,7 @@ fn parseV2(allocator: std.mem.Allocator, path: []const u8, text: []const u8) !Ma
         const api_path = api_reference orelse return error.MissingR4LApiReference;
         try validateLocalContractPath(contract_path, ".json");
         try validateLocalContractPath(baseline_path, ".json");
-        try validateLocalContractPath(implementation_path, ".zig");
+        if (implementation_zig) |implementation_path| try validateLocalContractPath(implementation_path, ".zig");
         try validateLocalContractPath(zig_path, ".zig");
         try validateLocalContractPath(c_path, ".h");
         if (binding_rust) |binding_path| try validateLocalContractPath(binding_path, ".rs");
@@ -1973,6 +1974,16 @@ test "runtime R4L owns symbolic exports contract and language bindings" {
         \\CONFORMANCE_C=Tests/Generated/contract_conformance.c
         \\API_REFERENCE=Docs/API.md
     ;
+    const no_zig_implementation = try std.mem.replaceOwned(u8, allocator, base, "IMPLEMENTATION_ZIG=Contract/Generated/implementation_abi.zig", "");
+    const c_language = try std.mem.replaceOwned(u8, allocator, no_zig_implementation, "LANGUAGE=Zig", "LANGUAGE=C");
+    const c_provider = try std.mem.replaceOwned(u8, allocator, c_language, "Source/main.zig", "Source/main.c");
+    try std.testing.expectEqual(Language.c, (try parse(allocator, "Vendor/C/module.R4MF", c_provider)).language.?);
+    const rust_language = try std.mem.replaceOwned(u8, allocator, no_zig_implementation, "LANGUAGE=Zig", "LANGUAGE=Rust");
+    const rust_provider = try std.mem.replaceOwned(u8, allocator, rust_language, "Source/main.zig", "Source/main.rs");
+    try std.testing.expectError(error.MissingR4LRustBinding, parse(allocator, "Vendor/Rust/module.R4MF", rust_provider));
+    const rust_complete = try std.fmt.allocPrint(allocator, "{s}\nBINDING_RUST=Bindings/Rust/lib.rs\n", .{rust_provider});
+    try std.testing.expectEqual(Language.rust, (try parse(allocator, "Vendor/Rust/module.R4MF", rust_complete)).language.?);
+    try std.testing.expectError(error.MissingR4LImplementationZig, parse(allocator, "Vendor/Zig/module.R4MF", no_zig_implementation));
     const parsed = try parse(allocator, "Vendor/Library/module.R4MF", base);
     try std.testing.expectEqual(Kind.r4l, parsed.kind);
     try std.testing.expectEqual(@as(usize, 2), parsed.exports.len);

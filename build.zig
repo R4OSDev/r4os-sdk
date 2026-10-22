@@ -37,7 +37,28 @@ pub fn build(b: *std.Build) void {
         b.installArtifact(b.addExecutable(.{ .name = "module-catalog", .root_module = root }));
         return;
     }
+    if (b.option(bool, "r4l-contract-generator-only", "Build only the selected host library contract generator") orelse false) {
+        const root = b.createModule(.{ .root_source_file = b.path("Tools/R4LContractGen/src/main.zig"), .target = b.standardTargetOptions(.{}), .optimize = .ReleaseSafe });
+        b.installArtifact(b.addExecutable(.{ .name = "r4l-contract-gen", .root_module = root }));
+        return;
+    }
     const sdk_profile = Sdk.init(b, .{ .contract_dependency = contract_dependency });
+    if (b.option(bool, "r4l-consumer-fixtures-only", "Build only the C/Zig R4L consumers") orelse false) {
+        _ = sdk_profile.addR4MF(b.path("Tests/Build/R4LConsumers/C/module.R4MF"));
+        _ = sdk_profile.addR4MF(b.path("Tests/Build/R4LConsumers/Zig/module.R4MF"));
+        return;
+    }
+
+    if (b.option(bool, "r4l-provider-tests-only", "Only current manifest/library contract tests") orelse false) {
+        const root = b.createModule(.{ .root_source_file = b.path("r4os/module_manifest.zig"), .target = b.graph.host, .optimize = .ReleaseSafe });
+        root.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
+        const manifest_tests = b.addRunArtifact(b.addTest(.{ .root_module = root }));
+        const contract_tests = b.addRunArtifact(b.addTest(.{ .root_module = sdk_profile.r4l_contract_generator.?.root_module }));
+        b.getInstallStep().dependOn(&manifest_tests.step);
+        b.getInstallStep().dependOn(&contract_tests.step);
+        return;
+    }
+
     const update_json_core = b.option([]const u8, "update-json-core", "Original JSON protocol core for current SDK update owner tests");
     if (b.option(bool, "update-owner-tests-only", "Run only existing update/catalog/journal owner cases") orelse false) {
         const json_file = update_json_core orelse @panic("update-owner-tests-only requires -Dupdate-json-core=<original JSON core path>");
@@ -237,10 +258,7 @@ pub fn build(b: *std.Build) void {
     }
     const r4l_generator_tests = b.addRunArtifact(b.addTest(.{ .root_module = sdk_profile.r4l_contract_generator.?.root_module }));
     b.step("r4l-contract-test", "Run the existing library contract generator cases").dependOn(&r4l_generator_tests.step);
-    if (b.option(bool, "r4l-contract-generator-only", "Build only the host library contract generator") orelse false) {
-        b.installArtifact(sdk_profile.r4l_contract_generator.?);
-        return;
-    }
+
     if (b.option(bool, "heap-host-test-only", "Build the native SDK heap object for its host interop test") orelse false) {
         const root = b.createModule(.{ .root_source_file = b.path("r4os/heap_runtime.zig"), .target = b.graph.host, .optimize = .ReleaseSafe, .pic = true, .single_threaded = false, .stack_check = false });
         root.addImport("r4os_contract", contract_dependency.module("r4os_contract"));

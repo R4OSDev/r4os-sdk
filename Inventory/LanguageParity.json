@@ -46697,8 +46697,8 @@
       "entry_mode": null,
       "wave": "0.86.66",
       "zig": "current_reference",
-      "rust": "explicitly_unqualified",
-      "c": "c_root_builder_exists_contract_conformance_still_zig",
+      "rust": "qualified_own_provider_root",
+      "c": "qualified_own_provider_root",
       "owner": "Repositories/SDK",
       "canonical_sources": [
         "Repositories/SDK/r4os/module_capabilities.zig",
@@ -46706,7 +46706,7 @@
         "Repositories/SDK/r4os/module_manifest.zig"
       ],
       "evidence": [
-        "source_inventory"
+        "r4l_providers_current_66"
       ],
       "target": "Gleiche echte Rolle/Artefakt-/Start-/Export-/Lifecyclefunktion, keine Umbenennung einer App oder dauerhafte Zig-Fachbruecke."
     },
@@ -47094,6 +47094,98 @@
       },
       "wave": "0.86.70",
       "qualification": "Vorlage/Mapping ist kein Laufzeitnachweis; Rust-Console/GUI/Service separat nach evidence.rust_qualified_classes, Windows bleibt unqualifiziert."
+    },
+    {
+      "source": {
+        "path": "Repositories/SDK/Templates/R4L/C/template.ini",
+        "sha256": "31f33c88eccaf2efbf820d59750a3a667de668e3a2ea30603ae76a4f6d9caee0",
+        "bytes": 643
+      },
+      "id": "R4OS.Host_C_R4L",
+      "definition": {
+        "Execution": [
+          "host"
+        ],
+        "Id": [
+          "R4OS.Host_C_R4L"
+        ],
+        "DisplayName": [
+          "C runtime R4L with local contract"
+        ],
+        "Description": [
+          "Genuine provider root; project-local generator/baseline initialization and matched host tools required before build."
+        ],
+        "ProjectFileTemplate": [
+          "module.R4MF.template"
+        ],
+        "ProjectFile": [
+          "module.R4MF"
+        ],
+        "DefaultProjectName": [
+          "EXAMPLELIB"
+        ],
+        "File": [
+          "module.R4MF.template|module.R4MF",
+          "Source/main.c.template|Source/main.c",
+          "Contract/LibraryContract.json.template|Contract/LibraryContract.json",
+          "Bindings/Rust/Cargo.toml.template|Bindings/Rust/Cargo.toml",
+          "README.md.template|README.md",
+          "build.zig.template|build.zig",
+          "build.zig.zon.template|build.zig.zon"
+        ]
+      },
+      "wave": "0.86.66",
+      "qualification": "Actual template materialization/baseline/regular R4L build+inspection passed. Original two providers have six actual KVM4 consumer combinations; templates require their explicit local contract generation and locked Cargo setup. Common frontend/tool aggregation remains70.",
+      "evidence": [
+        "r4l_providers_current_66"
+      ]
+    },
+    {
+      "source": {
+        "path": "Repositories/SDK/Templates/R4L/Rust/template.ini",
+        "sha256": "aafd2c1e4d80f031b2347a1a319442080001305f70ebd60a83aaf0b296a43de3",
+        "bytes": 693
+      },
+      "id": "R4OS.Host_Rust_R4L",
+      "definition": {
+        "Execution": [
+          "host"
+        ],
+        "Id": [
+          "R4OS.Host_Rust_R4L"
+        ],
+        "DisplayName": [
+          "Rust runtime R4L with local contract"
+        ],
+        "Description": [
+          "Genuine provider root; project-local generator/baseline initialization and matched host tools required before build."
+        ],
+        "ProjectFileTemplate": [
+          "module.R4MF.template"
+        ],
+        "ProjectFile": [
+          "module.R4MF"
+        ],
+        "DefaultProjectName": [
+          "EXAMPLELIB"
+        ],
+        "File": [
+          "module.R4MF.template|module.R4MF",
+          "Source/main.rs.template|Source/main.rs",
+          "Contract/LibraryContract.json.template|Contract/LibraryContract.json",
+          "Bindings/Rust/Cargo.toml.template|Bindings/Rust/Cargo.toml",
+          "README.md.template|README.md",
+          "Cargo.toml.template|Cargo.toml",
+          "Build.ps1.template|Build.ps1",
+          "Build.sh|Build.sh",
+          "Build.bat|Build.bat"
+        ]
+      },
+      "wave": "0.86.66",
+      "qualification": "Actual template materialization/baseline/regular R4L build+inspection passed. Original two providers have six actual KVM4 consumer combinations; templates require their explicit local contract generation and locked Cargo setup. Common frontend/tool aggregation remains70.",
+      "evidence": [
+        "r4l_providers_current_66"
+      ]
     }
   ],
   "build_profiles": [
@@ -48484,6 +48576,383 @@
         "benchmark_image_sha256": "93312fea508839c5a51ee0a605a1dc4ae1045d5d79c6efdd4af1e5a2bdbef78a",
         "boot_kernel_sha256": "e06111b9363b44712fe69ded9ddfc3edb1f60c5c271c59a42238a816b0882340",
         "scope": "single final normal KVM/SMP4 Suite3 regression after original shared indexed raster fix; no isolated subsystem performance claim"
+      }
+    },
+    "r4l_providers_current_66": {
+      "kind": "genuine_C_Rust_R4L_provider_roots_and_Zig_C_Rust_consumers",
+      "performed_in": "0.86.66",
+      "sdk": "0.64.85",
+      "contract": "0.64.44",
+      "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.66",
+      "scope": "Real own C and Rust provider roots with original library-owned contracts/baselines/projections, ordinary Query/API exports and original loader. No dummy Zig SOURCE or mandatory unused IMPLEMENTATION_ZIG. Existing Zig/mixed C routes remain. Platform ABI, R4MF/R4M0 and library baselines unchanged.",
+      "profile": "r4os-rust-r4l-v1; same canonical module CPU/codegen policy, no R4XStart/startup-info dummy; explicit R4L plan branch leaves R4X plan meaning intact. Matched host contract generator checked before compile and its binary hash verified. The SDK R4X-global alloc feature is refused; explicit caller/session allocator and callbacks own resources until actual close/quiescence.",
+      "checks": {
+        "manifest_cases": 19,
+        "original_contract_generator_cases": 2,
+        "current_C_to_Rust_projection": "fresh current header-bound projector check passes unchanged c_facades.rs",
+        "clippy": "SDK all optional alloc helpers warning-free",
+        "actual_build_negative": "R4LRequiresExplicitCallerAllocatorNotR4XGlobalAlloc at cargo metadata, no artifact produced",
+        "capability_delta": "Host C/Rust R4L semantic admission matches actual provider builds; native R4CC/Rust remain unavailable for R4L. Template sample path corrected to LIBS; Rust R4L advertises the required generator/local contract and no unsupported New-RustProject creator. Full frontend aggregation remains70. Catalog source directory is now a matched tool input."
+      },
+      "providers": {
+        "L66C": {
+          "path": "Temp/SDK66/CProvider/L66C.R4L",
+          "sha256": "e00467f69033f34fc9337004ba9d97c676cd8dbfc2b42b93fb7aa4c38038a117",
+          "bytes": 8319,
+          "query_revision": 1,
+          "api_revision": 1,
+          "canonical_readback": "exact",
+          "source_language": "C"
+        },
+        "L66R": {
+          "path": "Temp/SDK66/RustProvider/L66R.R4L",
+          "sha256": "44adeb1db8a227f855df194ebdeb24147bb87d3a86f890dc07708c17ec7a9099",
+          "bytes": 8319,
+          "query_revision": 1,
+          "api_revision": 1,
+          "canonical_readback": "exact",
+          "source_language": "Rust"
+        }
+      },
+      "consumers": {
+        "C": {
+          "path": "Temp/SDK66/Consumers/LC66C.R4X",
+          "sha256": "cf256ea34a68c47ab15e62d0aebe3b68a99d7bf25175270374e4128d5feb9acd",
+          "bytes": 70938,
+          "exit": 0,
+          "result": "PASS R4L66 L66C work=805 sessions=2 callbacks=3 failed-release-held=1 heap=exact\nPASS R4L66 L66R work=850 sessions=2 callbacks=3 failed-release-held=1 heap=exact",
+          "readback": "exact"
+        },
+        "Zig": {
+          "path": "Temp/SDK66/Consumers/LC66Z.R4X",
+          "sha256": "32aa84ce191826170faaffea5efcef24be6ce5ed10a508549a32496f8500c776",
+          "bytes": 42418,
+          "exit": 0,
+          "result": "PASS R4L66 L66C work=805 sessions=2 callbacks=3 failed-release-held=1 heap=exact\nPASS R4L66 L66R work=850 sessions=2 callbacks=3 failed-release-held=1 heap=exact\nPASS R4L66 independent Zig generated clients and exact active heap release",
+          "readback": "exact"
+        },
+        "Rust": {
+          "path": "Temp/SDK66/RustConsumer/LC66R.R4X",
+          "sha256": "c1c1463841a25beebf4450fe553f2d0caeeb24656cc107e3d0c6dde5c1a5f2d7",
+          "bytes": 79502,
+          "exit": 0,
+          "result": "PASS R4L66 L66C work=805 sessions=2 callbacks=3 failed-release-held=1 heap=exact\nPASS R4L66 L66R work=850 sessions=2 callbacks=3 failed-release-held=1 heap=exact\nPASS R4L66 Rust generated/generic clients and exact active heap release",
+          "readback": "exact"
+        }
+      },
+      "templates": {
+        "C": {
+          "artifact": {
+            "path": "Temp/SDK66/TemplateCBuild/ACMEC66.R4L",
+            "sha256": "a6ff744d470cd482c4d471b1bddd9693dacedc6783de8e5170776e115114ec1c",
+            "bytes": 8472
+          },
+          "scope": "rendered actual new template, original initial baseline/materialization/check and regular build/inspection; no extra guest repetition for the simple integer template"
+        },
+        "Rust": {
+          "artifact": {
+            "path": "Temp/SDK66/TemplateRustBuild/RUST66LIB.R4L",
+            "sha256": "5ccde0d9fadbd387d4129ee926a7ab78d1e374037c2b12d543798477d27d2b6b",
+            "bytes": 8480
+          },
+          "scope": "rendered actual new template, original initial baseline/materialization/check and regular build/inspection; no extra guest repetition for the simple integer template"
+        }
+      },
+      "loader_negatives": {
+        "NEGREV": {
+          "artifact": {
+            "path": "Temp/SDK66/NEGREV.R4X",
+            "sha256": "f587c77e909cfed64cfd5d117e238fc835e77efe0dcc623a495aae8d9b620b49",
+            "bytes": 70934
+          },
+          "exit": 1,
+          "result": "Program launch failed: C:\\TEMP\\NEGREV.R4X (-9)"
+        },
+        "NEGEXP": {
+          "artifact": {
+            "path": "Temp/SDK66/NEGEXP.R4X",
+            "sha256": "3b6b753c24e972fea7b2ec00a7106566f4eea462d3f4dccb4127e821636b5357",
+            "bytes": 70938
+          },
+          "exit": 1,
+          "result": "Program launch failed: C:\\TEMP\\NEGEXP.R4X (-9)"
+        },
+        "serial": "Unresolved R4M0 import L66R:API_V1 after raising requirement1->2; Unresolved R4M0 import L66C:MISSING_V1. Same original positive C ELF repacked by original R4M0 packager with only the respective import changed."
+      },
+      "guest": {
+        "source_image_sha256": "41cd183a57e24af229ff90d1cf6b08f5241a5f56af6ddd4251aeb92b91beb882",
+        "boot_kernel_sha256": "e06111b9363b44712fe69ded9ddfc3edb1f60c5c271c59a42238a816b0882340",
+        "environment": "fresh owned persistent clone of Full42, Kernel381, KVM SMP4; originals untouched. Install own libraries then normal shutdown/boot, because the ordinary library directory is scanned at boot. SSH setup/readback/console execution throughout.",
+        "actual_combinations": 6,
+        "results": "Each Zig/C/Rust consumer reports L66C checksum805 and L66R checksum850; two distinct implementations with the same interface and separate module identities. Two simultaneous caller-owned sessions per provider, failed allocation and clean retry, wrong-generation refusal with unchanged output, callback close Busy, failed release-44 retains the exact allocation, retry acknowledges one free and the other session continues.3 callbacks per provider, exact active heap allocations/bytes before/after. Rust also uses its generated and generic checked clients directly.",
+        "library_lifetime": "Both actual boot-loaded R4Ls have2 sections/3 pointer relocations and generation1, pinned by the existing registry policy. Caller sessions/allocations close explicitly; no new module unloader or provider-global caller heap. The normal shutdown closes the guest.",
+        "cleanup": "Own library/consumer/negative files removed and regular final POWEROFF/QEMU exit0; own completed private image and work removed after recording compact proof.",
+        "shutdowns": {
+          "initial_qemu_exit": 0,
+          "qualification_qemu_exit": 0,
+          "final_poweroff": "System poweroff; SSH255 after orderly disconnect"
+        }
+      },
+      "normal_runtime": {
+        "changed_artifacts": false,
+        "r4std_original_Zig_route": {
+          "baseline": "unchanged live Full42 library in original source image",
+          "baseline_sha256": "4455c6d212355fc9aac1d8d1026225e6ac4043a3c53b32a7a76721560a4e1836",
+          "rebuilt_sha256": "4455c6d212355fc9aac1d8d1026225e6ac4043a3c53b32a7a76721560a4e1836",
+          "equal": true,
+          "bytes": 54433
+        },
+        "standard": "No new STANDARD: host project/generator/template changes and isolated IMAGE_SCOPE=none fixtures only; no installed normal runtime artifact changed. Rebuilt ordinary R4STD exactly equals original Full42 bytes. Existing normal kernel/desktop/Spectra/subsystem artifacts remain. Previous STANDARD65 is not presented as a new66 performance result."
+      },
+      "limits": "Actual execution Linux/native tools and local KVM4 only. Windows catalog and contract generator are PE32+ binaries but not executed. No hardware, direct Rust FP/SIMD, native R4OS Rust compiler, new loader/unloader policy or performance claim. Published Full/Slim42 and OssiPC remain unchanged.",
+      "sources": [
+        {
+          "path": "Repositories/SDK/r4os/module_manifest.zig",
+          "sha256": "83f812ecf530a74771c8390047d924bdb8db5bbd40da1ea12b982beb145a13ba",
+          "bytes": 104866
+        },
+        {
+          "path": "Repositories/SDK/r4os/module_capabilities.zig",
+          "sha256": "066ae6ea9d8e13b8cd5e6279f161bca1e1702571dcd9440a5623085cc18b333f",
+          "bytes": 6302
+        },
+        {
+          "path": "Repositories/SDK/r4os/build.zig",
+          "sha256": "75673dcd35e7b0b1975b33c7b4d1af0611b690df81e389cf42c9ca13ae8bfd05",
+          "bytes": 88005
+        },
+        {
+          "path": "Repositories/SDK/Rust/src/r4l.rs",
+          "sha256": "71203e1193c4fbee5a2fa927dff31d1908fd61f137bb81bb07b2275e523497d4",
+          "bytes": 13889
+        },
+        {
+          "path": "Repositories/SDK/Shared/C/include/r4os/r4l.h",
+          "sha256": "15f25769ff13d405b1e573464130d8f77468e451df2b52a9361dd24e6b63badb",
+          "bytes": 8858
+        },
+        {
+          "path": "Repositories/SDK/Tools/Build-RustModule.ps1",
+          "sha256": "a243a31b8fef735d92ef71380c32dea516271183dbfae462382890b5562d4d00",
+          "bytes": 26747
+        },
+        {
+          "path": "Repositories/SDK/Tools/ModuleCatalog/src/main.zig",
+          "sha256": "cd3ad3cd16e7b8234357c87eb7d8aa412745847e6c8149189e924a6ce93413b6",
+          "bytes": 82752
+        },
+        {
+          "path": "Repositories/SDK/Tools/R4LContractGen/src/main.zig",
+          "sha256": "09ef74f89fcf46413ec081e4edc189b59546375bf9db9eb155355bec19958a19",
+          "bytes": 56558
+        },
+        {
+          "path": "DevKit/Setup/Export-RustTools.ps1",
+          "sha256": "c06c3075e6e68d2a0164c1ca6e049338a21405047ec08f875cee3f886056402d",
+          "bytes": 15921
+        },
+        {
+          "path": "Repositories/SDK/Tests/Simulation/R4LProviders.c",
+          "sha256": "10e94fb60d31ba40cf8b52161bea05186e894079e04b1371a18ca24342885758",
+          "bytes": 3786
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/CR4L/build.zig.zon",
+          "sha256": "287af32b70bd24d48d7eafdd4923491bc6d401bcf30fd3c60518ce4c1d68e4de",
+          "bytes": 286
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/CR4L/module.R4MF",
+          "sha256": "230da281a208c068afa369a4490f949d885c79adccdecce0fd215e992df360cc",
+          "bytes": 515
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/CR4L/build.zig",
+          "sha256": "91b968839bd6e7c05d418a280ae0aa581c9500c44c1f2597cb38998bc4155456",
+          "bytes": 235
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/CR4L/Docs/API.md",
+          "sha256": "e3a85eb13fc0cfcf2e80aa635ec7d3f7210929ea37a6a7d6e105e10ae3b78ee3",
+          "bytes": 1945
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/CR4L/src/main.c",
+          "sha256": "98cced20a063ddd32eb661573480787eeaefda9de521f9471e622d0eac2fcd1d",
+          "bytes": 2075
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/CR4L/Contract/LibraryContract.json",
+          "sha256": "e755a0f6c5a1730daef4040dd10803ee7fe7970e2bd80adc4f9be3c05f1776e8",
+          "bytes": 12951
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/CR4L/Contract/LibraryContract.baseline.json",
+          "sha256": "e755a0f6c5a1730daef4040dd10803ee7fe7970e2bd80adc4f9be3c05f1776e8",
+          "bytes": 12951
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/CR4L/Bindings/Rust/Cargo.toml",
+          "sha256": "82a81f90031c25aa71782e88a1d241a257fbaa186d4969d4d2e67b096c18e94c",
+          "bytes": 124
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/CR4L/Bindings/C/l66c.h",
+          "sha256": "9cf93faf102c79fd5d79a54065357b1d5fb7d869225edb8d594e9ee3aaf263fd",
+          "bytes": 4984
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/CR4L/Bindings/Zig/l66c.zig",
+          "sha256": "ae06a073712547b8ac66427c92d1d051ece27bb105647c119475712152b72be0",
+          "bytes": 2985
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/CR4L/Bindings/Rust/src/lib.rs",
+          "sha256": "7ae7600919cdc2cbdbec702862302ec8c5deb3958226d57848571a02386d0eac",
+          "bytes": 6880
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/CR4L/Tests/Generated/contract_conformance.c",
+          "sha256": "e17fe76081dc2828192b382d814b257362c1a8c2a8547bcca369595d41b40d06",
+          "bytes": 127
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/CR4L/Tests/Generated/contract_conformance.zig",
+          "sha256": "3a54276d8395af9ee62fd4379d43bd81a4b35fb1b9ae8e89d8fd6b3e03726a35",
+          "bytes": 2602
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/RustR4L/Cargo.toml",
+          "sha256": "d39a34fc0dc918ee313d111243e3ace1eb4e6b321d6d68592e5c02c7b639eb13",
+          "bytes": 315
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/RustR4L/Cargo.lock",
+          "sha256": "3c874dc5fefa348f5c7a67a66cfef81458ca46a1cdc139515e679ef7bedccd5a",
+          "bytes": 433
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/RustR4L/module.R4MF",
+          "sha256": "4dd05b6df72452affde9767ce506c6b4ba80d2f7bf8bdf98e831f35706ae8a44",
+          "bytes": 519
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/RustR4L/Docs/API.md",
+          "sha256": "9e1dc952239c20b13c5cadb92472f1fa5ba1f286ae4cbd274eede93443002c15",
+          "bytes": 1948
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/RustR4L/src/main.rs",
+          "sha256": "e62497955d5839d88b53596e6be636201fca1281955bb2d834ff28526b1aadc7",
+          "bytes": 3973
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/RustR4L/Contract/LibraryContract.json",
+          "sha256": "3367ce9d44c12b83297573d7806c0e20fc82c53e375642d7c84b3886e31c2bbe",
+          "bytes": 12954
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/RustR4L/Contract/LibraryContract.baseline.json",
+          "sha256": "3367ce9d44c12b83297573d7806c0e20fc82c53e375642d7c84b3886e31c2bbe",
+          "bytes": 12954
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/RustR4L/Bindings/Rust/Cargo.toml",
+          "sha256": "ee1c3faa93f6ae54b548934a1be12230bf522708c57dd942d6921281258e84f1",
+          "bytes": 137
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/RustR4L/Bindings/C/l66r.h",
+          "sha256": "e2fd23e7432a677ad4ea06cdb6de29cde25146c19f1b5207999fc2e2ee16b5dd",
+          "bytes": 4984
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/RustR4L/Bindings/Zig/l66r.zig",
+          "sha256": "add020c5c2d38373c53e989888704436171cef7eb07cea228adabd881d6689de",
+          "bytes": 2985
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/RustR4L/Bindings/Rust/src/lib.rs",
+          "sha256": "60b0e8156c439cda1b56ec772a74237af412c6e551e453f33735a365f96536b3",
+          "bytes": 6880
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/RustR4L/Tests/Generated/contract_conformance.c",
+          "sha256": "df806d801e1ec7e1c7231fcd52c275359ff8b6682a72665e00e0d9f7584d5e02",
+          "bytes": 127
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/RustR4L/Tests/Generated/contract_conformance.zig",
+          "sha256": "3a54276d8395af9ee62fd4379d43bd81a4b35fb1b9ae8e89d8fd6b3e03726a35",
+          "bytes": 2602
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/R4LConsumers/Rust/Cargo.toml",
+          "sha256": "6b431afa4c54edeff9dafcb511a33825eaeb20b81201a5f86fd7c2ca942e1963",
+          "bytes": 303
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/R4LConsumers/Rust/Cargo.lock",
+          "sha256": "9c8b2ab2a5f16910a2035d55775fec0c12d0f792936dd1175dc884e4b816f92e",
+          "bytes": 433
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/R4LConsumers/Rust/module.R4MF",
+          "sha256": "0dd5ae03e7f629b0ad05da8a326ca9c207f8536b71e53e6a6fd99dde36ed2bda",
+          "bytes": 294
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/R4LConsumers/C/module.R4MF",
+          "sha256": "7c50aadb948252fcde3705a9444a392a348e5596b4649170bb281f2a79c00463",
+          "bytes": 268
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/R4LConsumers/Zig/module.R4MF",
+          "sha256": "e50181cfe9b2e7b8a4bdd206099cacdbdf856c50c7266039b2e4f30998730bf5",
+          "bytes": 388
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/R4LConsumers/Zig/src/main.zig",
+          "sha256": "d78dbc1ef0922b275c058d78f6032ee1ec237832f1104abf43f58af452e3e1fb",
+          "bytes": 5128
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/R4LConsumers/C/src/main.c",
+          "sha256": "6b31656002b0b5b18de2f24e8ab711ee030050f691485f7aa635026d1021ab46",
+          "bytes": 216
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/R4LConsumers/Rust/src/consumer.c",
+          "sha256": "b8eee7cbb527c61c00cf6c81f36e7cbb42196465ad675ce150ddfe2dc141e633",
+          "bytes": 49
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/R4LConsumers/Rust/src/main.rs",
+          "sha256": "1fe16cf8dd8fbb2dcaa2b396729aea94fe40388176b006c99dd2ce3ed790289c",
+          "bytes": 1741
+        },
+        {
+          "path": "Repositories/SDK/Tools/ModuleCatalog/src/capabilities.zig",
+          "sha256": "41f007c80a5af49d9dc39998f155994fd3f798d76e29f6004558d5fad902f68f",
+          "bytes": 16483
+        },
+        {
+          "path": "Repositories/SDK/build.zig",
+          "sha256": "ac23454e81fd9f1b66962f38d33ce378b167e708bb25277f332a8e36e103afb1",
+          "bytes": 41577
+        }
+      ],
+      "sdk_runtimes": {
+        "r4sdk_facades.o": {
+          "path": "Temp/SDKWorkTools/LibraryBare66/lib/r4sdk_facades.o",
+          "sha256": "c0cd3c22b9111e9213bee609f01d98059a4439c55b11ef6e4e55a96bdc75bb0f",
+          "bytes": 19600504
+        },
+        "r4sdk_storage.o": {
+          "path": "Temp/SDKWorkTools/LibraryBare66/lib/r4sdk_storage.o",
+          "sha256": "acd2f89fc7c792746ecdf878acefd22ecb294477b98803b6e3913ad87bd970c2",
+          "bytes": 44458160
+        }
       }
     }
   },

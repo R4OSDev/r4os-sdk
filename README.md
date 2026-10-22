@@ -873,3 +873,22 @@ entry; SSH controls setup/readback. Fixtures use `IMAGE_SCOPE=none` and explicit
 Indexed8 owner now preserves its 1024-byte palette, initializes the reserved
 64-byte gap and writes pixels at the unchanged offset1088. Complete boundaries,
 qualification and limits remain in the shared language-parity matrix.
+
+
+SDK0.64.85 adds genuine C/Rust Runtime-R4L provider roots. Zig retains its
+`IMPLEMENTATION_ZIG` module; C/Rust use their generated local table contracts
+without a dummy Zig implementation. Rust requires `BINDING_RUST` and builds
+through `Tools/Build-RustModule.ps1` using `r4os-rust-r4l-v1`, ordinary
+`r4l_entry`, Query and declared API exports. Matched toolsets can include
+both host `r4l-contract-gen` binaries; the builder checks their identity and
+the original contract/baseline/bindings before compilation. The SDK R4X-global
+`alloc` feature is rejected for shared providers. Keep explicit caller/session
+allocators and callbacks alive through actual close/quiescence. Exclude a nested
+generated `Bindings/Rust` workspace from the provider root workspace.
+`r4l::provider_header`/`r4l_provider!` and C `R4L_PROVIDER_QUERY` construct the
+existing common descriptors/entry. New `Templates/R4L/C` and `Rust` retain local
+contract generation. `-Dr4l-provider-tests-only=true` runs current manifest and
+contract cases; `-Dr4l-consumer-fixtures-only=true` builds the C/Zig consumers in
+`Tests/Build/R4LConsumers`. The genuine `CR4L`/`RustR4L` fixtures and Rust consumer
+use the same regular builders/loader. Current scope and six actual guest
+combinations remain in the shared parity matrix and report.

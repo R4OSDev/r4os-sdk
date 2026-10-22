@@ -61,6 +61,13 @@ _Static_assert(offsetof(R4LInterfaceHeader, abi_minor) == 14u, "R4LInterfaceHead
 _Static_assert(offsetof(R4LInterfaceHeader, interface_id_lo) == 16u, "R4LInterfaceHeader.interface_id_lo offset mismatch");
 _Static_assert(offsetof(R4LInterfaceHeader, interface_id_hi) == 24u, "R4LInterfaceHeader.interface_id_hi offset mismatch");
 
+/* Provider ABI stays the same as the generated consumer tables. The caller
+ * owns every allocator, session and callback through exact close/quiescence. */
+#define R4L_PROVIDER_QUERY(symbol_) \
+    void r4l_entry(void) {} \
+    R4LQuery symbol_ __attribute__((aligned(8),section(".data.r4l_exports"))) = \
+        {R4L_ABI_MAGIC,R4L_ABI_VERSION,sizeof(R4LQuery),0,0,0}
+
 static inline int r4xstart_context_valid(const R4XStartContext *ctx) {
     return ctx != 0 &&
         ctx->magic == R4XSTART_MAGIC &&

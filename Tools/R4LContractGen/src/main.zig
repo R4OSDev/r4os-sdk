@@ -131,7 +131,7 @@ const Paths = struct {
     exports: []const []const u8,
     contract: []const u8,
     baseline: []const u8,
-    implementation_zig: []const u8,
+    implementation_zig: ?[]const u8,
     binding_zig: []const u8,
     binding_c: []const u8,
     binding_rust: ?[]const u8,
@@ -189,7 +189,7 @@ pub fn main(init: std.process.Init) !void {
     switch (paths.action) {
         .check => {
             if (!std.mem.eql(u8, contract_bytes, canonical)) return error.ContractNotCanonical;
-            try checkFile(io, cwd, allocator, paths.implementation_zig, implementation_zig, error.ImplementationZigDrift);
+            if (paths.implementation_zig) |path| try checkFile(io, cwd, allocator, path, implementation_zig, error.ImplementationZigDrift);
             try checkFile(io, cwd, allocator, paths.binding_zig, binding_zig, error.BindingZigDrift);
             try checkFile(io, cwd, allocator, paths.binding_c, binding_c, error.BindingCDrift);
             if (paths.binding_rust) |path| try checkFile(io, cwd, allocator, path, binding_rust.?, error.BindingRustDrift);
@@ -200,7 +200,7 @@ pub fn main(init: std.process.Init) !void {
         .write => {
             try cwd.writeFile(io, .{ .sub_path = paths.contract, .data = canonical });
             if (paths.update_baseline) try cwd.writeFile(io, .{ .sub_path = paths.baseline, .data = canonical });
-            try cwd.writeFile(io, .{ .sub_path = paths.implementation_zig, .data = implementation_zig });
+            if (paths.implementation_zig) |path| try cwd.writeFile(io, .{ .sub_path = path, .data = implementation_zig });
             try cwd.writeFile(io, .{ .sub_path = paths.binding_zig, .data = binding_zig });
             try cwd.writeFile(io, .{ .sub_path = paths.binding_c, .data = binding_c });
             if (paths.binding_rust) |path| {
@@ -272,7 +272,7 @@ fn parseOptions(allocator: std.mem.Allocator, args: []const []const u8) !Paths {
     if (options.exports.items.len == 0) return error.MissingManifestExports;
     const contract = options.contract_path orelse return error.MissingContractPath;
     const baseline = options.baseline_path orelse return error.MissingBaselinePath;
-    const implementation_zig = options.implementation_zig_path orelse return error.MissingImplementationZigPath;
+    const implementation_zig = options.implementation_zig_path;
     const binding_zig = options.binding_zig_path orelse return error.MissingBindingZigPath;
     const binding_c = options.binding_c_path orelse return error.MissingBindingCPath;
     const fixture_zig = options.fixture_zig_path orelse return error.MissingFixtureZigPath;
@@ -312,7 +312,7 @@ fn printUsage() void {
         \\Usage: r4l-contract-gen --check|--write|--selftest
         \\       --module-name NAME --export PUBLIC:ELF_SYMBOL:REVISION [--export ...]
         \\       --contract PATH --baseline PATH
-        \\       --implementation-zig PATH --binding-zig PATH --binding-c PATH
+        \\       [--implementation-zig PATH] --binding-zig PATH --binding-c PATH
         \\       [--binding-rust PATH]  # library-local Rust consumer source
         \\       --fixture-zig PATH --fixture-c PATH --docs PATH
         \\       [--update-baseline]  # only together with --write

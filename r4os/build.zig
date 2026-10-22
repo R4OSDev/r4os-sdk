@@ -546,12 +546,12 @@ pub const Sdk = struct {
         const contract_check = self.addR4LContractCheck(loaded);
         const optimize = manifestOptimizeMode(loaded.manifest);
         self.b.getInstallStep().dependOn(&contract_check.step);
-        const implementation_modules = self.b.allocator.alloc(ZigModuleBuild, loaded.zig_modules.len + 1) catch @panic("OOM");
-        implementation_modules[0] = .{
-            .name = "r4l_contract",
-            .root_source_file = resolvedProjectPath(self.b, loaded.project_path, loaded.manifest.implementation_zig.?),
-        };
-        @memcpy(implementation_modules[1..], loaded.zig_modules);
+        const implementation_modules = if (loaded.manifest.language == .zig) blk: {
+            const modules = self.b.allocator.alloc(ZigModuleBuild, loaded.zig_modules.len + 1) catch @panic("OOM");
+            modules[0] = .{ .name = "r4l_contract", .root_source_file = resolvedProjectPath(self.b, loaded.project_path, loaded.manifest.implementation_zig.?) };
+            @memcpy(modules[1..], loaded.zig_modules);
+            break :blk modules;
+        } else &.{};
         const companion_count = loaded.source_paths.len - 1;
         const c_source_files = self.b.allocator.alloc(std.Build.LazyPath, companion_count) catch @panic("OOM");
         const explicit_include_roots = self.manifestCIncludeRoots(loaded);
@@ -563,12 +563,13 @@ pub const Sdk = struct {
             c_include_roots[index + 2] = userPath(self.b, std.fs.path.dirname(source_path) orelse loaded.project_path);
         }
         for (explicit_include_roots, companion_count + 2..) |include_root, index| c_include_roots[index] = include_root;
-        const c_library_include_roots = self.b.allocator.alloc(std.Build.LazyPath, explicit_include_roots.len + 2) catch @panic("OOM");
+        const c_library_include_roots = self.b.allocator.alloc(std.Build.LazyPath, explicit_include_roots.len + 3) catch @panic("OOM");
         c_library_include_roots[0] = resolvedProjectPath(self.b, loaded.project_path, std.fs.path.dirname(loaded.manifest.binding_c.?) orelse ".");
         c_library_include_roots[1] = self.profile.contract_c_include_root;
-        for (explicit_include_roots, 2..) |include_root, index| c_library_include_roots[index] = include_root;
+        c_library_include_roots[2] = self.profile.c_include_root;
+        for (explicit_include_roots, 3..) |include_root, index| c_library_include_roots[index] = include_root;
         const elf = switch (loaded.manifest.language.?) {
-            .rust => @panic("Rust R4L is not qualified"),
+            .rust => @panic("Rust R4L projects use SDK Tools/Build-RustModule.ps1 and matched host tools; no Zig provider fallback"),
             .zig => addRawModule(self.b, .{
                 .builder = self.builder,
                 .name = loaded.manifest.name,
@@ -637,7 +638,7 @@ pub const Sdk = struct {
         }
         addNamedProjectFile(run, self.b, loaded.project_path, "--contract", loaded.manifest.contract.?);
         addNamedProjectFile(run, self.b, loaded.project_path, "--baseline", loaded.manifest.contract_baseline.?);
-        addNamedProjectFile(run, self.b, loaded.project_path, "--implementation-zig", loaded.manifest.implementation_zig.?);
+        if (loaded.manifest.implementation_zig) |path| addNamedProjectFile(run, self.b, loaded.project_path, "--implementation-zig", path);
         addNamedProjectFile(run, self.b, loaded.project_path, "--binding-zig", loaded.manifest.binding_zig.?);
         addNamedProjectFile(run, self.b, loaded.project_path, "--binding-c", loaded.manifest.binding_c.?);
         if (loaded.manifest.binding_rust) |path| addNamedProjectFile(run, self.b, loaded.project_path, "--binding-rust", path);

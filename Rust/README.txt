@@ -352,11 +352,16 @@ The shared SDK module_capabilities.zig Decision supplies supported/code/reason,
 owner_contract and missing_steps. Installation of a compiler does not change
 these support decisions. Further Rust roles are deliberately separate work:
 
-R4L provider: current R4MF requires library-owned contract/baseline,
-implementation/bindings/conformance and regular Query/table exports. The
-generator supplies Zig/C/Rust consumers; a Rust provider still needs its real
-implementation entry, export/build and lifecycle qualification. Fake Zig
-SOURCE or unused IMPLEMENTATION_ZIG entries are forbidden.
+R4L provider (qualified since SDK0.64.85): a real Rust staticlib root uses
+its project-local generated contract/table types, baseline and ordinary
+Query/API exports. Build-RustModule.ps1 selects r4os-rust-r4l-v1 and requires
+the matching host r4l-contract-gen in the toolset. r4l::provider_header and
+r4l_provider! supply the common descriptor/entry, without R4XStart or an
+unused IMPLEMENTATION_ZIG. Exclude a nested generated Bindings/Rust workspace
+from the root Cargo workspace. The SDK R4X-global alloc feature is rejected;
+explicit caller allocators, session resources and callbacks remain resident
+until actual close/quiescence. No Rust mutable reference spans callbacks.
+Three actual consumers of two genuine provider languages pass in KVM4.
 
 R4D: the current driver builder owns r4d_init_entry, DriverInit/DriverShutdown,
 R4DEV callbacks and metadata. Rust needs an actual driver startup/packager and
@@ -380,8 +385,7 @@ SSH alone does not bind their application window before ProgramEntry.
 Rust lowlevel needs separate raw-entry stack/ABI/panic qualification. Native
 R4OS Rust builds need a compiler/toolchain port; R4CC implements the native C
 subset and is not a Rust compiler. Stable machine reason codes live in the
-shared Decision, not in an IDE-maintained matrix. Driver/protocol/library
-provider support and hardware qualification remain separate work.
+shared Decision, not in an IDE-maintained matrix. Driver/protocol support and hardware qualification remain separate work.
 
 Graphics owners (SDK0.64.76)
 ---------------------------
