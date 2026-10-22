@@ -1,4 +1,5 @@
 const std = @import("std");
+const rust = @import("rust.zig");
 
 const max_file_bytes: usize = 4 * 1024 * 1024;
 const interface_header_size: u32 = 32;
@@ -117,6 +118,7 @@ const Options = struct {
     implementation_zig_path: ?[]const u8 = null,
     binding_zig_path: ?[]const u8 = null,
     binding_c_path: ?[]const u8 = null,
+    binding_rust_path: ?[]const u8 = null,
     fixture_zig_path: ?[]const u8 = null,
     fixture_c_path: ?[]const u8 = null,
     docs_path: ?[]const u8 = null,
@@ -132,6 +134,7 @@ const Paths = struct {
     implementation_zig: []const u8,
     binding_zig: []const u8,
     binding_c: []const u8,
+    binding_rust: ?[]const u8,
     fixture_zig: []const u8,
     fixture_c: []const u8,
     docs: []const u8,
@@ -162,6 +165,8 @@ pub fn main(init: std.process.Init) !void {
     defer allocator.free(binding_zig);
     const binding_c = try renderBindingC(allocator, &parsed.value);
     defer allocator.free(binding_c);
+    const binding_rust = if (paths.binding_rust != null) try rust.render(allocator, &parsed.value) else null;
+    defer if (binding_rust) |text| allocator.free(text);
     const fixture_zig = try renderFixtureZig(allocator, &parsed.value);
     defer allocator.free(fixture_zig);
     const fixture_c = try renderFixtureC(allocator, &parsed.value);
@@ -187,6 +192,7 @@ pub fn main(init: std.process.Init) !void {
             try checkFile(io, cwd, allocator, paths.implementation_zig, implementation_zig, error.ImplementationZigDrift);
             try checkFile(io, cwd, allocator, paths.binding_zig, binding_zig, error.BindingZigDrift);
             try checkFile(io, cwd, allocator, paths.binding_c, binding_c, error.BindingCDrift);
+            if (paths.binding_rust) |path| try checkFile(io, cwd, allocator, path, binding_rust.?, error.BindingRustDrift);
             try checkFile(io, cwd, allocator, paths.fixture_zig, fixture_zig, error.FixtureZigDrift);
             try checkFile(io, cwd, allocator, paths.fixture_c, fixture_c, error.FixtureCDrift);
             try checkFile(io, cwd, allocator, paths.docs, docs, error.DocumentationDrift);
@@ -197,6 +203,10 @@ pub fn main(init: std.process.Init) !void {
             try cwd.writeFile(io, .{ .sub_path = paths.implementation_zig, .data = implementation_zig });
             try cwd.writeFile(io, .{ .sub_path = paths.binding_zig, .data = binding_zig });
             try cwd.writeFile(io, .{ .sub_path = paths.binding_c, .data = binding_c });
+            if (paths.binding_rust) |path| {
+                if (std.fs.path.dirname(path)) |parent| try cwd.createDirPath(io, parent);
+                try cwd.writeFile(io, .{ .sub_path = path, .data = binding_rust.? });
+            }
             try cwd.writeFile(io, .{ .sub_path = paths.fixture_zig, .data = fixture_zig });
             try cwd.writeFile(io, .{ .sub_path = paths.fixture_c, .data = fixture_c });
             try cwd.writeFile(io, .{ .sub_path = paths.docs, .data = docs });
@@ -241,6 +251,8 @@ fn parseOptions(allocator: std.mem.Allocator, args: []const []const u8) !Paths {
             options.binding_zig_path = try nextArg(args, &index);
         } else if (std.mem.eql(u8, arg, "--binding-c")) {
             options.binding_c_path = try nextArg(args, &index);
+        } else if (std.mem.eql(u8, arg, "--binding-rust")) {
+            options.binding_rust_path = try nextArg(args, &index);
         } else if (std.mem.eql(u8, arg, "--fixture-zig")) {
             options.fixture_zig_path = try nextArg(args, &index);
         } else if (std.mem.eql(u8, arg, "--fixture-c")) {
@@ -277,6 +289,7 @@ fn parseOptions(allocator: std.mem.Allocator, args: []const []const u8) !Paths {
         .implementation_zig = implementation_zig,
         .binding_zig = binding_zig,
         .binding_c = binding_c,
+        .binding_rust = options.binding_rust_path,
         .fixture_zig = fixture_zig,
         .fixture_c = fixture_c,
         .docs = docs,
@@ -300,6 +313,7 @@ fn printUsage() void {
         \\       --module-name NAME --export PUBLIC:ELF_SYMBOL:REVISION [--export ...]
         \\       --contract PATH --baseline PATH
         \\       --implementation-zig PATH --binding-zig PATH --binding-c PATH
+        \\       [--binding-rust PATH]  # library-local Rust consumer source
         \\       --fixture-zig PATH --fixture-c PATH --docs PATH
         \\       [--update-baseline]  # only together with --write
         \\
@@ -680,7 +694,7 @@ fn renderBindingC(allocator: std.mem.Allocator, contract: *const Contract) ![]u8
         try appendUpperIdentifier(&out, allocator, contract.module_name);
         try out.append(allocator, '_');
         try appendUpperIdentifier(&out, allocator, interface.zig_name);
-        try out.appendSlice(allocator, "_HEADER_INITIALIZER { R4L_INTERFACE_MAGIC, R4L_INTERFACE_HEADER_VERSION, 0u, ");
+        try emit(&out, allocator, "_HEADER_INITIALIZER {{ R4L_INTERFACE_MAGIC, R4L_INTERFACE_HEADER_VERSION, {d}u, ", .{interface.known_required_flags});
         try appendUpperIdentifier(&out, allocator, contract.module_name);
         try out.append(allocator, '_');
         try appendUpperIdentifier(&out, allocator, interface.zig_name);
@@ -727,6 +741,7 @@ fn renderBindingC(allocator: std.mem.Allocator, contract: *const Contract) ![]u8
         try emit(&out, allocator, "typedef struct {s}Client {{ const R4LInterfaceHeader *header; }} {s}Client;\n\nstatic inline int32_t {s}_{s}_init(const R4XStartContext *ctx, {s}Client *out_client) {{\n    if (out_client == 0) return R4L_BINDING_INVALID_EXPECTATION;\n    out_client->header = 0;\n    const R4XStartImport *item = r4xstart_find_import_named(ctx, \"{s}\", \"{s}\");\n    const R4LInterfaceExpectation expected = {{ 0x{x}ull, 0x{x}ull, {d}u, {d}u, {d}u, {d}u, 0u }};\n    const R4LInterfaceHeader *header = 0;\n    int32_t status = r4l_validate_import(item, &expected, &header);\n    if (status != R4L_BINDING_OK) return status;\n", .{ interface.c_type, interface.c_type, contract.c_prefix, interface.zig_name, interface.c_type, contract.module_name, interface.export_name, interface.interface_id_lo, interface.interface_id_hi, interface.abi_major, interface.revision, tableSize(interface), interface.known_required_flags });
         for (interface.functions) |function| try emit(&out, allocator, "    if (r4l_slot_address(header, {d}u) == 0) return R4L_BINDING_TABLE_TOO_SMALL;\n", .{interface_header_size + @as(u32, function.slot) * pointer_size});
         try out.appendSlice(allocator, "    out_client->header = header;\n    return R4L_BINDING_OK;\n}\n");
+        try emit(&out, allocator, "\nstatic inline int32_t {s}_{s}_init_optional(const R4XStartContext *ctx, {s}Client *out_client) {{\n    if (!out_client) return R4L_BINDING_INVALID_EXPECTATION;\n    out_client->header = 0;\n    if (!r4xstart_context_valid(ctx)) return R4L_BINDING_INVALID_IMPORT;\n    const R4XStartImport *item = r4xstart_find_import_named(ctx, \"{s}\", \"{s}\");\n    if (!item || (item->table == 0 && item->resolved_version == 0 && item->group_id == 0 && item->flags == 0 && item->min_version != 0)) return R4L_BINDING_ABSENT;\n    return {s}_{s}_init(ctx, out_client);\n}}\n", .{ contract.c_prefix, interface.zig_name, interface.c_type, contract.module_name, interface.export_name, contract.c_prefix, interface.zig_name });
         for (interface.functions) |function| {
             const fn_type = try cFunctionTypeNameAlloc(allocator, interface.c_type, function.name);
             defer allocator.free(fn_type);
@@ -978,6 +993,14 @@ test "contract check rejects slot signature and layout drift" {
     const allocator = std.testing.allocator;
     try validateContract(&contract);
     try validateManifestIdentity(&contract, "ACME", &.{"API_V1:acme_api_v1:1"});
+    interfaces[0].known_required_flags = 1;
+    const c_flags = try renderBindingC(allocator, &contract);
+    defer allocator.free(c_flags);
+    try std.testing.expect(std.mem.indexOf(u8, c_flags, "R4L_INTERFACE_HEADER_VERSION, 1u, ") != null);
+    const rust_flags = try rust.render(allocator, &contract);
+    defer allocator.free(rust_flags);
+    try std.testing.expect(std.mem.indexOf(u8, rust_flags, "known_required_flags: 1") != null);
+    interfaces[0].known_required_flags = 0;
     try std.testing.expectError(error.ManifestModuleNameDrift, validateManifestIdentity(&contract, "OTHER", &.{"API_V1:acme_api_v1:1"}));
     try std.testing.expectError(error.ManifestExportRevisionDrift, validateManifestIdentity(&contract, "ACME", &.{"API_V1:acme_api_v1:2"}));
     try std.testing.expectError(error.ManifestExportSymbolDrift, validateManifestIdentity(&contract, "ACME", &.{"API_V1:other_symbol:1"}));

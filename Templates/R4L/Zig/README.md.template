@@ -3,7 +3,7 @@
 {Description}
 
 This library is an independent unit. Its contract, baseline, implementation,
-Zig and C bindings, conformance fixtures, and tests remain together.
+Zig, C and Rust consumer bindings, conformance fixtures, and tests remain together.
 module.R4MF is the build and image source of truth.
 
 Build and test:
@@ -16,3 +16,7 @@ Intentionally evolve the contract:
 
 Supply the paths defined by module.R4MF. Normal builds only verify materialized
 contract files and never rewrite sources.
+The BINDING_RUST output is generated from the same local contract. Its
+Bindings/Rust/Cargo.toml owns the independent consumer crate version; the
+provider implementation stays Zig. Rust consumers select that path crate
+and the matched r4os-sdk explicitly in their own Cargo project.

@@ -38,6 +38,12 @@ pub fn build(b: *std.Build) void {
         return;
     }
     const sdk_profile = Sdk.init(b, .{ .contract_dependency = contract_dependency });
+    const r4l_generator_tests = b.addRunArtifact(b.addTest(.{ .root_module = sdk_profile.r4l_contract_generator.?.root_module }));
+    b.step("r4l-contract-test", "Run the existing library contract generator cases").dependOn(&r4l_generator_tests.step);
+    if (b.option(bool, "r4l-contract-generator-only", "Build only the host library contract generator") orelse false) {
+        b.installArtifact(sdk_profile.r4l_contract_generator.?);
+        return;
+    }
     if (b.option(bool, "heap-host-test-only", "Build the native SDK heap object for its host interop test") orelse false) {
         const root = b.createModule(.{ .root_source_file = b.path("r4os/heap_runtime.zig"), .target = b.graph.host, .optimize = .ReleaseSafe, .pic = true, .single_threaded = false, .stack_check = false });
         root.addImport("r4os_contract", contract_dependency.module("r4os_contract"));

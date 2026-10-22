@@ -367,21 +367,21 @@
       "semantics": "Genauen Import/Interface-ID/Major/Revision/Groesse/Flags pruefen, optionale Nullimports erhalten, geladene Instanzgeneration waehrend Leihen/Callbacks festhalten; lokale Library bleibt Vertragseigner.",
       "current_only": "current_function",
       "rust": {
-        "state": "missing_higher_facade",
-        "source": "Repositories/SDK/Rust/src/lib.rs",
-        "gap": "Zentraler Rust-Rohvertrag ersetzt keine Rust-Consumerbindings fuer lokale R4Ls. C-Resolver und lokale C-Vertraege vorhanden; neue Generierung und ihre Driftpruefung an lokale Besitzer binden."
+        "state": "qualified_current_local_contract_consumers",
+        "source": "Repositories/SDK/Rust/src/r4l.rs",
+        "gap": "SDK71/Contract44: generischer gepruefter Interface-/Query-Zugang, explizite optionale Abwesenheit und App-geborgte Clients. Zwoelf lokale Rust-Crates aus denselben unveraenderten LibraryContracts; hoehere Fachfassaden bleiben ihren Wellen zugeordnet. Rust-Providerrollen folgen66."
       },
       "c": {
         "state": "existing_facade_review_required",
         "sources": [
           "Repositories/SDK/Shared/C/include/r4os/r4l.h"
         ],
-        "gap": "Bestehende C-Fassade erhalten; nur fehlende aktuelle Funktionen/hoeheren Hilfen und deren Semantik gegen die verlinkten Zig-Deklarationen schliessen."
+        "gap": "Bestehender Resolver qualifiziert;52 ergaenzt ausdrueckliche optionale Clients, Query-Metadaten und korrekte nichtleere Pflichtflags im Initialisierer. Lokale C-Conformance aller12 Libraries gueltig. Hoehere Fachhilfen bleiben ihre eigenen Wellen."
       },
       "evidence": [
         "source_inventory"
       ],
-      "shared_core": "SDK Tools/R4LContractGen und je Library Contract/LibraryContract.json statt zentraler zweiter Library-API."
+      "shared_core": "SDK Tools/R4LContractGen mit sprachbezogener Rustprojektion und je Library Contract/LibraryContract.json; Baselines/Implementation/Zig unveraendert. Qualifikation52 in Docs/SDK/LanguageParity.txt."
     },
     {
       "id": "files-registry-console",
@@ -12693,9 +12693,20 @@
         "Repositories/Libraries/R4ACO/Bindings/C/r4aco.h"
       ],
       "rust": {
-        "state": "no_generated_consumer_binding",
-        "sources": [],
-        "gap": "Lokale Vertragsprojektion/Resolver in52; alle verlinkten hoeheren Zig-Helfer in60 mit gleichem Verhalten bereitstellen. Rust-Implementierungsquellen anderer Libraries sind keine Consumerbindings."
+        "state": "local_contract_consumer_qualified_higher_helpers_pending",
+        "sources": [
+          "Repositories/Libraries/R4ACO/Bindings/Rust/src/lib.rs"
+        ],
+        "gap": "Lokale Raw-Vertragsprojektion/Resolver52 abgenommen; alle hoeheren Zig-Helfer bleiben in der bestehenden Fachwelle dieses Eintrags. Rust-Providerimplementierung ist kein Teil der Consumerfreigabe.",
+        "binding_qualification": {
+          "subversion": "0.86.52",
+          "sdk": "0.64.71",
+          "contract": "0.64.44",
+          "crate": "r4os-r4aco",
+          "source_sha256": "b80e918e2d27e112fd279792e1f4a146f173de24e5698aa84233ced55c442afb",
+          "scope": "alle lokalen Typen/Slots/IDs/Revisionen/Flags aus unveraenderter Librarybaseline; App-geborgene Clients, unsafe Operationen mit Besitzervertrag",
+          "evidence": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.52"
+        }
       },
       "c": {
         "state": "generated_local_contract_present_higher_helpers_review",
@@ -12778,9 +12789,20 @@
         "Repositories/Libraries/R4AMD/Bindings/C/r4amd.h"
       ],
       "rust": {
-        "state": "no_generated_consumer_binding",
-        "sources": [],
-        "gap": "Lokale Vertragsprojektion/Resolver in52; alle verlinkten hoeheren Zig-Helfer in60 mit gleichem Verhalten bereitstellen. Rust-Implementierungsquellen anderer Libraries sind keine Consumerbindings."
+        "state": "local_contract_consumer_qualified_higher_helpers_pending",
+        "sources": [
+          "Repositories/Libraries/R4AMD/Bindings/Rust/src/lib.rs"
+        ],
+        "gap": "Lokale Raw-Vertragsprojektion/Resolver52 abgenommen; alle hoeheren Zig-Helfer bleiben in der bestehenden Fachwelle dieses Eintrags. Rust-Providerimplementierung ist kein Teil der Consumerfreigabe.",
+        "binding_qualification": {
+          "subversion": "0.86.52",
+          "sdk": "0.64.71",
+          "contract": "0.64.44",
+          "crate": "r4os-r4amd",
+          "source_sha256": "0852125ac3832e0a65a153e3548d9569bef16637fda8a26a9774fc2fd6cb0559",
+          "scope": "alle lokalen Typen/Slots/IDs/Revisionen/Flags aus unveraenderter Librarybaseline; App-geborgene Clients, unsafe Operationen mit Besitzervertrag",
+          "evidence": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.52"
+        }
       },
       "c": {
         "state": "generated_local_contract_present_higher_helpers_review",
@@ -12836,9 +12858,20 @@
         "Repositories/Libraries/R4ENC/Bindings/C/r4enc.h"
       ],
       "rust": {
-        "state": "no_generated_consumer_binding",
-        "sources": [],
-        "gap": "Lokale Vertragsprojektion/Resolver in52; alle verlinkten hoeheren Zig-Helfer in60 mit gleichem Verhalten bereitstellen. Rust-Implementierungsquellen anderer Libraries sind keine Consumerbindings."
+        "state": "local_contract_consumer_qualified_higher_helpers_pending",
+        "sources": [
+          "Repositories/Libraries/R4ENC/Bindings/Rust/src/lib.rs"
+        ],
+        "gap": "Lokale Raw-Vertragsprojektion/Resolver52 abgenommen; alle hoeheren Zig-Helfer bleiben in der bestehenden Fachwelle dieses Eintrags. Rust-Providerimplementierung ist kein Teil der Consumerfreigabe.",
+        "binding_qualification": {
+          "subversion": "0.86.52",
+          "sdk": "0.64.71",
+          "contract": "0.64.44",
+          "crate": "r4os-r4enc",
+          "source_sha256": "0da10d14abefb0b8d1930a128ea574ff2c09093f2d222442be379219651182a2",
+          "scope": "alle lokalen Typen/Slots/IDs/Revisionen/Flags aus unveraenderter Librarybaseline; App-geborgene Clients, unsafe Operationen mit Besitzervertrag",
+          "evidence": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.52"
+        }
       },
       "c": {
         "state": "generated_local_contract_present_higher_helpers_review",
@@ -12899,9 +12932,20 @@
         "Repositories/Libraries/R4FONT/Bindings/C/r4font.h"
       ],
       "rust": {
-        "state": "no_generated_consumer_binding",
-        "sources": [],
-        "gap": "Lokale Vertragsprojektion/Resolver in52; alle verlinkten hoeheren Zig-Helfer in59 mit gleichem Verhalten bereitstellen. Rust-Implementierungsquellen anderer Libraries sind keine Consumerbindings."
+        "state": "local_contract_consumer_qualified_higher_helpers_pending",
+        "sources": [
+          "Repositories/Libraries/R4FONT/Bindings/Rust/src/lib.rs"
+        ],
+        "gap": "Lokale Raw-Vertragsprojektion/Resolver52 abgenommen; alle hoeheren Zig-Helfer bleiben in der bestehenden Fachwelle dieses Eintrags. Rust-Providerimplementierung ist kein Teil der Consumerfreigabe.",
+        "binding_qualification": {
+          "subversion": "0.86.52",
+          "sdk": "0.64.71",
+          "contract": "0.64.44",
+          "crate": "r4os-r4font",
+          "source_sha256": "6bd8bff40512a0f1f95d56392bee2d876f43c6b42717a95ed09a7bcc5eb998f1",
+          "scope": "alle lokalen Typen/Slots/IDs/Revisionen/Flags aus unveraenderter Librarybaseline; App-geborgene Clients, unsafe Operationen mit Besitzervertrag",
+          "evidence": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.52"
+        }
       },
       "c": {
         "state": "generated_local_contract_present_higher_helpers_review",
@@ -13050,9 +13094,20 @@
         "Repositories/Libraries/R4GFX/Bindings/C/r4gfx.h"
       ],
       "rust": {
-        "state": "no_generated_consumer_binding",
-        "sources": [],
-        "gap": "Lokale Vertragsprojektion/Resolver in52; alle verlinkten hoeheren Zig-Helfer in60 mit gleichem Verhalten bereitstellen. Rust-Implementierungsquellen anderer Libraries sind keine Consumerbindings."
+        "state": "local_contract_consumer_qualified_higher_helpers_pending",
+        "sources": [
+          "Repositories/Libraries/R4GFX/Bindings/Rust/src/lib.rs"
+        ],
+        "gap": "Lokale Raw-Vertragsprojektion/Resolver52 abgenommen; alle hoeheren Zig-Helfer bleiben in der bestehenden Fachwelle dieses Eintrags. Rust-Providerimplementierung ist kein Teil der Consumerfreigabe.",
+        "binding_qualification": {
+          "subversion": "0.86.52",
+          "sdk": "0.64.71",
+          "contract": "0.64.44",
+          "crate": "r4os-r4gfx",
+          "source_sha256": "8ab6536e2b519480724eb8fd643254b81f9f844886c0f87abb4a73573e0adac4",
+          "scope": "alle lokalen Typen/Slots/IDs/Revisionen/Flags aus unveraenderter Librarybaseline; App-geborgene Clients, unsafe Operationen mit Besitzervertrag",
+          "evidence": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.52"
+        }
       },
       "c": {
         "state": "generated_local_contract_present_higher_helpers_review",
@@ -13101,9 +13156,20 @@
         "Repositories/Libraries/R4GL/Bindings/C/r4gl_api.h"
       ],
       "rust": {
-        "state": "no_generated_consumer_binding",
-        "sources": [],
-        "gap": "Lokale Vertragsprojektion/Resolver in52; alle verlinkten hoeheren Zig-Helfer in60 mit gleichem Verhalten bereitstellen. Rust-Implementierungsquellen anderer Libraries sind keine Consumerbindings."
+        "state": "local_contract_consumer_qualified_higher_helpers_pending",
+        "sources": [
+          "Repositories/Libraries/R4GL/Bindings/Rust/src/lib.rs"
+        ],
+        "gap": "Lokale Raw-Vertragsprojektion/Resolver52 abgenommen; alle hoeheren Zig-Helfer bleiben in der bestehenden Fachwelle dieses Eintrags. Rust-Providerimplementierung ist kein Teil der Consumerfreigabe.",
+        "binding_qualification": {
+          "subversion": "0.86.52",
+          "sdk": "0.64.71",
+          "contract": "0.64.44",
+          "crate": "r4os-r4gl",
+          "source_sha256": "c4e80e8649d7d5547cd63a0200e304333dbfea19579f68477f26961c5389968a",
+          "scope": "alle lokalen Typen/Slots/IDs/Revisionen/Flags aus unveraenderter Librarybaseline; App-geborgene Clients, unsafe Operationen mit Besitzervertrag",
+          "evidence": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.52"
+        }
       },
       "c": {
         "state": "generated_local_contract_present_higher_helpers_review",
@@ -13179,9 +13245,20 @@
         "Repositories/Libraries/R4IMG/Bindings/C/r4img.h"
       ],
       "rust": {
-        "state": "no_generated_consumer_binding",
-        "sources": [],
-        "gap": "Lokale Vertragsprojektion/Resolver in52; alle verlinkten hoeheren Zig-Helfer in59 mit gleichem Verhalten bereitstellen. Rust-Implementierungsquellen anderer Libraries sind keine Consumerbindings."
+        "state": "local_contract_consumer_qualified_higher_helpers_pending",
+        "sources": [
+          "Repositories/Libraries/R4IMG/Bindings/Rust/src/lib.rs"
+        ],
+        "gap": "Lokale Raw-Vertragsprojektion/Resolver52 abgenommen; alle hoeheren Zig-Helfer bleiben in der bestehenden Fachwelle dieses Eintrags. Rust-Providerimplementierung ist kein Teil der Consumerfreigabe.",
+        "binding_qualification": {
+          "subversion": "0.86.52",
+          "sdk": "0.64.71",
+          "contract": "0.64.44",
+          "crate": "r4os-r4img",
+          "source_sha256": "146bd23a2bb4b0031fce247f717da99b3cc775240a99a3bfb48b25d2b7354187",
+          "scope": "alle lokalen Typen/Slots/IDs/Revisionen/Flags aus unveraenderter Librarybaseline; App-geborgene Clients, unsafe Operationen mit Besitzervertrag",
+          "evidence": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.52"
+        }
       },
       "c": {
         "state": "generated_local_contract_present_higher_helpers_review",
@@ -13231,9 +13308,20 @@
         "Repositories/Libraries/R4NAK/Bindings/C/r4nak.h"
       ],
       "rust": {
-        "state": "no_generated_consumer_binding",
-        "sources": [],
-        "gap": "Lokale Vertragsprojektion/Resolver in52; alle verlinkten hoeheren Zig-Helfer in60 mit gleichem Verhalten bereitstellen. Rust-Implementierungsquellen anderer Libraries sind keine Consumerbindings."
+        "state": "local_contract_consumer_qualified_higher_helpers_pending",
+        "sources": [
+          "Repositories/Libraries/R4NAK/Bindings/Rust/src/lib.rs"
+        ],
+        "gap": "Lokale Raw-Vertragsprojektion/Resolver52 abgenommen; alle hoeheren Zig-Helfer bleiben in der bestehenden Fachwelle dieses Eintrags. Rust-Providerimplementierung ist kein Teil der Consumerfreigabe.",
+        "binding_qualification": {
+          "subversion": "0.86.52",
+          "sdk": "0.64.71",
+          "contract": "0.64.44",
+          "crate": "r4os-r4nak",
+          "source_sha256": "57ed6483c26b401bf139c6cdbc5eabd6bf69df74bab9ee78a09693aa4cff41c7",
+          "scope": "alle lokalen Typen/Slots/IDs/Revisionen/Flags aus unveraenderter Librarybaseline; App-geborgene Clients, unsafe Operationen mit Besitzervertrag",
+          "evidence": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.52"
+        }
       },
       "c": {
         "state": "generated_local_contract_present_higher_helpers_review",
@@ -13304,9 +13392,20 @@
         "Repositories/Libraries/R4NV/Bindings/C/r4nv.h"
       ],
       "rust": {
-        "state": "no_generated_consumer_binding",
-        "sources": [],
-        "gap": "Lokale Vertragsprojektion/Resolver in52; alle verlinkten hoeheren Zig-Helfer in60 mit gleichem Verhalten bereitstellen. Rust-Implementierungsquellen anderer Libraries sind keine Consumerbindings."
+        "state": "local_contract_consumer_qualified_higher_helpers_pending",
+        "sources": [
+          "Repositories/Libraries/R4NV/Bindings/Rust/src/lib.rs"
+        ],
+        "gap": "Lokale Raw-Vertragsprojektion/Resolver52 abgenommen; alle hoeheren Zig-Helfer bleiben in der bestehenden Fachwelle dieses Eintrags. Rust-Providerimplementierung ist kein Teil der Consumerfreigabe.",
+        "binding_qualification": {
+          "subversion": "0.86.52",
+          "sdk": "0.64.71",
+          "contract": "0.64.44",
+          "crate": "r4os-r4nv",
+          "source_sha256": "c1d628aa9fdfa23aabacbd4fa838d391f5842c586d8ce7ee4ca76546322ec2e7",
+          "scope": "alle lokalen Typen/Slots/IDs/Revisionen/Flags aus unveraenderter Librarybaseline; App-geborgene Clients, unsafe Operationen mit Besitzervertrag",
+          "evidence": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.52"
+        }
       },
       "c": {
         "state": "generated_local_contract_present_higher_helpers_review",
@@ -13462,12 +13561,22 @@
         "Repositories/Libraries/R4STD/Bindings/C/r4std_abi.h"
       ],
       "rust": {
-        "state": "independent_text_primitives_only",
+        "state": "local_contract_consumer_qualified_higher_helpers_pending",
         "sources": [
           "Repositories/Libraries/R4STD/Rust/lib.rs",
-          "Repositories/Libraries/R4STD/Rust/utf16.rs"
+          "Repositories/Libraries/R4STD/Rust/utf16.rs",
+          "Repositories/Libraries/R4STD/Bindings/Rust/src/lib.rs"
         ],
-        "gap": "Lokale Vertragsprojektion/Resolver in52; alle verlinkten hoeheren Zig-Helfer in59 mit gleichem Verhalten bereitstellen. Rust-Implementierungsquellen anderer Libraries sind keine Consumerbindings."
+        "gap": "Lokale Raw-Vertragsprojektion/Resolver52 abgenommen; alle hoeheren Zig-Helfer bleiben in der bestehenden Fachwelle dieses Eintrags. Rust-Providerimplementierung ist kein Teil der Consumerfreigabe.",
+        "binding_qualification": {
+          "subversion": "0.86.52",
+          "sdk": "0.64.71",
+          "contract": "0.64.44",
+          "crate": "r4os-r4std",
+          "source_sha256": "dabd260e38b6667757261d4aabd55485ec5c7e55fcc6031f596e9b64b848df70",
+          "scope": "alle lokalen Typen/Slots/IDs/Revisionen/Flags aus unveraenderter Librarybaseline; App-geborgene Clients, unsafe Operationen mit Besitzervertrag",
+          "evidence": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.52"
+        }
       },
       "c": {
         "state": "generated_local_contract_present_higher_helpers_review",
@@ -13525,9 +13634,20 @@
         "Repositories/Libraries/R4VIDEO/Bindings/C/r4video.h"
       ],
       "rust": {
-        "state": "no_generated_consumer_binding",
-        "sources": [],
-        "gap": "Lokale Vertragsprojektion/Resolver in52; alle verlinkten hoeheren Zig-Helfer in60 mit gleichem Verhalten bereitstellen. Rust-Implementierungsquellen anderer Libraries sind keine Consumerbindings."
+        "state": "local_contract_consumer_qualified_higher_helpers_pending",
+        "sources": [
+          "Repositories/Libraries/R4VIDEO/Bindings/Rust/src/lib.rs"
+        ],
+        "gap": "Lokale Raw-Vertragsprojektion/Resolver52 abgenommen; alle hoeheren Zig-Helfer bleiben in der bestehenden Fachwelle dieses Eintrags. Rust-Providerimplementierung ist kein Teil der Consumerfreigabe.",
+        "binding_qualification": {
+          "subversion": "0.86.52",
+          "sdk": "0.64.71",
+          "contract": "0.64.44",
+          "crate": "r4os-r4video",
+          "source_sha256": "5e59f26cc4c53e7d3576c0cf35def76853a1d89ffc64bdfc2181bd33303c1a2c",
+          "scope": "alle lokalen Typen/Slots/IDs/Revisionen/Flags aus unveraenderter Librarybaseline; App-geborgene Clients, unsafe Operationen mit Besitzervertrag",
+          "evidence": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.52"
+        }
       },
       "c": {
         "state": "generated_local_contract_present_higher_helpers_review",
@@ -13574,9 +13694,20 @@
         "Repositories/Libraries/R4VK/Bindings/C/r4vk_wsi.h"
       ],
       "rust": {
-        "state": "no_generated_consumer_binding",
-        "sources": [],
-        "gap": "Lokale Vertragsprojektion/Resolver in52; alle verlinkten hoeheren Zig-Helfer in60 mit gleichem Verhalten bereitstellen. Rust-Implementierungsquellen anderer Libraries sind keine Consumerbindings."
+        "state": "local_contract_consumer_qualified_higher_helpers_pending",
+        "sources": [
+          "Repositories/Libraries/R4VK/Bindings/Rust/src/lib.rs"
+        ],
+        "gap": "Lokale Raw-Vertragsprojektion/Resolver52 abgenommen; alle hoeheren Zig-Helfer bleiben in der bestehenden Fachwelle dieses Eintrags. Rust-Providerimplementierung ist kein Teil der Consumerfreigabe.",
+        "binding_qualification": {
+          "subversion": "0.86.52",
+          "sdk": "0.64.71",
+          "contract": "0.64.44",
+          "crate": "r4os-r4vk",
+          "source_sha256": "33bac0ac4ae5c5939001d88c51f2d3c0123028fd72eb75997b6a7623c4e70f36",
+          "scope": "alle lokalen Typen/Slots/IDs/Revisionen/Flags aus unveraenderter Librarybaseline; App-geborgene Clients, unsafe Operationen mit Besitzervertrag",
+          "evidence": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.52"
+        }
       },
       "c": {
         "state": "generated_local_contract_present_higher_helpers_review",

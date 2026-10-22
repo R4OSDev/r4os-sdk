@@ -194,15 +194,34 @@ loader and kernel are unchanged. Evidence: Docs/SDK/LanguageParity.txt.
 
 Other module roles (0.86.38)
 ---------------------------
+Library consumers (SDK0.64.71)
+------------------------------
+Each current library publishes a generated Bindings/Rust/src/lib.rs and a
+local Cargo package such as r4os-r4std0.1.0. Its crate version belongs to Cargo;
+the provider module version and interface revision remain distinct facts.
+Select the path dependency and explicitly admit its Libraries root in the
+module builder. No provider rewrite or global Zig installation is required.
+
+For example, r4os_r4std::TextV1Client::init(app) validates the declared import,
+ID/major/revision/size/flags and every required slot. The client borrows App
+and cannot cross that loan or move to another thread. Its unsafe operation
+methods preserve raw status values and the library's ownership/lifetime/
+blocking/threading/reentrancy rules, documented from the same local contract.
+::optional(app) explicitly permits absence; incompatible loaded tables fail.
+The SDK r4l::query helper reads standalone Query metadata, separate from a
+named table or platform API. Rust raw records/tables assert all local sizes,
+alignments and field/slot offsets during compilation. Higher library helper
+facades remain their own parity waves; these are complete contract consumers.
+
 The shared SDK module_capabilities.zig Decision supplies supported/code/reason,
 owner_contract and missing_steps. Installation of a compiler does not change
 these support decisions. Further Rust roles are deliberately separate work:
 
-R4L: current R4MF requires library-owned contract/baseline, IMPLEMENTATION_ZIG,
-Zig/C bindings/conformance and regular Query/table export generation. The R4L
-contract generator emits Zig/C only. Rust needs its real implementation and
-local contract/generator/build/consumer qualification; fake Zig SOURCE or
-unused IMPLEMENTATION_ZIG entries are forbidden.
+R4L provider: current R4MF requires library-owned contract/baseline,
+implementation/bindings/conformance and regular Query/table exports. The
+generator supplies Zig/C/Rust consumers; a Rust provider still needs its real
+implementation entry, export/build and lifecycle qualification. Fake Zig
+SOURCE or unused IMPLEMENTATION_ZIG entries are forbidden.
 
 R4D: the current driver builder owns r4d_init_entry, DriverInit/DriverShutdown,
 R4DEV callbacks and metadata. Rust needs an actual driver startup/packager and

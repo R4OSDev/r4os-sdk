@@ -195,6 +195,7 @@ pub const Manifest = struct {
     implementation_zig: ?[]const u8 = null,
     binding_zig: ?[]const u8 = null,
     binding_c: ?[]const u8 = null,
+    binding_rust: ?[]const u8 = null,
     conformance_zig: ?[]const u8 = null,
     conformance_c: ?[]const u8 = null,
     api_reference: ?[]const u8 = null,
@@ -290,6 +291,7 @@ fn parseV2(allocator: std.mem.Allocator, path: []const u8, text: []const u8) !Ma
     var implementation_zig: ?[]const u8 = null;
     var binding_zig: ?[]const u8 = null;
     var binding_c: ?[]const u8 = null;
+    var binding_rust: ?[]const u8 = null;
     var conformance_zig: ?[]const u8 = null;
     var conformance_c: ?[]const u8 = null;
     var api_reference: ?[]const u8 = null;
@@ -363,6 +365,8 @@ fn parseV2(allocator: std.mem.Allocator, path: []const u8, text: []const u8) !Ma
             try setSingle(&binding_zig, field.value);
         } else if (std.mem.eql(u8, field.key, "BINDING_C")) {
             try setSingle(&binding_c, field.value);
+        } else if (std.mem.eql(u8, field.key, "BINDING_RUST")) {
+            try setSingle(&binding_rust, field.value);
         } else if (std.mem.eql(u8, field.key, "CONFORMANCE_ZIG")) {
             try setSingle(&conformance_zig, field.value);
         } else if (std.mem.eql(u8, field.key, "CONFORMANCE_C")) {
@@ -531,6 +535,7 @@ fn parseV2(allocator: std.mem.Allocator, path: []const u8, text: []const u8) !Ma
         try validateLocalContractPath(implementation_path, ".zig");
         try validateLocalContractPath(zig_path, ".zig");
         try validateLocalContractPath(c_path, ".h");
+        if (binding_rust) |binding_path| try validateLocalContractPath(binding_path, ".rs");
         try validateLocalContractPath(fixture_zig_path, ".zig");
         try validateLocalContractPath(fixture_c_path, ".c");
         try validateLocalContractPath(api_path, ".md");
@@ -540,7 +545,7 @@ fn parseV2(allocator: std.mem.Allocator, path: []const u8, text: []const u8) !Ma
         // Projekte und besitzen ihren Buildvertrag im angegebenen Fixture-
         // Generator statt in diesem beschreibenden Installationsmanifest.
     } else if (exports.items.len != 0 or contract != null or contract_baseline != null or implementation_zig != null or
-        binding_zig != null or binding_c != null or conformance_zig != null or conformance_c != null or api_reference != null)
+        binding_zig != null or binding_c != null or binding_rust != null or conformance_zig != null or conformance_c != null or api_reference != null)
     {
         return error.NonR4LContractFieldForbidden;
     }
@@ -577,6 +582,7 @@ fn parseV2(allocator: std.mem.Allocator, path: []const u8, text: []const u8) !Ma
         .implementation_zig = implementation_zig,
         .binding_zig = binding_zig,
         .binding_c = binding_c,
+        .binding_rust = binding_rust,
         .conformance_zig = conformance_zig,
         .conformance_c = conformance_c,
         .api_reference = api_reference,

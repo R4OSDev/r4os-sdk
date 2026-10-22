@@ -634,6 +634,7 @@ pub const Sdk = struct {
         addNamedProjectFile(run, self.b, loaded.project_path, "--implementation-zig", loaded.manifest.implementation_zig.?);
         addNamedProjectFile(run, self.b, loaded.project_path, "--binding-zig", loaded.manifest.binding_zig.?);
         addNamedProjectFile(run, self.b, loaded.project_path, "--binding-c", loaded.manifest.binding_c.?);
+        if (loaded.manifest.binding_rust) |path| addNamedProjectFile(run, self.b, loaded.project_path, "--binding-rust", path);
         addNamedProjectFile(run, self.b, loaded.project_path, "--fixture-zig", loaded.manifest.conformance_zig.?);
         addNamedProjectFile(run, self.b, loaded.project_path, "--fixture-c", loaded.manifest.conformance_c.?);
         addNamedProjectFile(run, self.b, loaded.project_path, "--docs", loaded.manifest.api_reference.?);

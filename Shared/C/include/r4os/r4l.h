@@ -13,6 +13,7 @@
 #define R4L_INTERFACE_REQUIRED_FLAG_MASK 0x00ffu
 
 #define R4L_BINDING_OK 0
+#define R4L_BINDING_ABSENT 1
 #define R4L_BINDING_INVALID_IMPORT (-1001)
 #define R4L_BINDING_MANIFEST_REVISION_TOO_OLD (-1002)
 #define R4L_BINDING_MISALIGNED_TABLE (-1003)
@@ -27,6 +28,7 @@
 #define R4L_BINDING_REVISION_TOO_OLD (-1012)
 #define R4L_BINDING_TABLE_TOO_SMALL (-1013)
 #define R4L_BINDING_INVALID_EXPECTATION (-1014)
+#define R4L_BINDING_INVALID_QUERY (-1015)
 
 typedef struct R4LInterfaceHeader {
     uint32_t magic;
@@ -135,6 +137,20 @@ static inline int32_t r4l_validate_import(const R4XStartImport *item, const R4LI
     if (header->abi_minor < expected->min_revision) return R4L_BINDING_REVISION_TOO_OLD;
     if (header->size < expected->required_size) return R4L_BINDING_TABLE_TOO_SMALL;
     *out_header = header;
+    return R4L_BINDING_OK;
+}
+
+/* Query is current standalone-library metadata, distinct from a named API. */
+static inline int32_t r4l_query_metadata(const R4XStartContext *ctx, const char *module, const R4LQuery **out_query) {
+    if (!out_query) return R4L_BINDING_INVALID_EXPECTATION;
+    *out_query = 0;
+    const R4XStartImport *item = r4xstart_find_import_named(ctx,module,"Query");
+    if (!item || item->group_id != 0 || item->table == 0 || item->min_version == 0 || item->resolved_version < item->min_version) return R4L_BINDING_INVALID_IMPORT;
+    if (item->table % _Alignof(R4LQuery)) return R4L_BINDING_MISALIGNED_TABLE;
+    const R4LQuery *query = (const R4LQuery *)(uintptr_t)item->table;
+    if (item->resolved_version != 1 || query->magic != R4L_ABI_MAGIC || query->abi_version != R4L_ABI_VERSION ||
+        query->size < sizeof(R4LQuery) || query->group != 0 || query->kernel_bridge != 0 || query->reserved != 0) return R4L_BINDING_INVALID_QUERY;
+    *out_query = query;
     return R4L_BINDING_OK;
 }
 

@@ -23,6 +23,11 @@ locked local dependency graphs and features; explicit external roots and C
 companions are supported with real compiler input accounting. Pure Rust builds
 keep the independent toolset; native C sources explicitly select pinned Zig.
 The SDK owns no Studio integration, component version selection or project pins.
+SDK0.64.71 binds Contract0.64.44 and projects all twelve library-owned
+contracts into local Rust consumer crates. Checked SDK `r4l` clients borrow
+the App; C gains explicit optional admission and Query metadata access.
+Library implementations and baselines stay with their owners; Rust provider
+implementation roles remain separate from consuming those libraries.
 SDK0.64.67 binds Contract0.64.42's complete technical C projection. Driver,
 protocol, DMA/USB and service records now come from the canonical Contract;
 the three manually duplicated network reply records are removed from the SDK.

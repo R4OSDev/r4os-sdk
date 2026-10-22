@@ -7,6 +7,7 @@ use core::{ffi::CStr, marker::PhantomData, mem, ptr};
 pub use r4os_contract as abi;
 pub mod heap;
 mod memory;
+pub mod r4l;
 mod startup;
 pub use startup::{ImportSpec, StartupInfo};
 
@@ -22,7 +23,9 @@ pub struct App<'a> {
 impl<'a> App<'a> {
     /// # Safety
     /// `raw` and the loader-owned imports/tables must remain resident for the
-    /// exact R4X call. The public entry macro supplies manifest-derived facts.
+    /// exact R4X call. Provider tables must honor their immutable ABI, including
+    /// the complete readable header/slot range. The entry macro receives that
+    /// loader guarantee and supplies manifest-derived facts.
     pub unsafe fn from_raw(
         raw: *const abi::R4XStartContext,
         expected: &StartupInfo<'_>,
