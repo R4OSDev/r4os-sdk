@@ -38,6 +38,31 @@ pub fn build(b: *std.Build) void {
         return;
     }
     const sdk_profile = Sdk.init(b, .{ .contract_dependency = contract_dependency });
+    const update_json_core = b.option([]const u8, "update-json-core", "Original JSON protocol core for current SDK update owner tests");
+    if (b.option(bool, "update-owner-tests-only", "Run only existing update/catalog/journal owner cases") orelse false) {
+        const json_file = update_json_core orelse @panic("update-owner-tests-only requires -Dupdate-json-core=<original JSON core path>");
+        const target = b.resolveTargetQuery(.{ .cpu_arch = .x86_64, .os_tag = b.graph.host.result.os.tag, .abi = b.graph.host.result.abi, .cpu_model = .baseline });
+        const cases = b.createModule(.{ .root_source_file = b.path("test_update_owners.zig"), .target = target, .optimize = .ReleaseSafe });
+        cases.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
+        cases.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = target, .optimize = .ReleaseSafe }));
+        cases.addImport("json_core", b.createModule(.{ .root_source_file = .{ .cwd_relative = json_file }, .target = target, .optimize = .ReleaseSafe }));
+        const selected = b.addRunArtifact(b.addTest(.{ .root_module = cases, .filters = @import("Tests/Simulation/UpdateFilters.zig").names }));
+        b.getInstallStep().dependOn(&selected.step);
+        return;
+    }
+
+    if (b.option(bool, "update-bridge-generator-only", "Build the compiler-typed SDK update/job generator") orelse false) {
+        const root = b.createModule(.{ .root_source_file = b.path("Tools/DataBridgeGen/src/main.zig"), .target = b.graph.host, .optimize = .Debug, .strip = true });
+        const schema = b.createModule(.{ .root_source_file = b.path("r4os/update_bridge_schema.zig"), .target = b.graph.host, .optimize = .Debug });
+        schema.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
+        schema.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = b.graph.host, .optimize = .ReleaseSafe }));
+        const options = b.createModule(.{ .root_source_file = b.path("r4os/update_bridge_names.zig"), .target = b.graph.host, .optimize = .Debug });
+        options.addImport("schema", schema);
+        root.addImport("schema", schema);
+        root.addImport("options", options);
+        b.installArtifact(b.addExecutable(.{ .name = "update-bridge-gen", .root_module = root, .use_llvm = true }));
+        return;
+    }
     if (b.option(bool, "transport-bridge-generator-only", "Build the compiler-typed SDK transport/job generator") orelse false) {
         const root = b.createModule(.{ .root_source_file = b.path("Tools/DataBridgeGen/src/main.zig"), .target = b.graph.host, .optimize = .Debug, .strip = true });
         const schema = b.createModule(.{ .root_source_file = b.path("r4os/transport_bridge_schema.zig"), .target = b.graph.host, .optimize = .Debug });
@@ -74,7 +99,9 @@ pub fn build(b: *std.Build) void {
         schema.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
         schema.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = b.graph.host, .optimize = .ReleaseSafe }));
         root.addImport("schema", schema);
-        root.addImport("options", b.createModule(.{ .root_source_file = b.path("Tools/DataBridgeGen/src/options.zig"), .target = b.graph.host, .optimize = .Debug }));
+        const options = b.createModule(.{ .root_source_file = b.path("Tools/DataBridgeGen/src/options.zig"), .target = b.graph.host, .optimize = .Debug });
+        options.addImport("schema", schema);
+        root.addImport("options", options);
         b.installArtifact(b.addExecutable(.{ .name = "data-bridge-gen", .root_module = root, .use_llvm = true }));
         return;
     }
@@ -170,6 +197,7 @@ pub fn build(b: *std.Build) void {
         root.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
         root.addIncludePath(sdk_profile.profile.c_include_root);
         root.addIncludePath(sdk_profile.profile.contract_c_include_root);
+        @import("r4os/c_header_inputs.zig").addMacro(b, root, &.{ sdk_profile.profile.c_include_root, sdk_profile.profile.contract_c_include_root });
         b.installArtifact(b.addExecutable(.{ .name = "c-facade-gen", .root_module = root }));
         return;
     }
@@ -253,6 +281,12 @@ pub fn build(b: *std.Build) void {
         "Headers rejects malformed",                     "Headers preserves Set-Cookie",
     } }));
     b.step("transport-parity-test", "Existing bounded HTTP/cache/policy/resource/download owner cases").dependOn(&transport_tests.step);
+    const update_cases = b.createModule(.{ .root_source_file = b.path("test_update_owners.zig"), .target = data_target, .optimize = .ReleaseSafe });
+    update_cases.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
+    update_cases.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = data_target, .optimize = .ReleaseSafe }));
+    if (update_json_core) |file| update_cases.addImport("json_core", b.createModule(.{ .root_source_file = .{ .cwd_relative = file }, .target = data_target, .optimize = .ReleaseSafe }));
+    const update_tests = b.addRunArtifact(b.addTest(.{ .root_module = update_cases, .filters = @import("Tests/Simulation/UpdateFilters.zig").names }));
+    b.step("update-parity-test", "Existing current update/catalog/journal/backup owner cases").dependOn(&update_tests.step);
     const gui_cases = b.createModule(.{ .root_source_file = b.path("Tests/Conformance/GuiFacadePrototype05824.zig"), .target = b.graph.host, .optimize = .Debug });
     gui_cases.addImport("r4os", host_r4os);
     const gui_parity = b.addRunArtifact(b.addTest(.{ .root_module = gui_cases, .filters = &.{ "raw GUI events", "command clipboard timer", "transactional paint", "buffered Canvas" } }));

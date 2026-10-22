@@ -10,3 +10,7 @@ pub const context = core.context;
 pub const canonical = core.canonical;
 pub const typeId = core.typeId;
 pub const stableName = core.stableName;
+
+pub fn nativeName(comptime T: type) []const u8 {
+    return @import("data_bridge_names.zig").nativeName(@This(), T);
+}

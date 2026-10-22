@@ -1904,6 +1904,7 @@ pub fn addFacadeRuntime(b: *std.Build, source: std.Build.LazyPath, c_include: st
     });
     root.addIncludePath(c_include);
     root.addIncludePath(contract_include);
+    @import("c_header_inputs.zig").addMacro(b, root, &.{ c_include, contract_include });
     const base: []const []const u8 = &.{ "-std=c11", "-ffreestanding", "-fno-builtin", "-fno-stack-protector", "-fno-unwind-tables", "-fno-asynchronous-unwind-tables", "-mno-red-zone", "-ffunction-sections", "-fdata-sections" };
     const cpu_flags = contract_build.module_cpu.cFlags(b.allocator);
     const probes: []const []const u8 = if (native_test) &.{} else &.{ "-Xclang", "-fstack-clash-protection" };

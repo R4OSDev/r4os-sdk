@@ -12,3 +12,7 @@ comptime {
     _ = @import("web_value_bridge.zig");
     _ = @import("transport_value_bridge.zig");
 }
+
+comptime {
+    _ = @import("update_value_bridge.zig");
+}

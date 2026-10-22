@@ -957,19 +957,29 @@
       "semantics": "R4U-/Inventar-/Journal-/Hash-/Pfadvertraege, genaue Boot-/Stage-/Backupidentitaet, Platz/Groessen/Atomizitaet und Wiederaufnahme erhalten. FAT/NTFS/GPT/Partitions-/Installationstools samt aktuellen Datenformaten mit erfassen.",
       "current_only": "current_function",
       "rust": {
-        "state": "missing_higher_facade",
-        "source": "Repositories/SDK/Rust/src/lib.rs",
-        "gap": "Versionen, R4U, Update, Recovery, Backup und Storage-Tools als gleichwertige typisierte Rust-Fassade mit denselben Fehler-/Besitz-/Waitregeln ergaenzen."
+        "state": "original_update_storage_helpers_qualified",
+        "source": "Repositories/SDK/Rust/src/update/mod.rs",
+        "raw": "Repositories/SDK/Rust/src/c_facades.rs",
+        "gap": ""
       },
       "c": {
-        "state": "missing_higher_facade",
-        "sources": [],
-        "gap": "Kein entsprechender hoeherer C-Einstieg im SDK-Headerbestand; gleiche Fachfunktion bereitstellen."
+        "state": "original_update_storage_helpers_qualified",
+        "sources": [
+          "Repositories/SDK/Shared/C/include/r4os/update_helpers.h"
+        ],
+        "gap": ""
       },
       "evidence": [
-        "source_inventory"
+        "source_inventory",
+        "update_current_64"
       ],
-      "shared_core": "Grosse Update-/Dateisystem-/Recoveryalgorithmen einmal im SDK-/Storagebesitzer; keine zweite Host-/Gastimplementierung oder neue Kernelzustandsmaschine."
+      "shared_core": "Grosse Update-/Dateisystem-/Recoveryalgorithmen einmal im SDK-/Storagebesitzer; keine zweite Host-/Gastimplementierung oder neue Kernelzustandsmaschine.",
+      "qualification": {
+        "performed_in": "0.86.64",
+        "sdk": "0.64.83",
+        "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.64",
+        "scope": "All ten current update/storage groups, including nested FAT32/NTFS/GPT/partition/image/install/Limine owners, reuse original code. Data61 version/R4U/artifact types remain canonical. Concrete JSON.R4P catalogue, bounded reader, replay/archive I/O, claimed guest target and separate host-file lifetime adapters; Rust journal/inventory/catalogue/device/formatter/host loans plus complete typed unsafe operations."
+      }
     },
     {
       "id": "subsystems",
@@ -48014,6 +48024,172 @@
       },
       "kernel": "0.1.381 unchanged; STANDARD BOOT SHA256 e06111b9363b44712fe69ded9ddfc3edb1f60c5c271c59a42238a816b0882340",
       "benchmark_image_source_sha256": "da27ec7cc9888b633987a47e05e406b7eb57f317d932788d6cda4443abbf2baa"
+    },
+    "update_current_64": {
+      "kind": "original_update_storage_owners_native_Rust_C_and_private_KVM_SMP4_transaction",
+      "performed_in": "0.86.64",
+      "sdk": "0.64.83",
+      "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.64",
+      "scope": "All ten current update/storage groups, including nested FAT32/NTFS/GPT/partition/image/install/Limine owners, reuse original code. Data61 version/R4U/artifact types remain canonical. Concrete JSON.R4P catalogue, bounded reader, replay/archive I/O, claimed guest target and separate host-file lifetime adapters; Rust journal/inventory/catalogue/device/formatter/host loans plus complete typed unsafe operations.",
+      "projection": {
+        "types": 321,
+        "functions": 276,
+        "c_inline_operations": 1780,
+        "rust_transport_and_operations": 1785,
+        "native_fingerprint": 4924212398762475126,
+        "missing_c_operations_in_rust": [],
+        "missing_old_rust_lines": [],
+        "data_web_transport_headers": "unchanged; canonical original type names and fingerprints retained"
+      },
+      "specializations": [
+        "The generic catalogue document is the original JSON.R4P Document, never a parser embedded in an app.",
+        "Generic recovery check/forward/rollback/cleanup and backup referenced/archive call their original cores through15 exact native callback kinds. Source-read errors have a declared bounded SourceError set; native errors are named resident data, never foreign Zig error numbers.",
+        "HostFile original init/acquire/release/resize/device runs with a pinned owned std.Io backend; open-existing and borrow-handle lifetimes are explicit. Fixed opaque storage keeps host handles/backend layouts out of common ABI. HostOnly in guest; physical guest device remains original StorageTarget/claim.",
+        "GPT reports stay opaque: all original operations plus readonly status/copy-valid/reason access avoid caller mutation of private anyerror diagnostics.",
+        "Common native callback marshaller extracted with original web descriptor/type identities unchanged; common canonical data naming extracted without header drift."
+      ],
+      "ownership": "Journal paths/versions are copied by the original v5 owner. Inventory/catalogue strings retain immutable source input. Device loans exclude host release/resize/drop or memory-buffer mutation; host borrowed handle remains caller-owned after close. Callback descriptors/user/device/journal/source/allocator loans last through actual synchronous return; copied plans/advanced native operations remain explicitly unsafe until their original owner release/execute protocol completes. No commit, journal-write or close alone becomes a fresh identity/durability receipt.",
+      "build_fix": {
+        "problem": "C-import build caching reused an older facade generator after update header changed; generated fingerprint4059627490386229151 and missing concrete catalogue parser proved stale output.",
+        "solution": "r4os/c_header_inputs.zig hashes actual sorted SDK and Contract C headers at build configuration and sets a private compiler macro for facade projector and C runtime. Current4924212398762475126/parser projection checked. Native and bare C objects contain1769 current and0 obsolete fingerprint immediates. Generator comptime quota32M accommodates full public declaration set.",
+        "scope": "SDK-owned generic build logic, no Studio/version-selection/project pins or toolchain changes."
+      },
+      "checks": {
+        "update_owner_cases": 27,
+        "update_case_selection": "25 existing original cases plus same-package root/collector, external original JSON core explicitly supplied; no empty dependency-module collector claim.",
+        "storage_owner_cases": 13,
+        "storage_cases": "existing bounded/sparse GPT/MBR, Limine layout, FAT trees/delta/quick/full/failure/cancel, large virtual FAT/NTFS bounded-memory/fragmentation/growth/shrink/repair fixtures.",
+        "native_cases": 7,
+        "native_case_scope": "C interrupted journal persistence/reparse/idempotent mutation/rollback, six archive failure boundaries and MissingCallback, all block/source callback types including signed I/O code and named source error/cancel, checked cleanup failure/terminal receipt, original FAT32 quickformat and exact backup-sector invalidation, host lock/resize/flush/borrowed handle retention, journal/inventory roundtrip and checksum rejection.",
+        "actual_compiler_negatives": [
+          "E0133",
+          "E0502",
+          "E0502",
+          "E0499",
+          "E0277"
+        ],
+        "web_regression": "five native cases +five actual compiler negatives after shared marshaller extraction",
+        "transport_regression": "four native cases +five actual compiler negatives",
+        "projections_and_clippy": "current schema and complete C-to-Rust closure, all prior Rust projection lines preserved, warning-free Clippy and handwritten Zig formatting."
+      },
+      "consumer": {
+        "file": "UPDATEPROBE.R4X",
+        "bytes": 2001937,
+        "sha256": "0b5528add0629a0876e57e51ad18ac12d77df4ecc34b69a6b42cc9c36a6a3bf1",
+        "readback": "exact UP64A.R4X bytes",
+        "exit": 0,
+        "result": "PASS UPDATE64 C original journal interruption/reopen/idempotent commit/rollback on private real files\nPASS UPDATE64 case=0\nPASS UPDATE64 case=1\nPASS UPDATE64 case=2\nPASS UPDATE64 case=3\nPASS UPDATE64 case=4\nPASS UPDATE64 strict catalogue via original JSON.R4P\nPASS UPDATE64 exact active heap release; original Rust/C update and storage owners"
+      },
+      "guest": "Full0.86.42/Kernel0.1.381/KVM/SMP4, embedded SDK83 and IMAGE_SCOPE=none/browser profile. Actual private files reject foreign target fingerprint before mutation; original checked atomic forward/install, failed second journal persistence, readback/reparse, exact idempotent replay, last-good and rollback; own targets/journals/module removed. Original JSON.R4P lazy load and strict catalogue pass. Exact active heap release, regular shutdown0. No actual OS installation.",
+      "limits": "No physical disk/boot partition installation, power-loss durability, hardware/Windows execution or direct Rust SIMD/FP qualification; original Recovery source pins/installed images remain. Current16GB benchmark/22GB product geometries and format/version validation remain their existing owners, no new old-OS fallback. No performance gain claimed. Published Full/Slim42 unchanged.",
+      "sdk_runtimes": {
+        "facades": {
+          "path": "Runtime/r4sdk_facades.o",
+          "sha256": "5fb38197dad678633cd172361d5a507e107de36421a0b4b4e68a1be317119295",
+          "bytes": 17478336
+        },
+        "storage": {
+          "path": "Runtime/r4sdk_storage.o",
+          "sha256": "cde743b4067f37d6c7c21472d67c2ab2df65006a33565cd37ae54265fafd449f",
+          "bytes": 41917224
+        }
+      },
+      "current_sources": [
+        {
+          "path": "Repositories/SDK/r4os/update_helper_owners.zig",
+          "sha256": "4c4ffdbd4a04bd8f1642791b2611c14642cc823f707640bcb5d7148d35a94143"
+        },
+        {
+          "path": "Repositories/SDK/r4os/update_helper_adapters.zig",
+          "sha256": "a3449b89836c92b8773076745de4f7dbc83bdca45e9cede16786272a36e3d3ae"
+        },
+        {
+          "path": "Repositories/SDK/r4os/update_host_file.zig",
+          "sha256": "c5efa407b77ec0bf255ec16268a9b6894929202442b94625825e40474968cc16"
+        },
+        {
+          "path": "Repositories/SDK/r4os/update_callback_bridge.zig",
+          "sha256": "73be172a3601aefd7beed3de03a85d6358e42e0cd6fda6ecc960022e2b02bf4c"
+        },
+        {
+          "path": "Repositories/SDK/r4os/update_bridge_schema.zig",
+          "sha256": "9363ec7db289605989190fb140c3ecf491ff1b921c989dc667ffc7981546371b"
+        },
+        {
+          "path": "Repositories/SDK/r4os/update_bridge_names.zig",
+          "sha256": "900395b13163a95e791d0591f815e766ef4a3d33300987b33a159b3632bb8e8a"
+        },
+        {
+          "path": "Repositories/SDK/r4os/update_value_bridge.zig",
+          "sha256": "befb2ac2589bacaa86211b13196b645d4d8ba9430f3f47d9296e8b9e1920e2f3"
+        },
+        {
+          "path": "Repositories/SDK/r4os/native_callback_bridge.zig",
+          "sha256": "aad22008c63f030c86cb666f0fb6a9fa2b6c9d64e898f3af78b4c37151fe5b37"
+        },
+        {
+          "path": "Repositories/SDK/r4os/web_callback_bridge.zig",
+          "sha256": "94213f3e60f49eb2a9194a30887b9f72c79db84d1950b999628fd5ec15aa5e18"
+        },
+        {
+          "path": "Repositories/SDK/r4os/data_bridge_names.zig",
+          "sha256": "8c2e9a9ef520c096e3fe3ce43731b5aaf76e892d79ac51006ad79635ae381314"
+        },
+        {
+          "path": "Repositories/SDK/r4os/c_header_inputs.zig",
+          "sha256": "07e266e2f24ef9ac0bccb05caecbede7513700255e4a32509eb97ad6af0a813b"
+        },
+        {
+          "path": "Repositories/SDK/r4os/build.zig",
+          "sha256": "0cd988975f1945367d78ce96024fd4635d785378f20ac8d9890af09f289c7f35"
+        },
+        {
+          "path": "Repositories/SDK/Shared/C/include/r4os/update_helpers.h",
+          "sha256": "7ee1a7c028abac6e4b7a7a1a7ae3865bdcb84cbeeb9749bace35467f8bdd0542"
+        },
+        {
+          "path": "Repositories/SDK/Rust/src/c_facades.rs",
+          "sha256": "b15bccf97d2d77a3b6e5a386a80f0e93b1060bf322b64e5e542eb6ef9359866a"
+        },
+        {
+          "path": "Repositories/SDK/Rust/src/update/mod.rs",
+          "sha256": "2e7ccd71fd35b049dba25559f4292d989e4f4b74b867283a49d5be9f3d9aba67"
+        },
+        {
+          "path": "Repositories/SDK/Rust/src/update/journal.rs",
+          "sha256": "d7a04951952dcf448650d9786a834da46d11f8bdd2ed0eda4818c49708807a57"
+        },
+        {
+          "path": "Repositories/SDK/Rust/src/update/catalog.rs",
+          "sha256": "9fbe4246699ba2d7218c5405b78244c2ae4ce9b02f65f6707d9ec4d439113bca"
+        },
+        {
+          "path": "Repositories/SDK/Rust/src/update/storage.rs",
+          "sha256": "f35b5c3075612157a4de54ffe55439b1f5af0e65fa6c373e0dd5dfaa3a6fa249"
+        },
+        {
+          "path": "Repositories/SDK/Rust/src/update/host.rs",
+          "sha256": "704b14047ba1d4b7d932915e7342f2591384d14e7f96084daccab5ffaee0c2be"
+        },
+        {
+          "path": "Repositories/SDK/Tools/CFacadeGen/src/main.zig",
+          "sha256": "9f8e75b456f74b1ff2e79bdd21ddc6b020b9117373e1e1812e422a92e594d5bd"
+        }
+      ],
+      "standard": {
+        "run_id": "bec5444c-30c3-4027-8ac3-efe69b6ff06b",
+        "release_version": "0.86.64",
+        "sha256": "3a1766823db82b52818e7040347abaf4cc5b778eabe158be1b45f3c7e0354d69",
+        "full_readback": "valid",
+        "metrics": 5,
+        "samples": 30,
+        "workers": 4,
+        "valid_score_areas": 6,
+        "executions": 1,
+        "benchmark_image_sha256": "bc55a5f386c9841ae20aaf18030aaa2b791f4a63f26795014e57d6c0bb0c904a",
+        "boot_kernel_sha256": "e06111b9363b44712fe69ded9ddfc3edb1f60c5c271c59a42238a816b0882340",
+        "scope": "single final normal KVM/SMP4 Suite3 regression after common SDK runtime/build change; no isolated update performance claim"
+      }
     }
   },
   "wave_bindings": [

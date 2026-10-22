@@ -832,3 +832,22 @@ checks projections and selected native/ownership consumers. The mixed guest
 fixture is `Tests/Build/RustTransport`, with its bounded loopback counterpart
 `Tests/Fixture/Browser/TransportServer.py`. Current evidence and qualification
 limits remain in the language parity matrix and shared report.
+
+SDK0.64.83 adds `update` and `r4os/update_helpers.h`: original catalogue,
+inventory, batch/journal, recovery/backup and nested partition/FAT32/NTFS/
+image/install/Limine owners. Existing version/R4U/artifact data types remain
+canonical. The generic catalogue uses JSON.R4P; replay/archive/device callbacks
+instantiate original cores without a second transaction or filesystem policy.
+Rust borrows immutable inventory/catalogue input and exclusive journal/device
+storage. Native plans and custom callbacks retain all original source/allocator/
+identity loans. The host file adapter owns its std.Io backend, distinguishes
+opened and borrowed handles, and reports HostOnly in the guest. Guest physical
+writes still require the original StorageTarget claim. GPT diagnostics are
+read-only; native errors use resident names. Build with
+`-Dupdate-bridge-generator-only=true`. Existing owner tests use
+`-Dupdate-owner-tests-only=true -Dupdate-json-core=<original json_core.zig>`;
+`Tools/Test-RustUpdate.ps1` and `Tests/Build/RustUpdate` are bounded consumers.
+Facade generators and C objects now include a digest of the actual SDK/Contract
+C headers in their compiler inputs, preventing stale C-import reuse. Shared
+callback marshalling and canonical data names retain former web/data/transport
+headers and declarations. Qualification remains in the shared parity matrix.
