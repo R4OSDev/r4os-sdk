@@ -167,6 +167,12 @@ fn run(init: std.process.Init) !void {
                 try writeOutput(io, cwd, options.output, rendered);
                 return;
             }
+            if (value.kind == .r4d) {
+                const rendered = if (options.artifact_only) try std.fmt.allocPrint(allocator, "Code/zig-out/{s}.R4D\n", .{value.name}) else try renderDriverPlan(allocator, value);
+                defer allocator.free(rendered);
+                try writeOutput(io, cwd, options.output, rendered);
+                return;
+            }
             const plan = try manifest_contract.derivePlan(arena_allocator, value);
             if (options.artifact_only) {
                 try std.Io.File.stdout().writeStreamingAll(io, plan.artifact);
@@ -1459,4 +1465,30 @@ fn renderLibraryPlan(a: std.mem.Allocator, entry: manifest_contract.Manifest) ![
     const library_contract = .{ .contract = entry.contract, .baseline = entry.contract_baseline, .implementation_zig = entry.implementation_zig, .binding_zig = entry.binding_zig, .binding_c = entry.binding_c, .binding_rust = entry.binding_rust, .fixture_zig = entry.conformance_zig, .fixture_c = entry.conformance_c, .docs = entry.api_reference };
     const rust_project = .{ .schema = manifest_contract.capabilities.rust_build_plan_schema, .profile = "r4os-rust-r4l-v1", .tools = manifest_contract.capabilities.rust_tools, .host_build_qualified = manifest_contract.capabilities.rust_host_builder, .cargo_manifest = "Cargo.toml", .cargo_lock = "Cargo.lock", .target = "x86_64-unknown-none", .source = entry.sources[0], .c_sources = entry.sources[1..], .c_includes = entry.c_includes, .c_defines = entry.c_defines, .c_flags = entry.c_flags, .module_version = entry.module_version.text, .icons = entry.icons, .help = entry.help, .resources = entry.resources };
     return std.json.Stringify.valueAlloc(a, .{ .schema = @as(u32, 1), .manifest = entry.path, .plan = .{ .kind = "R4L", .name = entry.name, .language = entry.language.?.text(), .sources = entry.sources, .entry_mode = @as(?[]const u8, null), .app_class = @as(?[]const u8, null), .target = entry.target, .optimization = entry.optimization.?.text(), .imports = entry.imports, .metadata = metadata.items, .exports = exports.items, .library_contract = library_contract, .rust_project = if (entry.language == .rust) rust_project else null } }, .{ .whitespace = .indent_2 });
+}
+
+fn renderDriverPlan(a: std.mem.Allocator, entry: manifest_contract.Manifest) ![]u8 {
+    if (entry.kind != .r4d) return error.DriverPlanRequiresR4D;
+    var metadata: std.ArrayList([]const u8) = .empty;
+    try metadata.append(a, try manifest_contract.moduleVersionMeta(a, entry));
+    try metadata.append(a, try std.fmt.allocPrint(a, "module.name=R4D_{s}", .{entry.name}));
+    var has_name = false;
+    var has_type = false;
+    for (entry.metadata) |value| {
+        if (std.mem.startsWith(u8, value, "module.name=")) {
+            if (!std.mem.eql(u8, value, metadata.items[1])) return error.DriverIdentityConflict;
+            continue;
+        }
+        if (std.mem.startsWith(u8, value, "module.version=")) {
+            if (!std.mem.eql(u8, value, metadata.items[0])) return error.DriverIdentityConflict;
+            continue;
+        }
+        if (std.mem.startsWith(u8, value, "r4d.name=")) has_name = value.len > 9;
+        if (std.mem.startsWith(u8, value, "r4d.type=")) has_type = value.len > 9;
+        try metadata.append(a, value);
+    }
+    if (!has_name or !has_type) return error.DriverIdentityMissing;
+    if (entry.imports.len != 1 or !std.mem.eql(u8, entry.imports[0], "R4DEV:Query:1")) return error.DriverImportsMismatch;
+    const rust_project = .{ .schema = manifest_contract.capabilities.rust_build_plan_schema, .profile = "r4os-rust-r4d-v1", .tools = manifest_contract.capabilities.rust_tools, .host_build_qualified = manifest_contract.capabilities.rust_host_builder, .cargo_manifest = "Cargo.toml", .cargo_lock = "Cargo.lock", .target = "x86_64-unknown-none", .source = entry.sources[0], .c_sources = entry.sources[1..], .c_includes = entry.c_includes, .c_defines = entry.c_defines, .c_flags = entry.c_flags, .module_version = entry.module_version.text, .icons = entry.icons, .help = entry.help, .resources = entry.resources };
+    return std.json.Stringify.valueAlloc(a, .{ .schema = @as(u32, 1), .manifest = entry.path, .plan = .{ .kind = "R4D", .name = entry.name, .language = entry.language.?.text(), .sources = entry.sources, .entry_mode = @as(?[]const u8, null), .app_class = @as(?[]const u8, null), .target = entry.target, .optimization = entry.optimization.?.text(), .imports = entry.imports, .metadata = metadata.items, .exports = &[_][]const u8{ "DriverInit:@r4d_init_entry:1", "DriverShutdown:@r4d_shutdown_entry:1" }, .rust_project = if (entry.language == .rust) rust_project else null } }, .{ .whitespace = .indent_2 });
 }

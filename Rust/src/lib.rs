@@ -9,6 +9,7 @@ pub mod bounded_text;
 pub mod c_facades;
 pub mod data;
 pub mod directory_page;
+pub mod driver;
 pub mod heap;
 pub mod gui;
 pub mod graphics;

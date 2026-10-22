@@ -13871,6 +13871,1042 @@ pub struct R4SdkSubsystemNativeValue240 {
     pub r#opaque_bytes: [u8; 8],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue240>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue240>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue240, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverSlot {
+    pub r#ptr: *mut core::ffi::c_void,
+    pub r#length: u64,
+    pub r#bits: u64,
+    pub r#status: i32,
+    pub r#flags: u32,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverSlot>() == 32); assert!(core::mem::align_of::<R4SdkDriverSlot>() == 8); assert!(core::mem::offset_of!(R4SdkDriverSlot, r#ptr) == 0); assert!(core::mem::offset_of!(R4SdkDriverSlot, r#length) == 8); assert!(core::mem::offset_of!(R4SdkDriverSlot, r#bits) == 16); assert!(core::mem::offset_of!(R4SdkDriverSlot, r#status) == 24); assert!(core::mem::offset_of!(R4SdkDriverSlot, r#flags) == 28); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverSharedDmaBuffer {
+    pub r#opaque_bytes: [u8; 40],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverSharedDmaBuffer>() == 40); assert!(core::mem::align_of::<R4SdkDriverSharedDmaBuffer>() == 8); assert!(core::mem::offset_of!(R4SdkDriverSharedDmaBuffer, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverAudioOutputBackend {
+    pub r#opaque_bytes: [u8; 96],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverAudioOutputBackend>() == 96); assert!(core::mem::align_of::<R4SdkDriverAudioOutputBackend>() == 8); assert!(core::mem::offset_of!(R4SdkDriverAudioOutputBackend, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverAudioOutputIdleBackend {
+    pub r#opaque_bytes: [u8; 104],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverAudioOutputIdleBackend>() == 104); assert!(core::mem::align_of::<R4SdkDriverAudioOutputIdleBackend>() == 8); assert!(core::mem::offset_of!(R4SdkDriverAudioOutputIdleBackend, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue6 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue6>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue6>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue6, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverContext {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverContext>() == 8); assert!(core::mem::align_of::<R4SdkDriverContext>() == 8); assert!(core::mem::offset_of!(R4SdkDriverContext, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue8 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue8>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue8>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue8, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverSerialContext {
+    pub r#opaque_bytes: [u8; 40],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverSerialContext>() == 40); assert!(core::mem::align_of::<R4SdkDriverSerialContext>() == 8); assert!(core::mem::offset_of!(R4SdkDriverSerialContext, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverMemoryContext {
+    pub r#opaque_bytes: [u8; 256],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverMemoryContext>() == 256); assert!(core::mem::align_of::<R4SdkDriverMemoryContext>() == 8); assert!(core::mem::offset_of!(R4SdkDriverMemoryContext, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverEntropyContext {
+    pub r#opaque_bytes: [u8; 32],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverEntropyContext>() == 32); assert!(core::mem::align_of::<R4SdkDriverEntropyContext>() == 8); assert!(core::mem::offset_of!(R4SdkDriverEntropyContext, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverResourcesContext {
+    pub r#opaque_bytes: [u8; 72],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverResourcesContext>() == 72); assert!(core::mem::align_of::<R4SdkDriverResourcesContext>() == 8); assert!(core::mem::offset_of!(R4SdkDriverResourcesContext, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverResourcesPlatform {
+    pub r#opaque_bytes: [u8; 32],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverResourcesPlatform>() == 32); assert!(core::mem::align_of::<R4SdkDriverResourcesPlatform>() == 8); assert!(core::mem::offset_of!(R4SdkDriverResourcesPlatform, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverQueueContext {
+    pub r#opaque_bytes: [u8; 168],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverQueueContext>() == 168); assert!(core::mem::align_of::<R4SdkDriverQueueContext>() == 8); assert!(core::mem::offset_of!(R4SdkDriverQueueContext, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverOutputsContext {
+    pub r#opaque_bytes: [u8; 176],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverOutputsContext>() == 176); assert!(core::mem::align_of::<R4SdkDriverOutputsContext>() == 8); assert!(core::mem::offset_of!(R4SdkDriverOutputsContext, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverDisplayContext {
+    pub r#opaque_bytes: [u8; 152],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverDisplayContext>() == 152); assert!(core::mem::align_of::<R4SdkDriverDisplayContext>() == 8); assert!(core::mem::offset_of!(R4SdkDriverDisplayContext, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverHeapContext {
+    pub r#opaque_bytes: [u8; 32],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverHeapContext>() == 32); assert!(core::mem::align_of::<R4SdkDriverHeapContext>() == 8); assert!(core::mem::offset_of!(R4SdkDriverHeapContext, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverThreadsContext {
+    pub r#opaque_bytes: [u8; 88],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverThreadsContext>() == 88); assert!(core::mem::align_of::<R4SdkDriverThreadsContext>() == 8); assert!(core::mem::offset_of!(R4SdkDriverThreadsContext, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverSemaphoresContext {
+    pub r#opaque_bytes: [u8; 64],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverSemaphoresContext>() == 64); assert!(core::mem::align_of::<R4SdkDriverSemaphoresContext>() == 8); assert!(core::mem::offset_of!(R4SdkDriverSemaphoresContext, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverCpuPowerContext {
+    pub r#opaque_bytes: [u8; 184],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverCpuPowerContext>() == 184); assert!(core::mem::align_of::<R4SdkDriverCpuPowerContext>() == 8); assert!(core::mem::offset_of!(R4SdkDriverCpuPowerContext, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue34 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue34>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue34>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue34, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue35 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue35>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue35>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue35, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue36 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue36>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue36>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue36, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue37 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue37>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue37>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue37, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue39 {
+    pub r#opaque_bytes: [u8; 48],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue39>() == 48); assert!(core::mem::align_of::<R4SdkDriverNativeValue39>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue39, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue40 {
+    pub r#opaque_bytes: [u8; 40],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue40>() == 40); assert!(core::mem::align_of::<R4SdkDriverNativeValue40>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue40, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue41 {
+    pub r#opaque_bytes: [u8; 80],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue41>() == 80); assert!(core::mem::align_of::<R4SdkDriverNativeValue41>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue41, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue42 {
+    pub r#opaque_bytes: [u8; 160],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue42>() == 160); assert!(core::mem::align_of::<R4SdkDriverNativeValue42>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue42, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue43 {
+    pub r#opaque_bytes: [u8; 184],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue43>() == 184); assert!(core::mem::align_of::<R4SdkDriverNativeValue43>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue43, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue44 {
+    pub r#opaque_bytes: [u8; 176],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue44>() == 176); assert!(core::mem::align_of::<R4SdkDriverNativeValue44>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue44, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue45 {
+    pub r#opaque_bytes: [u8; 264],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue45>() == 264); assert!(core::mem::align_of::<R4SdkDriverNativeValue45>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue45, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue47 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue47>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue47>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue47, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue49 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue49>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue49>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue49, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue50 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue50>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue50>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue50, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue51 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue51>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue51>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue51, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue52 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue52>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue52>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue52, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue54 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue54>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue54>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue54, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue56 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue56>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue56>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue56, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue58 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue58>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue58>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue58, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue61 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue61>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue61>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue61, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue63 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue63>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue63>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue63, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue65 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue65>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue65>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue65, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue66 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue66>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue66>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue66, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue68 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue68>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue68>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue68, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue69 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue69>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue69>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue69, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue71 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue71>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue71>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue71, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue73 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue73>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue73>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue73, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue74 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue74>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue74>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue74, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue76 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue76>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue76>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue76, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue78 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue78>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue78>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue78, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue80 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue80>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue80>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue80, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue81 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue81>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue81>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue81, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue83 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue83>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue83>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue83, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue84 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue84>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue84>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue84, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue86 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue86>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue86>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue86, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue88 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue88>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue88>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue88, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue90 {
+    pub r#opaque_bytes: [u8; 96],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue90>() == 96); assert!(core::mem::align_of::<R4SdkDriverNativeValue90>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue90, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue91 {
+    pub r#opaque_bytes: [u8; 72],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue91>() == 72); assert!(core::mem::align_of::<R4SdkDriverNativeValue91>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue91, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue92 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue92>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue92>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue92, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue94 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue94>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue94>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue94, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue95 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue95>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue95>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue95, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue96 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue96>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue96>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue96, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue98 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue98>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue98>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue98, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue99 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue99>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue99>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue99, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue100 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue100>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue100>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue100, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue102 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue102>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue102>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue102, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue104 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue104>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue104>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue104, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue106 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue106>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue106>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue106, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue108 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue108>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue108>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue108, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue110 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue110>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue110>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue110, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue112 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue112>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue112>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue112, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue113 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue113>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue113>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue113, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue115 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue115>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue115>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue115, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue117 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue117>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue117>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue117, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue119 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue119>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue119>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue119, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue121 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue121>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue121>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue121, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue123 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue123>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue123>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue123, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue124 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue124>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue124>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue124, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue126 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue126>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue126>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue126, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue128 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue128>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue128>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue128, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue130 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue130>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue130>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue130, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue131 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue131>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue131>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue131, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue133 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue133>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue133>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue133, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue135 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue135>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue135>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue135, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue137 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue137>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue137>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue137, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue139 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue139>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue139>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue139, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue141 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue141>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue141>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue141, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue142 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue142>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue142>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue142, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue144 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue144>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue144>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue144, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue145 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue145>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue145>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue145, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue146 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue146>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue146>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue146, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue148 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue148>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue148>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue148, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue149 {
+    pub r#opaque_bytes: [u8; 40],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue149>() == 40); assert!(core::mem::align_of::<R4SdkDriverNativeValue149>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue149, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue150 {
+    pub r#opaque_bytes: [u8; 192],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue150>() == 192); assert!(core::mem::align_of::<R4SdkDriverNativeValue150>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue150, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue151 {
+    pub r#opaque_bytes: [u8; 40],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue151>() == 40); assert!(core::mem::align_of::<R4SdkDriverNativeValue151>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue151, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue152 {
+    pub r#opaque_bytes: [u8; 4],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue152>() == 4); assert!(core::mem::align_of::<R4SdkDriverNativeValue152>() == 1); assert!(core::mem::offset_of!(R4SdkDriverNativeValue152, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue153 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue153>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue153>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue153, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue155 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue155>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue155>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue155, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue157 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue157>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue157>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue157, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue159 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue159>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue159>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue159, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue160 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue160>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue160>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue160, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue162 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue162>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue162>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue162, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue164 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue164>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue164>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue164, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue166 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue166>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue166>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue166, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue168 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue168>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue168>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue168, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue170 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue170>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue170>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue170, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue172 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue172>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue172>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue172, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue174 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue174>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue174>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue174, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue176 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue176>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue176>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue176, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue177 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue177>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue177>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue177, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue179 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue179>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue179>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue179, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue181 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue181>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue181>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue181, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue183 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue183>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue183>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue183, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue185 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue185>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue185>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue185, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue186 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue186>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue186>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue186, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue188 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue188>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue188>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue188, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue190 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue190>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue190>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue190, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue192 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue192>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue192>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue192, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue194 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue194>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue194>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue194, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue196 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue196>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue196>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue196, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue198 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue198>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue198>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue198, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue200 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue200>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue200>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue200, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue202 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue202>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue202>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue202, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue204 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue204>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue204>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue204, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue206 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue206>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue206>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue206, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue208 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue208>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue208>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue208, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue210 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue210>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue210>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue210, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue212 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue212>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue212>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue212, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue213 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue213>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue213>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue213, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue215 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue215>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue215>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue215, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue217 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue217>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue217>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue217, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue219 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue219>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue219>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue219, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue221 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue221>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue221>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue221, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue222 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue222>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue222>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue222, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue224 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue224>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue224>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue224, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue225 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue225>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue225>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue225, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue226 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue226>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue226>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue226, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue228 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue228>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue228>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue228, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue230 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue230>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue230>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue230, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue232 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue232>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue232>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue232, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue233 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue233>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue233>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue233, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue235 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue235>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue235>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue235, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue237 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue237>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue237>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue237, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue239 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue239>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue239>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue239, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue241 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue241>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue241>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue241, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue243 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue243>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue243>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue243, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue245 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue245>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue245>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue245, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue247 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue247>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue247>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue247, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue248 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue248>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue248>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue248, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue250 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue250>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue250>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue250, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue252 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue252>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue252>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue252, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue253 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue253>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue253>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue253, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue255 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue255>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue255>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue255, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue257 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue257>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue257>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue257, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue259 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue259>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue259>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue259, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue260 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue260>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue260>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue260, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue262 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue262>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue262>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue262, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue264 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue264>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue264>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue264, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue265 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue265>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue265>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue265, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue267 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue267>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue267>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue267, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue269 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue269>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue269>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue269, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue271 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue271>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue271>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue271, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue273 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue273>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue273>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue273, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue275 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue275>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue275>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue275, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue277 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue277>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue277>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue277, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue279 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue279>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue279>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue279, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue281 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue281>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue281>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue281, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue283 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue283>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue283>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue283, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue285 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue285>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue285>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue285, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue287 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue287>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue287>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue287, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue289 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue289>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue289>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue289, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue291 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue291>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue291>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue291, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverNativeValue293 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue293>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue293>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue293, r#opaque_bytes) == 0); };
 pub const R4SdkGuiAlign_TYPE: u32 = 0;
 pub const R4SdkGuiPalette_TYPE: u32 = 1;
 pub const R4SdkGuiControlMetrics_TYPE: u32 = 2;
@@ -18243,6 +19279,179 @@ pub const R4SdkSubsystemRuntimeHostPollResult_TAG_command: u32 = 4;
 pub const R4SdkSubsystemRuntimeHostPollResult_TAG_failure: u32 = 5;
 pub const R4SdkSubsystemRuntimeCycleResult_TAG_wait: u32 = 0;
 pub const R4SdkSubsystemRuntimeCycleResult_TAG_finished: u32 = 1;
+pub const R4SdkDriverSharedDmaBuffer_TYPE: u32 = 0;
+pub const R4SdkDriverAudioOutputBackend_TYPE: u32 = 2;
+pub const R4SdkDriverAudioOutputIdleBackend_TYPE: u32 = 5;
+pub const R4SdkDriverNativeValue6_TYPE: u32 = 6;
+pub const R4SdkDriverContext_TYPE: u32 = 7;
+pub const R4SdkDriverNativeValue8_TYPE: u32 = 8;
+pub const R4SdkDriverSerialContext_TYPE: u32 = 10;
+pub const R4SdkDriverMemoryContext_TYPE: u32 = 12;
+pub const R4SdkDriverEntropyContext_TYPE: u32 = 14;
+pub const R4SdkDriverResourcesContext_TYPE: u32 = 16;
+pub const R4SdkDriverResourcesPlatform_TYPE: u32 = 18;
+pub const R4SdkDriverQueueContext_TYPE: u32 = 20;
+pub const R4SdkDriverOutputsContext_TYPE: u32 = 22;
+pub const R4SdkDriverDisplayContext_TYPE: u32 = 24;
+pub const R4SdkDriverHeapContext_TYPE: u32 = 26;
+pub const R4SdkDriverThreadsContext_TYPE: u32 = 28;
+pub const R4SdkDriverSemaphoresContext_TYPE: u32 = 30;
+pub const R4SdkDriverCpuPowerContext_TYPE: u32 = 32;
+pub const R4SdkDriverNativeValue34_TYPE: u32 = 34;
+pub const R4SdkDriverNativeValue35_TYPE: u32 = 35;
+pub const R4SdkDriverNativeValue36_TYPE: u32 = 36;
+pub const R4SdkDriverNativeValue37_TYPE: u32 = 37;
+pub const R4SdkDriverNativeValue39_TYPE: u32 = 39;
+pub const R4SdkDriverNativeValue40_TYPE: u32 = 40;
+pub const R4SdkDriverNativeValue41_TYPE: u32 = 41;
+pub const R4SdkDriverNativeValue42_TYPE: u32 = 42;
+pub const R4SdkDriverNativeValue43_TYPE: u32 = 43;
+pub const R4SdkDriverNativeValue44_TYPE: u32 = 44;
+pub const R4SdkDriverNativeValue45_TYPE: u32 = 45;
+pub const R4SdkDriverNativeValue47_TYPE: u32 = 47;
+pub const R4SdkDriverNativeValue49_TYPE: u32 = 49;
+pub const R4SdkDriverNativeValue50_TYPE: u32 = 50;
+pub const R4SdkDriverNativeValue51_TYPE: u32 = 51;
+pub const R4SdkDriverNativeValue52_TYPE: u32 = 52;
+pub const R4SdkDriverNativeValue54_TYPE: u32 = 54;
+pub const R4SdkDriverNativeValue56_TYPE: u32 = 56;
+pub const R4SdkDriverNativeValue58_TYPE: u32 = 58;
+pub const R4SdkDriverNativeValue61_TYPE: u32 = 61;
+pub const R4SdkDriverNativeValue63_TYPE: u32 = 63;
+pub const R4SdkDriverNativeValue65_TYPE: u32 = 65;
+pub const R4SdkDriverNativeValue66_TYPE: u32 = 66;
+pub const R4SdkDriverNativeValue68_TYPE: u32 = 68;
+pub const R4SdkDriverNativeValue69_TYPE: u32 = 69;
+pub const R4SdkDriverNativeValue71_TYPE: u32 = 71;
+pub const R4SdkDriverNativeValue73_TYPE: u32 = 73;
+pub const R4SdkDriverNativeValue74_TYPE: u32 = 74;
+pub const R4SdkDriverNativeValue76_TYPE: u32 = 76;
+pub const R4SdkDriverNativeValue78_TYPE: u32 = 78;
+pub const R4SdkDriverNativeValue80_TYPE: u32 = 80;
+pub const R4SdkDriverNativeValue81_TYPE: u32 = 81;
+pub const R4SdkDriverNativeValue83_TYPE: u32 = 83;
+pub const R4SdkDriverNativeValue84_TYPE: u32 = 84;
+pub const R4SdkDriverNativeValue86_TYPE: u32 = 86;
+pub const R4SdkDriverNativeValue88_TYPE: u32 = 88;
+pub const R4SdkDriverNativeValue90_TYPE: u32 = 90;
+pub const R4SdkDriverNativeValue91_TYPE: u32 = 91;
+pub const R4SdkDriverNativeValue92_TYPE: u32 = 92;
+pub const R4SdkDriverNativeValue94_TYPE: u32 = 94;
+pub const R4SdkDriverNativeValue95_TYPE: u32 = 95;
+pub const R4SdkDriverNativeValue96_TYPE: u32 = 96;
+pub const R4SdkDriverNativeValue98_TYPE: u32 = 98;
+pub const R4SdkDriverNativeValue99_TYPE: u32 = 99;
+pub const R4SdkDriverNativeValue100_TYPE: u32 = 100;
+pub const R4SdkDriverNativeValue102_TYPE: u32 = 102;
+pub const R4SdkDriverNativeValue104_TYPE: u32 = 104;
+pub const R4SdkDriverNativeValue106_TYPE: u32 = 106;
+pub const R4SdkDriverNativeValue108_TYPE: u32 = 108;
+pub const R4SdkDriverNativeValue110_TYPE: u32 = 110;
+pub const R4SdkDriverNativeValue112_TYPE: u32 = 112;
+pub const R4SdkDriverNativeValue113_TYPE: u32 = 113;
+pub const R4SdkDriverNativeValue115_TYPE: u32 = 115;
+pub const R4SdkDriverNativeValue117_TYPE: u32 = 117;
+pub const R4SdkDriverNativeValue119_TYPE: u32 = 119;
+pub const R4SdkDriverNativeValue121_TYPE: u32 = 121;
+pub const R4SdkDriverNativeValue123_TYPE: u32 = 123;
+pub const R4SdkDriverNativeValue124_TYPE: u32 = 124;
+pub const R4SdkDriverNativeValue126_TYPE: u32 = 126;
+pub const R4SdkDriverNativeValue128_TYPE: u32 = 128;
+pub const R4SdkDriverNativeValue130_TYPE: u32 = 130;
+pub const R4SdkDriverNativeValue131_TYPE: u32 = 131;
+pub const R4SdkDriverNativeValue133_TYPE: u32 = 133;
+pub const R4SdkDriverNativeValue135_TYPE: u32 = 135;
+pub const R4SdkDriverNativeValue137_TYPE: u32 = 137;
+pub const R4SdkDriverNativeValue139_TYPE: u32 = 139;
+pub const R4SdkDriverNativeValue141_TYPE: u32 = 141;
+pub const R4SdkDriverNativeValue142_TYPE: u32 = 142;
+pub const R4SdkDriverNativeValue144_TYPE: u32 = 144;
+pub const R4SdkDriverNativeValue145_TYPE: u32 = 145;
+pub const R4SdkDriverNativeValue146_TYPE: u32 = 146;
+pub const R4SdkDriverNativeValue148_TYPE: u32 = 148;
+pub const R4SdkDriverNativeValue149_TYPE: u32 = 149;
+pub const R4SdkDriverNativeValue150_TYPE: u32 = 150;
+pub const R4SdkDriverNativeValue151_TYPE: u32 = 151;
+pub const R4SdkDriverNativeValue152_TYPE: u32 = 152;
+pub const R4SdkDriverNativeValue153_TYPE: u32 = 153;
+pub const R4SdkDriverNativeValue155_TYPE: u32 = 155;
+pub const R4SdkDriverNativeValue157_TYPE: u32 = 157;
+pub const R4SdkDriverNativeValue159_TYPE: u32 = 159;
+pub const R4SdkDriverNativeValue160_TYPE: u32 = 160;
+pub const R4SdkDriverNativeValue162_TYPE: u32 = 162;
+pub const R4SdkDriverNativeValue164_TYPE: u32 = 164;
+pub const R4SdkDriverNativeValue166_TYPE: u32 = 166;
+pub const R4SdkDriverNativeValue168_TYPE: u32 = 168;
+pub const R4SdkDriverNativeValue170_TYPE: u32 = 170;
+pub const R4SdkDriverNativeValue172_TYPE: u32 = 172;
+pub const R4SdkDriverNativeValue174_TYPE: u32 = 174;
+pub const R4SdkDriverNativeValue176_TYPE: u32 = 176;
+pub const R4SdkDriverNativeValue177_TYPE: u32 = 177;
+pub const R4SdkDriverNativeValue179_TYPE: u32 = 179;
+pub const R4SdkDriverNativeValue181_TYPE: u32 = 181;
+pub const R4SdkDriverNativeValue183_TYPE: u32 = 183;
+pub const R4SdkDriverNativeValue185_TYPE: u32 = 185;
+pub const R4SdkDriverNativeValue186_TYPE: u32 = 186;
+pub const R4SdkDriverNativeValue188_TYPE: u32 = 188;
+pub const R4SdkDriverNativeValue190_TYPE: u32 = 190;
+pub const R4SdkDriverNativeValue192_TYPE: u32 = 192;
+pub const R4SdkDriverNativeValue194_TYPE: u32 = 194;
+pub const R4SdkDriverNativeValue196_TYPE: u32 = 196;
+pub const R4SdkDriverNativeValue198_TYPE: u32 = 198;
+pub const R4SdkDriverNativeValue200_TYPE: u32 = 200;
+pub const R4SdkDriverNativeValue202_TYPE: u32 = 202;
+pub const R4SdkDriverNativeValue204_TYPE: u32 = 204;
+pub const R4SdkDriverNativeValue206_TYPE: u32 = 206;
+pub const R4SdkDriverNativeValue208_TYPE: u32 = 208;
+pub const R4SdkDriverNativeValue210_TYPE: u32 = 210;
+pub const R4SdkDriverNativeValue212_TYPE: u32 = 212;
+pub const R4SdkDriverNativeValue213_TYPE: u32 = 213;
+pub const R4SdkDriverNativeValue215_TYPE: u32 = 215;
+pub const R4SdkDriverNativeValue217_TYPE: u32 = 217;
+pub const R4SdkDriverNativeValue219_TYPE: u32 = 219;
+pub const R4SdkDriverNativeValue221_TYPE: u32 = 221;
+pub const R4SdkDriverNativeValue222_TYPE: u32 = 222;
+pub const R4SdkDriverNativeValue224_TYPE: u32 = 224;
+pub const R4SdkDriverNativeValue225_TYPE: u32 = 225;
+pub const R4SdkDriverNativeValue226_TYPE: u32 = 226;
+pub const R4SdkDriverNativeValue228_TYPE: u32 = 228;
+pub const R4SdkDriverNativeValue230_TYPE: u32 = 230;
+pub const R4SdkDriverNativeValue232_TYPE: u32 = 232;
+pub const R4SdkDriverNativeValue233_TYPE: u32 = 233;
+pub const R4SdkDriverNativeValue235_TYPE: u32 = 235;
+pub const R4SdkDriverNativeValue237_TYPE: u32 = 237;
+pub const R4SdkDriverNativeValue239_TYPE: u32 = 239;
+pub const R4SdkDriverNativeValue241_TYPE: u32 = 241;
+pub const R4SdkDriverNativeValue243_TYPE: u32 = 243;
+pub const R4SdkDriverNativeValue245_TYPE: u32 = 245;
+pub const R4SdkDriverNativeValue247_TYPE: u32 = 247;
+pub const R4SdkDriverNativeValue248_TYPE: u32 = 248;
+pub const R4SdkDriverNativeValue250_TYPE: u32 = 250;
+pub const R4SdkDriverNativeValue252_TYPE: u32 = 252;
+pub const R4SdkDriverNativeValue253_TYPE: u32 = 253;
+pub const R4SdkDriverNativeValue255_TYPE: u32 = 255;
+pub const R4SdkDriverNativeValue257_TYPE: u32 = 257;
+pub const R4SdkDriverNativeValue259_TYPE: u32 = 259;
+pub const R4SdkDriverNativeValue260_TYPE: u32 = 260;
+pub const R4SdkDriverNativeValue262_TYPE: u32 = 262;
+pub const R4SdkDriverNativeValue264_TYPE: u32 = 264;
+pub const R4SdkDriverNativeValue265_TYPE: u32 = 265;
+pub const R4SdkDriverNativeValue267_TYPE: u32 = 267;
+pub const R4SdkDriverNativeValue269_TYPE: u32 = 269;
+pub const R4SdkDriverNativeValue271_TYPE: u32 = 271;
+pub const R4SdkDriverNativeValue273_TYPE: u32 = 273;
+pub const R4SdkDriverNativeValue275_TYPE: u32 = 275;
+pub const R4SdkDriverNativeValue277_TYPE: u32 = 277;
+pub const R4SdkDriverNativeValue279_TYPE: u32 = 279;
+pub const R4SdkDriverNativeValue281_TYPE: u32 = 281;
+pub const R4SdkDriverNativeValue283_TYPE: u32 = 283;
+pub const R4SdkDriverNativeValue285_TYPE: u32 = 285;
+pub const R4SdkDriverNativeValue287_TYPE: u32 = 287;
+pub const R4SdkDriverNativeValue289_TYPE: u32 = 289;
+pub const R4SdkDriverNativeValue291_TYPE: u32 = 291;
+pub const R4SdkDriverNativeValue293_TYPE: u32 = 293;
+pub const R4SdkDriver_ABI_FINGERPRINT: u64 = 2151242634955201969;
+pub const R4SdkDriver_r4d_shutdown_entry_offset: i32 = 5;
 unsafe extern "C" {
     pub fn r4serial_init(p0: *const R4Dev, p1: *mut R4Serial) -> i32;
     pub fn r4serial_count(p0: *const R4Serial) -> u32;
@@ -32134,4 +33343,666 @@ unsafe extern "C" {
     pub fn R4SdkSubsystemNativeValue238_inspectNative(p0: *const R4SdkSubsystemNativeValue238) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNativeValue240_create(p0: *mut R4SdkSubsystemNativeValue240, p1: *mut R4AudioServiceStreamResult) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNativeValue240_inspectNative(p0: *const R4SdkSubsystemNativeValue240) -> R4SdkSubsystemSlot;
+    pub fn R4SdkDriverInvoke(p0: u64, p1: u32, p2: *const R4SdkDriverSlot, p3: u32, p4: *mut core::ffi::c_void) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverConstruct(p0: u64, p1: u32, p2: *const R4SdkDriverSlot, p3: u32, p4: *mut core::ffi::c_void) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverInspect(p0: u64, p1: u32, p2: *mut core::ffi::c_void, p3: *mut core::ffi::c_void) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverField(p0: u64, p1: u32, p2: u32, p3: *mut core::ffi::c_void, p4: *const R4SdkDriverSlot, p5: *mut core::ffi::c_void) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverVerifyAbi(p0: u64) -> i32;
+    pub fn R4SdkDriverSharedDmaBuffer_create(p0: u32, p1: *const R4SdkDriverContext, p2: u32, p3: u64) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverSharedDmaBuffer_data(p0: u32, p1: *const R4SdkDriverSharedDmaBuffer) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverSharedDmaBuffer_retain(p0: u32, p1: *mut R4SdkDriverSharedDmaBuffer) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverSharedDmaBuffer_release(p0: u32, p1: *mut R4SdkDriverSharedDmaBuffer, p2: *const R4SdkDriverContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_serial(p0: u32, p1: *const R4SdkDriverContext, p2: *mut R4SdkDriverSerialContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_heap(p0: u32, p1: *const R4SdkDriverContext, p2: *mut R4SdkDriverHeapContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_resources(p0: u32, p1: *const R4SdkDriverContext, p2: *mut R4SdkDriverResourcesContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_graphicsDisplay(p0: u32, p1: *const R4SdkDriverContext, p2: *mut R4SdkDriverDisplayContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_graphicsOutputs(p0: u32, p1: *const R4SdkDriverContext, p2: *mut R4SdkDriverOutputsContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_graphicsQueue(p0: u32, p1: *const R4SdkDriverContext, p2: *mut R4SdkDriverQueueContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_memory(p0: u32, p1: *const R4SdkDriverContext, p2: *mut R4SdkDriverMemoryContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_init(p0: u32, p1: *const R4DriverApi, p2: *mut R4SdkDriverContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_apiMagic(p0: u32, p1: *const R4SdkDriverContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_apiVersion(p0: u32, p1: *const R4SdkDriverContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_apiSize(p0: u32, p1: *const R4SdkDriverContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_apiHeaderValid(p0: u32, p1: *const R4SdkDriverContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_supportsDriverApi(p0: u32, p1: *const R4SdkDriverContext, p2: u32, p3: u32) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_apiCompatible(p0: u32, p1: *const R4SdkDriverContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_logInfo(p0: u32, p1: *const R4SdkDriverContext, p2: *const u8) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_logWarn(p0: u32, p1: *const R4SdkDriverContext, p2: *const u8) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_logError(p0: u32, p1: *const R4SdkDriverContext, p2: *const u8) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_portInb(p0: u32, p1: *const R4SdkDriverContext, p2: u16) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_portOutb(p0: u32, p1: *const R4SdkDriverContext, p2: u16, p3: u8) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_portInw(p0: u32, p1: *const R4SdkDriverContext, p2: u16) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_portOutw(p0: u32, p1: *const R4SdkDriverContext, p2: u16, p3: u16) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_portInl(p0: u32, p1: *const R4SdkDriverContext, p2: u16) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_portOutl(p0: u32, p1: *const R4SdkDriverContext, p2: u16, p3: u32) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_getOption(p0: u32, p1: *const R4SdkDriverContext, p2: *const u8, p3: *const u8) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_registerSynthEngineEx(p0: u32, p1: *const R4SdkDriverContext, p2: *const u8, p3: *const R4SynthEngine) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_registerAudioOutputBackend(p0: u32, p1: *const R4SdkDriverContext, p2: *const u8, p3: *const R4AudioBackend) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_registerAudioOutputs(p0: u32, p1: *const R4SdkDriverContext, p2: *const u8, p3: *const R4SdkDriverAudioOutputBackend) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_registerAudioOutputIdle(p0: u32, p1: *const R4SdkDriverContext, p2: *const u8, p3: *const R4SdkDriverAudioOutputIdleBackend) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_unregisterAudioBackend(p0: u32, p1: *const R4SdkDriverContext, p2: *const u8) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_registerNetBackend(p0: u32, p1: *const R4SdkDriverContext, p2: *const u8, p3: *const R4NetBackend) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_registerStorageBackend(p0: u32, p1: *const R4SdkDriverContext, p2: *const u8, p3: *const R4StorageBackend) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_unregisterStorageBackend(p0: u32, p1: *const R4SdkDriverContext, p2: *const u8) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_storageBackendRecoveryBegin(p0: u32, p1: *const R4SdkDriverContext, p2: *const u8) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_storageBackendRecoveryFinish(p0: u32, p1: *const R4SdkDriverContext, p2: *const u8, p3: u8) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_registerUsbHostController(p0: u32, p1: *const R4SdkDriverContext, p2: *const u8, p3: *const R4UsbHostController) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_unregisterUsbHostController(p0: u32, p1: *const R4SdkDriverContext, p2: *const u8) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_activateUsbHostController(p0: u32, p1: *const R4SdkDriverContext, p2: *const u8, p3: u32) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_registerDisplayBlitBackend(p0: u32, p1: *const R4SdkDriverContext, p2: *const u8, p3: *const R4DisplayBlitBackend) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_unregisterDisplayBlitBackend(p0: u32, p1: *const R4SdkDriverContext, p2: *const u8) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_netReceiveFrame(p0: u32, p1: *const R4SdkDriverContext, p2: i32, p3: *const u8, p4: u64) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_netScheduleRx(p0: u32, p1: *const R4SdkDriverContext, p2: i32) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_netBackendQuery(p0: u32, p1: *const R4SdkDriverContext, p2: i32, p3: *mut R4NetBackendNegotiation) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_netReceivePacket(p0: u32, p1: *const R4SdkDriverContext, p2: i32, p3: *const R4NetPacket) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_allocDmaRegion(p0: u32, p1: *const R4SdkDriverContext, p2: u32, p3: u32, p4: *mut R4DmaBuffer) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_allocDmaRegionConstrained(p0: u32, p1: *const R4SdkDriverContext, p2: u32, p3: u32, p4: u64, p5: *mut R4DmaBuffer) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_freeDmaRegion(p0: u32, p1: *const R4SdkDriverContext, p2: *mut R4DmaBuffer) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_pinDmaBuffer(p0: u32, p1: *const R4SdkDriverContext, p2: *mut u8, p3: u64, p4: *mut R4DmaPinnedBuffer) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_pinDmaConstBuffer(p0: u32, p1: *const R4SdkDriverContext, p2: *const u8, p3: u64, p4: *mut R4DmaPinnedBuffer) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_mapDmaPinned(p0: u32, p1: *const R4SdkDriverContext, p2: *const R4DmaPinnedBuffer, p3: *const R4DmaConstraints, p4: u32, p5: *mut R4DmaMapping) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_syncDmaForDevice(p0: u32, p1: *const R4SdkDriverContext, p2: *const R4DmaMapping) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_syncDmaForCpu(p0: u32, p1: *const R4SdkDriverContext, p2: *const R4DmaMapping) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_syncDmaRangeForDevice(p0: u32, p1: *const R4SdkDriverContext, p2: *const R4DmaMapping, p3: u32, p4: u32) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_syncDmaRangeForCpu(p0: u32, p1: *const R4SdkDriverContext, p2: *const R4DmaMapping, p3: u32, p4: u32) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_unmapDma(p0: u32, p1: *const R4SdkDriverContext, p2: *mut R4DmaMapping) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_unpinDmaBuffer(p0: u32, p1: *const R4SdkDriverContext, p2: *mut R4DmaPinnedBuffer) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_pciDeviceCount(p0: u32, p1: *const R4SdkDriverContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_pciDeviceAt(p0: u32, p1: *const R4SdkDriverContext, p2: u32, p3: *mut R4PciDeviceInfo) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_pciFindByClass(p0: u32, p1: *const R4SdkDriverContext, p2: u8, p3: u8, p4: u32, p5: *mut R4PciDeviceInfo) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_pciReadConfig32(p0: u32, p1: *const R4SdkDriverContext, p2: *const R4PciDeviceInfo, p3: u16) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_pciWriteConfig32(p0: u32, p1: *const R4SdkDriverContext, p2: *const R4PciDeviceInfo, p3: u16, p4: u32) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_pciReadBar(p0: u32, p1: *const R4SdkDriverContext, p2: *const R4PciDeviceInfo, p3: u8) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_pciEnableBusMaster(p0: u32, p1: *const R4SdkDriverContext, p2: *const R4PciDeviceInfo, p3: u32) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_pciMapBar(p0: u32, p1: *const R4SdkDriverContext, p2: *const R4PciDeviceInfo, p3: u8, p4: u32, p5: u32, p6: *mut R4MmioRegion) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_irqRegister(p0: u32, p1: *const R4SdkDriverContext, p2: u8, p3: u64, p4: u64, p5: u32) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_pciEnableMsi(p0: u32, p1: *const R4SdkDriverContext, p2: *const R4PciDeviceInfo) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_pciDisableMsi(p0: u32, p1: *const R4SdkDriverContext, p2: *const R4PciDeviceInfo) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_irqUnregister(p0: u32, p1: *const R4SdkDriverContext, p2: u8, p3: u64, p4: u64) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_irqStats(p0: u32, p1: *const R4SdkDriverContext, p2: u8, p3: *mut R4IrqStats) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_workSubmit(p0: u32, p1: *const R4SdkDriverContext, p2: u64, p3: u64, p4: u32, p5: *mut u32) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_workSubmitRequest(p0: u32, p1: *const R4SdkDriverContext, p2: *const R4DriverWorkRequest, p3: *mut u32) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_workSubmitOwned(p0: u32, p1: *const R4SdkDriverContext, p2: u64, p3: u64, p4: *mut u32) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_workCancel(p0: u32, p1: *const R4SdkDriverContext, p2: u32) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_completionWait(p0: u32, p1: *const R4SdkDriverContext, p2: u32, p3: u64, p4: *mut i32) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_completionStatus(p0: u32, p1: *const R4SdkDriverContext, p2: u32, p3: *mut R4DriverCompletionStatus) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_completionRelease(p0: u32, p1: *const R4SdkDriverContext, p2: u32) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_workSummary(p0: u32, p1: *const R4SdkDriverContext, p2: *mut R4DriverWorkSummary) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_tickCount(p0: u32, p1: *const R4SdkDriverContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_timerFrequency(p0: u32, p1: *const R4SdkDriverContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_monotonicClock(p0: u32, p1: *const R4SdkDriverContext, p2: *mut R4MonotonicClockInfo) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_threads(p0: u32, p1: *const R4SdkDriverContext, p2: *mut R4SdkDriverThreadsContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_semaphores(p0: u32, p1: *const R4SdkDriverContext, p2: *mut R4SdkDriverSemaphoresContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_waitTicks(p0: u32, p1: *const R4SdkDriverContext, p2: u64) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_protocolDispatch(p0: u32, p1: *const R4SdkDriverContext, p2: *const u8, p3: u32, p4: *const R4ProtocolBuffer, p5: *mut R4ProtocolBuffer) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverSerialContext_register(p0: u32, p1: *const R4SdkDriverSerialContext, p2: *const R4SerialBackend, p3: *mut u64) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverSerialContext_unregister(p0: u32, p1: *const R4SdkDriverSerialContext, p2: u64) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverSerialContext_notify(p0: u32, p1: *const R4SdkDriverSerialContext, p2: u64, p3: u32) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverSerialContext_admission(p0: u32, p1: *const R4SdkDriverSerialContext, p2: u64) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverMemoryContext_reservedSpan(p0: u32, p1: *const R4SdkDriverMemoryContext, p2: u64, p3: u64) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverMemoryContext_unmanagedSpan(p0: u32, p1: *const R4SdkDriverMemoryContext, p2: u64, p3: u64) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverMemoryContext_deviceLost(p0: u32, p1: *const R4SdkDriverMemoryContext, p2: u32, p3: u64, p4: u8) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverMemoryContext_telemetryExchange(p0: u32, p1: *const R4SdkDriverMemoryContext, p2: *const R4GfxTelemetryState, p3: *mut R4GfxTelemetryDemand) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverMemoryContext_memoryBudget(p0: u32, p1: *const R4SdkDriverMemoryContext, p2: *const R4GfxDeviceBudgetRequest, p3: *mut R4GfxDeviceBudgetState) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverMemoryContext_virtualRegister(p0: u32, p1: *const R4SdkDriverMemoryContext, p2: *const R4GfxNativeProvider, p3: *mut R4GfxBufferHandle) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverMemoryContext_virtualUnregister(p0: u32, p1: *const R4SdkDriverMemoryContext, p2: *const R4GfxBufferHandle) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverMemoryContext_virtualTake(p0: u32, p1: *const R4SdkDriverMemoryContext, p2: *const R4GfxBufferHandle, p3: *mut R4GfxVirtualJob) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverMemoryContext_virtualComplete(p0: u32, p1: *const R4SdkDriverMemoryContext, p2: *const R4GfxBufferHandle, p3: *const R4GfxVirtualCompletion) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverMemoryContext_nativeRegister(p0: u32, p1: *const R4SdkDriverMemoryContext, p2: *const R4GfxNativeProvider, p3: *mut R4GfxBufferHandle) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverMemoryContext_nativeUnregister(p0: u32, p1: *const R4SdkDriverMemoryContext, p2: *const R4GfxBufferHandle) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverMemoryContext_nativeTake(p0: u32, p1: *const R4SdkDriverMemoryContext, p2: *const R4GfxBufferHandle, p3: *mut R4GfxNativeJob) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverMemoryContext_nativeComplete(p0: u32, p1: *const R4SdkDriverMemoryContext, p2: *const R4GfxBufferHandle, p3: *const R4GfxBufferHandle, p4: i32, p5: *const R4GfxBufferHandle) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverMemoryContext_bufferCreate(p0: u32, p1: *const R4SdkDriverMemoryContext, p2: *const R4GfxBufferDescriptor, p3: *mut R4GfxBufferReference) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverMemoryContext_bufferDescribe(p0: u32, p1: *const R4SdkDriverMemoryContext, p2: *const R4GfxBufferHandle, p3: *mut R4GfxBufferDescriptor) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverMemoryContext_bufferImport(p0: u32, p1: *const R4SdkDriverMemoryContext, p2: *const R4GfxBufferHandle, p3: *mut R4GfxBufferReference) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverMemoryContext_bufferRelease(p0: u32, p1: *const R4SdkDriverMemoryContext, p2: *const R4GfxBufferHandle) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverMemoryContext_bufferMap(p0: u32, p1: *const R4SdkDriverMemoryContext, p2: *const R4GfxBufferHandle, p3: u32, p4: u64, p5: u64, p6: *mut R4GfxBufferMap) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverMemoryContext_bufferUnmap(p0: u32, p1: *const R4SdkDriverMemoryContext, p2: *const R4GfxBufferHandle) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverMemoryContext_deviceAcquire(p0: u32, p1: *const R4SdkDriverMemoryContext, p2: *const R4GfxBufferHandle, p3: *const R4GfxDeviceRequest, p4: *mut R4GfxDeviceLease) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverMemoryContext_deviceSegment(p0: u32, p1: *const R4SdkDriverMemoryContext, p2: *const R4GfxDeviceLease, p3: u64, p4: *mut R4GfxDmaSegment) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverMemoryContext_deviceRelease(p0: u32, p1: *const R4SdkDriverMemoryContext, p2: *const R4GfxDeviceLease, p3: u32) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverMemoryContext_mmioMap(p0: u32, p1: *const R4SdkDriverMemoryContext, p2: *const R4GfxMmioRequest, p3: *mut R4GfxMmioWindow) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverMemoryContext_mmioUnmap(p0: u32, p1: *const R4SdkDriverMemoryContext, p2: *const R4GfxBufferHandle, p3: u32) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverMemoryContext_collect(p0: u32, p1: *const R4SdkDriverMemoryContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverMemoryContext_bufferStats(p0: u32, p1: *const R4SdkDriverMemoryContext, p2: *mut R4GfxBufferStats) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverMemoryContext_bufferReserve(p0: u32, p1: *const R4SdkDriverMemoryContext, p2: *const R4GfxBufferDescriptor, p3: u64, p4: *mut R4GfxOwnedBufferReservation) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverMemoryContext_bufferCommit(p0: u32, p1: *const R4SdkDriverMemoryContext, p2: *const R4GfxOwnedBufferReservation, p3: *mut R4GfxBufferReference) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverMemoryContext_bufferAbort(p0: u32, p1: *const R4SdkDriverMemoryContext, p2: *const R4GfxOwnedBufferReservation, p3: u32) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverMemoryContext_bufferTakeRelease(p0: u32, p1: *const R4SdkDriverMemoryContext, p2: u32, p3: u64, p4: *mut R4GfxOwnedBufferRelease) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverMemoryContext_bufferFinishRelease(p0: u32, p1: *const R4SdkDriverMemoryContext, p2: *const R4GfxOwnedBufferRelease, p3: u32) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverEntropyContext_register(p0: u32, p1: *const R4SdkDriverEntropyContext, p2: *const R4EntropyBackend, p3: *mut u64) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverEntropyContext_unregister(p0: u32, p1: *const R4SdkDriverEntropyContext, p2: u64) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverResourcesContext_entropy(p0: u32, p1: *const R4SdkDriverResourcesContext, p2: *mut R4SdkDriverEntropyContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverResourcesContext_cpuPower(p0: u32, p1: *const R4SdkDriverResourcesContext, p2: *mut R4SdkDriverCpuPowerContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverResourcesContext_platform(p0: u32, p1: *const R4SdkDriverResourcesContext, p2: *mut R4SdkDriverResourcesPlatform) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverResourcesContext_supportsAcpi(p0: u32, p1: *const R4SdkDriverResourcesContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverResourcesContext_acpiStat(p0: u32, p1: *const R4SdkDriverResourcesContext, p2: *const R4SdkDriverNativeValue152, p3: u32, p4: *mut R4DriverFirmwareTableInfo) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverResourcesContext_acpiReadAt(p0: u32, p1: *const R4SdkDriverResourcesContext, p2: u64, p3: u64, p4: *mut u8, p5: u64, p6: u64) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverResourcesContext_stat(p0: u32, p1: *const R4SdkDriverResourcesContext, p2: *const u8, p3: u64, p4: *mut R4DriverResourceInfo) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverResourcesContext_readAt(p0: u32, p1: *const R4SdkDriverResourcesContext, p2: u64, p3: u64, p4: *mut u8, p5: u64, p6: u64) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverResourcesContext_nowNs(p0: u32, p1: *const R4SdkDriverResourcesContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverResourcesPlatform_rsdp(p0: u32, p1: *const R4SdkDriverResourcesPlatform) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverResourcesPlatform_physicalView(p0: u32, p1: *const R4SdkDriverResourcesPlatform, p2: u64, p3: u64) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverResourcesPlatform_input(p0: u32, p1: *const R4SdkDriverResourcesPlatform, p2: u32, p3: u32) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverQueueContext_queueOwnerInfo(p0: u32, p1: *const R4SdkDriverQueueContext, p2: *const R4GfxBackendBinding, p3: u64, p4: *mut R4GfxQueueOwnerInfo) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverQueueContext_supportsScanout(p0: u32, p1: *const R4SdkDriverQueueContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverQueueContext_retainScanout(p0: u32, p1: *const R4SdkDriverQueueContext, p2: *const R4GfxFence, p3: *mut R4GfxBufferReference) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverQueueContext_beginScanout(p0: u32, p1: *const R4SdkDriverQueueContext, p2: *const R4GfxFence) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverQueueContext_scanoutRetireRequested(p0: u32, p1: *const R4SdkDriverQueueContext, p2: *const R4GfxFence) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverQueueContext_supportsRenderList(p0: u32, p1: *const R4SdkDriverQueueContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverQueueContext_supportsRenderGridList(p0: u32, p1: *const R4SdkDriverQueueContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverQueueContext_supportsRenderColorList(p0: u32, p1: *const R4SdkDriverQueueContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverQueueContext_readRenderColorList(p0: u32, p1: *const R4SdkDriverQueueContext, p2: *const R4GfxFence, p3: *mut R4GfxRenderColorList) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverQueueContext_readRenderGridList(p0: u32, p1: *const R4SdkDriverQueueContext, p2: *const R4GfxFence, p3: *mut R4GfxRenderGridList) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverQueueContext_readRenderList(p0: u32, p1: *const R4SdkDriverQueueContext, p2: *const R4GfxFence, p3: *mut R4GfxRenderList) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverQueueContext_updateOperations(p0: u32, p1: *const R4SdkDriverQueueContext, p2: *const R4GfxBackendBinding, p3: u64) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverQueueContext_registerProfile(p0: u32, p1: *const R4SdkDriverQueueContext, p2: *const R4GfxBackendRegistration, p3: *const R4GfxBackendProfile, p4: *mut R4GfxBackendBinding) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverQueueContext_publishProperties(p0: u32, p1: *const R4SdkDriverQueueContext, p2: *const R4GfxBackendBinding, p3: *const R4GfxBackendProperties) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverQueueContext_nativeInfo(p0: u32, p1: *const R4SdkDriverQueueContext, p2: *const R4GfxFence, p3: *mut R4GfxNativeJobInfo) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverQueueContext_nativeData(p0: u32, p1: *const R4SdkDriverQueueContext, p2: *const R4GfxFence, p3: u32, p4: *mut u8, p5: u64) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverQueueContext_nativeBinding(p0: u32, p1: *const R4SdkDriverQueueContext, p2: *const R4GfxFence, p3: u32, p4: *mut R4GfxNativeBinding) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverQueueContext_register(p0: u32, p1: *const R4SdkDriverQueueContext, p2: *const R4GfxBackendRegistration, p3: *mut R4GfxBackendBinding) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverQueueContext_unregister(p0: u32, p1: *const R4SdkDriverQueueContext, p2: *const R4GfxBackendBinding, p3: u32) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverQueueContext_take(p0: u32, p1: *const R4SdkDriverQueueContext, p2: *const R4GfxBackendBinding, p3: *mut R4GfxDriverJob) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverQueueContext_complete(p0: u32, p1: *const R4SdkDriverQueueContext, p2: *const R4GfxFence, p3: u32, p4: u32) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverQueueContext_reset(p0: u32, p1: *const R4SdkDriverQueueContext, p2: *const R4GfxBackendBinding, p3: u32, p4: *mut R4GfxBackendBinding) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverQueueContext_segment(p0: u32, p1: *const R4SdkDriverQueueContext, p2: *const R4GfxFence, p3: u32, p4: u64, p5: u64, p6: *mut R4GfxDmaSegment) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverQueueContext_retainResource(p0: u32, p1: *const R4SdkDriverQueueContext, p2: *const R4GfxFence, p3: u32, p4: *mut R4GfxBufferReference) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverOutputsContext_supportsPower(p0: u32, p1: *const R4SdkDriverOutputsContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverOutputsContext_publishPower(p0: u32, p1: *const R4SdkDriverOutputsContext, p2: *const R4GfxOutputPower) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverOutputsContext_readPower(p0: u32, p1: *const R4SdkDriverOutputsContext, p2: *const R4GfxOutputId, p3: *mut R4GfxPowerRequest) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverOutputsContext_supportsBrightness(p0: u32, p1: *const R4SdkDriverOutputsContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverOutputsContext_publishBrightness(p0: u32, p1: *const R4SdkDriverOutputsContext, p2: *const R4GfxOutputBrightness) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverOutputsContext_readBrightness(p0: u32, p1: *const R4SdkDriverOutputsContext, p2: *const R4GfxOutputId, p3: *mut R4GfxBrightnessRequest) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverOutputsContext_supportsRefresh(p0: u32, p1: *const R4SdkDriverOutputsContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverOutputsContext_publishRefresh(p0: u32, p1: *const R4SdkDriverOutputsContext, p2: *const R4GfxOutputRefresh) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverOutputsContext_readRefresh(p0: u32, p1: *const R4SdkDriverOutputsContext, p2: *const R4GfxOutputTarget, p3: *mut R4GfxRefreshRequest) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverOutputsContext_supportsModeColor(p0: u32, p1: *const R4SdkDriverOutputsContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverOutputsContext_readModeColor(p0: u32, p1: *const R4SdkDriverOutputsContext, p2: u64, p3: u64, p4: *mut R4GfxDriverModeColor) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverOutputsContext_supportsColor(p0: u32, p1: *const R4SdkDriverOutputsContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverOutputsContext_publishColor(p0: u32, p1: *const R4SdkDriverOutputsContext, p2: *const R4GfxOutputColorState) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverOutputsContext_supportsHotplug(p0: u32, p1: *const R4SdkDriverOutputsContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverOutputsContext_pauseOutput(p0: u32, p1: *const R4SdkDriverOutputsContext, p2: *const R4GfxOutputId, p3: u8) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverOutputsContext_restoreMode(p0: u32, p1: *const R4SdkDriverOutputsContext, p2: *const R4GfxAtomicState, p3: *mut R4GfxModeStatus) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverOutputsContext_modeStatus(p0: u32, p1: *const R4SdkDriverOutputsContext, p2: u64, p3: *mut R4GfxModeStatus) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverOutputsContext_supportsAudio(p0: u32, p1: *const R4SdkDriverOutputsContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverOutputsContext_publishAudio(p0: u32, p1: *const R4SdkDriverOutputsContext, p2: *const R4GfxAudioRoute) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverOutputsContext_queryAudio(p0: u32, p1: *const R4SdkDriverOutputsContext, p2: u32, p3: u32, p4: u32, p5: *mut R4GfxAudioRoute) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverOutputsContext_supportsModes(p0: u32, p1: *const R4SdkDriverOutputsContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverOutputsContext_enableModes(p0: u32, p1: *const R4SdkDriverOutputsContext, p2: *const R4GfxBackendBinding) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverOutputsContext_takeMode(p0: u32, p1: *const R4SdkDriverOutputsContext, p2: *const R4GfxBackendBinding, p3: *mut R4GfxDriverModeJob) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverOutputsContext_completeMode(p0: u32, p1: *const R4SdkDriverOutputsContext, p2: *const R4GfxDriverModeCompletion) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverOutputsContext_supportsReceivers(p0: u32, p1: *const R4SdkDriverOutputsContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverOutputsContext_registerSource(p0: u32, p1: *const R4SdkDriverOutputsContext, p2: u32, p3: *mut R4GfxReceiverSource) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverOutputsContext_replaceReceivers(p0: u32, p1: *const R4SdkDriverOutputsContext, p2: *const R4GfxReceiverUpdate) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverOutputsContext_closeSource(p0: u32, p1: *const R4SdkDriverOutputsContext, p2: *const R4GfxReceiverSource) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverOutputsContext_publish(p0: u32, p1: *const R4SdkDriverOutputsContext, p2: *const R4GfxOutputPublication, p3: *mut R4GfxOutputId) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverOutputsContext_withdraw(p0: u32, p1: *const R4SdkDriverOutputsContext, p2: *const R4GfxOutputId) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverDisplayContext_supportsHeadlessResume(p0: u32, p1: *const R4SdkDriverDisplayContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverDisplayContext_resumeHeadless(p0: u32, p1: *const R4SdkDriverDisplayContext, p2: *const R4GfxBackendBinding, p3: u64, p4: *mut R4GfxNativeState) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverDisplayContext_supportsTerminalRelease(p0: u32, p1: *const R4SdkDriverDisplayContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverDisplayContext_releaseTerminal(p0: u32, p1: *const R4SdkDriverDisplayContext, p2: *const R4GfxBackendBinding, p3: u64, p4: *mut R4GfxNativeState) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverDisplayContext_supportsReset(p0: u32, p1: *const R4SdkDriverDisplayContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverDisplayContext_deviceReset(p0: u32, p1: *const R4SdkDriverDisplayContext, p2: *const R4GfxBackendBinding, p3: u64, p4: u8, p5: *mut R4GfxNativeState) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverDisplayContext_prepareReset(p0: u32, p1: *const R4SdkDriverDisplayContext, p2: *const R4GfxNativeRegistration, p3: u64, p4: u64, p5: *mut R4GfxNativeState) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverDisplayContext_supportsOutputs(p0: u32, p1: *const R4SdkDriverDisplayContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverDisplayContext_outputRegister(p0: u32, p1: *const R4SdkDriverDisplayContext, p2: *const R4GfxAdditionalOutput, p3: *mut R4GfxOutputTarget) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverDisplayContext_outputTransition(p0: u32, p1: *const R4SdkDriverDisplayContext, p2: *const R4GfxOutputTarget, p3: u32, p4: u8) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverDisplayContext_supportsCursor(p0: u32, p1: *const R4SdkDriverDisplayContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverDisplayContext_cursorConfigure(p0: u32, p1: *const R4SdkDriverDisplayContext, p2: *const R4DisplayCursorInfo) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverDisplayContext_cursorTake(p0: u32, p1: *const R4SdkDriverDisplayContext, p2: *const R4GfxBackendBinding, p3: *mut R4GfxDriverCursorJob) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverDisplayContext_cursorComplete(p0: u32, p1: *const R4SdkDriverDisplayContext, p2: *const R4GfxDriverCursorCompletion) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverDisplayContext_supportsPresentationStats(p0: u32, p1: *const R4SdkDriverDisplayContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverDisplayContext_supportsPresentationInfo(p0: u32, p1: *const R4SdkDriverDisplayContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverDisplayContext_presentationInfo(p0: u32, p1: *const R4SdkDriverDisplayContext, p2: *const R4DisplayPresentationInfo) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverDisplayContext_presentationStats(p0: u32, p1: *const R4SdkDriverDisplayContext, p2: *const R4DisplayPresentationStats) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverDisplayContext_bootHold(p0: u32, p1: *const R4SdkDriverDisplayContext, p2: *const R4GfxBootHoldRequest, p3: *mut R4GfxNativeState) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverDisplayContext_bootFinish(p0: u32, p1: *const R4SdkDriverDisplayContext, p2: u64, p3: u32, p4: *mut R4GfxNativeState) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverDisplayContext_schedule(p0: u32, p1: *const R4SdkDriverDisplayContext, p2: *const R4GfxBackendBinding) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverDisplayContext_bootInfo(p0: u32, p1: *const R4SdkDriverDisplayContext, p2: *mut R4GfxNativeBootInfo) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverDisplayContext_prepare(p0: u32, p1: *const R4SdkDriverDisplayContext, p2: *const R4GfxNativeRegistration, p3: *mut R4GfxNativeState) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverDisplayContext_prepareHeld(p0: u32, p1: *const R4SdkDriverDisplayContext, p2: *const R4GfxNativeRegistration, p3: u64, p4: *mut R4GfxNativeState) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverDisplayContext_transition(p0: u32, p1: *const R4SdkDriverDisplayContext, p2: u64, p3: u32, p4: *mut R4GfxNativeState) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverHeapContext_allocate(p0: u32, p1: *const R4SdkDriverHeapContext, p2: u64, p3: u32, p4: *mut R4DriverHeapAllocation) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverHeapContext_release(p0: u32, p1: *const R4SdkDriverHeapContext, p2: u64) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverHeapContext_stats(p0: u32, p1: *const R4SdkDriverHeapContext, p2: *mut R4DriverHeapStats) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverThreadsContext_start(p0: u32, p1: *const R4SdkDriverThreadsContext, p2: u64, p3: u64, p4: u32, p5: *mut u64) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverThreadsContext_stop(p0: u32, p1: *const R4SdkDriverThreadsContext, p2: u64) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverThreadsContext_join(p0: u32, p1: *const R4SdkDriverThreadsContext, p2: u64, p3: u64, p4: *mut i32) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverThreadsContext_release(p0: u32, p1: *const R4SdkDriverThreadsContext, p2: u64) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverThreadsContext_status(p0: u32, p1: *const R4SdkDriverThreadsContext, p2: u64, p3: *mut R4DriverThreadStatus) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverThreadsContext_current(p0: u32, p1: *const R4SdkDriverThreadsContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverThreadsContext_sleepTicks(p0: u32, p1: *const R4SdkDriverThreadsContext, p2: u64) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverThreadsContext_stats(p0: u32, p1: *const R4SdkDriverThreadsContext, p2: *mut R4DriverThreadStats) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverThreadsContext_canAbort(p0: u32, p1: *const R4SdkDriverThreadsContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverThreadsContext_hasCurrentRequest(p0: u32, p1: *const R4SdkDriverThreadsContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverThreadsContext_currentRequest(p0: u32, p1: *const R4SdkDriverThreadsContext, p2: *mut R4DriverThreadRequest) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverThreadsContext_abortCurrent(p0: u32, p1: *const R4SdkDriverThreadsContext, p2: i32) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverSemaphoresContext_create(p0: u32, p1: *const R4SdkDriverSemaphoresContext, p2: u32, p3: u32, p4: *mut u64) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverSemaphoresContext_acquire(p0: u32, p1: *const R4SdkDriverSemaphoresContext, p2: u64, p3: u64) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverSemaphoresContext_release(p0: u32, p1: *const R4SdkDriverSemaphoresContext, p2: u64) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverSemaphoresContext_destroy(p0: u32, p1: *const R4SdkDriverSemaphoresContext, p2: u64) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverSemaphoresContext_status(p0: u32, p1: *const R4SdkDriverSemaphoresContext, p2: u64, p3: *mut R4DriverSemaphoreStatus) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverSemaphoresContext_stats(p0: u32, p1: *const R4SdkDriverSemaphoresContext, p2: *mut R4DriverSemaphoreStats) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverSemaphoresContext_contextFlags(p0: u32, p1: *const R4SdkDriverSemaphoresContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverCpuPowerContext_idlePublish(p0: u32, p1: *const R4SdkDriverCpuPowerContext, p2: *const R4CpuIdleDescriptor) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverCpuPowerContext_idlePolicy(p0: u32, p1: *const R4SdkDriverCpuPowerContext, p2: *const R4CpuIdlePolicy) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverCpuPowerContext_firmwareRegister(p0: u32, p1: *const R4SdkDriverCpuPowerContext, p2: u32, p3: *const R4CpuFirmwareBackend, p4: *mut u64) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverCpuPowerContext_firmwareUnregister(p0: u32, p1: *const R4SdkDriverCpuPowerContext, p2: u32, p3: u64) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverCpuPowerContext_firmwareExecute(p0: u32, p1: *const R4SdkDriverCpuPowerContext, p2: *const R4CpuPerformanceRequest, p3: *mut R4CpuFirmwareInfo) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverCpuPowerContext_firmwareControl(p0: u32, p1: *const R4SdkDriverCpuPowerContext, p2: u32, p3: u32, p4: u64, p5: u64, p6: u64, p7: *mut u64) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverCpuPowerContext_firmwareCpuInfo(p0: u32, p1: *const R4SdkDriverCpuPowerContext, p2: u32, p3: *mut R4CpuCapabilitiesInfo) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverCpuPowerContext_feature(p0: u32, p1: *const R4SdkDriverCpuPowerContext, p2: u32, p3: u64, p4: u32, p5: *mut R4CpuFeatureInfo) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverCpuPowerContext_registerPerformance(p0: u32, p1: *const R4SdkDriverCpuPowerContext, p2: u64, p3: *const R4CpuPerformanceBackend) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverCpuPowerContext_controlAcquire(p0: u32, p1: *const R4SdkDriverCpuPowerContext, p2: u32, p3: u64, p4: *mut u64) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverCpuPowerContext_controlRelease(p0: u32, p1: *const R4SdkDriverCpuPowerContext, p2: u32, p3: u64, p4: u64) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverCpuPowerContext_registerCompareWrite(p0: u32, p1: *const R4SdkDriverCpuPowerContext, p2: u32, p3: u64, p4: u64, p5: u32, p6: u64, p7: u64, p8: *mut R4CpuRegisterWriteInfo) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverCpuPowerContext_registerCppc(p0: u32, p1: *const R4SdkDriverCpuPowerContext, p2: u64, p3: *const R4CpuCppcBackend) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverCpuPowerContext_rankPublish(p0: u32, p1: *const R4SdkDriverCpuPowerContext, p2: *const R4CpuPerformanceHint, p3: *mut u64) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverCpuPowerContext_register(p0: u32, p1: *const R4SdkDriverCpuPowerContext, p2: *const R4CpuPowerBackend, p3: *mut u64) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverCpuPowerContext_unregister(p0: u32, p1: *const R4SdkDriverCpuPowerContext, p2: u64) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverCpuPowerContext_currentCpu(p0: u32, p1: *const R4SdkDriverCpuPowerContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverCpuPowerContext_capabilities(p0: u32, p1: *const R4SdkDriverCpuPowerContext, p2: u32, p3: *mut R4CpuCapabilitiesInfo) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverCpuPowerContext_topology(p0: u32, p1: *const R4SdkDriverCpuPowerContext, p2: u32, p3: *mut R4CpuTopologyInfo) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverCpuPowerContext_registerRead(p0: u32, p1: *const R4SdkDriverCpuPowerContext, p2: u32, p3: u64, p4: u32, p5: *mut R4CpuRegisterInfo) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverCpuPowerContext_clock(p0: u32, p1: *const R4SdkDriverCpuPowerContext, p2: *mut R4MonotonicClockInfo) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverCpuPowerContext_countersRead(p0: u32, p1: *const R4SdkDriverCpuPowerContext, p2: u32, p3: u64, p4: *mut R4CpuPowerCounters) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverSharedDmaBuffer_constructNative(p0: *mut R4SdkDriverSharedDmaBuffer, p1: *const R4DmaBuffer, p2: u32) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverSharedDmaBuffer_from_fields(p0: *mut R4SdkDriverSharedDmaBuffer, p1: *const R4DmaBuffer, p2: u32, p3: u32) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverSharedDmaBuffer_get_region(p0: *const R4SdkDriverSharedDmaBuffer, p1: *mut R4DmaBuffer) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverSharedDmaBuffer_set_region(p0: *mut R4SdkDriverSharedDmaBuffer, p1: *const R4DmaBuffer) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverSharedDmaBuffer_get_references(p0: *const R4SdkDriverSharedDmaBuffer) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverSharedDmaBuffer_set_references(p0: *mut R4SdkDriverSharedDmaBuffer, p1: u32) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverSharedDmaBuffer_get_payload_bytes(p0: *const R4SdkDriverSharedDmaBuffer) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverSharedDmaBuffer_set_payload_bytes(p0: *mut R4SdkDriverSharedDmaBuffer, p1: u32) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverSharedDmaBuffer_inspectNative(p0: *const R4SdkDriverSharedDmaBuffer) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverAudioOutputBackend_create(p0: *mut R4SdkDriverAudioOutputBackend, p1: *const R4AudioOutputExtension) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverAudioOutputBackend_from_fields(p0: *mut R4SdkDriverAudioOutputBackend, p1: *const R4AudioBackend, p2: *const R4AudioOutputExtension) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverAudioOutputBackend_get_base(p0: *const R4SdkDriverAudioOutputBackend, p1: *mut R4AudioBackend) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverAudioOutputBackend_set_base(p0: *mut R4SdkDriverAudioOutputBackend, p1: *const R4AudioBackend) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverAudioOutputBackend_get_outputs(p0: *const R4SdkDriverAudioOutputBackend, p1: *mut R4AudioOutputExtension) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverAudioOutputBackend_set_outputs(p0: *mut R4SdkDriverAudioOutputBackend, p1: *const R4AudioOutputExtension) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverAudioOutputBackend_inspectNative(p0: *const R4SdkDriverAudioOutputBackend) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverAudioOutputIdleBackend_create(p0: *mut R4SdkDriverAudioOutputIdleBackend, p1: *const R4SdkDriverAudioOutputBackend) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverAudioOutputIdleBackend_from_fields(p0: *mut R4SdkDriverAudioOutputIdleBackend, p1: *const R4SdkDriverAudioOutputBackend, p2: R4SdkDriverSlot) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverAudioOutputIdleBackend_get_base(p0: *const R4SdkDriverAudioOutputIdleBackend, p1: *mut R4SdkDriverAudioOutputBackend) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverAudioOutputIdleBackend_set_base(p0: *mut R4SdkDriverAudioOutputIdleBackend, p1: *const R4SdkDriverAudioOutputBackend) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverAudioOutputIdleBackend_get_idle(p0: *const R4SdkDriverAudioOutputIdleBackend) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverAudioOutputIdleBackend_set_idle(p0: *mut R4SdkDriverAudioOutputIdleBackend, p1: R4SdkDriverSlot) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverAudioOutputIdleBackend_inspectNative(p0: *const R4SdkDriverAudioOutputIdleBackend) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue6_create(p0: *mut R4SdkDriverNativeValue6, p1: R4SdkDriverSlot) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue6_inspectNative(p0: *const R4SdkDriverNativeValue6) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_create(p0: *mut R4SdkDriverContext, p1: *const R4DriverApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_from_fields(p0: *mut R4SdkDriverContext, p1: *const R4DriverApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_get_api(p0: *const R4SdkDriverContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_set_api(p0: *mut R4SdkDriverContext, p1: *const R4DriverApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverContext_inspectNative(p0: *const R4SdkDriverContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue8_create(p0: *mut R4SdkDriverNativeValue8, p1: *const R4DriverApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue8_inspectNative(p0: *const R4SdkDriverNativeValue8) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverSerialContext_create(p0: *mut R4SdkDriverSerialContext, p1: *const R4DriverSerialApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverSerialContext_from_fields(p0: *mut R4SdkDriverSerialContext, p1: *const R4DriverSerialApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverSerialContext_get_table(p0: *const R4SdkDriverSerialContext, p1: *mut R4DriverSerialApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverSerialContext_set_table(p0: *mut R4SdkDriverSerialContext, p1: *const R4DriverSerialApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverSerialContext_inspectNative(p0: *const R4SdkDriverSerialContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverMemoryContext_create(p0: *mut R4SdkDriverMemoryContext, p1: *const R4GfxDriverMemoryApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverMemoryContext_from_fields(p0: *mut R4SdkDriverMemoryContext, p1: *const R4GfxDriverMemoryApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverMemoryContext_get_table(p0: *const R4SdkDriverMemoryContext, p1: *mut R4GfxDriverMemoryApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverMemoryContext_set_table(p0: *mut R4SdkDriverMemoryContext, p1: *const R4GfxDriverMemoryApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverMemoryContext_inspectNative(p0: *const R4SdkDriverMemoryContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverEntropyContext_create(p0: *mut R4SdkDriverEntropyContext, p1: *const R4DriverEntropyApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverEntropyContext_from_fields(p0: *mut R4SdkDriverEntropyContext, p1: *const R4DriverEntropyApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverEntropyContext_get_table(p0: *const R4SdkDriverEntropyContext, p1: *mut R4DriverEntropyApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverEntropyContext_set_table(p0: *mut R4SdkDriverEntropyContext, p1: *const R4DriverEntropyApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverEntropyContext_inspectNative(p0: *const R4SdkDriverEntropyContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverResourcesContext_create(p0: *mut R4SdkDriverResourcesContext, p1: *const R4DriverResourceApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverResourcesContext_from_fields(p0: *mut R4SdkDriverResourcesContext, p1: *const R4DriverResourceApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverResourcesContext_get_table(p0: *const R4SdkDriverResourcesContext, p1: *mut R4DriverResourceApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverResourcesContext_set_table(p0: *mut R4SdkDriverResourcesContext, p1: *const R4DriverResourceApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverResourcesContext_inspectNative(p0: *const R4SdkDriverResourcesContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverResourcesPlatform_create(p0: *mut R4SdkDriverResourcesPlatform, p1: *const R4DriverPlatformApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverResourcesPlatform_from_fields(p0: *mut R4SdkDriverResourcesPlatform, p1: *const R4DriverPlatformApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverResourcesPlatform_get_table(p0: *const R4SdkDriverResourcesPlatform, p1: *mut R4DriverPlatformApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverResourcesPlatform_set_table(p0: *mut R4SdkDriverResourcesPlatform, p1: *const R4DriverPlatformApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverResourcesPlatform_inspectNative(p0: *const R4SdkDriverResourcesPlatform) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverQueueContext_create(p0: *mut R4SdkDriverQueueContext, p1: *const R4GfxDriverQueueApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverQueueContext_from_fields(p0: *mut R4SdkDriverQueueContext, p1: *const R4GfxDriverQueueApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverQueueContext_get_table(p0: *const R4SdkDriverQueueContext, p1: *mut R4GfxDriverQueueApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverQueueContext_set_table(p0: *mut R4SdkDriverQueueContext, p1: *const R4GfxDriverQueueApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverQueueContext_inspectNative(p0: *const R4SdkDriverQueueContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverOutputsContext_create(p0: *mut R4SdkDriverOutputsContext, p1: *const R4GfxDriverOutputApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverOutputsContext_from_fields(p0: *mut R4SdkDriverOutputsContext, p1: *const R4GfxDriverOutputApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverOutputsContext_get_table(p0: *const R4SdkDriverOutputsContext, p1: *mut R4GfxDriverOutputApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverOutputsContext_set_table(p0: *mut R4SdkDriverOutputsContext, p1: *const R4GfxDriverOutputApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverOutputsContext_inspectNative(p0: *const R4SdkDriverOutputsContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverDisplayContext_create(p0: *mut R4SdkDriverDisplayContext, p1: *const R4GfxDriverDisplayApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverDisplayContext_from_fields(p0: *mut R4SdkDriverDisplayContext, p1: *const R4GfxDriverDisplayApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverDisplayContext_get_table(p0: *const R4SdkDriverDisplayContext, p1: *mut R4GfxDriverDisplayApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverDisplayContext_set_table(p0: *mut R4SdkDriverDisplayContext, p1: *const R4GfxDriverDisplayApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverDisplayContext_inspectNative(p0: *const R4SdkDriverDisplayContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverHeapContext_create(p0: *mut R4SdkDriverHeapContext, p1: *const R4DriverHeapApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverHeapContext_from_fields(p0: *mut R4SdkDriverHeapContext, p1: *const R4DriverHeapApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverHeapContext_get_table(p0: *const R4SdkDriverHeapContext, p1: *mut R4DriverHeapApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverHeapContext_set_table(p0: *mut R4SdkDriverHeapContext, p1: *const R4DriverHeapApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverHeapContext_inspectNative(p0: *const R4SdkDriverHeapContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverThreadsContext_create(p0: *mut R4SdkDriverThreadsContext, p1: *const R4DriverThreadApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverThreadsContext_from_fields(p0: *mut R4SdkDriverThreadsContext, p1: *const R4DriverThreadApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverThreadsContext_get_table(p0: *const R4SdkDriverThreadsContext, p1: *mut R4DriverThreadApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverThreadsContext_set_table(p0: *mut R4SdkDriverThreadsContext, p1: *const R4DriverThreadApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverThreadsContext_inspectNative(p0: *const R4SdkDriverThreadsContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverSemaphoresContext_constructNative(p0: *mut R4SdkDriverSemaphoresContext, p1: *const R4DriverSemaphoreApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverSemaphoresContext_from_fields(p0: *mut R4SdkDriverSemaphoresContext, p1: *const R4DriverSemaphoreApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverSemaphoresContext_get_table(p0: *const R4SdkDriverSemaphoresContext, p1: *mut R4DriverSemaphoreApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverSemaphoresContext_set_table(p0: *mut R4SdkDriverSemaphoresContext, p1: *const R4DriverSemaphoreApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverSemaphoresContext_inspectNative(p0: *const R4SdkDriverSemaphoresContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverCpuPowerContext_create(p0: *mut R4SdkDriverCpuPowerContext, p1: *const R4DriverCpuPowerApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverCpuPowerContext_from_fields(p0: *mut R4SdkDriverCpuPowerContext, p1: *const R4DriverCpuPowerApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverCpuPowerContext_get_table(p0: *const R4SdkDriverCpuPowerContext, p1: *mut R4DriverCpuPowerApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverCpuPowerContext_set_table(p0: *mut R4SdkDriverCpuPowerContext, p1: *const R4DriverCpuPowerApi) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverCpuPowerContext_inspectNative(p0: *const R4SdkDriverCpuPowerContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue34_create(p0: *mut R4SdkDriverNativeValue34, p1: *const R4SdkDriverContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue34_inspectNative(p0: *const R4SdkDriverNativeValue34) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue35_create(p0: *mut R4SdkDriverNativeValue35, p1: R4SdkDriverSlot) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue35_inspectNative(p0: *const R4SdkDriverNativeValue35) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue36_create(p0: *mut R4SdkDriverNativeValue36, p1: *mut R4SdkDriverSharedDmaBuffer) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue36_inspectNative(p0: *const R4SdkDriverNativeValue36) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue37_create(p0: *mut R4SdkDriverNativeValue37, p1: *const R4SdkDriverSharedDmaBuffer) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue37_inspectNative(p0: *const R4SdkDriverNativeValue37) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue39_create(p0: *mut R4SdkDriverNativeValue39, p1: R4SdkDriverSlot) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue39_inspectNative(p0: *const R4SdkDriverNativeValue39, p1: *mut R4SdkDriverSerialContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue40_create(p0: *mut R4SdkDriverNativeValue40, p1: R4SdkDriverSlot) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue40_inspectNative(p0: *const R4SdkDriverNativeValue40, p1: *mut R4SdkDriverHeapContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue41_create(p0: *mut R4SdkDriverNativeValue41, p1: R4SdkDriverSlot) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue41_inspectNative(p0: *const R4SdkDriverNativeValue41, p1: *mut R4SdkDriverResourcesContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue42_create(p0: *mut R4SdkDriverNativeValue42, p1: R4SdkDriverSlot) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue42_inspectNative(p0: *const R4SdkDriverNativeValue42, p1: *mut R4SdkDriverDisplayContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue43_create(p0: *mut R4SdkDriverNativeValue43, p1: R4SdkDriverSlot) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue43_inspectNative(p0: *const R4SdkDriverNativeValue43, p1: *mut R4SdkDriverOutputsContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue44_create(p0: *mut R4SdkDriverNativeValue44, p1: R4SdkDriverSlot) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue44_inspectNative(p0: *const R4SdkDriverNativeValue44, p1: *mut R4SdkDriverQueueContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue45_create(p0: *mut R4SdkDriverNativeValue45, p1: R4SdkDriverSlot) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue45_inspectNative(p0: *const R4SdkDriverNativeValue45, p1: *mut R4SdkDriverMemoryContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue47_create(p0: *mut R4SdkDriverNativeValue47, p1: *const R4SynthEngine) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue47_inspectNative(p0: *const R4SdkDriverNativeValue47) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue49_create(p0: *mut R4SdkDriverNativeValue49, p1: *const R4AudioBackend) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue49_inspectNative(p0: *const R4SdkDriverNativeValue49) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue50_create(p0: *mut R4SdkDriverNativeValue50, p1: *const R4SdkDriverAudioOutputBackend) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue50_inspectNative(p0: *const R4SdkDriverNativeValue50) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue51_create(p0: *mut R4SdkDriverNativeValue51, p1: *const R4SdkDriverAudioOutputIdleBackend) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue51_inspectNative(p0: *const R4SdkDriverNativeValue51) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue52_create(p0: *mut R4SdkDriverNativeValue52, p1: *const R4NetBackend) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue52_inspectNative(p0: *const R4SdkDriverNativeValue52) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue54_create(p0: *mut R4SdkDriverNativeValue54, p1: *const R4StorageBackend) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue54_inspectNative(p0: *const R4SdkDriverNativeValue54) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue56_create(p0: *mut R4SdkDriverNativeValue56, p1: *const R4UsbHostController) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue56_inspectNative(p0: *const R4SdkDriverNativeValue56) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue58_create(p0: *mut R4SdkDriverNativeValue58, p1: *const R4DisplayBlitBackend) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue58_inspectNative(p0: *const R4SdkDriverNativeValue58) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue61_create(p0: *mut R4SdkDriverNativeValue61, p1: *mut R4NetBackendNegotiation) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue61_inspectNative(p0: *const R4SdkDriverNativeValue61) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue63_create(p0: *mut R4SdkDriverNativeValue63, p1: *const R4NetPacket) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue63_inspectNative(p0: *const R4SdkDriverNativeValue63) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue65_create(p0: *mut R4SdkDriverNativeValue65, p1: *mut R4DmaBuffer) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue65_inspectNative(p0: *const R4SdkDriverNativeValue65) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue66_create(p0: *mut R4SdkDriverNativeValue66, p1: *mut R4DmaPinnedBuffer) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue66_inspectNative(p0: *const R4SdkDriverNativeValue66) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue68_create(p0: *mut R4SdkDriverNativeValue68, p1: *const R4DmaPinnedBuffer) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue68_inspectNative(p0: *const R4SdkDriverNativeValue68) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue69_create(p0: *mut R4SdkDriverNativeValue69, p1: *const R4DmaConstraints) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue69_inspectNative(p0: *const R4SdkDriverNativeValue69) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue71_create(p0: *mut R4SdkDriverNativeValue71, p1: *mut R4DmaMapping) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue71_inspectNative(p0: *const R4SdkDriverNativeValue71) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue73_create(p0: *mut R4SdkDriverNativeValue73, p1: *const R4DmaMapping) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue73_inspectNative(p0: *const R4SdkDriverNativeValue73) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue74_create(p0: *mut R4SdkDriverNativeValue74, p1: *mut R4PciDeviceInfo) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue74_inspectNative(p0: *const R4SdkDriverNativeValue74) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue76_create(p0: *mut R4SdkDriverNativeValue76, p1: *mut R4MmioRegion) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue76_inspectNative(p0: *const R4SdkDriverNativeValue76) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue78_create(p0: *mut R4SdkDriverNativeValue78, p1: *mut R4IrqStats) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue78_inspectNative(p0: *const R4SdkDriverNativeValue78) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue80_create(p0: *mut R4SdkDriverNativeValue80, p1: *mut u32) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue80_inspectNative(p0: *const R4SdkDriverNativeValue80) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue81_create(p0: *mut R4SdkDriverNativeValue81, p1: *const R4DriverWorkRequest) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue81_inspectNative(p0: *const R4SdkDriverNativeValue81) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue83_create(p0: *mut R4SdkDriverNativeValue83, p1: *mut i32) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue83_inspectNative(p0: *const R4SdkDriverNativeValue83) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue84_create(p0: *mut R4SdkDriverNativeValue84, p1: *mut R4DriverCompletionStatus) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue84_inspectNative(p0: *const R4SdkDriverNativeValue84) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue86_create(p0: *mut R4SdkDriverNativeValue86, p1: *mut R4DriverWorkSummary) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue86_inspectNative(p0: *const R4SdkDriverNativeValue86) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue88_create(p0: *mut R4SdkDriverNativeValue88, p1: *mut R4MonotonicClockInfo) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue88_inspectNative(p0: *const R4SdkDriverNativeValue88) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue90_create(p0: *mut R4SdkDriverNativeValue90, p1: R4SdkDriverSlot) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue90_inspectNative(p0: *const R4SdkDriverNativeValue90, p1: *mut R4SdkDriverThreadsContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue91_create(p0: *mut R4SdkDriverNativeValue91, p1: R4SdkDriverSlot) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue91_inspectNative(p0: *const R4SdkDriverNativeValue91, p1: *mut R4SdkDriverSemaphoresContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue92_create(p0: *mut R4SdkDriverNativeValue92, p1: *const R4ProtocolBuffer) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue92_inspectNative(p0: *const R4SdkDriverNativeValue92) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue94_create(p0: *mut R4SdkDriverNativeValue94, p1: *mut R4ProtocolBuffer) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue94_inspectNative(p0: *const R4SdkDriverNativeValue94) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue95_create(p0: *mut R4SdkDriverNativeValue95, p1: *const R4SdkDriverSerialContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue95_inspectNative(p0: *const R4SdkDriverNativeValue95) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue96_create(p0: *mut R4SdkDriverNativeValue96, p1: *const R4SerialBackend) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue96_inspectNative(p0: *const R4SdkDriverNativeValue96) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue98_create(p0: *mut R4SdkDriverNativeValue98, p1: *mut u64) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue98_inspectNative(p0: *const R4SdkDriverNativeValue98) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue99_create(p0: *mut R4SdkDriverNativeValue99, p1: *const R4SdkDriverMemoryContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue99_inspectNative(p0: *const R4SdkDriverNativeValue99) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue100_create(p0: *mut R4SdkDriverNativeValue100, p1: *const R4GfxTelemetryState) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue100_inspectNative(p0: *const R4SdkDriverNativeValue100) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue102_create(p0: *mut R4SdkDriverNativeValue102, p1: *mut R4GfxTelemetryDemand) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue102_inspectNative(p0: *const R4SdkDriverNativeValue102) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue104_create(p0: *mut R4SdkDriverNativeValue104, p1: *const R4GfxDeviceBudgetRequest) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue104_inspectNative(p0: *const R4SdkDriverNativeValue104) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue106_create(p0: *mut R4SdkDriverNativeValue106, p1: *mut R4GfxDeviceBudgetState) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue106_inspectNative(p0: *const R4SdkDriverNativeValue106) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue108_create(p0: *mut R4SdkDriverNativeValue108, p1: *const R4GfxNativeProvider) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue108_inspectNative(p0: *const R4SdkDriverNativeValue108) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue110_create(p0: *mut R4SdkDriverNativeValue110, p1: *mut R4GfxBufferHandle) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue110_inspectNative(p0: *const R4SdkDriverNativeValue110) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue112_create(p0: *mut R4SdkDriverNativeValue112, p1: *const R4GfxBufferHandle) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue112_inspectNative(p0: *const R4SdkDriverNativeValue112) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue113_create(p0: *mut R4SdkDriverNativeValue113, p1: *mut R4GfxVirtualJob) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue113_inspectNative(p0: *const R4SdkDriverNativeValue113) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue115_create(p0: *mut R4SdkDriverNativeValue115, p1: *const R4GfxVirtualCompletion) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue115_inspectNative(p0: *const R4SdkDriverNativeValue115) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue117_create(p0: *mut R4SdkDriverNativeValue117, p1: *mut R4GfxNativeJob) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue117_inspectNative(p0: *const R4SdkDriverNativeValue117) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue119_create(p0: *mut R4SdkDriverNativeValue119, p1: *const R4GfxBufferDescriptor) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue119_inspectNative(p0: *const R4SdkDriverNativeValue119) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue121_create(p0: *mut R4SdkDriverNativeValue121, p1: *mut R4GfxBufferReference) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue121_inspectNative(p0: *const R4SdkDriverNativeValue121) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue123_create(p0: *mut R4SdkDriverNativeValue123, p1: *mut R4GfxBufferDescriptor) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue123_inspectNative(p0: *const R4SdkDriverNativeValue123) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue124_create(p0: *mut R4SdkDriverNativeValue124, p1: *mut R4GfxBufferMap) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue124_inspectNative(p0: *const R4SdkDriverNativeValue124) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue126_create(p0: *mut R4SdkDriverNativeValue126, p1: *const R4GfxDeviceRequest) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue126_inspectNative(p0: *const R4SdkDriverNativeValue126) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue128_create(p0: *mut R4SdkDriverNativeValue128, p1: *mut R4GfxDeviceLease) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue128_inspectNative(p0: *const R4SdkDriverNativeValue128) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue130_create(p0: *mut R4SdkDriverNativeValue130, p1: *const R4GfxDeviceLease) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue130_inspectNative(p0: *const R4SdkDriverNativeValue130) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue131_create(p0: *mut R4SdkDriverNativeValue131, p1: *mut R4GfxDmaSegment) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue131_inspectNative(p0: *const R4SdkDriverNativeValue131) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue133_create(p0: *mut R4SdkDriverNativeValue133, p1: *const R4GfxMmioRequest) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue133_inspectNative(p0: *const R4SdkDriverNativeValue133) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue135_create(p0: *mut R4SdkDriverNativeValue135, p1: *mut R4GfxMmioWindow) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue135_inspectNative(p0: *const R4SdkDriverNativeValue135) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue137_create(p0: *mut R4SdkDriverNativeValue137, p1: *mut R4GfxBufferStats) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue137_inspectNative(p0: *const R4SdkDriverNativeValue137) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue139_create(p0: *mut R4SdkDriverNativeValue139, p1: *mut R4GfxOwnedBufferReservation) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue139_inspectNative(p0: *const R4SdkDriverNativeValue139) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue141_create(p0: *mut R4SdkDriverNativeValue141, p1: *const R4GfxOwnedBufferReservation) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue141_inspectNative(p0: *const R4SdkDriverNativeValue141) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue142_create(p0: *mut R4SdkDriverNativeValue142, p1: *mut R4GfxOwnedBufferRelease) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue142_inspectNative(p0: *const R4SdkDriverNativeValue142) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue144_create(p0: *mut R4SdkDriverNativeValue144, p1: *const R4GfxOwnedBufferRelease) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue144_inspectNative(p0: *const R4SdkDriverNativeValue144) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue145_create(p0: *mut R4SdkDriverNativeValue145, p1: *const R4SdkDriverEntropyContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue145_inspectNative(p0: *const R4SdkDriverNativeValue145) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue146_create(p0: *mut R4SdkDriverNativeValue146, p1: *const R4EntropyBackend) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue146_inspectNative(p0: *const R4SdkDriverNativeValue146) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue148_create(p0: *mut R4SdkDriverNativeValue148, p1: *const R4SdkDriverResourcesContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue148_inspectNative(p0: *const R4SdkDriverNativeValue148) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue149_create(p0: *mut R4SdkDriverNativeValue149, p1: R4SdkDriverSlot) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue149_inspectNative(p0: *const R4SdkDriverNativeValue149, p1: *mut R4SdkDriverEntropyContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue150_create(p0: *mut R4SdkDriverNativeValue150, p1: R4SdkDriverSlot) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue150_inspectNative(p0: *const R4SdkDriverNativeValue150, p1: *mut R4SdkDriverCpuPowerContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue151_create(p0: *mut R4SdkDriverNativeValue151, p1: R4SdkDriverSlot) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue151_inspectNative(p0: *const R4SdkDriverNativeValue151, p1: *mut R4SdkDriverResourcesPlatform) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue152_create(p0: *mut R4SdkDriverNativeValue152, p1: *const R4SdkDriverNativeValue152) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue152_inspectNative(p0: *const R4SdkDriverNativeValue152, p1: *mut R4SdkDriverNativeValue152) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue153_create(p0: *mut R4SdkDriverNativeValue153, p1: *mut R4DriverFirmwareTableInfo) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue153_inspectNative(p0: *const R4SdkDriverNativeValue153) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue155_create(p0: *mut R4SdkDriverNativeValue155, p1: *mut R4DriverResourceInfo) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue155_inspectNative(p0: *const R4SdkDriverNativeValue155) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue157_create(p0: *mut R4SdkDriverNativeValue157, p1: *const R4SdkDriverResourcesPlatform) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue157_inspectNative(p0: *const R4SdkDriverNativeValue157) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue159_create(p0: *mut R4SdkDriverNativeValue159, p1: *const R4SdkDriverQueueContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue159_inspectNative(p0: *const R4SdkDriverNativeValue159) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue160_create(p0: *mut R4SdkDriverNativeValue160, p1: *const R4GfxBackendBinding) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue160_inspectNative(p0: *const R4SdkDriverNativeValue160) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue162_create(p0: *mut R4SdkDriverNativeValue162, p1: *mut R4GfxQueueOwnerInfo) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue162_inspectNative(p0: *const R4SdkDriverNativeValue162) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue164_create(p0: *mut R4SdkDriverNativeValue164, p1: *const R4GfxFence) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue164_inspectNative(p0: *const R4SdkDriverNativeValue164) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue166_create(p0: *mut R4SdkDriverNativeValue166, p1: *mut R4GfxRenderColorList) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue166_inspectNative(p0: *const R4SdkDriverNativeValue166) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue168_create(p0: *mut R4SdkDriverNativeValue168, p1: *mut R4GfxRenderGridList) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue168_inspectNative(p0: *const R4SdkDriverNativeValue168) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue170_create(p0: *mut R4SdkDriverNativeValue170, p1: *mut R4GfxRenderList) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue170_inspectNative(p0: *const R4SdkDriverNativeValue170) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue172_create(p0: *mut R4SdkDriverNativeValue172, p1: *const R4GfxBackendRegistration) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue172_inspectNative(p0: *const R4SdkDriverNativeValue172) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue174_create(p0: *mut R4SdkDriverNativeValue174, p1: *const R4GfxBackendProfile) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue174_inspectNative(p0: *const R4SdkDriverNativeValue174) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue176_create(p0: *mut R4SdkDriverNativeValue176, p1: *mut R4GfxBackendBinding) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue176_inspectNative(p0: *const R4SdkDriverNativeValue176) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue177_create(p0: *mut R4SdkDriverNativeValue177, p1: *const R4GfxBackendProperties) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue177_inspectNative(p0: *const R4SdkDriverNativeValue177) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue179_create(p0: *mut R4SdkDriverNativeValue179, p1: *mut R4GfxNativeJobInfo) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue179_inspectNative(p0: *const R4SdkDriverNativeValue179) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue181_create(p0: *mut R4SdkDriverNativeValue181, p1: *mut R4GfxNativeBinding) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue181_inspectNative(p0: *const R4SdkDriverNativeValue181) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue183_create(p0: *mut R4SdkDriverNativeValue183, p1: *mut R4GfxDriverJob) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue183_inspectNative(p0: *const R4SdkDriverNativeValue183) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue185_create(p0: *mut R4SdkDriverNativeValue185, p1: *const R4SdkDriverOutputsContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue185_inspectNative(p0: *const R4SdkDriverNativeValue185) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue186_create(p0: *mut R4SdkDriverNativeValue186, p1: *const R4GfxOutputPower) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue186_inspectNative(p0: *const R4SdkDriverNativeValue186) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue188_create(p0: *mut R4SdkDriverNativeValue188, p1: *const R4GfxOutputId) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue188_inspectNative(p0: *const R4SdkDriverNativeValue188) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue190_create(p0: *mut R4SdkDriverNativeValue190, p1: *mut R4GfxPowerRequest) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue190_inspectNative(p0: *const R4SdkDriverNativeValue190) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue192_create(p0: *mut R4SdkDriverNativeValue192, p1: *const R4GfxOutputBrightness) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue192_inspectNative(p0: *const R4SdkDriverNativeValue192) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue194_create(p0: *mut R4SdkDriverNativeValue194, p1: *mut R4GfxBrightnessRequest) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue194_inspectNative(p0: *const R4SdkDriverNativeValue194) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue196_create(p0: *mut R4SdkDriverNativeValue196, p1: *const R4GfxOutputRefresh) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue196_inspectNative(p0: *const R4SdkDriverNativeValue196) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue198_create(p0: *mut R4SdkDriverNativeValue198, p1: *const R4GfxOutputTarget) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue198_inspectNative(p0: *const R4SdkDriverNativeValue198) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue200_create(p0: *mut R4SdkDriverNativeValue200, p1: *mut R4GfxRefreshRequest) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue200_inspectNative(p0: *const R4SdkDriverNativeValue200) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue202_create(p0: *mut R4SdkDriverNativeValue202, p1: *mut R4GfxDriverModeColor) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue202_inspectNative(p0: *const R4SdkDriverNativeValue202) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue204_create(p0: *mut R4SdkDriverNativeValue204, p1: *const R4GfxOutputColorState) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue204_inspectNative(p0: *const R4SdkDriverNativeValue204) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue206_create(p0: *mut R4SdkDriverNativeValue206, p1: *const R4GfxAtomicState) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue206_inspectNative(p0: *const R4SdkDriverNativeValue206) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue208_create(p0: *mut R4SdkDriverNativeValue208, p1: *mut R4GfxModeStatus) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue208_inspectNative(p0: *const R4SdkDriverNativeValue208) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue210_create(p0: *mut R4SdkDriverNativeValue210, p1: *const R4GfxAudioRoute) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue210_inspectNative(p0: *const R4SdkDriverNativeValue210) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue212_create(p0: *mut R4SdkDriverNativeValue212, p1: *mut R4GfxAudioRoute) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue212_inspectNative(p0: *const R4SdkDriverNativeValue212) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue213_create(p0: *mut R4SdkDriverNativeValue213, p1: *mut R4GfxDriverModeJob) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue213_inspectNative(p0: *const R4SdkDriverNativeValue213) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue215_create(p0: *mut R4SdkDriverNativeValue215, p1: *const R4GfxDriverModeCompletion) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue215_inspectNative(p0: *const R4SdkDriverNativeValue215) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue217_create(p0: *mut R4SdkDriverNativeValue217, p1: *mut R4GfxReceiverSource) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue217_inspectNative(p0: *const R4SdkDriverNativeValue217) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue219_create(p0: *mut R4SdkDriverNativeValue219, p1: *const R4GfxReceiverUpdate) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue219_inspectNative(p0: *const R4SdkDriverNativeValue219) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue221_create(p0: *mut R4SdkDriverNativeValue221, p1: *const R4GfxReceiverSource) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue221_inspectNative(p0: *const R4SdkDriverNativeValue221) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue222_create(p0: *mut R4SdkDriverNativeValue222, p1: *const R4GfxOutputPublication) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue222_inspectNative(p0: *const R4SdkDriverNativeValue222) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue224_create(p0: *mut R4SdkDriverNativeValue224, p1: *mut R4GfxOutputId) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue224_inspectNative(p0: *const R4SdkDriverNativeValue224) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue225_create(p0: *mut R4SdkDriverNativeValue225, p1: *const R4SdkDriverDisplayContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue225_inspectNative(p0: *const R4SdkDriverNativeValue225) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue226_create(p0: *mut R4SdkDriverNativeValue226, p1: *mut R4GfxNativeState) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue226_inspectNative(p0: *const R4SdkDriverNativeValue226) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue228_create(p0: *mut R4SdkDriverNativeValue228, p1: *const R4GfxNativeRegistration) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue228_inspectNative(p0: *const R4SdkDriverNativeValue228) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue230_create(p0: *mut R4SdkDriverNativeValue230, p1: *const R4GfxAdditionalOutput) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue230_inspectNative(p0: *const R4SdkDriverNativeValue230) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue232_create(p0: *mut R4SdkDriverNativeValue232, p1: *mut R4GfxOutputTarget) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue232_inspectNative(p0: *const R4SdkDriverNativeValue232) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue233_create(p0: *mut R4SdkDriverNativeValue233, p1: *const R4DisplayCursorInfo) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue233_inspectNative(p0: *const R4SdkDriverNativeValue233) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue235_create(p0: *mut R4SdkDriverNativeValue235, p1: *mut R4GfxDriverCursorJob) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue235_inspectNative(p0: *const R4SdkDriverNativeValue235) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue237_create(p0: *mut R4SdkDriverNativeValue237, p1: *const R4GfxDriverCursorCompletion) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue237_inspectNative(p0: *const R4SdkDriverNativeValue237) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue239_create(p0: *mut R4SdkDriverNativeValue239, p1: *const R4DisplayPresentationInfo) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue239_inspectNative(p0: *const R4SdkDriverNativeValue239) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue241_create(p0: *mut R4SdkDriverNativeValue241, p1: *const R4DisplayPresentationStats) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue241_inspectNative(p0: *const R4SdkDriverNativeValue241) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue243_create(p0: *mut R4SdkDriverNativeValue243, p1: *const R4GfxBootHoldRequest) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue243_inspectNative(p0: *const R4SdkDriverNativeValue243) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue245_create(p0: *mut R4SdkDriverNativeValue245, p1: *mut R4GfxNativeBootInfo) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue245_inspectNative(p0: *const R4SdkDriverNativeValue245) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue247_create(p0: *mut R4SdkDriverNativeValue247, p1: *const R4SdkDriverHeapContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue247_inspectNative(p0: *const R4SdkDriverNativeValue247) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue248_create(p0: *mut R4SdkDriverNativeValue248, p1: *mut R4DriverHeapAllocation) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue248_inspectNative(p0: *const R4SdkDriverNativeValue248) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue250_create(p0: *mut R4SdkDriverNativeValue250, p1: *mut R4DriverHeapStats) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue250_inspectNative(p0: *const R4SdkDriverNativeValue250) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue252_create(p0: *mut R4SdkDriverNativeValue252, p1: *const R4SdkDriverThreadsContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue252_inspectNative(p0: *const R4SdkDriverNativeValue252) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue253_create(p0: *mut R4SdkDriverNativeValue253, p1: *mut R4DriverThreadStatus) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue253_inspectNative(p0: *const R4SdkDriverNativeValue253) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue255_create(p0: *mut R4SdkDriverNativeValue255, p1: *mut R4DriverThreadStats) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue255_inspectNative(p0: *const R4SdkDriverNativeValue255) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue257_create(p0: *mut R4SdkDriverNativeValue257, p1: *mut R4DriverThreadRequest) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue257_inspectNative(p0: *const R4SdkDriverNativeValue257) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue259_create(p0: *mut R4SdkDriverNativeValue259, p1: *const R4SdkDriverSemaphoresContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue259_inspectNative(p0: *const R4SdkDriverNativeValue259) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue260_create(p0: *mut R4SdkDriverNativeValue260, p1: *mut R4DriverSemaphoreStatus) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue260_inspectNative(p0: *const R4SdkDriverNativeValue260) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue262_create(p0: *mut R4SdkDriverNativeValue262, p1: *mut R4DriverSemaphoreStats) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue262_inspectNative(p0: *const R4SdkDriverNativeValue262) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue264_create(p0: *mut R4SdkDriverNativeValue264, p1: *const R4SdkDriverCpuPowerContext) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue264_inspectNative(p0: *const R4SdkDriverNativeValue264) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue265_create(p0: *mut R4SdkDriverNativeValue265, p1: *const R4CpuIdleDescriptor) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue265_inspectNative(p0: *const R4SdkDriverNativeValue265) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue267_create(p0: *mut R4SdkDriverNativeValue267, p1: *const R4CpuIdlePolicy) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue267_inspectNative(p0: *const R4SdkDriverNativeValue267) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue269_create(p0: *mut R4SdkDriverNativeValue269, p1: *const R4CpuFirmwareBackend) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue269_inspectNative(p0: *const R4SdkDriverNativeValue269) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue271_create(p0: *mut R4SdkDriverNativeValue271, p1: *const R4CpuPerformanceRequest) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue271_inspectNative(p0: *const R4SdkDriverNativeValue271) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue273_create(p0: *mut R4SdkDriverNativeValue273, p1: *mut R4CpuFirmwareInfo) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue273_inspectNative(p0: *const R4SdkDriverNativeValue273) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue275_create(p0: *mut R4SdkDriverNativeValue275, p1: *mut R4CpuCapabilitiesInfo) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue275_inspectNative(p0: *const R4SdkDriverNativeValue275) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue277_create(p0: *mut R4SdkDriverNativeValue277, p1: *mut R4CpuFeatureInfo) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue277_inspectNative(p0: *const R4SdkDriverNativeValue277) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue279_create(p0: *mut R4SdkDriverNativeValue279, p1: *const R4CpuPerformanceBackend) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue279_inspectNative(p0: *const R4SdkDriverNativeValue279) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue281_create(p0: *mut R4SdkDriverNativeValue281, p1: *mut R4CpuRegisterWriteInfo) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue281_inspectNative(p0: *const R4SdkDriverNativeValue281) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue283_create(p0: *mut R4SdkDriverNativeValue283, p1: *const R4CpuCppcBackend) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue283_inspectNative(p0: *const R4SdkDriverNativeValue283) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue285_create(p0: *mut R4SdkDriverNativeValue285, p1: *const R4CpuPerformanceHint) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue285_inspectNative(p0: *const R4SdkDriverNativeValue285) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue287_create(p0: *mut R4SdkDriverNativeValue287, p1: *const R4CpuPowerBackend) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue287_inspectNative(p0: *const R4SdkDriverNativeValue287) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue289_create(p0: *mut R4SdkDriverNativeValue289, p1: *mut R4CpuTopologyInfo) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue289_inspectNative(p0: *const R4SdkDriverNativeValue289) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue291_create(p0: *mut R4SdkDriverNativeValue291, p1: *mut R4CpuRegisterInfo) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue291_inspectNative(p0: *const R4SdkDriverNativeValue291) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue293_create(p0: *mut R4SdkDriverNativeValue293, p1: *mut R4CpuPowerCounters) -> R4SdkDriverSlot;
+    pub fn R4SdkDriverNativeValue293_inspectNative(p0: *const R4SdkDriverNativeValue293) -> R4SdkDriverSlot;
 }

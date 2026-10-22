@@ -478,6 +478,8 @@ pub const Sdk = struct {
     }
 
     fn addR4MFDriver(self: Sdk, loaded: LoadedR4MF) BuildResult {
+        if (loaded.manifest.language == .c and (loaded.manifest.imports.len != 1 or !std.mem.eql(u8, loaded.manifest.imports[0], "R4DEV:Query:1")))
+            @panic("C R4D requires the original exact R4DEV:Query:1 import");
         const companion_count = loaded.source_paths.len - 1;
         const sources = self.b.allocator.alloc(std.Build.LazyPath, companion_count) catch @panic("OOM");
         const includes = self.manifestCIncludeRoots(loaded);
@@ -489,7 +491,7 @@ pub const Sdk = struct {
             roots[index + 2] = userPath(self.b, std.fs.path.dirname(path) orelse loaded.project_path);
         }
         for (includes, companion_count + 2..) |include, index| roots[index] = include;
-        return addR4DWithOptions(self.b, .{
+        const options: R4DOptions = .{
             .zig_modules = loaded.zig_modules,
             .native_archives = loaded.native_archives,
             .c_source_files = sources,
@@ -509,7 +511,28 @@ pub const Sdk = struct {
             .builder = self.builder,
             .resources = self.manifestResources(loaded),
             .optimize = manifestOptimizeMode(loaded.manifest),
-        });
+        };
+        return switch (loaded.manifest.language.?) {
+            .zig => addR4DWithOptions(self.b, options),
+            .rust => @panic("Rust R4D projects use SDK Tools/Build-RustModule.ps1 and matched host tools"),
+            .c => packageR4D(self.b, options, addCModule(self.b, .{
+                .name = loaded.manifest.name,
+                .source_root = userPath(self.b, loaded.project_path),
+                .sources = loaded.manifest.sources,
+                .include_root = self.profile.c_include_root,
+                .extra_include_roots = roots,
+                .c_defines = loaded.manifest.c_defines,
+                .c_flags = loaded.manifest.c_flags,
+                .startup_source_file = null,
+                .extra_objects = &.{
+                    addFacadeRuntime(self.b, self.profile.sdk_root.path(self.b, "Shared/C/src/facades.c"), self.profile.c_include_root, self.profile.contract_c_include_root, false),
+                    addStorageRuntimeObject(self.b, self.profile.sdk_root.path(self.b, "r4os/facade_runtime.zig"), self.profile.contract_module, self.profile.grapheme_source.?, self.builder, false),
+                },
+                .linker_script = self.profile.linker_script,
+                .entry_symbol = "r4d_init_entry",
+                .optimize = manifestOptimizeMode(loaded.manifest),
+            })),
+        };
     }
 
     fn addR4MFProtocol(self: Sdk, loaded: LoadedR4MF) BuildResult {
@@ -1402,6 +1425,10 @@ fn addR4DWithOptions(b: *std.Build, opts: R4DOptions) BuildResult {
         .optimize = opts.optimize,
     });
 
+    return packageR4D(b, opts, elf);
+}
+
+fn packageR4D(b: *std.Build, opts: R4DOptions, elf: std.Build.LazyPath) BuildResult {
     const imports = b.allocator.alloc([]const u8, 1) catch @panic("OOM");
     imports[0] = "R4DEV:Query:1";
     const exports = b.allocator.alloc([]const u8, 2) catch @panic("OOM");
@@ -1658,6 +1685,7 @@ const COptions = struct {
     c_defines: []const module_manifest.CDefineEntry = &.{},
     c_flags: []const []const u8 = &.{},
     startup_source_file: ?std.Build.LazyPath,
+    extra_objects: []const std.Build.LazyPath = &.{},
     heap_runtime: ?std.Build.LazyPath = null,
     storage_runtime: ?std.Build.LazyPath = null,
     linker_script: std.Build.LazyPath,
@@ -1887,6 +1915,7 @@ fn addCModule(b: *std.Build, opts: COptions) std.Build.LazyPath {
     exe.link_emit_relocs = opts.emit_relocs;
     exe.link_gc_sections = true;
     exe.bundle_compiler_rt = true;
+    for (opts.extra_objects) |object| exe.root_module.addObjectFile(object);
     if (opts.heap_runtime) |runtime| exe.root_module.addObjectFile(runtime);
     if (opts.storage_runtime) |runtime| exe.root_module.addObjectFile(runtime);
     exe.setLinkerScript(opts.linker_script);

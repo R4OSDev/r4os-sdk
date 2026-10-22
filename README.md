@@ -892,3 +892,10 @@ contract cases; `-Dr4l-consumer-fixtures-only=true` builds the C/Zig consumers i
 `Tests/Build/R4LConsumers`. The genuine `CR4L`/`RustR4L` fixtures and Rust consumer
 use the same regular builders/loader. Current scope and six actual guest
 combinations remain in the shared parity matrix and report.
+
+SDK0.64.86 adds genuine C and Rust R4D roots. Include `r4os/driver.h` and
+use `R4D_ENTRIES(init, shutdown)` in C; Rust uses `driver_entry!` and
+`driver::Driver`. Both keep the original R4DEV admission and current
+DriverApi37/664. Driver resources retire explicitly after real quiescence;
+no Drop frees active DMA/callback state. See Docs/SDK/LanguageParity.txt and
+the `drivers_current_67` matrix evidence for the exact local qualification.

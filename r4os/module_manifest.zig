@@ -1657,6 +1657,17 @@ test "R4D accepts ordered C companions without changing driver identity or entry
     const header_driver = try parse(allocator, "HeaderDriver/module.R4MF", only_headers);
     try std.testing.expectEqual(@as(usize, 1), header_driver.sources.len);
     try std.testing.expectEqualStrings("ThirdParty/include", header_driver.c_includes[0]);
+    inline for (.{ .{ "C", "c" }, .{ "Rust", "rs" } }) |language| {
+        const own_language = try std.mem.replaceOwned(u8, allocator, text, "LANGUAGE=Zig", "LANGUAGE=" ++ language[0]);
+        const own_root = try std.mem.replaceOwned(u8, allocator, own_language, "src/main.zig", "src/main." ++ language[1]);
+        const own = try parse(allocator, "OwnDriver/module.R4MF", own_root);
+        try std.testing.expectEqual(Kind.r4d, own.kind);
+        try std.testing.expectEqualStrings("src/main." ++ language[1], own.sources[0]);
+        try std.testing.expectEqualStrings("src/native.c", own.sources[1]);
+        try std.testing.expect(own.entry_mode == null and own.app_class == null);
+        try std.testing.expect(capabilities.query(.{ .language = language[0], .kind = "R4D" }).supported);
+        try std.testing.expect(!capabilities.query(.{ .language = language[0], .kind = "R4D", .execution = .native_r4os }).supported);
+    }
     const wrong = try std.mem.replaceOwned(u8, allocator, text, "src/helpers.c", "src/second.zig");
     try std.testing.expectError(error.SourceLanguageMismatch, parse(allocator, "MixedDriver/module.R4MF", wrong));
     const escaped = try std.mem.replaceOwned(u8, allocator, text, "src/helpers.c", "../helpers.c");

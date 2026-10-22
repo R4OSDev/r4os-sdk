@@ -363,9 +363,11 @@ explicit caller allocators, session resources and callbacks remain resident
 until actual close/quiescence. No Rust mutable reference spans callbacks.
 Three actual consumers of two genuine provider languages pass in KVM4.
 
-R4D: the current driver builder owns r4d_init_entry, DriverInit/DriverShutdown,
-R4DEV callbacks and metadata. Rust needs an actual driver startup/packager and
-per-device IRQ/DMA/resource cleanup proof. R4XStart/app class is unrelated.
+R4D (qualified since SDK0.64.86): genuine Rust/C roots use the ordinary
+DriverInit/DriverShutdown entries and original R4DEV admission. Driver resources
+close explicitly; local KVM4 validates DMA/IRQ/work/task/heap and independent
+RAM backends through init, hot removal, public IO and actual warm-reset shutdown.
+Physical device readiness and Windows execution remain separate qualification.
 
 R4P: the protocol builder owns separate init/register/export stubs, role/category/
 dependency metadata and teardown. Raw Rust callback layouts alone do not provide
@@ -385,7 +387,7 @@ SSH alone does not bind their application window before ProgramEntry.
 Rust lowlevel needs separate raw-entry stack/ABI/panic qualification. Native
 R4OS Rust builds need a compiler/toolchain port; R4CC implements the native C
 subset and is not a Rust compiler. Stable machine reason codes live in the
-shared Decision, not in an IDE-maintained matrix. Driver/protocol support and hardware qualification remain separate work.
+shared Decision, not in an IDE-maintained matrix. Protocol/lowlevel support and physical hardware qualification remain separate work.
 
 Graphics owners (SDK0.64.76)
 ---------------------------
@@ -452,3 +454,16 @@ plus release C/Rust and the existing visual regression. Its real RustPlatform
 fixture checks passive current data and its own silent PCM streams on KVM4.
 This adds no hardware playback/PMU/power/fault, Windows, Rust SIMD/FP or
 performance qualification. General R4X/module roles remain later parity waves.
+
+Driver providers (SDK0.64.86)
+---------------------------
+R4D Rust roots use the ordinary Build-RustModule launcher with module.R4MF,
+Cargo.toml/lock and the matched host tools. No R4XStart/startup-info or Zig
+root is required. driver_entry!(init,shutdown) checks the original C ABI;
+init receives *const abi::DriverApi, shutdown takes no arguments. The
+unsafe Driver::from_raw borrow requires the current original resident table
+and actual module admission. Driver/DMA/IRQ/Work/Task/Heap tokens are local,
+explicitly closed and retain exact handles on refusal; Drop never proves
+hardware retirement. Rings/reset epochs stay with the actual per-device
+owner. Advanced original helpers remain typed and unsafe through driver::raw.
+Use the driver heap explicitly; the R4X-global alloc feature is refused.

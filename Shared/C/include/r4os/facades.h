@@ -25,3 +25,5 @@ int32_t R4SdkRegistryPath(const uint8_t *, uintptr_t, uint8_t *, uintptr_t, uint
 #endif
 
 #include "r4os/subsystem_helpers.h"
+
+#include "driver_helpers.h"

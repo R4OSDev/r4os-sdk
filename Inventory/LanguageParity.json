@@ -1031,17 +1031,24 @@
         "driver_resources",
         "driver_queue",
         "driver_outputs",
-        "driver_display"
+        "driver_display",
+        "driver_heap",
+        "driver_threads",
+        "driver_semaphores",
+        "driver_cpu_power"
       ],
-      "semantics": "DriverInit/Shutdown, genaue PCI-/IRQ-/DMA-/USB-/Work-/Buffer-/Geraetegeneration und Abmelde-/Stillstandsquittungen. R4D-Lifecycle bleibt eigener Besitzer, C-Begleitquellen sind kein echter C-Root.",
+      "semantics": "Original R4D Init/Shutdown, current DriverApi37/664, exact R4DEV owner admission; separate real C/Rust roots. Native typed helpers and explicit DMA/IRQ/work/task/heap retirement, no Drop as hardware proof.",
       "current_only": "current_function",
       "rust": {
-        "state": "missing_higher_facade",
-        "source": "Repositories/SDK/Rust/src/lib.rs",
-        "gap": "Treiber und Besitzerhilfen als gleichwertige typisierte Rust-Fassade mit denselben Fehler-/Besitz-/Waitregeln ergaenzen."
+        "state": "current_shared_native_core_and_typed_explicit_owners_qualified",
+        "sources": [
+          "Repositories/SDK/Rust/src/driver.rs",
+          "Repositories/SDK/Rust/src/c_facades.rs"
+        ],
+        "gap": "Hardware-specific ring/reset/quiescence protocols remain with the actual device driver; advanced native helpers unsafe. Windows execution and physical hotplug not qualified."
       },
       "c": {
-        "state": "existing_facade_review_required",
+        "state": "current_shared_native_core_and_genuine_c_root_qualified",
         "sources": [
           "Repositories/SDK/Shared/C/include/r4os/driver_serial.h",
           "Repositories/SDK/Shared/C/include/r4os/driver_memory.h",
@@ -1052,14 +1059,23 @@
           "Repositories/SDK/Shared/C/include/r4os/driver_heap.h",
           "Repositories/SDK/Shared/C/include/r4os/driver_threads.h",
           "Repositories/SDK/Shared/C/include/r4os/driver_semaphores.h",
-          "Repositories/SDK/Shared/C/include/r4os/driver_cpu_power.h"
+          "Repositories/SDK/Shared/C/include/r4os/driver_cpu_power.h",
+          "Repositories/SDK/Shared/C/include/r4os/driver_helpers.h",
+          "Repositories/SDK/Shared/C/include/r4os/driver.h",
+          "Repositories/SDK/Shared/C/include/r4os/driver_lifecycle.h"
         ],
-        "gap": "Bestehende C-Fassade erhalten; nur fehlende aktuelle Funktionen/hoeheren Hilfen und deren Semantik gegen die verlinkten Zig-Deklarationen schliessen."
+        "gap": "Explicit per-device backing, callbacks and reset quiescence remain owner obligations; C has no implicit destructor."
       },
       "evidence": [
-        "source_inventory"
+        "drivers_current_67"
       ],
-      "shared_core": null
+      "shared_core": {
+        "source": "Repositories/SDK/r4os/driver_helper_owners.zig",
+        "owners": 12,
+        "types": 295,
+        "functions": 259,
+        "fingerprint": 2151242634955201969
+      }
     },
     {
       "id": "protocol",
@@ -46717,8 +46733,8 @@
       "entry_mode": null,
       "wave": "0.86.67",
       "zig": "current_reference",
-      "rust": "explicitly_unqualified",
-      "c": "zig_owner_root_required_companions_only",
+      "rust": "real_host_r4d_source_build_and_kvm4_lifecycle_qualified",
+      "c": "real_host_c_r4d_root_and_kvm4_lifecycle_qualified",
       "owner": "Repositories/SDK",
       "canonical_sources": [
         "Repositories/SDK/r4os/module_capabilities.zig",
@@ -46726,7 +46742,7 @@
         "Repositories/SDK/r4os/module_manifest.zig"
       ],
       "evidence": [
-        "source_inventory"
+        "drivers_current_67"
       ],
       "target": "Gleiche echte Rolle/Artefakt-/Start-/Export-/Lifecyclefunktion, keine Umbenennung einer App oder dauerhafte Zig-Fachbruecke."
     },
@@ -47206,11 +47222,11 @@
     "canonical": [
       {
         "path": "Repositories/SDK/r4os/rust_module_profile.json",
-        "sha256": "4654c78bd325057d0adb4711a2a1bf2102bafbc11a432cb61e4e88a4ab6509ee"
+        "sha256": "6e462c92bc96d9528057062fb0748f331deb94db03533bf8468348ac24604c8a"
       },
       {
         "path": "Repositories/SDK/r4os/module_capabilities.zig",
-        "sha256": "247e25466b0423418e5ea99c1c43915e45357d04189fce88d22a304d7e65b1fb"
+        "sha256": "2534b7eb10cfe120ed5591b7b1a035ede573ebea4aeaa3a6521c1d2a5890a2d3"
       },
       {
         "path": "DevKit/Setup/RustToolchain.json",
@@ -48954,6 +48970,179 @@
           "bytes": 44458160
         }
       }
+    },
+    "drivers_current_67": {
+      "complete": true,
+      "kind": "genuine_C_Rust_R4D_roots_original_loader_and_explicit_driver_lifecycle",
+      "performed_in": "0.86.67",
+      "sdk": "0.64.86",
+      "contract": "0.64.44",
+      "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.67",
+      "scope": "Host SDK only plus explicitly uninstalled reusable fixtures; same original R4D entries/loader/admission and current helper owners. No productive driver/kernel change.",
+      "shared_core": {
+        "owners": 12,
+        "types": 295,
+        "functions": 259,
+        "fingerprint": 2151242634955201969,
+        "current_driver_api": 37,
+        "driver_api_bytes": 664
+      },
+      "profile": "r4os-rust-r4d-v1; ordinary two five-byte entry jumps, type-checked C/Rust signatures, canonical R4DEV:Query:1 and driver identity; no R4XStart/startup-info or dummy Zig root",
+      "checks": {
+        "original_manifest_cases": 19,
+        "original_generator_cases": 2,
+        "original_driver_graphics_abi_cases": 2,
+        "native": "Original typed C/Zig boundary and independent Rust owners: DMA Unmap refusal retains pin, pending/rejected Work release retains exact ticket, successful retry once, IRQ close refusal/tuple preserved, no Drop quiescence.",
+        "compiler_negatives": 3,
+        "clippy": "warning-free with SDK alloc helpers",
+        "projections": "current original driver and compiler-typed C/Rust projections exact",
+        "actual_builder_negatives": [
+          "C original import mismatch refused before artifact",
+          "Rust explicit r4os-sdk/alloc refused at cargo-metadata with no R4D artifact"
+        ],
+        "sdk86_rebuild": "Both actual versioned C/Rust provider rebuilds are byte-identical to qualified guest containers; Rust build receipt binds SDK0.64.86."
+      },
+      "providers": {
+        "C": {
+          "path": "Temp/SDK67/CDriverFinal/D67C.R4D",
+          "bytes": 70863,
+          "sha256": "63a4765e46058e467b8df0d983095dfb29f9158595492ee633d88bb967d78637"
+        },
+        "Rust": {
+          "path": "Temp/SDK67/RustDriver/D67R.R4D",
+          "bytes": 69188,
+          "sha256": "7124107f0605f90319b6ab2370e9811df98b31f882ab1483100d98cc93292f88"
+        }
+      },
+      "client": {
+        "path": "Temp/SDK67/Client/DRV67CLI.R4X",
+        "bytes": 12690,
+        "sha256": "09716db22fc4e6eaa61b4d049d6d3bd2b10c3ba8f654ecd398de8f1d62b67646"
+      },
+      "runtime": {
+        "environment": "Owned private clone of unchanged Full42, Kernel381, KVM SMP4; original template/source image untouched.",
+        "source_image_sha256": "41cd183a57e24af229ff90d1cf6b08f5241a5f56af6ddd4251aeb92b91beb882",
+        "source_kernel_sha256": "e06111b9363b44712fe69ded9ddfc3edb1f60c5c271c59a42238a816b0882340",
+        "kernel_binding": "inherited exact unchanged source image/SDK66 proof; no new kernel change or BOOT qualification claim",
+        "init_markers": [
+          "[LOG1] source=Driver severity=Info owner=7 text=PASS D67C init PCI DMA-stale IRQ-ended work-released task-generation hotremove-A B-alive",
+          "[LOG1] source=Driver severity=Info owner=8 text=PASS D67R init PCI DMA-stale IRQ-ended work-released task-generation hotremove-A B-alive"
+        ],
+        "work": "Real QEMU PCI NIC inventory; resident static DMA pin/map/sync/explicit unmap/unpin and stale refusal; real shared timer IRQ observed/unregistered; real work completion/release and stale refusal; dedicated driver tasks with nonzero owner_epoch/task_generation, join/release. Rust actual driver heap active counts/bytes exact.",
+        "backends": "Two exact private RAM StorageBackend instances per independent module, same EXAMPLE registration/recovery/duplicate/removal contract. A removed, B retained. Public R4SYS storage client enumerates current slots/references and reads both, writes distinct complete sector patterns71/72 through exact claims, closes claims, refreshes layout and verifies both independently. Only own named RAM8-sector devices can be written.",
+        "client_exit": 0,
+        "client_result": "PASS Driver67 real storage IO C-B/R-B distinct patterns after hotremove A; exact claims ended",
+        "shutdown": [
+          "[R4D] system-transition shutdown OK name=D67R",
+          "[R4D] system-transition shutdown OK name=D67C",
+          "[RESET] driver-shutdown=OK",
+          "[RESET] checkpoint=warm-reset-ready"
+        ],
+        "qemu_exit": 0,
+        "classification": "Mixed lifecycle fixtures use net classification solely to exercise the original selected shutdown path; no NIC backend is implemented or claimed. Actual storage drivers remain outside warm reset shutdown. POWEROFF alone does not qualify DriverShutdown.",
+        "readback": "Both final containers installed offline on the verified idle private SYSTEM loop and read back byte-exact. Earlier SFTP/canonical readbacks also exact. Loop detached before boot."
+      },
+      "hurdles": [
+        "Initial C fixture assumed zero for a successful PCI lookup; native API returns positive found status. Corrected fixture, no SDK/kernel workaround.",
+        "Partial Init fixture cleanup now tracks only registered backends.",
+        "Direct SFTP overwrite of CONFIG is refused; upload to TEMP, shell COPY and exact readback work.",
+        "Warm reset selects only defined driver classes, so original storage classification did not invoke fixture shutdown. Mixed fixtures now declare a selected class explicitly.",
+        "A refused block unregister caused the kernel to quarantine and power off; fixture now retains exact backing and performs at most64 one-tick retries on reversible Busy before still reporting failure. Final actual close succeeds."
+      ],
+      "diagnostic_followup": {
+        "owner": "Repositories/Diagnostics/Spectra/src/metrics.zig:114",
+        "finding": "METRICS STORAGE iterates active count as slot bound. After hole1, count3 omits live slot3 and marks collection incomplete. Public slot/generation-bound Storage API and actual IO remain correct.",
+        "status": "documented separate passive diagnostic correction; no Kernel IO/performance failure claim"
+      },
+      "normal_runtime": {
+        "r4std": {
+          "path": "Repositories/Libraries/R4STD/zig-out/R4STD.R4L",
+          "bytes": 54433,
+          "sha256": "4455c6d212355fc9aac1d8d1026225e6ac4043a3c53b32a7a76721560a4e1836"
+        },
+        "normal_artifacts_changed": false,
+        "standard": "not required: only host SDK/build paths and IMAGE_SCOPE=none fixtures; normal R4STD rebuilt byte-identical, no installed productive runtime changed."
+      },
+      "limits": [
+        "No physical PCI/USB hotplug/DMA/reset or GPU execution qualification",
+        "No Windows execution or cross-host byte identity",
+        "No direct Rust FP or performance comparison",
+        "No release image/SDK package publication or OssiPC update"
+      ],
+      "publication": "Development source SDK86; final SDK distribution/parity publication remains72. No Full/Slim upload.",
+      "cleanup": "Owned finished guest image/work disposable after compact proof; source fixtures retained for future standard component checks.",
+      "source_files": [
+        {
+          "path": "Repositories/SDK/r4os/driver_helper_owners.zig",
+          "bytes": 1673,
+          "sha256": "7525e43d8b080308e3179b809df667fdd1bf82ec0baf0cc7892f0951caa84de6"
+        },
+        {
+          "path": "Repositories/SDK/r4os/driver_bridge_schema.zig",
+          "bytes": 438,
+          "sha256": "346ebcf8c69f3cbd6a95ad632f0d86e94a4fd20d985f7caed66b0ce2ec3589b7"
+        },
+        {
+          "path": "Repositories/SDK/r4os/driver_bridge_names.zig",
+          "bytes": 1921,
+          "sha256": "f3516083bcbf0c93c9b0b0e92c3ca8de400ec19e10c45b213d51f92735a3d75f"
+        },
+        {
+          "path": "Repositories/SDK/r4os/driver_value_bridge.zig",
+          "bytes": 1567,
+          "sha256": "6e90403478feeec03e9359becff4104715fed6befb41a0e6d15f2c0dfdc4ad08"
+        },
+        {
+          "path": "Repositories/SDK/r4os/generated/driver_fingerprint.zig",
+          "bytes": 120,
+          "sha256": "ccfb2189d8f73adccba874e00eef9fccc0be65ceaa5a497c60879816ef4a0662"
+        },
+        {
+          "path": "Repositories/SDK/Shared/C/include/r4os/driver_helpers.h",
+          "bytes": 272868,
+          "sha256": "32dabc377402391bb8314885282d0c2387aca8e2c95228ae6be9f989a1e6ee83"
+        },
+        {
+          "path": "Repositories/SDK/Shared/C/include/r4os/driver.h",
+          "bytes": 1592,
+          "sha256": "41d46d06931ac40078e706f0d12ebc8ac085157e8a985b03e795bbe0d8be576a"
+        },
+        {
+          "path": "Repositories/SDK/Shared/C/include/r4os/driver_lifecycle.h",
+          "bytes": 1888,
+          "sha256": "7ca162dde830573d28a96c25f83150fe4c904fee0182d004fb1813def57c85cf"
+        },
+        {
+          "path": "Repositories/SDK/Rust/src/driver.rs",
+          "bytes": 14541,
+          "sha256": "062746627951b1790efb9cc0ae71af05309b1ad5c1a5bfa2b8869d050f0ac6f7"
+        },
+        {
+          "path": "Repositories/SDK/Tools/Build-RustModule.ps1",
+          "bytes": 27276,
+          "sha256": "c6b520e111780e71c1ac3ab16fd908ac325c4aaa597e187666ac2369e3ca4172"
+        },
+        {
+          "path": "Repositories/SDK/Tools/ModuleCatalog/src/main.zig",
+          "bytes": 85589,
+          "sha256": "35ff3a366177c1136a30431303587488fdce04ba316fd1c60e4731e4420f9488"
+        },
+        {
+          "path": "Repositories/SDK/r4os/build.zig",
+          "bytes": 89838,
+          "sha256": "10d9fc934391f7107fc084272e520bc976bfdfb8758929cc5be664b6ddc21e15"
+        },
+        {
+          "path": "Repositories/SDK/r4os/module_capabilities.zig",
+          "bytes": 6253,
+          "sha256": "2534b7eb10cfe120ed5591b7b1a035ede573ebea4aeaa3a6521c1d2a5890a2d3"
+        },
+        {
+          "path": "Repositories/SDK/Tools/Test-RustDrivers.ps1",
+          "bytes": 4455,
+          "sha256": "ce8b032fb981c21d9722d4ec349c82965de58d069541f12d66f81f8051eb3651"
+        }
+      ]
     }
   },
   "wave_bindings": [
