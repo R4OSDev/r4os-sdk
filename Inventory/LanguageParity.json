@@ -48578,7 +48578,8 @@
       "linux_standalone_builds": true,
       "real_C_Rust_desktop_host": true,
       "windows_execution_qualified": false,
-      "evidence": "independent_desktop_current_71"
+      "evidence": "independent_desktop_current_71",
+      "windows_test": "skipped_by_user_2026-10-22"
     }
   },
   "current_minimum_decisions": [
@@ -51326,7 +51327,7 @@
     },
     "independent_desktop_current_71": {
       "performed_in": "0.86.71",
-      "complete": false,
+      "complete": true,
       "linux_complete": true,
       "sdk": "0.64.89",
       "contract": "0.64.44",
@@ -53250,12 +53251,9 @@
         "lowlevel_current_69",
         "tooling_templates_current_70"
       ],
-      "open": [
-        "Explicit real Windows host execution required by71 task2; no Windows host/credentials supplied. Prepared Windows PE tools, Linux execution and byte-identical Linux relocations are not Windows proof.",
-        "72 final package publication and ongoing API drift check follow only after actual71 acceptance or explicit user change of its scope."
-      ],
+      "open": [],
       "performance": "Fixtures, host tooling and metadata/docs only; no productive Kernel/SDK/runtime body changed. No STANDARD or full image release required.",
-      "versions": "71 is not complete: Product70/SDK89 remain; no false release-version advance. Full/Slim42 unchanged.",
+      "versions": "Product71/SDK89; Contract44/Libraries27 and all normal runtime artifacts unchanged. No STANDARD71 or Full/Slim/hardware release.",
       "limits": [
         "Software framebuffer/local KVM4 only; no native GPU, hardware, direct Rust FP/SIMD or performance claim.",
         "The small shell proves the APIs/ownership needed by a desktop. It is not the productive Rust desktop or its whole compositor/window manager.",
@@ -53265,7 +53263,14 @@
         "The existing56 host consumer only exercised refusal while R4DESK owned WINSVC;71 uses the real shell host claim.",
         "A wrong status check in the new C fixture marker was corrected after actual drawing; only C rebuilt/repeated. Existing SDK runtime unchanged."
       ],
-      "private_image": "Both final guests shut down normally, actual QEMU exits0; original private CONFIG restored with exact offline readback. Original Full/Slim images never modified."
+      "private_image": "Both final guests shut down normally, actual QEMU exits0; original private CONFIG restored with exact offline readback. Original Full/Slim images never modified.",
+      "windows_execution": {
+        "status": "skipped_by_user",
+        "date": "2026-10-22",
+        "actual_execution": false,
+        "cross_host_byte_identity_qualified": false,
+        "reason": "Explicit user instruction: Wir ueberspringen den Windowstest. Bitte weitermachen."
+      }
     }
   },
   "wave_bindings": [
@@ -53509,13 +53514,13 @@
     }
   ],
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
-  "open_acceptance": "71: explicit real Windows host execution remains open; Linux standalone builds and the documented small real C/Rust desktop-host scope are qualified.72: final publication and ongoing drift guard remain separate. Existing native-compiler, hardware, SIMD/performance and exact owner lifecycle limits remain, not functional fallback work.",
+  "open_acceptance": "72: final standalone publication and ongoing API drift guard remain.71 accepted with explicit user skip of Windows execution on2026-10-22; Windows/cross-host identity remain unqualified. Existing native-compiler, hardware, SIMD/performance and exact owner lifecycle limits remain.",
   "current_review": {
     "performed_in": "0.86.71",
     "sdk": "0.64.89",
     "contract": "0.64.44",
     "libraries": "0.64.27",
     "evidence": "independent_desktop_current_71",
-    "scope": "Current180 public root exports;222 historical source identities rechecked with206unchanged/16existing owner deltas;24local contracts/baselines unchanged. Historical snapshot47 retained explicitly. Full71 acceptance remains open for Windows."
+    "scope": "Current180 public root exports;222 historical source identities rechecked with206unchanged/16existing owner deltas;24local contracts/baselines unchanged. Historical snapshot47 retained explicitly. 71 accepted with explicit user skip of Windows execution on2026-10-22; no Windows/cross-host qualification."
   }
 }
