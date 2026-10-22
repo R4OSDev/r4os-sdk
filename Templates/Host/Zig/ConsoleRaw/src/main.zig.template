@@ -1,0 +1,7 @@
+const r4os=@import("r4os");
+fn work(app:*r4os.App)i32 { app.system().println("Hello from {ProjectName}");return 0; }
+
+comptime {asm(r4os.r4x.entryAsm("raw_entry"));}
+export fn raw_entry(raw:*const r4os.abi.R4XStartContext)callconv(.c)i32{
+ var app=switch(r4os.App.init(raw,.console)){.value=>|v|v,.failure=>|e|return e.raw_code};return work(&app);
+}

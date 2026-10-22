@@ -1,0 +1,8 @@
+const r4os=@import("r4os");
+comptime {asm(r4os.r4d.entriesAsm("driver_init","driver_shutdown"));}
+export fn driver_init(api:*const r4os.abi.DriverApi)callconv(.c)i32{
+ if(api.magic!=r4os.abi.driver_magic or api.version<r4os.abi.driver_api_version or api.size<@sizeOf(r4os.abi.DriverApi))return -1;
+ const context=r4os.r4d.Context.init(api);context.logInfo("{ProjectName}: initialized");return 0;
+}
+// No device/DMA/IRQ backing is allocated by this default misc entry shell.
+export fn driver_shutdown()callconv(.c)i32{return 0;}

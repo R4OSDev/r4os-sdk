@@ -1,72 +1,46 @@
-﻿R4OS SDK Templates
-==================
+R4OS SDK templates (SDK0.64.89)
+===============================
 
-These are installable project templates for R4CODE and R4BUILD under
-C:/R4OS/SDK/Templates. Templates belong to the SDK, not to an application's
-private directory.
+The two native C definitions in this directory remain R4CODE/R4BUILD inputs:
+R4OS.R4X_C_Console and R4OS.R4X_C_Desktop_OK. Their compiler is the native
+R4CC subset, independent from the host SDK toolchains.
 
-The native C templates are:
+The complete host inventory is compiler-free capability schema3:
+  module-catalog capabilities --json --profile /TOOLS/RustToolsProfile.json
+There is one file map for each supported combination of Zig/C/Rust with
+app/lowlevel console/gui/service, app/lowlevel GUI subsystem, R4L, R4D and R4P.
+Existing public IDs for the three Rust app templates, host C/Zig consoles
+and local R4L templates remain. Host, R4L, R4X and R4OS folders are SDK-owned
+source groupings; consumers use stable IDs and the declared complete file map.
 
-  R4X C Terminal Hello  -> R4X_C_Console
-  R4X C Desktop OK      -> R4X_C_Desktop_OK
+Create a NEW project with explicit matched components:
+  ./Tools/New-Project.sh -TemplateId R4OS.Host_C_Console -Directory /project -ContractRoot /CONTRACT -ToolsRoot /TOOLS
+  ./Tools/New-RustProject.sh -TemplateId R4OS.R4X_Rust_Console -Directory /rust-project -ContractRoot /CONTRACT -ToolsRoot /TOOLS
+ProjectName is optional. SDK resolves from the creator's own location unless
+SdkRoot is supplied. Native-only IDs are consumed by R4CODE/R4BUILD instead.
+The common creator refuses an existing directory. R4L creation generates only
+that new library's own baseline/bindings/conformance/docs with the matched
+contract generator; Rust R4L additionally needs the selected installed Cargo
+toolset for its locked offline local graph. Later baseline changes are explicit.
 
-R4CODE creates module.R4MF and source files from these templates. R4BUILD
-validates, plans, and builds that manifest through R4PACK and R4CC.
+Build.sh/.bat are thin starters for the same Build.ps1. Pass SDK/Contract/
+ToolsRoot explicitly; C/Zig also select ZigRoot, Rust selects InstallRoot and
+CacheRoot as required. The original manifest/role builder and Cargo owner stay
+authoritative. Sources remain in their actual project; no injected Zig business
+root is produced. Output and caches have explicit owners, and an actual failed
+native compile removes its prior artifact/receipt. Default output is build/;
+OutputRoot can select out/ when an external/native editor expects that path.
 
-The C console and desktop template directories own their module.R4MF and
-source templates. Host-created projects use the same R4MF v2 contract and
-thin build.zig/build.zig.zon entry points that delegate to the SDK. Zig
-console templates are host-only because the native R4CC path implements the
-current C subset.
+The caller owns component versions and project pins. The SDK does not create,
+read, migrate or delete such state. Technical SDK/Contract hashes, Cargo.lock
+and required toolchain pins remain enforced. Older wrappers that explicitly
+passed ProjectPin should invoke the current driver with selected component
+roots; their external metadata remains under its owner's control.
 
-Do not create a second template source of truth. template.ini describes only
-catalog entries and filenames; language, module kind, application class,
-imports, and targets remain in module.R4MF.template.
-
-Rust host templates (SDK0.64.61)
--------------------------------
-R4OS.R4X_Rust_Console, R4OS.R4X_Rust_Desktop and R4OS.R4X_Rust_Service use the
-same template.ini convention. Repeated File=source|destination entries own
-the complete file map; shared Cargo/lock/build/readme sources live in
-RustShared. Language/class/target/import/resource facts remain solely in each
-module.R4MF.template. These are SDK sources, not extra productive modules.
-
-Create an independent project with the matched standalone components:
-
-  ./Tools/New-RustProject.sh -TemplateId R4OS.R4X_Rust_Console -Directory /project -ProjectName HELLO -ContractRoot /CONTRACT -ToolsRoot /TOOLS
-
-The script derives SDK from its own location, accepts -SdkRoot explicitly,
-and needs no compiler to create/validate the project. It refuses an existing
-destination. Build.sh/Build.bat call one Build.ps1 and the SDK driver with
-explicit SDK/Contract/tool directories. The caller owns version selection and
-any project lock. Technical component/profile checks remain in the driver;
-component mismatches, missing tools or compiler errors invalidate previous
-owned success outputs. No project pin file is created or consumed.
-
-Migration from SDK0.64.61-.65: remove -ProjectPin and its value from an existing
-project's Build.ps1, or invoke the SDK driver directly with component roots.
-Any existing project metadata remains under its external owner's control;
-the SDK does not read, migrate or delete it. Cargo.lock remains required for
-the actual Rust dependencies.
-
-All three templates were really compiled from individually staged SDK,
-Contract and tools in /tmp, outside the complete checkout. Console output,
-hosted window and bounded service registration/wait/stop are actual Rust code.
-The common startup/panic evidence is reused. SDK0.64.64 binds final independent
-package builds, path reproducibility and visible GUI/service/console runtime
-qualification in that release's metadata. SDK0.64.66 publishes the general
-component/package/evidence manifest as SDK-Release.json. Launch GUI through the regular
-desktop host, for example its Run dialog; an SSH console is not a visible GUI
-host. The service answers STATUS/op1 and rejects unknown requests in bounded
-batches. Stop also accepts an endpoint already retired by its owner.
-Windows remains prepared, not run.
-
-Capability interface1
----------------------
-module-catalog capabilities --json reads these same definitions and the host
-Zig/C/R4L template.ini file maps. Execution selects host versus native R4OS;
-language/class/imports/targets still come from the manifest. Host C reuses this
-canonical console source instead of an absent second file. Host build.zig.zon
-accepts exact SDK URL/hash inputs; no fixed neighboring SDK path. The R4L file
-map includes its real local contract/generator preparation. See
-Tools/ModuleCatalog/Capabilities.txt for sample expansion, tokens and limits.
+GUI runs through Desktop, services through SERVMAN. A raw entry gets the real
+R4XStartContext and initializes optional runtime helpers explicitly. Drivers
+and protocols use genuine R4D/R4P entries and their original owner lifetimes.
+Subsystem templates are host/launch/window shells, with the shared runtime
+API available to the developer's decoder. A template or host build does not
+prove a physical device, Windows execution, direct Rust SIMD/FP or performance.
+Exact scope: Docs/SDK/LanguageParity.txt and the owner language matrix.

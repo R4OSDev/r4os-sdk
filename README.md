@@ -113,7 +113,7 @@ described in [Templates/R4OS/README.txt](Templates/R4OS/README.txt).
 
 Host consumers can read the versioned compiler-free capability
 interface using `module-catalog capabilities --json` from the exported toolset.
-[Capabilities.txt](Tools/ModuleCatalog/Capabilities.txt) defines schema2, exact
+[Capabilities.txt](Tools/ModuleCatalog/Capabilities.txt) defines schema3, exact
 component identities, shared support/admission, real template file maps,
 required tools and separate qualification/availability. The C host is Zig/Clang;
 R4CC is the smaller native guest C compiler. No Rust compiler is needed to read
@@ -906,3 +906,11 @@ resident loader, PPI identity, role/dependency metadata and explicit provider
 resource close remain authoritative. Logical Gate receipts do not unload code;
 the loader currently does not call ProtocolShutdown automatically. See the
 `protocols_current_68` matrix evidence and Docs/SDK/LanguageParity.txt.
+
+SDK0.64.89 supplies one complete host template for each supported Zig/C/Rust
+role and entry combination. `Tools/New-Project.ps1` creates these projects,
+including initial local R4L contracts; `Tools/Build-Project.ps1` uses the
+original manifest builder or the existing Rust/Cargo owner. The capability
+catalog projects the current language matrix separately from tool presence
+and host/guest/hardware evidence. Native R4CODE/R4BUILD retain their bounded
+C subset and report host-only module roles without treating them as apps.

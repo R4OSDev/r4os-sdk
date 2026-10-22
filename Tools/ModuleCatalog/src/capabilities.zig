@@ -200,7 +200,7 @@ fn templates(a: std.mem.Allocator, io: std.Io, cwd: std.Io.Dir, root: []const u8
         const request = capabilities.Request{ .language = m.language.?.text(), .kind = m.kind.text(), .app_class = if (m.app_class) |c| c.text() else null, .entry_mode = if (m.entry_mode) |e| e.text() else null, .role = if (m.module_role) |r| r.text() else null, .execution = if (std.mem.eql(u8, execution, "host")) .host else .native_r4os };
         const d = capabilities.query(request);
         const rust = std.mem.eql(u8, request.language, "Rust");
-        try result.append(a, .{ .id = id, .display_name = meta.get("DisplayName") orelse id, .description = meta.get("Description") orelse "", .default_name = default_name, .language = request.language, .kind = request.kind, .app_class = request.app_class, .entry_mode = request.entry_mode, .role = request.role, .execution = execution, .target = m.target, .module_version = m.module_version.text, .imports = m.imports, .metadata = m.metadata, .resources = m.resources, .icons = m.icons, .help = m.help, .supported = d.supported, .reason_code = d.code, .files = try files.toOwnedSlice(a), .input_tokens = try fields.toOwnedSlice(a), .creator = if (rust and m.kind == .r4x) "Tools/New-RustProject.ps1" else null, .required_components = if (rust and m.kind == .r4l) &.{ "SDK", "Contract", "r4os-rust-tools-v1", "r4l-contract-gen", "local-library-contract-baseline-conformance" } else if (rust) &.{ "SDK", "Contract", "r4os-rust-tools-v1" } else if (m.kind == .r4l) &.{ "SDK", "Contract", "zig-host", "r4l-contract-gen", "local-library-contract-baseline-conformance" } else if (request.execution == .host) &.{ "SDK", "Contract", "zig-host" } else &.{"native-r4build-r4cc"} });
+        try result.append(a, .{ .id = id, .display_name = meta.get("DisplayName") orelse id, .description = meta.get("Description") orelse "", .default_name = default_name, .language = request.language, .kind = request.kind, .app_class = request.app_class, .entry_mode = request.entry_mode, .role = request.role, .execution = execution, .target = m.target, .module_version = m.module_version.text, .imports = m.imports, .metadata = m.metadata, .resources = m.resources, .icons = m.icons, .help = m.help, .supported = d.supported, .reason_code = d.code, .files = try files.toOwnedSlice(a), .input_tokens = try fields.toOwnedSlice(a), .creator = if (request.execution == .host) "Tools/New-Project.ps1" else null, .required_components = if (rust and m.kind == .r4l) &.{ "SDK", "Contract", "r4os-rust-tools-v1", "r4l-contract-gen", "local-library-contract-baseline-conformance" } else if (rust) &.{ "SDK", "Contract", "r4os-rust-tools-v1" } else if (m.kind == .r4l) &.{ "SDK", "Contract", "zig-host", "r4l-contract-gen", "local-library-contract-baseline-conformance" } else if (request.execution == .host) &.{ "SDK", "Contract", "zig-host" } else &.{"native-r4build-r4cc"} });
     }
     return result.toOwnedSlice(a);
 }
@@ -227,8 +227,9 @@ pub fn render(a: std.mem.Allocator, io: std.Io, cwd: std.Io.Dir, selected_profil
     const zig = try readJson(a, io, cwd, try relative(a, root, "Profile/ZigToolchain.json"));
     const qualified = try readJson(a, io, cwd, try relative(a, root, "Profile/RustQualification.json"));
     const template_root = try relative(a, root, try string(try object(profile, "template_root")));
+    const parity = try readJson(a, io, cwd, try relative(a, root, "Profile/LanguageParity.json"));
     const data = .{
-        .schema = @as(u32, 2),
+        .schema = @as(u32, 3),
         .interface = "r4os-sdk-capabilities",
         .profile = capabilities.rust_profile,
         .sdk = try object(profile, "sdk"),
@@ -241,8 +242,17 @@ pub fn render(a: std.mem.Allocator, io: std.Io, cwd: std.Io.Dir, selected_profil
         .templates = try templates(a, io, cwd, template_root),
         .tools = .{ .id = capabilities.rust_tools, .rust_version = try object(profile, "rust_version"), .cargo_version = try object(profile, "cargo_version"), .rustup_version = try object(profile, "rustup_version"), .bare_target = try object(profile, "bare_target"), .hosts = try object(profile, "hosts"), .release_manifest = try object(profile, "release_manifest"), .files = inputs, .required_components = try object(profile, "required_components"), .optional_components = try object(profile, "optional_components"), .rust_src_required = try object(profile, "rust_src_required"), .zig_host = zig, .c_host = "Zig bundled Clang, executing on Windows/Linux; not native R4CC", .rust_host = "rustc/Cargo plus pinned rust-lld/packager/catalog; Zig only for explicitly declared native C companions", .native_c = "R4BUILD/R4CC C subset inside R4OS", .local_availability_queried = false, .linker = .{ .id = "rust-lld", .source_component = "rustc", .version_binding = "rust_version and required rustc archive", .exact_sources = "tools.hosts.*.required[component=rustc]", .installed_binary_sha256_command = "Setup/Rust.sh check" }, .packager = .{ .id = "r4xbuilder", .version_binding = "sdk.source.commit and sdk.packager_source_sha256", .exact_files = "tools.files[bin/*/r4xbuilder*]" } },
         .qualification = qualified,
+        .language_parity = .{
+            .id = try object(parity, "id"),
+            .matrix_schema = try object(parity, "schema_version"),
+            .completion_rule = try object(parity, "completion_rule"),
+            .capabilities = try object(parity, "capabilities"),
+            .module_roles = try object(parity, "module_roles"),
+            .evidence_source = "Profile/LanguageParity.json#/evidence",
+            .availability_is_separate = true,
+        },
         .technical = try object(profile, "technical"),
-        .project_creation = .{ .rust_driver = "Tools/New-RustProject.ps1", .required_inputs = [_][]const u8{ "TemplateId", "Directory", "ContractRoot", "ToolsRoot" }, .optional_inputs = [_][]const u8{ "ProjectName", "SdkRoot" }, .derived_tokens = [_][]const u8{ "CrateName", "SdkCrateVersion", "ContractCrateVersion", "DisplayName", "TemplateId" } },
+        .project_creation = .{ .driver = "Tools/New-Project.ps1", .rust_driver = "Tools/New-RustProject.ps1", .required_inputs = [_][]const u8{ "TemplateId", "Directory", "ContractRoot", "ToolsRoot" }, .optional_inputs = [_][]const u8{ "ProjectName", "SdkRoot", "Language", "Version", "InstallRoot", "CacheRoot", "Technical" }, .derived_tokens = [_][]const u8{ "ProjectNameLower", "ProjectNameUpper", "CrateName", "SdkCrateVersion", "ContractCrateVersion", "DisplayName", "TemplateId", "ImageScope", "Target", "Description", "InterfaceIdLow", "InterfaceIdHigh" }, .c_zig_builder = "Tools/Build-Project.ps1", .rust_builder = "Tools/Build-RustModule.ps1", .initial_library_outputs = "original owner baseline/bindings/conformance/API docs; local Rust Cargo.lock" },
     };
     const json = try std.json.Stringify.valueAlloc(a, data, .{ .whitespace = .indent_2 });
     return std.fmt.allocPrint(a, "{s}\n", .{json});

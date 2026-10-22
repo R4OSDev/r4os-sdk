@@ -1,0 +1,14 @@
+#![no_std]
+use r4os_sdk::App;
+
+fn work(app: &mut App<'_>) -> i32 {
+    if app.write("[RUST] {ProjectName}: console OK\n") < 0 { return 1; }
+    0
+}
+
+unsafe extern "C" fn raw(context:*const r4os_sdk::abi::R4XStartContext)->i32{
+ let mut app=match unsafe{r4os_sdk::lowlevel_context!(context)}{Ok(v)=>v,Err(n)=>return n};
+ if let Err(n)=r4os_sdk::lowlevel::initialize_runtime(&app){return n;}
+ work(&mut app)
+}
+r4os_sdk::lowlevel_entry!(raw);

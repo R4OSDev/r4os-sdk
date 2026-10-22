@@ -46804,27 +46804,48 @@
         "lowlevel_current_69"
       ],
       "qualification": "Actual capability/manifest admission retains native-r4cc-profile-unsupported and rust/native-zig compiler unavailable; no new native port claimed."
+    },
+    {
+      "id": "subsystem-lowlevel",
+      "kind": "R4X",
+      "app_class": "gui",
+      "entry_mode": "lowlevel",
+      "wave": "0.86.70",
+      "zig": "current_reference",
+      "rust": "explicit_raw_gui_subsystem_host_source_build_qualified",
+      "c": "explicit_raw_gui_subsystem_host_source_build_qualified",
+      "owner": "Repositories/SDK",
+      "canonical_sources": [
+        "Repositories/SDK/r4os/module_capabilities.zig",
+        "Repositories/SDK/r4os/build.zig",
+        "Repositories/SDK/r4os/module_manifest.zig"
+      ],
+      "evidence": [
+        "tooling_templates_current_70"
+      ],
+      "target": "Gleiche echte Rolle/Artefakt-/Start-/Export-/Lifecyclefunktion, keine Umbenennung einer App oder dauerhafte Zig-Fachbruecke."
     }
   ],
   "templates": [
     {
       "source": {
-        "path": "Repositories/SDK/Templates/R4L/Zig/template.ini",
-        "sha256": "e08fb0ab62dc6362f69f86b7a821efab50d0a14f49b9c26e777335f85fbae5df"
+        "path": "Repositories/SDK/Templates/Host/C/ConsoleRaw/template.ini",
+        "bytes": 653,
+        "sha256": "289cdc8140790b97b443b469f759ba6d96c26438682562cb5420ceca97679dec"
       },
-      "id": "R4OS.Host_Zig_R4L",
+      "id": "R4OS.Host_C_ConsoleRaw",
       "definition": {
         "Execution": [
           "host"
         ],
         "Id": [
-          "R4OS.Host_Zig_R4L"
+          "R4OS.Host_C_ConsoleRaw"
         ],
         "DisplayName": [
-          "Zig runtime R4L with local contract"
+          "C ConsoleRaw host"
         ],
         "Description": [
-          "Requires local contract, baseline and SDK R4LContractGen outputs before build; raw file copying is not complete project creation."
+          "Explicit lowlevel console entry with original SDK owners and close paths."
         ],
         "ProjectFileTemplate": [
           "module.R4MF.template"
@@ -46833,103 +46854,45 @@
           "module.R4MF"
         ],
         "DefaultProjectName": [
-          "EXAMPLELIB"
+          "CRAWCONSOLE"
         ],
         "File": [
           "module.R4MF.template|module.R4MF",
-          "Source/main.zig.template|Source/main.zig",
-          "Contract/LibraryContract.json.template|Contract/LibraryContract.json",
-          "Tests/runtime_test.zig.template|Tests/runtime_test.zig",
-          "build.zig.template|build.zig",
-          "build.zig.zon.template|build.zig.zon",
-          "README.md.template|README.md"
+          "src/main.c.template|src/main.c",
+          "../../../HostShared/Build.ps1.template|Build.ps1",
+          "../../../HostShared/Build.sh|Build.sh",
+          "../../../HostShared/Build.bat|Build.bat",
+          "../../../HostShared/README.txt.template|README.txt",
+          "../../../HostShared/gitignore.template|.gitignore",
+          "../../../HostShared/payload.txt.template|assets/note.txt"
         ]
       },
       "wave": "0.86.70",
-      "qualification": "Vorlage/Mapping ist kein Laufzeitnachweis; Rust-Console/GUI/Service separat nach evidence.rust_qualified_classes, Windows bleibt unqualifiziert."
+      "updated_in": "0.86.70",
+      "qualification": "Actual Linux creation/build for all33host file maps; native2 retained. Not new role-runtime, Windows, hardware or performance qualification.",
+      "evidence": [
+        "tooling_templates_current_70"
+      ]
     },
     {
       "source": {
-        "path": "Repositories/SDK/Templates/R4OS/R4X_C_Console/template.ini",
-        "sha256": "9dad2960a61580e593ff87972339a05a7575dd7549dabb3d047e5b84a3fbd9df"
+        "path": "Repositories/SDK/Templates/Host/C/Desktop/template.ini",
+        "bytes": 635,
+        "sha256": "56bbe6ca212d87cf4e86f4baea55a13db2eb5dccc92533f30eb8cf9e58312e73"
       },
-      "id": "R4OS.R4X_C_Console",
-      "definition": {
-        "Execution": [
-          "native_r4os"
-        ],
-        "Id": [
-          "R4OS.R4X_C_Console"
-        ],
-        "DisplayName": [
-          "R4X C Console"
-        ],
-        "Description": [
-          "Creates a current R4MF-v2 R4OS console application in C."
-        ],
-        "ProjectFileTemplate": [
-          "module.R4MF.template"
-        ],
-        "ProjectFile": [
-          "module.R4MF"
-        ],
-        "DefaultProjectName": [
-          "HELLOC"
-        ]
-      },
-      "wave": "0.86.70",
-      "qualification": "Vorlage/Mapping ist kein Laufzeitnachweis; Rust-Console/GUI/Service separat nach evidence.rust_qualified_classes, Windows bleibt unqualifiziert."
-    },
-    {
-      "source": {
-        "path": "Repositories/SDK/Templates/R4OS/R4X_C_Desktop_OK/template.ini",
-        "sha256": "85f263138efbdca67658db6ac73c8470e82519765a7417319ec4c069fca9c4ec"
-      },
-      "id": "R4OS.R4X_C_Desktop_OK",
-      "definition": {
-        "Execution": [
-          "native_r4os"
-        ],
-        "Id": [
-          "R4OS.R4X_C_Desktop_OK"
-        ],
-        "DisplayName": [
-          "R4X C Desktop OK"
-        ],
-        "Description": [
-          "Creates a current R4MF-v2 R4OS desktop application in C with an OK button."
-        ],
-        "ProjectFileTemplate": [
-          "module.R4MF.template"
-        ],
-        "ProjectFile": [
-          "module.R4MF"
-        ],
-        "DefaultProjectName": [
-          "HELLOGUI"
-        ]
-      },
-      "wave": "0.86.70",
-      "qualification": "Vorlage/Mapping ist kein Laufzeitnachweis; Rust-Console/GUI/Service separat nach evidence.rust_qualified_classes, Windows bleibt unqualifiziert."
-    },
-    {
-      "source": {
-        "path": "Repositories/SDK/Templates/R4OS/R4X_Rust_Console/template.ini",
-        "sha256": "258aeb9117297b797ba10b01627da8829c49ef6b437ab18b2c8d1a79a149c71d"
-      },
-      "id": "R4OS.R4X_Rust_Console",
+      "id": "R4OS.Host_C_Desktop",
       "definition": {
         "Execution": [
           "host"
         ],
         "Id": [
-          "R4OS.R4X_Rust_Console"
+          "R4OS.Host_C_Desktop"
         ],
         "DisplayName": [
-          "Rust R4X Console"
+          "C Desktop host"
         ],
         "Description": [
-          "Normal Rust console output and process return."
+          "Explicit app gui entry with original SDK owners and close paths."
         ],
         "ProjectFileTemplate": [
           "module.R4MF.template"
@@ -46938,41 +46901,421 @@
           "module.R4MF"
         ],
         "DefaultProjectName": [
-          "RUSTCON"
+          "CDESKTOP"
+        ],
+        "File": [
+          "module.R4MF.template|module.R4MF",
+          "src/main.c.template|src/main.c",
+          "../../../HostShared/Build.ps1.template|Build.ps1",
+          "../../../HostShared/Build.sh|Build.sh",
+          "../../../HostShared/Build.bat|Build.bat",
+          "../../../HostShared/README.txt.template|README.txt",
+          "../../../HostShared/gitignore.template|.gitignore",
+          "../../../HostShared/payload.txt.template|assets/note.txt"
+        ]
+      },
+      "wave": "0.86.70",
+      "updated_in": "0.86.70",
+      "qualification": "Actual Linux creation/build for all33host file maps; native2 retained. Not new role-runtime, Windows, hardware or performance qualification.",
+      "evidence": [
+        "tooling_templates_current_70"
+      ]
+    },
+    {
+      "source": {
+        "path": "Repositories/SDK/Templates/Host/C/DesktopRaw/template.ini",
+        "bytes": 649,
+        "sha256": "8b2f6fa979b7ba7e4214ed11265d4d347d5c4ee4d786af2d03aeb7940b85bf1d"
+      },
+      "id": "R4OS.Host_C_DesktopRaw",
+      "definition": {
+        "Execution": [
+          "host"
+        ],
+        "Id": [
+          "R4OS.Host_C_DesktopRaw"
+        ],
+        "DisplayName": [
+          "C DesktopRaw host"
+        ],
+        "Description": [
+          "Explicit lowlevel gui entry with original SDK owners and close paths."
+        ],
+        "ProjectFileTemplate": [
+          "module.R4MF.template"
+        ],
+        "ProjectFile": [
+          "module.R4MF"
+        ],
+        "DefaultProjectName": [
+          "CRAWDESKTOP"
+        ],
+        "File": [
+          "module.R4MF.template|module.R4MF",
+          "src/main.c.template|src/main.c",
+          "../../../HostShared/Build.ps1.template|Build.ps1",
+          "../../../HostShared/Build.sh|Build.sh",
+          "../../../HostShared/Build.bat|Build.bat",
+          "../../../HostShared/README.txt.template|README.txt",
+          "../../../HostShared/gitignore.template|.gitignore",
+          "../../../HostShared/payload.txt.template|assets/note.txt"
+        ]
+      },
+      "wave": "0.86.70",
+      "updated_in": "0.86.70",
+      "qualification": "Actual Linux creation/build for all33host file maps; native2 retained. Not new role-runtime, Windows, hardware or performance qualification.",
+      "evidence": [
+        "tooling_templates_current_70"
+      ]
+    },
+    {
+      "source": {
+        "path": "Repositories/SDK/Templates/Host/C/Driver/template.ini",
+        "bytes": 571,
+        "sha256": "1a43aeaff8144154c070c4a86a35a05b76b1f9416acd2cc7a2f680a7b690d6b6"
+      },
+      "id": "R4OS.Host_C_R4D",
+      "definition": {
+        "Execution": [
+          "host"
+        ],
+        "Id": [
+          "R4OS.Host_C_R4D"
+        ],
+        "DisplayName": [
+          "C R4D provider"
+        ],
+        "Description": [
+          "Genuine R4D root with original entries and explicit owner close."
+        ],
+        "ProjectFileTemplate": [
+          "module.R4MF.template"
+        ],
+        "ProjectFile": [
+          "module.R4MF"
+        ],
+        "DefaultProjectName": [
+          "EXAMPLER4D"
+        ],
+        "File": [
+          "module.R4MF.template|module.R4MF",
+          "src/main.c.template|src/main.c",
+          "../../../HostShared/Build.ps1.template|Build.ps1",
+          "../../../HostShared/Build.sh|Build.sh",
+          "../../../HostShared/Build.bat|Build.bat",
+          "../../../HostShared/README.txt.template|README.txt",
+          "../../../HostShared/gitignore.template|.gitignore"
+        ]
+      },
+      "wave": "0.86.70",
+      "updated_in": "0.86.70",
+      "qualification": "Actual Linux creation/build for all33host file maps; native2 retained. Not new role-runtime, Windows, hardware or performance qualification.",
+      "evidence": [
+        "tooling_templates_current_70"
+      ]
+    },
+    {
+      "source": {
+        "path": "Repositories/SDK/Templates/Host/C/Protocol/template.ini",
+        "bytes": 571,
+        "sha256": "e2dab3e4cbd602891c456a87a833c4811ef243853f523e4fac174ba0b7678439"
+      },
+      "id": "R4OS.Host_C_R4P",
+      "definition": {
+        "Execution": [
+          "host"
+        ],
+        "Id": [
+          "R4OS.Host_C_R4P"
+        ],
+        "DisplayName": [
+          "C R4P provider"
+        ],
+        "Description": [
+          "Genuine R4P root with original entries and explicit owner close."
+        ],
+        "ProjectFileTemplate": [
+          "module.R4MF.template"
+        ],
+        "ProjectFile": [
+          "module.R4MF"
+        ],
+        "DefaultProjectName": [
+          "EXAMPLER4P"
+        ],
+        "File": [
+          "module.R4MF.template|module.R4MF",
+          "src/main.c.template|src/main.c",
+          "../../../HostShared/Build.ps1.template|Build.ps1",
+          "../../../HostShared/Build.sh|Build.sh",
+          "../../../HostShared/Build.bat|Build.bat",
+          "../../../HostShared/README.txt.template|README.txt",
+          "../../../HostShared/gitignore.template|.gitignore"
+        ]
+      },
+      "wave": "0.86.70",
+      "updated_in": "0.86.70",
+      "qualification": "Actual Linux creation/build for all33host file maps; native2 retained. Not new role-runtime, Windows, hardware or performance qualification.",
+      "evidence": [
+        "tooling_templates_current_70"
+      ]
+    },
+    {
+      "source": {
+        "path": "Repositories/SDK/Templates/Host/C/Service/template.ini",
+        "bytes": 639,
+        "sha256": "8587b0ba4949ce91e32bfe5c991cf9d0d53b43c75bf9aa98f718db71c8dd63ee"
+      },
+      "id": "R4OS.Host_C_Service",
+      "definition": {
+        "Execution": [
+          "host"
+        ],
+        "Id": [
+          "R4OS.Host_C_Service"
+        ],
+        "DisplayName": [
+          "C Service host"
+        ],
+        "Description": [
+          "Explicit app service entry with original SDK owners and close paths."
+        ],
+        "ProjectFileTemplate": [
+          "module.R4MF.template"
+        ],
+        "ProjectFile": [
+          "module.R4MF"
+        ],
+        "DefaultProjectName": [
+          "CSERVICE"
+        ],
+        "File": [
+          "module.R4MF.template|module.R4MF",
+          "src/main.c.template|src/main.c",
+          "../../../HostShared/Build.ps1.template|Build.ps1",
+          "../../../HostShared/Build.sh|Build.sh",
+          "../../../HostShared/Build.bat|Build.bat",
+          "../../../HostShared/README.txt.template|README.txt",
+          "../../../HostShared/gitignore.template|.gitignore",
+          "../../../HostShared/payload.txt.template|assets/note.txt"
+        ]
+      },
+      "wave": "0.86.70",
+      "updated_in": "0.86.70",
+      "qualification": "Actual Linux creation/build for all33host file maps; native2 retained. Not new role-runtime, Windows, hardware or performance qualification.",
+      "evidence": [
+        "tooling_templates_current_70"
+      ]
+    },
+    {
+      "source": {
+        "path": "Repositories/SDK/Templates/Host/C/ServiceRaw/template.ini",
+        "bytes": 653,
+        "sha256": "e94ed3d6842d10e451d5a911f63bceae8abae87a5172a176f29a87a9149c0e13"
+      },
+      "id": "R4OS.Host_C_ServiceRaw",
+      "definition": {
+        "Execution": [
+          "host"
+        ],
+        "Id": [
+          "R4OS.Host_C_ServiceRaw"
+        ],
+        "DisplayName": [
+          "C ServiceRaw host"
+        ],
+        "Description": [
+          "Explicit lowlevel service entry with original SDK owners and close paths."
+        ],
+        "ProjectFileTemplate": [
+          "module.R4MF.template"
+        ],
+        "ProjectFile": [
+          "module.R4MF"
+        ],
+        "DefaultProjectName": [
+          "CRAWSERVICE"
+        ],
+        "File": [
+          "module.R4MF.template|module.R4MF",
+          "src/main.c.template|src/main.c",
+          "../../../HostShared/Build.ps1.template|Build.ps1",
+          "../../../HostShared/Build.sh|Build.sh",
+          "../../../HostShared/Build.bat|Build.bat",
+          "../../../HostShared/README.txt.template|README.txt",
+          "../../../HostShared/gitignore.template|.gitignore",
+          "../../../HostShared/payload.txt.template|assets/note.txt"
+        ]
+      },
+      "wave": "0.86.70",
+      "updated_in": "0.86.70",
+      "qualification": "Actual Linux creation/build for all33host file maps; native2 retained. Not new role-runtime, Windows, hardware or performance qualification.",
+      "evidence": [
+        "tooling_templates_current_70"
+      ]
+    },
+    {
+      "source": {
+        "path": "Repositories/SDK/Templates/Host/C/Subsystem/template.ini",
+        "bytes": 641,
+        "sha256": "70868cd03a378f93e145c67d7327280173abff2cb8f45ee3851f5cc662e127b7"
+      },
+      "id": "R4OS.Host_C_Subsystem",
+      "definition": {
+        "Execution": [
+          "host"
+        ],
+        "Id": [
+          "R4OS.Host_C_Subsystem"
+        ],
+        "DisplayName": [
+          "C Subsystem host"
+        ],
+        "Description": [
+          "Explicit app gui entry with original SDK owners and close paths."
+        ],
+        "ProjectFileTemplate": [
+          "module.R4MF.template"
+        ],
+        "ProjectFile": [
+          "module.R4MF"
+        ],
+        "DefaultProjectName": [
+          "CSUBSYSTEM"
+        ],
+        "File": [
+          "module.R4MF.template|module.R4MF",
+          "src/main.c.template|src/main.c",
+          "../../../HostShared/Build.ps1.template|Build.ps1",
+          "../../../HostShared/Build.sh|Build.sh",
+          "../../../HostShared/Build.bat|Build.bat",
+          "../../../HostShared/README.txt.template|README.txt",
+          "../../../HostShared/gitignore.template|.gitignore",
+          "../../../HostShared/payload.txt.template|assets/note.txt"
+        ]
+      },
+      "wave": "0.86.70",
+      "updated_in": "0.86.70",
+      "qualification": "Actual Linux creation/build for all33host file maps; native2 retained. Not new role-runtime, Windows, hardware or performance qualification.",
+      "evidence": [
+        "tooling_templates_current_70"
+      ]
+    },
+    {
+      "source": {
+        "path": "Repositories/SDK/Templates/Host/C/SubsystemRaw/template.ini",
+        "bytes": 655,
+        "sha256": "86be18246b9ab88b362ea3b03470f912a6c8421bc80e76fda810173273e47ffe"
+      },
+      "id": "R4OS.Host_C_SubsystemRaw",
+      "definition": {
+        "Execution": [
+          "host"
+        ],
+        "Id": [
+          "R4OS.Host_C_SubsystemRaw"
+        ],
+        "DisplayName": [
+          "C SubsystemRaw host"
+        ],
+        "Description": [
+          "Explicit lowlevel gui entry with original SDK owners and close paths."
+        ],
+        "ProjectFileTemplate": [
+          "module.R4MF.template"
+        ],
+        "ProjectFile": [
+          "module.R4MF"
+        ],
+        "DefaultProjectName": [
+          "CRAWSUBSYSTEM"
+        ],
+        "File": [
+          "module.R4MF.template|module.R4MF",
+          "src/main.c.template|src/main.c",
+          "../../../HostShared/Build.ps1.template|Build.ps1",
+          "../../../HostShared/Build.sh|Build.sh",
+          "../../../HostShared/Build.bat|Build.bat",
+          "../../../HostShared/README.txt.template|README.txt",
+          "../../../HostShared/gitignore.template|.gitignore",
+          "../../../HostShared/payload.txt.template|assets/note.txt"
+        ]
+      },
+      "wave": "0.86.70",
+      "updated_in": "0.86.70",
+      "qualification": "Actual Linux creation/build for all33host file maps; native2 retained. Not new role-runtime, Windows, hardware or performance qualification.",
+      "evidence": [
+        "tooling_templates_current_70"
+      ]
+    },
+    {
+      "source": {
+        "path": "Repositories/SDK/Templates/Host/Rust/ConsoleRaw/template.ini",
+        "bytes": 786,
+        "sha256": "9c0bb1452705ee5ebe4a661f2f4294148a548428cd11ff877d4366cd6977e885"
+      },
+      "id": "R4OS.Host_Rust_ConsoleRaw",
+      "definition": {
+        "Execution": [
+          "host"
+        ],
+        "Id": [
+          "R4OS.Host_Rust_ConsoleRaw"
+        ],
+        "DisplayName": [
+          "Rust ConsoleRaw host"
+        ],
+        "Description": [
+          "Explicit lowlevel console entry with original SDK owners and close paths."
+        ],
+        "ProjectFileTemplate": [
+          "module.R4MF.template"
+        ],
+        "ProjectFile": [
+          "module.R4MF"
+        ],
+        "DefaultProjectName": [
+          "RUSTRAWCONSOLE"
         ],
         "File": [
           "module.R4MF.template|module.R4MF",
           "src/main.rs.template|src/main.rs",
-          "../RustShared/Cargo.toml.template|Cargo.toml",
-          "../RustShared/Cargo.lock.template|Cargo.lock",
-          "../RustShared/Build.ps1.template|Build.ps1",
-          "../RustShared/Build.sh|Build.sh",
-          "../RustShared/Build.bat|Build.bat",
-          "../RustShared/README.txt.template|README.txt",
-          "../RustShared/gitignore.template|.gitignore"
+          "../../../HostShared/Build.ps1.template|Build.ps1",
+          "../../../HostShared/Build.sh|Build.sh",
+          "../../../HostShared/Build.bat|Build.bat",
+          "../../../HostShared/README.txt.template|README.txt",
+          "../../../HostShared/gitignore.template|.gitignore",
+          "../../../HostShared/payload.txt.template|assets/note.txt",
+          "../../../R4OS/RustShared/Cargo.toml.template|Cargo.toml",
+          "../../../R4OS/RustShared/Cargo.lock.template|Cargo.lock"
         ]
       },
       "wave": "0.86.70",
-      "qualification": "Vorlage/Mapping ist kein Laufzeitnachweis; Rust-Console/GUI/Service separat nach evidence.rust_qualified_classes, Windows bleibt unqualifiziert."
+      "updated_in": "0.86.70",
+      "qualification": "Actual Linux creation/build for all33host file maps; native2 retained. Not new role-runtime, Windows, hardware or performance qualification.",
+      "evidence": [
+        "tooling_templates_current_70"
+      ]
     },
     {
       "source": {
-        "path": "Repositories/SDK/Templates/R4OS/R4X_Rust_Desktop/template.ini",
-        "sha256": "42ae3c3e27df7686aab8ff8e8443d1bc0fcc07d52b8ff837f0170835c178c7c2"
+        "path": "Repositories/SDK/Templates/Host/Rust/DesktopRaw/template.ini",
+        "bytes": 782,
+        "sha256": "25fac09a4d87a5d1d91fd47c040fe05db8aa0b9e72938920eae9f77121905c29"
       },
-      "id": "R4OS.R4X_Rust_Desktop",
+      "id": "R4OS.Host_Rust_DesktopRaw",
       "definition": {
         "Execution": [
           "host"
         ],
         "Id": [
-          "R4OS.R4X_Rust_Desktop"
+          "R4OS.Host_Rust_DesktopRaw"
         ],
         "DisplayName": [
-          "Rust R4X GUI"
+          "Rust DesktopRaw host"
         ],
         "Description": [
-          "Hosted Rust window with drawing, bounded event wait and close."
+          "Explicit lowlevel gui entry with original SDK owners and close paths."
         ],
         "ProjectFileTemplate": [
           "module.R4MF.template"
@@ -46981,41 +47324,47 @@
           "module.R4MF"
         ],
         "DefaultProjectName": [
-          "RUSTGUI"
+          "RUSTRAWDESKTOP"
         ],
         "File": [
           "module.R4MF.template|module.R4MF",
           "src/main.rs.template|src/main.rs",
-          "../RustShared/Cargo.toml.template|Cargo.toml",
-          "../RustShared/Cargo.lock.template|Cargo.lock",
-          "../RustShared/Build.ps1.template|Build.ps1",
-          "../RustShared/Build.sh|Build.sh",
-          "../RustShared/Build.bat|Build.bat",
-          "../RustShared/README.txt.template|README.txt",
-          "../RustShared/gitignore.template|.gitignore"
+          "../../../HostShared/Build.ps1.template|Build.ps1",
+          "../../../HostShared/Build.sh|Build.sh",
+          "../../../HostShared/Build.bat|Build.bat",
+          "../../../HostShared/README.txt.template|README.txt",
+          "../../../HostShared/gitignore.template|.gitignore",
+          "../../../HostShared/payload.txt.template|assets/note.txt",
+          "../../../R4OS/RustShared/Cargo.toml.template|Cargo.toml",
+          "../../../R4OS/RustShared/Cargo.lock.template|Cargo.lock"
         ]
       },
       "wave": "0.86.70",
-      "qualification": "Vorlage/Mapping ist kein Laufzeitnachweis; Rust-Console/GUI/Service separat nach evidence.rust_qualified_classes, Windows bleibt unqualifiziert."
+      "updated_in": "0.86.70",
+      "qualification": "Actual Linux creation/build for all33host file maps; native2 retained. Not new role-runtime, Windows, hardware or performance qualification.",
+      "evidence": [
+        "tooling_templates_current_70"
+      ]
     },
     {
       "source": {
-        "path": "Repositories/SDK/Templates/R4OS/R4X_Rust_Service/template.ini",
-        "sha256": "5f398c4bd327d1c12b01c452942f1dadfdc252ce131284def632f427cff0b266"
+        "path": "Repositories/SDK/Templates/Host/Rust/Driver/template.ini",
+        "bytes": 701,
+        "sha256": "2004cc0815bd7c58fbbf73b332ed0ac98845a120677bf52a350526546c4fccde"
       },
-      "id": "R4OS.R4X_Rust_Service",
+      "id": "R4OS.Host_Rust_R4D",
       "definition": {
         "Execution": [
           "host"
         ],
         "Id": [
-          "R4OS.R4X_Rust_Service"
+          "R4OS.Host_Rust_R4D"
         ],
         "DisplayName": [
-          "Rust R4X Service"
+          "Rust R4D provider"
         ],
         "Description": [
-          "Rust endpoint registration, bounded status/request handling and acknowledged stop."
+          "Genuine R4D root with original entries and explicit owner close."
         ],
         "ProjectFileTemplate": [
           "module.R4MF.template"
@@ -47024,41 +47373,46 @@
           "module.R4MF"
         ],
         "DefaultProjectName": [
-          "RUSTSVC"
+          "EXAMPLER4D"
         ],
         "File": [
           "module.R4MF.template|module.R4MF",
           "src/main.rs.template|src/main.rs",
-          "../RustShared/Cargo.toml.template|Cargo.toml",
-          "../RustShared/Cargo.lock.template|Cargo.lock",
-          "../RustShared/Build.ps1.template|Build.ps1",
-          "../RustShared/Build.sh|Build.sh",
-          "../RustShared/Build.bat|Build.bat",
-          "../RustShared/README.txt.template|README.txt",
-          "../RustShared/gitignore.template|.gitignore"
+          "../../../HostShared/Build.ps1.template|Build.ps1",
+          "../../../HostShared/Build.sh|Build.sh",
+          "../../../HostShared/Build.bat|Build.bat",
+          "../../../HostShared/README.txt.template|README.txt",
+          "../../../HostShared/gitignore.template|.gitignore",
+          "../../../R4OS/RustShared/Cargo.toml.template|Cargo.toml",
+          "../../../R4OS/RustShared/Cargo.lock.template|Cargo.lock"
         ]
       },
       "wave": "0.86.70",
-      "qualification": "Vorlage/Mapping ist kein Laufzeitnachweis; Rust-Console/GUI/Service separat nach evidence.rust_qualified_classes, Windows bleibt unqualifiziert."
+      "updated_in": "0.86.70",
+      "qualification": "Actual Linux creation/build for all33host file maps; native2 retained. Not new role-runtime, Windows, hardware or performance qualification.",
+      "evidence": [
+        "tooling_templates_current_70"
+      ]
     },
     {
       "source": {
-        "path": "Repositories/SDK/Templates/R4X/CConsole/template.ini",
-        "sha256": "be6b4ea548ea0cbe12ffc73066c87f017daa2926d7a212cbd32457cbec0f7a4d"
+        "path": "Repositories/SDK/Templates/Host/Rust/Protocol/template.ini",
+        "bytes": 701,
+        "sha256": "6022015993fdbcd12f11871889bf07dae0e8e1194da831d77275861a74170545"
       },
-      "id": "R4OS.Host_C_Console",
+      "id": "R4OS.Host_Rust_R4P",
       "definition": {
         "Execution": [
           "host"
         ],
         "Id": [
-          "R4OS.Host_C_Console"
+          "R4OS.Host_Rust_R4P"
         ],
         "DisplayName": [
-          "C R4X Console (Zig/Clang host)"
+          "Rust R4P provider"
         ],
         "Description": [
-          "Host C project using Zig/Clang; independent of the smaller native R4CC language subset."
+          "Genuine R4P root with original entries and explicit owner close."
         ],
         "ProjectFileTemplate": [
           "module.R4MF.template"
@@ -47067,36 +47421,46 @@
           "module.R4MF"
         ],
         "DefaultProjectName": [
-          "CCON"
+          "EXAMPLER4P"
         ],
         "File": [
           "module.R4MF.template|module.R4MF",
-          "../../R4OS/R4X_C_Console/src/main.c.template|src/main.c",
-          "../build.zig.template|build.zig",
-          "../build.zig.zon.template|build.zig.zon"
+          "src/main.rs.template|src/main.rs",
+          "../../../HostShared/Build.ps1.template|Build.ps1",
+          "../../../HostShared/Build.sh|Build.sh",
+          "../../../HostShared/Build.bat|Build.bat",
+          "../../../HostShared/README.txt.template|README.txt",
+          "../../../HostShared/gitignore.template|.gitignore",
+          "../../../R4OS/RustShared/Cargo.toml.template|Cargo.toml",
+          "../../../R4OS/RustShared/Cargo.lock.template|Cargo.lock"
         ]
       },
       "wave": "0.86.70",
-      "qualification": "Vorlage/Mapping ist kein Laufzeitnachweis; Rust-Console/GUI/Service separat nach evidence.rust_qualified_classes, Windows bleibt unqualifiziert."
+      "updated_in": "0.86.70",
+      "qualification": "Actual Linux creation/build for all33host file maps; native2 retained. Not new role-runtime, Windows, hardware or performance qualification.",
+      "evidence": [
+        "tooling_templates_current_70"
+      ]
     },
     {
       "source": {
-        "path": "Repositories/SDK/Templates/R4X/ZigConsole/template.ini",
-        "sha256": "b280e4e94860bd72c3ff9721b87128dcf5ecdc799db0bf7cdb57ec644b9755f9"
+        "path": "Repositories/SDK/Templates/Host/Rust/ServiceRaw/template.ini",
+        "bytes": 786,
+        "sha256": "bfd74a5c48415940e9754e57bae044e119a2f0f8b0645c72d512012ba332e499"
       },
-      "id": "R4OS.Host_Zig_Console",
+      "id": "R4OS.Host_Rust_ServiceRaw",
       "definition": {
         "Execution": [
           "host"
         ],
         "Id": [
-          "R4OS.Host_Zig_Console"
+          "R4OS.Host_Rust_ServiceRaw"
         ],
         "DisplayName": [
-          "Zig R4X Console (host)"
+          "Rust ServiceRaw host"
         ],
         "Description": [
-          "Zig host project; supply the package identity and exact SDK dependency pin."
+          "Explicit lowlevel service entry with original SDK owners and close paths."
         ],
         "ProjectFileTemplate": [
           "module.R4MF.template"
@@ -47105,23 +47469,552 @@
           "module.R4MF"
         ],
         "DefaultProjectName": [
-          "ZIGCON"
+          "RUSTRAWSERVICE"
         ],
         "File": [
           "module.R4MF.template|module.R4MF",
-          "src/main.zig|src/main.zig",
-          "../build.zig.template|build.zig",
-          "../build.zig.zon.template|build.zig.zon"
+          "src/main.rs.template|src/main.rs",
+          "../../../HostShared/Build.ps1.template|Build.ps1",
+          "../../../HostShared/Build.sh|Build.sh",
+          "../../../HostShared/Build.bat|Build.bat",
+          "../../../HostShared/README.txt.template|README.txt",
+          "../../../HostShared/gitignore.template|.gitignore",
+          "../../../HostShared/payload.txt.template|assets/note.txt",
+          "../../../R4OS/RustShared/Cargo.toml.template|Cargo.toml",
+          "../../../R4OS/RustShared/Cargo.lock.template|Cargo.lock"
         ]
       },
       "wave": "0.86.70",
-      "qualification": "Vorlage/Mapping ist kein Laufzeitnachweis; Rust-Console/GUI/Service separat nach evidence.rust_qualified_classes, Windows bleibt unqualifiziert."
+      "updated_in": "0.86.70",
+      "qualification": "Actual Linux creation/build for all33host file maps; native2 retained. Not new role-runtime, Windows, hardware or performance qualification.",
+      "evidence": [
+        "tooling_templates_current_70"
+      ]
+    },
+    {
+      "source": {
+        "path": "Repositories/SDK/Templates/Host/Rust/Subsystem/template.ini",
+        "bytes": 774,
+        "sha256": "d12edc78f8a6764b6a0b9a624be8bba7c925c7923d011b2f6242d2c9c5e02801"
+      },
+      "id": "R4OS.Host_Rust_Subsystem",
+      "definition": {
+        "Execution": [
+          "host"
+        ],
+        "Id": [
+          "R4OS.Host_Rust_Subsystem"
+        ],
+        "DisplayName": [
+          "Rust Subsystem host"
+        ],
+        "Description": [
+          "Explicit app gui entry with original SDK owners and close paths."
+        ],
+        "ProjectFileTemplate": [
+          "module.R4MF.template"
+        ],
+        "ProjectFile": [
+          "module.R4MF"
+        ],
+        "DefaultProjectName": [
+          "RUSTSUBSYSTEM"
+        ],
+        "File": [
+          "module.R4MF.template|module.R4MF",
+          "src/main.rs.template|src/main.rs",
+          "../../../HostShared/Build.ps1.template|Build.ps1",
+          "../../../HostShared/Build.sh|Build.sh",
+          "../../../HostShared/Build.bat|Build.bat",
+          "../../../HostShared/README.txt.template|README.txt",
+          "../../../HostShared/gitignore.template|.gitignore",
+          "../../../HostShared/payload.txt.template|assets/note.txt",
+          "../../../R4OS/RustShared/Cargo.toml.template|Cargo.toml",
+          "../../../R4OS/RustShared/Cargo.lock.template|Cargo.lock"
+        ]
+      },
+      "wave": "0.86.70",
+      "updated_in": "0.86.70",
+      "qualification": "Actual Linux creation/build for all33host file maps; native2 retained. Not new role-runtime, Windows, hardware or performance qualification.",
+      "evidence": [
+        "tooling_templates_current_70"
+      ]
+    },
+    {
+      "source": {
+        "path": "Repositories/SDK/Templates/Host/Rust/SubsystemRaw/template.ini",
+        "bytes": 788,
+        "sha256": "6b485a094e5baf5ff02f081e9ce3edbf369a5a1d16837134312ea1a4bedad703"
+      },
+      "id": "R4OS.Host_Rust_SubsystemRaw",
+      "definition": {
+        "Execution": [
+          "host"
+        ],
+        "Id": [
+          "R4OS.Host_Rust_SubsystemRaw"
+        ],
+        "DisplayName": [
+          "Rust SubsystemRaw host"
+        ],
+        "Description": [
+          "Explicit lowlevel gui entry with original SDK owners and close paths."
+        ],
+        "ProjectFileTemplate": [
+          "module.R4MF.template"
+        ],
+        "ProjectFile": [
+          "module.R4MF"
+        ],
+        "DefaultProjectName": [
+          "RUSTRAWSUBSYSTEM"
+        ],
+        "File": [
+          "module.R4MF.template|module.R4MF",
+          "src/main.rs.template|src/main.rs",
+          "../../../HostShared/Build.ps1.template|Build.ps1",
+          "../../../HostShared/Build.sh|Build.sh",
+          "../../../HostShared/Build.bat|Build.bat",
+          "../../../HostShared/README.txt.template|README.txt",
+          "../../../HostShared/gitignore.template|.gitignore",
+          "../../../HostShared/payload.txt.template|assets/note.txt",
+          "../../../R4OS/RustShared/Cargo.toml.template|Cargo.toml",
+          "../../../R4OS/RustShared/Cargo.lock.template|Cargo.lock"
+        ]
+      },
+      "wave": "0.86.70",
+      "updated_in": "0.86.70",
+      "qualification": "Actual Linux creation/build for all33host file maps; native2 retained. Not new role-runtime, Windows, hardware or performance qualification.",
+      "evidence": [
+        "tooling_templates_current_70"
+      ]
+    },
+    {
+      "source": {
+        "path": "Repositories/SDK/Templates/Host/Zig/ConsoleRaw/template.ini",
+        "bytes": 663,
+        "sha256": "ed541c540271adbce397c8fe2b56e6f09111a8c523c11c10ba959eaf58a38240"
+      },
+      "id": "R4OS.Host_Zig_ConsoleRaw",
+      "definition": {
+        "Execution": [
+          "host"
+        ],
+        "Id": [
+          "R4OS.Host_Zig_ConsoleRaw"
+        ],
+        "DisplayName": [
+          "Zig ConsoleRaw host"
+        ],
+        "Description": [
+          "Explicit lowlevel console entry with original SDK owners and close paths."
+        ],
+        "ProjectFileTemplate": [
+          "module.R4MF.template"
+        ],
+        "ProjectFile": [
+          "module.R4MF"
+        ],
+        "DefaultProjectName": [
+          "ZIGRAWCONSOLE"
+        ],
+        "File": [
+          "module.R4MF.template|module.R4MF",
+          "src/main.zig.template|src/main.zig",
+          "../../../HostShared/Build.ps1.template|Build.ps1",
+          "../../../HostShared/Build.sh|Build.sh",
+          "../../../HostShared/Build.bat|Build.bat",
+          "../../../HostShared/README.txt.template|README.txt",
+          "../../../HostShared/gitignore.template|.gitignore",
+          "../../../HostShared/payload.txt.template|assets/note.txt"
+        ]
+      },
+      "wave": "0.86.70",
+      "updated_in": "0.86.70",
+      "qualification": "Actual Linux creation/build for all33host file maps; native2 retained. Not new role-runtime, Windows, hardware or performance qualification.",
+      "evidence": [
+        "tooling_templates_current_70"
+      ]
+    },
+    {
+      "source": {
+        "path": "Repositories/SDK/Templates/Host/Zig/Desktop/template.ini",
+        "bytes": 645,
+        "sha256": "fdb4dff34e06b0b13e9e5c57efae5d123e83e75457e7d4ae520b3c1795105161"
+      },
+      "id": "R4OS.Host_Zig_Desktop",
+      "definition": {
+        "Execution": [
+          "host"
+        ],
+        "Id": [
+          "R4OS.Host_Zig_Desktop"
+        ],
+        "DisplayName": [
+          "Zig Desktop host"
+        ],
+        "Description": [
+          "Explicit app gui entry with original SDK owners and close paths."
+        ],
+        "ProjectFileTemplate": [
+          "module.R4MF.template"
+        ],
+        "ProjectFile": [
+          "module.R4MF"
+        ],
+        "DefaultProjectName": [
+          "ZIGDESKTOP"
+        ],
+        "File": [
+          "module.R4MF.template|module.R4MF",
+          "src/main.zig.template|src/main.zig",
+          "../../../HostShared/Build.ps1.template|Build.ps1",
+          "../../../HostShared/Build.sh|Build.sh",
+          "../../../HostShared/Build.bat|Build.bat",
+          "../../../HostShared/README.txt.template|README.txt",
+          "../../../HostShared/gitignore.template|.gitignore",
+          "../../../HostShared/payload.txt.template|assets/note.txt"
+        ]
+      },
+      "wave": "0.86.70",
+      "updated_in": "0.86.70",
+      "qualification": "Actual Linux creation/build for all33host file maps; native2 retained. Not new role-runtime, Windows, hardware or performance qualification.",
+      "evidence": [
+        "tooling_templates_current_70"
+      ]
+    },
+    {
+      "source": {
+        "path": "Repositories/SDK/Templates/Host/Zig/DesktopRaw/template.ini",
+        "bytes": 659,
+        "sha256": "0a33ec400239a4cf1e7f5a2e0e18c9122ef5dec63a028df6358532dd43f33a52"
+      },
+      "id": "R4OS.Host_Zig_DesktopRaw",
+      "definition": {
+        "Execution": [
+          "host"
+        ],
+        "Id": [
+          "R4OS.Host_Zig_DesktopRaw"
+        ],
+        "DisplayName": [
+          "Zig DesktopRaw host"
+        ],
+        "Description": [
+          "Explicit lowlevel gui entry with original SDK owners and close paths."
+        ],
+        "ProjectFileTemplate": [
+          "module.R4MF.template"
+        ],
+        "ProjectFile": [
+          "module.R4MF"
+        ],
+        "DefaultProjectName": [
+          "ZIGRAWDESKTOP"
+        ],
+        "File": [
+          "module.R4MF.template|module.R4MF",
+          "src/main.zig.template|src/main.zig",
+          "../../../HostShared/Build.ps1.template|Build.ps1",
+          "../../../HostShared/Build.sh|Build.sh",
+          "../../../HostShared/Build.bat|Build.bat",
+          "../../../HostShared/README.txt.template|README.txt",
+          "../../../HostShared/gitignore.template|.gitignore",
+          "../../../HostShared/payload.txt.template|assets/note.txt"
+        ]
+      },
+      "wave": "0.86.70",
+      "updated_in": "0.86.70",
+      "qualification": "Actual Linux creation/build for all33host file maps; native2 retained. Not new role-runtime, Windows, hardware or performance qualification.",
+      "evidence": [
+        "tooling_templates_current_70"
+      ]
+    },
+    {
+      "source": {
+        "path": "Repositories/SDK/Templates/Host/Zig/Driver/template.ini",
+        "bytes": 579,
+        "sha256": "04b5f557e8aa44d0e066983c594d1d8c90c1ff5af2f38e2430f8977c873b7c0e"
+      },
+      "id": "R4OS.Host_Zig_R4D",
+      "definition": {
+        "Execution": [
+          "host"
+        ],
+        "Id": [
+          "R4OS.Host_Zig_R4D"
+        ],
+        "DisplayName": [
+          "Zig R4D provider"
+        ],
+        "Description": [
+          "Genuine R4D root with original entries and explicit owner close."
+        ],
+        "ProjectFileTemplate": [
+          "module.R4MF.template"
+        ],
+        "ProjectFile": [
+          "module.R4MF"
+        ],
+        "DefaultProjectName": [
+          "EXAMPLER4D"
+        ],
+        "File": [
+          "module.R4MF.template|module.R4MF",
+          "src/main.zig.template|src/main.zig",
+          "../../../HostShared/Build.ps1.template|Build.ps1",
+          "../../../HostShared/Build.sh|Build.sh",
+          "../../../HostShared/Build.bat|Build.bat",
+          "../../../HostShared/README.txt.template|README.txt",
+          "../../../HostShared/gitignore.template|.gitignore"
+        ]
+      },
+      "wave": "0.86.70",
+      "updated_in": "0.86.70",
+      "qualification": "Actual Linux creation/build for all33host file maps; native2 retained. Not new role-runtime, Windows, hardware or performance qualification.",
+      "evidence": [
+        "tooling_templates_current_70"
+      ]
+    },
+    {
+      "source": {
+        "path": "Repositories/SDK/Templates/Host/Zig/Protocol/template.ini",
+        "bytes": 579,
+        "sha256": "10cca27b663201f0cb90abfdcfd30f4ce642186b629b305d7b07887fb85e1a33"
+      },
+      "id": "R4OS.Host_Zig_R4P",
+      "definition": {
+        "Execution": [
+          "host"
+        ],
+        "Id": [
+          "R4OS.Host_Zig_R4P"
+        ],
+        "DisplayName": [
+          "Zig R4P provider"
+        ],
+        "Description": [
+          "Genuine R4P root with original entries and explicit owner close."
+        ],
+        "ProjectFileTemplate": [
+          "module.R4MF.template"
+        ],
+        "ProjectFile": [
+          "module.R4MF"
+        ],
+        "DefaultProjectName": [
+          "EXAMPLER4P"
+        ],
+        "File": [
+          "module.R4MF.template|module.R4MF",
+          "src/main.zig.template|src/main.zig",
+          "../../../HostShared/Build.ps1.template|Build.ps1",
+          "../../../HostShared/Build.sh|Build.sh",
+          "../../../HostShared/Build.bat|Build.bat",
+          "../../../HostShared/README.txt.template|README.txt",
+          "../../../HostShared/gitignore.template|.gitignore"
+        ]
+      },
+      "wave": "0.86.70",
+      "updated_in": "0.86.70",
+      "qualification": "Actual Linux creation/build for all33host file maps; native2 retained. Not new role-runtime, Windows, hardware or performance qualification.",
+      "evidence": [
+        "tooling_templates_current_70"
+      ]
+    },
+    {
+      "source": {
+        "path": "Repositories/SDK/Templates/Host/Zig/Service/template.ini",
+        "bytes": 649,
+        "sha256": "4fdce49a8f6c14da1b579370732d3a77466c000002ff53b18037ae4f7ee35f3f"
+      },
+      "id": "R4OS.Host_Zig_Service",
+      "definition": {
+        "Execution": [
+          "host"
+        ],
+        "Id": [
+          "R4OS.Host_Zig_Service"
+        ],
+        "DisplayName": [
+          "Zig Service host"
+        ],
+        "Description": [
+          "Explicit app service entry with original SDK owners and close paths."
+        ],
+        "ProjectFileTemplate": [
+          "module.R4MF.template"
+        ],
+        "ProjectFile": [
+          "module.R4MF"
+        ],
+        "DefaultProjectName": [
+          "ZIGSERVICE"
+        ],
+        "File": [
+          "module.R4MF.template|module.R4MF",
+          "src/main.zig.template|src/main.zig",
+          "../../../HostShared/Build.ps1.template|Build.ps1",
+          "../../../HostShared/Build.sh|Build.sh",
+          "../../../HostShared/Build.bat|Build.bat",
+          "../../../HostShared/README.txt.template|README.txt",
+          "../../../HostShared/gitignore.template|.gitignore",
+          "../../../HostShared/payload.txt.template|assets/note.txt"
+        ]
+      },
+      "wave": "0.86.70",
+      "updated_in": "0.86.70",
+      "qualification": "Actual Linux creation/build for all33host file maps; native2 retained. Not new role-runtime, Windows, hardware or performance qualification.",
+      "evidence": [
+        "tooling_templates_current_70"
+      ]
+    },
+    {
+      "source": {
+        "path": "Repositories/SDK/Templates/Host/Zig/ServiceRaw/template.ini",
+        "bytes": 663,
+        "sha256": "48045f3dbe017f867b271eda0908ae418bab2028a6e66ae5d279ad1a7fbb075f"
+      },
+      "id": "R4OS.Host_Zig_ServiceRaw",
+      "definition": {
+        "Execution": [
+          "host"
+        ],
+        "Id": [
+          "R4OS.Host_Zig_ServiceRaw"
+        ],
+        "DisplayName": [
+          "Zig ServiceRaw host"
+        ],
+        "Description": [
+          "Explicit lowlevel service entry with original SDK owners and close paths."
+        ],
+        "ProjectFileTemplate": [
+          "module.R4MF.template"
+        ],
+        "ProjectFile": [
+          "module.R4MF"
+        ],
+        "DefaultProjectName": [
+          "ZIGRAWSERVICE"
+        ],
+        "File": [
+          "module.R4MF.template|module.R4MF",
+          "src/main.zig.template|src/main.zig",
+          "../../../HostShared/Build.ps1.template|Build.ps1",
+          "../../../HostShared/Build.sh|Build.sh",
+          "../../../HostShared/Build.bat|Build.bat",
+          "../../../HostShared/README.txt.template|README.txt",
+          "../../../HostShared/gitignore.template|.gitignore",
+          "../../../HostShared/payload.txt.template|assets/note.txt"
+        ]
+      },
+      "wave": "0.86.70",
+      "updated_in": "0.86.70",
+      "qualification": "Actual Linux creation/build for all33host file maps; native2 retained. Not new role-runtime, Windows, hardware or performance qualification.",
+      "evidence": [
+        "tooling_templates_current_70"
+      ]
+    },
+    {
+      "source": {
+        "path": "Repositories/SDK/Templates/Host/Zig/Subsystem/template.ini",
+        "bytes": 651,
+        "sha256": "de5d2d9ea0aa57158ea579f74c448f7f2e0ae098bb1506a91d6d2bdde042927c"
+      },
+      "id": "R4OS.Host_Zig_Subsystem",
+      "definition": {
+        "Execution": [
+          "host"
+        ],
+        "Id": [
+          "R4OS.Host_Zig_Subsystem"
+        ],
+        "DisplayName": [
+          "Zig Subsystem host"
+        ],
+        "Description": [
+          "Explicit app gui entry with original SDK owners and close paths."
+        ],
+        "ProjectFileTemplate": [
+          "module.R4MF.template"
+        ],
+        "ProjectFile": [
+          "module.R4MF"
+        ],
+        "DefaultProjectName": [
+          "ZIGSUBSYSTEM"
+        ],
+        "File": [
+          "module.R4MF.template|module.R4MF",
+          "src/main.zig.template|src/main.zig",
+          "../../../HostShared/Build.ps1.template|Build.ps1",
+          "../../../HostShared/Build.sh|Build.sh",
+          "../../../HostShared/Build.bat|Build.bat",
+          "../../../HostShared/README.txt.template|README.txt",
+          "../../../HostShared/gitignore.template|.gitignore",
+          "../../../HostShared/payload.txt.template|assets/note.txt"
+        ]
+      },
+      "wave": "0.86.70",
+      "updated_in": "0.86.70",
+      "qualification": "Actual Linux creation/build for all33host file maps; native2 retained. Not new role-runtime, Windows, hardware or performance qualification.",
+      "evidence": [
+        "tooling_templates_current_70"
+      ]
+    },
+    {
+      "source": {
+        "path": "Repositories/SDK/Templates/Host/Zig/SubsystemRaw/template.ini",
+        "bytes": 665,
+        "sha256": "d29f3c72cb394a30400501b9dc829f870b2965492b767bf2a38894a462400e02"
+      },
+      "id": "R4OS.Host_Zig_SubsystemRaw",
+      "definition": {
+        "Execution": [
+          "host"
+        ],
+        "Id": [
+          "R4OS.Host_Zig_SubsystemRaw"
+        ],
+        "DisplayName": [
+          "Zig SubsystemRaw host"
+        ],
+        "Description": [
+          "Explicit lowlevel gui entry with original SDK owners and close paths."
+        ],
+        "ProjectFileTemplate": [
+          "module.R4MF.template"
+        ],
+        "ProjectFile": [
+          "module.R4MF"
+        ],
+        "DefaultProjectName": [
+          "ZIGRAWSUBSYSTEM"
+        ],
+        "File": [
+          "module.R4MF.template|module.R4MF",
+          "src/main.zig.template|src/main.zig",
+          "../../../HostShared/Build.ps1.template|Build.ps1",
+          "../../../HostShared/Build.sh|Build.sh",
+          "../../../HostShared/Build.bat|Build.bat",
+          "../../../HostShared/README.txt.template|README.txt",
+          "../../../HostShared/gitignore.template|.gitignore",
+          "../../../HostShared/payload.txt.template|assets/note.txt"
+        ]
+      },
+      "wave": "0.86.70",
+      "updated_in": "0.86.70",
+      "qualification": "Actual Linux creation/build for all33host file maps; native2 retained. Not new role-runtime, Windows, hardware or performance qualification.",
+      "evidence": [
+        "tooling_templates_current_70"
+      ]
     },
     {
       "source": {
         "path": "Repositories/SDK/Templates/R4L/C/template.ini",
-        "sha256": "31f33c88eccaf2efbf820d59750a3a667de668e3a2ea30603ae76a4f6d9caee0",
-        "bytes": 643
+        "bytes": 771,
+        "sha256": "c7d9e846a7c135912e98258866f49564eb0d85a9a7b4b272e94087ab2638b177"
       },
       "id": "R4OS.Host_C_R4L",
       "definition": {
@@ -47151,22 +48044,25 @@
           "Source/main.c.template|Source/main.c",
           "Contract/LibraryContract.json.template|Contract/LibraryContract.json",
           "Bindings/Rust/Cargo.toml.template|Bindings/Rust/Cargo.toml",
-          "README.md.template|README.md",
-          "build.zig.template|build.zig",
-          "build.zig.zon.template|build.zig.zon"
+          "../../HostShared/Build.ps1.template|Build.ps1",
+          "../../HostShared/Build.sh|Build.sh",
+          "../../HostShared/Build.bat|Build.bat",
+          "../../HostShared/README.txt.template|README.txt",
+          "../../HostShared/gitignore.template|.gitignore"
         ]
       },
-      "wave": "0.86.66",
-      "qualification": "Actual template materialization/baseline/regular R4L build+inspection passed. Original two providers have six actual KVM4 consumer combinations; templates require their explicit local contract generation and locked Cargo setup. Common frontend/tool aggregation remains70.",
+      "wave": "0.86.70",
+      "updated_in": "0.86.70",
+      "qualification": "Actual Linux creation/build for all33host file maps; native2 retained. Not new role-runtime, Windows, hardware or performance qualification.",
       "evidence": [
-        "r4l_providers_current_66"
+        "tooling_templates_current_70"
       ]
     },
     {
       "source": {
         "path": "Repositories/SDK/Templates/R4L/Rust/template.ini",
-        "sha256": "aafd2c1e4d80f031b2347a1a319442080001305f70ebd60a83aaf0b296a43de3",
-        "bytes": 693
+        "bytes": 815,
+        "sha256": "236fdf1212caee173174bdef71de05866f19f16b4b4082d7c667485944df2611"
       },
       "id": "R4OS.Host_Rust_R4L",
       "definition": {
@@ -47196,17 +48092,383 @@
           "Source/main.rs.template|Source/main.rs",
           "Contract/LibraryContract.json.template|Contract/LibraryContract.json",
           "Bindings/Rust/Cargo.toml.template|Bindings/Rust/Cargo.toml",
-          "README.md.template|README.md",
           "Cargo.toml.template|Cargo.toml",
-          "Build.ps1.template|Build.ps1",
-          "Build.sh|Build.sh",
-          "Build.bat|Build.bat"
+          "../../HostShared/Build.ps1.template|Build.ps1",
+          "../../HostShared/Build.sh|Build.sh",
+          "../../HostShared/Build.bat|Build.bat",
+          "../../HostShared/README.txt.template|README.txt",
+          "../../HostShared/gitignore.template|.gitignore"
         ]
       },
-      "wave": "0.86.66",
-      "qualification": "Actual template materialization/baseline/regular R4L build+inspection passed. Original two providers have six actual KVM4 consumer combinations; templates require their explicit local contract generation and locked Cargo setup. Common frontend/tool aggregation remains70.",
+      "wave": "0.86.70",
+      "updated_in": "0.86.70",
+      "qualification": "Actual Linux creation/build for all33host file maps; native2 retained. Not new role-runtime, Windows, hardware or performance qualification.",
       "evidence": [
-        "r4l_providers_current_66"
+        "tooling_templates_current_70"
+      ]
+    },
+    {
+      "source": {
+        "path": "Repositories/SDK/Templates/R4L/Zig/template.ini",
+        "bytes": 852,
+        "sha256": "6c39afc52b5d0292c736fc2057799721f0bf70b1f6042077c7cabbd03ef9b5cd"
+      },
+      "id": "R4OS.Host_Zig_R4L",
+      "definition": {
+        "Execution": [
+          "host"
+        ],
+        "Id": [
+          "R4OS.Host_Zig_R4L"
+        ],
+        "DisplayName": [
+          "Zig runtime R4L with local contract"
+        ],
+        "Description": [
+          "Requires local contract, baseline and SDK R4LContractGen outputs before build; raw file copying is not complete project creation."
+        ],
+        "ProjectFileTemplate": [
+          "module.R4MF.template"
+        ],
+        "ProjectFile": [
+          "module.R4MF"
+        ],
+        "DefaultProjectName": [
+          "EXAMPLELIB"
+        ],
+        "File": [
+          "module.R4MF.template|module.R4MF",
+          "Source/main.zig.template|Source/main.zig",
+          "Contract/LibraryContract.json.template|Contract/LibraryContract.json",
+          "Bindings/Rust/Cargo.toml.template|Bindings/Rust/Cargo.toml",
+          "Tests/runtime_test.zig.template|Tests/runtime_test.zig",
+          "../../HostShared/Build.ps1.template|Build.ps1",
+          "../../HostShared/Build.sh|Build.sh",
+          "../../HostShared/Build.bat|Build.bat",
+          "../../HostShared/README.txt.template|README.txt",
+          "../../HostShared/gitignore.template|.gitignore"
+        ]
+      },
+      "wave": "0.86.70",
+      "updated_in": "0.86.70",
+      "qualification": "Actual Linux creation/build for all33host file maps; native2 retained. Not new role-runtime, Windows, hardware or performance qualification.",
+      "evidence": [
+        "tooling_templates_current_70"
+      ]
+    },
+    {
+      "source": {
+        "path": "Repositories/SDK/Templates/R4OS/R4X_C_Console/template.ini",
+        "bytes": 241,
+        "sha256": "9dad2960a61580e593ff87972339a05a7575dd7549dabb3d047e5b84a3fbd9df"
+      },
+      "id": "R4OS.R4X_C_Console",
+      "definition": {
+        "Execution": [
+          "native_r4os"
+        ],
+        "Id": [
+          "R4OS.R4X_C_Console"
+        ],
+        "DisplayName": [
+          "R4X C Console"
+        ],
+        "Description": [
+          "Creates a current R4MF-v2 R4OS console application in C."
+        ],
+        "ProjectFileTemplate": [
+          "module.R4MF.template"
+        ],
+        "ProjectFile": [
+          "module.R4MF"
+        ],
+        "DefaultProjectName": [
+          "HELLOC"
+        ]
+      },
+      "wave": "0.86.70",
+      "updated_in": "0.86.70",
+      "qualification": "Actual Linux creation/build for all33host file maps; native2 retained. Not new role-runtime, Windows, hardware or performance qualification.",
+      "evidence": [
+        "tooling_templates_current_70"
+      ]
+    },
+    {
+      "source": {
+        "path": "Repositories/SDK/Templates/R4OS/R4X_C_Desktop_OK/template.ini",
+        "bytes": 267,
+        "sha256": "85f263138efbdca67658db6ac73c8470e82519765a7417319ec4c069fca9c4ec"
+      },
+      "id": "R4OS.R4X_C_Desktop_OK",
+      "definition": {
+        "Execution": [
+          "native_r4os"
+        ],
+        "Id": [
+          "R4OS.R4X_C_Desktop_OK"
+        ],
+        "DisplayName": [
+          "R4X C Desktop OK"
+        ],
+        "Description": [
+          "Creates a current R4MF-v2 R4OS desktop application in C with an OK button."
+        ],
+        "ProjectFileTemplate": [
+          "module.R4MF.template"
+        ],
+        "ProjectFile": [
+          "module.R4MF"
+        ],
+        "DefaultProjectName": [
+          "HELLOGUI"
+        ]
+      },
+      "wave": "0.86.70",
+      "updated_in": "0.86.70",
+      "qualification": "Actual Linux creation/build for all33host file maps; native2 retained. Not new role-runtime, Windows, hardware or performance qualification.",
+      "evidence": [
+        "tooling_templates_current_70"
+      ]
+    },
+    {
+      "source": {
+        "path": "Repositories/SDK/Templates/R4OS/R4X_Rust_Console/template.ini",
+        "bytes": 731,
+        "sha256": "8cb50e9c1f413864c66392ae166af116fdb48c86d8eea66cd75716acee467dd6"
+      },
+      "id": "R4OS.R4X_Rust_Console",
+      "definition": {
+        "Execution": [
+          "host"
+        ],
+        "Id": [
+          "R4OS.R4X_Rust_Console"
+        ],
+        "DisplayName": [
+          "Rust Console host"
+        ],
+        "Description": [
+          "Explicit app console entry with original SDK owners and close paths."
+        ],
+        "ProjectFileTemplate": [
+          "module.R4MF.template"
+        ],
+        "ProjectFile": [
+          "module.R4MF"
+        ],
+        "DefaultProjectName": [
+          "RUSTCONSOLE"
+        ],
+        "File": [
+          "module.R4MF.template|module.R4MF",
+          "src/main.rs.template|src/main.rs",
+          "../../HostShared/Build.ps1.template|Build.ps1",
+          "../../HostShared/Build.sh|Build.sh",
+          "../../HostShared/Build.bat|Build.bat",
+          "../../HostShared/README.txt.template|README.txt",
+          "../../HostShared/gitignore.template|.gitignore",
+          "../../HostShared/payload.txt.template|assets/note.txt",
+          "../RustShared/Cargo.toml.template|Cargo.toml",
+          "../RustShared/Cargo.lock.template|Cargo.lock"
+        ]
+      },
+      "wave": "0.86.70",
+      "updated_in": "0.86.70",
+      "qualification": "Actual Linux creation/build for all33host file maps; native2 retained. Not new role-runtime, Windows, hardware or performance qualification.",
+      "evidence": [
+        "tooling_templates_current_70"
+      ]
+    },
+    {
+      "source": {
+        "path": "Repositories/SDK/Templates/R4OS/R4X_Rust_Desktop/template.ini",
+        "bytes": 727,
+        "sha256": "d5e90e2597cbcca856737931b7725a475816b5e7156edcfd6b4446bb5c6c40c1"
+      },
+      "id": "R4OS.R4X_Rust_Desktop",
+      "definition": {
+        "Execution": [
+          "host"
+        ],
+        "Id": [
+          "R4OS.R4X_Rust_Desktop"
+        ],
+        "DisplayName": [
+          "Rust Desktop host"
+        ],
+        "Description": [
+          "Explicit app gui entry with original SDK owners and close paths."
+        ],
+        "ProjectFileTemplate": [
+          "module.R4MF.template"
+        ],
+        "ProjectFile": [
+          "module.R4MF"
+        ],
+        "DefaultProjectName": [
+          "RUSTDESKTOP"
+        ],
+        "File": [
+          "module.R4MF.template|module.R4MF",
+          "src/main.rs.template|src/main.rs",
+          "../../HostShared/Build.ps1.template|Build.ps1",
+          "../../HostShared/Build.sh|Build.sh",
+          "../../HostShared/Build.bat|Build.bat",
+          "../../HostShared/README.txt.template|README.txt",
+          "../../HostShared/gitignore.template|.gitignore",
+          "../../HostShared/payload.txt.template|assets/note.txt",
+          "../RustShared/Cargo.toml.template|Cargo.toml",
+          "../RustShared/Cargo.lock.template|Cargo.lock"
+        ]
+      },
+      "wave": "0.86.70",
+      "updated_in": "0.86.70",
+      "qualification": "Actual Linux creation/build for all33host file maps; native2 retained. Not new role-runtime, Windows, hardware or performance qualification.",
+      "evidence": [
+        "tooling_templates_current_70"
+      ]
+    },
+    {
+      "source": {
+        "path": "Repositories/SDK/Templates/R4OS/R4X_Rust_Service/template.ini",
+        "bytes": 731,
+        "sha256": "b8e345177ab17cd0b26997b2a471e9f56546d8e7ee18e77906e525fda4d5418f"
+      },
+      "id": "R4OS.R4X_Rust_Service",
+      "definition": {
+        "Execution": [
+          "host"
+        ],
+        "Id": [
+          "R4OS.R4X_Rust_Service"
+        ],
+        "DisplayName": [
+          "Rust Service host"
+        ],
+        "Description": [
+          "Explicit app service entry with original SDK owners and close paths."
+        ],
+        "ProjectFileTemplate": [
+          "module.R4MF.template"
+        ],
+        "ProjectFile": [
+          "module.R4MF"
+        ],
+        "DefaultProjectName": [
+          "RUSTSERVICE"
+        ],
+        "File": [
+          "module.R4MF.template|module.R4MF",
+          "src/main.rs.template|src/main.rs",
+          "../../HostShared/Build.ps1.template|Build.ps1",
+          "../../HostShared/Build.sh|Build.sh",
+          "../../HostShared/Build.bat|Build.bat",
+          "../../HostShared/README.txt.template|README.txt",
+          "../../HostShared/gitignore.template|.gitignore",
+          "../../HostShared/payload.txt.template|assets/note.txt",
+          "../RustShared/Cargo.toml.template|Cargo.toml",
+          "../RustShared/Cargo.lock.template|Cargo.lock"
+        ]
+      },
+      "wave": "0.86.70",
+      "updated_in": "0.86.70",
+      "qualification": "Actual Linux creation/build for all33host file maps; native2 retained. Not new role-runtime, Windows, hardware or performance qualification.",
+      "evidence": [
+        "tooling_templates_current_70"
+      ]
+    },
+    {
+      "source": {
+        "path": "Repositories/SDK/Templates/R4X/CConsole/template.ini",
+        "bytes": 621,
+        "sha256": "6c1e914e1cfd4837d4ce0e2b0523e31a62e14643f91db626c656d32165f0f848"
+      },
+      "id": "R4OS.Host_C_Console",
+      "definition": {
+        "Execution": [
+          "host"
+        ],
+        "Id": [
+          "R4OS.Host_C_Console"
+        ],
+        "DisplayName": [
+          "C Console host"
+        ],
+        "Description": [
+          "Explicit app console entry with original SDK owners and close paths."
+        ],
+        "ProjectFileTemplate": [
+          "module.R4MF.template"
+        ],
+        "ProjectFile": [
+          "module.R4MF"
+        ],
+        "DefaultProjectName": [
+          "CCONSOLE"
+        ],
+        "File": [
+          "module.R4MF.template|module.R4MF",
+          "src/main.c.template|src/main.c",
+          "../../HostShared/Build.ps1.template|Build.ps1",
+          "../../HostShared/Build.sh|Build.sh",
+          "../../HostShared/Build.bat|Build.bat",
+          "../../HostShared/README.txt.template|README.txt",
+          "../../HostShared/gitignore.template|.gitignore",
+          "../../HostShared/payload.txt.template|assets/note.txt"
+        ]
+      },
+      "wave": "0.86.70",
+      "updated_in": "0.86.70",
+      "qualification": "Actual Linux creation/build for all33host file maps; native2 retained. Not new role-runtime, Windows, hardware or performance qualification.",
+      "evidence": [
+        "tooling_templates_current_70"
+      ]
+    },
+    {
+      "source": {
+        "path": "Repositories/SDK/Templates/R4X/ZigConsole/template.ini",
+        "bytes": 631,
+        "sha256": "5ad51f463e3d57bd1c0ecba66dd3e7b874f9ffaf2e39b39ca8b5ec8ee95449f1"
+      },
+      "id": "R4OS.Host_Zig_Console",
+      "definition": {
+        "Execution": [
+          "host"
+        ],
+        "Id": [
+          "R4OS.Host_Zig_Console"
+        ],
+        "DisplayName": [
+          "Zig Console host"
+        ],
+        "Description": [
+          "Explicit app console entry with original SDK owners and close paths."
+        ],
+        "ProjectFileTemplate": [
+          "module.R4MF.template"
+        ],
+        "ProjectFile": [
+          "module.R4MF"
+        ],
+        "DefaultProjectName": [
+          "ZIGCONSOLE"
+        ],
+        "File": [
+          "module.R4MF.template|module.R4MF",
+          "src/main.zig.template|src/main.zig",
+          "../../HostShared/Build.ps1.template|Build.ps1",
+          "../../HostShared/Build.sh|Build.sh",
+          "../../HostShared/Build.bat|Build.bat",
+          "../../HostShared/README.txt.template|README.txt",
+          "../../HostShared/gitignore.template|.gitignore",
+          "../../HostShared/payload.txt.template|assets/note.txt"
+        ]
+      },
+      "wave": "0.86.70",
+      "updated_in": "0.86.70",
+      "qualification": "Actual Linux creation/build for all33host file maps; native2 retained. Not new role-runtime, Windows, hardware or performance qualification.",
+      "evidence": [
+        "tooling_templates_current_70"
       ]
     }
   ],
@@ -47232,7 +48494,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/module_capabilities.zig",
-        "sha256": "3cd07dbb5dda1998e793ad7019e4b20e6a49d9683645bc1540932e0b70e79c58"
+        "sha256": "ba2b26d864fee90d24d529c7a50ca09e3848c7d83cb6cd6da5786b0d6ce8cb81"
       },
       {
         "path": "DevKit/Setup/RustToolchain.json",
@@ -47248,7 +48510,23 @@
     ],
     "windows_execution_qualified": false,
     "cross_host_byte_identity_qualified": false,
-    "scope": "Gleiche PS7-Orchestrierung und duenne .sh/.bat; Windows-Vorbereitung nicht als Windows-Ausfuehrung melden. Konsum exportierter Rustpakete ohne Zig; Publisher darf Zig fuer generierte Artefakte nutzen. Kein Studio-/Versionswahl-/Projektpinwissen im SDK."
+    "scope": "Gleiche PS7-Orchestrierung und duenne .sh/.bat; Windows-Vorbereitung nicht als Windows-Ausfuehrung melden. Konsum exportierter Rustpakete ohne Zig; Publisher darf Zig fuer generierte Artefakte nutzen. Kein Studio-/Versionswahl-/Projektpinwissen im SDK.",
+    "current_tooling_70": {
+      "capability_schema": 3,
+      "host_templates": 33,
+      "native_templates": 2,
+      "host_languages": [
+        "Zig",
+        "C",
+        "Rust"
+      ],
+      "creator": "Tools/New-Project.ps1",
+      "builder": "Tools/Build-Project.ps1",
+      "qualified": "Actual Linux creation/build, source/error/owner negatives and compiler-free projection. Windows execution remains false.",
+      "evidence": [
+        "tooling_templates_current_70"
+      ]
+    }
   },
   "current_minimum_decisions": [
     {
@@ -49418,6 +50696,578 @@
           "path": "Repositories/SDK/Tools/Test-RustProjects.ps1",
           "bytes": 4442,
           "sha256": "b4cc78176eaa56e09bc996d72420ea325a64cf68da22d1f4fcb3c41bba745e19"
+        }
+      ]
+    },
+    "tooling_templates_current_70": {
+      "complete": true,
+      "performed_in": "0.86.70",
+      "sdk": "0.64.89",
+      "contract": "0.64.44",
+      "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.70",
+      "scope": "Complete general host template/file-map/creator/build/capability tooling; original role/runtime owners reused. Cold native tool input/display corrections only; no Kernel/SDK ABI or performance-path implementation change.",
+      "capability_schema": 3,
+      "templates": {
+        "host_count": 33,
+        "native_count": 2,
+        "per_host_language": 11,
+        "combinations": "app/lowlevel console/gui/service; app/lowlevel GUI subsystem; R4L; R4D; R4P",
+        "source": "canonical template.ini file maps; previous public IDs retained",
+        "actual_creation_and_build": [
+          {
+            "created": true,
+            "language": "C",
+            "app_class": "console",
+            "true_container_kind": 1,
+            "built": true,
+            "role": null,
+            "id": "R4OS.Host_C_ConsoleRaw",
+            "artifact_bytes": 8510,
+            "entry": "lowlevel",
+            "sha256": "df81972971696e2a886f5dc43a0f8a27707ac04a21dc00f014ef2cc4fde77c64",
+            "kind": "R4X"
+          },
+          {
+            "created": true,
+            "language": "C",
+            "app_class": "gui",
+            "true_container_kind": 1,
+            "built": true,
+            "role": null,
+            "id": "R4OS.Host_C_Desktop",
+            "artifact_bytes": 16821,
+            "entry": "app",
+            "sha256": "5d700fdb2b331effaf98ade4cec50c7320089f024ac00412f345a5c974e396bb",
+            "kind": "R4X"
+          },
+          {
+            "created": true,
+            "language": "C",
+            "app_class": "gui",
+            "true_container_kind": 1,
+            "built": true,
+            "role": null,
+            "id": "R4OS.Host_C_DesktopRaw",
+            "artifact_bytes": 8533,
+            "entry": "lowlevel",
+            "sha256": "1621ef5d9287624d0ab8abfdc255bf4e9321edf77f2121c6484afcab18b8165c",
+            "kind": "R4X"
+          },
+          {
+            "created": true,
+            "language": "C",
+            "app_class": null,
+            "true_container_kind": 3,
+            "built": true,
+            "role": null,
+            "id": "R4OS.Host_C_R4D",
+            "artifact_bytes": 8309,
+            "entry": null,
+            "sha256": "2d31db4bfb7dfda1a416310000563b0395c60d43ba309dd331ff1fe078739a7f",
+            "kind": "R4D"
+          },
+          {
+            "created": true,
+            "language": "C",
+            "app_class": null,
+            "true_container_kind": 4,
+            "built": true,
+            "role": null,
+            "id": "R4OS.Host_C_R4P",
+            "artifact_bytes": 8386,
+            "entry": null,
+            "sha256": "b65c4531b7cd6d78f0372e5f485089c2c1dc24c26bbad2afc8afd2341e10d3a0",
+            "kind": "R4P"
+          },
+          {
+            "created": true,
+            "language": "C",
+            "app_class": "service",
+            "true_container_kind": 1,
+            "built": true,
+            "role": null,
+            "id": "R4OS.Host_C_Service",
+            "artifact_bytes": 8511,
+            "entry": "app",
+            "sha256": "a7388c392ef84364c13c15ddb08821e911c01f6ad2cce6ce7774f649c0653d18",
+            "kind": "R4X"
+          },
+          {
+            "created": true,
+            "language": "C",
+            "app_class": "service",
+            "true_container_kind": 1,
+            "built": true,
+            "role": null,
+            "id": "R4OS.Host_C_ServiceRaw",
+            "artifact_bytes": 8495,
+            "entry": "lowlevel",
+            "sha256": "f4409446d6e2f6817545b30959626a9b9eed2cc4f7142b8b10d11f5f12c7f032",
+            "kind": "R4X"
+          },
+          {
+            "created": true,
+            "language": "C",
+            "app_class": "gui",
+            "true_container_kind": 1,
+            "built": true,
+            "role": "subsystem",
+            "id": "R4OS.Host_C_Subsystem",
+            "artifact_bytes": 619338,
+            "entry": "app",
+            "sha256": "7efed8d0a39e6a286519e8828ba25ae5ea3a19bb9e1ba6daaf45994598b2c9c3",
+            "kind": "R4X"
+          },
+          {
+            "created": true,
+            "language": "C",
+            "app_class": "gui",
+            "true_container_kind": 1,
+            "built": true,
+            "role": "subsystem",
+            "id": "R4OS.Host_C_SubsystemRaw",
+            "artifact_bytes": 615130,
+            "entry": "lowlevel",
+            "sha256": "a1c04f62758446476d0a193cfa791a832ad8713fad0eee46861936bce79d9e0d",
+            "kind": "R4X"
+          },
+          {
+            "created": true,
+            "language": "Rust",
+            "app_class": "console",
+            "true_container_kind": 1,
+            "built": true,
+            "role": null,
+            "id": "R4OS.Host_Rust_ConsoleRaw",
+            "artifact_bytes": 12634,
+            "entry": "lowlevel",
+            "sha256": "3f04c1a8d1fc82426345078c116c02766ffddeef65a7d45810a726ad3627c355",
+            "kind": "R4X"
+          },
+          {
+            "created": true,
+            "language": "Rust",
+            "app_class": "gui",
+            "true_container_kind": 1,
+            "built": true,
+            "role": null,
+            "id": "R4OS.Host_Rust_DesktopRaw",
+            "artifact_bytes": 12769,
+            "entry": "lowlevel",
+            "sha256": "a6b341db5e48c60d2e43d07d1b9261636919fa87a653797daca65367900e37e4",
+            "kind": "R4X"
+          },
+          {
+            "created": true,
+            "language": "Rust",
+            "app_class": null,
+            "true_container_kind": 3,
+            "built": true,
+            "role": null,
+            "id": "R4OS.Host_Rust_R4D",
+            "artifact_bytes": 56520,
+            "entry": null,
+            "sha256": "cdfb65be12a1831d672a2b199073b48f0d17dda6ab4d203bee4f9d5605a3e904",
+            "kind": "R4D"
+          },
+          {
+            "created": true,
+            "language": "Rust",
+            "app_class": null,
+            "true_container_kind": 4,
+            "built": true,
+            "role": null,
+            "id": "R4OS.Host_Rust_R4P",
+            "artifact_bytes": 8408,
+            "entry": null,
+            "sha256": "983a1f33de662a26af445f5074167ff4e945bbba063a67fa9ed12f1ad20b1cd9",
+            "kind": "R4P"
+          },
+          {
+            "created": true,
+            "language": "Rust",
+            "app_class": "service",
+            "true_container_kind": 1,
+            "built": true,
+            "role": null,
+            "id": "R4OS.Host_Rust_ServiceRaw",
+            "artifact_bytes": 20827,
+            "entry": "lowlevel",
+            "sha256": "e0d983e8eb797430a9fde1adeecbf7d88df71c8e5f7dfc9083f9f713322639ed",
+            "kind": "R4X"
+          },
+          {
+            "created": true,
+            "language": "Rust",
+            "app_class": "gui",
+            "true_container_kind": 1,
+            "built": true,
+            "role": "subsystem",
+            "id": "R4OS.Host_Rust_Subsystem",
+            "artifact_bytes": 615302,
+            "entry": "app",
+            "sha256": "5920ca8c0a891c3e3f3b5627112764a892adc6aa612e68a15b5ad9fd2a0aa08e",
+            "kind": "R4X"
+          },
+          {
+            "created": true,
+            "language": "Rust",
+            "app_class": "gui",
+            "true_container_kind": 1,
+            "built": true,
+            "role": "subsystem",
+            "id": "R4OS.Host_Rust_SubsystemRaw",
+            "artifact_bytes": 615302,
+            "entry": "lowlevel",
+            "sha256": "c697af857c9529d991b75bc6127719958979a5b0a4ce58d7783a75f1fee3870b",
+            "kind": "R4X"
+          },
+          {
+            "created": true,
+            "language": "Zig",
+            "app_class": "console",
+            "true_container_kind": 1,
+            "built": true,
+            "role": null,
+            "id": "R4OS.Host_Zig_ConsoleRaw",
+            "artifact_bytes": 8510,
+            "entry": "lowlevel",
+            "sha256": "a3d42a32c7cdf47306d3142ff98e29e6258b2b0f43f8032c37625b80a906eeb1",
+            "kind": "R4X"
+          },
+          {
+            "created": true,
+            "language": "Zig",
+            "app_class": "gui",
+            "true_container_kind": 1,
+            "built": true,
+            "role": null,
+            "id": "R4OS.Host_Zig_Desktop",
+            "artifact_bytes": 9045,
+            "entry": "app",
+            "sha256": "47a1ec6e7a5836ccdc4a421c7b059485e3d44a0156b1c6f80c41251d83faf800",
+            "kind": "R4X"
+          },
+          {
+            "created": true,
+            "language": "Zig",
+            "app_class": "gui",
+            "true_container_kind": 1,
+            "built": true,
+            "role": null,
+            "id": "R4OS.Host_Zig_DesktopRaw",
+            "artifact_bytes": 9045,
+            "entry": "lowlevel",
+            "sha256": "aa1039347fbde6df6ec87ca2649f317acfd60bfa729683e79852eaa0b302bbad",
+            "kind": "R4X"
+          },
+          {
+            "created": true,
+            "language": "Zig",
+            "app_class": null,
+            "true_container_kind": 3,
+            "built": true,
+            "role": null,
+            "id": "R4OS.Host_Zig_R4D",
+            "artifact_bytes": 8309,
+            "entry": null,
+            "sha256": "52e7f07bf810b345047efb3c5f6368a947a11daaba7662242d8feae5d5cc2fcc",
+            "kind": "R4D"
+          },
+          {
+            "created": true,
+            "language": "Zig",
+            "app_class": null,
+            "true_container_kind": 4,
+            "built": true,
+            "role": null,
+            "id": "R4OS.Host_Zig_R4P",
+            "artifact_bytes": 8386,
+            "entry": null,
+            "sha256": "ee4265204cd9dd04cbba2a18ed174fee23bec760ded049a522d1352bae3108b6",
+            "kind": "R4P"
+          },
+          {
+            "created": true,
+            "language": "Zig",
+            "app_class": "service",
+            "true_container_kind": 1,
+            "built": true,
+            "role": null,
+            "id": "R4OS.Host_Zig_Service",
+            "artifact_bytes": 8735,
+            "entry": "app",
+            "sha256": "2b31bf3a992cf7e2233de7b01264694cc8345c1dd1c1b29d6f7ed6f063af3192",
+            "kind": "R4X"
+          },
+          {
+            "created": true,
+            "language": "Zig",
+            "app_class": "service",
+            "true_container_kind": 1,
+            "built": true,
+            "role": null,
+            "id": "R4OS.Host_Zig_ServiceRaw",
+            "artifact_bytes": 8735,
+            "entry": "lowlevel",
+            "sha256": "a01bee27ab21f0032f7a559420a70c52abf81c7e9af80506da2212052e34b4c6",
+            "kind": "R4X"
+          },
+          {
+            "created": true,
+            "language": "Zig",
+            "app_class": "gui",
+            "true_container_kind": 1,
+            "built": true,
+            "role": "subsystem",
+            "id": "R4OS.Host_Zig_Subsystem",
+            "artifact_bytes": 13322,
+            "entry": "app",
+            "sha256": "db90e9c6eb40cbfee2ddb1e38f29d297afe189272679591170226b20c3ee8dbc",
+            "kind": "R4X"
+          },
+          {
+            "created": true,
+            "language": "Zig",
+            "app_class": "gui",
+            "true_container_kind": 1,
+            "built": true,
+            "role": "subsystem",
+            "id": "R4OS.Host_Zig_SubsystemRaw",
+            "artifact_bytes": 13322,
+            "entry": "lowlevel",
+            "sha256": "52f7bc0608ca8bda4b2e972bdd88651d995ce7920ca8289ee79552cce620f00c",
+            "kind": "R4X"
+          },
+          {
+            "created": true,
+            "language": "C",
+            "app_class": null,
+            "true_container_kind": 2,
+            "built": true,
+            "role": null,
+            "id": "R4OS.Host_C_R4L",
+            "artifact_bytes": 8464,
+            "entry": null,
+            "sha256": "8f6b2699ea3d56bff110bb0a155a1c42fb34c6fc60f39b1c92576810900e7b7c",
+            "kind": "R4L"
+          },
+          {
+            "created": true,
+            "language": "Rust",
+            "app_class": null,
+            "true_container_kind": 2,
+            "built": true,
+            "role": null,
+            "id": "R4OS.Host_Rust_R4L",
+            "artifact_bytes": 8464,
+            "entry": null,
+            "sha256": "536110eb48a9f025c0ff5ab642c7b93df49d77a532ce6110ed4b229e997d70d0",
+            "kind": "R4L"
+          },
+          {
+            "created": true,
+            "language": "Zig",
+            "app_class": null,
+            "true_container_kind": 2,
+            "built": true,
+            "role": null,
+            "id": "R4OS.Host_Zig_R4L",
+            "artifact_bytes": 8493,
+            "entry": null,
+            "sha256": "49352f797f0f2abc622570b58d606749cfc8725ab1f82f6c53a4037ef7eb3e7e",
+            "kind": "R4L"
+          },
+          {
+            "created": true,
+            "language": "Rust",
+            "app_class": "console",
+            "true_container_kind": 1,
+            "built": true,
+            "role": null,
+            "id": "R4OS.R4X_Rust_Console",
+            "artifact_bytes": 8522,
+            "entry": "app",
+            "sha256": "601246e22fe4d16c9003e33f4bdc4eb48333c5f41daf897d141f4cf94543878c",
+            "kind": "R4X"
+          },
+          {
+            "created": true,
+            "language": "Rust",
+            "app_class": "gui",
+            "true_container_kind": 1,
+            "built": true,
+            "role": null,
+            "id": "R4OS.R4X_Rust_Desktop",
+            "artifact_bytes": 12769,
+            "entry": "app",
+            "sha256": "5504d0f94b6c86c63ea596cb339444479144b885c0beec1a453eee0eff610967",
+            "kind": "R4X"
+          },
+          {
+            "created": true,
+            "language": "Rust",
+            "app_class": "service",
+            "true_container_kind": 1,
+            "built": true,
+            "role": null,
+            "id": "R4OS.R4X_Rust_Service",
+            "artifact_bytes": 17067,
+            "entry": "app",
+            "sha256": "90b0d51cd005e36a220f2468729b4ee9f24326002d93e432b6beb7dbb342e03b",
+            "kind": "R4X"
+          },
+          {
+            "created": true,
+            "language": "C",
+            "app_class": "console",
+            "true_container_kind": 1,
+            "built": true,
+            "role": null,
+            "id": "R4OS.Host_C_Console",
+            "artifact_bytes": 8510,
+            "entry": "app",
+            "sha256": "b3273c929f4f4044999feb8b60587e7d4ca6f8b44586f2988426af165acfb4b8",
+            "kind": "R4X"
+          },
+          {
+            "created": true,
+            "language": "Zig",
+            "app_class": "console",
+            "true_container_kind": 1,
+            "built": true,
+            "role": null,
+            "id": "R4OS.Host_Zig_Console",
+            "artifact_bytes": 8510,
+            "entry": "app",
+            "sha256": "c5146a6257d1e4d5a2a3c52a137c7baa9dac7a4501eb35137b6c21246b05e94c",
+            "kind": "R4X"
+          }
+        ],
+        "negative": [
+          "real native compiler failure removes exact previous artifact/receipt",
+          "Rust creator rejects C file map without partial destination"
+        ],
+        "cleanup": "All successful source/output test copies removed by runner; compact result only."
+      },
+      "creator": "New-Project owns all host file maps and new-library contract/baseline/bindings/conformance/docs; Rust library local Cargo.lock generated offline. Existing New-RustProject delegates with actual language guard. Version/project-pin selection stays external; technical source/toolchain/Cargo dependencies remain exact.",
+      "builder": "Build-Project routes Rust to existing Cargo owner and C/Zig to original SDK addR4MF using real source/manifest paths. One SDK-owned host build wrapper, no injected Zig business root. PS7 common logic and thin host starters; own output lock and refusal cleanup, conservative default native -j1.",
+      "catalog": "Compiler-free with empty PATH/missing Cargo/rustup homes; complete support/template matrix and current SDK-owned language matrix/evidence references projected. Source/tool availability/host-build/guest/hardware/performance remain distinct; no project lock state.",
+      "native_consumers": {
+        "r4build": {
+          "version": "0.1.5",
+          "artifact": {
+            "path": "Artifacts/Modules/R4Build/R4BUILD.R4X",
+            "bytes": 161015,
+            "sha256": "508544c52ed6a6946e6df28db65e68313d2dc1ac21784444afbecb1dacad1d07"
+          },
+          "changes": "Original shared native admission includes exact role. No unwrap of absent non-R4X app fields; removed obsolete hand Cargo-parser call and stale app banner; native Rust validation explicitly declared files only, graph belongs to host Cargo.",
+          "runtime": "Actual private KVM4: existing C console/gui/resource selftest0; final genuine R4D/R4P and canonical subsystem refused3 before compilation, Rust files validation0 and native compilation refused3."
+        },
+        "r4code": {
+          "version": "0.1.11",
+          "artifact": {
+            "path": "Artifacts/Modules/R4Code/R4CODE.R4X",
+            "bytes": 287837,
+            "sha256": "1281bd8669d0ce8c187bba45f741f751acf7156ef34778a2308c0354b3f939e7"
+          },
+          "changes": "Non-app metadata retains kind, nullable class and real artifact extension; only R4X can Run. Existing native template choices unchanged.",
+          "checks": "Existing dialog-owner case plus two real non-app manifest summaries pass in same host test target; product artifact builds. No new GUI/hardware qualification claimed."
+        }
+      },
+      "checks": {
+        "existing_manifest_generator": 21,
+        "compiler_free_capability": "schema3,33 exact host combinations and current source hashes; native/invalid-entry negatives passed",
+        "clippy": "SDK alloc feature D warnings passed",
+        "host_targets": "Actual Linux host operations; Windows PE tools rebuilt, Windows execution not claimed."
+      },
+      "runtime": {
+        "environment": "Owned private Full42 image, unchanged Kernel381, KVM SMP4",
+        "source_image_sha256": "41cd183a57e24af229ff90d1cf6b08f5241a5f56af6ddd4251aeb92b91beb882",
+        "source_kernel_sha256": "e06111b9363b44712fe69ded9ddfc3edb1f60c5c271c59a42238a816b0882340",
+        "readback": "Uploaded actual R4BUILD/R4CODE artifacts and role/source fixtures read back exactly; final R4BUILD distinct filename binds final bytes.",
+        "qemu_exit": 0
+      },
+      "performance": {
+        "standard": "Not required: SDK host tooling/templates and cold project-admission/metadata display only. No scheduler, renderer, benchmark body or active product hot path changed. R4STD normal rebuild byte-identical; native app artifact changes are explicit.",
+        "r4std": {
+          "path": "Repositories/Libraries/R4STD/zig-out/R4STD.R4L",
+          "bytes": 54433,
+          "sha256": "4455c6d212355fc9aac1d8d1026225e6ac4043a3c53b32a7a76721560a4e1836"
+        }
+      },
+      "hurdles": [
+        "Guest-extension syntax requires a dot; corrected new template field to .xsub.",
+        "A concurrent documentation edit was correctly refused by selected-source hash checks at case28. Original documented input restored byte-exact;27 completed artifact/receipt facts verified, only remaining6 builds resumed, then final docs/profile refreshed.",
+        "Existing R4BUILD still called a removed Cargo parser and native tools assumed R4X-only app fields; corrected in their actual owners."
+      ],
+      "limits": [
+        "Template host build does not replay all previously qualified role functionality or physical hardware. Original role/ABI/lifetime evidence remains66–69 and earlier helper waves.",
+        "Native R4CC remains its one-source C app console/gui subset; no native Zig/Rust compiler port.",
+        "No Windows execution/cross-host byte identity/direct Rust FP/SIMD/performance or release upload claim.",
+        "Current resident R4P and terminal-fault boundaries remain those documented68/69."
+      ],
+      "publication": "Development SDK89/Product70 and cold native apps only; final SDK publication72. Full/Slim/OssiPC42 unchanged.",
+      "source_files": [
+        {
+          "path": "Repositories/SDK/Tools/New-Project.ps1",
+          "bytes": 8187,
+          "sha256": "3c68f2f18536d442bf436983f8fc8ddfe7600ef4cd38ad20ea1e872a338b8a86"
+        },
+        {
+          "path": "Repositories/SDK/Tools/New-RustProject.ps1",
+          "bytes": 530,
+          "sha256": "5d57087da566c5cee25657b0d1f6f57860537d752eb7429e1b8709503fafec72"
+        },
+        {
+          "path": "Repositories/SDK/Tools/Build-Project.ps1",
+          "bytes": 6151,
+          "sha256": "5a230d5f76ffceb6d0846707d8241644c9837e8acd9239f77a26bcf96a62db0a"
+        },
+        {
+          "path": "Repositories/SDK/Tools/MatchedComponents.ps1",
+          "bytes": 1691,
+          "sha256": "be7f843794d836be0a5f38004cbfc101333ef7129137705d5f60e903da3e4ab8"
+        },
+        {
+          "path": "Repositories/SDK/Tools/ManifestProject/build.zig",
+          "bytes": 450,
+          "sha256": "0e3ec80e21165cc743379295002a3650cf6f730ab56f57d2f6cc8030b228e69d"
+        },
+        {
+          "path": "Repositories/SDK/Tools/ManifestProject/build.zig.zon",
+          "bytes": 223,
+          "sha256": "090b08682001d7f486b101be1ab56c89c90543845e55dbd6e48215ce552f5fcd"
+        },
+        {
+          "path": "Repositories/SDK/Tools/ModuleCatalog/src/capabilities.zig",
+          "bytes": 17461,
+          "sha256": "b76bc48d86afc3c8d3305985791261eec4e18a82f8444e7762f526d388ee021b"
+        },
+        {
+          "path": "Repositories/SDK/Tools/Test-Capabilities.ps1",
+          "bytes": 5525,
+          "sha256": "92c48bf6c7ea006b6afd1a3bb777ee103dfc75c15232c7678b2b78c5f44f66c8"
+        },
+        {
+          "path": "Repositories/SDK/Tools/Test-ProjectTemplates.ps1",
+          "bytes": 5851,
+          "sha256": "abc35269f08d598cba7ea14900ff36615822b5e1c00774aabf0b77e9187400da"
+        },
+        {
+          "path": "DevKit/Setup/Export-RustTools.ps1",
+          "bytes": 16140,
+          "sha256": "4a1bdf980e2fb250ff676cd98664b7a842ad787f2aa42be301564baad01e578b"
+        },
+        {
+          "path": "Repositories/Apps/R4Build/src/main.zig",
+          "bytes": 45380,
+          "sha256": "b1bd1db27ca5fd7178424b0380034ff255669fa9403982350ff3506c59cb425f"
+        },
+        {
+          "path": "Repositories/Apps/R4Code/src/main.zig",
+          "bytes": 105666,
+          "sha256": "d6488a50935b0b8f4f66cb7bb7b48c3a15c743597502c3eb10d8c72385c644e7"
         }
       ]
     }

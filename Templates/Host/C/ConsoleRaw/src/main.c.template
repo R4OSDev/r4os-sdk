@@ -1,0 +1,5 @@
+#include <r4os/r4os.h>
+static int32_t work(R4App *app){return r4sys_write_line(&app->system,"Hello from {ProjectName}");}
+
+int32_t r4_main(const R4XStartContext *raw,R4Sys *sys){(void)sys;R4App app;
+ R4Status status=r4_app_init(raw,R4_APP_PROFILE_CONSOLE,&app);if(!r4_status_succeeded(status))return status.raw_code;return work(&app);}

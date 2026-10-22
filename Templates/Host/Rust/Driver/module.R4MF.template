@@ -1,0 +1,11 @@
+R4OS_MODULE_MANIFEST=2
+KIND=R4D
+NAME={ProjectName}
+VERSION={Version}
+LANGUAGE=Rust
+SOURCE=src/main.rs
+TARGET=/R4OS/DRIVERS/{ProjectName}.R4D
+IMAGE_SCOPE=none
+IMPORT=R4DEV:Query:1
+META=r4d.name={ProjectName}
+META=r4d.type=misc

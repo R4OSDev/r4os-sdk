@@ -1,0 +1,24 @@
+#include <r4os/r4os.h>
+static int32_t work(R4App *app){
+ R4Services services=r4_app_services(app);R4ServiceEndpoint ep={0};int32_t result=0;
+ int32_t rc=r4_services_register(&services,"{ProjectName}",0,&ep);if(rc<0)return rc;
+ while(!r4sys_program_should_close(&app->system)){
+  R4EndpointWaitResult wait=r4_service_endpoint_wait(&ep,r4_timeout_finite((R4Duration){.nanoseconds=200000000}));
+  if(wait.kind==R4_ENDPOINT_WAIT_FAILED){if(!r4sys_program_should_close(&app->system))result=wait.raw_code;break;}
+  if(wait.kind!=R4_ENDPOINT_WAIT_READY)continue;
+  for(uint32_t i=0;i<wait.pending && i<16;i++){
+   uint8_t payload[R4OS_SERVICE_API_MAX_PAYLOAD];R4EndpointReceiveResult got=r4_service_endpoint_recv(&ep,payload,sizeof(payload));
+   if(got.kind==R4_ENDPOINT_RECEIVE_WOULD_BLOCK)break;
+   if(got.kind==R4_ENDPOINT_RECEIVE_FAILED){if(!r4sys_program_should_close(&app->system))result=got.raw_code;break;}
+   if(got.header.request_id){const char *text=got.header.op==1?"OK":"BADOP";uint32_t len=got.header.op==1?2:5;
+    rc=r4_service_endpoint_reply(&ep,got.header.request_id,got.header.op==1?R4OS_SERVICE_API_RESULT_OK:R4OS_SERVICE_API_RESULT_BAD_OP,text,len);
+    if(rc<0 && !r4sys_program_should_close(&app->system)){result=rc;break;}}
+  }
+  if(result<0)break;
+  if(wait.pending>=16)r4sys_sleep_ticks(&app->system,1);
+ }
+ rc=r4_service_endpoint_unregister(&ep);if(rc<0 && rc!=R4OS_ERR_CLOSED)return rc;return result;
+}
+
+int32_t r4_main(const R4XStartContext *raw,R4Sys *sys){(void)sys;R4App app;
+ R4Status status=r4_app_init(raw,R4_APP_PROFILE_SERVICE,&app);if(!r4_status_succeeded(status))return status.raw_code;return work(&app);}

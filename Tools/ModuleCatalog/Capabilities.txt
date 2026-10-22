@@ -1,7 +1,7 @@
-﻿ModuleCatalog capability interface2
+﻿ModuleCatalog capability interface3
 ===================================
 
-Public query (SDK0.64.66 and matched toolset):
+Public query (SDK0.64.89 and matched toolset):
 
   bin/<host-triple>/module-catalog capabilities --json
   module-catalog capabilities --json --profile /TOOLS/RustToolsProfile.json
@@ -16,14 +16,13 @@ rustup homes. Success writes JSON to stdout (or --output), no success text on
 stderr. Exit0 means success; exit1 means invalid CLI, missing/invalid profile,
 file/hash or template/manifest error. Diagnostics/usage stay on stderr.
 
-Top-level schema is2, interface="r4os-sdk-capabilities". Additive fields and
-rows may appear within2; clients ignore unknown fields and use stable IDs.
-Incompatible meanings, required-field removal or encoding changes need a new
-schema. Do not infer order or a closed enum from the current array ordering.
-Schema2 removes project_creation.emitted_metadata_file and pin_schema from
-schema1. Component version selection and project locks belong to the caller;
-the SDK neither creates nor consumes such metadata. Published schema1 packages
-remain unchanged. Manifest2, semantic plan1 and the build receipt schema1 stay.
+Top-level schema is3, interface="r4os-sdk-capabilities". Schema3 adds the
+current owner-maintained function/role matrix, complete host-role file maps
+and the common New-Project creator. Consumers check the schema explicitly,
+ignore unknown additive fields and use stable template/profile IDs. Schema2
+packages remain immutable. Component selection and project locks remain with
+the external caller; no SDK project-pin state is emitted or consumed.
+Manifest2, semantic plan1, Rust build-plan2 and the R4M0/R4XStart ABI remain.
 
 Identity and formats
 --------------------
@@ -33,7 +32,7 @@ contract.binding_crate are currently each0.1.0; those are not SDK/Contract or
 module versions. devkit binds the producer source. technical=true denotes a
 development/dirty export, not a completed frozen integration. Final packages
 carry clean commits. formats names manifest2, semantic_plan1, source_catalog4,
-installed_catalog4, rust_build_plan1 and the unchanged R4M0/R4XStart contracts.
+installed_catalog4, rust_build_plan2 and the unchanged R4M0/R4XStart contracts.
 cpu projects canonical Contract/CpuBaseline.json. rust_codegen is the selected
 module codegen profile, separately qualified from the normal kernel profile.
 
@@ -44,9 +43,10 @@ admission. Language/kind/class/entry enums come from the shared manifest parser.
 Each row identifies language, kind, app_class, entry_mode, role, execution and
 hosts; supported/code/reason are distinct from installed-tool availability.
 owner_contract/missing_steps explain unsupported Rust roles. Native C rows
-state one source, exact class imports and the R4CC subset. C driver/protocol
-roots require Zig in the existing owner builders; declared C companions do
-not imply a C root builder. Rust native compilation remains unsupported.
+state one source, exact class imports and the R4CC subset. C/Rust R4L/R4D/R4P use genuine owner roots and original entry/export contracts.
+Rust app/lowlevel and canonical GUI subsystem roles use their actual profiles.
+Host C uses Zig/Clang; no dummy Zig owner root is required. Native Rust/Zig
+compilation remains unsupported; native C stays its explicit R4CC subset.
 
 qualification separates Linux host builds, actual Windows execution, cross-host
 byte identity, common R4X startup tests and runtime class checks. SDK0.64.64
@@ -69,18 +69,31 @@ remain visible, so sample values are not a second editable manifest truth.
 files includes actual canonical source paths/targets/hash; input_tokens shows
 all template substitutions, not only interactive user inputs.
 
-Rust creator is Tools/New-RustProject.ps1. project_creation lists required/
-optional inputs and derived tokens. It defines no project pin file or version
-selection policy. The creator accepts explicit component roots and still checks
-their technical dependencies against the matched tool profile. Shared Cargo/lock/
-PS7/.sh/.bat sources are mapped by each template; no class/import table lives
-in an IDE. The native C creator remains R4CODE/R4BUILD. Host Zig/C templates
-have explicit PackageName/Fingerprint/SdkUrl/SdkHash inputs instead of a fixed
-SDK neighbor path. Their C source reuses the existing canonical C template.
-The existing Zig R4L template additionally requires local library contract,
-baseline, generated bindings and conformance; its description/components state
-that raw copying alone is not complete project creation. Rust R4L remains a
-different unsupported combination.
+Host creator is Tools/New-Project.ps1; the existing New-RustProject command
+selects Rust and delegates to it. All33 supported host combinations have one
+complete file map: app/lowlevel console/gui/service, app/lowlevel GUI subsystem,
+R4L, R4D and R4P for each of Zig/C/Rust. The two existing native C templates
+remain consumed by R4CODE/R4BUILD, separately from host creation.
+
+The creator checks explicitly selected matched components, fills general
+module/crate inputs and initializes each NEW R4L's own contract/baseline,
+bindings, conformance and docs with the original generator. Rust R4L's local
+Cargo graph is generated offline. Existing baseline changes remain explicit
+owner work; copying a partial library template is not complete creation.
+
+Every host file map uses common PS7 Build.ps1 and thin .sh/.bat starters.
+Build-Project routes Rust to its existing Cargo/receipt owner; C/Zig use the
+original SDK addR4MF builder against the actual project manifest and sources.
+No generated Zig business root, sibling workspace, IDE state, source injection
+or second role grammar is involved. C/Zig select their pinned ZigRoot and use
+owned output/cache directories; a failed build removes its own prior artifact.
+
+language_parity projects the canonical SDK matrix's current capabilities and
+module_roles, with evidence IDs referring to Profile/LanguageParity.json.
+Historical analysis snapshots and older evidence retain their date/scope;
+semantic support, installed tools, actual host/guest checks, physical hardware
+and performance are distinct. Neither schema nor language parity grants a
+Windows execution or direct Rust FP/SIMD qualification by implication.
 
 Tools
 -----
@@ -106,8 +119,8 @@ profile, then invoke the SDK creator/build driver with explicit component roots.
 The caller selects component versions and manages any project pins. Required
 SDK/Contract dependencies and proven toolchain requirements remain exactly
 bound; the SDK validates the supplied components and records actual inputs.
-Build.json schema1 is a separate
-source/tool/ELF/container receipt, not this capability schema or semantic plan1.
+Rust build.json schema2 and native C/Zig host build.json schema1 are separate
+source/tool/artifact receipts, not this capability schema3 or semantic plan1.
 An actual complete capability JSON is included with the SDK release manifest;
 the query above reproduces it without a compiler. This interface implements no
 IDE version selector, project lock management or native Rust compiler.
