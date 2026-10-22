@@ -45366,11 +45366,11 @@
         "Repositories/Libraries/R4ACO/Bindings/C/r4aco.h"
       ],
       "rust": {
-        "state": "local_contract_consumer_qualified_higher_helpers_pending",
+        "state": "higher_original_owner_helpers_qualified",
         "sources": [
           "Repositories/Libraries/R4ACO/Bindings/Rust/src/lib.rs"
         ],
-        "gap": "Lokale Raw-Vertragsprojektion/Resolver52 abgenommen; alle hoeheren Zig-Helfer bleiben in der bestehenden Fachwelle dieses Eintrags. Rust-Providerimplementierung ist kein Teil der Consumerfreigabe.",
+        "gap": "",
         "binding_qualification": {
           "subversion": "0.86.52",
           "sdk": "0.64.71",
@@ -45379,16 +45379,26 @@
           "source_sha256": "b80e918e2d27e112fd279792e1f4a146f173de24e5698aa84233ced55c442afb",
           "scope": "alle lokalen Typen/Slots/IDs/Revisionen/Flags aus unveraenderter Librarybaseline; App-geborgene Clients, unsafe Operationen mit Besitzervertrag",
           "evidence": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.52"
-        }
+        },
+        "helper_qualification": {
+          "performed_in": "0.86.60",
+          "sdk": "0.64.79",
+          "libraries_package": "0.64.26",
+          "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.60",
+          "scope": "Alle36 oeffentlichen nicht generierten Grafik/Medien/Compilerhilfsmodule mit konkreten generischen Adaptern; R4AMD/R4NV/R4GL/R4VK haben keine zusaetzlichen hoeheren Zig-Bindingfunktionen. Vollstaendige unsafe Ownergrenze und gebundene Rust-Mux/NV12/Receiver/Profil/Clock-Fassaden. Keine Providerimplementierung oder neue Hardwarefreigabe."
+        },
+        "helper_boundary": "Repositories/Libraries/Shared/Rust/src/raw.rs"
       },
       "c": {
-        "state": "generated_local_contract_present_higher_helpers_review",
-        "gap": "Generierte C-Vertraege behalten; Zig-Zusatzhelfer (z.B. Settings/Consoletext, PNG/Raster, Fontimport, Displaymanager/Readback, Recordingmux oder Playback) einzeln auf fehlende C-Zugaenge pruefen und schliessen."
+        "state": "higher_original_owner_helpers_qualified",
+        "gap": "",
+        "helper_header": "Repositories/Libraries/R4ACO/Bindings/C/r4aco_helpers.h"
       },
       "current_only": "Manifestrevision, lokale Interface-ID/Flags/Praefixe, geladene Instanz und reale optionale Backends bleiben Vertragsbestandteil; keine Alt-OS-Nachbildung.",
       "evidence": [
         "source_inventory",
-        "local_contract_and_baseline"
+        "local_contract_and_baseline",
+        "language_libraries_current_60"
       ],
       "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten."
     },
@@ -45462,11 +45472,11 @@
         "Repositories/Libraries/R4AMD/Bindings/C/r4amd.h"
       ],
       "rust": {
-        "state": "local_contract_consumer_qualified_higher_helpers_pending",
+        "state": "local_contract_qualified_no_additional_higher_helpers",
         "sources": [
           "Repositories/Libraries/R4AMD/Bindings/Rust/src/lib.rs"
         ],
-        "gap": "Lokale Raw-Vertragsprojektion/Resolver52 abgenommen; alle hoeheren Zig-Helfer bleiben in der bestehenden Fachwelle dieses Eintrags. Rust-Providerimplementierung ist kein Teil der Consumerfreigabe.",
+        "gap": "",
         "binding_qualification": {
           "subversion": "0.86.52",
           "sdk": "0.64.71",
@@ -45475,18 +45485,27 @@
           "source_sha256": "0852125ac3832e0a65a153e3548d9569bef16637fda8a26a9774fc2fd6cb0559",
           "scope": "alle lokalen Typen/Slots/IDs/Revisionen/Flags aus unveraenderter Librarybaseline; App-geborgene Clients, unsafe Operationen mit Besitzervertrag",
           "evidence": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.52"
+        },
+        "helper_qualification": {
+          "performed_in": "0.86.60",
+          "sdk": "0.64.79",
+          "libraries_package": "0.64.26",
+          "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.60",
+          "scope": "Alle36 oeffentlichen nicht generierten Grafik/Medien/Compilerhilfsmodule mit konkreten generischen Adaptern; R4AMD/R4NV/R4GL/R4VK haben keine zusaetzlichen hoeheren Zig-Bindingfunktionen. Vollstaendige unsafe Ownergrenze und gebundene Rust-Mux/NV12/Receiver/Profil/Clock-Fassaden. Keine Providerimplementierung oder neue Hardwarefreigabe."
         }
       },
       "c": {
-        "state": "generated_local_contract_present_higher_helpers_review",
-        "gap": "Generierte C-Vertraege behalten; Zig-Zusatzhelfer (z.B. Settings/Consoletext, PNG/Raster, Fontimport, Displaymanager/Readback, Recordingmux oder Playback) einzeln auf fehlende C-Zugaenge pruefen und schliessen."
+        "state": "local_contract_qualified_no_additional_higher_helpers",
+        "gap": ""
       },
       "current_only": "Manifestrevision, lokale Interface-ID/Flags/Praefixe, geladene Instanz und reale optionale Backends bleiben Vertragsbestandteil; keine Alt-OS-Nachbildung.",
       "evidence": [
         "source_inventory",
-        "local_contract_and_baseline"
+        "local_contract_and_baseline",
+        "language_libraries_current_60"
       ],
-      "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten."
+      "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten.",
+      "higher_helper_review": "Current public Zig binding contains generated local contract only; no additional higher consumer helper is omitted. Binding52 evidence remains."
     },
     {
       "id": "library-R4ENC",
@@ -45531,11 +45550,12 @@
         "Repositories/Libraries/R4ENC/Bindings/C/r4enc.h"
       ],
       "rust": {
-        "state": "local_contract_consumer_qualified_higher_helpers_pending",
+        "state": "higher_original_owner_helpers_qualified",
         "sources": [
-          "Repositories/Libraries/R4ENC/Bindings/Rust/src/lib.rs"
+          "Repositories/Libraries/R4ENC/Bindings/Rust/src/lib.rs",
+          "Repositories/Libraries/R4ENC/Bindings/Rust/src/helpers.rs"
         ],
-        "gap": "Lokale Raw-Vertragsprojektion/Resolver52 abgenommen; alle hoeheren Zig-Helfer bleiben in der bestehenden Fachwelle dieses Eintrags. Rust-Providerimplementierung ist kein Teil der Consumerfreigabe.",
+        "gap": "",
         "binding_qualification": {
           "subversion": "0.86.52",
           "sdk": "0.64.71",
@@ -45544,16 +45564,26 @@
           "source_sha256": "0da10d14abefb0b8d1930a128ea574ff2c09093f2d222442be379219651182a2",
           "scope": "alle lokalen Typen/Slots/IDs/Revisionen/Flags aus unveraenderter Librarybaseline; App-geborgene Clients, unsafe Operationen mit Besitzervertrag",
           "evidence": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.52"
-        }
+        },
+        "helper_qualification": {
+          "performed_in": "0.86.60",
+          "sdk": "0.64.79",
+          "libraries_package": "0.64.26",
+          "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.60",
+          "scope": "Alle36 oeffentlichen nicht generierten Grafik/Medien/Compilerhilfsmodule mit konkreten generischen Adaptern; R4AMD/R4NV/R4GL/R4VK haben keine zusaetzlichen hoeheren Zig-Bindingfunktionen. Vollstaendige unsafe Ownergrenze und gebundene Rust-Mux/NV12/Receiver/Profil/Clock-Fassaden. Keine Providerimplementierung oder neue Hardwarefreigabe."
+        },
+        "helper_boundary": "Repositories/Libraries/Shared/Rust/src/raw.rs"
       },
       "c": {
-        "state": "generated_local_contract_present_higher_helpers_review",
-        "gap": "Generierte C-Vertraege behalten; Zig-Zusatzhelfer (z.B. Settings/Consoletext, PNG/Raster, Fontimport, Displaymanager/Readback, Recordingmux oder Playback) einzeln auf fehlende C-Zugaenge pruefen und schliessen."
+        "state": "higher_original_owner_helpers_qualified",
+        "gap": "",
+        "helper_header": "Repositories/Libraries/R4ENC/Bindings/C/r4enc_helpers.h"
       },
       "current_only": "Manifestrevision, lokale Interface-ID/Flags/Praefixe, geladene Instanz und reale optionale Backends bleiben Vertragsbestandteil; keine Alt-OS-Nachbildung.",
       "evidence": [
         "source_inventory",
-        "local_contract_and_baseline"
+        "local_contract_and_baseline",
+        "language_libraries_current_60"
       ],
       "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten."
     },
@@ -45777,11 +45807,12 @@
         "Repositories/Libraries/R4GFX/Bindings/C/r4gfx.h"
       ],
       "rust": {
-        "state": "local_contract_consumer_qualified_higher_helpers_pending",
+        "state": "higher_original_owner_helpers_qualified",
         "sources": [
-          "Repositories/Libraries/R4GFX/Bindings/Rust/src/lib.rs"
+          "Repositories/Libraries/R4GFX/Bindings/Rust/src/lib.rs",
+          "Repositories/Libraries/R4GFX/Bindings/Rust/src/helpers.rs"
         ],
-        "gap": "Lokale Raw-Vertragsprojektion/Resolver52 abgenommen; alle hoeheren Zig-Helfer bleiben in der bestehenden Fachwelle dieses Eintrags. Rust-Providerimplementierung ist kein Teil der Consumerfreigabe.",
+        "gap": "",
         "binding_qualification": {
           "subversion": "0.86.52",
           "sdk": "0.64.71",
@@ -45790,16 +45821,26 @@
           "source_sha256": "8ab6536e2b519480724eb8fd643254b81f9f844886c0f87abb4a73573e0adac4",
           "scope": "alle lokalen Typen/Slots/IDs/Revisionen/Flags aus unveraenderter Librarybaseline; App-geborgene Clients, unsafe Operationen mit Besitzervertrag",
           "evidence": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.52"
-        }
+        },
+        "helper_qualification": {
+          "performed_in": "0.86.60",
+          "sdk": "0.64.79",
+          "libraries_package": "0.64.26",
+          "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.60",
+          "scope": "Alle36 oeffentlichen nicht generierten Grafik/Medien/Compilerhilfsmodule mit konkreten generischen Adaptern; R4AMD/R4NV/R4GL/R4VK haben keine zusaetzlichen hoeheren Zig-Bindingfunktionen. Vollstaendige unsafe Ownergrenze und gebundene Rust-Mux/NV12/Receiver/Profil/Clock-Fassaden. Keine Providerimplementierung oder neue Hardwarefreigabe."
+        },
+        "helper_boundary": "Repositories/Libraries/Shared/Rust/src/raw.rs"
       },
       "c": {
-        "state": "generated_local_contract_present_higher_helpers_review",
-        "gap": "Generierte C-Vertraege behalten; Zig-Zusatzhelfer (z.B. Settings/Consoletext, PNG/Raster, Fontimport, Displaymanager/Readback, Recordingmux oder Playback) einzeln auf fehlende C-Zugaenge pruefen und schliessen."
+        "state": "higher_original_owner_helpers_qualified",
+        "gap": "",
+        "helper_header": "Repositories/Libraries/R4GFX/Bindings/C/r4gfx_helpers.h"
       },
       "current_only": "Manifestrevision, lokale Interface-ID/Flags/Praefixe, geladene Instanz und reale optionale Backends bleiben Vertragsbestandteil; keine Alt-OS-Nachbildung.",
       "evidence": [
         "source_inventory",
-        "local_contract_and_baseline"
+        "local_contract_and_baseline",
+        "language_libraries_current_60"
       ],
       "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten."
     },
@@ -45839,11 +45880,11 @@
         "Repositories/Libraries/R4GL/Bindings/C/r4gl_api.h"
       ],
       "rust": {
-        "state": "local_contract_consumer_qualified_higher_helpers_pending",
+        "state": "local_contract_qualified_no_additional_higher_helpers",
         "sources": [
           "Repositories/Libraries/R4GL/Bindings/Rust/src/lib.rs"
         ],
-        "gap": "Lokale Raw-Vertragsprojektion/Resolver52 abgenommen; alle hoeheren Zig-Helfer bleiben in der bestehenden Fachwelle dieses Eintrags. Rust-Providerimplementierung ist kein Teil der Consumerfreigabe.",
+        "gap": "",
         "binding_qualification": {
           "subversion": "0.86.52",
           "sdk": "0.64.71",
@@ -45852,18 +45893,27 @@
           "source_sha256": "c4e80e8649d7d5547cd63a0200e304333dbfea19579f68477f26961c5389968a",
           "scope": "alle lokalen Typen/Slots/IDs/Revisionen/Flags aus unveraenderter Librarybaseline; App-geborgene Clients, unsafe Operationen mit Besitzervertrag",
           "evidence": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.52"
+        },
+        "helper_qualification": {
+          "performed_in": "0.86.60",
+          "sdk": "0.64.79",
+          "libraries_package": "0.64.26",
+          "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.60",
+          "scope": "Alle36 oeffentlichen nicht generierten Grafik/Medien/Compilerhilfsmodule mit konkreten generischen Adaptern; R4AMD/R4NV/R4GL/R4VK haben keine zusaetzlichen hoeheren Zig-Bindingfunktionen. Vollstaendige unsafe Ownergrenze und gebundene Rust-Mux/NV12/Receiver/Profil/Clock-Fassaden. Keine Providerimplementierung oder neue Hardwarefreigabe."
         }
       },
       "c": {
-        "state": "generated_local_contract_present_higher_helpers_review",
-        "gap": "Generierte C-Vertraege behalten; Zig-Zusatzhelfer (z.B. Settings/Consoletext, PNG/Raster, Fontimport, Displaymanager/Readback, Recordingmux oder Playback) einzeln auf fehlende C-Zugaenge pruefen und schliessen."
+        "state": "local_contract_qualified_no_additional_higher_helpers",
+        "gap": ""
       },
       "current_only": "Manifestrevision, lokale Interface-ID/Flags/Praefixe, geladene Instanz und reale optionale Backends bleiben Vertragsbestandteil; keine Alt-OS-Nachbildung.",
       "evidence": [
         "source_inventory",
-        "local_contract_and_baseline"
+        "local_contract_and_baseline",
+        "language_libraries_current_60"
       ],
-      "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten."
+      "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten.",
+      "higher_helper_review": "Current public Zig binding contains generated local contract only; no additional higher consumer helper is omitted. Binding52 evidence remains."
     },
     {
       "id": "library-R4IMG",
@@ -46001,11 +46051,11 @@
         "Repositories/Libraries/R4NAK/Bindings/C/r4nak.h"
       ],
       "rust": {
-        "state": "local_contract_consumer_qualified_higher_helpers_pending",
+        "state": "higher_original_owner_helpers_qualified",
         "sources": [
           "Repositories/Libraries/R4NAK/Bindings/Rust/src/lib.rs"
         ],
-        "gap": "Lokale Raw-Vertragsprojektion/Resolver52 abgenommen; alle hoeheren Zig-Helfer bleiben in der bestehenden Fachwelle dieses Eintrags. Rust-Providerimplementierung ist kein Teil der Consumerfreigabe.",
+        "gap": "",
         "binding_qualification": {
           "subversion": "0.86.52",
           "sdk": "0.64.71",
@@ -46014,16 +46064,26 @@
           "source_sha256": "57ed6483c26b401bf139c6cdbc5eabd6bf69df74bab9ee78a09693aa4cff41c7",
           "scope": "alle lokalen Typen/Slots/IDs/Revisionen/Flags aus unveraenderter Librarybaseline; App-geborgene Clients, unsafe Operationen mit Besitzervertrag",
           "evidence": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.52"
-        }
+        },
+        "helper_qualification": {
+          "performed_in": "0.86.60",
+          "sdk": "0.64.79",
+          "libraries_package": "0.64.26",
+          "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.60",
+          "scope": "Alle36 oeffentlichen nicht generierten Grafik/Medien/Compilerhilfsmodule mit konkreten generischen Adaptern; R4AMD/R4NV/R4GL/R4VK haben keine zusaetzlichen hoeheren Zig-Bindingfunktionen. Vollstaendige unsafe Ownergrenze und gebundene Rust-Mux/NV12/Receiver/Profil/Clock-Fassaden. Keine Providerimplementierung oder neue Hardwarefreigabe."
+        },
+        "helper_boundary": "Repositories/Libraries/Shared/Rust/src/raw.rs"
       },
       "c": {
-        "state": "generated_local_contract_present_higher_helpers_review",
-        "gap": "Generierte C-Vertraege behalten; Zig-Zusatzhelfer (z.B. Settings/Consoletext, PNG/Raster, Fontimport, Displaymanager/Readback, Recordingmux oder Playback) einzeln auf fehlende C-Zugaenge pruefen und schliessen."
+        "state": "higher_original_owner_helpers_qualified",
+        "gap": "",
+        "helper_header": "Repositories/Libraries/R4NAK/Bindings/C/r4nak_helpers.h"
       },
       "current_only": "Manifestrevision, lokale Interface-ID/Flags/Praefixe, geladene Instanz und reale optionale Backends bleiben Vertragsbestandteil; keine Alt-OS-Nachbildung.",
       "evidence": [
         "source_inventory",
-        "local_contract_and_baseline"
+        "local_contract_and_baseline",
+        "language_libraries_current_60"
       ],
       "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten."
     },
@@ -46085,11 +46145,11 @@
         "Repositories/Libraries/R4NV/Bindings/C/r4nv.h"
       ],
       "rust": {
-        "state": "local_contract_consumer_qualified_higher_helpers_pending",
+        "state": "local_contract_qualified_no_additional_higher_helpers",
         "sources": [
           "Repositories/Libraries/R4NV/Bindings/Rust/src/lib.rs"
         ],
-        "gap": "Lokale Raw-Vertragsprojektion/Resolver52 abgenommen; alle hoeheren Zig-Helfer bleiben in der bestehenden Fachwelle dieses Eintrags. Rust-Providerimplementierung ist kein Teil der Consumerfreigabe.",
+        "gap": "",
         "binding_qualification": {
           "subversion": "0.86.52",
           "sdk": "0.64.71",
@@ -46098,18 +46158,27 @@
           "source_sha256": "c1d628aa9fdfa23aabacbd4fa838d391f5842c586d8ce7ee4ca76546322ec2e7",
           "scope": "alle lokalen Typen/Slots/IDs/Revisionen/Flags aus unveraenderter Librarybaseline; App-geborgene Clients, unsafe Operationen mit Besitzervertrag",
           "evidence": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.52"
+        },
+        "helper_qualification": {
+          "performed_in": "0.86.60",
+          "sdk": "0.64.79",
+          "libraries_package": "0.64.26",
+          "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.60",
+          "scope": "Alle36 oeffentlichen nicht generierten Grafik/Medien/Compilerhilfsmodule mit konkreten generischen Adaptern; R4AMD/R4NV/R4GL/R4VK haben keine zusaetzlichen hoeheren Zig-Bindingfunktionen. Vollstaendige unsafe Ownergrenze und gebundene Rust-Mux/NV12/Receiver/Profil/Clock-Fassaden. Keine Providerimplementierung oder neue Hardwarefreigabe."
         }
       },
       "c": {
-        "state": "generated_local_contract_present_higher_helpers_review",
-        "gap": "Generierte C-Vertraege behalten; Zig-Zusatzhelfer (z.B. Settings/Consoletext, PNG/Raster, Fontimport, Displaymanager/Readback, Recordingmux oder Playback) einzeln auf fehlende C-Zugaenge pruefen und schliessen."
+        "state": "local_contract_qualified_no_additional_higher_helpers",
+        "gap": ""
       },
       "current_only": "Manifestrevision, lokale Interface-ID/Flags/Praefixe, geladene Instanz und reale optionale Backends bleiben Vertragsbestandteil; keine Alt-OS-Nachbildung.",
       "evidence": [
         "source_inventory",
-        "local_contract_and_baseline"
+        "local_contract_and_baseline",
+        "language_libraries_current_60"
       ],
-      "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten."
+      "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten.",
+      "higher_helper_review": "Current public Zig binding contains generated local contract only; no additional higher consumer helper is omitted. Binding52 evidence remains."
     },
     {
       "id": "library-R4STD",
@@ -46337,11 +46406,12 @@
         "Repositories/Libraries/R4VIDEO/Bindings/C/r4video.h"
       ],
       "rust": {
-        "state": "local_contract_consumer_qualified_higher_helpers_pending",
+        "state": "higher_original_owner_helpers_qualified",
         "sources": [
-          "Repositories/Libraries/R4VIDEO/Bindings/Rust/src/lib.rs"
+          "Repositories/Libraries/R4VIDEO/Bindings/Rust/src/lib.rs",
+          "Repositories/Libraries/R4VIDEO/Bindings/Rust/src/helpers.rs"
         ],
-        "gap": "Lokale Raw-Vertragsprojektion/Resolver52 abgenommen; alle hoeheren Zig-Helfer bleiben in der bestehenden Fachwelle dieses Eintrags. Rust-Providerimplementierung ist kein Teil der Consumerfreigabe.",
+        "gap": "",
         "binding_qualification": {
           "subversion": "0.86.52",
           "sdk": "0.64.71",
@@ -46350,16 +46420,26 @@
           "source_sha256": "5e59f26cc4c53e7d3576c0cf35def76853a1d89ffc64bdfc2181bd33303c1a2c",
           "scope": "alle lokalen Typen/Slots/IDs/Revisionen/Flags aus unveraenderter Librarybaseline; App-geborgene Clients, unsafe Operationen mit Besitzervertrag",
           "evidence": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.52"
-        }
+        },
+        "helper_qualification": {
+          "performed_in": "0.86.60",
+          "sdk": "0.64.79",
+          "libraries_package": "0.64.26",
+          "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.60",
+          "scope": "Alle36 oeffentlichen nicht generierten Grafik/Medien/Compilerhilfsmodule mit konkreten generischen Adaptern; R4AMD/R4NV/R4GL/R4VK haben keine zusaetzlichen hoeheren Zig-Bindingfunktionen. Vollstaendige unsafe Ownergrenze und gebundene Rust-Mux/NV12/Receiver/Profil/Clock-Fassaden. Keine Providerimplementierung oder neue Hardwarefreigabe."
+        },
+        "helper_boundary": "Repositories/Libraries/Shared/Rust/src/raw.rs"
       },
       "c": {
-        "state": "generated_local_contract_present_higher_helpers_review",
-        "gap": "Generierte C-Vertraege behalten; Zig-Zusatzhelfer (z.B. Settings/Consoletext, PNG/Raster, Fontimport, Displaymanager/Readback, Recordingmux oder Playback) einzeln auf fehlende C-Zugaenge pruefen und schliessen."
+        "state": "higher_original_owner_helpers_qualified",
+        "gap": "",
+        "helper_header": "Repositories/Libraries/R4VIDEO/Bindings/C/r4video_helpers.h"
       },
       "current_only": "Manifestrevision, lokale Interface-ID/Flags/Praefixe, geladene Instanz und reale optionale Backends bleiben Vertragsbestandteil; keine Alt-OS-Nachbildung.",
       "evidence": [
         "source_inventory",
-        "local_contract_and_baseline"
+        "local_contract_and_baseline",
+        "language_libraries_current_60"
       ],
       "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten."
     },
@@ -46397,11 +46477,11 @@
         "Repositories/Libraries/R4VK/Bindings/C/r4vk_wsi.h"
       ],
       "rust": {
-        "state": "local_contract_consumer_qualified_higher_helpers_pending",
+        "state": "local_contract_qualified_no_additional_higher_helpers",
         "sources": [
           "Repositories/Libraries/R4VK/Bindings/Rust/src/lib.rs"
         ],
-        "gap": "Lokale Raw-Vertragsprojektion/Resolver52 abgenommen; alle hoeheren Zig-Helfer bleiben in der bestehenden Fachwelle dieses Eintrags. Rust-Providerimplementierung ist kein Teil der Consumerfreigabe.",
+        "gap": "",
         "binding_qualification": {
           "subversion": "0.86.52",
           "sdk": "0.64.71",
@@ -46410,18 +46490,27 @@
           "source_sha256": "33bac0ac4ae5c5939001d88c51f2d3c0123028fd72eb75997b6a7623c4e70f36",
           "scope": "alle lokalen Typen/Slots/IDs/Revisionen/Flags aus unveraenderter Librarybaseline; App-geborgene Clients, unsafe Operationen mit Besitzervertrag",
           "evidence": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.52"
+        },
+        "helper_qualification": {
+          "performed_in": "0.86.60",
+          "sdk": "0.64.79",
+          "libraries_package": "0.64.26",
+          "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.60",
+          "scope": "Alle36 oeffentlichen nicht generierten Grafik/Medien/Compilerhilfsmodule mit konkreten generischen Adaptern; R4AMD/R4NV/R4GL/R4VK haben keine zusaetzlichen hoeheren Zig-Bindingfunktionen. Vollstaendige unsafe Ownergrenze und gebundene Rust-Mux/NV12/Receiver/Profil/Clock-Fassaden. Keine Providerimplementierung oder neue Hardwarefreigabe."
         }
       },
       "c": {
-        "state": "generated_local_contract_present_higher_helpers_review",
-        "gap": "Generierte C-Vertraege behalten; Zig-Zusatzhelfer (z.B. Settings/Consoletext, PNG/Raster, Fontimport, Displaymanager/Readback, Recordingmux oder Playback) einzeln auf fehlende C-Zugaenge pruefen und schliessen."
+        "state": "local_contract_qualified_no_additional_higher_helpers",
+        "gap": ""
       },
       "current_only": "Manifestrevision, lokale Interface-ID/Flags/Praefixe, geladene Instanz und reale optionale Backends bleiben Vertragsbestandteil; keine Alt-OS-Nachbildung.",
       "evidence": [
         "source_inventory",
-        "local_contract_and_baseline"
+        "local_contract_and_baseline",
+        "language_libraries_current_60"
       ],
-      "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten."
+      "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten.",
+      "higher_helper_review": "Current public Zig binding contains generated local contract only; no additional higher consumer helper is omitted. Binding52 evidence remains."
     }
   ],
   "module_roles": [
@@ -47350,6 +47439,56 @@
       "normal_artifacts": "unchanged; current hashes retained at platform_current_58.unchanged_normal_artifacts",
       "standard": "none: optional new library helper boundary/foreign-language facades and IMAGE_SCOPE=none fixture; normal runtime/provider/module artifacts unchanged",
       "limits": "No physical GPU/native JPEG/color/display, Windows, new Rust SIMD/FP or performance qualification. Existing local contracts/baselines/provider module versions unchanged. No test environments retained."
+    },
+    "language_libraries_current_60": {
+      "kind": "compiler_reflected_original_graphics_media_helpers_native_Rust_C_and_real_KVM_SMP4",
+      "performed_in": "0.86.60",
+      "sdk": "0.64.79",
+      "libraries_package": "0.64.26",
+      "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.60",
+      "scope": "Alle36 oeffentlichen nicht generierten Grafik/Medien/Compilerhilfsmodule mit konkreten generischen Adaptern; R4AMD/R4NV/R4GL/R4VK haben keine zusaetzlichen hoeheren Zig-Bindingfunktionen. Vollstaendige unsafe Ownergrenze und gebundene Rust-Mux/NV12/Receiver/Profil/Clock-Fassaden. Keine Providerimplementierung oder neue Hardwarefreigabe.",
+      "projection": {
+        "native_types": 684,
+        "native_functions": 517,
+        "C_Rust_entries": 4447,
+        "layout_assertions": 1124,
+        "canonical_platform_aliases": 464,
+        "fingerprint": 6999400729378588851
+      },
+      "consumer": {
+        "file": "MEDHPROBE.R4X",
+        "bytes": 1820827,
+        "sha256": "ce4e5b68cd17f4481e5490ac9cfc6a49f6d2ec846fcebb81a54653329ee89898",
+        "readback": "exact bytes from executed MEDIA60C.R4X",
+        "exit": 0,
+        "result": "MEDIA60 optional compiler providers absent mask=3 (ACO=1, NAK=2); native init rejection checked\nPASS MEDIA60 Rust/C original ICC/VCGT, receiver, NV12, clock, shader data; optional compiler availability and exact allocation release"
+      },
+      "guest": "Full0.86.42/Kernel0.1.381/KVM/SMP4; CPU ICC/VCGT; both optional compiler providers absent, original initializer rejections checked; own files deleted and regular shutdown exit0",
+      "checks": [
+        "both generated projections, warning-free Clippy and combined five new C owner headers",
+        "five native release Rust/C cases, existing unchanged recording pixel/Matroska oracles and prior font/text regression",
+        "exact C/Rust mux bytes, sticky partial-write failure, aligned16 ICC storage, bounded native error-name transport and error-value/operation-failure distinction",
+        "seven real unsafe/allocator/source/buffer/Send/callback/profile lifetime compiler negatives",
+        "real COLOR_V1 profile CPU transform with existing ICC/VCGT white endpoint and C/Rust pixel equality; exact native close/allocator and full SDK heap balance",
+        "real guest receiver/NV12/clock/shader data; optional named compiler bindings reject absent providers without unrelated failure"
+      ],
+      "native_objects": [
+        {
+          "sha256": "782051d3d36fd6e3998cb4f0ee7a1de3ba9d94fc66dea77d27a49af2f487370c",
+          "name": "r4libraries_helpers.o"
+        },
+        {
+          "sha256": "959a3b24a1b1e83f125e287cb8045b9a5118a6a41b978ced0ea873a6d749b2be",
+          "name": "r4libraries_facades.o"
+        }
+      ],
+      "normal_sdk_objects_unchanged": {
+        "facades": "997e45325734f02ee294da592402d6f899cef722a8aa40f8e4df59fb2e8fc9ed",
+        "storage": "e033a7dd9d6ea6ef01f18eafadbb0a76685b68c0008463f27c912cf5070b9147"
+      },
+      "normal_artifacts": "unchanged; hashes at platform_current_58.unchanged_normal_artifacts",
+      "standard": "none: optional helper/foreign-language and IMAGE_SCOPE=none test work only; normal kernel/provider/module implementations unchanged",
+      "limits": "No physical GPU/scanout/display/color qualification, actual ACO/NAK worker compilation/join with provider, native video/encode/playback, external GL/Vulkan direct-FP ABI, Windows, Rust SIMD/FP or performance qualification. Raw asynchronous owners retain original stable addresses, all inputs, real join/close/completion requirements; timeout/cancel never frees. Existing local contracts/baselines/provider artifacts unchanged."
     }
   },
   "wave_bindings": [

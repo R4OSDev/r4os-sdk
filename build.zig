@@ -49,12 +49,28 @@ pub fn build(b: *std.Build) void {
             return;
         }
         const generate = b.option(bool, "library-helpers-generator-only", "Build the library-owned helper generator") orelse false;
-        const native = generate or (b.option(bool, "library-helpers-host-test", "Native ABI for library helper interop") orelse false);
+        const oracle_only = b.option(bool, "library-helpers-oracle-only", "Build existing recording/media owner oracles") orelse false;
+        const native = generate or oracle_only or (b.option(bool, "library-helpers-host-test", "Native ABI for library helper interop") orelse false);
         const target = if (native) b.graph.host else r4os_build.moduleTarget(b);
         const optimize: std.builtin.OptimizeMode = if (generate) .Debug else .ReleaseSafe;
         const owners = b.createModule(.{ .root_source_file = .{ .cwd_relative = b.pathResolve(&.{ library_root, "consumer_helpers.zig" }) }, .target = target, .optimize = optimize, .single_threaded = false });
         const r4os_module = sdk_profile.createR4osModule(target, optimize);
+        if (oracle_only) {
+            const oracle = b.createModule(.{ .root_source_file = .{ .cwd_relative = b.pathResolve(&.{ library_root, "consumer_oracles.zig" }) }, .target = target, .optimize = .Debug, .single_threaded = false, .pic = true });
+            oracle.addImport("r4os", r4os_module);
+            for ([_][]const u8{ "recording_mux", "recording_pixels", "r4nv_encode" }) |name| oracle.addImport(name, oracle);
+            const object = b.addObject(.{ .name = "r4libraries_media_oracle", .root_module = oracle });
+            b.getInstallStep().dependOn(&b.addInstallFile(object.getEmittedBin(), "lib/r4libraries_media_oracle.o").step);
+            return;
+        }
         owners.addImport("r4os", r4os_module);
+        inline for (.{ .{ "r4gfx_binding", "R4GFX/Bindings/Zig/r4gfx_abi.zig" }, .{ "r4aco", "R4ACO/Bindings/Zig/r4aco.zig" }, .{ "r4nak", "R4NAK/Bindings/Zig/r4nak.zig" } }) |entry| {
+            const binding = b.createModule(.{ .root_source_file = .{ .cwd_relative = b.pathResolve(&.{ library_root, entry[1] }) }, .target = target, .optimize = optimize });
+            binding.addImport("r4os", r4os_module);
+            owners.addImport(entry[0], binding);
+            if (std.mem.eql(u8, entry[0], "r4gfx_binding")) owners.addImport("r4gfx", binding);
+        }
+        owners.addImport("r4gfx_edid", owners);
         owners.addImport("r4std_console_text", owners);
         owners.addImport("r4std_legacy_tables", b.createModule(.{ .root_source_file = .{ .cwd_relative = b.pathResolve(&.{ library_root, "R4STD/Source/codec_tables.zig" }) }, .target = target, .optimize = optimize }));
         const schema = b.createModule(.{ .root_source_file = .{ .cwd_relative = b.pathResolve(&.{ library_root, "Shared/Language/schema.zig" }) }, .target = target, .optimize = optimize });

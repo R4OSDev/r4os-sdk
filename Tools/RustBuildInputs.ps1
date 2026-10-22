@@ -79,11 +79,11 @@ function Build-RustLibraryHelpers([string]$Work,$Roots) {
     $pin=Get-Content -Raw -LiteralPath (Join-Path $ToolsRoot 'Profile/ZigToolchain.json')|ConvertFrom-Json -AsHashtable
     if((Invoke-Tool $zig @('version') $Work).Trim() -cne $pin.version){throw 'LibraryHelperCompilerVersionMismatch'}
     $files=@()
-    foreach($relative in @('build.zig.zon','consumer_helpers.zig','consumer_adapters.zig','R4STD/Source/codec_tables.zig')){
+    foreach($relative in @('build.zig.zon','consumer_helpers.zig','consumer_adapters.zig','consumer_media.zig','consumer_media_adapters.zig','R4STD/Source/codec_tables.zig')){
         $files+=Canonical $LibraryHelpersRoot $relative
     }
     $files+=Canonical $SdkRoot 'build.zig'
-    foreach($relative in @('Shared/Language','Shared/C','R4STD/Bindings/Zig','R4IMG/Bindings/Zig','R4FONT/Bindings/Zig','R4GFX/Bindings/Zig','R4VIDEO/Bindings/Zig')){
+    foreach($relative in @('Shared/Language','Shared/C','R4STD/Bindings/Zig','R4IMG/Bindings/Zig','R4FONT/Bindings/Zig','R4GFX/Bindings/Zig','R4GFX/Display','R4VIDEO/Bindings/Zig','R4ENC/Bindings/Zig','R4ACO/Bindings/Zig','R4NAK/Bindings/Zig')){
         $files+=@(Get-ChildItem -LiteralPath (Canonical $LibraryHelpersRoot $relative) -Recurse -File|ForEach-Object FullName)
     }
     $inputs=@($files|Sort-Object -Unique|ForEach-Object {Observe-Input $_ $Roots})
