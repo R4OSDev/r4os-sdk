@@ -39,8 +39,14 @@
       "implementation_owner": "Repositories/Kernel",
       "wave": "0.86.48",
       "higher_facade_wave": "0.86.54",
-      "rust_state": "raw_generated_sdk_facade_partial_or_missing",
-      "c_state": "generated_core_plus_manual_technical_and_typed_forwarders_review"
+      "rust_state": "current_raw_startup_and_higher_owner_facades_qualified",
+      "c_state": "current_raw_startup_and_higher_owner_facades_qualified",
+      "evidence": [
+        "central_abi_interop",
+        "independent_desktop_current_71",
+        "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.49",
+        "resource_current_54"
+      ]
     },
     {
       "name": "R4DESK",
@@ -53,8 +59,14 @@
       "implementation_owner": "Repositories/Kernel",
       "wave": "0.86.48",
       "higher_facade_wave": "0.86.56",
-      "rust_state": "raw_generated_sdk_facade_partial_or_missing",
-      "c_state": "generated_core_plus_manual_technical_and_typed_forwarders_review"
+      "rust_state": "current_raw_startup_and_higher_owner_facades_qualified",
+      "c_state": "current_raw_startup_and_higher_owner_facades_qualified",
+      "evidence": [
+        "central_abi_interop",
+        "independent_desktop_current_71",
+        "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.49",
+        "gui_current_56"
+      ]
     },
     {
       "name": "R4DRAW",
@@ -67,8 +79,14 @@
       "implementation_owner": "Repositories/Kernel",
       "wave": "0.86.48",
       "higher_facade_wave": "0.86.57",
-      "rust_state": "raw_generated_sdk_facade_partial_or_missing",
-      "c_state": "generated_core_plus_manual_technical_and_typed_forwarders_review"
+      "rust_state": "current_raw_startup_and_higher_owner_facades_qualified",
+      "c_state": "current_raw_startup_and_higher_owner_facades_qualified",
+      "evidence": [
+        "central_abi_interop",
+        "independent_desktop_current_71",
+        "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.49",
+        "graphics_current_57"
+      ]
     },
     {
       "name": "R4NET",
@@ -81,8 +99,14 @@
       "implementation_owner": "Repositories/Kernel",
       "wave": "0.86.48",
       "higher_facade_wave": "0.86.55",
-      "rust_state": "raw_generated_sdk_facade_partial_or_missing",
-      "c_state": "generated_core_plus_manual_technical_and_typed_forwarders_review"
+      "rust_state": "current_raw_startup_and_higher_owner_facades_qualified",
+      "c_state": "current_raw_startup_and_higher_owner_facades_qualified",
+      "evidence": [
+        "central_abi_interop",
+        "independent_desktop_current_71",
+        "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.49",
+        "service_network_current_55"
+      ]
     },
     {
       "name": "R4AUDIO",
@@ -95,8 +119,14 @@
       "implementation_owner": "Repositories/Kernel",
       "wave": "0.86.48",
       "higher_facade_wave": "0.86.58",
-      "rust_state": "raw_generated_sdk_facade_partial_or_missing",
-      "c_state": "generated_core_plus_manual_technical_and_typed_forwarders_review"
+      "rust_state": "current_raw_startup_and_higher_owner_facades_qualified",
+      "c_state": "current_raw_startup_and_higher_owner_facades_qualified",
+      "evidence": [
+        "central_abi_interop",
+        "independent_desktop_current_71",
+        "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.49",
+        "platform_current_58"
+      ]
     },
     {
       "name": "R4DEV",
@@ -109,8 +139,14 @@
       "implementation_owner": "Repositories/Kernel",
       "wave": "0.86.48",
       "higher_facade_wave": "0.86.58",
-      "rust_state": "raw_generated_sdk_facade_partial_or_missing",
-      "c_state": "generated_core_plus_manual_technical_and_typed_forwarders_review"
+      "rust_state": "current_raw_startup_and_higher_owner_facades_qualified",
+      "c_state": "current_raw_startup_and_higher_owner_facades_qualified",
+      "evidence": [
+        "central_abi_interop",
+        "independent_desktop_current_71",
+        "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.49",
+        "platform_current_58"
+      ]
     }
   ],
   "raw_rust_projection": {
@@ -379,14 +415,16 @@
         "gap": "SDK71/Contract44: generischer gepruefter Interface-/Query-Zugang, explizite optionale Abwesenheit und App-geborgte Clients. Zwoelf lokale Rust-Crates aus denselben unveraenderten LibraryContracts; hoehere Fachfassaden bleiben ihren Wellen zugeordnet. Rust-Providerrollen folgen66."
       },
       "c": {
-        "state": "existing_facade_review_required",
+        "state": "qualified_current_local_contract_consumers",
         "sources": [
           "Repositories/SDK/Shared/C/include/r4os/r4l.h"
         ],
-        "gap": "Bestehender Resolver qualifiziert;52 ergaenzt ausdrueckliche optionale Clients, Query-Metadaten und korrekte nichtleere Pflichtflags im Initialisierer. Lokale C-Conformance aller12 Libraries gueltig. Hoehere Fachhilfen bleiben ihre eigenen Wellen."
+        "gap": null
       },
       "evidence": [
-        "source_inventory"
+        "source_inventory",
+        "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.52",
+        "independent_desktop_current_71"
       ],
       "shared_core": "SDK Tools/R4LContractGen mit sprachbezogener Rustprojektion und je Library Contract/LibraryContract.json; Baselines/Implementation/Zig unveraendert. Qualifikation52 in Docs/SDK/LanguageParity.txt."
     },
@@ -46624,7 +46662,10 @@
         "Repositories/SDK/r4os/module_manifest.zig"
       ],
       "evidence": [
-        "rust_qualified_classes"
+        "rust_qualified_classes",
+        "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.49",
+        "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.51",
+        "tooling_templates_current_70"
       ],
       "target": "Gleiche echte Rolle/Artefakt-/Start-/Export-/Lifecyclefunktion, keine Umbenennung einer App oder dauerhafte Zig-Fachbruecke."
     },
@@ -46644,7 +46685,9 @@
         "Repositories/SDK/r4os/module_manifest.zig"
       ],
       "evidence": [
-        "rust_qualified_classes"
+        "rust_qualified_classes",
+        "gui_current_56",
+        "tooling_templates_current_70"
       ],
       "target": "Gleiche echte Rolle/Artefakt-/Start-/Export-/Lifecyclefunktion, keine Umbenennung einer App oder dauerhafte Zig-Fachbruecke."
     },
@@ -46664,7 +46707,9 @@
         "Repositories/SDK/r4os/module_manifest.zig"
       ],
       "evidence": [
-        "rust_qualified_classes"
+        "rust_qualified_classes",
+        "service_network_current_55",
+        "tooling_templates_current_70"
       ],
       "target": "Gleiche echte Rolle/Artefakt-/Start-/Export-/Lifecyclefunktion, keine Umbenennung einer App oder dauerhafte Zig-Fachbruecke."
     },
@@ -46673,10 +46718,10 @@
       "kind": "R4X",
       "app_class": "gui",
       "entry_mode": "app",
-      "wave": "0.86.56",
+      "wave": "0.86.71",
       "zig": "current_reference",
-      "rust": "startup_import_and_host_helpers_missing",
-      "c": "host_helpers_review",
+      "rust": "real_shell_host_claim_and_software_display_qualified",
+      "c": "real_shell_host_claim_and_software_display_qualified",
       "owner": "Repositories/SDK",
       "canonical_sources": [
         "Repositories/SDK/r4os/module_capabilities.zig",
@@ -46684,9 +46729,11 @@
         "Repositories/SDK/r4os/module_manifest.zig"
       ],
       "evidence": [
-        "source_inventory"
+        "gui_current_56",
+        "independent_desktop_current_71"
       ],
-      "target": "Gleiche echte Rolle/Artefakt-/Start-/Export-/Lifecyclefunktion, keine Umbenennung einer App oder dauerhafte Zig-Fachbruecke."
+      "target": "Gleiche echte Rolle/Artefakt-/Start-/Export-/Lifecyclefunktion, keine Umbenennung einer App oder dauerhafte Zig-Fachbruecke.",
+      "qualification": "Actual independent Linux build with Desktop137 imports; exact WINSVC generation/epoch claim, allocation, BMP/text/raster, real QMP keyboard and endpoint close in KVM4. Windows remains separate/open."
     },
     {
       "id": "subsystem-host",
@@ -48526,6 +48573,12 @@
       "evidence": [
         "tooling_templates_current_70"
       ]
+    },
+    "current_acceptance_71": {
+      "linux_standalone_builds": true,
+      "real_C_Rust_desktop_host": true,
+      "windows_execution_qualified": false,
+      "evidence": "independent_desktop_current_71"
     }
   },
   "current_minimum_decisions": [
@@ -51270,6 +51323,1949 @@
           "sha256": "d6488a50935b0b8f4f66cb7bb7b48c3a15c743597502c3eb10d8c72385c644e7"
         }
       ]
+    },
+    "independent_desktop_current_71": {
+      "performed_in": "0.86.71",
+      "complete": false,
+      "linux_complete": true,
+      "sdk": "0.64.89",
+      "contract": "0.64.44",
+      "libraries": "0.64.27",
+      "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.71",
+      "review": {
+        "sdk": "0.64.89",
+        "contract": "0.64.44",
+        "libraries": "0.64.27",
+        "public_export_count": 180,
+        "historical_sources_rechecked": 222,
+        "unchanged_sources": 206,
+        "changed_sources_reviewed": [
+          {
+            "path": "Repositories/SDK/build.zig",
+            "sha256": "104a5167f43af71e8e703b2caf6731ca785a2b68e2eb0a731de8dd77dae4a511",
+            "changed_since_47": true,
+            "evidence": "drivers_current_67",
+            "last_owner_change": "86b5890749c42d5c6e5eb8e0d5705a1f77415e6f"
+          },
+          {
+            "path": "Repositories/SDK/r4os/app_network.zig",
+            "sha256": "078640afde6f5309467a4916cb97343241f73a7c60995004659678ff7e17255d",
+            "changed_since_47": true,
+            "evidence": "transport_current_63",
+            "last_owner_change": "d073fda76161ac79ec9768d688b967cb6d6b9008"
+          },
+          {
+            "path": "Repositories/SDK/r4os/app_services.zig",
+            "sha256": "3515101693341cb3d0798bf2e8b59b1fe0d6c1d67433cd37e8d59f1a66f5c39e",
+            "changed_since_47": true,
+            "evidence": "service_network_current_55",
+            "last_owner_change": "09348901485904e506dfff092bd64b7d8a828385"
+          },
+          {
+            "path": "Repositories/SDK/r4os/build.zig",
+            "sha256": "23ba84ed8878faebfdc2b8ad54311368d8b2c6d102bbfadaabdd1f51cdb9ec9f",
+            "changed_since_47": true,
+            "evidence": "protocols_current_68",
+            "last_owner_change": "e13542d4612d34d39e3e81079e302f8638c01134"
+          },
+          {
+            "path": "Repositories/SDK/r4os/crypto_sha256.zig",
+            "sha256": "f92562f09d18caebc1d1549cebff5a4f15e5da252490e5605cf185d068308f94",
+            "changed_since_47": true,
+            "evidence": "data_current_61",
+            "last_owner_change": "4c2c87ea95e66b9aa41fa509932dd73bcdf60a10"
+          },
+          {
+            "path": "Repositories/SDK/r4os/gui.zig",
+            "sha256": "50bb06750e10ee5affa70d9ea38df8deb9ebfc7bea6e5ba099a4a8de30b94fa7",
+            "changed_since_47": true,
+            "evidence": "gui_current_56",
+            "last_owner_change": "10c060ae88f586402758cf96362e8a7f75c24680"
+          },
+          {
+            "path": "Repositories/SDK/r4os/ico.zig",
+            "sha256": "f78d56964deeb296735ac5ebc231df304f4b5bec77bd21d8f47d14f7a52fe95b",
+            "changed_since_47": true,
+            "evidence": "data_current_61",
+            "last_owner_change": "4c2c87ea95e66b9aa41fa509932dd73bcdf60a10"
+          },
+          {
+            "path": "Repositories/SDK/r4os/input_events.zig",
+            "sha256": "070cb480db90d395027fd255a7192d250299a5cc60d0fdd250634c78cc63fecb",
+            "changed_since_47": true,
+            "evidence": "gui_current_56",
+            "last_owner_change": "10c060ae88f586402758cf96362e8a7f75c24680"
+          },
+          {
+            "path": "Repositories/SDK/r4os/json.zig",
+            "sha256": "7d6b07a0f627df12599b49313e5a19c8df3e685bdf11aacc0398adb072ca1b73",
+            "changed_since_47": true,
+            "evidence": "data_current_61",
+            "last_owner_change": "4c2c87ea95e66b9aa41fa509932dd73bcdf60a10"
+          },
+          {
+            "path": "Repositories/SDK/r4os/module_capabilities.zig",
+            "sha256": "ba2b26d864fee90d24d529c7a50ca09e3848c7d83cb6cd6da5786b0d6ce8cb81",
+            "changed_since_47": true,
+            "evidence": "tooling_templates_current_70",
+            "last_owner_change": "3e04994359e683f851799229396a28217a861934"
+          },
+          {
+            "path": "Repositories/SDK/r4os/module_manifest.zig",
+            "sha256": "6016668272016da51f59eb318f671b3041e944330c8ab181ac1be4f8e78fa82f",
+            "changed_since_47": true,
+            "evidence": "lowlevel_current_69",
+            "last_owner_change": "1e404bed923f4d880635022b5946124ab12afb5e"
+          },
+          {
+            "path": "Repositories/SDK/r4os/recent_documents.zig",
+            "sha256": "13000dfecbbc7c952efa5f055e1201c6fa52b3dda61e051295e0e3acb6b88c01",
+            "changed_since_47": true,
+            "evidence": "storage_current_53",
+            "last_owner_change": "933945e7486ae5675d9730673c66006d9b2a81b4"
+          },
+          {
+            "path": "Repositories/SDK/r4os/rust_project.zig",
+            "sha256": "65e182e794f12cbd8aa1c09348f7a94bb5ead99c791f4bbb316903dca349bc62",
+            "changed_since_47": true,
+            "evidence": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.51",
+            "last_owner_change": "cb02730e8c136d683d46fb5597570aeadace23d9"
+          },
+          {
+            "path": "Repositories/SDK/r4os/subsystem_host.zig",
+            "sha256": "fd80e561b3b74e9f251173ac4652be8431e8e9e5723d88dc511bf12ea97cef9b",
+            "changed_since_47": true,
+            "evidence": "subsystems_current_65",
+            "last_owner_change": "f36349b77351dd42167fcbd4f93c894ff46172d6"
+          },
+          {
+            "path": "Repositories/SDK/r4os/subsystem_persistence.zig",
+            "sha256": "d1acae50deef4b4b9f536ce476f83e1fdfcfcc1ea0dd6283e48096d96d656b76",
+            "changed_since_47": true,
+            "evidence": "subsystems_current_65",
+            "last_owner_change": "f36349b77351dd42167fcbd4f93c894ff46172d6"
+          },
+          {
+            "path": "Repositories/SDK/r4os/vm_allocator.zig",
+            "sha256": "c0bbf9c2806a185f475847f67be701db2e98fa0f71b1bc7d79e7dce35fa846ee",
+            "changed_since_47": true,
+            "evidence": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.50",
+            "last_owner_change": "f1bd067a5d6848014adb8fee97c17591777c97c2"
+          }
+        ],
+        "local_contract_and_baseline_count": 24,
+        "unchanged_local_contracts_and_baselines": [
+          {
+            "path": "Repositories/Libraries/R4ACO/Contract/LibraryContract.json",
+            "sha256": "1f15b4524b73ae0e628f05d3d55e7377ba1155f8e68921cff7f64f195bb54084"
+          },
+          {
+            "path": "Repositories/Libraries/R4ACO/Contract/LibraryContract.baseline.json",
+            "sha256": "1f15b4524b73ae0e628f05d3d55e7377ba1155f8e68921cff7f64f195bb54084"
+          },
+          {
+            "path": "Repositories/Libraries/R4AMD/Contract/LibraryContract.json",
+            "sha256": "9b21262454f2854f6260bf9b0a4f09ac10e8aabf1470e83a913024518aa35a7c"
+          },
+          {
+            "path": "Repositories/Libraries/R4AMD/Contract/LibraryContract.baseline.json",
+            "sha256": "9b21262454f2854f6260bf9b0a4f09ac10e8aabf1470e83a913024518aa35a7c"
+          },
+          {
+            "path": "Repositories/Libraries/R4ENC/Contract/LibraryContract.json",
+            "sha256": "f175cc46a67e529285a848a969fcb96419644a5757ebc447722bd957dc319a0a"
+          },
+          {
+            "path": "Repositories/Libraries/R4ENC/Contract/LibraryContract.baseline.json",
+            "sha256": "f175cc46a67e529285a848a969fcb96419644a5757ebc447722bd957dc319a0a"
+          },
+          {
+            "path": "Repositories/Libraries/R4FONT/Contract/LibraryContract.json",
+            "sha256": "0a9db9c3bfd87368e80f47b10e456001624ad0266c94c19bd64f59ca70103bf0"
+          },
+          {
+            "path": "Repositories/Libraries/R4FONT/Contract/LibraryContract.baseline.json",
+            "sha256": "0a9db9c3bfd87368e80f47b10e456001624ad0266c94c19bd64f59ca70103bf0"
+          },
+          {
+            "path": "Repositories/Libraries/R4GFX/Contract/LibraryContract.json",
+            "sha256": "a4d28f983091271e22b59e4f5928592ebf3c6ac336d2df132f7247f2478bb3b3"
+          },
+          {
+            "path": "Repositories/Libraries/R4GFX/Contract/LibraryContract.baseline.json",
+            "sha256": "a4d28f983091271e22b59e4f5928592ebf3c6ac336d2df132f7247f2478bb3b3"
+          },
+          {
+            "path": "Repositories/Libraries/R4GL/Contract/LibraryContract.json",
+            "sha256": "a822099c21fb7456ffb4d83c96e8406c76e21715785c2c2c9dfb273c8db32b97"
+          },
+          {
+            "path": "Repositories/Libraries/R4GL/Contract/LibraryContract.baseline.json",
+            "sha256": "a822099c21fb7456ffb4d83c96e8406c76e21715785c2c2c9dfb273c8db32b97"
+          },
+          {
+            "path": "Repositories/Libraries/R4IMG/Contract/LibraryContract.json",
+            "sha256": "b952f0d45d32dd238c4a8d0327640e623cf09c6ee2bd8c7aadd1a6d845f0ec11"
+          },
+          {
+            "path": "Repositories/Libraries/R4IMG/Contract/LibraryContract.baseline.json",
+            "sha256": "b952f0d45d32dd238c4a8d0327640e623cf09c6ee2bd8c7aadd1a6d845f0ec11"
+          },
+          {
+            "path": "Repositories/Libraries/R4NAK/Contract/LibraryContract.json",
+            "sha256": "2a67e3cdeb7e6aaeb90dbbbd512acf62ef275bfbe9a63781d2e3cffaa2e6da60"
+          },
+          {
+            "path": "Repositories/Libraries/R4NAK/Contract/LibraryContract.baseline.json",
+            "sha256": "2a67e3cdeb7e6aaeb90dbbbd512acf62ef275bfbe9a63781d2e3cffaa2e6da60"
+          },
+          {
+            "path": "Repositories/Libraries/R4NV/Contract/LibraryContract.json",
+            "sha256": "4cdcb14cdc8cdb3c1ff2867ec762d2e1e3f74c7bc5b8a3c6e0d55a3ef724d825"
+          },
+          {
+            "path": "Repositories/Libraries/R4NV/Contract/LibraryContract.baseline.json",
+            "sha256": "4cdcb14cdc8cdb3c1ff2867ec762d2e1e3f74c7bc5b8a3c6e0d55a3ef724d825"
+          },
+          {
+            "path": "Repositories/Libraries/R4STD/Contract/LibraryContract.json",
+            "sha256": "c74c5eb35a894236ad111c24453e2bc8aba4fc5bcc71c8da2a5b28b8ac6f86f7"
+          },
+          {
+            "path": "Repositories/Libraries/R4STD/Contract/LibraryContract.baseline.json",
+            "sha256": "c74c5eb35a894236ad111c24453e2bc8aba4fc5bcc71c8da2a5b28b8ac6f86f7"
+          },
+          {
+            "path": "Repositories/Libraries/R4VIDEO/Contract/LibraryContract.json",
+            "sha256": "3223934d6a769dd7509c5eb25bdb42bc135a456f10afa44fab57bd4751c09851"
+          },
+          {
+            "path": "Repositories/Libraries/R4VIDEO/Contract/LibraryContract.baseline.json",
+            "sha256": "3223934d6a769dd7509c5eb25bdb42bc135a456f10afa44fab57bd4751c09851"
+          },
+          {
+            "path": "Repositories/Libraries/R4VK/Contract/LibraryContract.json",
+            "sha256": "6c71430315e500f1a67371b63a302a770b4b3a282b63a930031228b009d5a68d"
+          },
+          {
+            "path": "Repositories/Libraries/R4VK/Contract/LibraryContract.baseline.json",
+            "sha256": "6c71430315e500f1a67371b63a302a770b4b3a282b63a930031228b009d5a68d"
+          }
+        ],
+        "canonical_platform_unchanged": [
+          {
+            "path": "Repositories/Contract/API/ApiContract.json",
+            "sha256": "521c5be36935d3f670b1991e303bcb6e88bf420dc4ee4c7428b7cf878dc2a1e3"
+          },
+          {
+            "path": "Repositories/Contract/Generated/Inventory/API.json",
+            "sha256": "d8a0d41b8dff43462a4a5b4e54299dc14fea8becb41e071bf4c6f294098b9bd0"
+          },
+          {
+            "path": "Repositories/Contract/Generated/Inventory/RustABI.json",
+            "sha256": "ff8c45bd94d79705426840b186ccf3c684b4d8c8dd8c5f5e3d4cd987b68db1eb"
+          }
+        ],
+        "scope": "Current source/body changes since47 are the qualified owner changes49–70. No public root export added/removed; changed shared cores and removed Cargo hand parser mapped to their actual wave. Historical declaration lists retained as historical, not treated as final source inventory. New internal facade/adapter/generated files belong to their existing functional evidence. This review is analysis, not another runtime or Windows test.",
+        "source_hashes": [
+          {
+            "path": "Repositories/SDK/r4os.zig",
+            "sha256": "bcaa709aa53feb2ebdad83433b8c365b095f440883f552ad78af0f23646d70c1",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/build.zig",
+            "sha256": "104a5167f43af71e8e703b2caf6731ca785a2b68e2eb0a731de8dd77dae4a511",
+            "changed_since_47": true,
+            "evidence": "drivers_current_67",
+            "last_owner_change": "86b5890749c42d5c6e5eb8e0d5705a1f77415e6f"
+          },
+          {
+            "path": "Repositories/SDK/r4os/allocator_wait.zig",
+            "sha256": "b6e15b26c4ecc59991b1416d5eced0a12d52c5708ed4275106cc15ca02e27b4c",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/app_audio.zig",
+            "sha256": "391ec8fe4f9ca9af8483c29415a315ccafcf1b2c680b7b4e9d393156c3afd329",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/app_contract.zig",
+            "sha256": "394a2487915ceb7d53888f77b6959c08f3ac3872d7dcea3a38e248506e5dd4b4",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/app_devices.zig",
+            "sha256": "d6c71ccc988ad73429b0a56f51783a0738b4e89c7b9c20736ee8995072071eee",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/app_gui.zig",
+            "sha256": "6bbac0da7a1a361381595172d7530d1e67688f976f9075bd708a216a506b062a",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/app_network.zig",
+            "sha256": "078640afde6f5309467a4916cb97343241f73a7c60995004659678ff7e17255d",
+            "changed_since_47": true,
+            "evidence": "transport_current_63",
+            "last_owner_change": "d073fda76161ac79ec9768d688b967cb6d6b9008"
+          },
+          {
+            "path": "Repositories/SDK/r4os/app_resources.zig",
+            "sha256": "e8da288dfef82bc3b91276233a050540210ef6d727a528c3cfbabaa95096b263",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/app_services.zig",
+            "sha256": "3515101693341cb3d0798bf2e8b59b1fe0d6c1d67433cd37e8d59f1a66f5c39e",
+            "changed_since_47": true,
+            "evidence": "service_network_current_55",
+            "last_owner_change": "09348901485904e506dfff092bd64b7d8a828385"
+          },
+          {
+            "path": "Repositories/SDK/r4os/app_storage.zig",
+            "sha256": "522c6d41d78aa5525780f3735e03ed47aa9b8e731255821bcc9cae7193d6556e",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/app_tray.zig",
+            "sha256": "cb7ce13c4dedddf2c136423deeb8175777a786a9c613a92960cbea0b82f74248",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/app_web.zig",
+            "sha256": "efff1503a910293f757c878e87dccd2280eae0dcb46685c0544f7689a8337fd7",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/app_web_jobs.zig",
+            "sha256": "e3d97ebde0e90587bfa21dbd7752dd984a5517b2efa48bbb0b446e4d323717bd",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/audio_pcm.zig",
+            "sha256": "e239bf10a2e4465272a20e61615feace3402dd026e36ff8204039e9dfd6b7c02",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/bounded_text.zig",
+            "sha256": "ad927fedd95c3e633e263ece99d8d96d1e535ac7c0cd245205aa8f5ac21a594b",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/build.zig",
+            "sha256": "23ba84ed8878faebfdc2b8ad54311368d8b2c6d102bbfadaabdd1f51cdb9ec9f",
+            "changed_since_47": true,
+            "evidence": "protocols_current_68",
+            "last_owner_change": "e13542d4612d34d39e3e81079e302f8638c01134"
+          },
+          {
+            "path": "Repositories/SDK/r4os/chart.zig",
+            "sha256": "cfdf7afa55cf83bfbd1ea2c999fdef92c63e093c8e0e9937791ae2d5105cb22a",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/clipboard.zig",
+            "sha256": "71f393fad452fb770e7497f53d6362963e686e443a1fbdb590ace197a09b2474",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/cpu_acceleration.zig",
+            "sha256": "b46b18b5a512cfecc138756a651ed46bbcc5533d7427ace4e6deac8c2868627b",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/cpu_memory.zig",
+            "sha256": "457808304d8acfcdc9cf369817adc1cca88386d2dd34aac33d4329e04c29ec9e",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/crypto_sha256.zig",
+            "sha256": "f92562f09d18caebc1d1549cebff5a4f15e5da252490e5605cf185d068308f94",
+            "changed_since_47": true,
+            "evidence": "data_current_61",
+            "last_owner_change": "4c2c87ea95e66b9aa41fa509932dd73bcdf60a10"
+          },
+          {
+            "path": "Repositories/SDK/r4os/crypto_sha256_leaf.zig",
+            "sha256": "2c1d3ce403b7d4d21532f3df8bb969e5e49a389e9859df60058aebc81e6f9c2e",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/css.zig",
+            "sha256": "5905336acc4bfe0036e5886b0cdcd4e1cb9f940ddb70b927124a8ed491621a34",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/directory_page.zig",
+            "sha256": "c0e9560b6a68b952a4388b08b092b36ab6b4f92840080b76649d600dc2dde332",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/document_save.zig",
+            "sha256": "69a9129d67575c4583e1029df07b4d65900ebceabd54243f60ea1194690f1f25",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/driver.zig",
+            "sha256": "7d1ccccb2c99426f31ae390a9b041eff2ee1301e51adf9c68b0396d4dfe9e5b3",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/driver_cpu_power.zig",
+            "sha256": "af51a3ad73948714e227ee8262ed1b4d23b1ca8123b830b948d665f2257c3bed",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/driver_display.zig",
+            "sha256": "1089b34ae0fcbaa398fcb82354556df18234c3c9aa7f79fd966f2829ed44bf8c",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/driver_entropy.zig",
+            "sha256": "ce0176b7612f3aa8d450b5f7829598139dea8103a64499d0af4c1d48d0549902",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/driver_heap.zig",
+            "sha256": "5f26c2b03d54e5994f55f60cd23405334d7f3f67fce1d10b6d635a58303b5cdc",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/driver_memory.zig",
+            "sha256": "bd3a5ae21ef2d9342e8605efa7b1f31f846b13fe3498bab618171cd8248069ea",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/driver_outputs.zig",
+            "sha256": "b5c3eaa9b197f997b9baea069f19f74461875b7700ccce8af26ae782270868b0",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/driver_queue.zig",
+            "sha256": "6f464133c157e65b0943d7d3f2bfcdb1acac9e240532d71b666604e74671e583",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/driver_resources.zig",
+            "sha256": "b9443d0454dca1fac1adec2293e0ca0eb939ed132a288690fa7d17144622e8c2",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/driver_semaphores.zig",
+            "sha256": "a2f222b5bd67fee63efbcd30a9be49bbf7edcb50eef63b640852c646324513ce",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/driver_serial.zig",
+            "sha256": "2a539926da1f6c4e1a8d42a0ffeba50e65ba5c8a0beba9a662ca0cf2ab078984",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/driver_threads.zig",
+            "sha256": "17fcdb36b0a1d093b696fe8e9c6d9bf8df5e92c2a7fe024064b5e27c815a459f",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/file_stream.zig",
+            "sha256": "5e31c72d3b15bbb0c7ecee9588eee66e82e677d1ecea91460f34e18ed353d101",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/gfx_buffers.zig",
+            "sha256": "0f440ed4f272c46a7c05feeaf17f0dcad4a4866054b2dbedc783ffecb7692d9c",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/gfx_outputs.zig",
+            "sha256": "2f626391f24b7116ebbe99417677cb847a90b0a1d6d21d6a1dab004e13aed4ce",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/gfx_queue.zig",
+            "sha256": "809bb6be114a2a806cdf42d2f0f767210cc0fc3ed47de3017c27a9603b1c41e3",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/gfx_telemetry.zig",
+            "sha256": "bbdaabcea956e019906c4b811e86fd612b20e2a13e3b622775e96e34a40958a0",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/gpt_format.zig",
+            "sha256": "009a158f1f5bf1a4f6da1e5ffd28230d4163b13670efd48a2e15c7b43200c1c6",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/graphics_status.zig",
+            "sha256": "ad5637db2f65219abb196b4b9e164b0214ed86de33df19083b4660029321514d",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/gui.zig",
+            "sha256": "50bb06750e10ee5affa70d9ea38df8deb9ebfc7bea6e5ba099a4a8de30b94fa7",
+            "changed_since_47": true,
+            "evidence": "gui_current_56",
+            "last_owner_change": "10c060ae88f586402758cf96362e8a7f75c24680"
+          },
+          {
+            "path": "Repositories/SDK/r4os/gui_shapes.zig",
+            "sha256": "01167e944d9ef9f2c89f8fb5166a4e7c7fff53bc2f1f0d6b475614342a21d555",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/html.zig",
+            "sha256": "550c3b69d82027069e98810e8569a12187912509492f79912c6193b71fb2de37",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/http.zig",
+            "sha256": "38fd7709d727b1cfe7694bff48509031070dea719fed228c5eebf3ea3f5d9bf7",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/ico.zig",
+            "sha256": "f78d56964deeb296735ac5ebc231df304f4b5bec77bd21d8f47d14f7a52fe95b",
+            "changed_since_47": true,
+            "evidence": "data_current_61",
+            "last_owner_change": "4c2c87ea95e66b9aa41fa509932dd73bcdf60a10"
+          },
+          {
+            "path": "Repositories/SDK/r4os/input_events.zig",
+            "sha256": "070cb480db90d395027fd255a7192d250299a5cc60d0fdd250634c78cc63fecb",
+            "changed_since_47": true,
+            "evidence": "gui_current_56",
+            "last_owner_change": "10c060ae88f586402758cf96362e8a7f75c24680"
+          },
+          {
+            "path": "Repositories/SDK/r4os/javascript.zig",
+            "sha256": "105444ca9a434a4f41c4d5acdd3861a18909d9a779e90892635d3b663528ac98",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/javascript_regex_unicode.zig",
+            "sha256": "ec4913fb8ce56776906388baa6c140f12d8a51e2730e193bb608bce17bd834df",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/javascript_string_case.zig",
+            "sha256": "45fc51a81af084e548bcb1ec1940f97a5b2819aa3f2b5e3e78973cd4d43fc71d",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/javascript_string_normalization.zig",
+            "sha256": "1a896d276198aa1c313daf173e8fb62c34e244e959b923d0bf74a304c47eb68e",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/javascript_unicode.zig",
+            "sha256": "5df704934b301bd2603e015fa4b661d6b43d1d11e9ddbeea74699da62eb25008",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/json.zig",
+            "sha256": "7d6b07a0f627df12599b49313e5a19c8df3e685bdf11aacc0398adb072ca1b73",
+            "changed_since_47": true,
+            "evidence": "data_current_61",
+            "last_owner_change": "4c2c87ea95e66b9aa41fa509932dd73bcdf60a10"
+          },
+          {
+            "path": "Repositories/SDK/r4os/lowlevel.zig",
+            "sha256": "b828eda540e709c52387112ad5e601fdf68179b2b17dd59841e9bf76358708b2",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/module_capabilities.zig",
+            "sha256": "ba2b26d864fee90d24d529c7a50ca09e3848c7d83cb6cd6da5786b0d6ce8cb81",
+            "changed_since_47": true,
+            "evidence": "tooling_templates_current_70",
+            "last_owner_change": "3e04994359e683f851799229396a28217a861934"
+          },
+          {
+            "path": "Repositories/SDK/r4os/module_manifest.zig",
+            "sha256": "6016668272016da51f59eb318f671b3041e944330c8ab181ac1be4f8e78fa82f",
+            "changed_since_47": true,
+            "evidence": "lowlevel_current_69",
+            "last_owner_change": "1e404bed923f4d880635022b5946124ab12afb5e"
+          },
+          {
+            "path": "Repositories/SDK/r4os/ntfs_builder.zig",
+            "sha256": "327e7650e1b0e3cd981750ba7dac06b49c2e26bd4a833f169ec15f1fa1153fd9",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/ntfs_format.zig",
+            "sha256": "1862a4ae3ee5af46fc2452e8f8d24b2e310b90662223f941c0f94ed1146727ee",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/ntfs_mkfs.zig",
+            "sha256": "6a33bc6f2ea3452cfd11e1ffabeef991c7cd74152134ce7373c65c97ac0ac966",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/ntfs_volume.zig",
+            "sha256": "be86a7484d58e4ee0b9750537ba7f376c6989f866d6053948088cf4b52debb17",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/path.zig",
+            "sha256": "d0c82b3cff5a7c459bd0b4cc5d08583d0b3af8ea63a84c6bdbc5bb1ae299bcf9",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/power_profiles.zig",
+            "sha256": "5aeb929722c93ce94bf6343142304f67d764624fd71921f201786c59c8faff45",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/program.zig",
+            "sha256": "012c29584d4efd5ae16c408d88ed3c1e6f9c0285455ad52d2d4a0e5ecbfabaea",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/protocol.zig",
+            "sha256": "179a9d357cf0bcc974083591cd0b259b6f46a08829333a138ba5b1864797e9d7",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/r4audio.zig",
+            "sha256": "498c972889b6fa825d16d9fa658e2f4032c9680f7cdeea32a72dd5dfffdf237d",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/r4cp.zig",
+            "sha256": "2748bd69a3bdd25583931e8ef8d30a99480c6c79f28aa87b9e31e1050c41cdd4",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/r4cp_convert.zig",
+            "sha256": "4ec56a746852831e2f54fd359292b00634d3fd6b36ba9c25de3f692b7096f767",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/r4desk.zig",
+            "sha256": "cc1b598a35d5ec8cf063b8d857a7a869b9292ecd474453fd051a04b03fed1691",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/r4dev.zig",
+            "sha256": "16a8ba9a69b53e2602ab1c8c7d79a633a50306528a57720027c6c7ce4075f1a1",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/r4draw.zig",
+            "sha256": "7dee4d4e1ab08a575de4fb438814bdb394cd3fc610a9616f59bb7f6547ab9c4b",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/r4net.zig",
+            "sha256": "cbf163ed77f78b917c437334df4826aa1db1e1c568a5c15a18b06087cfd29d2e",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/r4sys.zig",
+            "sha256": "ad24b04b023c651ef8fdd033adf3d0e33f938e5b35a8a5cdb1d006b544c2d3a8",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/r4u_artifact.zig",
+            "sha256": "fb134fa35f0a978220665309826cb1156ca53e1da270cd9a42a4d0151405b03f",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/r4u_manifest.zig",
+            "sha256": "22527bd0227a8d80d2794aaf77fbc5922805da716adada5bd871afc2fe19a05f",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/r4x.zig",
+            "sha256": "17fee1b227311ad0ad4923d42c726613f5250bb58fc50c057c81e90366a46713",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/r4xstart.zig",
+            "sha256": "50fe5902fee73ec85f063bd40520b665d562f67a08eaf1a444c1eaeb0aa9995a",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/raster.zig",
+            "sha256": "79a8fdb79bdf6e7b771d48a8f3876f82897a6a76f5294cde1fcec942a75d95ae",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/recent_documents.zig",
+            "sha256": "13000dfecbbc7c952efa5f055e1201c6fa52b3dda61e051295e0e3acb6b88c01",
+            "changed_since_47": true,
+            "evidence": "storage_current_53",
+            "last_owner_change": "933945e7486ae5675d9730673c66006d9b2a81b4"
+          },
+          {
+            "path": "Repositories/SDK/r4os/registry.zig",
+            "sha256": "44cb5c5062f48bc6bb179ebfee21c916749f4583bf182a7160f5b6eb4413497e",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/registry_core.zig",
+            "sha256": "01d08635b0c917fd721f9c75d60fd295402417ff63e8ad47b062196a351deb44",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/runtime_context.zig",
+            "sha256": "10e935fa11f4b2d95444280cd0cb4027441d5ebae792e62e17d70d800986a743",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/runtime_r4l.zig",
+            "sha256": "1ebd2ab5d60d602ce8ceaf0038ad3e58cf1283fb07475ef7d9a6915143ccc18f",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/rust_project.zig",
+            "sha256": "65e182e794f12cbd8aa1c09348f7a94bb5ead99c791f4bbb316903dca349bc62",
+            "changed_since_47": true,
+            "evidence": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.51",
+            "last_owner_change": "cb02730e8c136d683d46fb5597570aeadace23d9"
+          },
+          {
+            "path": "Repositories/SDK/r4os/secure_random.zig",
+            "sha256": "e1eb97e24ce3ad657481d6d92defb001bd33a80460be77cd98cd5601d613e3ae",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/serial.zig",
+            "sha256": "cc8eb8eff6c072ea3b35fd2757c8beb41da3f871b221941db534eee644b7a7f0",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/service_deadline.zig",
+            "sha256": "0220bfe0b6f8a5cd376d7563be80833f6e0fcebdeb93eac8cbfb7c577780292a",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/storage.zig",
+            "sha256": "4510639b72dee1e97eba0b141339dcba5f6d29c751004ae82df20df0ceb39571",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/storage_tools/byte_source.zig",
+            "sha256": "08fbd26bac93a18f8dbef7461f3291374aa9e52a001c4896240abfa63a882a85",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/storage_tools/fat32.zig",
+            "sha256": "ea0eca83f8e8a0116a109db789fdf884538d0967d6f9374144473e75c6b70bf0",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/storage_tools/fat32_image.zig",
+            "sha256": "d72ce924f4b1ca77bb5a385ba89e5b766547f6e61829ec21889cf52a1aba34a2",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/storage_tools/fat32_update.zig",
+            "sha256": "7b311d865eda09677517337452d4dbc3b0d0fabac0a94e382ef932a0ae98ab8b",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/storage_tools/fat32_view.zig",
+            "sha256": "6c3642ab38c0073341c567e8c7ca6c564b83240b9f1a456531a58f25fa715d5c",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/storage_tools/gpt_repair.zig",
+            "sha256": "38124df4cbf48316bf098ca99da9ed46e82ea89a90443faedff34aa75d76f7aa",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/storage_tools/guid.zig",
+            "sha256": "45535a4e53fbab56c789de19000909c953cff8a55d32f22a5118b7a9c0fd3321",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/storage_tools/host_file.zig",
+            "sha256": "c9d7a92c11bbf877f7855b1387f1481feaed1e5e8e4e85729b2b4abe152ce2b1",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/storage_tools/installation.zig",
+            "sha256": "aab73992ed50c224202bb4721e773de18a556fec15bf1678da05811394ffa071",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/storage_tools/io.zig",
+            "sha256": "003148d1f5c50bc328e2172a834cfe337435466b68979deadfa7eacedf04cee8",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/storage_tools/limine.zig",
+            "sha256": "eb87e0432a4782b0843f4afeb5557273fe799edce501997504081831feda40d4",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/storage_tools/ntfs_extend.zig",
+            "sha256": "e39b9122f4fff972ac346719cbd5e03de52c233b641e6cbdd0224efdbe69949f",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/storage_tools/ntfs_metadata.zig",
+            "sha256": "da0524393f4913f010ad36b58b38eccf321cd4413be86e730ffe963a272b59f1",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/storage_tools/ntfs_plan.zig",
+            "sha256": "6452d5c795051dfcace876055acafaf590a165adc6ad202c3a11dfaa078bf021",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/storage_tools/ntfs_resize.zig",
+            "sha256": "e7a645a80edcbfea5695db7e9f97005ec2dc82561cbdc38465883b7642de1594",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/storage_tools/partition.zig",
+            "sha256": "39d32c37753bf2b7bf53b5831bf32dd58a89488aa69545000136608982999459",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/storage_tools/sparse_image.zig",
+            "sha256": "fc7977a51859ff06c8570721c40740c8d104057d5d60c1229371458f58493403",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/storage_tools.zig",
+            "sha256": "319fff1e901b15ee50be38eaec674851bad43f3d20af5a4003149f783b0a02c5",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/storage_tools_guest.zig",
+            "sha256": "154d7ec78f8ea3a232561b9f9c08a94510bec3c8b553c46ffb0ea9fc6b7d9f97",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/subsystem_catalog.zig",
+            "sha256": "9be94cb31a47227a6c5b47b999c54ffc5f47ae67df58b8187b0a931cd4aede22",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/subsystem_host.zig",
+            "sha256": "fd80e561b3b74e9f251173ac4652be8431e8e9e5723d88dc511bf12ea97cef9b",
+            "changed_since_47": true,
+            "evidence": "subsystems_current_65",
+            "last_owner_change": "f36349b77351dd42167fcbd4f93c894ff46172d6"
+          },
+          {
+            "path": "Repositories/SDK/r4os/subsystem_launch.zig",
+            "sha256": "547fa1849cd8d8db0fc475fccd875d2d48a417ac4bfe4a4d1dcf6b90c0b2d270",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/subsystem_persistence.zig",
+            "sha256": "d1acae50deef4b4b9f536ce476f83e1fdfcfcc1ea0dd6283e48096d96d656b76",
+            "changed_since_47": true,
+            "evidence": "subsystems_current_65",
+            "last_owner_change": "f36349b77351dd42167fcbd4f93c894ff46172d6"
+          },
+          {
+            "path": "Repositories/SDK/r4os/subsystem_runtime.zig",
+            "sha256": "d87b7d3a0dee2cee16c21f9c126287e62f72a680a609c25e2b399ce9ca8b40d2",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/system_update_backup.zig",
+            "sha256": "85617a4cc615c6c333b79da6526809b71f28b3d620005cdc61e408c34da3692f",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/system_update_batch.zig",
+            "sha256": "1564310f0d7237053557579461b0688028abcccdce130bd5f66fcf82f2ad0154",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/system_update_engine.zig",
+            "sha256": "86a5a21e3e6bb41ce8f8ba9fa65f04970b300a62f9c1b47443cd156e1a23e92e",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/system_update_inventory.zig",
+            "sha256": "a65c2d285f145e06ac75631340c5a3fbe74129bf6c65dadba1dc6030f1349506",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/system_update_paths.zig",
+            "sha256": "bf5313919d0ea8c723d4e11e8f3ac38a8cbaef8562d515ac0f7045e5b4286e1c",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/system_update_recovery.zig",
+            "sha256": "7b3b29dad51865d8ba89702d88b1c1ced5e81dc6bd6312db43b4285969e654ea",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/time_contract.zig",
+            "sha256": "d6ccf6a9359c27f52faf3943d2d00c9ed0cbe716532ef9d5119c48d71494cc13",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/update_catalog.zig",
+            "sha256": "8ef1b263f2a65471093f060e4fc3a2d6f10bfb66d13ed7d750adbdfdf82108a5",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/update_service_contract.zig",
+            "sha256": "9454f24d86b7bee8d500bc06bd0d74f6694601dc85cfd2ecab3cd998c5ddade0",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/upload_publish_claim.zig",
+            "sha256": "9b4710dd5d43ef3a379ec62ed3aae69ddb88819e1d3e7d55b404611aaeed2020",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/version_info.zig",
+            "sha256": "5025f30ec6eb4fe6da01b8ca5df6679442cff2b4492a5e7752e5c48260ce52f5",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/vm_allocator.zig",
+            "sha256": "c0bbf9c2806a185f475847f67be701db2e98fa0f71b1bc7d79e7dce35fa846ee",
+            "changed_since_47": true,
+            "evidence": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.50",
+            "last_owner_change": "f1bd067a5d6848014adb8fee97c17591777c97c2"
+          },
+          {
+            "path": "Repositories/SDK/r4os/web_background.zig",
+            "sha256": "e4584fef248b9f905e45cd77c2a119851a3a6f71e7c25e18648d5189ea92af30",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/web_canvas.zig",
+            "sha256": "c2a39fe96589cf47e4ab969c52fa4cd2bcb2394b14ce21d5cd1e386bdd846139",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/web_crypto.zig",
+            "sha256": "ccdf98c816b1ba6e77dbd73fc7d4178baeac0929833f70df3495ae33bdfafe16",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/web_documents.zig",
+            "sha256": "c1c3c05c04c5a9f9cc898bfe4870be145c5efef1855393e8d81b99fdbf3c9a9f",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/web_encoding.zig",
+            "sha256": "bbec0a6fe1ba394abbb4f7e6deb47f8c6f402012f98ea987fd5778fd295354e8",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/web_fetch.zig",
+            "sha256": "517ad1a5185648f1324f87ba624fa228a636b3738388bf8d99a5c5f7cd8235be",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/web_font.zig",
+            "sha256": "5fffa3fcb2cf2434fc5e0b318d57646357dd4a8a8a6edf0b808508a0367cf0c4",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/web_font_activation.zig",
+            "sha256": "8d03f04faea1bf22bee5304184dced4c9b4908e83ca3745462f410df5f2cabdd",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/web_font_cache.zig",
+            "sha256": "3645e021ed54f5637df472863bb5c3732c88899c1ed9fce2a72e77b10987bf52",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/web_fonts.zig",
+            "sha256": "d015abc67be8d7a3e5228c569c136054c8830adb5eaf06d027359ac0856f6e93",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/web_forms.zig",
+            "sha256": "e024861cf59fca9a4bfee660a3b82864903b39e94160c31c7f4db19948776901",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/web_images.zig",
+            "sha256": "2b49dc51f499169684876b68ae5ccd99969e59443fa38a86b74073e9b2982605",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/web_layout.zig",
+            "sha256": "dbf214781a544a4497daa7bc855afc732c7b01a51583d5413acfd4bb7a857b05",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/web_navigation.zig",
+            "sha256": "aa888799c8b8bd5fdd44a563d08627a002029c3438f4d58350a7f97df4192cfb",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/web_resources.zig",
+            "sha256": "22cb2c078eef44e76ea80d6f1939352a8dea3acfc359888196be5b6a68a2c593",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/web_response_cache.zig",
+            "sha256": "8a2e22d72bb520431bae2d203dbe633ca20e9957db670a39ec93d7926bf15d5c",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/web_runtime.zig",
+            "sha256": "4a5d35915996ebf790682ffa8bd3b42a4a7a6759722ab49979295cceeebdce2b",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/web_runtime_jobs.zig",
+            "sha256": "cf719821b195b68e031cfcdbcd3828c20b620f78546b25a1bb5fb12b8cddc669",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/web_security.zig",
+            "sha256": "f6cb1189aa27116e09b665884a102102034cddb2498b1d4d609b7ec7fb5b15e3",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/web_url.zig",
+            "sha256": "ed8660774453a70af095e3edf44084384071e045d051611c81cb9fff799b4543",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/window_mode.zig",
+            "sha256": "cd403d900d711e58dd77c117fad3506960303efe7fb144f4d87e8ee5e597d3e8",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/SDK/r4os/zip.zig",
+            "sha256": "a58fcffd6c692da571d4ca8a9d3cb85e3a01ea4d0b21e8159b8e295eca639cbf",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4ACO/Bindings/Zig/r4aco.zig",
+            "sha256": "55386326a7975641348ec9eab1eebfc53fd0a1bf9a3f3a74da48d90f80bc3f23",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4ACO/Bindings/Zig/shaders.zig",
+            "sha256": "c4cd101ee0c166a34fae41c39c65ab39b357afe876f6a23b6a96ad93442f11db",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4ACO/Bindings/Zig/worker.zig",
+            "sha256": "eac4d5742a05a2f0aa6f7ef2102278eb0acb9b6c0f35b65444ca8df925db9d8c",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4AMD/Bindings/Zig/r4amd.zig",
+            "sha256": "1fa039505eff4d14c458fa5396a02293230181cfa9b7968874ff98085b4400c2",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4ENC/Bindings/Zig/r4enc.zig",
+            "sha256": "a77abeec0fe12ff0213bc3190270b423e0c14044f4cbbfc18c7bbe3e9f9cfc12",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4ENC/Bindings/Zig/recording_mux.zig",
+            "sha256": "bff364a353ed06f859ecac7389492ede68c3b38d450f9f0560e4d9e82b308170",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4ENC/Bindings/Zig/recording_pixels.zig",
+            "sha256": "872a3650e5ab26cf1774436bc3ad4c26c5fae7401b9f059ef14b547f2a708c91",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4FONT/Bindings/Zig/app_fonts.zig",
+            "sha256": "ceb69bb6df51650f3fa8775ec3d4647b8e9b5ef82a24ae2ff7e46ef46a3a03a6",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4FONT/Bindings/Zig/font_format.zig",
+            "sha256": "16fe2e44c77ac8ad5f41777c2ef2f34a6137671bf01992d70b8e8f831289c82d",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4FONT/Bindings/Zig/font_import.zig",
+            "sha256": "11ccf276f4fcaf2074ef52000b405ace35606686262a762350e9bc47364d941e",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4FONT/Bindings/Zig/font_tools.zig",
+            "sha256": "a4807af44a0b61ca8eab9028566293461a35c5ed8723d02bfacd6404bb53903f",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4FONT/Bindings/Zig/r4font.zig",
+            "sha256": "28cb127566eb302fc3ba6d9f7ef56ff7a990facb88404496cc96ff668ffe7033",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4FONT/Bindings/Zig/r4font_abi.zig",
+            "sha256": "5a1a543b8c6743895ce8f83c907303861d0d829dd266bcec2d4d7fe2646f9f12",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4GFX/Bindings/Zig/outputs.zig",
+            "sha256": "1273cb122670f38832e535f65504c659a7892674f6e8c014fa0c77bd3d537579",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4GFX/Bindings/Zig/queue.zig",
+            "sha256": "bd636216592b0f53abd5ca62f3d8cf97458d48566c82f523b01d72e94ba5c6de",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4GFX/Bindings/Zig/r4gfx_abi.zig",
+            "sha256": "ca53a3d7c75462bd3a2b212990c8a90fbe5a02f1d419d30ed992c536fbb718f0",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4GL/Bindings/Zig/r4gl.zig",
+            "sha256": "eebcaf220cc603f9f8277089e213d01d8286de3bdcd0483fab9fed890ca4fd44",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4IMG/Bindings/Zig/color.zig",
+            "sha256": "33e794dcd3fac4dfa13cfae50fc70cc46b715841530402f2704a5f97a71c9c21",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4IMG/Bindings/Zig/native_jpeg.zig",
+            "sha256": "c3a00ded448e5f5f53bdf239fd54c2c022f9b1aa4c704f3a4217f908e3cb940a",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4IMG/Bindings/Zig/r4img.zig",
+            "sha256": "409dab4879d1f9da9b9db3ea01e43957e2cc2a6188176fdbdc0adb4eed2dfd25",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4IMG/Bindings/Zig/r4img_abi.zig",
+            "sha256": "12f4c14bf12b52fa769b4b768faf3f05dead4d36fa599d5ee3cd7d62c70fa4c7",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4NAK/Bindings/Zig/r4nak.zig",
+            "sha256": "055ff2dd85255b3d34c01b963726eec9ffb1ec8f7259cdb4232a379f046426c7",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4NAK/Bindings/Zig/worker.zig",
+            "sha256": "2552876eb159e0906f71450ac788328198b7aff4497b18119b400a9971383723",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4NV/Bindings/Zig/r4nv.zig",
+            "sha256": "728de011b9df184095a35e0e1efe7cf7f86d750b5a06be214cb182e07abc6958",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4STD/Bindings/Zig/app_assoc.zig",
+            "sha256": "a205ba887160d181910d125c93a164a14c7e517550c497e03cad888615b3668b",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4STD/Bindings/Zig/codec.zig",
+            "sha256": "47777613f144f74300142795df8d9757d53ef188d91a28f51fbeb481d8e50862",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4STD/Bindings/Zig/config.zig",
+            "sha256": "fbfd26d1435440b112893c15ba51c28f05c1db6ea1d99bf7a9df99381834ade3",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4STD/Bindings/Zig/console_text.zig",
+            "sha256": "efd315a9f185405bc7b5a87c0d5380eeea19cea4db860c8b2621afd2784f0ef0",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4STD/Bindings/Zig/date.zig",
+            "sha256": "bdee547375bb284b6a3034319ec8d9a2e3756b27be23d9559a2171cb8f457068",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4STD/Bindings/Zig/file_handler.zig",
+            "sha256": "c391c4bee30c0387f3d0a66174099631d0dff869e3f9c71844d08804a2f36906",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4STD/Bindings/Zig/grapheme.zig",
+            "sha256": "ef9d27cf631ac40625f63e1dc9433ac7177a0b31cd5356704c4f878711fd1a42",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4STD/Bindings/Zig/grapheme_properties.zig",
+            "sha256": "4919b83b1f3004efbb6445e9e08655b06f31cad00cfab5b79717003db706770e",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4STD/Bindings/Zig/path_text.zig",
+            "sha256": "6e26ad70b6b134dc19b3da69202583eaeac2b360dc0bea5058ad3196e26c047e",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4STD/Bindings/Zig/r4std.zig",
+            "sha256": "d633e16cc0d85ace166d66ac5998b4179d12b6bc88d614e1c1afec1056828df7",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4STD/Bindings/Zig/r4std_abi.zig",
+            "sha256": "a06e4842a1af2b45691598e5efd28e01cf3c43ab790e6ad8f40e0f4d40ac52ab",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4STD/Bindings/Zig/runtime.zig",
+            "sha256": "77bb3d383f86f00cedad5e5495c972b2543394bb0aadb32ce6b259e1f5442e0b",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4STD/Bindings/Zig/settings.zig",
+            "sha256": "ff105212906a3f0958cd3bde8b22da4b842a09997e6ea1224e175a9abf1d7682",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4STD/Bindings/Zig/shortcut.zig",
+            "sha256": "8f8909ea84497de3c513ccb523f97f709fac6ebd8b47e9c18b48c76130c228bb",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4STD/Bindings/Zig/subsystem_runtime.zig",
+            "sha256": "9aee079ac49dbc081d7c780f6eb74af77cd487c70ac95e233299830ea062fb83",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4STD/Bindings/Zig/text.zig",
+            "sha256": "52b67ee0f49f9e848f401669166202fab157d442d45ee9e374d54c0e862dd797",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4STD/Bindings/Zig/text_file.zig",
+            "sha256": "2ddde8e420f68f51a40dc2ad62eb2c10b7cfb95ef5726cc7572ac6219c3d69ad",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4STD/Bindings/Zig/time.zig",
+            "sha256": "0430ee5940769b9ca9d71d28bcdcc1822e546a5fa870c1064fa5fb479290359e",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4VIDEO/Bindings/Zig/playback.zig",
+            "sha256": "6208afcaee1cde15e69baefa784faab8a7fc7a70ad329a37fb480fcf90be6b7b",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4VIDEO/Bindings/Zig/playback_audio.zig",
+            "sha256": "0cd1a353c312c27e297b8b75825198d851a426ad2ce0c3b836ef799448a9559c",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4VIDEO/Bindings/Zig/playback_clock.zig",
+            "sha256": "3bdb6b189fb4397c89664ceb89d96a9f3369d8f05e810b6d548df61ccec9d5ed",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4VIDEO/Bindings/Zig/playback_composition.zig",
+            "sha256": "25e368d4390af929e52fa1f22016b9c7360915fa4e170451722dc8b67dab09fe",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4VIDEO/Bindings/Zig/r4video.zig",
+            "sha256": "e3835fd245a01ff5c6f4109b4ea0bd2d494277bc583aeb8ea45029124217ab60",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4VK/Bindings/Zig/r4vk.zig",
+            "sha256": "cba7d83d37229ccc9a9181fb2fa12316cb25d3a4342f10cb87f21ea5741ad091",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4GFX/Display/brightness_client.zig",
+            "sha256": "e547b92ce508990dcf5062d4401f46683094799d92de8302073e2ae8ac67b046",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4GFX/Display/brightness_preferences.zig",
+            "sha256": "8303a78b49315c30e3ec547c9874eb94b9357c7e49dc99a4de16463bc585b166",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4GFX/Display/brightness_status.zig",
+            "sha256": "ee417d1d61601a0a12c9f3bdcbde5e774962e0baeb10859666e6b6483e6cec06",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4GFX/Display/color_control.zig",
+            "sha256": "f87b6c4eedcc86a919f17fbbba1a80a337db82d658e1264d7d3937f4c117e9fb",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4GFX/Display/color_preferences.zig",
+            "sha256": "71718def642a8e3c957276da45adc1aa677bd4a34015ecbd9b5dfecc515a7a19",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4GFX/Display/color_signal.zig",
+            "sha256": "80194219902c571a4926197ccf85d8511d52912e09929a80b90f4297bc8eaea7",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4GFX/Display/control.zig",
+            "sha256": "bfef91d45fa142e235a791a920ad5544998fe9a7ea636aa705a0afa09a8afb9a",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4GFX/Display/cta_timings.zig",
+            "sha256": "c396da157e512110c86303cf9719aaef93c8cb1ef05ef36e60f7ddb39574eb60",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4GFX/Display/desktop_outputs.zig",
+            "sha256": "a1e56abcf4f5ff177166961ef8eeab18d14eebf749539a3ccedcf849915bf43b",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4GFX/Display/display_profile.zig",
+            "sha256": "6bd3bf43db7f3e32e0a20df3d6a6b0e97dd5e041171bfe83c51bd252d21b2f33",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4GFX/Display/edid.zig",
+            "sha256": "cdd3d5635daa6713069f0e964ac601386ba2bfd62c25f105d7f853f440032200",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4GFX/Display/eld.zig",
+            "sha256": "2f7600fe9dc98de9da6ad4e4bb3f0dfeb4aadb66438d62dd0d945f91d288993c",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4GFX/Display/links.zig",
+            "sha256": "794e16f790d3d159213bf1268ecc9531e8e38ebfb4edbfc197d75469e84fbc29",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4GFX/Display/mode_control.zig",
+            "sha256": "15906924a156df1ca19ffe766aa0f1e7bb5ae7becb70806f34f56dfdfe81dc9f",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4GFX/Display/preferences.zig",
+            "sha256": "181f08fb3419a58316b8be6498f70c66550ce38556fd6a72e833058ed43e837e",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4GFX/Display/readback.zig",
+            "sha256": "28ea45b9e06b7f3e433d793e7c8398ca461053f006a1e6c46228db1e523159d4",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4GFX/Display/refresh_client.zig",
+            "sha256": "39d7e302828aa5aa734e76543756debafaf58fc00e36e3c8c962c3f61dd268c5",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4GFX/Display/refresh_observer.zig",
+            "sha256": "2ccd60b6a0487950bffddc21ae4d38279d6b12317814d285b9c3b80eb36847dc",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4GFX/Display/refresh_preferences.zig",
+            "sha256": "f0e9394589528f774a921d04a216b0deeee365442f815878fa7d0b452f833cac",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4GFX/Display/refresh_range.zig",
+            "sha256": "2120c60e0d4b0a9bc1c8db5f30ed922c5594a0008bf6b1f8fc7a8ff3513fefd0",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4GFX/Display/refresh_status.zig",
+            "sha256": "2c5f8512cb532f06e02e756062c5a90dbf724d0a243ad1b84cd5e129097dff8d",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4GFX/Display/timing.zig",
+            "sha256": "45d3516055309beb52c2268c1dd6509a61fa493b1522473f87136e67b17af565",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4GFX/Display/topology.zig",
+            "sha256": "5c158c8ca851171296a8dfa397a93580d7a587949952aabe3151e15eb0485d02",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4GFX/Display/transfer.zig",
+            "sha256": "ef8ddecb37f4e7f7a4b4aa15b29dbda7f3b5252a90c2f0886fcc310e5671152f",
+            "changed_since_47": false
+          },
+          {
+            "path": "Repositories/Libraries/R4GFX/Display/vrr.zig",
+            "sha256": "30a5167cef6e20659278cf7ba05e02af73667be7eccd10bcca79ed01576d6983",
+            "changed_since_47": false
+          }
+        ],
+        "additional_sdk_core_sources": [
+          {
+            "path": "Repositories/SDK/r4os/allocator_wait_test.zig",
+            "sha256": "ac44e1f3e314cda66a7f639fc1c4d96d38efb0e54e547a26f5784c7b62fad03b",
+            "bytes": 5380
+          },
+          {
+            "path": "Repositories/SDK/r4os/c_header_inputs.zig",
+            "sha256": "07e266e2f24ef9ac0bccb05caecbede7513700255e4a32509eb97ad6af0a813b",
+            "bytes": 1812
+          },
+          {
+            "path": "Repositories/SDK/r4os/cpu_acceleration_tests.zig",
+            "sha256": "1431e81ca3b9aae5f05e4476f4248172f1140d49df9275f7970573dded7c226a",
+            "bytes": 8699
+          },
+          {
+            "path": "Repositories/SDK/r4os/data_bridge_names.zig",
+            "sha256": "8c2e9a9ef520c096e3fe3ce43731b5aaf76e892d79ac51006ad79635ae381314",
+            "bytes": 2397
+          },
+          {
+            "path": "Repositories/SDK/r4os/data_bridge_schema.zig",
+            "sha256": "9af79e95f16c85ab7bc8a97f4cfef338ca53dcc31112a9934a608397024d70be",
+            "bytes": 661
+          },
+          {
+            "path": "Repositories/SDK/r4os/data_helper_adapters.zig",
+            "sha256": "28c466dee6694d41e1e1f0053e0891ab2edac4423d9a4ec5711c893c871b8e32",
+            "bytes": 2460
+          },
+          {
+            "path": "Repositories/SDK/r4os/data_helper_owners.zig",
+            "sha256": "163402f543c6f062a725c39e835bf77bc20cba26275c8ce816930a5bdd7242fb",
+            "bytes": 2041
+          },
+          {
+            "path": "Repositories/SDK/r4os/data_value_bridge.zig",
+            "sha256": "e454d49f359370681d987cee176c8bbb4b35f159504510ac3f18323f2403bc91",
+            "bytes": 1550
+          },
+          {
+            "path": "Repositories/SDK/r4os/driver_bridge_names.zig",
+            "sha256": "f3516083bcbf0c93c9b0b0e92c3ca8de400ec19e10c45b213d51f92735a3d75f",
+            "bytes": 1921
+          },
+          {
+            "path": "Repositories/SDK/r4os/driver_bridge_schema.zig",
+            "sha256": "346ebcf8c69f3cbd6a95ad632f0d86e94a4fd20d985f7caed66b0ce2ec3589b7",
+            "bytes": 438
+          },
+          {
+            "path": "Repositories/SDK/r4os/driver_helper_owners.zig",
+            "sha256": "7525e43d8b080308e3179b809df667fdd1bf82ec0baf0cc7892f0951caa84de6",
+            "bytes": 1673
+          },
+          {
+            "path": "Repositories/SDK/r4os/driver_value_bridge.zig",
+            "sha256": "6e90403478feeec03e9359becff4104715fed6befb41a0e6d15f2c0dfdc4ad08",
+            "bytes": 1567
+          },
+          {
+            "path": "Repositories/SDK/r4os/facade_runtime.zig",
+            "sha256": "c6be8f24d39459e62a3f591e2cc10acd6cd07165430b74af156c1ea598468cf5",
+            "bytes": 692
+          },
+          {
+            "path": "Repositories/SDK/r4os/generated/data_fingerprint.zig",
+            "sha256": "33891fa2938e8a805deeaa7ba3aca07e7e1fc473fbd73876a3497448e3a913d8",
+            "bytes": 118
+          },
+          {
+            "path": "Repositories/SDK/r4os/generated/driver_fingerprint.zig",
+            "sha256": "ccfb2189d8f73adccba874e00eef9fccc0be65ceaa5a497c60879816ef4a0662",
+            "bytes": 120
+          },
+          {
+            "path": "Repositories/SDK/r4os/generated/gui_fingerprint.zig",
+            "sha256": "7a8e81238d8c8c0ae469a74be0a537ca019eb8c27c3a0b07ec0bdf0743e18e38",
+            "bytes": 113
+          },
+          {
+            "path": "Repositories/SDK/r4os/generated/net_facade.zig",
+            "sha256": "4b1120e228ccc24d0e208387edfe5b9776046017ff347a5167a3bec35af7faf1",
+            "bytes": 53389
+          },
+          {
+            "path": "Repositories/SDK/r4os/generated/subsystem_fingerprint.zig",
+            "sha256": "c12b84665586ef790ffb0120946dcfd19d6d1c443bcd21693efe707f1bc08420",
+            "bytes": 123
+          },
+          {
+            "path": "Repositories/SDK/r4os/generated/transport_fingerprint.zig",
+            "sha256": "4307b02a7c4722894faccd33b900f78c40e09e9e850d1f495fd91f45671beb54",
+            "bytes": 123
+          },
+          {
+            "path": "Repositories/SDK/r4os/generated/update_fingerprint.zig",
+            "sha256": "2a9329785a1628593168dde068d9e9b77982879ad7e21eee3236b1d5002c6ca5",
+            "bytes": 120
+          },
+          {
+            "path": "Repositories/SDK/r4os/generated/web_fingerprint.zig",
+            "sha256": "a45c6616c3d3b2276d3ac7fb2ee7609565a6e2173b6a5f05e9646472c0402f0d",
+            "bytes": 117
+          },
+          {
+            "path": "Repositories/SDK/r4os/graphics_runtime.zig",
+            "sha256": "d004d5bb10f381e2dc5328b8a61370050dfcae84d8d96409e7fdbe23764598db",
+            "bytes": 1549
+          },
+          {
+            "path": "Repositories/SDK/r4os/graphics_support.zig",
+            "sha256": "10b1472a4bbbb43662230ab91308cfa6a7057bd7ea90f6b809aac8c7a0eb8357",
+            "bytes": 240
+          },
+          {
+            "path": "Repositories/SDK/r4os/gui_bridge_schema.zig",
+            "sha256": "8e1cc1e2594818c405f4c6871fc73d1636a7c56e9a57aef3fd37f408b23c1a5f",
+            "bytes": 9802
+          },
+          {
+            "path": "Repositories/SDK/r4os/gui_language.zig",
+            "sha256": "ed97836169c9341a0e6da90491bae50f93daf5b626e10c8d6ecfb5683bf60e91",
+            "bytes": 1143
+          },
+          {
+            "path": "Repositories/SDK/r4os/gui_session_runtime.zig",
+            "sha256": "87d85385f67c1671cae881211e14df7840463efd91811f6c7bd3f71498535d37",
+            "bytes": 10434
+          },
+          {
+            "path": "Repositories/SDK/r4os/gui_session_support.zig",
+            "sha256": "827266c3c4a1aa299909d91a58ee0aec2b318ef1aed12687794ebfabc7962ac1",
+            "bytes": 1359
+          },
+          {
+            "path": "Repositories/SDK/r4os/gui_value_bridge.zig",
+            "sha256": "77158802f9494a9804e766fc7a3dbd5580bd702fe380749478967a2d2879d565",
+            "bytes": 11845
+          },
+          {
+            "path": "Repositories/SDK/r4os/heap_runtime.zig",
+            "sha256": "fb935076e5098cfa944e3873a6263b01feae8df0d04b5c714aed9da707df3daf",
+            "bytes": 9898
+          },
+          {
+            "path": "Repositories/SDK/r4os/import_spec.zig",
+            "sha256": "83f00d3c756adfbd678fb06d5ba624cf49f3514c168b091924cf7668b2ac1839",
+            "bytes": 1751
+          },
+          {
+            "path": "Repositories/SDK/r4os/input_events_tests.zig",
+            "sha256": "e5151bbb801de4b538cefb2cc32c23bf173e70f304b985090fdc635380ba8eea",
+            "bytes": 5578
+          },
+          {
+            "path": "Repositories/SDK/r4os/native_bridge_schema.zig",
+            "sha256": "2987534203b0fe329b40d2c6071c878bc4d93a9886b7958f6b1a51357f0c8477",
+            "bytes": 8488
+          },
+          {
+            "path": "Repositories/SDK/r4os/native_callback_bridge.zig",
+            "sha256": "a7cb874f39835c84e1b4cf5edfd82fa7081e9d5199c6471cc1d55f750e65fa8f",
+            "bytes": 5665
+          },
+          {
+            "path": "Repositories/SDK/r4os/native_value_bridge.zig",
+            "sha256": "4407f5c3909ecdc2d8eecd4163ff810ca0c7cb38aef0ccc92d54c9cc29105d84",
+            "bytes": 13116
+          },
+          {
+            "path": "Repositories/SDK/r4os/net_bridge_support.zig",
+            "sha256": "b3026806c7c3e1c1de73fa3d8acdb4ba2c0c0bbcc063d46dfbaa0123483402b3",
+            "bytes": 2394
+          },
+          {
+            "path": "Repositories/SDK/r4os/net_request_runtime.zig",
+            "sha256": "05efed17364ff27f6c2862d938fb7ccd35f14c15644743f8a9e52b0d595c5208",
+            "bytes": 2955
+          },
+          {
+            "path": "Repositories/SDK/r4os/platform_runtime.zig",
+            "sha256": "e476029a7d0d2563129eab44d4de9494ae5bb971e4a6089baf5c28cf0f04962e",
+            "bytes": 1930
+          },
+          {
+            "path": "Repositories/SDK/r4os/platform_support.zig",
+            "sha256": "f00846480d3222ef0ab45f738d0c3cd89eac57fe8f1fdace757eba5bd7ec1c08",
+            "bytes": 376
+          },
+          {
+            "path": "Repositories/SDK/r4os/registry_selftest.zig",
+            "sha256": "18a41559b21d5df21c39de6686b05b9231c9cad49e3b52e0a95297075f731a5c",
+            "bytes": 3608
+          },
+          {
+            "path": "Repositories/SDK/r4os/runtime_bootstrap.zig",
+            "sha256": "0474c718dc998c765349a2bd42f683b55b2f0f37f8049f5b5de267213595a6cd",
+            "bytes": 623
+          },
+          {
+            "path": "Repositories/SDK/r4os/services_runtime.zig",
+            "sha256": "d1e471131b35c371bade543a564f700603b279d3e7c1781e5bff74671a61fb47",
+            "bytes": 7940
+          },
+          {
+            "path": "Repositories/SDK/r4os/startup_metadata.zig",
+            "sha256": "2fd9ce3d4673185998025b4387e638318ea61f96e5e1b83da83d258897341783",
+            "bytes": 4422
+          },
+          {
+            "path": "Repositories/SDK/r4os/storage_runtime.zig",
+            "sha256": "684e14f750a9cf6ed96a9854339e5f81d3e2f8a6bf6090f62982986f5de5d812",
+            "bytes": 12512
+          },
+          {
+            "path": "Repositories/SDK/r4os/subsystem_bridge_names.zig",
+            "sha256": "e0bbec5222522d12d07aca4b9f6e3c31543fbe96bc46db518465da27080d5326",
+            "bytes": 2200
+          },
+          {
+            "path": "Repositories/SDK/r4os/subsystem_bridge_schema.zig",
+            "sha256": "e04f809118ef46cd3d76fd6e4c85bdb647d0dc45f371b9217578c5fdc87e60f8",
+            "bytes": 441
+          },
+          {
+            "path": "Repositories/SDK/r4os/subsystem_callback_bridge.zig",
+            "sha256": "c583c935351741e67483382d2248fd7fc827914aebe322513b9489d42f53c5ca",
+            "bytes": 1322
+          },
+          {
+            "path": "Repositories/SDK/r4os/subsystem_helper_adapters.zig",
+            "sha256": "812773ee1f90982615692f83ed61aee85b5d4d8786dfecf49d4c381608caa1a1",
+            "bytes": 6749
+          },
+          {
+            "path": "Repositories/SDK/r4os/subsystem_helper_owners.zig",
+            "sha256": "ecde8978c3eaff0ddc68525fbb61f816efea90ec9678b4f2a6f00d48475b1960",
+            "bytes": 1978
+          },
+          {
+            "path": "Repositories/SDK/r4os/subsystem_value_bridge.zig",
+            "sha256": "697cf75fb170c6a25d9e51703bd99e596af21817f18d5c7a921481a88daf4dec",
+            "bytes": 1594
+          },
+          {
+            "path": "Repositories/SDK/r4os/transport_bridge_names.zig",
+            "sha256": "b34e1267502fa29a31b359fd8c7fd7c5b8edf8303eca744f7300d3313ef703e3",
+            "bytes": 1893
+          },
+          {
+            "path": "Repositories/SDK/r4os/transport_bridge_schema.zig",
+            "sha256": "7e9a90b335bee012ac2c6cec8504c976003e0e81714939bb286a0f6636459a84",
+            "bytes": 441
+          },
+          {
+            "path": "Repositories/SDK/r4os/transport_helper_adapters.zig",
+            "sha256": "9a8fb068b30fa475d5c948ab0424fd00cdaa7b299fae193924f898144ab53212",
+            "bytes": 3114
+          },
+          {
+            "path": "Repositories/SDK/r4os/transport_helper_owners.zig",
+            "sha256": "b2f9c7e9d944a9fdf8945e566fe6930e90fddf41ae90af01d94801751aaa36f0",
+            "bytes": 1899
+          },
+          {
+            "path": "Repositories/SDK/r4os/transport_value_bridge.zig",
+            "sha256": "fd0765b53105629edf355b0e13d3393076acdffaf0729624e35ee8bde5d6c13d",
+            "bytes": 1595
+          },
+          {
+            "path": "Repositories/SDK/r4os/update_bridge_names.zig",
+            "sha256": "ee82cba9a878aced4bd430d2779fcb293f8112ea1d622612b8928c3bec2fb527",
+            "bytes": 252
+          },
+          {
+            "path": "Repositories/SDK/r4os/update_bridge_schema.zig",
+            "sha256": "1b8f688a0d51f8aa30f6704ba765cdbf2009d8953ff7e4bbda865a5955884c1c",
+            "bytes": 558
+          },
+          {
+            "path": "Repositories/SDK/r4os/update_callback_bridge.zig",
+            "sha256": "73be172a3601aefd7beed3de03a85d6358e42e0cd6fda6ecc960022e2b02bf4c",
+            "bytes": 978
+          },
+          {
+            "path": "Repositories/SDK/r4os/update_helper_adapters.zig",
+            "sha256": "a3449b89836c92b8773076745de4f7dbc83bdca45e9cede16786272a36e3d3ae",
+            "bytes": 8049
+          },
+          {
+            "path": "Repositories/SDK/r4os/update_helper_owners.zig",
+            "sha256": "4c4ffdbd4a04bd8f1642791b2611c14642cc823f707640bcb5d7148d35a94143",
+            "bytes": 2516
+          },
+          {
+            "path": "Repositories/SDK/r4os/update_host_file.zig",
+            "sha256": "c5efa407b77ec0bf255ec16268a9b6894929202442b94625825e40474968cc16",
+            "bytes": 3466
+          },
+          {
+            "path": "Repositories/SDK/r4os/update_type_names.zig",
+            "sha256": "a5fded5647f483f7b54c6725fd0241f53626342dfd080c71aa9c937d3dde317f",
+            "bytes": 2289
+          },
+          {
+            "path": "Repositories/SDK/r4os/update_value_bridge.zig",
+            "sha256": "befb2ac2589bacaa86211b13196b645d4d8ba9430f3f47d9296e8b9e1920e2f3",
+            "bytes": 1575
+          },
+          {
+            "path": "Repositories/SDK/r4os/web_bridge_names.zig",
+            "sha256": "f9da04cfae4b07c67204b08faff6d077c72f181fb7536867949d37b2538d8daa",
+            "bytes": 2363
+          },
+          {
+            "path": "Repositories/SDK/r4os/web_bridge_schema.zig",
+            "sha256": "9d137fa67c615ececc3a69d203d9be4868bda0469ac44afb1e61763e37dfb346",
+            "bytes": 544
+          },
+          {
+            "path": "Repositories/SDK/r4os/web_callback_bridge.zig",
+            "sha256": "94213f3e60f49eb2a9194a30887b9f72c79db84d1950b999628fd5ec15aa5e18",
+            "bytes": 1902
+          },
+          {
+            "path": "Repositories/SDK/r4os/web_helper_adapters.zig",
+            "sha256": "39fb37683559a08d756dc69241f63d91172bd7acafc8103b13fcf0c355e016b9",
+            "bytes": 7518
+          },
+          {
+            "path": "Repositories/SDK/r4os/web_helper_owners.zig",
+            "sha256": "418717ec5cef40435fb17998e96179f75124bd709c589dc2a010dae30ec122ae",
+            "bytes": 3561
+          },
+          {
+            "path": "Repositories/SDK/r4os/web_value_bridge.zig",
+            "sha256": "af2311ef2b20d8486fe79724636d06330022833902cd0aa76795833f676aa0e6",
+            "bytes": 1541
+          }
+        ]
+      },
+      "components": {
+        "SDK": {
+          "commit": "3e04994359e683f851799229396a28217a861934",
+          "files": 1210
+        },
+        "Contract": {
+          "commit": "922eb1a100df212e078e7ccdbea5525b77fe85da",
+          "files": 102
+        },
+        "Libraries": {
+          "commit": "afdccd30f0ef94d7e8173a592142ddb87960033c",
+          "files": 2821
+        }
+      },
+      "toolset": {
+        "technical": false,
+        "profile_sha256": "cb869b9e1b2f80c716f4089048377fcc5b4524333580d5a8c79571bdc5d3269f",
+        "sdk_inputs": "Clean commit and canonical git archive/filter bytes; all selected-source hashes checked by existing original builders. SDK, Contract, Libraries and toolset are separate real copies.",
+        "installation": "Pinned Rust1.99 and Zig0.16 copied independently, no source symlinks or global compiler. Actual acceptance runner uses only selected package/tool roots.",
+        "builds": {
+          "schema": 1,
+          "host": "Linux",
+          "scope": "Actual standalone C and Rust desktop-host builds; guest claim/input/display/close require separate execution",
+          "projects": [
+            {
+              "contract_version": "0.64.44",
+              "sdk_version": "0.64.89",
+              "language": "C",
+              "artifact": {
+                "bytes": 629806,
+                "file": "DH71C.R4X",
+                "sha256": "895728bf33041f3e84b9e325beae0afc7292db8a788b7f54ac16ec78c43da527"
+              },
+              "receipt_sha256": "5e45bd8082d0310830dd5d1903dbdd6af204f89caaf27d42c24d52d36b268145",
+              "followup": "Only the C fixture marker status branch corrected after actual first guest reached drawing. Final exact C source rebuilt with the same isolated explicit roots and original Build-Project owner; Rust unchanged."
+            },
+            {
+              "contract_version": "0.64.44",
+              "sdk_version": "0.64.89",
+              "language": "Rust",
+              "artifact": {
+                "file": "DH71R.R4X",
+                "sha256": "af58b914b23cb1a49e3cc18428d15d79c814149bf61b7b5fc48bfd3da91ab93a",
+                "bytes": 642706
+              },
+              "receipt_sha256": "09030d2ff82e7d4106b1781a64ee7d223aa81b61419b6bb362b4b00769ba7d69"
+            }
+          ]
+        }
+      },
+      "runtime": {
+        "Rust": {
+          "language": "Rust",
+          "artifact": {
+            "file": "DH71R.R4X",
+            "sha256": "af58b914b23cb1a49e3cc18428d15d79c814149bf61b7b5fc48bfd3da91ab93a",
+            "bytes": 642706
+          },
+          "build_receipt_sha256": "dc5755d71772c8194f58ba46a450be62e9c948eef6cac193269aee9bd321dcc3",
+          "actual_windows_execution": false,
+          "actual_host": "Linux",
+          "guest": "KVM SMP4, inherited Full42/Kernel381",
+          "host_claim": "Actual shell/desktop_host; WINSVC exact generation/epoch accepted",
+          "imports": "All16 original Desktop137 imports,12 required and4 optional; generated same startup facts and eight named required clients resolved",
+          "work": [
+            "24576-byte pooled Rust allocation, nonzero verify and Drop",
+            "R4IMG actual BMP probe/scratch/decode/two exact RGB pixels/8x8 scale",
+            "SDK exact UTF8 checks and screen text",
+            "real software display begin/rect/blit/present; screenshot background and first/last raster colors verified",
+            "native readKeyCodepoint received q from QMP sendkey"
+          ],
+          "result": "R71 result=000 close=done",
+          "service_after": {
+            "running_starting": 14,
+            "failed": 0,
+            "open_handles": 0,
+            "busy": 0,
+            "timeouts": 0,
+            "cancels": 0
+          },
+          "limit": "UTF8 validity is not glyph coverage/shaping; boot font displayed unsupported marks as replacement characters. Software path only; no GPU hardware, performance or productive Desktop port claim.",
+          "qemu_exit": 0
+        },
+        "C": {
+          "language": "C",
+          "artifact": {
+            "file": "DH71C.R4X",
+            "bytes": 629806,
+            "sha256": "895728bf33041f3e84b9e325beae0afc7292db8a788b7f54ac16ec78c43da527"
+          },
+          "build_receipt_sha256": "5e45bd8082d0310830dd5d1903dbdd6af204f89caaf27d42c24d52d36b268145",
+          "actual_host": "Linux",
+          "guest": "KVM SMP4, inherited Full42/Kernel381",
+          "host_claim": "Actual SHELL with app.role desktop_host; exact WINSVC generation/epoch accepted",
+          "imports": "16 original Desktop137 imports:12 required,4 optional; eight required named clients resolved",
+          "work": [
+            "24576-byte 64-aligned pooled allocation, nonzero verify, explicit free",
+            "R4IMG real BMP probe/scratch/decode with two exact RGB pixels,8x8 scaling and explicit scratch free",
+            "Exact SDK UTF8 validation/copy",
+            "Original software display begin/rect/text/blit/present; actual screenshot colors verified",
+            "Real keyboard q via QMP, readKeyCodepoint in the host"
+          ],
+          "result": "C71 result=000 close=done",
+          "service_after": {
+            "failed": 0,
+            "open_handles": 0,
+            "busy": 0,
+            "timeouts": 0,
+            "cancels": 0
+          },
+          "limit": "Current software screen only. UTF8 validity is not glyph coverage or shaping. No hardware/performance/productive Desktop port claim.",
+          "qemu_exit": 0
+        }
+      },
+      "test_sources": [
+        {
+          "path": "Repositories/SDK/Tests/Build/DesktopHost/C/module.R4MF.template",
+          "sha256": "596184a50958dda9f31afb450441aee4091d4dfde807799d98d9a4e9ddce36c2",
+          "bytes": 753
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/DesktopHost/C/src/main.c",
+          "sha256": "0dd14f97384f3ae1bccacd43bb2992aa7ae10dc33237fa42380da331ef329d03",
+          "bytes": 4268
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/DesktopHost/README.txt",
+          "sha256": "7704d0d07f1adbcbc0bb5b8c8a35bb69a11ea02d33047a2c7f2265418f06acc4",
+          "bytes": 2398
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/DesktopHost/Rust/Cargo.lock",
+          "sha256": "5652c5564f805ee701d0f8b08a47d238702e62a7afa4c8f931f805a1bedd5b05",
+          "bytes": 633
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/DesktopHost/Rust/Cargo.toml.template",
+          "sha256": "1894bdc86d40f4bb73a0973dc12738ae867caefd070671d7215d4a79c35d9ce5",
+          "bytes": 438
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/DesktopHost/Rust/module.R4MF.template",
+          "sha256": "deaf3865f7a53179a6e5e79f9c5797c50aba2f7713e069e4ab48419fe48407c1",
+          "bytes": 606
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/DesktopHost/Rust/src/main.rs",
+          "sha256": "e93e023563ce0cb3f86f7de0c5fbc82babe3bb4fdde4701e62348943be292a30",
+          "bytes": 4138
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/DesktopHost/Shared/pixels.h",
+          "sha256": "cc9d6c6507582d778260f81e691d47712836c414afc2df04dff5aa00bf07b841",
+          "bytes": 206
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/DesktopHost/Shared/two-pixels.bmp",
+          "sha256": "99ea9f7424a0b75f49d66e7842c0bebb90c12a60641ba163bb124ca54fd59254",
+          "bytes": 62
+        },
+        {
+          "path": "Repositories/SDK/Tools/Test-DesktopHostBuild.ps1",
+          "sha256": "cfb24ca9b0697ba5ad8885b9cd4652458f3e7df5ddd5b64512c78441e0107e0c",
+          "bytes": 4087
+        }
+      ],
+      "current_desktop_manifest": {
+        "path": "Repositories/Apps/Desktop/module.R4MF",
+        "sha256": "d24aefbb88e303866d46a84c7cad3bca4140ca07b652aa4bc00d7e82272f0962",
+        "bytes": 1379
+      },
+      "reused_evidence": [
+        "source_inventory",
+        "central_abi_interop",
+        "rust_qualified_classes",
+        "local_contract_and_baseline",
+        "storage_current_53",
+        "resource_current_54",
+        "service_network_current_55",
+        "gui_current_56",
+        "graphics_current_57",
+        "platform_current_58",
+        "language_libraries_current_59",
+        "language_libraries_current_60",
+        "data_current_61",
+        "library_projection_current_61",
+        "web_current_62",
+        "transport_current_63",
+        "update_current_64",
+        "subsystems_current_65",
+        "r4l_providers_current_66",
+        "drivers_current_67",
+        "protocols_current_68",
+        "lowlevel_current_69",
+        "tooling_templates_current_70"
+      ],
+      "open": [
+        "Explicit real Windows host execution required by71 task2; no Windows host/credentials supplied. Prepared Windows PE tools, Linux execution and byte-identical Linux relocations are not Windows proof.",
+        "72 final package publication and ongoing API drift check follow only after actual71 acceptance or explicit user change of its scope."
+      ],
+      "performance": "Fixtures, host tooling and metadata/docs only; no productive Kernel/SDK/runtime body changed. No STANDARD or full image release required.",
+      "versions": "71 is not complete: Product70/SDK89 remain; no false release-version advance. Full/Slim42 unchanged.",
+      "limits": [
+        "Software framebuffer/local KVM4 only; no native GPU, hardware, direct Rust FP/SIMD or performance claim.",
+        "The small shell proves the APIs/ownership needed by a desktop. It is not the productive Rust desktop or its whole compositor/window manager.",
+        "UTF8 buffer checks do not promise glyph coverage, shaping or display width."
+      ],
+      "hurdles": [
+        "The existing56 host consumer only exercised refusal while R4DESK owned WINSVC;71 uses the real shell host claim.",
+        "A wrong status check in the new C fixture marker was corrected after actual drawing; only C rebuilt/repeated. Existing SDK runtime unchanged."
+      ],
+      "private_image": "Both final guests shut down normally, actual QEMU exits0; original private CONFIG restored with exact offline readback. Original Full/Slim images never modified."
     }
   },
   "wave_bindings": [
@@ -51513,5 +53509,13 @@
     }
   ],
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
-  "open_acceptance": "Hoehere SDK-Fassaden, lokale Librarybindings, Rollen und Windows-/Linux-Gesamtabnahme49-72 bleiben verbindlich. Vollstaendige SDK-Sprachparitaet ist durch die qualifizierte zentrale Rohprojektion allein nicht erreicht."
+  "open_acceptance": "71: explicit real Windows host execution remains open; Linux standalone builds and the documented small real C/Rust desktop-host scope are qualified.72: final publication and ongoing drift guard remain separate. Existing native-compiler, hardware, SIMD/performance and exact owner lifecycle limits remain, not functional fallback work.",
+  "current_review": {
+    "performed_in": "0.86.71",
+    "sdk": "0.64.89",
+    "contract": "0.64.44",
+    "libraries": "0.64.27",
+    "evidence": "independent_desktop_current_71",
+    "scope": "Current180 public root exports;222 historical source identities rechecked with206unchanged/16existing owner deltas;24local contracts/baselines unchanged. Historical snapshot47 retained explicitly. Full71 acceptance remains open for Windows."
+  }
 }
