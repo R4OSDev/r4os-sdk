@@ -16,7 +16,15 @@ pub const input = @import("input_events.zig");
 pub const mode = @import("window_mode.zig");
 pub const session = @import("gui_session_support.zig");
 pub const language = @import("gui_language.zig");
-pub const modules = .{ gui, app_gui, shapes, chart, clipboard, input, mode, language };
+pub const gfx_buffers = @import("gfx_buffers.zig");
+pub const gfx_outputs = @import("gfx_outputs.zig");
+pub const gfx_queue = @import("gfx_queue.zig");
+pub const gfx_telemetry = @import("gfx_telemetry.zig");
+pub const graphics_status = @import("graphics_status.zig");
+pub const gfx = @import("graphics_support.zig");
+pub const dev = @import("r4dev.zig");
+// One typed transport for visual owners, never a second renderer.
+pub const modules = .{ gui, app_gui, shapes, chart, clipboard, input, mode, language, gfx_buffers, gfx_outputs, gfx_queue, gfx_telemetry, graphics_status };
 pub const Function = struct { owner: type, name: []const u8 };
 
 fn contains(comptime list: []const type, comptime T: type) bool {
@@ -24,7 +32,7 @@ fn contains(comptime list: []const type, comptime T: type) bool {
     return false;
 }
 pub fn context(comptime T: type) bool {
-    return T == program.Context or T == sys.Context or T == desk.Context or T == draw.Context or T == session.Session;
+    return T == program.Context or T == sys.Context or T == desk.Context or T == draw.Context or T == session.Session or T == gfx.Context or T == dev.Context or T == gfx_buffers.Context or T == gfx_outputs.Context or T == gfx_queue.Context;
 }
 pub fn canonical(comptime T: type) bool {
     const full = @typeName(T);
@@ -63,8 +71,8 @@ fn walkFunction(comptime F: type, comptime list: *[]const type) void {
     if (f.return_type.? != type) walk(f.return_type.?, list);
 }
 fn exportedMethod(comptime T: type, comptime name: []const u8) bool {
-    if (T == program.Context or T == sys.Context) return false;
-    if (T == draw.Context) return std.mem.startsWith(u8, name, "gui") or std.mem.startsWith(u8, name, "supportsGui") or std.mem.startsWith(u8, name, "font");
+    if (T == program.Context or T == sys.Context or T == dev.Context or T == gfx.Context) return false;
+    if (T == draw.Context) return !std.mem.eql(u8, name, "init") and !std.mem.eql(u8, name, "fromProgram") and !std.mem.eql(u8, name, "hasFn");
     if (T == desk.Context) return !std.mem.eql(u8, name, "init") and !std.mem.eql(u8, name, "fromProgram") and !std.mem.eql(u8, name, "hasFn");
     return true;
 }
@@ -81,6 +89,7 @@ pub const types = blk: {
     walk(desk.Context, &result);
     walk(draw.Context, &result);
     walk(session.Session, &result);
+    walk(gfx.Context, &result);
     var index: usize = 0;
     while (index < result.len) : (index += 1) {
         const T = result[index];

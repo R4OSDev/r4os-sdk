@@ -1498,6 +1498,24 @@ fn replayCaptured(width: usize, height: usize, output: []u32) void {
 
 // Language interop reuses the original callbacks, capture and pixel oracle.
 // These exports belong to the test object, never the SDK product runtime.
+pub export fn sdk_gfx_oracle_tables(sys:*r4os.abi.R4XStartR4Sys,desk:*r4os.abi.R4XStartR4Desk,draw:*r4os.abi.R4XStartR4Draw) callconv(.c) void {
+    sdk_gui_oracle_tables(sys,desk,draw);
+    draw.gfx_buffer_map=@intFromPtr(&gfxMapProbe);
+    draw.gfx_buffer_map_persistent=@intFromPtr(&gfxMapProbe);
+    draw.gfx_fence_wait=@intFromPtr(&gfxWaitProbe);
+    draw.gfx_queue_submit_native=@intFromPtr(&nativeSubmitProbe);
+    draw.gfx_queue_backend_info=@intFromPtr(&gfxBackendInfoProbe);
+    draw.gfx_atomic_test=@intFromPtr(&outputTestProbe);
+    draw.gfx_atomic_submit=@intFromPtr(&modeSubmitProbe);
+    draw.gfx_atomic_status=@intFromPtr(&modeStatusProbe);
+    draw.gfx_atomic_resolve=@intFromPtr(&modeResolveProbe);
+    draw.gfx_memory_budget=@intFromPtr(&budgetProbe);
+    draw.gfx_telemetry=@intFromPtr(&telemetryProbe);
+    draw.display_cursor_info=@intFromPtr(&cursorInfoProbe);
+    draw.display_cursor_status=@intFromPtr(&cursorStatusProbe);
+    draw.display_cursor_submit=@intFromPtr(&cursorSubmitProbe);
+    budget_probe_rc=1;
+}
 pub export fn sdk_gui_oracle_tables(sys:*r4os.abi.R4XStartR4Sys,desk:*r4os.abi.R4XStartR4Desk,draw:*r4os.abi.R4XStartR4Draw) callconv(.c) void {
     var tables=makeTables(true);enableFrameContract(&tables[2]);
     sys.*=tables[0];desk.*=tables[1];draw.*=tables[2];

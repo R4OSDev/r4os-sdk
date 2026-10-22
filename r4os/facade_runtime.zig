@@ -5,4 +5,5 @@ comptime {
     _ = @import("generated/net_facade.zig");
     _ = @import("net_request_runtime.zig");
     _ = @import("gui_value_bridge.zig");
+    _ = @import("graphics_runtime.zig");
 }

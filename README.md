@@ -55,6 +55,13 @@ sessions, exclusive paint loans, typed events and borrowed Unicode editors.
 Host admission does not require an app window; exact process/epoch bindings
 and explicit service reconnection remain separate from Desktop startup policy.
 Other facade groups remain in their respective parity waves.
+SDK0.64.76 extends that compiler-typed boundary to all public Zig graphics
+owners: buffers/imports/maps, outputs/modes, queues/fences, cursor/present,
+telemetry and coherent graphics status. Rust `graphics` provides a separate
+pinned context without a window or host claim. Resource close and native
+completion remain explicit; no drop/submit/copy implies scanout visibility.
+Original native oracles and a real Rust/C KVM4 offscreen CPU-copy consumer
+qualify this group. Native GPU/hardware and higher R4GFX helpers remain separate.
 SDK0.64.67 binds Contract0.64.42's complete technical C projection. Driver,
 protocol, DMA/USB and service records now come from the canonical Contract;
 the three manually duplicated network reply records are removed from the SDK.

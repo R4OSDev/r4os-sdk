@@ -22,6 +22,13 @@ pub fn name(comptime T: type) []const u8 {
         if (T == s.sys.Context) break :blk "R4SdkGuiSystemContext";
         if (T == s.desk.Context) break :blk "R4SdkGuiDesktopContext";
         if (T == s.draw.Context) break :blk "R4SdkGuiDrawContext";
+        if (T == s.dev.Context) break :blk "R4SdkGfxDeviceContext";
+        if (T == s.gfx.Context) break :blk "R4SdkGfxContext";
+        if (T == s.gfx_buffers) break :blk "R4SdkGfxBuffers";
+        if (T == s.gfx_outputs) break :blk "R4SdkGfxOutputs";
+        if (T == s.gfx_queue) break :blk "R4SdkGfxQueue";
+        if (T == s.gfx_telemetry) break :blk "R4SdkGfxTelemetry";
+        if (T == s.graphics_status) break :blk "R4SdkGraphicsStatus";
         if (T == s.session.Session) break :blk "R4SdkGuiSession";
         if (T == s.session.EventKind) break :blk "R4SdkGuiEventKind";
         if (T == s.gui.TextField([]u8)) break :blk "R4SdkGuiTextField";
@@ -34,7 +41,7 @@ pub fn name(comptime T: type) []const u8 {
             break :blk if (std.mem.startsWith(u8, last, "R4")) last else "R4" ++ last;
         }
         const prefixes = .{ .{ "gui.", "R4SdkGui" }, .{ "app_gui.", "R4SdkGui" }, .{ "gui_shapes.", "R4SdkGuiShape" }, .{ "chart.", "R4SdkGuiChart" }, .{ "clipboard.", "R4SdkGuiClipboard" }, .{ "window_mode.", "R4SdkGuiWindowMode" }, .{ "input_events.", "R4SdkGuiInput" } };
-        for (prefixes) |entry| if (std.mem.startsWith(u8, full, entry[0])) break :blk entry[1] ++ clean(full[entry[0].len..]);
+        for (prefixes ++ .{ .{ "gfx_buffers.", "R4SdkGfxBuffers" }, .{ "gfx_outputs.", "R4SdkGfxOutputs" }, .{ "gfx_queue.", "R4SdkGfxQueue" }, .{ "gfx_telemetry.", "R4SdkGfxTelemetry" }, .{ "graphics_status.", "R4SdkGraphicsStatus" } }) |entry| if (std.mem.startsWith(u8, full, entry[0])) break :blk entry[1] ++ clean(full[entry[0].len..]);
         break :blk std.fmt.comptimePrint("R4SdkGuiType{d}", .{s.typeId(T)});
     };
 }
@@ -123,6 +130,7 @@ pub fn emit(w: *std.Io.Writer) !void {
     }
     try w.print("#define R4SdkGui_ABI_FINGERPRINT UINT64_C({d})\nint32_t R4SdkGuiVerifyAbi(uint64_t);\n", .{s.fingerprint});
     inline for (s.modules) |M| try constants(w, M);
+    try w.writeAll("/* Offscreen graphics admission is independent of GUI windows/host claims.\n * Keep this context pinned while any borrowed native subcontext is used.\n * Resources require explicit native close/unmap/fence/reset acknowledgements. */\nint32_t R4SdkGfxOpenNative(uint64_t,R4SdkGfxContext *,const R4XStartContext *);\nstatic inline int32_t R4SdkGfxOpen(R4SdkGfxContext *s,const R4XStartContext *ctx) { return R4SdkGfxOpenNative(R4SdkGui_ABI_FINGERPRINT,s,ctx); }\nR4SdkGuiDrawContext *R4SdkGfxDraw(R4SdkGfxContext *);\nR4SdkGfxDeviceContext *R4SdkGfxDevice(R4SdkGfxContext *);\n");
     try constants(w, s.session.EventKind);
     inline for (s.types) |T| if (comptime !s.canonical(T) and !s.context(T)) try constants(w, T);
     try w.writeAll("/* Session storage must stay at this address until Close. Open initializes\n * caller-owned timers. role=0 is a hosted app, role=1 an independent host.\n * HostReset closes only the endpoint; the WindowService binding remains\n * tied to the exact live process. Reopening is explicit, without retries. */\ntypedef struct R4SdkGuiEvent {\n");

@@ -146,7 +146,7 @@ results in Docs/API/RustContractBindings.txt. Host memory bounds/overlap cases
 and source/error/tool cases are reusable SDK tests; no broad image/hardware
 matrix or extra normal STANDARD follows from host/fixture-only work.
 
-Shared GUI owners (SDK0.64.75)
+Shared GUI owners (since SDK0.64.75)
 ------------------------------
 gui::Session uses pinned SessionStorage and caller-owned TimerStorage; no
 allocator is required. Session::open(Role::Window) uses the regular host-bound
@@ -366,3 +366,32 @@ R4OS Rust builds need a compiler/toolchain port; R4CC implements the native C
 subset and is not a Rust compiler. Stable machine reason codes live in the
 shared Decision, not in an IDE-maintained matrix. No new driver/protocol/library/
 subsystem implementation or hardware claim is included in this SDK delivery.
+
+Graphics owners (SDK0.64.76)
+---------------------------
+Use graphics::Graphics::open(Pin<&mut GraphicsStorage>, &app) without a GUI
+Session or host claim. The context is local and not Send/Sync. Keep its pinned
+storage and App alive through every borrowed buffer/output/queue context.
+Buffers exposes descriptors, imports, mapping receipts, budgets and explicit
+release/unmap. Queues preserves complete fence status, including Pending,
+Retained, device-active and resources-held; positive transport is no terminal
+or visibility receipt. Submit requires an explicit future monotonic deadline.
+No Drop acknowledges GPU completion, reset, resource retirement or Unmap.
+
+No safe slice is created from a native mapping address. Raw CPU access,
+async submit, native/list payloads and output ownership follow their exact
+unsafe lifetime/alias/cache contracts. graphics::raw exposes all compiler-
+typed Zig graphics helper calls, including output modes/color/power, cursor,
+virtual/native allocation and render lists, with the shared private fingerprint.
+For instance, obtain native_draw only while Graphics remains live, then derive
+the original buffers/outputs/queues context using its generated typed function.
+Coherent Snapshot and telemetry_line reuse the original Zig presentation code.
+R4DEV is optional for offscreen admission; status stays unavailable if absent.
+
+Test-RustGui.ps1 -Graphics groups the original graphics/descriptor/retire/
+telemetry cases with C/Rust release calls and the existing GUI regression.
+The IMAGE_SCOPE=none RustGraphics fixture uses real KVM4 buffer imports,
+C mapping/fill and a Rust CPU-copy queue with original 4x3 pixels, explicit
+fence/resource release and stale-handle confirmation. This qualifies software
+Offscreen work, not native GPU, scanout, physical cursor/EDID, Windows or a
+Rust floating-point/SIMD ABI. General R4GFX helpers remain their library wave.

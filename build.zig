@@ -131,6 +131,8 @@ pub fn build(b: *std.Build) void {
     gui_cases.addImport("r4os", host_r4os);
     const gui_parity = b.addRunArtifact(b.addTest(.{ .root_module = gui_cases, .filters = &.{ "raw GUI events", "command clipboard timer", "transactional paint", "buffered Canvas" } }));
     b.step("gui-parity-test", "Existing GUI events, frame/immutable generation, pixel and failure oracles").dependOn(&gui_parity.step);
+    const graphics_parity = b.addRunArtifact(b.addTest(.{ .root_module = gui_cases, .filters = &.{ "graphics buffer optional tails", "old display and driver prefixes" } }));
+    b.step("graphics-parity-test", "Existing graphics descriptors, generations, retire, cursor and telemetry cases").dependOn(&graphics_parity.step);
     const storage_cases = b.createModule(.{ .root_source_file = b.path("Tests/Conformance/StorageFacadePrototype05823.zig"), .target = b.graph.host, .optimize = .Debug });
     storage_cases.addImport("r4os", host_r4os);
     const storage_parity = b.addRunArtifact(b.addTest(.{ .root_module = storage_cases }));
