@@ -3,7 +3,9 @@ param(
     [Parameter(Mandatory)][string]$ContractRoot,
     [Parameter(Mandatory)][string]$ToolsRoot,
     [string]$SdkRoot='', [string]$InstallRoot='', [string]$CacheRoot='',
-    [string]$OutputRoot='', [switch]$Technical
+    [string]$OutputRoot='', [string[]]$DependencyRoot=@(), [string]$DependencyRootsJson='',
+    [string]$Features='', [switch]$NoDefaultFeatures, [string]$ZigRoot='',
+    [switch]$Technical
 )
 $ErrorActionPreference='Stop';Set-StrictMode -Version Latest
 $SdkRoot=if($SdkRoot){[IO.Path]::GetFullPath($SdkRoot)}else{[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))}
@@ -63,6 +65,7 @@ function Input([string]$Path,[string]$Root,[string]$Label){
     $item=Get-Item -LiteralPath $Path -Force
     return [ordered]@{owner=$Label;path=[IO.Path]::GetRelativePath($Root,$Path).Replace('\','/');sha256=Hash $Path;bytes=$item.Length}
 }
+. (Join-Path $PSScriptRoot 'RustBuildInputs.ps1')
 try{
     if($OutputRoot -eq $ProjectRoot -or (Below $ProjectRoot $OutputRoot)){throw 'Output must not contain the project root.'}
     [IO.Directory]::CreateDirectory($OutputRoot)|Out-Null
@@ -111,7 +114,25 @@ try{
     if(!$rust.host_build_qualified -and !$Technical){throw 'RustHostBuilderNotYetQualified'}
     $codegenPath=Join-Path $SdkRoot 'r4os/rust_module_profile.json'
     $codegen=Get-Content -Raw -LiteralPath $codegenPath|ConvertFrom-Json -AsHashtable
-    if($codegen.schema -ne 1 -or $codegen.id -cne $rust.profile -or $codegen.target -cne $description.kernel_target){throw 'RustModuleProfileMismatch'}
+    if($rust.schema -ne 2 -or $codegen.schema -ne 2 -or $codegen.id -cne $rust.profile -or $codegen.target -cne $description.kernel_target){throw 'RustModuleProfileMismatch'}
+    if($DependencyRootsJson){
+        $decoded=ConvertFrom-Json -InputObject $DependencyRootsJson -NoEnumerate
+        if($decoded -isnot [array] -or @($decoded|Where-Object {$_ -isnot [string]}).Count){throw 'RustDependencyRootsJsonInvalid'}
+        $DependencyRoot+=@($decoded)
+    }
+    $inputRoots=@(@{owner='project';path=$ProjectRoot},@{owner='sdk';path=$SdkRoot},@{owner='contract';path=$ContractRoot})
+    foreach($dependency in $DependencyRoot){
+        $path=[IO.Path]::GetFullPath($dependency)
+        if(!(Test-Path -LiteralPath $path -PathType Container)){throw 'RustDependencyRootMissing'}
+        if(@($inputRoots|Where-Object {SamePath $_.path $path}).Count){throw 'RustDuplicateDependencyRoot'}
+        $inputRoots+=@{owner=('dependency'+($inputRoots.Count-3));path=$path}
+    }
+    $selection=@()
+    if($Features){
+        if($Features -cnotmatch '^[A-Za-z0-9_+./-]+(,[A-Za-z0-9_+./-]+)*$'){throw 'RustFeatureSelectionInvalid'}
+        $selection+=@('--features',$Features)
+    }
+    if($NoDefaultFeatures){$selection+='--no-default-features'}
     foreach($name in @('RUSTFLAGS','CARGO_ENCODED_RUSTFLAGS','RUSTC','RUSTC_WRAPPER','RUSTC_WORKSPACE_WRAPPER','RUSTDOC','RUSTC_BOOTSTRAP')){
         if([Environment]::GetEnvironmentVariable($name)){throw "RustEnvironmentOverrideForbidden: $name"}
     }
@@ -132,54 +153,65 @@ try{
     $mapping=@{'-msse2'='sse2';'-mavx2'='avx2';'-maes'='aes';'-mpclmul'='pclmulqdq'}
     $features=@(foreach($requirement in $cpu.requirements){if($requirement.ContainsKey('c_flag')){if(!$mapping.ContainsKey($requirement.c_flag)){throw 'Unmapped canonical CPU requirement'};'+'+$mapping[$requirement.c_flag]}})
     $flags=@('-C',('code-model='+$codegen.code_model),'-C',('relocation-model='+$codegen.relocation_model),'-C','no-redzone=yes','-C',('target-cpu='+$cpu.cpu_model.Replace('_','-')),'-C',('target-feature='+($features -join ',')),'-C',('lto='+$codegen.lto),'-C','embed-bitcode=yes','-C',('codegen-units='+$codegen.codegen_units),'-C',('panic='+$codegen.panic))
-    foreach($entry in @(@($ProjectRoot,'/r4os/project'),@($SdkRoot,'/r4os/sdk'),@($ContractRoot,'/r4os/contract'),@($CacheRoot,'/r4os/cache'),@($InstallRoot,'/r4os/tools'),@($OutputRoot,'/r4os/output'))){$flags+=('--remap-path-prefix='+$entry[0]+'='+$entry[1])}
+    $remaps=@($inputRoots)+@(@{owner='cache';path=$CacheRoot},@{owner='tools';path=$InstallRoot},@{owner='output';path=$OutputRoot})
+    foreach($root in $remaps|Sort-Object {$_.path.Length}){$flags+=('--remap-path-prefix='+$root.path+'=/r4os/'+$root.owner)}
     $envForCargo=@{CARGO_HOME=$cargoBuildHome;RUSTUP_HOME=$description.rustup_home;RUSTUP_TOOLCHAIN=([IO.Path]::GetFileName($description.toolchain));RUSTUP_AUTO_INSTALL='0';RUSTC=$compiler;CARGO_TARGET_DIR=$targetDir;CARGO_ENCODED_RUSTFLAGS=($flags -join [char]31);RUSTFLAGS=$null;R4OS_STARTUP_INFO_FILE=$startupFile;R4OS_MODULE_NAME=$facts.name;CARGO_INCREMENTAL='0';CARGO_PROFILE_RELEASE_OPT_LEVEL=$codegen.optimization[$facts.optimization];CARGO_PROFILE_RELEASE_PANIC='abort';CARGO_PROFILE_RELEASE_OVERFLOW_CHECKS='true';CARGO_PROFILE_RELEASE_DEBUG_ASSERTIONS='false';CARGO_PROFILE_RELEASE_DEBUG='0';CARGO_PROFILE_RELEASE_STRIP='none';CARGO_TERM_COLOR='never'}
     # Selected path crates satisfy these exact patched registry identities.
-    # No registry/git download, ambient cargo config or custom build step.
+    # Other path/vendor crates are selected by the caller's Cargo manifests
+    # and explicit roots. No registry/git download or ambient build step.
     $patches=@('--config',('patch.crates-io.r4os-contract.path='+('"'+(Join-Path $ContractRoot 'Generated/SDK/Rust').Replace('\','/')+'"')),'--config',('patch.crates-io.r4os-sdk.path='+('"'+(Join-Path $SdkRoot 'Rust').Replace('\','/')+'"')))
     $phase='cargo-metadata'
-    $metadata=(Invoke-Tool $cargo (@('metadata','--format-version','1','--offline','--locked','--manifest-path',(Join-Path $ProjectRoot 'Cargo.toml'))+$patches) $work $envForCargo)|ConvertFrom-Json -AsHashtable
+    $metadata=(Invoke-Tool $cargo (@('metadata','--format-version','1','--offline','--locked','--filter-platform',$codegen.target,'--manifest-path',(Join-Path $ProjectRoot 'Cargo.toml'))+$selection+$patches) $work $envForCargo)|ConvertFrom-Json -AsHashtable
     if(!(SamePath $metadata.workspace_root $ProjectRoot) -or $metadata.workspace_members.Count -ne 1){throw 'RustCargoAmbiguousWorkspace'}
     $package=@($metadata.packages|Where-Object id -CEQ $metadata.workspace_members[0]);if($package.Count -ne 1){throw 'RustCargoAmbiguousPackage'};$package=$package[0]
+    if($null -ne $package.metadata -and $package.metadata.ContainsKey('r4os')){throw 'RustCargoModuleMetadataConflict'}
     $source=Canonical $ProjectRoot $rust.source
-    if($package.name -cne $rust.cargo_package -or $package.version -cne $rust.cargo_version -or $package.targets.Count -ne 1){throw 'RustCargoSelectionMismatch'}
+    if(!(SamePath $package.manifest_path (Join-Path $ProjectRoot 'Cargo.toml')) -or $package.targets.Count -ne 1){throw 'RustCargoSelectionMismatch'}
     $target=$package.targets[0]
     if($target.kind.Count -ne 1 -or $target.kind[0] -cne 'staticlib' -or $target.crate_types.Count -ne 1 -or $target.crate_types[0] -cne 'staticlib' -or !(SamePath $target.src_path $source) -or $target.edition -cne '2024'){throw 'RustCargoTargetMismatch'}
-    $allowed=@{$ProjectRoot=$package.name;(Join-Path $SdkRoot 'Rust')='r4os-sdk';(Join-Path $ContractRoot 'Generated/SDK/Rust')='r4os-contract'}
-    $sdkFeatureNames=@()
+    $sdkFeatureNames=@();$crateInputs=@();$crateGraph=@()
     foreach($dep in $metadata.packages){
         $directory=[IO.Path]::GetDirectoryName([IO.Path]::GetFullPath($dep.manifest_path))
-        if(!$allowed.ContainsKey($directory) -or $allowed[$directory] -cne $dep.name -or $null -ne $dep.source){throw 'RustCargoDependencyOutsideSelectedRoots'}
-        if($directory -cne $ProjectRoot -and $dep.version -cne '0.1.0'){throw 'RustCargoBindingVersionMismatch'}
-        foreach($t in $dep.targets){if($t.kind -contains 'custom-build' -or $t.kind -contains 'proc-macro'){throw 'RustCargoHostBuildStepForbidden'}}
-        foreach($d in $dep.dependencies){
-            $sdkFeatures=$d.name -ceq 'r4os-sdk' -and @($d.features|Where-Object {$_ -cne 'alloc'}).Count -eq 0
-            if($null -ne $d.kind -or $d.rename -or (!$sdkFeatures -and $d.features.Count -ne 0) -or $d.optional){throw 'RustCargoDependencyExtensionUnsupported'}
+        $root=Find-InputOwner $directory $inputRoots
+        if($null -ne $dep.source){throw 'RustCargoRequiresExplicitLocalSources'}
+        Assert-NoCargoConfig $directory
+        foreach($binding in @(@('r4os-sdk',(Join-Path $SdkRoot 'Rust'),$rustToolProfile.sdk.rust_crate.version),@('r4os-contract',(Join-Path $ContractRoot 'Generated/SDK/Rust'),$rustToolProfile.contract.binding_crate.version))){
+            if($dep.name -ceq $binding[0] -and (!(SamePath $directory $binding[1]) -or $dep.version -cne $binding[2])){throw 'RustCargoBindingIdentityMismatch'}
         }
+        foreach($t in $dep.targets){if($t.kind -contains 'custom-build' -or $t.kind -contains 'proc-macro'){throw 'RustCargoHostBuildStepForbidden'}}
+        $crateInputs+=Observe-Input $dep.manifest_path $inputRoots
+        $resolvedFeatures=@();$resolvedDependencies=@();$edges=@();$resolved=$false
         foreach($node in $metadata.resolve.nodes){
-            if($node.id -ceq $dep.id -and $node.features.Count){
-                if($dep.name -cne 'r4os-sdk' -or @($node.features|Where-Object {$_ -cnotin @('default','alloc')}).Count){throw 'RustCargoFeatureUnsupported'}
-                $sdkFeatureNames=@($node.features)
+            if($node.id -ceq $dep.id){
+                $resolvedFeatures=@($node.features);$resolvedDependencies=@($node.dependencies)
+                $edges=@($node.deps);$resolved=$true
+                if($dep.name -ceq 'r4os-sdk'){$sdkFeatureNames=$resolvedFeatures}
             }
         }
+        $crateGraph+=@{id=$dep.id;name=$dep.name;version=$dep.version;owner=$root.owner;manifest=[IO.Path]::GetRelativePath($root.path,$dep.manifest_path).Replace('\','/');resolved=$resolved;features=$resolvedFeatures;dependencies=$resolvedDependencies;dependency_edges=$edges}
     }
+    $phase='compile-c'
+    $native=Build-RustCCompanions $rust $cpu $facts.optimization $work $inputRoots
     $phase='compile'
-    $messages=Invoke-Tool $cargo (@('build','--release','--lib','--locked','--offline','--target',$codegen.target,'--manifest-path',(Join-Path $ProjectRoot 'Cargo.toml'),'--message-format=json-render-diagnostics')+$patches) $work $envForCargo (Join-Path $work 'cargo')
+    $messages=Invoke-Tool $cargo (@('build','--release','--lib','--locked','--offline','--target',$codegen.target,'--manifest-path',(Join-Path $ProjectRoot 'Cargo.toml'),'--message-format=json-render-diagnostics')+$selection+$patches) $work $envForCargo (Join-Path $work 'cargo')
     $archive=''
     foreach($line in $messages.Split("`n")){
         if(!$line.Trim()){continue};$message=$line|ConvertFrom-Json -AsHashtable
-        if($message.reason -ceq 'compiler-artifact' -and $message.package_id -ceq $package.id){foreach($file in $message.filenames){if($file.EndsWith('.a')){if($archive){throw 'Ambiguous Rust archive'};$archive=$file}}}
+        if($message.reason -ceq 'compiler-artifact'){
+            if($message.profile.opt_level -cne $codegen.optimization[$facts.optimization] -or $message.profile.debug_assertions -or !$message.profile.overflow_checks -or $message.profile.test){throw 'RustCargoCompiledProfileMismatch'}
+            if($message.package_id -ceq $package.id){foreach($file in $message.filenames){if($file.EndsWith('.a')){if($archive){throw 'Ambiguous Rust archive'};$archive=$file}}}
+        }
     }
     if(!$archive -or !(Test-Path -LiteralPath $archive -PathType Leaf)){throw 'RustArchiveMissing'}
     $phase='link'
     $linked=Join-Path $work 'module.elf';$script=Canonical $SdkRoot $codegen.linker_script
-    Invoke-Tool $description.linker @('-flavor','gnu','--emit-relocs','--gc-sections','--no-undefined','--strip-debug','--entry','R4XStart','-T',$script,'-o',$linked,$archive,$heapRuntime) $work|Out-Null
+    Invoke-Tool $description.linker (@('-flavor','gnu','--emit-relocs','--gc-sections','--no-undefined','--strip-debug','--entry','R4XStart','-T',$script,'-o',$linked,$archive,$heapRuntime)+$native.objects) $work|Out-Null
     $phase='package'
     $candidate=Join-Path $work 'module.R4X'
     $packArgs=@('--r4m','--kind','r4x','--elf',$linked,'--output',$candidate,'--module-name',$facts.name,'--app-class',$facts.app_class,'--export','R4XStart:@R4XStart:1')
     foreach($import in $facts.imports){$packArgs+=@('--import',$import)}
     foreach($meta in $facts.metadata){$packArgs+=@('--meta',$meta)}
-    $declared=@(Input $manifest $ProjectRoot 'project';Input (Join-Path $ProjectRoot 'Cargo.toml') $ProjectRoot 'project';Input (Join-Path $ProjectRoot 'Cargo.lock') $ProjectRoot 'project')
+    $declared=@(Input $manifest $ProjectRoot 'project';Input (Join-Path $ProjectRoot 'Cargo.lock') $ProjectRoot 'project')+$crateInputs
     foreach($icon in $rust.icons){$path=Canonical $ProjectRoot $icon;$packArgs+=@('--icon',$path);$declared+=Input $path $ProjectRoot 'project'}
     if($rust.help){$path=Canonical $ProjectRoot $rust.help;$packArgs+=@('--help-file',$path);$declared+=Input $path $ProjectRoot 'project'}
     foreach($resource in $rust.resources){$path=Canonical $ProjectRoot $resource.path;$packArgs+=@('--resource',$resource.name,$path);$declared+=Input $path $ProjectRoot 'project'}
@@ -187,23 +219,19 @@ try{
     $inspection=Invoke-Tool $packager @('--inspect',$candidate) $work -Diagnostics
     $phase='dep-info'
     $depInfo=[IO.Path]::ChangeExtension($archive,'.d')
-    $depText=[IO.File]::ReadAllText($depInfo)
-    $line=@($depText.Split("`n")|Where-Object {$_ -match ': '})[0]
-    $rhs=$line.Substring($line.IndexOf(': ')+2);$paths=[Collections.Generic.List[string]]::new();$token=[Text.StringBuilder]::new();$escaped=$false
-    foreach($c in $rhs.ToCharArray()){
-        if($escaped){[void]$token.Append($c);$escaped=$false;continue}
-        if($c -eq '\'){$escaped=$true;continue}
-        if([char]::IsWhiteSpace($c)){if($token.Length){$paths.Add($token.ToString());[void]$token.Clear()}}else{[void]$token.Append($c)}
-    }
-    if($token.Length){$paths.Add($token.ToString())}
-    $observed=@(foreach($pathText in ($paths|Sort-Object -Unique)){
+    $observed=@(foreach($pathText in (Read-CompilerDependencies $depInfo|Sort-Object -Unique)){
         $path=[IO.Path]::GetFullPath($pathText)
-        if(SamePath $path $startupFile){Input $path $OutputRoot 'generated'}elseif(Below $path $ProjectRoot){Input $path $ProjectRoot 'project'}elseif(Below $path $SdkRoot){Input $path $SdkRoot 'sdk'}elseif(Below $path $ContractRoot){Input $path $ContractRoot 'contract'}else{throw 'RustCompilerDependencyOutsideSelectedRoots'}
-    })
+        if(SamePath $path $startupFile){Input $path $OutputRoot 'generated'}else{Observe-Input $path $inputRoots}
+    })+@($native.inputs)
     if(!@($observed|Where-Object {$_.owner -ceq 'project' -and $_.path -ceq $rust.source}).Count){throw 'RustCompilerSourceNotObserved'}
     if(!@($observed|Where-Object owner -CEQ 'generated').Count){throw 'RustCompilerStartupInfoNotObserved'}
     $result=[ordered]@{schema=1;profile=$rust.profile;status='success';technical=[bool]$Technical;module=@{name=$facts.name;version=$rust.module_version;kind='R4X';app_class=$facts.app_class;target=$facts.target;imports=$facts.imports};cargo=@{name=$package.name;version=$package.version;source=$rust.source;target=$codegen.target;lock_sha256=Hash (Join-Path $ProjectRoot 'Cargo.lock')};sdk=$rustToolProfile.sdk;contract=$rustToolProfile.contract;tools=@{profile_sha256=Hash $rustToolProfilePath;pin_sha256=$description.pin_sha256;rust=$description.rust_version;cargo=$description.cargo_version;linker_sha256=$description.linker_sha256;packager_sha256=Hash $packager;catalog_sha256=Hash $catalog};cpu=@{id=$cpu.name;sha256=Hash $cpuPath;features=$features};codegen=@{profile_sha256=Hash $codegenPath;code_model=$codegen.code_model;relocation_model=$codegen.relocation_model;lto=$codegen.lto;red_zone=$false;panic='abort';stack_probes=$codegen.stack_probes};declared_inputs=$declared;compiler_inputs=$observed;elf=@{file=[IO.Path]::GetFileName($elf);sha256=Hash $linked};artifact=@{file=[IO.Path]::GetFileName($artifact);sha256=Hash $candidate;bytes=([IO.FileInfo]$candidate).Length};container_inspection=$inspection.Trim()}
     $result['memory']=@{sdk_features=$sdkFeatureNames;heap_runtime=@{path=$rustToolProfile.runtime.heap.path;sha256=Hash $heapRuntime;owner='SDK/r4os/vm_allocator.zig';instance_checked=$true};alloc_sysroot_component='rust-std/'+$codegen.target;root_return_releases_heap=$false}
+    $result['schema']=2
+    $result.cargo['graph']=$crateGraph
+    $result.cargo['selected_features']=$Features
+    $result.cargo['default_features']=!$NoDefaultFeatures
+    $result['native_c']=$native.compiler
     Copy-Item -LiteralPath $linked -Destination $elf;Copy-Item -LiteralPath $candidate -Destination $artifact
     Write-Json $receipt $result;Write-Json $ownerFile @{schema=1;project=$ProjectRoot;status='success';artifact=[IO.Path]::GetFileName($artifact);elf=[IO.Path]::GetFileName($elf)}
     $failedLink=Join-Path $OutputRoot 'failed-link.elf'

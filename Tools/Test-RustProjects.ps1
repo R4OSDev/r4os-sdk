@@ -26,7 +26,7 @@ foreach($class in @('console','gui','service')){
     [IO.File]::WriteAllText($manifest,$text,$utf8)
     Run validate $manifest $true|Out-Null
     $plan=(Run plan $manifest $true)|ConvertFrom-Json
-    if($plan.plan.language -cne 'Rust' -or $plan.plan.rust_project.cargo_package -cne 'rust-manifest-probe' -or $plan.plan.rust_project.module_version -cne '0.1.0'){throw 'Rust plan identity drift.'}
+    if($plan.plan.language -cne 'Rust' -or $plan.plan.rust_project.schema -ne 2 -or $plan.plan.rust_project.source -cne 'src/main.rs' -or $plan.plan.rust_project.module_version -cne '0.1.0'){throw 'Rust plan identity drift.'}
     Run contract-plan $manifest $true 'R4MF_PLAN=1'|Out-Null
 }
 $manifest=Join-Path $WorkRoot 'console/module.R4MF'
@@ -35,8 +35,8 @@ $cases=@(
     @{find='src/main.rs';replace='src/main.c';error='SourceLanguageMismatch'},
     @{find='VERSION=0.1.0';replace='VERSION=bad';error='BadModuleVersion'},
     @{find='ENTRY_MODE=app';replace='ENTRY_MODE=lowlevel';error='RustLowlevelUnsupported'},
-    @{find='SOURCE=src/main.rs';replace="SOURCE=src/main.rs`nSOURCE=other.rs";error='RustRequiresSingleSource'},
-    @{find='SOURCE=src/main.rs';replace="SOURCE=src/main.rs`nC_FLAG=-O2";error='RustForbidsForeignBuildFields'}
+    @{find='SOURCE=src/main.rs';replace="SOURCE=src/main.rs`nSOURCE=other.rs";error='SourceLanguageMismatch'},
+    @{find='SOURCE=src/main.rs';replace="SOURCE=src/main.rs`nC_FLAG=-O2";error='CConfigurationWithoutCSource'}
 )
 foreach($case in $cases){
     [IO.File]::WriteAllText($manifest,$original.Replace($case.find,$case.replace),$utf8)
@@ -45,9 +45,9 @@ foreach($case in $cases){
 [IO.File]::WriteAllText($manifest,$original,$utf8)
 $cargoPath=Join-Path $WorkRoot 'console/Cargo.toml'
 [IO.File]::WriteAllText($cargoPath,$cargo.Replace('src/main.rs','src/other.rs'),$utf8)
-Run validate $manifest $false 'RustCargoSourceMismatch'|Out-Null
+Run validate $manifest $true|Out-Null # Cargo owns TOML/target validation at build time.
 [IO.File]::WriteAllText($cargoPath,$cargo+"`n[profile.release]`npanic=`"unwind`"`n",$utf8)
-Run validate $manifest $false 'RustCargoUnsupportedTable'|Out-Null
+Run validate $manifest $true|Out-Null # The SDK compiler profile is explicit at build time.
 [IO.File]::WriteAllText($cargoPath,$cargo,$utf8)
 $lockPath=Join-Path $WorkRoot 'console/Cargo.lock';[IO.File]::Move($lockPath,$lockPath+'.held')
 try {Run validate $manifest $false 'RustCargoLockMissing'|Out-Null} finally {[IO.File]::Move($lockPath+'.held',$lockPath)}

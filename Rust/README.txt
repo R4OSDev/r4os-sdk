@@ -1,17 +1,18 @@
 ﻿R4OS normal Rust R4X development
 ================================
 
-SDK package0.64.60 introduces r4os-rust-r4x-v1. The Rust helper crate is
+SDK package0.64.70 supplies r4os-rust-r4x-v2. The Rust helper crate is
 r4os-sdk0.1.0; r4os-contract0.1.0 remains a separate generated ABI crate.
 Neither crate version is the SDK/Contract package or installed module version.
-The platform contract and project rules live in Contract/Module/RustModuleV1.txt.
+The platform contract and project rules live in Contract/Module/RustModuleV2.txt.
 
 Profile and tools
 -----------------
 Use the matched SDK, Contract and r4os-rust-tools-v1 export. Rust/Cargo1.99.0,
 rustup1.29.1, LLVM tools and x86_64-unknown-none are pinned by the shared DevKit
 installer. No global Rust, complete workspace, Zig install, MSVC linker or
-Rust sources are needed to consume the exported baretarget build tools.
+Rust sources are needed for pure Rust builds with the exported baretarget tools.
+Explicit C companions additionally require the selected pinned Zig/Clang root.
 The publisher builds both host packagers/catalogs with Zig. Windows uses the
 same PS7 driver and prepared PE tools; Windows execution is not yet qualified.
 
@@ -43,13 +44,26 @@ See Templates/R4OS/README.txt for commands and current qualification.
 
 Project and outputs
 -------------------
-module.R4MF is the module truth: LANGUAGE=Rust, one canonical .rs SOURCE,
+module.R4MF is the module truth: LANGUAGE=Rust, one canonical .rs SOURCE root,
 ENTRY_MODE=app, APP_CLASS=console/gui/service, target/version/imports/resources.
 Cargo owns its different crate name/version, edition2024 and one explicit
-[lib] path=SOURCE, crate-type=["staticlib"]. Include Cargo.lock. The bounded
-single-line TOML grammar is documented by the Contract. The initial dependencies
-are matched r4os-sdk/r4os-contract0.1.0 only; exact path patches come from the
-selected components. Builds run offline/locked, without a registry fetch.
+[lib] path=SOURCE, crate-type=["staticlib"]. Include Cargo.lock. Cargo parses
+its own TOML and supplies resolved package identities/features. Additional
+local/path or vendored crates are supported, including aliases and optional
+dependencies; matched r4os-sdk/r4os-contract0.1.0 retain exact component paths.
+Builds run offline/locked, with a private Cargo home and no registry/git fetch.
+For crates outside project/SDK/Contract, pass an explicit -DependencyRoot.
+Multiple roots can be passed as -DependencyRootsJson '["/first","/second"]'
+from command-line launchers; PS callers may supply a DependencyRoot array.
+Root -Features 'one,two' and -NoDefaultFeatures select Cargo features. This
+is build selection, not SDK-owned component version/project-pin management.
+
+Additional ordered SOURCE lines may declare C companions; C_INCLUDE,
+C_DEFINE and C_FLAG use the existing manifest fields. Select -ZigRoot explicitly
+for these sources. The matched Profile/ZigToolchain.json pin, freestanding
+CPU/PIC/stack-probe options and actual compiler source/header dependencies are
+recorded. C objects link into the same R4M0 artifact; no Cargo build.rs or new
+runtime module. Native C compiler flags precede required SDK codegen options.
 
 Use #![no_std], a function fn main(app: &mut r4os_sdk::App<'_>) -> i32 and
 r4os_sdk::app!(main). The macro's R4XStart derives class/import order/name from
@@ -70,21 +84,24 @@ outside this profile. Rust module/include inputs come from rustc
 dep-info; the receipt distinguishes those from declared manifest/Cargo/resources.
 The generated startup input has owner=generated in compiler_inputs and its
 exact hash in the same receipt. Input directory/file symlinks are outside the
-v1 project tree.
+current project tree.
 
 Default output is project/build; -OutputRoot selects another owned directory.
 Its marker binds it to exactly one project and an exclusive build lock. Invalid
 sources, compile/link errors or missing tools remove previous successful R4X,
 ELF, generated startup-info.rs and build.json outputs. An output directory containing unrelated files is
-rejected. build.json schema1 records exact source/tool/profile/ELF/R4M0 hashes,
-selected Cargo package/target, imports, version and resource inputs. Cargo's
+rejected. build.json schema2 records exact source/tool/profile/ELF/R4M0 hashes,
+selected/resolved Cargo graph/features, every manifest, Rust/C/include inputs,
+imports, module version and resources. Cargo's
 reusable target cache lives below the explicitly selected cache root. Temporary
 build homes/work files are removed. Technical failures may retain one clearly
 named failed-link.elf while diagnosing a link profile; it is no success output.
 
-Project/ancestor Cargo config, build.rs, proc macros, other dependency kinds,
-features, profiles, rust-toolchain overrides and compiler/target/profile flags
-from the environment are rejected. The child process gets private Cargo state
+Project/ancestor Cargo config, build.rs, proc macros, rust-toolchain overrides
+and compiler/target/profile environment flags are rejected. Project release
+settings are explicitly replaced by the SDK's profile; actual Cargo artifact
+profiles must match optimization/check/assertion/test settings. The child
+process gets private Cargo state
 and exact tools; the calling shell is not changed. Empty [workspace] avoids
 implicit parent selection. ModuleCatalog validation runs before Cargo metadata,
 which independently confirms the one real package and target.

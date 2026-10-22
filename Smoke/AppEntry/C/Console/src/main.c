@@ -1,4 +1,5 @@
 #include <r4os/r4os.h>
+#include "companion.h"
 
 static void parity_u64(R4Sys *sys, uint64_t value) {
     char buffer[20];
@@ -47,6 +48,7 @@ static int32_t heap_case(R4App *app) {
 }
 
 int32_t r4_app_main(R4App *app) {
+    if (r4_c_companion(7u) != 24u) return 114;
     if (app->profile != R4_APP_PROFILE_CONSOLE || !r4_app_has_group(app, R4L_GROUP_R4SYS) || r4_app_has_group(app, R4L_GROUP_R4DESK)) return 81;
     R4Files files = r4_app_files(app);
     R4FilePath missing_path, payload_path;

@@ -5,7 +5,7 @@ module build support, templates, build profiles, and generic Runtime-R4L
 helpers. The platform API and ABI remain canonical in the separate Contract
 repository.
 
-Rust host modules use the Contract's `Module/RustModuleV1.txt` and the matched
+Rust host modules use the Contract's `Module/RustModuleV2.txt` and the matched
 isolated tool profile. SDK0.64.60 supplies the actual no_std source-to-R4M0
 builder and normal R4X startup, with console/hosted GUI/service helpers in
 [Rust/README.txt](Rust/README.txt). Module/Cargo identities remain separate.
@@ -18,6 +18,11 @@ SDK0.64.65 corrects the capability catalog's linker origin: rust-lld is
 provided by the pinned rustc host archive. llvm-tools-preview supplies the
 separate inspection tools. Module codegen and Rust helper sources are unchanged.
 Native guest Rust and other module roles remain separate explicit capabilities.
+SDK0.64.70 binds Contract0.64.43 and Rust build profile/plan2. Cargo owns TOML,
+locked local dependency graphs and features; explicit external roots and C
+companions are supported with real compiler input accounting. Pure Rust builds
+keep the independent toolset; native C sources explicitly select pinned Zig.
+The SDK owns no Studio integration, component version selection or project pins.
 SDK0.64.67 binds Contract0.64.42's complete technical C projection. Driver,
 protocol, DMA/USB and service records now come from the canonical Contract;
 the three manually duplicated network reply records are removed from the SDK.

@@ -168,7 +168,6 @@ pub const Manifest = struct {
     module_version: ModuleVersion,
     language: ?Language = null,
     /// Filled by file-aware consumers after shared Cargo validation.
-    rust_cargo: ?rust_project.Cargo = null,
     sources: []const []const u8 = &.{},
     entry_mode: ?EntryMode = null,
     app_class: ?AppClass = null,
@@ -393,8 +392,7 @@ fn parseV2(allocator: std.mem.Allocator, path: []const u8, text: []const u8) !Ma
     if (parsed_language == .rust) {
         const admission = capabilities.rust(parsed_kind.text(), entry_mode orelse "", module_role, .host);
         if (admission.failure) |err| return err;
-        if (sources.items.len != 1) return error.RustRequiresSingleSource;
-        if (zig_modules.items.len != 0 or native_archives.items.len != 0 or c_includes.items.len != 0 or c_defines.items.len != 0 or c_flags.items.len != 0) return error.RustForbidsForeignBuildFields;
+        if (zig_modules.items.len != 0 or native_archives.items.len != 0) return error.RustForbidsForeignBuildFields;
     }
     if (sources.items.len == 0) return error.MissingSource;
     // One Zig root, followed by optional C companions in R4L/R4D. They are
@@ -403,7 +401,7 @@ fn parseV2(allocator: std.mem.Allocator, path: []const u8, text: []const u8) !Ma
     const allows_c_companions = parsed_kind == .r4l or parsed_kind == .r4d;
     if (parsed_language == .zig and !allows_c_companions and sources.items.len != 1) return error.ZigRequiresSingleSource;
     for (sources.items, 0..) |source, index| {
-        const source_language: Language = if (parsed_language == .zig and allows_c_companions and index != 0) .c else parsed_language;
+        const source_language: Language = if (index != 0 and (parsed_language == .rust or (parsed_language == .zig and allows_c_companions))) .c else parsed_language;
         try validateSource(source, source_language);
     }
     ensureUnique(sources.items, false) catch return error.DuplicateSource;
@@ -416,7 +414,7 @@ fn parseV2(allocator: std.mem.Allocator, path: []const u8, text: []const u8) !Ma
     for (native_archives.items) |archive| try validateName(archive);
     ensureUnique(native_archives.items, true) catch return error.DuplicateNativeArchive;
     try validateCConfiguration(c_includes.items, c_defines.items, c_flags.items);
-    const has_c_source = parsed_language == .c or (allows_c_companions and parsed_language == .zig and sources.items.len > 1);
+    const has_c_source = parsed_language == .c or ((parsed_language == .rust or (allows_c_companions and parsed_language == .zig)) and sources.items.len > 1);
     // R4D/R4L Zig roots can translate data headers with @cImport without a C object
     // or native archive. C_FLAG still requires an actual C compilation unit;
     // include roots and macros also apply to the Zig root's translation.
@@ -2081,6 +2079,10 @@ test "Rust R4X classes share admission and preserve semantic plan v1" {
         const plan = renderContractPlan(manifest, &buffer);
         try std.testing.expect(plan.ok);
         try std.testing.expect(std.mem.startsWith(u8, plan.bytes, "R4MF_PLAN=1\n"));
+        const companions = try parse(a, "Rust/module.R4MF", try std.fmt.allocPrint(a, "{s}SOURCE=native/first.c\nSOURCE=native/second.c\nC_INCLUDE=native/include\nC_DEFINE=BIAS=7\n", .{text}));
+        try std.testing.expectEqual(@as(usize, 3), companions.sources.len);
+        try std.testing.expectEqualStrings("native/first.c", companions.sources[1]);
+        try std.testing.expectEqualStrings("native/second.c", companions.sources[2]);
         const wrong = try std.mem.replaceOwned(u8, a, text, "main.rs", "main.c");
         try std.testing.expectError(error.SourceLanguageMismatch, parse(a, "Rust/module.R4MF", wrong));
         const escape = try std.mem.replaceOwned(u8, a, text, "src/main.rs", "../main.rs");

@@ -653,11 +653,13 @@ fn discoverCatalog(
 
 fn readManifest(allocator: std.mem.Allocator, io: std.Io, cwd: std.Io.Dir, path: []const u8) !manifest_contract.Manifest {
     const bytes = try cwd.readFileAlloc(io, path, allocator, .limited(manifest_contract.max_manifest_bytes));
-    var manifest = try manifest_contract.parse(allocator, path, bytes);
+    const manifest = try manifest_contract.parse(allocator, path, bytes);
     if (manifest.language == .rust) {
         const cargo_path = try std.fs.path.join(allocator, &.{ std.fs.path.dirname(path) orelse ".", "Cargo.toml" });
-        const cargo = cwd.readFileAlloc(io, cargo_path, allocator, .limited(manifest_contract.max_manifest_bytes)) catch return error.RustCargoManifestMissing;
-        manifest.rust_cargo = try manifest_contract.rust_project.parseCargo(manifest.sources[0], cargo);
+        // Cargo owns its grammar, package identities and resolved features.
+        // Compiler-free planning checks presence; the locked/offline builder
+        // validates actual cargo metadata before any compilation.
+        cwd.access(io, cargo_path, .{}) catch return error.RustCargoManifestMissing;
     }
     return manifest;
 }
@@ -1157,7 +1159,6 @@ fn renderPlanObject(allocator: std.mem.Allocator, entry: manifest_contract.Manif
     try out.appendSlice(allocator, ",\n    \"sources\": ");
     try appendStringArray(&out, allocator, entry.sources);
     if (entry.language == .rust) {
-        const cargo = entry.rust_cargo orelse return error.RustCargoManifestMissing;
         const descriptor = .{
             .schema = manifest_contract.capabilities.rust_build_plan_schema,
             .profile = manifest_contract.capabilities.rust_profile,
@@ -1169,9 +1170,12 @@ fn renderPlanObject(allocator: std.mem.Allocator, entry: manifest_contract.Manif
             .declared_inputs = [_][]const u8{ "module.R4MF", "Cargo.toml", "Cargo.lock" },
             .compiler_inputs = "observed at build time from rustc dep-info",
             .native_rust_compiler = false,
-            .cargo_package = cargo.name,
-            .cargo_version = cargo.version,
-            .source = cargo.source,
+            .cargo_identity_source = "locked/offline cargo metadata at build time",
+            .source = entry.sources[0],
+            .c_sources = entry.sources[1..],
+            .c_includes = entry.c_includes,
+            .c_defines = entry.c_defines,
+            .c_flags = entry.c_flags,
             .module_version = entry.module_version.text,
             .icons = entry.icons,
             .help = entry.help,

@@ -336,20 +336,24 @@
       "semantics": "R4MF besitzt Modulidentitaet/Imports/Ressourcen; Cargo besitzt Crates/Lock. Technische SDK-/Contract-/Toolchainpins bleiben; externe Versionsauswahl/Projektpins bleiben beim Verbraucher. Eingaben und fehlgeschlagene Outputs exakt verfolgen.",
       "current_only": "current_build_and_explicit_project_data",
       "rust": {
-        "state": "qualified_bounded_single_crate_profile",
-        "source": "Repositories/SDK/Rust/src/lib.rs",
-        "gap": "Rust-Profil beschraenkt Dependencies/Features und eine staticlib-Quelle; normale Mehrdatei-/lokale Libraryabhaengigkeiten und Rollenbau pruefen/erweitern. R4CP-Konvertierung als explizites Datentool getrennt von Alt-OS-Laufzeit behandeln."
+        "state": "qualified_current_local_dependency_graph_and_C_companions",
+        "source": "Repositories/SDK/Tools/Build-RustModule.ps1",
+        "gap": "SDK70/Contract43 Profil2: voller Cargo-TOML-Owner, gesperrte Offline-Path-/Vendorcrates, Aliases/optionale Features und explizite externe Wurzeln, echte Rust/C/Header-Depinfo. Ein eindeutig gewaehlter staticlib-Root; keine Host-build.rs/proc-macros oder stillen Downloads. Library-/Treiber-/Protokollrollen bleiben eigene Wellen."
       },
       "c": {
-        "state": "existing_host_multifile_C_builder",
+        "state": "qualified_existing_host_multifile_C_builder",
         "sources": [
           "Repositories/SDK/r4os/build.zig",
           "Repositories/SDK/BuildProfiles/README.txt"
         ],
-        "gap": "Bestehenden C-/Clang-Mehrdateibau und Ressourcen-/Dependencyverfolgung erhalten; gleiche normale Projektfaehigkeit, keine C-Neuimplementierung der Zig-Build-API."
+        "gap": "Bestehender C-/Clang-Mehrdateibau erhalten und mit erweitertem APPCCON1.2 samt echtem Header/zweiter C-Quelle qualifiziert. C-Begleiter von Rust verwenden denselben Freestanding-/CPU-/Stackprobe-Vertrag mit explizitem ZigRoot. Keine neue C-Kopie der Zig-Build-API."
       },
       "evidence": [
-        "source_inventory"
+        "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.51",
+        "Repositories/SDK/Tools/Test-RustDependencies.ps1",
+        "Repositories/SDK/Tools/Test-RustModule.ps1",
+        "Repositories/SDK/Tests/Build/RustGraph",
+        "Repositories/SDK/Smoke/AppEntry/C/Console"
       ],
       "shared_core": "Gemeinsamer R4MF-Parser, Builder, Packager und PS7-Orchestrierung."
     },
