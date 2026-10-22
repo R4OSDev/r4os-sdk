@@ -5,6 +5,20 @@
 
 typedef struct R4Resources { R4App *app; } R4Resources;
 
+/* A current context still admits each optional slot by its real readable end.
+ * No dereference of an absent tail and no emulation of an older OS table. */
+static inline int r4_resource_sys_has(const R4App *app, size_t offset) {
+    return app && app->system.table && offset <= app->system.table->size &&
+        sizeof(uintptr_t) <= app->system.table->size - offset;
+}
+static inline int r4_resource_desk_has(const R4App *app, size_t offset) {
+    return app && app->desktop.table && offset <= app->desktop.table->size &&
+        sizeof(uintptr_t) <= app->desktop.table->size - offset;
+}
+#define R4_RESOURCE_SYS_HAS(app, field) (r4_resource_sys_has((app), offsetof(R4XStartR4Sys, field)) && (app)->system.table->field != 0)
+#define R4_RESOURCE_DESK_HAS(app, field) (r4_resource_desk_has((app), offsetof(R4XStartR4Desk, field)) && (app)->desktop.table->field != 0)
+
+
 typedef enum R4ResourceWaitKind {
     R4_RESOURCE_WAIT_EXITED = 0,
     R4_RESOURCE_WAIT_WOULD_BLOCK = 1,
@@ -105,7 +119,7 @@ static inline int r4_vm_region_valid(const R4VmRegion *region) { return region !
 static inline int r4_io_request_valid(const R4IoRequest *request) { return request != 0 && request->app != 0 && request->raw != 0u; }
 
 static inline uint32_t r4_resource_monotonic_hz(R4App *app) {
-    if (app == 0 || app->system.table == 0 || app->system.table->time_state == 0) return 0u;
+    if (!R4_RESOURCE_SYS_HAS(app, time_state)) return 0u;
     R4TimeState state = {0};
     ((R4SysTimeStateFn)(uintptr_t)app->system.table->time_state)(&state);
     return state.monotonic_hz;
@@ -113,7 +127,7 @@ static inline uint32_t r4_resource_monotonic_hz(R4App *app) {
 
 static inline void r4_resource_yield(R4App *app) {
     if (app == 0) return;
-    if (app->system.table != 0 && app->system.table->task_yield != 0) {
+    if (R4_RESOURCE_SYS_HAS(app, task_yield)) {
         ((R4SysTaskYieldFn)(uintptr_t)app->system.table->task_yield)();
         return;
     }
@@ -125,7 +139,7 @@ static inline void r4_resource_yield(R4App *app) {
 static inline int32_t r4_resources_spawn(R4Resources *resources, R4PathZ path, const char *args, uint32_t policy, R4Process *out) {
     if (out != 0) *out = (R4Process){0};
     if (resources == 0 || resources->app == 0 || out == 0 || path.ptr == 0) return R4OS_PROGRAM_HANDLE_ERROR_INVALID;
-    if (resources->app->system.table == 0 || resources->app->system.table->program_spawn_handle == 0) return R4OS_ERR_NO_FN;
+    if (!R4_RESOURCE_SYS_HAS(resources->app, program_spawn_handle)) return R4OS_ERR_NO_FN;
     R4ProgramProcessHandle handle = {0};
     int32_t status = ((R4SysProgramSpawnHandleFn)(uintptr_t)resources->app->system.table->program_spawn_handle)(
         path.ptr, (const uint8_t *)(args != 0 ? args : ""), policy, &handle);
@@ -137,7 +151,7 @@ static inline int32_t r4_resources_spawn(R4Resources *resources, R4PathZ path, c
 static inline int32_t r4os_spawn_with_console_host(R4Resources *resources, R4PathZ path, const char *args, uint32_t policy, uint32_t host, R4OS_ProcessHandle *out) {
     if (out != 0) *out = (R4OS_ProcessHandle){0};
     if (resources == 0 || resources->app == 0 || out == 0 || path.ptr == 0) return R4OS_PROGRAM_HANDLE_ERROR_INVALID;
-    if (resources->app->desktop.table == 0 || resources->app->desktop.table->program_spawn_with_console_host_handle == 0) return R4OS_ERR_NO_FN;
+    if (!R4_RESOURCE_DESK_HAS(resources->app, program_spawn_with_console_host_handle)) return R4OS_ERR_NO_FN;
     R4ProgramProcessHandle handle = {0};
     int32_t status = ((R4DeskProgramSpawnWithConsoleHostHandleFn)(uintptr_t)resources->app->desktop.table->program_spawn_with_console_host_handle)(
         path.ptr, (const uint8_t *)(args != 0 ? args : ""), policy, host, &handle);
@@ -149,7 +163,7 @@ static inline int32_t r4os_spawn_with_console_host(R4Resources *resources, R4Pat
 static inline int32_t r4os_process_status(R4OS_ProcessHandle *process, R4ProgramInstanceInfo *out) {
     if (process == 0 || out == 0) return R4OS_PROGRAM_HANDLE_ERROR_INVALID;
     if (!r4os_process_valid(process)) return R4OS_ERR_CLOSED;
-    if (process->app->system.table == 0 || process->app->system.table->program_handle_status == 0) return R4OS_ERR_NO_FN;
+    if (!R4_RESOURCE_SYS_HAS(process->app, program_handle_status)) return R4OS_ERR_NO_FN;
     R4ProgramProcessHandle handle = r4os_process_abi_handle(process);
     return ((R4SysProgramHandleStatusFn)(uintptr_t)process->app->system.table->program_handle_status)(&handle, out);
 }
@@ -158,7 +172,7 @@ static inline int32_t r4_process_status(R4Process *process, R4ProgramInstanceInf
 static inline int32_t r4_resources_open_process(R4Resources *resources, uint32_t instance_id, R4Process *out) {
     if (out != 0) *out = (R4Process){0};
     if (resources == 0 || resources->app == 0 || out == 0 || instance_id == 0u) return R4OS_PROGRAM_HANDLE_ERROR_INVALID;
-    if (resources->app->system.table == 0 || resources->app->system.table->program_open_handle == 0) return R4OS_ERR_NO_FN;
+    if (!R4_RESOURCE_SYS_HAS(resources->app, program_open_handle)) return R4OS_ERR_NO_FN;
     R4ProgramProcessHandle handle = {0};
     int32_t status = ((R4SysProgramOpenHandleFn)(uintptr_t)resources->app->system.table->program_open_handle)(instance_id, &handle);
     if (status != R4OS_PROGRAM_HANDLE_OK) return status;
@@ -169,7 +183,7 @@ static inline int32_t r4_resources_open_process(R4Resources *resources, uint32_t
 static inline int32_t r4os_process_request_close(R4OS_ProcessHandle *process) {
     if (process == 0) return R4OS_PROGRAM_HANDLE_ERROR_INVALID;
     if (!r4os_process_valid(process)) return R4OS_ERR_CLOSED;
-    if (process->app->system.table == 0 || process->app->system.table->program_handle_request_close == 0) return R4OS_ERR_NO_FN;
+    if (!R4_RESOURCE_SYS_HAS(process->app, program_handle_request_close)) return R4OS_ERR_NO_FN;
     R4ProgramProcessHandle handle = r4os_process_abi_handle(process);
     return ((R4SysProgramHandleRequestCloseFn)(uintptr_t)process->app->system.table->program_handle_request_close)(&handle);
 }
@@ -178,7 +192,7 @@ static inline int32_t r4_process_request_close(R4Process *process) { return r4os
 static inline int32_t r4os_process_kill(R4OS_ProcessHandle *process) {
     if (process == 0) return R4OS_PROGRAM_HANDLE_ERROR_INVALID;
     if (!r4os_process_valid(process)) return R4OS_ERR_CLOSED;
-    if (process->app->system.table == 0 || process->app->system.table->program_handle_kill == 0) return R4OS_ERR_NO_FN;
+    if (!R4_RESOURCE_SYS_HAS(process->app, program_handle_kill)) return R4OS_ERR_NO_FN;
     R4ProgramProcessHandle handle = r4os_process_abi_handle(process);
     return ((R4SysProgramHandleKillFn)(uintptr_t)process->app->system.table->program_handle_kill)(&handle);
 }
@@ -188,7 +202,7 @@ static inline int32_t r4os_process_wait_ready(R4OS_ProcessHandle *process, R4Tim
     if (out != 0) *out = (R4OS_ProcessCompletion){0};
     if (process == 0 || out == 0) return R4OS_PROGRAM_HANDLE_ERROR_INVALID;
     if (!r4os_process_valid(process)) return R4OS_ERR_CLOSED;
-    if (process->app->system.table == 0 || process->app->system.table->program_handle_wait == 0) return R4OS_ERR_NO_FN;
+    if (!R4_RESOURCE_SYS_HAS(process->app, program_handle_wait)) return R4OS_ERR_NO_FN;
     uint64_t timeout_ticks = 0u;
     if (r4_timeout_to_ticks(timeout, r4_resource_monotonic_hz(process->app), &timeout_ticks) != R4OS_OK) return R4OS_PROGRAM_HANDLE_ERROR_INVALID;
     R4ProgramProcessHandle handle = r4os_process_abi_handle(process);
@@ -199,8 +213,7 @@ static inline int32_t r4os_process_completion_read(R4OS_ProcessHandle *process, 
     if (out_read != 0) *out_read = 0u;
     if (process == 0 || out == 0 || out_read == 0) return R4OS_PROGRAM_HANDLE_ERROR_INVALID;
     if (!r4os_process_valid(process)) return R4OS_ERR_CLOSED;
-    if (process->app->system.table == 0 ||
-        process->app->system.table->program_completion_read == 0) return R4OS_ERR_NO_FN;
+    if (!R4_RESOURCE_SYS_HAS(process->app, program_completion_read)) return R4OS_ERR_NO_FN;
     R4ProgramProcessHandle handle = r4os_process_abi_handle(process);
     return ((R4SysProgramCompletionReadFn)(uintptr_t)process->app->system.table->program_completion_read)(
         &handle, offset, out, capacity, out_read);
@@ -211,7 +224,7 @@ static inline int32_t r4os_process_reap(R4OS_ProcessHandle *process, R4OS_Proces
     if (process == 0 || out == 0) return R4OS_PROGRAM_HANDLE_ERROR_INVALID;
     if (!r4os_process_valid(process)) return R4OS_ERR_CLOSED;
     if (!process->owned) return R4OS_ERR_NOT_OWNED;
-    if (process->app->system.table == 0 || process->app->system.table->program_handle_reap == 0) return R4OS_ERR_NO_FN;
+    if (!R4_RESOURCE_SYS_HAS(process->app, program_handle_reap)) return R4OS_ERR_NO_FN;
     R4ProgramProcessHandle handle = r4os_process_abi_handle(process);
     int32_t status = ((R4SysProgramHandleReapFn)(uintptr_t)process->app->system.table->program_handle_reap)(&handle, out);
     if (status == R4OS_PROGRAM_HANDLE_OK) r4os_process_invalidate(process);
@@ -375,4 +388,272 @@ static inline int32_t r4_io_request_close(R4IoRequest *request) {
     return raw;
 }
 
+
+/* Scalar resource operations retain the native generation/cursor contract. */
+static inline int r4_resources_available(const R4Resources *resources) {
+    R4App *app = resources ? resources->app : 0;
+    return R4_RESOURCE_SYS_HAS(app, program_spawn_handle) &&
+        R4_RESOURCE_SYS_HAS(app, program_open_handle) &&
+        R4_RESOURCE_SYS_HAS(app, program_handle_status) &&
+        R4_RESOURCE_SYS_HAS(app, program_handle_request_close) &&
+        R4_RESOURCE_SYS_HAS(app, program_handle_kill) &&
+        R4_RESOURCE_SYS_HAS(app, program_handle_wait) &&
+        R4_RESOURCE_SYS_HAS(app, program_handle_reap) &&
+        R4_RESOURCE_SYS_HAS(app, program_completion_read) &&
+        R4_RESOURCE_SYS_HAS(app, thread_create_handle) &&
+        R4_RESOURCE_SYS_HAS(app, thread_handle_join) &&
+        R4_RESOURCE_SYS_HAS(app, thread_handle_status) &&
+        R4_RESOURCE_SYS_HAS(app, vm_reserve) &&
+        R4_RESOURCE_SYS_HAS(app, vm_release) &&
+        R4_RESOURCE_SYS_HAS(app, io_wait) &&
+        R4_RESOURCE_SYS_HAS(app, io_close);
+}
+static inline int32_t r4_resources_borrow_process(R4Resources *resources, const R4ProgramProcessHandle *handle, R4Process *out) {
+    if (out) *out = (R4Process){0};
+    if (!resources || !resources->app || !handle || !out || !handle->instance_id || !handle->generation || handle->reserved)
+        return R4OS_PROGRAM_HANDLE_ERROR_INVALID;
+    out->app = resources->app; r4os_process_store_abi_handle(out, handle); return R4OS_PROGRAM_HANDLE_OK;
+}
+static inline int32_t r4_resources_current_thread(R4Resources *resources, R4JoinHandle *out) {
+    if (out) *out = (R4JoinHandle){0};
+    if (!resources || !resources->app || !out) return R4OS_THREAD_ERROR_INVALID;
+    int32_t raw = r4sys_thread_current_handle(&resources->app->system, &out->handle);
+    if (raw == R4OS_THREAD_OK) out->app = resources->app;
+    return raw;
+}
+static inline int32_t r4_join_placement(R4JoinHandle *handle, R4ThreadPlacementInfo *info, uint64_t *cpus, uint32_t capacity) {
+    if (!r4_join_handle_valid(handle)) return R4OS_ERR_CLOSED;
+    return r4sys_thread_placement_get(&handle->app->system, &handle->handle, info, cpus, capacity);
+}
+static inline int32_t r4_join_set_placement(R4JoinHandle *handle, const R4ThreadPlacementRequest *request, const uint64_t *cpus, uint32_t count) {
+    if (!r4_join_handle_valid(handle)) return R4OS_ERR_CLOSED;
+    return r4sys_thread_placement_set(&handle->app->system, &handle->handle, request, cpus, count);
+}
+static inline int32_t r4_vm_region_commit_flags(R4VmRegion *region, uint64_t offset, uint64_t len, uint64_t flags) {
+    return r4_vm_region_valid(region) ? r4sys_vm_commit_flags(&region->app->system, region->raw, offset, len, flags) : R4OS_ERR_CLOSED;
+}
+static inline int32_t r4_resources_cpu_capacity(R4Resources *resources, R4CpuCapacity *out) {
+    if (!resources || !resources->app) return R4OS_ERR_NO_FN;
+    return r4sys_cpu_capacity(&resources->app->system, out);
+}
+static inline int32_t r4_resources_program_inventory_begin(R4Resources *resources, R4ProgramInventoryCursor *cursor, R4ProgramInventorySummary *summary) {
+    if (!resources || !resources->app) return R4OS_ERR_NO_FN;
+    return r4sys_program_inventory_begin(&resources->app->system, cursor, summary);
+}
+static inline int32_t r4_resources_program_inventory_programs(R4Resources *resources, R4ProgramInventoryCursor *cursor, R4ProgramInstanceSnapshot *out, uint32_t capacity, R4ProgramInventoryPageInfo *page) {
+    if (!resources || !resources->app) return R4OS_ERR_NO_FN;
+    return r4sys_program_inventory_programs(&resources->app->system, cursor, out, capacity, page);
+}
+static inline int32_t r4_resources_program_inventory_tasks(R4Resources *resources, R4ProgramInventoryCursor *cursor, R4ProgramTaskSnapshot *out, uint32_t capacity, R4ProgramInventoryPageInfo *page) {
+    if (!resources || !resources->app) return R4OS_ERR_NO_FN;
+    return r4sys_program_inventory_tasks(&resources->app->system, cursor, out, capacity, page);
+}
+static inline int32_t r4_resources_program_inventory_threads(R4Resources *resources, R4ProgramInventoryCursor *cursor, R4ProgramThreadSnapshot *out, uint32_t capacity, R4ProgramInventoryPageInfo *page) {
+    if (!resources || !resources->app) return R4OS_ERR_NO_FN;
+    return r4sys_program_inventory_threads(&resources->app->system, cursor, out, capacity, page);
+}
+static inline int32_t r4_resources_notification_create(R4Resources *resources, uint64_t *out) {
+    if (!out) return R4OS_ERROR_INVALID;
+    R4App *app = resources ? resources->app : 0;
+    if (!R4_RESOURCE_SYS_HAS(app, notification_create)) return R4OS_ERR_NO_FN;
+    return ((R4SysNotificationCreateFn)(uintptr_t)app->system.table->notification_create)(out);
+}
+static inline int32_t r4_resources_notification_query(R4Resources *resources, uint64_t handle, uint64_t *sequence) {
+    if (!sequence) return R4OS_ERROR_INVALID;
+    R4App *app = resources ? resources->app : 0;
+    if (!R4_RESOURCE_SYS_HAS(app, notification_query)) return R4OS_ERR_NO_FN;
+    return ((R4SysNotificationQueryFn)(uintptr_t)app->system.table->notification_query)(handle, sequence);
+}
+static inline int32_t r4_resources_notification_notify(R4Resources *resources, uint64_t handle, uint32_t count) {
+    if (0) return R4OS_ERROR_INVALID;
+    R4App *app = resources ? resources->app : 0;
+    if (!R4_RESOURCE_SYS_HAS(app, notification_notify)) return R4OS_ERR_NO_FN;
+    return ((R4SysNotificationNotifyFn)(uintptr_t)app->system.table->notification_notify)(handle, count);
+}
+static inline int32_t r4_resources_notification_wait(R4Resources *resources, uint64_t handle, uint64_t observed, uint64_t ticks) {
+    if (0) return R4OS_ERROR_INVALID;
+    R4App *app = resources ? resources->app : 0;
+    if (!R4_RESOURCE_SYS_HAS(app, notification_wait)) return R4OS_ERR_NO_FN;
+    return ((R4SysNotificationWaitFn)(uintptr_t)app->system.table->notification_wait)(handle, observed, ticks);
+}
+static inline int32_t r4_resources_notification_close(R4Resources *resources, uint64_t handle) {
+    if (0) return R4OS_ERROR_INVALID;
+    R4App *app = resources ? resources->app : 0;
+    if (!R4_RESOURCE_SYS_HAS(app, notification_close)) return R4OS_ERR_NO_FN;
+    return ((R4SysNotificationCloseFn)(uintptr_t)app->system.table->notification_close)(handle);
+}
+static inline int32_t r4_resources_program_local_get(R4Resources *resources, uint64_t key, uint64_t *out) {
+    if (!out) return R4OS_ERROR_INVALID;
+    R4App *app = resources ? resources->app : 0;
+    if (!R4_RESOURCE_SYS_HAS(app, program_local_get)) return R4OS_ERR_NO_FN;
+    return ((R4SysProgramLocalGetFn)(uintptr_t)app->system.table->program_local_get)(key, out);
+}
+static inline int32_t r4_resources_program_local_publish(R4Resources *resources, uint64_t key, uint64_t value, uint64_t *out) {
+    if (!out) return R4OS_ERROR_INVALID;
+    R4App *app = resources ? resources->app : 0;
+    if (!R4_RESOURCE_SYS_HAS(app, program_local_publish)) return R4OS_ERR_NO_FN;
+    return ((R4SysProgramLocalPublishFn)(uintptr_t)app->system.table->program_local_publish)(key, value, out);
+}
+static inline int32_t r4_resources_program_run(R4Resources *resources, const uint8_t *path, const uint8_t *args) {
+    if (!path || !args) return R4OS_ERROR_INVALID;
+    R4App *app = resources ? resources->app : 0;
+    if (!R4_RESOURCE_SYS_HAS(app, program_run)) return R4OS_ERR_NO_FN;
+    return ((R4SysProgramRunFn)(uintptr_t)app->system.table->program_run)(path, args);
+}
+static inline int32_t r4_resources_program_launch(R4Resources *resources, const uint8_t *path, const uint8_t *args, uint32_t policy) {
+    if (!path || !args) return R4OS_ERROR_INVALID;
+    R4App *app = resources ? resources->app : 0;
+    if (!R4_RESOURCE_SYS_HAS(app, program_launch)) return R4OS_ERR_NO_FN;
+    return ((R4SysProgramLaunchFn)(uintptr_t)app->system.table->program_launch)(path, args, policy);
+}
+static inline int32_t r4_resources_program_spawn(R4Resources *resources, const uint8_t *path, const uint8_t *args, uint32_t policy) {
+    if (!path || !args) return R4OS_ERROR_INVALID;
+    R4App *app = resources ? resources->app : 0;
+    if (!R4_RESOURCE_SYS_HAS(app, program_spawn)) return R4OS_ERR_NO_FN;
+    return ((R4SysProgramSpawnFn)(uintptr_t)app->system.table->program_spawn)(path, args, policy);
+}
+static inline int32_t r4_resources_program_instance(R4Resources *resources, uint32_t index, R4ProgramInstanceInfo *out) {
+    if (!out) return R4OS_ERROR_INVALID;
+    R4App *app = resources ? resources->app : 0;
+    if (!R4_RESOURCE_SYS_HAS(app, program_instance)) return R4OS_ERR_NO_FN;
+    return ((R4SysProgramInstanceFn)(uintptr_t)app->system.table->program_instance)(index, out);
+}
+static inline int32_t r4_resources_program_class(R4Resources *resources, const uint8_t *path, uint32_t policy) {
+    if (!path) return R4OS_ERROR_INVALID;
+    R4App *app = resources ? resources->app : 0;
+    if (!R4_RESOURCE_SYS_HAS(app, program_class)) return R4OS_ERR_NO_FN;
+    return ((R4SysProgramClassFn)(uintptr_t)app->system.table->program_class)(path, policy);
+}
+static inline int32_t r4_resources_program_module_path(R4Resources *resources, uint8_t *out, uint32_t capacity) {
+    if (!out) return R4OS_ERROR_INVALID;
+    R4App *app = resources ? resources->app : 0;
+    if (!R4_RESOURCE_SYS_HAS(app, program_module_path)) return R4OS_ERR_NO_FN;
+    return ((R4SysProgramModulePathFn)(uintptr_t)app->system.table->program_module_path)(out, capacity);
+}
+static inline int32_t r4_resources_program_module_running(R4Resources *resources, const uint8_t *path) {
+    if (!path) return R4OS_ERROR_INVALID;
+    R4App *app = resources ? resources->app : 0;
+    if (!R4_RESOURCE_SYS_HAS(app, program_module_running)) return R4OS_ERR_NO_FN;
+    return ((R4SysProgramModuleRunningFn)(uintptr_t)app->system.table->program_module_running)(path);
+}
+static inline int32_t r4_resources_program_reap_instance(R4Resources *resources, uint32_t id) {
+    if (0) return R4OS_ERROR_INVALID;
+    R4App *app = resources ? resources->app : 0;
+    if (!R4_RESOURCE_SYS_HAS(app, program_reap_instance)) return R4OS_ERR_NO_FN;
+    return ((R4SysProgramReapInstanceFn)(uintptr_t)app->system.table->program_reap_instance)(id);
+}
+static inline int32_t r4_resources_program_request_close(R4Resources *resources, uint32_t id) {
+    if (0) return R4OS_ERROR_INVALID;
+    R4App *app = resources ? resources->app : 0;
+    if (!R4_RESOURCE_SYS_HAS(app, program_request_close)) return R4OS_ERR_NO_FN;
+    return ((R4SysProgramRequestCloseFn)(uintptr_t)app->system.table->program_request_close)(id);
+}
+static inline int32_t r4_resources_program_kill(R4Resources *resources, uint32_t id) {
+    if (0) return R4OS_ERROR_INVALID;
+    R4App *app = resources ? resources->app : 0;
+    if (!R4_RESOURCE_SYS_HAS(app, program_kill)) return R4OS_ERR_NO_FN;
+    return ((R4SysProgramKillFn)(uintptr_t)app->system.table->program_kill)(id);
+}
+static inline int32_t r4_resources_program_exit(R4Resources *resources, int32_t code, uint32_t reason) {
+    if (0) return R4OS_ERROR_INVALID;
+    R4App *app = resources ? resources->app : 0;
+    if (!R4_RESOURCE_SYS_HAS(app, program_exit)) return R4OS_ERR_NO_FN;
+    return ((R4SysProgramExitFn)(uintptr_t)app->system.table->program_exit)(code, reason);
+}
+static inline int32_t r4_resources_async_write_at(R4Resources *resources, R4PathZ path, uint64_t offset, const uint8_t *data, uint64_t length, uint32_t flags, R4IoRequest *out) {
+    if (out) *out = (R4IoRequest){0};
+    R4App *app = resources ? resources->app : 0;
+    if (!out || !path.ptr || !R4_RESOURCE_SYS_HAS(app, io_file_write_at)) return R4OS_IO_ERROR_UNSUPPORTED;
+    uint32_t id = 0;
+    int32_t raw = ((R4SysIoFileWriteAtFn)(uintptr_t)app->system.table->io_file_write_at)(path.ptr, offset, data, length, flags, &id);
+    if (raw == R4OS_IO_OK) r4_io_bind(out, app, id, R4_IO_BUFFER_READ_ONLY, 0, data, length);
+    return raw;
+}
+static inline int32_t r4_resources_async_file_info(R4Resources *resources, R4PathZ path, uint32_t flags, R4IoRequest *out) {
+    if (out) *out = (R4IoRequest){0};
+    R4App *app = resources ? resources->app : 0;
+    if (!out || !path.ptr || !R4_RESOURCE_SYS_HAS(app, io_file_info)) return R4OS_IO_ERROR_UNSUPPORTED;
+    uint32_t id = 0;
+    int32_t raw = ((R4SysIoFileInfoFn)(uintptr_t)app->system.table->io_file_info)(path.ptr, flags, &id);
+    if (raw == R4OS_IO_OK) r4_io_bind(out, app, id, R4_IO_BUFFER_NONE, 0, 0, 0);
+    return raw;
+}
+static inline int32_t r4_resources_async_file_lock(R4Resources *resources, R4PathZ path, uint64_t offset, uint64_t length, uint32_t flags, R4IoRequest *out) {
+    if (out) *out = (R4IoRequest){0};
+    R4App *app = resources ? resources->app : 0;
+    if (!out || !path.ptr || !R4_RESOURCE_SYS_HAS(app, io_file_lock)) return R4OS_IO_ERROR_UNSUPPORTED;
+    uint32_t id = 0;
+    int32_t raw = ((R4SysIoFileLockFn)(uintptr_t)app->system.table->io_file_lock)(path.ptr, offset, length, flags, &id);
+    if (raw == R4OS_IO_OK) r4_io_bind(out, app, id, R4_IO_BUFFER_NONE, 0, 0, 0);
+    return raw;
+}
+
+/* All three service-call buffers are caller-owned through the exact io_close
+ * acknowledgement, including timeout/cancellation. Do not release on wait. */
+static inline int32_t r4_resources_async_service_call(R4Resources *resources,
+    uint32_t service, uint16_t op, const uint8_t *request, uint32_t request_length,
+    R4ServiceMessageHeader *header, uint8_t *response, uint32_t response_capacity,
+    uint64_t timeout_ticks, uint32_t flags, R4IoRequest *out) {
+    if (out) *out = (R4IoRequest){0};
+    if (!resources || !resources->app || !out) return R4OS_IO_ERROR_UNSUPPORTED;
+    uint32_t id = 0;
+    int32_t raw = r4sys_io_service_call(&resources->app->system, service, op, request, request_length,
+        header, response, response_capacity, timeout_ticks, flags, &id);
+    if (raw == R4OS_IO_OK) r4_io_bind(out, resources->app, id, R4_IO_BUFFER_MUTABLE, response, request, response_capacity);
+    return raw;
+}
+static inline int32_t r4_resource_timeout_ticks(R4Resources *resources, R4Timeout timeout, uint64_t *out) {
+    return r4_timeout_to_ticks(timeout, r4_resource_monotonic_hz(resources ? resources->app : 0), out);
+}
+
+
+static inline int32_t r4_resources_program_status(R4Resources *resources, R4ProgramStatus *out) {
+    R4App *app = resources ? resources->app : 0;
+    if (!out || !R4_RESOURCE_SYS_HAS(app, program_status)) return R4OS_ERR_NO_FN;
+    ((R4SysProgramStatusFn)(uintptr_t)app->system.table->program_status)(out); return R4OS_OK;
+}
+static inline int32_t r4_resources_thread_create_raw(R4Resources *resources, R4ThreadEntryFn entry, uint64_t arg, uint64_t reserve, uint32_t flags, uint32_t *out) {
+    R4App *app = resources ? resources->app : 0;
+    if (out) *out = 0;
+    if (!entry || !out) return R4OS_THREAD_ERROR_INVALID;
+    if (!R4_RESOURCE_SYS_HAS(app, thread_create)) return R4OS_THREAD_ERROR_UNSUPPORTED;
+    return ((R4SysThreadCreateFn)(uintptr_t)app->system.table->thread_create)(entry, arg, reserve, flags, out);
+}
+static inline int32_t r4_resources_thread_exit(R4Resources *resources, int32_t code) {
+    R4App *app = resources ? resources->app : 0;
+    if (!R4_RESOURCE_SYS_HAS(app, thread_exit)) return R4OS_THREAD_ERROR_UNSUPPORTED;
+    ((R4SysThreadExitFn)(uintptr_t)app->system.table->thread_exit)(code);
+    return R4OS_THREAD_ERROR_INVALID; /* A valid terminal callback never returns. */
+}
+static inline int32_t r4_resources_thread_join_raw(R4Resources *resources, uint32_t id, uint64_t ticks, int32_t *out) {
+    if (!resources || !resources->app) return R4OS_THREAD_ERROR_UNSUPPORTED;
+    return r4sys_thread_join(&resources->app->system, id, ticks, out);
+}
+static inline uint32_t r4_resources_thread_current_id(R4Resources *resources) {
+    return resources && resources->app ? r4sys_thread_current(&resources->app->system) : 0;
+}
+static inline int32_t r4_resources_thread_status_raw(R4Resources *resources, uint32_t id, R4ProgramThreadInfo *out) {
+    return resources && resources->app ? r4sys_thread_status(&resources->app->system, id, out) : R4OS_THREAD_ERROR_UNSUPPORTED;
+}
+static inline int32_t r4_resources_program_set_console_host(R4Resources *resources, uint32_t id, uint32_t host) {
+    R4App *app = resources ? resources->app : 0;
+    if (!R4_RESOURCE_DESK_HAS(app, program_set_console_host)) return R4OS_ERR_NO_FN;
+    return ((R4DeskProgramSetConsoleHostFn)(uintptr_t)app->desktop.table->program_set_console_host)(id, host);
+}
+static inline uint32_t r4_resources_program_current_console_host(R4Resources *resources) {
+    R4App *app = resources ? resources->app : 0;
+    if (!R4_RESOURCE_DESK_HAS(app, program_current_console_host)) return R4ABI_CONSOLE_HOST_KIND_NONE;
+    return ((R4DeskProgramCurrentConsoleHostFn)(uintptr_t)app->desktop.table->program_current_console_host)();
+}
+static inline int32_t r4_resources_program_request_desktop(R4Resources *resources) {
+    R4App *app = resources ? resources->app : 0;
+    if (!R4_RESOURCE_DESK_HAS(app, program_request_desktop)) return R4OS_ERR_NO_FN;
+    return ((R4DeskProgramRequestDesktopFn)(uintptr_t)app->desktop.table->program_request_desktop)();
+}
+static inline int32_t r4_resources_program_spawn_with_console_host(R4Resources *resources, const uint8_t *path, const uint8_t *args, uint32_t policy, uint32_t host) {
+    R4App *app = resources ? resources->app : 0;
+    if (!path || !args) return R4OS_PROGRAM_HANDLE_ERROR_INVALID;
+    if (!R4_RESOURCE_DESK_HAS(app, program_spawn_with_console_host)) return R4OS_ERR_NO_FN;
+    return ((R4DeskProgramSpawnWithConsoleHostFn)(uintptr_t)app->desktop.table->program_spawn_with_console_host)(path, args, policy, host);
+}
 #endif

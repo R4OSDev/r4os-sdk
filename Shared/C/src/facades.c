@@ -7,6 +7,7 @@
 #define static
 #define inline
 #include <r4os/app_storage.h>
+#include <r4os/app_resources.h>
 #include <r4os/storage.h>
 #include <r4os/directory_page.h>
 #undef inline
@@ -33,4 +34,16 @@ int32_t R4SdkRegistryPath(const uint8_t *input, uintptr_t length,
     r4_contract_copy(out,path.bytes,(uintptr_t)path.length + 1u);
     *out_length = path.length;
     return R4_PATH_OK;
+}
+
+int32_t R4SdkAppFacade(const R4XStartContext *context, R4App *out) {
+    if (!context) return R4OS_ERROR_INVALID;
+    R4AppProfile profile;
+    switch (context->app_class) {
+    case R4XSTART_APP_CLASS_CONSOLE: profile = R4_APP_PROFILE_CONSOLE; break;
+    case R4XSTART_APP_CLASS_GUI: profile = R4_APP_PROFILE_DESKTOP; break;
+    case R4XSTART_APP_CLASS_SERVICE: profile = R4_APP_PROFILE_SERVICE; break;
+    default: return R4OS_ERROR_INVALID;
+    }
+    return r4_app_init(context, profile, out).raw_code;
 }

@@ -253,6 +253,40 @@ is Tests/Simulation/RustAggregateCopy.rs; real nonzero record/FFI checks live
 in the RustStorage fixture. Panic output includes source location and message
 without an allocator, while retaining failed process exit and terminal trap.
 
+Instance resources (SDK0.64.73)
+------------------------------
+resources::Resources borrows App and stays local (no Send/Sync). Its process,
+thread, VM, notification and I/O modules reuse the existing C owner. Owned and
+borrowed process handles retain exact generations; wait-ready/output/reap are
+distinct. Native raw-ID APIs stay independent and are never a handle fallback.
+program_run returns call status, not the child exit code. Placement retains
+required CPU-word metadata and native status, including capacity errors.
+Ownerlocal publication distinguishes an inserted value from the existing one.
+
+Close/join/stop/timeout are distinct. VM release and notification close retain
+failed native ownership; thread arguments/entry code stay resident until the
+exact join. StopFlag is atomic stop intent, never a completion receipt.
+Native waits use the blocking APIs. Optional function admission checks the
+exact readable slot; file I/O does not require an unrelated service callback.
+
+Borrowed async IoOperation admission is unsafe: caller buffers and service
+request/header/response must remain resident and obey aliasing until exact
+close acknowledgement, even if IoRequest is dropped or forgotten. A Rust
+lifetime alone does not make forget safe. The alloc feature offers safe owned
+read/write/service requests: Box storage is consumed into raw ownership and
+reconstructed only after close ACK. No buffer views are exposed while pending.
+Drop tries close once; BUSY/failure retains all raw addresses for eventual
+instance cleanup. Forgetting OwnedIo also keeps its owned storage alive.
+Use wait, close and take_buffers to recover it normally. Completed status,
+operation error, partial bytes and timeout retain their separate meanings.
+Closing a file-lock I/O receipt does not unlock the distinct native file lock.
+
+Test-RustResources.ps1 uses the existing C app-resource case and a grouped
+release Rust interop/retention check plus real unsafe/Send misuse builds.
+resource-parity-test runs only the three existing Zig lifecycle cases. The
+RustResources mixed R4X qualifies actual local SMP4 AP workers, VM, processes
+and I/O cleanup. See Docs/SDK/LanguageParity.txt for exact evidence and limits.
+
 The shared SDK module_capabilities.zig Decision supplies supported/code/reason,
 owner_contract and missing_steps. Installation of a compiler does not change
 these support decisions. Further Rust roles are deliberately separate work:

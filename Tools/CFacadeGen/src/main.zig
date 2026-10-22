@@ -16,7 +16,7 @@ fn typeCandidate(name: []const u8) bool {
 }
 fn selected(comptime name: []const u8) bool {
     if (starts(name, "R4SdkHeap")) return false;
-    inline for (.{ "r4_files_", "r4_console_", "r4_stream_", "r4_directory_", "r4_registry_", "r4_storage_", "r4_dialog_", "r4_ordered_", "r4_snapshot_", "R4Sdk" }) |prefix| {
+    inline for (.{ "r4_files_", "r4_console_", "r4_stream_", "r4_directory_", "r4_registry_", "r4_storage_", "r4_dialog_", "r4_ordered_", "r4_snapshot_", "r4_resources_", "r4_resource_", "r4_process_", "r4os_process_", "r4os_spawn_", "r4_join_", "r4_vm_region_", "r4_io_", "r4_notification_", "R4Sdk" }) |prefix| {
         if (starts(name, prefix)) return true;
     }
     return false;

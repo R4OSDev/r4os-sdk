@@ -32,7 +32,12 @@ SDK0.64.72 completes the storage/path/registry/console facade group for Rust
 and C. Rust reuses compiler-projected C facades and the existing Zig save,
 recent-document, hive and Unicode buffer owners through matched SDK objects.
 The same release fixes the current recent-document write capacity and keeps
-Cargo feature selection independent of mandatory CPU compiler features.
+Cargo feature selection distinct from required hardware and effective Rust flags.
+SDK0.64.73 adds complete current Rust/C process, thread, VM, notification and
+async-I/O facades, reusing the existing C resource owner. Safe owned I/O keeps
+all native buffer addresses until exact close ACK, including drop/forget;
+borrowed asynchronous admission is explicitly unsafe. Generation, partial
+progress, optional-slot and CPU-placement metadata retain their contracts.
 Other facade groups remain in their respective parity waves.
 SDK0.64.67 binds Contract0.64.42's complete technical C projection. Driver,
 protocol, DMA/USB and service records now come from the canonical Contract;

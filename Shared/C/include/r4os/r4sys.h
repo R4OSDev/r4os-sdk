@@ -20,6 +20,13 @@ typedef struct R4Sys {
     const R4XStartR4Sys *table;
 } R4Sys;
 
+/* Per-operation slot admission. A file operation does not require an unrelated
+ * service transport, nor does a handle status query require thread creation. */
+static inline int r4sys_has_callback(const R4Sys *sys, size_t offset) {
+    return sys && sys->table && offset <= sys->table->size && sizeof(uintptr_t) <= sys->table->size - offset;
+}
+#define R4SYS_HAS(sys, field) (r4sys_has_callback((sys), offsetof(R4XStartR4Sys, field)) && (sys)->table->field != 0)
+
 /* Optional explicit blocking orderly transition; accepted work is terminal.
  * Old raw slots remain independent immediate operations. No automatic retry. */
 static inline int32_t r4sys_system_power_transition(const R4Sys *sys,uint32_t action,uint64_t timeout_ticks){
@@ -187,25 +194,25 @@ static inline int r4sys_supports_threads(R4Sys *sys) {
 }
 
 static inline int32_t r4sys_thread_create(R4Sys *sys, R4ThreadEntryFn entry, uintptr_t arg, uint64_t stack_reserve_bytes, uint32_t *out_thread_id) {
-    if (!r4sys_supports_threads(sys) || entry == 0 || out_thread_id == 0) return R4OS_THREAD_ERROR_UNSUPPORTED;
+    if (!R4SYS_HAS(sys, thread_create) || entry == 0 || out_thread_id == 0) return R4OS_THREAD_ERROR_UNSUPPORTED;
     R4SysThreadCreateFn create_fn = (R4SysThreadCreateFn)(uintptr_t)sys->table->thread_create;
     return create_fn(entry, arg, stack_reserve_bytes, 0, out_thread_id);
 }
 
 static inline void r4sys_thread_exit(R4Sys *sys, int32_t exit_code) {
-    if (!r4sys_supports_threads(sys)) return;
+    if (!R4SYS_HAS(sys, thread_exit)) return;
     R4SysThreadExitFn exit_fn = (R4SysThreadExitFn)(uintptr_t)sys->table->thread_exit;
     exit_fn(exit_code);
 }
 
 static inline int32_t r4sys_thread_join(R4Sys *sys, uint32_t thread_id, uint64_t timeout_ticks, int32_t *out_exit_code) {
-    if (!r4sys_supports_threads(sys) || out_exit_code == 0) return R4OS_THREAD_ERROR_UNSUPPORTED;
+    if (!R4SYS_HAS(sys, thread_join) || out_exit_code == 0) return R4OS_THREAD_ERROR_UNSUPPORTED;
     R4SysThreadJoinFn join_fn = (R4SysThreadJoinFn)(uintptr_t)sys->table->thread_join;
     return join_fn(thread_id, timeout_ticks, out_exit_code);
 }
 
 static inline uint32_t r4sys_thread_current(R4Sys *sys) {
-    if (!r4sys_supports_threads(sys)) return 0;
+    if (!R4SYS_HAS(sys, thread_current)) return 0;
     R4SysThreadCurrentFn current_fn = (R4SysThreadCurrentFn)(uintptr_t)sys->table->thread_current;
     return current_fn();
 }
@@ -260,7 +267,7 @@ static inline int32_t r4sys_program_exit(R4Sys *sys, int32_t exit_code, uint32_t
 }
 
 static inline int32_t r4sys_thread_status(R4Sys *sys, uint32_t thread_id, R4ProgramThreadInfo *out_info) {
-    if (!r4sys_supports_threads(sys) || out_info == 0) return R4OS_THREAD_ERROR_UNSUPPORTED;
+    if (!R4SYS_HAS(sys, thread_status) || out_info == 0) return R4OS_THREAD_ERROR_UNSUPPORTED;
     R4SysThreadStatusFn status_fn = (R4SysThreadStatusFn)(uintptr_t)sys->table->thread_status;
     return status_fn(thread_id, out_info);
 }
@@ -423,13 +430,13 @@ static inline int32_t r4sys_thread_create_handle(
 {
     if (out_handle != 0) *out_handle = (R4ProgramJoinHandle){0};
     if (entry == 0 || out_handle == 0) return R4OS_THREAD_ERROR_INVALID;
-    if (!r4sys_supports_thread_handles(sys)) return R4OS_THREAD_ERROR_UNSUPPORTED;
+    if (!R4SYS_HAS(sys, thread_create_handle)) return R4OS_THREAD_ERROR_UNSUPPORTED;
     R4SysThreadCreateHandleFn create_fn =
         (R4SysThreadCreateHandleFn)(uintptr_t)sys->table->thread_create_handle;
     return create_fn(entry, (uint64_t)arg, stack_reserve_bytes, flags, out_handle);
 }
 
-/* Requires META=runtime.workers=owned-v1; old providers return unsupported. */
+/* Requires META=runtime.workers=owned-v1; native admission owns the policy. */
 static inline int32_t r4sys_compute_worker_create(
     R4Sys *sys, R4ThreadEntryFn entry, uintptr_t arg, uint64_t stack_reserve_bytes,
     R4ProgramJoinHandle *out_handle)
@@ -445,7 +452,7 @@ static inline int32_t r4sys_thread_handle_join(
     int32_t *out_exit_code)
 {
     if (handle == 0 || out_exit_code == 0) return R4OS_THREAD_ERROR_INVALID;
-    if (!r4sys_supports_thread_handles(sys)) return R4OS_THREAD_ERROR_UNSUPPORTED;
+    if (!R4SYS_HAS(sys, thread_handle_join)) return R4OS_THREAD_ERROR_UNSUPPORTED;
     R4SysThreadHandleJoinFn join_fn =
         (R4SysThreadHandleJoinFn)(uintptr_t)sys->table->thread_handle_join;
     return join_fn(handle, timeout_ticks, out_exit_code);
@@ -457,7 +464,7 @@ static inline int32_t r4sys_thread_handle_status(
     R4ProgramThreadInfo *out_info)
 {
     if (handle == 0 || out_info == 0) return R4OS_THREAD_ERROR_INVALID;
-    if (!r4sys_supports_thread_handles(sys)) return R4OS_THREAD_ERROR_UNSUPPORTED;
+    if (!R4SYS_HAS(sys, thread_handle_status)) return R4OS_THREAD_ERROR_UNSUPPORTED;
     R4SysThreadHandleStatusFn status_fn =
         (R4SysThreadHandleStatusFn)(uintptr_t)sys->table->thread_handle_status;
     return status_fn(handle, out_info);
@@ -569,109 +576,109 @@ static inline int r4sys_supports_async_io(R4Sys *sys) {
 }
 
 static inline int32_t r4sys_io_file_read(R4Sys *sys, const char *path, uint8_t *out, uint64_t capacity, uint32_t flags, uint32_t *out_request_id) {
-    if (!r4sys_supports_async_io(sys) || path == 0 || out_request_id == 0) return R4OS_IO_ERROR_UNSUPPORTED;
+    if (!R4SYS_HAS(sys, io_file_read) || path == 0 || out_request_id == 0) return R4OS_IO_ERROR_UNSUPPORTED;
     R4SysIoFileReadFn io_fn = (R4SysIoFileReadFn)(uintptr_t)sys->table->io_file_read;
     return io_fn((const uint8_t *)path, out, capacity, flags, out_request_id);
 }
 
 static inline int32_t r4sys_io_file_read_at(R4Sys *sys, const char *path, uint64_t offset, uint8_t *out, uint64_t capacity, uint32_t flags, uint32_t *out_request_id) {
-    if (!r4sys_supports_async_io(sys) || sys->table->io_file_read_at == 0 || path == 0 || out_request_id == 0) return R4OS_IO_ERROR_UNSUPPORTED;
+    if (!R4SYS_HAS(sys, io_file_read_at) || sys->table->io_file_read_at == 0 || path == 0 || out_request_id == 0) return R4OS_IO_ERROR_UNSUPPORTED;
     R4SysIoFileReadAtFn io_fn = (R4SysIoFileReadAtFn)(uintptr_t)sys->table->io_file_read_at;
     return io_fn((const uint8_t *)path, offset, out, capacity, flags, out_request_id);
 }
 
 static inline int32_t r4sys_io_file_write(R4Sys *sys, const char *path, const uint8_t *data, uint64_t len, uint32_t flags, uint32_t *out_request_id) {
-    if (!r4sys_supports_async_io(sys) || path == 0 || out_request_id == 0) return R4OS_IO_ERROR_UNSUPPORTED;
+    if (!R4SYS_HAS(sys, io_file_write) || path == 0 || out_request_id == 0) return R4OS_IO_ERROR_UNSUPPORTED;
     R4SysIoFileWriteFn io_fn = (R4SysIoFileWriteFn)(uintptr_t)sys->table->io_file_write;
     return io_fn((const uint8_t *)path, data, len, flags, out_request_id);
 }
 
 static inline int32_t r4sys_io_file_append(R4Sys *sys, const char *path, const uint8_t *data, uint64_t len, uint32_t flags, uint32_t *out_request_id) {
-    if (!r4sys_supports_async_io(sys) || sys->table->io_file_append == 0 || path == 0 || out_request_id == 0) return R4OS_IO_ERROR_UNSUPPORTED;
+    if (!R4SYS_HAS(sys, io_file_append) || sys->table->io_file_append == 0 || path == 0 || out_request_id == 0) return R4OS_IO_ERROR_UNSUPPORTED;
     R4SysIoFileAppendFn io_fn = (R4SysIoFileAppendFn)(uintptr_t)sys->table->io_file_append;
     return io_fn((const uint8_t *)path, data, len, flags, out_request_id);
 }
 
 static inline int32_t r4sys_io_file_stream_begin(R4Sys *sys, const char *path, uint32_t flags, uint32_t *out_request_id) {
-    if (!r4sys_supports_async_io(sys) || sys->table->io_file_stream_begin == 0 || path == 0 || out_request_id == 0) return R4OS_IO_ERROR_UNSUPPORTED;
+    if (!R4SYS_HAS(sys, io_file_stream_begin) || sys->table->io_file_stream_begin == 0 || path == 0 || out_request_id == 0) return R4OS_IO_ERROR_UNSUPPORTED;
     R4SysIoFileStreamBeginFn io_fn = (R4SysIoFileStreamBeginFn)(uintptr_t)sys->table->io_file_stream_begin;
     return io_fn((const uint8_t *)path, flags, out_request_id);
 }
 
 static inline int32_t r4sys_io_file_stream_write(R4Sys *sys, const char *path, uint64_t offset, const uint8_t *data, uint64_t len, uint32_t flags, uint32_t *out_request_id) {
-    if (!r4sys_supports_async_io(sys) || path == 0 || out_request_id == 0) return R4OS_IO_ERROR_UNSUPPORTED;
+    if (!R4SYS_HAS(sys, io_file_stream_write) || path == 0 || out_request_id == 0) return R4OS_IO_ERROR_UNSUPPORTED;
     R4SysIoFileStreamWriteFn io_fn = (R4SysIoFileStreamWriteFn)(uintptr_t)sys->table->io_file_stream_write;
     return io_fn((const uint8_t *)path, offset, data, len, flags, out_request_id);
 }
 
 static inline int32_t r4sys_io_file_stream_finish(R4Sys *sys, const char *path, uint64_t expected_size, uint32_t flags, uint32_t *out_request_id) {
-    if (!r4sys_supports_async_io(sys) || sys->table->io_file_stream_finish == 0 || path == 0 || out_request_id == 0) return R4OS_IO_ERROR_UNSUPPORTED;
+    if (!R4SYS_HAS(sys, io_file_stream_finish) || sys->table->io_file_stream_finish == 0 || path == 0 || out_request_id == 0) return R4OS_IO_ERROR_UNSUPPORTED;
     R4SysIoFileStreamFinishFn io_fn = (R4SysIoFileStreamFinishFn)(uintptr_t)sys->table->io_file_stream_finish;
     return io_fn((const uint8_t *)path, expected_size, flags, out_request_id);
 }
 
 static inline int32_t r4sys_io_file_stream_abort(R4Sys *sys, const char *path, uint32_t *out_request_id) {
-    if (!r4sys_supports_async_io(sys) || sys->table->io_file_stream_abort == 0 || path == 0 || out_request_id == 0) return R4OS_IO_ERROR_UNSUPPORTED;
+    if (!R4SYS_HAS(sys, io_file_stream_abort) || sys->table->io_file_stream_abort == 0 || path == 0 || out_request_id == 0) return R4OS_IO_ERROR_UNSUPPORTED;
     R4SysIoFileStreamAbortFn io_fn = (R4SysIoFileStreamAbortFn)(uintptr_t)sys->table->io_file_stream_abort;
     return io_fn((const uint8_t *)path, out_request_id);
 }
 
 static inline int32_t r4sys_io_service_call(R4Sys *sys, uint32_t handle, uint16_t op, const uint8_t *request, uint32_t request_len, void *response_header, uint8_t *response, uint32_t response_capacity, uint64_t timeout_ticks, uint32_t flags, uint32_t *out_request_id) {
-    if (!r4sys_supports_async_io(sys) || response_header == 0 || response == 0 || out_request_id == 0) return R4OS_IO_ERROR_UNSUPPORTED;
+    if (!R4SYS_HAS(sys, io_service_call) || response_header == 0 || response == 0 || out_request_id == 0) return R4OS_IO_ERROR_UNSUPPORTED;
     R4SysIoServiceCallFn io_fn = (R4SysIoServiceCallFn)(uintptr_t)sys->table->io_service_call;
     return io_fn(handle, op, request, request_len, response_header, response, response_capacity, timeout_ticks, flags, out_request_id);
 }
 
 static inline int32_t r4sys_io_status(R4Sys *sys, uint32_t request_id, R4ProgramIoInfo *out_info) {
-    if (!r4sys_supports_async_io(sys) || out_info == 0) return R4OS_IO_ERROR_UNSUPPORTED;
+    if (!R4SYS_HAS(sys, io_status) || out_info == 0) return R4OS_IO_ERROR_UNSUPPORTED;
     R4SysIoStatusFn io_fn = (R4SysIoStatusFn)(uintptr_t)sys->table->io_status;
     return io_fn(request_id, out_info);
 }
 
 static inline int32_t r4sys_io_wait(R4Sys *sys, uint32_t request_id, uint64_t timeout_ticks, R4ProgramIoInfo *out_info) {
-    if (!r4sys_supports_async_io(sys) || out_info == 0) return R4OS_IO_ERROR_UNSUPPORTED;
+    if (!R4SYS_HAS(sys, io_wait) || out_info == 0) return R4OS_IO_ERROR_UNSUPPORTED;
     R4SysIoWaitFn io_fn = (R4SysIoWaitFn)(uintptr_t)sys->table->io_wait;
     return io_fn(request_id, timeout_ticks, out_info);
 }
 
 static inline int32_t r4sys_io_close(R4Sys *sys, uint32_t request_id) {
-    if (!r4sys_supports_async_io(sys)) return R4OS_IO_ERROR_UNSUPPORTED;
+    if (!R4SYS_HAS(sys, io_close)) return R4OS_IO_ERROR_UNSUPPORTED;
     R4SysIoCloseFn io_fn = (R4SysIoCloseFn)(uintptr_t)sys->table->io_close;
     return io_fn(request_id);
 }
 
 static inline int32_t r4sys_vm_reserve(R4Sys *sys, uint64_t size, uint64_t alignment, uint64_t flags, R4ProgramVmRegionInfo *out_info) {
-    if (!r4sys_supports_vm(sys) || out_info == 0) return R4OS_VM_ERROR_NO_INSTANCE;
+    if (!R4SYS_HAS(sys, vm_reserve) || out_info == 0) return R4OS_VM_ERROR_NO_INSTANCE;
     R4SysVmReserveFn vm_fn = (R4SysVmReserveFn)(uintptr_t)sys->table->vm_reserve;
     return vm_fn(size, alignment, flags, out_info);
 }
 
 static inline int32_t r4sys_vm_commit(R4Sys *sys, uint32_t region_id, uint64_t offset, uint64_t len) {
-    if (!r4sys_supports_vm(sys)) return R4OS_VM_ERROR_NO_INSTANCE;
+    if (!R4SYS_HAS(sys, vm_commit)) return R4OS_VM_ERROR_NO_INSTANCE;
     R4SysVmCommitFn vm_fn = (R4SysVmCommitFn)(uintptr_t)sys->table->vm_commit;
     return vm_fn(region_id, offset, len, 0);
 }
 
 static inline int32_t r4sys_vm_commit_flags(R4Sys *sys, uint32_t region_id, uint64_t offset, uint64_t len, uint64_t flags) {
-    if (!r4sys_supports_vm(sys)) return R4OS_VM_ERROR_NO_INSTANCE;
+    if (!R4SYS_HAS(sys, vm_commit)) return R4OS_VM_ERROR_NO_INSTANCE;
     R4SysVmCommitFn vm_fn = (R4SysVmCommitFn)(uintptr_t)sys->table->vm_commit;
     return vm_fn(region_id, offset, len, flags);
 }
 
 static inline int32_t r4sys_vm_decommit(R4Sys *sys, uint32_t region_id, uint64_t offset, uint64_t len) {
-    if (!r4sys_supports_vm(sys)) return R4OS_VM_ERROR_NO_INSTANCE;
+    if (!R4SYS_HAS(sys, vm_decommit)) return R4OS_VM_ERROR_NO_INSTANCE;
     R4SysVmDecommitFn vm_fn = (R4SysVmDecommitFn)(uintptr_t)sys->table->vm_decommit;
     return vm_fn(region_id, offset, len);
 }
 
 static inline int32_t r4sys_vm_release(R4Sys *sys, uint32_t region_id) {
-    if (!r4sys_supports_vm(sys)) return R4OS_VM_ERROR_NO_INSTANCE;
+    if (!R4SYS_HAS(sys, vm_release)) return R4OS_VM_ERROR_NO_INSTANCE;
     R4SysVmReleaseFn vm_fn = (R4SysVmReleaseFn)(uintptr_t)sys->table->vm_release;
     return vm_fn(region_id);
 }
 
 static inline int32_t r4sys_vm_query(R4Sys *sys, uint32_t region_id, R4ProgramVmRegionInfo *out_info) {
-    if (!r4sys_supports_vm(sys) || out_info == 0) return R4OS_VM_ERROR_NO_INSTANCE;
+    if (!R4SYS_HAS(sys, vm_query) || out_info == 0) return R4OS_VM_ERROR_NO_INSTANCE;
     R4SysVmQueryFn vm_fn = (R4SysVmQueryFn)(uintptr_t)sys->table->vm_query;
     return vm_fn(region_id, out_info);
 }

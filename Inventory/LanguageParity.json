@@ -457,22 +457,27 @@
       "semantics": "Instanz-/Thread-/VM-Generationen, borrowed/owned, Join/Stop/Cancel und echte Abschlussquittungen unterscheiden. Timeout/Forever/NoWait, Teilfortschritt und gehaltene I/O-Puffer unveraendert; kein ungeprueftes Send/Sync.",
       "current_only": "current_function",
       "rust": {
-        "state": "missing_higher_facade",
-        "source": "Repositories/SDK/Rust/src/lib.rs",
-        "gap": "Rust besitzt sleep und rohe ABI-Typen, keine Ressourcenfassaden. C hat getypte Prozesse/Joins/VM/I/O; fehlende aktuelle Schwanzfunktionen und Verhalten pruefen."
+        "state": "paritaet_abgenommen",
+        "source": "Repositories/SDK/Rust/src/resources",
+        "gap": "SDK73/Contract44: Process/Join/VM/IO/Notification/Ownerlocal/Inventory/CPU-Placement mit echten Leihen und Quittungen. Sichere owned I/O-Puffer bis ACK; Borrowaufnahme unsafe auch bei forget. Keine automatische Cancellation/ACK oder Send/Sync-Zusage."
       },
       "c": {
-        "state": "existing_facade_review_required",
+        "state": "paritaet_abgenommen",
         "sources": [
           "Repositories/SDK/Shared/C/include/r4os/r4sys.h",
           "Repositories/SDK/Shared/C/include/r4os/app_resources.h"
         ],
-        "gap": "Bestehende C-Fassade erhalten; nur fehlende aktuelle Funktionen/hoeheren Hilfen und deren Semantik gegen die verlinkten Zig-Deklarationen schliessen."
+        "gap": "Vorhandene C-Kerne projiziert und fehlende aktuelle Funktionen ergaenzt; per-operation Slotzulassung, Cursorgenerationen, rohe Placement-/Publish-Statuswerte und expliziter Close erhalten. Keine Altkernel-Emulation."
       },
       "evidence": [
-        "source_inventory"
+        "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.54",
+        "Repositories/SDK/Tools/Test-RustResources.ps1",
+        "Repositories/SDK/Tests/Simulation/RustResources.rs",
+        "Repositories/SDK/Tests/Simulation/ResourceCallbacks.c",
+        "Repositories/SDK/Tests/Build/RustResources",
+        "Repositories/SDK/Tests/Conformance/ResourceFacadePrototype05825.zig"
       ],
-      "shared_core": null
+      "shared_core": "Bestehender C-AppResources-Besitzer und native R4SYS-Callbacks; keine zweite VM-/Scheduler-/Prozess-/IOimplementierung. Eigener Code nur fuer Rust-Besitz und API-sichere Pufferretention."
     },
     {
       "id": "services",
@@ -46976,6 +46981,28 @@
         "workers": 4,
         "score_areas": 6
       }
+    },
+    "resource_current_54": {
+      "kind": "native_release_and_real_KVM_SMP4_function",
+      "sdk": "0.64.73",
+      "contract": "0.64.44",
+      "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.54",
+      "container_sha256": "bed6ff9c0daf4bdb1571df60ba6ebf697feb1f830c52408a133b47bc50596b4c",
+      "container_bytes": 135293,
+      "guest": "Full0.86.42/Kernel0.1.381/KVM/SMP4",
+      "exit": 0,
+      "projection": {
+        "functions": 200,
+        "records": 531,
+        "canonical_aliases": 464
+      },
+      "standard": "none: SDK/header/fixture-only, no normal consumer of changed C resources; normal artifacts byte-identical to53",
+      "unchanged_normal_artifacts": {
+        "kernel": "e06111b9363b44712fe69ded9ddfc3edb1f60c5c271c59a42238a816b0882340",
+        "desktop": "2b493582b26d800f6ddf67d306e192b37a727a654b202bd98b06ad3dd8901421",
+        "spectra": "1687bf3ffc267a663e04280579c0774eb4427dbe4165e9338cb09f253fd32bd7"
+      },
+      "limit": "Kein Hardware-/Windows-/Rust-SIMDbeleg. Borrowed IO unsafe; fehlgeschlagenes Drop-Close behaelt Rohspeicher, Kernelinstance-Reaper bleibt Besitzer."
     }
   },
   "wave_bindings": [
@@ -47046,7 +47073,8 @@
         "process-sync-vm"
       ],
       "entry_rule": "Nur diese betroffenen Zeilen gegen ihren aktuellen Besitzer und gueltige Vorbelege nachpruefen; bereits erreichte Teilziele belegen, alte Kandidaten verwerfen, Pflichtfunktion erhalten.",
-      "current_only_cleanup": "Im ohnehin beruehrten Besitzer alte OS-Ersatzpfade entfernen;78-82 nur noch nachgewiesenen Rest zuweisen."
+      "current_only_cleanup": "Im ohnehin beruehrten Besitzer alte OS-Ersatzpfade entfernen;78-82 nur noch nachgewiesenen Rest zuweisen.",
+      "result": "SDK73/Contract44 qualifiziert; C/Rust-Semantik/Retention, drei bestehende Zigfaelle und ein gebuendelter echter SMP4-Verbraucher abgenommen. Normale Runtime unveraendert, kein STANDARD."
     },
     {
       "version": "0.86.55",

@@ -1324,6 +1324,64 @@ pub struct R4RegistryBatchApply {
 const _: () = { assert!(core::mem::size_of::<R4RegistryBatchApply>() == 48); assert!(core::mem::align_of::<R4RegistryBatchApply>() == 8); assert!(core::mem::offset_of!(R4RegistryBatchApply, r#raw_code) == 0); assert!(core::mem::offset_of!(R4RegistryBatchApply, r#result) == 8); };
 #[repr(C)]
 #[derive(Clone, Copy)]
+pub struct R4Resources {
+    pub r#app: *mut R4App,
+}
+const _: () = { assert!(core::mem::size_of::<R4Resources>() == 8); assert!(core::mem::align_of::<R4Resources>() == 8); assert!(core::mem::offset_of!(R4Resources, r#app) == 0); };
+#[repr(C)]
+#[derive(Clone, Copy)]
+pub struct R4ResourceWait {
+    pub r#kind: u32,
+    pub r#value: i32,
+}
+const _: () = { assert!(core::mem::size_of::<R4ResourceWait>() == 8); assert!(core::mem::align_of::<R4ResourceWait>() == 4); assert!(core::mem::offset_of!(R4ResourceWait, r#kind) == 0); assert!(core::mem::offset_of!(R4ResourceWait, r#value) == 4); };
+#[repr(C)]
+#[derive(Clone, Copy)]
+pub struct R4Process {
+    pub r#app: *mut R4App,
+    pub r#raw: u32,
+    pub r#owned: u8,
+    pub r#reserved: [u8; 3],
+    pub r#generation: u64,
+    pub r#handle_reserved: u32,
+    pub r#extension_reserved: u32,
+}
+const _: () = { assert!(core::mem::size_of::<R4Process>() == 32); assert!(core::mem::align_of::<R4Process>() == 8); assert!(core::mem::offset_of!(R4Process, r#app) == 0); assert!(core::mem::offset_of!(R4Process, r#raw) == 8); assert!(core::mem::offset_of!(R4Process, r#owned) == 12); assert!(core::mem::offset_of!(R4Process, r#reserved) == 13); assert!(core::mem::offset_of!(R4Process, r#generation) == 16); assert!(core::mem::offset_of!(R4Process, r#handle_reserved) == 24); assert!(core::mem::offset_of!(R4Process, r#extension_reserved) == 28); };
+#[repr(C)]
+#[derive(Clone, Copy)]
+pub struct R4JoinHandle {
+    pub r#app: *mut R4App,
+    pub r#handle: R4ProgramJoinHandle,
+    pub r#owned: u8,
+    pub r#reserved: [u8; 7],
+}
+const _: () = { assert!(core::mem::size_of::<R4JoinHandle>() == 48); assert!(core::mem::align_of::<R4JoinHandle>() == 8); assert!(core::mem::offset_of!(R4JoinHandle, r#app) == 0); assert!(core::mem::offset_of!(R4JoinHandle, r#handle) == 8); assert!(core::mem::offset_of!(R4JoinHandle, r#owned) == 40); assert!(core::mem::offset_of!(R4JoinHandle, r#reserved) == 41); };
+#[repr(C)]
+#[derive(Clone, Copy)]
+pub struct R4VmRegion {
+    pub r#app: *mut R4App,
+    pub r#raw: u32,
+    pub r#owned: u8,
+    pub r#reserved: [u8; 3],
+    pub r#last_info: R4ProgramVmRegionInfo,
+}
+const _: () = { assert!(core::mem::size_of::<R4VmRegion>() == 112); assert!(core::mem::align_of::<R4VmRegion>() == 8); assert!(core::mem::offset_of!(R4VmRegion, r#app) == 0); assert!(core::mem::offset_of!(R4VmRegion, r#raw) == 8); assert!(core::mem::offset_of!(R4VmRegion, r#owned) == 12); assert!(core::mem::offset_of!(R4VmRegion, r#reserved) == 13); assert!(core::mem::offset_of!(R4VmRegion, r#last_info) == 16); };
+#[repr(C)]
+#[derive(Clone, Copy)]
+pub struct R4IoRequest {
+    pub r#app: *mut R4App,
+    pub r#raw: u32,
+    pub r#owned: u8,
+    pub r#buffer_kind: u8,
+    pub r#reserved: [u8; 2],
+    pub r#mutable_buffer: *mut core::ffi::c_void,
+    pub r#read_only_buffer: *const core::ffi::c_void,
+    pub r#buffer_length: u64,
+    pub r#last_info: R4ProgramIoInfo,
+}
+const _: () = { assert!(core::mem::size_of::<R4IoRequest>() == 120); assert!(core::mem::align_of::<R4IoRequest>() == 8); assert!(core::mem::offset_of!(R4IoRequest, r#app) == 0); assert!(core::mem::offset_of!(R4IoRequest, r#raw) == 8); assert!(core::mem::offset_of!(R4IoRequest, r#owned) == 12); assert!(core::mem::offset_of!(R4IoRequest, r#buffer_kind) == 13); assert!(core::mem::offset_of!(R4IoRequest, r#reserved) == 14); assert!(core::mem::offset_of!(R4IoRequest, r#mutable_buffer) == 16); assert!(core::mem::offset_of!(R4IoRequest, r#read_only_buffer) == 24); assert!(core::mem::offset_of!(R4IoRequest, r#buffer_length) == 32); assert!(core::mem::offset_of!(R4IoRequest, r#last_info) == 40); };
+#[repr(C)]
+#[derive(Clone, Copy)]
 pub struct R4Storage {
     pub r#system: *mut R4Sys,
 }
@@ -1519,6 +1577,102 @@ unsafe extern "C" {
     pub fn r4_registry_value_bool(p0: *const R4RegistryValueView, p1: *mut i32) -> i32;
     pub fn r4_registry_value_string(p0: *const R4RegistryValueView, p1: *mut R4TextView) -> i32;
     pub fn r4_registry_value_binary(p0: *const R4RegistryValueView, p1: *mut *const u8, p2: *mut u32) -> i32;
+    pub fn r4_resource_sys_has(p0: *const R4App, p1: u64) -> i32;
+    pub fn r4_resource_desk_has(p0: *const R4App, p1: u64) -> i32;
+    pub fn r4os_process_valid(p0: *const R4Process) -> i32;
+    pub fn r4_process_valid(p0: *const R4Process) -> i32;
+    pub fn r4os_process_abi_handle(p0: *const R4Process) -> R4ProgramProcessHandle;
+    pub fn r4os_process_store_abi_handle(p0: *mut R4Process, p1: *const R4ProgramProcessHandle) -> ();
+    pub fn r4os_process_invalidate(p0: *mut R4Process) -> ();
+    pub fn r4_join_handle_valid(p0: *const R4JoinHandle) -> i32;
+    pub fn r4_join_handle_invalidate(p0: *mut R4JoinHandle) -> ();
+    pub fn r4_vm_region_valid(p0: *const R4VmRegion) -> i32;
+    pub fn r4_io_request_valid(p0: *const R4IoRequest) -> i32;
+    pub fn r4_resource_monotonic_hz(p0: *mut R4App) -> u32;
+    pub fn r4_resource_yield(p0: *mut R4App) -> ();
+    pub fn r4_resources_spawn(p0: *mut R4Resources, p1: R4PathZ, p2: *const u8, p3: u32, p4: *mut R4Process) -> i32;
+    pub fn r4os_spawn_with_console_host(p0: *mut R4Resources, p1: R4PathZ, p2: *const u8, p3: u32, p4: u32, p5: *mut R4Process) -> i32;
+    pub fn r4os_process_status(p0: *mut R4Process, p1: *mut R4ProgramInstanceInfo) -> i32;
+    pub fn r4_process_status(p0: *mut R4Process, p1: *mut R4ProgramInstanceInfo) -> i32;
+    pub fn r4_resources_open_process(p0: *mut R4Resources, p1: u32, p2: *mut R4Process) -> i32;
+    pub fn r4os_process_request_close(p0: *mut R4Process) -> i32;
+    pub fn r4_process_request_close(p0: *mut R4Process) -> i32;
+    pub fn r4os_process_kill(p0: *mut R4Process) -> i32;
+    pub fn r4_process_kill(p0: *mut R4Process) -> i32;
+    pub fn r4os_process_wait_ready(p0: *mut R4Process, p1: R4Timeout, p2: *mut R4ProgramProcessCompletion) -> i32;
+    pub fn r4os_process_completion_read(p0: *mut R4Process, p1: u32, p2: *mut u8, p3: u32, p4: *mut u32) -> i32;
+    pub fn r4os_process_reap(p0: *mut R4Process, p1: *mut R4ProgramProcessCompletion) -> i32;
+    pub fn r4os_process_wait(p0: *mut R4Process, p1: R4Timeout, p2: *mut R4ProgramProcessCompletion) -> i32;
+    pub fn r4_process_reap(p0: *mut R4Process) -> R4ResourceWait;
+    pub fn r4_process_wait(p0: *mut R4Process, p1: R4Timeout) -> R4ResourceWait;
+    pub fn r4_resources_create_thread_flags(p0: *mut R4Resources, p1: Option<unsafe extern "C" fn(u64) -> i32>, p2: u64, p3: u64, p4: u32, p5: *mut R4JoinHandle) -> i32;
+    pub fn r4_resources_create_thread(p0: *mut R4Resources, p1: Option<unsafe extern "C" fn(u64) -> i32>, p2: u64, p3: u64, p4: *mut R4JoinHandle) -> i32;
+    pub fn r4_resources_create_compute_worker(p0: *mut R4Resources, p1: Option<unsafe extern "C" fn(u64) -> i32>, p2: u64, p3: u64, p4: *mut R4JoinHandle) -> i32;
+    pub fn r4_join_status(p0: *mut R4JoinHandle, p1: *mut R4ProgramThreadInfo) -> i32;
+    pub fn r4_join_wait(p0: *mut R4JoinHandle, p1: R4Timeout) -> R4ResourceWait;
+    pub fn r4_resources_reserve_vm(p0: *mut R4Resources, p1: u64, p2: u64, p3: u64, p4: *mut R4VmRegion) -> i32;
+    pub fn r4_vm_region_query(p0: *mut R4VmRegion, p1: *mut R4ProgramVmRegionInfo) -> i32;
+    pub fn r4_vm_region_commit(p0: *mut R4VmRegion, p1: u64, p2: u64) -> i32;
+    pub fn r4_vm_region_decommit(p0: *mut R4VmRegion, p1: u64, p2: u64) -> i32;
+    pub fn r4_vm_region_release(p0: *mut R4VmRegion) -> i32;
+    pub fn r4_io_bind(p0: *mut R4IoRequest, p1: *mut R4App, p2: u32, p3: u32, p4: *mut core::ffi::c_void, p5: *const core::ffi::c_void, p6: u64) -> ();
+    pub fn r4_resources_async_read(p0: *mut R4Resources, p1: R4PathZ, p2: *mut u8, p3: u64, p4: u32, p5: *mut R4IoRequest) -> i32;
+    pub fn r4_resources_async_read_at(p0: *mut R4Resources, p1: R4PathZ, p2: u64, p3: *mut u8, p4: u64, p5: u32, p6: *mut R4IoRequest) -> i32;
+    pub fn r4_resources_async_write(p0: *mut R4Resources, p1: R4PathZ, p2: *const u8, p3: u64, p4: u32, p5: *mut R4IoRequest) -> i32;
+    pub fn r4_resources_async_append(p0: *mut R4Resources, p1: R4PathZ, p2: *const u8, p3: u64, p4: u32, p5: *mut R4IoRequest) -> i32;
+    pub fn r4_resources_async_stream_begin(p0: *mut R4Resources, p1: R4PathZ, p2: u32, p3: *mut R4IoRequest) -> i32;
+    pub fn r4_resources_async_stream_write(p0: *mut R4Resources, p1: R4PathZ, p2: u64, p3: *const u8, p4: u64, p5: u32, p6: *mut R4IoRequest) -> i32;
+    pub fn r4_resources_async_stream_finish(p0: *mut R4Resources, p1: R4PathZ, p2: u64, p3: u32, p4: *mut R4IoRequest) -> i32;
+    pub fn r4_resources_async_stream_abort(p0: *mut R4Resources, p1: R4PathZ, p2: *mut R4IoRequest) -> i32;
+    pub fn r4_io_request_buffers_held(p0: *const R4IoRequest) -> i32;
+    pub fn r4_io_request_release_buffers(p0: *mut R4IoRequest) -> i32;
+    pub fn r4_io_request_status(p0: *mut R4IoRequest, p1: *mut R4ProgramIoInfo) -> i32;
+    pub fn r4_io_request_wait(p0: *mut R4IoRequest, p1: R4Timeout) -> R4ResourceWait;
+    pub fn r4_io_request_close(p0: *mut R4IoRequest) -> i32;
+    pub fn r4_resources_available(p0: *const R4Resources) -> i32;
+    pub fn r4_resources_borrow_process(p0: *mut R4Resources, p1: *const R4ProgramProcessHandle, p2: *mut R4Process) -> i32;
+    pub fn r4_resources_current_thread(p0: *mut R4Resources, p1: *mut R4JoinHandle) -> i32;
+    pub fn r4_join_placement(p0: *mut R4JoinHandle, p1: *mut R4ThreadPlacementInfo, p2: *mut u64, p3: u32) -> i32;
+    pub fn r4_join_set_placement(p0: *mut R4JoinHandle, p1: *const R4ThreadPlacementRequest, p2: *const u64, p3: u32) -> i32;
+    pub fn r4_vm_region_commit_flags(p0: *mut R4VmRegion, p1: u64, p2: u64, p3: u64) -> i32;
+    pub fn r4_resources_cpu_capacity(p0: *mut R4Resources, p1: *mut R4CpuCapacity) -> i32;
+    pub fn r4_resources_program_inventory_begin(p0: *mut R4Resources, p1: *mut R4ProgramInventoryCursor, p2: *mut R4ProgramInventorySummary) -> i32;
+    pub fn r4_resources_program_inventory_programs(p0: *mut R4Resources, p1: *mut R4ProgramInventoryCursor, p2: *mut R4ProgramInstanceSnapshot, p3: u32, p4: *mut R4ProgramInventoryPageInfo) -> i32;
+    pub fn r4_resources_program_inventory_tasks(p0: *mut R4Resources, p1: *mut R4ProgramInventoryCursor, p2: *mut R4ProgramTaskSnapshot, p3: u32, p4: *mut R4ProgramInventoryPageInfo) -> i32;
+    pub fn r4_resources_program_inventory_threads(p0: *mut R4Resources, p1: *mut R4ProgramInventoryCursor, p2: *mut R4ProgramThreadSnapshot, p3: u32, p4: *mut R4ProgramInventoryPageInfo) -> i32;
+    pub fn r4_resources_notification_create(p0: *mut R4Resources, p1: *mut u64) -> i32;
+    pub fn r4_resources_notification_query(p0: *mut R4Resources, p1: u64, p2: *mut u64) -> i32;
+    pub fn r4_resources_notification_notify(p0: *mut R4Resources, p1: u64, p2: u32) -> i32;
+    pub fn r4_resources_notification_wait(p0: *mut R4Resources, p1: u64, p2: u64, p3: u64) -> i32;
+    pub fn r4_resources_notification_close(p0: *mut R4Resources, p1: u64) -> i32;
+    pub fn r4_resources_program_local_get(p0: *mut R4Resources, p1: u64, p2: *mut u64) -> i32;
+    pub fn r4_resources_program_local_publish(p0: *mut R4Resources, p1: u64, p2: u64, p3: *mut u64) -> i32;
+    pub fn r4_resources_program_run(p0: *mut R4Resources, p1: *const u8, p2: *const u8) -> i32;
+    pub fn r4_resources_program_launch(p0: *mut R4Resources, p1: *const u8, p2: *const u8, p3: u32) -> i32;
+    pub fn r4_resources_program_spawn(p0: *mut R4Resources, p1: *const u8, p2: *const u8, p3: u32) -> i32;
+    pub fn r4_resources_program_instance(p0: *mut R4Resources, p1: u32, p2: *mut R4ProgramInstanceInfo) -> i32;
+    pub fn r4_resources_program_class(p0: *mut R4Resources, p1: *const u8, p2: u32) -> i32;
+    pub fn r4_resources_program_module_path(p0: *mut R4Resources, p1: *mut u8, p2: u32) -> i32;
+    pub fn r4_resources_program_module_running(p0: *mut R4Resources, p1: *const u8) -> i32;
+    pub fn r4_resources_program_reap_instance(p0: *mut R4Resources, p1: u32) -> i32;
+    pub fn r4_resources_program_request_close(p0: *mut R4Resources, p1: u32) -> i32;
+    pub fn r4_resources_program_kill(p0: *mut R4Resources, p1: u32) -> i32;
+    pub fn r4_resources_program_exit(p0: *mut R4Resources, p1: i32, p2: u32) -> i32;
+    pub fn r4_resources_async_write_at(p0: *mut R4Resources, p1: R4PathZ, p2: u64, p3: *const u8, p4: u64, p5: u32, p6: *mut R4IoRequest) -> i32;
+    pub fn r4_resources_async_file_info(p0: *mut R4Resources, p1: R4PathZ, p2: u32, p3: *mut R4IoRequest) -> i32;
+    pub fn r4_resources_async_file_lock(p0: *mut R4Resources, p1: R4PathZ, p2: u64, p3: u64, p4: u32, p5: *mut R4IoRequest) -> i32;
+    pub fn r4_resources_async_service_call(p0: *mut R4Resources, p1: u32, p2: u16, p3: *const u8, p4: u32, p5: *mut R4ServiceMessageHeader, p6: *mut u8, p7: u32, p8: u64, p9: u32, p10: *mut R4IoRequest) -> i32;
+    pub fn r4_resource_timeout_ticks(p0: *mut R4Resources, p1: R4Timeout, p2: *mut u64) -> i32;
+    pub fn r4_resources_program_status(p0: *mut R4Resources, p1: *mut R4ProgramStatus) -> i32;
+    pub fn r4_resources_thread_create_raw(p0: *mut R4Resources, p1: Option<unsafe extern "C" fn(u64) -> i32>, p2: u64, p3: u64, p4: u32, p5: *mut u32) -> i32;
+    pub fn r4_resources_thread_exit(p0: *mut R4Resources, p1: i32) -> i32;
+    pub fn r4_resources_thread_join_raw(p0: *mut R4Resources, p1: u32, p2: u64, p3: *mut i32) -> i32;
+    pub fn r4_resources_thread_current_id(p0: *mut R4Resources) -> u32;
+    pub fn r4_resources_thread_status_raw(p0: *mut R4Resources, p1: u32, p2: *mut R4ProgramThreadInfo) -> i32;
+    pub fn r4_resources_program_set_console_host(p0: *mut R4Resources, p1: u32, p2: u32) -> i32;
+    pub fn r4_resources_program_current_console_host(p0: *mut R4Resources) -> u32;
+    pub fn r4_resources_program_request_desktop(p0: *mut R4Resources) -> i32;
+    pub fn r4_resources_program_spawn_with_console_host(p0: *mut R4Resources, p1: *const u8, p2: *const u8, p3: u32, p4: u32) -> i32;
     pub fn r4_storage_available(p0: *const R4Storage) -> i32;
     pub fn r4_storage_inventory(p0: *mut R4Storage, p1: *mut R4StorageInventory) -> i32;
     pub fn r4_storage_device(p0: *mut R4Storage, p1: u64, p2: u32, p3: *mut R4StorageDeviceInfo) -> i32;
@@ -1562,6 +1716,7 @@ unsafe extern "C" {
     pub fn r4_snapshot_sift(p0: *mut R4DirectorySnapshot, p1: u64, p2: u64, p3: Option<unsafe extern "C" fn(*mut core::ffi::c_void, *const core::ffi::c_void, *const core::ffi::c_void) -> i32>, p4: *mut core::ffi::c_void) -> ();
     pub fn r4_snapshot_sort(p0: *mut R4DirectorySnapshot, p1: Option<unsafe extern "C" fn(*mut core::ffi::c_void, *const core::ffi::c_void, *const core::ffi::c_void) -> i32>, p2: *mut core::ffi::c_void) -> ();
     pub fn r4_snapshot_close(p0: *mut R4DirectorySnapshot) -> i32;
+    pub fn R4SdkAppFacade(p0: *const R4XStartContext, p1: *mut R4App) -> i32;
     pub fn R4SdkFilePath(p0: *const u8, p1: u64, p2: i32, p3: *mut u8, p4: u64, p5: *mut u16, p6: *mut u8) -> i32;
     pub fn R4SdkRegistryPath(p0: *const u8, p1: u64, p2: *mut u8, p3: u64, p4: *mut u16) -> i32;
 }

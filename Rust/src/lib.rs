@@ -15,6 +15,7 @@ pub mod physical_storage;
 pub mod r4l;
 pub mod registry_diagnostics;
 pub mod registry_hive;
+pub mod resources;
 mod startup;
 pub mod storage;
 pub use startup::{ImportSpec, StartupInfo};
