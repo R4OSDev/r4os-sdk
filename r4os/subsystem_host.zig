@@ -811,8 +811,11 @@ fn copySurfaceToSharedRaster(surface: Surface, destination: []u8, info: abi.GuiS
         .indexed8 => |indexed| {
             const palette = std.mem.sliceAsBytes(indexed.palette);
             const data_offset: usize = @intCast(info.data_offset);
-            if (palette.len != data_offset or data_offset + indexed.pixels.len != destination.len) return false;
-            @memcpy(destination[0..data_offset], palette);
+            if (palette.len > data_offset or data_offset + indexed.pixels.len != destination.len) return false;
+            @memcpy(destination[0..palette.len], palette);
+            // The shared contract reserves the same data offset as indexed
+            // command resources. Its unused header-sized gap is not a palette.
+            @memset(destination[palette.len..data_offset], 0);
             @memcpy(destination[data_offset..], indexed.pixels);
         },
     }
@@ -2215,7 +2218,9 @@ test "shared raster backpressure falls back for the frame and preserves indexed 
     defer presenter.deinit(fake.backend());
 
     try std.testing.expect(presenter.presentTo(fake.backend(), 2, 2) == .presented);
-    try std.testing.expectEqualSlices(u8, std.mem.sliceAsBytes(palette[0..]), shared_memory[0..abi.gui_indexed8_pixels_offset]);
+    const palette_bytes = std.mem.sliceAsBytes(palette[0..]);
+    try std.testing.expectEqualSlices(u8, palette_bytes, shared_memory[0..palette_bytes.len]);
+    for (shared_memory[palette_bytes.len..abi.gui_indexed8_pixels_offset]) |byte| try std.testing.expectEqual(@as(u8, 0), byte);
     try std.testing.expectEqualSlices(u8, indices[0..], shared_memory[abi.gui_indexed8_pixels_offset..]);
     fake.shared_raster_map_result = abi.gui_frame_error_state;
     indices[0] = 2;
@@ -2359,9 +2364,21 @@ test "indexed8 contract preserves sparse damage and source pixels" {
     try std.testing.expectEqual(@as(u32, 3), fake.captured_indexed_command.h);
     var header: abi.GuiIndexed8Resource = .{};
     @memcpy(std.mem.asBytes(&header), fake.captured_indexed[0..@sizeOf(abi.GuiIndexed8Resource)]);
-    try std.testing.expectEqual(@as(u32, 4), header.source_w);
-    try std.testing.expectEqual(@as(u32, 4), header.source_h);
-    try std.testing.expectEqualSlices(u8, indices[0..], fake.captured_indexed[abi.gui_indexed8_pixels_offset .. abi.gui_indexed8_pixels_offset + indices.len]);
+    // Source-window compaction retains every sampled texel; the resource
+    // need not include unsampled right/bottom pixels. Decode its declared
+    // geometry independently, retaining the current floor-sampling oracle.
+    try std.testing.expectEqual(@as(u32, 4), header.guest_w);
+    try std.testing.expectEqual(@as(u32, 4), header.guest_h);
+    try std.testing.expectEqual(@as(u32, 3), header.viewport_w);
+    try std.testing.expectEqual(@as(u32, 3), header.viewport_h);
+    for (0..3) |y| for (0..3) |x| {
+        const source_x = x * 4 / 3;
+        const source_y = y * 4 / 3;
+        try std.testing.expect(source_x >= header.source_x and source_x < header.source_x + header.source_w);
+        try std.testing.expect(source_y >= header.source_y and source_y < header.source_y + header.source_h);
+        const offset = abi.gui_indexed8_pixels_offset + (source_y - header.source_y) * header.pixel_stride + source_x - header.source_x;
+        try std.testing.expectEqual(indices[source_y * 4 + source_x], fake.captured_indexed[offset]);
+    };
 
     presenter.invalidate(.{ .x = 0, .y = 0, .w = 1, .h = 1 });
     presenter.invalidate(.{ .x = 3, .y = 3, .w = 1, .h = 1 });
@@ -2455,7 +2472,7 @@ test "physical key transitions preserve sides and focus loss releases held keys 
     const repeat = translator.translate(.{
         .kind = @intFromEnum(abi.GuiEventKind.physical_key_down),
         .key = abi.physical_key_usage_right_control,
-        .flags = abi.physical_key_flag_repeat,
+        .buttons = abi.physical_key_flag_repeat,
         .tick = 13,
     }, null, null).?;
     try std.testing.expectEqual(abi.physical_key_flag_repeat, repeat.physical_key_down.flags);
@@ -2523,7 +2540,7 @@ test "keypad and right control transport stays physical through repeat and focus
     const repeated = translator.translate(.{
         .kind = @intFromEnum(abi.GuiEventKind.physical_key_down),
         .key = abi.physical_key_usage_keypad_8,
-        .flags = abi.physical_key_flag_repeat,
+        .buttons = abi.physical_key_flag_repeat,
         .tick = 32,
     }, null, null).?;
     try std.testing.expectEqual(abi.physical_key_flag_repeat, repeated.physical_key_down.flags);

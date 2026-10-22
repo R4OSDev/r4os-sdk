@@ -1,5 +1,6 @@
 //! The single SDK helper object shared by C and Rust consumers.
 comptime {
+    _ = @import("subsystem_value_bridge.zig");
     _ = @import("runtime_bootstrap.zig");
     _ = @import("storage_runtime.zig");
     _ = @import("services_runtime.zig");

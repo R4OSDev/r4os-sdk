@@ -95,6 +95,11 @@ pub fn Adapter(comptime Table: type, comptime Pointer: type, comptime context_in
                 return dispatch(Table, F, context_index, kind, .{ a, b, c, d, e, f });
             }
         },
+        7 => struct {
+            pub fn call(a: P.at(0), b: P.at(1), c: P.at(2), d: P.at(3), e: P.at(4), f: P.at(5), g: P.at(6)) callconv(info.calling_convention) R {
+                return dispatch(Table, F, context_index, kind, .{ a, b, c, d, e, f, g });
+            }
+        },
         else => @compileError("native callback arity needs an explicit adapter"),
     };
 }

@@ -1,6 +1,6 @@
 .{
     .name = .r4os_sdk,
-    .version = "0.64.83",
+    .version = "0.64.84",
     .fingerprint = 0x8e8330db02f37336,
     .minimum_zig_version = "0.16.0",
     .dependencies = .{
@@ -23,6 +23,7 @@
         "r4os.zig",
         "test_owners.zig",
         "test_update_owners.zig",
+        "test_subsystem_owners.zig",
         "r4os",
         "Shared",
         "Hosts",

@@ -995,19 +995,29 @@
       "semantics": "Katalogidentitaet, bounded Guest-Slices, pause-aware Zeit/Pacing, Video/Input/Audio, Sharedraster-Leihen, PCM-Rueckstau, Speicherung und idempotenter genauer Cleanup. Busy-Raster braucht weiter einen aktuellen Kopierpfad.",
       "current_only": "current_function",
       "rust": {
-        "state": "missing_higher_facade",
-        "source": "Repositories/SDK/Rust/src/lib.rs",
-        "gap": "Subsystemkatalog, Start, Host, Runtime und Persistenz als gleichwertige typisierte Rust-Fassade mit denselben Fehler-/Besitz-/Waitregeln ergaenzen."
+        "state": "original_subsystem_helpers_qualified",
+        "source": "Repositories/SDK/Rust/src/subsystems/mod.rs",
+        "gap": "",
+        "raw": "Repositories/SDK/Rust/src/c_facades.rs"
       },
       "c": {
-        "state": "missing_higher_facade",
-        "sources": [],
-        "gap": "Kein entsprechender hoeherer C-Einstieg im SDK-Headerbestand; gleiche Fachfunktion bereitstellen."
+        "state": "original_subsystem_helpers_qualified",
+        "sources": [
+          "Repositories/SDK/Shared/C/include/r4os/subsystem_helpers.h"
+        ],
+        "gap": ""
       },
       "evidence": [
-        "source_inventory"
+        "source_inventory",
+        "subsystems_current_65"
       ],
-      "shared_core": "Generischen Host-/Runtime-/Persistenzkern einmal nutzen; kein Emulatorneuaufbau oder languagespezifische Kopie."
+      "shared_core": "Generischen Host-/Runtime-/Persistenzkern einmal nutzen; kein Emulatorneuaufbau oder languagespezifische Kopie.",
+      "qualification": {
+        "performed_in": "0.86.65",
+        "sdk": "0.64.84",
+        "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.65",
+        "scope": "Original Catalog/Launch/Host/Runtime/Persistence, concrete configurable original R4osStore and AsyncStore,38 typed callback kinds and real R4SYS/R4DESK/R4DRAW/R4AUDIO/file adapters. Canonical installed schema4 MODULES.JSON remains the only host catalog."
+      }
     },
     {
       "id": "driver",
@@ -46667,8 +46677,8 @@
       "entry_mode": "app",
       "wave": "0.86.65",
       "zig": "current_reference",
-      "rust": "explicitly_unqualified",
-      "c": "helpers_missing",
+      "rust": "qualified_canonical_subsystem_host",
+      "c": "qualified_canonical_subsystem_host",
       "owner": "Repositories/SDK",
       "canonical_sources": [
         "Repositories/SDK/r4os/module_capabilities.zig",
@@ -46676,7 +46686,7 @@
         "Repositories/SDK/r4os/module_manifest.zig"
       ],
       "evidence": [
-        "source_inventory"
+        "subsystems_current_65"
       ],
       "target": "Gleiche echte Rolle/Artefakt-/Start-/Export-/Lifecyclefunktion, keine Umbenennung einer App oder dauerhafte Zig-Fachbruecke."
     },
@@ -48189,6 +48199,291 @@
         "benchmark_image_sha256": "bc55a5f386c9841ae20aaf18030aaa2b791f4a63f26795014e57d6c0bb0c904a",
         "boot_kernel_sha256": "e06111b9363b44712fe69ded9ddfc3edb1f60c5c271c59a42238a816b0882340",
         "scope": "single final normal KVM/SMP4 Suite3 regression after common SDK runtime/build change; no isolated update performance claim"
+      }
+    },
+    "subsystems_current_65": {
+      "kind": "original_subsystem_owners_native_Rust_C_and_three_canonical_KVM_SMP4_hosts",
+      "performed_in": "0.86.65",
+      "sdk": "0.64.84",
+      "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.65",
+      "projection": {
+        "types": 242,
+        "functions": 167,
+        "c_inline_operations": 1510,
+        "native_fingerprint": 3081907962662971100,
+        "missing_c_operations": [],
+        "missing_prior_rust_lines": [],
+        "existing_headers_unchanged": {
+          "data": true,
+          "web": true,
+          "transport": true,
+          "update": true
+        },
+        "rust_transport_and_operations": 1515
+      },
+      "scope": "Original Catalog/Launch/Host/Runtime/Persistence, concrete configurable original R4osStore and AsyncStore,38 typed callback kinds and real R4SYS/R4DESK/R4DRAW/R4AUDIO/file adapters. Canonical installed schema4 MODULES.JSON remains the only host catalog.",
+      "ownership": "Rust source/workspace/callback/user loans, local cooperative runtime and initialized-only shutdown; complete advanced native operations unsafe with original pinned context/scratch/surface/shared-raster/audio/save-generation/allocator loans through real close/drain/release. Safe runtime constructor has no borrowed audio. Dynamic save configuration uses one serialized scratch writer and the same transaction core; static owners keep zero-size configuration. No duplicate emulator/save policy.",
+      "fixes": [
+        "Shared indexed raster palette1024 previously compared to pixel offset1088, permanently selecting fallback. Original owner now copies exact palette, clears64 reserved bytes and copies pixels at unchanged offset1088; no ABI/format/sampling change.",
+        "Two old repeat-event test initializers use actual buttons field; fractional source-window oracle checks only actual sampled texels, retaining current nearest floor mapping.",
+        "Runtime Drop only shuts down after successful initialization; rejected callbacks cannot run uninitialized cleanup."
+      ],
+      "checks": {
+        "owner_runner_cases": 48,
+        "owner_selection": "43 distinct existing original cases plus two collector/configuration cases and three repeated generic instantiations; one dynamic fixed-root-only generic returns early. These are runner counts, not48 independent substantive originals.",
+        "native_cases": 6,
+        "actual_compiler_negatives": [
+          "E0133",
+          "E0499",
+          "E0502",
+          "E0502",
+          "E0277"
+        ],
+        "native_scope": "clock/launch, identical runtime work pause/reset/close, refused callbacks and no uninitialized shutdown, current raster/damage/unchanged/resize, source-loaned installed catalogue and exact host verifier, signed audio failure-77 without stopping guest time/video and one sink close.",
+        "projection_format_clippy": "all prior Rust declarations retained; old Data/Web/Transport/Update headers byte unchanged, fresh native/bare ABI objects and actual final native six/five cases pass; Zig/Rust formatting and warning-free Clippy.",
+        "host_tools": "Current Linux and Windows module-catalog/packager compiled and matched Technical65 tools exported. Actual Linux catalogue admits Rust subsystem; normal workspace catalog rebuilt. Windows binaries not executed."
+      },
+      "guest": {
+        "environment": "private COW Full0.86.42/Kernel0.1.381 KVM SMP4; final SDK84 embedded C objects; normal Desktop Run attaches the actual window before ProgramEntry. SSH controls setup, clipboard and readback, not the GUI launch.",
+        "source_image": {
+          "path": "Artifacts/Distribution/Profiles/Full/disk.img",
+          "sha256": "41cd183a57e24af229ff90d1cf6b08f5241a5f56af6ddd4251aeb92b91beb882",
+          "bytes": 23622320128
+        },
+        "source_fixture_sha256": "ebe49dd106058d19ba508e2b329719a4e1440ac35c05aa9217f37ede2a57933d",
+        "canonical_catalogue": "Original module-catalog projects three canonical manifests; original Inventory.parse/upsert/render merges them into112-entry installed MODULES.JSON without changing109 existing entries. Real file verifier, user association, probe and chosen exact host ID/target pass in each language. Qualification used test scope; final manifests use none and explicit include-target for isolated selection, removing them from normal images. The only projected field change is image_scope; final builds retain byte-identical guest artifacts.",
+        "installed_catalogue_sha256": "76b2bf1814d0ef41f6d1d779363dd4b6c2d5865d3f14a8782cd4bdb28eb88671",
+        "restored_catalogue_sha256": "94afaa4560b050f2099163325f5ef7f4524398246aab6ec052d3a753d73e2d86",
+        "results": {
+          "C": {
+            "path": "Temp/SDK65/NativeGuests/SP65C.R4X",
+            "sha256": "a2e9d10df51022c5a147d2ed723ba93f6037e00496a361d0d2e11d4adabf246c",
+            "bytes": 1054285,
+            "exit": 0,
+            "canonical_readback": "byte-identical",
+            "result_sha256": "2f593394867359206f84c6fc20d40151c8c32bf20d54ed3e3e5dd5a93358acb4"
+          },
+          "Zig": {
+            "path": "Temp/SDK65/NativeGuests/SP65Z.R4X",
+            "sha256": "94909df18fa5acbf566306ce2365273d18c55a1dd56c972b3cfd71185e821ccb",
+            "bytes": 402969,
+            "exit": 0,
+            "canonical_readback": "byte-identical",
+            "result_sha256": "2f593394867359206f84c6fc20d40151c8c32bf20d54ed3e3e5dd5a93358acb4"
+          },
+          "Rust": {
+            "path": "Temp/SDK65/RustGuest/SP65R.R4X",
+            "sha256": "275361acae8b40a0aa6eb95e14e8488222bac965c8aae292fdd1cf123f1c1a03",
+            "bytes": 1153999,
+            "exit": 0,
+            "canonical_readback": "byte-identical",
+            "result_sha256": "2f593394867359206f84c6fc20d40151c8c32bf20d54ed3e3e5dd5a93358acb4"
+          }
+        },
+        "oracles": "All three CODE=0, WORK=3,12,1,3,366479761601330874,10000000 and VIDEO=13852335833376211202; exact equal result bytes. Original sync acquire/write/read, wrong-generation release refusal, Busy second owner, release/reopen plus async immutable snapshot/write/drain/join/read/release on actual private files. Real window present/deinit; audio failure stays synthetic and deterministic. Rust active allocations/bytes return exactly to entry state. C/Rust output hashes are compared across original boundary; pure Zig is independent caller of same owners.",
+        "cleanup": "Own module/source/result/temp files removed, original installed catalog restored byte-for-byte, then normal POWEROFF and actual QEMU exit0. COW overlay discarded; source Full unchanged."
+      },
+      "normal_consumers": {
+        "R4Basic": {
+          "path": "Artifacts/Modules/R4Basic/R4BASIC.R4X",
+          "sha256": "e79c52c14364e5c11f79ccdd609b4dea3add8e8fc0004a370aa589b870e6b861",
+          "bytes": 1309988,
+          "version": "1.2.40",
+          "previous_sha256": "69a2fa760afc23373d91f33c5d0a82348e2f481fce9bf2bdeecc9133d4d57b4b"
+        },
+        "R4GB": {
+          "path": "Artifacts/Modules/R4GB/R4GB.R4X",
+          "sha256": "f1c7e8fd16313548963651f2e7fbf6a25bbd1b7f30124964d2991b9544f037ac",
+          "bytes": 356671,
+          "version": "0.10.16",
+          "previous_sha256": "b8856217198a9d1221666eb06588d62d2f6ce03d36702fe7cea7ffcd22eb4bb7"
+        },
+        "R4SNES": {
+          "path": "Artifacts/Modules/R4SNES/R4SNES.R4X",
+          "sha256": "b6d2edb34351994822fc593085109d3986469698d6a2a13fa77fc8f292cd32b7",
+          "bytes": 3199884,
+          "version": "0.22.17",
+          "previous_sha256": "303dd3e5f489a66c407f29e8ac576b6c49aa02e1a3d90906c27cbe108679c35c"
+        }
+      },
+      "sources": [
+        {
+          "path": "Repositories/SDK/r4os/subsystem_catalog.zig",
+          "sha256": "9be94cb31a47227a6c5b47b999c54ffc5f47ae67df58b8187b0a931cd4aede22",
+          "bytes": 32556
+        },
+        {
+          "path": "Repositories/SDK/r4os/subsystem_launch.zig",
+          "sha256": "547fa1849cd8d8db0fc475fccd875d2d48a417ac4bfe4a4d1dcf6b90c0b2d270",
+          "bytes": 9938
+        },
+        {
+          "path": "Repositories/SDK/r4os/subsystem_host.zig",
+          "sha256": "fd80e561b3b74e9f251173ac4652be8431e8e9e5723d88dc511bf12ea97cef9b",
+          "bytes": 112309
+        },
+        {
+          "path": "Repositories/SDK/r4os/subsystem_runtime.zig",
+          "sha256": "d87b7d3a0dee2cee16c21f9c126287e62f72a680a609c25e2b399ce9ca8b40d2",
+          "bytes": 78485
+        },
+        {
+          "path": "Repositories/SDK/r4os/subsystem_persistence.zig",
+          "sha256": "d1acae50deef4b4b9f536ce476f83e1fdfcfcc1ea0dd6283e48096d96d656b76",
+          "bytes": 70731
+        },
+        {
+          "path": "Repositories/SDK/r4os/subsystem_helper_owners.zig",
+          "sha256": "ecde8978c3eaff0ddc68525fbb61f816efea90ec9678b4f2a6f00d48475b1960",
+          "bytes": 1978
+        },
+        {
+          "path": "Repositories/SDK/r4os/subsystem_helper_adapters.zig",
+          "sha256": "812773ee1f90982615692f83ed61aee85b5d4d8786dfecf49d4c381608caa1a1",
+          "bytes": 6749
+        },
+        {
+          "path": "Repositories/SDK/r4os/subsystem_bridge_schema.zig",
+          "sha256": "e04f809118ef46cd3d76fd6e4c85bdb647d0dc45f371b9217578c5fdc87e60f8",
+          "bytes": 441
+        },
+        {
+          "path": "Repositories/SDK/r4os/subsystem_bridge_names.zig",
+          "sha256": "e0bbec5222522d12d07aca4b9f6e3c31543fbe96bc46db518465da27080d5326",
+          "bytes": 2200
+        },
+        {
+          "path": "Repositories/SDK/r4os/subsystem_value_bridge.zig",
+          "sha256": "697cf75fb170c6a25d9e51703bd99e596af21817f18d5c7a921481a88daf4dec",
+          "bytes": 1594
+        },
+        {
+          "path": "Repositories/SDK/r4os/subsystem_callback_bridge.zig",
+          "sha256": "c583c935351741e67483382d2248fd7fc827914aebe322513b9489d42f53c5ca",
+          "bytes": 1322
+        },
+        {
+          "path": "Repositories/SDK/r4os/native_callback_bridge.zig",
+          "sha256": "a7cb874f39835c84e1b4cf5edfd82fa7081e9d5199c6471cc1d55f750e65fa8f",
+          "bytes": 5665
+        },
+        {
+          "path": "Repositories/SDK/r4os/update_type_names.zig",
+          "sha256": "a5fded5647f483f7b54c6725fd0241f53626342dfd080c71aa9c937d3dde317f",
+          "bytes": 2289
+        },
+        {
+          "path": "Repositories/SDK/r4os/module_capabilities.zig",
+          "sha256": "2a277ab654eb6d641b8eeccef62ea2293b6e83aaae169fea86be8a22f0c22ad1",
+          "bytes": 6357
+        },
+        {
+          "path": "Repositories/SDK/Shared/C/include/r4os/subsystem_helpers.h",
+          "sha256": "0b3b23c814c7ed757edaade6dd14b98f6d2be97bf0744c7349b4ce297d25284d",
+          "bytes": 587032
+        },
+        {
+          "path": "Repositories/SDK/Rust/src/subsystems/catalog.rs",
+          "sha256": "4bff553eb47f3f1987dece064bbfb578ccee8032dbb61bbe39b1f21cc1f0fd5a",
+          "bytes": 5737
+        },
+        {
+          "path": "Repositories/SDK/Rust/src/subsystems/clock.rs",
+          "sha256": "2bbb7800df52d4d746363d91673c1d8384770085dd93112eba0919526a61dbe2",
+          "bytes": 2464
+        },
+        {
+          "path": "Repositories/SDK/Rust/src/subsystems/launch.rs",
+          "sha256": "441fa4330f2cb16cd45d91ddab4c708104528288d40ad90214cb8a8f91544646",
+          "bytes": 2376
+        },
+        {
+          "path": "Repositories/SDK/Rust/src/subsystems/mod.rs",
+          "sha256": "41f69e31509f91f1c71bd2cf1838ff4e6aa17a2f91fe64762708c5aaccc2d497",
+          "bytes": 3635
+        },
+        {
+          "path": "Repositories/SDK/Rust/src/subsystems/runtime.rs",
+          "sha256": "8f6e15d32ba3c9b1e3d8e75077f71e6528b9092530525f7f8c2d84c206594a40",
+          "bytes": 5017
+        },
+        {
+          "path": "Repositories/SDK/Tests/Simulation/SubsystemParity.c",
+          "sha256": "760a98480feb5ccb9aea9916b677d443cee92f4d4950fc7fd467c522d1127c97",
+          "bytes": 21095
+        },
+        {
+          "path": "Repositories/SDK/Tests/Simulation/SubsystemCases.rs",
+          "sha256": "8cf0978d4733651a590b5451b6688ec2e9ce5158423e553044ecd033361a4177",
+          "bytes": 10280
+        },
+        {
+          "path": "Repositories/SDK/Tests/Simulation/RustSubsystem.rs",
+          "sha256": "e0dfa39b563856d238e2fc6667ea8f85dabe22fb41fa7389dacd6b2ec8ee23bd",
+          "bytes": 582
+        },
+        {
+          "path": "Repositories/SDK/Tests/Simulation/SubsystemFilters.zig",
+          "sha256": "323583d8fbb1c487ac4db74f99665bf00afa36d2178182b089592a981df6c137",
+          "bytes": 3577
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/CSubsystem/module.R4MF",
+          "sha256": "c1071962d3005dcc243066965bf5c7e7f5b56e63c53668c4becbbe6e99992bb4",
+          "bytes": 511
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/CSubsystem/src/main.c",
+          "sha256": "45ded5463ad3f58500283a304bbb43435a80675d23808fec32e2f57d8c0b39dd",
+          "bytes": 1648
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/ZigSubsystem/module.R4MF",
+          "sha256": "66880e2a15087d7c7240379e0e23ee414fd666539db128c226d854e7f67c0687",
+          "bytes": 521
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/ZigSubsystem/src/main.zig",
+          "sha256": "7b3502b2ba07c20c0085df90d01849606fa06bfd12000a38e51ede5324eaf061",
+          "bytes": 12387
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/RustSubsystem/module.R4MF",
+          "sha256": "283ae54918a4972eff9720f94668854cee555b3a7f7fd8831cf9a8019615a618",
+          "bytes": 546
+        },
+        {
+          "path": "Repositories/SDK/Tests/Build/RustSubsystem/src/main.rs",
+          "sha256": "e9e75d1495fd759edab5908c51631e79b8aae8749888e873420078229ac964a6",
+          "bytes": 3408
+        }
+      ],
+      "limits": "Linux/native and local KVM4 only. No commercial ROM/emulator port, hardware/audio device/NVIDIA/AMD/Windows or direct Rust SIMD/FP qualification; sampling contract unchanged. Published Full/Slim42 and OssiPC unchanged. STANDARD is system regression only, no isolated subsystem speed claim.",
+      "sdk_runtimes": {
+        "facades": {
+          "path": "Temp/SDKWorkTools/SubsystemBare65/lib/r4sdk_facades.o",
+          "sha256": "332f7c6bd6374d3fc7435aa651dd19ad83750b609c16b8377e889d4ca5fa3439",
+          "bytes": 19600504
+        },
+        "storage": {
+          "path": "Temp/SDKWorkTools/SubsystemBare65/lib/r4sdk_storage.o",
+          "sha256": "da0a76568153e2659aa38a8f8319c8e246dc1368c92a6fcda5bd91b5de4a37d7",
+          "bytes": 44458096
+        }
+      },
+      "standard": {
+        "run_id": "6c60c20f-b766-4ef4-8b50-32c84d52733c",
+        "release_version": "0.86.65",
+        "sha256": "59429d3c5968c6359a8e18d84d703b8e8aa462e4e5ee1fa0bc5c939c4928ff68",
+        "full_readback": "valid",
+        "metrics": 5,
+        "samples": 30,
+        "workers": 4,
+        "valid_score_areas": 6,
+        "executions": 1,
+        "benchmark_image_sha256": "93312fea508839c5a51ee0a605a1dc4ae1045d5d79c6efdd4af1e5a2bdbef78a",
+        "boot_kernel_sha256": "e06111b9363b44712fe69ded9ddfc3edb1f60c5c271c59a42238a816b0882340",
+        "scope": "single final normal KVM/SMP4 Suite3 regression after original shared indexed raster fix; no isolated subsystem performance claim"
       }
     }
   },

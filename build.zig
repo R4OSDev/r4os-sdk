@@ -51,6 +51,32 @@ pub fn build(b: *std.Build) void {
         return;
     }
 
+    if (b.option(bool, "subsystem-guest-fixtures-only", "Build only canonical Zig/C synthetic subsystem consumers") orelse false) {
+        _ = sdk_profile.addR4MF(b.path("Tests/Build/CSubsystem/module.R4MF"));
+        _ = sdk_profile.addR4MF(b.path("Tests/Build/ZigSubsystem/module.R4MF"));
+        return;
+    }
+    if (b.option(bool, "subsystem-owner-tests-only", "Only current subsystem owner and configuration cases") orelse false) {
+        const target = b.resolveTargetQuery(.{ .cpu_arch = .x86_64, .os_tag = b.graph.host.result.os.tag, .abi = b.graph.host.result.abi, .cpu_model = .baseline });
+        const cases = b.createModule(.{ .root_source_file = b.path("test_subsystem_owners.zig"), .target = target, .optimize = .ReleaseSafe });
+        cases.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
+        cases.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = target, .optimize = .ReleaseSafe }));
+        const selected = b.addRunArtifact(b.addTest(.{ .root_module = cases, .filters = @import("Tests/Simulation/SubsystemFilters.zig").names }));
+        b.getInstallStep().dependOn(&selected.step);
+        return;
+    }
+    if (b.option(bool, "subsystem-bridge-generator-only", "Build the compiler-typed SDK subsystem generator") orelse false) {
+        const root = b.createModule(.{ .root_source_file = b.path("Tools/DataBridgeGen/src/main.zig"), .target = b.graph.host, .optimize = .Debug, .strip = true });
+        const schema = b.createModule(.{ .root_source_file = b.path("r4os/subsystem_bridge_schema.zig"), .target = b.graph.host, .optimize = .Debug });
+        schema.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
+        schema.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = b.graph.host, .optimize = .ReleaseSafe }));
+        const options = b.createModule(.{ .root_source_file = b.path("r4os/subsystem_bridge_names.zig"), .target = b.graph.host, .optimize = .Debug });
+        options.addImport("schema", schema);
+        root.addImport("schema", schema);
+        root.addImport("options", options);
+        b.installArtifact(b.addExecutable(.{ .name = "subsystem-bridge-gen", .root_module = root, .use_llvm = true }));
+        return;
+    }
     if (b.option(bool, "update-bridge-generator-only", "Build the compiler-typed SDK update/job generator") orelse false) {
         const root = b.createModule(.{ .root_source_file = b.path("Tools/DataBridgeGen/src/main.zig"), .target = b.graph.host, .optimize = .Debug, .strip = true });
         const schema = b.createModule(.{ .root_source_file = b.path("r4os/update_bridge_schema.zig"), .target = b.graph.host, .optimize = .Debug });

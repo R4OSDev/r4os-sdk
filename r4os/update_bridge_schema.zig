@@ -9,3 +9,7 @@ pub const functions = C.functions;
 pub const typeId = C.typeId;
 pub const stableName = C.stableName;
 pub const fingerprint = C.fingerprint;
+
+pub fn nativeName(comptime T: type) []const u8 {
+    return @import("update_type_names.zig").nativeName(@This(), T);
+}

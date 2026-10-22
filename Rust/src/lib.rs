@@ -585,3 +585,5 @@ const _: () = {
         mem::offset_of!(abi::R4XStartR4Sys, size) == mem::offset_of!(abi::R4XStartR4Draw, size)
     );
 };
+
+pub mod subsystems;

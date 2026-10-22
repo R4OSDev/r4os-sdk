@@ -366,16 +366,22 @@ R4P: the protocol builder owns separate init/register/export stubs, role/categor
 dependency metadata and teardown. Raw Rust callback layouts alone do not provide
 that builder or qualified registration/hot removal/shutdown ownership.
 
-Subsystem: a normal GUI R4X with MODULE_ROLE=subsystem additionally owns ID,
-display name, guest formats/target/catalog and resolver/host/video/input/audio/
-persistence/cleanup contracts. Existing subsystem_launch/host/runtime helpers
-are Zig; the Rust window helper is not an equivalent subsystem host facade.
+Subsystem (qualified since SDK0.64.84): a normal GUI R4X with
+MODULE_ROLE=subsystem owns canonical ID/display name/formats/target and the
+installed MODULES.JSON catalogue/resolver. `subsystems` and its complete
+native typed operations now reuse the original launch/host/runtime/persistence
+owners, including video/input/audio and exact close/save cleanup. Safe Rust
+catalogue/launch/clock/pacer/runtime helpers retain source/callback loans;
+advanced media/save calls remain unsafe under their original stable-address
+contracts. Three synthetic Zig/C/Rust hosts pass equal work/video and real
+save/window cleanup in local KVM4. Start GUI consumers through Desktop Run;
+SSH alone does not bind their application window before ProgramEntry.
 
 Rust lowlevel needs separate raw-entry stack/ABI/panic qualification. Native
 R4OS Rust builds need a compiler/toolchain port; R4CC implements the native C
 subset and is not a Rust compiler. Stable machine reason codes live in the
-shared Decision, not in an IDE-maintained matrix. No new driver/protocol/library/
-subsystem implementation or hardware claim is included in this SDK delivery.
+shared Decision, not in an IDE-maintained matrix. Driver/protocol/library
+provider support and hardware qualification remain separate work.
 
 Graphics owners (SDK0.64.76)
 ---------------------------

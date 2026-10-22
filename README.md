@@ -851,3 +851,25 @@ Facade generators and C objects now include a digest of the actual SDK/Contract
 C headers in their compiler inputs, preventing stale C-import reuse. Shared
 callback marshalling and canonical data names retain former web/data/transport
 headers and declarations. Qualification remains in the shared parity matrix.
+
+SDK0.64.84 adds `subsystems` and `r4os/subsystem_helpers.h` for the complete
+original catalogue, launch, host, runtime and persistence owners. Rust provides
+source-borrowing catalogue/resolution/launch, clock/pacer and cooperative runtime
+helpers; all advanced native video/input/audio/save operations remain typed
+unsafe calls with the original pinned buffer/context/callback/generation loans.
+The safe runtime constructor disables borrowed audio. Thirty-eight callback
+kinds and real platform adapters instantiate the existing cores. Runtime save
+configuration shares `R4osStore`/`AsyncStore` with static Zig configurations.
+Rust's normal GUI builder now admits the canonical subsystem manifest role.
+Three synthetic Zig/C/Rust hosts qualify actual installed-catalog resolution,
+equal work/output, owned saves, asynchronous completion and window cleanup.
+GUI guests start through Desktop Run so the desktop binds their window before
+entry; SSH controls setup/readback. Fixtures use `IMAGE_SCOPE=none` and explicit
+`--include-target` selection. Build owner cases with
+`-Dsubsystem-owner-tests-only=true`, the generator with
+`-Dsubsystem-bridge-generator-only=true`, and C/Zig guests with
+`-Dsubsystem-guest-fixtures-only=true`; use `Tools/Test-RustSubsystems.ps1` and
+`Tests/Build/RustSubsystem` for native and bare consumers. The original shared
+Indexed8 owner now preserves its 1024-byte palette, initializes the reserved
+64-byte gap and writes pixels at the unchanged offset1088. Complete boundaries,
+qualification and limits remain in the shared language-parity matrix.

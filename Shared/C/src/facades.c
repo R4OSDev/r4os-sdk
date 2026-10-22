@@ -26,6 +26,7 @@
 #include <r4os/web_helpers.h>
 #include <r4os/transport_helpers.h>
 #include <r4os/update_helpers.h>
+#include <r4os/subsystem_helpers.h>
 #undef inline
 #undef static
 #include <r4os/facades.h>

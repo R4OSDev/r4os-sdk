@@ -23,3 +23,5 @@ int32_t R4SdkAppFacade(const R4XStartContext *, R4App *);
 int32_t R4SdkFilePath(const uint8_t *, uintptr_t, int32_t, uint8_t *, uintptr_t, uint16_t *, uint8_t *);
 int32_t R4SdkRegistryPath(const uint8_t *, uintptr_t, uint8_t *, uintptr_t, uint16_t *);
 #endif
+
+#include "r4os/subsystem_helpers.h"
