@@ -13,5 +13,7 @@ int32_t R4XStart(const R4XStartContext *ctx) {
     R4App app;
     R4Status status = r4_app_init_declared(ctx, &startup_info, &app);
     if (!r4_status_succeeded(status)) return status.raw_code;
+    int32_t entropy_status = R4SdkBindProgramEntropy(ctx);
+    if (entropy_status < 0) return entropy_status;
     return r4_app_main(&app);
 }

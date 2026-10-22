@@ -38,6 +38,18 @@ pub fn build(b: *std.Build) void {
         return;
     }
     const sdk_profile = Sdk.init(b, .{ .contract_dependency = contract_dependency });
+    if (b.option(bool, "transport-bridge-generator-only", "Build the compiler-typed SDK transport/job generator") orelse false) {
+        const root = b.createModule(.{ .root_source_file = b.path("Tools/DataBridgeGen/src/main.zig"), .target = b.graph.host, .optimize = .Debug, .strip = true });
+        const schema = b.createModule(.{ .root_source_file = b.path("r4os/transport_bridge_schema.zig"), .target = b.graph.host, .optimize = .Debug });
+        schema.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
+        schema.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = b.graph.host, .optimize = .ReleaseSafe }));
+        const options = b.createModule(.{ .root_source_file = b.path("r4os/transport_bridge_names.zig"), .target = b.graph.host, .optimize = .Debug });
+        options.addImport("schema", schema);
+        root.addImport("schema", schema);
+        root.addImport("options", options);
+        b.installArtifact(b.addExecutable(.{ .name = "transport-bridge-gen", .root_module = root, .use_llvm = true }));
+        return;
+    }
     if (b.option(bool, "web-bridge-generator-only", "Build the compiler-typed SDK web helper generator") orelse false) {
         const root = b.createModule(.{ .root_source_file = b.path("Tools/DataBridgeGen/src/main.zig"), .target = b.graph.host, .optimize = .Debug, .strip = true });
         const schema = b.createModule(.{ .root_source_file = b.path("r4os/web_bridge_schema.zig"), .target = b.graph.host, .optimize = .Debug });
@@ -228,6 +240,19 @@ pub fn build(b: *std.Build) void {
         "web runtime bounds scripts",              "Canvas 2D keeps bounded",           "offline browser fixtures exercise",
     } }));
     b.step("web-parity-test", "Existing web parse/layout/script/font/form/canvas cases and exact realm teardown").dependOn(&web_tests.step);
+    const transport_tests = b.addRunArtifact(b.addTest(.{ .root_module = data_cases, .filters = &.{
+        "URL parser separates HTTP",                     "request methods and validated custom headers",
+        "complete response heads retain precise errors", "incremental response framing excludes",
+        "stream decoder exposes ranges",                 "redirect filtering removes",
+        "transport target authorizer observes",          "request deadline remains absolute",
+        "stream download pump resumes",                  "CORS preflight derives",
+        "TLS handshake records reassemble",              "origin policy blocks",
+        "CORS requires an exact origin",                 "cookies honor host path",
+        "response cache eviction",                       "response cache modes freshness",
+        "resource scheduler rejects stale",              "subdocuments srcdoc inherits",
+        "Headers rejects malformed",                     "Headers preserves Set-Cookie",
+    } }));
+    b.step("transport-parity-test", "Existing bounded HTTP/cache/policy/resource/download owner cases").dependOn(&transport_tests.step);
     const gui_cases = b.createModule(.{ .root_source_file = b.path("Tests/Conformance/GuiFacadePrototype05824.zig"), .target = b.graph.host, .optimize = .Debug });
     gui_cases.addImport("r4os", host_r4os);
     const gui_parity = b.addRunArtifact(b.addTest(.{ .root_module = gui_cases, .filters = &.{ "raw GUI events", "command clipboard timer", "transactional paint", "buffered Canvas" } }));

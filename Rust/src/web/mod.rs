@@ -15,6 +15,7 @@ mod script;
 pub use script::Script;
 mod canvas;
 pub use canvas::Canvas;
+pub mod transport;
 
 pub(crate) fn result(v: c::R4SdkWebSlot) -> Result<c::R4SdkWebSlot> {
     data::result(c::R4SdkDataSlot {

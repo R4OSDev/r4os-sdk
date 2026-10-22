@@ -24,7 +24,7 @@ pub const Ipv4Address = struct {
     }
 
     pub fn isUnspecified(self: Ipv4Address) bool {
-        return self.octets == .{ 0, 0, 0, 0 };
+        return std.mem.eql(u8, &self.octets, &.{ 0, 0, 0, 0 });
     }
 };
 

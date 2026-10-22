@@ -813,3 +813,22 @@ dependency does not collect its internal tests. Check actual test counts.
 The bounded foreign-language consumers and actual unsafe/borrow negatives
 are run by `Tools/Test-RustWeb.ps1`; the shared IMAGE_SCOPE=none RustWeb
 fixture also runs in R4OS. Finished work directories remain disposable.
+
+SDK0.64.82 adds `web::transport` and `r4os/transport_helpers.h`. All nine
+current HTTP/fetch/security/cache/job/resource/document modules execute the
+original owners; shared URL/crypto/document types retain their single source.
+Typed raw operations cover the complete native surface. Rust offers synchronous
+borrowed response buffers, pinned cache leases and owned GET jobs: cancel does
+not free worker storage; drop services callbacks and joins before release, while
+forgetting a job keeps its backing alive. Advanced borrowed/custom-callback jobs
+remain unsafe until actual collect. Runtime jobs look up the exact generation.
+Seven callback kinds extend the existing table, preserving its layout and the
+original Zig/C calling conventions. Normal C/Rust app startup now binds the same
+optional resident entropy provider as Zig, once before main/workers. Manual/raw
+entry must explicitly call `R4SdkBindProgramEntropy` before creating workers.
+No HTTP/TLS/cookie/CSP/cache or entropy policy is duplicated. Build the boundary
+with `-Dtransport-bridge-generator-only=true`; `Tools/Test-RustTransport.ps1`
+checks projections and selected native/ownership consumers. The mixed guest
+fixture is `Tests/Build/RustTransport`, with its bounded loopback counterpart
+`Tests/Fixture/Browser/TransportServer.py`. Current evidence and qualification
+limits remain in the language parity matrix and shared report.

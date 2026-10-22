@@ -2,6 +2,11 @@
 #define R4OS_STARTUP_H
 #include "r4l.h"
 
+/* SDK-local module bootstrap, once after validated app entry and before
+ * workers/callbacks. Copies the same optional resident entropy functions as
+ * Zig startup; absence remains unavailable. Not a platform ABI extension. */
+int32_t R4SdkBindProgramEntropy(const R4XStartContext *);
+
 /* SDK-owned generated manifest facts, not another platform ABI table. */
 typedef struct R4StartupImport {
     const char *module_name;

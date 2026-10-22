@@ -196,7 +196,9 @@ pub fn Engine(comptime schema: type) type {
                 .@"union" => |u| inline for (u.fields, 0..) |field, i| {
                     if (field_index == i) {
                         if (update) |value| {
-                            if (comptime u.layout == .@"extern" and u.tag_type == null) {
+                            if (comptime u.layout == .@"extern" and u.tag_type == null and
+                                (@typeInfo(field.type) == .@"struct" or @typeInfo(field.type) == .@"union" or @typeInfo(field.type) == .array or @typeInfo(field.type) == .float))
+                            {
                                 // A C union's payload starts at zero. Copy
                                 // directly, preserving overlapping source data.
                                 const incoming = object(field.type, value.ptr) catch return failed();

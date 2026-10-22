@@ -478,6 +478,10 @@ pub unsafe fn start(
         Ok(a) => a,
         Err(e) => return e,
     };
+    let entropy_status = unsafe { c_facades::R4SdkBindProgramEntropy(raw) };
+    if entropy_status < 0 {
+        return entropy_status;
+    }
     PANIC_CONTEXT.store(raw.cast_mut(), Ordering::Release);
     #[cfg(all(feature = "alloc", target_os = "none"))]
     if heap::install(&app).is_err() {

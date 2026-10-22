@@ -14,6 +14,7 @@
 #include "gui_bridge.h"
 #include "data_helpers.h"
 #include "web_helpers.h"
+#include "transport_helpers.h"
 
 int32_t R4SdkAppFacade(const R4XStartContext *, R4App *);
 

@@ -9689,6 +9689,1126 @@ pub struct R4SdkWebNativeValue670 {
     pub r#opaque_bytes: [u8; 8],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue670>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue670>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue670, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportSlot {
+    pub r#ptr: *mut core::ffi::c_void,
+    pub r#length: u64,
+    pub r#bits: u64,
+    pub r#status: i32,
+    pub r#flags: u32,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportSlot>() == 32); assert!(core::mem::align_of::<R4SdkTransportSlot>() == 8); assert!(core::mem::offset_of!(R4SdkTransportSlot, r#ptr) == 0); assert!(core::mem::offset_of!(R4SdkTransportSlot, r#length) == 8); assert!(core::mem::offset_of!(R4SdkTransportSlot, r#bits) == 16); assert!(core::mem::offset_of!(R4SdkTransportSlot, r#status) == 24); assert!(core::mem::offset_of!(R4SdkTransportSlot, r#flags) == 28); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportRequestDeadline {
+    pub r#opaque_bytes: [u8; 16],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportRequestDeadline>() == 16); assert!(core::mem::align_of::<R4SdkTransportRequestDeadline>() == 8); assert!(core::mem::offset_of!(R4SdkTransportRequestDeadline, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportError {
+    pub r#opaque_bytes: [u8; 1],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportError>() == 1); assert!(core::mem::align_of::<R4SdkTransportError>() == 1); assert!(core::mem::offset_of!(R4SdkTransportError, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportRedirectMode {
+    pub r#opaque_bytes: [u8; 1],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportRedirectMode>() == 1); assert!(core::mem::align_of::<R4SdkTransportRedirectMode>() == 1); assert!(core::mem::offset_of!(R4SdkTransportRedirectMode, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportTransportStats {
+    pub r#opaque_bytes: [u8; 48],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportTransportStats>() == 48); assert!(core::mem::align_of::<R4SdkTransportTransportStats>() == 8); assert!(core::mem::offset_of!(R4SdkTransportTransportStats, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportFetchOptions {
+    pub r#opaque_bytes: [u8; 304],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportFetchOptions>() == 304); assert!(core::mem::align_of::<R4SdkTransportFetchOptions>() == 8); assert!(core::mem::offset_of!(R4SdkTransportFetchOptions, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue6 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue6>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue6>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue6, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue7 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue7>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue7>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue7, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportSessionPool {
+    pub r#opaque_bytes: [u8; 70152],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportSessionPool>() == 70152); assert!(core::mem::align_of::<R4SdkTransportSessionPool>() == 8); assert!(core::mem::offset_of!(R4SdkTransportSessionPool, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue9 {
+    pub r#opaque_bytes: [u8; 4512],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue9>() == 4512); assert!(core::mem::align_of::<R4SdkTransportNativeValue9>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue9, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportSessionPool_Entry {
+    pub r#opaque_bytes: [u8; 2256],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportSessionPool_Entry>() == 2256); assert!(core::mem::align_of::<R4SdkTransportSessionPool_Entry>() == 8); assert!(core::mem::offset_of!(R4SdkTransportSessionPool_Entry, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue11 {
+    pub r#opaque_bytes: [u8; 2048],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue11>() == 2048); assert!(core::mem::align_of::<R4SdkTransportNativeValue11>() == 1); assert!(core::mem::offset_of!(R4SdkTransportNativeValue11, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue12 {
+    pub r#opaque_bytes: [u8; 40],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue12>() == 40); assert!(core::mem::align_of::<R4SdkTransportNativeValue12>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue12, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNative_app_network_TcpSocket {
+    pub r#opaque_bytes: [u8; 32],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_app_network_TcpSocket>() == 32); assert!(core::mem::align_of::<R4SdkTransportNative_app_network_TcpSocket>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_app_network_TcpSocket, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNative_app_network_Network {
+    pub r#opaque_bytes: [u8; 16],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_app_network_Network>() == 16); assert!(core::mem::align_of::<R4SdkTransportNative_app_network_Network>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_app_network_Network, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNative_r4sys_Context {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_r4sys_Context>() == 8); assert!(core::mem::align_of::<R4SdkTransportNative_r4sys_Context>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_r4sys_Context, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNative_r4net_Context {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_r4net_Context>() == 8); assert!(core::mem::align_of::<R4SdkTransportNative_r4net_Context>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_r4net_Context, r#opaque_bytes) == 0); };
+#[repr(C, align(2))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNative_app_network_SocketAddress {
+    pub r#opaque_bytes: [u8; 6],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_app_network_SocketAddress>() == 6); assert!(core::mem::align_of::<R4SdkTransportNative_app_network_SocketAddress>() == 2); assert!(core::mem::offset_of!(R4SdkTransportNative_app_network_SocketAddress, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNative_app_network_Ipv4Address {
+    pub r#opaque_bytes: [u8; 4],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_app_network_Ipv4Address>() == 4); assert!(core::mem::align_of::<R4SdkTransportNative_app_network_Ipv4Address>() == 1); assert!(core::mem::offset_of!(R4SdkTransportNative_app_network_Ipv4Address, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue19 {
+    pub r#opaque_bytes: [u8; 4],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue19>() == 4); assert!(core::mem::align_of::<R4SdkTransportNativeValue19>() == 1); assert!(core::mem::offset_of!(R4SdkTransportNativeValue19, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue20 {
+    pub r#opaque_bytes: [u8; 141],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue20>() == 141); assert!(core::mem::align_of::<R4SdkTransportNativeValue20>() == 1); assert!(core::mem::offset_of!(R4SdkTransportNativeValue20, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportTlsSession {
+    pub r#opaque_bytes: [u8; 140],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportTlsSession>() == 140); assert!(core::mem::align_of::<R4SdkTransportTlsSession>() == 1); assert!(core::mem::offset_of!(R4SdkTransportTlsSession, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue22 {
+    pub r#opaque_bytes: [u8; 140],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue22>() == 140); assert!(core::mem::align_of::<R4SdkTransportNativeValue22>() == 1); assert!(core::mem::offset_of!(R4SdkTransportNativeValue22, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue23 {
+    pub r#opaque_bytes: [u8; 65632],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue23>() == 65632); assert!(core::mem::align_of::<R4SdkTransportNativeValue23>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue23, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportSessionPool_Preflight {
+    pub r#opaque_bytes: [u8; 16408],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportSessionPool_Preflight>() == 16408); assert!(core::mem::align_of::<R4SdkTransportSessionPool_Preflight>() == 8); assert!(core::mem::offset_of!(R4SdkTransportSessionPool_Preflight, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue27 {
+    pub r#opaque_bytes: [u8; 24],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue27>() == 24); assert!(core::mem::align_of::<R4SdkTransportNativeValue27>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue27, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue28 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue28>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue28>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue28, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue29 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue29>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue29>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue29, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue31 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue31>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue31>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue31, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue32 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue32>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue32>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue32, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue34 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue34>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue34>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue34, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue38 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue38>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue38>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue38, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue39 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue39>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue39>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue39, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue40 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue40>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue40>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue40, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportFetchResponse {
+    pub r#opaque_bytes: [u8; 1408],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportFetchResponse>() == 1408); assert!(core::mem::align_of::<R4SdkTransportFetchResponse>() == 8); assert!(core::mem::offset_of!(R4SdkTransportFetchResponse, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportFinalUrl {
+    pub r#opaque_bytes: [u8; 1040],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportFinalUrl>() == 1040); assert!(core::mem::align_of::<R4SdkTransportFinalUrl>() == 8); assert!(core::mem::offset_of!(R4SdkTransportFinalUrl, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue45 {
+    pub r#opaque_bytes: [u8; 1025],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue45>() == 1025); assert!(core::mem::align_of::<R4SdkTransportNativeValue45>() == 1); assert!(core::mem::offset_of!(R4SdkTransportNativeValue45, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportFetchResult {
+    pub r#opaque_bytes: [u8; 1416],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportFetchResult>() == 1416); assert!(core::mem::align_of::<R4SdkTransportFetchResult>() == 8); assert!(core::mem::offset_of!(R4SdkTransportFetchResult, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNative__typeInfo_app_web_FetchResult____union__tag_type__ {
+    pub r#opaque_bytes: [u8; 1],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative__typeInfo_app_web_FetchResult____union__tag_type__>() == 1); assert!(core::mem::align_of::<R4SdkTransportNative__typeInfo_app_web_FetchResult____union__tag_type__>() == 1); assert!(core::mem::offset_of!(R4SdkTransportNative__typeInfo_app_web_FetchResult____union__tag_type__, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportDownloadSink {
+    pub r#opaque_bytes: [u8; 16],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportDownloadSink>() == 16); assert!(core::mem::align_of::<R4SdkTransportDownloadSink>() == 8); assert!(core::mem::offset_of!(R4SdkTransportDownloadSink, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportDownloadOptions {
+    pub r#opaque_bytes: [u8; 136],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportDownloadOptions>() == 136); assert!(core::mem::align_of::<R4SdkTransportDownloadOptions>() == 8); assert!(core::mem::offset_of!(R4SdkTransportDownloadOptions, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue50 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue50>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue50>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue50, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue51 {
+    pub r#opaque_bytes: [u8; 16],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue51>() == 16); assert!(core::mem::align_of::<R4SdkTransportNativeValue51>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue51, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportDownloadResponse {
+    pub r#opaque_bytes: [u8; 1080],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportDownloadResponse>() == 1080); assert!(core::mem::align_of::<R4SdkTransportDownloadResponse>() == 8); assert!(core::mem::offset_of!(R4SdkTransportDownloadResponse, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportDownloadResult {
+    pub r#opaque_bytes: [u8; 1088],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportDownloadResult>() == 1088); assert!(core::mem::align_of::<R4SdkTransportDownloadResult>() == 8); assert!(core::mem::offset_of!(R4SdkTransportDownloadResult, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNative__typeInfo_app_web_DownloadResult____union__tag_type__ {
+    pub r#opaque_bytes: [u8; 1],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative__typeInfo_app_web_DownloadResult____union__tag_type__>() == 1); assert!(core::mem::align_of::<R4SdkTransportNative__typeInfo_app_web_DownloadResult____union__tag_type__>() == 1); assert!(core::mem::offset_of!(R4SdkTransportNative__typeInfo_app_web_DownloadResult____union__tag_type__, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportWebTransport {
+    pub r#opaque_bytes: [u8; 24],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportWebTransport>() == 24); assert!(core::mem::align_of::<R4SdkTransportWebTransport>() == 8); assert!(core::mem::offset_of!(R4SdkTransportWebTransport, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNative_r4dev_Context {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_r4dev_Context>() == 8); assert!(core::mem::align_of::<R4SdkTransportNative_r4dev_Context>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_r4dev_Context, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue57 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue57>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue57>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue57, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportHttpScheme {
+    pub r#opaque_bytes: [u8; 1],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportHttpScheme>() == 1); assert!(core::mem::align_of::<R4SdkTransportHttpScheme>() == 1); assert!(core::mem::offset_of!(R4SdkTransportHttpScheme, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportHttpUrlError {
+    pub r#opaque_bytes: [u8; 1],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportHttpUrlError>() == 1); assert!(core::mem::align_of::<R4SdkTransportHttpUrlError>() == 1); assert!(core::mem::offset_of!(R4SdkTransportHttpUrlError, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportHttpParsedUrl {
+    pub r#opaque_bytes: [u8; 40],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportHttpParsedUrl>() == 40); assert!(core::mem::align_of::<R4SdkTransportHttpParsedUrl>() == 8); assert!(core::mem::offset_of!(R4SdkTransportHttpParsedUrl, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportHttpUrlResult {
+    pub r#opaque_bytes: [u8; 48],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportHttpUrlResult>() == 48); assert!(core::mem::align_of::<R4SdkTransportHttpUrlResult>() == 8); assert!(core::mem::offset_of!(R4SdkTransportHttpUrlResult, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNative__typeInfo_http_UrlResult____union__tag_type__ {
+    pub r#opaque_bytes: [u8; 1],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative__typeInfo_http_UrlResult____union__tag_type__>() == 1); assert!(core::mem::align_of::<R4SdkTransportNative__typeInfo_http_UrlResult____union__tag_type__>() == 1); assert!(core::mem::offset_of!(R4SdkTransportNative__typeInfo_http_UrlResult____union__tag_type__, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportHttpRequestOptions {
+    pub r#opaque_bytes: [u8; 120],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportHttpRequestOptions>() == 120); assert!(core::mem::align_of::<R4SdkTransportHttpRequestOptions>() == 8); assert!(core::mem::offset_of!(R4SdkTransportHttpRequestOptions, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportHttpBuildResult {
+    pub r#opaque_bytes: [u8; 24],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportHttpBuildResult>() == 24); assert!(core::mem::align_of::<R4SdkTransportHttpBuildResult>() == 8); assert!(core::mem::offset_of!(R4SdkTransportHttpBuildResult, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNative__typeInfo_http_BuildResult____union__tag_type__ {
+    pub r#opaque_bytes: [u8; 1],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative__typeInfo_http_BuildResult____union__tag_type__>() == 1); assert!(core::mem::align_of::<R4SdkTransportNative__typeInfo_http_BuildResult____union__tag_type__>() == 1); assert!(core::mem::offset_of!(R4SdkTransportNative__typeInfo_http_BuildResult____union__tag_type__, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportHttpTransfer {
+    pub r#opaque_bytes: [u8; 1],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportHttpTransfer>() == 1); assert!(core::mem::align_of::<R4SdkTransportHttpTransfer>() == 1); assert!(core::mem::offset_of!(R4SdkTransportHttpTransfer, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportHttpContentRange {
+    pub r#opaque_bytes: [u8; 32],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportHttpContentRange>() == 32); assert!(core::mem::align_of::<R4SdkTransportHttpContentRange>() == 8); assert!(core::mem::offset_of!(R4SdkTransportHttpContentRange, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportHttpResponseError {
+    pub r#opaque_bytes: [u8; 1],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportHttpResponseError>() == 1); assert!(core::mem::align_of::<R4SdkTransportHttpResponseError>() == 1); assert!(core::mem::offset_of!(R4SdkTransportHttpResponseError, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportHttpResponse {
+    pub r#opaque_bytes: [u8; 432],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportHttpResponse>() == 432); assert!(core::mem::align_of::<R4SdkTransportHttpResponse>() == 8); assert!(core::mem::offset_of!(R4SdkTransportHttpResponse, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue71 {
+    pub r#opaque_bytes: [u8; 40],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue71>() == 40); assert!(core::mem::align_of::<R4SdkTransportNativeValue71>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue71, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportHttpDecodeResult {
+    pub r#opaque_bytes: [u8; 440],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportHttpDecodeResult>() == 440); assert!(core::mem::align_of::<R4SdkTransportHttpDecodeResult>() == 8); assert!(core::mem::offset_of!(R4SdkTransportHttpDecodeResult, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNative__typeInfo_http_DecodeResult____union__tag_type__ {
+    pub r#opaque_bytes: [u8; 1],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative__typeInfo_http_DecodeResult____union__tag_type__>() == 1); assert!(core::mem::align_of::<R4SdkTransportNative__typeInfo_http_DecodeResult____union__tag_type__>() == 1); assert!(core::mem::offset_of!(R4SdkTransportNative__typeInfo_http_DecodeResult____union__tag_type__, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportHttpResponseDecoder {
+    pub r#opaque_bytes: [u8; 512],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportHttpResponseDecoder>() == 512); assert!(core::mem::align_of::<R4SdkTransportHttpResponseDecoder>() == 8); assert!(core::mem::offset_of!(R4SdkTransportHttpResponseDecoder, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue75 {
+    pub r#opaque_bytes: [u8; 432],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue75>() == 432); assert!(core::mem::align_of::<R4SdkTransportNativeValue75>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue75, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportHttpParsedHead {
+    pub r#opaque_bytes: [u8; 424],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportHttpParsedHead>() == 424); assert!(core::mem::align_of::<R4SdkTransportHttpParsedHead>() == 8); assert!(core::mem::offset_of!(R4SdkTransportHttpParsedHead, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue77 {
+    pub r#opaque_bytes: [u8; 1],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue77>() == 1); assert!(core::mem::align_of::<R4SdkTransportNativeValue77>() == 1); assert!(core::mem::offset_of!(R4SdkTransportNativeValue77, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue78 {
+    pub r#opaque_bytes: [u8; 2],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue78>() == 2); assert!(core::mem::align_of::<R4SdkTransportNativeValue78>() == 1); assert!(core::mem::offset_of!(R4SdkTransportNativeValue78, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportHttpStreamResponse {
+    pub r#opaque_bytes: [u8; 88],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportHttpStreamResponse>() == 88); assert!(core::mem::align_of::<R4SdkTransportHttpStreamResponse>() == 8); assert!(core::mem::offset_of!(R4SdkTransportHttpStreamResponse, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportHttpStreamChunk {
+    pub r#opaque_bytes: [u8; 24],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportHttpStreamChunk>() == 24); assert!(core::mem::align_of::<R4SdkTransportHttpStreamChunk>() == 8); assert!(core::mem::offset_of!(R4SdkTransportHttpStreamChunk, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportHttpStreamDecodeResult {
+    pub r#opaque_bytes: [u8; 32],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportHttpStreamDecodeResult>() == 32); assert!(core::mem::align_of::<R4SdkTransportHttpStreamDecodeResult>() == 8); assert!(core::mem::offset_of!(R4SdkTransportHttpStreamDecodeResult, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNative__typeInfo_http_StreamDecodeResult____union__tag_type__ {
+    pub r#opaque_bytes: [u8; 1],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative__typeInfo_http_StreamDecodeResult____union__tag_type__>() == 1); assert!(core::mem::align_of::<R4SdkTransportNative__typeInfo_http_StreamDecodeResult____union__tag_type__>() == 1); assert!(core::mem::offset_of!(R4SdkTransportNative__typeInfo_http_StreamDecodeResult____union__tag_type__, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportHttpStreamDecoder {
+    pub r#opaque_bytes: [u8; 472],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportHttpStreamDecoder>() == 472); assert!(core::mem::align_of::<R4SdkTransportHttpStreamDecoder>() == 8); assert!(core::mem::offset_of!(R4SdkTransportHttpStreamDecoder, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportHttpRedirectResult {
+    pub r#opaque_bytes: [u8; 24],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportHttpRedirectResult>() == 24); assert!(core::mem::align_of::<R4SdkTransportHttpRedirectResult>() == 8); assert!(core::mem::offset_of!(R4SdkTransportHttpRedirectResult, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNative__typeInfo_http_RedirectResult____union__tag_type__ {
+    pub r#opaque_bytes: [u8; 1],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative__typeInfo_http_RedirectResult____union__tag_type__>() == 1); assert!(core::mem::align_of::<R4SdkTransportNative__typeInfo_http_RedirectResult____union__tag_type__>() == 1); assert!(core::mem::offset_of!(R4SdkTransportNative__typeInfo_http_RedirectResult____union__tag_type__, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportCacheLimits {
+    pub r#opaque_bytes: [u8; 16],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportCacheLimits>() == 16); assert!(core::mem::align_of::<R4SdkTransportCacheLimits>() == 8); assert!(core::mem::offset_of!(R4SdkTransportCacheLimits, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportCacheClock {
+    pub r#opaque_bytes: [u8; 24],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportCacheClock>() == 24); assert!(core::mem::align_of::<R4SdkTransportCacheClock>() == 8); assert!(core::mem::offset_of!(R4SdkTransportCacheClock, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportCacheKey {
+    pub r#opaque_bytes: [u8; 48],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportCacheKey>() == 48); assert!(core::mem::align_of::<R4SdkTransportCacheKey>() == 8); assert!(core::mem::offset_of!(R4SdkTransportCacheKey, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportCacheHandle {
+    pub r#opaque_bytes: [u8; 16],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportCacheHandle>() == 16); assert!(core::mem::align_of::<R4SdkTransportCacheHandle>() == 8); assert!(core::mem::offset_of!(R4SdkTransportCacheHandle, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportCacheAction {
+    pub r#opaque_bytes: [u8; 1],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportCacheAction>() == 1); assert!(core::mem::align_of::<R4SdkTransportCacheAction>() == 1); assert!(core::mem::offset_of!(R4SdkTransportCacheAction, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportCacheLookup {
+    pub r#opaque_bytes: [u8; 32],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportCacheLookup>() == 32); assert!(core::mem::align_of::<R4SdkTransportCacheLookup>() == 8); assert!(core::mem::offset_of!(R4SdkTransportCacheLookup, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue109 {
+    pub r#opaque_bytes: [u8; 24],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue109>() == 24); assert!(core::mem::align_of::<R4SdkTransportNativeValue109>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue109, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportCacheView {
+    pub r#opaque_bytes: [u8; 48],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportCacheView>() == 48); assert!(core::mem::align_of::<R4SdkTransportCacheView>() == 8); assert!(core::mem::offset_of!(R4SdkTransportCacheView, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportCacheStats {
+    pub r#opaque_bytes: [u8; 40],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportCacheStats>() == 40); assert!(core::mem::align_of::<R4SdkTransportCacheStats>() == 8); assert!(core::mem::offset_of!(R4SdkTransportCacheStats, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportCacheCache {
+    pub r#opaque_bytes: [u8; 992],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportCacheCache>() == 992); assert!(core::mem::align_of::<R4SdkTransportCacheCache>() == 8); assert!(core::mem::offset_of!(R4SdkTransportCacheCache, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue114 {
+    pub r#opaque_bytes: [u8; 896],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue114>() == 896); assert!(core::mem::align_of::<R4SdkTransportNativeValue114>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue114, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportCacheEntry {
+    pub r#opaque_bytes: [u8; 112],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportCacheEntry>() == 112); assert!(core::mem::align_of::<R4SdkTransportCacheEntry>() == 8); assert!(core::mem::offset_of!(R4SdkTransportCacheEntry, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue116 {
+    pub r#opaque_bytes: [u8; 40],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue116>() == 40); assert!(core::mem::align_of::<R4SdkTransportNativeValue116>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue116, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportCacheHeader {
+    pub r#opaque_bytes: [u8; 32],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportCacheHeader>() == 32); assert!(core::mem::align_of::<R4SdkTransportCacheHeader>() == 8); assert!(core::mem::offset_of!(R4SdkTransportCacheHeader, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportCacheHeaderIterator {
+    pub r#opaque_bytes: [u8; 40],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportCacheHeaderIterator>() == 40); assert!(core::mem::align_of::<R4SdkTransportCacheHeaderIterator>() == 8); assert!(core::mem::offset_of!(R4SdkTransportCacheHeaderIterator, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNative_mem_SplitIterator_u8__scalar_ {
+    pub r#opaque_bytes: [u8; 40],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_mem_SplitIterator_u8__scalar_>() == 40); assert!(core::mem::align_of::<R4SdkTransportNative_mem_SplitIterator_u8__scalar_>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_mem_SplitIterator_u8__scalar_, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportCacheDirectives {
+    pub r#opaque_bytes: [u8; 24],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportCacheDirectives>() == 24); assert!(core::mem::align_of::<R4SdkTransportCacheDirectives>() == 8); assert!(core::mem::offset_of!(R4SdkTransportCacheDirectives, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportJobsJob {
+    pub r#opaque_bytes: [u8; 72096],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportJobsJob>() == 72096); assert!(core::mem::align_of::<R4SdkTransportJobsJob>() == 8); assert!(core::mem::offset_of!(R4SdkTransportJobsJob, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue123 {
+    pub r#opaque_bytes: [u8; 56],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue123>() == 56); assert!(core::mem::align_of::<R4SdkTransportNativeValue123>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue123, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNative_app_resources_JoinHandle {
+    pub r#opaque_bytes: [u8; 48],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_app_resources_JoinHandle>() == 48); assert!(core::mem::align_of::<R4SdkTransportNative_app_resources_JoinHandle>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_app_resources_JoinHandle, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue126 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue126>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue126>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue126, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportRuntimeJobsOwner {
+    pub r#opaque_bytes: [u8; 16],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportRuntimeJobsOwner>() == 16); assert!(core::mem::align_of::<R4SdkTransportRuntimeJobsOwner>() == 8); assert!(core::mem::offset_of!(R4SdkTransportRuntimeJobsOwner, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportRuntimeJobsRequestJob {
+    pub r#opaque_bytes: [u8; 74344],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportRuntimeJobsRequestJob>() == 74344); assert!(core::mem::align_of::<R4SdkTransportRuntimeJobsRequestJob>() == 8); assert!(core::mem::offset_of!(R4SdkTransportRuntimeJobsRequestJob, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue131 {
+    pub r#opaque_bytes: [u8; 277],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue131>() == 277); assert!(core::mem::align_of::<R4SdkTransportNativeValue131>() == 1); assert!(core::mem::offset_of!(R4SdkTransportNativeValue131, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue140 {
+    pub r#opaque_bytes: [u8; 2],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue140>() == 2); assert!(core::mem::align_of::<R4SdkTransportNativeValue140>() == 1); assert!(core::mem::offset_of!(R4SdkTransportNativeValue140, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportDocumentsContext {
+    pub r#opaque_bytes: [u8; 3330648],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportDocumentsContext>() == 3330648); assert!(core::mem::align_of::<R4SdkTransportDocumentsContext>() == 8); assert!(core::mem::offset_of!(R4SdkTransportDocumentsContext, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportDocumentsSet {
+    pub r#opaque_bytes: [u8; 232],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportDocumentsSet>() == 232); assert!(core::mem::align_of::<R4SdkTransportDocumentsSet>() == 8); assert!(core::mem::offset_of!(R4SdkTransportDocumentsSet, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue147 {
+    pub r#opaque_bytes: [u8; 32],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue147>() == 32); assert!(core::mem::align_of::<R4SdkTransportNativeValue147>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue147, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue148 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue148>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue148>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue148, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue149 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue149>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue149>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue149, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportFetchHeaders {
+    pub r#opaque_bytes: [u8; 70664],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportFetchHeaders>() == 70664); assert!(core::mem::align_of::<R4SdkTransportFetchHeaders>() == 8); assert!(core::mem::offset_of!(R4SdkTransportFetchHeaders, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue154 {
+    pub r#opaque_bytes: [u8; 70656],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue154>() == 70656); assert!(core::mem::align_of::<R4SdkTransportNativeValue154>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue154, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportFetchHeader {
+    pub r#opaque_bytes: [u8; 1104],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportFetchHeader>() == 1104); assert!(core::mem::align_of::<R4SdkTransportFetchHeader>() == 8); assert!(core::mem::offset_of!(R4SdkTransportFetchHeader, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportContext {
+    pub r#opaque_bytes: [u8; 80],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportContext>() == 80); assert!(core::mem::align_of::<R4SdkTransportContext>() == 8); assert!(core::mem::offset_of!(R4SdkTransportContext, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue159 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue159>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue159>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue159, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue160 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue160>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue160>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue160, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue162 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue162>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue162>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue162, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue163 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue163>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue163>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue163, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue164 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue164>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue164>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue164, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue165 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue165>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue165>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue165, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue167 {
+    pub r#opaque_bytes: [u8; 24],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue167>() == 24); assert!(core::mem::align_of::<R4SdkTransportNativeValue167>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue167, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue168 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue168>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue168>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue168, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue169 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue169>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue169>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue169, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue170 {
+    pub r#opaque_bytes: [u8; 24],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue170>() == 24); assert!(core::mem::align_of::<R4SdkTransportNativeValue170>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue170, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue172 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue172>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue172>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue172, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue173 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue173>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue173>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue173, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue174 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue174>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue174>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue174, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNative_app_network_SocketIo {
+    pub r#opaque_bytes: [u8; 16],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_app_network_SocketIo>() == 16); assert!(core::mem::align_of::<R4SdkTransportNative_app_network_SocketIo>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_app_network_SocketIo, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNative__typeInfo_app_network_SocketIo____union__tag_type__ {
+    pub r#opaque_bytes: [u8; 1],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative__typeInfo_app_network_SocketIo____union__tag_type__>() == 1); assert!(core::mem::align_of::<R4SdkTransportNative__typeInfo_app_network_SocketIo____union__tag_type__>() == 1); assert!(core::mem::offset_of!(R4SdkTransportNative__typeInfo_app_network_SocketIo____union__tag_type__, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNative_app_network_Resolver {
+    pub r#opaque_bytes: [u8; 16],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_app_network_Resolver>() == 16); assert!(core::mem::align_of::<R4SdkTransportNative_app_network_Resolver>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_app_network_Resolver, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNative_app_network_TcpOpen {
+    pub r#opaque_bytes: [u8; 40],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_app_network_TcpOpen>() == 40); assert!(core::mem::align_of::<R4SdkTransportNative_app_network_TcpOpen>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_app_network_TcpOpen, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNative__typeInfo_app_network_TcpOpen____union__tag_type__ {
+    pub r#opaque_bytes: [u8; 1],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative__typeInfo_app_network_TcpOpen____union__tag_type__>() == 1); assert!(core::mem::align_of::<R4SdkTransportNative__typeInfo_app_network_TcpOpen____union__tag_type__>() == 1); assert!(core::mem::offset_of!(R4SdkTransportNative__typeInfo_app_network_TcpOpen____union__tag_type__, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNative_app_network_ListenerOpen {
+    pub r#opaque_bytes: [u8; 32],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_app_network_ListenerOpen>() == 32); assert!(core::mem::align_of::<R4SdkTransportNative_app_network_ListenerOpen>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_app_network_ListenerOpen, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNative__typeInfo_app_network_ListenerOpen____union__tag_type__ {
+    pub r#opaque_bytes: [u8; 1],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative__typeInfo_app_network_ListenerOpen____union__tag_type__>() == 1); assert!(core::mem::align_of::<R4SdkTransportNative__typeInfo_app_network_ListenerOpen____union__tag_type__>() == 1); assert!(core::mem::offset_of!(R4SdkTransportNative__typeInfo_app_network_ListenerOpen____union__tag_type__, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNative_app_network_TcpListener {
+    pub r#opaque_bytes: [u8; 24],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_app_network_TcpListener>() == 24); assert!(core::mem::align_of::<R4SdkTransportNative_app_network_TcpListener>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_app_network_TcpListener, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNative_app_network_UdpOpen {
+    pub r#opaque_bytes: [u8; 32],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_app_network_UdpOpen>() == 32); assert!(core::mem::align_of::<R4SdkTransportNative_app_network_UdpOpen>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_app_network_UdpOpen, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNative__typeInfo_app_network_UdpOpen____union__tag_type__ {
+    pub r#opaque_bytes: [u8; 1],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative__typeInfo_app_network_UdpOpen____union__tag_type__>() == 1); assert!(core::mem::align_of::<R4SdkTransportNative__typeInfo_app_network_UdpOpen____union__tag_type__>() == 1); assert!(core::mem::offset_of!(R4SdkTransportNative__typeInfo_app_network_UdpOpen____union__tag_type__, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNative_app_network_UdpSocket {
+    pub r#opaque_bytes: [u8; 24],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_app_network_UdpSocket>() == 24); assert!(core::mem::align_of::<R4SdkTransportNative_app_network_UdpSocket>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_app_network_UdpSocket, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue186 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue186>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue186>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue186, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue187 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue187>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue187>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue187, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue188 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue188>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue188>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue188, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue189 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue189>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue189>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue189, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue190 {
+    pub r#opaque_bytes: [u8; 96],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue190>() == 96); assert!(core::mem::align_of::<R4SdkTransportNativeValue190>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue190, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue191 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue191>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue191>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue191, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue192 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue192>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue192>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue192, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue193 {
+    pub r#opaque_bytes: [u8; 56],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue193>() == 56); assert!(core::mem::align_of::<R4SdkTransportNativeValue193>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue193, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue194 {
+    pub r#opaque_bytes: [u8; 24],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue194>() == 24); assert!(core::mem::align_of::<R4SdkTransportNativeValue194>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue194, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue195 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue195>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue195>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue195, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue196 {
+    pub r#opaque_bytes: [u8; 40],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue196>() == 40); assert!(core::mem::align_of::<R4SdkTransportNativeValue196>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue196, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue197 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue197>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue197>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue197, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue198 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue198>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue198>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue198, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue199 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue199>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue199>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue199, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue200 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue200>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue200>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue200, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue202 {
+    pub r#opaque_bytes: [u8; 16],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue202>() == 16); assert!(core::mem::align_of::<R4SdkTransportNativeValue202>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue202, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue203 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue203>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue203>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue203, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNative_app_resources_ThreadInfo {
+    pub r#opaque_bytes: [u8; 96],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_app_resources_ThreadInfo>() == 96); assert!(core::mem::align_of::<R4SdkTransportNative_app_resources_ThreadInfo>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_app_resources_ThreadInfo, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNative__typeInfo_app_resources_ThreadInfo____union__tag_type__ {
+    pub r#opaque_bytes: [u8; 1],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative__typeInfo_app_resources_ThreadInfo____union__tag_type__>() == 1); assert!(core::mem::align_of::<R4SdkTransportNative__typeInfo_app_resources_ThreadInfo____union__tag_type__>() == 1); assert!(core::mem::offset_of!(R4SdkTransportNative__typeInfo_app_resources_ThreadInfo____union__tag_type__, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue209 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue209>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue209>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue209, r#opaque_bytes) == 0); };
+#[repr(C, align(4))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNative_app_resources_JoinWait {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_app_resources_JoinWait>() == 8); assert!(core::mem::align_of::<R4SdkTransportNative_app_resources_JoinWait>() == 4); assert!(core::mem::offset_of!(R4SdkTransportNative_app_resources_JoinWait, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNative__typeInfo_app_resources_JoinWait____union__tag_type__ {
+    pub r#opaque_bytes: [u8; 1],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative__typeInfo_app_resources_JoinWait____union__tag_type__>() == 1); assert!(core::mem::align_of::<R4SdkTransportNative__typeInfo_app_resources_JoinWait____union__tag_type__>() == 1); assert!(core::mem::offset_of!(R4SdkTransportNative__typeInfo_app_resources_JoinWait____union__tag_type__, r#opaque_bytes) == 0); };
+#[repr(C, align(2))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue214 {
+    pub r#opaque_bytes: [u8; 2],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue214>() == 2); assert!(core::mem::align_of::<R4SdkTransportNativeValue214>() == 2); assert!(core::mem::offset_of!(R4SdkTransportNativeValue214, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue215 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue215>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue215>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue215, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue218 {
+    pub r#opaque_bytes: [u8; 16],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue218>() == 16); assert!(core::mem::align_of::<R4SdkTransportNativeValue218>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue218, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue219 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue219>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue219>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue219, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue221 {
+    pub r#opaque_bytes: [u8; 16],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue221>() == 16); assert!(core::mem::align_of::<R4SdkTransportNativeValue221>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue221, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue222 {
+    pub r#opaque_bytes: [u8; 70672],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue222>() == 70672); assert!(core::mem::align_of::<R4SdkTransportNativeValue222>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue222, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue223 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue223>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue223>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue223, r#opaque_bytes) == 0); };
+#[repr(C, align(2))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue224 {
+    pub r#opaque_bytes: [u8; 2],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue224>() == 2); assert!(core::mem::align_of::<R4SdkTransportNativeValue224>() == 2); assert!(core::mem::offset_of!(R4SdkTransportNativeValue224, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue225 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue225>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue225>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue225, r#opaque_bytes) == 0); };
+#[repr(C, align(2))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue226 {
+    pub r#opaque_bytes: [u8; 4],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue226>() == 4); assert!(core::mem::align_of::<R4SdkTransportNativeValue226>() == 2); assert!(core::mem::offset_of!(R4SdkTransportNativeValue226, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue227 {
+    pub r#opaque_bytes: [u8; 24],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue227>() == 24); assert!(core::mem::align_of::<R4SdkTransportNativeValue227>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue227, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue228 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue228>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue228>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue228, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue229 {
+    pub r#opaque_bytes: [u8; 1024],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue229>() == 1024); assert!(core::mem::align_of::<R4SdkTransportNativeValue229>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue229, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue230 {
+    pub r#opaque_bytes: [u8; 24],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue230>() == 24); assert!(core::mem::align_of::<R4SdkTransportNativeValue230>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue230, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue231 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue231>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue231>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue231, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue232 {
+    pub r#opaque_bytes: [u8; 512],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue232>() == 512); assert!(core::mem::align_of::<R4SdkTransportNativeValue232>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue232, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue233 {
+    pub r#opaque_bytes: [u8; 16],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue233>() == 16); assert!(core::mem::align_of::<R4SdkTransportNativeValue233>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue233, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue234 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue234>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue234>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue234, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue235 {
+    pub r#opaque_bytes: [u8; 5],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue235>() == 5); assert!(core::mem::align_of::<R4SdkTransportNativeValue235>() == 1); assert!(core::mem::offset_of!(R4SdkTransportNativeValue235, r#opaque_bytes) == 0); };
+#[repr(C, align(4))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNative_app_network_ResolveResult {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_app_network_ResolveResult>() == 8); assert!(core::mem::align_of::<R4SdkTransportNative_app_network_ResolveResult>() == 4); assert!(core::mem::offset_of!(R4SdkTransportNative_app_network_ResolveResult, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNative__typeInfo_app_network_ResolveResult____union__tag_type__ {
+    pub r#opaque_bytes: [u8; 1],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative__typeInfo_app_network_ResolveResult____union__tag_type__>() == 1); assert!(core::mem::align_of::<R4SdkTransportNative__typeInfo_app_network_ResolveResult____union__tag_type__>() == 1); assert!(core::mem::offset_of!(R4SdkTransportNative__typeInfo_app_network_ResolveResult____union__tag_type__, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue238 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue238>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue238>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue238, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue239 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue239>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue239>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue239, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNative_app_network_TcpAccept {
+    pub r#opaque_bytes: [u8; 40],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_app_network_TcpAccept>() == 40); assert!(core::mem::align_of::<R4SdkTransportNative_app_network_TcpAccept>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_app_network_TcpAccept, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNative__typeInfo_app_network_TcpAccept____union__tag_type__ {
+    pub r#opaque_bytes: [u8; 1],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative__typeInfo_app_network_TcpAccept____union__tag_type__>() == 1); assert!(core::mem::align_of::<R4SdkTransportNative__typeInfo_app_network_TcpAccept____union__tag_type__>() == 1); assert!(core::mem::offset_of!(R4SdkTransportNative__typeInfo_app_network_TcpAccept____union__tag_type__, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue242 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue242>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue242>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue242, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNativeValue243 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue243>() == 8); assert!(core::mem::align_of::<R4SdkTransportNativeValue243>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue243, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNative_app_network_UdpReceive {
+    pub r#opaque_bytes: [u8; 32],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_app_network_UdpReceive>() == 32); assert!(core::mem::align_of::<R4SdkTransportNative_app_network_UdpReceive>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_app_network_UdpReceive, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNative__typeInfo_app_network_UdpReceive____union__tag_type__ {
+    pub r#opaque_bytes: [u8; 1],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative__typeInfo_app_network_UdpReceive____union__tag_type__>() == 1); assert!(core::mem::align_of::<R4SdkTransportNative__typeInfo_app_network_UdpReceive____union__tag_type__>() == 1); assert!(core::mem::offset_of!(R4SdkTransportNative__typeInfo_app_network_UdpReceive____union__tag_type__, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTransportNative_app_network_Datagram {
+    pub r#opaque_bytes: [u8; 24],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_app_network_Datagram>() == 24); assert!(core::mem::align_of::<R4SdkTransportNative_app_network_Datagram>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_app_network_Datagram, r#opaque_bytes) == 0); };
 pub const R4SdkGuiAlign_TYPE: u32 = 0;
 pub const R4SdkGuiPalette_TYPE: u32 = 1;
 pub const R4SdkGuiControlMetrics_TYPE: u32 = 2;
@@ -11321,7 +12441,7 @@ pub const R4SdkWebNativeValue667_TYPE: u32 = 667;
 pub const R4SdkWebNativeValue668_TYPE: u32 = 668;
 pub const R4SdkWebNativeValue669_TYPE: u32 = 669;
 pub const R4SdkWebNativeValue670_TYPE: u32 = 670;
-pub const R4SdkWeb_ABI_FINGERPRINT: u64 = 17145349120571270290;
+pub const R4SdkWeb_ABI_FINGERPRINT: u64 = 4238743141405319170;
 pub const R4SdkWebHtml_max_source_bytes: i32 = 262144;
 pub const R4SdkWebHtml_max_string_bytes: i32 = 163840;
 pub const R4SdkWebHtml_max_nodes: i32 = 4096;
@@ -12600,6 +13720,13 @@ pub const R4SdkWebCallbackKind_resource_report: u32 = 27;
 pub const R4SdkWebCallbackKind_frame_lookup: u32 = 28;
 pub const R4SdkWebCallbackKind_script_report: u32 = 29;
 pub const R4SdkWebCallbackKind_monotonic_clock: u32 = 30;
+pub const R4SdkWebCallbackKind_network_progress: u32 = 31;
+pub const R4SdkWebCallbackKind_cookie_provider: u32 = 32;
+pub const R4SdkWebCallbackKind_cookie_sink: u32 = 33;
+pub const R4SdkWebCallbackKind_target_authorize: u32 = 34;
+pub const R4SdkWebCallbackKind_download_progress: u32 = 35;
+pub const R4SdkWebCallbackKind_download_write: u32 = 36;
+pub const R4SdkWebCallbackKind_runtime_lookup: u32 = 37;
 pub const R4SdkWebNativeValue589_left: u32 = 0;
 pub const R4SdkWebNativeValue589_right: u32 = 1;
 pub const R4SdkWebNativeValue589_home: u32 = 2;
@@ -12624,6 +13751,476 @@ pub const R4SdkWebRuntimeEventTarget_TAG_document: u32 = 1;
 pub const R4SdkWebRuntimeEventTarget_TAG_navigation: u32 = 2;
 pub const R4SdkWebRuntimeEventTarget_TAG_node: u32 = 3;
 pub const R4SdkWebRuntimeEventTarget_TAG_xhr: u32 = 4;
+pub const R4SdkTransportRequestDeadline_TYPE: u32 = 1;
+pub const R4SdkTransportError_TYPE: u32 = 2;
+pub const R4SdkTransportRedirectMode_TYPE: u32 = 3;
+pub const R4SdkTransportTransportStats_TYPE: u32 = 4;
+pub const R4SdkTransportFetchOptions_TYPE: u32 = 5;
+pub const R4SdkTransportNativeValue6_TYPE: u32 = 6;
+pub const R4SdkTransportNativeValue7_TYPE: u32 = 7;
+pub const R4SdkTransportSessionPool_TYPE: u32 = 8;
+pub const R4SdkTransportNativeValue9_TYPE: u32 = 9;
+pub const R4SdkTransportSessionPool_Entry_TYPE: u32 = 10;
+pub const R4SdkTransportNativeValue11_TYPE: u32 = 11;
+pub const R4SdkTransportNativeValue12_TYPE: u32 = 12;
+pub const R4SdkTransportNative_app_network_TcpSocket_TYPE: u32 = 13;
+pub const R4SdkTransportNative_app_network_Network_TYPE: u32 = 14;
+pub const R4SdkTransportNative_r4sys_Context_TYPE: u32 = 15;
+pub const R4SdkTransportNative_r4net_Context_TYPE: u32 = 16;
+pub const R4SdkTransportNative_app_network_SocketAddress_TYPE: u32 = 17;
+pub const R4SdkTransportNative_app_network_Ipv4Address_TYPE: u32 = 18;
+pub const R4SdkTransportNativeValue19_TYPE: u32 = 19;
+pub const R4SdkTransportNativeValue20_TYPE: u32 = 20;
+pub const R4SdkTransportTlsSession_TYPE: u32 = 21;
+pub const R4SdkTransportNativeValue22_TYPE: u32 = 22;
+pub const R4SdkTransportNativeValue23_TYPE: u32 = 23;
+pub const R4SdkTransportSessionPool_Preflight_TYPE: u32 = 24;
+pub const R4SdkTransportNativeValue27_TYPE: u32 = 27;
+pub const R4SdkTransportNativeValue28_TYPE: u32 = 28;
+pub const R4SdkTransportNativeValue29_TYPE: u32 = 29;
+pub const R4SdkTransportNativeValue31_TYPE: u32 = 31;
+pub const R4SdkTransportNativeValue32_TYPE: u32 = 32;
+pub const R4SdkTransportNativeValue34_TYPE: u32 = 34;
+pub const R4SdkTransportNativeValue38_TYPE: u32 = 38;
+pub const R4SdkTransportNativeValue39_TYPE: u32 = 39;
+pub const R4SdkTransportNativeValue40_TYPE: u32 = 40;
+pub const R4SdkTransportFetchResponse_TYPE: u32 = 41;
+pub const R4SdkTransportFinalUrl_TYPE: u32 = 44;
+pub const R4SdkTransportNativeValue45_TYPE: u32 = 45;
+pub const R4SdkTransportFetchResult_TYPE: u32 = 46;
+pub const R4SdkTransportNative__typeInfo_app_web_FetchResult____union__tag_type___TYPE: u32 = 47;
+pub const R4SdkTransportDownloadSink_TYPE: u32 = 48;
+pub const R4SdkTransportDownloadOptions_TYPE: u32 = 49;
+pub const R4SdkTransportNativeValue50_TYPE: u32 = 50;
+pub const R4SdkTransportNativeValue51_TYPE: u32 = 51;
+pub const R4SdkTransportDownloadResponse_TYPE: u32 = 52;
+pub const R4SdkTransportDownloadResult_TYPE: u32 = 53;
+pub const R4SdkTransportNative__typeInfo_app_web_DownloadResult____union__tag_type___TYPE: u32 = 54;
+pub const R4SdkTransportWebTransport_TYPE: u32 = 55;
+pub const R4SdkTransportNative_r4dev_Context_TYPE: u32 = 56;
+pub const R4SdkTransportNativeValue57_TYPE: u32 = 57;
+pub const R4SdkTransportHttpScheme_TYPE: u32 = 59;
+pub const R4SdkTransportHttpUrlError_TYPE: u32 = 60;
+pub const R4SdkTransportHttpParsedUrl_TYPE: u32 = 61;
+pub const R4SdkTransportHttpUrlResult_TYPE: u32 = 62;
+pub const R4SdkTransportNative__typeInfo_http_UrlResult____union__tag_type___TYPE: u32 = 63;
+pub const R4SdkTransportHttpRequestOptions_TYPE: u32 = 64;
+pub const R4SdkTransportHttpBuildResult_TYPE: u32 = 65;
+pub const R4SdkTransportNative__typeInfo_http_BuildResult____union__tag_type___TYPE: u32 = 66;
+pub const R4SdkTransportHttpTransfer_TYPE: u32 = 67;
+pub const R4SdkTransportHttpContentRange_TYPE: u32 = 68;
+pub const R4SdkTransportHttpResponseError_TYPE: u32 = 69;
+pub const R4SdkTransportHttpResponse_TYPE: u32 = 70;
+pub const R4SdkTransportNativeValue71_TYPE: u32 = 71;
+pub const R4SdkTransportHttpDecodeResult_TYPE: u32 = 72;
+pub const R4SdkTransportNative__typeInfo_http_DecodeResult____union__tag_type___TYPE: u32 = 73;
+pub const R4SdkTransportHttpResponseDecoder_TYPE: u32 = 74;
+pub const R4SdkTransportNativeValue75_TYPE: u32 = 75;
+pub const R4SdkTransportHttpParsedHead_TYPE: u32 = 76;
+pub const R4SdkTransportNativeValue77_TYPE: u32 = 77;
+pub const R4SdkTransportNativeValue78_TYPE: u32 = 78;
+pub const R4SdkTransportHttpStreamResponse_TYPE: u32 = 79;
+pub const R4SdkTransportHttpStreamChunk_TYPE: u32 = 80;
+pub const R4SdkTransportHttpStreamDecodeResult_TYPE: u32 = 81;
+pub const R4SdkTransportNative__typeInfo_http_StreamDecodeResult____union__tag_type___TYPE: u32 = 82;
+pub const R4SdkTransportHttpStreamDecoder_TYPE: u32 = 83;
+pub const R4SdkTransportHttpRedirectResult_TYPE: u32 = 84;
+pub const R4SdkTransportNative__typeInfo_http_RedirectResult____union__tag_type___TYPE: u32 = 85;
+pub const R4SdkTransportCacheLimits_TYPE: u32 = 103;
+pub const R4SdkTransportCacheClock_TYPE: u32 = 104;
+pub const R4SdkTransportCacheKey_TYPE: u32 = 105;
+pub const R4SdkTransportCacheHandle_TYPE: u32 = 106;
+pub const R4SdkTransportCacheAction_TYPE: u32 = 107;
+pub const R4SdkTransportCacheLookup_TYPE: u32 = 108;
+pub const R4SdkTransportNativeValue109_TYPE: u32 = 109;
+pub const R4SdkTransportCacheView_TYPE: u32 = 110;
+pub const R4SdkTransportCacheStats_TYPE: u32 = 111;
+pub const R4SdkTransportCacheCache_TYPE: u32 = 112;
+pub const R4SdkTransportNativeValue114_TYPE: u32 = 114;
+pub const R4SdkTransportCacheEntry_TYPE: u32 = 115;
+pub const R4SdkTransportNativeValue116_TYPE: u32 = 116;
+pub const R4SdkTransportCacheHeader_TYPE: u32 = 117;
+pub const R4SdkTransportCacheHeaderIterator_TYPE: u32 = 118;
+pub const R4SdkTransportNative_mem_SplitIterator_u8__scalar__TYPE: u32 = 119;
+pub const R4SdkTransportCacheDirectives_TYPE: u32 = 121;
+pub const R4SdkTransportJobsJob_TYPE: u32 = 122;
+pub const R4SdkTransportNativeValue123_TYPE: u32 = 123;
+pub const R4SdkTransportNative_app_resources_JoinHandle_TYPE: u32 = 124;
+pub const R4SdkTransportNativeValue126_TYPE: u32 = 126;
+pub const R4SdkTransportRuntimeJobsOwner_TYPE: u32 = 127;
+pub const R4SdkTransportRuntimeJobsRequestJob_TYPE: u32 = 128;
+pub const R4SdkTransportNativeValue131_TYPE: u32 = 131;
+pub const R4SdkTransportNativeValue140_TYPE: u32 = 140;
+pub const R4SdkTransportDocumentsContext_TYPE: u32 = 141;
+pub const R4SdkTransportDocumentsSet_TYPE: u32 = 144;
+pub const R4SdkTransportNativeValue147_TYPE: u32 = 147;
+pub const R4SdkTransportNativeValue148_TYPE: u32 = 148;
+pub const R4SdkTransportNativeValue149_TYPE: u32 = 149;
+pub const R4SdkTransportFetchHeaders_TYPE: u32 = 153;
+pub const R4SdkTransportNativeValue154_TYPE: u32 = 154;
+pub const R4SdkTransportFetchHeader_TYPE: u32 = 155;
+pub const R4SdkTransportContext_TYPE: u32 = 158;
+pub const R4SdkTransportNativeValue159_TYPE: u32 = 159;
+pub const R4SdkTransportNativeValue160_TYPE: u32 = 160;
+pub const R4SdkTransportNativeValue162_TYPE: u32 = 162;
+pub const R4SdkTransportNativeValue163_TYPE: u32 = 163;
+pub const R4SdkTransportNativeValue164_TYPE: u32 = 164;
+pub const R4SdkTransportNativeValue165_TYPE: u32 = 165;
+pub const R4SdkTransportNativeValue167_TYPE: u32 = 167;
+pub const R4SdkTransportNativeValue168_TYPE: u32 = 168;
+pub const R4SdkTransportNativeValue169_TYPE: u32 = 169;
+pub const R4SdkTransportNativeValue170_TYPE: u32 = 170;
+pub const R4SdkTransportNativeValue172_TYPE: u32 = 172;
+pub const R4SdkTransportNativeValue173_TYPE: u32 = 173;
+pub const R4SdkTransportNativeValue174_TYPE: u32 = 174;
+pub const R4SdkTransportNative_app_network_SocketIo_TYPE: u32 = 175;
+pub const R4SdkTransportNative__typeInfo_app_network_SocketIo____union__tag_type___TYPE: u32 = 176;
+pub const R4SdkTransportNative_app_network_Resolver_TYPE: u32 = 177;
+pub const R4SdkTransportNative_app_network_TcpOpen_TYPE: u32 = 178;
+pub const R4SdkTransportNative__typeInfo_app_network_TcpOpen____union__tag_type___TYPE: u32 = 179;
+pub const R4SdkTransportNative_app_network_ListenerOpen_TYPE: u32 = 180;
+pub const R4SdkTransportNative__typeInfo_app_network_ListenerOpen____union__tag_type___TYPE: u32 = 181;
+pub const R4SdkTransportNative_app_network_TcpListener_TYPE: u32 = 182;
+pub const R4SdkTransportNative_app_network_UdpOpen_TYPE: u32 = 183;
+pub const R4SdkTransportNative__typeInfo_app_network_UdpOpen____union__tag_type___TYPE: u32 = 184;
+pub const R4SdkTransportNative_app_network_UdpSocket_TYPE: u32 = 185;
+pub const R4SdkTransportNativeValue186_TYPE: u32 = 186;
+pub const R4SdkTransportNativeValue187_TYPE: u32 = 187;
+pub const R4SdkTransportNativeValue188_TYPE: u32 = 188;
+pub const R4SdkTransportNativeValue189_TYPE: u32 = 189;
+pub const R4SdkTransportNativeValue190_TYPE: u32 = 190;
+pub const R4SdkTransportNativeValue191_TYPE: u32 = 191;
+pub const R4SdkTransportNativeValue192_TYPE: u32 = 192;
+pub const R4SdkTransportNativeValue193_TYPE: u32 = 193;
+pub const R4SdkTransportNativeValue194_TYPE: u32 = 194;
+pub const R4SdkTransportNativeValue195_TYPE: u32 = 195;
+pub const R4SdkTransportNativeValue196_TYPE: u32 = 196;
+pub const R4SdkTransportNativeValue197_TYPE: u32 = 197;
+pub const R4SdkTransportNativeValue198_TYPE: u32 = 198;
+pub const R4SdkTransportNativeValue199_TYPE: u32 = 199;
+pub const R4SdkTransportNativeValue200_TYPE: u32 = 200;
+pub const R4SdkTransportNativeValue202_TYPE: u32 = 202;
+pub const R4SdkTransportNativeValue203_TYPE: u32 = 203;
+pub const R4SdkTransportNative_app_resources_ThreadInfo_TYPE: u32 = 206;
+pub const R4SdkTransportNative__typeInfo_app_resources_ThreadInfo____union__tag_type___TYPE: u32 = 207;
+pub const R4SdkTransportNativeValue209_TYPE: u32 = 209;
+pub const R4SdkTransportNative_app_resources_JoinWait_TYPE: u32 = 210;
+pub const R4SdkTransportNative__typeInfo_app_resources_JoinWait____union__tag_type___TYPE: u32 = 211;
+pub const R4SdkTransportNativeValue214_TYPE: u32 = 214;
+pub const R4SdkTransportNativeValue215_TYPE: u32 = 215;
+pub const R4SdkTransportNativeValue218_TYPE: u32 = 218;
+pub const R4SdkTransportNativeValue219_TYPE: u32 = 219;
+pub const R4SdkTransportNativeValue221_TYPE: u32 = 221;
+pub const R4SdkTransportNativeValue222_TYPE: u32 = 222;
+pub const R4SdkTransportNativeValue223_TYPE: u32 = 223;
+pub const R4SdkTransportNativeValue224_TYPE: u32 = 224;
+pub const R4SdkTransportNativeValue225_TYPE: u32 = 225;
+pub const R4SdkTransportNativeValue226_TYPE: u32 = 226;
+pub const R4SdkTransportNativeValue227_TYPE: u32 = 227;
+pub const R4SdkTransportNativeValue228_TYPE: u32 = 228;
+pub const R4SdkTransportNativeValue229_TYPE: u32 = 229;
+pub const R4SdkTransportNativeValue230_TYPE: u32 = 230;
+pub const R4SdkTransportNativeValue231_TYPE: u32 = 231;
+pub const R4SdkTransportNativeValue232_TYPE: u32 = 232;
+pub const R4SdkTransportNativeValue233_TYPE: u32 = 233;
+pub const R4SdkTransportNativeValue234_TYPE: u32 = 234;
+pub const R4SdkTransportNativeValue235_TYPE: u32 = 235;
+pub const R4SdkTransportNative_app_network_ResolveResult_TYPE: u32 = 236;
+pub const R4SdkTransportNative__typeInfo_app_network_ResolveResult____union__tag_type___TYPE: u32 = 237;
+pub const R4SdkTransportNativeValue238_TYPE: u32 = 238;
+pub const R4SdkTransportNativeValue239_TYPE: u32 = 239;
+pub const R4SdkTransportNative_app_network_TcpAccept_TYPE: u32 = 240;
+pub const R4SdkTransportNative__typeInfo_app_network_TcpAccept____union__tag_type___TYPE: u32 = 241;
+pub const R4SdkTransportNativeValue242_TYPE: u32 = 242;
+pub const R4SdkTransportNativeValue243_TYPE: u32 = 243;
+pub const R4SdkTransportNative_app_network_UdpReceive_TYPE: u32 = 244;
+pub const R4SdkTransportNative__typeInfo_app_network_UdpReceive____union__tag_type___TYPE: u32 = 245;
+pub const R4SdkTransportNative_app_network_Datagram_TYPE: u32 = 246;
+pub const R4SdkTransport_ABI_FINGERPRINT: u64 = 3079459800984226674;
+pub const R4SdkTransport_tls_workspace_bytes: i32 = 18432;
+pub const R4SdkTransport_tls_scratch_bytes: i32 = 55296;
+pub const R4SdkTransportHttp_max_header_bytes: i32 = 16384;
+pub const R4SdkTransportHttp_max_header_count: i32 = 64;
+pub const R4SdkTransportHttp_max_set_cookie_headers: i32 = 16;
+pub const R4SdkTransportHttp_max_redirects: i32 = 20;
+pub const R4SdkTransportSecurity_max_origin_host_bytes: i32 = 253;
+pub const R4SdkTransportSecurity_max_policy_bytes: i32 = 1024;
+pub const R4SdkTransportSecurity_max_cookies: i32 = 32;
+pub const R4SdkTransportSecurity_max_cookie_name_bytes: i32 = 64;
+pub const R4SdkTransportSecurity_max_cookie_value_bytes: i32 = 4096;
+pub const R4SdkTransportSecurity_max_cookie_path_bytes: i32 = 256;
+pub const R4SdkTransportSecurity_max_storage_origins: i32 = 8;
+pub const R4SdkTransportSecurity_max_storage_entries: i32 = 24;
+pub const R4SdkTransportSecurity_max_storage_key_bytes: i32 = 96;
+pub const R4SdkTransportSecurity_max_storage_value_bytes: i32 = 512;
+pub const R4SdkTransportSecurity_max_persistence_bytes: i32 = 196608;
+pub const R4SdkTransportCache_max_entries: i32 = 8;
+pub const R4SdkTransportCache_max_key_bytes: i32 = 16384;
+pub const R4SdkTransportCache_max_header_bytes: i32 = 8192;
+pub const R4SdkTransportJobs_capacity: i32 = 2;
+pub const R4SdkTransportResources_max_resources: i32 = 64;
+pub const R4SdkTransportResources_no_request: i32 = 0;
+pub const R4SdkTransportDocuments_max_subdocuments: i32 = 4;
+pub const R4SdkTransportDocuments_max_document_owners: i32 = 5;
+pub const R4SdkTransportFetch_max_headers: i32 = 64;
+pub const R4SdkTransportFetch_max_name_bytes: i32 = 64;
+pub const R4SdkTransportFetch_max_value_bytes: i32 = 1024;
+pub const R4SdkTransportFetch_max_serialized_bytes: i32 = 16384;
+pub const R4SdkTransportError_invalid_url: u32 = 0;
+pub const R4SdkTransportError_unsupported_scheme: u32 = 1;
+pub const R4SdkTransportError_cancelled: u32 = 2;
+pub const R4SdkTransportError_dns_timeout: u32 = 3;
+pub const R4SdkTransportError_dns_not_found: u32 = 4;
+pub const R4SdkTransportError_dns_failed: u32 = 5;
+pub const R4SdkTransportError_connect_timeout: u32 = 6;
+pub const R4SdkTransportError_connect_failed: u32 = 7;
+pub const R4SdkTransportError_write_failed: u32 = 8;
+pub const R4SdkTransportError_read_failed: u32 = 9;
+pub const R4SdkTransportError_response_too_large: u32 = 10;
+pub const R4SdkTransportError_malformed_response: u32 = 11;
+pub const R4SdkTransportError_cors_preflight_failed: u32 = 12;
+pub const R4SdkTransportError_cors_rejected: u32 = 13;
+pub const R4SdkTransportError_policy_rejected: u32 = 14;
+pub const R4SdkTransportError_redirect_disallowed: u32 = 15;
+pub const R4SdkTransportError_redirect_without_location: u32 = 16;
+pub const R4SdkTransportError_redirect_limit: u32 = 17;
+pub const R4SdkTransportError_tls_unavailable: u32 = 18;
+pub const R4SdkTransportError_tls_entropy_required: u32 = 19;
+pub const R4SdkTransportError_tls_handshake_failed: u32 = 20;
+pub const R4SdkTransportError_tls_alert_handshake_failure: u32 = 21;
+pub const R4SdkTransportError_tls_alert_illegal_parameter: u32 = 22;
+pub const R4SdkTransportError_tls_alert_decode_error: u32 = 23;
+pub const R4SdkTransportError_tls_alert_protocol_version: u32 = 24;
+pub const R4SdkTransportError_tls_alert_insufficient_security: u32 = 25;
+pub const R4SdkTransportError_tls_alert_unexpected_message: u32 = 26;
+pub const R4SdkTransportError_tls_server_flight_malformed: u32 = 27;
+pub const R4SdkTransportError_tls_server_record_header_invalid: u32 = 28;
+pub const R4SdkTransportError_tls_server_message_framing_invalid: u32 = 29;
+pub const R4SdkTransportError_tls_server_hello_invalid: u32 = 30;
+pub const R4SdkTransportError_tls_server_certificate_list_invalid: u32 = 31;
+pub const R4SdkTransportError_tls_server_key_exchange_invalid: u32 = 32;
+pub const R4SdkTransportError_tls_server_hello_done_invalid: u32 = 33;
+pub const R4SdkTransportError_tls_server_message_unsupported: u32 = 34;
+pub const R4SdkTransportError_tls_server_flight_incomplete: u32 = 35;
+pub const R4SdkTransportError_tls_client_flight_buffer_invalid: u32 = 36;
+pub const R4SdkTransportError_tls_client_flight_header_invalid: u32 = 37;
+pub const R4SdkTransportError_tls_client_flight_lengths_invalid: u32 = 38;
+pub const R4SdkTransportError_tls_client_state_length_mismatch: u32 = 39;
+pub const R4SdkTransportError_tls_server_flight_length_mismatch: u32 = 40;
+pub const R4SdkTransportError_tls_client_flight_total_length_mismatch: u32 = 41;
+pub const R4SdkTransportError_tls_client_state_length_zero: u32 = 42;
+pub const R4SdkTransportError_tls_server_flight_length_zero: u32 = 43;
+pub const R4SdkTransportError_tls_client_flight_declared_too_large: u32 = 44;
+pub const R4SdkTransportError_tls_client_flight_has_trailing_input: u32 = 45;
+pub const R4SdkTransportError_tls_client_state_invalid: u32 = 46;
+pub const R4SdkTransportError_tls_certificate_rejected: u32 = 47;
+pub const R4SdkTransportError_tls_certificate_material_unavailable: u32 = 48;
+pub const R4SdkTransportError_tls_certificate_clock_invalid: u32 = 49;
+pub const R4SdkTransportError_tls_certificate_parse_failed: u32 = 50;
+pub const R4SdkTransportError_tls_certificate_hostname_rejected: u32 = 51;
+pub const R4SdkTransportError_tls_certificate_validity_rejected: u32 = 52;
+pub const R4SdkTransportError_tls_certificate_chain_rejected: u32 = 53;
+pub const R4SdkTransportError_tls_certificate_root_rejected: u32 = 54;
+pub const R4SdkTransportError_tls_server_signature_rejected: u32 = 55;
+pub const R4SdkTransportError_tls_server_flight_unsupported: u32 = 56;
+pub const R4SdkTransportError_tls_server_final_flight_invalid: u32 = 57;
+pub const R4SdkTransportError_tls_server_finished_rejected: u32 = 58;
+pub const R4SdkTransportError_tls_finished_state_invalid: u32 = 59;
+pub const R4SdkTransportError_tls_record_failed: u32 = 60;
+pub const R4SdkTransportError_scratch_too_small: u32 = 61;
+pub const R4SdkTransportError_request_too_large: u32 = 62;
+pub const R4SdkTransportError_read_timeout: u32 = 63;
+pub const R4SdkTransportError_read_reset: u32 = 64;
+pub const R4SdkTransportError_read_peer_closed: u32 = 65;
+pub const R4SdkTransportError_tls_close_notify: u32 = 66;
+pub const R4SdkTransportError_tls_alert_received: u32 = 67;
+pub const R4SdkTransportError_header_buffer_too_small: u32 = 68;
+pub const R4SdkTransportError_io_buffer_too_small: u32 = 69;
+pub const R4SdkTransportError_sink_failed: u32 = 70;
+pub const R4SdkTransportError_content_length_required: u32 = 71;
+pub const R4SdkTransportError_content_range_required: u32 = 72;
+pub const R4SdkTransportError_content_range_mismatch: u32 = 73;
+pub const R4SdkTransportError_range_header_conflict: u32 = 74;
+pub const R4SdkTransportError_unsupported_method: u32 = 75;
+pub const R4SdkTransportRedirectMode_follow: u32 = 0;
+pub const R4SdkTransportRedirectMode_error_mode: u32 = 1;
+pub const R4SdkTransportRedirectMode_manual: u32 = 2;
+pub const R4SdkTransportNative__typeInfo_app_web_FetchResult____union__tag_type___response: u32 = 0;
+pub const R4SdkTransportNative__typeInfo_app_web_FetchResult____union__tag_type___failure: u32 = 1;
+pub const R4SdkTransportNative__typeInfo_app_web_DownloadResult____union__tag_type___response: u32 = 0;
+pub const R4SdkTransportNative__typeInfo_app_web_DownloadResult____union__tag_type___range_not_satisfiable: u32 = 1;
+pub const R4SdkTransportNative__typeInfo_app_web_DownloadResult____union__tag_type___failure: u32 = 2;
+pub const R4SdkTransportHttpScheme_http: u32 = 0;
+pub const R4SdkTransportHttpScheme_https: u32 = 1;
+pub const R4SdkTransportHttpUrlError_empty: u32 = 0;
+pub const R4SdkTransportHttpUrlError_unsupported_scheme: u32 = 1;
+pub const R4SdkTransportHttpUrlError_missing_host: u32 = 2;
+pub const R4SdkTransportHttpUrlError_userinfo_forbidden: u32 = 3;
+pub const R4SdkTransportHttpUrlError_ipv6_not_supported: u32 = 4;
+pub const R4SdkTransportHttpUrlError_bad_port: u32 = 5;
+pub const R4SdkTransportHttpUrlError_fragment_forbidden: u32 = 6;
+pub const R4SdkTransportHttpUrlError_output_too_small: u32 = 7;
+pub const R4SdkTransportHttpUrlError_invalid_target: u32 = 8;
+pub const R4SdkTransportNative__typeInfo_http_UrlResult____union__tag_type___value: u32 = 0;
+pub const R4SdkTransportNative__typeInfo_http_UrlResult____union__tag_type___failure: u32 = 1;
+pub const R4SdkTransportNative__typeInfo_http_BuildResult____union__tag_type___bytes: u32 = 0;
+pub const R4SdkTransportNative__typeInfo_http_BuildResult____union__tag_type___invalid_url: u32 = 1;
+pub const R4SdkTransportNative__typeInfo_http_BuildResult____union__tag_type___output_too_small: u32 = 2;
+pub const R4SdkTransportHttpTransfer_none: u32 = 0;
+pub const R4SdkTransportHttpTransfer_content_length: u32 = 1;
+pub const R4SdkTransportHttpTransfer_chunked: u32 = 2;
+pub const R4SdkTransportHttpTransfer_close_delimited: u32 = 3;
+pub const R4SdkTransportHttpResponseError_malformed_status: u32 = 0;
+pub const R4SdkTransportHttpResponseError_unsupported_version: u32 = 1;
+pub const R4SdkTransportHttpResponseError_header_too_large: u32 = 2;
+pub const R4SdkTransportHttpResponseError_too_many_headers: u32 = 3;
+pub const R4SdkTransportHttpResponseError_malformed_header: u32 = 4;
+pub const R4SdkTransportHttpResponseError_invalid_content_length: u32 = 5;
+pub const R4SdkTransportHttpResponseError_conflicting_length: u32 = 6;
+pub const R4SdkTransportHttpResponseError_unsupported_transfer_encoding: u32 = 7;
+pub const R4SdkTransportHttpResponseError_malformed_chunk: u32 = 8;
+pub const R4SdkTransportHttpResponseError_body_too_large: u32 = 9;
+pub const R4SdkTransportHttpResponseError_redirect_without_location: u32 = 10;
+pub const R4SdkTransportHttpResponseError_redirect_loop: u32 = 11;
+pub const R4SdkTransportHttpResponseError_transport_closed_early: u32 = 12;
+pub const R4SdkTransportHttpResponseError_content_length_required: u32 = 13;
+pub const R4SdkTransportHttpResponseError_unexpected_body: u32 = 14;
+pub const R4SdkTransportNative__typeInfo_http_DecodeResult____union__tag_type___complete: u32 = 0;
+pub const R4SdkTransportNative__typeInfo_http_DecodeResult____union__tag_type___need_more: u32 = 1;
+pub const R4SdkTransportNative__typeInfo_http_DecodeResult____union__tag_type___aborted: u32 = 2;
+pub const R4SdkTransportNative__typeInfo_http_DecodeResult____union__tag_type___failure: u32 = 3;
+pub const R4SdkTransportNativeValue77_size: u32 = 0;
+pub const R4SdkTransportNativeValue77_data: u32 = 1;
+pub const R4SdkTransportNativeValue77_data_crlf: u32 = 2;
+pub const R4SdkTransportNativeValue77_trailers: u32 = 3;
+pub const R4SdkTransportNative__typeInfo_http_StreamDecodeResult____union__tag_type___chunk: u32 = 0;
+pub const R4SdkTransportNative__typeInfo_http_StreamDecodeResult____union__tag_type___complete: u32 = 1;
+pub const R4SdkTransportNative__typeInfo_http_StreamDecodeResult____union__tag_type___need_more: u32 = 2;
+pub const R4SdkTransportNative__typeInfo_http_StreamDecodeResult____union__tag_type___aborted: u32 = 3;
+pub const R4SdkTransportNative__typeInfo_http_StreamDecodeResult____union__tag_type___failure: u32 = 4;
+pub const R4SdkTransportNative__typeInfo_http_RedirectResult____union__tag_type___url: u32 = 0;
+pub const R4SdkTransportNative__typeInfo_http_RedirectResult____union__tag_type___invalid: u32 = 1;
+pub const R4SdkTransportNative__typeInfo_http_RedirectResult____union__tag_type___output_too_small: u32 = 2;
+pub const R4SdkTransportCacheAction_miss: u32 = 0;
+pub const R4SdkTransportCacheAction_hit: u32 = 1;
+pub const R4SdkTransportCacheAction_revalidate: u32 = 2;
+pub const R4SdkTransportCacheAction_only_miss: u32 = 3;
+pub const R4SdkTransportNative__typeInfo_app_network_SocketIo____union__tag_type___bytes: u32 = 0;
+pub const R4SdkTransportNative__typeInfo_app_network_SocketIo____union__tag_type___would_block: u32 = 1;
+pub const R4SdkTransportNative__typeInfo_app_network_SocketIo____union__tag_type___timed_out: u32 = 2;
+pub const R4SdkTransportNative__typeInfo_app_network_SocketIo____union__tag_type___reset: u32 = 3;
+pub const R4SdkTransportNative__typeInfo_app_network_SocketIo____union__tag_type___peer_closed: u32 = 4;
+pub const R4SdkTransportNative__typeInfo_app_network_SocketIo____union__tag_type___closed: u32 = 5;
+pub const R4SdkTransportNative__typeInfo_app_network_SocketIo____union__tag_type___failure: u32 = 6;
+pub const R4SdkTransportNative__typeInfo_app_network_TcpOpen____union__tag_type___socket: u32 = 0;
+pub const R4SdkTransportNative__typeInfo_app_network_TcpOpen____union__tag_type___would_block: u32 = 1;
+pub const R4SdkTransportNative__typeInfo_app_network_TcpOpen____union__tag_type___timed_out: u32 = 2;
+pub const R4SdkTransportNative__typeInfo_app_network_TcpOpen____union__tag_type___reset: u32 = 3;
+pub const R4SdkTransportNative__typeInfo_app_network_TcpOpen____union__tag_type___peer_closed: u32 = 4;
+pub const R4SdkTransportNative__typeInfo_app_network_TcpOpen____union__tag_type___no_service: u32 = 5;
+pub const R4SdkTransportNative__typeInfo_app_network_TcpOpen____union__tag_type___failure: u32 = 6;
+pub const R4SdkTransportNative__typeInfo_app_network_ListenerOpen____union__tag_type___listener: u32 = 0;
+pub const R4SdkTransportNative__typeInfo_app_network_ListenerOpen____union__tag_type___timed_out: u32 = 1;
+pub const R4SdkTransportNative__typeInfo_app_network_ListenerOpen____union__tag_type___no_service: u32 = 2;
+pub const R4SdkTransportNative__typeInfo_app_network_ListenerOpen____union__tag_type___failure: u32 = 3;
+pub const R4SdkTransportNative__typeInfo_app_network_UdpOpen____union__tag_type___socket: u32 = 0;
+pub const R4SdkTransportNative__typeInfo_app_network_UdpOpen____union__tag_type___timed_out: u32 = 1;
+pub const R4SdkTransportNative__typeInfo_app_network_UdpOpen____union__tag_type___no_service: u32 = 2;
+pub const R4SdkTransportNative__typeInfo_app_network_UdpOpen____union__tag_type___failure: u32 = 3;
+pub const R4SdkTransportNative__typeInfo_app_resources_ThreadInfo____union__tag_type___value: u32 = 0;
+pub const R4SdkTransportNative__typeInfo_app_resources_ThreadInfo____union__tag_type___failure: u32 = 1;
+pub const R4SdkTransportNative__typeInfo_app_resources_JoinWait____union__tag_type___exited: u32 = 0;
+pub const R4SdkTransportNative__typeInfo_app_resources_JoinWait____union__tag_type___timed_out: u32 = 1;
+pub const R4SdkTransportNative__typeInfo_app_resources_JoinWait____union__tag_type___failure: u32 = 2;
+pub const R4SdkTransportNative__typeInfo_app_network_ResolveResult____union__tag_type___address: u32 = 0;
+pub const R4SdkTransportNative__typeInfo_app_network_ResolveResult____union__tag_type___timed_out: u32 = 1;
+pub const R4SdkTransportNative__typeInfo_app_network_ResolveResult____union__tag_type___not_found: u32 = 2;
+pub const R4SdkTransportNative__typeInfo_app_network_ResolveResult____union__tag_type___no_service: u32 = 3;
+pub const R4SdkTransportNative__typeInfo_app_network_ResolveResult____union__tag_type___failure: u32 = 4;
+pub const R4SdkTransportNative__typeInfo_app_network_TcpAccept____union__tag_type___socket: u32 = 0;
+pub const R4SdkTransportNative__typeInfo_app_network_TcpAccept____union__tag_type___would_block: u32 = 1;
+pub const R4SdkTransportNative__typeInfo_app_network_TcpAccept____union__tag_type___timed_out: u32 = 2;
+pub const R4SdkTransportNative__typeInfo_app_network_TcpAccept____union__tag_type___reset: u32 = 3;
+pub const R4SdkTransportNative__typeInfo_app_network_TcpAccept____union__tag_type___closed: u32 = 4;
+pub const R4SdkTransportNative__typeInfo_app_network_TcpAccept____union__tag_type___no_service: u32 = 5;
+pub const R4SdkTransportNative__typeInfo_app_network_TcpAccept____union__tag_type___failure: u32 = 6;
+pub const R4SdkTransportNative__typeInfo_app_network_UdpReceive____union__tag_type___datagram: u32 = 0;
+pub const R4SdkTransportNative__typeInfo_app_network_UdpReceive____union__tag_type___would_block: u32 = 1;
+pub const R4SdkTransportNative__typeInfo_app_network_UdpReceive____union__tag_type___timed_out: u32 = 2;
+pub const R4SdkTransportNative__typeInfo_app_network_UdpReceive____union__tag_type___reset: u32 = 3;
+pub const R4SdkTransportNative__typeInfo_app_network_UdpReceive____union__tag_type___peer_closed: u32 = 4;
+pub const R4SdkTransportNative__typeInfo_app_network_UdpReceive____union__tag_type___closed: u32 = 5;
+pub const R4SdkTransportNative__typeInfo_app_network_UdpReceive____union__tag_type___no_service: u32 = 6;
+pub const R4SdkTransportNative__typeInfo_app_network_UdpReceive____union__tag_type___failure: u32 = 7;
+pub const R4SdkTransportFetchResult_TAG_response: u32 = 0;
+pub const R4SdkTransportFetchResult_TAG_failure: u32 = 1;
+pub const R4SdkTransportDownloadResult_TAG_response: u32 = 0;
+pub const R4SdkTransportDownloadResult_TAG_range_not_satisfiable: u32 = 1;
+pub const R4SdkTransportDownloadResult_TAG_failure: u32 = 2;
+pub const R4SdkTransportHttpUrlResult_TAG_value: u32 = 0;
+pub const R4SdkTransportHttpUrlResult_TAG_failure: u32 = 1;
+pub const R4SdkTransportHttpBuildResult_TAG_bytes: u32 = 0;
+pub const R4SdkTransportHttpBuildResult_TAG_invalid_url: u32 = 1;
+pub const R4SdkTransportHttpBuildResult_TAG_output_too_small: u32 = 2;
+pub const R4SdkTransportHttpDecodeResult_TAG_complete: u32 = 0;
+pub const R4SdkTransportHttpDecodeResult_TAG_need_more: u32 = 1;
+pub const R4SdkTransportHttpDecodeResult_TAG_aborted: u32 = 2;
+pub const R4SdkTransportHttpDecodeResult_TAG_failure: u32 = 3;
+pub const R4SdkTransportHttpStreamDecodeResult_TAG_chunk: u32 = 0;
+pub const R4SdkTransportHttpStreamDecodeResult_TAG_complete: u32 = 1;
+pub const R4SdkTransportHttpStreamDecodeResult_TAG_need_more: u32 = 2;
+pub const R4SdkTransportHttpStreamDecodeResult_TAG_aborted: u32 = 3;
+pub const R4SdkTransportHttpStreamDecodeResult_TAG_failure: u32 = 4;
+pub const R4SdkTransportHttpRedirectResult_TAG_url: u32 = 0;
+pub const R4SdkTransportHttpRedirectResult_TAG_invalid: u32 = 1;
+pub const R4SdkTransportHttpRedirectResult_TAG_output_too_small: u32 = 2;
+pub const R4SdkTransportNative_app_network_SocketIo_TAG_bytes: u32 = 0;
+pub const R4SdkTransportNative_app_network_SocketIo_TAG_would_block: u32 = 1;
+pub const R4SdkTransportNative_app_network_SocketIo_TAG_timed_out: u32 = 2;
+pub const R4SdkTransportNative_app_network_SocketIo_TAG_reset: u32 = 3;
+pub const R4SdkTransportNative_app_network_SocketIo_TAG_peer_closed: u32 = 4;
+pub const R4SdkTransportNative_app_network_SocketIo_TAG_closed: u32 = 5;
+pub const R4SdkTransportNative_app_network_SocketIo_TAG_failure: u32 = 6;
+pub const R4SdkTransportNative_app_network_TcpOpen_TAG_socket: u32 = 0;
+pub const R4SdkTransportNative_app_network_TcpOpen_TAG_would_block: u32 = 1;
+pub const R4SdkTransportNative_app_network_TcpOpen_TAG_timed_out: u32 = 2;
+pub const R4SdkTransportNative_app_network_TcpOpen_TAG_reset: u32 = 3;
+pub const R4SdkTransportNative_app_network_TcpOpen_TAG_peer_closed: u32 = 4;
+pub const R4SdkTransportNative_app_network_TcpOpen_TAG_no_service: u32 = 5;
+pub const R4SdkTransportNative_app_network_TcpOpen_TAG_failure: u32 = 6;
+pub const R4SdkTransportNative_app_network_ListenerOpen_TAG_listener: u32 = 0;
+pub const R4SdkTransportNative_app_network_ListenerOpen_TAG_timed_out: u32 = 1;
+pub const R4SdkTransportNative_app_network_ListenerOpen_TAG_no_service: u32 = 2;
+pub const R4SdkTransportNative_app_network_ListenerOpen_TAG_failure: u32 = 3;
+pub const R4SdkTransportNative_app_network_UdpOpen_TAG_socket: u32 = 0;
+pub const R4SdkTransportNative_app_network_UdpOpen_TAG_timed_out: u32 = 1;
+pub const R4SdkTransportNative_app_network_UdpOpen_TAG_no_service: u32 = 2;
+pub const R4SdkTransportNative_app_network_UdpOpen_TAG_failure: u32 = 3;
+pub const R4SdkTransportNative_app_resources_ThreadInfo_TAG_value: u32 = 0;
+pub const R4SdkTransportNative_app_resources_ThreadInfo_TAG_failure: u32 = 1;
+pub const R4SdkTransportNative_app_resources_JoinWait_TAG_exited: u32 = 0;
+pub const R4SdkTransportNative_app_resources_JoinWait_TAG_timed_out: u32 = 1;
+pub const R4SdkTransportNative_app_resources_JoinWait_TAG_failure: u32 = 2;
+pub const R4SdkTransportNative_app_network_ResolveResult_TAG_address: u32 = 0;
+pub const R4SdkTransportNative_app_network_ResolveResult_TAG_timed_out: u32 = 1;
+pub const R4SdkTransportNative_app_network_ResolveResult_TAG_not_found: u32 = 2;
+pub const R4SdkTransportNative_app_network_ResolveResult_TAG_no_service: u32 = 3;
+pub const R4SdkTransportNative_app_network_ResolveResult_TAG_failure: u32 = 4;
+pub const R4SdkTransportNative_app_network_TcpAccept_TAG_socket: u32 = 0;
+pub const R4SdkTransportNative_app_network_TcpAccept_TAG_would_block: u32 = 1;
+pub const R4SdkTransportNative_app_network_TcpAccept_TAG_timed_out: u32 = 2;
+pub const R4SdkTransportNative_app_network_TcpAccept_TAG_reset: u32 = 3;
+pub const R4SdkTransportNative_app_network_TcpAccept_TAG_closed: u32 = 4;
+pub const R4SdkTransportNative_app_network_TcpAccept_TAG_no_service: u32 = 5;
+pub const R4SdkTransportNative_app_network_TcpAccept_TAG_failure: u32 = 6;
+pub const R4SdkTransportNative_app_network_UdpReceive_TAG_datagram: u32 = 0;
+pub const R4SdkTransportNative_app_network_UdpReceive_TAG_would_block: u32 = 1;
+pub const R4SdkTransportNative_app_network_UdpReceive_TAG_timed_out: u32 = 2;
+pub const R4SdkTransportNative_app_network_UdpReceive_TAG_reset: u32 = 3;
+pub const R4SdkTransportNative_app_network_UdpReceive_TAG_peer_closed: u32 = 4;
+pub const R4SdkTransportNative_app_network_UdpReceive_TAG_closed: u32 = 5;
+pub const R4SdkTransportNative_app_network_UdpReceive_TAG_no_service: u32 = 6;
+pub const R4SdkTransportNative_app_network_UdpReceive_TAG_failure: u32 = 7;
 unsafe extern "C" {
     pub fn r4serial_init(p0: *const R4Dev, p1: *mut R4Serial) -> i32;
     pub fn r4serial_count(p0: *const R4Serial) -> u32;
@@ -12646,6 +14243,7 @@ unsafe extern "C" {
     pub fn r4_remaining_ticks(p0: R4Deadline, p1: R4MonotonicInstant, p2: u32, p3: *mut u64) -> i32;
     pub fn r4_monotonic_resolution_ns(p0: u32) -> u64;
     pub fn r4_deadline_after(p0: R4MonotonicInstant, p1: R4Duration) -> R4Deadline;
+    pub fn R4SdkBindProgramEntropy(p0: *const R4XStartContext) -> i32;
     pub fn R4SdkConsole(p0: *const R4Sys, p1: *const u8, p2: u64, p3: i32) -> i32;
     pub fn r4_console_available(p0: *const R4Console) -> i32;
     pub fn r4_console_write(p0: *mut R4Console, p1: *const u8, p2: u32) -> i32;
@@ -21972,6 +23570,1245 @@ unsafe extern "C" {
     pub fn R4SdkWebNativeValue669_inspectNative(p0: *const R4SdkWebNativeValue669) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue670_create(p0: *mut R4SdkWebNativeValue670, p1: *const R4SdkWebCanvasTextOp) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue670_inspectNative(p0: *const R4SdkWebNativeValue670) -> R4SdkWebSlot;
+    pub fn R4SdkTransportInvoke(p0: u64, p1: u32, p2: *const R4SdkTransportSlot, p3: u32, p4: *mut core::ffi::c_void) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportConstruct(p0: u64, p1: u32, p2: *const R4SdkTransportSlot, p3: u32, p4: *mut core::ffi::c_void) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportInspect(p0: u64, p1: u32, p2: *mut core::ffi::c_void, p3: *mut core::ffi::c_void) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportField(p0: u64, p1: u32, p2: u32, p3: *mut core::ffi::c_void, p4: *const R4SdkTransportSlot, p5: *mut core::ffi::c_void) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportVerifyAbi(p0: u64) -> i32;
+    pub fn R4SdkTransport_fillSecureEntropy(p0: u32, p1: *mut R4SdkWebNativeValue151) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttp_parseUrl(p0: u32, p1: *const u8, p2: u64, p3: *mut R4SdkTransportHttpUrlResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttp_buildGetRequest(p0: u32, p1: *mut u8, p2: u64, p3: *const R4SdkTransportHttpParsedUrl, p4: *const R4SdkTransportHttpRequestOptions, p5: *mut R4SdkTransportHttpBuildResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttp_buildRequest(p0: u32, p1: *mut u8, p2: u64, p3: u32, p4: *const R4SdkTransportHttpParsedUrl, p5: *const R4SdkTransportHttpRequestOptions, p6: *mut R4SdkTransportHttpBuildResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttp_decodeResponse(p0: u32, p1: *const u8, p2: u64, p3: *mut u8, p4: u64, p5: u8, p6: u8, p7: *mut R4SdkTransportHttpDecodeResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttp_responseAllowsReuse(p0: u32, p1: *const u8, p2: u64, p3: *const R4SdkTransportHttpResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttp_serializedHeadersContain(p0: u32, p1: *const u8, p2: u64, p3: *const u8, p4: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttp_resolveRedirect(p0: u32, p1: *const R4SdkTransportHttpParsedUrl, p2: *const u8, p3: u64, p4: *mut u8, p5: u64, p6: *mut R4SdkTransportHttpRedirectResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCache_header(p0: u32, p1: *const u8, p2: u64, p3: *const u8, p4: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCache_directives(p0: u32, p1: *const u8, p2: u64, p3: *mut R4SdkTransportCacheDirectives) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCache_initialAgeSeconds(p0: u32, p1: *const u8, p2: u64, p3: *const R4SdkTransportCacheClock, p4: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCache_parseDate(p0: u32, p1: *const u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportResources_classifyScript(p0: u32, p1: *const R4SdkWebHtmlDocument, p2: u16, p3: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportResources_resourceKind(p0: u32, p1: *const R4SdkWebHtmlDocument, p2: u16) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportResources_hasPotentialImageSource(p0: u32, p1: *const R4SdkWebHtmlDocument, p2: u16) -> R4SdkTransportSlot;
+    pub fn R4SdkTransport_open(p0: u32, p1: *mut R4SdkTransportContext, p2: *const R4XStartContext) -> R4SdkTransportSlot;
+    pub fn R4SdkTransport_transport(p0: u32, p1: *mut R4SdkTransportContext) -> R4SdkTransportSlot;
+    pub fn R4SdkTransport_job(p0: u32, p1: *mut R4SdkTransportJobsJob, p2: *const R4SdkTransportContext) -> R4SdkTransportSlot;
+    pub fn R4SdkTransport_requestJob(p0: u32, p1: *mut R4SdkTransportRuntimeJobsRequestJob, p2: *const R4SdkTransportContext, p3: *const R4SdkDataAllocator, p4: *const R4SdkTransportRuntimeJobsOwner) -> R4SdkTransportSlot;
+    pub fn R4SdkTransport_owner(p0: u32, p1: *const R4SdkWebCallbackTable, p2: *mut R4SdkTransportRuntimeJobsOwner) -> R4SdkTransportSlot;
+    pub fn R4SdkTransport_fetchCallbacks(p0: u32, p1: *mut R4SdkTransportFetchOptions, p2: *const R4SdkWebCallbackTable) -> R4SdkTransportSlot;
+    pub fn R4SdkTransport_downloadCallbacks(p0: u32, p1: *mut R4SdkTransportDownloadOptions, p2: *const R4SdkWebCallbackTable) -> R4SdkTransportSlot;
+    pub fn R4SdkTransport_sink(p0: u32, p1: *const R4SdkWebCallbackTable, p2: *mut R4SdkTransportDownloadSink) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRequestDeadline_start(p0: u32, p1: *const R4SdkTransportNative_app_network_Network, p2: *const R4Timeout, p3: *mut R4SdkTransportRequestDeadline) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_deinit(p0: u32, p1: *mut R4SdkTransportSessionPool) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpSocket_valid(p0: u32, p1: *const R4SdkTransportNative_app_network_TcpSocket) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpSocket_write(p0: u32, p1: *mut R4SdkTransportNative_app_network_TcpSocket, p2: *const u8, p3: u64, p4: *const R4Timeout, p5: *mut R4SdkTransportNative_app_network_SocketIo) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpSocket_read(p0: u32, p1: *mut R4SdkTransportNative_app_network_TcpSocket, p2: *mut u8, p3: u64, p4: *const R4Timeout, p5: *mut R4SdkTransportNative_app_network_SocketIo) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpSocket_poll(p0: u32, p1: *mut R4SdkTransportNative_app_network_TcpSocket, p2: *const R4Timeout, p3: *mut R4SdkTransportNative_app_network_SocketIo) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpSocket_close(p0: u32, p1: *mut R4SdkTransportNative_app_network_TcpSocket, p2: *const R4Timeout, p3: *mut R4SdkTransportNative_app_network_SocketIo) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_Network_available(p0: u32, p1: *const R4SdkTransportNative_app_network_Network) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_Network_resolver(p0: u32, p1: *const R4SdkTransportNative_app_network_Network, p2: *mut R4SdkTransportNative_app_network_Resolver) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_Network_connectTcp(p0: u32, p1: *const R4SdkTransportNative_app_network_Network, p2: *const R4SdkTransportNative_app_network_SocketAddress, p3: *const R4Timeout, p4: *mut R4SdkTransportNative_app_network_TcpOpen) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_Network_listenTcp(p0: u32, p1: *const R4SdkTransportNative_app_network_Network, p2: u16, p3: *const R4Timeout, p4: *mut R4SdkTransportNative_app_network_ListenerOpen) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_Network_bindUdp(p0: u32, p1: *const R4SdkTransportNative_app_network_Network, p2: u16, p3: *const R4Timeout, p4: *mut R4SdkTransportNative_app_network_UdpOpen) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_Ipv4Address_init(p0: u32, p1: u8, p2: u8, p3: u8, p4: u8, p5: *mut R4SdkTransportNative_app_network_Ipv4Address) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_Ipv4Address_fromBytes(p0: u32, p1: *const R4SdkTransportNativeValue19, p2: *mut R4SdkTransportNative_app_network_Ipv4Address) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_Ipv4Address_isUnspecified(p0: u32, p1: *const R4SdkTransportNative_app_network_Ipv4Address) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFinalUrl_bytes(p0: u32, p1: *const R4SdkTransportFinalUrl) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadSink_write(p0: u32, p1: *const R4SdkTransportDownloadSink, p2: u64, p3: *const u8, p4: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportWebTransport_available(p0: u32, p1: *const R4SdkTransportWebTransport) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportWebTransport_fetch(p0: u32, p1: *mut R4SdkTransportWebTransport, p2: *const u8, p3: u64, p4: *mut u8, p5: u64, p6: *mut u8, p7: u64, p8: *mut u8, p9: u64, p10: *const R4SdkTransportFetchOptions, p11: *mut R4SdkTransportFetchResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportWebTransport_download(p0: u32, p1: *mut R4SdkTransportWebTransport, p2: *const u8, p3: u64, p4: *mut u8, p5: u64, p6: *mut u8, p7: u64, p8: *mut u8, p9: u64, p10: *const R4SdkTransportDownloadSink, p11: *const R4SdkTransportDownloadOptions, p12: *mut R4SdkTransportDownloadResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpScheme_defaultPort(p0: u32, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpScheme_text(p0: u32, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponse_isRedirect(p0: u32, p1: *const R4SdkTransportHttpResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponseDecoder_init(p0: u32, p1: u32, p2: *mut R4SdkTransportHttpResponseDecoder) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponseDecoder_decode(p0: u32, p1: *mut R4SdkTransportHttpResponseDecoder, p2: *const u8, p3: u64, p4: *mut u8, p5: u64, p6: u8, p7: u8, p8: *mut R4SdkTransportHttpDecodeResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamResponse_isRedirect(p0: u32, p1: *const R4SdkTransportHttpStreamResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamDecoder_init(p0: u32, p1: *mut u8, p2: u64, p3: u32, p4: *mut R4SdkTransportHttpStreamDecoder) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamDecoder_response(p0: u32, p1: *const R4SdkTransportHttpStreamDecoder, p2: *mut R4SdkTransportHttpStreamResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamDecoder_receivedBytes(p0: u32, p1: *const R4SdkTransportHttpStreamDecoder) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamDecoder_push(p0: u32, p1: *mut R4SdkTransportHttpStreamDecoder, p2: *const u8, p3: u64, p4: u8, p5: u8, p6: *mut R4SdkTransportHttpStreamDecodeResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheCache_init(p0: u32, p1: *const R4SdkDataAllocator, p2: *const R4SdkTransportCacheLimits, p3: *mut R4SdkTransportCacheCache) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheCache_deinit(p0: u32, p1: *mut R4SdkTransportCacheCache) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheCache_invalidateUrl(p0: u32, p1: *mut R4SdkTransportCacheCache, p2: *const u8, p3: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheCache_invalidate(p0: u32, p1: *mut R4SdkTransportCacheCache, p2: *const R4SdkTransportCacheKey) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheCache_lookup(p0: u32, p1: *mut R4SdkTransportCacheCache, p2: *const R4SdkTransportCacheKey, p3: u32, p4: *const R4SdkTransportCacheClock, p5: *mut R4SdkTransportCacheLookup) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheCache_view(p0: u32, p1: *mut R4SdkTransportCacheCache, p2: *const R4SdkTransportCacheHandle, p3: *const R4SdkTransportCacheClock, p4: *mut R4SdkTransportCacheView) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheCache_release(p0: u32, p1: *mut R4SdkTransportCacheCache, p2: *const R4SdkTransportCacheHandle) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheCache_store(p0: u32, p1: *mut R4SdkTransportCacheCache, p2: *const R4SdkTransportCacheKey, p3: *const u8, p4: u64, p5: *const u8, p6: u64, p7: *const R4SdkTransportCacheClock, p8: u64, p9: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheCache_newIdentity(p0: u32, p1: *mut R4SdkTransportCacheCache) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheHeaderIterator_init(p0: u32, p1: *const u8, p2: u64, p3: *mut R4SdkTransportCacheHeaderIterator) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheHeaderIterator_next(p0: u32, p1: *mut R4SdkTransportCacheHeaderIterator, p2: *mut R4SdkTransportCacheHeader) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_mem_SplitIterator_u8__scalar__first(p0: u32, p1: *mut R4SdkTransportNative_mem_SplitIterator_u8__scalar_) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_mem_SplitIterator_u8__scalar__next(p0: u32, p1: *mut R4SdkTransportNative_mem_SplitIterator_u8__scalar_) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_mem_SplitIterator_u8__scalar__peek(p0: u32, p1: *const R4SdkTransportNative_mem_SplitIterator_u8__scalar_) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_mem_SplitIterator_u8__scalar__rest(p0: u32, p1: *const R4SdkTransportNative_mem_SplitIterator_u8__scalar_) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_mem_SplitIterator_u8__scalar__reset(p0: u32, p1: *mut R4SdkTransportNative_mem_SplitIterator_u8__scalar_) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportJobsJob_start(p0: u32, p1: *mut R4SdkTransportJobsJob, p2: *const u8, p3: u64, p4: *mut u8, p5: u64, p6: *mut u8, p7: u64, p8: *mut u8, p9: u64, p10: *const R4SdkTransportFetchOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportJobsJob_cancel(p0: u32, p1: *mut R4SdkTransportJobsJob) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportJobsJob_service(p0: u32, p1: *mut R4SdkTransportJobsJob) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportJobsJob_collect(p0: u32, p1: *mut R4SdkTransportJobsJob) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportJobsJob_deinit(p0: u32, p1: *mut R4SdkTransportJobsJob) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_resources_JoinHandle_valid(p0: u32, p1: *const R4SdkTransportNative_app_resources_JoinHandle) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_resources_JoinHandle_placement(p0: u32, p1: *const R4SdkTransportNative_app_resources_JoinHandle, p2: *mut R4ThreadPlacementInfo, p3: *mut u64, p4: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_resources_JoinHandle_setPlacement(p0: u32, p1: *const R4SdkTransportNative_app_resources_JoinHandle, p2: *const R4ThreadPlacementRequest, p3: *const u64, p4: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_resources_JoinHandle_status(p0: u32, p1: *const R4SdkTransportNative_app_resources_JoinHandle, p2: *mut R4SdkTransportNative_app_resources_ThreadInfo) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_resources_JoinHandle_join(p0: u32, p1: *mut R4SdkTransportNative_app_resources_JoinHandle, p2: *const R4Timeout, p3: *mut R4SdkTransportNative_app_resources_JoinWait) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_prepare(p0: u32, p1: *mut R4SdkTransportRuntimeJobsRequestJob, p2: *mut R4SdkWebRuntimeWebRuntime, p3: *mut R4SdkWebRuntimePendingRequest, p4: u64, p5: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_start(p0: u32, p1: *mut R4SdkTransportRuntimeJobsRequestJob, p2: *const R4SdkTransportFetchOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_activeRuntime(p0: u32, p1: *mut R4SdkTransportRuntimeJobsRequestJob) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_poll(p0: u32, p1: *mut R4SdkTransportRuntimeJobsRequestJob) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_release(p0: u32, p1: *mut R4SdkTransportRuntimeJobsRequestJob) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_deinit(p0: u32, p1: *mut R4SdkTransportRuntimeJobsRequestJob) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_fail(p0: u32, p1: *mut R4SdkTransportRuntimeJobsRequestJob, p2: *const u8, p3: u64, p4: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_complete(p0: u32, p1: *mut R4SdkTransportRuntimeJobsRequestJob, p2: *const R4SdkTransportFetchResponse, p3: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsSet_init(p0: u32, p1: *const R4SdkDataAllocator, p2: *const R4SdkWebJsProgramAllocator, p3: *mut R4SdkWebNative_web_security_BrowserStorage, p4: *mut R4SdkTransportDocumentsSet) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsSet_deinit(p0: u32, p1: *mut R4SdkTransportDocumentsSet) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsSet_setExecutionPolicy(p0: u32, p1: *mut R4SdkTransportDocumentsSet, p2: *const R4SdkWebJsStop, p3: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsSet_setEnvironment(p0: u32, p1: *mut R4SdkTransportDocumentsSet, p2: *const R4SdkWebRuntimeEnvironment) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsSet_setMonotonicClock(p0: u32, p1: *mut R4SdkTransportDocumentsSet, p2: *const R4SdkWebRuntimeMonotonicClock) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsSet_setViewport(p0: u32, p1: *mut R4SdkTransportDocumentsSet, p2: u32, p3: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsSet_create(p0: u32, p1: *mut R4SdkTransportDocumentsSet, p2: u32, p3: *const R4SdkWebNative_web_security_Origin, p4: u16, p5: *const R4SdkWebNavigationUrl, p6: *const u8, p7: u64, p8: *const u8, p9: u64, p10: *const u8, p11: u64, p12: u8, p13: *const R4SdkWebRuntimeResourceHandler, p14: *const R4SdkWebRuntimeFrameLookup) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsSet_find(p0: u32, p1: *const R4SdkTransportDocumentsSet, p2: u32, p3: u16) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsSet_findGeneration(p0: u32, p1: *const R4SdkTransportDocumentsSet, p2: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsSet_sameOrigin(p0: u32, p1: *const R4SdkTransportDocumentsSet, p2: *const R4SdkWebNative_web_security_Origin, p3: u32, p4: u16) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsSet_retireParent(p0: u32, p1: *mut R4SdkTransportDocumentsSet, p2: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsSet_activeCount(p0: u32, p1: *const R4SdkTransportDocumentsSet) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsSet_pumpFair(p0: u32, p1: *mut R4SdkTransportDocumentsSet, p2: *const f64, p3: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsSet_finalizeSettled(p0: u32, p1: *mut R4SdkTransportDocumentsSet, p2: *const f64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchHeaders_init(p0: u32, p1: *const u8, p2: u64, p3: *mut R4SdkTransportFetchHeaders) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchHeaders_append(p0: u32, p1: *mut R4SdkTransportFetchHeaders, p2: *const u8, p3: u64, p4: *const u8, p5: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchHeaders_delete(p0: u32, p1: *mut R4SdkTransportFetchHeaders, p2: *const u8, p3: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchHeaders_has(p0: u32, p1: *const R4SdkTransportFetchHeaders, p2: *const u8, p3: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchHeaders_set(p0: u32, p1: *mut R4SdkTransportFetchHeaders, p2: *const u8, p3: u64, p4: *const u8, p5: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchHeaders_get(p0: u32, p1: *const R4SdkTransportFetchHeaders, p2: *const u8, p3: u64, p4: *mut u8, p5: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchHeaders_getSetCookie(p0: u32, p1: *const R4SdkTransportFetchHeaders, p2: *mut R4SdkTransportNativeValue229) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchHeaders_serialize(p0: u32, p1: *const R4SdkTransportFetchHeaders, p2: *mut u8, p3: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchHeaders_ordered(p0: u32, p1: *const R4SdkTransportFetchHeaders, p2: *mut R4SdkTransportNativeValue232) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchHeaders_name(p0: u32, p1: *const R4SdkTransportFetchHeaders, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchHeaders_value(p0: u32, p1: *const R4SdkTransportFetchHeaders, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_Resolver_resolveA(p0: u32, p1: *mut R4SdkTransportNative_app_network_Resolver, p2: *const u8, p3: u64, p4: R4SdkTransportSlot, p5: *const R4Timeout, p6: *mut R4SdkTransportNative_app_network_ResolveResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpListener_valid(p0: u32, p1: *const R4SdkTransportNative_app_network_TcpListener) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpListener_accept(p0: u32, p1: *mut R4SdkTransportNative_app_network_TcpListener, p2: *const R4Timeout, p3: *mut R4SdkTransportNative_app_network_TcpAccept) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpListener_close(p0: u32, p1: *mut R4SdkTransportNative_app_network_TcpListener, p2: *const R4Timeout, p3: *mut R4SdkTransportNative_app_network_SocketIo) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpSocket_valid(p0: u32, p1: *const R4SdkTransportNative_app_network_UdpSocket) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpSocket_sendTo(p0: u32, p1: *mut R4SdkTransportNative_app_network_UdpSocket, p2: *const R4SdkTransportNative_app_network_SocketAddress, p3: *const u8, p4: u64, p5: *const R4Timeout, p6: *mut R4SdkTransportNative_app_network_SocketIo) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpSocket_receiveFrom(p0: u32, p1: *mut R4SdkTransportNative_app_network_UdpSocket, p2: *mut u8, p3: u64, p4: *const R4Timeout, p5: *mut R4SdkTransportNative_app_network_UdpReceive) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpSocket_close(p0: u32, p1: *mut R4SdkTransportNative_app_network_UdpSocket, p2: *const R4Timeout, p3: *mut R4SdkTransportNative_app_network_SocketIo) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRequestDeadline_create(p0: *mut R4SdkTransportRequestDeadline) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRequestDeadline_from_fields(p0: *mut R4SdkTransportRequestDeadline, p1: u64, p2: u8, p3: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRequestDeadline_get_deadline_tick(p0: *const R4SdkTransportRequestDeadline) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRequestDeadline_set_deadline_tick(p0: *mut R4SdkTransportRequestDeadline, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRequestDeadline_get_forever(p0: *const R4SdkTransportRequestDeadline) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRequestDeadline_set_forever(p0: *mut R4SdkTransportRequestDeadline, p1: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRequestDeadline_get_valid(p0: *const R4SdkTransportRequestDeadline) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRequestDeadline_set_valid(p0: *mut R4SdkTransportRequestDeadline, p1: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRequestDeadline_inspectNative(p0: *const R4SdkTransportRequestDeadline) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportError_create(p0: *mut R4SdkTransportError, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportError_inspectNative(p0: *const R4SdkTransportError) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRedirectMode_create(p0: *mut R4SdkTransportRedirectMode, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRedirectMode_inspectNative(p0: *const R4SdkTransportRedirectMode) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportTransportStats_create(p0: *mut R4SdkTransportTransportStats) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportTransportStats_from_fields(p0: *mut R4SdkTransportTransportStats, p1: u64, p2: u64, p3: u64, p4: u64, p5: u64, p6: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportTransportStats_get_dns_resolutions(p0: *const R4SdkTransportTransportStats) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportTransportStats_set_dns_resolutions(p0: *mut R4SdkTransportTransportStats, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportTransportStats_get_connections(p0: *const R4SdkTransportTransportStats) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportTransportStats_set_connections(p0: *mut R4SdkTransportTransportStats, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportTransportStats_get_tls_handshakes(p0: *const R4SdkTransportTransportStats) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportTransportStats_set_tls_handshakes(p0: *mut R4SdkTransportTransportStats, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportTransportStats_get_reused_connections(p0: *const R4SdkTransportTransportStats) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportTransportStats_set_reused_connections(p0: *mut R4SdkTransportTransportStats, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportTransportStats_get_preflights(p0: *const R4SdkTransportTransportStats) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportTransportStats_set_preflights(p0: *mut R4SdkTransportTransportStats, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportTransportStats_get_payload_copied_bytes(p0: *const R4SdkTransportTransportStats) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportTransportStats_set_payload_copied_bytes(p0: *mut R4SdkTransportTransportStats, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportTransportStats_inspectNative(p0: *const R4SdkTransportTransportStats) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_create(p0: *mut R4SdkTransportFetchOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_from_fields(p0: *mut R4SdkTransportFetchOptions, p1: R4SdkTransportSlot, p2: *const u8, p3: u64, p4: R4SdkTransportSlot, p5: R4SdkTransportSlot, p6: *const R4Timeout, p7: u8, p8: u32, p9: R4SdkTransportSlot, p10: R4SdkTransportSlot, p11: R4SdkTransportSlot, p12: R4SdkTransportSlot, p13: *const u8, p14: u64, p15: R4SdkTransportSlot, p16: *const u8, p17: u64, p18: *const u8, p19: u64, p20: *const u8, p21: u64, p22: *const u8, p23: u64, p24: u32, p25: *const u8, p26: u64, p27: *const u8, p28: u64, p29: u8, p30: u8, p31: R4SdkTransportSlot, p32: R4SdkTransportSlot, p33: R4SdkTransportSlot, p34: R4SdkTransportSlot, p35: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_get_sessions(p0: *const R4SdkTransportFetchOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_set_sessions(p0: *mut R4SdkTransportFetchOptions, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_get_network_partition(p0: *const R4SdkTransportFetchOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_set_network_partition(p0: *mut R4SdkTransportFetchOptions, p1: *const u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_get_absolute_deadline(p0: *const R4SdkTransportFetchOptions, p1: *mut R4SdkTransportRequestDeadline) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_set_absolute_deadline(p0: *mut R4SdkTransportFetchOptions, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_get_stats(p0: *const R4SdkTransportFetchOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_set_stats(p0: *mut R4SdkTransportFetchOptions, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_get_timeout(p0: *const R4SdkTransportFetchOptions, p1: *mut R4Timeout) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_set_timeout(p0: *mut R4SdkTransportFetchOptions, p1: *const R4Timeout) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_get_redirect_limit(p0: *const R4SdkTransportFetchOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_set_redirect_limit(p0: *mut R4SdkTransportFetchOptions, p1: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_get_redirect(p0: *const R4SdkTransportFetchOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_set_redirect(p0: *mut R4SdkTransportFetchOptions, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_get_entropy(p0: *const R4SdkTransportFetchOptions, p1: *mut R4SdkWebNativeValue151) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_set_entropy(p0: *mut R4SdkTransportFetchOptions, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_get_stop(p0: *const R4SdkTransportFetchOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_set_stop(p0: *mut R4SdkTransportFetchOptions, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_get_progress(p0: *const R4SdkTransportFetchOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_set_progress(p0: *mut R4SdkTransportFetchOptions, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_get_progress_context(p0: *const R4SdkTransportFetchOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_set_progress_context(p0: *mut R4SdkTransportFetchOptions, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_get_cookie(p0: *const R4SdkTransportFetchOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_set_cookie(p0: *mut R4SdkTransportFetchOptions, p1: *const u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_get_initial_cookie(p0: *const R4SdkTransportFetchOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_set_initial_cookie(p0: *mut R4SdkTransportFetchOptions, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_get_origin(p0: *const R4SdkTransportFetchOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_set_origin(p0: *mut R4SdkTransportFetchOptions, p1: *const u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_get_headers(p0: *const R4SdkTransportFetchOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_set_headers(p0: *mut R4SdkTransportFetchOptions, p1: *const u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_get_conditional_headers(p0: *const R4SdkTransportFetchOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_set_conditional_headers(p0: *mut R4SdkTransportFetchOptions, p1: *const u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_get_cache_headers(p0: *const R4SdkTransportFetchOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_set_cache_headers(p0: *mut R4SdkTransportFetchOptions, p1: *const u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_get_method(p0: *const R4SdkTransportFetchOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_set_method(p0: *mut R4SdkTransportFetchOptions, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_get_content_type(p0: *const R4SdkTransportFetchOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_set_content_type(p0: *mut R4SdkTransportFetchOptions, p1: *const u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_get_body(p0: *const R4SdkTransportFetchOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_set_body(p0: *mut R4SdkTransportFetchOptions, p1: *const u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_get_cors(p0: *const R4SdkTransportFetchOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_set_cors(p0: *mut R4SdkTransportFetchOptions, p1: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_get_credentials_include(p0: *const R4SdkTransportFetchOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_set_credentials_include(p0: *mut R4SdkTransportFetchOptions, p1: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_get_cookie_provider(p0: *const R4SdkTransportFetchOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_set_cookie_provider(p0: *mut R4SdkTransportFetchOptions, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_get_cookie_sink(p0: *const R4SdkTransportFetchOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_set_cookie_sink(p0: *mut R4SdkTransportFetchOptions, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_get_cookie_context(p0: *const R4SdkTransportFetchOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_set_cookie_context(p0: *mut R4SdkTransportFetchOptions, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_get_target_authorizer(p0: *const R4SdkTransportFetchOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_set_target_authorizer(p0: *mut R4SdkTransportFetchOptions, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_get_target_authorization_context(p0: *const R4SdkTransportFetchOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_set_target_authorization_context(p0: *mut R4SdkTransportFetchOptions, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchOptions_inspectNative(p0: *const R4SdkTransportFetchOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue6_create(p0: *mut R4SdkTransportNativeValue6, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue6_inspectNative(p0: *const R4SdkTransportNativeValue6) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue7_create(p0: *mut R4SdkTransportNativeValue7, p1: *mut R4SdkTransportSessionPool) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue7_inspectNative(p0: *const R4SdkTransportNativeValue7) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_create(p0: *mut R4SdkTransportSessionPool) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_from_fields(p0: *mut R4SdkTransportSessionPool, p1: *const R4SdkTransportNativeValue9, p2: *const R4SdkTransportNativeValue23, p3: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_get_entries(p0: *const R4SdkTransportSessionPool, p1: *mut R4SdkTransportNativeValue9) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_set_entries(p0: *mut R4SdkTransportSessionPool, p1: *const R4SdkTransportNativeValue9) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_get_preflights(p0: *const R4SdkTransportSessionPool, p1: *mut R4SdkTransportNativeValue23) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_set_preflights(p0: *mut R4SdkTransportSessionPool, p1: *const R4SdkTransportNativeValue23) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_get_serial(p0: *const R4SdkTransportSessionPool) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_set_serial(p0: *mut R4SdkTransportSessionPool, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_inspectNative(p0: *const R4SdkTransportSessionPool) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue9_create(p0: *mut R4SdkTransportNativeValue9, p1: *const R4SdkTransportNativeValue9) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue9_inspectNative(p0: *const R4SdkTransportNativeValue9, p1: *mut R4SdkTransportNativeValue9) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_Entry_create(p0: *mut R4SdkTransportSessionPool_Entry) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_Entry_from_fields(p0: *mut R4SdkTransportSessionPool_Entry, p1: *const R4SdkTransportNativeValue11, p2: u64, p3: R4SdkTransportSlot, p4: R4SdkTransportSlot, p5: u8, p6: u64, p7: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_Entry_get_key(p0: *const R4SdkTransportSessionPool_Entry, p1: *mut R4SdkTransportNativeValue11) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_Entry_set_key(p0: *mut R4SdkTransportSessionPool_Entry, p1: *const R4SdkTransportNativeValue11) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_Entry_get_key_len(p0: *const R4SdkTransportSessionPool_Entry) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_Entry_set_key_len(p0: *mut R4SdkTransportSessionPool_Entry, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_Entry_get_socket(p0: *const R4SdkTransportSessionPool_Entry, p1: *mut R4SdkTransportNative_app_network_TcpSocket) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_Entry_set_socket(p0: *mut R4SdkTransportSessionPool_Entry, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_Entry_get_tls(p0: *const R4SdkTransportSessionPool_Entry, p1: *mut R4SdkTransportTlsSession) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_Entry_set_tls(p0: *mut R4SdkTransportSessionPool_Entry, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_Entry_get_leased(p0: *const R4SdkTransportSessionPool_Entry) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_Entry_set_leased(p0: *mut R4SdkTransportSessionPool_Entry, p1: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_Entry_get_expires(p0: *const R4SdkTransportSessionPool_Entry) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_Entry_set_expires(p0: *mut R4SdkTransportSessionPool_Entry, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_Entry_get_used(p0: *const R4SdkTransportSessionPool_Entry) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_Entry_set_used(p0: *mut R4SdkTransportSessionPool_Entry, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_Entry_inspectNative(p0: *const R4SdkTransportSessionPool_Entry) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue11_create(p0: *mut R4SdkTransportNativeValue11, p1: *const R4SdkTransportNativeValue11) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue11_inspectNative(p0: *const R4SdkTransportNativeValue11, p1: *mut R4SdkTransportNativeValue11) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue12_create(p0: *mut R4SdkTransportNativeValue12, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue12_inspectNative(p0: *const R4SdkTransportNativeValue12, p1: *mut R4SdkTransportNative_app_network_TcpSocket) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpSocket_create(p0: *mut R4SdkTransportNative_app_network_TcpSocket, p1: *const R4SdkTransportNative_app_network_Network) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpSocket_from_fields(p0: *mut R4SdkTransportNative_app_network_TcpSocket, p1: *const R4SdkTransportNative_app_network_Network, p2: u32, p3: u8, p4: *const R4SdkTransportNative_app_network_SocketAddress) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpSocket_get_network(p0: *const R4SdkTransportNative_app_network_TcpSocket, p1: *mut R4SdkTransportNative_app_network_Network) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpSocket_set_network(p0: *mut R4SdkTransportNative_app_network_TcpSocket, p1: *const R4SdkTransportNative_app_network_Network) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpSocket_get_raw(p0: *const R4SdkTransportNative_app_network_TcpSocket) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpSocket_set_raw(p0: *mut R4SdkTransportNative_app_network_TcpSocket, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpSocket_get_owned(p0: *const R4SdkTransportNative_app_network_TcpSocket) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpSocket_set_owned(p0: *mut R4SdkTransportNative_app_network_TcpSocket, p1: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpSocket_get_remote(p0: *const R4SdkTransportNative_app_network_TcpSocket, p1: *mut R4SdkTransportNative_app_network_SocketAddress) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpSocket_set_remote(p0: *mut R4SdkTransportNative_app_network_TcpSocket, p1: *const R4SdkTransportNative_app_network_SocketAddress) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpSocket_inspectNative(p0: *const R4SdkTransportNative_app_network_TcpSocket) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_Network_create(p0: *mut R4SdkTransportNative_app_network_Network, p1: *const R4SdkTransportNative_r4sys_Context, p2: *const R4SdkTransportNative_r4net_Context) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_Network_from_fields(p0: *mut R4SdkTransportNative_app_network_Network, p1: *const R4SdkTransportNative_r4sys_Context, p2: *const R4SdkTransportNative_r4net_Context) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_Network_get_sys(p0: *const R4SdkTransportNative_app_network_Network, p1: *mut R4SdkTransportNative_r4sys_Context) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_Network_set_sys(p0: *mut R4SdkTransportNative_app_network_Network, p1: *const R4SdkTransportNative_r4sys_Context) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_Network_get_net(p0: *const R4SdkTransportNative_app_network_Network, p1: *mut R4SdkTransportNative_r4net_Context) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_Network_set_net(p0: *mut R4SdkTransportNative_app_network_Network, p1: *const R4SdkTransportNative_r4net_Context) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_Network_inspectNative(p0: *const R4SdkTransportNative_app_network_Network) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_SocketAddress_create(p0: *mut R4SdkTransportNative_app_network_SocketAddress, p1: *const R4SdkTransportNative_app_network_Ipv4Address, p2: u16) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_SocketAddress_from_fields(p0: *mut R4SdkTransportNative_app_network_SocketAddress, p1: *const R4SdkTransportNative_app_network_Ipv4Address, p2: u16) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_SocketAddress_get_address(p0: *const R4SdkTransportNative_app_network_SocketAddress, p1: *mut R4SdkTransportNative_app_network_Ipv4Address) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_SocketAddress_set_address(p0: *mut R4SdkTransportNative_app_network_SocketAddress, p1: *const R4SdkTransportNative_app_network_Ipv4Address) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_SocketAddress_get_port(p0: *const R4SdkTransportNative_app_network_SocketAddress) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_SocketAddress_set_port(p0: *mut R4SdkTransportNative_app_network_SocketAddress, p1: u16) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_SocketAddress_inspectNative(p0: *const R4SdkTransportNative_app_network_SocketAddress) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_Ipv4Address_create(p0: *mut R4SdkTransportNative_app_network_Ipv4Address) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_Ipv4Address_from_fields(p0: *mut R4SdkTransportNative_app_network_Ipv4Address, p1: *const R4SdkTransportNativeValue19) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_Ipv4Address_get_octets(p0: *const R4SdkTransportNative_app_network_Ipv4Address, p1: *mut R4SdkTransportNativeValue19) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_Ipv4Address_set_octets(p0: *mut R4SdkTransportNative_app_network_Ipv4Address, p1: *const R4SdkTransportNativeValue19) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_Ipv4Address_inspectNative(p0: *const R4SdkTransportNative_app_network_Ipv4Address) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue19_create(p0: *mut R4SdkTransportNativeValue19, p1: *const R4SdkTransportNativeValue19) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue19_inspectNative(p0: *const R4SdkTransportNativeValue19, p1: *mut R4SdkTransportNativeValue19) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue20_create(p0: *mut R4SdkTransportNativeValue20, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue20_inspectNative(p0: *const R4SdkTransportNativeValue20, p1: *mut R4SdkTransportTlsSession) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportTlsSession_create(p0: *mut R4SdkTransportTlsSession, p1: *const R4SdkTransportNativeValue22) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportTlsSession_from_fields(p0: *mut R4SdkTransportTlsSession, p1: *const R4SdkTransportNativeValue22) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportTlsSession_get_stream_state(p0: *const R4SdkTransportTlsSession, p1: *mut R4SdkTransportNativeValue22) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportTlsSession_set_stream_state(p0: *mut R4SdkTransportTlsSession, p1: *const R4SdkTransportNativeValue22) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportTlsSession_inspectNative(p0: *const R4SdkTransportTlsSession) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue22_create(p0: *mut R4SdkTransportNativeValue22, p1: *const R4SdkTransportNativeValue22) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue22_inspectNative(p0: *const R4SdkTransportNativeValue22, p1: *mut R4SdkTransportNativeValue22) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue23_create(p0: *mut R4SdkTransportNativeValue23, p1: *const R4SdkTransportNativeValue23) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue23_inspectNative(p0: *const R4SdkTransportNativeValue23, p1: *mut R4SdkTransportNativeValue23) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_Preflight_create(p0: *mut R4SdkTransportSessionPool_Preflight) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_Preflight_from_fields(p0: *mut R4SdkTransportSessionPool_Preflight, p1: *const R4SdkWebNativeValue367, p2: u64, p3: u64, p4: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_Preflight_get_key(p0: *const R4SdkTransportSessionPool_Preflight, p1: *mut R4SdkWebNativeValue367) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_Preflight_set_key(p0: *mut R4SdkTransportSessionPool_Preflight, p1: *const R4SdkWebNativeValue367) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_Preflight_get_key_len(p0: *const R4SdkTransportSessionPool_Preflight) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_Preflight_set_key_len(p0: *mut R4SdkTransportSessionPool_Preflight, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_Preflight_get_expires(p0: *const R4SdkTransportSessionPool_Preflight) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_Preflight_set_expires(p0: *mut R4SdkTransportSessionPool_Preflight, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_Preflight_get_used(p0: *const R4SdkTransportSessionPool_Preflight) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_Preflight_set_used(p0: *mut R4SdkTransportSessionPool_Preflight, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_Preflight_inspectNative(p0: *const R4SdkTransportSessionPool_Preflight) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue27_create(p0: *mut R4SdkTransportNativeValue27, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue27_inspectNative(p0: *const R4SdkTransportNativeValue27, p1: *mut R4SdkTransportRequestDeadline) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue28_create(p0: *mut R4SdkTransportNativeValue28, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue28_inspectNative(p0: *const R4SdkTransportNativeValue28) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue29_create(p0: *mut R4SdkTransportNativeValue29, p1: *mut R4SdkTransportTransportStats) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue29_inspectNative(p0: *const R4SdkTransportNativeValue29) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue31_create(p0: *mut R4SdkTransportNativeValue31, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue31_inspectNative(p0: *const R4SdkTransportNativeValue31) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue32_create(p0: *mut R4SdkTransportNativeValue32, p1: *const R4StopFlag) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue32_inspectNative(p0: *const R4SdkTransportNativeValue32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue34_create(p0: *mut R4SdkTransportNativeValue34, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue34_inspectNative(p0: *const R4SdkTransportNativeValue34) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue38_create(p0: *mut R4SdkTransportNativeValue38, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue38_inspectNative(p0: *const R4SdkTransportNativeValue38) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue39_create(p0: *mut R4SdkTransportNativeValue39, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue39_inspectNative(p0: *const R4SdkTransportNativeValue39) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue40_create(p0: *mut R4SdkTransportNativeValue40, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue40_inspectNative(p0: *const R4SdkTransportNativeValue40) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchResponse_create(p0: *mut R4SdkTransportFetchResponse, p1: u16, p2: *mut u8, p3: u64, p4: *const u8, p5: u64, p6: R4SdkTransportSlot, p7: R4SdkTransportSlot, p8: R4SdkTransportSlot, p9: u8, p10: R4SdkTransportSlot, p11: *const R4SdkWebNativeValue373, p12: u64, p13: u8, p14: u8, p15: u8, p16: *const R4SdkTransportFinalUrl) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchResponse_from_fields(p0: *mut R4SdkTransportFetchResponse, p1: u16, p2: *mut u8, p3: u64, p4: *const u8, p5: u64, p6: R4SdkTransportSlot, p7: R4SdkTransportSlot, p8: R4SdkTransportSlot, p9: u8, p10: R4SdkTransportSlot, p11: *const R4SdkWebNativeValue373, p12: u64, p13: u8, p14: u8, p15: u8, p16: *const R4SdkTransportFinalUrl) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchResponse_get_status(p0: *const R4SdkTransportFetchResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchResponse_set_status(p0: *mut R4SdkTransportFetchResponse, p1: u16) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchResponse_get_body(p0: *const R4SdkTransportFetchResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchResponse_set_body(p0: *mut R4SdkTransportFetchResponse, p1: *mut u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchResponse_get_headers(p0: *const R4SdkTransportFetchResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchResponse_set_headers(p0: *mut R4SdkTransportFetchResponse, p1: *const u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchResponse_get_content_type(p0: *const R4SdkTransportFetchResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchResponse_set_content_type(p0: *mut R4SdkTransportFetchResponse, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchResponse_get_content_security_policy(p0: *const R4SdkTransportFetchResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchResponse_set_content_security_policy(p0: *mut R4SdkTransportFetchResponse, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchResponse_get_access_control_allow_origin(p0: *const R4SdkTransportFetchResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchResponse_set_access_control_allow_origin(p0: *mut R4SdkTransportFetchResponse, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchResponse_get_access_control_allow_credentials(p0: *const R4SdkTransportFetchResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchResponse_set_access_control_allow_credentials(p0: *mut R4SdkTransportFetchResponse, p1: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchResponse_get_set_cookie(p0: *const R4SdkTransportFetchResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchResponse_set_set_cookie(p0: *mut R4SdkTransportFetchResponse, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchResponse_get_set_cookies(p0: *const R4SdkTransportFetchResponse, p1: *mut R4SdkWebNativeValue373) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchResponse_set_set_cookies(p0: *mut R4SdkTransportFetchResponse, p1: *const R4SdkWebNativeValue373) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchResponse_get_set_cookie_count(p0: *const R4SdkTransportFetchResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchResponse_set_set_cookie_count(p0: *mut R4SdkTransportFetchResponse, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchResponse_get_redirects(p0: *const R4SdkTransportFetchResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchResponse_set_redirects(p0: *mut R4SdkTransportFetchResponse, p1: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchResponse_get_manual_redirect(p0: *const R4SdkTransportFetchResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchResponse_set_manual_redirect(p0: *mut R4SdkTransportFetchResponse, p1: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchResponse_get_secure(p0: *const R4SdkTransportFetchResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchResponse_set_secure(p0: *mut R4SdkTransportFetchResponse, p1: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchResponse_get_final_url(p0: *const R4SdkTransportFetchResponse, p1: *mut R4SdkTransportFinalUrl) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchResponse_set_final_url(p0: *mut R4SdkTransportFetchResponse, p1: *const R4SdkTransportFinalUrl) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchResponse_inspectNative(p0: *const R4SdkTransportFetchResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFinalUrl_create(p0: *mut R4SdkTransportFinalUrl) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFinalUrl_from_fields(p0: *mut R4SdkTransportFinalUrl, p1: *const R4SdkTransportNativeValue45, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFinalUrl_get_storage(p0: *const R4SdkTransportFinalUrl, p1: *mut R4SdkTransportNativeValue45) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFinalUrl_set_storage(p0: *mut R4SdkTransportFinalUrl, p1: *const R4SdkTransportNativeValue45) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFinalUrl_get_len(p0: *const R4SdkTransportFinalUrl) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFinalUrl_set_len(p0: *mut R4SdkTransportFinalUrl, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFinalUrl_inspectNative(p0: *const R4SdkTransportFinalUrl) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue45_create(p0: *mut R4SdkTransportNativeValue45, p1: *const R4SdkTransportNativeValue45) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue45_inspectNative(p0: *const R4SdkTransportNativeValue45, p1: *mut R4SdkTransportNativeValue45) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchResult_get_response(p0: *const R4SdkTransportFetchResult, p1: *mut R4SdkTransportFetchResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchResult_set_response(p0: *mut R4SdkTransportFetchResult, p1: *const R4SdkTransportFetchResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchResult_get_failure(p0: *const R4SdkTransportFetchResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchResult_set_failure(p0: *mut R4SdkTransportFetchResult, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchResult_inspectNative(p0: *const R4SdkTransportFetchResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative__typeInfo_app_web_FetchResult____union__tag_type___create(p0: *mut R4SdkTransportNative__typeInfo_app_web_FetchResult____union__tag_type__, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative__typeInfo_app_web_FetchResult____union__tag_type___inspectNative(p0: *const R4SdkTransportNative__typeInfo_app_web_FetchResult____union__tag_type__) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadSink_create(p0: *mut R4SdkTransportDownloadSink, p1: R4SdkTransportSlot, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadSink_from_fields(p0: *mut R4SdkTransportDownloadSink, p1: R4SdkTransportSlot, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadSink_get_context(p0: *const R4SdkTransportDownloadSink) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadSink_set_context(p0: *mut R4SdkTransportDownloadSink, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadSink_get_write_fn(p0: *const R4SdkTransportDownloadSink) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadSink_set_write_fn(p0: *mut R4SdkTransportDownloadSink, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadSink_inspectNative(p0: *const R4SdkTransportDownloadSink) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadOptions_create(p0: *mut R4SdkTransportDownloadOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadOptions_from_fields(p0: *mut R4SdkTransportDownloadOptions, p1: *const R4Timeout, p2: u8, p3: R4SdkTransportSlot, p4: R4SdkTransportSlot, p5: R4SdkTransportSlot, p6: R4SdkTransportSlot, p7: *const u8, p8: u64, p9: u32, p10: u64, p11: R4SdkTransportSlot, p12: R4SdkTransportSlot, p13: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadOptions_get_timeout(p0: *const R4SdkTransportDownloadOptions, p1: *mut R4Timeout) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadOptions_set_timeout(p0: *mut R4SdkTransportDownloadOptions, p1: *const R4Timeout) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadOptions_get_redirect_limit(p0: *const R4SdkTransportDownloadOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadOptions_set_redirect_limit(p0: *mut R4SdkTransportDownloadOptions, p1: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadOptions_get_entropy(p0: *const R4SdkTransportDownloadOptions, p1: *mut R4SdkWebNativeValue151) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadOptions_set_entropy(p0: *mut R4SdkTransportDownloadOptions, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadOptions_get_stop(p0: *const R4SdkTransportDownloadOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadOptions_set_stop(p0: *mut R4SdkTransportDownloadOptions, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadOptions_get_progress(p0: *const R4SdkTransportDownloadOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadOptions_set_progress(p0: *mut R4SdkTransportDownloadOptions, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadOptions_get_progress_context(p0: *const R4SdkTransportDownloadOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadOptions_set_progress_context(p0: *mut R4SdkTransportDownloadOptions, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadOptions_get_headers(p0: *const R4SdkTransportDownloadOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadOptions_set_headers(p0: *mut R4SdkTransportDownloadOptions, p1: *const u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadOptions_get_method(p0: *const R4SdkTransportDownloadOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadOptions_set_method(p0: *mut R4SdkTransportDownloadOptions, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadOptions_get_resume_from(p0: *const R4SdkTransportDownloadOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadOptions_set_resume_from(p0: *mut R4SdkTransportDownloadOptions, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadOptions_get_expected_size(p0: *const R4SdkTransportDownloadOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadOptions_set_expected_size(p0: *mut R4SdkTransportDownloadOptions, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadOptions_get_target_authorizer(p0: *const R4SdkTransportDownloadOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadOptions_set_target_authorizer(p0: *mut R4SdkTransportDownloadOptions, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadOptions_get_target_authorization_context(p0: *const R4SdkTransportDownloadOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadOptions_set_target_authorization_context(p0: *mut R4SdkTransportDownloadOptions, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadOptions_inspectNative(p0: *const R4SdkTransportDownloadOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue50_create(p0: *mut R4SdkTransportNativeValue50, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue50_inspectNative(p0: *const R4SdkTransportNativeValue50) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue51_create(p0: *mut R4SdkTransportNativeValue51, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue51_inspectNative(p0: *const R4SdkTransportNativeValue51) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadResponse_create(p0: *mut R4SdkTransportDownloadResponse, p1: u16, p2: u64, p3: u64, p4: u64, p5: u64, p6: u8, p7: u8, p8: *const R4SdkTransportFinalUrl) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadResponse_from_fields(p0: *mut R4SdkTransportDownloadResponse, p1: u16, p2: u64, p3: u64, p4: u64, p5: u64, p6: u8, p7: u8, p8: *const R4SdkTransportFinalUrl) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadResponse_get_status(p0: *const R4SdkTransportDownloadResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadResponse_set_status(p0: *mut R4SdkTransportDownloadResponse, p1: u16) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadResponse_get_content_length(p0: *const R4SdkTransportDownloadResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadResponse_set_content_length(p0: *mut R4SdkTransportDownloadResponse, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadResponse_get_total_size(p0: *const R4SdkTransportDownloadResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadResponse_set_total_size(p0: *mut R4SdkTransportDownloadResponse, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadResponse_get_transferred(p0: *const R4SdkTransportDownloadResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadResponse_set_transferred(p0: *mut R4SdkTransportDownloadResponse, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadResponse_get_resumed_from(p0: *const R4SdkTransportDownloadResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadResponse_set_resumed_from(p0: *mut R4SdkTransportDownloadResponse, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadResponse_get_redirects(p0: *const R4SdkTransportDownloadResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadResponse_set_redirects(p0: *mut R4SdkTransportDownloadResponse, p1: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadResponse_get_secure(p0: *const R4SdkTransportDownloadResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadResponse_set_secure(p0: *mut R4SdkTransportDownloadResponse, p1: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadResponse_get_final_url(p0: *const R4SdkTransportDownloadResponse, p1: *mut R4SdkTransportFinalUrl) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadResponse_set_final_url(p0: *mut R4SdkTransportDownloadResponse, p1: *const R4SdkTransportFinalUrl) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadResponse_inspectNative(p0: *const R4SdkTransportDownloadResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadResult_get_response(p0: *const R4SdkTransportDownloadResult, p1: *mut R4SdkTransportDownloadResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadResult_set_response(p0: *mut R4SdkTransportDownloadResult, p1: *const R4SdkTransportDownloadResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadResult_get_range_not_satisfiable(p0: *const R4SdkTransportDownloadResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadResult_set_range_not_satisfiable(p0: *mut R4SdkTransportDownloadResult, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadResult_get_failure(p0: *const R4SdkTransportDownloadResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadResult_set_failure(p0: *mut R4SdkTransportDownloadResult, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDownloadResult_inspectNative(p0: *const R4SdkTransportDownloadResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative__typeInfo_app_web_DownloadResult____union__tag_type___create(p0: *mut R4SdkTransportNative__typeInfo_app_web_DownloadResult____union__tag_type__, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative__typeInfo_app_web_DownloadResult____union__tag_type___inspectNative(p0: *const R4SdkTransportNative__typeInfo_app_web_DownloadResult____union__tag_type__) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportWebTransport_create(p0: *mut R4SdkTransportWebTransport, p1: *const R4SdkTransportNative_app_network_Network, p2: *const R4SdkTransportNative_r4dev_Context) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportWebTransport_from_fields(p0: *mut R4SdkTransportWebTransport, p1: *const R4SdkTransportNative_app_network_Network, p2: *const R4SdkTransportNative_r4dev_Context) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportWebTransport_get_network(p0: *const R4SdkTransportWebTransport, p1: *mut R4SdkTransportNative_app_network_Network) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportWebTransport_set_network(p0: *mut R4SdkTransportWebTransport, p1: *const R4SdkTransportNative_app_network_Network) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportWebTransport_get_dev(p0: *const R4SdkTransportWebTransport, p1: *mut R4SdkTransportNative_r4dev_Context) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportWebTransport_set_dev(p0: *mut R4SdkTransportWebTransport, p1: *const R4SdkTransportNative_r4dev_Context) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportWebTransport_inspectNative(p0: *const R4SdkTransportWebTransport) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue57_create(p0: *mut R4SdkTransportNativeValue57, p1: *mut R4SdkWebNativeValue151) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue57_inspectNative(p0: *const R4SdkTransportNativeValue57) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpScheme_create(p0: *mut R4SdkTransportHttpScheme, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpScheme_inspectNative(p0: *const R4SdkTransportHttpScheme) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpUrlError_create(p0: *mut R4SdkTransportHttpUrlError, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpUrlError_inspectNative(p0: *const R4SdkTransportHttpUrlError) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedUrl_create(p0: *mut R4SdkTransportHttpParsedUrl, p1: u32, p2: *const u8, p3: u64, p4: u16, p5: *const u8, p6: u64, p7: u8, p8: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedUrl_from_fields(p0: *mut R4SdkTransportHttpParsedUrl, p1: u32, p2: *const u8, p3: u64, p4: u16, p5: *const u8, p6: u64, p7: u8, p8: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedUrl_get_scheme(p0: *const R4SdkTransportHttpParsedUrl) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedUrl_set_scheme(p0: *mut R4SdkTransportHttpParsedUrl, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedUrl_get_host(p0: *const R4SdkTransportHttpParsedUrl) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedUrl_set_host(p0: *mut R4SdkTransportHttpParsedUrl, p1: *const u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedUrl_get_port(p0: *const R4SdkTransportHttpParsedUrl) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedUrl_set_port(p0: *mut R4SdkTransportHttpParsedUrl, p1: u16) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedUrl_get_path(p0: *const R4SdkTransportHttpParsedUrl) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedUrl_set_path(p0: *mut R4SdkTransportHttpParsedUrl, p1: *const u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedUrl_get_explicit_port(p0: *const R4SdkTransportHttpParsedUrl) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedUrl_set_explicit_port(p0: *mut R4SdkTransportHttpParsedUrl, p1: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedUrl_get_query_only(p0: *const R4SdkTransportHttpParsedUrl) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedUrl_set_query_only(p0: *mut R4SdkTransportHttpParsedUrl, p1: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedUrl_inspectNative(p0: *const R4SdkTransportHttpParsedUrl) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpUrlResult_get_value(p0: *const R4SdkTransportHttpUrlResult, p1: *mut R4SdkTransportHttpParsedUrl) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpUrlResult_set_value(p0: *mut R4SdkTransportHttpUrlResult, p1: *const R4SdkTransportHttpParsedUrl) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpUrlResult_get_failure(p0: *const R4SdkTransportHttpUrlResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpUrlResult_set_failure(p0: *mut R4SdkTransportHttpUrlResult, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpUrlResult_inspectNative(p0: *const R4SdkTransportHttpUrlResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative__typeInfo_http_UrlResult____union__tag_type___create(p0: *mut R4SdkTransportNative__typeInfo_http_UrlResult____union__tag_type__, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative__typeInfo_http_UrlResult____union__tag_type___inspectNative(p0: *const R4SdkTransportNative__typeInfo_http_UrlResult____union__tag_type__) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpRequestOptions_create(p0: *mut R4SdkTransportHttpRequestOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpRequestOptions_from_fields(p0: *mut R4SdkTransportHttpRequestOptions, p1: *const u8, p2: u64, p3: *const u8, p4: u64, p5: *const u8, p6: u64, p7: *const u8, p8: u64, p9: *const u8, p10: u64, p11: u8, p12: *const u8, p13: u64, p14: *const u8, p15: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpRequestOptions_get_user_agent(p0: *const R4SdkTransportHttpRequestOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpRequestOptions_set_user_agent(p0: *mut R4SdkTransportHttpRequestOptions, p1: *const u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpRequestOptions_get_accept(p0: *const R4SdkTransportHttpRequestOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpRequestOptions_set_accept(p0: *mut R4SdkTransportHttpRequestOptions, p1: *const u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpRequestOptions_get_cookie(p0: *const R4SdkTransportHttpRequestOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpRequestOptions_set_cookie(p0: *mut R4SdkTransportHttpRequestOptions, p1: *const u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpRequestOptions_get_origin(p0: *const R4SdkTransportHttpRequestOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpRequestOptions_set_origin(p0: *mut R4SdkTransportHttpRequestOptions, p1: *const u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpRequestOptions_get_headers(p0: *const R4SdkTransportHttpRequestOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpRequestOptions_set_headers(p0: *mut R4SdkTransportHttpRequestOptions, p1: *const u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpRequestOptions_get_connection_close(p0: *const R4SdkTransportHttpRequestOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpRequestOptions_set_connection_close(p0: *mut R4SdkTransportHttpRequestOptions, p1: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpRequestOptions_get_content_type(p0: *const R4SdkTransportHttpRequestOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpRequestOptions_set_content_type(p0: *mut R4SdkTransportHttpRequestOptions, p1: *const u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpRequestOptions_get_body(p0: *const R4SdkTransportHttpRequestOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpRequestOptions_set_body(p0: *mut R4SdkTransportHttpRequestOptions, p1: *const u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpRequestOptions_inspectNative(p0: *const R4SdkTransportHttpRequestOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpBuildResult_get_bytes(p0: *const R4SdkTransportHttpBuildResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpBuildResult_set_bytes(p0: *mut R4SdkTransportHttpBuildResult, p1: *mut u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpBuildResult_get_invalid_url(p0: *const R4SdkTransportHttpBuildResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpBuildResult_set_invalid_url(p0: *mut R4SdkTransportHttpBuildResult, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpBuildResult_get_output_too_small(p0: *const R4SdkTransportHttpBuildResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpBuildResult_set_output_too_small(p0: *mut R4SdkTransportHttpBuildResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpBuildResult_inspectNative(p0: *const R4SdkTransportHttpBuildResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative__typeInfo_http_BuildResult____union__tag_type___create(p0: *mut R4SdkTransportNative__typeInfo_http_BuildResult____union__tag_type__, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative__typeInfo_http_BuildResult____union__tag_type___inspectNative(p0: *const R4SdkTransportNative__typeInfo_http_BuildResult____union__tag_type__) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpTransfer_create(p0: *mut R4SdkTransportHttpTransfer, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpTransfer_inspectNative(p0: *const R4SdkTransportHttpTransfer) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpContentRange_create(p0: *mut R4SdkTransportHttpContentRange, p1: u8, p2: u64, p3: u64, p4: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpContentRange_from_fields(p0: *mut R4SdkTransportHttpContentRange, p1: u8, p2: u64, p3: u64, p4: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpContentRange_get_satisfied(p0: *const R4SdkTransportHttpContentRange) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpContentRange_set_satisfied(p0: *mut R4SdkTransportHttpContentRange, p1: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpContentRange_get_start(p0: *const R4SdkTransportHttpContentRange) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpContentRange_set_start(p0: *mut R4SdkTransportHttpContentRange, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpContentRange_get_end(p0: *const R4SdkTransportHttpContentRange) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpContentRange_set_end(p0: *mut R4SdkTransportHttpContentRange, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpContentRange_get_total(p0: *const R4SdkTransportHttpContentRange) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpContentRange_set_total(p0: *mut R4SdkTransportHttpContentRange, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpContentRange_inspectNative(p0: *const R4SdkTransportHttpContentRange) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponseError_create(p0: *mut R4SdkTransportHttpResponseError, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponseError_inspectNative(p0: *const R4SdkTransportHttpResponseError) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponse_create(p0: *mut R4SdkTransportHttpResponse, p1: u16, p2: u32, p3: *mut u8, p4: u64, p5: *const u8, p6: u64, p7: R4SdkTransportSlot, p8: R4SdkTransportSlot, p9: R4SdkTransportSlot, p10: R4SdkTransportSlot, p11: u8, p12: R4SdkTransportSlot, p13: *const R4SdkWebNativeValue373, p14: u64, p15: R4SdkTransportSlot, p16: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponse_from_fields(p0: *mut R4SdkTransportHttpResponse, p1: u16, p2: u32, p3: *mut u8, p4: u64, p5: *const u8, p6: u64, p7: R4SdkTransportSlot, p8: R4SdkTransportSlot, p9: R4SdkTransportSlot, p10: R4SdkTransportSlot, p11: u8, p12: R4SdkTransportSlot, p13: *const R4SdkWebNativeValue373, p14: u64, p15: R4SdkTransportSlot, p16: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponse_get_status(p0: *const R4SdkTransportHttpResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponse_set_status(p0: *mut R4SdkTransportHttpResponse, p1: u16) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponse_get_transfer(p0: *const R4SdkTransportHttpResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponse_set_transfer(p0: *mut R4SdkTransportHttpResponse, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponse_get_body(p0: *const R4SdkTransportHttpResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponse_set_body(p0: *mut R4SdkTransportHttpResponse, p1: *mut u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponse_get_headers(p0: *const R4SdkTransportHttpResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponse_set_headers(p0: *mut R4SdkTransportHttpResponse, p1: *const u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponse_get_location(p0: *const R4SdkTransportHttpResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponse_set_location(p0: *mut R4SdkTransportHttpResponse, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponse_get_content_type(p0: *const R4SdkTransportHttpResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponse_set_content_type(p0: *mut R4SdkTransportHttpResponse, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponse_get_content_security_policy(p0: *const R4SdkTransportHttpResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponse_set_content_security_policy(p0: *mut R4SdkTransportHttpResponse, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponse_get_access_control_allow_origin(p0: *const R4SdkTransportHttpResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponse_set_access_control_allow_origin(p0: *mut R4SdkTransportHttpResponse, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponse_get_access_control_allow_credentials(p0: *const R4SdkTransportHttpResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponse_set_access_control_allow_credentials(p0: *mut R4SdkTransportHttpResponse, p1: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponse_get_set_cookie(p0: *const R4SdkTransportHttpResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponse_set_set_cookie(p0: *mut R4SdkTransportHttpResponse, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponse_get_set_cookies(p0: *const R4SdkTransportHttpResponse, p1: *mut R4SdkWebNativeValue373) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponse_set_set_cookies(p0: *mut R4SdkTransportHttpResponse, p1: *const R4SdkWebNativeValue373) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponse_get_set_cookie_count(p0: *const R4SdkTransportHttpResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponse_set_set_cookie_count(p0: *mut R4SdkTransportHttpResponse, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponse_get_content_range(p0: *const R4SdkTransportHttpResponse, p1: *mut R4SdkTransportHttpContentRange) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponse_set_content_range(p0: *mut R4SdkTransportHttpResponse, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponse_get_consumed(p0: *const R4SdkTransportHttpResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponse_set_consumed(p0: *mut R4SdkTransportHttpResponse, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponse_inspectNative(p0: *const R4SdkTransportHttpResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue71_create(p0: *mut R4SdkTransportNativeValue71, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue71_inspectNative(p0: *const R4SdkTransportNativeValue71, p1: *mut R4SdkTransportHttpContentRange) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpDecodeResult_get_complete(p0: *const R4SdkTransportHttpDecodeResult, p1: *mut R4SdkTransportHttpResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpDecodeResult_set_complete(p0: *mut R4SdkTransportHttpDecodeResult, p1: *const R4SdkTransportHttpResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpDecodeResult_get_need_more(p0: *const R4SdkTransportHttpDecodeResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpDecodeResult_set_need_more(p0: *mut R4SdkTransportHttpDecodeResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpDecodeResult_get_aborted(p0: *const R4SdkTransportHttpDecodeResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpDecodeResult_set_aborted(p0: *mut R4SdkTransportHttpDecodeResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpDecodeResult_get_failure(p0: *const R4SdkTransportHttpDecodeResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpDecodeResult_set_failure(p0: *mut R4SdkTransportHttpDecodeResult, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpDecodeResult_inspectNative(p0: *const R4SdkTransportHttpDecodeResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative__typeInfo_http_DecodeResult____union__tag_type___create(p0: *mut R4SdkTransportNative__typeInfo_http_DecodeResult____union__tag_type__, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative__typeInfo_http_DecodeResult____union__tag_type___inspectNative(p0: *const R4SdkTransportNative__typeInfo_http_DecodeResult____union__tag_type__) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponseDecoder_create(p0: *mut R4SdkTransportHttpResponseDecoder) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponseDecoder_from_fields(p0: *mut R4SdkTransportHttpResponseDecoder, p1: u32, p2: R4SdkTransportSlot, p3: u64, p4: u64, p5: u64, p6: u64, p7: u64, p8: u64, p9: u64, p10: u64, p11: u64, p12: u32, p13: u8, p14: u8, p15: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponseDecoder_get_method(p0: *const R4SdkTransportHttpResponseDecoder) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponseDecoder_set_method(p0: *mut R4SdkTransportHttpResponseDecoder, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponseDecoder_get_head(p0: *const R4SdkTransportHttpResponseDecoder, p1: *mut R4SdkTransportHttpParsedHead) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponseDecoder_set_head(p0: *mut R4SdkTransportHttpResponseDecoder, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponseDecoder_get_cursor(p0: *const R4SdkTransportHttpResponseDecoder) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponseDecoder_set_cursor(p0: *mut R4SdkTransportHttpResponseDecoder, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponseDecoder_get_written(p0: *const R4SdkTransportHttpResponseDecoder) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponseDecoder_set_written(p0: *mut R4SdkTransportHttpResponseDecoder, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponseDecoder_get_copied_bytes(p0: *const R4SdkTransportHttpResponseDecoder) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponseDecoder_set_copied_bytes(p0: *mut R4SdkTransportHttpResponseDecoder, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponseDecoder_get_seen_input(p0: *const R4SdkTransportHttpResponseDecoder) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponseDecoder_set_seen_input(p0: *mut R4SdkTransportHttpResponseDecoder, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponseDecoder_get_header_scan(p0: *const R4SdkTransportHttpResponseDecoder) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponseDecoder_set_header_scan(p0: *mut R4SdkTransportHttpResponseDecoder, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponseDecoder_get_line_scan(p0: *const R4SdkTransportHttpResponseDecoder) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponseDecoder_set_line_scan(p0: *mut R4SdkTransportHttpResponseDecoder, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponseDecoder_get_remaining(p0: *const R4SdkTransportHttpResponseDecoder) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponseDecoder_set_remaining(p0: *mut R4SdkTransportHttpResponseDecoder, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponseDecoder_get_trailer_start(p0: *const R4SdkTransportHttpResponseDecoder) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponseDecoder_set_trailer_start(p0: *mut R4SdkTransportHttpResponseDecoder, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponseDecoder_get_trailer_count(p0: *const R4SdkTransportHttpResponseDecoder) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponseDecoder_set_trailer_count(p0: *mut R4SdkTransportHttpResponseDecoder, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponseDecoder_get_phase(p0: *const R4SdkTransportHttpResponseDecoder) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponseDecoder_set_phase(p0: *mut R4SdkTransportHttpResponseDecoder, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponseDecoder_get_done(p0: *const R4SdkTransportHttpResponseDecoder) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponseDecoder_set_done(p0: *mut R4SdkTransportHttpResponseDecoder, p1: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponseDecoder_get_cancelled(p0: *const R4SdkTransportHttpResponseDecoder) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponseDecoder_set_cancelled(p0: *mut R4SdkTransportHttpResponseDecoder, p1: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponseDecoder_get_failure(p0: *const R4SdkTransportHttpResponseDecoder) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponseDecoder_set_failure(p0: *mut R4SdkTransportHttpResponseDecoder, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponseDecoder_inspectNative(p0: *const R4SdkTransportHttpResponseDecoder) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue75_create(p0: *mut R4SdkTransportNativeValue75, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue75_inspectNative(p0: *const R4SdkTransportNativeValue75, p1: *mut R4SdkTransportHttpParsedHead) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedHead_create(p0: *mut R4SdkTransportHttpParsedHead, p1: u16, p2: u64, p3: u32, p4: u64, p5: *const u8, p6: u64, p7: R4SdkTransportSlot, p8: R4SdkTransportSlot, p9: R4SdkTransportSlot, p10: R4SdkTransportSlot, p11: u8, p12: R4SdkTransportSlot, p13: *const R4SdkWebNativeValue373, p14: u64, p15: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedHead_from_fields(p0: *mut R4SdkTransportHttpParsedHead, p1: u16, p2: u64, p3: u32, p4: u64, p5: *const u8, p6: u64, p7: R4SdkTransportSlot, p8: R4SdkTransportSlot, p9: R4SdkTransportSlot, p10: R4SdkTransportSlot, p11: u8, p12: R4SdkTransportSlot, p13: *const R4SdkWebNativeValue373, p14: u64, p15: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedHead_get_status(p0: *const R4SdkTransportHttpParsedHead) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedHead_set_status(p0: *mut R4SdkTransportHttpParsedHead, p1: u16) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedHead_get_body_start(p0: *const R4SdkTransportHttpParsedHead) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedHead_set_body_start(p0: *mut R4SdkTransportHttpParsedHead, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedHead_get_transfer(p0: *const R4SdkTransportHttpParsedHead) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedHead_set_transfer(p0: *mut R4SdkTransportHttpParsedHead, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedHead_get_content_length(p0: *const R4SdkTransportHttpParsedHead) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedHead_set_content_length(p0: *mut R4SdkTransportHttpParsedHead, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedHead_get_headers(p0: *const R4SdkTransportHttpParsedHead) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedHead_set_headers(p0: *mut R4SdkTransportHttpParsedHead, p1: *const u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedHead_get_location(p0: *const R4SdkTransportHttpParsedHead) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedHead_set_location(p0: *mut R4SdkTransportHttpParsedHead, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedHead_get_content_type(p0: *const R4SdkTransportHttpParsedHead) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedHead_set_content_type(p0: *mut R4SdkTransportHttpParsedHead, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedHead_get_content_security_policy(p0: *const R4SdkTransportHttpParsedHead) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedHead_set_content_security_policy(p0: *mut R4SdkTransportHttpParsedHead, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedHead_get_access_control_allow_origin(p0: *const R4SdkTransportHttpParsedHead) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedHead_set_access_control_allow_origin(p0: *mut R4SdkTransportHttpParsedHead, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedHead_get_access_control_allow_credentials(p0: *const R4SdkTransportHttpParsedHead) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedHead_set_access_control_allow_credentials(p0: *mut R4SdkTransportHttpParsedHead, p1: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedHead_get_set_cookie(p0: *const R4SdkTransportHttpParsedHead) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedHead_set_set_cookie(p0: *mut R4SdkTransportHttpParsedHead, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedHead_get_set_cookies(p0: *const R4SdkTransportHttpParsedHead, p1: *mut R4SdkWebNativeValue373) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedHead_set_set_cookies(p0: *mut R4SdkTransportHttpParsedHead, p1: *const R4SdkWebNativeValue373) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedHead_get_set_cookie_count(p0: *const R4SdkTransportHttpParsedHead) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedHead_set_set_cookie_count(p0: *mut R4SdkTransportHttpParsedHead, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedHead_get_content_range(p0: *const R4SdkTransportHttpParsedHead, p1: *mut R4SdkTransportHttpContentRange) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedHead_set_content_range(p0: *mut R4SdkTransportHttpParsedHead, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedHead_inspectNative(p0: *const R4SdkTransportHttpParsedHead) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue77_create(p0: *mut R4SdkTransportNativeValue77, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue77_inspectNative(p0: *const R4SdkTransportNativeValue77) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue78_create(p0: *mut R4SdkTransportNativeValue78, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue78_inspectNative(p0: *const R4SdkTransportNativeValue78) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamResponse_create(p0: *mut R4SdkTransportHttpStreamResponse, p1: u16, p2: u32, p3: u64, p4: R4SdkTransportSlot, p5: R4SdkTransportSlot, p6: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamResponse_from_fields(p0: *mut R4SdkTransportHttpStreamResponse, p1: u16, p2: u32, p3: u64, p4: R4SdkTransportSlot, p5: R4SdkTransportSlot, p6: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamResponse_get_status(p0: *const R4SdkTransportHttpStreamResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamResponse_set_status(p0: *mut R4SdkTransportHttpStreamResponse, p1: u16) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamResponse_get_transfer(p0: *const R4SdkTransportHttpStreamResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamResponse_set_transfer(p0: *mut R4SdkTransportHttpStreamResponse, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamResponse_get_content_length(p0: *const R4SdkTransportHttpStreamResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamResponse_set_content_length(p0: *mut R4SdkTransportHttpStreamResponse, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamResponse_get_location(p0: *const R4SdkTransportHttpStreamResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamResponse_set_location(p0: *mut R4SdkTransportHttpStreamResponse, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamResponse_get_content_type(p0: *const R4SdkTransportHttpStreamResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamResponse_set_content_type(p0: *mut R4SdkTransportHttpStreamResponse, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamResponse_get_content_range(p0: *const R4SdkTransportHttpStreamResponse, p1: *mut R4SdkTransportHttpContentRange) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamResponse_set_content_range(p0: *mut R4SdkTransportHttpStreamResponse, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamResponse_inspectNative(p0: *const R4SdkTransportHttpStreamResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamChunk_create(p0: *mut R4SdkTransportHttpStreamChunk, p1: *const u8, p2: u64, p3: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamChunk_from_fields(p0: *mut R4SdkTransportHttpStreamChunk, p1: *const u8, p2: u64, p3: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamChunk_get_bytes(p0: *const R4SdkTransportHttpStreamChunk) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamChunk_set_bytes(p0: *mut R4SdkTransportHttpStreamChunk, p1: *const u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamChunk_get_complete(p0: *const R4SdkTransportHttpStreamChunk) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamChunk_set_complete(p0: *mut R4SdkTransportHttpStreamChunk, p1: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamChunk_inspectNative(p0: *const R4SdkTransportHttpStreamChunk) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamDecodeResult_get_chunk(p0: *const R4SdkTransportHttpStreamDecodeResult, p1: *mut R4SdkTransportHttpStreamChunk) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamDecodeResult_set_chunk(p0: *mut R4SdkTransportHttpStreamDecodeResult, p1: *const R4SdkTransportHttpStreamChunk) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamDecodeResult_get_complete(p0: *const R4SdkTransportHttpStreamDecodeResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamDecodeResult_set_complete(p0: *mut R4SdkTransportHttpStreamDecodeResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamDecodeResult_get_need_more(p0: *const R4SdkTransportHttpStreamDecodeResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamDecodeResult_set_need_more(p0: *mut R4SdkTransportHttpStreamDecodeResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamDecodeResult_get_aborted(p0: *const R4SdkTransportHttpStreamDecodeResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamDecodeResult_set_aborted(p0: *mut R4SdkTransportHttpStreamDecodeResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamDecodeResult_get_failure(p0: *const R4SdkTransportHttpStreamDecodeResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamDecodeResult_set_failure(p0: *mut R4SdkTransportHttpStreamDecodeResult, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamDecodeResult_inspectNative(p0: *const R4SdkTransportHttpStreamDecodeResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative__typeInfo_http_StreamDecodeResult____union__tag_type___create(p0: *mut R4SdkTransportNative__typeInfo_http_StreamDecodeResult____union__tag_type__, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative__typeInfo_http_StreamDecodeResult____union__tag_type___inspectNative(p0: *const R4SdkTransportNative__typeInfo_http_StreamDecodeResult____union__tag_type__) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamDecoder_create(p0: *mut R4SdkTransportHttpStreamDecoder, p1: *mut u8, p2: u64, p3: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamDecoder_from_fields(p0: *mut R4SdkTransportHttpStreamDecoder, p1: *mut u8, p2: u64, p3: u32, p4: u64, p5: R4SdkTransportSlot, p6: u64, p7: u8, p8: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamDecoder_get_header_buffer(p0: *const R4SdkTransportHttpStreamDecoder) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamDecoder_set_header_buffer(p0: *mut R4SdkTransportHttpStreamDecoder, p1: *mut u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamDecoder_get_method(p0: *const R4SdkTransportHttpStreamDecoder) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamDecoder_set_method(p0: *mut R4SdkTransportHttpStreamDecoder, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamDecoder_get_header_len(p0: *const R4SdkTransportHttpStreamDecoder) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamDecoder_set_header_len(p0: *mut R4SdkTransportHttpStreamDecoder, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamDecoder_get_head(p0: *const R4SdkTransportHttpStreamDecoder, p1: *mut R4SdkTransportHttpParsedHead) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamDecoder_set_head(p0: *mut R4SdkTransportHttpStreamDecoder, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamDecoder_get_received(p0: *const R4SdkTransportHttpStreamDecoder) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamDecoder_set_received(p0: *mut R4SdkTransportHttpStreamDecoder, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamDecoder_get_done(p0: *const R4SdkTransportHttpStreamDecoder) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamDecoder_set_done(p0: *mut R4SdkTransportHttpStreamDecoder, p1: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamDecoder_get_failure(p0: *const R4SdkTransportHttpStreamDecoder) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamDecoder_set_failure(p0: *mut R4SdkTransportHttpStreamDecoder, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpStreamDecoder_inspectNative(p0: *const R4SdkTransportHttpStreamDecoder) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpRedirectResult_get_url(p0: *const R4SdkTransportHttpRedirectResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpRedirectResult_set_url(p0: *mut R4SdkTransportHttpRedirectResult, p1: *mut u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpRedirectResult_get_invalid(p0: *const R4SdkTransportHttpRedirectResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpRedirectResult_set_invalid(p0: *mut R4SdkTransportHttpRedirectResult, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpRedirectResult_get_output_too_small(p0: *const R4SdkTransportHttpRedirectResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpRedirectResult_set_output_too_small(p0: *mut R4SdkTransportHttpRedirectResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpRedirectResult_inspectNative(p0: *const R4SdkTransportHttpRedirectResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative__typeInfo_http_RedirectResult____union__tag_type___create(p0: *mut R4SdkTransportNative__typeInfo_http_RedirectResult____union__tag_type__, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative__typeInfo_http_RedirectResult____union__tag_type___inspectNative(p0: *const R4SdkTransportNative__typeInfo_http_RedirectResult____union__tag_type__) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheLimits_create(p0: *mut R4SdkTransportCacheLimits) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheLimits_from_fields(p0: *mut R4SdkTransportCacheLimits, p1: u64, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheLimits_get_object_bytes(p0: *const R4SdkTransportCacheLimits) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheLimits_set_object_bytes(p0: *mut R4SdkTransportCacheLimits, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheLimits_get_total_bytes(p0: *const R4SdkTransportCacheLimits) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheLimits_set_total_bytes(p0: *mut R4SdkTransportCacheLimits, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheLimits_inspectNative(p0: *const R4SdkTransportCacheLimits) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheClock_create(p0: *mut R4SdkTransportCacheClock, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheClock_from_fields(p0: *mut R4SdkTransportCacheClock, p1: u64, p2: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheClock_get_monotonic_ms(p0: *const R4SdkTransportCacheClock) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheClock_set_monotonic_ms(p0: *mut R4SdkTransportCacheClock, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheClock_get_unix_seconds(p0: *const R4SdkTransportCacheClock) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheClock_set_unix_seconds(p0: *mut R4SdkTransportCacheClock, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheClock_inspectNative(p0: *const R4SdkTransportCacheClock) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheKey_create(p0: *mut R4SdkTransportCacheKey, p1: *const u8, p2: u64, p3: *const u8, p4: u64, p5: *const u8, p6: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheKey_from_fields(p0: *mut R4SdkTransportCacheKey, p1: *const u8, p2: u64, p3: *const u8, p4: u64, p5: *const u8, p6: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheKey_get_url(p0: *const R4SdkTransportCacheKey) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheKey_set_url(p0: *mut R4SdkTransportCacheKey, p1: *const u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheKey_get_context(p0: *const R4SdkTransportCacheKey) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheKey_set_context(p0: *mut R4SdkTransportCacheKey, p1: *const u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheKey_get_headers(p0: *const R4SdkTransportCacheKey) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheKey_set_headers(p0: *mut R4SdkTransportCacheKey, p1: *const u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheKey_inspectNative(p0: *const R4SdkTransportCacheKey) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheHandle_create(p0: *mut R4SdkTransportCacheHandle, p1: u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheHandle_from_fields(p0: *mut R4SdkTransportCacheHandle, p1: u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheHandle_get_index(p0: *const R4SdkTransportCacheHandle) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheHandle_set_index(p0: *mut R4SdkTransportCacheHandle, p1: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheHandle_get_identity(p0: *const R4SdkTransportCacheHandle) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheHandle_set_identity(p0: *mut R4SdkTransportCacheHandle, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheHandle_inspectNative(p0: *const R4SdkTransportCacheHandle) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheAction_create(p0: *mut R4SdkTransportCacheAction, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheAction_inspectNative(p0: *const R4SdkTransportCacheAction) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheLookup_create(p0: *mut R4SdkTransportCacheLookup, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheLookup_from_fields(p0: *mut R4SdkTransportCacheLookup, p1: u32, p2: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheLookup_get_action(p0: *const R4SdkTransportCacheLookup) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheLookup_set_action(p0: *mut R4SdkTransportCacheLookup, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheLookup_get_handle(p0: *const R4SdkTransportCacheLookup, p1: *mut R4SdkTransportCacheHandle) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheLookup_set_handle(p0: *mut R4SdkTransportCacheLookup, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheLookup_inspectNative(p0: *const R4SdkTransportCacheLookup) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue109_create(p0: *mut R4SdkTransportNativeValue109, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue109_inspectNative(p0: *const R4SdkTransportNativeValue109, p1: *mut R4SdkTransportCacheHandle) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheView_create(p0: *mut R4SdkTransportCacheView, p1: *const u8, p2: u64, p3: *const u8, p4: u64, p5: u64, p6: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheView_from_fields(p0: *mut R4SdkTransportCacheView, p1: *const u8, p2: u64, p3: *const u8, p4: u64, p5: u64, p6: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheView_get_headers(p0: *const R4SdkTransportCacheView) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheView_set_headers(p0: *mut R4SdkTransportCacheView, p1: *const u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheView_get_body(p0: *const R4SdkTransportCacheView) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheView_set_body(p0: *mut R4SdkTransportCacheView, p1: *const u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheView_get_identity(p0: *const R4SdkTransportCacheView) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheView_set_identity(p0: *mut R4SdkTransportCacheView, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheView_get_age_seconds(p0: *const R4SdkTransportCacheView) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheView_set_age_seconds(p0: *mut R4SdkTransportCacheView, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheView_inspectNative(p0: *const R4SdkTransportCacheView) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheStats_create(p0: *mut R4SdkTransportCacheStats) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheStats_from_fields(p0: *mut R4SdkTransportCacheStats, p1: u64, p2: u64, p3: u64, p4: u64, p5: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheStats_get_hits(p0: *const R4SdkTransportCacheStats) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheStats_set_hits(p0: *mut R4SdkTransportCacheStats, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheStats_get_misses(p0: *const R4SdkTransportCacheStats) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheStats_set_misses(p0: *mut R4SdkTransportCacheStats, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheStats_get_validations(p0: *const R4SdkTransportCacheStats) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheStats_set_validations(p0: *mut R4SdkTransportCacheStats, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheStats_get_stores(p0: *const R4SdkTransportCacheStats) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheStats_set_stores(p0: *mut R4SdkTransportCacheStats, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheStats_get_evictions(p0: *const R4SdkTransportCacheStats) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheStats_set_evictions(p0: *mut R4SdkTransportCacheStats, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheStats_inspectNative(p0: *const R4SdkTransportCacheStats) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheCache_create(p0: *mut R4SdkTransportCacheCache, p1: *const R4SdkDataAllocator, p2: *const R4SdkTransportCacheLimits) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheCache_from_fields(p0: *mut R4SdkTransportCacheCache, p1: *const R4SdkDataAllocator, p2: *const R4SdkTransportCacheLimits, p3: *const R4SdkTransportNativeValue114, p4: u64, p5: u64, p6: u64, p7: *const R4SdkTransportCacheStats) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheCache_get_allocator(p0: *const R4SdkTransportCacheCache, p1: *mut R4SdkDataAllocator) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheCache_set_allocator(p0: *mut R4SdkTransportCacheCache, p1: *const R4SdkDataAllocator) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheCache_get_limits(p0: *const R4SdkTransportCacheCache, p1: *mut R4SdkTransportCacheLimits) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheCache_set_limits(p0: *mut R4SdkTransportCacheCache, p1: *const R4SdkTransportCacheLimits) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheCache_get_entries(p0: *const R4SdkTransportCacheCache, p1: *mut R4SdkTransportNativeValue114) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheCache_set_entries(p0: *mut R4SdkTransportCacheCache, p1: *const R4SdkTransportNativeValue114) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheCache_get_bytes(p0: *const R4SdkTransportCacheCache) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheCache_set_bytes(p0: *mut R4SdkTransportCacheCache, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheCache_get_serial(p0: *const R4SdkTransportCacheCache) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheCache_set_serial(p0: *mut R4SdkTransportCacheCache, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheCache_get_next_identity(p0: *const R4SdkTransportCacheCache) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheCache_set_next_identity(p0: *mut R4SdkTransportCacheCache, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheCache_get_stats(p0: *const R4SdkTransportCacheCache, p1: *mut R4SdkTransportCacheStats) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheCache_set_stats(p0: *mut R4SdkTransportCacheCache, p1: *const R4SdkTransportCacheStats) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheCache_inspectNative(p0: *const R4SdkTransportCacheCache) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue114_create(p0: *mut R4SdkTransportNativeValue114, p1: *const R4SdkTransportNativeValue114) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue114_inspectNative(p0: *const R4SdkTransportNativeValue114, p1: *mut R4SdkTransportNativeValue114) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheEntry_create(p0: *mut R4SdkTransportCacheEntry) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheEntry_from_fields(p0: *mut R4SdkTransportCacheEntry, p1: *mut u8, p2: u64, p3: *const R4SdkTransportNativeValue116, p4: u64, p5: u64, p6: u64, p7: u16, p8: u8, p9: u64, p10: u64, p11: u64, p12: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheEntry_get_data(p0: *const R4SdkTransportCacheEntry) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheEntry_set_data(p0: *mut R4SdkTransportCacheEntry, p1: *mut u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheEntry_get_ends(p0: *const R4SdkTransportCacheEntry, p1: *mut R4SdkTransportNativeValue116) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheEntry_set_ends(p0: *mut R4SdkTransportCacheEntry, p1: *const R4SdkTransportNativeValue116) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheEntry_get_identity(p0: *const R4SdkTransportCacheEntry) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheEntry_set_identity(p0: *mut R4SdkTransportCacheEntry, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheEntry_get_token(p0: *const R4SdkTransportCacheEntry) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheEntry_set_token(p0: *mut R4SdkTransportCacheEntry, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheEntry_get_used(p0: *const R4SdkTransportCacheEntry) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheEntry_set_used(p0: *mut R4SdkTransportCacheEntry, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheEntry_get_pins(p0: *const R4SdkTransportCacheEntry) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheEntry_set_pins(p0: *mut R4SdkTransportCacheEntry, p1: u16) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheEntry_get_retired(p0: *const R4SdkTransportCacheEntry) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheEntry_set_retired(p0: *mut R4SdkTransportCacheEntry, p1: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheEntry_get_stored_ms(p0: *const R4SdkTransportCacheEntry) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheEntry_set_stored_ms(p0: *mut R4SdkTransportCacheEntry, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheEntry_get_initial_age_ms(p0: *const R4SdkTransportCacheEntry) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheEntry_set_initial_age_ms(p0: *mut R4SdkTransportCacheEntry, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheEntry_get_lifetime_ms(p0: *const R4SdkTransportCacheEntry) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheEntry_set_lifetime_ms(p0: *mut R4SdkTransportCacheEntry, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheEntry_get_validate(p0: *const R4SdkTransportCacheEntry) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheEntry_set_validate(p0: *mut R4SdkTransportCacheEntry, p1: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheEntry_inspectNative(p0: *const R4SdkTransportCacheEntry) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue116_create(p0: *mut R4SdkTransportNativeValue116, p1: *const R4SdkTransportNativeValue116) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue116_inspectNative(p0: *const R4SdkTransportNativeValue116, p1: *mut R4SdkTransportNativeValue116) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheHeader_create(p0: *mut R4SdkTransportCacheHeader, p1: *const u8, p2: u64, p3: *const u8, p4: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheHeader_from_fields(p0: *mut R4SdkTransportCacheHeader, p1: *const u8, p2: u64, p3: *const u8, p4: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheHeader_get_name(p0: *const R4SdkTransportCacheHeader) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheHeader_set_name(p0: *mut R4SdkTransportCacheHeader, p1: *const u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheHeader_get_value(p0: *const R4SdkTransportCacheHeader) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheHeader_set_value(p0: *mut R4SdkTransportCacheHeader, p1: *const u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheHeader_inspectNative(p0: *const R4SdkTransportCacheHeader) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheHeaderIterator_create(p0: *mut R4SdkTransportCacheHeaderIterator, p1: *const R4SdkTransportNative_mem_SplitIterator_u8__scalar_) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheHeaderIterator_from_fields(p0: *mut R4SdkTransportCacheHeaderIterator, p1: *const R4SdkTransportNative_mem_SplitIterator_u8__scalar_) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheHeaderIterator_get_lines(p0: *const R4SdkTransportCacheHeaderIterator, p1: *mut R4SdkTransportNative_mem_SplitIterator_u8__scalar_) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheHeaderIterator_set_lines(p0: *mut R4SdkTransportCacheHeaderIterator, p1: *const R4SdkTransportNative_mem_SplitIterator_u8__scalar_) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheHeaderIterator_inspectNative(p0: *const R4SdkTransportCacheHeaderIterator) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_mem_SplitIterator_u8__scalar__create(p0: *mut R4SdkTransportNative_mem_SplitIterator_u8__scalar_, p1: *const u8, p2: u64, p3: R4SdkTransportSlot, p4: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_mem_SplitIterator_u8__scalar__from_fields(p0: *mut R4SdkTransportNative_mem_SplitIterator_u8__scalar_, p1: *const u8, p2: u64, p3: R4SdkTransportSlot, p4: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_mem_SplitIterator_u8__scalar__get_buffer(p0: *const R4SdkTransportNative_mem_SplitIterator_u8__scalar_) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_mem_SplitIterator_u8__scalar__set_buffer(p0: *mut R4SdkTransportNative_mem_SplitIterator_u8__scalar_, p1: *const u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_mem_SplitIterator_u8__scalar__get_index(p0: *const R4SdkTransportNative_mem_SplitIterator_u8__scalar_) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_mem_SplitIterator_u8__scalar__set_index(p0: *mut R4SdkTransportNative_mem_SplitIterator_u8__scalar_, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_mem_SplitIterator_u8__scalar__get_delimiter(p0: *const R4SdkTransportNative_mem_SplitIterator_u8__scalar_) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_mem_SplitIterator_u8__scalar__set_delimiter(p0: *mut R4SdkTransportNative_mem_SplitIterator_u8__scalar_, p1: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_mem_SplitIterator_u8__scalar__inspectNative(p0: *const R4SdkTransportNative_mem_SplitIterator_u8__scalar_) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheDirectives_create(p0: *mut R4SdkTransportCacheDirectives) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheDirectives_from_fields(p0: *mut R4SdkTransportCacheDirectives, p1: u8, p2: u8, p3: R4SdkTransportSlot, p4: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheDirectives_get_no_store(p0: *const R4SdkTransportCacheDirectives) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheDirectives_set_no_store(p0: *mut R4SdkTransportCacheDirectives, p1: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheDirectives_get_no_cache(p0: *const R4SdkTransportCacheDirectives) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheDirectives_set_no_cache(p0: *mut R4SdkTransportCacheDirectives, p1: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheDirectives_get_max_age(p0: *const R4SdkTransportCacheDirectives) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheDirectives_set_max_age(p0: *mut R4SdkTransportCacheDirectives, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheDirectives_get_invalid_age(p0: *const R4SdkTransportCacheDirectives) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheDirectives_set_invalid_age(p0: *mut R4SdkTransportCacheDirectives, p1: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportCacheDirectives_inspectNative(p0: *const R4SdkTransportCacheDirectives) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportJobsJob_create(p0: *mut R4SdkTransportJobsJob, p1: *const R4SdkTransportWebTransport) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportJobsJob_from_fields(p0: *mut R4SdkTransportJobsJob, p1: *const R4SdkTransportWebTransport, p2: *const R4SdkTransportSessionPool, p3: *const R4SdkTransportTransportStats, p4: R4SdkTransportSlot, p5: *const R4StopFlag, p6: u32, p7: u32, p8: R4SdkTransportSlot, p9: R4SdkTransportSlot, p10: *const u8, p11: u64, p12: *mut u8, p13: u64, p14: *mut u8, p15: u64, p16: *mut u8, p17: u64, p18: *const R4SdkTransportFetchOptions, p19: *const R4SdkTransportFetchResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportJobsJob_get_transport(p0: *const R4SdkTransportJobsJob, p1: *mut R4SdkTransportWebTransport) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportJobsJob_set_transport(p0: *mut R4SdkTransportJobsJob, p1: *const R4SdkTransportWebTransport) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportJobsJob_get_sessions(p0: *const R4SdkTransportJobsJob, p1: *mut R4SdkTransportSessionPool) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportJobsJob_set_sessions(p0: *mut R4SdkTransportJobsJob, p1: *const R4SdkTransportSessionPool) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportJobsJob_get_stats(p0: *const R4SdkTransportJobsJob, p1: *mut R4SdkTransportTransportStats) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportJobsJob_set_stats(p0: *mut R4SdkTransportJobsJob, p1: *const R4SdkTransportTransportStats) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportJobsJob_get_handle(p0: *const R4SdkTransportJobsJob, p1: *mut R4SdkTransportNative_app_resources_JoinHandle) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportJobsJob_set_handle(p0: *mut R4SdkTransportJobsJob, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportJobsJob_get_stop(p0: *const R4SdkTransportJobsJob, p1: *mut R4StopFlag) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportJobsJob_set_stop(p0: *mut R4SdkTransportJobsJob, p1: *const R4StopFlag) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportJobsJob_get_done(p0: *const R4SdkTransportJobsJob) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportJobsJob_set_done(p0: *mut R4SdkTransportJobsJob, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportJobsJob_get_invocation_pending(p0: *const R4SdkTransportJobsJob) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportJobsJob_set_invocation_pending(p0: *mut R4SdkTransportJobsJob, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportJobsJob_get_invocation_context(p0: *const R4SdkTransportJobsJob) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportJobsJob_set_invocation_context(p0: *mut R4SdkTransportJobsJob, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportJobsJob_get_invocation_fn(p0: *const R4SdkTransportJobsJob) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportJobsJob_set_invocation_fn(p0: *mut R4SdkTransportJobsJob, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportJobsJob_get_url(p0: *const R4SdkTransportJobsJob) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportJobsJob_set_url(p0: *mut R4SdkTransportJobsJob, p1: *const u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportJobsJob_get_raw(p0: *const R4SdkTransportJobsJob) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportJobsJob_set_raw(p0: *mut R4SdkTransportJobsJob, p1: *mut u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportJobsJob_get_body(p0: *const R4SdkTransportJobsJob) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportJobsJob_set_body(p0: *mut R4SdkTransportJobsJob, p1: *mut u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportJobsJob_get_scratch(p0: *const R4SdkTransportJobsJob) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportJobsJob_set_scratch(p0: *mut R4SdkTransportJobsJob, p1: *mut u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportJobsJob_get_owner_options(p0: *const R4SdkTransportJobsJob, p1: *mut R4SdkTransportFetchOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportJobsJob_set_owner_options(p0: *mut R4SdkTransportJobsJob, p1: *const R4SdkTransportFetchOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportJobsJob_get_result(p0: *const R4SdkTransportJobsJob, p1: *mut R4SdkTransportFetchResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportJobsJob_set_result(p0: *mut R4SdkTransportJobsJob, p1: *const R4SdkTransportFetchResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportJobsJob_inspectNative(p0: *const R4SdkTransportJobsJob) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue123_create(p0: *mut R4SdkTransportNativeValue123, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue123_inspectNative(p0: *const R4SdkTransportNativeValue123, p1: *mut R4SdkTransportNative_app_resources_JoinHandle) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_resources_JoinHandle_create(p0: *mut R4SdkTransportNative_app_resources_JoinHandle, p1: *const R4SdkTransportNative_r4sys_Context) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_resources_JoinHandle_from_fields(p0: *mut R4SdkTransportNative_app_resources_JoinHandle, p1: *const R4SdkTransportNative_r4sys_Context, p2: *const R4ProgramJoinHandle, p3: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_resources_JoinHandle_get_sys(p0: *const R4SdkTransportNative_app_resources_JoinHandle, p1: *mut R4SdkTransportNative_r4sys_Context) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_resources_JoinHandle_set_sys(p0: *mut R4SdkTransportNative_app_resources_JoinHandle, p1: *const R4SdkTransportNative_r4sys_Context) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_resources_JoinHandle_get_handle(p0: *const R4SdkTransportNative_app_resources_JoinHandle, p1: *mut R4ProgramJoinHandle) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_resources_JoinHandle_set_handle(p0: *mut R4SdkTransportNative_app_resources_JoinHandle, p1: *const R4ProgramJoinHandle) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_resources_JoinHandle_get_owned(p0: *const R4SdkTransportNative_app_resources_JoinHandle) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_resources_JoinHandle_set_owned(p0: *mut R4SdkTransportNative_app_resources_JoinHandle, p1: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_resources_JoinHandle_inspectNative(p0: *const R4SdkTransportNative_app_resources_JoinHandle) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue126_create(p0: *mut R4SdkTransportNativeValue126, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue126_inspectNative(p0: *const R4SdkTransportNativeValue126) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsOwner_create(p0: *mut R4SdkTransportRuntimeJobsOwner, p1: R4SdkTransportSlot, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsOwner_from_fields(p0: *mut R4SdkTransportRuntimeJobsOwner, p1: R4SdkTransportSlot, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsOwner_get_context(p0: *const R4SdkTransportRuntimeJobsOwner) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsOwner_set_context(p0: *mut R4SdkTransportRuntimeJobsOwner, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsOwner_get_find(p0: *const R4SdkTransportRuntimeJobsOwner) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsOwner_set_find(p0: *mut R4SdkTransportRuntimeJobsOwner, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsOwner_inspectNative(p0: *const R4SdkTransportRuntimeJobsOwner) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_create(p0: *mut R4SdkTransportRuntimeJobsRequestJob, p1: *const R4SdkTransportJobsJob, p2: *const R4SdkTransportRuntimeJobsOwner, p3: *const R4SdkDataAllocator) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_from_fields(p0: *mut R4SdkTransportRuntimeJobsRequestJob, p1: *const R4SdkTransportJobsJob, p2: *const R4SdkTransportRuntimeJobsOwner, p3: *const R4SdkDataAllocator, p4: *mut u8, p5: u64, p6: u8, p7: u32, p8: *const R4SdkWebNativeValue629, p9: u64, p10: u32, p11: u32, p12: u32, p13: u32, p14: *const R4SdkWebNative_web_security_Origin, p15: *const R4SdkTransportNativeValue131, p16: *const R4SdkWebNativeValue226, p17: *const R4SdkWebNavigationUrl, p18: *const R4SdkTransportFetchOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_get_job(p0: *const R4SdkTransportRuntimeJobsRequestJob, p1: *mut R4SdkTransportJobsJob) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_set_job(p0: *mut R4SdkTransportRuntimeJobsRequestJob, p1: *const R4SdkTransportJobsJob) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_get_owner(p0: *const R4SdkTransportRuntimeJobsRequestJob, p1: *mut R4SdkTransportRuntimeJobsOwner) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_set_owner(p0: *mut R4SdkTransportRuntimeJobsRequestJob, p1: *const R4SdkTransportRuntimeJobsOwner) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_get_allocator(p0: *const R4SdkTransportRuntimeJobsRequestJob, p1: *mut R4SdkDataAllocator) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_set_allocator(p0: *mut R4SdkTransportRuntimeJobsRequestJob, p1: *const R4SdkDataAllocator) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_get_memory(p0: *const R4SdkTransportRuntimeJobsRequestJob) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_set_memory(p0: *mut R4SdkTransportRuntimeJobsRequestJob, p1: *mut u8, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_get_active(p0: *const R4SdkTransportRuntimeJobsRequestJob) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_set_active(p0: *mut R4SdkTransportRuntimeJobsRequestJob, p1: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_get_generation(p0: *const R4SdkTransportRuntimeJobsRequestJob) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_set_generation(p0: *mut R4SdkTransportRuntimeJobsRequestJob, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_get_ids(p0: *const R4SdkTransportRuntimeJobsRequestJob, p1: *mut R4SdkWebNativeValue629) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_set_ids(p0: *mut R4SdkTransportRuntimeJobsRequestJob, p1: *const R4SdkWebNativeValue629) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_get_count(p0: *const R4SdkTransportRuntimeJobsRequestJob) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_set_count(p0: *mut R4SdkTransportRuntimeJobsRequestJob, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_get_kind(p0: *const R4SdkTransportRuntimeJobsRequestJob) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_set_kind(p0: *mut R4SdkTransportRuntimeJobsRequestJob, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_get_mode(p0: *const R4SdkTransportRuntimeJobsRequestJob) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_set_mode(p0: *mut R4SdkTransportRuntimeJobsRequestJob, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_get_credentials(p0: *const R4SdkTransportRuntimeJobsRequestJob) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_set_credentials(p0: *mut R4SdkTransportRuntimeJobsRequestJob, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_get_cache_mode(p0: *const R4SdkTransportRuntimeJobsRequestJob) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_set_cache_mode(p0: *mut R4SdkTransportRuntimeJobsRequestJob, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_get_origin(p0: *const R4SdkTransportRuntimeJobsRequestJob, p1: *mut R4SdkWebNative_web_security_Origin) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_set_origin(p0: *mut R4SdkTransportRuntimeJobsRequestJob, p1: *const R4SdkWebNative_web_security_Origin) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_get_origin_text(p0: *const R4SdkTransportRuntimeJobsRequestJob, p1: *mut R4SdkTransportNativeValue131) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_set_origin_text(p0: *mut R4SdkTransportRuntimeJobsRequestJob, p1: *const R4SdkTransportNativeValue131) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_get_partition(p0: *const R4SdkTransportRuntimeJobsRequestJob, p1: *mut R4SdkWebNativeValue226) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_set_partition(p0: *mut R4SdkTransportRuntimeJobsRequestJob, p1: *const R4SdkWebNativeValue226) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_get_url(p0: *const R4SdkTransportRuntimeJobsRequestJob, p1: *mut R4SdkWebNavigationUrl) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_set_url(p0: *mut R4SdkTransportRuntimeJobsRequestJob, p1: *const R4SdkWebNavigationUrl) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_get_options(p0: *const R4SdkTransportRuntimeJobsRequestJob, p1: *mut R4SdkTransportFetchOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_set_options(p0: *mut R4SdkTransportRuntimeJobsRequestJob, p1: *const R4SdkTransportFetchOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_inspectNative(p0: *const R4SdkTransportRuntimeJobsRequestJob) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue131_create(p0: *mut R4SdkTransportNativeValue131, p1: *const R4SdkTransportNativeValue131) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue131_inspectNative(p0: *const R4SdkTransportNativeValue131, p1: *mut R4SdkTransportNativeValue131) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue140_create(p0: *mut R4SdkTransportNativeValue140, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue140_inspectNative(p0: *const R4SdkTransportNativeValue140) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsContext_create(p0: *mut R4SdkTransportDocumentsContext, p1: u32, p2: u32, p3: u16, p4: *const R4SdkWebNavigationUrl) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsContext_from_fields(p0: *mut R4SdkTransportDocumentsContext, p1: u32, p2: u32, p3: u16, p4: *const R4SdkWebNavigationUrl, p5: *const R4SdkWebHtmlDocument, p6: *const R4SdkWebRuntimeWebRuntime, p7: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsContext_get_parent_generation(p0: *const R4SdkTransportDocumentsContext) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsContext_set_parent_generation(p0: *mut R4SdkTransportDocumentsContext, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsContext_get_generation(p0: *const R4SdkTransportDocumentsContext) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsContext_set_generation(p0: *mut R4SdkTransportDocumentsContext, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsContext_get_node(p0: *const R4SdkTransportDocumentsContext) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsContext_set_node(p0: *mut R4SdkTransportDocumentsContext, p1: u16) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsContext_get_url(p0: *const R4SdkTransportDocumentsContext, p1: *mut R4SdkWebNavigationUrl) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsContext_set_url(p0: *mut R4SdkTransportDocumentsContext, p1: *const R4SdkWebNavigationUrl) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsContext_get_document(p0: *const R4SdkTransportDocumentsContext, p1: *mut R4SdkWebHtmlDocument) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsContext_set_document(p0: *mut R4SdkTransportDocumentsContext, p1: *const R4SdkWebHtmlDocument) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsContext_get_runtime(p0: *const R4SdkTransportDocumentsContext, p1: *mut R4SdkWebRuntimeWebRuntime) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsContext_set_runtime(p0: *mut R4SdkTransportDocumentsContext, p1: *const R4SdkWebRuntimeWebRuntime) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsContext_get_finalized(p0: *const R4SdkTransportDocumentsContext) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsContext_set_finalized(p0: *mut R4SdkTransportDocumentsContext, p1: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsContext_inspectNative(p0: *const R4SdkTransportDocumentsContext) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsSet_constructNative(p0: *mut R4SdkTransportDocumentsSet, p1: *const R4SdkDataAllocator, p2: *const R4SdkWebJsProgramAllocator, p3: *mut R4SdkWebNative_web_security_BrowserStorage) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsSet_from_fields(p0: *mut R4SdkTransportDocumentsSet, p1: *const R4SdkDataAllocator, p2: *const R4SdkWebJsProgramAllocator, p3: *mut R4SdkWebNative_web_security_BrowserStorage, p4: *const R4SdkTransportNativeValue147, p5: u32, p6: u64, p7: *const R4SdkWebJsStop, p8: u64, p9: *const R4SdkWebRuntimeEnvironment, p10: *const R4SdkWebRuntimeMonotonicClock) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsSet_get_allocator(p0: *const R4SdkTransportDocumentsSet, p1: *mut R4SdkDataAllocator) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsSet_set_allocator(p0: *mut R4SdkTransportDocumentsSet, p1: *const R4SdkDataAllocator) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsSet_get_program_allocator(p0: *const R4SdkTransportDocumentsSet, p1: *mut R4SdkWebJsProgramAllocator) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsSet_set_program_allocator(p0: *mut R4SdkTransportDocumentsSet, p1: *const R4SdkWebJsProgramAllocator) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsSet_get_storage(p0: *const R4SdkTransportDocumentsSet) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsSet_set_storage(p0: *mut R4SdkTransportDocumentsSet, p1: *mut R4SdkWebNative_web_security_BrowserStorage) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsSet_get_entries(p0: *const R4SdkTransportDocumentsSet, p1: *mut R4SdkTransportNativeValue147) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsSet_set_entries(p0: *mut R4SdkTransportDocumentsSet, p1: *const R4SdkTransportNativeValue147) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsSet_get_next_generation(p0: *const R4SdkTransportDocumentsSet) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsSet_set_next_generation(p0: *mut R4SdkTransportDocumentsSet, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsSet_get_pump_cursor(p0: *const R4SdkTransportDocumentsSet) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsSet_set_pump_cursor(p0: *mut R4SdkTransportDocumentsSet, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsSet_get_execution_stop(p0: *const R4SdkTransportDocumentsSet, p1: *mut R4SdkWebJsStop) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsSet_set_execution_stop(p0: *mut R4SdkTransportDocumentsSet, p1: *const R4SdkWebJsStop) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsSet_get_execution_step_budget(p0: *const R4SdkTransportDocumentsSet) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsSet_set_execution_step_budget(p0: *mut R4SdkTransportDocumentsSet, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsSet_get_environment(p0: *const R4SdkTransportDocumentsSet, p1: *mut R4SdkWebRuntimeEnvironment) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsSet_set_environment(p0: *mut R4SdkTransportDocumentsSet, p1: *const R4SdkWebRuntimeEnvironment) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsSet_get_monotonic_clock(p0: *const R4SdkTransportDocumentsSet, p1: *mut R4SdkWebRuntimeMonotonicClock) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsSet_set_monotonic_clock(p0: *mut R4SdkTransportDocumentsSet, p1: *const R4SdkWebRuntimeMonotonicClock) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportDocumentsSet_inspectNative(p0: *const R4SdkTransportDocumentsSet) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue147_create(p0: *mut R4SdkTransportNativeValue147, p1: *const R4SdkTransportNativeValue147) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue147_inspectNative(p0: *const R4SdkTransportNativeValue147, p1: *mut R4SdkTransportNativeValue147) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue148_create(p0: *mut R4SdkTransportNativeValue148, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue148_inspectNative(p0: *const R4SdkTransportNativeValue148) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue149_create(p0: *mut R4SdkTransportNativeValue149, p1: *mut R4SdkTransportDocumentsContext) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue149_inspectNative(p0: *const R4SdkTransportNativeValue149) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchHeaders_create(p0: *mut R4SdkTransportFetchHeaders) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchHeaders_from_fields(p0: *mut R4SdkTransportFetchHeaders, p1: *const R4SdkTransportNativeValue154, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchHeaders_get_entries(p0: *const R4SdkTransportFetchHeaders, p1: *mut R4SdkTransportNativeValue154) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchHeaders_set_entries(p0: *mut R4SdkTransportFetchHeaders, p1: *const R4SdkTransportNativeValue154) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchHeaders_get_count(p0: *const R4SdkTransportFetchHeaders) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchHeaders_set_count(p0: *mut R4SdkTransportFetchHeaders, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchHeaders_inspectNative(p0: *const R4SdkTransportFetchHeaders) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue154_create(p0: *mut R4SdkTransportNativeValue154, p1: *const R4SdkTransportNativeValue154) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue154_inspectNative(p0: *const R4SdkTransportNativeValue154, p1: *mut R4SdkTransportNativeValue154) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchHeader_create(p0: *mut R4SdkTransportFetchHeader) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchHeader_from_fields(p0: *mut R4SdkTransportFetchHeader, p1: *const R4SdkWebNativeValue164, p2: u64, p3: *const R4SdkWebNativeValue351, p4: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchHeader_get_name(p0: *const R4SdkTransportFetchHeader, p1: *mut R4SdkWebNativeValue164) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchHeader_set_name(p0: *mut R4SdkTransportFetchHeader, p1: *const R4SdkWebNativeValue164) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchHeader_get_name_len(p0: *const R4SdkTransportFetchHeader) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchHeader_set_name_len(p0: *mut R4SdkTransportFetchHeader, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchHeader_get_value(p0: *const R4SdkTransportFetchHeader, p1: *mut R4SdkWebNativeValue351) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchHeader_set_value(p0: *mut R4SdkTransportFetchHeader, p1: *const R4SdkWebNativeValue351) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchHeader_get_value_len(p0: *const R4SdkTransportFetchHeader) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchHeader_set_value_len(p0: *mut R4SdkTransportFetchHeader, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchHeader_inspectNative(p0: *const R4SdkTransportFetchHeader) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue159_create(p0: *mut R4SdkTransportNativeValue159, p1: *mut R4SdkTransportContext) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue159_inspectNative(p0: *const R4SdkTransportNativeValue159) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue160_create(p0: *mut R4SdkTransportNativeValue160, p1: *const R4XStartContext) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue160_inspectNative(p0: *const R4SdkTransportNativeValue160) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue162_create(p0: *mut R4SdkTransportNativeValue162, p1: *mut R4SdkTransportWebTransport) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue162_inspectNative(p0: *const R4SdkTransportNativeValue162) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue163_create(p0: *mut R4SdkTransportNativeValue163, p1: *mut R4SdkTransportJobsJob) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue163_inspectNative(p0: *const R4SdkTransportNativeValue163) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue164_create(p0: *mut R4SdkTransportNativeValue164, p1: *const R4SdkTransportContext) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue164_inspectNative(p0: *const R4SdkTransportNativeValue164) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue165_create(p0: *mut R4SdkTransportNativeValue165, p1: *mut R4SdkTransportRuntimeJobsRequestJob) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue165_inspectNative(p0: *const R4SdkTransportNativeValue165) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue167_inspectNative(p0: *const R4SdkTransportNativeValue167, p1: *mut R4SdkTransportRuntimeJobsOwner) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue168_create(p0: *mut R4SdkTransportNativeValue168, p1: *mut R4SdkTransportFetchOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue168_inspectNative(p0: *const R4SdkTransportNativeValue168) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue169_create(p0: *mut R4SdkTransportNativeValue169, p1: *mut R4SdkTransportDownloadOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue169_inspectNative(p0: *const R4SdkTransportNativeValue169) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue170_inspectNative(p0: *const R4SdkTransportNativeValue170, p1: *mut R4SdkTransportDownloadSink) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue172_create(p0: *mut R4SdkTransportNativeValue172, p1: *const R4SdkTransportNative_app_network_Network) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue172_inspectNative(p0: *const R4SdkTransportNativeValue172) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue173_create(p0: *mut R4SdkTransportNativeValue173, p1: *const R4SdkTransportNative_app_network_TcpSocket) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue173_inspectNative(p0: *const R4SdkTransportNativeValue173) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue174_create(p0: *mut R4SdkTransportNativeValue174, p1: *mut R4SdkTransportNative_app_network_TcpSocket) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue174_inspectNative(p0: *const R4SdkTransportNativeValue174) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_SocketIo_get_bytes(p0: *const R4SdkTransportNative_app_network_SocketIo) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_SocketIo_set_bytes(p0: *mut R4SdkTransportNative_app_network_SocketIo, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_SocketIo_get_would_block(p0: *const R4SdkTransportNative_app_network_SocketIo) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_SocketIo_set_would_block(p0: *mut R4SdkTransportNative_app_network_SocketIo) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_SocketIo_get_timed_out(p0: *const R4SdkTransportNative_app_network_SocketIo) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_SocketIo_set_timed_out(p0: *mut R4SdkTransportNative_app_network_SocketIo) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_SocketIo_get_reset(p0: *const R4SdkTransportNative_app_network_SocketIo) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_SocketIo_set_reset(p0: *mut R4SdkTransportNative_app_network_SocketIo) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_SocketIo_get_peer_closed(p0: *const R4SdkTransportNative_app_network_SocketIo) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_SocketIo_set_peer_closed(p0: *mut R4SdkTransportNative_app_network_SocketIo) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_SocketIo_get_closed(p0: *const R4SdkTransportNative_app_network_SocketIo) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_SocketIo_set_closed(p0: *mut R4SdkTransportNative_app_network_SocketIo) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_SocketIo_get_failure(p0: *const R4SdkTransportNative_app_network_SocketIo) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_SocketIo_set_failure(p0: *mut R4SdkTransportNative_app_network_SocketIo, p1: i32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_SocketIo_inspectNative(p0: *const R4SdkTransportNative_app_network_SocketIo) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative__typeInfo_app_network_SocketIo____union__tag_type___create(p0: *mut R4SdkTransportNative__typeInfo_app_network_SocketIo____union__tag_type__, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative__typeInfo_app_network_SocketIo____union__tag_type___inspectNative(p0: *const R4SdkTransportNative__typeInfo_app_network_SocketIo____union__tag_type__) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_Resolver_create(p0: *mut R4SdkTransportNative_app_network_Resolver, p1: *const R4SdkTransportNative_app_network_Network) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_Resolver_from_fields(p0: *mut R4SdkTransportNative_app_network_Resolver, p1: *const R4SdkTransportNative_app_network_Network) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_Resolver_get_network(p0: *const R4SdkTransportNative_app_network_Resolver, p1: *mut R4SdkTransportNative_app_network_Network) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_Resolver_set_network(p0: *mut R4SdkTransportNative_app_network_Resolver, p1: *const R4SdkTransportNative_app_network_Network) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_Resolver_inspectNative(p0: *const R4SdkTransportNative_app_network_Resolver) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpOpen_get_socket(p0: *const R4SdkTransportNative_app_network_TcpOpen, p1: *mut R4SdkTransportNative_app_network_TcpSocket) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpOpen_set_socket(p0: *mut R4SdkTransportNative_app_network_TcpOpen, p1: *const R4SdkTransportNative_app_network_TcpSocket) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpOpen_get_would_block(p0: *const R4SdkTransportNative_app_network_TcpOpen) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpOpen_set_would_block(p0: *mut R4SdkTransportNative_app_network_TcpOpen) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpOpen_get_timed_out(p0: *const R4SdkTransportNative_app_network_TcpOpen) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpOpen_set_timed_out(p0: *mut R4SdkTransportNative_app_network_TcpOpen) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpOpen_get_reset(p0: *const R4SdkTransportNative_app_network_TcpOpen) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpOpen_set_reset(p0: *mut R4SdkTransportNative_app_network_TcpOpen) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpOpen_get_peer_closed(p0: *const R4SdkTransportNative_app_network_TcpOpen) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpOpen_set_peer_closed(p0: *mut R4SdkTransportNative_app_network_TcpOpen) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpOpen_get_no_service(p0: *const R4SdkTransportNative_app_network_TcpOpen) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpOpen_set_no_service(p0: *mut R4SdkTransportNative_app_network_TcpOpen) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpOpen_get_failure(p0: *const R4SdkTransportNative_app_network_TcpOpen) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpOpen_set_failure(p0: *mut R4SdkTransportNative_app_network_TcpOpen, p1: i32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpOpen_inspectNative(p0: *const R4SdkTransportNative_app_network_TcpOpen) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative__typeInfo_app_network_TcpOpen____union__tag_type___create(p0: *mut R4SdkTransportNative__typeInfo_app_network_TcpOpen____union__tag_type__, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative__typeInfo_app_network_TcpOpen____union__tag_type___inspectNative(p0: *const R4SdkTransportNative__typeInfo_app_network_TcpOpen____union__tag_type__) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_ListenerOpen_get_listener(p0: *const R4SdkTransportNative_app_network_ListenerOpen, p1: *mut R4SdkTransportNative_app_network_TcpListener) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_ListenerOpen_set_listener(p0: *mut R4SdkTransportNative_app_network_ListenerOpen, p1: *const R4SdkTransportNative_app_network_TcpListener) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_ListenerOpen_get_timed_out(p0: *const R4SdkTransportNative_app_network_ListenerOpen) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_ListenerOpen_set_timed_out(p0: *mut R4SdkTransportNative_app_network_ListenerOpen) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_ListenerOpen_get_no_service(p0: *const R4SdkTransportNative_app_network_ListenerOpen) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_ListenerOpen_set_no_service(p0: *mut R4SdkTransportNative_app_network_ListenerOpen) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_ListenerOpen_get_failure(p0: *const R4SdkTransportNative_app_network_ListenerOpen) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_ListenerOpen_set_failure(p0: *mut R4SdkTransportNative_app_network_ListenerOpen, p1: i32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_ListenerOpen_inspectNative(p0: *const R4SdkTransportNative_app_network_ListenerOpen) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative__typeInfo_app_network_ListenerOpen____union__tag_type___create(p0: *mut R4SdkTransportNative__typeInfo_app_network_ListenerOpen____union__tag_type__, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative__typeInfo_app_network_ListenerOpen____union__tag_type___inspectNative(p0: *const R4SdkTransportNative__typeInfo_app_network_ListenerOpen____union__tag_type__) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpListener_create(p0: *mut R4SdkTransportNative_app_network_TcpListener, p1: *const R4SdkTransportNative_app_network_Network) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpListener_from_fields(p0: *mut R4SdkTransportNative_app_network_TcpListener, p1: *const R4SdkTransportNative_app_network_Network, p2: u16, p3: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpListener_get_network(p0: *const R4SdkTransportNative_app_network_TcpListener, p1: *mut R4SdkTransportNative_app_network_Network) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpListener_set_network(p0: *mut R4SdkTransportNative_app_network_TcpListener, p1: *const R4SdkTransportNative_app_network_Network) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpListener_get_port(p0: *const R4SdkTransportNative_app_network_TcpListener) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpListener_set_port(p0: *mut R4SdkTransportNative_app_network_TcpListener, p1: u16) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpListener_get_owned(p0: *const R4SdkTransportNative_app_network_TcpListener) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpListener_set_owned(p0: *mut R4SdkTransportNative_app_network_TcpListener, p1: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpListener_inspectNative(p0: *const R4SdkTransportNative_app_network_TcpListener) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpOpen_get_socket(p0: *const R4SdkTransportNative_app_network_UdpOpen, p1: *mut R4SdkTransportNative_app_network_UdpSocket) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpOpen_set_socket(p0: *mut R4SdkTransportNative_app_network_UdpOpen, p1: *const R4SdkTransportNative_app_network_UdpSocket) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpOpen_get_timed_out(p0: *const R4SdkTransportNative_app_network_UdpOpen) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpOpen_set_timed_out(p0: *mut R4SdkTransportNative_app_network_UdpOpen) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpOpen_get_no_service(p0: *const R4SdkTransportNative_app_network_UdpOpen) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpOpen_set_no_service(p0: *mut R4SdkTransportNative_app_network_UdpOpen) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpOpen_get_failure(p0: *const R4SdkTransportNative_app_network_UdpOpen) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpOpen_set_failure(p0: *mut R4SdkTransportNative_app_network_UdpOpen, p1: i32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpOpen_inspectNative(p0: *const R4SdkTransportNative_app_network_UdpOpen) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative__typeInfo_app_network_UdpOpen____union__tag_type___create(p0: *mut R4SdkTransportNative__typeInfo_app_network_UdpOpen____union__tag_type__, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative__typeInfo_app_network_UdpOpen____union__tag_type___inspectNative(p0: *const R4SdkTransportNative__typeInfo_app_network_UdpOpen____union__tag_type__) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpSocket_create(p0: *mut R4SdkTransportNative_app_network_UdpSocket, p1: *const R4SdkTransportNative_app_network_Network) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpSocket_from_fields(p0: *mut R4SdkTransportNative_app_network_UdpSocket, p1: *const R4SdkTransportNative_app_network_Network, p2: u32, p3: u8, p4: u16) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpSocket_get_network(p0: *const R4SdkTransportNative_app_network_UdpSocket, p1: *mut R4SdkTransportNative_app_network_Network) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpSocket_set_network(p0: *mut R4SdkTransportNative_app_network_UdpSocket, p1: *const R4SdkTransportNative_app_network_Network) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpSocket_get_raw(p0: *const R4SdkTransportNative_app_network_UdpSocket) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpSocket_set_raw(p0: *mut R4SdkTransportNative_app_network_UdpSocket, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpSocket_get_owned(p0: *const R4SdkTransportNative_app_network_UdpSocket) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpSocket_set_owned(p0: *mut R4SdkTransportNative_app_network_UdpSocket, p1: u8) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpSocket_get_local_port(p0: *const R4SdkTransportNative_app_network_UdpSocket) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpSocket_set_local_port(p0: *mut R4SdkTransportNative_app_network_UdpSocket, p1: u16) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpSocket_inspectNative(p0: *const R4SdkTransportNative_app_network_UdpSocket) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue186_create(p0: *mut R4SdkTransportNativeValue186, p1: *const R4SdkTransportFinalUrl) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue186_inspectNative(p0: *const R4SdkTransportNativeValue186) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue187_create(p0: *mut R4SdkTransportNativeValue187, p1: *const R4SdkTransportWebTransport) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue187_inspectNative(p0: *const R4SdkTransportNativeValue187) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue188_create(p0: *mut R4SdkTransportNativeValue188, p1: *mut R4SdkTransportHttpResponseDecoder) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue188_inspectNative(p0: *const R4SdkTransportNativeValue188) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue189_create(p0: *mut R4SdkTransportNativeValue189, p1: *const R4SdkTransportHttpStreamDecoder) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue189_inspectNative(p0: *const R4SdkTransportNativeValue189) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue190_create(p0: *mut R4SdkTransportNativeValue190, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue190_inspectNative(p0: *const R4SdkTransportNativeValue190, p1: *mut R4SdkTransportHttpStreamResponse) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue191_create(p0: *mut R4SdkTransportNativeValue191, p1: *mut R4SdkTransportHttpStreamDecoder) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue191_inspectNative(p0: *const R4SdkTransportNativeValue191) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue192_create(p0: *mut R4SdkTransportNativeValue192, p1: *mut R4SdkTransportCacheCache) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue192_inspectNative(p0: *const R4SdkTransportNativeValue192) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue193_create(p0: *mut R4SdkTransportNativeValue193, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue193_inspectNative(p0: *const R4SdkTransportNativeValue193, p1: *mut R4SdkTransportCacheView) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue194_inspectNative(p0: *const R4SdkTransportNativeValue194) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue195_create(p0: *mut R4SdkTransportNativeValue195, p1: *mut R4SdkTransportCacheHeaderIterator) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue195_inspectNative(p0: *const R4SdkTransportNativeValue195) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue196_create(p0: *mut R4SdkTransportNativeValue196, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue196_inspectNative(p0: *const R4SdkTransportNativeValue196, p1: *mut R4SdkTransportCacheHeader) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue197_create(p0: *mut R4SdkTransportNativeValue197, p1: *mut R4SdkTransportNative_mem_SplitIterator_u8__scalar_) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue197_inspectNative(p0: *const R4SdkTransportNativeValue197) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue198_create(p0: *mut R4SdkTransportNativeValue198, p1: *const R4SdkTransportNative_mem_SplitIterator_u8__scalar_) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue198_inspectNative(p0: *const R4SdkTransportNativeValue198) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue199_create(p0: *mut R4SdkTransportNativeValue199, p1: *const R4SdkTransportNative_app_resources_JoinHandle) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue199_inspectNative(p0: *const R4SdkTransportNativeValue199) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue200_create(p0: *mut R4SdkTransportNativeValue200, p1: *mut R4ThreadPlacementInfo) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue200_inspectNative(p0: *const R4SdkTransportNativeValue200) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue202_create(p0: *mut R4SdkTransportNativeValue202, p1: *mut u64, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue202_inspectNative(p0: *const R4SdkTransportNativeValue202) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue203_create(p0: *mut R4SdkTransportNativeValue203, p1: *const R4ThreadPlacementRequest) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue203_inspectNative(p0: *const R4SdkTransportNativeValue203) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_resources_ThreadInfo_get_value(p0: *const R4SdkTransportNative_app_resources_ThreadInfo, p1: *mut R4ProgramThreadInfo) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_resources_ThreadInfo_set_value(p0: *mut R4SdkTransportNative_app_resources_ThreadInfo, p1: *const R4ProgramThreadInfo) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_resources_ThreadInfo_get_failure(p0: *const R4SdkTransportNative_app_resources_ThreadInfo) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_resources_ThreadInfo_set_failure(p0: *mut R4SdkTransportNative_app_resources_ThreadInfo, p1: i32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_resources_ThreadInfo_inspectNative(p0: *const R4SdkTransportNative_app_resources_ThreadInfo) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative__typeInfo_app_resources_ThreadInfo____union__tag_type___create(p0: *mut R4SdkTransportNative__typeInfo_app_resources_ThreadInfo____union__tag_type__, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative__typeInfo_app_resources_ThreadInfo____union__tag_type___inspectNative(p0: *const R4SdkTransportNative__typeInfo_app_resources_ThreadInfo____union__tag_type__) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue209_create(p0: *mut R4SdkTransportNativeValue209, p1: *mut R4SdkTransportNative_app_resources_JoinHandle) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue209_inspectNative(p0: *const R4SdkTransportNativeValue209) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_resources_JoinWait_get_exited(p0: *const R4SdkTransportNative_app_resources_JoinWait) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_resources_JoinWait_set_exited(p0: *mut R4SdkTransportNative_app_resources_JoinWait, p1: i32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_resources_JoinWait_get_timed_out(p0: *const R4SdkTransportNative_app_resources_JoinWait) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_resources_JoinWait_set_timed_out(p0: *mut R4SdkTransportNative_app_resources_JoinWait) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_resources_JoinWait_get_failure(p0: *const R4SdkTransportNative_app_resources_JoinWait) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_resources_JoinWait_set_failure(p0: *mut R4SdkTransportNative_app_resources_JoinWait, p1: i32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_resources_JoinWait_inspectNative(p0: *const R4SdkTransportNative_app_resources_JoinWait) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative__typeInfo_app_resources_JoinWait____union__tag_type___create(p0: *mut R4SdkTransportNative__typeInfo_app_resources_JoinWait____union__tag_type__, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative__typeInfo_app_resources_JoinWait____union__tag_type___inspectNative(p0: *const R4SdkTransportNative__typeInfo_app_resources_JoinWait____union__tag_type__) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue214_inspectNative(p0: *const R4SdkTransportNativeValue214) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue215_create(p0: *mut R4SdkTransportNativeValue215, p1: *mut R4SdkTransportDocumentsSet) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue215_inspectNative(p0: *const R4SdkTransportNativeValue215) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue218_inspectNative(p0: *const R4SdkTransportNativeValue218) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue219_create(p0: *mut R4SdkTransportNativeValue219, p1: *const R4SdkTransportDocumentsSet) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue219_inspectNative(p0: *const R4SdkTransportNativeValue219) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue221_inspectNative(p0: *const R4SdkTransportNativeValue221) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue222_inspectNative(p0: *const R4SdkTransportNativeValue222, p1: *mut R4SdkTransportFetchHeaders) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue223_create(p0: *mut R4SdkTransportNativeValue223, p1: *mut R4SdkTransportFetchHeaders) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue223_inspectNative(p0: *const R4SdkTransportNativeValue223) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue224_inspectNative(p0: *const R4SdkTransportNativeValue224) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue225_create(p0: *mut R4SdkTransportNativeValue225, p1: *const R4SdkTransportFetchHeaders) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue225_inspectNative(p0: *const R4SdkTransportNativeValue225) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue226_inspectNative(p0: *const R4SdkTransportNativeValue226) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue227_inspectNative(p0: *const R4SdkTransportNativeValue227) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue228_create(p0: *mut R4SdkTransportNativeValue228, p1: *mut R4SdkTransportNativeValue229) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue228_inspectNative(p0: *const R4SdkTransportNativeValue228) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue229_create(p0: *mut R4SdkTransportNativeValue229, p1: *const R4SdkTransportNativeValue229) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue229_inspectNative(p0: *const R4SdkTransportNativeValue229, p1: *mut R4SdkTransportNativeValue229) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue230_inspectNative(p0: *const R4SdkTransportNativeValue230) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue231_create(p0: *mut R4SdkTransportNativeValue231, p1: *mut R4SdkTransportNativeValue232) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue231_inspectNative(p0: *const R4SdkTransportNativeValue231) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue232_create(p0: *mut R4SdkTransportNativeValue232, p1: *const R4SdkTransportNativeValue232) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue232_inspectNative(p0: *const R4SdkTransportNativeValue232, p1: *mut R4SdkTransportNativeValue232) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue233_create(p0: *mut R4SdkTransportNativeValue233, p1: *const u64, p2: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue233_inspectNative(p0: *const R4SdkTransportNativeValue233) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue234_create(p0: *mut R4SdkTransportNativeValue234, p1: *mut R4SdkTransportNative_app_network_Resolver) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue234_inspectNative(p0: *const R4SdkTransportNativeValue234) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue235_create(p0: *mut R4SdkTransportNativeValue235, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue235_inspectNative(p0: *const R4SdkTransportNativeValue235, p1: *mut R4SdkTransportNative_app_network_Ipv4Address) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_ResolveResult_get_address(p0: *const R4SdkTransportNative_app_network_ResolveResult, p1: *mut R4SdkTransportNative_app_network_Ipv4Address) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_ResolveResult_set_address(p0: *mut R4SdkTransportNative_app_network_ResolveResult, p1: *const R4SdkTransportNative_app_network_Ipv4Address) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_ResolveResult_get_timed_out(p0: *const R4SdkTransportNative_app_network_ResolveResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_ResolveResult_set_timed_out(p0: *mut R4SdkTransportNative_app_network_ResolveResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_ResolveResult_get_not_found(p0: *const R4SdkTransportNative_app_network_ResolveResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_ResolveResult_set_not_found(p0: *mut R4SdkTransportNative_app_network_ResolveResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_ResolveResult_get_no_service(p0: *const R4SdkTransportNative_app_network_ResolveResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_ResolveResult_set_no_service(p0: *mut R4SdkTransportNative_app_network_ResolveResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_ResolveResult_get_failure(p0: *const R4SdkTransportNative_app_network_ResolveResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_ResolveResult_set_failure(p0: *mut R4SdkTransportNative_app_network_ResolveResult, p1: i32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_ResolveResult_inspectNative(p0: *const R4SdkTransportNative_app_network_ResolveResult) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative__typeInfo_app_network_ResolveResult____union__tag_type___create(p0: *mut R4SdkTransportNative__typeInfo_app_network_ResolveResult____union__tag_type__, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative__typeInfo_app_network_ResolveResult____union__tag_type___inspectNative(p0: *const R4SdkTransportNative__typeInfo_app_network_ResolveResult____union__tag_type__) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue238_create(p0: *mut R4SdkTransportNativeValue238, p1: *const R4SdkTransportNative_app_network_TcpListener) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue238_inspectNative(p0: *const R4SdkTransportNativeValue238) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue239_create(p0: *mut R4SdkTransportNativeValue239, p1: *mut R4SdkTransportNative_app_network_TcpListener) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue239_inspectNative(p0: *const R4SdkTransportNativeValue239) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpAccept_get_socket(p0: *const R4SdkTransportNative_app_network_TcpAccept, p1: *mut R4SdkTransportNative_app_network_TcpSocket) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpAccept_set_socket(p0: *mut R4SdkTransportNative_app_network_TcpAccept, p1: *const R4SdkTransportNative_app_network_TcpSocket) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpAccept_get_would_block(p0: *const R4SdkTransportNative_app_network_TcpAccept) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpAccept_set_would_block(p0: *mut R4SdkTransportNative_app_network_TcpAccept) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpAccept_get_timed_out(p0: *const R4SdkTransportNative_app_network_TcpAccept) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpAccept_set_timed_out(p0: *mut R4SdkTransportNative_app_network_TcpAccept) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpAccept_get_reset(p0: *const R4SdkTransportNative_app_network_TcpAccept) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpAccept_set_reset(p0: *mut R4SdkTransportNative_app_network_TcpAccept) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpAccept_get_closed(p0: *const R4SdkTransportNative_app_network_TcpAccept) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpAccept_set_closed(p0: *mut R4SdkTransportNative_app_network_TcpAccept) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpAccept_get_no_service(p0: *const R4SdkTransportNative_app_network_TcpAccept) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpAccept_set_no_service(p0: *mut R4SdkTransportNative_app_network_TcpAccept) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpAccept_get_failure(p0: *const R4SdkTransportNative_app_network_TcpAccept) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpAccept_set_failure(p0: *mut R4SdkTransportNative_app_network_TcpAccept, p1: i32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_TcpAccept_inspectNative(p0: *const R4SdkTransportNative_app_network_TcpAccept) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative__typeInfo_app_network_TcpAccept____union__tag_type___create(p0: *mut R4SdkTransportNative__typeInfo_app_network_TcpAccept____union__tag_type__, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative__typeInfo_app_network_TcpAccept____union__tag_type___inspectNative(p0: *const R4SdkTransportNative__typeInfo_app_network_TcpAccept____union__tag_type__) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue242_create(p0: *mut R4SdkTransportNativeValue242, p1: *const R4SdkTransportNative_app_network_UdpSocket) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue242_inspectNative(p0: *const R4SdkTransportNativeValue242) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue243_create(p0: *mut R4SdkTransportNativeValue243, p1: *mut R4SdkTransportNative_app_network_UdpSocket) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNativeValue243_inspectNative(p0: *const R4SdkTransportNativeValue243) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpReceive_get_datagram(p0: *const R4SdkTransportNative_app_network_UdpReceive, p1: *mut R4SdkTransportNative_app_network_Datagram) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpReceive_set_datagram(p0: *mut R4SdkTransportNative_app_network_UdpReceive, p1: *const R4SdkTransportNative_app_network_Datagram) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpReceive_get_would_block(p0: *const R4SdkTransportNative_app_network_UdpReceive) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpReceive_set_would_block(p0: *mut R4SdkTransportNative_app_network_UdpReceive) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpReceive_get_timed_out(p0: *const R4SdkTransportNative_app_network_UdpReceive) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpReceive_set_timed_out(p0: *mut R4SdkTransportNative_app_network_UdpReceive) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpReceive_get_reset(p0: *const R4SdkTransportNative_app_network_UdpReceive) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpReceive_set_reset(p0: *mut R4SdkTransportNative_app_network_UdpReceive) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpReceive_get_peer_closed(p0: *const R4SdkTransportNative_app_network_UdpReceive) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpReceive_set_peer_closed(p0: *mut R4SdkTransportNative_app_network_UdpReceive) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpReceive_get_closed(p0: *const R4SdkTransportNative_app_network_UdpReceive) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpReceive_set_closed(p0: *mut R4SdkTransportNative_app_network_UdpReceive) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpReceive_get_no_service(p0: *const R4SdkTransportNative_app_network_UdpReceive) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpReceive_set_no_service(p0: *mut R4SdkTransportNative_app_network_UdpReceive) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpReceive_get_failure(p0: *const R4SdkTransportNative_app_network_UdpReceive) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpReceive_set_failure(p0: *mut R4SdkTransportNative_app_network_UdpReceive, p1: i32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_UdpReceive_inspectNative(p0: *const R4SdkTransportNative_app_network_UdpReceive) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative__typeInfo_app_network_UdpReceive____union__tag_type___create(p0: *mut R4SdkTransportNative__typeInfo_app_network_UdpReceive____union__tag_type__, p1: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative__typeInfo_app_network_UdpReceive____union__tag_type___inspectNative(p0: *const R4SdkTransportNative__typeInfo_app_network_UdpReceive____union__tag_type__) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_Datagram_create(p0: *mut R4SdkTransportNative_app_network_Datagram, p1: *const R4SdkTransportNative_app_network_SocketAddress, p2: *const R4SdkTransportNative_app_network_SocketAddress, p3: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_Datagram_from_fields(p0: *mut R4SdkTransportNative_app_network_Datagram, p1: *const R4SdkTransportNative_app_network_SocketAddress, p2: *const R4SdkTransportNative_app_network_SocketAddress, p3: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_Datagram_get_source(p0: *const R4SdkTransportNative_app_network_Datagram, p1: *mut R4SdkTransportNative_app_network_SocketAddress) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_Datagram_set_source(p0: *mut R4SdkTransportNative_app_network_Datagram, p1: *const R4SdkTransportNative_app_network_SocketAddress) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_Datagram_get_destination(p0: *const R4SdkTransportNative_app_network_Datagram, p1: *mut R4SdkTransportNative_app_network_SocketAddress) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_Datagram_set_destination(p0: *mut R4SdkTransportNative_app_network_Datagram, p1: *const R4SdkTransportNative_app_network_SocketAddress) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_Datagram_get_bytes(p0: *const R4SdkTransportNative_app_network_Datagram) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_Datagram_set_bytes(p0: *mut R4SdkTransportNative_app_network_Datagram, p1: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportNative_app_network_Datagram_inspectNative(p0: *const R4SdkTransportNative_app_network_Datagram) -> R4SdkTransportSlot;
     pub fn R4SdkAppFacade(p0: *const R4XStartContext, p1: *mut R4App) -> i32;
     pub fn R4SdkFilePath(p0: *const u8, p1: u64, p2: i32, p3: *mut u8, p4: u64, p5: *mut u16, p6: *mut u8) -> i32;
     pub fn R4SdkRegistryPath(p0: *const u8, p1: u64, p2: *mut u8, p3: u64, p4: *mut u16) -> i32;

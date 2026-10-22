@@ -3,4 +3,5 @@
 test {
     _ = @import("Tests/Simulation/DataOwners.zig");
     _ = @import("Tests/Simulation/WebOwners.zig");
+    _ = @import("Tests/Simulation/TransportOwners.zig");
 }

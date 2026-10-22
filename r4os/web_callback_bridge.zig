@@ -37,6 +37,13 @@ pub const Kind = enum(u6) {
     frame_lookup,
     script_report,
     monotonic_clock,
+    network_progress,
+    cookie_provider,
+    cookie_sink,
+    target_authorize,
+    download_progress,
+    download_write,
+    runtime_lookup,
 };
 pub const Table = extern struct {
     user: ?*anyopaque = null,
@@ -109,32 +116,32 @@ pub fn Adapter(comptime Pointer: type, comptime context_index: usize, comptime k
     };
     return switch (info.params.len) {
         1 => struct {
-            pub fn call(a: P.at(0)) R {
+            pub fn call(a: P.at(0)) callconv(info.calling_convention) R {
                 return dispatch(F, context_index, kind, .{a});
             }
         },
         2 => struct {
-            pub fn call(a: P.at(0), b: P.at(1)) R {
+            pub fn call(a: P.at(0), b: P.at(1)) callconv(info.calling_convention) R {
                 return dispatch(F, context_index, kind, .{ a, b });
             }
         },
         3 => struct {
-            pub fn call(a: P.at(0), b: P.at(1), c: P.at(2)) R {
+            pub fn call(a: P.at(0), b: P.at(1), c: P.at(2)) callconv(info.calling_convention) R {
                 return dispatch(F, context_index, kind, .{ a, b, c });
             }
         },
         4 => struct {
-            pub fn call(a: P.at(0), b: P.at(1), c: P.at(2), d: P.at(3)) R {
+            pub fn call(a: P.at(0), b: P.at(1), c: P.at(2), d: P.at(3)) callconv(info.calling_convention) R {
                 return dispatch(F, context_index, kind, .{ a, b, c, d });
             }
         },
         5 => struct {
-            pub fn call(a: P.at(0), b: P.at(1), c: P.at(2), d: P.at(3), e: P.at(4)) R {
+            pub fn call(a: P.at(0), b: P.at(1), c: P.at(2), d: P.at(3), e: P.at(4)) callconv(info.calling_convention) R {
                 return dispatch(F, context_index, kind, .{ a, b, c, d, e });
             }
         },
         6 => struct {
-            pub fn call(a: P.at(0), b: P.at(1), c: P.at(2), d: P.at(3), e: P.at(4), f: P.at(5)) R {
+            pub fn call(a: P.at(0), b: P.at(1), c: P.at(2), d: P.at(3), e: P.at(4), f: P.at(5)) callconv(info.calling_convention) R {
                 return dispatch(F, context_index, kind, .{ a, b, c, d, e, f });
             }
         },

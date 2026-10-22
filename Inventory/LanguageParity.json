@@ -914,19 +914,29 @@
       "semantics": "Origin/Redirect/TLS-/Zertifikats-/Entropiepolitik, begrenzte Jobs/Queues, Cancel/Deadline, Cacheidentitaet und Download-/Dokumentbesitz bis echten Abschluss erhalten.",
       "current_only": "current_function",
       "rust": {
-        "state": "missing_higher_facade",
-        "source": "Repositories/SDK/Rust/src/lib.rs",
-        "gap": "HTTP, Web-Transport, Fetch, Jobs, Cache und Sicherheit als gleichwertige typisierte Rust-Fassade mit denselben Fehler-/Besitz-/Waitregeln ergaenzen."
+        "state": "original_transport_helpers_qualified",
+        "source": "Repositories/SDK/Rust/src/web/transport/mod.rs",
+        "raw": "Repositories/SDK/Rust/src/c_facades.rs",
+        "gap": ""
       },
       "c": {
-        "state": "missing_higher_facade",
-        "sources": [],
-        "gap": "Kein entsprechender hoeherer C-Einstieg im SDK-Headerbestand; gleiche Fachfunktion bereitstellen."
+        "state": "original_transport_helpers_qualified",
+        "sources": [
+          "Repositories/SDK/Shared/C/include/r4os/transport_helpers.h"
+        ],
+        "gap": ""
       },
       "evidence": [
-        "source_inventory"
+        "source_inventory",
+        "transport_current_63"
       ],
-      "shared_core": "Existierende Transport-/Ressourcen-/Jobkerne sprachneutral nutzen; Parser-/URL-/Encodingkerne aus61/62 wiederverwenden."
+      "shared_core": "Existierende Transport-/Ressourcen-/Jobkerne sprachneutral nutzen; Parser-/URL-/Encodingkerne aus61/62 wiederverwenden.",
+      "qualification": {
+        "performed_in": "0.86.63",
+        "sdk": "0.64.82",
+        "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.63",
+        "scope": "All nine current transport/fetch/cache/job/resource/document/security modules execute their original owners. Existing URL/encoding/crypto61 and canonical web62 types are reused. Safe Rust synchronous buffers, cache leases and fully owned worker jobs; advanced native operations retain explicit unsafe loans through exact collect/release."
+      }
     },
     {
       "id": "update-storage",
@@ -47847,6 +47857,163 @@
       },
       "kernel": "0.1.381 unchanged; STANDARD BOOT SHA256 e06111b9363b44712fe69ded9ddfc3edb1f60c5c271c59a42238a816b0882340",
       "benchmark_image_source_sha256": "a6bf70060d144ea14290528045adffe8281f48f0dbb6891e1fc507e97f51a703"
+    },
+    "transport_current_63": {
+      "kind": "original_transport_owners_native_Rust_C_and_controlled_real_KVM_SMP4",
+      "performed_in": "0.86.63",
+      "sdk": "0.64.82",
+      "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.63",
+      "scope": "All nine current transport/fetch/cache/job/resource/document/security modules execute their original owners. Existing URL/encoding/crypto61 and canonical web62 types are reused. Safe Rust synchronous buffers, cache leases and fully owned worker jobs; advanced native operations retain explicit unsafe loans through exact collect/release.",
+      "projection": {
+        "types": 247,
+        "functions": 120,
+        "c_inline_operations": 1234,
+        "rust_transport_and_operations": 1239,
+        "missing_c_operations_in_rust": [],
+        "native_fingerprint": 3079459800984226674,
+        "web_fingerprint": 4238743141405319170,
+        "data_fingerprint": 17129968839081907690,
+        "former_rust_declarations": "All former declarations retained; only old web fingerprint value intentionally changes for appended callback kinds31-37. Shared native types/names and table/Slot layout unchanged."
+      },
+      "callbacks": "38 total kinds, seven transport additions: progress, cookie provider/sink, target authorization, download progress/write, generation lookup. Exact original C versus Zig calling convention is preserved; no foreign function-pointer cast to Zig ABI. Stable descriptor/user/allocator/buffer ownership until actual synchronous return or async collect.",
+      "rust_ownership": "Safe Job owns boxed native/context and all heap request/response/scratch addresses. Drop cancels, services owner invocations and joins; mem::forget leaks backing rather than invalidating worker loans. Cancel alone does not release storage. Borrowed/custom-callback jobs and RequestJob remain typed unsafe; runtime lookup is generation-checked and never retains a Runtime pointer across worker I/O.",
+      "fixes": [
+        "C/Rust normal app startup binds the same original secure_random module-local provider as Zig, after declared validation and before main/workers. Only optional resident function pointers are copied. Manual/raw starts must explicitly bind before workers; raw-entry role remains69. No per-request global switching or substitute entropy.",
+        "Compile-exposed Ipv4Address.isUnspecified compares bytes via std.mem.eql; old public array == expression did not compile when used. C zero/nonzero regression passes.",
+        "Real Documents.Set.create no longer collides with storage-only construction: only colliding native type constructors use _constructNative. Extern-union scalar fields retain normal scalar decoding."
+      ],
+      "checks": {
+        "original_owner_cases": 25,
+        "includes_same_package_collectors": true,
+        "native_rust_c_cases": 4,
+        "actual_compiler_negatives": [
+          "E0133",
+          "E0499",
+          "E0505",
+          "E0277",
+          "E0502"
+        ],
+        "projections": "Fresh data/web/transport schema checks, complete C-to-Rust projection and warning-free final Clippy. Handwritten Zig formatting; generated fingerprint text is checked by its generator.",
+        "native_cases": "C incremental chunk/abort/cache pinned-retirement/download callback/IPv4; Rust cache lease invalidation, truncated decoder/cancel; controlled resident entropy source copied at startup with exact129-byte max64 chunking then provider absence restored.",
+        "functional": "Actual guest partial100+chunked reply, redirect, Cookie provider/sink, forbidden redirect target never opened, owner-thread cookie/target callbacks from real worker, TLS protocol-version alert via real original R4TLS dispatch, 200000 exact retained download bytes with one resume at50000, truncated GET retried once, absolute timeout, synchronous cancellation before network, safe owned job result/cancel/drop, stale document-generation RequestJob cancellation and exact memory release; final active heap balance.",
+        "server_oracles": {
+          "forbidden_not_opened": true,
+          "cancelled_sync_not_opened": true,
+          "download_resume": "bytes=50000-",
+          "truncated_get_attempts": 2,
+          "tls_protocol_version_alert": true
+        },
+        "request_count": 12
+      },
+      "consumer": {
+        "file": "TRANSPROBE.R4X",
+        "bytes": 12531083,
+        "sha256": "611333352e02720f0bdbde6b4b905398430b574cbea4564b3f019d2203842371",
+        "readback": "exact TR63A.R4X bytes",
+        "exit": 0,
+        "result": "PASS TRANSPORT63 C parser/cache/callback/IPv4\nPASS TRANSPORT63 C cookies/target policy/owner-thread callbacks/TLS alert/200000-byte resume\nPASS TRANSPORT63 Rust case=0\nPASS TRANSPORT63 Rust case=1\nPASS TRANSPORT63 Rust case=2\nPASS TRANSPORT63 Rust/C exact worker join, generation cancellation and heap release"
+      },
+      "guest": "Full0.86.42/Kernel0.1.381/KVM/SMP4, current embedded SDK82, browser profile, IMAGE_SCOPE=none. Counterpart local Python stdlib on host loopback via SLIRP10.0.2.2; no external server. Own module deleted and regular shutdown0; own guest/server environments disposable.",
+      "limits": "No TLS certificate/hostname/clock/hardware RNG, external-site interoperability, browser speed, physical network/GPU/Windows or direct Rust FP/SIMD qualification. Original certificate/security decisions are reused, not weakened. No physical hardware update or Full/Slim publication.",
+      "sdk_runtimes": {
+        "facades": {
+          "sha256": "3b2320894f7b7c893604db7f40893922bd0517b2a7a34efbd3a6e665c328eb7f",
+          "bytes": 14903144,
+          "path": "Runtime/r4sdk_facades.o"
+        },
+        "storage": {
+          "sha256": "35eaf02dc8f6cb3b1aa583f28b1ddf6809010f6c4cfe740e7d8639b33635564d",
+          "bytes": 36698928,
+          "path": "Runtime/r4sdk_storage.o"
+        }
+      },
+      "current_sources": [
+        {
+          "path": "Repositories/SDK/r4os/native_value_bridge.zig",
+          "sha256": "4407f5c3909ecdc2d8eecd4163ff810ca0c7cb38aef0ccc92d54c9cc29105d84"
+        },
+        {
+          "path": "Repositories/SDK/r4os/transport_helper_owners.zig",
+          "sha256": "b2f9c7e9d944a9fdf8945e566fe6930e90fddf41ae90af01d94801751aaa36f0"
+        },
+        {
+          "path": "Repositories/SDK/r4os/transport_helper_adapters.zig",
+          "sha256": "9a8fb068b30fa475d5c948ab0424fd00cdaa7b299fae193924f898144ab53212"
+        },
+        {
+          "path": "Repositories/SDK/r4os/transport_bridge_schema.zig",
+          "sha256": "7e9a90b335bee012ac2c6cec8504c976003e0e81714939bb286a0f6636459a84"
+        },
+        {
+          "path": "Repositories/SDK/r4os/transport_bridge_names.zig",
+          "sha256": "b34e1267502fa29a31b359fd8c7fd7c5b8edf8303eca744f7300d3313ef703e3"
+        },
+        {
+          "path": "Repositories/SDK/r4os/transport_value_bridge.zig",
+          "sha256": "fd0765b53105629edf355b0e13d3393076acdffaf0729624e35ee8bde5d6c13d"
+        },
+        {
+          "path": "Repositories/SDK/r4os/web_callback_bridge.zig",
+          "sha256": "ff0d6493123c783c8b5994a73ef9a0cabbf3cb86cb24ad203937292e8e5b3e79"
+        },
+        {
+          "path": "Repositories/SDK/r4os/runtime_bootstrap.zig",
+          "sha256": "0474c718dc998c765349a2bd42f683b55b2f0f37f8049f5b5de267213595a6cd"
+        },
+        {
+          "path": "Repositories/SDK/r4os/app_network.zig",
+          "sha256": "078640afde6f5309467a4916cb97343241f73a7c60995004659678ff7e17255d"
+        },
+        {
+          "path": "Repositories/SDK/Tools/DataBridgeGen/src/c_header.zig",
+          "sha256": "10553af307afd5d51e3b58f1932e05a5d5b181c0a3dc03cddaef4c0a51630a86"
+        },
+        {
+          "path": "Repositories/SDK/Shared/C/include/r4os/transport_helpers.h",
+          "sha256": "6bea254ab937f76525aa3d8cd460bec83addb2f2f8450a481ecc66d9e45688fb"
+        },
+        {
+          "path": "Repositories/SDK/Shared/C/include/r4os/web_helpers.h",
+          "sha256": "644bd50d6e6e61fd3640249c894bc8e22655c2f6d9b7fd13d2f43957c201dd3d"
+        },
+        {
+          "path": "Repositories/SDK/Rust/src/c_facades.rs",
+          "sha256": "c3fb19418c66ab0f87abb88fed767706d5a9e04a59eb37d7afc740d1405c9483"
+        },
+        {
+          "path": "Repositories/SDK/Rust/src/lib.rs",
+          "sha256": "1139f70f9bab053cb8c72f85d87a825a25bf3d05da962b86e5661292b78b5f18"
+        },
+        {
+          "path": "Repositories/SDK/Shared/C/src/r4app_startup.c",
+          "sha256": "7f52601e71e3abf5fd19c64a323a620bc635e44a93a40769ae88e739afc20a04"
+        },
+        {
+          "path": "Repositories/SDK/Rust/src/web/transport/mod.rs",
+          "sha256": "2e749d717b4029a81b2380b62079287207312c1d9b42ec54e044d1a6c83d1bf8"
+        },
+        {
+          "path": "Repositories/SDK/Rust/src/web/transport/job.rs",
+          "sha256": "12013cd6cc15a2cd73cbc4423c557b6d7a1d66d25dd77f9004e51d322efd42af"
+        },
+        {
+          "path": "Repositories/SDK/Rust/src/web/transport/cache.rs",
+          "sha256": "ce5162ee1a998047536106643e983a4ad0aeee177d0e140e3a27b8c894b5ee27"
+        }
+      ],
+      "standard": {
+        "run_id": "24d7b3c0-0a3a-42c3-88ab-f34b0c5ed1d3",
+        "release_version": "0.86.63",
+        "sha256": "579d40eb18b7da186c66188b27e566745598c4fac621f3103941667f34ccf35d",
+        "full_readback": "valid",
+        "metrics": 5,
+        "samples": 30,
+        "workers": 4,
+        "valid_score_areas": 6,
+        "purpose": "Exactly one mandatory normal regression for common SDK startup/runtime possible impact; no transport speed claim."
+      },
+      "kernel": "0.1.381 unchanged; STANDARD BOOT SHA256 e06111b9363b44712fe69ded9ddfc3edb1f60c5c271c59a42238a816b0882340",
+      "benchmark_image_source_sha256": "da27ec7cc9888b633987a47e05e406b7eb57f317d932788d6cda4443abbf2baa"
     }
   },
   "wave_bindings": [

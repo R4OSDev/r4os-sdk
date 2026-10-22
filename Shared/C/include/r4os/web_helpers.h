@@ -2027,7 +2027,7 @@ typedef struct R4SdkWebNativeValue669 { _Alignas(8) uint8_t opaque_bytes[8]; } R
 /* *const web_canvas.TextOp; native size 8, alignment 8. */
 typedef struct R4SdkWebNativeValue670 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkWebNativeValue670;
 #define R4SdkWebNativeValue670_TYPE 670u
-#define R4SdkWeb_ABI_FINGERPRINT UINT64_C(17145349120571270290)
+#define R4SdkWeb_ABI_FINGERPRINT UINT64_C(4238743141405319170)
 int32_t R4SdkWebVerifyAbi(uint64_t);
 #define R4SdkWebHtml_max_source_bytes (262144)
 #define R4SdkWebHtml_max_string_bytes (163840)
@@ -3318,6 +3318,13 @@ static inline R4SdkWebSlot R4SdkWebFontCache_constant_object_file_extension(void
 #define R4SdkWebCallbackKind_frame_lookup 28u
 #define R4SdkWebCallbackKind_script_report 29u
 #define R4SdkWebCallbackKind_monotonic_clock 30u
+#define R4SdkWebCallbackKind_network_progress 31u
+#define R4SdkWebCallbackKind_cookie_provider 32u
+#define R4SdkWebCallbackKind_cookie_sink 33u
+#define R4SdkWebCallbackKind_target_authorize 34u
+#define R4SdkWebCallbackKind_download_progress 35u
+#define R4SdkWebCallbackKind_download_write 36u
+#define R4SdkWebCallbackKind_runtime_lookup 37u
 #define R4SdkWebNativeValue589_left 0u
 #define R4SdkWebNativeValue589_right 1u
 #define R4SdkWebNativeValue589_home 2u

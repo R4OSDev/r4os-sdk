@@ -116,6 +116,14 @@ fn argument(w: *std.Io.Writer, comptime T: type, comptime index: usize) !void {
 fn fieldList(comptime T: type) []const std.builtin.Type.StructField {
     return @typeInfo(T).@"struct".fields;
 }
+fn constructor(comptime T: type) []const u8 {
+    // A real owner method named create keeps its public name. The transport
+    // constructor is generated metadata and must not shadow that operation.
+    if (comptime @typeInfo(T) == .@"struct" or @typeInfo(T) == .@"enum") {
+        if (comptime @hasDecl(T, "create")) return comptime name(T) ++ "_constructNative";
+    }
+    return comptime name(T) ++ "_create";
+}
 fn stringConstant(w: *std.Io.Writer, comptime T: type, comptime field: []const u8, comptime bytes: []const u8) !void {
     try w.print(scoped("static const uint8_t {s}_CONST_{s}[] = {{"), .{ name(T), field });
     for (bytes) |b| try w.print(scoped("{d},"), .{b});
@@ -185,7 +193,7 @@ pub fn emit(w: *std.Io.Writer) !void {
         }
         if (info == .@"struct") {
             const fields = comptime fieldList(T);
-            try w.print(scoped("static inline R4SdkDataSlot {s}_create({s} *output"), .{ name(T), name(T) });
+            try w.print(scoped("static inline R4SdkDataSlot {s}({s} *output"), .{ constructor(T), name(T) });
             inline for (fields, 0..) |f, i| if (f.default_value_ptr == null) {
                 try parameter(w, f.type, i);
             };
@@ -200,7 +208,7 @@ pub fn emit(w: *std.Io.Writer) !void {
             inline for (fields, 0..) |f, i| try argument(w, f.type, i);
             try w.print(scoped(" return R4SdkDataConstruct(R4SdkData_ABI_FINGERPRINT,{d}u,a,{d}u,output);\n}}\n"), .{ id, fields.len });
         } else if (info == .@"enum" or info == .pointer or info == .optional or info == .array) {
-            try w.print(scoped("static inline R4SdkDataSlot {s}_create({s} *output"), .{ name(T), name(T) });
+            try w.print(scoped("static inline R4SdkDataSlot {s}({s} *output"), .{ constructor(T), name(T) });
             try parameter(w, T, 0);
             try w.writeAll(scoped(") { R4SdkDataSlot a[1]={0};\n"));
             try argument(w, T, 0);
