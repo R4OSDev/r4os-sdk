@@ -69,3 +69,36 @@ function Build-RustCCompanions($Rust,$Cpu,[string]$Optimization,[string]$Work,$R
     }
     return @{objects=$objects;inputs=$inputs;compiler=@{kind='zig-cc';version=$pin.version;sha256=Hash $zig;pin_sha256=Hash (Join-Path $ToolsRoot 'Profile/ZigToolchain.json');commands=$commands}}
 }
+
+# Optional library-owned native helpers are an explicit compiler input. They
+# are never inferred from Studio projects, installed hardware or ambient paths.
+function Build-RustLibraryHelpers([string]$Work,$Roots) {
+    if(!$LibraryHelpersRoot){return @{objects=@();inputs=@();receipt=$null}}
+    if(!$ZigRoot){throw 'LibraryHelpersRequireExplicitZigRoot'}
+    $zig=Join-Path ([IO.Path]::GetFullPath($ZigRoot)) ('zig'+$(if($IsWindows){'.exe'}else{''}))
+    $pin=Get-Content -Raw -LiteralPath (Join-Path $ToolsRoot 'Profile/ZigToolchain.json')|ConvertFrom-Json -AsHashtable
+    if((Invoke-Tool $zig @('version') $Work).Trim() -cne $pin.version){throw 'LibraryHelperCompilerVersionMismatch'}
+    $files=@()
+    foreach($relative in @('build.zig.zon','consumer_helpers.zig','consumer_adapters.zig','R4STD/Source/codec_tables.zig')){
+        $files+=Canonical $LibraryHelpersRoot $relative
+    }
+    $files+=Canonical $SdkRoot 'build.zig'
+    foreach($relative in @('Shared/Language','Shared/C','R4STD/Bindings/Zig','R4IMG/Bindings/Zig','R4FONT/Bindings/Zig','R4GFX/Bindings/Zig','R4VIDEO/Bindings/Zig')){
+        $files+=@(Get-ChildItem -LiteralPath (Canonical $LibraryHelpersRoot $relative) -Recurse -File|ForEach-Object FullName)
+    }
+    $inputs=@($files|Sort-Object -Unique|ForEach-Object {Observe-Input $_ $Roots})
+    $prefix=Join-Path $Work 'library-helpers'
+    $arguments=@('build',('--fork='+$ContractRoot),('-Dlibrary-helpers-root='+$LibraryHelpersRoot),'--prefix',$prefix,'-j1')
+    Invoke-Tool $zig $arguments $SdkRoot|Out-Null
+    # Bind the receipt to precisely the source snapshot compiled in this build.
+    foreach($item in $inputs){
+        $owner=@($Roots|Where-Object owner -CEQ $item.owner)[0]
+        if((Hash (Canonical $owner.path $item.path)) -cne $item.sha256){throw 'LibraryHelperInputChangedDuringBuild'}
+    }
+    $objects=@();$built=@()
+    foreach($name in @('r4libraries_helpers.o','r4libraries_facades.o')){
+        $path=Join-Path $prefix ('lib/'+$name)
+        $objects+=$path;$built+=@{name=$name;sha256=Hash $path}
+    }
+    return @{objects=$objects;inputs=$inputs;receipt=@{owner='Libraries';compiler='zig';version=$pin.version;objects=$built;stack_probes=$true}}
+}

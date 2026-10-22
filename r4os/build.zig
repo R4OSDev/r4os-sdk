@@ -1936,6 +1936,15 @@ fn sharedZigRuntime(b: *std.Build, source: std.Build.LazyPath, contract: *std.Bu
     });
     root.addImport("r4os_contract", contract);
     if (grapheme) |path| root.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = path, .target = root.resolved_target.?, .optimize = .ReleaseSafe }));
+    return addProbedObject(b, root, builder, name, native);
+}
+
+pub fn moduleTarget(b: *std.Build) std.Build.ResolvedTarget {
+    return contract_build.module_cpu.target(b);
+}
+
+/// Foreign consumer owners retain the regular stack-probe/codegen path.
+pub fn addProbedObject(b: *std.Build, root: *std.Build.Module, builder: *std.Build.Step.Compile, name: []const u8, native: bool) std.Build.LazyPath {
     const object = b.addObject(.{ .name = name, .root_module = root });
     if (native) return object.getEmittedBin();
     const probes = b.addRunArtifact(builder);

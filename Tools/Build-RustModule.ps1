@@ -5,6 +5,7 @@ param(
     [string]$SdkRoot='', [string]$InstallRoot='', [string]$CacheRoot='',
     [string]$OutputRoot='', [string[]]$DependencyRoot=@(), [string]$DependencyRootsJson='',
     [string]$Features='', [switch]$NoDefaultFeatures, [string]$ZigRoot='',
+    [string]$LibraryHelpersRoot='',
     [switch]$Technical
 )
 $ErrorActionPreference='Stop';Set-StrictMode -Version Latest
@@ -126,6 +127,10 @@ try{
         if($decoded -isnot [array] -or @($decoded|Where-Object {$_ -isnot [string]}).Count){throw 'RustDependencyRootsJsonInvalid'}
         $DependencyRoot+=@($decoded)
     }
+    if($LibraryHelpersRoot){
+        $LibraryHelpersRoot=[IO.Path]::GetFullPath($LibraryHelpersRoot)
+        if(!@($DependencyRoot|Where-Object {SamePath $_ $LibraryHelpersRoot}).Count){$DependencyRoot+=@($LibraryHelpersRoot)}
+    }
     $inputRoots=@(@{owner='project';path=$ProjectRoot},@{owner='sdk';path=$SdkRoot},@{owner='contract';path=$ContractRoot})
     foreach($dependency in $DependencyRoot){
         $path=[IO.Path]::GetFullPath($dependency)
@@ -204,6 +209,8 @@ try{
     }
     $phase='compile-c'
     $native=Build-RustCCompanions $rust $cpu $facts.optimization $work $inputRoots
+    $phase='compile-library-helpers'
+    $libraryHelpers=Build-RustLibraryHelpers $work $inputRoots
     $phase='compile'
     $messages=Invoke-Tool $cargo (@('build','--release','--lib','--locked','--offline','--target',$codegen.target,'--manifest-path',(Join-Path $ProjectRoot 'Cargo.toml'),'--message-format=json-render-diagnostics')+$selection+$patches) $work $envForCargo (Join-Path $work 'cargo')
     $archive=''
@@ -217,7 +224,7 @@ try{
     if(!$archive -or !(Test-Path -LiteralPath $archive -PathType Leaf)){throw 'RustArchiveMissing'}
     $phase='link'
     $linked=Join-Path $work 'module.elf';$script=Canonical $SdkRoot $codegen.linker_script
-    Invoke-Tool $description.linker (@('-flavor','gnu','--emit-relocs','--gc-sections','--no-undefined','--strip-debug','--entry','R4XStart','-T',$script,'-o',$linked,$archive,$heapRuntime)+$facadeObjects+$native.objects) $work|Out-Null
+    Invoke-Tool $description.linker (@('-flavor','gnu','--emit-relocs','--gc-sections','--no-undefined','--strip-debug','--entry','R4XStart','-T',$script,'-o',$linked,$archive,$heapRuntime)+$facadeObjects+$native.objects+$libraryHelpers.objects) $work|Out-Null
     $phase='package'
     $candidate=Join-Path $work 'module.R4X'
     $packArgs=@('--r4m','--kind','r4x','--elf',$linked,'--output',$candidate,'--module-name',$facts.name,'--app-class',$facts.app_class,'--export','R4XStart:@R4XStart:1')
@@ -234,12 +241,13 @@ try{
     $observed=@(foreach($pathText in (Read-CompilerDependencies $depInfo|Sort-Object -Unique)){
         $path=[IO.Path]::GetFullPath($pathText)
         if(SamePath $path $startupFile){Input $path $OutputRoot 'generated'}else{Observe-Input $path $inputRoots}
-    })+@($native.inputs)
+    })+@($native.inputs)+@($libraryHelpers.inputs)
     if(!@($observed|Where-Object {$_.owner -ceq 'project' -and $_.path -ceq $rust.source}).Count){throw 'RustCompilerSourceNotObserved'}
     if(!@($observed|Where-Object owner -CEQ 'generated').Count){throw 'RustCompilerStartupInfoNotObserved'}
     $result=[ordered]@{schema=1;profile=$rust.profile;status='success';technical=[bool]$Technical;module=@{name=$facts.name;version=$rust.module_version;kind='R4X';app_class=$facts.app_class;target=$facts.target;imports=$facts.imports};cargo=@{name=$package.name;version=$package.version;source=$rust.source;target=$codegen.target;lock_sha256=Hash (Join-Path $ProjectRoot 'Cargo.lock')};sdk=$rustToolProfile.sdk;contract=$rustToolProfile.contract;tools=@{profile_sha256=Hash $rustToolProfilePath;pin_sha256=$description.pin_sha256;rust=$description.rust_version;cargo=$description.cargo_version;linker_sha256=$description.linker_sha256;packager_sha256=Hash $packager;catalog_sha256=Hash $catalog};cpu=@{id=$cpu.name;sha256=Hash $cpuPath;features=$cpuFeatures};codegen=@{profile_sha256=Hash $codegenPath;code_model=$codegen.code_model;relocation_model=$codegen.relocation_model;lto=$codegen.lto;red_zone=$false;panic='abort';stack_probes=$codegen.stack_probes};declared_inputs=$declared;compiler_inputs=$observed;elf=@{file=[IO.Path]::GetFileName($elf);sha256=Hash $linked};artifact=@{file=[IO.Path]::GetFileName($artifact);sha256=Hash $candidate;bytes=([IO.FileInfo]$candidate).Length};container_inspection=$inspection.Trim()}
     $result['memory']=@{sdk_features=$sdkFeatureNames;heap_runtime=@{path=$rustToolProfile.runtime.heap.path;sha256=Hash $heapRuntime;owner='SDK/r4os/vm_allocator.zig';instance_checked=$true};alloc_sysroot_component='rust-std/'+$codegen.target;root_return_releases_heap=$false}
     $result['sdk_runtimes']=@{facades=$rustToolProfile.runtime.facades;storage=$rustToolProfile.runtime.storage}
+    $result['library_helpers']=$libraryHelpers.receipt
     $result.codegen['target_features']=$effectiveCpuFeatures
     $result.codegen['backend_feature_policy']=$codegen.backend_features
     $result['schema']=2

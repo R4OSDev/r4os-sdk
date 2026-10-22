@@ -754,3 +754,11 @@ The same Zig PCM and service/policy algorithms execute from each language.
 Native owner cases and a real Rust/C KVM4 silent-stream/status consumer qualify
 this group. Audio admission, hardware status and policy acceptance do not
 prove audible playback, physical frequency, DMA stop or performance.
+
+SDK0.64.78 builds optional library-owned higher helpers with an explicit
+`-LibraryHelpersRoot` and pinned `-ZigRoot` in the Rust module driver. Select
+`r4os-library-helpers` from Libraries/Shared/Rust for R4STD text/settings/codecs,
+R4IMG images and R4FONT resources; C uses each owner's `*_helpers.h` header.
+The original library algorithms, data and resource acknowledgements remain
+at their owners. The core SDK only builds/links the selected boundary and
+records its actual source inputs. See Libraries/Shared/Rust/README.md.

@@ -772,17 +772,34 @@
       "semantics": "R4STD besitzt Unicode-/Codec-/Graphemdaten; keine Anzeige-/Normalisierungs-/Breitenzusage aus Grenzen ableiten; Caller besitzt Bytes/Puffer.",
       "current_only": "current_function",
       "rust": {
-        "state": "missing_higher_facade",
-        "source": "Repositories/SDK/Rust/src/lib.rs",
-        "gap": "Graphemgrenzen und gepinnte Textprojektion als gleichwertige typisierte Rust-Fassade mit denselben Fehler-/Besitz-/Waitregeln ergaenzen."
+        "state": "higher_original_owner_helpers_qualified",
+        "source": "Repositories/Libraries/R4STD/Bindings/Rust/src/helpers.rs",
+        "gap": "",
+        "qualification": {
+          "performed_in": "0.86.59",
+          "sdk": "0.64.78",
+          "libraries_package": "0.64.25",
+          "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.59",
+          "scope": "Fachlicher hoeherer Zig-Umfang ueber getypte Originalbesitzer; konkrete generische Adapter; Testreset/Fault-Hooks bleiben in Besitzertests. Kein Rust-R4L-Provider. Raw-Besitz-/Leih-/Cache-/Freigabevertraege bleiben unsafe."
+        }
       },
       "c": {
-        "state": "missing_higher_facade",
-        "sources": [],
-        "gap": "Kein entsprechender hoeherer C-Einstieg im SDK-Headerbestand; gleiche Fachfunktion bereitstellen."
+        "state": "higher_original_owner_helpers_qualified",
+        "sources": [
+          "Repositories/Libraries/R4STD/Bindings/C/r4std_helpers.h"
+        ],
+        "gap": "",
+        "qualification": {
+          "performed_in": "0.86.59",
+          "sdk": "0.64.78",
+          "libraries_package": "0.64.25",
+          "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.59",
+          "scope": "Fachlicher hoeherer Zig-Umfang ueber getypte Originalbesitzer; konkrete generische Adapter; Testreset/Fault-Hooks bleiben in Besitzertests. Kein Rust-R4L-Provider. Raw-Besitz-/Leih-/Cache-/Freigabevertraege bleiben unsafe."
+        }
       },
       "evidence": [
-        "source_inventory"
+        "source_inventory",
+        "language_libraries_current_59"
       ],
       "shared_core": "R4STD/Bindings/Zig und vorhandene R4STD/Rust-Primitiven verbinden; keine zweite Unicode-Datenbank."
     },
@@ -45588,11 +45605,12 @@
         "Repositories/Libraries/R4FONT/Bindings/C/r4font.h"
       ],
       "rust": {
-        "state": "local_contract_consumer_qualified_higher_helpers_pending",
+        "state": "higher_original_owner_helpers_qualified",
         "sources": [
-          "Repositories/Libraries/R4FONT/Bindings/Rust/src/lib.rs"
+          "Repositories/Libraries/R4FONT/Bindings/Rust/src/lib.rs",
+          "Repositories/Libraries/R4FONT/Bindings/Rust/src/helpers.rs"
         ],
-        "gap": "Lokale Raw-Vertragsprojektion/Resolver52 abgenommen; alle hoeheren Zig-Helfer bleiben in der bestehenden Fachwelle dieses Eintrags. Rust-Providerimplementierung ist kein Teil der Consumerfreigabe.",
+        "gap": "",
         "binding_qualification": {
           "subversion": "0.86.52",
           "sdk": "0.64.71",
@@ -45601,16 +45619,25 @@
           "source_sha256": "6bd8bff40512a0f1f95d56392bee2d876f43c6b42717a95ed09a7bcc5eb998f1",
           "scope": "alle lokalen Typen/Slots/IDs/Revisionen/Flags aus unveraenderter Librarybaseline; App-geborgene Clients, unsafe Operationen mit Besitzervertrag",
           "evidence": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.52"
+        },
+        "helper_qualification": {
+          "performed_in": "0.86.59",
+          "sdk": "0.64.78",
+          "libraries_package": "0.64.25",
+          "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.59",
+          "scope": "Fachlicher hoeherer Zig-Umfang ueber getypte Originalbesitzer; konkrete generische Adapter; Testreset/Fault-Hooks bleiben in Besitzertests. Kein Rust-R4L-Provider. Raw-Besitz-/Leih-/Cache-/Freigabevertraege bleiben unsafe."
         }
       },
       "c": {
-        "state": "generated_local_contract_present_higher_helpers_review",
-        "gap": "Generierte C-Vertraege behalten; Zig-Zusatzhelfer (z.B. Settings/Consoletext, PNG/Raster, Fontimport, Displaymanager/Readback, Recordingmux oder Playback) einzeln auf fehlende C-Zugaenge pruefen und schliessen."
+        "state": "higher_original_owner_helpers_qualified",
+        "gap": "",
+        "helper_header": "Repositories/Libraries/R4FONT/Bindings/C/r4font_helpers.h"
       },
       "current_only": "Manifestrevision, lokale Interface-ID/Flags/Praefixe, geladene Instanz und reale optionale Backends bleiben Vertragsbestandteil; keine Alt-OS-Nachbildung.",
       "evidence": [
         "source_inventory",
-        "local_contract_and_baseline"
+        "local_contract_and_baseline",
+        "language_libraries_current_59"
       ],
       "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten."
     },
@@ -45901,11 +45928,12 @@
         "Repositories/Libraries/R4IMG/Bindings/C/r4img.h"
       ],
       "rust": {
-        "state": "local_contract_consumer_qualified_higher_helpers_pending",
+        "state": "higher_original_owner_helpers_qualified",
         "sources": [
-          "Repositories/Libraries/R4IMG/Bindings/Rust/src/lib.rs"
+          "Repositories/Libraries/R4IMG/Bindings/Rust/src/lib.rs",
+          "Repositories/Libraries/R4IMG/Bindings/Rust/src/helpers.rs"
         ],
-        "gap": "Lokale Raw-Vertragsprojektion/Resolver52 abgenommen; alle hoeheren Zig-Helfer bleiben in der bestehenden Fachwelle dieses Eintrags. Rust-Providerimplementierung ist kein Teil der Consumerfreigabe.",
+        "gap": "",
         "binding_qualification": {
           "subversion": "0.86.52",
           "sdk": "0.64.71",
@@ -45914,16 +45942,25 @@
           "source_sha256": "146bd23a2bb4b0031fce247f717da99b3cc775240a99a3bfb48b25d2b7354187",
           "scope": "alle lokalen Typen/Slots/IDs/Revisionen/Flags aus unveraenderter Librarybaseline; App-geborgene Clients, unsafe Operationen mit Besitzervertrag",
           "evidence": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.52"
+        },
+        "helper_qualification": {
+          "performed_in": "0.86.59",
+          "sdk": "0.64.78",
+          "libraries_package": "0.64.25",
+          "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.59",
+          "scope": "Fachlicher hoeherer Zig-Umfang ueber getypte Originalbesitzer; konkrete generische Adapter; Testreset/Fault-Hooks bleiben in Besitzertests. Kein Rust-R4L-Provider. Raw-Besitz-/Leih-/Cache-/Freigabevertraege bleiben unsafe."
         }
       },
       "c": {
-        "state": "generated_local_contract_present_higher_helpers_review",
-        "gap": "Generierte C-Vertraege behalten; Zig-Zusatzhelfer (z.B. Settings/Consoletext, PNG/Raster, Fontimport, Displaymanager/Readback, Recordingmux oder Playback) einzeln auf fehlende C-Zugaenge pruefen und schliessen."
+        "state": "higher_original_owner_helpers_qualified",
+        "gap": "",
+        "helper_header": "Repositories/Libraries/R4IMG/Bindings/C/r4img_helpers.h"
       },
       "current_only": "Manifestrevision, lokale Interface-ID/Flags/Praefixe, geladene Instanz und reale optionale Backends bleiben Vertragsbestandteil; keine Alt-OS-Nachbildung.",
       "evidence": [
         "source_inventory",
-        "local_contract_and_baseline"
+        "local_contract_and_baseline",
+        "language_libraries_current_59"
       ],
       "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten."
     },
@@ -46217,13 +46254,14 @@
         "Repositories/Libraries/R4STD/Bindings/C/r4std_abi.h"
       ],
       "rust": {
-        "state": "local_contract_consumer_qualified_higher_helpers_pending",
+        "state": "higher_original_owner_helpers_qualified",
         "sources": [
           "Repositories/Libraries/R4STD/Rust/lib.rs",
           "Repositories/Libraries/R4STD/Rust/utf16.rs",
-          "Repositories/Libraries/R4STD/Bindings/Rust/src/lib.rs"
+          "Repositories/Libraries/R4STD/Bindings/Rust/src/lib.rs",
+          "Repositories/Libraries/R4STD/Bindings/Rust/src/helpers.rs"
         ],
-        "gap": "Lokale Raw-Vertragsprojektion/Resolver52 abgenommen; alle hoeheren Zig-Helfer bleiben in der bestehenden Fachwelle dieses Eintrags. Rust-Providerimplementierung ist kein Teil der Consumerfreigabe.",
+        "gap": "",
         "binding_qualification": {
           "subversion": "0.86.52",
           "sdk": "0.64.71",
@@ -46232,16 +46270,25 @@
           "source_sha256": "dabd260e38b6667757261d4aabd55485ec5c7e55fcc6031f596e9b64b848df70",
           "scope": "alle lokalen Typen/Slots/IDs/Revisionen/Flags aus unveraenderter Librarybaseline; App-geborgene Clients, unsafe Operationen mit Besitzervertrag",
           "evidence": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.52"
+        },
+        "helper_qualification": {
+          "performed_in": "0.86.59",
+          "sdk": "0.64.78",
+          "libraries_package": "0.64.25",
+          "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.59",
+          "scope": "Fachlicher hoeherer Zig-Umfang ueber getypte Originalbesitzer; konkrete generische Adapter; Testreset/Fault-Hooks bleiben in Besitzertests. Kein Rust-R4L-Provider. Raw-Besitz-/Leih-/Cache-/Freigabevertraege bleiben unsafe."
         }
       },
       "c": {
-        "state": "generated_local_contract_present_higher_helpers_review",
-        "gap": "Generierte C-Vertraege behalten; Zig-Zusatzhelfer (z.B. Settings/Consoletext, PNG/Raster, Fontimport, Displaymanager/Readback, Recordingmux oder Playback) einzeln auf fehlende C-Zugaenge pruefen und schliessen."
+        "state": "higher_original_owner_helpers_qualified",
+        "gap": "",
+        "helper_header": "Repositories/Libraries/R4STD/Bindings/C/r4std_helpers.h"
       },
       "current_only": "Manifestrevision, lokale Interface-ID/Flags/Praefixe, geladene Instanz und reale optionale Backends bleiben Vertragsbestandteil; keine Alt-OS-Nachbildung.",
       "evidence": [
         "source_inventory",
-        "local_contract_and_baseline"
+        "local_contract_and_baseline",
+        "language_libraries_current_59"
       ],
       "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten."
     },
@@ -47254,6 +47301,55 @@
           "cancel": 0
         }
       }
+    },
+    "language_libraries_current_59": {
+      "kind": "compiler_reflected_original_library_helpers_native_release_Rust_C_and_real_KVM_SMP4",
+      "performed_in": "0.86.59",
+      "sdk": "0.64.78",
+      "libraries_package": "0.64.25",
+      "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.59",
+      "scope": "Fachlicher hoeherer Zig-Umfang ueber getypte Originalbesitzer; konkrete generische Adapter; Testreset/Fault-Hooks bleiben in Besitzertests. Kein Rust-R4L-Provider. Raw-Besitz-/Leih-/Cache-/Freigabevertraege bleiben unsafe.",
+      "projection": {
+        "native_types": 327,
+        "native_functions": 298,
+        "C_Rust_entries": 2031,
+        "layout_assertions": 787,
+        "canonical_platform_aliases": 464,
+        "fingerprint": 10906934532697860863
+      },
+      "consumer": {
+        "sha256": "ee4e02f9c2ff027e7ad133f317bd51ff6dc6fabd5bb817b640923c2376690018",
+        "file": "LIBHPROBE.R4X",
+        "bytes": 1131523,
+        "readback": "exact final bytes; current rebuild byte-identical to executed LIBH59B.R4X",
+        "exit": 0,
+        "result": "PASS LIBHELP59 Rust/C real text/settings/date/time/config/codec, PNG/SVG/PNG16, font raster/import and exact allocation release"
+      },
+      "guest": "Full0.86.42/Kernel0.1.381/KVM/SMP4; regular shutdown exit0; own files deleted",
+      "checks": [
+        "two shared native release C/Rust cases, five real E0133/E0505/E0502/E0277 unsafe/lifetime/Send negatives",
+        "all three owner C helper and ABI headers coexist; private time config has separate C name",
+        "both projections, warning-free Clippy, explicit selected source/object receipts and stack probes",
+        "real table calls for R4STD six groups, R4IMG API/PNG16 and R4FONT API; bounded/invalid input and resource teardown",
+        "exact native C allocation callback balance and unchanged active Rust SDK heap allocations/bytes after all resources drop"
+      ],
+      "native_objects": [
+        {
+          "sha256": "70a6c18dc5f41d6142a0a1f4d1681f7558ddacf2d5a69af3acf86793c8049cbe",
+          "name": "r4libraries_helpers.o"
+        },
+        {
+          "sha256": "6068b7c746d2e3eb00f305e6fd117458e3ea3b0007ef8b315f4eb59fc6a9b2b8",
+          "name": "r4libraries_facades.o"
+        }
+      ],
+      "normal_sdk_objects_unchanged": {
+        "facades": "997e45325734f02ee294da592402d6f899cef722a8aa40f8e4df59fb2e8fc9ed",
+        "storage": "e033a7dd9d6ea6ef01f18eafadbb0a76685b68c0008463f27c912cf5070b9147"
+      },
+      "normal_artifacts": "unchanged; current hashes retained at platform_current_58.unchanged_normal_artifacts",
+      "standard": "none: optional new library helper boundary/foreign-language facades and IMAGE_SCOPE=none fixture; normal runtime/provider/module artifacts unchanged",
+      "limits": "No physical GPU/native JPEG/color/display, Windows, new Rust SIMD/FP or performance qualification. Existing local contracts/baselines/provider module versions unchanged. No test environments retained."
     }
   },
   "wave_bindings": [

@@ -38,6 +38,38 @@ pub fn build(b: *std.Build) void {
         return;
     }
     const sdk_profile = Sdk.init(b, .{ .contract_dependency = contract_dependency });
+    if (b.option([]const u8, "library-helpers-root", "Explicit library owner root for its optional C/Rust helper boundary")) |library_root| {
+        if (b.option(bool, "library-helpers-rust-generator-only", "Project the library-owned C helper header to Rust") orelse false) {
+            const root = b.createModule(.{ .root_source_file = .{ .cwd_relative = b.pathResolve(&.{ library_root, "Shared/Language/rust_gen.zig" }) }, .target = b.graph.host, .optimize = .Debug, .strip = true, .link_libc = true });
+            root.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
+            root.addIncludePath(.{ .cwd_relative = b.pathResolve(&.{ library_root, "Shared/C/include" }) });
+            root.addIncludePath(sdk_profile.profile.c_include_root);
+            root.addIncludePath(sdk_profile.profile.contract_c_include_root);
+            b.installArtifact(b.addExecutable(.{ .name = "library-helpers-rust-gen", .root_module = root }));
+            return;
+        }
+        const generate = b.option(bool, "library-helpers-generator-only", "Build the library-owned helper generator") orelse false;
+        const native = generate or (b.option(bool, "library-helpers-host-test", "Native ABI for library helper interop") orelse false);
+        const target = if (native) b.graph.host else r4os_build.moduleTarget(b);
+        const optimize: std.builtin.OptimizeMode = if (generate) .Debug else .ReleaseSafe;
+        const owners = b.createModule(.{ .root_source_file = .{ .cwd_relative = b.pathResolve(&.{ library_root, "consumer_helpers.zig" }) }, .target = target, .optimize = optimize, .single_threaded = false });
+        const r4os_module = sdk_profile.createR4osModule(target, optimize);
+        owners.addImport("r4os", r4os_module);
+        owners.addImport("r4std_console_text", owners);
+        owners.addImport("r4std_legacy_tables", b.createModule(.{ .root_source_file = .{ .cwd_relative = b.pathResolve(&.{ library_root, "R4STD/Source/codec_tables.zig" }) }, .target = target, .optimize = optimize }));
+        const schema = b.createModule(.{ .root_source_file = .{ .cwd_relative = b.pathResolve(&.{ library_root, "Shared/Language/schema.zig" }) }, .target = target, .optimize = optimize });
+        schema.addImport("owners", owners);
+        schema.addImport("r4os", r4os_module);
+        const root = b.createModule(.{ .root_source_file = .{ .cwd_relative = b.pathResolve(&.{ library_root, if (generate) "Shared/Language/gen.zig" else "Shared/Language/runtime.zig" }) }, .target = target, .optimize = if (generate) .Debug else .ReleaseSafe, .single_threaded = false, .pic = true, .red_zone = false, .stack_check = !native });
+        root.addImport("schema", schema);
+        if (generate) b.installArtifact(b.addExecutable(.{ .name = "library-helpers-gen", .root_module = root })) else {
+            const object = r4os_build.addProbedObject(b, root, sdk_profile.builder, "r4libraries_helpers", native);
+            b.getInstallStep().dependOn(&b.addInstallFile(object, "lib/r4libraries_helpers.o").step);
+            const facades = r4os_build.addFacadeRuntime(b, .{ .cwd_relative = b.pathResolve(&.{ library_root, "Shared/Language/facades.c" }) }, sdk_profile.profile.c_include_root, sdk_profile.profile.contract_c_include_root, native);
+            b.getInstallStep().dependOn(&b.addInstallFile(facades, "lib/r4libraries_facades.o").step);
+        }
+        return;
+    }
     if (b.option(bool, "gui-oracle-only", "Build existing GUI callbacks/pixel oracle for language interop") orelse false) {
         const oracle = b.createModule(.{ .root_source_file = b.path("Tests/Conformance/GuiFacadePrototype05824.zig"), .target = b.graph.host, .optimize = .Debug, .pic = true });
         oracle.addImport("r4os", sdk_profile.createR4osModule(b.graph.host, .Debug));

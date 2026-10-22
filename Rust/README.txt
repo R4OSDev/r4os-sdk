@@ -12,7 +12,8 @@ Use the matched SDK, Contract and r4os-rust-tools-v1 export. Rust/Cargo1.99.0,
 rustup1.29.1, LLVM tools and x86_64-unknown-none are pinned by the shared DevKit
 installer. No global Rust, complete workspace, Zig install, MSVC linker or
 Rust sources are needed for pure Rust builds with the exported baretarget tools.
-Explicit C companions additionally require the selected pinned Zig/Clang root.
+Explicit C companions and optional native library helpers additionally require
+the selected pinned Zig/Clang root.
 The publisher builds both host packagers/catalogs with Zig. Windows uses the
 same PS7 driver and prepared PE tools; Windows execution is not yet qualified.
 
@@ -263,6 +264,15 @@ The SDK r4l::query helper reads standalone Query metadata, separate from a
 named table or platform API. Rust raw records/tables assert all local sizes,
 alignments and field/slot offsets during compilation. Higher library helper
 facades remain their own parity waves; these are complete contract consumers.
+SDK0.64.78/Libraries0.64.25 adds the higher R4STD/R4IMG/R4FONT helpers through
+the library-owned r4os-library-helpers crate under Libraries/Shared/Rust.
+Select that path dependency and pass -LibraryHelpersRoot and -ZigRoot to the
+module builder. Native helper objects, the exact source snapshot and regular
+stack probes appear in its build receipt. Text/iterator/image loans and
+face/decoder/allocator lifetimes are typed; advanced cache/color/JPEG calls
+remain unsafe raw owner operations. No implementation or Unicode database
+is copied into the core SDK. Libraries/Shared/Rust/README.md gives C linking
+and generator instructions. Other library groups retain their own waves.
 
 Storage/paths/registry/console (SDK0.64.72)
 -----------------------------------------
