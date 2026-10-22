@@ -6,6 +6,9 @@
 typedef struct R4Console { R4Sys *system; } R4Console;
 typedef struct R4Files { R4Sys *system; } R4Files;
 typedef struct R4Registry { R4Sys *system; } R4Registry;
+/* SDK-local complete console policy; return value validates dispatch only.
+ * Like the Zig facade it does not claim a transport completion code. */
+int32_t R4SdkConsole(const R4Sys *,const uint8_t *,uintptr_t,int32_t operation);
 
 typedef struct R4FileCopyResult {
     R4FileCopyProgress progress;
@@ -156,6 +159,16 @@ static inline int32_t r4_console_line(R4Console *console, const char *text) {
     return r4_console_available(console) ? r4sys_write_line(console->system, text) : R4OS_ERR_NO_FN;
 }
 
+static inline int32_t r4_console_put(R4Console *console, uint8_t byte) {
+    return R4SdkConsole(console?console->system:0,&byte,1,2);
+}
+static inline int32_t r4_console_write_line(R4Console *console,const uint8_t *bytes,uint32_t length) {
+    return R4SdkConsole(console?console->system:0,bytes,length,1);
+}
+static inline int32_t r4_console_write_all(R4Console *console,const uint8_t *bytes,uintptr_t length) {
+    return R4SdkConsole(console?console->system:0,bytes,length,0);
+}
+
 static inline int r4_files_available(const R4Files *files) {
     return files != 0 && files->system != 0 && files->system->table != 0 &&
         files->system->table->file_read != 0 && files->system->table->file_write != 0 &&
@@ -224,6 +237,30 @@ static inline R4Operation r4_files_delete_directory(R4Files *files, const R4File
 static inline R4Operation r4_files_rename(R4Files *files, const R4FilePath *source, const R4FilePath *target) {
     if (files == 0 || source == 0 || target == 0 || files->system == 0 || files->system->table == 0 || files->system->table->file_rename == 0) return r4_operation_status(R4OS_ERR_NO_FN);
     return r4_operation_presence(((R4SysFileRenameFn)(uintptr_t)files->system->table->file_rename)(source->bytes, target->bytes));
+}
+
+static inline int32_t r4_files_replace_atomic(R4Files *files, const R4FilePath *target, const R4FilePath *stage, const R4FilePath *backup, uint32_t flags) {
+    if (!files || !target || !stage || !backup ||
+        (flags & ~(R4SYS_FILE_REPLACE_ATOMIC_CONSUME_STAGE | R4SYS_FILE_REPLACE_ATOMIC_REQUIRE_TARGET_ABSENT | R4SYS_FILE_REPLACE_ATOMIC_REQUIRE_OWNED_STAGE)) ||
+        ((flags & (R4SYS_FILE_REPLACE_ATOMIC_REQUIRE_TARGET_ABSENT | R4SYS_FILE_REPLACE_ATOMIC_REQUIRE_OWNED_STAGE)) && !(flags & R4SYS_FILE_REPLACE_ATOMIC_CONSUME_STAGE)) ||
+        ((flags & R4SYS_FILE_REPLACE_ATOMIC_REQUIRE_OWNED_STAGE) &&
+         (flags & (R4SYS_FILE_REPLACE_ATOMIC_CONSUME_STAGE | R4SYS_FILE_REPLACE_ATOMIC_REQUIRE_TARGET_ABSENT)) !=
+         (R4SYS_FILE_REPLACE_ATOMIC_CONSUME_STAGE | R4SYS_FILE_REPLACE_ATOMIC_REQUIRE_TARGET_ABSENT))) return R4SYS_FILE_REPLACE_ATOMIC_ERROR_INVALID;
+    return r4sys_file_replace_atomic_flags(files->system, (const char *)target->bytes, (const char *)stage->bytes, (const char *)backup->bytes, flags);
+}
+
+static inline int32_t r4_files_directory_changes_begin(R4Files *files, const R4FilePath *path, R4DirectoryChangeCursor *cursor) {
+    if (!files || !files->system || !files->system->table || !path || !cursor) return R4OS_ERROR_INVALID;
+    const R4XStartR4Sys *t = files->system->table;
+    if (t->size < offsetof(R4XStartR4Sys, directory_change_begin) + sizeof(uintptr_t) || !t->directory_change_begin) return R4OS_ERR_NO_FN;
+    *cursor = (R4DirectoryChangeCursor){.version=1, .size=sizeof(*cursor)};
+    return ((R4SysDirectoryChangeBeginFn)(uintptr_t)t->directory_change_begin)(path->bytes, cursor);
+}
+static inline int32_t r4_files_directory_changes_poll(R4Files *files, R4DirectoryChangeCursor *cursor) {
+    if (!files || !files->system || !files->system->table || !cursor) return R4OS_ERROR_INVALID;
+    const R4XStartR4Sys *t = files->system->table;
+    if (t->size < offsetof(R4XStartR4Sys, directory_change_poll) + sizeof(uintptr_t) || !t->directory_change_poll) return R4OS_ERR_NO_FN;
+    return ((R4SysDirectoryChangePollFn)(uintptr_t)t->directory_change_poll)(cursor);
 }
 
 static inline R4DirectoryIterator r4_files_iterate(R4Files files, const R4FilePath *directory) {
@@ -298,10 +335,14 @@ static inline R4Operation r4_stream_writer_write(R4StreamWriter *writer, const u
     writer->offset += length; return r4_operation_status(R4OS_FILE_STREAM_RESULT_OK);
 }
 
-static inline R4Operation r4_stream_writer_finish(R4StreamWriter *writer) {
+static inline R4Operation r4_stream_writer_finish_flags(R4StreamWriter *writer, uint32_t flags) {
     if (writer == 0 || !writer->active || writer->files.system->table->file_stream_finish == 0) return r4_operation_status(R4OS_ERR_NO_FN);
-    int32_t raw = ((R4SysFileStreamFinishFn)(uintptr_t)writer->files.system->table->file_stream_finish)(writer->path->bytes, writer->offset, 0u);
+    int32_t raw = ((R4SysFileStreamFinishFn)(uintptr_t)writer->files.system->table->file_stream_finish)(writer->path->bytes, writer->offset, flags);
     writer->raw_code = raw; writer->active = 0u; return r4_operation_status(raw);
+}
+
+static inline R4Operation r4_stream_writer_finish(R4StreamWriter *writer) {
+    return r4_stream_writer_finish_flags(writer, 0u);
 }
 
 static inline R4Operation r4_stream_writer_abort(R4StreamWriter *writer) {

@@ -38,6 +38,22 @@ pub fn build(b: *std.Build) void {
         return;
     }
     const sdk_profile = Sdk.init(b, .{ .contract_dependency = contract_dependency });
+    if (b.option(bool, "facade-generator-only", "Build the compiler-typed SDK C/Rust facade projector") orelse false) {
+        const root = b.createModule(.{ .root_source_file = b.path("Tools/CFacadeGen/src/main.zig"), .target = b.graph.host, .optimize = .ReleaseSafe, .link_libc = true });
+        root.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
+        root.addIncludePath(sdk_profile.profile.c_include_root);
+        root.addIncludePath(sdk_profile.profile.contract_c_include_root);
+        b.installArtifact(b.addExecutable(.{ .name = "c-facade-gen", .root_module = root }));
+        return;
+    }
+    if (b.option(bool, "facade-runtime-only", "Build the SDK C facade object for Rust consumers") orelse false) {
+        const native = b.option(bool, "facade-host-test", "Use native ABI for facade interop only") orelse false;
+        const object = r4os_build.addFacadeRuntime(b, b.path("Shared/C/src/facades.c"), sdk_profile.profile.c_include_root, sdk_profile.profile.contract_c_include_root, native);
+        b.getInstallStep().dependOn(&b.addInstallFile(object, "lib/r4sdk_facades.o").step);
+        const storage_runtime = r4os_build.addStorageRuntimeObject(b, b.path("r4os/storage_runtime.zig"), sdk_profile.profile.contract_module, sdk_profile.profile.grapheme_source.?, sdk_profile.builder, native);
+        b.getInstallStep().dependOn(&b.addInstallFile(storage_runtime, "lib/r4sdk_storage.o").step);
+        return;
+    }
     const r4l_generator_tests = b.addRunArtifact(b.addTest(.{ .root_module = sdk_profile.r4l_contract_generator.?.root_module }));
     b.step("r4l-contract-test", "Run the existing library contract generator cases").dependOn(&r4l_generator_tests.step);
     if (b.option(bool, "r4l-contract-generator-only", "Build only the host library contract generator") orelse false) {
@@ -54,6 +70,9 @@ pub fn build(b: *std.Build) void {
     const heap_runtime = sdk_profile.addHeapRuntime();
     b.getInstallStep().dependOn(&b.addInstallFile(heap_runtime, "lib/r4sdk_heap.o").step);
     if (b.option(bool, "heap-runtime-only", "Build only the module CPU-profile shared C/Rust heap object") orelse false) return;
+    const facade_runtime = r4os_build.addFacadeRuntime(b, b.path("Shared/C/src/facades.c"), sdk_profile.profile.c_include_root, sdk_profile.profile.contract_c_include_root, false);
+    b.getInstallStep().dependOn(&b.addInstallFile(facade_runtime, "lib/r4sdk_facades.o").step);
+    b.getInstallStep().dependOn(&b.addInstallFile(sdk_profile.addStorageRuntime(), "lib/r4sdk_storage.o").step);
     b.installArtifact(sdk_profile.builder);
     if (sdk_profile.r4l_contract_generator) |generator| b.installArtifact(generator);
 
@@ -78,6 +97,10 @@ pub fn build(b: *std.Build) void {
     });
 
     const host_r4os = sdk_profile.createR4osModule(b.graph.host, .Debug);
+    const storage_cases = b.createModule(.{ .root_source_file = b.path("Tests/Conformance/StorageFacadePrototype05823.zig"), .target = b.graph.host, .optimize = .Debug });
+    storage_cases.addImport("r4os", host_r4os);
+    const storage_parity = b.addRunArtifact(b.addTest(.{ .root_module = storage_cases }));
+    b.step("storage-parity-test", "Existing file/registry/physical storage cases and imported codec/path owners").dependOn(&storage_parity.step);
     const sdk_unit_tests = b.addTest(.{ .root_module = host_r4os });
     const run_sdk_unit_tests = b.addRunArtifact(sdk_unit_tests);
     const dialog_root = b.createModule(.{

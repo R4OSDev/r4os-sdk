@@ -1,14 +1,22 @@
 #![no_std]
-//! Minimal normal R4X runtime. Layouts, callbacks and constants come from the
-//! matched generated Contract crate. There is no allocator or unwind runtime.
+//! Normal R4X runtime and borrowed SDK facades. Layouts, callbacks and constants
+//! come from the matched Contract crate. `alloc` is optional; panic aborts.
 
 use core::sync::atomic::{AtomicPtr, Ordering};
 use core::{ffi::CStr, marker::PhantomData, mem, ptr};
 pub use r4os_contract as abi;
+pub mod bounded_text;
+pub mod c_facades;
+pub mod directory_page;
 pub mod heap;
 mod memory;
+pub mod path;
+pub mod physical_storage;
 pub mod r4l;
+pub mod registry_diagnostics;
+pub mod registry_hive;
 mod startup;
+pub mod storage;
 pub use startup::{ImportSpec, StartupInfo};
 
 static PANIC_CONTEXT: AtomicPtr<abi::R4XStartContext> = AtomicPtr::new(ptr::null_mut());
@@ -461,7 +469,7 @@ pub unsafe fn start(
 
 #[cfg(target_os = "none")]
 #[panic_handler]
-fn panic(_info: &core::panic::PanicInfo<'_>) -> ! {
+fn panic(info: &core::panic::PanicInfo<'_>) -> ! {
     let raw = PANIC_CONTEXT.load(Ordering::Acquire);
     if !raw.is_null() {
         // The normal validated context remains pinned by the loader until
@@ -471,7 +479,38 @@ fn panic(_info: &core::panic::PanicInfo<'_>) -> ! {
             name: c"panic",
             _local: PhantomData,
         };
-        let _ = app.write("[RUST] panic: failed process exit\n");
+        let _ = app.write("[RUST] panic");
+        if let Some(location) = info.location() {
+            let _ = app.write(" at ");
+            let _ = app.write(location.file());
+            let _ = app.write(":");
+            let mut digits = [0u8; 10];
+            let mut at = digits.len();
+            let mut line = location.line();
+            loop {
+                at -= 1;
+                digits[at] = b'0' + (line % 10) as u8;
+                line /= 10;
+                if line == 0 {
+                    break;
+                }
+            }
+            let _ = app.write(unsafe { core::str::from_utf8_unchecked(&digits[at..]) });
+        }
+        struct PanicWriter<'a, 'b>(&'a App<'b>);
+        impl core::fmt::Write for PanicWriter<'_, '_> {
+            fn write_str(&mut self, text: &str) -> core::fmt::Result {
+                if self.0.write(text) < 0 {
+                    Err(core::fmt::Error)
+                } else {
+                    Ok(())
+                }
+            }
+        }
+        let _ = core::fmt::write(
+            &mut PanicWriter(&app),
+            format_args!(": {}\n", info.message()),
+        );
         if let Some(address) = app.sys_slot(mem::offset_of!(abi::R4XStartR4Sys, program_exit)) {
             let f: abi::R4SysFns::program_exit = unsafe { mem::transmute(address) };
             let _ = unsafe { f(-101, abi::program_exit_reason_failed as u32) };

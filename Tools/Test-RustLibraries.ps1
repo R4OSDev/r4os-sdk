@@ -74,6 +74,7 @@ try{
 
 $guest=Join-Path $WorkRoot 'Guest'
 Copy-Item -LiteralPath (Join-Path $sdk 'Tests/Build/RustLibrary') -Destination $guest -Recurse
+Move-Item -LiteralPath (Join-Path $guest 'module.R4MF.template') -Destination (Join-Path $guest 'module.R4MF')
 $template=[IO.File]::ReadAllText((Join-Path $guest 'Cargo.toml.template'))
 $template=$template.Replace('{R4StdRoot}',(Join-Path $LibrariesRoot 'R4STD/Bindings/Rust').Replace('\','/').Replace('"','\"'))
 [IO.File]::WriteAllText((Join-Path $guest 'Cargo.toml'),$template,$utf8)

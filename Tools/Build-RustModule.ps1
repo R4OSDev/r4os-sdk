@@ -102,6 +102,12 @@ try{
     $packager=Canonical $ToolsRoot $rustToolProfile.hosts[$hostName].packager
     $heapRuntime=Canonical $ToolsRoot $rustToolProfile.runtime.heap.path
     if((Hash $heapRuntime) -cne $rustToolProfile.runtime.heap.sha256){throw 'MatchedHeapRuntimeMismatch'}
+    $facadeObjects=@(foreach($name in @('facades','storage')){
+        $item=$rustToolProfile.runtime[$name]
+        $path=Canonical $ToolsRoot $item.path
+        if((Hash $path) -cne $item.sha256){throw ('MatchedSdkRuntimeMismatch: '+$name)}
+        $path
+    })
     if($IsLinux){& chmod 755 $catalog $packager;if($LASTEXITCODE -ne 0){throw 'Cannot prepare executable host tools'}}
     $phase='manifest'
     $manifest=Join-Path $ProjectRoot 'module.R4MF'
@@ -149,10 +155,16 @@ try{
     $targetDir=Join-Path $CacheRoot ('Projects/'+[Convert]::ToHexString([Security.Cryptography.SHA256]::HashData([Text.Encoding]::UTF8.GetBytes($ProjectRoot+'|'+$description.toolset_manifest_sha256))).ToLowerInvariant())
     $cpuPath=Join-Path $ContractRoot 'Module/CpuBaseline.json';$cpu=Get-Content -Raw -LiteralPath $cpuPath|ConvertFrom-Json -AsHashtable
     if((Hash $cpuPath) -cne $rustToolProfile.runtime.heap.cpu_baseline_sha256){throw 'HeapRuntimeCpuContractMismatch'}
+    foreach($name in @('facades','storage')){if((Hash $cpuPath) -cne $rustToolProfile.runtime[$name].cpu_baseline_sha256){throw ('SdkRuntimeCpuContractMismatch: '+$name)}}
     if($cpu.format -ne 1 -or $cpu.xcr0_mask -ne 7){throw 'Unsupported CPU baseline'}
     $mapping=@{'-msse2'='sse2';'-mavx2'='avx2';'-maes'='aes';'-mpclmul'='pclmulqdq'}
-    $features=@(foreach($requirement in $cpu.requirements){if($requirement.ContainsKey('c_flag')){if(!$mapping.ContainsKey($requirement.c_flag)){throw 'Unmapped canonical CPU requirement'};'+'+$mapping[$requirement.c_flag]}})
-    $flags=@('-C',('code-model='+$codegen.code_model),'-C',('relocation-model='+$codegen.relocation_model),'-C','no-redzone=yes','-C',('target-cpu='+$cpu.cpu_model.Replace('_','-')),'-C',('target-feature='+($features -join ',')),'-C',('lto='+$codegen.lto),'-C','embed-bitcode=yes','-C',('codegen-units='+$codegen.codegen_units),'-C',('panic='+$codegen.panic))
+    $cpuFeatures=@(foreach($requirement in $cpu.requirements){if($requirement.ContainsKey('c_flag')){if(!$mapping.ContainsKey($requirement.c_flag)){throw 'Unmapped canonical CPU requirement'};'+'+$mapping[$requirement.c_flag]}})
+    if(!$codegen.backend_features.reason -or $codegen.backend_features.selection -cne 'target-defaults'){throw 'RustBackendFeaturePolicyInvalid'}
+    # Hardware admission and C/Zig objects retain the complete common floor.
+    # Do not apply their SIMD switches to this softfloat Rust target: the
+    # pinned backend miscompiles ordinary aggregate moves in that combination.
+    $effectiveCpuFeatures=@()
+    $flags=@('-C',('code-model='+$codegen.code_model),'-C',('relocation-model='+$codegen.relocation_model),'-C','no-redzone=yes','-C',('target-cpu='+$cpu.cpu_model.Replace('_','-')),'-C',('lto='+$codegen.lto),'-C','embed-bitcode=yes','-C',('codegen-units='+$codegen.codegen_units),'-C',('panic='+$codegen.panic))
     $remaps=@($inputRoots)+@(@{owner='cache';path=$CacheRoot},@{owner='tools';path=$InstallRoot},@{owner='output';path=$OutputRoot})
     foreach($root in $remaps|Sort-Object {$_.path.Length}){$flags+=('--remap-path-prefix='+$root.path+'=/r4os/'+$root.owner)}
     $envForCargo=@{CARGO_HOME=$cargoBuildHome;RUSTUP_HOME=$description.rustup_home;RUSTUP_TOOLCHAIN=([IO.Path]::GetFileName($description.toolchain));RUSTUP_AUTO_INSTALL='0';RUSTC=$compiler;CARGO_TARGET_DIR=$targetDir;CARGO_ENCODED_RUSTFLAGS=($flags -join [char]31);RUSTFLAGS=$null;R4OS_STARTUP_INFO_FILE=$startupFile;R4OS_MODULE_NAME=$facts.name;CARGO_INCREMENTAL='0';CARGO_PROFILE_RELEASE_OPT_LEVEL=$codegen.optimization[$facts.optimization];CARGO_PROFILE_RELEASE_PANIC='abort';CARGO_PROFILE_RELEASE_OVERFLOW_CHECKS='true';CARGO_PROFILE_RELEASE_DEBUG_ASSERTIONS='false';CARGO_PROFILE_RELEASE_DEBUG='0';CARGO_PROFILE_RELEASE_STRIP='none';CARGO_TERM_COLOR='never'}
@@ -205,7 +217,7 @@ try{
     if(!$archive -or !(Test-Path -LiteralPath $archive -PathType Leaf)){throw 'RustArchiveMissing'}
     $phase='link'
     $linked=Join-Path $work 'module.elf';$script=Canonical $SdkRoot $codegen.linker_script
-    Invoke-Tool $description.linker (@('-flavor','gnu','--emit-relocs','--gc-sections','--no-undefined','--strip-debug','--entry','R4XStart','-T',$script,'-o',$linked,$archive,$heapRuntime)+$native.objects) $work|Out-Null
+    Invoke-Tool $description.linker (@('-flavor','gnu','--emit-relocs','--gc-sections','--no-undefined','--strip-debug','--entry','R4XStart','-T',$script,'-o',$linked,$archive,$heapRuntime)+$facadeObjects+$native.objects) $work|Out-Null
     $phase='package'
     $candidate=Join-Path $work 'module.R4X'
     $packArgs=@('--r4m','--kind','r4x','--elf',$linked,'--output',$candidate,'--module-name',$facts.name,'--app-class',$facts.app_class,'--export','R4XStart:@R4XStart:1')
@@ -225,8 +237,11 @@ try{
     })+@($native.inputs)
     if(!@($observed|Where-Object {$_.owner -ceq 'project' -and $_.path -ceq $rust.source}).Count){throw 'RustCompilerSourceNotObserved'}
     if(!@($observed|Where-Object owner -CEQ 'generated').Count){throw 'RustCompilerStartupInfoNotObserved'}
-    $result=[ordered]@{schema=1;profile=$rust.profile;status='success';technical=[bool]$Technical;module=@{name=$facts.name;version=$rust.module_version;kind='R4X';app_class=$facts.app_class;target=$facts.target;imports=$facts.imports};cargo=@{name=$package.name;version=$package.version;source=$rust.source;target=$codegen.target;lock_sha256=Hash (Join-Path $ProjectRoot 'Cargo.lock')};sdk=$rustToolProfile.sdk;contract=$rustToolProfile.contract;tools=@{profile_sha256=Hash $rustToolProfilePath;pin_sha256=$description.pin_sha256;rust=$description.rust_version;cargo=$description.cargo_version;linker_sha256=$description.linker_sha256;packager_sha256=Hash $packager;catalog_sha256=Hash $catalog};cpu=@{id=$cpu.name;sha256=Hash $cpuPath;features=$features};codegen=@{profile_sha256=Hash $codegenPath;code_model=$codegen.code_model;relocation_model=$codegen.relocation_model;lto=$codegen.lto;red_zone=$false;panic='abort';stack_probes=$codegen.stack_probes};declared_inputs=$declared;compiler_inputs=$observed;elf=@{file=[IO.Path]::GetFileName($elf);sha256=Hash $linked};artifact=@{file=[IO.Path]::GetFileName($artifact);sha256=Hash $candidate;bytes=([IO.FileInfo]$candidate).Length};container_inspection=$inspection.Trim()}
+    $result=[ordered]@{schema=1;profile=$rust.profile;status='success';technical=[bool]$Technical;module=@{name=$facts.name;version=$rust.module_version;kind='R4X';app_class=$facts.app_class;target=$facts.target;imports=$facts.imports};cargo=@{name=$package.name;version=$package.version;source=$rust.source;target=$codegen.target;lock_sha256=Hash (Join-Path $ProjectRoot 'Cargo.lock')};sdk=$rustToolProfile.sdk;contract=$rustToolProfile.contract;tools=@{profile_sha256=Hash $rustToolProfilePath;pin_sha256=$description.pin_sha256;rust=$description.rust_version;cargo=$description.cargo_version;linker_sha256=$description.linker_sha256;packager_sha256=Hash $packager;catalog_sha256=Hash $catalog};cpu=@{id=$cpu.name;sha256=Hash $cpuPath;features=$cpuFeatures};codegen=@{profile_sha256=Hash $codegenPath;code_model=$codegen.code_model;relocation_model=$codegen.relocation_model;lto=$codegen.lto;red_zone=$false;panic='abort';stack_probes=$codegen.stack_probes};declared_inputs=$declared;compiler_inputs=$observed;elf=@{file=[IO.Path]::GetFileName($elf);sha256=Hash $linked};artifact=@{file=[IO.Path]::GetFileName($artifact);sha256=Hash $candidate;bytes=([IO.FileInfo]$candidate).Length};container_inspection=$inspection.Trim()}
     $result['memory']=@{sdk_features=$sdkFeatureNames;heap_runtime=@{path=$rustToolProfile.runtime.heap.path;sha256=Hash $heapRuntime;owner='SDK/r4os/vm_allocator.zig';instance_checked=$true};alloc_sysroot_component='rust-std/'+$codegen.target;root_return_releases_heap=$false}
+    $result['sdk_runtimes']=@{facades=$rustToolProfile.runtime.facades;storage=$rustToolProfile.runtime.storage}
+    $result.codegen['target_features']=$effectiveCpuFeatures
+    $result.codegen['backend_feature_policy']=$codegen.backend_features
     $result['schema']=2
     $result.cargo['graph']=$crateGraph
     $result.cargo['selected_features']=$Features

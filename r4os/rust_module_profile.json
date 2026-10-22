@@ -2,6 +2,7 @@
   "schema": 2,
   "id": "r4os-rust-r4x-v2",
   "target": "x86_64-unknown-none",
+  "backend_features": {"selection": "target-defaults", "reason": "Pinned Rust1.99 softfloat bare-metal aggregate copies omit alternating bytes when SIMD features are enabled (SSE2 at56bytes, AVX at72bytes). Keep the verified built-in integer codegen until a qualified compiler/target correction. Canonical required hardware and full-ISA Zig/C runtime objects are unchanged; direct Rust SIMD is not qualified."},
   "code_model": "kernel",
   "relocation_model": "pie",
   "lto": "fat",

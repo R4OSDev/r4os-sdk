@@ -28,6 +28,12 @@ contracts into local Rust consumer crates. Checked SDK `r4l` clients borrow
 the App; C gains explicit optional admission and Query metadata access.
 Library implementations and baselines stay with their owners; Rust provider
 implementation roles remain separate from consuming those libraries.
+SDK0.64.72 completes the storage/path/registry/console facade group for Rust
+and C. Rust reuses compiler-projected C facades and the existing Zig save,
+recent-document, hive and Unicode buffer owners through matched SDK objects.
+The same release fixes the current recent-document write capacity and keeps
+Cargo feature selection independent of mandatory CPU compiler features.
+Other facade groups remain in their respective parity waves.
 SDK0.64.67 binds Contract0.64.42's complete technical C projection. Driver,
 protocol, DMA/USB and service records now come from the canonical Contract;
 the three manually duplicated network reply records are removed from the SDK.

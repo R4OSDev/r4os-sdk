@@ -15,6 +15,8 @@
 #include "heap.h"
 #include "app_storage.h"
 #include "storage.h"
+#include "storage_helpers.h"
+#include "directory_page.h"
 #include "app_gui.h"
 #include "app_resources.h"
 #include "app_services.h"

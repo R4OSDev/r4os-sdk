@@ -1,6 +1,13 @@
 const std = @import("std");
 const r4os = @import("r4os");
 
+test "storage parity includes the path recent registry and bounded text owners" {
+    std.testing.refAllDecls(r4os.path);
+    std.testing.refAllDecls(r4os.recent_documents);
+    std.testing.refAllDecls(r4os.registry);
+    std.testing.refAllDecls(r4os.bounded_text);
+}
+
 const file_bytes = "hello";
 const config_bytes = "\xEF\xBB\xBFR4S_FORMAT=1\r\nSCHEMA=TEST\r\nTITLE=Configured\r\nCOUNT=27\r\n";
 var written: [64]u8 = .{0} ** 64;

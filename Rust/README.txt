@@ -213,6 +213,46 @@ named table or platform API. Rust raw records/tables assert all local sizes,
 alignments and field/slot offsets during compilation. Higher library helper
 facades remain their own parity waves; these are complete contract consumers.
 
+Storage/paths/registry/console (SDK0.64.72)
+-----------------------------------------
+storage::System borrows the current App. Files, stream readers/writers,
+directory iteration/pages and registry values/snapshots/batches retain their
+provider, path and caller-buffer loans. physical_storage exposes the existing
+generation-bound inventories, claims and use leases, with explicit completion.
+Partial bytes, EOF, missing values, restart status, ambiguous publication and
+failed close remain distinct. Writers need explicit finish/abort; an error
+during begin returns its writer for checked cleanup. Retained create-only
+stages use finish_keep_ownership and publish_create; a confirmed publication
+closes that writer before another stream reuses the path.
+
+path uses the existing C normalization core. bounded_text, registry_hive,
+document saving, recent documents and registry_diagnostics use the existing
+Zig owners through SDK-local objects. Hive views pin immutable input; build/
+text transforms use caller-provided scratch/output. Directory pages publish
+only after a complete successful scan. C headers supply the same missing
+helpers and generic bounded page/snapshot containers. Byte APIs perform no
+implicit text conversion. Console write/line/put use the complete existing
+Zig policy, including short writes and CRLF; their Result validates dispatch,
+not an additional transport-completion promise absent from the Zig facade.
+
+c_facades is a generated unsafe projection of the existing C owners; platform
+records alias the canonical Contract crate. CFacadeGen verifies every layout.
+Publishers build/export r4sdk_heap.o, r4sdk_facades.o and r4sdk_storage.o with
+the common CPU profile and real stack probes. Rust consumers need no Zig for
+these objects. C companions still select pinned Zig explicitly. Runtime hashes
+and CPU/source identities belong to the tool profile and build receipt.
+
+The pinned1.99 bare-metal softfloat backend produces incomplete aggregate
+copies when SIMD is explicitly enabled: SSE2 at56 bytes and AVX at72 bytes.
+Rust codegen therefore uses the verified built-in integer target defaults.
+The canonical required hardware floor and full-ISA C/Zig objects stay intact.
+Receipts distinguish hardware requirements from effective Rust features;
+Cargo feature selection is separate. Direct Rust SIMD and new floating-point
+ABI claims need the later profile qualification. The reusable minimal source
+is Tests/Simulation/RustAggregateCopy.rs; real nonzero record/FFI checks live
+in the RustStorage fixture. Panic output includes source location and message
+without an allocator, while retaining failed process exit and terminal trap.
+
 The shared SDK module_capabilities.zig Decision supplies supported/code/reason,
 owner_contract and missing_steps. Installation of a compiler does not change
 these support decisions. Further Rust roles are deliberately separate work:
