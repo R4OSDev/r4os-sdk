@@ -1,7 +1,7 @@
 ﻿ModuleCatalog capability interface3
 ===================================
 
-Public query (SDK0.64.89 and matched toolset):
+Public query (SDK0.64.90 and matched toolset):
 
   bin/<host-triple>/module-catalog capabilities --json
   module-catalog capabilities --json --profile /TOOLS/RustToolsProfile.json
@@ -124,3 +124,18 @@ source/tool/artifact receipts, not this capability schema3 or semantic plan1.
 An actual complete capability JSON is included with the SDK release manifest;
 the query above reproduces it without a compiler. This interface implements no
 IDE version selector, project lock management or native Rust compiler.
+
+SDK0.64.90 release qualification
+--------------------------------
+The separate source/tool archives and exact published bytes are described by
+SDK-Release.json. Libraries is an explicit independent component for local
+library clients/helpers; it is not an implicit workspace sibling dependency.
+The current matrix binds functional owner evidence through71 and the ongoing
+source review gate in drift_guard. Original body/projection changes require
+review of the affected C/Rust implementation and matching functional proof.
+The small gate is part of SDK module-test/test and language-parity-check;
+it is not another runtime suite and does not create consumer project pins.
+Linux and actual KVM4 desktop-host evidence remain qualified. Windows testing
+was explicitly skipped on2026-10-22; Windows execution and cross-host byte
+identity remain false. Keep native compiler, integer Rust backend, hardware,
+physical visibility, lifecycle and performance limits from the actual owners.

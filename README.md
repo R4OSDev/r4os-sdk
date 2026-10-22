@@ -1,9 +1,41 @@
 ﻿# R4OS SDK
 
-The host-neutral R4OS SDK provides Zig and C startup code, platform facades,
-module build support, templates, build profiles, and generic Runtime-R4L
-helpers. The platform API and ABI remain canonical in the separate Contract
-repository.
+The host-neutral R4OS SDK provides Zig, Rust and C module roots, current
+platform and library helpers, build profiles and general project templates.
+The platform API and ABI remain canonical in the separate Contract repository.
+
+SDK0.64.90 packages the completed functional language-parity work47–71.
+Select SDK, Contract, Libraries and the matched toolset explicitly; all are
+independent archives described by SDK-Release.json. Genuine host R4X, R4L,
+R4D and R4P roots, app/lowlevel entry and GUI subsystem hosts are available
+in all three languages. The common creator has33 host templates and retains
+the two separate native C templates. Project pins and version selection belong
+to the external caller; technical dependency/toolchain pins remain enforced.
+
+Linux builds and local KVM-SMP4 functionality have qualified evidence in
+[Inventory/LanguageParity.json](Inventory/LanguageParity.json), including
+real C/Rust SHELL hosts with the current Desktop imports and WindowService
+claim. Windows execution was explicitly skipped by the user on2026-10-22;
+prepared Windows binaries do not qualify execution or cross-host identity.
+Native R4CC remains a C subset; native Zig/Rust compilers are unavailable.
+Rust uses its qualified integer codegen profile; direct Rust FP/SIMD,
+physical hardware and performance remain separate qualifications.
+
+The existing SDK module-test/test also run the small source review gate:
+
+    zig build language-parity-check -Dparity-library-root=/LIBRARIES
+    pwsh -File Tools/Test-LanguageParity.ps1 -SdkRoot /SDK -ContractRoot /CONTRACT -LibraryRoot /LIBRARIES
+
+Use the ordinary matched Contract dependency/fork for the Zig command.
+The gate compares actual owner bodies, shared bridges, generated C/Rust
+projections and their functional-evidence mapping. A changed/new/deleted
+input fails until its affected implementations and evidence are reviewed;
+it never automatically refreshes hashes or grants functional qualification.
+Unchanged evidence can be reused. The historical47 inventory stays dated;
+current review identities live in drift_guard, with BOM/LF/CRLF normalized
+only for this review. Real build receipts still hash exact compiler bytes.
+Further public API changes must update the affected language facades/packages
+and evidence in this same matrix, including later Desktop/Library work.
 
 Rust host modules use the Contract's `Module/RustModuleV2.txt` and the matched
 isolated tool profile. SDK0.64.60 supplies the actual no_std source-to-R4M0

@@ -53271,6 +53271,101 @@
         "cross_host_byte_identity_qualified": false,
         "reason": "Explicit user instruction: Wir ueberspringen den Windowstest. Bitte weitermachen."
       }
+    },
+    "source_review_current_72": {
+      "complete": true,
+      "performed_in": "0.86.72",
+      "sdk": "0.64.90",
+      "contract": "0.64.44",
+      "libraries": "0.64.27",
+      "scope": "Host review gate/export/version metadata only. Runtime bodies, canonical ABI and qualified compiler profiles unchanged from71. Reuse exact functional owner evidence47–71; no new guest/STANDARD/hardware qualification. Published component/source/archive identities belong to the general SDK-Release.json, not caller project pins.",
+      "drift_checks": {
+        "schema": 1,
+        "host": "Linux",
+        "cases": [
+          {
+            "case": "unchanged review",
+            "passed": true,
+            "exit": 0
+          },
+          {
+            "case": "changed public Zig function",
+            "passed": true,
+            "exit": 1
+          },
+          {
+            "case": "new owner file",
+            "passed": true,
+            "exit": 1
+          },
+          {
+            "case": "changed Rust implementation",
+            "passed": true,
+            "exit": 1
+          },
+          {
+            "case": "changed C implementation",
+            "passed": true,
+            "exit": 1
+          },
+          {
+            "case": "missing functional proof",
+            "passed": true,
+            "exit": 1
+          },
+          {
+            "case": "missing real Rust implementation",
+            "passed": true,
+            "exit": 1
+          },
+          {
+            "case": "new unreviewed library owner",
+            "passed": true,
+            "exit": 1
+          },
+          {
+            "case": "BOM and CRLF source equivalence",
+            "passed": true,
+            "exit": 0
+          },
+          {
+            "case": "new public root function requires mapping even after source hash update",
+            "passed": true,
+            "exit": 1
+          }
+        ],
+        "windows_execution": false,
+        "scope": "Source review gate positives/negatives only; no functional runtime requalification"
+      },
+      "integration": "Tools/Test-LanguageParity.ps1; SDK language-parity-check plus original module-test/test",
+      "windows_execution": false,
+      "windows_test": "explicitly_skipped_by_user_2026-10-22",
+      "reuse": [
+        "source_inventory",
+        "central_abi_interop",
+        "rust_qualified_classes",
+        "local_contract_and_baseline",
+        "storage_current_53",
+        "resource_current_54",
+        "service_network_current_55",
+        "gui_current_56",
+        "graphics_current_57",
+        "platform_current_58",
+        "language_libraries_current_59",
+        "language_libraries_current_60",
+        "data_current_61",
+        "library_projection_current_61",
+        "web_current_62",
+        "transport_current_63",
+        "update_current_64",
+        "subsystems_current_65",
+        "r4l_providers_current_66",
+        "drivers_current_67",
+        "protocols_current_68",
+        "lowlevel_current_69",
+        "tooling_templates_current_70",
+        "independent_desktop_current_71"
+      ]
     }
   },
   "wave_bindings": [
@@ -53514,13 +53609,3484 @@
     }
   ],
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
-  "open_acceptance": "72: final standalone publication and ongoing API drift guard remain.71 accepted with explicit user skip of Windows execution on2026-10-22; Windows/cross-host identity remain unqualified. Existing native-compiler, hardware, SIMD/performance and exact owner lifecycle limits remain.",
+  "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.86.71",
-    "sdk": "0.64.89",
+    "performed_in": "0.86.72",
+    "sdk": "0.64.90",
     "contract": "0.64.44",
     "libraries": "0.64.27",
-    "evidence": "independent_desktop_current_71",
-    "scope": "Current180 public root exports;222 historical source identities rechecked with206unchanged/16existing owner deltas;24local contracts/baselines unchanged. Historical snapshot47 retained explicitly. 71 accepted with explicit user skip of Windows execution on2026-10-22; no Windows/cross-host qualification."
+    "evidence": "source_review_current_72",
+    "scope": "71 current180root/222historical+additional source and24local-contract review retained; source review gate watches actual current bodies/bridges/C/Rust projections. No runtime body or canonical ABI change after71; independent Linux/KVM4 desktop-host and original functional waves reused. Windows execution explicitly skipped by user."
+  },
+  "drift_guard": {
+    "schema": 1,
+    "hash_mode": "utf8-bomless-lf",
+    "reviewed_in": "0.86.72",
+    "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
+    "watch": [
+      "Repositories/Contract/API",
+      "Repositories/Contract/Generated/Inventory",
+      "Repositories/Contract/Generated/SDK",
+      "Repositories/Contract/Module",
+      "Repositories/Contract/Tools/AbiRustGen",
+      "Repositories/Contract/Tools/ApiContractGen",
+      "Repositories/Libraries/R4ACO/Bindings",
+      "Repositories/Libraries/R4ACO/Contract",
+      "Repositories/Libraries/R4AMD/Bindings",
+      "Repositories/Libraries/R4AMD/Contract",
+      "Repositories/Libraries/R4ENC/Bindings",
+      "Repositories/Libraries/R4ENC/Contract",
+      "Repositories/Libraries/R4FONT/Bindings",
+      "Repositories/Libraries/R4FONT/Contract",
+      "Repositories/Libraries/R4GFX/Bindings",
+      "Repositories/Libraries/R4GFX/Contract",
+      "Repositories/Libraries/R4GFX/Display",
+      "Repositories/Libraries/R4GL/Bindings",
+      "Repositories/Libraries/R4GL/Contract",
+      "Repositories/Libraries/R4IMG/Bindings",
+      "Repositories/Libraries/R4IMG/Contract",
+      "Repositories/Libraries/R4NAK/Bindings",
+      "Repositories/Libraries/R4NAK/Contract",
+      "Repositories/Libraries/R4NV/Bindings",
+      "Repositories/Libraries/R4NV/Contract",
+      "Repositories/Libraries/R4STD/Bindings",
+      "Repositories/Libraries/R4STD/Contract",
+      "Repositories/Libraries/R4STD/Rust/lib.rs",
+      "Repositories/Libraries/R4STD/Rust/utf16.rs",
+      "Repositories/Libraries/R4VIDEO/Bindings",
+      "Repositories/Libraries/R4VIDEO/Contract",
+      "Repositories/Libraries/R4VK/Bindings",
+      "Repositories/Libraries/R4VK/Contract",
+      "Repositories/Libraries/Shared",
+      "Repositories/Libraries/consumer_adapters.zig",
+      "Repositories/Libraries/consumer_helpers.zig",
+      "Repositories/Libraries/consumer_media.zig",
+      "Repositories/SDK/BuildProfiles/README.txt",
+      "Repositories/SDK/Rust/Cargo.toml",
+      "Repositories/SDK/Rust/src",
+      "Repositories/SDK/Shared/C",
+      "Repositories/SDK/Shared/Generated",
+      "Repositories/SDK/Shared/Zig",
+      "Repositories/SDK/Tools",
+      "Repositories/SDK/build.zig",
+      "Repositories/SDK/build.zig.zon",
+      "Repositories/SDK/r4os",
+      "Repositories/SDK/r4os.zig"
+    ],
+    "files": [
+      {
+        "path": "Repositories/Contract/API/ApiContract.baseline.json",
+        "sha256": "521c5be36935d3f670b1991e303bcb6e88bf420dc4ee4c7428b7cf878dc2a1e3"
+      },
+      {
+        "path": "Repositories/Contract/API/ApiContract.json",
+        "sha256": "521c5be36935d3f670b1991e303bcb6e88bf420dc4ee4c7428b7cf878dc2a1e3"
+      },
+      {
+        "path": "Repositories/Contract/Generated/Inventory/API.json",
+        "sha256": "d8a0d41b8dff43462a4a5b4e54299dc14fea8becb41e071bf4c6f294098b9bd0"
+      },
+      {
+        "path": "Repositories/Contract/Generated/Inventory/RustABI.json",
+        "sha256": "ff8c45bd94d79705426840b186ccf3c684b4d8c8dd8c5f5e3d4cd987b68db1eb"
+      },
+      {
+        "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_generated.h",
+        "sha256": "41990ffe635977bc99581ab363be582d712496a334439b5584d16abd6fe8c555"
+      },
+      {
+        "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_technical_generated.h",
+        "sha256": "c48357c163910366a8bfecb09ad8fd2b3a8780cb0efd34e7d1484169383b26ef"
+      },
+      {
+        "path": "Repositories/Contract/Generated/SDK/Rust/Cargo.toml",
+        "sha256": "de464f2f9243e3d153c06b701a2126839c3e8a921a6d466467d3042370023263"
+      },
+      {
+        "path": "Repositories/Contract/Generated/SDK/Rust/src/lib.rs",
+        "sha256": "0b96d1f4f55d14f2d129d874b7cf85c3dbef00b3d8a654600250bd71e4194354"
+      },
+      {
+        "path": "Repositories/Contract/Generated/SDK/Zig/abi.zig",
+        "sha256": "d3c45669cca76f8fda8ef7f2a21b3d1090db2cb8f0d105042242f551edde22e2"
+      },
+      {
+        "path": "Repositories/Contract/Generated/SDK/Zig/abi_exports.zig",
+        "sha256": "6ef49c3de609b92277e5c0d226342d106097430f98fca6cd6cf35e1b63a557b2"
+      },
+      {
+        "path": "Repositories/Contract/Generated/SDK/Zig/abi_generated.zig",
+        "sha256": "2dfd8ea26dda1f9d6861075059664cd0b8bb467de8e4469a510bdee7ece97f16"
+      },
+      {
+        "path": "Repositories/Contract/Generated/SDK/Zig/package.zig",
+        "sha256": "32fa2f4214c153fb4325361c9308ef8bc0a80a0d9c45c96423dcfb1edf828ff8"
+      },
+      {
+        "path": "Repositories/Contract/Module/CpuBaseline.json",
+        "sha256": "eeeee03aa8fd41051c09e61e9d70ca35660f2b413c3f878fb6e5a3bb51aad10c"
+      },
+      {
+        "path": "Repositories/Contract/Module/cpu_baseline.zig",
+        "sha256": "c6b6c864131aea4c2a6e635fccb954184ba7006449771a123454bf6853869de2"
+      },
+      {
+        "path": "Repositories/Contract/Tools/AbiRustGen/src/c_projection.zig",
+        "sha256": "256629dee502d035cfa60c4c3bba5debf546437294d30d3cae52d1994fee9651"
+      },
+      {
+        "path": "Repositories/Contract/Tools/AbiRustGen/src/main.zig",
+        "sha256": "61ec37eb008fb6626ed5400c2eca94f3ab0eda9595a27e84f90fa1ad32910f1c"
+      },
+      {
+        "path": "Repositories/Contract/Tools/ApiContractGen/src/main.zig",
+        "sha256": "2a5de58dc2a0feb6327377d67bfb1d1cde8377d12d9b7c44ec3b5c2d1752e9bc"
+      },
+      {
+        "path": "Repositories/Libraries/R4ACO/Bindings/C/r4aco.h",
+        "sha256": "c3cea82c98631bca53c4fdbbe60bf0507be7d6be19c1a7a7b791e288c233d86a"
+      },
+      {
+        "path": "Repositories/Libraries/R4ACO/Bindings/C/r4aco_helpers.h",
+        "sha256": "08889748bca4e32cc1b411aa6fbfe8d109acb75dc605445f4779b47646553b28"
+      },
+      {
+        "path": "Repositories/Libraries/R4ACO/Bindings/Rust/Cargo.toml",
+        "sha256": "448659d23c706867488f3b5eb5dc8673e286b2e7b4cf5d6999d1e4bc8acf062a"
+      },
+      {
+        "path": "Repositories/Libraries/R4ACO/Bindings/Rust/src/lib.rs",
+        "sha256": "b80e918e2d27e112fd279792e1f4a146f173de24e5698aa84233ced55c442afb"
+      },
+      {
+        "path": "Repositories/Libraries/R4ACO/Bindings/Zig/r4aco.zig",
+        "sha256": "55386326a7975641348ec9eab1eebfc53fd0a1bf9a3f3a74da48d90f80bc3f23"
+      },
+      {
+        "path": "Repositories/Libraries/R4ACO/Bindings/Zig/shaders.zig",
+        "sha256": "c4cd101ee0c166a34fae41c39c65ab39b357afe876f6a23b6a96ad93442f11db"
+      },
+      {
+        "path": "Repositories/Libraries/R4ACO/Bindings/Zig/worker.zig",
+        "sha256": "eac4d5742a05a2f0aa6f7ef2102278eb0acb9b6c0f35b65444ca8df925db9d8c"
+      },
+      {
+        "path": "Repositories/Libraries/R4ACO/Contract/Generated/implementation_abi.zig",
+        "sha256": "fd40ef1489b290ca71ed77b2da11b50257c4a6631181bd9d38adbb9ee7255c9d"
+      },
+      {
+        "path": "Repositories/Libraries/R4ACO/Contract/LibraryContract.baseline.json",
+        "sha256": "1f15b4524b73ae0e628f05d3d55e7377ba1155f8e68921cff7f64f195bb54084"
+      },
+      {
+        "path": "Repositories/Libraries/R4ACO/Contract/LibraryContract.json",
+        "sha256": "1f15b4524b73ae0e628f05d3d55e7377ba1155f8e68921cff7f64f195bb54084"
+      },
+      {
+        "path": "Repositories/Libraries/R4AMD/Bindings/C/r4amd.h",
+        "sha256": "1456aa3f22eac23b45aaa38025f8d612cc73178c198758d5735601f3363d8a5b"
+      },
+      {
+        "path": "Repositories/Libraries/R4AMD/Bindings/Rust/Cargo.toml",
+        "sha256": "9d9c5994599eb63d95dc562120c1121ec0e9477d82744602422e0bbc86627488"
+      },
+      {
+        "path": "Repositories/Libraries/R4AMD/Bindings/Rust/src/lib.rs",
+        "sha256": "0852125ac3832e0a65a153e3548d9569bef16637fda8a26a9774fc2fd6cb0559"
+      },
+      {
+        "path": "Repositories/Libraries/R4AMD/Bindings/Zig/r4amd.zig",
+        "sha256": "1fa039505eff4d14c458fa5396a02293230181cfa9b7968874ff98085b4400c2"
+      },
+      {
+        "path": "Repositories/Libraries/R4AMD/Contract/Generated/implementation_abi.zig",
+        "sha256": "a843d684c5201f877db6cb28a825150e6ff88527087885001707a489b83bdd25"
+      },
+      {
+        "path": "Repositories/Libraries/R4AMD/Contract/LibraryContract.baseline.json",
+        "sha256": "9b21262454f2854f6260bf9b0a4f09ac10e8aabf1470e83a913024518aa35a7c"
+      },
+      {
+        "path": "Repositories/Libraries/R4AMD/Contract/LibraryContract.json",
+        "sha256": "9b21262454f2854f6260bf9b0a4f09ac10e8aabf1470e83a913024518aa35a7c"
+      },
+      {
+        "path": "Repositories/Libraries/R4ENC/Bindings/C/r4enc.h",
+        "sha256": "4355b6ceb1314b06bb898a073a194049da53c489214b3d3ba1849d74301317b3"
+      },
+      {
+        "path": "Repositories/Libraries/R4ENC/Bindings/C/r4enc_helpers.h",
+        "sha256": "2f7c87f8edda4045198040632d354c84aa901f289b0a7246d0ead88ceb259405"
+      },
+      {
+        "path": "Repositories/Libraries/R4ENC/Bindings/Rust/Cargo.toml",
+        "sha256": "ce6241f9a90d76875650ea4fd49ae3bdb8dc6b960ffa9aa0b34b2ab08af3454e"
+      },
+      {
+        "path": "Repositories/Libraries/R4ENC/Bindings/Rust/src/helpers.rs",
+        "sha256": "387498fa3dd365cdb4f4f80cc840e72449beda72d2c1a5504df5ba9aa1005c5f"
+      },
+      {
+        "path": "Repositories/Libraries/R4ENC/Bindings/Rust/src/lib.rs",
+        "sha256": "0da10d14abefb0b8d1930a128ea574ff2c09093f2d222442be379219651182a2"
+      },
+      {
+        "path": "Repositories/Libraries/R4ENC/Bindings/Zig/r4enc.zig",
+        "sha256": "a77abeec0fe12ff0213bc3190270b423e0c14044f4cbbfc18c7bbe3e9f9cfc12"
+      },
+      {
+        "path": "Repositories/Libraries/R4ENC/Bindings/Zig/recording_mux.zig",
+        "sha256": "bff364a353ed06f859ecac7389492ede68c3b38d450f9f0560e4d9e82b308170"
+      },
+      {
+        "path": "Repositories/Libraries/R4ENC/Bindings/Zig/recording_pixels.zig",
+        "sha256": "872a3650e5ab26cf1774436bc3ad4c26c5fae7401b9f059ef14b547f2a708c91"
+      },
+      {
+        "path": "Repositories/Libraries/R4ENC/Contract/Generated/implementation_abi.zig",
+        "sha256": "b9f45bb5a44f75d100a6db4777efc2190a4026e39a9cc32e163d69fe5a6e9759"
+      },
+      {
+        "path": "Repositories/Libraries/R4ENC/Contract/LibraryContract.baseline.json",
+        "sha256": "f175cc46a67e529285a848a969fcb96419644a5757ebc447722bd957dc319a0a"
+      },
+      {
+        "path": "Repositories/Libraries/R4ENC/Contract/LibraryContract.json",
+        "sha256": "f175cc46a67e529285a848a969fcb96419644a5757ebc447722bd957dc319a0a"
+      },
+      {
+        "path": "Repositories/Libraries/R4FONT/Bindings/C/r4font.h",
+        "sha256": "0e62e8299dc16ae52abd809d9dc93a3d27fa1b8cdd383f6332c0a1e4bf9222e0"
+      },
+      {
+        "path": "Repositories/Libraries/R4FONT/Bindings/C/r4font_helpers.h",
+        "sha256": "dd13b4778a42c034366837f1a5c101069e05429fc70db4e31e0a8554d981ddc1"
+      },
+      {
+        "path": "Repositories/Libraries/R4FONT/Bindings/Rust/Cargo.toml",
+        "sha256": "d1c91ae534f518d9b8493fc4c6649a8fbfa60cef81b7e474b8806931cf08cb24"
+      },
+      {
+        "path": "Repositories/Libraries/R4FONT/Bindings/Rust/src/helpers.rs",
+        "sha256": "23b1ae37d24ccee6f9597c1f41f9294d6a94d49ae7c9a732802bb1c238d11a70"
+      },
+      {
+        "path": "Repositories/Libraries/R4FONT/Bindings/Rust/src/lib.rs",
+        "sha256": "6bd8bff40512a0f1f95d56392bee2d876f43c6b42717a95ed09a7bcc5eb998f1"
+      },
+      {
+        "path": "Repositories/Libraries/R4FONT/Bindings/Zig/app_fonts.zig",
+        "sha256": "ceb69bb6df51650f3fa8775ec3d4647b8e9b5ef82a24ae2ff7e46ef46a3a03a6"
+      },
+      {
+        "path": "Repositories/Libraries/R4FONT/Bindings/Zig/font_format.zig",
+        "sha256": "16fe2e44c77ac8ad5f41777c2ef2f34a6137671bf01992d70b8e8f831289c82d"
+      },
+      {
+        "path": "Repositories/Libraries/R4FONT/Bindings/Zig/font_import.zig",
+        "sha256": "11ccf276f4fcaf2074ef52000b405ace35606686262a762350e9bc47364d941e"
+      },
+      {
+        "path": "Repositories/Libraries/R4FONT/Bindings/Zig/font_tools.zig",
+        "sha256": "a4807af44a0b61ca8eab9028566293461a35c5ed8723d02bfacd6404bb53903f"
+      },
+      {
+        "path": "Repositories/Libraries/R4FONT/Bindings/Zig/r4font.zig",
+        "sha256": "28cb127566eb302fc3ba6d9f7ef56ff7a990facb88404496cc96ff668ffe7033"
+      },
+      {
+        "path": "Repositories/Libraries/R4FONT/Bindings/Zig/r4font_abi.zig",
+        "sha256": "5a1a543b8c6743895ce8f83c907303861d0d829dd266bcec2d4d7fe2646f9f12"
+      },
+      {
+        "path": "Repositories/Libraries/R4FONT/Contract/Generated/implementation_abi.zig",
+        "sha256": "d5480143ce4db6551ffbe5781739c5c76e76583bd52dda9307f247252fe6e782"
+      },
+      {
+        "path": "Repositories/Libraries/R4FONT/Contract/LibraryContract.baseline.json",
+        "sha256": "0a9db9c3bfd87368e80f47b10e456001624ad0266c94c19bd64f59ca70103bf0"
+      },
+      {
+        "path": "Repositories/Libraries/R4FONT/Contract/LibraryContract.json",
+        "sha256": "0a9db9c3bfd87368e80f47b10e456001624ad0266c94c19bd64f59ca70103bf0"
+      },
+      {
+        "path": "Repositories/Libraries/R4GFX/Bindings/C/r4gfx.h",
+        "sha256": "e5d4ef9b0c10ef932be1173a2301a44f8d626af2ba495b3ecdb84600b7efd241"
+      },
+      {
+        "path": "Repositories/Libraries/R4GFX/Bindings/C/r4gfx_helpers.h",
+        "sha256": "5933c09a1172f6ec151f805dfec34c4105085d8fcc8623ec2e492861a88123c9"
+      },
+      {
+        "path": "Repositories/Libraries/R4GFX/Bindings/Rust/Cargo.toml",
+        "sha256": "a684bb920df2b7e379a8342fdcee5a2ae748c5c1c16fef6426dfea9063c7054a"
+      },
+      {
+        "path": "Repositories/Libraries/R4GFX/Bindings/Rust/src/helpers.rs",
+        "sha256": "d5eca7e094ed979a2b842fb43ff240105673837ee116458825cddc9c6699a3b6"
+      },
+      {
+        "path": "Repositories/Libraries/R4GFX/Bindings/Rust/src/lib.rs",
+        "sha256": "8ab6536e2b519480724eb8fd643254b81f9f844886c0f87abb4a73573e0adac4"
+      },
+      {
+        "path": "Repositories/Libraries/R4GFX/Bindings/Zig/outputs.zig",
+        "sha256": "1273cb122670f38832e535f65504c659a7892674f6e8c014fa0c77bd3d537579"
+      },
+      {
+        "path": "Repositories/Libraries/R4GFX/Bindings/Zig/queue.zig",
+        "sha256": "bd636216592b0f53abd5ca62f3d8cf97458d48566c82f523b01d72e94ba5c6de"
+      },
+      {
+        "path": "Repositories/Libraries/R4GFX/Bindings/Zig/r4gfx_abi.zig",
+        "sha256": "ca53a3d7c75462bd3a2b212990c8a90fbe5a02f1d419d30ed992c536fbb718f0"
+      },
+      {
+        "path": "Repositories/Libraries/R4GFX/Contract/Generated/implementation_abi.zig",
+        "sha256": "5a604d4ecd9e2d95e8f1e8d429d1400b4b3af4fb97dfd388f25d10dd15d4b4de"
+      },
+      {
+        "path": "Repositories/Libraries/R4GFX/Contract/LibraryContract.baseline.json",
+        "sha256": "a4d28f983091271e22b59e4f5928592ebf3c6ac336d2df132f7247f2478bb3b3"
+      },
+      {
+        "path": "Repositories/Libraries/R4GFX/Contract/LibraryContract.json",
+        "sha256": "a4d28f983091271e22b59e4f5928592ebf3c6ac336d2df132f7247f2478bb3b3"
+      },
+      {
+        "path": "Repositories/Libraries/R4GFX/Display/brightness_client.zig",
+        "sha256": "e547b92ce508990dcf5062d4401f46683094799d92de8302073e2ae8ac67b046"
+      },
+      {
+        "path": "Repositories/Libraries/R4GFX/Display/brightness_preferences.zig",
+        "sha256": "8303a78b49315c30e3ec547c9874eb94b9357c7e49dc99a4de16463bc585b166"
+      },
+      {
+        "path": "Repositories/Libraries/R4GFX/Display/brightness_status.zig",
+        "sha256": "ee417d1d61601a0a12c9f3bdcbde5e774962e0baeb10859666e6b6483e6cec06"
+      },
+      {
+        "path": "Repositories/Libraries/R4GFX/Display/color_control.zig",
+        "sha256": "f87b6c4eedcc86a919f17fbbba1a80a337db82d658e1264d7d3937f4c117e9fb"
+      },
+      {
+        "path": "Repositories/Libraries/R4GFX/Display/color_preferences.zig",
+        "sha256": "71718def642a8e3c957276da45adc1aa677bd4a34015ecbd9b5dfecc515a7a19"
+      },
+      {
+        "path": "Repositories/Libraries/R4GFX/Display/color_signal.zig",
+        "sha256": "80194219902c571a4926197ccf85d8511d52912e09929a80b90f4297bc8eaea7"
+      },
+      {
+        "path": "Repositories/Libraries/R4GFX/Display/control.zig",
+        "sha256": "bfef91d45fa142e235a791a920ad5544998fe9a7ea636aa705a0afa09a8afb9a"
+      },
+      {
+        "path": "Repositories/Libraries/R4GFX/Display/cta_timings.zig",
+        "sha256": "c396da157e512110c86303cf9719aaef93c8cb1ef05ef36e60f7ddb39574eb60"
+      },
+      {
+        "path": "Repositories/Libraries/R4GFX/Display/desktop_outputs.zig",
+        "sha256": "a1e56abcf4f5ff177166961ef8eeab18d14eebf749539a3ccedcf849915bf43b"
+      },
+      {
+        "path": "Repositories/Libraries/R4GFX/Display/display_profile.zig",
+        "sha256": "6bd3bf43db7f3e32e0a20df3d6a6b0e97dd5e041171bfe83c51bd252d21b2f33"
+      },
+      {
+        "path": "Repositories/Libraries/R4GFX/Display/edid.zig",
+        "sha256": "cdd3d5635daa6713069f0e964ac601386ba2bfd62c25f105d7f853f440032200"
+      },
+      {
+        "path": "Repositories/Libraries/R4GFX/Display/eld.zig",
+        "sha256": "2f7600fe9dc98de9da6ad4e4bb3f0dfeb4aadb66438d62dd0d945f91d288993c"
+      },
+      {
+        "path": "Repositories/Libraries/R4GFX/Display/links.zig",
+        "sha256": "794e16f790d3d159213bf1268ecc9531e8e38ebfb4edbfc197d75469e84fbc29"
+      },
+      {
+        "path": "Repositories/Libraries/R4GFX/Display/mode_control.zig",
+        "sha256": "15906924a156df1ca19ffe766aa0f1e7bb5ae7becb70806f34f56dfdfe81dc9f"
+      },
+      {
+        "path": "Repositories/Libraries/R4GFX/Display/preferences.zig",
+        "sha256": "181f08fb3419a58316b8be6498f70c66550ce38556fd6a72e833058ed43e837e"
+      },
+      {
+        "path": "Repositories/Libraries/R4GFX/Display/readback.zig",
+        "sha256": "28ea45b9e06b7f3e433d793e7c8398ca461053f006a1e6c46228db1e523159d4"
+      },
+      {
+        "path": "Repositories/Libraries/R4GFX/Display/refresh_client.zig",
+        "sha256": "39d7e302828aa5aa734e76543756debafaf58fc00e36e3c8c962c3f61dd268c5"
+      },
+      {
+        "path": "Repositories/Libraries/R4GFX/Display/refresh_observer.zig",
+        "sha256": "2ccd60b6a0487950bffddc21ae4d38279d6b12317814d285b9c3b80eb36847dc"
+      },
+      {
+        "path": "Repositories/Libraries/R4GFX/Display/refresh_preferences.zig",
+        "sha256": "f0e9394589528f774a921d04a216b0deeee365442f815878fa7d0b452f833cac"
+      },
+      {
+        "path": "Repositories/Libraries/R4GFX/Display/refresh_range.zig",
+        "sha256": "2120c60e0d4b0a9bc1c8db5f30ed922c5594a0008bf6b1f8fc7a8ff3513fefd0"
+      },
+      {
+        "path": "Repositories/Libraries/R4GFX/Display/refresh_status.zig",
+        "sha256": "2c5f8512cb532f06e02e756062c5a90dbf724d0a243ad1b84cd5e129097dff8d"
+      },
+      {
+        "path": "Repositories/Libraries/R4GFX/Display/timing.zig",
+        "sha256": "45d3516055309beb52c2268c1dd6509a61fa493b1522473f87136e67b17af565"
+      },
+      {
+        "path": "Repositories/Libraries/R4GFX/Display/topology.zig",
+        "sha256": "5c158c8ca851171296a8dfa397a93580d7a587949952aabe3151e15eb0485d02"
+      },
+      {
+        "path": "Repositories/Libraries/R4GFX/Display/transfer.zig",
+        "sha256": "ef8ddecb37f4e7f7a4b4aa15b29dbda7f3b5252a90c2f0886fcc310e5671152f"
+      },
+      {
+        "path": "Repositories/Libraries/R4GFX/Display/vrr.zig",
+        "sha256": "30a5167cef6e20659278cf7ba05e02af73667be7eccd10bcca79ed01576d6983"
+      },
+      {
+        "path": "Repositories/Libraries/R4GL/Bindings/C/EGL/egl.h",
+        "sha256": "f5f41711f5d7517eb50d63726d786d471a3e84a52b94fd9aca9b6262b629347c"
+      },
+      {
+        "path": "Repositories/Libraries/R4GL/Bindings/C/EGL/eglext.h",
+        "sha256": "efc117e5cbbf21fa4f2e9dbfb3899eedb3235c0152a2f6d9ca4510b7505e400f"
+      },
+      {
+        "path": "Repositories/Libraries/R4GL/Bindings/C/EGL/eglplatform.h",
+        "sha256": "25b5391655effcf363a38fa00c3154f356a3eab3d35dc067847875513cf1e441"
+      },
+      {
+        "path": "Repositories/Libraries/R4GL/Bindings/C/GL/glcorearb.h",
+        "sha256": "087622fc4b933fc0e5e4f7aa6071111720acd085de039159de0f2d06b91d7486"
+      },
+      {
+        "path": "Repositories/Libraries/R4GL/Bindings/C/KHR/khrplatform.h",
+        "sha256": "7b1e01aaa7ad8f6fc34b5c7bdf79ebf5189bb09e2c4d2e79fc5d350623d11e83"
+      },
+      {
+        "path": "Repositories/Libraries/R4GL/Bindings/C/r4gl.h",
+        "sha256": "981450081bc257eb5925d2a4838e882bf76eb4a99076d0dd557478d702baf217"
+      },
+      {
+        "path": "Repositories/Libraries/R4GL/Bindings/C/r4gl_api.h",
+        "sha256": "7be3d20ca5d3809367c0501a709578a395838371e39d694163dce14bf1085953"
+      },
+      {
+        "path": "Repositories/Libraries/R4GL/Bindings/Rust/Cargo.toml",
+        "sha256": "78eb27c4ad2bc919c54a2e09f3c8724fc1f9f1775758fcf0e88481afaf96ca47"
+      },
+      {
+        "path": "Repositories/Libraries/R4GL/Bindings/Rust/src/lib.rs",
+        "sha256": "c4e80e8649d7d5547cd63a0200e304333dbfea19579f68477f26961c5389968a"
+      },
+      {
+        "path": "Repositories/Libraries/R4GL/Bindings/Zig/r4gl.zig",
+        "sha256": "eebcaf220cc603f9f8277089e213d01d8286de3bdcd0483fab9fed890ca4fd44"
+      },
+      {
+        "path": "Repositories/Libraries/R4GL/Contract/Generated/implementation_abi.zig",
+        "sha256": "7dbc415d4ba23206a9200428129303b051c316a53b55e344c59b53265b672e1c"
+      },
+      {
+        "path": "Repositories/Libraries/R4GL/Contract/LibraryContract.baseline.json",
+        "sha256": "a822099c21fb7456ffb4d83c96e8406c76e21715785c2c2c9dfb273c8db32b97"
+      },
+      {
+        "path": "Repositories/Libraries/R4GL/Contract/LibraryContract.json",
+        "sha256": "a822099c21fb7456ffb4d83c96e8406c76e21715785c2c2c9dfb273c8db32b97"
+      },
+      {
+        "path": "Repositories/Libraries/R4IMG/Bindings/C/r4img.h",
+        "sha256": "a5307c8834e9acaa506e787e8960410d9dcf32c00a15cd52ca7bab7bf27644b9"
+      },
+      {
+        "path": "Repositories/Libraries/R4IMG/Bindings/C/r4img_helpers.h",
+        "sha256": "1a694cba86803a30209f8e5d2f49bb53f9214d25c5d61231d3409422c3376843"
+      },
+      {
+        "path": "Repositories/Libraries/R4IMG/Bindings/Rust/Cargo.toml",
+        "sha256": "cd17132c1914b3d481022d50e442e29ed28df42a92026a249b91567ac7e14342"
+      },
+      {
+        "path": "Repositories/Libraries/R4IMG/Bindings/Rust/src/helpers.rs",
+        "sha256": "b4378d6bcde5dc283c578ee3c9f6dc8cce3f4b0ac73cd62b8f48cd42d7c13eab"
+      },
+      {
+        "path": "Repositories/Libraries/R4IMG/Bindings/Rust/src/lib.rs",
+        "sha256": "146bd23a2bb4b0031fce247f717da99b3cc775240a99a3bfb48b25d2b7354187"
+      },
+      {
+        "path": "Repositories/Libraries/R4IMG/Bindings/Zig/color.zig",
+        "sha256": "33e794dcd3fac4dfa13cfae50fc70cc46b715841530402f2704a5f97a71c9c21"
+      },
+      {
+        "path": "Repositories/Libraries/R4IMG/Bindings/Zig/native_jpeg.zig",
+        "sha256": "c3a00ded448e5f5f53bdf239fd54c2c022f9b1aa4c704f3a4217f908e3cb940a"
+      },
+      {
+        "path": "Repositories/Libraries/R4IMG/Bindings/Zig/r4img.zig",
+        "sha256": "409dab4879d1f9da9b9db3ea01e43957e2cc2a6188176fdbdc0adb4eed2dfd25"
+      },
+      {
+        "path": "Repositories/Libraries/R4IMG/Bindings/Zig/r4img_abi.zig",
+        "sha256": "12f4c14bf12b52fa769b4b768faf3f05dead4d36fa599d5ee3cd7d62c70fa4c7"
+      },
+      {
+        "path": "Repositories/Libraries/R4IMG/Contract/Generated/implementation_abi.zig",
+        "sha256": "5493a3d686cc310da3ca66f74aa4042ec28bbf28f0a18a711bd2648d3fcc6c9b"
+      },
+      {
+        "path": "Repositories/Libraries/R4IMG/Contract/LibraryContract.baseline.json",
+        "sha256": "b952f0d45d32dd238c4a8d0327640e623cf09c6ee2bd8c7aadd1a6d845f0ec11"
+      },
+      {
+        "path": "Repositories/Libraries/R4IMG/Contract/LibraryContract.json",
+        "sha256": "b952f0d45d32dd238c4a8d0327640e623cf09c6ee2bd8c7aadd1a6d845f0ec11"
+      },
+      {
+        "path": "Repositories/Libraries/R4NAK/Bindings/C/r4nak.h",
+        "sha256": "44be23ef0a2551604d2552e8f946d858346d166a31937e7d455257a648c8db7d"
+      },
+      {
+        "path": "Repositories/Libraries/R4NAK/Bindings/C/r4nak_helpers.h",
+        "sha256": "e4515f9d6a951b191654c10c8aef9693799b85596d2cf271c196522b11afc968"
+      },
+      {
+        "path": "Repositories/Libraries/R4NAK/Bindings/Rust/Cargo.toml",
+        "sha256": "c7811ca92a82aff244e2dc106325565bb4480237f9adb30bc31189490cd25aba"
+      },
+      {
+        "path": "Repositories/Libraries/R4NAK/Bindings/Rust/src/lib.rs",
+        "sha256": "57ed6483c26b401bf139c6cdbc5eabd6bf69df74bab9ee78a09693aa4cff41c7"
+      },
+      {
+        "path": "Repositories/Libraries/R4NAK/Bindings/Zig/r4nak.zig",
+        "sha256": "055ff2dd85255b3d34c01b963726eec9ffb1ec8f7259cdb4232a379f046426c7"
+      },
+      {
+        "path": "Repositories/Libraries/R4NAK/Bindings/Zig/worker.zig",
+        "sha256": "2552876eb159e0906f71450ac788328198b7aff4497b18119b400a9971383723"
+      },
+      {
+        "path": "Repositories/Libraries/R4NAK/Contract/Generated/implementation_abi.zig",
+        "sha256": "eb071e58b1790e0b548a54479173436830b3cd64359aec244e86c6c9ea9c4987"
+      },
+      {
+        "path": "Repositories/Libraries/R4NAK/Contract/LibraryContract.baseline.json",
+        "sha256": "2a67e3cdeb7e6aaeb90dbbbd512acf62ef275bfbe9a63781d2e3cffaa2e6da60"
+      },
+      {
+        "path": "Repositories/Libraries/R4NAK/Contract/LibraryContract.json",
+        "sha256": "2a67e3cdeb7e6aaeb90dbbbd512acf62ef275bfbe9a63781d2e3cffaa2e6da60"
+      },
+      {
+        "path": "Repositories/Libraries/R4NV/Bindings/C/r4nv.h",
+        "sha256": "d9dd92fe112cd1fb7db4b3a3402bc41b65835c1c4f851f892066aeb6add51b39"
+      },
+      {
+        "path": "Repositories/Libraries/R4NV/Bindings/Rust/Cargo.toml",
+        "sha256": "737c8a9dc4205c66a1217d3975eb8b5c93cf2e353f0f95fd8d66c41377d597e7"
+      },
+      {
+        "path": "Repositories/Libraries/R4NV/Bindings/Rust/src/lib.rs",
+        "sha256": "c1d628aa9fdfa23aabacbd4fa838d391f5842c586d8ce7ee4ca76546322ec2e7"
+      },
+      {
+        "path": "Repositories/Libraries/R4NV/Bindings/Zig/r4nv.zig",
+        "sha256": "728de011b9df184095a35e0e1efe7cf7f86d750b5a06be214cb182e07abc6958"
+      },
+      {
+        "path": "Repositories/Libraries/R4NV/Contract/Generated/implementation_abi.zig",
+        "sha256": "a08c2d1a1eaa428459a38e18ea45e29c3b57817b53ae0ac7a72ea81b57152781"
+      },
+      {
+        "path": "Repositories/Libraries/R4NV/Contract/LibraryContract.baseline.json",
+        "sha256": "4cdcb14cdc8cdb3c1ff2867ec762d2e1e3f74c7bc5b8a3c6e0d55a3ef724d825"
+      },
+      {
+        "path": "Repositories/Libraries/R4NV/Contract/LibraryContract.json",
+        "sha256": "4cdcb14cdc8cdb3c1ff2867ec762d2e1e3f74c7bc5b8a3c6e0d55a3ef724d825"
+      },
+      {
+        "path": "Repositories/Libraries/R4STD/Bindings/C/r4std.h",
+        "sha256": "12c403c44c7b083fb4832e4f8988ebc8bac3b0228e8a62189482c24d831584c0"
+      },
+      {
+        "path": "Repositories/Libraries/R4STD/Bindings/C/r4std_abi.h",
+        "sha256": "d10aea9f9e7cde07df2e8da12e02390d700847d2992a66d4b4888c9e00412e0f"
+      },
+      {
+        "path": "Repositories/Libraries/R4STD/Bindings/C/r4std_helpers.h",
+        "sha256": "17284b78d79f001131645ceff667a9b9ba096e4a96821e8baf2c11696e6ae781"
+      },
+      {
+        "path": "Repositories/Libraries/R4STD/Bindings/Rust/Cargo.toml",
+        "sha256": "7e547af8379adc079978d7d8212ed75212eaceb1bd084334e6997293663c37e6"
+      },
+      {
+        "path": "Repositories/Libraries/R4STD/Bindings/Rust/src/helpers.rs",
+        "sha256": "d95d599cf14ae6f52ed89cad63c0f3bc96b706ce91247b7f61ff8a53b7f3fdcd"
+      },
+      {
+        "path": "Repositories/Libraries/R4STD/Bindings/Rust/src/lib.rs",
+        "sha256": "dabd260e38b6667757261d4aabd55485ec5c7e55fcc6031f596e9b64b848df70"
+      },
+      {
+        "path": "Repositories/Libraries/R4STD/Bindings/Zig/app_assoc.zig",
+        "sha256": "a205ba887160d181910d125c93a164a14c7e517550c497e03cad888615b3668b"
+      },
+      {
+        "path": "Repositories/Libraries/R4STD/Bindings/Zig/codec.zig",
+        "sha256": "47777613f144f74300142795df8d9757d53ef188d91a28f51fbeb481d8e50862"
+      },
+      {
+        "path": "Repositories/Libraries/R4STD/Bindings/Zig/config.zig",
+        "sha256": "fbfd26d1435440b112893c15ba51c28f05c1db6ea1d99bf7a9df99381834ade3"
+      },
+      {
+        "path": "Repositories/Libraries/R4STD/Bindings/Zig/console_text.zig",
+        "sha256": "efd315a9f185405bc7b5a87c0d5380eeea19cea4db860c8b2621afd2784f0ef0"
+      },
+      {
+        "path": "Repositories/Libraries/R4STD/Bindings/Zig/date.zig",
+        "sha256": "bdee547375bb284b6a3034319ec8d9a2e3756b27be23d9559a2171cb8f457068"
+      },
+      {
+        "path": "Repositories/Libraries/R4STD/Bindings/Zig/file_handler.zig",
+        "sha256": "c391c4bee30c0387f3d0a66174099631d0dff869e3f9c71844d08804a2f36906"
+      },
+      {
+        "path": "Repositories/Libraries/R4STD/Bindings/Zig/grapheme.zig",
+        "sha256": "ef9d27cf631ac40625f63e1dc9433ac7177a0b31cd5356704c4f878711fd1a42"
+      },
+      {
+        "path": "Repositories/Libraries/R4STD/Bindings/Zig/grapheme_properties.zig",
+        "sha256": "4919b83b1f3004efbb6445e9e08655b06f31cad00cfab5b79717003db706770e"
+      },
+      {
+        "path": "Repositories/Libraries/R4STD/Bindings/Zig/path_text.zig",
+        "sha256": "6e26ad70b6b134dc19b3da69202583eaeac2b360dc0bea5058ad3196e26c047e"
+      },
+      {
+        "path": "Repositories/Libraries/R4STD/Bindings/Zig/r4std.zig",
+        "sha256": "d633e16cc0d85ace166d66ac5998b4179d12b6bc88d614e1c1afec1056828df7"
+      },
+      {
+        "path": "Repositories/Libraries/R4STD/Bindings/Zig/r4std_abi.zig",
+        "sha256": "a06e4842a1af2b45691598e5efd28e01cf3c43ab790e6ad8f40e0f4d40ac52ab"
+      },
+      {
+        "path": "Repositories/Libraries/R4STD/Bindings/Zig/runtime.zig",
+        "sha256": "77bb3d383f86f00cedad5e5495c972b2543394bb0aadb32ce6b259e1f5442e0b"
+      },
+      {
+        "path": "Repositories/Libraries/R4STD/Bindings/Zig/settings.zig",
+        "sha256": "ff105212906a3f0958cd3bde8b22da4b842a09997e6ea1224e175a9abf1d7682"
+      },
+      {
+        "path": "Repositories/Libraries/R4STD/Bindings/Zig/shortcut.zig",
+        "sha256": "8f8909ea84497de3c513ccb523f97f709fac6ebd8b47e9c18b48c76130c228bb"
+      },
+      {
+        "path": "Repositories/Libraries/R4STD/Bindings/Zig/subsystem_runtime.zig",
+        "sha256": "9aee079ac49dbc081d7c780f6eb74af77cd487c70ac95e233299830ea062fb83"
+      },
+      {
+        "path": "Repositories/Libraries/R4STD/Bindings/Zig/text.zig",
+        "sha256": "52b67ee0f49f9e848f401669166202fab157d442d45ee9e374d54c0e862dd797"
+      },
+      {
+        "path": "Repositories/Libraries/R4STD/Bindings/Zig/text_file.zig",
+        "sha256": "2ddde8e420f68f51a40dc2ad62eb2c10b7cfb95ef5726cc7572ac6219c3d69ad"
+      },
+      {
+        "path": "Repositories/Libraries/R4STD/Bindings/Zig/time.zig",
+        "sha256": "0430ee5940769b9ca9d71d28bcdcc1822e546a5fa870c1064fa5fb479290359e"
+      },
+      {
+        "path": "Repositories/Libraries/R4STD/Contract/Generated/implementation_abi.zig",
+        "sha256": "92a3f6cef2895c47f951234422379f2409fcd15a6a0cb80e880b503a335015ad"
+      },
+      {
+        "path": "Repositories/Libraries/R4STD/Contract/LibraryContract.baseline.json",
+        "sha256": "c74c5eb35a894236ad111c24453e2bc8aba4fc5bcc71c8da2a5b28b8ac6f86f7"
+      },
+      {
+        "path": "Repositories/Libraries/R4STD/Contract/LibraryContract.json",
+        "sha256": "c74c5eb35a894236ad111c24453e2bc8aba4fc5bcc71c8da2a5b28b8ac6f86f7"
+      },
+      {
+        "path": "Repositories/Libraries/R4STD/Rust/lib.rs",
+        "sha256": "f94895aadac60cf07a867aa363c3ab576f03307759c1b60ec449b5a576066638"
+      },
+      {
+        "path": "Repositories/Libraries/R4STD/Rust/utf16.rs",
+        "sha256": "cf46adf69e184e54dad31056ae3d5c6d90fdd3877028ca1926eceb2a437ba1f9"
+      },
+      {
+        "path": "Repositories/Libraries/R4VIDEO/Bindings/C/r4video.h",
+        "sha256": "eca23dd194583c840d1108297008b2c56a2fb7ec1f8218a34bf2e49075b5b469"
+      },
+      {
+        "path": "Repositories/Libraries/R4VIDEO/Bindings/C/r4video_helpers.h",
+        "sha256": "5964646d568a19e54042686fdd531481db3f348256f8fcc23dc2657d8e949840"
+      },
+      {
+        "path": "Repositories/Libraries/R4VIDEO/Bindings/Rust/Cargo.toml",
+        "sha256": "251b85dd809d5484416d7f99d1e31bebe968ecbed5a25b5cc1b09d69f5afe047"
+      },
+      {
+        "path": "Repositories/Libraries/R4VIDEO/Bindings/Rust/src/helpers.rs",
+        "sha256": "e816cef78cb55059677ff7c36393274b5994c6e98a21b51e4b7ecd2f336ec1ab"
+      },
+      {
+        "path": "Repositories/Libraries/R4VIDEO/Bindings/Rust/src/lib.rs",
+        "sha256": "5e59f26cc4c53e7d3576c0cf35def76853a1d89ffc64bdfc2181bd33303c1a2c"
+      },
+      {
+        "path": "Repositories/Libraries/R4VIDEO/Bindings/Zig/playback.zig",
+        "sha256": "6208afcaee1cde15e69baefa784faab8a7fc7a70ad329a37fb480fcf90be6b7b"
+      },
+      {
+        "path": "Repositories/Libraries/R4VIDEO/Bindings/Zig/playback_audio.zig",
+        "sha256": "0cd1a353c312c27e297b8b75825198d851a426ad2ce0c3b836ef799448a9559c"
+      },
+      {
+        "path": "Repositories/Libraries/R4VIDEO/Bindings/Zig/playback_clock.zig",
+        "sha256": "3bdb6b189fb4397c89664ceb89d96a9f3369d8f05e810b6d548df61ccec9d5ed"
+      },
+      {
+        "path": "Repositories/Libraries/R4VIDEO/Bindings/Zig/playback_composition.zig",
+        "sha256": "25e368d4390af929e52fa1f22016b9c7360915fa4e170451722dc8b67dab09fe"
+      },
+      {
+        "path": "Repositories/Libraries/R4VIDEO/Bindings/Zig/r4video.zig",
+        "sha256": "e3835fd245a01ff5c6f4109b4ea0bd2d494277bc583aeb8ea45029124217ab60"
+      },
+      {
+        "path": "Repositories/Libraries/R4VIDEO/Contract/Generated/implementation_abi.zig",
+        "sha256": "cbdb8b51be18ea8886dc6df1d8e1ea39a7d263a2033e7a353261d882e1850728"
+      },
+      {
+        "path": "Repositories/Libraries/R4VIDEO/Contract/LibraryContract.baseline.json",
+        "sha256": "3223934d6a769dd7509c5eb25bdb42bc135a456f10afa44fab57bd4751c09851"
+      },
+      {
+        "path": "Repositories/Libraries/R4VIDEO/Contract/LibraryContract.json",
+        "sha256": "3223934d6a769dd7509c5eb25bdb42bc135a456f10afa44fab57bd4751c09851"
+      },
+      {
+        "path": "Repositories/Libraries/R4VK/Bindings/C/r4vk.h",
+        "sha256": "8e4489774480cc115bd47795b139153f0eb6ab508f77757533e54cf0623110bd"
+      },
+      {
+        "path": "Repositories/Libraries/R4VK/Bindings/C/r4vk_wsi.h",
+        "sha256": "81fb29e28b548c277750c76270711005eb8c3453c060bb10d0e4991363f42000"
+      },
+      {
+        "path": "Repositories/Libraries/R4VK/Bindings/Rust/Cargo.toml",
+        "sha256": "5a596e9ebba3b4a0d5a8db341f55c90b18eed5a169db7b74e7b85112fea69fe8"
+      },
+      {
+        "path": "Repositories/Libraries/R4VK/Bindings/Rust/src/lib.rs",
+        "sha256": "33bac0ac4ae5c5939001d88c51f2d3c0123028fd72eb75997b6a7623c4e70f36"
+      },
+      {
+        "path": "Repositories/Libraries/R4VK/Bindings/Zig/r4vk.zig",
+        "sha256": "cba7d83d37229ccc9a9181fb2fa12316cb25d3a4342f10cb87f21ea5741ad091"
+      },
+      {
+        "path": "Repositories/Libraries/R4VK/Contract/Generated/implementation_abi.zig",
+        "sha256": "31fcd373203a68616e70c842fef95343eff60ca162470e16f5a687098da2183f"
+      },
+      {
+        "path": "Repositories/Libraries/R4VK/Contract/LibraryContract.baseline.json",
+        "sha256": "6c71430315e500f1a67371b63a302a770b4b3a282b63a930031228b009d5a68d"
+      },
+      {
+        "path": "Repositories/Libraries/R4VK/Contract/LibraryContract.json",
+        "sha256": "6c71430315e500f1a67371b63a302a770b4b3a282b63a930031228b009d5a68d"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/C/include/r4libraries/helpers.h",
+        "sha256": "f5bdf3a31811ee7d8d545815cf642b64bbb740a0ed7fcf1ab792fec931614d53"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Language/c_header.zig",
+        "sha256": "309204894d63c50cd0391764c15478b2d838b83567e96256edade561d76f40b6"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Language/facades.c",
+        "sha256": "41ae1bae8fb3ad6c2b4efaf2429d1c6ce66d5a3442265de61ac9d13cc7ec5f5c"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Language/fingerprint.zig",
+        "sha256": "3b354c2b0f5e4efc6f3f7063e95db2b7448f92581147b2b0b09f0b9d35fe5908"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Language/gen.zig",
+        "sha256": "6ad154c54863ca49c872027ecce26c140156656499f78b1fb942a25fe5edf1a0"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Language/runtime.zig",
+        "sha256": "a02ce71e3dede3b945d0d0245058189b58e7f31393e000eb9188dd2132ed31be"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Language/rust_gen.zig",
+        "sha256": "de1ccccadc39cdb0361c6f7b93ed40151d8e2575023f244aa2f576d77e1f4aa9"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Language/schema.zig",
+        "sha256": "7205bd52560f70bc189bf8831f3a0622639a9eb23861618b32be31490da32a50"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Language/support.zig",
+        "sha256": "37afc85e43573dbfb89470932c085f805e4cd568161e2cd270d5b112b354ad8e"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/AMDProfile.json",
+        "sha256": "c685a952c668c46ed682e822e3181d55d1cd8bbb1bb77254a39e24a62f53b1be"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/BuildPortability.ps1",
+        "sha256": "6f08ea897b15c89e6622c8cb6173e07145ad744962b30ac32b516116811425a5"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/Math/Build.ps1",
+        "sha256": "d36611beae87dd6f499df01c14402cfdb0537c9ce05e0ce850d5cdb574127385"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/Math/Include/endian.h",
+        "sha256": "7fccc34c84fd899386482d37ad503576c98209f05c5c209ce9f06df66f9c1f89"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/Math/Include/features.h",
+        "sha256": "e05afe16154c81d90be81218266a4a2c23c8156e2434adaca63e48e5571df5f0"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/Math/Include/math.h",
+        "sha256": "309be78c2a40b4e9fddb75f3146484795ce05beb36315157d237c45e24e71c3c"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/Math/Sources.json",
+        "sha256": "894441ec66c1b59ed620681aa9b6c11a94e5fff05164e8e9941e7e130a733a2a"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/Scan/Build.ps1",
+        "sha256": "8ee09fdcb29a6e919790ba78dfb0984a86eb2bfdadeddfbc1f5b188396ee2d88"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/Scan/Include/math.h",
+        "sha256": "12f2206485e78659c6a29e90c27c83856ecf1c96db0dcda6d88eaae416afd974"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/Scan/Include/stdio_impl.h",
+        "sha256": "68531dc364ec422311fae098999240c55727e94f40984b9da33fbfc95faab23c"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/Scan/Sources.json",
+        "sha256": "15b53141ff04f26bf8ae85439937b64ad6f3b125984242fb125fc294d64c66d5"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/Scan/convert.c",
+        "sha256": "a12d3b76453ef5fb7b46b61818697988d675a4d8add62f708e17d2ade61380c5"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/Scan/format_scan.c",
+        "sha256": "8d5f81fa3d6e40ca58c5dae567116c56d78b186bc4362b15e1c8e7d99ce45172"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/Scan/scan_string.c",
+        "sha256": "5c8d56572a0bbd40cb0dbfd300526921e66aa4a83e146aa7c58908ae5b23b704"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/Tests/gpu_model.zig",
+        "sha256": "b58cd7cc153b9669381997046503caf9ee532361c6c0b677ac02397bcd66acd6"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/application.zig",
+        "sha256": "00de7004f49460cf0ade04ffdd249370a65a5f4c40d9486c5dc6c3ae61bef5ce"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/budget.zig",
+        "sha256": "7c1649a175f0866d806a492ac84917aca68c378430829a1702b21efb695f84d6"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/budgeted_allocation.zig",
+        "sha256": "523031b24aa623b7fd35cbafaf3eec5d1e612dd0f137863d4a6f724dd21f076e"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/budgeted_memory.zig",
+        "sha256": "3395df4d8bcd6a060e7320905eee3946510264d1aadfbca589825aa1dfcbf87d"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/c11_threads.h",
+        "sha256": "4480cfbd720f6affc469704f7909a418dac37f0857a1d04591e65707f33db3ab"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/c_runtime.h",
+        "sha256": "31bacf26a40c38bde4caae2be87af1abdd0d3fe62d3c4016e1acc62ed04c290e"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/calendar.zig",
+        "sha256": "983537c80fddd66662672d22ed70babec5af490329e1874e5f0f79b2abb9de9c"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/cpp_runtime.h",
+        "sha256": "4befee4d5441db6534759d09f0869b4a9d7e2ef7ad5a8536f9bfed8a46bfc5f5"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/errno.c",
+        "sha256": "778f9bb6168d9e6b10916df45404106950d2480bbc5e93af9e886d93a4dfdee2"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/errno.h",
+        "sha256": "841af177872135ee6179959124eea6efd13f4e6100b25bc2042db6a5f0fe8317"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/files.h",
+        "sha256": "f3db620ee740a8a35c092684defcb9b88c0848240c8a877f218619ccff62e6f1"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/files.zig",
+        "sha256": "38fa730a0d36fb83256d1611fa8e447c65ef4fb8095ae6053b56a2def500d4e0"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/finalizers.zig",
+        "sha256": "30dcb8eab9679eda6e908fdeff92a3abfe7f6a12fb28c32ec557db2186316365"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/format.c",
+        "sha256": "0869415031e252d31a8b76903910c8fd9512531fbcbb77be97fbb722865c1d20"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/gpu_resources.zig",
+        "sha256": "194621ad528d2df904287e109af8d5d880cc20ee5d2940ceb42132dcda9bfd51"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/math.zig",
+        "sha256": "fedd3d1b7df5e95798f6bd3edff6ddacc1c37013b322be4b9862c3d9a1fac264"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/memory.zig",
+        "sha256": "33815303e480a0f37ba1711b6b1762d3342bc370b7bb3e826d270b1e57a78492"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/numeric.c",
+        "sha256": "b636c4725d63d76d5e8619e6f97bdcb19dfb7f0b1c7c0d20332a88bd71186b96"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/options.zig",
+        "sha256": "c896fea6973ec934f533e7630cc15243fb55bd89a47070bd80cd36cd116e1d45"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/process.zig",
+        "sha256": "4c7dbfee44e33271f1048d890a17b85d4da1ddf961c7274d768acbd2bd548017"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/process_local.zig",
+        "sha256": "b2fba6f078212043e9cbb56dead4db3c1a23317d73df2fd4930078d7a28d6657"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/random.zig",
+        "sha256": "b715f0a9e41db789ec4414221ee2a86997ca557c20b25284e71c4b588ab68291"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/root.zig",
+        "sha256": "92f4ac4f51b906da5d00e977798e87e077713c7953adf6dcaedc68c6f33eff32"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/sort.c",
+        "sha256": "494f4496a41d1dabbac2dd839d834e97823769cdd12270198578940fb53d5816"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/stdio.c",
+        "sha256": "106e33f2280bdbabccb1dc498e93a73c390489cc730572c890719e6813bd6b7e"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/string.c",
+        "sha256": "b60b78bc9984409ca1e232951d7b9da34eabcb92a2e7b4f2eb3e7e09c9541e49"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/system_info.zig",
+        "sha256": "5b06696832350fa32d85f7b17e482f163ab84af4eccfe1c022e4ed9915d17fe8"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/thread_lifecycle.zig",
+        "sha256": "485b36abb1198a4fac9ca60c25483beeda7ae4290e6c99811dee38c327eb4f05"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/thread_local.zig",
+        "sha256": "620f1952339ec7e58e96dbb00d6c2779726916cf07df407a5881ec3e24e350dc"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/threading.zig",
+        "sha256": "3536bee5332c2f956ac3f96470bf77c39090c57f3d159bf7f545e5df43e2ef55"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/threads.zig",
+        "sha256": "2ca94b4e5b50e97a542aee636a27c36da94a204d366cb56452e73ee4e6e452e9"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/time.zig",
+        "sha256": "7e59cd9c0a1967fb7a350bb3374aab58e030922f8c336823759aaebc043da7fb"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/tokenize.c",
+        "sha256": "02c72cb709bc06540b88b22d242e616acf11dfec23c26b00d167632b4036b6a3"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/wall_clock.zig",
+        "sha256": "7b34ca06832adad51e5e868e995e2bf0b95847895d9475a68d6c7414b5d85793"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/window.zig",
+        "sha256": "bbcb2ec9065a29c2fe2b1cf9b2f5fe4f1507cfedb78bcaef3848a4a6589c757e"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Rust/Cargo.toml",
+        "sha256": "431c38bac8b28467b0dad7842d1626397bb061eeb94f54f604276dc81036aec4"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Rust/src/lib.rs",
+        "sha256": "380f8d709eb65659cf421c19b7b318c56381fa37665201d1fea3f632e69df7fe"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Rust/src/raw.rs",
+        "sha256": "0eecd4f8a19d146fda30f13869bfebf60353fa5f87e752cd42c21dbb61edf11c"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Tests/Consumer/Cargo.toml",
+        "sha256": "368909cd2d64fb9ebb1104357b773404361962ab5fce82dba7fe3125f4c5dd5c"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Tests/Consumer/src/consumer.c",
+        "sha256": "d338a4777968cd12c3aa1116db0ea660a5d505c352eddbedc5e7a1cd4f95d9a2"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Tests/Consumer/src/main.rs",
+        "sha256": "13e626c4998d4ee1b00a2c00180519439cbd4212b31adccaf1c94ed08db187d3"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Tests/MediaConsumer/Cargo.toml",
+        "sha256": "67ced6d609d25e2ff74d8a4a64795ed29b06c372cad170b62384508f5c35f678"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Tests/MediaConsumer/src/consumer.c",
+        "sha256": "a0b03d631977beb2cc55b32bc0e3a31d8a6debfcd14e1b1ee97d7ee1e647a15c"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Tests/MediaConsumer/src/main.rs",
+        "sha256": "947335c510bd8a9762af0caed28affc8dad06622e60f4c62f8aad9588592863b"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Tests/fixtures.rs",
+        "sha256": "5225f0f8c4339dfa7ec76c8963abd482cec9254dbd1e38b681c62fdf1f9a8cba"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Tests/media.c",
+        "sha256": "b674d80cc70256e9ea6a32f148710f810d914fe0a0e72aeb43a010d30eea813f"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Tests/media_native.rs",
+        "sha256": "59d57f7f510ca818c9d84515b0b96d5898539fa404a6846b9845ccf3566a0ef8"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Tests/native.rs",
+        "sha256": "e784df85511e48cd9e452dabd52df17332ab8fd3bbe351c1b56d4f0728b2c4dc"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Tests/pure.c",
+        "sha256": "11ec7d25e957a1b91b17af1c39e9f813a73e491620f369810541649f3e1c89fc"
+      },
+      {
+        "path": "Repositories/Libraries/consumer_adapters.zig",
+        "sha256": "30b99798dd9342bf1461ca09ff43bf78bac7151d5c86126ef81fcb45c5f9faad"
+      },
+      {
+        "path": "Repositories/Libraries/consumer_helpers.zig",
+        "sha256": "246ded3aab2a308a59b78ccce35dadbd881302a3f1ef3060659a0582a6b3c285"
+      },
+      {
+        "path": "Repositories/Libraries/consumer_media.zig",
+        "sha256": "b0faafa6792889e5489baef14db5d1064fc228898cafec8309cb2546990f1180"
+      },
+      {
+        "path": "Repositories/SDK/BuildProfiles/README.txt",
+        "sha256": "a986642e0f1b14792e811dbf9f7b8a87d1dfcdf8d2155b23c9bb525c3f698add"
+      },
+      {
+        "path": "Repositories/SDK/Rust/Cargo.toml",
+        "sha256": "a3b42a9432ab0c5ea69caa99b417e84ad2c3e265baeaa74befa386aa2782d581"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/bounded_text.rs",
+        "sha256": "4740ad58c54a63255bd83f26139cbd2e9b6d3f647d09e6e38023cb7509296fc1"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/c_facades.rs",
+        "sha256": "3196db997579e4e7c5cbe61a5e7556547c44df1b95bcbc3bafe242ae788a7730"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/data/hash.rs",
+        "sha256": "1738a6b967a3cc3474c839ec847a78f4e8dafb5d9fa678d156c45822a218798f"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/data/image.rs",
+        "sha256": "2ed95f2ade773d02bf38791cae17d97087dec5a2756b6c9148cd928d58801cbb"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/data/json.rs",
+        "sha256": "a6c358810d5a30d5b680ce60ccd41e695c4e8c6cb6be33893ef458b885765380"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/data/metadata.rs",
+        "sha256": "65fb99740e8f5a54555c6711c2b9923101d36c323ac0135091adae614ef1b79d"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/data/mod.rs",
+        "sha256": "681143f8200315c1184367f4f4906b52eb0c8cdc581030aedfd41a22d06e4426"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/data/text.rs",
+        "sha256": "c3ac9eb88c65dc86e054c79675105a68f924dac7c025af4e7505e1764036a37b"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/directory_page.rs",
+        "sha256": "769d6269bcc1b99703df5ff0c71e47f05457d9f2fa6ba2df1b21d23b5f6a1aff"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/driver.rs",
+        "sha256": "062746627951b1790efb9cc0ae71af05309b1ad5c1a5bfa2b8869d050f0ac6f7"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/generated/network.rs",
+        "sha256": "b895489acc44e7e17525a8b1fbc2d3fdc5a82b9242c115263dbe19c9c5604ffb"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/graphics/groups.rs",
+        "sha256": "e230b21bfd6bec1385f8fe76a259eb1d1097a2b4d3cf7430e37fc5135999a291"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/graphics/mod.rs",
+        "sha256": "e37b40967a387cd02782ed7d6429352db246b0632328b86788a7d443028b5283"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/gui/input.rs",
+        "sha256": "65ba650e71c086068a1ecbf81a061c413cb8e7cd2e1f575b07cadbe373ba84d3"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/gui/mod.rs",
+        "sha256": "58fe5f7b54cfb8d3a4919234b51d39fd23bf4699b58f94d41ea9931df66fd4a9"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/gui/session.rs",
+        "sha256": "724bfb035f6ba98207ea0a81937cc31b2473252395b7ead3e70cdb83249aa54a"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/gui/text.rs",
+        "sha256": "fdfe33e1bcc2f3c291bf150504eab130a905b7a700a36d8aed3ef01839a736d8"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/heap.rs",
+        "sha256": "93ae950a8bbcff655aacd0622a341d69ca6e62ce53039844365f9b1a3e51a5b4"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/lib.rs",
+        "sha256": "2e1bd916cdd8a13e6dfe250858fedd8657652332e27110d9039f712886a0473e"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/lowlevel.rs",
+        "sha256": "cf773e8857efbb7ef7b4b079b2953d70a9ebc68a765a5c8726ec9ef42180c943"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/memory.rs",
+        "sha256": "fa3fffce65f5d895f6f14d00d3ce0597f196e4e262cb0c88d697e698624053ce"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/network.rs",
+        "sha256": "dad894c8dae12c3b6e37a4b3e271d3b1f9f3695da2354c84ac46b40d492cdb81"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/network/sockets.rs",
+        "sha256": "7bc8538e625168d1e3ce32b4c9603a9d0a09808fffcedd3ca4d286691e618fdf"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/path.rs",
+        "sha256": "ab820a3f0fcb15d5d3dac2457a2231ec34254308e240f646ba7d0c1cd9bca9d2"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/physical_storage.rs",
+        "sha256": "664d94bc4cae74ebf4f8a03769cb839090251e5cbc52c373430d925154504004"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/platform/audio.rs",
+        "sha256": "f14799bc0ec0b4ad3c2c7cf117d5c5222a8c4237993237785cd08b62e261669f"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/platform/devices.rs",
+        "sha256": "ce349daa4c13c7f1fa242acfcd51a552da196a4cf0cbdb9de201ac2b2c90af89"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/platform/mod.rs",
+        "sha256": "c620649a24eadbe2a6c9629029201503ef040b29ab59c429ae6a07a53d5a8e4b"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/platform/pcm.rs",
+        "sha256": "f51c8a1628559be16d23160498c4638c06e345adfc245a9aeb2d0db7cf33dd27"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/platform/power.rs",
+        "sha256": "f4a0331577091ca16defc64611b40d7ceacd760c06e427e3cc50f3d9fe4e59a3"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/protocol.rs",
+        "sha256": "012d39f87069a8a1d22f37e843c2f016167a0043cadbc036d0d0b6b5badcf3b4"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/r4l.rs",
+        "sha256": "71203e1193c4fbee5a2fa927dff31d1908fd61f137bb81bb07b2275e523497d4"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/registry_diagnostics.rs",
+        "sha256": "09a3792f138c22f301f87abc51236b865590de3f73557190a57b3713838bfe47"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/registry_hive.rs",
+        "sha256": "c853b3c8c99f8b17e72f60969463a16fd5e08b674d49bcd393dbe670f36f0457"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/resources/io.rs",
+        "sha256": "088d2d467e5c5eaa7a79c3aab0c52299a1e9b1ec6f7421daa0e5ccabd8d40a95"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/resources/mod.rs",
+        "sha256": "1f4065c0425ad66d0b71b718f440a6301abd4ebec3ec4ac2dfc9161656ef9d17"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/resources/notification.rs",
+        "sha256": "b4f99fbd2e8239df96efcb5ef07181cb0b532f8f3b13b4e770e84ef14d01795e"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/resources/process.rs",
+        "sha256": "e0eb48928a9192a86a86c73b386d6d4fc94d5a1e5e527f3e1bf5beae2d32534e"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/resources/thread.rs",
+        "sha256": "8f6893b82df2919b99d11b1fc687df1f5300152c9d851f15f9e2fa530e1365d3"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/resources/vm.rs",
+        "sha256": "e90bb942536b40c9417a37decb469aea52647a434d55d1867916606827fb4c5c"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/serial.rs",
+        "sha256": "4f15fce193e4b4a48fd743f43f50db130b0aa1a0027408a0673c8e9a944c6298"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/services.rs",
+        "sha256": "fe36f29620ac1d180385ea217eb2b2a7697eac633e82858eb870bb23e61cc4e6"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/services/tray.rs",
+        "sha256": "17f06742582e3fab08e76658e84c874408ec792dc41e4f0f1e203647b8519c8f"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/startup.rs",
+        "sha256": "2a91553f3c8d3148e1e9024be18d23636d1d61ba55e5b7ae8150eaa4e38e2ac0"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/storage.rs",
+        "sha256": "37970a33154f52c0816f143cc678f134d94e65b33cf05f727245754c37827075"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/subsystems/catalog.rs",
+        "sha256": "4bff553eb47f3f1987dece064bbfb578ccee8032dbb61bbe39b1f21cc1f0fd5a"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/subsystems/clock.rs",
+        "sha256": "2bbb7800df52d4d746363d91673c1d8384770085dd93112eba0919526a61dbe2"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/subsystems/launch.rs",
+        "sha256": "441fa4330f2cb16cd45d91ddab4c708104528288d40ad90214cb8a8f91544646"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/subsystems/mod.rs",
+        "sha256": "41f69e31509f91f1c71bd2cf1838ff4e6aa17a2f91fe64762708c5aaccc2d497"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/subsystems/runtime.rs",
+        "sha256": "8f6e15d32ba3c9b1e3d8e75077f71e6528b9092530525f7f8c2d84c206594a40"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/time.rs",
+        "sha256": "39da62e074eda02c4d9e6a628e965765b9f745e71941d0a20ebd737cd7e7758b"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/update/catalog.rs",
+        "sha256": "9fbe4246699ba2d7218c5405b78244c2ae4ce9b02f65f6707d9ec4d439113bca"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/update/host.rs",
+        "sha256": "704b14047ba1d4b7d932915e7342f2591384d14e7f96084daccab5ffaee0c2be"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/update/journal.rs",
+        "sha256": "d7a04951952dcf448650d9786a834da46d11f8bdd2ed0eda4818c49708807a57"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/update/mod.rs",
+        "sha256": "2e7ccd71fd35b049dba25559f4292d989e4f4b74b867283a49d5be9f3d9aba67"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/update/storage.rs",
+        "sha256": "f35b5c3075612157a4de54ffe55439b1f5af0e65fa6c373e0dd5dfaa3a6fa249"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/web/canvas.rs",
+        "sha256": "6a1176de9144cd30e0fb2fb5e5f11f653d48105d68a6cb6ab9b1635455fbd69b"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/web/document.rs",
+        "sha256": "095078193f97cc4e9889d6d05c8c2652e12e9ddb5d042ec807e447e661b231d9"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/web/mod.rs",
+        "sha256": "45d904a4a7ecd2c9e4f6bd32c14999618fec0b68e2dd1b9ebb33cfcfe2d71ca6"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/web/script.rs",
+        "sha256": "d60980cb964c89477228337fdedd325a0e16a947ff82a9b4b493cd2e8618eeb2"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/web/transport/cache.rs",
+        "sha256": "ce5162ee1a998047536106643e983a4ad0aeee177d0e140e3a27b8c894b5ee27"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/web/transport/job.rs",
+        "sha256": "12013cd6cc15a2cd73cbc4423c557b6d7a1d66d25dd77f9004e51d322efd42af"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/web/transport/mod.rs",
+        "sha256": "2e749d717b4029a81b2380b62079287207312c1d9b42ec54e044d1a6c83d1bf8"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/abi.h",
+        "sha256": "1c6c5ba1789820da82cdbcc9bbe620da875a08424c3664add2494e83b95991c5"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/app_audio.h",
+        "sha256": "b1aa1bb311b42f2023e3ffd8b245b312534e4b891585a9c1342d40878faef312"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/app_contract.h",
+        "sha256": "4062edd21dc779fce1eb67056a383ef87d621a2ad2e7d857ac1c7ee697062de3"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/app_devices.h",
+        "sha256": "10db4325028695bfd20e728b24ecf44f0fec48d5951347816251ed000905bc4a"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/app_gui.h",
+        "sha256": "90d4d155d8eea9e6914588b557198c36660204a5fb17f7dd7b1e7ef35586223b"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/app_network.h",
+        "sha256": "e99c9dd2eb19db3139a085bbcd8648ca360d10c8083fd7e24cbdf1c30753e5de"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/app_resources.h",
+        "sha256": "8292e42d9d9e7e858b6cbe383c423debfd4ffa016320b8aa675c8bc6af2bc6a0"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/app_services.h",
+        "sha256": "42b85502aafb47c32c1e39c076c3e3c91cb03f13c848b968e20a1acee7c5d48d"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/app_storage.h",
+        "sha256": "7ecbdc6e6b85b82e10187c36df04a56e058f92ee934eaccd53c6638311394fd8"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/app_tray.h",
+        "sha256": "e398fe38009378c82c119e5433962782e042143e41c4b811dcb5c683cbfa646f"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/data_helpers.h",
+        "sha256": "64f6a05584a142e92a1f8f42654a6400682458672ba8f32d0bdbbe18e1c9c3a0"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/directory_page.h",
+        "sha256": "2e0a1579fb9ae84920114db93307890c02c951afda5667ebc7650e1d84ed07fa"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/driver.h",
+        "sha256": "41d46d06931ac40078e706f0d12ebc8ac085157e8a985b03e795bbe0d8be576a"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/driver_cpu_power.h",
+        "sha256": "c0be04a2609b754888d857fbc51ef252e0cbc8ebeebf8507a83d94366d024055"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/driver_display.h",
+        "sha256": "cb3f7ba75df11b682b05fa50390999be084d99881525c89038ff3a1961460c83"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/driver_heap.h",
+        "sha256": "90bbe79708161bb8d58a4650f29fa2ced608c945f9dd95a7ca4efdc4d6ea9000"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/driver_helpers.h",
+        "sha256": "32dabc377402391bb8314885282d0c2387aca8e2c95228ae6be9f989a1e6ee83"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/driver_lifecycle.h",
+        "sha256": "7ca162dde830573d28a96c25f83150fe4c904fee0182d004fb1813def57c85cf"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/driver_memory.h",
+        "sha256": "2129a4d84e3b96a942da0f2c77c620d3f96ed6d99bf59fd53b1e9c83c39d60bb"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/driver_outputs.h",
+        "sha256": "f1ad350ae3278e3cfbc6d6b9f60ffe19f96a315e03f504c7b09a9ff5ba5ebd27"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/driver_queue.h",
+        "sha256": "58b675d6da65b25429c352522e48e631565c5232613356ac7da21cacf327219d"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/driver_resources.h",
+        "sha256": "bcaf0116ed26e669c9399534a80aa981b3e8474eaf93d82a92f1242671f9cf45"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/driver_semaphores.h",
+        "sha256": "f3f16e4941a77b99399d11fbefc4f03098bf47b54654a70d27684f1ec907ca9a"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/driver_serial.h",
+        "sha256": "b8a80e23e5e60bba0e410dfc7fb81e95d851e14e88a510b2bf68c16249a5090d"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/driver_threads.h",
+        "sha256": "9596a3866d9d01ffddc1e28c8883be5b63ee713bf99b195b412a2d1b19d1a99e"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/facades.h",
+        "sha256": "b43578677e276d3bd9c3182f07070ecde358d9a4492947053d1c36caad5723f8"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/gui_bridge.h",
+        "sha256": "10e653986637698cb48631e46d3c4b511ad979e355efb802e355cc1f271729d4"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/heap.h",
+        "sha256": "84492815b5db9ee50815a42d4c0557cee2730df607a726e89b9dffb18f8e63f3"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/net_bridge.h",
+        "sha256": "67c072b270f10b409976b2d06d27c31e6e836cab960eb432991d68f2d9593ff6"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/net_request.h",
+        "sha256": "7b6b4f7417985399a6992b58c5ae220a59df6b9289e04c90606624a6cb98422f"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/path_timeout.h",
+        "sha256": "0426614d41d4d59b6bf22251df33b281c7222413ebe42e0ab9cea6170d49a260"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/power_profiles.h",
+        "sha256": "a004924cd6b579d7ec8712a67b061044e383c1b46a8097372ec31e80c8be0166"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/protocol.h",
+        "sha256": "103e8d4cd31b124bcb6820c557b025c07faed856736c45a3e44de887d694334a"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/r4audio.h",
+        "sha256": "b09eb054ccb68270fe871ef1cdbf63ecfce4c990cb48eac7cf3fad94a25e672d"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/r4desk.h",
+        "sha256": "e4b16a05a24d1acedf5c0b2c49dfe267eac33b48323dfcfd3a40b42d369965a0"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/r4dev.h",
+        "sha256": "d5bb569423019caa97df4202a2115b30e43c337454d0d84346b946026ea45524"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/r4draw.h",
+        "sha256": "8af81735d1094a75e1aa5216e579ec8e1a81be364e6a19d664d6d98349c8531f"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/r4l.h",
+        "sha256": "15f25769ff13d405b1e573464130d8f77468e451df2b52a9361dd24e6b63badb"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/r4m0.h",
+        "sha256": "9ab2e7a5a959b9d7369b80b2612c57f6fc4a0f1cd1ded66de0ecdf1bcb8e3870"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/r4net.h",
+        "sha256": "195794cc2e82abfa290de6dfa0dac06532ffbce0a89f4ec3ac721fd46af96a1a"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/r4os.h",
+        "sha256": "2c0de1dbecbaac9acba1b2a05f7016e133a0113c715ec07036a73abf7dc6b179"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/r4sys.h",
+        "sha256": "6e02b479511a412f1e644163b0e394452e88681612d7ff6444c7bacaed02510c"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/r4xstart.h",
+        "sha256": "c0d85b0b91fc8074a35f667b863dfb9ee2aa3e452055065d388ee5775b911ef2"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/serial.h",
+        "sha256": "a25ca8f65c6be81aff93f49974bee3089dd7bec0792b51e6b8c476e0ea594068"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/service_helpers.h",
+        "sha256": "ac0b43d4f4fb81b3db2a03fdf4619cca085680e0246775d847c44f9993825683"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/startup.h",
+        "sha256": "093b43ead7227693e92699235c81a1e330cb4bbeceeacbf8516998a39b420d48"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/storage.h",
+        "sha256": "689c500ad57cba2d037f2f0657dc096c379c22701705180d362e53415a7c14bb"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/storage_helpers.h",
+        "sha256": "efe0d24dd0183be13986f9501ec382c4613645cd82c5118206d695a70b1ff686"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/subsystem_helpers.h",
+        "sha256": "0b3b23c814c7ed757edaade6dd14b98f6d2be97bf0744c7349b4ce297d25284d"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/transport_helpers.h",
+        "sha256": "6bea254ab937f76525aa3d8cd460bec83addb2f2f8450a481ecc66d9e45688fb"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/update_helpers.h",
+        "sha256": "7ee1a7c028abac6e4b7a7a1a7ae3865bdcb84cbeeb9749bace35467f8bdd0542"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/web_helpers.h",
+        "sha256": "644bd50d6e6e61fd3640249c894bc8e22655c2f6d9b7fd13d2f43957c201dd3d"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/src/facades.c",
+        "sha256": "4bad41c76cdbe6ad19054b2e9a02d7de1ac3cb32c548a3b4e47c3ee32ccc1efd"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/src/r4app_startup.c",
+        "sha256": "7f52601e71e3abf5fd19c64a323a620bc635e44a93a40769ae88e739afc20a04"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/src/r4xstart_startup.c",
+        "sha256": "ddcd778f5929ae56fd82595636486a94695059c18f5c1e729f2a31d3cd94aff2"
+      },
+      {
+        "path": "Repositories/SDK/Shared/Generated/R4STD_Grapheme/SOURCE.json",
+        "sha256": "3fc168ce771ed8a0db8837d660ffb58f404322e36d5abfb2b118da3d2d136913"
+      },
+      {
+        "path": "Repositories/SDK/Shared/Generated/R4STD_Grapheme/console_text.zig",
+        "sha256": "efd315a9f185405bc7b5a87c0d5380eeea19cea4db860c8b2621afd2784f0ef0"
+      },
+      {
+        "path": "Repositories/SDK/Shared/Generated/R4STD_Grapheme/grapheme.zig",
+        "sha256": "ef9d27cf631ac40625f63e1dc9433ac7177a0b31cd5356704c4f878711fd1a42"
+      },
+      {
+        "path": "Repositories/SDK/Shared/Generated/R4STD_Grapheme/grapheme_properties.zig",
+        "sha256": "4919b83b1f3004efbb6445e9e08655b06f31cad00cfab5b79717003db706770e"
+      },
+      {
+        "path": "Repositories/SDK/Shared/Zig/r4app_startup.zig",
+        "sha256": "c90b5f9032ea4ef924b824b9b146fe4c1a78b62c136024595ad1f921fc609b8c"
+      },
+      {
+        "path": "Repositories/SDK/Tools/Build-Project.ps1",
+        "sha256": "5a230d5f76ffceb6d0846707d8241644c9837e8acd9239f77a26bcf96a62db0a"
+      },
+      {
+        "path": "Repositories/SDK/Tools/Build-RustModule.ps1",
+        "sha256": "059a977372f6c1ce84ec784036a3b4f161d5a86ec81b945709faf92c72562227"
+      },
+      {
+        "path": "Repositories/SDK/Tools/BuildModule.ps1",
+        "sha256": "0a11ace54f91f4c8b5ade9292c6c99d450d2da707b4e2415e17db11a9dc67b5d"
+      },
+      {
+        "path": "Repositories/SDK/Tools/CFacadeGen/src/main.zig",
+        "sha256": "9f8e75b456f74b1ff2e79bdd21ddc6b020b9117373e1e1812e422a92e594d5bd"
+      },
+      {
+        "path": "Repositories/SDK/Tools/DataBridgeGen/src/c_header.zig",
+        "sha256": "80cfbbc8cfaa9952dfdc171e6321cd3b76b47b3887b04f7ea2bcac2ce0da1b40"
+      },
+      {
+        "path": "Repositories/SDK/Tools/DataBridgeGen/src/main.zig",
+        "sha256": "8354739db097fcfdbaeda820e574d029d78bdbd928e07a561ca13c02b5e22841"
+      },
+      {
+        "path": "Repositories/SDK/Tools/DataBridgeGen/src/options.zig",
+        "sha256": "6eff335abcb8a7ec0ba271553fbe782a62218752793fc5e56a7ed6a071ed70fc"
+      },
+      {
+        "path": "Repositories/SDK/Tools/GuiBridgeGen/src/c_header.zig",
+        "sha256": "b41bdb6f061b5886aa92904c0e4b2a36025859031231d28e0f28375076cded1c"
+      },
+      {
+        "path": "Repositories/SDK/Tools/GuiBridgeGen/src/main.zig",
+        "sha256": "35a87effa9d381ff4a5f745b2ff2e6c9be39a67f7d1cd8f4031701f273f5f154"
+      },
+      {
+        "path": "Repositories/SDK/Tools/ManifestProject/build.zig",
+        "sha256": "0e3ec80e21165cc743379295002a3650cf6f730ab56f57d2f6cc8030b228e69d"
+      },
+      {
+        "path": "Repositories/SDK/Tools/MatchedComponents.ps1",
+        "sha256": "be7f843794d836be0a5f38004cbfc101333ef7129137705d5f60e903da3e4ab8"
+      },
+      {
+        "path": "Repositories/SDK/Tools/ModuleCatalog/src/capabilities.zig",
+        "sha256": "b76bc48d86afc3c8d3305985791261eec4e18a82f8444e7762f526d388ee021b"
+      },
+      {
+        "path": "Repositories/SDK/Tools/ModuleCatalog/src/main.zig",
+        "sha256": "2a30193a6386d98fc546d3ab018683e6f1b8b525712e3f89d98f1f83a4c850ee"
+      },
+      {
+        "path": "Repositories/SDK/Tools/NetBridgeGen/src/main.zig",
+        "sha256": "3419432380cd67b815c3419fbf639bd04a4347319d175f7376a7ba47a7f12b60"
+      },
+      {
+        "path": "Repositories/SDK/Tools/New-Project.ps1",
+        "sha256": "3c68f2f18536d442bf436983f8fc8ddfe7600ef4cd38ad20ea1e872a338b8a86"
+      },
+      {
+        "path": "Repositories/SDK/Tools/New-RustProject.ps1",
+        "sha256": "5d57087da566c5cee25657b0d1f6f57860537d752eb7429e1b8709503fafec72"
+      },
+      {
+        "path": "Repositories/SDK/Tools/R4LContractGen/build.zig",
+        "sha256": "a41bec92c8815bc018449bc004f744b2151f01cd7fee39a347cbeb8d149f0597"
+      },
+      {
+        "path": "Repositories/SDK/Tools/R4LContractGen/src/main.zig",
+        "sha256": "09ef74f89fcf46413ec081e4edc189b59546375bf9db9eb155355bec19958a19"
+      },
+      {
+        "path": "Repositories/SDK/Tools/R4LContractGen/src/rust.zig",
+        "sha256": "4d3238f69d44408df9e8d3cbbd6bc439213c9acea120a242e90465ab340d80b6"
+      },
+      {
+        "path": "Repositories/SDK/Tools/R4XBuilder/build.zig",
+        "sha256": "c33ea17382794c1ca8acd643f7a70b35a1d8c30f9709e35353a2d74f3fe3fa0f"
+      },
+      {
+        "path": "Repositories/SDK/Tools/R4XBuilder/src/main.zig",
+        "sha256": "94a96b3ae51a6e7b81d5d1391522e2da094f58eab1ab309d7de291aa597e4e16"
+      },
+      {
+        "path": "Repositories/SDK/Tools/R4XBuilder/src/stack_probes.zig",
+        "sha256": "adc41a8ee2c27ddcb8db31373487ff06c7bc70b5d8da4e8d86410122ce7f2b4a"
+      },
+      {
+        "path": "Repositories/SDK/Tools/RustBuildInputs.ps1",
+        "sha256": "b4e12ea5e0ce01209d064533ca49699b63f2ce85456b18cbf8bb7c6d0e8bb661"
+      },
+      {
+        "path": "Repositories/SDK/Tools/Sync-R4stdGrapheme.ps1",
+        "sha256": "df11a84b51f56adcd114b4823b751db6302307369fb09d486c7090ffb7d80a87"
+      },
+      {
+        "path": "Repositories/SDK/Tools/Test-Capabilities.ps1",
+        "sha256": "92c48bf6c7ea006b6afd1a3bb777ee103dfc75c15232c7678b2b78c5f44f66c8"
+      },
+      {
+        "path": "Repositories/SDK/Tools/Test-DesktopHostBuild.ps1",
+        "sha256": "cfb24ca9b0697ba5ad8885b9cd4652458f3e7df5ddd5b64512c78441e0107e0c"
+      },
+      {
+        "path": "Repositories/SDK/Tools/Test-LanguageParity.ps1",
+        "sha256": "c90d3814f3825df0dd62af66e362949078e13c9f169412c0e40de1f33e7471c0"
+      },
+      {
+        "path": "Repositories/SDK/Tools/Test-ProjectTemplates.ps1",
+        "sha256": "abc35269f08d598cba7ea14900ff36615822b5e1c00774aabf0b77e9187400da"
+      },
+      {
+        "path": "Repositories/SDK/Tools/Test-RustData.ps1",
+        "sha256": "13a8ed639ef007889c48ef5a2249d07e701d64bf99cffa2ba5bdc644001ca582"
+      },
+      {
+        "path": "Repositories/SDK/Tools/Test-RustDependencies.ps1",
+        "sha256": "e60eaa523e5c5d8b35fcf72ba2abb53a55ec071188b053578a28df6249f0104f"
+      },
+      {
+        "path": "Repositories/SDK/Tools/Test-RustDrivers.ps1",
+        "sha256": "ce8b032fb981c21d9722d4ec349c82965de58d069541f12d66f81f8051eb3651"
+      },
+      {
+        "path": "Repositories/SDK/Tools/Test-RustGui.ps1",
+        "sha256": "35cf7f5c8ffdc1a394e00733e640773f669136ae9ebd05d48ce183ae063f5978"
+      },
+      {
+        "path": "Repositories/SDK/Tools/Test-RustHeap.ps1",
+        "sha256": "b8cccbb3d7204d15a721eb6929d36ad8de2cdc4b8ff9fda130e4f3a185fbfa82"
+      },
+      {
+        "path": "Repositories/SDK/Tools/Test-RustLibraries.ps1",
+        "sha256": "3d9bb110b31a55da326a1015bb022ee766c50ab3a3bf59983ca795b0a1853584"
+      },
+      {
+        "path": "Repositories/SDK/Tools/Test-RustModule.ps1",
+        "sha256": "a47c3ea69825f5cdcb333c90ffaa1fe05d9ad557628915de473874b0fcf71af4"
+      },
+      {
+        "path": "Repositories/SDK/Tools/Test-RustProjects.ps1",
+        "sha256": "b4cc78176eaa56e09bc996d72420ea325a64cf68da22d1f4fcb3c41bba745e19"
+      },
+      {
+        "path": "Repositories/SDK/Tools/Test-RustProtocols.ps1",
+        "sha256": "3a16156ebb8232b3c67f3158251eb52e2739ef506f8bf4b4e893c5e45b0290aa"
+      },
+      {
+        "path": "Repositories/SDK/Tools/Test-RustResources.ps1",
+        "sha256": "c2e3686592cb6b9ce967979dcaedc2283ecf19dd7a01c5367a54b6a7188d6048"
+      },
+      {
+        "path": "Repositories/SDK/Tools/Test-RustServices.ps1",
+        "sha256": "9de08d76b8071dab08373d5bc3a65f223f72c8318483a6d364a5372115a71198"
+      },
+      {
+        "path": "Repositories/SDK/Tools/Test-RustStorage.ps1",
+        "sha256": "baae59787ffd0706337d51d2aec5f50c47d99ae94b8244ae78a7d4617432c382"
+      },
+      {
+        "path": "Repositories/SDK/Tools/Test-RustSubsystems.ps1",
+        "sha256": "81b9d7adbe28332ba99538b949d1e002d3f333b880d683ae8a6033b2b5cc6837"
+      },
+      {
+        "path": "Repositories/SDK/Tools/Test-RustTransport.ps1",
+        "sha256": "a1237620ac7e9d6e30b55aa943811e42e34e78f00c547ca70223f05c3414c09d"
+      },
+      {
+        "path": "Repositories/SDK/Tools/Test-RustUpdate.ps1",
+        "sha256": "9fbcd7e8b7904faa00f029508a9c7587d6c4d026b4fb4dc6b8e079a1f8ddb42f"
+      },
+      {
+        "path": "Repositories/SDK/Tools/Test-RustWeb.ps1",
+        "sha256": "af4d6cb6bb3a75a6d963cb72df01440f133123fbf801f95e800eda4759d73278"
+      },
+      {
+        "path": "Repositories/SDK/build.zig",
+        "sha256": "d6316dd114ec4282274a9f3f46002f51381770ed9e8ff806bef736b8e63ee663"
+      },
+      {
+        "path": "Repositories/SDK/build.zig.zon",
+        "sha256": "19d999b2a10db6bed7c86925a34d452059fdccc010f40b38a3d7870d355b75e4"
+      },
+      {
+        "path": "Repositories/SDK/r4os.zig",
+        "sha256": "bcaa709aa53feb2ebdad83433b8c365b095f440883f552ad78af0f23646d70c1"
+      },
+      {
+        "path": "Repositories/SDK/r4os/allocator_wait.zig",
+        "sha256": "b6e15b26c4ecc59991b1416d5eced0a12d52c5708ed4275106cc15ca02e27b4c"
+      },
+      {
+        "path": "Repositories/SDK/r4os/allocator_wait_test.zig",
+        "sha256": "ac44e1f3e314cda66a7f639fc1c4d96d38efb0e54e547a26f5784c7b62fad03b"
+      },
+      {
+        "path": "Repositories/SDK/r4os/app_audio.zig",
+        "sha256": "391ec8fe4f9ca9af8483c29415a315ccafcf1b2c680b7b4e9d393156c3afd329"
+      },
+      {
+        "path": "Repositories/SDK/r4os/app_contract.zig",
+        "sha256": "394a2487915ceb7d53888f77b6959c08f3ac3872d7dcea3a38e248506e5dd4b4"
+      },
+      {
+        "path": "Repositories/SDK/r4os/app_devices.zig",
+        "sha256": "d6c71ccc988ad73429b0a56f51783a0738b4e89c7b9c20736ee8995072071eee"
+      },
+      {
+        "path": "Repositories/SDK/r4os/app_gui.zig",
+        "sha256": "6bbac0da7a1a361381595172d7530d1e67688f976f9075bd708a216a506b062a"
+      },
+      {
+        "path": "Repositories/SDK/r4os/app_network.zig",
+        "sha256": "078640afde6f5309467a4916cb97343241f73a7c60995004659678ff7e17255d"
+      },
+      {
+        "path": "Repositories/SDK/r4os/app_resources.zig",
+        "sha256": "e8da288dfef82bc3b91276233a050540210ef6d727a528c3cfbabaa95096b263"
+      },
+      {
+        "path": "Repositories/SDK/r4os/app_services.zig",
+        "sha256": "3515101693341cb3d0798bf2e8b59b1fe0d6c1d67433cd37e8d59f1a66f5c39e"
+      },
+      {
+        "path": "Repositories/SDK/r4os/app_storage.zig",
+        "sha256": "522c6d41d78aa5525780f3735e03ed47aa9b8e731255821bcc9cae7193d6556e"
+      },
+      {
+        "path": "Repositories/SDK/r4os/app_tray.zig",
+        "sha256": "cb7ce13c4dedddf2c136423deeb8175777a786a9c613a92960cbea0b82f74248"
+      },
+      {
+        "path": "Repositories/SDK/r4os/app_web.zig",
+        "sha256": "efff1503a910293f757c878e87dccd2280eae0dcb46685c0544f7689a8337fd7"
+      },
+      {
+        "path": "Repositories/SDK/r4os/app_web_jobs.zig",
+        "sha256": "e3d97ebde0e90587bfa21dbd7752dd984a5517b2efa48bbb0b446e4d323717bd"
+      },
+      {
+        "path": "Repositories/SDK/r4os/audio_pcm.zig",
+        "sha256": "e239bf10a2e4465272a20e61615feace3402dd026e36ff8204039e9dfd6b7c02"
+      },
+      {
+        "path": "Repositories/SDK/r4os/bounded_text.zig",
+        "sha256": "ad927fedd95c3e633e263ece99d8d96d1e535ac7c0cd245205aa8f5ac21a594b"
+      },
+      {
+        "path": "Repositories/SDK/r4os/build.zig",
+        "sha256": "23ba84ed8878faebfdc2b8ad54311368d8b2c6d102bbfadaabdd1f51cdb9ec9f"
+      },
+      {
+        "path": "Repositories/SDK/r4os/c_header_inputs.zig",
+        "sha256": "07e266e2f24ef9ac0bccb05caecbede7513700255e4a32509eb97ad6af0a813b"
+      },
+      {
+        "path": "Repositories/SDK/r4os/chart.zig",
+        "sha256": "cfdf7afa55cf83bfbd1ea2c999fdef92c63e093c8e0e9937791ae2d5105cb22a"
+      },
+      {
+        "path": "Repositories/SDK/r4os/clipboard.zig",
+        "sha256": "71f393fad452fb770e7497f53d6362963e686e443a1fbdb590ace197a09b2474"
+      },
+      {
+        "path": "Repositories/SDK/r4os/cpu_acceleration.zig",
+        "sha256": "b46b18b5a512cfecc138756a651ed46bbcc5533d7427ace4e6deac8c2868627b"
+      },
+      {
+        "path": "Repositories/SDK/r4os/cpu_acceleration_tests.zig",
+        "sha256": "1431e81ca3b9aae5f05e4476f4248172f1140d49df9275f7970573dded7c226a"
+      },
+      {
+        "path": "Repositories/SDK/r4os/cpu_memory.zig",
+        "sha256": "457808304d8acfcdc9cf369817adc1cca88386d2dd34aac33d4329e04c29ec9e"
+      },
+      {
+        "path": "Repositories/SDK/r4os/crypto_sha256.zig",
+        "sha256": "f92562f09d18caebc1d1549cebff5a4f15e5da252490e5605cf185d068308f94"
+      },
+      {
+        "path": "Repositories/SDK/r4os/crypto_sha256_leaf.zig",
+        "sha256": "2c1d3ce403b7d4d21532f3df8bb969e5e49a389e9859df60058aebc81e6f9c2e"
+      },
+      {
+        "path": "Repositories/SDK/r4os/css.zig",
+        "sha256": "5905336acc4bfe0036e5886b0cdcd4e1cb9f940ddb70b927124a8ed491621a34"
+      },
+      {
+        "path": "Repositories/SDK/r4os/data_bridge_names.zig",
+        "sha256": "8c2e9a9ef520c096e3fe3ce43731b5aaf76e892d79ac51006ad79635ae381314"
+      },
+      {
+        "path": "Repositories/SDK/r4os/data_bridge_schema.zig",
+        "sha256": "9af79e95f16c85ab7bc8a97f4cfef338ca53dcc31112a9934a608397024d70be"
+      },
+      {
+        "path": "Repositories/SDK/r4os/data_helper_adapters.zig",
+        "sha256": "28c466dee6694d41e1e1f0053e0891ab2edac4423d9a4ec5711c893c871b8e32"
+      },
+      {
+        "path": "Repositories/SDK/r4os/data_helper_owners.zig",
+        "sha256": "163402f543c6f062a725c39e835bf77bc20cba26275c8ce816930a5bdd7242fb"
+      },
+      {
+        "path": "Repositories/SDK/r4os/data_value_bridge.zig",
+        "sha256": "e454d49f359370681d987cee176c8bbb4b35f159504510ac3f18323f2403bc91"
+      },
+      {
+        "path": "Repositories/SDK/r4os/directory_page.zig",
+        "sha256": "c0e9560b6a68b952a4388b08b092b36ab6b4f92840080b76649d600dc2dde332"
+      },
+      {
+        "path": "Repositories/SDK/r4os/document_save.zig",
+        "sha256": "69a9129d67575c4583e1029df07b4d65900ebceabd54243f60ea1194690f1f25"
+      },
+      {
+        "path": "Repositories/SDK/r4os/driver.zig",
+        "sha256": "7d1ccccb2c99426f31ae390a9b041eff2ee1301e51adf9c68b0396d4dfe9e5b3"
+      },
+      {
+        "path": "Repositories/SDK/r4os/driver_bridge_names.zig",
+        "sha256": "f3516083bcbf0c93c9b0b0e92c3ca8de400ec19e10c45b213d51f92735a3d75f"
+      },
+      {
+        "path": "Repositories/SDK/r4os/driver_bridge_schema.zig",
+        "sha256": "346ebcf8c69f3cbd6a95ad632f0d86e94a4fd20d985f7caed66b0ce2ec3589b7"
+      },
+      {
+        "path": "Repositories/SDK/r4os/driver_cpu_power.zig",
+        "sha256": "af51a3ad73948714e227ee8262ed1b4d23b1ca8123b830b948d665f2257c3bed"
+      },
+      {
+        "path": "Repositories/SDK/r4os/driver_display.zig",
+        "sha256": "1089b34ae0fcbaa398fcb82354556df18234c3c9aa7f79fd966f2829ed44bf8c"
+      },
+      {
+        "path": "Repositories/SDK/r4os/driver_entropy.zig",
+        "sha256": "ce0176b7612f3aa8d450b5f7829598139dea8103a64499d0af4c1d48d0549902"
+      },
+      {
+        "path": "Repositories/SDK/r4os/driver_heap.zig",
+        "sha256": "5f26c2b03d54e5994f55f60cd23405334d7f3f67fce1d10b6d635a58303b5cdc"
+      },
+      {
+        "path": "Repositories/SDK/r4os/driver_helper_owners.zig",
+        "sha256": "7525e43d8b080308e3179b809df667fdd1bf82ec0baf0cc7892f0951caa84de6"
+      },
+      {
+        "path": "Repositories/SDK/r4os/driver_memory.zig",
+        "sha256": "bd3a5ae21ef2d9342e8605efa7b1f31f846b13fe3498bab618171cd8248069ea"
+      },
+      {
+        "path": "Repositories/SDK/r4os/driver_outputs.zig",
+        "sha256": "b5c3eaa9b197f997b9baea069f19f74461875b7700ccce8af26ae782270868b0"
+      },
+      {
+        "path": "Repositories/SDK/r4os/driver_queue.zig",
+        "sha256": "6f464133c157e65b0943d7d3f2bfcdb1acac9e240532d71b666604e74671e583"
+      },
+      {
+        "path": "Repositories/SDK/r4os/driver_resources.zig",
+        "sha256": "b9443d0454dca1fac1adec2293e0ca0eb939ed132a288690fa7d17144622e8c2"
+      },
+      {
+        "path": "Repositories/SDK/r4os/driver_semaphores.zig",
+        "sha256": "a2f222b5bd67fee63efbcd30a9be49bbf7edcb50eef63b640852c646324513ce"
+      },
+      {
+        "path": "Repositories/SDK/r4os/driver_serial.zig",
+        "sha256": "2a539926da1f6c4e1a8d42a0ffeba50e65ba5c8a0beba9a662ca0cf2ab078984"
+      },
+      {
+        "path": "Repositories/SDK/r4os/driver_threads.zig",
+        "sha256": "17fcdb36b0a1d093b696fe8e9c6d9bf8df5e92c2a7fe024064b5e27c815a459f"
+      },
+      {
+        "path": "Repositories/SDK/r4os/driver_value_bridge.zig",
+        "sha256": "6e90403478feeec03e9359becff4104715fed6befb41a0e6d15f2c0dfdc4ad08"
+      },
+      {
+        "path": "Repositories/SDK/r4os/facade_runtime.zig",
+        "sha256": "c6be8f24d39459e62a3f591e2cc10acd6cd07165430b74af156c1ea598468cf5"
+      },
+      {
+        "path": "Repositories/SDK/r4os/file_stream.zig",
+        "sha256": "5e31c72d3b15bbb0c7ecee9588eee66e82e677d1ecea91460f34e18ed353d101"
+      },
+      {
+        "path": "Repositories/SDK/r4os/generated/data_fingerprint.zig",
+        "sha256": "33891fa2938e8a805deeaa7ba3aca07e7e1fc473fbd73876a3497448e3a913d8"
+      },
+      {
+        "path": "Repositories/SDK/r4os/generated/driver_fingerprint.zig",
+        "sha256": "ccfb2189d8f73adccba874e00eef9fccc0be65ceaa5a497c60879816ef4a0662"
+      },
+      {
+        "path": "Repositories/SDK/r4os/generated/gui_fingerprint.zig",
+        "sha256": "7a8e81238d8c8c0ae469a74be0a537ca019eb8c27c3a0b07ec0bdf0743e18e38"
+      },
+      {
+        "path": "Repositories/SDK/r4os/generated/net_facade.zig",
+        "sha256": "4b1120e228ccc24d0e208387edfe5b9776046017ff347a5167a3bec35af7faf1"
+      },
+      {
+        "path": "Repositories/SDK/r4os/generated/subsystem_fingerprint.zig",
+        "sha256": "c12b84665586ef790ffb0120946dcfd19d6d1c443bcd21693efe707f1bc08420"
+      },
+      {
+        "path": "Repositories/SDK/r4os/generated/transport_fingerprint.zig",
+        "sha256": "4307b02a7c4722894faccd33b900f78c40e09e9e850d1f495fd91f45671beb54"
+      },
+      {
+        "path": "Repositories/SDK/r4os/generated/update_fingerprint.zig",
+        "sha256": "2a9329785a1628593168dde068d9e9b77982879ad7e21eee3236b1d5002c6ca5"
+      },
+      {
+        "path": "Repositories/SDK/r4os/generated/web_fingerprint.zig",
+        "sha256": "a45c6616c3d3b2276d3ac7fb2ee7609565a6e2173b6a5f05e9646472c0402f0d"
+      },
+      {
+        "path": "Repositories/SDK/r4os/gfx_buffers.zig",
+        "sha256": "0f440ed4f272c46a7c05feeaf17f0dcad4a4866054b2dbedc783ffecb7692d9c"
+      },
+      {
+        "path": "Repositories/SDK/r4os/gfx_outputs.zig",
+        "sha256": "2f626391f24b7116ebbe99417677cb847a90b0a1d6d21d6a1dab004e13aed4ce"
+      },
+      {
+        "path": "Repositories/SDK/r4os/gfx_queue.zig",
+        "sha256": "809bb6be114a2a806cdf42d2f0f767210cc0fc3ed47de3017c27a9603b1c41e3"
+      },
+      {
+        "path": "Repositories/SDK/r4os/gfx_telemetry.zig",
+        "sha256": "bbdaabcea956e019906c4b811e86fd612b20e2a13e3b622775e96e34a40958a0"
+      },
+      {
+        "path": "Repositories/SDK/r4os/gpt_format.zig",
+        "sha256": "009a158f1f5bf1a4f6da1e5ffd28230d4163b13670efd48a2e15c7b43200c1c6"
+      },
+      {
+        "path": "Repositories/SDK/r4os/graphics_runtime.zig",
+        "sha256": "d004d5bb10f381e2dc5328b8a61370050dfcae84d8d96409e7fdbe23764598db"
+      },
+      {
+        "path": "Repositories/SDK/r4os/graphics_status.zig",
+        "sha256": "ad5637db2f65219abb196b4b9e164b0214ed86de33df19083b4660029321514d"
+      },
+      {
+        "path": "Repositories/SDK/r4os/graphics_support.zig",
+        "sha256": "10b1472a4bbbb43662230ab91308cfa6a7057bd7ea90f6b809aac8c7a0eb8357"
+      },
+      {
+        "path": "Repositories/SDK/r4os/gui.zig",
+        "sha256": "50bb06750e10ee5affa70d9ea38df8deb9ebfc7bea6e5ba099a4a8de30b94fa7"
+      },
+      {
+        "path": "Repositories/SDK/r4os/gui_bridge_schema.zig",
+        "sha256": "8e1cc1e2594818c405f4c6871fc73d1636a7c56e9a57aef3fd37f408b23c1a5f"
+      },
+      {
+        "path": "Repositories/SDK/r4os/gui_language.zig",
+        "sha256": "ed97836169c9341a0e6da90491bae50f93daf5b626e10c8d6ecfb5683bf60e91"
+      },
+      {
+        "path": "Repositories/SDK/r4os/gui_session_runtime.zig",
+        "sha256": "87d85385f67c1671cae881211e14df7840463efd91811f6c7bd3f71498535d37"
+      },
+      {
+        "path": "Repositories/SDK/r4os/gui_session_support.zig",
+        "sha256": "827266c3c4a1aa299909d91a58ee0aec2b318ef1aed12687794ebfabc7962ac1"
+      },
+      {
+        "path": "Repositories/SDK/r4os/gui_shapes.zig",
+        "sha256": "01167e944d9ef9f2c89f8fb5166a4e7c7fff53bc2f1f0d6b475614342a21d555"
+      },
+      {
+        "path": "Repositories/SDK/r4os/gui_value_bridge.zig",
+        "sha256": "77158802f9494a9804e766fc7a3dbd5580bd702fe380749478967a2d2879d565"
+      },
+      {
+        "path": "Repositories/SDK/r4os/heap_runtime.zig",
+        "sha256": "fb935076e5098cfa944e3873a6263b01feae8df0d04b5c714aed9da707df3daf"
+      },
+      {
+        "path": "Repositories/SDK/r4os/html.zig",
+        "sha256": "550c3b69d82027069e98810e8569a12187912509492f79912c6193b71fb2de37"
+      },
+      {
+        "path": "Repositories/SDK/r4os/http.zig",
+        "sha256": "38fd7709d727b1cfe7694bff48509031070dea719fed228c5eebf3ea3f5d9bf7"
+      },
+      {
+        "path": "Repositories/SDK/r4os/ico.zig",
+        "sha256": "f78d56964deeb296735ac5ebc231df304f4b5bec77bd21d8f47d14f7a52fe95b"
+      },
+      {
+        "path": "Repositories/SDK/r4os/import_spec.zig",
+        "sha256": "83f00d3c756adfbd678fb06d5ba624cf49f3514c168b091924cf7668b2ac1839"
+      },
+      {
+        "path": "Repositories/SDK/r4os/input_events.zig",
+        "sha256": "070cb480db90d395027fd255a7192d250299a5cc60d0fdd250634c78cc63fecb"
+      },
+      {
+        "path": "Repositories/SDK/r4os/input_events_tests.zig",
+        "sha256": "e5151bbb801de4b538cefb2cc32c23bf173e70f304b985090fdc635380ba8eea"
+      },
+      {
+        "path": "Repositories/SDK/r4os/javascript.zig",
+        "sha256": "105444ca9a434a4f41c4d5acdd3861a18909d9a779e90892635d3b663528ac98"
+      },
+      {
+        "path": "Repositories/SDK/r4os/javascript_regex_unicode.zig",
+        "sha256": "ec4913fb8ce56776906388baa6c140f12d8a51e2730e193bb608bce17bd834df"
+      },
+      {
+        "path": "Repositories/SDK/r4os/javascript_string_case.zig",
+        "sha256": "45fc51a81af084e548bcb1ec1940f97a5b2819aa3f2b5e3e78973cd4d43fc71d"
+      },
+      {
+        "path": "Repositories/SDK/r4os/javascript_string_normalization.zig",
+        "sha256": "1a896d276198aa1c313daf173e8fb62c34e244e959b923d0bf74a304c47eb68e"
+      },
+      {
+        "path": "Repositories/SDK/r4os/javascript_unicode.zig",
+        "sha256": "5df704934b301bd2603e015fa4b661d6b43d1d11e9ddbeea74699da62eb25008"
+      },
+      {
+        "path": "Repositories/SDK/r4os/json.zig",
+        "sha256": "7d6b07a0f627df12599b49313e5a19c8df3e685bdf11aacc0398adb072ca1b73"
+      },
+      {
+        "path": "Repositories/SDK/r4os/lowlevel.zig",
+        "sha256": "b828eda540e709c52387112ad5e601fdf68179b2b17dd59841e9bf76358708b2"
+      },
+      {
+        "path": "Repositories/SDK/r4os/module_capabilities.zig",
+        "sha256": "ba2b26d864fee90d24d529c7a50ca09e3848c7d83cb6cd6da5786b0d6ce8cb81"
+      },
+      {
+        "path": "Repositories/SDK/r4os/module_manifest.zig",
+        "sha256": "6016668272016da51f59eb318f671b3041e944330c8ab181ac1be4f8e78fa82f"
+      },
+      {
+        "path": "Repositories/SDK/r4os/native_bridge_schema.zig",
+        "sha256": "2987534203b0fe329b40d2c6071c878bc4d93a9886b7958f6b1a51357f0c8477"
+      },
+      {
+        "path": "Repositories/SDK/r4os/native_callback_bridge.zig",
+        "sha256": "a7cb874f39835c84e1b4cf5edfd82fa7081e9d5199c6471cc1d55f750e65fa8f"
+      },
+      {
+        "path": "Repositories/SDK/r4os/native_value_bridge.zig",
+        "sha256": "4407f5c3909ecdc2d8eecd4163ff810ca0c7cb38aef0ccc92d54c9cc29105d84"
+      },
+      {
+        "path": "Repositories/SDK/r4os/net_bridge_support.zig",
+        "sha256": "b3026806c7c3e1c1de73fa3d8acdb4ba2c0c0bbcc063d46dfbaa0123483402b3"
+      },
+      {
+        "path": "Repositories/SDK/r4os/net_request_runtime.zig",
+        "sha256": "05efed17364ff27f6c2862d938fb7ccd35f14c15644743f8a9e52b0d595c5208"
+      },
+      {
+        "path": "Repositories/SDK/r4os/ntfs_builder.zig",
+        "sha256": "327e7650e1b0e3cd981750ba7dac06b49c2e26bd4a833f169ec15f1fa1153fd9"
+      },
+      {
+        "path": "Repositories/SDK/r4os/ntfs_format.zig",
+        "sha256": "1862a4ae3ee5af46fc2452e8f8d24b2e310b90662223f941c0f94ed1146727ee"
+      },
+      {
+        "path": "Repositories/SDK/r4os/ntfs_mkfs.zig",
+        "sha256": "6a33bc6f2ea3452cfd11e1ffabeef991c7cd74152134ce7373c65c97ac0ac966"
+      },
+      {
+        "path": "Repositories/SDK/r4os/ntfs_volume.zig",
+        "sha256": "be86a7484d58e4ee0b9750537ba7f376c6989f866d6053948088cf4b52debb17"
+      },
+      {
+        "path": "Repositories/SDK/r4os/path.zig",
+        "sha256": "d0c82b3cff5a7c459bd0b4cc5d08583d0b3af8ea63a84c6bdbc5bb1ae299bcf9"
+      },
+      {
+        "path": "Repositories/SDK/r4os/platform_runtime.zig",
+        "sha256": "e476029a7d0d2563129eab44d4de9494ae5bb971e4a6089baf5c28cf0f04962e"
+      },
+      {
+        "path": "Repositories/SDK/r4os/platform_support.zig",
+        "sha256": "f00846480d3222ef0ab45f738d0c3cd89eac57fe8f1fdace757eba5bd7ec1c08"
+      },
+      {
+        "path": "Repositories/SDK/r4os/power_profiles.zig",
+        "sha256": "5aeb929722c93ce94bf6343142304f67d764624fd71921f201786c59c8faff45"
+      },
+      {
+        "path": "Repositories/SDK/r4os/program.zig",
+        "sha256": "012c29584d4efd5ae16c408d88ed3c1e6f9c0285455ad52d2d4a0e5ecbfabaea"
+      },
+      {
+        "path": "Repositories/SDK/r4os/protocol.zig",
+        "sha256": "179a9d357cf0bcc974083591cd0b259b6f46a08829333a138ba5b1864797e9d7"
+      },
+      {
+        "path": "Repositories/SDK/r4os/r4audio.zig",
+        "sha256": "498c972889b6fa825d16d9fa658e2f4032c9680f7cdeea32a72dd5dfffdf237d"
+      },
+      {
+        "path": "Repositories/SDK/r4os/r4cp.zig",
+        "sha256": "2748bd69a3bdd25583931e8ef8d30a99480c6c79f28aa87b9e31e1050c41cdd4"
+      },
+      {
+        "path": "Repositories/SDK/r4os/r4cp_convert.zig",
+        "sha256": "4ec56a746852831e2f54fd359292b00634d3fd6b36ba9c25de3f692b7096f767"
+      },
+      {
+        "path": "Repositories/SDK/r4os/r4desk.zig",
+        "sha256": "cc1b598a35d5ec8cf063b8d857a7a869b9292ecd474453fd051a04b03fed1691"
+      },
+      {
+        "path": "Repositories/SDK/r4os/r4dev.zig",
+        "sha256": "16a8ba9a69b53e2602ab1c8c7d79a633a50306528a57720027c6c7ce4075f1a1"
+      },
+      {
+        "path": "Repositories/SDK/r4os/r4draw.zig",
+        "sha256": "7dee4d4e1ab08a575de4fb438814bdb394cd3fc610a9616f59bb7f6547ab9c4b"
+      },
+      {
+        "path": "Repositories/SDK/r4os/r4net.zig",
+        "sha256": "cbf163ed77f78b917c437334df4826aa1db1e1c568a5c15a18b06087cfd29d2e"
+      },
+      {
+        "path": "Repositories/SDK/r4os/r4sys.zig",
+        "sha256": "ad24b04b023c651ef8fdd033adf3d0e33f938e5b35a8a5cdb1d006b544c2d3a8"
+      },
+      {
+        "path": "Repositories/SDK/r4os/r4u_artifact.zig",
+        "sha256": "fb134fa35f0a978220665309826cb1156ca53e1da270cd9a42a4d0151405b03f"
+      },
+      {
+        "path": "Repositories/SDK/r4os/r4u_manifest.zig",
+        "sha256": "22527bd0227a8d80d2794aaf77fbc5922805da716adada5bd871afc2fe19a05f"
+      },
+      {
+        "path": "Repositories/SDK/r4os/r4x.zig",
+        "sha256": "17fee1b227311ad0ad4923d42c726613f5250bb58fc50c057c81e90366a46713"
+      },
+      {
+        "path": "Repositories/SDK/r4os/r4xstart.zig",
+        "sha256": "50fe5902fee73ec85f063bd40520b665d562f67a08eaf1a444c1eaeb0aa9995a"
+      },
+      {
+        "path": "Repositories/SDK/r4os/raster.zig",
+        "sha256": "79a8fdb79bdf6e7b771d48a8f3876f82897a6a76f5294cde1fcec942a75d95ae"
+      },
+      {
+        "path": "Repositories/SDK/r4os/recent_documents.zig",
+        "sha256": "13000dfecbbc7c952efa5f055e1201c6fa52b3dda61e051295e0e3acb6b88c01"
+      },
+      {
+        "path": "Repositories/SDK/r4os/registry.zig",
+        "sha256": "44cb5c5062f48bc6bb179ebfee21c916749f4583bf182a7160f5b6eb4413497e"
+      },
+      {
+        "path": "Repositories/SDK/r4os/registry_core.zig",
+        "sha256": "01d08635b0c917fd721f9c75d60fd295402417ff63e8ad47b062196a351deb44"
+      },
+      {
+        "path": "Repositories/SDK/r4os/registry_selftest.zig",
+        "sha256": "18a41559b21d5df21c39de6686b05b9231c9cad49e3b52e0a95297075f731a5c"
+      },
+      {
+        "path": "Repositories/SDK/r4os/runtime_bootstrap.zig",
+        "sha256": "0474c718dc998c765349a2bd42f683b55b2f0f37f8049f5b5de267213595a6cd"
+      },
+      {
+        "path": "Repositories/SDK/r4os/runtime_context.zig",
+        "sha256": "10e935fa11f4b2d95444280cd0cb4027441d5ebae792e62e17d70d800986a743"
+      },
+      {
+        "path": "Repositories/SDK/r4os/runtime_r4l.zig",
+        "sha256": "1ebd2ab5d60d602ce8ceaf0038ad3e58cf1283fb07475ef7d9a6915143ccc18f"
+      },
+      {
+        "path": "Repositories/SDK/r4os/rust_module_profile.json",
+        "sha256": "6e462c92bc96d9528057062fb0748f331deb94db03533bf8468348ac24604c8a"
+      },
+      {
+        "path": "Repositories/SDK/r4os/rust_project.zig",
+        "sha256": "65e182e794f12cbd8aa1c09348f7a94bb5ead99c791f4bbb316903dca349bc62"
+      },
+      {
+        "path": "Repositories/SDK/r4os/rust_qualification.json",
+        "sha256": "bef4896fbbb14a5a5c5816a21cb1b7117c0bf59ec69d2dd2a667f835729c4b3d"
+      },
+      {
+        "path": "Repositories/SDK/r4os/secure_random.zig",
+        "sha256": "e1eb97e24ce3ad657481d6d92defb001bd33a80460be77cd98cd5601d613e3ae"
+      },
+      {
+        "path": "Repositories/SDK/r4os/serial.zig",
+        "sha256": "cc8eb8eff6c072ea3b35fd2757c8beb41da3f871b221941db534eee644b7a7f0"
+      },
+      {
+        "path": "Repositories/SDK/r4os/service_deadline.zig",
+        "sha256": "0220bfe0b6f8a5cd376d7563be80833f6e0fcebdeb93eac8cbfb7c577780292a"
+      },
+      {
+        "path": "Repositories/SDK/r4os/services_runtime.zig",
+        "sha256": "d1e471131b35c371bade543a564f700603b279d3e7c1781e5bff74671a61fb47"
+      },
+      {
+        "path": "Repositories/SDK/r4os/startup_metadata.zig",
+        "sha256": "2fd9ce3d4673185998025b4387e638318ea61f96e5e1b83da83d258897341783"
+      },
+      {
+        "path": "Repositories/SDK/r4os/storage.zig",
+        "sha256": "4510639b72dee1e97eba0b141339dcba5f6d29c751004ae82df20df0ceb39571"
+      },
+      {
+        "path": "Repositories/SDK/r4os/storage_runtime.zig",
+        "sha256": "684e14f750a9cf6ed96a9854339e5f81d3e2f8a6bf6090f62982986f5de5d812"
+      },
+      {
+        "path": "Repositories/SDK/r4os/storage_tools.zig",
+        "sha256": "319fff1e901b15ee50be38eaec674851bad43f3d20af5a4003149f783b0a02c5"
+      },
+      {
+        "path": "Repositories/SDK/r4os/storage_tools/byte_source.zig",
+        "sha256": "08fbd26bac93a18f8dbef7461f3291374aa9e52a001c4896240abfa63a882a85"
+      },
+      {
+        "path": "Repositories/SDK/r4os/storage_tools/fat32.zig",
+        "sha256": "ea0eca83f8e8a0116a109db789fdf884538d0967d6f9374144473e75c6b70bf0"
+      },
+      {
+        "path": "Repositories/SDK/r4os/storage_tools/fat32_image.zig",
+        "sha256": "d72ce924f4b1ca77bb5a385ba89e5b766547f6e61829ec21889cf52a1aba34a2"
+      },
+      {
+        "path": "Repositories/SDK/r4os/storage_tools/fat32_update.zig",
+        "sha256": "7b311d865eda09677517337452d4dbc3b0d0fabac0a94e382ef932a0ae98ab8b"
+      },
+      {
+        "path": "Repositories/SDK/r4os/storage_tools/fat32_view.zig",
+        "sha256": "6c3642ab38c0073341c567e8c7ca6c564b83240b9f1a456531a58f25fa715d5c"
+      },
+      {
+        "path": "Repositories/SDK/r4os/storage_tools/gpt_repair.zig",
+        "sha256": "38124df4cbf48316bf098ca99da9ed46e82ea89a90443faedff34aa75d76f7aa"
+      },
+      {
+        "path": "Repositories/SDK/r4os/storage_tools/guid.zig",
+        "sha256": "45535a4e53fbab56c789de19000909c953cff8a55d32f22a5118b7a9c0fd3321"
+      },
+      {
+        "path": "Repositories/SDK/r4os/storage_tools/host_file.zig",
+        "sha256": "c9d7a92c11bbf877f7855b1387f1481feaed1e5e8e4e85729b2b4abe152ce2b1"
+      },
+      {
+        "path": "Repositories/SDK/r4os/storage_tools/installation.zig",
+        "sha256": "aab73992ed50c224202bb4721e773de18a556fec15bf1678da05811394ffa071"
+      },
+      {
+        "path": "Repositories/SDK/r4os/storage_tools/io.zig",
+        "sha256": "003148d1f5c50bc328e2172a834cfe337435466b68979deadfa7eacedf04cee8"
+      },
+      {
+        "path": "Repositories/SDK/r4os/storage_tools/limine.zig",
+        "sha256": "eb87e0432a4782b0843f4afeb5557273fe799edce501997504081831feda40d4"
+      },
+      {
+        "path": "Repositories/SDK/r4os/storage_tools/limine/limine-bios-hdd.h",
+        "sha256": "ef88b0484bbe028e4ac46a312fe756f9d5a59425ac3165c2fb70c7373b46437f"
+      },
+      {
+        "path": "Repositories/SDK/r4os/storage_tools/limine/limine.c",
+        "sha256": "e2f66c0eb7a07db995d5ef8b579c991e32864bf01dd73a6b4d2e930e537e02de"
+      },
+      {
+        "path": "Repositories/SDK/r4os/storage_tools/limine/provenance.json",
+        "sha256": "a2e037b541ac69429dba6feb56f3011290abb92f04fdb4a9128c78bff8b51058"
+      },
+      {
+        "path": "Repositories/SDK/r4os/storage_tools/ntfs_extend.zig",
+        "sha256": "e39b9122f4fff972ac346719cbd5e03de52c233b641e6cbdd0224efdbe69949f"
+      },
+      {
+        "path": "Repositories/SDK/r4os/storage_tools/ntfs_metadata.zig",
+        "sha256": "da0524393f4913f010ad36b58b38eccf321cd4413be86e730ffe963a272b59f1"
+      },
+      {
+        "path": "Repositories/SDK/r4os/storage_tools/ntfs_metadata/provenance.json",
+        "sha256": "8560742310ee8af2a7346cf06de314b0700e56b06e2ac7f0aaeb2aefe3edd3c4"
+      },
+      {
+        "path": "Repositories/SDK/r4os/storage_tools/ntfs_plan.zig",
+        "sha256": "6452d5c795051dfcace876055acafaf590a165adc6ad202c3a11dfaa078bf021"
+      },
+      {
+        "path": "Repositories/SDK/r4os/storage_tools/ntfs_resize.zig",
+        "sha256": "e7a645a80edcbfea5695db7e9f97005ec2dc82561cbdc38465883b7642de1594"
+      },
+      {
+        "path": "Repositories/SDK/r4os/storage_tools/partition.zig",
+        "sha256": "39d32c37753bf2b7bf53b5831bf32dd58a89488aa69545000136608982999459"
+      },
+      {
+        "path": "Repositories/SDK/r4os/storage_tools/sparse_image.zig",
+        "sha256": "fc7977a51859ff06c8570721c40740c8d104057d5d60c1229371458f58493403"
+      },
+      {
+        "path": "Repositories/SDK/r4os/storage_tools_guest.zig",
+        "sha256": "154d7ec78f8ea3a232561b9f9c08a94510bec3c8b553c46ffb0ea9fc6b7d9f97"
+      },
+      {
+        "path": "Repositories/SDK/r4os/subsystem_bridge_names.zig",
+        "sha256": "e0bbec5222522d12d07aca4b9f6e3c31543fbe96bc46db518465da27080d5326"
+      },
+      {
+        "path": "Repositories/SDK/r4os/subsystem_bridge_schema.zig",
+        "sha256": "e04f809118ef46cd3d76fd6e4c85bdb647d0dc45f371b9217578c5fdc87e60f8"
+      },
+      {
+        "path": "Repositories/SDK/r4os/subsystem_callback_bridge.zig",
+        "sha256": "c583c935351741e67483382d2248fd7fc827914aebe322513b9489d42f53c5ca"
+      },
+      {
+        "path": "Repositories/SDK/r4os/subsystem_catalog.zig",
+        "sha256": "9be94cb31a47227a6c5b47b999c54ffc5f47ae67df58b8187b0a931cd4aede22"
+      },
+      {
+        "path": "Repositories/SDK/r4os/subsystem_helper_adapters.zig",
+        "sha256": "812773ee1f90982615692f83ed61aee85b5d4d8786dfecf49d4c381608caa1a1"
+      },
+      {
+        "path": "Repositories/SDK/r4os/subsystem_helper_owners.zig",
+        "sha256": "ecde8978c3eaff0ddc68525fbb61f816efea90ec9678b4f2a6f00d48475b1960"
+      },
+      {
+        "path": "Repositories/SDK/r4os/subsystem_host.zig",
+        "sha256": "fd80e561b3b74e9f251173ac4652be8431e8e9e5723d88dc511bf12ea97cef9b"
+      },
+      {
+        "path": "Repositories/SDK/r4os/subsystem_launch.zig",
+        "sha256": "547fa1849cd8d8db0fc475fccd875d2d48a417ac4bfe4a4d1dcf6b90c0b2d270"
+      },
+      {
+        "path": "Repositories/SDK/r4os/subsystem_persistence.zig",
+        "sha256": "d1acae50deef4b4b9f536ce476f83e1fdfcfcc1ea0dd6283e48096d96d656b76"
+      },
+      {
+        "path": "Repositories/SDK/r4os/subsystem_runtime.zig",
+        "sha256": "d87b7d3a0dee2cee16c21f9c126287e62f72a680a609c25e2b399ce9ca8b40d2"
+      },
+      {
+        "path": "Repositories/SDK/r4os/subsystem_value_bridge.zig",
+        "sha256": "697cf75fb170c6a25d9e51703bd99e596af21817f18d5c7a921481a88daf4dec"
+      },
+      {
+        "path": "Repositories/SDK/r4os/system_update_backup.zig",
+        "sha256": "85617a4cc615c6c333b79da6526809b71f28b3d620005cdc61e408c34da3692f"
+      },
+      {
+        "path": "Repositories/SDK/r4os/system_update_batch.zig",
+        "sha256": "1564310f0d7237053557579461b0688028abcccdce130bd5f66fcf82f2ad0154"
+      },
+      {
+        "path": "Repositories/SDK/r4os/system_update_engine.zig",
+        "sha256": "86a5a21e3e6bb41ce8f8ba9fa65f04970b300a62f9c1b47443cd156e1a23e92e"
+      },
+      {
+        "path": "Repositories/SDK/r4os/system_update_inventory.zig",
+        "sha256": "a65c2d285f145e06ac75631340c5a3fbe74129bf6c65dadba1dc6030f1349506"
+      },
+      {
+        "path": "Repositories/SDK/r4os/system_update_paths.zig",
+        "sha256": "bf5313919d0ea8c723d4e11e8f3ac38a8cbaef8562d515ac0f7045e5b4286e1c"
+      },
+      {
+        "path": "Repositories/SDK/r4os/system_update_recovery.zig",
+        "sha256": "7b3b29dad51865d8ba89702d88b1c1ced5e81dc6bd6312db43b4285969e654ea"
+      },
+      {
+        "path": "Repositories/SDK/r4os/time_contract.zig",
+        "sha256": "d6ccf6a9359c27f52faf3943d2d00c9ed0cbe716532ef9d5119c48d71494cc13"
+      },
+      {
+        "path": "Repositories/SDK/r4os/transport_bridge_names.zig",
+        "sha256": "b34e1267502fa29a31b359fd8c7fd7c5b8edf8303eca744f7300d3313ef703e3"
+      },
+      {
+        "path": "Repositories/SDK/r4os/transport_bridge_schema.zig",
+        "sha256": "7e9a90b335bee012ac2c6cec8504c976003e0e81714939bb286a0f6636459a84"
+      },
+      {
+        "path": "Repositories/SDK/r4os/transport_helper_adapters.zig",
+        "sha256": "9a8fb068b30fa475d5c948ab0424fd00cdaa7b299fae193924f898144ab53212"
+      },
+      {
+        "path": "Repositories/SDK/r4os/transport_helper_owners.zig",
+        "sha256": "b2f9c7e9d944a9fdf8945e566fe6930e90fddf41ae90af01d94801751aaa36f0"
+      },
+      {
+        "path": "Repositories/SDK/r4os/transport_value_bridge.zig",
+        "sha256": "fd0765b53105629edf355b0e13d3393076acdffaf0729624e35ee8bde5d6c13d"
+      },
+      {
+        "path": "Repositories/SDK/r4os/update_bridge_names.zig",
+        "sha256": "ee82cba9a878aced4bd430d2779fcb293f8112ea1d622612b8928c3bec2fb527"
+      },
+      {
+        "path": "Repositories/SDK/r4os/update_bridge_schema.zig",
+        "sha256": "1b8f688a0d51f8aa30f6704ba765cdbf2009d8953ff7e4bbda865a5955884c1c"
+      },
+      {
+        "path": "Repositories/SDK/r4os/update_callback_bridge.zig",
+        "sha256": "73be172a3601aefd7beed3de03a85d6358e42e0cd6fda6ecc960022e2b02bf4c"
+      },
+      {
+        "path": "Repositories/SDK/r4os/update_catalog.zig",
+        "sha256": "8ef1b263f2a65471093f060e4fc3a2d6f10bfb66d13ed7d750adbdfdf82108a5"
+      },
+      {
+        "path": "Repositories/SDK/r4os/update_helper_adapters.zig",
+        "sha256": "a3449b89836c92b8773076745de4f7dbc83bdca45e9cede16786272a36e3d3ae"
+      },
+      {
+        "path": "Repositories/SDK/r4os/update_helper_owners.zig",
+        "sha256": "4c4ffdbd4a04bd8f1642791b2611c14642cc823f707640bcb5d7148d35a94143"
+      },
+      {
+        "path": "Repositories/SDK/r4os/update_host_file.zig",
+        "sha256": "c5efa407b77ec0bf255ec16268a9b6894929202442b94625825e40474968cc16"
+      },
+      {
+        "path": "Repositories/SDK/r4os/update_service_contract.zig",
+        "sha256": "9454f24d86b7bee8d500bc06bd0d74f6694601dc85cfd2ecab3cd998c5ddade0"
+      },
+      {
+        "path": "Repositories/SDK/r4os/update_type_names.zig",
+        "sha256": "a5fded5647f483f7b54c6725fd0241f53626342dfd080c71aa9c937d3dde317f"
+      },
+      {
+        "path": "Repositories/SDK/r4os/update_value_bridge.zig",
+        "sha256": "befb2ac2589bacaa86211b13196b645d4d8ba9430f3f47d9296e8b9e1920e2f3"
+      },
+      {
+        "path": "Repositories/SDK/r4os/upload_publish_claim.zig",
+        "sha256": "9b4710dd5d43ef3a379ec62ed3aae69ddb88819e1d3e7d55b404611aaeed2020"
+      },
+      {
+        "path": "Repositories/SDK/r4os/version_info.zig",
+        "sha256": "5025f30ec6eb4fe6da01b8ca5df6679442cff2b4492a5e7752e5c48260ce52f5"
+      },
+      {
+        "path": "Repositories/SDK/r4os/vm_allocator.zig",
+        "sha256": "c0bbf9c2806a185f475847f67be701db2e98fa0f71b1bc7d79e7dce35fa846ee"
+      },
+      {
+        "path": "Repositories/SDK/r4os/web_background.zig",
+        "sha256": "e4584fef248b9f905e45cd77c2a119851a3a6f71e7c25e18648d5189ea92af30"
+      },
+      {
+        "path": "Repositories/SDK/r4os/web_bridge_names.zig",
+        "sha256": "f9da04cfae4b07c67204b08faff6d077c72f181fb7536867949d37b2538d8daa"
+      },
+      {
+        "path": "Repositories/SDK/r4os/web_bridge_schema.zig",
+        "sha256": "9d137fa67c615ececc3a69d203d9be4868bda0469ac44afb1e61763e37dfb346"
+      },
+      {
+        "path": "Repositories/SDK/r4os/web_callback_bridge.zig",
+        "sha256": "94213f3e60f49eb2a9194a30887b9f72c79db84d1950b999628fd5ec15aa5e18"
+      },
+      {
+        "path": "Repositories/SDK/r4os/web_canvas.zig",
+        "sha256": "c2a39fe96589cf47e4ab969c52fa4cd2bcb2394b14ce21d5cd1e386bdd846139"
+      },
+      {
+        "path": "Repositories/SDK/r4os/web_crypto.zig",
+        "sha256": "ccdf98c816b1ba6e77dbd73fc7d4178baeac0929833f70df3495ae33bdfafe16"
+      },
+      {
+        "path": "Repositories/SDK/r4os/web_documents.zig",
+        "sha256": "c1c3c05c04c5a9f9cc898bfe4870be145c5efef1855393e8d81b99fdbf3c9a9f"
+      },
+      {
+        "path": "Repositories/SDK/r4os/web_encoding.zig",
+        "sha256": "bbec0a6fe1ba394abbb4f7e6deb47f8c6f402012f98ea987fd5778fd295354e8"
+      },
+      {
+        "path": "Repositories/SDK/r4os/web_fetch.zig",
+        "sha256": "517ad1a5185648f1324f87ba624fa228a636b3738388bf8d99a5c5f7cd8235be"
+      },
+      {
+        "path": "Repositories/SDK/r4os/web_font.zig",
+        "sha256": "5fffa3fcb2cf2434fc5e0b318d57646357dd4a8a8a6edf0b808508a0367cf0c4"
+      },
+      {
+        "path": "Repositories/SDK/r4os/web_font_activation.zig",
+        "sha256": "8d03f04faea1bf22bee5304184dced4c9b4908e83ca3745462f410df5f2cabdd"
+      },
+      {
+        "path": "Repositories/SDK/r4os/web_font_cache.zig",
+        "sha256": "3645e021ed54f5637df472863bb5c3732c88899c1ed9fce2a72e77b10987bf52"
+      },
+      {
+        "path": "Repositories/SDK/r4os/web_fonts.zig",
+        "sha256": "d015abc67be8d7a3e5228c569c136054c8830adb5eaf06d027359ac0856f6e93"
+      },
+      {
+        "path": "Repositories/SDK/r4os/web_forms.zig",
+        "sha256": "e024861cf59fca9a4bfee660a3b82864903b39e94160c31c7f4db19948776901"
+      },
+      {
+        "path": "Repositories/SDK/r4os/web_helper_adapters.zig",
+        "sha256": "39fb37683559a08d756dc69241f63d91172bd7acafc8103b13fcf0c355e016b9"
+      },
+      {
+        "path": "Repositories/SDK/r4os/web_helper_owners.zig",
+        "sha256": "418717ec5cef40435fb17998e96179f75124bd709c589dc2a010dae30ec122ae"
+      },
+      {
+        "path": "Repositories/SDK/r4os/web_images.zig",
+        "sha256": "2b49dc51f499169684876b68ae5ccd99969e59443fa38a86b74073e9b2982605"
+      },
+      {
+        "path": "Repositories/SDK/r4os/web_layout.zig",
+        "sha256": "dbf214781a544a4497daa7bc855afc732c7b01a51583d5413acfd4bb7a857b05"
+      },
+      {
+        "path": "Repositories/SDK/r4os/web_navigation.zig",
+        "sha256": "aa888799c8b8bd5fdd44a563d08627a002029c3438f4d58350a7f97df4192cfb"
+      },
+      {
+        "path": "Repositories/SDK/r4os/web_resources.zig",
+        "sha256": "22cb2c078eef44e76ea80d6f1939352a8dea3acfc359888196be5b6a68a2c593"
+      },
+      {
+        "path": "Repositories/SDK/r4os/web_response_cache.zig",
+        "sha256": "8a2e22d72bb520431bae2d203dbe633ca20e9957db670a39ec93d7926bf15d5c"
+      },
+      {
+        "path": "Repositories/SDK/r4os/web_runtime.zig",
+        "sha256": "4a5d35915996ebf790682ffa8bd3b42a4a7a6759722ab49979295cceeebdce2b"
+      },
+      {
+        "path": "Repositories/SDK/r4os/web_runtime_jobs.zig",
+        "sha256": "cf719821b195b68e031cfcdbcd3828c20b620f78546b25a1bb5fb12b8cddc669"
+      },
+      {
+        "path": "Repositories/SDK/r4os/web_security.zig",
+        "sha256": "f6cb1189aa27116e09b665884a102102034cddb2498b1d4d609b7ec7fb5b15e3"
+      },
+      {
+        "path": "Repositories/SDK/r4os/web_url.zig",
+        "sha256": "ed8660774453a70af095e3edf44084384071e045d051611c81cb9fff799b4543"
+      },
+      {
+        "path": "Repositories/SDK/r4os/web_value_bridge.zig",
+        "sha256": "af2311ef2b20d8486fe79724636d06330022833902cd0aa76795833f676aa0e6"
+      },
+      {
+        "path": "Repositories/SDK/r4os/window_mode.zig",
+        "sha256": "cd403d900d711e58dd77c117fad3506960303efe7fb144f4d87e8ee5e597d3e8"
+      },
+      {
+        "path": "Repositories/SDK/r4os/zip.zig",
+        "sha256": "a58fcffd6c692da571d4ca8a9d3cb85e3a01ea4d0b21e8159b8e295eca639cbf"
+      }
+    ],
+    "coverage": [
+      {
+        "id": "platform-abi",
+        "zig": [
+          "Repositories/Contract/Generated/SDK/Zig/abi.zig"
+        ],
+        "c": [
+          "Repositories/Contract/Generated/SDK/C/include/r4os/abi_generated.h",
+          "Repositories/Contract/Generated/SDK/C/include/r4os/abi_technical_generated.h",
+          "Repositories/SDK/Shared/C/include/r4os/abi.h"
+        ],
+        "rust": [
+          "Repositories/Contract/Generated/SDK/Rust/src/lib.rs"
+        ],
+        "proof": [
+          "central_abi_interop"
+        ]
+      },
+      {
+        "id": "startup",
+        "zig": [
+          "Repositories/SDK/r4os/app_contract.zig",
+          "Repositories/SDK/r4os/program.zig",
+          "Repositories/SDK/r4os/r4x.zig",
+          "Repositories/SDK/r4os/r4xstart.zig",
+          "Repositories/SDK/r4os/runtime_context.zig"
+        ],
+        "c": [
+          "Repositories/SDK/Shared/C/include/r4os/app_contract.h",
+          "Repositories/SDK/Shared/C/include/r4os/r4xstart.h",
+          "Repositories/SDK/Shared/C/include/r4os/startup.h"
+        ],
+        "rust": [
+          "Repositories/SDK/Rust/src/lib.rs"
+        ],
+        "proof": [
+          "rust_qualified_classes",
+          "independent_desktop_current_71"
+        ]
+      },
+      {
+        "id": "allocation",
+        "zig": [
+          "Repositories/SDK/r4os/vm_allocator.zig"
+        ],
+        "c": [
+          "Repositories/SDK/Shared/C/include/r4os/heap.h",
+          "Repositories/SDK/Shared/C/include/r4os/r4sys.h"
+        ],
+        "rust": [
+          "Repositories/SDK/Rust/src/heap.rs"
+        ],
+        "proof": [
+          "independent_desktop_current_71"
+        ]
+      },
+      {
+        "id": "project-build",
+        "zig": [
+          "Repositories/SDK/r4os/module_manifest.zig",
+          "Repositories/SDK/r4os/r4cp.zig",
+          "Repositories/SDK/r4os/r4cp_convert.zig"
+        ],
+        "c": [
+          "Repositories/SDK/BuildProfiles/README.txt",
+          "Repositories/SDK/r4os/build.zig"
+        ],
+        "rust": [
+          "Repositories/SDK/Tools/Build-RustModule.ps1"
+        ],
+        "proof": [
+          "tooling_templates_current_70",
+          "independent_desktop_current_71"
+        ]
+      },
+      {
+        "id": "library-bind",
+        "zig": [
+          "Repositories/SDK/r4os/runtime_r4l.zig"
+        ],
+        "c": [
+          "Repositories/SDK/Shared/C/include/r4os/r4l.h"
+        ],
+        "rust": [
+          "Repositories/SDK/Rust/src/r4l.rs"
+        ],
+        "proof": [
+          "local_contract_and_baseline",
+          "library_projection_current_61"
+        ]
+      },
+      {
+        "id": "files-registry-console",
+        "zig": [
+          "Repositories/SDK/r4os/app_storage.zig",
+          "Repositories/SDK/r4os/bounded_text.zig",
+          "Repositories/SDK/r4os/directory_page.zig",
+          "Repositories/SDK/r4os/document_save.zig",
+          "Repositories/SDK/r4os/file_stream.zig",
+          "Repositories/SDK/r4os/path.zig",
+          "Repositories/SDK/r4os/recent_documents.zig",
+          "Repositories/SDK/r4os/registry.zig",
+          "Repositories/SDK/r4os/registry_core.zig",
+          "Repositories/SDK/r4os/registry_selftest.zig",
+          "Repositories/SDK/r4os/storage.zig"
+        ],
+        "c": [
+          "Repositories/SDK/Shared/C/include/r4os/app_storage.h",
+          "Repositories/SDK/Shared/C/include/r4os/directory_page.h",
+          "Repositories/SDK/Shared/C/include/r4os/facades.h",
+          "Repositories/SDK/Shared/C/include/r4os/path_timeout.h",
+          "Repositories/SDK/Shared/C/include/r4os/storage.h",
+          "Repositories/SDK/Shared/C/include/r4os/storage_helpers.h",
+          "Repositories/SDK/Shared/C/src/facades.c"
+        ],
+        "rust": [
+          "Repositories/SDK/Rust/src/bounded_text.rs",
+          "Repositories/SDK/Rust/src/c_facades.rs",
+          "Repositories/SDK/Rust/src/directory_page.rs",
+          "Repositories/SDK/Rust/src/path.rs",
+          "Repositories/SDK/Rust/src/physical_storage.rs",
+          "Repositories/SDK/Rust/src/registry_diagnostics.rs",
+          "Repositories/SDK/Rust/src/registry_hive.rs",
+          "Repositories/SDK/Rust/src/storage.rs"
+        ],
+        "proof": [
+          "storage_current_53"
+        ]
+      },
+      {
+        "id": "process-sync-vm",
+        "zig": [
+          "Repositories/SDK/r4os/app_resources.zig",
+          "Repositories/SDK/r4os/r4sys.zig"
+        ],
+        "c": [
+          "Repositories/SDK/Shared/C/include/r4os/app_resources.h",
+          "Repositories/SDK/Shared/C/include/r4os/r4sys.h"
+        ],
+        "rust": [
+          "Repositories/SDK/Rust/src/resources/io.rs",
+          "Repositories/SDK/Rust/src/resources/mod.rs",
+          "Repositories/SDK/Rust/src/resources/notification.rs",
+          "Repositories/SDK/Rust/src/resources/process.rs",
+          "Repositories/SDK/Rust/src/resources/thread.rs",
+          "Repositories/SDK/Rust/src/resources/vm.rs"
+        ],
+        "proof": [
+          "resource_current_54"
+        ]
+      },
+      {
+        "id": "services",
+        "zig": [
+          "Repositories/SDK/r4os/app_services.zig",
+          "Repositories/SDK/r4os/app_tray.zig",
+          "Repositories/SDK/r4os/service_deadline.zig"
+        ],
+        "c": [
+          "Repositories/SDK/Shared/C/include/r4os/app_services.h",
+          "Repositories/SDK/Shared/C/include/r4os/app_tray.h",
+          "Repositories/SDK/Shared/C/include/r4os/path_timeout.h"
+        ],
+        "rust": [
+          "Repositories/SDK/Rust/src/services.rs",
+          "Repositories/SDK/Rust/src/services/tray.rs"
+        ],
+        "proof": [
+          "service_network_current_55"
+        ]
+      },
+      {
+        "id": "network",
+        "zig": [
+          "Repositories/SDK/r4os/app_network.zig",
+          "Repositories/SDK/r4os/r4net.zig"
+        ],
+        "c": [
+          "Repositories/SDK/Shared/C/include/r4os/app_network.h",
+          "Repositories/SDK/Shared/C/include/r4os/r4net.h"
+        ],
+        "rust": [
+          "Repositories/SDK/Rust/src/generated/network.rs",
+          "Repositories/SDK/Rust/src/network.rs",
+          "Repositories/SDK/Rust/src/network/sockets.rs"
+        ],
+        "proof": [
+          "service_network_current_55"
+        ]
+      },
+      {
+        "id": "time-serial",
+        "zig": [
+          "Repositories/SDK/r4os/serial.zig",
+          "Repositories/SDK/r4os/time_contract.zig"
+        ],
+        "c": [
+          "Repositories/SDK/Shared/C/include/r4os/path_timeout.h",
+          "Repositories/SDK/Shared/C/include/r4os/serial.h"
+        ],
+        "rust": [
+          "Repositories/SDK/Rust/src/serial.rs",
+          "Repositories/SDK/Rust/src/time.rs"
+        ],
+        "proof": [
+          "service_network_current_55"
+        ]
+      },
+      {
+        "id": "gui",
+        "zig": [
+          "Repositories/SDK/r4os/app_gui.zig",
+          "Repositories/SDK/r4os/chart.zig",
+          "Repositories/SDK/r4os/clipboard.zig",
+          "Repositories/SDK/r4os/gui.zig",
+          "Repositories/SDK/r4os/gui_shapes.zig",
+          "Repositories/SDK/r4os/input_events.zig",
+          "Repositories/SDK/r4os/r4desk.zig",
+          "Repositories/SDK/r4os/window_mode.zig"
+        ],
+        "c": [
+          "Repositories/SDK/Shared/C/include/r4os/app_gui.h",
+          "Repositories/SDK/Shared/C/include/r4os/gui_bridge.h",
+          "Repositories/SDK/Shared/C/include/r4os/r4desk.h"
+        ],
+        "rust": [
+          "Repositories/SDK/Rust/src/c_facades.rs",
+          "Repositories/SDK/Rust/src/gui/input.rs",
+          "Repositories/SDK/Rust/src/gui/mod.rs",
+          "Repositories/SDK/Rust/src/gui/session.rs",
+          "Repositories/SDK/Rust/src/gui/text.rs"
+        ],
+        "proof": [
+          "gui_current_56"
+        ]
+      },
+      {
+        "id": "graphics",
+        "zig": [
+          "Repositories/SDK/r4os/gfx_buffers.zig",
+          "Repositories/SDK/r4os/gfx_outputs.zig",
+          "Repositories/SDK/r4os/gfx_queue.zig",
+          "Repositories/SDK/r4os/gfx_telemetry.zig",
+          "Repositories/SDK/r4os/graphics_status.zig",
+          "Repositories/SDK/r4os/r4draw.zig"
+        ],
+        "c": [
+          "Repositories/SDK/Shared/C/include/r4os/gui_bridge.h",
+          "Repositories/SDK/Shared/C/include/r4os/r4draw.h"
+        ],
+        "rust": [
+          "Repositories/SDK/Rust/src/c_facades.rs",
+          "Repositories/SDK/Rust/src/graphics/groups.rs",
+          "Repositories/SDK/Rust/src/graphics/mod.rs"
+        ],
+        "proof": [
+          "graphics_current_57"
+        ]
+      },
+      {
+        "id": "audio",
+        "zig": [
+          "Repositories/SDK/r4os/app_audio.zig",
+          "Repositories/SDK/r4os/audio_pcm.zig",
+          "Repositories/SDK/r4os/r4audio.zig"
+        ],
+        "c": [
+          "Repositories/SDK/Shared/C/include/r4os/app_audio.h",
+          "Repositories/SDK/Shared/C/include/r4os/gui_bridge.h",
+          "Repositories/SDK/Shared/C/include/r4os/r4audio.h"
+        ],
+        "rust": [
+          "Repositories/SDK/Rust/src/c_facades.rs",
+          "Repositories/SDK/Rust/src/platform/audio.rs",
+          "Repositories/SDK/Rust/src/platform/pcm.rs"
+        ],
+        "proof": [
+          "platform_current_58"
+        ]
+      },
+      {
+        "id": "devices-power",
+        "zig": [
+          "Repositories/SDK/r4os/app_devices.zig",
+          "Repositories/SDK/r4os/power_profiles.zig",
+          "Repositories/SDK/r4os/r4dev.zig"
+        ],
+        "c": [
+          "Repositories/SDK/Shared/C/include/r4os/app_devices.h",
+          "Repositories/SDK/Shared/C/include/r4os/gui_bridge.h",
+          "Repositories/SDK/Shared/C/include/r4os/power_profiles.h",
+          "Repositories/SDK/Shared/C/include/r4os/r4dev.h"
+        ],
+        "rust": [
+          "Repositories/SDK/Rust/src/c_facades.rs",
+          "Repositories/SDK/Rust/src/platform/devices.rs",
+          "Repositories/SDK/Rust/src/platform/mod.rs",
+          "Repositories/SDK/Rust/src/platform/power.rs"
+        ],
+        "proof": [
+          "platform_current_58"
+        ]
+      },
+      {
+        "id": "text-primitives",
+        "zig": [
+          "Repositories/SDK/Shared/Generated/R4STD_Grapheme/grapheme.zig"
+        ],
+        "c": [
+          "Repositories/Libraries/R4STD/Bindings/C/r4std_helpers.h"
+        ],
+        "rust": [
+          "Repositories/Libraries/R4STD/Bindings/Rust/src/helpers.rs"
+        ],
+        "proof": [
+          "language_libraries_current_59"
+        ]
+      },
+      {
+        "id": "data-crypto",
+        "zig": [
+          "Repositories/SDK/r4os/cpu_acceleration.zig",
+          "Repositories/SDK/r4os/cpu_memory.zig",
+          "Repositories/SDK/r4os/crypto_sha256.zig",
+          "Repositories/SDK/r4os/ico.zig",
+          "Repositories/SDK/r4os/json.zig",
+          "Repositories/SDK/r4os/raster.zig",
+          "Repositories/SDK/r4os/secure_random.zig",
+          "Repositories/SDK/r4os/web_crypto.zig",
+          "Repositories/SDK/r4os/web_encoding.zig",
+          "Repositories/SDK/r4os/web_url.zig",
+          "Repositories/SDK/r4os/zip.zig"
+        ],
+        "c": [
+          "Repositories/SDK/Shared/C/include/r4os/data_helpers.h"
+        ],
+        "rust": [
+          "Repositories/SDK/Rust/src/data/mod.rs"
+        ],
+        "proof": [
+          "data_current_61"
+        ]
+      },
+      {
+        "id": "web-document",
+        "zig": [
+          "Repositories/SDK/r4os/css.zig",
+          "Repositories/SDK/r4os/html.zig",
+          "Repositories/SDK/r4os/javascript.zig",
+          "Repositories/SDK/r4os/web_background.zig",
+          "Repositories/SDK/r4os/web_canvas.zig",
+          "Repositories/SDK/r4os/web_font.zig",
+          "Repositories/SDK/r4os/web_font_activation.zig",
+          "Repositories/SDK/r4os/web_font_cache.zig",
+          "Repositories/SDK/r4os/web_fonts.zig",
+          "Repositories/SDK/r4os/web_forms.zig",
+          "Repositories/SDK/r4os/web_images.zig",
+          "Repositories/SDK/r4os/web_layout.zig",
+          "Repositories/SDK/r4os/web_navigation.zig",
+          "Repositories/SDK/r4os/web_runtime.zig"
+        ],
+        "c": [
+          "Repositories/SDK/Shared/C/include/r4os/web_helpers.h"
+        ],
+        "rust": [
+          "Repositories/SDK/Rust/src/web/mod.rs"
+        ],
+        "proof": [
+          "web_current_62"
+        ]
+      },
+      {
+        "id": "web-transport",
+        "zig": [
+          "Repositories/SDK/r4os/app_web.zig",
+          "Repositories/SDK/r4os/app_web_jobs.zig",
+          "Repositories/SDK/r4os/http.zig",
+          "Repositories/SDK/r4os/web_documents.zig",
+          "Repositories/SDK/r4os/web_fetch.zig",
+          "Repositories/SDK/r4os/web_resources.zig",
+          "Repositories/SDK/r4os/web_response_cache.zig",
+          "Repositories/SDK/r4os/web_runtime_jobs.zig",
+          "Repositories/SDK/r4os/web_security.zig"
+        ],
+        "c": [
+          "Repositories/SDK/Shared/C/include/r4os/transport_helpers.h"
+        ],
+        "rust": [
+          "Repositories/SDK/Rust/src/web/transport/mod.rs"
+        ],
+        "proof": [
+          "transport_current_63"
+        ]
+      },
+      {
+        "id": "update-storage",
+        "zig": [
+          "Repositories/SDK/r4os/r4u_artifact.zig",
+          "Repositories/SDK/r4os/r4u_manifest.zig",
+          "Repositories/SDK/r4os/storage_tools.zig",
+          "Repositories/SDK/r4os/storage_tools_guest.zig",
+          "Repositories/SDK/r4os/system_update_backup.zig",
+          "Repositories/SDK/r4os/system_update_batch.zig",
+          "Repositories/SDK/r4os/system_update_inventory.zig",
+          "Repositories/SDK/r4os/system_update_recovery.zig",
+          "Repositories/SDK/r4os/update_catalog.zig",
+          "Repositories/SDK/r4os/version_info.zig"
+        ],
+        "c": [
+          "Repositories/SDK/Shared/C/include/r4os/update_helpers.h"
+        ],
+        "rust": [
+          "Repositories/SDK/Rust/src/update/mod.rs"
+        ],
+        "proof": [
+          "update_current_64"
+        ]
+      },
+      {
+        "id": "subsystems",
+        "zig": [
+          "Repositories/SDK/r4os/subsystem_catalog.zig",
+          "Repositories/SDK/r4os/subsystem_host.zig",
+          "Repositories/SDK/r4os/subsystem_launch.zig",
+          "Repositories/SDK/r4os/subsystem_persistence.zig",
+          "Repositories/SDK/r4os/subsystem_runtime.zig"
+        ],
+        "c": [
+          "Repositories/SDK/Shared/C/include/r4os/subsystem_helpers.h"
+        ],
+        "rust": [
+          "Repositories/SDK/Rust/src/subsystems/mod.rs"
+        ],
+        "proof": [
+          "subsystems_current_65"
+        ]
+      },
+      {
+        "id": "driver",
+        "zig": [
+          "Repositories/SDK/r4os/driver.zig",
+          "Repositories/SDK/r4os/driver_display.zig",
+          "Repositories/SDK/r4os/driver_entropy.zig",
+          "Repositories/SDK/r4os/driver_memory.zig",
+          "Repositories/SDK/r4os/driver_outputs.zig",
+          "Repositories/SDK/r4os/driver_queue.zig",
+          "Repositories/SDK/r4os/driver_resources.zig",
+          "Repositories/SDK/r4os/driver_serial.zig"
+        ],
+        "c": [
+          "Repositories/SDK/Shared/C/include/r4os/driver.h",
+          "Repositories/SDK/Shared/C/include/r4os/driver_cpu_power.h",
+          "Repositories/SDK/Shared/C/include/r4os/driver_display.h",
+          "Repositories/SDK/Shared/C/include/r4os/driver_heap.h",
+          "Repositories/SDK/Shared/C/include/r4os/driver_helpers.h",
+          "Repositories/SDK/Shared/C/include/r4os/driver_lifecycle.h",
+          "Repositories/SDK/Shared/C/include/r4os/driver_memory.h",
+          "Repositories/SDK/Shared/C/include/r4os/driver_outputs.h",
+          "Repositories/SDK/Shared/C/include/r4os/driver_queue.h",
+          "Repositories/SDK/Shared/C/include/r4os/driver_resources.h",
+          "Repositories/SDK/Shared/C/include/r4os/driver_semaphores.h",
+          "Repositories/SDK/Shared/C/include/r4os/driver_serial.h",
+          "Repositories/SDK/Shared/C/include/r4os/driver_threads.h"
+        ],
+        "rust": [
+          "Repositories/SDK/Rust/src/c_facades.rs",
+          "Repositories/SDK/Rust/src/driver.rs"
+        ],
+        "proof": [
+          "drivers_current_67"
+        ]
+      },
+      {
+        "id": "protocol",
+        "zig": [
+          "Repositories/SDK/r4os/protocol.zig"
+        ],
+        "c": [
+          "Repositories/SDK/Shared/C/include/r4os/protocol.h"
+        ],
+        "rust": [
+          "Repositories/SDK/Rust/src/protocol.rs"
+        ],
+        "proof": [
+          "protocols_current_68"
+        ]
+      },
+      {
+        "id": "lowlevel",
+        "zig": [
+          "Repositories/SDK/r4os/lowlevel.zig"
+        ],
+        "c": [
+          "Repositories/SDK/Shared/C/include/r4os/r4m0.h",
+          "Repositories/SDK/Shared/C/include/r4os/r4xstart.h"
+        ],
+        "rust": [
+          "Repositories/SDK/Rust/src/lowlevel.rs"
+        ],
+        "proof": [
+          "lowlevel_current_69"
+        ]
+      },
+      {
+        "id": "library-R4ACO",
+        "zig": [
+          "Repositories/Libraries/R4ACO/Bindings/Zig/r4aco.zig",
+          "Repositories/Libraries/R4ACO/Bindings/Zig/shaders.zig",
+          "Repositories/Libraries/R4ACO/Bindings/Zig/worker.zig"
+        ],
+        "c": [
+          "Repositories/Libraries/R4ACO/Bindings/C/r4aco.h",
+          "Repositories/Libraries/R4ACO/Bindings/C/r4aco_helpers.h"
+        ],
+        "rust": [
+          "Repositories/Libraries/R4ACO/Bindings/Rust/src/lib.rs",
+          "Repositories/Libraries/Shared/Rust/src/raw.rs"
+        ],
+        "proof": [
+          "local_contract_and_baseline",
+          "library_projection_current_61",
+          "language_libraries_current_60"
+        ]
+      },
+      {
+        "id": "library-R4AMD",
+        "zig": [
+          "Repositories/Libraries/R4AMD/Bindings/Zig/r4amd.zig"
+        ],
+        "c": [
+          "Repositories/Libraries/R4AMD/Bindings/C/r4amd.h"
+        ],
+        "rust": [
+          "Repositories/Libraries/R4AMD/Bindings/Rust/src/lib.rs"
+        ],
+        "proof": [
+          "local_contract_and_baseline",
+          "library_projection_current_61",
+          "language_libraries_current_60"
+        ]
+      },
+      {
+        "id": "library-R4ENC",
+        "zig": [
+          "Repositories/Libraries/R4ENC/Bindings/Zig/r4enc.zig",
+          "Repositories/Libraries/R4ENC/Bindings/Zig/recording_mux.zig",
+          "Repositories/Libraries/R4ENC/Bindings/Zig/recording_pixels.zig"
+        ],
+        "c": [
+          "Repositories/Libraries/R4ENC/Bindings/C/r4enc.h",
+          "Repositories/Libraries/R4ENC/Bindings/C/r4enc_helpers.h"
+        ],
+        "rust": [
+          "Repositories/Libraries/R4ENC/Bindings/Rust/src/helpers.rs",
+          "Repositories/Libraries/R4ENC/Bindings/Rust/src/lib.rs",
+          "Repositories/Libraries/Shared/Rust/src/raw.rs"
+        ],
+        "proof": [
+          "local_contract_and_baseline",
+          "library_projection_current_61",
+          "language_libraries_current_60"
+        ]
+      },
+      {
+        "id": "library-R4FONT",
+        "zig": [
+          "Repositories/Libraries/R4FONT/Bindings/Zig/app_fonts.zig",
+          "Repositories/Libraries/R4FONT/Bindings/Zig/font_format.zig",
+          "Repositories/Libraries/R4FONT/Bindings/Zig/font_import.zig",
+          "Repositories/Libraries/R4FONT/Bindings/Zig/font_tools.zig",
+          "Repositories/Libraries/R4FONT/Bindings/Zig/r4font.zig",
+          "Repositories/Libraries/R4FONT/Bindings/Zig/r4font_abi.zig"
+        ],
+        "c": [
+          "Repositories/Libraries/R4FONT/Bindings/C/r4font.h",
+          "Repositories/Libraries/R4FONT/Bindings/C/r4font_helpers.h"
+        ],
+        "rust": [
+          "Repositories/Libraries/R4FONT/Bindings/Rust/src/helpers.rs",
+          "Repositories/Libraries/R4FONT/Bindings/Rust/src/lib.rs"
+        ],
+        "proof": [
+          "local_contract_and_baseline",
+          "library_projection_current_61",
+          "language_libraries_current_59"
+        ]
+      },
+      {
+        "id": "library-R4GFX",
+        "zig": [
+          "Repositories/Libraries/R4GFX/Bindings/Zig/outputs.zig",
+          "Repositories/Libraries/R4GFX/Bindings/Zig/queue.zig",
+          "Repositories/Libraries/R4GFX/Bindings/Zig/r4gfx_abi.zig",
+          "Repositories/Libraries/R4GFX/Display/brightness_client.zig",
+          "Repositories/Libraries/R4GFX/Display/brightness_preferences.zig",
+          "Repositories/Libraries/R4GFX/Display/brightness_status.zig",
+          "Repositories/Libraries/R4GFX/Display/color_control.zig",
+          "Repositories/Libraries/R4GFX/Display/color_preferences.zig",
+          "Repositories/Libraries/R4GFX/Display/color_signal.zig",
+          "Repositories/Libraries/R4GFX/Display/control.zig",
+          "Repositories/Libraries/R4GFX/Display/cta_timings.zig",
+          "Repositories/Libraries/R4GFX/Display/desktop_outputs.zig",
+          "Repositories/Libraries/R4GFX/Display/display_profile.zig",
+          "Repositories/Libraries/R4GFX/Display/edid.zig",
+          "Repositories/Libraries/R4GFX/Display/eld.zig",
+          "Repositories/Libraries/R4GFX/Display/links.zig",
+          "Repositories/Libraries/R4GFX/Display/mode_control.zig",
+          "Repositories/Libraries/R4GFX/Display/preferences.zig",
+          "Repositories/Libraries/R4GFX/Display/readback.zig",
+          "Repositories/Libraries/R4GFX/Display/refresh_client.zig",
+          "Repositories/Libraries/R4GFX/Display/refresh_observer.zig",
+          "Repositories/Libraries/R4GFX/Display/refresh_preferences.zig",
+          "Repositories/Libraries/R4GFX/Display/refresh_range.zig",
+          "Repositories/Libraries/R4GFX/Display/refresh_status.zig",
+          "Repositories/Libraries/R4GFX/Display/timing.zig",
+          "Repositories/Libraries/R4GFX/Display/topology.zig",
+          "Repositories/Libraries/R4GFX/Display/transfer.zig",
+          "Repositories/Libraries/R4GFX/Display/vrr.zig"
+        ],
+        "c": [
+          "Repositories/Libraries/R4GFX/Bindings/C/r4gfx.h",
+          "Repositories/Libraries/R4GFX/Bindings/C/r4gfx_helpers.h"
+        ],
+        "rust": [
+          "Repositories/Libraries/R4GFX/Bindings/Rust/src/helpers.rs",
+          "Repositories/Libraries/R4GFX/Bindings/Rust/src/lib.rs",
+          "Repositories/Libraries/Shared/Rust/src/raw.rs"
+        ],
+        "proof": [
+          "local_contract_and_baseline",
+          "library_projection_current_61",
+          "language_libraries_current_60"
+        ]
+      },
+      {
+        "id": "library-R4GL",
+        "zig": [
+          "Repositories/Libraries/R4GL/Bindings/Zig/r4gl.zig"
+        ],
+        "c": [
+          "Repositories/Libraries/R4GL/Bindings/C/r4gl.h",
+          "Repositories/Libraries/R4GL/Bindings/C/r4gl_api.h"
+        ],
+        "rust": [
+          "Repositories/Libraries/R4GL/Bindings/Rust/src/lib.rs"
+        ],
+        "proof": [
+          "local_contract_and_baseline",
+          "library_projection_current_61",
+          "language_libraries_current_60"
+        ]
+      },
+      {
+        "id": "library-R4IMG",
+        "zig": [
+          "Repositories/Libraries/R4IMG/Bindings/Zig/color.zig",
+          "Repositories/Libraries/R4IMG/Bindings/Zig/native_jpeg.zig",
+          "Repositories/Libraries/R4IMG/Bindings/Zig/r4img.zig",
+          "Repositories/Libraries/R4IMG/Bindings/Zig/r4img_abi.zig"
+        ],
+        "c": [
+          "Repositories/Libraries/R4IMG/Bindings/C/r4img.h",
+          "Repositories/Libraries/R4IMG/Bindings/C/r4img_helpers.h"
+        ],
+        "rust": [
+          "Repositories/Libraries/R4IMG/Bindings/Rust/src/helpers.rs",
+          "Repositories/Libraries/R4IMG/Bindings/Rust/src/lib.rs"
+        ],
+        "proof": [
+          "local_contract_and_baseline",
+          "library_projection_current_61",
+          "language_libraries_current_59"
+        ]
+      },
+      {
+        "id": "library-R4NAK",
+        "zig": [
+          "Repositories/Libraries/R4NAK/Bindings/Zig/r4nak.zig",
+          "Repositories/Libraries/R4NAK/Bindings/Zig/worker.zig"
+        ],
+        "c": [
+          "Repositories/Libraries/R4NAK/Bindings/C/r4nak.h",
+          "Repositories/Libraries/R4NAK/Bindings/C/r4nak_helpers.h"
+        ],
+        "rust": [
+          "Repositories/Libraries/R4NAK/Bindings/Rust/src/lib.rs",
+          "Repositories/Libraries/Shared/Rust/src/raw.rs"
+        ],
+        "proof": [
+          "local_contract_and_baseline",
+          "library_projection_current_61",
+          "language_libraries_current_60"
+        ]
+      },
+      {
+        "id": "library-R4NV",
+        "zig": [
+          "Repositories/Libraries/R4NV/Bindings/Zig/r4nv.zig"
+        ],
+        "c": [
+          "Repositories/Libraries/R4NV/Bindings/C/r4nv.h"
+        ],
+        "rust": [
+          "Repositories/Libraries/R4NV/Bindings/Rust/src/lib.rs"
+        ],
+        "proof": [
+          "local_contract_and_baseline",
+          "library_projection_current_61",
+          "language_libraries_current_60"
+        ]
+      },
+      {
+        "id": "library-R4STD",
+        "zig": [
+          "Repositories/Libraries/R4STD/Bindings/Zig/app_assoc.zig",
+          "Repositories/Libraries/R4STD/Bindings/Zig/codec.zig",
+          "Repositories/Libraries/R4STD/Bindings/Zig/config.zig",
+          "Repositories/Libraries/R4STD/Bindings/Zig/console_text.zig",
+          "Repositories/Libraries/R4STD/Bindings/Zig/date.zig",
+          "Repositories/Libraries/R4STD/Bindings/Zig/file_handler.zig",
+          "Repositories/Libraries/R4STD/Bindings/Zig/grapheme.zig",
+          "Repositories/Libraries/R4STD/Bindings/Zig/grapheme_properties.zig",
+          "Repositories/Libraries/R4STD/Bindings/Zig/path_text.zig",
+          "Repositories/Libraries/R4STD/Bindings/Zig/r4std.zig",
+          "Repositories/Libraries/R4STD/Bindings/Zig/r4std_abi.zig",
+          "Repositories/Libraries/R4STD/Bindings/Zig/runtime.zig",
+          "Repositories/Libraries/R4STD/Bindings/Zig/settings.zig",
+          "Repositories/Libraries/R4STD/Bindings/Zig/shortcut.zig",
+          "Repositories/Libraries/R4STD/Bindings/Zig/subsystem_runtime.zig",
+          "Repositories/Libraries/R4STD/Bindings/Zig/text.zig",
+          "Repositories/Libraries/R4STD/Bindings/Zig/text_file.zig",
+          "Repositories/Libraries/R4STD/Bindings/Zig/time.zig"
+        ],
+        "c": [
+          "Repositories/Libraries/R4STD/Bindings/C/r4std.h",
+          "Repositories/Libraries/R4STD/Bindings/C/r4std_abi.h",
+          "Repositories/Libraries/R4STD/Bindings/C/r4std_helpers.h"
+        ],
+        "rust": [
+          "Repositories/Libraries/R4STD/Bindings/Rust/src/helpers.rs",
+          "Repositories/Libraries/R4STD/Bindings/Rust/src/lib.rs",
+          "Repositories/Libraries/R4STD/Rust/lib.rs",
+          "Repositories/Libraries/R4STD/Rust/utf16.rs"
+        ],
+        "proof": [
+          "local_contract_and_baseline",
+          "library_projection_current_61",
+          "language_libraries_current_59"
+        ]
+      },
+      {
+        "id": "library-R4VIDEO",
+        "zig": [
+          "Repositories/Libraries/R4VIDEO/Bindings/Zig/playback.zig",
+          "Repositories/Libraries/R4VIDEO/Bindings/Zig/playback_audio.zig",
+          "Repositories/Libraries/R4VIDEO/Bindings/Zig/playback_clock.zig",
+          "Repositories/Libraries/R4VIDEO/Bindings/Zig/playback_composition.zig",
+          "Repositories/Libraries/R4VIDEO/Bindings/Zig/r4video.zig"
+        ],
+        "c": [
+          "Repositories/Libraries/R4VIDEO/Bindings/C/r4video.h",
+          "Repositories/Libraries/R4VIDEO/Bindings/C/r4video_helpers.h"
+        ],
+        "rust": [
+          "Repositories/Libraries/R4VIDEO/Bindings/Rust/src/helpers.rs",
+          "Repositories/Libraries/R4VIDEO/Bindings/Rust/src/lib.rs",
+          "Repositories/Libraries/Shared/Rust/src/raw.rs"
+        ],
+        "proof": [
+          "local_contract_and_baseline",
+          "library_projection_current_61",
+          "language_libraries_current_60"
+        ]
+      },
+      {
+        "id": "library-R4VK",
+        "zig": [
+          "Repositories/Libraries/R4VK/Bindings/Zig/r4vk.zig"
+        ],
+        "c": [
+          "Repositories/Libraries/R4VK/Bindings/C/r4vk.h",
+          "Repositories/Libraries/R4VK/Bindings/C/r4vk_wsi.h"
+        ],
+        "rust": [
+          "Repositories/Libraries/R4VK/Bindings/Rust/src/lib.rs"
+        ],
+        "proof": [
+          "local_contract_and_baseline",
+          "library_projection_current_61",
+          "language_libraries_current_60"
+        ]
+      }
+    ]
   }
 }

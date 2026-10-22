@@ -24,6 +24,14 @@ pub fn build(b: *std.Build) void {
     b.addNamedLazyPath("update_service_contract", b.path("r4os/update_service_contract.zig"));
 
     const contract_dependency = b.dependency("r4os_contract", .{});
+    const parity_check = b.addSystemCommand(&.{ "pwsh", "-NoLogo", "-NoProfile", "-File" });
+    parity_check.addFileArg(b.path("Tools/Test-LanguageParity.ps1"));
+    parity_check.addArg("-SdkRoot");
+    parity_check.addDirectoryArg(b.path("."));
+    parity_check.addArg("-ContractRoot");
+    parity_check.addDirectoryArg(contract_dependency.path("."));
+    parity_check.addArgs(&.{ "-LibraryRoot", b.option([]const u8, "parity-library-root", "Explicit Libraries package for the language parity source review") orelse b.pathResolve(&.{ "..", "Libraries" }) });
+    b.step("language-parity-check", "Check current Zig/C/Rust implementation and evidence review identities").dependOn(&parity_check.step);
     if (b.option(bool, "packager-only", "Build only the selected host R4M0 packager") orelse false) {
         b.installArtifact(r4os_build.addR4XBuilder(b, b.path("Tools/R4XBuilder/src/main.zig")));
         return;
@@ -499,8 +507,10 @@ pub fn build(b: *std.Build) void {
     const module_test_step = b.step("module-test", "Run the existing manifest and module catalog tests");
     module_test_step.dependOn(&run_catalog_tests.step);
     module_test_step.dependOn(&run_catalog_tool_tests.step);
+    module_test_step.dependOn(&parity_check.step);
 
     const test_step = b.step("test", "Run SDK, build-tool and smoke tests");
+    test_step.dependOn(&parity_check.step);
     const input_events_root = b.createModule(.{
         .root_source_file = b.path("r4os/input_events_tests.zig"),
         .target = b.graph.host,
