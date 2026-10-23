@@ -425,17 +425,6 @@ fn fakePerformance(out: *r4os.abi.ProgramPerformanceSummary) callconv(.c) i32 {
     out.* = .{ .audio_stream_writes = 9 };
     return 1;
 }
-fn fakeProgramInstanceStorageLegacy(out: *r4os.abi.ProgramInstanceStorageSummary) callconv(.c) i32 {
-    @memset(@as([*]u8, @ptrCast(out))[0..256], 0);
-    out.version = 1;
-    out.size = 256;
-    out.active_instances = 4;
-    out.active_service_instances = 2;
-    out.current_payload_bytes = 4096;
-    out.payload_allocations = 11;
-    out.payload_releases = 7;
-    return 1;
-}
 fn fakeProgramInstanceStorageV2(out: *r4os.abi.ProgramInstanceStorageSummary) callconv(.c) i32 {
     if (out.version < 2 or out.size < @sizeOf(r4os.abi.ProgramInstanceStorageSummary)) return -1;
     out.* = .{ .active_instances = 4, .active_service_instances = 2, .current_payload_bytes = 4096, .payload_allocations = 11, .payload_releases = 7, .current_gui_frame_bytes = 8192 };
@@ -498,7 +487,6 @@ fn initFacades() struct { audio: r4os.Audio, devices: r4os.Devices } {
     dev_table.memory_block = @intFromPtr(&fakeMemoryBlock);
     dev_table.memory_pressure_snapshot = @intFromPtr(&fakePressure);
     dev_table.performance_summary = @intFromPtr(&fakePerformance);
-    dev_table.program_instance_storage_summary = @intFromPtr(&fakeProgramInstanceStorageLegacy);
     dev_table.program_instance_storage_summary_v2 = @intFromPtr(&fakeProgramInstanceStorageV2);
     dev_table.program_instance_storage_self_test = @intFromPtr(&fakeProgramInstanceStorageSelfTest);
     dev_table.execution_inventory_summary = @intFromPtr(&fakeExecutionInventory);
@@ -590,26 +578,20 @@ test "advanced synth operations and R4DEV views stay explicit" {
     try std.testing.expectEqual(@as(u32, 4), storage.active_instances);
     try std.testing.expectEqual(@as(u64, 4096), storage.current_payload_bytes);
     try std.testing.expectEqual(@as(u64, 8192), storage.current_gui_frame_bytes);
-    var legacy_storage: r4os.abi.ProgramInstanceStorageSummary = undefined;
-    @memset(std.mem.asBytes(&legacy_storage), 0xA5);
-    try std.testing.expect(performance.raw.programInstanceStorageSummaryLegacy(&legacy_storage) > 0);
-    try std.testing.expectEqual(@as(u32, 1), legacy_storage.version);
-    try std.testing.expectEqual(@as(u32, 256), legacy_storage.size);
-    try std.testing.expectEqual(@as(u8, 0xA5), std.mem.asBytes(&legacy_storage)[256]);
-    legacy_storage.version = 3;
-    legacy_storage.size = @sizeOf(r4os.abi.ProgramInstanceStorageSummary);
-    try std.testing.expect(performance.raw.programInstanceStorageSummaryV2(&legacy_storage) > 0);
-    try std.testing.expectEqual(@as(u32, 2), legacy_storage.version);
-    @memset(std.mem.asBytes(&legacy_storage), 0xB6);
-    legacy_storage.version = 0;
-    legacy_storage.size = @sizeOf(r4os.abi.ProgramInstanceStorageSummary) - 1;
-    try std.testing.expectEqual(@as(i32, -1), performance.raw.programInstanceStorageSummaryV2(&legacy_storage));
-    try std.testing.expectEqual(@as(u32, 0), legacy_storage.version);
-    try std.testing.expectEqual(@as(u32, @sizeOf(r4os.abi.ProgramInstanceStorageSummary) - 1), legacy_storage.size);
-    try std.testing.expectEqual(@as(u8, 0xB6), std.mem.asBytes(&legacy_storage)[8]);
+    var current_storage: r4os.abi.ProgramInstanceStorageSummary = .{};
+    current_storage.version = 3;
+    current_storage.size = @sizeOf(r4os.abi.ProgramInstanceStorageSummary);
+    try std.testing.expect(performance.raw.programInstanceStorageSummaryV2(&current_storage) > 0);
+    try std.testing.expectEqual(@as(u32, 2), current_storage.version);
+    @memset(std.mem.asBytes(&current_storage), 0xB6);
+    current_storage.version = 0;
+    current_storage.size = @sizeOf(r4os.abi.ProgramInstanceStorageSummary) - 1;
+    try std.testing.expectEqual(@as(i32, -1), performance.raw.programInstanceStorageSummaryV2(&current_storage));
+    try std.testing.expectEqual(@as(u32, 0), current_storage.version);
+    try std.testing.expectEqual(@as(u32, @sizeOf(r4os.abi.ProgramInstanceStorageSummary) - 1), current_storage.size);
+    try std.testing.expectEqual(@as(u8, 0xB6), std.mem.asBytes(&current_storage)[8]);
     dev_table.size = 288;
-    // Explicit V1 above is still a separate API until the owner migration.
-    // The generic current convenience API must not silently choose it.
+    // Missing current capacity never selects an inactive diagnostic slot.
     try std.testing.expectEqual(@as(?r4os.abi.ProgramInstanceStorageSummary, null), performance.programInstanceStorage());
     var storage_test: r4os.abi.ProgramInstanceStorageSelfTestResult = .{};
     try std.testing.expect(performance.programInstanceStorageSelfTest(&storage_test) > 0);

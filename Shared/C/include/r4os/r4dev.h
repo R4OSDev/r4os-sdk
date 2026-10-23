@@ -243,22 +243,6 @@ static inline int r4dev_available(const R4Dev *g) {
     return g != 0 && g->table != 0;
 }
 
-static inline int32_t r4dev_program_instance_storage_summary_legacy(
-    const R4Dev *dev,
-    R4ProgramInstanceStorageSummary *out_summary)
-{
-    if (out_summary == 0) return R4OS_ERROR_INVALID;
-    if (!r4dev_available(dev) ||
-        dev->table->size < offsetof(R4XStartR4Dev, program_instance_storage_summary) + sizeof(uintptr_t) ||
-        dev->table->program_instance_storage_summary == 0)
-    {
-        return R4OS_ERR_NO_FN;
-    }
-    R4DevProgramInstanceStorageSummaryFn summary_fn =
-        (R4DevProgramInstanceStorageSummaryFn)(uintptr_t)dev->table->program_instance_storage_summary;
-    return summary_fn(out_summary);
-}
-
 static inline int32_t r4dev_program_instance_storage_summary_v2(
     const R4Dev *dev,
     R4ProgramInstanceStorageSummary *out_summary)

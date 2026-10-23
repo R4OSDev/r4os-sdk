@@ -43,10 +43,11 @@ real font revision/metrics, Unicode input, generation-bound network service
 requests and V2 default storage summaries. Missing capabilities fail without
 simulating an earlier OS. GUI beginPaint requires the existing six-callback
 frame transaction. Exact slot bounds, optional groups/hardware, direct drawing
-inside a valid transaction and explicit V1 diagnostics pending their coupled
-provider migration remain distinct. See DOCUMENTATION.de.txt for the minimum
-operations; the Contract ABI, toolchain pins and caller project independence
-remain unchanged.
+inside a valid transaction remain distinct. SDK92/Contract45 retires V1
+diagnostic slots27/29/30 in place as zero tombstones in R4DEV35. Registry
+V2 callers initialize version2 and complete224/136-byte records; short
+headers fail without mutation. See DOCUMENTATION.de.txt for operation minima;
+toolchain pins and caller project independence remain unchanged.
 
 Rust host modules use the Contract's `Module/RustModuleV2.txt` and the matched
 isolated tool profile. SDK0.64.60 supplies the actual no_std source-to-R4M0
@@ -217,11 +218,15 @@ wakeup runtime result keep delivery and loss observable without event logs.
 Manually constructed video backends may omit optional replacement, native
 XRGB32 and shared-raster callbacks; unavailable hooks default to `err_no_fn`
 with their capability flags disabled, preserving the copied full/damage path.
+These are independent current callback backends. The R4OS adapter requires
+the current replacement/shared-raster callbacks and refuses an incomplete
+provider before starting a frame. Current ring backpressure still permits a
+bounded copied frame; it does not emulate missing APIs from an older OS.
 
 Draw-heavy Zig apps can attach a caller-owned `FrameCanvas` command/resource
 buffer with `PaintContext.bufferedCanvas`. Existing Canvas widgets then share
-bounded `gui_frame_append` chunks, while old R4DRAW tables retain the direct
-draw path. Flush failures cancel the whole private frame, oversized individual
+bounded `gui_frame_append` chunks within the required current transaction.
+Flush failures cancel the whole private frame, oversized individual
 resources keep their ordering through a direct chunk or established draw
 fallback, and per-frame statistics expose commands, bytes, flushes and actual
 draw transitions without another ABI.

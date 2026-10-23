@@ -693,11 +693,6 @@ pub const Context = struct {
         return table_fn(out);
     }
 
-    pub fn programInstanceStorageSummaryLegacy(self: *const Context, out: *abi.ProgramInstanceStorageSummary) i32 {
-        const table_fn = self.devFn("program_instance_storage_summary") orelse return self.unavailable("dev");
-        return table_fn(out);
-    }
-
     pub fn programInstanceStorageSummaryV2(self: *const Context, out: *abi.ProgramInstanceStorageSummary) i32 {
         const table_fn = self.devFn("program_instance_storage_summary_v2") orelse return self.unavailable("dev");
         return table_fn(out);
@@ -705,16 +700,6 @@ pub const Context = struct {
 
     pub fn programInstanceStorageSelfTest(self: *const Context, out: *abi.ProgramInstanceStorageSelfTestResult) i32 {
         const table_fn = self.devFn("program_instance_storage_self_test") orelse return self.unavailable("dev");
-        return table_fn(out);
-    }
-
-    pub fn programRegistrySummary(self: *const Context, out: *abi.ProgramRegistrySummary) i32 {
-        const table_fn = self.devFn("program_registry_summary") orelse return self.unavailable("dev");
-        return table_fn(out);
-    }
-
-    pub fn programRegistrySelfTest(self: *const Context, out: *abi.ProgramRegistrySelfTestResult) i32 {
-        const table_fn = self.devFn("program_registry_self_test") orelse return self.unavailable("dev");
         return table_fn(out);
     }
 
@@ -736,14 +721,6 @@ pub const Context = struct {
     pub fn kernelVersion(self: *const Context, out: *abi.KernelVersion) i32 {
         const table_fn = self.devFn("kernel_version") orelse return self.unavailable("dev");
         return table_fn(out);
-    }
-
-    pub fn programRegistrySummaryLegacy(self: *const Context, out: *abi.ProgramRegistrySummary) i32 {
-        return self.programRegistrySummary(out);
-    }
-
-    pub fn programRegistrySelfTestLegacy(self: *const Context, out: *abi.ProgramRegistrySelfTestResult) i32 {
-        return self.programRegistrySelfTest(out);
     }
 
     pub fn performanceTask(self: *const Context, index: u32) ?abi.ProgramTaskPerformanceInfo {
@@ -1890,8 +1867,13 @@ pub const Context = struct {
 
     pub fn gfxBufferStats(self: *const Context, output: *abi.GfxBufferStats) i32 {
         const table_fn = self.drawFn("gfx_buffer_stats") orelse return self.unavailable("draw");
-        output.* = .{};
-        return table_fn(output);
+        var value: abi.GfxBufferStats = .{};
+        const code = table_fn(&value);
+        if (code == abi.gfx_buffer_result_ok) {
+            if (value.version != 1 or value.size < @sizeOf(abi.GfxBufferStats)) return abi.gfx_buffer_error_invalid;
+            output.* = value;
+        }
+        return code;
     }
 
     pub fn gfxOutputRevision(self: *const Context, output: *abi.GfxDisplayRevision) i32 {
@@ -1911,9 +1893,7 @@ pub const Context = struct {
         var value: abi.GfxOutputColorState = .{};
         const code = table_fn(identity, &value);
         if (code == abi.gfx_output_ok) {
-            if (value.version != 1 or value.size < 128) return abi.gfx_output_error_invalid;
-            // An older provider writes the original prefix. Initialize the
-            // whole local value so optional link facts cannot survive a query.
+            if (value.version != 1 or value.size < @sizeOf(abi.GfxOutputColorState)) return abi.gfx_output_error_invalid;
             output.* = value;
         }
         return code;
@@ -5618,7 +5598,6 @@ test "network service request refuses a missing current slot without raw IPC or 
 }
 
 var current_byte_calls: u32 = 0;
-var current_v1_calls: u32 = 0;
 fn currentByteKey() callconv(.c) u8 {
     current_byte_calls += 1;
     return 'A';
@@ -5637,12 +5616,6 @@ fn currentFontMeasure(_: u32, _: [*:0]const u8, out: *abi.GuiTextMetrics) callco
 fn currentFontZero() callconv(.c) u32 {
     return 0;
 }
-fn currentStorageV1(out: *abi.ProgramInstanceStorageSummary) callconv(.c) i32 {
-    current_v1_calls += 1;
-    out.version = 1;
-    out.size = 256;
-    return 1;
-}
 fn currentStorageV2(out: *abi.ProgramInstanceStorageSummary) callconv(.c) i32 {
     if (out.version != 2 or out.size != @sizeOf(abi.ProgramInstanceStorageSummary)) return -1;
     out.current_gui_frame_bytes = 8192;
@@ -5652,7 +5625,7 @@ test "current SDK capabilities never synthesize fonts input or a storage prefix"
     var raw: abi.R4XStartContext = .{};
     var draw: abi.R4XStartR4Draw = .{ .font_info = @intFromPtr(&currentFontInfo), .font_measure = @intFromPtr(&currentFontMeasure) };
     var desk: abi.R4XStartR4Desk = .{ .read_key = @intFromPtr(&currentByteKey) };
-    var dev: abi.R4XStartR4Dev = .{ .program_instance_storage_summary = @intFromPtr(&currentStorageV1) };
+    var dev: abi.R4XStartR4Dev = .{ .reserved_program_instance_storage_summary_v1 = 1 };
     const bundle: Bundle = .{ .raw = &raw, .draw = &draw, .desk = &desk, .dev = &dev };
     const ctx = Context.initBundle(&bundle);
     // Metadata queries depend on their own current callback, not a GUI setter.
@@ -5675,15 +5648,10 @@ test "current SDK capabilities never synthesize fonts input or a storage prefix"
     try std.testing.expectEqual(@as(u32, 0), current_byte_calls);
     desk.read_key_codepoint = @intFromPtr(&currentCodepoint);
     try std.testing.expectEqual(@as(u32, 0x1F642), ctx.readKeyCodepoint());
-    current_v1_calls = 0;
     var storage: abi.ProgramInstanceStorageSummary = .{ .version = 77, .size = 88, .current_gui_frame_bytes = 99 };
     try std.testing.expectEqual(abi.err_no_fn, ctx.programInstanceStorageSummary(&storage));
-    try std.testing.expectEqual(@as(u32, 0), current_v1_calls);
     try std.testing.expectEqual(@as(u32, 77), storage.version);
     try std.testing.expectEqual(@as(u64, 99), storage.current_gui_frame_bytes);
-    // This separate explicit V1 API remains until its coupled owner migration80.
-    try std.testing.expectEqual(@as(i32, 1), ctx.programInstanceStorageSummaryLegacy(&storage));
-    try std.testing.expectEqual(@as(u32, 1), current_v1_calls);
     dev.program_instance_storage_summary_v2 = @intFromPtr(&currentStorageV2);
     try std.testing.expectEqual(@as(i32, 1), ctx.programInstanceStorageSummary(&storage));
     try std.testing.expectEqual(@as(u32, 2), storage.version);

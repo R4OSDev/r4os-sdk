@@ -1129,25 +1129,42 @@ fn resources() r4os.Resources {
     return .{ .sys = r4os.r4sys.Context.init(&bundle) };
 }
 
-test "R4DEV registry source names keep v1 and expose V2 explicitly" {
-    const bundle = r4os.program.Bundle{ .raw = &fake_context };
+var registry_v2_calls: u32 = 0;
+fn registrySummaryV2Peer(out: *r4os.abi.ProgramRegistrySummaryV2) callconv(.c) i32 {
+    if (out.version < 2 or out.size < @sizeOf(r4os.abi.ProgramRegistrySummaryV2)) return -1;
+    registry_v2_calls += 1;
+    out.live_slots = 7;
+    return 1;
+}
+fn registryTestV2Peer(out: *r4os.abi.ProgramRegistrySelfTestResultV2) callconv(.c) i32 {
+    if (out.version < 2 or out.size < @sizeOf(r4os.abi.ProgramRegistrySelfTestResultV2)) return -1;
+    registry_v2_calls += 1;
+    out.flags = 17;
+    return 1;
+}
+test "R4DEV current registry V2 is explicit and unavailable without its group" {
+    var bundle = r4os.program.Bundle{ .raw = &fake_context };
     const dev = r4os.r4dev.Context.init(&bundle);
-    var summary_v1: r4os.abi.ProgramRegistrySummary = .{};
-    var self_test_v1: r4os.abi.ProgramRegistrySelfTestResult = .{};
     var summary_v2: r4os.abi.ProgramRegistrySummaryV2 = .{};
     var self_test_v2: r4os.abi.ProgramRegistrySelfTestResultV2 = .{};
-    try std.testing.expectEqual(r4os.abi.err_no_group, dev.programRegistrySummary(&summary_v1));
-    try std.testing.expectEqual(r4os.abi.err_no_group, dev.programRegistrySelfTest(&self_test_v1));
     try std.testing.expectEqual(r4os.abi.err_no_group, dev.programRegistrySummaryV2(&summary_v2));
     try std.testing.expectEqual(r4os.abi.err_no_group, dev.programRegistrySelfTestV2(&self_test_v2));
-    try std.testing.expectEqual(r4os.abi.err_no_group, dev.programRegistrySummaryLegacy(&summary_v1));
-    try std.testing.expectEqual(r4os.abi.err_no_group, dev.programRegistrySelfTestLegacy(&self_test_v1));
 
     const performance = r4os.PerformanceView{ .raw = dev };
-    try std.testing.expect(performance.programRegistry() == null);
     try std.testing.expect(performance.programRegistryV2() == null);
-    try std.testing.expectEqual(r4os.abi.err_no_group, performance.programRegistrySelfTest(&self_test_v1));
     try std.testing.expectEqual(r4os.abi.err_no_group, performance.programRegistrySelfTestV2(&self_test_v2));
+    var table: r4os.abi.R4XStartR4Dev = .{ .program_registry_summary_v2 = @intFromPtr(&registrySummaryV2Peer), .program_registry_self_test_v2 = @intFromPtr(&registryTestV2Peer) };
+    bundle.dev = &table;
+    registry_v2_calls = 0;
+    table.size = @offsetOf(r4os.abi.R4XStartR4Dev, "program_registry_summary_v2");
+    try std.testing.expectEqual(r4os.abi.err_no_fn, dev.programRegistrySummaryV2(&summary_v2));
+    try std.testing.expectEqual(@as(u32, 0), registry_v2_calls);
+    table.size = @sizeOf(r4os.abi.R4XStartR4Dev);
+    try std.testing.expectEqual(@as(i32, 1), dev.programRegistrySummaryV2(&summary_v2));
+    try std.testing.expectEqual(@as(u32, 7), summary_v2.live_slots);
+    try std.testing.expectEqual(@as(i32, 1), performance.programRegistrySelfTestV2(&self_test_v2));
+    try std.testing.expectEqual(@as(u32, 17), self_test_v2.flags);
+    try std.testing.expectEqual(@as(u32, 2), registry_v2_calls);
 }
 
 test "ProcessHandle raw remains u32 source compatible" {

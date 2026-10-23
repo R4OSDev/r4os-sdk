@@ -367,6 +367,7 @@ pub const Backend = struct {
     commit_full_fn: *const fn (*anyopaque) i32,
     commit_damage_fn: *const fn (*anyopaque) i32,
     cancel_fn: *const fn (*anyopaque) i32,
+    available: bool = true,
     supports_indexed8: bool = false,
     supports_xrgb32_nearest: bool = false,
     supports_shared_raster: bool = false,
@@ -389,9 +390,10 @@ pub const Backend = struct {
             .commit_full_fn = drawCommitFull,
             .commit_damage_fn = drawCommitDamage,
             .cancel_fn = drawCancel,
-            .supports_indexed8 = draw.supportsGuiFrameDamageContract(),
-            .supports_xrgb32_nearest = draw.supportsGuiFrameStreamingContract(),
-            .supports_shared_raster = draw.supportsGuiSharedRasterContract(),
+            .available = currentDrawContract(draw),
+            .supports_indexed8 = true,
+            .supports_xrgb32_nearest = true,
+            .supports_shared_raster = true,
         };
     }
 
@@ -519,6 +521,7 @@ pub const Presenter = struct {
     }
 
     pub fn presentToWithOverlay(self: *Presenter, backend: Backend, client_w: i32, client_h: i32, overlay: ?FrameOverlay) PresentResult {
+        if (!backend.available) return .{ .failure = abi.err_no_fn };
         const viewport = calculateViewport(client_w, client_h, self.surface.width, self.surface.height) catch {
             self.stats.skipped_frames +%= 1;
             return .hidden;
@@ -1222,8 +1225,7 @@ pub const Host = struct {
     overlay: ?FrameOverlay = null,
 
     pub fn init(desk: r4desk.Context, draw: r4draw.Context, surface: Surface, scratch: []u32) Error!Host {
-        if (!draw.supportsGuiFrameContract() or !draw.hasFn("gui_blit") or
-            !draw.hasFn("gui_clear") or !draw.hasFn("gui_present")) return Error.UnsupportedDrawContract;
+        if (!currentDrawContract(&draw)) return Error.UnsupportedDrawContract;
         if (desk.programWindowId() < 0) return Error.WindowUnavailable;
         return .{
             .desk = desk,
@@ -1739,6 +1741,10 @@ fn isTextCodepoint(value: u32) bool {
     return value < 0xD800 or value > 0xDFFF;
 }
 
+fn currentDrawContract(draw: *const r4draw.Context) bool {
+    return draw.supportsGuiSharedRasterContract() and draw.hasFn("gui_blit") and draw.hasFn("gui_clear");
+}
+
 fn drawContext(context: *anyopaque) *const r4draw.Context {
     return @ptrCast(@alignCast(context));
 }
@@ -1748,15 +1754,11 @@ fn drawBeginFull(context: *anyopaque) i32 {
 }
 
 fn drawBeginDamage(context: *anyopaque, regions: []const abi.DisplayDamageRect) i32 {
-    const draw = drawContext(context);
-    if (!draw.supportsGuiFrameDamageContract()) return 0;
-    return draw.guiFrameBeginDamage(regions);
+    return drawContext(context).guiFrameBeginDamage(regions);
 }
 
 fn drawBeginReplace(context: *anyopaque, regions: []const abi.DisplayDamageRect) i32 {
-    const draw = drawContext(context);
-    if (!draw.supportsGuiFrameStreamingContract()) return abi.err_no_fn;
-    return draw.guiFrameBeginReplace(regions);
+    return drawContext(context).guiFrameBeginReplace(regions);
 }
 
 fn drawClear(context: *anyopaque, rgb: u32) i32 {
@@ -1800,8 +1802,7 @@ fn drawCommitFull(context: *anyopaque) i32 {
 }
 
 fn drawCommitDamage(context: *anyopaque) i32 {
-    const draw = drawContext(context);
-    return if (draw.supportsGuiFrameDamageContract()) draw.guiFrameCommit() else draw.guiPresent();
+    return drawContext(context).guiFrameCommit();
 }
 
 fn drawCancel(context: *anyopaque) i32 {
@@ -2023,7 +2024,22 @@ fn fakeCancel(context: *anyopaque) i32 {
     return 0;
 }
 
-test "legacy backend initializers keep optional streaming hooks unavailable" {
+test "custom software backends keep explicit optional streaming hooks unavailable" {
+    // A current custom CPU backend is independent of R4OS capability age.
+    // The R4OS adapter itself refuses missing current streaming/shared APIs.
+    var raw: abi.R4XStartContext = .{};
+    var table: abi.R4XStartR4Draw = .{};
+    const bundle = @import("program.zig").Bundle{ .raw = &raw, .draw = &table };
+    const draw = r4draw.Context.init(&bundle);
+    const desk = r4desk.Context.init(&bundle);
+    var surface_pixels = [_]u32{0} ** 4;
+    var surface_scratch: [tile_max_pixels]u32 = undefined;
+    const surface = try Surface.initXrgb32(&surface_pixels, 2, 2);
+    try std.testing.expectError(Error.UnsupportedDrawContract, Host.init(desk, draw, surface, &surface_scratch));
+    var unavailable = try Presenter.init(surface, &surface_scratch);
+    const current = Backend.fromDraw(&draw);
+    try std.testing.expect(!current.available);
+    try std.testing.expectEqual(abi.err_no_fn, unavailable.presentTo(current, 2, 2).failure);
     var fake = FakeBackend{};
     const backend = Backend{
         .context = &fake,

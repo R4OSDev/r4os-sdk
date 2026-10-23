@@ -214,10 +214,14 @@ static inline int32_t r4driver_memory_collect(const R4GfxDriverMemoryApi *table)
 static inline int32_t r4driver_memory_buffer_stats(const R4GfxDriverMemoryApi *table, R4GfxBufferStats * output) {
     if (table == 0 || table->version != 1 || table->size < offsetof(R4GfxDriverMemoryApi, buffer_stats) + sizeof(uint64_t) || table->buffer_stats == 0) return R4OS_ERR_NO_FN;
     if (output == 0) return R4OS_ERROR_INVALID;
-    *output = (R4GfxBufferStats){0};
-    output->version = 1; output->size = sizeof(*output);
+    R4GfxBufferStats value = {0}; value.version = 1; value.size = sizeof(value);
     typedef int32_t (*Callback)(R4GfxBufferStats *);
-    return ((Callback)(uintptr_t)table->buffer_stats)(output);
+    int32_t code = ((Callback)(uintptr_t)table->buffer_stats)(&value);
+    if (code == R4OS_GFX_BUFFER_RESULT_OK) {
+        if (value.version != 1 || value.size < sizeof(value)) return R4OS_GFX_BUFFER_ERROR_INVALID;
+        *output = value;
+    }
+    return code;
 }
 
 

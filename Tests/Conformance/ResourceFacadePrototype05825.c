@@ -600,6 +600,15 @@ static int app_resource_checks(void) {
     return process_slots == 0u && thread_slots == 0u && vm_slots == 0u && io_slots == 0u ? 0 : 30;
 }
 
+static unsigned registry_v2_calls;
+static int32_t registry_summary_v2_peer(R4ProgramRegistrySummaryV2 *out) {
+    if(out->version<2 || out->size<sizeof(*out)) return -1;
+    ++registry_v2_calls;out->live_slots=7;return 1;
+}
+static int32_t registry_test_v2_peer(R4ProgramRegistrySelfTestResultV2 *out) {
+    if(out->version<2 || out->size<sizeof(*out)) return -1;
+    ++registry_v2_calls;out->flags=17;return 1;
+}
 int main(void) {
     if (platform_checks()) return 100;
     if (program_exit_checks() != 0) return 86;
@@ -616,10 +625,16 @@ int main(void) {
     if (cppc_checks() != 0) return 91;
     R4App app; R4XStartR4Sys table; R4XStartR4Desk desk; init_app(&app, &table, &desk);
     R4PerformanceView performance = r4_devices_performance(r4_app_devices(&app));
-    R4ProgramRegistrySummary registry_v1 = {0}; R4ProgramRegistrySelfTestResult registry_test_v1 = {0};
     R4ProgramRegistrySummaryV2 registry_v2 = {0}; R4ProgramRegistrySelfTestResultV2 registry_test_v2 = {0};
-    if (r4_program_registry_summary(&performance, &registry_v1) != R4OS_ERR_NO_FN || r4_program_registry_self_test(&performance, &registry_test_v1) != R4OS_ERR_NO_FN) return 32;
     if (r4_program_registry_summary_v2(&performance, &registry_v2) != R4OS_ERR_NO_FN || r4_program_registry_self_test_v2(&performance, &registry_test_v2) != R4OS_ERR_NO_FN) return 32;
-    if (r4_program_registry_summary_legacy(&performance, &registry_v1) != R4OS_ERR_NO_FN || r4_program_registry_self_test_legacy(&performance, &registry_test_v1) != R4OS_ERR_NO_FN) return 32;
+    R4XStartR4Dev current_dev={.size=sizeof(current_dev),.program_registry_summary_v2=(uintptr_t)registry_summary_v2_peer,.program_registry_self_test_v2=(uintptr_t)registry_test_v2_peer};
+    app.devices.table=&current_dev;
+    registry_v2.version=2;registry_v2.size=sizeof(registry_v2);
+    registry_test_v2.version=2;registry_test_v2.size=sizeof(registry_test_v2);
+    current_dev.size=offsetof(R4XStartR4Dev,program_registry_summary_v2);
+    if(r4_program_registry_summary_v2(&performance,&registry_v2)!=R4OS_ERR_NO_FN || registry_v2_calls) return 92;
+    current_dev.size=sizeof(current_dev);
+    if(r4_program_registry_summary_v2(&performance,&registry_v2)!=1 || registry_v2.live_slots!=7) return 93;
+    if(r4_program_registry_self_test_v2(&performance,&registry_test_v2)!=1 || registry_test_v2.flags!=17 || registry_v2_calls!=2) return 94;
     return app_resource_checks();
 }

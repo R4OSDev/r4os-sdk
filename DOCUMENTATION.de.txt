@@ -245,18 +245,21 @@ ueberdeckte Damagegenerationen erneut abspielen. `GuiXrgb32Resource` erhaelt
 Gast- und Viewportgeometrie bis zum Desktop; Kacheln bleiben hoechstens
 128x128 Pixel gross und werden weder in Farblaeufe noch in `fillRect`-Aufrufe
 zerlegt. `gui_frame_stream_info` weist Live-, Freigabe-, Koaleszenz-, XRGB32-
-und Speicherzaehler aus. Fehlen die optionalen Slots, bleiben der bestehende
-Damagevertrag und der begrenzte Rasterfallback unveraendert nutzbar.
+und Speicherzaehler aus. Der R4OS-Subsystemadapter verlangt den aktuellen
+Replacement-/Shared-Rastervertrag; fehlende Pflichtcallbacks werden vor
+Framebeginn mit NoFn/UnsupportedDrawContract abgewiesen.
 
 R4DRAW-v9 transportiert XRGB32-, Indexed8- und Alpha8-Raster ueber
 generationengebundene Shared-Ressourcen. Der Producer beschreibt den Inhalt
 einmal; die hoechstens 128x128 Pixel grossen Zielbloecke verweisen danach nur
 noch ueber feste 80-Byte-Deskriptoren darauf. Drei begrenzte Puffer verhindern
-unbeschraenkte Retention. Backpressure oder ein fehlender optionaler Slot
-fallen fuer genau diesen Frame auf den kopierenden Pfad zurueck. Manuell
+unbeschraenkte Retention. Aktuelle Ring-Backpressure darf fuer genau diesen
+Frame den begrenzten kopierenden Pfad verwenden. Fehlende aktuelle
+Pflichtcallbacks werden nicht nachgebildet. Manuell
 erzeugte `subsystem_host.Backend`-Werte muessen die optionalen v8/v9-Callbacks
 nicht mit Platzhaltern fuellen: Deren Defaults liefern `err_no_fn`, waehrend
-die zugehoerigen Capability-Flags false bleiben.
+die zugehoerigen Capability-Flags false bleiben. Dies sind eigenstaendige
+aktuelle Callbackbackends, keine Nachbildung frueherer R4OS-Versionen.
 
 `Host.pollInput` uebersetzt Close, Resize, Fokus, Tastencode, Text und Maus in
 eine gastneutrale Ereignisunion. Jedes rohe GUI-Ereignis erhaelt dabei eine
@@ -1040,8 +1043,13 @@ Der jeweils verwendete aktuelle Callback ist der Mindestvertrag der Operation:
 - Netzwerk: net_service_request mit generationengebundener Kernelzuordnung;
   fehlend NoFn/NoGroup, kein selbstgebauter Raw-IPC-Request/Response-Ersatz.
 - Generische Programmspeicheransicht: program_instance_storage_summary_v2;
-  fehlend NoFn/NoGroup, unveraenderter Ausgabepuffer. Explizite V1-Zugriffe
-  bleiben bis zur gekoppelten Provider-/Consumerumstellung in 0.86.80 getrennt.
+  fehlend NoFn/NoGroup, unveraenderter Ausgabepuffer. SDK92/Contract45/R4DEV35
+  legt die V1-Diagnoseslots27/29/30 dauerhaft als Null-Tombstones still.
+  Registry-V2-Aufrufer initialisieren Version2 und volle224/136Byte;
+  ungueltige Header werden ohne Ausgabemutation abgewiesen.
+- Grafikpayloads: volle aktuelle Records fuer Registrierung48/Backend152/
+  Submission512/Driverjob296/Color192/Statistik136Byte; kurze Daten werden
+  ohne Aufnahme/Jobentnahme/Publikation oder Ausgabemutation abgewiesen.
 - beginPaint: alle sechs bestehenden Frame-Callbacks begin/append/commit/
   cancel/gui_frame_info/gui_frame_read; fehlend keine Paint-Transaktion.
   Direkte CLEAR-/Rasteroperationen innerhalb einer echten aktuellen

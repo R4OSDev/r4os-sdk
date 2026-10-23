@@ -659,7 +659,7 @@ typedef struct R4SdkSubsystemNativeValue238 { _Alignas(8) uint8_t opaque_bytes[8
 /* *abi.AudioServiceStreamResult; native size 8, alignment 8. */
 typedef struct R4SdkSubsystemNativeValue240 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkSubsystemNativeValue240;
 #define R4SdkSubsystemNativeValue240_TYPE 240u
-#define R4SdkSubsystem_ABI_FINGERPRINT UINT64_C(3081907962662971100)
+#define R4SdkSubsystem_ABI_FINGERPRINT UINT64_C(14987619388979785259)
 int32_t R4SdkSubsystemVerifyAbi(uint64_t);
 #define R4SdkSubsystemCatalog_max_entries (192)
 #define R4SdkSubsystemCatalog_max_candidates (128)
@@ -2893,7 +2893,7 @@ static inline R4SdkSubsystemSlot R4SdkSubsystemVideoSharedRasterBatch_set_resour
  return R4SdkSubsystemField(R4SdkSubsystem_ABI_FINGERPRINT,46u,1u,self,a,0); }
 static inline R4SdkSubsystemSlot R4SdkSubsystemVideoSharedRasterBatch_inspectNative(const R4SdkSubsystemVideoSharedRasterBatch *self) { return R4SdkSubsystemInspect(R4SdkSubsystem_ABI_FINGERPRINT,46u,(void *)self,0); }
 static inline R4SdkSubsystemSlot R4SdkSubsystemVideoBackend_create(R4SdkSubsystemVideoBackend *output, void * p0, uintptr_t p1, uintptr_t p2, uintptr_t p4, uintptr_t p5, uintptr_t p6, uintptr_t p13, uintptr_t p14, uintptr_t p15) {
- R4SdkSubsystemSlot a[19]={0};
+ R4SdkSubsystemSlot a[20]={0};
  a[0] = (R4SdkSubsystemSlot){.ptr=(void *)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[1] = (R4SdkSubsystemSlot){.ptr=(void *)(uintptr_t)p1,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[2] = (R4SdkSubsystemSlot){.ptr=(void *)(uintptr_t)p2,.flags=R4SDKSUBSYSTEM_PRESENT};
@@ -2913,10 +2913,11 @@ static inline R4SdkSubsystemSlot R4SdkSubsystemVideoBackend_create(R4SdkSubsyste
  a[16].flags=R4SDKSUBSYSTEM_DEFAULT;
  a[17].flags=R4SDKSUBSYSTEM_DEFAULT;
  a[18].flags=R4SDKSUBSYSTEM_DEFAULT;
- return R4SdkSubsystemConstruct(R4SdkSubsystem_ABI_FINGERPRINT,48u,a,19u,output);
+ a[19].flags=R4SDKSUBSYSTEM_DEFAULT;
+ return R4SdkSubsystemConstruct(R4SdkSubsystem_ABI_FINGERPRINT,48u,a,20u,output);
 }
-static inline R4SdkSubsystemSlot R4SdkSubsystemVideoBackend_from_fields(R4SdkSubsystemVideoBackend *output, void * p0, uintptr_t p1, uintptr_t p2, uintptr_t p3, uintptr_t p4, uintptr_t p5, uintptr_t p6, uintptr_t p7, uintptr_t p8, uintptr_t p9, uintptr_t p10, uintptr_t p11, uintptr_t p12, uintptr_t p13, uintptr_t p14, uintptr_t p15, uint8_t p16, uint8_t p17, uint8_t p18) {
- R4SdkSubsystemSlot a[19]={0};
+static inline R4SdkSubsystemSlot R4SdkSubsystemVideoBackend_from_fields(R4SdkSubsystemVideoBackend *output, void * p0, uintptr_t p1, uintptr_t p2, uintptr_t p3, uintptr_t p4, uintptr_t p5, uintptr_t p6, uintptr_t p7, uintptr_t p8, uintptr_t p9, uintptr_t p10, uintptr_t p11, uintptr_t p12, uintptr_t p13, uintptr_t p14, uintptr_t p15, uint8_t p16, uint8_t p17, uint8_t p18, uint8_t p19) {
+ R4SdkSubsystemSlot a[20]={0};
  a[0] = (R4SdkSubsystemSlot){.ptr=(void *)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[1] = (R4SdkSubsystemSlot){.ptr=(void *)(uintptr_t)p1,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[2] = (R4SdkSubsystemSlot){.ptr=(void *)(uintptr_t)p2,.flags=R4SDKSUBSYSTEM_PRESENT};
@@ -2936,7 +2937,8 @@ static inline R4SdkSubsystemSlot R4SdkSubsystemVideoBackend_from_fields(R4SdkSub
  a[16] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p16,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[17] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p17,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[18] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p18,.flags=R4SDKSUBSYSTEM_PRESENT};
- return R4SdkSubsystemConstruct(R4SdkSubsystem_ABI_FINGERPRINT,48u,a,19u,output);
+ a[19] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p19,.flags=R4SDKSUBSYSTEM_PRESENT};
+ return R4SdkSubsystemConstruct(R4SdkSubsystem_ABI_FINGERPRINT,48u,a,20u,output);
 }
 static inline R4SdkSubsystemSlot R4SdkSubsystemVideoBackend_get_context(const R4SdkSubsystemVideoBackend *self) { return R4SdkSubsystemField(R4SdkSubsystem_ABI_FINGERPRINT,48u,0u,(void *)self,0,0); }
 static inline R4SdkSubsystemSlot R4SdkSubsystemVideoBackend_set_context(R4SdkSubsystemVideoBackend *self, void * p0) { R4SdkSubsystemSlot a[1]={0};
@@ -3002,18 +3004,22 @@ static inline R4SdkSubsystemSlot R4SdkSubsystemVideoBackend_get_cancel_fn(const 
 static inline R4SdkSubsystemSlot R4SdkSubsystemVideoBackend_set_cancel_fn(R4SdkSubsystemVideoBackend *self, uintptr_t p0) { R4SdkSubsystemSlot a[1]={0};
  a[0] = (R4SdkSubsystemSlot){.ptr=(void *)(uintptr_t)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
  return R4SdkSubsystemField(R4SdkSubsystem_ABI_FINGERPRINT,48u,15u,self,a,0); }
-static inline R4SdkSubsystemSlot R4SdkSubsystemVideoBackend_get_supports_indexed8(const R4SdkSubsystemVideoBackend *self) { return R4SdkSubsystemField(R4SdkSubsystem_ABI_FINGERPRINT,48u,16u,(void *)self,0,0); }
-static inline R4SdkSubsystemSlot R4SdkSubsystemVideoBackend_set_supports_indexed8(R4SdkSubsystemVideoBackend *self, uint8_t p0) { R4SdkSubsystemSlot a[1]={0};
+static inline R4SdkSubsystemSlot R4SdkSubsystemVideoBackend_get_available(const R4SdkSubsystemVideoBackend *self) { return R4SdkSubsystemField(R4SdkSubsystem_ABI_FINGERPRINT,48u,16u,(void *)self,0,0); }
+static inline R4SdkSubsystemSlot R4SdkSubsystemVideoBackend_set_available(R4SdkSubsystemVideoBackend *self, uint8_t p0) { R4SdkSubsystemSlot a[1]={0};
  a[0] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
  return R4SdkSubsystemField(R4SdkSubsystem_ABI_FINGERPRINT,48u,16u,self,a,0); }
-static inline R4SdkSubsystemSlot R4SdkSubsystemVideoBackend_get_supports_xrgb32_nearest(const R4SdkSubsystemVideoBackend *self) { return R4SdkSubsystemField(R4SdkSubsystem_ABI_FINGERPRINT,48u,17u,(void *)self,0,0); }
-static inline R4SdkSubsystemSlot R4SdkSubsystemVideoBackend_set_supports_xrgb32_nearest(R4SdkSubsystemVideoBackend *self, uint8_t p0) { R4SdkSubsystemSlot a[1]={0};
+static inline R4SdkSubsystemSlot R4SdkSubsystemVideoBackend_get_supports_indexed8(const R4SdkSubsystemVideoBackend *self) { return R4SdkSubsystemField(R4SdkSubsystem_ABI_FINGERPRINT,48u,17u,(void *)self,0,0); }
+static inline R4SdkSubsystemSlot R4SdkSubsystemVideoBackend_set_supports_indexed8(R4SdkSubsystemVideoBackend *self, uint8_t p0) { R4SdkSubsystemSlot a[1]={0};
  a[0] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
  return R4SdkSubsystemField(R4SdkSubsystem_ABI_FINGERPRINT,48u,17u,self,a,0); }
-static inline R4SdkSubsystemSlot R4SdkSubsystemVideoBackend_get_supports_shared_raster(const R4SdkSubsystemVideoBackend *self) { return R4SdkSubsystemField(R4SdkSubsystem_ABI_FINGERPRINT,48u,18u,(void *)self,0,0); }
-static inline R4SdkSubsystemSlot R4SdkSubsystemVideoBackend_set_supports_shared_raster(R4SdkSubsystemVideoBackend *self, uint8_t p0) { R4SdkSubsystemSlot a[1]={0};
+static inline R4SdkSubsystemSlot R4SdkSubsystemVideoBackend_get_supports_xrgb32_nearest(const R4SdkSubsystemVideoBackend *self) { return R4SdkSubsystemField(R4SdkSubsystem_ABI_FINGERPRINT,48u,18u,(void *)self,0,0); }
+static inline R4SdkSubsystemSlot R4SdkSubsystemVideoBackend_set_supports_xrgb32_nearest(R4SdkSubsystemVideoBackend *self, uint8_t p0) { R4SdkSubsystemSlot a[1]={0};
  a[0] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
  return R4SdkSubsystemField(R4SdkSubsystem_ABI_FINGERPRINT,48u,18u,self,a,0); }
+static inline R4SdkSubsystemSlot R4SdkSubsystemVideoBackend_get_supports_shared_raster(const R4SdkSubsystemVideoBackend *self) { return R4SdkSubsystemField(R4SdkSubsystem_ABI_FINGERPRINT,48u,19u,(void *)self,0,0); }
+static inline R4SdkSubsystemSlot R4SdkSubsystemVideoBackend_set_supports_shared_raster(R4SdkSubsystemVideoBackend *self, uint8_t p0) { R4SdkSubsystemSlot a[1]={0};
+ a[0] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
+ return R4SdkSubsystemField(R4SdkSubsystem_ABI_FINGERPRINT,48u,19u,self,a,0); }
 static inline R4SdkSubsystemSlot R4SdkSubsystemVideoBackend_inspectNative(const R4SdkSubsystemVideoBackend *self) { return R4SdkSubsystemInspect(R4SdkSubsystem_ABI_FINGERPRINT,48u,(void *)self,0); }
 static inline R4SdkSubsystemSlot R4SdkSubsystemVideoFrameOverlay_create(R4SdkSubsystemVideoFrameOverlay *output, void * p0, uintptr_t p1) {
  R4SdkSubsystemSlot a[2]={0};

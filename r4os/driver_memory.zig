@@ -177,8 +177,13 @@ pub const Context = struct {
     pub fn bufferStats(self: *const Context, output: *abi.GfxBufferStats) i32 {
         if (self.table.version != 1 or self.table.size < @offsetOf(abi.GfxDriverMemoryApi, "buffer_stats") + 8 or self.table.buffer_stats == 0) return abi.err_no_fn;
         const callback: *const fn (*abi.GfxBufferStats) callconv(.c) i32 = @ptrFromInt(self.table.buffer_stats);
-        output.* = .{};
-        return callback(output);
+        var value: abi.GfxBufferStats = .{};
+        const code = callback(&value);
+        if (code == abi.gfx_buffer_result_ok) {
+            if (value.version != 1 or value.size < @sizeOf(abi.GfxBufferStats)) return abi.gfx_buffer_error_invalid;
+            output.* = value;
+        }
+        return code;
     }
 
     pub fn bufferReserve(self: *const Context, input: *const abi.GfxBufferDescriptor, cookie: u64, output: *abi.GfxOwnedBufferReservation) i32 {

@@ -75,17 +75,23 @@ static inline int32_t r4_program_instance_storage_summary(R4PerformanceView *vie
     return r4dev_program_instance_storage_summary_v2(&view->app->devices, out);
 }
 static inline int32_t r4_program_instance_storage_self_test(R4PerformanceView *view, R4ProgramInstanceStorageSelfTestResult *out) { const R4XStartR4Dev *table = view != 0 && view->app != 0 ? view->app->devices.table : 0; return table != 0 && table->program_instance_storage_self_test != 0u && out != 0 ? ((R4DevProgramInstanceStorageSelfTestFn)(uintptr_t)table->program_instance_storage_self_test)(out) : R4OS_ERR_NO_FN; }
-static inline int32_t r4_program_registry_summary(R4PerformanceView *view, R4ProgramRegistrySummary *out) { const R4XStartR4Dev *table = view != 0 && view->app != 0 ? view->app->devices.table : 0; return table != 0 && table->program_registry_summary != 0u && out != 0 ? ((R4DevProgramRegistrySummaryFn)(uintptr_t)table->program_registry_summary)(out) : R4OS_ERR_NO_FN; }
-static inline int32_t r4_program_registry_self_test(R4PerformanceView *view, R4ProgramRegistrySelfTestResult *out) { const R4XStartR4Dev *table = view != 0 && view->app != 0 ? view->app->devices.table : 0; return table != 0 && table->program_registry_self_test != 0u && out != 0 ? ((R4DevProgramRegistrySelfTestFn)(uintptr_t)table->program_registry_self_test)(out) : R4OS_ERR_NO_FN; }
-static inline int32_t r4_program_registry_summary_v2(R4PerformanceView *view, R4ProgramRegistrySummaryV2 *out) { const R4XStartR4Dev *table = view != 0 && view->app != 0 ? view->app->devices.table : 0; return table != 0 && table->program_registry_summary_v2 != 0u && out != 0 ? ((R4DevProgramRegistrySummaryV2Fn)(uintptr_t)table->program_registry_summary_v2)(out) : R4OS_ERR_NO_FN; }
-static inline int32_t r4_program_registry_self_test_v2(R4PerformanceView *view, R4ProgramRegistrySelfTestResultV2 *out) { const R4XStartR4Dev *table = view != 0 && view->app != 0 ? view->app->devices.table : 0; return table != 0 && table->program_registry_self_test_v2 != 0u && out != 0 ? ((R4DevProgramRegistrySelfTestV2Fn)(uintptr_t)table->program_registry_self_test_v2)(out) : R4OS_ERR_NO_FN; }
+static inline int32_t r4_program_registry_summary_v2(R4PerformanceView *view, R4ProgramRegistrySummaryV2 *out) {
+    if (!out) return R4OS_ERROR_INVALID;
+    const R4XStartR4Dev *table = view && view->app ? view->app->devices.table : 0;
+    if (!table || table->size < offsetof(R4XStartR4Dev, program_registry_summary_v2) + sizeof(uintptr_t) || !table->program_registry_summary_v2) return R4OS_ERR_NO_FN;
+    return ((R4DevProgramRegistrySummaryV2Fn)(uintptr_t)table->program_registry_summary_v2)(out);
+}
+static inline int32_t r4_program_registry_self_test_v2(R4PerformanceView *view, R4ProgramRegistrySelfTestResultV2 *out) {
+    if (!out) return R4OS_ERROR_INVALID;
+    const R4XStartR4Dev *table = view && view->app ? view->app->devices.table : 0;
+    if (!table || table->size < offsetof(R4XStartR4Dev, program_registry_self_test_v2) + sizeof(uintptr_t) || !table->program_registry_self_test_v2) return R4OS_ERR_NO_FN;
+    return ((R4DevProgramRegistrySelfTestV2Fn)(uintptr_t)table->program_registry_self_test_v2)(out);
+}
 static inline int32_t r4_execution_inventory_summary(R4PerformanceView *view, R4ProgramInventorySummary *out) {
     if (out == 0) return R4OS_PROGRAM_HANDLE_ERROR_INVALID;
     if (view == 0 || view->app == 0) return R4OS_ERR_NO_FN;
     return r4dev_execution_inventory_summary(&view->app->devices, out);
 }
-static inline int32_t r4_program_registry_summary_legacy(R4PerformanceView *view, R4ProgramRegistrySummary *out) { return r4_program_registry_summary(view, out); }
-static inline int32_t r4_program_registry_self_test_legacy(R4PerformanceView *view, R4ProgramRegistrySelfTestResult *out) { return r4_program_registry_self_test(view, out); }
 static inline int32_t r4_performance_task(R4PerformanceView *view, uint32_t index, R4ProgramTaskPerformanceInfo *out) { const R4XStartR4Dev *table = view != 0 && view->app != 0 ? view->app->devices.table : 0; return table != 0 && table->performance_task != 0u && out != 0 ? ((R4DevPerformanceTaskFn)(uintptr_t)table->performance_task)(index, out) : R4OS_ERR_NO_FN; }
 static inline int32_t r4_performance_storage(R4PerformanceView *view, uint32_t index, R4ProgramStoragePerformanceInfo *out) { const R4XStartR4Dev *table = view != 0 && view->app != 0 ? view->app->devices.table : 0; return table != 0 && table->performance_storage != 0u && out != 0 ? ((R4DevPerformanceStorageFn)(uintptr_t)table->performance_storage)(index, out) : R4OS_ERR_NO_FN; }
 static inline int32_t r4_performance_boot_phase(R4PerformanceView *view, uint32_t index, R4ProgramBootPhasePerformanceInfo *out) { const R4XStartR4Dev *table = view != 0 && view->app != 0 ? view->app->devices.table : 0; return table != 0 && table->performance_boot_phase != 0u && out != 0 ? ((R4DevPerformanceBootPhaseFn)(uintptr_t)table->performance_boot_phase)(index, out) : R4OS_ERR_NO_FN; }

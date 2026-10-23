@@ -500,9 +500,13 @@ static inline int32_t r4draw_gfx_memory_budget(const R4Draw *draw, const R4GfxDe
 static inline int32_t r4draw_gfx_buffer_stats(const R4Draw *draw, R4GfxBufferStats * output) {
     if (draw == 0 || draw->table == 0 || draw->table->size < offsetof(R4XStartR4Draw, gfx_buffer_stats) + sizeof(uintptr_t) || draw->table->gfx_buffer_stats == 0) return R4OS_ERR_NO_FN;
     if (output == 0) return R4OS_GFX_BUFFER_ERROR_INVALID;
-    *output = (R4GfxBufferStats){0};
-    output->version = 1; output->size = sizeof(R4GfxBufferStats);
-    return ((R4DrawGfxBufferStatsFn)(uintptr_t)draw->table->gfx_buffer_stats)(output);
+    R4GfxBufferStats value = {0}; value.version = 1; value.size = sizeof(value);
+    int32_t code = ((R4DrawGfxBufferStatsFn)(uintptr_t)draw->table->gfx_buffer_stats)(&value);
+    if (code == R4OS_GFX_BUFFER_RESULT_OK) {
+        if (value.version != 1 || value.size < sizeof(value)) return R4OS_GFX_BUFFER_ERROR_INVALID;
+        *output = value;
+    }
+    return code;
 }
 
 
@@ -537,7 +541,7 @@ static inline int32_t r4draw_gfx_output_color(const R4Draw *draw, const R4GfxOut
     R4GfxOutputColorState value = {0}; value.version = 1; value.size = sizeof(value);
     int32_t code = ((R4DrawGfxOutputColorFn)(uintptr_t)draw->table->gfx_output_color)(identity, &value);
     if (code == R4OS_GFX_OUTPUT_OK) {
-        if (value.version != 1 || value.size < 128) return R4OS_GFX_OUTPUT_ERROR_INVALID;
+        if (value.version != 1 || value.size < sizeof(value)) return R4OS_GFX_OUTPUT_ERROR_INVALID;
         *output = value;
     }
     return code;

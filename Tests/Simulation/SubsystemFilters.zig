@@ -10,7 +10,7 @@ pub const names: []const []const u8 = &.{
     "launch request rejects malformed duplicate and oversized inputs",
     "diagnostic launch options remain optional and addressable",
     "command and repeated environment records remain byte exact",
-    "legacy backend initializers keep optional streaming hooks unavailable",
+    "custom software backends keep explicit optional streaming hooks unavailable",
     "viewport preserves aspect ratio maps letterbox and prefers useful integer scales",
     "640x350 full frame is split into fifteen bounded raster blocks and unchanged frames are skipped",
     "bounded damage chains compact into a fresh full frame",

@@ -642,10 +642,11 @@ fn virtualFacadeProbe() !void {
     try t.expectEqual(@as(i32, -4), driver.virtualTake(&handle, &job));
     try t.expectEqualDeep(old, job);
 }
-fn oldStatsProbe(output: *r4os.abi.GfxBufferStats) callconv(.c) i32 {
+var stats_probe_bytes: u32 = @sizeOf(r4os.abi.GfxBufferStats);
+fn statsProbe(output: *r4os.abi.GfxBufferStats) callconv(.c) i32 {
     std.debug.assert(output.version == 1 and output.size == 136);
-    var old: r4os.abi.GfxBufferStats = .{ .size = 56, .committed_bytes = 0x100000003 };
-    @memcpy(@as([*]u8, @ptrCast(output))[0..56], std.mem.asBytes(&old)[0..56]);
+    const value: r4os.abi.GfxBufferStats = .{ .size = stats_probe_bytes, .committed_bytes = 0x100000003, .system_bytes = 17, .device_bytes = 19 };
+    @memcpy(std.mem.asBytes(output)[0..stats_probe_bytes], std.mem.asBytes(&value)[0..stats_probe_bytes]);
     return 1;
 }
 var budget_probe_rc: i32 = 1;
@@ -757,7 +758,7 @@ test "graphics buffer optional tails preserve 64-bit offsets in Zig and R4D call
     try nativeFacadeProbe();
     try virtualFacadeProbe();
     var tables = makeTables(true);
-    tables[2].abi_version = 10; // A new facade must accept an older prefix.
+    tables[2].abi_version = (r4os.abi.R4XStartR4Draw{}).abi_version;
     tables[2].gfx_buffer_map = @intFromPtr(&gfxMapProbe);
     tables[2].size = @offsetOf(r4os.abi.R4XStartR4Draw, "gfx_buffer_map");
     var imports: [3]r4os.abi.R4XStartImport = undefined;
@@ -765,15 +766,23 @@ test "graphics buffer optional tails preserve 64-bit offsets in Zig and R4D call
     var app = try makeApp(&tables, &imports, &context);
     const draw = app.drawing().?;
     const buffers = draw.buffers();
-    tables[2].gfx_buffer_stats = @intFromPtr(&oldStatsProbe);
+    tables[2].gfx_buffer_stats = @intFromPtr(&statsProbe);
     var stats: r4os.abi.GfxBufferStats = .{ .device_bytes = 79 };
     tables[2].size = @offsetOf(r4os.abi.R4XStartR4Draw, "gfx_buffer_stats") + 8;
+    const stats_driver = r4os.driver_memory.Context{ .table = .{ .buffer_stats = @intFromPtr(&statsProbe) } };
+    const before_stats = stats;
+    for ([_]u32{56, 135}) |bytes| {
+        stats_probe_bytes = bytes;
+        try std.testing.expectEqual(r4os.abi.gfx_buffer_error_invalid, buffers.stats(&stats));
+        try std.testing.expectEqualDeep(before_stats, stats);
+        try std.testing.expectEqual(r4os.abi.gfx_buffer_error_invalid, stats_driver.bufferStats(&stats));
+        try std.testing.expectEqualDeep(before_stats, stats);
+    }
+    stats_probe_bytes = @sizeOf(r4os.abi.GfxBufferStats);
     try std.testing.expectEqual(@as(i32, 1), buffers.stats(&stats));
-    try std.testing.expect(stats.size == 56 and stats.committed_bytes == 0x100000003 and stats.device_bytes == 0);
-    stats.device_bytes = 79;
-    const stats_driver = r4os.driver_memory.Context{ .table = .{ .buffer_stats = @intFromPtr(&oldStatsProbe) } };
+    try std.testing.expect(stats.size == 136 and stats.committed_bytes == 0x100000003 and stats.system_bytes == 17 and stats.device_bytes == 19);
     try std.testing.expectEqual(@as(i32, 1), stats_driver.bufferStats(&stats));
-    try std.testing.expect(stats.size == 56 and stats.device_bytes == 0);
+    try std.testing.expect(stats.size == 136 and stats.system_bytes == 17 and stats.device_bytes == 19);
     tables[2].size = @offsetOf(r4os.abi.R4XStartR4Draw, "gfx_buffer_map");
     const ref: r4os.abi.GfxBufferHandle = .{ .id = 7, .generation = 99 };
     var output: r4os.abi.GfxBufferMap = .{ .byte_length = 37 };
@@ -1215,14 +1224,15 @@ test "old display and driver prefixes hide output tails while C/Zig preserve rec
     try std.testing.expectEqual(a.gfx_output_ok, outputs.color(&port, &color_state));
     try std.testing.expect(color_state.revision == 0x600000007 and std.meta.eql(color_state.identity, port) and color_state.formats == 1);
     try std.testing.expect(color_state.max_frl_rate == 6);
+    const full_color = color_state;
     color_probe_prefix = 128;
-    try std.testing.expectEqual(a.gfx_output_ok, outputs.color(&port, &color_state));
-    try std.testing.expect(color_state.size == 128 and color_state.max_frl_rate == 0 and color_state.dsc_depths == 0);
+    try std.testing.expectEqual(a.gfx_output_error_invalid, outputs.color(&port, &color_state));
+    try std.testing.expectEqualDeep(full_color, color_state);
     color_probe_prefix = @sizeOf(a.GfxOutputColorState);
-    const legacy_color = color_state;
+    const current_color = color_state;
     color_probe_status = a.gfx_output_error_busy;
     try std.testing.expectEqual(a.gfx_output_error_busy, outputs.color(&port, &color_state));
-    try std.testing.expectEqualDeep(legacy_color, color_state);
+    try std.testing.expectEqualDeep(current_color, color_state);
     color_probe_status = a.gfx_output_ok;
     var color_driver: r4os.driver_outputs.Context = .{ .table = .{ .color_publish = @intFromPtr(&outputColorPublishProbe) } };
     for ([_]u32{ 24, 112, 119 }) |bytes| {

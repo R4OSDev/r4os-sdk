@@ -362,7 +362,7 @@ pub fn build(b: *std.Build) void {
     b.step("storage-parity-test", "Existing file/registry/physical storage cases and imported codec/path owners").dependOn(&storage_parity.step);
     const resource_cases = b.createModule(.{ .root_source_file = b.path("Tests/Conformance/ResourceFacadePrototype05825.zig"), .target = b.graph.host, .optimize = .Debug });
     resource_cases.addImport("r4os", host_r4os);
-    const resource_parity = b.addRunArtifact(b.addTest(.{ .root_module = resource_cases, .filters = &.{ "process thread VM and I/O resources", "program handles reject stale copies", "sequential stress reuses" } }));
+    const resource_parity = b.addRunArtifact(b.addTest(.{ .root_module = resource_cases, .filters = &.{ "process thread VM and I/O resources", "program handles reject stale copies", "sequential stress reuses", "R4DEV current registry V2" } }));
     b.step("resource-parity-test", "Existing process/thread/VM/I/O resource lifecycle cases only").dependOn(&resource_parity.step);
     const service_cases = b.createModule(.{ .root_source_file = b.path("Tests/Conformance/ServiceNetworkFacadePrototype05826.zig"), .target = b.graph.host, .optimize = .Debug });
     service_cases.addImport("r4os", host_r4os);

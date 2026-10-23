@@ -721,8 +721,9 @@ static void gfx_facade_probe(void) {
     color_table.size=sizeof(color_table);
     assert(r4draw_gfx_output_color(&color_draw,&port,&color_state)==1 && color_state.revision==UINT64_C(0x600000007));
     assert(color_state.max_frl_rate==6);
+    color_before=color_state;
     color_probe_prefix=128;
-    assert(r4draw_gfx_output_color(&color_draw,&port,&color_state)==1 && color_state.size==128 && color_state.max_frl_rate==0 && color_state.dsc_depths==0);
+    assert(r4draw_gfx_output_color(&color_draw,&port,&color_state)==R4OS_GFX_OUTPUT_ERROR_INVALID && memcmp(&color_before,&color_state,sizeof(color_state))==0);
     color_probe_prefix=sizeof(R4GfxOutputColorState); color_probe_status=R4OS_GFX_OUTPUT_ERROR_BUSY;
     color_before=color_state;
     assert(r4draw_gfx_output_color(&color_draw,&port,&color_state)==R4OS_GFX_OUTPUT_ERROR_BUSY && memcmp(&color_before,&color_state,sizeof(color_state))==0);
@@ -990,10 +991,11 @@ static R4App make_app(R4XStartR4Sys *sys, R4XStartR4Desk *desk, R4XStartR4Draw *
     return app;
 }
 
-static int32_t old_stats_probe(R4GfxBufferStats *output) {
+static uint32_t stats_probe_bytes = sizeof(R4GfxBufferStats);
+static int32_t stats_probe(R4GfxBufferStats *output) {
     assert(output->version == 1 && output->size == 136);
-    const R4GfxBufferStats legacy = {.version=1, .size=56, .committed_bytes=UINT64_C(0x100000003)};
-    memcpy(output, &legacy, 56);
+    const R4GfxBufferStats value = {.version=1, .size=stats_probe_bytes, .committed_bytes=UINT64_C(0x100000003), .system_bytes=17, .device_bytes=19};
+    memcpy(output, &value, stats_probe_bytes);
     return 1;
 }
 static int32_t budget_probe_rc = 1;
@@ -1050,13 +1052,20 @@ static void stats_facade_probe(void) {
     telemetry_facade_probe();
     budget_facade_probe();
     _Static_assert(sizeof(R4GfxBufferStats) == 136 && offsetof(R4GfxBufferStats, system_bytes) == 56, "statistics prefix");
-    R4XStartR4Draw table = {.size=sizeof(table), .gfx_buffer_stats=(uintptr_t)old_stats_probe};
+    R4XStartR4Draw table = {.size=sizeof(table), .gfx_buffer_stats=(uintptr_t)stats_probe};
     R4Draw draw = {.table=&table};
     R4GfxBufferStats stats = {.device_bytes=79};
-    assert(r4draw_gfx_buffer_stats(&draw, &stats) == 1 && stats.size == 56 && stats.device_bytes == 0 && stats.committed_bytes == UINT64_C(0x100000003));
-    R4GfxDriverMemoryApi memory = {.version=1, .size=sizeof(memory), .buffer_stats=(uintptr_t)old_stats_probe};
-    stats.device_bytes=79;
-    assert(r4driver_memory_buffer_stats(&memory, &stats) == 1 && stats.size == 56 && stats.device_bytes == 0);
+    R4GfxDriverMemoryApi memory = {.version=1, .size=sizeof(memory), .buffer_stats=(uintptr_t)stats_probe};
+    const R4GfxBufferStats before_stats=stats;
+    const uint32_t short_sizes[]={56,135};
+    for(unsigned i=0;i<2;i++) {
+        stats_probe_bytes=short_sizes[i];
+        assert(r4draw_gfx_buffer_stats(&draw,&stats)==R4OS_GFX_BUFFER_ERROR_INVALID && memcmp(&stats,&before_stats,sizeof(stats))==0);
+        assert(r4driver_memory_buffer_stats(&memory,&stats)==R4OS_GFX_BUFFER_ERROR_INVALID && memcmp(&stats,&before_stats,sizeof(stats))==0);
+    }
+    stats_probe_bytes=sizeof(R4GfxBufferStats);
+    assert(r4draw_gfx_buffer_stats(&draw,&stats)==1 && stats.size==136 && stats.committed_bytes==UINT64_C(0x100000003) && stats.system_bytes==17 && stats.device_bytes==19);
+    assert(r4driver_memory_buffer_stats(&memory,&stats)==1 && stats.size==136 && stats.system_bytes==17 && stats.device_bytes==19);
 }
 static int32_t virtual_start_probe(const R4GfxVirtualRequest *input, R4GfxVirtualStatus *output) {
     assert(input->memory_generation == UINT64_C(0x100000035) && input->byte_offset == UINT64_C(0x200000035) && output->size == 80);
