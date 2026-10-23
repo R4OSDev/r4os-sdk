@@ -45983,7 +45983,8 @@
         "source_inventory",
         "local_contract_and_baseline",
         "language_libraries_current_60",
-        "library_projection_current_61"
+        "library_projection_current_61",
+        "geometry_current_83"
       ],
       "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten."
     },
@@ -53605,6 +53606,160 @@
       "new_rust_bare_qualification": false,
       "rust_direct_fp_simd_qualification": false,
       "limits": "No new whole-SDK acceptance. Earlier independent bare consumer evidence remains bounded to its recorded ABI; only current native C/Rust and normal Zig software guest deltas qualified here. Recovery remains independent until81; general package/export deltas82."
+    },
+    "geometry_current_83": {
+      "performed_in": "0.86.83",
+      "sdk": "0.64.93",
+      "contract": "0.64.45",
+      "libraries": "0.64.30",
+      "scope": "Shared R4GFX signed extents/exclusive edges and complete enabled-output spans; current Desktop axis-wise clamp, atomic layout admission/window rescue, finite normalized workspace and cursor/damage across layout changes. Ordinary signed positions, rotation/scales, output identities and actual retirement remain.",
+      "language_boundary": "Exactly the original Zig owner through unchanged compiler-projected C/Rust functions, layouts, fingerprint and native error/commit semantics. Actual C and Release-Rust current negative layout, wide span refusal/no-write and exclusive edge cases pass2/2 with previous grapheme/font owner assertions. No new independent geometry implementation.",
+      "native": "Surface9/9, Window/imported Surface21/21, final render-test93/93 and existing selected R4GFX topology/preferences fixture1/1 pass. Cursor painter matches original pixels at INT32_MIN/MAX; complete candidate admission and cursor span unions checked. R4GFX owner build0 retains exactly the prior R4L bytes.",
+      "nonfunctional_sdk_delta": "SDK version metadata plus removal of a stale diagnostic-prefix migration comment; program functions/ABI unchanged. Current-kernel/platform evidence80 reused.",
+      "guest": {
+        "check_desktop_passed": true,
+        "exact_child_completions": [
+          {
+            "handle": {
+              "instance_id": {
+                "value": "20",
+                "unit": "identifier"
+              },
+              "generation": {
+                "value": "20",
+                "unit": "identifier"
+              }
+            },
+            "sequence": {
+              "value": "3",
+              "unit": "count"
+            },
+            "exit_code": {
+              "value": "0",
+              "unit": "count"
+            },
+            "reaped": true
+          },
+          {
+            "handle": {
+              "instance_id": {
+                "value": "21",
+                "unit": "identifier"
+              },
+              "generation": {
+                "value": "21",
+                "unit": "identifier"
+              }
+            },
+            "sequence": {
+              "value": "4",
+              "unit": "count"
+            },
+            "exit_code": {
+              "value": "0",
+              "unit": "count"
+            },
+            "reaped": true
+          }
+        ],
+        "cleanup_acknowledged": true,
+        "maximize_restore_observed": true,
+        "screen": [
+          1280,
+          720
+        ],
+        "wide_window_observed_origin": [
+          0,
+          200
+        ],
+        "maximized_origin": [
+          0,
+          0
+        ],
+        "restored_origin": [
+          0,
+          200
+        ],
+        "unchanged_window_body_crop": [
+          0,
+          200,
+          1278,
+          622
+        ],
+        "identical_body_pixels": 539316,
+        "body_rgb_sha256": "1d6048f1d57742b21f7a8cbc1a6d92e752379811f4c1d1e509f83d5ea6373f33",
+        "crop_excludes_last_two_cursor_columns": true,
+        "physical_visibility": null,
+        "cursor_latency_ns": null,
+        "regular_shutdown_exit": 0,
+        "normal_gui_close_requested_via_alt_f4": true,
+        "installed": {
+          "image_sha256": "57f5494e6c8c942ee5618c0075bb4a4452f9863ab3a15399d5452cdd5f7f342f",
+          "kernel_sha256": "2197987829185cce3e76cf36e6788c30e4fcb6ef2362c4201cbc7c4203472d7c",
+          "artifacts": {
+            "Spectra": {
+              "version": "0.1.55",
+              "sha256": "47f87fcd8157c42ed99ffca3a05d10c36cc22c56409160a14e3e5415147923e8",
+              "target": "/R4OS/SOFTWARE/TERMINAL/DIAG/SPECTRA.R4X"
+            },
+            "R4GB": {
+              "version": "0.10.17",
+              "sha256": "f58927d52d4da0146f73a401ef4f4e981b058742de56053ae149f497b962a7a2",
+              "target": "/R4OS/SUBSYSTEMS/r4os.gb/R4GB.R4X"
+            },
+            "Appearance": {
+              "version": "0.1.28",
+              "sha256": "e79e3c9de731f8be64512fe58833d477dfd96778216c95c571031220636ea641",
+              "target": "/R4OS/SOFTWARE/DESKTOP/APPEARANCE.R4X"
+            },
+            "R4Basic": {
+              "version": "1.2.41",
+              "sha256": "fc97cb05a0b1f09a2ba65a346ecb222523edf7aa1b22e9dc0cd629c623e3b88d",
+              "target": "/R4OS/SUBSYSTEMS/r4os.basic/R4BASIC.R4X"
+            },
+            "Desktop": {
+              "version": "0.1.144",
+              "sha256": "c71adc96c829401b8e33b53736dbcb1f23afe72ad4e97c4deec1cdcb82c34c71",
+              "target": "/R4OS/SOFTWARE/DESKTOP/R4DESK.R4X"
+            },
+            "R4GFX": {
+              "version": "0.1.38",
+              "sha256": "2114d3b196ab44017ff1ea3dab4bd5b76b167e930f423c3e00391564abd63b34",
+              "target": "/R4OS/LIBS/R4GFX.R4L"
+            },
+            "R4SNES": {
+              "version": "0.22.20",
+              "sha256": "2bdf38ee7d1e5188cef77d3ea2c75ef551af62e4b112226876f53f63da8d1aeb",
+              "target": "/R4OS/SUBSYSTEMS/r4os.snes/R4SNES.R4X"
+            },
+            "DisplayDiag": {
+              "version": "0.1.71",
+              "sha256": "02f90eb65989d16f1d23a2e8b1e4ad360aa01be38adba451aa02fe06f2ca064f",
+              "target": "/R4OS/SOFTWARE/TERMINAL/DIAG/DISPLAYD.R4X"
+            }
+          }
+        }
+      },
+      "standard": {
+        "run_id": "ce0e2723-8fe5-433e-9612-d11057b3cdaf",
+        "source_bytes": 27055,
+        "source_sha256": "aff32f8264e78c473b4272f3dc5443d068dc509cc0f6c8d281c9058161a6e3af",
+        "put_status": 201,
+        "all_normalized_fields_equal": true,
+        "metrics": 5,
+        "samples": 30,
+        "scores": 6,
+        "all_six_areas_valid": true
+      },
+      "proof": "Docs/Desktop/GrafikMehrschirm07924.txt#Fortschreibung-0.86.83",
+      "reuse": [
+        "current_kernel_records_80",
+        "current_contract_78",
+        "current_providers_79"
+      ],
+      "windows_execution": false,
+      "physical_hardware_qualification": false,
+      "rust_direct_fp_simd_qualification": false
     }
   },
   "wave_bindings": [
@@ -53850,17 +54005,17 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.86.80",
-    "sdk": "0.64.92",
+    "performed_in": "0.86.83",
+    "sdk": "0.64.93",
     "contract": "0.64.45",
-    "libraries": "0.64.29",
-    "evidence": "current_kernel_records_80",
-    "scope": "Exactly27 reviewed watched source/generator/binding/minimum deltas updated after actual owner/contract/native-language/software-guest and final STANDARD proofs. All other628 hashes unchanged;655 owner files/35 scopes/180 root exports retained. Initial47 snapshot is historical; raw projection and R4DEV row reflect current controlled retirement. Unchanged language/role evidence reused, no new Windows/hardware/Rust-FP/SIMD/bare or performance claim."
+    "libraries": "0.64.30",
+    "evidence": "geometry_current_83",
+    "scope": "Exactly five reviewed watched inputs: shared topology owner, its existing C/Rust cases, SDK version metadata and a stale comment. Other650 hashes unchanged;655 owner files/35 scopes/180 root exports. Unchanged C/Rust projections share the qualified original owner; no ABI, hardware, Windows, direct bare FP/SIMD or performance claim."
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.86.78",
+    "reviewed_in": "0.86.83",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -54283,7 +54438,7 @@
       },
       {
         "path": "Repositories/Libraries/R4GFX/Display/topology.zig",
-        "sha256": "5c158c8ca851171296a8dfa397a93580d7a587949952aabe3151e15eb0485d02"
+        "sha256": "0fa07a6f807d6acfe404cb808bf35463b6ee2cb665f23c85f339817205f96671"
       },
       {
         "path": "Repositories/Libraries/R4GFX/Display/transfer.zig",
@@ -54943,11 +55098,11 @@
       },
       {
         "path": "Repositories/Libraries/Shared/Tests/native.rs",
-        "sha256": "e784df85511e48cd9e452dabd52df17332ab8fd3bbe351c1b56d4f0728b2c4dc"
+        "sha256": "df76b2ce72f58797ea1b779e2e81e78227e463ed7f335482b865d4b53aeb1eca"
       },
       {
         "path": "Repositories/Libraries/Shared/Tests/pure.c",
-        "sha256": "11ec7d25e957a1b91b17af1c39e9f813a73e491620f369810541649f3e1c89fc"
+        "sha256": "dfa9e42fa47123df24f29f0b1def1a812c64d87dfe1fa17b5bacdcac356cd558"
       },
       {
         "path": "Repositories/Libraries/consumer_adapters.zig",
@@ -55643,7 +55798,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "e90e87f8530f34d2cd864433de7a2f646ce24ccb2933d4549875319efd906af3"
+        "sha256": "538601f54e0ef39a1aa896f1cd60c4b2b03f7e01451de7b5ee526cae462abdba"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -56059,7 +56214,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/program.zig",
-        "sha256": "41be6edf48034e64c0406062dfe582a710392c6d2fa06e008a699b08a2bc7b40"
+        "sha256": "69acea723d0ecfa70865017e5b0fbbd9a0ae33a0f5101fd98ca91601802f4c9c"
       },
       {
         "path": "Repositories/SDK/r4os/protocol.zig",
@@ -57112,7 +57267,8 @@
         "proof": [
           "local_contract_and_baseline",
           "library_projection_current_61",
-          "language_libraries_current_60"
+          "language_libraries_current_60",
+          "geometry_current_83"
         ]
       },
       {

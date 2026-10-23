@@ -70,7 +70,6 @@ pub fn bundleValueFromR4XStart(raw: *const abi.R4XStartContext) ?Bundle {
         .net = resolveGroupTable(abi.R4XStartR4Net, xs, .r4net, abi.r4xstart_r4net_magic, 1, @offsetOf(abi.R4XStartR4Net, "tcp_connect") + @sizeOf(usize)),
         .audio = resolveGroupTable(abi.R4XStartR4Audio, xs, .r4audio, abi.r4xstart_r4audio_magic, abi.r4xstart_r4audio_version, abi.r4xstart_r4audio_size),
         // Diagnostic capabilities are admitted per exact current slot.
-        // Explicit prefix APIs stay separate until their owner migration.
         .dev = resolveGroupTable(abi.R4XStartR4Dev, xs, .r4dev, abi.r4xstart_r4dev_magic, 1, @offsetOf(abi.R4XStartR4Dev, "memory_summary") + @sizeOf(usize)),
     };
     if (candidate.sys == null) return null;
