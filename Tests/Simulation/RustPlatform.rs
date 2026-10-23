@@ -187,9 +187,11 @@ fn original_platform_owners_preserve_frames_progress_and_explicit_close() {
     assert_eq!(summary.version, 2);
     dev.program_instance_storage_summary_v2 = 0;
     assert_eq!(dev.program_instance_storage_summary_v2, 0);
+    summary.version = 777;
     let unavailable =
         unsafe { c::R4SdkGfxDeviceContext_programInstanceStorageSummary(0, raw_dev, &mut summary) };
     assert_eq!(unavailable.bits as i32, abi::err_no_fn);
+    assert_eq!(summary.version, 777);
     let mut perf = MaybeUninit::uninit();
     let owner = unsafe { c::R4SdkPlatformDevices(platform.native()) };
     assert_eq!(

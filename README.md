@@ -4,7 +4,8 @@ The host-neutral R4OS SDK provides Zig, Rust and C module roots, current
 platform and library helpers, build profiles and general project templates.
 The platform API and ABI remain canonical in the separate Contract repository.
 
-SDK0.64.90 packages the completed functional language-parity work47–71.
+SDK0.64.91 retains the completed functional language-parity work47–71 and
+closes the remaining SDK current-contract gaps in0.86.78.
 Select SDK, Contract, Libraries and the matched toolset explicitly; all are
 independent archives described by SDK-Release.json. Genuine host R4X, R4L,
 R4D and R4P roots, app/lowlevel entry and GUI subsystem hosts are available
@@ -36,6 +37,16 @@ current review identities live in drift_guard, with BOM/LF/CRLF normalized
 only for this review. Real build receipts still hash exact compiler bytes.
 Further public API changes must update the affected language facades/packages
 and evidence in this same matrix, including later Desktop/Library work.
+
+Current operations require their actual callbacks: complete glyph bitmap,
+real font revision/metrics, Unicode input, generation-bound network service
+requests and V2 default storage summaries. Missing capabilities fail without
+simulating an earlier OS. GUI beginPaint requires the existing six-callback
+frame transaction. Exact slot bounds, optional groups/hardware, direct drawing
+inside a valid transaction and explicit V1 diagnostics pending their coupled
+provider migration remain distinct. See DOCUMENTATION.de.txt for the minimum
+operations; the Contract ABI, toolchain pins and caller project independence
+remain unchanged.
 
 Rust host modules use the Contract's `Module/RustModuleV2.txt` and the matched
 isolated tool profile. SDK0.64.60 supplies the actual no_std source-to-R4M0

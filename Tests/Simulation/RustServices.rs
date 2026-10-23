@@ -35,6 +35,7 @@ static ALLOCATOR: Tracking = Tracking;
 unsafe extern "C" {
     fn sdk_service_c_case() -> i32;
     fn sdk_service_extra_c_case() -> i32;
+    fn sdk_net_current_admission(start: *const abi::R4XStartContext) -> i32;
     fn sdk_service_tables(
         sys: *mut abi::R4XStartR4Sys,
         net: *mut abi::R4XStartR4Net,
@@ -250,6 +251,7 @@ fn service_network_serial_deadline_owners_and_retained_requests() {
     assert_eq!(time::split_deadline(&wire[..n]).unwrap().1, None);
 
     let network = Network::new(&app).unwrap();
+    assert_eq!(unsafe { sdk_net_current_admission(app.start_context()) }, 0);
     use r4os_sdk::network::{Ipv4Address, SocketAddress, SocketState};
     assert!(network.available());
     assert_eq!(
@@ -295,10 +297,20 @@ fn service_network_serial_deadline_owners_and_retained_requests() {
     assert_eq!(&response[..3], b"UDP");
     assert_eq!(socket.close(Timeout::Forever).state, SocketState::Closed);
     // No legacy raw IPC substitution when the current callback is absent.
+    let before_missing = response;
+    let mut current_reply = [0xB7; abi::net_service_header_size as usize];
+    let before_reply = current_reply;
     assert_eq!(
-        network.net_service_request(1, 2, 3, &[], &mut response),
+        network.net_service_request(1, 2, 3, &[], &mut current_reply),
         abi::err_no_fn
     );
+    assert_eq!(current_reply, before_reply);
+    // Exact shared wire bounds are checked before optional capability lookup.
+    assert_eq!(
+        network.net_service_request(1, 2, 3, &[], &mut response),
+        abi::net_service_result_bad_request
+    );
+    assert_eq!(response, before_missing);
     let mut structured = abi::NetServiceTcpResult::default();
     assert_eq!(
         network.tcp_connect_service_result(10, 0, 2, 2, 1234, &mut structured),

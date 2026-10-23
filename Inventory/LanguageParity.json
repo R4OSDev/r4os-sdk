@@ -319,7 +319,8 @@
       },
       "evidence": [
         "source_inventory",
-        "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.49"
+        "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.49",
+        "current_contract_78"
       ],
       "shared_core": "SDK/r4os/import_spec.zig und startup_metadata.zig mit aktuellen Contractdefaults; ModuleCatalog/C-Appbuilder projizieren denselben Datensatz. Keine neue Prozess-/Kernelruntime oder Runtime-Zweitgrammatik.",
       "qualification": {
@@ -552,7 +553,8 @@
         "Repositories/SDK/Tests/Simulation/RustServices.rs",
         "Repositories/SDK/Tests/Simulation/ServiceNetworkCallbacks.c",
         "Repositories/SDK/Tests/Build/RustServices",
-        "Repositories/SDK/Tests/Simulation/NetworkPeer.py"
+        "Repositories/SDK/Tests/Simulation/NetworkPeer.py",
+        "current_contract_78"
       ],
       "shared_core": "Vorhandene C-AppServices/AppTray/AppNetwork/Serial/Timeout-Besitzer, Zig-ServiceLoop/-Deadline/-R4NET-Besitzer und native R4SYS/R4NET/R4DEV-Callbacks. Rust fuegt Leihen/Typen/echte Abschlussretention hinzu; keine zweite Netzwerk- oder Schedulingimplementierung."
     },
@@ -686,7 +688,8 @@
         "source_inventory",
         "gui_current_56",
         "graphics_current_57",
-        "platform_current_58"
+        "platform_current_58",
+        "current_contract_78"
       ],
       "shared_core": "Gemeinsame GUI-/Rasterkerne beim Besitzer; keine unabhaengigen Widget-/Unicodealgorithmen pro Sprache."
     },
@@ -724,7 +727,8 @@
       "evidence": [
         "source_inventory",
         "graphics_current_57",
-        "platform_current_58"
+        "platform_current_58",
+        "current_contract_78"
       ],
       "shared_core": "Kernel-API nur binden; R4GFX-Owner/Renderer und dessen C-ABI wiederverwenden."
     },
@@ -759,7 +763,8 @@
       },
       "evidence": [
         "source_inventory",
-        "platform_current_58"
+        "platform_current_58",
+        "current_contract_78"
       ],
       "shared_core": "Existing Zig Audio/PCM/Device/Power owners through one compiler-typed native boundary; current legacy C audio loop aligned, no third Rust algorithm."
     },
@@ -48596,14 +48601,15 @@
       "id": "font-old-os",
       "decision": "do_not_port_old_os_emulation",
       "wave": "0.86.56",
-      "residual_wave": "0.86.78",
       "sources": [
         "Repositories/SDK/r4os/app_gui.zig",
         "Repositories/SDK/r4os/program.zig",
         "Docs/SDK/README.txt"
       ],
       "rule": "Glyph-Row-Ersatz fuer alte Whole-Glyph-Tabellen, erfundene Fontrevision1 und Ersatz fuer fehlende alte Commandstreamfunktionen nicht neu anbieten. Fehlende Fonts, Softwareausgabe, einzelne optionale Hardware- oder Backendfunktionen sind weiterhin gueltige Fehler-/Funktionsfaelle.",
-      "result_56": "New Rust/C bridge rejects missing whole-glyph/font-revision/frame callbacks without row emulation or invented revision. Explicit immediate FrameCanvas remains current behavior. Existing Zig legacy helpers remain residual wave78."
+      "result_56": "New Rust/C bridge rejects missing whole-glyph/font-revision/frame callbacks without row emulation or invented revision. Explicit immediate FrameCanvas remains current behavior. Existing Zig legacy helpers remain residual wave78.",
+      "resolved_in": "0.86.78",
+      "result_78": "Original Zig/raw and C paths now require actual current callbacks; shared C/Rust success uses the same owner. Native three-language refusal/value/pixel cases and real C/Rust GUI consumer passed. Explicit V1 diagnostic APIs remain separate for coupled80."
     },
     {
       "id": "subsystem-copy",
@@ -48648,14 +48654,34 @@
     },
     {
       "id": "device-summary-default",
-      "decision": "current_v2_default_preserve_explicit_v1_data",
+      "decision": "current_v2_default_preserve_explicit_v1_until_coupled80",
       "wave": "0.86.58",
-      "residual_wave": "0.86.78",
       "sources": [
         "Repositories/SDK/r4os/gui_value_bridge.zig",
         "Repositories/SDK/Shared/C/include/r4os/app_devices.h"
       ],
-      "rule": "New foreign/default summaries use V2 directly, including the higher PerformanceView; missing old provider is not emulated. Explicit V1 records are current data functionality. Remaining original Zig default/provider fallbacks stay residual78; no new fallback ported."
+      "rule": "All generic/default storage summaries require the actual V2 callback and preserve caller output on absence. No automatic V1 projection. Explicit prefix callers/provider removal belongs to coupled80.",
+      "resolved_in": "0.86.78",
+      "result_78": "Original Zig/raw and C paths now require actual current callbacks; shared C/Rust success uses the same owner. Native three-language refusal/value/pixel cases and real C/Rust GUI consumer passed. Explicit V1 diagnostic APIs remain separate for coupled80."
+    },
+    {
+      "id": "sdk-current-operation-minima-78",
+      "decision": "require_actual_callback_per_operation",
+      "wave": "0.86.78",
+      "sources": [
+        "Repositories/SDK/Shared/C/include/r4os/app_devices.h",
+        "Repositories/SDK/Shared/C/include/r4os/app_gui.h",
+        "Repositories/SDK/Shared/C/include/r4os/r4desk.h",
+        "Repositories/SDK/Tools/NetBridgeGen/src/main.zig",
+        "Repositories/SDK/build.zig.zon",
+        "Repositories/SDK/r4os/app_gui.zig",
+        "Repositories/SDK/r4os/generated/net_facade.zig",
+        "Repositories/SDK/r4os/gui_value_bridge.zig",
+        "Repositories/SDK/r4os/program.zig",
+        "Repositories/SDK/r4os/r4xstart.zig"
+      ],
+      "provider": "Repositories/Kernel/Rust/program/runtime_tables.rs; normal kernel0.1.381 BOOT/ELF unchanged",
+      "rule": "Current Contract44 and exact technical SDK/toolchain inputs. Keep group/import/magic/version/size/nullable/tombstone admission. Each used current callback is required; paint requires begin/append/commit/cancel/info/read. Optional unrelated capabilities and offscreen/host roles do not require a full table. Missing operations refuse or retain their established scalar0/void convention without synthesizing fonts, consuming a byte key, polling raw IPC, down-projecting default V2 or creating an old paint transaction. Current direct canvas operations and hardware/data options remain."
     }
   ],
   "evidence": {
@@ -53366,6 +53392,63 @@
         "tooling_templates_current_70",
         "independent_desktop_current_71"
       ]
+    },
+    "current_contract_78": {
+      "complete": true,
+      "performed_in": "0.86.78",
+      "sdk": "0.64.91",
+      "contract": "0.64.44",
+      "libraries": "0.64.27",
+      "canonical_abi_changed": false,
+      "scope": "Only the ten reviewed remaining current-operation owner/bridge/C header/version inputs. Existing full language/role evidence47-72 retained; no new broad suite or old-OS qualification.",
+      "native": {
+        "program_owner_cases": 3,
+        "raw_owner_cases": 2,
+        "gui_platform_owner_steps": "pass",
+        "generator_checks": 3,
+        "rust_platform_gui_graphics_release": 3,
+        "platform_safety_compile_negatives": 4,
+        "rust_services_release": 1,
+        "service_safety_compile_negatives": 2,
+        "real_c_network_bridge": "valid24-byte missing callback and invalid16-byte bounds, unchanged outputs",
+        "c_gui_platform": "original pixel/clear/clip/alpha/frame/input/format/close cases retained and passed"
+      },
+      "guest": {
+        "accelerator": "KVM",
+        "cpus": 4,
+        "graphics": "software",
+        "release": "0.86.78",
+        "kernel": "0.1.381",
+        "kernel_sha256": "e06111b9363b44712fe69ded9ddfc3edb1f60c5c271c59a42238a816b0882340",
+        "rust_c_gui_sha256": "2e1d4ce3af301ae05d6544d9ce499db6f280caccf44dce0b83764d45d78c5899",
+        "c_console_sha256": "78251d112118ca1a835c82630564d3c6c92aa59e890ac064b10a885e131d1064",
+        "uploaded_bytes_full_readback": true,
+        "c_console": "files/VM/heap/full close and actual ERRORLEVEL0",
+        "rust_c_gui": "original frames/UTF32/fullscreen/restore/normal close PASS",
+        "qemu_shutdown_exit": 0
+      },
+      "ordinary_artifacts": {
+        "owners_rebuilt": 27,
+        "changed_and_versioned": 23,
+        "desktop": "0.1.142",
+        "spectra": "0.1.54",
+        "kernel_winsvc_terminal_basic_gb_snes": "byte-identical",
+        "sdk_smokes": "APPCCON0.1.3 and SUBSYSOK0.66.8 changed; APPZCON/RSRCFIX/SDKMAP identical"
+      },
+      "proof": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.78",
+      "performance": "One mandatory final normal STANDARD is recorded separately in the owner document; no speed or physical/Windows/Rust-FP qualification inferred from these functional peers.",
+      "windows_execution": false,
+      "hardware_qualification": false,
+      "rust_direct_fp_simd_qualification": false,
+      "unchanged_evidence": [
+        "source_review_current_72",
+        "resource_current_54",
+        "service_network_current_55",
+        "gui_current_56",
+        "graphics_current_57",
+        "platform_current_58",
+        "independent_desktop_current_71"
+      ]
     }
   },
   "wave_bindings": [
@@ -53611,17 +53694,17 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.86.72",
-    "sdk": "0.64.90",
+    "performed_in": "0.86.78",
+    "sdk": "0.64.91",
     "contract": "0.64.44",
     "libraries": "0.64.27",
-    "evidence": "source_review_current_72",
-    "scope": "71 current180root/222historical+additional source and24local-contract review retained; source review gate watches actual current bodies/bridges/C/Rust projections. No runtime body or canonical ABI change after71; independent Linux/KVM4 desktop-host and original functional waves reused. Windows execution explicitly skipped by user."
+    "evidence": "current_contract_78",
+    "scope": "Ten actual SDK owner/bridge/C header/version deltas reviewed and qualified with original native Zig/C/Rust owner, negative, pixel and real KVM4 C/Rust consumers. Current per-operation minima, no synthetic old-OS behavior. Unchanged full functional scope47-72 reused; explicit provider/prefix/subsystem residual80 remains separately tracked. Windows/hardware/direct Rust FP/SIMD/performance not inferred."
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.86.72",
+    "reviewed_in": "0.86.78",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -54996,11 +55079,11 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_devices.h",
-        "sha256": "10db4325028695bfd20e728b24ecf44f0fec48d5951347816251ed000905bc4a"
+        "sha256": "f6182f26ca0b8f315ee3069db7b78957c038459f02dc88b7ccb4a6f24fd07e6b"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_gui.h",
-        "sha256": "90d4d155d8eea9e6914588b557198c36660204a5fb17f7dd7b1e7ef35586223b"
+        "sha256": "3621f2c48a2dbd9c0dd12cbb3fbab37ebff23bd77511728dcc38e94a25fcceab"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_network.h",
@@ -55120,7 +55203,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/r4desk.h",
-        "sha256": "e4b16a05a24d1acedf5c0b2c49dfe267eac33b48323dfcfd3a40b42d369965a0"
+        "sha256": "69fd1f720870602a6bd4c94ceb007b164eae42f7ddf186feed6ab626e97b16bc"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/r4dev.h",
@@ -55276,7 +55359,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/NetBridgeGen/src/main.zig",
-        "sha256": "3419432380cd67b815c3419fbf639bd04a4347319d175f7376a7ba47a7f12b60"
+        "sha256": "247222450c6dd83069fcae572a1f3f3f448f3c2dfcc38441c19d2a018574206b"
       },
       {
         "path": "Repositories/SDK/Tools/New-Project.ps1",
@@ -55404,7 +55487,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "19d999b2a10db6bed7c86925a34d452059fdccc010f40b38a3d7870d355b75e4"
+        "sha256": "c14ec36c118dd789cac4bb70a5c3437a19fdb9d1dc2ee3b00645eafea6f8da24"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -55432,7 +55515,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/app_gui.zig",
-        "sha256": "6bbac0da7a1a361381595172d7530d1e67688f976f9075bd708a216a506b062a"
+        "sha256": "5b824308415f6351f3699d2330522a0092053b7c106cb4a766a178ae49d4997c"
       },
       {
         "path": "Repositories/SDK/r4os/app_network.zig",
@@ -55624,7 +55707,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/generated/net_facade.zig",
-        "sha256": "4b1120e228ccc24d0e208387edfe5b9776046017ff347a5167a3bec35af7faf1"
+        "sha256": "968cd770bfda99731b1b982a46bbde94e9f83df07e3d70ea2fb2a101f1f78ad0"
       },
       {
         "path": "Repositories/SDK/r4os/generated/subsystem_fingerprint.zig",
@@ -55700,7 +55783,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/gui_value_bridge.zig",
-        "sha256": "77158802f9494a9804e766fc7a3dbd5580bd702fe380749478967a2d2879d565"
+        "sha256": "f8b54654cfb6848abaa141178d5b5c4fa3235db316f5e72405b4726d1b4c9114"
       },
       {
         "path": "Repositories/SDK/r4os/heap_runtime.zig",
@@ -55820,7 +55903,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/program.zig",
-        "sha256": "012c29584d4efd5ae16c408d88ed3c1e6f9c0285455ad52d2d4a0e5ecbfabaea"
+        "sha256": "b8f3b62bd52b1553eccedd3ce8bfe0b3fbd0bfebc01c0285957d4a6aa6d1df5a"
       },
       {
         "path": "Repositories/SDK/r4os/protocol.zig",
@@ -55872,7 +55955,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/r4xstart.zig",
-        "sha256": "50fe5902fee73ec85f063bd40520b665d562f67a08eaf1a444c1eaeb0aa9995a"
+        "sha256": "e44aab31f39c0191afead414e38260b4b6cdb6105f1ea3a6c23ebc52511988fa"
       },
       {
         "path": "Repositories/SDK/r4os/raster.zig",
@@ -56332,7 +56415,8 @@
         ],
         "proof": [
           "rust_qualified_classes",
-          "independent_desktop_current_71"
+          "independent_desktop_current_71",
+          "current_contract_78"
         ]
       },
       {
@@ -56470,7 +56554,8 @@
         "id": "network",
         "zig": [
           "Repositories/SDK/r4os/app_network.zig",
-          "Repositories/SDK/r4os/r4net.zig"
+          "Repositories/SDK/r4os/r4net.zig",
+          "Repositories/SDK/r4os/generated/net_facade.zig"
         ],
         "c": [
           "Repositories/SDK/Shared/C/include/r4os/app_network.h",
@@ -56482,7 +56567,8 @@
           "Repositories/SDK/Rust/src/network/sockets.rs"
         ],
         "proof": [
-          "service_network_current_55"
+          "service_network_current_55",
+          "current_contract_78"
         ]
       },
       {
@@ -56513,7 +56599,8 @@
           "Repositories/SDK/r4os/gui_shapes.zig",
           "Repositories/SDK/r4os/input_events.zig",
           "Repositories/SDK/r4os/r4desk.zig",
-          "Repositories/SDK/r4os/window_mode.zig"
+          "Repositories/SDK/r4os/window_mode.zig",
+          "Repositories/SDK/r4os/gui_value_bridge.zig"
         ],
         "c": [
           "Repositories/SDK/Shared/C/include/r4os/app_gui.h",
@@ -56528,7 +56615,8 @@
           "Repositories/SDK/Rust/src/gui/text.rs"
         ],
         "proof": [
-          "gui_current_56"
+          "gui_current_56",
+          "current_contract_78"
         ]
       },
       {
@@ -56539,7 +56627,8 @@
           "Repositories/SDK/r4os/gfx_queue.zig",
           "Repositories/SDK/r4os/gfx_telemetry.zig",
           "Repositories/SDK/r4os/graphics_status.zig",
-          "Repositories/SDK/r4os/r4draw.zig"
+          "Repositories/SDK/r4os/r4draw.zig",
+          "Repositories/SDK/r4os/gui_value_bridge.zig"
         ],
         "c": [
           "Repositories/SDK/Shared/C/include/r4os/gui_bridge.h",
@@ -56551,7 +56640,8 @@
           "Repositories/SDK/Rust/src/graphics/mod.rs"
         ],
         "proof": [
-          "graphics_current_57"
+          "graphics_current_57",
+          "current_contract_78"
         ]
       },
       {
@@ -56580,7 +56670,8 @@
         "zig": [
           "Repositories/SDK/r4os/app_devices.zig",
           "Repositories/SDK/r4os/power_profiles.zig",
-          "Repositories/SDK/r4os/r4dev.zig"
+          "Repositories/SDK/r4os/r4dev.zig",
+          "Repositories/SDK/r4os/gui_value_bridge.zig"
         ],
         "c": [
           "Repositories/SDK/Shared/C/include/r4os/app_devices.h",
@@ -56595,7 +56686,8 @@
           "Repositories/SDK/Rust/src/platform/power.rs"
         ],
         "proof": [
-          "platform_current_58"
+          "platform_current_58",
+          "current_contract_78"
         ]
       },
       {

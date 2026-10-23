@@ -310,5 +310,6 @@ int main(void) {
     if (r4dev_program_instance_storage_summary_v2(&app.devices, &instance_storage) != -1 || instance_storage.version != 0u || instance_storage.size != sizeof(instance_storage) - 1u || ((uint8_t *)&instance_storage)[8] != 0xB6u) return 19;
     raw_dev.size = 288u;
     if (r4_program_instance_storage_summary(&performance, &instance_storage) != R4OS_ERR_NO_FN) return 20;
+    if (instance_storage.version != 0u || instance_storage.size != sizeof(instance_storage) - 1u || ((uint8_t *)&instance_storage)[8] != 0xB6u) return 43;
     return 0;
 }

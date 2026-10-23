@@ -41,14 +41,10 @@ static inline int32_t r4desk_mouse_motion(const R4Desk *desk, R4MouseMotion *out
 }
 
 static inline uint32_t r4desk_read_key_codepoint(R4Desk *desk) {
-    if (desk == 0 || desk->table == 0) return 0;
-    if (desk->table->read_key_codepoint != 0) {
-        R4DeskReadKeyCodepointFn fn = (R4DeskReadKeyCodepointFn)(uintptr_t)desk->table->read_key_codepoint;
-        return fn();
-    }
-    if (desk->table->read_key == 0) return 0;
-    R4DeskReadKeyFn legacy_fn = (R4DeskReadKeyFn)(uintptr_t)desk->table->read_key;
-    return legacy_fn();
+    if (!desk || !desk->table ||
+        desk->table->size < offsetof(R4XStartR4Desk, read_key_codepoint) + sizeof(uintptr_t) ||
+        !desk->table->read_key_codepoint) return 0;
+    return ((R4DeskReadKeyCodepointFn)(uintptr_t)desk->table->read_key_codepoint)();
 }
 
 static inline int32_t r4desk_remote_frame_snapshot_acquire(const R4Desk *desk, uint32_t expected, R4RemoteFrameInfo *info, R4RemoteFrameLease *lease) {

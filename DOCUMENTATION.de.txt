@@ -222,20 +222,20 @@ abfragen koennen. Paletten-, Modus- und Viewportaenderungen erzwingen einen
 Vollframe; nach einer Vollbasis und hoechstens 31 Deltas wird die Kette durch
 einen neuen Vollframe verdichtet.
 
-R4DRAW-v6 liefert mit `font_glyph_bitmap` eine komplette, auf 40 Zeilen
-begrenzte Glyph-Bitmap samt Layoutmetriken in einem Aufruf. Dadurch entfallen
-bei aktuellen Kerneln die wiederholte Glyphsuche und ein ABI-Aufruf je Zeile.
-Der alte `font_glyph_row`-Slot bleibt erhalten. Fehlt der neue optionale Slot,
-setzt das SDK die Bitmap daraus zusammen; die Pixel bleiben exakt, waehrend
-proportionale Einzelglyphmetriken auf Face-Breite und maximalen Advance
-zurueckfallen.
+`font_glyph_bitmap` liefert eine komplette, auf 40 Zeilen begrenzte
+Glyph-Bitmap samt Layoutmetriken in einem Aufruf. Das aktuelle SDK verlangt
+dafuer diesen Callback und meldet bei fehlender/zu kurzer Tabelle NoFn;
+der Ausgabepuffer bleibt unberuehrt. Der eigenstaendige `font_glyph_row`-
+Aufruf bleibt erhalten, wird aber nicht zum Nachbilden einer Bitmap genutzt.
+`font_info`, `font_measure` und `text_font` verwenden ebenfalls nur ihre
+jeweiligen echten Callbacks, ohne erfundene Builtin-Metriken oder Fonts.
 
-R4DRAW-v7 haengt `font_revision` an. Der von `fontRevision()` gelieferte
-Wert ist ungleich null und aendert sich nach jedem erfolgreich abgeschlossenen
-Reload des Fontkatalogs. Caches duerfen damit Font-ID, Revision und Codepoint
-als Schluessel verwenden und muessen bei einem Revisionswechsel ihre alten
-Layouts und Abdeckungen verwerfen. Fehlt der optionale Slot in einer aelteren
-Tabelle, liefert die SDK-Fassade die stabile Kompatibilitaetsrevision 1.
+`fontRevision()` gibt die wirkliche Kataloggeneration zurueck. Null bedeutet
+unbekannt/nicht verfuegbar und wird nicht durch eine erfundene Generation
+ersetzt. Ein erfolgreicher Fontreload aendert die echte Revision; Caches
+verwerfen dann ihre alten Layouts und Abdeckungen. Die C-/Rust-Bruecke
+meldet einen fehlenden Callback ausdruecklich als NoFn. Alle Sprachen nutzen
+bei vorhandenem Callback denselben Zig-Besitzer und dessen wirklichen Wert.
 
 R4DRAW-v8 ergaenzt vollstaendig ersetzende GUI-Generationen und native
 XRGB32-Quelltiles. Fuer einen geaenderten XRGB32-Frame publiziert der
@@ -1026,3 +1026,24 @@ reserviert: immer-1, ohne Argumentzugriff oder Seiteneffekt. Der SDK-Helper
 registerSynthEngine entfaellt; registerSynthEngineEx und die typisierten
 AudioBackend-v2/v3/v4-Helper bleiben. DriverApi36/656 samt Slotpositionen
 96/120 und alle bestehenden Idle-/Stop-/Besitz-/Abbauvertraege bleiben stabil.
+
+
+Aktueller SDK-Mindestvertrag seit 0.64.91 / Produkt 0.86.78
+---------------------------------------------------------
+Technische Contract-/SDK-/Toolchainbindungen bleiben exakt; Versionsauswahl
+und Projektpins gehoeren zum externen Verbraucher. Die Plattformtabellen
+bleiben slotweise groessen-/nullgeprueft: eine optionale Gruppe oder ein
+Offscreenkontext muss nicht alle fachfremden GUI-/Hardwarefunktionen besitzen.
+Der jeweils verwendete aktuelle Callback ist der Mindestvertrag der Operation:
+- Fonts: font_info/font_measure/text_font bzw. font_glyph_bitmap/font_revision.
+- Unicode: read_key_codepoint; fehlend liefert 0, ohne read_key zu verbrauchen.
+- Netzwerk: net_service_request mit generationengebundener Kernelzuordnung;
+  fehlend NoFn/NoGroup, kein selbstgebauter Raw-IPC-Request/Response-Ersatz.
+- Generische Programmspeicheransicht: program_instance_storage_summary_v2;
+  fehlend NoFn/NoGroup, unveraenderter Ausgabepuffer. Explizite V1-Zugriffe
+  bleiben bis zur gekoppelten Provider-/Consumerumstellung in 0.86.80 getrennt.
+- beginPaint: alle sechs bestehenden Frame-Callbacks begin/append/commit/
+  cancel/gui_frame_info/gui_frame_read; fehlend keine Paint-Transaktion.
+  Direkte CLEAR-/Rasteroperationen innerhalb einer echten aktuellen
+  Transaktion, optionale GPU-/Formatwege und genaue Ressourcenquittungen bleiben.
+Es werden keine Slots umnummeriert und keine Layouts oder CPUprofile geaendert.

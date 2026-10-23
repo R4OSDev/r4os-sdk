@@ -233,11 +233,12 @@ static inline R4MessageNext r4_window_wait_message(R4Window *window, R4Timeout t
 }
 
 static inline int r4_window_begin_paint(R4Window *window, R4PaintContext *out) {
-    if (window == 0 || out == 0 || window->app == 0) return 0; *out = (R4PaintContext){0}; out->window = window;
+    if (!window || !out || !window->app ||
+        !r4draw_supports_gui_frame_contract(&window->app->drawing)) return 0;
+    *out = (R4PaintContext){0}; out->window = window;
     if (r4desk_gui_window_info(&window->app->desktop, &out->info) < 0 || out->info.client_w <= 0 || out->info.client_h <= 0) return 0;
-    out->transactional = (uint8_t)r4draw_supports_gui_frame_contract(&window->app->drawing);
-    if (out->transactional && r4draw_gui_frame_begin(&window->app->drawing) < 0) return 0;
-    out->active = 1u; return 1;
+    if (r4draw_gui_frame_begin(&window->app->drawing) < 0) return 0;
+    out->transactional = 1u; out->active = 1u; return 1;
 }
 
 static inline R4Canvas r4_paint_canvas(R4PaintContext *paint) { R4Canvas result = {paint}; return result; }

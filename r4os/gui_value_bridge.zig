@@ -98,29 +98,19 @@ pub export fn R4SdkGuiInvoke(fingerprint: u64, operation: u32, values: ?[*]const
             if (count != info.params.len or (count != 0 and values == null)) return failed();
             var args: std.meta.ArgsTuple(F) = undefined;
             inline for (info.params, 0..) |param, i| args[i] = decode(param.type.?, values.?[i]) catch return failed();
-            // New foreign-language entry targets the current callbacks. Do
-            // not expose the old row-by-row glyph or invented revision paths.
+            // Keep explicit foreign missing-capability errors. Successful
+            // work and values use the same current Zig owner in all languages.
             if (comptime entry.owner == schema.draw.Context and std.mem.eql(u8, entry.name, "fontGlyphBitmap")) {
                 if (!args[0].hasFn("font_glyph_bitmap")) return .{ .status = abi.err_no_fn };
             }
             if (comptime entry.owner == schema.draw.Context and std.mem.eql(u8, entry.name, "fontRevision")) {
                 if (!args[0].hasFn("font_revision")) return .{ .status = abi.err_no_fn };
-                const callback: abi.R4DrawFns.font_revision = @ptrFromInt(args[0].base.bundle.?.draw.?.font_revision);
-                return .{ .bits = callback(), .flags = present };
             }
             if (comptime entry.owner == schema.app_gui.Window and std.mem.eql(u8, entry.name, "beginPaint")) {
                 if (!args[0].draw.supportsGuiFrameContract()) return .{ .status = abi.err_no_fn };
             }
             if (comptime entry.owner == schema.app_gui and std.mem.eql(u8, entry.name, "beginPaintForSize")) {
                 if (!args[0].supportsGuiFrameContract()) return .{ .status = abi.err_no_fn };
-            }
-            if (comptime entry.owner == schema.dev.Context and std.mem.eql(u8, entry.name, "programInstanceStorageSummary")) {
-                return store(info.return_type.?, args[0].programInstanceStorageSummaryV2(args[1]), output) catch failed();
-            }
-            if (comptime entry.owner == schema.app_devices.PerformanceView and std.mem.eql(u8, entry.name, "programInstanceStorage")) {
-                var summary: abi.ProgramInstanceStorageSummary = .{};
-                const result: ?abi.ProgramInstanceStorageSummary = if (args[0].raw.programInstanceStorageSummaryV2(&summary) > 0) summary else null;
-                return store(info.return_type.?, result, output) catch failed();
             }
             return store(info.return_type.?, @call(.auto, function, args), output) catch failed();
         }

@@ -66,10 +66,12 @@ static inline int32_t r4_performance_stack_fault(R4PerformanceView *view, uint32
 
 static inline int32_t r4_performance_summary(R4PerformanceView *view, R4ProgramPerformanceSummary *out) { const R4XStartR4Dev *table = view != 0 && view->app != 0 ? view->app->devices.table : 0; return table != 0 && table->performance_summary != 0u && out != 0 ? ((R4DevPerformanceSummaryFn)(uintptr_t)table->performance_summary)(out) : R4OS_ERR_NO_FN; }
 static inline int32_t r4_program_instance_storage_summary(R4PerformanceView *view, R4ProgramInstanceStorageSummary *out) {
-    if (view == 0 || view->app == 0 || out == 0) return R4OS_ERR_NO_FN;
+    if (!view || !view->app || !out) return R4OS_ERR_NO_FN;
+    const R4XStartR4Dev *table = view->app->devices.table;
+    if (!table || table->size < offsetof(R4XStartR4Dev, program_instance_storage_summary_v2) + sizeof(uintptr_t) ||
+        !table->program_instance_storage_summary_v2) return R4OS_ERR_NO_FN;
     *out = (R4ProgramInstanceStorageSummary){0};
-    out->version = 2u;
-    out->size = (uint32_t)sizeof(*out);
+    out->version = 2u; out->size = (uint32_t)sizeof(*out);
     return r4dev_program_instance_storage_summary_v2(&view->app->devices, out);
 }
 static inline int32_t r4_program_instance_storage_self_test(R4PerformanceView *view, R4ProgramInstanceStorageSelfTestResult *out) { const R4XStartR4Dev *table = view != 0 && view->app != 0 ? view->app->devices.table : 0; return table != 0 && table->program_instance_storage_self_test != 0u && out != 0 ? ((R4DevProgramInstanceStorageSelfTestFn)(uintptr_t)table->program_instance_storage_self_test)(out) : R4OS_ERR_NO_FN; }

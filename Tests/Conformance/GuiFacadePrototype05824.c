@@ -1101,7 +1101,23 @@ static void virtual_facade_probe(void) {
     R4GfxVirtualJob job = {.token = {.opaque2 = 79}}, saved = job;
     assert(r4driver_memory_virtual_take(&driver, &handle, &job) == -4 && memcmp(&job, &saved, sizeof(job)) == 0);
 }
+static uint32_t current_byte_reads, current_codepoint_reads;
+static uint8_t current_byte_read(void) { ++current_byte_reads; return 'A'; }
+static uint32_t current_codepoint_read(void) { ++current_codepoint_reads; return 0x1F642u; }
+static void test_current_codepoint_contract(void) {
+    current_byte_reads = current_codepoint_reads = 0u;
+    R4XStartR4Desk table = {0}; table.size = sizeof(table); table.read_key = (uintptr_t)&current_byte_read;
+    R4Desk desk = {&table};
+    assert(r4desk_read_key_codepoint(&desk) == 0u && current_byte_reads == 0u);
+    table.read_key_codepoint = (uintptr_t)&current_codepoint_read;
+    table.size = offsetof(R4XStartR4Desk, read_key_codepoint);
+    assert(r4desk_read_key_codepoint(&desk) == 0u && current_codepoint_reads == 0u);
+    table.size = sizeof(table);
+    assert(r4desk_read_key_codepoint(&desk) == 0x1F642u && current_codepoint_reads == 1u && current_byte_reads == 0u);
+}
+
 int main(void) {
+    test_current_codepoint_contract();
     virtual_facade_probe();
     capture_facade_probe();
     stats_facade_probe();
@@ -1142,6 +1158,16 @@ int main(void) {
     assert(!r4_event_loop_poll(&window.events,&message));close_requested=0;
 
     R4PaintContext paint;
+    assert(!r4_window_begin_paint(&window, &paint));
+    assert(draw_count == 0u && present_count == 0u && frame_begin_count == 0u);
+
+    draw.gui_frame_begin = (uintptr_t)&fake_frame_begin;
+    draw.gui_frame_append = (uintptr_t)&fake_frame_append;
+    draw.gui_frame_commit = (uintptr_t)&fake_frame_commit;
+    draw.gui_frame_cancel = (uintptr_t)&fake_frame_cancel;
+    draw.gui_frame_info = (uintptr_t)&fake_frame_info;
+    draw.gui_frame_read = (uintptr_t)&fake_frame_read;
+    assert(r4draw_supports_gui_frame_contract(&app.drawing));
     assert(r4_window_begin_paint(&window, &paint));
     R4Canvas canvas = r4_paint_canvas(&paint);
     assert(r4_canvas_clear(canvas, 0u) == 0);
@@ -1152,24 +1178,14 @@ int main(void) {
     assert(alpha8_count == 1u && alpha8_x == 0 && alpha8_y == 0);
     assert(alpha8_width == 2u && alpha8_height == 1u && alpha8_stride == 4u);
     assert(alpha8_first == 50u);
-    assert(r4_paint_present(&paint) == 0);
-    assert(r4_paint_present(&paint) == R4OS_ERR_NO_FN);
-    assert(draw_count >= 2u && present_count == 1u);
-
-    draw.gui_frame_begin = (uintptr_t)&fake_frame_begin;
-    draw.gui_frame_append = (uintptr_t)&fake_frame_append;
-    draw.gui_frame_commit = (uintptr_t)&fake_frame_commit;
-    draw.gui_frame_cancel = (uintptr_t)&fake_frame_cancel;
-    draw.gui_frame_info = (uintptr_t)&fake_frame_info;
-    draw.gui_frame_read = (uintptr_t)&fake_frame_read;
-    assert(r4draw_supports_gui_frame_contract(&app.drawing));
-    assert(r4_window_begin_paint(&window, &paint));
     R4GuiFrameCommand command = {0}; command.version = R4OS_GUI_FRAME_COMMAND_VERSION; command.size = R4OS_GUI_FRAME_COMMAND_SIZE; command.kind = R4OS_GUI_FRAME_COMMAND_KIND_TEXT; command.resource_bytes = 4u;
     assert(r4draw_gui_frame_append(&app.drawing, &command, 1u, (const uint8_t *)"R4OS", 4u) == R4OS_GUI_FRAME_RESULT_OK);
     assert(r4draw_gui_frame_append(&app.drawing, 0, 1u, 0, 0u) == R4OS_GUI_FRAME_ERROR_INVALID);
     assert(frame_append_count == 2u);
     assert(r4_paint_present(&paint) == R4OS_GUI_FRAME_RESULT_OK);
     assert(frame_begin_count == 1u && frame_commit_count == 1u);
+    assert(r4_paint_present(&paint) == R4OS_ERR_NO_FN);
+    assert(draw_count >= 2u && present_count == 0u);
     R4ProgramProcessHandle handle = {0}; handle.instance_id = 4u; handle.generation = 9u;
     R4GuiFrameInfo frame_info = {0};
     assert(r4draw_gui_frame_info(&app.drawing, &handle, &frame_info) == R4OS_GUI_FRAME_RESULT_OK);

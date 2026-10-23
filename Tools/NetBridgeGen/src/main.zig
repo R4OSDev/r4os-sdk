@@ -109,7 +109,6 @@ fn emit(c: *std.Io.Writer, z: *std.Io.Writer) !void {
         }
         try c.writeAll(");\n");
         try z.print(") callconv(.c) {s} {{\n    const bundle = bridge.bundle(context) orelse return {s};\n    const owner = net.Context.init(&bundle);\n", .{ zResult(Ret), failure(Ret) });
-        if (comptime std.mem.eql(u8, decl.name, "netServiceRequest")) try z.writeAll("    if (!owner.hasFn(\"net_service_request\")) return abi.err_no_fn; // No old raw-IPC replacement.\n");
         inline for (f.params[1..], 0..) |param, i| {
             const T = param.type.?;
             if (comptime resolverPointer(T)) try z.print("    var result{d}: program.ResolverResult = .{{}};\n", .{i});

@@ -292,16 +292,13 @@ pub const PaintContext = struct {
 };
 
 /// Begins one complete GUI frame for applications that own their window loop
-/// directly.  Older R4DRAW tables retain the legacy present path; current
-/// tables always publish or discard one explicit dynamic frame.
+/// directly. The current six-callback frame contract is required; no
+/// automatic legacy paint/present transaction is synthesized.
 pub fn beginPaintForSize(draw: *const r4draw.Context, width: i32, height: i32) PaintOpen {
-    if (width <= 0 or height <= 0) return .{ .failure = abi.err_no_fn };
-    const transactional = draw.supportsGuiFrameContract();
-    if (transactional) {
-        const raw = draw.guiFrameBegin();
-        if (raw < 0) return .{ .failure = raw };
-    }
-    return .{ .paint = .{ .canvas = Canvas.initSize(draw, width, height), .transactional = transactional } };
+    if (width <= 0 or height <= 0 or !draw.supportsGuiFrameContract()) return .{ .failure = abi.err_no_fn };
+    const raw = draw.guiFrameBegin();
+    if (raw < 0) return .{ .failure = raw };
+    return .{ .paint = .{ .canvas = Canvas.initSize(draw, width, height), .transactional = true } };
 }
 
 pub const Window = struct {

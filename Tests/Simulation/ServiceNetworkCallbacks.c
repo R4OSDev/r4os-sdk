@@ -3,6 +3,7 @@
 #include "../Conformance/ServiceNetworkFacadePrototype05826.c"
 #undef main
 #include <r4os/facades.h>
+#include <r4os/net_bridge.h>
 #include <assert.h>
 
 static uint64_t clock_tick=100, last_wait;
@@ -90,4 +91,14 @@ int sdk_service_extra_c_case(void){
     R4XStartContext ctx={.instance_id=42};app.context=&ctx;sys.size=offsetof(R4XStartR4Sys,program_open_handle);sys.program_open_handle=(uintptr_t)&forbidden_open;
     R4Tray tray;forbidden_calls=0;if(r4_app_tray(&app,&tray)!=R4OS_ERR_NO_FN||forbidden_calls)return 5;
     return 0;
+}
+
+/* Same typed bridge used by a real C consumer, with a valid current import. */
+int sdk_net_current_admission(const R4XStartContext *start) {
+    uint8_t response[R4OS_NET_SERVICE_HEADER_SIZE], before[sizeof(response)];
+    memset(response, 0xB7, sizeof(response)); memcpy(before, response, sizeof(before));
+    if (R4SdkNet_netServiceRequest(start, 1, 2, 3, 0, 0, response, sizeof(response)) != R4OS_ERR_NO_FN) return 1;
+    if (memcmp(response, before, sizeof(response))) return 2;
+    if (R4SdkNet_netServiceRequest(start, 1, 2, 3, 0, 0, response, sizeof(response)-1) != R4OS_NET_SERVICE_RESULT_BAD_REQUEST) return 3;
+    return memcmp(response, before, sizeof(response)) ? 4 : 0;
 }

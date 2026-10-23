@@ -1,9 +1,7 @@
 const std = @import("std");
 const r4os = @import("r4os");
 
-fn nativeSubmitProbe(queue: *const r4os.abi.GfxQueueHandle, submission: *const r4os.abi.GfxSubmission,
-    native: *const r4os.abi.GfxNativeSubmission, out: *r4os.abi.GfxFenceStatus) callconv(.c) i32
-{
+fn nativeSubmitProbe(queue: *const r4os.abi.GfxQueueHandle, submission: *const r4os.abi.GfxSubmission, native: *const r4os.abi.GfxNativeSubmission, out: *r4os.abi.GfxFenceStatus) callconv(.c) i32 {
     std.debug.assert(queue.timeline == 0x100000003 and submission.operation == r4os.abi.gfx_queue_operation_native);
     std.debug.assert(native.commands == 0x200000009 and out.version == 1 and out.size == 80);
     out.fence.point = 0x300000007;
@@ -16,7 +14,9 @@ fn nativeInfoProbe(fence: *const r4os.abi.GfxFence, out: *r4os.abi.GfxNativeJobI
 }
 fn queueOwnerProbe(binding: *const r4os.abi.GfxBackendBinding, timeline: u64, out: *r4os.abi.GfxQueueOwnerInfo) callconv(.c) i32 {
     std.debug.assert(binding.device_generation == 0x100000017 and timeline == 0x200000009 and out.version == 1 and out.size == 48);
-    out.timeline = timeline; out.producer_generation = 0x300000005; out.closing = 1;
+    out.timeline = timeline;
+    out.producer_generation = 0x300000005;
+    out.closing = 1;
     return if (binding.adapter_id == 17) 1 else if (binding.adapter_id == 18) 0 else -3;
 }
 
@@ -52,33 +52,40 @@ fn motionProbe(out: *r4os.abi.MouseMotion) callconv(.c) i32 {
     out.* = .{ .mouse = std.mem.zeroes(r4os.abi.Mouse), .motion_x = 0xfffffff1, .motion_y = 0x80000003 };
     return 1;
 }
-fn gridSubmitProbe(queue: *const r4os.abi.GfxQueueHandle, request: *const r4os.abi.GfxSubmission,
-    list: *const r4os.abi.GfxRenderGridList, output: *r4os.abi.GfxFenceStatus) callconv(.c) i32 {
+fn gridSubmitProbe(queue: *const r4os.abi.GfxQueueHandle, request: *const r4os.abi.GfxSubmission, list: *const r4os.abi.GfxRenderGridList, output: *r4os.abi.GfxFenceStatus) callconv(.c) i32 {
     std.debug.assert(queue.timeline == 0x200000017 and request.operation == r4os.abi.gfx_queue_operation_render_grid_list and
         list.version == 1 and list.size == 2320 and list.count == 1 and list.grids[0].scale == 180 and list.grids[0].rotation == 3);
-    output.fence = .{ .slot = 7, .timeline = queue.timeline, .point = 0x300000019 }; return 1;
+    output.fence = .{ .slot = 7, .timeline = queue.timeline, .point = 0x300000019 };
+    return 1;
 }
 fn gridReadProbe(fence: *const r4os.abi.GfxFence, output: *r4os.abi.GfxRenderGridList) callconv(.c) i32 {
     std.debug.assert(fence.timeline == 0x200000017 and fence.point == 0x300000019 and output.version == 1 and output.size == 2320);
-    output.* = .{ .count = 1 }; output.grids[0] = .{ .enabled = 1, .scale = 180, .rotation = 3 }; return 1;
+    output.* = .{ .count = 1 };
+    output.grids[0] = .{ .enabled = 1, .scale = 180, .rotation = 3 };
+    return 1;
 }
 fn gridFacadeProbe() !void {
     try captureFacadeProbe();
     try colorFacadeProbe();
-    const a = r4os.abi; const t = std.testing;
+    const a = r4os.abi;
+    const t = std.testing;
     var tables = makeTables(true);
-    var imports: [3]a.R4XStartImport = undefined; var raw: a.R4XStartContext = undefined;
+    var imports: [3]a.R4XStartImport = undefined;
+    var raw: a.R4XStartContext = undefined;
     var app = try makeApp(&tables, &imports, &raw);
     const legacy: r4os.r4xstart.R4Desk = .{ .raw = &raw, .table = &tables[1] };
     tables[1].mouse_motion = @intFromPtr(&motionProbe);
     tables[1].size = @offsetOf(a.R4XStartR4Desk, "mouse_motion");
     var motion: a.MouseMotion = .{ .mouse = std.mem.zeroes(a.Mouse), .motion_x = 79 };
-    try t.expectEqual(a.err_no_fn, legacy.mouseMotion(&motion)); try t.expectEqual(@as(u32, 79), motion.motion_x);
+    try t.expectEqual(a.err_no_fn, legacy.mouseMotion(&motion));
+    try t.expectEqual(@as(u32, 79), motion.motion_x);
     tables[1].size += 8;
-    try t.expectEqual(@as(i32, 1), legacy.mouseMotion(&motion)); try t.expectEqual(@as(u32, 0xfffffff1), motion.motion_x);
+    try t.expectEqual(@as(i32, 1), legacy.mouseMotion(&motion));
+    try t.expectEqual(@as(u32, 0xfffffff1), motion.motion_x);
     const queues = app.drawing().?.queues();
     tables[2].gfx_queue_submit_render_grid_list = @intFromPtr(&gridSubmitProbe);
-    var list: a.GfxRenderGridList = .{ .count = 1 }; list.grids[0] = .{ .enabled = 1, .scale = 180, .rotation = 3 };
+    var list: a.GfxRenderGridList = .{ .count = 1 };
+    list.grids[0] = .{ .enabled = 1, .scale = 180, .rotation = 3 };
     const queue: a.GfxQueueHandle = .{ .timeline = 0x200000017 };
     const request: a.GfxSubmission = .{ .operation = a.gfx_queue_operation_render_grid_list };
     var result: a.GfxFenceStatus = .{ .deadline_ns = 79 };
@@ -92,7 +99,8 @@ fn gridFacadeProbe() !void {
     for (112..120) |size| {
         driver.table.size = @intCast(size);
         try t.expect(!driver.supportsRenderGridList());
-        try t.expectEqual(a.err_no_fn, driver.readRenderGridList(&result.fence, &list)); try t.expectEqual(@as(u32, 79), list.count);
+        try t.expectEqual(a.err_no_fn, driver.readRenderGridList(&result.fence, &list));
+        try t.expectEqual(@as(u32, 79), list.count);
     }
     driver.table.size = 120;
     try t.expect(driver.supportsRenderGridList());
@@ -107,14 +115,22 @@ fn captureAcquireProbe(expected: u32, info: *r4os.abi.RemoteFrameInfo, lease: *r
     return 0;
 }
 fn captureReleaseProbe(lease: *const r4os.abi.RemoteFrameLease) callconv(.c) i32 {
-    std.debug.assert(lease.id == 0x100000003 and lease.epoch == 0x200000009); return 0;
+    std.debug.assert(lease.id == 0x100000003 and lease.epoch == 0x200000009);
+    return 0;
 }
-fn captureResetProbe() callconv(.c) i32 { return 0; }
-fn captureStatsProbe(out: *r4os.abi.RemoteFrameCaptureStats) callconv(.c) i32 { out.* = .{ .snapshot_copy_bytes = 0x300000007, .leases = 2 }; return 0; }
+fn captureResetProbe() callconv(.c) i32 {
+    return 0;
+}
+fn captureStatsProbe(out: *r4os.abi.RemoteFrameCaptureStats) callconv(.c) i32 {
+    out.* = .{ .snapshot_copy_bytes = 0x300000007, .leases = 2 };
+    return 0;
+}
 fn captureFacadeProbe() !void {
-    const a = r4os.abi; const t = std.testing;
+    const a = r4os.abi;
+    const t = std.testing;
     var tables = makeTables(true);
-    var imports: [3]a.R4XStartImport = undefined; var raw: a.R4XStartContext = undefined;
+    var imports: [3]a.R4XStartImport = undefined;
+    var raw: a.R4XStartContext = undefined;
     var app = try makeApp(&tables, &imports, &raw);
     const desk = app.desktop().?;
     const direct: r4os.r4xstart.R4Desk = .{ .raw = &raw, .table = &tables[1] };
@@ -123,7 +139,8 @@ fn captureFacadeProbe() !void {
     tables[1].remote_frame_source_reset = @intFromPtr(&captureResetProbe);
     tables[1].remote_frame_capture_stats = @intFromPtr(&captureStatsProbe);
     tables[1].size = 496;
-    var info: a.RemoteFrameInfo = .{ .revision = 17 }; var lease: a.RemoteFrameLease = .{ .id = 19 };
+    var info: a.RemoteFrameInfo = .{ .revision = 17 };
+    var lease: a.RemoteFrameLease = .{ .id = 19 };
     try t.expect(desk.remoteFrameSnapshotAcquire(73, &info, &lease) < 0 and info.revision == 17 and lease.id == 19);
     try t.expect(direct.remoteFrameSnapshotRelease(&lease) < 0 and desk.remoteFrameSourceReset() < 0);
     tables[1].size = @sizeOf(a.R4XStartR4Desk);
@@ -134,28 +151,33 @@ fn captureFacadeProbe() !void {
     try t.expect(desk.remoteFrameCaptureStats(&stats) == 0 and stats.snapshot_copy_bytes == 0x300000007);
     try t.expect(direct.remoteFrameCaptureStats(&stats) == 0 and direct.remoteFrameSourceReset() == 0);
 }
-fn colorSubmitProbe(queue: *const r4os.abi.GfxQueueHandle, request: *const r4os.abi.GfxSubmission,
-    list: *const r4os.abi.GfxRenderColorList, output: *r4os.abi.GfxFenceStatus) callconv(.c) i32 {
+fn colorSubmitProbe(queue: *const r4os.abi.GfxQueueHandle, request: *const r4os.abi.GfxSubmission, list: *const r4os.abi.GfxRenderColorList, output: *r4os.abi.GfxFenceStatus) callconv(.c) i32 {
     std.debug.assert(queue.timeline == 0x200000017 and request.operation == r4os.abi.gfx_queue_operation_render_color_list and
         list.size == 1568 and list.count == 1 and list.program.size == 272 and list.program.words[63] == 0x12345678);
-    output.fence = .{ .slot = 7, .timeline = queue.timeline, .point = 0x300000019 }; return 1;
+    output.fence = .{ .slot = 7, .timeline = queue.timeline, .point = 0x300000019 };
+    return 1;
 }
 fn colorReadProbe(fence: *const r4os.abi.GfxFence, output: *r4os.abi.GfxRenderColorList) callconv(.c) i32 {
     std.debug.assert(fence.point == 0x300000019 and output.version == 1 and output.size == 1568);
-    output.* = .{ .count = 1 }; output.program.words[63] = 0x87654321; return 1;
+    output.* = .{ .count = 1 };
+    output.program.words[63] = 0x87654321;
+    return 1;
 }
 fn colorFacadeProbe() !void {
     try modeColorFacadeProbe();
     try refreshFacadeProbe();
     try powerFacadeProbe();
     try brightnessFacadeProbe();
-    const a = r4os.abi; const t = std.testing;
+    const a = r4os.abi;
+    const t = std.testing;
     var tables = makeTables(true);
-    var imports: [3]a.R4XStartImport = undefined; var raw: a.R4XStartContext = undefined;
+    var imports: [3]a.R4XStartImport = undefined;
+    var raw: a.R4XStartContext = undefined;
     var app = try makeApp(&tables, &imports, &raw);
     const queues = app.drawing().?.queues();
     tables[2].gfx_queue_submit_render_color_list = @intFromPtr(&colorSubmitProbe);
-    var list: a.GfxRenderColorList = .{ .count = 1 }; list.program.words[63] = 0x12345678;
+    var list: a.GfxRenderColorList = .{ .count = 1 };
+    list.program.words[63] = 0x12345678;
     const queue: a.GfxQueueHandle = .{ .timeline = 0x200000017 };
     const request: a.GfxSubmission = .{ .operation = a.gfx_queue_operation_render_color_list };
     var result: a.GfxFenceStatus = .{ .deadline_ns = 79 };
@@ -169,35 +191,41 @@ fn colorFacadeProbe() !void {
         driver.table.size = @intCast(size);
         try t.expect(!driver.supportsRenderColorList());
         try t.expectEqual(a.err_no_fn, driver.readRenderColorList(&result.fence, &list));
-        try t.expectEqual(@as(u32,0x12345678), list.program.words[63]);
+        try t.expectEqual(@as(u32, 0x12345678), list.program.words[63]);
     }
     driver.table.size = 128;
     try t.expect(driver.supportsRenderColorList());
     try t.expectEqual(@as(i32, 1), driver.readRenderColorList(&result.fence, &list));
-    try t.expectEqual(@as(u32,0x87654321), list.program.words[63]);
+    try t.expectEqual(@as(u32, 0x87654321), list.program.words[63]);
 }
 fn modeColorTestProbe(request: *const r4os.abi.GfxModeColorRequest, output: *r4os.abi.GfxAtomicResult) callconv(.c) i32 {
     std.debug.assert(request.size == 1344 and request.image.id == 23 and request.image.generation == 0x200000017 and request.signal.metadata.max_cll == 1000);
-    output.commit_sequence = 0x300000019; return 1;
+    output.commit_sequence = 0x300000019;
+    return 1;
 }
 fn modeColorSubmitProbe(request: *const r4os.abi.GfxModeColorRequest, timeout: u32, output: *r4os.abi.GfxModeStatus) callconv(.c) i32 {
     std.debug.assert(request.image.id == 23 and request.image.generation == 0x200000017 and timeout == 15000);
-    output.ticket = 0x300000019; return 1;
+    output.ticket = 0x300000019;
+    return 1;
 }
 fn modeColorReadProbe(ticket: u64, sequence: u64, output: *r4os.abi.GfxDriverModeColor) callconv(.c) i32 {
     std.debug.assert(ticket == 0x300000019 and sequence == 2);
-    output.* = .{ .ticket = ticket, .sequence = sequence, .signal = .{ .metadata = .{ .max_cll = 1000 } } }; return 1;
+    output.* = .{ .ticket = ticket, .sequence = sequence, .signal = .{ .metadata = .{ .max_cll = 1000 } } };
+    return 1;
 }
 fn modeColorFacadeProbe() !void {
-    const a = r4os.abi; const t = std.testing;
+    const a = r4os.abi;
+    const t = std.testing;
     var tables = makeTables(true);
-    var imports: [3]a.R4XStartImport = undefined; var raw: a.R4XStartContext = undefined;
+    var imports: [3]a.R4XStartImport = undefined;
+    var raw: a.R4XStartContext = undefined;
     var app = try makeApp(&tables, &imports, &raw);
     const outputs = app.drawing().?.outputs();
     tables[2].gfx_atomic_test_color = @intFromPtr(&modeColorTestProbe);
     tables[2].gfx_atomic_submit_color = @intFromPtr(&modeColorSubmitProbe);
     const request: a.GfxModeColorRequest = .{ .image = .{ .id = 23, .generation = 0x200000017 }, .signal = .{ .metadata = .{ .max_cll = 1000 } } };
-    var tested: a.GfxAtomicResult = .{ .commit_sequence = 79 }; var submitted: a.GfxModeStatus = .{ .ticket = 79 };
+    var tested: a.GfxAtomicResult = .{ .commit_sequence = 79 };
+    var submitted: a.GfxModeStatus = .{ .ticket = 79 };
     tables[2].size = 768;
     try t.expectEqual(a.err_no_fn, outputs.testColor(&request, &tested));
     try t.expectEqual(a.err_no_fn, outputs.submitColor(&request, 15000, &submitted));
@@ -207,8 +235,7 @@ fn modeColorFacadeProbe() !void {
     try t.expectEqual(a.err_no_fn, outputs.submitColor(&request, 15000, &submitted));
     tables[2].size = 784;
     try t.expectEqual(@as(i32, 1), outputs.submitColor(&request, 15000, &submitted));
-    var driver: r4os.driver_outputs.Context = .{ .table = .{ .mode_enable = 1, .mode_take = 1, .mode_complete = 1,
-        .mode_read_color = @intFromPtr(&modeColorReadProbe) } };
+    var driver: r4os.driver_outputs.Context = .{ .table = .{ .mode_enable = 1, .mode_take = 1, .mode_complete = 1, .mode_read_color = @intFromPtr(&modeColorReadProbe) } };
     var color: a.GfxDriverModeColor = .{ .ticket = 79 };
     for (120..128) |size| {
         driver.table.size = @intCast(size);
@@ -226,17 +253,22 @@ fn refreshReadProbe(target: *const r4os.abi.GfxOutputTarget, output: *r4os.abi.G
 }
 fn refreshIntentProbe(input: *const r4os.abi.GfxRefreshRequest, output: *r4os.abi.GfxRefreshRequest) callconv(.c) i32 {
     std.debug.assert(output.version == 1 and output.size == 88);
-    output.* = input.*; output.sequence = 0x300000079;
+    output.* = input.*;
+    output.sequence = 0x300000079;
     return if (input.target.head_id == 7) r4os.abi.gfx_output_error_stale else 1;
 }
 fn refreshDriverReadProbe(target: *const r4os.abi.GfxOutputTarget, output: *r4os.abi.GfxRefreshRequest) callconv(.c) i32 {
     return refreshIntentProbe(&.{ .target = target.* }, output);
 }
-fn refreshPublishProbe(input: *const r4os.abi.GfxOutputRefresh) callconv(.c) i32 { return if (input.status.sequence == 0x200000079) 1 else -3; }
+fn refreshPublishProbe(input: *const r4os.abi.GfxOutputRefresh) callconv(.c) i32 {
+    return if (input.status.sequence == 0x200000079) 1 else -3;
+}
 fn refreshFacadeProbe() !void {
-    const a = r4os.abi; const t = std.testing;
+    const a = r4os.abi;
+    const t = std.testing;
     var tables = makeTables(true);
-    var imports: [3]a.R4XStartImport = undefined; var raw: a.R4XStartContext = undefined;
+    var imports: [3]a.R4XStartImport = undefined;
+    var raw: a.R4XStartContext = undefined;
     var app = try makeApp(&tables, &imports, &raw);
     const outputs = app.drawing().?.outputs();
     tables[2].gfx_output_refresh = @intFromPtr(&refreshReadProbe);
@@ -263,7 +295,8 @@ fn refreshFacadeProbe() !void {
     driver.table.size = 144;
     try t.expectEqual(@as(i32, 1), driver.publishRefresh(&read));
     try t.expectEqual(@as(i32, 1), driver.readRefresh(&request.target, &intent));
-    const old_read = read; const old_intent = intent;
+    const old_read = read;
+    const old_intent = intent;
     request.target.head_id = 7;
     try t.expectEqual(a.gfx_output_error_stale, outputs.refresh(&request.target, &read));
     try t.expectEqual(a.gfx_output_error_stale, outputs.requestRefresh(&request, &intent));
@@ -277,17 +310,22 @@ fn powerReadProbe(identity: *const r4os.abi.GfxOutputId, output: *r4os.abi.GfxOu
 }
 fn powerIntentProbe(input: *const r4os.abi.GfxPowerRequest, output: *r4os.abi.GfxPowerRequest) callconv(.c) i32 {
     std.debug.assert(output.version == 1 and output.size == 64);
-    output.* = input.*; output.sequence = 0x300000079;
+    output.* = input.*;
+    output.sequence = 0x300000079;
     return if (input.identity.connector_id == 7) r4os.abi.gfx_output_error_stale else 1;
 }
 fn powerDriverReadProbe(identity: *const r4os.abi.GfxOutputId, output: *r4os.abi.GfxPowerRequest) callconv(.c) i32 {
     return powerIntentProbe(&.{ .identity = identity.* }, output);
 }
-fn powerPublishProbe(input: *const r4os.abi.GfxOutputPower) callconv(.c) i32 { return if (input.sequence == 0x200000079) 1 else -3; }
+fn powerPublishProbe(input: *const r4os.abi.GfxOutputPower) callconv(.c) i32 {
+    return if (input.sequence == 0x200000079) 1 else -3;
+}
 fn powerFacadeProbe() !void {
-    const a = r4os.abi; const t = std.testing;
+    const a = r4os.abi;
+    const t = std.testing;
     var tables = makeTables(true);
-    var imports: [3]a.R4XStartImport = undefined; var raw: a.R4XStartContext = undefined;
+    var imports: [3]a.R4XStartImport = undefined;
+    var raw: a.R4XStartContext = undefined;
     var app = try makeApp(&tables, &imports, &raw);
     const outputs = app.drawing().?.outputs();
     tables[2].gfx_output_power = @intFromPtr(&powerReadProbe);
@@ -319,7 +357,8 @@ fn powerFacadeProbe() !void {
     driver.table.size = 160;
     try t.expectEqual(@as(i32, 1), driver.publishPower(&read));
     try t.expectEqual(@as(i32, 1), driver.readPower(&request.identity, &intent));
-    const old_read = read; const old_intent = intent;
+    const old_read = read;
+    const old_intent = intent;
     request.identity.connector_id = 7;
     try t.expectEqual(a.gfx_output_error_stale, outputs.power(&request.identity, &read));
     try t.expectEqual(a.gfx_output_error_stale, outputs.requestPower(&request, &intent));
@@ -333,17 +372,22 @@ fn brightnessReadProbe(identity: *const r4os.abi.GfxOutputId, output: *r4os.abi.
 }
 fn brightnessIntentProbe(input: *const r4os.abi.GfxBrightnessRequest, output: *r4os.abi.GfxBrightnessRequest) callconv(.c) i32 {
     std.debug.assert(output.version == 1 and output.size == 48);
-    output.* = input.*; output.sequence = 0x300000079;
+    output.* = input.*;
+    output.sequence = 0x300000079;
     return if (input.identity.connector_id == 7) r4os.abi.gfx_output_error_stale else 1;
 }
 fn brightnessDriverReadProbe(identity: *const r4os.abi.GfxOutputId, output: *r4os.abi.GfxBrightnessRequest) callconv(.c) i32 {
     return brightnessIntentProbe(&.{ .identity = identity.* }, output);
 }
-fn brightnessPublishProbe(input: *const r4os.abi.GfxOutputBrightness) callconv(.c) i32 { return if (input.sequence == 0x200000079) 1 else -3; }
+fn brightnessPublishProbe(input: *const r4os.abi.GfxOutputBrightness) callconv(.c) i32 {
+    return if (input.sequence == 0x200000079) 1 else -3;
+}
 fn brightnessFacadeProbe() !void {
-    const a = r4os.abi; const t = std.testing;
+    const a = r4os.abi;
+    const t = std.testing;
     var tables = makeTables(true);
-    var imports: [3]a.R4XStartImport = undefined; var raw: a.R4XStartContext = undefined;
+    var imports: [3]a.R4XStartImport = undefined;
+    var raw: a.R4XStartContext = undefined;
     var app = try makeApp(&tables, &imports, &raw);
     const outputs = app.drawing().?.outputs();
     tables[2].gfx_output_brightness = @intFromPtr(&brightnessReadProbe);
@@ -375,7 +419,8 @@ fn brightnessFacadeProbe() !void {
     driver.table.size = 176;
     try t.expectEqual(@as(i32, 1), driver.publishBrightness(&read));
     try t.expectEqual(@as(i32, 1), driver.readBrightness(&request.identity, &intent));
-    const old_read = read; const old_intent = intent;
+    const old_read = read;
+    const old_intent = intent;
     request.identity.connector_id = 7;
     try t.expectEqual(a.gfx_output_error_stale, outputs.brightness(&request.identity, &read));
     try t.expectEqual(a.gfx_output_error_stale, outputs.requestBrightness(&request, &intent));
@@ -400,52 +445,84 @@ fn propertiesPublishProbe(binding: *const r4os.abi.GfxBackendBinding, input: *co
 }
 fn gfxBackendInfoProbe(index: u32, out: *r4os.abi.GfxBackendInfo) callconv(.c) i32 {
     std.debug.assert(index == 16 and out.version == 1 and out.size == @sizeOf(r4os.abi.GfxBackendInfo));
-    out.* = .{ .binding = .{ .adapter_id = 17, .device_generation = 0x100000017, .reset_generation = 0x200000017 },
-        .operations = 13, .memory_generation = 0x500000018,
-        .profile = .{ .interface_id_hi = 0x300000017, .revision = 1, .data_bytes = 64, .data = @splat(91) } };
+    out.* = .{ .binding = .{ .adapter_id = 17, .device_generation = 0x100000017, .reset_generation = 0x200000017 }, .operations = 13, .memory_generation = 0x500000018, .profile = .{ .interface_id_hi = 0x300000017, .revision = 1, .data_bytes = 64, .data = @splat(91) } };
     return 1;
 }
 fn ownedReserveProbe(_: *const r4os.abi.GfxBufferDescriptor, cookie: u64, out: *r4os.abi.GfxOwnedBufferReservation) callconv(.c) i32 {
     std.debug.assert(cookie == 0x100000003 and out.size == 88);
-    out.cookie = cookie; out.driver_generation = 0x200000005; return 1;
+    out.cookie = cookie;
+    out.driver_generation = 0x200000005;
+    return 1;
 }
 fn ownedCommitProbe(in: *const r4os.abi.GfxOwnedBufferReservation, out: *r4os.abi.GfxBufferReference) callconv(.c) i32 {
-    std.debug.assert(in.cookie == 0x100000003 and in.driver_generation == 0x200000005 and out.size == 48); return 1;
+    std.debug.assert(in.cookie == 0x100000003 and in.driver_generation == 0x200000005 and out.size == 48);
+    return 1;
 }
 fn ownedAbortProbe(in: *const r4os.abi.GfxOwnedBufferReservation, quiesced: u32) callconv(.c) i32 {
-    std.debug.assert(in.cookie == 0x100000003 and quiesced == 0); return -4;
+    std.debug.assert(in.cookie == 0x100000003 and quiesced == 0);
+    return -4;
 }
 fn ownedTakeProbe(adapter: u32, generation: u64, out: *r4os.abi.GfxOwnedBufferRelease) callconv(.c) i32 {
     std.debug.assert(adapter == 17 and generation == 0x300000007 and out.size == 80);
-    out.cookie = 0x100000003; out.attempt = 0x400000009; return 1;
+    out.cookie = 0x100000003;
+    out.attempt = 0x400000009;
+    return 1;
 }
 fn ownedFinishProbe(in: *const r4os.abi.GfxOwnedBufferRelease, quiesced: u32) callconv(.c) i32 {
-    std.debug.assert(in.cookie == 0x100000003 and in.attempt == 0x400000009 and quiesced == 1); return 1;
+    std.debug.assert(in.cookie == 0x100000003 and in.attempt == 0x400000009 and quiesced == 1);
+    return 1;
 }
 fn memoryPrefixProbe(out: *r4os.abi.GfxDriverMemoryApi) callconv(.c) i32 {
     const value: r4os.abi.GfxDriverMemoryApi = .{ .size = 112, .buffer_map = @intFromPtr(&gfxMapProbe) };
-    @memcpy(@as([*]u8, @ptrCast(out))[0..112], std.mem.asBytes(&value)[0..112]); return 1;
+    @memcpy(@as([*]u8, @ptrCast(out))[0..112], std.mem.asBytes(&value)[0..112]);
+    return 1;
 }
 fn ownedFacadeProbe() !void {
     try reservedSpanFacadeProbe();
     try deviceLostFacadeProbe();
     const a = r4os.abi;
-    var native = r4os.driver_memory.Context{ .table = .{ .buffer_reserve = @intFromPtr(&ownedReserveProbe), .buffer_commit = @intFromPtr(&ownedCommitProbe),
-        .buffer_abort = @intFromPtr(&ownedAbortProbe), .buffer_take_release = @intFromPtr(&ownedTakeProbe), .buffer_finish_release = @intFromPtr(&ownedFinishProbe) } };
-    var reservation: a.GfxOwnedBufferReservation = .{}; var reference: a.GfxBufferReference = .{}; var release: a.GfxOwnedBufferRelease = .{};
-    for (112..120) |size| { native.table.size = @intCast(size); try std.testing.expectEqual(a.err_no_fn, native.bufferReserve(&.{}, 0x100000003, &reservation)); }
+    var native = r4os.driver_memory.Context{ .table = .{ .buffer_reserve = @intFromPtr(&ownedReserveProbe), .buffer_commit = @intFromPtr(&ownedCommitProbe), .buffer_abort = @intFromPtr(&ownedAbortProbe), .buffer_take_release = @intFromPtr(&ownedTakeProbe), .buffer_finish_release = @intFromPtr(&ownedFinishProbe) } };
+    var reservation: a.GfxOwnedBufferReservation = .{};
+    var reference: a.GfxBufferReference = .{};
+    var release: a.GfxOwnedBufferRelease = .{};
+    for (112..120) |size| {
+        native.table.size = @intCast(size);
+        try std.testing.expectEqual(a.err_no_fn, native.bufferReserve(&.{}, 0x100000003, &reservation));
+    }
     try std.testing.expect(reservation.cookie == 0);
-    native.table.size = 120; try std.testing.expectEqual(@as(i32, 1), native.bufferReserve(&.{}, 0x100000003, &reservation));
-    for (120..128) |size| { native.table.size = @intCast(size); try std.testing.expectEqual(a.err_no_fn, native.bufferCommit(&reservation, &reference)); }
-    native.table.size = 128; try std.testing.expectEqual(@as(i32, 1), native.bufferCommit(&reservation, &reference));
-    for (128..136) |size| { native.table.size = @intCast(size); try std.testing.expectEqual(a.err_no_fn, native.bufferAbort(&reservation, 0)); }
-    native.table.size = 136; try std.testing.expectEqual(@as(i32, -4), native.bufferAbort(&reservation, 0));
-    for (136..144) |size| { native.table.size = @intCast(size); try std.testing.expectEqual(a.err_no_fn, native.bufferTakeRelease(17, 0x300000007, &release)); }
-    native.table.size = 144; try std.testing.expectEqual(@as(i32, 1), native.bufferTakeRelease(17, 0x300000007, &release));
-    for (144..152) |size| { native.table.size = @intCast(size); try std.testing.expectEqual(a.err_no_fn, native.bufferFinishRelease(&release, 1)); }
-    native.table.size = 152; try std.testing.expectEqual(@as(i32, 1), native.bufferFinishRelease(&release, 1));
-    var api: a.DriverApi = undefined; api.magic = a.driver_magic; api.version = 25; api.size = 568; api.gfx_memory_query = &memoryPrefixProbe;
-    const ctx = r4os.r4dev.DriverContext.init(&api); const old = ctx.memory().?;
+    native.table.size = 120;
+    try std.testing.expectEqual(@as(i32, 1), native.bufferReserve(&.{}, 0x100000003, &reservation));
+    for (120..128) |size| {
+        native.table.size = @intCast(size);
+        try std.testing.expectEqual(a.err_no_fn, native.bufferCommit(&reservation, &reference));
+    }
+    native.table.size = 128;
+    try std.testing.expectEqual(@as(i32, 1), native.bufferCommit(&reservation, &reference));
+    for (128..136) |size| {
+        native.table.size = @intCast(size);
+        try std.testing.expectEqual(a.err_no_fn, native.bufferAbort(&reservation, 0));
+    }
+    native.table.size = 136;
+    try std.testing.expectEqual(@as(i32, -4), native.bufferAbort(&reservation, 0));
+    for (136..144) |size| {
+        native.table.size = @intCast(size);
+        try std.testing.expectEqual(a.err_no_fn, native.bufferTakeRelease(17, 0x300000007, &release));
+    }
+    native.table.size = 144;
+    try std.testing.expectEqual(@as(i32, 1), native.bufferTakeRelease(17, 0x300000007, &release));
+    for (144..152) |size| {
+        native.table.size = @intCast(size);
+        try std.testing.expectEqual(a.err_no_fn, native.bufferFinishRelease(&release, 1));
+    }
+    native.table.size = 152;
+    try std.testing.expectEqual(@as(i32, 1), native.bufferFinishRelease(&release, 1));
+    var api: a.DriverApi = undefined;
+    api.magic = a.driver_magic;
+    api.version = 25;
+    api.size = 568;
+    api.gfx_memory_query = &memoryPrefixProbe;
+    const ctx = r4os.r4dev.DriverContext.init(&api);
+    const old = ctx.memory().?;
     try std.testing.expect(old.table.size == 112 and old.table.buffer_reserve == 0);
     try std.testing.expectEqual(a.err_no_fn, old.bufferReserve(&.{}, 0, &reservation));
 }
@@ -476,7 +553,8 @@ fn gfxOperationsProbe(binding: *const r4os.abi.GfxBackendBinding, operations: u6
 }
 fn nativeTakeProbe(_: *const r4os.abi.GfxBufferHandle, output: *r4os.abi.GfxNativeJob) callconv(.c) i32 {
     std.debug.assert(output.version == 1 and output.size == 88);
-    output.request.generation = 99; return -4;
+    output.request.generation = 99;
+    return -4;
 }
 fn nativeFacadeProbe() !void {
     const a = r4os.abi;
@@ -499,29 +577,36 @@ fn nativeFacadeProbe() !void {
 }
 fn virtualStartProbe(input: *const r4os.abi.GfxVirtualRequest, output: *r4os.abi.GfxVirtualStatus) callconv(.c) i32 {
     std.debug.assert(input.memory_generation == 0x100000035 and input.byte_offset == 0x200000035 and output.size == 80);
-    output.address = 0x300000035; return -4;
+    output.address = 0x300000035;
+    return -4;
 }
 fn virtualWaitProbe(handle: *const r4os.abi.GfxBufferHandle, until: u32, timeout: u64, output: *r4os.abi.GfxVirtualStatus) callconv(.c) i32 {
     std.debug.assert(handle.generation == 0x400000035 and until == 1 and timeout == 0x500000035 and output.version == 1 and output.size == 80);
-    output.address = 0x600000035; return 1;
+    output.address = 0x600000035;
+    return 1;
 }
 fn virtualCloseProbe(handle: *const r4os.abi.GfxBufferHandle, mode: u32) callconv(.c) i32 {
-    std.debug.assert(handle.generation == 0x400000035 and mode == 1); return 1;
+    std.debug.assert(handle.generation == 0x400000035 and mode == 1);
+    return 1;
 }
 fn virtualTakeProbe(provider: *const r4os.abi.GfxBufferHandle, output: *r4os.abi.GfxVirtualJob) callconv(.c) i32 {
     std.debug.assert(provider.generation == 0x400000035 and output.version == 1 and output.size == 248);
-    output.token.opaque2 = 0x700000035; return -4;
+    output.token.opaque2 = 0x700000035;
+    return -4;
 }
 fn virtualCompleteProbe(provider: *const r4os.abi.GfxBufferHandle, input: *const r4os.abi.GfxVirtualCompletion) callconv(.c) i32 {
-    std.debug.assert(provider.generation == 0x400000035 and input.token.opaque2 == 0x800000035 and input.operation == 1); return 1;
+    std.debug.assert(provider.generation == 0x400000035 and input.token.opaque2 == 0x800000035 and input.operation == 1);
+    return 1;
 }
 fn virtualFacadeProbe() !void {
-    const a = r4os.abi; const t = std.testing;
+    const a = r4os.abi;
+    const t = std.testing;
     var tables = makeTables(true);
     tables[2].gfx_virtual_start = @intFromPtr(&virtualStartProbe);
     tables[2].gfx_virtual_wait = @intFromPtr(&virtualWaitProbe);
     tables[2].gfx_virtual_close = @intFromPtr(&virtualCloseProbe);
-    var imports: [3]a.R4XStartImport = undefined; var raw: a.R4XStartContext = undefined;
+    var imports: [3]a.R4XStartImport = undefined;
+    var raw: a.R4XStartContext = undefined;
     var app = try makeApp(&tables, &imports, &raw);
     const draw = app.drawing().?;
     const handle: a.GfxBufferHandle = .{ .generation = 0x400000035 };
@@ -571,10 +656,12 @@ fn budgetProbe(input: *const r4os.abi.GfxDeviceBudgetRequest, output: *r4os.abi.
 }
 fn budgetFacadeProbe() !void {
     try telemetryFacadeProbe();
-    const a = r4os.abi; const t = std.testing;
+    const a = r4os.abi;
+    const t = std.testing;
     var tables = makeTables(true);
     tables[2].gfx_memory_budget = @intFromPtr(&budgetProbe);
-    var imports: [3]a.R4XStartImport = undefined; var raw: a.R4XStartContext = undefined;
+    var imports: [3]a.R4XStartImport = undefined;
+    var raw: a.R4XStartContext = undefined;
     var app = try makeApp(&tables, &imports, &raw);
     const draw = app.drawing().?;
     var driver: r4os.driver_memory.Context = .{ .table = .{ .memory_budget = @intFromPtr(&budgetProbe) } };
@@ -591,7 +678,8 @@ fn budgetFacadeProbe() !void {
         try t.expectEqual(a.err_no_fn, draw.gfxMemoryBudget(&input, &output));
         try t.expectEqualDeep(unchanged, output);
     }
-    driver.table.size = 192; tables[2].size = 808;
+    driver.table.size = 192;
+    tables[2].size = 808;
     budget_probe_rc = a.gfx_buffer_error_stale;
     try t.expectEqual(budget_probe_rc, driver.memoryBudget(&input, &output));
     try t.expectEqualDeep(unchanged, output);
@@ -606,7 +694,7 @@ fn budgetFacadeProbe() !void {
 }
 fn telemetryProbe(input: *const r4os.abi.GfxTelemetryRequest, output: *r4os.abi.GfxTelemetryState) callconv(.c) i32 {
     output.* = .{ .adapter_id = input.adapter_id, .memory_generation = input.memory_generation };
-    output.metrics[5] = .{ .status = r4os.abi.gfx_telemetry_fresh, .source_stamp = 9, .values = .{-12500,0,0,0} };
+    output.metrics[5] = .{ .status = r4os.abi.gfx_telemetry_fresh, .source_stamp = 9, .values = .{ -12500, 0, 0, 0 } };
     return budget_probe_rc;
 }
 fn telemetryDriverProbe(input: *const r4os.abi.GfxTelemetryState, output: *r4os.abi.GfxTelemetryDemand) callconv(.c) i32 {
@@ -614,10 +702,12 @@ fn telemetryDriverProbe(input: *const r4os.abi.GfxTelemetryState, output: *r4os.
     return budget_probe_rc;
 }
 fn telemetryFacadeProbe() !void {
-    const a = r4os.abi; const t = std.testing;
+    const a = r4os.abi;
+    const t = std.testing;
     var tables = makeTables(true);
     tables[2].gfx_telemetry = @intFromPtr(&telemetryProbe);
-    var imports: [3]a.R4XStartImport = undefined; var raw: a.R4XStartContext = undefined;
+    var imports: [3]a.R4XStartImport = undefined;
+    var raw: a.R4XStartContext = undefined;
     var app = try makeApp(&tables, &imports, &raw);
     const draw = app.drawing().?;
     var driver: r4os.driver_memory.Context = .{ .table = .{ .telemetry_exchange = @intFromPtr(&telemetryDriverProbe) } };
@@ -636,7 +726,8 @@ fn telemetryFacadeProbe() !void {
         try t.expectEqual(a.err_no_fn, driver.telemetryExchange(&state, &demand));
         try t.expectEqualDeep(original_demand, demand);
     }
-    tables[2].size = 816; driver.table.size = 200;
+    tables[2].size = 816;
+    driver.table.size = 200;
     budget_probe_rc = a.gfx_buffer_error_stale;
     try t.expectEqual(budget_probe_rc, draw.gfxTelemetry(&request, &state));
     try t.expectEqualDeep(unchanged, state);
@@ -651,14 +742,13 @@ fn telemetryFacadeProbe() !void {
     try t.expectEqualStrings("GPU temp: -12.5 C", r4os.gfx_telemetry.formatLine(&line, &state, 5));
     state.source = a.gfx_telemetry_source_smu10;
     state.metrics[0] = .{ .status = a.gfx_telemetry_fresh, .flags = a.gfx_telemetry_partial_values |
-        a.gfx_telemetry_current_clocks | a.gfx_telemetry_fabric_clock | (3 << 8), .values = .{800000000,1200000000,0,0} };
+        a.gfx_telemetry_current_clocks | a.gfx_telemetry_fabric_clock | (3 << 8), .values = .{ 800000000, 1200000000, 0, 0 } };
     try t.expectEqualStrings("GPU clock: 800.0 MHz", r4os.gfx_telemetry.formatLine(&line, &state, 1));
     try t.expectEqualStrings("Fabric clock: 1200.0 MHz", r4os.gfx_telemetry.formatLine(&line, &state, 2));
     try t.expectEqualStrings("Video clock: unknown (unavailable)", r4os.gfx_telemetry.formatLine(&line, &state, 3));
     try t.expectEqualStrings("APU temp: -12.5 C", r4os.gfx_telemetry.formatLine(&line, &state, 5));
-    state.metrics[2] = .{ .status = a.gfx_telemetry_fresh, .flags = a.gfx_telemetry_partial_values | (1 << 8), .values = .{37,0,0,0} };
+    state.metrics[2] = .{ .status = a.gfx_telemetry_fresh, .flags = a.gfx_telemetry_partial_values | (1 << 8), .values = .{ 37, 0, 0, 0 } };
     try t.expectEqualStrings("Memory busy: unknown (unavailable)", r4os.gfx_telemetry.formatLine(&line, &state, 13));
-
 }
 test "graphics buffer optional tails preserve 64-bit offsets in Zig and R4D calls" {
     try budgetFacadeProbe();
@@ -770,7 +860,8 @@ test "graphics buffer optional tails preserve 64-bit offsets in Zig and R4D call
         try std.testing.expectEqual(r4os.abi.err_no_fn, queues.submitNative(&raw_queue, &raw_submission, &raw_input, &raw_output));
         try std.testing.expectEqualDeep(saved_raw, raw_output);
     }
-    tables[2].size = 888; raw_input.revision = 2;
+    tables[2].size = 888;
+    raw_input.revision = 2;
     try std.testing.expectEqual(@as(i32, -3), queues.submitNative(&raw_queue, &raw_submission, &raw_input, &raw_output));
     try std.testing.expectEqualDeep(saved_raw, raw_output);
     raw_input.revision = 1;
@@ -785,7 +876,8 @@ test "graphics buffer optional tails preserve 64-bit offsets in Zig and R4D call
         try std.testing.expectEqual(r4os.abi.err_no_fn, native.nativeInfo(&raw_fence, &raw_info));
         try std.testing.expectEqualDeep(saved_info, raw_info);
     }
-    native.table.size = 144; raw_fence.slot = 8;
+    native.table.size = 144;
+    raw_fence.slot = 8;
     try std.testing.expectEqual(@as(i32, -3), native.nativeInfo(&raw_fence, &raw_info));
     try std.testing.expectEqualDeep(saved_info, raw_info);
     raw_fence.slot = 7;
@@ -801,10 +893,12 @@ test "graphics buffer optional tails preserve 64-bit offsets in Zig and R4D call
     tables[2].size = 880;
     try std.testing.expectEqual(@as(i32, 1), queues.backendProperties(&binding, &properties));
     try std.testing.expect(properties.data[255] == 0x35);
-    binding.adapter_id = 18; properties.data[255] = 0xa5;
+    binding.adapter_id = 18;
+    properties.data[255] = 0xa5;
     try std.testing.expectEqual(@as(i32, -3), queues.backendProperties(&binding, &properties));
     try std.testing.expect(properties.data[255] == 0xa5);
-    binding.adapter_id = 17; properties.data[255] = 0x35;
+    binding.adapter_id = 17;
+    properties.data[255] = 0x35;
     native.table.publish_properties = @intFromPtr(&propertiesPublishProbe);
     for (128..136) |size| {
         native.table.size = @intCast(size);
@@ -820,7 +914,8 @@ test "graphics buffer optional tails preserve 64-bit offsets in Zig and R4D call
         try std.testing.expectEqual(r4os.abi.err_no_fn, native.queueOwnerInfo(&binding, 0x200000009, &queue_owner));
         try std.testing.expectEqualDeep(saved_owner, queue_owner);
     }
-    native.table.size = 168; binding.adapter_id = 18;
+    native.table.size = 168;
+    binding.adapter_id = 18;
     try std.testing.expectEqual(@as(i32, 0), native.queueOwnerInfo(&binding, 0x200000009, &queue_owner));
     try std.testing.expectEqualDeep(saved_owner, queue_owner);
     binding.adapter_id = 19;
@@ -893,8 +988,7 @@ var color_probe_prefix: u32 = @sizeOf(r4os.abi.GfxOutputColorState);
 var color_probe_status: i32 = r4os.abi.gfx_output_ok;
 fn outputColorProbe(identity: *const r4os.abi.GfxOutputId, output: *r4os.abi.GfxOutputColorState) callconv(.c) i32 {
     std.debug.assert(output.version == 1 and output.size == @sizeOf(r4os.abi.GfxOutputColorState));
-    const value: r4os.abi.GfxOutputColorState = .{ .size = color_probe_prefix, .identity = identity.*, .revision = 0x600000007,
-        .flags = r4os.abi.gfx_output_color_known, .formats = 1, .max_frl_rate = 6 };
+    const value: r4os.abi.GfxOutputColorState = .{ .size = color_probe_prefix, .identity = identity.*, .revision = 0x600000007, .flags = r4os.abi.gfx_output_color_known, .formats = 1, .max_frl_rate = 6 };
     @memcpy(std.mem.asBytes(output)[0..color_probe_prefix], std.mem.asBytes(&value)[0..color_probe_prefix]);
     return color_probe_status;
 }
@@ -904,7 +998,8 @@ fn outputColorPublishProbe(input: *const r4os.abi.GfxOutputColorState) callconv(
 }
 fn modeRestoreProbe(input: *const r4os.abi.GfxAtomicState, out: *r4os.abi.GfxModeStatus) callconv(.c) i32 {
     std.debug.assert(input.topology_revision == 0 and input.count == 1);
-    out.ticket = 0x200000079; return 1;
+    out.ticket = 0x200000079;
+    return 1;
 }
 fn audioRoutePublishProbe(input: *const r4os.abi.GfxAudioRoute) callconv(.c) i32 {
     std.debug.assert(input.source.generation == 0x100000079 and input.revision == 0x200000015 and input.eld[95] == 0x79);
@@ -913,7 +1008,9 @@ fn audioRoutePublishProbe(input: *const r4os.abi.GfxAudioRoute) callconv(.c) i32
 fn audioRouteQueryProbe(location: u32, device: u32, index: u32, output: *r4os.abi.GfxAudioRoute) callconv(.c) i32 {
     std.debug.assert(location == 0x01000901 and device == 0x228e10de and output.size == 176);
     if (index != 0) return 0;
-    output.source.generation = 0x100000079; output.revision = 0x200000015; output.eld[95] = 0x79;
+    output.source.generation = 0x100000079;
+    output.revision = 0x200000015;
+    output.eld[95] = 0x79;
     return 1;
 }
 fn receiverRegisterProbe(adapter: u32, out: *r4os.abi.GfxReceiverSource) callconv(.c) i32 {
@@ -931,7 +1028,9 @@ fn receiverCloseProbe(input: *const r4os.abi.GfxReceiverSource) callconv(.c) i32
 }
 fn displayTransitionProbe(generation: u64, operation: u32, output: *r4os.abi.GfxNativeState) callconv(.c) i32 {
     std.debug.assert(generation == 0x100000007 and operation == 2);
-    output.generation = generation + 1; output.outcome = 3; output.retained = 1;
+    output.generation = generation + 1;
+    output.outcome = 3;
+    output.retained = 1;
     return 1;
 }
 fn displayScheduleProbe(binding: *const r4os.abi.GfxBackendBinding) callconv(.c) i32 {
@@ -953,7 +1052,8 @@ fn displayPrepareResetProbe(input: *const r4os.abi.GfxNativeRegistration, held_g
 }
 fn presentationReadProbe(head: u32, output: *r4os.abi.DisplayPresentationStats) callconv(.c) i32 {
     std.debug.assert(head == 3 and output.version == 1 and output.size == 208);
-    output.visible_sequence = 0x100000079; output.source_point = 0x200000079;
+    output.visible_sequence = 0x100000079;
+    output.source_point = 0x200000079;
     return r4os.abi.gfx_output_ok;
 }
 fn presentationPublishProbe(input: *const r4os.abi.DisplayPresentationStats) callconv(.c) i32 {
@@ -961,35 +1061,50 @@ fn presentationPublishProbe(input: *const r4os.abi.DisplayPresentationStats) cal
     return r4os.abi.gfx_output_error_stale;
 }
 fn cursorInfoProbe(out: *r4os.abi.DisplayCursorInfo) callconv(.c) i32 {
-    std.debug.assert(out.version == 1 and out.size == 80); out.display_generation = 0x100000079; return 1;
+    std.debug.assert(out.version == 1 and out.size == 80);
+    out.display_generation = 0x100000079;
+    return 1;
 }
 fn cursorStatusProbe(out: *r4os.abi.DisplayCursorStatus) callconv(.c) i32 {
-    std.debug.assert(out.version == 1 and out.size == 72); out.completed = 0x200000079; return 1;
+    std.debug.assert(out.version == 1 and out.size == 72);
+    out.completed = 0x200000079;
+    return 1;
 }
 fn cursorSubmitProbe(input: *const r4os.abi.DisplayCursorRequest, out: *r4os.abi.DisplayCursorStatus) callconv(.c) i32 {
     std.debug.assert(input.display_generation == 0x100000079 and input.image_sequence == 0x300000079 and input.x == -17);
     return cursorStatusProbe(out);
 }
 fn cursorConfigureProbe(input: *const r4os.abi.DisplayCursorInfo) callconv(.c) i32 {
-    std.debug.assert(input.display_generation == 0x100000079); return 1;
+    std.debug.assert(input.display_generation == 0x100000079);
+    return 1;
 }
 fn cursorTakeProbe(input: *const r4os.abi.GfxBackendBinding, out: *r4os.abi.GfxDriverCursorJob) callconv(.c) i32 {
     std.debug.assert(input.reset_generation == 0x400000079 and out.version == 1 and out.size == 160);
-    out.sequence = 0x200000079; out.barrier_point = 0x500000079; return 1;
+    out.sequence = 0x200000079;
+    out.barrier_point = 0x500000079;
+    return 1;
 }
 fn cursorCompleteProbe(input: *const r4os.abi.GfxDriverCursorCompletion) callconv(.c) i32 {
-    std.debug.assert(input.sequence == 0x200000079 and input.display_generation == 0x100000079); return -4;
+    std.debug.assert(input.sequence == 0x200000079 and input.display_generation == 0x100000079);
+    return -4;
 }
 fn cursorFacadeProbe() !void {
-    const a = r4os.abi; const t = std.testing;
-    var tables = makeTables(true); var imports: [3]a.R4XStartImport = undefined; var context: a.R4XStartContext = undefined;
-    var app = try makeApp(&tables, &imports, &context); const draw = app.drawing().?;
-    tables[2].display_cursor_info = @intFromPtr(&cursorInfoProbe); tables[2].display_cursor_submit = @intFromPtr(&cursorSubmitProbe);
+    const a = r4os.abi;
+    const t = std.testing;
+    var tables = makeTables(true);
+    var imports: [3]a.R4XStartImport = undefined;
+    var context: a.R4XStartContext = undefined;
+    var app = try makeApp(&tables, &imports, &context);
+    const draw = app.drawing().?;
+    tables[2].display_cursor_info = @intFromPtr(&cursorInfoProbe);
+    tables[2].display_cursor_submit = @intFromPtr(&cursorSubmitProbe);
     tables[2].display_cursor_status = @intFromPtr(&cursorStatusProbe);
-    var info: a.DisplayCursorInfo = .{}; var status: a.DisplayCursorStatus = .{ .completed=79 };
-    const request: a.DisplayCursorRequest = .{ .display_generation=0x100000079,.image_sequence=0x300000079,.x=-17 };
+    var info: a.DisplayCursorInfo = .{};
+    var status: a.DisplayCursorStatus = .{ .completed = 79 };
+    const request: a.DisplayCursorRequest = .{ .display_generation = 0x100000079, .image_sequence = 0x300000079, .x = -17 };
     for (616..640) |size| {
-        tables[2].size = @intCast(size); try t.expect(!draw.supportsDisplayCursor());
+        tables[2].size = @intCast(size);
+        try t.expect(!draw.supportsDisplayCursor());
         try t.expectEqual(a.err_no_fn, draw.displayCursorInfo(&info));
         try t.expectEqual(a.err_no_fn, draw.displayCursorSubmit(&request, &status));
         try t.expectEqual(a.err_no_fn, draw.displayCursorStatus(&status));
@@ -999,13 +1114,13 @@ fn cursorFacadeProbe() !void {
     try t.expectEqual(a.gfx_output_ok, draw.displayCursorInfo(&info));
     try t.expectEqual(a.gfx_output_ok, draw.displayCursorSubmit(&request, &status));
     try t.expectEqual(a.gfx_output_ok, draw.displayCursorStatus(&status));
-    var driver: r4os.driver_display.Context = .{ .table=.{.cursor_configure=@intFromPtr(&cursorConfigureProbe),
-        .cursor_take=@intFromPtr(&cursorTakeProbe),.cursor_complete=@intFromPtr(&cursorCompleteProbe)} };
+    var driver: r4os.driver_display.Context = .{ .table = .{ .cursor_configure = @intFromPtr(&cursorConfigureProbe), .cursor_take = @intFromPtr(&cursorTakeProbe), .cursor_complete = @intFromPtr(&cursorCompleteProbe) } };
     var job: a.GfxDriverCursorJob = .{};
-    const binding: a.GfxBackendBinding = .{ .reset_generation=0x400000079 };
-    const receipt: a.GfxDriverCursorCompletion = .{ .sequence=0x200000079,.display_generation=0x100000079 };
+    const binding: a.GfxBackendBinding = .{ .reset_generation = 0x400000079 };
+    const receipt: a.GfxDriverCursorCompletion = .{ .sequence = 0x200000079, .display_generation = 0x100000079 };
     for (72..96) |size| {
-        driver.table.size = @intCast(size); try t.expect(!driver.supportsCursor());
+        driver.table.size = @intCast(size);
+        try t.expect(!driver.supportsCursor());
         try t.expectEqual(a.err_no_fn, driver.cursorConfigure(&info));
         try t.expectEqual(a.err_no_fn, driver.cursorTake(&binding, &job));
         try t.expectEqual(a.err_no_fn, driver.cursorComplete(&receipt));
@@ -1021,7 +1136,8 @@ test "old display and driver prefixes hide output tails while C/Zig preserve rec
     try cursorFacadeProbe();
     const a = r4os.abi;
     var tables = makeTables(true);
-    tables[2].abi_version = 11; tables[2].size = 536;
+    tables[2].abi_version = 11;
+    tables[2].size = 536;
     tables[2].gfx_atomic_test = @intFromPtr(&outputTestProbe);
     var imports: [3]a.R4XStartImport = undefined;
     var context: a.R4XStartContext = undefined;
@@ -1069,8 +1185,7 @@ test "old display and driver prefixes hide output tails while C/Zig preserve rec
     try std.testing.expectEqual(a.gfx_output_ok, outputs.status(mode_status.ticket, &mode_status));
     try std.testing.expectEqual(a.gfx_output_ok, outputs.resolve(mode_status.ticket, 2, &mode_status));
     try std.testing.expect(mode_status.ticket == 0x200000079 and mode_status.phase == 5 and mode_status.retained == 3);
-    var mode_driver: r4os.driver_outputs.Context = .{ .table = .{ .mode_enable = @intFromPtr(&modeEnableProbe),
-        .mode_take = @intFromPtr(&modeTakeProbe), .mode_complete = @intFromPtr(&modeCompleteProbe) } };
+    var mode_driver: r4os.driver_outputs.Context = .{ .table = .{ .mode_enable = @intFromPtr(&modeEnableProbe), .mode_take = @intFromPtr(&modeTakeProbe), .mode_complete = @intFromPtr(&modeCompleteProbe) } };
     const mode_binding: a.GfxBackendBinding = .{ .device_generation = 0x100000079 };
     var mode_job: a.GfxDriverModeJob = .{};
     for ([_]u32{ 24, 48, 56, 64, 71 }) |bytes| {
@@ -1083,11 +1198,12 @@ test "old display and driver prefixes hide output tails while C/Zig preserve rec
     try std.testing.expectEqual(a.gfx_output_ok, mode_driver.takeMode(&mode_binding, &mode_job));
     try std.testing.expectEqual(a.gfx_output_error_stale, mode_driver.completeMode(&.{ .ticket = mode_job.ticket, .sequence = mode_job.sequence, .quiesced = 1 }));
     var old_driver: a.DriverApi = undefined;
-    old_driver.magic = a.driver_magic; old_driver.version = 26; old_driver.size = 576;
+    old_driver.magic = a.driver_magic;
+    old_driver.version = 26;
+    old_driver.size = 576;
     try std.testing.expect(r4os.r4dev.DriverContext.init(&old_driver).graphicsOutputs() == null);
     var native = r4os.driver_outputs.Context{ .table = .{ .publish = @intFromPtr(&outputPublishProbe) } };
-    var hotplug = r4os.driver_outputs.Context{ .table = .{ .output_pause = @intFromPtr(&outputPauseProbe),
-        .mode_restore = @intFromPtr(&modeRestoreProbe), .mode_status = @intFromPtr(&modeStatusProbe) } };
+    var hotplug = r4os.driver_outputs.Context{ .table = .{ .output_pause = @intFromPtr(&outputPauseProbe), .mode_restore = @intFromPtr(&modeRestoreProbe), .mode_status = @intFromPtr(&modeStatusProbe) } };
     const port: a.GfxOutputId = .{ .connection_generation = 0x40000000d };
     var color_state: a.GfxOutputColorState = .{ .formats = 7 };
     const color_before = color_state;
@@ -1121,14 +1237,14 @@ test "old display and driver prefixes hide output tails while C/Zig preserve rec
         hotplug.table.size = @intCast(bytes);
         try std.testing.expect(!hotplug.supportsHotplug());
         try std.testing.expectEqual(a.err_no_fn, hotplug.pauseOutput(&port, true));
-        try std.testing.expectEqual(a.err_no_fn, hotplug.restoreMode(&.{.count=1}, &restored));
+        try std.testing.expectEqual(a.err_no_fn, hotplug.restoreMode(&.{ .count = 1 }, &restored));
         try std.testing.expectEqual(a.err_no_fn, hotplug.modeStatus(0x200000079, &restored));
         try std.testing.expect(restored.ticket == 0);
     }
     hotplug.table.size = 112;
     try std.testing.expectEqual(a.gfx_output_ok, hotplug.pauseOutput(&port, true));
     try std.testing.expectEqual(a.gfx_output_error_busy, hotplug.pauseOutput(&port, false));
-    try std.testing.expectEqual(a.gfx_output_ok, hotplug.restoreMode(&.{.count=1}, &restored));
+    try std.testing.expectEqual(a.gfx_output_ok, hotplug.restoreMode(&.{ .count = 1 }, &restored));
     try std.testing.expectEqual(a.gfx_output_ok, hotplug.modeStatus(restored.ticket, &restored));
     hotplug.table.mode_status = 0;
     try std.testing.expect(!hotplug.supportsHotplug());
@@ -1147,7 +1263,9 @@ test "old display and driver prefixes hide output tails while C/Zig preserve rec
     try std.testing.expectEqual(@as(i32, 0), audio_routes.queryAudio(0x01000901, 0x228e10de, 1, &audio_route));
     try std.testing.expectEqualDeep(audio_before, audio_route);
     try std.testing.expectEqual(a.gfx_output_error_stale, audio_routes.publishAudio(&audio_route));
-    var publication = a.GfxOutputPublication{}; publication.info.edid_bytes = 128; publication.edid[127] = 0x79;
+    var publication = a.GfxOutputPublication{};
+    publication.info.edid_bytes = 128;
+    publication.edid[127] = 0x79;
     var identity: a.GfxOutputId = .{};
     try std.testing.expectEqual(@as(i32, 1), native.publish(&publication, &identity));
     try std.testing.expectEqual(@as(u64, 0x40000000d), identity.connection_generation);
@@ -1169,7 +1287,8 @@ test "old display and driver prefixes hide output tails while C/Zig preserve rec
     native.table.size = @offsetOf(a.GfxDriverOutputApi, "publish");
     try std.testing.expectEqual(a.err_no_fn, native.publish(&publication, &identity));
     try std.testing.expectEqual(@as(u64, 0x40000000d), identity.connection_generation);
-    old_driver.version = 27; old_driver.size = 584;
+    old_driver.version = 27;
+    old_driver.size = 584;
     try std.testing.expect(r4os.r4dev.DriverContext.init(&old_driver).graphicsDisplay() == null);
     var display = r4os.driver_display.Context{ .table = .{ .transition = @intFromPtr(&displayTransitionProbe), .schedule = @intFromPtr(&displayScheduleProbe) } };
     var outcome = a.GfxNativeState{};
@@ -1293,7 +1412,9 @@ fn fakeActivityWait(last_sequence: u64, timeout_ticks: u64, out_sequence: *u64) 
     return 0;
 }
 
-fn fakeActivityNotify() callconv(.c) i32 { return 0; }
+fn fakeActivityNotify() callconv(.c) i32 {
+    return 0;
+}
 
 fn fakeClear(rgb: u32) callconv(.c) i32 {
     _ = rgb;
@@ -1498,38 +1619,57 @@ fn replayCaptured(width: usize, height: usize, output: []u32) void {
 
 // Language interop reuses the original callbacks, capture and pixel oracle.
 // These exports belong to the test object, never the SDK product runtime.
-pub export fn sdk_gfx_oracle_tables(sys:*r4os.abi.R4XStartR4Sys,desk:*r4os.abi.R4XStartR4Desk,draw:*r4os.abi.R4XStartR4Draw) callconv(.c) void {
-    sdk_gui_oracle_tables(sys,desk,draw);
-    draw.gfx_buffer_map=@intFromPtr(&gfxMapProbe);
-    draw.gfx_buffer_map_persistent=@intFromPtr(&gfxMapProbe);
-    draw.gfx_fence_wait=@intFromPtr(&gfxWaitProbe);
-    draw.gfx_queue_submit_native=@intFromPtr(&nativeSubmitProbe);
-    draw.gfx_queue_backend_info=@intFromPtr(&gfxBackendInfoProbe);
-    draw.gfx_atomic_test=@intFromPtr(&outputTestProbe);
-    draw.gfx_atomic_submit=@intFromPtr(&modeSubmitProbe);
-    draw.gfx_atomic_status=@intFromPtr(&modeStatusProbe);
-    draw.gfx_atomic_resolve=@intFromPtr(&modeResolveProbe);
-    draw.gfx_memory_budget=@intFromPtr(&budgetProbe);
-    draw.gfx_telemetry=@intFromPtr(&telemetryProbe);
-    draw.display_cursor_info=@intFromPtr(&cursorInfoProbe);
-    draw.display_cursor_status=@intFromPtr(&cursorStatusProbe);
-    draw.display_cursor_submit=@intFromPtr(&cursorSubmitProbe);
-    budget_probe_rc=1;
+pub export fn sdk_gfx_oracle_tables(sys: *r4os.abi.R4XStartR4Sys, desk: *r4os.abi.R4XStartR4Desk, draw: *r4os.abi.R4XStartR4Draw) callconv(.c) void {
+    sdk_gui_oracle_tables(sys, desk, draw);
+    draw.gfx_buffer_map = @intFromPtr(&gfxMapProbe);
+    draw.gfx_buffer_map_persistent = @intFromPtr(&gfxMapProbe);
+    draw.gfx_fence_wait = @intFromPtr(&gfxWaitProbe);
+    draw.gfx_queue_submit_native = @intFromPtr(&nativeSubmitProbe);
+    draw.gfx_queue_backend_info = @intFromPtr(&gfxBackendInfoProbe);
+    draw.gfx_atomic_test = @intFromPtr(&outputTestProbe);
+    draw.gfx_atomic_submit = @intFromPtr(&modeSubmitProbe);
+    draw.gfx_atomic_status = @intFromPtr(&modeStatusProbe);
+    draw.gfx_atomic_resolve = @intFromPtr(&modeResolveProbe);
+    draw.gfx_memory_budget = @intFromPtr(&budgetProbe);
+    draw.gfx_telemetry = @intFromPtr(&telemetryProbe);
+    draw.display_cursor_info = @intFromPtr(&cursorInfoProbe);
+    draw.display_cursor_status = @intFromPtr(&cursorStatusProbe);
+    draw.display_cursor_submit = @intFromPtr(&cursorSubmitProbe);
+    budget_probe_rc = 1;
 }
-pub export fn sdk_gui_oracle_tables(sys:*r4os.abi.R4XStartR4Sys,desk:*r4os.abi.R4XStartR4Desk,draw:*r4os.abi.R4XStartR4Draw) callconv(.c) void {
-    var tables=makeTables(true);enableFrameContract(&tables[2]);
-    sys.*=tables[0];desk.*=tables[1];draw.*=tables[2];
-    event_index=0;interop_codepoint=0x1f642;now_ticks=100;clipboard_revision=7;
-    activity_waits=0;frame_begin_count=0;frame_append_count=0;frame_commit_count=0;frame_cancel_count=0;frame_append_fail_at=0;
-    draw_count=0;alpha8_count=0;raster_count=0;present_count=0;resetFrameCapture();
+pub export fn sdk_gui_oracle_tables(sys: *r4os.abi.R4XStartR4Sys, desk: *r4os.abi.R4XStartR4Desk, draw: *r4os.abi.R4XStartR4Draw) callconv(.c) void {
+    var tables = makeTables(true);
+    enableFrameContract(&tables[2]);
+    sys.* = tables[0];
+    desk.* = tables[1];
+    draw.* = tables[2];
+    event_index = 0;
+    interop_codepoint = 0x1f642;
+    now_ticks = 100;
+    clipboard_revision = 7;
+    activity_waits = 0;
+    frame_begin_count = 0;
+    frame_append_count = 0;
+    frame_commit_count = 0;
+    frame_cancel_count = 0;
+    frame_append_fail_at = 0;
+    draw_count = 0;
+    alpha8_count = 0;
+    raster_count = 0;
+    present_count = 0;
+    resetFrameCapture();
 }
-pub export fn sdk_gui_oracle_pixels(out:[*]u32,count:usize) callconv(.c) i32 {
-    if(count!=12)return -1;
-    replayCaptured(4,3,out[0..count]);
-    return if(captured_command_count==5 and captured_resource_len==12 and captured_commands[4].resource_offset==0 and frame_append_count==1 and frame_commit_count==1 and draw_count==0 and raster_count==0)0 else -2;
+pub export fn sdk_gui_oracle_pixels(out: [*]u32, count: usize) callconv(.c) i32 {
+    if (count != 12) return -1;
+    replayCaptured(4, 3, out[0..count]);
+    return if (captured_command_count == 5 and captured_resource_len == 12 and captured_commands[4].resource_offset == 0 and frame_append_count == 1 and frame_commit_count == 1 and draw_count == 0 and raster_count == 0) 0 else -2;
 }
-pub export fn sdk_gui_oracle_fail_append(at:u32) callconv(.c) void {frame_append_fail_at=at;}
-pub export fn sdk_gui_oracle_cancelled() callconv(.c) u32 {return frame_cancel_count;}
+pub export fn sdk_gui_oracle_fail_append(at: u32) callconv(.c) void {
+    frame_append_fail_at = at;
+}
+pub export fn sdk_gui_oracle_cancelled() callconv(.c) u32 {
+    return frame_cancel_count;
+}
 
 fn makeApp(tables: anytype, imports: *[3]r4os.abi.R4XStartImport, context: *r4os.abi.R4XStartContext) !r4os.App {
     imports.* = .{
@@ -1555,7 +1695,11 @@ test "raw GUI events become typed messages and paint presents once" {
     draw_count = 0;
     alpha8_count = 0;
     present_count = 0;
+    frame_begin_count = 0;
+    frame_commit_count = 0;
+    frame_cancel_count = 0;
     var tables = makeTables(true);
+    enableFrameContract(&tables[2]);
     var imports: [3]r4os.abi.R4XStartImport = undefined;
     var context: r4os.abi.R4XStartContext = undefined;
     var app = try makeApp(&tables, &imports, &context);
@@ -1606,7 +1750,10 @@ test "raw GUI events become typed messages and paint presents once" {
     try std.testing.expectEqual(@as(u8, 50), alpha8_first);
     try std.testing.expectEqual(@as(i32, 0), paint.present());
     try std.testing.expectEqual(@as(i32, r4os.abi.err_no_fn), paint.present());
-    try std.testing.expect(draw_count >= 2 and present_count == 1);
+    try std.testing.expect(draw_count >= 2 and present_count == 0);
+    try std.testing.expectEqual(@as(u32, 1), frame_begin_count);
+    try std.testing.expectEqual(@as(u32, 1), frame_commit_count);
+    try std.testing.expectEqual(@as(u32, 0), frame_cancel_count);
 }
 
 test "command clipboard timer wait and missing draw capability stay explicit" {
@@ -1797,7 +1944,7 @@ test "buffered Canvas keeps pixels identical while collapsing draw transitions" 
     );
 }
 
-test "buffered Canvas covers widgets partial flush direct fallback and old tables" {
+test "buffered Canvas covers widgets partial flush direct operations and rejects missing transactions" {
     frame_begin_count = 0;
     frame_commit_count = 0;
     frame_cancel_count = 0;
@@ -1834,31 +1981,22 @@ test "buffered Canvas covers widgets partial flush direct fallback and old table
     try std.testing.expectEqual(@as(u64, 2), builder.stats.direct_chunks);
     try std.testing.expect(builder.stats.drawTransitions() < builder.stats.logical_commands);
 
-    // The same facade on an old table uses the established draw calls and
-    // PRESENT.  No batch operation is attempted.
+    // A shorter/current provider without the required transaction callbacks
+    // is refused before any drawing or PRESENT; no old-OS reconstruction.
     resetFrameCapture();
     draw_count = 0;
     present_count = 0;
-    var legacy_tables = makeTables(true);
-    var legacy_imports: [3]r4os.abi.R4XStartImport = undefined;
-    var legacy_context: r4os.abi.R4XStartContext = undefined;
-    var legacy_app = try makeApp(&legacy_tables, &legacy_imports, &legacy_context);
-    var legacy_window = legacy_app.window(timers[0..]) orelse return error.WindowMissing;
-    var legacy_paint = switch (legacy_window.beginPaint()) {
-        .paint => |value| value,
-        .failure => return error.Paint,
-    };
-    defer legacy_paint.discard();
-    var legacy_builder: r4os.FrameCanvas = undefined;
-    const legacy_canvas = legacy_paint.bufferedCanvas(&legacy_builder, commands[0..], resources[0..]);
-    try std.testing.expectEqual(@as(i32, 0), legacy_canvas.clear(0));
-    try std.testing.expectEqual(@as(i32, 0), legacy_canvas.rect(.{ .x = 1, .y = 1, .w = 2, .h = 2 }, 1));
-    try std.testing.expectEqual(@as(i32, 0), legacy_canvas.text(1, 1, "old", 1, 0));
-    try std.testing.expectEqual(@as(i32, 0), legacy_paint.present());
-    try std.testing.expectEqual(@as(u64, 3), legacy_builder.stats.legacy_calls);
-    try std.testing.expectEqual(@as(u64, 3), legacy_builder.stats.drawTransitions());
-    try std.testing.expectEqual(@as(u32, 3), draw_count);
-    try std.testing.expectEqual(@as(u32, 1), present_count);
+    var incomplete_tables = makeTables(true);
+    var incomplete_imports: [3]r4os.abi.R4XStartImport = undefined;
+    var incomplete_context: r4os.abi.R4XStartContext = undefined;
+    var incomplete_app = try makeApp(&incomplete_tables, &incomplete_imports, &incomplete_context);
+    var incomplete_window = incomplete_app.window(timers[0..]) orelse return error.WindowMissing;
+    switch (incomplete_window.beginPaint()) {
+        .paint => return error.IncompatiblePaintAccepted,
+        .failure => |code| try std.testing.expectEqual(r4os.abi.err_no_fn, code),
+    }
+    try std.testing.expectEqual(@as(u32, 0), draw_count);
+    try std.testing.expectEqual(@as(u32, 0), present_count);
     try std.testing.expectEqual(@as(u32, 0), frame_append_count);
 }
 
@@ -1919,6 +2057,7 @@ fn reservedSpanFacadeProbe() !void {
     try std.testing.expectEqual(a.gfx_buffer_error_unsupported, memory.unmanagedSpan(0x200000000, 0x20000000));
     memory.table.version = 2;
     try std.testing.expectEqual(a.err_no_fn, memory.unmanagedSpan(0x200000000, 0x20000000));
-    memory.table.version = 1; memory.table.unmanaged_span = 0;
+    memory.table.version = 1;
+    memory.table.unmanaged_span = 0;
     try std.testing.expectEqual(a.err_no_fn, memory.unmanagedSpan(0x200000000, 0x20000000));
 }

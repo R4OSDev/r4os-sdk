@@ -55,7 +55,6 @@ pub export fn R4SdkNet_ipcPerformance(context: *const abi.R4XStartContext, p0: u
 pub export fn R4SdkNet_netServiceRequest(context: *const abi.R4XStartContext, p0: u32, p1: u16, p2: u32, p3: [*]const u8, n3: u32, p4: [*]u8, n4: u32) callconv(.c) i32 {
     const bundle = bridge.bundle(context) orelse return abi.err_no_group;
     const owner = net.Context.init(&bundle);
-    if (!owner.hasFn("net_service_request")) return abi.err_no_fn; // No old raw-IPC replacement.
     const value = owner.netServiceRequest(p0, p1, p2, p3[0..n3], p4[0..n4]);
     return value;
 }
