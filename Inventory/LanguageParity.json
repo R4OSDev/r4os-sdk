@@ -45524,7 +45524,8 @@
         "source_inventory",
         "local_contract_and_baseline",
         "language_libraries_current_60",
-        "library_projection_current_61"
+        "library_projection_current_61",
+        "current_providers_79"
       ],
       "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten."
     },
@@ -48682,6 +48683,18 @@
       ],
       "provider": "Repositories/Kernel/Rust/program/runtime_tables.rs; normal kernel0.1.381 BOOT/ELF unchanged",
       "rule": "Current Contract44 and exact technical SDK/toolchain inputs. Keep group/import/magic/version/size/nullable/tombstone admission. Each used current callback is required; paint requires begin/append/commit/cancel/info/read. Optional unrelated capabilities and offscreen/host roles do not require a full table. Missing operations refuse or retain their established scalar0/void convention without synthesizing fonts, consuming a byte key, polling raw IPC, down-projecting default V2 or creating an old paint transaction. Current direct canvas operations and hardware/data options remain."
+    },
+    {
+      "id": "current-provider-epoch-79",
+      "decision": "require_complete_actual_provider_no_implicit_old_request",
+      "wave": "0.86.79",
+      "sources": [
+        "Repositories/Libraries/R4GFX/Source/device.zig",
+        "Repositories/Libraries/R4GFX/Source/providers.zig",
+        "Repositories/Drivers/NVIDIA/src/gsp_runtime.zig",
+        "Repositories/Services/TimeService/src/main.zig"
+      ],
+      "rule": "Current GfxBackendInfo152 with explicit copy operations and independent nonzero memory epoch; NVIDIA requires profile registration, never substitutes unprofiled on NoFn. Time service requires nonzero explicit current selector flags. Keep valid format/hardware options and real retirement acknowledgements."
     }
   ],
   "evidence": {
@@ -53449,6 +53462,41 @@
         "platform_current_58",
         "independent_desktop_current_71"
       ]
+    },
+    "current_providers_79": {
+      "complete": true,
+      "performed_in": "0.86.79",
+      "sdk": "0.64.91",
+      "contract": "0.64.44",
+      "libraries": "0.64.28",
+      "scope": "R4GFX provider implementation37, NVIDIA314 profiled registration and TIMESVC6 explicit selector. SDK consumer/helper/generated ABI bodies unchanged; no additional language implementation or contract revision.",
+      "provider_cases": "Existing device/cpu-render/swapchain case1/1: full independent epochs,136/144/151-byte/no-memory/no-copy refusal without vendor call; original pixels/ownership retained. Existing NVIDIA storage/init owner case: profile-NoFn refuses without unprofiled fallback then current profile succeeds, partial-resource retention intact.",
+      "guest": {
+        "accelerator": "KVM",
+        "cpus": 4,
+        "release": "0.86.79",
+        "kernel": "0.1.381",
+        "kernel_sha256": "e06111b9363b44712fe69ded9ddfc3edb1f60c5c271c59a42238a816b0882340",
+        "r4gfx_sha256": "0563f598b4798397bc4ae056fd5cddd131b4dca47aa054f9b34c2017fc9683aa",
+        "timesvc_sha256": "d58c6b182d5eff06b3ae6b6a443b9793ad8e24914843b72e7ac6576afa845700",
+        "functional": "Existing DISPLAYD /BUFFERS actual loaded R4GFX API/DEVICE/RENDER pixels/padding/BO map/shared import and balanced release; TIMESVC /SELFTEST old flagless rejection preserves config/revision/writes and current valid operations, restores config/date. Both actual ERRORLEVEL0; full installed selected bytes/BOOT readback.",
+        "qemu_shutdown_exit": 0
+      },
+      "nvidia": {
+        "sha256": "654f65909be597f09cb96c5476036029fb654f380b9e2034015b716074cd6e3b",
+        "scope": "Built/inspected and genuine CPU owner implementation tested. Manifest scope=none; no injected guest module or physical hardware qualification."
+      },
+      "retained": "Explicit WINSVC geometry/color capability, generically unprofiled registration for other current providers, actual hardware/format/persisted user-data and synchronous IO/PID diagnosis contracts remain. Kernel graphic prefixes stay coupled80 follow-up.",
+      "proof": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.79",
+      "windows_execution": false,
+      "hardware_qualification": false,
+      "rust_direct_fp_simd_qualification": false,
+      "reuse": [
+        "language_libraries_current_60",
+        "library_projection_current_61",
+        "source_review_current_72",
+        "current_contract_78"
+      ]
     }
   },
   "wave_bindings": [
@@ -53694,12 +53742,12 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.86.78",
+    "performed_in": "0.86.79",
     "sdk": "0.64.91",
     "contract": "0.64.44",
-    "libraries": "0.64.27",
-    "evidence": "current_contract_78",
-    "scope": "Ten actual SDK owner/bridge/C header/version deltas reviewed and qualified with original native Zig/C/Rust owner, negative, pixel and real KVM4 C/Rust consumers. Current per-operation minima, no synthetic old-OS behavior. Unchanged full functional scope47-72 reused; explicit provider/prefix/subsystem residual80 remains separately tracked. Windows/hardware/direct Rust FP/SIMD/performance not inferred."
+    "libraries": "0.64.28",
+    "evidence": "current_providers_79",
+    "scope": "SDK ABI/consumer/helper/generator bodies and all655 watched hashes remain byte-normalized equal to78; reviewed actual R4GFX module-provider delta with existing owner case and live public API/DEVICE/RENDER software consumer. Same R4L implementation under unchanged Zig/C/Rust bindings. NVIDIA CPU owner and actual TIMESVC current/refusal selftest qualify only their bounded scope; untouched full language/role evidence47-78 reused."
   },
   "drift_guard": {
     "schema": 1,
@@ -56908,7 +56956,8 @@
         "proof": [
           "local_contract_and_baseline",
           "library_projection_current_61",
-          "language_libraries_current_60"
+          "language_libraries_current_60",
+          "current_providers_79"
         ]
       },
       {
