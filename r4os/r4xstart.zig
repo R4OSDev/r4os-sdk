@@ -421,6 +421,19 @@ pub const R4Sys = struct {
         return instance_fn(index, out);
     }
 
+    pub fn programLifecycleBegin(self: *const R4Sys, cursor: *abi.ProgramInventoryCursor) i32 {
+        if (!self.hasFn("program_lifecycle_begin")) return abi.err_no_fn;
+        const call: abi.R4SysFns.program_lifecycle_begin = @ptrFromInt(self.table.program_lifecycle_begin);
+        return call(cursor);
+    }
+
+    pub fn programLifecyclePrograms(self: *const R4Sys, cursor: *abi.ProgramInventoryCursor, out: []abi.ProgramLifecycleSnapshot, page: *abi.ProgramInventoryPageInfo) i32 {
+        if (out.len == 0 or out.len > @as(usize, abi.program_inventory_page_max)) return abi.program_handle_error_invalid;
+        if (!self.hasFn("program_lifecycle_programs")) return abi.err_no_fn;
+        const call: abi.R4SysFns.program_lifecycle_programs = @ptrFromInt(self.table.program_lifecycle_programs);
+        return call(cursor, out.ptr, @intCast(out.len), page);
+    }
+
     pub fn programInventoryBegin(self: *const R4Sys, cursor: *abi.ProgramInventoryCursor, out: *abi.ProgramInventorySummary) i32 {
         if (!self.hasFn("program_inventory_begin")) return abi.program_handle_error_invalid;
         const inventory_fn: ProgramInventoryBeginFn = @ptrFromInt(self.table.program_inventory_begin);

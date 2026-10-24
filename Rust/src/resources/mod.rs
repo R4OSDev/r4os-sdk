@@ -13,7 +13,7 @@ mod vm;
 pub use io::{IoBuffers, IoOpenError, OwnedIo};
 pub use io::{IoControl, IoOperation, IoRequest, WriteKind};
 pub use notification::{Notification, StopFlag};
-pub use process::{Inventory, Process};
+pub use process::{Inventory, Lifecycle, Process};
 pub use thread::{JoinHandle, Placement};
 pub use vm::VmRegion;
 

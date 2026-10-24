@@ -272,6 +272,25 @@ static inline int32_t r4sys_thread_status(R4Sys *sys, uint32_t thread_id, R4Prog
     return status_fn(thread_id, out_info);
 }
 
+/* Explicit lifecycle metadata capability, independent of diagnostic inventory. */
+static inline int r4sys_supports_program_lifecycle(R4Sys *sys) {
+    return sys != 0 && sys->table != 0 &&
+        sys->table->size >= offsetof(R4XStartR4Sys, program_lifecycle_programs) + sizeof(uintptr_t) &&
+        sys->table->program_lifecycle_begin != 0 && sys->table->program_lifecycle_programs != 0;
+}
+static inline int32_t r4sys_program_lifecycle_begin(R4Sys *sys, R4ProgramInventoryCursor *cursor) {
+    if (cursor == 0) return R4OS_PROGRAM_HANDLE_ERROR_INVALID;
+    if (!r4sys_supports_program_lifecycle(sys)) return R4OS_ERR_NO_FN;
+    return ((R4SysProgramLifecycleBeginFn)(uintptr_t)sys->table->program_lifecycle_begin)(cursor);
+}
+static inline int32_t r4sys_program_lifecycle_programs(R4Sys *sys, R4ProgramInventoryCursor *cursor,
+    R4ProgramLifecycleSnapshot *out, uint32_t capacity, R4ProgramInventoryPageInfo *page) {
+    if (cursor == 0 || out == 0 || page == 0 || capacity == 0u || capacity > R4OS_PROGRAM_INVENTORY_PAGE_MAX)
+        return R4OS_PROGRAM_HANDLE_ERROR_INVALID;
+    if (!r4sys_supports_program_lifecycle(sys)) return R4OS_ERR_NO_FN;
+    return ((R4SysProgramLifecycleProgramsFn)(uintptr_t)sys->table->program_lifecycle_programs)(cursor, out, capacity, page);
+}
+
 static inline int r4sys_supports_program_inventory(R4Sys *sys) {
     if (sys == 0 || sys->table == 0) return 0;
     if (sys->table->size < offsetof(R4XStartR4Sys, program_inventory_threads) + sizeof(uintptr_t)) return 0;

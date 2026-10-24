@@ -1563,3 +1563,34 @@ fn platformFacade() !void {
     sys.platform_input_snapshot = 0;
     try t.expectEqual(a.err_no_fn, ctx.platformInputSnapshot(&snapshot));
 }
+
+fn lifecycleBegin(cursor: *r4os.abi.ProgramInventoryCursor) callconv(.c) i32 {
+    cursor.* = .{ .snapshot_generation = 91, .program_epoch = 91, .flags = r4os.abi.program_inventory_cursor_flag_initialized | r4os.abi.program_inventory_cursor_flag_lifecycle };
+    return 0;
+}
+fn lifecyclePrograms(cursor: *r4os.abi.ProgramInventoryCursor, out: [*]r4os.abi.ProgramLifecycleSnapshot, capacity: u32, page: *r4os.abi.ProgramInventoryPageInfo) callconv(.c) i32 {
+    std.debug.assert(capacity == 2 and cursor.snapshot_generation == 91);
+    out[0] = .{ .handle = .{ .instance_id = 42, .generation = 0x1234567887654321 }, .task_id = 73, .role = 2, .app_class = 1, .state = 1, .flags = 2, .exit_code = -17, .window_id = -1 };
+    page.* = .{ .snapshot_generation = 91, .returned = 1, .kind = r4os.abi.program_inventory_kind_lifecycle, .status = r4os.abi.program_inventory_status_complete };
+    return 0;
+}
+test "process thread VM and I/O resources preserve separate metadata-only lifecycle admission" {
+    const a = r4os.abi;
+    var table: a.R4XStartR4Sys = .{ .program_lifecycle_begin = @intFromPtr(&lifecycleBegin), .program_lifecycle_programs = @intFromPtr(&lifecyclePrograms) };
+    const raw: a.R4XStartContext = .{};
+    const bundle: r4os.program.Bundle = .{ .raw = &raw, .sys = &table };
+    const context = r4os.r4sys.Context.init(&bundle);
+    var cursor: a.ProgramInventoryCursor = .{};
+    var page: a.ProgramInventoryPageInfo = .{};
+    var rows: [2]a.ProgramLifecycleSnapshot = @splat(.{});
+    try std.testing.expectEqual(@as(i32, 0), context.programLifecycleBegin(&cursor));
+    try std.testing.expectEqual(@as(i32, 0), context.programLifecyclePrograms(&cursor, &rows, &page));
+    try std.testing.expectEqual(@as(u64, 0x1234567887654321), rows[0].handle.generation);
+    try std.testing.expectEqual(@as(i32, -17), rows[0].exit_code);
+    try std.testing.expectEqual(@as(i32, -1), rows[0].window_id);
+    try std.testing.expectEqual(a.program_handle_error_invalid, context.programLifecyclePrograms(&cursor, rows[0..0], &page));
+    table.program_lifecycle_programs = 0;
+    try std.testing.expectEqual(a.err_no_fn, context.programLifecyclePrograms(&cursor, &rows, &page));
+    table.program_lifecycle_begin = 0;
+    try std.testing.expectEqual(a.err_no_fn, context.programLifecycleBegin(&cursor));
+}

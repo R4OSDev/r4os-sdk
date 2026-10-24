@@ -82,6 +82,14 @@ pub const IoWait = union(enum) {
 pub const Resources = struct {
     sys: r4sys.Context,
 
+    pub fn lifecycleBegin(self: *const Resources, cursor: *abi.ProgramInventoryCursor) i32 {
+        return self.sys.programLifecycleBegin(cursor);
+    }
+
+    pub fn lifecyclePrograms(self: *const Resources, cursor: *abi.ProgramInventoryCursor, out: []abi.ProgramLifecycleSnapshot, page: *abi.ProgramInventoryPageInfo) i32 {
+        return self.sys.programLifecyclePrograms(cursor, out, page);
+    }
+
     pub fn available(self: *const Resources) bool {
         return self.sys.hasFn("program_spawn_handle") and self.sys.hasFn("program_open_handle") and
             self.sys.hasFn("program_handle_status") and self.sys.hasFn("program_handle_request_close") and

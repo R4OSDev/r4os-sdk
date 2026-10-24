@@ -436,6 +436,15 @@ static inline int32_t r4_resources_cpu_capacity(R4Resources *resources, R4CpuCap
     if (!resources || !resources->app) return R4OS_ERR_NO_FN;
     return r4sys_cpu_capacity(&resources->app->system, out);
 }
+static inline int32_t r4_resources_program_lifecycle_begin(R4Resources *resources, R4ProgramInventoryCursor *cursor) {
+    if (resources == 0 || resources->app == 0) return R4OS_PROGRAM_HANDLE_ERROR_INVALID;
+    return r4sys_program_lifecycle_begin(&resources->app->system, cursor);
+}
+static inline int32_t r4_resources_program_lifecycle_programs(R4Resources *resources, R4ProgramInventoryCursor *cursor,
+    R4ProgramLifecycleSnapshot *out, uint32_t capacity, R4ProgramInventoryPageInfo *page) {
+    if (resources == 0 || resources->app == 0) return R4OS_PROGRAM_HANDLE_ERROR_INVALID;
+    return r4sys_program_lifecycle_programs(&resources->app->system, cursor, out, capacity, page);
+}
 static inline int32_t r4_resources_program_inventory_begin(R4Resources *resources, R4ProgramInventoryCursor *cursor, R4ProgramInventorySummary *summary) {
     if (!resources || !resources->app) return R4OS_ERR_NO_FN;
     return r4sys_program_inventory_begin(&resources->app->system, cursor, summary);

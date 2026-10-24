@@ -979,6 +979,14 @@ pub const Context = struct {
         return self.base.programInstance(index, out);
     }
 
+    pub fn programLifecycleBegin(self: *const Context, cursor: *abi.ProgramInventoryCursor) i32 {
+        return self.base.programLifecycleBegin(cursor);
+    }
+
+    pub fn programLifecyclePrograms(self: *const Context, cursor: *abi.ProgramInventoryCursor, out: []abi.ProgramLifecycleSnapshot, page: *abi.ProgramInventoryPageInfo) i32 {
+        return self.base.programLifecyclePrograms(cursor, out, page);
+    }
+
     pub fn programInventoryBegin(self: *const Context, cursor: *abi.ProgramInventoryCursor, out: *abi.ProgramInventorySummary) i32 {
         return self.base.programInventoryBegin(cursor, out);
     }

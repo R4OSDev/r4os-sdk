@@ -16,23 +16,23 @@
   "canonical_platform_sources": [
     {
       "path": "Repositories/Contract/API/ApiContract.json",
-      "sha256": "521c5be36935d3f670b1991e303bcb6e88bf420dc4ee4c7428b7cf878dc2a1e3"
+      "sha256": "78cfde7bb88d6f80cefa91a030b5752bb1362818dab0172c7b41a6bd1d195a9f"
     },
     {
       "path": "Repositories/Contract/Generated/Inventory/API.json",
-      "sha256": "d8a0d41b8dff43462a4a5b4e54299dc14fea8becb41e071bf4c6f294098b9bd0"
+      "sha256": "1052d096954e1358c3a345973f1d6447b1d4ba9da36fab8c701971505e9a42a8"
     },
     {
       "path": "Repositories/Contract/Generated/Inventory/RustABI.json",
-      "sha256": "ff8c45bd94d79705426840b186ccf3c684b4d8c8dd8c5f5e3d4cd987b68db1eb"
+      "sha256": "ffa039f3d19a33ca903ef4d064685cd2514149ba9654d8b15aa31f3ef18dffd3"
     }
   ],
   "platform_groups": [
     {
       "name": "R4SYS",
       "import_name": "R4SYS:Query:1",
-      "current_abi_version": 28,
-      "current_table_bytes": 1304,
+      "current_abi_version": 29,
+      "current_table_bytes": 1320,
       "canonical_pointer": "/groups/0",
       "minimum": "Neue Fassaden zielen auf diese aktuelle Vertragsgeneration; keine Emulation alter R4OS-Tabellen. Import-/Hardwareoption und Groessen-/Nullzeigerpruefung bleiben.",
       "owner": "Repositories/Contract",
@@ -45,7 +45,8 @@
         "central_abi_interop",
         "independent_desktop_current_71",
         "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.49",
-        "resource_current_54"
+        "resource_current_54",
+        "lifecycle_metadata_87"
       ]
     },
     {
@@ -162,11 +163,11 @@
       "API/ApiContract.json",
       "Generated/SDK/Zig/abi.zig"
     ],
-    "extern_structs": 462,
-    "fields": 7865,
+    "extern_structs": 463,
+    "fields": 7877,
     "integer_enums": 20,
-    "callback_declarations": 643,
-    "constants": 3166,
+    "callback_declarations": 645,
+    "constants": 3168,
     "scalar_float_abi_values": 0,
     "direct_vector_abi_values": 0,
     "excluded_zig_metadata_types": [
@@ -175,8 +176,8 @@
       "R4ApiSlotMeta"
     ],
     "target": "x86_64-unknown-none",
-    "reviewed_in": "0.86.80",
-    "evolution": "Two unused V1 records/39 fields and three retired callback declarations removed. Current record layouts remain; snapshot47 identities stay in snapshot."
+    "reviewed_in": "0.86.87",
+    "evolution": "One general40-byte lifecycle record, two tail callbacks and two cursor/kind constants appended; all previous record layouts/slots preserved, R4SYS header revision29/size1320."
   },
   "capabilities": [
     {
@@ -522,7 +523,8 @@
         "Repositories/SDK/Tests/Simulation/RustResources.rs",
         "Repositories/SDK/Tests/Simulation/ResourceCallbacks.c",
         "Repositories/SDK/Tests/Build/RustResources",
-        "Repositories/SDK/Tests/Conformance/ResourceFacadePrototype05825.zig"
+        "Repositories/SDK/Tests/Conformance/ResourceFacadePrototype05825.zig",
+        "lifecycle_metadata_87"
       ],
       "shared_core": "Bestehender C-AppResources-Besitzer und native R4SYS-Callbacks; keine zweite VM-/Scheduler-/Prozess-/IOimplementierung. Eigener Code nur fuer Rust-Besitz und API-sichere Pufferretention."
     },
@@ -53988,6 +53990,18 @@
         "c_projection_check": true,
         "guest": "Real local software Desktop audio master35%/muted,40%/unmuted and exact restore passed in owned-host capture qualification; no physical audio or Windows claim. One earlier BASIC fixture Exit120 is not a proven SDK-audio repair."
       }
+    },
+    "lifecycle_metadata_87": {
+      "complete": true,
+      "performed_in": "0.86.87",
+      "sdk": "0.64.95",
+      "contract": "0.64.46",
+      "libraries": "0.64.31",
+      "contract_commit": "9e6a453167c7f1cfe72fabed5e366ad56fcc1d86",
+      "report": "Docs/Desktop/RustOptimierungen086.json",
+      "native": "Actual focused Zig resources; native C/Release-Rust resources and two unsafe/Send compiler negatives. Exact40-byte state/64-bit handles, Busy/restart/invalid-prefix/mixed-mode boundaries. Canonical Contract test with26 mutations and C/Zig/Rust layout checks. Generated shared Library Rust projection write/check.",
+      "guest": "Normal Rust Desktop148 uses general lifecycle Resources on normal Kernel383; original DESKTOP /HOST /RESTART check, full installed-byte/BOOT readback and exact host close/completion/reap0. Bounded explicit LIFECYCLE /METADATA compares unchanged full diagnostic fields and current mode/restart/close/completion/reap/ID-reuse. Actual compact outputs in shared report.",
+      "limits": "No new full SDK/Windows/hardware/direct Rust SIMD qualification. Compiled call paths, actual caller work, wall acquisition time and global frame comparison remain separate evidence."
     }
   },
   "wave_bindings": [
@@ -54233,17 +54247,17 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.86.86",
-    "sdk": "0.64.94",
-    "contract": "0.64.45",
-    "libraries": "0.64.30",
-    "evidence": "service_audio_admission_86",
-    "scope": "Same658 watched files/35 scopes/180 root exports. General service-only audio, shared Rust build route, precise clock/storage/grapheme/media adapters and common memory primitives qualified on Linux through existing owners. Normal modular Rust Desktop147 uses SDK94; exact combined runtime evidence and unchanged-scope limits in Desktop/RustMigration08686.json. No new public package/Windows/physical/direct Rust SIMD qualification."
+    "performed_in": "0.86.87",
+    "sdk": "0.64.95",
+    "contract": "0.64.46",
+    "libraries": "0.64.31",
+    "evidence": "lifecycle_metadata_87",
+    "scope": "Only the additive general40-byte lifecycle projection/current1320-byte R4SYS table and changed Zig/C/Rust resource facades reviewed. Original full diagnostic inventory and unrelated language scopes unchanged. Real Linux native owner/interop and current normal Rust Desktop148 guest; no whole-SDK, Windows, hardware or direct Rust SIMD claim."
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.86.86",
+    "reviewed_in": "0.86.87",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -54299,23 +54313,23 @@
     "files": [
       {
         "path": "Repositories/Contract/API/ApiContract.baseline.json",
-        "sha256": "f3e88ae85fa4777daa4c2ef39ce9255561575ef33548a7f3f15d1a7afb210b5c"
+        "sha256": "78cfde7bb88d6f80cefa91a030b5752bb1362818dab0172c7b41a6bd1d195a9f"
       },
       {
         "path": "Repositories/Contract/API/ApiContract.json",
-        "sha256": "f3e88ae85fa4777daa4c2ef39ce9255561575ef33548a7f3f15d1a7afb210b5c"
+        "sha256": "78cfde7bb88d6f80cefa91a030b5752bb1362818dab0172c7b41a6bd1d195a9f"
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/API.json",
-        "sha256": "547cba50aa53eddfde42440dcc0936d25daeddcdf93a0530d9935793510c1be8"
+        "sha256": "1052d096954e1358c3a345973f1d6447b1d4ba9da36fab8c701971505e9a42a8"
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/RustABI.json",
-        "sha256": "0382d9a986bca9a79417b3e5df10d48be002dd9667c6f4286da021774fb23dc0"
+        "sha256": "ffa039f3d19a33ca903ef4d064685cd2514149ba9654d8b15aa31f3ef18dffd3"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_generated.h",
-        "sha256": "8d07d16a501c135688edae320f73f4d202456fde027676312898c83cf8761a02"
+        "sha256": "427da8f19b2f4eeb9afd69ce507df2e9012237bee14655ca5bbb89a131a3a205"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_technical_generated.h",
@@ -54327,19 +54341,19 @@
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Rust/src/lib.rs",
-        "sha256": "858d2074f95d8e6084698e67cc95070e38e74e38ced4eac8e708d231b122fe03"
+        "sha256": "27d95fa2faee76e5af0bc5fd3b0063f66a1eaa192a6f0a85f5d3ddbdd72cfd19"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi.zig",
-        "sha256": "c20ae90960a6702068a827744d7fecc809f312bf4fbe9b9d467463962260a73d"
+        "sha256": "e1126cfc93dcf840407938d79e78493ddd36a627de319bf28c15ac37dc7ee401"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_exports.zig",
-        "sha256": "dbfe1157461050a649b497e0517361732061aaa38376176db0803f36d04c933e"
+        "sha256": "a010ab026061486899d66d87ac0cfc0ff0f4087c2aae4148d44684c03a6cf750"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_generated.zig",
-        "sha256": "c43d103b28db28a563927546313f713016542c06cf60e94001036a557d5f5639"
+        "sha256": "35d058b43da47cf8ffbe15493a2cc6f48dfe0e99daad9ecf420c2ea4ca4db788"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/package.zig",
@@ -54363,7 +54377,7 @@
       },
       {
         "path": "Repositories/Contract/Tools/ApiContractGen/src/main.zig",
-        "sha256": "51228eeda5b94c1674f70f7cd3d74257e746bdc5aedd410147d309c868a97dc3"
+        "sha256": "f5f933a3ff8ee93ff261877a25f0aba4801ec0ce13068a4c4e19c2e199add8f9"
       },
       {
         "path": "Repositories/Libraries/R4ACO/Bindings/C/r4aco.h",
@@ -55295,7 +55309,7 @@
       },
       {
         "path": "Repositories/Libraries/Shared/Rust/src/raw.rs",
-        "sha256": "7a52c9890c8de0bbe5fbd88ca6db5f4e63207b65723cdc3bc4ff052e70503787"
+        "sha256": "b6602390b4ceb88145af481311e266939511fefe793a6cf0a702cfde37174a0e"
       },
       {
         "path": "Repositories/Libraries/Shared/Tests/Consumer/Cargo.toml",
@@ -55367,7 +55381,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "5a7b509da24a8dccfd97bd8db94c08a5eb163d728b0c26da4a0bd206e45fd963"
+        "sha256": "6a04ad4f1f1f35e9c7749f8f429d94d23707f6c0261606ce7978c423608623b7"
       },
       {
         "path": "Repositories/SDK/Rust/src/data/hash.rs",
@@ -55503,7 +55517,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/resources/mod.rs",
-        "sha256": "1f4065c0425ad66d0b71b718f440a6301abd4ebec3ec4ac2dfc9161656ef9d17"
+        "sha256": "7e9675b6c9e1df562d800233ef30287f1351947165da4b8569b37a58b8357fc2"
       },
       {
         "path": "Repositories/SDK/Rust/src/resources/notification.rs",
@@ -55511,7 +55525,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/resources/process.rs",
-        "sha256": "e0eb48928a9192a86a86c73b386d6d4fc94d5a1e5e527f3e1bf5beae2d32534e"
+        "sha256": "edac669119abbf9daece4cce640aa91a8bd6b46faf840924b709f39f9b14d0d5"
       },
       {
         "path": "Repositories/SDK/Rust/src/resources/thread.rs",
@@ -55639,7 +55653,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_resources.h",
-        "sha256": "8292e42d9d9e7e858b6cbe383c423debfd4ffa016320b8aa675c8bc6af2bc6a0"
+        "sha256": "adc0a5d5bd2c3dae8b22a394d762e274a50f8d87c19d1ba50cbba95e769e2ee4"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_services.h",
@@ -55779,7 +55793,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/r4sys.h",
-        "sha256": "6e02b479511a412f1e644163b0e394452e88681612d7ff6444c7bacaed02510c"
+        "sha256": "a631f875e5b27d364e70a419449d6d1d1c4a66e61fc3888e8ebb4c2495ab7fe7"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/r4xstart.h",
@@ -56039,7 +56053,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "b0e8c943221249ebbde19dde177cadd1247e574300d46ac7a52e63c6fe057824"
+        "sha256": "76d1ae9d1735a7cdeaebcb2322fc192cedd69e9f805e98bb6f0397fd57a449c2"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -56075,7 +56089,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/app_resources.zig",
-        "sha256": "e8da288dfef82bc3b91276233a050540210ef6d727a528c3cfbabaa95096b263"
+        "sha256": "e6e599c0e8c240e5dc3f0093bb52fc22e1c18e7a463b4175ce39a6b0fb2e9679"
       },
       {
         "path": "Repositories/SDK/r4os/app_services.zig",
@@ -56455,7 +56469,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/program.zig",
-        "sha256": "69acea723d0ecfa70865017e5b0fbbd9a0ae33a0f5101fd98ca91601802f4c9c"
+        "sha256": "6d45785fb4a1b82b96fc299c69a27677d9ca22406b4c6c18fad05bfdaa3a66f9"
       },
       {
         "path": "Repositories/SDK/r4os/protocol.zig",
@@ -56491,7 +56505,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/r4sys.zig",
-        "sha256": "ad24b04b023c651ef8fdd033adf3d0e33f938e5b35a8a5cdb1d006b544c2d3a8"
+        "sha256": "aab38fb844076cb976b754a4d0a44fca773a8caf20239fcdab11459e23a98ea2"
       },
       {
         "path": "Repositories/SDK/r4os/r4u_artifact.zig",
@@ -56507,7 +56521,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/r4xstart.zig",
-        "sha256": "e44aab31f39c0191afead414e38260b4b6cdb6105f1ea3a6c23ebc52511988fa"
+        "sha256": "62f11c7998f78c65bc12328ff5a847339140729a45b7c34180623c288748f5c9"
       },
       {
         "path": "Repositories/SDK/r4os/raster.zig",
@@ -57086,7 +57100,8 @@
         ],
         "proof": [
           "resource_current_54",
-          "current_kernel_records_80"
+          "current_kernel_records_80",
+          "lifecycle_metadata_87"
         ]
       },
       {

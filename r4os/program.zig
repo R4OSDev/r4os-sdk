@@ -1244,6 +1244,17 @@ pub const Context = struct {
         return table_fn(index, out);
     }
 
+    pub fn programLifecycleBegin(self: *const Context, cursor: *abi.ProgramInventoryCursor) i32 {
+        const table_fn = self.sysFn("program_lifecycle_begin") orelse return self.unavailable("sys");
+        return table_fn(cursor);
+    }
+
+    pub fn programLifecyclePrograms(self: *const Context, cursor: *abi.ProgramInventoryCursor, out: []abi.ProgramLifecycleSnapshot, page: *abi.ProgramInventoryPageInfo) i32 {
+        if (out.len == 0 or out.len > @as(usize, abi.program_inventory_page_max)) return abi.program_handle_error_invalid;
+        const table_fn = self.sysFn("program_lifecycle_programs") orelse return self.unavailable("sys");
+        return table_fn(cursor, out.ptr, @intCast(out.len), page);
+    }
+
     pub fn programInventoryBegin(self: *const Context, cursor: *abi.ProgramInventoryCursor, out: *abi.ProgramInventorySummary) i32 {
         const table_fn = self.sysFn("program_inventory_begin") orelse return self.unavailable("sys");
         return table_fn(cursor, out);

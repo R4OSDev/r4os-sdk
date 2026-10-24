@@ -71,6 +71,22 @@ static int32_t io_close(uint32_t id){return mode==1&&io_active?R4OS_IO_ERROR_BUS
 /* Test-only reclamation after proving a forgotten/drop-BUSY buffer remained
  * allocated. The normal Rust API never reconstructs ownership before ACK. */
 int32_t sdk_resource_complete_dropped(void){R4ProgramIoInfo info;int32_t r=io_wait(71,UINT64_MAX,&info);if(r!=0)return r;mode=0;return io_close(71);}
+static int32_t lifecycle_begin(R4ProgramInventoryCursor *cursor) {
+    if (mode == 7) return R4OS_PROGRAM_HANDLE_ERROR_WOULD_BLOCK;
+    *cursor = (R4ProgramInventoryCursor){.version=1,.size=sizeof(*cursor),.snapshot_generation=91,.program_epoch=91,
+        .flags=R4OS_PROGRAM_INVENTORY_CURSOR_FLAG_INITIALIZED|R4OS_PROGRAM_INVENTORY_CURSOR_FLAG_LIFECYCLE};
+    return 0;
+}
+static int32_t lifecycle_programs(R4ProgramInventoryCursor *cursor, R4ProgramLifecycleSnapshot *out,
+    uint32_t capacity, R4ProgramInventoryPageInfo *page) {
+    assert(capacity>0 && (cursor->flags & R4OS_PROGRAM_INVENTORY_CURSOR_FLAG_LIFECYCLE));
+    *page=(R4ProgramInventoryPageInfo){.version=1,.size=sizeof(*page),.snapshot_generation=91,.kind=R4OS_PROGRAM_INVENTORY_KIND_LIFECYCLE};
+    if(mode==4){page->status=R4OS_PROGRAM_INVENTORY_STATUS_RESTART;return 0;}
+    *out=(R4ProgramLifecycleSnapshot){.version=1,.size=sizeof(*out),.handle={.instance_id=42,.generation=0x1234567887654321ULL},
+        .task_id=73,.role=2,.app_class=1,.state=1,.flags=2,.exit_code=-17,.window_id=-1};
+    page->returned=mode==8?capacity+1:1;page->status=R4OS_PROGRAM_INVENTORY_STATUS_COMPLETE;
+    return 0;
+}
 static int32_t inventory_begin(R4ProgramInventoryCursor *cursor,R4ProgramInventorySummary *out){
     *cursor=(R4ProgramInventoryCursor){.version=1,.size=sizeof(*cursor),.snapshot_generation=77};
     *out=(R4ProgramInventorySummary){.version=1,.size=sizeof(*out),.snapshot_generation=77};return 0;
@@ -99,6 +115,8 @@ void sdk_resource_table(R4XStartR4Sys *table,R4XStartR4Desk *desk){
     table->io_file_stream_write=(uintptr_t)&stream_write;table->io_file_info=(uintptr_t)&file_info;table->io_file_lock=(uintptr_t)&file_lock;
     table->io_file_stream_begin=(uintptr_t)&stream_begin;table->io_file_stream_finish=(uintptr_t)&stream_finish;table->io_file_stream_abort=(uintptr_t)&stream_abort;
     table->io_service_call=(uintptr_t)&service_io;table->io_status=(uintptr_t)&io_status;table->io_wait=(uintptr_t)&io_wait;table->io_close=(uintptr_t)&io_close;
+    table->program_lifecycle_begin=(uintptr_t)&lifecycle_begin;
+    table->program_lifecycle_programs=(uintptr_t)&lifecycle_programs;
     table->program_inventory_begin=(uintptr_t)&inventory_begin;table->program_inventory_programs=(uintptr_t)&inventory_programs;
     table->program_inventory_tasks=(uintptr_t)&inventory_tasks;table->program_inventory_threads=(uintptr_t)&inventory_threads;
 }

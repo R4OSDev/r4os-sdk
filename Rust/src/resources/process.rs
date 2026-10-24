@@ -55,6 +55,18 @@ impl Resources<'_> {
         exact(unsafe { c::r4_resources_borrow_process(&mut self.raw(), handle, &mut raw) })?;
         Ok(Process { raw, owner: self })
     }
+    /// Metadata-only, generation-checked registry acquisition. Full task/thread/
+    /// memory inventory remains an explicit independent operation.
+    pub fn lifecycle(&self) -> Result<Lifecycle<'_>> {
+        let mut value = Lifecycle {
+            owner: self,
+            cursor: abi::ProgramInventoryCursor::default(),
+        };
+        exact(unsafe {
+            c::r4_resources_program_lifecycle_begin(&mut self.raw(), &mut value.cursor)
+        })?;
+        Ok(value)
+    }
     pub fn inventory(&self) -> Result<Inventory<'_>> {
         let mut value = Inventory {
             owner: self,
@@ -200,6 +212,37 @@ impl Inventory<'_> {
         let mut page = abi::ProgramInventoryPageInfo::default();
         exact(unsafe {
             c::r4_resources_program_inventory_threads(
+                &mut self.owner.raw(),
+                &mut self.cursor,
+                out.as_mut_ptr(),
+                crate::storage::length(out.len())?,
+                &mut page,
+            )
+        })?;
+        if page.returned as usize > out.len() {
+            return Err(Error::InvalidProvider);
+        }
+        Ok(page)
+    }
+}
+
+/// A caller-owned cursor, not a registry lease. Complete paging is required
+/// before lifecycle decisions; Busy or restart never makes partial rows current.
+pub struct Lifecycle<'a> {
+    owner: &'a Resources<'a>,
+    cursor: abi::ProgramInventoryCursor,
+}
+impl Lifecycle<'_> {
+    pub fn cursor(&self) -> &abi::ProgramInventoryCursor {
+        &self.cursor
+    }
+    pub fn programs(
+        &mut self,
+        out: &mut [abi::ProgramLifecycleSnapshot],
+    ) -> Result<abi::ProgramInventoryPageInfo> {
+        let mut page = abi::ProgramInventoryPageInfo::default();
+        exact(unsafe {
+            c::r4_resources_program_lifecycle_programs(
                 &mut self.owner.raw(),
                 &mut self.cursor,
                 out.as_mut_ptr(),

@@ -212,6 +212,52 @@ fn current_lifecycle_partial_progress_and_retained_native_buffers() {
     let p = resources.local_publish(key, 4).unwrap();
     assert!(!p.inserted);
     assert_eq!(p.value, 0x8877665544332211);
+    // The same canonical C/Rust lifecycle facade keeps exact fields and page
+    // restart semantics, without requesting diagnostic inventory as admission.
+    let mut lifecycle = resources.lifecycle().unwrap();
+    assert_eq!(lifecycle.cursor().snapshot_generation, 91);
+    let mut light = [abi::ProgramLifecycleSnapshot::default(); 2];
+    let light_page = lifecycle.programs(&mut light).unwrap();
+    assert_eq!(light_page.returned, 1);
+    assert_eq!(
+        light_page.kind,
+        abi::program_inventory_kind_lifecycle as u32
+    );
+    assert_eq!(light[0].handle.generation, 0x1234567887654321);
+    assert_eq!(light[0].task_id, 73);
+    assert_eq!(
+        (
+            light[0].role,
+            light[0].app_class,
+            light[0].state,
+            light[0].flags
+        ),
+        (2, 1, 1, 2)
+    );
+    assert_eq!((light[0].exit_code, light[0].window_id), (-17, -1));
+    let exact = light[0];
+    unsafe { sdk_resource_mode(4) };
+    assert_eq!(
+        lifecycle.programs(&mut light).unwrap().status,
+        abi::program_inventory_status_restart as i32
+    );
+    assert_eq!(light[0].handle.generation, exact.handle.generation);
+    assert_eq!(lifecycle.cursor().program_after_generation, 0);
+    unsafe { sdk_resource_mode(7) };
+    assert!(matches!(
+        resources.lifecycle(),
+        Err(Error::Raw(abi::program_handle_error_would_block))
+    ));
+    unsafe { sdk_resource_mode(8) };
+    assert!(matches!(
+        lifecycle.programs(&mut light),
+        Err(Error::InvalidProvider)
+    ));
+    unsafe { sdk_resource_mode(0) };
+    assert!(matches!(
+        lifecycle.programs(&mut []),
+        Err(Error::Raw(abi::program_handle_error_invalid))
+    ));
     let mut inventory = resources.inventory().unwrap();
     assert_eq!(inventory.cursor().snapshot_generation, 77);
     assert_eq!(
