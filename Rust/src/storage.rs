@@ -35,6 +35,15 @@ fn operation(value: c::R4Operation) -> Result<Presence> {
         _ => Err(Error::Raw(value.raw_code)),
     }
 }
+// A stream operation needs its own successful acknowledgement. Missing may
+// be useful for idempotent file deletion, but cannot finish/abort a retained
+// stream or acknowledge bytes which the provider did not accept.
+fn stream_operation(value: c::R4Operation) -> Result<()> {
+    match operation(value)? {
+        Presence::Present if value.raw_code == 0 => Ok(()),
+        _ => Err(Error::Raw(value.raw_code)),
+    }
+}
 fn transfer(value: c::R4Transfer, capacity: usize) -> Result<Option<usize>> {
     match value.state {
         0 if value.bytes as usize <= capacity => Ok(Some(value.bytes as usize)),
@@ -469,18 +478,18 @@ impl core::fmt::Debug for StreamOpenError<'_> {
 }
 impl StreamWriter<'_> {
     pub fn write(&mut self, bytes: &[u8]) -> Result<()> {
-        operation(unsafe {
+        stream_operation(unsafe {
             c::r4_stream_writer_write(&mut self.raw, bytes.as_ptr(), length(bytes.len())?)
         })?;
         Ok(())
     }
     pub fn finish(&mut self) -> Result<()> {
-        operation(unsafe { c::r4_stream_writer_finish(&mut self.raw) })?;
+        stream_operation(unsafe { c::r4_stream_writer_finish(&mut self.raw) })?;
         self.needs_abort = false;
         Ok(())
     }
     pub fn finish_keep_ownership(&mut self) -> Result<()> {
-        operation(unsafe { c::r4_stream_writer_finish_flags(&mut self.raw, 1) })?;
+        stream_operation(unsafe { c::r4_stream_writer_finish_flags(&mut self.raw, 1) })?;
         self.retained = true;
         Ok(())
     }
@@ -489,7 +498,7 @@ impl StreamWriter<'_> {
             return Ok(());
         }
         let r = unsafe { c::r4_stream_writer_abort(&mut self.raw) };
-        operation(r)?;
+        stream_operation(r)?;
         self.needs_abort = false;
         self.retained = false;
         Ok(())

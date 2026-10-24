@@ -325,9 +325,9 @@ fn runRuntimeSelfTest(sys: *r4os.r4sys.Context, host: *host_api.Host, audio: ?r4
     if (runtime.stats.slices < 6) return runtimeSelfTestFail(sys, "time-pacing-slices", 119);
     if (runtime.stats.sleeps == 0) return runtimeSelfTestFail(sys, "time-pacing-sleeps", 119);
     if (runtime.clock.guest_ns == 0) return runtimeSelfTestFail(sys, "time-pacing-clock", 119);
-    if (runtime.audio.last_error != 0) return runtimeSelfTestFail(sys, "audio-close", 120);
-    if (runtime.audio.stats.generated_bytes == 0) return runtimeSelfTestFail(sys, "audio-generate", 120);
-    if (runtime.audio.stats.submitted_bytes == 0) return runtimeSelfTestFail(sys, "audio-submit", 120);
+    if (runtime.audio.last_error != 0) return runtimeAudioSelfTestFail(sys, &runtime, "audio-close");
+    if (runtime.audio.stats.generated_bytes == 0) return runtimeAudioSelfTestFail(sys, &runtime, "audio-generate");
+    if (runtime.audio.stats.submitted_bytes == 0) return runtimeAudioSelfTestFail(sys, &runtime, "audio-submit");
     if (runtime.audio.stats.muted_bytes == 0 or runtime.audio.muted or runtime.audio.stats.idle_closes == 0) return runtimeSelfTestFail(sys, "audio-idle", 121);
     if (runtime.stats.presents < 4 or runtime_host.phase == .warming or runtime_host.phase == .paused or runtime_host.phase == .resumed or runtime_host.phase == .reset or runtime_host.phase == .muted) return runtimeSelfTestFail(sys, "host-progress", 122);
 
@@ -520,6 +520,17 @@ fn runtimeSelfTestFail(sys: *r4os.r4sys.Context, reason: []const u8, code: i32) 
     sys.println(reason);
     writeSelfTestFailure(sys, "SUBSYSTEM runtime selftest FAILED: ", reason);
     return code;
+}
+
+fn runtimeAudioSelfTestFail(sys: *r4os.r4sys.Context, runtime: *const runtime_api.Runtime, reason: []const u8) i32 {
+    // Failure-only context distinguishes a real sink refusal from absent
+    // guest production/submission. Work, timeouts and assertions are unchanged.
+    var buffer: [120]u8 = undefined;
+    const text = std.fmt.bufPrint(&buffer, "{s} raw={d} generated={d} submitted={d} idle_closes={d}", .{
+        reason, runtime.audio.last_error, runtime.audio.stats.generated_bytes,
+        runtime.audio.stats.submitted_bytes, runtime.audio.stats.idle_closes,
+    }) catch reason;
+    return runtimeSelfTestFail(sys, text, 120);
 }
 
 fn switchMode(host: *host_api.Host, demo: *Demo, mode: Mode) bool {

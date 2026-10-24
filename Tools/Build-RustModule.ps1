@@ -281,6 +281,9 @@ try{
     if($isProtocol){$result.memory['ownership']='exact PPI module scope, caller/session resources and explicit callback close; resident module code';$result.memory.heap_runtime['instance_checked']=$false}
     $result.codegen['target_features']=$effectiveCpuFeatures
     $result.codegen['backend_feature_policy']=$codegen.backend_features
+    $result.codegen['optimization']=$facts.optimization
+    $result.codegen['opt_level']=$codegen.optimization[$facts.optimization]
+    $result.codegen['overflow_checks']=$true
     $result['schema']=2
     $result.cargo['graph']=$crateGraph
     $result.cargo['selected_features']=$Features

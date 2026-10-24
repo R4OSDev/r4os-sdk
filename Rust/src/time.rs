@@ -37,6 +37,32 @@ impl<'a, 'context> Clock<'a, 'context> {
         let state = self.state()?;
         instant_from_ticks(state.monotonic_ticks, state.monotonic_hz)
     }
+    /// The existing precise platform clock, without a coarse tick substitute.
+    /// Short work budgets must use its actual nanoseconds and admission flags.
+    pub fn precise_instant(&self) -> Result<Instant> {
+        let address = self
+            .app
+            .sys_slot(core::mem::offset_of!(abi::R4XStartR4Sys, monotonic_clock))
+            .ok_or(Error::Raw(abi::err_no_fn))?;
+        let call: abi::R4SysFns::monotonic_clock = unsafe { core::mem::transmute(address) };
+        let mut info = abi::MonotonicClockInfo::default();
+        let code = unsafe { call(&mut info) };
+        if code <= 0 {
+            return Err(if code < 0 {
+                Error::Raw(code)
+            } else {
+                Error::Unavailable
+            });
+        }
+        if info.flags & abi::monotonic_clock_flag_valid == 0
+            || info.frequency_hz != abi::monotonic_clock_frequency_hz
+        {
+            return Err(Error::InvalidProvider);
+        }
+        Ok(Instant {
+            nanoseconds: info.instant_ns,
+        })
+    }
 }
 fn exact(rc: i32) -> Result<()> {
     if rc == 0 { Ok(()) } else { Err(Error::Raw(rc)) }

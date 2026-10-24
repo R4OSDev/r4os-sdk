@@ -3,6 +3,24 @@
 const std = @import("std");
 const schema = @import("gui_bridge_schema.zig");
 const abi = schema.abi;
+const grapheme = @import("r4std_grapheme");
+
+// These scalar text exports use the same pinned owner as the GUI editor.
+// They need no App, widget, mutable text buffer or GUI transport record.
+pub export fn R4SdkTextNext(bytes: ?[*]const u8, len: usize, offset: usize, out: ?*usize) callconv(.c) i32 {
+    return textBoundary(bytes, len, offset, out, false);
+}
+pub export fn R4SdkTextPrevious(bytes: ?[*]const u8, len: usize, offset: usize, out: ?*usize) callconv(.c) i32 {
+    return textBoundary(bytes, len, offset, out, true);
+}
+fn textBoundary(bytes: ?[*]const u8, len: usize, offset: usize, out: ?*usize, backwards: bool) i32 {
+    const result = out orelse return 0;
+    if (len > std.math.maxInt(isize)) return 0;
+    const value = if (bytes) |p| p[0..len] else if (len == 0) "" else return 0;
+    const boundary = if (backwards) grapheme.previous(value, offset) catch return 0 else grapheme.next(value, offset) catch return 0;
+    result.* = boundary;
+    return 1;
+}
 comptime {
     _ = @import("gui_session_runtime.zig");
     if (@import("generated/gui_fingerprint.zig").fingerprint != schema.fingerprint) @compileError(std.fmt.comptimePrint("GUI boundary drift: generated={d} runtime={d} types={d} methods={d} first={s} context={s}", .{ @import("generated/gui_fingerprint.zig").fingerprint, schema.fingerprint, schema.types.len, schema.functions.len, @typeName(schema.types[0]), @typeName(schema.program.Context) }));

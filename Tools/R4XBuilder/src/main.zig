@@ -1212,15 +1212,19 @@ fn parseElfRelocations(a: std.mem.Allocator, elf: []const u8, sections: []const 
                 count += 1;
                 continue;
             }
-            const r4m_kind = r4mRelocKindFromElf(elf_reloc_type) orelse {
+            const mapped_kind = if (elf_reloc_type == ELF_R_X86_64_REX_GOTPCRELX) blk: {
+                if (symbol_index >= sym_count) return error.BadElfRelocation;
+                const sym_off: usize = @intCast(symtab.file_off + symbol_index * symtab.entsize);
+                try checkRelaxedRipReference(elf, elf_type, patch_header, patch_value, addend64, rU64(elf, sym_off + 8));
+                break :blk @as(?u32, R4M_RELOC_REL32);
+            } else r4mRelocKindFromElf(elf_reloc_type);
+            const r4m_kind = mapped_kind orelse {
                 if (elf_reloc_type == 0) continue;
                 // R_X86_64_REX_GOTPCRELX is a linker-relaxation hint, not a
                 // portable description of the final patch. LLD can leave the
                 // same relocation type on both RIP-relative LEA displacements
                 // and absolute signed-32 immediates (for example ADD/CMP).
                 // R4M0 intentionally has no load-address-limited ABS32 kind.
-                if (elf_reloc_type == ELF_R_X86_64_REX_GOTPCRELX)
-                    return error.UnsupportedRelaxedGotPcRelx;
                 return error.UnsupportedElfRelocation;
             };
             if (symbol_index >= sym_count) return error.BadElfRelocation;
@@ -1319,6 +1323,25 @@ fn closedGotReference(elf: []const u8, elf_type: u16, patch: ElfSectionHeader, p
     };
 }
 
+fn checkRelaxedRipReference(elf: []const u8, elf_type: u16, patch: ElfSectionHeader, patch_value: u64, addend: i64, symbol_value: u64) !void {
+    // The final instruction, not the relaxation hint, supplies the contract.
+    // Only a linked 64-bit RIP-relative LEA with the exact resolved symbol
+    // displacement can become REL32. ADD/CMP immediates remain forbidden.
+    if ((elf_type != ELF_ET_EXEC and elf_type != ELF_ET_DYN) or addend != -4 or
+        patch.sh_type != ELF_SHT_PROGBITS or patch.flags & 6 != 6)
+        return error.UnsupportedRelaxedGotPcRelx;
+    const offset = try elfSectionOffset(elf_type, patch_value, patch.addr);
+    if (offset < 3 or offset > patch.size or 4 > patch.size - offset) return error.BadElfRelocationRange;
+    try checkRangeU64(elf.len, patch.file_off, patch.size);
+    const start: usize = @intCast(patch.file_off + offset - 3);
+    const prefix = elf[start..][0..3].*;
+    if (prefix[0] & 8 == 0 or classifyRelaxedGotPcRelx(prefix) != .rip_relative)
+        return error.UnsupportedRelaxedGotPcRelx;
+    const displacement: i32 = @bitCast(rU32(elf, start + 3));
+    if (@as(i128, patch_value) + 4 + displacement != symbol_value)
+        return error.UnsupportedRelaxedGotPcRelx;
+}
+
 fn appendGotDefinition(out: []ModuleRelocation, count: *usize, candidate: ModuleRelocation) !void {
     for (out[0..count.*]) |existing| {
         if (!std.mem.eql(u8, existing.patch_section, candidate.patch_section) or existing.patch_offset != candidate.patch_offset) continue;
@@ -1358,9 +1381,8 @@ fn r4mRelocKindFromElf(elf_reloc_type: u32) ?u32 {
 }
 
 // The four-byte relocation field follows these three instruction bytes.
-// This classifier is diagnostic/test evidence only: neither form is
-// accepted as an R4M relocation because one ELF relocation type can denote
-// both forms in the same linked image.
+// Admission additionally requires a full-width destination and the exact
+// linked symbol displacement. The hint alone is never a relocation mapping.
 fn classifyRelaxedGotPcRelx(prefix: [3]u8) RelaxedGotPcRelxForm {
     const rex = prefix[0];
     const opcode = prefix[1];
@@ -1384,6 +1406,28 @@ test "REX GOTPCRELX is not blindly mapped to an R4M relocation" {
     try std.testing.expectEqual(RelaxedGotPcRelxForm.rip_relative, classifyRelaxedGotPcRelx(.{ 0x48, 0x8d, 0x05 }));
     try std.testing.expectEqual(RelaxedGotPcRelxForm.absolute_imm32, classifyRelaxedGotPcRelx(.{ 0x48, 0x81, 0xc0 }));
     try std.testing.expectEqual(RelaxedGotPcRelxForm.absolute_imm32, classifyRelaxedGotPcRelx(.{ 0x48, 0x81, 0xff }));
+}
+
+test "only a resolved full-width RIP LEA can close a relaxation hint" {
+    var elf = [_]u8{ 0x48, 0x8d, 0x0d, 0, 0, 0, 0, 0 };
+    wU32(&elf, 3, 0x1000 - 7);
+    const patch: ElfSectionHeader = .{ .name = ".text", .sh_type = ELF_SHT_PROGBITS, .flags = 6, .addr = 0x1000, .file_off = 0, .size = elf.len, .link = 0, .info = 0, .alignment = 16, .entsize = 0 };
+    try checkRelaxedRipReference(&elf, ELF_ET_EXEC, patch, 0x1003, -4, 0x2000);
+    try checkRelaxedRipReference(&elf, ELF_ET_DYN, patch, 0x1003, -4, 0x2000);
+    try std.testing.expectError(error.UnsupportedRelaxedGotPcRelx, checkRelaxedRipReference(&elf, ELF_ET_REL, patch, 0x1003, -4, 0x2000));
+    try std.testing.expectError(error.UnsupportedRelaxedGotPcRelx, checkRelaxedRipReference(&elf, ELF_ET_EXEC, patch, 0x1003, 0, 0x2000));
+    try std.testing.expectError(error.UnsupportedRelaxedGotPcRelx, checkRelaxedRipReference(&elf, ELF_ET_EXEC, patch, 0x1003, -4, 0x2001));
+    elf[0] = 0x40; // A 32-bit destination would truncate a high load address.
+    try std.testing.expectError(error.UnsupportedRelaxedGotPcRelx, checkRelaxedRipReference(&elf, ELF_ET_EXEC, patch, 0x1003, -4, 0x2000));
+    elf[0] = 0x48;
+    for ([_][2]u8{ .{ 0x81, 0xc0 }, .{ 0x81, 0xff }, .{ 0x8b, 0x05 } }) |suffix| {
+        @memcpy(elf[1..3], &suffix);
+        try std.testing.expectError(error.UnsupportedRelaxedGotPcRelx, checkRelaxedRipReference(&elf, ELF_ET_EXEC, patch, 0x1003, -4, 0x2000));
+    }
+    try std.testing.expectError(error.BadElfRelocationRange, checkRelaxedRipReference(&elf, ELF_ET_EXEC, patch, 0x1002, -4, 0x2000));
+    // Moving source and target together preserves the admitted displacement.
+    const high_base: u64 = 0xffff_8000_1000_0000;
+    try std.testing.expectEqual(@as(u64, high_base + 0x2000), @as(u64, @intCast(@as(i128, high_base + 0x1003) + 4 + @as(i32, @bitCast(rU32(&elf, 3))))));
 }
 
 test "closed unrelaxed GOT uses relative slot and full-width owned definition" {

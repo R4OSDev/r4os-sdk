@@ -19679,6 +19679,8 @@ unsafe extern "C" {
     pub fn R4SdkTextAssign(p0: *mut u8, p1: u64, p2: *const u8, p3: u64) -> i32;
     pub fn R4SdkTextLabel(p0: *mut u8, p1: u64, p2: *const u8, p3: u64) -> i32;
     pub fn R4SdkTextPrefix(p0: *const u8, p1: u64, p2: u64, p3: i32, p4: *mut u64) -> i32;
+    pub fn R4SdkTextNext(p0: *const u8, p1: u64, p2: u64, p3: *mut u64) -> i32;
+    pub fn R4SdkTextPrevious(p0: *const u8, p1: u64, p2: u64, p3: *mut u64) -> i32;
     pub fn R4SdkRegistrySelfTest(p0: *const R4Sys, p1: i32, p2: *const R4RegistryTestPaths, p3: i32, p4: *mut u8, p5: u64, p6: *mut u8, p7: u64) -> i32;
     pub fn R4SdkHiveParse(p0: *const u8, p1: u64, p2: *mut R4HiveView) -> i32;
     pub fn R4SdkHiveKey(p0: *const R4HiveView, p1: u32, p2: *mut R4HiveKey) -> i32;

@@ -40,3 +40,17 @@ pub fn load_prefix(bytes: &[u8], capacity: usize, truncated: bool) -> Option<usi
         None
     }
 }
+/// The next current R4STD extended-grapheme byte boundary. Offsets clamp
+/// to length; invalid UTF8 returns None. No display-width or normalization.
+pub fn next_boundary(bytes: &[u8], offset: usize) -> Option<usize> {
+    let mut out = 0;
+    (unsafe { c::R4SdkTextNext(bytes.as_ptr(), bytes.len() as u64, offset as u64, &mut out) } != 0)
+        .then_some(out as usize)
+}
+/// The previous boundary from that same original owner and byte contract.
+pub fn previous_boundary(bytes: &[u8], offset: usize) -> Option<usize> {
+    let mut out = 0;
+    (unsafe { c::R4SdkTextPrevious(bytes.as_ptr(), bytes.len() as u64, offset as u64, &mut out) }
+        != 0)
+        .then_some(out as usize)
+}

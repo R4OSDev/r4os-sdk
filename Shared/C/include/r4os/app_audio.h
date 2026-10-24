@@ -65,9 +65,8 @@ static inline void r4_audio_copy_bytes(void *destination, const void *source, ui
 }
 
 static inline int r4_audio_available(const R4AudioFacade *audio) {
-    if (audio == 0 || audio->app == 0 || audio->app->audio.table == 0) return 0;
-    return R4SYS_HAS(&audio->app->system,service_open) && R4SYS_HAS(&audio->app->system,service_close) && R4SYS_HAS(&audio->app->system,service_call) &&
-        audio->app->audio.table->size >= offsetof(R4XStartR4Audio,audio_open_stream)+sizeof(uintptr_t) && audio->app->audio.table->audio_open_stream != 0u;
+    if (audio == 0 || audio->app == 0) return 0;
+    return R4SYS_HAS(&audio->app->system,service_open) && R4SYS_HAS(&audio->app->system,service_close) && R4SYS_HAS(&audio->app->system,service_call);
 }
 
 static inline int r4_audio_response_valid(const R4AudioWireResult *response, uint16_t action) {

@@ -107,10 +107,19 @@ fn original_gui_pixels_frames_unicode_input_and_exact_host_session() {
         // Current font capability absence is an error, never a row-based or
         // invented-revision substitute; caller bitmap storage is untouched.
         let draw = unsafe { window.native_draw() };
-        let mut glyph = abi::GuiGlyphBitmap { width: 77, ..Default::default() };
-        assert_eq!(unsafe { c::R4SdkGuiDrawContext_fontGlyphBitmap(0, draw, 0, 65, &mut glyph) }.status, abi::err_no_fn);
+        let mut glyph = abi::GuiGlyphBitmap {
+            width: 77,
+            ..Default::default()
+        };
+        assert_eq!(
+            unsafe { c::R4SdkGuiDrawContext_fontGlyphBitmap(0, draw, 0, 65, &mut glyph) }.status,
+            abi::err_no_fn
+        );
         assert_eq!(glyph.width, 77);
-        assert_eq!(unsafe { c::R4SdkGuiDrawContext_fontRevision(0, draw) }.status, abi::err_no_fn);
+        assert_eq!(
+            unsafe { c::R4SdkGuiDrawContext_fontRevision(0, draw) }.status,
+            abi::err_no_fn
+        );
         assert_eq!(window.window_info().unwrap().unwrap().client_w, 320);
         window.set_title(c"Test").unwrap();
         window.set_minimum_size(100, 80).unwrap();

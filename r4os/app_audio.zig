@@ -99,7 +99,9 @@ pub const Audio = struct {
     raw: r4audio.Context,
 
     pub fn available(self: *const Audio) bool {
-        return self.sys.hasFn("service_open") and self.sys.hasFn("service_close") and self.sys.hasFn("service_call") and self.raw.hasFn("audio_open_stream");
+        // This facade uses AUDSVC RPCs. The separate raw/advanced audio
+        // operations retain their own direct table admission.
+        return self.sys.hasFn("service_open") and self.sys.hasFn("service_close") and self.sys.hasFn("service_call");
     }
 
     pub fn openStream(self: *const Audio, rate: u32, channels: u16, format: PcmFormat, volume: u32, timeout: Timeout) OpenResult {

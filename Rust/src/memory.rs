@@ -1,17 +1,23 @@
 //! Close the freestanding compiler memory helpers inside the same R4X.
-//! Volatile byte operations prevent LLVM from rewriting their bodies into
-//! recursive libc calls. The caller supplies valid ranges; no allocator exists.
+//! Integer x86-64 string instructions avoid both byte-loop overhead and LLVM
+//! rewriting these bodies into recursive libc calls. The ordinary x86-64 ABI
+//! supplies DF=0; these instructions leave it and all other flags unchanged.
+//! The caller supplies valid ranges; no allocation or SIMD state is involved.
 
-use core::{ffi::c_void, ptr};
+use core::{arch::asm, ffi::c_void, ptr};
+
+#[inline(always)]
+unsafe fn forward(dst: *mut c_void, src: *const c_void, len: usize) {
+    unsafe {
+        asm!("rep movsb", inout("rdi") dst => _, inout("rsi") src => _,
+            inout("rcx") len => _, options(nostack, preserves_flags));
+    }
+}
 
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn memcpy(dst: *mut c_void, src: *const c_void, len: usize) -> *mut c_void {
-    let dst = dst.cast::<u8>();
-    let src = src.cast::<u8>();
-    for index in 0..len {
-        unsafe { ptr::write_volatile(dst.add(index), ptr::read_volatile(src.add(index))) };
-    }
-    dst.cast()
+    unsafe { forward(dst, src, len) };
+    dst
 }
 
 #[unsafe(no_mangle)]
@@ -23,20 +29,18 @@ pub unsafe extern "C" fn memmove(dst: *mut c_void, src: *const c_void, len: usiz
             unsafe { ptr::write_volatile(dst.add(index), ptr::read_volatile(src.add(index))) };
         }
     } else {
-        for index in 0..len {
-            unsafe { ptr::write_volatile(dst.add(index), ptr::read_volatile(src.add(index))) };
-        }
+        unsafe { forward(dst.cast(), src.cast(), len) };
     }
     dst.cast()
 }
 
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn memset(dst: *mut c_void, value: i32, len: usize) -> *mut c_void {
-    let dst = dst.cast::<u8>();
-    for index in 0..len {
-        unsafe { ptr::write_volatile(dst.add(index), value as u8) };
+    unsafe {
+        asm!("rep stosb", inout("rdi") dst => _, in("al") value as u8,
+            inout("rcx") len => _, options(nostack, preserves_flags));
     }
-    dst.cast()
+    dst
 }
 
 #[unsafe(no_mangle)]

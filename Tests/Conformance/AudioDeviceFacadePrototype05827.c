@@ -236,6 +236,8 @@ int main(void) {
     R4App app; R4XStartR4Sys sys; R4XStartR4Audio raw_audio; R4XStartR4Dev raw_dev;
     init_app(&app, &sys, &raw_audio, &raw_dev); stream_open = 0; open_connections = 0u;
     R4AudioFacade audio = r4_app_audio(&app); R4AudioStream stream;
+    /* Service-only audio deliberately has no direct R4AUDIO import. */
+    app.audio.table = 0;
     if (!r4_audio_available(&audio)) return 1;
     if (r4_audio_open_stream(&audio,192001u,2u,R4_AUDIO_FORMAT_S16LE,0x10000u,forever_timeout(),&stream).raw_code!=R4OS_SERVICE_API_RESULT_INVALID) return 71;
     if (r4_audio_open_stream(&audio,48000u,3u,R4_AUDIO_FORMAT_S16LE,0x10000u,forever_timeout(),&stream).raw_code!=R4OS_SERVICE_API_RESULT_INVALID) return 72;
@@ -255,6 +257,8 @@ int main(void) {
     if (r4_audio_stream_set_volume(&stream, 0x8000u, forever_timeout()).kind != R4_AUDIO_RESULT_OK) return 6;
     if (r4_audio_stream_close(&stream, forever_timeout()).kind != R4_AUDIO_RESULT_OK || r4_audio_stream_close(&stream, forever_timeout()).raw_code != R4OS_ERR_CLOSED || open_connections != 0u) return 7;
     R4AdvancedAudio advanced = r4_audio_advanced(audio);
+    if (r4_audio_sid_acquire(&advanced) != R4OS_ERR_NO_FN) return 76;
+    app.audio.table = &raw_audio;
     if (r4_audio_sid_acquire(&advanced) != 11 || r4_audio_sid_write_register(&advanced, 11u, 0u, 1u) != 0 || r4_audio_midi_open_synth(&advanced, (const uint8_t *)"OPL3") != 12 || r4_audio_midi_send(&advanced, 12u, 0u, 0x90u, 60u, 100u) != 0 || r4_audio_opl3_reset(&advanced) != 0) return 8;
 
     R4Devices devices = r4_app_devices(&app); if (!r4_devices_available(&devices)) return 9;

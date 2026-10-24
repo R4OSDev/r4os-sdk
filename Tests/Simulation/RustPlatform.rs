@@ -1,4 +1,6 @@
 #![cfg(test)]
+#[path = "PreciseClock.rs"]
+mod precise_clock;
 #[path = "RustGraphics.rs"]
 mod visual_regression;
 use core::{mem::MaybeUninit, pin::pin};
@@ -250,9 +252,17 @@ fn original_platform_owners_preserve_frames_progress_and_explicit_close() {
         unsafe { App::from_raw(&no_audio_context, &no_audio_expected, c"NoAudio") }.unwrap();
     let mut no_audio_storage = pin!(PlatformStorage::new());
     let no_audio_platform = Platform::open(no_audio_storage.as_mut(), &app_without_audio).unwrap();
-    assert!(matches!(
-        no_audio_platform.audio(),
-        Err(r4os_sdk::storage::Error::Unavailable)
-    ));
+    let service_only_audio = no_audio_platform.audio().unwrap();
+    let mut service_only_stream = service_only_audio
+        .open_stream(48000, 2, 0x10000, Timeout::Forever)
+        .unwrap();
+    service_only_stream.close(Timeout::Forever).unwrap();
+    assert_eq!(unsafe { sdk_platform_oracle_connections() }, 0);
+    // Direct raw synthesizer operations still have no R4AUDIO provider.
+    let raw_audio = unsafe { c::R4SdkPlatformAudioRaw(no_audio_platform.native()) };
+    assert_eq!(
+        unsafe { c::R4SdkAudioContext_audioOpenStream(0, raw_audio, 48000, 2, 1) }.bits as i32,
+        abi::err_no_group
+    );
     assert!(no_audio_platform.devices().memory().unwrap().is_some());
 }

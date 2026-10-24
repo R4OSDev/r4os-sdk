@@ -67,6 +67,12 @@ impl<'a> Launch<'a> {
             self.source,
         )
     }
+    pub fn option_count(&self) -> Result<usize> {
+        let value = required(unsafe {
+            c::R4SdkSubsystemLaunchRequest_get_option_count(self.native.as_ptr())
+        })?;
+        value.bits.try_into().map_err(|_| super::Error::Bounds)
+    }
     pub fn option(&self, key: &[u8]) -> Result<Option<&[u8]>> {
         let v = result(unsafe {
             c::R4SdkSubsystemLaunchRequest_option(

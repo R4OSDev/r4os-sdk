@@ -834,6 +834,11 @@
           "libraries_package": "0.64.25",
           "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.59",
           "scope": "Fachlicher hoeherer Zig-Umfang ueber getypte Originalbesitzer; konkrete generische Adapter; Testreset/Fault-Hooks bleiben in Besitzertests. Kein Rust-R4L-Provider. Raw-Besitz-/Leih-/Cache-/Freigabevertraege bleiben unsafe."
+        },
+        "current_port_additions_86": {
+          "source_sha256": "ffecd48ec23ff2a23eb77224c79d7736a31ecc46df0fd28d0e16bd892df35da6",
+          "evidence": "desktop_settings_helpers_86",
+          "scope": "Thin current safe Rust document/writer/owned-shortcut views over the existing native owner. No new parser or R4L ABI."
         }
       },
       "c": {
@@ -45986,7 +45991,15 @@
         "library_projection_current_61",
         "geometry_current_83"
       ],
-      "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten."
+      "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten.",
+      "rust_sources": [
+        "Repositories/Libraries/R4GFX/Display/Rust/Cargo.toml",
+        "Repositories/Libraries/R4GFX/Display/Rust/src/lib.rs"
+      ],
+      "source_geometry_08686": {
+        "component": "r4os-display-geometry0.1.0",
+        "scope": "Source-only signed topology math shared by Desktop;3 original native geometry groups. EDID/discovery/preferences/control not ported or qualified here. No R4M0 or library ABI change."
+      }
     },
     {
       "id": "library-R4GL",
@@ -53760,6 +53773,221 @@
       "windows_execution": false,
       "physical_hardware_qualification": false,
       "rust_direct_fp_simd_qualification": false
+    },
+    "desktop_port_inputs_86": {
+      "complete": true,
+      "scope": "Only the reviewed general SDK94 C/Rust grapheme boundary delta and source-only shared signed topology helper. Full Rust Desktop86 remains open; unchanged655-scope evidence retained except five reviewed changed hashes.",
+      "native": {
+        "runner": "Repositories/Apps/Desktop/Tests/RustNative.ps1",
+        "proof_sha256": "1cfb42e9d044ba23b02c25a9e4d4d286c729cbb75e30904c5a48001adf3a9f42",
+        "cases": "83 Desktop+3 shared geometry;13 C boundary checks inside one case",
+        "host": "Linux only"
+      },
+      "target": {
+        "scope": "limited current Rust core and SDK94 consumer, not a Rust Desktop acceptance",
+        "passed": true,
+        "qemu": "KVM SMP4 / 8192 MB / RTL8139 / software / null audio",
+        "product": "0.86.85",
+        "kernel": "0.1.382",
+        "module_sha256": "edc6c53e7b2edde2787257fac1e53fe00ed1ff3a84419fafe7e1e03fb3f3bc7e",
+        "elf_sha256": "480a514bd78d38d7d93c3d78c7b2b14b3a2505e7eda3e221ce759040da470078",
+        "build_receipt_sha256": "2cb475224df35302cc89378875eba38bbe1ab8bf385af78f10c158ffd757f21c",
+        "fixture_sha256": "d67934c96de6f37968b6a5405c83b3c3f630ba09fffa9d2613ffa261fb69d898",
+        "report_bytes": 57,
+        "report_sha256": "14e1589092dd263e6855929ba727cead7325415318b29c392c99a12a1e43c9c6",
+        "report": "RUST86 core result=000 wide-clear/NN/hash/SDK-graphemes",
+        "wide_clear_code": {
+          "function": "R4XStart, inlined current CpuScene.clear_layer",
+          "range": "0x341..0x383",
+          "pair_store": "0x366: movq %rsi,(%rax,%rdi,4); index += 2",
+          "tail": "0x37f: andl $0,(%rax,%rdi,4)",
+          "claim": "actual 64-bit RAM pair stores; no throughput, visibility or full Desktop claim"
+        },
+        "core_scope": "Frozen owner copy from before text/cache and GUI snapshot additions. Ordinary SDK Build-Project profile2, integer Rust target defaults; C hash uses existing external BLAKE3 plus existing R4FONT freestanding headers.",
+        "shutdown_requested": true,
+        "shutdown": "regular POWEROFF, QEMU runner exit0; serial poweroff and clean registry confirmed"
+      },
+      "changed_inputs": [
+        "Repositories/SDK/Rust/src/bounded_text.rs",
+        "Repositories/SDK/Rust/src/c_facades.rs",
+        "Repositories/SDK/Shared/C/include/r4os/storage_helpers.h",
+        "Repositories/SDK/build.zig.zon",
+        "Repositories/SDK/r4os/gui_value_bridge.zig"
+      ],
+      "added_inputs": [
+        "Repositories/Libraries/R4GFX/Display/Rust/Cargo.toml",
+        "Repositories/Libraries/R4GFX/Display/Rust/src/lib.rs",
+        "Repositories/SDK/Tests/Conformance/BoundedGraphemeChecks.c"
+      ],
+      "limits": "Shared topology native only. No EDID/control implementation, normal Desktop switch, full SDK requalification, hardware, Windows, direct Rust FP/SIMD or performance claim."
+    },
+    "desktop_settings_helpers_86": {
+      "complete": true,
+      "scope": "Only the added safe Rust R4STD document/schema, writer and shortcut consumers; generated C/raw/runtime/ABI unchanged. Original Desktop configuration/layout/default-link/grid consumers pass with the real original native R4STD provider.",
+      "source": "Repositories/Libraries/R4STD/Bindings/Rust/src/helpers.rs",
+      "source_sha256": "ffecd48ec23ff2a23eb77224c79d7736a31ecc46df0fd28d0e16bd892df35da6",
+      "native_cases": "99 Desktop+3 common geometry. Configuration seven groups in one case; other owners keep original case groups.",
+      "native_proof_sha256": "e24d047d87680cd07bfb60bee4738ecb20aa78699e53e05af218ce38295f3488",
+      "toolset_manifest_sha256": "43881fd76cbfb58924dbacde896e998051488deb0ce9aec028eccee4b243a76b",
+      "limits": "Linux native only. No new Rust bare-target, full Desktop, physical, Windows, SIMD/FP or performance qualification. Previous independent language/role evidence remains bounded to its original scope."
+    },
+    "desktop_capture_inputs_86": {
+      "complete": true,
+      "scope": "Only general Rust StreamWriter successful-ACK correction and existing R4ENC writer color selection; no Desktop or Studio policy moved into SDK/Libraries. Full Rust Desktop86 remains open.",
+      "changed_inputs": [
+        "Repositories/Libraries/R4ENC/Bindings/Rust/src/helpers.rs",
+        "Repositories/Libraries/Shared/Tests/media.c",
+        "Repositories/Libraries/Shared/Tests/media_native.rs",
+        "Repositories/SDK/Rust/src/storage.rs"
+      ],
+      "stream_writer": {
+        "source": "Repositories/SDK/Rust/src/storage.rs",
+        "source_sha256": "78de1ba39b08b32bb41c5ea169cefb46b68f2172ca68271335590208272c57d6",
+        "proof_sha256": "b6e7bae28301429df2f9500ee22eb773fddd5e6947e1dc90d4787074356ed49e",
+        "cases": "Five original capture fault groups through actual SDK C facade, extended Missing for write/finish/finish_keep_ownership/abort. Native174Desktop+3geometry frozen receipt; complete screenshot/recording remains unqualified.",
+        "change": "Missing is still meaningful for idempotent file deletion; it cannot acknowledge stream bytes or clear exact finish/abort ownership."
+      },
+      "mux_color": {
+        "schema": 1,
+        "passed": true,
+        "runner": "Repositories/Libraries/Tools/Test-ConsumerHelpers.ps1 -Media",
+        "exit_code": 0,
+        "native_cases": 5,
+        "ownership_negatives": 7,
+        "scope": "Existing original media/pixel/Matroska and prior text/font groups. Original C and Rust mux bytes agree for transfer1/13 and left/centered chroma; exact EBML transfer/chroma elements verified. No real encoder, GPU, guest capture/recording, Windows or performance claim.",
+        "source_sha256": {
+          "Repositories/Libraries/R4ENC/Bindings/Rust/src/helpers.rs": "b7f8d3d04f797cebd46b672dc14aee9aae8f5ce8b96c5638736dc180d1d4df83",
+          "Repositories/Libraries/Shared/Tests/media.c": "cbbebcecb34ff4360636c2630d1c47c74555c93f56689821f2b0ac1767b87183",
+          "Repositories/Libraries/Shared/Tests/media_native.rs": "7b8b3b1a7ed491996ac96e0cf7ec8dfef58a6df26cb94b63881909086c9ffe49",
+          "Repositories/Libraries/R4ENC/Bindings/Zig/recording_mux.zig": "bff364a353ed06f859ecac7389492ede68c3b38d450f9f0560e4d9e82b308170",
+          "Repositories/Libraries/R4ENC/Bindings/Zig/recording_pixels.zig": "872a3650e5ab26cf1774436bc3ad4c26c5fae7401b9f059ef14b547f2a708c91",
+          "Repositories/Libraries/R4ENC/Tests/recording.zig": "4fe8ab440a524a43e7799ecd26d68e6aa0301cbf324f5a9305a4567f2fbd4cd9",
+          "Repositories/Libraries/Tools/Test-ConsumerHelpers.ps1": "9d0441bb21194ac4f7b6514759f0754241813ee6acdeb66a9dea31aa36f94e29"
+        },
+        "log_sha256": "9623f422a6016dee0dddb5f575945dc3af13899aaee2fb312e5839f0914d9649",
+        "generator_sha256": "18355975acaf453181f725485eceabd49df18997c8a3d273b4c026d461ccf820",
+        "rust_generator_sha256": "1d200278bfd0b003325e18c95070a6cb3da095437b539fe9370ccc178cd0d0bb",
+        "environment_removed": true
+      },
+      "limits": "Host-only changed-input proof. No new runtime/ABI/Contract, installed SDK release, bare encoder, physical GPU, Windows, SIMD/FP or performance qualification."
+    },
+    "desktop_output_inputs_86": {
+      "complete": true,
+      "scope": "Only the six ordinary shared native-library forwarding operations needed to consume the already existing display policy from C/Rust. No Desktop/Studio policy moved into SDK/Libraries; full Rust Desktop86 remains open.",
+      "changed_inputs": [
+        "Repositories/Libraries/Shared/C/include/r4libraries/helpers.h",
+        "Repositories/Libraries/Shared/Language/fingerprint.zig",
+        "Repositories/Libraries/Shared/Rust/src/raw.rs",
+        "Repositories/Libraries/Shared/Tests/media.c",
+        "Repositories/Libraries/Shared/Tests/media_native.rs"
+      ],
+      "native": {
+        "schema": 1,
+        "passed": true,
+        "runner": "Repositories/Libraries/Tools/Test-ConsumerHelpers.ps1 -Media",
+        "exit_code": 0,
+        "native_cases": 5,
+        "ownership_negatives": 7,
+        "scope": "Six general forwarding operations: refresh and brightness construction/selection plus fieldwise color-config/optional-choice equality. The existing native state machines, preferences, algorithms, R4GFX ABI and provider module are unchanged. Constructors/selectors and equal/different/optional metadata exercised from both C and Rust inside the existing native group. No physical refresh/brightness, new guest, full Desktop or performance claim.",
+        "source_sha256": {
+          "Repositories/Libraries/consumer_media_adapters.zig": "8cb691e3d930d790d121ee81360c13291d81b1a500901f68382ed69dd5776096",
+          "Repositories/Libraries/Shared/C/include/r4libraries/helpers.h": "17e4c9e66a5523ed0e766cc2993689a9b9d835e43f6ecda128d00498cefd0ff8",
+          "Repositories/Libraries/Shared/Language/fingerprint.zig": "7f28ce9a78603c278481bfec8926ab6cb0a3d02d8a2738007104a897539bed2a",
+          "Repositories/Libraries/Shared/Rust/src/raw.rs": "7a52c9890c8de0bbe5fbd88ca6db5f4e63207b65723cdc3bc4ff052e70503787",
+          "Repositories/Libraries/Shared/Tests/media.c": "1bf482b523b6512b21590ce01d4709d80608029aa67f31b4f94e3300bcdc2c02",
+          "Repositories/Libraries/Shared/Tests/media_native.rs": "061c9dbafd99107536dda67576f5df9828f418669c3ede771a06d54b331c4e64",
+          "Repositories/Libraries/Tools/Test-ConsumerHelpers.ps1": "9d0441bb21194ac4f7b6514759f0754241813ee6acdeb66a9dea31aa36f94e29"
+        },
+        "log_sha256": "920bbdd4b2d7586d9d933d273b9c3110ae27eb2636396fe4c167aa99bdd5dbb9",
+        "generator_sha256": "723fbdad30167abd79e59a0c13a35961cb80a809f1a90dc19d40be54b2101824",
+        "rust_generator_sha256": "62c80960accb9d10f74c4c421786e793097e77c0378fb3e90446ee7264e7afd9",
+        "environment_removed": true
+      },
+      "limits": "Host-only helper projection and original Media proof. No new platform ABI, installed SDK release, physical display, Windows or performance qualification."
+    },
+    "precise_clock_consumer_86": {
+      "complete": true,
+      "scope": "General Rust Clock::precise_instant forwards the already existing actual R4SYS monotonic_clock slot. Positive response, VALID and nanosecond frequency required. Existing Clock::instant/coarse tick behavior preserved. No Desktop/Studio policy, new platform ABI or kernel change.",
+      "source_sha256": {
+        "Repositories/SDK/Rust/src/time.rs": "85889bee7b548592fbc893495cc50eeae0849df3ab81c74de1c930a796fd4591",
+        "Repositories/SDK/Tests/Simulation/PreciseClock.rs": "af3a66913e45488f5ec04f751b9c4f5a4643319e3260bcaab06a4120dfdd2587",
+        "Repositories/SDK/Tests/Simulation/RustPlatform.rs": "2b787ffd4c8d3a18a2d1225e9327e62f7db7f989f879d305ade3c253e2be2de7",
+        "Repositories/SDK/r4os/program.zig": "69acea723d0ecfa70865017e5b0fbbd9a0ae33a0f5101fd98ca91601802f4c9c"
+      },
+      "proof": "Temp/Current86-wallpaper-clock-native-proof.json",
+      "proof_sha256": "f21165dff270897b30faf80f93d5c2ac98c0815315cd4f0032d0c88051a39af3",
+      "cases": 1,
+      "qualified": "Independent fractional-tick instant250001ns beyond the coarse source; invalid flags/frequency, unavailable/negative and missing slot do not synthesize a tick fallback. Test is included by the existing RustPlatform component and separately run by the current Desktop native runner.",
+      "limits": "One native source-admission case only, not a new full Platform, guest, hardware, drift/accuracy or performance qualification."
+    },
+    "desktop_entry_inputs_86": {
+      "complete": true,
+      "scope": "Two general SDK input deltas only: Rust Launch.option_count exposes the existing native field; packager admits linked full-width RIP LEA only after exact final opcode/displacement/symbol validation. Absolute ADD/CMP, 32-bit destination, wrong displacement/addend and object-only cases remain refused. No ABI/loader/kernel or Studio policy change. Full Desktop86 remains open.",
+      "source_sha256": {
+        "Repositories/SDK/Rust/src/subsystems/launch.rs": "43f5e10b51a05a4fc74b0d75d42f01afaa2f2cb901cfdf8ce56e391de8b4b12d",
+        "Repositories/SDK/Tools/R4XBuilder/src/main.zig": "cbc88670cbc7c3fc03644bbdb912bd4d06819273b7a169712783ac27eb993174"
+      },
+      "native_proof": "Temp/Current86-entry-routing-native-proof.json",
+      "native_sha256": "e06ae0e888fa5776ea7a85e4c189bb2868419567dcf542e7e0111d705c2e9644",
+      "relocation_proof": "Temp/Current86-relocation-proof.json",
+      "relocation_sha256": "b3dd338eeeae80964d59d5006c98e1d198582d9cf71ce87f5eea451fb3e0fb2f",
+      "packager_cases": 6,
+      "original_c_fixture": {
+        "pic_absolute_forms_refused": true,
+        "large_model_accepted": true
+      },
+      "actual_failed_elf_repackaged": true,
+      "actual_two_paths_relocated_at_high_load_base": true,
+      "private_full_entry_build": {
+        "artifact": {
+          "bytes": 4599199,
+          "file": "R4DESK.R4X",
+          "sha256": "848d53eb6a5bae35c08125ef3ee18bf6f7b2c24213017193607fd4a224d435b2"
+        },
+        "profile": "r4os-rust-r4x-v2",
+        "compiler_inputs": 464,
+        "default_features": true,
+        "scope": "Build/package only; no guest, Windows or full runtime acceptance"
+      }
+    },
+    "desktop_owner_build_86": {
+      "complete": true,
+      "scope": "Normal modular Rust Desktop147 built through the shared BuildModule -> Build-Project -> Build-RustModule route and matched technical tools. Original argument refusals retain valid bytes. Only explicit independent original host oracles remain under Tests/Original; no productive Zig entry. Native190 and normal Small/Maximized pairs are bound separately in Docs/Desktop/RustMigration08686.json, which owns final runtime acceptance/limits. No Studio binding or renewed Windows/physical qualification.",
+      "source_sha256": {
+        "Repositories/SDK/Tools/BuildModule.ps1": "3f3b3c4343027763e1ebc21102cb85248022d2d31fb97e9c0a28062be0d76613",
+        "Repositories/SDK/Tools/Build-RustModule.ps1": "04a8b5e9f8c67669c3b5768776f70e0138d1abf1076abc9d1d15c196504fc179",
+        "Repositories/SDK/Rust/src/memory.rs": "387ff0b58196aa7eaea1a72491e257d41910cdff79c7c21db53244a971d4c3fa"
+      },
+      "artifact_sha256": "0b6147f22e39e03805707bb4804ccf748c6244538a51f8149e5bd34bd8ef441c",
+      "initial_route_artifact_sha256": "83af1307ff77ad2f8ce623ddda229b1dfeb3df862a3f84664cf7f4240c37cf40",
+      "memory_helpers": "Integer REP MOVSB/STOSB with original reverse overlap/unsigned compare. Existing2 memory cases cover guards/alignment/bulk/page/overlap. Wider memcmp trial rejected/restored. Desktop speed optimization and overflow checks are explicit compiler facts; no SIMD target change.",
+      "normal_window_runs": [
+        "e207d644-6558-4b10-aa15-de8d19406e56",
+        "29dd8499-c027-48bb-a8be-552f527ea0d0"
+      ],
+      "normal_window_reference_artifact_sha256": "7197a7828e2a399d94cf372e62a675748b1423bfb37f4d3d3b0dc9e90cb4e78d",
+      "diagnostic_parameter_correction": "Only explicit software-profile selector sha256->SHA-256; compiled normal layout/instructions unchanged outside selector/length/13address corrections. Actual20original cases and exact owned host completion/reap0 passed; details in Desktop/RustMigration08686.json."
+    },
+    "service_audio_admission_86": {
+      "complete": true,
+      "source_sha256": {
+        "Repositories/SDK/Shared/C/include/r4os/app_audio.h": "31f227101caf1641b348df442cbb65e9f0d22339031f901b714cd4bf3a9220ac",
+        "Repositories/SDK/Tests/Conformance/AudioDeviceFacadePrototype05827.c": "08b265b139c25762907b570a28c82ac55a8459c8c9e144e09d4880ca09ce7946",
+        "Repositories/SDK/Tests/Conformance/AudioDeviceFacadePrototype05827.zig": "9b743a3b3861f288a0e9ee386d22a38961facbfd6944abcbbf1e7429ed71c109",
+        "Repositories/SDK/Tests/Simulation/RustPlatform.rs": "f84aadafbd8fb01032f7b2e867483bc7a92bad13bdae5efce11f0a434acaf487",
+        "Repositories/SDK/r4os/app_audio.zig": "c582f49bd1d500c887efdd4b28eab6e5b039681a1f1ac9b2896b62e4e97bd575"
+      },
+      "scope": "AUDSVC service-RPC audio requires only its real R4SYS open/call/close slots. Canonical Zig/C admission corrected; Rust uses the same original native owner. Existing Zig/PCM/Power groups, C service-only stream/master/close/advanced refusal, four release Rust/visual/clock groups and four actual compiler negatives passed. Absent direct R4AUDIO retains exact err_no_group at its original typed raw entry. No ABI/import/Studio/old-OS change; Desktop86 remains open.",
+      "qualification": {
+        "runner": "Tools/Test-RustGui.ps1 -Platform",
+        "host": "Linux",
+        "passed": true,
+        "rust_groups": 4,
+        "compiler_negatives": 4,
+        "gui_projection_check": true,
+        "c_projection_check": true,
+        "guest": "Real local software Desktop audio master35%/muted,40%/unmuted and exact restore passed in owned-host capture qualification; no physical audio or Windows claim. One earlier BASIC fixture Exit120 is not a proven SDK-audio repair."
+      }
     }
   },
   "wave_bindings": [
@@ -54005,17 +54233,17 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.86.83",
-    "sdk": "0.64.93",
+    "performed_in": "0.86.86",
+    "sdk": "0.64.94",
     "contract": "0.64.45",
     "libraries": "0.64.30",
-    "evidence": "geometry_current_83",
-    "scope": "Exactly five reviewed watched inputs: shared topology owner, its existing C/Rust cases, SDK version metadata and a stale comment. Other650 hashes unchanged;655 owner files/35 scopes/180 root exports. Unchanged C/Rust projections share the qualified original owner; no ABI, hardware, Windows, direct bare FP/SIMD or performance claim."
+    "evidence": "service_audio_admission_86",
+    "scope": "Same658 watched files/35 scopes/180 root exports. General service-only audio, shared Rust build route, precise clock/storage/grapheme/media adapters and common memory primitives qualified on Linux through existing owners. Normal modular Rust Desktop147 uses SDK94; exact combined runtime evidence and unchanged-scope limits in Desktop/RustMigration08686.json. No new public package/Windows/physical/direct Rust SIMD qualification."
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.86.83",
+    "reviewed_in": "0.86.86",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -54061,6 +54289,7 @@
       "Repositories/SDK/Shared/C",
       "Repositories/SDK/Shared/Generated",
       "Repositories/SDK/Shared/Zig",
+      "Repositories/SDK/Tests/Conformance/BoundedGraphemeChecks.c",
       "Repositories/SDK/Tools",
       "Repositories/SDK/build.zig",
       "Repositories/SDK/build.zig.zon",
@@ -54218,7 +54447,7 @@
       },
       {
         "path": "Repositories/Libraries/R4ENC/Bindings/Rust/src/helpers.rs",
-        "sha256": "387498fa3dd365cdb4f4f80cc840e72449beda72d2c1a5504df5ba9aa1005c5f"
+        "sha256": "b7f8d3d04f797cebd46b672dc14aee9aae8f5ce8b96c5638736dc180d1d4df83"
       },
       {
         "path": "Repositories/Libraries/R4ENC/Bindings/Rust/src/lib.rs",
@@ -54347,6 +54576,14 @@
       {
         "path": "Repositories/Libraries/R4GFX/Contract/LibraryContract.json",
         "sha256": "a4d28f983091271e22b59e4f5928592ebf3c6ac336d2df132f7247f2478bb3b3"
+      },
+      {
+        "path": "Repositories/Libraries/R4GFX/Display/Rust/Cargo.toml",
+        "sha256": "b961fd0608ff8b1740b6718f8a79ca53a50b896ac6eef7abb11ac9658a22c7d3"
+      },
+      {
+        "path": "Repositories/Libraries/R4GFX/Display/Rust/src/lib.rs",
+        "sha256": "1d3711208def47ccb4837c50829c6b5898fa0d23bf00c6f4b8f2f85eb866c2b4"
       },
       {
         "path": "Repositories/Libraries/R4GFX/Display/brightness_client.zig",
@@ -54630,7 +54867,7 @@
       },
       {
         "path": "Repositories/Libraries/R4STD/Bindings/Rust/src/helpers.rs",
-        "sha256": "d95d599cf14ae6f52ed89cad63c0f3bc96b706ce91247b7f61ff8a53b7f3fdcd"
+        "sha256": "ffecd48ec23ff2a23eb77224c79d7736a31ecc46df0fd28d0e16bd892df35da6"
       },
       {
         "path": "Repositories/Libraries/R4STD/Bindings/Rust/src/lib.rs",
@@ -54814,7 +55051,7 @@
       },
       {
         "path": "Repositories/Libraries/Shared/C/include/r4libraries/helpers.h",
-        "sha256": "f5bdf3a31811ee7d8d545815cf642b64bbb740a0ed7fcf1ab792fec931614d53"
+        "sha256": "17e4c9e66a5523ed0e766cc2993689a9b9d835e43f6ecda128d00498cefd0ff8"
       },
       {
         "path": "Repositories/Libraries/Shared/Language/c_header.zig",
@@ -54826,7 +55063,7 @@
       },
       {
         "path": "Repositories/Libraries/Shared/Language/fingerprint.zig",
-        "sha256": "3b354c2b0f5e4efc6f3f7063e95db2b7448f92581147b2b0b09f0b9d35fe5908"
+        "sha256": "7f28ce9a78603c278481bfec8926ab6cb0a3d02d8a2738007104a897539bed2a"
       },
       {
         "path": "Repositories/Libraries/Shared/Language/gen.zig",
@@ -55058,7 +55295,7 @@
       },
       {
         "path": "Repositories/Libraries/Shared/Rust/src/raw.rs",
-        "sha256": "11f51cc02be3f159b7a1ebc1b63c3c2a0367918e2dc9f376c833213b4daa6661"
+        "sha256": "7a52c9890c8de0bbe5fbd88ca6db5f4e63207b65723cdc3bc4ff052e70503787"
       },
       {
         "path": "Repositories/Libraries/Shared/Tests/Consumer/Cargo.toml",
@@ -55090,11 +55327,11 @@
       },
       {
         "path": "Repositories/Libraries/Shared/Tests/media.c",
-        "sha256": "b674d80cc70256e9ea6a32f148710f810d914fe0a0e72aeb43a010d30eea813f"
+        "sha256": "1bf482b523b6512b21590ce01d4709d80608029aa67f31b4f94e3300bcdc2c02"
       },
       {
         "path": "Repositories/Libraries/Shared/Tests/media_native.rs",
-        "sha256": "59d57f7f510ca818c9d84515b0b96d5898539fa404a6846b9845ccf3566a0ef8"
+        "sha256": "061c9dbafd99107536dda67576f5df9828f418669c3ede771a06d54b331c4e64"
       },
       {
         "path": "Repositories/Libraries/Shared/Tests/native.rs",
@@ -55126,11 +55363,11 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/bounded_text.rs",
-        "sha256": "4740ad58c54a63255bd83f26139cbd2e9b6d3f647d09e6e38023cb7509296fc1"
+        "sha256": "67c1c01b9b620d3bf37341366afb90ac571d92d563da43dca0b20abd6bf4c081"
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "d198e5357effdb5d13ba7c387d922dff21828570e6673cec23a5568c92703119"
+        "sha256": "5a7b509da24a8dccfd97bd8db94c08a5eb163d728b0c26da4a0bd206e45fd963"
       },
       {
         "path": "Repositories/SDK/Rust/src/data/hash.rs",
@@ -55206,7 +55443,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/memory.rs",
-        "sha256": "fa3fffce65f5d895f6f14d00d3ce0597f196e4e262cb0c88d697e698624053ce"
+        "sha256": "387ff0b58196aa7eaea1a72491e257d41910cdff79c7c21db53244a971d4c3fa"
       },
       {
         "path": "Repositories/SDK/Rust/src/network.rs",
@@ -55302,7 +55539,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/storage.rs",
-        "sha256": "37970a33154f52c0816f143cc678f134d94e65b33cf05f727245754c37827075"
+        "sha256": "78de1ba39b08b32bb41c5ea169cefb46b68f2172ca68271335590208272c57d6"
       },
       {
         "path": "Repositories/SDK/Rust/src/subsystems/catalog.rs",
@@ -55314,7 +55551,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/subsystems/launch.rs",
-        "sha256": "441fa4330f2cb16cd45d91ddab4c708104528288d40ad90214cb8a8f91544646"
+        "sha256": "43f5e10b51a05a4fc74b0d75d42f01afaa2f2cb901cfdf8ce56e391de8b4b12d"
       },
       {
         "path": "Repositories/SDK/Rust/src/subsystems/mod.rs",
@@ -55326,7 +55563,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/time.rs",
-        "sha256": "39da62e074eda02c4d9e6a628e965765b9f745e71941d0a20ebd737cd7e7758b"
+        "sha256": "85889bee7b548592fbc893495cc50eeae0849df3ab81c74de1c930a796fd4591"
       },
       {
         "path": "Repositories/SDK/Rust/src/update/catalog.rs",
@@ -55382,7 +55619,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_audio.h",
-        "sha256": "b1aa1bb311b42f2023e3ffd8b245b312534e4b891585a9c1342d40878faef312"
+        "sha256": "31f227101caf1641b348df442cbb65e9f0d22339031f901b714cd4bf3a9220ac"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_contract.h",
@@ -55566,7 +55803,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/storage_helpers.h",
-        "sha256": "efe0d24dd0183be13986f9501ec382c4613645cd82c5118206d695a70b1ff686"
+        "sha256": "f367c375ee789fe580efe8d8604ada72f6d25ba61b70becba8538ee84cf2e9e1"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/subsystem_helpers.h",
@@ -55617,16 +55854,20 @@
         "sha256": "c90b5f9032ea4ef924b824b9b146fe4c1a78b62c136024595ad1f921fc609b8c"
       },
       {
+        "path": "Repositories/SDK/Tests/Conformance/BoundedGraphemeChecks.c",
+        "sha256": "fbb0e964c8c6cd908106622e89776c570027531ef9bb1d99f17ff84fe08be54f"
+      },
+      {
         "path": "Repositories/SDK/Tools/Build-Project.ps1",
         "sha256": "5a230d5f76ffceb6d0846707d8241644c9837e8acd9239f77a26bcf96a62db0a"
       },
       {
         "path": "Repositories/SDK/Tools/Build-RustModule.ps1",
-        "sha256": "059a977372f6c1ce84ec784036a3b4f161d5a86ec81b945709faf92c72562227"
+        "sha256": "04a8b5e9f8c67669c3b5768776f70e0138d1abf1076abc9d1d15c196504fc179"
       },
       {
         "path": "Repositories/SDK/Tools/BuildModule.ps1",
-        "sha256": "0a11ace54f91f4c8b5ade9292c6c99d450d2da707b4e2415e17db11a9dc67b5d"
+        "sha256": "3f3b3c4343027763e1ebc21102cb85248022d2d31fb97e9c0a28062be0d76613"
       },
       {
         "path": "Repositories/SDK/Tools/CFacadeGen/src/main.zig",
@@ -55698,7 +55939,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/R4XBuilder/src/main.zig",
-        "sha256": "94a96b3ae51a6e7b81d5d1391522e2da094f58eab1ab309d7de291aa597e4e16"
+        "sha256": "cbc88670cbc7c3fc03644bbdb912bd4d06819273b7a169712783ac27eb993174"
       },
       {
         "path": "Repositories/SDK/Tools/R4XBuilder/src/stack_probes.zig",
@@ -55798,7 +56039,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "538601f54e0ef39a1aa896f1cd60c4b2b03f7e01451de7b5ee526cae462abdba"
+        "sha256": "b0e8c943221249ebbde19dde177cadd1247e574300d46ac7a52e63c6fe057824"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -55814,7 +56055,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/app_audio.zig",
-        "sha256": "391ec8fe4f9ca9af8483c29415a315ccafcf1b2c680b7b4e9d393156c3afd329"
+        "sha256": "c582f49bd1d500c887efdd4b28eab6e5b039681a1f1ac9b2896b62e4e97bd575"
       },
       {
         "path": "Repositories/SDK/r4os/app_contract.zig",
@@ -56094,7 +56335,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/gui_value_bridge.zig",
-        "sha256": "f8b54654cfb6848abaa141178d5b5c4fa3235db316f5e72405b4726d1b4c9114"
+        "sha256": "38087ad0821bc3cdf827f430d1639609a2dafa26c5412831f7cf4e1c309e6489"
       },
       {
         "path": "Repositories/SDK/r4os/heap_runtime.zig",
@@ -56763,7 +57004,9 @@
         ],
         "proof": [
           "tooling_templates_current_70",
-          "independent_desktop_current_71"
+          "independent_desktop_current_71",
+          "desktop_entry_inputs_86",
+          "desktop_owner_build_86"
         ]
       },
       {
@@ -56818,7 +57061,9 @@
           "Repositories/SDK/Rust/src/storage.rs"
         ],
         "proof": [
-          "storage_current_53"
+          "storage_current_53",
+          "desktop_port_inputs_86",
+          "desktop_capture_inputs_86"
         ]
       },
       {
@@ -56900,7 +57145,8 @@
           "Repositories/SDK/Rust/src/time.rs"
         ],
         "proof": [
-          "service_network_current_55"
+          "service_network_current_55",
+          "precise_clock_consumer_86"
         ]
       },
       {
@@ -56978,7 +57224,8 @@
           "Repositories/SDK/Rust/src/platform/pcm.rs"
         ],
         "proof": [
-          "platform_current_58"
+          "platform_current_58",
+          "service_audio_admission_86"
         ]
       },
       {
@@ -57139,7 +57386,8 @@
         ],
         "proof": [
           "subsystems_current_65",
-          "current_kernel_records_80"
+          "current_kernel_records_80",
+          "desktop_entry_inputs_86"
         ]
       },
       {
@@ -57268,7 +57516,8 @@
           "local_contract_and_baseline",
           "library_projection_current_61",
           "language_libraries_current_60",
-          "geometry_current_83"
+          "geometry_current_83",
+          "desktop_capture_inputs_86"
         ]
       },
       {
@@ -57292,7 +57541,8 @@
         "proof": [
           "local_contract_and_baseline",
           "library_projection_current_61",
-          "language_libraries_current_59"
+          "language_libraries_current_59",
+          "desktop_settings_helpers_86"
         ]
       },
       {
@@ -57334,12 +57584,16 @@
         "rust": [
           "Repositories/Libraries/R4GFX/Bindings/Rust/src/helpers.rs",
           "Repositories/Libraries/R4GFX/Bindings/Rust/src/lib.rs",
+          "Repositories/Libraries/R4GFX/Display/Rust/Cargo.toml",
+          "Repositories/Libraries/R4GFX/Display/Rust/src/lib.rs",
           "Repositories/Libraries/Shared/Rust/src/raw.rs"
         ],
         "proof": [
           "local_contract_and_baseline",
           "library_projection_current_61",
-          "language_libraries_current_60"
+          "language_libraries_current_60",
+          "desktop_port_inputs_86",
+          "desktop_output_inputs_86"
         ]
       },
       {

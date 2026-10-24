@@ -18,6 +18,11 @@ int32_t R4SdkTextValid(const uint8_t *, uintptr_t);
 int32_t R4SdkTextAssign(uint8_t *, uintptr_t, const uint8_t *, uintptr_t);
 int32_t R4SdkTextLabel(uint8_t *, uintptr_t, const uint8_t *, uintptr_t);
 int32_t R4SdkTextPrefix(const uint8_t *, uintptr_t, uintptr_t capacity, int32_t truncated, uintptr_t *prefix);
+/* Current R4STD extended-grapheme byte boundaries, without normalization or
+ * display-width policy. Offsets clamp to length, as at the original owner.
+ * Return 1 on success; failure leaves the output offset unchanged. */
+int32_t R4SdkTextNext(const uint8_t *, uintptr_t, uintptr_t offset, uintptr_t *next);
+int32_t R4SdkTextPrevious(const uint8_t *, uintptr_t, uintptr_t offset, uintptr_t *previous);
 typedef struct R4RegistryTestPaths {const uint8_t *hive,*tmp,*bak,*original,*stage,*displaced;} R4RegistryTestPaths;
 /* operation 0: private-image marker; 1: backup (-1 indeterminate, 0 absent,
  * 1 verified original); 2: restore (0/1). Serialize diagnostics and retain

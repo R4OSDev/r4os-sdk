@@ -515,6 +515,8 @@ test "PCM lifecycle validates format timeout progress and double close" {
     timeout_next = false;
     var facades = initFacades();
     try std.testing.expect(facades.audio.available());
+    facades.audio.raw = .{ .base = .{} };
+    try std.testing.expect(facades.audio.available());
     const invalid_format: r4os.PcmFormat = @enumFromInt(2);
     try std.testing.expect(switch (facades.audio.openStream(48_000, 2, invalid_format, r4os.app_audio.default_volume, r4os.time_contract.timeoutPoll())) {
         .failure => |raw| raw == r4os.abi.service_api_result_invalid,
