@@ -45936,6 +45936,7 @@
         "Repositories/Libraries/R4GFX/Display/cta_timings.zig",
         "Repositories/Libraries/R4GFX/Display/desktop_outputs.zig",
         "Repositories/Libraries/R4GFX/Display/display_profile.zig",
+        "Repositories/Libraries/R4GFX/Display/document_text.zig",
         "Repositories/Libraries/R4GFX/Display/edid.zig",
         "Repositories/Libraries/R4GFX/Display/eld.zig",
         "Repositories/Libraries/R4GFX/Display/links.zig",
@@ -45991,7 +45992,8 @@
         "local_contract_and_baseline",
         "language_libraries_current_60",
         "library_projection_current_61",
-        "geometry_current_83"
+        "geometry_current_83",
+        "display_geometry_parsers_94"
       ],
       "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten.",
       "rust_sources": [
@@ -46001,6 +46003,10 @@
       "source_geometry_08686": {
         "component": "r4os-display-geometry0.1.0",
         "scope": "Source-only signed topology math shared by Desktop;3 original native geometry groups. EDID/discovery/preferences/control not ported or qualified here. No R4M0 or library ABI change."
+      },
+      "source_display_review_08694": {
+        "evidence": "display_geometry_parsers_94",
+        "scope": "Shared current local projection and strict document lexer; same C/Rust generic functions through unchanged native owner. Existing historical contracts/qualification preserved."
       }
     },
     {
@@ -54002,6 +54008,55 @@
       "native": "Actual focused Zig resources; native C/Release-Rust resources and two unsafe/Send compiler negatives. Exact40-byte state/64-bit handles, Busy/restart/invalid-prefix/mixed-mode boundaries. Canonical Contract test with26 mutations and C/Zig/Rust layout checks. Generated shared Library Rust projection write/check.",
       "guest": "Normal Rust Desktop148 uses general lifecycle Resources on normal Kernel383; original DESKTOP /HOST /RESTART check, full installed-byte/BOOT readback and exact host close/completion/reap0. Bounded explicit LIFECYCLE /METADATA compares unchanged full diagnostic fields and current mode/restart/close/completion/reap/ID-reuse. Actual compact outputs in shared report.",
       "limits": "No new full SDK/Windows/hardware/direct Rust SIMD qualification. Compiled call paths, actual caller work, wall acquisition time and global frame comparison remain separate evidence."
+    },
+    "display_geometry_parsers_94": {
+      "complete": true,
+      "performed_in": "0.86.94",
+      "sdk": "0.64.95",
+      "contract": "0.64.46",
+      "libraries": "0.64.33",
+      "report": "Docs/Desktop/RustOptimierungen086.json",
+      "before_guard": "Actual exit1: changed owner source set. Five old hashes match the92/94 before-source receipts exactly; one added private helper. All other653 baseline file bodies checked unchanged.",
+      "reviewed_sources": [
+        {
+          "path": "Repositories/Libraries/R4GFX/Display/Rust/src/lib.rs",
+          "before_sha256": "1d3711208def47ccb4837c50829c6b5898fa0d23bf00c6f4b8f2f85eb866c2b4",
+          "sha256": "11629aea9e254c92f6324b0ce0a60cc78eb0a036f30afa4605a22775dfc24dba"
+        },
+        {
+          "path": "Repositories/Libraries/R4GFX/Display/brightness_preferences.zig",
+          "before_sha256": "8303a78b49315c30e3ec547c9874eb94b9357c7e49dc99a4de16463bc585b166",
+          "sha256": "103b5feee97e9338e97087989cbdf1713d504da21a6c821f31780390f1306f23"
+        },
+        {
+          "path": "Repositories/Libraries/R4GFX/Display/color_preferences.zig",
+          "before_sha256": "71718def642a8e3c957276da45adc1aa677bd4a34015ecbd9b5dfecc515a7a19",
+          "sha256": "84e8dfe58afa160212f2e8c72328f8a5e0844de2145f2dfb1e6b63b18e33483e"
+        },
+        {
+          "path": "Repositories/Libraries/R4GFX/Display/preferences.zig",
+          "before_sha256": "181f08fb3419a58316b8be6498f70c66550ce38556fd6a72e833058ed43e837e",
+          "sha256": "b989118d874ca8cf80641d5c9dbcfb195f3316bceee873cbdc9727b59670d74d"
+        },
+        {
+          "path": "Repositories/Libraries/R4GFX/Display/refresh_preferences.zig",
+          "before_sha256": "f0e9394589528f774a921d04a216b0deeee365442f815878fa7d0b452f833cac",
+          "sha256": "b9222042fe8450318c4407a0279a48dfaaf114cac369e73bd185567285e5b8d7"
+        },
+        {
+          "path": "Repositories/Libraries/R4GFX/Display/document_text.zig",
+          "before_sha256": null,
+          "sha256": "ed30d87b2771fc7cffb7816d31a07732385cfb38f82966cedee3dc26f7eeecac"
+        }
+      ],
+      "scope": "Only existing R4GFX local/global point policy and shared strict preference text lexemes reviewed. No change to wire ABI, generated C/Rust bindings, provider contracts, supported schema/receiver/error/serial/allocator/close semantics. No new language-specific math/parser implementation.",
+      "geometry": "92: native4owner cases+3original geometry/1clock.48whole original ZigCPU images across4rotations/6scales,4868Capturecells against independent canonical Zig global physical API,12original primitive hashes and existing GPU readback flow. Final normal Desktop152 compiled; no out-of-line point helper.",
+      "parsers": "94: existing canonical Zig display/topology/four-parser case1/1, all previous expectations plus41external document boundaries. C/Rust consume the same original Zig parser through unchanged shared native adapter signatures; exact helper interfaces and fixed records unchanged. Both real static consumers Appearance29/Desktop153 rebuilt and versioned after actual byte differences.",
+      "normal_references": {
+        "92": "d0c86fd6-43b6-4ae3-9ff0-5fabf3974c7c",
+        "94": "f7a1dc74-cc52-4dec-a5df-82775fc89054"
+      },
+      "limits": "Existing qualified scopes only. No new runtime, host/Windows, physical display/cursor, direct Rust SIMD/FP, package-release or performance qualification. Metadata-only follow-up retains exact final153/29/383/GFX38 bytes; no extra STANDARD."
     }
   },
   "wave_bindings": [
@@ -54247,17 +54302,17 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.86.87",
+    "performed_in": "0.86.94",
     "sdk": "0.64.95",
     "contract": "0.64.46",
-    "libraries": "0.64.31",
-    "evidence": "lifecycle_metadata_87",
-    "scope": "Only the additive general40-byte lifecycle projection/current1320-byte R4SYS table and changed Zig/C/Rust resource facades reviewed. Original full diagnostic inventory and unrelated language scopes unchanged. Real Linux native owner/interop and current normal Rust Desktop148 guest; no whole-SDK, Windows, hardware or direct Rust SIMD claim."
+    "libraries": "0.64.33",
+    "evidence": "display_geometry_parsers_94",
+    "scope": "Exactly five changed existing GFX owner files and one added private helper from92/94, bound to their unchanged original baseline hashes, specific independent native cases, real normal consumer artifacts and existing full STANDARD readbacks. All other reviewed source bodies/ABI/implementation scopes retained unchanged; no blanket semantic refresh or new runtime qualification."
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.86.87",
+    "reviewed_in": "0.86.94",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -54597,7 +54652,7 @@
       },
       {
         "path": "Repositories/Libraries/R4GFX/Display/Rust/src/lib.rs",
-        "sha256": "1d3711208def47ccb4837c50829c6b5898fa0d23bf00c6f4b8f2f85eb866c2b4"
+        "sha256": "11629aea9e254c92f6324b0ce0a60cc78eb0a036f30afa4605a22775dfc24dba"
       },
       {
         "path": "Repositories/Libraries/R4GFX/Display/brightness_client.zig",
@@ -54605,7 +54660,7 @@
       },
       {
         "path": "Repositories/Libraries/R4GFX/Display/brightness_preferences.zig",
-        "sha256": "8303a78b49315c30e3ec547c9874eb94b9357c7e49dc99a4de16463bc585b166"
+        "sha256": "103b5feee97e9338e97087989cbdf1713d504da21a6c821f31780390f1306f23"
       },
       {
         "path": "Repositories/Libraries/R4GFX/Display/brightness_status.zig",
@@ -54617,7 +54672,7 @@
       },
       {
         "path": "Repositories/Libraries/R4GFX/Display/color_preferences.zig",
-        "sha256": "71718def642a8e3c957276da45adc1aa677bd4a34015ecbd9b5dfecc515a7a19"
+        "sha256": "84e8dfe58afa160212f2e8c72328f8a5e0844de2145f2dfb1e6b63b18e33483e"
       },
       {
         "path": "Repositories/Libraries/R4GFX/Display/color_signal.zig",
@@ -54640,6 +54695,10 @@
         "sha256": "6bd3bf43db7f3e32e0a20df3d6a6b0e97dd5e041171bfe83c51bd252d21b2f33"
       },
       {
+        "path": "Repositories/Libraries/R4GFX/Display/document_text.zig",
+        "sha256": "ed30d87b2771fc7cffb7816d31a07732385cfb38f82966cedee3dc26f7eeecac"
+      },
+      {
         "path": "Repositories/Libraries/R4GFX/Display/edid.zig",
         "sha256": "cdd3d5635daa6713069f0e964ac601386ba2bfd62c25f105d7f853f440032200"
       },
@@ -54657,7 +54716,7 @@
       },
       {
         "path": "Repositories/Libraries/R4GFX/Display/preferences.zig",
-        "sha256": "181f08fb3419a58316b8be6498f70c66550ce38556fd6a72e833058ed43e837e"
+        "sha256": "b989118d874ca8cf80641d5c9dbcfb195f3316bceee873cbdc9727b59670d74d"
       },
       {
         "path": "Repositories/Libraries/R4GFX/Display/readback.zig",
@@ -54673,7 +54732,7 @@
       },
       {
         "path": "Repositories/Libraries/R4GFX/Display/refresh_preferences.zig",
-        "sha256": "f0e9394589528f774a921d04a216b0deeee365442f815878fa7d0b452f833cac"
+        "sha256": "b9222042fe8450318c4407a0279a48dfaaf114cac369e73bd185567285e5b8d7"
       },
       {
         "path": "Repositories/Libraries/R4GFX/Display/refresh_range.zig",
@@ -57576,6 +57635,7 @@
           "Repositories/Libraries/R4GFX/Display/cta_timings.zig",
           "Repositories/Libraries/R4GFX/Display/desktop_outputs.zig",
           "Repositories/Libraries/R4GFX/Display/display_profile.zig",
+          "Repositories/Libraries/R4GFX/Display/document_text.zig",
           "Repositories/Libraries/R4GFX/Display/edid.zig",
           "Repositories/Libraries/R4GFX/Display/eld.zig",
           "Repositories/Libraries/R4GFX/Display/links.zig",
@@ -57608,7 +57668,8 @@
           "library_projection_current_61",
           "language_libraries_current_60",
           "desktop_port_inputs_86",
-          "desktop_output_inputs_86"
+          "desktop_output_inputs_86",
+          "display_geometry_parsers_94"
         ]
       },
       {
