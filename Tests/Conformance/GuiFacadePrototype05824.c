@@ -897,6 +897,11 @@ static int32_t fake_activity_wait(uint64_t sequence, uint64_t timeout, uint64_t 
     *out_sequence = sequence;
     return 0;
 }
+static int32_t fake_gui_activity_wait(uint64_t sequence, uint64_t timeout,
+                                      uint32_t subscriptions, uint64_t *out_sequence) {
+    assert((subscriptions & ~R4OS_GUI_ACTIVITY_SHARED_ALL) == 0);
+    return fake_activity_wait(sequence, timeout, out_sequence);
+}
 static int32_t fake_clear(uint32_t rgb) { (void)rgb; ++draw_count; return 0; }
 static int32_t fake_rect(int32_t x, int32_t y, uint32_t width, uint32_t height, uint32_t rgb) {
     (void)x; (void)y; (void)width; (void)height; (void)rgb; ++draw_count; return 0;
@@ -975,6 +980,7 @@ static R4App make_app(R4XStartR4Sys *sys, R4XStartR4Desk *desk, R4XStartR4Draw *
     desk->gui_set_min_size = (uintptr_t)&fake_set_minimum_size;
     desk->clipboard_revision = (uintptr_t)&fake_clipboard_revision;
     desk->desktop_activity_wait = (uintptr_t)&fake_activity_wait;
+    desk->gui_activity_wait = (uintptr_t)&fake_gui_activity_wait;
     *draw = (R4XStartR4Draw){0};
     draw->size = R4XSTART_R4DRAW_SIZE;
     draw->gui_clear = (uintptr_t)&fake_clear;

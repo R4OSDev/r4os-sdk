@@ -1132,6 +1132,16 @@ pub const R4Desk = struct {
         const function: abi.R4DeskFns.desktop_activity_notify = @ptrFromInt(self.table.desktop_activity_notify);
         return function();
     }
+    pub fn guiActivityWait(self: *const R4Desk, last_seq: u64, timeout_ticks: u64, subscriptions: u32, out_seq: *u64) i32 {
+        if (!self.hasFn("gui_activity_wait")) return abi.err_no_fn;
+        const function: abi.R4DeskFns.gui_activity_wait = @ptrFromInt(self.table.gui_activity_wait);
+        return function(last_seq, timeout_ticks, subscriptions, out_seq);
+    }
+    pub fn guiActivityNotify(self: *const R4Desk, categories: u32) i32 {
+        if (!self.hasFn("gui_activity_notify")) return abi.err_no_fn;
+        const function: abi.R4DeskFns.gui_activity_notify = @ptrFromInt(self.table.gui_activity_notify);
+        return function(categories);
+    }
 
     pub fn supportsRemoteFrameMap(self: *const R4Desk) bool {
         return self.hasFn("remote_frame_map");

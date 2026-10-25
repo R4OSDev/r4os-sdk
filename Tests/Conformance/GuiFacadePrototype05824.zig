@@ -771,7 +771,7 @@ test "graphics buffer optional tails preserve 64-bit offsets in Zig and R4D call
     tables[2].size = @offsetOf(r4os.abi.R4XStartR4Draw, "gfx_buffer_stats") + 8;
     const stats_driver = r4os.driver_memory.Context{ .table = .{ .buffer_stats = @intFromPtr(&statsProbe) } };
     const before_stats = stats;
-    for ([_]u32{56, 135}) |bytes| {
+    for ([_]u32{ 56, 135 }) |bytes| {
         stats_probe_bytes = bytes;
         try std.testing.expectEqual(r4os.abi.gfx_buffer_error_invalid, buffers.stats(&stats));
         try std.testing.expectEqualDeep(before_stats, stats);
@@ -1332,6 +1332,9 @@ test "old display and driver prefixes hide output tails while C/Zig preserve rec
 
 var now_ticks: u64 = 100;
 var activity_waits: u32 = 0;
+var desktop_activity_waits: u32 = 0;
+var gui_wait_mode: u32 = 0;
+var last_gui_subscriptions: u32 = 0;
 var clipboard_revision: u32 = 7;
 var present_count: u32 = 0;
 var draw_count: u32 = 0;
@@ -1416,7 +1419,7 @@ fn fakeClipboardRevision() callconv(.c) u32 {
 }
 
 fn fakeActivityWait(last_sequence: u64, timeout_ticks: u64, out_sequence: *u64) callconv(.c) i32 {
-    activity_waits += 1;
+    desktop_activity_waits += 1;
     now_ticks +|= timeout_ticks;
     out_sequence.* = last_sequence;
     return 0;
@@ -1424,6 +1427,30 @@ fn fakeActivityWait(last_sequence: u64, timeout_ticks: u64, out_sequence: *u64) 
 
 fn fakeActivityNotify() callconv(.c) i32 {
     return 0;
+}
+fn fakeGuiActivityWait(last: u64, timeout: u64, subscriptions: u32, out: *u64) callconv(.c) i32 {
+    std.debug.assert(subscriptions & ~r4os.abi.gui_activity_shared_all == 0);
+    activity_waits += 1;
+    last_gui_subscriptions = subscriptions;
+    if (gui_wait_mode == 1) {
+        // A real peer may commit clipboard state after poll but before wait.
+        gui_wait_mode = 0;
+        clipboard_revision +%= 1;
+        out.* = last +% 1;
+        return 1;
+    }
+    if (gui_wait_mode == 2 and timeout > 1) {
+        now_ticks += 1;
+        out.* = last +% 1;
+        return 1;
+    }
+    if (gui_wait_mode == 3) return -2;
+    now_ticks +|= timeout;
+    out.* = last;
+    return 0;
+}
+fn fakeGuiActivityNotify(categories: u32) callconv(.c) i32 {
+    return if (categories != 0 and categories & ~r4os.abi.gui_activity_shared_all == 0) 0 else -1;
 }
 
 fn fakeClear(rgb: u32) callconv(.c) i32 {
@@ -1566,6 +1593,8 @@ fn makeTables(draw_available: bool) struct { r4os.abi.R4XStartR4Sys, r4os.abi.R4
     desk.gui_set_min_size = @intFromPtr(&fakeSetMinSize);
     desk.clipboard_revision = @intFromPtr(&fakeClipboardRevision);
     desk.desktop_activity_wait = @intFromPtr(&fakeActivityWait);
+    desk.gui_activity_wait = @intFromPtr(&fakeGuiActivityWait);
+    desk.gui_activity_notify = @intFromPtr(&fakeGuiActivityNotify);
     var draw: r4os.abi.R4XStartR4Draw = .{};
     draw.gui_clear = @intFromPtr(&fakeClear);
     draw.gui_rect = @intFromPtr(&fakeRect);
@@ -1816,6 +1845,49 @@ test "command clipboard timer wait and missing draw capability stay explicit" {
     var missing_context: r4os.abi.R4XStartContext = undefined;
     var missing_app = try makeApp(&missing_tables, &missing_imports, &missing_context);
     try std.testing.expect(missing_app.window(timers[0..]) == null);
+}
+
+test "command clipboard timer scoped activity preserves enrollment race deadline and cancellation" {
+    event_index = raw_events.len;
+    now_ticks = 100;
+    activity_waits = 0;
+    desktop_activity_waits = 0;
+    clipboard_revision = 7;
+    gui_wait_mode = 1;
+    defer gui_wait_mode = 0;
+    var tables = makeTables(true);
+    var imports: [3]r4os.abi.R4XStartImport = undefined;
+    var context: r4os.abi.R4XStartContext = undefined;
+    var app = try makeApp(&tables, &imports, &context);
+    var timers: [0]r4os.Timer = .{};
+    var window = app.window(timers[0..]) orelse return error.WindowMissing;
+    switch (window.waitMessage(r4os.time_contract.timeoutForever())) {
+        .message => |message| switch (message) {
+            .clipboard => |value| try std.testing.expectEqual(@as(u32, 8), value.revision),
+            else => return error.Clipboard,
+        },
+        else => return error.MissedPublication,
+    }
+    try std.testing.expectEqual(r4os.abi.gui_activity_shared_clipboard, last_gui_subscriptions);
+    try std.testing.expectEqual(@as(u32, 1), activity_waits);
+    try std.testing.expectEqual(@as(u32, 0), desktop_activity_waits);
+    // Multiple unrelated shared hints cannot extend the original deadline.
+    window.events.subscriptions = 0;
+    clipboard_revision = 9;
+    gui_wait_mode = 2;
+    try std.testing.expect(window.waitMessage(r4os.time_contract.timeoutFinite(.{ .nanoseconds = 10_000_000 })) == .timed_out);
+    try std.testing.expectEqual(@as(u64, 110), now_ticks);
+    try std.testing.expectEqual(@as(u32, 11), activity_waits);
+    try std.testing.expectEqual(@as(u32, 0), last_gui_subscriptions);
+    const sequence = window.events.activity_sequence;
+    gui_wait_mode = 3;
+    switch (window.waitMessage(r4os.time_contract.timeoutForever())) {
+        .failure => |value| try std.testing.expectEqual(@as(i32, -2), value),
+        else => return error.Cancellation,
+    }
+    try std.testing.expectEqual(sequence, window.events.activity_sequence);
+    try std.testing.expectEqual(@as(u32, 12), activity_waits);
+    try std.testing.expectEqual(@as(u32, 0), desktop_activity_waits);
 }
 
 test "transactional paint and immutable snapshot use the complete frame facade" {

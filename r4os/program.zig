@@ -2387,6 +2387,14 @@ pub const Context = struct {
         const function = self.deskFn("desktop_activity_notify") orelse return abi.remote_frame_error_unsupported;
         return function();
     }
+    pub fn guiActivityWait(self: *const Context, last_seq: u64, timeout_ticks: u64, subscriptions: u32, out_seq: *u64) i32 {
+        const function = self.deskFn("gui_activity_wait") orelse return abi.err_no_fn;
+        return function(last_seq, timeout_ticks, subscriptions, out_seq);
+    }
+    pub fn guiActivityNotify(self: *const Context, categories: u32) i32 {
+        const function = self.deskFn("gui_activity_notify") orelse return abi.err_no_fn;
+        return function(categories);
+    }
 
     pub fn supportsRemoteFrameMap(self: *const Context) bool {
         return self.hasDeskFn("remote_frame_map");

@@ -135,6 +135,7 @@ pub const EventLoop = struct {
     desk: r4desk.Context,
     timers: []Timer,
     activity_sequence: u64 = 0,
+    subscriptions: u32 = abi.gui_activity_shared_clipboard,
     clipboard_revision: u32 = 0,
     pending_command: ?CommandId = null,
     close_delivered: bool = false,
@@ -164,7 +165,7 @@ pub const EventLoop = struct {
             self.pending_command = null;
             return .{ .command = command };
         }
-        if (self.desk.hasFn("clipboard_revision")) {
+        if (self.subscriptions & abi.gui_activity_shared_clipboard != 0 and self.desk.hasFn("clipboard_revision")) {
             const revision = self.desk.clipboardRevision();
             if (revision != self.clipboard_revision) {
                 self.clipboard_revision = revision;
@@ -192,7 +193,7 @@ pub const EventLoop = struct {
     }
 
     pub fn wait(self: *EventLoop, timeout: time_contract.Timeout) WaitResult {
-        if (!self.desk.hasFn("desktop_activity_wait")) return .{ .failure = abi.err_no_fn };
+        if (!self.desk.hasFn("gui_activity_wait")) return .{ .failure = abi.err_no_fn };
         const timeout_ticks = time_contract.timeoutToTicks(timeout, self.sys.monotonicHz()) catch return .{ .failure = abi.remote_frame_error_invalid };
         const started = self.sys.ticks();
         const deadline: ?u64 = if (timeout.kind == abi.timeout_kind_forever) null else started +| timeout_ticks;
@@ -204,7 +205,7 @@ pub const EventLoop = struct {
             if (self.nextTimerDelay(now)) |timer_delay| remaining = @min(remaining, timer_delay);
             if (remaining == 0) continue;
             var sequence = self.activity_sequence;
-            const raw = self.desk.desktopActivityWait(self.activity_sequence, remaining, &sequence);
+            const raw = self.desk.guiActivityWait(self.activity_sequence, remaining, self.subscriptions, &sequence);
             self.activity_sequence = sequence;
             if (raw < 0) return .{ .failure = raw };
         }
@@ -310,7 +311,7 @@ pub const Window = struct {
 
     pub fn init(sys: r4sys.Context, desk: r4desk.Context, draw: r4draw.Context, timers: []Timer) ?Window {
         if (!desk.hasFn("program_window_id") or !desk.hasFn("gui_window_info") or
-            !desk.hasFn("gui_poll_event") or !desk.hasFn("desktop_activity_wait") or
+            !desk.hasFn("gui_poll_event") or !desk.hasFn("gui_activity_wait") or
             !draw.hasFn("gui_clear") or !draw.hasFn("gui_rect") or
             !draw.hasFn("gui_draw_text") or !draw.hasFn("gui_present")) return null;
         const id = desk.programWindowId();
