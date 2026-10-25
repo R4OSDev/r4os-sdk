@@ -19,6 +19,9 @@ static int32_t async_result;
 static uint32_t serial_live, serial_closing;
 static uint64_t serial_id=UINT64_C(0x1122334455667788),serial_generation=UINT64_C(0x99aabbccddeeff00),serial_handle=UINT64_C(0xabcd0123456789ef);
 int sdk_service_c_case(void){return service_network_checks();}
+void sdk_service_clock_rate(uint32_t value){clock_rate=value;}
+uint32_t sdk_service_calendar_calls(void){return calendar_calls;}
+uint64_t sdk_service_call_timeout(void){return observed_timeout;}
 void sdk_service_mode(uint32_t value){reply_mode=(enum ReplyMode)value;}
 void sdk_service_queue(uint32_t n){queued=n;}
 void sdk_service_stop(uint32_t value){stopping=value;}
@@ -27,7 +30,7 @@ uint32_t sdk_service_yielded(void){return yielded;}
 uint64_t sdk_service_last_wait(void){return last_wait;}
 uint32_t sdk_service_open_handles(void){return open_handles;}
 static uint64_t ticks(void){return clock_tick;}
-static void time_state(R4TimeState *out){memset(out,0,sizeof(*out));out->monotonic_hz=1000;}
+static void time_state(R4TimeState *out){++calendar_calls;memset(out,0,sizeof(*out));out->monotonic_hz=1000;}
 static uint32_t should_close(void){return stopping;}
 static void task_yield(void){++yielded;}
 static int32_t endpoint_wait(uint32_t handle,uint64_t timeout){last_wait=timeout;return handle==201&&endpoint_registered?(int32_t)queued:R4OS_SERVICE_API_RESULT_BAD_HANDLE;}

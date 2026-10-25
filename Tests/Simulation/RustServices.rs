@@ -34,6 +34,9 @@ unsafe impl GlobalAlloc for Tracking {
 static ALLOCATOR: Tracking = Tracking;
 unsafe extern "C" {
     fn sdk_service_c_case() -> i32;
+    fn sdk_service_clock_rate(value: u32);
+    fn sdk_service_calendar_calls() -> u32;
+    fn sdk_service_call_timeout() -> u64;
     fn sdk_service_extra_c_case() -> i32;
     fn sdk_net_current_admission(start: *const abi::R4XStartContext) -> i32;
     fn sdk_service_tables(
@@ -136,6 +139,20 @@ fn service_network_serial_deadline_owners_and_retained_requests() {
     assert!(services.available());
     let mut response = [0; 16];
     let mut connection = services.open(c"EXAMPLE").unwrap();
+    let calendar_before = unsafe { sdk_service_calendar_calls() };
+    for (hz, ticks) in [(1000, 18), (250, 5)] {
+        unsafe { sdk_service_clock_rate(hz) };
+        assert!(matches!(
+            connection
+                .call(7, b"PING", &mut response, Timeout::AfterNanos(17_000_001))
+                .unwrap(),
+            Call::Response { .. }
+        ));
+        assert_eq!(unsafe { sdk_service_call_timeout() }, ticks);
+    }
+    assert_eq!(unsafe { sdk_service_calendar_calls() }, calendar_before);
+    unsafe { sdk_service_clock_rate(1000) };
+
     assert!(matches!(
         connection
             .call(7, b"PING", &mut response, Timeout::Forever)
@@ -151,7 +168,7 @@ fn service_network_serial_deadline_owners_and_retained_requests() {
     ));
     connection.close().unwrap();
     assert_eq!(connection.handle(), 0);
-    assert_eq!(connection.info.handle,0);
+    assert_eq!(connection.info.handle, 0);
     let mut endpoint = services.register(c"EXAMPLE", 0).unwrap();
     assert_eq!(endpoint.wait(Timeout::Poll).unwrap(), None);
     let mut loop_owner = endpoint.service_loop(200, 2).unwrap();
@@ -206,7 +223,7 @@ fn service_network_serial_deadline_owners_and_retained_requests() {
     drop(loop_owner);
     endpoint.close().unwrap();
     assert_eq!(endpoint.handle(), 0);
-    assert_eq!(endpoint.info.handle,0);
+    assert_eq!(endpoint.info.handle, 0);
     unsafe { sdk_service_stop(0) };
 
     assert_eq!(

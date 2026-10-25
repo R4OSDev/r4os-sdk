@@ -54057,6 +54057,46 @@
         "94": "f7a1dc74-cc52-4dec-a5df-82775fc89054"
       },
       "limits": "Existing qualified scopes only. No new runtime, host/Windows, physical display/cursor, direct Rust SIMD/FP, package-release or performance qualification. Metadata-only follow-up retains exact final153/29/383/GFX38 bytes; no extra STANDARD."
+    },
+    "clock_service_08720": {
+      "complete": true,
+      "scope": "Two SDK code owner deltas plus package version metadata: Rust Clock::monotonic returns the existing admitted current clock metadata; C service timeout conversion and its Rust binding use current event_requested_hz without calendar access. No platform ABI; coarse instant semantics, resource/GUI owners and unrelated projections retained.",
+      "source_deltas": [
+        {
+          "path": "Repositories/SDK/Rust/src/time.rs",
+          "before": "85889bee7b548592fbc893495cc50eeae0849df3ab81c74de1c930a796fd4591",
+          "after": "e5f1881aac6c01bd2abd4c6822ae92eeab99cd7828152b764aa7dfb0c5024815"
+        },
+        {
+          "path": "Repositories/SDK/Shared/C/include/r4os/app_services.h",
+          "before": "42b85502aafb47c32c1e39c076c3e3c91cb03f13c848b968e20a1acee7c5d48d",
+          "after": "2bf7acb8e4ad9452fedb71f7ad47a11d085f398ffa9e5af9b55c56220d702b40"
+        },
+        {
+          "path": "Repositories/SDK/build.zig.zon",
+          "before": "76d1ae9d1735a7cdeaebcb2322fc192cedd69e9f805e98bb6f0397fd57a449c2",
+          "after": "8ec12c9102d399f4161a703679843fee2525106b4dd6cc03242fde88466ed461"
+        }
+      ],
+      "source_sha256": {
+        "Repositories/SDK/Rust/src/time.rs": "e5f1881aac6c01bd2abd4c6822ae92eeab99cd7828152b764aa7dfb0c5024815",
+        "Repositories/SDK/Shared/C/include/r4os/app_services.h": "2bf7acb8e4ad9452fedb71f7ad47a11d085f398ffa9e5af9b55c56220d702b40",
+        "Repositories/SDK/build.zig.zon": "8ec12c9102d399f4161a703679843fee2525106b4dd6cc03242fde88466ed461",
+        "Repositories/SDK/Tests/Simulation/PreciseClock.rs": "33c33269c460a823cf413d451a73ec6b642a0baceea12a8fdeac214e4ef507ad",
+        "Repositories/SDK/Tests/Conformance/ServiceNetworkFacadePrototype05826.c": "84451d2b2da902b4b090b8f859904eefc550ec3242a0037d44e1420712c741e5",
+        "Repositories/SDK/Tests/Simulation/ServiceNetworkCallbacks.c": "91f54d179be8127ded589c9dfae6f359278b59d2c0c04b754d77113662c07c3e",
+        "Repositories/SDK/Tests/Simulation/RustServices.rs": "a318aa0efd6b5dc706236eb5584d16a1f8d461ee368e70a46789d26bac3c180a",
+        "Repositories/SDK/Tools/Test-RustServices.ps1": "9de08d76b8071dab08373d5bc3a65f223f72c8318483a6d364a5372115a71198"
+      },
+      "qualified": [
+        "Existing PreciseClock case: sub-tick instant and source errors retained; changing current event rate and direct ticks with no additional calendar call.",
+        "Original service-parity-test and C-backed RustServices case: client/endpoint conversion, 17,000,001ns ->18/5ticks for1000/250Hz; invalid/missing source refuses finite dispatch; Poll/Forever preserved; calendar counter unchanged.",
+        "Existing async ownership, serial progress and unsafe/Send rejection cases retained and passed.",
+        "Fresh compiler-typed C projection equals checked-in c_facades.rs; initial stale host generator rebuilt. No generated projection changed."
+      ],
+      "service_log_sha256": "e878f859972b7b3347c95bde84b6d43c0b1e8d5c7e218c1453709a2d570cc0c0",
+      "desktop_native_receipt_sha256": "1c00b407cece431fc3266c6c075a1a0851cf2142cb9fd52802658f7b8b9a68eb",
+      "limits": "Focused native checks only. Desktop product/KVM4/final STANDARD documented separately in Docs/Desktop/README.txt. No SDK package publication, Windows run or hardware qualification; historic evidence retains its exact scope."
     }
   },
   "wave_bindings": [
@@ -54302,17 +54342,17 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.86.94",
-    "sdk": "0.64.95",
+    "performed_in": "0.87.20",
+    "sdk": "0.64.96",
     "contract": "0.64.46",
     "libraries": "0.64.33",
-    "evidence": "display_geometry_parsers_94",
-    "scope": "Exactly five changed existing GFX owner files and one added private helper from92/94, bound to their unchanged original baseline hashes, specific independent native cases, real normal consumer artifacts and existing full STANDARD readbacks. All other reviewed source bodies/ABI/implementation scopes retained unchanged; no blanket semantic refresh or new runtime qualification."
+    "evidence": "clock_service_08720",
+    "scope": "Two changed existing clock/service code owners plus SDK version metadata; qualified native metadata, C/Rust current-rate timeout and calendar omission. All other source hashes and functional scopes retained; no blanket repinning or new package/Windows/hardware qualification."
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.86.94",
+    "reviewed_in": "0.87.20",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -55636,7 +55676,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/time.rs",
-        "sha256": "85889bee7b548592fbc893495cc50eeae0849df3ab81c74de1c930a796fd4591"
+        "sha256": "e5f1881aac6c01bd2abd4c6822ae92eeab99cd7828152b764aa7dfb0c5024815"
       },
       {
         "path": "Repositories/SDK/Rust/src/update/catalog.rs",
@@ -55716,7 +55756,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_services.h",
-        "sha256": "42b85502aafb47c32c1e39c076c3e3c91cb03f13c848b968e20a1acee7c5d48d"
+        "sha256": "2bf7acb8e4ad9452fedb71f7ad47a11d085f398ffa9e5af9b55c56220d702b40"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_storage.h",
@@ -56112,7 +56152,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "76d1ae9d1735a7cdeaebcb2322fc192cedd69e9f805e98bb6f0397fd57a449c2"
+        "sha256": "8ec12c9102d399f4161a703679843fee2525106b4dd6cc03242fde88466ed461"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -57180,7 +57220,8 @@
           "Repositories/SDK/Rust/src/services/tray.rs"
         ],
         "proof": [
-          "service_network_current_55"
+          "service_network_current_55",
+          "clock_service_08720"
         ]
       },
       {
@@ -57220,7 +57261,8 @@
         ],
         "proof": [
           "service_network_current_55",
-          "precise_clock_consumer_86"
+          "precise_clock_consumer_86",
+          "clock_service_08720"
         ]
       },
       {

@@ -79,10 +79,14 @@ static inline int r4_services_available(const R4Services *services) {
 }
 
 static inline uint32_t r4_services_monotonic_hz(R4App *app) {
-    if (app == 0 || !R4SYS_HAS(&app->system, time_state)) return 0u;
-    R4TimeState state = {0};
-    ((R4SysTimeStateFn)(uintptr_t)app->system.table->time_state)(&state);
-    return state.monotonic_hz;
+    if (app == 0 || !R4SYS_HAS(&app->system, monotonic_clock)) return 0u;
+    R4MonotonicClockInfo clock = {0};
+    int32_t rc = ((R4SysMonotonicClockFn)(uintptr_t)app->system.table->monotonic_clock)(&clock);
+    if (rc <= 0 || !(clock.flags & R4OS_MONOTONIC_CLOCK_FLAG_VALID) ||
+        clock.frequency_hz != R4OS_MONOTONIC_CLOCK_FREQUENCY_HZ) return 0u;
+    /* Same logical scale as ticks()/TimeState, read anew for each conversion.
+       event_effective_hz describes the physical timer's rounded rate. */
+    return clock.event_requested_hz;
 }
 
 static inline int32_t r4_services_open(R4Services *services, const char *name, R4ServiceConnection *out) {

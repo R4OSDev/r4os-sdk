@@ -40,6 +40,14 @@ impl<'a, 'context> Clock<'a, 'context> {
     /// The existing precise platform clock, without a coarse tick substitute.
     /// Short work budgets must use its actual nanoseconds and admission flags.
     pub fn precise_instant(&self) -> Result<Instant> {
+        Ok(Instant {
+            nanoseconds: self.monotonic()?.instant_ns,
+        })
+    }
+    /// Current admitted monotonic source and event scale, without calendar I/O.
+    /// event_requested_hz is the logical ticks()/TimeState scale; refresh it
+    /// when converting a new timeout, rather than assuming it never changes.
+    pub fn monotonic(&self) -> Result<abi::MonotonicClockInfo> {
         let address = self
             .app
             .sys_slot(core::mem::offset_of!(abi::R4XStartR4Sys, monotonic_clock))
@@ -59,9 +67,7 @@ impl<'a, 'context> Clock<'a, 'context> {
         {
             return Err(Error::InvalidProvider);
         }
-        Ok(Instant {
-            nanoseconds: info.instant_ns,
-        })
+        Ok(info)
     }
 }
 fn exact(rc: i32) -> Result<()> {
