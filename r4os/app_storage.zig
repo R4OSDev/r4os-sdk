@@ -201,45 +201,64 @@ pub const DirectoryIterator = struct {
     directory: PathZ,
     index: u32 = 2,
     ended: bool = false,
-    cursor: abi.DirectoryScanCursor = .{},
+    cursor: abi.DirectoryBatchCursor = .{},
+    buffer: [4]abi.DirectoryBatchEntry = @splat(.{}),
+    buffer_index: u32 = 0,
+    buffer_count: u32 = 0,
     legacy_after_removal: bool = false,
 
     pub fn next(self: *DirectoryIterator, out_path: []u8) DirectoryNext {
         if (self.ended) return .end;
         if (out_path.len == 0) return .{ .failure = abi.file_stream_error_invalid };
         @memset(out_path, 0);
-        var info: abi.FileInfo = .{};
-        const resumable = !self.legacy_after_removal and self.index >= 2 and
-            (self.index == 2 or self.cursor.change.mount_generation != 0) and self.files.sys.hasFn("directory_next");
-        const raw = if (resumable) blk: {
-            while (true) {
-                const result = self.files.sys.directoryNext(self.directory.ptr, &self.cursor, out_path, &info);
-                if (result != 2) break :blk result;
-                if (self.files.sys.programShouldClose()) return .{ .failure = -10 };
-                self.files.sys.sleepTicks(0);
+        if (self.legacy_after_removal or self.index < 2) {
+            const raw = self.files.sys.dirEntry(self.directory.ptr, self.index, out_path);
+            if (raw == r4sys.dir_entry_result_end) {
+                self.ended = true;
+                return .end;
             }
-        } else self.files.sys.dirEntry(self.directory.ptr, self.index, out_path);
-        if (raw == r4sys.dir_entry_result_end) {
-            self.ended = true;
-            return .end;
+            if (raw < 0) return .{ .failure = raw };
+            self.index += 1;
+            return .{ .entry = .{ .kind = if (raw == 1) .directory else .file, .path = spanZ(out_path), .info = null } };
         }
-        if (raw < 0) return .{ .failure = raw };
+        while (self.buffer_index == self.buffer_count) {
+            const raw = self.files.sys.directoryBatch(self.directory.ptr, &self.cursor, &self.buffer);
+            if (raw == r4sys.dir_entry_result_end) {
+                self.ended = true;
+                return .end;
+            }
+            if (raw < 0) return .{ .failure = raw };
+            if (raw > self.buffer.len) return .{ .failure = abi.file_stream_error_invalid };
+            if (raw != 0) {
+                self.buffer_index = 0;
+                self.buffer_count = @intCast(raw);
+                break;
+            }
+            if (self.files.sys.programShouldClose()) return .{ .failure = -10 };
+            self.files.sys.sleepTicks(0);
+        }
+        if (self.files.sys.programShouldClose()) return .{ .failure = -10 };
+        // Buffered values remain private until exact mount/owner/namespace
+        // validation. Unchanged scans take the kernel's RAM-only path.
+        const valid = self.files.sys.directoryBatch(self.directory.ptr, &self.cursor, self.buffer[0..0]);
+        if (valid < 0) return .{ .failure = valid };
+        const record = &self.buffer[self.buffer_index];
+        const length = @import("std").mem.indexOfScalar(u8, &record.path, 0) orelse return .{ .failure = abi.file_stream_error_invalid };
+        // A small output does not consume this buffered item.
+        if (length >= out_path.len) return .{ .failure = -7 };
+        @memcpy(out_path[0..length], record.path[0..length]);
+        self.buffer_index += 1;
         self.index += 1;
-        return .{ .entry = .{
-            .kind = if (raw == 1) .directory else .file,
-            .path = spanZ(out_path),
-            .info = if (resumable) info else null,
-        } };
+        return .{ .entry = .{ .kind = if (record.info.is_dir != 0) .directory else .file, .path = out_path[0..length], .info = record.info } };
     }
 
-    /// R4SYS directory indices address the Nth currently live entry.  After
-    /// removing the entry just returned by `next`, its successor shifts into
-    /// that same logical index and must be visited before advancing again.
+    /// Deleting the returned entry shifts its successor into the same live
+    /// Nth index. This is current mutation behavior, not an old-OS fallback.
     pub fn revisitAfterRemoval(self: *DirectoryIterator) void {
-        // Deleting while iterating intentionally changes the generation.
-        // Preserve the old live-index removal contract for this traversal.
         self.legacy_after_removal = true;
         self.cursor = .{};
+        self.buffer_index = 0;
+        self.buffer_count = 0;
         if (self.index > 2) self.index -= 1;
         self.ended = false;
     }

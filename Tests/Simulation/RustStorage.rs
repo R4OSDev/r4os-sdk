@@ -11,6 +11,7 @@ unsafe extern "C" {
     fn sdk_storage_c_fixture() -> i32;
     fn sdk_storage_table(out: *mut abi::R4XStartR4Sys);
     fn sdk_storage_mode(mode: i32);
+    fn sdk_storage_directory_stale(mode: i32);
     fn sdk_storage_close_mode(mode: i32);
     fn sdk_storage_console(out: *mut u8, capacity: u32) -> u32;
 }
@@ -78,8 +79,21 @@ fn existing_bytes_real_facades_and_explicit_failure_ownership() {
     assert_eq!(reader.offset(), 5);
     let mut iterator = files.iterate(&directory);
     assert!(!iterator.next_entry().unwrap().unwrap().is_directory);
+    unsafe { sdk_storage_directory_stale(1) };
+    assert!(matches!(iterator.next_entry(), Err(Error::Raw(-10))));
+    unsafe { sdk_storage_directory_stale(0) };
     assert!(iterator.next_entry().unwrap().unwrap().is_directory);
     assert!(iterator.next_entry().unwrap().is_none());
+    let mut cursor = abi::DirectoryBatchCursor::default();
+    let mut records = [abi::DirectoryBatchEntry::default(); 2];
+    assert_eq!(
+        app.directory_batch(c"C:\\", &mut cursor, &mut records),
+        Some(2)
+    );
+    assert_eq!(
+        app.directory_batch(c"Z:\\IGNORED", &mut cursor, &mut []),
+        Some(0)
+    );
     let mut writer = files
         .stream_writer(&path, abi::file_stream_open_replace)
         .unwrap();

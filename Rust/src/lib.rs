@@ -150,6 +150,30 @@ impl<'a> App<'a> {
         let mut out = abi::DriveInfo::default();
         (unsafe { function(index, &mut out) } > 0).then_some(out)
     }
+    /// Complete directory records, or an empty slice to validate an existing
+    /// bound scan without advancing. No kernel resources survive the call.
+    pub fn directory_batch(
+        &self,
+        path: &core::ffi::CStr,
+        cursor: &mut abi::DirectoryBatchCursor,
+        out: &mut [abi::DirectoryBatchEntry],
+    ) -> Option<i32> {
+        let address = self.sys_slot(mem::offset_of!(abi::R4XStartR4Sys, directory_batch))?;
+        let function: abi::R4SysFns::directory_batch = unsafe { mem::transmute(address) };
+        let capacity = u32::try_from(out.len()).ok()?;
+        Some(unsafe {
+            function(
+                path.as_ptr().cast(),
+                cursor,
+                if out.is_empty() {
+                    core::ptr::null_mut()
+                } else {
+                    out.as_mut_ptr()
+                },
+                capacity,
+            )
+        })
+    }
     fn table_slot(
         &self,
         group: abi::R4LGroup,

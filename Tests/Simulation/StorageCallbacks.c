@@ -57,6 +57,8 @@ void sdk_storage_table(R4XStartR4Sys *out){
     out->file_replace_atomic=(uintptr_t)&replace;out->file_delete=(uintptr_t)&remove_file;
     out->registry_snapshot_begin=(uintptr_t)&snapshot_begin;out->registry_snapshot_page=(uintptr_t)&snapshot_page;out->registry_batch_mutate=(uintptr_t)&batch;
     out->storage_claim_begin=(uintptr_t)&fake_storage_begin;out->storage_claim_end=(uintptr_t)&fake_storage_end;
-    mode=0;storage_close_result=R4OS_STORAGE_ERROR_BUSY;
+    mode=0;resume_stale=0;storage_close_result=R4OS_STORAGE_ERROR_BUSY;
 }
 void sdk_storage_close_mode(int32_t result){storage_close_result=result;}
+
+void sdk_storage_directory_stale(int value){resume_stale=value;}

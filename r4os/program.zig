@@ -2642,6 +2642,12 @@ pub const Context = struct {
         return table_fn(path, cursor, out.ptr, @intCast(out.len), info);
     }
 
+    /// Empty output validates an initialized scan without consuming entries.
+    pub fn directoryBatch(self: *const Context, path: [*:0]const u8, cursor: *abi.DirectoryBatchCursor, out: []abi.DirectoryBatchEntry) i32 {
+        const table_fn = self.sysFn("directory_batch") orelse return self.unavailable("sys");
+        return table_fn(path, cursor, if (out.len == 0) null else out.ptr, @intCast(out.len));
+    }
+
     pub fn dirEntry(self: *const Context, path: [*:0]const u8, index: u32, out: []u8) i32 {
         const table_fn = self.sysFn("dir_entry") orelse return self.unavailable("sys");
         return table_fn(path, index, out.ptr, @intCast(out.len));

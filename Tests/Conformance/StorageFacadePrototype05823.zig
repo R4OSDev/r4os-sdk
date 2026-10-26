@@ -210,6 +210,20 @@ fn fakeRegistrySet(key: [*:0]const u8, name: [*:0]const u8, value_type: u16, dat
     return r4os.abi.registry_api_result_ok;
 }
 
+fn fakeDirectoryBatch(_: ?[*:0]const u8, cursor: *r4os.abi.DirectoryBatchCursor, out: ?[*]r4os.abi.DirectoryBatchEntry, capacity: u32) callconv(.c) i32 {
+    if (capacity == 0) return 0;
+    if (cursor.backend[0] != 0) return -5;
+    cursor.change.mount_generation = 1;
+    cursor.backend[0] = 1;
+    const count = @min(capacity, 2);
+    for (0..count) |i| {
+        out.?[i] = .{};
+        const raw = fakeDirEntry("C:\\", @intCast(i + 2), &out.?[i].path, out.?[i].path.len);
+        out.?[i].info = .{ .exists = 1, .is_dir = @intFromBool(raw == 1) };
+    }
+    return @intCast(count);
+}
+
 fn makeSys(full: bool) r4os.abi.R4XStartR4Sys {
     var table: r4os.abi.R4XStartR4Sys = .{};
     table.write = @intFromPtr(&fakeWrite);
@@ -225,6 +239,7 @@ fn makeSys(full: bool) r4os.abi.R4XStartR4Sys {
     table.dir_create = @intFromPtr(&fakeDirCreate);
     table.dir_delete = @intFromPtr(&fakeDelete);
     table.dir_entry = @intFromPtr(&fakeDirEntry);
+    table.directory_batch = @intFromPtr(&fakeDirectoryBatch);
     table.file_stream_begin = @intFromPtr(&fakeStreamBegin);
     table.file_stream_write = @intFromPtr(&fakeStreamWrite);
     table.file_stream_finish = @intFromPtr(&fakeStreamFinish);
@@ -348,27 +363,32 @@ test "missing capability and long paths fail before hidden fallback" {
 
 var resume_calls: usize = 0;
 var resume_stale = false;
-fn fakeDirectoryNext(_: [*:0]const u8, cursor: *r4os.abi.DirectoryScanCursor, out: [*]u8, capacity: u32, info: *r4os.abi.FileInfo) callconv(.c) i32 {
+fn fakeBoundBatch(_: ?[*:0]const u8, cursor: *r4os.abi.DirectoryBatchCursor, out: ?[*]r4os.abi.DirectoryBatchEntry, capacity: u32) callconv(.c) i32 {
     resume_calls += 1;
     if (resume_stale) return -10;
+    if (capacity == 0) return 0;
     if (cursor.backend[0] == 0) {
         cursor.backend[0] = 1;
         cursor.change.mount_generation = 1;
-        return 2;
+        return 0;
     }
     if (cursor.backend[0] > 1) return -5;
-    _ = copyOut("C:\\ONE.TXT\x00", out, capacity);
+    for (0..2) |i| {
+        out.?[i] = .{};
+        _ = copyOut(if (i == 0) "C:\\ONE.TXT\x00" else "C:\\TWO.TXT\x00", &out.?[i].path, out.?[i].path.len);
+        out.?[i].info = .{ .exists = 1, .size = 123 };
+    }
     cursor.backend[0] = 2;
-    info.* = .{ .exists = 1, .size = 123 };
-    return 0;
+    return 2;
 }
+
 fn snapshotLess(_: void, a: u32, b: u32) bool {
     return a < b;
 }
 test "directory continuation carries metadata preserves restart and bounds complete snapshots" {
     var table = makeSys(true);
     table.size = @sizeOf(r4os.abi.R4XStartR4Sys);
-    table.directory_next = @intFromPtr(&fakeDirectoryNext);
+    table.directory_batch = @intFromPtr(&fakeBoundBatch);
     var imports: [1]r4os.abi.R4XStartImport = undefined;
     var context: r4os.abi.R4XStartContext = undefined;
     const app = try makeApp(&table, &imports, &context);
@@ -377,20 +397,24 @@ test "directory continuation carries metadata preserves restart and bounds compl
     var path: [128]u8 = undefined;
     resume_calls = 0;
     resume_stale = false;
+    var too_small: [4]u8 = undefined;
+    try std.testing.expectEqual(@as(i32, -7), it.next(&too_small).failure);
+    try std.testing.expectEqual(@as(u32, 0), it.buffer_index);
     const item = it.next(&path).entry;
     try std.testing.expectEqual(@as(u64, 123), item.info.?.size);
     try std.testing.expectEqualStrings("C:\\ONE.TXT", item.path);
-    try std.testing.expectEqual(@as(usize, 2), resume_calls);
+    try std.testing.expectEqual(@as(usize, 4), resume_calls);
     resume_stale = true;
     try std.testing.expectEqual(@as(i32, -10), it.next(&path).failure);
     resume_stale = false;
+    try std.testing.expectEqualStrings("C:\\TWO.TXT", it.next(&path).entry.path);
     try std.testing.expect(it.next(&path) == .end);
     const calls = resume_calls;
     try std.testing.expect(it.next(&path) == .end);
     try std.testing.expectEqual(calls, resume_calls);
-    // Legacy deletion traversal is deliberately not an implicit restart.
+    // Current live-index deletion traversal discards the private batch.
     it.revisitAfterRemoval();
-    try std.testing.expectEqualStrings("C:\\ONE.TXT", it.next(&path).entry.path);
+    try std.testing.expect(it.next(&path) == .entry);
     try std.testing.expectEqual(calls, resume_calls);
     const allocator = std.testing.allocator;
     var snapshot = r4os.directory_page.Snapshot(u32, 257 * 4){};

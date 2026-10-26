@@ -1339,6 +1339,10 @@ pub const Context = struct {
         return self.base.directoryNext(path, cursor, out, info);
     }
 
+    pub fn directoryBatch(self: *const Context, path: [*:0]const u8, cursor: *abi.DirectoryBatchCursor, out: []abi.DirectoryBatchEntry) i32 {
+        return self.base.directoryBatch(path, cursor, out);
+    }
+
     pub fn dirEntry(self: *const Context, path: [*:0]const u8, index: u32, out: []u8) i32 {
         return self.base.dirEntry(path, index, out);
     }
