@@ -3565,10 +3565,11 @@ pub const Context = struct {
         return close_rc;
     }
 
-    // Stack-local NetSocketRequests must not disappear while the async worker
-    // still owns pointers into them. A finite caller wait may expire before a
-    // loaded worker even starts its own service timeout, so close can report
-    // BUSY. Drain that exact request without a second timeout, then retry the
+    // Stack-local NetSocketRequests must not disappear while the exact async
+    // request or its active worker still owns pointers into them. Service queue/admission/reply work shares
+    // its submission deadline, but caller wait and terminal buffer release are
+    // distinct: a finite caller wait can expire while close still reports BUSY.
+    // Drain that exact request without a second timeout, then retry the
     // release. The caller still observes its original finite timeout result.
     fn netSocketDrainAndClose(self: *const Context, request: *NetSocketRequest) void {
         while (request.active and request.request_id != 0) {
