@@ -10,9 +10,9 @@ pub mod c_facades;
 pub mod data;
 pub mod directory_page;
 pub mod driver;
-pub mod heap;
-pub mod gui;
 pub mod graphics;
+pub mod gui;
+pub mod heap;
 pub mod lowlevel;
 mod memory;
 pub mod network;
@@ -21,8 +21,8 @@ mod network_methods;
 pub mod path;
 pub mod physical_storage;
 pub mod platform;
-pub mod r4l;
 pub mod protocol;
+pub mod r4l;
 pub mod registry_diagnostics;
 pub mod registry_hive;
 pub mod resources;
@@ -31,8 +31,8 @@ pub mod services;
 mod startup;
 pub mod storage;
 pub mod time;
-pub mod web;
 pub mod update;
+pub mod web;
 pub use startup::{ImportSpec, StartupInfo};
 
 static PANIC_CONTEXT: AtomicPtr<abi::R4XStartContext> = AtomicPtr::new(ptr::null_mut());
@@ -141,6 +141,14 @@ impl<'a> App<'a> {
             return unsafe { f() != 0 };
         }
         false
+    }
+    /// Mounted scalar geometry without invoking the potentially cold FREE query.
+    /// Free fields remain unknown; no fallback to the full query.
+    pub fn drive_info_geometry(&self, index: u32) -> Option<abi::DriveInfo> {
+        let address = self.sys_slot(mem::offset_of!(abi::R4XStartR4Sys, drive_info_geometry))?;
+        let function: abi::R4SysFns::drive_info_geometry = unsafe { mem::transmute(address) };
+        let mut out = abi::DriveInfo::default();
+        (unsafe { function(index, &mut out) } > 0).then_some(out)
     }
     fn table_slot(
         &self,

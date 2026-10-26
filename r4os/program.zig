@@ -2654,6 +2654,15 @@ pub const Context = struct {
         return out;
     }
 
+    /// Same mounted request owner and scalar geometry; never executes FREE.
+    /// Free fields are unknown. No fallback to a potentially cold full query.
+    pub fn driveInfoGeometry(self: *const Context, index: u32) ?abi.DriveInfo {
+        var out: abi.DriveInfo = .{};
+        const table_fn = self.sysFn("drive_info_geometry") orelse return null;
+        if (table_fn(index, &out) <= 0) return null;
+        return out;
+    }
+
     pub fn fileInfoRaw(self: *const Context, path: [*:0]const u8, out: *abi.FileInfo) i32 {
         const table_fn = self.sysFn("file_info") orelse return self.unavailable("sys");
         return table_fn(path, out);

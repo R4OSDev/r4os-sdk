@@ -31,8 +31,8 @@
     {
       "name": "R4SYS",
       "import_name": "R4SYS:Query:1",
-      "current_abi_version": 29,
-      "current_table_bytes": 1320,
+      "current_abi_version": 30,
+      "current_table_bytes": 1328,
       "canonical_pointer": "/groups/0",
       "minimum": "Neue Fassaden zielen auf diese aktuelle Vertragsgeneration; keine Emulation alter R4OS-Tabellen. Import-/Hardwareoption und Groessen-/Nullzeigerpruefung bleiben.",
       "owner": "Repositories/Contract",
@@ -46,8 +46,10 @@
         "independent_desktop_current_71",
         "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.49",
         "resource_current_54",
-        "lifecycle_metadata_87"
-      ]
+        "lifecycle_metadata_87",
+        "drive_geometry_08742"
+      ],
+      "extension_08742": "Contract48 appends optional drive_info_geometry at1320; full163-slot/1320-byte prefix and DriveInfo56 preserved. FREE-valid bit distinguishes exact zero from unknown. New call retains mount/request admission but never executes FREE. Actual new API/worker GUI scope is native Zig KVM4; C/Rust native callback/layout conformance and Rust thin wrapper compilation, without a new native Rust/C helper execution or Windows/hardware claim."
     },
     {
       "name": "R4DESK",
@@ -165,10 +167,10 @@
       "Generated/SDK/Zig/abi.zig"
     ],
     "extern_structs": 463,
-    "fields": 7879,
+    "fields": 7880,
     "integer_enums": 20,
-    "callback_declarations": 647,
-    "constants": 3171,
+    "callback_declarations": 648,
+    "constants": 3172,
     "scalar_float_abi_values": 0,
     "direct_vector_abi_values": 0,
     "excluded_zig_metadata_types": [
@@ -177,8 +179,8 @@
       "R4ApiSlotMeta"
     ],
     "target": "x86_64-unknown-none",
-    "reviewed_in": "0.87.35",
-    "evolution": "Two R4DESK tail callbacks and three shared-category constants appended: R4DESK18/584. Its previous69-slot prefix and all369 payload layouts remain; 463 extern structs, no new scalar-float/vector ABI values."
+    "reviewed_in": "0.87.42",
+    "evolution": "One R4SYS tail callback and FREE-valid flag appended: R4SYS30/1328, full163-slot/1320-byte prefix retained; DriveInfo56 and all369 payload layouts stay fixed. R4DESK18/584 and other groups unchanged;463 extern structs, no new scalar-float/vector ABI values."
   },
   "capabilities": [
     {
@@ -18388,7 +18390,16 @@
           "fn",
           5005
         ]
-      ]
+      ],
+      "reviewed_delta_08742": {
+        "version": "0.64.98",
+        "new_declaration": [
+          "Context.driveInfoGeometry",
+          "fn",
+          2659
+        ],
+        "meaning": "Metadata-only call, no full-query fallback. Original source_inventory/snapshot remains a dated analysis reference; current hashes live in drift_guard."
+      }
     },
     {
       "path": "Repositories/SDK/r4os/protocol.zig",
@@ -23139,7 +23150,16 @@
           "fn",
           1586
         ]
-      ]
+      ],
+      "reviewed_delta_08742": {
+        "version": "0.64.98",
+        "new_declaration": [
+          "Context.driveInfoGeometry",
+          "fn",
+          1350
+        ],
+        "meaning": "Metadata-only call, no full-query fallback. Original source_inventory/snapshot remains a dated analysis reference; current hashes live in drift_guard."
+      }
     },
     {
       "path": "Repositories/SDK/r4os/r4u_artifact.zig",
@@ -54210,6 +54230,18 @@
       "projection": "Compiler-typed GUI header/native fingerprint and Rust C facade regenerated; the library-owned Rust projection updates only R4DESK size/offset assertions to 584 bytes and the two tail fields. Library helper algorithms, declarations and own contracts are unchanged; rebuilt runtime libraries remain byte-identical and retain their bounded functional evidence.",
       "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.87.35",
       "limit": "This qualifies the changed SDK host facade/ABI scope. Exact kernel enrollment, Close/Kill/reap and current KVM artifacts are separately owned by the 0.87.35 runtime acceptance. No Windows execution, physical NVIDIA/audio/input latency or SDK package publication is granted."
+    },
+    "drive_geometry_08742": {
+      "complete": true,
+      "scope": "Controlled current-source prefix and generated Zig/C/Rust ABI conformance; SDK C-facade projection regenerated, Rust SDK rlib compiled; actual native Zig kernel query, Explorer GUI/worker/cooperative close and existing file operations on KVM4. No native Rust/C execution of the added helper, no Windows runtime or physical latency qualification. Exact existing DirectoryChangeCursor mount reference/global mutation sequence now bounds worker results; native joined-before-mutation rejection/exact retry, actual stale-generation lookup rejection and post-join abort discard pass. Kernel polls mount/history atomically under one metadata guard. Actual remount is not forced.",
+      "reference": "Docs/Desktop/README.txt.42 and Docs/SDK/LanguageParity.txt.42",
+      "native_case": "08742-identity",
+      "kernel_version": "0.1.404",
+      "sdk_source": "0.64.98",
+      "contract_commit": "9414b489d9c0359f13629ac25e9d6dc2bbff7028",
+      "prefix_slots": 163,
+      "table_bytes": 1328,
+      "drive_info_bytes": 56
     }
   },
   "wave_bindings": [
@@ -54465,7 +54497,7 @@
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.87.35",
+    "reviewed_in": "0.87.42",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -54521,23 +54553,23 @@
     "files": [
       {
         "path": "Repositories/Contract/API/ApiContract.baseline.json",
-        "sha256": "2c74dba4ece38e83dc22c6e9a19542a1cab9ff1f9bca6ad845511b0ec8e2c8e4"
+        "sha256": "29cfe6a1d24b1d1a3e26b29910966e585f5fdfe32786bc62fc49776446300afd"
       },
       {
         "path": "Repositories/Contract/API/ApiContract.json",
-        "sha256": "2c74dba4ece38e83dc22c6e9a19542a1cab9ff1f9bca6ad845511b0ec8e2c8e4"
+        "sha256": "29cfe6a1d24b1d1a3e26b29910966e585f5fdfe32786bc62fc49776446300afd"
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/API.json",
-        "sha256": "98ae6ab3f1771d7e2a32538eddf10f519a677110a07bcbd8c53ea0603bb53024"
+        "sha256": "93bc8db32f39d1f02009f8ee65400c4ef676807d8b9db96a4567844c6e45d370"
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/RustABI.json",
-        "sha256": "f6b9b68203da4712d27752d92b119c46f7c91a67283bce20d3152ad500120086"
+        "sha256": "9acae557f5b188bfd004d836ecd6738bbb1a4b9540431c391791b7d5bfa3b3de"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_generated.h",
-        "sha256": "bb6ae885facb88079846567e5d6cf2857b88c438491a0453602e8e4751d80053"
+        "sha256": "1b6083d1842b1504d7e949ba73e7c2c90632cb3b21deff487c892e71c26c68ff"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_technical_generated.h",
@@ -54549,19 +54581,19 @@
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Rust/src/lib.rs",
-        "sha256": "c1b896ba0e1f2e52a4a224e73f096d868d578773a2ec83e7ff6a257babee3db3"
+        "sha256": "0baace45d001156f9422c2fc67ee9255bebf670fc39dc5a6012954b02e7c8eab"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi.zig",
-        "sha256": "03df4cbc57b041fdb08cebc2bfb1ec0ce47da6ad1921a3fb800e580b04c5fe3e"
+        "sha256": "ea353c27fef5d097e882751a9e98ef37f1270b496fd6474e52cec63a2e871a86"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_exports.zig",
-        "sha256": "f3a9f51ff5f25d88cba10b8a94ce510095e7ec6c7c14ddd247ec2f3e3768dcb1"
+        "sha256": "d2c228422b9ec3fb96d49a4ea902622ec058c0802debd6534fb2bde489b9d9f6"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_generated.zig",
-        "sha256": "48ecd3eb173739ef0743beb2871f8c10eceaf435911787d0166fde62d7a763e0"
+        "sha256": "9d52294677b4da56cf7ee00fcef173747cae4573d9ddcc9c92ad4ecd4def525a"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/package.zig",
@@ -54585,7 +54617,7 @@
       },
       {
         "path": "Repositories/Contract/Tools/ApiContractGen/src/main.zig",
-        "sha256": "2197e04a2ac3a1207bb15de7f81a2c63f9b515fae55c12674b8778738befe730"
+        "sha256": "e87a87204a2bed0987234c90d04d84835f0c34ae3b9668353f4fd58ae34fa12e"
       },
       {
         "path": "Repositories/Libraries/R4ACO/Bindings/C/r4aco.h",
@@ -55593,7 +55625,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "f3018992a53569096d5b5d680899353cdd87c3d5e8c478e0b2e4514522e17550"
+        "sha256": "4514bdde324ea7f24fb71f9748150ec045e34acb2ed055bfbaa33501f97dad56"
       },
       {
         "path": "Repositories/SDK/Rust/src/data/hash.rs",
@@ -55661,7 +55693,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/lib.rs",
-        "sha256": "2e1bd916cdd8a13e6dfe250858fedd8657652332e27110d9039f712886a0473e"
+        "sha256": "60cecc50151482130a668c602e0d5a7f5c21cdc5e1ad822d9cdbe4a243110da8"
       },
       {
         "path": "Repositories/SDK/Rust/src/lowlevel.rs",
@@ -56265,7 +56297,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "e51ee2b5a0d3b7b35d6fabe6709891a965476390df3bad4769d084660d471c21"
+        "sha256": "c7f2a88117b5925109615aad48110f21fce8fd0c5f652d19b2e29ebb758b8c7b"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -56681,7 +56713,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/program.zig",
-        "sha256": "d7009083fc73c406058577f689e2738600d36131277a883b8a3f6fc98ef4ce1a"
+        "sha256": "44932795c5fc9e0099e2ae51b6a9290fda62fd4640c8f2ba33f53f7a67eb4674"
       },
       {
         "path": "Repositories/SDK/r4os/protocol.zig",
@@ -56717,7 +56749,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/r4sys.zig",
-        "sha256": "aab38fb844076cb976b754a4d0a44fca773a8caf20239fcdab11459e23a98ea2"
+        "sha256": "81e75dc28561f5ca5ba080daded3cdeffab656052e9ef29758093f5ebcf73b0f"
       },
       {
         "path": "Repositories/SDK/r4os/r4u_artifact.zig",
@@ -57173,7 +57205,8 @@
         "proof": [
           "central_abi_interop",
           "current_kernel_records_80",
-          "gui_activity_08735"
+          "gui_activity_08735",
+          "drive_geometry_08742"
         ]
       },
       {

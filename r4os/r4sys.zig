@@ -1347,6 +1347,10 @@ pub const Context = struct {
         return self.base.driveInfo(index);
     }
 
+    pub fn driveInfoGeometry(self: *const Context, index: u32) ?abi.DriveInfo {
+        return self.base.driveInfoGeometry(index);
+    }
+
     pub fn fileInfo(self: *const Context, path: [*:0]const u8) ?abi.FileInfo {
         return self.base.fileInfo(path);
     }
