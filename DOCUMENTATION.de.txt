@@ -1055,3 +1055,25 @@ Der jeweils verwendete aktuelle Callback ist der Mindestvertrag der Operation:
   Direkte CLEAR-/Rasteroperationen innerhalb einer echten aktuellen
   Transaktion, optionale GPU-/Formatwege und genaue Ressourcenquittungen bleiben.
 Es werden keine Slots umnummeriert und keine Layouts oder CPUprofile geaendert.
+
+0.87.49 — Asynchroner R4AudioSink, SDK0.64.100
+-------------------------------------------
+R4AudioSink nutzt eine native R4SYS Async-Service-Anfrage statt synchroner
+RPCs im interaktiven Runtimezyklus. Eine Anfrage, stabiler Payload-/Header-/
+Antwortbesitzer, kein zusaetzlicher PCM-Rueckstau oder Feederthread. Queuekopf
+bleibt bis zu valider Teilquittung und echter IO-Freigabe eingefroren. BUSY
+bewahrt den Rest; uneindeutiger Timeout wird nicht blind erneut geschrieben.
+Runtime verarbeitet Input, Gastscheiben und Bild weiter. Pause/Reset/Mute
+trennen noch ausstehende alte PCM-Quittungen von der neuen Gastgeneration.
+Terminales finish drainiert den genauen Besitzer und bestaetigt Close;
+ein Fehler bleibt resources_closed=false. Custom-Sinks duerfen synchron
+bleiben; ein asynchroner poll-Callback braucht einen finish-Callback.
+
+Die C-/Rust-Helpergrenze fuegt zwei Callbackkinds an (insgesamt40, alte38
+nummerngleich), Fingerprint2210870889783679946. Generierte Header/Fassaden
+und getypte Adapter sind aktualisiert, die Plattform-ABI bleibt Contract49.
+Pruefen: Build.sh subsystem-runtime-test (Windows Build.bat);48Zig-Ownerfaelle,
+urspruengliche C/Rust-Subsystem-Interop mit5Negativen und SDK113Buildschritte.
+Kanonische Runtime-, Host-, Persistenz- und Gastbesitzer bleiben getrennt.
+Native Zig-Produktfalle/KVM4 und Grenzen: Docs/SDK/LanguageParity.txt.49.
+Keine SDK-Paketpublikation oder neue C/Rust-Gast-/Hardwarequalifikation.

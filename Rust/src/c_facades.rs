@@ -13030,6 +13030,30 @@ pub struct R4SdkSubsystemNativeValue83 {
     pub r#opaque_bytes: [u8; 24],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue83>() == 24); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue83>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue83, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkSubsystemNative_subsystem_audio_transport_Completion {
+    pub r#opaque_bytes: [u8; 24],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNative_subsystem_audio_transport_Completion>() == 24); assert!(core::mem::align_of::<R4SdkSubsystemNative_subsystem_audio_transport_Completion>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNative_subsystem_audio_transport_Completion, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkSubsystemNative_subsystem_audio_transport_Operation {
+    pub r#opaque_bytes: [u8; 1],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNative_subsystem_audio_transport_Operation>() == 1); assert!(core::mem::align_of::<R4SdkSubsystemNative_subsystem_audio_transport_Operation>() == 1); assert!(core::mem::offset_of!(R4SdkSubsystemNative_subsystem_audio_transport_Operation, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkSubsystemNative_subsystem_audio_transport_Finish {
+    pub r#opaque_bytes: [u8; 40],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNative_subsystem_audio_transport_Finish>() == 40); assert!(core::mem::align_of::<R4SdkSubsystemNative_subsystem_audio_transport_Finish>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNative_subsystem_audio_transport_Finish, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkSubsystemNativeValue87 {
+    pub r#opaque_bytes: [u8; 32],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue87>() == 32); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue87>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue87, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemRuntimeLifecycleState {
@@ -13086,10 +13110,10 @@ pub struct R4SdkSubsystemRuntimeGuestDriver {
 const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemRuntimeGuestDriver>() == 40); assert!(core::mem::align_of::<R4SdkSubsystemRuntimeGuestDriver>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemRuntimeGuestDriver, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue94 {
+pub struct R4SdkSubsystemNativeValue98 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue94>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue94>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue94, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue98>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue98>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue98, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemRuntimeHostDriver {
@@ -13098,16 +13122,16 @@ pub struct R4SdkSubsystemRuntimeHostDriver {
 const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemRuntimeHostDriver>() == 40); assert!(core::mem::align_of::<R4SdkSubsystemRuntimeHostDriver>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemRuntimeHostDriver, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue96 {
+pub struct R4SdkSubsystemNativeValue100 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue96>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue96>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue96, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue100>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue100>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue100, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue97 {
+pub struct R4SdkSubsystemNativeValue101 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue97>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue97>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue97, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue101>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue101>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue101, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemRuntimeGuestClock {
@@ -13129,15 +13153,27 @@ const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemRuntimeAudioConfig>()
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemRuntimeAudioSink {
-    pub r#opaque_bytes: [u8; 40],
+    pub r#opaque_bytes: [u8; 56],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemRuntimeAudioSink>() == 40); assert!(core::mem::align_of::<R4SdkSubsystemRuntimeAudioSink>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemRuntimeAudioSink, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemRuntimeAudioSink>() == 56); assert!(core::mem::align_of::<R4SdkSubsystemRuntimeAudioSink>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemRuntimeAudioSink, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkSubsystemNativeValue106 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue106>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue106>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue106, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkSubsystemNativeValue107 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue107>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue107>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue107, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemRuntimeR4AudioSink {
-    pub r#opaque_bytes: [u8; 304],
+    pub r#opaque_bytes: [u8; 56],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemRuntimeR4AudioSink>() == 304); assert!(core::mem::align_of::<R4SdkSubsystemRuntimeR4AudioSink>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemRuntimeR4AudioSink, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemRuntimeR4AudioSink>() == 56); assert!(core::mem::align_of::<R4SdkSubsystemRuntimeR4AudioSink>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemRuntimeR4AudioSink, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNative_app_audio_Audio {
@@ -13146,22 +13182,10 @@ pub struct R4SdkSubsystemNative_app_audio_Audio {
 const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNative_app_audio_Audio>() == 16); assert!(core::mem::align_of::<R4SdkSubsystemNative_app_audio_Audio>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNative_app_audio_Audio, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue104 {
-    pub r#opaque_bytes: [u8; 256],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue104>() == 256); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue104>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue104, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNative_app_audio_AudioStream {
-    pub r#opaque_bytes: [u8; 248],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNative_app_audio_AudioStream>() == 248); assert!(core::mem::align_of::<R4SdkSubsystemNative_app_audio_AudioStream>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNative_app_audio_AudioStream, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
 pub struct R4SdkSubsystemRuntimeAudioStats {
-    pub r#opaque_bytes: [u8; 216],
+    pub r#opaque_bytes: [u8; 264],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemRuntimeAudioStats>() == 216); assert!(core::mem::align_of::<R4SdkSubsystemRuntimeAudioStats>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemRuntimeAudioStats, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemRuntimeAudioStats>() == 264); assert!(core::mem::align_of::<R4SdkSubsystemRuntimeAudioStats>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemRuntimeAudioStats, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemRuntimePcmQueue {
@@ -13171,21 +13195,27 @@ const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemRuntimePcmQueue>() ==
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemRuntimeAudioOptions {
-    pub r#opaque_bytes: [u8; 112],
+    pub r#opaque_bytes: [u8; 128],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemRuntimeAudioOptions>() == 112); assert!(core::mem::align_of::<R4SdkSubsystemRuntimeAudioOptions>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemRuntimeAudioOptions, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemRuntimeAudioOptions>() == 128); assert!(core::mem::align_of::<R4SdkSubsystemRuntimeAudioOptions>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemRuntimeAudioOptions, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue110 {
-    pub r#opaque_bytes: [u8; 48],
+pub struct R4SdkSubsystemNativeValue114 {
+    pub r#opaque_bytes: [u8; 64],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue110>() == 48); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue110>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue110, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue114>() == 64); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue114>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue114, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemRuntimeAudioPump {
-    pub r#opaque_bytes: [u8; 408],
+    pub r#opaque_bytes: [u8; 504],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemRuntimeAudioPump>() == 408); assert!(core::mem::align_of::<R4SdkSubsystemRuntimeAudioPump>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemRuntimeAudioPump, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemRuntimeAudioPump>() == 504); assert!(core::mem::align_of::<R4SdkSubsystemRuntimeAudioPump>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemRuntimeAudioPump, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkSubsystemNativeValue116 {
+    pub r#opaque_bytes: [u8; 2],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue116>() == 2); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue116>() == 1); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue116, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemRuntimeConfig {
@@ -13212,16 +13242,16 @@ pub struct R4SdkSubsystemNative__typeInfo_subsystem_runtime_CycleResult____union
 const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNative__typeInfo_subsystem_runtime_CycleResult____union__tag_type__>() == 1); assert!(core::mem::align_of::<R4SdkSubsystemNative__typeInfo_subsystem_runtime_CycleResult____union__tag_type__>() == 1); assert!(core::mem::offset_of!(R4SdkSubsystemNative__typeInfo_subsystem_runtime_CycleResult____union__tag_type__, r#opaque_bytes) == 0); };
 #[repr(C, align(4))]
 #[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue116 {
+pub struct R4SdkSubsystemNativeValue121 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue116>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue116>() == 4); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue116, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue121>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue121>() == 4); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue121, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemRuntimeRuntime {
-    pub r#opaque_bytes: [u8; 760],
+    pub r#opaque_bytes: [u8; 856],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemRuntimeRuntime>() == 760); assert!(core::mem::align_of::<R4SdkSubsystemRuntimeRuntime>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemRuntimeRuntime, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemRuntimeRuntime>() == 856); assert!(core::mem::align_of::<R4SdkSubsystemRuntimeRuntime>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemRuntimeRuntime, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemPersistenceFileKind {
@@ -13230,22 +13260,22 @@ pub struct R4SdkSubsystemPersistenceFileKind {
 const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemPersistenceFileKind>() == 1); assert!(core::mem::align_of::<R4SdkSubsystemPersistenceFileKind>() == 1); assert!(core::mem::offset_of!(R4SdkSubsystemPersistenceFileKind, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue119 {
+pub struct R4SdkSubsystemNativeValue124 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue119>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue119>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue119, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue124>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue124>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue124, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue121 {
+pub struct R4SdkSubsystemNativeValue126 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue121>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue121>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue121, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue126>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue126>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue126, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue122 {
+pub struct R4SdkSubsystemNativeValue127 {
     pub r#opaque_bytes: [u8; 64],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue122>() == 64); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue122>() == 1); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue122, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue127>() == 64); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue127>() == 1); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue127, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemPersistenceReadResult {
@@ -13260,10 +13290,10 @@ pub struct R4SdkSubsystemPersistenceBackend {
 const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemPersistenceBackend>() == 64); assert!(core::mem::align_of::<R4SdkSubsystemPersistenceBackend>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemPersistenceBackend, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue125 {
+pub struct R4SdkSubsystemNativeValue130 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue125>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue125>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue125, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue130>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue130>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue130, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemPersistenceConfiguration {
@@ -13272,10 +13302,10 @@ pub struct R4SdkSubsystemPersistenceConfiguration {
 const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemPersistenceConfiguration>() == 88); assert!(core::mem::align_of::<R4SdkSubsystemPersistenceConfiguration>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemPersistenceConfiguration, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue127 {
+pub struct R4SdkSubsystemNativeValue132 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue127>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue127>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue127, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue132>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue132>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue132, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemFailureStage {
@@ -13302,10 +13332,10 @@ pub struct R4SdkSubsystemNative_app_storage_Files {
 const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNative_app_storage_Files>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNative_app_storage_Files>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNative_app_storage_Files, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue132 {
+pub struct R4SdkSubsystemNativeValue137 {
     pub r#opaque_bytes: [u8; 1080],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue132>() == 1080); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue132>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue132, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue137>() == 1080); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue137>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue137, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNative_app_storage_OwnedStageWriter {
@@ -13314,10 +13344,10 @@ pub struct R4SdkSubsystemNative_app_storage_OwnedStageWriter {
 const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNative_app_storage_OwnedStageWriter>() == 1072); assert!(core::mem::align_of::<R4SdkSubsystemNative_app_storage_OwnedStageWriter>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNative_app_storage_OwnedStageWriter, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue134 {
+pub struct R4SdkSubsystemNativeValue139 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue134>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue134>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue134, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue139>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue139>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue139, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemAsyncStats {
@@ -13332,10 +13362,10 @@ pub struct R4SdkSubsystemAsyncStore {
 const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemAsyncStore>() == 1312); assert!(core::mem::align_of::<R4SdkSubsystemAsyncStore>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemAsyncStore, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue138 {
+pub struct R4SdkSubsystemNativeValue143 {
     pub r#opaque_bytes: [u8; 48],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue138>() == 48); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue138>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue138, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue143>() == 48); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue143>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue143, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__ActiveWrite {
@@ -13344,10 +13374,10 @@ pub struct R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuratio
 const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__ActiveWrite>() == 40); assert!(core::mem::align_of::<R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__ActiveWrite>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__ActiveWrite, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue140 {
+pub struct R4SdkSubsystemNativeValue145 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue140>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue140>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue140, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue145>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue145>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue145, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob {
@@ -13356,10 +13386,10 @@ pub struct R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuratio
 const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob>() == 72); assert!(core::mem::align_of::<R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue142 {
+pub struct R4SdkSubsystemNativeValue147 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue142>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue142>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue142, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue147>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue147>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue147, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteResult {
@@ -13368,28 +13398,28 @@ pub struct R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuratio
 const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteResult>() == 1); assert!(core::mem::align_of::<R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteResult>() == 1); assert!(core::mem::offset_of!(R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteResult, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue145 {
+pub struct R4SdkSubsystemNativeValue150 {
     pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue145>() == 24); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue145>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue145, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue150>() == 24); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue150>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue150, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue146 {
+pub struct R4SdkSubsystemNativeValue151 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue146>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue146>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue146, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue151>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue151>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue151, r#opaque_bytes) == 0); };
 #[repr(C, align(2))]
 #[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue147 {
+pub struct R4SdkSubsystemNativeValue152 {
     pub r#opaque_bytes: [u8; 2],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue147>() == 2); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue147>() == 2); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue147, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue152>() == 2); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue152>() == 2); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue152, r#opaque_bytes) == 0); };
 #[repr(C, align(2))]
 #[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue148 {
+pub struct R4SdkSubsystemNativeValue153 {
     pub r#opaque_bytes: [u8; 1030],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue148>() == 1030); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue148>() == 2); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue148, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue153>() == 1030); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue153>() == 2); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue153, r#opaque_bytes) == 0); };
 #[repr(C, align(2))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNative_path_AbsoluteFilePath {
@@ -13410,58 +13440,58 @@ pub struct R4SdkSubsystemCallbackTable {
 const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemCallbackTable>() == 24); assert!(core::mem::align_of::<R4SdkSubsystemCallbackTable>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemCallbackTable, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue156 {
+pub struct R4SdkSubsystemNativeValue161 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue156>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue156>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue156, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue157 {
-    pub r#opaque_bytes: [u8; 24],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue157>() == 24); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue157>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue157, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue158 {
-    pub r#opaque_bytes: [u8; 144],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue158>() == 144); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue158>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue158, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue159 {
-    pub r#opaque_bytes: [u8; 24],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue159>() == 24); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue159>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue159, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue160 {
-    pub r#opaque_bytes: [u8; 48],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue160>() == 48); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue160>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue160, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue161 {
-    pub r#opaque_bytes: [u8; 48],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue161>() == 48); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue161>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue161, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue161>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue161>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue161, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue162 {
-    pub r#opaque_bytes: [u8; 48],
+    pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue162>() == 48); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue162>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue162, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue162>() == 24); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue162>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue162, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue163 {
-    pub r#opaque_bytes: [u8; 72],
+    pub r#opaque_bytes: [u8; 144],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue163>() == 72); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue163>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue163, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue163>() == 144); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue163>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue163, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue164 {
+    pub r#opaque_bytes: [u8; 24],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue164>() == 24); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue164>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue164, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkSubsystemNativeValue165 {
+    pub r#opaque_bytes: [u8; 48],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue165>() == 48); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue165>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue165, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkSubsystemNativeValue166 {
+    pub r#opaque_bytes: [u8; 48],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue166>() == 48); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue166>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue166, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkSubsystemNativeValue167 {
+    pub r#opaque_bytes: [u8; 64],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue167>() == 64); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue167>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue167, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkSubsystemNativeValue168 {
+    pub r#opaque_bytes: [u8; 72],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue168>() == 72); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue168>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue168, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkSubsystemNativeValue169 {
     pub r#opaque_bytes: [u8; 96],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue164>() == 96); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue164>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue164, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue169>() == 96); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue169>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue169, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemContext {
@@ -13494,34 +13524,10 @@ pub struct R4SdkSubsystemNative_program_Context {
 const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNative_program_Context>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNative_program_Context>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNative_program_Context, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue170 {
-    pub r#opaque_bytes: [u8; 8],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue170>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue170>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue170, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue171 {
-    pub r#opaque_bytes: [u8; 8],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue171>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue171>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue171, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue173 {
-    pub r#opaque_bytes: [u8; 8],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue173>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue173>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue173, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue174 {
-    pub r#opaque_bytes: [u8; 8],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue174>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue174>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue174, r#opaque_bytes) == 0); };
-#[repr(C, align(2))]
-#[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue175 {
-    pub r#opaque_bytes: [u8; 2],
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue175>() == 2); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue175>() == 2); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue175, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue175>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue175>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue175, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue176 {
@@ -13530,112 +13536,106 @@ pub struct R4SdkSubsystemNativeValue176 {
 const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue176>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue176>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue176, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue177 {
+pub struct R4SdkSubsystemNativeValue178 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue177>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue177>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue177, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue178>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue178>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue178, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue178 {
-    pub r#opaque_bytes: [u8; 16],
+pub struct R4SdkSubsystemNativeValue179 {
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue178>() == 16); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue178>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue178, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue179>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue179>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue179, r#opaque_bytes) == 0); };
 #[repr(C, align(2))]
 #[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue179 {
+pub struct R4SdkSubsystemNativeValue180 {
     pub r#opaque_bytes: [u8; 2],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue179>() == 2); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue179>() == 2); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue179, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue180>() == 2); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue180>() == 2); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue180, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue181 {
     pub r#opaque_bytes: [u8; 8],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue181>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue181>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue181, r#opaque_bytes) == 0); };
-#[repr(C, align(2))]
+#[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue182 {
-    pub r#opaque_bytes: [u8; 2],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue182>() == 2); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue182>() == 2); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue182, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue184 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue184>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue184>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue184, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue182>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue182>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue182, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue185 {
+pub struct R4SdkSubsystemNativeValue183 {
     pub r#opaque_bytes: [u8; 16],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue185>() == 16); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue185>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue185, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue183>() == 16); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue183>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue183, r#opaque_bytes) == 0); };
+#[repr(C, align(2))]
+#[derive(Clone, Copy)]
+pub struct R4SdkSubsystemNativeValue184 {
+    pub r#opaque_bytes: [u8; 2],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue184>() == 2); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue184>() == 2); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue184, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue186 {
-    pub r#opaque_bytes: [u8; 96],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue186>() == 96); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue186>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue186, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue187 {
-    pub r#opaque_bytes: [u8; 24],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue187>() == 24); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue187>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue187, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue188 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue188>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue188>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue188, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue186>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue186>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue186, r#opaque_bytes) == 0); };
+#[repr(C, align(2))]
+#[derive(Clone, Copy)]
+pub struct R4SdkSubsystemNativeValue187 {
+    pub r#opaque_bytes: [u8; 2],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue187>() == 2); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue187>() == 2); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue187, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue189 {
-    pub r#opaque_bytes: [u8; 48],
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue189>() == 48); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue189>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue189, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue189>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue189>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue189, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue190 {
-    pub r#opaque_bytes: [u8; 40],
+    pub r#opaque_bytes: [u8; 16],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue190>() == 40); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue190>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue190, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue190>() == 16); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue190>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue190, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue191 {
-    pub r#opaque_bytes: [u8; 56],
+    pub r#opaque_bytes: [u8; 96],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue191>() == 56); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue191>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue191, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue191>() == 96); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue191>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue191, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue192 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue192>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue192>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue192, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue192>() == 24); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue192>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue192, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue193 {
-    pub r#opaque_bytes: [u8; 16],
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue193>() == 16); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue193>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue193, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue193>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue193>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue193, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue194 {
-    pub r#opaque_bytes: [u8; 16],
+    pub r#opaque_bytes: [u8; 48],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue194>() == 16); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue194>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue194, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue194>() == 48); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue194>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue194, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue195 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 40],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue195>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue195>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue195, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue195>() == 40); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue195>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue195, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue196 {
-    pub r#opaque_bytes: [u8; 528],
+    pub r#opaque_bytes: [u8; 56],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue196>() == 528); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue196>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue196, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue196>() == 56); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue196>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue196, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue197 {
@@ -13645,15 +13645,15 @@ const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue197>() == 
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue198 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 16],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue198>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue198>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue198, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue198>() == 16); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue198>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue198, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue199 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 16],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue199>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue199>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue199, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue199>() == 16); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue199>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue199, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue200 {
@@ -13663,87 +13663,87 @@ const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue200>() == 
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue201 {
-    pub r#opaque_bytes: [u8; 72],
+    pub r#opaque_bytes: [u8; 528],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue201>() == 72); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue201>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue201, r#opaque_bytes) == 0); };
-#[repr(C, align(4))]
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue201>() == 528); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue201>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue201, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkSubsystemNativeValue202 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue202>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue202>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue202, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue203 {
-    pub r#opaque_bytes: [u8; 12],
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue203>() == 12); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue203>() == 4); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue203, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue203>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue203>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue203, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue204 {
-    pub r#opaque_bytes: [u8; 1168],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue204>() == 1168); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue204>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue204, r#opaque_bytes) == 0); };
-#[repr(C, align(4))]
-#[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue206 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue206>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue206>() == 4); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue206, r#opaque_bytes) == 0); };
-#[repr(C, align(1))]
-#[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue207 {
-    pub r#opaque_bytes: [u8; 2],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue207>() == 2); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue207>() == 1); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue207, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue204>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue204>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue204, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue208 {
-    pub r#opaque_bytes: [u8; 40],
+pub struct R4SdkSubsystemNativeValue205 {
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue208>() == 40); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue208>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue208, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue205>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue205>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue205, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkSubsystemNativeValue206 {
+    pub r#opaque_bytes: [u8; 72],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue206>() == 72); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue206>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue206, r#opaque_bytes) == 0); };
+#[repr(C, align(4))]
+#[derive(Clone, Copy)]
+pub struct R4SdkSubsystemNativeValue208 {
+    pub r#opaque_bytes: [u8; 12],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue208>() == 12); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue208>() == 4); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue208, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue209 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 1168],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue209>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue209>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue209, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue210 {
-    pub r#opaque_bytes: [u8; 8],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue210>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue210>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue210, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue209>() == 1168); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue209>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue209, r#opaque_bytes) == 0); };
+#[repr(C, align(4))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue211 {
-    pub r#opaque_bytes: [u8; 24],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue211>() == 24); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue211>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue211, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue212 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue212>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue212>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue212, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue211>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue211>() == 4); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue211, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkSubsystemNativeValue212 {
+    pub r#opaque_bytes: [u8; 2],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue212>() == 2); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue212>() == 1); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue212, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue213 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 40],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue213>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue213>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue213, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue213>() == 40); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue213>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue213, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue214 {
-    pub r#opaque_bytes: [u8; 16],
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue214>() == 16); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue214>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue214, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue214>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue214>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue214, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue215 {
-    pub r#opaque_bytes: [u8; 48],
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue215>() == 48); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue215>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue215, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue215>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue215>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue215, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue216 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue216>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue216>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue216, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue216>() == 24); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue216>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue216, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue217 {
@@ -13753,21 +13753,21 @@ const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue217>() == 
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue218 {
-    pub r#opaque_bytes: [u8; 120],
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue218>() == 120); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue218>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue218, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue218>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue218>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue218, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue219 {
-    pub r#opaque_bytes: [u8; 768],
+    pub r#opaque_bytes: [u8; 16],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue219>() == 768); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue219>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue219, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue219>() == 16); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue219>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue219, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue220 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 48],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue220>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue220>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue220, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue220>() == 48); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue220>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue220, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue221 {
@@ -13777,27 +13777,27 @@ const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue221>() == 
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue222 {
-    pub r#opaque_bytes: [u8; 56],
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue222>() == 56); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue222>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue222, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue222>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue222>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue222, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue223 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 136],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue223>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue223>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue223, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue223>() == 136); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue223>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue223, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue224 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 864],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue224>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue224>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue224, r#opaque_bytes) == 0); };
-#[repr(C, align(2))]
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue224>() == 864); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue224>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue224, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue225 {
-    pub r#opaque_bytes: [u8; 1030],
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue225>() == 1030); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue225>() == 2); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue225, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue225>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue225>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue225, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue226 {
@@ -13806,10 +13806,10 @@ pub struct R4SdkSubsystemNativeValue226 {
 const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue226>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue226>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue226, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNative_path_PathZ {
-    pub r#opaque_bytes: [u8; 16],
+pub struct R4SdkSubsystemNativeValue227 {
+    pub r#opaque_bytes: [u8; 56],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNative_path_PathZ>() == 16); assert!(core::mem::align_of::<R4SdkSubsystemNative_path_PathZ>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNative_path_PathZ, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue227>() == 56); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue227>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue227, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue228 {
@@ -13822,12 +13822,24 @@ pub struct R4SdkSubsystemNativeValue229 {
     pub r#opaque_bytes: [u8; 8],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue229>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue229>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue229, r#opaque_bytes) == 0); };
+#[repr(C, align(2))]
+#[derive(Clone, Copy)]
+pub struct R4SdkSubsystemNativeValue230 {
+    pub r#opaque_bytes: [u8; 1030],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue230>() == 1030); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue230>() == 2); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue230, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue231 {
     pub r#opaque_bytes: [u8; 8],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue231>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue231>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue231, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkSubsystemNative_path_PathZ {
+    pub r#opaque_bytes: [u8; 16],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNative_path_PathZ>() == 16); assert!(core::mem::align_of::<R4SdkSubsystemNative_path_PathZ>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNative_path_PathZ, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue233 {
@@ -13854,10 +13866,28 @@ pub struct R4SdkSubsystemNativeValue238 {
 const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue238>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue238>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue238, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkSubsystemNativeValue240 {
+pub struct R4SdkSubsystemNativeValue239 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue240>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue240>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue240, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue239>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue239>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue239, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkSubsystemNativeValue241 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue241>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue241>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue241, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkSubsystemNativeValue243 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue243>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue243>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue243, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkSubsystemNativeValue245 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue245>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue245>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue245, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDriverSlot {
@@ -18908,99 +18938,99 @@ pub const R4SdkSubsystemVideoHost_TYPE: u32 = 80;
 pub const R4SdkSubsystemNative_r4desk_Context_TYPE: u32 = 81;
 pub const R4SdkSubsystemNative_r4draw_Context_TYPE: u32 = 82;
 pub const R4SdkSubsystemNativeValue83_TYPE: u32 = 83;
-pub const R4SdkSubsystemRuntimeLifecycleState_TYPE: u32 = 84;
-pub const R4SdkSubsystemRuntimeLifecycleCommand_TYPE: u32 = 85;
-pub const R4SdkSubsystemRuntimeStepStatus_TYPE: u32 = 86;
-pub const R4SdkSubsystemRuntimeStepResult_TYPE: u32 = 87;
-pub const R4SdkSubsystemRuntimeHostPollResult_TYPE: u32 = 88;
-pub const R4SdkSubsystemNative__typeInfo_subsystem_runtime_HostPollResult____union__tag_type___TYPE: u32 = 89;
-pub const R4SdkSubsystemRuntimeAudioFeedback_TYPE: u32 = 90;
-pub const R4SdkSubsystemRuntimeAudioState_TYPE: u32 = 91;
-pub const R4SdkSubsystemRuntimeGuestDriver_TYPE: u32 = 93;
-pub const R4SdkSubsystemNativeValue94_TYPE: u32 = 94;
-pub const R4SdkSubsystemRuntimeHostDriver_TYPE: u32 = 95;
-pub const R4SdkSubsystemNativeValue96_TYPE: u32 = 96;
-pub const R4SdkSubsystemNativeValue97_TYPE: u32 = 97;
-pub const R4SdkSubsystemRuntimeGuestClock_TYPE: u32 = 98;
-pub const R4SdkSubsystemRuntimePacer_TYPE: u32 = 99;
-pub const R4SdkSubsystemRuntimeAudioConfig_TYPE: u32 = 100;
-pub const R4SdkSubsystemRuntimeAudioSink_TYPE: u32 = 101;
-pub const R4SdkSubsystemRuntimeR4AudioSink_TYPE: u32 = 102;
-pub const R4SdkSubsystemNative_app_audio_Audio_TYPE: u32 = 103;
-pub const R4SdkSubsystemNativeValue104_TYPE: u32 = 104;
-pub const R4SdkSubsystemNative_app_audio_AudioStream_TYPE: u32 = 105;
-pub const R4SdkSubsystemRuntimeAudioStats_TYPE: u32 = 107;
-pub const R4SdkSubsystemRuntimePcmQueue_TYPE: u32 = 108;
-pub const R4SdkSubsystemRuntimeAudioOptions_TYPE: u32 = 109;
-pub const R4SdkSubsystemNativeValue110_TYPE: u32 = 110;
-pub const R4SdkSubsystemRuntimeAudioPump_TYPE: u32 = 111;
-pub const R4SdkSubsystemRuntimeConfig_TYPE: u32 = 112;
-pub const R4SdkSubsystemRuntimeRuntimeStats_TYPE: u32 = 113;
-pub const R4SdkSubsystemRuntimeCycleResult_TYPE: u32 = 114;
-pub const R4SdkSubsystemNative__typeInfo_subsystem_runtime_CycleResult____union__tag_type___TYPE: u32 = 115;
+pub const R4SdkSubsystemNative_subsystem_audio_transport_Completion_TYPE: u32 = 84;
+pub const R4SdkSubsystemNative_subsystem_audio_transport_Operation_TYPE: u32 = 85;
+pub const R4SdkSubsystemNative_subsystem_audio_transport_Finish_TYPE: u32 = 86;
+pub const R4SdkSubsystemNativeValue87_TYPE: u32 = 87;
+pub const R4SdkSubsystemRuntimeLifecycleState_TYPE: u32 = 88;
+pub const R4SdkSubsystemRuntimeLifecycleCommand_TYPE: u32 = 89;
+pub const R4SdkSubsystemRuntimeStepStatus_TYPE: u32 = 90;
+pub const R4SdkSubsystemRuntimeStepResult_TYPE: u32 = 91;
+pub const R4SdkSubsystemRuntimeHostPollResult_TYPE: u32 = 92;
+pub const R4SdkSubsystemNative__typeInfo_subsystem_runtime_HostPollResult____union__tag_type___TYPE: u32 = 93;
+pub const R4SdkSubsystemRuntimeAudioFeedback_TYPE: u32 = 94;
+pub const R4SdkSubsystemRuntimeAudioState_TYPE: u32 = 95;
+pub const R4SdkSubsystemRuntimeGuestDriver_TYPE: u32 = 97;
+pub const R4SdkSubsystemNativeValue98_TYPE: u32 = 98;
+pub const R4SdkSubsystemRuntimeHostDriver_TYPE: u32 = 99;
+pub const R4SdkSubsystemNativeValue100_TYPE: u32 = 100;
+pub const R4SdkSubsystemNativeValue101_TYPE: u32 = 101;
+pub const R4SdkSubsystemRuntimeGuestClock_TYPE: u32 = 102;
+pub const R4SdkSubsystemRuntimePacer_TYPE: u32 = 103;
+pub const R4SdkSubsystemRuntimeAudioConfig_TYPE: u32 = 104;
+pub const R4SdkSubsystemRuntimeAudioSink_TYPE: u32 = 105;
+pub const R4SdkSubsystemNativeValue106_TYPE: u32 = 106;
+pub const R4SdkSubsystemNativeValue107_TYPE: u32 = 107;
+pub const R4SdkSubsystemRuntimeR4AudioSink_TYPE: u32 = 108;
+pub const R4SdkSubsystemNative_app_audio_Audio_TYPE: u32 = 109;
+pub const R4SdkSubsystemRuntimeAudioStats_TYPE: u32 = 111;
+pub const R4SdkSubsystemRuntimePcmQueue_TYPE: u32 = 112;
+pub const R4SdkSubsystemRuntimeAudioOptions_TYPE: u32 = 113;
+pub const R4SdkSubsystemNativeValue114_TYPE: u32 = 114;
+pub const R4SdkSubsystemRuntimeAudioPump_TYPE: u32 = 115;
 pub const R4SdkSubsystemNativeValue116_TYPE: u32 = 116;
-pub const R4SdkSubsystemRuntimeRuntime_TYPE: u32 = 117;
-pub const R4SdkSubsystemPersistenceFileKind_TYPE: u32 = 118;
-pub const R4SdkSubsystemNativeValue119_TYPE: u32 = 119;
+pub const R4SdkSubsystemRuntimeConfig_TYPE: u32 = 117;
+pub const R4SdkSubsystemRuntimeRuntimeStats_TYPE: u32 = 118;
+pub const R4SdkSubsystemRuntimeCycleResult_TYPE: u32 = 119;
+pub const R4SdkSubsystemNative__typeInfo_subsystem_runtime_CycleResult____union__tag_type___TYPE: u32 = 120;
 pub const R4SdkSubsystemNativeValue121_TYPE: u32 = 121;
-pub const R4SdkSubsystemNativeValue122_TYPE: u32 = 122;
-pub const R4SdkSubsystemPersistenceReadResult_TYPE: u32 = 123;
-pub const R4SdkSubsystemPersistenceBackend_TYPE: u32 = 124;
-pub const R4SdkSubsystemNativeValue125_TYPE: u32 = 125;
-pub const R4SdkSubsystemPersistenceConfiguration_TYPE: u32 = 126;
+pub const R4SdkSubsystemRuntimeRuntime_TYPE: u32 = 122;
+pub const R4SdkSubsystemPersistenceFileKind_TYPE: u32 = 123;
+pub const R4SdkSubsystemNativeValue124_TYPE: u32 = 124;
+pub const R4SdkSubsystemNativeValue126_TYPE: u32 = 126;
 pub const R4SdkSubsystemNativeValue127_TYPE: u32 = 127;
-pub const R4SdkSubsystemFailureStage_TYPE: u32 = 128;
-pub const R4SdkSubsystemRecoveryTestState_TYPE: u32 = 129;
-pub const R4SdkSubsystemStore_TYPE: u32 = 130;
-pub const R4SdkSubsystemNative_app_storage_Files_TYPE: u32 = 131;
+pub const R4SdkSubsystemPersistenceReadResult_TYPE: u32 = 128;
+pub const R4SdkSubsystemPersistenceBackend_TYPE: u32 = 129;
+pub const R4SdkSubsystemNativeValue130_TYPE: u32 = 130;
+pub const R4SdkSubsystemPersistenceConfiguration_TYPE: u32 = 131;
 pub const R4SdkSubsystemNativeValue132_TYPE: u32 = 132;
-pub const R4SdkSubsystemNative_app_storage_OwnedStageWriter_TYPE: u32 = 133;
-pub const R4SdkSubsystemNativeValue134_TYPE: u32 = 134;
-pub const R4SdkSubsystemAsyncStats_TYPE: u32 = 135;
-pub const R4SdkSubsystemAsyncStore_TYPE: u32 = 136;
-pub const R4SdkSubsystemNativeValue138_TYPE: u32 = 138;
-pub const R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__ActiveWrite_TYPE: u32 = 139;
-pub const R4SdkSubsystemNativeValue140_TYPE: u32 = 140;
-pub const R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob_TYPE: u32 = 141;
-pub const R4SdkSubsystemNativeValue142_TYPE: u32 = 142;
-pub const R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteResult_TYPE: u32 = 143;
+pub const R4SdkSubsystemFailureStage_TYPE: u32 = 133;
+pub const R4SdkSubsystemRecoveryTestState_TYPE: u32 = 134;
+pub const R4SdkSubsystemStore_TYPE: u32 = 135;
+pub const R4SdkSubsystemNative_app_storage_Files_TYPE: u32 = 136;
+pub const R4SdkSubsystemNativeValue137_TYPE: u32 = 137;
+pub const R4SdkSubsystemNative_app_storage_OwnedStageWriter_TYPE: u32 = 138;
+pub const R4SdkSubsystemNativeValue139_TYPE: u32 = 139;
+pub const R4SdkSubsystemAsyncStats_TYPE: u32 = 140;
+pub const R4SdkSubsystemAsyncStore_TYPE: u32 = 141;
+pub const R4SdkSubsystemNativeValue143_TYPE: u32 = 143;
+pub const R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__ActiveWrite_TYPE: u32 = 144;
 pub const R4SdkSubsystemNativeValue145_TYPE: u32 = 145;
-pub const R4SdkSubsystemNativeValue146_TYPE: u32 = 146;
+pub const R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob_TYPE: u32 = 146;
 pub const R4SdkSubsystemNativeValue147_TYPE: u32 = 147;
-pub const R4SdkSubsystemNativeValue148_TYPE: u32 = 148;
-pub const R4SdkSubsystemNative_path_AbsoluteFilePath_TYPE: u32 = 149;
-pub const R4SdkSubsystemCallbackKind_TYPE: u32 = 153;
-pub const R4SdkSubsystemCallbackTable_TYPE: u32 = 154;
-pub const R4SdkSubsystemNativeValue156_TYPE: u32 = 156;
-pub const R4SdkSubsystemNativeValue157_TYPE: u32 = 157;
-pub const R4SdkSubsystemNativeValue158_TYPE: u32 = 158;
-pub const R4SdkSubsystemNativeValue159_TYPE: u32 = 159;
-pub const R4SdkSubsystemNativeValue160_TYPE: u32 = 160;
+pub const R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteResult_TYPE: u32 = 148;
+pub const R4SdkSubsystemNativeValue150_TYPE: u32 = 150;
+pub const R4SdkSubsystemNativeValue151_TYPE: u32 = 151;
+pub const R4SdkSubsystemNativeValue152_TYPE: u32 = 152;
+pub const R4SdkSubsystemNativeValue153_TYPE: u32 = 153;
+pub const R4SdkSubsystemNative_path_AbsoluteFilePath_TYPE: u32 = 154;
+pub const R4SdkSubsystemCallbackKind_TYPE: u32 = 158;
+pub const R4SdkSubsystemCallbackTable_TYPE: u32 = 159;
 pub const R4SdkSubsystemNativeValue161_TYPE: u32 = 161;
 pub const R4SdkSubsystemNativeValue162_TYPE: u32 = 162;
 pub const R4SdkSubsystemNativeValue163_TYPE: u32 = 163;
 pub const R4SdkSubsystemNativeValue164_TYPE: u32 = 164;
-pub const R4SdkSubsystemContext_TYPE: u32 = 165;
-pub const R4SdkSubsystemNative_program_Bundle_TYPE: u32 = 166;
-pub const R4SdkSubsystemNative_r4sys_Context_TYPE: u32 = 167;
-pub const R4SdkSubsystemNative_r4audio_Context_TYPE: u32 = 168;
-pub const R4SdkSubsystemNative_program_Context_TYPE: u32 = 169;
-pub const R4SdkSubsystemNativeValue170_TYPE: u32 = 170;
-pub const R4SdkSubsystemNativeValue171_TYPE: u32 = 171;
-pub const R4SdkSubsystemNativeValue173_TYPE: u32 = 173;
-pub const R4SdkSubsystemNativeValue174_TYPE: u32 = 174;
+pub const R4SdkSubsystemNativeValue165_TYPE: u32 = 165;
+pub const R4SdkSubsystemNativeValue166_TYPE: u32 = 166;
+pub const R4SdkSubsystemNativeValue167_TYPE: u32 = 167;
+pub const R4SdkSubsystemNativeValue168_TYPE: u32 = 168;
+pub const R4SdkSubsystemNativeValue169_TYPE: u32 = 169;
+pub const R4SdkSubsystemContext_TYPE: u32 = 170;
+pub const R4SdkSubsystemNative_program_Bundle_TYPE: u32 = 171;
+pub const R4SdkSubsystemNative_r4sys_Context_TYPE: u32 = 172;
+pub const R4SdkSubsystemNative_r4audio_Context_TYPE: u32 = 173;
+pub const R4SdkSubsystemNative_program_Context_TYPE: u32 = 174;
 pub const R4SdkSubsystemNativeValue175_TYPE: u32 = 175;
 pub const R4SdkSubsystemNativeValue176_TYPE: u32 = 176;
-pub const R4SdkSubsystemNativeValue177_TYPE: u32 = 177;
 pub const R4SdkSubsystemNativeValue178_TYPE: u32 = 178;
 pub const R4SdkSubsystemNativeValue179_TYPE: u32 = 179;
+pub const R4SdkSubsystemNativeValue180_TYPE: u32 = 180;
 pub const R4SdkSubsystemNativeValue181_TYPE: u32 = 181;
 pub const R4SdkSubsystemNativeValue182_TYPE: u32 = 182;
+pub const R4SdkSubsystemNativeValue183_TYPE: u32 = 183;
 pub const R4SdkSubsystemNativeValue184_TYPE: u32 = 184;
-pub const R4SdkSubsystemNativeValue185_TYPE: u32 = 185;
 pub const R4SdkSubsystemNativeValue186_TYPE: u32 = 186;
 pub const R4SdkSubsystemNativeValue187_TYPE: u32 = 187;
-pub const R4SdkSubsystemNativeValue188_TYPE: u32 = 188;
 pub const R4SdkSubsystemNativeValue189_TYPE: u32 = 189;
 pub const R4SdkSubsystemNativeValue190_TYPE: u32 = 190;
 pub const R4SdkSubsystemNativeValue191_TYPE: u32 = 191;
@@ -19014,13 +19044,13 @@ pub const R4SdkSubsystemNativeValue198_TYPE: u32 = 198;
 pub const R4SdkSubsystemNativeValue199_TYPE: u32 = 199;
 pub const R4SdkSubsystemNativeValue200_TYPE: u32 = 200;
 pub const R4SdkSubsystemNativeValue201_TYPE: u32 = 201;
+pub const R4SdkSubsystemNativeValue202_TYPE: u32 = 202;
 pub const R4SdkSubsystemNativeValue203_TYPE: u32 = 203;
 pub const R4SdkSubsystemNativeValue204_TYPE: u32 = 204;
+pub const R4SdkSubsystemNativeValue205_TYPE: u32 = 205;
 pub const R4SdkSubsystemNativeValue206_TYPE: u32 = 206;
-pub const R4SdkSubsystemNativeValue207_TYPE: u32 = 207;
 pub const R4SdkSubsystemNativeValue208_TYPE: u32 = 208;
 pub const R4SdkSubsystemNativeValue209_TYPE: u32 = 209;
-pub const R4SdkSubsystemNativeValue210_TYPE: u32 = 210;
 pub const R4SdkSubsystemNativeValue211_TYPE: u32 = 211;
 pub const R4SdkSubsystemNativeValue212_TYPE: u32 = 212;
 pub const R4SdkSubsystemNativeValue213_TYPE: u32 = 213;
@@ -19037,16 +19067,21 @@ pub const R4SdkSubsystemNativeValue223_TYPE: u32 = 223;
 pub const R4SdkSubsystemNativeValue224_TYPE: u32 = 224;
 pub const R4SdkSubsystemNativeValue225_TYPE: u32 = 225;
 pub const R4SdkSubsystemNativeValue226_TYPE: u32 = 226;
-pub const R4SdkSubsystemNative_path_PathZ_TYPE: u32 = 227;
+pub const R4SdkSubsystemNativeValue227_TYPE: u32 = 227;
 pub const R4SdkSubsystemNativeValue228_TYPE: u32 = 228;
 pub const R4SdkSubsystemNativeValue229_TYPE: u32 = 229;
+pub const R4SdkSubsystemNativeValue230_TYPE: u32 = 230;
 pub const R4SdkSubsystemNativeValue231_TYPE: u32 = 231;
+pub const R4SdkSubsystemNative_path_PathZ_TYPE: u32 = 232;
 pub const R4SdkSubsystemNativeValue233_TYPE: u32 = 233;
 pub const R4SdkSubsystemNativeValue234_TYPE: u32 = 234;
 pub const R4SdkSubsystemNativeValue236_TYPE: u32 = 236;
 pub const R4SdkSubsystemNativeValue238_TYPE: u32 = 238;
-pub const R4SdkSubsystemNativeValue240_TYPE: u32 = 240;
-pub const R4SdkSubsystem_ABI_FINGERPRINT: u64 = 14987619388979785259;
+pub const R4SdkSubsystemNativeValue239_TYPE: u32 = 239;
+pub const R4SdkSubsystemNativeValue241_TYPE: u32 = 241;
+pub const R4SdkSubsystemNativeValue243_TYPE: u32 = 243;
+pub const R4SdkSubsystemNativeValue245_TYPE: u32 = 245;
+pub const R4SdkSubsystem_ABI_FINGERPRINT: u64 = 2210870889783679946;
 pub const R4SdkSubsystemCatalog_max_entries: i32 = 192;
 pub const R4SdkSubsystemCatalog_max_candidates: i32 = 128;
 pub const R4SdkSubsystemCatalog_max_associations: i32 = 64;
@@ -19130,6 +19165,11 @@ pub const R4SdkSubsystemNative__typeInfo_subsystem_host_InputEvent____union__tag
 pub const R4SdkSubsystemNative__typeInfo_subsystem_host_InputEvent____union__tag_type___physical_key_up: u32 = 5;
 pub const R4SdkSubsystemNative__typeInfo_subsystem_host_InputEvent____union__tag_type___text: u32 = 6;
 pub const R4SdkSubsystemNative__typeInfo_subsystem_host_InputEvent____union__tag_type___mouse: u32 = 7;
+pub const R4SdkSubsystemNative_subsystem_audio_transport_Operation_open: u32 = 0;
+pub const R4SdkSubsystemNative_subsystem_audio_transport_Operation_write: u32 = 1;
+pub const R4SdkSubsystemNative_subsystem_audio_transport_Operation_volume: u32 = 2;
+pub const R4SdkSubsystemNative_subsystem_audio_transport_Operation_close: u32 = 3;
+pub const R4SdkSubsystemNative_subsystem_audio_transport_Operation_fence: u32 = 4;
 pub const R4SdkSubsystemRuntimeLifecycleState_ready: u32 = 0;
 pub const R4SdkSubsystemRuntimeLifecycleState_running: u32 = 1;
 pub const R4SdkSubsystemRuntimeLifecycleState_paused: u32 = 2;
@@ -19241,6 +19281,8 @@ pub const R4SdkSubsystemCallbackKind_save_drain: u32 = 34;
 pub const R4SdkSubsystemCallbackKind_save_pending: u32 = 35;
 pub const R4SdkSubsystemCallbackKind_validate_rtc: u32 = 36;
 pub const R4SdkSubsystemCallbackKind_validate_delta: u32 = 37;
+pub const R4SdkSubsystemCallbackKind_audio_poll: u32 = 38;
+pub const R4SdkSubsystemCallbackKind_audio_finish: u32 = 39;
 pub const R4SdkSubsystemVideoPixelStorage_TAG_indexed8: u32 = 0;
 pub const R4SdkSubsystemVideoPixelStorage_TAG_xrgb32: u32 = 1;
 pub const R4SdkSubsystemVideoPresentResult_TAG_unchanged: u32 = 0;
@@ -31827,7 +31869,7 @@ unsafe extern "C" {
     pub fn R4SdkSubsystemLaunch_encode(p0: u32, p1: *const u8, p2: u64, p3: *const R4SdkSubsystemLaunchOption, p4: u64, p5: *mut u8, p6: u64) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemLaunch_parse(p0: u32, p1: *const u8, p2: u64, p3: *mut R4SdkSubsystemLaunchRequest) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemVideo_calculateViewport(p0: u32, p1: i32, p2: i32, p3: u32, p4: u32, p5: *mut R4SdkSubsystemVideoViewport) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemPersistence_digestHex(p0: u32, p1: *const R4SdkDataNative_Value156, p2: *mut R4SdkSubsystemNativeValue122) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemPersistence_digestHex(p0: u32, p1: *const R4SdkDataNative_Value156, p2: *mut R4SdkSubsystemNativeValue127) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__dataPath(p0: u32, p1: *const R4SdkSubsystemPersistenceConfiguration, p2: *const R4SdkDataNative_Value156, p3: u32, p4: *mut R4SdkSubsystemNative_path_AbsoluteFilePath) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__wallSeconds(p0: u32, p1: *const R4TimeState) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystem_hostVerifier(p0: u32, p1: *const R4SdkSubsystemCallbackTable, p2: *mut R4SdkSubsystemCatalogHostVerifier) -> R4SdkSubsystemSlot;
@@ -31959,7 +32001,7 @@ unsafe extern "C" {
     pub fn R4SdkSubsystemNative_r4audio_Context_fromProgram(p0: u32, p1: *const R4SdkSubsystemNative_program_Context, p2: *mut R4SdkSubsystemNative_r4audio_Context) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNative_r4audio_Context_audioOpenStream(p0: u32, p1: *const R4SdkSubsystemNative_r4audio_Context, p2: u32, p3: u16, p4: u32) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNative_r4audio_Context_audioOutputInfo(p0: u32, p1: *const R4SdkSubsystemNative_r4audio_Context, p2: u32, p3: *mut R4AudioOutputInfo) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNative_r4audio_Context_audioSelectOutput(p0: u32, p1: *const R4SdkSubsystemNative_r4audio_Context, p2: *const R4SdkSubsystemNativeValue122) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNative_r4audio_Context_audioSelectOutput(p0: u32, p1: *const R4SdkSubsystemNative_r4audio_Context, p2: *const R4SdkSubsystemNativeValue127) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNative_r4audio_Context_audioWrite(p0: u32, p1: *const R4SdkSubsystemNative_r4audio_Context, p2: u32, p3: *const u8, p4: u64) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNative_r4audio_Context_audioClose(p0: u32, p1: *const R4SdkSubsystemNative_r4audio_Context, p2: u32) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNative_r4audio_Context_audioSetVolume(p0: u32, p1: *const R4SdkSubsystemNative_r4audio_Context, p2: u32, p3: u32) -> R4SdkSubsystemSlot;
@@ -32611,6 +32653,30 @@ unsafe extern "C" {
     pub fn R4SdkSubsystemVideoHost_inspectNative(p0: *const R4SdkSubsystemVideoHost) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNativeValue83_create(p0: *mut R4SdkSubsystemNativeValue83, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNativeValue83_inspectNative(p0: *const R4SdkSubsystemNativeValue83, p1: *mut R4SdkSubsystemVideoFrameOverlay) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNative_subsystem_audio_transport_Completion_create(p0: *mut R4SdkSubsystemNative_subsystem_audio_transport_Completion, p1: u32, p2: u32, p3: u64, p4: i32) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNative_subsystem_audio_transport_Completion_from_fields(p0: *mut R4SdkSubsystemNative_subsystem_audio_transport_Completion, p1: u32, p2: u32, p3: u64, p4: i32) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNative_subsystem_audio_transport_Completion_get_operation(p0: *const R4SdkSubsystemNative_subsystem_audio_transport_Completion) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNative_subsystem_audio_transport_Completion_set_operation(p0: *mut R4SdkSubsystemNative_subsystem_audio_transport_Completion, p1: u32) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNative_subsystem_audio_transport_Completion_get_request_id(p0: *const R4SdkSubsystemNative_subsystem_audio_transport_Completion) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNative_subsystem_audio_transport_Completion_set_request_id(p0: *mut R4SdkSubsystemNative_subsystem_audio_transport_Completion, p1: u32) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNative_subsystem_audio_transport_Completion_get_generation(p0: *const R4SdkSubsystemNative_subsystem_audio_transport_Completion) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNative_subsystem_audio_transport_Completion_set_generation(p0: *mut R4SdkSubsystemNative_subsystem_audio_transport_Completion, p1: u64) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNative_subsystem_audio_transport_Completion_get_result(p0: *const R4SdkSubsystemNative_subsystem_audio_transport_Completion) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNative_subsystem_audio_transport_Completion_set_result(p0: *mut R4SdkSubsystemNative_subsystem_audio_transport_Completion, p1: i32) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNative_subsystem_audio_transport_Completion_inspectNative(p0: *const R4SdkSubsystemNative_subsystem_audio_transport_Completion) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNative_subsystem_audio_transport_Operation_create(p0: *mut R4SdkSubsystemNative_subsystem_audio_transport_Operation, p1: u32) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNative_subsystem_audio_transport_Operation_inspectNative(p0: *const R4SdkSubsystemNative_subsystem_audio_transport_Operation) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNative_subsystem_audio_transport_Finish_create(p0: *mut R4SdkSubsystemNative_subsystem_audio_transport_Finish) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNative_subsystem_audio_transport_Finish_from_fields(p0: *mut R4SdkSubsystemNative_subsystem_audio_transport_Finish, p1: R4SdkSubsystemSlot, p2: i32, p3: u32) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNative_subsystem_audio_transport_Finish_get_completion(p0: *const R4SdkSubsystemNative_subsystem_audio_transport_Finish, p1: *mut R4SdkSubsystemNative_subsystem_audio_transport_Completion) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNative_subsystem_audio_transport_Finish_set_completion(p0: *mut R4SdkSubsystemNative_subsystem_audio_transport_Finish, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNative_subsystem_audio_transport_Finish_get_error_code(p0: *const R4SdkSubsystemNative_subsystem_audio_transport_Finish) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNative_subsystem_audio_transport_Finish_set_error_code(p0: *mut R4SdkSubsystemNative_subsystem_audio_transport_Finish, p1: i32) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNative_subsystem_audio_transport_Finish_get_control_requests(p0: *const R4SdkSubsystemNative_subsystem_audio_transport_Finish) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNative_subsystem_audio_transport_Finish_set_control_requests(p0: *mut R4SdkSubsystemNative_subsystem_audio_transport_Finish, p1: u32) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNative_subsystem_audio_transport_Finish_inspectNative(p0: *const R4SdkSubsystemNative_subsystem_audio_transport_Finish) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue87_create(p0: *mut R4SdkSubsystemNativeValue87, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue87_inspectNative(p0: *const R4SdkSubsystemNativeValue87, p1: *mut R4SdkSubsystemNative_subsystem_audio_transport_Completion) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeLifecycleState_create(p0: *mut R4SdkSubsystemRuntimeLifecycleState, p1: u32) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeLifecycleState_inspectNative(p0: *const R4SdkSubsystemRuntimeLifecycleState) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeLifecycleCommand_create(p0: *mut R4SdkSubsystemRuntimeLifecycleCommand, p1: u32) -> R4SdkSubsystemSlot;
@@ -32675,8 +32741,8 @@ unsafe extern "C" {
     pub fn R4SdkSubsystemRuntimeGuestDriver_get_audio_feedback_fn(p0: *const R4SdkSubsystemRuntimeGuestDriver) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeGuestDriver_set_audio_feedback_fn(p0: *mut R4SdkSubsystemRuntimeGuestDriver, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeGuestDriver_inspectNative(p0: *const R4SdkSubsystemRuntimeGuestDriver) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue94_create(p0: *mut R4SdkSubsystemNativeValue94, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue94_inspectNative(p0: *const R4SdkSubsystemNativeValue94) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue98_create(p0: *mut R4SdkSubsystemNativeValue98, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue98_inspectNative(p0: *const R4SdkSubsystemNativeValue98) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeHostDriver_create(p0: *mut R4SdkSubsystemRuntimeHostDriver, p1: *mut core::ffi::c_void, p2: u64, p3: u64) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeHostDriver_from_fields(p0: *mut R4SdkSubsystemRuntimeHostDriver, p1: *mut core::ffi::c_void, p2: u64, p3: u64, p4: R4SdkSubsystemSlot, p5: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeHostDriver_get_context(p0: *const R4SdkSubsystemRuntimeHostDriver) -> R4SdkSubsystemSlot;
@@ -32690,10 +32756,10 @@ unsafe extern "C" {
     pub fn R4SdkSubsystemRuntimeHostDriver_get_should_close_fn(p0: *const R4SdkSubsystemRuntimeHostDriver) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeHostDriver_set_should_close_fn(p0: *mut R4SdkSubsystemRuntimeHostDriver, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeHostDriver_inspectNative(p0: *const R4SdkSubsystemRuntimeHostDriver) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue96_create(p0: *mut R4SdkSubsystemNativeValue96, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue96_inspectNative(p0: *const R4SdkSubsystemNativeValue96) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue97_create(p0: *mut R4SdkSubsystemNativeValue97, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue97_inspectNative(p0: *const R4SdkSubsystemNativeValue97) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue100_create(p0: *mut R4SdkSubsystemNativeValue100, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue100_inspectNative(p0: *const R4SdkSubsystemNativeValue100) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue101_create(p0: *mut R4SdkSubsystemNativeValue101, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue101_inspectNative(p0: *const R4SdkSubsystemNativeValue101) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeGuestClock_create(p0: *mut R4SdkSubsystemRuntimeGuestClock, p1: u32) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeGuestClock_from_fields(p0: *mut R4SdkSubsystemRuntimeGuestClock, p1: u32, p2: u64, p3: u64, p4: u64, p5: u8) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeGuestClock_get_monotonic_hz(p0: *const R4SdkSubsystemRuntimeGuestClock) -> R4SdkSubsystemSlot;
@@ -32732,7 +32798,7 @@ unsafe extern "C" {
     pub fn R4SdkSubsystemRuntimeAudioConfig_set_busy_retry_nanoseconds(p0: *mut R4SdkSubsystemRuntimeAudioConfig, p1: u64) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeAudioConfig_inspectNative(p0: *const R4SdkSubsystemRuntimeAudioConfig) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeAudioSink_create(p0: *mut R4SdkSubsystemRuntimeAudioSink, p1: *mut core::ffi::c_void, p2: u64, p3: u64, p4: u64, p5: u64) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemRuntimeAudioSink_from_fields(p0: *mut R4SdkSubsystemRuntimeAudioSink, p1: *mut core::ffi::c_void, p2: u64, p3: u64, p4: u64, p5: u64) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemRuntimeAudioSink_from_fields(p0: *mut R4SdkSubsystemRuntimeAudioSink, p1: *mut core::ffi::c_void, p2: u64, p3: u64, p4: u64, p5: u64, p6: R4SdkSubsystemSlot, p7: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeAudioSink_get_context(p0: *const R4SdkSubsystemRuntimeAudioSink) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeAudioSink_set_context(p0: *mut R4SdkSubsystemRuntimeAudioSink, p1: *mut core::ffi::c_void) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeAudioSink_get_open_fn(p0: *const R4SdkSubsystemRuntimeAudioSink) -> R4SdkSubsystemSlot;
@@ -32743,28 +32809,46 @@ unsafe extern "C" {
     pub fn R4SdkSubsystemRuntimeAudioSink_set_volume_fn(p0: *mut R4SdkSubsystemRuntimeAudioSink, p1: u64) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeAudioSink_get_close_fn(p0: *const R4SdkSubsystemRuntimeAudioSink) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeAudioSink_set_close_fn(p0: *mut R4SdkSubsystemRuntimeAudioSink, p1: u64) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemRuntimeAudioSink_get_poll_fn(p0: *const R4SdkSubsystemRuntimeAudioSink) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemRuntimeAudioSink_set_poll_fn(p0: *mut R4SdkSubsystemRuntimeAudioSink, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemRuntimeAudioSink_get_finish_fn(p0: *const R4SdkSubsystemRuntimeAudioSink) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemRuntimeAudioSink_set_finish_fn(p0: *mut R4SdkSubsystemRuntimeAudioSink, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeAudioSink_inspectNative(p0: *const R4SdkSubsystemRuntimeAudioSink) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue106_create(p0: *mut R4SdkSubsystemNativeValue106, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue106_inspectNative(p0: *const R4SdkSubsystemNativeValue106) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue107_create(p0: *mut R4SdkSubsystemNativeValue107, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue107_inspectNative(p0: *const R4SdkSubsystemNativeValue107) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeR4AudioSink_create(p0: *mut R4SdkSubsystemRuntimeR4AudioSink, p1: *const R4SdkSubsystemNative_app_audio_Audio) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeR4AudioSink_from_fields(p0: *mut R4SdkSubsystemRuntimeR4AudioSink, p1: *const R4SdkSubsystemNative_app_audio_Audio, p2: R4SdkSubsystemSlot, p3: *const R4Timeout, p4: *const R4Timeout) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeR4AudioSink_get_audio(p0: *const R4SdkSubsystemRuntimeR4AudioSink, p1: *mut R4SdkSubsystemNative_app_audio_Audio) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeR4AudioSink_set_audio(p0: *mut R4SdkSubsystemRuntimeR4AudioSink, p1: *const R4SdkSubsystemNative_app_audio_Audio) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemRuntimeR4AudioSink_get_stream(p0: *const R4SdkSubsystemRuntimeR4AudioSink, p1: *mut R4SdkSubsystemNative_app_audio_AudioStream) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemRuntimeR4AudioSink_set_stream(p0: *mut R4SdkSubsystemRuntimeR4AudioSink, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemRuntimeR4AudioSink_get_transport_owner(p0: *const R4SdkSubsystemRuntimeR4AudioSink) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemRuntimeR4AudioSink_set_transport_owner(p0: *mut R4SdkSubsystemRuntimeR4AudioSink, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeR4AudioSink_get_timeout(p0: *const R4SdkSubsystemRuntimeR4AudioSink, p1: *mut R4Timeout) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeR4AudioSink_set_timeout(p0: *mut R4SdkSubsystemRuntimeR4AudioSink, p1: *const R4Timeout) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeR4AudioSink_get_close_timeout(p0: *const R4SdkSubsystemRuntimeR4AudioSink, p1: *mut R4Timeout) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeR4AudioSink_set_close_timeout(p0: *mut R4SdkSubsystemRuntimeR4AudioSink, p1: *const R4Timeout) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeR4AudioSink_inspectNative(p0: *const R4SdkSubsystemRuntimeR4AudioSink) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue104_create(p0: *mut R4SdkSubsystemNativeValue104, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue104_inspectNative(p0: *const R4SdkSubsystemNativeValue104, p1: *mut R4SdkSubsystemNative_app_audio_AudioStream) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeAudioStats_create(p0: *mut R4SdkSubsystemRuntimeAudioStats) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemRuntimeAudioStats_from_fields(p0: *mut R4SdkSubsystemRuntimeAudioStats, p1: u64, p2: u64, p3: u64, p4: u64, p5: u64, p6: u64, p7: u64, p8: u64, p9: u64, p10: u64, p11: u64, p12: u64, p13: u64, p14: u64, p15: u64, p16: u64, p17: u64, p18: u64, p19: u64, p20: u64, p21: u64, p22: u64, p23: u64, p24: u64, p25: u64, p26: u64, p27: u16) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemRuntimeAudioStats_from_fields(p0: *mut R4SdkSubsystemRuntimeAudioStats, p1: u64, p2: u64, p3: u64, p4: u64, p5: u64, p6: u64, p7: u64, p8: u64, p9: u64, p10: u64, p11: u64, p12: u64, p13: u64, p14: u64, p15: u64, p16: u64, p17: u64, p18: u64, p19: u64, p20: u64, p21: u64, p22: u64, p23: u64, p24: u64, p25: u64, p26: u64, p27: u64, p28: u64, p29: u64, p30: u64, p31: u64, p32: u64, p33: u16) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeAudioStats_get_generated_bytes(p0: *const R4SdkSubsystemRuntimeAudioStats) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeAudioStats_set_generated_bytes(p0: *mut R4SdkSubsystemRuntimeAudioStats, p1: u64) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeAudioStats_get_submitted_bytes(p0: *const R4SdkSubsystemRuntimeAudioStats) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeAudioStats_set_submitted_bytes(p0: *mut R4SdkSubsystemRuntimeAudioStats, p1: u64) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeAudioStats_get_discarded_bytes(p0: *const R4SdkSubsystemRuntimeAudioStats) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeAudioStats_set_discarded_bytes(p0: *mut R4SdkSubsystemRuntimeAudioStats, p1: u64) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemRuntimeAudioStats_get_retired_submitted_bytes(p0: *const R4SdkSubsystemRuntimeAudioStats) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemRuntimeAudioStats_set_retired_submitted_bytes(p0: *mut R4SdkSubsystemRuntimeAudioStats, p1: u64) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemRuntimeAudioStats_get_retired_discarded_bytes(p0: *const R4SdkSubsystemRuntimeAudioStats) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemRuntimeAudioStats_set_retired_discarded_bytes(p0: *mut R4SdkSubsystemRuntimeAudioStats, p1: u64) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemRuntimeAudioStats_get_async_submissions(p0: *const R4SdkSubsystemRuntimeAudioStats) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemRuntimeAudioStats_set_async_submissions(p0: *mut R4SdkSubsystemRuntimeAudioStats, p1: u64) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemRuntimeAudioStats_get_async_completions(p0: *const R4SdkSubsystemRuntimeAudioStats) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemRuntimeAudioStats_set_async_completions(p0: *mut R4SdkSubsystemRuntimeAudioStats, p1: u64) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemRuntimeAudioStats_get_async_pending_cycles(p0: *const R4SdkSubsystemRuntimeAudioStats) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemRuntimeAudioStats_set_async_pending_cycles(p0: *mut R4SdkSubsystemRuntimeAudioStats, p1: u64) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemRuntimeAudioStats_get_partial_writes(p0: *const R4SdkSubsystemRuntimeAudioStats) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemRuntimeAudioStats_set_partial_writes(p0: *mut R4SdkSubsystemRuntimeAudioStats, p1: u64) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeAudioStats_get_silence_bytes(p0: *const R4SdkSubsystemRuntimeAudioStats) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeAudioStats_set_silence_bytes(p0: *mut R4SdkSubsystemRuntimeAudioStats, p1: u64) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeAudioStats_get_muted_bytes(p0: *const R4SdkSubsystemRuntimeAudioStats) -> R4SdkSubsystemSlot;
@@ -32836,10 +32920,10 @@ unsafe extern "C" {
     pub fn R4SdkSubsystemRuntimeAudioOptions_get_sink(p0: *const R4SdkSubsystemRuntimeAudioOptions, p1: *mut R4SdkSubsystemRuntimeAudioSink) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeAudioOptions_set_sink(p0: *mut R4SdkSubsystemRuntimeAudioOptions, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeAudioOptions_inspectNative(p0: *const R4SdkSubsystemRuntimeAudioOptions) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue110_create(p0: *mut R4SdkSubsystemNativeValue110, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue110_inspectNative(p0: *const R4SdkSubsystemNativeValue110, p1: *mut R4SdkSubsystemRuntimeAudioSink) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue114_create(p0: *mut R4SdkSubsystemNativeValue114, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue114_inspectNative(p0: *const R4SdkSubsystemNativeValue114, p1: *mut R4SdkSubsystemRuntimeAudioSink) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeAudioPump_create(p0: *mut R4SdkSubsystemRuntimeAudioPump) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemRuntimeAudioPump_from_fields(p0: *mut R4SdkSubsystemRuntimeAudioPump, p1: *const R4SdkSubsystemRuntimeAudioConfig, p2: *const R4SdkSubsystemRuntimePcmQueue, p3: *mut u8, p4: u64, p5: R4SdkSubsystemSlot, p6: u32, p7: i32, p8: u8, p9: u64, p10: u64, p11: u32, p12: u64, p13: u64, p14: u16, p15: u16, p16: u8, p17: u8, p18: u16, p19: *const R4SdkSubsystemRuntimeAudioStats) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemRuntimeAudioPump_from_fields(p0: *mut R4SdkSubsystemRuntimeAudioPump, p1: *const R4SdkSubsystemRuntimeAudioConfig, p2: *const R4SdkSubsystemRuntimePcmQueue, p3: *mut u8, p4: u64, p5: R4SdkSubsystemSlot, p6: u32, p7: i32, p8: u8, p9: u64, p10: u64, p11: u32, p12: u64, p13: u64, p14: u16, p15: u16, p16: u8, p17: u8, p18: R4SdkSubsystemSlot, p19: u64, p20: u8, p21: u8, p22: u8, p23: u64, p24: i32, p25: u64, p26: u16, p27: *const R4SdkSubsystemRuntimeAudioStats) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeAudioPump_get_config(p0: *const R4SdkSubsystemRuntimeAudioPump, p1: *mut R4SdkSubsystemRuntimeAudioConfig) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeAudioPump_set_config(p0: *mut R4SdkSubsystemRuntimeAudioPump, p1: *const R4SdkSubsystemRuntimeAudioConfig) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeAudioPump_get_queue(p0: *const R4SdkSubsystemRuntimeAudioPump, p1: *mut R4SdkSubsystemRuntimePcmQueue) -> R4SdkSubsystemSlot;
@@ -32872,11 +32956,29 @@ unsafe extern "C" {
     pub fn R4SdkSubsystemRuntimeAudioPump_set_sink_open(p0: *mut R4SdkSubsystemRuntimeAudioPump, p1: u8) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeAudioPump_get_close_pending(p0: *const R4SdkSubsystemRuntimeAudioPump) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeAudioPump_set_close_pending(p0: *mut R4SdkSubsystemRuntimeAudioPump, p1: u8) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemRuntimeAudioPump_get_pending_operation(p0: *const R4SdkSubsystemRuntimeAudioPump) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemRuntimeAudioPump_set_pending_operation(p0: *mut R4SdkSubsystemRuntimeAudioPump, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemRuntimeAudioPump_get_pending_bytes(p0: *const R4SdkSubsystemRuntimeAudioPump) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemRuntimeAudioPump_set_pending_bytes(p0: *mut R4SdkSubsystemRuntimeAudioPump, p1: u64) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemRuntimeAudioPump_get_pending_idle_close(p0: *const R4SdkSubsystemRuntimeAudioPump) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemRuntimeAudioPump_set_pending_idle_close(p0: *mut R4SdkSubsystemRuntimeAudioPump, p1: u8) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemRuntimeAudioPump_get_discard_after_pending(p0: *const R4SdkSubsystemRuntimeAudioPump) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemRuntimeAudioPump_set_discard_after_pending(p0: *mut R4SdkSubsystemRuntimeAudioPump, p1: u8) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemRuntimeAudioPump_get_retire_pending_feedback(p0: *const R4SdkSubsystemRuntimeAudioPump) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemRuntimeAudioPump_set_retire_pending_feedback(p0: *mut R4SdkSubsystemRuntimeAudioPump, p1: u8) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemRuntimeAudioPump_get_sink_generation(p0: *const R4SdkSubsystemRuntimeAudioPump) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemRuntimeAudioPump_set_sink_generation(p0: *mut R4SdkSubsystemRuntimeAudioPump, p1: u64) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemRuntimeAudioPump_get_close_error(p0: *const R4SdkSubsystemRuntimeAudioPump) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemRuntimeAudioPump_set_close_error(p0: *mut R4SdkSubsystemRuntimeAudioPump, p1: i32) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemRuntimeAudioPump_get_close_retry_tick(p0: *const R4SdkSubsystemRuntimeAudioPump) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemRuntimeAudioPump_set_close_retry_tick(p0: *mut R4SdkSubsystemRuntimeAudioPump, p1: u64) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeAudioPump_get_service_operations_cycle(p0: *const R4SdkSubsystemRuntimeAudioPump) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeAudioPump_set_service_operations_cycle(p0: *mut R4SdkSubsystemRuntimeAudioPump, p1: u16) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeAudioPump_get_stats(p0: *const R4SdkSubsystemRuntimeAudioPump, p1: *mut R4SdkSubsystemRuntimeAudioStats) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeAudioPump_set_stats(p0: *mut R4SdkSubsystemRuntimeAudioPump, p1: *const R4SdkSubsystemRuntimeAudioStats) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeAudioPump_inspectNative(p0: *const R4SdkSubsystemRuntimeAudioPump) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue116_create(p0: *mut R4SdkSubsystemNativeValue116, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue116_inspectNative(p0: *const R4SdkSubsystemNativeValue116) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeConfig_create(p0: *mut R4SdkSubsystemRuntimeConfig) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeConfig_from_fields(p0: *mut R4SdkSubsystemRuntimeConfig, p1: u32, p2: u16, p3: u64, p4: u64) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeConfig_get_slice_budget(p0: *const R4SdkSubsystemRuntimeConfig) -> R4SdkSubsystemSlot;
@@ -32951,18 +33053,18 @@ unsafe extern "C" {
     pub fn R4SdkSubsystemRuntimeRuntimeStats_inspectNative(p0: *const R4SdkSubsystemRuntimeRuntimeStats) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeCycleResult_get_wait(p0: *const R4SdkSubsystemRuntimeCycleResult) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeCycleResult_set_wait(p0: *mut R4SdkSubsystemRuntimeCycleResult, p1: u64) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemRuntimeCycleResult_get_finished(p0: *const R4SdkSubsystemRuntimeCycleResult, p1: *mut R4SdkSubsystemNativeValue116) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemRuntimeCycleResult_set_finished(p0: *mut R4SdkSubsystemRuntimeCycleResult, p1: *const R4SdkSubsystemNativeValue116) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemRuntimeCycleResult_get_finished(p0: *const R4SdkSubsystemRuntimeCycleResult, p1: *mut R4SdkSubsystemNativeValue121) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemRuntimeCycleResult_set_finished(p0: *mut R4SdkSubsystemRuntimeCycleResult, p1: *const R4SdkSubsystemNativeValue121) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeCycleResult_inspectNative(p0: *const R4SdkSubsystemRuntimeCycleResult) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNative__typeInfo_subsystem_runtime_CycleResult____union__tag_type___create(p0: *mut R4SdkSubsystemNative__typeInfo_subsystem_runtime_CycleResult____union__tag_type__, p1: u32) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNative__typeInfo_subsystem_runtime_CycleResult____union__tag_type___inspectNative(p0: *const R4SdkSubsystemNative__typeInfo_subsystem_runtime_CycleResult____union__tag_type__) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue116_create(p0: *mut R4SdkSubsystemNativeValue116, p1: u32, p2: i32) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue116_from_fields(p0: *mut R4SdkSubsystemNativeValue116, p1: u32, p2: i32) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue116_get_state(p0: *const R4SdkSubsystemNativeValue116) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue116_set_state(p0: *mut R4SdkSubsystemNativeValue116, p1: u32) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue116_get_exit_code(p0: *const R4SdkSubsystemNativeValue116) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue116_set_exit_code(p0: *mut R4SdkSubsystemNativeValue116, p1: i32) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue116_inspectNative(p0: *const R4SdkSubsystemNativeValue116) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue121_create(p0: *mut R4SdkSubsystemNativeValue121, p1: u32, p2: i32) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue121_from_fields(p0: *mut R4SdkSubsystemNativeValue121, p1: u32, p2: i32) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue121_get_state(p0: *const R4SdkSubsystemNativeValue121) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue121_set_state(p0: *mut R4SdkSubsystemNativeValue121, p1: u32) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue121_get_exit_code(p0: *const R4SdkSubsystemNativeValue121) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue121_set_exit_code(p0: *mut R4SdkSubsystemNativeValue121, p1: i32) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue121_inspectNative(p0: *const R4SdkSubsystemNativeValue121) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeRuntime_create(p0: *mut R4SdkSubsystemRuntimeRuntime, p1: *const R4SdkSubsystemRuntimeConfig, p2: *const R4SdkSubsystemRuntimeGuestClock, p3: u64) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeRuntime_from_fields(p0: *mut R4SdkSubsystemRuntimeRuntime, p1: *const R4SdkSubsystemRuntimeConfig, p2: *const R4SdkSubsystemRuntimeGuestClock, p3: *const R4SdkSubsystemRuntimeAudioPump, p4: u32, p5: i32, p6: u64, p7: u8, p8: u8, p9: u8, p10: u8, p11: u8, p12: u64, p13: u64, p14: u8, p15: u8, p16: u64, p17: u64, p18: u64, p19: u32, p20: u8, p21: u8, p22: *const R4SdkSubsystemRuntimeRuntimeStats) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeRuntime_get_config(p0: *const R4SdkSubsystemRuntimeRuntime, p1: *mut R4SdkSubsystemRuntimeConfig) -> R4SdkSubsystemSlot;
@@ -33012,12 +33114,12 @@ unsafe extern "C" {
     pub fn R4SdkSubsystemRuntimeRuntime_inspectNative(p0: *const R4SdkSubsystemRuntimeRuntime) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemPersistenceFileKind_create(p0: *mut R4SdkSubsystemPersistenceFileKind, p1: u32) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemPersistenceFileKind_inspectNative(p0: *const R4SdkSubsystemPersistenceFileKind) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue119_create(p0: *mut R4SdkSubsystemNativeValue119, p1: *const R4SdkDataNative_Value156) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue119_inspectNative(p0: *const R4SdkSubsystemNativeValue119) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue121_create(p0: *mut R4SdkSubsystemNativeValue121, p1: *mut R4SdkSubsystemNativeValue122) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue121_inspectNative(p0: *const R4SdkSubsystemNativeValue121) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue122_create(p0: *mut R4SdkSubsystemNativeValue122, p1: *const R4SdkSubsystemNativeValue122) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue122_inspectNative(p0: *const R4SdkSubsystemNativeValue122, p1: *mut R4SdkSubsystemNativeValue122) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue124_create(p0: *mut R4SdkSubsystemNativeValue124, p1: *const R4SdkDataNative_Value156) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue124_inspectNative(p0: *const R4SdkSubsystemNativeValue124) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue126_create(p0: *mut R4SdkSubsystemNativeValue126, p1: *mut R4SdkSubsystemNativeValue127) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue126_inspectNative(p0: *const R4SdkSubsystemNativeValue126) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue127_create(p0: *mut R4SdkSubsystemNativeValue127, p1: *const R4SdkSubsystemNativeValue127) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue127_inspectNative(p0: *const R4SdkSubsystemNativeValue127, p1: *mut R4SdkSubsystemNativeValue127) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemPersistenceReadResult_create(p0: *mut R4SdkSubsystemPersistenceReadResult, p1: u32) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemPersistenceReadResult_inspectNative(p0: *const R4SdkSubsystemPersistenceReadResult) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemPersistenceBackend_create(p0: *mut R4SdkSubsystemPersistenceBackend, p1: *mut core::ffi::c_void, p2: u64, p3: u64, p4: u64, p5: u64) -> R4SdkSubsystemSlot;
@@ -33039,8 +33141,8 @@ unsafe extern "C" {
     pub fn R4SdkSubsystemPersistenceBackend_get_pending_fn(p0: *const R4SdkSubsystemPersistenceBackend) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemPersistenceBackend_set_pending_fn(p0: *mut R4SdkSubsystemPersistenceBackend, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemPersistenceBackend_inspectNative(p0: *const R4SdkSubsystemPersistenceBackend) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue125_create(p0: *mut R4SdkSubsystemNativeValue125, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue125_inspectNative(p0: *const R4SdkSubsystemNativeValue125) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue130_create(p0: *mut R4SdkSubsystemNativeValue130, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue130_inspectNative(p0: *const R4SdkSubsystemNativeValue130) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemPersistenceConfiguration_create(p0: *mut R4SdkSubsystemPersistenceConfiguration, p1: *const u8, p2: u64, p3: *const R4SdkDataNative_Value31, p4: u64) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemPersistenceConfiguration_from_fields(p0: *mut R4SdkSubsystemPersistenceConfiguration, p1: *const u8, p2: u64, p3: *const R4SdkDataNative_Value31, p4: u64, p5: u64, p6: u64, p7: *mut u8, p8: u64, p9: R4SdkSubsystemSlot, p10: R4SdkSubsystemSlot, p11: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemPersistenceConfiguration_get_save_root(p0: *const R4SdkSubsystemPersistenceConfiguration) -> R4SdkSubsystemSlot;
@@ -33060,8 +33162,8 @@ unsafe extern "C" {
     pub fn R4SdkSubsystemPersistenceConfiguration_get_validate_delta(p0: *const R4SdkSubsystemPersistenceConfiguration) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemPersistenceConfiguration_set_validate_delta(p0: *mut R4SdkSubsystemPersistenceConfiguration, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemPersistenceConfiguration_inspectNative(p0: *const R4SdkSubsystemPersistenceConfiguration) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue127_create(p0: *mut R4SdkSubsystemNativeValue127, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue127_inspectNative(p0: *const R4SdkSubsystemNativeValue127) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue132_create(p0: *mut R4SdkSubsystemNativeValue132, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue132_inspectNative(p0: *const R4SdkSubsystemNativeValue132) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemFailureStage_create(p0: *mut R4SdkSubsystemFailureStage, p1: u32) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemFailureStage_inspectNative(p0: *const R4SdkSubsystemFailureStage) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRecoveryTestState_create(p0: *mut R4SdkSubsystemRecoveryTestState, p1: R4SdkSubsystemSlot, p2: R4SdkSubsystemSlot, p3: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
@@ -33090,10 +33192,10 @@ unsafe extern "C" {
     pub fn R4SdkSubsystemStore_get_configuration(p0: *const R4SdkSubsystemStore) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemStore_set_configuration(p0: *mut R4SdkSubsystemStore, p1: *const R4SdkSubsystemPersistenceConfiguration) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemStore_inspectNative(p0: *const R4SdkSubsystemStore) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue132_create(p0: *mut R4SdkSubsystemNativeValue132, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue132_inspectNative(p0: *const R4SdkSubsystemNativeValue132, p1: *mut R4SdkSubsystemNative_app_storage_OwnedStageWriter) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue134_create(p0: *mut R4SdkSubsystemNativeValue134, p1: *const R4SdkSubsystemPersistenceConfiguration) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue134_inspectNative(p0: *const R4SdkSubsystemNativeValue134) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue137_create(p0: *mut R4SdkSubsystemNativeValue137, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue137_inspectNative(p0: *const R4SdkSubsystemNativeValue137, p1: *mut R4SdkSubsystemNative_app_storage_OwnedStageWriter) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue139_create(p0: *mut R4SdkSubsystemNativeValue139, p1: *const R4SdkSubsystemPersistenceConfiguration) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue139_inspectNative(p0: *const R4SdkSubsystemNativeValue139) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemAsyncStats_create(p0: *mut R4SdkSubsystemAsyncStats) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemAsyncStats_from_fields(p0: *mut R4SdkSubsystemAsyncStats, p1: u64, p2: u64, p3: u64, p4: u64, p5: u64, p6: u8, p7: u64, p8: u64) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemAsyncStats_get_enqueued(p0: *const R4SdkSubsystemAsyncStats) -> R4SdkSubsystemSlot;
@@ -33114,15 +33216,15 @@ unsafe extern "C" {
     pub fn R4SdkSubsystemAsyncStats_set_written_bytes(p0: *mut R4SdkSubsystemAsyncStats, p1: u64) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemAsyncStats_inspectNative(p0: *const R4SdkSubsystemAsyncStats) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemAsyncStore_create(p0: *mut R4SdkSubsystemAsyncStore, p1: *const R4SdkDataAllocator, p2: *const R4SdkSubsystemStore) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemAsyncStore_from_fields(p0: *mut R4SdkSubsystemAsyncStore, p1: *const R4SdkDataAllocator, p2: *const R4SdkSubsystemStore, p3: R4SdkSubsystemSlot, p4: *const R4SdkSubsystemNativeValue145, p5: u64, p6: R4SdkSubsystemSlot, p7: *const R4SdkSubsystemAsyncStats) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemAsyncStore_from_fields(p0: *mut R4SdkSubsystemAsyncStore, p1: *const R4SdkDataAllocator, p2: *const R4SdkSubsystemStore, p3: R4SdkSubsystemSlot, p4: *const R4SdkSubsystemNativeValue150, p5: u64, p6: R4SdkSubsystemSlot, p7: *const R4SdkSubsystemAsyncStats) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemAsyncStore_get_allocator(p0: *const R4SdkSubsystemAsyncStore, p1: *mut R4SdkDataAllocator) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemAsyncStore_set_allocator(p0: *mut R4SdkSubsystemAsyncStore, p1: *const R4SdkDataAllocator) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemAsyncStore_get_store(p0: *const R4SdkSubsystemAsyncStore, p1: *mut R4SdkSubsystemStore) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemAsyncStore_set_store(p0: *mut R4SdkSubsystemAsyncStore, p1: *const R4SdkSubsystemStore) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemAsyncStore_get_active(p0: *const R4SdkSubsystemAsyncStore, p1: *mut R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__ActiveWrite) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemAsyncStore_set_active(p0: *mut R4SdkSubsystemAsyncStore, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemAsyncStore_get_pending(p0: *const R4SdkSubsystemAsyncStore, p1: *mut R4SdkSubsystemNativeValue145) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemAsyncStore_set_pending(p0: *mut R4SdkSubsystemAsyncStore, p1: *const R4SdkSubsystemNativeValue145) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemAsyncStore_get_pending(p0: *const R4SdkSubsystemAsyncStore, p1: *mut R4SdkSubsystemNativeValue150) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemAsyncStore_set_pending(p0: *mut R4SdkSubsystemAsyncStore, p1: *const R4SdkSubsystemNativeValue150) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemAsyncStore_get_next_sequence(p0: *const R4SdkSubsystemAsyncStore) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemAsyncStore_set_next_sequence(p0: *mut R4SdkSubsystemAsyncStore, p1: u64) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemAsyncStore_get_latched_failure(p0: *const R4SdkSubsystemAsyncStore) -> R4SdkSubsystemSlot;
@@ -33130,8 +33232,8 @@ unsafe extern "C" {
     pub fn R4SdkSubsystemAsyncStore_get_stats(p0: *const R4SdkSubsystemAsyncStore, p1: *mut R4SdkSubsystemAsyncStats) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemAsyncStore_set_stats(p0: *mut R4SdkSubsystemAsyncStore, p1: *const R4SdkSubsystemAsyncStats) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemAsyncStore_inspectNative(p0: *const R4SdkSubsystemAsyncStore) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue138_create(p0: *mut R4SdkSubsystemNativeValue138, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue138_inspectNative(p0: *const R4SdkSubsystemNativeValue138, p1: *mut R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__ActiveWrite) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue143_create(p0: *mut R4SdkSubsystemNativeValue143, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue143_inspectNative(p0: *const R4SdkSubsystemNativeValue143, p1: *mut R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__ActiveWrite) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__ActiveWrite_create(p0: *mut R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__ActiveWrite, p1: *mut R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob, p2: *const R4ProgramJoinHandle) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__ActiveWrite_from_fields(p0: *mut R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__ActiveWrite, p1: *mut R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob, p2: *const R4ProgramJoinHandle) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__ActiveWrite_get_job(p0: *const R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__ActiveWrite) -> R4SdkSubsystemSlot;
@@ -33139,8 +33241,8 @@ unsafe extern "C" {
     pub fn R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__ActiveWrite_get_handle(p0: *const R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__ActiveWrite, p1: *mut R4ProgramJoinHandle) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__ActiveWrite_set_handle(p0: *mut R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__ActiveWrite, p1: *const R4ProgramJoinHandle) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__ActiveWrite_inspectNative(p0: *const R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__ActiveWrite) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue140_create(p0: *mut R4SdkSubsystemNativeValue140, p1: *mut R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue140_inspectNative(p0: *const R4SdkSubsystemNativeValue140) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue145_create(p0: *mut R4SdkSubsystemNativeValue145, p1: *mut R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue145_inspectNative(p0: *const R4SdkSubsystemNativeValue145) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob_create(p0: *mut R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob, p1: *mut R4SdkSubsystemStore, p2: *const R4SdkDataNative_Value156, p3: u32, p4: *mut u8, p5: u64, p6: u64) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob_from_fields(p0: *mut R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob, p1: *mut R4SdkSubsystemStore, p2: *const R4SdkDataNative_Value156, p3: u32, p4: *mut u8, p5: u64, p6: u64, p7: u32) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob_get_store(p0: *const R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob) -> R4SdkSubsystemSlot;
@@ -33156,17 +33258,17 @@ unsafe extern "C" {
     pub fn R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob_get_result(p0: *const R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob_set_result(p0: *mut R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob, p1: u32) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob_inspectNative(p0: *const R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue142_create(p0: *mut R4SdkSubsystemNativeValue142, p1: *mut R4SdkSubsystemStore) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue142_inspectNative(p0: *const R4SdkSubsystemNativeValue142) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue147_create(p0: *mut R4SdkSubsystemNativeValue147, p1: *mut R4SdkSubsystemStore) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue147_inspectNative(p0: *const R4SdkSubsystemNativeValue147) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteResult_create(p0: *mut R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteResult, p1: u32) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteResult_inspectNative(p0: *const R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteResult) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue145_create(p0: *mut R4SdkSubsystemNativeValue145, p1: *const R4SdkSubsystemNativeValue145) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue145_inspectNative(p0: *const R4SdkSubsystemNativeValue145, p1: *mut R4SdkSubsystemNativeValue145) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue146_create(p0: *mut R4SdkSubsystemNativeValue146, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue146_inspectNative(p0: *const R4SdkSubsystemNativeValue146) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue147_create(p0: *mut R4SdkSubsystemNativeValue147, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue147_inspectNative(p0: *const R4SdkSubsystemNativeValue147) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue148_inspectNative(p0: *const R4SdkSubsystemNativeValue148, p1: *mut R4SdkSubsystemNative_path_AbsoluteFilePath) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue150_create(p0: *mut R4SdkSubsystemNativeValue150, p1: *const R4SdkSubsystemNativeValue150) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue150_inspectNative(p0: *const R4SdkSubsystemNativeValue150, p1: *mut R4SdkSubsystemNativeValue150) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue151_create(p0: *mut R4SdkSubsystemNativeValue151, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue151_inspectNative(p0: *const R4SdkSubsystemNativeValue151) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue152_create(p0: *mut R4SdkSubsystemNativeValue152, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue152_inspectNative(p0: *const R4SdkSubsystemNativeValue152) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue153_inspectNative(p0: *const R4SdkSubsystemNativeValue153, p1: *mut R4SdkSubsystemNative_path_AbsoluteFilePath) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNative_path_AbsoluteFilePath_create(p0: *mut R4SdkSubsystemNative_path_AbsoluteFilePath) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNative_path_AbsoluteFilePath_from_fields(p0: *mut R4SdkSubsystemNative_path_AbsoluteFilePath, p1: *const R4SdkUpdateNativeValue154, p2: u16) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNative_path_AbsoluteFilePath_get_storage(p0: *const R4SdkSubsystemNative_path_AbsoluteFilePath, p1: *mut R4SdkUpdateNativeValue154) -> R4SdkSubsystemSlot;
@@ -33185,16 +33287,16 @@ unsafe extern "C" {
     pub fn R4SdkSubsystemCallbackTable_get_invoke(p0: *const R4SdkSubsystemCallbackTable) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemCallbackTable_set_invoke(p0: *mut R4SdkSubsystemCallbackTable, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemCallbackTable_inspectNative(p0: *const R4SdkSubsystemCallbackTable) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue156_create(p0: *mut R4SdkSubsystemNativeValue156, p1: *const R4SdkSubsystemCallbackTable) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue156_inspectNative(p0: *const R4SdkSubsystemNativeValue156) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue157_inspectNative(p0: *const R4SdkSubsystemNativeValue157, p1: *mut R4SdkSubsystemCatalogHostVerifier) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue158_inspectNative(p0: *const R4SdkSubsystemNativeValue158, p1: *mut R4SdkSubsystemVideoBackend) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue159_inspectNative(p0: *const R4SdkSubsystemNativeValue159, p1: *mut R4SdkSubsystemVideoFrameOverlay) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue160_inspectNative(p0: *const R4SdkSubsystemNativeValue160, p1: *mut R4SdkSubsystemRuntimeGuestDriver) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue161_inspectNative(p0: *const R4SdkSubsystemNativeValue161, p1: *mut R4SdkSubsystemRuntimeHostDriver) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue162_inspectNative(p0: *const R4SdkSubsystemNativeValue162, p1: *mut R4SdkSubsystemRuntimeAudioSink) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue163_inspectNative(p0: *const R4SdkSubsystemNativeValue163, p1: *mut R4SdkSubsystemPersistenceBackend) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue164_inspectNative(p0: *const R4SdkSubsystemNativeValue164, p1: *mut R4SdkSubsystemPersistenceConfiguration) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue161_create(p0: *mut R4SdkSubsystemNativeValue161, p1: *const R4SdkSubsystemCallbackTable) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue161_inspectNative(p0: *const R4SdkSubsystemNativeValue161) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue162_inspectNative(p0: *const R4SdkSubsystemNativeValue162, p1: *mut R4SdkSubsystemCatalogHostVerifier) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue163_inspectNative(p0: *const R4SdkSubsystemNativeValue163, p1: *mut R4SdkSubsystemVideoBackend) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue164_inspectNative(p0: *const R4SdkSubsystemNativeValue164, p1: *mut R4SdkSubsystemVideoFrameOverlay) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue165_inspectNative(p0: *const R4SdkSubsystemNativeValue165, p1: *mut R4SdkSubsystemRuntimeGuestDriver) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue166_inspectNative(p0: *const R4SdkSubsystemNativeValue166, p1: *mut R4SdkSubsystemRuntimeHostDriver) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue167_inspectNative(p0: *const R4SdkSubsystemNativeValue167, p1: *mut R4SdkSubsystemRuntimeAudioSink) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue168_inspectNative(p0: *const R4SdkSubsystemNativeValue168, p1: *mut R4SdkSubsystemPersistenceBackend) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue169_inspectNative(p0: *const R4SdkSubsystemNativeValue169, p1: *mut R4SdkSubsystemPersistenceConfiguration) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemContext_create(p0: *mut R4SdkSubsystemContext, p1: *const R4SdkSubsystemNative_program_Bundle, p2: *const R4SdkSubsystemNative_r4sys_Context, p3: *const R4SdkSubsystemNative_r4desk_Context, p4: *const R4SdkSubsystemNative_r4draw_Context, p5: *const R4SdkSubsystemNative_r4audio_Context) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemContext_from_fields(p0: *mut R4SdkSubsystemContext, p1: *const R4SdkSubsystemNative_program_Bundle, p2: *const R4SdkSubsystemNative_r4sys_Context, p3: *const R4SdkSubsystemNative_r4desk_Context, p4: *const R4SdkSubsystemNative_r4draw_Context, p5: *const R4SdkSubsystemNative_r4audio_Context) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemContext_get_bundle(p0: *const R4SdkSubsystemContext, p1: *mut R4SdkSubsystemNative_program_Bundle) -> R4SdkSubsystemSlot;
@@ -33213,95 +33315,95 @@ unsafe extern "C" {
     pub fn R4SdkSubsystemNative_r4audio_Context_get_base(p0: *const R4SdkSubsystemNative_r4audio_Context, p1: *mut R4SdkSubsystemNative_program_Context) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNative_r4audio_Context_set_base(p0: *mut R4SdkSubsystemNative_r4audio_Context, p1: *const R4SdkSubsystemNative_program_Context) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNative_r4audio_Context_inspectNative(p0: *const R4SdkSubsystemNative_r4audio_Context) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue170_create(p0: *mut R4SdkSubsystemNativeValue170, p1: *mut R4SdkSubsystemContext) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue170_inspectNative(p0: *const R4SdkSubsystemNativeValue170) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue171_create(p0: *mut R4SdkSubsystemNativeValue171, p1: *const R4XStartContext) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue171_inspectNative(p0: *const R4SdkSubsystemNativeValue171) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue173_create(p0: *mut R4SdkSubsystemNativeValue173, p1: *mut R4SdkSubsystemVideoHost) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue173_inspectNative(p0: *const R4SdkSubsystemNativeValue173) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue174_create(p0: *mut R4SdkSubsystemNativeValue174, p1: *const R4SdkSubsystemContext) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue174_inspectNative(p0: *const R4SdkSubsystemNativeValue174) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue175_create(p0: *mut R4SdkSubsystemNativeValue175, p1: *mut R4SdkSubsystemContext) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNativeValue175_inspectNative(p0: *const R4SdkSubsystemNativeValue175) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue176_create(p0: *mut R4SdkSubsystemNativeValue176, p1: *mut R4SdkSubsystemRuntimeR4AudioSink) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue176_create(p0: *mut R4SdkSubsystemNativeValue176, p1: *const R4XStartContext) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNativeValue176_inspectNative(p0: *const R4SdkSubsystemNativeValue176) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue177_create(p0: *mut R4SdkSubsystemNativeValue177, p1: *mut R4SdkSubsystemRuntimeRuntime) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue177_inspectNative(p0: *const R4SdkSubsystemNativeValue177) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue178_create(p0: *mut R4SdkSubsystemNativeValue178, p1: *const u32, p2: u64) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue178_create(p0: *mut R4SdkSubsystemNativeValue178, p1: *mut R4SdkSubsystemVideoHost) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNativeValue178_inspectNative(p0: *const R4SdkSubsystemNativeValue178) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue179_create(p0: *mut R4SdkSubsystemNativeValue179, p1: *const R4SdkSubsystemContext) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNativeValue179_inspectNative(p0: *const R4SdkSubsystemNativeValue179) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue181_create(p0: *mut R4SdkSubsystemNativeValue181, p1: *mut R4SdkSubsystemCatalogCatalog) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue180_inspectNative(p0: *const R4SdkSubsystemNativeValue180) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue181_create(p0: *mut R4SdkSubsystemNativeValue181, p1: *mut R4SdkSubsystemRuntimeR4AudioSink) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNativeValue181_inspectNative(p0: *const R4SdkSubsystemNativeValue181) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue182_create(p0: *mut R4SdkSubsystemNativeValue182, p1: *mut R4SdkSubsystemRuntimeRuntime) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNativeValue182_inspectNative(p0: *const R4SdkSubsystemNativeValue182) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue184_create(p0: *mut R4SdkSubsystemNativeValue184, p1: *const R4SdkSubsystemCatalogResolution) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue183_create(p0: *mut R4SdkSubsystemNativeValue183, p1: *const u32, p2: u64) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue183_inspectNative(p0: *const R4SdkSubsystemNativeValue183) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNativeValue184_inspectNative(p0: *const R4SdkSubsystemNativeValue184) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue185_create(p0: *mut R4SdkSubsystemNativeValue185, p1: *const R4SdkSubsystemCatalogCandidate, p2: u64) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue185_inspectNative(p0: *const R4SdkSubsystemNativeValue185) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue186_create(p0: *mut R4SdkSubsystemNativeValue186, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue186_inspectNative(p0: *const R4SdkSubsystemNativeValue186, p1: *mut R4SdkSubsystemCatalogCandidate) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue186_create(p0: *mut R4SdkSubsystemNativeValue186, p1: *mut R4SdkSubsystemCatalogCatalog) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue186_inspectNative(p0: *const R4SdkSubsystemNativeValue186) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNativeValue187_inspectNative(p0: *const R4SdkSubsystemNativeValue187) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue188_create(p0: *mut R4SdkSubsystemNativeValue188, p1: *mut R4SdkSubsystemLaunchOptionIterator) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue188_inspectNative(p0: *const R4SdkSubsystemNativeValue188) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue189_inspectNative(p0: *const R4SdkSubsystemNativeValue189, p1: *mut R4SdkSubsystemLaunchOption) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue190_create(p0: *mut R4SdkSubsystemNativeValue190, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue190_inspectNative(p0: *const R4SdkSubsystemNativeValue190, p1: *mut R4SdkSubsystemLaunchOption) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue191_inspectNative(p0: *const R4SdkSubsystemNativeValue191, p1: *mut R4SdkSubsystemVideoSurface) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue192_create(p0: *mut R4SdkSubsystemNativeValue192, p1: *mut R4SdkSubsystemVideoSurface) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue189_create(p0: *mut R4SdkSubsystemNativeValue189, p1: *const R4SdkSubsystemCatalogResolution) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue189_inspectNative(p0: *const R4SdkSubsystemNativeValue189) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue190_create(p0: *mut R4SdkSubsystemNativeValue190, p1: *const R4SdkSubsystemCatalogCandidate, p2: u64) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue190_inspectNative(p0: *const R4SdkSubsystemNativeValue190) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue191_create(p0: *mut R4SdkSubsystemNativeValue191, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue191_inspectNative(p0: *const R4SdkSubsystemNativeValue191, p1: *mut R4SdkSubsystemCatalogCandidate) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNativeValue192_inspectNative(p0: *const R4SdkSubsystemNativeValue192) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue193_create(p0: *mut R4SdkSubsystemNativeValue193, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue193_create(p0: *mut R4SdkSubsystemNativeValue193, p1: *mut R4SdkSubsystemLaunchOptionIterator) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNativeValue193_inspectNative(p0: *const R4SdkSubsystemNativeValue193) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue194_create(p0: *mut R4SdkSubsystemNativeValue194, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue194_inspectNative(p0: *const R4SdkSubsystemNativeValue194) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue195_create(p0: *mut R4SdkSubsystemNativeValue195, p1: *const R4SdkSubsystemNative_r4draw_Context) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue195_inspectNative(p0: *const R4SdkSubsystemNativeValue195) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue196_inspectNative(p0: *const R4SdkSubsystemNativeValue196, p1: *mut R4SdkSubsystemVideoPresenter) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue197_create(p0: *mut R4SdkSubsystemNativeValue197, p1: *mut R4SdkSubsystemVideoPresenter) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue194_inspectNative(p0: *const R4SdkSubsystemNativeValue194, p1: *mut R4SdkSubsystemLaunchOption) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue195_create(p0: *mut R4SdkSubsystemNativeValue195, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue195_inspectNative(p0: *const R4SdkSubsystemNativeValue195, p1: *mut R4SdkSubsystemLaunchOption) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue196_inspectNative(p0: *const R4SdkSubsystemNativeValue196, p1: *mut R4SdkSubsystemVideoSurface) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue197_create(p0: *mut R4SdkSubsystemNativeValue197, p1: *mut R4SdkSubsystemVideoSurface) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNativeValue197_inspectNative(p0: *const R4SdkSubsystemNativeValue197) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue198_create(p0: *mut R4SdkSubsystemNativeValue198, p1: *const R4SdkSubsystemVideoPresenter) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue198_create(p0: *mut R4SdkSubsystemNativeValue198, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNativeValue198_inspectNative(p0: *const R4SdkSubsystemNativeValue198) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue199_create(p0: *mut R4SdkSubsystemNativeValue199, p1: *mut R4SdkSubsystemVideoInputTranslator) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue199_create(p0: *mut R4SdkSubsystemNativeValue199, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNativeValue199_inspectNative(p0: *const R4SdkSubsystemNativeValue199) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue200_create(p0: *mut R4SdkSubsystemNativeValue200, p1: *const R4SdkSubsystemVideoInputTranslator) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue200_create(p0: *mut R4SdkSubsystemNativeValue200, p1: *const R4SdkSubsystemNative_r4draw_Context) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNativeValue200_inspectNative(p0: *const R4SdkSubsystemNativeValue200) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue201_create(p0: *mut R4SdkSubsystemNativeValue201, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue201_inspectNative(p0: *const R4SdkSubsystemNativeValue201, p1: *mut R4SdkSubsystemVideoInputEvent) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue203_create(p0: *mut R4SdkSubsystemNativeValue203, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue203_inspectNative(p0: *const R4SdkSubsystemNativeValue203, p1: *mut R4SdkSubsystemVideoSize) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue204_inspectNative(p0: *const R4SdkSubsystemNativeValue204, p1: *mut R4SdkSubsystemVideoHost) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue201_inspectNative(p0: *const R4SdkSubsystemNativeValue201, p1: *mut R4SdkSubsystemVideoPresenter) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue202_create(p0: *mut R4SdkSubsystemNativeValue202, p1: *mut R4SdkSubsystemVideoPresenter) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue202_inspectNative(p0: *const R4SdkSubsystemNativeValue202) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue203_create(p0: *mut R4SdkSubsystemNativeValue203, p1: *const R4SdkSubsystemVideoPresenter) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue203_inspectNative(p0: *const R4SdkSubsystemNativeValue203) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue204_create(p0: *mut R4SdkSubsystemNativeValue204, p1: *mut R4SdkSubsystemVideoInputTranslator) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue204_inspectNative(p0: *const R4SdkSubsystemNativeValue204) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue205_create(p0: *mut R4SdkSubsystemNativeValue205, p1: *const R4SdkSubsystemVideoInputTranslator) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue205_inspectNative(p0: *const R4SdkSubsystemNativeValue205) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNativeValue206_create(p0: *mut R4SdkSubsystemNativeValue206, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue206_inspectNative(p0: *const R4SdkSubsystemNativeValue206) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue207_create(p0: *mut R4SdkSubsystemNativeValue207, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue207_inspectNative(p0: *const R4SdkSubsystemNativeValue207) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue208_inspectNative(p0: *const R4SdkSubsystemNativeValue208, p1: *mut R4SdkSubsystemRuntimeGuestClock) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue209_create(p0: *mut R4SdkSubsystemNativeValue209, p1: *mut R4SdkSubsystemRuntimeGuestClock) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue209_inspectNative(p0: *const R4SdkSubsystemNativeValue209) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue210_create(p0: *mut R4SdkSubsystemNativeValue210, p1: *const R4SdkSubsystemRuntimeGuestClock) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue210_inspectNative(p0: *const R4SdkSubsystemNativeValue210) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue211_inspectNative(p0: *const R4SdkSubsystemNativeValue211, p1: *mut R4SdkSubsystemRuntimePacer) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue212_create(p0: *mut R4SdkSubsystemNativeValue212, p1: *mut R4SdkSubsystemRuntimePacer) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue206_inspectNative(p0: *const R4SdkSubsystemNativeValue206, p1: *mut R4SdkSubsystemVideoInputEvent) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue208_create(p0: *mut R4SdkSubsystemNativeValue208, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue208_inspectNative(p0: *const R4SdkSubsystemNativeValue208, p1: *mut R4SdkSubsystemVideoSize) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue209_inspectNative(p0: *const R4SdkSubsystemNativeValue209, p1: *mut R4SdkSubsystemVideoHost) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue211_create(p0: *mut R4SdkSubsystemNativeValue211, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue211_inspectNative(p0: *const R4SdkSubsystemNativeValue211) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue212_create(p0: *mut R4SdkSubsystemNativeValue212, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNativeValue212_inspectNative(p0: *const R4SdkSubsystemNativeValue212) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue213_create(p0: *mut R4SdkSubsystemNativeValue213, p1: *const R4SdkSubsystemRuntimePacer) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue213_inspectNative(p0: *const R4SdkSubsystemNativeValue213) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue213_inspectNative(p0: *const R4SdkSubsystemNativeValue213, p1: *mut R4SdkSubsystemRuntimeGuestClock) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue214_create(p0: *mut R4SdkSubsystemNativeValue214, p1: *mut R4SdkSubsystemRuntimeGuestClock) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNativeValue214_inspectNative(p0: *const R4SdkSubsystemNativeValue214) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue215_inspectNative(p0: *const R4SdkSubsystemNativeValue215, p1: *mut R4SdkSubsystemRuntimePcmQueue) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue216_create(p0: *mut R4SdkSubsystemNativeValue216, p1: *const R4SdkSubsystemRuntimePcmQueue) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue216_inspectNative(p0: *const R4SdkSubsystemNativeValue216) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue217_create(p0: *mut R4SdkSubsystemNativeValue217, p1: *mut R4SdkSubsystemRuntimePcmQueue) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue215_create(p0: *mut R4SdkSubsystemNativeValue215, p1: *const R4SdkSubsystemRuntimeGuestClock) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue215_inspectNative(p0: *const R4SdkSubsystemNativeValue215) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue216_inspectNative(p0: *const R4SdkSubsystemNativeValue216, p1: *mut R4SdkSubsystemRuntimePacer) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue217_create(p0: *mut R4SdkSubsystemNativeValue217, p1: *mut R4SdkSubsystemRuntimePacer) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNativeValue217_inspectNative(p0: *const R4SdkSubsystemNativeValue217) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue218_create(p0: *mut R4SdkSubsystemNativeValue218, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue218_inspectNative(p0: *const R4SdkSubsystemNativeValue218, p1: *mut R4SdkSubsystemRuntimeAudioOptions) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue219_inspectNative(p0: *const R4SdkSubsystemNativeValue219, p1: *mut R4SdkSubsystemRuntimeRuntime) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue220_create(p0: *mut R4SdkSubsystemNativeValue220, p1: *const R4SdkSubsystemNative_r4sys_Context) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue220_inspectNative(p0: *const R4SdkSubsystemNativeValue220) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue221_create(p0: *mut R4SdkSubsystemNativeValue221, p1: *const R4SdkSubsystemStore) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue218_create(p0: *mut R4SdkSubsystemNativeValue218, p1: *const R4SdkSubsystemRuntimePacer) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue218_inspectNative(p0: *const R4SdkSubsystemNativeValue218) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue219_inspectNative(p0: *const R4SdkSubsystemNativeValue219) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue220_inspectNative(p0: *const R4SdkSubsystemNativeValue220, p1: *mut R4SdkSubsystemRuntimePcmQueue) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue221_create(p0: *mut R4SdkSubsystemNativeValue221, p1: *const R4SdkSubsystemRuntimePcmQueue) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNativeValue221_inspectNative(p0: *const R4SdkSubsystemNativeValue221) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue222_inspectNative(p0: *const R4SdkSubsystemNativeValue222, p1: *mut R4SdkSubsystemRecoveryTestState) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue223_create(p0: *mut R4SdkSubsystemNativeValue223, p1: *mut R4SdkSubsystemAsyncStore) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue223_inspectNative(p0: *const R4SdkSubsystemNativeValue223) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue224_create(p0: *mut R4SdkSubsystemNativeValue224, p1: *const R4SdkSubsystemAsyncStore) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue224_inspectNative(p0: *const R4SdkSubsystemNativeValue224) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue225_inspectNative(p0: *const R4SdkSubsystemNativeValue225, p1: *mut R4SdkSubsystemNative_path_AbsoluteFilePath) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue226_create(p0: *mut R4SdkSubsystemNativeValue226, p1: *const R4SdkSubsystemNative_path_AbsoluteFilePath) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue222_create(p0: *mut R4SdkSubsystemNativeValue222, p1: *mut R4SdkSubsystemRuntimePcmQueue) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue222_inspectNative(p0: *const R4SdkSubsystemNativeValue222) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue223_create(p0: *mut R4SdkSubsystemNativeValue223, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue223_inspectNative(p0: *const R4SdkSubsystemNativeValue223, p1: *mut R4SdkSubsystemRuntimeAudioOptions) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue224_inspectNative(p0: *const R4SdkSubsystemNativeValue224, p1: *mut R4SdkSubsystemRuntimeRuntime) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue225_create(p0: *mut R4SdkSubsystemNativeValue225, p1: *const R4SdkSubsystemNative_r4sys_Context) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue225_inspectNative(p0: *const R4SdkSubsystemNativeValue225) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue226_create(p0: *mut R4SdkSubsystemNativeValue226, p1: *const R4SdkSubsystemStore) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNativeValue226_inspectNative(p0: *const R4SdkSubsystemNativeValue226) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue227_inspectNative(p0: *const R4SdkSubsystemNativeValue227, p1: *mut R4SdkSubsystemRecoveryTestState) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue228_create(p0: *mut R4SdkSubsystemNativeValue228, p1: *mut R4SdkSubsystemAsyncStore) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue228_inspectNative(p0: *const R4SdkSubsystemNativeValue228) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue229_create(p0: *mut R4SdkSubsystemNativeValue229, p1: *const R4SdkSubsystemAsyncStore) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue229_inspectNative(p0: *const R4SdkSubsystemNativeValue229) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue230_inspectNative(p0: *const R4SdkSubsystemNativeValue230, p1: *mut R4SdkSubsystemNative_path_AbsoluteFilePath) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue231_create(p0: *mut R4SdkSubsystemNativeValue231, p1: *const R4SdkSubsystemNative_path_AbsoluteFilePath) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue231_inspectNative(p0: *const R4SdkSubsystemNativeValue231) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNative_path_PathZ_create(p0: *mut R4SdkSubsystemNative_path_PathZ, p1: *const u8, p2: u16) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNative_path_PathZ_from_fields(p0: *mut R4SdkSubsystemNative_path_PathZ, p1: *const u8, p2: u16) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNative_path_PathZ_get_ptr(p0: *const R4SdkSubsystemNative_path_PathZ) -> R4SdkSubsystemSlot;
@@ -33309,22 +33411,22 @@ unsafe extern "C" {
     pub fn R4SdkSubsystemNative_path_PathZ_get_len(p0: *const R4SdkSubsystemNative_path_PathZ) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNative_path_PathZ_set_len(p0: *mut R4SdkSubsystemNative_path_PathZ, p1: u16) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNative_path_PathZ_inspectNative(p0: *const R4SdkSubsystemNative_path_PathZ) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue228_create(p0: *mut R4SdkSubsystemNativeValue228, p1: *const R4SdkSubsystemNative_program_Bundle) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue228_inspectNative(p0: *const R4SdkSubsystemNativeValue228) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue229_create(p0: *mut R4SdkSubsystemNativeValue229, p1: *const R4SdkSubsystemNative_r4audio_Context) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue229_inspectNative(p0: *const R4SdkSubsystemNativeValue229) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue231_create(p0: *mut R4SdkSubsystemNativeValue231, p1: *mut R4AudioOutputInfo) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue231_inspectNative(p0: *const R4SdkSubsystemNativeValue231) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue233_create(p0: *mut R4SdkSubsystemNativeValue233, p1: *const R4SdkSubsystemNativeValue122) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue233_create(p0: *mut R4SdkSubsystemNativeValue233, p1: *const R4SdkSubsystemNative_program_Bundle) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNativeValue233_inspectNative(p0: *const R4SdkSubsystemNativeValue233) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue234_create(p0: *mut R4SdkSubsystemNativeValue234, p1: *mut R4AudioServiceStatus) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue234_create(p0: *mut R4SdkSubsystemNativeValue234, p1: *const R4SdkSubsystemNative_r4audio_Context) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNativeValue234_inspectNative(p0: *const R4SdkSubsystemNativeValue234) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue236_create(p0: *mut R4SdkSubsystemNativeValue236, p1: *mut R4AudioServiceMasterState) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue236_create(p0: *mut R4SdkSubsystemNativeValue236, p1: *mut R4AudioOutputInfo) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNativeValue236_inspectNative(p0: *const R4SdkSubsystemNativeValue236) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue238_create(p0: *mut R4SdkSubsystemNativeValue238, p1: *const R4AudioServiceMasterRequest) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue238_create(p0: *mut R4SdkSubsystemNativeValue238, p1: *const R4SdkSubsystemNativeValue127) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNativeValue238_inspectNative(p0: *const R4SdkSubsystemNativeValue238) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue240_create(p0: *mut R4SdkSubsystemNativeValue240, p1: *mut R4AudioServiceStreamResult) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue240_inspectNative(p0: *const R4SdkSubsystemNativeValue240) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue239_create(p0: *mut R4SdkSubsystemNativeValue239, p1: *mut R4AudioServiceStatus) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue239_inspectNative(p0: *const R4SdkSubsystemNativeValue239) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue241_create(p0: *mut R4SdkSubsystemNativeValue241, p1: *mut R4AudioServiceMasterState) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue241_inspectNative(p0: *const R4SdkSubsystemNativeValue241) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue243_create(p0: *mut R4SdkSubsystemNativeValue243, p1: *const R4AudioServiceMasterRequest) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue243_inspectNative(p0: *const R4SdkSubsystemNativeValue243) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue245_create(p0: *mut R4SdkSubsystemNativeValue245, p1: *mut R4AudioServiceStreamResult) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue245_inspectNative(p0: *const R4SdkSubsystemNativeValue245) -> R4SdkSubsystemSlot;
     pub fn R4SdkDriverInvoke(p0: u64, p1: u32, p2: *const R4SdkDriverSlot, p3: u32, p4: *mut core::ffi::c_void) -> R4SdkDriverSlot;
     pub fn R4SdkDriverConstruct(p0: u64, p1: u32, p2: *const R4SdkDriverSlot, p3: u32, p4: *mut core::ffi::c_void) -> R4SdkDriverSlot;
     pub fn R4SdkDriverInspect(p0: u64, p1: u32, p2: *mut core::ffi::c_void, p3: *mut core::ffi::c_void) -> R4SdkDriverSlot;

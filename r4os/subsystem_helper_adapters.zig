@@ -51,7 +51,7 @@ pub fn hostDriver(table: *const cb.Table) Error!rt.HostDriver {
     return make(rt.HostDriver, table, .{ .{ "poll_fn", cb.Kind.host_poll, 0 }, .{ "present_fn", cb.Kind.host_present, 0 }, .{ "wait_fn", cb.Kind.host_wait, 0 }, .{ "should_close_fn", cb.Kind.host_close, 0 } });
 }
 pub fn audioSink(table: *const cb.Table) Error!rt.AudioSink {
-    return make(rt.AudioSink, table, .{ .{ "open_fn", cb.Kind.audio_open, 0 }, .{ "write_fn", cb.Kind.audio_write, 0 }, .{ "volume_fn", cb.Kind.audio_volume, 0 }, .{ "close_fn", cb.Kind.audio_close, 0 } });
+    return make(rt.AudioSink, table, .{ .{ "open_fn", cb.Kind.audio_open, 0 }, .{ "write_fn", cb.Kind.audio_write, 0 }, .{ "volume_fn", cb.Kind.audio_volume, 0 }, .{ "close_fn", cb.Kind.audio_close, 0 }, .{ "poll_fn", cb.Kind.audio_poll, 0 }, .{ "finish_fn", cb.Kind.audio_finish, 0 } });
 }
 pub fn persistenceBackend(table: *const cb.Table) Error!save.Backend {
     return make(save.Backend, table, .{ .{ "acquire_fn", cb.Kind.save_acquire, 0 }, .{ "release_fn", cb.Kind.save_release, 0 }, .{ "read_exact_fn", cb.Kind.save_read, 0 }, .{ "write_atomic_fn", cb.Kind.save_write, 0 }, .{ "poll_fn", cb.Kind.save_poll, 0 }, .{ "drain_fn", cb.Kind.save_drain, 0 }, .{ "pending_fn", cb.Kind.save_pending, 0 } });

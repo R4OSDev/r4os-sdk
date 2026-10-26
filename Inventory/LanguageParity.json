@@ -1080,7 +1080,8 @@
       "evidence": [
         "source_inventory",
         "subsystems_current_65",
-        "current_kernel_records_80"
+        "current_kernel_records_80",
+        "subsystem_audio_08749"
       ],
       "shared_core": "Generischen Host-/Runtime-/Persistenzkern einmal nutzen; kein Emulatorneuaufbau oder languagespezifische Kopie.",
       "qualification": {
@@ -1088,7 +1089,15 @@
         "sdk": "0.64.84",
         "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.65",
         "scope": "Original Catalog/Launch/Host/Runtime/Persistence, concrete configurable original R4osStore and AsyncStore,38 typed callback kinds and real R4SYS/R4DESK/R4DRAW/R4AUDIO/file adapters. Canonical installed schema4 MODULES.JSON remains the only host catalog."
-      }
+      },
+      "qualification_updates": [
+        {
+          "performed_in": "0.87.49",
+          "sdk": "0.64.100",
+          "report": "Docs/SDK/LanguageParity.txt#0.87.49",
+          "scope": "40 typed callback kinds with old38numeric IDs preserved;48 actual Zig runtime owner cases (3transport native tables explicitly modeled); original C/Rust host subsystem interop plus5negative cases, full113stepSDK build; current SDK fixture and actual Zig products pass strict original long KVM4 reports. No new C/Rust guest, Windows execution, physical or isolated-speedup claim."
+        }
+      ]
     },
     {
       "id": "driver",
@@ -54260,6 +54269,15 @@
       "native_r4os_qualification": "KVM4 case08743-bound, actual Zig callers on NTFS and boot FAT; original GUI/Explorer and real private D remount/expired caller/native join/no persistent scan leases all pass. No forced real reparse directory or in-flight I/O kill fixture.",
       "kernel_version": "0.1.405",
       "kernel_sha256": "9c672b5d1bf2850eb7df84035369102aed28da7665b55225f03811439421780a"
+    },
+    "subsystem_audio_08749": {
+      "complete": true,
+      "scope": "40 typed callback kinds with old38numeric IDs preserved;48 actual Zig runtime owner cases (3transport native tables explicitly modeled); original C/Rust host subsystem interop plus5negative cases, full113stepSDK build; current SDK fixture and actual Zig products pass strict original long KVM4 reports. No new C/Rust guest, Windows execution, physical or isolated-speedup claim.",
+      "standard_run_id": "cf47d735-2d08-4ff6-ba58-c6304fb26a6b",
+      "original_sha256": "015f174810950bfa54fde8e64722372ee3187933fc5e6bdc4fe62bc3ce1dd3d4",
+      "compiler_fingerprint": 2210870889783679946,
+      "platform_contract_unchanged": "0.64.49",
+      "reference": "Docs/Core/KernelRustAudio.txt#0.87.49"
     }
   },
   "wave_bindings": [
@@ -54500,6 +54518,13 @@
       ],
       "entry_rule": "Nur diese betroffenen Zeilen gegen ihren aktuellen Besitzer und gueltige Vorbelege nachpruefen; bereits erreichte Teilziele belegen, alte Kandidaten verwerfen, Pflichtfunktion erhalten.",
       "current_only_cleanup": "Im ohnehin beruehrten Besitzer alte OS-Ersatzpfade entfernen;78-82 nur noch nachgewiesenen Rest zuweisen."
+    },
+    {
+      "version": "0.87.49",
+      "matrix_ids": [
+        "subsystems"
+      ],
+      "entry_rule": "Only affected audio Runtime/compiler-helper row refreshed; dated source inventory and prior qualification retained."
     }
   ],
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",

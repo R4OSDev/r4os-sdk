@@ -446,6 +446,7 @@ pub fn build(b: *std.Build) void {
     subsystem_runtime_module.addImport("r4os_contract", sdk_profile.profile.contract_module);
     const subsystem_runtime_tests = b.addTest(.{ .root_module = subsystem_runtime_module });
     const run_subsystem_runtime_tests = b.addRunArtifact(subsystem_runtime_tests);
+    b.step("subsystem-runtime-test", "Run existing SubsystemRuntime owner cases").dependOn(&run_subsystem_runtime_tests.step);
 
     const ntfs_format = b.createModule(.{
         .root_source_file = b.path("r4os/ntfs_format.zig"),

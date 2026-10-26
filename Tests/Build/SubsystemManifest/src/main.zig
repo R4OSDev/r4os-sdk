@@ -416,11 +416,16 @@ fn runtimeHostPoll(context: *anyopaque) runtime_api.HostPollResult {
         },
         .reset => {
             if (self.guest.resets > 1) return .{ .failure = -9711 };
-            if (self.guest.resets == 1 and self.guest.steps >= 2) {
+            // Exercise actual queued PCM on a settled live stream. A fast
+            // Async Open/Close transition is not evidence for the mute case.
+            if (self.guest.resets == 1 and self.guest.steps >= 2 and
+                self.runtime.audio.state == .active and self.runtime.audio.sink_open and
+                self.runtime.audio.pending_operation == null and self.runtime.audio.queue.available() != 0)
+            {
                 self.muted_submitted_bytes = self.runtime.audio.stats.submitted_bytes;
                 self.muted_writes = self.runtime.audio.stats.writes;
                 self.muted_idle_closes = self.runtime.audio.stats.idle_closes;
-                self.muted_was_active = self.runtime.audio.state == .active;
+                self.muted_was_active = self.runtime.audio.sink_open;
                 self.phase = .muted;
                 return self.command(.mute);
             }
@@ -433,7 +438,8 @@ fn runtimeHostPoll(context: *anyopaque) runtime_api.HostPollResult {
                 return .{ .failure = -9712 };
             }
             const expected_idle_closes = self.muted_idle_closes + @intFromBool(self.muted_was_active);
-            if (self.runtime.audio.state == .ready and
+            if (self.runtime.audio.state == .ready and !self.runtime.audio.sink_open and
+                !self.runtime.audio.close_pending and self.runtime.audio.pending_operation == null and
                 self.runtime.audio.next_deadline_tick == 0 and
                 self.runtime.audio.stats.idle_closes == expected_idle_closes)
             {
@@ -527,7 +533,7 @@ fn runtimeAudioSelfTestFail(sys: *r4os.r4sys.Context, runtime: *const runtime_ap
     // guest production/submission. Work, timeouts and assertions are unchanged.
     var buffer: [120]u8 = undefined;
     const text = std.fmt.bufPrint(&buffer, "{s} raw={d} generated={d} submitted={d} idle_closes={d}", .{
-        reason, runtime.audio.last_error, runtime.audio.stats.generated_bytes,
+        reason,                              runtime.audio.last_error,        runtime.audio.stats.generated_bytes,
         runtime.audio.stats.submitted_bytes, runtime.audio.stats.idle_closes,
     }) catch reason;
     return runtimeSelfTestFail(sys, text, 120);

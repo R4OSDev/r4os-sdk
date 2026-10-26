@@ -32,6 +32,8 @@ pub const callbackTypes = .{
     @FieldType(runtime.GuestDriver, "step_fn"),
     @FieldType(runtime.HostDriver, "poll_fn"),
     @FieldType(runtime.AudioSink, "open_fn"),
+    @typeInfo(@FieldType(runtime.AudioSink, "poll_fn")).optional.child,
+    @typeInfo(@FieldType(runtime.AudioSink, "finish_fn")).optional.child,
     @FieldType(persistence.Backend, "write_atomic_fn"),
     @typeInfo(@FieldType(persistence.Configuration, "validate_rtc")).optional.child,
 };
