@@ -114,9 +114,8 @@ pub const HostPollResult = union(enum) {
 
 /// Progress at the service boundary of one guest audio stream. Accepted
 /// source bytes have reached AudioService; they must not be interpreted as
-/// hardware-played bytes. The current platform ABI exposes no per-stream
-/// hardware playback cursor, so `playback_frames` remains null until such a
-/// cursor exists.
+/// speaker playback. Optional frame progress is canonical48k PCM attributed
+/// to validated DMA consumption, with unconfirmed tails kept separate.
 pub const AudioFeedback = struct {
     state: AudioState,
     muted: bool,
@@ -124,6 +123,12 @@ pub const AudioFeedback = struct {
     suppressed_bytes: u64 = 0,
     discarded_bytes: u64 = 0,
     playback_frames: ?u64 = null,
+    backend_frames: u64 = 0,
+    dma_frames: u64 = 0,
+    unconfirmed_frames: u64 = 0,
+    queued_frames: u64 = 0,
+    queue_age_ns: u64 = 0,
+    source_starvations: u64 = 0,
 };
 
 pub const GuestDriver = struct {
@@ -260,6 +265,9 @@ pub const AudioConfig = struct {
     target_quanta: u16 = default_target_quanta,
     max_catchup_quanta: u16 = default_max_catchup_quanta,
     busy_retry_nanoseconds: u64 = default_busy_retry_nanoseconds,
+    continuous: bool = false,
+    low_water_frames: u32 = 960,
+    high_water_frames: u32 = 1920,
 
     pub fn frameBytes(self: AudioConfig) Error!usize {
         if (self.sample_rate == 0 or self.channels == 0) return Error.InvalidAudioConfiguration;
@@ -285,6 +293,7 @@ pub const AudioSink = struct {
     close_fn: *const fn (*anyopaque) i32,
     poll_fn: ?*const fn (*anyopaque) ?transport.Completion = null,
     finish_fn: ?*const fn (*anyopaque) transport.Finish = null,
+    progress_fn: ?*const fn (*anyopaque) i32 = null,
 
     fn open(self: AudioSink, config: AudioConfig) i32 {
         return self.open_fn(self.context, config);
@@ -343,6 +352,7 @@ pub const R4AudioSink = struct {
             .volume_fn = r4AudioVolume,
             .close_fn = r4AudioClose,
             .poll_fn = r4AudioPoll,
+            .progress_fn = r4AudioProgress,
             .finish_fn = r4AudioFinish,
         };
     }
@@ -357,6 +367,21 @@ pub const AudioState = enum {
 };
 
 pub const AudioStats = struct {
+    playback_frames: ?u64 = null,
+    backend_frames: u64 = 0,
+    dma_frames: u64 = 0,
+    unconfirmed_frames: u64 = 0,
+    queued_frames: u64 = 0,
+    queue_age_ns: u64 = 0,
+    source_starvations: u64 = 0,
+    progress_queries: u64 = 0,
+    retired_playback_frames: u64 = 0,
+    retired_unconfirmed_frames: u64 = 0,
+    backend_generation: u64 = 0,
+    output_generation: u64 = 0,
+    reset_generation: u64 = 0,
+    stream_generation: u64 = 0,
+    progress_observed_ns: u64 = 0,
     generated_bytes: u64 = 0,
     submitted_bytes: u64 = 0,
     discarded_bytes: u64 = 0,
@@ -469,6 +494,7 @@ const SubmitResult = enum {
 };
 
 pub const AudioPump = struct {
+    const DiscardReason = enum { other, pause, mute };
     config: AudioConfig = .{},
     queue: PcmQueue = .{ .storage = @constCast(empty_audio_storage[0..]) },
     scratch: []u8 = @constCast(empty_audio_storage[0..]),
@@ -489,12 +515,19 @@ pub const AudioPump = struct {
     pending_bytes: usize = 0,
     pending_idle_close: bool = false,
     discard_after_pending: bool = false,
+    pending_discard_reason: DiscardReason = .other,
     retire_pending_feedback: bool = false,
     sink_generation: u64 = 0,
     close_error: i32 = 0,
     close_retry_tick: u64 = 0,
     service_operations_cycle: u16 = 0,
     stats: AudioStats = .{},
+    progress_record: abi.AudioServiceStreamProgressState = .{},
+    progress_seen: bool = false,
+    progress_ready: bool = false,
+    progress_due_tick: u64 = 0,
+    feedback_retire_current: bool = false,
+    progress_record_retired: bool = false,
 
     fn init(options: AudioOptions, monotonic_hz: u32) Error!AudioPump {
         if (options.sink) |sink| if (sink.poll_fn != null and sink.finish_fn == null) return Error.InvalidAudioConfiguration;
@@ -551,6 +584,7 @@ pub const AudioPump = struct {
         };
         self.noteServiceOperation();
         self.stats.open_operations +%= 1;
+        self.feedback_retire_current = false;
         const rc = sink.open(self.config);
         if (rc == transport.pending and sink.poll_fn != null) {
             self.beginPending(.open, 0);
@@ -574,6 +608,7 @@ pub const AudioPump = struct {
             self.degrade(rc);
             return false;
         }
+        self.progress_ready = false;
         self.state = .active;
         self.sink_open = true;
         self.last_error = 0;
@@ -587,17 +622,23 @@ pub const AudioPump = struct {
     }
 
     fn reset(self: *AudioPump, now: u64) void {
+        self.feedback_retire_current = true;
+        self.progress_record_retired = self.progress_seen;
+        self.resumePlayback(now);
+    }
+
+    fn resumePlayback(self: *AudioPump, now: u64) void {
         if (self.state == .disabled or self.state == .degraded or self.state == .closed) return;
         self.enterIdle();
-        // Resume/reset may need buffered guest PCM before another guest step.
+        // Pause/resume keeps the guest's outstanding PCM: a late Close cursor
+        // still retires that exact data. Only a new guest/capture epoch hides it.
         self.next_deadline_tick = if (now == 0) 1 else now;
     }
 
     fn pause(self: *AudioPump, now: u64) void {
         _ = now;
         if (self.state == .disabled or self.state == .degraded or self.state == .closed) return;
-        self.stats.paused_bytes +%= self.queue.available();
-        self.enterIdle();
+        self.enterIdleAs(.pause);
     }
 
     fn setMuted(self: *AudioPump, muted: bool, now: u64) void {
@@ -605,8 +646,7 @@ pub const AudioPump = struct {
         self.muted = muted;
         if (self.state == .degraded) return;
         if (muted) {
-            self.stats.muted_bytes +%= self.queue.available();
-            self.enterIdle();
+            self.enterIdleAs(.mute);
         } else {
             self.reset(now);
         }
@@ -655,6 +695,10 @@ pub const AudioPump = struct {
 
     fn pump(self: *AudioPump, now: u64, running: bool) void {
         self.pollPending(now);
+        self.pumpReady(now, running);
+    }
+
+    fn pumpReady(self: *AudioPump, now: u64, running: bool) void {
         if (self.pending_operation != null) return;
         if (self.close_pending) {
             if (now < self.close_retry_tick) return;
@@ -674,6 +718,18 @@ pub const AudioPump = struct {
         }
         if (self.queue.available() != 0 or self.state == .active) self.stats.active_cycles +%= 1;
         if (self.service_operations_cycle != 0) return;
+        if (self.config.continuous and self.progress_ready and now >= self.progress_due_tick and
+            (self.queue.available() == 0 or now < self.next_deadline_tick))
+        {
+            if (self.sink) |sink| if (sink.progress_fn) |query| {
+                self.noteServiceOperation();
+                self.stats.progress_queries +%= 1;
+                const rc = query(sink.context);
+                self.progress_due_tick = now +| @max(self.quantum_ticks / 2, 1);
+                if (rc == transport.pending) self.beginPending(.progress, 0) else if (rc < 0 and rc != abi.service_api_result_busy) self.degrade(rc);
+                return;
+            };
+        }
         if (now < self.next_deadline_tick) return;
         const copied = self.queue.peek(self.scratch);
         if (copied == 0) {
@@ -682,7 +738,7 @@ pub const AudioPump = struct {
             self.next_deadline_tick = if (self.state == .active) now +| self.quantum_ticks else 0;
             return;
         }
-        if (isZeroPcm(self.scratch[0..copied])) {
+        if (!self.config.continuous and isZeroPcm(self.scratch[0..copied])) {
             _ = self.queue.discard(copied);
             self.stats.silence_bytes +%= copied;
             self.stats.suppressed_bytes +%= copied;
@@ -756,6 +812,17 @@ pub const AudioPump = struct {
         const accepted: usize = @intCast(written);
         _ = self.queue.discard(accepted);
         self.stats.submitted_bytes +%= accepted;
+        if (self.config.continuous) {
+            if (isZeroPcm(self.scratch[0..accepted])) self.stats.silence_bytes +%= accepted;
+            if (self.sink) |sink| {
+                self.progress_ready = sink.progress_fn != null;
+                if (sink.progress_fn == null and self.config.sample_rate == 48000) {
+                    const frames = accepted / self.queue.frame_bytes;
+                    self.stats.unconfirmed_frames +%= frames;
+                    if (self.feedback_retire_current or self.retire_pending_feedback) self.stats.retired_unconfirmed_frames +%= frames;
+                }
+            }
+        }
         if (self.retire_pending_feedback) self.stats.retired_submitted_bytes +%= accepted;
         self.stats.writes +%= 1;
         if (accepted != copied) {
@@ -794,6 +861,13 @@ pub const AudioPump = struct {
         self.pending_operation = null;
         self.pending_bytes = 0;
         self.stats.async_completions +%= 1;
+        if (completion.requests > 1) {
+            self.stats.async_submissions +%= completion.requests - 1;
+            self.stats.async_completions +%= completion.requests - 1;
+            self.stats.service_operations +%= completion.requests - 1;
+        }
+        if (completion.progress) |record| self.applyProgress(record);
+        self.progress_due_tick = now +| @max(self.quantum_ticks / 2, 1);
         switch (operation) {
             .open => {
                 _ = self.completeOpen(rc, now);
@@ -809,30 +883,97 @@ pub const AudioPump = struct {
                 .pending, .failed => {},
             },
             .close => self.completeClose(rc),
+            .progress => {
+                if (rc < 0 and rc != abi.service_api_result_busy) self.degrade(rc);
+            },
             .volume, .fence => self.degrade(abi.service_api_result_invalid),
         }
         if (self.discard_after_pending) {
+            const reason = self.pending_discard_reason;
+            self.pending_discard_reason = .other;
             self.discard_after_pending = false;
             // Finish has already drained/destroyed its owner. Applying the
             // last receipt must not post another operation into that owner.
-            if (terminal) self.discardQueue() else self.enterIdle();
+            if (terminal) self.discardQueueAs(reason) else self.enterIdleAs(reason);
         }
         self.retire_pending_feedback = false;
     }
 
+    fn applyProgress(self: *AudioPump, record: abi.AudioServiceStreamProgressState) void {
+        const p = record.progress;
+        if ((p.flags & abi.audio_progress_source_valid) == 0 or p.stream_generation == 0) return;
+        if (p.rate != 48000 or p.channels != 2 or p.format != @intFromEnum(abi.AudioFormat.s16le) or
+            p.consumed_frames > p.submitted_frames or p.submitted_frames > p.backend_frames or p.backend_frames > p.accepted_frames or
+            p.unconfirmed_frames > p.accepted_frames - p.consumed_frames or
+            p.queued_frames != p.accepted_frames - p.consumed_frames - p.unconfirmed_frames)
+        {
+            self.degrade(abi.service_api_result_invalid);
+            return;
+        }
+        const same = self.progress_seen and record.service_epoch == self.progress_record.service_epoch and
+            record.stream_generation == self.progress_record.stream_generation and p.stream_generation == self.progress_record.progress.stream_generation;
+        const old = if (same) self.progress_record.progress else abi.AudioStreamProgress{};
+        if (p.consumed_frames < old.consumed_frames or p.submitted_frames < old.submitted_frames or p.backend_frames < old.backend_frames or
+            p.unconfirmed_frames < old.unconfirmed_frames or p.source_starvations < old.source_starvations)
+        {
+            self.degrade(abi.service_api_result_invalid);
+            return;
+        }
+        if (self.progress_seen and !same) {
+            self.stats.unconfirmed_frames +%= self.progress_record.progress.queued_frames;
+            if (self.progress_record_retired) self.stats.retired_unconfirmed_frames +%= self.progress_record.progress.queued_frames;
+        }
+        if (self.stats.playback_frames != null or (p.flags & abi.audio_progress_device_valid) != 0 or p.consumed_frames != 0)
+            self.stats.playback_frames = (self.stats.playback_frames orelse 0) +% (p.consumed_frames - old.consumed_frames);
+        self.stats.backend_frames +%= p.backend_frames - old.backend_frames;
+        self.stats.dma_frames +%= p.submitted_frames - old.submitted_frames;
+        self.stats.unconfirmed_frames +%= p.unconfirmed_frames - old.unconfirmed_frames;
+        if (self.feedback_retire_current) {
+            self.stats.retired_playback_frames +%= p.consumed_frames - old.consumed_frames;
+            self.stats.retired_unconfirmed_frames +%= p.unconfirmed_frames - old.unconfirmed_frames;
+        }
+        self.stats.source_starvations +%= p.source_starvations - old.source_starvations;
+        self.stats.queued_frames = p.queued_frames;
+        self.stats.queue_age_ns = p.queue_age_ns;
+        self.stats.backend_generation = p.backend_generation;
+        self.stats.output_generation = p.output_generation;
+        self.stats.reset_generation = p.reset_generation;
+        self.stats.stream_generation = p.stream_generation;
+        self.stats.progress_observed_ns = p.observed_ns;
+        self.progress_record = record;
+        self.progress_seen = true;
+        self.progress_record_retired = self.feedback_retire_current;
+    }
+
     fn discardQueue(self: *AudioPump) void {
+        self.discardQueueAs(.other);
+    }
+
+    fn discardQueueAs(self: *AudioPump, reason: DiscardReason) void {
         const discarded = self.queue.available();
         self.queue.clear();
         self.stats.discarded_bytes +%= discarded;
+        switch (reason) {
+            .pause => self.stats.paused_bytes +%= discarded,
+            .mute => self.stats.muted_bytes +%= discarded,
+            .other => {},
+        }
         if (self.retire_pending_feedback) self.stats.retired_discarded_bytes +%= discarded;
     }
 
     fn enterIdle(self: *AudioPump) void {
+        self.enterIdleAs(.other);
+    }
+
+    fn enterIdleAs(self: *AudioPump, reason: DiscardReason) void {
         if (self.pending_operation != null) {
+            // Keep the first owner's reason until its real receipt excludes
+            // the accepted prefix; subsequent resume/reset must not re-label it.
+            if (!self.discard_after_pending) self.pending_discard_reason = reason;
             self.discard_after_pending = true;
             self.close_pending = true;
             self.pending_idle_close = true;
-        } else self.discardQueue();
+        } else self.discardQueueAs(reason);
         self.resync_prefill_quanta = 0;
         self.next_deadline_tick = 0;
         self.open_retry_attempts = 0;
@@ -903,6 +1044,7 @@ pub const AudioPump = struct {
             self.state = .degraded;
             self.last_error = rc;
         }
+        self.progress_ready = false;
         self.sink_open = false;
         self.close_pending = false;
         if (rc == 0 and self.state != .degraded) self.last_error = 0;
@@ -920,6 +1062,7 @@ pub const AudioPump = struct {
                 self.stats.async_submissions +%= finished.control_requests;
                 self.stats.async_completions +%= finished.control_requests;
                 if (finished.completion) |completion| self.completePending(completion, 0, true);
+                if (finished.progress) |record| self.applyProgress(record);
                 self.close_error = finished.error_code;
                 if (self.pending_operation != null and self.close_error == 0) self.close_error = abi.service_api_result_invalid;
                 if (self.close_error < 0) self.last_error = self.close_error;
@@ -1010,6 +1153,10 @@ pub const Runtime = struct {
     audio_feedback_state: AudioState = .disabled,
     audio_feedback_muted: bool = false,
     audio_feedback_initialized: bool = false,
+    audio_feedback_playback_frames: ?u64 = null,
+    audio_feedback_unconfirmed_frames: u64 = 0,
+    audio_feedback_playback_base: u64 = 0,
+    audio_feedback_unconfirmed_base: u64 = 0,
     stats: RuntimeStats = .{},
 
     pub fn init(config: Config, monotonic_hz: u32, host_tick: u64, audio: ?AudioOptions) Error!Runtime {
@@ -1044,7 +1191,7 @@ pub const Runtime = struct {
             },
             .resume_running => if (self.state == .paused) {
                 self.clock.resumeAt(host_tick);
-                self.audio.reset(host_tick);
+                self.audio.resumePlayback(host_tick);
                 self.state = .running;
                 self.stats.resumes +%= 1;
             },
@@ -1061,6 +1208,10 @@ pub const Runtime = struct {
                 self.audio_feedback_submitted_bytes = self.audio.stats.submitted_bytes -| self.audio.stats.retired_submitted_bytes;
                 self.audio_feedback_discarded_bytes = self.audio.stats.discarded_bytes -| self.audio.stats.retired_discarded_bytes;
                 self.audio_feedback_suppressed_bytes = self.audio.stats.suppressed_bytes;
+                self.audio_feedback_playback_base = (self.audio.stats.playback_frames orelse 0) -| self.audio.stats.retired_playback_frames;
+                self.audio_feedback_unconfirmed_base = self.audio.stats.unconfirmed_frames -| self.audio.stats.retired_unconfirmed_frames;
+                self.audio_feedback_playback_frames = if (self.audio.stats.playback_frames != null) 0 else null;
+                self.audio_feedback_unconfirmed_frames = 0;
                 self.guest_wake_ns = 0;
                 self.guest_waiting = false;
                 self.guest_idle_polling = false;
@@ -1081,7 +1232,6 @@ pub const Runtime = struct {
     pub fn cycle(self: *Runtime, host_tick: u64, guest: GuestDriver, host: HostDriver) CycleResult {
         if (!self.started) self.start(host_tick);
         self.audio.beginCycle();
-        self.audio.pollPending(host_tick);
         self.stats.cycles +%= 1;
         self.post_present_poll_pending = false;
         var guest_now_ns = self.clock.sync(host_tick);
@@ -1162,9 +1312,10 @@ pub const Runtime = struct {
             }
         }
 
-        // A ready frame is published before any potentially blocking audio
-        // service operation. Audio can therefore delay neither this frame nor
-        // host input handling in the current cycle.
+        // A ready frame is published before any audio service operation.
+        // Pending polls can also post the next bounded RPC in a continuous
+        // stream's discovery/flow/write chain. Poll only below presentation,
+        // then refill the source before choosing the next service operation.
         if (self.present_pending and self.state != .failed and self.state != .closed) {
             self.stats.present_attempts +%= 1;
             const presented = host.present();
@@ -1185,11 +1336,15 @@ pub const Runtime = struct {
             }
         }
 
+        // A completed progress request must release its owned I/O before
+        // producer refill. Otherwise frequent queries can keep an empty
+        // software queue from receiving already buffered source PCM.
+        self.audio.pollPending(host_tick);
         if (self.state == .running) {
             const audio_fill = self.audio.fill(guest, host_tick, guest_stepped);
             if (audio_fill < 0) self.fail(audio_fill);
         }
-        self.audio.pump(host_tick, self.state == .running);
+        self.audio.pumpReady(host_tick, self.state == .running);
         self.deliverAudioFeedback(guest);
 
         switch (self.state) {
@@ -1281,7 +1436,11 @@ pub const Runtime = struct {
             .disabled, .degraded, .closed => true,
             .ready, .active => false,
         });
-        if (!state_changed and accepted == 0 and suppressed == 0 and discarded == 0 and !unavailable_wait) return;
+        const playback_frames: ?u64 = if (self.audio.stats.playback_frames) |n| n -| self.audio.stats.retired_playback_frames -| self.audio_feedback_playback_base else null;
+        const unconfirmed_frames = self.audio.stats.unconfirmed_frames -| self.audio.stats.retired_unconfirmed_frames -| self.audio_feedback_unconfirmed_base;
+        const playback_changed = self.audio_feedback_playback_frames != playback_frames or
+            self.audio_feedback_unconfirmed_frames != unconfirmed_frames;
+        if (!state_changed and !playback_changed and accepted == 0 and suppressed == 0 and discarded == 0 and !unavailable_wait) return;
 
         self.audio_feedback_submitted_bytes = submitted;
         self.audio_feedback_suppressed_bytes = self.audio.stats.suppressed_bytes;
@@ -1289,13 +1448,21 @@ pub const Runtime = struct {
         self.audio_feedback_state = self.audio.state;
         self.audio_feedback_muted = self.audio.muted;
         self.audio_feedback_initialized = true;
+        self.audio_feedback_playback_frames = playback_frames;
+        self.audio_feedback_unconfirmed_frames = unconfirmed_frames;
         if (guest.audioFeedback(.{
             .state = self.audio.state,
             .muted = self.audio.muted,
             .accepted_bytes = accepted,
             .suppressed_bytes = suppressed,
             .discarded_bytes = discarded,
-            .playback_frames = null,
+            .playback_frames = playback_frames,
+            .backend_frames = self.audio.stats.backend_frames,
+            .dma_frames = self.audio.stats.dma_frames,
+            .unconfirmed_frames = unconfirmed_frames,
+            .queued_frames = self.audio.stats.queued_frames,
+            .queue_age_ns = self.audio.stats.queue_age_ns,
+            .source_starvations = self.audio.stats.source_starvations,
         })) {
             self.guest_wake_ns = 0;
             self.guest_waiting = false;
@@ -1308,6 +1475,8 @@ pub const Runtime = struct {
         var wait = self.config.max_wait_ticks;
         if (self.audio.close_pending and self.audio.pending_operation == null) wait = @min(wait, self.audio.close_retry_tick -| host_tick);
         if (self.audio.pending_operation != null) wait = @min(wait, self.audio.busy_retry_ticks);
+        if (self.audio.pending_operation == null and self.audio.progress_ready and self.audio.config.continuous)
+            wait = @min(wait, self.audio.progress_due_tick -| host_tick);
         if (self.state == .running) {
             if (self.guest_idle_polling) {
                 wait = @min(wait, self.config.idle_retry_ticks);
@@ -1335,7 +1504,11 @@ fn r4AudioOpen(context: *anyopaque, config: AudioConfig) i32 {
     const self: *R4AudioSink = @ptrCast(@alignCast(context));
     if (!self.audio.available()) return audio_error_unavailable;
     if (self.transport_owner == null) self.transport_owner = transport.Transport.create(self.audio.sys, self.timeout, self.close_timeout) orelse return audio_error_unavailable;
-    return self.owner().?.open(config.sample_rate, config.channels, config.volume);
+    const owner = self.owner().?;
+    owner.continuous = config.continuous;
+    owner.low_water_frames = config.low_water_frames;
+    owner.high_water_frames = config.high_water_frames;
+    return owner.open(config.sample_rate, config.channels, config.volume);
 }
 fn r4AudioWrite(context: *anyopaque, data: []const u8) i32 {
     const self: *R4AudioSink = @ptrCast(@alignCast(context));
@@ -1352,6 +1525,10 @@ fn r4AudioClose(context: *anyopaque) i32 {
 fn r4AudioPoll(context: *anyopaque) ?transport.Completion {
     const self: *R4AudioSink = @ptrCast(@alignCast(context));
     return (self.owner() orelse return null).poll();
+}
+fn r4AudioProgress(context: *anyopaque) i32 {
+    const self: *R4AudioSink = @ptrCast(@alignCast(context));
+    return (self.owner() orelse return abi.err_closed).progress();
 }
 fn r4AudioFinish(context: *anyopaque) transport.Finish {
     const self: *R4AudioSink = @ptrCast(@alignCast(context));
@@ -1388,6 +1565,57 @@ test "R4AudioSink separates interactive and draining close timeouts" {
 
     const compatible = R4AudioSink.initWithTimeout(app, 25 * std.time.ns_per_ms);
     try std.testing.expectEqual(compatible.timeout.nanoseconds, compatible.close_timeout.nanoseconds);
+}
+
+fn playbackTestSnapshot(consumed: u64, unconfirmed: u64) abi.AudioServiceStreamProgressState {
+    return .{ .service_epoch = 8, .stream_generation = 2, .progress = .{
+        .flags = abi.audio_progress_source_valid | abi.audio_progress_device_valid,
+        .stream_id = 7,
+        .stream_generation = 9,
+        .backend_generation = 10,
+        .output_generation = 3,
+        .reset_generation = 1,
+        .accepted_frames = 480,
+        .backend_frames = 480,
+        .submitted_frames = 480,
+        .consumed_frames = consumed,
+        .unconfirmed_frames = unconfirmed,
+        .queued_frames = 480 - consumed - unconfirmed,
+    } };
+}
+
+test "audio progress keeps consumed and reset-unconfirmed frames across stream generations" {
+    var pump = AudioPump{};
+    pump.applyProgress(playbackTestSnapshot(120, 0));
+    try std.testing.expectEqual(@as(?u64, 120), pump.stats.playback_frames);
+    var reset_record = playbackTestSnapshot(240, 240);
+    reset_record.progress.reset_generation = 2;
+    pump.applyProgress(reset_record);
+    try std.testing.expectEqual(@as(?u64, 240), pump.stats.playback_frames);
+    try std.testing.expectEqual(@as(u64, 240), pump.stats.unconfirmed_frames);
+    var next = playbackTestSnapshot(480, 0);
+    next.stream_generation = 3;
+    next.progress.stream_generation = 10;
+    pump.applyProgress(next);
+    try std.testing.expectEqual(@as(?u64, 720), pump.stats.playback_frames);
+    try std.testing.expectEqual(@as(u64, 960), pump.stats.dma_frames);
+    try std.testing.expectEqual(@as(u64, 240), pump.stats.unconfirmed_frames);
+}
+
+test "audio reset excludes a late old-stream cursor from the new guest epoch" {
+    var pump = AudioPump{};
+    pump.applyProgress(playbackTestSnapshot(120, 0));
+    const epoch_base: u64 = 120;
+    pump.reset(0);
+    pump.applyProgress(playbackTestSnapshot(480, 0));
+    try std.testing.expectEqual(@as(u64, 360), pump.stats.retired_playback_frames);
+    try std.testing.expectEqual(@as(u64, 0), pump.stats.playback_frames.? - pump.stats.retired_playback_frames - epoch_base);
+    pump.feedback_retire_current = false;
+    var next = playbackTestSnapshot(240, 0);
+    next.stream_generation = 3;
+    next.progress.stream_generation = 10;
+    pump.applyProgress(next);
+    try std.testing.expectEqual(@as(u64, 240), pump.stats.playback_frames.? - pump.stats.retired_playback_frames - epoch_base);
 }
 
 const FakeGuest = struct {
@@ -1586,6 +1814,9 @@ const DelayedSink = struct {
     copy: [app_audio.max_write_payload]u8 = undefined,
     finish_error: i32 = 0,
     auto_close: bool = true,
+    guarded_host: ?*FakeHost = null,
+    required_present: u32 = 0,
+    polled_before_host: bool = false,
 
     fn sink(self: *DelayedSink) AudioSink {
         return .{ .context = self, .open_fn = open, .write_fn = write, .volume_fn = volume, .close_fn = close, .poll_fn = poll, .finish_fn = finish };
@@ -1628,6 +1859,9 @@ const DelayedSink = struct {
     }
     fn poll(raw: *anyopaque) ?AudioCompletion {
         const self = from(raw);
+        if (self.guarded_host) |host| {
+            if (host.presents < self.required_present or host.handled_left != 0) self.polled_before_host = true;
+        }
         const value = self.receipt orelse return null;
         self.receipt = null;
         self.operation = null;
@@ -1640,6 +1874,108 @@ const DelayedSink = struct {
         return .{ .completion = poll(raw), .error_code = self.finish_error };
     }
 };
+
+test "audio continuation polling follows input and ready frame publication" {
+    var queue: [3840]u8 = undefined;
+    var scratch: [1920]u8 = undefined;
+    var sink = DelayedSink{};
+    var guest = FakeGuest{ .audio_byte = 0x55 };
+    var host = FakeHost{};
+    var runtime = try Runtime.init(.{}, 1000, 0, .{ .queue_storage = &queue, .scratch = &scratch, .sink = sink.sink() });
+    defer runtime.shutdown();
+    _ = runtime.cycle(0, guest.driver(), host.driver());
+    _ = runtime.cycle(1, guest.driver(), host.driver());
+    try std.testing.expectEqual(transport.Operation.write, runtime.audio.pending_operation.?);
+    sink.guarded_host = &host;
+    sink.required_present = host.presents + 1;
+    host.handled_left = 1;
+    runtime.present_pending = true;
+    _ = runtime.cycle(2, guest.driver(), host.driver());
+    try std.testing.expect(!sink.polled_before_host);
+    try std.testing.expectEqual(@as(u32, 1), sink.writes);
+    try std.testing.expectEqual(@as(u64, 0), runtime.audio.stats.submitted_bytes);
+}
+
+test "pause resume preserves late device consumption within the same guest epoch" {
+    var queue: [3840]u8 = undefined;
+    var scratch: [1920]u8 = undefined;
+    var sink = DelayedSink{};
+    var controlled = sink.sink();
+    controlled.progress_fn = struct {
+        fn busy(_: *anyopaque) i32 {
+            return abi.service_api_result_busy;
+        }
+    }.busy;
+    var guest = FakeGuest{ .audio_byte = 0x33 };
+    var host = FakeHost{};
+    var runtime = try Runtime.init(.{}, 1000, 0, .{ .config = .{ .continuous = true }, .queue_storage = &queue, .scratch = &scratch, .sink = controlled });
+    defer runtime.shutdown();
+    _ = runtime.cycle(0, guest.driver(), host.driver());
+    _ = runtime.cycle(1, guest.driver(), host.driver());
+    try std.testing.expectEqual(transport.Operation.write, runtime.audio.pending_operation.?);
+    runtime.request(.pause, 2, guest.driver());
+    sink.reply(1920);
+    sink.receipt.?.progress = playbackTestSnapshot(120, 0);
+    sink.auto_close = false;
+    _ = runtime.cycle(3, guest.driver(), host.driver());
+    try std.testing.expectEqual(transport.Operation.close, runtime.audio.pending_operation.?);
+    runtime.request(.resume_running, 4, guest.driver());
+    sink.reply(0);
+    sink.receipt.?.progress = playbackTestSnapshot(480, 0);
+    _ = runtime.cycle(5, guest.driver(), host.driver());
+    try std.testing.expectEqual(@as(u64, 0), runtime.audio.stats.retired_playback_frames);
+    try std.testing.expectEqual(@as(?u64, 480), runtime.audio_feedback_playback_frames);
+    try std.testing.expectEqual(@as(u64, 1920), runtime.audio.stats.discarded_bytes);
+    try std.testing.expectEqual(runtime.audio.stats.discarded_bytes, runtime.audio.stats.paused_bytes);
+}
+
+test "deferred mute discard excludes its genuinely accepted partial prefix" {
+    var queue: [3840]u8 = undefined;
+    var scratch: [1920]u8 = undefined;
+    var sink = DelayedSink{ .generation = 1 };
+    var pump = try AudioPump.init(.{ .queue_storage = &queue, .scratch = &scratch, .sink = sink.sink() }, 1000);
+    defer pump.close();
+    pump.start(0);
+    var pcm = [_]u8{0x33} ** 3840;
+    try std.testing.expectEqual(pcm.len, pump.queue.write(&pcm));
+    pump.state = .active;
+    pump.sink_open = true;
+    pump.sink_generation = 1;
+    _ = sink.sink().write_fn(&sink, pcm[0..1920]);
+    pump.beginPending(.write, 1920);
+    pump.setMuted(true, 1);
+    sink.reply(960);
+    pump.pollPending(2);
+    try std.testing.expectEqual(@as(u64, 960), pump.stats.submitted_bytes);
+    try std.testing.expectEqual(@as(u64, 2880), pump.stats.discarded_bytes);
+    try std.testing.expectEqual(pump.stats.discarded_bytes, pump.stats.muted_bytes);
+    try std.testing.expectEqual(@as(u64, 0), pump.stats.paused_bytes);
+}
+
+test "completed progress cannot starve buffered PCM while the guest waits" {
+    var queue: [3840]u8 = undefined;
+    var scratch: [1920]u8 = undefined;
+    var sink = DelayedSink{ .generation = 1 };
+    var guest = FakeGuest{ .audio_byte = 0x44 };
+    var host = FakeHost{};
+    var runtime = try Runtime.init(.{}, 1000, 0, .{ .config = .{ .continuous = true }, .queue_storage = &queue, .scratch = &scratch, .sink = sink.sink() });
+    defer runtime.shutdown();
+    runtime.start(0);
+    runtime.guest_waiting = true;
+    runtime.audio.state = .active;
+    runtime.audio.sink_open = true;
+    runtime.audio.sink_generation = 1;
+    runtime.audio.progress_ready = true;
+    runtime.audio.next_deadline_tick = 2;
+    _ = sink.post(.progress);
+    runtime.audio.beginPending(.progress, 0);
+    sink.reply(0);
+    sink.receipt.?.progress = playbackTestSnapshot(480, 0);
+    _ = runtime.cycle(2, guest.driver(), host.driver());
+    try std.testing.expectEqual(@as(u32, 0), guest.steps);
+    try std.testing.expectEqual(@as(u32, 1), sink.writes);
+    try std.testing.expectEqual(transport.Operation.write, runtime.audio.pending_operation.?);
+}
 
 test "pending audio permits real input guest and present phases with one bounded copied prefix" {
     var queue: [3840]u8 = undefined;

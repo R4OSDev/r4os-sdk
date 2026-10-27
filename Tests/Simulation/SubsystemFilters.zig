@@ -1,5 +1,9 @@
 //! Current original source tests and the concrete configuration boundary.
 pub const names: []const []const u8 = &.{
+    "continuous transport keeps copied PCM and one absolute budget through binding and flow",
+    "continuous transport expires its original budget before starting PCM",
+    "audio progress keeps consumed and reset-unconfirmed frames across stream generations",
+    "audio reset excludes a late old-stream cursor from the new guest epoch",
     "installed catalog projects complete sorted subsystem data deterministically",
     "resolver recognizes BASIC DOS and ROM fixtures without cross candidates",
     "resolver returns stable ambiguity and honors user then default association",

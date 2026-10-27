@@ -54278,6 +54278,29 @@
       "compiler_fingerprint": 2210870889783679946,
       "platform_contract_unchanged": "0.64.49",
       "reference": "Docs/Core/KernelRustAudio.txt#0.87.49"
+    },
+    "audio_progress_08753": {
+      "complete": true,
+      "scope": "Affected current Contract51/SDK101 source owners and generated C/Rust boundaries reviewed after actual Linux native interop. Per-stream progress152/service state200 and append-only R4AUDIO3/224; original200-byte prefix and all old payloads/constants retained.",
+      "sources": [
+        "Repositories/SDK/r4os/subsystem_audio_transport.zig",
+        "Repositories/SDK/r4os/subsystem_runtime.zig",
+        "Repositories/SDK/r4os/driver.zig",
+        "Repositories/SDK/Tests/Simulation/SubsystemParity.c",
+        "Repositories/SDK/Tests/Simulation/SubsystemFilters.zig"
+      ],
+      "checks": [
+        "Contract complete Zig/C/Rust host and bare layouts/callbacks plus26 mutation cases passed.",
+        "56 existing/extended SDK subsystem owner cases passed: exact retirement/original chained budget/partial consumption/late-reset exclusion/input-ready-video precedence. Pause/resume first rejected360 hidden frames; completed progress first rejected0 instead of1 buffered Write; full/partial accepted prefixes first overcounted3840 paused/muted instead of1920/2880 actual discard. Each now passes after preserving same-guest progress, retiring before refill and carrying the first discard reason until the real receipt. Original drop/ownership/status/deadline invariants retained. Compiler-owned C/Rust projection refreshed for the private discard reason; opaque pump size remains856.",
+        "Contract51 corrects only new operation output/ownership metadata; emitted Zig/C/Rust bindings are byte-identical to qualified50. Current51 Contract26-mutation/layout/callback gate passed. Unchanged Driver/Platform owners reuse the actual101 host interop receipts; subsystem interop reran on the final Runtime implementation.",
+        "Original C/Rust Driver67 core plus3 unsafe/ownership negatives passed.",
+        "Original C/Rust Audio/Device/PCM/Power and visual cases4 plus misuse negatives passed.",
+        "Original C/Rust subsystem cores plus5 unsafe/ownership negatives passed. Existing synthetic AudioConfig uses unchanged discrete behavior with explicit new defaults.",
+        "update_bridge_names delegates its schema-owned naming function: one file/module owner; generated update boundary remains byte-identical.",
+        "Prior49 async file and shared callback/helper owner changes are included in the actual current subsystem C/Rust proof. Unchanged unrelated bounded evidence retained.",
+        "Source drift guard excludes transient .git/.zig-cache/zig-out/zig-pkg/target paths; canonical Generated sources remain covered."
+      ],
+      "limits": "These are Linux host/cross-language and Contract bare-layout receipts. Actual R4OS guest, OssiPC audio/display, Windows, physical speaker and performance qualification remain separate roadmap53 requirements. No automatic test/PASS follows from the source hash review."
     }
   },
   "wave_bindings": [
@@ -54530,17 +54553,17 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.87.43",
-    "sdk": "0.64.99",
-    "contract": "0.64.49",
+    "performed_in": "0.87.53",
+    "sdk": "0.64.101",
+    "contract": "0.64.51",
     "libraries": "0.64.34",
-    "evidence": "directory_batch_08743",
-    "scope": "Targeted directory batch boundary, real C owner/generated Rust facade and typed Rust/Zig helpers reviewed. Source inventories remain dated snapshots. Existing unaffected capabilities/providers retained; no general package or external consumer repinning."
+    "evidence": "audio_progress_08753",
+    "scope": "Affected audio/driver/subsystem implementation, generated C/Rust projection and original native interop reviewed. Dated source inventories and unaffected capabilities remain unchanged; R4OS/native hardware qualification is separate."
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.87.43",
+    "reviewed_in": "0.87.53",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -54596,23 +54619,23 @@
     "files": [
       {
         "path": "Repositories/Contract/API/ApiContract.baseline.json",
-        "sha256": "af07baec448cd6f2fd5be84c895c2b3bd14f3da65590c4b967854fe7f76bd5bd"
+        "sha256": "7d3976c4735be1ed5ca2524e8e889e4849cfe6bfb1adcbdf0a3d9ddebc9fb4ac"
       },
       {
         "path": "Repositories/Contract/API/ApiContract.json",
-        "sha256": "af07baec448cd6f2fd5be84c895c2b3bd14f3da65590c4b967854fe7f76bd5bd"
+        "sha256": "7d3976c4735be1ed5ca2524e8e889e4849cfe6bfb1adcbdf0a3d9ddebc9fb4ac"
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/API.json",
-        "sha256": "723c7f6facb77bcda377fc19867759dc5669295da1515e0cdda6c5a262d16c99"
+        "sha256": "fab5a6180eb5f29df106f3bce5d5dbc854c74d9af8e8bb9bde12fb11bbd881a9"
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/RustABI.json",
-        "sha256": "d0f941a5175fe56e066630e31610071f49a9ada7a0177b74b61d314755bf4bf3"
+        "sha256": "1ae9477d35f7550cbc2c7c4b5db2bcd3b9c43443e636f306adad62e172a41fc5"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_generated.h",
-        "sha256": "31264fbced36434293b2a071798f8e189b0a0482d9abcd85d86544b7f6a9a910"
+        "sha256": "eaa5ac5322022081328154de835a1a80ec4e6d8b101a31a92a31b88fe26f8d71"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_technical_generated.h",
@@ -54624,19 +54647,19 @@
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Rust/src/lib.rs",
-        "sha256": "ae12d9b7308c2dc6854a99e658116de272020b806dc6641a83d5fa40f337f0f3"
+        "sha256": "b10437cd0ab33d279a7fe9833d216650236c8e2c61f1e0e00483eb8bddc0a4fa"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi.zig",
-        "sha256": "6ba977a9b2b7ec539170e49c6fd6faf6154c9ff8a35da220c2c473afe4c6457d"
+        "sha256": "6011b8b2202aadaac3f86a5a7c153f24017e1c803ca367c63a77ed2f4a0b159f"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_exports.zig",
-        "sha256": "a16172fa2efaafd9b54713f129485ec43c102f63fe2f2010f2adb7a69567738a"
+        "sha256": "acf93dbe85abadde6815eea64091f4a306c8d7610e945903e7fd781eca2028ee"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_generated.zig",
-        "sha256": "0278a5b7b5d9861116b58a1ad993c5395a80193c8bc2147bfe46d49ce65d3130"
+        "sha256": "513878d6f5bc0975c940c157b263e5e79c11552d94e441009e0445d4d68fa862"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/package.zig",
@@ -54660,7 +54683,7 @@
       },
       {
         "path": "Repositories/Contract/Tools/ApiContractGen/src/main.zig",
-        "sha256": "321ab2149752ce82de57b73ef156c22e2e947c5bb3eac5995271bd93a37fef40"
+        "sha256": "80db4b331135ffe07e13801f16f19a4e1248428d0732695ac5e779f7c1f3855d"
       },
       {
         "path": "Repositories/Libraries/R4ACO/Bindings/C/r4aco.h",
@@ -55668,7 +55691,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "f0ee5299a7e4eb9655193ab89039c567799625455a0b9ffa5af6c3e3613ab149"
+        "sha256": "afaf732c2075e208a09f5da908d622f587539b77b5d7933501510836814c83cf"
       },
       {
         "path": "Repositories/SDK/Rust/src/data/hash.rs",
@@ -55980,7 +56003,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/driver_helpers.h",
-        "sha256": "32dabc377402391bb8314885282d0c2387aca8e2c95228ae6be9f989a1e6ee83"
+        "sha256": "9b125a0f897198024f055948516b89ff44e1da85a1765d22e2a58c89f5fe70bb"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/driver_lifecycle.h",
@@ -56020,7 +56043,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/gui_bridge.h",
-        "sha256": "ae90acfedcc161a60b6a1761d98f47f6a28f40e6dc936f42cf4cffbfe9670ebc"
+        "sha256": "52f333f2f4871ee76c1b6b282ad5c7f84998ca46a92039e2c1de3d2b048ef5ee"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/heap.h",
@@ -56108,7 +56131,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/subsystem_helpers.h",
-        "sha256": "6151abe6cb71386dde33483b206792d1aa0b8fe20a8dcbc06935111d5912fd4f"
+        "sha256": "48ac977ff6ebfe18dc571f32b4c1a74049114074fc768267649bb70697211985"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/transport_helpers.h",
@@ -56264,7 +56287,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/Test-LanguageParity.ps1",
-        "sha256": "c90d3814f3825df0dd62af66e362949078e13c9f169412c0e40de1f33e7471c0"
+        "sha256": "8e196f16141af88a4a5dab3a430660fedb9f508edf9c015ec6ec4b61a0930d78"
       },
       {
         "path": "Repositories/SDK/Tools/Test-ProjectTemplates.ps1",
@@ -56336,11 +56359,11 @@
       },
       {
         "path": "Repositories/SDK/build.zig",
-        "sha256": "373b7f98e7032e38faad661dfff520f5f5998b776672c0753005f0151923a320"
+        "sha256": "71290cc6ed9af862be758372bbceaa17c1fca1f2c40c7c4b640d218a46bda7cd"
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "47bbcf6cb60da740f60a24031eb85a2301308a5a0dea049641c7b3740c8f9a08"
+        "sha256": "bc16f69397a84a216b4d6b63a0dc5ad0aea41e13c2f1b3fee0e7be8f2fb6babe"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -56476,7 +56499,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/driver.zig",
-        "sha256": "7d1ccccb2c99426f31ae390a9b041eff2ee1301e51adf9c68b0396d4dfe9e5b3"
+        "sha256": "c6bedca3fd903c51639c521e0b5ce7a7f7682dcf8e4fb7091811a38ae6270cd7"
       },
       {
         "path": "Repositories/SDK/r4os/driver_bridge_names.zig",
@@ -56552,11 +56575,11 @@
       },
       {
         "path": "Repositories/SDK/r4os/generated/driver_fingerprint.zig",
-        "sha256": "ccfb2189d8f73adccba874e00eef9fccc0be65ceaa5a497c60879816ef4a0662"
+        "sha256": "a7d3e1d678ebc27757a21e47eba2d0631c93bb666e354c76876a21cebf42618d"
       },
       {
         "path": "Repositories/SDK/r4os/generated/gui_fingerprint.zig",
-        "sha256": "da79d442f1f6d4e327398ebcfb413ef45426b405ed3f0363c744b38f30ad5863"
+        "sha256": "c002d28af0dc8851737dbd3622074683a3fd51fa78691627e87e2353755adb68"
       },
       {
         "path": "Repositories/SDK/r4os/generated/net_facade.zig",
@@ -56564,7 +56587,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/generated/subsystem_fingerprint.zig",
-        "sha256": "23c082073ebd7645b9034d7c1028a6c420d111420167bcc1f479d745621338f5"
+        "sha256": "cf6339af7fa29f4646215abd9fd22e981555f78a1518886f4182fe4c42e097a8"
       },
       {
         "path": "Repositories/SDK/r4os/generated/transport_fingerprint.zig",
@@ -56756,7 +56779,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/program.zig",
-        "sha256": "d9640dd25f3a23b9980bd74cfae50faf88b51d10735d9a338a65c5bd13ee739b"
+        "sha256": "9ce0d3ba4ba8c1bb3625c1e9dae327f2578864a57d31680f31dd321c49d5b73b"
       },
       {
         "path": "Repositories/SDK/r4os/protocol.zig",
@@ -56764,7 +56787,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/r4audio.zig",
-        "sha256": "498c972889b6fa825d16d9fa658e2f4032c9680f7cdeea32a72dd5dfffdf237d"
+        "sha256": "4dba929a7ec6c1f8361e11a0d55076b0fffe37775257292086deafcfbd88aee2"
       },
       {
         "path": "Repositories/SDK/r4os/r4cp.zig",
@@ -56780,7 +56803,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/r4dev.zig",
-        "sha256": "0f32372741de485da7ddb7392084a8c1e78f74fcc8875a6a964ad84b339d7659"
+        "sha256": "089f60082ea47f74be82e4ad0760a08a02f6e2df4e6e8a2e09d0e4a6531bbeff"
       },
       {
         "path": "Repositories/SDK/r4os/r4draw.zig",
@@ -56808,7 +56831,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/r4xstart.zig",
-        "sha256": "f2ea1854ede87cb32a4a9997c8f31584495948f97d2d00533c164b1b7e461672"
+        "sha256": "dfb0f7f7d8f4ce9e18b7656c93d89dbe708ab96dd9f6e1d88712e51418b883a8"
       },
       {
         "path": "Repositories/SDK/r4os/raster.zig",
@@ -56975,6 +56998,10 @@
         "sha256": "154d7ec78f8ea3a232561b9f9c08a94510bec3c8b553c46ffb0ea9fc6b7d9f97"
       },
       {
+        "path": "Repositories/SDK/r4os/subsystem_audio_transport.zig",
+        "sha256": "260b9497ef2ed51c1fa0052f4532ae32e655709cd0c26b8f4f84c93a0201888e"
+      },
+      {
         "path": "Repositories/SDK/r4os/subsystem_bridge_names.zig",
         "sha256": "e0bbec5222522d12d07aca4b9f6e3c31543fbe96bc46db518465da27080d5326"
       },
@@ -56984,7 +57011,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/subsystem_callback_bridge.zig",
-        "sha256": "c583c935351741e67483382d2248fd7fc827914aebe322513b9489d42f53c5ca"
+        "sha256": "4a2862a7b8b2bc4c9756e1abacd4258e17bb0b3cb9c179e9211d29a87f07ea99"
       },
       {
         "path": "Repositories/SDK/r4os/subsystem_catalog.zig",
@@ -56992,11 +57019,11 @@
       },
       {
         "path": "Repositories/SDK/r4os/subsystem_helper_adapters.zig",
-        "sha256": "812773ee1f90982615692f83ed61aee85b5d4d8786dfecf49d4c381608caa1a1"
+        "sha256": "5eab9aae95330a11d6ff2e0b645d0272b400fd8793379b5a31087e31aa3e8b5a"
       },
       {
         "path": "Repositories/SDK/r4os/subsystem_helper_owners.zig",
-        "sha256": "ecde8978c3eaff0ddc68525fbb61f816efea90ec9678b4f2a6f00d48475b1960"
+        "sha256": "34082465f07bb158571bd5020cd359a6ae4e35d45073b17920a78bd45b9fd5cf"
       },
       {
         "path": "Repositories/SDK/r4os/subsystem_host.zig",
@@ -57012,7 +57039,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/subsystem_runtime.zig",
-        "sha256": "d87b7d3a0dee2cee16c21f9c126287e62f72a680a609c25e2b399ce9ca8b40d2"
+        "sha256": "6107d7f60a4c05bab29d9a1e63190e3f60d5476111c9c82c1a417796eec0135d"
       },
       {
         "path": "Repositories/SDK/r4os/subsystem_value_bridge.zig",
@@ -57068,7 +57095,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/update_bridge_names.zig",
-        "sha256": "ee82cba9a878aced4bd430d2779fcb293f8112ea1d622612b8928c3bec2fb527"
+        "sha256": "bc9e945a2a0b5bc63b49c84124984112138839294e789bc43d22221e5785ae3e"
       },
       {
         "path": "Repositories/SDK/r4os/update_bridge_schema.zig",
@@ -57250,7 +57277,8 @@
           "current_kernel_records_80",
           "gui_activity_08735",
           "drive_geometry_08742",
-          "directory_batch_08743"
+          "directory_batch_08743",
+          "audio_progress_08753"
         ]
       },
       {
@@ -57535,7 +57563,8 @@
         ],
         "proof": [
           "platform_current_58",
-          "service_audio_admission_86"
+          "service_audio_admission_86",
+          "audio_progress_08753"
         ]
       },
       {
@@ -57697,7 +57726,8 @@
         "proof": [
           "subsystems_current_65",
           "current_kernel_records_80",
-          "desktop_entry_inputs_86"
+          "desktop_entry_inputs_86",
+          "audio_progress_08753"
         ]
       },
       {
@@ -57732,7 +57762,8 @@
           "Repositories/SDK/Rust/src/driver.rs"
         ],
         "proof": [
-          "drivers_current_67"
+          "drivers_current_67",
+          "audio_progress_08753"
         ]
       },
       {

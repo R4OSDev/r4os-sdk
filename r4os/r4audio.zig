@@ -46,6 +46,18 @@ pub const Context = struct {
         return self.base.audioClose(stream_id);
     }
 
+    pub fn audioStreamProgress(self: *const Context, stream_id: u32, generation: u64, out: *abi.AudioStreamProgress) i32 {
+        return self.base.audioStreamProgress(stream_id, generation, out);
+    }
+
+    pub fn audioSetStreamExpectation(self: *const Context, stream_id: u32, input: *const abi.AudioStreamExpectation) i32 {
+        return self.base.audioSetStreamExpectation(stream_id, input);
+    }
+
+    pub fn audioCloseStreamProgress(self: *const Context, stream_id: u32, generation: u64, out: *abi.AudioStreamProgress) i32 {
+        return self.base.audioCloseStreamProgress(stream_id, generation, out);
+    }
+
     pub fn audioSetVolume(self: *const Context, stream_id: u32, fixed_volume: u32) i32 {
         return self.base.audioSetVolume(stream_id, fixed_volume);
     }

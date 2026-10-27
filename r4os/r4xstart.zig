@@ -189,8 +189,8 @@ comptime {
     if (@sizeOf(abi.R4XStartR4Net) < abi.r4xstart_r4net_size) {
         @compileError("R4XStartR4Net ABI minimum size mismatch");
     }
-    if (@sizeOf(abi.R4XStartR4Audio) != abi.r4xstart_r4audio_size) {
-        @compileError("R4XStartR4Audio ABI size mismatch");
+    if (@sizeOf(abi.R4XStartR4Audio) < abi.r4xstart_r4audio_size) {
+        @compileError("R4XStartR4Audio ABI minimum size mismatch");
     }
     if (@sizeOf(abi.R4XStartR4Dev) < abi.r4xstart_r4dev_size) {
         @compileError("R4XStartR4Dev ABI minimum size mismatch");

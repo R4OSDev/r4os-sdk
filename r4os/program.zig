@@ -2925,6 +2925,21 @@ pub const Context = struct {
         return table_fn(stream_id);
     }
 
+    pub fn audioStreamProgress(self: *const Context, stream_id: u32, generation: u64, out: *abi.AudioStreamProgress) i32 {
+        const callback = self.audioFn("audio_stream_progress") orelse return self.unavailable("audio");
+        return callback(stream_id, generation, out);
+    }
+
+    pub fn audioSetStreamExpectation(self: *const Context, stream_id: u32, input: *const abi.AudioStreamExpectation) i32 {
+        const callback = self.audioFn("audio_set_stream_expectation") orelse return self.unavailable("audio");
+        return callback(stream_id, input);
+    }
+
+    pub fn audioCloseStreamProgress(self: *const Context, stream_id: u32, generation: u64, out: *abi.AudioStreamProgress) i32 {
+        const callback = self.audioFn("audio_close_stream_progress") orelse return self.unavailable("audio");
+        return callback(stream_id, generation, out);
+    }
+
     pub fn audioSetVolume(self: *const Context, stream_id: u32, fixed_volume: u32) i32 {
         const table_fn = self.audioFn("audio_set_volume") orelse return self.unavailable("audio");
         return table_fn(stream_id, fixed_volume);

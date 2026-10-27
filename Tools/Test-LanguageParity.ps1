@@ -36,8 +36,12 @@ function Expand-References($References) {
         $item = Get-Item -LiteralPath $path
         if ($item.PSIsContainer) {
             foreach ($file in Get-ChildItem -LiteralPath $path -File -Recurse) {
+                # Host/package caches contain generated dependency source, not
+                # canonical owner files. Keep persistent Generated/ boundaries.
+                $relative = [IO.Path]::GetRelativePath($path, $file.FullName).Replace('\', '/')
+                if (@($relative.Split('/') | Where-Object { $_ -cin @('.git', '.zig-cache', 'zig-out', 'zig-pkg', 'target') }).Count -ne 0) { continue }
                 if ($file.Extension -cin @('.zig', '.rs', '.c', '.h', '.json', '.ps1', '.toml')) {
-                    $reference.TrimEnd('/') + '/' + [IO.Path]::GetRelativePath($path, $file.FullName).Replace('\', '/')
+                    $reference.TrimEnd('/') + '/' + $relative
                 }
             }
         } else { $reference }

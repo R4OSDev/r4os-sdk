@@ -25,6 +25,7 @@ pub const DriverSemaphoreContext = @import("driver_semaphores.zig").Context;
 pub const SharedDmaBuffer = driver.SharedDmaBuffer;
 pub const AudioOutputBackend = driver.AudioOutputBackend;
 pub const AudioOutputIdleBackend = driver.AudioOutputIdleBackend;
+pub const AudioOutputPlaybackBackend = driver.AudioOutputPlaybackBackend;
 pub const ProtocolContext = protocol.Context;
 pub const r4d_shutdown_entry_offset = driver.r4d_shutdown_entry_offset;
 pub const r4p_shutdown_entry_offset = protocol.r4p_shutdown_entry_offset;

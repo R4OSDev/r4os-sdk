@@ -169,7 +169,7 @@ int sdk65_c_audio(uint64_t *out) {
     R4SdkSubsystemRuntimeGuestDriver guest;R4SdkSubsystemRuntimeHostDriver host;R4SdkSubsystemRuntimeAudioSink sink;
     NEED(OK(R4SdkSubsystem_guestDriver(0,&t,&guest)),2);NEED(OK(R4SdkSubsystem_hostDriver(0,&t,&host)),3);NEED(OK(R4SdkSubsystem_audioSink(0,&t,&sink)),4);
     R4SdkSubsystemRuntimeAudioConfig audio_config;R4SdkSubsystemRuntimeAudioOptions options;uint8_t queue[16],scratch[8];
-    NEED(OK(R4SdkSubsystemRuntimeAudioConfig_from_fields(&audio_config,1000,1,65536,4,2,2,10000000)),5);
+    NEED(OK(R4SdkSubsystemRuntimeAudioConfig_from_fields(&audio_config,1000,1,65536,4,2,2,10000000,0,960,1920)),5);
     NEED(OK(R4SdkSubsystemRuntimeAudioOptions_from_fields(&options,&audio_config,queue,sizeof(queue),scratch,sizeof(scratch),(S){.ptr=&sink,.flags=P})),6);
     R4SdkSubsystemRuntimeConfig config;R4SdkSubsystemRuntimeRuntime rt;R4SdkSubsystemRuntimeCycleResult cycle;
     NEED(OK(R4SdkSubsystemRuntimeConfig_from_fields(&config,4,4,8,1)),7);

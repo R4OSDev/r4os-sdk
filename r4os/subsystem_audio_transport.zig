@@ -8,9 +8,10 @@ const r4sys = @import("r4sys.zig");
 const time = @import("time_contract.zig");
 
 pub const pending: i32 = -9603;
-pub const Operation = enum { open, write, volume, close, fence };
-pub const Completion = struct { operation: Operation, request_id: u32, generation: u64, result: i32 };
-pub const Finish = struct { completion: ?Completion = null, error_code: i32 = 0, control_requests: u32 = 0 };
+pub const Operation = enum { open, write, volume, close, fence, progress };
+pub const Completion = struct { operation: Operation, request_id: u32, generation: u64, result: i32, requests: u16 = 1, progress: ?abi.AudioServiceStreamProgressState = null };
+pub const Finish = struct { completion: ?Completion = null, error_code: i32 = 0, control_requests: u32 = 0, progress: ?abi.AudioServiceStreamProgressState = null };
+const Stage = enum { ordinary, discover, configure, tracked, key };
 
 pub const Transport = struct {
     sys: r4sys.Context,
@@ -22,6 +23,24 @@ pub const Transport = struct {
     generation: u64 = 0,
     request_id: u32 = 0,
     operation: Operation = .open,
+    stage: Stage = .ordinary,
+    continuous: bool = false,
+    low_water_frames: u32 = 960,
+    high_water_frames: u32 = 1920,
+    sample_rate: u32 = 48000,
+    service_epoch: u64 = 0,
+    stream_generation: u64 = 0,
+    flow_configured: bool = false,
+    source_start_ns: u64 = 0,
+    accepted_source_frames: u64 = 0,
+    source_due_ns: u64 = 0,
+    chain_requests: u16 = 0,
+    chain_started: u64 = 0,
+    chain_budget: u64 = 0,
+    control_key: abi.AudioServiceStreamProgressRequest = .{},
+    control_flow: abi.AudioServiceStreamFlowRequest = .{},
+    progress_response: abi.AudioServiceStreamProgressState = .{},
+    latest_progress: ?abi.AudioServiceStreamProgressState = null,
     request_generation: u64 = 0,
     payload: [abi.service_api_max_payload]u8 = undefined,
     header: abi.ServiceMessageHeader = .{},
@@ -51,6 +70,15 @@ pub const Transport = struct {
         }
         self.generation += 1;
         self.frame_bytes = @as(usize, channels) * 2;
+        self.sample_rate = rate;
+        self.service_epoch = 0;
+        self.stream_generation = 0;
+        self.flow_configured = false;
+        self.source_start_ns = 0;
+        self.accepted_source_frames = 0;
+        self.latest_progress = null;
+        self.stage = .ordinary;
+        self.chain_requests = 0;
         const request = abi.AudioServiceStreamOpenRequest{ .rate = rate, .channels = channels, .format = @intFromEnum(audio.PcmFormat.s16le), .fixed_volume = fixed };
         @memcpy(self.payload[0..@sizeOf(@TypeOf(request))], std.mem.asBytes(&request));
         const rc = self.submit(.open, @sizeOf(@TypeOf(request)), self.timeout);
@@ -62,8 +90,22 @@ pub const Transport = struct {
         if (self.request_id != 0) return abi.service_api_result_busy;
         if (self.stream_id == 0) return abi.err_closed;
         if (self.frame_bytes == 0 or bytes.len == 0 or bytes.len % self.frame_bytes != 0) return abi.service_api_result_invalid;
-        const limit = @min(bytes.len, audio.max_write_payload);
+        const header_size: usize = if (self.continuous) @sizeOf(abi.AudioServiceStreamTrackedWriteRequest) else @sizeOf(abi.AudioServiceStreamWriteRequest);
+        const limit = @min(bytes.len, abi.service_api_max_payload - header_size);
         self.copied_bytes = limit - limit % self.frame_bytes;
+        self.chain_requests = 0;
+        if (self.continuous) {
+            self.stage = if (self.stream_generation == 0) .discover else if (!self.flow_configured) .configure else .tracked;
+            if (self.source_start_ns == 0) self.source_start_ns = self.sys.monotonicNanoseconds() orelse return abi.service_api_result_invalid;
+            const end = std.math.add(u64, self.accepted_source_frames, self.copied_bytes / self.frame_bytes) catch return abi.service_api_result_invalid;
+            const duration = (@as(u128, end) * std.time.ns_per_s + self.sample_rate - 1) / self.sample_rate;
+            self.source_due_ns = std.math.add(u64, self.source_start_ns, std.math.cast(u64, duration) orelse return abi.service_api_result_invalid) catch return abi.service_api_result_invalid;
+            self.prepareTrackedHeader();
+            @memcpy(self.payload[header_size..][0..self.copied_bytes], bytes[0..self.copied_bytes]);
+            self.prepareControl();
+            return self.submit(.write, header_size + self.copied_bytes, self.timeout);
+        }
+        self.stage = .ordinary;
         const request = abi.AudioServiceStreamWriteRequest{ .stream_id = self.stream_id, .byte_count = @intCast(self.copied_bytes) };
         const header_bytes = @sizeOf(@TypeOf(request));
         @memcpy(self.payload[0..header_bytes], std.mem.asBytes(&request));
@@ -74,6 +116,8 @@ pub const Transport = struct {
     pub fn volume(self: *Transport, fixed: u32) i32 {
         if (self.request_id != 0) return abi.service_api_result_busy;
         if (self.stream_id == 0) return abi.err_closed;
+        self.stage = .ordinary;
+        self.chain_requests = 0;
         const request = abi.AudioServiceStreamControlRequest{ .stream_id = self.stream_id, .fixed_volume = fixed };
         @memcpy(self.payload[0..@sizeOf(@TypeOf(request))], std.mem.asBytes(&request));
         return self.submit(.volume, @sizeOf(@TypeOf(request)), self.timeout);
@@ -85,9 +129,16 @@ pub const Transport = struct {
 
     fn closeWithTimeout(self: *Transport, budget: time.Timeout) i32 {
         if (self.request_id != 0) return abi.service_api_result_busy;
+        self.chain_requests = 0;
+        self.stage = .ordinary;
         if (self.stream_id == 0) {
             if (self.uncertain_open) return self.submit(.fence, 0, budget);
             return 0;
+        }
+        if (self.continuous and self.stream_generation != 0) {
+            self.stage = .key;
+            self.prepareControl();
+            return self.submit(.close, 0, budget);
         }
         const request = abi.AudioServiceStreamControlRequest{ .stream_id = self.stream_id };
         @memcpy(self.payload[0..@sizeOf(@TypeOf(request))], std.mem.asBytes(&request));
@@ -97,18 +148,30 @@ pub const Transport = struct {
     fn submit(self: *Transport, operation: Operation, len: usize, timeout: time.Timeout) i32 {
         if (self.request_id != 0) return abi.service_api_result_busy;
         const connection = &(self.connection orelse return abi.err_closed);
-        const budget = time.timeoutToTicks(timeout, self.sys.monotonicHz()) catch return abi.service_api_result_invalid;
+        if (self.chain_requests == 0) {
+            self.chain_budget = time.timeoutToTicks(timeout, self.sys.monotonicHz()) catch return abi.service_api_result_invalid;
+            self.chain_started = self.sys.ticks();
+        }
+        const budget = if (self.chain_budget == abi.io_wait_forever) self.chain_budget else self.chain_budget -| (self.sys.ticks() -| self.chain_started);
+        if (budget == 0) return abi.service_api_result_timeout;
         self.operation = operation;
         self.request_generation = self.generation;
         self.header = .{};
         self.response = .{};
         self.status = .{};
-        const response = if (operation == .fence) std.mem.asBytes(&self.status) else std.mem.asBytes(&self.response);
-        const rc = self.sys.ioServiceCall(connection.raw, wireOp(operation), self.payload[0..len], &self.header, response, budget, 0, &self.request_id);
+        self.progress_response = .{};
+        const response = if (operation == .fence) std.mem.asBytes(&self.status) else if (self.stage != .ordinary) std.mem.asBytes(&self.progress_response) else std.mem.asBytes(&self.response);
+        const request = switch (self.stage) {
+            .discover, .key => std.mem.asBytes(&self.control_key),
+            .configure => std.mem.asBytes(&self.control_flow),
+            .ordinary, .tracked => self.payload[0..len],
+        };
+        const rc = self.sys.ioServiceCall(connection.raw, self.activeWireOp(operation), request, &self.header, response, budget, 0, &self.request_id);
         if (rc != abi.io_ok) {
             self.request_id = 0;
             return rc;
         }
+        self.chain_requests +|= 1;
         return pending;
     }
 
@@ -126,20 +189,29 @@ pub const Transport = struct {
         if (closed != abi.io_ok and closed != abi.io_error_not_found) return null;
         const id = self.request_id;
         self.request_id = 0;
-        const result = if (rc != abi.io_ok) rc else if (info.request_id != id or info.kind != abi.io_kind_service_call or self.request_generation != self.generation)
+        var result = if (rc != abi.io_ok) rc else if (info.request_id != id or info.kind != abi.io_kind_service_call or self.request_generation != self.generation)
             abi.service_api_result_invalid
         else if (info.state != abi.io_state_completed and info.result >= 0) abi.service_api_result_invalid else if (info.result < 0) info.result else self.decode(info.result);
-        return .{ .operation = if (self.operation == .fence) .close else self.operation, .request_id = id, .generation = self.request_generation, .result = result };
+        if (result == 0 and self.operation == .write and (self.stage == .discover or self.stage == .configure)) {
+            self.stage = if (self.stage == .discover) .configure else .tracked;
+            self.prepareTrackedHeader();
+            self.prepareControl();
+            const next = self.submit(.write, @sizeOf(abi.AudioServiceStreamTrackedWriteRequest) + self.copied_bytes, self.timeout);
+            if (next == pending) return null;
+            result = next;
+        }
+        return .{ .operation = if (self.operation == .fence) .close else self.operation, .request_id = id, .generation = self.request_generation, .result = result, .requests = self.chain_requests, .progress = self.latest_progress };
     }
 
     fn decode(self: *Transport, bytes: i32) i32 {
-        if (self.header.magic != abi.service_api_magic or self.header.version != abi.service_api_version or self.header.op != wireOp(self.operation) or self.header.request_id == 0) return abi.service_api_result_invalid;
+        if (self.header.magic != abi.service_api_magic or self.header.version != abi.service_api_version or self.header.op != self.activeWireOp(self.operation) or self.header.request_id == 0) return abi.service_api_result_invalid;
         if (self.header.status != abi.service_api_result_ok) return if (self.header.status < 0) self.header.status else abi.service_api_result_invalid;
         if (self.operation == .fence) {
             if (bytes != @sizeOf(abi.AudioServiceStatus) or self.status.magic != abi.audio_service_status_magic or self.status.version != abi.audio_service_status_version) return abi.service_api_result_invalid;
             self.uncertain_open = false;
             return 0;
         }
+        if (self.stage != .ordinary) return self.decodeProgress(bytes);
         if (bytes != @sizeOf(abi.AudioServiceStreamResult) or self.response.magic != abi.audio_service_result_magic or self.response.version != abi.audio_service_result_version or self.response.action != wireOp(self.operation)) return abi.service_api_result_invalid;
         if (self.response.result < 0) return self.response.result;
         if (self.operation == .open) {
@@ -166,6 +238,70 @@ pub const Transport = struct {
             _ = self.sys.ioWait(self.request_id, abi.io_wait_forever, &info);
             if (self.request_id != 0) self.sys.sleepTicks(1);
         }
+    }
+
+    fn activeWireOp(self: *const Transport, operation: Operation) u16 {
+        return switch (self.stage) {
+            .discover => abi.audio_service_op_stream_progress,
+            .configure => abi.audio_service_op_stream_expectation,
+            .tracked => abi.audio_service_op_write_stream_tracked,
+            .key => if (operation == .close) abi.audio_service_op_close_stream_progress else abi.audio_service_op_stream_progress,
+            .ordinary => wireOp(operation),
+        };
+    }
+
+    fn prepareTrackedHeader(self: *Transport) void {
+        const request = abi.AudioServiceStreamTrackedWriteRequest{ .stream_id = self.stream_id, .byte_count = @intCast(self.copied_bytes), .service_epoch = self.service_epoch, .stream_generation = self.stream_generation, .source_due_ns = self.source_due_ns };
+        @memcpy(self.payload[0..@sizeOf(@TypeOf(request))], std.mem.asBytes(&request));
+    }
+
+    fn prepareControl(self: *Transport) void {
+        self.control_key = .{ .stream_id = self.stream_id, .service_epoch = self.service_epoch, .stream_generation = self.stream_generation };
+        self.control_flow = .{ .stream = self.control_key, .expectation = .{ .flags = abi.audio_flow_continuous, .source_due_ns = self.source_due_ns, .low_water_frames = self.low_water_frames, .high_water_frames = self.high_water_frames } };
+    }
+
+    pub fn progress(self: *Transport) i32 {
+        if (self.request_id != 0) return abi.service_api_result_busy;
+        if (!self.continuous or self.stream_id == 0 or self.stream_generation == 0 or !self.flow_configured) return abi.err_closed;
+        self.stage = .key;
+        self.chain_requests = 0;
+        self.prepareControl();
+        return self.submit(.progress, 0, self.timeout);
+    }
+
+    fn decodeProgress(self: *Transport, bytes: i32) i32 {
+        const r = &self.progress_response;
+        const expected = abi.AudioServiceStreamProgressState{};
+        if (bytes != @sizeOf(@TypeOf(expected)) or r.magic != expected.magic or r.version != expected.version or r.size != @sizeOf(@TypeOf(expected)) or r.stream_id != self.stream_id) return abi.service_api_result_invalid;
+        if (r.result < 0) {
+            if (self.operation == .close and r.result == abi.service_api_result_not_found) {
+                self.stream_id = 0;
+                self.stream_generation = 0;
+                return 0;
+            }
+            return r.result;
+        }
+        if (r.service_epoch == 0 or r.stream_generation == 0) return abi.service_api_result_invalid;
+        if (self.stage == .discover) {
+            self.service_epoch = r.service_epoch;
+            self.stream_generation = r.stream_generation;
+        } else if (r.service_epoch != self.service_epoch or r.stream_generation != self.stream_generation) return abi.service_api_result_invalid;
+        if (r.progress.version != 1 or r.progress.size != @sizeOf(abi.AudioStreamProgress) or r.progress.reserved0 != 0 or r.progress.reserved1 != 0) return abi.service_api_result_invalid;
+        self.latest_progress = r.*;
+        if (self.stage == .configure) self.flow_configured = true;
+        if (self.stage == .tracked) {
+            const accepted = std.math.cast(usize, r.result) orelse return abi.service_api_result_invalid;
+            if (accepted == 0 or accepted > self.copied_bytes or accepted % self.frame_bytes != 0) return abi.service_api_result_invalid;
+            self.accepted_source_frames = std.math.add(u64, self.accepted_source_frames, accepted / self.frame_bytes) catch return abi.service_api_result_invalid;
+            return r.result;
+        }
+        if (r.result != 0) return abi.service_api_result_invalid;
+        if (self.operation == .close) {
+            self.stream_id = 0;
+            self.stream_generation = 0;
+            self.flow_configured = false;
+        }
+        return 0;
     }
 
     /// Terminal shutdown only. The original finite RPC budget and an unlimited
@@ -201,6 +337,7 @@ pub const Transport = struct {
             if (closed != 0 and closed != abi.err_closed and result.error_code == 0) result.error_code = if (closed < 0) closed else abi.service_api_result_invalid;
         }
         const allocator = self.sys.allocator();
+        result.progress = self.latest_progress;
         allocator.destroy(self);
         return result;
     }
@@ -213,6 +350,7 @@ fn wireOp(operation: Operation) u16 {
         .volume => abi.audio_service_op_set_stream_volume,
         .close => abi.audio_service_op_close_stream,
         .fence => abi.audio_service_op_status,
+        .progress => abi.audio_service_op_stream_progress,
     };
 }
 
@@ -231,6 +369,8 @@ const Probe = struct {
     var header: *abi.ServiceMessageHeader = undefined;
     var response: [*]u8 = undefined;
     var operation: u16 = 0;
+    var now_ticks: u64 = 0;
+    var submitted_budget: u64 = 0;
     fn context() r4sys.Context {
         table = .{};
         raw = .{};
@@ -240,6 +380,9 @@ const Probe = struct {
         close_busy = false;
         status_busy = false;
         closes = 0;
+        now_ticks = 0;
+        submitted_budget = 0;
+        table.ticks = @intFromPtr(&ticks);
         table.monotonic_clock = @intFromPtr(&clock);
         table.io_service_call = @intFromPtr(&submit);
         table.io_status = @intFromPtr(&status);
@@ -251,13 +394,18 @@ const Probe = struct {
         out.* = .{ .event_effective_hz = 1000 };
         return 1;
     }
-    fn submit(handle: u32, op: u16, _: [*]const u8, _: u32, h: *abi.ServiceMessageHeader, bytes: [*]u8, _: u32, _: u64, _: u32, id: *u32) callconv(.c) i32 {
+    fn ticks() callconv(.c) u64 {
+        return now_ticks;
+    }
+    fn submit(handle: u32, op: u16, _: [*]const u8, _: u32, h: *abi.ServiceMessageHeader, bytes: [*]u8, _: u32, budget: u64, _: u32, id: *u32) callconv(.c) i32 {
         std.debug.assert(handle == 11);
         next_id += 1;
         id.* = next_id;
         header = h;
         response = bytes;
         operation = op;
+        submitted_budget = budget;
+        state = abi.io_state_running;
         return 0;
     }
     fn status(id: u32, out: *abi.ProgramIoInfo) callconv(.c) i32 {
@@ -273,6 +421,13 @@ const Probe = struct {
         header.* = .{ .op = operation, .request_id = 91 };
         const value = abi.AudioServiceStreamResult{ .action = operation, .stream_id = stream_id, .result = @intCast(accepted), .bytes = accepted };
         @memcpy(response[0..@sizeOf(@TypeOf(value))], std.mem.asBytes(&value));
+        state = abi.io_state_completed;
+    }
+    fn progressReply(code: i32) void {
+        header.* = .{ .op = operation, .request_id = 93 };
+        const value = abi.AudioServiceStreamProgressState{ .stream_id = 77, .service_epoch = 8, .stream_generation = 10, .result = code };
+        @memcpy(response[0..@sizeOf(@TypeOf(value))], std.mem.asBytes(&value));
+        result = @sizeOf(@TypeOf(value));
         state = abi.io_state_completed;
     }
     fn stream() Transport {
@@ -337,4 +492,59 @@ test "timed out actual Open is fenced on its original endpoint before reusing th
     try std.testing.expectEqual(Operation.close, receipt.operation);
     try std.testing.expectEqual(@as(i32, 0), receipt.result);
     try std.testing.expect(!owner.uncertain_open and owner.stream_id == 0 and owner.request_id == 0);
+}
+
+test "continuous transport keeps copied PCM and one absolute budget through binding and flow" {
+    var owner = Probe.stream();
+    owner.continuous = true;
+    owner.source_start_ns = 1_000_000_000;
+    var input = [_]u8{0x42} ** 1920;
+    try std.testing.expectEqual(pending, owner.write(&input));
+    const due = owner.source_due_ns;
+    @memset(&input, 0);
+    try std.testing.expectEqual(abi.audio_service_op_stream_progress, Probe.operation);
+    Probe.progressReply(0);
+    Probe.close_busy = true;
+    try std.testing.expect(owner.poll() == null and owner.stream_generation == 0);
+    Probe.close_busy = false;
+    Probe.now_ticks = 20;
+    try std.testing.expect(owner.poll() == null);
+    try std.testing.expectEqual(abi.audio_service_op_stream_expectation, Probe.operation);
+    try std.testing.expectEqual(@as(u64, 180), Probe.submitted_budget);
+    try std.testing.expectEqual(due, owner.control_flow.expectation.source_due_ns);
+    Probe.progressReply(0);
+    Probe.now_ticks = 50;
+    try std.testing.expect(owner.poll() == null);
+    try std.testing.expectEqual(abi.audio_service_op_write_stream_tracked, Probe.operation);
+    try std.testing.expectEqual(@as(u64, 150), Probe.submitted_budget);
+    const offset = @sizeOf(abi.AudioServiceStreamTrackedWriteRequest);
+    for (owner.payload[offset..][0..1920]) |byte| try std.testing.expectEqual(@as(u8, 0x42), byte);
+    Probe.progressReply(960);
+    const completed = owner.poll().?;
+    try std.testing.expectEqual(@as(i32, 960), completed.result);
+    try std.testing.expectEqual(@as(u16, 3), completed.requests);
+    try std.testing.expectEqual(@as(u64, 240), owner.accepted_source_frames);
+    try std.testing.expect(owner.request_id == 0);
+    try std.testing.expectEqual(pending, owner.write(input[0..960]));
+    try std.testing.expectEqual(due, owner.source_due_ns); // Same original remainder deadline.
+    Probe.progressReply(960);
+    try std.testing.expectEqual(@as(i32, 960), owner.poll().?.result);
+}
+
+test "continuous transport expires its original budget before starting PCM" {
+    var owner = Probe.stream();
+    owner.continuous = true;
+    owner.source_start_ns = 1_000_000_000;
+    const input = [_]u8{0x42} ** 1920;
+    try std.testing.expectEqual(pending, owner.write(&input));
+    Probe.progressReply(0);
+    Probe.now_ticks = 100;
+    try std.testing.expect(owner.poll() == null);
+    Probe.progressReply(0);
+    Probe.now_ticks = 201;
+    const completed = owner.poll().?;
+    try std.testing.expectEqual(abi.service_api_result_timeout, completed.result);
+    try std.testing.expectEqual(@as(u16, 2), completed.requests);
+    try std.testing.expectEqual(abi.audio_service_op_stream_expectation, Probe.operation);
+    try std.testing.expect(owner.request_id == 0 and owner.accepted_source_frames == 0);
 }

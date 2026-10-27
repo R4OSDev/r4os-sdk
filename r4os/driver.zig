@@ -58,11 +58,24 @@ pub const AudioOutputIdleBackend = extern struct {
     idle: ?*const fn (?*anyopaque) callconv(.c) i32 = null,
 };
 
+/// Version5 keeps the complete idle prefix. Tagged acceptance and cursor
+/// snapshots share one physical epoch, so reset cannot reattribute old PCM.
+pub const AudioOutputPlaybackBackend = extern struct {
+    base: AudioOutputIdleBackend,
+    write_tracked: ?*const fn (?*anyopaque, [*]const u8, u32, u32, u16, u16, *abi.AudioBackendWriteReceipt) callconv(.c) i32 = null,
+    playback: ?*const fn (?*anyopaque, *abi.AudioBackendPlayback) callconv(.c) i32 = null,
+    flow: ?*const fn (?*anyopaque, *const abi.AudioBackendFlow) callconv(.c) i32 = null,
+};
+
 comptime {
     if (@sizeOf(abi.AudioBackend) != 72 or @offsetOf(AudioOutputBackend, "outputs") != 72 or @sizeOf(AudioOutputBackend) != 96)
         @compileError("audio output backend prefix drift");
     if (@offsetOf(AudioOutputIdleBackend, "idle") != 96 or @sizeOf(AudioOutputIdleBackend) != 104)
         @compileError("audio idle backend prefix drift");
+    if (@offsetOf(AudioOutputPlaybackBackend, "write_tracked") != 104 or
+        @offsetOf(AudioOutputPlaybackBackend, "playback") != 112 or
+        @offsetOf(AudioOutputPlaybackBackend, "flow") != 120 or @sizeOf(AudioOutputPlaybackBackend) != 128)
+        @compileError("audio playback backend prefix drift");
 }
 
 pub const r4d_shutdown_entry_offset: u32 = 5;
@@ -213,6 +226,10 @@ pub const Context = struct {
     }
 
     pub fn registerAudioOutputIdle(self: *const Context, name: [*:0]const u8, backend: *const AudioOutputIdleBackend) i32 {
+        return self.api.register_audio_output_backend(name, backend);
+    }
+
+    pub fn registerAudioOutputPlayback(self: *const Context, name: [*:0]const u8, backend: *const AudioOutputPlaybackBackend) i32 {
         return self.api.register_audio_output_backend(name, backend);
     }
 

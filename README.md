@@ -206,11 +206,41 @@ Pause, mute, reset and shutdown still release it, and resume/unmute schedule
 a fresh refill even if the guest remains waiting. Pending video is published
 before audio work, and each host cycle performs at
 most one open, write, or close service operation. Optional source-frame
-feedback distinguishes accepted, suppressed, and discarded PCM while leaving
-hardware playback explicitly unknown.
+feedback distinguishes accepted, suppressed, and discarded PCM. Continuous
+sources can additionally query generation-bound device progress; unknown
+device evidence remains explicitly unconfirmed.
 Runnable slices with completed operations yield cooperatively; a progress
 result with zero operations and no deadline waits one bounded host tick so an
 idle guest cannot turn into an active scheduler scan loop.
+
+SDK0.64.101 adds continuous source deadlines and per-stream progress through
+AUDSVC15 and R4AUDIO3/224. The original200-byte ABI prefix and minimum
+version2 are retained. Progress distinguishes accepted source bytes, canonical
+backend frames, actual DMA frames, consumed frames and unconfirmed frames;
+canonical units are48kHz/stereo/S16. Service, logical-stream, kernel-stream,
+backend, output and reset identities prevent reuse of an old cursor. A device
+reset retires only its known prefix; remaining accepted data is unconfirmed.
+Queue age uses the oldest outstanding source timestamp. Continuous sources
+declare a fixed source deadline and explicit end; polling/retries never renew
+the deadline. Discrete silence suppression remains available, while continuous
+zero PCM advances its clock through the real sink.
+
+The native subsystem audio transport still owns one copied PCM prefix and one
+IO request at a time. Initial discovery, flow configuration and tracked write
+form a bounded chain under the original absolute request budget; each request
+is retired before the next starts. All continuation polling follows host input
+and any ready frame publication. SNES29 uses20/40ms low/high watermarks across
+the complete pipeline. Device-consumed frames are not a physical speaker
+receipt, and missing device support must never be reported as played audio.
+
+Pause/resume retains the same guest epoch: late Close consumption still
+retires its outstanding PCM. Guest reset or a new capture epoch excludes the
+old source instead. The current owner cases distinguish these paths explicitly
+and preserve exact asynchronous retirement through the final Close reply.
+Pause/mute byte counters include only PCM actually discarded after the owned
+write receipt. A full or partial accepted prefix is credited once and cannot
+also appear as intentionally discarded data; its deferred discard reason
+survives a concurrent resume/reset until that receipt is retired.
 Input policies can preserve the default physical-key-plus-text/pointer model
 or select one printable text event with pointer filtering before mapping.
 Stable raw-event sequences and ticks, filter counters, and an ignored-without-
