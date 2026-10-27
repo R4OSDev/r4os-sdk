@@ -54315,6 +54315,23 @@
         "Current original native C/Rust subsystem cores and5 actual unsafe/ownership negatives pass. Unchanged Driver/Platform/Data/Web owners retain their previous actual source-matching evidence."
       ],
       "limits": "Linux host/language proof only. Actual KVM/OssiPC and physical limits remain separate roadmap54 requirements; no hardware or general performance claim from source hashes."
+    },
+    "bounded_work_08755": {
+      "complete": true,
+      "scope": "Contract52 DriverApi38 normal Work flag/result constants; unchanged664-byte table, all498slots/380payloads and SDK C/Rust facade bodies. SDK103 pins exact published e9b162c1a6bd8b286585daebb3bb642b7943df47.",
+      "sources": [
+        "Repositories/Contract/API/ApiContract.json",
+        "Repositories/Contract/Generated/SDK/Zig/abi.zig",
+        "Repositories/Contract/Generated/SDK/C/include/r4os/abi_generated.h",
+        "Repositories/Contract/Generated/SDK/Rust/src/lib.rs"
+      ],
+      "checks": [
+        "Controlled canonical baseline,26 generator negative mutations and current check pass.",
+        "All current host/bare Rust layouts, Clippy and7real typed C/Zig/Rust callback interops pass; layouts and every prior constant except explicit semantic37-to38 version retain their values.",
+        "SDK C/Rust device/driver wrapper and projection sources have no changes; same typed u32 flag/i32 result boundary, no new facade function, field, callback or ownership conversion. Matching previous facade evidence remains applicable.",
+        "Explicit GUI fixture13 offers elapsed-host-call maxima only when C:\\TEMP\\SUBSYS.TIMING is deliberately installed. Default callbacks have no extra clock reads or successful-run diagnostic writes; failure-only context remains. Original100ms RPC/500ms close budgets and all PCM/lifecycle assertions stay unchanged. A local build selector compiles this existing fixture alone. No common runtime, C/Rust facade body or ABI projection change; one previous timeout remains observed, not declared noise or an isolated regression."
+      ],
+      "limits": "Language/ABI review only; kernel continuation scheduling and actual native HDA qualification are separate55 gates. No runtime or physical performance claim from these hashes."
     }
   },
   "wave_bindings": [
@@ -54567,17 +54584,17 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.87.54",
-    "sdk": "0.64.102",
-    "contract": "0.64.51",
+    "performed_in": "0.87.55",
+    "sdk": "0.64.103",
+    "contract": "0.64.52",
     "libraries": "0.64.34",
-    "evidence": "audio_silence_08754",
-    "scope": "Shared audio pump active-zero behavior; current57 owner cases and original C/Rust cores reviewed, private/public layouts unchanged. Real native hardware qualification remains separate."
+    "evidence": "bounded_work_08755",
+    "scope": "Canonical DriverApi38 continuation constants/current C-Rust-Zig ABI reviewed; unchanged facade bodies retain matching evidence. Native/runtime55 proof remains separate."
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.87.54",
+    "reviewed_in": "0.87.55",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -54633,11 +54650,11 @@
     "files": [
       {
         "path": "Repositories/Contract/API/ApiContract.baseline.json",
-        "sha256": "7d3976c4735be1ed5ca2524e8e889e4849cfe6bfb1adcbdf0a3d9ddebc9fb4ac"
+        "sha256": "b278bc92aac7630ef5b585e08e573511e889478fa269fb60dd6c76a8881f1718"
       },
       {
         "path": "Repositories/Contract/API/ApiContract.json",
-        "sha256": "7d3976c4735be1ed5ca2524e8e889e4849cfe6bfb1adcbdf0a3d9ddebc9fb4ac"
+        "sha256": "b278bc92aac7630ef5b585e08e573511e889478fa269fb60dd6c76a8881f1718"
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/API.json",
@@ -54645,11 +54662,11 @@
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/RustABI.json",
-        "sha256": "1ae9477d35f7550cbc2c7c4b5db2bcd3b9c43443e636f306adad62e172a41fc5"
+        "sha256": "1aa8ef8e6e0ff43370c8c9859c5c97b539593ec563ee6d2e2f85890ee1bcb176"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_generated.h",
-        "sha256": "eaa5ac5322022081328154de835a1a80ec4e6d8b101a31a92a31b88fe26f8d71"
+        "sha256": "accdc898f42b2735d905fae79f3d8dc26b70903554a54aab5d0a68bde669b71b"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_technical_generated.h",
@@ -54661,19 +54678,19 @@
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Rust/src/lib.rs",
-        "sha256": "b10437cd0ab33d279a7fe9833d216650236c8e2c61f1e0e00483eb8bddc0a4fa"
+        "sha256": "55e9fee567bd77a1de6fb8fc2bd4aa012496090c92350478d7b70a058136f301"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi.zig",
-        "sha256": "6011b8b2202aadaac3f86a5a7c153f24017e1c803ca367c63a77ed2f4a0b159f"
+        "sha256": "15ade85d1c2bda91683e5e3f71de89d9aaaecbca15804961537c4e9ecf04a8f5"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_exports.zig",
-        "sha256": "acf93dbe85abadde6815eea64091f4a306c8d7610e945903e7fd781eca2028ee"
+        "sha256": "e2286dba7c58ce37f8658df7c351f2b53bcc52b3a247f7abfd81f4adefa456dd"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_generated.zig",
-        "sha256": "513878d6f5bc0975c940c157b263e5e79c11552d94e441009e0445d4d68fa862"
+        "sha256": "88553138a860c609cc7c4a0a1625cb4e7da7c67c598e2be933eeb094076f3a24"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/package.zig",
@@ -56373,11 +56390,11 @@
       },
       {
         "path": "Repositories/SDK/build.zig",
-        "sha256": "71290cc6ed9af862be758372bbceaa17c1fca1f2c40c7c4b640d218a46bda7cd"
+        "sha256": "371ad04958d7959e99902306a01341cdcecf34ab9999351e205b8dbc658afcde"
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "828268717a44416f3f26e2deee1b054f313475f2995e124e02745f2c90f44987"
+        "sha256": "4e5b700a35e4cb66849829d0220abea1c79deab30ac1960d902dba2b1c4d6096"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -57292,7 +57309,8 @@
           "gui_activity_08735",
           "drive_geometry_08742",
           "directory_batch_08743",
-          "audio_progress_08753"
+          "audio_progress_08753",
+          "bounded_work_08755"
         ]
       },
       {
@@ -57353,7 +57371,8 @@
           "tooling_templates_current_70",
           "independent_desktop_current_71",
           "desktop_entry_inputs_86",
-          "desktop_owner_build_86"
+          "desktop_owner_build_86",
+          "bounded_work_08755"
         ]
       },
       {
@@ -57605,7 +57624,8 @@
         "proof": [
           "platform_current_58",
           "current_contract_78",
-          "current_kernel_records_80"
+          "current_kernel_records_80",
+          "bounded_work_08755"
         ]
       },
       {
@@ -57743,7 +57763,8 @@
           "current_kernel_records_80",
           "desktop_entry_inputs_86",
           "audio_progress_08753",
-          "audio_silence_08754"
+          "audio_silence_08754",
+          "bounded_work_08755"
         ]
       },
       {
@@ -57779,7 +57800,8 @@
         ],
         "proof": [
           "drivers_current_67",
-          "audio_progress_08753"
+          "audio_progress_08753",
+          "bounded_work_08755"
         ]
       },
       {
@@ -57810,7 +57832,8 @@
           "Repositories/SDK/Rust/src/lowlevel.rs"
         ],
         "proof": [
-          "lowlevel_current_69"
+          "lowlevel_current_69",
+          "bounded_work_08755"
         ]
       },
       {

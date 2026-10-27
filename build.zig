@@ -80,6 +80,10 @@ pub fn build(b: *std.Build) void {
         return;
     }
 
+    if (b.option(bool, "subsystem-host-fixture-only", "Build only the existing GUI subsystem lifecycle/audio fixture") orelse false) {
+        _ = sdk_profile.addR4MF(b.path("Tests/Build/SubsystemManifest/module.R4MF"));
+        return;
+    }
     if (b.option(bool, "subsystem-guest-fixtures-only", "Build only canonical Zig/C synthetic subsystem consumers") orelse false) {
         _ = sdk_profile.addR4MF(b.path("Tests/Build/CSubsystem/module.R4MF"));
         _ = sdk_profile.addR4MF(b.path("Tests/Build/ZigSubsystem/module.R4MF"));

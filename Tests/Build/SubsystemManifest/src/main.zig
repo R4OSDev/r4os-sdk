@@ -244,6 +244,7 @@ const RuntimeGuest = struct {
 };
 
 const RuntimeSelfTestHost = struct {
+    sys: *r4os.r4sys.Context,
     host: *host_api.Host,
     guest: *RuntimeGuest,
     runtime: *runtime_api.Runtime,
@@ -258,6 +259,9 @@ const RuntimeSelfTestHost = struct {
     muted_writes: u64 = 0,
     muted_idle_closes: u64 = 0,
     muted_was_active: bool = false,
+    timing_enabled: bool = false,
+    max_poll_ticks: u64 = 0,
+    max_present_ticks: u64 = 0,
 
     fn driver(self: *RuntimeSelfTestHost) runtime_api.HostDriver {
         return .{
@@ -274,6 +278,9 @@ const RuntimeSelfTestHost = struct {
 };
 
 fn runRuntimeSelfTest(sys: *r4os.r4sys.Context, host: *host_api.Host, audio: ?r4os.Audio, exit_mode: RuntimeExitMode, variant: u8) i32 {
+    // An explicit private diagnostic marker enables timing. The normal
+    // original workload performs no additional clock calls in host callbacks.
+    const timing_enabled = sys.exists("C:\\TEMP\\SUBSYS.TIMING");
     host.video.setSurface(makeSurface(.qbasic_640x350) catch return runtimeSelfTestFail(sys, "surface", 110)) catch return runtimeSelfTestFail(sys, "mode", 111);
     paintPattern(&host.video.surface, .qbasic_640x350, true, variant);
     host.video.invalidateAll();
@@ -301,6 +308,8 @@ fn runRuntimeSelfTest(sys: *r4os.r4sys.Context, host: *host_api.Host, audio: ?r4
     }) catch return runtimeSelfTestFail(sys, "runtime-init", 112);
     var guest = RuntimeGuest.init(host, exit_mode, variant) orelse return runtimeSelfTestFail(sys, "guest-init", 113);
     var runtime_host = RuntimeSelfTestHost{
+        .sys = sys,
+        .timing_enabled = timing_enabled,
         .host = host,
         .guest = &guest,
         .runtime = &runtime,
@@ -308,6 +317,16 @@ fn runRuntimeSelfTest(sys: *r4os.r4sys.Context, host: *host_api.Host, audio: ?r4
     };
 
     const result = runtime.run(sys, guest.driver(), runtime_host.driver());
+    // One post-close diagnostic record from this explicit fixture. These are
+    // elapsed host-call spans, not CPU time; producer deadlines stay unchanged.
+    if (timing_enabled or runtime.audio.last_error != 0) {
+        var timing: [280]u8 = undefined;
+        const timing_text = std.fmt.bufPrint(&timing, "enabled={} poll_ticks={d} present_ticks={d} hz={d} audio_error={d} close_error={d} generated={d} submitted={d}\n", .{
+            timing_enabled, runtime_host.max_poll_ticks, runtime_host.max_present_ticks, sys.monotonicHz(), runtime.audio.last_error, runtime.audio.close_error, runtime.audio.stats.generated_bytes, runtime.audio.stats.submitted_bytes,
+        }) catch return runtimeSelfTestFail(sys, "timing-format", 123);
+        if (sys.fileWrite(if (variant == 1) "C:\\TEMP\\SUBSYS-A.TIMES" else "C:\\TEMP\\SUBSYS-B.TIMES", timing_text) != @as(i32, @intCast(timing_text.len)))
+            return runtimeSelfTestFail(sys, "timing-report", 123);
+    }
     if (result != 0) return runtimeSelfTestFail(sys, "runtime-exit", 114);
     const expected_state: runtime_api.LifecycleState = if (exit_mode == .guest_completion) .completed else .closed;
     if (runtime.state != expected_state) return runtimeSelfTestFail(sys, switch (runtime_host.phase) {
@@ -325,9 +344,9 @@ fn runRuntimeSelfTest(sys: *r4os.r4sys.Context, host: *host_api.Host, audio: ?r4
     if (runtime.stats.slices < 6) return runtimeSelfTestFail(sys, "time-pacing-slices", 119);
     if (runtime.stats.sleeps == 0) return runtimeSelfTestFail(sys, "time-pacing-sleeps", 119);
     if (runtime.clock.guest_ns == 0) return runtimeSelfTestFail(sys, "time-pacing-clock", 119);
-    if (runtime.audio.last_error != 0) return runtimeAudioSelfTestFail(sys, &runtime, "audio-close");
-    if (runtime.audio.stats.generated_bytes == 0) return runtimeAudioSelfTestFail(sys, &runtime, "audio-generate");
-    if (runtime.audio.stats.submitted_bytes == 0) return runtimeAudioSelfTestFail(sys, &runtime, "audio-submit");
+    if (runtime.audio.last_error != 0) return runtimeAudioSelfTestFail(sys, &runtime, &runtime_host, "audio-close");
+    if (runtime.audio.stats.generated_bytes == 0) return runtimeAudioSelfTestFail(sys, &runtime, &runtime_host, "audio-generate");
+    if (runtime.audio.stats.submitted_bytes == 0) return runtimeAudioSelfTestFail(sys, &runtime, &runtime_host, "audio-submit");
     if (runtime.audio.stats.muted_bytes == 0 or runtime.audio.muted or runtime.audio.stats.idle_closes == 0) return runtimeSelfTestFail(sys, "audio-idle", 121);
     if (runtime.stats.presents < 4 or runtime_host.phase == .warming or runtime_host.phase == .paused or runtime_host.phase == .resumed or runtime_host.phase == .reset or runtime_host.phase == .muted) return runtimeSelfTestFail(sys, "host-progress", 122);
 
@@ -390,6 +409,10 @@ fn runtimeGuestAudio(context: *anyopaque, out: []u8) i32 {
 
 fn runtimeHostPoll(context: *anyopaque) runtime_api.HostPollResult {
     const self: *RuntimeSelfTestHost = @ptrCast(@alignCast(context));
+    const started = if (self.timing_enabled) self.sys.ticks() else 0;
+    defer if (self.timing_enabled) {
+        self.max_poll_ticks = @max(self.max_poll_ticks, self.sys.ticks() -| started);
+    };
     if (self.host.pollInput()) |event| return runtimeHostInput(self, event);
     if (self.idle_after_command) {
         self.idle_after_command = false;
@@ -514,6 +537,10 @@ fn runtimeHostInput(self: *RuntimeSelfTestHost, event: host_api.InputEvent) runt
 
 fn runtimeHostPresent(context: *anyopaque) i32 {
     const self: *RuntimeSelfTestHost = @ptrCast(@alignCast(context));
+    const started = if (self.timing_enabled) self.sys.ticks() else 0;
+    defer if (self.timing_enabled) {
+        self.max_present_ticks = @max(self.max_present_ticks, self.sys.ticks() -| started);
+    };
     return switch (self.host.present()) {
         .failure => |raw| raw,
         .presented => 1,
@@ -528,13 +555,14 @@ fn runtimeSelfTestFail(sys: *r4os.r4sys.Context, reason: []const u8, code: i32) 
     return code;
 }
 
-fn runtimeAudioSelfTestFail(sys: *r4os.r4sys.Context, runtime: *const runtime_api.Runtime, reason: []const u8) i32 {
+fn runtimeAudioSelfTestFail(sys: *r4os.r4sys.Context, runtime: *const runtime_api.Runtime, host: *const RuntimeSelfTestHost, reason: []const u8) i32 {
     // Failure-only context distinguishes a real sink refusal from absent
     // guest production/submission. Work, timeouts and assertions are unchanged.
-    var buffer: [120]u8 = undefined;
-    const text = std.fmt.bufPrint(&buffer, "{s} raw={d} generated={d} submitted={d} idle_closes={d}", .{
+    var buffer: [280]u8 = undefined;
+    const text = std.fmt.bufPrint(&buffer, "{s} raw={d} generated={d} submitted={d} idle_closes={d} poll_ticks={d} present_ticks={d} hz={d} close={d}", .{
         reason,                              runtime.audio.last_error,        runtime.audio.stats.generated_bytes,
-        runtime.audio.stats.submitted_bytes, runtime.audio.stats.idle_closes,
+        runtime.audio.stats.submitted_bytes, runtime.audio.stats.idle_closes, host.max_poll_ticks,
+        host.max_present_ticks,              sys.monotonicHz(),               runtime.audio.close_error,
     }) catch reason;
     return runtimeSelfTestFail(sys, text, 120);
 }
