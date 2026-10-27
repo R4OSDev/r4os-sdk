@@ -54301,6 +54301,20 @@
         "Source drift guard excludes transient .git/.zig-cache/zig-out/zig-pkg/target paths; canonical Generated sources remain covered."
       ],
       "limits": "These are Linux host/cross-language and Contract bare-layout receipts. Actual R4OS guest, OssiPC audio/display, Windows, physical speaker and performance qualification remain separate roadmap53 requirements. No automatic test/PASS follows from the source hash review."
+    },
+    "audio_silence_08754": {
+      "complete": true,
+      "scope": "Current SDK102 active null PCM under same source/request ownership; compiler projections unchanged.",
+      "sources": [
+        "Repositories/SDK/r4os/subsystem_runtime.zig"
+      ],
+      "checks": [
+        "57 SDK owner cases pass; old signal/null/signal first failed55/56 with Close1 instead0. Active zero PCM now retains stream/timing; initial discrete suppression retained.",
+        "Pending zero write keeps owned bytes until actual960accepted/960pause-discarded receipt, then one real Close; no premature reuse.",
+        "Fresh54 compiler-typed subsystem and C/Rust facade layouts remain byte-identical; no ABI/API/default/opaque size change. Old zig-out generator check rejected before projection edits; current explicit54 generator passes.",
+        "Current original native C/Rust subsystem cores and5 actual unsafe/ownership negatives pass. Unchanged Driver/Platform/Data/Web owners retain their previous actual source-matching evidence."
+      ],
+      "limits": "Linux host/language proof only. Actual KVM/OssiPC and physical limits remain separate roadmap54 requirements; no hardware or general performance claim from source hashes."
     }
   },
   "wave_bindings": [
@@ -54553,17 +54567,17 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.87.53",
-    "sdk": "0.64.101",
+    "performed_in": "0.87.54",
+    "sdk": "0.64.102",
     "contract": "0.64.51",
     "libraries": "0.64.34",
-    "evidence": "audio_progress_08753",
-    "scope": "Affected audio/driver/subsystem implementation, generated C/Rust projection and original native interop reviewed. Dated source inventories and unaffected capabilities remain unchanged; R4OS/native hardware qualification is separate."
+    "evidence": "audio_silence_08754",
+    "scope": "Shared audio pump active-zero behavior; current57 owner cases and original C/Rust cores reviewed, private/public layouts unchanged. Real native hardware qualification remains separate."
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.87.53",
+    "reviewed_in": "0.87.54",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -56363,7 +56377,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "bc16f69397a84a216b4d6b63a0dc5ad0aea41e13c2f1b3fee0e7be8f2fb6babe"
+        "sha256": "828268717a44416f3f26e2deee1b054f313475f2995e124e02745f2c90f44987"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -57039,7 +57053,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/subsystem_runtime.zig",
-        "sha256": "6107d7f60a4c05bab29d9a1e63190e3f60d5476111c9c82c1a417796eec0135d"
+        "sha256": "b10401effa33bc6347040de2df5c5d36e1c8148edd6302b3d8b0a67d6c5a226c"
       },
       {
         "path": "Repositories/SDK/r4os/subsystem_value_bridge.zig",
@@ -57564,7 +57578,8 @@
         "proof": [
           "platform_current_58",
           "service_audio_admission_86",
-          "audio_progress_08753"
+          "audio_progress_08753",
+          "audio_silence_08754"
         ]
       },
       {
@@ -57727,7 +57742,8 @@
           "subsystems_current_65",
           "current_kernel_records_80",
           "desktop_entry_inputs_86",
-          "audio_progress_08753"
+          "audio_progress_08753",
+          "audio_silence_08754"
         ]
       },
       {

@@ -738,7 +738,10 @@ pub const AudioPump = struct {
             self.next_deadline_tick = if (self.state == .active) now +| self.quantum_ticks else 0;
             return;
         }
-        if (!self.config.continuous and isZeroPcm(self.scratch[0..copied])) {
+        // Only an unmaterialized discrete source may omit initial silence.
+        // Null PCM in an active stream still occupies its exact timeline;
+        // producer pause/stop/idle, not sample values, owns Close.
+        if (!self.config.continuous and !self.sink_open and isZeroPcm(self.scratch[0..copied])) {
             _ = self.queue.discard(copied);
             self.stats.silence_bytes +%= copied;
             self.stats.suppressed_bytes +%= copied;
@@ -749,7 +752,6 @@ pub const AudioPump = struct {
             self.next_deadline_tick = now +| @max(@as(u64, 1), duration);
             self.resync_prefill_quanta = 0;
             self.open_retry_attempts = 0;
-            if (self.sink_open) self.closeSink(true);
             if (self.state != .degraded) self.state = .ready;
             return;
         }
@@ -812,8 +814,8 @@ pub const AudioPump = struct {
         const accepted: usize = @intCast(written);
         _ = self.queue.discard(accepted);
         self.stats.submitted_bytes +%= accepted;
+        if (isZeroPcm(self.scratch[0..accepted])) self.stats.silence_bytes +%= accepted;
         if (self.config.continuous) {
-            if (isZeroPcm(self.scratch[0..accepted])) self.stats.silence_bytes +%= accepted;
             if (self.sink) |sink| {
                 self.progress_ready = sink.progress_fn != null;
                 if (sink.progress_fn == null and self.config.sample_rate == 48000) {
@@ -2374,21 +2376,74 @@ test "transient PCM gaps retain the stream and due silence preserves following s
     _ = pump.queue.write(&signal);
     pump.beginCycle();
     pump.pump(30, true);
-    try std.testing.expectEqual(@as(u32, 1), sink.closes);
+    try std.testing.expectEqual(@as(u32, 0), sink.closes);
     try std.testing.expectEqual(@as(usize, 1920), pump.queue.available());
     try std.testing.expectEqual(@as(u64, 0), pump.stats.discarded_bytes);
     pump.beginCycle();
     pump.pump(40, true);
     pump.beginCycle();
     pump.pump(40, true);
-    try std.testing.expectEqual(@as(u32, 2), sink.opens);
-    try std.testing.expectEqual(@as(u64, 3 * 1920), sink.bytes);
-    _ = pump.queue.write(silence[0..480]); // 120 frames = 2.5 ms, rounded up.
+    try std.testing.expectEqual(@as(u32, 1), sink.opens);
+    try std.testing.expectEqual(@as(u64, 4 * 1920), sink.bytes);
+    try std.testing.expectEqual(@as(u64, 1920), pump.stats.suppressed_bytes);
+    try std.testing.expectEqual(@as(u64, 2 * 1920), pump.stats.silence_bytes);
+    try std.testing.expectEqual(@as(u64, 0), pump.stats.idle_closes);
+    // Only confirmed producer idle ends the stream; valid null PCM does not.
     pump.beginCycle();
-    pump.pump(40, true);
-    try std.testing.expectEqual(@as(u64, 43), pump.next_deadline_tick);
-    try std.testing.expectEqual(@as(u64, 4320), pump.stats.suppressed_bytes);
+    pump.pump(41, false);
+    try std.testing.expectEqual(@as(u32, 1), sink.closes);
+    try std.testing.expectEqual(@as(u64, 1), pump.stats.idle_closes);
+    try std.testing.expectEqual(@as(usize, 0), pump.queue.available());
+    try std.testing.expectEqual(@as(u64, 0), pump.stats.discarded_bytes);
+    _ = pump.queue.write(silence[0..480]); // Initial120frames =2.5ms, rounded up.
+    pump.beginCycle();
+    pump.pump(42, true);
+    try std.testing.expectEqual(@as(u64, 45), pump.next_deadline_tick);
+    try std.testing.expectEqual(@as(u64, 2400), pump.stats.suppressed_bytes);
     try std.testing.expectEqual(@as(u16, 1), pump.stats.maximum_service_operations_per_cycle);
+}
+
+test "active null PCM keeps async ownership until real acceptance and explicit idle" {
+    var storage: [3840]u8 = undefined;
+    var scratch: [1920]u8 = undefined;
+    var sink = DelayedSink{};
+    var pump = try AudioPump.init(.{ .queue_storage = &storage, .scratch = &scratch, .sink = sink.sink() }, 1000);
+    defer pump.close();
+    const signal = [_]u8{0x22} ** 1920;
+    const silence = [_]u8{0} ** 1920;
+    _ = pump.queue.write(&signal);
+    pump.pump(0, true);
+    pump.beginCycle();
+    pump.pump(1, true);
+    try std.testing.expectEqual(transport.Operation.write, pump.pending_operation.?);
+    sink.reply(1920);
+    pump.beginCycle();
+    pump.pump(2, true);
+    _ = pump.queue.write(&silence);
+    pump.beginCycle();
+    pump.pump(12, true);
+    try std.testing.expectEqual(transport.Operation.write, pump.pending_operation.?);
+    try std.testing.expect(std.mem.allEqual(u8, sink.copy[0..sink.len], 0));
+    try std.testing.expectEqual(@as(u64, 1), sink.generation);
+    try std.testing.expectEqual(@as(u32, 0), sink.closes);
+    try std.testing.expectEqual(@as(usize, 1920), pump.queue.available());
+    pump.pause(13); // No Close/reuse while the zero PCM request still owns bytes.
+    try std.testing.expectEqual(@as(u32, 0), sink.closes);
+    try std.testing.expectEqual(@as(usize, 1920), pump.queue.available());
+    sink.reply(960);
+    pump.beginCycle();
+    pump.pump(14, true);
+    pump.beginCycle();
+    pump.pump(15, true);
+    try std.testing.expectEqual(@as(u32, 2), sink.writes);
+    try std.testing.expectEqual(@as(u64, 1), sink.generation);
+    try std.testing.expectEqual(@as(u32, 1), sink.closes);
+    try std.testing.expectEqual(@as(u64, 2880), pump.stats.submitted_bytes);
+    try std.testing.expectEqual(@as(u64, 960), pump.stats.silence_bytes);
+    try std.testing.expectEqual(@as(u64, 960), pump.stats.discarded_bytes);
+    try std.testing.expectEqual(@as(u64, 960), pump.stats.paused_bytes);
+    try std.testing.expectEqual(@as(usize, 0), pump.queue.available());
+    try std.testing.expect(!pump.sink_open and pump.pending_operation == null);
 }
 
 test "open prefill busy and resync use at most one service operation per cycle" {

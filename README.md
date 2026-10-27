@@ -195,11 +195,12 @@ SDK host tools before running an image plan with an installed ModuleCatalog.
 Subsystem R4X hosts can compose the allocation-free `subsystem_host` video
 and input layer with `subsystem_runtime` for bounded guest slices, monotonic
 guest time, lifecycle control, paced frames, and buffered S16LE audio through
-the regular app audio facade. Audio streams are materialized on the first
-non-silent quantum; silence, pause, mute, and reset submit no full zero PCM
-payload and close an active sink once without affecting guest time or video.
-Silent blocks retain their position in the bounded PCM queue and are suppressed
-only at their audio deadline. Waiting guests refill only after a guest step or
+the regular app audio facade. Discrete streams materialize on their first
+non-silent quantum; initial silence keeps its queue position and may be
+suppressed only when due. Active zero PCM retains its duration and stream.
+Continuous sources materialize real zero PCM as well. Pause, mute, reset and
+stop explicitly release the sink without changing guest time or video.
+Waiting guests refill only after a guest step or
 a due quantum; repeated host polls cannot consume future silence. A temporary
 empty producer buffer keeps the stream open and schedules a bounded retry.
 Pause, mute, reset and shutdown still release it, and resume/unmute schedule
@@ -213,7 +214,17 @@ Runnable slices with completed operations yield cooperatively; a progress
 result with zero operations and no deadline waits one bounded host tick so an
 idle guest cannot turn into an active scheduler scan loop.
 
-SDK0.64.101 adds continuous source deadlines and per-stream progress through
+SDK0.64.102 keeps active zero PCM on the same stream for discrete and
+continuous producers. Only initial unmaterialized discrete silence may be
+suppressed. Explicit producer pause/mute/stop or final shutdown owns Close;
+sample values never stand in for an idle receipt. The native sink continues
+Close with the existing owned asynchronous request and original generation,
+and terminal shutdown waits for actual stream/buffer release. No guessed
+timeout, new timer/thread, ABI/layout change or HDA drain shortcut is added.
+The existing signal/null/signal owner case and a pending-zero partial-receipt
+pause case retain exact accepted/discarded bytes and actual close ordering.
+
+SDK0.64.101 added continuous source deadlines and per-stream progress through
 AUDSVC15 and R4AUDIO3/224. The original200-byte ABI prefix and minimum
 version2 are retained. Progress distinguishes accepted source bytes, canonical
 backend frames, actual DMA frames, consumed frames and unconfirmed frames;
@@ -222,7 +233,7 @@ backend, output and reset identities prevent reuse of an old cursor. A device
 reset retires only its known prefix; remaining accepted data is unconfirmed.
 Queue age uses the oldest outstanding source timestamp. Continuous sources
 declare a fixed source deadline and explicit end; polling/retries never renew
-the deadline. Discrete silence suppression remains available, while continuous
+the deadline. Initial discrete silence suppression remains available, while continuous
 zero PCM advances its clock through the real sink.
 
 The native subsystem audio transport still owns one copied PCM prefix and one
