@@ -188,6 +188,21 @@ impl Files<'_> {
         )
         .map(|n| n.unwrap_or(0))
     }
+    /// Actual resolved mount limits, including hidden boot-volume routing.
+    /// This snapshot does not reserve a mount or a filename.
+    pub fn name_limits(&self, path: &FilePath) -> Result<abi::FileNameLimits> {
+        let mut value = abi::FileNameLimits::default();
+        let raw = unsafe { c::r4_files_name_limits(&mut self.raw(), path.as_raw(), &mut value) };
+        if raw != 0 {
+            return Err(Error::Raw(raw));
+        }
+        if value.size as usize != core::mem::size_of::<abi::FileNameLimits>()
+            || value.flags & abi::file_name_limits_flag_known == 0
+        {
+            return Err(Error::InvalidProvider);
+        }
+        Ok(value)
+    }
     pub fn info(&self, path: &FilePath) -> Result<Option<abi::FileInfo>> {
         let r = unsafe { c::r4_files_info(&mut self.raw(), path.as_raw()) };
         match r.state {
@@ -292,7 +307,10 @@ impl Files<'_> {
             unsafe { c::r4_files_stream_writer(self.raw(), path.as_raw(), flags, &mut raw) };
         let writer = StreamWriter {
             raw,
-            needs_abort: true,
+            // These precise native preflights refuse before stream allocation.
+            // Other errors keep their existing ambiguous cleanup obligation.
+            needs_abort: opened.raw_code != abi::file_stream_error_name_not_supported
+                && opened.raw_code != abi::file_stream_error_name_too_long,
             retained: false,
             _loan: PhantomData,
         };

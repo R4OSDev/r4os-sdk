@@ -35,6 +35,8 @@ pub const file_replace_atomic_error_alias: i32 = -5;
 pub const file_replace_atomic_error_conflict: i32 = -6;
 pub const file_replace_atomic_error_io: i32 = -7;
 pub const file_replace_atomic_error_not_atomic: i32 = -8;
+pub const file_replace_atomic_error_name_not_supported = abi.file_replace_atomic_error_name_not_supported;
+pub const file_replace_atomic_error_name_too_long = abi.file_replace_atomic_error_name_too_long;
 pub const file_replace_atomic_flag_consume_stage: u32 = 1 << 0;
 pub const file_replace_atomic_flag_require_target_absent: u32 = 1 << 1;
 pub const file_replace_atomic_flag_require_owned_stage: u32 = 1 << 2;
@@ -1318,6 +1320,10 @@ pub const Context = struct {
 
     pub fn fileAppend(self: *const Context, path: [*:0]const u8, data: []const u8) i32 {
         return self.base.fileAppend(path, data);
+    }
+
+    pub fn fileNameLimits(self: *const Context, path: [*:0]const u8, out: *abi.FileNameLimits) i32 {
+        return self.base.fileNameLimits(path, out);
     }
 
     pub fn fileStreamBegin(self: *const Context, path: [*:0]const u8, flags: u32) i32 {

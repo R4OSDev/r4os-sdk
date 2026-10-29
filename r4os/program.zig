@@ -2621,6 +2621,12 @@ pub const Context = struct {
         return table_fn(path, data.ptr, @intCast(data.len));
     }
 
+    /// Actual path-mount capabilities; does not require the final file to exist.
+    pub fn fileNameLimits(self: *const Context, path: [*:0]const u8, out: *abi.FileNameLimits) i32 {
+        const table_fn = self.sysFn("file_name_limits") orelse return abi.file_stream_error_unsupported;
+        return table_fn(path, out);
+    }
+
     pub fn fileStreamBegin(self: *const Context, path: [*:0]const u8, flags: u32) i32 {
         const table_fn = self.sysFn("file_stream_begin") orelse return self.unavailable("sys");
         return table_fn(path, flags);

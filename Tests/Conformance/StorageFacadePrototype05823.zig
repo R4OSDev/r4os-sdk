@@ -9,6 +9,12 @@ test "storage parity includes the path recent registry and bounded text owners" 
 }
 
 const file_bytes = "hello";
+var name_limits_result: i32 = 0;
+fn fakeNameLimits(_: [*:0]const u8, out: *r4os.abi.FileNameLimits) callconv(.c) i32 {
+    if (name_limits_result != 0) return name_limits_result;
+    out.* = .{ .size = 56, .flags = 3, .provider = 2, .drive_letter = 'C', .mount_slot = 7, .mount_generation = 99, .max_path_bytes = 1023, .max_component_bytes = 765, .max_component_utf16_units = 255, .short_base_bytes = 8, .short_extension_bytes = 3, .name_rules = 7, .atomic_rules = 7 };
+    return 0;
+}
 const config_bytes = "\xEF\xBB\xBFR4S_FORMAT=1\r\nSCHEMA=TEST\r\nTITLE=Configured\r\nCOUNT=27\r\n";
 var written: [64]u8 = .{0} ** 64;
 var written_len: usize = 0;
@@ -271,6 +277,17 @@ test "files directory streams and registry use caller owned state" {
     var app = try makeApp(&table, &imports, &context);
     var files = app.files() orelse return error.FilesMissing;
     var file_path = try r4os.FilePath.parse("C:/TEMP/FILE.TXT");
+    table.size = @sizeOf(r4os.abi.R4XStartR4Sys);
+    table.file_name_limits = @intFromPtr(&fakeNameLimits);
+    name_limits_result = 0;
+    const limits = files.nameLimits(file_path.asZ()).value;
+    try std.testing.expectEqual(@as(u64, 99), limits.mount_generation);
+    try std.testing.expectEqual(@as(u32, 255), limits.max_component_utf16_units);
+    for ([_]i32{ r4os.abi.file_stream_error_name_not_supported, r4os.abi.file_stream_error_name_too_long, r4os.abi.file_stream_error_unsupported }) |code| {
+        name_limits_result = code;
+        try std.testing.expectEqual(code, files.nameLimits(file_path.asZ()).failure);
+    }
+    name_limits_result = 0;
     var out: [16]u8 = undefined;
     switch (files.read(file_path.asZ(), out[0..])) {
         .bytes => |count| try std.testing.expectEqualStrings(file_bytes, out[0..count]),

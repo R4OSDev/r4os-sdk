@@ -200,6 +200,13 @@ static inline R4Transfer r4_files_append(R4Files *files, const R4FilePath *path,
     R4Transfer result = r4_transfer_raw(raw); if (raw == 0) { result.state = R4_TRANSFER_BYTES; result.bytes = 0; } return result;
 }
 
+/* Names are syntactically checked by FilePath; this query reports the actual
+ * target provider and independent atomic staging rules. No name truncation. */
+static inline int32_t r4_files_name_limits(R4Files *files, const R4FilePath *path, R4FileNameLimits *out) {
+    if (!files || !path || !out) return R4OS_FILE_STREAM_ERROR_INVALID;
+    return r4sys_file_name_limits(files->system, (const char *)path->bytes, out);
+}
+
 static inline R4FileInfoRead r4_files_info(R4Files *files, const R4FilePath *path) {
     R4FileInfoRead result = {0};
     if (files == 0 || path == 0 || files->system == 0 || files->system->table == 0 || files->system->table->file_info == 0) {

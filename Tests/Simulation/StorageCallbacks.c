@@ -19,7 +19,11 @@ static int32_t info(const uint8_t *path,R4FileInfo *out){
     if(strstr((const char *)path,".BAK"))return 0;
     return fake_file_info(path,out);
 }
-static int32_t begin(const uint8_t *path,uint32_t flags){int32_t r=fake_stream_begin(path,flags);return mode==20?-7:r;}
+static int32_t begin(const uint8_t *path,uint32_t flags){
+    if(mode==55)return R4OS_FILE_STREAM_ERROR_NAME_NOT_SUPPORTED;
+    if(mode==56)return R4OS_FILE_STREAM_ERROR_NAME_TOO_LONG;
+    int32_t r=fake_stream_begin(path,flags);return mode==20?-7:r;
+}
 static int32_t chunk(const uint8_t *path,uint64_t offset,const uint8_t *bytes,uint32_t length,uint32_t flags){
     int32_t r=fake_stream_write(path,offset,bytes,length,flags);return mode==21&&r>0?r-1:r;
 }
@@ -48,10 +52,23 @@ static int32_t batch(const R4RegistryBatchOperation *ops,uint32_t count,const ui
     assert(count==1&&ops[0].data_len==4&&ops[0].data_offset+4<=length&&blob[ops[0].data_offset]==99);
     *out=(R4RegistryBatchResult){.version=1,.size=sizeof(*out),.generation_before=77,.generation_after=78,.operation_count=count,.status=R4OS_REGISTRY_BATCH_STATUS_COMMITTED};return 0;
 }
+static int32_t name_limits(const uint8_t *path,R4FileNameLimits *out){
+    assert(path&&out);
+    if(mode==51)return R4OS_FILE_STREAM_ERROR_UNSUPPORTED;
+    if(mode==52)return R4OS_FILE_STREAM_ERROR_NAME_NOT_SUPPORTED;
+    if(mode==53)return R4OS_FILE_STREAM_ERROR_NAME_TOO_LONG;
+    if(mode==54){*out=(R4FileNameLimits){0};return 0;}
+    *out=(R4FileNameLimits){.size=sizeof(*out),.flags=3,.provider=2,.drive_letter='C',
+        .mount_slot=7,.mount_generation=99,.max_path_bytes=1023,.max_component_bytes=765,
+        .max_component_utf16_units=255,.short_base_bytes=8,.short_extension_bytes=3,
+        .name_rules=7,.atomic_rules=7};
+    return 0;
+}
 void sdk_storage_table(R4XStartR4Sys *out){
     R4XStartR4Sys current=*out;
     *out=make_table(1);out->magic=current.magic;out->abi_version=current.abi_version;out->size=current.size;
     out->write=(uintptr_t)&console_write;out->putc=(uintptr_t)&console_put;
+    out->file_name_limits=(uintptr_t)&name_limits;
     out->ticks=(uintptr_t)&ticks;out->file_info=(uintptr_t)&info;out->path_names_equal_collated=(uintptr_t)&collated;
     out->file_stream_begin=(uintptr_t)&begin;out->file_stream_write=(uintptr_t)&chunk;out->file_stream_finish=(uintptr_t)&finish;out->file_stream_abort=(uintptr_t)&abort_stream;
     out->file_replace_atomic=(uintptr_t)&replace;out->file_delete=(uintptr_t)&remove_file;

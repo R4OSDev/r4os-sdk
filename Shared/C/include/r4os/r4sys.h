@@ -27,6 +27,14 @@ static inline int r4sys_has_callback(const R4Sys *sys, size_t offset) {
 }
 #define R4SYS_HAS(sys, field) (r4sys_has_callback((sys), offsetof(R4XStartR4Sys, field)) && (sys)->table->field != 0)
 
+/* Actual path-mount snapshot; the final file need not exist. Unknown provider
+ * or unavailable callback returns UNSUPPORTED and leaves output untouched. */
+static inline int32_t r4sys_file_name_limits(const R4Sys *sys, const char *path, R4FileNameLimits *out) {
+    if (!path || !out) return R4OS_FILE_STREAM_ERROR_INVALID;
+    if (!R4SYS_HAS(sys, file_name_limits)) return R4OS_FILE_STREAM_ERROR_UNSUPPORTED;
+    return ((R4SysFileNameLimitsFn)(uintptr_t)sys->table->file_name_limits)((const uint8_t *)path, out);
+}
+
 /* Optional explicit blocking orderly transition; accepted work is terminal.
  * Old raw slots remain independent immediate operations. No automatic retry. */
 static inline int32_t r4sys_system_power_transition(const R4Sys *sys,uint32_t action,uint64_t timeout_ticks){
@@ -56,6 +64,8 @@ static inline int32_t r4sys_platform_input_snapshot(R4Sys *sys, R4PlatformInputS
 #define R4SYS_FILE_REPLACE_ATOMIC_ERROR_CONFLICT (-6)
 #define R4SYS_FILE_REPLACE_ATOMIC_ERROR_IO (-7)
 #define R4SYS_FILE_REPLACE_ATOMIC_ERROR_NOT_ATOMIC (-8)
+#define R4SYS_FILE_REPLACE_ATOMIC_ERROR_NAME_NOT_SUPPORTED R4OS_FILE_REPLACE_ATOMIC_ERROR_NAME_NOT_SUPPORTED
+#define R4SYS_FILE_REPLACE_ATOMIC_ERROR_NAME_TOO_LONG R4OS_FILE_REPLACE_ATOMIC_ERROR_NAME_TOO_LONG
 #define R4SYS_FILE_REPLACE_ATOMIC_CONSUME_STAGE (1u << 0)
 #define R4SYS_FILE_REPLACE_ATOMIC_REQUIRE_TARGET_ABSENT (1u << 1)
 #define R4SYS_FILE_REPLACE_ATOMIC_REQUIRE_OWNED_STAGE (1u << 2)

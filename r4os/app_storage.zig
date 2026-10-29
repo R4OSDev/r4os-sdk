@@ -58,6 +58,11 @@ pub const AtomicReplaceResult = union(enum) {
     failure: i32,
 };
 
+pub const FileNameLimitsResult = union(enum) {
+    value: abi.FileNameLimits,
+    failure: i32,
+};
+
 pub const FileInfoResult = union(enum) {
     value: abi.FileInfo,
     missing,
@@ -110,6 +115,15 @@ pub const Files = struct {
         const raw = self.sys.fileAppend(file_path.ptr, bytes);
         if (raw < 0) return .{ .failure = raw };
         return .{ .bytes = @intCast(raw) };
+    }
+
+    /// Query the actual mount, including hidden C:\BOOT routing. A successful
+    /// snapshot reserves nothing; stream/atomic operations revalidate normally.
+    pub fn nameLimits(self: *const Files, file_path: PathZ) FileNameLimitsResult {
+        var value: abi.FileNameLimits = .{};
+        const raw = self.sys.fileNameLimits(file_path.ptr, &value);
+        if (raw != 0) return .{ .failure = raw };
+        return .{ .value = value };
     }
 
     pub fn info(self: *const Files, file_path: PathZ) FileInfoResult {

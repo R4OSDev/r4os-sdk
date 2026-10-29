@@ -1046,3 +1046,40 @@ diagnostics are separate. OutputAvailable includes captured empty output;
 OutputTruncated and OutputIncomplete report known loss (overflow, editing or
 capture failure). An unavailable capture is not an empty successful capture.
 Validate the actual exit code and application-specific expected markers too.
+
+### Actual filename capabilities (0.88.27, SDK109 / R4SYS33)
+
+Use Zig `Files.nameLimits(path.asZ())`, C `r4_files_name_limits`, or Rust
+`Files::name_limits` to query the actual target mount. The file need not
+exist. A visible drive's `DriveInfo.kind` alone cannot identify hidden
+`C:\BOOT` routing. The 56-byte record reports byte and UTF-16-unit budgets,
+provider rules, independent atomic staging rules and a mount-generation
+snapshot; it reserves nothing.
+
+```c
+R4Files files = { .system = &app->system };
+R4FilePath path = {0};
+const uint8_t name[] = "D:\\SAVE\\GAME.DAT";
+if (r4_file_path(name, sizeof(name)-1, &path) == R4_PATH_OK) {
+    R4FileNameLimits limits = {0};
+    int32_t rc = r4_files_name_limits(&files, &path, &limits);
+    if (rc == 0 && (limits.flags & R4OS_FILE_NAME_LIMITS_FLAG_KNOWN)) {
+        /* Respect all reported bounds/rules; handle the actual CREATE too. */
+    }
+}
+```
+
+Current FAT32 and NTFS names support 255 UTF-16 units / at most 765 UTF-8
+bytes; raw/resolved visible paths fit 1023 bytes excluding NUL. The SDK's
+260-character syntax budget and C/Rust non-BMP syntax restriction remain
+separate. Unsupported providers/callbacks return -2 with output untouched,
+not fabricated zero limits.
+
+Valid long names work with ordinary CREATE. Atomic stage/backup names have
+their own short-name rule; the existing document saver already creates
+unique `DSxxxxxx.TMP` / `.BAK` candidates and preserves the full target name.
+Stream begin and atomic replacement now report
+`R4OS_FILE_STREAM_ERROR_NAME_NOT_SUPPORTED (-64)` and
+`R4OS_FILE_STREAM_ERROR_NAME_TOO_LONG (-65)` (atomic aliases use the same
+values), preserving files on these preflight failures. Other errors and
+cleanup obligations retain their operation-specific meaning.

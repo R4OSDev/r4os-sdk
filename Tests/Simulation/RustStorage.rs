@@ -68,6 +68,59 @@ fn existing_bytes_real_facades_and_explicit_failure_ownership() {
     assert!(!r4os_sdk::registry_diagnostics::private_image(&system));
     let files = system.files();
     let path = FilePath::parse(b"C:\\TEMP\\FILE.TXT").unwrap();
+    unsafe { sdk_storage_mode(50) };
+    let limits = files.name_limits(&path).unwrap();
+    assert_eq!(
+        (
+            limits.size,
+            limits.provider,
+            limits.mount_slot,
+            limits.mount_generation
+        ),
+        (56, 2, 7, 99)
+    );
+    assert_eq!(
+        (
+            limits.max_path_bytes,
+            limits.max_component_bytes,
+            limits.max_component_utf16_units
+        ),
+        (1023, 765, 255)
+    );
+    assert_eq!(
+        (
+            limits.short_base_bytes,
+            limits.short_extension_bytes,
+            limits.atomic_rules
+        ),
+        (8, 3, 7)
+    );
+    for (mode, code) in [
+        (51, -2),
+        (52, abi::file_stream_error_name_not_supported),
+        (53, abi::file_stream_error_name_too_long),
+    ] {
+        unsafe { sdk_storage_mode(mode) };
+        assert!(matches!(files.name_limits(&path),Err(Error::Raw(raw)) if raw==code));
+    }
+    unsafe { sdk_storage_mode(54) };
+    assert!(matches!(
+        files.name_limits(&path),
+        Err(Error::InvalidProvider)
+    ));
+    for (mode, code) in [
+        (55, abi::file_stream_error_name_not_supported),
+        (56, abi::file_stream_error_name_too_long),
+    ] {
+        unsafe { sdk_storage_mode(mode) };
+        let failure = files
+            .stream_writer(&path, abi::file_stream_open_create)
+            .err()
+            .unwrap();
+        assert!(matches!(failure.error,Error::Raw(raw) if raw==code));
+        assert!(!failure.writer.needs_abort());
+    }
+    unsafe { sdk_storage_mode(0) };
     let directory = FilePath::parse(b"C:\\").unwrap();
     let mut bytes = [0; 128];
     assert_eq!(files.read(&path, &mut bytes).unwrap(), Some(5));

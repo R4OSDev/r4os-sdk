@@ -462,7 +462,7 @@
         "file_stream",
         "bounded_text"
       ],
-      "semantics": "Bytes/EOF/Teilfortschritt/Fehler unterscheiden; generationstreue Handles, paginierte Verzeichnisse, Registry-Snapshots/-Batches, absolute/relative Pfade, atomare Publikation und erhaltenes Stageeigentum bei Fehlern.",
+      "semantics": "Bytes/EOF/Teilfortschritt/Fehler unterscheiden; generationstreue Handles, paginierte Verzeichnisse, Registry-Snapshots/-Batches, absolute/relative Pfade, atomare Publikation und erhaltenes Stageeigentum bei Fehlern. SDK109: konkrete Pfad-Mount-Namensgrenzen mit UTF8-Bytes/UTF16-Units, Mountsnapshot und getrennten Atomic-Regeln in Zig/C/Rust; Name-64/Laenge-65 vor Mutation, lange CREATE-/Zielnamen bleiben unterstuetzt.",
       "current_only": "current_function",
       "rust": {
         "state": "paritaet_abgenommen",
@@ -498,7 +498,8 @@
         "Repositories/SDK/Tests/Conformance/StorageCodecChecks.rs",
         "Repositories/SDK/Tests/Conformance/StorageCodecChecks.c",
         "Repositories/SDK/r4os/recent_documents.zig",
-        "directory_batch_08743"
+        "directory_batch_08743",
+        "file_name_limits_08827"
       ],
       "shared_core": "C-Funktionsbesitzer plus r4os/storage_runtime.zig zu bestehenden Zig-/R4STD-Kernen; keine neue Codec-/Pfad-/Registryimplementierung. Runtimeobjekte im technischen Profil mit Quellen/CPU/Hashes gebunden.",
       "extension_08743": "Bound-node batches are the current iterator path; exact provider validation precedes each buffered record. Deliberate live-index traversal after deletion stays supported; no implicit fallback on absent batch support."
@@ -54423,6 +54424,110 @@
       "standard_run_id": "efc49c9b-fccb-4cdc-a99f-ca8a6a0278c8",
       "original_standard_sha256": "5118140cba59fe27a934bafe2db9c5a115e362853e899b194de1a7bf06953b93",
       "standard_status": "lokal validiert; R4OS Server ausstehend"
+    },
+    "file_name_limits_08827": {
+      "complete": true,
+      "scope": "SDK109/Contract57 actual path-mount filename capabilities and explicit preflight name errors; generated Library36 Rust ABI projection. Old slots, payloads, constants and result values remain identical.",
+      "sources": [
+        "Repositories/Contract/API/ApiContract.json",
+        "Repositories/SDK/r4os/app_storage.zig",
+        "Repositories/SDK/r4os/program.zig",
+        "Repositories/SDK/r4os/r4sys.zig",
+        "Repositories/SDK/Shared/C/include/r4os/app_storage.h",
+        "Repositories/SDK/Shared/C/include/r4os/r4sys.h",
+        "Repositories/SDK/Rust/src/storage.rs",
+        "Repositories/SDK/Rust/src/c_facades.rs",
+        "Repositories/Libraries/Shared/Rust/src/raw.rs"
+      ],
+      "checks": [
+        "Contract57:16/16 steps,26 negative mutations,7 C/Zig/Rust callbacks, host/bare layouts and Clippy. Source comparison proves every old slot/payload/constant/result unchanged; one R4SYS33/1376 tail callback1368 and FileNameLimits56 added. Error-64/-65 cannot alias existing async transport-1..-10.",
+        "Actual resident FAT/NTFS host name-owner3 cases passed, including exact255UTF16 units, malformed scalar versus excessive units and short-alias/LFN distinctions.",
+        "Existing SDK Zig storage/path/registry cases and C/Rust storage interop passed: query success, real output fields, unsupported/name failure propagation, malformed provider response, precise Begin failures without abort obligation; existing ambiguous failure ownership/abort cases remain passing.",
+        "Library-owned Rust generator emitted canonical new record alias and exact R4SYS1376/offset1368 assertions. Shared helper Rust crate checks with actual local SDK/Contract; no R4L runtime artifact or library-local ABI changed.",
+        "SDK109 source package binds published Contract57 archive commit7c379e9b34a0ee86e0063cbf517c788931433d03 and its actual Zig fetch hash. No consumer-wide pin replacement."
+      ],
+      "guest": {
+        "pass_all": true,
+        "scope": "Actual mounted private Test-image providers, KVM4/RTL8139; no Windows or physical hardware qualification",
+        "release_in_guest": "0.88.26",
+        "kernel": "0.1.420",
+        "sdk": "0.64.109",
+        "contract": "0.64.57",
+        "r4sys_version": 33,
+        "kernel_sha256": "bcc4b551930f2d592ccf526b1138f10c20a1b9807f8b2dcefa0ab3fc6bb4596c",
+        "fixture_source": "Repositories/Kernel/Tests/Guest/FileNames",
+        "fixture_sha256": "a4fde039f0c3c7c839e1ccf08320725c5ba088b5461b07cb756332923cc52648",
+        "source_sha256": "2fe9a2326fc26777d2cc65d52396ecfe61986b4d9a0d9167044379e1ac1a9182",
+        "guest_exit": 0,
+        "checks": 215,
+        "failures": 0,
+        "provider_limits": [
+          "N27 limits path=C:\\ result=0 provider=3 flags=3 mount-slot=2 mount-generation=3 path-bytes=1023 name-bytes=765 utf16-units=255 atomic=3",
+          "N27 limits path=D:\\ result=0 provider=3 flags=3 mount-slot=3 mount-generation=4 path-bytes=1023 name-bytes=765 utf16-units=255 atomic=3",
+          "N27 limits path=E:\\ result=0 provider=2 flags=3 mount-slot=4 mount-generation=5 path-bytes=1023 name-bytes=765 utf16-units=255 atomic=7",
+          "N27 limits path=C:\\BOOT\\ result=0 provider=2 flags=3 mount-slot=26 mount-generation=2 path-bytes=1023 name-bytes=765 utf16-units=255 atomic=7"
+        ],
+        "name_vectors": [
+          "N27 vector=short path=C:\\ syntax=0 bytes=12 begin/finish=0 read=12",
+          "N27 vector=long path=C:\\ syntax=0 bytes=43 begin/finish=0 read=12",
+          "N27 vector=leading-dot path=C:\\ syntax=0 bytes=23 begin/finish=0 read=12",
+          "N27 vector=plus path=C:\\ syntax=0 bytes=12 begin/finish=0 read=12",
+          "N27 vector=ascii255 path=C:\\ syntax=0 bytes=255 begin/finish=0 read=12",
+          "N27 vector=ascii256 path=C:\\ syntax=-3 bytes=256 begin/finish=-65",
+          "N27 vector=euro255/765bytes path=C:\\ syntax=0 bytes=765 begin/finish=0 read=12",
+          "N27 vector=euro256/768bytes path=C:\\ syntax=-3 bytes=768 begin/finish=-65",
+          "N27 vector=supplementary/255units path=C:\\ syntax=-5 bytes=509 begin/finish=0 read=12",
+          "N27 vector=supplementary/256units path=C:\\ syntax=-5 bytes=512 begin/finish=-65",
+          "N27 vector=short path=D:\\ syntax=0 bytes=12 begin/finish=0 read=12",
+          "N27 vector=long path=D:\\ syntax=0 bytes=43 begin/finish=0 read=12",
+          "N27 vector=leading-dot path=D:\\ syntax=0 bytes=23 begin/finish=0 read=12",
+          "N27 vector=plus path=D:\\ syntax=0 bytes=12 begin/finish=0 read=12",
+          "N27 vector=ascii255 path=D:\\ syntax=0 bytes=255 begin/finish=0 read=12",
+          "N27 vector=ascii256 path=D:\\ syntax=-3 bytes=256 begin/finish=-65",
+          "N27 vector=euro255/765bytes path=D:\\ syntax=0 bytes=765 begin/finish=0 read=12",
+          "N27 vector=euro256/768bytes path=D:\\ syntax=-3 bytes=768 begin/finish=-65",
+          "N27 vector=supplementary/255units path=D:\\ syntax=-5 bytes=509 begin/finish=0 read=12",
+          "N27 vector=supplementary/256units path=D:\\ syntax=-5 bytes=512 begin/finish=-65",
+          "N27 vector=short path=E:\\ syntax=0 bytes=12 begin/finish=0 read=12",
+          "N27 vector=long path=E:\\ syntax=0 bytes=43 begin/finish=0 read=12",
+          "N27 vector=leading-dot path=E:\\ syntax=0 bytes=23 begin/finish=-64",
+          "N27 vector=plus path=E:\\ syntax=0 bytes=12 begin/finish=0 read=12",
+          "N27 vector=ascii255 path=E:\\ syntax=0 bytes=255 begin/finish=0 read=12",
+          "N27 vector=ascii256 path=E:\\ syntax=-3 bytes=256 begin/finish=-65",
+          "N27 vector=euro255/765bytes path=E:\\ syntax=0 bytes=765 begin/finish=0 read=12",
+          "N27 vector=euro256/768bytes path=E:\\ syntax=-3 bytes=768 begin/finish=-65",
+          "N27 vector=supplementary/255units path=E:\\ syntax=-5 bytes=509 begin/finish=0 read=12",
+          "N27 vector=supplementary/256units path=E:\\ syntax=-5 bytes=512 begin/finish=-65",
+          "N27 vector=short path=C:\\BOOT\\ syntax=0 bytes=12 begin/finish=0 read=12",
+          "N27 vector=long path=C:\\BOOT\\ syntax=0 bytes=43 begin/finish=0 read=12",
+          "N27 vector=leading-dot path=C:\\BOOT\\ syntax=0 bytes=23 begin/finish=-64",
+          "N27 vector=plus path=C:\\BOOT\\ syntax=0 bytes=12 begin/finish=0 read=12",
+          "N27 vector=ascii255 path=C:\\BOOT\\ syntax=-2 bytes=255 begin/finish=0 read=12",
+          "N27 vector=ascii256 path=C:\\BOOT\\ syntax=-3 bytes=256 begin/finish=-65",
+          "N27 vector=euro255/765bytes path=C:\\BOOT\\ syntax=-2 bytes=765 begin/finish=0 read=12",
+          "N27 vector=euro256/768bytes path=C:\\BOOT\\ syntax=-3 bytes=768 begin/finish=-65",
+          "N27 vector=supplementary/255units path=C:\\BOOT\\ syntax=-5 bytes=509 begin/finish=0 read=12",
+          "N27 vector=supplementary/256units path=C:\\BOOT\\ syntax=-5 bytes=512 begin/finish=-65"
+        ],
+        "atomic_vectors": [
+          "N27 atomic path=C:\\ long-stage=0 long-target=0 result=0",
+          "N27 atomic path=C:\\ long-stage=1 long-target=0 result=-64",
+          "N27 atomic path=C:\\ long-stage=0 long-target=1 result=0",
+          "N27 atomic path=D:\\ long-stage=0 long-target=0 result=0",
+          "N27 atomic path=D:\\ long-stage=1 long-target=0 result=-64",
+          "N27 atomic path=D:\\ long-stage=0 long-target=1 result=0",
+          "N27 atomic path=E:\\ long-stage=0 long-target=0 result=0",
+          "N27 atomic path=E:\\ long-stage=1 long-target=0 result=-64",
+          "N27 atomic path=E:\\ long-stage=0 long-target=1 result=0",
+          "N27 atomic path=C:\\BOOT\\ long-stage=0 long-target=0 result=0",
+          "N27 atomic path=C:\\BOOT\\ long-stage=1 long-target=0 result=-64",
+          "N27 atomic path=C:\\BOOT\\ long-stage=0 long-target=1 result=0"
+        ],
+        "document_save_helpers_actual": 4,
+        "original_external_invalid_minus_one_reproduced": false,
+        "findings": "Long CREATE and 255UTF16-unit/native supplementary names pass; 256unit and 1024-byte paths reject-65; actual FAT dot prefix and long atomic stage reject-64. Rejected atomic target, stage and backup retain bytes. Short stage preserves long targets; actual SDK document-save passes all4paths. Query supports nonexistent files and exact1023-byte visible paths; failed query preserves all56output bytes. C/Rust SDK syntax budgets remain separate."
+      },
+      "limits": "Actual private-image KVM4 provider execution, not physical hardware or Windows. Original foreign Exchange provider/name/release and INVALID-1 cause remain unknown. C/Rust SDK syntax and native provider unit budgets differ explicitly. Performance and final STANDARD are recorded separately in Docs/FileSystem/Dateistreams.txt and Docs/SDK/LanguageParity.txt; historical qualifications remain scoped to their original evidence."
     }
   },
   "wave_bindings": [
@@ -54675,17 +54780,17 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.88.26",
-    "sdk": "0.64.108",
-    "contract": "0.64.56",
-    "libraries": "0.64.35",
-    "evidence": "process_evidence_08826",
-    "scope": "Append-only R4SYS observation contract, typed public bindings, lazy GUI transcript and generated Library Rust projection; bounded host/Core and full Desktop broker lifecycle/retention proof."
+    "performed_in": "0.88.27",
+    "sdk": "0.64.109",
+    "contract": "0.64.57",
+    "libraries": "0.64.36",
+    "evidence": "file_name_limits_08827",
+    "scope": "Exactly19 enumerated owner deltas: append-only actual-mount name capability, typed public bindings and canonical generated ABI alias/layout changes; actual KVM4 name/atomic/document-save proof. Other qualified bodies retain prior scoped evidence."
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.88.26",
+    "reviewed_in": "0.88.27",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -54741,23 +54846,23 @@
     "files": [
       {
         "path": "Repositories/Contract/API/ApiContract.baseline.json",
-        "sha256": "c4bece3221b2951bafb30c0aae60212f96e0a0898136447a8a392336e0fd308a"
+        "sha256": "8bfb42f8ab69fb4b3e159262f301bfc02a59e12a8fd500a5925455a74b54bd85"
       },
       {
         "path": "Repositories/Contract/API/ApiContract.json",
-        "sha256": "c4bece3221b2951bafb30c0aae60212f96e0a0898136447a8a392336e0fd308a"
+        "sha256": "8bfb42f8ab69fb4b3e159262f301bfc02a59e12a8fd500a5925455a74b54bd85"
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/API.json",
-        "sha256": "05297c289808fbbdbe8c17e302bdedc0020e95085f82fc47f23bee2b53636a69"
+        "sha256": "c831b1a25983bbed4482ea310a7f72c1eb37b4773ce804f27f174b7d30e9c6e4"
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/RustABI.json",
-        "sha256": "2fbe71ceaa3e2e0b18bd03c2cd65c961b8b18a754997f3acf0e8e5308bc6c822"
+        "sha256": "2f31a2538cfa73a9aa0a22069031eeaeae066770e2c63447aeb81fd68be99108"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_generated.h",
-        "sha256": "b39d4dc3d45850425b7ee24186a3a459c57a3eb89b1682f386b35646448b770a"
+        "sha256": "eee4eba60287f5d73f2611fde59739ba00a24271e0fecdec86ad685a6cab71bc"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_technical_generated.h",
@@ -54769,19 +54874,19 @@
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Rust/src/lib.rs",
-        "sha256": "37e2b871521e4b8cf2dc8655e112949f851ffdc498e219ab2c94829c378bcaf4"
+        "sha256": "6d48e3773a24458cc1a59b5df18aaf5935d4ab770dccd791c9cba19f2c32cd56"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi.zig",
-        "sha256": "9743f5972bd6b2a5dbb3543384c7be21ab720c6b9c8a4b0acfa2ed63185b0f06"
+        "sha256": "8d23144d38c8a0a1d64801b78bb1c9234e68342c25946600ecd8b2b619f1db90"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_exports.zig",
-        "sha256": "2bc1fea95ae0d2d4a144596d7fde49fb09a9ec1032777ab4a2a4df03833d5a6f"
+        "sha256": "3178bb9380391d5a4999d41c06f33a3faaa17d3e82a18e7359f6c1c1e8be341a"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_generated.zig",
-        "sha256": "3436aa2c1787816182383401eb8d5e078c13eb5fd83c0897bc4e50fadd7f0ddf"
+        "sha256": "40066f05526b908f7fb1f895759400d51c76c09877bd274c61dfe40acf8486f8"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/package.zig",
@@ -54805,7 +54910,7 @@
       },
       {
         "path": "Repositories/Contract/Tools/ApiContractGen/src/main.zig",
-        "sha256": "cd35bd1800b75dcf27fbe98e56d3a13bc1a1e2e04eea4bfc58b4cddcb10a7153"
+        "sha256": "0feb8b3e9e160a1937c2df2bea7cc198e899a8647ea1d28078f81c2ed14e3a97"
       },
       {
         "path": "Repositories/Libraries/R4ACO/Bindings/C/r4aco.h",
@@ -55741,7 +55846,7 @@
       },
       {
         "path": "Repositories/Libraries/Shared/Rust/src/raw.rs",
-        "sha256": "8a45a98d5c07e7c30eef1d33ebd83e09a7da18b30f67cd85c5765d7d2ae707c2"
+        "sha256": "f530c8fdf7706078a3f95ee70bffbe916113e99bd226d0ee2e7236c9a998d7f6"
       },
       {
         "path": "Repositories/Libraries/Shared/Tests/Consumer/Cargo.toml",
@@ -55813,7 +55918,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "6980fc12d6c8f18acfecbc227a4dab38829401ea86eea6f17334b0ea0aa063fe"
+        "sha256": "73f12abc006774d7ffce3c8c980942a07c8d48e4dc033a65c1390af1079ddfc0"
       },
       {
         "path": "Repositories/SDK/Rust/src/data/hash.rs",
@@ -55985,7 +56090,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/storage.rs",
-        "sha256": "78de1ba39b08b32bb41c5ea169cefb46b68f2172ca68271335590208272c57d6"
+        "sha256": "9e84c7d6a3ef626e34e3f823ba4b17f1fc74cbb5577290499f910e09eb0c9fa1"
       },
       {
         "path": "Repositories/SDK/Rust/src/subsystems/catalog.rs",
@@ -56093,7 +56198,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_storage.h",
-        "sha256": "20ced70a1994d7b5c294b55ac1f58e312ced55b86a84172ecea25918ad090a49"
+        "sha256": "2eb2afafc4edebcfdc44f8accc8cc98d566de31d9cc10050b889fec4f04433cd"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_tray.h",
@@ -56225,7 +56330,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/r4sys.h",
-        "sha256": "a631f875e5b27d364e70a419449d6d1d1c4a66e61fc3888e8ebb4c2495ab7fe7"
+        "sha256": "c016333e108aaa82f519a9c19c3a93669796adc416c816df269b2fa3426974fe"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/r4xstart.h",
@@ -56485,7 +56590,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "0c4f144a8a6b82e5c0fb2b6d4eb39bb349bd288d4a8629c50e66dee5a6580d1a"
+        "sha256": "000e53ba9436272ede637f20b24c08b312c41a84ca6159df5bd6ff9277cdc66f"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -56529,7 +56634,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/app_storage.zig",
-        "sha256": "a50633474ba47e53e5890fe130bab17b91c7bb049a7666cb540b64152dfbacf8"
+        "sha256": "4af66b0153bb4d3a742a2071a22a086adbdeb103648cf1627012573bc1e17f74"
       },
       {
         "path": "Repositories/SDK/r4os/app_tray.zig",
@@ -56901,7 +57006,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/program.zig",
-        "sha256": "75e02e290577437fe2413b1f5b95980d24308d5dfde1e53d0b98c7c7e7150c4e"
+        "sha256": "34541668123876670ea3be1e644f7a5870e5ff96ded69582dc1917aa56c7769b"
       },
       {
         "path": "Repositories/SDK/r4os/protocol.zig",
@@ -56937,7 +57042,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/r4sys.zig",
-        "sha256": "6b32a15330003b56684d35046bdcec84df9217b970b7dfdaa91fdabd4854a163"
+        "sha256": "c35d87d9262d0c3f045c4646274ff09767fc11469479ee97c10fe005620d6bad"
       },
       {
         "path": "Repositories/SDK/r4os/r4u_artifact.zig",
@@ -57404,7 +57509,8 @@
           "bounded_work_08755",
           "gui_focus_font_08825",
           "qualified_prior_source_08825",
-          "process_evidence_08826"
+          "process_evidence_08826",
+          "file_name_limits_08827"
         ]
       },
       {
@@ -57428,7 +57534,8 @@
           "rust_qualified_classes",
           "independent_desktop_current_71",
           "current_contract_78",
-          "gui_activity_08735"
+          "gui_activity_08735",
+          "file_name_limits_08827"
         ]
       },
       {
@@ -57444,7 +57551,8 @@
           "Repositories/SDK/Rust/src/heap.rs"
         ],
         "proof": [
-          "independent_desktop_current_71"
+          "independent_desktop_current_71",
+          "file_name_limits_08827"
         ]
       },
       {
@@ -57468,7 +57576,8 @@
           "desktop_owner_build_86",
           "bounded_work_08755",
           "qualified_prior_source_08825",
-          "process_evidence_08826"
+          "process_evidence_08826",
+          "file_name_limits_08827"
         ]
       },
       {
@@ -57527,7 +57636,8 @@
           "desktop_port_inputs_86",
           "desktop_capture_inputs_86",
           "directory_batch_08743",
-          "process_evidence_08826"
+          "process_evidence_08826",
+          "file_name_limits_08827"
         ]
       },
       {
@@ -57552,7 +57662,8 @@
           "resource_current_54",
           "current_kernel_records_80",
           "lifecycle_metadata_87",
-          "process_evidence_08826"
+          "process_evidence_08826",
+          "file_name_limits_08827"
         ]
       },
       {
@@ -57649,7 +57760,8 @@
           "current_contract_78",
           "current_kernel_records_80",
           "gui_activity_08735",
-          "gui_focus_font_08825"
+          "gui_focus_font_08825",
+          "file_name_limits_08827"
         ]
       },
       {
@@ -57675,7 +57787,8 @@
         "proof": [
           "graphics_current_57",
           "current_contract_78",
-          "current_kernel_records_80"
+          "current_kernel_records_80",
+          "file_name_limits_08827"
         ]
       },
       {
@@ -57700,7 +57813,8 @@
           "service_audio_admission_86",
           "audio_progress_08753",
           "audio_silence_08754",
-          "qualified_prior_source_08825"
+          "qualified_prior_source_08825",
+          "file_name_limits_08827"
         ]
       },
       {
@@ -57727,7 +57841,8 @@
           "platform_current_58",
           "current_contract_78",
           "current_kernel_records_80",
-          "bounded_work_08755"
+          "bounded_work_08755",
+          "file_name_limits_08827"
         ]
       },
       {
@@ -57904,7 +58019,8 @@
         "proof": [
           "drivers_current_67",
           "audio_progress_08753",
-          "bounded_work_08755"
+          "bounded_work_08755",
+          "file_name_limits_08827"
         ]
       },
       {
@@ -57958,7 +58074,8 @@
           "local_contract_and_baseline",
           "library_projection_current_61",
           "language_libraries_current_60",
-          "current_providers_79"
+          "current_providers_79",
+          "file_name_limits_08827"
         ]
       },
       {
@@ -58000,7 +58117,8 @@
           "library_projection_current_61",
           "language_libraries_current_60",
           "geometry_current_83",
-          "desktop_capture_inputs_86"
+          "desktop_capture_inputs_86",
+          "file_name_limits_08827"
         ]
       },
       {
@@ -58078,7 +58196,8 @@
           "language_libraries_current_60",
           "desktop_port_inputs_86",
           "desktop_output_inputs_86",
-          "display_geometry_parsers_94"
+          "display_geometry_parsers_94",
+          "file_name_limits_08827"
         ]
       },
       {
@@ -58138,7 +58257,8 @@
         "proof": [
           "local_contract_and_baseline",
           "library_projection_current_61",
-          "language_libraries_current_60"
+          "language_libraries_current_60",
+          "file_name_limits_08827"
         ]
       },
       {
@@ -58218,7 +58338,8 @@
         "proof": [
           "local_contract_and_baseline",
           "library_projection_current_61",
-          "language_libraries_current_60"
+          "language_libraries_current_60",
+          "file_name_limits_08827"
         ]
       },
       {
