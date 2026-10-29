@@ -54403,10 +54403,26 @@
         "Contract56 16/16 build steps,26 negative mutations, host/bare layouts, Clippy and7 actual C/Zig/Rust callback interops passed; old165 R4SYS slots/1336byte prefix preserved; four optional slots append at1336..1360, new handle24bytes.",
         "SDK current native C/Rust resource lifecycle case and original native GUI/session case pass, including actual unsafe/Send/retained-buffer/frame-loan misuse rejection. GUI compiler fingerprint unchanged. Desktop native owners241 and geometry3 cases pass with generated Library aliases.",
         "Actual KVM4 software Desktop: public C observer sees exit37 and four stdout/stderr markers in76 normalized CRLF bytes. Two independent references survive real Desktop consuming reap; closing one leaves the second readable; wrong generation rejected; last close removes record; old owner wait/read remain invalid after consume.",
-        "Actual default creator-end cleanup confirmed while target stays alive. Core419 release build and Clippy pass. Library Rust projection generated from current canonical C types: R4SYS1368 plus appended offsets, ProgramObservationHandle24; runtime R4L artifacts unchanged."
+        "Actual default creator-end cleanup confirmed while target stays alive. Core419 release build and Clippy pass. Library Rust projection generated from current canonical C types: R4SYS1368 plus appended offsets, ProgramObservationHandle24; runtime R4L artifacts unchanged.",
+        "Full KVM4 Desktop183/WINSVC25/DESKRUN2 public C path passes: real pending waiter close and two managed-thread completion waits (1MB reserve), portable creator-end/reap, capture empty/16384byte truncation/clear, actual kill-9, first late bind after fast Desktop consume, actual65s broker expiry followed by portable read/last-close removal. Same Desktop generation,0window/capture resources restored; QEMU normal shutdown0."
       ],
-      "guest_proof": "Temp/08826-core-proof.json",
-      "limits": "This evidence covers the stated host/Core primitive scope. No Windows, physical hardware, speedup or full broker lifecycle claim. Portable creator-end, pending waiter cancellation/concurrent waits and complete Desktop183/WINSVC25 handoff are still undergoing runtime qualification;64KB managed-thread fixture reserve was too small and is corrected to1MB. No successful cancellation claim from that interrupted run."
+      "guest_proof": "Docs/Desktop/DeskRun.txt (0.88.26); compact original Temp/08826-integration-proof.json",
+      "limits": "Linux/KVM4 software scope; no Windows/native hardware/physical visibility, isolated speedup or actual32bit public process-ID wrap. Full identities and real window-slot reuse tested. Earlier64KB fixture exhausted its guard; it supplies no successful wait/cancellation or thread-fault-recovery claim. Final STANDARD recorded separately.",
+      "guest": {
+        "exit": 37,
+        "normal_bytes": 76,
+        "source_bytes": 72,
+        "thread_reserve_bytes": 1048576,
+        "broker_retention_expiry_seconds": 65,
+        "kernel": 419,
+        "desktop": 183,
+        "winsvc": 25,
+        "deskrun": 2,
+        "shutdown": 0
+      },
+      "standard_run_id": "efc49c9b-fccb-4cdc-a99f-ca8a6a0278c8",
+      "original_standard_sha256": "5118140cba59fe27a934bafe2db9c5a115e362853e899b194de1a7bf06953b93",
+      "standard_status": "lokal validiert; R4OS Server ausstehend"
     }
   },
   "wave_bindings": [
@@ -54664,7 +54680,7 @@
     "contract": "0.64.56",
     "libraries": "0.64.35",
     "evidence": "process_evidence_08826",
-    "scope": "Append-only R4SYS observation contract, typed public resource bindings, lazy GUI console capture and regenerated canonical Library Rust projection. Bounded host/Core guest proof above; complete broker runtime qualification pending."
+    "scope": "Append-only R4SYS observation contract, typed public bindings, lazy GUI transcript and generated Library Rust projection; bounded host/Core and full Desktop broker lifecycle/retention proof."
   },
   "drift_guard": {
     "schema": 1,

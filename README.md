@@ -1038,7 +1038,9 @@ if (rc == 0) {
 
 GUI stdout (`R4SYS.write`) and stdout/stderr (`R4DESK.console_write`) enter a
 lazy console transcript without a visible console or physical TTY routing.
-It is the merged, normalized UTF-8 console representation, bounded to16384
+The live CUI console_output surface stays separate; read GUI text through
+its completed observation. It is the merged, normalized UTF-8 console
+representation, including CRLF normalization, bounded to16384
 bytes; it is neither raw per-stream bytes nor the R4DRAW GUI image. COM1
 diagnostics are separate. OutputAvailable includes captured empty output;
 OutputTruncated and OutputIncomplete report known loss (overflow, editing or
