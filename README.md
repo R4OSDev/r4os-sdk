@@ -1003,3 +1003,44 @@ original manifest builder or the existing Rust/Cargo owner. The capability
 catalog projects the current language matrix separately from tool presence
 and host/guest/hardware evidence. Native R4CODE/R4BUILD retain their bounded
 C subset and report host-only module roles without treating them as apps.
+
+## Terminal process evidence
+
+SDK0.64.108 / Contract0.64.56 adds R4SYS32 evidence observations (Kernel419).
+Bind the exact process ID and generation while its completion exists. An
+observation survives the process owner's consuming reap and retains only
+terminal metadata and the inactive transcript. Close it explicitly when done.
+Default bindings also close with their creator generation; PORTABLE bindings
+survive that creator and require explicit close or boot end. Exporting a
+Rust token alone does not make it portable.
+
+Zig: `app.system().programObservationRetain/Wait/Read/Release`. C:
+`r4_resources_observation_retain/wait/read/release` in `r4os/app_resources.h`.
+Rust: `Resources::observe_process`, `Observation::{wait_ready,read,close}`;
+`export` transfers release responsibility and `adopt_observation` adopts it.
+The old process wait/reap API keeps its consuming ownership contract.
+
+```c
+R4Resources resources = { .app = app };
+R4ProgramObservationHandle observation = {0};
+/* process contains the exact ID/generation returned by the launch. */
+int32_t rc = r4_resources_observation_retain(&resources, &process, 0, &observation);
+if (rc == 0) {
+    R4ProgramProcessCompletion completion = {0};
+    rc = r4_resources_observation_wait(&resources, &observation,
+                                       r4_timeout_forever(), &completion);
+    /* Only rc == 0 confirms completion.exit_code; zero output is not proof. */
+    int32_t released = r4_resources_observation_release(&resources, &observation);
+    /* Preserve actual wait/read/release failures in the consumer. */
+    (void)released;
+}
+```
+
+GUI stdout (`R4SYS.write`) and stdout/stderr (`R4DESK.console_write`) enter a
+lazy console transcript without a visible console or physical TTY routing.
+It is the merged, normalized UTF-8 console representation, bounded to16384
+bytes; it is neither raw per-stream bytes nor the R4DRAW GUI image. COM1
+diagnostics are separate. OutputAvailable includes captured empty output;
+OutputTruncated and OutputIncomplete report known loss (overflow, editing or
+capture failure). An unavailable capture is not an empty successful capture.
+Validate the actual exit code and application-specific expected markers too.

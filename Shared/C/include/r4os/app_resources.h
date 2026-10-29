@@ -219,6 +219,35 @@ static inline int32_t r4os_process_completion_read(R4OS_ProcessHandle *process, 
         &handle, offset, out, capacity, out_read);
 }
 
+/* An observation is an independent exact-generation evidence reference.
+ * Default bindings are reclaimed with the creator; PORTABLE requires release.
+ * Releasing an observation never reaps or terminates its target process. */
+static inline int32_t r4_resources_observation_retain(R4Resources *resources, const R4ProgramProcessHandle *process,
+                                                     uint32_t flags, R4ProgramObservationHandle *out) {
+    if (!resources || !resources->app || !process || !out) return R4OS_PROGRAM_HANDLE_ERROR_INVALID;
+    if (!R4_RESOURCE_SYS_HAS(resources->app, program_observation_retain)) return R4OS_ERR_NO_FN;
+    return ((R4SysProgramObservationRetainFn)(uintptr_t)resources->app->system.table->program_observation_retain)(process, flags, out);
+}
+static inline int32_t r4_resources_observation_wait(R4Resources *resources, const R4ProgramObservationHandle *observation,
+                                                   R4Timeout timeout, R4ProgramProcessCompletion *out) {
+    if (!resources || !resources->app || !observation || !out) return R4OS_PROGRAM_HANDLE_ERROR_INVALID;
+    if (!R4_RESOURCE_SYS_HAS(resources->app, program_observation_wait)) return R4OS_ERR_NO_FN;
+    uint64_t ticks = 0u;
+    if (r4_timeout_to_ticks(timeout, r4_resource_monotonic_hz(resources->app), &ticks) != R4OS_OK) return R4OS_PROGRAM_HANDLE_ERROR_INVALID;
+    return ((R4SysProgramObservationWaitFn)(uintptr_t)resources->app->system.table->program_observation_wait)(observation, ticks, out);
+}
+static inline int32_t r4_resources_observation_read(R4Resources *resources, const R4ProgramObservationHandle *observation,
+                                                   uint32_t offset, uint8_t *out, uint32_t capacity, uint32_t *out_read) {
+    if (!resources || !resources->app || !observation || !out || !out_read) return R4OS_PROGRAM_HANDLE_ERROR_INVALID;
+    if (!R4_RESOURCE_SYS_HAS(resources->app, program_observation_read)) return R4OS_ERR_NO_FN;
+    return ((R4SysProgramObservationReadFn)(uintptr_t)resources->app->system.table->program_observation_read)(observation, offset, out, capacity, out_read);
+}
+static inline int32_t r4_resources_observation_release(R4Resources *resources, const R4ProgramObservationHandle *observation) {
+    if (!resources || !resources->app || !observation) return R4OS_PROGRAM_HANDLE_ERROR_INVALID;
+    if (!R4_RESOURCE_SYS_HAS(resources->app, program_observation_release)) return R4OS_ERR_NO_FN;
+    return ((R4SysProgramObservationReleaseFn)(uintptr_t)resources->app->system.table->program_observation_release)(observation);
+}
+
 static inline int32_t r4os_process_reap(R4OS_ProcessHandle *process, R4OS_ProcessCompletion *out) {
     if (out != 0) *out = (R4OS_ProcessCompletion){0};
     if (process == 0 || out == 0) return R4OS_PROGRAM_HANDLE_ERROR_INVALID;

@@ -54395,6 +54395,18 @@
         "SDK build.zig.zon103-to106 historical source increments and exact Contract archive pins reviewed;107 changes the actual public C/GUI projections and binds published Contract55 archive. No consumer-wide repinning."
       ],
       "limits": "This reconciles specific qualified source review metadata. It neither reruns old hardware tests nor grants new runtime, hardware or performance acceptance."
+    },
+    "process_evidence_08826": {
+      "complete": true,
+      "scope": "SDK108/Contract56 typed C/Zig/Rust observation bindings and Core419 retained GUI stdout/stderr; old process owner/reap contract stays consuming. Library source35 regenerates only its current canonical Rust aliases/layout checks.",
+      "checks": [
+        "Contract56 16/16 build steps,26 negative mutations, host/bare layouts, Clippy and7 actual C/Zig/Rust callback interops passed; old165 R4SYS slots/1336byte prefix preserved; four optional slots append at1336..1360, new handle24bytes.",
+        "SDK current native C/Rust resource lifecycle case and original native GUI/session case pass, including actual unsafe/Send/retained-buffer/frame-loan misuse rejection. GUI compiler fingerprint unchanged. Desktop native owners241 and geometry3 cases pass with generated Library aliases.",
+        "Actual KVM4 software Desktop: public C observer sees exit37 and four stdout/stderr markers in76 normalized CRLF bytes. Two independent references survive real Desktop consuming reap; closing one leaves the second readable; wrong generation rejected; last close removes record; old owner wait/read remain invalid after consume.",
+        "Actual default creator-end cleanup confirmed while target stays alive. Core419 release build and Clippy pass. Library Rust projection generated from current canonical C types: R4SYS1368 plus appended offsets, ProgramObservationHandle24; runtime R4L artifacts unchanged."
+      ],
+      "guest_proof": "Temp/08826-core-proof.json",
+      "limits": "This evidence covers the stated host/Core primitive scope. No Windows, physical hardware, speedup or full broker lifecycle claim. Portable creator-end, pending waiter cancellation/concurrent waits and complete Desktop183/WINSVC25 handoff are still undergoing runtime qualification;64KB managed-thread fixture reserve was too small and is corrected to1MB. No successful cancellation claim from that interrupted run."
     }
   },
   "wave_bindings": [
@@ -54647,17 +54659,17 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.88.25",
-    "sdk": "0.64.107",
-    "contract": "0.64.55",
-    "libraries": "0.64.34",
-    "evidence": "gui_focus_font_08825",
-    "scope": "Typed C/Zig/Rust GUI focus/font and generated C window flags with actual bounded host/guest proof. Separately enumerated prior selector/raw-alias/pending-RPC source deltas reviewed; unchanged qualified bodies retain their evidence."
+    "performed_in": "0.88.26",
+    "sdk": "0.64.108",
+    "contract": "0.64.56",
+    "libraries": "0.64.35",
+    "evidence": "process_evidence_08826",
+    "scope": "Append-only R4SYS observation contract, typed public resource bindings, lazy GUI console capture and regenerated canonical Library Rust projection. Bounded host/Core guest proof above; complete broker runtime qualification pending."
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.88.25",
+    "reviewed_in": "0.88.26",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -54713,23 +54725,23 @@
     "files": [
       {
         "path": "Repositories/Contract/API/ApiContract.baseline.json",
-        "sha256": "6fafd3c7879af899994b597bb4f4eaba9ca19d260f8f6c5ae68c61b28dd4aeca"
+        "sha256": "c4bece3221b2951bafb30c0aae60212f96e0a0898136447a8a392336e0fd308a"
       },
       {
         "path": "Repositories/Contract/API/ApiContract.json",
-        "sha256": "6fafd3c7879af899994b597bb4f4eaba9ca19d260f8f6c5ae68c61b28dd4aeca"
+        "sha256": "c4bece3221b2951bafb30c0aae60212f96e0a0898136447a8a392336e0fd308a"
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/API.json",
-        "sha256": "fab5a6180eb5f29df106f3bce5d5dbc854c74d9af8e8bb9bde12fb11bbd881a9"
+        "sha256": "05297c289808fbbdbe8c17e302bdedc0020e95085f82fc47f23bee2b53636a69"
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/RustABI.json",
-        "sha256": "5ab7f5096bb6601d67c9d13cafb29e8035d6d7aa7df31b72217255359d46b883"
+        "sha256": "2fbe71ceaa3e2e0b18bd03c2cd65c961b8b18a754997f3acf0e8e5308bc6c822"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_generated.h",
-        "sha256": "cd1c2d33d853b4c0781f2eca67ae14be5461cc8a6d6702c730dde4d117a4c42f"
+        "sha256": "b39d4dc3d45850425b7ee24186a3a459c57a3eb89b1682f386b35646448b770a"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_technical_generated.h",
@@ -54741,19 +54753,19 @@
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Rust/src/lib.rs",
-        "sha256": "ac0756b857ca6a22bf0aa6665ca4031fe49914c9723a19815bf8dfc6469541b4"
+        "sha256": "37e2b871521e4b8cf2dc8655e112949f851ffdc498e219ab2c94829c378bcaf4"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi.zig",
-        "sha256": "e93ba914f5f1f5c111947a1f4e23a3be7d51a7444b0f136bf82de6124c6f8564"
+        "sha256": "9743f5972bd6b2a5dbb3543384c7be21ab720c6b9c8a4b0acfa2ed63185b0f06"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_exports.zig",
-        "sha256": "fb09022a601b27b76b2f7dba5ce01387bec94322ae04c919cb02609b324db8b1"
+        "sha256": "2bc1fea95ae0d2d4a144596d7fde49fb09a9ec1032777ab4a2a4df03833d5a6f"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_generated.zig",
-        "sha256": "15679324ec0cc1aa74df0a6a6bb85bc2ea6dc9ea2c97ecddec1b1acbf84a05f1"
+        "sha256": "3436aa2c1787816182383401eb8d5e078c13eb5fd83c0897bc4e50fadd7f0ddf"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/package.zig",
@@ -54777,7 +54789,7 @@
       },
       {
         "path": "Repositories/Contract/Tools/ApiContractGen/src/main.zig",
-        "sha256": "80db4b331135ffe07e13801f16f19a4e1248428d0732695ac5e779f7c1f3855d"
+        "sha256": "cd35bd1800b75dcf27fbe98e56d3a13bc1a1e2e04eea4bfc58b4cddcb10a7153"
       },
       {
         "path": "Repositories/Libraries/R4ACO/Bindings/C/r4aco.h",
@@ -55713,7 +55725,7 @@
       },
       {
         "path": "Repositories/Libraries/Shared/Rust/src/raw.rs",
-        "sha256": "46d3afe016682e7dc24f2ac9b3428456c11ca4e45e47b5f6fcdfbb35adb285e9"
+        "sha256": "8a45a98d5c07e7c30eef1d33ebd83e09a7da18b30f67cd85c5765d7d2ae707c2"
       },
       {
         "path": "Repositories/Libraries/Shared/Tests/Consumer/Cargo.toml",
@@ -55785,7 +55797,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "686c9706260fc4e94514ceca0bb7cb52cecbcec2490f9e2d21e855a1370631ae"
+        "sha256": "6980fc12d6c8f18acfecbc227a4dab38829401ea86eea6f17334b0ea0aa063fe"
       },
       {
         "path": "Repositories/SDK/Rust/src/data/hash.rs",
@@ -55921,7 +55933,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/resources/mod.rs",
-        "sha256": "7e9675b6c9e1df562d800233ef30287f1351947165da4b8569b37a58b8357fc2"
+        "sha256": "a1130fe6e6b23911a5b8d0015c18fd47b6c047af78c47df93c157c9ebf86cf32"
       },
       {
         "path": "Repositories/SDK/Rust/src/resources/notification.rs",
@@ -55929,7 +55941,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/resources/process.rs",
-        "sha256": "edac669119abbf9daece4cce640aa91a8bd6b46faf840924b709f39f9b14d0d5"
+        "sha256": "ba9a15fd351db0d9e53506625aeb89b0884696297612596d70c67464ce41c633"
       },
       {
         "path": "Repositories/SDK/Rust/src/resources/thread.rs",
@@ -56057,7 +56069,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_resources.h",
-        "sha256": "adc0a5d5bd2c3dae8b22a394d762e274a50f8d87c19d1ba50cbba95e769e2ee4"
+        "sha256": "4bef93798d4c15f14a68f2175fd671c52a788e804a783d014559bcaf5d68258f"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_services.h",
@@ -56457,7 +56469,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "6f8d3a561274aa9c1b1a2dea5ec70bd58f8ce535058edb7b0f59700d8acc2fb3"
+        "sha256": "0c4f144a8a6b82e5c0fb2b6d4eb39bb349bd288d4a8629c50e66dee5a6580d1a"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -56873,7 +56885,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/program.zig",
-        "sha256": "9ce0d3ba4ba8c1bb3625c1e9dae327f2578864a57d31680f31dd321c49d5b73b"
+        "sha256": "75e02e290577437fe2413b1f5b95980d24308d5dfde1e53d0b98c7c7e7150c4e"
       },
       {
         "path": "Repositories/SDK/r4os/protocol.zig",
@@ -56909,7 +56921,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/r4sys.zig",
-        "sha256": "50d3ce0743c8770c19d79e788d4075c49f0cb760fff980ce3904869fd27cfa8e"
+        "sha256": "6b32a15330003b56684d35046bdcec84df9217b970b7dfdaa91fdabd4854a163"
       },
       {
         "path": "Repositories/SDK/r4os/r4u_artifact.zig",
@@ -57375,7 +57387,8 @@
           "audio_progress_08753",
           "bounded_work_08755",
           "gui_focus_font_08825",
-          "qualified_prior_source_08825"
+          "qualified_prior_source_08825",
+          "process_evidence_08826"
         ]
       },
       {
@@ -57438,7 +57451,8 @@
           "desktop_entry_inputs_86",
           "desktop_owner_build_86",
           "bounded_work_08755",
-          "qualified_prior_source_08825"
+          "qualified_prior_source_08825",
+          "process_evidence_08826"
         ]
       },
       {
@@ -57496,7 +57510,8 @@
           "storage_current_53",
           "desktop_port_inputs_86",
           "desktop_capture_inputs_86",
-          "directory_batch_08743"
+          "directory_batch_08743",
+          "process_evidence_08826"
         ]
       },
       {
@@ -57520,7 +57535,8 @@
         "proof": [
           "resource_current_54",
           "current_kernel_records_80",
-          "lifecycle_metadata_87"
+          "lifecycle_metadata_87",
+          "process_evidence_08826"
         ]
       },
       {

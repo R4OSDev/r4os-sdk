@@ -256,3 +256,102 @@ impl Lifecycle<'_> {
         Ok(page)
     }
 }
+
+/// Separate terminal evidence reference. It never owns/reaps the target.
+#[must_use = "close or export the observation when its evidence is no longer needed"]
+pub struct Observation<'a> {
+    raw: abi::ProgramObservationHandle,
+    owner: &'a Resources<'a>,
+}
+impl Resources<'_> {
+    /// Bind while the exact completion still exists. Portable bindings survive
+    /// this process only when explicitly exported; close them in the consumer.
+    pub fn observe_process(
+        &self,
+        process: &abi::ProgramProcessHandle,
+        portable: bool,
+    ) -> Result<Observation<'_>> {
+        let mut raw = abi::ProgramObservationHandle::default();
+        exact(unsafe {
+            c::r4_resources_observation_retain(
+                &mut self.raw(),
+                process,
+                if portable {
+                    abi::program_observation_flag_portable
+                } else {
+                    0
+                },
+                &mut raw,
+            )
+        })?;
+        Ok(Observation { raw, owner: self })
+    }
+    /// Adopt one previously exported binding, without retaining another one.
+    /// Copies of its token name the same reference and close together.
+    pub fn adopt_observation(&self, raw: abi::ProgramObservationHandle) -> Observation<'_> {
+        Observation { raw, owner: self }
+    }
+}
+impl Observation<'_> {
+    pub fn handle(&self) -> abi::ProgramObservationHandle {
+        self.raw
+    }
+    /// Transfer explicit release responsibility. Only portable bindings survive
+    /// their creator generation; exporting does not change that kernel policy.
+    pub fn export(mut self) -> abi::ProgramObservationHandle {
+        let value = self.raw;
+        self.raw = abi::ProgramObservationHandle::default();
+        value
+    }
+    pub fn wait_ready(&self, timeout: Timeout) -> Result<Wait<abi::ProgramProcessCompletion>> {
+        let mut value = abi::ProgramProcessCompletion::default();
+        let code = unsafe {
+            c::r4_resources_observation_wait(
+                &mut self.owner.raw(),
+                &self.raw,
+                timeout.raw(),
+                &mut value,
+            )
+        };
+        match code {
+            abi::program_handle_error_would_block => Ok(Wait::WouldBlock),
+            abi::program_handle_error_timeout => Ok(Wait::TimedOut),
+            0 => Ok(Wait::Completed(value)),
+            _ => Err(Error::Raw(code)),
+        }
+    }
+    pub fn read(&self, offset: u32, bytes: &mut [u8]) -> Result<Wait<usize>> {
+        let mut count = 0;
+        let code = unsafe {
+            c::r4_resources_observation_read(
+                &mut self.owner.raw(),
+                &self.raw,
+                offset,
+                bytes.as_mut_ptr(),
+                crate::storage::length(bytes.len())?,
+                &mut count,
+            )
+        };
+        if code == abi::program_handle_error_would_block {
+            return Ok(Wait::WouldBlock);
+        }
+        exact(code)?;
+        if count as usize > bytes.len() {
+            return Err(Error::InvalidProvider);
+        }
+        Ok(Wait::Completed(count as usize))
+    }
+    pub fn close(&mut self) -> Result<()> {
+        if self.raw.id == 0 {
+            return Ok(());
+        }
+        exact(unsafe { c::r4_resources_observation_release(&mut self.owner.raw(), &self.raw) })?;
+        self.raw = abi::ProgramObservationHandle::default();
+        Ok(())
+    }
+}
+impl Drop for Observation<'_> {
+    fn drop(&mut self) {
+        let _ = self.close();
+    }
+}

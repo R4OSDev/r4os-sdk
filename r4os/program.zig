@@ -1209,6 +1209,25 @@ pub const Context = struct {
         return table_fn(handle, offset, out.ptr, @intCast(out.len), out_read);
     }
 
+    /// Retains terminal evidence independently of the consuming process owner.
+    pub fn programObservationRetain(self: *const Context, process: *const abi.ProgramProcessHandle, flags: u32, out: *abi.ProgramObservationHandle) i32 {
+        const callback = self.sysFn("program_observation_retain") orelse return self.unavailable("sys");
+        return callback(process, flags, out);
+    }
+    pub fn programObservationWait(self: *const Context, observation: *const abi.ProgramObservationHandle, timeout_ticks: u64, out: *abi.ProgramProcessCompletion) i32 {
+        const callback = self.sysFn("program_observation_wait") orelse return self.unavailable("sys");
+        return callback(observation, timeout_ticks, out);
+    }
+    pub fn programObservationRead(self: *const Context, observation: *const abi.ProgramObservationHandle, offset: u32, out: []u8, out_read: *u32) i32 {
+        if (out.len > std.math.maxInt(u32)) return abi.program_handle_error_output_range;
+        const callback = self.sysFn("program_observation_read") orelse return self.unavailable("sys");
+        return callback(observation, offset, out.ptr, @intCast(out.len), out_read);
+    }
+    pub fn programObservationRelease(self: *const Context, observation: *const abi.ProgramObservationHandle) i32 {
+        const callback = self.sysFn("program_observation_release") orelse return self.unavailable("sys");
+        return callback(observation);
+    }
+
     pub fn programSpawnWithConsoleHost(self: *const Context, path: [*:0]const u8, args: [*:0]const u8, policy: abi.LaunchPolicy, host: abi.ConsoleHostKind) i32 {
         const table_fn = self.deskFn("program_spawn_with_console_host") orelse return self.unavailable("desk");
         return table_fn(path, args, @intFromEnum(policy), @intFromEnum(host));

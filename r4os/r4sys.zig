@@ -951,6 +951,19 @@ pub const Context = struct {
         return self.base.programCompletionRead(handle, offset, out, out_read);
     }
 
+    pub fn programObservationRetain(self: *const Context, process: *const abi.ProgramProcessHandle, flags: u32, out: *abi.ProgramObservationHandle) i32 {
+        return self.base.programObservationRetain(process, flags, out);
+    }
+    pub fn programObservationWait(self: *const Context, observation: *const abi.ProgramObservationHandle, timeout_ticks: u64, out: *abi.ProgramProcessCompletion) i32 {
+        return self.base.programObservationWait(observation, timeout_ticks, out);
+    }
+    pub fn programObservationRead(self: *const Context, observation: *const abi.ProgramObservationHandle, offset: u32, out: []u8, out_read: *u32) i32 {
+        return self.base.programObservationRead(observation, offset, out, out_read);
+    }
+    pub fn programObservationRelease(self: *const Context, observation: *const abi.ProgramObservationHandle) i32 {
+        return self.base.programObservationRelease(observation);
+    }
+
     pub fn programSpawnWithConsoleHost(self: *const Context, path: [*:0]const u8, args: [*:0]const u8, policy: abi.LaunchPolicy, host: abi.ConsoleHostKind) i32 {
         return self.base.programSpawnWithConsoleHost(path, args, policy, host);
     }
