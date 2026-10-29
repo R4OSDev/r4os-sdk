@@ -9,6 +9,7 @@ use r4os_sdk::{
 };
 unsafe extern "C" {
     fn sdk_data_c_case(manifest: *const u8, length: usize) -> i32;
+    fn sdk_ico_c_case(bytes: *const u8, length: usize) -> i32;
 }
 const MANIFEST: &[u8] = include_bytes!("../Fixtures/Data/manifest.r4mf.txt");
 #[test]
@@ -92,6 +93,40 @@ fn original_raster_resize_and_existing_ico_fixture_match_owner_oracles() {
     assert_eq!(image.pixel(0, 0).unwrap(), Some((0xff, 0xff)));
     assert_eq!(image.pixel(1, 0).unwrap().unwrap().1, 0);
     assert!(Icon::open(b"bad").is_err());
+    for (bytes, colors) in [
+        (
+            include_bytes!("../Fixtures/Icons/windows32.ico").as_slice(),
+            [0xff, 0xff00, 0xff0000, 0xffffff],
+        ),
+        (
+            include_bytes!("../Fixtures/Icons/indexed8.ico").as_slice(),
+            [0xff0000, 0xff, 0xff, 0xff0000],
+        ),
+    ] {
+        assert_eq!(unsafe { sdk_ico_c_case(bytes.as_ptr(), bytes.len()) }, 0);
+        let bitmap = Icon::open(bytes).unwrap().best_bitmap(32).unwrap();
+        let mut rgb = [0x12345678; 24];
+        let mut alpha = [91; 24];
+        bitmap
+            .copy_scaled_pixels(&mut rgb, &mut alpha, 4, 4, 6)
+            .unwrap();
+        for i in 0..24 {
+            let (x, y) = (i % 6, i / 6);
+            if x < 4 {
+                let at = y / 2 * 2 + x / 2;
+                assert_eq!(rgb[i], colors[at]);
+                assert_eq!(alpha[i], [255, 0, 255, 255][at]);
+            } else {
+                assert_eq!((rgb[i], alpha[i]), (0x12345678, 91));
+            }
+        }
+        let before = (rgb, alpha);
+        assert_eq!(
+            bitmap.copy_scaled_pixels(&mut rgb[..3], &mut alpha, 2, 2, 2),
+            Err(r4os_sdk::data::Error::Bounds)
+        );
+        assert_eq!((rgb, alpha), before);
+    }
 }
 #[test]
 fn current_manifest_parser_plan_and_scratch_bounds_are_shared() {

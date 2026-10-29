@@ -1,2 +1,2 @@
 // Generated from the compiler-typed SDK data catalogue. Do not edit.
-pub const fingerprint:u64=17129968839081907690;
+pub const fingerprint:u64=3558765171647906743;

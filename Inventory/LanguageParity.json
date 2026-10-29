@@ -914,7 +914,8 @@
       "evidence": [
         "source_inventory",
         "data_current_61",
-        "web_current_62"
+        "web_current_62",
+        "ico_bulk_08840"
       ],
       "shared_core": "Grosse Parser/Codec-/Kryptokerne einmal beim SDK-/Librarybesitzer; besitzereigene C-ABI bzw. passende existierende R4L in61 begruenden. Kein Kopieren von JSON/ZIP/Entropiealgorithmen in drei Sprachen.",
       "qualification": {
@@ -923,6 +924,11 @@
         "libraries_package": "0.64.27",
         "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.61",
         "scope": "All eleven data-crypto modules plus public project/manifest/version/update/artifact metadata, concrete arena/reader/hash/context adapters. Existing bounded text53, time55 and chart56 paths retained; update/recovery and web engines keep their later waves. JSON/ZIP parsers remain installed R4P providers, not embedded app copies."
+      },
+      "current_bulk_copy_08840": {
+        "sdk": "0.64.112",
+        "evidence": "ico_bulk_08840",
+        "scope": "Original ICO owner, typed generated C and safe Rust bulk RGB/alpha copy; no new platform ABI or independent parser."
       }
     },
     {
@@ -54657,6 +54663,44 @@
         "Actual KVM4/software comparison using the unchanged original public C artifact fills native queue63, delays consumer2s and injects real Remote Up. Original Kernel422/Desktop186 yields Down1/Up0 exit7; Kernel423/Desktop187 yields Down1/Up1,63 drained, exit0 and complete78-byte retained output. No physical mouse/Windows or broad lifecycle qualification inferred."
       ],
       "limits": "Canonical historical source_inventory and unrelated capability evidence are unchanged. Actual native keyboard/overload/focus/close/kill/rebind/capture matrix, final normal tool export/product hashes and one final STANDARD32 are recorded separately in Docs/API/GuiFacade.md and Docs/Desktop/README.txt. The current source/binding review does not assert those pending tests passed or a speedup."
+    },
+    "ico_bulk_08840": {
+      "kind": "original_ICO_owner_bulk_C_Rust_boundary_and_Desktop_cache",
+      "performed_in": "0.88.40",
+      "sdk": "0.64.112",
+      "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.88.40",
+      "scope": "One allocation-free original ico.copyScaledPixels: original pixelAt palette/mask/BGRA alpha, NN scaling, checked source/destination layouts, strides, lengths, overflow and disjoint resident planes; validation failure writes nothing, padding unchanged. C generated opaque contract and safe Rust Icon.best_bitmap/Bitmap.copy_scaled_pixels; Desktop preserves centering, clipping, source freshness, negative cache, retry and invalidation. No duplicated bitmap implementation.",
+      "projection": {
+        "native_types": 185,
+        "native_functions": 168,
+        "fingerprint": 3558765171647906743,
+        "generated_C_native_fingerprint_and_Rust_projection": "byte checked"
+      },
+      "host_checks": {
+        "original_data_owner_tests": 49,
+        "C_Rust_data_groups": 5,
+        "actual_unsafe_ownership_compile_negatives": 5,
+        "Desktop_icon_groups": 5,
+        "common_geometry": 3,
+        "sdk_clock": 1,
+        "prior_32px_pixel_binding_calls": 3072,
+        "current_pixel_transfer_calls": 1,
+        "scope": "Real original SDK/native boundary. Fixed full RGB/alpha expected values, padding/scale/invalid/alias and all original cache/freshness/pixel oracles. Counts concern pixel transfer, excluding fixed selection/dimension calls; no timing multiplier."
+      },
+      "current_sources": {
+        "Repositories/SDK/Rust/src/c_facades.rs": "f5b650d39dd3886fd67290a3d0820ec70f6ad361dd63d1262faf65d4b3f04285",
+        "Repositories/SDK/Rust/src/data/image.rs": "f3586f4c040fa13857290b6c420c00cb2eec2396a5334427256c497bb5e5a6d9",
+        "Repositories/SDK/Shared/C/include/r4os/data_helpers.h": "ea85a9b4a991a94d7e2a442b0b48a86b8714c9bb4da8edbf75c9428c849a1f71",
+        "Repositories/SDK/Tests/Simulation/DataParity.c": "cbcacba8621fd87aa90c3f0d8a8dfe9881985f91f4f9b2d8d6d644713c9b3353",
+        "Repositories/SDK/Tests/Simulation/RustData.rs": "26771259f1af26cc44ba8ad24b8c7531821b01ace931b1d047a3aef7cb23a8d3",
+        "Repositories/SDK/build.zig": "e7cc738232be1cd1377904758b50a8996346374f8dd95ba01b28bf383656a1a4",
+        "Repositories/SDK/build.zig.zon": "6b4273cc884aeb15abe1d0d048e291895320c062f24f79b3a6b143708a800b06",
+        "Repositories/SDK/r4os/generated/data_fingerprint.zig": "7628c4ea3b8bdd25f78d872511c2fc3be125f5e73e6ad15b3bfd8508cd9c6033",
+        "Repositories/SDK/r4os/ico.zig": "3ef918bf1a93e95d366938354b53f53dad36fa800a54daf183362eb4c9367995"
+      },
+      "native_runtime": "Separate current194 pixel/readback/SMP4 qualification in Docs/Desktop/README.txt; this SDK review records host/data semantics.",
+      "standard": "Separate sole final0.88.40 STANDARD in Docs/Desktop/README.txt; historical suites retain their own scope.",
+      "limits": "Source review and host tests grant no physical audio/GPU/Windows execution or isolated latency qualification."
     }
   },
   "wave_bindings": [
@@ -54909,12 +54953,12 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.88.32",
-    "sdk": "0.64.111",
+    "performed_in": "0.88.40",
+    "sdk": "0.64.112",
     "contract": "0.64.59",
     "libraries": "0.64.38",
-    "evidence": "gui_host_backpressure_08832",
-    "scope": "28 enumerated owner deltas plus2 original typed C/Zig GUI oracle sources. Current raw/higher bindings, typed reset, public request/error/prefix transport and shared input decoder reviewed. Native lifecycle/final STANDARD and physical/Windows/performance remain separate qualification."
+    "evidence": "ico_bulk_08840",
+    "scope": "Seven reviewed owner/generated/build deltas and two explicit C/Rust test bodies. Original data owner49, actual C/Rust5 plus5 ownership negatives and Desktop5 original icon/cache groups qualified. Generated projection/opaque layouts and resident synchronous slices reviewed. Native current194, final STANDARD and physical/Windows/performance remain separate qualification."
   },
   "drift_guard": {
     "schema": 1,
@@ -56060,7 +56104,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "0fc37d8f1abbb1f7c2000b9e69e2294d096c168bdb0cac0fae34e824603d54b0"
+        "sha256": "f5b650d39dd3886fd67290a3d0820ec70f6ad361dd63d1262faf65d4b3f04285"
       },
       {
         "path": "Repositories/SDK/Rust/src/data/hash.rs",
@@ -56068,7 +56112,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/data/image.rs",
-        "sha256": "2ed95f2ade773d02bf38791cae17d97087dec5a2756b6c9148cd928d58801cbb"
+        "sha256": "f3586f4c040fa13857290b6c420c00cb2eec2396a5334427256c497bb5e5a6d9"
       },
       {
         "path": "Repositories/SDK/Rust/src/data/json.rs",
@@ -56348,7 +56392,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/data_helpers.h",
-        "sha256": "64f6a05584a142e92a1f8f42654a6400682458672ba8f32d0bdbbe18e1c9c3a0"
+        "sha256": "ea85a9b4a991a94d7e2a442b0b48a86b8714c9bb4da8edbf75c9428c849a1f71"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/directory_page.h",
@@ -56760,11 +56804,11 @@
       },
       {
         "path": "Repositories/SDK/build.zig",
-        "sha256": "371ad04958d7959e99902306a01341cdcecf34ab9999351e205b8dbc658afcde"
+        "sha256": "e7cc738232be1cd1377904758b50a8996346374f8dd95ba01b28bf383656a1a4"
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "7d3d05e42ce284794d9aadd5f1ebe0ca5a2c23420f769c9a5fb8f0886a144979"
+        "sha256": "6b4273cc884aeb15abe1d0d048e291895320c062f24f79b3a6b143708a800b06"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -56972,7 +57016,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/generated/data_fingerprint.zig",
-        "sha256": "33891fa2938e8a805deeaa7ba3aca07e7e1fc473fbd73876a3497448e3a913d8"
+        "sha256": "7628c4ea3b8bdd25f78d872511c2fc3be125f5e73e6ad15b3bfd8508cd9c6033"
       },
       {
         "path": "Repositories/SDK/r4os/generated/driver_fingerprint.zig",
@@ -57076,7 +57120,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/ico.zig",
-        "sha256": "f78d56964deeb296735ac5ebc231df304f4b5bec77bd21d8f47d14f7a52fe95b"
+        "sha256": "3ef918bf1a93e95d366938354b53f53dad36fa800a54daf183362eb4c9367995"
       },
       {
         "path": "Repositories/SDK/r4os/import_spec.zig",
@@ -58072,7 +58116,8 @@
           "Repositories/SDK/Rust/src/data/mod.rs"
         ],
         "proof": [
-          "data_current_61"
+          "data_current_61",
+          "ico_bulk_08840"
         ]
       },
       {

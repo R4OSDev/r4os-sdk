@@ -85,13 +85,30 @@ impl<'a> Icon<'a> {
                 entry.as_mut_ptr(),
             )
         })?;
+        self.decode(unsafe { entry.assume_init_ref() })
+    }
+    /// Select and decode with the original ICO owner's size/depth policy.
+    pub fn best_bitmap(&self, preferred_size: u16) -> Result<Bitmap<'a>> {
+        let mut entry = MaybeUninit::uninit();
+        required(unsafe {
+            c::R4SdkDataIco_chooseBest(
+                0,
+                self.bytes.as_ptr(),
+                self.bytes.len() as u64,
+                preferred_size,
+                entry.as_mut_ptr(),
+            )
+        })?;
+        self.decode(unsafe { entry.assume_init_ref() })
+    }
+    fn decode(&self, entry: &c::R4SdkDataIcoEntry) -> Result<Bitmap<'a>> {
         let mut native = MaybeUninit::uninit();
         required(unsafe {
             c::R4SdkDataIco_parseBmpImage(
                 0,
                 self.bytes.as_ptr(),
                 self.bytes.len() as u64,
-                entry.as_ptr(),
+                entry,
                 native.as_mut_ptr(),
             )
         })?;
@@ -108,6 +125,36 @@ pub struct Bitmap<'a> {
     _source: PhantomData<&'a [u8]>,
 }
 impl Bitmap<'_> {
+    /// Copy nearest-neighbour RGB/alpha pixels through one native call. Stride
+    /// counts pixels; padding is preserved. All borrows end at return.
+    pub fn copy_scaled_pixels(
+        &self,
+        rgb: &mut [u32],
+        alpha: &mut [u8],
+        width: u32,
+        height: u32,
+        stride: usize,
+    ) -> Result<()> {
+        if scalar(unsafe {
+            c::R4SdkDataIco_copyScaledPixels(
+                0,
+                self.bytes.as_ptr(),
+                self.bytes.len() as u64,
+                self.native.as_ptr(),
+                rgb.as_mut_ptr(),
+                rgb.len() as u64,
+                alpha.as_mut_ptr(),
+                alpha.len() as u64,
+                width,
+                height,
+                stride as u64,
+            )
+        })? == 0
+        {
+            return Err(Error::Bounds);
+        }
+        Ok(())
+    }
     pub fn dimensions(&self) -> Result<(u32, u32)> {
         Ok((
             scalar(unsafe { c::R4SdkDataIcoBitmapImage_get_width(self.native.as_ptr()) })? as u32,
