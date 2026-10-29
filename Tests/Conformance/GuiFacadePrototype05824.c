@@ -8,6 +8,10 @@
 #include <string.h>
 #include <r4os/driver_display.h>
 
+_Static_assert(sizeof(R4Message) == 48 && sizeof(R4MessageNext) == 56, "existing C message layout");
+_Static_assert(sizeof(R4FocusMessage) == 16 && offsetof(R4FocusMessage, tick) == 8, "focus payload");
+_Static_assert(sizeof(R4FontChangedMessage) == 16 && offsetof(R4FontChangedMessage, tick) == 8, "font notification payload");
+
 _Static_assert(sizeof(R4GfxReceiverSource) == 16, "receiver source layout");
 _Static_assert(sizeof(R4GfxReceiverInfo) == 8224 && offsetof(R4GfxReceiverInfo, modes) == 32 && offsetof(R4GfxReceiverInfo, edid) == 4128, "receiver record layout");
 _Static_assert(sizeof(R4GfxReceiverUpdate) == 48 && offsetof(R4GfxReceiverUpdate, receivers) == 40, "receiver update layout");
@@ -841,6 +845,8 @@ static void gfx_facade_probe(void) {
 
 static uint64_t now_ticks = 100u;
 static uint32_t activity_waits;
+static uint32_t gui_activity_waits;
+static uint32_t last_gui_subscriptions;
 static uint32_t clipboard_revision = 7u;
 static uint32_t event_index;
 static uint32_t draw_count;
@@ -864,6 +870,10 @@ static const R4GuiEvent events[] = {
     {.kind = R4_GUI_RAW_EVENT_MOUSE_UP, .window_id = 4, .x = 10, .y = 11, .tick = 13u},
     {.kind = R4_GUI_RAW_EVENT_MOUSE_MOVE, .window_id = 4, .x = 12, .y = 13, .tick = 14u},
     {.kind = R4_GUI_RAW_EVENT_CLOSE, .window_id = 4, .tick = 15u},
+    {.kind = R4_GUI_RAW_EVENT_FOCUS_GAINED, .window_id = 4, .tick = UINT64_C(0x100000010)},
+    {.kind = R4_GUI_RAW_EVENT_FOCUS_LOST, .window_id = 4, .tick = UINT64_C(0x100000011)},
+    {.kind = R4_GUI_RAW_EVENT_FONT_CHANGED, .window_id = -1},
+    {.kind = 0xfeedu, .window_id = 4, .x = -7, .y = 13, .key = 0x1f642u, .buttons = 3, .modifiers = 9, .tick = UINT64_C(0x100000012)},
 };
 
 static uint64_t fake_ticks(void) { return now_ticks; }
@@ -900,6 +910,7 @@ static int32_t fake_activity_wait(uint64_t sequence, uint64_t timeout, uint64_t 
 static int32_t fake_gui_activity_wait(uint64_t sequence, uint64_t timeout,
                                       uint32_t subscriptions, uint64_t *out_sequence) {
     assert((subscriptions & ~R4OS_GUI_ACTIVITY_SHARED_ALL) == 0);
+    ++gui_activity_waits; last_gui_subscriptions = subscriptions;
     return fake_activity_wait(sequence, timeout, out_sequence);
 }
 static int32_t fake_clear(uint32_t rgb) { (void)rgb; ++draw_count; return 0; }
@@ -1166,6 +1177,10 @@ int main(void) {
     assert(r4_event_loop_poll(&window.events, &message) && message.kind == R4_MESSAGE_MOUSE && message.value.mouse.action == R4_MOUSE_UP);
     assert(r4_event_loop_poll(&window.events, &message) && message.kind == R4_MESSAGE_MOUSE && message.value.mouse.action == R4_MOUSE_MOVE);
     assert(r4_event_loop_poll(&window.events, &message) && message.kind == R4_MESSAGE_CLOSE && message.value.close_window_id == 4);
+    assert(r4_event_loop_poll(&window.events, &message) && message.kind == R4_MESSAGE_FOCUS_GAINED && message.value.focus.window_id == 4 && message.value.focus.tick == UINT64_C(0x100000010));
+    assert(r4_event_loop_poll(&window.events, &message) && message.kind == R4_MESSAGE_FOCUS_LOST && message.value.focus.window_id == 4 && message.value.focus.tick == UINT64_C(0x100000011));
+    assert(r4_event_loop_poll(&window.events, &message) && message.kind == R4_MESSAGE_FONT_CHANGED && message.value.font_changed.window_id == -1 && message.value.font_changed.tick == 0);
+    assert(r4_event_loop_poll(&window.events, &message) && message.kind == R4_MESSAGE_UNKNOWN && memcmp(&message.value.unknown, &events[9], sizeof(R4GuiEvent)) == 0);
     close_requested=1;
     for(unsigned i=0;i<100;i++)assert(!r4_event_loop_poll(&window.events,&message));
     close_requested=0;assert(!r4_event_loop_poll(&window.events,&message));
@@ -1219,9 +1234,12 @@ int main(void) {
     clipboard_revision = 8u;
     assert(r4_event_loop_poll(&window.events, &message) && message.kind == R4_MESSAGE_CLIPBOARD && message.value.clipboard.revision == 8u);
     assert(r4_timer_start(&timers[0], &app, (R4TimerId){9u}, (R4Duration){2000000u}, 0));
+    uint32_t gui_waits_before = gui_activity_waits;
     R4MessageNext next = r4_window_wait_message(&window, r4_timeout_finite((R4Duration){10000000u}));
     assert(next.state == R4_MESSAGE_NEXT_MESSAGE && next.message.kind == R4_MESSAGE_TIMER && next.message.value.timer.id.value == 9u);
     assert(activity_waits > 0u);
+    assert(gui_activity_waits > gui_waits_before);
+    assert(last_gui_subscriptions == R4OS_GUI_ACTIVITY_SHARED_CLIPBOARD);
     assert(r4_window_wait_message(&window, r4_timeout_poll()).state == R4_MESSAGE_NEXT_TIMED_OUT);
     timers[0]=(R4Timer){.id={17},.deadline_tick=0,.interval_ticks=1,.active=1};now_ticks=UINT64_MAX;
     assert(r4_event_loop_poll(&window.events,&message) && message.kind==R4_MESSAGE_TIMER && timers[0].deadline_tick==UINT64_MAX);

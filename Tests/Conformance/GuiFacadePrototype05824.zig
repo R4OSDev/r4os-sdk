@@ -1365,6 +1365,10 @@ const raw_events = [_]r4os.abi.GuiEvent{
     .{ .kind = @intFromEnum(r4os.abi.GuiEventKind.mouse_up), .window_id = 4, .x = 10, .y = 11, .tick = 13 },
     .{ .kind = @intFromEnum(r4os.abi.GuiEventKind.mouse_move), .window_id = 4, .x = 12, .y = 13, .tick = 14 },
     .{ .kind = @intFromEnum(r4os.abi.GuiEventKind.close), .window_id = 4, .tick = 15 },
+    .{ .kind = @intFromEnum(r4os.abi.GuiEventKind.focus_gained), .window_id = 4, .tick = 0x100000010 },
+    .{ .kind = @intFromEnum(r4os.abi.GuiEventKind.focus_lost), .window_id = 4, .tick = 0x100000011 },
+    .{ .kind = @intFromEnum(r4os.abi.GuiEventKind.font_changed) },
+    .{ .kind = 0xfeed, .window_id = 4, .x = -7, .y = 13, .key = 0x1f642, .buttons = 3, .modifiers = 9, .tick = 0x100000012 },
 };
 
 fn fakeWrite(bytes: [*]const u8, length: u32) callconv(.c) i32 {
@@ -1771,6 +1775,21 @@ test "raw GUI events become typed messages and paint presents once" {
         .close => |id| try std.testing.expectEqual(@as(i32, 4), id),
         else => return error.Close,
     }
+    switch (window.pollMessage().?) {
+        .focus_gained => |v| try std.testing.expect(v.window_id == 4 and v.tick == 0x100000010),
+        else => return error.FocusGained,
+    }
+    switch (window.pollMessage().?) {
+        .focus_lost => |v| try std.testing.expect(v.window_id == 4 and v.tick == 0x100000011),
+        else => return error.FocusLost,
+    }
+    switch (window.pollMessage().?) {
+        .font_changed => |v| try std.testing.expect(v.window_id == -1 and v.tick == 0),
+        else => return error.FontChanged,
+    }
+    const unknown = window.pollMessage().?;
+    try std.testing.expect(unknown == .unknown);
+    try std.testing.expectEqualDeep(raw_events[9], unknown.guiEvent().?);
 
     var paint = switch (window.beginPaint()) {
         .paint => |value| value,

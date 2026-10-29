@@ -81,6 +81,10 @@ int32_t sdk_gui_c_case(void){
     assert(R4SdkGuiSessionNext(&s,&poll,&event)==1 && event.kind==3 && event.codepoint==0x1f642);
     for(unsigned kind=4;kind<=6;kind++)assert(R4SdkGuiSessionNext(&s,&poll,&event)==1 && event.kind==kind);
     assert(R4SdkGuiSessionNext(&s,&poll,&event)==1 && event.kind==1);
+    assert(R4SdkGuiSessionNext(&s,&poll,&event)==1 && event.kind==R4SdkGuiEventKind_focus_gained && event.window_id==4 && event.tick==UINT64_C(0x100000010));
+    assert(R4SdkGuiSessionNext(&s,&poll,&event)==1 && event.kind==R4SdkGuiEventKind_focus_lost && event.window_id==4 && event.tick==UINT64_C(0x100000011));
+    assert(R4SdkGuiSessionNext(&s,&poll,&event)==1 && event.kind==R4SdkGuiEventKind_font_changed && event.window_id==-1 && event.tick==0);
+    assert(R4SdkGuiSessionNext(&s,&poll,&event)==1 && event.kind==R4SdkGuiEventKind_unknown && memcmp(&event.raw,&events[9],sizeof(event.raw))==0);
     assert(R4SdkGuiSessionNext(&s,&poll,&event)==0);
     assert(R4SdkGuiSessionCommand(&s,42)==0);assert(R4SdkGuiSessionCommand(&s,43)<0);
     assert(R4SdkGuiSessionNext(&s,&poll,&event)==1 && event.kind==7 && event.id==42);

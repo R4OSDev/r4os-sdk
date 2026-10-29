@@ -25,7 +25,7 @@ pub const Session = struct {
     claimed: bool = false,
     mode: ?mode.Client = null,
 };
-pub const EventKind = enum(u32) { close = 1, resize = 2, key = 3, mouse_down = 4, mouse_up = 5, mouse_move = 6, command = 7, clipboard = 8, timer = 9, unknown = 10 };
+pub const EventKind = enum(u32) { close = 1, resize = 2, key = 3, mouse_down = 4, mouse_up = 5, mouse_move = 6, command = 7, clipboard = 8, timer = 9, unknown = 10, focus_gained = 11, focus_lost = 12, font_changed = 13 };
 pub const Event = extern struct {
     kind: u32 = 0,
     window_id: i32 = -1,

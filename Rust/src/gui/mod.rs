@@ -28,6 +28,9 @@ pub enum EventKind {
     Clipboard = c::R4SdkGuiEventKind_clipboard,
     Timer = c::R4SdkGuiEventKind_timer,
     Unknown = c::R4SdkGuiEventKind_unknown,
+    FocusGained = c::R4SdkGuiEventKind_focus_gained,
+    FocusLost = c::R4SdkGuiEventKind_focus_lost,
+    FontChanged = c::R4SdkGuiEventKind_font_changed,
 }
 impl Event {
     pub fn kind(&self) -> Option<EventKind> {
@@ -42,6 +45,9 @@ impl Event {
             c::R4SdkGuiEventKind_clipboard => EventKind::Clipboard,
             c::R4SdkGuiEventKind_timer => EventKind::Timer,
             c::R4SdkGuiEventKind_unknown => EventKind::Unknown,
+            c::R4SdkGuiEventKind_focus_gained => EventKind::FocusGained,
+            c::R4SdkGuiEventKind_focus_lost => EventKind::FocusLost,
+            c::R4SdkGuiEventKind_font_changed => EventKind::FontChanged,
             _ => return None,
         })
     }

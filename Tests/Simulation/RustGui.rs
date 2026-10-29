@@ -130,6 +130,18 @@ fn original_gui_pixels_frames_unicode_input_and_exact_host_session() {
         for kind in [4, 5, 6, 1] {
             assert_eq!(window.next(Timeout::Poll).unwrap().unwrap().kind, kind)
         }
+        for (kind, tick) in [(gui::EventKind::FocusGained, 0x100000010), (gui::EventKind::FocusLost, 0x100000011)] {
+            let event = window.next(Timeout::Poll).unwrap().unwrap();
+            assert_eq!(event.kind(), Some(kind));
+            assert_eq!((event.window_id, event.tick), (4, tick));
+        }
+        let font = window.next(Timeout::Poll).unwrap().unwrap();
+        assert_eq!(font.kind(), Some(gui::EventKind::FontChanged));
+        assert_eq!((font.window_id, font.tick), (-1, 0));
+        let unknown = window.next(Timeout::Poll).unwrap().unwrap();
+        assert_eq!(unknown.kind(), Some(gui::EventKind::Unknown));
+        assert_eq!((unknown.raw.kind, unknown.raw.window_id, unknown.raw.x, unknown.raw.y), (0xfeed, 4, -7, 13));
+        assert_eq!((unknown.raw.key, unknown.raw.buttons, unknown.raw.modifiers, unknown.raw.tick), (0x1f642, 3, 9, 0x100000012));
         assert!(window.next(Timeout::Poll).unwrap().is_none());
         window.post_command(42).unwrap();
         assert!(window.post_command(43).is_err());

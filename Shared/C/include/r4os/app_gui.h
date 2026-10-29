@@ -7,13 +7,22 @@ typedef struct R4CommandId { uint32_t value; } R4CommandId;
 typedef struct R4TimerId { uint32_t value; } R4TimerId;
 
 enum {
-    R4_GUI_RAW_EVENT_CLOSE = 1,
-    R4_GUI_RAW_EVENT_RESIZE = 2,
-    R4_GUI_RAW_EVENT_MOUSE_DOWN = 3,
-    R4_GUI_RAW_EVENT_MOUSE_UP = 4,
-    R4_GUI_RAW_EVENT_MOUSE_MOVE = 5,
-    R4_GUI_RAW_EVENT_KEY_DOWN = 6
+    R4_GUI_RAW_EVENT_CLOSE = R4ABI_GUI_EVENT_KIND_CLOSE,
+    R4_GUI_RAW_EVENT_RESIZE = R4ABI_GUI_EVENT_KIND_RESIZE,
+    R4_GUI_RAW_EVENT_MOUSE_DOWN = R4ABI_GUI_EVENT_KIND_MOUSE_DOWN,
+    R4_GUI_RAW_EVENT_MOUSE_UP = R4ABI_GUI_EVENT_KIND_MOUSE_UP,
+    R4_GUI_RAW_EVENT_MOUSE_MOVE = R4ABI_GUI_EVENT_KIND_MOUSE_MOVE,
+    R4_GUI_RAW_EVENT_KEY_DOWN = R4ABI_GUI_EVENT_KIND_KEY_DOWN,
+    R4_GUI_RAW_EVENT_FONT_CHANGED = R4ABI_GUI_EVENT_KIND_FONT_CHANGED,
+    R4_GUI_RAW_EVENT_FOCUS_GAINED = R4ABI_GUI_EVENT_KIND_FOCUS_GAINED,
+    R4_GUI_RAW_EVENT_FOCUS_LOST = R4ABI_GUI_EVENT_KIND_FOCUS_LOST
 };
+
+#define R4_GUI_WINDOW_FLAG_VISIBLE R4ABI_GUI_WINDOW_FLAG_VISIBLE
+#define R4_GUI_WINDOW_FLAG_MINIMIZED R4ABI_GUI_WINDOW_FLAG_MINIMIZED
+#define R4_GUI_WINDOW_FLAG_MAXIMIZED R4ABI_GUI_WINDOW_FLAG_MAXIMIZED
+#define R4_GUI_WINDOW_FLAG_CLOSE_REQUESTED R4ABI_GUI_WINDOW_FLAG_CLOSE_REQUESTED
+#define R4_GUI_WINDOW_FLAG_FULLSCREEN R4OS_GUI_WINDOW_FLAG_FULLSCREEN
 
 typedef enum R4MouseAction {
     R4_MOUSE_DOWN = 0,
@@ -49,6 +58,9 @@ typedef struct R4MouseMessage {
 
 typedef struct R4ClipboardMessage { uint32_t revision; } R4ClipboardMessage;
 typedef struct R4TimerMessage { R4TimerId id; uint64_t tick; } R4TimerMessage;
+typedef struct R4FocusMessage { int32_t window_id; uint64_t tick; } R4FocusMessage;
+/* A change notification: query the current font/metrics when handling it. */
+typedef struct R4FontChangedMessage { int32_t window_id; uint64_t tick; } R4FontChangedMessage;
 
 typedef enum R4MessageKind {
     R4_MESSAGE_CLOSE = 1,
@@ -58,7 +70,10 @@ typedef enum R4MessageKind {
     R4_MESSAGE_COMMAND = 5,
     R4_MESSAGE_CLIPBOARD = 6,
     R4_MESSAGE_TIMER = 7,
-    R4_MESSAGE_UNKNOWN = 8
+    R4_MESSAGE_UNKNOWN = 8,
+    R4_MESSAGE_FOCUS_GAINED = 9,
+    R4_MESSAGE_FOCUS_LOST = 10,
+    R4_MESSAGE_FONT_CHANGED = 11
 } R4MessageKind;
 
 typedef struct R4Message {
@@ -72,6 +87,8 @@ typedef struct R4Message {
         R4ClipboardMessage clipboard;
         R4TimerMessage timer;
         R4GuiEvent unknown;
+        R4FocusMessage focus;
+        R4FontChangedMessage font_changed;
     } value;
 } R4Message;
 
@@ -145,7 +162,7 @@ static inline void r4_timer_cancel(R4Timer *timer) { if (timer != 0) timer->acti
 static inline int r4_window_open(R4App *app, R4Timer *timers, uint32_t timer_count, R4Window *out) {
     if (app == 0 || out == 0 || (timer_count != 0 && timers == 0) || !r4_app_has_group(app, R4L_GROUP_R4DESK) || !r4_app_has_group(app, R4L_GROUP_R4DRAW)) return 0;
     const R4XStartR4Desk *desk = app->desktop.table; const R4XStartR4Draw *draw = app->drawing.table;
-    if (desk == 0 || draw == 0 || !R4_GUI_DESK_HAS(&app->desktop,program_window_id) || !R4_GUI_DESK_HAS(&app->desktop,gui_window_info) || !R4_GUI_DESK_HAS(&app->desktop,gui_poll_event) || !R4_GUI_DESK_HAS(&app->desktop,desktop_activity_wait) || !R4_GUI_DRAW_HAS(&app->drawing,gui_clear) || !R4_GUI_DRAW_HAS(&app->drawing,gui_rect) || !R4_GUI_DRAW_HAS(&app->drawing,gui_draw_text) || !R4_GUI_DRAW_HAS(&app->drawing,gui_present)) return 0;
+    if (desk == 0 || draw == 0 || !R4_GUI_DESK_HAS(&app->desktop,program_window_id) || !R4_GUI_DESK_HAS(&app->desktop,gui_window_info) || !R4_GUI_DESK_HAS(&app->desktop,gui_poll_event) || !R4_GUI_DESK_HAS(&app->desktop,gui_activity_wait) || !R4_GUI_DRAW_HAS(&app->drawing,gui_clear) || !R4_GUI_DRAW_HAS(&app->drawing,gui_rect) || !R4_GUI_DRAW_HAS(&app->drawing,gui_draw_text) || !R4_GUI_DRAW_HAS(&app->drawing,gui_present)) return 0;
     int32_t id = r4desk_program_window_id(&app->desktop); if (id < 0) return 0;
     *out = (R4Window){0}; out->app = app; out->id = id; out->events.app = app; out->events.timers = timers; out->events.timer_count = timer_count;
     if (R4_GUI_DESK_HAS(&app->desktop,clipboard_revision)) out->events.clipboard_revision = ((R4DeskClipboardRevisionFn)(uintptr_t)desk->clipboard_revision)();
@@ -177,6 +194,12 @@ static inline R4Message r4_message_translate(R4EventLoop *loop, R4GuiEvent raw) 
         case R4_GUI_RAW_EVENT_MOUSE_DOWN: result.kind = R4_MESSAGE_MOUSE; result.value.mouse = r4_mouse_message(raw, R4_MOUSE_DOWN); break;
         case R4_GUI_RAW_EVENT_MOUSE_UP: result.kind = R4_MESSAGE_MOUSE; result.value.mouse = r4_mouse_message(raw, R4_MOUSE_UP); break;
         case R4_GUI_RAW_EVENT_MOUSE_MOVE: result.kind = R4_MESSAGE_MOUSE; result.value.mouse = r4_mouse_message(raw, R4_MOUSE_MOVE); break;
+        case R4_GUI_RAW_EVENT_FOCUS_GAINED:
+        case R4_GUI_RAW_EVENT_FOCUS_LOST:
+            result.kind = raw.kind == R4_GUI_RAW_EVENT_FOCUS_GAINED ? R4_MESSAGE_FOCUS_GAINED : R4_MESSAGE_FOCUS_LOST;
+            result.value.focus = (R4FocusMessage){raw.window_id, raw.tick}; break;
+        case R4_GUI_RAW_EVENT_FONT_CHANGED:
+            result.kind = R4_MESSAGE_FONT_CHANGED; result.value.font_changed = (R4FontChangedMessage){raw.window_id, raw.tick}; break;
         default: result.kind = R4_MESSAGE_UNKNOWN; result.value.unknown = raw; break;
     }
     return result;
@@ -214,7 +237,7 @@ static inline uint64_t r4_event_loop_timer_delay(R4EventLoop *loop, uint64_t now
 
 static inline R4MessageNext r4_event_loop_wait(R4EventLoop *loop, R4Timeout timeout) {
     R4MessageNext result = {0};
-    if (loop == 0 || loop->app == 0 || !R4_GUI_DESK_HAS(&loop->app->desktop,desktop_activity_wait)) { result.state = R4_MESSAGE_NEXT_FAILED; result.raw_code = R4OS_ERR_NO_FN; return result; }
+    if (loop == 0 || loop->app == 0 || !R4_GUI_DESK_HAS(&loop->app->desktop,gui_activity_wait)) { result.state = R4_MESSAGE_NEXT_FAILED; result.raw_code = R4OS_ERR_NO_FN; return result; }
     uint64_t budget = 0u; if (r4_timeout_to_ticks(timeout, r4_gui_monotonic_hz(loop->app), &budget) != R4OS_OK) { result.state = R4_MESSAGE_NEXT_FAILED; result.raw_code = R4_REMOTE_FRAME_ERROR_INVALID; return result; }
     uint64_t started = r4_app_ticks(loop->app); int forever = timeout.kind == R4OS_TIMEOUT_KIND_FOREVER; uint64_t deadline = forever || UINT64_MAX - started < budget ? UINT64_MAX : started + budget;
     for (;;) {
@@ -222,7 +245,7 @@ static inline R4MessageNext r4_event_loop_wait(R4EventLoop *loop, R4Timeout time
         uint64_t now = r4_app_ticks(loop->app); uint64_t remaining = forever ? UINT64_MAX : (now >= deadline ? 0u : deadline - now);
         if (remaining == 0u) { result.state = R4_MESSAGE_NEXT_TIMED_OUT; return result; }
         int timer_found = 0; uint64_t timer_delay = r4_event_loop_timer_delay(loop, now, &timer_found); if (timer_found && timer_delay < remaining) remaining = timer_delay; if (remaining == 0u) continue;
-        uint64_t sequence = loop->activity_sequence; int32_t raw = ((R4DeskDesktopActivityWaitFn)(uintptr_t)loop->app->desktop.table->desktop_activity_wait)(loop->activity_sequence, remaining, &sequence); loop->activity_sequence = sequence;
+        uint64_t sequence = loop->activity_sequence; int32_t raw = ((R4DeskGuiActivityWaitFn)(uintptr_t)loop->app->desktop.table->gui_activity_wait)(loop->activity_sequence, remaining, R4OS_GUI_ACTIVITY_SHARED_CLIPBOARD, &sequence); loop->activity_sequence = sequence;
         if (raw < 0) { result.state = R4_MESSAGE_NEXT_FAILED; result.raw_code = raw; return result; }
     }
 }

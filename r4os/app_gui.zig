@@ -61,6 +61,17 @@ pub const TimerMessage = struct {
     tick: u64,
 };
 
+pub const FocusMessage = struct {
+    window_id: i32,
+    tick: u64,
+};
+
+/// Notification only; the raw provider does not attach a font ID or revision.
+pub const FontChangedMessage = struct {
+    window_id: i32,
+    tick: u64,
+};
+
 pub const Message = union(enum) {
     close: i32,
     resize: ResizeMessage,
@@ -70,6 +81,9 @@ pub const Message = union(enum) {
     clipboard: ClipboardMessage,
     timer: TimerMessage,
     unknown: abi.GuiEvent,
+    focus_gained: FocusMessage,
+    focus_lost: FocusMessage,
+    font_changed: FontChangedMessage,
 
     /// Bridge existing raw GUI handlers onto the shared event loop. Synthetic
     /// timer, clipboard and command messages remain explicit to the caller.
@@ -84,6 +98,9 @@ pub const Message = union(enum) {
                 .move => abi.GuiEventKind.mouse_move,
             }), .window_id = value.window_id, .x = value.x, .y = value.y, .buttons = value.buttons, .modifiers = value.modifiers, .tick = value.tick },
             .unknown => |value| value,
+            .focus_gained => |value| .{ .kind = @intFromEnum(abi.GuiEventKind.focus_gained), .window_id = value.window_id, .tick = value.tick },
+            .focus_lost => |value| .{ .kind = @intFromEnum(abi.GuiEventKind.focus_lost), .window_id = value.window_id, .tick = value.tick },
+            .font_changed => |value| .{ .kind = @intFromEnum(abi.GuiEventKind.font_changed), .window_id = value.window_id, .tick = value.tick },
             else => null,
         };
     }
@@ -226,6 +243,9 @@ pub const EventLoop = struct {
             @intFromEnum(abi.GuiEventKind.mouse_down) => .{ .mouse = mouseMessage(raw, .down) },
             @intFromEnum(abi.GuiEventKind.mouse_up) => .{ .mouse = mouseMessage(raw, .up) },
             @intFromEnum(abi.GuiEventKind.mouse_move) => .{ .mouse = mouseMessage(raw, .move) },
+            @intFromEnum(abi.GuiEventKind.focus_gained) => .{ .focus_gained = .{ .window_id = raw.window_id, .tick = raw.tick } },
+            @intFromEnum(abi.GuiEventKind.focus_lost) => .{ .focus_lost = .{ .window_id = raw.window_id, .tick = raw.tick } },
+            @intFromEnum(abi.GuiEventKind.font_changed) => .{ .font_changed = .{ .window_id = raw.window_id, .tick = raw.tick } },
             else => .{ .unknown = raw },
         };
     }

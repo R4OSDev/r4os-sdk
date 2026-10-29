@@ -121,6 +121,18 @@ fn event(message: app.Message) E {
             out.kind = @intFromEnum(Kind.unknown);
             out.raw = v;
         },
+        .focus_gained, .focus_lost => |v| {
+            out.kind = @intFromEnum(if (message == .focus_gained) Kind.focus_gained else Kind.focus_lost);
+            out.window_id = v.window_id;
+            out.tick = v.tick;
+            out.raw = message.guiEvent().?;
+        },
+        .font_changed => |v| {
+            out.kind = @intFromEnum(Kind.font_changed);
+            out.window_id = v.window_id;
+            out.tick = v.tick;
+            out.raw = message.guiEvent().?;
+        },
     }
     return out;
 }
