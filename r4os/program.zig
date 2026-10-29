@@ -1538,6 +1538,23 @@ pub const Context = struct {
         return table_fn();
     }
 
+    pub fn guiPointerCaptureInfo(self: *const Context, capture: ?*const abi.GuiPointerCaptureHandle, out: *abi.GuiPointerCaptureInfo) i32 {
+        const call = self.deskFn("gui_pointer_capture_info") orelse return self.unavailable("desk");
+        return call(capture, out);
+    }
+    pub fn guiPointerCaptureAcquire(self: *const Context, window: *const abi.GuiPointerWindowIdentity, mode: u32, out: *abi.GuiPointerCaptureHandle) i32 {
+        const call = self.deskFn("gui_pointer_capture_acquire") orelse return self.unavailable("desk");
+        return call(window, mode, out);
+    }
+    pub fn guiPointerCaptureRelease(self: *const Context, capture: *const abi.GuiPointerCaptureHandle) i32 {
+        const call = self.deskFn("gui_pointer_capture_release") orelse return self.unavailable("desk");
+        return call(capture);
+    }
+    pub fn guiPointerCaptureHost(self: *const Context, request: *const abi.GuiPointerHostRequest, out: *abi.GuiPointerCaptureInfo) i32 {
+        const call = self.deskFn("gui_pointer_capture_host") orelse return self.unavailable("desk");
+        return call(request, out);
+    }
+
     pub fn guiWindowInfo(self: *const Context, out: *abi.GuiWindowInfo) i32 {
         const table_fn = self.deskFn("gui_window_info") orelse return self.unavailable("desk");
         return table_fn(out);

@@ -123,6 +123,24 @@ fn original_gui_pixels_frames_unicode_input_and_exact_host_session() {
         assert_eq!(window.window_info().unwrap().unwrap().client_w, 320);
         window.set_title(c"Test").unwrap();
         window.set_minimum_size(100, 80).unwrap();
+        // Typed native transport, including absent/present optional pointers
+        // and all upper 32 bits. Runtime ownership is a separate guest proof.
+        let identity = window.pointer_identity().unwrap();
+        assert_eq!(identity.owner.generation, 0x100000009);
+        assert_eq!(identity.epoch, 0x200000008);
+        let token = window
+            .pointer_capture(&identity, r4os_sdk::abi::gui_pointer_mode_relative)
+            .unwrap();
+        assert_eq!(token.id, 0x300000007);
+        assert_eq!(
+            window.pointer_info(Some(&token)).unwrap().state,
+            r4os_sdk::abi::gui_pointer_state_active
+        );
+        assert!(matches!(
+            window.pointer_release(&token),
+            Err(r4os_sdk::storage::Error::Raw(-2))
+        ));
+
         assert_eq!(window.next(Timeout::Poll).unwrap().unwrap().kind, 2);
         let key = window.next(Timeout::Poll).unwrap().unwrap();
         assert_eq!(key.kind(), Some(gui::EventKind::Key));
@@ -130,7 +148,10 @@ fn original_gui_pixels_frames_unicode_input_and_exact_host_session() {
         for kind in [4, 5, 6, 1] {
             assert_eq!(window.next(Timeout::Poll).unwrap().unwrap().kind, kind)
         }
-        for (kind, tick) in [(gui::EventKind::FocusGained, 0x100000010), (gui::EventKind::FocusLost, 0x100000011)] {
+        for (kind, tick) in [
+            (gui::EventKind::FocusGained, 0x100000010),
+            (gui::EventKind::FocusLost, 0x100000011),
+        ] {
             let event = window.next(Timeout::Poll).unwrap().unwrap();
             assert_eq!(event.kind(), Some(kind));
             assert_eq!((event.window_id, event.tick), (4, tick));
@@ -140,8 +161,24 @@ fn original_gui_pixels_frames_unicode_input_and_exact_host_session() {
         assert_eq!((font.window_id, font.tick), (-1, 0));
         let unknown = window.next(Timeout::Poll).unwrap().unwrap();
         assert_eq!(unknown.kind(), Some(gui::EventKind::Unknown));
-        assert_eq!((unknown.raw.kind, unknown.raw.window_id, unknown.raw.x, unknown.raw.y), (0xfeed, 4, -7, 13));
-        assert_eq!((unknown.raw.key, unknown.raw.buttons, unknown.raw.modifiers, unknown.raw.tick), (0x1f642, 3, 9, 0x100000012));
+        assert_eq!(
+            (
+                unknown.raw.kind,
+                unknown.raw.window_id,
+                unknown.raw.x,
+                unknown.raw.y
+            ),
+            (0xfeed, 4, -7, 13)
+        );
+        assert_eq!(
+            (
+                unknown.raw.key,
+                unknown.raw.buttons,
+                unknown.raw.modifiers,
+                unknown.raw.tick
+            ),
+            (0x1f642, 3, 9, 0x100000012)
+        );
         assert!(window.next(Timeout::Poll).unwrap().is_none());
         window.post_command(42).unwrap();
         assert!(window.post_command(43).is_err());

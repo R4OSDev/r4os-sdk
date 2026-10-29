@@ -3,6 +3,7 @@
 #define main sdk_gui_legacy_c_case
 #include "../Conformance/GuiFacadePrototype05824.c"
 #undef main
+#include "PointerBindings.c"
 #include <r4os/gui_bridge.h>
 extern void sdk_gui_oracle_tables(R4XStartR4Sys *,R4XStartR4Desk *,R4XStartR4Draw *);
 extern int32_t sdk_gui_oracle_pixels(uint32_t *,uintptr_t);
@@ -32,6 +33,7 @@ void sdk_gui_native_tables(R4XStartR4Sys *sys,R4XStartR4Desk *desk,R4XStartR4Dra
     draw->gui_shared_raster_acquire=(uintptr_t)shared_acquire;draw->gui_shared_raster_release=(uintptr_t)shared_release;
     draw->font_info=(uintptr_t)font_info_probe;draw->font_glyph_row=(uintptr_t)legacy_row_probe;
     legacy_rows=0;font_revision_value=0;
+    desk->gui_pointer_capture_info=(uintptr_t)pointer_info;desk->gui_pointer_capture_acquire=(uintptr_t)pointer_acquire;desk->gui_pointer_capture_release=(uintptr_t)pointer_release;
 }
 static uint32_t host_mode,host_opens,host_closes,host_calls,host_window_queries;
 static int32_t host_window_id(void){++host_window_queries;return -1;}

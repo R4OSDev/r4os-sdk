@@ -133,6 +133,37 @@ fn event(message: app.Message) E {
             out.tick = v.tick;
             out.raw = message.guiEvent().?;
         },
+        .wheel => |v| {
+            out.kind = @intFromEnum(Kind.wheel);
+            out.window_id = v.window_id;
+            out.x = v.x;
+            out.y = v.y;
+            out.width = v.delta;
+            out.buttons = v.buttons;
+            out.modifiers = v.modifiers;
+            out.tick = v.tick;
+            out.raw = message.guiEvent().?;
+        },
+        .relative => |v| {
+            out.kind = @intFromEnum(Kind.relative);
+            out.window_id = v.window_id;
+            out.x = v.dx;
+            out.y = v.dy;
+            out.id = v.source;
+            out.buttons = v.buttons;
+            out.modifiers = v.modifiers;
+            out.tick = v.tick;
+            out.raw = message.guiEvent().?;
+        },
+        .pointer_capture => |v| {
+            out.kind = @intFromEnum(Kind.pointer_capture);
+            out.window_id = v.window_id;
+            out.id = v.state;
+            out.revision = v.reason;
+            out.buttons = v.mode;
+            out.tick = v.tick;
+            out.raw = message.guiEvent().?;
+        },
     }
     return out;
 }

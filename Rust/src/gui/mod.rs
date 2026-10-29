@@ -31,6 +31,9 @@ pub enum EventKind {
     FocusGained = c::R4SdkGuiEventKind_focus_gained,
     FocusLost = c::R4SdkGuiEventKind_focus_lost,
     FontChanged = c::R4SdkGuiEventKind_font_changed,
+    MouseWheel = c::R4SdkGuiEventKind_wheel,
+    MouseRelative = c::R4SdkGuiEventKind_relative,
+    PointerCapture = c::R4SdkGuiEventKind_pointer_capture,
 }
 impl Event {
     pub fn kind(&self) -> Option<EventKind> {
@@ -48,6 +51,9 @@ impl Event {
             c::R4SdkGuiEventKind_focus_gained => EventKind::FocusGained,
             c::R4SdkGuiEventKind_focus_lost => EventKind::FocusLost,
             c::R4SdkGuiEventKind_font_changed => EventKind::FontChanged,
+            c::R4SdkGuiEventKind_wheel => EventKind::MouseWheel,
+            c::R4SdkGuiEventKind_relative => EventKind::MouseRelative,
+            c::R4SdkGuiEventKind_pointer_capture => EventKind::PointerCapture,
             _ => return None,
         })
     }

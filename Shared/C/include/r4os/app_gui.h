@@ -15,7 +15,10 @@ enum {
     R4_GUI_RAW_EVENT_KEY_DOWN = R4ABI_GUI_EVENT_KIND_KEY_DOWN,
     R4_GUI_RAW_EVENT_FONT_CHANGED = R4ABI_GUI_EVENT_KIND_FONT_CHANGED,
     R4_GUI_RAW_EVENT_FOCUS_GAINED = R4ABI_GUI_EVENT_KIND_FOCUS_GAINED,
-    R4_GUI_RAW_EVENT_FOCUS_LOST = R4ABI_GUI_EVENT_KIND_FOCUS_LOST
+    R4_GUI_RAW_EVENT_FOCUS_LOST = R4ABI_GUI_EVENT_KIND_FOCUS_LOST,
+    R4_GUI_RAW_EVENT_MOUSE_WHEEL = R4ABI_GUI_EVENT_KIND_MOUSE_WHEEL,
+    R4_GUI_RAW_EVENT_MOUSE_RELATIVE = R4ABI_GUI_EVENT_KIND_MOUSE_RELATIVE,
+    R4_GUI_RAW_EVENT_CAPTURE_CHANGED = R4ABI_GUI_EVENT_KIND_CAPTURE_CHANGED
 };
 
 #define R4_GUI_WINDOW_FLAG_VISIBLE R4ABI_GUI_WINDOW_FLAG_VISIBLE
@@ -62,6 +65,22 @@ typedef struct R4FocusMessage { int32_t window_id; uint64_t tick; } R4FocusMessa
 /* A change notification: query the current font/metrics when handling it. */
 typedef struct R4FontChangedMessage { int32_t window_id; uint64_t tick; } R4FontChangedMessage;
 
+typedef struct R4WheelMessage {
+    int32_t window_id,x,y,delta;
+    uint32_t buttons,modifiers;
+    uint64_t tick;
+} R4WheelMessage;
+typedef struct R4RelativeMouseMessage {
+    int32_t window_id,dx,dy;
+    uint32_t buttons,source,modifiers;
+    uint64_t tick;
+} R4RelativeMouseMessage;
+typedef struct R4PointerCaptureMessage {
+    int32_t window_id;
+    uint32_t state,reason,mode;
+    uint64_t capture_id,tick;
+} R4PointerCaptureMessage;
+
 typedef enum R4MessageKind {
     R4_MESSAGE_CLOSE = 1,
     R4_MESSAGE_RESIZE = 2,
@@ -73,7 +92,10 @@ typedef enum R4MessageKind {
     R4_MESSAGE_UNKNOWN = 8,
     R4_MESSAGE_FOCUS_GAINED = 9,
     R4_MESSAGE_FOCUS_LOST = 10,
-    R4_MESSAGE_FONT_CHANGED = 11
+    R4_MESSAGE_FONT_CHANGED = 11,
+    R4_MESSAGE_MOUSE_WHEEL = 12,
+    R4_MESSAGE_MOUSE_RELATIVE = 13,
+    R4_MESSAGE_POINTER_CAPTURE = 14
 } R4MessageKind;
 
 typedef struct R4Message {
@@ -89,6 +111,9 @@ typedef struct R4Message {
         R4GuiEvent unknown;
         R4FocusMessage focus;
         R4FontChangedMessage font_changed;
+        R4WheelMessage wheel;
+        R4RelativeMouseMessage relative;
+        R4PointerCaptureMessage capture;
     } value;
 } R4Message;
 
@@ -169,6 +194,30 @@ static inline int r4_window_open(R4App *app, R4Timer *timers, uint32_t timer_cou
     return 1;
 }
 
+/* Keep the explicit identity for the window incarnation being captured.
+ * Zero from acquire means PENDING; wait for POINTER_CAPTURE/ACTIVE. */
+static inline int32_t r4_window_pointer_identity(R4Window *window,R4GuiPointerWindowIdentity *out){
+    if(!window||!window->app||!out)return R4OS_GUI_POINTER_ERROR_INVALID;
+    R4GuiPointerCaptureInfo info={0};
+    int32_t rc=r4desk_gui_pointer_capture_info(&window->app->desktop,0,&info);
+    if(rc)return rc;
+    if(info.capture.window.window_id!=window->id||!info.capture.window.epoch)return R4OS_GUI_POINTER_ERROR_UNAVAILABLE;
+    *out=info.capture.window;return 0;
+}
+static inline int32_t r4_window_pointer_capture(R4Window *window,const R4GuiPointerWindowIdentity *identity,uint32_t mode,R4GuiPointerCaptureHandle *out){
+    if(!window||!window->app||!identity||!out)return R4OS_GUI_POINTER_ERROR_INVALID;
+    if(identity->window_id!=window->id)return R4OS_GUI_POINTER_ERROR_STALE;
+    return r4desk_gui_pointer_capture_acquire(&window->app->desktop,identity,mode,out);
+}
+static inline int32_t r4_window_pointer_status(R4Window *window,const R4GuiPointerCaptureHandle *capture,R4GuiPointerCaptureInfo *out){
+    if(!window||!window->app||!capture||!out)return R4OS_GUI_POINTER_ERROR_INVALID;
+    return r4desk_gui_pointer_capture_info(&window->app->desktop,capture,out);
+}
+static inline int32_t r4_window_pointer_release(R4Window *window,const R4GuiPointerCaptureHandle *capture){
+    if(!window||!window->app||!capture)return R4OS_GUI_POINTER_ERROR_INVALID;
+    return r4desk_gui_pointer_capture_release(&window->app->desktop,capture);
+}
+
 static inline int32_t r4_window_set_title(R4Window *window, const char *title) {
     return window != 0 && window->app != 0 ? r4desk_gui_set_title(&window->app->desktop, title) : R4OS_ERR_NO_FN;
 }
@@ -194,6 +243,12 @@ static inline R4Message r4_message_translate(R4EventLoop *loop, R4GuiEvent raw) 
         case R4_GUI_RAW_EVENT_MOUSE_DOWN: result.kind = R4_MESSAGE_MOUSE; result.value.mouse = r4_mouse_message(raw, R4_MOUSE_DOWN); break;
         case R4_GUI_RAW_EVENT_MOUSE_UP: result.kind = R4_MESSAGE_MOUSE; result.value.mouse = r4_mouse_message(raw, R4_MOUSE_UP); break;
         case R4_GUI_RAW_EVENT_MOUSE_MOVE: result.kind = R4_MESSAGE_MOUSE; result.value.mouse = r4_mouse_message(raw, R4_MOUSE_MOVE); break;
+        case R4_GUI_RAW_EVENT_MOUSE_WHEEL:
+            result.kind=R4_MESSAGE_MOUSE_WHEEL;result.value.wheel=(R4WheelMessage){raw.window_id,raw.x,raw.y,(int32_t)raw.key,raw.buttons,raw.modifiers,raw.tick};break;
+        case R4_GUI_RAW_EVENT_MOUSE_RELATIVE:
+            result.kind=R4_MESSAGE_MOUSE_RELATIVE;result.value.relative=(R4RelativeMouseMessage){raw.window_id,raw.x,raw.y,raw.buttons,raw.key,raw.modifiers,raw.tick};break;
+        case R4_GUI_RAW_EVENT_CAPTURE_CHANGED:
+            result.kind=R4_MESSAGE_POINTER_CAPTURE;result.value.capture=(R4PointerCaptureMessage){raw.window_id,(uint32_t)raw.x,(uint32_t)raw.y,raw.modifiers,(uint64_t)raw.key|((uint64_t)raw.buttons<<32),raw.tick};break;
         case R4_GUI_RAW_EVENT_FOCUS_GAINED:
         case R4_GUI_RAW_EVENT_FOCUS_LOST:
             result.kind = raw.kind == R4_GUI_RAW_EVENT_FOCUS_GAINED ? R4_MESSAGE_FOCUS_GAINED : R4_MESSAGE_FOCUS_LOST;

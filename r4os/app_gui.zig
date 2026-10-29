@@ -72,6 +72,33 @@ pub const FontChangedMessage = struct {
     tick: u64,
 };
 
+pub const WheelMessage = struct {
+    window_id: i32,
+    x: i32,
+    y: i32,
+    delta: i32,
+    buttons: u32,
+    modifiers: u32,
+    tick: u64,
+};
+pub const RelativeMouseMessage = struct {
+    window_id: i32,
+    dx: i32,
+    dy: i32,
+    buttons: u32,
+    source: u32,
+    modifiers: u32,
+    tick: u64,
+};
+pub const PointerCaptureMessage = struct {
+    window_id: i32,
+    state: u32,
+    reason: u32,
+    mode: u32,
+    capture_id: u64,
+    tick: u64,
+};
+
 pub const Message = union(enum) {
     close: i32,
     resize: ResizeMessage,
@@ -84,6 +111,9 @@ pub const Message = union(enum) {
     focus_gained: FocusMessage,
     focus_lost: FocusMessage,
     font_changed: FontChangedMessage,
+    wheel: WheelMessage,
+    relative: RelativeMouseMessage,
+    pointer_capture: PointerCaptureMessage,
 
     /// Bridge existing raw GUI handlers onto the shared event loop. Synthetic
     /// timer, clipboard and command messages remain explicit to the caller.
@@ -97,6 +127,9 @@ pub const Message = union(enum) {
                 .up => abi.GuiEventKind.mouse_up,
                 .move => abi.GuiEventKind.mouse_move,
             }), .window_id = value.window_id, .x = value.x, .y = value.y, .buttons = value.buttons, .modifiers = value.modifiers, .tick = value.tick },
+            .wheel => |value| .{ .kind = @intFromEnum(abi.GuiEventKind.mouse_wheel), .window_id = value.window_id, .x = value.x, .y = value.y, .key = @bitCast(value.delta), .buttons = value.buttons, .modifiers = value.modifiers, .tick = value.tick },
+            .relative => |value| .{ .kind = @intFromEnum(abi.GuiEventKind.mouse_relative), .window_id = value.window_id, .x = value.dx, .y = value.dy, .key = value.source, .buttons = value.buttons, .modifiers = value.modifiers, .tick = value.tick },
+            .pointer_capture => |value| .{ .kind = @intFromEnum(abi.GuiEventKind.capture_changed), .window_id = value.window_id, .x = @intCast(value.state), .y = @intCast(value.reason), .key = @truncate(value.capture_id), .buttons = @truncate(value.capture_id >> 32), .modifiers = value.mode, .tick = value.tick },
             .unknown => |value| value,
             .focus_gained => |value| .{ .kind = @intFromEnum(abi.GuiEventKind.focus_gained), .window_id = value.window_id, .tick = value.tick },
             .focus_lost => |value| .{ .kind = @intFromEnum(abi.GuiEventKind.focus_lost), .window_id = value.window_id, .tick = value.tick },
@@ -243,6 +276,9 @@ pub const EventLoop = struct {
             @intFromEnum(abi.GuiEventKind.mouse_down) => .{ .mouse = mouseMessage(raw, .down) },
             @intFromEnum(abi.GuiEventKind.mouse_up) => .{ .mouse = mouseMessage(raw, .up) },
             @intFromEnum(abi.GuiEventKind.mouse_move) => .{ .mouse = mouseMessage(raw, .move) },
+            @intFromEnum(abi.GuiEventKind.mouse_wheel) => .{ .wheel = .{ .window_id = raw.window_id, .x = raw.x, .y = raw.y, .delta = @bitCast(raw.key), .buttons = raw.buttons, .modifiers = raw.modifiers, .tick = raw.tick } },
+            @intFromEnum(abi.GuiEventKind.mouse_relative) => .{ .relative = .{ .window_id = raw.window_id, .dx = raw.x, .dy = raw.y, .buttons = raw.buttons, .source = raw.key, .modifiers = raw.modifiers, .tick = raw.tick } },
+            @intFromEnum(abi.GuiEventKind.capture_changed) => .{ .pointer_capture = .{ .window_id = raw.window_id, .state = @bitCast(raw.x), .reason = @bitCast(raw.y), .mode = raw.modifiers, .capture_id = @as(u64, raw.key) | (@as(u64, raw.buttons) << 32), .tick = raw.tick } },
             @intFromEnum(abi.GuiEventKind.focus_gained) => .{ .focus_gained = .{ .window_id = raw.window_id, .tick = raw.tick } },
             @intFromEnum(abi.GuiEventKind.focus_lost) => .{ .focus_lost = .{ .window_id = raw.window_id, .tick = raw.tick } },
             @intFromEnum(abi.GuiEventKind.font_changed) => .{ .font_changed = .{ .window_id = raw.window_id, .tick = raw.tick } },
@@ -337,6 +373,26 @@ pub const Window = struct {
         const id = desk.programWindowId();
         if (id < 0) return null;
         return .{ .sys = sys, .desk = desk, .draw = draw, .id = id, .events = EventLoop.init(sys, desk, timers) };
+    }
+
+    pub fn pointerIdentity(self: *Window, out: *abi.GuiPointerWindowIdentity) i32 {
+        var value: abi.GuiPointerCaptureInfo = .{};
+        const rc = self.desk.guiPointerCaptureInfo(null, &value);
+        if (rc != 0) return rc;
+        if (value.capture.window.window_id != self.id or value.capture.window.epoch == 0) return abi.gui_pointer_error_unavailable;
+        out.* = value.capture.window;
+        return 0;
+    }
+    /// Zero accepts PENDING; process pointer_capture/ACTIVE before mouse-look.
+    pub fn pointerCapture(self: *Window, identity: *const abi.GuiPointerWindowIdentity, mode: u32, out: *abi.GuiPointerCaptureHandle) i32 {
+        if (identity.window_id != self.id) return abi.gui_pointer_error_stale;
+        return self.desk.guiPointerCaptureAcquire(identity, mode, out);
+    }
+    pub fn pointerStatus(self: *Window, capture: *const abi.GuiPointerCaptureHandle, out: *abi.GuiPointerCaptureInfo) i32 {
+        return self.desk.guiPointerCaptureInfo(capture, out);
+    }
+    pub fn pointerRelease(self: *Window, capture: *const abi.GuiPointerCaptureHandle) i32 {
+        return self.desk.guiPointerCaptureRelease(capture);
     }
 
     pub fn setTitle(self: *Window, title: [*:0]const u8) i32 {

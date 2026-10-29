@@ -99,6 +99,62 @@ impl<'app, 'storage> Session<'app, 'storage> {
         }
         code(unsafe { c::R4SdkGuiWindow_setMinimumSize(0, w, width, height) })
     }
+    /// Exact native state; a null token queries the current own window.
+    pub fn pointer_info(
+        &mut self,
+        token: Option<&abi::GuiPointerCaptureHandle>,
+    ) -> Result<abi::GuiPointerCaptureInfo> {
+        let mut out = abi::GuiPointerCaptureInfo::default();
+        code(unsafe {
+            c::R4SdkGuiDesktopContext_guiPointerCaptureInfo(
+                0,
+                self.native_desktop(),
+                c::R4SdkGuiSlot {
+                    ptr: token.map_or(core::ptr::null_mut(), |value| {
+                        core::ptr::from_ref(value).cast_mut().cast()
+                    }),
+                    length: 0,
+                    bits: 0,
+                    status: 0,
+                    flags: u32::from(token.is_some()), // R4SDK_GUI_PRESENT, optional pointer only.
+                },
+                &mut out,
+            )
+        })?;
+        Ok(out)
+    }
+    pub fn pointer_identity(&mut self) -> Result<abi::GuiPointerWindowIdentity> {
+        let info = self.pointer_info(None)?;
+        if info.capture.window.epoch == 0 || info.capture.window.window_id < 0 {
+            return Err(Error::Raw(abi::gui_pointer_error_unavailable));
+        }
+        Ok(info.capture.window)
+    }
+    /// Success is PENDING. The native capture_changed event grants ACTIVE;
+    /// physical relative events never derive from clamped cursor positions.
+    pub fn pointer_capture(
+        &mut self,
+        window: &abi::GuiPointerWindowIdentity,
+        mode: u32,
+    ) -> Result<abi::GuiPointerCaptureHandle> {
+        let mut out = abi::GuiPointerCaptureHandle::default();
+        code(unsafe {
+            c::R4SdkGuiDesktopContext_guiPointerCaptureAcquire(
+                0,
+                self.native_desktop(),
+                window,
+                mode,
+                &mut out,
+            )
+        })?;
+        Ok(out)
+    }
+    pub fn pointer_release(&mut self, capture: &abi::GuiPointerCaptureHandle) -> Result<i32> {
+        code(unsafe {
+            c::R4SdkGuiDesktopContext_guiPointerCaptureRelease(0, self.native_desktop(), capture)
+        })
+    }
+
     pub fn window_info(&mut self) -> Result<Option<abi::GuiWindowInfo>> {
         let w = unsafe { c::R4SdkGuiSessionWindow(self.pointer()) };
         if w.is_null() {

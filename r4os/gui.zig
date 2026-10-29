@@ -173,6 +173,8 @@ pub const FocusState = struct {
     }
 };
 
+/// Local widget target/action state only; native capture is the explicit
+/// Window.pointerCapture/R4DESK contract, including its host grant.
 pub const MouseCapture = struct {
     target: ?usize = null,
     action: ControlAction = .none,

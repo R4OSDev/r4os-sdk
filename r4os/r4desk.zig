@@ -105,6 +105,19 @@ pub const Context = struct {
         return self.base.programWindowId();
     }
 
+    pub fn guiPointerCaptureInfo(self: *const Context, capture: ?*const abi.GuiPointerCaptureHandle, out: *abi.GuiPointerCaptureInfo) i32 {
+        return self.base.guiPointerCaptureInfo(capture, out);
+    }
+    pub fn guiPointerCaptureAcquire(self: *const Context, window: *const abi.GuiPointerWindowIdentity, mode: u32, out: *abi.GuiPointerCaptureHandle) i32 {
+        return self.base.guiPointerCaptureAcquire(window, mode, out);
+    }
+    pub fn guiPointerCaptureRelease(self: *const Context, capture: *const abi.GuiPointerCaptureHandle) i32 {
+        return self.base.guiPointerCaptureRelease(capture);
+    }
+    pub fn guiPointerCaptureHost(self: *const Context, request: *const abi.GuiPointerHostRequest, out: *abi.GuiPointerCaptureInfo) i32 {
+        return self.base.guiPointerCaptureHost(request, out);
+    }
+
     pub fn guiWindowInfo(self: *const Context, out: *abi.GuiWindowInfo) i32 {
         return self.base.guiWindowInfo(out);
     }

@@ -12,6 +12,32 @@ typedef struct R4Desk {
     const R4XStartR4Desk *table;
 } R4Desk;
 
+/* Per-operation admission; native policy remains with the actual host/owner. */
+static inline int r4desk_has_callback(const R4Desk *desk,size_t offset) {
+    return desk && desk->table && offset<=desk->table->size && sizeof(uintptr_t)<=desk->table->size-offset;
+}
+#define R4DESK_HAS(desk,field) (r4desk_has_callback((desk),offsetof(R4XStartR4Desk,field)) && (desk)->table->field)
+static inline int32_t r4desk_gui_pointer_capture_info(R4Desk *desk,const R4GuiPointerCaptureHandle *capture,R4GuiPointerCaptureInfo *out){
+    if(!out)return R4OS_GUI_POINTER_ERROR_INVALID;
+    if(!R4DESK_HAS(desk,gui_pointer_capture_info))return R4OS_ERR_NO_FN;
+    return ((R4DeskGuiPointerCaptureInfoFn)(uintptr_t)desk->table->gui_pointer_capture_info)(capture,out);
+}
+static inline int32_t r4desk_gui_pointer_capture_acquire(R4Desk *desk,const R4GuiPointerWindowIdentity *window,uint32_t mode,R4GuiPointerCaptureHandle *out){
+    if(!window||!out)return R4OS_GUI_POINTER_ERROR_INVALID;
+    if(!R4DESK_HAS(desk,gui_pointer_capture_acquire))return R4OS_ERR_NO_FN;
+    return ((R4DeskGuiPointerCaptureAcquireFn)(uintptr_t)desk->table->gui_pointer_capture_acquire)(window,mode,out);
+}
+static inline int32_t r4desk_gui_pointer_capture_release(R4Desk *desk,const R4GuiPointerCaptureHandle *capture){
+    if(!capture)return R4OS_GUI_POINTER_ERROR_INVALID;
+    if(!R4DESK_HAS(desk,gui_pointer_capture_release))return R4OS_ERR_NO_FN;
+    return ((R4DeskGuiPointerCaptureReleaseFn)(uintptr_t)desk->table->gui_pointer_capture_release)(capture);
+}
+static inline int32_t r4desk_gui_pointer_capture_host(R4Desk *desk,const R4GuiPointerHostRequest *request,R4GuiPointerCaptureInfo *out){
+    if(!request||!out)return R4OS_GUI_POINTER_ERROR_INVALID;
+    if(!R4DESK_HAS(desk,gui_pointer_capture_host))return R4OS_ERR_NO_FN;
+    return ((R4DeskGuiPointerCaptureHostFn)(uintptr_t)desk->table->gui_pointer_capture_host)(request,out);
+}
+
 static inline int r4desk_import_valid(const R4XStartImport *item) {
     return item != 0 &&
         item->group_id == R4L_GROUP_R4DESK &&

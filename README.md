@@ -1083,3 +1083,29 @@ Stream begin and atomic replacement now report
 `R4OS_FILE_STREAM_ERROR_NAME_TOO_LONG (-65)` (atomic aliases use the same
 values), preserving files on these preflight failures. Other errors and
 cleanup obligations retain their operation-specific meaning.
+
+
+### Native pointer capture and FPS mouse-look
+
+SDK0.64.110/Contract58 expose R4DESK19 native capture. In public C, include
+`<r4os/app_gui.h>`, retain `R4GuiPointerWindowIdentity` from
+`r4_window_pointer_identity`, then call `r4_window_pointer_capture` with
+`R4OS_GUI_POINTER_MODE_DRAG` or `R4OS_GUI_POINTER_MODE_RELATIVE` and keep its full
+`R4GuiPointerCaptureHandle`. Return0 accepts PENDING; wait for the matching
+`R4_MESSAGE_POINTER_CAPTURE` with state ACTIVE before mouse-look. Read
+`R4_MESSAGE_MOUSE_RELATIVE` physical dx/dy and `R4_MESSAGE_MOUSE_WHEEL`;
+`r4_window_pointer_status` observes state and `r4_window_pointer_release` stops
+capture. Cancellation clears held game/widget interaction state.
+
+`Examples/MouseLook.c` demonstrates real Down/Up dragging and button-free FPS
+mouse-look with typed focus/cancel messages. Build its
+`Tests/Build/MouseLook/module.R4MF` and launch it as a Desktop GUI app. Relative
+mode hides/freezes the system cursor, uses preclamp physical movement and
+restores a defined cursor position on release. Absolute remote moves cancel
+relative mode; they do not supply raw deltas. Acquiring a new window incarnation
+requires an intentionally refreshed identity. SDK `gui.MouseCapture` is local
+widget state and does not request native capture. Zig Window pointer methods
+and Rust `gui::Session` expose the same exact tokens and asynchronous grant.
+Guest and physical qualification is recorded separately in the project
+Docs/API/GuiFacade.md. Compilation alone does not qualify outside-client
+dragging, pointer visibility or physical relative input.
