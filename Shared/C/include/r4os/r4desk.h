@@ -17,6 +17,13 @@ static inline int r4desk_has_callback(const R4Desk *desk,size_t offset) {
     return desk && desk->table && offset<=desk->table->size && sizeof(uintptr_t)<=desk->table->size-offset;
 }
 #define R4DESK_HAS(desk,field) (r4desk_has_callback((desk),offsetof(R4XStartR4Desk,field)) && (desk)->table->field)
+/* QUERY/POST/RESET return0 on acknowledgement; Busy retains the suffix. */
+static inline int32_t r4desk_gui_host_input(R4Desk *desk, const R4GuiHostInputRequest *request, R4GuiPointerWindowIdentity *out) {
+    if (!request || !out) return R4OS_GUI_HOST_INPUT_ERROR_INVALID;
+    if (!R4DESK_HAS(desk,gui_host_input)) return R4OS_ERR_NO_FN;
+    return ((R4DeskGuiHostInputFn)(uintptr_t)desk->table->gui_host_input)(request,out);
+}
+
 static inline int32_t r4desk_gui_pointer_capture_info(R4Desk *desk,const R4GuiPointerCaptureHandle *capture,R4GuiPointerCaptureInfo *out){
     if(!out)return R4OS_GUI_POINTER_ERROR_INVALID;
     if(!R4DESK_HAS(desk,gui_pointer_capture_info))return R4OS_ERR_NO_FN;

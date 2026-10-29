@@ -99,6 +99,12 @@ pub const PointerCaptureMessage = struct {
     tick: u64,
 };
 
+pub const InputResetMessage = struct {
+    window_id: i32,
+    reason: u32,
+    tick: u64,
+};
+
 pub const Message = union(enum) {
     close: i32,
     resize: ResizeMessage,
@@ -114,6 +120,7 @@ pub const Message = union(enum) {
     wheel: WheelMessage,
     relative: RelativeMouseMessage,
     pointer_capture: PointerCaptureMessage,
+    input_reset: InputResetMessage,
 
     /// Bridge existing raw GUI handlers onto the shared event loop. Synthetic
     /// timer, clipboard and command messages remain explicit to the caller.
@@ -130,6 +137,7 @@ pub const Message = union(enum) {
             .wheel => |value| .{ .kind = @intFromEnum(abi.GuiEventKind.mouse_wheel), .window_id = value.window_id, .x = value.x, .y = value.y, .key = @bitCast(value.delta), .buttons = value.buttons, .modifiers = value.modifiers, .tick = value.tick },
             .relative => |value| .{ .kind = @intFromEnum(abi.GuiEventKind.mouse_relative), .window_id = value.window_id, .x = value.dx, .y = value.dy, .key = value.source, .buttons = value.buttons, .modifiers = value.modifiers, .tick = value.tick },
             .pointer_capture => |value| .{ .kind = @intFromEnum(abi.GuiEventKind.capture_changed), .window_id = value.window_id, .x = @intCast(value.state), .y = @intCast(value.reason), .key = @truncate(value.capture_id), .buttons = @truncate(value.capture_id >> 32), .modifiers = value.mode, .tick = value.tick },
+            .input_reset => |value| .{ .kind = @intFromEnum(abi.GuiEventKind.input_reset), .window_id = value.window_id, .key = value.reason, .tick = value.tick },
             .unknown => |value| value,
             .focus_gained => |value| .{ .kind = @intFromEnum(abi.GuiEventKind.focus_gained), .window_id = value.window_id, .tick = value.tick },
             .focus_lost => |value| .{ .kind = @intFromEnum(abi.GuiEventKind.focus_lost), .window_id = value.window_id, .tick = value.tick },
@@ -279,6 +287,7 @@ pub const EventLoop = struct {
             @intFromEnum(abi.GuiEventKind.mouse_wheel) => .{ .wheel = .{ .window_id = raw.window_id, .x = raw.x, .y = raw.y, .delta = @bitCast(raw.key), .buttons = raw.buttons, .modifiers = raw.modifiers, .tick = raw.tick } },
             @intFromEnum(abi.GuiEventKind.mouse_relative) => .{ .relative = .{ .window_id = raw.window_id, .dx = raw.x, .dy = raw.y, .buttons = raw.buttons, .source = raw.key, .modifiers = raw.modifiers, .tick = raw.tick } },
             @intFromEnum(abi.GuiEventKind.capture_changed) => .{ .pointer_capture = .{ .window_id = raw.window_id, .state = @bitCast(raw.x), .reason = @bitCast(raw.y), .mode = raw.modifiers, .capture_id = @as(u64, raw.key) | (@as(u64, raw.buttons) << 32), .tick = raw.tick } },
+            @intFromEnum(abi.GuiEventKind.input_reset) => .{ .input_reset = .{ .window_id = raw.window_id, .reason = raw.key, .tick = raw.tick } },
             @intFromEnum(abi.GuiEventKind.focus_gained) => .{ .focus_gained = .{ .window_id = raw.window_id, .tick = raw.tick } },
             @intFromEnum(abi.GuiEventKind.focus_lost) => .{ .focus_lost = .{ .window_id = raw.window_id, .tick = raw.tick } },
             @intFromEnum(abi.GuiEventKind.font_changed) => .{ .font_changed = .{ .window_id = raw.window_id, .tick = raw.tick } },

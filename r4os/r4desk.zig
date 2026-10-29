@@ -105,6 +105,11 @@ pub const Context = struct {
         return self.base.programWindowId();
     }
 
+    /// Exact ordinary host delivery and cancellation. Busy owns no suffix.
+    pub fn guiHostInput(self: *const Context, request: *const abi.GuiHostInputRequest, out: *abi.GuiPointerWindowIdentity) i32 {
+        return self.base.guiHostInput(request, out);
+    }
+
     pub fn guiPointerCaptureInfo(self: *const Context, capture: ?*const abi.GuiPointerCaptureHandle, out: *abi.GuiPointerCaptureInfo) i32 {
         return self.base.guiPointerCaptureInfo(capture, out);
     }

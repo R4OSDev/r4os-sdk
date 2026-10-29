@@ -34,6 +34,7 @@ pub enum EventKind {
     MouseWheel = c::R4SdkGuiEventKind_wheel,
     MouseRelative = c::R4SdkGuiEventKind_relative,
     PointerCapture = c::R4SdkGuiEventKind_pointer_capture,
+    InputReset = c::R4SdkGuiEventKind_input_reset,
 }
 impl Event {
     pub fn kind(&self) -> Option<EventKind> {
@@ -54,6 +55,7 @@ impl Event {
             c::R4SdkGuiEventKind_wheel => EventKind::MouseWheel,
             c::R4SdkGuiEventKind_relative => EventKind::MouseRelative,
             c::R4SdkGuiEventKind_pointer_capture => EventKind::PointerCapture,
+            c::R4SdkGuiEventKind_input_reset => EventKind::InputReset,
             _ => return None,
         })
     }

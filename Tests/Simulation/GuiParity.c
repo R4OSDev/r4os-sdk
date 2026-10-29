@@ -33,6 +33,7 @@ void sdk_gui_native_tables(R4XStartR4Sys *sys,R4XStartR4Desk *desk,R4XStartR4Dra
     draw->gui_shared_raster_acquire=(uintptr_t)shared_acquire;draw->gui_shared_raster_release=(uintptr_t)shared_release;
     draw->font_info=(uintptr_t)font_info_probe;draw->font_glyph_row=(uintptr_t)legacy_row_probe;
     legacy_rows=0;font_revision_value=0;
+    desk->gui_host_input=(uintptr_t)host_input_probe;
     desk->gui_pointer_capture_info=(uintptr_t)pointer_info;desk->gui_pointer_capture_acquire=(uintptr_t)pointer_acquire;desk->gui_pointer_capture_release=(uintptr_t)pointer_release;
 }
 static uint32_t host_mode,host_opens,host_closes,host_calls,host_window_queries;
@@ -78,6 +79,13 @@ int32_t sdk_gui_c_case(void){
     assert(R4SdkGuiSessionOpen(&s,&start,0,&timer,1)==0);
     assert(R4SdkGuiDrawContext_fontRevision(0,R4SdkGuiSessionDraw(&s)).status==R4OS_ERR_NO_FN);
     R4GuiGlyphBitmap bitmap={0};assert(R4SdkGuiDrawContext_fontGlyphBitmap(0,R4SdkGuiSessionDraw(&s),0,'A',&bitmap).status==R4OS_ERR_NO_FN && legacy_rows==0);
+    R4GuiHostInputRequest input_request={.window=pointer_identity(),.operation=R4OS_GUI_HOST_INPUT_OPERATION_POST,
+        .event={.kind=R4_GUI_RAW_EVENT_MOUSE_UP,.x=-701,.tick=UINT64_C(0x8000000000000009)}};
+    R4GuiPointerWindowIdentity identity=pointer_identity(),untouched=identity;
+    uint32_t previous_input_calls=input_calls;
+    R4SdkGuiSlot reply=R4SdkGuiDesktopContext_guiHostInput(0,R4SdkGuiSessionDesktop(&s),&input_request,&identity);
+    assert(reply.status==0 && (int32_t)reply.bits==R4OS_GUI_HOST_INPUT_ERROR_BUSY && input_calls==previous_input_calls+1);
+    assert(!memcmp(&identity,&untouched,sizeof identity));
     R4Timeout poll={.kind=R4OS_TIMEOUT_KIND_POLL};R4SdkGuiEvent event;
     assert(R4SdkGuiSessionNext(&s,&poll,&event)==1 && event.kind==2 && event.width==320);
     assert(R4SdkGuiSessionNext(&s,&poll,&event)==1 && event.kind==3 && event.codepoint==0x1f642);
@@ -86,7 +94,8 @@ int32_t sdk_gui_c_case(void){
     assert(R4SdkGuiSessionNext(&s,&poll,&event)==1 && event.kind==R4SdkGuiEventKind_focus_gained && event.window_id==4 && event.tick==UINT64_C(0x100000010));
     assert(R4SdkGuiSessionNext(&s,&poll,&event)==1 && event.kind==R4SdkGuiEventKind_focus_lost && event.window_id==4 && event.tick==UINT64_C(0x100000011));
     assert(R4SdkGuiSessionNext(&s,&poll,&event)==1 && event.kind==R4SdkGuiEventKind_font_changed && event.window_id==-1 && event.tick==0);
-    assert(R4SdkGuiSessionNext(&s,&poll,&event)==1 && event.kind==R4SdkGuiEventKind_unknown && memcmp(&event.raw,&events[9],sizeof(event.raw))==0);
+    assert(R4SdkGuiSessionNext(&s,&poll,&event)==1 && event.kind==R4SdkGuiEventKind_input_reset && event.window_id==4 && event.id==R4OS_GUI_INPUT_RESET_REASON_OVERFLOW && event.tick==UINT64_C(0x100000014) && event.raw.kind==R4_GUI_RAW_EVENT_INPUT_RESET);
+    assert(R4SdkGuiSessionNext(&s,&poll,&event)==1 && event.kind==R4SdkGuiEventKind_unknown && memcmp(&event.raw,&events[10],sizeof(event.raw))==0);
     assert(R4SdkGuiSessionNext(&s,&poll,&event)==0);
     assert(R4SdkGuiSessionCommand(&s,42)==0);assert(R4SdkGuiSessionCommand(&s,43)<0);
     assert(R4SdkGuiSessionNext(&s,&poll,&event)==1 && event.kind==7 && event.id==42);

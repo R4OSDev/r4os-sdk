@@ -873,6 +873,7 @@ static const R4GuiEvent events[] = {
     {.kind = R4_GUI_RAW_EVENT_FOCUS_GAINED, .window_id = 4, .tick = UINT64_C(0x100000010)},
     {.kind = R4_GUI_RAW_EVENT_FOCUS_LOST, .window_id = 4, .tick = UINT64_C(0x100000011)},
     {.kind = R4_GUI_RAW_EVENT_FONT_CHANGED, .window_id = -1},
+    {.kind = R4_GUI_RAW_EVENT_INPUT_RESET, .window_id = 4, .key = R4OS_GUI_INPUT_RESET_REASON_OVERFLOW, .tick = UINT64_C(0x100000014)},
     {.kind = 0xfeedu, .window_id = 4, .x = -7, .y = 13, .key = 0x1f642u, .buttons = 3, .modifiers = 9, .tick = UINT64_C(0x100000012)},
 };
 
@@ -1180,7 +1181,8 @@ int main(void) {
     assert(r4_event_loop_poll(&window.events, &message) && message.kind == R4_MESSAGE_FOCUS_GAINED && message.value.focus.window_id == 4 && message.value.focus.tick == UINT64_C(0x100000010));
     assert(r4_event_loop_poll(&window.events, &message) && message.kind == R4_MESSAGE_FOCUS_LOST && message.value.focus.window_id == 4 && message.value.focus.tick == UINT64_C(0x100000011));
     assert(r4_event_loop_poll(&window.events, &message) && message.kind == R4_MESSAGE_FONT_CHANGED && message.value.font_changed.window_id == -1 && message.value.font_changed.tick == 0);
-    assert(r4_event_loop_poll(&window.events, &message) && message.kind == R4_MESSAGE_UNKNOWN && memcmp(&message.value.unknown, &events[9], sizeof(R4GuiEvent)) == 0);
+    assert(r4_event_loop_poll(&window.events,&message) && message.kind==R4_MESSAGE_INPUT_RESET && message.value.input_reset.window_id==4 && message.value.input_reset.reason==R4OS_GUI_INPUT_RESET_REASON_OVERFLOW && message.value.input_reset.tick==UINT64_C(0x100000014));
+    assert(r4_event_loop_poll(&window.events, &message) && message.kind == R4_MESSAGE_UNKNOWN && memcmp(&message.value.unknown, &events[10], sizeof(R4GuiEvent)) == 0);
     close_requested=1;
     for(unsigned i=0;i<100;i++)assert(!r4_event_loop_poll(&window.events,&message));
     close_requested=0;assert(!r4_event_loop_poll(&window.events,&message));

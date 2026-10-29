@@ -8,6 +8,8 @@ _Static_assert(sizeof(R4Message)==48,"existing message union prefix/size");
 _Static_assert(sizeof(R4PointerCaptureMessage)==32,"typed 64-bit capture notice");
 _Static_assert(offsetof(R4Window,app)==0&&offsetof(R4Window,id)==8&&offsetof(R4Window,events)==16,"window prefix");
 static uint32_t pointer_calls;
+static uint32_t input_calls;
+_Static_assert(sizeof(R4GuiHostInputRequest)==80,"exact window+event+operation input request");
 static R4GuiPointerWindowIdentity pointer_identity(void) {
     return (R4GuiPointerWindowIdentity){.owner={.instance_id=7,.generation=UINT64_C(0x100000009)},
         .epoch=UINT64_C(0x200000008),.window_id=4};
@@ -28,6 +30,14 @@ static int32_t pointer_release(const R4GuiPointerCaptureHandle *token) {
     ++pointer_calls;assert(token->id==UINT64_C(0x300000007));
     assert(token->window.epoch==UINT64_C(0x200000008));return R4OS_GUI_POINTER_ERROR_STALE;
 }
+static int32_t host_input_probe(const R4GuiHostInputRequest *request,R4GuiPointerWindowIdentity *out) {
+    R4GuiPointerWindowIdentity expected=pointer_identity();
+    assert(!memcmp(&request->window,&expected,sizeof expected));
+    assert(request->operation==R4OS_GUI_HOST_INPUT_OPERATION_POST && request->reason==0);
+    assert(request->event.kind==R4_GUI_RAW_EVENT_MOUSE_UP && request->event.x==-701);
+    assert(request->event.tick==UINT64_C(0x8000000000000009));
+    (void)out;++input_calls;return R4OS_GUI_HOST_INPUT_ERROR_BUSY;
+}
 static void sdk_gui_pointer_binding_case(void) {
     R4XStartR4Desk desk={.magic=R4XSTART_R4DESK_MAGIC,.abi_version=R4XSTART_R4DESK_VERSION,.size=sizeof desk,
         .gui_pointer_capture_info=(uintptr_t)pointer_info,.gui_pointer_capture_acquire=(uintptr_t)pointer_acquire,
@@ -39,6 +49,15 @@ static void sdk_gui_pointer_binding_case(void) {
     assert(r4_window_pointer_capture(&window,&identity,R4OS_GUI_POINTER_MODE_RELATIVE,&token)==0);
     assert(r4_window_pointer_status(&window,&token,&info)==0&&info.state==R4OS_GUI_POINTER_STATE_ACTIVE);
     assert(r4_window_pointer_release(&window,&token)==R4OS_GUI_POINTER_ERROR_STALE&&pointer_calls==4);
+    desk.gui_host_input=(uintptr_t)host_input_probe;
+    R4GuiHostInputRequest request={.window=pointer_identity(),.operation=R4OS_GUI_HOST_INPUT_OPERATION_POST,
+        .event={.kind=R4_GUI_RAW_EVENT_MOUSE_UP,.x=-701,.tick=UINT64_C(0x8000000000000009)}};
+    R4GuiPointerWindowIdentity untouched=identity;
+    input_calls=0;
+    assert(r4desk_gui_host_input(&app.desktop,&request,&identity)==R4OS_GUI_HOST_INPUT_ERROR_BUSY && input_calls==1);
+    assert(!memcmp(&identity,&untouched,sizeof identity));
+    desk.size=616;desk.abi_version=19;
+    assert(r4desk_gui_host_input(&app.desktop,&request,&identity)==R4OS_ERR_NO_FN && input_calls==1);
     desk.size=584;desk.abi_version=18;
     assert(r4_window_pointer_status(&window,&token,&info)==R4OS_ERR_NO_FN&&pointer_calls==4);
     assert(r4_window_pointer_identity(0,&identity)==R4OS_GUI_POINTER_ERROR_INVALID);

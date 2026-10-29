@@ -56,8 +56,8 @@
     {
       "name": "R4DESK",
       "import_name": "R4DESK:Query:1",
-      "current_abi_version": 19,
-      "current_table_bytes": 616,
+      "current_abi_version": 20,
+      "current_table_bytes": 624,
       "canonical_pointer": "/groups/1",
       "minimum": "Neue Fassaden zielen auf diese aktuelle Vertragsgeneration; keine Emulation alter R4OS-Tabellen. Import-/Hardwareoption und Groessen-/Nullzeigerpruefung bleiben.",
       "owner": "Repositories/Contract",
@@ -72,7 +72,8 @@
         "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.49",
         "gui_current_56",
         "gui_activity_08735",
-        "native_pointer_capture_08828"
+        "native_pointer_capture_08828",
+        "gui_host_backpressure_08832"
       ]
     },
     {
@@ -683,7 +684,7 @@
         "clipboard",
         "chart"
       ],
-      "semantics": "GUI-Nachrichten/Unicode/Modifier/Close, Timer/Clipboard, Paint/Present und Ressourcenbesitz; gehostete App und Desktophost sind verschiedene Rollen. Kein Schlafpolling oder Abschneiden von UTF-8. Aktuelle CPU/GPU-Ausgaben und abgerundete/alpha-Pixel erhalten. Fokusgewinn/-verlust und globale Fontaenderung sind typisiert; vorhandene Fensteridentitaet/Ticks und vollstaendige Unknown-Rohdaten bleiben erhalten. Vier benannte C-Fensterflags stammen aus der kanonischen GuiWindowFlag-Wahrheit. SDK110: natives Capture bindet volle Prozessgeneration, Fensterinkarnation und Capture-ID;0 bestaetigt PENDING, ACTIVE erst nach Desktop-Grant. C/Zig/Rust erhalten typisierte Capture-/Relative-/Wheel-Nachrichten. Relative physische Deltas entstehen vor Clamping; absolute Remote-Moves werden nicht als Rohbewegung ausgegeben. Release-/Cancel-/Broker-/Fensterende und zugehoerige externe C-Belege sind getrennt qualifiziert.",
+      "semantics": "GUI-Nachrichten/Unicode/Modifier/Close, Timer/Clipboard, Paint/Present und Ressourcenbesitz; gehostete App und Desktophost sind verschiedene Rollen. Kein Schlafpolling oder Abschneiden von UTF-8. Aktuelle CPU/GPU-Ausgaben und abgerundete/alpha-Pixel erhalten. Fokusgewinn/-verlust und globale Fontaenderung sind typisiert; vorhandene Fensteridentitaet/Ticks und vollstaendige Unknown-Rohdaten bleiben erhalten. Vier benannte C-Fensterflags stammen aus der kanonischen GuiWindowFlag-Wahrheit. SDK110: natives Capture bindet volle Prozessgeneration, Fensterinkarnation und Capture-ID;0 bestaetigt PENDING, ACTIVE erst nach Desktop-Grant. C/Zig/Rust erhalten typisierte Capture-/Relative-/Wheel-Nachrichten. Relative physische Deltas entstehen vor Clamping; absolute Remote-Moves werden nicht als Rohbewegung ausgegeben. Release-/Cancel-/Broker-/Fensterende und zugehoerige externe C-Belege sind getrennt qualifiziert. SDK111: Desktop bindet den genauen Prozesshandle und die native Fensterinkarnation an QUERY/POST/RESET. Busy ist keine fehlende GUI-Zustaendigkeit. C/Zig/Rust erhalten InputReset mit Grund/Fenster/Tick; lokale Press-/Repeat-/Dragzustaende enden ohne synthetischen Klick. Capture-Terminalmeldungen behalten ihren eigenen Vertrag.",
       "current_only": "current_function",
       "rust": {
         "state": "paritaet_abgenommen",
@@ -713,7 +714,8 @@
         "current_contract_78",
         "gui_activity_08735",
         "gui_focus_font_08825",
-        "native_pointer_capture_08828"
+        "native_pointer_capture_08828",
+        "gui_host_backpressure_08832"
       ],
       "shared_core": "Gemeinsame GUI-/Rasterkerne beim Besitzer; keine unabhaengigen Widget-/Unicodealgorithmen pro Sprache."
     },
@@ -54611,6 +54613,50 @@
         ]
       },
       "limits": "Private Linux/KVM4 emulated PS/2/software-display scope. No physical mouse/display/GPU/USB, Windows or physical input-latency claim. Physical PS/2 wheel not observed; actual remote-input wheel tested and labelled. Owner kill exit-9 has no invented finish marker. Fullwidth binding/stale vectors are distinct from actual32bit PID/64bit serial wrap. Final STANDARD and normal release/source publication are separately recorded in project Docs/API/GuiFacade.md and Docs/SDK/LanguageParity.txt. Historical source_inventory remains dated."
+    },
+    "gui_host_backpressure_08832": {
+      "complete": true,
+      "scope": "SDK111/Contract59 public raw and higher C/Zig/Rust transport of the current exact GUI host input callback and typed cancellation. Library source38 regenerates current624-byte layout assertions; unchanged R4L artifacts retain their versions. This evidence qualifies these enumerated binding/translation/input-owner deltas; native backend lifecycle and final release qualification remain separate.",
+      "sources": [
+        "Repositories/Contract/API/ApiContract.baseline.json",
+        "Repositories/Contract/API/ApiContract.json",
+        "Repositories/Contract/Generated/Inventory/API.json",
+        "Repositories/Contract/Generated/Inventory/RustABI.json",
+        "Repositories/Contract/Generated/SDK/C/include/r4os/abi_generated.h",
+        "Repositories/Contract/Generated/SDK/C/include/r4os/abi_technical_generated.h",
+        "Repositories/Contract/Generated/SDK/Rust/src/lib.rs",
+        "Repositories/Contract/Generated/SDK/Zig/abi.zig",
+        "Repositories/Contract/Generated/SDK/Zig/abi_exports.zig",
+        "Repositories/Contract/Generated/SDK/Zig/abi_generated.zig",
+        "Repositories/Contract/Tools/ApiContractGen/src/main.zig",
+        "Repositories/Libraries/Shared/Rust/src/raw.rs",
+        "Repositories/SDK/Rust/src/c_facades.rs",
+        "Repositories/SDK/Rust/src/gui/mod.rs",
+        "Repositories/SDK/Shared/C/include/r4os/app_gui.h",
+        "Repositories/SDK/Shared/C/include/r4os/gui_bridge.h",
+        "Repositories/SDK/Shared/C/include/r4os/r4desk.h",
+        "Repositories/SDK/Tests/Conformance/GuiFacadePrototype05824.c",
+        "Repositories/SDK/Tests/Conformance/GuiFacadePrototype05824.zig",
+        "Repositories/SDK/Tests/Simulation/GuiParity.c",
+        "Repositories/SDK/Tests/Simulation/PointerBindings.c",
+        "Repositories/SDK/Tests/Simulation/RustGui.rs",
+        "Repositories/SDK/build.zig.zon",
+        "Repositories/SDK/r4os/app_gui.zig",
+        "Repositories/SDK/r4os/generated/gui_fingerprint.zig",
+        "Repositories/SDK/r4os/gui_session_runtime.zig",
+        "Repositories/SDK/r4os/gui_session_support.zig",
+        "Repositories/SDK/r4os/program.zig",
+        "Repositories/SDK/r4os/r4desk.zig",
+        "Repositories/SDK/r4os/subsystem_host.zig"
+      ],
+      "checks": [
+        "R4DESK19/616 prefix and all75 preceding slots retained;20/624 appends gui_host_input at616. GuiHostInputRequest80 and existing window identity32, GuiEvent40 retain full64-bit process/window/tick values. Existing raw kinds0..15 unchanged; input_reset16 appended. QUERY/POST/RESET use current provider admission; no old-OS runtime replacement.",
+        "Contract owner generator/layout/package/negative mutation/interop and host/bare Rust Clippy gates pass. SDK C and Rust native GUI cases through the real Zig facade pass, including typed reset(reason/window/tick), public C short-table rejection, untouched error outputs, full-width request and negative Busy result. Existing window/message union prefix/size and original pixel/Unicode/lifetime/negative-usage proofs retained.",
+        "Seven original Zig GUI owner cases and52 original subsystem owner cases pass. Existing physical-key release test now also exercises generic overflow reset and once-only held-key release. Host reset with lifecycle reason changes focus through the existing typed focus path. Public consumers cancel transient local pressed/repeat/drag state without generating a click.",
+        "Desktop252 native owner cases and3 shared geometry cases pass. Nine new cases exercise bounded acknowledged suffixes, key/physical reset/button-up order, current exact process/window binding, overload/focus cancel and GUI-owned Busy dispatch. These are host/source tests, not a substitute for actual native kernel admission.",
+        "Actual KVM4/software comparison using the unchanged original public C artifact fills native queue63, delays consumer2s and injects real Remote Up. Original Kernel422/Desktop186 yields Down1/Up0 exit7; Kernel423/Desktop187 yields Down1/Up1,63 drained, exit0 and complete78-byte retained output. No physical mouse/Windows or broad lifecycle qualification inferred."
+      ],
+      "limits": "Canonical historical source_inventory and unrelated capability evidence are unchanged. Actual native keyboard/overload/focus/close/kill/rebind/capture matrix, final normal tool export/product hashes and one final STANDARD32 are recorded separately in Docs/API/GuiFacade.md and Docs/Desktop/README.txt. The current source/binding review does not assert those pending tests passed or a speedup."
     }
   },
   "wave_bindings": [
@@ -54863,17 +54909,17 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.88.28",
-    "sdk": "0.64.110",
-    "contract": "0.64.58",
-    "libraries": "0.64.37",
-    "evidence": "native_pointer_capture_08828",
-    "scope": "Exactly26 enumerated current owner deltas and7 explicitly enrolled public example/native binding/guest C entry sources. Typed exact capture/async control/relative input across C/Zig/Rust and actual KVM4 C consumers reviewed. Other bodies retain prior scoped evidence; no new Windows/physical/performance qualification."
+    "performed_in": "0.88.32",
+    "sdk": "0.64.111",
+    "contract": "0.64.59",
+    "libraries": "0.64.38",
+    "evidence": "gui_host_backpressure_08832",
+    "scope": "28 enumerated owner deltas plus2 original typed C/Zig GUI oracle sources. Current raw/higher bindings, typed reset, public request/error/prefix transport and shared input decoder reviewed. Native lifecycle/final STANDARD and physical/Windows/performance remain separate qualification."
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.88.28",
+    "reviewed_in": "0.88.32",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -54924,6 +54970,8 @@
       "Repositories/SDK/Tests/Build/MouseLook/Observe/main.c",
       "Repositories/SDK/Tests/Build/MouseLook/main.c",
       "Repositories/SDK/Tests/Conformance/BoundedGraphemeChecks.c",
+      "Repositories/SDK/Tests/Conformance/GuiFacadePrototype05824.c",
+      "Repositories/SDK/Tests/Conformance/GuiFacadePrototype05824.zig",
       "Repositories/SDK/Tests/Simulation/GuiParity.c",
       "Repositories/SDK/Tests/Simulation/PointerBindings.c",
       "Repositories/SDK/Tests/Simulation/RustGui.rs",
@@ -54936,27 +54984,27 @@
     "files": [
       {
         "path": "Repositories/Contract/API/ApiContract.baseline.json",
-        "sha256": "2572a0d9a02f01dbfd3376cac6f22e947e6bac97f41b935293d1d9a3fe579b8b"
+        "sha256": "6c7773d5aeeb9c1f2232fe5893a160b4680f0fd1f7b67862421cc60078a5ff64"
       },
       {
         "path": "Repositories/Contract/API/ApiContract.json",
-        "sha256": "2572a0d9a02f01dbfd3376cac6f22e947e6bac97f41b935293d1d9a3fe579b8b"
+        "sha256": "6c7773d5aeeb9c1f2232fe5893a160b4680f0fd1f7b67862421cc60078a5ff64"
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/API.json",
-        "sha256": "d3ff1a283a0aa75dd19d82259c14cab2085a48bb6817db18cff75ea699a03a22"
+        "sha256": "12d0b80b970cb02d905159cfd7658882a78c8c9bd243ef8ef26b884baac0cb61"
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/RustABI.json",
-        "sha256": "9a3bd7bd3dca14e1bae2b1f479676115524152bc0aa065cefff981a6560e3ab9"
+        "sha256": "dcb337a3d72a72f57fdcca232161b3c0a634981e569acc653f756bc40985d2be"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_generated.h",
-        "sha256": "4495ce28f5846431d56d84bd384205fa5460857ef109466fb445f5509e0ce675"
+        "sha256": "d1ea5e969f371567c97ed4c9b6b2efe94503126e55ea1d94290bf6a0210ce4cc"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_technical_generated.h",
-        "sha256": "1a587acffaed9d7b17599c0319a2e5cf2c59821de258993768efcd093669a5da"
+        "sha256": "a90bbaf9b4b3527f798b182da8fd9f128c47504c2217d6f19cd34f11e6a73199"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Rust/Cargo.toml",
@@ -54964,19 +55012,19 @@
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Rust/src/lib.rs",
-        "sha256": "949120335de4893a71f86411e190324d674c2a61b00b02585d573c8d3bcdea19"
+        "sha256": "e666cc32a326905712a3a7a9c3b9ce181242b8a476c16984229a0afee1de485c"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi.zig",
-        "sha256": "a300301c1b988e868b87bf338d126a84413378f8b6db523fbe92f6d8286866a1"
+        "sha256": "9c5fe06e310d772e2031d1a2784c39f1007189378b4cc555cd7c468017cf1677"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_exports.zig",
-        "sha256": "b1b00cb8cfc715dea8f1d1fc982b84f03c1287403a08b3f798e7251b74124e1f"
+        "sha256": "a2d96e14a58ca1a9aee7687c252776da3ff84d27a131e4973c96a07735b88760"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_generated.zig",
-        "sha256": "e4478754540ee7a8a260dbf725df1ae3da4372c7768c0830f129ab10eb76a8ee"
+        "sha256": "7621ff9d4f8d118bdf02a9b671593a0b69da94469053970de31038f22ce58eb3"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/package.zig",
@@ -55000,7 +55048,7 @@
       },
       {
         "path": "Repositories/Contract/Tools/ApiContractGen/src/main.zig",
-        "sha256": "26ebb6e17b59af86c452dd4fb757819354dc6ef6bb72c167cb11e62ec320ff72"
+        "sha256": "8b279cf0eea5a4942b1b21d3fe82c8ca5fbd4c2a2eb755a2c9b535c5a8836d96"
       },
       {
         "path": "Repositories/Libraries/R4ACO/Bindings/C/r4aco.h",
@@ -55936,7 +55984,7 @@
       },
       {
         "path": "Repositories/Libraries/Shared/Rust/src/raw.rs",
-        "sha256": "c63ff191f8f591ea2df1b147e8d5a81a58112ce250ab098b926b5513b3fb14e0"
+        "sha256": "cc6aedc01967be62fae18b6c6b31955f9ad767d4e9f12dd0998b6972d1658826"
       },
       {
         "path": "Repositories/Libraries/Shared/Tests/Consumer/Cargo.toml",
@@ -56012,7 +56060,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "22a137bb2dd5de090fd00468735807fc125c8dda0a3c34cffda9e618270f3ff5"
+        "sha256": "0fc37d8f1abbb1f7c2000b9e69e2294d096c168bdb0cac0fae34e824603d54b0"
       },
       {
         "path": "Repositories/SDK/Rust/src/data/hash.rs",
@@ -56064,7 +56112,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/gui/mod.rs",
-        "sha256": "283499798ef6b91df66c6d87e5269c46696573dbc49451b2f0c85efea2312e76"
+        "sha256": "279835a9f98bc68f4e34da00b6907349563125c82c2ede39da424d33a00c3574"
       },
       {
         "path": "Repositories/SDK/Rust/src/gui/session.rs",
@@ -56276,7 +56324,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_gui.h",
-        "sha256": "0cda3a39c3469096e800adbf1e90dcede191fc0990ce6592145028b704d8b03f"
+        "sha256": "5058101e7bb4c43a4fe2ba31e7102eb55e5acce66cb3b70e77352d3c9552f60a"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_network.h",
@@ -56364,7 +56412,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/gui_bridge.h",
-        "sha256": "fd7e6aac590b2e8359aed24676b8e38ee51cdee2960839cd4033e0adb7ee9a77"
+        "sha256": "6ebe8aa5be0705aabd5bf21f3878e20ab0f9629b46a6a1b2546d1595aa39add7"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/heap.h",
@@ -56396,7 +56444,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/r4desk.h",
-        "sha256": "1b0b3bc4798929043463db66eab79fba863031669c3be2486d55e7d50d9acaf7"
+        "sha256": "a67026486c575c8c07e5cd42ffc293324d262a32e38ecd521ab013b629c30c35"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/r4dev.h",
@@ -56515,16 +56563,24 @@
         "sha256": "fbb0e964c8c6cd908106622e89776c570027531ef9bb1d99f17ff84fe08be54f"
       },
       {
+        "path": "Repositories/SDK/Tests/Conformance/GuiFacadePrototype05824.c",
+        "sha256": "656d725425c1e8e683dd581f7b3421eff230a1b235b03751b9aa75f85ef206b4"
+      },
+      {
+        "path": "Repositories/SDK/Tests/Conformance/GuiFacadePrototype05824.zig",
+        "sha256": "d2943df7702fcd56085f1e4f87ae57cc25184cbad98e21ff030e75818c076fa7"
+      },
+      {
         "path": "Repositories/SDK/Tests/Simulation/GuiParity.c",
-        "sha256": "8e8064454ba643dd1d7214637c2fe908d68307753f3293ba2a3319dfc07816eb"
+        "sha256": "66df15a5c8180ae096e89068da897228d19dd2f369e62854fe77b4a8024ec79f"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/PointerBindings.c",
-        "sha256": "d0a27fa3cdac8756624ab397add2e17d74e666a6799a340157711ecbe44e2492"
+        "sha256": "79c6334ce093c6c2eb375639fa3b9246d987a383130412a8cf571cdc795c0b8c"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/RustGui.rs",
-        "sha256": "cb1b95373bc8698b74a57739bd2e210bab9ee78c80c38a4ed14d2365dcbce41e"
+        "sha256": "7a7a32dfe1cf0675a08ec1e54ac720389d9a5c43709e30f7f444ac5c98efffde"
       },
       {
         "path": "Repositories/SDK/Tools/Build-Project.ps1",
@@ -56708,7 +56764,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "41f305b5f54075b946fbd96c7435cd5a2ed2566fbecd079ec9dd2ab28d34f1d5"
+        "sha256": "7d3d05e42ce284794d9aadd5f1ebe0ca5a2c23420f769c9a5fb8f0886a144979"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -56736,7 +56792,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/app_gui.zig",
-        "sha256": "d2a3bae98f681b2400482e37de590e13715f439faf14c4f321792a5c0b942381"
+        "sha256": "e51775a257a111fb7a7083d9ae0c2ddb883d14df3966566ac1a7fb5ebdf88965"
       },
       {
         "path": "Repositories/SDK/r4os/app_network.zig",
@@ -56924,7 +56980,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/generated/gui_fingerprint.zig",
-        "sha256": "a2168afc51f79b270f6c34f1b1badc932da996a4eafe987ebd4f9f41cd82d2ce"
+        "sha256": "803e271a2a33a364f7a99c237be31b350e50586238ea3d750a46be84dbffd0de"
       },
       {
         "path": "Repositories/SDK/r4os/generated/net_facade.zig",
@@ -56992,11 +57048,11 @@
       },
       {
         "path": "Repositories/SDK/r4os/gui_session_runtime.zig",
-        "sha256": "4933bd1dafe5be377f2eba92bd6f80d940e7da5b1ccab010ea0dc0ff2867e2fd"
+        "sha256": "219bc8570221e72da8e9aabde077c7b20f7e505334c859375f7a0c759e3be1df"
       },
       {
         "path": "Repositories/SDK/r4os/gui_session_support.zig",
-        "sha256": "784a1c63baa42c98cd5c7aaeb8f39f0d66fccf5710ea3f9bd76481c344df442a"
+        "sha256": "de6cedc0402d4d3c9f9ef0cbbc2c0640300854218526d94e94576b0238420a06"
       },
       {
         "path": "Repositories/SDK/r4os/gui_shapes.zig",
@@ -57124,7 +57180,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/program.zig",
-        "sha256": "ca40b3ff2bf6b28451db4e8cda14a68fea4933995af22c47202b19bcc1ce6063"
+        "sha256": "3db02c08fdc8e1a06fcd493bb204b0056c174aecc03f36fc3a4508a3bfa84652"
       },
       {
         "path": "Repositories/SDK/r4os/protocol.zig",
@@ -57144,7 +57200,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/r4desk.zig",
-        "sha256": "972b5717626e1face3dd61a8849ca7d678efaf87f540c88df1ae7a5add01b475"
+        "sha256": "507950de94d2a29194313837ae9de0f03eea8115f5f333792aa2eb6b404b3477"
       },
       {
         "path": "Repositories/SDK/r4os/r4dev.zig",
@@ -57372,7 +57428,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/subsystem_host.zig",
-        "sha256": "6b49542f95b5fe70e013bc544c7f120c0e5fc972fa73f294c5a143a196566470"
+        "sha256": "0594aa40ff7f97e9b719d8c6e3882b70217a6c6c55a40ece111b944451d7b1d5"
       },
       {
         "path": "Repositories/SDK/r4os/subsystem_launch.zig",
@@ -57629,7 +57685,8 @@
           "qualified_prior_source_08825",
           "process_evidence_08826",
           "file_name_limits_08827",
-          "native_pointer_capture_08828"
+          "native_pointer_capture_08828",
+          "gui_host_backpressure_08832"
         ]
       },
       {
@@ -57655,7 +57712,8 @@
           "current_contract_78",
           "gui_activity_08735",
           "file_name_limits_08827",
-          "native_pointer_capture_08828"
+          "native_pointer_capture_08828",
+          "gui_host_backpressure_08832"
         ]
       },
       {
@@ -57698,7 +57756,8 @@
           "qualified_prior_source_08825",
           "process_evidence_08826",
           "file_name_limits_08827",
-          "native_pointer_capture_08828"
+          "native_pointer_capture_08828",
+          "gui_host_backpressure_08832"
         ]
       },
       {
@@ -57759,7 +57818,8 @@
           "directory_batch_08743",
           "process_evidence_08826",
           "file_name_limits_08827",
-          "native_pointer_capture_08828"
+          "native_pointer_capture_08828",
+          "gui_host_backpressure_08832"
         ]
       },
       {
@@ -57884,7 +57944,8 @@
           "gui_activity_08735",
           "gui_focus_font_08825",
           "file_name_limits_08827",
-          "native_pointer_capture_08828"
+          "native_pointer_capture_08828",
+          "gui_host_backpressure_08832"
         ]
       },
       {
@@ -57912,7 +57973,8 @@
           "current_contract_78",
           "current_kernel_records_80",
           "file_name_limits_08827",
-          "native_pointer_capture_08828"
+          "native_pointer_capture_08828",
+          "gui_host_backpressure_08832"
         ]
       },
       {
@@ -57939,7 +58001,8 @@
           "audio_silence_08754",
           "qualified_prior_source_08825",
           "file_name_limits_08827",
-          "native_pointer_capture_08828"
+          "native_pointer_capture_08828",
+          "gui_host_backpressure_08832"
         ]
       },
       {
@@ -57968,7 +58031,8 @@
           "current_kernel_records_80",
           "bounded_work_08755",
           "file_name_limits_08827",
-          "native_pointer_capture_08828"
+          "native_pointer_capture_08828",
+          "gui_host_backpressure_08832"
         ]
       },
       {
@@ -58108,7 +58172,8 @@
           "audio_progress_08753",
           "audio_silence_08754",
           "bounded_work_08755",
-          "qualified_prior_source_08825"
+          "qualified_prior_source_08825",
+          "gui_host_backpressure_08832"
         ]
       },
       {
@@ -58147,7 +58212,8 @@
           "audio_progress_08753",
           "bounded_work_08755",
           "file_name_limits_08827",
-          "native_pointer_capture_08828"
+          "native_pointer_capture_08828",
+          "gui_host_backpressure_08832"
         ]
       },
       {
@@ -58203,7 +58269,8 @@
           "language_libraries_current_60",
           "current_providers_79",
           "file_name_limits_08827",
-          "native_pointer_capture_08828"
+          "native_pointer_capture_08828",
+          "gui_host_backpressure_08832"
         ]
       },
       {
@@ -58247,7 +58314,8 @@
           "geometry_current_83",
           "desktop_capture_inputs_86",
           "file_name_limits_08827",
-          "native_pointer_capture_08828"
+          "native_pointer_capture_08828",
+          "gui_host_backpressure_08832"
         ]
       },
       {
@@ -58327,7 +58395,8 @@
           "desktop_output_inputs_86",
           "display_geometry_parsers_94",
           "file_name_limits_08827",
-          "native_pointer_capture_08828"
+          "native_pointer_capture_08828",
+          "gui_host_backpressure_08832"
         ]
       },
       {
@@ -58389,7 +58458,8 @@
           "library_projection_current_61",
           "language_libraries_current_60",
           "file_name_limits_08827",
-          "native_pointer_capture_08828"
+          "native_pointer_capture_08828",
+          "gui_host_backpressure_08832"
         ]
       },
       {
@@ -58471,7 +58541,8 @@
           "library_projection_current_61",
           "language_libraries_current_60",
           "file_name_limits_08827",
-          "native_pointer_capture_08828"
+          "native_pointer_capture_08828",
+          "gui_host_backpressure_08832"
         ]
       },
       {

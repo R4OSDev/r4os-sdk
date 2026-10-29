@@ -1,9 +1,10 @@
 #![cfg(test)]
 use core::{mem::MaybeUninit, pin::pin};
 use r4os_sdk::{
-    App, ImportSpec, StartupInfo, abi,
-    gui::{self, InputQueue, Rect, Role, Session, SessionStorage, TextArea, TextField, raw as c},
+    abi,
+    gui::{self, raw as c, InputQueue, Rect, Role, Session, SessionStorage, TextArea, TextField},
     resources::Timeout,
+    App, ImportSpec, StartupInfo,
 };
 unsafe extern "C" {
     fn sdk_gui_c_case() -> i32;
@@ -159,6 +160,13 @@ fn original_gui_pixels_frames_unicode_input_and_exact_host_session() {
         let font = window.next(Timeout::Poll).unwrap().unwrap();
         assert_eq!(font.kind(), Some(gui::EventKind::FontChanged));
         assert_eq!((font.window_id, font.tick), (-1, 0));
+        let reset = window.next(Timeout::Poll).unwrap().unwrap();
+        assert_eq!(reset.kind(), Some(gui::EventKind::InputReset));
+        assert_eq!(
+            (reset.window_id, reset.id, reset.tick),
+            (4, abi::gui_input_reset_reason_overflow, 0x100000014)
+        );
+        assert_eq!(reset.raw.kind, abi::GuiEventKind::input_reset.0);
         let unknown = window.next(Timeout::Poll).unwrap().unwrap();
         assert_eq!(unknown.kind(), Some(gui::EventKind::Unknown));
         assert_eq!(
@@ -226,28 +234,24 @@ fn original_gui_pixels_frames_unicode_input_and_exact_host_session() {
         assert_eq!(unsafe { sdk_gui_oracle_pixels(output.as_mut_ptr(), 12) }, 0);
         assert_eq!(
             output,
-            [
-                0x112233, 0x445566, 0, 0, 0, 0xffffff, 0xcc0000, 0xcc0000, 0xffffff, 0, 0, 0x010203
-            ]
+            [0x112233, 0x445566, 0, 0, 0, 0xffffff, 0xcc0000, 0xcc0000, 0xffffff, 0, 0, 0x010203]
         );
         // Actual partial-flush failure must cancel the opened transaction.
         unsafe { sdk_gui_oracle_fail_append(2) };
         let mut tiny_commands = [abi::GuiFrameCommand::default(); 1];
         let mut paint = window.begin(&mut tiny_commands, &mut resources).unwrap();
         paint.clear(0).unwrap();
-        assert!(
-            paint
-                .rect(
-                    Rect {
-                        x: 0,
-                        y: 0,
-                        width: 1,
-                        height: 1
-                    },
-                    1
-                )
-                .is_err()
-        );
+        assert!(paint
+            .rect(
+                Rect {
+                    x: 0,
+                    y: 0,
+                    width: 1,
+                    height: 1
+                },
+                1
+            )
+            .is_err());
         drop(paint);
         assert!(unsafe { sdk_gui_oracle_cancelled() } > 0);
     });
@@ -282,14 +286,12 @@ fn original_gui_pixels_frames_unicode_input_and_exact_host_session() {
     assert_eq!(queue.peek().unwrap().len(), 1);
     assert!(queue.consume(1).unwrap());
     assert_eq!(queue.peek().unwrap().len(), 2);
-    assert!(
-        !queue
-            .append(&[abi::ConsoleInputEvent {
-                value: 0xd800,
-                ..text
-            }])
-            .unwrap()
-    );
+    assert!(!queue
+        .append(&[abi::ConsoleInputEvent {
+            value: 0xd800,
+            ..text
+        }])
+        .unwrap());
     // Native float data crosses by pointer. Returned values do not assume the
     // unqualified bare Rust scalar FP calling convention.
     let mut point = MaybeUninit::<c::R4SdkGuiShapePoint>::uninit();
@@ -321,17 +323,15 @@ fn original_gui_pixels_frames_unicode_input_and_exact_host_session() {
         let exchange = host.claim_host(timeout).unwrap();
         assert_eq!(exchange.desktop_epoch, 0x100000007);
         unsafe { sdk_gui_host_mode(1) };
-        assert!(
-            host.host_exchange(abi::tray_service_op_desktop_sync, &exchange, timeout)
-                .is_err()
-        );
+        assert!(host
+            .host_exchange(abi::tray_service_op_desktop_sync, &exchange, timeout)
+            .is_err());
         assert_eq!(unsafe { sdk_gui_host_count(1) }, 1);
         assert_eq!(unsafe { sdk_gui_host_count(0) }, 1);
         unsafe { sdk_gui_host_mode(0) };
-        assert!(
-            host.host_exchange(abi::tray_service_op_desktop_sync, &exchange, timeout)
-                .is_err()
-        );
+        assert!(host
+            .host_exchange(abi::tray_service_op_desktop_sync, &exchange, timeout)
+            .is_err());
         assert_eq!(unsafe { sdk_gui_host_count(0) }, 1);
         host.reset_host_connection();
         host.claim_host(timeout).unwrap();

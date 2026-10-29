@@ -155,6 +155,13 @@ fn event(message: app.Message) E {
             out.tick = v.tick;
             out.raw = message.guiEvent().?;
         },
+        .input_reset => |v| {
+            out.kind = @intFromEnum(Kind.input_reset);
+            out.window_id = v.window_id;
+            out.id = v.reason;
+            out.tick = v.tick;
+            out.raw = message.guiEvent().?;
+        },
         .pointer_capture => |v| {
             out.kind = @intFromEnum(Kind.pointer_capture);
             out.window_id = v.window_id;

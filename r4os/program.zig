@@ -1538,6 +1538,12 @@ pub const Context = struct {
         return table_fn();
     }
 
+    /// Exact ordinary host delivery and cancellation. Busy owns no suffix.
+    pub fn guiHostInput(self: *const Context, request: *const abi.GuiHostInputRequest, out: *abi.GuiPointerWindowIdentity) i32 {
+        const call = self.deskFn("gui_host_input") orelse return self.unavailable("desk");
+        return call(request, out);
+    }
+
     pub fn guiPointerCaptureInfo(self: *const Context, capture: ?*const abi.GuiPointerCaptureHandle, out: *abi.GuiPointerCaptureInfo) i32 {
         const call = self.deskFn("gui_pointer_capture_info") orelse return self.unavailable("desk");
         return call(capture, out);

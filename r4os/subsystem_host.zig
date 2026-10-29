@@ -1067,8 +1067,12 @@ pub const InputTranslator = struct {
             self.releaseHeldPhysicalKeys(raw.tick);
             return self.logical(.{ .focus = .{ .focused = false, .tick = raw.tick, .sequence = sequence } });
         }
-        if (kind == @intFromEnum(abi.GuiEventKind.physical_key_reset)) {
+        if (kind == @intFromEnum(abi.GuiEventKind.physical_key_reset) or kind == @intFromEnum(abi.GuiEventKind.input_reset)) {
             self.releaseHeldPhysicalKeys(raw.tick);
+            if (kind == @intFromEnum(abi.GuiEventKind.input_reset) and raw.key != abi.gui_input_reset_reason_overflow and self.focused) {
+                self.focused = false;
+                return self.logical(.{ .focus = .{ .focused = false, .tick = raw.tick, .sequence = sequence } });
+            }
             return self.takePending() orelse self.filtered(sequence, raw.tick, .unexpected_physical_up);
         }
         if (kind == @intFromEnum(abi.GuiEventKind.physical_key_down) or
@@ -2514,6 +2518,15 @@ test "physical key transitions preserve sides and focus loss releases held keys 
     try std.testing.expectEqual(@as(u64, 2), translator.stats.synthesized_physical_key_ups);
     try std.testing.expectEqual(@as(u64, 1), translator.stats.duplicate_physical_down);
     try std.testing.expectEqual(@as(u64, 1), translator.stats.unexpected_physical_up);
+    for ([_]abi.GuiEventKind{ .physical_key_reset, .input_reset }) |reset_kind| {
+        var reset = InputTranslator{};
+        _ = reset.translate(.{ .kind = @intFromEnum(abi.GuiEventKind.focus_gained), .tick = 1 }, null, null);
+        _ = reset.translate(.{ .kind = @intFromEnum(abi.GuiEventKind.physical_key_down), .key = abi.physical_key_usage_right_control, .tick = 2 }, null, null);
+        const released = reset.translate(.{ .kind = @intFromEnum(reset_kind), .key = if (reset_kind == .input_reset) abi.gui_input_reset_reason_overflow else 0, .tick = 3 }, null, null).?;
+        try std.testing.expectEqual(abi.physical_key_usage_right_control, released.physical_key_up.key);
+        try std.testing.expectEqual(@as(u64, 3), released.physical_key_up.tick);
+        try std.testing.expect(reset.takePending() == null);
+    }
 }
 
 test "keypad and right control transport stays physical through repeat and focus release" {

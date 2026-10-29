@@ -18,7 +18,8 @@ enum {
     R4_GUI_RAW_EVENT_FOCUS_LOST = R4ABI_GUI_EVENT_KIND_FOCUS_LOST,
     R4_GUI_RAW_EVENT_MOUSE_WHEEL = R4ABI_GUI_EVENT_KIND_MOUSE_WHEEL,
     R4_GUI_RAW_EVENT_MOUSE_RELATIVE = R4ABI_GUI_EVENT_KIND_MOUSE_RELATIVE,
-    R4_GUI_RAW_EVENT_CAPTURE_CHANGED = R4ABI_GUI_EVENT_KIND_CAPTURE_CHANGED
+    R4_GUI_RAW_EVENT_CAPTURE_CHANGED = R4ABI_GUI_EVENT_KIND_CAPTURE_CHANGED,
+    R4_GUI_RAW_EVENT_INPUT_RESET = R4ABI_GUI_EVENT_KIND_INPUT_RESET
 };
 
 #define R4_GUI_WINDOW_FLAG_VISIBLE R4ABI_GUI_WINDOW_FLAG_VISIBLE
@@ -81,6 +82,13 @@ typedef struct R4PointerCaptureMessage {
     uint64_t capture_id,tick;
 } R4PointerCaptureMessage;
 
+/* Cancel all local pressed/repeat/drag state; do not synthesize a click. */
+typedef struct R4InputResetMessage {
+    int32_t window_id;
+    uint32_t reason;
+    uint64_t tick;
+} R4InputResetMessage;
+
 typedef enum R4MessageKind {
     R4_MESSAGE_CLOSE = 1,
     R4_MESSAGE_RESIZE = 2,
@@ -95,7 +103,8 @@ typedef enum R4MessageKind {
     R4_MESSAGE_FONT_CHANGED = 11,
     R4_MESSAGE_MOUSE_WHEEL = 12,
     R4_MESSAGE_MOUSE_RELATIVE = 13,
-    R4_MESSAGE_POINTER_CAPTURE = 14
+    R4_MESSAGE_POINTER_CAPTURE = 14,
+    R4_MESSAGE_INPUT_RESET = 15
 } R4MessageKind;
 
 typedef struct R4Message {
@@ -114,6 +123,7 @@ typedef struct R4Message {
         R4WheelMessage wheel;
         R4RelativeMouseMessage relative;
         R4PointerCaptureMessage capture;
+        R4InputResetMessage input_reset;
     } value;
 } R4Message;
 
@@ -247,6 +257,8 @@ static inline R4Message r4_message_translate(R4EventLoop *loop, R4GuiEvent raw) 
             result.kind=R4_MESSAGE_MOUSE_WHEEL;result.value.wheel=(R4WheelMessage){raw.window_id,raw.x,raw.y,(int32_t)raw.key,raw.buttons,raw.modifiers,raw.tick};break;
         case R4_GUI_RAW_EVENT_MOUSE_RELATIVE:
             result.kind=R4_MESSAGE_MOUSE_RELATIVE;result.value.relative=(R4RelativeMouseMessage){raw.window_id,raw.x,raw.y,raw.buttons,raw.key,raw.modifiers,raw.tick};break;
+        case R4_GUI_RAW_EVENT_INPUT_RESET:
+            result.kind=R4_MESSAGE_INPUT_RESET;result.value.input_reset=(R4InputResetMessage){raw.window_id,raw.key,raw.tick};break;
         case R4_GUI_RAW_EVENT_CAPTURE_CHANGED:
             result.kind=R4_MESSAGE_POINTER_CAPTURE;result.value.capture=(R4PointerCaptureMessage){raw.window_id,(uint32_t)raw.x,(uint32_t)raw.y,raw.modifiers,(uint64_t)raw.key|((uint64_t)raw.buttons<<32),raw.tick};break;
         case R4_GUI_RAW_EVENT_FOCUS_GAINED:
