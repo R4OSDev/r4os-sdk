@@ -1476,7 +1476,11 @@ pub const Runtime = struct {
         if (self.host_backlog_pending or self.post_present_poll_pending) return 0;
         var wait = self.config.max_wait_ticks;
         if (self.audio.close_pending and self.audio.pending_operation == null) wait = @min(wait, self.audio.close_retry_tick -| host_tick);
-        if (self.audio.pending_operation != null) wait = @min(wait, self.audio.busy_retry_ticks);
+        // GUI activity does not signal completion of the separate audio RPC.
+        // Observe an outstanding request on the next scheduler tick. The
+        // device-busy delay applies only after an actual busy reply; using it
+        // here can spend an entire PCM quantum asleep between chained replies.
+        if (self.audio.pending_operation != null) wait = @min(wait, 1);
         if (self.audio.pending_operation == null and self.audio.progress_ready and self.audio.config.continuous)
             wait = @min(wait, self.audio.progress_due_tick -| host_tick);
         if (self.state == .running) {
@@ -2008,6 +2012,43 @@ test "pending audio permits real input guest and present phases with one bounded
     var head: [1920]u8 = undefined;
     _ = runtime.audio.queue.peek(&head);
     try std.testing.expect(std.mem.allEqual(u8, &head, 0x11));
+}
+
+test "pending audio completion wakes an event-waiting guest before the device busy retry" {
+    var queue: [3840]u8 = undefined;
+    var scratch: [1920]u8 = undefined;
+    var sink = DelayedSink{};
+    var guest = FakeGuest{ .audio_byte = 0x35, .event_waiting = true };
+    var host = FakeHost{};
+    var runtime = try Runtime.init(.{}, 1000, 0, .{
+        .queue_storage = &queue,
+        .scratch = &scratch,
+        .sink = sink.sink(),
+    });
+    defer runtime.shutdown();
+    _ = runtime.cycle(0, guest.driver(), host.driver());
+    _ = runtime.cycle(1, guest.driver(), host.driver());
+    try std.testing.expectEqual(transport.Operation.write, runtime.audio.pending_operation.?);
+    // Input/GPU activity need not arrive while the guest waits for PCM room.
+    // An outstanding RPC is not a device-busy reply: observe it next tick.
+    try std.testing.expectEqual(@as(u64, 1), runtime.cycle(2, guest.driver(), host.driver()).wait);
+    try std.testing.expectEqual(@as(u64, 1), runtime.cycle(3, guest.driver(), host.driver()).wait);
+    try std.testing.expectEqual(@as(u32, 1), sink.writes);
+    try std.testing.expectEqual(@as(u64, 0), runtime.audio.stats.submitted_bytes);
+    try std.testing.expectEqual(@as(usize, 3840), runtime.audio.queue.available());
+
+    sink.reply(abi.service_api_result_busy);
+    try std.testing.expectEqual(@as(u64, 10), runtime.cycle(4, guest.driver(), host.driver()).wait);
+    try std.testing.expectEqual(@as(u64, 1), runtime.cycle(13, guest.driver(), host.driver()).wait);
+    try std.testing.expectEqual(@as(u32, 1), sink.writes);
+    _ = runtime.cycle(14, guest.driver(), host.driver());
+    try std.testing.expectEqual(@as(u32, 2), sink.writes);
+    try std.testing.expectEqual(transport.Operation.write, runtime.audio.pending_operation.?);
+    sink.reply(960);
+    _ = runtime.cycle(15, guest.driver(), host.driver());
+    try std.testing.expectEqual(@as(u64, 960), runtime.audio.stats.submitted_bytes);
+    try std.testing.expectEqual(@as(u64, 1), runtime.audio.stats.partial_writes);
+    try std.testing.expectEqual(@as(u64, 0), runtime.audio.stats.write_failures);
 }
 
 test "reset retires a late old-stream prefix without feeding the new guest epoch" {
