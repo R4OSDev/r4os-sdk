@@ -4,6 +4,7 @@ const r4audio = @import("r4audio.zig");
 const r4sys = @import("r4sys.zig");
 const services_facade = @import("app_services.zig");
 const time_contract = @import("time_contract.zig");
+const stream_reply = @import("audio_stream_reply.zig");
 
 pub const Timeout = time_contract.Timeout;
 pub const default_volume: u32 = 0x0001_0000;
@@ -120,9 +121,10 @@ pub const Audio = struct {
         const called = connection.callTyped(abi.AudioServiceStreamOpenRequest, abi.AudioServiceStreamResult, abi.audio_service_op_open_stream, &request, timeout);
         return switch (called) {
             .value => |response| blk: {
-                if (!validResponse(&response, abi.audio_service_op_open_stream) or response.result < 0 or response.stream_id == 0) {
+                const valid = validResponse(&response, abi.audio_service_op_open_stream, 0, 0, 0);
+                if (!valid or response.result < 0) {
                     _ = connection.close();
-                    break :blk .{ .failure = if (response.result < 0) response.result else abi.service_api_result_invalid };
+                    break :blk .{ .failure = if (valid) response.result else abi.service_api_result_invalid };
                 }
                 break :blk .{ .stream = .{ .connection = connection, .stream_id = response.stream_id, .owned = true, .frame_bytes = @as(usize, channels) * 2 } };
             },
@@ -264,15 +266,14 @@ pub const AudioStream = struct {
             const called = self.connection.call(abi.audio_service_op_write_stream, payload[0 .. @sizeOf(abi.AudioServiceStreamWriteRequest) + chunk_len], std.mem.asBytes(&response), timeout);
             switch (called) {
                 .response => |meta| {
-                    if (meta.bytes != @sizeOf(abi.AudioServiceStreamResult) or !validResponse(&response, abi.audio_service_op_write_stream)) {
+                    if (meta.bytes != @sizeOf(abi.AudioServiceStreamResult) or !validResponse(&response, abi.audio_service_op_write_stream, self.stream_id, @intCast(chunk_len), self.frame_bytes)) {
                         return .{ .failure = .{ .raw = abi.service_api_result_invalid, .written = offset } };
                     }
                     if (response.result == abi.service_api_result_busy) return .{ .busy = offset };
                     if (response.result < 0) {
-                        return .{ .failure = .{ .raw = if (response.result < 0) response.result else abi.service_api_result_invalid, .written = offset } };
+                        return .{ .failure = .{ .raw = response.result, .written = offset } };
                     }
                     const advanced: usize = @intCast(response.bytes);
-                    if (advanced == 0 or advanced > chunk_len or advanced % self.frame_bytes != 0) return .{ .failure = .{ .raw = abi.service_api_result_invalid, .written = offset } };
                     offset += advanced;
                 },
                 .timed_out => return .{ .timed_out = offset },
@@ -299,7 +300,8 @@ pub const AudioStream = struct {
         const called = self.connection.callTyped(abi.AudioServiceStreamControlRequest, abi.AudioServiceStreamResult, op, request, timeout);
         return switch (called) {
             .value => |response| blk: {
-                if (!validResponse(&response, op) or response.result < 0) break :blk .{ .failure = if (response.result < 0) response.result else abi.service_api_result_invalid };
+                if (!validResponse(&response, op, self.stream_id, 0, 0)) break :blk .{ .failure = abi.service_api_result_invalid };
+                if (response.result < 0) break :blk .{ .failure = response.result };
                 if (closes) {
                     self.stream_id = 0;
                     self.owned = false;
@@ -368,8 +370,8 @@ pub const AdvancedAudio = struct {
     }
 };
 
-fn validResponse(response: *const abi.AudioServiceStreamResult, action: u16) bool {
-    return response.magic == abi.audio_service_result_magic and response.version == abi.audio_service_result_version and response.action == action;
+fn validResponse(response: *const abi.AudioServiceStreamResult, action: u16, stream_id: u32, maximum_bytes: u32, frame_bytes: u64) bool {
+    return stream_reply.validate(std.mem.asBytes(response), action, stream_id, maximum_bytes, frame_bytes);
 }
 
 test "write cursor preserves partial progress and never converts errors into success" {

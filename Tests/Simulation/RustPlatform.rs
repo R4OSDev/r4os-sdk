@@ -20,6 +20,8 @@ unsafe extern "C" {
     );
     fn sdk_platform_oracle_mode(mode: u32);
     fn sdk_platform_oracle_connections() -> u32;
+    fn sdk_platform_oracle_reply_fault(action: u16, fault: u32, at: u32);
+    fn sdk_platform_oracle_last_stream() -> u32;
 }
 #[test]
 fn original_platform_owners_preserve_frames_progress_and_explicit_close() {
@@ -170,11 +172,83 @@ fn original_platform_owners_preserve_frames_progress_and_explicit_close() {
             .kind,
         WriteKind::Failure
     );
+    // The exact accepted prefix survives an unrelated or malformed second
+    // reply, at both the four-byte and full service-chunk boundaries.
+    for length in [16usize, 8192] {
+        let input = [0x42u8; 8192];
+        for fault in [1, 2, 3, 4, 5, 6, 7, 8, 12, 13, 14, 15, 16] {
+            unsafe {
+                sdk_platform_oracle_mode(if length == 16 { 1 } else { 0 });
+                sdk_platform_oracle_reply_fault(abi::audio_service_op_write_stream, fault, 2);
+            }
+            let failed = stream
+                .write(&input[..length], Timeout::Forever, false)
+                .unwrap();
+            let prefix = if length == 16 { 4 } else { 4076 };
+            assert_eq!(failed.kind, WriteKind::Failure);
+            assert_eq!(
+                failed.raw,
+                if fault == 16 {
+                    abi::service_api_result_bad_handle
+                } else {
+                    abi::service_api_result_invalid
+                }
+            );
+            assert_eq!(failed.accepted, prefix);
+            let mut cursor = WriteCursor::new(length, 4).unwrap().unwrap();
+            cursor.apply(failed).unwrap();
+            assert_eq!(cursor.remaining().unwrap(), length - prefix);
+            assert!(stream.valid().unwrap());
+            assert_eq!(unsafe { sdk_platform_oracle_last_stream() }, 91);
+            assert_eq!(unsafe { sdk_platform_oracle_connections() }, 1);
+        }
+    }
+    for operation in [
+        abi::audio_service_op_set_stream_volume,
+        abi::audio_service_op_close_stream,
+    ] {
+        for fault in [1, 2, 3, 4, 5, 6, 7, 8, 16] {
+            unsafe { sdk_platform_oracle_reply_fault(operation, fault, 1) };
+            let result = if operation == abi::audio_service_op_close_stream {
+                stream.close(Timeout::Forever)
+            } else {
+                stream.set_volume(0x8000, Timeout::Forever)
+            };
+            assert!(result.is_err());
+            assert!(stream.valid().unwrap());
+            assert_eq!(unsafe { sdk_platform_oracle_last_stream() }, 91);
+            assert_eq!(unsafe { sdk_platform_oracle_connections() }, 1);
+        }
+    }
+    unsafe {
+        sdk_platform_oracle_reply_fault(0, 0, 0);
+        sdk_platform_oracle_mode(0);
+    }
     stream.set_volume(0x8000, Timeout::Forever).unwrap();
     stream.close(Timeout::Forever).unwrap();
     assert!(!stream.valid().unwrap());
     assert!(stream.close(Timeout::Forever).is_err());
     assert_eq!(unsafe { sdk_platform_oracle_connections() }, 0);
+    for fault in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] {
+        unsafe { sdk_platform_oracle_reply_fault(abi::audio_service_op_open_stream, fault, 1) };
+        assert!(
+            audio
+                .open_stream(48000, 2, 0x10000, Timeout::Forever)
+                .is_err()
+        );
+        assert_eq!(unsafe { sdk_platform_oracle_connections() }, 0);
+    }
+    unsafe { sdk_platform_oracle_reply_fault(abi::audio_service_op_open_stream, 16, 1) };
+    assert!(
+        matches!(audio.open_stream(48000, 2, 0x10000, Timeout::Forever), Err(r4os_sdk::storage::Error::Raw(raw)) if raw == abi::service_api_result_bad_handle)
+    );
+    assert_eq!(unsafe { sdk_platform_oracle_connections() }, 0);
+    unsafe { sdk_platform_oracle_reply_fault(0, 0, 0) };
+    let mut regular = audio
+        .open_stream(48000, 2, 0x10000, Timeout::Forever)
+        .unwrap();
+    assert!(regular.valid().unwrap());
+    regular.close(Timeout::Forever).unwrap();
     assert!(platform.devices().memory().unwrap().is_some());
     assert!(platform.devices().inventory().is_ok());
     assert!(matches!(

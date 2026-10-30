@@ -15980,7 +15980,7 @@ pub const R4SdkDataNative_Value181_TYPE: u32 = 181;
 pub const R4SdkDataNative_Value182_TYPE: u32 = 182;
 pub const R4SdkDataNative_Value183_TYPE: u32 = 183;
 pub const R4SdkDataNative_Value184_TYPE: u32 = 184;
-pub const R4SdkData_ABI_FINGERPRINT: u64 = 3558765171647906743;
+pub const R4SdkData_ABI_FINGERPRINT: u64 = 17614999946340117096;
 pub const R4SdkDataJson_op_open: i32 = 1;
 pub const R4SdkDataJson_op_next: i32 = 2;
 pub const R4SdkDataJson_op_select: i32 = 3;
@@ -23316,6 +23316,7 @@ unsafe extern "C" {
     pub fn R4SdkData_used(p0: u32, p1: *const R4SdkDataArena) -> R4SdkDataSlot;
     pub fn R4SdkData_inspectBytes(p0: u32, p1: *const u8, p2: u64, p3: *mut R4SdkDataArtifactIdentity) -> R4SdkDataSlot;
     pub fn R4SdkData_inspectReader(p0: u32, p1: *const R4SdkDataReader, p2: u64, p3: *mut R4SdkDataArtifactIdentity) -> R4SdkDataSlot;
+    pub fn R4SdkData_audioStreamReplyValid(p0: u32, p1: *const u8, p2: u64, p3: u16, p4: u32, p5: u32, p6: u64) -> R4SdkDataSlot;
     pub fn R4SdkDataSha256_init(p0: u32, p1: *const R4SdkDataNative_crypto_sha2_Sha2x32____1779033703__3144134277__1013904242__2773480762__1359893119__2600822924__528734635__1541459225___256__Options, p2: *mut R4SdkDataSha256) -> R4SdkDataSlot;
     pub fn R4SdkDataSha256_hash(p0: u32, p1: *const u8, p2: u64, p3: *mut R4SdkDataNative_Value156, p4: *const R4SdkDataNative_crypto_sha2_Sha2x32____1779033703__3144134277__1013904242__2773480762__1359893119__2600822924__528734635__1541459225___256__Options) -> R4SdkDataSlot;
     pub fn R4SdkDataSha256_update(p0: u32, p1: *mut R4SdkDataSha256, p2: *const u8, p3: u64) -> R4SdkDataSlot;

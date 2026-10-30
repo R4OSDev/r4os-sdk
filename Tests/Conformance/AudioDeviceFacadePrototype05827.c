@@ -4,6 +4,12 @@
 static int timeout_next;
 static int stream_open;
 static uint32_t open_connections;
+static R4Timeout forever_timeout(void);
+static uint16_t reply_action;
+static uint32_t reply_fault, reply_at, reply_calls, short_writes, write_calls, last_request_stream;
+static void reply_mode(uint16_t action, uint32_t fault, uint32_t at) {
+    reply_action=action;reply_fault=fault;reply_at=at;reply_calls=0u;write_calls=0u;
+}
 
 static int32_t fake_cpu_lifecycle(uint32_t operation, uint32_t cpu, uint64_t epoch, R4CpuLifecycleInfo *out) {
     if (operation != 2u || cpu != 63u || epoch != UINT64_C(0x1234567885abcdef)) return -99;
@@ -145,14 +151,75 @@ static int32_t fake_service_call(uint32_t handle, uint16_t op, const uint8_t *re
         memcpy(response, &state, sizeof(state)); return (int32_t)sizeof(state);
     }
     if (capacity < sizeof(R4AudioWireResult)) return R4OS_SERVICE_API_RESULT_BUFFER_TOO_SMALL;
+    if (op==reply_action) ++reply_calls;
+    const int inject=op==reply_action && reply_fault && (!reply_at || reply_calls==reply_at);
     R4AudioWireResult result = {0}; result.magic = R4OS_AUDIO_SERVICE_RESULT_MAGIC; result.version = R4OS_AUDIO_SERVICE_RESULT_VERSION; result.action = op; result.stream_id = 91u;
-    if (op == R4OS_AUDIO_SERVICE_OP_OPEN_STREAM) stream_open = 1;
+    if (op == R4OS_AUDIO_SERVICE_OP_OPEN_STREAM) { stream_open = 1; result.result = 91; }
     else if (op == R4OS_AUDIO_SERVICE_OP_WRITE_STREAM) {
+        ++write_calls;
         if (!stream_open || request_len < sizeof(R4AudioWireWriteRequest)) result.result = -1;
-        else { R4AudioWireWriteRequest wire; memcpy(&wire, request, sizeof(wire)); result.bytes = wire.byte_count; result.result = (int32_t)wire.byte_count; }
+        else { R4AudioWireWriteRequest wire; memcpy(&wire, request, sizeof(wire)); last_request_stream=wire.stream_id; result.bytes=short_writes && wire.byte_count>4u?4u:wire.byte_count; result.result=(int32_t)result.bytes; }
     } else if (op == R4OS_AUDIO_SERVICE_OP_SET_STREAM_VOLUME) { if (!stream_open) result.result = -1; }
-    else if (op == R4OS_AUDIO_SERVICE_OP_CLOSE_STREAM) { if (stream_open) stream_open = 0; else result.result = -1; }
-    memcpy(response, &result, sizeof(result)); return (int32_t)sizeof(result);
+    else if (op == R4OS_AUDIO_SERVICE_OP_CLOSE_STREAM) { if (stream_open) { if(!inject)stream_open=0; } else result.result=-1; }
+    if ((op==R4OS_AUDIO_SERVICE_OP_SET_STREAM_VOLUME || op==R4OS_AUDIO_SERVICE_OP_CLOSE_STREAM) && request_len==sizeof(R4AudioWireControlRequest)) {
+        R4AudioWireControlRequest wire;memcpy(&wire,request,sizeof wire);last_request_stream=wire.stream_id;
+    }
+    if(inject)switch(reply_fault){
+      case 1:++result.stream_id;break;
+      case 2:++result.result;break;
+      case 3:result.bytes+=4u;break;
+      case 4:result.magic^=1u;break;
+      case 5:++result.version;break;
+      case 6:++result.action;break;
+      case 7:case 8:break;
+      case 9:result.result=0;break;
+      case 10:result.stream_id=0u;break;
+      case 11:result.result=R4OS_SERVICE_API_RESULT_BAD_HANDLE;break;
+      case 12:result.result=R4OS_SERVICE_API_RESULT_BUSY;result.bytes=4u;break;
+      case 13:result.result=0;result.bytes=0u;break;
+      case 14:{R4AudioWireWriteRequest wire;memcpy(&wire,request,sizeof wire);result.bytes=wire.byte_count+4u;result.result=(int32_t)result.bytes;break;}
+      case 15:result.bytes=3u;result.result=3;break;
+      case 16:result.result=R4OS_SERVICE_API_RESULT_BAD_HANDLE;result.bytes=0u;if(op==R4OS_AUDIO_SERVICE_OP_OPEN_STREAM)result.stream_id=0u;break;
+      default:return R4OS_SERVICE_API_RESULT_INVALID;
+    }
+    memcpy(response, &result, sizeof(result));
+    return (int32_t)sizeof(result)+(inject?(reply_fault==7u?-1:reply_fault==8u?1:0):0);
+}
+
+static int strict_reply_probe(R4AudioFacade *audio) {
+    static const uint32_t write_faults[]={1,2,3,4,5,6,7,8,12,13,14,15,16};
+    uint8_t pcm[8192];memset(pcm,0x42,sizeof pcm);
+    for(uint32_t shape=0u;shape<2u;++shape)for(uint32_t f=0u;f<sizeof write_faults/sizeof write_faults[0];++f){
+        reply_mode(0u,0u,0u);short_writes=shape==0u;R4AudioStream stream;
+        if(r4_audio_open_stream(audio,48000u,2u,R4_AUDIO_FORMAT_S16LE,0x10000u,forever_timeout(),&stream).kind!=R4_AUDIO_RESULT_OK)return 1;
+        reply_mode(R4OS_AUDIO_SERVICE_OP_WRITE_STREAM,write_faults[f],2u);
+        R4AudioResult result=r4_audio_stream_write(&stream,pcm,shape?8192u:16u,forever_timeout());
+        const int32_t expected=write_faults[f]==16u?R4OS_SERVICE_API_RESULT_BAD_HANDLE:R4OS_SERVICE_API_RESULT_INVALID;
+        if(result.kind!=R4_AUDIO_RESULT_FAILED || result.raw_code!=expected || result.bytes!=(shape?4076u:4u) || write_calls!=2u)return 2;
+        if(!r4_audio_stream_valid(&stream) || stream.stream_id!=91u || !stream.owned || open_connections!=1u || last_request_stream!=91u)return 3;
+        reply_mode(0u,0u,0u);if(r4_audio_stream_close(&stream,forever_timeout()).kind!=R4_AUDIO_RESULT_OK || open_connections)return 4;
+    }
+    const uint16_t operations[]={R4OS_AUDIO_SERVICE_OP_SET_STREAM_VOLUME,R4OS_AUDIO_SERVICE_OP_CLOSE_STREAM};
+    for(uint32_t op=0u;op<2u;++op)for(uint32_t index=1u;index<=9u;++index){
+        const uint32_t fault=index==9u?16u:index;
+        reply_mode(0u,0u,0u);R4AudioStream stream;
+        if(r4_audio_open_stream(audio,48000u,2u,R4_AUDIO_FORMAT_S16LE,0x10000u,forever_timeout(),&stream).kind!=R4_AUDIO_RESULT_OK)return 5;
+        reply_mode(operations[op],fault,1u);
+        R4AudioResult result=op?r4_audio_stream_close(&stream,forever_timeout()):r4_audio_stream_set_volume(&stream,0x8000u,forever_timeout());
+        const int32_t expected=fault==7u || fault==8u?R4OS_SERVICE_API_RESULT_BUFFER_TOO_SMALL:fault==16u?R4OS_SERVICE_API_RESULT_BAD_HANDLE:R4OS_SERVICE_API_RESULT_INVALID;
+        if(result.kind!=R4_AUDIO_RESULT_FAILED || result.raw_code!=expected || !r4_audio_stream_valid(&stream) || stream.stream_id!=91u || open_connections!=1u || last_request_stream!=91u)return 6;
+        reply_mode(0u,0u,0u);if(r4_audio_stream_close(&stream,forever_timeout()).kind!=R4_AUDIO_RESULT_OK || open_connections)return 7;
+    }
+    for(uint32_t fault=1u;fault<=11u;++fault){
+        reply_mode(R4OS_AUDIO_SERVICE_OP_OPEN_STREAM,fault,1u);R4AudioStream stream;
+        R4AudioResult result=r4_audio_open_stream(audio,48000u,2u,R4_AUDIO_FORMAT_S16LE,0x10000u,forever_timeout(),&stream);
+        const int32_t expected=fault==7u || fault==8u?R4OS_SERVICE_API_RESULT_BUFFER_TOO_SMALL:R4OS_SERVICE_API_RESULT_INVALID;
+        if(result.kind!=R4_AUDIO_RESULT_FAILED || result.raw_code!=expected || r4_audio_stream_valid(&stream) || open_connections)return 8;
+    }
+    {reply_mode(R4OS_AUDIO_SERVICE_OP_OPEN_STREAM,16u,1u);R4AudioStream stream;
+     R4AudioResult result=r4_audio_open_stream(audio,48000u,2u,R4_AUDIO_FORMAT_S16LE,0x10000u,forever_timeout(),&stream);
+     if(result.kind!=R4_AUDIO_RESULT_FAILED || result.raw_code!=R4OS_SERVICE_API_RESULT_BAD_HANDLE || r4_audio_stream_valid(&stream) || open_connections)return 9;}
+    reply_mode(0u,0u,0u);short_writes=0u;return 0;
 }
 
 static int32_t fake_audio_open(uint32_t rate, uint16_t channels, uint16_t format) { (void)rate; (void)channels; (void)format; return 1; }
@@ -256,6 +323,7 @@ int main(void) {
     if(r4_audio_stream_write(&stream,partial+once.bytes,sizeof(partial)-once.bytes,forever_timeout()).bytes!=20u)return 75;
     if (r4_audio_stream_set_volume(&stream, 0x8000u, forever_timeout()).kind != R4_AUDIO_RESULT_OK) return 6;
     if (r4_audio_stream_close(&stream, forever_timeout()).kind != R4_AUDIO_RESULT_OK || r4_audio_stream_close(&stream, forever_timeout()).raw_code != R4OS_ERR_CLOSED || open_connections != 0u) return 7;
+    {int strict=strict_reply_probe(&audio);if(strict)return 80+strict;}
     R4AdvancedAudio advanced = r4_audio_advanced(audio);
     if (r4_audio_sid_acquire(&advanced) != R4OS_ERR_NO_FN) return 76;
     app.audio.table = &raw_audio;

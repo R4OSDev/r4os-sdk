@@ -2,6 +2,7 @@
 #define R4OS_APP_AUDIO_H
 
 #include "app_services.h"
+#include "data_helpers.h"
 
 typedef struct R4AudioFacade { R4App *app; } R4AudioFacade;
 typedef struct R4AdvancedAudio { R4App *app; } R4AdvancedAudio;
@@ -73,6 +74,12 @@ static inline int r4_audio_response_valid(const R4AudioWireResult *response, uin
     return response->magic == R4OS_AUDIO_SERVICE_RESULT_MAGIC && response->version == R4OS_AUDIO_SERVICE_RESULT_VERSION && response->action == action;
 }
 
+/* Acceptance belongs to the same SDK owner used by Zig and safe Rust. */
+static inline int r4_audio_stream_reply_valid(const R4AudioWireResult *response, uint16_t action, uint32_t stream_id, uint32_t maximum_bytes, uint64_t frame_bytes) {
+    R4SdkDataSlot checked = R4SdkData_audioStreamReplyValid(0u, (const uint8_t *)response, sizeof(*response), action, stream_id, maximum_bytes, frame_bytes);
+    return checked.status == 0 && (checked.flags & R4SDKDATA_PRESENT) != 0u && checked.bits != 0u;
+}
+
 static inline int r4_audio_master_state_valid(const R4AudioServiceMasterState *state) {
     return state != 0 && state->magic == R4OS_AUDIO_MASTER_STATE_MAGIC && state->version == R4OS_AUDIO_MASTER_STATE_VERSION && state->size == sizeof(R4AudioServiceMasterState);
 }
@@ -119,8 +126,9 @@ static inline R4AudioResult r4_audio_open_stream(R4AudioFacade *audio, uint32_t 
     R4AudioWireResult response = {0};
     R4ServiceCallResult call = r4_service_connection_call_struct(&connection, R4OS_AUDIO_SERVICE_OP_OPEN_STREAM, &request, sizeof(request), &response, sizeof(response), timeout);
     if (call.kind == R4_SERVICE_CALL_TIMED_OUT) { (void)r4_service_connection_close(&connection); return r4_audio_result(R4_AUDIO_RESULT_TIMED_OUT, R4OS_SERVICE_API_RESULT_TIMEOUT, 0u); }
-    if (call.kind != R4_SERVICE_CALL_RESPONSE || !r4_audio_response_valid(&response, R4OS_AUDIO_SERVICE_OP_OPEN_STREAM) || response.result < 0 || response.stream_id == 0u) {
-        int32_t raw = call.kind == R4_SERVICE_CALL_RESPONSE ? (response.result < 0 ? response.result : R4OS_SERVICE_API_RESULT_INVALID) : call.raw_code;
+    const int valid = call.kind == R4_SERVICE_CALL_RESPONSE && r4_audio_stream_reply_valid(&response, R4OS_AUDIO_SERVICE_OP_OPEN_STREAM, 0u, 0u, 0u);
+    if (!valid || response.result < 0) {
+        int32_t raw = call.kind == R4_SERVICE_CALL_RESPONSE ? (valid ? response.result : R4OS_SERVICE_API_RESULT_INVALID) : call.raw_code;
         (void)r4_service_connection_close(&connection); return r4_audio_result(R4_AUDIO_RESULT_FAILED, raw, 0u);
     }
     out->connection = connection; out->stream_id = response.stream_id; out->owned = 1u; out->frame_bytes=(uint32_t)channels*2u;
@@ -140,12 +148,14 @@ static inline R4AudioResult r4_audio_stream_write_bounded(R4AudioStream *stream,
         R4AudioWireWriteRequest request = {0}; request.magic = R4OS_AUDIO_SERVICE_REQUEST_MAGIC; request.version = R4OS_AUDIO_SERVICE_REQUEST_VERSION; request.stream_id = stream->stream_id; request.byte_count = chunk;
         r4_audio_copy_bytes(payload, &request, (uint32_t)sizeof(request)); r4_audio_copy_bytes(payload + sizeof(request), data + offset, chunk);
         R4AudioWireResult response = {0};
-        R4ServiceCallResult call = r4_service_connection_call_struct(&stream->connection, R4OS_AUDIO_SERVICE_OP_WRITE_STREAM, payload, (uint32_t)sizeof(request) + chunk, &response, sizeof(response), timeout);
+        R4ServiceCallResult call = r4_service_connection_call(&stream->connection, R4OS_AUDIO_SERVICE_OP_WRITE_STREAM, payload, (uint32_t)sizeof(request) + chunk, &response, sizeof(response), timeout);
         if (call.kind == R4_SERVICE_CALL_TIMED_OUT) return r4_audio_result(R4_AUDIO_RESULT_TIMED_OUT, R4OS_SERVICE_API_RESULT_TIMEOUT, offset);
-        if(call.kind==R4_SERVICE_CALL_RESPONSE && r4_audio_response_valid(&response,R4OS_AUDIO_SERVICE_OP_WRITE_STREAM) && response.result==R4OS_SERVICE_API_RESULT_BUSY)
+        if (call.kind == R4_SERVICE_CALL_RESPONSE && (call.bytes != sizeof(response) || !r4_audio_stream_reply_valid(&response, R4OS_AUDIO_SERVICE_OP_WRITE_STREAM, stream->stream_id, chunk, stream->frame_bytes)))
+            return r4_audio_result(R4_AUDIO_RESULT_FAILED,R4OS_SERVICE_API_RESULT_INVALID,offset);
+        if(call.kind==R4_SERVICE_CALL_RESPONSE && response.result==R4OS_SERVICE_API_RESULT_BUSY)
             return r4_audio_result(R4_AUDIO_RESULT_BUSY,R4OS_SERVICE_API_RESULT_BUSY,offset);
-        if (call.kind != R4_SERVICE_CALL_RESPONSE || !r4_audio_response_valid(&response, R4OS_AUDIO_SERVICE_OP_WRITE_STREAM) || response.result < 0 || response.bytes == 0u || response.bytes > chunk || response.bytes%stream->frame_bytes) {
-            int32_t raw = call.kind == R4_SERVICE_CALL_RESPONSE ? (response.result < 0 ? response.result : R4OS_SERVICE_API_RESULT_INVALID) : call.raw_code;
+        if (call.kind != R4_SERVICE_CALL_RESPONSE || response.result < 0) {
+            int32_t raw = call.kind == R4_SERVICE_CALL_RESPONSE ? response.result : call.raw_code;
             return r4_audio_result(R4_AUDIO_RESULT_FAILED, raw, offset);
         }
         offset += response.bytes;
@@ -161,7 +171,8 @@ static inline R4AudioResult r4_audio_stream_control(R4AudioStream *stream, uint1
     R4AudioWireResult response = {0};
     R4ServiceCallResult call = r4_service_connection_call_struct(&stream->connection, op, &request, sizeof(request), &response, sizeof(response), timeout);
     if (call.kind == R4_SERVICE_CALL_TIMED_OUT) return r4_audio_result(R4_AUDIO_RESULT_TIMED_OUT, R4OS_SERVICE_API_RESULT_TIMEOUT, 0u);
-    if (call.kind != R4_SERVICE_CALL_RESPONSE || !r4_audio_response_valid(&response, op) || response.result < 0) return r4_audio_result(R4_AUDIO_RESULT_FAILED, call.kind == R4_SERVICE_CALL_RESPONSE ? (response.result < 0 ? response.result : R4OS_SERVICE_API_RESULT_INVALID) : call.raw_code, 0u);
+    const int valid = call.kind == R4_SERVICE_CALL_RESPONSE && r4_audio_stream_reply_valid(&response, op, stream->stream_id, 0u, 0u);
+    if (!valid || response.result < 0) return r4_audio_result(R4_AUDIO_RESULT_FAILED, call.kind == R4_SERVICE_CALL_RESPONSE ? (valid ? response.result : R4OS_SERVICE_API_RESULT_INVALID) : call.raw_code, 0u);
     if (closes) { stream->stream_id = 0u; stream->owned = 0u; stream->frame_bytes=0u; (void)r4_service_connection_close(&stream->connection); }
     return r4_audio_result(R4_AUDIO_RESULT_OK, R4OS_OK, 0u);
 }

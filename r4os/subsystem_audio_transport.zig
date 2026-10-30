@@ -6,6 +6,7 @@ const audio = @import("app_audio.zig");
 const services = @import("app_services.zig");
 const r4sys = @import("r4sys.zig");
 const time = @import("time_contract.zig");
+const stream_reply = @import("audio_stream_reply.zig");
 
 pub const pending: i32 = -9603;
 pub const Operation = enum { open, write, volume, close, fence, progress };
@@ -212,21 +213,16 @@ pub const Transport = struct {
             return 0;
         }
         if (self.stage != .ordinary) return self.decodeProgress(bytes);
-        if (bytes != @sizeOf(abi.AudioServiceStreamResult) or self.response.magic != abi.audio_service_result_magic or self.response.version != abi.audio_service_result_version or self.response.action != wireOp(self.operation)) return abi.service_api_result_invalid;
+        if (bytes != @sizeOf(abi.AudioServiceStreamResult) or !stream_reply.validate(std.mem.asBytes(&self.response), wireOp(self.operation), self.stream_id, @intCast(self.copied_bytes), self.frame_bytes)) return abi.service_api_result_invalid;
         if (self.response.result < 0) return self.response.result;
         if (self.operation == .open) {
-            if (self.response.stream_id == 0) return abi.service_api_result_invalid;
             self.stream_id = self.response.stream_id;
             self.uncertain_open = false;
             return 0;
         }
-        if (self.response.stream_id != self.stream_id or self.stream_id == 0) return abi.service_api_result_invalid;
         if (self.operation == .write) {
-            const accepted = self.response.bytes;
-            if (accepted == 0 or accepted > self.copied_bytes or accepted % self.frame_bytes != 0 or self.response.result != accepted) return abi.service_api_result_invalid;
-            return @intCast(accepted);
+            return @intCast(self.response.bytes);
         }
-        if (self.response.result != 0) return abi.service_api_result_invalid;
         if (self.operation == .close) self.stream_id = 0;
         return 0;
     }
@@ -492,6 +488,31 @@ test "timed out actual Open is fenced on its original endpoint before reusing th
     try std.testing.expectEqual(Operation.close, receipt.operation);
     try std.testing.expectEqual(@as(i32, 0), receipt.result);
     try std.testing.expect(!owner.uncertain_open and owner.stream_id == 0 and owner.request_id == 0);
+}
+
+test "actual transport Open binds positive result and identity before adopting a stream" {
+    for (0..5) |variant| {
+        var owner = Probe.stream();
+        owner.stream_id = 0;
+        try std.testing.expectEqual(pending, owner.open(48000, 2, audio.default_volume));
+        Probe.reply(77, 0);
+        var response: abi.AudioServiceStreamResult = undefined;
+        @memcpy(std.mem.asBytes(&response), Probe.response[0..@sizeOf(@TypeOf(response))]);
+        response.result = switch (variant) {
+            0 => 0,
+            1 => 78,
+            2 => 77,
+            3 => abi.service_api_result_bad_handle,
+            else => 77,
+        };
+        if (variant == 2) response.bytes = 4;
+        @memcpy(Probe.response[0..@sizeOf(@TypeOf(response))], std.mem.asBytes(&response));
+        const receipt = owner.poll().?;
+        try std.testing.expectEqual(if (variant == 4) @as(i32, 0) else abi.service_api_result_invalid, receipt.result);
+        try std.testing.expectEqual(@as(u32, if (variant == 4) 77 else 0), owner.stream_id);
+        try std.testing.expectEqual(variant != 4, owner.uncertain_open);
+        try std.testing.expectEqual(@as(u32, 1), Probe.closes);
+    }
 }
 
 test "continuous transport keeps copied PCM and one absolute budget through binding and flow" {

@@ -784,16 +784,25 @@
         "sources": [
           "Repositories/SDK/Shared/C/include/r4os/r4audio.h",
           "Repositories/SDK/Shared/C/include/r4os/app_audio.h",
-          "Repositories/SDK/Shared/C/include/r4os/gui_bridge.h"
+          "Repositories/SDK/Shared/C/include/r4os/gui_bridge.h",
+          "Repositories/SDK/Shared/C/include/r4os/data_helpers.h"
         ],
         "gap": null
       },
       "evidence": [
         "source_inventory",
         "platform_current_58",
-        "current_contract_78"
+        "current_contract_78",
+        "audio_reply_08842"
       ],
-      "shared_core": "Existing Zig Audio/PCM/Device/Power owners through one compiler-typed native boundary; current legacy C audio loop aligned, no third Rust algorithm."
+      "shared_core": "Existing Zig Audio/PCM/Device/Power owners through one compiler-typed native boundary; current legacy C audio loop aligned, no third Rust algorithm.",
+      "current_reply_validation_08842": {
+        "sdk": "0.64.113",
+        "evidence": "audio_reply_08842",
+        "owner": "Repositories/SDK/r4os/audio_stream_reply.zig",
+        "C_legacy_transport": "Retained; acceptance delegates to the same SDK owner through generated data helper.",
+        "Rust": "Existing generated canonical Audio/AudioStream calls; no parallel validation."
+      }
     },
     {
       "id": "devices-power",
@@ -915,7 +924,8 @@
         "source_inventory",
         "data_current_61",
         "web_current_62",
-        "ico_bulk_08840"
+        "ico_bulk_08840",
+        "audio_reply_08842"
       ],
       "shared_core": "Grosse Parser/Codec-/Kryptokerne einmal beim SDK-/Librarybesitzer; besitzereigene C-ABI bzw. passende existierende R4L in61 begruenden. Kein Kopieren von JSON/ZIP/Entropiealgorithmen in drei Sprachen.",
       "qualification": {
@@ -54701,6 +54711,47 @@
       "native_runtime": "Separate current194 pixel/readback/SMP4 qualification in Docs/Desktop/README.txt; this SDK review records host/data semantics.",
       "standard": "Separate sole final0.88.40 STANDARD in Docs/Desktop/README.txt; historical suites retain their own scope.",
       "limits": "Source review and host tests grant no physical audio/GPU/Windows execution or isolated latency qualification."
+    },
+    "audio_reply_08842": {
+      "kind": "actual_audio_owner_injected_reply_and_native_C_Rust_common_validation",
+      "performed_in": "0.88.42",
+      "sdk": "0.64.113",
+      "report": "Docs/Audio/README.txt#0.88.42",
+      "scope": "One stateless SDK audio_stream_reply validates exact wire size/header/action, positive Open result==streamID and0bytes, existing own-stream identity, Write result==accepted complete frame bytes within submitted chunk, control result0/bytes0, consistent negative replies without new accepted bytes. Sync and async ordinary paths use the owner; legacy C preserves private transport and calls the generated data adapter for the same acceptance decision. No duplicate C acceptance algorithm. Existing progress/fence/retirement/deadline contracts remain.",
+      "projection": {
+        "native_types": 185,
+        "native_functions": 169,
+        "fingerprint": 17614999946340117096,
+        "generated_C_native_fingerprint_and_Rust_projection": "byte checked; unchanged GUI projection checked"
+      },
+      "host_checks": {
+        "owner_and_runtime_cases": 76,
+        "original_data_owner_cases": 49,
+        "C_Rust_platform_visual_clock_groups": 4,
+        "platform_unsafe_Send_Unpin_borrow_compile_negatives": 4,
+        "original_C_Rust_data_groups": 5,
+        "data_unsafe_ownership_compile_negatives": 5,
+        "before_owner_cases": 76,
+        "before_expected_fails": 4,
+        "scope": "Actual native table fixture injects wrong identity/result/bytes/header/length, positive control results, inconsistent Open pairs, valid1/91/i32max IDs, known partial prefixes4/4076, BUSY/timeouts/negative payload errors and explicit valid close. C and safe Rust exercise the same owner and complete frame/prefix oracles; no automatically repeated unknown write."
+      },
+      "current_sources": {
+        "Repositories/SDK/Rust/src/c_facades.rs": "2ae4965219625208b84744d517d8a95820131ec2dfb059e176f0d75393b90aca",
+        "Repositories/SDK/Shared/C/include/r4os/app_audio.h": "553ae7b72e86fecf2a060b572b35e56a334da9547654595a35b9bed6f4dea073",
+        "Repositories/SDK/Shared/C/include/r4os/data_helpers.h": "16611fea28fdef0b9a20538a96b9a4e09ceb66f81854deaacbc1bacf97a5bc9a",
+        "Repositories/SDK/Tests/Conformance/AudioDeviceFacadePrototype05827.c": "62dc7e82c2c8a0c972e382cc090c3b8c72fa5addcaba2cf222a44e853c8a6bb5",
+        "Repositories/SDK/Tests/Conformance/AudioDeviceFacadePrototype05827.zig": "231d9480ee032f2262d95aa192c9e82615438ddbffcd101bacc5b74447d6c03f",
+        "Repositories/SDK/Tests/Simulation/RustPlatform.rs": "d6b29c783c7da68321c39dc93443fd69cfdc21c98eb7e24d3e1c58bec0f7874f",
+        "Repositories/SDK/build.zig.zon": "14000386d635d0f3881e8dfa52c81fbff4d5c7f10fcb7df080dfaa8d79f861af",
+        "Repositories/SDK/r4os/app_audio.zig": "f0c761034551e20321f71511aa7f46101875c0ad603c1ea43ac8ba7a8e857018",
+        "Repositories/SDK/r4os/audio_stream_reply.zig": "e0b3c373a768e68887baa4b8b6a7bb9d78d3db48f4578d71934335a397e86ac0",
+        "Repositories/SDK/r4os/data_helper_adapters.zig": "5e79c0a17007e1b7186f2b0344b99ec704c858dfe2d54399d8b8c3a28637fe2d",
+        "Repositories/SDK/r4os/generated/data_fingerprint.zig": "6954b6eef54a439c03b2be30f727d0c374e4693fc9b75757952b7975c052b2a3",
+        "Repositories/SDK/r4os/subsystem_audio_transport.zig": "58e44688b69a00c6ce4fca158630e1edbbcc4809af421d7fdc0cc4353c881c3a"
+      },
+      "native_runtime": "Current guest/artifact qualification is recorded separately in Docs/Audio/README.txt for0.88.42.",
+      "standard": "The sole final release42 general benchmark is recorded separately in its domain documentation.",
+      "limits": "Host evidence is injected reply validation. No actual malformed AUDSVC/hardware reply, physical hearing/latency, Windows execution or isolated speedup is claimed."
     }
   },
   "wave_bindings": [
@@ -54953,17 +55004,17 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.88.40",
-    "sdk": "0.64.112",
+    "performed_in": "0.88.42",
+    "sdk": "0.64.113",
     "contract": "0.64.59",
     "libraries": "0.64.38",
-    "evidence": "ico_bulk_08840",
-    "scope": "Seven reviewed owner/generated/build deltas and two explicit C/Rust test bodies. Original data owner49, actual C/Rust5 plus5 ownership negatives and Desktop5 original icon/cache groups qualified. Generated projection/opaque layouts and resident synchronous slices reviewed. Native current194, final STANDARD and physical/Windows/performance remain separate qualification."
+    "evidence": "audio_reply_08842",
+    "scope": "Eight explicit reviewed owner/generated/version deltas plus one private stateless audio owner and three C/Zig/Rust test bodies.76owner/runtime,49originaldata,4platform+4compilernegatives and5data+5compilernegatives qualified. Exact original prefix, stream ownership and positive Open contract. Native release/artifacts/final STANDARD and physical/Windows/performance scope remain separate domain evidence."
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.88.32",
+    "reviewed_in": "0.88.42",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -56104,7 +56155,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "f5b650d39dd3886fd67290a3d0820ec70f6ad361dd63d1262faf65d4b3f04285"
+        "sha256": "2ae4965219625208b84744d517d8a95820131ec2dfb059e176f0d75393b90aca"
       },
       {
         "path": "Repositories/SDK/Rust/src/data/hash.rs",
@@ -56356,7 +56407,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_audio.h",
-        "sha256": "31f227101caf1641b348df442cbb65e9f0d22339031f901b714cd4bf3a9220ac"
+        "sha256": "553ae7b72e86fecf2a060b572b35e56a334da9547654595a35b9bed6f4dea073"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_contract.h",
@@ -56392,7 +56443,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/data_helpers.h",
-        "sha256": "ea85a9b4a991a94d7e2a442b0b48a86b8714c9bb4da8edbf75c9428c849a1f71"
+        "sha256": "16611fea28fdef0b9a20538a96b9a4e09ceb66f81854deaacbc1bacf97a5bc9a"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/directory_page.h",
@@ -56808,7 +56859,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "6b4273cc884aeb15abe1d0d048e291895320c062f24f79b3a6b143708a800b06"
+        "sha256": "14000386d635d0f3881e8dfa52c81fbff4d5c7f10fcb7df080dfaa8d79f861af"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -56824,7 +56875,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/app_audio.zig",
-        "sha256": "c582f49bd1d500c887efdd4b28eab6e5b039681a1f1ac9b2896b62e4e97bd575"
+        "sha256": "f0c761034551e20321f71511aa7f46101875c0ad603c1ea43ac8ba7a8e857018"
       },
       {
         "path": "Repositories/SDK/r4os/app_contract.zig",
@@ -56869,6 +56920,10 @@
       {
         "path": "Repositories/SDK/r4os/audio_pcm.zig",
         "sha256": "e239bf10a2e4465272a20e61615feace3402dd026e36ff8204039e9dfd6b7c02"
+      },
+      {
+        "path": "Repositories/SDK/r4os/audio_stream_reply.zig",
+        "sha256": "e0b3c373a768e68887baa4b8b6a7bb9d78d3db48f4578d71934335a397e86ac0"
       },
       {
         "path": "Repositories/SDK/r4os/bounded_text.zig",
@@ -56924,7 +56979,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/data_helper_adapters.zig",
-        "sha256": "28c466dee6694d41e1e1f0053e0891ab2edac4423d9a4ec5711c893c871b8e32"
+        "sha256": "5e79c0a17007e1b7186f2b0344b99ec704c858dfe2d54399d8b8c3a28637fe2d"
       },
       {
         "path": "Repositories/SDK/r4os/data_helper_owners.zig",
@@ -57016,7 +57071,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/generated/data_fingerprint.zig",
-        "sha256": "7628c4ea3b8bdd25f78d872511c2fc3be125f5e73e6ad15b3bfd8508cd9c6033"
+        "sha256": "6954b6eef54a439c03b2be30f727d0c374e4693fc9b75757952b7975c052b2a3"
       },
       {
         "path": "Repositories/SDK/r4os/generated/driver_fingerprint.zig",
@@ -57444,7 +57499,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/subsystem_audio_transport.zig",
-        "sha256": "260b9497ef2ed51c1fa0052f4532ae32e655709cd0c26b8f4f84c93a0201888e"
+        "sha256": "58e44688b69a00c6ce4fca158630e1edbbcc4809af421d7fdc0cc4353c881c3a"
       },
       {
         "path": "Repositories/SDK/r4os/subsystem_bridge_names.zig",
@@ -58026,10 +58081,14 @@
         "zig": [
           "Repositories/SDK/r4os/app_audio.zig",
           "Repositories/SDK/r4os/audio_pcm.zig",
-          "Repositories/SDK/r4os/r4audio.zig"
+          "Repositories/SDK/r4os/audio_stream_reply.zig",
+          "Repositories/SDK/r4os/data_helper_adapters.zig",
+          "Repositories/SDK/r4os/r4audio.zig",
+          "Repositories/SDK/r4os/subsystem_audio_transport.zig"
         ],
         "c": [
           "Repositories/SDK/Shared/C/include/r4os/app_audio.h",
+          "Repositories/SDK/Shared/C/include/r4os/data_helpers.h",
           "Repositories/SDK/Shared/C/include/r4os/gui_bridge.h",
           "Repositories/SDK/Shared/C/include/r4os/r4audio.h"
         ],
@@ -58046,7 +58105,8 @@
           "qualified_prior_source_08825",
           "file_name_limits_08827",
           "native_pointer_capture_08828",
-          "gui_host_backpressure_08832"
+          "gui_host_backpressure_08832",
+          "audio_reply_08842"
         ]
       },
       {
@@ -58117,7 +58177,8 @@
         ],
         "proof": [
           "data_current_61",
-          "ico_bulk_08840"
+          "ico_bulk_08840",
+          "audio_reply_08842"
         ]
       },
       {

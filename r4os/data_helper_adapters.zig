@@ -55,3 +55,8 @@ pub const Reader = struct {
 pub fn inspectReader(reader: Reader, size: u64) ?owners.artifact.Identity {
     return owners.artifact.inspect(reader, size);
 }
+
+/// The legacy C facade uses the same reply owner as Zig and safe Rust.
+pub fn audioStreamReplyValid(bytes: []const u8, action: u16, stream_id: u32, maximum_bytes: u32, frame_bytes: u64) bool {
+    return @import("audio_stream_reply.zig").validate(bytes, action, stream_id, maximum_bytes, frame_bytes);
+}

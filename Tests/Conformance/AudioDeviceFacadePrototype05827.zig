@@ -8,6 +8,23 @@ var context: r4os.abi.R4XStartContext = .{};
 var timeout_next = false;
 var stream_open = false;
 var open_connections: u32 = 0;
+const ReplyFault = enum(u32) { none, stream, result, bytes, magic, version, action, short, long, open_zero_result, open_zero_stream, open_negative_stream, busy_bytes, write_zero, write_large, write_unaligned, remote_error };
+var reply_fault: ReplyFault = .none;
+var reply_action: u16 = 0;
+var reply_at: u32 = 0;
+var reply_calls: u32 = 0;
+var platform_stream_id: u32 = 91;
+var last_request_stream: u32 = 0;
+
+pub export fn sdk_platform_oracle_reply_fault(action: u16, fault: u32, at: u32) callconv(.c) void {
+    reply_action = action;
+    reply_fault = @enumFromInt(fault);
+    reply_at = at;
+    reply_calls = 0;
+}
+pub export fn sdk_platform_oracle_last_stream() callconv(.c) u32 {
+    return last_request_stream;
+}
 
 fn fakeCpuLifecycle(op: u32, cpu: u32, epoch: u64, out: *r4os.abi.CpuLifecycleInfo) callconv(.c) i32 {
     std.debug.assert(op == 2 and cpu == 63 and epoch == 0x1234_5678_85ab_cdef);
@@ -310,15 +327,21 @@ fn fakeServiceCall(_: u32, op: u16, request: [*]const u8, request_len: u32, head
         timeout_next = false;
         return r4os.abi.service_api_result_timeout;
     }
-    var result = r4os.abi.AudioServiceStreamResult{ .action = op, .result = 0, .stream_id = 91 };
+    if (op == reply_action) reply_calls += 1;
+    const inject = op == reply_action and reply_fault != .none and (reply_at == 0 or reply_calls == reply_at);
+    var result = r4os.abi.AudioServiceStreamResult{ .action = op, .result = 0, .stream_id = platform_stream_id };
     switch (op) {
-        r4os.abi.audio_service_op_open_stream => stream_open = true,
+        r4os.abi.audio_service_op_open_stream => {
+            stream_open = true;
+            result.result = @intCast(platform_stream_id);
+        },
         r4os.abi.audio_service_op_write_stream => {
             platform_write_calls += 1;
             if (platform_write_mode == 3 and platform_write_calls == 2) return r4os.abi.service_api_result_timeout;
             if (!stream_open or request_len < @sizeOf(r4os.abi.AudioServiceStreamWriteRequest)) result.result = -1 else {
                 var wire: r4os.abi.AudioServiceStreamWriteRequest = .{};
                 @memcpy(std.mem.asBytes(&wire), request[0..@sizeOf(r4os.abi.AudioServiceStreamWriteRequest)]);
+                last_request_stream = wire.stream_id;
                 result.bytes = wire.byte_count;
                 result.result = @intCast(wire.byte_count);
                 if (platform_write_mode != 0) {
@@ -339,13 +362,56 @@ fn fakeServiceCall(_: u32, op: u16, request: [*]const u8, request_len: u32, head
             result.result = -1;
         },
         r4os.abi.audio_service_op_close_stream => if (stream_open) {
-            stream_open = false;
+            if (!inject) stream_open = false;
         } else {
             result.result = -1;
         },
         else => result.result = r4os.abi.service_api_result_bad_op,
     }
-    return copyResponse(response, capacity, &result);
+    if ((op == r4os.abi.audio_service_op_set_stream_volume or op == r4os.abi.audio_service_op_close_stream) and request_len == @sizeOf(r4os.abi.AudioServiceStreamControlRequest)) {
+        var wire: r4os.abi.AudioServiceStreamControlRequest = .{};
+        @memcpy(std.mem.asBytes(&wire), request[0..@sizeOf(@TypeOf(wire))]);
+        last_request_stream = wire.stream_id;
+    }
+    if (inject) switch (reply_fault) {
+        .none => unreachable,
+        .stream => result.stream_id += 1,
+        .result => result.result += 1,
+        .bytes => result.bytes += 4,
+        .magic => result.magic ^= 1,
+        .version => result.version += 1,
+        .action => result.action +%= 1,
+        .short, .long => {},
+        .open_zero_result => result.result = 0,
+        .open_zero_stream => result.stream_id = 0,
+        .open_negative_stream => result.result = r4os.abi.service_api_result_bad_handle,
+        .busy_bytes => {
+            result.result = r4os.abi.service_api_result_busy;
+            result.bytes = 4;
+        },
+        .write_zero => {
+            result.result = 0;
+            result.bytes = 0;
+        },
+        .write_large => {
+            const raw = request[0..@sizeOf(r4os.abi.AudioServiceStreamWriteRequest)];
+            var wire: r4os.abi.AudioServiceStreamWriteRequest = .{};
+            @memcpy(std.mem.asBytes(&wire), raw);
+            result.bytes = wire.byte_count + 4;
+            result.result = @intCast(result.bytes);
+        },
+        .write_unaligned => {
+            result.bytes = 3;
+            result.result = 3;
+        },
+        .remote_error => {
+            result.result = r4os.abi.service_api_result_bad_handle;
+            result.bytes = 0;
+            if (op == r4os.abi.audio_service_op_open_stream) result.stream_id = 0;
+        },
+    };
+    const copied = copyResponse(response, capacity, &result);
+    return if (inject and reply_fault == .short) copied - 1 else if (inject and reply_fault == .long) copied + 1 else copied;
 }
 
 var platform_write_mode: u32 = 0;
@@ -367,6 +433,11 @@ pub export fn sdk_platform_oracle_tables(sys: *r4os.abi.R4XStartR4Sys, audio: *r
     timeout_next = false;
     platform_write_mode = 0;
     platform_write_calls = 0;
+    reply_fault = .none;
+    reply_action = 0;
+    reply_calls = 0;
+    platform_stream_id = 91;
+    last_request_stream = 0;
 }
 
 fn fakeAudioOpen(_: u32, _: u16, _: u16) callconv(.c) i32 {
@@ -513,6 +584,9 @@ test "PCM lifecycle validates format timeout progress and double close" {
     stream_open = false;
     open_connections = 0;
     timeout_next = false;
+    reply_fault = .none;
+    platform_stream_id = 91;
+    platform_write_mode = 0;
     var facades = initFacades();
     try std.testing.expect(facades.audio.available());
     facades.audio.raw = .{ .base = .{} };
@@ -547,6 +621,96 @@ test "PCM lifecycle validates format timeout progress and double close" {
     try std.testing.expect(switch (stream.close(r4os.time_contract.timeoutForever())) {
         .failure => |raw| raw == r4os.abi.err_closed,
         else => false,
+    });
+    try std.testing.expectEqual(@as(u32, 0), open_connections);
+}
+
+fn replyTestAudio() r4os.Audio {
+    sdk_platform_oracle_tables(&sys_table, &audio_table, &dev_table);
+    return initFacades().audio;
+}
+
+fn replyTestStream(audio: *const r4os.Audio) !r4os.AudioStream {
+    return switch (audio.openStream(48_000, 2, .s16le, r4os.app_audio.default_volume, r4os.time_contract.timeoutForever())) {
+        .stream => |stream| stream,
+        else => error.Open,
+    };
+}
+
+test "PCM reply ownership retains only the exact acknowledged prefix across bad writes" {
+    const a = r4os.abi;
+    for ([_]ReplyFault{ .stream, .result, .bytes, .magic, .version, .action, .short, .long, .busy_bytes, .write_zero, .write_large, .write_unaligned, .remote_error }) |fault| {
+        for ([_]usize{ 16, 8192 }) |length| {
+            const audio = replyTestAudio();
+            var stream = try replyTestStream(&audio);
+            sdk_platform_oracle_mode(if (length == 16) 1 else 0);
+            sdk_platform_oracle_reply_fault(a.audio_service_op_write_stream, @intFromEnum(fault), 2);
+            var bytes: [8192]u8 = .{0x42} ** 8192;
+            const result = stream.write(bytes[0..length], r4os.time_contract.timeoutForever());
+            const failure = switch (result) {
+                .failure => |value| value,
+                else => return error.UnacknowledgedBytesAccepted,
+            };
+            try std.testing.expectEqual(if (fault == .remote_error) a.service_api_result_bad_handle else a.service_api_result_invalid, failure.raw);
+            try std.testing.expectEqual(if (length == 16) @as(usize, 4) else r4os.app_audio.max_write_payload, failure.written);
+            try std.testing.expectEqual(@as(u32, 2), platform_write_calls);
+            try std.testing.expect(stream.valid() and stream.stream_id == 91 and open_connections == 1 and last_request_stream == 91);
+            var cursor = r4os.app_audio.WriteCursor.init(length, 4).?;
+            try std.testing.expectEqual(r4os.app_audio.WriteOutcome.failure, cursor.apply(result).outcome);
+            try std.testing.expectEqual(length - failure.written, cursor.remaining());
+            sdk_platform_oracle_reply_fault(0, 0, 0);
+            try std.testing.expect(stream.close(r4os.time_contract.timeoutForever()) == .ok);
+            try std.testing.expectEqual(@as(u32, 0), open_connections);
+        }
+    }
+}
+
+test "PCM reply ownership rejects foreign and positive control success without releasing stream" {
+    const a = r4os.abi;
+    for ([_]u16{ a.audio_service_op_set_stream_volume, a.audio_service_op_close_stream }) |operation| {
+        for ([_]ReplyFault{ .stream, .result, .bytes, .magic, .version, .action, .short, .long, .remote_error }) |fault| {
+            const audio = replyTestAudio();
+            var stream = try replyTestStream(&audio);
+            sdk_platform_oracle_reply_fault(operation, @intFromEnum(fault), 1);
+            const result = if (operation == a.audio_service_op_close_stream) stream.close(r4os.time_contract.timeoutForever()) else stream.setVolume(0x8000, r4os.time_contract.timeoutForever());
+            const expected = if (fault == .short or fault == .long) a.service_api_result_buffer_too_small else if (fault == .remote_error) a.service_api_result_bad_handle else a.service_api_result_invalid;
+            try std.testing.expectEqual(expected, switch (result) {
+                .failure => |raw| raw,
+                else => return error.ForeignControlAcknowledged,
+            });
+            try std.testing.expect(stream.valid() and stream.stream_id == 91 and stream.owned and open_connections == 1 and last_request_stream == 91);
+            sdk_platform_oracle_reply_fault(0, 0, 0);
+            try std.testing.expect(stream.close(r4os.time_contract.timeoutForever()) == .ok);
+            try std.testing.expectEqual(@as(u32, 0), open_connections);
+        }
+    }
+}
+
+test "PCM reply ownership binds positive Open result to stream and rejects inconsistent identities" {
+    const a = r4os.abi;
+    for ([_]ReplyFault{ .stream, .result, .bytes, .magic, .version, .action, .short, .long, .open_zero_result, .open_zero_stream, .open_negative_stream }) |fault| {
+        const audio = replyTestAudio();
+        sdk_platform_oracle_reply_fault(a.audio_service_op_open_stream, @intFromEnum(fault), 1);
+        const expected = if (fault == .short or fault == .long) a.service_api_result_buffer_too_small else a.service_api_result_invalid;
+        try std.testing.expectEqual(expected, switch (audio.openStream(48_000, 2, .s16le, 0x10000, r4os.time_contract.timeoutForever())) {
+            .failure => |raw| raw,
+            else => return error.InconsistentOpenAdopted,
+        });
+        try std.testing.expectEqual(@as(u32, 0), open_connections);
+    }
+    for ([_]u32{ 1, 91, std.math.maxInt(i32) }) |id| {
+        const audio = replyTestAudio();
+        platform_stream_id = id;
+        var stream = try replyTestStream(&audio);
+        try std.testing.expect(stream.valid() and stream.stream_id == id);
+        try std.testing.expect(stream.close(r4os.time_contract.timeoutForever()) == .ok);
+        try std.testing.expectEqual(@as(u32, 0), open_connections);
+    }
+    const audio = replyTestAudio();
+    sdk_platform_oracle_reply_fault(a.audio_service_op_open_stream, @intFromEnum(ReplyFault.remote_error), 1);
+    try std.testing.expectEqual(a.service_api_result_bad_handle, switch (audio.openStream(48_000, 2, .s16le, 0x10000, r4os.time_contract.timeoutForever())) {
+        .failure => |raw| raw,
+        else => return error.RemoteErrorLost,
     });
     try std.testing.expectEqual(@as(u32, 0), open_connections);
 }
