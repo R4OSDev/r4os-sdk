@@ -38,6 +38,14 @@ only for this review. Real build receipts still hash exact compiler bytes.
 Further public API changes must update the affected language facades/packages
 and evidence in this same matrix, including later Desktop/Library work.
 
+With current SDK0.64.115/Contract0.64.60, use Libraries0.64.39 for its higher
+Rust helper projection. Its compiler-owned aliases include R4AUDIO v4,
+DriverApi v39 and the copied audio catalog records. The library C boundary,
+native fingerprint and installed R4L binaries are unchanged. A platform record
+extension requires checking this reachable projection as well as the SDK
+projections. The0.88.56 matrix update records that review; SDK implementation
+and ABI remain0.64.115.
+
 Current operations require their actual callbacks: complete glyph bitmap,
 real font revision/metrics, Unicode input, generation-bound network service
 requests and V2 default storage summaries. Missing capabilities fail without

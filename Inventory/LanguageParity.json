@@ -54848,6 +54848,39 @@
         "Repositories/SDK/r4os/r4audio.zig": "a50913a2fb33fd1be2f55c2bf5ff45f6c809883b47ceb2c093304ddd1c3843f0"
       },
       "limits": "Functional source/ABI/native ownership review, not a final STANDARD, physical receiver/ELD/speaker/Windows or isolated latency/performance qualification. Final normal-product release and the single STANDARD are separately recorded in the domain report."
+    },
+    "audio_selection_08856": {
+      "kind": "current_reachable_library_canonical_alias_projection_and_async_audio_consumers",
+      "performed_in": "0.88.56",
+      "sdk": "0.64.115",
+      "contract": "0.64.60",
+      "libraries": "0.64.39",
+      "complete": true,
+      "report": "Docs/Audio/README.txt",
+      "scope": "Follow-up review fixes the reachable Library raw projection missed when R4AUDIO/DriverApi grew in55. Compiler-owned native C header and fingerprint remain byte-identical; exactly3new canonical record aliases and the2expanded platform-table layout assertions change. No hand edits/relaxed guards/provider binary change or SDK ABI/implementation change. AUDSVC21 uses existing owned thread/Join boundaries for one copied operation.",
+      "current_owner_checks": [
+        "Actual nativeLibraryC/Rust2functional cases +5compiler ownership/unsafe negatives PASS; currentC/header fingerprint generatorcheck PASS, oldRustprojection checkfailedandactualcurrentRustgeneratorwrite/checkqualified.",
+        "OriginalDesktop3audio owner cases forPending/newIntents, superseded popup replies andtimeout/generation/partialClose PASS, plus original3geometry/1preciseclock admission. InitialoldLibrarysizeRustcompilefailure preserved; intermediate empty scope selection did not executeDesktopcases and is not counted."
+      ],
+      "native_current": {
+        "dispatcher": "Temp/08856-final-controlled-native-proof.json",
+        "initial_stage_archive": "Temp/08856-first-qualified",
+        "runtime": "Final Kernel429/AUDSVC21 cc2f13d54027be041e369a4df47ca6d161ce9bb0cc404947fcf14721b3c24bdd",
+        "scope": "All current controlled SMP4 cases and unchanged original ServiceSELFTEST PASS. Pure post-ACK fresh-catalog reconciliation additionally qualifies withdrawal without replay; initial b1c false-reason negative retained. HDA/AC97/final STANDARD remain separate task4.",
+        "hda": "Temp/08856-hda-real-output-proof.json; Temp/08856-hda-audio-proof.json",
+        "ac97": "Temp/08856-ac97-native-proof.json"
+      },
+      "source_review": [
+        {
+          "path": "Repositories/Libraries/Shared/Rust/src/raw.rs",
+          "old_sha256": "cc6aedc01967be62fae18b6c6b31955f9ad767d4e9f12dd0998b6972d1658826",
+          "new_sha256": "48cf7eaaf960cdb7cdb35ed1e9b4cfaa82535aa771f90072b5ac72e8109bb082"
+        }
+      ],
+      "current_sources": {
+        "Repositories/Libraries/Shared/Rust/src/raw.rs": "48cf7eaaf960cdb7cdb35ed1e9b4cfaa82535aa771f90072b5ac72e8109bb082"
+      },
+      "limits": "Reachable binding review completed against the actual current C/Rust/library/Desktop owners and final normal Kernel429/AUDSVC21 controlled/HDA47/AC9711 source-matched native proofs. Actual short+LONG AC97 original100ms oracle and six concurrent full SFTP readbacks remain unrelaxed. No physical ELD/receiver/speaker/Windows/isolated speed claim. Final STANDARD/formal roadmap closure remain separate; SDK115 implementation/ABI unchanged. All670input paths/35scopes/180exports retained."
     }
   },
   "wave_bindings": [
@@ -55100,12 +55133,12 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.88.55",
+    "performed_in": "0.88.56",
     "sdk": "0.64.115",
     "contract": "0.64.60",
-    "libraries": "0.64.38",
-    "evidence": "audio_catalog_08855",
-    "scope": "Actual new canonical audio catalog/driver epoch API with minimal Zig/C bindings and current generated C/Rust driver, GUI-Audio and reachable subsystem projections. All23changed watched owner inputs explicitly matched to new implementations and qualified Contract/C/Rust/nativeSMP4 evidence; old670file set and other prior scopes retained. Source review does not grant physical hardware/Windows or system speed qualification."
+    "libraries": "0.64.39",
+    "evidence": "audio_selection_08856",
+    "scope": "Exactly one changed watched implementation, the compiler-owned Library raw canonical-alias projection, re-reviewed against unchanged C/native fingerprint, actual positive/negative C/Rust consumers, original3Desktopaudio cases and actual current normalSMP4 service/driver/Join/persistence scenarios. 55evidence retained; all670file paths/35functional scopes/180public exports remain unchanged. SDK implementation/ABI is unchanged; this matrix is review metadata, not a new SDK runtime artifact."
   },
   "drift_guard": {
     "schema": 1,
@@ -56175,7 +56208,7 @@
       },
       {
         "path": "Repositories/Libraries/Shared/Rust/src/raw.rs",
-        "sha256": "cc6aedc01967be62fae18b6c6b31955f9ad767d4e9f12dd0998b6972d1658826"
+        "sha256": "48cf7eaaf960cdb7cdb35ed1e9b4cfaa82535aa771f90072b5ac72e8109bb082"
       },
       {
         "path": "Repositories/Libraries/Shared/Tests/Consumer/Cargo.toml",
@@ -58478,7 +58511,8 @@
           "current_providers_79",
           "file_name_limits_08827",
           "native_pointer_capture_08828",
-          "gui_host_backpressure_08832"
+          "gui_host_backpressure_08832",
+          "audio_selection_08856"
         ]
       },
       {
@@ -58523,7 +58557,8 @@
           "desktop_capture_inputs_86",
           "file_name_limits_08827",
           "native_pointer_capture_08828",
-          "gui_host_backpressure_08832"
+          "gui_host_backpressure_08832",
+          "audio_selection_08856"
         ]
       },
       {
@@ -58604,7 +58639,8 @@
           "display_geometry_parsers_94",
           "file_name_limits_08827",
           "native_pointer_capture_08828",
-          "gui_host_backpressure_08832"
+          "gui_host_backpressure_08832",
+          "audio_selection_08856"
         ]
       },
       {
@@ -58667,7 +58703,8 @@
           "language_libraries_current_60",
           "file_name_limits_08827",
           "native_pointer_capture_08828",
-          "gui_host_backpressure_08832"
+          "gui_host_backpressure_08832",
+          "audio_selection_08856"
         ]
       },
       {
@@ -58750,7 +58787,8 @@
           "language_libraries_current_60",
           "file_name_limits_08827",
           "native_pointer_capture_08828",
-          "gui_host_backpressure_08832"
+          "gui_host_backpressure_08832",
+          "audio_selection_08856"
         ]
       },
       {
