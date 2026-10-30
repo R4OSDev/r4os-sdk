@@ -1109,3 +1109,29 @@ and Rust `gui::Session` expose the same exact tokens and asynchronous grant.
 Guest and physical qualification is recorded separately in the project
 Docs/API/GuiFacade.md. Compilation alone does not qualify outside-client
 dragging, pointer visibility or physical relative input.
+# Complete audio output catalogs (0.88.55, SDK0.64.115)
+
+`r4audio.Context.audioOutputCatalog` and C `r4audio_output_catalog` copy the
+whole current catalog into at least256 caller-owned `AudioOutputInfo` rows and
+a disjoint `AudioOutputCatalog` initialized to version1/size224. Only result1
+publishes a complete receipt. On failure discard scratch rows; metadata and
+unused caller tails remain unchanged. The scalar `audioOutputInfo` remains
+available for individual consumers. Optional R4AUDIO slot26 is negotiated by
+size and function presence; no legacy scan fabricates catalog generations.
+
+The receipt binds actual registry generation, selected registration and up
+to8 exact provider registration/catalog/count/active witnesses. Driver code
+binds `registerAudioOutputEpoch` once from the same owner after structured
+backend registration (DriverApi39/672). A provider serializes row publication,
+advances a nonreused epoch for changes including ABA, and reports Busy during
+transitions/exhaustion. HDA47 and AC9711 implement this contract; unsupported
+providers return `err_no_fn` for complete capture. This is not a physical
+route, Stop, ELD or speaker receipt.
+
+Current compiler-generated C/Rust helpers include
+`R4SdkAudioContext_audioOutputCatalog`,
+`R4SdkDriverContext_registerAudioOutputEpoch` and the reachable subsystem
+audio context. Driver, GUI-Audio and subsystem fingerprints/projections are
+regenerated together. The source review records qualified native C/Rust
+owner and negative-consumer cases plus actual KVM4 Core/provider/AUDSVC/HDA/
+AC97 catalog, selection, PCM and teardown evidence in `Docs/Audio/README.txt`.

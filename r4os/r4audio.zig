@@ -34,6 +34,11 @@ pub const Context = struct {
         return self.base.audioOutputInfo(index, out);
     }
 
+    /// Discard outputs on failure; out is a complete receipt only on result1.
+    pub fn audioOutputCatalog(self: *const Context, outputs: []abi.AudioOutputInfo, out: *abi.AudioOutputCatalog) i32 {
+        return self.base.audioOutputCatalog(outputs, out);
+    }
+
     pub fn audioSelectOutput(self: *const Context, id: *const [64]u8) i32 {
         return self.base.audioSelectOutput(id);
     }

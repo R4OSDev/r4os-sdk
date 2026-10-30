@@ -2958,6 +2958,12 @@ pub const Context = struct {
         return callback(index, out);
     }
 
+    pub fn audioOutputCatalog(self: *const Context, outputs: []abi.AudioOutputInfo, out: *abi.AudioOutputCatalog) i32 {
+        const callback = self.audioFn("audio_output_catalog") orelse return self.unavailable("audio");
+        if (outputs.len > 0xffffffff) return abi.service_api_result_invalid;
+        return callback(outputs.ptr, @intCast(outputs.len), out);
+    }
+
     pub fn audioSelectOutput(self: *const Context, id: *const [64]u8) i32 {
         const callback = self.audioFn("audio_select_output") orelse return self.unavailable("audio");
         return callback(id);

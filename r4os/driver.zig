@@ -237,6 +237,14 @@ pub const Context = struct {
         return self.api.unregister_audio_backend(name);
     }
 
+    /// Bind once after registering the structured backend. The callback must
+    /// observe real row/count/active publication epochs under its own owner.
+    pub fn registerAudioOutputEpoch(self: *const Context, name: [*:0]const u8, callback: abi.AudioOutputEpochFn) i32 {
+        if (!self.supportsDriverApi(39, @offsetOf(abi.DriverApi, "register_audio_output_epoch") + 8)) return abi.err_no_fn;
+        const bind = self.api.register_audio_output_epoch orelse return abi.err_no_fn;
+        return bind(name, callback);
+    }
+
     /// Kernel 0.1.304 requires the complete v2 NetBackend header. Optional
     /// packet metadata/callbacks may remain absent; canonical flat I/O stays valid.
     pub fn registerNetBackend(self: *const Context, name: [*:0]const u8, backend: *const abi.NetBackend) i32 {

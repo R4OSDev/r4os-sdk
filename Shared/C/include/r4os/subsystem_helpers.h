@@ -668,28 +668,34 @@ typedef struct R4SdkSubsystemNativeValue238 { _Alignas(8) uint8_t opaque_bytes[8
 /* *abi_generated.AudioOutputInfo; native size 8, alignment 8. */
 typedef struct R4SdkSubsystemNativeValue240 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkSubsystemNativeValue240;
 #define R4SdkSubsystemNativeValue240_TYPE 240u
-/* *const [64]u8; native size 8, alignment 8. */
-typedef struct R4SdkSubsystemNativeValue242 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkSubsystemNativeValue242;
+/* []abi_generated.AudioOutputInfo; native size 16, alignment 8. */
+typedef struct R4SdkSubsystemNativeValue242 { _Alignas(8) uint8_t opaque_bytes[16]; } R4SdkSubsystemNativeValue242;
 #define R4SdkSubsystemNativeValue242_TYPE 242u
-/* *abi_generated.AudioStreamProgress; native size 8, alignment 8. */
+/* *abi_generated.AudioOutputCatalog; native size 8, alignment 8. */
 typedef struct R4SdkSubsystemNativeValue243 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkSubsystemNativeValue243;
 #define R4SdkSubsystemNativeValue243_TYPE 243u
-/* *const abi_generated.AudioStreamExpectation; native size 8, alignment 8. */
+/* *const [64]u8; native size 8, alignment 8. */
 typedef struct R4SdkSubsystemNativeValue245 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkSubsystemNativeValue245;
 #define R4SdkSubsystemNativeValue245_TYPE 245u
+/* *abi_generated.AudioStreamProgress; native size 8, alignment 8. */
+typedef struct R4SdkSubsystemNativeValue246 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkSubsystemNativeValue246;
+#define R4SdkSubsystemNativeValue246_TYPE 246u
+/* *const abi_generated.AudioStreamExpectation; native size 8, alignment 8. */
+typedef struct R4SdkSubsystemNativeValue248 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkSubsystemNativeValue248;
+#define R4SdkSubsystemNativeValue248_TYPE 248u
 /* *abi.AudioServiceStatus; native size 8, alignment 8. */
-typedef struct R4SdkSubsystemNativeValue247 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkSubsystemNativeValue247;
-#define R4SdkSubsystemNativeValue247_TYPE 247u
+typedef struct R4SdkSubsystemNativeValue250 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkSubsystemNativeValue250;
+#define R4SdkSubsystemNativeValue250_TYPE 250u
 /* *abi_generated.AudioServiceMasterState; native size 8, alignment 8. */
-typedef struct R4SdkSubsystemNativeValue249 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkSubsystemNativeValue249;
-#define R4SdkSubsystemNativeValue249_TYPE 249u
+typedef struct R4SdkSubsystemNativeValue252 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkSubsystemNativeValue252;
+#define R4SdkSubsystemNativeValue252_TYPE 252u
 /* *const abi_generated.AudioServiceMasterRequest; native size 8, alignment 8. */
-typedef struct R4SdkSubsystemNativeValue251 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkSubsystemNativeValue251;
-#define R4SdkSubsystemNativeValue251_TYPE 251u
+typedef struct R4SdkSubsystemNativeValue254 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkSubsystemNativeValue254;
+#define R4SdkSubsystemNativeValue254_TYPE 254u
 /* *abi.AudioServiceStreamResult; native size 8, alignment 8. */
-typedef struct R4SdkSubsystemNativeValue253 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkSubsystemNativeValue253;
-#define R4SdkSubsystemNativeValue253_TYPE 253u
-#define R4SdkSubsystem_ABI_FINGERPRINT UINT64_C(18217587697455952549)
+typedef struct R4SdkSubsystemNativeValue256 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkSubsystemNativeValue256;
+#define R4SdkSubsystemNativeValue256_TYPE 256u
+#define R4SdkSubsystem_ABI_FINGERPRINT UINT64_C(12413102210881657404)
 int32_t R4SdkSubsystemVerifyAbi(uint64_t);
 #define R4SdkSubsystemCatalog_max_entries (192)
 #define R4SdkSubsystemCatalog_max_candidates (128)
@@ -1872,12 +1878,20 @@ static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_audioOutpu
  a[2] = (R4SdkSubsystemSlot){.ptr=(void *)p2,.flags=R4SDKSUBSYSTEM_PRESENT};
  return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,136u,a,3u,0);
 }
+/* r4audio.Context.audioOutputCatalog -> i32 */
+static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_audioOutputCatalog(uint32_t reserved, const R4SdkSubsystemNative_r4audio_Context * p0, R4AudioOutputInfo * p1, uintptr_t n1, R4AudioOutputCatalog * p2) {
+ (void)reserved; R4SdkSubsystemSlot a[3]={0};
+ a[0] = (R4SdkSubsystemSlot){.ptr=(void *)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
+ a[1] = (R4SdkSubsystemSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDKSUBSYSTEM_PRESENT};
+ a[2] = (R4SdkSubsystemSlot){.ptr=(void *)p2,.flags=R4SDKSUBSYSTEM_PRESENT};
+ return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,137u,a,3u,0);
+}
 /* r4audio.Context.audioSelectOutput -> i32 */
 static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_audioSelectOutput(uint32_t reserved, const R4SdkSubsystemNative_r4audio_Context * p0, const R4SdkSubsystemNativeValue131 * p1) {
  (void)reserved; R4SdkSubsystemSlot a[2]={0};
  a[0] = (R4SdkSubsystemSlot){.ptr=(void *)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[1] = (R4SdkSubsystemSlot){.ptr=(void *)p1,.flags=R4SDKSUBSYSTEM_PRESENT};
- return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,137u,a,2u,0);
+ return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,138u,a,2u,0);
 }
 /* r4audio.Context.audioWrite -> i32 */
 static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_audioWrite(uint32_t reserved, const R4SdkSubsystemNative_r4audio_Context * p0, uint32_t p1, const uint8_t * p2, uintptr_t n2) {
@@ -1885,14 +1899,14 @@ static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_audioWrite
  a[0] = (R4SdkSubsystemSlot){.ptr=(void *)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[1] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[2] = (R4SdkSubsystemSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDKSUBSYSTEM_PRESENT};
- return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,138u,a,3u,0);
+ return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,139u,a,3u,0);
 }
 /* r4audio.Context.audioClose -> i32 */
 static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_audioClose(uint32_t reserved, const R4SdkSubsystemNative_r4audio_Context * p0, uint32_t p1) {
  (void)reserved; R4SdkSubsystemSlot a[2]={0};
  a[0] = (R4SdkSubsystemSlot){.ptr=(void *)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[1] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKSUBSYSTEM_PRESENT};
- return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,139u,a,2u,0);
+ return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,140u,a,2u,0);
 }
 /* r4audio.Context.audioStreamProgress -> i32 */
 static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_audioStreamProgress(uint32_t reserved, const R4SdkSubsystemNative_r4audio_Context * p0, uint32_t p1, uint64_t p2, R4AudioStreamProgress * p3) {
@@ -1901,7 +1915,7 @@ static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_audioStrea
  a[1] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[2] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[3] = (R4SdkSubsystemSlot){.ptr=(void *)p3,.flags=R4SDKSUBSYSTEM_PRESENT};
- return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,140u,a,4u,0);
+ return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,141u,a,4u,0);
 }
 /* r4audio.Context.audioSetStreamExpectation -> i32 */
 static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_audioSetStreamExpectation(uint32_t reserved, const R4SdkSubsystemNative_r4audio_Context * p0, uint32_t p1, const R4AudioStreamExpectation * p2) {
@@ -1909,7 +1923,7 @@ static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_audioSetSt
  a[0] = (R4SdkSubsystemSlot){.ptr=(void *)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[1] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[2] = (R4SdkSubsystemSlot){.ptr=(void *)p2,.flags=R4SDKSUBSYSTEM_PRESENT};
- return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,141u,a,3u,0);
+ return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,142u,a,3u,0);
 }
 /* r4audio.Context.audioCloseStreamProgress -> i32 */
 static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_audioCloseStreamProgress(uint32_t reserved, const R4SdkSubsystemNative_r4audio_Context * p0, uint32_t p1, uint64_t p2, R4AudioStreamProgress * p3) {
@@ -1918,7 +1932,7 @@ static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_audioClose
  a[1] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[2] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[3] = (R4SdkSubsystemSlot){.ptr=(void *)p3,.flags=R4SDKSUBSYSTEM_PRESENT};
- return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,142u,a,4u,0);
+ return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,143u,a,4u,0);
 }
 /* r4audio.Context.audioSetVolume -> i32 */
 static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_audioSetVolume(uint32_t reserved, const R4SdkSubsystemNative_r4audio_Context * p0, uint32_t p1, uint32_t p2) {
@@ -1926,14 +1940,14 @@ static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_audioSetVo
  a[0] = (R4SdkSubsystemSlot){.ptr=(void *)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[1] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[2] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDKSUBSYSTEM_PRESENT};
- return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,143u,a,3u,0);
+ return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,144u,a,3u,0);
 }
 /* r4audio.Context.audioServiceStatus -> i32 */
 static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_audioServiceStatus(uint32_t reserved, const R4SdkSubsystemNative_r4audio_Context * p0, R4AudioServiceStatus * p1) {
  (void)reserved; R4SdkSubsystemSlot a[2]={0};
  a[0] = (R4SdkSubsystemSlot){.ptr=(void *)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[1] = (R4SdkSubsystemSlot){.ptr=(void *)p1,.flags=R4SDKSUBSYSTEM_PRESENT};
- return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,144u,a,2u,0);
+ return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,145u,a,2u,0);
 }
 /* r4audio.Context.audioServiceSetMasterVolume -> i32 */
 static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_audioServiceSetMasterVolume(uint32_t reserved, const R4SdkSubsystemNative_r4audio_Context * p0, uint32_t p1, R4AudioServiceStatus * p2) {
@@ -1941,14 +1955,14 @@ static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_audioServi
  a[0] = (R4SdkSubsystemSlot){.ptr=(void *)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[1] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[2] = (R4SdkSubsystemSlot){.ptr=(void *)p2,.flags=R4SDKSUBSYSTEM_PRESENT};
- return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,145u,a,3u,0);
+ return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,146u,a,3u,0);
 }
 /* r4audio.Context.audioServiceMasterState -> i32 */
 static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_audioServiceMasterState(uint32_t reserved, const R4SdkSubsystemNative_r4audio_Context * p0, R4AudioServiceMasterState * p1) {
  (void)reserved; R4SdkSubsystemSlot a[2]={0};
  a[0] = (R4SdkSubsystemSlot){.ptr=(void *)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[1] = (R4SdkSubsystemSlot){.ptr=(void *)p1,.flags=R4SDKSUBSYSTEM_PRESENT};
- return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,146u,a,2u,0);
+ return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,147u,a,2u,0);
 }
 /* r4audio.Context.audioServiceSetMasterState -> i32 */
 static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_audioServiceSetMasterState(uint32_t reserved, const R4SdkSubsystemNative_r4audio_Context * p0, const R4AudioServiceMasterRequest * p1, R4AudioServiceMasterState * p2) {
@@ -1956,7 +1970,7 @@ static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_audioServi
  a[0] = (R4SdkSubsystemSlot){.ptr=(void *)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[1] = (R4SdkSubsystemSlot){.ptr=(void *)p1,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[2] = (R4SdkSubsystemSlot){.ptr=(void *)p2,.flags=R4SDKSUBSYSTEM_PRESENT};
- return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,147u,a,3u,0);
+ return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,148u,a,3u,0);
 }
 /* r4audio.Context.audioServiceOpenStream -> i32 */
 static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_audioServiceOpenStream(uint32_t reserved, const R4SdkSubsystemNative_r4audio_Context * p0, uint32_t p1, uint16_t p2, uint32_t p3) {
@@ -1965,7 +1979,7 @@ static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_audioServi
  a[1] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[2] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[3] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDKSUBSYSTEM_PRESENT};
- return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,148u,a,4u,0);
+ return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,149u,a,4u,0);
 }
 /* r4audio.Context.audioServiceOpenStreamResult -> i32 */
 static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_audioServiceOpenStreamResult(uint32_t reserved, const R4SdkSubsystemNative_r4audio_Context * p0, uint32_t p1, uint16_t p2, uint32_t p3, uint32_t p4, R4AudioServiceStreamResult * p5) {
@@ -1976,7 +1990,7 @@ static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_audioServi
  a[3] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[4] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[5] = (R4SdkSubsystemSlot){.ptr=(void *)p5,.flags=R4SDKSUBSYSTEM_PRESENT};
- return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,149u,a,6u,0);
+ return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,150u,a,6u,0);
 }
 /* r4audio.Context.audioServiceWrite -> i32 */
 static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_audioServiceWrite(uint32_t reserved, const R4SdkSubsystemNative_r4audio_Context * p0, uint32_t p1, const uint8_t * p2, uintptr_t n2) {
@@ -1984,14 +1998,14 @@ static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_audioServi
  a[0] = (R4SdkSubsystemSlot){.ptr=(void *)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[1] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[2] = (R4SdkSubsystemSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDKSUBSYSTEM_PRESENT};
- return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,150u,a,3u,0);
+ return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,151u,a,3u,0);
 }
 /* r4audio.Context.audioServiceClose -> i32 */
 static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_audioServiceClose(uint32_t reserved, const R4SdkSubsystemNative_r4audio_Context * p0, uint32_t p1) {
  (void)reserved; R4SdkSubsystemSlot a[2]={0};
  a[0] = (R4SdkSubsystemSlot){.ptr=(void *)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[1] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKSUBSYSTEM_PRESENT};
- return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,151u,a,2u,0);
+ return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,152u,a,2u,0);
 }
 /* r4audio.Context.audioServiceSetVolume -> i32 */
 static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_audioServiceSetVolume(uint32_t reserved, const R4SdkSubsystemNative_r4audio_Context * p0, uint32_t p1, uint32_t p2) {
@@ -1999,13 +2013,13 @@ static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_audioServi
  a[0] = (R4SdkSubsystemSlot){.ptr=(void *)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[1] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[2] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDKSUBSYSTEM_PRESENT};
- return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,152u,a,3u,0);
+ return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,153u,a,3u,0);
 }
 /* r4audio.Context.sidAcquire -> i32 */
 static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_sidAcquire(uint32_t reserved, const R4SdkSubsystemNative_r4audio_Context * p0) {
  (void)reserved; R4SdkSubsystemSlot a[1]={0};
  a[0] = (R4SdkSubsystemSlot){.ptr=(void *)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
- return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,153u,a,1u,0);
+ return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,154u,a,1u,0);
 }
 /* r4audio.Context.sidWriteRegister -> i32 */
 static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_sidWriteRegister(uint32_t reserved, const R4SdkSubsystemNative_r4audio_Context * p0, uint32_t p1, uint8_t p2, uint8_t p3) {
@@ -2014,14 +2028,14 @@ static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_sidWriteRe
  a[1] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[2] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[3] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDKSUBSYSTEM_PRESENT};
- return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,154u,a,4u,0);
+ return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,155u,a,4u,0);
 }
 /* r4audio.Context.sidRelease -> i32 */
 static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_sidRelease(uint32_t reserved, const R4SdkSubsystemNative_r4audio_Context * p0, uint32_t p1) {
  (void)reserved; R4SdkSubsystemSlot a[2]={0};
  a[0] = (R4SdkSubsystemSlot){.ptr=(void *)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[1] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKSUBSYSTEM_PRESENT};
- return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,155u,a,2u,0);
+ return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,156u,a,2u,0);
 }
 /* r4audio.Context.sidLoadData -> i32 */
 static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_sidLoadData(uint32_t reserved, const R4SdkSubsystemNative_r4audio_Context * p0, uint32_t p1, uint16_t p2, const uint8_t * p3, uintptr_t n3) {
@@ -2030,7 +2044,7 @@ static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_sidLoadDat
  a[1] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[2] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[3] = (R4SdkSubsystemSlot){.ptr=(void *)p3,.length=n3,.flags=R4SDKSUBSYSTEM_PRESENT};
- return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,156u,a,4u,0);
+ return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,157u,a,4u,0);
 }
 /* r4audio.Context.sidInit -> i32 */
 static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_sidInit(uint32_t reserved, const R4SdkSubsystemNative_r4audio_Context * p0, uint32_t p1, uint16_t p2, uint16_t p3) {
@@ -2039,7 +2053,7 @@ static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_sidInit(ui
  a[1] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[2] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[3] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDKSUBSYSTEM_PRESENT};
- return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,157u,a,4u,0);
+ return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,158u,a,4u,0);
 }
 /* r4audio.Context.sidPlayFrame -> i32 */
 static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_sidPlayFrame(uint32_t reserved, const R4SdkSubsystemNative_r4audio_Context * p0, uint32_t p1, uint16_t p2, uint16_t p3) {
@@ -2048,27 +2062,27 @@ static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_sidPlayFra
  a[1] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[2] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[3] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDKSUBSYSTEM_PRESENT};
- return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,158u,a,4u,0);
+ return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,159u,a,4u,0);
 }
 /* r4audio.Context.sidStop -> i32 */
 static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_sidStop(uint32_t reserved, const R4SdkSubsystemNative_r4audio_Context * p0, uint32_t p1) {
  (void)reserved; R4SdkSubsystemSlot a[2]={0};
  a[0] = (R4SdkSubsystemSlot){.ptr=(void *)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[1] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKSUBSYSTEM_PRESENT};
- return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,159u,a,2u,0);
+ return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,160u,a,2u,0);
 }
 /* r4audio.Context.sidModelName -> [*:0]const u8 */
 static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_sidModelName(uint32_t reserved, const R4SdkSubsystemNative_r4audio_Context * p0) {
  (void)reserved; R4SdkSubsystemSlot a[1]={0};
  a[0] = (R4SdkSubsystemSlot){.ptr=(void *)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
- return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,160u,a,1u,0);
+ return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,161u,a,1u,0);
 }
 /* r4audio.Context.midiOpenSynth -> i32 */
 static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_midiOpenSynth(uint32_t reserved, const R4SdkSubsystemNative_r4audio_Context * p0, const uint8_t * p1) {
  (void)reserved; R4SdkSubsystemSlot a[2]={0};
  a[0] = (R4SdkSubsystemSlot){.ptr=(void *)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[1] = (R4SdkSubsystemSlot){.ptr=(void *)p1,.flags=R4SDKSUBSYSTEM_PRESENT};
- return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,161u,a,2u,0);
+ return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,162u,a,2u,0);
 }
 /* r4audio.Context.midiSend -> i32 */
 static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_midiSend(uint32_t reserved, const R4SdkSubsystemNative_r4audio_Context * p0, uint32_t p1, uint8_t p2, uint8_t p3, uint8_t p4, uint8_t p5) {
@@ -2079,7 +2093,7 @@ static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_midiSend(u
  a[3] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[4] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[5] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p5,.flags=R4SDKSUBSYSTEM_PRESENT};
- return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,162u,a,6u,0);
+ return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,163u,a,6u,0);
 }
 /* r4audio.Context.midiRender -> i32 */
 static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_midiRender(uint32_t reserved, const R4SdkSubsystemNative_r4audio_Context * p0, uint32_t p1, uint16_t p2) {
@@ -2087,14 +2101,14 @@ static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_midiRender
  a[0] = (R4SdkSubsystemSlot){.ptr=(void *)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[1] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[2] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDKSUBSYSTEM_PRESENT};
- return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,163u,a,3u,0);
+ return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,164u,a,3u,0);
 }
 /* r4audio.Context.midiClose -> i32 */
 static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_midiClose(uint32_t reserved, const R4SdkSubsystemNative_r4audio_Context * p0, uint32_t p1) {
  (void)reserved; R4SdkSubsystemSlot a[2]={0};
  a[0] = (R4SdkSubsystemSlot){.ptr=(void *)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[1] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKSUBSYSTEM_PRESENT};
- return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,164u,a,2u,0);
+ return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,165u,a,2u,0);
 }
 /* r4audio.Context.opl3WriteRegister -> i32 */
 static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_opl3WriteRegister(uint32_t reserved, const R4SdkSubsystemNative_r4audio_Context * p0, uint8_t p1, uint8_t p2, uint8_t p3) {
@@ -2103,31 +2117,31 @@ static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_opl3WriteR
  a[1] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[2] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[3] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDKSUBSYSTEM_PRESENT};
- return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,165u,a,4u,0);
+ return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,166u,a,4u,0);
 }
 /* r4audio.Context.opl3Reset -> i32 */
 static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_opl3Reset(uint32_t reserved, const R4SdkSubsystemNative_r4audio_Context * p0) {
  (void)reserved; R4SdkSubsystemSlot a[1]={0};
  a[0] = (R4SdkSubsystemSlot){.ptr=(void *)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
- return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,166u,a,1u,0);
+ return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,167u,a,1u,0);
 }
 /* r4audio.Context.opl3RenderBlock -> i32 */
 static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_opl3RenderBlock(uint32_t reserved, const R4SdkSubsystemNative_r4audio_Context * p0) {
  (void)reserved; R4SdkSubsystemSlot a[1]={0};
  a[0] = (R4SdkSubsystemSlot){.ptr=(void *)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
- return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,167u,a,1u,0);
+ return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,168u,a,1u,0);
 }
 /* r4audio.Context.opl3Stop -> i32 */
 static inline R4SdkSubsystemSlot R4SdkSubsystemNative_r4audio_Context_opl3Stop(uint32_t reserved, const R4SdkSubsystemNative_r4audio_Context * p0) {
  (void)reserved; R4SdkSubsystemSlot a[1]={0};
  a[0] = (R4SdkSubsystemSlot){.ptr=(void *)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
- return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,168u,a,1u,0);
+ return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,169u,a,1u,0);
 }
 /* path.PathZ.bytes -> []const u8 */
 static inline R4SdkSubsystemSlot R4SdkSubsystemNative_path_PathZ_bytes(uint32_t reserved, const R4SdkSubsystemNative_path_PathZ * p0) {
  (void)reserved; R4SdkSubsystemSlot a[1]={0};
  a[0] = (R4SdkSubsystemSlot){.ptr=(void *)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
- return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,169u,a,1u,0);
+ return R4SdkSubsystemInvoke(R4SdkSubsystem_ABI_FINGERPRINT,170u,a,1u,0);
 }
 static inline R4SdkSubsystemSlot R4SdkSubsystemCatalogHostState_create(R4SdkSubsystemCatalogHostState *output, uint32_t p0) { R4SdkSubsystemSlot a[1]={0};
  a[0] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
@@ -6237,32 +6251,40 @@ static inline R4SdkSubsystemSlot R4SdkSubsystemNativeValue240_create(R4SdkSubsys
  a[0] = (R4SdkSubsystemSlot){.ptr=(void *)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
  return R4SdkSubsystemConstruct(R4SdkSubsystem_ABI_FINGERPRINT,240u,a,1u,output); }
 static inline R4SdkSubsystemSlot R4SdkSubsystemNativeValue240_inspectNative(const R4SdkSubsystemNativeValue240 *self) { return R4SdkSubsystemInspect(R4SdkSubsystem_ABI_FINGERPRINT,240u,(void *)self,0); }
-static inline R4SdkSubsystemSlot R4SdkSubsystemNativeValue242_create(R4SdkSubsystemNativeValue242 *output, const R4SdkSubsystemNativeValue131 * p0) { R4SdkSubsystemSlot a[1]={0};
- a[0] = (R4SdkSubsystemSlot){.ptr=(void *)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
+static inline R4SdkSubsystemSlot R4SdkSubsystemNativeValue242_create(R4SdkSubsystemNativeValue242 *output, R4AudioOutputInfo * p0, uintptr_t n0) { R4SdkSubsystemSlot a[1]={0};
+ a[0] = (R4SdkSubsystemSlot){.ptr=(void *)p0,.length=n0,.flags=R4SDKSUBSYSTEM_PRESENT};
  return R4SdkSubsystemConstruct(R4SdkSubsystem_ABI_FINGERPRINT,242u,a,1u,output); }
 static inline R4SdkSubsystemSlot R4SdkSubsystemNativeValue242_inspectNative(const R4SdkSubsystemNativeValue242 *self) { return R4SdkSubsystemInspect(R4SdkSubsystem_ABI_FINGERPRINT,242u,(void *)self,0); }
-static inline R4SdkSubsystemSlot R4SdkSubsystemNativeValue243_create(R4SdkSubsystemNativeValue243 *output, R4AudioStreamProgress * p0) { R4SdkSubsystemSlot a[1]={0};
+static inline R4SdkSubsystemSlot R4SdkSubsystemNativeValue243_create(R4SdkSubsystemNativeValue243 *output, R4AudioOutputCatalog * p0) { R4SdkSubsystemSlot a[1]={0};
  a[0] = (R4SdkSubsystemSlot){.ptr=(void *)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
  return R4SdkSubsystemConstruct(R4SdkSubsystem_ABI_FINGERPRINT,243u,a,1u,output); }
 static inline R4SdkSubsystemSlot R4SdkSubsystemNativeValue243_inspectNative(const R4SdkSubsystemNativeValue243 *self) { return R4SdkSubsystemInspect(R4SdkSubsystem_ABI_FINGERPRINT,243u,(void *)self,0); }
-static inline R4SdkSubsystemSlot R4SdkSubsystemNativeValue245_create(R4SdkSubsystemNativeValue245 *output, const R4AudioStreamExpectation * p0) { R4SdkSubsystemSlot a[1]={0};
+static inline R4SdkSubsystemSlot R4SdkSubsystemNativeValue245_create(R4SdkSubsystemNativeValue245 *output, const R4SdkSubsystemNativeValue131 * p0) { R4SdkSubsystemSlot a[1]={0};
  a[0] = (R4SdkSubsystemSlot){.ptr=(void *)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
  return R4SdkSubsystemConstruct(R4SdkSubsystem_ABI_FINGERPRINT,245u,a,1u,output); }
 static inline R4SdkSubsystemSlot R4SdkSubsystemNativeValue245_inspectNative(const R4SdkSubsystemNativeValue245 *self) { return R4SdkSubsystemInspect(R4SdkSubsystem_ABI_FINGERPRINT,245u,(void *)self,0); }
-static inline R4SdkSubsystemSlot R4SdkSubsystemNativeValue247_create(R4SdkSubsystemNativeValue247 *output, R4AudioServiceStatus * p0) { R4SdkSubsystemSlot a[1]={0};
+static inline R4SdkSubsystemSlot R4SdkSubsystemNativeValue246_create(R4SdkSubsystemNativeValue246 *output, R4AudioStreamProgress * p0) { R4SdkSubsystemSlot a[1]={0};
  a[0] = (R4SdkSubsystemSlot){.ptr=(void *)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
- return R4SdkSubsystemConstruct(R4SdkSubsystem_ABI_FINGERPRINT,247u,a,1u,output); }
-static inline R4SdkSubsystemSlot R4SdkSubsystemNativeValue247_inspectNative(const R4SdkSubsystemNativeValue247 *self) { return R4SdkSubsystemInspect(R4SdkSubsystem_ABI_FINGERPRINT,247u,(void *)self,0); }
-static inline R4SdkSubsystemSlot R4SdkSubsystemNativeValue249_create(R4SdkSubsystemNativeValue249 *output, R4AudioServiceMasterState * p0) { R4SdkSubsystemSlot a[1]={0};
+ return R4SdkSubsystemConstruct(R4SdkSubsystem_ABI_FINGERPRINT,246u,a,1u,output); }
+static inline R4SdkSubsystemSlot R4SdkSubsystemNativeValue246_inspectNative(const R4SdkSubsystemNativeValue246 *self) { return R4SdkSubsystemInspect(R4SdkSubsystem_ABI_FINGERPRINT,246u,(void *)self,0); }
+static inline R4SdkSubsystemSlot R4SdkSubsystemNativeValue248_create(R4SdkSubsystemNativeValue248 *output, const R4AudioStreamExpectation * p0) { R4SdkSubsystemSlot a[1]={0};
  a[0] = (R4SdkSubsystemSlot){.ptr=(void *)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
- return R4SdkSubsystemConstruct(R4SdkSubsystem_ABI_FINGERPRINT,249u,a,1u,output); }
-static inline R4SdkSubsystemSlot R4SdkSubsystemNativeValue249_inspectNative(const R4SdkSubsystemNativeValue249 *self) { return R4SdkSubsystemInspect(R4SdkSubsystem_ABI_FINGERPRINT,249u,(void *)self,0); }
-static inline R4SdkSubsystemSlot R4SdkSubsystemNativeValue251_create(R4SdkSubsystemNativeValue251 *output, const R4AudioServiceMasterRequest * p0) { R4SdkSubsystemSlot a[1]={0};
+ return R4SdkSubsystemConstruct(R4SdkSubsystem_ABI_FINGERPRINT,248u,a,1u,output); }
+static inline R4SdkSubsystemSlot R4SdkSubsystemNativeValue248_inspectNative(const R4SdkSubsystemNativeValue248 *self) { return R4SdkSubsystemInspect(R4SdkSubsystem_ABI_FINGERPRINT,248u,(void *)self,0); }
+static inline R4SdkSubsystemSlot R4SdkSubsystemNativeValue250_create(R4SdkSubsystemNativeValue250 *output, R4AudioServiceStatus * p0) { R4SdkSubsystemSlot a[1]={0};
  a[0] = (R4SdkSubsystemSlot){.ptr=(void *)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
- return R4SdkSubsystemConstruct(R4SdkSubsystem_ABI_FINGERPRINT,251u,a,1u,output); }
-static inline R4SdkSubsystemSlot R4SdkSubsystemNativeValue251_inspectNative(const R4SdkSubsystemNativeValue251 *self) { return R4SdkSubsystemInspect(R4SdkSubsystem_ABI_FINGERPRINT,251u,(void *)self,0); }
-static inline R4SdkSubsystemSlot R4SdkSubsystemNativeValue253_create(R4SdkSubsystemNativeValue253 *output, R4AudioServiceStreamResult * p0) { R4SdkSubsystemSlot a[1]={0};
+ return R4SdkSubsystemConstruct(R4SdkSubsystem_ABI_FINGERPRINT,250u,a,1u,output); }
+static inline R4SdkSubsystemSlot R4SdkSubsystemNativeValue250_inspectNative(const R4SdkSubsystemNativeValue250 *self) { return R4SdkSubsystemInspect(R4SdkSubsystem_ABI_FINGERPRINT,250u,(void *)self,0); }
+static inline R4SdkSubsystemSlot R4SdkSubsystemNativeValue252_create(R4SdkSubsystemNativeValue252 *output, R4AudioServiceMasterState * p0) { R4SdkSubsystemSlot a[1]={0};
  a[0] = (R4SdkSubsystemSlot){.ptr=(void *)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
- return R4SdkSubsystemConstruct(R4SdkSubsystem_ABI_FINGERPRINT,253u,a,1u,output); }
-static inline R4SdkSubsystemSlot R4SdkSubsystemNativeValue253_inspectNative(const R4SdkSubsystemNativeValue253 *self) { return R4SdkSubsystemInspect(R4SdkSubsystem_ABI_FINGERPRINT,253u,(void *)self,0); }
+ return R4SdkSubsystemConstruct(R4SdkSubsystem_ABI_FINGERPRINT,252u,a,1u,output); }
+static inline R4SdkSubsystemSlot R4SdkSubsystemNativeValue252_inspectNative(const R4SdkSubsystemNativeValue252 *self) { return R4SdkSubsystemInspect(R4SdkSubsystem_ABI_FINGERPRINT,252u,(void *)self,0); }
+static inline R4SdkSubsystemSlot R4SdkSubsystemNativeValue254_create(R4SdkSubsystemNativeValue254 *output, const R4AudioServiceMasterRequest * p0) { R4SdkSubsystemSlot a[1]={0};
+ a[0] = (R4SdkSubsystemSlot){.ptr=(void *)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
+ return R4SdkSubsystemConstruct(R4SdkSubsystem_ABI_FINGERPRINT,254u,a,1u,output); }
+static inline R4SdkSubsystemSlot R4SdkSubsystemNativeValue254_inspectNative(const R4SdkSubsystemNativeValue254 *self) { return R4SdkSubsystemInspect(R4SdkSubsystem_ABI_FINGERPRINT,254u,(void *)self,0); }
+static inline R4SdkSubsystemSlot R4SdkSubsystemNativeValue256_create(R4SdkSubsystemNativeValue256 *output, R4AudioServiceStreamResult * p0) { R4SdkSubsystemSlot a[1]={0};
+ a[0] = (R4SdkSubsystemSlot){.ptr=(void *)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
+ return R4SdkSubsystemConstruct(R4SdkSubsystem_ABI_FINGERPRINT,256u,a,1u,output); }
+static inline R4SdkSubsystemSlot R4SdkSubsystemNativeValue256_inspectNative(const R4SdkSubsystemNativeValue256 *self) { return R4SdkSubsystemInspect(R4SdkSubsystem_ABI_FINGERPRINT,256u,(void *)self,0); }
 #endif

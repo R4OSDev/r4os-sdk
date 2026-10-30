@@ -1,6 +1,36 @@
 const std = @import("std");
 const r4os = @import("r4os");
 
+fn fakeOutputCatalog(rows: [*]r4os.abi.AudioOutputInfo, capacity: u32, out: *r4os.abi.AudioOutputCatalog) callconv(.c) i32 {
+    std.debug.assert(capacity == 257);
+    rows[0].preferred_rate = 48000;
+    out.* = .{ .registry_generation = 0x1234_5678_0000_0055, .count = 1, .provider_count = 1 };
+    out.providers[0] = .{ .registration = 0x2345_6789_0000_0055, .generation = 0x3456_789a_0000_0055, .count = 1, .active_index = 0 };
+    return 1;
+}
+test "audio catalog facade negotiates the complete optional slot and forwards full provider witnesses" {
+    const a = r4os.abi;
+    const t = std.testing;
+    const facade = initFacades().audio.raw;
+    var rows: [257]a.AudioOutputInfo = @splat(.{});
+    var receipt: a.AudioOutputCatalog = .{ .registry_generation = 71 };
+    audio_table.audio_output_catalog = @intFromPtr(&fakeOutputCatalog);
+    for (224..232) |size| {
+        audio_table.size = @intCast(size);
+        try t.expectEqual(a.err_no_fn, facade.audioOutputCatalog(&rows, &receipt));
+        try t.expectEqual(@as(u64, 71), receipt.registry_generation);
+    }
+    audio_table.size = 232;
+    try t.expectEqual(@as(i32, 1), facade.audioOutputCatalog(&rows, &receipt));
+    try t.expectEqual(@as(u64, 0x1234_5678_0000_0055), receipt.registry_generation);
+    try t.expectEqual(@as(u64, 0x2345_6789_0000_0055), receipt.providers[0].registration);
+    try t.expectEqual(@as(u64, 0x3456_789a_0000_0055), receipt.providers[0].generation);
+    try t.expectEqual(@as(u32, 48000), rows[0].preferred_rate);
+    try t.expectEqual(@as(u32, 0), rows[256].preferred_rate);
+    audio_table.audio_output_catalog = 0;
+    try t.expectEqual(a.err_no_fn, facade.audioOutputCatalog(&rows, &receipt));
+}
+
 var sys_table: r4os.abi.R4XStartR4Sys = .{};
 var audio_table: r4os.abi.R4XStartR4Audio = .{};
 var dev_table: r4os.abi.R4XStartR4Dev = .{};

@@ -54789,6 +54789,65 @@
         "Repositories/SDK/build.zig.zon": "17faa468a30aefd6ac810d2c363b8bcea2c753e87ac7f2deb3d2bbef546e5357",
         "Repositories/SDK/r4os/subsystem_audio_transport.zig": "093087d6bcd86ed8dbf9b6d6db531f6133ce510473397a39145929068c55bdd1"
       }
+    },
+    "audio_catalog_08855": {
+      "kind": "actual_canonical_audio_catalog_and_owner_bound_driver_epoch",
+      "performed_in": "0.88.55",
+      "sdk": "0.64.115",
+      "contract": "0.64.60",
+      "complete": true,
+      "report": "Docs/Audio/README.txt#0.88.55",
+      "scope": "Append-only R4AUDIO4/232 complete copied catalog and DriverApi39/672 epoch binding. All original table slots/types/constants except DriverApi version preserved. Scalar API remains for real individual consumers. New Zig/C wrappers and compiler-generated driver/GUI-Audio/subsystem C/Rust projections invoke current original owners; no second hardware catalog, borrowed pointer beyond return or fabricated generation.",
+      "canonical_checks": "Full Contract test:26mutation/selftests, host+bare Rust layouts/Clippy and7C/Zig/Rust callback interop groups. Explicit previous-prefix/type/constant proof: Temp/08855-contract-prefix-proof.json.",
+      "current_owner_checks": {
+        "sdk_platform": 18,
+        "c_audio_device_facade": "all original C cases plus optional catalog slot/full64-bit witnesses",
+        "rust_platform_positive": 4,
+        "rust_platform_negative": 4,
+        "rust_driver_positive": 1,
+        "rust_driver_negative": 3,
+        "rust_subsystem_positive": 6,
+        "rust_subsystem_negative": 5,
+        "native_runtime_all_boundaries": "current full facade-runtime compilation after all driver/GUI-Audio/subsystem fingerprint refreshes",
+        "wrapper_note": "Original outer temporary wrapper exit1 was its stale LASTEXITCODE check after the expected final negative compiler; owner scripts reached unique PASS and success-only cleanup. Original exits/logs retained, temporary wrapper corrected, green owner oracles not rerun."
+      },
+      "native_current": {
+        "kernel_sha256": "c609a521f4be54701260b94311317c2cd35b83a6811bc7b4ac185d150880560c",
+        "hda_sha256": "67e7987a06e23a2b419c891569e88a23f37ee6fee82e9c83a2e7588836e0a0b6",
+        "ac97_sha256": "ac2ecefbd88326232fe3d071d36271daf6836aec2716c5cee3f7632c5ae3a9bd",
+        "audsvc_sha256": "be2d5a08fd35b5f7cf58bb09e20d216368d441ec19018e60bbb114613990a6f8",
+        "smp4": "Normal Core/R4D callbacks1/2/32 outputs:2/3/32Queries,0Active,2Epoch. Real reentrant registry Busy and ownedWork re-registration7->11/UID1->3; same IDs, full64-bit witnesses. Provider/cross-provider/partial/malformed and actual row-tail overlap/header-tail oracles pass.",
+        "service": "33outputs/5coherent pages; desired withdrawal/fallback/return/Busy-retained-display/noBackendFlag. Actual PCM program thread533writes/1023360accepted bytes during50complete captures+10Busy; exact join/exit0. Software backend ACK, no physical emission claim.",
+        "qemu_hda": "Actual catalog/scalar/selection/service plus original queued3072/continued9600/lastIdleACK, two realPSID child full358/Exit0/reap0/release0, fullAUDIOD/Master/Lifecycle/PROGRESS480/GAP1440/BEEP pass.",
+        "qemu_ac97": "Actual catalog/scalar/selection/service; original short+LONG strict100ms progress under six complete equal concurrent SFTP copies, explicit q35 slot3/GSI23 shared NICslot7, positive IRQWork/no retainedWork/errors."
+      },
+      "source_review": "23changed reviewed Contract/SDK owner files only; matching generated implementations, qualified current evidence and all unchanged prior scopes reviewed before updating hashes. Original matrix SHA15fb02a6e617bf43a6ff0e24246eee38199632f0cc4748ebcf4bf8924daaa020 retained verbatim in Temp/08855-language-parity-before.json.",
+      "current_sources": {
+        "Repositories/Contract/API/ApiContract.baseline.json": "39f6951e536398efb9ba9754ddcc6a16a96f813baa98eec780827a78facfd434",
+        "Repositories/Contract/API/ApiContract.json": "39f6951e536398efb9ba9754ddcc6a16a96f813baa98eec780827a78facfd434",
+        "Repositories/Contract/Generated/Inventory/API.json": "6743afe236202588c854114f78d019967982640d60b44c8f08be32f0a186fa7b",
+        "Repositories/Contract/Generated/Inventory/RustABI.json": "78f7e70b320c6902036992bb0e482f179dc41d2ac7ac3b354a9f72735d09b290",
+        "Repositories/Contract/Generated/SDK/C/include/r4os/abi_generated.h": "3d5fdd3640d2b0580309656887a2d6e15f3e099130b2820433f91aee5f83ceb1",
+        "Repositories/Contract/Generated/SDK/C/include/r4os/abi_technical_generated.h": "898ad6743e42f9fcf3bc1858daa4adde956c503ca5e0cda690efbfee6d59b2fe",
+        "Repositories/Contract/Generated/SDK/Rust/src/lib.rs": "f812723c1bacc920878e867db3e342ba292e32e9a761b552d2a62369e29dc642",
+        "Repositories/Contract/Generated/SDK/Zig/abi.zig": "ed0ca207db01b8d098992da679e63846f9de02498e0d8c65e3fc1aff5f2b22de",
+        "Repositories/Contract/Generated/SDK/Zig/abi_exports.zig": "02fcc29bd909946b136b3947b846a809c864eae0c444e6180d68a8e98c58ec90",
+        "Repositories/Contract/Generated/SDK/Zig/abi_generated.zig": "498708982b8763edd7d93e3950092b918b1106e18230467a47de272a71fd2748",
+        "Repositories/Contract/Tools/ApiContractGen/src/main.zig": "67c39f2aa37aad8c8450ab4dd387349b051dd24fcfb585cc9bacf2bda6334187",
+        "Repositories/SDK/Rust/src/c_facades.rs": "83eb4c52485d25d2208c7c06cd3322b6f52411fd4d559c78407055bcb76d71f0",
+        "Repositories/SDK/Shared/C/include/r4os/driver_helpers.h": "eebff4e9ac5a145bee0d07a73600dae38079b4ab89aa83cddf501f439a3138c2",
+        "Repositories/SDK/Shared/C/include/r4os/gui_bridge.h": "da655380af0cd8c111aa47aa0aa0c8f655ba48e06bb090faa4b38cda113fc167",
+        "Repositories/SDK/Shared/C/include/r4os/r4audio.h": "8132fec6f6cb31a3926c7e3b9f743b559ea858329f9a17d353c54ad94b0f800f",
+        "Repositories/SDK/Shared/C/include/r4os/subsystem_helpers.h": "360dd1f16576c4e98018b8ff9839673c2faae7c71697cbbfff43bb397c0604d3",
+        "Repositories/SDK/build.zig.zon": "12b7927e0618c78ee6f3d8c4ce1d678e6fb0e2ac40a6a596d6001bc5622de2ba",
+        "Repositories/SDK/r4os/driver.zig": "72e8e61aaf360bca3b762634dc060aa8da72bae7e01250765e4ae50f41629c5c",
+        "Repositories/SDK/r4os/generated/driver_fingerprint.zig": "f96f493e4c8aa8ddaa6ccc06601bac14fda41b1e1252bf802b14f733969bed38",
+        "Repositories/SDK/r4os/generated/gui_fingerprint.zig": "5a5f7fbf05de1df40dc3a62ebb6b8cf4afe78cb0ca21bb169dd9cec257ca5730",
+        "Repositories/SDK/r4os/generated/subsystem_fingerprint.zig": "53e15ace14ea524ee9b4e0297305b45a096034c67ae720db5df13efd13403ca9",
+        "Repositories/SDK/r4os/program.zig": "5664352e822e7f29c48d17a84fb448bc14681a7f2f499fcb334bf5cd0ac2a8ac",
+        "Repositories/SDK/r4os/r4audio.zig": "a50913a2fb33fd1be2f55c2bf5ff45f6c809883b47ceb2c093304ddd1c3843f0"
+      },
+      "limits": "Functional source/ABI/native ownership review, not a final STANDARD, physical receiver/ELD/speaker/Windows or isolated latency/performance qualification. Final normal-product release and the single STANDARD are separately recorded in the domain report."
     }
   },
   "wave_bindings": [
@@ -55041,17 +55100,17 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.88.43",
-    "sdk": "0.64.114",
-    "contract": "0.64.59",
+    "performed_in": "0.88.55",
+    "sdk": "0.64.115",
+    "contract": "0.64.60",
     "libraries": "0.64.38",
-    "evidence": "audio_drain_08843",
-    "scope": "Two explicit source/version deltas: only product Transport.drain changes plus three actual native-table ordering groups in its existing private Probe. All other product method bytes, public C/Rust projections and progress/fence/absolute-budget/ownership contracts unchanged.79owner cases pass after3intended before failures. Current artifacts/native/final STANDARD remain separate domain evidence; review metadata frozen before export/receipts."
+    "evidence": "audio_catalog_08855",
+    "scope": "Actual new canonical audio catalog/driver epoch API with minimal Zig/C bindings and current generated C/Rust driver, GUI-Audio and reachable subsystem projections. All23changed watched owner inputs explicitly matched to new implementations and qualified Contract/C/Rust/nativeSMP4 evidence; old670file set and other prior scopes retained. Source review does not grant physical hardware/Windows or system speed qualification."
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.88.43",
+    "reviewed_in": "0.88.55",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -55116,27 +55175,27 @@
     "files": [
       {
         "path": "Repositories/Contract/API/ApiContract.baseline.json",
-        "sha256": "6c7773d5aeeb9c1f2232fe5893a160b4680f0fd1f7b67862421cc60078a5ff64"
+        "sha256": "39f6951e536398efb9ba9754ddcc6a16a96f813baa98eec780827a78facfd434"
       },
       {
         "path": "Repositories/Contract/API/ApiContract.json",
-        "sha256": "6c7773d5aeeb9c1f2232fe5893a160b4680f0fd1f7b67862421cc60078a5ff64"
+        "sha256": "39f6951e536398efb9ba9754ddcc6a16a96f813baa98eec780827a78facfd434"
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/API.json",
-        "sha256": "12d0b80b970cb02d905159cfd7658882a78c8c9bd243ef8ef26b884baac0cb61"
+        "sha256": "6743afe236202588c854114f78d019967982640d60b44c8f08be32f0a186fa7b"
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/RustABI.json",
-        "sha256": "dcb337a3d72a72f57fdcca232161b3c0a634981e569acc653f756bc40985d2be"
+        "sha256": "78f7e70b320c6902036992bb0e482f179dc41d2ac7ac3b354a9f72735d09b290"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_generated.h",
-        "sha256": "d1ea5e969f371567c97ed4c9b6b2efe94503126e55ea1d94290bf6a0210ce4cc"
+        "sha256": "3d5fdd3640d2b0580309656887a2d6e15f3e099130b2820433f91aee5f83ceb1"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_technical_generated.h",
-        "sha256": "a90bbaf9b4b3527f798b182da8fd9f128c47504c2217d6f19cd34f11e6a73199"
+        "sha256": "898ad6743e42f9fcf3bc1858daa4adde956c503ca5e0cda690efbfee6d59b2fe"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Rust/Cargo.toml",
@@ -55144,19 +55203,19 @@
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Rust/src/lib.rs",
-        "sha256": "e666cc32a326905712a3a7a9c3b9ce181242b8a476c16984229a0afee1de485c"
+        "sha256": "f812723c1bacc920878e867db3e342ba292e32e9a761b552d2a62369e29dc642"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi.zig",
-        "sha256": "9c5fe06e310d772e2031d1a2784c39f1007189378b4cc555cd7c468017cf1677"
+        "sha256": "ed0ca207db01b8d098992da679e63846f9de02498e0d8c65e3fc1aff5f2b22de"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_exports.zig",
-        "sha256": "a2d96e14a58ca1a9aee7687c252776da3ff84d27a131e4973c96a07735b88760"
+        "sha256": "02fcc29bd909946b136b3947b846a809c864eae0c444e6180d68a8e98c58ec90"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_generated.zig",
-        "sha256": "7621ff9d4f8d118bdf02a9b671593a0b69da94469053970de31038f22ce58eb3"
+        "sha256": "498708982b8763edd7d93e3950092b918b1106e18230467a47de272a71fd2748"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/package.zig",
@@ -55180,7 +55239,7 @@
       },
       {
         "path": "Repositories/Contract/Tools/ApiContractGen/src/main.zig",
-        "sha256": "8b279cf0eea5a4942b1b21d3fe82c8ca5fbd4c2a2eb755a2c9b535c5a8836d96"
+        "sha256": "67c39f2aa37aad8c8450ab4dd387349b051dd24fcfb585cc9bacf2bda6334187"
       },
       {
         "path": "Repositories/Libraries/R4ACO/Bindings/C/r4aco.h",
@@ -56192,7 +56251,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "2ae4965219625208b84744d517d8a95820131ec2dfb059e176f0d75393b90aca"
+        "sha256": "83eb4c52485d25d2208c7c06cd3322b6f52411fd4d559c78407055bcb76d71f0"
       },
       {
         "path": "Repositories/SDK/Rust/src/data/hash.rs",
@@ -56504,7 +56563,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/driver_helpers.h",
-        "sha256": "9b125a0f897198024f055948516b89ff44e1da85a1765d22e2a58c89f5fe70bb"
+        "sha256": "eebff4e9ac5a145bee0d07a73600dae38079b4ab89aa83cddf501f439a3138c2"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/driver_lifecycle.h",
@@ -56544,7 +56603,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/gui_bridge.h",
-        "sha256": "6ebe8aa5be0705aabd5bf21f3878e20ab0f9629b46a6a1b2546d1595aa39add7"
+        "sha256": "da655380af0cd8c111aa47aa0aa0c8f655ba48e06bb090faa4b38cda113fc167"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/heap.h",
@@ -56572,7 +56631,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/r4audio.h",
-        "sha256": "b09eb054ccb68270fe871ef1cdbf63ecfce4c990cb48eac7cf3fad94a25e672d"
+        "sha256": "8132fec6f6cb31a3926c7e3b9f743b559ea858329f9a17d353c54ad94b0f800f"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/r4desk.h",
@@ -56632,7 +56691,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/subsystem_helpers.h",
-        "sha256": "48ac977ff6ebfe18dc571f32b4c1a74049114074fc768267649bb70697211985"
+        "sha256": "360dd1f16576c4e98018b8ff9839673c2faae7c71697cbbfff43bb397c0604d3"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/transport_helpers.h",
@@ -56896,7 +56955,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "17faa468a30aefd6ac810d2c363b8bcea2c753e87ac7f2deb3d2bbef546e5357"
+        "sha256": "12b7927e0618c78ee6f3d8c4ce1d678e6fb0e2ac40a6a596d6001bc5622de2ba"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -57036,7 +57095,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/driver.zig",
-        "sha256": "c6bedca3fd903c51639c521e0b5ce7a7f7682dcf8e4fb7091811a38ae6270cd7"
+        "sha256": "72e8e61aaf360bca3b762634dc060aa8da72bae7e01250765e4ae50f41629c5c"
       },
       {
         "path": "Repositories/SDK/r4os/driver_bridge_names.zig",
@@ -57112,11 +57171,11 @@
       },
       {
         "path": "Repositories/SDK/r4os/generated/driver_fingerprint.zig",
-        "sha256": "a7d3e1d678ebc27757a21e47eba2d0631c93bb666e354c76876a21cebf42618d"
+        "sha256": "f96f493e4c8aa8ddaa6ccc06601bac14fda41b1e1252bf802b14f733969bed38"
       },
       {
         "path": "Repositories/SDK/r4os/generated/gui_fingerprint.zig",
-        "sha256": "803e271a2a33a364f7a99c237be31b350e50586238ea3d750a46be84dbffd0de"
+        "sha256": "5a5f7fbf05de1df40dc3a62ebb6b8cf4afe78cb0ca21bb169dd9cec257ca5730"
       },
       {
         "path": "Repositories/SDK/r4os/generated/net_facade.zig",
@@ -57124,7 +57183,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/generated/subsystem_fingerprint.zig",
-        "sha256": "cf6339af7fa29f4646215abd9fd22e981555f78a1518886f4182fe4c42e097a8"
+        "sha256": "53e15ace14ea524ee9b4e0297305b45a096034c67ae720db5df13efd13403ca9"
       },
       {
         "path": "Repositories/SDK/r4os/generated/transport_fingerprint.zig",
@@ -57316,7 +57375,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/program.zig",
-        "sha256": "3db02c08fdc8e1a06fcd493bb204b0056c174aecc03f36fc3a4508a3bfa84652"
+        "sha256": "5664352e822e7f29c48d17a84fb448bc14681a7f2f499fcb334bf5cd0ac2a8ac"
       },
       {
         "path": "Repositories/SDK/r4os/protocol.zig",
@@ -57324,7 +57383,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/r4audio.zig",
-        "sha256": "4dba929a7ec6c1f8361e11a0d55076b0fffe37775257292086deafcfbd88aee2"
+        "sha256": "a50913a2fb33fd1be2f55c2bf5ff45f6c809883b47ceb2c093304ddd1c3843f0"
       },
       {
         "path": "Repositories/SDK/r4os/r4cp.zig",
@@ -57822,7 +57881,8 @@
           "process_evidence_08826",
           "file_name_limits_08827",
           "native_pointer_capture_08828",
-          "gui_host_backpressure_08832"
+          "gui_host_backpressure_08832",
+          "audio_catalog_08855"
         ]
       },
       {
@@ -58144,7 +58204,8 @@
           "native_pointer_capture_08828",
           "gui_host_backpressure_08832",
           "audio_reply_08842",
-          "audio_drain_08843"
+          "audio_drain_08843",
+          "audio_catalog_08855"
         ]
       },
       {
@@ -58318,7 +58379,8 @@
           "bounded_work_08755",
           "qualified_prior_source_08825",
           "gui_host_backpressure_08832",
-          "audio_drain_08843"
+          "audio_drain_08843",
+          "audio_catalog_08855"
         ]
       },
       {
@@ -58358,7 +58420,8 @@
           "bounded_work_08755",
           "file_name_limits_08827",
           "native_pointer_capture_08828",
-          "gui_host_backpressure_08832"
+          "gui_host_backpressure_08832",
+          "audio_catalog_08855"
         ]
       },
       {

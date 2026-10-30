@@ -294,7 +294,32 @@ static void init_app(R4App *app, R4XStartR4Sys *sys, R4XStartR4Audio *audio, R4X
     dev->size = sizeof(*dev);
 }
 
+static int32_t fake_output_catalog(R4AudioOutputInfo *rows, uint32_t capacity, R4AudioOutputCatalog *out) {
+    if (capacity != 257u) return -1;
+    rows[0].preferred_rate = 48000u;
+    out->registry_generation = UINT64_C(0x1234567800000055);
+    out->providers[0].registration = UINT64_C(0x2345678900000055);
+    out->providers[0].generation = UINT64_C(0x3456789a00000055);
+    return 1;
+}
+static int output_catalog_facade_probe(void) {
+    R4XStartR4Audio table = {0}; R4Audio audio = { &table };
+    R4AudioOutputInfo rows[257] = {0};
+    R4AudioOutputCatalog receipt = {0}; receipt.registry_generation = 71u;
+    table.audio_output_catalog = (uintptr_t)&fake_output_catalog;
+    for (uint32_t size = 224u; size < 232u; ++size) {
+        table.size = size;
+        if (r4audio_output_catalog(&audio, rows, 257u, &receipt) != R4OS_ERR_NO_FN || receipt.registry_generation != 71u) return 1;
+    }
+    table.size = 232u;
+    if (r4audio_output_catalog(&audio, rows, 257u, &receipt) != 1 || rows[0].preferred_rate != 48000u || rows[256].preferred_rate != 0u) return 2;
+    if (receipt.registry_generation != UINT64_C(0x1234567800000055) || receipt.providers[0].registration != UINT64_C(0x2345678900000055) || receipt.providers[0].generation != UINT64_C(0x3456789a00000055)) return 3;
+    table.audio_output_catalog = 0;
+    if (r4audio_output_catalog(&audio, rows, 257u, &receipt) != R4OS_ERR_NO_FN) return 4;
+    return 0;
+}
 int main(void) {
+    if (output_catalog_facade_probe() != 0) return 55;
     if (cpu_lifecycle_facade_probe() != 0) return 63;
     if (cpu_catalogue_facade_probe() != 0) return 64;
     if (cpu_power_facade_probe() != 0) return 65;
