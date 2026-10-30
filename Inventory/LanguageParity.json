@@ -214,7 +214,8 @@
       "evidence": [
         "source_inventory",
         "central_abi_interop",
-        "gui_activity_08735"
+        "gui_activity_08735",
+        "audio_duration_retirement_08859"
       ],
       "shared_core": "Contract-Generatoren und vorhandene Layout-/Callbackfixtures wiederverwenden.",
       "qualification": {
@@ -794,7 +795,8 @@
         "platform_current_58",
         "current_contract_78",
         "audio_reply_08842",
-        "audio_drain_08843"
+        "audio_drain_08843",
+        "audio_duration_retirement_08859"
       ],
       "shared_core": "Existing Zig Audio/PCM/Device/Power owners through one compiler-typed native boundary; current legacy C audio loop aligned, no third Rust algorithm.",
       "current_reply_validation_08842": {
@@ -839,7 +841,8 @@
       "evidence": [
         "source_inventory",
         "platform_current_58",
-        "current_kernel_records_80"
+        "current_kernel_records_80",
+        "audio_duration_retirement_08859"
       ],
       "shared_core": "Existing Zig Audio/PCM/Device/Power owners through one compiler-typed native boundary; current legacy C audio loop aligned, no third Rust algorithm."
     },
@@ -1178,7 +1181,8 @@
         "gap": "Explicit per-device backing, callbacks and reset quiescence remain owner obligations; C has no implicit destructor."
       },
       "evidence": [
-        "drivers_current_67"
+        "drivers_current_67",
+        "audio_duration_retirement_08859"
       ],
       "shared_core": {
         "source": "Repositories/SDK/r4os/driver_helper_owners.zig",
@@ -54953,6 +54957,77 @@
         "runtime_regression_excluded": false,
         "report": "Docs/Audio/README.txt#0.88.58"
       }
+    },
+    "audio_duration_retirement_08859": {
+      "kind": "controlled_retirement_of_unused_audio_duration_observation",
+      "performed_in": "0.88.59",
+      "sdk": "0.64.117",
+      "contract": "0.64.61",
+      "libraries": "0.64.39",
+      "complete": true,
+      "report": "Docs/Audio/README.txt#0.88.59",
+      "scope": "One named UINT64_MAX unavailable constant; nine retained summary and six retained technical status duration slots now unavailable; existing audio_latency_ready bit clear. No new table slot, payload, method, layout, enum width, owner state or SDK runtime implementation.",
+      "source_review": [
+        {
+          "path": "Repositories/Contract/API/ApiContract.baseline.json",
+          "before": "39f6951e536398efb9ba9754ddcc6a16a96f813baa98eec780827a78facfd434",
+          "after": "e87f9e6e929e759b9b04450e64836952d455d71075a24f0f1550c365717b726b"
+        },
+        {
+          "path": "Repositories/Contract/API/ApiContract.json",
+          "before": "39f6951e536398efb9ba9754ddcc6a16a96f813baa98eec780827a78facfd434",
+          "after": "e87f9e6e929e759b9b04450e64836952d455d71075a24f0f1550c365717b726b"
+        },
+        {
+          "path": "Repositories/Contract/Generated/Inventory/RustABI.json",
+          "before": "78f7e70b320c6902036992bb0e482f179dc41d2ac7ac3b354a9f72735d09b290",
+          "after": "8cfa0bc446446340d29e95e3a7ed947d84ba74d9a19a3fb94764ecbdf68813a6"
+        },
+        {
+          "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_generated.h",
+          "before": "3d5fdd3640d2b0580309656887a2d6e15f3e099130b2820433f91aee5f83ceb1",
+          "after": "180ca637ea496d09b02f8ee505b62b656750df43fbe9a4e6d34a8ebfd8288c0d"
+        },
+        {
+          "path": "Repositories/Contract/Generated/SDK/Rust/src/lib.rs",
+          "before": "f812723c1bacc920878e867db3e342ba292e32e9a761b552d2a62369e29dc642",
+          "after": "5eb6c0f0ca738f4f1d02364d755bd19fbe68831740911a61daad69282fff9e0a"
+        },
+        {
+          "path": "Repositories/Contract/Generated/SDK/Zig/abi.zig",
+          "before": "ed0ca207db01b8d098992da679e63846f9de02498e0d8c65e3fc1aff5f2b22de",
+          "after": "0fab6a7e33986f09806a2fe0befb39d2125f6cf347a2856e32855d17192336d6"
+        },
+        {
+          "path": "Repositories/Contract/Generated/SDK/Zig/abi_exports.zig",
+          "before": "02fcc29bd909946b136b3947b846a809c864eae0c444e6180d68a8e98c58ec90",
+          "after": "cf74310598cbe1889dbcbbc3325c33bc809482c72fc6268a1d35ce9d40ce709b"
+        },
+        {
+          "path": "Repositories/Contract/Generated/SDK/Zig/abi_generated.zig",
+          "before": "498708982b8763edd7d93e3950092b918b1106e18230467a47de272a71fd2748",
+          "after": "a10f790be0b1675483064c26535ca786bc5780ae86e11eafc650756d558afc40"
+        },
+        {
+          "path": "Repositories/SDK/build.zig.zon",
+          "before": "9d301555de2d3a8ec1fe0d13e3480067ae0906571f108f9f8202de85697ee44a",
+          "after": "9a5701108b5998252707301a821ca4d1368b3c5ef504fdc3039e264f66439b4c"
+        }
+      ],
+      "compiler_proof": "Original Contract26mutation checks; generated Zig/C/Rust check; host/bare Rust+Clippy and7 actual native Rust/Zig/C callback roundtrips PASS. All6352-byte Summary15 and128-byte status offsets/types/versions unchanged. Compiler-owned SDK and Library raw aliases, Cfacade declarations and all native fingerprint sources remain byte-identical.",
+      "owner_proof": "Original SDK18Audio/PCM/Power cases PASS. HDA89 and AC9729 groups PASS; two actual invalid-write oracles and two actual refill oracles have no duration-clock reads. Both original product refill prefixes fail exactly0expected/2actual after their real work assertions; actual PCM bytes/descriptor queue/480submitted/0consumed and errors are separately asserted.",
+      "current_sources": {
+        "Repositories/Contract/API/ApiContract.baseline.json": "e87f9e6e929e759b9b04450e64836952d455d71075a24f0f1550c365717b726b",
+        "Repositories/Contract/API/ApiContract.json": "e87f9e6e929e759b9b04450e64836952d455d71075a24f0f1550c365717b726b",
+        "Repositories/Contract/Generated/Inventory/RustABI.json": "8cfa0bc446446340d29e95e3a7ed947d84ba74d9a19a3fb94764ecbdf68813a6",
+        "Repositories/Contract/Generated/SDK/C/include/r4os/abi_generated.h": "180ca637ea496d09b02f8ee505b62b656750df43fbe9a4e6d34a8ebfd8288c0d",
+        "Repositories/Contract/Generated/SDK/Rust/src/lib.rs": "5eb6c0f0ca738f4f1d02364d755bd19fbe68831740911a61daad69282fff9e0a",
+        "Repositories/Contract/Generated/SDK/Zig/abi.zig": "0fab6a7e33986f09806a2fe0befb39d2125f6cf347a2856e32855d17192336d6",
+        "Repositories/Contract/Generated/SDK/Zig/abi_exports.zig": "cf74310598cbe1889dbcbbc3325c33bc809482c72fc6268a1d35ce9d40ce709b",
+        "Repositories/Contract/Generated/SDK/Zig/abi_generated.zig": "a10f790be0b1675483064c26535ca786bc5780ae86e11eafc650756d558afc40",
+        "Repositories/SDK/build.zig.zon": "9a5701108b5998252707301a821ca4d1368b3c5ef504fdc3039e264f66439b4c"
+      },
+      "limits": "Bounded source/host/native-ABI scope. Kernel430/HDA48/AC9712 runtime PCM/progress/Close qualification and the single final STANDARD are separate Audio-domain receipts. No physical playback or isolated throughput/latency claim. Service request duration is unchanged, separately planned at roadmap end0.88.90. Existing58 unresolved88/89 and all prior evidence retained."
     }
   },
   "wave_bindings": [
@@ -55205,17 +55280,17 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.88.58",
-    "sdk": "0.64.116",
-    "contract": "0.64.60",
+    "performed_in": "0.88.59",
+    "sdk": "0.64.117",
+    "contract": "0.64.61",
     "libraries": "0.64.39",
-    "evidence": "runtime_wait_08858",
-    "scope": "Exactly two watched inputs reviewed: SDK source identity and original shared subsystem Runtime body. Private implementation/actual run deadlines, unchanged public C/Rust layouts and delegation, current owner/interop tests and full current all-subsystem native proof reviewed before updating these two hashes. Existing56Library and55catalog evidence retained. All670input paths/35functional scopes/180public exports remain unchanged; no automatic qualification or source hash bypass."
+    "evidence": "audio_duration_retirement_08859",
+    "scope": "Explicit review of exactly9watched inputs: SDK117 actual Contract61 pin plus canonical retirement/defaults/new constant and generated raw bindings/inventory. Every old layout/type/slot and all SDK implementation and higher C/Rust alias/fingerprint source bytes preserved; historical exports untouched. Current compiler/ABI/owner scope above is complete; native product and STANDARD receipts remain separate.670paths/35scopes/180public exports and all earlier evidence retained."
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.88.58",
+    "reviewed_in": "0.88.59",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -55280,11 +55355,11 @@
     "files": [
       {
         "path": "Repositories/Contract/API/ApiContract.baseline.json",
-        "sha256": "39f6951e536398efb9ba9754ddcc6a16a96f813baa98eec780827a78facfd434"
+        "sha256": "e87f9e6e929e759b9b04450e64836952d455d71075a24f0f1550c365717b726b"
       },
       {
         "path": "Repositories/Contract/API/ApiContract.json",
-        "sha256": "39f6951e536398efb9ba9754ddcc6a16a96f813baa98eec780827a78facfd434"
+        "sha256": "e87f9e6e929e759b9b04450e64836952d455d71075a24f0f1550c365717b726b"
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/API.json",
@@ -55292,11 +55367,11 @@
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/RustABI.json",
-        "sha256": "78f7e70b320c6902036992bb0e482f179dc41d2ac7ac3b354a9f72735d09b290"
+        "sha256": "8cfa0bc446446340d29e95e3a7ed947d84ba74d9a19a3fb94764ecbdf68813a6"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_generated.h",
-        "sha256": "3d5fdd3640d2b0580309656887a2d6e15f3e099130b2820433f91aee5f83ceb1"
+        "sha256": "180ca637ea496d09b02f8ee505b62b656750df43fbe9a4e6d34a8ebfd8288c0d"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_technical_generated.h",
@@ -55308,19 +55383,19 @@
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Rust/src/lib.rs",
-        "sha256": "f812723c1bacc920878e867db3e342ba292e32e9a761b552d2a62369e29dc642"
+        "sha256": "5eb6c0f0ca738f4f1d02364d755bd19fbe68831740911a61daad69282fff9e0a"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi.zig",
-        "sha256": "ed0ca207db01b8d098992da679e63846f9de02498e0d8c65e3fc1aff5f2b22de"
+        "sha256": "0fab6a7e33986f09806a2fe0befb39d2125f6cf347a2856e32855d17192336d6"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_exports.zig",
-        "sha256": "02fcc29bd909946b136b3947b846a809c864eae0c444e6180d68a8e98c58ec90"
+        "sha256": "cf74310598cbe1889dbcbbc3325c33bc809482c72fc6268a1d35ce9d40ce709b"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_generated.zig",
-        "sha256": "498708982b8763edd7d93e3950092b918b1106e18230467a47de272a71fd2748"
+        "sha256": "a10f790be0b1675483064c26535ca786bc5780ae86e11eafc650756d558afc40"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/package.zig",
@@ -57060,7 +57135,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "9d301555de2d3a8ec1fe0d13e3480067ae0906571f108f9f8202de85697ee44a"
+        "sha256": "9a5701108b5998252707301a821ca4d1368b3c5ef504fdc3039e264f66439b4c"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -57987,7 +58062,8 @@
           "file_name_limits_08827",
           "native_pointer_capture_08828",
           "gui_host_backpressure_08832",
-          "audio_catalog_08855"
+          "audio_catalog_08855",
+          "audio_duration_retirement_08859"
         ]
       },
       {
@@ -58311,7 +58387,8 @@
           "audio_reply_08842",
           "audio_drain_08843",
           "audio_catalog_08855",
-          "runtime_wait_08858"
+          "runtime_wait_08858",
+          "audio_duration_retirement_08859"
         ]
       },
       {
@@ -58341,7 +58418,8 @@
           "bounded_work_08755",
           "file_name_limits_08827",
           "native_pointer_capture_08828",
-          "gui_host_backpressure_08832"
+          "gui_host_backpressure_08832",
+          "audio_duration_retirement_08859"
         ]
       },
       {
@@ -58528,7 +58606,8 @@
           "file_name_limits_08827",
           "native_pointer_capture_08828",
           "gui_host_backpressure_08832",
-          "audio_catalog_08855"
+          "audio_catalog_08855",
+          "audio_duration_retirement_08859"
         ]
       },
       {
@@ -58560,7 +58639,8 @@
         ],
         "proof": [
           "lowlevel_current_69",
-          "bounded_work_08755"
+          "bounded_work_08755",
+          "audio_duration_retirement_08859"
         ]
       },
       {

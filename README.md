@@ -38,7 +38,7 @@ only for this review. Real build receipts still hash exact compiler bytes.
 Further public API changes must update the affected language facades/packages
 and evidence in this same matrix, including later Desktop/Library work.
 
-With current SDK0.64.116/Contract0.64.60, use Libraries0.64.39 for its higher
+With current SDK0.64.117/Contract0.64.61, use Libraries0.64.39 for its higher
 Rust helper projection. Its compiler-owned aliases include R4AUDIO v4,
 DriverApi v39 and the copied audio catalog records. The library C boundary,
 native fingerprint and installed R4L binaries are unchanged. A platform record
@@ -1156,3 +1156,12 @@ audio context. Driver, GUI-Audio and subsystem fingerprints/projections are
 regenerated together. The source review records qualified native C/Rust
 owner and negative-consumer cases plus actual KVM4 Core/provider/AUDSVC/HDA/
 AC97 catalog, selection, PCM and teardown evidence in `Docs/Audio/README.txt`.
+SDK0.64.117 publishes Contract0.64.61 with explicitly retired audio
+detail durations. ProgramPerformanceSummary15/6352 and AudioBackendStatus128
+retain every field offset and type. Current providers return the named
+audio_duration_ticks_unavailable (UINT64_MAX) and clear audio_latency_ready;
+exclude the sentinel from arithmetic, latency displays and scores. PCM work,
+errors, actual progress and Close remain independent. SDK runtime/facade
+implementation, C/Rust aliases and all native fingerprints are unchanged.
+The0.88.59 source review covers the semantic retirement and current ABI/owner
+cases; native Kernel/driver qualification is recorded in the Audio domain.
