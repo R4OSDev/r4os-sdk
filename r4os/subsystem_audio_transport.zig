@@ -231,7 +231,14 @@ pub const Transport = struct {
         while (true) {
             if (self.poll()) |value| return value;
             var info: abi.ProgramIoInfo = .{};
-            _ = self.sys.ioWait(self.request_id, abi.io_wait_forever, &info);
+            const waited = self.request_id;
+            const rc = self.sys.ioWait(waited, abi.io_wait_forever, &info);
+            if (rc == abi.io_ok and (info.state == abi.io_state_completed or info.state == abi.io_state_failed)) {
+                // Wait publication is not retirement. Try the actual status /
+                // close owner before backing off, retaining storage on BUSY.
+                if (self.poll()) |value| return value;
+                if (self.request_id != waited) continue;
+            }
             if (self.request_id != 0) self.sys.sleepTicks(1);
         }
     }
@@ -367,6 +374,16 @@ const Probe = struct {
     var operation: u16 = 0;
     var now_ticks: u64 = 0;
     var submitted_budget: u64 = 0;
+    const WaitMode = enum { completed, failed, running, transient, close_busy, status_busy, continuous, expired };
+    var wait_mode: WaitMode = .completed;
+    var waits: usize = 0;
+    var sleeps: usize = 0;
+    var event_log: [128]u8 = undefined;
+    var event_count: usize = 0;
+    var watched: ?*Transport = null;
+    var retained_at_backoff: bool = true;
+    var budgets: [3]u64 = undefined;
+    var budget_count: usize = 0;
     fn context() r4sys.Context {
         table = .{};
         raw = .{};
@@ -378,10 +395,19 @@ const Probe = struct {
         closes = 0;
         now_ticks = 0;
         submitted_budget = 0;
+        wait_mode = .completed;
+        waits = 0;
+        sleeps = 0;
+        event_count = 0;
+        watched = null;
+        retained_at_backoff = true;
+        budget_count = 0;
         table.ticks = @intFromPtr(&ticks);
+        table.sleep_ticks = @intFromPtr(&sleep);
         table.monotonic_clock = @intFromPtr(&clock);
         table.io_service_call = @intFromPtr(&submit);
         table.io_status = @intFromPtr(&status);
+        table.io_wait = @intFromPtr(&wait);
         table.io_close = @intFromPtr(&close);
         bundle = .{ .raw = &raw, .sys = &table };
         return r4sys.Context.init(&bundle);
@@ -393,8 +419,31 @@ const Probe = struct {
     fn ticks() callconv(.c) u64 {
         return now_ticks;
     }
+    fn record(event: u8) void {
+        std.debug.assert(event_count < event_log.len);
+        event_log[event_count] = event;
+        event_count += 1;
+    }
+    fn sleep(duration: u64) callconv(.c) void {
+        record('b');
+        std.debug.assert(duration == 1);
+        sleeps += 1;
+        now_ticks += duration;
+        if (watched) |owner| {
+            const replacement = [_]u8{0xee} ** 1920;
+            retained_at_backoff = retained_at_backoff and owner.request_id == 401 and
+                owner.write(&replacement) == abi.service_api_result_busy and
+                std.mem.allEqual(u8, owner.payload[@sizeOf(abi.AudioServiceStreamWriteRequest)..][0..1920], 0x6a);
+        }
+        if (wait_mode == .running or wait_mode == .transient) reply(77, 960);
+        if (sleeps >= 2) close_busy = false;
+        status_busy = false;
+    }
     fn submit(handle: u32, op: u16, _: [*]const u8, _: u32, h: *abi.ServiceMessageHeader, bytes: [*]u8, _: u32, budget: u64, _: u32, id: *u32) callconv(.c) i32 {
         std.debug.assert(handle == 11);
+        record('n');
+        if (budget_count < budgets.len) budgets[budget_count] = budget;
+        budget_count += 1;
         next_id += 1;
         id.* = next_id;
         header = h;
@@ -405,13 +454,38 @@ const Probe = struct {
         return 0;
     }
     fn status(id: u32, out: *abi.ProgramIoInfo) callconv(.c) i32 {
+        record('s');
         if (status_busy) return abi.io_error_busy;
         out.* = .{ .request_id = id, .kind = abi.io_kind_service_call, .state = state, .result = result };
         return 0;
     }
     fn close(_: u32) callconv(.c) i32 {
+        record('c');
         closes += 1;
         return if (close_busy) abi.io_error_busy else 0;
+    }
+    fn wait(id: u32, timeout: u64, out: *abi.ProgramIoInfo) callconv(.c) i32 {
+        record('w');
+        waits += 1;
+        std.debug.assert(id == next_id and timeout == abi.io_wait_forever);
+        if ((wait_mode == .running or wait_mode == .transient) and waits == 1) {
+            out.* = .{ .request_id = id, .kind = abi.io_kind_service_call, .state = state, .result = result };
+            return if (wait_mode == .transient) abi.io_error_busy else abi.io_ok;
+        }
+        if (wait_mode == .continuous or wait_mode == .expired) {
+            now_ticks = if (waits == 1) 20 else if (wait_mode == .expired) 201 else 50;
+            progressReply(if (waits == 3) 960 else 0);
+        } else {
+            reply(77, 960);
+            if (wait_mode == .failed) {
+                state = abi.io_state_failed;
+                result = abi.service_api_result_timeout;
+            }
+            if (waits == 1 and wait_mode == .close_busy) close_busy = true;
+            if (waits == 1 and wait_mode == .status_busy) status_busy = true;
+        }
+        out.* = .{ .request_id = id, .kind = abi.io_kind_service_call, .state = state, .result = result };
+        return abi.io_ok;
     }
     fn reply(stream_id: u32, accepted: u32) void {
         header.* = .{ .op = operation, .request_id = 91 };
@@ -431,6 +505,74 @@ const Probe = struct {
         return .{ .sys = sys, .timeout = time.timeoutFinite(.{ .nanoseconds = 200000000 }), .close_timeout = time.timeoutFinite(.{ .nanoseconds = 500000000 }), .connection = .{ .sys = sys, .raw = 11, .owned = true }, .stream_id = 77, .frame_bytes = 4, .generation = 9 };
     }
 };
+
+test "terminal transport wait checks actual retirement before any backoff" {
+    for ([_]Probe.WaitMode{ .completed, .failed }) |mode| {
+        var owner = Probe.stream();
+        Probe.wait_mode = mode;
+        const bytes = [_]u8{0x6a} ** 1920;
+        try std.testing.expectEqual(pending, owner.write(&bytes));
+        Probe.event_count = 0;
+        const receipt = owner.drain();
+        try std.testing.expectEqualStrings("swsc", Probe.event_log[0..Probe.event_count]);
+        try std.testing.expectEqual(@as(usize, 0), Probe.sleeps);
+        try std.testing.expectEqual(@as(usize, 1), Probe.waits);
+        try std.testing.expectEqual(@as(usize, 1), Probe.closes);
+        try std.testing.expectEqual(@as(i32, if (mode == .failed) abi.service_api_result_timeout else 960), receipt.result);
+        try std.testing.expectEqual(@as(u32, 401), receipt.request_id);
+        try std.testing.expectEqual(@as(u64, 9), receipt.generation);
+        try std.testing.expectEqual(@as(u16, 1), receipt.requests);
+        try std.testing.expect(owner.request_id == 0 and owner.stream_id == 77 and owner.poll() == null);
+    }
+}
+
+test "transport drain backoff retains real copied request through running transient and BUSY replies" {
+    for ([_]Probe.WaitMode{ .running, .transient, .close_busy, .status_busy }) |mode| {
+        var owner = Probe.stream();
+        Probe.wait_mode = mode;
+        const bytes = [_]u8{0x6a} ** 1920;
+        try std.testing.expectEqual(pending, owner.write(&bytes));
+        Probe.watched = &owner;
+        Probe.event_count = 0;
+        const receipt = owner.drain();
+        const expected: []const u8 = switch (mode) {
+            .close_busy => "swscbscwscbsc",
+            .status_busy => "swsbsc",
+            else => "swbsc",
+        };
+        try std.testing.expectEqualStrings(expected, Probe.event_log[0..Probe.event_count]);
+        try std.testing.expectEqual(@as(usize, if (mode == .close_busy) 2 else 1), Probe.sleeps);
+        try std.testing.expect(Probe.retained_at_backoff and owner.request_id == 0 and owner.poll() == null);
+        try std.testing.expectEqual(@as(i32, 960), receipt.result);
+        try std.testing.expectEqual(@as(u32, 401), receipt.request_id);
+        try std.testing.expectEqual(@as(u32, 401), Probe.next_id);
+        try std.testing.expectEqual(@as(u16, 1), receipt.requests);
+    }
+}
+
+test "terminal transport drain chains keep exact absolute budgets without inserted ticks" {
+    for ([_]Probe.WaitMode{ .continuous, .expired }) |mode| {
+        var owner = Probe.stream();
+        owner.continuous = true;
+        owner.source_start_ns = 1_000_000_000;
+        Probe.wait_mode = mode;
+        const bytes = [_]u8{0x6a} ** 1920;
+        try std.testing.expectEqual(pending, owner.write(&bytes));
+        const due = owner.source_due_ns;
+        Probe.event_count = 0;
+        const receipt = owner.drain();
+        const expired = mode == .expired;
+        try std.testing.expectEqualStrings(if (expired) "swscnswsc" else "swscnswscnswsc", Probe.event_log[0..Probe.event_count]);
+        try std.testing.expectEqual(@as(usize, 0), Probe.sleeps);
+        const expected_budgets = [_]u64{ 200, 180, 150 };
+        try std.testing.expectEqualSlices(u64, expected_budgets[0 .. if (expired) @as(usize, 2) else 3], Probe.budgets[0..Probe.budget_count]);
+        try std.testing.expectEqual(@as(u16, if (expired) 2 else 3), receipt.requests);
+        try std.testing.expectEqual(@as(i32, if (expired) abi.service_api_result_timeout else 960), receipt.result);
+        try std.testing.expectEqual(@as(u64, if (expired) 0 else 240), owner.accepted_source_frames);
+        try std.testing.expect(owner.request_id == 0 and owner.stream_id == 77 and owner.poll() == null);
+        try std.testing.expectEqual(due, owner.source_due_ns);
+    }
+}
 
 test "one actual transport request copies PCM and retains all buffers through terminal close BUSY" {
     var owner = Probe.stream();

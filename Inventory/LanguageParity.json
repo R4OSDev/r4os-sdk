@@ -793,7 +793,8 @@
         "source_inventory",
         "platform_current_58",
         "current_contract_78",
-        "audio_reply_08842"
+        "audio_reply_08842",
+        "audio_drain_08843"
       ],
       "shared_core": "Existing Zig Audio/PCM/Device/Power owners through one compiler-typed native boundary; current legacy C audio loop aligned, no third Rust algorithm.",
       "current_reply_validation_08842": {
@@ -1103,7 +1104,8 @@
         "source_inventory",
         "subsystems_current_65",
         "current_kernel_records_80",
-        "subsystem_audio_08749"
+        "subsystem_audio_08749",
+        "audio_drain_08843"
       ],
       "shared_core": "Generischen Host-/Runtime-/Persistenzkern einmal nutzen; kein Emulatorneuaufbau oder languagespezifische Kopie.",
       "qualification": {
@@ -54752,6 +54754,41 @@
       "native_runtime": "Current guest/artifact qualification is recorded separately in Docs/Audio/README.txt for0.88.42.",
       "standard": "The sole final release42 general benchmark is recorded separately in its domain documentation.",
       "limits": "Host evidence is injected reply validation. No actual malformed AUDSVC/hardware reply, physical hearing/latency, Windows execution or isolated speedup is claimed."
+    },
+    "audio_drain_08843": {
+      "kind": "actual_native_transport_wait_poll_retirement_order",
+      "performed_in": "0.88.43",
+      "sdk": "0.64.114",
+      "report": "Docs/Audio/README.txt#0.88.43",
+      "scope": "Only product Transport.drain changes. After successful terminal ioWait it invokes the actual poll/status/close owner before backoff. A genuinely new chained request proceeds without an artificial tick; unchanged blocked or transient state still sleeps1. ioWait publication itself never releases storage. No new replay, worker, timeout or progress algorithm.",
+      "host_checks": {
+        "before": "59/62,3 intended drain ordering groups fail on original product",
+        "after_owner_cases": 79,
+        "runtime_cases": 62,
+        "new_existing_file_groups": 3,
+        "vectors": "completed+failed wait, running+transient wait, repeated ioClose BUSY, status BUSY after terminal wait, copied1920B retained through backoff, busy new Write while owned, exact one request/receipt, continuous3stage200/180/150 original absolute budget, expiry before PCM",
+        "scope": "Actual SDK Transport methods and modeled native tables; no real driver retirement or native teardown duration inferred."
+      },
+      "unchanged_product_methods": [
+        "poll",
+        "submit",
+        "decode",
+        "decodeProgress",
+        "finish",
+        "closeWithTimeout",
+        "open",
+        "write",
+        "volume",
+        "progress",
+        "prepareControl",
+        "prepareTrackedHeader"
+      ],
+      "projection": "No C/Rust header, schema, generated fingerprint or public signature changed. Current final artifact builds consume SDK114; targeted native original SNES/owned shutdown qualification and sole final STANDARD are documented separately in Audio/README.txt.",
+      "limits": "One avoided source tick is deterministic host evidence; no isolated native time, hardware release, physical hearing, Windows execution or speedup claim.",
+      "current_sources": {
+        "Repositories/SDK/build.zig.zon": "17faa468a30aefd6ac810d2c363b8bcea2c753e87ac7f2deb3d2bbef546e5357",
+        "Repositories/SDK/r4os/subsystem_audio_transport.zig": "093087d6bcd86ed8dbf9b6d6db531f6133ce510473397a39145929068c55bdd1"
+      }
     }
   },
   "wave_bindings": [
@@ -55004,17 +55041,17 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.88.42",
-    "sdk": "0.64.113",
+    "performed_in": "0.88.43",
+    "sdk": "0.64.114",
     "contract": "0.64.59",
     "libraries": "0.64.38",
-    "evidence": "audio_reply_08842",
-    "scope": "Eight explicit reviewed owner/generated/version deltas plus one private stateless audio owner and three C/Zig/Rust test bodies.76owner/runtime,49originaldata,4platform+4compilernegatives and5data+5compilernegatives qualified. Exact original prefix, stream ownership and positive Open contract. Native release/artifacts/final STANDARD and physical/Windows/performance scope remain separate domain evidence."
+    "evidence": "audio_drain_08843",
+    "scope": "Two explicit source/version deltas: only product Transport.drain changes plus three actual native-table ordering groups in its existing private Probe. All other product method bytes, public C/Rust projections and progress/fence/absolute-budget/ownership contracts unchanged.79owner cases pass after3intended before failures. Current artifacts/native/final STANDARD remain separate domain evidence; review metadata frozen before export/receipts."
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.88.42",
+    "reviewed_in": "0.88.43",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -56859,7 +56896,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "14000386d635d0f3881e8dfa52c81fbff4d5c7f10fcb7df080dfaa8d79f861af"
+        "sha256": "17faa468a30aefd6ac810d2c363b8bcea2c753e87ac7f2deb3d2bbef546e5357"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -57499,7 +57536,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/subsystem_audio_transport.zig",
-        "sha256": "58e44688b69a00c6ce4fca158630e1edbbcc4809af421d7fdc0cc4353c881c3a"
+        "sha256": "093087d6bcd86ed8dbf9b6d6db531f6133ce510473397a39145929068c55bdd1"
       },
       {
         "path": "Repositories/SDK/r4os/subsystem_bridge_names.zig",
@@ -58106,7 +58143,8 @@
           "file_name_limits_08827",
           "native_pointer_capture_08828",
           "gui_host_backpressure_08832",
-          "audio_reply_08842"
+          "audio_reply_08842",
+          "audio_drain_08843"
         ]
       },
       {
@@ -58279,7 +58317,8 @@
           "audio_silence_08754",
           "bounded_work_08755",
           "qualified_prior_source_08825",
-          "gui_host_backpressure_08832"
+          "gui_host_backpressure_08832",
+          "audio_drain_08843"
         ]
       },
       {
