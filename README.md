@@ -38,13 +38,26 @@ only for this review. Real build receipts still hash exact compiler bytes.
 Further public API changes must update the affected language facades/packages
 and evidence in this same matrix, including later Desktop/Library work.
 
-With current SDK0.64.115/Contract0.64.60, use Libraries0.64.39 for its higher
+With current SDK0.64.116/Contract0.64.60, use Libraries0.64.39 for its higher
 Rust helper projection. Its compiler-owned aliases include R4AUDIO v4,
 DriverApi v39 and the copied audio catalog records. The library C boundary,
 native fingerprint and installed R4L binaries are unchanged. A platform record
 extension requires checking this reachable projection as well as the SDK
-projections. The0.88.56 matrix update records that review; SDK implementation
-and ABI remain0.64.115.
+projections. The0.88.56 matrix update records that library review.
+
+SDK0.64.116 evaluates subsystem Runtime.run waits after guest, presentation
+and I/O work using the current host clock. Absolute deadlines age during
+that work; new relative retries keep their full interval from the actual
+callback return. Guest time is projected on a copy without consuming virtual
+work. Public cycle retains its explicit tick snapshot, and all public layouts,
+generated C/Rust headers, ownership contracts and native fingerprints remain
+unchanged. The0.88.58 review qualifies36 runtime groups, original native
+C/Rust consumers and the full current BASIC/GB/SNES acceptance on KVM-SMP4;
+it makes no isolated performance or physical audio claim. An earlier normal
+SNES run reported one unexplained audio Write failure; another diagnostic
+run stopped at a short test guest's focus timeout. The unchanged later normal
+full run passes, while findings 0.88.88/89 retain these unresolved failures.
+That positive run does not establish their cause or exclude SDK involvement.
 
 Current operations require their actual callbacks: complete glyph bitmap,
 real font revision/metrics, Unicode input, generation-bound network service

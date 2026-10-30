@@ -576,7 +576,7 @@ pub const AudioPump = struct {
         );
     }
 
-    fn tryOpen(self: *AudioPump, now: u64) bool {
+    fn tryOpen(self: *AudioPump, now: u64, clock: ?*const r4sys.Context) bool {
         if (self.close_pending or self.service_operations_cycle != 0) return false;
         const sink = self.sink orelse {
             self.degrade(audio_error_unavailable);
@@ -592,7 +592,7 @@ pub const AudioPump = struct {
             self.sink_open = true;
             return false;
         }
-        return self.completeOpen(rc, now);
+        return self.completeOpen(rc, currentHostTick(clock, now));
     }
 
     fn completeOpen(self: *AudioPump, rc: i32, now: u64) bool {
@@ -694,16 +694,16 @@ pub const AudioPump = struct {
     }
 
     fn pump(self: *AudioPump, now: u64, running: bool) void {
-        self.pollPending(now);
-        self.pumpReady(now, running);
+        self.pollPending(now, null);
+        self.pumpReady(now, running, null);
     }
 
-    fn pumpReady(self: *AudioPump, now: u64, running: bool) void {
+    fn pumpReady(self: *AudioPump, now: u64, running: bool, clock: ?*const r4sys.Context) void {
         if (self.pending_operation != null) return;
         if (self.close_pending) {
             if (now < self.close_retry_tick) return;
             self.closeSink(false);
-            if (self.close_pending and self.pending_operation == null) self.close_retry_tick = now +| self.busy_retry_ticks;
+            if (self.close_pending and self.pending_operation == null) self.close_retry_tick = currentHostTick(clock, now) +| self.busy_retry_ticks;
             return;
         }
         if (self.state != .ready and self.state != .active) return;
@@ -725,7 +725,7 @@ pub const AudioPump = struct {
                 self.noteServiceOperation();
                 self.stats.progress_queries +%= 1;
                 const rc = query(sink.context);
-                self.progress_due_tick = now +| @max(self.quantum_ticks / 2, 1);
+                self.progress_due_tick = currentHostTick(clock, now) +| @max(self.quantum_ticks / 2, 1);
                 if (rc == transport.pending) self.beginPending(.progress, 0) else if (rc < 0 and rc != abi.service_api_result_busy) self.degrade(rc);
                 return;
             };
@@ -735,7 +735,7 @@ pub const AudioPump = struct {
         if (copied == 0) {
             // A transient producer gap is not an explicit silent block.
             // Keep an active stream and retry at a bounded future deadline.
-            self.next_deadline_tick = if (self.state == .active) now +| self.quantum_ticks else 0;
+            self.next_deadline_tick = if (self.state == .active) currentHostTick(clock, now) +| self.quantum_ticks else 0;
             return;
         }
         // Only an unmaterialized discrete source may omit initial silence.
@@ -756,26 +756,27 @@ pub const AudioPump = struct {
             return;
         }
         if (self.state == .ready) {
-            _ = self.tryOpen(now);
+            _ = self.tryOpen(now, clock);
             return;
         }
         if (self.resync_prefill_quanta != 0) {
             switch (self.submitQuantum(copied)) {
                 .submitted => {
                     self.resync_prefill_quanta -= 1;
+                    const accepted_tick = currentHostTick(clock, now);
                     self.next_deadline_tick = if (self.resync_prefill_quanta == 0)
-                        now +| self.quantum_ticks
+                        accepted_tick +| self.quantum_ticks
                     else
-                        now;
+                        accepted_tick;
                 },
-                .busy => self.next_deadline_tick = now +| self.busy_retry_ticks,
+                .busy => self.next_deadline_tick = currentHostTick(clock, now) +| self.busy_retry_ticks,
                 .pending, .failed => {},
             }
             return;
         }
         switch (self.submitQuantum(copied)) {
             .submitted => self.next_deadline_tick +|= self.quantum_ticks,
-            .busy => self.next_deadline_tick = now +| self.busy_retry_ticks,
+            .busy => self.next_deadline_tick = currentHostTick(clock, now) +| self.busy_retry_ticks,
             .pending, .failed => {},
         }
     }
@@ -843,11 +844,11 @@ pub const AudioPump = struct {
         self.stats.async_submissions +%= 1;
     }
 
-    fn pollPending(self: *AudioPump, now: u64) void {
+    fn pollPending(self: *AudioPump, now: u64, clock: ?*const r4sys.Context) void {
         if (self.pending_operation == null) return;
         const sink = self.sink orelse return;
         const poll = sink.poll_fn orelse return;
-        if (poll(sink.context)) |completion| self.completePending(completion, now, false);
+        if (poll(sink.context)) |completion| self.completePending(completion, currentHostTick(clock, now), false);
     }
 
     fn completePending(self: *AudioPump, completion: transport.Completion, now: u64, terminal: bool) void {
@@ -1232,6 +1233,13 @@ pub const Runtime = struct {
     }
 
     pub fn cycle(self: *Runtime, host_tick: u64, guest: GuestDriver, host: HostDriver) CycleResult {
+        return self.cycleWork(host_tick, guest, host, null) orelse .{ .wait = self.nextWait(host_tick) };
+    }
+
+    // Only terminal work returns a result. Live callers choose their wait after
+    // all guest/presentation/I/O work; cycle retains its explicit tick snapshot.
+    // The run clock is borrowed solely through these synchronous calls.
+    fn cycleWork(self: *Runtime, host_tick: u64, guest: GuestDriver, host: HostDriver, clock: ?*const r4sys.Context) ?CycleResult {
         if (!self.started) self.start(host_tick);
         self.audio.beginCycle();
         self.stats.cycles +%= 1;
@@ -1341,12 +1349,12 @@ pub const Runtime = struct {
         // A completed progress request must release its owned I/O before
         // producer refill. Otherwise frequent queries can keep an empty
         // software queue from receiving already buffered source PCM.
-        self.audio.pollPending(host_tick);
+        self.audio.pollPending(host_tick, clock);
         if (self.state == .running) {
             const audio_fill = self.audio.fill(guest, host_tick, guest_stepped);
             if (audio_fill < 0) self.fail(audio_fill);
         }
-        self.audio.pumpReady(host_tick, self.state == .running);
+        self.audio.pumpReady(host_tick, self.state == .running, clock);
         self.deliverAudioFeedback(guest);
 
         switch (self.state) {
@@ -1363,7 +1371,7 @@ pub const Runtime = struct {
         }
 
         if (isTerminal(self.state)) return self.finish();
-        return .{ .wait = self.nextWait(host_tick) };
+        return null;
     }
 
     pub fn run(self: *Runtime, sys: *const r4sys.Context, guest: GuestDriver, host: HostDriver) i32 {
@@ -1371,35 +1379,32 @@ pub const Runtime = struct {
         self.start(host_tick);
         defer self.shutdown();
         while (true) {
-            switch (self.cycle(host_tick, guest, host)) {
-                .finished => |finished| return finished.exit_code,
-                .wait => |ticks| {
-                    if (ticks == 0) {
-                        host_tick = sys.ticks();
-                        self.stats.active_continues +%= 1;
-                        if (host_tick >= self.next_yield_tick) {
-                            self.stats.yields +%= 1;
-                            sys.taskYield();
-                            self.next_yield_tick = host_tick +| self.active_yield_ticks;
-                        }
-                        continue;
-                    } else if (host.wait(ticks)) |raw| {
-                        self.stats.event_waits +%= 1;
-                        if (raw < 0) {
-                            self.stats.event_wait_failures +%= 1;
-                            self.fail(raw);
-                            return self.exit_code;
-                        }
-                        if (raw == 0) {
-                            self.stats.event_timeouts +%= 1;
-                        } else {
-                            self.stats.event_wakes +%= 1;
-                        }
-                    } else {
-                        self.stats.sleeps +%= 1;
-                        sys.sleepTicks(if (ticks == abi.io_wait_forever) self.config.idle_retry_ticks else ticks);
-                    }
-                },
+            if (self.cycleWork(host_tick, guest, host, sys)) |finished| return finished.finished.exit_code;
+            host_tick = sys.ticks();
+            const ticks = self.nextWait(host_tick);
+            if (ticks == 0) {
+                self.stats.active_continues +%= 1;
+                if (host_tick >= self.next_yield_tick) {
+                    self.stats.yields +%= 1;
+                    sys.taskYield();
+                    self.next_yield_tick = host_tick +| self.active_yield_ticks;
+                }
+                continue;
+            } else if (host.wait(ticks)) |raw| {
+                self.stats.event_waits +%= 1;
+                if (raw < 0) {
+                    self.stats.event_wait_failures +%= 1;
+                    self.fail(raw);
+                    return self.exit_code;
+                }
+                if (raw == 0) {
+                    self.stats.event_timeouts +%= 1;
+                } else {
+                    self.stats.event_wakes +%= 1;
+                }
+            } else {
+                self.stats.sleeps +%= 1;
+                sys.sleepTicks(if (ticks == abi.io_wait_forever) self.config.idle_retry_ticks else ticks);
             }
             host_tick = sys.ticks();
         }
@@ -1489,7 +1494,9 @@ pub const Runtime = struct {
             } else if (!self.guest_waiting) {
                 return 0;
             } else if (self.guest_wake_ns != 0) {
-                wait = @min(wait, self.clock.ticksUntil(self.guest_wake_ns));
+                var guest_clock = self.clock;
+                _ = guest_clock.sync(host_tick);
+                wait = @min(wait, guest_clock.ticksUntil(self.guest_wake_ns));
             }
         }
         if (self.audio.pending_operation == null and (self.audio.state == .ready or self.audio.state == .active) and self.audio.next_deadline_tick != 0) {
@@ -1499,6 +1506,10 @@ pub const Runtime = struct {
         return wait;
     }
 };
+
+fn currentHostTick(clock: ?*const r4sys.Context, fallback_tick: u64) u64 {
+    return if (clock) |sys| sys.ticks() else fallback_tick;
+}
 
 fn ticksForNanoseconds(frequency_hz: u32, nanoseconds: u64) u64 {
     const product = @as(u128, frequency_hz) * nanoseconds;
@@ -1951,7 +1962,7 @@ test "deferred mute discard excludes its genuinely accepted partial prefix" {
     pump.beginPending(.write, 1920);
     pump.setMuted(true, 1);
     sink.reply(960);
-    pump.pollPending(2);
+    pump.pollPending(2, null);
     try std.testing.expectEqual(@as(u64, 960), pump.stats.submitted_bytes);
     try std.testing.expectEqual(@as(u64, 2880), pump.stats.discarded_bytes);
     try std.testing.expectEqual(pump.stats.discarded_bytes, pump.stats.muted_bytes);
@@ -2699,4 +2710,323 @@ test "transient asynchronous Close Busy keeps a healthy paused stream recoverabl
     try std.testing.expectEqual(LifecycleState.running, runtime.state);
     try std.testing.expect(runtime.audio.state != .degraded);
     try std.testing.expectEqual(@as(u64, 0), runtime.audio.stats.write_failures);
+}
+
+// Tests the actual run -> cycle -> host.wait/sleep boundary. External callbacks
+// advance one controlled host clock while the real runtime owns all scheduling,
+// virtual clock, PCM queue, pending receipts and terminal cleanup decisions.
+const RunWaitProbe = struct {
+    const Mode = enum { guest_due, idle, event, pause };
+    var active: ?*RunWaitProbe = null;
+    now: u64 = 0,
+    mode: Mode = .guest_due,
+    step_work: u64 = 0,
+    present_work: u64 = 0,
+    open_work: u64 = 0,
+    write_work: u64 = 0,
+    empty_render_work: u64 = 0,
+    audio_limit: usize = std.math.maxInt(usize),
+    audio_generated: usize = 0,
+    audio_accepted: usize = 0,
+    write_tick: u64 = 0,
+    close_tick: u64 = 0,
+    progress_enabled: bool = false,
+    progress_work: u64 = 0,
+    progress_calls: usize = 0,
+    progress_tick: u64 = 0,
+    open_busy: bool = false,
+    write_busy: bool = false,
+    async_open: bool = false,
+    open_pending: bool = false,
+    audio_enabled: bool = false,
+    steps: u32 = 0,
+    polls: u32 = 0,
+    opens: u32 = 0,
+    writes: u32 = 0,
+    closes: u32 = 0,
+    waits: [16]u64 = .{0} ** 16,
+    wait_count: usize = 0,
+    sleep_count: usize = 0,
+    yields: usize = 0,
+    wake_after: usize = 1,
+    wake_pending: bool = false,
+    pause_sent: bool = false,
+    resume_sent: bool = false,
+
+    fn guest(self: *RunWaitProbe) GuestDriver {
+        return .{ .context = self, .step_fn = step, .reset_fn = reset, .render_audio_fn = render };
+    }
+    fn host(self: *RunWaitProbe, use_wait: bool) HostDriver {
+        return .{ .context = self, .poll_fn = poll, .present_fn = present, .wait_fn = if (use_wait) wait else null };
+    }
+    fn sink(self: *RunWaitProbe) AudioSink {
+        return .{ .context = self, .open_fn = open, .write_fn = write, .volume_fn = volume, .close_fn = close, .poll_fn = if (self.async_open) pollAudio else null, .finish_fn = if (self.async_open) finishAudio else null, .progress_fn = if (self.progress_enabled) progress else null };
+    }
+    fn run(self: *RunWaitProbe, runtime: *Runtime, use_wait: bool) i32 {
+        const program = @import("program.zig");
+        var table: abi.R4XStartR4Sys = .{};
+        table.ticks = @intFromPtr(&ticks);
+        table.sleep_ticks = @intFromPtr(&sleep);
+        table.task_yield = @intFromPtr(&yield);
+        const raw: abi.R4XStartContext = .{};
+        const bundle: program.Bundle = .{ .raw = &raw, .sys = &table };
+        const sys = r4sys.Context.init(&bundle);
+        active = self;
+        defer active = null;
+        return runtime.run(&sys, self.guest(), self.host(use_wait));
+    }
+    fn ticks() callconv(.c) u64 {
+        return active.?.now;
+    }
+    fn sleep(count: u64) callconv(.c) void {
+        active.?.sleep_count += 1;
+        _ = wait(active.?, count);
+    }
+    fn yield() callconv(.c) void {
+        active.?.yields += 1;
+    }
+    fn step(context: *anyopaque, budget: u32, _: u64) StepResult {
+        const self: *RunWaitProbe = @ptrCast(@alignCast(context));
+        self.steps += 1;
+        if (self.steps == 2) return StepResult.complete(0, false).withOperations(budget);
+        self.now += self.step_work;
+        return switch (self.mode) {
+            .guest_due, .pause => StepResult.waitUntil(10 * std.time.ns_per_ms, self.present_work != 0).withOperations(budget),
+            .event => StepResult.waitUntil(0, self.present_work != 0).withOperations(budget),
+            .idle => StepResult.progress(false),
+        };
+    }
+    fn reset(_: *anyopaque) i32 {
+        return 0;
+    }
+    fn render(context: *anyopaque, out: []u8) i32 {
+        const self: *RunWaitProbe = @ptrCast(@alignCast(context));
+        if (!self.audio_enabled) return 0;
+        const count = @min(out.len, self.audio_limit - self.audio_generated);
+        if (count == 0) self.now += self.empty_render_work;
+        @memset(out[0..count], 0x62);
+        self.audio_generated += count;
+        return @intCast(count);
+    }
+    fn poll(context: *anyopaque) HostPollResult {
+        const self: *RunWaitProbe = @ptrCast(@alignCast(context));
+        self.polls += 1;
+        if (self.polls > 24) return .{ .command = .close }; // Bounded failure, never a hung test.
+        if (self.mode == .pause) {
+            if (!self.pause_sent) {
+                self.pause_sent = true;
+                return .{ .command = .pause };
+            }
+            if (self.wait_count != 0 and !self.resume_sent) {
+                self.resume_sent = true;
+                return .{ .command = .resume_running };
+            }
+        } else if (self.mode == .event and self.wake_pending) {
+            self.wake_pending = false;
+            return .handled;
+        }
+        return .idle;
+    }
+    fn present(context: *anyopaque) i32 {
+        const self: *RunWaitProbe = @ptrCast(@alignCast(context));
+        self.now += self.present_work;
+        return host_present_unchanged;
+    }
+    fn wait(context: *anyopaque, count: u64) i32 {
+        const self: *RunWaitProbe = @ptrCast(@alignCast(context));
+        if (self.wait_count >= self.waits.len) return -9910;
+        self.waits[self.wait_count] = count;
+        self.wait_count += 1;
+        self.now += if (count == abi.io_wait_forever) 100 else count;
+        if (self.wait_count >= self.wake_after) self.wake_pending = true;
+        return if (count == abi.io_wait_forever) 1 else 0;
+    }
+    fn open(context: *anyopaque, _: AudioConfig) i32 {
+        const self: *RunWaitProbe = @ptrCast(@alignCast(context));
+        self.opens += 1;
+        self.now += self.open_work;
+        if (self.async_open) {
+            self.open_pending = true;
+            return transport.pending;
+        }
+        return if (self.open_busy) abi.service_api_result_busy else 0;
+    }
+    fn write(context: *anyopaque, data: []const u8) i32 {
+        const self: *RunWaitProbe = @ptrCast(@alignCast(context));
+        self.writes += 1;
+        self.now += self.write_work;
+        self.write_tick = self.now;
+        if (!self.write_busy) self.audio_accepted += data.len;
+        return if (self.write_busy) abi.service_api_result_busy else @intCast(data.len);
+    }
+    fn volume(_: *anyopaque, _: u32) i32 {
+        return 0;
+    }
+    fn close(context: *anyopaque) i32 {
+        const self: *RunWaitProbe = @ptrCast(@alignCast(context));
+        self.closes += 1;
+        self.close_tick = self.now;
+        return 0;
+    }
+    fn progress(context: *anyopaque) i32 {
+        const self: *RunWaitProbe = @ptrCast(@alignCast(context));
+        self.progress_calls += 1;
+        self.progress_tick = self.now;
+        self.now += self.progress_work;
+        return abi.service_api_result_busy; // No fabricated playback cursor.
+    }
+    fn pollAudio(context: *anyopaque) ?transport.Completion {
+        const self: *RunWaitProbe = @ptrCast(@alignCast(context));
+        if (!self.open_pending) return null;
+        self.open_pending = false;
+        return .{ .operation = .open, .request_id = 901, .generation = 1, .result = 0, .requests = 1 };
+    }
+    fn finishAudio(context: *anyopaque) transport.Finish {
+        const self: *RunWaitProbe = @ptrCast(@alignCast(context));
+        return .{ .completion = pollAudio(self) };
+    }
+};
+
+fn expectRunGuestWait(step_work: u64, present_work: u64, expected: u64) !void {
+    for ([_]bool{ true, false }) |use_wait| {
+        var probe = RunWaitProbe{ .step_work = step_work, .present_work = present_work };
+        var runtime = try Runtime.init(.{ .slice_budget = 123 }, 1000, 0, null);
+        try std.testing.expectEqual(@as(i32, 0), probe.run(&runtime, use_wait));
+        try std.testing.expectEqual(@as(usize, @intFromBool(expected != 0)), probe.wait_count);
+        if (expected != 0) try std.testing.expectEqual(expected, probe.waits[0]);
+        try std.testing.expectEqual(@max(@as(u64, 10), step_work + present_work), probe.now);
+        try std.testing.expectEqual(@as(u32, 2), probe.steps);
+        try std.testing.expectEqual(@as(u64, 246), runtime.stats.executed_operations);
+        try std.testing.expect(runtime.resources_closed);
+    }
+}
+
+test "runtime run ages absolute guest waits after real guest and presentation work" {
+    try expectRunGuestWait(3, 4, 3);
+}
+
+test "runtime run never sleeps an absolute guest deadline already spent by work" {
+    try expectRunGuestWait(8, 7, 0);
+}
+
+test "runtime run preserves fresh idle pending open and device Busy intervals" {
+    var idle = RunWaitProbe{ .mode = .idle, .step_work = 15 };
+    var idle_runtime = try Runtime.init(.{ .idle_retry_ticks = 4 }, 1000, 0, null);
+    try std.testing.expectEqual(@as(i32, 0), idle.run(&idle_runtime, true));
+    try std.testing.expectEqual(@as(u64, 4), idle.waits[0]);
+    try std.testing.expectEqual(@as(u64, 19), idle.now);
+    for ([_]bool{ false, true }) |pending| {
+        var queue: [3840]u8 = undefined;
+        var scratch: [1920]u8 = undefined;
+        var probe = RunWaitProbe{ .mode = .event, .audio_enabled = true, .open_work = 15, .open_busy = !pending, .async_open = pending };
+        var runtime = try Runtime.init(.{}, 1000, 0, .{ .queue_storage = &queue, .scratch = &scratch, .sink = probe.sink() });
+        try std.testing.expectEqual(@as(i32, 0), probe.run(&runtime, true));
+        try std.testing.expectEqual(@as(usize, 1), probe.wait_count);
+        try std.testing.expectEqual(@as(u64, if (pending) 1 else 50), probe.waits[0]);
+        try std.testing.expectEqual(@as(u32, 1), probe.opens);
+        try std.testing.expectEqual(@as(u32, @intFromBool(pending)), probe.closes);
+        try std.testing.expect(runtime.audio.pending_operation == null and runtime.resources_closed);
+    }
+    var queue: [3840]u8 = undefined;
+    var scratch: [1920]u8 = undefined;
+    var busy = RunWaitProbe{ .mode = .event, .audio_enabled = true, .write_busy = true, .write_work = 15, .wake_after = 2 };
+    var runtime = try Runtime.init(.{}, 1000, 0, .{ .queue_storage = &queue, .scratch = &scratch, .sink = busy.sink() });
+    try std.testing.expectEqual(@as(i32, 0), busy.run(&runtime, true));
+    try std.testing.expectEqual(@as(usize, 2), busy.wait_count);
+    try std.testing.expectEqualSlices(u64, &.{ 1, 10 }, busy.waits[0..busy.wait_count]);
+    try std.testing.expectEqual(@as(u32, 1), busy.writes);
+    try std.testing.expectEqual(@as(u32, 1), busy.closes);
+    try std.testing.expect(runtime.resources_closed);
+
+    var gap = RunWaitProbe{ .mode = .event, .audio_enabled = true, .audio_limit = 3840, .empty_render_work = 15, .wake_after = 3 };
+    var gap_runtime = try Runtime.init(.{}, 1000, 0, .{ .queue_storage = &queue, .scratch = &scratch, .sink = gap.sink() });
+    try std.testing.expectEqual(@as(i32, 0), gap.run(&gap_runtime, true));
+    try std.testing.expectEqual(@as(usize, 3), gap.wait_count);
+    try std.testing.expectEqualSlices(u64, &.{ 1, 10, 10 }, gap.waits[0..gap.wait_count]);
+    try std.testing.expectEqual(@as(usize, 3840), gap.audio_generated);
+    try std.testing.expectEqual(@as(usize, 3840), gap.audio_accepted);
+    try std.testing.expectEqual(@as(u32, 2), gap.writes);
+    try std.testing.expectEqual(@as(u32, 1), gap.closes);
+    try std.testing.expectEqual(@as(u64, 0), gap_runtime.audio.stats.discarded_bytes);
+    try std.testing.expect(gap_runtime.resources_closed);
+}
+
+test "runtime run handles an expired absolute PCM deadline before waiting" {
+    var queue: [3840]u8 = undefined;
+    var scratch: [1920]u8 = undefined;
+    var probe = RunWaitProbe{ .mode = .event, .step_work = 8, .present_work = 7 };
+    var runtime = try Runtime.init(.{}, 1000, 0, .{ .queue_storage = &queue, .scratch = &scratch, .sink = probe.sink() });
+    // Existing active owner with one exact buffered quantum from an earlier
+    // cycle. This setup makes no claim about an external hardware backend.
+    runtime.audio.state = .active;
+    runtime.audio.sink_open = true;
+    runtime.audio.next_deadline_tick = 10;
+    const signal = [_]u8{0x62} ** 1920;
+    try std.testing.expectEqual(signal.len, runtime.audio.queue.write(&signal));
+    runtime.audio.stats.generated_bytes = signal.len;
+    try std.testing.expectEqual(@as(i32, 0), probe.run(&runtime, true));
+    try std.testing.expectEqual(@as(u64, 15), probe.write_tick);
+    try std.testing.expectEqual(@as(usize, 1920), probe.audio_accepted);
+    try std.testing.expectEqual(@as(u64, 1920), runtime.audio.stats.submitted_bytes);
+    try std.testing.expectEqual(@as(u64, 0), runtime.audio.stats.discarded_bytes);
+    try std.testing.expectEqual(@as(usize, 1), probe.wait_count);
+    try std.testing.expectEqual(@as(u64, 5), probe.waits[0]); // Keep the original cadence due at20.
+    try std.testing.expectEqual(@as(u32, 1), probe.closes);
+    try std.testing.expect(runtime.resources_closed);
+}
+
+test "runtime run handles an expired absolute close retry before waiting" {
+    var queue: [3840]u8 = undefined;
+    var scratch: [1920]u8 = undefined;
+    var probe = RunWaitProbe{ .mode = .event, .step_work = 8, .present_work = 7 };
+    var runtime = try Runtime.init(.{}, 1000, 0, .{ .queue_storage = &queue, .scratch = &scratch, .sink = probe.sink() });
+    runtime.audio.state = .degraded;
+    runtime.audio.sink_open = true;
+    runtime.audio.close_pending = true;
+    runtime.audio.close_retry_tick = 10;
+    try std.testing.expectEqual(@as(i32, 0), probe.run(&runtime, true));
+    try std.testing.expectEqual(@as(u64, 15), probe.close_tick);
+    try std.testing.expectEqual(@as(u32, 1), probe.closes);
+    try std.testing.expectEqual(@as(usize, 1), probe.wait_count);
+    try std.testing.expectEqual(abi.io_wait_forever, probe.waits[0]);
+    try std.testing.expect(runtime.resources_closed and !runtime.audio.close_pending);
+}
+
+test "runtime run ages old progress due and preserves a newly created query interval" {
+    var queue: [3840]u8 = undefined;
+    var scratch: [1920]u8 = undefined;
+    var probe = RunWaitProbe{ .mode = .event, .step_work = 8, .present_work = 7, .progress_enabled = true, .progress_work = 3 };
+    var runtime = try Runtime.init(.{}, 1000, 0, .{ .queue_storage = &queue, .scratch = &scratch, .sink = probe.sink(), .config = .{ .continuous = true } });
+    runtime.audio.state = .active;
+    runtime.audio.sink_open = true;
+    runtime.audio.next_deadline_tick = 100;
+    runtime.audio.progress_ready = true;
+    runtime.audio.progress_due_tick = 10;
+    try std.testing.expectEqual(@as(i32, 0), probe.run(&runtime, true));
+    try std.testing.expectEqual(@as(usize, 1), probe.progress_calls);
+    try std.testing.expectEqual(@as(u64, 15), probe.progress_tick);
+    try std.testing.expectEqual(@as(usize, 1), probe.wait_count);
+    try std.testing.expectEqual(@as(u64, 5), probe.waits[0]); // New interval starts after the actual query.
+    try std.testing.expectEqual(@as(u32, 1), probe.closes);
+    try std.testing.expect(runtime.audio.stats.playback_frames == null and runtime.resources_closed);
+}
+
+test "runtime run retains Forever event wake pause resume and sleep fallback" {
+    for ([_]bool{ true, false }) |use_wait| {
+        var event = RunWaitProbe{ .mode = .event, .step_work = 15 };
+        var runtime = try Runtime.init(.{ .idle_retry_ticks = 4 }, 1000, 0, null);
+        try std.testing.expectEqual(@as(i32, 0), event.run(&runtime, use_wait));
+        try std.testing.expectEqual(@as(usize, 1), event.wait_count);
+        try std.testing.expectEqual(@as(u64, if (use_wait) abi.io_wait_forever else 4), event.waits[0]);
+        try std.testing.expectEqual(@as(u32, 2), event.steps);
+    }
+    var pause = RunWaitProbe{ .mode = .pause, .step_work = 3 };
+    var runtime = try Runtime.init(.{}, 1000, 0, null);
+    try std.testing.expectEqual(@as(i32, 0), pause.run(&runtime, true));
+    try std.testing.expectEqual(@as(usize, 2), pause.wait_count);
+    try std.testing.expectEqualSlices(u64, &.{ abi.io_wait_forever, 7 }, pause.waits[0..pause.wait_count]);
+    try std.testing.expectEqual(@as(u64, 110), pause.now);
+    try std.testing.expectEqual(@as(u64, 10 * std.time.ns_per_ms), runtime.clock.guest_ns);
+    try std.testing.expectEqual(@as(u64, 1), runtime.stats.pauses);
+    try std.testing.expectEqual(@as(u64, 1), runtime.stats.resumes);
 }

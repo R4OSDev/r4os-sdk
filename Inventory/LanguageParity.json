@@ -1105,7 +1105,8 @@
         "subsystems_current_65",
         "current_kernel_records_80",
         "subsystem_audio_08749",
-        "audio_drain_08843"
+        "audio_drain_08843",
+        "runtime_wait_08858"
       ],
       "shared_core": "Generischen Host-/Runtime-/Persistenzkern einmal nutzen; kein Emulatorneuaufbau oder languagespezifische Kopie.",
       "qualification": {
@@ -1120,6 +1121,12 @@
           "sdk": "0.64.100",
           "report": "Docs/SDK/LanguageParity.txt#0.87.49",
           "scope": "40 typed callback kinds with old38numeric IDs preserved;48 actual Zig runtime owner cases (3transport native tables explicitly modeled); original C/Rust host subsystem interop plus5negative cases, full113stepSDK build; current SDK fixture and actual Zig products pass strict original long KVM4 reports. No new C/Rust guest, Windows execution, physical or isolated-speedup claim."
+        },
+        {
+          "performed_in": "0.88.58",
+          "sdk": "0.64.116",
+          "report": "Docs/Audio/README.txt#0.88.58",
+          "scope": "Current shared Runtime.run deadline semantics, original36runtime groups, actual C/Rust6positive+5ownership negatives, unchanged compiler-owned public ABI, and exact current all-subsystem KVM4 acceptance."
         }
       ]
     },
@@ -54881,6 +54888,71 @@
         "Repositories/Libraries/Shared/Rust/src/raw.rs": "48cf7eaaf960cdb7cdb35ed1e9b4cfaa82535aa771f90072b5ac72e8109bb082"
       },
       "limits": "Reachable binding review completed against the actual current C/Rust/library/Desktop owners and final normal Kernel429/AUDSVC21 controlled/HDA47/AC9711 source-matched native proofs. Actual short+LONG AC97 original100ms oracle and six concurrent full SFTP readbacks remain unrelaxed. No physical ELD/receiver/speaker/Windows/isolated speed claim. Final STANDARD/formal roadmap closure remain separate; SDK115 implementation/ABI unchanged. All670input paths/35scopes/180exports retained."
+    },
+    "runtime_wait_08858": {
+      "kind": "actual_shared_Runtime_run_work_then_current_deadline_selection",
+      "performed_in": "0.88.58",
+      "sdk": "0.64.116",
+      "contract": "0.64.60",
+      "libraries": "0.64.39",
+      "complete": true,
+      "report": "Docs/Audio/README.txt#0.88.58",
+      "scope": "Private work/wait separation in the original shared Runtime; run selects waits from a fresh host tick after actual guest/presentation/I/O work. A projected GuestClock copy preserves original virtual debt/remainder. Explicit public cycle tick-snapshot semantics, public fields/layouts, generated headers and native fingerprint remain unchanged. Synchronous borrowed clock arguments are never stored. No second runtime, C/Rust implementation copy, new public type or product measurement.",
+      "deadlines": "Absolute guest/audio/close/progress deadlines age during real work. Newly starting Open/Busy/Close/progress/empty-source/new-prefill intervals begin at the actual callback return; active PCM cadence still advances by quantum and initial suppressed-silence duration keeps its original source anchor. Forever is never subtracted. Existing zero-wait yield, pause, event, fallback, generation and owned-I/O cleanup behavior remains.",
+      "current_owner_checks": {
+        "original_runtime_groups": 29,
+        "new_actual_run_groups": 7,
+        "all_runtime_groups": 36,
+        "qualified_before": "One existing-control group passes; six intended groups fail against the verified unchanged original115 production prefix. Partial10->3, expired1Wait->0, Write/Close/Progress due and Pause/Resume are then green.",
+        "native_C_Rust_positive": 6,
+        "actual_compiler_ownership_negatives": 5,
+        "compiler_ABI_check": "Current subsystem header/native fingerprint check byte-identical; fingerprint12413102210881657404. Original C/Rust helper adapters continue to delegate to the actual common SDK Runtime.run.",
+        "desktop_original_audio_groups": 3,
+        "geometry_groups": 3,
+        "precise_clock_groups": 1
+      },
+      "native_current": {
+        "proof": "Temp/08858-native-e2e-proof.json",
+        "full_original_archive": "ExFiles/Reports/Audio/0.88.58-runtime-waits/",
+        "kernel": "0.1.429",
+        "desktop": "0.1.197",
+        "basic": "1.2.47",
+        "gb": "0.10.24",
+        "snes": "0.22.36",
+        "private_SDK_host": "0.66.14",
+        "installed_full_readbacks": 9,
+        "scope": "Actual KVM4, unchanged Spectra94 full CHECK SUBSYSTEM /HOST all scope: original BASIC baseline/test host, GB and SNES each two complete60s guest runs, exact guest work/drift/PCM/persistence/SAV/RTC, rejected inputs and owned Exit0/reap/cleanup. Current normal Kernel429/HDA47/AUDSVC21; no shortened guest or relaxed oracle."
+      },
+      "source_review": [
+        {
+          "path": "Repositories/SDK/build.zig.zon",
+          "old_sha256": "12b7927e0618c78ee6f3d8c4ce1d678e6fb0e2ac40a6a596d6001bc5622de2ba",
+          "new_sha256": "9d301555de2d3a8ec1fe0d13e3480067ae0906571f108f9f8202de85697ee44a"
+        },
+        {
+          "path": "Repositories/SDK/r4os/subsystem_runtime.zig",
+          "old_sha256": "02d654348405b1a56426f39347775933c6af19d209b81e57e1f9b47a99220f43",
+          "new_sha256": "8b41bdc699a2f6c931b75997219906b245de37b567c22093bc4d93c0d34f1204"
+        }
+      ],
+      "current_sources": {
+        "Repositories/SDK/build.zig.zon": "9d301555de2d3a8ec1fe0d13e3480067ae0906571f108f9f8202de85697ee44a",
+        "Repositories/SDK/r4os/subsystem_runtime.zig": "8b41bdc699a2f6c931b75997219906b245de37b567c22093bc4d93c0d34f1204"
+      },
+      "limits": "Deterministic actual-runtime host-clock and current virtual SMP4 functional evidence. No isolated native speed/latency, physical speaker/receiver, Windows execution or known SNES-starvation causality claim. Final SDK publication/pins/normal STANDARD and formal roadmap closure are separately recorded in the domain report. Unchanged prior scopes remain reviewed, all670paths/35scopes/180exports retained. Actual earlier unexplained SNES Writefailure and synthetic-host focus timeout are retained and planned at the roadmap end88/89; no causal exclusion or stability claim follows from the later positive normal run.",
+      "native_unresolved_findings": {
+        "first_current_full_all": "Exact normal current SNES D1 reaches full60s/drift0/Close0 but reports1Writefailure and Exit97; controller cancels D2. Initial original preserved. Source error code unavailable; no cause inferred.",
+        "before_control": "Exact prior46/23/35/SDKHost13 on identical currentD197/Kernel429/HDA47/AUDSVC21 passes full originalALL.",
+        "diagnostic": "Private current final-report-only SNES probe ALL stops beforeSNES at3000msfocus timeout, both SDKHost14 children subsequentlyExit0. Its separate originalSNES-only scope then passes bothfull60s/error0/Close0. Neither diagnostic run qualifies normalSNES artifact bytes.",
+        "final_current_normal": "Second fullALL with exactly unchanged NORMAL current payloads passes all original cases, fullGB+SNESpairs and owned cleanup. This bounded positive run does not explain or fix either prior failure.",
+        "planned_followups": [
+          "0.88.88",
+          "0.88.89"
+        ],
+        "first_failure_fixed": false,
+        "runtime_regression_excluded": false,
+        "report": "Docs/Audio/README.txt#0.88.58"
+      }
     }
   },
   "wave_bindings": [
@@ -55133,17 +55205,17 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.88.56",
-    "sdk": "0.64.115",
+    "performed_in": "0.88.58",
+    "sdk": "0.64.116",
     "contract": "0.64.60",
     "libraries": "0.64.39",
-    "evidence": "audio_selection_08856",
-    "scope": "Exactly one changed watched implementation, the compiler-owned Library raw canonical-alias projection, re-reviewed against unchanged C/native fingerprint, actual positive/negative C/Rust consumers, original3Desktopaudio cases and actual current normalSMP4 service/driver/Join/persistence scenarios. 55evidence retained; all670file paths/35functional scopes/180public exports remain unchanged. SDK implementation/ABI is unchanged; this matrix is review metadata, not a new SDK runtime artifact."
+    "evidence": "runtime_wait_08858",
+    "scope": "Exactly two watched inputs reviewed: SDK source identity and original shared subsystem Runtime body. Private implementation/actual run deadlines, unchanged public C/Rust layouts and delegation, current owner/interop tests and full current all-subsystem native proof reviewed before updating these two hashes. Existing56Library and55catalog evidence retained. All670input paths/35functional scopes/180public exports remain unchanged; no automatic qualification or source hash bypass."
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.88.55",
+    "reviewed_in": "0.88.58",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -56988,7 +57060,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "12b7927e0618c78ee6f3d8c4ce1d678e6fb0e2ac40a6a596d6001bc5622de2ba"
+        "sha256": "9d301555de2d3a8ec1fe0d13e3480067ae0906571f108f9f8202de85697ee44a"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -57668,7 +57740,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/subsystem_runtime.zig",
-        "sha256": "02d654348405b1a56426f39347775933c6af19d209b81e57e1f9b47a99220f43"
+        "sha256": "8b41bdc699a2f6c931b75997219906b245de37b567c22093bc4d93c0d34f1204"
       },
       {
         "path": "Repositories/SDK/r4os/subsystem_value_bridge.zig",
@@ -58238,7 +58310,8 @@
           "gui_host_backpressure_08832",
           "audio_reply_08842",
           "audio_drain_08843",
-          "audio_catalog_08855"
+          "audio_catalog_08855",
+          "runtime_wait_08858"
         ]
       },
       {
@@ -58413,7 +58486,8 @@
           "qualified_prior_source_08825",
           "gui_host_backpressure_08832",
           "audio_drain_08843",
-          "audio_catalog_08855"
+          "audio_catalog_08855",
+          "runtime_wait_08858"
         ]
       },
       {

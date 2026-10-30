@@ -49,4 +49,11 @@ pub const names: []const []const u8 = &.{
     "private stream retries are limited to transient namespace outcomes",
     "subsystem owner collector includes actual current source tests",
     "runtime save configuration shares static canonical paths and validates scratch",
+    "runtime run ages absolute guest waits after real guest and presentation work",
+    "runtime run never sleeps an absolute guest deadline already spent by work",
+    "runtime run preserves fresh idle pending open and device Busy intervals",
+    "runtime run handles an expired absolute PCM deadline before waiting",
+    "runtime run handles an expired absolute close retry before waiting",
+    "runtime run ages old progress due and preserves a newly created query interval",
+    "runtime run retains Forever event wake pause resume and sleep fallback",
 };
