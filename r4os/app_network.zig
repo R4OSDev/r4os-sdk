@@ -263,14 +263,9 @@ pub const TcpSocket = struct {
         return outcome;
     }
 
+    /// State-only poll. No transferred bytes; use tcpReadiness for a snapshot.
     pub fn poll(self: *TcpSocket, timeout: Timeout) SocketIo {
-        if (!self.valid()) return .{ .failure = abi.err_closed };
-        var request: [4]u8 = undefined;
-        writeU32(request[0..], 0, self.raw);
-        var response: [@sizeOf(abi.NetServiceTcpResult)]u8 = undefined;
-        const call = self.network.tcpServiceCall(abi.net_service_op_tcp_poll_result, request[0..], response[0..], timeout);
-        const result = parseTcpCall(call, response[0..]) catch |raw| return mapTcpSocketFailure(raw);
-        return self.finishIo(result, result.pending_rx);
+        return tcpReadiness(self, timeout).outcome;
     }
 
     pub fn close(self: *TcpSocket, timeout: Timeout) SocketIo {
@@ -282,19 +277,45 @@ pub const TcpSocket = struct {
         const call = self.network.tcpServiceCall(abi.net_service_op_tcp_close_result, request[0..], response[0..], timeout);
         const result = parseTcpCall(call, response[0..]) catch |raw| return mapTcpSocketFailure(raw);
         const state = classifyTcp(result);
-        if (state == .ok or state == .closed) {
+        if (state == .ok or state == .closed or (state == .peer_closed and result.lifecycle_cause == abi.net_service_socket_lifecycle_closed)) {
             self.raw = 0;
             return .closed;
         }
         return mapSocketState(state, result.result);
     }
 
-    fn finishIo(self: *TcpSocket, result: abi.NetServiceTcpResult, bytes: u32) SocketIo {
+    fn finishIo(_: *TcpSocket, result: abi.NetServiceTcpResult, bytes: u32) SocketIo {
         const state = classifyTcp(result);
-        if (state == .closed or state == .reset or state == .peer_closed) self.raw = 0;
+        // Transport termination does not acknowledge disposal of our frontend.
         return if (bytes != 0 or state == .ok) .{ .bytes = @intCast(bytes) } else mapSocketState(state, result.result);
     }
 };
+
+/// A validated snapshot can be both peer-closed and readable. Its pending_rx
+/// is buffered availability, never a count transferred by the poll.
+pub const TcpPoll = struct {
+    outcome: SocketIo,
+    readiness: ?r4net.TcpReadiness = null,
+};
+
+/// Kept at module scope so the existing GUI value-method ABI does not grow.
+pub fn tcpReadiness(socket: *TcpSocket, timeout: Timeout) TcpPoll {
+    if (!socket.valid()) return .{ .outcome = .{ .failure = abi.err_closed } };
+    var request: [4]u8 = undefined;
+    writeU32(request[0..], 0, socket.raw);
+    var response: [@sizeOf(abi.NetServiceTcpResult)]u8 = undefined;
+    const call = socket.network.tcpServiceCall(abi.net_service_op_tcp_poll_result, request[0..], response[0..], timeout);
+    const result = parseTcpCall(call, response[0..]) catch |raw| return .{ .outcome = mapTcpSocketFailure(raw) };
+    var snapshot = r4net.tcpResultReadiness(&result);
+    if (result.service_status != abi.net_service_status_idle) snapshot.service_status = result.service_status;
+    if (snapshot.would_block) snapshot.service_status = abi.net_service_status_would_block;
+    snapshot.would_block = snapshot.service_status == abi.net_service_status_would_block or snapshot.would_block;
+    const state = classifyTcp(result);
+    return .{
+        .outcome = if (state == .ok) .{ .bytes = 0 } else mapSocketState(state, result.result),
+        .readiness = snapshot,
+    };
+}
 
 pub const TcpListener = struct {
     network: Network,

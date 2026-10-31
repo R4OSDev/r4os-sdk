@@ -2,6 +2,7 @@
 #define R4OS_APP_NETWORK_H
 
 #include "app_services.h"
+#include "net_bridge.h"
 
 typedef struct R4Ipv4Address { uint8_t octets[4]; } R4Ipv4Address;
 typedef struct R4SocketAddress { R4Ipv4Address address; uint16_t port; uint16_t reserved; } R4SocketAddress;
@@ -60,6 +61,15 @@ typedef struct R4NetResult {
     int32_t raw_code;
     uint32_t bytes;
 } R4NetResult;
+
+/* A poll transfers no bytes. Readiness is available only after a validated
+ * structured provider reply, including terminal replies. This does not
+ * acknowledge disposal of the still-owned local frontend handle. */
+typedef struct R4TcpPollResult {
+    R4NetResult result;
+    R4SdkTcpReadiness readiness;
+    uint32_t available;
+} R4TcpPollResult;
 
 typedef struct R4TcpServiceCall {
     R4ServiceCallResult call;
@@ -220,7 +230,7 @@ static inline R4NetResult r4_tcp_socket_write(R4TcpSocket *socket, const uint8_t
     if (!r4_tcp_socket_valid(socket)) return r4_net_result(R4_NET_RESULT_FAILED, R4OS_ERR_CLOSED, 0u); if (len > R4OS_NET_SERVICE_TCP_WRITE_MAX || (len != 0u && data == 0)) return r4_net_result(R4_NET_RESULT_FAILED, R4OS_NET_TX_TOO_LARGE, 0u);
     uint8_t request[4u + R4OS_NET_SERVICE_TCP_WRITE_MAX]; r4_net_write_u32(request, socket->raw); for (uint32_t i = 0u; i < len; ++i) request[4u + i] = data[i]; R4NetServiceTcpResult response = {0};
     R4TcpServiceCall tcp_call = r4_network_tcp_service_call(&socket->network, R4OS_NET_SERVICE_OP_TCP_WRITE_RESULT, request, 4u + len, &response, sizeof(response), timeout); R4ServiceCallResult call = tcp_call.call; R4NetResult transport = r4_tcp_from_call(tcp_call); if (transport.kind != R4_NET_RESULT_OK) return transport; if (call.bytes < sizeof(response) || call.bytes > sizeof(response) || response.magic != R4OS_NET_SERVICE_TCP_RESULT_MAGIC || response.version != R4OS_NET_SERVICE_TCP_RESULT_VERSION) return r4_tcp_reply_unknown();
-    if (response.bytes > len) return r4_tcp_reply_unknown(); R4NetResult result = r4_net_classify_tcp(&response, response.bytes); if (result.kind == R4_NET_RESULT_CLOSED || result.kind == R4_NET_RESULT_RESET || result.kind == R4_NET_RESULT_PEER_CLOSED) socket->raw = 0u; return result;
+    if (response.bytes > len) return r4_tcp_reply_unknown(); R4NetResult result = r4_net_classify_tcp(&response, response.bytes);  return result;
 }
 
 static inline R4NetResult r4_tcp_socket_read(R4TcpSocket *socket, uint8_t *out, uint32_t capacity, R4Timeout timeout) {
@@ -228,19 +238,53 @@ static inline R4NetResult r4_tcp_socket_read(R4TcpSocket *socket, uint8_t *out, 
     uint8_t request[6]; r4_net_write_u32(request, socket->raw); r4_net_write_u16(&request[4], (uint16_t)capacity); uint8_t response[sizeof(R4NetServiceTcpResult) + R4OS_NET_SERVICE_TCP_READ_MAX];
     R4TcpServiceCall tcp_call = r4_network_tcp_service_call(&socket->network, R4OS_NET_SERVICE_OP_TCP_READ_RESULT, request, sizeof(request), response, sizeof(response), timeout); R4ServiceCallResult call = tcp_call.call; R4NetResult transport = r4_tcp_from_call(tcp_call); if (transport.kind != R4_NET_RESULT_OK) return transport;
     if (call.bytes < sizeof(R4NetServiceTcpResult)) return r4_tcp_reply_unknown(); R4NetServiceTcpResult parsed; __builtin_memcpy(&parsed, response, sizeof(parsed)); if (parsed.magic != R4OS_NET_SERVICE_TCP_RESULT_MAGIC || parsed.version != R4OS_NET_SERVICE_TCP_RESULT_VERSION) return r4_tcp_reply_unknown();
-    if (parsed.bytes > capacity || sizeof(parsed) + parsed.bytes > call.bytes) return r4_tcp_reply_unknown(); R4NetResult result = r4_net_classify_tcp(&parsed, parsed.bytes); for (uint32_t i = 0u; i < parsed.bytes; ++i) out[i] = response[sizeof(parsed) + i]; if (result.kind == R4_NET_RESULT_CLOSED || result.kind == R4_NET_RESULT_RESET || result.kind == R4_NET_RESULT_PEER_CLOSED) socket->raw = 0u; return result;
+    if (parsed.bytes > capacity || sizeof(parsed) + parsed.bytes > call.bytes) return r4_tcp_reply_unknown(); R4NetResult result = r4_net_classify_tcp(&parsed, parsed.bytes); for (uint32_t i = 0u; i < parsed.bytes; ++i) out[i] = response[sizeof(parsed) + i];  return result;
 }
 
-static inline R4NetResult r4_tcp_socket_poll(R4TcpSocket *socket, R4Timeout timeout) {
-    if (!r4_tcp_socket_valid(socket)) return r4_net_result(R4_NET_RESULT_FAILED, R4OS_ERR_CLOSED, 0u);
+static inline R4TcpPollResult r4_tcp_socket_readiness(R4TcpSocket *socket, R4Timeout timeout) {
+    R4TcpPollResult out = {0};
+    out.result = r4_net_result(R4_NET_RESULT_FAILED, R4OS_ERR_CLOSED, 0u);
+    if (!r4_tcp_socket_valid(socket)) return out;
     uint8_t request[4]; r4_net_write_u32(request, socket->raw);
     R4NetServiceTcpResult response = {0};
-    R4TcpServiceCall tcp_call = r4_network_tcp_service_call(&socket->network, R4OS_NET_SERVICE_OP_TCP_POLL_RESULT, request, sizeof(request), &response, sizeof(response), timeout); R4ServiceCallResult call = tcp_call.call;
-    R4NetResult transport = r4_tcp_from_call(tcp_call); if (transport.kind != R4_NET_RESULT_OK) return transport;
-    if (call.bytes != sizeof(response) || response.magic != R4OS_NET_SERVICE_TCP_RESULT_MAGIC || response.version != R4OS_NET_SERVICE_TCP_RESULT_VERSION) return r4_tcp_reply_unknown();
-    R4NetResult result = r4_net_classify_tcp(&response, response.pending_rx);
-    if (result.kind == R4_NET_RESULT_CLOSED || result.kind == R4_NET_RESULT_RESET || result.kind == R4_NET_RESULT_PEER_CLOSED) socket->raw = 0u;
-    return result;
+    R4TcpServiceCall tcp_call = r4_network_tcp_service_call(&socket->network, R4OS_NET_SERVICE_OP_TCP_POLL_RESULT, request, sizeof(request), &response, sizeof(response), timeout);
+    out.result = r4_tcp_from_call(tcp_call);
+    if (out.result.kind != R4_NET_RESULT_OK) return out;
+    if (tcp_call.call.bytes != sizeof(response) || response.magic != R4OS_NET_SERVICE_TCP_RESULT_MAGIC || response.version != R4OS_NET_SERVICE_TCP_RESULT_VERSION) {
+        out.result = r4_tcp_reply_unknown(); return out;
+    }
+    out.result = r4_net_classify_tcp(&response, 0u);
+    uint32_t packed = (response.flags & R4OS_NET_SERVICE_STATUS_MASK) >> R4OS_NET_SERVICE_STATUS_SHIFT;
+    uint32_t status = response.service_status != R4OS_NET_SERVICE_STATUS_IDLE ? response.service_status : packed;
+    if (packed == R4OS_NET_SERVICE_STATUS_WOULD_BLOCK) status = packed;
+    out.available = 1u;
+    out.readiness.readable = response.pending_rx != 0u;
+    out.readiness.writable = response.tx_window != 0u;
+    out.readiness.pending_rx = response.pending_rx;
+    out.readiness.rx_window = response.rx_window;
+    out.readiness.tx_window = response.tx_window;
+    out.readiness.lifecycle_cause = response.lifecycle_cause;
+    out.readiness.service_status = status;
+    out.readiness.would_block = status == R4OS_NET_SERVICE_STATUS_WOULD_BLOCK || response.lifecycle_cause == R4OS_NET_SERVICE_SOCKET_LIFECYCLE_WOULD_BLOCK;
+    out.readiness.reset = response.lifecycle_cause == R4OS_NET_SERVICE_SOCKET_LIFECYCLE_RESET;
+    out.readiness.peer_closed = response.lifecycle_cause == R4OS_NET_SERVICE_SOCKET_LIFECYCLE_PEER_GONE || response.lifecycle_cause == R4OS_NET_SERVICE_SOCKET_LIFECYCLE_CLOSED;
+    switch (response.lifecycle_cause) {
+        case R4OS_NET_SERVICE_SOCKET_LIFECYCLE_CLOSED:
+        case R4OS_NET_SERVICE_SOCKET_LIFECYCLE_RESET:
+        case R4OS_NET_SERVICE_SOCKET_LIFECYCLE_PEER_GONE:
+        case R4OS_NET_SERVICE_SOCKET_LIFECYCLE_LOCAL_ABORT:
+        case R4OS_NET_SERVICE_SOCKET_LIFECYCLE_LOCAL_CLOSE:
+        case R4OS_NET_SERVICE_SOCKET_LIFECYCLE_BAD_HANDLE:
+        case R4OS_NET_SERVICE_SOCKET_LIFECYCLE_OWNER_MISMATCH:
+        case R4OS_NET_SERVICE_SOCKET_LIFECYCLE_DROPPED: out.readiness.terminal = 1u; break;
+        default: break;
+    }
+    return out;
+}
+
+/* Compatibility state-only view: pending_rx is not transferred progress. */
+static inline R4NetResult r4_tcp_socket_poll(R4TcpSocket *socket, R4Timeout timeout) {
+    return r4_tcp_socket_readiness(socket, timeout).result;
 }
 
 static inline R4NetResult r4_tcp_socket_close(R4TcpSocket *socket, R4Timeout timeout) {

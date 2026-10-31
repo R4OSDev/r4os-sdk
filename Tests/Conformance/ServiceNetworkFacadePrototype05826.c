@@ -180,7 +180,7 @@ static int service_network_checks(void) {
     if (!r4_network_available(&network) || r4_resolver_resolve_a(&resolver, (const uint8_t *)"r4os.local", 10u, 0, forever_timeout(), &address).kind != R4_NET_RESULT_OK || address.octets[3] != 15u) return 8;
     R4SocketAddress remote = {r4_ipv4(10u, 0u, 2u, 2u), 1234u, 0u}; R4TcpSocket socket;
     if (r4_network_connect_tcp(&network, remote, forever_timeout(), &socket).kind != R4_NET_RESULT_OK || r4_tcp_socket_write(&socket, (const uint8_t *)"GET", 3u, forever_timeout()).bytes != 3u) return 9;
-    if(r4_tcp_socket_poll(&socket,forever_timeout()).bytes!=4)return 17;
+    R4TcpPollResult ready=r4_tcp_socket_readiness(&socket,forever_timeout()); if(!ready.available||ready.readiness.pending_rx!=4||!ready.readiness.readable||ready.result.bytes!=0)return 17;
     uint8_t buffer[8] = {0}; if (r4_tcp_socket_read(&socket, buffer, sizeof(buffer), forever_timeout()).bytes != 2u || memcmp(buffer, "OK", 2u) != 0) return 10;
     reply_mode = MODE_WOULD_BLOCK; if (r4_tcp_socket_read(&socket, buffer, sizeof(buffer), poll_timeout()).kind != R4_NET_RESULT_WOULD_BLOCK) return 11;
     reply_mode = MODE_PEER_CLOSE; if (r4_tcp_socket_read(&socket, buffer, sizeof(buffer), forever_timeout()).kind != R4_NET_RESULT_PEER_CLOSED) return 12;

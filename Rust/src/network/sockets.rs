@@ -86,6 +86,13 @@ impl SocketOutcome {
         (self.state != SocketState::OutcomeUnknown).then_some(self.bytes)
     }
 }
+/// One validated readiness snapshot, independent of transferred byte progress.
+/// Peer termination leaves the owned local handle available for drain/close.
+#[derive(Clone, Copy)]
+pub struct TcpPoll {
+    pub outcome: SocketOutcome,
+    pub readiness: Option<super::TcpReadiness>,
+}
 impl Network<'_> {
     pub fn available(&self) -> bool {
         unsafe { c::r4_network_available(&self.raw()) != 0 }
@@ -222,6 +229,15 @@ impl TcpSocket<'_> {
             )
         })
     }
+    /// The snapshot can be readable and peer-closed simultaneously.
+    pub fn readiness(&mut self, timeout: Timeout) -> TcpPoll {
+        let raw = unsafe { c::r4_tcp_socket_readiness(&mut self.raw, timeout.raw()) };
+        TcpPoll {
+            outcome: SocketOutcome::from_raw(raw.result),
+            readiness: (raw.available != 0).then_some(raw.readiness),
+        }
+    }
+    /// State-only compatibility poll; pending_rx is not transferred bytes.
     pub fn poll(&mut self, timeout: Timeout) -> SocketOutcome {
         SocketOutcome::from_raw(unsafe { c::r4_tcp_socket_poll(&mut self.raw, timeout.raw()) })
     }

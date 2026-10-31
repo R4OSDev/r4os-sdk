@@ -1475,6 +1475,75 @@ pub struct R4EndpointReceiveResult {
     pub r#header: R4ServiceMessageHeader,
 }
 const _: () = { assert!(core::mem::size_of::<R4EndpointReceiveResult>() == 40); assert!(core::mem::align_of::<R4EndpointReceiveResult>() == 4); assert!(core::mem::offset_of!(R4EndpointReceiveResult, r#kind) == 0); assert!(core::mem::offset_of!(R4EndpointReceiveResult, r#raw_code) == 4); assert!(core::mem::offset_of!(R4EndpointReceiveResult, r#bytes) == 8); assert!(core::mem::offset_of!(R4EndpointReceiveResult, r#header) == 12); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkNetRequest {
+    pub r#data: [u8; 8320],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkNetRequest>() == 8320); assert!(core::mem::align_of::<R4SdkNetRequest>() == 8); assert!(core::mem::offset_of!(R4SdkNetRequest, r#data) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkNetSlice {
+    pub r#ptr: *const u8,
+    pub r#length: u64,
+    pub r#valid: u32,
+    pub r#reserved: u32,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkNetSlice>() == 24); assert!(core::mem::align_of::<R4SdkNetSlice>() == 8); assert!(core::mem::offset_of!(R4SdkNetSlice, r#ptr) == 0); assert!(core::mem::offset_of!(R4SdkNetSlice, r#length) == 8); assert!(core::mem::offset_of!(R4SdkNetSlice, r#valid) == 16); assert!(core::mem::offset_of!(R4SdkNetSlice, r#reserved) == 20); };
+#[repr(C, align(4))]
+#[derive(Clone, Copy)]
+pub struct R4SdkResolverOptions {
+    pub r#has_server: u32,
+    pub r#server: [u8; 4],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkResolverOptions>() == 8); assert!(core::mem::align_of::<R4SdkResolverOptions>() == 4); assert!(core::mem::offset_of!(R4SdkResolverOptions, r#has_server) == 0); assert!(core::mem::offset_of!(R4SdkResolverOptions, r#server) == 4); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkResolverResult {
+    pub r#result: i32,
+    pub r#answer: [u8; 4],
+    pub r#server: [u8; 4],
+    pub r#flags: u32,
+    pub r#service_status: u32,
+    pub r#cache_hit: u8,
+    pub r#cache_valid: u8,
+    pub r#explicit_server: u8,
+    pub r#cache_answer: [u8; 4],
+    pub r#cache_age_seconds: u32,
+    pub r#cache_ttl_seconds: u32,
+    pub r#cache_remaining_seconds: u32,
+    pub r#queries_tx: u64,
+    pub r#resolve_requests: u64,
+    pub r#responses_rx: u64,
+    pub r#a_records: u64,
+    pub r#timeouts: u64,
+    pub r#nxdomain: u64,
+    pub r#tx_errors: u64,
+    pub r#malformed: u64,
+    pub r#cache_hits: u64,
+    pub r#cache_stores: u64,
+    pub r#last_id: u16,
+    pub r#name_len: u16,
+    pub r#name: [u8; 96],
+    pub r#last_error: [u8; 32],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkResolverResult>() == 256); assert!(core::mem::align_of::<R4SdkResolverResult>() == 8); assert!(core::mem::offset_of!(R4SdkResolverResult, r#result) == 0); assert!(core::mem::offset_of!(R4SdkResolverResult, r#answer) == 4); assert!(core::mem::offset_of!(R4SdkResolverResult, r#server) == 8); assert!(core::mem::offset_of!(R4SdkResolverResult, r#flags) == 12); assert!(core::mem::offset_of!(R4SdkResolverResult, r#service_status) == 16); assert!(core::mem::offset_of!(R4SdkResolverResult, r#cache_hit) == 20); assert!(core::mem::offset_of!(R4SdkResolverResult, r#cache_valid) == 21); assert!(core::mem::offset_of!(R4SdkResolverResult, r#explicit_server) == 22); assert!(core::mem::offset_of!(R4SdkResolverResult, r#cache_answer) == 23); assert!(core::mem::offset_of!(R4SdkResolverResult, r#cache_age_seconds) == 28); assert!(core::mem::offset_of!(R4SdkResolverResult, r#cache_ttl_seconds) == 32); assert!(core::mem::offset_of!(R4SdkResolverResult, r#cache_remaining_seconds) == 36); assert!(core::mem::offset_of!(R4SdkResolverResult, r#queries_tx) == 40); assert!(core::mem::offset_of!(R4SdkResolverResult, r#resolve_requests) == 48); assert!(core::mem::offset_of!(R4SdkResolverResult, r#responses_rx) == 56); assert!(core::mem::offset_of!(R4SdkResolverResult, r#a_records) == 64); assert!(core::mem::offset_of!(R4SdkResolverResult, r#timeouts) == 72); assert!(core::mem::offset_of!(R4SdkResolverResult, r#nxdomain) == 80); assert!(core::mem::offset_of!(R4SdkResolverResult, r#tx_errors) == 88); assert!(core::mem::offset_of!(R4SdkResolverResult, r#malformed) == 96); assert!(core::mem::offset_of!(R4SdkResolverResult, r#cache_hits) == 104); assert!(core::mem::offset_of!(R4SdkResolverResult, r#cache_stores) == 112); assert!(core::mem::offset_of!(R4SdkResolverResult, r#last_id) == 120); assert!(core::mem::offset_of!(R4SdkResolverResult, r#name_len) == 122); assert!(core::mem::offset_of!(R4SdkResolverResult, r#name) == 124); assert!(core::mem::offset_of!(R4SdkResolverResult, r#last_error) == 220); };
+#[repr(C, align(4))]
+#[derive(Clone, Copy)]
+pub struct R4SdkTcpReadiness {
+    pub r#readable: u8,
+    pub r#writable: u8,
+    pub r#would_block: u8,
+    pub r#terminal: u8,
+    pub r#reset: u8,
+    pub r#peer_closed: u8,
+    pub r#pending_rx: u32,
+    pub r#rx_window: u32,
+    pub r#tx_window: u32,
+    pub r#lifecycle_cause: u32,
+    pub r#service_status: u32,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkTcpReadiness>() == 28); assert!(core::mem::align_of::<R4SdkTcpReadiness>() == 4); assert!(core::mem::offset_of!(R4SdkTcpReadiness, r#readable) == 0); assert!(core::mem::offset_of!(R4SdkTcpReadiness, r#writable) == 1); assert!(core::mem::offset_of!(R4SdkTcpReadiness, r#would_block) == 2); assert!(core::mem::offset_of!(R4SdkTcpReadiness, r#terminal) == 3); assert!(core::mem::offset_of!(R4SdkTcpReadiness, r#reset) == 4); assert!(core::mem::offset_of!(R4SdkTcpReadiness, r#peer_closed) == 5); assert!(core::mem::offset_of!(R4SdkTcpReadiness, r#pending_rx) == 8); assert!(core::mem::offset_of!(R4SdkTcpReadiness, r#rx_window) == 12); assert!(core::mem::offset_of!(R4SdkTcpReadiness, r#tx_window) == 16); assert!(core::mem::offset_of!(R4SdkTcpReadiness, r#lifecycle_cause) == 20); assert!(core::mem::offset_of!(R4SdkTcpReadiness, r#service_status) == 24); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
 pub struct R4Ipv4Address {
@@ -1546,6 +1615,14 @@ pub struct R4NetResult {
     pub r#bytes: u32,
 }
 const _: () = { assert!(core::mem::size_of::<R4NetResult>() == 12); assert!(core::mem::align_of::<R4NetResult>() == 4); assert!(core::mem::offset_of!(R4NetResult, r#kind) == 0); assert!(core::mem::offset_of!(R4NetResult, r#raw_code) == 4); assert!(core::mem::offset_of!(R4NetResult, r#bytes) == 8); };
+#[repr(C, align(4))]
+#[derive(Clone, Copy)]
+pub struct R4TcpPollResult {
+    pub r#result: R4NetResult,
+    pub r#readiness: R4SdkTcpReadiness,
+    pub r#available: u32,
+}
+const _: () = { assert!(core::mem::size_of::<R4TcpPollResult>() == 44); assert!(core::mem::align_of::<R4TcpPollResult>() == 4); assert!(core::mem::offset_of!(R4TcpPollResult, r#result) == 0); assert!(core::mem::offset_of!(R4TcpPollResult, r#readiness) == 12); assert!(core::mem::offset_of!(R4TcpPollResult, r#available) == 40); };
 #[repr(C, align(4))]
 #[derive(Clone, Copy)]
 pub struct R4TcpServiceCall {
@@ -1773,75 +1850,6 @@ pub struct R4SdkDeadlineView {
     pub r#has_deadline: u32,
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkDeadlineView>() == 24); assert!(core::mem::align_of::<R4SdkDeadlineView>() == 8); assert!(core::mem::offset_of!(R4SdkDeadlineView, r#length) == 0); assert!(core::mem::offset_of!(R4SdkDeadlineView, r#deadline_tick) == 8); assert!(core::mem::offset_of!(R4SdkDeadlineView, r#has_deadline) == 16); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkNetRequest {
-    pub r#data: [u8; 8320],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkNetRequest>() == 8320); assert!(core::mem::align_of::<R4SdkNetRequest>() == 8); assert!(core::mem::offset_of!(R4SdkNetRequest, r#data) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkNetSlice {
-    pub r#ptr: *const u8,
-    pub r#length: u64,
-    pub r#valid: u32,
-    pub r#reserved: u32,
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkNetSlice>() == 24); assert!(core::mem::align_of::<R4SdkNetSlice>() == 8); assert!(core::mem::offset_of!(R4SdkNetSlice, r#ptr) == 0); assert!(core::mem::offset_of!(R4SdkNetSlice, r#length) == 8); assert!(core::mem::offset_of!(R4SdkNetSlice, r#valid) == 16); assert!(core::mem::offset_of!(R4SdkNetSlice, r#reserved) == 20); };
-#[repr(C, align(4))]
-#[derive(Clone, Copy)]
-pub struct R4SdkResolverOptions {
-    pub r#has_server: u32,
-    pub r#server: [u8; 4],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkResolverOptions>() == 8); assert!(core::mem::align_of::<R4SdkResolverOptions>() == 4); assert!(core::mem::offset_of!(R4SdkResolverOptions, r#has_server) == 0); assert!(core::mem::offset_of!(R4SdkResolverOptions, r#server) == 4); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkResolverResult {
-    pub r#result: i32,
-    pub r#answer: [u8; 4],
-    pub r#server: [u8; 4],
-    pub r#flags: u32,
-    pub r#service_status: u32,
-    pub r#cache_hit: u8,
-    pub r#cache_valid: u8,
-    pub r#explicit_server: u8,
-    pub r#cache_answer: [u8; 4],
-    pub r#cache_age_seconds: u32,
-    pub r#cache_ttl_seconds: u32,
-    pub r#cache_remaining_seconds: u32,
-    pub r#queries_tx: u64,
-    pub r#resolve_requests: u64,
-    pub r#responses_rx: u64,
-    pub r#a_records: u64,
-    pub r#timeouts: u64,
-    pub r#nxdomain: u64,
-    pub r#tx_errors: u64,
-    pub r#malformed: u64,
-    pub r#cache_hits: u64,
-    pub r#cache_stores: u64,
-    pub r#last_id: u16,
-    pub r#name_len: u16,
-    pub r#name: [u8; 96],
-    pub r#last_error: [u8; 32],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkResolverResult>() == 256); assert!(core::mem::align_of::<R4SdkResolverResult>() == 8); assert!(core::mem::offset_of!(R4SdkResolverResult, r#result) == 0); assert!(core::mem::offset_of!(R4SdkResolverResult, r#answer) == 4); assert!(core::mem::offset_of!(R4SdkResolverResult, r#server) == 8); assert!(core::mem::offset_of!(R4SdkResolverResult, r#flags) == 12); assert!(core::mem::offset_of!(R4SdkResolverResult, r#service_status) == 16); assert!(core::mem::offset_of!(R4SdkResolverResult, r#cache_hit) == 20); assert!(core::mem::offset_of!(R4SdkResolverResult, r#cache_valid) == 21); assert!(core::mem::offset_of!(R4SdkResolverResult, r#explicit_server) == 22); assert!(core::mem::offset_of!(R4SdkResolverResult, r#cache_answer) == 23); assert!(core::mem::offset_of!(R4SdkResolverResult, r#cache_age_seconds) == 28); assert!(core::mem::offset_of!(R4SdkResolverResult, r#cache_ttl_seconds) == 32); assert!(core::mem::offset_of!(R4SdkResolverResult, r#cache_remaining_seconds) == 36); assert!(core::mem::offset_of!(R4SdkResolverResult, r#queries_tx) == 40); assert!(core::mem::offset_of!(R4SdkResolverResult, r#resolve_requests) == 48); assert!(core::mem::offset_of!(R4SdkResolverResult, r#responses_rx) == 56); assert!(core::mem::offset_of!(R4SdkResolverResult, r#a_records) == 64); assert!(core::mem::offset_of!(R4SdkResolverResult, r#timeouts) == 72); assert!(core::mem::offset_of!(R4SdkResolverResult, r#nxdomain) == 80); assert!(core::mem::offset_of!(R4SdkResolverResult, r#tx_errors) == 88); assert!(core::mem::offset_of!(R4SdkResolverResult, r#malformed) == 96); assert!(core::mem::offset_of!(R4SdkResolverResult, r#cache_hits) == 104); assert!(core::mem::offset_of!(R4SdkResolverResult, r#cache_stores) == 112); assert!(core::mem::offset_of!(R4SdkResolverResult, r#last_id) == 120); assert!(core::mem::offset_of!(R4SdkResolverResult, r#name_len) == 122); assert!(core::mem::offset_of!(R4SdkResolverResult, r#name) == 124); assert!(core::mem::offset_of!(R4SdkResolverResult, r#last_error) == 220); };
-#[repr(C, align(4))]
-#[derive(Clone, Copy)]
-pub struct R4SdkTcpReadiness {
-    pub r#readable: u8,
-    pub r#writable: u8,
-    pub r#would_block: u8,
-    pub r#terminal: u8,
-    pub r#reset: u8,
-    pub r#peer_closed: u8,
-    pub r#pending_rx: u32,
-    pub r#rx_window: u32,
-    pub r#tx_window: u32,
-    pub r#lifecycle_cause: u32,
-    pub r#service_status: u32,
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkTcpReadiness>() == 28); assert!(core::mem::align_of::<R4SdkTcpReadiness>() == 4); assert!(core::mem::offset_of!(R4SdkTcpReadiness, r#readable) == 0); assert!(core::mem::offset_of!(R4SdkTcpReadiness, r#writable) == 1); assert!(core::mem::offset_of!(R4SdkTcpReadiness, r#would_block) == 2); assert!(core::mem::offset_of!(R4SdkTcpReadiness, r#terminal) == 3); assert!(core::mem::offset_of!(R4SdkTcpReadiness, r#reset) == 4); assert!(core::mem::offset_of!(R4SdkTcpReadiness, r#peer_closed) == 5); assert!(core::mem::offset_of!(R4SdkTcpReadiness, r#pending_rx) == 8); assert!(core::mem::offset_of!(R4SdkTcpReadiness, r#rx_window) == 12); assert!(core::mem::offset_of!(R4SdkTcpReadiness, r#tx_window) == 16); assert!(core::mem::offset_of!(R4SdkTcpReadiness, r#lifecycle_cause) == 20); assert!(core::mem::offset_of!(R4SdkTcpReadiness, r#service_status) == 24); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiSlot {
@@ -19958,109 +19966,6 @@ unsafe extern "C" {
     pub fn r4_service_endpoint_recv(p0: *mut R4ServiceEndpoint, p1: *mut core::ffi::c_void, p2: u32) -> R4EndpointReceiveResult;
     pub fn r4_service_endpoint_reply(p0: *mut R4ServiceEndpoint, p1: u32, p2: i32, p3: *const core::ffi::c_void, p4: u32) -> i32;
     pub fn r4_service_endpoint_unregister(p0: *mut R4ServiceEndpoint) -> i32;
-    pub fn r4_ipv4(p0: u8, p1: u8, p2: u8, p3: u8) -> R4Ipv4Address;
-    pub fn r4_ipv4_is_unspecified(p0: R4Ipv4Address) -> i32;
-    pub fn r4_network_resolver(p0: R4Network) -> R4Resolver;
-    pub fn r4_network_available(p0: *const R4Network) -> i32;
-    pub fn r4_tcp_socket_valid(p0: *const R4TcpSocket) -> i32;
-    pub fn r4_tcp_listener_valid(p0: *const R4TcpListener) -> i32;
-    pub fn r4_udp_socket_valid(p0: *const R4UdpSocket) -> i32;
-    pub fn r4_net_result(p0: u32, p1: i32, p2: u32) -> R4NetResult;
-    pub fn r4_net_write_u16(p0: *mut u8, p1: u16) -> ();
-    pub fn r4_net_write_u32(p0: *mut u8, p1: u32) -> ();
-    pub fn r4_network_service_call(p0: *mut R4Network, p1: *const u8, p2: u16, p3: *const core::ffi::c_void, p4: u32, p5: *mut core::ffi::c_void, p6: u32, p7: R4Timeout) -> R4ServiceCallResult;
-    pub fn r4_net_from_call(p0: R4ServiceCallResult) -> R4NetResult;
-    pub fn r4_net_progress_known(p0: R4NetResult) -> i32;
-    pub fn r4_tcp_reply_unknown() -> R4NetResult;
-    pub fn r4_network_tcp_service_call(p0: *mut R4Network, p1: u16, p2: *const core::ffi::c_void, p3: u32, p4: *mut core::ffi::c_void, p5: u32, p6: R4Timeout) -> R4TcpServiceCall;
-    pub fn r4_tcp_from_call(p0: R4TcpServiceCall) -> R4NetResult;
-    pub fn r4_net_classify_socket(p0: u32, p1: u32, p2: i32, p3: u32) -> R4NetResult;
-    pub fn r4_net_classify_tcp(p0: *const R4NetServiceTcpResult, p1: u32) -> R4NetResult;
-    pub fn r4_net_classify_udp(p0: *const R4NetServiceUdpResult, p1: u32) -> R4NetResult;
-    pub fn r4_resolver_resolve_a(p0: *mut R4Resolver, p1: *const u8, p2: u32, p3: *const R4Ipv4Address, p4: R4Timeout, p5: *mut R4Ipv4Address) -> R4NetResult;
-    pub fn r4_network_connect_tcp(p0: *mut R4Network, p1: R4SocketAddress, p2: R4Timeout, p3: *mut R4TcpSocket) -> R4NetResult;
-    pub fn r4_network_listen_tcp(p0: *mut R4Network, p1: u16, p2: R4Timeout, p3: *mut R4TcpListener) -> R4NetResult;
-    pub fn r4_tcp_listener_accept(p0: *mut R4TcpListener, p1: R4Timeout, p2: *mut R4TcpSocket) -> R4NetResult;
-    pub fn r4_tcp_socket_write(p0: *mut R4TcpSocket, p1: *const u8, p2: u32, p3: R4Timeout) -> R4NetResult;
-    pub fn r4_tcp_socket_read(p0: *mut R4TcpSocket, p1: *mut u8, p2: u32, p3: R4Timeout) -> R4NetResult;
-    pub fn r4_tcp_socket_poll(p0: *mut R4TcpSocket, p1: R4Timeout) -> R4NetResult;
-    pub fn r4_tcp_socket_close(p0: *mut R4TcpSocket, p1: R4Timeout) -> R4NetResult;
-    pub fn r4_tcp_listener_close(p0: *mut R4TcpListener, p1: R4Timeout) -> R4NetResult;
-    pub fn r4_network_bind_udp(p0: *mut R4Network, p1: u16, p2: R4Timeout, p3: *mut R4UdpSocket) -> R4NetResult;
-    pub fn r4_udp_socket_send_to(p0: *mut R4UdpSocket, p1: R4SocketAddress, p2: *const u8, p3: u32, p4: R4Timeout) -> R4NetResult;
-    pub fn r4_udp_socket_receive_from(p0: *mut R4UdpSocket, p1: *mut u8, p2: u32, p3: R4Timeout, p4: *mut R4Datagram) -> R4NetResult;
-    pub fn r4_udp_socket_close(p0: *mut R4UdpSocket, p1: R4Timeout) -> R4NetResult;
-    pub fn r4_tray_owner_equal(p0: R4ProgramProcessHandle, p1: R4ProgramProcessHandle) -> i32;
-    pub fn r4_tray_owner_valid(p0: R4ProgramProcessHandle) -> i32;
-    pub fn r4_app_tray(p0: *mut R4App, p1: *mut R4Tray) -> i32;
-    pub fn r4_tray_request(p0: R4ProgramProcessHandle) -> R4TrayServiceRequest;
-    pub fn r4_tray_response_valid(p0: *const R4TrayServiceResponse, p1: R4ProgramProcessHandle) -> i32;
-    pub fn r4_tray_call(p0: *mut R4Tray, p1: u16, p2: *const R4TrayServiceRequest, p3: R4Timeout) -> R4TrayCallResult;
-    pub fn r4_tray_status(p0: *mut R4Tray, p1: u64, p2: R4Timeout) -> R4TrayCallResult;
-    pub fn r4_tray_upsert(p0: *mut R4Tray, p1: *const R4TrayItem, p2: R4Timeout) -> R4TrayCallResult;
-    pub fn r4_tray_remove(p0: *mut R4Tray, p1: u64, p2: R4Timeout) -> R4TrayCallResult;
-    pub fn r4_tray_wait_event(p0: *mut R4Tray, p1: u64, p2: R4Timeout) -> R4TrayCallResult;
-    pub fn r4_storage_available(p0: *const R4Storage) -> i32;
-    pub fn r4_storage_inventory(p0: *mut R4Storage, p1: *mut R4StorageInventory) -> i32;
-    pub fn r4_storage_device(p0: *mut R4Storage, p1: u64, p2: u32, p3: *mut R4StorageDeviceInfo) -> i32;
-    pub fn r4_storage_partition(p0: *mut R4Storage, p1: u64, p2: *const R4StorageDeviceRef, p3: u32, p4: *mut R4StoragePartitionInfo) -> i32;
-    pub fn r4_storage_volume(p0: *mut R4Storage, p1: u64, p2: u32, p3: *mut R4StorageVolumeInfo) -> i32;
-    pub fn r4_storage_whole_device(p0: *const R4StorageDeviceInfo) -> R4StorageTarget;
-    pub fn r4_storage_claim_begin(p0: *mut R4Storage, p1: *const R4StorageTarget, p2: *mut u64) -> i32;
-    pub fn r4_storage_claim_end(p0: *mut R4Storage, p1: *mut u64, p2: i32) -> i32;
-    pub fn r4_storage_read(p0: *mut R4Storage, p1: *const R4StorageTarget, p2: u64, p3: *mut u8, p4: u32) -> i32;
-    pub fn r4_storage_claim_read(p0: *mut R4Storage, p1: u64, p2: u64, p3: *mut u8, p4: u32) -> i32;
-    pub fn r4_storage_claim_write(p0: *mut R4Storage, p1: u64, p2: u64, p3: *const u8, p4: u32) -> i32;
-    pub fn r4_storage_claim_flush(p0: *mut R4Storage, p1: u64) -> i32;
-    pub fn r4_storage_rescan(p0: *mut R4Storage, p1: *const R4StorageDeviceRef) -> i32;
-    pub fn r4_storage_mount(p0: *mut R4Storage, p1: *const R4StorageTarget, p2: u8, p3: *mut R4StorageVolumeRef) -> i32;
-    pub fn r4_storage_unmount(p0: *mut R4Storage, p1: *const R4StorageVolumeRef) -> i32;
-    pub fn r4_storage_use_begin(p0: *mut R4Storage, p1: *const u8, p2: *mut u64) -> i32;
-    pub fn r4_storage_use_end(p0: *mut R4Storage, p1: *mut u64) -> i32;
-    pub fn r4_storage_transfer_use_begin(p0: *mut R4Storage, p1: *const u8, p2: *mut u64) -> i32;
-    pub fn R4SdkDocumentSave(p0: *const R4Sys, p1: *mut u32, p2: *const u8, p3: u64, p4: *const u8, p5: u64, p6: i32) -> i32;
-    pub fn R4SdkRecentRead(p0: *const R4Sys, p1: *mut R4RecentEntry, p2: u64) -> i32;
-    pub fn R4SdkRecentAdd(p0: *const R4Sys, p1: *const u8, p2: u64, p3: *const u8, p4: u64) -> i32;
-    pub fn R4SdkTextValid(p0: *const u8, p1: u64) -> i32;
-    pub fn R4SdkTextAssign(p0: *mut u8, p1: u64, p2: *const u8, p3: u64) -> i32;
-    pub fn R4SdkTextLabel(p0: *mut u8, p1: u64, p2: *const u8, p3: u64) -> i32;
-    pub fn R4SdkTextPrefix(p0: *const u8, p1: u64, p2: u64, p3: i32, p4: *mut u64) -> i32;
-    pub fn R4SdkTextNext(p0: *const u8, p1: u64, p2: u64, p3: *mut u64) -> i32;
-    pub fn R4SdkTextPrevious(p0: *const u8, p1: u64, p2: u64, p3: *mut u64) -> i32;
-    pub fn R4SdkRegistrySelfTest(p0: *const R4Sys, p1: i32, p2: *const R4RegistryTestPaths, p3: i32, p4: *mut u8, p5: u64, p6: *mut u8, p7: u64) -> i32;
-    pub fn R4SdkHiveParse(p0: *const u8, p1: u64, p2: *mut R4HiveView) -> i32;
-    pub fn R4SdkHiveKey(p0: *const R4HiveView, p1: u32, p2: *mut R4HiveKey) -> i32;
-    pub fn R4SdkHiveValue(p0: *const R4HiveView, p1: u32, p2: *mut R4HiveValue) -> i32;
-    pub fn R4SdkHiveFind(p0: *const R4HiveView, p1: i32, p2: u32, p3: *const u8, p4: u64, p5: *mut u32) -> i32;
-    pub fn R4SdkHiveBuild(p0: u16, p1: u64, p2: *const R4HiveBuildValue, p3: u64, p4: *mut u8, p5: u64, p6: *mut u8, p7: u64, p8: *mut u64) -> i32;
-    pub fn R4SdkHiveText(p0: i32, p1: u64, p2: *const u8, p3: u64, p4: *mut u8, p5: u64, p6: *mut u8, p7: u64, p8: *mut u64) -> i32;
-    pub fn r4_dialog_page_init(p0: *mut R4DialogPage, p1: *mut R4DialogRow, p2: u32) -> i32;
-    pub fn r4_dialog_page_add(p0: *mut R4DialogPage, p1: u32, p2: *const R4FilePath, p3: *const u8, p4: u64) -> i32;
-    pub fn r4_dialog_page_load(p0: *mut R4DialogPage, p1: *mut R4DialogRow, p2: u32, p3: R4Files, p4: *const R4FilePath, p5: u32, p6: *const u8, p7: u64) -> i32;
-    pub fn r4_ordered_page_init(p0: *mut R4OrderedPage, p1: *mut core::ffi::c_void, p2: u64, p3: u64) -> i32;
-    pub fn r4_ordered_page_offer(p0: *mut R4OrderedPage, p1: *const core::ffi::c_void, p2: Option<unsafe extern "C" fn(*mut core::ffi::c_void, *const core::ffi::c_void, *const core::ffi::c_void) -> i32>, p3: *mut core::ffi::c_void) -> i32;
-    pub fn r4_snapshot_init(p0: *mut R4DirectorySnapshot, p1: *const R4Heap, p2: u64, p3: u64, p4: u64) -> i32;
-    pub fn r4_snapshot_append(p0: *mut R4DirectorySnapshot, p1: *const core::ffi::c_void) -> i32;
-    pub fn r4_snapshot_swap(p0: *mut R4DirectorySnapshot, p1: u64, p2: u64) -> ();
-    pub fn r4_snapshot_sift(p0: *mut R4DirectorySnapshot, p1: u64, p2: u64, p3: Option<unsafe extern "C" fn(*mut core::ffi::c_void, *const core::ffi::c_void, *const core::ffi::c_void) -> i32>, p4: *mut core::ffi::c_void) -> ();
-    pub fn r4_snapshot_sort(p0: *mut R4DirectorySnapshot, p1: Option<unsafe extern "C" fn(*mut core::ffi::c_void, *const core::ffi::c_void, *const core::ffi::c_void) -> i32>, p2: *mut core::ffi::c_void) -> ();
-    pub fn r4_snapshot_close(p0: *mut R4DirectorySnapshot) -> i32;
-    pub fn R4SdkServiceLoopInit(p0: *const R4XStartContext, p1: u32, p2: u64, p3: u32, p4: *mut R4SdkServiceLoop) -> i32;
-    pub fn R4SdkServiceLoopWait(p0: *const R4XStartContext, p1: *mut R4SdkServiceLoop, p2: u32, p3: u64) -> R4SdkServiceStep;
-    pub fn R4SdkServiceLoopBatch(p0: *const R4XStartContext, p1: *mut R4SdkServiceLoop, p2: u32, p3: *mut R4SdkServiceBatch) -> i32;
-    pub fn R4SdkServiceBatchNext(p0: *const R4XStartContext, p1: *mut R4SdkServiceLoop, p2: *mut R4SdkServiceBatch) -> R4SdkServiceStep;
-    pub fn R4SdkServiceLoopDrain(p0: *const R4XStartContext, p1: *mut R4SdkServiceLoop, p2: u32, p3: Option<unsafe extern "C" fn(*mut core::ffi::c_void) -> i32>, p4: *mut core::ffi::c_void) -> i32;
-    pub fn R4SdkServiceLoopReport(p0: *const R4XStartContext, p1: *const R4SdkServiceLoop, p2: *const u8, p3: u32, p4: *mut u8, p5: u32) -> i32;
-    pub fn R4SdkServiceDetails(p0: *const R4XStartContext, p1: *mut R4ServiceDetail, p2: u32) -> i32;
-    pub fn R4SdkServiceControl(p0: *const R4XStartContext, p1: u32, p2: *const u8, p3: *const u8, p4: *const u8, p5: u32, p6: *const u8, p7: u64, p8: *mut R4ServiceInfo) -> i32;
-    pub fn R4SdkServiceInfo(p0: *const R4XStartContext, p1: u32, p2: *mut R4ServiceInfo) -> i32;
-    pub fn R4SdkServiceDetail(p0: *const R4XStartContext, p1: *const u8, p2: *mut R4ServiceDetail) -> i32;
-    pub fn R4SdkCompletedReply(p0: i32) -> i32;
-    pub fn R4SdkDeadlineAppend(p0: *mut u8, p1: u32, p2: *const u8, p3: u32, p4: u64) -> i32;
-    pub fn R4SdkDeadlineSplit(p0: *const u8, p1: u32) -> R4SdkDeadlineView;
-    pub fn R4SdkDeadlineFromTimeout(p0: R4Timeout, p1: u64, p2: u32, p3: *mut u64) -> i32;
-    pub fn R4SdkDeadlineRemaining(p0: u64, p1: u64, p2: u32) -> R4Timeout;
-    pub fn R4SdkDurationFromTicks(p0: u64, p1: u32, p2: *mut R4Duration) -> i32;
     pub fn R4SdkNet_ipcOpen(p0: *const R4XStartContext, p1: u32) -> i32;
     pub fn R4SdkNet_ipcSend(p0: *const R4XStartContext, p1: u32, p2: *const u8, p3: u32) -> i32;
     pub fn R4SdkNet_ipcRecv(p0: *const R4XStartContext, p1: u32, p2: *mut u8, p3: u32) -> i32;
@@ -20218,6 +20123,110 @@ unsafe extern "C" {
     pub fn R4SdkNet_netServiceSemanticFlags(p0: *const R4XStartContext, p1: u32) -> u32;
     pub fn R4SdkNet_netConfigResultName(p0: *const R4XStartContext, p1: i32) -> R4SdkNetSlice;
     pub fn R4SdkNet_netTxResultName(p0: *const R4XStartContext, p1: i32) -> R4SdkNetSlice;
+    pub fn r4_ipv4(p0: u8, p1: u8, p2: u8, p3: u8) -> R4Ipv4Address;
+    pub fn r4_ipv4_is_unspecified(p0: R4Ipv4Address) -> i32;
+    pub fn r4_network_resolver(p0: R4Network) -> R4Resolver;
+    pub fn r4_network_available(p0: *const R4Network) -> i32;
+    pub fn r4_tcp_socket_valid(p0: *const R4TcpSocket) -> i32;
+    pub fn r4_tcp_listener_valid(p0: *const R4TcpListener) -> i32;
+    pub fn r4_udp_socket_valid(p0: *const R4UdpSocket) -> i32;
+    pub fn r4_net_result(p0: u32, p1: i32, p2: u32) -> R4NetResult;
+    pub fn r4_net_write_u16(p0: *mut u8, p1: u16) -> ();
+    pub fn r4_net_write_u32(p0: *mut u8, p1: u32) -> ();
+    pub fn r4_network_service_call(p0: *mut R4Network, p1: *const u8, p2: u16, p3: *const core::ffi::c_void, p4: u32, p5: *mut core::ffi::c_void, p6: u32, p7: R4Timeout) -> R4ServiceCallResult;
+    pub fn r4_net_from_call(p0: R4ServiceCallResult) -> R4NetResult;
+    pub fn r4_net_progress_known(p0: R4NetResult) -> i32;
+    pub fn r4_tcp_reply_unknown() -> R4NetResult;
+    pub fn r4_network_tcp_service_call(p0: *mut R4Network, p1: u16, p2: *const core::ffi::c_void, p3: u32, p4: *mut core::ffi::c_void, p5: u32, p6: R4Timeout) -> R4TcpServiceCall;
+    pub fn r4_tcp_from_call(p0: R4TcpServiceCall) -> R4NetResult;
+    pub fn r4_net_classify_socket(p0: u32, p1: u32, p2: i32, p3: u32) -> R4NetResult;
+    pub fn r4_net_classify_tcp(p0: *const R4NetServiceTcpResult, p1: u32) -> R4NetResult;
+    pub fn r4_net_classify_udp(p0: *const R4NetServiceUdpResult, p1: u32) -> R4NetResult;
+    pub fn r4_resolver_resolve_a(p0: *mut R4Resolver, p1: *const u8, p2: u32, p3: *const R4Ipv4Address, p4: R4Timeout, p5: *mut R4Ipv4Address) -> R4NetResult;
+    pub fn r4_network_connect_tcp(p0: *mut R4Network, p1: R4SocketAddress, p2: R4Timeout, p3: *mut R4TcpSocket) -> R4NetResult;
+    pub fn r4_network_listen_tcp(p0: *mut R4Network, p1: u16, p2: R4Timeout, p3: *mut R4TcpListener) -> R4NetResult;
+    pub fn r4_tcp_listener_accept(p0: *mut R4TcpListener, p1: R4Timeout, p2: *mut R4TcpSocket) -> R4NetResult;
+    pub fn r4_tcp_socket_write(p0: *mut R4TcpSocket, p1: *const u8, p2: u32, p3: R4Timeout) -> R4NetResult;
+    pub fn r4_tcp_socket_read(p0: *mut R4TcpSocket, p1: *mut u8, p2: u32, p3: R4Timeout) -> R4NetResult;
+    pub fn r4_tcp_socket_readiness(p0: *mut R4TcpSocket, p1: R4Timeout) -> R4TcpPollResult;
+    pub fn r4_tcp_socket_poll(p0: *mut R4TcpSocket, p1: R4Timeout) -> R4NetResult;
+    pub fn r4_tcp_socket_close(p0: *mut R4TcpSocket, p1: R4Timeout) -> R4NetResult;
+    pub fn r4_tcp_listener_close(p0: *mut R4TcpListener, p1: R4Timeout) -> R4NetResult;
+    pub fn r4_network_bind_udp(p0: *mut R4Network, p1: u16, p2: R4Timeout, p3: *mut R4UdpSocket) -> R4NetResult;
+    pub fn r4_udp_socket_send_to(p0: *mut R4UdpSocket, p1: R4SocketAddress, p2: *const u8, p3: u32, p4: R4Timeout) -> R4NetResult;
+    pub fn r4_udp_socket_receive_from(p0: *mut R4UdpSocket, p1: *mut u8, p2: u32, p3: R4Timeout, p4: *mut R4Datagram) -> R4NetResult;
+    pub fn r4_udp_socket_close(p0: *mut R4UdpSocket, p1: R4Timeout) -> R4NetResult;
+    pub fn r4_tray_owner_equal(p0: R4ProgramProcessHandle, p1: R4ProgramProcessHandle) -> i32;
+    pub fn r4_tray_owner_valid(p0: R4ProgramProcessHandle) -> i32;
+    pub fn r4_app_tray(p0: *mut R4App, p1: *mut R4Tray) -> i32;
+    pub fn r4_tray_request(p0: R4ProgramProcessHandle) -> R4TrayServiceRequest;
+    pub fn r4_tray_response_valid(p0: *const R4TrayServiceResponse, p1: R4ProgramProcessHandle) -> i32;
+    pub fn r4_tray_call(p0: *mut R4Tray, p1: u16, p2: *const R4TrayServiceRequest, p3: R4Timeout) -> R4TrayCallResult;
+    pub fn r4_tray_status(p0: *mut R4Tray, p1: u64, p2: R4Timeout) -> R4TrayCallResult;
+    pub fn r4_tray_upsert(p0: *mut R4Tray, p1: *const R4TrayItem, p2: R4Timeout) -> R4TrayCallResult;
+    pub fn r4_tray_remove(p0: *mut R4Tray, p1: u64, p2: R4Timeout) -> R4TrayCallResult;
+    pub fn r4_tray_wait_event(p0: *mut R4Tray, p1: u64, p2: R4Timeout) -> R4TrayCallResult;
+    pub fn r4_storage_available(p0: *const R4Storage) -> i32;
+    pub fn r4_storage_inventory(p0: *mut R4Storage, p1: *mut R4StorageInventory) -> i32;
+    pub fn r4_storage_device(p0: *mut R4Storage, p1: u64, p2: u32, p3: *mut R4StorageDeviceInfo) -> i32;
+    pub fn r4_storage_partition(p0: *mut R4Storage, p1: u64, p2: *const R4StorageDeviceRef, p3: u32, p4: *mut R4StoragePartitionInfo) -> i32;
+    pub fn r4_storage_volume(p0: *mut R4Storage, p1: u64, p2: u32, p3: *mut R4StorageVolumeInfo) -> i32;
+    pub fn r4_storage_whole_device(p0: *const R4StorageDeviceInfo) -> R4StorageTarget;
+    pub fn r4_storage_claim_begin(p0: *mut R4Storage, p1: *const R4StorageTarget, p2: *mut u64) -> i32;
+    pub fn r4_storage_claim_end(p0: *mut R4Storage, p1: *mut u64, p2: i32) -> i32;
+    pub fn r4_storage_read(p0: *mut R4Storage, p1: *const R4StorageTarget, p2: u64, p3: *mut u8, p4: u32) -> i32;
+    pub fn r4_storage_claim_read(p0: *mut R4Storage, p1: u64, p2: u64, p3: *mut u8, p4: u32) -> i32;
+    pub fn r4_storage_claim_write(p0: *mut R4Storage, p1: u64, p2: u64, p3: *const u8, p4: u32) -> i32;
+    pub fn r4_storage_claim_flush(p0: *mut R4Storage, p1: u64) -> i32;
+    pub fn r4_storage_rescan(p0: *mut R4Storage, p1: *const R4StorageDeviceRef) -> i32;
+    pub fn r4_storage_mount(p0: *mut R4Storage, p1: *const R4StorageTarget, p2: u8, p3: *mut R4StorageVolumeRef) -> i32;
+    pub fn r4_storage_unmount(p0: *mut R4Storage, p1: *const R4StorageVolumeRef) -> i32;
+    pub fn r4_storage_use_begin(p0: *mut R4Storage, p1: *const u8, p2: *mut u64) -> i32;
+    pub fn r4_storage_use_end(p0: *mut R4Storage, p1: *mut u64) -> i32;
+    pub fn r4_storage_transfer_use_begin(p0: *mut R4Storage, p1: *const u8, p2: *mut u64) -> i32;
+    pub fn R4SdkDocumentSave(p0: *const R4Sys, p1: *mut u32, p2: *const u8, p3: u64, p4: *const u8, p5: u64, p6: i32) -> i32;
+    pub fn R4SdkRecentRead(p0: *const R4Sys, p1: *mut R4RecentEntry, p2: u64) -> i32;
+    pub fn R4SdkRecentAdd(p0: *const R4Sys, p1: *const u8, p2: u64, p3: *const u8, p4: u64) -> i32;
+    pub fn R4SdkTextValid(p0: *const u8, p1: u64) -> i32;
+    pub fn R4SdkTextAssign(p0: *mut u8, p1: u64, p2: *const u8, p3: u64) -> i32;
+    pub fn R4SdkTextLabel(p0: *mut u8, p1: u64, p2: *const u8, p3: u64) -> i32;
+    pub fn R4SdkTextPrefix(p0: *const u8, p1: u64, p2: u64, p3: i32, p4: *mut u64) -> i32;
+    pub fn R4SdkTextNext(p0: *const u8, p1: u64, p2: u64, p3: *mut u64) -> i32;
+    pub fn R4SdkTextPrevious(p0: *const u8, p1: u64, p2: u64, p3: *mut u64) -> i32;
+    pub fn R4SdkRegistrySelfTest(p0: *const R4Sys, p1: i32, p2: *const R4RegistryTestPaths, p3: i32, p4: *mut u8, p5: u64, p6: *mut u8, p7: u64) -> i32;
+    pub fn R4SdkHiveParse(p0: *const u8, p1: u64, p2: *mut R4HiveView) -> i32;
+    pub fn R4SdkHiveKey(p0: *const R4HiveView, p1: u32, p2: *mut R4HiveKey) -> i32;
+    pub fn R4SdkHiveValue(p0: *const R4HiveView, p1: u32, p2: *mut R4HiveValue) -> i32;
+    pub fn R4SdkHiveFind(p0: *const R4HiveView, p1: i32, p2: u32, p3: *const u8, p4: u64, p5: *mut u32) -> i32;
+    pub fn R4SdkHiveBuild(p0: u16, p1: u64, p2: *const R4HiveBuildValue, p3: u64, p4: *mut u8, p5: u64, p6: *mut u8, p7: u64, p8: *mut u64) -> i32;
+    pub fn R4SdkHiveText(p0: i32, p1: u64, p2: *const u8, p3: u64, p4: *mut u8, p5: u64, p6: *mut u8, p7: u64, p8: *mut u64) -> i32;
+    pub fn r4_dialog_page_init(p0: *mut R4DialogPage, p1: *mut R4DialogRow, p2: u32) -> i32;
+    pub fn r4_dialog_page_add(p0: *mut R4DialogPage, p1: u32, p2: *const R4FilePath, p3: *const u8, p4: u64) -> i32;
+    pub fn r4_dialog_page_load(p0: *mut R4DialogPage, p1: *mut R4DialogRow, p2: u32, p3: R4Files, p4: *const R4FilePath, p5: u32, p6: *const u8, p7: u64) -> i32;
+    pub fn r4_ordered_page_init(p0: *mut R4OrderedPage, p1: *mut core::ffi::c_void, p2: u64, p3: u64) -> i32;
+    pub fn r4_ordered_page_offer(p0: *mut R4OrderedPage, p1: *const core::ffi::c_void, p2: Option<unsafe extern "C" fn(*mut core::ffi::c_void, *const core::ffi::c_void, *const core::ffi::c_void) -> i32>, p3: *mut core::ffi::c_void) -> i32;
+    pub fn r4_snapshot_init(p0: *mut R4DirectorySnapshot, p1: *const R4Heap, p2: u64, p3: u64, p4: u64) -> i32;
+    pub fn r4_snapshot_append(p0: *mut R4DirectorySnapshot, p1: *const core::ffi::c_void) -> i32;
+    pub fn r4_snapshot_swap(p0: *mut R4DirectorySnapshot, p1: u64, p2: u64) -> ();
+    pub fn r4_snapshot_sift(p0: *mut R4DirectorySnapshot, p1: u64, p2: u64, p3: Option<unsafe extern "C" fn(*mut core::ffi::c_void, *const core::ffi::c_void, *const core::ffi::c_void) -> i32>, p4: *mut core::ffi::c_void) -> ();
+    pub fn r4_snapshot_sort(p0: *mut R4DirectorySnapshot, p1: Option<unsafe extern "C" fn(*mut core::ffi::c_void, *const core::ffi::c_void, *const core::ffi::c_void) -> i32>, p2: *mut core::ffi::c_void) -> ();
+    pub fn r4_snapshot_close(p0: *mut R4DirectorySnapshot) -> i32;
+    pub fn R4SdkServiceLoopInit(p0: *const R4XStartContext, p1: u32, p2: u64, p3: u32, p4: *mut R4SdkServiceLoop) -> i32;
+    pub fn R4SdkServiceLoopWait(p0: *const R4XStartContext, p1: *mut R4SdkServiceLoop, p2: u32, p3: u64) -> R4SdkServiceStep;
+    pub fn R4SdkServiceLoopBatch(p0: *const R4XStartContext, p1: *mut R4SdkServiceLoop, p2: u32, p3: *mut R4SdkServiceBatch) -> i32;
+    pub fn R4SdkServiceBatchNext(p0: *const R4XStartContext, p1: *mut R4SdkServiceLoop, p2: *mut R4SdkServiceBatch) -> R4SdkServiceStep;
+    pub fn R4SdkServiceLoopDrain(p0: *const R4XStartContext, p1: *mut R4SdkServiceLoop, p2: u32, p3: Option<unsafe extern "C" fn(*mut core::ffi::c_void) -> i32>, p4: *mut core::ffi::c_void) -> i32;
+    pub fn R4SdkServiceLoopReport(p0: *const R4XStartContext, p1: *const R4SdkServiceLoop, p2: *const u8, p3: u32, p4: *mut u8, p5: u32) -> i32;
+    pub fn R4SdkServiceDetails(p0: *const R4XStartContext, p1: *mut R4ServiceDetail, p2: u32) -> i32;
+    pub fn R4SdkServiceControl(p0: *const R4XStartContext, p1: u32, p2: *const u8, p3: *const u8, p4: *const u8, p5: u32, p6: *const u8, p7: u64, p8: *mut R4ServiceInfo) -> i32;
+    pub fn R4SdkServiceInfo(p0: *const R4XStartContext, p1: u32, p2: *mut R4ServiceInfo) -> i32;
+    pub fn R4SdkServiceDetail(p0: *const R4XStartContext, p1: *const u8, p2: *mut R4ServiceDetail) -> i32;
+    pub fn R4SdkCompletedReply(p0: i32) -> i32;
+    pub fn R4SdkDeadlineAppend(p0: *mut u8, p1: u32, p2: *const u8, p3: u32, p4: u64) -> i32;
+    pub fn R4SdkDeadlineSplit(p0: *const u8, p1: u32) -> R4SdkDeadlineView;
+    pub fn R4SdkDeadlineFromTimeout(p0: R4Timeout, p1: u64, p2: u32, p3: *mut u64) -> i32;
+    pub fn R4SdkDeadlineRemaining(p0: u64, p1: u64, p2: u32) -> R4Timeout;
+    pub fn R4SdkDurationFromTicks(p0: u64, p1: u32, p2: *mut R4Duration) -> i32;
     pub fn R4SdkNetRequestInit(p0: *mut R4SdkNetRequest) -> ();
     pub fn R4SdkNetRequestReset(p0: *mut R4SdkNetRequest) -> i32;
     pub fn R4SdkNetRequestActive(p0: *const R4SdkNetRequest) -> u32;

@@ -35,6 +35,7 @@ static ALLOCATOR: Tracking = Tracking;
 unsafe extern "C" {
     fn sdk_service_c_case() -> i32;
     fn sdk_service_tcp_deadline_case() -> i32;
+    fn sdk_service_tcp_readiness_case() -> i32;
     fn sdk_service_clock_rate(value: u32);
     fn sdk_service_calendar_calls() -> u32;
     fn sdk_service_call_timeout() -> u64;
@@ -68,6 +69,7 @@ unsafe extern "C" {
 #[test]
 fn service_network_serial_deadline_owners_and_retained_requests() {
     assert_eq!(unsafe { sdk_service_tcp_deadline_case() }, 0);
+    assert_eq!(unsafe { sdk_service_tcp_readiness_case() }, 0);
     assert_eq!(unsafe { sdk_service_c_case() }, 0);
     assert_eq!(unsafe { sdk_service_extra_c_case() }, 0);
     assert_eq!(unsafe { sdk_service_bound_c_case() }, 0);
@@ -336,7 +338,9 @@ fn service_network_serial_deadline_owners_and_retained_requests() {
     };
     let mut tcp = network.connect_tcp(address, Timeout::Forever).unwrap();
     assert_eq!(tcp.remote(), address);
-    assert_eq!(tcp.poll(Timeout::Poll).bytes, 4);
+    let ready = tcp.readiness(Timeout::Poll);
+    assert_eq!(ready.outcome.bytes, 0);
+    assert_eq!(ready.readiness.unwrap().pending_rx, 4);
     unsafe { sdk_service_mode(6) };
     assert_eq!(tcp.write(b"GET", Timeout::Forever).bytes, 2);
     assert_eq!(tcp.handle(), 501);
@@ -353,6 +357,9 @@ fn service_network_serial_deadline_owners_and_retained_requests() {
         tcp.read(&mut response, Timeout::Forever).state,
         SocketState::PeerClosed
     );
+    assert!(tcp.valid());
+    unsafe { sdk_service_mode(0) };
+    assert_eq!(tcp.close(Timeout::Forever).state, SocketState::Closed);
     assert!(!tcp.valid());
     unsafe { sdk_service_mode(0) };
     let mut listener = network.listen_tcp(1234, Timeout::Forever).unwrap();

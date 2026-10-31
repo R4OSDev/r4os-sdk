@@ -211,3 +211,81 @@ int sdk_service_tcp_deadline_case(void){
     if(result.kind!=R4_NET_RESULT_FAILED||tcp_deadline_calls)return 107;
     return 0;
 }
+
+/* One controlled TCP lifecycle: readiness is a snapshot, transfer is a count,
+ * peer termination never disposes the still-owned local frontend. */
+static const uint8_t tcp80_payload[]="TCP80-remaining-payload\n";
+static uint32_t tcp80_offset,tcp80_calls,tcp80_mode,tcp80_close_unknown;
+static int32_t tcp80_call(uint32_t handle,uint16_t op,const uint8_t *request,uint32_t n,R4ServiceMessageHeader *header,uint8_t *out,uint32_t capacity,uint64_t wait){
+    (void)handle;(void)wait;++tcp80_calls;
+    R4ServiceDeadlineFooter footer;assert(n>=4+sizeof(footer));memcpy(&footer,request+n-sizeof(footer),sizeof(footer));
+    assert(footer.magic==R4OS_SERVICE_DEADLINE_FOOTER_MAGIC&&footer.version==R4OS_SERVICE_DEADLINE_FOOTER_VERSION&&footer.size==sizeof(footer)&&footer.payload_len==n-sizeof(footer)&&footer.deadline_tick==UINT64_MAX);
+    assert(((uint32_t)request[0]|((uint32_t)request[1]<<8)|((uint32_t)request[2]<<16)|((uint32_t)request[3]<<24))==501);
+    *header=(R4ServiceMessageHeader){.magic=R4OS_SERVICE_API_MAGIC,.version=R4OS_SERVICE_API_VERSION,.op=op,.status=R4OS_SERVICE_API_RESULT_OK};
+    if(op==R4OS_NET_SERVICE_OP_TCP_CLOSE_RESULT&&tcp80_close_unknown)return R4OS_SERVICE_API_RESULT_TIMEOUT;
+    R4NetServiceTcpResult reply={0};reply.magic=R4OS_NET_SERVICE_TCP_RESULT_MAGIC;reply.version=R4OS_NET_SERVICE_TCP_RESULT_VERSION;reply.handle=501;
+    reply.flags=R4OS_NET_SERVICE_TCP_FLAG_HANDLE_VALID|R4OS_NET_SERVICE_TCP_FLAG_OK;
+    reply.service_status=R4OS_NET_SERVICE_STATUS_OK;reply.lifecycle_cause=R4OS_NET_SERVICE_SOCKET_LIFECYCLE_PEER_GONE;
+    reply.pending_rx=(uint32_t)sizeof(tcp80_payload)-1-tcp80_offset;reply.tx_window=123;
+    if(tcp80_mode==1){reply.lifecycle_cause=R4OS_NET_SERVICE_SOCKET_LIFECYCLE_RESET;reply.result=-777;reply.pending_rx=0;}
+    if(tcp80_mode==2){reply.lifecycle_cause=R4OS_NET_SERVICE_SOCKET_LIFECYCLE_BAD_HANDLE;reply.result=R4OS_SERVICE_API_RESULT_BAD_HANDLE;reply.pending_rx=0;}
+    if(op==R4OS_NET_SERVICE_OP_TCP_CLOSE_RESULT){reply.lifecycle_cause=R4OS_NET_SERVICE_SOCKET_LIFECYCLE_LOCAL_CLOSE;reply.result=0;reply.pending_rx=0;}
+    if(op==R4OS_NET_SERVICE_OP_TCP_READ_RESULT&&tcp80_mode==0){
+        uint32_t size=(uint32_t)request[4]|((uint32_t)request[5]<<8);
+        if(size>reply.pending_rx)size=reply.pending_rx;
+        reply.bytes=size;reply.pending_rx-=size;assert(sizeof(reply)+size<=capacity);
+        memcpy(out+sizeof(reply),tcp80_payload+tcp80_offset,size);tcp80_offset+=size;
+    }
+    if(tcp80_mode==3&&op==R4OS_NET_SERVICE_OP_TCP_READ_RESULT)reply.bytes=capacity+1;
+    assert(capacity>=sizeof(reply));memcpy(out,&reply,sizeof(reply));return (int32_t)(sizeof(reply)+(tcp80_mode==0?reply.bytes:0));
+}
+int sdk_service_tcp_readiness_case(void){
+    R4App app;R4XStartR4Sys sys;R4XStartR4Net net;init_app(&app,&sys,&net);sys.service_call=(uintptr_t)&tcp80_call;
+    R4TcpSocket socket={.network=r4_app_network(&app),.raw=501,.owned=1};tcp80_offset=tcp80_calls=tcp80_mode=tcp80_close_unknown=0;
+    R4NetResult result=r4_tcp_socket_poll(&socket,r4_timeout_forever());
+    if(!r4_tcp_socket_valid(&socket)||result.kind!=R4_NET_RESULT_PEER_CLOSED||result.bytes!=0)return 181;
+#ifndef SDK_TCP80_OLD_SOURCE
+    R4TcpPollResult snapshot=r4_tcp_socket_readiness(&socket,r4_timeout_forever());
+    if(!snapshot.available||!snapshot.readiness.readable||!snapshot.readiness.peer_closed||!snapshot.readiness.terminal||snapshot.readiness.pending_rx!=sizeof(tcp80_payload)-1||snapshot.result.bytes||tcp80_offset)return 182;
+#endif
+    uint8_t data[sizeof(tcp80_payload)]={0};uint32_t total=0;
+    while(total<sizeof(tcp80_payload)-1){
+#ifndef SDK_TCP80_OLD_SOURCE
+        R4TcpPollResult before=r4_tcp_socket_readiness(&socket,r4_timeout_forever());
+        if(!before.available||!before.readiness.readable||!before.readiness.peer_closed||before.readiness.pending_rx!=sizeof(tcp80_payload)-1-total||tcp80_offset!=total)return 183;
+#endif
+        result=r4_tcp_socket_read(&socket,data+total,5,r4_timeout_forever());
+        if(result.kind!=R4_NET_RESULT_PEER_CLOSED||!result.bytes||result.bytes>5||!r4_tcp_socket_valid(&socket))return 184;
+        total+=result.bytes;
+    }
+    if(memcmp(data,tcp80_payload,total))return 185;
+    result=r4_tcp_socket_read(&socket,data,5,r4_timeout_forever());
+    if(result.kind!=R4_NET_RESULT_PEER_CLOSED||result.bytes||!r4_tcp_socket_valid(&socket))return 186;
+#ifndef SDK_TCP80_OLD_SOURCE
+    R4TcpPollResult eof=r4_tcp_socket_readiness(&socket,r4_timeout_forever());
+    if(!eof.available||eof.readiness.readable||!eof.readiness.peer_closed||eof.readiness.pending_rx||eof.result.bytes)return 187;
+#endif
+    result=r4_tcp_socket_write(&socket,(const uint8_t *)"W",1,r4_timeout_forever());
+    if(result.kind!=R4_NET_RESULT_PEER_CLOSED||!r4_tcp_socket_valid(&socket))return 188;
+    tcp80_mode=1;memset(data,0xA5,sizeof(data));
+    result=r4_tcp_socket_read(&socket,data,5,r4_timeout_forever());
+    if(result.kind!=R4_NET_RESULT_RESET||result.bytes||data[0]!=0xA5||!r4_tcp_socket_valid(&socket))return 189;
+#ifndef SDK_TCP80_OLD_SOURCE
+    R4TcpPollResult reset=r4_tcp_socket_readiness(&socket,r4_timeout_forever());
+    if(!reset.available||!reset.readiness.reset||!reset.readiness.terminal||reset.readiness.readable||reset.result.bytes)return 190;
+#endif
+    tcp80_mode=2;result=r4_tcp_socket_poll(&socket,r4_timeout_forever());
+    if(result.kind!=R4_NET_RESULT_CLOSED||!r4_tcp_socket_valid(&socket))return 191;
+    tcp80_close_unknown=1;result=r4_tcp_socket_close(&socket,r4_timeout_forever());
+    if(result.kind!=R4_NET_RESULT_OUTCOME_UNKNOWN||r4_net_progress_known(result)||!r4_tcp_socket_valid(&socket))return 192;
+    tcp80_close_unknown=0;socket.owned=0;uint32_t calls=tcp80_calls;
+    result=r4_tcp_socket_close(&socket,r4_timeout_forever());
+    if(result.raw_code!=R4OS_ERR_NOT_OWNED||tcp80_calls!=calls||!r4_tcp_socket_valid(&socket))return 193;
+    socket.owned=1;result=r4_tcp_socket_close(&socket,r4_timeout_forever());
+    if(result.kind!=R4_NET_RESULT_CLOSED||r4_tcp_socket_valid(&socket))return 194;
+    socket.raw=501;tcp80_mode=3;memset(data,0xA5,sizeof(data));
+    result=r4_tcp_socket_read(&socket,data,5,r4_timeout_forever());
+    if(result.kind!=R4_NET_RESULT_OUTCOME_UNKNOWN||data[0]!=0xA5||!r4_tcp_socket_valid(&socket))return 195;
+    tcp80_mode=0;result=r4_tcp_socket_close(&socket,r4_timeout_forever());
+    return result.kind==R4_NET_RESULT_CLOSED&&!r4_tcp_socket_valid(&socket)&&open_handles==0?0:196;
+}

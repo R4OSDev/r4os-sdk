@@ -510,7 +510,12 @@ test "resolver TCP and UDP classify lifecycle outcomes without fallback" {
         else => false,
     });
 
+    try std.testing.expect(socket.valid());
     reply_mode = .ok;
+    try std.testing.expect(switch (socket.close(r4os.time_contract.timeoutForever())) {
+        .closed => true,
+        else => false,
+    });
     var listener = switch (facades.network.listenTcp(8080, r4os.time_contract.timeoutForever())) {
         .listener => |value| value,
         else => return error.Listen,
@@ -524,7 +529,12 @@ test "resolver TCP and UDP classify lifecycle outcomes without fallback" {
         .reset => true,
         else => false,
     });
+    try std.testing.expect(accepted.valid());
     reply_mode = .ok;
+    try std.testing.expect(switch (accepted.close(r4os.time_contract.timeoutForever())) {
+        .closed => true,
+        else => false,
+    });
     try std.testing.expect(switch (listener.close(r4os.time_contract.timeoutForever())) {
         .closed => true,
         else => false,

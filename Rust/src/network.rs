@@ -5,8 +5,8 @@ use crate::{App, abi, c_facades as c};
 use core::marker::PhantomData;
 mod sockets;
 pub use sockets::{
-    Datagram, Ipv4Address, SocketAddress, SocketOutcome, SocketState, TcpListener, TcpSocket,
-    UdpSocket,
+    Datagram, Ipv4Address, SocketAddress, SocketOutcome, SocketState, TcpListener, TcpPoll,
+    TcpSocket, UdpSocket,
 };
 #[cfg(feature = "alloc")]
 extern crate alloc;
@@ -163,7 +163,9 @@ impl Drop for OwnedRequest<'_> {
         if !self.active() {
             unsafe {
                 drop(alloc::boxed::Box::from_raw(
-                    self.raw.as_ptr().cast::<core::mem::MaybeUninit<RawRequest>>(),
+                    self.raw
+                        .as_ptr()
+                        .cast::<core::mem::MaybeUninit<RawRequest>>(),
                 ))
             };
         }

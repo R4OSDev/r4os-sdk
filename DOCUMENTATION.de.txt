@@ -1210,3 +1210,38 @@ Kernel446 bleibt unveraendert; das genaue neue Runtime-Lieferpaar wird bei
 0.88.79 separat qualifiziert. Das gepinnte Nexus-SDK92/Contract45 wird durch
 diese Quellenlieferung nicht umgestellt. Eine Nexus-Migration und die
 Ursache seines TLS-Recordfehlers bleiben getrennte Verbraucherauftraege.
+
+TCP-Fassaden seit0.88.80 / SDK0.64.123
+------------------------------------
+C r4_tcp_socket_readiness und Rust TcpSocket::readiness liefern eine
+validierte Readiness zusammen mit dem Operationsausgang. Zig benutzt die
+freie Funktion app_network.tcpReadiness(&socket, timeout). Der bestehende
+R4SdkTcpReadiness-/r4net.TcpReadiness-Typ bleibt die Snapshotform: readable
+und peer_closed duerfen gleichzeitig wahr sein; pending_rx zaehlt gepufferte
+Verfuegbarkeit, keine durch Poll uebertragenen Bytes. Die bisherige poll-
+Funktion bleibt als Zustandssicht erhalten, ihr Transferzaehler ist jetzt0.
+Bestehende Nutzer mit poll.bytes als Verfuegbarkeit auf readiness umstellen.
+R4TcpPollResult ergaenzt nur eine neue hohe SDK-Form; fixe Socket-/Result-/
+Wiretypen, Plattformslots und die GUI-Wertmethodengrenze bleiben gleich.
+
+Read/Write/Poll verwerfen den lokalen Frontendhandle weder bei Peer-FIN noch
+Reset/Closed/BackendBadHandle. valid() bezeichnet den vorhandenen lokalen
+Token, keine laufende Providerprobe. Backendretirement beweist nicht, dass
+TCPSVC seine Frontreferenz freigegeben hat. Strukturierte Readpraefixe werden
+validiert/kopiert, bevor der Aufrufer den Transfer auswertet. Erst expliziter
+bestaetigter Close beziehungsweise dessen bestaetigte Invaliditaet loescht
+den lokalen Token. Unknown/Timeout beim Close erfindet keine Freigabe.
+Borrowed owned0-Objekte besitzen keine Closepflicht; Rust-Drop versucht
+weiter best-effort Poll-Close fuer owned/raw!=0. Wer die Quittung benoetigt,
+muss vor Drop explizit close auswerten; Drop allein ist kein ACK-Nachweis.
+
+Der vorhandene Kernel beendet FIN aktuell als Closed mit drainbarem RX-
+Restpuffer; dadurch entsteht keine neue volle Halfclose-Sendefaehigkeit.
+Nach Drain darf der Backendhandle bereits retiret sein; der lokale TCPSVC-
+Frontendhandle braucht dennoch Close. Transport-Closed/PeerClosed und
+Providerinvaliditaet bleiben benannte Endgruende, keine Zusage ueber
+TLS-close_notify, HTTPbody-/SSE-Vollstaendigkeit oder Nexus-Datenverlust.
+SDK123 nutzt Contract65 und die in0.88.79 qualifizierte TCPSVC9-/Kernel446-
+Basis, kein neuer Provider-/Kernelbuild fuer diese Fassadenkorrektur.
+SDK99/R4OS100 sind die aktuellen finalen Roadmapstufen nach allen fachlichen
+Unterversionen; SDK-Komponentenversionen bleiben davon unabhaengig.
