@@ -1077,3 +1077,30 @@ urspruengliche C/Rust-Subsystem-Interop mit5Negativen und SDK113Buildschritte.
 Kanonische Runtime-, Host-, Persistenz- und Gastbesitzer bleiben getrennt.
 Native Zig-Produktfalle/KVM4 und Grenzen: Docs/SDK/LanguageParity.txt.49.
 Keine SDK-Paketpublikation oder neue C/Rust-Gast-/Hardwarequalifikation.
+
+
+Prozessbeobachtung und Retention (0.88.75)
+----------------------------------------
+
+program_observation_retain bindet einen eigenen Beobachter an den exakten
+Prozesshandle samt Generation. Entscheidend ist, dass dessen Completionrecord
+noch vorhanden ist. Vor dem konsumierenden Owner-Reap ist eine Erstbindung
+moeglich; danach kann eine bestehende Referenz den Record weiter erhalten
+und ein neuer unabhaengiger Beobachter mit erneutem retain gebunden werden.
+Eine Kopie desselben Tokens ist dieselbe Referenz und erhoeht keinen Refcount.
+Unabhaengige Beobachter benoetigen jeweils einen eigenen retain-Aufruf.
+
+Nach letzter Freigabe und Entfernung des konsumierten Records scheitert
+erneutes retain. Es rekonstruiert weder Abschluss noch verlorene Ausgabe.
+flags0 bindet die Bereinigung an die erzeugende Prozessgeneration; PORTABLE
+ueberlebt diesen Creator ausdruecklich bis zur Freigabe oder zum Bootende.
+Beobachter erhalten dadurch kein Recht zum Reapen oder Beenden des Ziels.
+ProgramObservationHandle behaelt seinen bestehenden24-Byte-Vertrag.
+
+Grundlage sind die vorhandene Implementierung und die oeffentlichen C-Belege
+aus0.88.26: fruehe/unabhaengige Bindungen, spaete Erstbindung nach echtem
+Desktop-Reap bei bestehender Retention sowie Ablehnung nach letzter Freigabe
+und bei falscher Generation. Details und Grenzen: Docs/Desktop/DeskRun.txt.
+Die direkte Rust-GUI-Ausgabe mit externem Rust-Beobachter ist der getrennte
+Qualifikationsumfang0.88.76; diese Textkorrektur behauptet keinen neuen
+Sprach-, Gast-, Hardware- oder Performancebeleg.
