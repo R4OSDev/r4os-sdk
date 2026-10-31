@@ -1293,3 +1293,17 @@ Beispiel und Callbacksignaturen stehen in Examples/README.md. SSE-Zeilen,
 UTF8-Zustaende, id/mehrzeilige data und LLM-Endmarker bleiben Anwendungscode.
 Nexus bleibt auf seinen eigenen SDK92-/Contract45-Pins; keine Migration oder
 Behauptung zu seiner TLS-Ursache. Contract65/TCPSVC9/Kernel446 unveraendert.
+
+AUDSVC-Requestdauern ab SDK0.64.125 / Contract0.64.66
+----------------------------------------------------
+AUDSVC ab0.1.22 erhebt keine reinen Request-/WriteRequest-Dauern mehr.
+AudioServiceStatus.flags und AudioServiceStreamResult.flags setzen
+audio_service_flag_duration_unavailable. Alle sechs Statusdauerfelder und
+request_ticks/write_ticks im StreamResult enthalten dann
+audio_duration_ticks_unavailable (UINT64_MAX), niemals eine gemessene Null.
+Diese Werte weder verrechnen noch als Latenz oder Score darstellen.
+C: R4OS_AUDIO_SERVICE_FLAG_DURATION_UNAVAILABLE; Zig/Rust verwenden den
+kanonischen Kleinschreibungsnamen. Binaere Layouts, Wireversionen und alte
+Flagwerte bleiben erhalten. Historische Provider ohne dieses Flag behalten
+ihre damaligen Messwerte. Funktionale Closefristen, PCM-Annahme, Fortschritt,
+Client-/Streamgeneration, Auswahl-Join und Fehlerzaehler bleiben wirksam.
