@@ -279,6 +279,8 @@ const TlsWriteResult = union(enum) {
     failure: Error,
 };
 
+const TlsProtected = union(enum) { bytes: []const u8, failure: Error };
+
 const TlsApplicationRead = union(enum) {
     bytes: []const u8,
     close_notify,
@@ -1130,6 +1132,15 @@ pub const WebTransport = struct {
     }
 
     fn writeTlsApplication(self: *WebTransport, socket: *app_network.TcpSocket, session: *TlsSession, bytes: []const u8, scratch: []u8, options: FetchOptions, deadline: RequestDeadline) TlsWriteResult {
+        const wire = switch (self.protectTlsApplication(session, bytes, scratch)) {
+            .bytes => |value| value,
+            .failure => |failure| return .{ .failure = failure },
+        };
+        if (!writeAll(socket, wire, options, deadline)) return .{ .failure = if (shouldStop(options)) .cancelled else .write_failed };
+        return .ok;
+    }
+
+    fn protectTlsApplication(self: *WebTransport, session: *TlsSession, bytes: []const u8, scratch: []u8) TlsProtected {
         const first = scratch[0..tls_workspace_bytes];
         const third = scratch[tls_workspace_bytes * 2 .. tls_workspace_bytes * 3];
         if (tls_app_header_len + bytes.len > third.len) return .{ .failure = .scratch_too_small };
@@ -1139,8 +1150,7 @@ pub const WebTransport = struct {
         const protected = self.protocolCall(tls_op_client_app_write, third[0 .. tls_app_header_len + bytes.len], first) orelse return .{ .failure = .tls_record_failed };
         if (protected.len <= tls_app_header_len or !startsWith(protected, "R4CX")) return .{ .failure = .tls_record_failed };
         @memcpy(session.stream_state[0..], protected[4..tls_app_header_len]);
-        if (!writeAll(socket, protected[tls_app_header_len..], options, deadline)) return .{ .failure = if (shouldStop(options)) .cancelled else .write_failed };
-        return .ok;
+        return .{ .bytes = protected[tls_app_header_len..] };
     }
 
     fn readTlsApplication(self: *WebTransport, socket: *app_network.TcpSocket, session: *TlsSession, scratch: []u8, options: FetchOptions, deadline: RequestDeadline) TlsApplicationRead {
@@ -1186,6 +1196,486 @@ pub const WebTransport = struct {
         return .{ .bytes = output[0..out_buffer.len], .status = rc };
     }
 };
+
+pub const PostStreamAction = enum(u8) { accept, pause, cancel, fail };
+pub const PostStreamWrite = *const fn (?*anyopaque, u64, []const u8) PostStreamAction;
+/// Positive: bytes produced in `output`; zero: EOF; -1: pause; -2: cancel;
+/// every other negative value: source failure. A paused read consumes nothing.
+pub const PostStreamRead = *const fn (?*anyopaque, u64, []u8) i64;
+pub const PostStreamSink = struct { context: ?*anyopaque = null, write: PostStreamWrite };
+pub const PostStreamOptions = struct {
+    request: FetchOptions = .{ .method = .post, .redirect = .manual },
+    request_body_limit: u64 = 64 * 1024 * 1024,
+    response_limits: http.PayloadStreamLimits = .{},
+    /// Null selects chunked request framing for a reader. A slice always has
+    /// its exact length. Reader and request.body are mutually exclusive.
+    request_length: ?u64 = null,
+    reader: ?PostStreamRead = null,
+    reader_context: ?*anyopaque = null,
+};
+pub const PostStreamBuffers = struct {
+    headers: []u8,
+    io: []u8,
+    upload: []u8,
+    tls: []u8,
+};
+pub const PostStreamState = enum(u8) { ready, paused, cleanup_pending, complete, cancelled, failed };
+pub const PostStreamReport = struct {
+    state: PostStreamState = .ready,
+    failure: ?Error = null,
+    framing_failure: ?http.ResponseError = null,
+    status: ?u16 = null,
+    response_total: ?u64 = null,
+    request_body_confirmed: u64 = 0,
+    /// TCP-accepted application wire bytes, including TLS record overhead;
+    /// excludes handshake traffic. This is not server execution evidence.
+    application_wire_confirmed: u64 = 0,
+    response_received: u64 = 0,
+    response_delivered: u64 = 0,
+    request_effect_unknown: bool = false,
+    http_complete: bool = false,
+    tcp_eof: bool = false,
+    tls_close_notify: bool = false,
+    close_ack: bool = false,
+};
+
+/// Caller-owned POST transport. Keep this context, options, callback storage
+/// and all four buffers stable until canRelease(). Pausing accepts zero bytes
+/// and retains the same chunk for the next run(). No POST or TLS record is
+/// automatically replayed. Redirects are manual or errors, never followed.
+pub const PostStream = struct {
+    transport: *WebTransport,
+    options: PostStreamOptions,
+    buffers: PostStreamBuffers,
+    sink: PostStreamSink,
+    deadline: RequestDeadline,
+    decoder: http.PayloadStreamDecoder,
+    socket: ?app_network.TcpSocket = null,
+    tls: ?TlsSession = null,
+    url: [max_url_bytes]u8 = undefined,
+    url_len: usize = 0,
+    parsed_url: ?http.ParsedUrl = null,
+    headers: [max_request_bytes]u8 = undefined,
+    headers_len: usize = 0,
+    request_head: [max_request_bytes]u8 = undefined,
+    request_head_len: usize = 0,
+    remaining_input: []const u8 = "",
+    pending: []const u8 = "",
+    result: PostStreamReport = .{},
+    length: ?u64 = null,
+    preflight: bool = false,
+    stopped: bool = false,
+    busy: bool = false,
+    phase: enum { connect, send_head, send_body, receive, preflight_close, terminal } = .connect,
+
+    /// Initialize in its final stable address; this does not send a request.
+    pub fn init(self: *PostStream, transport: *WebTransport, raw_url: []const u8, buffers: PostStreamBuffers, sink: PostStreamSink, options: PostStreamOptions) PostStreamReport {
+        self.* = .{ .transport = transport, .options = options, .buffers = buffers, .sink = sink, .deadline = .{ .valid = false }, .decoder = .init(buffers.headers, .post, options.response_limits) };
+        if (shouldStop(options.request)) return self.finish(.cancelled);
+        if (!targetAuthorized(options.request, raw_url)) return self.finish(.policy_rejected);
+        if (raw_url.len == 0 or raw_url.len > self.url.len) return self.finish(.invalid_url);
+        const url = switch (http.parseUrl(raw_url)) {
+            .value => |v| v,
+            else => return self.finish(.invalid_url),
+        };
+        if (options.request.method != .post) return self.finish(.unsupported_method);
+        if (options.request.redirect == .follow) return self.finish(.redirect_disallowed);
+        if (buffers.headers.len < http.max_header_bytes) return self.finish(.header_buffer_too_small);
+        if (buffers.io.len == 0 or buffers.upload.len == 0) return self.finish(.io_buffer_too_small);
+        if (buffers.tls.len < tls_scratch_bytes) return self.finish(.scratch_too_small);
+        const limits = options.response_limits;
+        if (limits.header_bytes < 4 or limits.header_bytes > http.max_header_bytes or limits.line_bytes < 2 or limits.line_bytes > 1024 or
+            limits.trailer_bytes < 2 or limits.trailer_bytes > http.max_header_bytes or limits.trailer_count > http.max_header_count or limits.informational_count > 8) return self.finish(.policy_rejected);
+        inline for (.{ "content-length", "transfer-encoding", "expect", "connection" }) |reserved| {
+            if (http.serializedHeadersContain(options.request.headers, reserved)) return self.finish(.policy_rejected);
+        }
+        if (options.reader != null and options.request.body.len != 0) return self.finish(.policy_rejected);
+        self.length = if (options.reader != null) options.request_length else options.request.body.len;
+        if (options.reader == null and options.request_length != null and options.request_length.? != options.request.body.len) return self.finish(.policy_rejected);
+        if (self.length) |length| if (length > options.request_body_limit) return self.finish(.request_too_large);
+        @memcpy(self.url[0..raw_url.len], raw_url);
+        self.url_len = raw_url.len;
+        self.parsed_url = http.parseUrl(self.url[0..self.url_len]).value;
+        const headers = if (options.request.content_type.len != 0 and !http.serializedHeadersContain(options.request.headers, "content-type"))
+            std.fmt.bufPrint(&self.headers, "{s}Content-Type: {s}\n", .{ options.request.headers, options.request.content_type }) catch return self.finish(.request_too_large)
+        else blk: {
+            if (options.request.headers.len > self.headers.len) return self.finish(.request_too_large);
+            @memcpy(self.headers[0..options.request.headers.len], options.request.headers);
+            break :blk self.headers[0..options.request.headers.len];
+        };
+        self.headers_len = headers.len;
+        if (options.request.cors and isCrossOrigin(options.request.origin, url)) {
+            var preflight_headers: [max_request_bytes]u8 = undefined;
+            const generated = corsPreflightHeaders(.post, headers, &preflight_headers) orelse return self.finish(.cors_preflight_failed);
+            if (generated.len != 0) {
+                const head = switch (http.buildRequest(&self.request_head, .options, url, .{ .headers = generated, .origin = options.request.origin })) {
+                    .bytes => |v| v,
+                    else => return self.finish(.request_too_large),
+                };
+                self.request_head_len = head.len;
+                self.preflight = true;
+                self.decoder = .init(buffers.headers, .options, options.response_limits);
+            }
+        }
+        if (!self.preflight and !self.preparePost()) return self.result;
+        self.deadline = options.request.absolute_deadline orelse RequestDeadline.start(&transport.network, options.request.timeout);
+        if (!self.deadline.valid) return self.finish(.read_timeout);
+        return self.result;
+    }
+
+    pub fn report(self: *const PostStream) PostStreamReport {
+        return self.result;
+    }
+
+    /// Final response metadata borrows buffers.headers, until reinitialization.
+    pub fn response(self: *const PostStream) ?http.Response {
+        return if (self.preflight) null else self.decoder.response();
+    }
+
+    pub fn canRelease(self: *const PostStream) bool {
+        return if (self.socket) |socket| !socket.valid() else true;
+    }
+
+    /// Explicit bounded disposal. Unknown/failed Close retains the real socket
+    /// and responsibility in this context. No ACK is inferred from FIN/EOF.
+    pub fn close(self: *PostStream, timeout: Timeout) bool {
+        if (self.busy) return false;
+        if (self.phase != .preflight_close and self.phase != .terminal) {
+            self.phase = .terminal;
+            self.result.state = .cancelled;
+            self.result.failure = .cancelled;
+        }
+        return self.closeOwned(timeout);
+    }
+
+    pub fn cancel(self: *PostStream) void {
+        self.stopped = true;
+    }
+
+    pub fn run(self: *PostStream) PostStreamReport {
+        if (self.busy or self.phase == .terminal) return self.result;
+        self.busy = true;
+        defer self.busy = false;
+        self.result.state = .ready;
+        while (true) {
+            if (self.stopped or shouldStop(self.options.request)) return self.finish(.cancelled);
+            if (self.deadline.expired(&self.transport.network)) return self.finish(.read_timeout);
+            const url = self.parsed_url.?;
+            switch (self.phase) {
+                .connect => {
+                    var resolver = self.transport.network.resolver();
+                    const address = switch (resolver.resolveA(url.host, null, self.deadline.remaining(&self.transport.network))) {
+                        .address => |v| v,
+                        .timed_out => return self.finish(.dns_timeout),
+                        .not_found => return self.finish(.dns_not_found),
+                        else => return self.finish(.dns_failed),
+                    };
+                    self.socket = switch (self.transport.network.connectTcp(.{ .address = address, .port = url.port }, self.deadline.remaining(&self.transport.network))) {
+                        .socket => |v| v,
+                        .timed_out => return self.finish(.connect_timeout),
+                        else => return self.finish(.connect_failed),
+                    };
+                    self.result.close_ack = false;
+                    if (url.scheme == .https) {
+                        var tls_options = self.options.request;
+                        if (self.preflight) tls_options.entropy = null;
+                        self.tls = switch (self.transport.openTlsSession(&self.socket.?, url, self.buffers.tls, tls_options, self.deadline)) {
+                            .session => |v| v,
+                            .failure => |err| return self.finish(err),
+                        };
+                    }
+                    self.phase = .send_head;
+                },
+                .send_head => {
+                    if (!self.send(self.request_head[0..self.request_head_len], false)) return self.result;
+                    self.phase = if (self.preflight) .receive else .send_body;
+                },
+                .send_body => {
+                    const offset = self.result.request_body_confirmed;
+                    if (self.length) |length| if (offset == length) {
+                        self.phase = .receive;
+                        continue;
+                    };
+                    const capacity = @min(self.buffers.upload.len, @as(usize, 8 * 1024));
+                    const available: usize = if (self.length) |length| @intCast(@min(capacity, length - offset)) else capacity;
+                    const bytes = if (self.options.reader) |reader| blk: {
+                        const n = reader(self.options.reader_context, offset, self.buffers.upload[0..available]);
+                        if (n == -1) {
+                            self.result.state = .paused;
+                            return self.result;
+                        }
+                        if (n == -2) return self.finish(.cancelled);
+                        if (n < 0 or n > available) return self.finish(.read_failed);
+                        if (n == 0) {
+                            if (self.length != null) return self.finish(.read_failed);
+                            if (!self.send("0\r\n\r\n", false)) return self.result;
+                            self.phase = .receive;
+                            continue;
+                        }
+                        break :blk self.buffers.upload[0..@intCast(n)];
+                    } else self.options.request.body[@intCast(offset)..][0..available];
+                    if (bytes.len > self.options.request_body_limit - offset) return self.finish(.request_too_large);
+                    if (self.length == null) {
+                        var line: [24]u8 = undefined;
+                        const prefix = std.fmt.bufPrint(&line, "{x}\r\n", .{bytes.len}) catch unreachable;
+                        if (!self.send(prefix, false)) return self.result;
+                    }
+                    if (!self.send(bytes, true)) return self.result;
+                    if (self.length == null and !self.send("\r\n", false)) return self.result;
+                },
+                .receive => {
+                    if (self.pending.len != 0) {
+                        const action = self.sink.write(self.sink.context, self.result.response_delivered, self.pending);
+                        // Acceptance happens inside the callback, before any
+                        // stop intent it may publish. Never erase that prefix.
+                        if (action == .accept) {
+                            self.result.response_delivered += self.pending.len;
+                            self.pending = "";
+                        }
+                        if (self.stopped or shouldStop(self.options.request)) return self.finish(.cancelled);
+                        switch (action) {
+                            .pause => {
+                                self.result.state = .paused;
+                                return self.result;
+                            },
+                            .cancel => return self.finish(.cancelled),
+                            .fail => return self.finish(.sink_failed),
+                            .accept => {},
+                        }
+                        continue;
+                    }
+                    const eof = self.result.tcp_eof or self.result.tls_close_notify;
+                    const step = self.decoder.push(self.remaining_input, eof, false);
+                    self.remaining_input = self.remaining_input[step.consumed..];
+                    if (!self.preflight) self.result.response_received = self.decoder.receivedBytes();
+                    switch (step.state) {
+                        .head => {
+                            const head = self.decoder.response().?;
+                            if (self.preflight) {
+                                if (!acceptsPreflight(head, self.options.request.origin, .post, self.headers[0..self.headers_len], self.options.request.credentials_include)) return self.finish(.cors_preflight_failed);
+                            } else {
+                                self.result.status = head.status;
+                                self.result.response_total = self.decoder.totalBytes();
+                                if (self.options.request.cors and isCrossOrigin(self.options.request.origin, url) and !acceptsCorsResponse(head, self.options.request.origin, self.options.request.credentials_include)) return self.finish(.cors_rejected);
+                                if (head.isRedirect() and self.options.request.redirect == .error_mode) return self.finish(.redirect_disallowed);
+                                if (self.options.request.cookie_sink) |sink| {
+                                    for (head.set_cookies[0..head.set_cookie_count]) |cookie| if (cookie) |value| sink(self.options.request.cookie_context, self.url[0..self.url_len], value);
+                                }
+                            }
+                        },
+                        .chunk => if (!self.preflight) {
+                            self.pending = step.bytes;
+                        },
+                        .complete => {
+                            if (self.preflight) {
+                                self.phase = .preflight_close;
+                                continue;
+                            }
+                            self.result.http_complete = true;
+                            self.result.state = .complete;
+                            self.phase = .terminal;
+                            _ = self.closeOwned(self.deadline.remaining(&self.transport.network));
+                            return self.result;
+                        },
+                        .failure => {
+                            self.result.framing_failure = step.failure;
+                            return self.finish(if (step.failure == .body_too_large) .response_too_large else .malformed_response);
+                        },
+                        .aborted => return self.finish(.cancelled),
+                        .need_more => {
+                            if (self.remaining_input.len != 0) return self.finish(.malformed_response);
+                            if (self.tls) |*session| {
+                                switch (self.transport.readTlsApplication(&self.socket.?, session, self.buffers.tls, self.options.request, self.deadline)) {
+                                    .bytes => |bytes| self.remaining_input = bytes,
+                                    .close_notify => self.result.tls_close_notify = true,
+                                    .failure => |err| {
+                                        if (err == .read_peer_closed) self.result.tcp_eof = true;
+                                        // A bare TCP EOF never authenticates a TLS body end.
+                                        return self.finish(if (err == .read_failed and self.deadline.expired(&self.transport.network)) .read_timeout else err);
+                                    },
+                                }
+                            } else switch (readSocketBounded(&self.socket.?, self.buffers.io, self.options.request, self.deadline)) {
+                                .bytes => |n| self.remaining_input = self.buffers.io[0..n],
+                                .peer_closed, .closed => self.result.tcp_eof = true,
+                                .cancelled => return self.finish(.cancelled),
+                                .timed_out => return self.finish(.read_timeout),
+                                .reset => return self.finish(.read_reset),
+                                .failed => return self.finish(if (self.deadline.expired(&self.transport.network)) .read_timeout else .read_failed),
+                            }
+                        },
+                    }
+                },
+                .preflight_close => {
+                    if (!self.closeOwned(self.deadline.remaining(&self.transport.network))) {
+                        self.result.state = .cleanup_pending;
+                        return self.result;
+                    }
+                    self.socket = null;
+                    self.tls = null;
+                    self.preflight = false;
+                    self.result = .{};
+                    self.decoder = .init(self.buffers.headers, .post, self.options.response_limits);
+                    if (!self.preparePost()) return self.result;
+                    self.phase = .connect;
+                },
+                .terminal => return self.result,
+            }
+        }
+    }
+
+    fn preparePost(self: *PostStream) bool {
+        var cookie_buffer: [1024]u8 = undefined;
+        const options = self.options.request;
+        const cookie = if (options.initial_cookie) |v| v else if (options.cookie_provider) |provider|
+            provider(options.cookie_context, self.url[0..self.url_len], &cookie_buffer)
+        else
+            options.cookie;
+        const head = switch (http.buildStreamRequestHead(&self.request_head, .post, self.parsed_url.?, .{ .cookie = cookie, .origin = options.origin, .headers = self.headers[0..self.headers_len] }, if (self.length) |length| .{ .content_length = length } else .chunked)) {
+            .bytes => |v| v,
+            else => {
+                _ = self.finish(.request_too_large);
+                return false;
+            },
+        };
+        self.request_head_len = head.len;
+        return true;
+    }
+
+    fn send(self: *PostStream, plain: []const u8, body: bool) bool {
+        // A record is protected once. On a partial/unknown write it is never
+        // protected or submitted again; only earlier confirmed prefixes count.
+        const wire = if (self.tls) |*session| switch (self.transport.protectTlsApplication(session, plain, self.buffers.tls)) {
+            .bytes => |v| v,
+            .failure => |err| {
+                _ = self.finish(err);
+                return false;
+            },
+        } else plain;
+        var pos: usize = 0;
+        while (pos < wire.len) {
+            if (self.stopped or shouldStop(self.options.request)) {
+                if (!self.preflight and self.tls != null and pos != 0) self.result.request_effect_unknown = true;
+                _ = self.finish(.cancelled);
+                return false;
+            }
+            if (self.deadline.expired(&self.transport.network)) {
+                if (!self.preflight and self.tls != null and pos != 0) self.result.request_effect_unknown = true;
+                _ = self.finish(.read_timeout);
+                return false;
+            }
+            const end = @min(wire.len, pos + abi.net_service_tcp_write_max);
+            switch (self.socket.?.write(wire[pos..end], self.deadline.remaining(&self.transport.network))) {
+                .bytes => |n| {
+                    if (n == 0) {
+                        self.transport.network.sys.sleepTicks(1);
+                        continue;
+                    }
+                    if (!self.preflight) {
+                        self.result.application_wire_confirmed += n;
+                        if (body and self.tls == null) self.result.request_body_confirmed += n;
+                    }
+                    pos += n;
+                },
+                .would_block => self.transport.network.sys.sleepTicks(1),
+                .failure => {
+                    if (!self.preflight) self.result.request_effect_unknown = true;
+                    _ = self.finish(if (self.stopped or shouldStop(self.options.request)) .cancelled else if (self.deadline.expired(&self.transport.network)) .read_timeout else .write_failed);
+                    return false;
+                },
+                else => {
+                    if (!self.preflight and self.tls != null and pos != 0) self.result.request_effect_unknown = true;
+                    _ = self.finish(.write_failed);
+                    return false;
+                },
+            }
+        }
+        if (body and self.tls != null and !self.preflight) self.result.request_body_confirmed += plain.len;
+        return true;
+    }
+
+    fn closeOwned(self: *PostStream, timeout: Timeout) bool {
+        if (self.socket) |*socket| {
+            if (!socket.valid()) return true;
+            _ = socket.close(timeout);
+            if (socket.valid()) return false;
+            self.result.close_ack = true;
+        }
+        return true;
+    }
+
+    fn finish(self: *PostStream, failure: Error) PostStreamReport {
+        self.result.failure = failure;
+        self.result.state = if (failure == .cancelled) .cancelled else .failed;
+        self.phase = .terminal;
+        if (self.socket != null) _ = self.closeOwned(if (self.deadline.valid) self.deadline.remaining(&self.transport.network) else time_contract.timeoutPoll());
+        return self.result;
+    }
+};
+
+test "HTTP81 actual POST owner retains paused bytes counts acceptance and handles cancel sink error" {
+    const State = struct {
+        action: PostStreamAction = .pause,
+        stop: ?*abi.R4StopFlag = null,
+        calls: usize = 0,
+        output: [8]u8 = undefined,
+        fn write(raw: ?*anyopaque, offset: u64, bytes: []const u8) PostStreamAction {
+            const self: *@This() = @ptrCast(@alignCast(raw.?));
+            self.calls += 1;
+            if (self.action == .accept) @memcpy(self.output[@intCast(offset)..][0..bytes.len], bytes);
+            if (self.stop) |flag| @atomicStore(u32, &flag.value, 1, .release);
+            return self.action;
+        }
+    };
+    var transport: WebTransport = undefined; // No network branch is reached.
+    var header: [http.max_header_bytes]u8 = undefined;
+    var io: [64]u8 = undefined;
+    var upload: [64]u8 = undefined;
+    var scratch: [tls_scratch_bytes]u8 = undefined;
+    var sink = State{};
+    var stream = PostStream{ .transport = &transport, .options = .{}, .buffers = .{ .headers = &header, .io = &io, .upload = &upload, .tls = &scratch }, .sink = .{ .context = &sink, .write = State.write }, .deadline = .{ .forever = true }, .decoder = .init(&header, .post, .{}), .phase = .receive, .remaining_input = "HTTP/1.1 200 OK\r\nTransfer-Encoding: chunked\r\n\r\n8\r\nabcdefgh\r\n0\r\n\r\n" };
+    const url = "http://stream.example/events";
+    @memcpy(stream.url[0..url.len], url);
+    stream.url_len = url.len;
+    stream.parsed_url = http.parseUrl(url).value;
+    const paused = stream.run();
+    try std.testing.expectEqual(PostStreamState.paused, paused.state);
+    try std.testing.expectEqual(@as(u64, 8), paused.response_received);
+    try std.testing.expectEqual(@as(u64, 0), paused.response_delivered);
+    try std.testing.expect(paused.response_total == null and !paused.http_complete and !paused.close_ack);
+    sink.action = .accept;
+    const complete = stream.run();
+    try std.testing.expectEqual(PostStreamState.complete, complete.state);
+    try std.testing.expectEqual(@as(u64, 8), complete.response_delivered);
+    try std.testing.expectEqualStrings("abcdefgh", &sink.output);
+    try std.testing.expect(complete.http_complete and !complete.close_ack and stream.canRelease());
+    try std.testing.expectEqual(@as(usize, 2), sink.calls);
+
+    // Reuse the actual retained context path, without manufacturing an ACK.
+    stream.phase = .receive;
+    stream.result = .{};
+    stream.pending = "x";
+    sink.action = .fail;
+    try std.testing.expectEqual(Error.sink_failed, stream.run().failure.?);
+    try std.testing.expectEqual(@as(u64, 0), stream.report().response_delivered);
+    stream.phase = .receive;
+    stream.result = .{};
+    stream.cancel();
+    try std.testing.expectEqual(PostStreamState.cancelled, stream.run().state);
+    var stop = abi.R4StopFlag{ .value = 0 };
+    stream.phase = .receive;
+    stream.result = .{};
+    stream.stopped = false;
+    stream.options.request.stop = &stop;
+    stream.pending = "x";
+    sink.action = .accept;
+    sink.stop = &stop;
+    const accepted_then_stopped = stream.run();
+    try std.testing.expectEqual(PostStreamState.cancelled, accepted_then_stopped.state);
+    try std.testing.expectEqual(@as(u64, 1), accepted_then_stopped.response_delivered);
+    const rejected = stream.init(&transport, url, stream.buffers, stream.sink, .{ .request = .{ .method = .post, .redirect = .manual, .body = "exceeds" }, .request_body_limit = 2 });
+    try std.testing.expectEqual(Error.request_too_large, rejected.failure.?);
+    try std.testing.expect(stream.canRelease() and !rejected.close_ack);
+}
 
 fn sameOrigin(left: http.ParsedUrl, right: http.ParsedUrl) bool {
     return left.scheme == right.scheme and left.port == right.port and std.ascii.eqlIgnoreCase(left.host, right.host);

@@ -342,12 +342,13 @@ pub fn build(b: *std.Build) void {
         "complete response heads retain precise errors", "incremental response framing excludes",
         "stream decoder exposes ranges",                 "redirect filtering removes",
         "transport target authorizer observes",          "request deadline remains absolute",
-        "stream download pump resumes",                  "CORS preflight derives",
-        "TLS handshake records reassemble",              "origin policy blocks",
-        "CORS requires an exact origin",                 "cookies honor host path",
-        "response cache eviction",                       "response cache modes freshness",
-        "resource scheduler rejects stale",              "subdocuments srcdoc inherits",
-        "Headers rejects malformed",                     "Headers preserves Set-Cookie",
+        "stream download pump resumes",                  "HTTP81",
+        "CORS preflight derives",                        "TLS handshake records reassemble",
+        "origin policy blocks",                          "CORS requires an exact origin",
+        "cookies honor host path",                       "response cache eviction",
+        "response cache modes freshness",                "resource scheduler rejects stale",
+        "subdocuments srcdoc inherits",                  "Headers rejects malformed",
+        "Headers preserves Set-Cookie",
     } }));
     b.step("transport-parity-test", "Existing bounded HTTP/cache/policy/resource/download owner cases").dependOn(&transport_tests.step);
     const update_cases = b.createModule(.{ .root_source_file = b.path("test_update_owners.zig"), .target = data_target, .optimize = .ReleaseSafe });

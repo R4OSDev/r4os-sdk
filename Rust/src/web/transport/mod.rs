@@ -11,6 +11,8 @@ mod job;
 pub use job::Job;
 mod cache;
 pub use cache::{Cache, CacheClock, CacheKey, CacheLease, CacheMode};
+mod stream;
+pub use stream::{PostBuffers, PostRequest, PostStream, StreamReport, StreamState};
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Error {
     Native(super::Error),

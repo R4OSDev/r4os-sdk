@@ -1245,3 +1245,51 @@ SDK123 nutzt Contract65 und die in0.88.79 qualifizierte TCPSVC9-/Kernel446-
 Basis, kein neuer Provider-/Kernelbuild fuer diese Fassadenkorrektur.
 SDK99/R4OS100 sind die aktuellen finalen Roadmapstufen nach allen fachlichen
 Unterversionen; SDK-Komponentenversionen bleiben davon unabhaengig.
+
+
+Begrenztes inkrementelles POST seit0.88.81 / SDK0.64.124
+------------------------------------------------------
+app_web.PostStream ist ein separater, ortsfester SDK-Library-Owner. Die
+bisherigen Fetch-/Download-Typen und der CL-only StreamDecoder bleiben
+unveraendert. PayloadStreamDecoder verwendet denselben Headerparser und
+liefert geliehene Bodyteile fuer CL, chunked (inklusive Extensions/Trailer)
+und explizit erlaubtes EOF. Requestheader und Body werden getrennt gesendet;
+ein Body ueber12KB benoetigt keinen entsprechend grossen Headerpuffer.
+
+Bekannte Slice-/Readerlaenge: Content-Length; unbekannte Readerlaenge:
+chunked. Reader produziert maximal8KB pro Aufruf in einen Aufruferpuffer,
+mit0=EOF/-1=Pause/-2=Cancel/-3=Fehler. Sink akzeptiert den geliehenen Chunk
+vollstaendig oder pausiert mit0 uebernommenen Bytes. Beim naechsten run
+bleibt derselbe Chunk erhalten. Zeitbudget ist eine gemeinsame absolute
+Frist; Pausen und Callbacks starten sie nicht neu. Callbacks muessen begrenzt
+zurueckkehren. Kein automatisches POST-/TLSrecord-Replay bei Teilfortschritt
+oder unbekannter Wirkung. Manueller Redirect oder Fehler, kein automatisches
+Credentialweiterreichen; bestehende Target-/Cookie-/CORS-/TLS-Trustregeln.
+
+Defaults: je64MB Request-/Responsebody, URL1024B, Requestheader12KB,
+Responseheader16KB/64Felder, Chunk-/Trailerzeile1024B, Trailer16KB/64Felder,
+maximal8Zwischenantworten. TLSscratch54KB, Responseheader16KB sowie kleine
+nichtleere IO-/Uploadpuffer beim Aufrufer. 1MB=1024KB. Speicherbedarf bleibt
+unabhaengig von der gesamten Antwortlaenge. Eigene Reader/Sinks begrenzen
+zusaetzlich ihre Arbeit. Kein Requesttrailer; Framing-/Expect-/Connection-
+Header bleiben Transportbesitz. Eine unbekannte Antwortgesamtgroesse ist
+null, nicht0. Bestaetigter Requestpraefix, Application-Wirebytes (bei TLS
+inklusive Recordoverhead, ohneHandshake), decodierte und vom Sink uebernommene
+Bytes bleiben getrennt. Bei teilweise gesendetem TLSrecord zaehlt nur der
+vorher bestaetigte Plaintextpraefix; unbestaetigte Wirkung bleibt markiert.
+
+Nur gueltiges explizites CloseACK gibt den lokalen Socketbesitz frei.
+Unknown/Timeout behaelt Socket und Kontext; mit eigenem begrenztem
+Cleanupbudget close auswerten. HTTPvollstaendigkeit, TCP-EOF und
+TLS-close_notify werden unabhaengig berichtet. TLS-TCP-EOF ohne close_notify
+vervollstaendigt keinen EOF-Body. Rust-Drop ist nur best-effort Poll-Close.
+
+C: transport_helpers.h mit generierten postStreamInit/Run/Report/Response/
+Cancel/Close/CanRelease und Callbackadaptern. Zig: app_web.PostStream.
+Rust: web::transport::{PostRequest,PostBuffers,PostStream,StreamReport}.
+Die komplette lokale web-/transport-Bridge wird regulaer neu projiziert;
+Headers, Rustdeklarationen und SDKbareruntime nicht aus Revisionen mischen.
+Beispiel und Callbacksignaturen stehen in Examples/README.md. SSE-Zeilen,
+UTF8-Zustaende, id/mehrzeilige data und LLM-Endmarker bleiben Anwendungscode.
+Nexus bleibt auf seinen eigenen SDK92-/Contract45-Pins; keine Migration oder
+Behauptung zu seiner TLS-Ursache. Contract65/TCPSVC9/Kernel446 unveraendert.

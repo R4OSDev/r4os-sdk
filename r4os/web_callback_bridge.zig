@@ -43,6 +43,8 @@ pub const Kind = enum(u6) {
     download_progress,
     download_write,
     runtime_lookup,
+    post_stream_write,
+    post_stream_read,
 };
 pub const Table = extern struct {
     user: ?*anyopaque = null,

@@ -48,3 +48,33 @@ pub fn sink(table: *const cb.Table) Error!web.DownloadSink {
     if (!table.has(.download_write)) return error.MissingCallback;
     return .{ .context = @ptrCast(@constCast(table)), .write_fn = cb.pointer(web.DownloadWrite, 0, .download_write) };
 }
+pub fn postStreamCallbacks(options: *web.PostStreamOptions, table: *const cb.Table) void {
+    fetchCallbacks(&options.request, table);
+    options.reader_context = @ptrCast(@constCast(table));
+    options.reader = if (table.has(.post_stream_read)) cb.pointer(web.PostStreamRead, 0, .post_stream_read) else null;
+}
+pub fn postStreamSink(table: *const cb.Table) Error!web.PostStreamSink {
+    if (!table.has(.post_stream_write)) return error.MissingCallback;
+    return .{ .context = @ptrCast(@constCast(table)), .write = cb.pointer(web.PostStreamWrite, 0, .post_stream_write) };
+}
+pub fn postStreamInit(output: *web.PostStream, ctx: *Context, url: []const u8, buffers: web.PostStreamBuffers, stream_sink: web.PostStreamSink, options: web.PostStreamOptions) web.PostStreamReport {
+    return output.init(&ctx.transport, url, buffers, stream_sink, options);
+}
+pub fn postStreamRun(stream: *web.PostStream) web.PostStreamReport {
+    return stream.run();
+}
+pub fn postStreamReport(stream: *const web.PostStream) web.PostStreamReport {
+    return stream.report();
+}
+pub fn postStreamResponse(stream: *const web.PostStream) ?@import("http.zig").Response {
+    return stream.response();
+}
+pub fn postStreamCancel(stream: *web.PostStream) void {
+    stream.cancel();
+}
+pub fn postStreamClose(stream: *web.PostStream, timeout: web.Timeout) bool {
+    return stream.close(timeout);
+}
+pub fn postStreamCanRelease(stream: *const web.PostStream) bool {
+    return stream.canRelease();
+}
