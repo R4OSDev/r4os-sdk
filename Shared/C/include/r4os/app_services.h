@@ -123,14 +123,14 @@ static inline int32_t r4_services_open(R4Services *services, const char *name, R
     return R4OS_SERVICE_API_RESULT_OK;
 }
 
-static inline R4ServiceCallResult r4_service_connection_call(R4ServiceConnection *connection, uint16_t op, const void *request, uint32_t request_len, void *response, uint32_t response_capacity, R4Timeout timeout) {
+/* Internal tick budget: callers carrying an absolute deadline must not
+ * round remaining ticks through nanoseconds and start another full budget. */
+static inline R4ServiceCallResult r4_service_connection_call_ticks(R4ServiceConnection *connection, uint16_t op, const void *request, uint32_t request_len, void *response, uint32_t response_capacity, uint64_t ticks) {
     R4ServiceCallResult result = {R4_SERVICE_CALL_FAILED, R4OS_ERR_CLOSED, 0u, {0}};
     if (!r4_service_connection_valid(connection)) return result;
     if (request_len > R4OS_SERVICE_API_MAX_PAYLOAD || response_capacity > R4OS_SERVICE_API_MAX_PAYLOAD || (request_len != 0u && request == 0) || (response_capacity != 0u && response == 0)) { result.raw_code = R4OS_SERVICE_API_RESULT_INVALID; return result; }
     const R4XStartR4Sys *table = connection->app->system.table;
     if (!R4_SERVICES_HAS(table, service_call)) { result.raw_code = R4OS_ERR_NO_FN; return result; }
-    uint64_t ticks = 0u;
-    if (r4_timeout_to_ticks(timeout, r4_services_monotonic_hz(connection->app), &ticks) != R4OS_OK) { result.raw_code = R4OS_SERVICE_API_RESULT_INVALID; return result; }
     R4ServiceMessageHeader header = {0};
     int32_t raw = ((R4SysServiceCallFn)(uintptr_t)table->service_call)(connection->raw, op, (const uint8_t *)request, request_len, &header, (uint8_t *)response, response_capacity, ticks);
     result.header = header; result.raw_code = raw;
@@ -140,6 +140,15 @@ static inline R4ServiceCallResult r4_service_connection_call(R4ServiceConnection
     if (header.status != R4OS_SERVICE_API_RESULT_OK) { result.kind = R4_SERVICE_CALL_REMOTE_FAILURE; result.raw_code = header.status; return result; }
     result.kind = R4_SERVICE_CALL_RESPONSE; result.raw_code = R4OS_SERVICE_API_RESULT_OK; result.bytes = (uint32_t)raw;
     return result;
+}
+
+static inline R4ServiceCallResult r4_service_connection_call(R4ServiceConnection *connection, uint16_t op, const void *request, uint32_t request_len, void *response, uint32_t response_capacity, R4Timeout timeout) {
+    uint64_t ticks = 0u;
+    if (!r4_service_connection_valid(connection)) return (R4ServiceCallResult){R4_SERVICE_CALL_FAILED, R4OS_ERR_CLOSED, 0u, {0}};
+    if (request_len > R4OS_SERVICE_API_MAX_PAYLOAD || response_capacity > R4OS_SERVICE_API_MAX_PAYLOAD || (request_len != 0u && request == 0) || (response_capacity != 0u && response == 0)) return (R4ServiceCallResult){R4_SERVICE_CALL_FAILED, R4OS_SERVICE_API_RESULT_INVALID, 0u, {0}};
+    if (!R4_SERVICES_HAS(connection->app->system.table, service_call)) return (R4ServiceCallResult){R4_SERVICE_CALL_FAILED, R4OS_ERR_NO_FN, 0u, {0}};
+    if (r4_timeout_to_ticks(timeout, r4_services_monotonic_hz(connection->app), &ticks) != R4OS_OK) return (R4ServiceCallResult){R4_SERVICE_CALL_FAILED, R4OS_SERVICE_API_RESULT_INVALID, 0u, {0}};
+    return r4_service_connection_call_ticks(connection, op, request, request_len, response, response_capacity, ticks);
 }
 
 static inline R4ServiceCallResult r4_service_connection_call_struct(R4ServiceConnection *connection, uint16_t op, const void *request, uint32_t request_size, void *response, uint32_t response_size, R4Timeout timeout) {

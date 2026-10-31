@@ -103,17 +103,8 @@ pub const ServiceConnection = struct {
 
     pub fn call(self: *ServiceConnection, op: u16, request: []const u8, response: []u8, timeout: Timeout) ServiceCall {
         if (!self.valid()) return .{ .failure = abi.err_closed };
-        var header: abi.ServiceMessageHeader = .{};
-        const raw = self.sys.serviceCallTimeout(self.raw, op, request, &header, response, timeout);
-        if (raw == abi.service_api_result_timeout) return .timed_out;
-        if (raw == abi.service_api_result_bad_handle or raw == abi.service_api_result_not_running) {
-            self.raw = 0;
-            return .{ .failure = raw };
-        }
-        if (raw < 0) return .{ .failure = raw };
-        if (header.status == abi.service_api_result_timeout) return .timed_out;
-        if (header.status != abi.service_api_result_ok) return .{ .remote_failure = header.status };
-        return .{ .response = .{ .header = header, .bytes = @intCast(raw) } };
+        const ticks = time_contract.timeoutToTicks(timeout, self.sys.monotonicHz()) catch return .{ .failure = abi.service_api_result_invalid };
+        return callWithTicks(self, op, request, response, ticks);
     }
 
     pub fn callTyped(self: *ServiceConnection, comptime Request: type, comptime Response: type, op: u16, request: *const Request, timeout: Timeout) TypedServiceCall(Response) {
@@ -139,6 +130,22 @@ pub const ServiceConnection = struct {
         return raw;
     }
 };
+
+/// Shared native tick-budget owner; not an extra reflected connection method.
+pub fn callWithTicks(connection: *ServiceConnection, op: u16, request: []const u8, response: []u8, ticks: u64) ServiceCall {
+    if (!connection.valid()) return .{ .failure = abi.err_closed };
+    var header: abi.ServiceMessageHeader = .{};
+    const raw = connection.sys.serviceCall(connection.raw, op, request, &header, response, ticks);
+    if (raw == abi.service_api_result_timeout) return .timed_out;
+    if (raw == abi.service_api_result_bad_handle or raw == abi.service_api_result_not_running) {
+        connection.raw = 0;
+        return .{ .failure = raw };
+    }
+    if (raw < 0) return .{ .failure = raw };
+    if (header.status == abi.service_api_result_timeout) return .timed_out;
+    if (header.status != abi.service_api_result_ok) return .{ .remote_failure = header.status };
+    return .{ .response = .{ .header = header, .bytes = @intCast(raw) } };
+}
 
 pub const EndpointWait = union(enum) {
     ready: u32,

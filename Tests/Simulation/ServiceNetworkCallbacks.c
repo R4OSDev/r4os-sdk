@@ -144,3 +144,70 @@ int sdk_net_current_admission(const R4XStartContext *start) {
     if (R4SdkNet_netServiceRequest(start, 1, 2, 3, 0, 0, response, sizeof(response)-1) != R4OS_NET_SERVICE_RESULT_BAD_REQUEST) return 3;
     return memcmp(response, before, sizeof(response)) ? 4 : 0;
 }
+
+/* One controlled TCP peer: discovery consumes budget; a lost reply may have
+ * consumed bytes; a structured timeout can still acknowledge a prefix. */
+static uint64_t tcp_deadline_now, tcp_discovery_ticks, tcp_expected_deadline, tcp_expected_wait;
+static uint32_t tcp_deadline_calls, tcp_deadline_effects, tcp_deadline_missing_footer, tcp_deadline_mode;
+static uint64_t tcp_deadline_ticks(void){return tcp_deadline_now;}
+static int32_t tcp_deadline_open(const uint8_t *name,R4ServiceInfo *out){
+    tcp_deadline_now+=tcp_discovery_ticks;return fake_open(name,out);
+}
+static int32_t tcp_deadline_call(uint32_t handle,uint16_t op,const uint8_t *request,uint32_t n,R4ServiceMessageHeader *header,uint8_t *out,uint32_t capacity,uint64_t wait){
+    ++tcp_deadline_calls;
+    if(n<sizeof(R4ServiceDeadlineFooter)){++tcp_deadline_missing_footer;return R4OS_SERVICE_API_RESULT_INVALID;}
+    R4ServiceDeadlineFooter footer;memcpy(&footer,request+n-sizeof(footer),sizeof(footer));
+    if(footer.magic!=UINT32_C(1279538258)||footer.version!=1||footer.size!=sizeof(footer)||footer.reserved0||footer.payload_len!=n-sizeof(footer)||footer.deadline_tick!=tcp_expected_deadline||wait!=tcp_expected_wait){
+        ++tcp_deadline_missing_footer;return R4OS_SERVICE_API_RESULT_INVALID;
+    }
+    if(tcp_deadline_mode==1){++tcp_deadline_effects;return R4OS_SERVICE_API_RESULT_TIMEOUT;}
+    if(tcp_deadline_mode==2){
+        R4NetServiceTcpResult reply={0};reply.magic=R4OS_NET_SERVICE_TCP_RESULT_MAGIC;reply.version=R4OS_NET_SERVICE_TCP_RESULT_VERSION;reply.action=op;
+        reply.flags=R4OS_NET_SERVICE_TCP_FLAG_DATA|R4OS_NET_SERVICE_TCP_FLAG_TIMEOUT;reply.service_status=R4OS_NET_SERVICE_STATUS_TIMEOUT;
+        reply.lifecycle_cause=R4OS_NET_SERVICE_SOCKET_LIFECYCLE_TIMEOUT;reply.bytes=3;
+        assert(capacity>=sizeof(reply)+3);memcpy(out,&reply,sizeof(reply));memcpy(out+sizeof(reply),"ACK",3);
+        *header=(R4ServiceMessageHeader){.magic=R4OS_SERVICE_API_MAGIC,.version=R4OS_SERVICE_API_VERSION,.op=op,.status=R4OS_SERVICE_API_RESULT_OK};
+        return (int32_t)sizeof(reply)+3;
+    }
+    return fake_call(handle,op,request,footer.payload_len,header,out,capacity,wait);
+}
+void sdk_tcp_deadline_reset(uint32_t mode,uint64_t discovery,uint64_t deadline,uint64_t wait){
+    tcp_deadline_now=100;tcp_discovery_ticks=discovery;tcp_expected_deadline=deadline;tcp_expected_wait=wait;
+    tcp_deadline_calls=0;tcp_deadline_effects=0;tcp_deadline_missing_footer=0;tcp_deadline_mode=mode;reply_mode=MODE_OK;clock_rate=1000;clock_mode=0;
+}
+void sdk_tcp_deadline_tables(R4XStartR4Sys *sys,R4XStartR4Net *net){
+    R4App app;init_app(&app,sys,net);sys->ticks=(uintptr_t)&tcp_deadline_ticks;
+    sys->service_open=(uintptr_t)&tcp_deadline_open;sys->service_call=(uintptr_t)&tcp_deadline_call;
+}
+uint32_t sdk_tcp_deadline_calls(void){return tcp_deadline_calls;}
+uint32_t sdk_tcp_deadline_effects(void){return tcp_deadline_effects;}
+uint32_t sdk_tcp_deadline_bad_footer(void){return tcp_deadline_missing_footer;}
+int sdk_service_tcp_deadline_case(void){
+    R4App app;R4XStartR4Sys sys;R4XStartR4Net net;init_app(&app,&sys,&net);sdk_tcp_deadline_tables(&sys,&net);
+    R4Network network=r4_app_network(&app);
+    R4TcpSocket socket={.network=network,.raw=501,.owned=1};
+    uint8_t bytes[8]={0};R4Timeout finite=r4_timeout_finite((R4Duration){20000000});
+    sdk_tcp_deadline_reset(0,5,120,15);
+    R4NetResult result=r4_tcp_socket_write(&socket,(const uint8_t *)"HELLO",5,finite);
+    if(tcp_deadline_missing_footer||tcp_deadline_calls!=1||result.kind!=R4_NET_RESULT_OK||result.bytes!=5)return 101;
+    sdk_tcp_deadline_reset(1,0,120,20);
+    result=r4_tcp_socket_read(&socket,bytes,sizeof(bytes),finite);
+    /* 9 is the additive facade outcome-unknown state, not a wire status. */
+    if(result.kind!=9||result.raw_code!=R4OS_SERVICE_API_RESULT_TIMEOUT||tcp_deadline_calls!=1||tcp_deadline_effects!=1)return 102;
+    sdk_tcp_deadline_reset(2,0,120,20);
+    result=r4_tcp_socket_read(&socket,bytes,sizeof(bytes),finite);
+    if(result.kind!=R4_NET_RESULT_TIMED_OUT||result.bytes!=3||memcmp(bytes,"ACK",3))return 103;
+    sdk_tcp_deadline_reset(0,20,120,0);
+    result=r4_tcp_socket_read(&socket,bytes,sizeof(bytes),finite);
+    if(result.kind!=R4_NET_RESULT_TIMED_OUT||result.bytes||tcp_deadline_calls)return 104;
+    sdk_tcp_deadline_reset(0,0,0,0);
+    result=r4_tcp_socket_write(&socket,(const uint8_t *)"X",1,r4_timeout_poll());
+    if(result.kind!=R4_NET_RESULT_OK||result.bytes!=1||tcp_deadline_missing_footer)return 105;
+    sdk_tcp_deadline_reset(0,5,UINT64_MAX,UINT64_MAX);
+    result=r4_tcp_socket_write(&socket,(const uint8_t *)"X",1,r4_timeout_forever());
+    if(result.kind!=R4_NET_RESULT_OK||result.bytes!=1||tcp_deadline_missing_footer)return 106;
+    sdk_tcp_deadline_reset(0,0,0,0);tcp_deadline_now=UINT64_MAX-10;
+    result=r4_tcp_socket_read(&socket,bytes,sizeof(bytes),finite);
+    if(result.kind!=R4_NET_RESULT_FAILED||tcp_deadline_calls)return 107;
+    return 0;
+}

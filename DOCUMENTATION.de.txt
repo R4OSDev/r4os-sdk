@@ -1154,3 +1154,59 @@ Details/Quellpins/Artefakthashes: Docs/Desktop/DeskRun.txt und
 ExFiles/Reports/Core/0.88.76-rust-gui-evidence/.
 SDK121 ergaenzt ausschliesslich diese Dokumentation/Quellpaketidentitaet;
 Rust-/C-Fassaden, Runtime und oeffentliche ABI unveraendert. Kein STANDARD76.
+
+TCP-Operationsfrist und Bytefortschritt (SDK0.64.122, R4OS0.88.79)
+--------------------------------------------------------------
+
+Die hoeheren TCP-Fassaden fuer C/Rust und Zig verwenden einen end-to-end
+Timeout: Nach der aktuellen monotonen Taktmetadatenabfrage, vor Discovery,
+wird genau eine Frist festgelegt. Dienstsuche und Warteschlange verbrauchen
+dieses Budget. Der native Aufruf erhaelt nur die restlichen Ticks.
+Finite0 fuehrt keinen TCP-Aufruf aus; Overflow darf kein Forever erzeugen.
+
+Lieferpaar: SDK0.64.122 / Contract0.64.65 und TCPSVC ab0.1.9.
+Footer v1 bleibt24Bytes, alle bisherigen festen Typen/Tabellen/Slots gleich.
+Die benannten Konstanten entsprechen dem bisherigen R4DL-Magic/Version1.
+Im TCPSVC-Footer bedeutet deadline_tick0 einen nicht blockierenden Versuch
+ohne Deferred-Wiederholung; Connect liefert WouldBlock ohne blockierenden
+Handshake. MAXu64 bedeutet Forever, sonst gilt die absolute Systemtickfrist.
+TCPSVC prueft vor Aufnahme und vor jedem Deferred-Read/Write/Acceptversuch.
+Eine bereits begonnene Wirkung wird dadurch nicht transaktional rueckgaengig.
+
+Ein bestaetigter Service-Bytezaehler ist ein vom Provider akzeptierter
+Praefix. Kernelwrite zaehlt erfolgreich zum Senden angenommene Segmente;
+weder Remote-TCP-ACK noch Empfang durch die Peeranwendung sind dadurch belegt.
+Bei einem strukturierten Timeout oder Terminalzustand bleiben bestaetigte
+Teilbytes erhalten; Read kopiert sie erst nach Laengenpruefung.
+TLS-Recordbytes und HTTP-Nutzbytes sind andere Zaehler.
+
+Fehlt nach Submission eine gueltige Operationsantwort, liefert C
+R4_NET_RESULT_OUTCOME_UNKNOWN (9). bytes ist dann nicht verfuegbar;
+dessen0 ist KEIN bestaetigter Nullfortschritt.
+r4_net_progress_known(result) prueft diese Gueltigkeit.
+Rust verwendet SocketState::OutcomeUnknown; confirmed_bytes() liefert None.
+Bei gueltiger Antwort liefert es Some(bytes), auch bei Timeout/Terminalstatus.
+bytes bleibt zur Quellkompatibilitaet vorhanden, ist aber nur bei bestaetigtem
+Fortschritt verwendbar. Weder Read noch Write werden automatisch wiederholt.
+
+Zigs bestehende SocketIo-Union hat bei fehlender/ungueltiger TCP-Antwort
+.failure ohne Bytezaehler; ein natives Client-Warteende traegt darin
+service_api_result_timeout. Ein strukturierter Servertimeout ohne Daten
+bleibt .timed_out. Ein validierter positiver Praefix hat im bisherigen
+Ergebnis mit Bytezaehler .bytes Vorrang; wer gleichzeitig alle Statusfelder
+benoetigt, nutzt das vorhandene strukturierte technische Resultat.
+Diese unterschiedliche Ergebnisform fuehrt dieselbe Operationsfrist aus.
+UDP und DNS behalten ihre bisherigen eigenen Vertraege.
+
+Die technische Generated-API tcp*ServiceResultWait/NetSocketRequest bleibt
+ein ausdruecklicher Vertrag mit getrenntem Serverbudget, Completion-Warten
+und nativer Drain-/Closequittung. Dort ist Wait kein hoeherer end-to-end
+Timeout; bisherige Defaults und Completion-Gnadenfrist bleiben erhalten.
+Ein lokales Warteende bestaetigt weder Ressourcenfreigabe noch ausgebliebene
+Serverwirkung. Nach unbekanntem Read-/Writeeffekt nicht blind erneut senden.
+
+Die Namespace-/ABI-Ergaenzung benoetigt keinen neuen Kernel-API-Slot.
+Kernel446 bleibt unveraendert; das genaue neue Runtime-Lieferpaar wird bei
+0.88.79 separat qualifiziert. Das gepinnte Nexus-SDK92/Contract45 wird durch
+diese Quellenlieferung nicht umgestellt. Eine Nexus-Migration und die
+Ursache seines TLS-Recordfehlers bleiben getrennte Verbraucherauftraege.

@@ -57,6 +57,11 @@ static uint32_t service_status(void) {
 }
 
 static int32_t fake_call(uint32_t handle, uint16_t op, const uint8_t *request, uint32_t request_len, R4ServiceMessageHeader *header, uint8_t *response, uint32_t capacity, uint64_t timeout) {
+    /* Decode the optional TCP suffix independently of the SDK encoder. */
+    if (handle == 102u && request_len >= sizeof(R4ServiceDeadlineFooter)) {
+        R4ServiceDeadlineFooter footer; memcpy(&footer, request + request_len - sizeof(footer), sizeof(footer));
+        if (footer.magic == R4OS_SERVICE_DEADLINE_FOOTER_MAGIC && footer.version == R4OS_SERVICE_DEADLINE_FOOTER_VERSION && footer.size == sizeof(footer) && !footer.reserved0 && footer.payload_len == request_len - sizeof(footer)) request_len = footer.payload_len;
+    }
     observed_timeout=timeout; ++observed_calls;
     *header = (R4ServiceMessageHeader){0}; header->magic = R4OS_SERVICE_API_MAGIC; header->version = R4OS_SERVICE_API_VERSION; header->op = op; header->status = R4OS_SERVICE_API_RESULT_OK;
     if(handle==105u)return power_call(op,request,request_len,header,response,capacity);
@@ -100,8 +105,9 @@ static int32_t fake_tcp_marker(uint8_t a, uint8_t b, uint8_t c, uint8_t d, uint1
 static R4Timeout poll_timeout(void) { R4Timeout value = {0}; value.kind = R4OS_TIMEOUT_KIND_POLL; return value; }
 static R4Timeout forever_timeout(void) { R4Timeout value = {0}; value.kind = R4OS_TIMEOUT_KIND_FOREVER; return value; }
 
+static uint64_t network_fixture_ticks(void) { return 100u; }
 static void init_app(R4App *app, R4XStartR4Sys *sys, R4XStartR4Net *net) {
-    *sys = (R4XStartR4Sys){.magic=R4XSTART_R4SYS_MAGIC,.abi_version=R4XSTART_R4SYS_VERSION,.size=sizeof(*sys)}; sys->monotonic_clock=(uintptr_t)&fake_monotonic; sys->time_state=(uintptr_t)&fake_calendar; sys->service_open = (uintptr_t)&fake_open; sys->service_close = (uintptr_t)&fake_close; sys->service_call = (uintptr_t)&fake_call; sys->service_endpoint_register = (uintptr_t)&fake_register; sys->service_endpoint_unregister = (uintptr_t)&fake_unregister; sys->service_endpoint_wait = (uintptr_t)&fake_wait; sys->service_endpoint_recv = (uintptr_t)&fake_recv; sys->service_endpoint_reply = (uintptr_t)&fake_reply;
+    *sys = (R4XStartR4Sys){.magic=R4XSTART_R4SYS_MAGIC,.abi_version=R4XSTART_R4SYS_VERSION,.size=sizeof(*sys)}; sys->ticks=(uintptr_t)&network_fixture_ticks; sys->monotonic_clock=(uintptr_t)&fake_monotonic; sys->time_state=(uintptr_t)&fake_calendar; sys->service_open = (uintptr_t)&fake_open; sys->service_close = (uintptr_t)&fake_close; sys->service_call = (uintptr_t)&fake_call; sys->service_endpoint_register = (uintptr_t)&fake_register; sys->service_endpoint_unregister = (uintptr_t)&fake_unregister; sys->service_endpoint_wait = (uintptr_t)&fake_wait; sys->service_endpoint_recv = (uintptr_t)&fake_recv; sys->service_endpoint_reply = (uintptr_t)&fake_reply;
     *net = (R4XStartR4Net){.magic=R4XSTART_R4NET_MAGIC,.abi_version=R4XSTART_R4NET_VERSION,.size=sizeof(*net)}; net->tcp_connect = (uintptr_t)&fake_tcp_marker;
     *app = (R4App){0}; app->system.table = sys; app->network.table = net;
 }

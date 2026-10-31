@@ -1546,6 +1546,13 @@ pub struct R4NetResult {
     pub r#bytes: u32,
 }
 const _: () = { assert!(core::mem::size_of::<R4NetResult>() == 12); assert!(core::mem::align_of::<R4NetResult>() == 4); assert!(core::mem::offset_of!(R4NetResult, r#kind) == 0); assert!(core::mem::offset_of!(R4NetResult, r#raw_code) == 4); assert!(core::mem::offset_of!(R4NetResult, r#bytes) == 8); };
+#[repr(C, align(4))]
+#[derive(Clone, Copy)]
+pub struct R4TcpServiceCall {
+    pub r#call: R4ServiceCallResult,
+    pub r#submitted: u32,
+}
+const _: () = { assert!(core::mem::size_of::<R4TcpServiceCall>() == 44); assert!(core::mem::align_of::<R4TcpServiceCall>() == 4); assert!(core::mem::offset_of!(R4TcpServiceCall, r#call) == 0); assert!(core::mem::offset_of!(R4TcpServiceCall, r#submitted) == 40); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4Tray {
@@ -19942,6 +19949,7 @@ unsafe extern "C" {
     pub fn r4_services_monotonic_hz(p0: *mut R4App) -> u32;
     pub fn r4_services_stop_bound(p0: *const R4Services, p1: *const u8, p2: *const R4ProgramProcessHandle, p3: R4Timeout, p4: *mut R4ServiceInfo) -> i32;
     pub fn r4_services_open(p0: *mut R4Services, p1: *const u8, p2: *mut R4ServiceConnection) -> i32;
+    pub fn r4_service_connection_call_ticks(p0: *mut R4ServiceConnection, p1: u16, p2: *const core::ffi::c_void, p3: u32, p4: *mut core::ffi::c_void, p5: u32, p6: u64) -> R4ServiceCallResult;
     pub fn r4_service_connection_call(p0: *mut R4ServiceConnection, p1: u16, p2: *const core::ffi::c_void, p3: u32, p4: *mut core::ffi::c_void, p5: u32, p6: R4Timeout) -> R4ServiceCallResult;
     pub fn r4_service_connection_call_struct(p0: *mut R4ServiceConnection, p1: u16, p2: *const core::ffi::c_void, p3: u32, p4: *mut core::ffi::c_void, p5: u32, p6: R4Timeout) -> R4ServiceCallResult;
     pub fn r4_service_connection_close(p0: *mut R4ServiceConnection) -> i32;
@@ -19962,6 +19970,10 @@ unsafe extern "C" {
     pub fn r4_net_write_u32(p0: *mut u8, p1: u32) -> ();
     pub fn r4_network_service_call(p0: *mut R4Network, p1: *const u8, p2: u16, p3: *const core::ffi::c_void, p4: u32, p5: *mut core::ffi::c_void, p6: u32, p7: R4Timeout) -> R4ServiceCallResult;
     pub fn r4_net_from_call(p0: R4ServiceCallResult) -> R4NetResult;
+    pub fn r4_net_progress_known(p0: R4NetResult) -> i32;
+    pub fn r4_tcp_reply_unknown() -> R4NetResult;
+    pub fn r4_network_tcp_service_call(p0: *mut R4Network, p1: u16, p2: *const core::ffi::c_void, p3: u32, p4: *mut core::ffi::c_void, p5: u32, p6: R4Timeout) -> R4TcpServiceCall;
+    pub fn r4_tcp_from_call(p0: R4TcpServiceCall) -> R4NetResult;
     pub fn r4_net_classify_socket(p0: u32, p1: u32, p2: i32, p3: u32) -> R4NetResult;
     pub fn r4_net_classify_tcp(p0: *const R4NetServiceTcpResult, p1: u32) -> R4NetResult;
     pub fn r4_net_classify_udp(p0: *const R4NetServiceUdpResult, p1: u32) -> R4NetResult;

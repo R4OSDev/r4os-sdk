@@ -42,12 +42,17 @@ pub enum SocketState {
     NotFound,
     NoService,
     Failed,
+    /// The operation was submitted but its reply is unavailable or invalid.
+    /// A read/write may already have taken effect; do not retry automatically.
+    OutcomeUnknown,
     Unknown(u32),
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct SocketOutcome {
     pub state: SocketState,
     pub raw_code: i32,
+    /// Confirmed service prefix only when `confirmed_bytes()` returns Some.
+    /// This is buffering/transmission progress, not a peer acknowledgement.
     pub bytes: usize,
 }
 impl SocketOutcome {
@@ -63,6 +68,7 @@ impl SocketOutcome {
                 6 => SocketState::NotFound,
                 7 => SocketState::NoService,
                 8 => SocketState::Failed,
+                9 => SocketState::OutcomeUnknown,
                 n => SocketState::Unknown(n),
             },
             raw_code: raw.raw_code,
@@ -75,6 +81,9 @@ impl SocketOutcome {
             raw_code: code,
             bytes: 0,
         }
+    }
+    pub fn confirmed_bytes(&self) -> Option<usize> {
+        (self.state != SocketState::OutcomeUnknown).then_some(self.bytes)
     }
 }
 impl Network<'_> {
