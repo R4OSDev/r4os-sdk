@@ -1266,12 +1266,20 @@ pub const Context = struct {
         return self.base.serviceDetailByName(service_name, out);
     }
 
+    pub fn serviceBoundDetail(self: *const Context, service_name: [*:0]const u8, out: *abi.ServiceDetail, process: *abi.ProgramProcessHandle) i32 {
+        return self.base.serviceBoundDetail(service_name, out, process);
+    }
+
     pub fn serviceStart(self: *const Context, service_name: [*:0]const u8, out: *abi.ServiceInfo) i32 {
         return self.base.serviceStart(service_name, out);
     }
 
     pub fn serviceStop(self: *const Context, service_name: [*:0]const u8, out: *abi.ServiceInfo, timeout_ticks: u64) i32 {
         return self.base.serviceStop(service_name, out, timeout_ticks);
+    }
+
+    pub fn serviceStopBound(self: *const Context, service_name: [*:0]const u8, process: *const abi.ProgramProcessHandle, out: *abi.ServiceInfo, timeout_ticks: u64) i32 {
+        return self.base.serviceStopBound(service_name, process, out, timeout_ticks);
     }
 
     pub fn serviceRestart(self: *const Context, service_name: [*:0]const u8, out: *abi.ServiceInfo) i32 {

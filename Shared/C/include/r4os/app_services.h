@@ -78,6 +78,17 @@ static inline int r4_services_available(const R4Services *services) {
         R4_SERVICES_HAS(table, service_endpoint_reply);
 }
 
+/* One generation-validated metadata/identity snapshot. A terminal row may
+ * return its last retained process handle; this value grants no retention. */
+static inline int32_t r4_services_bound_detail(const R4Services *services, const char *name, R4ServiceDetail *detail, R4ProgramProcessHandle *process) {
+    if (detail != 0) *detail = (R4ServiceDetail){0};
+    if (process != 0) *process = (R4ProgramProcessHandle){0};
+    if (name == 0 || detail == 0 || process == 0) return R4OS_SERVICE_API_RESULT_INVALID;
+    const R4XStartR4Sys *table = services != 0 && services->app != 0 ? services->app->system.table : 0;
+    if (!R4_SERVICES_HAS(table, service_bound_detail)) return R4OS_ERR_NO_FN;
+    return ((R4SysServiceBoundDetailFn)(uintptr_t)table->service_bound_detail)((const uint8_t *)name, detail, process);
+}
+
 static inline uint32_t r4_services_monotonic_hz(R4App *app) {
     if (app == 0 || !R4SYS_HAS(&app->system, monotonic_clock)) return 0u;
     R4MonotonicClockInfo clock = {0};
@@ -87,6 +98,18 @@ static inline uint32_t r4_services_monotonic_hz(R4App *app) {
     /* Same logical scale as ticks()/TimeState, read anew for each conversion.
        event_effective_hz describes the physical timer's rounded rate. */
     return clock.event_requested_hz;
+}
+
+/* A replacement process is rejected before Close; the original active
+ * process handle must come from the generation-bound detail snapshot. */
+static inline int32_t r4_services_stop_bound(const R4Services *services, const char *name, const R4ProgramProcessHandle *process, R4Timeout timeout, R4ServiceInfo *out) {
+    if (out != 0) *out = (R4ServiceInfo){0};
+    if (name == 0 || process == 0 || out == 0) return R4OS_SERVICE_API_RESULT_INVALID;
+    const R4XStartR4Sys *table = services != 0 && services->app != 0 ? services->app->system.table : 0;
+    if (!R4_SERVICES_HAS(table, service_stop_bound)) return R4OS_ERR_NO_FN;
+    uint64_t ticks = 0;
+    if (r4_timeout_to_ticks(timeout, r4_services_monotonic_hz(services->app), &ticks) != R4OS_OK) return R4OS_SERVICE_API_RESULT_INVALID;
+    return ((R4SysServiceStopBoundFn)(uintptr_t)table->service_stop_bound)((const uint8_t *)name, process, out, ticks);
 }
 
 static inline int32_t r4_services_open(R4Services *services, const char *name, R4ServiceConnection *out) {

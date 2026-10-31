@@ -3,6 +3,226 @@ const r4os = @import("r4os");
 
 const ReplyMode = enum { ok, would_block, timeout, reset, peer_close, no_service };
 
+// Exercise the real SDK policy against controlled ABI callbacks. Acceptance of
+// a kill is deliberately separate from the fixture's physical completion ACK.
+const BoundServiceStopPolicy = struct {
+    const abi = r4os.abi;
+    const Mode = enum { pending, replace_before_stop, replace_after_timeout, kill_completes, replace_at_kill, terminal, starting };
+    const original: abi.ProgramProcessHandle = .{ .instance_id = 41, .generation = 3 };
+    var mode: Mode = .pending;
+    var process: abi.ProgramProcessHandle = original;
+    var now: u64 = 100;
+    var query_cost: u64 = 0;
+    var queries: u32 = 0;
+    var bound_calls: u32 = 0;
+    var named_calls: u32 = 0;
+    var closes: u32 = 0;
+    var typed_kills: u32 = 0;
+    var killed: u32 = 0;
+    var legacy_kills: u32 = 0;
+    var wait_budget: u64 = 0;
+    var acknowledged = false;
+
+    fn reset(next: Mode) void {
+        mode = next;
+        process = if (next == .starting) .{} else original;
+        now = 100;
+        query_cost = 0;
+        queries = 0;
+        bound_calls = 0;
+        named_calls = 0;
+        closes = 0;
+        typed_kills = 0;
+        killed = 0;
+        legacy_kills = 0;
+        wait_budget = 0;
+        acknowledged = next == .terminal;
+    }
+    fn replace() void {
+        // Reuse the numeric ID: only the generation distinguishes the service.
+        process.generation = 9;
+    }
+    fn info() abi.ServiceInfo {
+        return .{
+            .instance_id = if (acknowledged or mode == .starting) 0 else process.instance_id,
+            .state = if (acknowledged) abi.service_state_stopped else if (mode == .starting) abi.service_state_starting else abi.service_state_stopping,
+        };
+    }
+    fn tick() callconv(.c) u64 {
+        return now;
+    }
+    fn clock(out: *abi.MonotonicClockInfo) callconv(.c) i32 {
+        out.* = .{ .event_requested_hz = 1000, .event_effective_hz = 1000 };
+        return 1;
+    }
+    fn detail(_: [*:0]const u8, out: *abi.ServiceDetail, handle: *abi.ProgramProcessHandle) callconv(.c) i32 {
+        queries += 1;
+        if (queries == 1) now += query_cost;
+        if (queries == 2 and mode == .replace_after_timeout) replace();
+        out.* = .{ .info = info() };
+        handle.* = process;
+        return abi.service_api_result_ok;
+    }
+    fn stopBound(_: [*:0]const u8, expected: *const abi.ProgramProcessHandle, out: *abi.ServiceInfo, budget: u64) callconv(.c) i32 {
+        bound_calls += 1;
+        wait_budget = budget;
+        if (mode == .replace_before_stop) replace();
+        if (!std.meta.eql(expected.*, process)) return abi.service_api_result_busy;
+        closes += 1;
+        out.* = info();
+        now += budget;
+        return abi.service_api_result_timeout;
+    }
+    fn stopNamed(_: [*:0]const u8, out: *abi.ServiceInfo, budget: u64) callconv(.c) i32 {
+        named_calls += 1;
+        wait_budget = budget;
+        out.* = info();
+        return abi.service_api_result_timeout;
+    }
+    fn kill(expected: *const abi.ProgramProcessHandle) callconv(.c) i32 {
+        typed_kills += 1;
+        if (mode == .replace_at_kill) replace();
+        if (!std.meta.eql(expected.*, process)) return abi.program_handle_error_stale;
+        killed += 1;
+        if (mode == .kill_completes) acknowledged = true;
+        return 0;
+    }
+    fn legacyKill(_: u32) callconv(.c) i32 {
+        legacy_kills += 1;
+        return -99;
+    }
+    fn run(timeout: r4os.time_contract.Timeout, policy: r4os.program.ServiceStopPolicy, omit_query: bool, omit_bound_stop: bool) struct { code: i32, status: abi.ServiceInfo } {
+        var raw: abi.R4XStartContext = .{};
+        var table: abi.R4XStartR4Sys = .{};
+        table.ticks = @intFromPtr(&tick);
+        table.monotonic_clock = @intFromPtr(&clock);
+        table.service_bound_detail = if (omit_query) 0 else @intFromPtr(&detail);
+        table.service_stop_bound = if (omit_bound_stop) 0 else @intFromPtr(&stopBound);
+        table.service_stop = @intFromPtr(&stopNamed);
+        table.program_handle_kill = @intFromPtr(&kill);
+        table.program_kill = @intFromPtr(&legacyKill);
+        const bundle = r4os.program.Bundle{ .raw = &raw, .sys = &table };
+        const ctx = r4os.program.Context.initBundle(&bundle);
+        var status: abi.ServiceInfo = .{};
+        return .{ .code = ctx.serviceStopWithPolicy("SVC", &status, timeout, policy), .status = status };
+    }
+    fn finite() r4os.time_contract.Timeout {
+        return r4os.time_contract.timeoutFinite(.{ .nanoseconds = 5_000_000 });
+    }
+};
+
+test "service stop policy refuses same-ID replacement before Close" {
+    const f = BoundServiceStopPolicy;
+    f.reset(.replace_before_stop);
+    const result = f.run(f.finite(), .kill_after_grace, false, false);
+    try std.testing.expectEqual(r4os.abi.service_api_result_busy, result.code);
+    try std.testing.expectEqual(@as(u32, 0), f.closes);
+    try std.testing.expectEqual(@as(u32, 0), f.typed_kills);
+    try std.testing.expectEqual(@as(u32, 0), f.legacy_kills);
+}
+
+test "service stop policy refuses replacement after graceful timeout" {
+    const f = BoundServiceStopPolicy;
+    f.reset(.replace_after_timeout);
+    try std.testing.expectEqual(r4os.abi.service_api_result_busy, f.run(f.finite(), .kill_after_grace, false, false).code);
+    try std.testing.expectEqual(@as(u32, 1), f.closes);
+    try std.testing.expectEqual(@as(u32, 0), f.typed_kills);
+    try std.testing.expectEqual(@as(u32, 0), f.legacy_kills);
+}
+
+test "service stop policy preserves generation across typed kill race" {
+    const f = BoundServiceStopPolicy;
+    f.reset(.replace_at_kill);
+    try std.testing.expectEqual(r4os.abi.service_api_result_busy, f.run(f.finite(), .kill_after_grace, false, false).code);
+    try std.testing.expectEqual(@as(u32, 1), f.typed_kills);
+    try std.testing.expectEqual(@as(u32, 0), f.killed);
+    try std.testing.expectEqual(@as(u32, 0), f.legacy_kills);
+}
+
+test "service stop policy kill acceptance is not completion" {
+    const f = BoundServiceStopPolicy;
+    f.reset(.pending);
+    const result = f.run(f.finite(), .kill_after_grace, false, false);
+    try std.testing.expectEqual(r4os.abi.service_api_result_timeout, result.code);
+    try std.testing.expectEqual(f.original.instance_id, result.status.instance_id);
+    try std.testing.expectEqual(@as(u32, 1), f.killed);
+    try std.testing.expect(!f.acknowledged);
+    try std.testing.expectEqual(@as(u32, 0), f.legacy_kills);
+}
+
+test "service stop policy accepts the exact completion ACK" {
+    const f = BoundServiceStopPolicy;
+    f.reset(.kill_completes);
+    const result = f.run(f.finite(), .kill_after_grace, false, false);
+    try std.testing.expectEqual(r4os.abi.service_api_result_ok, result.code);
+    try std.testing.expectEqual(@as(u32, 0), result.status.instance_id);
+    try std.testing.expect(f.acknowledged);
+    try std.testing.expectEqual(@as(u32, 0), f.legacy_kills);
+}
+
+test "service stop policy charges detail work to its finite budget" {
+    const f = BoundServiceStopPolicy;
+    f.reset(.pending);
+    f.query_cost = 3;
+    try std.testing.expectEqual(r4os.abi.service_api_result_timeout, f.run(f.finite(), .kill_after_grace, false, false).code);
+    try std.testing.expectEqual(@as(u64, 2), f.wait_budget);
+    try std.testing.expectEqual(@as(u64, 105), f.now);
+}
+
+test "service stop policy exhausted query budget adds no wait" {
+    const f = BoundServiceStopPolicy;
+    f.reset(.pending);
+    f.query_cost = 7;
+    _ = f.run(f.finite(), .kill_after_grace, false, false);
+    try std.testing.expectEqual(@as(u64, 0), f.wait_budget);
+    try std.testing.expectEqual(@as(u64, 107), f.now);
+}
+
+test "service stop policy Poll remains Poll during escalation" {
+    const f = BoundServiceStopPolicy;
+    f.reset(.pending);
+    try std.testing.expectEqual(r4os.abi.service_api_result_timeout, f.run(r4os.time_contract.timeoutPoll(), .kill_after_grace, false, false).code);
+    try std.testing.expectEqual(@as(u64, 0), f.wait_budget);
+    try std.testing.expectEqual(@as(u64, 100), f.now);
+}
+
+test "service stop policy missing capabilities never falls back to bare ID" {
+    const f = BoundServiceStopPolicy;
+    f.reset(.pending);
+    try std.testing.expectEqual(r4os.abi.err_no_fn, f.run(f.finite(), .kill_after_grace, true, false).code);
+    try std.testing.expectEqual(@as(u32, 0), f.closes);
+    try std.testing.expectEqual(@as(u32, 0), f.legacy_kills);
+    f.reset(.pending);
+    try std.testing.expectEqual(r4os.abi.err_no_fn, f.run(f.finite(), .kill_after_grace, false, true).code);
+    try std.testing.expectEqual(@as(u32, 0), f.closes);
+    try std.testing.expectEqual(@as(u32, 0), f.legacy_kills);
+}
+
+test "service stop policy terminal and unbound starting rows stay distinct" {
+    const f = BoundServiceStopPolicy;
+    f.reset(.terminal);
+    try std.testing.expectEqual(r4os.abi.service_api_result_ok, f.run(f.finite(), .kill_after_grace, false, false).code);
+    try std.testing.expectEqual(@as(u32, 0), f.closes);
+    f.reset(.starting);
+    try std.testing.expectEqual(r4os.abi.service_api_result_busy, f.run(f.finite(), .kill_after_grace, false, false).code);
+    try std.testing.expectEqual(@as(u32, 0), f.closes);
+}
+
+test "service stop policy graceful and Forever preserve the original stop path" {
+    const f = BoundServiceStopPolicy;
+    f.reset(.pending);
+    _ = f.run(f.finite(), .graceful, true, true);
+    try std.testing.expectEqual(@as(u32, 1), f.named_calls);
+    try std.testing.expectEqual(@as(u64, 5), f.wait_budget);
+    try std.testing.expectEqual(@as(u32, 0), f.queries);
+    f.reset(.pending);
+    _ = f.run(r4os.time_contract.timeoutForever(), .kill_after_grace, true, true);
+    try std.testing.expectEqual(@as(u32, 1), f.named_calls);
+    try std.testing.expectEqual(r4os.abi.io_wait_forever, f.wait_budget);
+    try std.testing.expectEqual(@as(u32, 0), f.queries);
+    try std.testing.expectEqual(@as(u32, 0), f.typed_kills);
+}
+
 var sys_table: r4os.abi.R4XStartR4Sys = .{};
 var net_table: r4os.abi.R4XStartR4Net = .{};
 var context: r4os.abi.R4XStartContext = .{};

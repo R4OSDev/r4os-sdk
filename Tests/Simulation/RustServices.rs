@@ -38,6 +38,13 @@ unsafe extern "C" {
     fn sdk_service_calendar_calls() -> u32;
     fn sdk_service_call_timeout() -> u64;
     fn sdk_service_extra_c_case() -> i32;
+    fn sdk_service_bound_c_case() -> i32;
+    fn sdk_service_bound_reset();
+    fn sdk_service_bound_result(value: i32);
+    fn sdk_service_bound_replace();
+    fn sdk_service_bound_ack();
+    fn sdk_service_bound_closes() -> u32;
+    fn sdk_service_bound_budget() -> u64;
     fn sdk_net_current_admission(start: *const abi::R4XStartContext) -> i32;
     fn sdk_service_tables(
         sys: *mut abi::R4XStartR4Sys,
@@ -61,6 +68,7 @@ unsafe extern "C" {
 fn service_network_serial_deadline_owners_and_retained_requests() {
     assert_eq!(unsafe { sdk_service_c_case() }, 0);
     assert_eq!(unsafe { sdk_service_extra_c_case() }, 0);
+    assert_eq!(unsafe { sdk_service_bound_c_case() }, 0);
     let (mut sys, mut net, mut desk, mut dev) = (
         abi::R4XStartR4Sys::default(),
         abi::R4XStartR4Net::default(),
@@ -137,6 +145,49 @@ fn service_network_serial_deadline_owners_and_retained_requests() {
     let app = unsafe { App::from_raw(&ctx, &expected, c"SERVICE-INTEROP") }.unwrap();
     let services = Services::new(&app).unwrap();
     assert!(services.available());
+    let bound = services.bound_detail(c"MANAGED").unwrap();
+    assert_eq!(bound.process.instance_id, 41);
+    assert_eq!(bound.process.generation, 0x1122334455667788);
+    unsafe { sdk_service_bound_replace() };
+    assert_eq!(
+        services
+            .stop_bound(c"MANAGED", &bound.process, Timeout::Poll)
+            .raw_code,
+        abi::service_api_result_busy
+    );
+    assert_eq!(unsafe { sdk_service_bound_closes() }, 0);
+    let replacement = services.bound_detail(c"MANAGED").unwrap();
+    assert_eq!(replacement.process.instance_id, bound.process.instance_id);
+    assert_eq!(replacement.process.generation, bound.process.generation + 1);
+    let pending = services.stop_bound(
+        c"MANAGED",
+        &replacement.process,
+        Timeout::AfterNanos(7_000_000),
+    );
+    assert_eq!(pending.raw_code, abi::service_api_result_timeout);
+    assert_eq!(pending.info.instance_id, 41);
+    assert_eq!(unsafe { sdk_service_bound_budget() }, 7);
+    assert_eq!(unsafe { sdk_service_bound_closes() }, 1);
+    unsafe { sdk_service_bound_ack() };
+    let terminal = services.bound_detail(c"MANAGED").unwrap();
+    assert_eq!(terminal.detail.info.instance_id, 0);
+    assert_eq!(terminal.detail.info.exit_code, -23);
+    assert_eq!(terminal.process.generation, replacement.process.generation);
+    assert_eq!(
+        services
+            .stop_bound(c"MANAGED", &replacement.process, Timeout::Poll)
+            .raw_code,
+        0
+    );
+    // Capability truncation is exercised by the actual C consumer above.
+    // Keep this admitted Rust table immutable and test error propagation via
+    // the shared callback instead of changing its live ABI header.
+    unsafe { sdk_service_bound_result(abi::err_no_fn) };
+    assert!(matches!(
+        services.bound_detail(c"MANAGED"),
+        Err(r4os_sdk::storage::Error::Raw(abi::err_no_fn))
+    ));
+    unsafe { sdk_service_bound_reset() };
     let mut response = [0; 16];
     let mut connection = services.open(c"EXAMPLE").unwrap();
     let calendar_before = unsafe { sdk_service_calendar_calls() };

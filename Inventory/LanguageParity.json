@@ -48,10 +48,13 @@
         "resource_current_54",
         "lifecycle_metadata_87",
         "drive_geometry_08742",
-        "directory_batch_08743"
+        "directory_batch_08743",
+        "service_binding_08870_host",
+        "service_binding_08870_native"
       ],
       "extension_08742": "Contract48 appends optional drive_info_geometry at1320; full163-slot/1320-byte prefix and DriveInfo56 preserved. FREE-valid bit distinguishes exact zero from unknown. New call retains mount/request admission but never executes FREE. Actual new API/worker GUI scope is native Zig KVM4; C/Rust native callback/layout conformance and Rust thin wrapper compilation, without a new native Rust/C helper execution or Windows/hardware claim.",
-      "extension_08743": "Contract49 appends optional directory_batch at1328; full164-slot/1328-byte prefix and all369 existing payload layouts preserved. New pointer-free cursor2160 and complete-path entry1120. SDK99 Zig/C iterators cache4 records, validate before publication and preserve explicit current live-index deletion traversal; Rust shares the C owner and adds a typed raw helper. No old-OS fallback."
+      "extension_08743": "Contract49 appends optional directory_batch at1328; full164-slot/1328-byte prefix and all369 existing payload layouts preserved. New pointer-free cursor2160 and complete-path entry1120. SDK99 Zig/C iterators cache4 records, validate before publication and preserve explicit current live-index deletion traversal; Rust shares the C owner and adds a typed raw helper. No old-OS fallback.",
+      "extension_08870": "Contract62 current R4SYS34/1392 appends service_bound_detail at1376 and service_stop_bound at1384. Original170slot/1376byte prefix and all fixed public layouts unchanged. SDK118 bound snapshot is borrowed, returns last retained terminal process, and grants no app lease. StopBound checks the full expected handle before any Close. Current qualification here is the explicitly bounded Linux host compiler/callback evidence. Actual SMP4 normal441 scope: native C first getter plus Zig expected-handle Stop/typed escalation, old117 prefix compatibility and original Spectra scopes PASS; first private unqualified failure retained, no native Rust/Windows/hardware claim."
     },
     {
       "name": "R4DESK",
@@ -577,7 +580,9 @@
         "Repositories/SDK/Tests/Simulation/ServiceNetworkCallbacks.c",
         "Repositories/SDK/Tests/Build/RustServices",
         "Repositories/SDK/Tests/Simulation/NetworkPeer.py",
-        "current_contract_78"
+        "current_contract_78",
+        "service_binding_08870_host",
+        "service_binding_08870_native"
       ],
       "shared_core": "Vorhandene C-AppServices/AppTray/AppNetwork/Serial/Timeout-Besitzer, Zig-ServiceLoop/-Deadline/-R4NET-Besitzer und native R4SYS/R4NET/R4DEV-Callbacks. Rust fuegt Leihen/Typen/echte Abschlussretention hinzu; keine zweite Netzwerk- oder Schedulingimplementierung."
     },
@@ -55028,6 +55033,163 @@
         "Repositories/SDK/build.zig.zon": "9a5701108b5998252707301a821ca4d1368b3c5ef504fdc3039e264f66439b4c"
       },
       "limits": "Bounded source/host/native-ABI scope. Kernel430/HDA48/AC9712 runtime PCM/progress/Close qualification and the single final STANDARD are separate Audio-domain receipts. No physical playback or isolated throughput/latency claim. Service request duration is unchanged, separately planned at roadmap end0.88.90. Existing58 unresolved88/89 and all prior evidence retained."
+    },
+    "service_binding_08870_host": {
+      "complete": true,
+      "scope": "Qualified Linux HOST compiler/callback scope only. Contract62 R4SYS34/1392 appends two optional slots; all170 old slots and fixed public records retained. SDK118 borrowed BoundDetail and expected-handle StopBound in Zig/C/Rust; explicit Zig kill policy never follows numeric ID or replacement name and never infers completion from kill acceptance.",
+      "validation": [
+        "Contract check/selftest26mutation/test including native C/Zig/Rust callback layouts PASS",
+        "Eleven actual SDK policy cases through controlled ABI callbacks PASS",
+        "Current C/Rust facade and network projection checks PASS",
+        "Real C consumer and Rust-to-generated-C service owner callbacks, high64bit generation, finite7ticks, stale expected handle, retained terminal identity and capability-prefix errors PASS",
+        "Rust unsafe and non-Send misuse compiler-negative cases PASS",
+        "Full current SDK/buildtool/smoke run139steps171tests PASS; same reviewed implementation source."
+      ],
+      "reviewed_sources": [
+        {
+          "path": "Repositories/SDK/Tests/Conformance/ServiceNetworkFacadePrototype05826.zig",
+          "sha256": "eec90d5cc0079c6659f174dbded1bfc467f9383d758de4783b3317494ab6d173"
+        },
+        {
+          "path": "Repositories/SDK/Tests/Simulation/ServiceNetworkCallbacks.c",
+          "sha256": "79ad535ba32fa1a6936191b60f0689bfbeb6d28ca2851b054f6585afb0fbdd27"
+        },
+        {
+          "path": "Repositories/SDK/Tests/Simulation/RustServices.rs",
+          "sha256": "93b6f0af49cc9f63668db2f79259d960ec945ce5c6d5614772d976ef2bc59de9"
+        }
+      ],
+      "changed_owner_files": [
+        {
+          "path": "Repositories/Contract/API/ApiContract.baseline.json",
+          "before": "e87f9e6e929e759b9b04450e64836952d455d71075a24f0f1550c365717b726b",
+          "after": "52ee84b8449c0d1b9bd7f4c2a08cb74553799d8fd1a39f3315c7618a527daec9"
+        },
+        {
+          "path": "Repositories/Contract/API/ApiContract.json",
+          "before": "e87f9e6e929e759b9b04450e64836952d455d71075a24f0f1550c365717b726b",
+          "after": "52ee84b8449c0d1b9bd7f4c2a08cb74553799d8fd1a39f3315c7618a527daec9"
+        },
+        {
+          "path": "Repositories/Contract/Generated/Inventory/API.json",
+          "before": "6743afe236202588c854114f78d019967982640d60b44c8f08be32f0a186fa7b",
+          "after": "b40051e5f4cc4c50171ee66d853265a7fcd81b711e816bfdf5c3d9d39d73e17b"
+        },
+        {
+          "path": "Repositories/Contract/Generated/Inventory/RustABI.json",
+          "before": "8cfa0bc446446340d29e95e3a7ed947d84ba74d9a19a3fb94764ecbdf68813a6",
+          "after": "f39b6132cc8d980d9bada05ad82915ca6da658665d00fe19bf1cf24b292a7977"
+        },
+        {
+          "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_generated.h",
+          "before": "180ca637ea496d09b02f8ee505b62b656750df43fbe9a4e6d34a8ebfd8288c0d",
+          "after": "1a4b06a12e394e613806dfc33f5a3af9469c9888fa2caf06ad99e2193d2fc724"
+        },
+        {
+          "path": "Repositories/Contract/Generated/SDK/Rust/src/lib.rs",
+          "before": "5eb6c0f0ca738f4f1d02364d755bd19fbe68831740911a61daad69282fff9e0a",
+          "after": "6e16b9dc9e9826947f3d8eb799b45cce709c7ed862f7a53c986471ed543a48f3"
+        },
+        {
+          "path": "Repositories/Contract/Generated/SDK/Zig/abi_generated.zig",
+          "before": "a10f790be0b1675483064c26535ca786bc5780ae86e11eafc650756d558afc40",
+          "after": "46456124ee5ab36c227b96bb9478a9ac0b61fa7d1d81ab3ac5dbb70de190d9cc"
+        },
+        {
+          "path": "Repositories/Contract/Tools/ApiContractGen/src/main.zig",
+          "before": "67c39f2aa37aad8c8450ab4dd387349b051dd24fcfb585cc9bacf2bda6334187",
+          "after": "18c0d2c6f87bf158803df0bc008043ddce53934eaf3a2ddd2b90ed2fc31dae03"
+        },
+        {
+          "path": "Repositories/SDK/Rust/src/c_facades.rs",
+          "before": "83eb4c52485d25d2208c7c06cd3322b6f52411fd4d559c78407055bcb76d71f0",
+          "after": "c3b3b9ea19d503ebf7b36392815e880d5d3727a7a85d3636ac1263187b4f49c6"
+        },
+        {
+          "path": "Repositories/SDK/Rust/src/services.rs",
+          "before": "fe36f29620ac1d180385ea217eb2b2a7697eac633e82858eb870bb23e61cc4e6",
+          "after": "9fb6bc7119ffd3e230b7fcf944b0c5f147fafb10aedce57993d3629bfb2baa50"
+        },
+        {
+          "path": "Repositories/SDK/Shared/C/include/r4os/app_services.h",
+          "before": "2bf7acb8e4ad9452fedb71f7ad47a11d085f398ffa9e5af9b55c56220d702b40",
+          "after": "f909ceed1d770a4dbe7566c37f951f3b8635ef8ee7618dfd26bb016a1c137b0f"
+        },
+        {
+          "path": "Repositories/SDK/build.zig",
+          "before": "e7cc738232be1cd1377904758b50a8996346374f8dd95ba01b28bf383656a1a4",
+          "after": "efaea0cf37780c17b2a3d021682bfa690ed17cc1aab0b357023d1d3f3ae0b696"
+        },
+        {
+          "path": "Repositories/SDK/build.zig.zon",
+          "before": "9a5701108b5998252707301a821ca4d1368b3c5ef504fdc3039e264f66439b4c",
+          "after": "0c890ee3378bdcbf2a3bdd25d6e695e17c48d0ee1158f2bac3e6161650b4406d"
+        },
+        {
+          "path": "Repositories/SDK/r4os/program.zig",
+          "before": "5664352e822e7f29c48d17a84fb448bc14681a7f2f499fcb334bf5cd0ac2a8ac",
+          "after": "5e5e99da770d3980ef36e8d1608b149386b707bc48492dbddea53b3c694c3f76"
+        },
+        {
+          "path": "Repositories/SDK/r4os/r4sys.zig",
+          "before": "c35d87d9262d0c3f045c4646274ff09767fc11469479ee97c10fe005620d6bad",
+          "after": "d049a626474fa9f7ed1ea9ac08dc505d78201a852d6ee8e6b1ed4aa0f225727e"
+        },
+        {
+          "path": "Repositories/SDK/r4os/r4xstart.zig",
+          "before": "dfb0f7f7d8f4ce9e18b7656c93d89dbe708ab96dd9f6e1d88712e51418b883a8",
+          "after": "53f984ac8df446fb1f6c7d0c0ab5ab4848733b86645ed54e24832fc0bec857b9"
+        }
+      ],
+      "original_matrix_sha256": "3fe89259883b38752e1d64cf1ad3bfdfd2d2211ef3459ba21a221ee748dc33bf",
+      "limits": "Host compiler/callback qualification only; actual virtual SMP4 scope is separately bounded in service_binding_08870_native. Two private host fixture compile failures and the outer temporary expected-negative101 false failure remain preserved. Native Rust, hardware, Windows execution and isolated performance are not claimed."
+    },
+    "service_binding_08870_native": {
+      "complete": true,
+      "scope": "Actual virtual SMP4 on normal Kernel441. Private publicSDK118 Zig controller and C service; C first bound query precedes endpoint registration and independently matches pinned-self handle. Native expected-handle StopBound and typed kill policy are Zig calls; actual C StopBound/Rust higher facade are covered by the separate Linux host callback evidence.",
+      "kernel": "0.1.441",
+      "kernel_sha256": "2fb0d275a9de0572ac81624e621d0cf74a68cc4ceb0e34746a406134c286444d",
+      "guest_pid": 1058304,
+      "required_scope_pass": true,
+      "all_native_runs_pass": false,
+      "processes": [
+        {
+          "id": 30,
+          "generation": 30
+        },
+        {
+          "id": 30,
+          "generation": 31
+        },
+        {
+          "id": 31,
+          "generation": 32
+        },
+        {
+          "id": 30,
+          "generation": 33
+        },
+        {
+          "id": 33,
+          "generation": 36
+        }
+      ],
+      "qualified": [
+        "Actual starter wait/reap while managed service binding remains valid",
+        "Same registry entry: forced exact numeric ID reuse with fresh generation; old StopBound BUSY, replacement has no Close",
+        "Actual Restart, Remove/Reinstall of same name, second forced same-ID reuse, old endpoint rejection and retained exact Exit23",
+        "Two native Stop processes both receive actual completion0",
+        "Typed kill policy returnsTimeout-8 followed by actual retained physical ACK-9",
+        "All private public observation leases released and registry lifecycle counts restored",
+        "Unchanged SDK117 consumer: poll0, finite5, restart40, Forever1001, real late ACK/release/Restart and original SVCAPPD APITEST PASS",
+        "Unchanged Spectra95 METADATA/SERVICE six original markers/ASYNCQUICK PASS"
+      ],
+      "validation_originals": [
+        "Temp/08870-native-original-01-metadata-export-original",
+        "Temp/08870-native-original-01-asyncquick-export-original"
+      ],
+      "first_attempt": "Private0.1.0 reached first C query and starter reap, then code6 combined Stop/ACK/terminal guard failed without individual values. Entire original source/artifacts/serial/transport preserved. Source audit found private C fixture rejected contractual early endpoint invalidation; only private fixture corrected to0.1.1. Same normal Kernel441/SDK118/SERVMAN bytes passed; no observed first-run individual exit code invented.",
+      "limits": "No new kernel bridge, probe, clock injection, exact SMP interleaving count, isolated speed/latency, physical hardware, Windows execution or native Rust claim. Original full PROGRAMLIFECYCLE failure from68 remains open at96; not rerun or weakened here. Final R4OS publication/oneSTANDARD/closure still separate."
     }
   },
   "wave_bindings": [
@@ -55290,7 +55452,7 @@
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.88.59",
+    "reviewed_in": "0.88.70",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -55350,28 +55512,31 @@
       "Repositories/SDK/build.zig",
       "Repositories/SDK/build.zig.zon",
       "Repositories/SDK/r4os",
-      "Repositories/SDK/r4os.zig"
+      "Repositories/SDK/r4os.zig",
+      "Repositories/SDK/Tests/Conformance/ServiceNetworkFacadePrototype05826.zig",
+      "Repositories/SDK/Tests/Simulation/ServiceNetworkCallbacks.c",
+      "Repositories/SDK/Tests/Simulation/RustServices.rs"
     ],
     "files": [
       {
         "path": "Repositories/Contract/API/ApiContract.baseline.json",
-        "sha256": "e87f9e6e929e759b9b04450e64836952d455d71075a24f0f1550c365717b726b"
+        "sha256": "52ee84b8449c0d1b9bd7f4c2a08cb74553799d8fd1a39f3315c7618a527daec9"
       },
       {
         "path": "Repositories/Contract/API/ApiContract.json",
-        "sha256": "e87f9e6e929e759b9b04450e64836952d455d71075a24f0f1550c365717b726b"
+        "sha256": "52ee84b8449c0d1b9bd7f4c2a08cb74553799d8fd1a39f3315c7618a527daec9"
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/API.json",
-        "sha256": "6743afe236202588c854114f78d019967982640d60b44c8f08be32f0a186fa7b"
+        "sha256": "b40051e5f4cc4c50171ee66d853265a7fcd81b711e816bfdf5c3d9d39d73e17b"
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/RustABI.json",
-        "sha256": "8cfa0bc446446340d29e95e3a7ed947d84ba74d9a19a3fb94764ecbdf68813a6"
+        "sha256": "f39b6132cc8d980d9bada05ad82915ca6da658665d00fe19bf1cf24b292a7977"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_generated.h",
-        "sha256": "180ca637ea496d09b02f8ee505b62b656750df43fbe9a4e6d34a8ebfd8288c0d"
+        "sha256": "1a4b06a12e394e613806dfc33f5a3af9469c9888fa2caf06ad99e2193d2fc724"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_technical_generated.h",
@@ -55383,7 +55548,7 @@
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Rust/src/lib.rs",
-        "sha256": "5eb6c0f0ca738f4f1d02364d755bd19fbe68831740911a61daad69282fff9e0a"
+        "sha256": "6e16b9dc9e9826947f3d8eb799b45cce709c7ed862f7a53c986471ed543a48f3"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi.zig",
@@ -55395,7 +55560,7 @@
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_generated.zig",
-        "sha256": "a10f790be0b1675483064c26535ca786bc5780ae86e11eafc650756d558afc40"
+        "sha256": "46456124ee5ab36c227b96bb9478a9ac0b61fa7d1d81ab3ac5dbb70de190d9cc"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/package.zig",
@@ -55419,7 +55584,7 @@
       },
       {
         "path": "Repositories/Contract/Tools/ApiContractGen/src/main.zig",
-        "sha256": "67c39f2aa37aad8c8450ab4dd387349b051dd24fcfb585cc9bacf2bda6334187"
+        "sha256": "18c0d2c6f87bf158803df0bc008043ddce53934eaf3a2ddd2b90ed2fc31dae03"
       },
       {
         "path": "Repositories/Libraries/R4ACO/Bindings/C/r4aco.h",
@@ -56431,7 +56596,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "83eb4c52485d25d2208c7c06cd3322b6f52411fd4d559c78407055bcb76d71f0"
+        "sha256": "c3b3b9ea19d503ebf7b36392815e880d5d3727a7a85d3636ac1263187b4f49c6"
       },
       {
         "path": "Repositories/SDK/Rust/src/data/hash.rs",
@@ -56591,7 +56756,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/services.rs",
-        "sha256": "fe36f29620ac1d180385ea217eb2b2a7697eac633e82858eb870bb23e61cc4e6"
+        "sha256": "9fb6bc7119ffd3e230b7fcf944b0c5f147fafb10aedce57993d3629bfb2baa50"
       },
       {
         "path": "Repositories/SDK/Rust/src/services/tray.rs",
@@ -56707,7 +56872,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_services.h",
-        "sha256": "2bf7acb8e4ad9452fedb71f7ad47a11d085f398ffa9e5af9b55c56220d702b40"
+        "sha256": "f909ceed1d770a4dbe7566c37f951f3b8635ef8ee7618dfd26bb016a1c137b0f"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_storage.h",
@@ -56942,6 +57107,10 @@
         "sha256": "d2943df7702fcd56085f1e4f87ae57cc25184cbad98e21ff030e75818c076fa7"
       },
       {
+        "path": "Repositories/SDK/Tests/Conformance/ServiceNetworkFacadePrototype05826.zig",
+        "sha256": "eec90d5cc0079c6659f174dbded1bfc467f9383d758de4783b3317494ab6d173"
+      },
+      {
         "path": "Repositories/SDK/Tests/Simulation/GuiParity.c",
         "sha256": "66df15a5c8180ae096e89068da897228d19dd2f369e62854fe77b4a8024ec79f"
       },
@@ -56952,6 +57121,14 @@
       {
         "path": "Repositories/SDK/Tests/Simulation/RustGui.rs",
         "sha256": "7a7a32dfe1cf0675a08ec1e54ac720389d9a5c43709e30f7f444ac5c98efffde"
+      },
+      {
+        "path": "Repositories/SDK/Tests/Simulation/RustServices.rs",
+        "sha256": "93b6f0af49cc9f63668db2f79259d960ec945ce5c6d5614772d976ef2bc59de9"
+      },
+      {
+        "path": "Repositories/SDK/Tests/Simulation/ServiceNetworkCallbacks.c",
+        "sha256": "79ad535ba32fa1a6936191b60f0689bfbeb6d28ca2851b054f6585afb0fbdd27"
       },
       {
         "path": "Repositories/SDK/Tools/Build-Project.ps1",
@@ -57131,11 +57308,11 @@
       },
       {
         "path": "Repositories/SDK/build.zig",
-        "sha256": "e7cc738232be1cd1377904758b50a8996346374f8dd95ba01b28bf383656a1a4"
+        "sha256": "efaea0cf37780c17b2a3d021682bfa690ed17cc1aab0b357023d1d3f3ae0b696"
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "9a5701108b5998252707301a821ca4d1368b3c5ef504fdc3039e264f66439b4c"
+        "sha256": "0c890ee3378bdcbf2a3bdd25d6e695e17c48d0ee1158f2bac3e6161650b4406d"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -57555,7 +57732,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/program.zig",
-        "sha256": "5664352e822e7f29c48d17a84fb448bc14681a7f2f499fcb334bf5cd0ac2a8ac"
+        "sha256": "5e5e99da770d3980ef36e8d1608b149386b707bc48492dbddea53b3c694c3f76"
       },
       {
         "path": "Repositories/SDK/r4os/protocol.zig",
@@ -57591,7 +57768,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/r4sys.zig",
-        "sha256": "c35d87d9262d0c3f045c4646274ff09767fc11469479ee97c10fe005620d6bad"
+        "sha256": "d049a626474fa9f7ed1ea9ac08dc505d78201a852d6ee8e6b1ed4aa0f225727e"
       },
       {
         "path": "Repositories/SDK/r4os/r4u_artifact.zig",
@@ -57607,7 +57784,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/r4xstart.zig",
-        "sha256": "dfb0f7f7d8f4ce9e18b7656c93d89dbe708ab96dd9f6e1d88712e51418b883a8"
+        "sha256": "53f984ac8df446fb1f6c7d0c0ab5ab4848733b86645ed54e24832fc0bec857b9"
       },
       {
         "path": "Repositories/SDK/r4os/raster.zig",
@@ -58243,7 +58420,9 @@
         ],
         "proof": [
           "service_network_current_55",
-          "clock_service_08720"
+          "clock_service_08720",
+          "service_binding_08870_host",
+          "service_binding_08870_native"
         ]
       },
       {

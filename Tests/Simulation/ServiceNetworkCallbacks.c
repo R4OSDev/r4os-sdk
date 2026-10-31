@@ -70,6 +70,44 @@ static int32_t port_cancel(uint64_t handle){if(handle!=serial_handle)return R4OS
 static int32_t port_close(uint64_t handle,uint32_t flags,uint64_t timeout){(void)flags;(void)timeout;if(handle!=serial_handle)return R4OS_SERIAL_ERROR_STALE;if(serial_closing)return R4OS_SERIAL_ERROR_BUSY;serial_live=0;return 0;}
 void sdk_serial_busy(uint32_t value){serial_closing=value;}
 uint32_t sdk_serial_live(void){return serial_live;}
+
+/* Controlled callbacks shared by real C/Rust facade consumers. The explicit
+ * ACK below models completion; this host fixture is not physical guest proof. */
+static R4ProgramProcessHandle managed_process;
+static uint32_t managed_terminal,managed_closes;
+static uint64_t managed_budget;
+static int32_t managed_result;
+void sdk_service_bound_reset(void){managed_process=(R4ProgramProcessHandle){.instance_id=41,.generation=UINT64_C(0x1122334455667788)};managed_terminal=managed_closes=0;managed_budget=0;managed_result=0;}
+void sdk_service_bound_result(int32_t value){managed_result=value;}
+void sdk_service_bound_replace(void){++managed_process.generation;}
+void sdk_service_bound_ack(void){managed_terminal=1;}
+uint32_t sdk_service_bound_closes(void){return managed_closes;}
+uint64_t sdk_service_bound_budget(void){return managed_budget;}
+static R4ServiceInfo managed_info(void){return (R4ServiceInfo){.instance_id=managed_terminal?0:managed_process.instance_id,.state=managed_terminal?R4OS_SERVICE_STATE_STOPPED:R4OS_SERVICE_STATE_STOPPING,.exit_code=managed_terminal?-23:0};}
+static int32_t managed_bound_detail(const uint8_t *name,R4ServiceDetail *out,R4ProgramProcessHandle *process){assert(strcmp((const char *)name,"MANAGED")==0);if(managed_result)return managed_result;*out=(R4ServiceDetail){.info=managed_info()};*process=managed_process;return 0;}
+static int32_t managed_stop_bound(const uint8_t *name,const R4ProgramProcessHandle *process,R4ServiceInfo *out,uint64_t budget){
+    assert(strcmp((const char *)name,"MANAGED")==0);managed_budget=budget;
+    if(process->instance_id!=managed_process.instance_id||process->reserved!=managed_process.reserved||process->generation!=managed_process.generation)return R4OS_SERVICE_API_RESULT_BUSY;
+    *out=managed_info();if(managed_terminal)return 0;++managed_closes;return R4OS_SERVICE_API_RESULT_TIMEOUT;
+}
+int sdk_service_bound_c_case(void){
+    R4App app;R4XStartR4Sys sys;R4XStartR4Net net;init_app(&app,&sys,&net);clock_rate=1000;sdk_service_bound_reset();
+    sys.service_bound_detail=(uintptr_t)&managed_bound_detail;sys.service_stop_bound=(uintptr_t)&managed_stop_bound;
+    R4Services services=r4_app_services(&app);R4ServiceDetail detail;R4ProgramProcessHandle process;R4ServiceInfo info;
+    if(r4_services_bound_detail(&services,"MANAGED",&detail,&process)||process.generation!=UINT64_C(0x1122334455667788)||detail.info.instance_id!=41)return 1;
+    sdk_service_bound_replace();
+    if(r4_services_stop_bound(&services,"MANAGED",&process,poll_timeout(),&info)!=R4OS_SERVICE_API_RESULT_BUSY||managed_closes)return 2;
+    if(r4_services_bound_detail(&services,"MANAGED",&detail,&process))return 3;
+    if(r4_services_stop_bound(&services,"MANAGED",&process,r4_timeout_finite((R4Duration){7000000}),&info)!=R4OS_SERVICE_API_RESULT_TIMEOUT||managed_budget!=7||managed_closes!=1||info.instance_id!=41)return 4;
+    sdk_service_bound_ack();
+    if(r4_services_bound_detail(&services,"MANAGED",&detail,&process)||detail.info.instance_id||detail.info.exit_code!=-23||process.generation!=UINT64_C(0x1122334455667789))return 5;
+    if(r4_services_stop_bound(&services,"MANAGED",&process,poll_timeout(),&info)||info.instance_id)return 6;
+    sys.size=offsetof(R4XStartR4Sys,service_bound_detail);
+    if(r4_services_bound_detail(&services,"MANAGED",&detail,&process)!=R4OS_ERR_NO_FN||process.instance_id||process.generation)return 7;
+    sys.size=offsetof(R4XStartR4Sys,service_stop_bound);
+    if(r4_services_stop_bound(&services,"MANAGED",&process,poll_timeout(),&info)!=R4OS_ERR_NO_FN||managed_closes!=1)return 8;
+    sdk_service_bound_reset();return 0;
+}
 void sdk_service_tables(R4XStartR4Sys *sys,R4XStartR4Net *net,R4XStartR4Desk *desk,R4XStartR4Dev *dev){
     /* The caller supplies canonical current record defaults. C's public
      * R4XSTART_*_VERSION constants describe minimum query prefixes. */
@@ -79,6 +117,7 @@ void sdk_service_tables(R4XStartR4Sys *sys,R4XStartR4Net *net,R4XStartR4Desk *de
     sys->ticks=(uintptr_t)&ticks;sys->time_state=(uintptr_t)&time_state;sys->program_should_close=(uintptr_t)&should_close;sys->task_yield=(uintptr_t)&task_yield;
     sys->service_endpoint_wait=(uintptr_t)&endpoint_wait;sys->service_endpoint_poll=(uintptr_t)&endpoint_poll;sys->service_endpoint_recv=(uintptr_t)&endpoint_recv;sys->service_endpoint_reply=(uintptr_t)&endpoint_reply;
     sys->io_service_call=(uintptr_t)&io_begin;sys->io_status=(uintptr_t)&io_status;sys->io_wait=(uintptr_t)&io_wait;sys->io_close=(uintptr_t)&io_close;
+    sdk_service_bound_reset();sys->service_bound_detail=(uintptr_t)&managed_bound_detail;sys->service_stop_bound=(uintptr_t)&managed_stop_bound;
     *desk=(R4XStartR4Desk){.magic=R4XSTART_R4DESK_MAGIC,.abi_version=desk_version,.size=sizeof(*desk)};
     *dev=(R4XStartR4Dev){.magic=R4XSTART_R4DEV_MAGIC,.abi_version=dev_version,.size=sizeof(*dev),.serial_count=(uintptr_t)&port_count,.serial_port_at=(uintptr_t)&port_at,.serial_open=(uintptr_t)&port_open,.serial_configure=(uintptr_t)&port_configure,.serial_read=(uintptr_t)&port_read,.serial_write=(uintptr_t)&port_write,.serial_drain=(uintptr_t)&port_drain,.serial_status=(uintptr_t)&port_status,.serial_cancel=(uintptr_t)&port_cancel,.serial_close=(uintptr_t)&port_close};
 }

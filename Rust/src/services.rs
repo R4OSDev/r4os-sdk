@@ -13,6 +13,13 @@ pub struct Control {
     pub raw_code: i32,
     pub info: abi::ServiceInfo,
 }
+/// A borrowed identity value paired with one generation-validated service
+/// snapshot. It may name the terminal row's last retained process.
+#[derive(Clone, Copy, Default)]
+pub struct BoundDetail {
+    pub detail: abi::ServiceDetail,
+    pub process: abi::ProgramProcessHandle,
+}
 pub struct Services<'a> {
     app: c::R4App,
     context: *const abi::R4XStartContext,
@@ -128,6 +135,24 @@ impl<'a> Services<'a> {
         }
         self.control(2, name, None, None, 0, None, ticks)
     }
+    pub fn stop_bound(
+        &self,
+        name: &CStr,
+        process: &abi::ProgramProcessHandle,
+        timeout: Timeout,
+    ) -> Control {
+        let mut info = abi::ServiceInfo::default();
+        let raw_code = unsafe {
+            c::r4_services_stop_bound(
+                &self.raw(),
+                name.as_ptr().cast(),
+                process,
+                timeout.raw(),
+                &mut info,
+            )
+        };
+        Control { raw_code, info }
+    }
     pub fn restart(&self, name: &CStr) -> Control {
         self.control(3, name, None, None, 0, None, 0)
     }
@@ -159,6 +184,18 @@ impl<'a> Services<'a> {
         let mut info = abi::ServiceInfo::default();
         let raw_code = unsafe { c::R4SdkServiceInfo(self.context, index, &mut info) };
         Control { raw_code, info }
+    }
+    pub fn bound_detail(&self, name: &CStr) -> Result<BoundDetail> {
+        let mut value = BoundDetail::default();
+        exact(unsafe {
+            c::r4_services_bound_detail(
+                &self.raw(),
+                name.as_ptr().cast(),
+                &mut value.detail,
+                &mut value.process,
+            )
+        })?;
+        Ok(value)
     }
     pub fn detail(&self, name: &CStr) -> (i32, abi::ServiceDetail) {
         let mut info = abi::ServiceDetail::default();

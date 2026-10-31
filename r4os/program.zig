@@ -3213,6 +3213,13 @@ pub const Context = struct {
         return table_fn(name, out);
     }
 
+    /// Metadata and its exact current/last retained process identity. This
+    /// value does not retain a process or an observation for the caller.
+    pub fn serviceBoundDetail(self: *const Context, name: [*:0]const u8, out: *abi.ServiceDetail, process: *abi.ProgramProcessHandle) i32 {
+        const table_fn = self.sysFn("service_bound_detail") orelse return self.unavailable("sys");
+        return table_fn(name, out, process);
+    }
+
     pub fn serviceStart(self: *const Context, name: [*:0]const u8, out: *abi.ServiceInfo) i32 {
         const table_fn = self.sysFn("service_start") orelse return self.unavailable("sys");
         return table_fn(name, out);
@@ -3223,12 +3230,46 @@ pub const Context = struct {
         return table_fn(name, out, timeout_ticks);
     }
 
+    pub fn serviceStopBound(self: *const Context, name: [*:0]const u8, process: *const abi.ProgramProcessHandle, out: *abi.ServiceInfo, timeout_ticks: u64) i32 {
+        const table_fn = self.sysFn("service_stop_bound") orelse return self.unavailable("sys");
+        return table_fn(name, process, out, timeout_ticks);
+    }
+
     pub fn serviceStopWithPolicy(self: *const Context, name: [*:0]const u8, out: *abi.ServiceInfo, timeout: time_contract.Timeout, policy: ServiceStopPolicy) i32 {
-        const timeout_ticks_value = time_contract.timeoutToTicks(timeout, self.monotonicHz()) catch return abi.service_api_result_invalid;
-        const stopped = self.serviceStop(name, out, timeout_ticks_value);
-        if (stopped != abi.service_api_result_timeout or policy == .graceful) return stopped;
-        if (out.instance_id == 0 or self.programKill(out.instance_id) < 0) return abi.service_api_result_stop_failed;
-        return self.serviceStatus(name, out);
+        const budget = time_contract.timeoutToTicks(timeout, self.monotonicHz()) catch return abi.service_api_result_invalid;
+        if (policy == .graceful or budget == abi.io_wait_forever) return self.serviceStop(name, out, budget);
+        const ticks_fn = self.sysFn("ticks") orelse return self.unavailable("sys");
+        const begin = ticks_fn();
+        var detail: abi.ServiceDetail = .{};
+        var process: abi.ProgramProcessHandle = .{};
+        const selected = self.serviceBoundDetail(name, &detail, &process);
+        if (selected != abi.service_api_result_ok) return selected;
+        if (detail.info.instance_id == 0) {
+            out.* = detail.info;
+            return if (detail.info.state == abi.service_state_stopped or detail.info.state == abi.service_state_disabled or detail.info.state == abi.service_state_failed) abi.service_api_result_ok else abi.service_api_result_busy;
+        }
+        const remaining = budget -| (ticks_fn() -| begin);
+        const stopped = self.serviceStopBound(name, &process, out, remaining);
+        if (stopped != abi.service_api_result_timeout) return stopped;
+        // An explicit kill policy is still tied to this exact process. A
+        // replaced registration/ID must never receive the old escalation.
+        var current: abi.ProgramProcessHandle = .{};
+        const refreshed = self.serviceBoundDetail(name, &detail, &current);
+        if (refreshed != abi.service_api_result_ok) return refreshed;
+        if (process.instance_id == 0 or !std.meta.eql(process, current)) return abi.service_api_result_busy;
+        if (detail.info.instance_id == 0) {
+            out.* = detail.info;
+            return abi.service_api_result_ok;
+        }
+        const killed = self.programHandleKill(&process);
+        const observed = self.serviceBoundDetail(name, &detail, &current);
+        if (observed != abi.service_api_result_ok) return observed;
+        if (!std.meta.eql(process, current)) return abi.service_api_result_busy;
+        out.* = detail.info;
+        if (out.instance_id == 0) return abi.service_api_result_ok;
+        // Kill acceptance does not prove physical retirement. Preserve the
+        // original wait budget; callers can observe a later actual completion.
+        return if (killed < 0 and killed != abi.program_handle_error_not_running) abi.service_api_result_stop_failed else abi.service_api_result_timeout;
     }
 
     pub fn serviceRestart(self: *const Context, name: [*:0]const u8, out: *abi.ServiceInfo) i32 {

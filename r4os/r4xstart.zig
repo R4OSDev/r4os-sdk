@@ -64,6 +64,8 @@ const ServiceEndpointPollFn = *const fn (u32) callconv(.c) i32;
 const ServiceEndpointRecvFn = *const fn (u32, *abi.ServiceMessageHeader, [*]u8, u32) callconv(.c) i32;
 const ServiceEndpointReplyFn = *const fn (u32, u32, i32, [*]const u8, u32) callconv(.c) i32;
 const ServiceDetailByNameFn = *const fn ([*:0]const u8, *abi.ServiceDetail) callconv(.c) i32;
+const ServiceBoundDetailFn = *const fn ([*:0]const u8, *abi.ServiceDetail, *abi.ProgramProcessHandle) callconv(.c) i32;
+const ServiceStopBoundFn = *const fn ([*:0]const u8, *const abi.ProgramProcessHandle, *abi.ServiceInfo, u64) callconv(.c) i32;
 const ServiceStartFn = *const fn ([*:0]const u8, *abi.ServiceInfo) callconv(.c) i32;
 const ServiceStopFn = *const fn ([*:0]const u8, *abi.ServiceInfo, u64) callconv(.c) i32;
 const ServiceRestartFn = *const fn ([*:0]const u8, *abi.ServiceInfo) callconv(.c) i32;
@@ -788,6 +790,12 @@ pub const R4Sys = struct {
         return service_fn(name, out);
     }
 
+    pub fn serviceBoundDetail(self: *const R4Sys, name: [*:0]const u8, out: *abi.ServiceDetail, process: *abi.ProgramProcessHandle) i32 {
+        if (!self.hasFn("service_bound_detail")) return abi.err_no_fn;
+        const service_fn: ServiceBoundDetailFn = @ptrFromInt(self.table.service_bound_detail);
+        return service_fn(name, out, process);
+    }
+
     pub fn serviceStart(self: *const R4Sys, name: [*:0]const u8, out: *abi.ServiceInfo) i32 {
         if (!self.hasFn("service_start")) return abi.service_api_result_invalid;
         const service_fn: ServiceStartFn = @ptrFromInt(self.table.service_start);
@@ -798,6 +806,12 @@ pub const R4Sys = struct {
         if (!self.hasFn("service_stop")) return abi.service_api_result_invalid;
         const service_fn: ServiceStopFn = @ptrFromInt(self.table.service_stop);
         return service_fn(name, out, timeout_ticks);
+    }
+
+    pub fn serviceStopBound(self: *const R4Sys, name: [*:0]const u8, process: *const abi.ProgramProcessHandle, out: *abi.ServiceInfo, timeout_ticks: u64) i32 {
+        if (!self.hasFn("service_stop_bound")) return abi.err_no_fn;
+        const service_fn: ServiceStopBoundFn = @ptrFromInt(self.table.service_stop_bound);
+        return service_fn(name, process, out, timeout_ticks);
     }
 
     pub fn serviceRestart(self: *const R4Sys, name: [*:0]const u8, out: *abi.ServiceInfo) i32 {
