@@ -1104,3 +1104,53 @@ und bei falscher Generation. Details und Grenzen: Docs/Desktop/DeskRun.txt.
 Die direkte Rust-GUI-Ausgabe mit externem Rust-Beobachter ist der getrennte
 Qualifikationsumfang0.88.76; diese Textkorrektur behauptet keinen neuen
 Sprach-, Gast-, Hardware- oder Performancebeleg.
+
+
+Rust-GUI-Ausgabe nach Desktop-Reap (0.88.76)
+------------------------------------------
+
+GUI-Text aus App::write wird ueber die generationengebundene Prozessbeobachtung
+gelesen. Der externe Rust-Verbraucher bindet rechtzeitig mit
+Resources::observe_process(&handle, false) eine eigene Referenz. Danach liefern
+Observation::wait_ready und read auch nach dem konsumierenden Desktop-Reap
+den echten Abschluss samt Ausgabe. Wiederholtes Lesen konsumiert ihn nicht.
+Eine alte Process::status-Abfrage liefert dann None; console_output am bereits
+gereapten Ziel ersetzt keine Beobachtungsreferenz. Jede eigene Referenz wird
+mit close quittiert. Tokenkopien erhoehen keinen Refcount.
+
+Der oeffentliche Reproducer aus SDK120/Contract64 (Rust/Cargo1.99.0) schreibt
+RUST76 BEGIN/END mit nicht-ASCII-UTF8, wartet auf einen privaten File-Handshake
+nach Bindung zweier Rust-Referenzen und kehrt selbst mit37 zurueck.
+Ein kombinierter KVM4-Nachweis auf normalem Kernel445, Desktop197, WINSVC27
+und DESKRUN2 besteht: Handle45/Generation45, Completionsequenz32,
+Exit37,56Bytes, flags27. Available gesetzt, Truncated/Incomplete nicht gesetzt.
+Die Bytefolge enthaelt normalisiertes CRLF und unveraenderte gueltige UTF8.
+Zweimaliges Lesen und die zweite unabhaengige Referenz behalten Sequenz und
+Bytes; beide Freigaben sind quittiert, der geschlossene Token liefert-2.
+
+Das oeffentliche paginierte Taskinventar verwendet program_inventory_page_max.
+Task115/Generation115 ist nach echtem Owner-Reap abgebaut. Gleiche Desktop-/
+Broker-Generationen und0Fenster/0Captureleases/0Livebytes vor/nach.
+Startkontext-GUI ist Code2, waehrend hier die vorhandenen ProgramInstanceInfo-
+und Completionfelder GUI mit1 ausweisen; diese unterschiedlichen Felder
+duerfen nicht ueber einen unbegruendeten gemeinsamen Zahlencheck vermischt werden.
+
+Es gab vier Starts desselben kleinen Qualifikationsfalls im selben Gast:
+erster privater Frame-/Handshakeaufbau unqualifiziert, exakter Exit nach
+Retentionablauf unbekannt; zweiter Beobachter mit zu grosser Inventarseite
+abgewiesen; dritter mit unberechtigtem Klassencode2-Zusatzcheck abgebrochen;
+vierter besteht den gesamten geforderten Umfang. Alle Originale bleiben
+erhalten, all_native_runs_pass=False/required_scope_pass=True.
+Ein fehlgeschlagener gleichnamiger Hot-Upload lieferte den alten Dateistand
+zurueck; genaue Ursache unbewiesen, keine SFTP-Put-Quittung daraus. Die
+neuen Artefakte wurden unter frischen8.3-Namen vollstaendig zurueckgelesen.
+
+Die urspruengliche externe Solitaire-Rust-App und deren Cargo-/SDK-/Contract-
+Identitaeten fehlen weiterhin. Dieser aktuelle Nachweis rekonstruiert weder
+jene Ausgabe noch eine damalige Reapkonkurrenz. History65s/letzter globaler
+Close bleiben die vorhandenen0.88.26-Belege; hier nur letzte eigene Freigabe.
+Keine physische Sicht-/Windows-/PID-Umlauf- oder Performanceabnahme.
+Details/Quellpins/Artefakthashes: Docs/Desktop/DeskRun.txt und
+ExFiles/Reports/Core/0.88.76-rust-gui-evidence/.
+SDK121 ergaenzt ausschliesslich diese Dokumentation/Quellpaketidentitaet;
+Rust-/C-Fassaden, Runtime und oeffentliche ABI unveraendert. Kein STANDARD76.
