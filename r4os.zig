@@ -21,6 +21,7 @@ pub const system_update_batch = @import("r4os/system_update_batch.zig");
 pub const system_update_backup = @import("r4os/system_update_backup.zig");
 pub const update_catalog = @import("r4os/update_catalog.zig");
 pub const server_targets = @import("r4os/server_targets.zig");
+pub const server_access = @import("r4os/server_access.zig");
 pub const server_profile = @import("r4os/server_profile.zig");
 pub const server_credentials = @import("r4os/server_credentials.zig");
 pub const app_contract = @import("r4os/app_contract.zig");
