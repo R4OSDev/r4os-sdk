@@ -346,6 +346,10 @@ pub const Context = struct {
         return self.base.hardwareSummary();
     }
 
+    pub fn firmwareSystemUuid(self: *const Context) ?abi.FirmwareSystemUuidInfo {
+        return self.base.firmwareSystemUuid();
+    }
+
     pub fn bootInfoSummary(self: *const Context) ?abi.BootInfoSummary {
         return self.base.bootInfoSummary();
     }

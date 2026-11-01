@@ -142,8 +142,8 @@
     {
       "name": "R4DEV",
       "import_name": "R4DEV:Query:1",
-      "current_abi_version": 35,
-      "current_table_bytes": 728,
+      "current_abi_version": 36,
+      "current_table_bytes": 736,
       "canonical_pointer": "/groups/5",
       "minimum": "Neue Fassaden zielen auf diese aktuelle Vertragsgeneration; keine Emulation alter R4OS-Tabellen. Import-/Hardwareoption und Groessen-/Nullzeigerpruefung bleiben.",
       "owner": "Repositories/Contract",
@@ -157,13 +157,15 @@
         "independent_desktop_current_71",
         "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.49",
         "platform_current_58",
-        "current_kernel_records_80"
+        "current_kernel_records_80",
+        "Docs/SDK/LanguageParity.txt#0.89.2-Firmwarekennung-fuer-Spectra"
       ],
       "retired_slots": [
         27,
         29,
         30
-      ]
+      ],
+      "new_slot_scope": "0.89.2: firmware_system_uuid at offset 728 is optional; generated C/Rust raw ABI and Zig SDK helper are reviewed. Hardware retrieval is implemented in Kernel453 and exercised in QEMU; no new higher C/Rust helper or R4Laptop claim."
     }
   ],
   "raw_rust_projection": {
@@ -55789,14 +55791,14 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.89.5",
-    "sdk": "0.64.130 source candidate",
-    "contract": "0.64.68 unchanged",
+    "performed_in": "0.89.2-0.89.4",
+    "sdk": "0.64.131 source candidate",
+    "contract": "0.64.69 source candidate",
     "libraries": "0.64.40 unchanged",
-    "evidence": "benchmark_put_transport_0895",
-    "scope": "Review the four new Zig server facade owners, existing generic C/Rust registry/file/service access, and compiler-generated C/Rust registration transport types. Native interop and actual guest reuse evidence are bounded; no high-level C/Rust server facade, parallel registration, benchmark PUT, package transfer, Windows or hardware claim. The streaming PUT source extension passed the targeted transport test; isolated guest upload remains separate.",
+    "evidence": "Docs/SDK/LanguageParity.txt#0.89.2-Firmwarekennung-fuer-Spectra",
+    "scope": "R4DEV36/736 appends optional firmware_system_uuid at offset 728. Generated C/Rust raw ABI and Zig SDK helper are reviewed; Kernel453 SMBIOS retrieval and two fresh QEMU installations are qualified. Existing server registration, TLS and streaming PUT are reused by Spectra. No new higher C/Rust firmware helper, R4Laptop hardware, Windows, or final release qualification is claimed.",
     "historical_snapshot_retained": true,
-    "current_group_metadata": "Existing platform ABI and Contract68 records unchanged. Transport helper fingerprint refreshed from compiler types for RegistrationEndpoint and RegistrationResult; C/Rust projections and native boundary checks pass."
+    "current_group_metadata": "R4DEV current table metadata updated; dated canonical_platform_sources and earlier wave evidence retained."
   },
   "drift_guard": {
     "schema": 1,
@@ -55874,19 +55876,19 @@
       },
       {
         "path": "Repositories/Contract/API/ApiContract.json",
-        "sha256": "1b563e52c1748a5567eb24a41ea2c34ea371b72378b737dc8b8a4e8c8054f91a"
+        "sha256": "1a182400e5231916dc388952df3b07cec763f4224e53c89cc5cba381ecf682c5"
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/API.json",
-        "sha256": "700adef2a74f0dc4c4f15c2a839498079aec15f0a06302b3160ba83cabc23b95"
+        "sha256": "bd95382f29dbaabbd06e1b538c8b17dbfad1e227dd8c1f69b2658f38f1a2fc33"
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/RustABI.json",
-        "sha256": "ebfe4373c393223029b831b5f8c6f06d6ac2f4c85a5e355d4e6979ca76016088"
+        "sha256": "0d91cdcfd97e191099dd900d54fc3c0264c68c60c31e9cc187d8bb8ab4a2678b"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_generated.h",
-        "sha256": "565524dd8b495159b0e9d2a3f4350a6667d586835e5c25e4bec403cb497b034b"
+        "sha256": "2b106ecd480cb470041739f74b79c2d03e248ad3e23447de417eff8b7922523b"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_technical_generated.h",
@@ -55898,19 +55900,19 @@
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Rust/src/lib.rs",
-        "sha256": "902e71414a194489378af34976fa3a53da4356fe5e57145c59078f441f189517"
+        "sha256": "59c8f0812cf09f373d92acc1e97dc671c7d86b399aa6ca466cdab2d8111ce842"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi.zig",
-        "sha256": "373ec3ae785043083befb279c06b5526a7b1fae0a871f1cccd5748b4b771bfdf"
+        "sha256": "bbd37edb5e83dfc88975f2e6423d4df39f196bd6cbd3501d08af3c26dba77d56"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_exports.zig",
-        "sha256": "c2888360edee4189b9b364f84f8d560f28cd0acbf0ab3e8edc55dba743246516"
+        "sha256": "139a9217997b2a2dcbf1610064faefa59d1fa80ca507df42cad29a7e8e88e5d4"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_generated.zig",
-        "sha256": "842d85c7659d6c087b6febcbf72c3154e50b97e2eddac07bc00fbe1bf2c3da9a"
+        "sha256": "0aebe27da9bf3b3f3ad45873635e8664f7dd97d16b7607c4b03b84572f3dd5c4"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/package.zig",
@@ -57686,7 +57688,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "68ac50271e41eb86b2d0a971d0df63530ea082b1965af108e503a985d65c84a8"
+        "sha256": "8253e4949f1c0c0558548817cf537f6666863d9113ee273489e2b65c8c095713"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -58114,7 +58116,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/program.zig",
-        "sha256": "5e5e99da770d3980ef36e8d1608b149386b707bc48492dbddea53b3c694c3f76"
+        "sha256": "303de13e181a465b968cac0619be394ae5c0f44b94c4a9e6cc64eb89eea544a8"
       },
       {
         "path": "Repositories/SDK/r4os/protocol.zig",
@@ -58138,7 +58140,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/r4dev.zig",
-        "sha256": "089f60082ea47f74be82e4ad0760a08a02f6e2df4e6e8a2e09d0e4a6531bbeff"
+        "sha256": "66ec41f15b5f0b463e8285d97a096b01ae88107d89e1426c0cfb742f3b2f0e1e"
       },
       {
         "path": "Repositories/SDK/r4os/r4draw.zig",

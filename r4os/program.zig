@@ -904,6 +904,14 @@ pub const Context = struct {
         return out;
     }
 
+    pub fn firmwareSystemUuid(self: *const Context) ?abi.FirmwareSystemUuidInfo {
+        var out: abi.FirmwareSystemUuidInfo = .{};
+        const table_fn = self.devFn("firmware_system_uuid") orelse return null;
+        if (table_fn(&out) != 0 or out.version != 1 or out.size != @sizeOf(abi.FirmwareSystemUuidInfo) or out.source != 1)
+            return null;
+        return out;
+    }
+
     pub fn bootInfoSummary(self: *const Context) ?abi.BootInfoSummary {
         var out: abi.BootInfoSummary = .{};
         const table_fn = self.devFn("boot_info_summary") orelse return null;
