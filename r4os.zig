@@ -38,6 +38,7 @@ pub const driver_outputs = @import("r4os/driver_outputs.zig");
 pub const driver_display = @import("r4os/driver_display.zig");
 pub const app_resources = @import("r4os/app_resources.zig");
 pub const app_services = @import("r4os/app_services.zig");
+pub const desktop_evidence = @import("r4os/desktop_evidence.zig");
 pub const power_profiles = @import("r4os/power_profiles.zig");
 pub const app_tray = @import("r4os/app_tray.zig");
 pub const app_network = @import("r4os/app_network.zig");
@@ -180,3 +181,5 @@ pub const lowlevel = @import("r4os/lowlevel.zig");
 
 /// Pinned external R4STD extended-grapheme boundaries; no display-width policy.
 pub const grapheme = @import("r4std_grapheme");
+
+pub const desktop_actions = @import("r4os/desktop_actions.zig");

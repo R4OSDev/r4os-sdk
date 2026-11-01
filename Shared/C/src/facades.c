@@ -17,6 +17,8 @@
 #define inline
 #include <r4os/app_storage.h>
 #include <r4os/app_resources.h>
+#include <r4os/desktop_evidence.h>
+#include <r4os/desktop_actions.h>
 #include <r4os/app_network.h>
 #include <r4os/app_tray.h>
 #include <r4os/storage.h>

@@ -1,4 +1,4 @@
-﻿R4OS SDK
+R4OS SDK
 ========
 
 Dieses Repository enthaelt das hostneutrale Kern-SDK von R4OS: Zig- und
@@ -1307,3 +1307,73 @@ kanonischen Kleinschreibungsnamen. Binaere Layouts, Wireversionen und alte
 Flagwerte bleiben erhalten. Historische Provider ohne dieses Flag behalten
 ihre damaligen Messwerte. Funktionale Closefristen, PCM-Annahme, Fortschritt,
 Client-/Streamgeneration, Auswahl-Join und Fehlerzaehler bleiben wirksam.
+
+SDK0.64.126-Kandidat: Desktop-Belege ueber WINSVC29/Contract67/DESKRUN3.
+Oeffentliche C/Rust/Zig-Fassade: desktop_evidence.Client,
+r4_desktop_evidence_*, Services::evidence_*. Originalen Launch-Schluessel
+mitsamt vor Submit erfasster evidence_epoch speichern. LegacySTATUS ohne
+Originalepoche ist kein Bootnachweis. Intent vor Reserve, zurueckgegebene
+Serial vor Offer und kanonischen vollen Prozesstoken vor ACK bestaetigt
+speichern. Verlorene Antworten ueber Status derselben Identitaet abgleichen.
+Kein neuer Spawn/Retain bei Unknown/Expired/Stale. ACK-Beleglease bleibt
+beim Service bis Release/Serviceende; unbestaetigte Reservation5Minuten,
+insgesamt16aktiveSlots. Unterschiedliche Beobachter verwenden eigeneIntents;
+Tokenkopien teilen dieselbe Freigabe. Desktop behaelt den konsumierenden Reap.
+Beispiel mit atomarem Persistenzcallback: Examples/DesktopEvidence.c.
+Ein frischer192bitServiceNonce aus echter Entropie plus Broker-Vollgeneration
+verhindert Service-/Bootverwechslung; kein erfundener globaler BootUUID.
+Vier gezielte Broker-Hostfaelle plus14bestehende Launchfaelle und aktuelle
+Compiler-/ABI-/Modulbauten bestehen. Native97: normalKernel452/SMP4,
+Desktop197/WINSVC29/DESKRUN3, zwei echte Belegreferenzen nach Desktop-Reap,
+Original22:22/Sequenz7/Exit37/76Bytes mit4Markern. Status nach echten
+Helferenden mit absichtlich nicht exportierten Offer-/ACK-Ergebnissen;
+17neue Starts gegen16Historyslots, C/Rust/Zig-Zugriff, leer/abgeschnitten,
+5fremdeToken, reale300000ms-Frist, letzterRelease und Service-Orphan bestehen.
+Beim frischen Boot desselben Images wiederholen sich alle numerischen Token-
+Identitaeten; nur die192bitEpoche unterscheidet sich, alt wird Stale(-3).
+WINSVC29 importiert fuer vorhandenen Hardwarezufall R4DEV; ohne brauchbare
+Entropie ScopeUnavailable, kein Zeit-/ID-Ersatz. OriginalCompletion128 samt
+Incomplete-Flag unveraendert; kein neuer erzwungener Incomplete-/Desktoprestart-
+Gastfall und keine native16Slot-Erschoepfung. Alle3Gaeste normal beendet,
+rote/unqualifizierte Originale erhalten. Docs/Desktop/DeskRun.txt.
+SDK126/Contract67 sind Quellkandidaten. Veroeffentlichte kompatible SDK-/OS-
+Kombination erst in99/100 nach allen Functional, keine Studio-Gastfreigabe.
+
+0.88.98: SDK127/Contract68 als Quellkandidaten
+------------------------------------------------
+Oeffentliche Desktopaktionen: r4os.desktop_actions (Zig),
+<r4os/desktop_actions.h> (C), services::Services::action_* (Rust).
+Originaler DESKRUN delegiert explizit an /CONTROLLER:pid:generation;
+control_result/Grant getrennt pruefen, kanonischen Token per Status lesen.
+Nur der benannte volle Caller darf Resize/Min/Restore fuer dieses originale
+Kind/Fenster ausfuehren. Gleiche Operation mit unveraenderten Daten liest
+die Originalquittung; bei Ergebnisverlust Status statt neuem WM-Auftrag.
+applied bleibt unveraendert, current ist eine eigene aktuelle Kopie. Erst
+frameReady bestaetigt die passende wirkliche Komposition; Min hat Frame0.
+Neue Ansichten/Frames/Koordinaten bleiben an die gleichen Revisionen gebunden.
+Grant nach Benutzung freigeben, keine fremden Caller-/Reaprechte.
+Der normale C/Zig-Paintpfad meldet nur markierte Ansichten, nicht jeden FPS-
+Frame. Bestehende Mode-RPCs werden1:1 ersetzt. KVM4 mit originaler C-App,
+echten Pixeln/PS2, gespeicherten Token in C/Rust/Zig, Close37 und Slotreuse
+abgenommen; erster Bindungsfehler bleibt erhalten. Docs/Desktop/DeskRun.txt.
+Publiziert bleiben SDK125/Contract66; passendes finales SDK/OS in99/100.
+Keine Studio0.8.3-/GPU-/Windows-/Hardware-/STANDARD-Freigabe.
+
+Matched0.88 SDK delivery (01.11.2026)
+------------------------------------------
+SDK0.64.127 is matched to Contract0.64.68 and Libraries0.64.40 for the final
+R4OS0.88.107 runtime. The source Contract pin is immutable. Public delivery
+also requires the separately matched technical=false Linux/Windows host-tool
+profile and the exact bare runtime objects; a source commit alone is not a
+complete standalone SDK release. Brokered desktop evidence requires the
+current WINSVC service; delegated window actions require WINSVC0.1.31 and
+Desktop0.1.198. A missing/restarted broker or desktop yields the documented
+unavailable/stale results, not an implicit platform ABI extension.
+C, Zig and host Rust share the public observation/action contracts. Retain
+an original launch token and epoch before submission, use status to resolve
+an unknown result, and release independent evidence references explicitly.
+See desktop_evidence, desktop_actions and Examples/DesktopEvidence.c.
+The historical SNES Write and placement-wake investigations0.88.88/101 were
+explicitly discarded by the user01.11.2026; their causes remain unknown.
+Package validation does not imply a fix for these historical findings,
+Windows execution, native Rust compilation or physical GPU/audio hardware.

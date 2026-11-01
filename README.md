@@ -1,4 +1,4 @@
-﻿# R4OS SDK
+# R4OS SDK
 
 The host-neutral R4OS SDK provides Zig, Rust and C module roots, current
 platform and library helpers, build profiles and general project templates.
@@ -1165,3 +1165,116 @@ errors, actual progress and Close remain independent. SDK runtime/facade
 implementation, C/Rust aliases and all native fingerprints are unchanged.
 The0.88.59 source review covers the semantic retirement and current ABI/owner
 cases; native Kernel/driver qualification is recorded in the Audio domain.
+
+### Restartable Desktop evidence handoff (SDK0.64.126 candidate)
+
+Contract67/WINSVC29/DESKRUN3 add a service-owned observation lease. The early
+Desktop reference and the broker reference before Desktop ACK remain the
+bridge. The observer receives completion/output evidence of that exact process
+generation; Desktop keeps lifecycle and consuming reap ownership.
+
+Use `desktop_evidence.Client` / `r4_desktop_evidence_*` /
+`Services::evidence_*`. Token128, request136 and reply header288 bytes are
+shared generated types. Read replies append at most3808output bytes. Transport
+failure, service result and the original app exit code are separate values.
+The example `Examples/DesktopEvidence.c` includes persistence hooks and recovery.
+
+1. Keep the original DESKRUN3 launch key plus `evidence_epoch[3]` (lossless
+   decimal strings), or a scope saved before that launch. Require
+   `evidence_scope_available`. Numeric legacy `/STATUS` cannot supply a missing
+   original epoch. Do not combine an old numeric launch key with a fresh scope.
+2. Choose a nonzero receiver intent and save the pre-intent before Reserve.
+   Reserve allocates no kernel reference. Save its returned nonzero serial
+   before Offer. A lost Reserve response is resolved by read-only Status with
+   the same saved pre-intent; an old missing serial never creates a new retain.
+3. Offer binds an independent creator-bound WINSVC reference while the original
+   launch reference still protects the evidence. A waiting offer is promoted
+   on actual launch completion before Desktop ACK. Lost bridge means unavailable.
+4. Save the canonical token, including the full process generation, before ACK.
+   Status resolves lost Offer/ACK responses without another reference or app.
+   It can confirm Reserved before retrying the same Offer serial. Never replace
+   Unknown/Expired/Stale with a blind new retain, reservation or launch.
+5. ACK leases survive observer/helper exit until explicit Release or broker end.
+   Unacknowledged reservations expire after5minutes;16slots bound total live
+   leases/reservations. Active leases are never evicted by launch/history pressure.
+   Closed tombstones are bounded; evicted old serials remain Unknown.
+6. Read Status/Read after restart using the saved token. Keep the original
+   completion sequence, exit code, generation and output flags. Zero output,
+   truncation, incomplete output and unavailable evidence remain distinct.
+   Finally release; copied tokens alias one lease, independent observers use
+   distinct intents. C/Zig close explicitly; Rust Drop attempts Release unless
+   the token was exported. Persist before ACK so interrupted cleanup is recoverable.
+
+A192bit actual-entropy WINSVC incarnation plus full broker generation binds
+tokens to the current service lifetime inside one boot. Restarting WINSVC or
+booting anew invalidates the old epoch even if numeric IDs repeat. This is
+narrower than a boot UUID. No clock/ID entropy fallback is used; missing entropy
+makes this handoff unavailable. Raw portable kernel bindings are not exported.
+Desktop restart keeps already protected old evidence while the broker lives.
+
+Four actual ownership/recovery/expiry cases and the existing14launch cases,
+public C/Zig/Rust builds and the generated ABI interoperability pass. The
+normal Kernel452/SMP4/Desktop197/WINSVC29/DESKRUN3 guest qualifies two original
+observer leases after consuming reap, saved-record helper restart, deliberately
+unexported Offer/ACK results,17new launches through16history slots, empty and
+truncated output, public native Rust/Zig adoption/read/export, five wrong-token
+rejections, real5minute expiry, last-reference deletion and broker orphan cleanup.
+A fresh boot of the same immutable image repeats every numeric token identity;
+the saved token differs only in its192bit epoch and is rejected as Stale while
+the new acknowledged control remains readable. All three guests shut down
+normally. First unavailable-scope and private qualifier/preflight failures remain.
+WINSVC29 explicitly imports R4DEV for the existing SDK hardware-entropy provider;
+without usable entropy the scope is Unavailable, never a clock-derived token.
+The new service copies the entire original Completion128, including incomplete
+flags; this run does not add a forced-writer-incomplete or full Desktop-restart
+injection. Quota16 is covered by the four owner tests, not new native exhaustion.
+Evidence: Docs/Desktop/DeskRun.txt and Core/0.88.97-desktop-evidence reports.
+These remain local SDK126/Contract67 source candidates. Published immutable
+SDK/Contract/Full matching belongs to0.88.99/100 after all functional work;
+no Studio0.8.1, Windows, physical hardware or STANDARD qualification is implied.
+
+## Delegated Desktop actions (0.88.98 source candidate)
+
+SDK127 / Contract68 expose `desktop_actions.Client` (Zig),
+`r4os/desktop_actions.h` (C) and `Services::action_*` (Rust). An original
+DESKRUN `/CONTROLLER:pid:generation` explicitly grants resize, minimize and
+restore for its actual child and exact window incarnation. Read the separate
+`control_result`/lossless `control_grant`, then recover the canonical token
+with read-only status. Commands require the named full controller handle.
+Use one immutable operation/deadline; recover the original result by status.
+`applied` is an immutable original receipt, `current` is a separate live view.
+`frameReady`/`action_frame_ready` require the matching real composed view.
+Release the bounded grant when finished. A copied token grants no foreign
+mutation or reap right. Launch receipt slots are one-based; native action GUI
+indices are zero-based. The broker adapter performs this conversion.
+
+The normal C/Zig paint path acknowledges only explicitly tagged delegated
+views after successful frame commit. Ordinary FPS frames add no new RPC.
+The existing Desktop mode RPC is replaced one-for-one by a640-byte envelope;
+no extra permanent poll or worker. Native CPU KVM4 qualification includes
+the same C child/window across all actions, actual pixels and PS2 input,
+exact same persisted144-byte-token C/Rust/Zig readers, normal exit37 and a
+separate native GUI-slot reuse case. Existing four owner cases cover quota,
+deadlines and late immutable ACKs. First failed binding attempt is preserved.
+See workspace `Docs/Desktop/DeskRun.txt` and `Core/0.88.98-window-actions`.
+These are source candidates; published matching belongs to0.88.99/100.
+No Studio0.8.3, native GPU, Windows, physical hardware or STANDARD claim.
+
+Matched0.88 SDK delivery (01.11.2026)
+------------------------------------------
+SDK0.64.127 is matched to Contract0.64.68 and Libraries0.64.40 for the final
+R4OS0.88.107 runtime. The source Contract pin is immutable. Public delivery
+also requires the separately matched technical=false Linux/Windows host-tool
+profile and the exact bare runtime objects; a source commit alone is not a
+complete standalone SDK release. Brokered desktop evidence requires the
+current WINSVC service; delegated window actions require WINSVC0.1.31 and
+Desktop0.1.198. A missing/restarted broker or desktop yields the documented
+unavailable/stale results, not an implicit platform ABI extension.
+C, Zig and host Rust share the public observation/action contracts. Retain
+an original launch token and epoch before submission, use status to resolve
+an unknown result, and release independent evidence references explicitly.
+See desktop_evidence, desktop_actions and Examples/DesktopEvidence.c.
+The historical SNES Write and placement-wake investigations0.88.88/101 were
+explicitly discarded by the user01.11.2026; their causes remain unknown.
+Package validation does not imply a fix for these historical findings,
+Windows execution, native Rust compilation or physical GPU/audio hardware.

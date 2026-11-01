@@ -1,3 +1,4 @@
+const desktop_actions = @import("desktop_actions.zig");
 const abi = @import("r4os_contract").abi;
 const gui = @import("gui.zig");
 const r4desk = @import("r4desk.zig");
@@ -197,6 +198,7 @@ pub const EventLoop = struct {
     clipboard_revision: u32 = 0,
     pending_command: ?CommandId = null,
     close_delivered: bool = false,
+    action_view_pending: bool = false,
 
     pub fn init(sys: r4sys.Context, desk: r4desk.Context, timers: []Timer) EventLoop {
         return .{
@@ -273,6 +275,7 @@ pub const EventLoop = struct {
         return switch (raw.kind) {
             @intFromEnum(abi.GuiEventKind.close) => .{ .close = raw.window_id },
             @intFromEnum(abi.GuiEventKind.resize) => blk: {
+                if (raw.key == abi.gui_resize_action_view_key) self.action_view_pending = true;
                 var info: abi.GuiWindowInfo = .{};
                 const result = self.desk.guiWindowInfo(&info);
                 break :blk if (result < 0)
@@ -311,11 +314,13 @@ pub const PaintOpen = union(enum) {
     failure: i32,
 };
 
+const ActionPaintView = struct { token: abi.DesktopActionToken, revision: u64, width: i32, height: i32 };
 pub const PaintContext = struct {
     canvas: Canvas,
     active: bool = true,
     transactional: bool = false,
     frame_canvas: ?*FrameCanvas = null,
+    action_view: ?ActionPaintView = null,
 
     /// Attaches caller-owned bounded command/resource storage to this paint.
     /// The returned Canvas can be passed through all existing widget helpers.
@@ -342,6 +347,13 @@ pub const PaintContext = struct {
         if (raw >= 0) {
             self.active = false;
             if (self.frame_canvas) |builder| builder.complete();
+            if (self.transactional) if (self.action_view) |view| {
+                var frame: abi.GuiFrameInfo = .{};
+                if (self.canvas.ctx.guiFrameInfo(&view.token.window.owner, &frame) == 0) {
+                    const client = desktop_actions.Client{ .sys = r4sys.Context.fromProgram(self.canvas.ctx.base) };
+                    _ = client.appFrame(view.token, view.revision, frame.committed_generation, view.width, view.height);
+                }
+            };
         } else if (self.transactional) {
             _ = self.canvas.ctx.guiFrameCancel();
             self.active = false;
@@ -419,9 +431,28 @@ pub const Window = struct {
     }
 
     pub fn beginPaint(self: *Window) PaintOpen {
-        const value = self.info() orelse return .{ .failure = abi.err_no_fn };
+        var value = self.info() orelse return .{ .failure = abi.err_no_fn };
         if (value.client_w <= 0 or value.client_h <= 0) return .{ .failure = abi.err_no_fn };
-        return beginPaintForSize(&self.draw, value.client_w, value.client_h);
+        var view: ?ActionPaintView = null;
+        if (self.events.action_view_pending) {
+            self.events.action_view_pending = false;
+            const client = desktop_actions.Client{ .sys = self.sys };
+            const reply = client.appView(self.id);
+            if (reply == .reply and reply.reply.result == 0 and reply.reply.current.view_revision != 0) {
+                if (self.info()) |current| {
+                    value = current;
+                    if (current.client_x == reply.reply.current.info.client_x and current.client_y == reply.reply.current.info.client_y and
+                        current.client_w == reply.reply.current.info.client_w and current.client_h == reply.reply.current.info.client_h and
+                        current.flags == reply.reply.current.info.flags)
+                    {
+                        view = .{ .token = reply.reply.request.token, .revision = reply.reply.current.view_revision, .width = current.client_w, .height = current.client_h };
+                    }
+                }
+            }
+        }
+        var opened = beginPaintForSize(&self.draw, value.client_w, value.client_h);
+        if (opened == .paint) opened.paint.action_view = view;
+        return opened;
     }
 
     pub fn pollMessage(self: *Window) ?Message {

@@ -2,6 +2,7 @@
 #define R4OS_APP_GUI_H
 
 #include "app_contract.h"
+#include "desktop_actions.h"
 
 typedef struct R4CommandId { uint32_t value; } R4CommandId;
 typedef struct R4TimerId { uint32_t value; } R4TimerId;
@@ -155,6 +156,7 @@ typedef struct R4EventLoop {
     R4CommandId pending_command;
     uint8_t has_pending_command;
     uint8_t close_delivered;
+    uint8_t action_view_pending;
 } R4EventLoop;
 
 typedef struct R4Window {
@@ -168,6 +170,9 @@ typedef struct R4PaintContext {
     R4GuiWindowInfo info;
     uint8_t active;
     uint8_t transactional;
+    uint8_t action_view_valid;
+    R4DesktopActionToken action_view;
+    uint64_t action_view_revision;
 } R4PaintContext;
 
 typedef struct R4Canvas { R4PaintContext *paint; } R4Canvas;
@@ -245,6 +250,7 @@ static inline R4Message r4_message_translate(R4EventLoop *loop, R4GuiEvent raw) 
     switch (raw.kind) {
         case R4_GUI_RAW_EVENT_CLOSE: result.kind = R4_MESSAGE_CLOSE; result.value.close_window_id = raw.window_id; break;
         case R4_GUI_RAW_EVENT_RESIZE: {
+            if(raw.key==R4OS_GUI_RESIZE_ACTION_VIEW_KEY)loop->action_view_pending=1u;
             R4GuiWindowInfo info = {0};
             if (r4desk_gui_window_info(&loop->app->desktop, &info) < 0) { result.kind = R4_MESSAGE_UNKNOWN; result.value.unknown = raw; break; }
             result.kind = R4_MESSAGE_RESIZE; result.value.resize = (R4ResizeMessage){raw.window_id, info.client_w, info.client_h, raw.tick}; break;
@@ -327,6 +333,20 @@ static inline int r4_window_begin_paint(R4Window *window, R4PaintContext *out) {
         !r4draw_supports_gui_frame_contract(&window->app->drawing)) return 0;
     *out = (R4PaintContext){0}; out->window = window;
     if (r4desk_gui_window_info(&window->app->desktop, &out->info) < 0 || out->info.client_w <= 0 || out->info.client_h <= 0) return 0;
+    if(window->events.action_view_pending){
+        window->events.action_view_pending=0u;
+        R4DesktopActionReply view={0};
+        if(r4_desktop_action_app_view(window->app,window->id,&view)==0&&!view.result&&view.current.view_revision){
+            R4GuiWindowInfo current={0};
+            if(r4desk_gui_window_info(&window->app->desktop,&current)>=0){
+                out->info=current;
+                if(current.client_x==view.current.info.client_x&&current.client_y==view.current.info.client_y&&current.client_w==view.current.info.client_w&&current.client_h==view.current.info.client_h&&current.flags==view.current.info.flags){
+                    out->action_view=view.request.token;out->action_view_revision=view.current.view_revision;out->action_view_valid=1u;
+                }
+            }
+        }
+    }
+    if(out->info.client_w<=0||out->info.client_h<=0)return 0;
     if (r4draw_gui_frame_begin(&window->app->drawing) < 0) return 0;
     out->transactional = 1u; out->active = 1u; return 1;
 }
@@ -365,7 +385,19 @@ static inline int32_t r4_canvas_blend_alpha8(R4Canvas canvas, int32_t x, int32_t
                                    visible_width, visible_height, stride, rgb,
                                    alpha + source_offset, visible_bytes);
 }
-static inline int32_t r4_paint_present(R4PaintContext *paint) { if (paint == 0 || !paint->active) return R4OS_ERR_NO_FN; int32_t raw = paint->transactional ? r4draw_gui_frame_commit(&paint->window->app->drawing) : r4draw_gui_present(&paint->window->app->drawing); if (raw >= 0) paint->active = 0u; return raw; }
+static inline int32_t r4_paint_present(R4PaintContext *paint) {
+    if (paint == 0 || !paint->active) return R4OS_ERR_NO_FN;
+    int32_t raw=paint->transactional?r4draw_gui_frame_commit(&paint->window->app->drawing):r4draw_gui_present(&paint->window->app->drawing);
+    if(raw>=0){
+        paint->active=0u;
+        if(paint->transactional&&paint->action_view_valid){
+            R4GuiFrameInfo frame={0};R4DesktopActionReply reply={0};
+            if(r4draw_gui_frame_info(&paint->window->app->drawing,&paint->action_view.window.owner,&frame)==0)
+                (void)r4_desktop_action_app_frame(paint->window->app,&paint->action_view,paint->action_view_revision,frame.committed_generation,paint->info.client_w,paint->info.client_h,&reply);
+        }
+    }
+    return raw;
+}
 static inline void r4_paint_discard(R4PaintContext *paint) { if (paint != 0) { if (paint->active && paint->transactional) (void)r4draw_gui_frame_cancel(&paint->window->app->drawing); paint->active = 0u; } }
 
 #endif

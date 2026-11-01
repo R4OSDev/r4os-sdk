@@ -2,6 +2,8 @@
 #define R4OS_FACADES_H
 #include "app_storage.h"
 #include "app_resources.h"
+#include "desktop_evidence.h"
+#include "desktop_actions.h"
 #include "app_network.h"
 #include "app_tray.h"
 #include "storage.h"
