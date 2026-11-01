@@ -1317,9 +1317,9 @@ pub const PostStreamReport = struct {
     close_ack: bool = false,
 };
 
-/// Caller-owned POST transport. Keep this context, options, callback storage
+/// Caller-owned POST/PUT transport. Keep this context, options, callback storage
 /// and all four buffers stable until canRelease(). Pausing accepts zero bytes
-/// and retains the same chunk for the next run(). No POST or TLS record is
+/// and retains the same chunk for the next run(). No upload or TLS record is
 /// automatically replayed. Redirects are manual or errors, never followed.
 pub const PostStream = struct {
     transport: *WebTransport,
@@ -1348,7 +1348,7 @@ pub const PostStream = struct {
 
     /// Initialize in its final stable address; this does not send a request.
     pub fn init(self: *PostStream, transport: *WebTransport, raw_url: []const u8, buffers: PostStreamBuffers, sink: PostStreamSink, options: PostStreamOptions) PostStreamReport {
-        self.* = .{ .transport = transport, .options = options, .buffers = buffers, .sink = sink, .deadline = .{ .valid = false }, .decoder = .init(buffers.headers, .post, options.response_limits) };
+        self.* = .{ .transport = transport, .options = options, .buffers = buffers, .sink = sink, .deadline = .{ .valid = false }, .decoder = .init(buffers.headers, options.request.method, options.response_limits) };
         if (shouldStop(options.request)) return self.finish(.cancelled);
         if (!targetAuthorized(options.request, raw_url)) return self.finish(.policy_rejected);
         if (raw_url.len == 0 or raw_url.len > self.url.len) return self.finish(.invalid_url);
@@ -1356,7 +1356,7 @@ pub const PostStream = struct {
             .value => |v| v,
             else => return self.finish(.invalid_url),
         };
-        if (options.request.method != .post) return self.finish(.unsupported_method);
+        if (options.request.method != .post and options.request.method != .put) return self.finish(.unsupported_method);
         if (options.request.redirect == .follow) return self.finish(.redirect_disallowed);
         if (buffers.headers.len < http.max_header_bytes) return self.finish(.header_buffer_too_small);
         if (buffers.io.len == 0 or buffers.upload.len == 0) return self.finish(.io_buffer_too_small);
@@ -1384,7 +1384,7 @@ pub const PostStream = struct {
         self.headers_len = headers.len;
         if (options.request.cors and isCrossOrigin(options.request.origin, url)) {
             var preflight_headers: [max_request_bytes]u8 = undefined;
-            const generated = corsPreflightHeaders(.post, headers, &preflight_headers) orelse return self.finish(.cors_preflight_failed);
+            const generated = corsPreflightHeaders(options.request.method, headers, &preflight_headers) orelse return self.finish(.cors_preflight_failed);
             if (generated.len != 0) {
                 const head = switch (http.buildRequest(&self.request_head, .options, url, .{ .headers = generated, .origin = options.request.origin })) {
                     .bytes => |v| v,
@@ -1530,7 +1530,7 @@ pub const PostStream = struct {
                         .head => {
                             const head = self.decoder.response().?;
                             if (self.preflight) {
-                                if (!acceptsPreflight(head, self.options.request.origin, .post, self.headers[0..self.headers_len], self.options.request.credentials_include)) return self.finish(.cors_preflight_failed);
+                                if (!acceptsPreflight(head, self.options.request.origin, self.options.request.method, self.headers[0..self.headers_len], self.options.request.credentials_include)) return self.finish(.cors_preflight_failed);
                             } else {
                                 self.result.status = head.status;
                                 self.result.response_total = self.decoder.totalBytes();
@@ -1592,7 +1592,7 @@ pub const PostStream = struct {
                     self.tls = null;
                     self.preflight = false;
                     self.result = .{};
-                    self.decoder = .init(self.buffers.headers, .post, self.options.response_limits);
+                    self.decoder = .init(self.buffers.headers, self.options.request.method, self.options.response_limits);
                     if (!self.preparePost()) return self.result;
                     self.phase = .connect;
                 },
@@ -1608,7 +1608,7 @@ pub const PostStream = struct {
             provider(options.cookie_context, self.url[0..self.url_len], &cookie_buffer)
         else
             options.cookie;
-        const head = switch (http.buildStreamRequestHead(&self.request_head, .post, self.parsed_url.?, .{ .cookie = cookie, .origin = options.origin, .headers = self.headers[0..self.headers_len] }, if (self.length) |length| .{ .content_length = length } else .chunked)) {
+        const head = switch (http.buildStreamRequestHead(&self.request_head, options.method, self.parsed_url.?, .{ .cookie = cookie, .origin = options.origin, .headers = self.headers[0..self.headers_len] }, if (self.length) |length| .{ .content_length = length } else .chunked)) {
             .bytes => |v| v,
             else => {
                 _ = self.finish(.request_too_large);

@@ -466,7 +466,10 @@
         "registry_selftest",
         "path",
         "file_stream",
-        "bounded_text"
+        "bounded_text",
+        "server_targets",
+        "server_profile",
+        "server_credentials"
       ],
       "semantics": "Bytes/EOF/Teilfortschritt/Fehler unterscheiden; generationstreue Handles, paginierte Verzeichnisse, Registry-Snapshots/-Batches, absolute/relative Pfade, atomare Publikation und erhaltenes Stageeigentum bei Fehlern. SDK109: konkrete Pfad-Mount-Namensgrenzen mit UTF8-Bytes/UTF16-Units, Mountsnapshot und getrennten Atomic-Regeln in Zig/C/Rust; Name-64/Laenge-65 vor Mutation, lange CREATE-/Zielnamen bleiben unterstuetzt.",
       "current_only": "current_function",
@@ -553,7 +556,8 @@
         "app_tray",
         "service_deadline",
         "desktop_evidence",
-        "desktop_actions"
+        "desktop_actions",
+        "server_access"
       ],
       "semantics": "Endpunkt-/Connection-/Requesteigentum, begrenzte Batches, Requestfristen, Stop/Abmeldung und bereits quittiertes Ende unterscheiden; IPC-Rueckgaben/Teilantworten nicht verschlucken. Restartable broker-owned observation: persist intent beforeReserve, serial beforeOffer, canonicalToken beforeACK; read-only recovery, exact serviceepoch, independent refs versus aliases, bounded expiry/quota and no reap transfer. Original-requester delegation to a named full controller and exact original desktop child/window/service epoch; bounded grants, immutable operation/deadline and original applied receipt, independent current view/input/composition, no new app or blind retry after Unknown.",
       "current_only": "current_function",
@@ -2727,6 +2731,38 @@
       "expression": "@import(\"r4os/desktop_actions.zig\")",
       "capability": "services",
       "wave": "0.88.98"
+    },
+    {
+      "name": "server_targets",
+      "source": "Repositories/SDK/r4os.zig",
+      "line": 23,
+      "expression": "@import(\"r4os/server_targets.zig\")",
+      "capability": "files-registry-console",
+      "wave": "0.89.3"
+    },
+    {
+      "name": "server_access",
+      "source": "Repositories/SDK/r4os.zig",
+      "line": 24,
+      "expression": "@import(\"r4os/server_access.zig\")",
+      "capability": "services",
+      "wave": "0.89.3"
+    },
+    {
+      "name": "server_profile",
+      "source": "Repositories/SDK/r4os.zig",
+      "line": 25,
+      "expression": "@import(\"r4os/server_profile.zig\")",
+      "capability": "files-registry-console",
+      "wave": "0.89.3"
+    },
+    {
+      "name": "server_credentials",
+      "source": "Repositories/SDK/r4os.zig",
+      "line": 26,
+      "expression": "@import(\"r4os/server_credentials.zig\")",
+      "capability": "files-registry-console",
+      "wave": "0.89.3"
     }
   ],
   "build_exports": [
@@ -55472,6 +55508,35 @@
       "normal_implementations_unchanged": true,
       "reference": "Temp/08898-native-proof.json and Temp/08898-workstate.json; Docs/SDK/LanguageParity.txt",
       "no_new_runtime_or_host_test_claim": true
+    },
+    "server_access_0893": {
+      "kind": "reviewed_server_facades_and_generated_transport_projection",
+      "performed_in": "0.89.3",
+      "sdk": "0.64.130 source candidate",
+      "contract": "0.64.68 unchanged",
+      "libraries": "0.64.40 unchanged",
+      "complete": true,
+      "report": "Docs/SDK/LanguageParity.txt#0.89.3",
+      "scope": "Narrow source and native boundary review for four Zig server facades and the public registration transport extension. Existing C/Rust generic registry, file and service APIs remain the lower-level paths; no new platform ABI. No claim of a same-named high-level C/Rust R4SRV facade.",
+      "checks": [
+        "Canonical transport generator check for C header and fingerprint plus CFacadeGen Rust projection check passed.",
+        "Native C/Rust TransportParity: five Rust tests including actual C consumer and registration IP/port/TLS construction, plus five unsafe/ownership negative cases passed.",
+        "Actual RTL8139 R4OS guest used TLS-verified public registration, UPDSVC catalog GET and Benchmark hosts GET with one R4SRV registration generation."
+      ],
+      "limits": "Parallel single-flight, fragmented OK/EOF, 401/403/429 transitions, C/Rust guest consumers, benchmark PUT and package download remain open roadmap work."
+    },
+    "benchmark_put_transport_0895": {
+      "kind": "bounded_streaming_put_source_and_transport_review",
+      "performed_in": "0.89.5",
+      "sdk": "0.64.130 source candidate",
+      "complete": true,
+      "report": "Docs/SDK/LanguageParity.txt#0.89.5",
+      "scope": "The existing caller-owned PostStream accepts PUT with fixed Content-Length or reader framing, keeps its existing stop, deadline, TLS and ownership rules, and never automatically replays an uncertain upload. No type or function signature change after the registration transport projection.",
+      "checks": [
+        "Zig transport-parity-test passed after method change.",
+        "Compiler transport generator and Rust C-facade projector still match their generated files."
+      ],
+      "limits": "Actual R4OS Benchmark PUT, bearer authorization and normalized readback remain open until isolated guest proof."
     }
   },
   "wave_bindings": [
@@ -55724,19 +55789,19 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.88.98",
-    "sdk": "0.64.127 sourcecandidate",
-    "contract": "0.64.68 sourcecandidate",
-    "libraries": "0.64.40 sourcecandidate",
-    "evidence": "desktop_actions_08898",
-    "scope": "Review six append-only wire records, typed C/Zig/Rust delegated actions, actual compiler GUI/Cfacade projections and conditional own-app paint-view/frame announcements. Normal Rust Desktop needs current generated shared Rust helper aliases/assertions; C provider boundary unchanged. Actual clean native proof and limits in evidence; no publication/Studio/Windows/HW/GPU/STD claim. Finalactual544B-vs8B COMMAND/STATUS capacityfailure/status-onlyrecovery/close37/controllerRelease proof added without changes to the reviewed product owner sources.",
+    "performed_in": "0.89.5",
+    "sdk": "0.64.130 source candidate",
+    "contract": "0.64.68 unchanged",
+    "libraries": "0.64.40 unchanged",
+    "evidence": "benchmark_put_transport_0895",
+    "scope": "Review the four new Zig server facade owners, existing generic C/Rust registry/file/service access, and compiler-generated C/Rust registration transport types. Native interop and actual guest reuse evidence are bounded; no high-level C/Rust server facade, parallel registration, benchmark PUT, package transfer, Windows or hardware claim. The streaming PUT source extension passed the targeted transport test; isolated guest upload remains separate.",
     "historical_snapshot_retained": true,
-    "current_group_metadata": "Existing current R4SYS34/1392 and R4AUDIO4/232 unchanged from67. Existing provider APIs/modules unchanged; shared Rust aliases now match68. Source candidate Contract68 and SDK127 published matching deferred99/100."
+    "current_group_metadata": "Existing platform ABI and Contract68 records unchanged. Transport helper fingerprint refreshed from compiler types for RegistrationEndpoint and RegistrationResult; C/Rust projections and native boundary checks pass."
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.88.98",
+    "reviewed_in": "0.89.5",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -56885,7 +56950,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "657493eed925df67010a3d8d6f86af3393e1250921646c96c21e9c75e5428657"
+        "sha256": "2a6c8acf1bf7372b25b4c7ea4dc16be92a1b42c9b5fc3659507e9927f074b77b"
       },
       {
         "path": "Repositories/SDK/Rust/src/data/hash.rs",
@@ -57349,7 +57414,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/transport_helpers.h",
-        "sha256": "28b4b4f5d7793771a654efb3e77c3c237658af7ed1c4bca9d458987ae9544d49"
+        "sha256": "b43c595e25d2d952859b37784ccef2d24c75d07aefcd3d407ff9e48fd35b9f6e"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/update_helpers.h",
@@ -57621,11 +57686,11 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "b27b9dcb7b70522845e3d845b90a11e96a6b6fba5cecf7c6e80e987f319d3640"
+        "sha256": "68ac50271e41eb86b2d0a971d0df63530ea082b1965af108e503a985d65c84a8"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
-        "sha256": "e3164e95de5913242f125a8a6cad9a418006c9c7da8949cb620aa29f448beb00"
+        "sha256": "e203fb2feab8d6dc502650feb6a929d026435f5bc65ff84810d736e8659de769"
       },
       {
         "path": "Repositories/SDK/r4os/allocator_wait.zig",
@@ -57653,7 +57718,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/app_network.zig",
-        "sha256": "743f1ab368349c46b7b4701d6a3fa43427c6e3ed5300b80f994fc9997be0b13b"
+        "sha256": "d722a9bb2211139954ff04be4bd2661c67d975d51e10aeb2ee183294aa46decf"
       },
       {
         "path": "Repositories/SDK/r4os/app_resources.zig",
@@ -57673,7 +57738,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/app_web.zig",
-        "sha256": "032e0a6af9766cd3d68a5e9f29fb993f7a84a8a4ab906d58cd60f659b5b8232a"
+        "sha256": "7e1e74b04d7890249847ccc1075d431af1a788205f032b30e5c7ca18b0563069"
       },
       {
         "path": "Repositories/SDK/r4os/app_web_jobs.zig",
@@ -57861,7 +57926,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/generated/transport_fingerprint.zig",
-        "sha256": "52291f6cb330aa7feabb284d4a62307e4a0b5979e05619afc77f62c86ad8e7c6"
+        "sha256": "27b6b4c5e8cdabf1ba1614eced19fb925c68d6a8f481a667643af6bbbda82a93"
       },
       {
         "path": "Repositories/SDK/r4os/generated/update_fingerprint.zig",
@@ -58154,6 +58219,22 @@
       {
         "path": "Repositories/SDK/r4os/serial.zig",
         "sha256": "cc8eb8eff6c072ea3b35fd2757c8beb41da3f871b221941db534eee644b7a7f0"
+      },
+      {
+        "path": "Repositories/SDK/r4os/server_access.zig",
+        "sha256": "62056f9533e0561e4664dce745b31d7150e25d3ee5967996a02cbeb2068e66de"
+      },
+      {
+        "path": "Repositories/SDK/r4os/server_credentials.zig",
+        "sha256": "b61534e8bc907a66eef6f70a6fc431fc63dde111c7827cf193186c37eb435ed2"
+      },
+      {
+        "path": "Repositories/SDK/r4os/server_profile.zig",
+        "sha256": "48f516543233c9544994105076c2381ca276298325e80a0be0d2c3166cb52ffa"
+      },
+      {
+        "path": "Repositories/SDK/r4os/server_targets.zig",
+        "sha256": "1181634b9dfe01cb5ea5ef15cf45f1053ae530321f0e491307cca07efafdeb72"
       },
       {
         "path": "Repositories/SDK/r4os/service_deadline.zig",
@@ -58663,7 +58744,10 @@
           "Repositories/SDK/r4os/registry.zig",
           "Repositories/SDK/r4os/registry_core.zig",
           "Repositories/SDK/r4os/registry_selftest.zig",
-          "Repositories/SDK/r4os/storage.zig"
+          "Repositories/SDK/r4os/storage.zig",
+          "Repositories/SDK/r4os/server_targets.zig",
+          "Repositories/SDK/r4os/server_profile.zig",
+          "Repositories/SDK/r4os/server_credentials.zig"
         ],
         "c": [
           "Repositories/SDK/Shared/C/include/r4os/app_storage.h",
@@ -58692,7 +58776,8 @@
           "process_evidence_08826",
           "file_name_limits_08827",
           "native_pointer_capture_08828",
-          "gui_host_backpressure_08832"
+          "gui_host_backpressure_08832",
+          "server_access_0893"
         ]
       },
       {
@@ -58728,7 +58813,8 @@
           "Repositories/SDK/r4os/app_tray.zig",
           "Repositories/SDK/r4os/service_deadline.zig",
           "Repositories/SDK/r4os/desktop_evidence.zig",
-          "Repositories/SDK/r4os/desktop_actions.zig"
+          "Repositories/SDK/r4os/desktop_actions.zig",
+          "Repositories/SDK/r4os/server_access.zig"
         ],
         "c": [
           "Repositories/SDK/Shared/C/include/r4os/app_services.h",
@@ -58749,7 +58835,8 @@
           "service_binding_08870_host",
           "service_binding_08870_native",
           "desktop_evidence_handoff_08897",
-          "desktop_actions_08898"
+          "desktop_actions_08898",
+          "server_access_0893"
         ]
       },
       {
@@ -58770,7 +58857,8 @@
         ],
         "proof": [
           "service_network_current_55",
-          "current_contract_78"
+          "current_contract_78",
+          "server_access_0893"
         ]
       },
       {
@@ -59019,7 +59107,9 @@
           "Repositories/SDK/Rust/src/web/transport/mod.rs"
         ],
         "proof": [
-          "transport_current_63"
+          "transport_current_63",
+          "server_access_0893",
+          "benchmark_put_transport_0895"
         ]
       },
       {

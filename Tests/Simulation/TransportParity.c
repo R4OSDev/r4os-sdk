@@ -64,6 +64,14 @@ int sdk_transport_c_case(uint8_t *scratch,uintptr_t capacity){
     R4SdkTransportNative_app_network_Ipv4Address ip;
     TRY(R4SdkTransportNative_app_network_Ipv4Address_init(0,0,0,0,0,&ip));CHECK(R4SdkTransportNative_app_network_Ipv4Address_isUnspecified(0,&ip).bits==1);
     TRY(R4SdkTransportNative_app_network_Ipv4Address_init(0,1,0,0,0,&ip));CHECK(R4SdkTransportNative_app_network_Ipv4Address_isUnspecified(0,&ip).bits==0);
+    R4SdkTransportRegistrationEndpoint registration;
+    TRY(R4SdkTransportRegistrationEndpoint_from_fields(&registration,&ip,B("1.0.0.0"),4021,1));
+    CHECK(equal(R4SdkTransportRegistrationEndpoint_get_hostname(&registration),"1.0.0.0",7));
+    CHECK(R4SdkTransportRegistrationEndpoint_get_port(&registration).bits==4021);
+    CHECK(R4SdkTransportRegistrationEndpoint_get_tls(&registration).bits==1);
+    R4SdkTransportRegistrationResult rejected;
+    TRY(R4SdkTransportRegistrationResult_set_invalid_reply(&rejected));
+    CHECK(R4SdkTransportRegistrationResult_inspectNative(&rejected).bits==R4SdkTransportRegistrationResult_TAG_invalid_reply);
     SinkState state={0};R4SdkWebCallbackTable table;R4SdkTransportDownloadSink sink;
     CHECK(!R4SdkWebCallbackTable_from_fields(&table,(R4SdkWebSlot){.ptr=&state,.flags=1},UINT64_C(1)<<R4SdkWebCallbackKind_download_write,(R4SdkWebSlot){.ptr=(void *)(uintptr_t)&invoke,.flags=1}).status);
     TRY(R4SdkTransport_sink(0,&table,&sink));

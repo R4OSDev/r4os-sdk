@@ -20,6 +20,24 @@ fn original_c_parser_cache_callbacks_and_ipv4() {
     assert_eq!(code, 0);
 }
 #[test]
+fn generated_registration_endpoint_preserves_public_ip_and_tls_mode() {
+    let mut ip = MaybeUninit::<c::R4SdkTransportNative_app_network_Ipv4Address>::uninit();
+    let mut endpoint = MaybeUninit::<c::R4SdkTransportRegistrationEndpoint>::uninit();
+    let name = b"138.201.253.143";
+    unsafe {
+        check(c::R4SdkTransportNative_app_network_Ipv4Address_init(
+            0, 138, 201, 253, 143, ip.as_mut_ptr(),
+        ));
+        check(c::R4SdkTransportRegistrationEndpoint_from_fields(
+            endpoint.as_mut_ptr(), ip.as_ptr(), name.as_ptr(), name.len() as u64, 4021, 1,
+        ));
+        let hostname = check(c::R4SdkTransportRegistrationEndpoint_get_hostname(endpoint.as_ptr()));
+        assert_eq!(core::slice::from_raw_parts(hostname.ptr.cast::<u8>(), hostname.length as usize), name);
+        assert_eq!(check(c::R4SdkTransportRegistrationEndpoint_get_port(endpoint.as_ptr())).bits, 4021);
+        assert_eq!(check(c::R4SdkTransportRegistrationEndpoint_get_tls(endpoint.as_ptr())).bits, 1);
+    }
+}
+#[test]
 fn common_startup_binds_original_entropy_without_optional_host_instructions() {
     assert_eq!(unsafe { sdk_transport_bootstrap_case() }, 0);
 }
