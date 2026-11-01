@@ -158,7 +158,8 @@
         "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.49",
         "platform_current_58",
         "current_kernel_records_80",
-        "Docs/SDK/LanguageParity.txt#0.89.2-Firmwarekennung-fuer-Spectra"
+        "Docs/SDK/LanguageParity.txt#0.89.2-Firmwarekennung-fuer-Spectra",
+        "Docs/SDK/LanguageParity.txt#0.89.5-Generatorprojektion-fuer-Firmwarekennung"
       ],
       "retired_slots": [
         27,
@@ -55791,14 +55792,14 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.89.2-0.89.4",
-    "sdk": "0.64.131 source candidate",
+    "performed_in": "0.89.2-0.89.5",
+    "sdk": "0.64.132 source candidate",
     "contract": "0.64.69 source candidate",
     "libraries": "0.64.40 unchanged",
-    "evidence": "Docs/SDK/LanguageParity.txt#0.89.2-Firmwarekennung-fuer-Spectra",
-    "scope": "R4DEV36/736 appends optional firmware_system_uuid at offset 728. Generated C/Rust raw ABI and Zig SDK helper are reviewed; Kernel453 SMBIOS retrieval and two fresh QEMU installations are qualified. Existing server registration, TLS and streaming PUT are reused by Spectra. No new higher C/Rust firmware helper, R4Laptop hardware, Windows, or final release qualification is claimed.",
+    "evidence": "Docs/SDK/LanguageParity.txt#0.89.5-Generatorprojektion-fuer-Firmwarekennung",
+    "scope": "R4DEV36/736 appends optional firmware_system_uuid at offset 728. Generated C/Rust raw ABI and Zig SDK helper are reviewed; Kernel453 SMBIOS retrieval and two fresh QEMU installations are qualified. Existing server registration, TLS and streaming PUT are reused by Spectra. The compiler-typed GUI catalogue now projects the optional firmware method into the generated C header and Rust facades (682 types, 902 methods, fingerprint 10951471536795706676). No specialized higher C/Rust firmware helper, R4Laptop hardware, Windows, or final release qualification is claimed.",
     "historical_snapshot_retained": true,
-    "current_group_metadata": "R4DEV current table metadata updated; dated canonical_platform_sources and earlier wave evidence retained."
+    "current_group_metadata": "R4DEV current table metadata and generated GUI projection updated; dated canonical_platform_sources and earlier wave evidence retained."
   },
   "drift_guard": {
     "schema": 1,
@@ -56952,7 +56953,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "2a6c8acf1bf7372b25b4c7ea4dc16be92a1b42c9b5fc3659507e9927f074b77b"
+        "sha256": "2d7067ae657e783b1e172bf8c69b7c6676c02fe5589f8fd9fb370c5dba9a76a3"
       },
       {
         "path": "Repositories/SDK/Rust/src/data/hash.rs",
@@ -57324,7 +57325,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/gui_bridge.h",
-        "sha256": "edffe9832aab435168e8890de623d7f64e3e426c8936515ff8794376e9eee184"
+        "sha256": "b89787158386fd4e5afcc7a28dff492a7dfd30217d98f306837a825c068d5476"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/heap.h",
@@ -57688,7 +57689,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "8253e4949f1c0c0558548817cf537f6666863d9113ee273489e2b65c8c095713"
+        "sha256": "34fe469111cc869acc5e36046c272d2f358c8d008d2177a1b44f5b192194dedc"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -57916,7 +57917,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/generated/gui_fingerprint.zig",
-        "sha256": "53f841ea7faf999ea9810eef57c6522555f54f2f03081cc88e66841c5e40f81e"
+        "sha256": "5b0e7d240751ebe557041f6066cd53ffbc6cddb8fa8cd372d4390e87228f296c"
       },
       {
         "path": "Repositories/SDK/r4os/generated/net_facade.zig",
