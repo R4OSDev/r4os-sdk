@@ -218,6 +218,20 @@ pub const FetchResult = union(enum) {
     failure: Error,
 };
 
+pub const RegistrationEndpoint = struct {
+    address: app_network.Ipv4Address,
+    hostname: []const u8,
+    port: u16,
+    tls: bool,
+};
+
+pub const RegistrationResult = union(enum) {
+    accepted,
+    invalid_secret,
+    invalid_reply,
+    failure: Error,
+};
+
 pub const DownloadProgress = *const fn (?*anyopaque, u64, u64) bool;
 pub const DownloadWrite = *const fn (?*anyopaque, u64, []const u8) bool;
 
@@ -505,6 +519,70 @@ pub const WebTransport = struct {
 
     pub fn available(self: *const WebTransport) bool {
         return self.network.available() and self.dev.hasFn("protocol_dispatch");
+    }
+
+    /// Registration is a raw TCP exchange. The public profile completes
+    /// certificate and IP-SAN verification before any secret bytes are sent.
+    pub fn registerServer(self: *WebTransport, endpoint: RegistrationEndpoint, secret: []const u8, scratch: []u8, timeout: Timeout) RegistrationResult {
+        if (secret.len == 0 or secret.len > 256) return .invalid_secret;
+        for (secret) |byte| if (byte < 0x21 or byte > 0x7e) { return .invalid_secret; };
+        const parsed_ip = app_network.Ipv4Address.parseCanonical(endpoint.hostname) orelse return .{ .failure = .invalid_url };
+        if (!std.mem.eql(u8, &parsed_ip.octets, &endpoint.address.octets) or endpoint.port == 0) return .{ .failure = .invalid_url };
+        if (endpoint.tls and scratch.len < tls_scratch_bytes) return .{ .failure = .scratch_too_small };
+        defer std.crypto.secureZero(u8, scratch);
+
+        const options = FetchOptions{ .timeout = timeout };
+        const deadline = RequestDeadline.start(&self.network, timeout);
+        var socket = switch (self.network.connectTcp(.{ .address = endpoint.address, .port = endpoint.port }, deadline.remaining(&self.network))) {
+            .socket => |value| value,
+            .timed_out => return .{ .failure = .connect_timeout },
+            else => return .{ .failure = .connect_failed },
+        };
+        defer _ = socket.close(deadline.remaining(&self.network));
+
+        var received: usize = 0;
+        var reply: [2]u8 = undefined;
+        if (endpoint.tls) {
+            var url_buffer: [64]u8 = undefined;
+            const raw_url = std.fmt.bufPrint(&url_buffer, "https://{s}:{d}/", .{ endpoint.hostname, endpoint.port }) catch return .{ .failure = .invalid_url };
+            const url = switch (http.parseUrl(raw_url)) {
+                .value => |value| value,
+                .failure => return .{ .failure = .invalid_url },
+            };
+            var session = switch (self.openTlsSession(&socket, url, scratch, options, deadline)) {
+                .session => |value| value,
+                .failure => |failure| return .{ .failure = failure },
+            };
+            switch (self.writeTlsApplication(&socket, &session, secret, scratch, options, deadline)) {
+                .ok => {},
+                .failure => |failure| return .{ .failure = failure },
+            }
+            while (received < reply.len) {
+                switch (self.readTlsApplication(&socket, &session, scratch, options, deadline)) {
+                    .bytes => |plain| {
+                        if (plain.len == 0) continue;
+                        if (plain.len > reply.len - received) return .invalid_reply;
+                        @memcpy(reply[received .. received + plain.len], plain);
+                        received += plain.len;
+                    },
+                    .close_notify => return .invalid_reply,
+                    .failure => |failure| return .{ .failure = failure },
+                }
+            }
+        } else {
+            if (!writeAll(&socket, secret, options, deadline)) return .{ .failure = .write_failed };
+            while (received < reply.len) {
+                switch (readSocketBounded(&socket, reply[received..], options, deadline)) {
+                    .bytes => |count| received += count,
+                    .cancelled => return .{ .failure = .cancelled },
+                    .timed_out => return .{ .failure = .read_timeout },
+                    .reset => return .{ .failure = .read_reset },
+                    .peer_closed, .closed => return .invalid_reply,
+                    .failed => return .{ .failure = .read_failed },
+                }
+            }
+        }
+        return if (std.mem.eql(u8, &reply, "OK")) .accepted else .invalid_reply;
     }
 
     pub fn fetch(self: *WebTransport, raw_url: []const u8, raw_response: []u8, body_out: []u8, scratch: []u8, options: FetchOptions) FetchResult {

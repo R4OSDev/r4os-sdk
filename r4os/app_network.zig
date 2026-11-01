@@ -23,6 +23,30 @@ pub const Ipv4Address = struct {
         return .{ .octets = value };
     }
 
+    pub fn parseCanonical(text: []const u8) ?Ipv4Address {
+        var octets: [4]u8 = undefined;
+        var part: usize = 0;
+        var value: u16 = 0;
+        var digits: usize = 0;
+        for (text) |character| {
+            if (character == '.') {
+                if (part >= 3 or digits == 0) return null;
+                octets[part] = @intCast(value);
+                part += 1;
+                value = 0;
+                digits = 0;
+                continue;
+            }
+            if (character < '0' or character > '9' or digits >= 3 or (digits == 1 and value == 0)) return null;
+            value = value * 10 + (character - '0');
+            if (value > 255) return null;
+            digits += 1;
+        }
+        if (part != 3 or digits == 0) return null;
+        octets[3] = @intCast(value);
+        return fromBytes(octets);
+    }
+
     pub fn isUnspecified(self: Ipv4Address) bool {
         return std.mem.eql(u8, &self.octets, &.{ 0, 0, 0, 0 });
     }
@@ -197,6 +221,7 @@ pub const Resolver = struct {
 
     pub fn resolveA(self: *Resolver, name: []const u8, server: ?Ipv4Address, timeout: Timeout) ResolveResult {
         if (name.len == 0 or name.len > abi.service_api_max_payload - 4) return .{ .failure = abi.dns_result_name };
+        if (Ipv4Address.parseCanonical(name)) |address| return .{ .address = address };
         var request: [abi.service_api_max_payload]u8 = undefined;
         var len: usize = 0;
         const op: u16 = if (server) |address| blk: {
