@@ -3228,6 +3228,17 @@ pub const Context = struct {
         return table_fn(name, out, process);
     }
 
+    pub fn serviceInventoryPage(self: *const Context, cursor: *abi.ServiceInventoryCursor, rows: []abi.ServiceInventoryRow) i32 {
+        if (rows.len == 0 or rows.len > std.math.maxInt(u32)) return abi.service_api_result_invalid;
+        const table_fn = self.sysFn("service_inventory_page") orelse return self.unavailable("sys");
+        return table_fn(cursor, rows.ptr, @intCast(rows.len));
+    }
+
+    pub fn serviceControlBound(self: *const Context, request: *const abi.ServiceControlRequest) i32 {
+        const table_fn = self.sysFn("service_control_bound") orelse return self.unavailable("sys");
+        return table_fn(request);
+    }
+
     pub fn serviceStart(self: *const Context, name: [*:0]const u8, out: *abi.ServiceInfo) i32 {
         const table_fn = self.sysFn("service_start") orelse return self.unavailable("sys");
         return table_fn(name, out);

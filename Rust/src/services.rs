@@ -11,6 +11,10 @@ mod tray;
 mod evidence;
 mod actions;
 mod links;
+mod inventory;
+pub use inventory::InventoryAction;
+#[cfg(feature = "alloc")]
+pub use inventory::ServiceInventory;
 pub use links::{LinkToken, LinkRequest, LinkReply, link_supported, prepare_link_binding};
 pub use evidence::{EvidenceLease, EvidenceReply, EvidenceToken, prepare_evidence};
 pub use actions::{FocusObservation, PointerStep, prepare_pointer_grant};

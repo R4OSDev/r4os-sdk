@@ -1270,6 +1270,14 @@ pub const Context = struct {
         return self.base.serviceBoundDetail(service_name, out, process);
     }
 
+    pub fn serviceInventoryPage(self: *const Context, cursor: *abi.ServiceInventoryCursor, rows: []abi.ServiceInventoryRow) i32 {
+        return self.base.serviceInventoryPage(cursor, rows);
+    }
+
+    pub fn serviceControlBound(self: *const Context, request: *const abi.ServiceControlRequest) i32 {
+        return self.base.serviceControlBound(request);
+    }
+
     pub fn serviceStart(self: *const Context, service_name: [*:0]const u8, out: *abi.ServiceInfo) i32 {
         return self.base.serviceStart(service_name, out);
     }

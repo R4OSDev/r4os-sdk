@@ -339,3 +339,37 @@ int sdk_link_c_case(void){
  if(r4_desktop_link_status(&app,&q,&r)||r.process.generation!=UINT64_C(0xfedcba9876543210)||link_activations!=1||link_statuses!=1)return 5;
  return 0;
 }
+
+/* Page memory belongs to the consumer. Deliberately use one-row pages in the
+ * C check: transfer size must never become a total-inventory cap. */
+static uint32_t inv_calls, inv_mode, inv_starts;
+static uint64_t inv_revision=11;
+void sdk_inventory_reset(uint32_t mode){inv_calls=inv_starts=0;inv_mode=mode;inv_revision=11;}
+static int32_t inventory_page(R4ServiceInventoryCursor *cursor,R4ServiceInventoryRow *rows,uint32_t capacity){
+    ++inv_calls;
+    if(inv_mode==2||(inv_mode==1&&inv_calls==2)){++inv_revision;return R4OS_SERVICE_API_RESULT_RESTART;}
+    uint64_t after=cursor->after_id;
+    uint32_t n=(uint32_t)(300-after);if(n>capacity)n=capacity;if(n>8)n=8;
+    for(uint32_t i=0;i<n;++i){memset(&rows[i],0,sizeof(rows[i]));rows[i].registration_id=after+i+1;rows[i].start_generation=91;rows[i].process.instance_id=77;rows[i].process.generation=8;}
+    *cursor=(R4ServiceInventoryCursor){.revision=inv_revision,.after_id=after+n,.total=300,.flags=R4OS_SERVICE_INVENTORY_DYNAMIC|((after+n==300)?R4OS_SERVICE_INVENTORY_END:0)};
+    return (int32_t)n;
+}
+static int32_t inventory_control(const R4ServiceControlRequest *request){
+    if(request->registration_id!=300||request->start_generation!=91||request->process.instance_id!=77||request->process.generation!=8)return R4OS_SERVICE_API_RESULT_BUSY;
+    ++inv_starts;return 0;
+}
+void sdk_inventory_tables(R4XStartR4Sys *sys){sys->service_inventory_page=(uintptr_t)&inventory_page;sys->service_control_bound=(uintptr_t)&inventory_control;}
+int sdk_inventory_c_case(void){
+    R4App app;R4XStartR4Sys sys;R4XStartR4Net net;init_app(&app,&sys,&net);sys.abi_version=35;
+    sdk_inventory_tables(&sys);sdk_inventory_reset(0);R4Services services=r4_app_services(&app);
+    if(!r4_services_inventory_available(&services))return 1;
+    R4ServiceInventoryCursor cursor={0};R4ServiceInventoryRow row={0};uint64_t count=0;
+    do {if(r4_services_inventory_page(&services,&cursor,&row,1)!=1||row.registration_id!=++count)return 2;}while(!(cursor.flags&R4OS_SERVICE_INVENTORY_END));
+    if(count!=300||cursor.total!=300)return 3;
+    R4ServiceControlRequest request=r4_service_control_request(&row,R4OS_SERVICE_CONTROL_START);
+    if(r4_services_control_bound(&services,&request)!=0)return 4;
+    --request.process.generation;if(r4_services_control_bound(&services,&request)!=R4OS_SERVICE_API_RESULT_BUSY||inv_starts!=1)return 5;
+    sys.size=offsetof(R4XStartR4Sys,service_inventory_page);
+    if(r4_services_inventory_available(&services)||r4_services_inventory_page(&services,&cursor,&row,1)!=R4OS_ERR_NO_FN)return 6;
+    return 0;
+}

@@ -5,6 +5,92 @@ const time_contract = @import("time_contract.zig");
 
 pub const Timeout = time_contract.Timeout;
 
+pub const Inventory = struct {
+    rows: []abi.ServiceInventoryRow,
+    revision: u64,
+    allocator: std.mem.Allocator,
+
+    pub fn deinit(self: *Inventory) void {
+        self.allocator.free(self.rows);
+        self.rows = &.{};
+    }
+};
+pub const InventoryRead = union(enum) { complete: Inventory, failure: i32 };
+
+pub fn inventoryAvailable(sys: *const r4sys.Context) bool {
+    return sys.hasFn("service_inventory_page") and sys.hasFn("service_control_bound");
+}
+
+/// All rows are caller-owned values. A native page size bounds one transfer,
+/// never the full inventory. Partial attempts are discarded on restart/OOM.
+pub fn readInventory(sys: *const r4sys.Context, allocator: std.mem.Allocator) InventoryRead {
+    if (!sys.hasFn("service_inventory_page")) return .{ .failure = abi.err_no_fn };
+    var values: std.ArrayList(abi.ServiceInventoryRow) = .empty;
+    defer values.deinit(allocator);
+    for (0..3) |_| {
+        values.clearRetainingCapacity();
+        var cursor: abi.ServiceInventoryCursor = .{};
+        var page: [abi.service_inventory_page_rows]abi.ServiceInventoryRow = undefined;
+        while (true) {
+            const previous = cursor;
+            const raw = sys.serviceInventoryPage(&cursor, &page);
+            if (raw == abi.service_api_result_restart or raw == abi.service_api_result_busy) break;
+            if (raw < 0) return .{ .failure = raw };
+            const count: usize = @intCast(raw);
+            if (count > page.len or cursor.revision == 0 or cursor.reserved != 0 or
+                cursor.flags & abi.service_inventory_dynamic == 0 or
+                cursor.flags & ~(abi.service_inventory_dynamic | abi.service_inventory_end) != 0 or
+                (previous.revision != 0 and (cursor.revision != previous.revision or cursor.total != previous.total)))
+                return .{ .failure = abi.service_api_result_invalid };
+            var last = previous.after_id;
+            for (page[0..count]) |row| {
+                if (row.registration_id <= last) return .{ .failure = abi.service_api_result_invalid };
+                last = row.registration_id;
+            }
+            if (cursor.after_id != last or values.items.len > cursor.total or count > cursor.total - values.items.len)
+                return .{ .failure = abi.service_api_result_invalid };
+            values.appendSlice(allocator, page[0..count]) catch return .{ .failure = abi.service_api_result_memory };
+            if (cursor.flags & abi.service_inventory_end != 0) {
+                if (values.items.len != cursor.total) return .{ .failure = abi.service_api_result_invalid };
+                const owned = values.toOwnedSlice(allocator) catch return .{ .failure = abi.service_api_result_memory };
+                return .{ .complete = .{ .rows = owned, .revision = cursor.revision, .allocator = allocator } };
+            }
+            if (count == 0) return .{ .failure = abi.service_api_result_invalid };
+        }
+    }
+    return .{ .failure = abi.service_api_result_busy };
+}
+
+pub const InventoryAction = union(enum) {
+    start,
+    stop: Timeout,
+    restart,
+    mode: u32,
+    remove,
+};
+
+pub fn controlEntry(sys: *const r4sys.Context, row: *const abi.ServiceInventoryRow, action: InventoryAction) i32 {
+    var request: abi.ServiceControlRequest = .{
+        .registration_id = row.registration_id,
+        .start_generation = row.start_generation,
+        .process = row.process,
+    };
+    switch (action) {
+        .start => request.operation = abi.service_control_start,
+        .stop => |timeout| {
+            request.operation = abi.service_control_stop;
+            request.timeout_ticks = time_contract.timeoutToTicks(timeout, sys.monotonicHz()) catch return abi.service_api_result_invalid;
+        },
+        .restart => request.operation = abi.service_control_restart,
+        .mode => |mode| {
+            request.operation = abi.service_control_mode;
+            request.mode = mode;
+        },
+        .remove => request.operation = abi.service_control_remove,
+    }
+    return sys.serviceControlBound(&request);
+}
+
 /// Only an explicit EOF publishes a complete inventory. The caller supplies
 /// private staging storage and must ignore its contents on failure. The current
 /// index API has no cross-call revision token; this detects aborted enumeration,

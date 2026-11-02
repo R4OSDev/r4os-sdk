@@ -748,3 +748,80 @@ test "explicit blocking system transition negotiates1280/1288 and forwards full 
     sys_table.system_power_transition = 0;
     try t.expectEqual(a.err_no_fn, sys.systemPowerTransition(a.power_transition_action_poweroff, 0));
 }
+
+// Controlled ABI peer, not a native-kernel qualification.
+const InventoryFixture = struct {
+    const abi = r4os.abi;
+    var mode: enum { normal, once, always, no_end, bad_id } = .normal;
+    var calls: u32 = 0;
+    var starts: u32 = 0;
+    var revision: u64 = 11;
+    fn page(cursor: *abi.ServiceInventoryCursor, rows: [*]abi.ServiceInventoryRow, capacity: u32) callconv(.c) i32 {
+        calls += 1;
+        if (mode == .always or (mode == .once and calls == 2)) {
+            revision += 1;
+            return abi.service_api_result_restart;
+        }
+        if (mode == .no_end) {
+            cursor.* = .{ .revision = revision, .total = 300, .flags = abi.service_inventory_dynamic };
+            return 0;
+        }
+        const start = cursor.after_id;
+        const n: usize = @intCast(@min(300 - start, capacity, abi.service_inventory_page_rows));
+        for (0..n) |i| rows[i] = .{ .registration_id = start + i + 1, .start_generation = 91, .process = .{ .instance_id = 77, .generation = 8 } };
+        if (mode == .bad_id and n > 1) rows[1].registration_id = rows[0].registration_id;
+        cursor.* = .{ .revision = revision, .after_id = start + n, .total = 300, .flags = abi.service_inventory_dynamic | (if (start + n == 300) abi.service_inventory_end else @as(u32, 0)) };
+        return @intCast(n);
+    }
+    fn control(request: *const abi.ServiceControlRequest) callconv(.c) i32 {
+        if (request.registration_id != 300 or request.start_generation != 91 or request.process.instance_id != 77 or request.process.generation != 8) return abi.service_api_result_busy;
+        starts += 1;
+        return 0;
+    }
+};
+
+test "service inventory grows past 255, discards restarted pages and frees caller storage" {
+    const f = InventoryFixture;
+    var facades = initFacades();
+    sys_table.service_inventory_page = @intFromPtr(&f.page);
+    sys_table.service_control_bound = @intFromPtr(&f.control);
+    f.mode = .once;
+    f.calls = 0;
+    f.starts = 0;
+    var inventory = switch (r4os.app_services.readInventory(&facades.services.sys, std.testing.allocator)) {
+        .complete => |v| v,
+        else => return error.Capture,
+    };
+    defer inventory.deinit();
+    try std.testing.expectEqual(@as(usize, 300), inventory.rows.len);
+    try std.testing.expect(f.calls > 38);
+    try std.testing.expectEqual(f.revision, inventory.revision);
+    for (inventory.rows, 1..) |row, id| try std.testing.expectEqual(id, row.registration_id);
+    try std.testing.expectEqual(@as(i32, 0), r4os.app_services.controlEntry(&facades.services.sys, &inventory.rows[299], .start));
+    var old = inventory.rows[299];
+    old.process.generation -= 1;
+    try std.testing.expectEqual(f.abi.service_api_result_busy, r4os.app_services.controlEntry(&facades.services.sys, &old, .start));
+    try std.testing.expectEqual(@as(u32, 1), f.starts);
+}
+
+test "service inventory rejects endless restart, missing END, repeated identity, OOM and absent tail" {
+    const f = InventoryFixture;
+    var facades = initFacades();
+    sys_table.service_inventory_page = @intFromPtr(&f.page);
+    sys_table.service_control_bound = @intFromPtr(&f.control);
+    f.mode = .always;
+    f.calls = 0;
+    try std.testing.expectEqual(f.abi.service_api_result_busy, r4os.app_services.readInventory(&facades.services.sys, std.testing.allocator).failure);
+    try std.testing.expectEqual(@as(u32, 3), f.calls);
+    f.mode = .no_end;
+    try std.testing.expectEqual(f.abi.service_api_result_invalid, r4os.app_services.readInventory(&facades.services.sys, std.testing.allocator).failure);
+    f.mode = .bad_id;
+    try std.testing.expectEqual(f.abi.service_api_result_invalid, r4os.app_services.readInventory(&facades.services.sys, std.testing.allocator).failure);
+    f.mode = .normal;
+    var tiny: [1]u8 = undefined;
+    var allocator = std.heap.FixedBufferAllocator.init(&tiny);
+    try std.testing.expectEqual(f.abi.service_api_result_memory, r4os.app_services.readInventory(&facades.services.sys, allocator.allocator()).failure);
+    sys_table.size = @offsetOf(f.abi.R4XStartR4Sys, "service_inventory_page");
+    try std.testing.expect(!r4os.app_services.inventoryAvailable(&facades.services.sys));
+    try std.testing.expectEqual(f.abi.err_no_fn, r4os.app_services.readInventory(&facades.services.sys, std.testing.allocator).failure);
+}

@@ -63,6 +63,38 @@ typedef struct R4EndpointReceiveResult {
 #define R4_SERVICES_HAS(table, field) ((table) != 0 && (table)->size >= offsetof(R4XStartR4Sys, field) + sizeof(uintptr_t) && (table)->field != 0)
 
 static inline R4Services r4_app_services(R4App *app) { R4Services value = {app}; return value; }
+
+/* Caller owns cursor and page buffers. Only END proves completeness; on
+ * RESTART discard all accumulated pages. No fixed total service capacity. */
+static inline int r4_services_inventory_available(const R4Services *services) {
+    const R4XStartR4Sys *table = services != 0 && services->app != 0 ? services->app->system.table : 0;
+    return R4_SERVICES_HAS(table, service_inventory_page) && R4_SERVICES_HAS(table, service_control_bound);
+}
+
+static inline int32_t r4_services_inventory_page(const R4Services *services, R4ServiceInventoryCursor *cursor, R4ServiceInventoryRow *rows, uint32_t capacity) {
+    if (cursor == 0 || rows == 0 || capacity == 0u) return R4OS_SERVICE_API_RESULT_INVALID;
+    const R4XStartR4Sys *table = services != 0 && services->app != 0 ? services->app->system.table : 0;
+    if (!R4_SERVICES_HAS(table, service_inventory_page)) return R4OS_ERR_NO_FN;
+    return ((R4SysServiceInventoryPageFn)(uintptr_t)table->service_inventory_page)(cursor, rows, capacity);
+}
+
+static inline int32_t r4_services_control_bound(const R4Services *services, const R4ServiceControlRequest *request) {
+    if (request == 0) return R4OS_SERVICE_API_RESULT_INVALID;
+    const R4XStartR4Sys *table = services != 0 && services->app != 0 ? services->app->system.table : 0;
+    if (!R4_SERVICES_HAS(table, service_control_bound)) return R4OS_ERR_NO_FN;
+    return ((R4SysServiceControlBoundFn)(uintptr_t)table->service_control_bound)(request);
+}
+
+static inline R4ServiceControlRequest r4_service_control_request(const R4ServiceInventoryRow *row, uint32_t operation) {
+    R4ServiceControlRequest request = {0};
+    if (row != 0) {
+        request.registration_id = row->registration_id;
+        request.start_generation = row->start_generation;
+        request.process = row->process;
+    }
+    request.operation = operation;
+    return request;
+}
 static inline int r4_service_connection_valid(const R4ServiceConnection *connection) { return connection != 0 && connection->app != 0 && connection->raw != 0u; }
 static inline int r4_service_endpoint_valid(const R4ServiceEndpoint *endpoint) { return endpoint != 0 && endpoint->app != 0 && endpoint->raw != 0u; }
 

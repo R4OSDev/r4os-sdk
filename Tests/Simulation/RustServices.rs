@@ -33,6 +33,9 @@ unsafe impl GlobalAlloc for Tracking {
 #[global_allocator]
 static ALLOCATOR: Tracking = Tracking;
 unsafe extern "C" {
+    fn sdk_inventory_c_case() -> i32;
+    fn sdk_inventory_tables(sys: *mut abi::R4XStartR4Sys);
+    fn sdk_inventory_reset(mode: u32);
     fn sdk_link_c_case() -> i32;
     fn sdk_link_tables(sys: *mut abi::R4XStartR4Sys);
     fn sdk_link_activations() -> u32;
@@ -154,6 +157,21 @@ fn service_network_serial_deadline_owners_and_retained_requests() {
     let app = unsafe { App::from_raw(&ctx, &expected, c"SERVICE-INTEROP") }.unwrap();
     let services = Services::new(&app).unwrap();
     assert!(services.available());
+    assert_eq!(unsafe { sdk_inventory_c_case() }, 0);
+    unsafe { sdk_inventory_tables(&mut sys); sdk_inventory_reset(1); }
+    assert!(services.inventory_available());
+    let inventory=services.inventory().unwrap();
+    assert_eq!(inventory.rows.len(),300);
+    assert_eq!(inventory.revision,12);
+    for (index,row) in inventory.rows.iter().enumerate(){assert_eq!(row.registration_id,index as u64+1);}
+    services.control_entry(&inventory.rows[299],r4os_sdk::services::InventoryAction::Start).unwrap();
+    let mut stale=inventory.rows[299];stale.process.generation-=1;
+    assert_eq!(services.control_entry(&stale,r4os_sdk::services::InventoryAction::Start),Err(r4os_sdk::storage::Error::Raw(abi::service_api_result_busy)));
+    drop(inventory);
+    unsafe { sdk_inventory_reset(2); }
+    assert!(matches!(services.inventory(),Err(r4os_sdk::storage::Error::Raw(code)) if code==abi::service_api_result_busy));
+    unsafe { sdk_inventory_reset(0); }
+
     assert_eq!(unsafe { sdk_link_c_case() }, 0);
     unsafe { sdk_link_tables(&mut sys) };
     let link_scope = services.link_scope().unwrap();
