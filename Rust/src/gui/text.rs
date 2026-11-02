@@ -2,12 +2,19 @@ use super::{boolean, c, slot};
 use crate::storage::{Error, Result};
 use core::{marker::PhantomData, mem::MaybeUninit, ptr::NonNull};
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum TextFieldMode {
+    Normal,
+    Password,
+}
+
 /// Native text state retains an exclusive buffer loan; it owns no independent
 /// Unicode editor. Moving this Rust wrapper does not move its borrowed data.
 pub struct TextField<'b> {
     native: MaybeUninit<c::R4SdkGuiTextField>,
     buffer: NonNull<u8>,
     capacity: usize,
+    sensitive_buffer: bool,
     _loan: PhantomData<&'b mut [u8]>,
 }
 impl<'b> TextField<'b> {
@@ -28,8 +35,35 @@ impl<'b> TextField<'b> {
             native,
             buffer,
             capacity,
+            sensitive_buffer: false,
             _loan: PhantomData,
         })
+    }
+    pub fn new_password(buffer: &'b mut [u8]) -> Result<Self> {
+        let mut field = Self::new(buffer)?;
+        field.sensitive_buffer = true;
+        if !field.set_mode(TextFieldMode::Password)? {
+            return Err(Error::Length);
+        }
+        Ok(field)
+    }
+    pub fn set_mode(&mut self, mode: TextFieldMode) -> Result<bool> {
+        let enabled = mode == TextFieldMode::Password;
+        if enabled {
+            self.sensitive_buffer = true;
+        }
+        let accepted = boolean(unsafe {
+            c::R4SdkGuiTextField_setPasswordMode(0, self.native.as_mut_ptr(), u8::from(enabled))
+        })?;
+        if accepted && enabled {
+            self.sensitive_buffer = true;
+        }
+        Ok(accepted)
+    }
+    /// Wipes the entire borrowed editor buffer, including unused capacity.
+    pub fn clear(&mut self) -> Result<()> {
+        slot(unsafe { c::R4SdkGuiTextField_clear(0, self.native.as_mut_ptr()) })?;
+        Ok(())
     }
     pub fn set_exact(&mut self, text: &[u8]) -> Result<bool> {
         boolean(unsafe {
@@ -62,6 +96,7 @@ impl<'b> TextField<'b> {
         })?;
         Ok(())
     }
+    /// Explicit plaintext access, including when password mode is enabled.
     pub fn value(&self) -> Result<&[u8]> {
         let value = slot(unsafe { c::R4SdkGuiTextField_value(0, self.native.as_ptr()) })?;
         if value.length as usize >= self.capacity {
@@ -74,6 +109,13 @@ impl<'b> TextField<'b> {
     /// cursor or UTF-8 invariants. This loan ends before the next safe call.
     pub unsafe fn native(&mut self) -> *mut c::R4SdkGuiTextField {
         self.native.as_mut_ptr()
+    }
+}
+impl Drop for TextField<'_> {
+    fn drop(&mut self) {
+        if self.sensitive_buffer {
+            unsafe { core::ptr::write_bytes(self.buffer.as_ptr(), 0, self.capacity) };
+        }
     }
 }
 pub struct TextArea<'b> {

@@ -393,6 +393,12 @@ metadata. Failed releases and decommits retain their exact retry identity.
 The default allocator and explicit `vm_allocator.Heap` objects use the same
 path. Keep an explicit heap at a stable address until all concurrent calls
 and allocations have retired, including their notification cleanup.
+Each heap owner now records `Stats.peak_active_bytes` at successful allocation
+and resize mutations as the historical peak of all simultaneously active
+bytes. `Stats.peak_region_active_bytes` retains the former largest individual
+small-region or direct-aggregate peak. The counters begin at zero for a fresh
+heap/default process state and remain historical across trim and shutdown;
+reinitialize an explicit heap only after all its users have retired.
 
 Long contention uses the existing optional R4SYS notifications, observing a
 revision before rechecking the predicate. Notifications close after their last

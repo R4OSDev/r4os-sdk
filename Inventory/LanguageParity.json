@@ -389,7 +389,8 @@
         "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.50",
         "Repositories/SDK/Tests/Simulation/RustHeap.rs",
         "Repositories/SDK/Tests/Build/RustHeap",
-        "Repositories/SDK/Smoke/AppEntry/C/Console"
+        "Repositories/SDK/Smoke/AppEntry/C/Console",
+        "studio_089_host"
       ],
       "shared_core": "SDK/r4os/vm_allocator.zig ueber pro R4X gelinktes heap_runtime.zig; echte Stackprobes, gehashter CPU-/Quellvertrag. Ein Algorithmus fuer Zig/C/Rust; Kernel besitzt VM/Taskabbau. SDK69/Contract42. Normale Consumer Desktop137/Spectra49 wegen Direct-Retirement-Korrektur neu gebunden; finaler STANDARD im gemeinsamen Fachbeleg."
     },
@@ -597,7 +598,8 @@
         "service_binding_08870_host",
         "service_binding_08870_native",
         "desktop_evidence_handoff_08897",
-        "desktop_actions_08898"
+        "desktop_actions_08898",
+        "studio_089_host"
       ],
       "shared_core": "Vorhandene C-AppServices/AppTray/AppNetwork/Serial/Timeout-Besitzer, Zig-ServiceLoop/-Deadline/-R4NET-Besitzer und native R4SYS/R4NET/R4DEV-Callbacks. Rust fuegt Leihen/Typen/echte Abschlussretention hinzu; keine zweite Netzwerk- oder Schedulingimplementierung."
     },
@@ -650,7 +652,8 @@
         "Repositories/SDK/Tests/Simulation/RustServices.rs",
         "Repositories/SDK/Tests/Simulation/ServiceNetworkCallbacks.c",
         "Repositories/SDK/Tests/Build/RustServices",
-        "Repositories/SDK/Tests/Simulation/NetworkPeer.py"
+        "Repositories/SDK/Tests/Simulation/NetworkPeer.py",
+        "studio_089_host"
       ],
       "shared_core": "Vorhandene C-AppServices/AppTray/AppNetwork/Serial/Timeout-Besitzer, Zig-ServiceLoop/-Deadline/-R4NET-Besitzer und native R4SYS/R4NET/R4DEV-Callbacks. Rust fuegt Leihen/Typen/echte Abschlussretention hinzu; keine zweite Netzwerk- oder Schedulingimplementierung."
     },
@@ -736,7 +739,8 @@
         "gui_activity_08735",
         "gui_focus_font_08825",
         "native_pointer_capture_08828",
-        "gui_host_backpressure_08832"
+        "gui_host_backpressure_08832",
+        "studio_089_host"
       ],
       "shared_core": "Gemeinsame GUI-/Rasterkerne beim Besitzer; keine unabhaengigen Widget-/Unicodealgorithmen pro Sprache."
     },
@@ -55540,6 +55544,23 @@
         "Compiler transport generator and Rust C-facade projector still match their generated files."
       ],
       "limits": "Actual R4OS Benchmark PUT, bearer authorization and normalized readback remain open until isolated guest proof."
+    },
+    "studio_089_host": {
+      "kind": "targeted_source_and_native_host_qualification",
+      "performed_in": "0.89.10-0.89.15",
+      "sdk": "0.64.133 source candidate",
+      "contract": "0.64.70 source candidate",
+      "libraries": "0.64.41 source candidate",
+      "complete": true,
+      "report": "Docs/SDK/LanguageParity.txt#0.89.10-0.89.15-Studio-Vertraege",
+      "scope": "Append-only focus wire records and technical pointer/focus constants; Zig, C and Rust SDK facade changes for bounded pointer actions, own FocusSnapshot, TCP CloseReceipt, password TextField, and exact simultaneous VM owner active peak. Host and source qualification only.",
+      "checks": [
+        "Contract write/check/test, including seven C/Zig/Rust ABI interop checks; old fixed layouts retained.",
+        "WindowService desktop-test validates exact focus incarnation, own-only query, bounded grant and immutable pointer receipts.",
+        "Desktop rust-native-test: 280 owner tests including focus restoration and native pointer capture outside the client; actual product build and QEMU integration are separate.",
+        "SDK dialog-text-test, service-parity-test, vm-allocator-test and generated C/Rust projection checks; C headers compile."
+      ],
+      "limits": "No physical hardware, Windows execution, Studio application, native guest drag or final release claimed by this host evidence. The R4OS release has a separate QEMU and package acceptance."
     }
   },
   "wave_bindings": [
@@ -55792,19 +55813,19 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.89.2-0.89.5",
-    "sdk": "0.64.132 source candidate",
-    "contract": "0.64.69 source candidate",
-    "libraries": "0.64.40 unchanged",
-    "evidence": "Docs/SDK/LanguageParity.txt#0.89.5-Generatorprojektion-fuer-Firmwarekennung",
-    "scope": "R4DEV36/736 appends optional firmware_system_uuid at offset 728. Generated C/Rust raw ABI and Zig SDK helper are reviewed; Kernel453 SMBIOS retrieval and two fresh QEMU installations are qualified. Existing server registration, TLS and streaming PUT are reused by Spectra. The compiler-typed GUI catalogue now projects the optional firmware method into the generated C header and Rust facades (682 types, 902 methods, fingerprint 10951471536795706676). No specialized higher C/Rust firmware helper, R4Laptop hardware, Windows, or final release qualification is claimed.",
+    "performed_in": "0.89.10-0.89.15",
+    "sdk": "0.64.133 source candidate",
+    "contract": "0.64.70 source candidate",
+    "libraries": "0.64.41 source candidate",
+    "evidence": "studio_089_host",
+    "scope": "Append-only focus wire records and technical pointer/focus constants; Zig, C and Rust SDK facade changes for bounded pointer actions, own FocusSnapshot, TCP CloseReceipt, password TextField, and exact simultaneous VM owner active peak. Host and source qualification only.",
     "historical_snapshot_retained": true,
-    "current_group_metadata": "R4DEV current table metadata and generated GUI projection updated; dated canonical_platform_sources and earlier wave evidence retained."
+    "current_group_metadata": "No platform table slot changed. New focus and pointer records use the existing WindowService service boundary; prior snapshots and qualified evidence remain dated."
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.89.5",
+    "reviewed_in": "0.89.10-0.89.15",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -55877,7 +55898,7 @@
       },
       {
         "path": "Repositories/Contract/API/ApiContract.json",
-        "sha256": "1a182400e5231916dc388952df3b07cec763f4224e53c89cc5cba381ecf682c5"
+        "sha256": "01f6633b6e917ea678dbb3579c4858836b279ec5d365634c0bedaae1aa67eb40"
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/API.json",
@@ -55885,15 +55906,15 @@
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/RustABI.json",
-        "sha256": "0d91cdcfd97e191099dd900d54fc3c0264c68c60c31e9cc187d8bb8ab4a2678b"
+        "sha256": "53deda6317005a6560decbbe5ec85176a8f7532d68d231d4501a3c28db4b0b61"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_generated.h",
-        "sha256": "2b106ecd480cb470041739f74b79c2d03e248ad3e23447de417eff8b7922523b"
+        "sha256": "d96747d23e10f78b40a97d08a470c8685bee81d5dd440c14ed22a4c7aac51f86"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_technical_generated.h",
-        "sha256": "898ad6743e42f9fcf3bc1858daa4adde956c503ca5e0cda690efbfee6d59b2fe"
+        "sha256": "1902e7ec91e2596ab48f43a28789494263f63aaecb222c33102ead5d48c9de4c"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Rust/Cargo.toml",
@@ -55901,19 +55922,19 @@
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Rust/src/lib.rs",
-        "sha256": "59c8f0812cf09f373d92acc1e97dc671c7d86b399aa6ca466cdab2d8111ce842"
+        "sha256": "0b0f66c092e4723cff5a7a0646b996a2cfc29e5b88433a4faf74283643846dc5"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi.zig",
-        "sha256": "bbd37edb5e83dfc88975f2e6423d4df39f196bd6cbd3501d08af3c26dba77d56"
+        "sha256": "6350e71f37ce700c8748180f5c420debdc213a44c281b11ac247776e98d7e4f8"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_exports.zig",
-        "sha256": "139a9217997b2a2dcbf1610064faefa59d1fa80ca507df42cad29a7e8e88e5d4"
+        "sha256": "e0ae4381a9c6d58ddccd023c700db8f67362edd006b427b8ed7ff54b35d78d9d"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_generated.zig",
-        "sha256": "0aebe27da9bf3b3f3ad45873635e8664f7dd97d16b7607c4b03b84572f3dd5c4"
+        "sha256": "e417abecf21af547deb3fec6081451d651d4ab5ef82c189672e3cd9f2958ae04"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/package.zig",
@@ -56873,7 +56894,7 @@
       },
       {
         "path": "Repositories/Libraries/Shared/Rust/src/raw.rs",
-        "sha256": "4434e8f9745167f4d9b9904c7348a13f2b3222340663e318d4704ad2093214a8"
+        "sha256": "035f6394cdf81fd78744a5694eb5427db016a671727ee5306a51f109be9e2f1a"
       },
       {
         "path": "Repositories/Libraries/Shared/Tests/Consumer/Cargo.toml",
@@ -56953,7 +56974,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "2d7067ae657e783b1e172bf8c69b7c6676c02fe5589f8fd9fb370c5dba9a76a3"
+        "sha256": "e1e782a8df8759cffef74b7810a799a9d21628a75f15f45fa5323bfc582fd4ba"
       },
       {
         "path": "Repositories/SDK/Rust/src/data/hash.rs",
@@ -57005,7 +57026,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/gui/mod.rs",
-        "sha256": "279835a9f98bc68f4e34da00b6907349563125c82c2ede39da424d33a00c3574"
+        "sha256": "3012f09877ee9e6ffe0db2bf8ed72ff0487133ee1ee780eec6c66e799ff00a43"
       },
       {
         "path": "Repositories/SDK/Rust/src/gui/session.rs",
@@ -57013,7 +57034,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/gui/text.rs",
-        "sha256": "fdfe33e1bcc2f3c291bf150504eab130a905b7a700a36d8aed3ef01839a736d8"
+        "sha256": "787857b4e753ed05613c5b5cb5db6e445ce0f0da95c6084b861489fcd7eb7e9b"
       },
       {
         "path": "Repositories/SDK/Rust/src/heap.rs",
@@ -57033,11 +57054,11 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/network.rs",
-        "sha256": "fbe1b10f37a51ed83beb985b95a5352d8983ab7b6f94f1a97800577364a49569"
+        "sha256": "865887a8d6b4d6b051253d3d73fe89e42cb87db1a397847d733cbfa0bb64b1ea"
       },
       {
         "path": "Repositories/SDK/Rust/src/network/sockets.rs",
-        "sha256": "7628b8e2d30765dfc19384884de38d232bfc32fd3b529fc9ac1d1300d158fb8f"
+        "sha256": "bd94a71fece3ced1384c22c60afa750bbf93cce0d28b7f1f3b958640884a111e"
       },
       {
         "path": "Repositories/SDK/Rust/src/path.rs",
@@ -57113,11 +57134,11 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/services.rs",
-        "sha256": "54eed062e58ea5fb606f1875b06816d975aa8d9bb0e0a56d6d748ecbf8b130fc"
+        "sha256": "d1580e25265de4c4ac82f3fca3c7d6b287de58e761001f356c63722b6c277b87"
       },
       {
         "path": "Repositories/SDK/Rust/src/services/actions.rs",
-        "sha256": "7d1d36a9434a9d5d9b565948ea50f14fffdfbce3a7069dd9f785dfbe1d3ec420"
+        "sha256": "126e6bf8edac6033e4bb024c2f5a3b8de0de412679c191eef323baae2ae3092e"
       },
       {
         "path": "Repositories/SDK/Rust/src/services/evidence.rs",
@@ -57233,7 +57254,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_network.h",
-        "sha256": "a08304e995c5f9c7ad2797bd43d540af1394dbce2ca7a20f19d847c9f6a4f81f"
+        "sha256": "6606de35b4e0cf37eaad4dad33bc882193ebcdd4275582f6e77204f48612bca3"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_resources.h",
@@ -57257,7 +57278,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/desktop_actions.h",
-        "sha256": "fc871ea5f78e5da3d556bb40b0e9b06330bb2aac7feffe49493cb434488d6927"
+        "sha256": "157b64a83f5da266ddee1c4de1e5e3395e3bfb7634b5fb69b4d141ef7b7015df"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/desktop_evidence.h",
@@ -57325,7 +57346,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/gui_bridge.h",
-        "sha256": "b89787158386fd4e5afcc7a28dff492a7dfd30217d98f306837a825c068d5476"
+        "sha256": "358f51805baec90a3f49bf60785083ce8a74f9bcf86a67567ab3f557bd6ede7a"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/heap.h",
@@ -57417,7 +57438,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/transport_helpers.h",
-        "sha256": "b43c595e25d2d952859b37784ccef2d24c75d07aefcd3d407ff9e48fd35b9f6e"
+        "sha256": "c92d733c155ec694ef0a13d553df9b5efa6b8d13998ba45db000ccadd79a0e84"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/update_helpers.h",
@@ -57497,15 +57518,15 @@
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/RustGui.rs",
-        "sha256": "7a7a32dfe1cf0675a08ec1e54ac720389d9a5c43709e30f7f444ac5c98efffde"
+        "sha256": "1a99b63ab01228227851826bd91200bb0d45a9ee4001c58ee86bc41a0b44b6d8"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/RustServices.rs",
-        "sha256": "60445b5ea9be3a97cdcdbc27e0b0fdc771fdf3a36fc9f4472754c1c9e6122975"
+        "sha256": "6cde8dbee611d307039058a91316e890f07b57c26ed9bebdb44ea279140d3786"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/ServiceNetworkCallbacks.c",
-        "sha256": "360b76bb26bc6b9b3f2edbb4cad94a5f86845d4f141f213b8192ce301cfa4b49"
+        "sha256": "a9603fa35e603a97162401058adbb2738e2c3ea74108e22838d68076feaebffd"
       },
       {
         "path": "Repositories/SDK/Tools/Build-Project.ps1",
@@ -57689,7 +57710,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "34fe469111cc869acc5e36046c272d2f358c8d008d2177a1b44f5b192194dedc"
+        "sha256": "8d4531acedaca7a1e52192610a7a657a15d427f0a2807fc20c59f7efb1b9f78e"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -57721,7 +57742,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/app_network.zig",
-        "sha256": "d722a9bb2211139954ff04be4bd2661c67d975d51e10aeb2ee183294aa46decf"
+        "sha256": "9454a7269e0abc750e3f14f04f7f65d64f37698d8b3a0a979b1856fe6df5e9d1"
       },
       {
         "path": "Repositories/SDK/r4os/app_resources.zig",
@@ -57821,7 +57842,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/desktop_actions.zig",
-        "sha256": "6bd58ecc742673b0af390613f086869e76df5acbf6d859854002bde44ae04647"
+        "sha256": "aacd500a32640bead6ce5318ed5196ea206edd3fd51939f03c1159eadc459f83"
       },
       {
         "path": "Repositories/SDK/r4os/desktop_evidence.zig",
@@ -57917,7 +57938,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/generated/gui_fingerprint.zig",
-        "sha256": "5b0e7d240751ebe557041f6066cd53ffbc6cddb8fa8cd372d4390e87228f296c"
+        "sha256": "db2c75b91e84e0945f78035450c3e4acc7eb62fe1e7d35a089996ad2f081711a"
       },
       {
         "path": "Repositories/SDK/r4os/generated/net_facade.zig",
@@ -57929,7 +57950,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/generated/transport_fingerprint.zig",
-        "sha256": "27b6b4c5e8cdabf1ba1614eced19fb925c68d6a8f481a667643af6bbbda82a93"
+        "sha256": "2fadf571546166a11190bc283cfd1e1f3a23a4797d40c95d093bd7203837039e"
       },
       {
         "path": "Repositories/SDK/r4os/generated/update_fingerprint.zig",
@@ -57973,7 +57994,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/gui.zig",
-        "sha256": "11df55708a77dcab9e9e2ff67231a90f44cce0b942db6274cd32a13bee9453af"
+        "sha256": "0f10213b736e9d37b27ddb5f42189735f09e346a34c09a82016d48ad74646035"
       },
       {
         "path": "Repositories/SDK/r4os/gui_bridge_schema.zig",
@@ -58497,7 +58518,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/vm_allocator.zig",
-        "sha256": "c0bbf9c2806a185f475847f67be701db2e98fa0f71b1bc7d79e7dce35fa846ee"
+        "sha256": "c64b1013d0ce36435a2db82cacaaea9a6af48509c7bbd80688fbd5d2e51be4a1"
       },
       {
         "path": "Repositories/SDK/r4os/web_background.zig",
@@ -58643,7 +58664,8 @@
           "audio_catalog_08855",
           "audio_duration_retirement_08859",
           "desktop_evidence_handoff_08897",
-          "desktop_actions_08898"
+          "desktop_actions_08898",
+          "studio_089_host"
         ]
       },
       {
@@ -58687,7 +58709,8 @@
         ],
         "proof": [
           "independent_desktop_current_71",
-          "file_name_limits_08827"
+          "file_name_limits_08827",
+          "studio_089_host"
         ]
       },
       {
@@ -58839,7 +58862,8 @@
           "service_binding_08870_native",
           "desktop_evidence_handoff_08897",
           "desktop_actions_08898",
-          "server_access_0893"
+          "server_access_0893",
+          "studio_089_host"
         ]
       },
       {
@@ -58861,7 +58885,8 @@
         "proof": [
           "service_network_current_55",
           "current_contract_78",
-          "server_access_0893"
+          "server_access_0893",
+          "studio_089_host"
         ]
       },
       {
@@ -58920,7 +58945,8 @@
           "file_name_limits_08827",
           "native_pointer_capture_08828",
           "gui_host_backpressure_08832",
-          "desktop_actions_08898"
+          "desktop_actions_08898",
+          "studio_089_host"
         ]
       },
       {

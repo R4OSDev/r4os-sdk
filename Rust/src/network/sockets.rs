@@ -93,6 +93,62 @@ pub struct TcpPoll {
     pub outcome: SocketOutcome,
     pub readiness: Option<super::TcpReadiness>,
 }
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum CloseLifecycle {
+    Unknown,
+    Active,
+    Closed,
+    Reset,
+    Timeout,
+    PeerGone,
+    LocalAbort,
+    LocalClose,
+    PendingClose,
+    WouldBlock,
+    BadHandle,
+    OwnerMismatch,
+    Listener,
+    Dropped,
+    Other(u32),
+}
+impl CloseLifecycle {
+    fn from_raw(value: u32) -> Self {
+        match value {
+            0 => Self::Unknown,
+            1 => Self::Active,
+            2 => Self::Closed,
+            3 => Self::Reset,
+            4 => Self::Timeout,
+            5 => Self::PeerGone,
+            6 => Self::LocalAbort,
+            7 => Self::LocalClose,
+            8 => Self::PendingClose,
+            9 => Self::WouldBlock,
+            10 => Self::BadHandle,
+            11 => Self::OwnerMismatch,
+            12 => Self::Listener,
+            13 => Self::Dropped,
+            other => Self::Other(other),
+        }
+    }
+}
+
+/// TCPSVC's close ACK releases the frontend handle. `pending_shutdown`
+/// explicitly reports that the network shutdown has not completed yet.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct TcpCloseReceipt {
+    pub outcome: SocketOutcome,
+    pub operation: u16,
+    pub action: u16,
+    pub ack: u32,
+    pub lifecycle: CloseLifecycle,
+    pub service_status: u32,
+    pub accepted: bool,
+    pub pending_shutdown: bool,
+    pub frontend_released: bool,
+    pub submitted: bool,
+}
 impl Network<'_> {
     pub fn available(&self) -> bool {
         unsafe { c::r4_network_available(&self.raw()) != 0 }
@@ -243,6 +299,21 @@ impl TcpSocket<'_> {
     }
     pub fn close(&mut self, timeout: Timeout) -> SocketOutcome {
         SocketOutcome::from_raw(unsafe { c::r4_tcp_socket_close(&mut self.raw, timeout.raw()) })
+    }
+    pub fn close_receipt(&mut self, timeout: Timeout) -> TcpCloseReceipt {
+        let raw = unsafe { c::r4_tcp_socket_close_receipt(&mut self.raw, timeout.raw()) };
+        TcpCloseReceipt {
+            outcome: SocketOutcome::from_raw(raw.outcome),
+            operation: raw.operation,
+            action: raw.action,
+            ack: raw.ack,
+            lifecycle: CloseLifecycle::from_raw(raw.lifecycle_cause),
+            service_status: raw.service_status,
+            accepted: raw.accepted != 0,
+            pending_shutdown: raw.pending_shutdown != 0,
+            frontend_released: raw.frontend_released != 0,
+            submitted: raw.submitted != 0,
+        }
     }
     pub fn network(&self) -> &Network<'_> {
         self.network

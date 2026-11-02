@@ -9,7 +9,9 @@ use core::{cell::Cell, ffi::CStr, marker::PhantomData};
 pub use c::R4SdkServiceLoopMetrics as LoopMetrics;
 mod tray;
 mod evidence;
+mod actions;
 pub use evidence::{EvidenceLease, EvidenceReply, EvidenceToken, prepare_evidence};
+pub use actions::{FocusObservation, PointerStep, prepare_pointer_grant};
 pub use tray::{Tray, TrayCall, TrayItem};
 pub struct Control {
     pub raw_code: i32,
@@ -484,5 +486,4 @@ impl Batch<'_, '_> {
     }
 }
 
-mod actions;
 pub use actions::{ActionToken, ActionRequest, ActionReply, prepare_actions, action_frame_ready};

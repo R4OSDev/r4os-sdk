@@ -102,6 +102,22 @@ pub const TcpAccept = union(enum) {
     failure: i32,
 };
 
+/// A validated close reply releases the TCPSVC frontend handle. A lifecycle
+/// of pending_close still has a network shutdown in progress.
+pub const TcpCloseReceipt = struct {
+    outcome: SocketIo = .{ .failure = abi.err_closed },
+    operation: u16 = abi.net_service_op_tcp_close_result,
+    action: u16 = 0,
+    ack: u32 = 0,
+    lifecycle_cause: u32 = abi.net_service_socket_lifecycle_unknown,
+    service_status: u32 = abi.net_service_status_idle,
+    accepted: bool = false,
+    pending_shutdown: bool = false,
+    frontend_released: bool = false,
+    submitted: bool = false,
+    reply_valid: bool = false,
+};
+
 pub const UdpOpen = union(enum) {
     socket: UdpSocket,
     timed_out,
@@ -192,6 +208,11 @@ pub const Network = struct {
     }
 
     fn tcpServiceCall(self: *const Network, op: u16, request: []const u8, response: []u8, timeout: Timeout) services_facade.ServiceCall {
+        return self.tcpServiceCallTracking(op, request, response, timeout, null);
+    }
+
+    fn tcpServiceCallTracking(self: *const Network, op: u16, request: []const u8, response: []u8, timeout: Timeout, submitted: ?*bool) services_facade.ServiceCall {
+        if (submitted) |out| out.* = false;
         var encoded: [abi.service_api_max_payload]u8 = undefined;
         const hz = self.sys.monotonicHz();
         const finite = timeout.kind == abi.timeout_kind_finite;
@@ -210,6 +231,7 @@ pub const Network = struct {
         const now = if (finite) self.sys.ticks() else 0;
         if (finite and now >= deadline_tick) return .timed_out;
         const remaining = if (timeout.kind == abi.timeout_kind_poll) 0 else if (deadline_tick == service_deadline.forever_tick) abi.io_wait_forever else deadline_tick - now;
+        if (submitted) |out| out.* = true;
         const call = services_facade.callWithTicks(&connection, op, payload, response, remaining);
         if (call == .response and call.response.header.op != op) return .{ .failure = abi.service_api_result_invalid };
         return call;
@@ -248,6 +270,7 @@ pub const TcpSocket = struct {
     raw: u32 = 0,
     owned: bool = false,
     remote: SocketAddress = .{ .address = .{}, .port = 0 },
+    close_uncertain: bool = false,
 
     pub fn valid(self: *const TcpSocket) bool {
         return self.raw != 0;
@@ -296,6 +319,7 @@ pub const TcpSocket = struct {
     pub fn close(self: *TcpSocket, timeout: Timeout) SocketIo {
         if (!self.valid()) return .{ .failure = abi.err_closed };
         if (!self.owned) return .{ .failure = abi.err_not_owned };
+        if (self.close_uncertain) return .{ .failure = abi.service_api_result_invalid };
         var request: [4]u8 = undefined;
         writeU32(request[0..], 0, self.raw);
         var response: [@sizeOf(abi.NetServiceTcpResult)]u8 = undefined;
@@ -307,6 +331,55 @@ pub const TcpSocket = struct {
             return .closed;
         }
         return mapSocketState(state, result.result);
+    }
+
+    /// Issues at most one close. An unconfirmed submitted request is retained
+    /// as uncertain on this object; callers must not issue a second close.
+    pub fn closeReceipt(self: *TcpSocket, timeout: Timeout) TcpCloseReceipt {
+        var receipt: TcpCloseReceipt = .{};
+        if (!self.valid()) return receipt;
+        if (!self.owned) {
+            receipt.outcome = .{ .failure = abi.err_not_owned };
+            return receipt;
+        }
+        if (self.close_uncertain) {
+            receipt.submitted = true;
+            receipt.outcome = .{ .failure = abi.service_api_result_invalid };
+            return receipt;
+        }
+        var request: [4]u8 = undefined;
+        writeU32(request[0..], 0, self.raw);
+        var response: [@sizeOf(abi.NetServiceTcpResult)]u8 = undefined;
+        const call = self.network.tcpServiceCallTracking(receipt.operation, request[0..], response[0..], timeout, &receipt.submitted);
+        const result = parseTcpCall(call, response[0..]) catch |raw| {
+            if (receipt.submitted) self.close_uncertain = true;
+            receipt.outcome = mapTcpSocketFailure(raw);
+            return receipt;
+        };
+        if (result.action != abi.net_service_tcp_action_close or
+            (result.flags & abi.net_service_tcp_flag_handle_valid) == 0 or result.handle != self.raw)
+        {
+            self.close_uncertain = true;
+            receipt.outcome = .{ .failure = abi.service_api_result_invalid };
+            return receipt;
+        }
+        receipt.reply_valid = true;
+        receipt.action = result.action;
+        receipt.ack = result.tx_ack;
+        receipt.lifecycle_cause = result.lifecycle_cause;
+        receipt.service_status = result.service_status;
+        receipt.outcome = mapSocketState(classifyTcp(result), result.result);
+        if (result.result == 0) {
+            receipt.accepted = true;
+            receipt.pending_shutdown = result.lifecycle_cause == abi.net_service_socket_lifecycle_pending_close;
+            receipt.frontend_released = true;
+            receipt.outcome = .closed;
+            self.raw = 0;
+        } else {
+            // TCPSVC may release its frontend even after a backend failure.
+            self.close_uncertain = true;
+        }
+        return receipt;
     }
 
     fn finishIo(_: *TcpSocket, result: abi.NetServiceTcpResult, bytes: u32) SocketIo {

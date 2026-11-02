@@ -215,7 +215,7 @@ int sdk_service_tcp_deadline_case(void){
 /* One controlled TCP lifecycle: readiness is a snapshot, transfer is a count,
  * peer termination never disposes the still-owned local frontend. */
 static const uint8_t tcp80_payload[]="TCP80-remaining-payload\n";
-static uint32_t tcp80_offset,tcp80_calls,tcp80_mode,tcp80_close_unknown;
+static uint32_t tcp80_offset,tcp80_calls,tcp80_mode,tcp80_close_unknown,tcp80_close_pending;
 static int32_t tcp80_call(uint32_t handle,uint16_t op,const uint8_t *request,uint32_t n,R4ServiceMessageHeader *header,uint8_t *out,uint32_t capacity,uint64_t wait){
     (void)handle;(void)wait;++tcp80_calls;
     R4ServiceDeadlineFooter footer;assert(n>=4+sizeof(footer));memcpy(&footer,request+n-sizeof(footer),sizeof(footer));
@@ -229,7 +229,7 @@ static int32_t tcp80_call(uint32_t handle,uint16_t op,const uint8_t *request,uin
     reply.pending_rx=(uint32_t)sizeof(tcp80_payload)-1-tcp80_offset;reply.tx_window=123;
     if(tcp80_mode==1){reply.lifecycle_cause=R4OS_NET_SERVICE_SOCKET_LIFECYCLE_RESET;reply.result=-777;reply.pending_rx=0;}
     if(tcp80_mode==2){reply.lifecycle_cause=R4OS_NET_SERVICE_SOCKET_LIFECYCLE_BAD_HANDLE;reply.result=R4OS_SERVICE_API_RESULT_BAD_HANDLE;reply.pending_rx=0;}
-    if(op==R4OS_NET_SERVICE_OP_TCP_CLOSE_RESULT){reply.lifecycle_cause=R4OS_NET_SERVICE_SOCKET_LIFECYCLE_LOCAL_CLOSE;reply.result=0;reply.pending_rx=0;}
+    if(op==R4OS_NET_SERVICE_OP_TCP_CLOSE_RESULT){reply.action=R4OS_NET_SERVICE_TCP_ACTION_CLOSE;reply.lifecycle_cause=tcp80_close_pending?R4OS_NET_SERVICE_SOCKET_LIFECYCLE_PENDING_CLOSE:R4OS_NET_SERVICE_SOCKET_LIFECYCLE_LOCAL_CLOSE;reply.tx_ack=12345;reply.result=0;reply.pending_rx=0;}
     if(op==R4OS_NET_SERVICE_OP_TCP_READ_RESULT&&tcp80_mode==0){
         uint32_t size=(uint32_t)request[4]|((uint32_t)request[5]<<8);
         if(size>reply.pending_rx)size=reply.pending_rx;
@@ -241,7 +241,7 @@ static int32_t tcp80_call(uint32_t handle,uint16_t op,const uint8_t *request,uin
 }
 int sdk_service_tcp_readiness_case(void){
     R4App app;R4XStartR4Sys sys;R4XStartR4Net net;init_app(&app,&sys,&net);sys.service_call=(uintptr_t)&tcp80_call;
-    R4TcpSocket socket={.network=r4_app_network(&app),.raw=501,.owned=1};tcp80_offset=tcp80_calls=tcp80_mode=tcp80_close_unknown=0;
+    R4TcpSocket socket={.network=r4_app_network(&app),.raw=501,.owned=1};tcp80_offset=tcp80_calls=tcp80_mode=tcp80_close_unknown=tcp80_close_pending=0;
     R4NetResult result=r4_tcp_socket_poll(&socket,r4_timeout_forever());
     if(!r4_tcp_socket_valid(&socket)||result.kind!=R4_NET_RESULT_PEER_CLOSED||result.bytes!=0)return 181;
 #ifndef SDK_TCP80_OLD_SOURCE
@@ -288,4 +288,23 @@ int sdk_service_tcp_readiness_case(void){
     if(result.kind!=R4_NET_RESULT_OUTCOME_UNKNOWN||data[0]!=0xA5||!r4_tcp_socket_valid(&socket))return 195;
     tcp80_mode=0;result=r4_tcp_socket_close(&socket,r4_timeout_forever());
     return result.kind==R4_NET_RESULT_CLOSED&&!r4_tcp_socket_valid(&socket)&&open_handles==0?0:196;
+}
+
+int sdk_service_tcp_close_receipt_case(void){
+    R4App app;R4XStartR4Sys sys;R4XStartR4Net net;init_app(&app,&sys,&net);sys.service_call=(uintptr_t)&tcp80_call;
+    R4TcpSocket socket={.network=r4_app_network(&app),.raw=501,.owned=1};
+    tcp80_offset=tcp80_calls=tcp80_mode=tcp80_close_unknown=0;tcp80_close_pending=1;
+    R4TcpCloseReceipt receipt=r4_tcp_socket_close_receipt(&socket,r4_timeout_forever());
+    if(!receipt.submitted||!receipt.accepted||!receipt.frontend_released||!receipt.pending_shutdown||
+       receipt.operation!=R4OS_NET_SERVICE_OP_TCP_CLOSE_RESULT||receipt.action!=R4OS_NET_SERVICE_TCP_ACTION_CLOSE||
+       receipt.ack!=12345||receipt.lifecycle_cause!=R4OS_NET_SERVICE_SOCKET_LIFECYCLE_PENDING_CLOSE||
+       receipt.outcome.kind!=R4_NET_RESULT_CLOSED||r4_tcp_socket_valid(&socket)||tcp80_calls!=1)return 1;
+    if(r4_tcp_socket_close(&socket,r4_timeout_forever()).raw_code!=R4OS_ERR_CLOSED||tcp80_calls!=1)return 2;
+    socket.raw=501;tcp80_close_pending=0;tcp80_close_unknown=1;
+    receipt=r4_tcp_socket_close_receipt(&socket,r4_timeout_forever());
+    if(!receipt.submitted||receipt.accepted||receipt.frontend_released||receipt.outcome.kind!=R4_NET_RESULT_OUTCOME_UNKNOWN||!r4_tcp_socket_valid(&socket)||tcp80_calls!=2)return 3;
+    receipt=r4_tcp_socket_close_receipt(&socket,r4_timeout_forever());
+    if(receipt.outcome.kind!=R4_NET_RESULT_OUTCOME_UNKNOWN||tcp80_calls!=2)return 4;
+    if(r4_tcp_socket_close(&socket,r4_timeout_forever()).kind!=R4_NET_RESULT_OUTCOME_UNKNOWN||tcp80_calls!=2)return 5;
+    return 0;
 }

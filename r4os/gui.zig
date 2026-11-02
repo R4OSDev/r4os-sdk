@@ -1911,7 +1911,23 @@ pub fn TextField(comptime capacity: anytype) type {
         selection_anchor: ?usize = null,
         focused: bool = false,
         disabled: bool = false,
+        password: bool = false,
         palette: Palette = default_palette,
+
+        const password_max_bytes: usize = 4096;
+
+        fn inputLimit(self: *const Self) usize {
+            return @min(self.buffer.len - 1, if (self.password) password_max_bytes else std.math.maxInt(usize));
+        }
+
+        /// A password field keeps plaintext only in its caller-owned editor
+        /// buffer. This operation never reveals or copies it elsewhere.
+        pub fn setPasswordMode(self: *Self, enabled: bool) bool {
+            if (enabled and self.len > password_max_bytes) return false;
+            self.password = enabled;
+            if (enabled) @memset(self.buffer[self.len + 1 ..], 0);
+            return true;
+        }
 
         pub fn value(self: *const Self) []const u8 {
             return self.buffer[0..self.len];
@@ -1919,20 +1935,23 @@ pub fn TextField(comptime capacity: anytype) type {
 
         pub fn set(self: *Self, value_text: []const u8) void {
             if (!bounded_text.valid(value_text)) return;
-            const end = grapheme.prefix(value_text, self.buffer.len - 1) catch return;
+            const end = grapheme.prefix(value_text, self.inputLimit()) catch return;
             if (!bounded_text.assignZ(self.buffer[0..], value_text[0..end])) return;
             self.len = end;
             self.cursor = self.len;
             self.selection_anchor = null;
+            if (self.password) @memset(self.buffer[self.len + 1 ..], 0);
         }
 
         /// Exact editable preload. Invalid/overlong input preserves value,
         /// cursor and selection; callers must report the failed assignment.
         pub fn setExact(self: *Self, value_text: []const u8) bool {
+            if (value_text.len > self.inputLimit()) return false;
             if (!bounded_text.assignZ(self.buffer[0..], value_text)) return false;
             self.len = value_text.len;
             self.cursor = self.len;
             self.selection_anchor = null;
+            if (self.password) @memset(self.buffer[self.len + 1 ..], 0);
             return true;
         }
 
@@ -1950,7 +1969,7 @@ pub fn TextField(comptime capacity: anytype) type {
                 const bytes = encodeUtf8Codepoint(codepoint, &encoded);
                 const range = self.selectionRange();
                 const retained = self.len - (range.end - range.start);
-                if (bytes == 0 or bytes >= self.buffer.len - retained) return false;
+                if (bytes == 0 or bytes > self.inputLimit() - retained) return false;
             }
             return self.handleCodepoint(codepoint);
         }
@@ -2039,7 +2058,7 @@ pub fn TextField(comptime capacity: anytype) type {
             var encoded: [4]u8 = undefined;
             const encoded_len = encodeUtf8Codepoint(codepoint, &encoded);
             const range = self.selectionRange();
-            if (encoded_len == 0 or self.len - (range.end - range.start) + encoded_len >= self.buffer.len) return false;
+            if (encoded_len == 0 or self.len - (range.end - range.start) + encoded_len > self.inputLimit()) return false;
             _ = self.deleteSelection();
             for (encoded[0..encoded_len]) |ch| _ = self.insertPrintable(ch);
             self.cursor = graphemeCeil(self.value(), self.cursor);
@@ -2061,11 +2080,12 @@ pub fn TextField(comptime capacity: anytype) type {
         }
 
         pub fn copyToClipboard(self: *const Self, ctx: *const r4desk.Context) bool {
+            if (self.password) return false;
             return ctx.clipboardWrite(self.clipboardValue()) >= 0;
         }
 
         pub fn cutToClipboard(self: *Self, ctx: *const r4desk.Context) bool {
-            if (self.disabled) return false;
+            if (self.disabled or self.password) return false;
             if (!self.copyToClipboard(ctx)) return false;
             if (!self.deleteSelection()) self.clear();
             return true;
@@ -2074,6 +2094,7 @@ pub fn TextField(comptime capacity: anytype) type {
         pub fn pasteFromClipboard(self: *Self, ctx: *const r4desk.Context) bool {
             if (self.disabled) return false;
             var data: [clipboard_buffer_size]u8 = .{0} ** clipboard_buffer_size;
+            defer if (self.password) @memset(&data, 0);
             const len = ctx.clipboardRead(data[0..]);
             if (len <= 0) return false;
             if (@as(usize, @intCast(len)) > data.len) return false;
@@ -2083,7 +2104,7 @@ pub fn TextField(comptime capacity: anytype) type {
         pub fn pasteSlice(self: *Self, input: []const u8) bool {
             if (self.disabled) return false;
             const range = self.selectionRange();
-            const cap = self.buffer.len - 1 - self.len + range.end - range.start;
+            const cap = self.inputLimit() - self.len + range.end - range.start;
             const end = editablePrefix(input, cap, false) orelse return false;
             if (end == 0) return false;
             const deleted = self.deleteSelection();
@@ -2094,6 +2115,12 @@ pub fn TextField(comptime capacity: anytype) type {
         }
 
         pub fn draw(self: *const Self, canvas: Canvas, rect: Rect, scratch: []u8) i32 {
+            if (self.password) {
+                var masked: [password_max_bytes + 1]u8 = undefined;
+                defer @memset(&masked, 0);
+                const visible = passwordMask(self.value(), self.cursor, self.selectionRange(), &masked);
+                return drawTextFieldEx(canvas, rect, scratch, masked[0..visible.len], visible.cursor, visible.selection, self.focused, self.disabled, self.palette);
+            }
             return drawTextFieldEx(canvas, rect, scratch, self.value(), self.cursor, self.selectionRange(), self.focused, self.disabled, self.palette);
         }
 
@@ -2123,7 +2150,7 @@ pub fn TextField(comptime capacity: anytype) type {
 
         fn insertPrintable(self: *Self, ch: u8) bool {
             if (ch < 0x20 or ch == 0x7F) return false;
-            if (self.len >= self.buffer.len - 1) return false;
+            if (self.len >= self.inputLimit()) return false;
             var index = self.len;
             while (index > self.cursor) : (index -= 1) self.buffer[index] = self.buffer[index - 1];
             self.buffer[self.cursor] = ch;
@@ -2132,6 +2159,33 @@ pub fn TextField(comptime capacity: anytype) type {
             self.cursor += 1;
             return true;
         }
+    };
+}
+
+const PasswordVisual = struct { len: usize, cursor: usize, selection: TextRange };
+
+fn passwordIndex(value: []const u8, byte_index: usize) usize {
+    const target = graphemeFloor(value, @min(byte_index, value.len));
+    var at: usize = 0;
+    var count: usize = 0;
+    while (at < target) : (count += 1) at = graphemeNext(value, at);
+    return count;
+}
+
+/// Render-only projection. The original UTF-8 bytes never enter the canvas
+/// scratch buffer or a draw command; each grapheme becomes one mask glyph.
+fn passwordMask(value: []const u8, cursor: usize, selection: anytype, out: *[4097]u8) PasswordVisual {
+    var at: usize = 0;
+    var count: usize = 0;
+    while (at < value.len and count < out.len - 1) : (count += 1) {
+        out[count] = '*';
+        at = graphemeNext(value, at);
+    }
+    out[count] = 0;
+    return .{
+        .len = count,
+        .cursor = passwordIndex(value, cursor),
+        .selection = .{ .start = passwordIndex(value, selection.start), .end = passwordIndex(value, selection.end) },
     };
 }
 
@@ -5213,6 +5267,29 @@ test "text field edits printable keys and backspace" {
     try std.testing.expectEqualStrings("R", field.value());
     try std.testing.expectEqual(@as(usize, 1), field.cursor);
     try std.testing.expect(!field.handleKey('\n'));
+}
+
+test "password text field masks graphemes and wipes its own buffer" {
+    var field = TextField(32){};
+    try std.testing.expect(field.setPasswordMode(true));
+    try std.testing.expect(field.setExact("e\xcc\x81\xc3\xa4A"));
+    try std.testing.expectEqualStrings("e\xcc\x81\xc3\xa4A", field.value());
+    var masked: [4097]u8 = undefined;
+    const visual = passwordMask(field.value(), 3, .{ .start = 3, .end = 5 }, &masked);
+    try std.testing.expectEqualStrings("***", masked[0..visual.len]);
+    try std.testing.expectEqual(@as(usize, 1), visual.cursor);
+    try std.testing.expectEqual(TextRange{ .start = 1, .end = 2 }, visual.selection);
+    var unused_desktop: r4desk.Context = undefined;
+    try std.testing.expect(!field.copyToClipboard(&unused_desktop));
+    try std.testing.expect(!field.cutToClipboard(&unused_desktop));
+    try std.testing.expect(field.handleKey(Key.left));
+    try std.testing.expectEqual(@as(usize, 5), field.cursor);
+    field.clear();
+    try std.testing.expectEqual(@as(usize, 0), field.value().len);
+    for (field.buffer) |byte| try std.testing.expectEqual(@as(u8, 0), byte);
+    try std.testing.expect(field.setPasswordMode(false));
+    try std.testing.expect(field.setExact("normal"));
+    try std.testing.expectEqualStrings("normal", field.value());
 }
 
 test "text field keeps capacity and nul terminator" {

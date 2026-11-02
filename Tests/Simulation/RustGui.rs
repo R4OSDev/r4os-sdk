@@ -2,7 +2,7 @@
 use core::{mem::MaybeUninit, pin::pin};
 use r4os_sdk::{
     abi,
-    gui::{self, raw as c, InputQueue, Rect, Role, Session, SessionStorage, TextArea, TextField},
+    gui::{self, raw as c, InputQueue, Rect, Role, Session, SessionStorage, TextArea, TextField, TextFieldMode},
     resources::Timeout,
     App, ImportSpec, StartupInfo,
 };
@@ -265,6 +265,17 @@ fn original_gui_pixels_frames_unicode_input_and_exact_host_session() {
     assert_eq!(field.value().unwrap(), "🙂B".as_bytes());
     assert!(field.handle_codepoint(8).unwrap());
     assert_eq!(field.value().unwrap(), b"B");
+    let mut secret_bytes = [0u8; 24];
+    {
+        let mut password = TextField::new_password(&mut secret_bytes).unwrap();
+        assert!(password.set_exact("ä🙂".as_bytes()).unwrap());
+        assert_eq!(password.value().unwrap(), "ä🙂".as_bytes());
+        password.clear().unwrap();
+        assert!(password.value().unwrap().is_empty());
+        assert!(password.set_exact(b"private").unwrap());
+        assert!(password.set_mode(TextFieldMode::Normal).unwrap());
+    }
+    assert!(secret_bytes.iter().all(|byte| *byte == 0));
     let mut area_bytes = [0u8; 48];
     let mut area = TextArea::new(&mut area_bytes, 5, 3).unwrap();
     area.set("ä\n🙂".as_bytes()).unwrap();

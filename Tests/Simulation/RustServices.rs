@@ -36,6 +36,7 @@ unsafe extern "C" {
     fn sdk_service_c_case() -> i32;
     fn sdk_service_tcp_deadline_case() -> i32;
     fn sdk_service_tcp_readiness_case() -> i32;
+    fn sdk_service_tcp_close_receipt_case() -> i32;
     fn sdk_service_clock_rate(value: u32);
     fn sdk_service_calendar_calls() -> u32;
     fn sdk_service_call_timeout() -> u64;
@@ -70,6 +71,7 @@ unsafe extern "C" {
 fn service_network_serial_deadline_owners_and_retained_requests() {
     assert_eq!(unsafe { sdk_service_tcp_deadline_case() }, 0);
     assert_eq!(unsafe { sdk_service_tcp_readiness_case() }, 0);
+    assert_eq!(unsafe { sdk_service_tcp_close_receipt_case() }, 0);
     assert_eq!(unsafe { sdk_service_c_case() }, 0);
     assert_eq!(unsafe { sdk_service_extra_c_case() }, 0);
     assert_eq!(unsafe { sdk_service_bound_c_case() }, 0);

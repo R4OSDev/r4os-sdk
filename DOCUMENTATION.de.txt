@@ -1243,8 +1243,85 @@ Providerinvaliditaet bleiben benannte Endgruende, keine Zusage ueber
 TLS-close_notify, HTTPbody-/SSE-Vollstaendigkeit oder Nexus-Datenverlust.
 SDK123 nutzt Contract65 und die in0.88.79 qualifizierte TCPSVC9-/Kernel446-
 Basis, kein neuer Provider-/Kernelbuild fuer diese Fassadenkorrektur.
-SDK99/R4OS100 sind die aktuellen finalen Roadmapstufen nach allen fachlichen
-Unterversionen; SDK-Komponentenversionen bleiben davon unabhaengig.
+
+TCP-CloseReceipt und Heap-Gesamtpeak fuer 0.89.X
+-----------------------------------------------
+Zig TcpSocket.closeReceipt, C r4_tcp_socket_close_receipt und Rust
+TcpSocket::close_receipt liefern den urspruenglichen Close-Opcode, die
+gemeldete Aktion, den TCP-ACK-Stand und den Lifecycle zusammen mit dem
+Operationsausgang. `accepted` bedeutet: TCPSVC hat den Close-Auftrag
+quittiert und seinen Frontendhandle freigegeben. `pending_shutdown` bei
+Lifecycle `pending_close` bedeutet, dass das TCP-Shutdown noch laeuft;
+`frontend_released` behauptet keine vollstaendige Netzwerkfreigabe. Ein
+positiver Receipt loescht den SDK-Handle, auch wenn das Shutdown aussteht.
+Die bisherigen close-Methoden bleiben als kompatible Zustandssicht erhalten;
+deren `closed` beschreibt keine bestaetigte Beendigung des TCP-Shutdowns.
+Ein abgesandter Close ohne gueltige Antwort ist ungewiss und wird von der
+neuen Receipt-Fassade auf demselben Socket nicht erneut gesendet. Nach
+ungueltiger oder negativer Antwort bleibt der lokale Token zur Diagnose
+erhalten, ohne eine Freigabe oder gefahrlose Wiederholung zu behaupten.
+
+vm_allocator.Stats.peak_active_bytes ist jetzt der historische Hoechstwert
+gleichzeitig aktiver Bytes je Heapowner. Die bisherige groesste einzelne
+Region beziehungsweise der direkte Aggregatpeak bleibt getrennt als
+peak_region_active_bytes sichtbar. Jeder erfolgreiche Allokations- und
+Resize-Schritt aktualisiert den Gesamtpeak unter der vorhandenen
+Owner-Sperre; Free senkt nur den aktuellen Gesamtwert. Zwischen Abfragen
+auftretende Spitzen bleiben erfasst. Ein frischer Prozess-Defaultheap oder
+eine frische explizite Heap-Struktur beginnt bei null; trim und shutdown
+setzen den historischen Peak nicht zurueck. Eine explizite Heap-Struktur
+darf erst nach Ende aller Nutzer neu initialisiert werden.
+
+GUI TextField kann mit setPasswordMode(true) beziehungsweise Rust
+TextField::new_password/set_mode(TextFieldMode::Password) maskiert werden.
+Die Standardeinstellung bleibt normal. Maximal4096 UTF-8-Bytes werden im
+Passwortmodus angenommen, zusaetzlich zur kleineren Pufferkapazitaet.
+Zeichen, Auswahl und Cursor bewegen sich weiter an Graphemgrenzen;
+der Renderer sieht nur ein Sternchen je Graphem und legt keinen Klartext
+in den Canvas-Scratch oder Draw-Befehl. Copy, Cut und Reveal sind gesperrt;
+Paste bleibt moeglich. Das explizite value() liefert weiter Klartext an
+den Besitzer des Editors und darf nicht protokolliert werden.
+clear() nullt den gesamten eigenen/geborgten Editorpuffer inklusive Rest;
+gekuerzte Ersetzungen nullen den alten Rest im Passwortmodus. Zig- und
+C-Aufrufer muessen clear vor Freigabe eines vertraulichen Puffers selbst
+aufrufen. Der Rust-Wrapper nullt einen jemals als Passwortfeld genutzten
+geborgten Puffer zusaetzlich bei Drop, auch nach Rueckschalten auf Normal.
+Die finalen 0.89.X-Stufen sind 0.89.16 (SDK) und 0.89.17 (R4OS);
+SDK-Komponentenversionen bleiben davon unabhaengig.
+
+Desktop-Pointer und eigener FocusSnapshot fuer 0.89.X
+----------------------------------------------------
+Der originale Launcher vergibt nach Fensteranbindung einen gesonderten
+Pointer-Grant (Recht 8) nur an die benannte Prozessgeneration. WINSVC bindet
+ihn an die aktuelle Fensterinkarnation, Ansicht und Inputrevision des
+beobachteten fokussierten Fensters. Ein Grant gilt hoechstens 2000ms und fuer
+eine linke Down/Move/Up-Geste mit maximal 32 Schritten und 1024 Pixeln
+Abstand vom Down. Down liegt im Client; ausserhalb gefuehrte Move/Up-Schritte
+benutzen den Desktop-Router und die native Drag-Capture der Ziel-App. Die App
+muss fuer einen Drag ausserhalb ihres Clients MouseCapture anfordern. Ein
+verlorener oder abgebrochener Ablauf wird per gezieltem Input-Reset geloest,
+ohne einen zusaetzlichen Drop auszufuehren. Ein fremder Eingabevorgang beendet
+die delegierte Geste. Es gibt keinen globalen Controllerwechsel.
+
+Zig: desktop_actions.prepare/pointerStep/status/release. C:
+r4_desktop_action_prepare/pointer_step/status/release. Rust:
+services::prepare_pointer_grant und Services::pointer_grant/step/status/
+release. Vor jedem Befehl die unveraenderliche Operation samt Deadline
+sichern; nach ungewisser Antwort denselben Status abfragen. Nach Up den Grant
+freigeben. Ein erneuter Grant verwendet eine neue kanonische Token-ID.
+
+Der Desktop veroeffentlicht einen eigenen FocusSnapshot mit Prozessgeneration,
+Fensterinkarnation, Sichtbar-/Minimiert-Flags, Ansichts- und Inputrevision
+sowie dem beobachteten Tick ueber die neue 752-Byte-Desktop-Exchange-V2;
+die alte 640-Byte-Exchange bleibt als kompatibler Dienstaufruf erhalten.
+WINSVC gibt den Snapshot nur dem Besitzer dieses Fensters zurueck;
+verschwundene, veraltete und noch unbekannte
+Beobachtungen sind getrennte Ergebnisse. Eine mehr als 1000ms alte
+Beobachtung ist unbekannt, keine aktuelle Fokuszusage. Zig
+Client.focusSnapshot, C r4_desktop_focus_snapshot und Rust
+Services::focus_snapshot sind schreibfrei. Nach einem verlorenen Fokusereignis
+koennen Anwendungen ihren eigenen Zustand erneut lesen; die gewoehnliche
+Loss-/Gain-Zustellung bleibt der primaere Ereignispfad.
 
 
 Begrenztes inkrementelles POST seit0.88.81 / SDK0.64.124

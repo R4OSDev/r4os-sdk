@@ -106,6 +106,8 @@ const State = struct {
     direct_frees: u64 = 0,
     direct_active_bytes: u64 = 0,
     direct_peak_active_bytes: u64 = 0,
+    active_bytes: u64 = 0,
+    peak_active_bytes: u64 = 0,
     direct_reserved_bytes: u64 = 0,
     direct_cached_bytes: u64 = 0,
     peak_committed_bytes: u64 = 0,
@@ -148,7 +150,10 @@ pub const Stats = struct {
     allocations: u64 = 0,
     frees: u64 = 0,
     active_bytes: u64 = 0,
+    /// Historical maximum of all simultaneously active allocations in this heap.
     peak_active_bytes: u64 = 0,
+    /// Largest single small region or direct allocation aggregate peak.
+    peak_region_active_bytes: u64 = 0,
     reserved_bytes: u64 = 0,
     committed_bytes: u64 = 0,
     peak_committed_bytes: u64 = 0,
@@ -306,8 +311,9 @@ fn stateStats(heap_state: *State) Stats {
         .active_allocations = heap_state.direct_active,
         .allocations = heap_state.direct_allocations,
         .frees = heap_state.direct_frees,
-        .active_bytes = heap_state.direct_active_bytes,
-        .peak_active_bytes = heap_state.direct_peak_active_bytes,
+        .active_bytes = heap_state.active_bytes,
+        .peak_active_bytes = heap_state.peak_active_bytes,
+        .peak_region_active_bytes = heap_state.direct_peak_active_bytes,
         .reserved_bytes = heap_state.direct_reserved_bytes,
         .committed_bytes = heap_state.direct_reserved_bytes,
         .peak_committed_bytes = heap_state.peak_committed_bytes,
@@ -337,8 +343,7 @@ fn stateStats(heap_state: *State) Stats {
         out.active_allocations += region.active_allocations;
         out.allocations += region.allocations;
         out.frees += region.frees;
-        out.active_bytes +%= region.active_bytes;
-        if (region.peak_active_bytes > out.peak_active_bytes) out.peak_active_bytes = region.peak_active_bytes;
+        if (region.peak_active_bytes > out.peak_region_active_bytes) out.peak_region_active_bytes = region.peak_active_bytes;
         out.reserved_bytes +%= region.reserve_size;
         out.committed_bytes +%= region.committed_size;
         out.decommits +%= region.decommits;
@@ -411,7 +416,7 @@ fn allocatorResize(heap_state: *State, ptr: *anyopaque, memory: []u8, alignment:
             const region = &heap_state.small_regions[index];
             const address = @intFromPtr(header);
             if (canHoldUser(address, header.block_size, header.user_addr, new_len)) {
-                accountResize(region, memory.len, new_len);
+                accountResize(heap_state, region, memory.len, new_len);
                 header.requested_size = new_len;
                 return true;
             }
@@ -655,6 +660,7 @@ fn allocateFromFreeBlock(heap_state: *State, region: *SmallRegion, header: *Bloc
     region.allocations +%= 1;
     region.active_bytes +%= len;
     if (region.active_bytes > region.peak_active_bytes) region.peak_active_bytes = region.active_bytes;
+    accountActiveGrowth(heap_state, len);
 }
 
 fn allocDirect(heap_state: *State, api: *const abi.R4XStartR4Sys, len: usize, alignment: usize) ?[*]u8 {
@@ -719,6 +725,7 @@ fn activateDirect(heap_state: *State, region_id: u32, base: usize, reserve_size:
     heap_state.direct_allocations +%= 1;
     heap_state.direct_active_bytes +%= len;
     if (heap_state.direct_active_bytes > heap_state.direct_peak_active_bytes) heap_state.direct_peak_active_bytes = heap_state.direct_active_bytes;
+    accountActiveGrowth(heap_state, len);
     return @ptrFromInt(layout.user_addr);
 }
 
@@ -730,6 +737,7 @@ fn accountDirectFree(heap_state: *State, requested_size: usize) void {
     } else {
         heap_state.direct_active_bytes = 0;
     }
+    accountActiveShrink(heap_state, requested_size);
 }
 
 fn directCacheClass(reserve_size: usize) ?usize {
@@ -941,6 +949,7 @@ fn freeSmallBlock(heap_state: *State, region_index: usize, header: *BlockHeader,
     } else {
         region.active_bytes = 0;
     }
+    accountActiveShrink(heap_state, old_len);
     return true;
 }
 
@@ -956,7 +965,7 @@ fn growSmallBlock(heap_state: *State, api: *const abi.R4XStartR4Sys, header_addr
             if (!validSmallBlock(region.*, header_addr, header) or !isUsed(header)) return false;
             const user_addr = header.user_addr;
             if (canHoldUser(header_addr, header.block_size, user_addr, new_len)) {
-                accountResize(region, old_len, new_len);
+                accountResize(heap_state, region, old_len, new_len);
                 header.requested_size = new_len;
                 return true;
             }
@@ -971,7 +980,7 @@ fn growSmallBlock(heap_state: *State, api: *const abi.R4XStartR4Sys, header_addr
                     writeFooter(header);
                     heap_state.coalesces +%= 1;
                     splitAfterResize(heap_state, region, header, user_addr, new_len);
-                    accountResize(region, old_len, new_len);
+                    accountResize(heap_state, region, old_len, new_len);
                     header.requested_size = new_len;
                     return true;
                 }
@@ -988,6 +997,7 @@ fn growSmallBlock(heap_state: *State, api: *const abi.R4XStartR4Sys, header_addr
 fn shrinkBlock(heap_state: *State, header: *BlockHeader, old_len: usize, new_len: usize) void {
     if (isDirect(header)) {
         if (old_len > new_len and heap_state.direct_active_bytes >= old_len - new_len) heap_state.direct_active_bytes -= old_len - new_len;
+        accountActiveShrink(heap_state, old_len - new_len);
         header.requested_size = new_len;
         return;
     }
@@ -997,6 +1007,7 @@ fn shrinkBlock(heap_state: *State, header: *BlockHeader, old_len: usize, new_len
     };
     var region = &heap_state.small_regions[region_index];
     if (old_len > new_len and region.active_bytes >= old_len - new_len) region.active_bytes -= old_len - new_len;
+    accountActiveShrink(heap_state, old_len - new_len);
     header.requested_size = new_len;
 }
 
@@ -1018,15 +1029,29 @@ fn splitAfterResize(heap_state: *State, region: *SmallRegion, header: *BlockHead
     }
 }
 
-fn accountResize(region: *SmallRegion, old_len: usize, new_len: usize) void {
+fn accountResize(heap_state: *State, region: *SmallRegion, old_len: usize, new_len: usize) void {
     if (new_len >= old_len) {
         region.active_bytes +%= new_len - old_len;
+        accountActiveGrowth(heap_state, new_len - old_len);
     } else if (region.active_bytes >= old_len - new_len) {
         region.active_bytes -= old_len - new_len;
+        accountActiveShrink(heap_state, old_len - new_len);
     } else {
         region.active_bytes = 0;
+        accountActiveShrink(heap_state, old_len - new_len);
     }
     if (region.active_bytes > region.peak_active_bytes) region.peak_active_bytes = region.active_bytes;
+}
+
+/// All callers hold this heap owner's allocator lock. The peak is updated at
+/// the successful mutation, so a short-lived simultaneous peak is retained.
+fn accountActiveGrowth(heap_state: *State, amount: usize) void {
+    heap_state.active_bytes +|= amount;
+    if (heap_state.active_bytes > heap_state.peak_active_bytes) heap_state.peak_active_bytes = heap_state.active_bytes;
+}
+
+fn accountActiveShrink(heap_state: *State, amount: usize) void {
+    heap_state.active_bytes -|= amount;
 }
 
 fn decommitTopFree(heap_state: *State, api: *const abi.R4XStartR4Sys, region_index: usize, pressure: bool) usize {
@@ -1764,6 +1789,28 @@ test "explicit VM heaps keep allocation state separate from each other and the R
     try std.testing.expectEqual(@as(u8, 0xA5), memory[127]);
     a1.free(memory);
     try std.testing.expectEqual(@as(u64, 0), first.stats().active_allocations);
+}
+
+test "VM owner records the simultaneous active peak between stats calls" {
+    resetTestVm();
+    test_vm_multiple = true;
+    const small_len = 4096;
+    const direct_len = large_threshold + 4096;
+    const small = allocatorAlloc(&state, @ptrCast(&test_vm_table), small_len, .fromByteUnits(16), 0) orelse return error.OutOfMemory;
+    const direct = allocatorAlloc(&state, @ptrCast(&test_vm_table), direct_len, .fromByteUnits(16), 0) orelse return error.OutOfMemory;
+    // No statistics read at the maximum: the update belongs to the mutation.
+    allocatorFree(&state, @ptrCast(&test_vm_table), direct[0..direct_len], .fromByteUnits(16), 0);
+    const after = stats();
+    try std.testing.expectEqual(@as(u64, small_len), after.active_bytes);
+    try std.testing.expectEqual(@as(u64, small_len + direct_len), after.peak_active_bytes);
+    try std.testing.expectEqual(@as(u64, direct_len), after.peak_region_active_bytes);
+    try std.testing.expect(after.peak_active_bytes >= after.active_bytes);
+    allocatorFree(&state, @ptrCast(&test_vm_table), small[0..small_len], .fromByteUnits(16), 0);
+    try std.testing.expectEqual(@as(u64, 0), stats().active_bytes);
+    try std.testing.expectEqual(@as(u64, small_len + direct_len), stats().peak_active_bytes);
+
+    resetTestVm();
+    try std.testing.expectEqual(@as(u64, 0), stats().peak_active_bytes);
 }
 
 test "VM allocator mixed fragmentation workload exposes bounded search metrics" {

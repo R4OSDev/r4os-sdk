@@ -71,6 +71,21 @@ typedef struct R4TcpPollResult {
     uint32_t available;
 } R4TcpPollResult;
 
+/* A positive close receipt releases the TCPSVC frontend handle. A pending
+ * network shutdown is still in progress and is not a disposal ACK. */
+typedef struct R4TcpCloseReceipt {
+    R4NetResult outcome;
+    uint16_t operation;
+    uint16_t action;
+    uint32_t ack;
+    uint32_t lifecycle_cause;
+    uint32_t service_status;
+    uint32_t accepted;
+    uint32_t pending_shutdown;
+    uint32_t frontend_released;
+    uint32_t submitted;
+} R4TcpCloseReceipt;
+
 typedef struct R4TcpServiceCall {
     R4ServiceCallResult call;
     uint32_t submitted;
@@ -287,8 +302,52 @@ static inline R4NetResult r4_tcp_socket_poll(R4TcpSocket *socket, R4Timeout time
     return r4_tcp_socket_readiness(socket, timeout).result;
 }
 
+/* One close request. An unconfirmed submitted request is never repeated by
+ * this facade or by the compatibility close method on the same socket. */
+static inline R4TcpCloseReceipt r4_tcp_socket_close_receipt(R4TcpSocket *socket, R4Timeout timeout) {
+    R4TcpCloseReceipt receipt = {0};
+    receipt.operation = R4OS_NET_SERVICE_OP_TCP_CLOSE_RESULT;
+    receipt.outcome = r4_net_result(R4_NET_RESULT_FAILED, R4OS_ERR_CLOSED, 0u);
+    if (!r4_tcp_socket_valid(socket)) return receipt;
+    if (!socket->owned) { receipt.outcome.raw_code = R4OS_ERR_NOT_OWNED; return receipt; }
+    if (socket->reserved[0]) { receipt.outcome = r4_tcp_reply_unknown(); receipt.submitted = 1u; return receipt; }
+    uint8_t request[4]; r4_net_write_u32(request, socket->raw);
+    R4NetServiceTcpResult response = {0};
+    R4TcpServiceCall call = r4_network_tcp_service_call(&socket->network, receipt.operation, request, sizeof(request), &response, sizeof(response), timeout);
+    receipt.submitted = call.submitted;
+    receipt.outcome = r4_tcp_from_call(call);
+    if (receipt.outcome.kind != R4_NET_RESULT_OK) {
+        if (receipt.outcome.kind == R4_NET_RESULT_OUTCOME_UNKNOWN) socket->reserved[0] = 1u;
+        return receipt;
+    }
+    if (call.call.bytes != sizeof(response) || response.magic != R4OS_NET_SERVICE_TCP_RESULT_MAGIC ||
+        response.version != R4OS_NET_SERVICE_TCP_RESULT_VERSION || response.action != R4OS_NET_SERVICE_TCP_ACTION_CLOSE ||
+        (response.flags & R4OS_NET_SERVICE_TCP_FLAG_HANDLE_VALID) == 0u || response.handle != socket->raw) {
+        receipt.outcome = r4_tcp_reply_unknown();
+        socket->reserved[0] = 1u;
+        return receipt;
+    }
+    receipt.action = response.action;
+    receipt.ack = response.tx_ack;
+    receipt.lifecycle_cause = response.lifecycle_cause;
+    receipt.service_status = response.service_status;
+    receipt.outcome = r4_net_classify_tcp(&response, 0u);
+    if (response.result == 0) {
+        receipt.accepted = 1u;
+        receipt.pending_shutdown = response.lifecycle_cause == R4OS_NET_SERVICE_SOCKET_LIFECYCLE_PENDING_CLOSE;
+        receipt.frontend_released = 1u;
+        receipt.outcome = r4_net_result(R4_NET_RESULT_CLOSED, R4OS_OK, 0u);
+        socket->raw = 0u;
+    } else {
+        /* TCPSVC can release its frontend after a backend error. */
+        socket->reserved[0] = 1u;
+    }
+    return receipt;
+}
+
 static inline R4NetResult r4_tcp_socket_close(R4TcpSocket *socket, R4Timeout timeout) {
     if (!r4_tcp_socket_valid(socket)) return r4_net_result(R4_NET_RESULT_FAILED, R4OS_ERR_CLOSED, 0u); if (!socket->owned) return r4_net_result(R4_NET_RESULT_FAILED, R4OS_ERR_NOT_OWNED, 0u);
+    if (socket->reserved[0]) return r4_tcp_reply_unknown();
     uint8_t request[4]; r4_net_write_u32(request, socket->raw); R4NetServiceTcpResult response = {0}; R4TcpServiceCall tcp_call = r4_network_tcp_service_call(&socket->network, R4OS_NET_SERVICE_OP_TCP_CLOSE_RESULT, request, sizeof(request), &response, sizeof(response), timeout); R4ServiceCallResult call = tcp_call.call; R4NetResult transport = r4_tcp_from_call(tcp_call); if (transport.kind != R4_NET_RESULT_OK) return transport; if (call.bytes < sizeof(response) || call.bytes > sizeof(response) || response.magic != R4OS_NET_SERVICE_TCP_RESULT_MAGIC || response.version != R4OS_NET_SERVICE_TCP_RESULT_VERSION) return r4_tcp_reply_unknown();
     R4NetResult result = r4_net_classify_tcp(&response, 0u); if (result.kind == R4_NET_RESULT_OK || result.kind == R4_NET_RESULT_CLOSED || (result.kind == R4_NET_RESULT_PEER_CLOSED && response.lifecycle_cause == R4OS_NET_SERVICE_SOCKET_LIFECYCLE_CLOSED)) { socket->raw = 0u; return r4_net_result(R4_NET_RESULT_CLOSED, R4OS_OK, 0u); } return result;
 }
