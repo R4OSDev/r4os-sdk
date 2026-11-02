@@ -187,3 +187,5 @@ pub const lowlevel = @import("r4os/lowlevel.zig");
 pub const grapheme = @import("r4std_grapheme");
 
 pub const desktop_actions = @import("r4os/desktop_actions.zig");
+
+pub const desktop_links = @import("r4os/desktop_links.zig");

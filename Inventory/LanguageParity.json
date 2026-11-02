@@ -16,15 +16,15 @@
   "canonical_platform_sources": [
     {
       "path": "Repositories/Contract/API/ApiContract.json",
-      "sha256": "78cfde7bb88d6f80cefa91a030b5752bb1362818dab0172c7b41a6bd1d195a9f"
+      "sha256": "91d7d5a41880e6abf470fae3603265953d44e0cebf263c11a7771ad9123de655"
     },
     {
       "path": "Repositories/Contract/Generated/Inventory/API.json",
-      "sha256": "1052d096954e1358c3a345973f1d6447b1d4ba9da36fab8c701971505e9a42a8"
+      "sha256": "bd95382f29dbaabbd06e1b538c8b17dbfad1e227dd8c1f69b2658f38f1a2fc33"
     },
     {
       "path": "Repositories/Contract/Generated/Inventory/RustABI.json",
-      "sha256": "ffa039f3d19a33ca903ef4d064685cd2514149ba9654d8b15aa31f3ef18dffd3"
+      "sha256": "1982c76ff113d0f71a7275225609d1d903769a1047a4072930b0701006577977"
     }
   ],
   "platform_groups": [
@@ -561,9 +561,10 @@
         "service_deadline",
         "desktop_evidence",
         "desktop_actions",
-        "server_access"
+        "server_access",
+        "desktop_links"
       ],
-      "semantics": "Endpunkt-/Connection-/Requesteigentum, begrenzte Batches, Requestfristen, Stop/Abmeldung und bereits quittiertes Ende unterscheiden; IPC-Rueckgaben/Teilantworten nicht verschlucken. Restartable broker-owned observation: persist intent beforeReserve, serial beforeOffer, canonicalToken beforeACK; read-only recovery, exact serviceepoch, independent refs versus aliases, bounded expiry/quota and no reap transfer. Original-requester delegation to a named full controller and exact original desktop child/window/service epoch; bounded grants, immutable operation/deadline and original applied receipt, independent current view/input/composition, no new app or blind retry after Unknown.",
+      "semantics": "Endpunkt-/Connection-/Requesteigentum, begrenzte Batches, Requestfristen, Stop/Abmeldung und bereits quittiertes Ende unterscheiden; IPC-Rueckgaben/Teilantworten nicht verschlucken. Restartable broker-owned observation: persist intent beforeReserve, serial beforeOffer, canonicalToken beforeACK; read-only recovery, exact serviceepoch, independent refs versus aliases, bounded expiry/quota and no reap transfer. Original-requester delegation to a named full controller and exact original desktop child/window/service epoch; bounded grants, immutable operation/deadline and original applied receipt, independent current view/input/composition, no new app or blind retry after Unknown. Native own R4LNK binding: persist canonical original request before Activate, exact Desktop link bytes/target/process-generation proof, immutable retry, read-only Status, explicit observed end/reap/evidence cleanup.",
       "current_only": "current_function",
       "rust": {
         "state": "paritaet_abgenommen",
@@ -573,7 +574,8 @@
           "Repositories/SDK/Rust/src/services.rs",
           "Repositories/SDK/Rust/src/services/tray.rs",
           "Repositories/SDK/Rust/src/services/evidence.rs",
-          "Repositories/SDK/Rust/src/services/actions.rs"
+          "Repositories/SDK/Rust/src/services/actions.rs",
+          "Repositories/SDK/Rust/src/services/links.rs"
         ]
       },
       "c": {
@@ -583,7 +585,8 @@
           "Repositories/SDK/Shared/C/include/r4os/app_tray.h",
           "Repositories/SDK/Shared/C/include/r4os/path_timeout.h",
           "Repositories/SDK/Shared/C/include/r4os/desktop_evidence.h",
-          "Repositories/SDK/Shared/C/include/r4os/desktop_actions.h"
+          "Repositories/SDK/Shared/C/include/r4os/desktop_actions.h",
+          "Repositories/SDK/Shared/C/include/r4os/desktop_links.h"
         ],
         "gap": "Bestehende aktuelle C-Besitzer erhalten; gemeinsame Zig-Loop/Deadline/Netzwerkbridge, fehlender TCP-Poll, gepackter Socketstatus und abgelaufener Poll ohne Frequenz vervollstaendigt. Slot-/Request-/Close-Quittungen bleiben explizit; keine Altkernel-Emulation."
       },
@@ -599,7 +602,8 @@
         "service_binding_08870_native",
         "desktop_evidence_handoff_08897",
         "desktop_actions_08898",
-        "studio_089_host"
+        "studio_089_host",
+        "link_08916_host"
       ],
       "shared_core": "Vorhandene C-AppServices/AppTray/AppNetwork/Serial/Timeout-Besitzer, Zig-ServiceLoop/-Deadline/-R4NET-Besitzer und native R4SYS/R4NET/R4DEV-Callbacks. Rust fuegt Leihen/Typen/echte Abschlussretention hinzu; keine zweite Netzwerk- oder Schedulingimplementierung."
     },
@@ -2770,6 +2774,14 @@
       "expression": "@import(\"r4os/server_credentials.zig\")",
       "capability": "files-registry-console",
       "wave": "0.89.3"
+    },
+    {
+      "name": "desktop_links",
+      "source": "Repositories/SDK/r4os.zig",
+      "line": 191,
+      "expression": "@import(\"r4os/desktop_links.zig\")",
+      "capability": "services",
+      "wave": "0.89.16"
     }
   ],
   "build_exports": [
@@ -2881,9 +2893,9 @@
   "source_inventory": [
     {
       "path": "Repositories/SDK/r4os.zig",
-      "sha256": "bcaa709aa53feb2ebdad83433b8c365b095f440883f552ad78af0f23646d70c1",
+      "sha256": "532f2fead59609adb5638c427fe0abfaa266b5c11e39e46f07345b634737729b",
       "owner": "Repositories/SDK",
-      "version": "0.64.66",
+      "version": "0.64.134",
       "capability": "public-root",
       "declarations": [
         [
@@ -3790,9 +3802,9 @@
     },
     {
       "path": "Repositories/SDK/build.zig",
-      "sha256": "fdd505020ab924a7b8385416cb92bb41bce37a30aff682021790a19d3dde6d59",
+      "sha256": "f1a16514bce8eaf4d9f7cb72f233d443850f0bcff97870bbabaf4484d2feb09b",
       "owner": "Repositories/SDK",
-      "version": "0.64.66",
+      "version": "0.64.134",
       "capability": "project-build",
       "declarations": [
         [
@@ -3928,9 +3940,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/app_audio.zig",
-      "sha256": "391ec8fe4f9ca9af8483c29415a315ccafcf1b2c680b7b4e9d393156c3afd329",
+      "sha256": "f0c761034551e20321f71511aa7f46101875c0ad603c1ea43ac8ba7a8e857018",
       "owner": "Repositories/SDK",
-      "version": "0.64.66",
+      "version": "0.64.134",
       "capability": "audio",
       "declarations": [
         [
@@ -4526,9 +4538,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/app_devices.zig",
-      "sha256": "d6c71ccc988ad73429b0a56f51783a0738b4e89c7b9c20736ee8995072071eee",
+      "sha256": "a119a8e8757653d09e7fde040e042968ce22f0ba6d0fe3d1d758e44b6eb2f934",
       "owner": "Repositories/SDK",
-      "version": "0.64.66",
+      "version": "0.64.134",
       "capability": "devices-power",
       "declarations": [
         [
@@ -4715,9 +4727,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/app_gui.zig",
-      "sha256": "6bbac0da7a1a361381595172d7530d1e67688f976f9075bd708a216a506b062a",
+      "sha256": "44178c805b8252140b27c75cf598fecf6ffa25932af380f1c4b2394d7da46e96",
       "owner": "Repositories/SDK",
-      "version": "0.64.66",
+      "version": "0.64.134",
       "capability": "gui",
       "declarations": [
         [
@@ -4914,9 +4926,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/app_network.zig",
-      "sha256": "c3d59d0d30fc8ebf816f8f6daec88dd0519cd00d401809edc73ec5061107e2fd",
+      "sha256": "9454a7269e0abc750e3f14f04f7f65d64f37698d8b3a0a979b1856fe6df5e9d1",
       "owner": "Repositories/SDK",
-      "version": "0.64.66",
+      "version": "0.64.134",
       "capability": "network",
       "declarations": [
         [
@@ -5108,9 +5120,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/app_resources.zig",
-      "sha256": "e8da288dfef82bc3b91276233a050540210ef6d727a528c3cfbabaa95096b263",
+      "sha256": "e6e599c0e8c240e5dc3f0093bb52fc22e1c18e7a463b4175ce39a6b0fb2e9679",
       "owner": "Repositories/SDK",
-      "version": "0.64.66",
+      "version": "0.64.134",
       "capability": "process-sync-vm",
       "declarations": [
         [
@@ -5437,9 +5449,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/app_services.zig",
-      "sha256": "87dddbe17f80d0c2db4bd36b6198a1a86f821ecfbabc4e9981a3a4f36718b67e",
+      "sha256": "e43ed36910efe95dd1007d388955e23eee598a9796f744cfc3360049de3bf44f",
       "owner": "Repositories/SDK",
-      "version": "0.64.66",
+      "version": "0.64.134",
       "capability": "services",
       "declarations": [
         [
@@ -5676,9 +5688,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/app_storage.zig",
-      "sha256": "522c6d41d78aa5525780f3735e03ed47aa9b8e731255821bcc9cae7193d6556e",
+      "sha256": "4af66b0153bb4d3a742a2071a22a086adbdeb103648cf1627012573bc1e17f74",
       "owner": "Repositories/SDK",
-      "version": "0.64.66",
+      "version": "0.64.134",
       "capability": "files-registry-console",
       "declarations": [
         [
@@ -6254,9 +6266,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/app_web.zig",
-      "sha256": "efff1503a910293f757c878e87dccd2280eae0dcb46685c0544f7689a8337fd7",
+      "sha256": "7e1e74b04d7890249847ccc1075d431af1a788205f032b30e5c7ca18b0563069",
       "owner": "Repositories/SDK",
-      "version": "0.64.66",
+      "version": "0.64.134",
       "capability": "web-transport",
       "declarations": [
         [
@@ -6580,9 +6592,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/build.zig",
-      "sha256": "54e2f5e06c35d2fdee930efa5facaca608fb961e84b4b2977c630c0ac375aa5f",
+      "sha256": "23ba84ed8878faebfdc2b8ad54311368d8b2c6d102bbfadaabdd1f51cdb9ec9f",
       "owner": "Repositories/SDK",
-      "version": "0.64.66",
+      "version": "0.64.134",
       "capability": "project-build",
       "declarations": [
         [
@@ -7035,9 +7047,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/crypto_sha256.zig",
-      "sha256": "d5ca99b53836b838f7b9762b0234f00d2db9fa96513f403441aae0ccbc495e57",
+      "sha256": "f92562f09d18caebc1d1549cebff5a4f15e5da252490e5605cf185d068308f94",
       "owner": "Repositories/SDK",
-      "version": "0.64.66",
+      "version": "0.64.134",
       "capability": "data-crypto",
       "declarations": [
         [
@@ -7540,9 +7552,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/driver.zig",
-      "sha256": "7d1ccccb2c99426f31ae390a9b041eff2ee1301e51adf9c68b0396d4dfe9e5b3",
+      "sha256": "72e8e61aaf360bca3b762634dc060aa8da72bae7e01250765e4ae50f41629c5c",
       "owner": "Repositories/SDK",
-      "version": "0.64.66",
+      "version": "0.64.134",
       "capability": "driver",
       "declarations": [
         [
@@ -8335,9 +8347,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/driver_memory.zig",
-      "sha256": "bd3a5ae21ef2d9342e8605efa7b1f31f846b13fe3498bab618171cd8248069ea",
+      "sha256": "29f227430ab6290d4ec895ed0ad1af11b39eef989d24fbecb7b733469ec89530",
       "owner": "Repositories/SDK",
-      "version": "0.64.66",
+      "version": "0.64.134",
       "capability": "driver",
       "declarations": [
         [
@@ -9576,9 +9588,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/gui.zig",
-      "sha256": "2ddc046f01e13297a1324f89f1e1cc71f401225a5075eac4c7d92b6c1ef55b35",
+      "sha256": "0f10213b736e9d37b27ddb5f42189735f09e346a34c09a82016d48ad74646035",
       "owner": "Repositories/SDK",
-      "version": "0.64.66",
+      "version": "0.64.134",
       "capability": "gui",
       "declarations": [
         [
@@ -11998,9 +12010,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/http.zig",
-      "sha256": "38fd7709d727b1cfe7694bff48509031070dea719fed228c5eebf3ea3f5d9bf7",
+      "sha256": "8f11f94ba6dc363047afce9133c24a79d6b6589474dc1d7e56f96d9465012817",
       "owner": "Repositories/SDK",
-      "version": "0.64.66",
+      "version": "0.64.134",
       "capability": "web-transport",
       "declarations": [
         [
@@ -12207,9 +12219,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/ico.zig",
-      "sha256": "a9a628362eacc695753fa6153194a503938f0f81f613bc068c0cdffe555611d7",
+      "sha256": "3ef918bf1a93e95d366938354b53f53dad36fa800a54daf183362eb4c9367995",
       "owner": "Repositories/SDK",
-      "version": "0.64.66",
+      "version": "0.64.134",
       "capability": "data-crypto",
       "declarations": [
         [
@@ -12276,9 +12288,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/input_events.zig",
-      "sha256": "35029f3f7afc1e2702a45b75c6d145b2ba972af311e90db0cbe680c57b5eef4b",
+      "sha256": "070cb480db90d395027fd255a7192d250299a5cc60d0fdd250634c78cc63fecb",
       "owner": "Repositories/SDK",
-      "version": "0.64.66",
+      "version": "0.64.134",
       "capability": "gui",
       "declarations": [
         [
@@ -13255,9 +13267,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/json.zig",
-      "sha256": "9a396c0bd315d28c5a6c58ee60be0745e538b7b78e716dc64a0bfa7c2222e754",
+      "sha256": "7d6b07a0f627df12599b49313e5a19c8df3e685bdf11aacc0398adb072ca1b73",
       "owner": "Repositories/SDK",
-      "version": "0.64.66",
+      "version": "0.64.134",
       "capability": "data-crypto",
       "declarations": [
         [
@@ -13468,9 +13480,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/module_capabilities.zig",
-      "sha256": "247e25466b0423418e5ea99c1c43915e45357d04189fce88d22a304d7e65b1fb",
+      "sha256": "ba2b26d864fee90d24d529c7a50ca09e3848c7d83cb6cd6da5786b0d6ce8cb81",
       "owner": "Repositories/SDK",
-      "version": "0.64.66",
+      "version": "0.64.134",
       "capability": "project-build",
       "declarations": [
         [
@@ -13527,9 +13539,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/module_manifest.zig",
-      "sha256": "2b61ea7850244f83bba30b7f60b081bd9a77d1662eef879c0e403c86712ef04a",
+      "sha256": "6016668272016da51f59eb318f671b3041e944330c8ab181ac1be4f8e78fa82f",
       "owner": "Repositories/SDK",
-      "version": "0.64.66",
+      "version": "0.64.134",
       "capability": "project-build",
       "declarations": [
         [
@@ -15070,9 +15082,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/program.zig",
-      "sha256": "012c29584d4efd5ae16c408d88ed3c1e6f9c0285455ad52d2d4a0e5ecbfabaea",
+      "sha256": "303de13e181a465b968cac0619be394ae5c0f44b94c4a9e6cc64eb89eea544a8",
       "owner": "Repositories/SDK",
-      "version": "0.64.66",
+      "version": "0.64.134",
       "capability": "startup",
       "declarations": [
         [
@@ -18607,9 +18619,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/r4audio.zig",
-      "sha256": "498c972889b6fa825d16d9fa658e2f4032c9680f7cdeea32a72dd5dfffdf237d",
+      "sha256": "a50913a2fb33fd1be2f55c2bf5ff45f6c809883b47ceb2c093304ddd1c3843f0",
       "owner": "Repositories/SDK",
-      "version": "0.64.66",
+      "version": "0.64.134",
       "capability": "audio",
       "declarations": [
         [
@@ -19014,9 +19026,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/r4desk.zig",
-      "sha256": "cc1b598a35d5ec8cf063b8d857a7a869b9292ecd474453fd051a04b03fed1691",
+      "sha256": "507950de94d2a29194313837ae9de0f03eea8115f5f333792aa2eb6b404b3477",
       "owner": "Repositories/SDK",
-      "version": "0.64.66",
+      "version": "0.64.134",
       "capability": "gui",
       "declarations": [
         [
@@ -19428,9 +19440,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/r4dev.zig",
-      "sha256": "16a8ba9a69b53e2602ab1c8c7d79a633a50306528a57720027c6c7ce4075f1a1",
+      "sha256": "66ec41f15b5f0b463e8285d97a096b01ae88107d89e1426c0cfb742f3b2f0e1e",
       "owner": "Repositories/SDK",
-      "version": "0.64.66",
+      "version": "0.64.134",
       "capability": "devices-power",
       "declarations": [
         [
@@ -21575,9 +21587,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/r4sys.zig",
-      "sha256": "ad24b04b023c651ef8fdd033adf3d0e33f938e5b35a8a5cdb1d006b544c2d3a8",
+      "sha256": "d049a626474fa9f7ed1ea9ac08dc505d78201a852d6ee8e6b1ed4aa0f225727e",
       "owner": "Repositories/SDK",
-      "version": "0.64.66",
+      "version": "0.64.134",
       "capability": "process-sync-vm",
       "declarations": [
         [
@@ -23650,9 +23662,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/r4xstart.zig",
-      "sha256": "50fe5902fee73ec85f063bd40520b665d562f67a08eaf1a444c1eaeb0aa9995a",
+      "sha256": "53f984ac8df446fb1f6c7d0c0ab5ab4848733b86645ed54e24832fc0bec857b9",
       "owner": "Repositories/SDK",
-      "version": "0.64.66",
+      "version": "0.64.134",
       "capability": "startup",
       "declarations": [
         [
@@ -24878,9 +24890,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/recent_documents.zig",
-      "sha256": "ee78a27c7bca2c646ff9fd8d86fc456074162fe14abede490a8e83e965ad9a85",
+      "sha256": "13000dfecbbc7c952efa5f055e1201c6fa52b3dda61e051295e0e3acb6b88c01",
       "owner": "Repositories/SDK",
-      "version": "0.64.66",
+      "version": "0.64.134",
       "capability": "files-registry-console",
       "declarations": [
         [
@@ -25363,9 +25375,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/rust_project.zig",
-      "sha256": "9399ca2e7d1bd46d29b7cd762fadb8c389ec02a1f271d568539361b819009d3d",
+      "sha256": "65e182e794f12cbd8aa1c09348f7a94bb5ead99c791f4bbb316903dca349bc62",
       "owner": "Repositories/SDK",
-      "version": "0.64.66",
+      "version": "0.64.134",
       "capability": "project-build",
       "declarations": [
         [
@@ -25555,9 +25567,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/service_deadline.zig",
-      "sha256": "0220bfe0b6f8a5cd376d7563be80833f6e0fcebdeb93eac8cbfb7c577780292a",
+      "sha256": "1f8e94950e686ad3141d530f7e5dca44e4f07ed3d76a31e8852c97178760ee4c",
       "owner": "Repositories/SDK",
-      "version": "0.64.66",
+      "version": "0.64.134",
       "capability": "services",
       "declarations": [
         [
@@ -26963,9 +26975,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/subsystem_host.zig",
-      "sha256": "56fcfce9f83ce6880e519e51e5365d63cdaa7d9a49cc675eee01287f049190bd",
+      "sha256": "0594aa40ff7f97e9b719d8c6e3882b70217a6c6c55a40ece111b944451d7b1d5",
       "owner": "Repositories/SDK",
-      "version": "0.64.66",
+      "version": "0.64.134",
       "capability": "subsystems",
       "declarations": [
         [
@@ -27486,9 +27498,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/subsystem_persistence.zig",
-      "sha256": "2068e47131b06de529226d5a576317d340c45cc99eb9ad0b7e1fa45a24293855",
+      "sha256": "d1acae50deef4b4b9f536ce476f83e1fdfcfcc1ea0dd6283e48096d96d656b76",
       "owner": "Repositories/SDK",
-      "version": "0.64.66",
+      "version": "0.64.134",
       "capability": "subsystems",
       "declarations": [
         [
@@ -27570,9 +27582,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/subsystem_runtime.zig",
-      "sha256": "d87b7d3a0dee2cee16c21f9c126287e62f72a680a609c25e2b399ce9ca8b40d2",
+      "sha256": "8b41bdc699a2f6c931b75997219906b245de37b567c22093bc4d93c0d34f1204",
       "owner": "Repositories/SDK",
-      "version": "0.64.66",
+      "version": "0.64.134",
       "capability": "subsystems",
       "declarations": [
         [
@@ -29748,9 +29760,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/vm_allocator.zig",
-      "sha256": "225acb7f377d9d98b14e58c190d0fd2a19da1b1354b4b1397dca3dd05d75cb7c",
+      "sha256": "c64b1013d0ce36435a2db82cacaaea9a6af48509c7bbd80688fbd5d2e51be4a1",
       "owner": "Repositories/SDK",
-      "version": "0.64.66",
+      "version": "0.64.134",
       "capability": "allocation",
       "declarations": [
         [
@@ -43841,7 +43853,7 @@
     },
     {
       "path": "Repositories/Libraries/R4GFX/Display/brightness_preferences.zig",
-      "sha256": "8303a78b49315c30e3ec547c9874eb94b9357c7e49dc99a4de16463bc585b166",
+      "sha256": "103b5feee97e9338e97087989cbdf1713d504da21a6c821f31780390f1306f23",
       "owner": "Repositories/Libraries/R4GFX",
       "version": "0.1.36",
       "capability": "library-R4GFX",
@@ -43958,7 +43970,7 @@
     },
     {
       "path": "Repositories/Libraries/R4GFX/Display/color_preferences.zig",
-      "sha256": "71718def642a8e3c957276da45adc1aa677bd4a34015ecbd9b5dfecc515a7a19",
+      "sha256": "84e8dfe58afa160212f2e8c72328f8a5e0844de2145f2dfb1e6b63b18e33483e",
       "owner": "Repositories/Libraries/R4GFX",
       "version": "0.1.36",
       "capability": "library-R4GFX",
@@ -44808,7 +44820,7 @@
     },
     {
       "path": "Repositories/Libraries/R4GFX/Display/preferences.zig",
-      "sha256": "181f08fb3419a58316b8be6498f70c66550ce38556fd6a72e833058ed43e837e",
+      "sha256": "b989118d874ca8cf80641d5c9dbcfb195f3316bceee873cbdc9727b59670d74d",
       "owner": "Repositories/Libraries/R4GFX",
       "version": "0.1.36",
       "capability": "library-R4GFX",
@@ -45054,7 +45066,7 @@
     },
     {
       "path": "Repositories/Libraries/R4GFX/Display/refresh_preferences.zig",
-      "sha256": "f0e9394589528f774a921d04a216b0deeee365442f815878fa7d0b452f833cac",
+      "sha256": "b9222042fe8450318c4407a0279a48dfaaf114cac369e73bd185567285e5b8d7",
       "owner": "Repositories/Libraries/R4GFX",
       "version": "0.1.36",
       "capability": "library-R4GFX",
@@ -45260,7 +45272,7 @@
     },
     {
       "path": "Repositories/Libraries/R4GFX/Display/topology.zig",
-      "sha256": "5c158c8ca851171296a8dfa397a93580d7a587949952aabe3151e15eb0485d02",
+      "sha256": "0fa07a6f807d6acfe404cb808bf35463b6ee2cb665f23c85f339817205f96671",
       "owner": "Repositories/Libraries/R4GFX",
       "version": "0.1.36",
       "capability": "library-R4GFX",
@@ -45701,9 +45713,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/desktop_actions.zig",
-      "sha256": "6bd58ecc742673b0af390613f086869e76df5acbf6d859854002bde44ae04647",
+      "sha256": "aacd500a32640bead6ce5318ed5196ea206edd3fd51939f03c1159eadc459f83",
       "owner": "Repositories/SDK",
-      "version": "0.64.127",
+      "version": "0.64.134",
       "capability": "services",
       "declarations": [
         [
@@ -45780,6 +45792,75 @@
           "Client.appFrame",
           "fn",
           54
+        ]
+      ]
+    },
+    {
+      "path": "Repositories/SDK/r4os/desktop_links.zig",
+      "sha256": "2f32c1ae7b9fcbe3b86a18645a77bcce3bd6421d6fc6e247ff30751b26a1aafd",
+      "owner": "Repositories/SDK",
+      "version": "0.64.134",
+      "capability": "services",
+      "declarations": [
+        [
+          "Token",
+          "const",
+          6
+        ],
+        [
+          "Request",
+          "const",
+          7
+        ],
+        [
+          "Reply",
+          "const",
+          8
+        ],
+        [
+          "Call",
+          "container",
+          9
+        ],
+        [
+          "supported",
+          "fn",
+          10
+        ],
+        [
+          "binding",
+          "fn",
+          13
+        ],
+        [
+          "Client",
+          "container",
+          20
+        ],
+        [
+          "Client.scope",
+          "fn",
+          22
+        ],
+        [
+          "Client.prepare",
+          "fn",
+          25
+        ],
+        [
+          "Client.activate",
+          "fn",
+          28
+        ],
+        [
+          "Client.status",
+          "fn",
+          31
+        ],
+        [
+          "Client.release",
+          "fn",
+          34
         ]
       ]
     }
@@ -55561,6 +55642,20 @@
         "SDK dialog-text-test, service-parity-test, vm-allocator-test and generated C/Rust projection checks; C headers compile."
       ],
       "limits": "No physical hardware, Windows execution, Studio application, native guest drag or final release claimed by this host evidence. The R4OS release has a separate QEMU and package acceptance."
+    },
+    "link_08916_host": {
+      "kind": "targeted_native_host_and_language_interop",
+      "performed_in": "0.89.16",
+      "complete": true,
+      "report": "Docs/Desktop/DeskRun.txt#Native-eigene-R4LNK-Aktivierung",
+      "scope": "Public pointer-free LinkToken/Request/Reply, WINSVC original binding/idempotence/lifecycle owner, real Desktop resolver integration and Zig/C/Rust typed clients. Host checks only.",
+      "checks": [
+        "Contract check/test and seven actual ABI C/Zig/Rust interop cases PASS.",
+        "WINSVC launch-test/owner-test: original response recovery, immutable repeats, foreign activation, deadlines, epoch/serial replacement, end/reap and explicit release; actual service product builds.",
+        "Desktop existing owner run: 276 non-service cases PASS; after extending actual Host timeout reconciliation the five targeted service cases PASS.",
+        "SDK Rust/C services interop PASS including actual C and Rust typed native link request bytes, discarded activation response and read-only generation-preserving recovery; DESKRUN Zig client builds."
+      ],
+      "limits": "No guest link activation, final SDK/R4OS package, Windows execution or real hardware claim; separate guest and release acceptance follows."
     }
   },
   "wave_bindings": [
@@ -55813,19 +55908,19 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.89.10-0.89.15",
-    "sdk": "0.64.133 source candidate",
-    "contract": "0.64.70 source candidate",
-    "libraries": "0.64.41 source candidate",
-    "evidence": "studio_089_host",
-    "scope": "Append-only focus wire records and technical pointer/focus constants; Zig, C and Rust SDK facade changes for bounded pointer actions, own FocusSnapshot, TCP CloseReceipt, password TextField, and exact simultaneous VM owner active peak. Host and source qualification only.",
+    "performed_in": "0.89.16",
+    "sdk": "0.64.134 source candidate",
+    "contract": "0.64.71",
+    "libraries": "0.64.42 source candidate",
+    "evidence": "link_08916_host",
+    "scope": "Public pointer-free LinkToken/Request/Reply, WINSVC original binding/idempotence/lifecycle owner, real Desktop resolver integration and Zig/C/Rust typed clients. Host checks only.",
     "historical_snapshot_retained": true,
-    "current_group_metadata": "No platform table slot changed. New focus and pointer records use the existing WindowService service boundary; prior snapshots and qualified evidence remain dated."
+    "current_group_metadata": "No platform table slot changed; new pointer-free own-link records use the existing WINSVC boundary. Previous Studio host evidence remains dated under studio_089_host."
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.89.10-0.89.15",
+    "reviewed_in": "0.89.16 host/source and language interop",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -55898,7 +55993,7 @@
       },
       {
         "path": "Repositories/Contract/API/ApiContract.json",
-        "sha256": "01f6633b6e917ea678dbb3579c4858836b279ec5d365634c0bedaae1aa67eb40"
+        "sha256": "91d7d5a41880e6abf470fae3603265953d44e0cebf263c11a7771ad9123de655"
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/API.json",
@@ -55906,15 +56001,15 @@
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/RustABI.json",
-        "sha256": "53deda6317005a6560decbbe5ec85176a8f7532d68d231d4501a3c28db4b0b61"
+        "sha256": "1982c76ff113d0f71a7275225609d1d903769a1047a4072930b0701006577977"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_generated.h",
-        "sha256": "d96747d23e10f78b40a97d08a470c8685bee81d5dd440c14ed22a4c7aac51f86"
+        "sha256": "3e7bc26d43c75d7b659b217ee41064887a12a3aa98ceb99b3f7e1d9c6d8d9866"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_technical_generated.h",
-        "sha256": "1902e7ec91e2596ab48f43a28789494263f63aaecb222c33102ead5d48c9de4c"
+        "sha256": "7216aac9beb582c4471c0f55f6e44e7ac43a696edb5e8918965ea59d0191f69a"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Rust/Cargo.toml",
@@ -55922,19 +56017,19 @@
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Rust/src/lib.rs",
-        "sha256": "0b0f66c092e4723cff5a7a0646b996a2cfc29e5b88433a4faf74283643846dc5"
+        "sha256": "856cd6682430f03fde5afe6ee463372ce64bfb1b72eb45f44ac7f23a282beac6"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi.zig",
-        "sha256": "6350e71f37ce700c8748180f5c420debdc213a44c281b11ac247776e98d7e4f8"
+        "sha256": "5c8ed545d1f9fa7c9a44c6544b02c5b4614e70957f752fcfa10e344550155390"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_exports.zig",
-        "sha256": "e0ae4381a9c6d58ddccd023c700db8f67362edd006b427b8ed7ff54b35d78d9d"
+        "sha256": "efd9a30e546e15a2847d7f9d3a37d5ce2b342c0da3788faba3ead33e18c8e5af"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_generated.zig",
-        "sha256": "e417abecf21af547deb3fec6081451d651d4ab5ef82c189672e3cd9f2958ae04"
+        "sha256": "8f943d71f1f7f1feb997ac200a63f5653d50794f80ecf7039dc457316cd0cd31"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/package.zig",
@@ -56894,7 +56989,7 @@
       },
       {
         "path": "Repositories/Libraries/Shared/Rust/src/raw.rs",
-        "sha256": "035f6394cdf81fd78744a5694eb5427db016a671727ee5306a51f109be9e2f1a"
+        "sha256": "9c49c9181a546358e1e266f6c2946cde7187fe73a3ec2783c3362f1eca3ebef5"
       },
       {
         "path": "Repositories/Libraries/Shared/Tests/Consumer/Cargo.toml",
@@ -56974,7 +57069,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "e1e782a8df8759cffef74b7810a799a9d21628a75f15f45fa5323bfc582fd4ba"
+        "sha256": "3010d305e03d5e7830bc0a6344e48a0627f6c6048bb7c2797087fd9f033d8e5d"
       },
       {
         "path": "Repositories/SDK/Rust/src/data/hash.rs",
@@ -57134,7 +57229,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/services.rs",
-        "sha256": "d1580e25265de4c4ac82f3fca3c7d6b287de58e761001f356c63722b6c277b87"
+        "sha256": "228f2e9af24e6cfda927f7a3a10cab18f2a7d3f39585d54d3d91331887da7913"
       },
       {
         "path": "Repositories/SDK/Rust/src/services/actions.rs",
@@ -57143,6 +57238,10 @@
       {
         "path": "Repositories/SDK/Rust/src/services/evidence.rs",
         "sha256": "956227b1a44e5d77e1cc50db2d5201db195ce49c9e8fb1dc3b931be3900c3152"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/services/links.rs",
+        "sha256": "feb312b4b1ed3442a82f030e656448462d47b1960f7f08dac196275436271aae"
       },
       {
         "path": "Repositories/SDK/Rust/src/services/tray.rs",
@@ -57283,6 +57382,10 @@
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/desktop_evidence.h",
         "sha256": "e24d515a2dca4aa60ff6844ae5d7800447fd6620446216f41220bfea82906c4f"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/desktop_links.h",
+        "sha256": "3b5fac367437d3c32e8467a33569491c47a84bb44d5a93aab1434080d15d39d9"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/directory_page.h",
@@ -57522,11 +57625,11 @@
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/RustServices.rs",
-        "sha256": "6cde8dbee611d307039058a91316e890f07b57c26ed9bebdb44ea279140d3786"
+        "sha256": "549765c852087495aa8333940e090e7336ed7ebb53186cdee3582c39799d8602"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/ServiceNetworkCallbacks.c",
-        "sha256": "a9603fa35e603a97162401058adbb2738e2c3ea74108e22838d68076feaebffd"
+        "sha256": "86509f24d1ebe9cb7e20446698a0fb6da0096e647d1ac5b9bfd68c026136d1b2"
       },
       {
         "path": "Repositories/SDK/Tools/Build-Project.ps1",
@@ -57710,11 +57813,11 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "8d4531acedaca7a1e52192610a7a657a15d427f0a2807fc20c59f7efb1b9f78e"
+        "sha256": "2049bf663729db1ca3d8bcc33567246eda312c8b2af8c7e3f50e161b4ad8879e"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
-        "sha256": "e203fb2feab8d6dc502650feb6a929d026435f5bc65ff84810d736e8659de769"
+        "sha256": "532f2fead59609adb5638c427fe0abfaa266b5c11e39e46f07345b634737729b"
       },
       {
         "path": "Repositories/SDK/r4os/allocator_wait.zig",
@@ -57847,6 +57950,10 @@
       {
         "path": "Repositories/SDK/r4os/desktop_evidence.zig",
         "sha256": "cebf5b406506d3e48e0bbfd0ea4d7e8ec870d45fec28d6da997384685e08ed77"
+      },
+      {
+        "path": "Repositories/SDK/r4os/desktop_links.zig",
+        "sha256": "2f32c1ae7b9fcbe3b86a18645a77bcce3bd6421d6fc6e247ff30751b26a1aafd"
       },
       {
         "path": "Repositories/SDK/r4os/directory_page.zig",
@@ -58840,20 +58947,23 @@
           "Repositories/SDK/r4os/service_deadline.zig",
           "Repositories/SDK/r4os/desktop_evidence.zig",
           "Repositories/SDK/r4os/desktop_actions.zig",
-          "Repositories/SDK/r4os/server_access.zig"
+          "Repositories/SDK/r4os/server_access.zig",
+          "Repositories/SDK/r4os/desktop_links.zig"
         ],
         "c": [
           "Repositories/SDK/Shared/C/include/r4os/app_services.h",
           "Repositories/SDK/Shared/C/include/r4os/app_tray.h",
           "Repositories/SDK/Shared/C/include/r4os/path_timeout.h",
           "Repositories/SDK/Shared/C/include/r4os/desktop_evidence.h",
-          "Repositories/SDK/Shared/C/include/r4os/desktop_actions.h"
+          "Repositories/SDK/Shared/C/include/r4os/desktop_actions.h",
+          "Repositories/SDK/Shared/C/include/r4os/desktop_links.h"
         ],
         "rust": [
           "Repositories/SDK/Rust/src/services.rs",
           "Repositories/SDK/Rust/src/services/tray.rs",
           "Repositories/SDK/Rust/src/services/evidence.rs",
-          "Repositories/SDK/Rust/src/services/actions.rs"
+          "Repositories/SDK/Rust/src/services/actions.rs",
+          "Repositories/SDK/Rust/src/services/links.rs"
         ],
         "proof": [
           "service_network_current_55",
@@ -58863,7 +58973,8 @@
           "desktop_evidence_handoff_08897",
           "desktop_actions_08898",
           "server_access_0893",
-          "studio_089_host"
+          "studio_089_host",
+          "link_08916_host"
         ]
       },
       {

@@ -33,6 +33,9 @@ unsafe impl GlobalAlloc for Tracking {
 #[global_allocator]
 static ALLOCATOR: Tracking = Tracking;
 unsafe extern "C" {
+    fn sdk_link_c_case() -> i32;
+    fn sdk_link_tables(sys: *mut abi::R4XStartR4Sys);
+    fn sdk_link_activations() -> u32;
     fn sdk_service_c_case() -> i32;
     fn sdk_service_tcp_deadline_case() -> i32;
     fn sdk_service_tcp_readiness_case() -> i32;
@@ -151,6 +154,18 @@ fn service_network_serial_deadline_owners_and_retained_requests() {
     let app = unsafe { App::from_raw(&ctx, &expected, c"SERVICE-INTEROP") }.unwrap();
     let services = Services::new(&app).unwrap();
     assert!(services.available());
+    assert_eq!(unsafe { sdk_link_c_case() }, 0);
+    unsafe { sdk_link_tables(&mut sys) };
+    let link_scope = services.link_scope().unwrap();
+    assert!(r4os_sdk::services::link_supported(&link_scope));
+    let link_intent = r4os_sdk::services::prepare_link_binding(link_scope.request.token, abi::ProgramProcessHandle { instance_id: 42, generation: 123, reserved: 0 }, [1,2,3], 999, b"C:\\TEMP\\SELF.LNK", b"R4S_FORMAT=1\nSCHEMA=R4LNK\nTARGET=C:\\TEMP\\SELF.R4X\n").unwrap();
+    let link_saved = services.link_prepare(&link_intent).unwrap().request;
+    assert_eq!(link_saved.token.serial, 55);
+    assert!(matches!(services.link_activate(&link_saved),Err(r4os_sdk::storage::Error::Raw(code)) if code == abi::service_api_result_timeout));
+    let link_readback = services.link_status(&link_saved).unwrap();
+    assert_eq!(link_readback.process.generation,0xfedcba9876543210);
+    assert_eq!(unsafe { sdk_link_activations() },1);
+
     let bound = services.bound_detail(c"MANAGED").unwrap();
     assert_eq!(bound.process.instance_id, 41);
     assert_eq!(bound.process.generation, 0x1122334455667788);

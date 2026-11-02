@@ -10,6 +10,8 @@ pub use c::R4SdkServiceLoopMetrics as LoopMetrics;
 mod tray;
 mod evidence;
 mod actions;
+mod links;
+pub use links::{LinkToken, LinkRequest, LinkReply, link_supported, prepare_link_binding};
 pub use evidence::{EvidenceLease, EvidenceReply, EvidenceToken, prepare_evidence};
 pub use actions::{FocusObservation, PointerStep, prepare_pointer_grant};
 pub use tray::{Tray, TrayCall, TrayItem};

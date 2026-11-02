@@ -308,3 +308,34 @@ int sdk_service_tcp_close_receipt_case(void){
     if(r4_tcp_socket_close(&socket,r4_timeout_forever()).kind!=R4_NET_RESULT_OUTCOME_UNKNOWN||tcp80_calls!=2)return 5;
     return 0;
 }
+
+#include <r4os/desktop_links.h>
+/* Interop peer exercises exact native request bytes and response-loss recovery.
+ * Production idempotence and binding rejection are tested by WINSVC itself. */
+static uint32_t link_activations,link_statuses;
+static R4DesktopLinkRequest link_original;
+static int32_t link_open(const uint8_t*name,R4ServiceInfo*out){if(strcmp((const char*)name,"WINSVC")==0){*out=(R4ServiceInfo){.handle=505,.instance_id=31};return 0;}return fake_open(name,out);}
+static int32_t link_close(uint32_t handle){return handle==505?0:fake_close(handle);}
+static int32_t link_call(uint32_t handle,uint16_t op,const uint8_t*bytes,uint32_t n,R4ServiceMessageHeader*header,uint8_t*out,uint32_t capacity,uint64_t timeout){
+ if(op<R4OS_DESKTOP_LINK_OP_SCOPE||op>R4OS_DESKTOP_LINK_OP_RELEASE)return fake_call(handle,op,bytes,n,header,out,capacity,timeout);
+ assert(handle==505&&n==sizeof(R4DesktopLinkRequest)&&capacity>=sizeof(R4DesktopLinkReply));
+ R4DesktopLinkRequest q;memcpy(&q,bytes,sizeof(q));R4DesktopLinkReply r={0};r.request=q;r.flags=R4OS_DESKTOP_LINK_CAPABILITIES;
+ if(op==R4OS_DESKTOP_LINK_OP_SCOPE){r.request.token=(R4DesktopLinkToken){.version=1,.size=sizeof(R4DesktopLinkToken),.service={.instance_id=31,.generation=UINT64_C(0xabc0000000000001)},.epoch={6,7,8}};}
+ if(op==R4OS_DESKTOP_LINK_OP_PREPARE){r.request.token.serial=55;link_original=r.request;r.phase=R4OS_DESKTOP_LINK_PHASE_PREPARED;}
+ if(op==R4OS_DESKTOP_LINK_OP_ACTIVATE){assert(memcmp(&q,&link_original,sizeof(q))==0);++link_activations;return R4OS_SERVICE_API_RESULT_TIMEOUT;}
+ if(op==R4OS_DESKTOP_LINK_OP_STATUS){assert(memcmp(&q,&link_original,sizeof(q))==0);++link_statuses;r.phase=R4OS_DESKTOP_LINK_PHASE_PROCESS;r.process=(R4ProgramProcessHandle){.instance_id=87,.generation=UINT64_C(0xfedcba9876543210)};r.started_tick=77;}
+ if(op==R4OS_DESKTOP_LINK_OP_RELEASE){r.phase=R4OS_DESKTOP_LINK_PHASE_CLEANED;r.cleanup_tick=99;}
+ *header=(R4ServiceMessageHeader){.magic=R4OS_SERVICE_API_MAGIC,.version=R4OS_SERVICE_API_VERSION,.op=op};memcpy(out,&r,sizeof(r));return sizeof(r);
+}
+void sdk_link_tables(R4XStartR4Sys*sys){sys->service_open=(uintptr_t)&link_open;sys->service_close=(uintptr_t)&link_close;sys->service_call=(uintptr_t)&link_call;link_activations=link_statuses=0;}
+uint32_t sdk_link_activations(void){return link_activations;}
+int sdk_link_c_case(void){
+ R4App app;R4XStartR4Sys sys;R4XStartR4Net net;init_app(&app,&sys,&net);sdk_link_tables(&sys);
+ R4DesktopLinkReply r;R4DesktopLinkRequest q;uint64_t intent[3]={1,2,3};const uint8_t path[]="C:\\TEMP\\SELF.LNK",bytes[]="R4S_FORMAT=1\nSCHEMA=R4LNK\nTARGET=C:\\TEMP\\SELF.R4X\n";
+ if(r4_desktop_link_scope(&app,&r)||!r4_desktop_link_supported(&r))return 1;
+ if(r4_desktop_link_binding(&r.request.token,(R4ProgramProcessHandle){.instance_id=42,.generation=123},intent,999,path,sizeof(path)-1,bytes,sizeof(bytes)-1,&q))return 2;
+ if(r4_desktop_link_prepare(&app,&q,&r)||r.request.token.serial!=55)return 3;q=r.request;
+ if(r4_desktop_link_activate(&app,&q,&r)!=R4OS_SERVICE_API_RESULT_TIMEOUT||link_activations!=1)return 4;
+ if(r4_desktop_link_status(&app,&q,&r)||r.process.generation!=UINT64_C(0xfedcba9876543210)||link_activations!=1||link_statuses!=1)return 5;
+ return 0;
+}
