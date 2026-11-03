@@ -57848,7 +57848,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/Sync-ComponentPins.ps1",
-        "sha256": "5eacce9f6bce7d35169fa0ad7b2b6ebac58a5ab3a1b0057816e7d99756aced9c"
+        "sha256": "c609d8b227a8fa4469a6b746b59ebd79a585d8950fe8cfa3f2f02c4c0047be8d"
       },
       {
         "path": "Repositories/SDK/Tools/Sync-KernelProjections.ps1",

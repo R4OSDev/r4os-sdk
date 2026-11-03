@@ -11,12 +11,13 @@ $text=$original
 foreach($pair in @(@('contract','r4os_contract'),@('libraries','r4os_libraries'))){
     $source=$data.Components.repositories[$pair[0]]
     if(!$source.Contains('zig_hash') -or !$source.Contains('archive_url')){throw ('SdkZigPinMissing: '+$pair[0])}
-    $pattern='(?s)\.'+$pair[1]+'\s*=\s*\.\{.*?\},'
+    $pattern='(?s)\.'+$pair[1]+'\s*=\s*\.\{[^{}]*\}\s*,?'
     $match=[regex]::Match($text,$pattern)
     $body='.'+$pair[1]+" = .{`n            .url = `""+$source.archive_url+"`",`n            .hash = `""+$source.zig_hash+"`","
     if($pair[0] -ceq 'libraries' -and (!$match.Success -or $match.Value -match '\.lazy\s*=\s*true')){$body+="`n            .lazy = true,"}
     $body+="`n        },"
     if($match.Success){$text=$text.Substring(0,$match.Index)+$body+$text.Substring($match.Index+$match.Length)}
+    elseif([regex]::IsMatch($text,('\.'+$pair[1]+'\s*='))){throw ('SdkZigPinSyntaxUnsupported: '+$pair[1])}
     elseif($IncludeLibraries -and $pair[0] -ceq 'libraries'){
         $marker='.dependencies = .{'
         $index=$text.IndexOf($marker,[StringComparison]::Ordinal)
