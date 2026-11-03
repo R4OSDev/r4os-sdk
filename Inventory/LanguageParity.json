@@ -55978,7 +55978,7 @@
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.89.34-library-alias",
+    "reviewed_in": "0.89.34-library-alias-final",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -57124,7 +57124,7 @@
       },
       {
         "path": "Repositories/SDK/Profiles/Components.json",
-        "sha256": "08fb5639da4511d06e367a9ccddbf4ef437ac7ce902b2d7bb250e6f0e5a41ed6"
+        "sha256": "ff75c5c5d586853b61ca5477b90040129578f36696fbc5a74fe473df0cb811fd"
       },
       {
         "path": "Repositories/SDK/Profiles/Tools.json",
@@ -57952,7 +57952,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "8ea88ad0292cc756b575ac67f7f3590f50e44eff386295bf822b28135b7972c1"
+        "sha256": "09f3f3abf4bfeac3b1404b76956a9ba6488daeca6b29fcd4443ae8d10ad71b98"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
