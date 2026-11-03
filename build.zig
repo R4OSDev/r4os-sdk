@@ -20,6 +20,11 @@ pub fn sdk(b: *std.Build, dependency: *std.Build.Dependency, opts: SdkOptions) S
     return Sdk.fromDependency(b, dependency, opts);
 }
 
+/// SDK-selected Libraries build API; callers do not pin the system package.
+pub inline fn systemLibrariesBuild(dependency: *std.Build.Dependency) ?type {
+    return dependency.builder.lazyImport(@This(), "r4os_libraries");
+}
+
 pub fn build(b: *std.Build) void {
     b.addNamedLazyPath("system_update_engine", b.path("r4os/system_update_engine.zig"));
     b.addNamedLazyPath("update_service_contract", b.path("r4os/update_service_contract.zig"));
