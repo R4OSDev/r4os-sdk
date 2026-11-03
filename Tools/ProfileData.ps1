@@ -87,7 +87,7 @@ function Read-R4SdkProfiles([string]$SdkRoot) {
     }
     foreach ($id in $components.repositories.Keys) {
         $source = $components.repositories[$id]
-        Assert-R4ProfileKeys $source @('repository', 'commit', 'version', 'files', 'archive_sha256', 'archive_url', 'archive_format', 'zig_hash') "repositories.$id"
+        Assert-R4ProfileKeys $source @('repository', 'commit', 'version', 'files', 'archive_sha256', 'archive_url', 'archive_format', 'zig_hash', 'tree') "repositories.$id"
         if ($source.repository -cnotmatch '^https://[^\s]+$' -or
             $source.commit -cnotmatch '^[0-9a-f]{40}$' -or
             $source.version -cnotmatch '^\d+\.\d+\.\d+$') { throw "SdkProfileInvalidSource: $id" }
@@ -99,6 +99,16 @@ function Read-R4SdkProfiles([string]$SdkRoot) {
         }
         if ($source.Contains('archive_sha256') -and $source.archive_sha256 -cnotmatch '^[0-9a-f]{64}$') {
             throw "SdkProfileInvalidArchiveHash: $id"
+        }
+        if($source.Contains('tree')){
+            Assert-R4ProfileKeys $source.tree @('algorithm','sha256','files') "$id.tree"
+            if($source.tree.algorithm -cne 'r4os-files-sha256-lf-v1' -or
+               $source.tree.sha256 -cnotmatch '^[0-9a-f]{64}$' -or !$source.tree.files.Count){throw "SdkProfileInvalidSourceTree: $id"}
+            $treePaths=[Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+            foreach($path in $source.tree.files){
+                if([IO.Path]::IsPathRooted($path) -or $path.Contains('\') -or $path.Split('/') -contains '..' -or
+                   $path.Split('/') -contains '.' -or !$treePaths.Add($path)){throw "SdkProfileInvalidSourceTreePath: $id/$path"}
+            }
         }
     }
     $names = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
