@@ -55700,6 +55700,22 @@
         "One final spectra-standard-3 SMP4 run locally validated: 30 samples, five metrics, six scores; original archived."
       ],
       "limits": "Linux/KVM4; no Windows execution, physical hardware or Server import/readback claim."
+    },
+    "native_sdk_profiles_08931": {
+      "kind": "native_host_build_profile_migration",
+      "performed_in": "0.89.31",
+      "complete": true,
+      "report": "Docs/SDK/Profiles.txt",
+      "scope": "SDK-only native tool/codegen data, checked projections and unified host-helper ownership; runtime bytes unchanged.",
+      "checks": [
+        "R4GFX owner test including AMD host peers",
+        "R4FONT owner tests and C consumer",
+        "projection/refusal/placeholder probes",
+        "NVIDIA SM86 nine shader profiles compiled twice",
+        "AMD GFX902/GFX909 six profiles each compiled twice; program data unchanged",
+        "Math/Scan archive byte equality and twelve existing R4L byte equality."
+      ],
+      "limits": "Linux host only; no GPU/Windows/hardware execution; unchanged runtime bytes imply no performance-effect benchmark requirement."
     }
   },
   "wave_bindings": [
@@ -55952,17 +55968,17 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.89.30",
-    "sdk": "0.64.141 source candidate",
+    "performed_in": "0.89.31",
+    "sdk": "0.64.142 source candidate",
     "contract": "0.64.72",
-    "evidence": "kernel_sdk_profile_08930",
-    "scope": "Kernel profile and source binding migration; no public API/ABI changes.",
+    "evidence": "native_sdk_profiles_08931",
+    "scope": "Native build policy migration; no public runtime API/ABI delta.",
     "historical_snapshot_retained": true
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.89.30",
+    "reviewed_in": "0.89.31",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -56827,11 +56843,11 @@
       },
       {
         "path": "Repositories/Libraries/Shared/Native/BuildPortability.ps1",
-        "sha256": "6f08ea897b15c89e6622c8cb6173e07145ad744962b30ac32b516116811425a5"
+        "sha256": "3b18066d9c6f198436fa2589544536b63850f8222a4a673cc50a31ca05427904"
       },
       {
         "path": "Repositories/Libraries/Shared/Native/Math/Build.ps1",
-        "sha256": "d36611beae87dd6f499df01c14402cfdb0537c9ce05e0ce850d5cdb574127385"
+        "sha256": "31d20a9b25b106d41c2bda5711cee47944fe8e5eff0da86a1d3fa4e6dd4af400"
       },
       {
         "path": "Repositories/Libraries/Shared/Native/Math/Include/endian.h",
@@ -56850,8 +56866,12 @@
         "sha256": "894441ec66c1b59ed620681aa9b6c11a94e5fff05164e8e9941e7e130a733a2a"
       },
       {
+        "path": "Repositories/Libraries/Shared/Native/SDK.ps1",
+        "sha256": "4f9a0ab8ade153f379005b365bc013bc45693aa0961754978f7332135d010e7a"
+      },
+      {
         "path": "Repositories/Libraries/Shared/Native/Scan/Build.ps1",
-        "sha256": "8ee09fdcb29a6e919790ba78dfb0984a86eb2bfdadeddfbc1f5b188396ee2d88"
+        "sha256": "d912269f7479e4c375ea2f6b41c617b0220c255e6ab98793ec240002103b5ed4"
       },
       {
         "path": "Repositories/Libraries/Shared/Native/Scan/Include/math.h",
@@ -57742,6 +57762,10 @@
         "sha256": "2a30193a6386d98fc546d3ab018683e6f1b8b525712e3f89d98f1f83a4c850ee"
       },
       {
+        "path": "Repositories/SDK/Tools/NativeProfiles.ps1",
+        "sha256": "3b6263d009b3271d200e0f0dee36f67b7d22a44fa5401e642c3bcbf196f282c1"
+      },
+      {
         "path": "Repositories/SDK/Tools/NetBridgeGen/src/main.zig",
         "sha256": "247222450c6dd83069fcae572a1f3f3f448f3c2dfcc38441c19d2a018574206b"
       },
@@ -57812,6 +57836,10 @@
       {
         "path": "Repositories/SDK/Tools/Sync-KernelProjections.ps1",
         "sha256": "b4d7f2ce19b25cb49baff1dcfde22681f28fb21ae014ad97e22ba358c22f24f2"
+      },
+      {
+        "path": "Repositories/SDK/Tools/Sync-NativeProjections.ps1",
+        "sha256": "9a59a871d90065559322cc398185157cc8f20176f6f061ed18cbe786fd0f10c1"
       },
       {
         "path": "Repositories/SDK/Tools/Sync-ProfileProjections.ps1",
@@ -57907,7 +57935,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "7f2a0756eb88d6eb1ad19f7c6b74f12c50981da2749c09cf77c8f897209921cc"
+        "sha256": "d16962b62403a2c84ca50500acac05390ffecdd58ecf2fff59965a85273d967e"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
