@@ -55978,7 +55978,7 @@
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.89.33",
+    "reviewed_in": "0.89.34",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -56019,7 +56019,9 @@
       "Repositories/Libraries/consumer_helpers.zig",
       "Repositories/Libraries/consumer_media.zig",
       "Repositories/SDK/BuildProfiles/README.txt",
+      "Repositories/SDK/Examples/DesktopEvidence.c",
       "Repositories/SDK/Examples/MouseLook.c",
+      "Repositories/SDK/Profiles",
       "Repositories/SDK/Rust/Cargo.toml",
       "Repositories/SDK/Rust/src",
       "Repositories/SDK/Shared/C",
@@ -56031,18 +56033,17 @@
       "Repositories/SDK/Tests/Conformance/BoundedGraphemeChecks.c",
       "Repositories/SDK/Tests/Conformance/GuiFacadePrototype05824.c",
       "Repositories/SDK/Tests/Conformance/GuiFacadePrototype05824.zig",
+      "Repositories/SDK/Tests/Conformance/ServiceNetworkFacadePrototype05826.zig",
       "Repositories/SDK/Tests/Simulation/GuiParity.c",
       "Repositories/SDK/Tests/Simulation/PointerBindings.c",
       "Repositories/SDK/Tests/Simulation/RustGui.rs",
+      "Repositories/SDK/Tests/Simulation/RustServices.rs",
+      "Repositories/SDK/Tests/Simulation/ServiceNetworkCallbacks.c",
       "Repositories/SDK/Tools",
       "Repositories/SDK/build.zig",
       "Repositories/SDK/build.zig.zon",
       "Repositories/SDK/r4os",
-      "Repositories/SDK/r4os.zig",
-      "Repositories/SDK/Tests/Conformance/ServiceNetworkFacadePrototype05826.zig",
-      "Repositories/SDK/Tests/Simulation/ServiceNetworkCallbacks.c",
-      "Repositories/SDK/Tests/Simulation/RustServices.rs",
-      "Repositories/SDK/Examples/DesktopEvidence.c"
+      "Repositories/SDK/r4os.zig"
     ],
     "files": [
       {
@@ -56096,10 +56097,6 @@
       {
         "path": "Repositories/Contract/Module/CpuBaseline.json",
         "sha256": "eeeee03aa8fd41051c09e61e9d70ca35660f2b413c3f878fb6e5a3bb51aad10c"
-      },
-      {
-        "path": "Repositories/Contract/Module/cpu_baseline.zig",
-        "sha256": "c6b6c864131aea4c2a6e635fccb954184ba7006449771a123454bf6853869de2"
       },
       {
         "path": "Repositories/Contract/Tools/AbiRustGen/src/c_projection.zig",
@@ -57122,6 +57119,18 @@
         "sha256": "e331441762075b6ae48867755c327dab648ef44e76aa75c001e864ac4e81206a"
       },
       {
+        "path": "Repositories/SDK/Profiles/Build.json",
+        "sha256": "2127f11eb499075f0a44589c0d2eb325b9cba2def4ddf03b65a529797b0d84d0"
+      },
+      {
+        "path": "Repositories/SDK/Profiles/Components.json",
+        "sha256": "4c3ece869abc327a9369d0866577e87c020e912b6f8ac567f5d0b41bf147d530"
+      },
+      {
+        "path": "Repositories/SDK/Profiles/Tools.json",
+        "sha256": "ae53e53e62822d575267ca43865a8a6646c436d22665f6926440df5bc80e99af"
+      },
+      {
         "path": "Repositories/SDK/Rust/Cargo.toml",
         "sha256": "a3b42a9432ab0c5ea69caa99b417e84ad2c3e265baeaa74befa386aa2782d581"
       },
@@ -57707,7 +57716,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/BuildContext.ps1",
-        "sha256": "29fc8c7b9ec3067f075230a4d217349f8600bf122f0487d54d41524479f503a5"
+        "sha256": "5258cfd277fce852ae80b655d1092d88b7da8a08fab6cb92f462c424095e033f"
       },
       {
         "path": "Repositories/SDK/Tools/BuildModule.ps1",
@@ -57715,7 +57724,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/BuildOwner.ps1",
-        "sha256": "f2fabd57150ab53d61516a15e3b998e09ab0ca49fa55bb07dc61b4bd495fdfd7"
+        "sha256": "34241fbe2d9907bc2e5d5a59cc6544b59a611715b0a130d26ccb1e61063bfdcb"
       },
       {
         "path": "Repositories/SDK/Tools/CFacadeGen/src/main.zig",
@@ -57795,7 +57804,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/ProfileSources.ps1",
-        "sha256": "9ecd461388582618c96a6bfe9d2b9a810fd860dd9ad4bd8e34c39898f25130e4"
+        "sha256": "66e2bda45bb65e9e85848a546011e635d4448bb622f4851d7c63380ceacbfda2"
       },
       {
         "path": "Repositories/SDK/Tools/R4LContractGen/build.zig",
@@ -57939,11 +57948,11 @@
       },
       {
         "path": "Repositories/SDK/build.zig",
-        "sha256": "934a9d093dca3cc6bec5c9abdf6439539832a98f3261f71d4fe3cdbe17d8b7dc"
+        "sha256": "70bd5cff3e363ae807c53b75bb4bce5b348b5764599e8317cbbf044091b0fe5a"
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "bdbb67dfdd6c0de7282b893c02069d9501f14ca9d743701b0b32be75e4ffffe5"
+        "sha256": "967ad16f6f3c36907f974490f4f345637889e2dfff37052e9ae498d304d8e811"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -58015,11 +58024,11 @@
       },
       {
         "path": "Repositories/SDK/r4os/build.zig",
-        "sha256": "e6af42ec6bbc3a171cb1ab948df4485a3fed1eceaaa56c5994240a92599cf8a6"
+        "sha256": "60c456451e1d6e93dd817727d0c2033b2ec25a2a798e014c88723d72267c7fea"
       },
       {
         "path": "Repositories/SDK/r4os/build_profile.zig",
-        "sha256": "4a2fa2589783dd64e19188d5ca72f2084f7acfc5ae3da4fca8195e0a92ebf732"
+        "sha256": "8f26eff0d3795be0da24e5db61d93ad9a912083ac2efa878d486e3daa37e7fee"
       },
       {
         "path": "Repositories/SDK/r4os/c_header_inputs.zig",

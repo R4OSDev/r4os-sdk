@@ -31,6 +31,7 @@ function Get-R4SdkBuildContext {
 }
 
 function Assert-R4SdkBuildArguments($Context, [string[]]$Arguments) {
+    $allowedModes=if($Context.resolved.build.role -ceq 'host'){$Context.data.Build.codegen.host.allowed_optimize_modes}else{$Context.data.Build.codegen.module.allowed_optimize_modes}
     foreach($argument in $Arguments){
         if($argument.StartsWith('--fork',[StringComparison]::Ordinal) -or
            $argument.StartsWith('-Dr4os-sdk',[StringComparison]::Ordinal) -or
@@ -39,7 +40,7 @@ function Assert-R4SdkBuildArguments($Context, [string[]]$Arguments) {
             throw "SdkBuildComponentOverrideForbidden: $argument"
         }
         if($argument -cmatch '^-Doptimize=(.+)$' -and
-           $Matches[1] -cnotin $Context.data.Build.codegen.module.allowed_optimize_modes){throw "SdkBuildOptimizationOverride: $argument"}
+           $Matches[1] -cnotin $allowedModes){throw "SdkBuildOptimizationOverride: $argument"}
     }
     foreach($name in @('ZIG_LIB_DIR','ZIG_LIBC','RUSTFLAGS','CARGO_ENCODED_RUSTFLAGS')){
         if([Environment]::GetEnvironmentVariable($name,'Process')){throw "SdkBuildEnvironmentOverride: $name"}
@@ -51,5 +52,24 @@ function Assert-R4SdkBuildArguments($Context, [string[]]$Arguments) {
 function Assert-R4SdkProjectPins([string]$SdkRoot,[string]$ProjectRoot) {
     if(Test-Path -LiteralPath (Join-Path $ProjectRoot 'build.zig.zon')){
         & (Join-Path $SdkRoot 'Tools/Sync-ComponentPins.ps1') -SdkRoot $SdkRoot -ProjectRoot $ProjectRoot
+    }
+}
+
+function Assert-R4SdkBootTools([string]$SdkRoot,[string]$Qemu='', [string]$LimineRoot='') {
+    $data=Read-R4SdkProfiles $SdkRoot
+    $hostName=if($IsWindows){'Windows'}elseif($IsLinux){'Linux'}else{throw 'SdkBootHostUnsupported'}
+    if($Qemu){
+        if(!(Test-Path -LiteralPath $Qemu -PathType Leaf)){throw 'SdkQemuMissing'}
+        $lines=@(& $Qemu --version 2>&1)
+        $line=if($lines.Count){[string]$lines[0]}else{''}
+        $prefix='QEMU emulator version '+$data.Tools.tools.qemu.hosts[$hostName].version+' '
+        if($LASTEXITCODE -ne 0 -or !$line.StartsWith($prefix,[StringComparison]::Ordinal)){throw 'SdkQemuVersionMismatch'}
+    }
+    if($LimineRoot){
+        $program=Join-Path $LimineRoot $(if($IsWindows){'limine-tool-windows-x86/limine.exe'}else{'limine'})
+        if(!(Test-Path -LiteralPath $program -PathType Leaf)){throw 'SdkLimineMissing'}
+        $lines=@(& $program --version 2>&1)
+        $line=if($lines.Count){[string]$lines[0]}else{''}
+        if($LASTEXITCODE -ne 0 -or $line -cne ('Limine '+$data.Tools.tools.limine.version)){throw 'SdkLimineVersionMismatch'}
     }
 }

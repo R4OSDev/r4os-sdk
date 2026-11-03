@@ -15,8 +15,18 @@ $install=if($settings.ContainsKey('DEVKIT_ROOT')){[IO.Path]::GetFullPath($settin
 $zigRoot=if($settings.ContainsKey('ZIG_ROOT')){[IO.Path]::GetFullPath($settings.ZIG_ROOT.Replace('\','/'),$install)}else{Join-Path $install 'Toolchains/Zig'}
 $context=Get-R4SdkBuildContext $sdkRoot $contract $libraries $install $zigRoot -Profile 'r4os-host-tools-v1'
 Assert-R4SdkBuildArguments $context $BuildArguments
-$forks=@(('--fork='+$contract),('--fork='+$libraries))
-if($OwnerRoot -cne $sdkRoot){$forks+=('--fork='+$sdkRoot)}
+$project=[IO.File]::ReadAllText((Join-Path $OwnerRoot 'build.zig.zon'))
+$forks=@()
+foreach($binding in @(@('r4os_contract',$contract),@('r4os_libraries',$libraries),@('r4os_sdk',$sdkRoot))){
+    # Zig rejects unused forks. A source owner such as Contract has no SDK
+    # dependencies; its selected host compiler/profile still comes from SDK.
+    if($project -cmatch ('(?m)^\s*\.'+$binding[0]+'\s*=')){$forks+=('--fork='+$binding[1])}
+}
+$packageName=[regex]::Match($project,'\.name\s*=\s*\.([a-z0-9_]+)').Groups[1].Value
+$defaults=$context.data.Build.codegen.host.owner_optimize
+if($defaults.Contains($packageName) -and !@($BuildArguments|Where-Object {$_ -cmatch '^-Doptimize='}).Count){
+    $BuildArguments=@('-Doptimize='+$defaults[$packageName])+$BuildArguments
+}
 Push-Location $OwnerRoot
 try{& $context.zig build @forks @BuildArguments;$code=$LASTEXITCODE}finally{Pop-Location}
 exit $code

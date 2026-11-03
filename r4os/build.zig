@@ -1193,7 +1193,7 @@ pub const R4MElfOptions = struct {
 
 pub fn addR4XBuilder(b: *std.Build, root_source_file: std.Build.LazyPath) *std.Build.Step.Compile {
     const target = b.standardTargetOptions(.{});
-    const optimize = b.standardOptimizeOption(.{});
+    const optimize = profiles.hostOptimize(b, profiles.defaults.packager_optimize);
 
     const exe = b.addExecutable(.{
         .name = "r4xbuilder",

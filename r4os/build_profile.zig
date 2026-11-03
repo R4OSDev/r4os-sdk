@@ -64,7 +64,7 @@ const StaticBuild = struct {
             optimization: struct { default: enum { size, speed }, size: std.builtin.OptimizeMode, speed: std.builtin.OptimizeMode },
         },
         runtime: struct { optimize: std.builtin.OptimizeMode },
-        host: struct { optimize: std.builtin.OptimizeMode },
+        host: struct { optimize: std.builtin.OptimizeMode, debug_optimize: std.builtin.OptimizeMode, packager_optimize: std.builtin.OptimizeMode },
     },
 };
 
@@ -96,6 +96,8 @@ pub const defaults = blk: {
         .optimize_speed = module.optimization.speed,
         .runtime_optimize = root.codegen.runtime.optimize,
         .host_optimize = root.codegen.host.optimize,
+        .debug_optimize = root.codegen.host.debug_optimize,
+        .packager_optimize = root.codegen.host.packager_optimize,
     };
 };
 
@@ -205,4 +207,12 @@ pub fn cFlags(allocator: std.mem.Allocator) []const []const u8 {
         if (requirement.c_flag) |flag| result.append(allocator, flag) catch @panic("OOM");
     }
     return result.toOwnedSlice(allocator) catch @panic("OOM");
+}
+
+pub fn hostOptimize(b: *std.Build, fallback: std.builtin.OptimizeMode) std.builtin.OptimizeMode {
+    const mode = b.option(std.builtin.OptimizeMode, "optimize", "SDK-approved host optimization") orelse fallback;
+    for (get(codegen(b.allocator, "host"), "allowed_optimize_modes").array.items) |entry| {
+        if (std.mem.eql(u8, entry.string, @tagName(mode))) return mode;
+    }
+    @panic("SdkHostOptimizationOverride");
 }

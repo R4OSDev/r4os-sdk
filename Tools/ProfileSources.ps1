@@ -53,6 +53,7 @@ function Get-R4SdkSourceState([string]$Root) {
                 if($LASTEXITCODE -ne 0){throw 'SdkSourceCannotReadStatus'}
                 $files=@(& $git.Source -C $Root -c core.quotepath=false ls-files --cached --others --exclude-standard)
                 if($LASTEXITCODE -ne 0){throw 'SdkSourceCannotReadInputs'}
+                $files=@($files|Where-Object {Test-Path -LiteralPath (Join-Path $Root $_) -PathType Leaf})
                 return [ordered]@{kind='git';root=$Root;commit=$commit;dirty=($dirty.Count -ne 0);files=$files}
             }
         }

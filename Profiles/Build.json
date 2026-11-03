@@ -645,7 +645,18 @@
       ]
     },
     "host": {
-      "optimize": "ReleaseSafe"
+      "optimize": "ReleaseSafe",
+      "debug_optimize": "Debug",
+      "packager_optimize": "Debug",
+      "allowed_optimize_modes": [
+        "Debug",
+        "ReleaseSmall",
+        "ReleaseFast",
+        "ReleaseSafe"
+      ],
+      "owner_optimize": {
+        "r4os_contract": "Debug"
+      }
     },
     "runtime": {
       "optimize": "ReleaseSafe",
