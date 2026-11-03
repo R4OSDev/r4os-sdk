@@ -2583,9 +2583,8 @@
       "archive_format": "tar.gz"
     },
     "recovery-contract": {
-      "repository": "https://github.com/R4OSDev/r4os-contract.git",
-      "commit": "e9f97a6e66a3a1a4daf4e01e21518fdcb62d14cb",
-      "archive_sha256": "ca133da951fccd004564f8fc91325b3cd0c40d53db9a5cf2af3e8e2faab37f00",
+      "repository": "https://github.com/R4OSDev/r4os-recovery.git",
+      "commit": "c54a19a5e2a50a94ec2e78226c92ad428c3e26e2",
       "version": "0.64.11",
       "files": {
         "build.zig.zon": "9bc2b404852c0f7bbf60bed1943464dc5c1054c29ccf3e7f58ea7aba87b5856e"
@@ -2646,12 +2645,20 @@
         ]
       },
       "zig_archive_url": "https://github.com/R4OSDev/r4os-contract/archive/5521df06871b4cee158e44853db01380934d6c4c.tar.gz",
-      "zig_hash": "r4os_contract-0.64.11-ELhbYa_UcgBuo-SnWc6plpYE5WHMo3UJlk7o7Daeerdo"
+      "zig_hash": "r4os_contract-0.64.11-ELhbYa_UcgBuo-SnWc6plpYE5WHMo3UJlk7o7Daeerdo",
+      "provenance": {
+        "repository": "https://github.com/R4OSDev/r4os-contract.git",
+        "commit": "e9f97a6e66a3a1a4daf4e01e21518fdcb62d14cb",
+        "archive_sha256": "ca133da951fccd004564f8fc91325b3cd0c40d53db9a5cf2af3e8e2faab37f00",
+        "version": "0.64.11"
+      },
+      "source_subdir": "Platform/Contract",
+      "archive_url": "https://github.com/R4OSDev/r4os-recovery/archive/c54a19a5e2a50a94ec2e78226c92ad428c3e26e2.tar.gz",
+      "archive_format": "tar.gz"
     },
     "recovery-sdk": {
-      "repository": "https://github.com/R4OSDev/r4os-sdk.git",
-      "commit": "cfc6f470b2c7dd1ba173d52d2edf5ce68a9ed18c",
-      "archive_sha256": "d36bfbf6f046f5262a4965c331a07b17893ce2f7c6b76b1be4791e1ff920132e",
+      "repository": "https://github.com/R4OSDev/r4os-recovery.git",
+      "commit": "c54a19a5e2a50a94ec2e78226c92ad428c3e26e2",
       "version": "0.64.22",
       "files": {
         "build.zig.zon": "73f65a8fa5053092daab768e8435464714ef2ec73e90e353231290f9eb2ae5a4"
@@ -2971,14 +2978,25 @@
           "r4os/web_url.zig",
           "r4os/zip.zig"
         ]
-      }
+      },
+      "provenance": {
+        "repository": "https://github.com/R4OSDev/r4os-sdk.git",
+        "commit": "cfc6f470b2c7dd1ba173d52d2edf5ce68a9ed18c",
+        "archive_sha256": "d36bfbf6f046f5262a4965c331a07b17893ce2f7c6b76b1be4791e1ff920132e",
+        "version": "0.64.14"
+      },
+      "source_subdir": "Platform/SDK",
+      "archive_url": "https://github.com/R4OSDev/r4os-recovery/archive/c54a19a5e2a50a94ec2e78226c92ad428c3e26e2.tar.gz",
+      "archive_format": "tar.gz"
     },
     "recovery-libraries": {
       "repository": "https://github.com/R4OSDev/r4os-libraries.git",
       "commit": "1365e096dfb3f58aca3ef915db6566cef5b50b1f",
       "archive_sha256": "a9cfa1ff990562ce6ee9339e53f8397cd1cf34b4b7c6a6e83d138dbf71237f4f",
       "version": "0.2.0",
-      "files": {}
+      "files": {},
+      "archive_url": "https://raw.githubusercontent.com/R4OSDev/r4os-recovery/c54a19a5e2a50a94ec2e78226c92ad428c3e26e2/Legal/Sources/Libraries.zip",
+      "archive_format": "zip"
     }
   },
   "libraries": {

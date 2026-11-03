@@ -62,6 +62,7 @@ function Get-R4SdkSourceState([string]$Root) {
 
 function Get-R4SdkRepositoryBinding([string]$Id, [string]$Root, $Expected, [bool]$Development) {
     if($Root -and (Test-Path -LiteralPath $Root -PathType Leaf) -and $Expected.Contains('archive_sha256')){
+        if($Expected.Contains('tree')){throw "SdkSourceExtractedTreeRequired: $Id"}
         $actual=(Get-FileHash -LiteralPath $Root -Algorithm SHA256).Hash.ToLowerInvariant()
         if($actual -cne $Expected.archive_sha256){throw "SdkSourceArchiveMismatch: $Id"}
         return [ordered]@{id=$Id;root=[IO.Path]::GetFullPath($Root);kind='archive';commit=$Expected.commit;dirty=$false;

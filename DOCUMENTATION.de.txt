@@ -1,4 +1,4 @@
-R4OS SDK
+﻿R4OS SDK
 ========
 
 Dieses Repository enthaelt das hostneutrale Kern-SDK von R4OS: Zig- und
@@ -1454,3 +1454,12 @@ The historical SNES Write and placement-wake investigations0.88.88/101 were
 explicitly discarded by the user01.11.2026; their causes remain unknown.
 Package validation does not imply a fix for these historical findings,
 Windows execution, native Rust compilation or physical GPU/audio hardware.
+
+Paketanschluss ab SDK0.64.144
+----------------------------
+Tools/Package.ps1 Describe erzeugt den compilerfreien Schema1-Paketanschluss
+aus den drei Originaldateien. Manifest bindet saubere Quellen und Assethashes
+ohne Selbsthashkreis; Verify prueft den heruntergeladenen/entpackten Satz.
+RootsFile/Assetzuordnung nennen Orte und Transport, keine eigene Politik.
+Schema3-capabilities enthaelt build_profiles/component_sets/profile_sources.
+Anleitung: Docs/SDK/Profiles.txt; finale Studio-/Server-Uebergabe in 0.89.37.

@@ -87,10 +87,20 @@ function Read-R4SdkProfiles([string]$SdkRoot) {
     }
     foreach ($id in $components.repositories.Keys) {
         $source = $components.repositories[$id]
-        Assert-R4ProfileKeys $source @('repository', 'commit', 'version', 'files', 'archive_sha256', 'archive_url', 'zig_archive_url', 'archive_format', 'zig_hash', 'tree') "repositories.$id"
+        Assert-R4ProfileKeys $source @('repository', 'commit', 'version', 'files', 'archive_sha256', 'archive_url', 'zig_archive_url', 'archive_format', 'zig_hash', 'tree', 'source_subdir', 'provenance') "repositories.$id"
         if ($source.repository -cnotmatch '^https://[^\s]+$' -or
             $source.commit -cnotmatch '^[0-9a-f]{40}$' -or
             $source.version -cnotmatch '^\d+\.\d+\.\d+$') { throw "SdkProfileInvalidSource: $id" }
+        if($source.Contains('source_subdir')){
+            $relative=$source.source_subdir
+            if(!$relative -or [IO.Path]::IsPathRooted($relative) -or $relative.Contains('\') -or
+               $relative.Split('/') -contains '..' -or $relative.Split('/') -contains '.' -or $relative.Split('/') -contains ''){throw "SdkProfileInvalidSourceSubdir: $id"}
+        }
+        if($source.Contains('provenance')){
+            Assert-R4ProfileKeys $source.provenance @('repository','commit','version','archive_sha256') "$id.provenance"
+            if($source.provenance.repository -cnotmatch '^https://[^\s]+$' -or $source.provenance.commit -cnotmatch '^[0-9a-f]{40}$' -or
+               $source.provenance.version -cnotmatch '^\d+\.\d+\.\d+$' -or $source.provenance.archive_sha256 -cnotmatch '^[0-9a-f]{64}$'){throw "SdkProfileInvalidProvenance: $id"}
+        }
         Assert-R4ProfileJsonObject $source.files "$id.files"
         foreach ($path in $source.files.Keys) {
             if ([IO.Path]::IsPathRooted($path) -or $path.Contains('\') -or

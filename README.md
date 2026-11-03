@@ -1,4 +1,4 @@
-# R4OS SDK
+﻿# R4OS SDK
 
 The host-neutral R4OS SDK provides Zig, Rust and C module roots, current
 platform and library helpers, build profiles and general project templates.
@@ -1284,3 +1284,13 @@ The historical SNES Write and placement-wake investigations0.88.88/101 were
 explicitly discarded by the user01.11.2026; their causes remain unknown.
 Package validation does not imply a fix for these historical findings,
 Windows execution, native Rust compilation or physical GPU/audio hardware.
+
+SDK package interface (0.64.144)
+-------------------------------
+Tools/Package.ps1 -Action Describe reads the three original profiles without
+a compiler. Manifest binds clean sources and matching assets; Verify checks
+the downloaded/extracted set. This is derived schema1 metadata, not another
+profile authority. Schema3 capabilities includes build_profiles,
+component_sets and profile_sources. Generated project starters forward
+LibrariesRoot, DevelopmentProfile and AdditionalLibrariesFile. Studio selects
+the SDK/profile; Server serves the immutable matching original assets.

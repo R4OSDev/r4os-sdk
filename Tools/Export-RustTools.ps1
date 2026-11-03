@@ -52,7 +52,12 @@ function Source-Hash([string]$Root,[string]$Relative){
     return Get-R4SdkBytesDigest $Relative ([byte[]](Source-Bytes $Root $Relative))
 }
 function Source-Files([string]$Root,[string]$Directory){
-    if($Technical){return @(Get-ChildItem -LiteralPath (Join-Path $Root $Directory) -File -Recurse|Sort-Object FullName|ForEach-Object {[IO.Path]::GetRelativePath($Root,$_.FullName).Replace('\','/')})}
+    if($Technical){
+        # Development inputs include new source files, never ignored compiler
+        # caches below a tool project. Deleted files cannot be exported.
+        $state=Get-R4SdkSourceState $Root
+        return @($state.files|Where-Object { $_.StartsWith($Directory+'/',[StringComparison]::Ordinal) -and (Test-Path -LiteralPath (Join-Path $Root $_) -PathType Leaf) })
+    }
     $files=@(& git -C $Root -c core.quotepath=false ls-files -- $Directory);if($LASTEXITCODE -ne 0){throw 'Cannot enumerate canonical source inputs.'}
     return $files
 }
@@ -146,7 +151,7 @@ if($LibraryContractLinux){
     Copy-Input $LibraryContractWindows 'bin/x86_64-pc-windows-msvc/r4l-contract-gen.exe'
 }
 if($IsLinux){
-    $linuxExecutables=@('Setup/Rust.sh','bin/x86_64-unknown-linux-gnu/r4xbuilder','bin/x86_64-unknown-linux-gnu/module-catalog')
+    $linuxExecutables=@('Setup/Rust.sh','Setup/Setup.sh','bin/x86_64-unknown-linux-gnu/r4xbuilder','bin/x86_64-unknown-linux-gnu/module-catalog')
     if($LibraryContractLinux){$linuxExecutables+='bin/x86_64-unknown-linux-gnu/r4l-contract-gen'}
     $linuxPaths=@($linuxExecutables|ForEach-Object {Join-Path $Destination $_})
     & chmod 755 @linuxPaths
@@ -162,7 +167,8 @@ foreach($name in @('Linux','Windows')){
     if($LibraryContractLinux){$hosts[$name]['r4l_contract_generator']="bin/$hostTriple/r4l-contract-gen$suffix"}
 }
 $sdkInputs=@(foreach($relative in @('Profiles/Build.json','Profiles/Tools.json','Profiles/Components.json','Tools/ProfileData.ps1','build.zig.zon','r4os/module_manifest.zig','r4os/import_spec.zig','r4os/startup_metadata.zig','r4os/module_capabilities.zig','r4os/rust_project.zig','r4os/rust_module_profile.json','r4os/rust_qualification.json','r4os/linker/r4os_module.ld','r4os/heap_runtime.zig','r4os/vm_allocator.zig','r4os/allocator_wait.zig','r4os/build.zig','Tools/ModuleCatalog/src/main.zig','Tools/ModuleCatalog/src/capabilities.zig','Tools/R4XBuilder/src/main.zig','Tools/Build-RustModule.ps1','Tools/RustBuildInputs.ps1','Tools/New-RustProject.ps1','Tools/New-Project.ps1','Tools/Build-Project.ps1','Tools/MatchedComponents.ps1','Inventory/LanguageParity.json','Rust/Cargo.toml')){@{path=$relative;sha256=Source-Hash $SdkRoot $relative}}
-    foreach($directory in @('Rust/src','Templates','Shared/C','Shared/Generated/R4STD_Grapheme','r4os','Tools/CFacadeGen','Tools/NetBridgeGen','Tools/GuiBridgeGen','Tools/DataBridgeGen','Tools/R4LContractGen','Tools/ModuleCatalog','Tools/ManifestProject')){foreach($relative in Source-Files $SdkRoot $directory){@{path=$relative;sha256=Source-Hash $SdkRoot $relative}}})
+    foreach($directory in @('Rust/src','Templates','Shared/C','Shared/Generated/R4STD_Grapheme','r4os','Tools')){foreach($relative in Source-Files $SdkRoot $directory){@{path=$relative;sha256=Source-Hash $SdkRoot $relative}}})
+$sdkInputs=@($sdkInputs|Sort-Object -Property path -Unique)
 $contractInputs=@(foreach($relative in @('build.zig.zon','Module/CpuBaseline.json','Generated/SDK/Rust/Cargo.toml','Generated/SDK/Rust/src/lib.rs')){@{path=$relative;sha256=Source-Hash $ContractRoot $relative}}
     foreach($directory in @('Generated/SDK/C','Generated/SDK/Zig')){foreach($relative in Source-Files $ContractRoot $directory){@{path=$relative;sha256=Source-Hash $ContractRoot $relative}}})
 $files=@(foreach($dir in @('Setup','Profile','Profiles','bin','Runtime')){Get-ChildItem -LiteralPath (Join-Path $Destination $dir) -File -Recurse|Sort-Object FullName|ForEach-Object {@{path=[IO.Path]::GetRelativePath($Destination,$_.FullName).Replace('\','/');bytes=$_.Length;sha256=Hash $_.FullName}}})
@@ -170,7 +176,7 @@ $files+=@{path='build.zig.zon';bytes=([IO.FileInfo](Join-Path $Destination 'buil
 $exportedRustProfile=[ordered]@{schema=1;id=$pin.profiles.sdk.id;scope='pinned tools, not a Rust module build capability';technical=[bool]$Technical;
     source_hash_mode='r4os-files-sha256-lf-v1';sdk=@{version=Version $SdkRoot;source=$sdkSource;inputs=$sdkInputs;rust_crate=Crate $SdkRoot 'Rust/Cargo.toml';packager_source_sha256=Source-Hash $SdkRoot 'Tools/R4XBuilder/src/main.zig'};
     contract=@{version=Version $ContractRoot;source=$contractSource;inputs=$contractInputs;binding_crate=Crate $ContractRoot 'Generated/SDK/Rust/Cargo.toml';cpu_baseline='Profile/CpuBaseline.json'};
-    profile_sources=$sdkProfiles.hashes;rust_version=$pin.rust_version;cargo_version=$pin.cargo_version;rustup_version=$pin.rustup_version;
+    profile_sources=$sdkProfiles.hashes;build_profiles=$sdkProfiles.Build.profiles;component_sets=$sdkProfiles.Components.sets;rust_version=$pin.rust_version;cargo_version=$pin.cargo_version;rustup_version=$pin.rustup_version;
     release_manifest=@{path='Profile/rust-release.toml';url="https://static.rust-lang.org/dist/channel-rust-$($pin.rust_version).toml";sha256=$pin.manifest_sha256};
     bare_target=$pin.kernel_target;hosts=$hosts;runtime=@{
         heap=@{path='Runtime/r4sdk_heap.o';sha256=Hash $HeapRuntime;cpu_baseline_sha256=Source-Hash $ContractRoot 'Module/CpuBaseline.json'};

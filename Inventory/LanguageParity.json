@@ -55978,7 +55978,7 @@
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.89.32",
+    "reviewed_in": "0.89.33",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -57699,7 +57699,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/Build-Project.ps1",
-        "sha256": "01abc8cbe3c1d736a3e8e0ad387e17df8e6460b1ada89cf67da2ec1015d418b6"
+        "sha256": "d8b49b05c47516475ecd96c5c1cbb0d2839f25f8024d92ff573a96d1b63cb52c"
       },
       {
         "path": "Repositories/SDK/Tools/Build-RustModule.ps1",
@@ -57735,7 +57735,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/Export-RustTools.ps1",
-        "sha256": "b9480bc5b3b900253afa26f433aae499a3433be848402f9fbf49a561d5e77d9c"
+        "sha256": "0ec1f279805ab9f5d37e003b25a9eb6dea1f239afdc32bd4807b9213699fc6ca"
       },
       {
         "path": "Repositories/SDK/Tools/GuiBridgeGen/src/c_header.zig",
@@ -57755,7 +57755,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/ModuleCatalog/src/capabilities.zig",
-        "sha256": "b76bc48d86afc3c8d3305985791261eec4e18a82f8444e7762f526d388ee021b"
+        "sha256": "c22fdf0059a7a96568e660869f171ccfabfd13b09245da290a1616b9691c5aa2"
       },
       {
         "path": "Repositories/SDK/Tools/ModuleCatalog/src/main.zig",
@@ -57778,12 +57778,16 @@
         "sha256": "5d57087da566c5cee25657b0d1f6f57860537d752eb7429e1b8709503fafec72"
       },
       {
+        "path": "Repositories/SDK/Tools/Package.ps1",
+        "sha256": "d8402e2d1ee0f33ed48c1aa7b639e8a3d9946038278a54d76c5220bad6545792"
+      },
+      {
         "path": "Repositories/SDK/Tools/Profile.ps1",
         "sha256": "6703131fe5084817cfc3df30fec9df2e666e6cdc441b8fed10deb879e4a42b57"
       },
       {
         "path": "Repositories/SDK/Tools/ProfileData.ps1",
-        "sha256": "f115ec3ec234edf7a2af2ff88309748961a567f15b8a4fe52584deab1271820d"
+        "sha256": "5efbff1299e3266ba68f058dad31bad10a97d9ee0322bfa418ded5e632bf4b65"
       },
       {
         "path": "Repositories/SDK/Tools/ProfileResolver.ps1",
@@ -57791,7 +57795,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/ProfileSources.ps1",
-        "sha256": "2d9590387c0b38f3bfef45e4aa070d4096d27cf14c8aa596de507bc6efc5f7c3"
+        "sha256": "9ecd461388582618c96a6bfe9d2b9a810fd860dd9ad4bd8e34c39898f25130e4"
       },
       {
         "path": "Repositories/SDK/Tools/R4LContractGen/build.zig",
@@ -57939,7 +57943,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "d2fd533d5beb49556d4b2494e0de2a1e13203642d3784618b1b6e667478f01a3"
+        "sha256": "bdbb67dfdd6c0de7282b893c02069d9501f14ca9d743701b0b32be75e4ffffe5"
       },
       {
         "path": "Repositories/SDK/r4os.zig",

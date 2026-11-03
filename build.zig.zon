@@ -1,6 +1,6 @@
 .{
     .name = .r4os_sdk,
-    .version = "0.64.143",
+    .version = "0.64.144",
     .fingerprint = 0x8e8330db02f37336,
     .minimum_zig_version = "0.16.0",
     .dependencies = .{
@@ -23,6 +23,7 @@
         "NOTICE",
         "build.zig",
         "build.zig.zon",
+        "Build.ps1",
         "Build.bat",
         "Build.sh",
         "Settings.R4S",

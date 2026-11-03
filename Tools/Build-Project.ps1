@@ -45,10 +45,11 @@ try{
     $receipt=Join-Path $OutputRoot 'build.json';[IO.File]::Delete($receipt)
     [IO.File]::WriteAllText($marker,(@{schema=1;project=$ProjectRoot;artifact='';status='building'}|ConvertTo-Json),$utf8)
     $profile=Read-SdkMatchedComponents $SdkRoot $ContractRoot $ToolsRoot $Technical.IsPresent
-    $context=Get-R4SdkBuildContext $SdkRoot $ContractRoot $LibrariesRoot $(if($InstallRoot){$InstallRoot}else{$ToolsRoot}) $ZigRoot -DevelopmentProfile $DevelopmentProfile
+    $profileId=if([IO.File]::ReadAllText($manifest) -cmatch '(?m)^LANGUAGE=C\s*$'){'r4os-c-module-v1'}else{'r4os-zig-module-v1'}
+    $context=Get-R4SdkBuildContext $SdkRoot $ContractRoot $LibrariesRoot $(if($InstallRoot){$InstallRoot}else{$ToolsRoot}) $ZigRoot -Profile $profileId -DevelopmentProfile $DevelopmentProfile
     Assert-R4SdkBuildArguments $context $BuildArguments
     Assert-R4SdkProjectPins $SdkRoot $ProjectRoot
-    if($AdditionalLibrariesFile){$extras=Get-Content -Raw -LiteralPath $AdditionalLibrariesFile|ConvertFrom-Json -AsHashtable -NoEnumerate;$null=Resolve-R4SdkComponents -SdkRoot $SdkRoot -Profile 'r4os-zig-module-v1' -Roots @{contract=$ContractRoot;libraries=$LibrariesRoot} -DevelopmentProfile $DevelopmentProfile -AdditionalLibraries $extras}
+    if($AdditionalLibrariesFile){$extras=Get-Content -Raw -LiteralPath $AdditionalLibrariesFile|ConvertFrom-Json -AsHashtable -NoEnumerate;$null=Resolve-R4SdkComponents -SdkRoot $SdkRoot -Profile $profileId -Roots @{contract=$ContractRoot;libraries=$LibrariesRoot} -DevelopmentProfile $DevelopmentProfile -AdditionalLibraries $extras}
     $hostName=if($IsWindows){'Windows'}elseif($IsLinux){'Linux'}else{throw 'Unsupported host.'}
     $catalog=Get-SdkMatchedTool $ToolsRoot $profile $profile.hosts[$hostName].catalog
     $plan=@(& $catalog plan --manifest $manifest 2>&1);if($LASTEXITCODE -ne 0){throw ($plan -join "`n")};$facts=(($plan -join "`n")|ConvertFrom-Json -AsHashtable).plan

@@ -231,6 +231,9 @@ pub fn render(a: std.mem.Allocator, io: std.Io, cwd: std.Io.Dir, selected_profil
     const data = .{
         .schema = @as(u32, 3),
         .interface = "r4os-sdk-capabilities",
+        .profile_sources = try object(profile, "profile_sources"),
+        .build_profiles = try object(profile, "build_profiles"),
+        .component_sets = try object(profile, "component_sets"),
         .profile = capabilities.rust_profile,
         .sdk = try object(profile, "sdk"),
         .contract = try object(profile, "contract"),
