@@ -25,7 +25,7 @@ $StorageRuntime=[IO.Path]::GetFullPath($StorageRuntime,$workspace)
 . (Join-Path $PSScriptRoot 'ProfileData.ps1')
 $sdkProfiles=Read-R4SdkProfiles $SdkRoot
 $pin=$sdkProfiles.Tools.tools.rust
-if(!$CacheRoot){$CacheRoot=Join-Path $SdkRoot '.Cache/Rust'}
+if(!$CacheRoot){$CacheRoot=Join-Path $SdkRoot '.Installed/.Cache/Rust'}
 if(!$ReleaseManifest){$ReleaseManifest=Join-Path $CacheRoot ('channel-rust-'+$pin.rust_version+'.toml')}
 $ReleaseManifest=[IO.Path]::GetFullPath($ReleaseManifest,$workspace)
 $utf8=[Text.UTF8Encoding]::new($false)
@@ -126,7 +126,7 @@ Copy-Source $ContractRoot 'Module/CpuBaseline.json' 'Profile/CpuBaseline.json'
 [IO.File]::WriteAllText((Join-Path $Destination 'Profile/ZigToolchain.json'),($sdkProfiles.Tools.tools.zig|ConvertTo-Json -Depth 100)+"`n",$utf8)
 Copy-Source $SdkRoot 'r4os/rust_qualification.json' 'Profile/RustQualification.json'
 Copy-Source $SdkRoot 'Inventory/LanguageParity.json' 'Profile/LanguageParity.json'
-Copy-Source $SdkRoot 'r4os/rust_module_profile.json' 'Profile/RustModuleProfile.json'
+[IO.File]::WriteAllText((Join-Path $Destination 'Profile/RustModuleProfile.json'),($sdkProfiles.Build.codegen['rust-module']|ConvertTo-Json -Depth 100)+"`n",$utf8)
 $templateSource=Join-Path $SdkRoot 'Templates';$templateDestination=Join-Path $Destination 'Profile/Templates'
 if(Test-Path -LiteralPath $templateDestination){Remove-Item -LiteralPath $templateDestination -Recurse -Force}
 foreach($relative in Source-Files $SdkRoot 'Templates'){Copy-Source $SdkRoot $relative ('Profile/'+$relative)}

@@ -1,4 +1,5 @@
 const std = @import("std");
+const sdk_profiles = @import("r4os/build_profile.zig");
 const r4os_build = @import("r4os/build.zig");
 
 pub const build_api = r4os_build;
@@ -38,15 +39,15 @@ pub fn build(b: *std.Build) void {
     }
     if (b.option(bool, "catalog-only", "Build only the selected host ModuleCatalog") orelse false) {
         const target = b.standardTargetOptions(.{});
-        const bundle = b.createModule(.{ .root_source_file = b.path("r4os/r4cp_convert.zig"), .target = target, .optimize = .ReleaseSafe });
+        const bundle = b.createModule(.{ .root_source_file = b.path("r4os/r4cp_convert.zig"), .target = target, .optimize = sdk_profiles.defaults.host_optimize });
         bundle.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
-        const root = b.createModule(.{ .root_source_file = b.path("Tools/ModuleCatalog/src/main.zig"), .target = target, .optimize = .ReleaseSafe });
+        const root = b.createModule(.{ .root_source_file = b.path("Tools/ModuleCatalog/src/main.zig"), .target = target, .optimize = sdk_profiles.defaults.host_optimize });
         root.addImport("contract_bundle", bundle);
         b.installArtifact(b.addExecutable(.{ .name = "module-catalog", .root_module = root }));
         return;
     }
     if (b.option(bool, "r4l-contract-generator-only", "Build only the selected host library contract generator") orelse false) {
-        const root = b.createModule(.{ .root_source_file = b.path("Tools/R4LContractGen/src/main.zig"), .target = b.standardTargetOptions(.{}), .optimize = .ReleaseSafe });
+        const root = b.createModule(.{ .root_source_file = b.path("Tools/R4LContractGen/src/main.zig"), .target = b.standardTargetOptions(.{}), .optimize = sdk_profiles.defaults.host_optimize });
         b.installArtifact(b.addExecutable(.{ .name = "r4l-contract-gen", .root_module = root }));
         return;
     }
@@ -58,7 +59,7 @@ pub fn build(b: *std.Build) void {
     }
 
     if (b.option(bool, "r4l-provider-tests-only", "Only current manifest/library contract tests") orelse false) {
-        const root = b.createModule(.{ .root_source_file = b.path("r4os/module_manifest.zig"), .target = b.graph.host, .optimize = .ReleaseSafe });
+        const root = b.createModule(.{ .root_source_file = b.path("r4os/module_manifest.zig"), .target = b.graph.host, .optimize = sdk_profiles.defaults.host_optimize });
         root.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
         const manifest_tests = b.addRunArtifact(b.addTest(.{ .root_module = root }));
         const contract_tests = b.addRunArtifact(b.addTest(.{ .root_module = sdk_profile.r4l_contract_generator.?.root_module }));
@@ -71,10 +72,10 @@ pub fn build(b: *std.Build) void {
     if (b.option(bool, "update-owner-tests-only", "Run only existing update/catalog/journal owner cases") orelse false) {
         const json_file = update_json_core orelse @panic("update-owner-tests-only requires -Dupdate-json-core=<original JSON core path>");
         const target = b.resolveTargetQuery(.{ .cpu_arch = .x86_64, .os_tag = b.graph.host.result.os.tag, .abi = b.graph.host.result.abi, .cpu_model = .baseline });
-        const cases = b.createModule(.{ .root_source_file = b.path("test_update_owners.zig"), .target = target, .optimize = .ReleaseSafe });
+        const cases = b.createModule(.{ .root_source_file = b.path("test_update_owners.zig"), .target = target, .optimize = sdk_profiles.defaults.host_optimize });
         cases.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
-        cases.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = target, .optimize = .ReleaseSafe }));
-        cases.addImport("json_core", b.createModule(.{ .root_source_file = .{ .cwd_relative = json_file }, .target = target, .optimize = .ReleaseSafe }));
+        cases.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = target, .optimize = sdk_profiles.defaults.host_optimize }));
+        cases.addImport("json_core", b.createModule(.{ .root_source_file = .{ .cwd_relative = json_file }, .target = target, .optimize = sdk_profiles.defaults.host_optimize }));
         const selected = b.addRunArtifact(b.addTest(.{ .root_module = cases, .filters = @import("Tests/Simulation/UpdateFilters.zig").names }));
         b.getInstallStep().dependOn(&selected.step);
         return;
@@ -91,9 +92,9 @@ pub fn build(b: *std.Build) void {
     }
     if (b.option(bool, "subsystem-owner-tests-only", "Only current subsystem owner and configuration cases") orelse false) {
         const target = b.resolveTargetQuery(.{ .cpu_arch = .x86_64, .os_tag = b.graph.host.result.os.tag, .abi = b.graph.host.result.abi, .cpu_model = .baseline });
-        const cases = b.createModule(.{ .root_source_file = b.path("test_subsystem_owners.zig"), .target = target, .optimize = .ReleaseSafe });
+        const cases = b.createModule(.{ .root_source_file = b.path("test_subsystem_owners.zig"), .target = target, .optimize = sdk_profiles.defaults.host_optimize });
         cases.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
-        cases.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = target, .optimize = .ReleaseSafe }));
+        cases.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = target, .optimize = sdk_profiles.defaults.host_optimize }));
         const selected = b.addRunArtifact(b.addTest(.{ .root_module = cases, .filters = @import("Tests/Simulation/SubsystemFilters.zig").names }));
         b.getInstallStep().dependOn(&selected.step);
         return;
@@ -113,7 +114,7 @@ pub fn build(b: *std.Build) void {
         const root = b.createModule(.{ .root_source_file = b.path("Tools/DataBridgeGen/src/main.zig"), .target = b.graph.host, .optimize = .Debug, .strip = true });
         const schema = b.createModule(.{ .root_source_file = b.path("r4os/subsystem_bridge_schema.zig"), .target = b.graph.host, .optimize = .Debug });
         schema.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
-        schema.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = b.graph.host, .optimize = .ReleaseSafe }));
+        schema.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = b.graph.host, .optimize = sdk_profiles.defaults.host_optimize }));
         const options = b.createModule(.{ .root_source_file = b.path("r4os/subsystem_bridge_names.zig"), .target = b.graph.host, .optimize = .Debug });
         options.addImport("schema", schema);
         root.addImport("schema", schema);
@@ -125,7 +126,7 @@ pub fn build(b: *std.Build) void {
         const root = b.createModule(.{ .root_source_file = b.path("Tools/DataBridgeGen/src/main.zig"), .target = b.graph.host, .optimize = .Debug, .strip = true });
         const schema = b.createModule(.{ .root_source_file = b.path("r4os/update_bridge_schema.zig"), .target = b.graph.host, .optimize = .Debug });
         schema.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
-        schema.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = b.graph.host, .optimize = .ReleaseSafe }));
+        schema.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = b.graph.host, .optimize = sdk_profiles.defaults.host_optimize }));
         const options = b.createModule(.{ .root_source_file = b.path("r4os/update_bridge_names.zig"), .target = b.graph.host, .optimize = .Debug });
         options.addImport("schema", schema);
         root.addImport("schema", schema);
@@ -137,7 +138,7 @@ pub fn build(b: *std.Build) void {
         const root = b.createModule(.{ .root_source_file = b.path("Tools/DataBridgeGen/src/main.zig"), .target = b.graph.host, .optimize = .Debug, .strip = true });
         const schema = b.createModule(.{ .root_source_file = b.path("r4os/transport_bridge_schema.zig"), .target = b.graph.host, .optimize = .Debug });
         schema.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
-        schema.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = b.graph.host, .optimize = .ReleaseSafe }));
+        schema.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = b.graph.host, .optimize = sdk_profiles.defaults.host_optimize }));
         const options = b.createModule(.{ .root_source_file = b.path("r4os/transport_bridge_names.zig"), .target = b.graph.host, .optimize = .Debug });
         options.addImport("schema", schema);
         root.addImport("schema", schema);
@@ -149,7 +150,7 @@ pub fn build(b: *std.Build) void {
         const root = b.createModule(.{ .root_source_file = b.path("Tools/DataBridgeGen/src/main.zig"), .target = b.graph.host, .optimize = .Debug, .strip = true });
         const schema = b.createModule(.{ .root_source_file = b.path("r4os/web_bridge_schema.zig"), .target = b.graph.host, .optimize = .Debug });
         schema.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
-        schema.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = b.graph.host, .optimize = .ReleaseSafe }));
+        schema.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = b.graph.host, .optimize = sdk_profiles.defaults.host_optimize }));
         const options = b.createModule(.{ .root_source_file = b.path("r4os/web_bridge_names.zig"), .target = b.graph.host, .optimize = .Debug });
         options.addImport("schema", schema);
         root.addImport("schema", schema);
@@ -167,7 +168,7 @@ pub fn build(b: *std.Build) void {
         const root = b.createModule(.{ .root_source_file = b.path("Tools/DataBridgeGen/src/main.zig"), .target = b.graph.host, .optimize = .Debug, .strip = true });
         const schema = b.createModule(.{ .root_source_file = b.path("r4os/data_bridge_schema.zig"), .target = b.graph.host, .optimize = .Debug });
         schema.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
-        schema.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = b.graph.host, .optimize = .ReleaseSafe }));
+        schema.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = b.graph.host, .optimize = sdk_profiles.defaults.host_optimize }));
         root.addImport("schema", schema);
         const options = b.createModule(.{ .root_source_file = b.path("Tools/DataBridgeGen/src/options.zig"), .target = b.graph.host, .optimize = .Debug });
         options.addImport("schema", schema);
@@ -248,22 +249,22 @@ pub fn build(b: *std.Build) void {
         const root = b.createModule(.{ .root_source_file = b.path("Tools/GuiBridgeGen/src/main.zig"), .target = b.graph.host, .optimize = .Debug });
         const schema = b.createModule(.{ .root_source_file = b.path("r4os/gui_bridge_schema.zig"), .target = b.graph.host, .optimize = .Debug });
         schema.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
-        schema.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = b.graph.host, .optimize = .ReleaseSafe }));
+        schema.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = b.graph.host, .optimize = sdk_profiles.defaults.host_optimize }));
         root.addImport("schema", schema);
         b.installArtifact(b.addExecutable(.{ .name = "gui-bridge-gen", .root_module = root }));
         return;
     }
     if (b.option(bool, "net-bridge-generator-only", "Build the compiler-typed SDK network bridge generator") orelse false) {
-        const root = b.createModule(.{ .root_source_file = b.path("Tools/NetBridgeGen/src/main.zig"), .target = b.graph.host, .optimize = .ReleaseSafe });
-        const bridge = b.createModule(.{ .root_source_file = b.path("r4os/net_bridge_support.zig"), .target = b.graph.host, .optimize = .ReleaseSafe });
+        const root = b.createModule(.{ .root_source_file = b.path("Tools/NetBridgeGen/src/main.zig"), .target = b.graph.host, .optimize = sdk_profiles.defaults.host_optimize });
+        const bridge = b.createModule(.{ .root_source_file = b.path("r4os/net_bridge_support.zig"), .target = b.graph.host, .optimize = sdk_profiles.defaults.host_optimize });
         bridge.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
-        bridge.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = b.graph.host, .optimize = .ReleaseSafe }));
+        bridge.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = b.graph.host, .optimize = sdk_profiles.defaults.host_optimize }));
         root.addImport("bridge", bridge);
         b.installArtifact(b.addExecutable(.{ .name = "net-bridge-gen", .root_module = root }));
         return;
     }
     if (b.option(bool, "facade-generator-only", "Build the compiler-typed SDK C/Rust facade projector") orelse false) {
-        const root = b.createModule(.{ .root_source_file = b.path("Tools/CFacadeGen/src/main.zig"), .target = b.graph.host, .optimize = .ReleaseSafe, .link_libc = true });
+        const root = b.createModule(.{ .root_source_file = b.path("Tools/CFacadeGen/src/main.zig"), .target = b.graph.host, .optimize = sdk_profiles.defaults.host_optimize, .link_libc = true });
         root.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
         root.addIncludePath(sdk_profile.profile.c_include_root);
         root.addIncludePath(sdk_profile.profile.contract_c_include_root);
@@ -285,7 +286,7 @@ pub fn build(b: *std.Build) void {
     b.step("r4l-contract-test", "Run the existing library contract generator cases").dependOn(&r4l_generator_tests.step);
 
     if (b.option(bool, "heap-host-test-only", "Build the native SDK heap object for its host interop test") orelse false) {
-        const root = b.createModule(.{ .root_source_file = b.path("r4os/heap_runtime.zig"), .target = b.graph.host, .optimize = .ReleaseSafe, .pic = true, .single_threaded = false, .stack_check = false });
+        const root = b.createModule(.{ .root_source_file = b.path("r4os/heap_runtime.zig"), .target = b.graph.host, .optimize = sdk_profiles.defaults.host_optimize, .pic = true, .single_threaded = false, .stack_check = false });
         root.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
         const object = b.addObject(.{ .name = "r4sdk_heap_host", .root_module = root });
         b.getInstallStep().dependOn(&b.addInstallFile(object.getEmittedBin(), "lib/r4sdk_heap_host.o").step);
@@ -322,9 +323,9 @@ pub fn build(b: *std.Build) void {
 
     const host_r4os = sdk_profile.createR4osModule(b.graph.host, .Debug);
     const data_target = b.resolveTargetQuery(.{ .cpu_arch = .x86_64, .os_tag = b.graph.host.result.os.tag, .abi = b.graph.host.result.abi, .cpu_model = .baseline });
-    const data_cases = b.createModule(.{ .root_source_file = b.path("test_owners.zig"), .target = data_target, .optimize = .ReleaseSafe });
+    const data_cases = b.createModule(.{ .root_source_file = b.path("test_owners.zig"), .target = data_target, .optimize = sdk_profiles.defaults.host_optimize });
     data_cases.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
-    data_cases.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = data_target, .optimize = .ReleaseSafe }));
+    data_cases.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = data_target, .optimize = sdk_profiles.defaults.host_optimize }));
     const data_tests = b.addRunArtifact(b.addTest(.{ .root_module = data_cases, .filters = &.{ "protocol status", "ZIP protocol status", "parse Windows ICO", "parse 8bpp", "bulk ICO", "raster ", "Encoding labels", "TextEncoder", "TextDecoder", "URL", "SHA-256 digest", "release and installed", "semantic versions", "R4M0 metadata", "metadata reads", "V2 derives profile", "contract plan is deterministic" } }));
     b.step("data-parity-test", "Existing bounded data, codec, raster, metadata and protocol facade owner cases").dependOn(&data_tests.step);
     const web_cases = data_cases;
@@ -351,10 +352,10 @@ pub fn build(b: *std.Build) void {
         "Headers preserves Set-Cookie",
     } }));
     b.step("transport-parity-test", "Existing bounded HTTP/cache/policy/resource/download owner cases").dependOn(&transport_tests.step);
-    const update_cases = b.createModule(.{ .root_source_file = b.path("test_update_owners.zig"), .target = data_target, .optimize = .ReleaseSafe });
+    const update_cases = b.createModule(.{ .root_source_file = b.path("test_update_owners.zig"), .target = data_target, .optimize = sdk_profiles.defaults.host_optimize });
     update_cases.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
-    update_cases.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = data_target, .optimize = .ReleaseSafe }));
-    if (update_json_core) |file| update_cases.addImport("json_core", b.createModule(.{ .root_source_file = .{ .cwd_relative = file }, .target = data_target, .optimize = .ReleaseSafe }));
+    update_cases.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = data_target, .optimize = sdk_profiles.defaults.host_optimize }));
+    if (update_json_core) |file| update_cases.addImport("json_core", b.createModule(.{ .root_source_file = .{ .cwd_relative = file }, .target = data_target, .optimize = sdk_profiles.defaults.host_optimize }));
     const update_tests = b.addRunArtifact(b.addTest(.{ .root_module = update_cases, .filters = @import("Tests/Simulation/UpdateFilters.zig").names }));
     b.step("update-parity-test", "Existing current update/catalog/journal/backup owner cases").dependOn(&update_tests.step);
     const gui_cases = b.createModule(.{ .root_source_file = b.path("Tests/Conformance/GuiFacadePrototype05824.zig"), .target = b.graph.host, .optimize = .Debug });
@@ -402,7 +403,7 @@ pub fn build(b: *std.Build) void {
         // Independent software SHA oracle; never select the host's optional
         // SHA backend while testing a synthetic executor and its rollback.
         .target = b.resolveTargetQuery(.{ .cpu_arch = .x86_64, .os_tag = b.graph.host.result.os.tag, .abi = b.graph.host.result.abi, .cpu_model = .baseline }),
-        .optimize = .ReleaseSafe,
+        .optimize = sdk_profiles.defaults.host_optimize,
     });
     cpu_tests_root.addImport("r4os_contract", sdk_profile.profile.contract_module);
     const cpu_tests = b.addRunArtifact(b.addTest(.{ .root_module = cpu_tests_root }));
@@ -410,7 +411,7 @@ pub fn build(b: *std.Build) void {
     const entropy_tests_root = b.createModule(.{
         .root_source_file = b.path("r4os/secure_random.zig"),
         .target = b.resolveTargetQuery(.{ .cpu_arch = .x86_64, .os_tag = b.graph.host.result.os.tag, .abi = b.graph.host.result.abi, .cpu_model = .baseline }),
-        .optimize = .ReleaseSafe,
+        .optimize = sdk_profiles.defaults.host_optimize,
     });
     entropy_tests_root.addImport("r4os_contract", sdk_profile.profile.contract_module);
     const entropy_tests = b.addRunArtifact(b.addTest(.{ .root_module = entropy_tests_root }));
@@ -522,7 +523,7 @@ pub fn build(b: *std.Build) void {
     const input_events_root = b.createModule(.{
         .root_source_file = b.path("r4os/input_events_tests.zig"),
         .target = b.graph.host,
-        .optimize = .ReleaseSafe,
+        .optimize = sdk_profiles.defaults.host_optimize,
     });
     input_events_root.addImport("r4os_contract", sdk_profile.profile.contract_module);
     const input_events_tests = b.addRunArtifact(b.addTest(.{ .root_module = input_events_root }));

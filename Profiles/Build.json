@@ -22,7 +22,8 @@
       "role": "module",
       "codegen": "rust-module",
       "toolset": "core",
-      "components": "system"
+      "components": "system",
+      "kind": "R4X"
     },
     "r4os-kernel-rust-v1": {
       "language": "Rust",
@@ -51,6 +52,38 @@
       "codegen": "host",
       "toolset": "core",
       "components": "system"
+    },
+    "r4os-rust-r4x-lowlevel-v1": {
+      "language": "Rust",
+      "role": "module",
+      "codegen": "rust-module",
+      "toolset": "core",
+      "components": "system",
+      "kind": "R4X"
+    },
+    "r4os-rust-r4l-v1": {
+      "language": "Rust",
+      "role": "module",
+      "codegen": "rust-module",
+      "toolset": "core",
+      "components": "system",
+      "kind": "R4L"
+    },
+    "r4os-rust-r4d-v1": {
+      "language": "Rust",
+      "role": "module",
+      "codegen": "rust-module",
+      "toolset": "core",
+      "components": "system",
+      "kind": "R4D"
+    },
+    "r4os-rust-r4p-v1": {
+      "language": "Rust",
+      "role": "module",
+      "codegen": "rust-module",
+      "toolset": "core",
+      "components": "system",
+      "kind": "R4P"
     }
   },
   "cpu_baselines": {
@@ -135,7 +168,8 @@
           "zig_features": [
             "sse2"
           ],
-          "c_flag": "-msse2"
+          "c_flag": "-msse2",
+          "rust_feature": "sse2"
         },
         {
           "name": "sse3",
@@ -198,7 +232,8 @@
           "zig_features": [
             "avx2"
           ],
-          "c_flag": "-mavx2"
+          "c_flag": "-mavx2",
+          "rust_feature": "avx2"
         },
         {
           "name": "aes",
@@ -209,7 +244,8 @@
           "zig_features": [
             "aes"
           ],
-          "c_flag": "-maes"
+          "c_flag": "-maes",
+          "rust_feature": "aes"
         },
         {
           "name": "pclmul",
@@ -220,7 +256,8 @@
           "zig_features": [
             "pclmul"
           ],
-          "c_flag": "-mpclmul"
+          "c_flag": "-mpclmul",
+          "rust_feature": "pclmulqdq"
         },
         {
           "name": "xsave",
@@ -270,7 +307,69 @@
         "default": "size",
         "size": "ReleaseSmall",
         "speed": "ReleaseFast"
-      }
+      },
+      "ir_flags": [
+        "-target",
+        "x86_64-freestanding-none",
+        "-fPIC",
+        "-mno-red-zone",
+        "-Xclang",
+        "-disable-llvm-passes",
+        "-c"
+      ],
+      "ir_optimization": {
+        "Debug": "-O0",
+        "ReleaseSmall": "-Oz",
+        "ReleaseFast": "-O3",
+        "ReleaseSafe": "-O3"
+      },
+      "project_c_flags": {
+        "allowed_exact": [
+          "-std=c11",
+          "-ffreestanding",
+          "-fno-builtin",
+          "-fno-stack-protector",
+          "-Xclang",
+          "-fstack-clash-protection",
+          "-fno-unwind-tables",
+          "-fno-asynchronous-unwind-tables",
+          "-mno-red-zone"
+        ],
+        "allowed_prefixes": [
+          "-W"
+        ],
+        "modules": {
+          "R4D:NVIDIA": [
+            "-std=gnu11",
+            "-g0",
+            "-fno-strict-aliasing",
+            "-fno-common",
+            "-mno-mmx",
+            "-mno-sse",
+            "-mno-sse2",
+            "-mno-avx",
+            "-mno-avx2"
+          ],
+          "R4L:R4GFX": [
+            "-std=c11",
+            "-fno-builtin",
+            "-fno-pic",
+            "-mcmodel=large"
+          ],
+          "R4L:R4FONT": [
+            "-fno-pic",
+            "-mcmodel=large"
+          ]
+        }
+      },
+      "allowed_optimize_modes": [
+        "ReleaseSmall",
+        "ReleaseFast",
+        "ReleaseSafe"
+      ],
+      "link_gc_sections": true,
+      "bundle_compiler_rt": true,
+      "link_libc": false
     },
     "rust-module": {
       "schema": 2,
@@ -301,9 +400,30 @@
       },
       "native_c": {
         "source": "R4MF SOURCE entries after Rust root",
-        "compiler": "explicit ZigRoot, matched Profile/ZigToolchain.json",
+        "compiler": "SDK Profiles/Tools.json tools.zig at an explicit matching installation root",
         "headers": "real compiler dep-info",
-        "c_build_rs": false
+        "c_build_rs": false,
+        "flags": [
+          "-target",
+          "x86_64-freestanding-none",
+          "-std=c11",
+          "-ffreestanding",
+          "-fno-builtin",
+          "-fno-stack-protector",
+          "-Xclang",
+          "-fstack-clash-protection",
+          "-fno-unwind-tables",
+          "-fno-asynchronous-unwind-tables",
+          "-mno-red-zone",
+          "-fPIC",
+          "-ffunction-sections",
+          "-fdata-sections",
+          "-g0"
+        ],
+        "optimization": {
+          "size": "-Oz",
+          "speed": "-O3"
+        }
       },
       "allocation": {
         "optional_sdk_feature": "alloc",
@@ -323,6 +443,29 @@
       "optimization": {
         "size": "z",
         "speed": "3"
+      },
+      "embed_bitcode": true,
+      "cargo_release": {
+        "PANIC": "abort",
+        "OVERFLOW_CHECKS": "true",
+        "DEBUG_ASSERTIONS": "false",
+        "DEBUG": "0",
+        "STRIP": "none"
+      },
+      "linker_flags": [
+        "-flavor",
+        "gnu",
+        "--emit-relocs",
+        "--gc-sections",
+        "--no-undefined",
+        "--strip-debug"
+      ],
+      "profile_ids": {
+        "app": "r4os-rust-r4x-v2",
+        "lowlevel": "r4os-rust-r4x-lowlevel-v1",
+        "library": "r4os-rust-r4l-v1",
+        "driver": "r4os-rust-r4d-v1",
+        "protocol": "r4os-rust-r4p-v1"
       }
     },
     "kernel": {
@@ -490,6 +633,36 @@
     },
     "host": {
       "optimize": "ReleaseSafe"
+    },
+    "runtime": {
+      "optimize": "ReleaseSafe",
+      "c_flags": [
+        "-std=c11",
+        "-ffreestanding",
+        "-fno-builtin",
+        "-fno-stack-protector",
+        "-fno-unwind-tables",
+        "-fno-asynchronous-unwind-tables",
+        "-mno-red-zone",
+        "-ffunction-sections",
+        "-fdata-sections"
+      ],
+      "probe_flags": [
+        "-Xclang",
+        "-fstack-clash-protection"
+      ],
+      "ir_flags": [
+        "-target",
+        "x86_64-freestanding-none",
+        "-O3",
+        "-fPIC",
+        "-mno-red-zone",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Xclang",
+        "-disable-llvm-passes",
+        "-c"
+      ]
     }
   },
   "native_c_profiles": {

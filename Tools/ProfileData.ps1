@@ -64,11 +64,12 @@ function Read-R4SdkProfiles([string]$SdkRoot) {
     }
     foreach ($id in $build.profiles.Keys) {
         $profile = $build.profiles[$id]
-        Assert-R4ProfileKeys $profile @('language', 'role', 'toolset', 'components', 'codegen', 'cpu') "profiles.$id"
+        Assert-R4ProfileKeys $profile @('language', 'role', 'toolset', 'components', 'codegen', 'cpu', 'kind') "profiles.$id"
         if ($profile.language -cnotin @('Zig', 'C', 'C++', 'Rust') -or
             $profile.role -cnotin @('module', 'kernel', 'recovery', 'native', 'host')) {
             throw "SdkProfileUnsupportedRole: $id"
         }
+        if($profile.Contains('kind') -and $profile.kind -cnotin @('R4X','R4L','R4D','R4P')){throw "SdkProfileUnsupportedKind: $id"}
         Assert-R4ProfileReference $tools.toolsets $profile.toolset "$id.toolset"
         Assert-R4ProfileReference $components.sets $profile.components "$id.components"
         Assert-R4ProfileReference $build.codegen $profile.codegen "$id.codegen"
@@ -140,5 +141,17 @@ function Get-R4SdkBuildProfile([string]$SdkRoot, [string]$Id) {
         build=$profile; codegen=$data.Build.codegen[$profile.codegen]
         toolset=$data.Tools.toolsets[$profile.toolset]
         components=$data.Components.sets[$profile.components]
+    }
+}
+
+function Assert-R4SdkProjectCFlags($Data, [string]$Kind, [string]$Name, $Flags) {
+    $policy=$Data.Build.codegen.module.project_c_flags
+    $specific=@()
+    $key=$Kind+':'+$Name
+    if($policy.modules.Contains($key)){$specific=@($policy.modules[$key])}
+    foreach($flag in $Flags){
+        $admitted=($flag -cin $policy.allowed_exact -or $flag -cin $specific)
+        foreach($prefix in $policy.allowed_prefixes){if($flag.StartsWith($prefix,[StringComparison]::Ordinal)){$admitted=$true}}
+        if(!$admitted){throw "SdkProfileCFlagOverride: $key $flag"}
     }
 }

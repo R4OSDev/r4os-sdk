@@ -142,9 +142,13 @@ try{
         $contractReceipt=@{generator_sha256=Hash $generator;inputs=$contractInputs;exports=$facts.exports;checked=$true}
     }
     if(!$rust.host_build_qualified -and !$Technical){throw 'RustHostBuilderNotYetQualified'}
-    $codegenPath=Join-Path $SdkRoot 'r4os/rust_module_profile.json'
-    $codegen=Get-Content -Raw -LiteralPath $codegenPath|ConvertFrom-Json -AsHashtable
-    $expectedProfile=if($isLibrary){'r4os-rust-r4l-v1'}elseif($isDriver){'r4os-rust-r4d-v1'}elseif($isProtocol){'r4os-rust-r4p-v1'}elseif($facts.entry_mode -ceq 'lowlevel'){'r4os-rust-r4x-lowlevel-v1'}else{$codegen.id}
+    $codegenPath=Join-Path $SdkRoot 'Profiles/Build.json'
+    . (Join-Path $PSScriptRoot 'ProfileData.ps1')
+    $sdkProfiles=Read-R4SdkProfiles $SdkRoot
+    $codegen=$sdkProfiles.Build.codegen['rust-module']
+    Assert-R4SdkProjectCFlags $sdkProfiles $facts.kind $facts.name $rust.c_flags
+    $profileRole=if($isLibrary){'library'}elseif($isDriver){'driver'}elseif($isProtocol){'protocol'}elseif($facts.entry_mode -ceq 'lowlevel'){'lowlevel'}else{'app'}
+    $expectedProfile=$codegen.profile_ids[$profileRole]
     if($rust.schema -ne 2 -or $codegen.schema -ne 2 -or $rust.profile -cne $expectedProfile -or $codegen.target -cne $description.kernel_target){throw 'RustModuleProfileMismatch'}
     if($DependencyRootsJson){
         $decoded=ConvertFrom-Json -InputObject $DependencyRootsJson -NoEnumerate
@@ -182,21 +186,22 @@ try{
     $compiler=Join-Path $description.toolchain ('bin/rustc'+$(if($IsWindows){'.exe'}else{''}))
     $cargo=Join-Path $description.toolchain ('bin/cargo'+$(if($IsWindows){'.exe'}else{''}))
     $targetDir=Join-Path $CacheRoot ('Projects/'+[Convert]::ToHexString([Security.Cryptography.SHA256]::HashData([Text.Encoding]::UTF8.GetBytes($ProjectRoot+'|'+$description.toolset_manifest_sha256))).ToLowerInvariant())
-    $cpuPath=Join-Path $ContractRoot 'Module/CpuBaseline.json';$cpu=Get-Content -Raw -LiteralPath $cpuPath|ConvertFrom-Json -AsHashtable
+    $cpuPath=Join-Path $ContractRoot 'Module/CpuBaseline.json'
+    $cpu=$sdkProfiles.Build.cpu_baselines[$sdkProfiles.Build.profiles['r4os-zig-module-v1'].cpu]
     if((Hash $cpuPath) -cne $rustToolProfile.runtime.heap.cpu_baseline_sha256){throw 'HeapRuntimeCpuContractMismatch'}
     foreach($name in @('facades','storage')){if((Hash $cpuPath) -cne $rustToolProfile.runtime[$name].cpu_baseline_sha256){throw ('SdkRuntimeCpuContractMismatch: '+$name)}}
     if($cpu.format -ne 1 -or $cpu.xcr0_mask -ne 7){throw 'Unsupported CPU baseline'}
-    $mapping=@{'-msse2'='sse2';'-mavx2'='avx2';'-maes'='aes';'-mpclmul'='pclmulqdq'}
-    $cpuFeatures=@(foreach($requirement in $cpu.requirements){if($requirement.ContainsKey('c_flag')){if(!$mapping.ContainsKey($requirement.c_flag)){throw 'Unmapped canonical CPU requirement'};'+'+$mapping[$requirement.c_flag]}})
+    $cpuFeatures=@(foreach($requirement in $cpu.requirements){if($requirement.Contains('rust_feature')){'+'+$requirement.rust_feature}})
     if(!$codegen.backend_features.reason -or $codegen.backend_features.selection -cne 'target-defaults'){throw 'RustBackendFeaturePolicyInvalid'}
     # Hardware admission and C/Zig objects retain the complete common floor.
     # Do not apply their SIMD switches to this softfloat Rust target: the
     # pinned backend miscompiles ordinary aggregate moves in that combination.
     $effectiveCpuFeatures=@()
-    $flags=@('-C',('code-model='+$codegen.code_model),'-C',('relocation-model='+$codegen.relocation_model),'-C','no-redzone=yes','-C',('target-cpu='+$cpu.cpu_model.Replace('_','-')),'-C',('lto='+$codegen.lto),'-C','embed-bitcode=yes','-C',('codegen-units='+$codegen.codegen_units),'-C',('panic='+$codegen.panic))
+    $flags=@('-C',('code-model='+$codegen.code_model),'-C',('relocation-model='+$codegen.relocation_model),'-C',('no-redzone='+$(if($codegen.red_zone){'no'}else{'yes'})),'-C',('target-cpu='+$cpu.cpu_model.Replace('_','-')),'-C',('lto='+$codegen.lto),'-C',('embed-bitcode='+$(if($codegen.embed_bitcode){'yes'}else{'no'})),'-C',('codegen-units='+$codegen.codegen_units),'-C',('panic='+$codegen.panic))
     $remaps=@($inputRoots)+@(@{owner='cache';path=$CacheRoot},@{owner='tools';path=$InstallRoot},@{owner='output';path=$OutputRoot})
     foreach($root in $remaps|Sort-Object {$_.path.Length}){$flags+=('--remap-path-prefix='+$root.path+'=/r4os/'+$root.owner)}
-    $envForCargo=@{CARGO_HOME=$cargoBuildHome;RUSTUP_HOME=$description.rustup_home;RUSTUP_TOOLCHAIN=([IO.Path]::GetFileName($description.toolchain));RUSTUP_AUTO_INSTALL='0';RUSTC=$compiler;CARGO_TARGET_DIR=$targetDir;CARGO_ENCODED_RUSTFLAGS=($flags -join [char]31);RUSTFLAGS=$null;R4OS_STARTUP_INFO_FILE=$startupFile;R4OS_MODULE_NAME=$facts.name;CARGO_INCREMENTAL='0';CARGO_PROFILE_RELEASE_OPT_LEVEL=$codegen.optimization[$facts.optimization];CARGO_PROFILE_RELEASE_PANIC='abort';CARGO_PROFILE_RELEASE_OVERFLOW_CHECKS='true';CARGO_PROFILE_RELEASE_DEBUG_ASSERTIONS='false';CARGO_PROFILE_RELEASE_DEBUG='0';CARGO_PROFILE_RELEASE_STRIP='none';CARGO_TERM_COLOR='never'}
+    $envForCargo=@{CARGO_HOME=$cargoBuildHome;RUSTUP_HOME=$description.rustup_home;RUSTUP_TOOLCHAIN=([IO.Path]::GetFileName($description.toolchain));RUSTUP_AUTO_INSTALL='0';RUSTC=$compiler;CARGO_TARGET_DIR=$targetDir;CARGO_ENCODED_RUSTFLAGS=($flags -join [char]31);RUSTFLAGS=$null;R4OS_STARTUP_INFO_FILE=$startupFile;R4OS_MODULE_NAME=$facts.name;CARGO_INCREMENTAL='0';CARGO_PROFILE_RELEASE_OPT_LEVEL=$codegen.optimization[$facts.optimization];CARGO_TERM_COLOR='never'}
+    foreach($key in $codegen.cargo_release.Keys){$envForCargo['CARGO_PROFILE_RELEASE_'+$key]=[string]$codegen.cargo_release[$key]}
     # Selected path crates satisfy these exact patched registry identities.
     # Other path/vendor crates are selected by the caller's Cargo manifests
     # and explicit roots. No registry/git download or ambient build step.
@@ -244,14 +249,14 @@ try{
     foreach($line in $messages.Split("`n")){
         if(!$line.Trim()){continue};$message=$line|ConvertFrom-Json -AsHashtable
         if($message.reason -ceq 'compiler-artifact'){
-            if($message.profile.opt_level -cne $codegen.optimization[$facts.optimization] -or $message.profile.debug_assertions -or !$message.profile.overflow_checks -or $message.profile.test){throw 'RustCargoCompiledProfileMismatch'}
+            if($message.profile.opt_level -cne $codegen.optimization[$facts.optimization] -or $message.profile.debug_assertions -ne ($codegen.cargo_release.DEBUG_ASSERTIONS -ceq 'true') -or $message.profile.overflow_checks -ne ($codegen.cargo_release.OVERFLOW_CHECKS -ceq 'true') -or $message.profile.test){throw 'RustCargoCompiledProfileMismatch'}
             if($message.package_id -ceq $package.id){foreach($file in $message.filenames){if($file.EndsWith('.a')){if($archive){throw 'Ambiguous Rust archive'};$archive=$file}}}
         }
     }
     if(!$archive -or !(Test-Path -LiteralPath $archive -PathType Leaf)){throw 'RustArchiveMissing'}
     $phase='link'
     $linked=Join-Path $work 'module.elf';$script=Canonical $SdkRoot $codegen.linker_script
-    Invoke-Tool $description.linker (@('-flavor','gnu','--emit-relocs','--gc-sections','--no-undefined','--strip-debug','--entry',$(if($isLibrary){'r4l_entry'}elseif($isDriver){'r4d_init_entry'}elseif($isProtocol){'r4p_init_entry'}else{'R4XStart'}),'-T',$script,'-o',$linked,$archive,$heapRuntime)+$facadeObjects+$native.objects+$libraryHelpers.objects) $work|Out-Null
+    Invoke-Tool $description.linker ((@($codegen.linker_flags)+@('--entry',$(if($isLibrary){'r4l_entry'}elseif($isDriver){'r4d_init_entry'}elseif($isProtocol){'r4p_init_entry'}else{'R4XStart'}),'-T',$script,'-o',$linked,$archive,$heapRuntime)+$facadeObjects+$native.objects+$libraryHelpers.objects)) $work|Out-Null
     $phase='package'
     $candidate=Join-Path $work ('module.'+$facts.kind)
     $packArgs=@('--r4m','--kind',$facts.kind.ToLowerInvariant(),'--elf',$linked,'--output',$candidate,'--module-name',$(if($isDriver){'R4D_'+$facts.name}elseif($isProtocol){'R4P_'+$facts.name}else{$facts.name}))
@@ -272,7 +277,7 @@ try{
     })+@($native.inputs)+@($libraryHelpers.inputs)
     if(!@($observed|Where-Object {$_.owner -ceq 'project' -and $_.path -ceq $rust.source}).Count){throw 'RustCompilerSourceNotObserved'}
     if(!$isLibrary -and !$isDriver -and !$isProtocol -and !@($observed|Where-Object owner -CEQ 'generated').Count){throw 'RustCompilerStartupInfoNotObserved'}
-    $result=[ordered]@{schema=1;profile=$rust.profile;status='success';technical=[bool]$Technical;module=@{name=$facts.name;version=$rust.module_version;kind=$facts.kind;app_class=$facts.app_class;target=$facts.target;imports=$facts.imports};cargo=@{name=$package.name;version=$package.version;source=$rust.source;target=$codegen.target;lock_sha256=Hash (Join-Path $ProjectRoot 'Cargo.lock')};sdk=$rustToolProfile.sdk;contract=$rustToolProfile.contract;tools=@{profile_sha256=Hash $rustToolProfilePath;pin_sha256=$description.pin_sha256;rust=$description.rust_version;cargo=$description.cargo_version;linker_sha256=$description.linker_sha256;packager_sha256=Hash $packager;catalog_sha256=Hash $catalog};cpu=@{id=$cpu.name;sha256=Hash $cpuPath;features=$cpuFeatures};codegen=@{profile_sha256=Hash $codegenPath;code_model=$codegen.code_model;relocation_model=$codegen.relocation_model;lto=$codegen.lto;red_zone=$false;panic='abort';stack_probes=$codegen.stack_probes};declared_inputs=$declared;compiler_inputs=$observed;elf=@{file=[IO.Path]::GetFileName($elf);sha256=Hash $linked};artifact=@{file=[IO.Path]::GetFileName($artifact);sha256=Hash $candidate;bytes=([IO.FileInfo]$candidate).Length};container_inspection=$inspection.Trim()}
+    $result=[ordered]@{schema=1;profile=$rust.profile;status='success';technical=[bool]$Technical;module=@{name=$facts.name;version=$rust.module_version;kind=$facts.kind;app_class=$facts.app_class;target=$facts.target;imports=$facts.imports};cargo=@{name=$package.name;version=$package.version;source=$rust.source;target=$codegen.target;lock_sha256=Hash (Join-Path $ProjectRoot 'Cargo.lock')};sdk=$rustToolProfile.sdk;contract=$rustToolProfile.contract;tools=@{profile_sha256=Hash $rustToolProfilePath;pin_sha256=$description.pin_sha256;rust=$description.rust_version;cargo=$description.cargo_version;linker_sha256=$description.linker_sha256;packager_sha256=Hash $packager;catalog_sha256=Hash $catalog};cpu=@{id=$cpu.name;sha256=Hash $cpuPath;features=$cpuFeatures};codegen=@{profile_sha256=Hash $codegenPath;code_model=$codegen.code_model;relocation_model=$codegen.relocation_model;lto=$codegen.lto;red_zone=$codegen.red_zone;panic=$codegen.panic;stack_probes=$codegen.stack_probes};declared_inputs=$declared;compiler_inputs=$observed;elf=@{file=[IO.Path]::GetFileName($elf);sha256=Hash $linked};artifact=@{file=[IO.Path]::GetFileName($artifact);sha256=Hash $candidate;bytes=([IO.FileInfo]$candidate).Length};container_inspection=$inspection.Trim()}
     $result['memory']=@{sdk_features=$sdkFeatureNames;heap_runtime=@{path=$rustToolProfile.runtime.heap.path;sha256=Hash $heapRuntime;owner='SDK/r4os/vm_allocator.zig';instance_checked=$true};alloc_sysroot_component='rust-std/'+$codegen.target;root_return_releases_heap=$false}
     $result['sdk_runtimes']=@{facades=$rustToolProfile.runtime.facades;storage=$rustToolProfile.runtime.storage}
     $result['library_helpers']=$libraryHelpers.receipt
@@ -283,7 +288,7 @@ try{
     $result.codegen['backend_feature_policy']=$codegen.backend_features
     $result.codegen['optimization']=$facts.optimization
     $result.codegen['opt_level']=$codegen.optimization[$facts.optimization]
-    $result.codegen['overflow_checks']=$true
+    $result.codegen['overflow_checks']=($codegen.cargo_release.OVERFLOW_CHECKS -ceq 'true')
     $result['schema']=2
     $result.cargo['graph']=$crateGraph
     $result.cargo['selected_features']=$Features

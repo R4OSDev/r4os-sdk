@@ -10,6 +10,7 @@ $installRoot = Join-Path $sdkRoot '.Installed'
 $toolsetSourceRoot = $sdkRoot
 $explicitCacheRoot = ''
 $profilePath = Join-Path $toolsetSourceRoot 'RustToolsProfile.json'
+if(Test-Path -LiteralPath $profilePath -PathType Leaf){$installRoot=$toolsetSourceRoot}
 $rustProfile = if (Test-Path -LiteralPath $profilePath -PathType Leaf) { 'sdk' } else { 'kernel' }
 $developmentTools = $false
 # Parse only the leading toolset options. Native Cargo/rustc switches and

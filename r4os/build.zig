@@ -1,5 +1,6 @@
 const std = @import("std");
 const contract_build = @import("r4os_contract");
+pub const profiles = @import("build_profile.zig");
 pub const module_manifest = @import("module_manifest.zig");
 
 pub const BuildResult = struct {
@@ -79,7 +80,7 @@ pub const R4AppOptions = struct {
     version_module: ?std.Build.LazyPath = null,
     profile: AppProfile,
     metadata: []const []const u8 = &.{},
-    optimize: std.builtin.OptimizeMode = .ReleaseSmall,
+    optimize: std.builtin.OptimizeMode = profiles.defaults.optimize_default,
 };
 
 pub const R4CAppOptions = struct {
@@ -88,7 +89,7 @@ pub const R4CAppOptions = struct {
     sources: []const []const u8,
     profile: AppProfile,
     metadata: []const []const u8 = &.{},
-    optimize: std.builtin.OptimizeMode = .ReleaseSmall,
+    optimize: std.builtin.OptimizeMode = profiles.defaults.optimize_default,
 };
 
 // Die R4L-Import-Liste eines R4X-Moduls kommt ausschliesslich und in exakter
@@ -164,8 +165,8 @@ fn extraProtocolMetadata(b: *std.Build, loaded: LoadedR4MF) []const []const u8 {
 
 fn manifestOptimizeMode(manifest: module_manifest.Manifest) std.builtin.OptimizeMode {
     return switch (manifest.optimization orelse .size) {
-        .size => .ReleaseSmall,
-        .speed => .ReleaseFast,
+        .size => profiles.defaults.optimize_size,
+        .speed => profiles.defaults.optimize_speed,
     };
 }
 
@@ -182,7 +183,7 @@ pub const R4XAppOptions = struct {
     version_module: ?std.Build.LazyPath = null,
     app_class: []const u8 = "auto",
     metadata: []const []const u8 = &.{},
-    optimize: std.builtin.OptimizeMode = .ReleaseSmall,
+    optimize: std.builtin.OptimizeMode = profiles.defaults.optimize_default,
 };
 
 pub const R4XCAppOptions = struct {
@@ -191,7 +192,7 @@ pub const R4XCAppOptions = struct {
     sources: []const []const u8,
     app_class: []const u8 = "auto",
     metadata: []const []const u8 = &.{},
-    optimize: std.builtin.OptimizeMode = .ReleaseSmall,
+    optimize: std.builtin.OptimizeMode = profiles.defaults.optimize_default,
 };
 
 pub const R4DModuleOptions = struct {
@@ -206,7 +207,7 @@ pub const R4DModuleOptions = struct {
     c_include_roots: []const std.Build.LazyPath = &.{},
     c_defines: []const module_manifest.CDefineEntry = &.{},
     c_flags: []const []const u8 = &.{},
-    optimize: std.builtin.OptimizeMode = .ReleaseSmall,
+    optimize: std.builtin.OptimizeMode = profiles.defaults.optimize_default,
 };
 
 pub const R4PModuleOptions = struct {
@@ -219,7 +220,7 @@ pub const R4PModuleOptions = struct {
     dependencies: []const []const u8 = &.{},
     metadata: []const []const u8 = &.{},
     root_source_file: std.Build.LazyPath,
-    optimize: std.builtin.OptimizeMode = .ReleaseSmall,
+    optimize: std.builtin.OptimizeMode = profiles.defaults.optimize_default,
 };
 
 pub const R4LModuleOptions = struct {
@@ -275,7 +276,7 @@ pub const Sdk = struct {
             .r4os_module = root.path(b, "r4os.zig"),
             .grapheme_source = root.path(b, "Shared/Generated/R4STD_Grapheme/grapheme.zig"),
             .contract_module = contract_dependency.module("r4os_contract"),
-            .linker_script = root.path(b, "r4os/linker/r4os_module.ld"),
+            .linker_script = root.path(b, profiles.policyString(b.allocator, "module", "linker_script")),
             .c_include_root = root.path(b, "Shared/C/include"),
             .contract_c_include_root = contract_dependency.namedLazyPath("r4os_contract_c_include"),
             .c_startup_source_file = root.path(b, "Shared/C/src/r4xstart_startup.c"),
@@ -641,7 +642,7 @@ pub const Sdk = struct {
                 .startup_source_file = null,
                 .linker_script = self.profile.linker_script,
                 .entry_symbol = "r4l_entry",
-                .strip = false,
+                .strip = profiles.defaults.strip,
                 .emit_relocs = true,
                 .optimize = optimize,
             }),
@@ -941,6 +942,7 @@ fn loadCurrentR4MF(b: *std.Build, manifest_path: std.Build.LazyPath, options: R4
     };
     const manifest = module_manifest.parse(b.allocator, canonical_path, bytes) catch |err|
         @panic(b.fmt("R4MF current-contract error: {s} ({s})", .{ full_path, @errorName(err) }));
+    profiles.requireProjectFlags(b, manifest.kind.text(), manifest.name, manifest.c_flags);
     if (options.native_archives.len != manifest.native_archives.len)
         @panic(b.fmt("R4MF native-archive mapping error: {s} declares {d}, build supplies {d}", .{ full_path, manifest.native_archives.len, options.native_archives.len }));
     // derivePlan prueft den R4X-Startvertrag und die Profilimporte; fuer R4D
@@ -1033,7 +1035,7 @@ pub const R4XOptions = struct {
     module_version: ?[]const u8 = null,
     metadata: []const []const u8 = &.{},
     resources: []const ResourceInput = &.{},
-    optimize: std.builtin.OptimizeMode = .ReleaseSmall,
+    optimize: std.builtin.OptimizeMode = profiles.defaults.optimize_default,
 };
 
 pub const R4AppBuildOptions = struct {
@@ -1053,7 +1055,7 @@ pub const R4AppBuildOptions = struct {
     module_version: ?[]const u8 = null,
     metadata: []const []const u8 = &.{},
     resources: []const ResourceInput = &.{},
-    optimize: std.builtin.OptimizeMode = .ReleaseSmall,
+    optimize: std.builtin.OptimizeMode = profiles.defaults.optimize_default,
 };
 
 pub const R4XCOptions = struct {
@@ -1075,7 +1077,7 @@ pub const R4XCOptions = struct {
     module_version: ?[]const u8 = null,
     metadata: []const []const u8 = &.{},
     resources: []const ResourceInput = &.{},
-    optimize: std.builtin.OptimizeMode = .ReleaseSmall,
+    optimize: std.builtin.OptimizeMode = profiles.defaults.optimize_default,
 };
 
 pub const R4CAppBuildOptions = struct {
@@ -1097,7 +1099,7 @@ pub const R4CAppBuildOptions = struct {
     module_version: ?[]const u8 = null,
     metadata: []const []const u8 = &.{},
     resources: []const ResourceInput = &.{},
-    optimize: std.builtin.OptimizeMode = .ReleaseSmall,
+    optimize: std.builtin.OptimizeMode = profiles.defaults.optimize_default,
 };
 
 pub const R4DOptions = struct {
@@ -1120,7 +1122,7 @@ pub const R4DOptions = struct {
     linker_script: std.Build.LazyPath,
     builder: *std.Build.Step.Compile,
     resources: []const ResourceInput = &.{},
-    optimize: std.builtin.OptimizeMode = .ReleaseSmall,
+    optimize: std.builtin.OptimizeMode = profiles.defaults.optimize_default,
 };
 
 pub const R4POptions = struct {
@@ -1139,7 +1141,7 @@ pub const R4POptions = struct {
     linker_script: std.Build.LazyPath,
     builder: *std.Build.Step.Compile,
     resources: []const ResourceInput = &.{},
-    optimize: std.builtin.OptimizeMode = .ReleaseSmall,
+    optimize: std.builtin.OptimizeMode = profiles.defaults.optimize_default,
 };
 
 pub const R4LRawOptions = struct {
@@ -1210,7 +1212,7 @@ pub fn addR4LContractGenerator(b: *std.Build, root_source_file: std.Build.LazyPa
         .root_module = b.createModule(.{
             .root_source_file = root_source_file,
             .target = b.graph.host,
-            .optimize = .ReleaseSafe,
+            .optimize = profiles.defaults.runtime_optimize,
         }),
     });
 }
@@ -1716,14 +1718,15 @@ const COptions = struct {
     entry_symbol: []const u8 = "R4XStart",
     // PIC still permits absolute pointers in constant C aggregates and tables.
     // Keep symbols/relocations until R4M conversion, as for Zig modules.
-    strip: bool = false,
-    emit_relocs: bool = true,
+    strip: bool = profiles.defaults.strip,
+    emit_relocs: bool = profiles.defaults.emit_relocs,
     optimize: std.builtin.OptimizeMode,
     app_profile: ?AppProfile = null,
 };
 
 fn addRawModule(b: *std.Build, opts: RawOptions) std.Build.LazyPath {
-    const target = contract_build.module_cpu.target(b);
+    profiles.requireOptimize(b, opts.optimize);
+    const target = profiles.target(b);
 
     const exe = b.addObject(.{
         .name = b.fmt("{s}-zig-ir", .{opts.name}),
@@ -1731,13 +1734,13 @@ fn addRawModule(b: *std.Build, opts: RawOptions) std.Build.LazyPath {
             .root_source_file = opts.root_source_file,
             .target = target,
             .optimize = opts.optimize,
-            .single_threaded = false,
-            .strip = false,
-            .pic = true,
-            .red_zone = false,
-            .sanitize_c = .off,
-            .stack_check = true,
-            .stack_protector = false,
+            .single_threaded = profiles.defaults.single_threaded,
+            .strip = profiles.defaults.strip,
+            .pic = profiles.defaults.pic,
+            .red_zone = profiles.defaults.red_zone,
+            .sanitize_c = profiles.defaults.sanitize_c,
+            .stack_check = profiles.defaults.stack_check,
+            .stack_protector = profiles.defaults.stack_protector,
         }),
     });
     const linked = b.addExecutable(.{
@@ -1745,18 +1748,18 @@ fn addRawModule(b: *std.Build, opts: RawOptions) std.Build.LazyPath {
         .root_module = b.createModule(.{
             .target = target,
             .optimize = opts.optimize,
-            .single_threaded = false,
-            .strip = false,
-            .pic = true,
-            .red_zone = false,
-            .sanitize_c = .off,
-            .stack_check = true,
-            .stack_protector = false,
+            .single_threaded = profiles.defaults.single_threaded,
+            .strip = profiles.defaults.strip,
+            .pic = profiles.defaults.pic,
+            .red_zone = profiles.defaults.red_zone,
+            .sanitize_c = profiles.defaults.sanitize_c,
+            .stack_check = profiles.defaults.stack_check,
+            .stack_protector = profiles.defaults.stack_protector,
         }),
     });
     linked.entry = .{ .symbol_name = opts.entry_symbol };
-    linked.link_emit_relocs = true;
-    linked.bundle_compiler_rt = true;
+    linked.link_emit_relocs = profiles.defaults.emit_relocs;
+    linked.bundle_compiler_rt = profiles.defaults.bundle_compiler_rt;
     for (opts.native_archives) |archive| linked.root_module.addObjectFile(archive);
     for (opts.c_include_roots) |include_root| {
         exe.root_module.addIncludePath(include_root);
@@ -1766,20 +1769,8 @@ fn addRawModule(b: *std.Build, opts: RawOptions) std.Build.LazyPath {
         exe.root_module.addCMacro(entry.name, entry.value);
         linked.root_module.addCMacro(entry.name, entry.value);
     }
-    const base_c_flags: []const []const u8 = &.{
-        "-std=c11",
-        "-ffreestanding",
-        "-fno-builtin",
-        "-fno-stack-protector",
-        // The freestanding driver ignores the ordinary stack-clash flag.
-        // Pass it to Clang directly so C/C++ also touch every stack page.
-        "-Xclang",
-        "-fstack-clash-protection",
-        "-fno-unwind-tables",
-        "-fno-asynchronous-unwind-tables",
-        "-mno-red-zone",
-    };
-    const cpu_c_flags = contract_build.module_cpu.cFlags(b.allocator);
+    const base_c_flags = profiles.moduleFlags(b.allocator);
+    const cpu_c_flags = profiles.cFlags(b.allocator);
     const c_flags = b.allocator.alloc([]const u8, base_c_flags.len + cpu_c_flags.len + opts.c_flags.len) catch @panic("OOM");
     for (base_c_flags, 0..) |flag, index| c_flags[index] = flag;
     for (cpu_c_flags, base_c_flags.len..) |flag, index| c_flags[index] = flag;
@@ -1794,12 +1785,12 @@ fn addRawModule(b: *std.Build, opts: RawOptions) std.Build.LazyPath {
         .root_source_file = opts.r4os_module,
         .target = target,
         .optimize = opts.optimize,
-        .single_threaded = false,
-        .strip = false,
-        .red_zone = false,
-        .sanitize_c = .off,
-        .stack_check = true,
-        .stack_protector = false,
+        .single_threaded = profiles.defaults.single_threaded,
+        .strip = profiles.defaults.strip,
+        .red_zone = profiles.defaults.red_zone,
+        .sanitize_c = profiles.defaults.sanitize_c,
+        .stack_check = profiles.defaults.stack_check,
+        .stack_protector = profiles.defaults.stack_protector,
     });
     r4os_module.addImport("r4os_contract", opts.contract_module);
     if (opts.grapheme_source) |source| r4os_module.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = source, .target = target, .optimize = opts.optimize }));
@@ -1810,12 +1801,12 @@ fn addRawModule(b: *std.Build, opts: RawOptions) std.Build.LazyPath {
             .root_source_file = module.root_source_file,
             .target = target,
             .optimize = opts.optimize,
-            .single_threaded = false,
-            .strip = false,
-            .red_zone = false,
-            .sanitize_c = .off,
-            .stack_check = true,
-            .stack_protector = false,
+            .single_threaded = profiles.defaults.single_threaded,
+            .strip = profiles.defaults.strip,
+            .red_zone = profiles.defaults.red_zone,
+            .sanitize_c = profiles.defaults.sanitize_c,
+            .stack_check = profiles.defaults.stack_check,
+            .stack_protector = profiles.defaults.stack_protector,
         });
         dependencies[index].addImport("r4os", r4os_module);
     }
@@ -1830,12 +1821,12 @@ fn addRawModule(b: *std.Build, opts: RawOptions) std.Build.LazyPath {
             .root_source_file = source_file,
             .target = target,
             .optimize = opts.optimize,
-            .single_threaded = false,
-            .strip = false,
-            .red_zone = false,
-            .sanitize_c = .off,
-            .stack_check = true,
-            .stack_protector = false,
+            .single_threaded = profiles.defaults.single_threaded,
+            .strip = profiles.defaults.strip,
+            .red_zone = profiles.defaults.red_zone,
+            .sanitize_c = profiles.defaults.sanitize_c,
+            .stack_check = profiles.defaults.stack_check,
+            .stack_protector = profiles.defaults.stack_protector,
         });
         app_module.addImport("r4os", r4os_module);
         for (opts.zig_modules, 0..) |module, index| app_module.addImport(module.name, dependencies[index]);
@@ -1849,12 +1840,12 @@ fn addRawModule(b: *std.Build, opts: RawOptions) std.Build.LazyPath {
             .root_source_file = version_module,
             .target = target,
             .optimize = opts.optimize,
-            .single_threaded = false,
-            .strip = false,
-            .red_zone = false,
-            .sanitize_c = .off,
-            .stack_check = true,
-            .stack_protector = false,
+            .single_threaded = profiles.defaults.single_threaded,
+            .strip = profiles.defaults.strip,
+            .red_zone = profiles.defaults.red_zone,
+            .sanitize_c = profiles.defaults.sanitize_c,
+            .stack_check = profiles.defaults.stack_check,
+            .stack_protector = profiles.defaults.stack_protector,
         }));
     }
     // Keep the optimized Zig IR and its ABI/target attributes. Change only
@@ -1864,16 +1855,8 @@ fn addRawModule(b: *std.Build, opts: RawOptions) std.Build.LazyPath {
     probes.addArg("--stack-probes");
     probes.addFileArg(exe.getEmittedLlvmIr());
     const inline_ir = probes.addOutputFileArg(b.fmt("{s}-probed.ll", .{opts.name}));
-    const codegen = b.addSystemCommand(&.{
-        b.graph.zig_exe, "cc",            "-target", "x86_64-freestanding-none",
-        switch (opts.optimize) {
-            .Debug => "-O0",
-            .ReleaseSmall => "-Oz",
-            .ReleaseFast, .ReleaseSafe => "-O3",
-        },
-        "-fPIC",         "-mno-red-zone", "-Xclang", "-disable-llvm-passes",
-        "-c",
-    });
+    const codegen = b.addSystemCommand(&.{ b.graph.zig_exe, "cc" });
+    codegen.addArgs(profiles.irArguments(b.allocator, opts.optimize));
     codegen.addFileArg(inline_ir);
     codegen.addArg("-o");
     linked.root_module.addObjectFile(codegen.addOutputFileArg(b.fmt("{s}-probed.o", .{opts.name})));
@@ -1882,34 +1865,23 @@ fn addRawModule(b: *std.Build, opts: RawOptions) std.Build.LazyPath {
 }
 
 fn addCModule(b: *std.Build, opts: COptions) std.Build.LazyPath {
-    const target = contract_build.module_cpu.target(b);
+    profiles.requireOptimize(b, opts.optimize);
+    const target = profiles.target(b);
 
     const c_mod = b.createModule(.{
         .target = target,
         .optimize = opts.optimize,
-        .single_threaded = false,
+        .single_threaded = profiles.defaults.single_threaded,
         .strip = opts.strip,
-        .pic = true,
-        .red_zone = false,
-        .sanitize_c = .off,
-        .stack_check = true,
-        .stack_protector = false,
-        .link_libc = false,
+        .pic = profiles.defaults.pic,
+        .red_zone = profiles.defaults.red_zone,
+        .sanitize_c = profiles.defaults.sanitize_c,
+        .stack_check = profiles.defaults.stack_check,
+        .stack_protector = profiles.defaults.stack_protector,
+        .link_libc = profiles.defaults.link_libc,
     });
-    const base_c_flags: []const []const u8 = &.{
-        "-std=c11",
-        "-ffreestanding",
-        "-fno-builtin",
-        "-fno-stack-protector",
-        // The freestanding driver ignores the ordinary stack-clash flag.
-        // Pass it to Clang directly so C/C++ also touch every stack page.
-        "-Xclang",
-        "-fstack-clash-protection",
-        "-fno-unwind-tables",
-        "-fno-asynchronous-unwind-tables",
-        "-mno-red-zone",
-    };
-    const cpu_c_flags = contract_build.module_cpu.cFlags(b.allocator);
+    const base_c_flags = profiles.moduleFlags(b.allocator);
+    const cpu_c_flags = profiles.cFlags(b.allocator);
     const base_flag_count = base_c_flags.len + cpu_c_flags.len;
     const profile_flag_count: usize = if (opts.app_profile != null) 1 else 0;
     const c_flags = b.allocator.alloc([]const u8, base_flag_count + profile_flag_count + opts.c_flags.len) catch @panic("OOM");
@@ -1937,8 +1909,8 @@ fn addCModule(b: *std.Build, opts: COptions) std.Build.LazyPath {
     });
     exe.entry = .{ .symbol_name = opts.entry_symbol };
     exe.link_emit_relocs = opts.emit_relocs;
-    exe.link_gc_sections = true;
-    exe.bundle_compiler_rt = true;
+    exe.link_gc_sections = profiles.defaults.link_gc_sections;
+    exe.bundle_compiler_rt = profiles.defaults.bundle_compiler_rt;
     for (opts.extra_objects) |object| exe.root_module.addObjectFile(object);
     if (opts.heap_runtime) |runtime| exe.root_module.addObjectFile(runtime);
     if (opts.storage_runtime) |runtime| exe.root_module.addObjectFile(runtime);
@@ -1948,20 +1920,20 @@ fn addCModule(b: *std.Build, opts: COptions) std.Build.LazyPath {
 
 pub fn addFacadeRuntime(b: *std.Build, source: std.Build.LazyPath, c_include: std.Build.LazyPath, contract_include: std.Build.LazyPath, native_test: bool) std.Build.LazyPath {
     const root = b.createModule(.{
-        .target = if (native_test) b.graph.host else contract_build.module_cpu.target(b),
-        .optimize = .ReleaseSafe,
-        .pic = true,
-        .red_zone = false,
+        .target = if (native_test) b.graph.host else profiles.target(b),
+        .optimize = profiles.defaults.runtime_optimize,
+        .pic = profiles.defaults.pic,
+        .red_zone = profiles.defaults.red_zone,
         .stack_check = !native_test,
-        .stack_protector = false,
-        .link_libc = false,
+        .stack_protector = profiles.defaults.stack_protector,
+        .link_libc = profiles.defaults.link_libc,
     });
     root.addIncludePath(c_include);
     root.addIncludePath(contract_include);
     @import("c_header_inputs.zig").addMacro(b, root, &.{ c_include, contract_include });
-    const base: []const []const u8 = &.{ "-std=c11", "-ffreestanding", "-fno-builtin", "-fno-stack-protector", "-fno-unwind-tables", "-fno-asynchronous-unwind-tables", "-mno-red-zone", "-ffunction-sections", "-fdata-sections" };
-    const cpu_flags = contract_build.module_cpu.cFlags(b.allocator);
-    const probes: []const []const u8 = if (native_test) &.{} else &.{ "-Xclang", "-fstack-clash-protection" };
+    const base = profiles.strings(b.allocator, profiles.get(profiles.codegen(b.allocator, "runtime"), "c_flags"));
+    const cpu_flags = profiles.cFlags(b.allocator);
+    const probes: []const []const u8 = if (native_test) &.{} else profiles.strings(b.allocator, profiles.get(profiles.codegen(b.allocator, "runtime"), "probe_flags"));
     const flags = b.allocator.alloc([]const u8, base.len + cpu_flags.len + probes.len) catch @panic("OOM");
     @memcpy(flags[0..base.len], base);
     @memcpy(flags[base.len..][0..cpu_flags.len], cpu_flags);
@@ -1981,21 +1953,21 @@ fn heapRuntime(b: *std.Build, source: std.Build.LazyPath, contract: *std.Build.M
 fn sharedZigRuntime(b: *std.Build, source: std.Build.LazyPath, contract: *std.Build.Module, grapheme: ?std.Build.LazyPath, builder: *std.Build.Step.Compile, name: []const u8, native: bool) std.Build.LazyPath {
     const root = b.createModule(.{
         .root_source_file = source,
-        .target = if (native) b.graph.host else contract_build.module_cpu.target(b),
-        .optimize = .ReleaseSafe,
-        .single_threaded = false,
-        .pic = true,
-        .red_zone = false,
+        .target = if (native) b.graph.host else profiles.target(b),
+        .optimize = profiles.defaults.runtime_optimize,
+        .single_threaded = profiles.defaults.single_threaded,
+        .pic = profiles.defaults.pic,
+        .red_zone = profiles.defaults.red_zone,
         .stack_check = !native,
-        .stack_protector = false,
+        .stack_protector = profiles.defaults.stack_protector,
     });
     root.addImport("r4os_contract", contract);
-    if (grapheme) |path| root.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = path, .target = root.resolved_target.?, .optimize = .ReleaseSafe }));
+    if (grapheme) |path| root.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = path, .target = root.resolved_target.?, .optimize = profiles.defaults.runtime_optimize }));
     return addProbedObject(b, root, builder, name, native);
 }
 
 pub fn moduleTarget(b: *std.Build) std.Build.ResolvedTarget {
-    return contract_build.module_cpu.target(b);
+    return profiles.target(b);
 }
 
 /// Foreign consumer owners retain the regular stack-probe/codegen path.
@@ -2006,7 +1978,8 @@ pub fn addProbedObject(b: *std.Build, root: *std.Build.Module, builder: *std.Bui
     probes.addArg("--stack-probes");
     probes.addFileArg(object.getEmittedLlvmIr());
     const ir = probes.addOutputFileArg(b.fmt("{s}-probed.ll", .{name}));
-    const codegen = b.addSystemCommand(&.{ b.graph.zig_exe, "cc", "-target", "x86_64-freestanding-none", "-O3", "-fPIC", "-mno-red-zone", "-ffunction-sections", "-fdata-sections", "-Xclang", "-disable-llvm-passes", "-c" });
+    const codegen = b.addSystemCommand(&.{ b.graph.zig_exe, "cc" });
+    codegen.addArgs(profiles.strings(b.allocator, profiles.get(profiles.codegen(b.allocator, "runtime"), "ir_flags")));
     codegen.addFileArg(ir);
     codegen.addArg("-o");
     return codegen.addOutputFileArg(b.fmt("{s}.o", .{name}));

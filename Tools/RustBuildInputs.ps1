@@ -40,10 +40,10 @@ function Build-RustCCompanions($Rust,$Cpu,[string]$Optimization,[string]$Work,$R
     if(!$Rust.c_sources.Count){return @{objects=@();inputs=@();compiler=$null}}
     if(!$ZigRoot){throw 'RustCCompanionsRequireExplicitZigRoot'}
     $zig=Join-Path ([IO.Path]::GetFullPath($ZigRoot)) ('zig'+$(if($IsWindows){'.exe'}else{''}))
-    $pin=Get-Content -Raw -LiteralPath (Join-Path $ToolsRoot 'Profile/ZigToolchain.json')|ConvertFrom-Json -AsHashtable
+    $pin=$sdkProfiles.Tools.tools.zig
     if((Invoke-Tool $zig @('version') $Work).Trim() -cne $pin.version){throw 'RustCCompilerVersionMismatch'}
     $objects=@();$inputs=@();$commands=@()
-    $arguments=@('cc')+@($Rust.c_flags)+@('-target','x86_64-freestanding-none','-std=c11','-ffreestanding','-fno-builtin','-fno-stack-protector','-Xclang','-fstack-clash-protection','-fno-unwind-tables','-fno-asynchronous-unwind-tables','-mno-red-zone','-fPIC','-ffunction-sections','-fdata-sections','-g0',$(if($Optimization -ceq 'size'){'-Oz'}else{'-O3'}))
+    $arguments=@('cc')+@($Rust.c_flags)+@($codegen.native_c.flags)+@($codegen.native_c.optimization[$Optimization])
     foreach($requirement in $Cpu.requirements){if($requirement.ContainsKey('c_flag')){$arguments+=$requirement.c_flag}}
     $arguments+=@('-I',(Join-Path $SdkRoot 'Shared/C/include'),'-I',(Join-Path $ContractRoot 'Generated/SDK/C/include'))
     foreach($include in $Rust.c_includes){
@@ -76,7 +76,7 @@ function Build-RustLibraryHelpers([string]$Work,$Roots) {
     if(!$LibraryHelpersRoot){return @{objects=@();inputs=@();receipt=$null}}
     if(!$ZigRoot){throw 'LibraryHelpersRequireExplicitZigRoot'}
     $zig=Join-Path ([IO.Path]::GetFullPath($ZigRoot)) ('zig'+$(if($IsWindows){'.exe'}else{''}))
-    $pin=Get-Content -Raw -LiteralPath (Join-Path $ToolsRoot 'Profile/ZigToolchain.json')|ConvertFrom-Json -AsHashtable
+    $pin=$sdkProfiles.Tools.tools.zig
     if((Invoke-Tool $zig @('version') $Work).Trim() -cne $pin.version){throw 'LibraryHelperCompilerVersionMismatch'}
     $files=@()
     foreach($relative in @('build.zig.zon','consumer_helpers.zig','consumer_adapters.zig','consumer_media.zig','consumer_media_adapters.zig','R4STD/Source/codec_tables.zig')){
