@@ -3003,9 +3003,9 @@
       "name": "R4ACO",
       "repository": "libraries",
       "path": "R4ACO",
-      "version": "0.1.5",
+      "version": "0.1.6",
       "target": "/R4OS/LIBS/R4ACO.R4L",
-      "manifest_sha256": "9047f2a463bfc27879dcd70b5bc449f57ade532ea858ed59278846719cda3c65"
+      "manifest_sha256": "a61b897690614a285561107aeaa4f926aefe63c8717a2430fbb151d88eeb47b1"
     },
     "r4amd": {
       "name": "R4AMD",
@@ -3091,9 +3091,9 @@
       "name": "R4VK",
       "repository": "libraries",
       "path": "R4VK",
-      "version": "0.1.42",
+      "version": "0.1.43",
       "target": "/R4OS/LIBS/R4VK.R4L",
-      "manifest_sha256": "2f55b4a85098312eb29ce3f8b13cd3edc7f3405511a87faa570187ecebe2543e"
+      "manifest_sha256": "9a11f89b0bd3cb9bd29f18a4218c694e212f218dd9e0f0f9f26792358e4df72a"
     }
   },
   "sets": {
