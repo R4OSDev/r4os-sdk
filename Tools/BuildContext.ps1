@@ -31,7 +31,7 @@ function Get-R4SdkBuildContext {
 }
 
 function Assert-R4SdkBuildArguments($Context, [string[]]$Arguments) {
-    $allowedModes=if($Context.resolved.build.role -ceq 'host'){$Context.data.Build.codegen.host.allowed_optimize_modes}else{$Context.data.Build.codegen.module.allowed_optimize_modes}
+    $allowedModes=if($Context.Contains('resolved') -and $Context.resolved.build.role -ceq 'host'){$Context.data.Build.codegen.host.allowed_optimize_modes}else{$Context.data.Build.codegen.module.allowed_optimize_modes}
     foreach($argument in $Arguments){
         if($argument.StartsWith('--fork',[StringComparison]::Ordinal) -or
            $argument.StartsWith('-Dr4os-sdk',[StringComparison]::Ordinal) -or
