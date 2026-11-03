@@ -4127,6 +4127,92 @@
         "-Dexpat=disabled",
         "-Dzlib=disabled",
         "-Ddisplay-info=disabled"
+      ],
+      "encoder_flags": [
+        "-target",
+        "x86_64-unknown-none-elf",
+        "-O2",
+        "-ffreestanding",
+        "-fno-stack-protector",
+        "-Xclang",
+        "-fstack-clash-protection",
+        "-fno-asynchronous-unwind-tables",
+        "-fno-unwind-tables",
+        "-fno-pic",
+        "-mcmodel=large",
+        "-mno-red-zone",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-fvisibility=hidden",
+        "-fno-math-errno",
+        "-fno-trapping-math",
+        "-femulated-tls",
+        "-nostdinc",
+        "-ferror-limit=3",
+        "-DR4OS_ENCODE=1",
+        "-DX86_ASM",
+        "-DHAVE_AVX2",
+        "-DGENERATED_VERSION_HEADER",
+        "-DNDEBUG"
+      ],
+      "encoder_asm_flags": [
+        "-f",
+        "elf64",
+        "-DUNIX64",
+        "-DHAVE_AVX2"
+      ],
+      "encoder_cpp_flags": [
+        "-std=c++17",
+        "-fno-exceptions",
+        "-fno-rtti",
+        "-fcheck-new",
+        "-fno-threadsafe-statics"
+      ],
+      "encoder_c_flags": [
+        "-std=c17"
+      ],
+      "video_flags": [
+        "-target",
+        "x86_64-unknown-none-elf",
+        "-std=c17",
+        "-O2",
+        "-ffreestanding",
+        "-fno-stack-protector",
+        "-Xclang",
+        "-fstack-clash-protection",
+        "-fno-asynchronous-unwind-tables",
+        "-fno-unwind-tables",
+        "-fno-pic",
+        "-mcmodel=large",
+        "-mno-red-zone",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-fvisibility=hidden",
+        "-fno-math-errno",
+        "-fno-trapping-math",
+        "-femulated-tls",
+        "-nostdinc",
+        "-ferror-limit=3",
+        "-DPIC",
+        "-DHAVE_AV_CONFIG_H",
+        "-DR4OS_VIDEO=1",
+        "-DR4NATIVE_FILE_IO=1"
+      ],
+      "video_asm_flags": [
+        "-f",
+        "elf64",
+        "-DPIC",
+        "-DSTACK_ALIGNMENT=16"
+      ],
+      "video_table_host_flags": [
+        "cc",
+        "-O2",
+        "-DHAVE_AV_CONFIG_H",
+        "-ffunction-sections",
+        "-fdata-sections"
+      ],
+      "video_table_link_flags": [
+        "-Wl,--gc-sections"
       ]
     },
     "recovery-module": {

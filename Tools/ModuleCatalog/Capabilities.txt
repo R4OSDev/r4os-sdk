@@ -20,8 +20,9 @@ Top-level schema is3, interface="r4os-sdk-capabilities". Schema3 adds the
 current owner-maintained function/role matrix, complete host-role file maps
 and the common New-Project creator. Consumers check the schema explicitly,
 ignore unknown additive fields and use stable template/profile IDs. Schema2
-packages remain immutable. Component selection and project locks remain with
-the external caller; no SDK project-pin state is emitted or consumed.
+packages remain immutable. SDK selection now comes exclusively from Profiles/Build.json,
+Tools.json and Components.json. Apps may pin additional non-system libraries.
+Generated project locks are checked projections, not independent system selection.
 Manifest2, semantic plan1, Rust build-plan2 and the R4M0/R4XStart ABI remain.
 
 Identity and formats
@@ -29,7 +30,7 @@ Identity and formats
 sdk and contract contain package version, exact source commit/dirty marker,
 input hashes and separately named Rust crates. sdk.rust_crate and
 contract.binding_crate are currently each0.1.0; those are not SDK/Contract or
-module versions. devkit binds the producer source. technical=true denotes a
+module versions. No DevKit source binding is required. technical=true denotes a
 development/dirty export, not a completed frozen integration. Final packages
 carry clean commits. formats names manifest2, semantic_plan1, source_catalog4,
 installed_catalog4, rust_build_plan2 and the unchanged R4M0/R4XStart contracts.
@@ -107,8 +108,8 @@ exported file hash. SDK0.64.65 corrects the linker origin label from0.64.64;
 compiler, linker bytes, module codegen and runtime semantics are unchanged.
 No Zig is needed by the exported Rust build. Host C is Zig's bundled Clang on
 Windows/Linux; native R4CC is a separate, smaller compiler inside R4OS.
-zig_host is copied from the single DevKit/Setup/ZigToolchain.json pin also read
-by Setup.ps1; this catalog does not maintain another compiler-version list.
+zig_host is derived from SDK/Profiles/Tools.json, also read by the SDK installer;
+this catalog does not maintain another compiler-version list.
 
 Host consumption
 ----------------
@@ -116,9 +117,9 @@ Read JSON before presenting project choices. Match the requested combination
 and inspect its supported/code/reason and qualification. Select a template by
 ID, collect its real inputs, install only necessary tools from the selected
 profile, then invoke the SDK creator/build driver with explicit component roots.
-The caller selects component versions and manages any project pins. Required
-SDK/Contract dependencies and proven toolchain requirements remain exactly
-bound; the SDK validates the supplied components and records actual inputs.
+The caller selects the SDK and its offered profile, plus extra app libraries.
+Contract, tools and system libraries follow the SDK. Roots select locations;
+the SDK validates their exact identities and records actual inputs.
 Rust build.json schema2 and native C/Zig host build.json schema1 are separate
 source/tool/artifact receipts, not this capability schema3 or semantic plan1.
 An actual complete capability JSON is included with the SDK release manifest;

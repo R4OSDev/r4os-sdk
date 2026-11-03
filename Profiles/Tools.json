@@ -128,7 +128,8 @@
       "cbindgen": "0.27.0",
       "clang": "19.1.7",
       "python_minimum": "3.10",
-      "mako_minimum": "0.8.0"
+      "mako_minimum": "0.8.0",
+      "nasm_minimum": "2.16"
     },
     "shader": {
       "schema": 1,

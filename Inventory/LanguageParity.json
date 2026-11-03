@@ -55978,7 +55978,7 @@
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.89.34",
+    "reviewed_in": "0.89.34-media",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -57120,15 +57120,15 @@
       },
       {
         "path": "Repositories/SDK/Profiles/Build.json",
-        "sha256": "2127f11eb499075f0a44589c0d2eb325b9cba2def4ddf03b65a529797b0d84d0"
+        "sha256": "6f0679f257b7f234bd9c2db1af0884fee043cec10801482d8ed4cb920c46a5f9"
       },
       {
         "path": "Repositories/SDK/Profiles/Components.json",
-        "sha256": "f8358978ce35b88e39f0a651a34cefd393545242afa5ea8a12dc9122ee1bc090"
+        "sha256": "8a8b5010e66bc7748ef0abea5f0bcd8a22a625e556e0009da5cb967cc1517a79"
       },
       {
         "path": "Repositories/SDK/Profiles/Tools.json",
-        "sha256": "ae53e53e62822d575267ca43865a8a6646c436d22665f6926440df5bc80e99af"
+        "sha256": "93e15d437faa75c3d82ef693d65dc0d4851db08464a6acc0a03b214f60bcbe8b"
       },
       {
         "path": "Repositories/SDK/Rust/Cargo.toml",

@@ -168,6 +168,10 @@ pending VM identities, including multiple failed direct frees. Fully linked,
 proven local GOTPCREL slots close onto existing R4M0 REL32/ABS64 relocations;
 relaxed GOTPCRELX and address-limited ABS32 remain rejected.
 
+SDK0.64.145 supersedes the historical caller-owned system selection below:
+build/tool policy, Contract and system libraries now come only from the three
+SDK Profiles JSON originals. Callers select locations and pin extra libraries.
+
 SDK0.64.66 leaves project version selection and project locks to the caller.
 Generators and builds use explicit component directories; technical SDK/Contract
 dependency hashes, Cargo.lock and the pinned toolchain remain enforced.
