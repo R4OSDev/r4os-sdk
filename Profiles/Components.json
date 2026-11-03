@@ -2644,7 +2644,9 @@
           "build.zig",
           "build.zig.zon"
         ]
-      }
+      },
+      "zig_archive_url": "https://github.com/R4OSDev/r4os-contract/archive/5521df06871b4cee158e44853db01380934d6c4c.tar.gz",
+      "zig_hash": "r4os_contract-0.64.11-ELhbYa_UcgBuo-SnWc6plpYE5WHMo3UJlk7o7Daeerdo"
     },
     "recovery-sdk": {
       "repository": "https://github.com/R4OSDev/r4os-sdk.git",

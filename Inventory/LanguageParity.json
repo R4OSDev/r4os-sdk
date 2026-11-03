@@ -55978,7 +55978,7 @@
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.89.31",
+    "reviewed_in": "0.89.32",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -57783,7 +57783,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/ProfileData.ps1",
-        "sha256": "cc3d3b8298950495abb9330c5474413dac08148d50454913c67c2110a5d27b58"
+        "sha256": "f115ec3ec234edf7a2af2ff88309748961a567f15b8a4fe52584deab1271820d"
       },
       {
         "path": "Repositories/SDK/Tools/ProfileResolver.ps1",
@@ -57816,6 +57816,10 @@
       {
         "path": "Repositories/SDK/Tools/R4XBuilder/src/stack_probes.zig",
         "sha256": "adc41a8ee2c27ddcb8db31373487ff06c7bc70b5d8da4e8d86410122ce7f2b4a"
+      },
+      {
+        "path": "Repositories/SDK/Tools/RecoveryProfiles.ps1",
+        "sha256": "5f86168de796a6a7ba359506649ff3e58bf73f5f35eb66a843c581a57901e99a"
       },
       {
         "path": "Repositories/SDK/Tools/Rust.ps1",
@@ -57935,7 +57939,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "decd80457c3b0d2b72f59bc6e6df11a0eabb503672cc4ef078b984bd68e35aec"
+        "sha256": "d2fd533d5beb49556d4b2494e0de2a1e13203642d3784618b1b6e667478f01a3"
       },
       {
         "path": "Repositories/SDK/r4os.zig",

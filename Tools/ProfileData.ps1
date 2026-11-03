@@ -87,7 +87,7 @@ function Read-R4SdkProfiles([string]$SdkRoot) {
     }
     foreach ($id in $components.repositories.Keys) {
         $source = $components.repositories[$id]
-        Assert-R4ProfileKeys $source @('repository', 'commit', 'version', 'files', 'archive_sha256', 'archive_url', 'archive_format', 'zig_hash', 'tree') "repositories.$id"
+        Assert-R4ProfileKeys $source @('repository', 'commit', 'version', 'files', 'archive_sha256', 'archive_url', 'zig_archive_url', 'archive_format', 'zig_hash', 'tree') "repositories.$id"
         if ($source.repository -cnotmatch '^https://[^\s]+$' -or
             $source.commit -cnotmatch '^[0-9a-f]{40}$' -or
             $source.version -cnotmatch '^\d+\.\d+\.\d+$') { throw "SdkProfileInvalidSource: $id" }

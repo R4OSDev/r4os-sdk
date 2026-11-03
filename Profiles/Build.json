@@ -523,7 +523,9 @@
       "sanitize_c": "off",
       "single_threaded": false,
       "stack_check": false,
-      "stack_protector": false
+      "stack_protector": false,
+      "image_creator_optimize": "ReleaseSafe",
+      "strip_default": true
     },
     "native-graphics": {
       "schema": 1,
@@ -4115,6 +4117,46 @@
         "-Dzlib=disabled",
         "-Ddisplay-info=disabled"
       ]
+    },
+    "recovery-module": {
+      "optimize_size": "ReleaseSmall",
+      "optimize_speed": "ReleaseFast",
+      "host_optimize": "Debug",
+      "contract_generator_optimize": "ReleaseSafe",
+      "cpu_features_add": [
+        "mmx",
+        "sse",
+        "sse2",
+        "sse3",
+        "ssse3",
+        "sse4_1",
+        "sse4_2",
+        "avx",
+        "avx2",
+        "aes",
+        "pclmul"
+      ],
+      "c_flags": [
+        "-std=c11",
+        "-ffreestanding",
+        "-fno-builtin",
+        "-fno-stack-protector",
+        "-fno-unwind-tables",
+        "-fno-asynchronous-unwind-tables",
+        "-mno-red-zone",
+        "-msse2",
+        "-mavx2",
+        "-maes",
+        "-mpclmul"
+      ],
+      "single_threaded": false,
+      "strip": false,
+      "pic": true,
+      "red_zone": false,
+      "sanitize_c": "off",
+      "stack_check": false,
+      "stack_protector": false,
+      "link_emit_relocs": true
     }
   },
   "native_c_profiles": {
