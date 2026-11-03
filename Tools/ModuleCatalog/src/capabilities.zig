@@ -237,7 +237,7 @@ pub fn render(a: std.mem.Allocator, io: std.Io, cwd: std.Io.Dir, selected_profil
         .profile = capabilities.rust_profile,
         .sdk = try object(profile, "sdk"),
         .contract = try object(profile, "contract"),
-        .devkit = try object(profile, "devkit"),
+        .package_interface = "r4os-sdk-package",
         .formats = .{ .manifest = manifest.manifest_version, .semantic_plan = manifest.plan_contract_version, .source_catalog = @as(u32, 4), .installed_catalog = @as(u32, 4), .rust_build_plan = capabilities.rust_build_plan_schema, .module_container = "R4M0:1", .r4x_start = "R4XStart:1" },
         .cpu = cpu,
         .rust_codegen = try readJson(a, io, cwd, try relative(a, root, "Profile/RustModuleProfile.json")),

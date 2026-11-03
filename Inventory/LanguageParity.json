@@ -57755,7 +57755,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/ModuleCatalog/src/capabilities.zig",
-        "sha256": "c22fdf0059a7a96568e660869f171ccfabfd13b09245da290a1616b9691c5aa2"
+        "sha256": "3738d7b8486a51613e28c3c544feb8a7ae5f872322eaa78a825a30b5d527e3d3"
       },
       {
         "path": "Repositories/SDK/Tools/ModuleCatalog/src/main.zig",
