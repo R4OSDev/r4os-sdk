@@ -1,0 +1,179 @@
+{
+  "schema": 1,
+  "policy": {
+    "system_selection": "sdk-only",
+    "additional_libraries": "caller-pinned-no-system-shadowing",
+    "development": "explicit-sdk-snapshot"
+  },
+  "repositories": {
+    "contract": {
+      "repository": "https://github.com/R4OSDev/r4os-contract.git",
+      "commit": "4d66b0e675b93df4339015e29e7dd817093a19b4",
+      "version": "0.64.72",
+      "files": {
+        "build.zig.zon": "1a2062426bdb460dd720a2babfc0eedccfa68cca5d04165706732a3f4b8a0dd0",
+        "API/ApiContract.json": "cca4a500e25a18d4288547e642c39a2a17a029faea579c866d5c716df759ef46",
+        "Module/CpuBaseline.json": "eeeee03aa8fd41051c09e61e9d70ca35660f2b413c3f878fb6e5a3bb51aad10c",
+        "Generated/SDK/Rust/Cargo.toml": "de464f2f9243e3d153c06b701a2126839c3e8a921a6d466467d3042370023263",
+        "Generated/SDK/Rust/src/lib.rs": "73809e2c62cafa0f92d5fedf1cf4f2359ceb58972a322d0d6aa9e1e1152ae9f9"
+      }
+    },
+    "libraries": {
+      "repository": "https://github.com/R4OSDev/r4os-libraries.git",
+      "commit": "8e114508aaeb225dfd77070574290bc8595208e1",
+      "version": "0.64.42",
+      "files": {
+        "build.zig.zon": "de127fe18339377616400647306008132ff51e1a1afc1cc15e25300350e89891",
+        "Shared/Rust/Cargo.toml": "431c38bac8b28467b0dad7842d1626397bb061eeb94f54f604276dc81036aec4"
+      }
+    },
+    "recovery-contract": {
+      "repository": "https://github.com/R4OSDev/r4os-contract.git",
+      "commit": "e9f97a6e66a3a1a4daf4e01e21518fdcb62d14cb",
+      "archive_sha256": "ca133da951fccd004564f8fc91325b3cd0c40d53db9a5cf2af3e8e2faab37f00",
+      "version": "0.64.11",
+      "files": {
+        "build.zig.zon": "9bc2b404852c0f7bbf60bed1943464dc5c1054c29ccf3e7f58ea7aba87b5856e"
+      }
+    },
+    "recovery-sdk": {
+      "repository": "https://github.com/R4OSDev/r4os-sdk.git",
+      "commit": "cfc6f470b2c7dd1ba173d52d2edf5ce68a9ed18c",
+      "archive_sha256": "d36bfbf6f046f5262a4965c331a07b17893ce2f7c6b76b1be4791e1ff920132e",
+      "version": "0.64.22",
+      "files": {
+        "build.zig.zon": "73f65a8fa5053092daab768e8435464714ef2ec73e90e353231290f9eb2ae5a4"
+      }
+    },
+    "recovery-libraries": {
+      "repository": "https://github.com/R4OSDev/r4os-libraries.git",
+      "commit": "1365e096dfb3f58aca3ef915db6566cef5b50b1f",
+      "archive_sha256": "a9cfa1ff990562ce6ee9339e53f8397cd1cf34b4b7c6a6e83d138dbf71237f4f",
+      "version": "0.2.0",
+      "files": {}
+    }
+  },
+  "libraries": {
+    "r4aco": {
+      "name": "R4ACO",
+      "repository": "libraries",
+      "path": "R4ACO",
+      "version": "0.1.5",
+      "target": "/R4OS/LIBS/R4ACO.R4L",
+      "manifest_sha256": "9047f2a463bfc27879dcd70b5bc449f57ade532ea858ed59278846719cda3c65"
+    },
+    "r4amd": {
+      "name": "R4AMD",
+      "repository": "libraries",
+      "path": "R4AMD",
+      "version": "0.1.8",
+      "target": "/R4OS/LIBS/R4AMD.R4L",
+      "manifest_sha256": "1b66236e6dfba28c9230b1e69160b334441a72650162e04ceff852f883df4fcc"
+    },
+    "r4enc": {
+      "name": "R4ENC",
+      "repository": "libraries",
+      "path": "R4ENC",
+      "version": "0.1.9",
+      "target": "/R4OS/LIBS/R4ENC.R4L",
+      "manifest_sha256": "ebdb2f033599afefa0a13de539a5aa7e969fc3fec6281ecf8cd04d286cc5d978"
+    },
+    "r4font": {
+      "name": "R4FONT",
+      "repository": "libraries",
+      "path": "R4FONT",
+      "version": "0.2.3",
+      "target": "/R4OS/LIBS/R4FONT.R4L",
+      "manifest_sha256": "a22c56f9e988efbb52b30feaf115610633e842fc6ed6b6207aab1d5c9bdc2cdb"
+    },
+    "r4gfx": {
+      "name": "R4GFX",
+      "repository": "libraries",
+      "path": "R4GFX",
+      "version": "0.1.38",
+      "target": "/R4OS/LIBS/R4GFX.R4L",
+      "manifest_sha256": "8f83893ea115d9bfa8c29484c6ba73b18d782eaea3e342022ba9fc758cd76fc8"
+    },
+    "r4gl": {
+      "name": "R4GL",
+      "repository": "libraries",
+      "path": "R4GL",
+      "version": "0.1.31",
+      "target": "/R4OS/LIBS/R4GL.R4L",
+      "manifest_sha256": "aad68555bc6fd148fa59cc23c2859a3f9b5ae41d384396d3051a49f2e9dcb22e"
+    },
+    "r4img": {
+      "name": "R4IMG",
+      "repository": "libraries",
+      "path": "R4IMG",
+      "version": "0.3.4",
+      "target": "/R4OS/LIBS/R4IMG.R4L",
+      "manifest_sha256": "1da35fc4966d42b93327c829b4d7452975a04ffddccd818aa233a84e9e1f4401"
+    },
+    "r4nak": {
+      "name": "R4NAK",
+      "repository": "libraries",
+      "path": "R4NAK",
+      "version": "0.1.3",
+      "target": "/R4OS/LIBS/R4NAK.R4L",
+      "manifest_sha256": "32ebaca721441e00570fcf52487b52d09fd52f9bbf4aa89b00975006f8b789c9"
+    },
+    "r4nv": {
+      "name": "R4NV",
+      "repository": "libraries",
+      "path": "R4NV",
+      "version": "0.1.19",
+      "target": "/R4OS/LIBS/R4NV.R4L",
+      "manifest_sha256": "5694de1ed1ce6edddc6ec6399e96b97e9caf40694b5f0278d73f73a327c44e8c"
+    },
+    "r4std": {
+      "name": "R4STD",
+      "repository": "libraries",
+      "path": "R4STD",
+      "version": "0.2.6",
+      "target": "/R4OS/LIBS/R4STD.R4L",
+      "manifest_sha256": "63a8967043c990bf41e291d8ab01524284b2583cea4249595f5e82c5c2c471e4"
+    },
+    "r4video": {
+      "name": "R4VIDEO",
+      "repository": "libraries",
+      "path": "R4VIDEO",
+      "version": "0.1.13",
+      "target": "/R4OS/LIBS/R4VIDEO.R4L",
+      "manifest_sha256": "900bd40b81fe51afa88556a284f98f76dcc4865b4e73c320e7453d79f44565fd"
+    },
+    "r4vk": {
+      "name": "R4VK",
+      "repository": "libraries",
+      "path": "R4VK",
+      "version": "0.1.42",
+      "target": "/R4OS/LIBS/R4VK.R4L",
+      "manifest_sha256": "2f55b4a85098312eb29ce3f8b13cd3edc7f3405511a87faa570187ecebe2543e"
+    }
+  },
+  "sets": {
+    "system": {
+      "contract": "contract",
+      "system_libraries": [
+        "r4aco",
+        "r4amd",
+        "r4enc",
+        "r4font",
+        "r4gfx",
+        "r4gl",
+        "r4img",
+        "r4nak",
+        "r4nv",
+        "r4std",
+        "r4video",
+        "r4vk"
+      ]
+    },
+    "recovery": {
+      "contract": "recovery-contract",
+      "system_libraries": [],
+      "source_sdk": "recovery-sdk",
+      "source_libraries": "recovery-libraries"
+    }
+  }
+}

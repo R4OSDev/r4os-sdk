@@ -1,0 +1,144 @@
+# Interpretation of the three SDK-owned inputs. No compiler or component pins live here.
+function Assert-R4ProfileJsonObject($Value, [string]$Label) {
+    if ($Value -isnot [Collections.IDictionary]) { throw "SdkProfileObjectRequired: $Label" }
+}
+
+function Assert-R4ProfileKeys($Value, [string[]]$Allowed, [string]$Label) {
+    Assert-R4ProfileJsonObject $Value $Label
+    foreach ($key in $Value.Keys) {
+        if ($key -cnotin $Allowed) { throw "SdkProfileUnknownField: $Label.$key" }
+    }
+}
+
+function Assert-R4ProfileId([string]$Id, [string]$Label) {
+    if ($Id -cnotmatch '^[a-z][a-z0-9_-]{0,95}$') { throw "SdkProfileInvalidId: $Label" }
+}
+
+function Assert-R4ProfileReference($Map, [string]$Id, [string]$Label) {
+    Assert-R4ProfileId $Id $Label
+    if (!$Map.Contains($Id)) { throw "SdkProfileUnknownReference: $Label=$Id" }
+}
+
+function Assert-R4ProfileJsonNames([System.Text.Json.JsonElement]$Element) {
+    if ($Element.ValueKind -eq [System.Text.Json.JsonValueKind]::Object) {
+        $names = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+        foreach ($property in $Element.EnumerateObject()) {
+            if (!$names.Add($property.Name)) { throw ('SdkProfileDuplicateKey: ' + $property.Name) }
+            Assert-R4ProfileJsonNames $property.Value
+        }
+    } elseif ($Element.ValueKind -eq [System.Text.Json.JsonValueKind]::Array) {
+        foreach ($item in $Element.EnumerateArray()) { Assert-R4ProfileJsonNames $item }
+    }
+}
+
+function Read-R4SdkProfiles([string]$SdkRoot) {
+    $SdkRoot = [IO.Path]::GetFullPath($SdkRoot)
+    $documents = [ordered]@{}
+    $hashes = [ordered]@{}
+    foreach ($name in @('Build', 'Tools', 'Components')) {
+        $path = Join-Path $SdkRoot ('Profiles/' + $name + '.json')
+        $text = [IO.File]::ReadAllText($path)
+        $json = [System.Text.Json.JsonDocument]::Parse($text)
+        try { Assert-R4ProfileJsonNames $json.RootElement } finally { $json.Dispose() }
+        $document = ConvertFrom-Json -InputObject $text -AsHashtable -Depth 100
+        Assert-R4ProfileJsonObject $document $name
+        if (($document.schema -isnot [long] -and $document.schema -isnot [int]) -or $document.schema -ne 1) {
+            throw "SdkProfileSchemaMismatch: $name"
+        }
+        $documents[$name] = $document
+        $hashes[$name] = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()
+    }
+    $build, $tools, $components = $documents.Build, $documents.Tools, $documents.Components
+    Assert-R4ProfileKeys $build @('schema', 'profiles', 'cpu_baselines', 'codegen', 'native_c_profiles') 'Build'
+    Assert-R4ProfileKeys $tools @('schema', 'toolsets', 'tools') 'Tools'
+    Assert-R4ProfileKeys $components @('schema', 'policy', 'repositories', 'libraries', 'sets') 'Components'
+    foreach ($entry in @(@($build.profiles, 'profiles'), @($build.codegen, 'codegen'),
+                        @($build.cpu_baselines, 'cpu_baselines'), @($tools.toolsets, 'toolsets'),
+                        @($tools.tools, 'tools'), @($components.repositories, 'repositories'),
+                        @($components.libraries, 'libraries'), @($components.sets, 'sets'))) {
+        Assert-R4ProfileJsonObject $entry[0] $entry[1]
+        foreach ($id in $entry[0].Keys) { Assert-R4ProfileId $id $entry[1] }
+    }
+    if (!$build.profiles.Count -or !$tools.toolsets.Count -or !$components.sets.Count) {
+        throw 'SdkProfileEmptyCatalogue'
+    }
+    foreach ($id in $build.profiles.Keys) {
+        $profile = $build.profiles[$id]
+        Assert-R4ProfileKeys $profile @('language', 'role', 'toolset', 'components', 'codegen', 'cpu') "profiles.$id"
+        if ($profile.language -cnotin @('Zig', 'C', 'C++', 'Rust') -or
+            $profile.role -cnotin @('module', 'kernel', 'recovery', 'native', 'host')) {
+            throw "SdkProfileUnsupportedRole: $id"
+        }
+        Assert-R4ProfileReference $tools.toolsets $profile.toolset "$id.toolset"
+        Assert-R4ProfileReference $components.sets $profile.components "$id.components"
+        Assert-R4ProfileReference $build.codegen $profile.codegen "$id.codegen"
+        if ($profile.Contains('cpu')) { Assert-R4ProfileReference $build.cpu_baselines $profile.cpu "$id.cpu" }
+    }
+    foreach ($id in $tools.toolsets.Keys) {
+        $ids = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
+        $set = $tools.toolsets[$id]
+        Assert-R4ProfileKeys $set @('tools') "toolsets.$id"
+        if (!$set.tools.Count) { throw "SdkProfileEmptyToolset: $id" }
+        foreach ($tool in $set.tools) {
+            Assert-R4ProfileReference $tools.tools $tool "$id.tools"
+            if (!$ids.Add($tool)) { throw "SdkProfileDuplicateTool: $tool" }
+        }
+    }
+    foreach ($id in $components.repositories.Keys) {
+        $source = $components.repositories[$id]
+        Assert-R4ProfileKeys $source @('repository', 'commit', 'version', 'files', 'archive_sha256', 'archive_url', 'archive_format', 'zig_hash') "repositories.$id"
+        if ($source.repository -cnotmatch '^https://[^\s]+$' -or
+            $source.commit -cnotmatch '^[0-9a-f]{40}$' -or
+            $source.version -cnotmatch '^\d+\.\d+\.\d+$') { throw "SdkProfileInvalidSource: $id" }
+        Assert-R4ProfileJsonObject $source.files "$id.files"
+        foreach ($path in $source.files.Keys) {
+            if ([IO.Path]::IsPathRooted($path) -or $path.Contains('\') -or
+                $path.Split('/') -contains '..' -or $path.Split('/') -contains '.' -or
+                $source.files[$path] -cnotmatch '^[0-9a-f]{64}$') { throw "SdkProfileInvalidInput: $id/$path" }
+        }
+        if ($source.Contains('archive_sha256') -and $source.archive_sha256 -cnotmatch '^[0-9a-f]{64}$') {
+            throw "SdkProfileInvalidArchiveHash: $id"
+        }
+    }
+    $names = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+    foreach ($id in $components.libraries.Keys) {
+        $library = $components.libraries[$id]
+        Assert-R4ProfileKeys $library @('name', 'repository', 'path', 'version', 'target', 'manifest_sha256') "libraries.$id"
+        Assert-R4ProfileReference $components.repositories $library.repository "$id.repository"
+        if (!$names.Add($library.name)) { throw "SdkProfileDuplicateSystemLibrary: $($library.name)" }
+        if ($library.path -cnotmatch '^[A-Za-z0-9_/-]+$' -or $library.path.Split('/') -contains '..' -or
+            $library.version -cnotmatch '^\d+\.\d+\.\d+$' -or
+            $library.manifest_sha256 -cnotmatch '^[0-9a-f]{64}$') { throw "SdkProfileInvalidLibrary: $id" }
+    }
+    foreach ($id in $components.sets.Keys) {
+        $set = $components.sets[$id]
+        Assert-R4ProfileKeys $set @('contract', 'system_libraries', 'source_sdk', 'source_libraries') "sets.$id"
+        Assert-R4ProfileReference $components.repositories $set.contract "$id.contract"
+        foreach ($field in @('source_sdk', 'source_libraries')) {
+            if ($set.Contains($field)) { Assert-R4ProfileReference $components.repositories $set[$field] "$id.$field" }
+        }
+        $seen = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
+        foreach ($library in $set.system_libraries) {
+            Assert-R4ProfileReference $components.libraries $library "$id.system_libraries"
+            if (!$seen.Add($library)) { throw "SdkProfileDuplicateSystemReference: $library" }
+        }
+    }
+    if ($components.policy.system_selection -cne 'sdk-only' -or
+        $components.policy.additional_libraries -cne 'caller-pinned-no-system-shadowing' -or
+        $components.policy.development -cne 'explicit-sdk-snapshot') { throw 'SdkProfilePolicyMismatch' }
+    $sdkManifest = [IO.File]::ReadAllText((Join-Path $SdkRoot 'build.zig.zon'))
+    if ($sdkManifest -cnotmatch '\.version\s*=\s*"(\d+\.\d+\.\d+)"') { throw 'SdkProfileMissingSdkVersion' }
+    return [ordered]@{schema=1; sdk_version=$Matches[1]; hashes=$hashes; Build=$build; Tools=$tools; Components=$components}
+}
+
+function Get-R4SdkBuildProfile([string]$SdkRoot, [string]$Id) {
+    $data = Read-R4SdkProfiles $SdkRoot
+    Assert-R4ProfileReference $data.Build.profiles $Id 'profile'
+    $profile = $data.Build.profiles[$Id]
+    return [ordered]@{
+        schema=1; sdk_version=$data.sdk_version; id=$Id; hashes=$data.hashes
+        build=$profile; codegen=$data.Build.codegen[$profile.codegen]
+        toolset=$data.Tools.toolsets[$profile.toolset]
+        components=$data.Components.sets[$profile.components]
+    }
+}
