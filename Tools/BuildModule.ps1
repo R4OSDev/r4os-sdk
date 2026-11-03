@@ -16,6 +16,12 @@ $contractPath=Resolve-ModuleSetting CONTRACT_ROOT $modulePath
 $devkitPath=Resolve-ModuleSetting DEVKIT_ROOT $modulePath
 $artifactPath=Resolve-ModuleSetting ARTIFACTS_ROOT $modulePath
 $zigPath=Join-Path (Resolve-ModuleSetting ZIG_ROOT $devkitPath) $(if($IsWindows){'zig.exe'}else{'zig'})
+. (Join-Path $PSScriptRoot 'BuildContext.ps1')
+$librariesPath=Resolve-ModuleSetting LIBRARIES_ROOT $modulePath
+$context=Get-R4SdkBuildContext $sdkPath $contractPath $librariesPath $devkitPath ([IO.Path]::GetDirectoryName($zigPath))
+Assert-R4SdkBuildArguments $context $BuildArguments
+Assert-R4SdkProjectPins $sdkPath $modulePath
+Write-Host ('SDK '+$context.data.sdk_version+'; profile sources verified; technical='+$context.resolved.technical)
 $moduleManifest=Join-Path $modulePath 'module.R4MF'
 $isRust=[IO.File]::ReadAllText($moduleManifest) -match '(?m)^LANGUAGE=Rust\s*$'
 $forward=@($BuildArguments)
@@ -37,23 +43,17 @@ if($isRust -and !$hostTests){
     }
     $options=@{ProjectRoot=$modulePath;SdkRoot=$sdkPath;ContractRoot=$contractPath;ToolsRoot=$toolsPath;
         InstallRoot=$devkitPath;CacheRoot=(Join-Path $devkitPath '.Cache/Rust');OutputRoot=$artifactPath;
-        ZigRoot=([IO.Path]::GetDirectoryName($zigPath));Technical=$technical}
-    if($settings.ContainsKey('LIBRARIES_ROOT')){$options.LibraryHelpersRoot=Resolve-ModuleSetting LIBRARIES_ROOT $modulePath}
+        ZigRoot=([IO.Path]::GetDirectoryName($zigPath));Technical=($technical -or $context.resolved.technical)}
+    $options.LibraryHelpersRoot=$librariesPath
+    $options.LibrariesRoot=$librariesPath
+    if($context.development_profile){$options.DevelopmentProfile=$context.development_profile}
     & (Join-Path $sdkPath 'Tools/Build-Project.ps1') @options
     exit $LASTEXITCODE
 }
 if($isRust -and !@($forward|Where-Object {!$_.StartsWith('-') -and $_ -cne 'install'}).Count){
     throw 'Select an explicit owner test target with -Dhost-tests=true.'
 }
-$forkPaths=@($sdkPath,$contractPath)
-$manifestPath=Join-Path $modulePath 'build.zig.zon'
-if($settings.ContainsKey('LIBRARIES_ROOT')){
-    $forkPaths+=,(Resolve-ModuleSetting LIBRARIES_ROOT $modulePath)
-} elseif([IO.File]::ReadAllText($manifestPath) -match '\.r4os_libraries\s*='){
-    # Older local settings predate a module's new library dependency. The
-    # canonical sibling follows the configured SDK path, never the host cwd.
-    $forkPaths+=,[IO.Path]::GetFullPath((Join-Path $sdkPath '../Libraries'))
-}
+$forkPaths=@($sdkPath,$context.contract_root,$context.libraries_root)
 foreach($path in $forkPaths){if(!(Test-Path -LiteralPath (Join-Path $path 'build.zig.zon') -PathType Leaf)){throw "Repository not found: $path"}}
 if(!(Test-Path -LiteralPath $zigPath -PathType Leaf)){throw "Zig not found: $zigPath"}
 [IO.Directory]::CreateDirectory($artifactPath)|Out-Null

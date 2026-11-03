@@ -4,12 +4,16 @@ param(
     [Parameter(Mandatory)][string]$ContractRoot,
     [Parameter(Mandatory)][string]$ToolsRoot,
     [string]$ZigRoot='', [string]$InstallRoot='', [string]$CacheRoot='', [string]$OutputRoot='',
+    [string]$LibrariesRoot='', [string]$DevelopmentProfile='', [string]$AdditionalLibrariesFile='',
     [string[]]$BuildArguments=@(), [string[]]$DependencyRoot=@(), [string]$DependencyRootsJson='',
     [string]$Features='', [switch]$NoDefaultFeatures, [string]$LibraryHelpersRoot='', [switch]$Technical
 )
 $ErrorActionPreference='Stop';Set-StrictMode -Version Latest
 foreach($key in @('ProjectRoot','SdkRoot','ContractRoot','ToolsRoot')){Set-Variable $key ([IO.Path]::GetFullPath((Get-Variable $key -ValueOnly)))}
 . (Join-Path $PSScriptRoot 'MatchedComponents.ps1')
+. (Join-Path $PSScriptRoot 'BuildContext.ps1')
+if(!$LibrariesRoot){$LibrariesRoot=if($LibraryHelpersRoot){$LibraryHelpersRoot}else{$env:R4OS_SDK_LIBRARIES_ROOT}}
+if(!$DevelopmentProfile){$DevelopmentProfile=$env:R4OS_SDK_DEVELOPMENT_PROFILE}
 $manifest=Join-Path $ProjectRoot 'module.R4MF'
 # Rust retains its existing output/error owner, Cargo and exact build receipt.
 $manifestExists=Test-Path -LiteralPath $manifest -PathType Leaf
@@ -17,7 +21,7 @@ $selectedOutput=if($OutputRoot){[IO.Path]::GetFullPath($OutputRoot)}else{Join-Pa
 $priorRust=Test-Path -LiteralPath (Join-Path $selectedOutput '.r4os-rust-build.json') -PathType Leaf
 if(($manifestExists -and [IO.File]::ReadAllText($manifest) -match '(?m)^LANGUAGE=Rust\s*$') -or (!$manifestExists -and $priorRust)){
     $arguments=@{ProjectRoot=$ProjectRoot;SdkRoot=$SdkRoot;ContractRoot=$ContractRoot;ToolsRoot=$ToolsRoot;Technical=$Technical}
-    foreach($key in @('ZigRoot','InstallRoot','CacheRoot','OutputRoot','DependencyRoot','DependencyRootsJson','Features','LibraryHelpersRoot')){if((Get-Variable $key -ValueOnly)){$arguments[$key]=Get-Variable $key -ValueOnly}}
+    foreach($key in @('LibrariesRoot','DevelopmentProfile','AdditionalLibrariesFile','ZigRoot','InstallRoot','CacheRoot','OutputRoot','DependencyRoot','DependencyRootsJson','Features','LibraryHelpersRoot')){if((Get-Variable $key -ValueOnly)){$arguments[$key]=Get-Variable $key -ValueOnly}}
     if($NoDefaultFeatures){$arguments.NoDefaultFeatures=$true}
     if($BuildArguments.Count){throw 'Rust uses explicit Cargo feature/dependency parameters, not Zig build arguments.'}
     & (Join-Path $PSScriptRoot 'Build-RustModule.ps1') @arguments
@@ -41,6 +45,10 @@ try{
     $receipt=Join-Path $OutputRoot 'build.json';[IO.File]::Delete($receipt)
     [IO.File]::WriteAllText($marker,(@{schema=1;project=$ProjectRoot;artifact='';status='building'}|ConvertTo-Json),$utf8)
     $profile=Read-SdkMatchedComponents $SdkRoot $ContractRoot $ToolsRoot $Technical.IsPresent
+    $context=Get-R4SdkBuildContext $SdkRoot $ContractRoot $LibrariesRoot $(if($InstallRoot){$InstallRoot}else{$ToolsRoot}) $ZigRoot -DevelopmentProfile $DevelopmentProfile
+    Assert-R4SdkBuildArguments $context $BuildArguments
+    Assert-R4SdkProjectPins $SdkRoot $ProjectRoot
+    if($AdditionalLibrariesFile){$extras=Get-Content -Raw -LiteralPath $AdditionalLibrariesFile|ConvertFrom-Json -AsHashtable -NoEnumerate;$null=Resolve-R4SdkComponents -SdkRoot $SdkRoot -Profile 'r4os-zig-module-v1' -Roots @{contract=$ContractRoot;libraries=$LibrariesRoot} -DevelopmentProfile $DevelopmentProfile -AdditionalLibraries $extras}
     $hostName=if($IsWindows){'Windows'}elseif($IsLinux){'Linux'}else{throw 'Unsupported host.'}
     $catalog=Get-SdkMatchedTool $ToolsRoot $profile $profile.hosts[$hostName].catalog
     $plan=@(& $catalog plan --manifest $manifest 2>&1);if($LASTEXITCODE -ne 0){throw ($plan -join "`n")};$facts=(($plan -join "`n")|ConvertFrom-Json -AsHashtable).plan
@@ -55,10 +63,10 @@ try{
     # Source roots and resource paths are resolved by the original SDK manifest
     # builder. This wrapper adds no second role grammar or Zig module root.
     if(!@($BuildArguments|Where-Object {$_ -match '^-j($|[0-9])'}).Count){$BuildArguments=@('-j1')+$BuildArguments}
-    & $zig build --build-file (Join-Path $SdkRoot 'Tools/ManifestProject/build.zig') ('--fork='+$ContractRoot) ('-Dproject-root='+$ProjectRoot) --cache-dir $CacheRoot --prefix $OutputRoot @BuildArguments
+    & $zig build --build-file (Join-Path $SdkRoot 'Tools/ManifestProject/build.zig') ('--fork='+$ContractRoot) ('--fork='+$LibrariesRoot) ('-Dproject-root='+$ProjectRoot) --cache-dir $CacheRoot --prefix $OutputRoot @BuildArguments
     if($LASTEXITCODE -ne 0){throw 'Original SDK manifest build failed.'}
     $path=Join-Path $OutputRoot $artifact;if(!(Test-Path -LiteralPath $path -PathType Leaf)){throw 'Manifest artifact missing.'}
-    $result=@{schema=1;status='success';technical=[bool]$Technical;project=$ProjectRoot;module=$facts;sdk=$profile.sdk;contract=$profile.contract;compiler=@{version=$version;sha256=(Get-FileHash -LiteralPath $zig -Algorithm SHA256).Hash.ToLowerInvariant()};artifact=@{file=$artifact;bytes=([IO.FileInfo]$path).Length;sha256=(Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()}}
+    $result=@{schema=1;sdk_profile=@{id=$context.resolved.profile;hashes=$context.resolved.hashes;technical=$context.resolved.technical};status='success';technical=[bool]$Technical;project=$ProjectRoot;module=$facts;sdk=$profile.sdk;contract=$profile.contract;compiler=@{version=$version;sha256=(Get-FileHash -LiteralPath $zig -Algorithm SHA256).Hash.ToLowerInvariant()};artifact=@{file=$artifact;bytes=([IO.FileInfo]$path).Length;sha256=(Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()}}
     [IO.File]::WriteAllText($receipt,($result|ConvertTo-Json -Depth 30)+"`n",$utf8)
     [IO.File]::WriteAllText($marker,(@{schema=1;project=$ProjectRoot;artifact=$artifact;status='success'}|ConvertTo-Json),$utf8)
 }catch{

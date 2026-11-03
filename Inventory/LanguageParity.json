@@ -55672,6 +55672,20 @@
         "Native KVM4: 24 actual simultaneous extra service processes/endpoints; Zig/C/Rust complete >300 row inventory and real IPC replies. Native old-registration and old-process actions rejected without replacement effects."
       ],
       "limits": "No Windows execution, physical hardware or native global memory exhaustion claimed. Controlled host allocation leaves and native ownership/cleanup tests have distinct scope."
+    },
+    "sdk_profiles_08929": {
+      "kind": "host_build_profile_migration",
+      "performed_in": "0.89.29",
+      "complete": true,
+      "report": "Docs/SDK/Profiles.txt",
+      "scope": "SDK3 resolution and shared owner/external C/Zig/Rust host builders; runtime APIs and ABI unchanged.",
+      "checks": [
+        "13 schema cases and 11 source/development/extra-library cases passed in 0.89.25/28.",
+        "Real C and Zig owner/manifest builds; Rust source change, error cleanup, restored artifact and missing tools checks passed.",
+        "Compiler and runtime codegen preserved; runtime object bytes compared in 0.89.27.",
+        "Explicit fork/Debug/dirty-SDK refusal; workspace catalog still 129 owners."
+      ],
+      "limits": "Linux host; Windows starters/source only. No new runtime, hardware or performance qualification."
     }
   },
   "wave_bindings": [
@@ -55924,18 +55938,17 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.89.21",
-    "sdk": "0.64.135 source candidate",
+    "performed_in": "0.89.29",
+    "sdk": "0.64.140 source candidate",
     "contract": "0.64.72",
-    "evidence": "dynamic_services_08921",
-    "scope": "R4SYS v35 dynamic pages and bound controls; host controlled peers plus actual KVM4 native consumers.",
-    "historical_snapshot_retained": true,
-    "current_group_metadata": "R4SYS v35 size1408 appends slots172/173. All previous prefixes/layouts preserved."
+    "evidence": "sdk_profiles_08929",
+    "scope": "Build/tool/source profile migration; no API/ABI/runtime semantics changed.",
+    "historical_snapshot_retained": true
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.89.21 dynamic service inventory and native language consumers",
+    "reviewed_in": "0.89.29",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -57652,15 +57665,23 @@
       },
       {
         "path": "Repositories/SDK/Tools/Build-Project.ps1",
-        "sha256": "5a230d5f76ffceb6d0846707d8241644c9837e8acd9239f77a26bcf96a62db0a"
+        "sha256": "01abc8cbe3c1d736a3e8e0ad387e17df8e6460b1ada89cf67da2ec1015d418b6"
       },
       {
         "path": "Repositories/SDK/Tools/Build-RustModule.ps1",
-        "sha256": "04a8b5e9f8c67669c3b5768776f70e0138d1abf1076abc9d1d15c196504fc179"
+        "sha256": "2b76452b8e2012a5d7060f6e0e1281c12f1fc11813e219e32a8b0a4666c25d28"
+      },
+      {
+        "path": "Repositories/SDK/Tools/BuildContext.ps1",
+        "sha256": "29fc8c7b9ec3067f075230a4d217349f8600bf122f0487d54d41524479f503a5"
       },
       {
         "path": "Repositories/SDK/Tools/BuildModule.ps1",
-        "sha256": "3f3b3c4343027763e1ebc21102cb85248022d2d31fb97e9c0a28062be0d76613"
+        "sha256": "787303eb91b6b6df069dddcae797b6cb201ee0b29ca5f659c5af163818a38720"
+      },
+      {
+        "path": "Repositories/SDK/Tools/BuildOwner.ps1",
+        "sha256": "f2fabd57150ab53d61516a15e3b998e09ab0ca49fa55bb07dc61b4bd495fdfd7"
       },
       {
         "path": "Repositories/SDK/Tools/CFacadeGen/src/main.zig",
@@ -57679,6 +57700,10 @@
         "sha256": "6eff335abcb8a7ec0ba271553fbe782a62218752793fc5e56a7ed6a071ed70fc"
       },
       {
+        "path": "Repositories/SDK/Tools/Export-RustTools.ps1",
+        "sha256": "347cdb7a42fc0be675db2d9e451a4c502cf91632cff456354da0edf4bc5b305f"
+      },
+      {
         "path": "Repositories/SDK/Tools/GuiBridgeGen/src/c_header.zig",
         "sha256": "b41bdb6f061b5886aa92904c0e4b2a36025859031231d28e0f28375076cded1c"
       },
@@ -57692,7 +57717,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/MatchedComponents.ps1",
-        "sha256": "be7f843794d836be0a5f38004cbfc101333ef7129137705d5f60e903da3e4ab8"
+        "sha256": "ce1b3b5c4fc25e87d4a7bec3358893978119b53495c979d1dc70b1e062d64474"
       },
       {
         "path": "Repositories/SDK/Tools/ModuleCatalog/src/capabilities.zig",
@@ -57713,6 +57738,22 @@
       {
         "path": "Repositories/SDK/Tools/New-RustProject.ps1",
         "sha256": "5d57087da566c5cee25657b0d1f6f57860537d752eb7429e1b8709503fafec72"
+      },
+      {
+        "path": "Repositories/SDK/Tools/Profile.ps1",
+        "sha256": "6703131fe5084817cfc3df30fec9df2e666e6cdc441b8fed10deb879e4a42b57"
+      },
+      {
+        "path": "Repositories/SDK/Tools/ProfileData.ps1",
+        "sha256": "cc3d3b8298950495abb9330c5474413dac08148d50454913c67c2110a5d27b58"
+      },
+      {
+        "path": "Repositories/SDK/Tools/ProfileResolver.ps1",
+        "sha256": "d13aa57fbed9827570379c73bf4f6df2a535d421fe5f41d6c6f480d11deddb2f"
+      },
+      {
+        "path": "Repositories/SDK/Tools/ProfileSources.ps1",
+        "sha256": "10313e02c7ca3cc1dad30b8c50cfece8ed4dbb1e743779b70de95f01233c44ca"
       },
       {
         "path": "Repositories/SDK/Tools/R4LContractGen/build.zig",
@@ -57739,8 +57780,24 @@
         "sha256": "adc41a8ee2c27ddcb8db31373487ff06c7bc70b5d8da4e8d86410122ce7f2b4a"
       },
       {
+        "path": "Repositories/SDK/Tools/Rust.ps1",
+        "sha256": "37458317db24d4d79ccf1c4015f678c79d3ceccf146b128b59a4ba4569ba9b1f"
+      },
+      {
         "path": "Repositories/SDK/Tools/RustBuildInputs.ps1",
-        "sha256": "b4e12ea5e0ce01209d064533ca49699b63f2ce85456b18cbf8bb7c6d0e8bb661"
+        "sha256": "4a9cdf5dff419a3cb3ceff905764488ca63b7b994377f6a5d85c5d566b0f7614"
+      },
+      {
+        "path": "Repositories/SDK/Tools/Setup.ps1",
+        "sha256": "43362805845475196ab6a434d132e52096040dd74c75c91eef43fcac3190101f"
+      },
+      {
+        "path": "Repositories/SDK/Tools/Sync-ComponentPins.ps1",
+        "sha256": "5eacce9f6bce7d35169fa0ad7b2b6ebac58a5ab3a1b0057816e7d99756aced9c"
+      },
+      {
+        "path": "Repositories/SDK/Tools/Sync-ProfileProjections.ps1",
+        "sha256": "468510b6e392718c7010f33e7387d34f07a4c37cb19b82d18cff1d6124f045d3"
       },
       {
         "path": "Repositories/SDK/Tools/Sync-R4stdGrapheme.ps1",
@@ -57828,11 +57885,11 @@
       },
       {
         "path": "Repositories/SDK/build.zig",
-        "sha256": "aae49c259aff9d7ac2ca0b0b1eecec22b51e6cac2c5e89e32cb9986bf61aa2b3"
+        "sha256": "1344ab7cc3aef7d781bc1cd890ee18f16b8ff3b3cc72407603d30773437cd591"
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "8b0efb58c619a9d32f6f57e7b4d26ab46795809e73dd4235d8a87a2130c08eaa"
+        "sha256": "477832dbaeb8e93041a21301e57697fd9034023dfd350772cb659f8308cf8f30"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -57904,7 +57961,11 @@
       },
       {
         "path": "Repositories/SDK/r4os/build.zig",
-        "sha256": "23ba84ed8878faebfdc2b8ad54311368d8b2c6d102bbfadaabdd1f51cdb9ec9f"
+        "sha256": "e6af42ec6bbc3a171cb1ab948df4485a3fed1eceaaa56c5994240a92599cf8a6"
+      },
+      {
+        "path": "Repositories/SDK/r4os/build_profile.zig",
+        "sha256": "4a2fa2589783dd64e19188d5ca72f2084f7acfc5ae3da4fca8195e0a92ebf732"
       },
       {
         "path": "Repositories/SDK/r4os/c_header_inputs.zig",
@@ -58352,7 +58413,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/rust_module_profile.json",
-        "sha256": "6e462c92bc96d9528057062fb0748f331deb94db03533bf8468348ac24604c8a"
+        "sha256": "a6bc242a34f10c3f9184aec4e145823a5c1ac8149ab1f768557b65a018e69ebf"
       },
       {
         "path": "Repositories/SDK/r4os/rust_project.zig",

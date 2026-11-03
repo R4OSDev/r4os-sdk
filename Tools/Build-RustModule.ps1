@@ -5,7 +5,7 @@ param(
     [string]$SdkRoot='', [string]$InstallRoot='', [string]$CacheRoot='',
     [string]$OutputRoot='', [string[]]$DependencyRoot=@(), [string]$DependencyRootsJson='',
     [string]$Features='', [switch]$NoDefaultFeatures, [string]$ZigRoot='',
-    [string]$LibraryHelpersRoot='',
+    [string]$LibraryHelpersRoot='', [string]$LibrariesRoot='', [string]$DevelopmentProfile='', [string]$AdditionalLibrariesFile='',
     [switch]$Technical
 )
 $ErrorActionPreference='Stop';Set-StrictMode -Version Latest
@@ -93,6 +93,17 @@ try{
     $rustToolProfile=Get-Content -Raw -LiteralPath $rustToolProfilePath|ConvertFrom-Json -AsHashtable
     if($rustToolProfile.schema -ne 1 -or $rustToolProfile.id -cne 'r4os-rust-tools-v1' -or ($rustToolProfile.technical -and !$Technical)){throw 'RustToolProfileUnsupportedOrTechnical'}
     Check-Inputs $SdkRoot $rustToolProfile.sdk.inputs;Check-Inputs $ContractRoot $rustToolProfile.contract.inputs
+    . (Join-Path $PSScriptRoot 'BuildContext.ps1')
+    Assert-R4SdkBuildArguments @{data=(Read-R4SdkProfiles $SdkRoot)} @()
+    Assert-R4SdkProjectPins $SdkRoot $ProjectRoot
+    if(!$LibrariesRoot){$LibrariesRoot=if($LibraryHelpersRoot){$LibraryHelpersRoot}else{$env:R4OS_SDK_LIBRARIES_ROOT}}
+    if(!$DevelopmentProfile){$DevelopmentProfile=$env:R4OS_SDK_DEVELOPMENT_PROFILE}
+    $resolveOptions=@{SdkRoot=$SdkRoot;Profile='r4os-rust-r4x-v2';Roots=@{contract=$ContractRoot;libraries=$LibrariesRoot}}
+    if($DevelopmentProfile){$resolveOptions.DevelopmentProfile=$DevelopmentProfile}
+    if($AdditionalLibrariesFile){$resolveOptions.AdditionalLibraries=Get-Content -Raw -LiteralPath $AdditionalLibrariesFile|ConvertFrom-Json -AsHashtable -NoEnumerate}
+    $sourceBinding=Resolve-R4SdkComponents @resolveOptions
+    if($rustToolProfile.ContainsKey('profile_sources')){foreach($name in $sourceBinding.hashes.Keys){if($rustToolProfile.profile_sources[$name] -cne $sourceBinding.hashes[$name]){throw 'RustToolsetSdkProfilesMismatch'}}}else{throw 'RustToolsetSdkProfilesMissing'}
+
     $runner=Join-Path $ToolsRoot 'Setup/Rust.ps1'
     $pwsh=(Get-Process -Id $PID).Path
     $toolArgs=@('-NoLogo','-NoProfile','-File',$runner,'--root',$InstallRoot,'--cache-root',$CacheRoot)
@@ -224,6 +235,7 @@ try{
         foreach($binding in @(@('r4os-sdk',(Join-Path $SdkRoot 'Rust'),$rustToolProfile.sdk.rust_crate.version),@('r4os-contract',(Join-Path $ContractRoot 'Generated/SDK/Rust'),$rustToolProfile.contract.binding_crate.version))){
             if($dep.name -ceq $binding[0] -and (!(SamePath $directory $binding[1]) -or $dep.version -cne $binding[2])){throw 'RustCargoBindingIdentityMismatch'}
         }
+        if($dep.name -cin (Read-R4SdkProfiles $SdkRoot).Components.policy.system_packages -and $root.owner -cnotin @('sdk','contract') -and !(SamePath $root.path $LibrariesRoot)){throw 'SdkSystemLibraryShadowed: Cargo'}
         foreach($t in $dep.targets){if($t.kind -contains 'custom-build' -or $t.kind -contains 'proc-macro'){throw 'RustCargoHostBuildStepForbidden'}}
         $crateInputs+=Observe-Input $dep.manifest_path $inputRoots
         $resolvedFeatures=@();$resolvedDependencies=@();$edges=@();$resolved=$false
@@ -277,7 +289,7 @@ try{
     })+@($native.inputs)+@($libraryHelpers.inputs)
     if(!@($observed|Where-Object {$_.owner -ceq 'project' -and $_.path -ceq $rust.source}).Count){throw 'RustCompilerSourceNotObserved'}
     if(!$isLibrary -and !$isDriver -and !$isProtocol -and !@($observed|Where-Object owner -CEQ 'generated').Count){throw 'RustCompilerStartupInfoNotObserved'}
-    $result=[ordered]@{schema=1;profile=$rust.profile;status='success';technical=[bool]$Technical;module=@{name=$facts.name;version=$rust.module_version;kind=$facts.kind;app_class=$facts.app_class;target=$facts.target;imports=$facts.imports};cargo=@{name=$package.name;version=$package.version;source=$rust.source;target=$codegen.target;lock_sha256=Hash (Join-Path $ProjectRoot 'Cargo.lock')};sdk=$rustToolProfile.sdk;contract=$rustToolProfile.contract;tools=@{profile_sha256=Hash $rustToolProfilePath;pin_sha256=$description.pin_sha256;rust=$description.rust_version;cargo=$description.cargo_version;linker_sha256=$description.linker_sha256;packager_sha256=Hash $packager;catalog_sha256=Hash $catalog};cpu=@{id=$cpu.name;sha256=Hash $cpuPath;features=$cpuFeatures};codegen=@{profile_sha256=Hash $codegenPath;code_model=$codegen.code_model;relocation_model=$codegen.relocation_model;lto=$codegen.lto;red_zone=$codegen.red_zone;panic=$codegen.panic;stack_probes=$codegen.stack_probes};declared_inputs=$declared;compiler_inputs=$observed;elf=@{file=[IO.Path]::GetFileName($elf);sha256=Hash $linked};artifact=@{file=[IO.Path]::GetFileName($artifact);sha256=Hash $candidate;bytes=([IO.FileInfo]$candidate).Length};container_inspection=$inspection.Trim()}
+    $result=[ordered]@{schema=1;sdk_profile=@{id=$sourceBinding.profile;hashes=$sourceBinding.hashes;technical=$sourceBinding.technical};profile=$rust.profile;status='success';technical=[bool]$Technical;module=@{name=$facts.name;version=$rust.module_version;kind=$facts.kind;app_class=$facts.app_class;target=$facts.target;imports=$facts.imports};cargo=@{name=$package.name;version=$package.version;source=$rust.source;target=$codegen.target;lock_sha256=Hash (Join-Path $ProjectRoot 'Cargo.lock')};sdk=$rustToolProfile.sdk;contract=$rustToolProfile.contract;tools=@{profile_sha256=Hash $rustToolProfilePath;pin_sha256=$description.pin_sha256;rust=$description.rust_version;cargo=$description.cargo_version;linker_sha256=$description.linker_sha256;packager_sha256=Hash $packager;catalog_sha256=Hash $catalog};cpu=@{id=$cpu.name;sha256=Hash $cpuPath;features=$cpuFeatures};codegen=@{profile_sha256=Hash $codegenPath;code_model=$codegen.code_model;relocation_model=$codegen.relocation_model;lto=$codegen.lto;red_zone=$codegen.red_zone;panic=$codegen.panic;stack_probes=$codegen.stack_probes};declared_inputs=$declared;compiler_inputs=$observed;elf=@{file=[IO.Path]::GetFileName($elf);sha256=Hash $linked};artifact=@{file=[IO.Path]::GetFileName($artifact);sha256=Hash $candidate;bytes=([IO.FileInfo]$candidate).Length};container_inspection=$inspection.Trim()}
     $result['memory']=@{sdk_features=$sdkFeatureNames;heap_runtime=@{path=$rustToolProfile.runtime.heap.path;sha256=Hash $heapRuntime;owner='SDK/r4os/vm_allocator.zig';instance_checked=$true};alloc_sysroot_component='rust-std/'+$codegen.target;root_return_releases_heap=$false}
     $result['sdk_runtimes']=@{facades=$rustToolProfile.runtime.facades;storage=$rustToolProfile.runtime.storage}
     $result['library_helpers']=$libraryHelpers.receipt
