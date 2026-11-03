@@ -57124,7 +57124,7 @@
       },
       {
         "path": "Repositories/SDK/Profiles/Components.json",
-        "sha256": "33a9a2b227917cc72377813a75f2d96c220fd13216c5595203c35e4690fe912a"
+        "sha256": "f8358978ce35b88e39f0a651a34cefd393545242afa5ea8a12dc9122ee1bc090"
       },
       {
         "path": "Repositories/SDK/Profiles/Tools.json",
@@ -57952,7 +57952,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "8b77916071d76721340f6445e36e57dfce02d60283b8d29728d71e01e65fbe8f"
+        "sha256": "e6f8a09195ac6ef7c5710b0ef45caa1559ac68f6ad411d90da7c96735d72d401"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
