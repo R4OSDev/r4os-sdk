@@ -65,6 +65,28 @@
             "clippy"
           ],
           "rust_src_required": false
+        },
+        "kernel": {
+          "id": "r4os-kernel-rust-tools-v1",
+          "required_components": [
+            "rustfmt",
+            "clippy",
+            "llvm-tools-preview",
+            "rust-src"
+          ],
+          "optional_components": [],
+          "rust_src_required": true
+        },
+        "development": {
+          "id": "r4os-kernel-rust-tools-v1",
+          "required_components": [
+            "rustfmt",
+            "clippy",
+            "llvm-tools-preview",
+            "rust-src"
+          ],
+          "optional_components": [],
+          "rust_src_required": true
         }
       },
       "hosts": {
@@ -80,7 +102,8 @@
     },
     "limine": {
       "version": "12.0.1",
-      "url": "https://github.com/Limine-Bootloader/Limine/releases/download/v12.0.1/limine-binary-12.0.1.zip"
+      "url": "https://github.com/Limine-Bootloader/Limine/releases/download/v12.0.1/limine-binary-12.0.1.zip",
+      "sha256": "175be9999063b7754af52b2852357f61cbe67a32ad8d3bf0d76d69c8757f9865"
     },
     "qemu": {
       "hosts": {
@@ -91,7 +114,9 @@
         },
         "Windows": {
           "version": "11.0.0",
-          "provider": "qemu-w64-installer"
+          "provider": "qemu-w64-installer",
+          "url": "https://qemu.weilnetz.de/w64/2026/qemu-w64-setup-20260422.exe",
+          "sha512": "64a43c0d39acddc9d30d290935a312a2b5c4fa62cffe6c27090f2a45ca6c8de0f0e8673e1e5117fb116a8742f86df92163531afc23f34758aadfc6d82c1f41a5"
         }
       }
     },
@@ -112,6 +137,13 @@
       "glslang": "15.2.0",
       "llvm_spirv_pkgconfig": "19.1.0.0",
       "spirv_tools_pkgconfig": "2025.1.1"
+    },
+    "sevenzip": {
+      "version": "26.02",
+      "bootstrap_url": "https://github.com/ip7z/7zip/releases/download/26.02/7zr.exe",
+      "bootstrap_sha256": "56b8cc9f4971cef253644fafe54063ed7fdca551d4dee0f8c6baa81b855acd72",
+      "url": "https://github.com/ip7z/7zip/releases/download/26.02/7z2602-x64.exe",
+      "sha256": "6745fa76dc2ea031596d8678f6f6b99c3c1b435b4164a63485adbbc7b8d82ef0"
     }
   }
 }

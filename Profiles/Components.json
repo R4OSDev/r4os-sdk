@@ -8,7 +8,7 @@
   "repositories": {
     "contract": {
       "repository": "https://github.com/R4OSDev/r4os-contract.git",
-      "commit": "4d66b0e675b93df4339015e29e7dd817093a19b4",
+      "commit": "1a8134fa1310c30534172521378aae064c4de81b",
       "version": "0.64.72",
       "files": {
         "build.zig.zon": "1a2062426bdb460dd720a2babfc0eedccfa68cca5d04165706732a3f4b8a0dd0",
@@ -16,7 +16,10 @@
         "Module/CpuBaseline.json": "eeeee03aa8fd41051c09e61e9d70ca35660f2b413c3f878fb6e5a3bb51aad10c",
         "Generated/SDK/Rust/Cargo.toml": "de464f2f9243e3d153c06b701a2126839c3e8a921a6d466467d3042370023263",
         "Generated/SDK/Rust/src/lib.rs": "73809e2c62cafa0f92d5fedf1cf4f2359ceb58972a322d0d6aa9e1e1152ae9f9"
-      }
+      },
+      "zig_hash": "r4os_contract-0.64.72-ELhbYU2gMQHyn5uwLdXnQnWp4ZTtUvXr-zjaO65kw0kZ",
+      "archive_url": "https://github.com/R4OSDev/r4os-contract/archive/1a8134fa1310c30534172521378aae064c4de81b.tar.gz",
+      "archive_format": "tar.gz"
     },
     "libraries": {
       "repository": "https://github.com/R4OSDev/r4os-libraries.git",
