@@ -114,15 +114,15 @@
     },
     "libraries": {
       "repository": "https://github.com/R4OSDev/r4os-libraries.git",
-      "commit": "431276e1ed0b49ebfd4a557444eca04cbda9730f",
-      "version": "0.64.43",
+      "commit": "95eb636ec96c179265d6295786066add8df1a4fa",
+      "version": "0.64.44",
       "files": {
-        "build.zig.zon": "b2da6c6b6538ac7e65ada5f534780b20ada0cc8873b7aac474708e5013bca9e1",
+        "build.zig.zon": "a52d6fb3279f3e2901c194126b59faf6db93de927c1dc9b8ff6b57750ffcc208",
         "Shared/Rust/Cargo.toml": "431c38bac8b28467b0dad7842d1626397bb061eeb94f54f604276dc81036aec4"
       },
       "tree": {
         "algorithm": "r4os-files-sha256-lf-v1",
-        "sha256": "be4b8b999689551d0ca8f21fa6e8f459a472eb62ae0f0000724390c7e9c27065",
+        "sha256": "d7e2ed218fe46db146db03abcf8f63e60a03e1f03117ff2664fd8bda37d59202",
         "files": [
           ".gitattributes",
           ".gitignore",
@@ -2577,8 +2577,8 @@
           "consumer_oracles.zig"
         ]
       },
-      "zig_hash": "r4os_libraries-0.64.43-dH4fNcv7dwOngH-6whs2nuBiJ8to4XERJ-hmi3lEv90P",
-      "archive_url": "https://github.com/R4OSDev/r4os-libraries/archive/431276e1ed0b49ebfd4a557444eca04cbda9730f.tar.gz",
+      "zig_hash": "r4os_libraries-0.64.44-dH4fNcv7dwMFtA0D8JzxxcM8CLsU0IowvLCeH8hZhAR2",
+      "archive_url": "https://github.com/R4OSDev/r4os-libraries/archive/95eb636ec96c179265d6295786066add8df1a4fa.tar.gz",
       "archive_format": "tar.gz"
     },
     "recovery-contract": {
