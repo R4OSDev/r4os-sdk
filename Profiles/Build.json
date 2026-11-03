@@ -466,7 +466,8 @@
         "library": "r4os-rust-r4l-v1",
         "driver": "r4os-rust-r4d-v1",
         "protocol": "r4os-rust-r4p-v1"
-      }
+      },
+      "edition": "2024"
     },
     "kernel": {
       "target": "x86_64-unknown-none",
@@ -487,7 +488,17 @@
         "DEBUG_ASSERTIONS": "true",
         "PANIC": "abort",
         "LTO": "false"
-      }
+      },
+      "simd": false,
+      "red_zone": false,
+      "code_model": "kernel",
+      "relocation_model": "static",
+      "linker": "rust-lld",
+      "linker_flags": [
+        "--build-id=none",
+        "-zmax-page-size=4096"
+      ],
+      "edition": "2024"
     },
     "recovery": {
       "target": "x86_64-freestanding-none",

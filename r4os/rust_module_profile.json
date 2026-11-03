@@ -93,5 +93,6 @@
     "library": "r4os-rust-r4l-v1",
     "driver": "r4os-rust-r4d-v1",
     "protocol": "r4os-rust-r4p-v1"
-  }
+  },
+  "edition": "2024"
 }

@@ -227,7 +227,7 @@ try{
     $source=Canonical $ProjectRoot $rust.source
     if(!(SamePath $package.manifest_path (Join-Path $ProjectRoot 'Cargo.toml')) -or $package.targets.Count -ne 1){throw 'RustCargoSelectionMismatch'}
     $target=$package.targets[0]
-    if($target.kind.Count -ne 1 -or $target.kind[0] -cne 'staticlib' -or $target.crate_types.Count -ne 1 -or $target.crate_types[0] -cne 'staticlib' -or !(SamePath $target.src_path $source) -or $target.edition -cne '2024'){throw 'RustCargoTargetMismatch'}
+    if($target.kind.Count -ne 1 -or $target.kind[0] -cne 'staticlib' -or $target.crate_types.Count -ne 1 -or $target.crate_types[0] -cne 'staticlib' -or !(SamePath $target.src_path $source) -or $target.edition -cne $codegen.edition){throw 'RustCargoTargetMismatch'}
     $sdkFeatureNames=@();$crateInputs=@();$crateGraph=@()
     foreach($dep in $metadata.packages){
         $directory=[IO.Path]::GetDirectoryName([IO.Path]::GetFullPath($dep.manifest_path))

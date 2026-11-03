@@ -55686,6 +55686,20 @@
         "Explicit fork/Debug/dirty-SDK refusal; workspace catalog still 129 owners."
       ],
       "limits": "Linux host; Windows starters/source only. No new runtime, hardware or performance qualification."
+    },
+    "kernel_sdk_profile_08930": {
+      "kind": "kernel_build_profile_migration",
+      "performed_in": "0.89.30",
+      "complete": true,
+      "report": "Docs/Core/KernelRustBuild.txt",
+      "scope": "SDK-defined kernel profile, derived Cargo/toolchain bindings and unchanged compiler flags; runtime interfaces unchanged.",
+      "checks": [
+        "Kernel fmt/check/clippy and product build passed.",
+        "Four refusal cases: ambient Rustflags, Cargo profile, target linker and Cargo config.",
+        "KVM SMP4 Quick markers passed, including heap/TLB/lock/network/NVMe.",
+        "One final spectra-standard-3 SMP4 run locally validated: 30 samples, five metrics, six scores; original archived."
+      ],
+      "limits": "Linux/KVM4; no Windows execution, physical hardware or Server import/readback claim."
     }
   },
   "wave_bindings": [
@@ -55938,17 +55952,17 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.89.29",
-    "sdk": "0.64.140 source candidate",
+    "performed_in": "0.89.30",
+    "sdk": "0.64.141 source candidate",
     "contract": "0.64.72",
-    "evidence": "sdk_profiles_08929",
-    "scope": "Build/tool/source profile migration; no API/ABI/runtime semantics changed.",
+    "evidence": "kernel_sdk_profile_08930",
+    "scope": "Kernel profile and source binding migration; no public API/ABI changes.",
     "historical_snapshot_retained": true
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.89.29",
+    "reviewed_in": "0.89.30",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -57669,7 +57683,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/Build-RustModule.ps1",
-        "sha256": "d60af32dea9188d901d61bbe0937edb4449ee48ade32a1a731ffb301277b7d4d"
+        "sha256": "9e545c23f63ece60ace3a4ab5a626e20bfc11bdd90272fea2ab26532e18d33d2"
       },
       {
         "path": "Repositories/SDK/Tools/BuildContext.ps1",
@@ -57796,6 +57810,10 @@
         "sha256": "5eacce9f6bce7d35169fa0ad7b2b6ebac58a5ab3a1b0057816e7d99756aced9c"
       },
       {
+        "path": "Repositories/SDK/Tools/Sync-KernelProjections.ps1",
+        "sha256": "b4d7f2ce19b25cb49baff1dcfde22681f28fb21ae014ad97e22ba358c22f24f2"
+      },
+      {
         "path": "Repositories/SDK/Tools/Sync-ProfileProjections.ps1",
         "sha256": "468510b6e392718c7010f33e7387d34f07a4c37cb19b82d18cff1d6124f045d3"
       },
@@ -57889,7 +57907,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "76dc9aec523ffa9aa633840de1a4c83d2b581ae4cfff73450f4c26bb225460e5"
+        "sha256": "7f2a0756eb88d6eb1ad19f7c6b74f12c50981da2749c09cf77c8f897209921cc"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -58413,7 +58431,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/rust_module_profile.json",
-        "sha256": "a6bc242a34f10c3f9184aec4e145823a5c1ac8149ab1f768557b65a018e69ebf"
+        "sha256": "0b8549a7433762c612edff392725b021b0ed2fac815257e6fc78072bafa13360"
       },
       {
         "path": "Repositories/SDK/r4os/rust_project.zig",
