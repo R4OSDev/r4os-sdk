@@ -115,15 +115,15 @@
     },
     "libraries": {
       "repository": "https://github.com/R4OSDev/r4os-libraries.git",
-      "commit": "6cda2fa2fc28e28cbeaef7f085d8dfb7d1ba310a",
-      "version": "0.64.42",
+      "commit": "8c602b289cfb75d134bfcb6c5ea7ca65c263d98f",
+      "version": "0.64.43",
       "files": {
-        "build.zig.zon": "de127fe18339377616400647306008132ff51e1a1afc1cc15e25300350e89891",
+        "build.zig.zon": "b2da6c6b6538ac7e65ada5f534780b20ada0cc8873b7aac474708e5013bca9e1",
         "Shared/Rust/Cargo.toml": "431c38bac8b28467b0dad7842d1626397bb061eeb94f54f604276dc81036aec4"
       },
       "tree": {
         "algorithm": "r4os-files-sha256-lf-v1",
-        "sha256": "8dce7428ba37dac77eac33002a4433a1208ca47c9f5aebc7c8768d9e6bcf38f0",
+        "sha256": "d6fcef65aab182b3e53010ae7820497aea7a6f88c4e34aa1c85fa703faa428f7",
         "files": [
           ".gitattributes",
           ".gitignore",
@@ -1515,6 +1515,7 @@
           "R4FONT/ThirdParty/r4font/src/r4font_system.c",
           "R4FONT/build.zig",
           "R4FONT/build.zig.zon",
+          "R4FONT/host_build.zig",
           "R4FONT/module.R4MF",
           "R4GFX/Bindings/C/r4gfx.h",
           "R4GFX/Bindings/C/r4gfx_helpers.h",
@@ -2501,6 +2502,7 @@
           "Shared/Native/Math/NOTICES.txt",
           "Shared/Native/Math/Sources.json",
           "Shared/Native/README.txt",
+          "Shared/Native/SDK.ps1",
           "Shared/Native/Scan/Build.ps1",
           "Shared/Native/Scan/Include/math.h",
           "Shared/Native/Scan/Include/stdio_impl.h",
@@ -2576,8 +2578,8 @@
           "consumer_oracles.zig"
         ]
       },
-      "zig_hash": "r4os_libraries-0.64.42-dH4fNcok2wGDV9E_ehLkawAWxkzPXEED23xX46dADis-",
-      "archive_url": "https://github.com/R4OSDev/r4os-libraries/archive/6cda2fa2fc28e28cbeaef7f085d8dfb7d1ba310a.tar.gz",
+      "zig_hash": "r4os_libraries-0.64.43-dH4fNT79dwP6APsRE-hS-ogjWJ63ZrVTWKJtA_1yxmYu",
+      "archive_url": "https://github.com/R4OSDev/r4os-libraries/archive/8c602b289cfb75d134bfcb6c5ea7ca65c263d98f.tar.gz",
       "archive_format": "tar.gz"
     },
     "recovery-contract": {
