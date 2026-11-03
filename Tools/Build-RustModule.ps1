@@ -54,7 +54,7 @@ function Invoke-Tool([string]$Program,[string[]]$Arguments,[string]$WorkingDirec
     }finally{$process.Dispose()}
 }
 function Check-Inputs([string]$Root,$Inputs){
-    foreach($inputFile in $Inputs){$path=Canonical $Root $inputFile.path;if(!(Test-Path -LiteralPath $path -PathType Leaf) -or (Hash $path) -cne $inputFile.sha256){throw ('Matched source input differs: '+$inputFile.path)}}
+    foreach($inputFile in $Inputs){$path=Canonical $Root $inputFile.path;if(!(Test-Path -LiteralPath $path -PathType Leaf) -or (Get-R4SdkFileDigest $path) -cne $inputFile.sha256){throw ('Matched source input differs: '+$inputFile.path)}}
 }
 function Input([string]$Path,[string]$Root,[string]$Label){
     # The v1 input tree has no implicit directory/file symlink dependencies.
@@ -67,6 +67,7 @@ function Input([string]$Path,[string]$Root,[string]$Label){
     return [ordered]@{owner=$Label;path=[IO.Path]::GetRelativePath($Root,$Path).Replace('\','/');sha256=Hash $Path;bytes=$item.Length}
 }
 . (Join-Path $PSScriptRoot 'RustBuildInputs.ps1')
+. (Join-Path $PSScriptRoot 'ProfileSources.ps1')
 try{
     if($OutputRoot -eq $ProjectRoot -or (Below $ProjectRoot $OutputRoot)){throw 'Output must not contain the project root.'}
     [IO.Directory]::CreateDirectory($OutputRoot)|Out-Null
@@ -92,6 +93,7 @@ try{
     $rustToolProfilePath=Join-Path $ToolsRoot 'RustToolsProfile.json'
     $rustToolProfile=Get-Content -Raw -LiteralPath $rustToolProfilePath|ConvertFrom-Json -AsHashtable
     if($rustToolProfile.schema -ne 1 -or $rustToolProfile.id -cne 'r4os-rust-tools-v1' -or ($rustToolProfile.technical -and !$Technical)){throw 'RustToolProfileUnsupportedOrTechnical'}
+    if(!$rustToolProfile.ContainsKey('source_hash_mode') -or $rustToolProfile.source_hash_mode -cne 'r4os-files-sha256-lf-v1'){throw 'SdkToolsetSourceHashModeUnsupported'}
     Check-Inputs $SdkRoot $rustToolProfile.sdk.inputs;Check-Inputs $ContractRoot $rustToolProfile.contract.inputs
     . (Join-Path $PSScriptRoot 'BuildContext.ps1')
     Assert-R4SdkBuildArguments @{data=(Read-R4SdkProfiles $SdkRoot)} @()

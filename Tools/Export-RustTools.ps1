@@ -23,6 +23,7 @@ $HeapRuntime=[IO.Path]::GetFullPath($HeapRuntime,$workspace)
 $FacadeRuntime=[IO.Path]::GetFullPath($FacadeRuntime,$workspace)
 $StorageRuntime=[IO.Path]::GetFullPath($StorageRuntime,$workspace)
 . (Join-Path $PSScriptRoot 'ProfileData.ps1')
+. (Join-Path $PSScriptRoot 'ProfileSources.ps1')
 $sdkProfiles=Read-R4SdkProfiles $SdkRoot
 $pin=$sdkProfiles.Tools.tools.rust
 if(!$CacheRoot){$CacheRoot=Join-Path $SdkRoot '.Installed/.Cache/Rust'}
@@ -48,7 +49,7 @@ function Source-Bytes([string]$Root,[string]$Relative){
     }finally{$bytes.Dispose();$process.Dispose()}
 }
 function Source-Hash([string]$Root,[string]$Relative){
-    return [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData([byte[]](Source-Bytes $Root $Relative))).ToLowerInvariant()
+    return Get-R4SdkBytesDigest $Relative ([byte[]](Source-Bytes $Root $Relative))
 }
 function Source-Files([string]$Root,[string]$Directory){
     if($Technical){return @(Get-ChildItem -LiteralPath (Join-Path $Root $Directory) -File -Recurse|Sort-Object FullName|ForEach-Object {[IO.Path]::GetRelativePath($Root,$_.FullName).Replace('\','/')})}
@@ -167,7 +168,7 @@ $contractInputs=@(foreach($relative in @('build.zig.zon','Module/CpuBaseline.jso
 $files=@(foreach($dir in @('Setup','Profile','Profiles','bin','Runtime')){Get-ChildItem -LiteralPath (Join-Path $Destination $dir) -File -Recurse|Sort-Object FullName|ForEach-Object {@{path=[IO.Path]::GetRelativePath($Destination,$_.FullName).Replace('\','/');bytes=$_.Length;sha256=Hash $_.FullName}}})
 $files+=@{path='build.zig.zon';bytes=([IO.FileInfo](Join-Path $Destination 'build.zig.zon')).Length;sha256=Hash (Join-Path $Destination 'build.zig.zon')}
 $exportedRustProfile=[ordered]@{schema=1;id=$pin.profiles.sdk.id;scope='pinned tools, not a Rust module build capability';technical=[bool]$Technical;
-    sdk=@{version=Version $SdkRoot;source=$sdkSource;inputs=$sdkInputs;rust_crate=Crate $SdkRoot 'Rust/Cargo.toml';packager_source_sha256=Source-Hash $SdkRoot 'Tools/R4XBuilder/src/main.zig'};
+    source_hash_mode='r4os-files-sha256-lf-v1';sdk=@{version=Version $SdkRoot;source=$sdkSource;inputs=$sdkInputs;rust_crate=Crate $SdkRoot 'Rust/Cargo.toml';packager_source_sha256=Source-Hash $SdkRoot 'Tools/R4XBuilder/src/main.zig'};
     contract=@{version=Version $ContractRoot;source=$contractSource;inputs=$contractInputs;binding_crate=Crate $ContractRoot 'Generated/SDK/Rust/Cargo.toml';cpu_baseline='Profile/CpuBaseline.json'};
     profile_sources=$sdkProfiles.hashes;rust_version=$pin.rust_version;cargo_version=$pin.cargo_version;rustup_version=$pin.rustup_version;
     release_manifest=@{path='Profile/rust-release.toml';url="https://static.rust-lang.org/dist/channel-rust-$($pin.rust_version).toml";sha256=$pin.manifest_sha256};

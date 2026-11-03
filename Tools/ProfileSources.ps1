@@ -5,16 +5,19 @@ function Assert-R4SdkRelativePath([string]$Path) {
         $Path.Split('/') -contains '.' -or $Path.Split('/') -contains ''){throw "SdkSourceInvalidPath: $Path"}
 }
 
-function Get-R4SdkFileDigest([string]$Path) {
+function Get-R4SdkBytesDigest([string]$Path,[byte[]]$Bytes) {
     $extension=[IO.Path]::GetExtension($Path).ToLowerInvariant()
     $textExtensions=@('.zig','.zon','.json','.ps1','.psm1','.psd1','.sh','.bat','.toml','.lock','.c','.h','.cc','.cpp','.hpp','.inc','.s','.asm','.ld','.r4mf','.r4s','.py','.rs','.md','.txt','.yml','.yaml','.xml','.cmake')
-    $bytes=[IO.File]::ReadAllBytes($Path)
     if($extension -cin $textExtensions -or [IO.Path]::GetFileName($Path) -cin @('LICENSE','NOTICE','.gitignore','.gitattributes','Makefile')){
         # Only CRLF is normalized. Binary inputs, standalone CR, UTF-8 BOMs and
         # every other byte stay significant. This is not semantic source hashing.
         $bytes=[Text.Encoding]::Latin1.GetBytes([Text.Encoding]::Latin1.GetString($bytes).Replace("`r`n","`n"))
     }
     return [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData($bytes)).ToLowerInvariant()
+}
+
+function Get-R4SdkFileDigest([string]$Path) {
+    return Get-R4SdkBytesDigest $Path ([IO.File]::ReadAllBytes($Path))
 }
 
 function Get-R4SdkTreeDigest([string]$Root, [string[]]$Files) {
