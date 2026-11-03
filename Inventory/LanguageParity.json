@@ -57935,7 +57935,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "e5eea6c51ac37a6a5d3d1f68d7e659d391cc1cc053e0cb7e456abde9d4bd1f33"
+        "sha256": "decd80457c3b0d2b72f59bc6e6df11a0eabb503672cc4ef078b984bd68e35aec"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
