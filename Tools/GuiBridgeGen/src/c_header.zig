@@ -44,6 +44,7 @@ pub fn name(comptime T: type) []const u8 {
         if (T == s.gui.TextArea([]u8)) break :blk "R4SdkGuiTextArea";
         if (T == s.input.Queue([]s.abi.ConsoleInputEvent)) break :blk "R4SdkGuiInputQueue";
         const full = @typeName(T);
+        if (std.mem.startsWith(u8, full, "gui_modern.")) break :blk "R4SdkGui" ++ clean(full["gui_modern.".len..]);
         if (std.mem.indexOf(u8, full, "__struct_") != null or std.mem.indexOf(u8, full, "__enum_") != null or std.mem.indexOf(u8, full, "__union_") != null) break :blk std.fmt.comptimePrint("R4SdkGuiType{d}", .{s.typeId(T)});
         if (s.canonical(T)) {
             const last = full[(std.mem.lastIndexOfScalar(u8, full, '.') orelse unreachable) + 1 ..];
@@ -112,6 +113,14 @@ fn argument(w: *std.Io.Writer, comptime T: type, comptime index: usize) !void {
 fn fieldList(comptime T: type) []const std.builtin.Type.StructField {
     return @typeInfo(T).@"struct".fields;
 }
+
+fn constructorPrefix(comptime T: type) usize {
+    // Existing scalar constructors keep their exact source signatures. New
+    // defaulted presentation fields use typed setters/withStyle/layoutTabs.
+    if (T == s.gui.Canvas) return 5;
+    if (T == s.gui.TabBar) return 7;
+    return fieldList(T).len;
+}
 fn constants(w: *std.Io.Writer, comptime T: type) !void {
     if (comptime @typeInfo(T) != .@"struct" and @typeInfo(T) != .@"union" and @typeInfo(T) != .@"enum") return;
     const declarations = comptime switch (@typeInfo(T)) {
@@ -166,6 +175,7 @@ pub fn emit(w: *std.Io.Writer) !void {
         }
         if (info == .@"struct") {
             const fields = comptime fieldList(T);
+            const prefix = comptime constructorPrefix(T);
             try w.print("static inline R4SdkGuiSlot {s}_create({s} *output", .{ name(T), name(T) });
             inline for (fields, 0..) |f, i| if (f.default_value_ptr == null) {
                 try parameter(w, f.type, i);
@@ -176,9 +186,14 @@ pub fn emit(w: *std.Io.Writer) !void {
             }
             try w.print(" return R4SdkGuiConstruct(R4SdkGui_ABI_FINGERPRINT,{d}u,a,{d}u,output);\n}}\n", .{ id, fields.len });
             try w.print("static inline R4SdkGuiSlot {s}_from_fields({s} *output", .{ name(T), name(T) });
-            inline for (fields, 0..) |f, i| try parameter(w, f.type, i);
+            inline for (fields[0..prefix], 0..) |f, i| try parameter(w, f.type, i);
             try w.print(") {{\n R4SdkGuiSlot a[{d}]={{0}};\n", .{@max(1, fields.len)});
-            inline for (fields, 0..) |f, i| try argument(w, f.type, i);
+            inline for (fields, 0..) |f, i| {
+                if (comptime i < prefix) try argument(w, f.type, i) else {
+                    if (f.default_value_ptr == null) @compileError("Legacy GUI constructor tail must have a native default");
+                    try w.print(" a[{d}].flags=R4SDK_GUI_DEFAULT;\n", .{i});
+                }
+            }
             try w.print(" return R4SdkGuiConstruct(R4SdkGui_ABI_FINGERPRINT,{d}u,a,{d}u,output);\n}}\n", .{ id, fields.len });
         } else if (info == .@"enum" or info == .pointer or info == .optional or info == .array) {
             try w.print("static inline R4SdkGuiSlot {s}_create({s} *output", .{ name(T), name(T) });

@@ -5,6 +5,18 @@ Dieses Repository enthaelt das hostneutrale Kern-SDK von R4OS: Zig- und
 C-Fassaden, Buildprofile, Templates, Smokeprojekte sowie die generischen
 Werkzeuge R4XBuilder, R4LContractGen und ModuleCatalog.
 
+Moderne Controls ab0.64.147
+--------------------------
+Canvas.withStyle(Style.light/dark) gestaltet nur den eigenen Canvas modern.
+Button, TextField, List, TabBar und ModalDialog behalten ihre bestehenden
+Eingabebesitzer; Card/TileGrid, Paragraph und Progress liefern gemeinsame
+Darstellungs-/Layouthelfer. Fonts kommen aus dem tatsächlichen R4Sans-Katalog;
+Canvas.layoutTabs verwendet dieselben Schriftmetriken für Paint und Hit-Test.
+Zig, C und Rust führen dieselbe Fachimplementierung aus. Ohne Opt-in bleibt
+der klassische Pfad unverändert. Modern.zig zeigt Tastatur, Unicode, echte
+Pointercapture, Dialoge und Hell/Dunkel; außen zeichnet weiterhin der Desktop.
+Vertrag und Migration: Docs/SDK/GuiControls.txt im Workspace.
+
 Native Zeichenbasis ab0.64.146
 -----------------------------
 gui_shapes.gradientRoundedRect erweitert die bisherigen Rundungen, Rahmen

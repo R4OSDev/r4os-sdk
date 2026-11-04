@@ -9,6 +9,7 @@ extern void sdk_gui_oracle_tables(R4XStartR4Sys *,R4XStartR4Desk *,R4XStartR4Dra
 extern int32_t sdk_gui_oracle_pixels(uint32_t *,uintptr_t);
 extern void sdk_gui_oracle_fail_append(uint32_t);
 extern uint32_t sdk_gui_oracle_cancelled(void);
+extern uint64_t sdk_gui_modern_hash(void);
 static uint32_t shared_live,shared_releases;
 static uint32_t legacy_rows,font_revision_value;
 static uint32_t revision_probe(void){return font_revision_value;}
@@ -70,6 +71,33 @@ static R4XStartContext start_for(R4XStartR4Sys *sys,R4XStartR4Desk *desk,R4XStar
     imports[1]=(R4XStartImport){.group_id=R4L_GROUP_R4DESK,.flags=R4XSTART_IMPORT_FLAG_GROUP_INTERFACE,.table=(uintptr_t)desk};
     imports[2]=(R4XStartImport){.group_id=R4L_GROUP_R4DRAW,.flags=R4XSTART_IMPORT_FLAG_GROUP_INTERFACE,.table=(uintptr_t)draw};
     return (R4XStartContext){.magic=R4XSTART_MAGIC,.abi_major=R4XSTART_ABI_MAJOR,.size=sizeof(R4XStartContext),.app_class=R4XSTART_APP_CLASS_GUI,.instance_id=42,.flags=R4XSTART_FLAG_IMPORTS_VALID,.imports=(uintptr_t)imports,.import_count=3};
+}
+uint64_t sdk_gui_modern_c_case(void){
+    R4XStartR4Sys sys;R4XStartR4Desk desk;R4XStartR4Draw draw;R4XStartImport imports[3];
+    sdk_gui_native_tables(&sys,&desk,&draw);R4XStartContext start=start_for(&sys,&desk,&draw,imports);
+    R4SdkGuiSession s;R4SdkGuiTimer timer;
+    assert(R4SdkGuiSessionOpen(&s,&start,0,&timer,1)==0);
+    R4SdkGuiStyle style;checked(R4SdkGuiStyle_light(0,&style));
+    R4SdkGuiFontMetrics metrics;checked(R4SdkGuiFontMetrics_create(&metrics));
+    R4SdkGuiCanvas legacy;
+    checked(R4SdkGuiCanvas_from_fields(&legacy,R4SdkGuiSessionDraw(&s),320,200,&metrics,(R4SdkGuiSlot){0}));
+    R4SdkGuiSlot absent=R4SdkGuiCanvas_get_style(&legacy,&style);
+    checked(absent);assert(!(absent.flags&R4SDK_GUI_PRESENT));
+    R4SdkGuiRect area;checked(R4SdkGuiRect_from_fields(&area,10,10,120,32));
+    R4SdkGuiPalette palette;checked(R4SdkGuiPalette_create(&palette));
+    R4SdkGuiTabBar old_tabs;
+    checked(R4SdkGuiTabBar_from_fields(&old_tabs,&area,0,0,0,(R4SdkGuiSlot){0},0,22,&palette));
+    R4SdkGuiSlot advance=R4SdkGuiTabBar_get_text_advance(&old_tabs);checked(advance);assert(advance.bits==8);
+    R4GuiFrameCommand commands[16];uint8_t resources[2048],scratch[64];
+    assert(R4SdkGuiSessionBegin(&s,commands,16,resources,sizeof resources)==0);
+    R4SdkGuiCanvas *canvas=R4SdkGuiSessionCanvas(&s);assert(canvas);
+    status(R4SdkGuiCanvas_setStyle(0,canvas,&style));
+    status(R4SdkGuiCanvas_actionButton(0,canvas,&area,(const uint8_t *)"Modern",6,R4SdkGuiButtonState_normal,1,1,scratch,sizeof scratch));
+    checked(R4SdkGuiRect_from_fields(&area,10,60,120,12));
+    status(R4SdkGuiCanvas_progressBar(0,canvas,&area,25,100,0,0));
+    assert(R4SdkGuiSessionEnd(&s,1)==0);
+    uint64_t result=sdk_gui_modern_hash();assert(result!=0);
+    R4SdkGuiSessionClose(&s);return result;
 }
 int32_t sdk_gui_c_case(void){
     assert(sdk_gui_legacy_c_case()==0);

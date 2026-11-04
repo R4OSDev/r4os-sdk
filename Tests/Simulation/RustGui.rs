@@ -9,6 +9,9 @@ use r4os_sdk::{
     resources::Timeout,
 };
 unsafe extern "C" {
+    fn sdk_gui_modern_hash() -> u64;
+    fn sdk_gui_modern_expected() -> u64;
+    fn sdk_gui_modern_c_case() -> u64;
     fn sdk_gui_c_case() -> i32;
     fn sdk_gui_native_tables(
         sys: *mut abi::R4XStartR4Sys,
@@ -25,6 +28,54 @@ unsafe extern "C" {
     fn sdk_gui_oracle_cancelled() -> u32;
     fn sdk_gui_host_mode(value: u32);
     fn sdk_gui_host_count(kind: u32) -> u32;
+}
+#[test]
+fn modern_controls_use_the_same_native_frames_from_zig_c_and_rust() {
+    let expected = unsafe { sdk_gui_modern_expected() };
+    assert_ne!(expected, 0);
+    assert_eq!(unsafe { sdk_gui_modern_c_case() }, expected);
+    with_app(false, |app| {
+        let mut storage = pin!(SessionStorage::new());
+        let mut timers = [MaybeUninit::uninit(); 1];
+        let mut window = Session::open(storage.as_mut(), app, Role::Window, &mut timers).unwrap();
+        let style = gui::Style::light().unwrap();
+        let mut commands = [abi::GuiFrameCommand::default(); 16];
+        let mut resources = [0; 2048];
+        let mut paint = window.begin(&mut commands, &mut resources).unwrap();
+        paint.set_style(&style).unwrap();
+        let mut scratch = [0; 64];
+        paint
+            .action_button(
+                Rect {
+                    x: 10,
+                    y: 10,
+                    width: 120,
+                    height: 32,
+                },
+                b"Modern",
+                gui::ButtonState::Normal,
+                true,
+                true,
+                &mut scratch,
+            )
+            .unwrap();
+        paint
+            .progress_bar(
+                Rect {
+                    x: 10,
+                    y: 60,
+                    width: 120,
+                    height: 12,
+                },
+                25,
+                100,
+                0,
+                false,
+            )
+            .unwrap();
+        paint.present().unwrap();
+        assert_eq!(unsafe { sdk_gui_modern_hash() }, expected);
+    });
 }
 fn with_app(host: bool, body: impl FnOnce(&App<'_>)) {
     let (mut sys, mut desk, mut draw) = (

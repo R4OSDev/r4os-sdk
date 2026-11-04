@@ -20,6 +20,19 @@ the R4DRAW39 grammar and corresponding Desktop renderer. The optional
 solid fill. The resource builder validates coordinates and two through eight
 ordered color stops before changing its caller-owned output buffer.
 
+`Modern.zig` opts its own Canvas into SDK0.64.147 `gui.Style.light/dark`.
+It uses the same Button, TextField, TabBar and ModalDialog input owners,
+plus shared Card/TileGrid, Paragraph and Progress helpers. Tab/arrow/Enter,
+Unicode/clipboard, native pointer capture, hover/pressed/disabled states,
+light/dark switching and a native dialog are interactive. The outer frame
+and system buttons remain Desktop-owned. Build it with the same three imports
+and ordinary module template as Canvas.zig; it installs no global theme.
+Resolve `Style.withSystemFonts(draw)` again on font_changed, and use
+Canvas.layoutTabs for both painting and hit testing with its font metrics.
+FontSet selects existing renderable R4 Sans catalog entries; unavailable
+roles retain the builtin font. R4FONT remains the scalable-font owner.
+For the complete contract and migration see Docs/SDK/GuiControls.txt.
+
 `GuiEvents.c` is a complete C application using only `<r4os/app_gui.h>`.
 Use the same GUI imports and `ENTRY_MODE=app`, with `LANGUAGE=C` and
 `SOURCE=src/main.c` in an ordinary R4X project. Copy the example to that source

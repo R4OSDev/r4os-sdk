@@ -365,7 +365,7 @@ pub fn build(b: *std.Build) void {
     b.step("update-parity-test", "Existing current update/catalog/journal/backup owner cases").dependOn(&update_tests.step);
     const gui_cases = b.createModule(.{ .root_source_file = b.path("Tests/Conformance/GuiFacadePrototype05824.zig"), .target = b.graph.host, .optimize = sdk_profiles.defaults.debug_optimize });
     gui_cases.addImport("r4os", host_r4os);
-    const gui_parity = b.addRunArtifact(b.addTest(.{ .root_module = gui_cases, .filters = &.{ "raw GUI events", "command clipboard timer", "transactional paint", "buffered Canvas", "gradient resources" } }));
+    const gui_parity = b.addRunArtifact(b.addTest(.{ .root_module = gui_cases, .filters = &.{ "raw GUI events", "command clipboard timer", "transactional paint", "buffered Canvas", "gradient resources", "modern controls" } }));
     b.step("gui-parity-test", "Existing GUI events, frame/immutable generation, pixel and failure oracles").dependOn(&gui_parity.step);
     const graphics_parity = b.addRunArtifact(b.addTest(.{ .root_module = gui_cases, .filters = &.{ "graphics buffer optional tails", "old display and driver prefixes" } }));
     b.step("graphics-parity-test", "Existing graphics descriptors, generations, retire, cursor and telemetry cases").dependOn(&graphics_parity.step);

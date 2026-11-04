@@ -1,4 +1,4 @@
-use super::{Rect, c, code, exact, slot};
+use super::{ButtonState, Rect, Style, c, code, exact, slot};
 use crate::{
     App, abi,
     resources::Timeout,
@@ -323,6 +323,57 @@ pub struct Paint<'s, 'app, 'storage> {
     _buffers: PhantomData<(&'s mut [abi::GuiFrameCommand], &'s mut [u8])>,
 }
 impl Paint<'_, '_, '_> {
+    /// Copies presentation values into this paint's Canvas only.
+    pub fn set_style(&mut self, style: &Style) -> Result<i32> {
+        code(unsafe { c::R4SdkGuiCanvas_setStyle(0, self.canvas.as_ptr(), style.native.as_ptr()) })
+    }
+    #[allow(clippy::too_many_arguments)]
+    pub fn action_button(
+        &mut self,
+        area: Rect,
+        text: &[u8],
+        state: ButtonState,
+        focused: bool,
+        primary: bool,
+        scratch: &mut [u8],
+    ) -> Result<i32> {
+        let rect = area.native()?;
+        code(unsafe {
+            c::R4SdkGuiCanvas_actionButton(
+                0,
+                self.canvas.as_ptr(),
+                rect.as_ptr(),
+                text.as_ptr(),
+                text.len() as _,
+                state as u32,
+                focused as u8,
+                primary as u8,
+                scratch.as_mut_ptr(),
+                scratch.len() as _,
+            )
+        })
+    }
+    pub fn progress_bar(
+        &mut self,
+        area: Rect,
+        completed: u64,
+        total: u64,
+        phase: u32,
+        disabled: bool,
+    ) -> Result<i32> {
+        let rect = area.native()?;
+        code(unsafe {
+            c::R4SdkGuiCanvas_progressBar(
+                0,
+                self.canvas.as_ptr(),
+                rect.as_ptr(),
+                completed,
+                total,
+                phase,
+                disabled as u8,
+            )
+        })
+    }
     pub fn clear(&mut self, rgb: u32) -> Result<i32> {
         code(unsafe { c::R4SdkGuiCanvas_clear(0, self.canvas.as_ptr(), rgb) })
     }

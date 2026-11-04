@@ -1,6 +1,95 @@
 const std = @import("std");
 const r4os = @import("r4os");
 
+test "modern controls preserve classic defaults and share bounded native resources" {
+    resetFrameCapture();
+    var tables = makeTables(true);
+    enableFrameContract(&tables[2]);
+    var imports: [3]r4os.abi.R4XStartImport = undefined;
+    var context: r4os.abi.R4XStartContext = undefined;
+    var app = try makeApp(&tables, &imports, &context);
+    const drawing = app.drawing().?;
+    var paint = switch (r4os.app_gui.beginPaintForSize(&drawing, 640, 480)) {
+        .paint => |value| value,
+        .failure => return error.Paint,
+    };
+    defer paint.discard();
+    var commands: [64]r4os.abi.GuiFrameCommand = undefined;
+    var resources: [4096]u8 = undefined;
+    var builder: r4os.FrameCanvas = undefined;
+    const classic = paint.bufferedCanvas(&builder, &commands, &resources);
+    try std.testing.expect(classic.style == null);
+    const canvas = classic.withStyle(r4os.gui.Style.light());
+    var scratch: [128]u8 = undefined;
+    for ([_]r4os.gui.ButtonState{ .normal, .hover, .pressed, .disabled }, 0..) |state, i| {
+        try std.testing.expectEqual(@as(i32, 0), canvas.actionButton(.{ .x = @intCast(i * 140), .y = 8, .w = 130, .h = 32 }, "Modern", state, true, true, &scratch));
+    }
+    try std.testing.expectEqual(@as(i32, 0), canvas.progressBar(.{ .x = 8, .y = 56, .w = 200, .h = 16 }, std.math.maxInt(u64) / 2, std.math.maxInt(u64), 0, false));
+    try std.testing.expectEqual(@as(i32, 0), canvas.progressBar(.{ .x = 8, .y = 80, .w = 200, .h = 16 }, 0, 0, 95, false));
+    var field: r4os.gui.TextField(64) = .{};
+    try std.testing.expect(field.setExact("a\u{301}z"));
+    field.focused = true;
+    try std.testing.expect(field.setPasswordMode(true));
+    try std.testing.expectEqual(@as(i32, 0), field.draw(canvas, .{ .x = 8, .y = 112, .w = 180, .h = 32 }, &scratch));
+    const items = [_]r4os.gui.TabItem{ .{ .text = "Apps" }, .{ .text = "Libraries", .enabled = false }, .{ .text = "Kernel" } };
+    const tabs = canvas.layoutTabs(.{ .rect = .{ .x = 8, .y = 160, .w = 500, .h = 36 }, .items = &items, .focused = true });
+    try std.testing.expect(tabs.indexAt(tabs.tabRect(1).x + 1, 165) == null);
+    try std.testing.expectEqual(@as(usize, 2), tabs.keyAction(r4os.gui.Key.right).index);
+    try std.testing.expectEqual(@as(i32, 0), tabs.draw(canvas, &scratch));
+    const labels = [_][]const u8{ "Hover", "Selected", "Disabled" };
+    const list = r4os.gui.List{ .rect = .{ .x = 300, .y = 220, .w = 240, .h = 128 }, .items = &labels, .row_h = 32, .selected_index = 1, .hover_index = 0, .disabled_index = 2, .focused = true };
+    try std.testing.expectEqual(@as(i32, 0), list.draw(canvas, &scratch));
+    const card = r4os.gui.Card{ .rect = .{ .x = 8, .y = 220, .w = 240, .h = 80 }, .title = "Card", .subtitle = "Shared control", .focused = true, .state = .disabled };
+    try std.testing.expect(!card.contains(20, 230));
+    try std.testing.expectEqual(r4os.gui.ControlAction.none, card.keyAction(r4os.gui.Key.enter));
+    try std.testing.expectEqual(@as(i32, 0), card.draw(canvas, &scratch));
+    const grid = r4os.gui.TileGrid{ .rect = .{ .x = 10, .y = 10, .w = 492, .h = 164 }, .count = 9 };
+    try std.testing.expectEqual(@as(usize, 2), grid.columns());
+    try std.testing.expectEqual(@as(usize, 4), grid.visibleCount());
+    try std.testing.expectEqual(@as(?usize, 3), grid.indexAt(265, 100));
+    try std.testing.expect(grid.indexAt(252, 30) == null); // the inter-card gap
+    try std.testing.expect(grid.itemRect(4).isEmpty());
+    try std.testing.expectEqual(@as(i32, 0), paint.present());
+    try std.testing.expectEqual(r4os.abi.gui_frame_command_kind_rounded_rect, captured_commands[0].kind);
+    const fill_offset = @offsetOf(r4os.abi.GuiShapeResource, "fill_argb");
+    try std.testing.expectEqual(@as(u32, 0xff7950d0), std.mem.readInt(u32, captured_resources[fill_offset..][0..4], .little));
+    try std.testing.expect(std.mem.indexOf(u8, captured_resources[0..captured_resource_len], "a\u{301}z") == null);
+    var invalid = r4os.gui.Style.dark();
+    invalid.radius = 65;
+    var untouched = classic;
+    try std.testing.expectEqual(r4os.abi.gui_frame_error_invalid, untouched.setStyle(invalid));
+    try std.testing.expect(untouched.style == null);
+}
+
+pub export fn sdk_gui_modern_hash() callconv(.c) u64 {
+    var hash = std.hash.Wyhash.init(46);
+    for (captured_commands[0..captured_command_count]) |command| std.hash.autoHash(&hash, command);
+    hash.update(captured_resources[0..captured_resource_len]);
+    return hash.final();
+}
+
+pub export fn sdk_gui_modern_expected() callconv(.c) u64 {
+    resetFrameCapture();
+    var tables = makeTables(true);
+    enableFrameContract(&tables[2]);
+    var imports: [3]r4os.abi.R4XStartImport = undefined;
+    var context: r4os.abi.R4XStartContext = undefined;
+    var app = makeApp(&tables, &imports, &context) catch return 0;
+    const drawing = app.drawing().?;
+    var paint = switch (r4os.app_gui.beginPaintForSize(&drawing, 320, 200)) {
+        .paint => |value| value,
+        .failure => return 0,
+    };
+    defer paint.discard();
+    var commands: [16]r4os.abi.GuiFrameCommand = undefined;
+    var resources: [2048]u8 = undefined;
+    var builder: r4os.FrameCanvas = undefined;
+    const canvas = paint.bufferedCanvas(&builder, &commands, &resources).withStyle(r4os.gui.Style.light());
+    var scratch: [64]u8 = undefined;
+    if (canvas.actionButton(.{ .x = 10, .y = 10, .w = 120, .h = 32 }, "Modern", .normal, true, true, &scratch) < 0 or canvas.progressBar(.{ .x = 10, .y = 60, .w = 120, .h = 12 }, 25, 100, 0, false) < 0 or paint.present() < 0) return 0;
+    return sdk_gui_modern_hash();
+}
+
 fn nativeSubmitProbe(queue: *const r4os.abi.GfxQueueHandle, submission: *const r4os.abi.GfxSubmission, native: *const r4os.abi.GfxNativeSubmission, out: *r4os.abi.GfxFenceStatus) callconv(.c) i32 {
     std.debug.assert(queue.timeline == 0x100000003 and submission.operation == r4os.abi.gfx_queue_operation_native);
     std.debug.assert(native.commands == 0x200000009 and out.version == 1 and out.size == 80);

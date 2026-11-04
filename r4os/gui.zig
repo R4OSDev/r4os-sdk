@@ -5,6 +5,16 @@ const abi = @import("r4os_contract").abi;
 const r4sys = @import("r4sys.zig");
 const r4desk = @import("r4desk.zig");
 const r4draw = @import("r4draw.zig");
+const modern = @import("gui_modern.zig");
+pub const Style = modern.Style;
+pub const FontSet = modern.FontSet;
+pub const TextRole = modern.TextRole;
+pub const SurfaceRole = modern.SurfaceRole;
+pub const Card = modern.Card;
+pub const TileGrid = modern.TileGrid;
+pub const Progress = modern.Progress;
+pub const Paragraph = modern.Paragraph;
+pub const modernSupported = modern.supported;
 
 pub const font_w: i32 = 8;
 pub const font_h: i32 = 8;
@@ -569,17 +579,22 @@ pub const TabBar = struct {
     focused: bool = false,
     tab_h: i32 = 22,
     palette: Palette = default_palette,
+    /// Keep the classic eight-pixel default; modern callers use Canvas.layoutTabs.
+    text_advance: i32 = font_w,
 
     pub fn draw(self: TabBar, canvas: Canvas, scratch: []u8) i32 {
         return drawTabBar(canvas, self, scratch);
     }
 
     pub fn tabRect(self: TabBar, index: usize) Rect {
-        return tabBarItemRect(self.rect, self.items, index, self.tab_h);
+        return tabBarItemRectWithAdvance(self.rect, self.items, index, self.tab_h, self.text_advance);
     }
 
     pub fn indexAt(self: TabBar, x: i32, y: i32) ?usize {
-        return tabBarIndexAt(self.rect, self.items, self.tab_h, x, y);
+        for (self.items, 0..) |item, index| {
+            if (item.enabled and self.tabRect(index).contains(x, y)) return index;
+        }
+        return null;
     }
 
     pub fn keyAction(self: TabBar, key: u8) SelectionStep {
@@ -2508,6 +2523,8 @@ pub const Canvas = struct {
     h: i32,
     font: FontMetrics = .{},
     frame_canvas: ?*FrameCanvas = null,
+    /// Application-local opt-in. null preserves the complete classic path.
+    style: ?Style = null,
 
     pub fn init(ctx: *const r4draw.Context, info: abi.GuiWindowInfo) Canvas {
         return initSize(ctx, info.client_w, info.client_h);
@@ -2534,6 +2551,59 @@ pub const Canvas = struct {
         var next = self;
         next.font = fontMetricsForId(self.ctx, font_id);
         return next;
+    }
+
+    pub fn withStyle(self: Canvas, style: Style) Canvas {
+        var next = self;
+        next.style = style;
+        return next.withTextRole(.body);
+    }
+
+    /// Mutates only this paint's caller-owned canvas, never a system theme.
+    pub fn setStyle(self: *Canvas, style: Style) i32 {
+        if (!style.valid()) return abi.gui_frame_error_invalid;
+        self.* = self.withStyle(style);
+        return 0;
+    }
+
+    pub fn withTextRole(self: Canvas, role: TextRole) Canvas {
+        if (self.style) |style| return self.withFontId(style.fonts.id(role));
+        return self;
+    }
+
+    pub fn layoutTabs(self: Canvas, tabs: TabBar) TabBar {
+        var result = tabs;
+        result.text_advance = self.font.max_advance;
+        if (self.style) |style| result.tab_h = @max(result.tab_h, style.controlHeight(self.font));
+        return result;
+    }
+
+    pub fn surface(self: Canvas, item: Rect, role: SurfaceRole) i32 {
+        const style = self.style orelse return self.rect(item, default_palette.client_bg);
+        if (!style.valid()) return abi.gui_frame_error_invalid;
+        return modern.surface(self, item, switch (role) {
+            .plain => style.surface,
+            .soft => style.soft,
+            .accent => style.accent,
+            .selected => style.tint,
+        }, style.line, style.radius, false);
+    }
+
+    pub fn card(self: Canvas, item: Card, scratch: []u8) i32 {
+        return item.draw(self, scratch);
+    }
+    /// Scalar-friendly facade for exactly the existing Button presentation.
+    pub fn actionButton(self: Canvas, area: Rect, value: []const u8, state: ButtonState, focused: bool, primary: bool, scratch: []u8) i32 {
+        return drawButtonEx(self, area, scratch, value, state, focused, primary, false, default_palette);
+    }
+    pub fn progressBar(self: Canvas, area: Rect, completed: u64, total: u64, phase: u32, disabled: bool) i32 {
+        return self.progress(.{ .rect = area, .completed = completed, .total = total, .phase = phase, .disabled = disabled });
+    }
+    pub fn progress(self: Canvas, item: Progress) i32 {
+        return item.draw(self);
+    }
+    pub fn paragraph(self: Canvas, item: Paragraph, scratch: []u8) i32 {
+        return item.draw(self, scratch);
     }
 
     pub fn clear(self: Canvas, rgb: u32) i32 {
@@ -2620,6 +2690,24 @@ pub const Canvas = struct {
         var metrics: abi.GuiTextMetrics = .{};
         if (self.ctx.fontMeasure(self.font.id, value, &metrics) >= 0) return clampU32ToI32(metrics.width);
         return fallbackTextWidthZ(value, self.font.max_advance);
+    }
+
+    /// Grapheme-safe hit testing using the same font as rendering. Single-line
+    /// controls accept at most 4096 display bytes here; editing stays TextField's.
+    pub fn textIndexAt(self: Canvas, value: []const u8, x: i32) usize {
+        if (x <= 0 or !bounded_text.valid(value)) return 0;
+        var iterator = DisplayIterator{ .inner = .{ .bytes = value } };
+        var previous: usize = 0;
+        var previous_width: i32 = 0;
+        while (iterator.next()) |range| {
+            if (range.end > 4096 or value[range.start] == '\n') break;
+            const width = displayPrefixWidth(self, value[0..range.end]);
+            if (x < previous_width + @divTrunc(width - previous_width, 2)) return previous;
+            if (x < width) return range.end;
+            previous = range.end;
+            previous_width = width;
+        }
+        return previous;
     }
 
     pub fn charsForWidth(self: Canvas, width_px: i32) usize {
@@ -3103,6 +3191,7 @@ pub fn drawButton(canvas: Canvas, rect: Rect, scratch: []u8, text: []const u8, s
 
 pub fn drawButtonEx(canvas: Canvas, rect: Rect, scratch: []u8, text: []const u8, state: ButtonState, focused: bool, is_default: bool, is_cancel: bool, palette: Palette) i32 {
     if (rect.isEmpty()) return 0;
+    if (canvas.style) |style| return modern.button(canvas, rect, scratch, text, state, focused, is_default, style);
 
     _ = canvas.rect(rect, palette.face);
     const pressed = state == .pressed;
@@ -3149,14 +3238,21 @@ pub fn drawTextField(canvas: Canvas, rect: Rect, scratch: []u8, value: []const u
     return drawTextFieldEx(canvas, rect, scratch, value, value.len, .{ .start = value.len, .end = value.len }, focused, disabled, palette);
 }
 
-pub fn drawTextFieldEx(canvas: Canvas, rect: Rect, scratch: []u8, value: []const u8, cursor: usize, selection: anytype, focused: bool, disabled: bool, palette: Palette) i32 {
+pub fn drawTextFieldEx(canvas: Canvas, rect: Rect, scratch: []u8, value: []const u8, cursor: usize, selection: anytype, focused: bool, disabled: bool, original_palette: Palette) i32 {
     if (rect.isEmpty()) return 0;
+    const palette = if (canvas.style) |style| style.palette() else original_palette;
     const bg = if (disabled) palette.face else palette.client_bg;
-    _ = canvas.rect(rect, bg);
-    _ = canvas.rect(.{ .x = rect.x, .y = rect.y, .w = rect.w, .h = default_metrics.bevel }, palette.face_shadow);
-    _ = canvas.rect(.{ .x = rect.x, .y = rect.y, .w = default_metrics.bevel, .h = rect.h }, palette.face_shadow);
-    _ = canvas.rect(.{ .x = rect.x, .y = rect.y + rect.h - default_metrics.bevel, .w = rect.w, .h = default_metrics.bevel }, palette.face_light);
-    _ = canvas.rect(.{ .x = rect.x + rect.w - default_metrics.bevel, .y = rect.y, .w = default_metrics.bevel, .h = rect.h }, palette.face_light);
+    if (canvas.style) |style| {
+        if (!style.valid()) return abi.gui_frame_error_invalid;
+        const rc = modern.surface(canvas, rect, bg, if (focused and !disabled) style.accent else style.line, style.radius, focused and !disabled);
+        if (rc < 0) return rc;
+    } else {
+        _ = canvas.rect(rect, bg);
+        _ = canvas.rect(.{ .x = rect.x, .y = rect.y, .w = rect.w, .h = default_metrics.bevel }, palette.face_shadow);
+        _ = canvas.rect(.{ .x = rect.x, .y = rect.y, .w = default_metrics.bevel, .h = rect.h }, palette.face_shadow);
+        _ = canvas.rect(.{ .x = rect.x, .y = rect.y + rect.h - default_metrics.bevel, .w = rect.w, .h = default_metrics.bevel }, palette.face_light);
+        _ = canvas.rect(.{ .x = rect.x + rect.w - default_metrics.bevel, .y = rect.y, .w = default_metrics.bevel, .h = rect.h }, palette.face_light);
+    }
 
     const text_rect = rect.inset(default_metrics.text_pad_x, default_metrics.text_pad_y);
     const fitted = copyEllipsizedForCanvas(canvas, scratch, value, text_rect.w);
@@ -3169,20 +3265,37 @@ pub fn drawTextFieldEx(canvas: Canvas, rect: Rect, scratch: []u8, value: []const
         0;
     const selection_start = @min(selection.start, visible_value_end);
     const selection_end = @min(selection.end, visible_value_end);
+    const modern_caret_width = if (canvas.style != null) displayPrefixWidth(canvas, if (cursor > visible_value_end and !fitted_is_full) fitted else value[0..graphemeFloor(value, @min(cursor, visible_value_end))]) else 0;
     if (selection_start < selection_end and !disabled) {
-        const sx = text_rect.x + @as(i32, @intCast(utf8ScalarCount(value[0..selection_start]))) * canvas.font.max_advance;
-        const sw = @as(i32, @intCast(utf8ScalarCount(value[selection_start..selection_end]))) * canvas.font.max_advance;
+        const before = if (canvas.style != null) displayPrefixWidth(canvas, value[0..selection_start]) else @as(i32, @intCast(utf8ScalarCount(value[0..selection_start]))) * canvas.font.max_advance;
+        const end = if (canvas.style != null) displayPrefixWidth(canvas, value[0..selection_end]) else before + @as(i32, @intCast(utf8ScalarCount(value[selection_start..selection_end]))) * canvas.font.max_advance;
+        const sx = text_rect.x + before;
+        const sw = end - before;
         _ = canvas.rect(.{ .x = sx, .y = text_rect.y + 1, .w = sw, .h = @max(1, text_rect.h - 2) }, palette.select_bg);
     }
     if (fitted.len > 0) {
         const y = text_rect.y + @max(0, @divTrunc(text_rect.h - canvas.font.line_height, 2));
-        _ = canvas.text(text_rect.x, y, @ptrCast(scratch.ptr), if (disabled) palette.disabled_text else palette.text, if (selection_start < selection_end) palette.select_bg else bg);
+        if (canvas.style != null and !disabled and selection_start < selection_end) {
+            var displayed: [4097]u8 = undefined;
+            const n = @min(fitted.len, displayed.len - 1);
+            @memcpy(displayed[0..n], fitted[0..n]);
+            const text = displayed[0..n];
+            const start = @min(selection_start, n);
+            const end = @min(selection_end, n);
+            for ([_]TextRange{ .{ .start = 0, .end = start }, .{ .start = start, .end = end }, .{ .start = end, .end = n } }, 0..) |part, index| {
+                const offset = displayPrefixWidth(canvas, text[0..part.start]);
+                _ = canvas.textClipped(text_rect.x + offset, y, @max(0, text_rect.w - offset), scratch, text[part.start..part.end], if (index == 1) palette.select_text else palette.text, if (index == 1) palette.select_bg else bg);
+            }
+        } else {
+            _ = canvas.text(text_rect.x, y, @ptrCast(scratch.ptr), if (disabled) palette.disabled_text else palette.text, if (selection_start < selection_end) palette.select_bg else bg);
+        }
     }
 
     if (focused and !disabled and text_rect.h > 2) {
         const caret_byte = graphemeFloor(value, @min(cursor, visible_value_end));
         const caret_chars = if (cursor > visible_value_end and !fitted_is_full) utf8ScalarCount(fitted) else utf8ScalarCount(value[0..caret_byte]);
-        const caret_text_w = @min(@as(i32, @intCast(caret_chars)) * canvas.font.max_advance, @max(0, text_rect.w - 1));
+        const caret_width = if (canvas.style != null) modern_caret_width else @as(i32, @intCast(caret_chars)) * canvas.font.max_advance;
+        const caret_text_w = @min(caret_width, @max(0, text_rect.w - 1));
         _ = canvas.rect(.{
             .x = text_rect.x + caret_text_w,
             .y = text_rect.y + 2,
@@ -3337,13 +3450,20 @@ pub fn drawList(canvas: Canvas, rect: Rect, scratch: []u8, items: []const []cons
     return drawListEx(canvas, rect, scratch, items, selected_index, null, 0, null, row_h, palette);
 }
 
-pub fn drawListEx(canvas: Canvas, rect: Rect, scratch: []u8, items: []const []const u8, selected_index: usize, hover_index: ?usize, first_index: usize, disabled_index: ?usize, row_h: i32, palette: Palette) i32 {
+pub fn drawListEx(canvas: Canvas, rect: Rect, scratch: []u8, items: []const []const u8, selected_index: usize, hover_index: ?usize, first_index: usize, disabled_index: ?usize, row_h: i32, original_palette: Palette) i32 {
     if (rect.isEmpty()) return 0;
-    _ = canvas.rect(rect, palette.client_bg);
-    _ = canvas.rect(.{ .x = rect.x, .y = rect.y, .w = rect.w, .h = default_metrics.bevel }, palette.face_shadow);
-    _ = canvas.rect(.{ .x = rect.x, .y = rect.y, .w = default_metrics.bevel, .h = rect.h }, palette.face_shadow);
-    _ = canvas.rect(.{ .x = rect.x, .y = rect.y + rect.h - default_metrics.bevel, .w = rect.w, .h = default_metrics.bevel }, palette.face_light);
-    _ = canvas.rect(.{ .x = rect.x + rect.w - default_metrics.bevel, .y = rect.y, .w = default_metrics.bevel, .h = rect.h }, palette.face_light);
+    const palette = if (canvas.style) |style| style.palette() else original_palette;
+    if (canvas.style) |style| {
+        if (!style.valid()) return abi.gui_frame_error_invalid;
+        const rc = modern.surface(canvas, rect, style.surface, style.line, style.radius, false);
+        if (rc < 0) return rc;
+    } else {
+        _ = canvas.rect(rect, palette.client_bg);
+        _ = canvas.rect(.{ .x = rect.x, .y = rect.y, .w = rect.w, .h = default_metrics.bevel }, palette.face_shadow);
+        _ = canvas.rect(.{ .x = rect.x, .y = rect.y, .w = default_metrics.bevel, .h = rect.h }, palette.face_shadow);
+        _ = canvas.rect(.{ .x = rect.x, .y = rect.y + rect.h - default_metrics.bevel, .w = rect.w, .h = default_metrics.bevel }, palette.face_light);
+        _ = canvas.rect(.{ .x = rect.x + rect.w - default_metrics.bevel, .y = rect.y, .w = default_metrics.bevel, .h = rect.h }, palette.face_light);
+    }
 
     const inner = rect.inset(default_metrics.frame_inset, default_metrics.frame_inset);
     const effective_row_h = listRowHeight(row_h);
@@ -3362,9 +3482,18 @@ pub fn drawListEx(canvas: Canvas, rect: Rect, scratch: []u8, items: []const []co
         const hovered = hover_index != null and hover_index.? == item_index and !selected and !disabled;
         const bg = if (selected) palette.select_bg else palette.client_bg;
         const fg = if (disabled) palette.disabled_text else if (selected) palette.select_text else palette.text;
-        _ = canvas.rect(row, bg);
-        if (hovered) _ = canvas.rect(.{ .x = row.x + 1, .y = row.y + 1, .w = @max(0, row.w - 2), .h = @max(0, row.h - 2) }, palette.face);
-        _ = drawTextInRect(canvas, row.inset(default_metrics.text_pad_x, default_metrics.frame_inset), scratch, items[item_index], .left, fg, if (hovered) palette.face else bg);
+        const hover_bg = if (canvas.style) |style| style.hover else palette.face;
+        if (canvas.style) |style| {
+            if (selected or hovered) {
+                const fill = if (hovered) hover_bg else bg;
+                const rc = modern.surface(canvas, row, fill, fill, @max(0, style.radius - 2), false);
+                if (rc < 0) return rc;
+            }
+        } else {
+            _ = canvas.rect(row, bg);
+            if (hovered) _ = canvas.rect(.{ .x = row.x + 1, .y = row.y + 1, .w = @max(0, row.w - 2), .h = @max(0, row.h - 2) }, palette.face);
+        }
+        _ = drawTextInRect(canvas, row.inset(default_metrics.text_pad_x, default_metrics.frame_inset), scratch, items[item_index], .left, fg, if (hovered) hover_bg else bg);
     }
     return 0;
 }
@@ -3418,6 +3547,21 @@ pub fn drawToolbarButton(canvas: Canvas, rect: Rect, scratch: []u8, text: []cons
 
 pub fn drawTabBar(canvas: Canvas, item: TabBar, scratch: []u8) i32 {
     if (item.rect.isEmpty()) return 0;
+    if (canvas.style) |style| {
+        if (!style.valid()) return abi.gui_frame_error_invalid;
+        for (item.items, 0..) |tab, index| {
+            const rect = item.tabRect(index);
+            if (rect.isEmpty()) continue;
+            const selected = index == item.selected_index and tab.enabled;
+            const hot = tab.enabled and item.hover_index == index;
+            const bg = if (selected) style.tint else if (hot) style.hover else style.background;
+            const rc = modern.surface(canvas, rect.inset(2, 0), bg, if (item.focused and selected) style.accent else bg, style.radius, item.focused and selected);
+            if (rc < 0) return rc;
+            const text_rc = drawTextInRect(canvas, rect.inset(default_metrics.text_pad_x + 2, 2), scratch, tab.text, .center, if (!tab.enabled) style.disabled else if (selected) style.accent else style.muted, bg);
+            if (text_rc < 0) return text_rc;
+        }
+        return 0;
+    }
     _ = canvas.rect(item.rect, item.palette.face);
     var index: usize = 0;
     while (index < item.items.len) : (index += 1) {
@@ -3893,6 +4037,12 @@ pub fn dialogFocusStep(items: []const DialogFocusItem, current: DialogAction, di
 
 pub fn drawDialogFrame(canvas: Canvas, rect: Rect, scratch: []u8, title: []const u8, palette: Palette) i32 {
     if (rect.isEmpty()) return 0;
+    if (canvas.style) |style| {
+        if (!style.valid()) return abi.gui_frame_error_invalid;
+        const rc = modern.surface(canvas, rect, style.surface, style.line, style.radius, false);
+        if (rc < 0) return rc;
+        return drawTextInRect(canvas, dialogTitleRect(rect).inset(8, 0), scratch, title, .left, style.text, style.surface);
+    }
     _ = canvas.rect(rect, palette.face);
     _ = canvas.rect(.{ .x = rect.x, .y = rect.y, .w = rect.w, .h = default_metrics.bevel }, palette.face_light);
     _ = canvas.rect(.{ .x = rect.x, .y = rect.y, .w = default_metrics.bevel, .h = rect.h }, palette.face_light);
@@ -4223,13 +4373,17 @@ pub fn scrollbarStep(item: Scrollbar, part: ScrollbarPart) ScrollbarStep {
 }
 
 pub fn tabBarItemRect(rect: Rect, items: []const TabItem, index: usize, tab_h: i32) Rect {
+    return tabBarItemRectWithAdvance(rect, items, index, tab_h, font_w);
+}
+
+pub fn tabBarItemRectWithAdvance(rect: Rect, items: []const TabItem, index: usize, tab_h: i32, advance: i32) Rect {
     if (index >= items.len) return .{};
     var x = rect.x;
     var i: usize = 0;
     while (i < index) : (i += 1) {
-        x += tabWidth(items[i].text);
+        x += tabWidthWithAdvance(items[i].text, advance);
     }
-    const w = @min(tabWidth(items[index].text), @max(0, rect.right() - x));
+    const w = @min(tabWidthWithAdvance(items[index].text, advance), @max(0, rect.right() - x));
     return .{ .x = x, .y = rect.y, .w = w, .h = @min(tabHeight(tab_h), @max(0, rect.h)) };
 }
 
@@ -4244,6 +4398,12 @@ pub fn tabBarIndexAt(rect: Rect, items: []const TabItem, tab_h: i32, x: i32, y: 
 
 fn tabWidth(text: []const u8) i32 {
     return @max(48, textWidth(text) + default_metrics.text_pad_x * 4);
+}
+
+fn tabWidthWithAdvance(text: []const u8, advance: i32) i32 {
+    if (advance == font_w) return tabWidth(text);
+    const width = @as(i32, @intCast(@min(utf8ScalarCount(text), 4096))) * std.math.clamp(advance, 1, 256);
+    return @max(48, width + default_metrics.text_pad_x * 4);
 }
 
 fn tabHeight(tab_h: i32) i32 {
@@ -4506,6 +4666,10 @@ fn drawTextAreaSegment(canvas: Canvas, scratch: []u8, value: []const u8, start: 
 
 fn drawFocusRect(canvas: Canvas, rect: Rect, palette: Palette) void {
     if (rect.isEmpty()) return;
+    if (canvas.style) |style| {
+        _ = modern.outline(canvas, rect, style.accent, style.radius);
+        return;
+    }
     _ = canvas.rect(.{ .x = rect.x, .y = rect.y, .w = rect.w, .h = 1 }, palette.text);
     _ = canvas.rect(.{ .x = rect.x, .y = rect.y, .w = 1, .h = rect.h }, palette.text);
     _ = canvas.rect(.{ .x = rect.x, .y = rect.y + rect.h - 1, .w = rect.w, .h = 1 }, palette.text);
@@ -4564,6 +4728,14 @@ fn fallbackTextWidthZ(value: [*:0]const u8, advance: i32) i32 {
         width += advance;
     }
     return width;
+}
+
+fn displayPrefixWidth(canvas: Canvas, value: []const u8) i32 {
+    var buffer: [4097]u8 = undefined;
+    const count = @min(value.len, buffer.len - 1);
+    @memcpy(buffer[0..count], value[0..count]);
+    buffer[count] = 0;
+    return canvas.textWidthZ(@ptrCast(&buffer));
 }
 
 fn effectiveTextAreaWrapCols(wrap_cols: usize) usize {

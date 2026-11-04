@@ -710,11 +710,12 @@
         "app_gui",
         "r4desk",
         "gui",
+        "gui_modern",
         "gui_shapes",
         "clipboard",
         "chart"
       ],
-      "semantics": "GUI-Nachrichten/Unicode/Modifier/Close, Timer/Clipboard, Paint/Present und Ressourcenbesitz; gehostete App und Desktophost sind verschiedene Rollen. Kein Schlafpolling oder Abschneiden von UTF-8. Aktuelle CPU/GPU-Ausgaben und abgerundete/alpha-Pixel erhalten. Fokusgewinn/-verlust und globale Fontaenderung sind typisiert; vorhandene Fensteridentitaet/Ticks und vollstaendige Unknown-Rohdaten bleiben erhalten. Vier benannte C-Fensterflags stammen aus der kanonischen GuiWindowFlag-Wahrheit. SDK110: natives Capture bindet volle Prozessgeneration, Fensterinkarnation und Capture-ID;0 bestaetigt PENDING, ACTIVE erst nach Desktop-Grant. C/Zig/Rust erhalten typisierte Capture-/Relative-/Wheel-Nachrichten. Relative physische Deltas entstehen vor Clamping; absolute Remote-Moves werden nicht als Rohbewegung ausgegeben. Release-/Cancel-/Broker-/Fensterende und zugehoerige externe C-Belege sind getrennt qualifiziert. SDK111: Desktop bindet den genauen Prozesshandle und die native Fensterinkarnation an QUERY/POST/RESET. Busy ist keine fehlende GUI-Zustaendigkeit. C/Zig/Rust erhalten InputReset mit Grund/Fenster/Tick; lokale Press-/Repeat-/Dragzustaende enden ohne synthetischen Klick. Capture-Terminalmeldungen behalten ihren eigenen Vertrag.",
+      "semantics": "GUI-Nachrichten/Unicode/Modifier/Close, Timer/Clipboard, Paint/Present und Ressourcenbesitz; gehostete App und Desktophost sind verschiedene Rollen. Kein Schlafpolling oder Abschneiden von UTF-8. Aktuelle CPU/GPU-Ausgaben und abgerundete/alpha-Pixel erhalten. Fokusgewinn/-verlust und globale Fontaenderung sind typisiert; vorhandene Fensteridentitaet/Ticks und vollstaendige Unknown-Rohdaten bleiben erhalten. Vier benannte C-Fensterflags stammen aus der kanonischen GuiWindowFlag-Wahrheit. SDK110: natives Capture bindet volle Prozessgeneration, Fensterinkarnation und Capture-ID;0 bestaetigt PENDING, ACTIVE erst nach Desktop-Grant. C/Zig/Rust erhalten typisierte Capture-/Relative-/Wheel-Nachrichten. Relative physische Deltas entstehen vor Clamping; absolute Remote-Moves werden nicht als Rohbewegung ausgegeben. Release-/Cancel-/Broker-/Fensterende und zugehoerige externe C-Belege sind getrennt qualifiziert. SDK111: Desktop bindet den genauen Prozesshandle und die native Fensterinkarnation an QUERY/POST/RESET. Busy ist keine fehlende GUI-Zustaendigkeit. C/Zig/Rust erhalten InputReset mit Grund/Fenster/Tick; lokale Press-/Repeat-/Dragzustaende enden ohne synthetischen Klick. Capture-Terminalmeldungen behalten ihren eigenen Vertrag. SDK147: Canvas-local opt-in Style/light/dark, catalog font roles, shared Button/TextField/List/TabBar/Dialog rendering and Card/TileGrid/Paragraph/Progress. Classic defaults and editing owners remain; existing C constructor prefixes keep native defaults for new fields.",
       "current_only": "current_function",
       "rust": {
         "state": "paritaet_abgenommen",
@@ -723,7 +724,8 @@
           "Repositories/SDK/Rust/src/gui/session.rs",
           "Repositories/SDK/Rust/src/gui/text.rs",
           "Repositories/SDK/Rust/src/gui/input.rs",
-          "Repositories/SDK/Rust/src/c_facades.rs"
+          "Repositories/SDK/Rust/src/c_facades.rs",
+          "Repositories/SDK/Rust/src/gui/style.rs"
         ],
         "gap": null
       },
@@ -746,7 +748,8 @@
         "gui_focus_font_08825",
         "native_pointer_capture_08828",
         "gui_host_backpressure_08832",
-        "studio_089_host"
+        "studio_089_host",
+        "gui_modern_08946"
       ],
       "shared_core": "Gemeinsame GUI-/Rasterkerne beim Besitzer; keine unabhaengigen Widget-/Unicodealgorithmen pro Sprache."
     },
@@ -55716,6 +55719,22 @@
         "Math/Scan archive byte equality and twelve existing R4L byte equality."
       ],
       "limits": "Linux host only; no GPU/Windows/hardware execution; unchanged runtime bytes imply no performance-effect benchmark requirement."
+    },
+    "gui_modern_08946": {
+      "complete": true,
+      "sdk": "0.64.147 source",
+      "contract": "0.64.74",
+      "owners": [
+        "Repositories/SDK/r4os/gui.zig",
+        "Repositories/SDK/r4os/gui_modern.zig"
+      ],
+      "proof": [
+        "Tests/Conformance/GuiFacadePrototype05824.zig",
+        "Tests/Simulation/GuiParity.c",
+        "Tests/Simulation/RustGui.rs"
+      ],
+      "result": "Existing GUI/editor/input suites and two actual native C/Rust peers PASS; modern semantic frame/resource hashes agree with Zig, classic pixels preserved; unsafe/Send/frame-loan misuse rejected. Legacy Canvas/TabBar C constructors compile and retain default presentation.",
+      "scope": "Linux host ABI of shared owners. Actual QEMU display/input, costs and limits are separate in Docs/SDK/GuiControls.txt; no Windows execution, hardware or isolated performance claim."
     }
   },
   "wave_bindings": [
@@ -55968,17 +55987,17 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.89.31",
-    "sdk": "0.64.142 source candidate",
-    "contract": "0.64.72",
-    "evidence": "native_sdk_profiles_08931",
-    "scope": "Native build policy migration; no public runtime API/ABI delta.",
+    "performed_in": "0.89.46",
+    "sdk": "0.64.147 source candidate",
+    "contract": "0.64.74",
+    "evidence": "gui_modern_08946",
+    "scope": "Shared optional modern GUI values and controls, generated C/Rust boundary and actual host semantic consumers. Native integration recorded separately.",
     "historical_snapshot_retained": true
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.89.45",
+    "reviewed_in": "0.89.46",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -57140,7 +57159,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "bd95ac1a277bf59a88f1e2613b695bf6676cf6f2685ad499520c8579883080ac"
+        "sha256": "849c64e73c3a95fb3875b8cc568b9622aa78e7a2745c1a68b75901a35c958957"
       },
       {
         "path": "Repositories/SDK/Rust/src/data/hash.rs",
@@ -57192,11 +57211,15 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/gui/mod.rs",
-        "sha256": "3012f09877ee9e6ffe0db2bf8ed72ff0487133ee1ee780eec6c66e799ff00a43"
+        "sha256": "3f57d056e807de650f8d85313ef42cdd085136f86ce104eac3438116c3395812"
       },
       {
         "path": "Repositories/SDK/Rust/src/gui/session.rs",
-        "sha256": "9625b30a2aef8eda6f46d3ec440d3f7c04c16b5e24fb591de4f8387e3e3ef8f0"
+        "sha256": "bd70541c31f6e8827b24ce8c413389fa87d9d52b6d5be84ca180e684a712565a"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/gui/style.rs",
+        "sha256": "011c5c33b12725ff6ab762bc7863ec47fe1c3d354f1d4b4513b35ef21c82853d"
       },
       {
         "path": "Repositories/SDK/Rust/src/gui/text.rs",
@@ -57524,7 +57547,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/gui_bridge.h",
-        "sha256": "857723a9ed5b972556ad4cdf656bc28e2f5c7a118a11ff9f2357cca71b5c28df"
+        "sha256": "6a7776ddeae783220f18406acaae32a80e24cab02cd1c0b9f700ae4158b9cc18"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/heap.h",
@@ -57680,7 +57703,7 @@
       },
       {
         "path": "Repositories/SDK/Tests/Conformance/GuiFacadePrototype05824.zig",
-        "sha256": "d2943df7702fcd56085f1e4f87ae57cc25184cbad98e21ff030e75818c076fa7"
+        "sha256": "c8b0af4144c7ea14687ec55ec0d57cf7e9b8dd2258d776f0e0099cc7a576610c"
       },
       {
         "path": "Repositories/SDK/Tests/Conformance/ServiceNetworkFacadePrototype05826.zig",
@@ -57688,7 +57711,7 @@
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/GuiParity.c",
-        "sha256": "3a48da2f06f1ca08d7d14365949c0327e7ac49d0bcfa91038e8d3e3b8b865cde"
+        "sha256": "463bc37f41ad2a88fc99f9686c4d888bb0f2b38d70c347291c7fed01763ac17a"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/PointerBindings.c",
@@ -57696,7 +57719,7 @@
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/RustGui.rs",
-        "sha256": "1e54f655a30a42512bb1882d49fcbbeb8c00cf585e87fdab5abd455d48a845c0"
+        "sha256": "36d23941cb029fc6d57cd0e26f0ee5699ee32791a8d638d2178819f24a8ee520"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/RustServices.rs",
@@ -57748,7 +57771,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/GuiBridgeGen/src/c_header.zig",
-        "sha256": "b41bdb6f061b5886aa92904c0e4b2a36025859031231d28e0f28375076cded1c"
+        "sha256": "36d5f574f11111f4f2914c9f0a8fafeeb3a77cb50b721fc175ebc79ce5db551f"
       },
       {
         "path": "Repositories/SDK/Tools/GuiBridgeGen/src/main.zig",
@@ -57948,11 +57971,11 @@
       },
       {
         "path": "Repositories/SDK/build.zig",
-        "sha256": "96d0607af87b30497290b77a4078b1e20511175b95f95bd9407b8a1169f2b6c1"
+        "sha256": "14a8b4067f5a9c2bd829def835f5e90ab2448192647c41f262a47ff1100a03c0"
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "c5b3ff430ac7300c47133f12018bde01549383f8d1d3fce9e169414aaaf0192a"
+        "sha256": "09c9c72cdd9df81018e7184d77395766a05d862ec4870bb8eec6e1d839822db2"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -58188,7 +58211,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/generated/gui_fingerprint.zig",
-        "sha256": "a073912bb26e6dffd1db6c333b338611ccdc82ff4245680b7fa7ce148fe5cbda"
+        "sha256": "8028ed83032c2b1246136409900799790b4714e20cf220c94c25690f91ac698f"
       },
       {
         "path": "Repositories/SDK/r4os/generated/net_facade.zig",
@@ -58244,7 +58267,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/gui.zig",
-        "sha256": "0f10213b736e9d37b27ddb5f42189735f09e346a34c09a82016d48ad74646035"
+        "sha256": "0a7e8c2dc301a0777bd541d213d4c6994f791d004541ab022db98641e210e920"
       },
       {
         "path": "Repositories/SDK/r4os/gui_bridge_schema.zig",
@@ -58253,6 +58276,10 @@
       {
         "path": "Repositories/SDK/r4os/gui_language.zig",
         "sha256": "ed97836169c9341a0e6da90491bae50f93daf5b626e10c8d6ecfb5683bf60e91"
+      },
+      {
+        "path": "Repositories/SDK/r4os/gui_modern.zig",
+        "sha256": "6530d5d762c6b88198a32d1e7851929f3c411fc79560edb9b23486c4b8bd90b0"
       },
       {
         "path": "Repositories/SDK/r4os/gui_session_runtime.zig",
@@ -59178,7 +59205,8 @@
           "Repositories/SDK/r4os/window_mode.zig",
           "Repositories/SDK/r4os/gui_value_bridge.zig",
           "Repositories/SDK/r4os/gui_session_runtime.zig",
-          "Repositories/SDK/r4os/gui_session_support.zig"
+          "Repositories/SDK/r4os/gui_session_support.zig",
+          "Repositories/SDK/r4os/gui_modern.zig"
         ],
         "c": [
           "Repositories/SDK/Shared/C/include/r4os/app_gui.h",
@@ -59190,7 +59218,8 @@
           "Repositories/SDK/Rust/src/gui/input.rs",
           "Repositories/SDK/Rust/src/gui/mod.rs",
           "Repositories/SDK/Rust/src/gui/session.rs",
-          "Repositories/SDK/Rust/src/gui/text.rs"
+          "Repositories/SDK/Rust/src/gui/text.rs",
+          "Repositories/SDK/Rust/src/gui/style.rs"
         ],
         "proof": [
           "gui_current_56",
@@ -59202,7 +59231,8 @@
           "native_pointer_capture_08828",
           "gui_host_backpressure_08832",
           "desktop_actions_08898",
-          "studio_089_host"
+          "studio_089_host",
+          "gui_modern_08946"
         ]
       },
       {
