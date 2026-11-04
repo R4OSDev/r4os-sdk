@@ -1,10 +1,12 @@
 #![cfg(test)]
 use core::{mem::MaybeUninit, pin::pin};
 use r4os_sdk::{
-    abi,
-    gui::{self, raw as c, InputQueue, Rect, Role, Session, SessionStorage, TextArea, TextField, TextFieldMode},
+    App, ImportSpec, StartupInfo, abi,
+    gui::{
+        self, InputQueue, Rect, Role, Session, SessionStorage, TextArea, TextField, TextFieldMode,
+        raw as c,
+    },
     resources::Timeout,
-    App, ImportSpec, StartupInfo,
 };
 unsafe extern "C" {
     fn sdk_gui_c_case() -> i32;
@@ -234,24 +236,28 @@ fn original_gui_pixels_frames_unicode_input_and_exact_host_session() {
         assert_eq!(unsafe { sdk_gui_oracle_pixels(output.as_mut_ptr(), 12) }, 0);
         assert_eq!(
             output,
-            [0x112233, 0x445566, 0, 0, 0, 0xffffff, 0xcc0000, 0xcc0000, 0xffffff, 0, 0, 0x010203]
+            [
+                0x112233, 0x445566, 0, 0, 0, 0xffffff, 0xcc0000, 0xcc0000, 0xffffff, 0, 0, 0x010203
+            ]
         );
         // Actual partial-flush failure must cancel the opened transaction.
         unsafe { sdk_gui_oracle_fail_append(2) };
         let mut tiny_commands = [abi::GuiFrameCommand::default(); 1];
         let mut paint = window.begin(&mut tiny_commands, &mut resources).unwrap();
         paint.clear(0).unwrap();
-        assert!(paint
-            .rect(
-                Rect {
-                    x: 0,
-                    y: 0,
-                    width: 1,
-                    height: 1
-                },
-                1
-            )
-            .is_err());
+        assert!(
+            paint
+                .rect(
+                    Rect {
+                        x: 0,
+                        y: 0,
+                        width: 1,
+                        height: 1
+                    },
+                    1
+                )
+                .is_err()
+        );
         drop(paint);
         assert!(unsafe { sdk_gui_oracle_cancelled() } > 0);
     });
@@ -297,12 +303,14 @@ fn original_gui_pixels_frames_unicode_input_and_exact_host_session() {
     assert_eq!(queue.peek().unwrap().len(), 1);
     assert!(queue.consume(1).unwrap());
     assert_eq!(queue.peek().unwrap().len(), 2);
-    assert!(!queue
-        .append(&[abi::ConsoleInputEvent {
-            value: 0xd800,
-            ..text
-        }])
-        .unwrap());
+    assert!(
+        !queue
+            .append(&[abi::ConsoleInputEvent {
+                value: 0xd800,
+                ..text
+            }])
+            .unwrap()
+    );
     // Native float data crosses by pointer. Returned values do not assume the
     // unqualified bare Rust scalar FP calling convention.
     let mut point = MaybeUninit::<c::R4SdkGuiShapePoint>::uninit();
@@ -318,6 +326,67 @@ fn original_gui_pixels_frames_unicode_input_and_exact_host_session() {
         0
     );
     assert_eq!(got, y);
+    let (zero, one, width, height) = (0f32, 1f32, 16f32, 12f32);
+    let mut begin = MaybeUninit::<c::R4SdkGuiShapePoint>::uninit();
+    let mut end = MaybeUninit::<c::R4SdkGuiShapePoint>::uninit();
+    let mut stops = MaybeUninit::<[c::R4SdkGuiShapeGradientStop; 2]>::uninit();
+    let mut gradient = MaybeUninit::<c::R4SdkGuiShapeGradient>::uninit();
+    let mut rounded = MaybeUninit::<c::R4SdkGuiShapeRoundedRect>::uninit();
+    let mut payload = [0xa5u8; 256];
+    unsafe {
+        assert_eq!(
+            c::R4SdkGuiShapePoint_create(begin.as_mut_ptr(), &zero, &zero).status,
+            0
+        );
+        assert_eq!(
+            c::R4SdkGuiShapePoint_create(end.as_mut_ptr(), &width, &height).status,
+            0
+        );
+        let stop = stops.as_mut_ptr().cast::<c::R4SdkGuiShapeGradientStop>();
+        assert_eq!(
+            c::R4SdkGuiShapeGradientStop_create(stop, &zero, 0xff112233).status,
+            0
+        );
+        assert_eq!(
+            c::R4SdkGuiShapeGradientStop_create(stop.add(1), &one, 0xffaabbcc).status,
+            0
+        );
+        assert_eq!(
+            c::R4SdkGuiShapeGradient_create(
+                gradient.as_mut_ptr(),
+                begin.as_ptr(),
+                end.as_ptr(),
+                stop,
+                2
+            )
+            .status,
+            0
+        );
+        assert_eq!(
+            c::R4SdkGuiShapeRoundedRect_create(rounded.as_mut_ptr(), &zero, &zero, &width, &height)
+                .status,
+            0
+        );
+        let built = c::R4SdkGuiShapes_gradientRoundedRect(
+            0,
+            payload.as_mut_ptr(),
+            payload.len() as u64,
+            rounded.as_ptr(),
+            gradient.as_ptr(),
+        );
+        assert_eq!(built.status, 0);
+        assert_eq!(built.flags & 2, 0);
+        assert_eq!(built.length, 208);
+        let paint = payload
+            .as_ptr()
+            .add(160)
+            .cast::<abi::GuiGradientPaint>()
+            .read_unaligned();
+        assert_eq!(
+            (paint.version, paint.size, paint.kind, paint.stop_count),
+            (1, 32, abi::gui_gradient_kind_linear, 2)
+        );
+    }
     assert_eq!(
         unsafe { c::R4SdkGuiVerifyAbi(c::R4SdkGui_ABI_FINGERPRINT) },
         0
@@ -334,15 +403,17 @@ fn original_gui_pixels_frames_unicode_input_and_exact_host_session() {
         let exchange = host.claim_host(timeout).unwrap();
         assert_eq!(exchange.desktop_epoch, 0x100000007);
         unsafe { sdk_gui_host_mode(1) };
-        assert!(host
-            .host_exchange(abi::tray_service_op_desktop_sync, &exchange, timeout)
-            .is_err());
+        assert!(
+            host.host_exchange(abi::tray_service_op_desktop_sync, &exchange, timeout)
+                .is_err()
+        );
         assert_eq!(unsafe { sdk_gui_host_count(1) }, 1);
         assert_eq!(unsafe { sdk_gui_host_count(0) }, 1);
         unsafe { sdk_gui_host_mode(0) };
-        assert!(host
-            .host_exchange(abi::tray_service_op_desktop_sync, &exchange, timeout)
-            .is_err());
+        assert!(
+            host.host_exchange(abi::tray_service_op_desktop_sync, &exchange, timeout)
+                .is_err()
+        );
         assert_eq!(unsafe { sdk_gui_host_count(0) }, 1);
         host.reset_host_connection();
         host.claim_host(timeout).unwrap();

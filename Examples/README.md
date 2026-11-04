@@ -13,6 +13,13 @@ Launch from Desktop: a GUI window is a prerequisite. The same source uses
 software composition or the admitted native output chosen by Desktop.
 This example is source documentation, not an installed module or a new test gate.
 
+SDK0.64.146 demonstrates two rounded cards with independent borders and
+shadow layers: one linear and one elliptical radial gradient. It requires
+the R4DRAW39 grammar and corresponding Desktop renderer. The optional
+`gui_shapes.gradientsSupported` query allows older consumers to choose a
+solid fill. The resource builder validates coordinates and two through eight
+ordered color stops before changing its caller-owned output buffer.
+
 `GuiEvents.c` is a complete C application using only `<r4os/app_gui.h>`.
 Use the same GUI imports and `ENTRY_MODE=app`, with `LANGUAGE=C` and
 `SOURCE=src/main.c` in an ordinary R4X project. Copy the example to that source

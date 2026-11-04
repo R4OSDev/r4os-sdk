@@ -5,6 +5,18 @@ Dieses Repository enthaelt das hostneutrale Kern-SDK von R4OS: Zig- und
 C-Fassaden, Buildprofile, Templates, Smokeprojekte sowie die generischen
 Werkzeuge R4XBuilder, R4LContractGen und ModuleCatalog.
 
+Native Zeichenbasis ab0.64.146
+-----------------------------
+gui_shapes.gradientRoundedRect erweitert die bisherigen Rundungen, Rahmen
+und Schatten um lineare und elliptisch-radiale Farbverläufe. Ein unveränderter
+v1-Shapeheader wird durch einen getrennten Paintheader und zwei bis acht
+geordnete Stopps ergänzt. Die gemeinsame compiler-typisierte Bridge bindet
+denselben Builder für Zig, C und Rust; es gibt keine zweite Rasterengine.
+gradientsSupported fragt die optionale R4DRAW39-Grammatik ab. Der passende
+Desktoprenderer muss mit ausgeliefert werden. Bestehende Aufrufe und
+klassische Controls ändern dadurch ihr Aussehen nicht. Canvas.zig zeigt den
+nativen Gebrauch. Fachvertrag: Docs/API/GuiShapeContract.txt im Workspace.
+
 SYSUPD-Journale
 ---------------
 

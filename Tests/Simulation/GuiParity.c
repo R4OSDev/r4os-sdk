@@ -148,6 +148,17 @@ int32_t sdk_gui_c_case(void){
     checked(R4SdkGuiShapePoint_create(&point,&nan_value,&y));
     R4SdkGuiSlot invalid=R4SdkGuiShapePathBuilder_moveTo(0,&path,&point);
     assert(invalid.status==0 && (invalid.flags&R4SDK_GUI_NATIVE_ERROR) && invalid.length==12 && !memcmp(invalid.ptr,"InvalidValue",12));
+    const float zero=0,one=1,gw=16,gh=12;
+    R4SdkGuiShapePoint begin,end;checked(R4SdkGuiShapePoint_create(&begin,&zero,&zero));checked(R4SdkGuiShapePoint_create(&end,&gw,&gh));
+    R4SdkGuiShapeGradientStop stops[2];checked(R4SdkGuiShapeGradientStop_create(&stops[0],&zero,0xff112233));checked(R4SdkGuiShapeGradientStop_create(&stops[1],&one,0xffaabbcc));
+    R4SdkGuiShapeGradient gradient;checked(R4SdkGuiShapeGradient_create(&gradient,&begin,&end,stops,2));
+    R4SdkGuiShapeRoundedRect rounded;checked(R4SdkGuiShapeRoundedRect_create(&rounded,&zero,&zero,&gw,&gh));
+    uint8_t gradient_bytes[256];R4SdkGuiSlot built=R4SdkGuiShapes_gradientRoundedRect(0,gradient_bytes,sizeof(gradient_bytes),&rounded,&gradient);checked(built);
+    assert(built.ptr==gradient_bytes && built.length==208);
+    R4GuiGradientPaint paint;memcpy(&paint,gradient_bytes+sizeof(R4GuiShapeResource),sizeof(paint));
+    assert(paint.version==1 && paint.size==32 && paint.kind==R4OS_GUI_GRADIENT_KIND_LINEAR && paint.stop_count==2);
+    memset(gradient_bytes,0xa5,sizeof(gradient_bytes));built=R4SdkGuiShapes_gradientRoundedRect(0,gradient_bytes,207,&rounded,&gradient);
+    assert(built.status==0 && (built.flags&R4SDK_GUI_NATIVE_ERROR));for(size_t i=0;i<sizeof(gradient_bytes);i++)assert(gradient_bytes[i]==0xa5);
     // Invalid transport cannot invoke an arbitrary owner or construct a context.
     assert(R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,UINT32_MAX,0,0,0).status<0);
     assert(R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT^1u,0,0,0,0).status<0);
