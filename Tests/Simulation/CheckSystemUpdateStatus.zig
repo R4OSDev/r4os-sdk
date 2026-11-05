@@ -190,6 +190,24 @@ fn observe(want_resume: bool) engine.Result {
 }
 fn status() engine.Result { return observe(false); }
 
+fn checkInstalledInventoryReceipt() !void {
+    // Unmodified original journal from the native L66C installation. A
+    // restart batch has payload + inventory + the owner's release marker.
+    const original = @embedFile("Fixtures/installed-library-v5.jrn");
+    reset();
+    @memcpy(files[0].bytes[0..original.len], original); files[0].len = original.len;
+    const installed = status();
+    try expect(installed.exit_code == 0 and installed.state == .installed and installed.inventory_consistent);
+    try expect(installed.payload_count == 1 and installed.transaction_step_count == 3 and installed.component_count == 1);
+    var pending: recovery.TransactionJournal = .{};
+    try expect(recovery.parseJournalInto(original, 0, &pending));
+    pending.phase = .post_boot;
+    files[0].len = (recovery.serializeJournal(&pending, &files[0].bytes) orelse return error.Fixture).len;
+    const unconfirmed = status();
+    try expect(unconfirmed.exit_code == 0 and unconfirmed.state == .restart_required and !unconfirmed.inventory_consistent);
+    try expect(file_writes == 0);
+}
+
 fn resumeFixture(phase: batch.Phase, transaction_phase: recovery.JournalPhase, same_package: bool) !void {
     reset(); try journal(0, 10); try batchJournal(2, 7);
     var transaction: recovery.TransactionJournal = .{};
@@ -283,4 +301,5 @@ test "status resnapshots a replaced journal without stale partial results" {
     try expect(files[1].stats <= 3 and sleeps <= 16);
     try expect(std.mem.indexOf(u8, output[0..output_len], "reason=journal-read") != null);
     try checkResumeBatchIdentity();
+    try checkInstalledInventoryReceipt();
 }

@@ -1103,7 +1103,8 @@
       "evidence": [
         "source_inventory",
         "update_current_64",
-        "asset_paths_08951"
+        "asset_paths_08951",
+        "asset_restart_08952"
       ],
       "shared_core": "Grosse Update-/Dateisystem-/Recoveryalgorithmen einmal im SDK-/Storagebesitzer; keine zweite Host-/Gastimplementierung oder neue Kernelzustandsmaschine.",
       "qualification": {
@@ -55776,6 +55777,14 @@
       "libraries": "0.64.49",
       "report": "Docs/Deployment/Portex.txt",
       "scope": "Current update owner cases include chosen Unicode R4X paths and distinct foreign-drive inventory identities. Seven original native C/Rust update cases and five actual unsafe/ownership negatives pass, including C and Rust foreign-drive canonicalization and C optional-tail/absent-slot query refusal. Library native helpers and five ownership negatives pass. Contract layouts/26 mutation cases and Kernel Clippy pass. The real Kernel459/Zig Portex consumer installed the original public Minesweeper asset with its exact inventory/binding/R4LNK readback and desktop launch. No new C/Rust guest or Windows execution claim."
+    },
+    "asset_restart_08952": {
+      "performed_in": "0.89.52",
+      "sdk": "0.64.151",
+      "contract": "0.64.76",
+      "libraries": "0.64.49",
+      "report": "Docs/Deployment/Portex.txt",
+      "scope": "Current shared Zig system-asset wrapper, installed BOOT/normal Limine binding and explicit restart activation. Existing update status case now includes an unmodified native installed R4L journal with payload/inventory/release marker and an unconfirmed post_boot negative. Real L66C installation and generated Zig client work=805 / exact heap pass in KVM4; Kernel459 activation evidence is recorded separately in the cited Portex report. C/Rust interfaces and three rebuilt runtime objects are byte-identical to150; no new C/Rust guest, Windows or hardware claim."
     }
   },
   "wave_bindings": [
@@ -56028,18 +56037,18 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.89.51",
-    "sdk": "0.64.150",
-    "contract": "0.64.76 optional R4SYS tail; existing baseline retained",
-    "libraries": "0.64.49 shared Rust ABI projection; runtime R4Ls unchanged",
-    "evidence": "asset_paths_08951",
-    "scope": "Native read-only recovery-target capability in Zig/C/Rust; shared original inventory/path/journal cores preserve foreign volume and UTF8 identity. Existing Zig update orchestration wraps a verified single original R4X into R4U and uses the same SYSLOCK/journal/inventory owner, with explicit old-target attestation. No dependency admission policy or separate GUI installer. Generated Rust ABI/projections reviewed; earlier qualification remains scoped to its original evidence.",
+    "performed_in": "0.89.52",
+    "sdk": "0.64.151",
+    "contract": "0.64.76 unchanged",
+    "libraries": "0.64.49 unchanged",
+    "evidence": "asset_restart_08952",
+    "scope": "Source review: same original R4U owner now wraps R4L/kernel and stages running R4X; explicit asset-bound commit and installed BOOT configuration proof. Raw ABI and C/Rust helper interfaces unchanged. Native qualification is recorded in the cited Portex report; no new C/Rust guest or Windows claim.",
     "historical_snapshot_retained": true
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.89.51",
+    "reviewed_in": "0.89.52",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -58013,11 +58022,11 @@
       },
       {
         "path": "Repositories/SDK/build.zig",
-        "sha256": "0ff75a13d14fe2e79e51f4bc4b937cb2659c0aefc3a18731a471db4af1725681"
+        "sha256": "b72db479ad5d54b754a03ef1e9cc000be348e9991d61cc11e534ed26dc6c28a5"
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "fd259dc5e6b83b08da4a59061245879ed40d09e4636fdf1d66417f2a2b90aaa1"
+        "sha256": "da742922ba2dd18d8706ca3b91612382eb04e1190e41636d0e01e246d95da39f"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -58745,7 +58754,11 @@
       },
       {
         "path": "Repositories/SDK/r4os/system_update_asset.zig",
-        "sha256": "061b56506a3faf147447062c2a79c3189ee590335c2d24eab4566b84b2745aa2"
+        "sha256": "5a9e2e614274d7c341dfc70b6a9d935676969104650b63ebd1934f7ff0118536"
+      },
+      {
+        "path": "Repositories/SDK/r4os/system_update_asset_system.zig",
+        "sha256": "a4542b177c1f143ef47f67c06769f5591b978a0935e6eabe46617be3426e03e8"
       },
       {
         "path": "Repositories/SDK/r4os/system_update_backup.zig",
@@ -58757,7 +58770,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/system_update_engine.zig",
-        "sha256": "bd3d435e08c5481c16374cc849f6e3445ad32cd1d41bf263212a71c45f50aea5"
+        "sha256": "15192a9f7342f927abd1c05db9b119d716f1181853ad6b38d7f9b3e2d5d01e04"
       },
       {
         "path": "Repositories/SDK/r4os/system_update_inventory.zig",
@@ -59504,7 +59517,8 @@
         ],
         "proof": [
           "update_current_64",
-          "asset_paths_08951"
+          "asset_paths_08951",
+          "asset_restart_08952"
         ]
       },
       {

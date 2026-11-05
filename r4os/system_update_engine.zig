@@ -10,6 +10,7 @@ pub const asset = @import("system_update_asset.zig");
 // The engine is deliberately single-threaded, like its existing workspaces.
 // Only installAsset supplies this additional create/replace precondition.
 var asset_expectation: ?asset.Plan = null;
+var asset_batch_source: ?[]const u8 = null;
 
 const header_size: usize = r4u_manifest.header_size;
 const manifest_max: usize = r4u_manifest.manifest_max_bytes;
@@ -422,9 +423,9 @@ pub const Engine = struct {
         return typedResult(.apply, exit_code, &primary_info_workspace, &command_journal_workspace, null);
     }
 
-    /// Original R4X -> verified R4U envelope -> the same journal/inventory
-    /// transaction as SYSUPD. Running targets are refused by APPLY; accepting
-    /// a command is never reported as an installed application.
+    /// Original artefact -> verified R4U envelope -> existing transaction.
+    /// Libraries, kernel and running applications enter the restart batch.
+    /// STAGE never authorizes COMMIT or a reboot on the caller's behalf.
     pub fn installAsset(self: *Engine, plan: asset.Plan) !Result {
         var release_buffer: [32]u8 = undefined;
         const release = switch (readCurrentVersionStatus(&self.ctx, &release_buffer)) {
@@ -432,14 +433,25 @@ pub const Engine = struct {
             else => return error.AssetRelease,
         };
         const prepared = try asset.prepare(self.app, plan, release);
+        switch (readNewestValidBatchInto(&self.ctx, &batch_journal_workspace)) {
+            .found => {
+                if (assetBatchBound(&batch_journal_workspace, prepared.path.bytes()) and
+                    (!system_update_batch.phaseTerminal(batch_journal_workspace.phase) or batch_journal_workspace.phase == .installed)) return self.resumeAsset(plan);
+                if (!system_update_batch.phaseTerminal(batch_journal_workspace.phase)) return error.AssetForeignTransaction;
+            },
+            .not_found => {},
+            .io => return error.AssetJournalRead,
+        }
         if (asset_expectation != null) return error.AssetEngineBusy;
         asset_expectation = plan;
         defer asset_expectation = null;
         const files = self.app.files() orelse return error.FilesUnavailable;
-        const target = try r4os.AbsoluteFilePath.parse(plan.target);
-        const end = std.mem.lastIndexOfScalar(u8, target.bytes(), '\\') orelse return error.AssetTarget;
-        if (end > 2) try asset.ensureParents(&files, try r4os.AbsoluteFilePath.parse(target.bytes()[0..end]));
-        return self.apply(prepared.path.bytes());
+        if (plan.kind != .kernel) {
+            const target = try r4os.AbsoluteFilePath.parse(plan.target);
+            const end = std.mem.lastIndexOfScalar(u8, target.bytes(), '\\') orelse return error.AssetTarget;
+            if (end > 2) try asset.ensureParents(&files, try r4os.AbsoluteFilePath.parse(target.bytes()[0..end]));
+        }
+        return self.stage(prepared.path.bytes());
     }
 
     /// Resume only the journal bound to this exact immutable wrapper. A
@@ -451,6 +463,16 @@ pub const Engine = struct {
             else => return error.AssetRelease,
         };
         const prepared = try asset.prepare(self.app, plan, release);
+        switch (readNewestValidBatchInto(&self.ctx, &batch_journal_workspace)) {
+            .found => if (assetBatchBound(&batch_journal_workspace, prepared.path.bytes())) {
+                const observed = self.status();
+                if (observed.state == .installed and
+                    (!command_journal_workspace.batch or !lastGoodBatchMatches(&batch_journal_workspace, &command_journal_workspace))) return error.AssetForeignTransaction;
+                return observed;
+            },
+            .not_found => {},
+            .io => return error.AssetJournalRead,
+        }
         switch (readNewestValidJournalInto(&self.ctx, &command_journal_workspace)) {
             .found => {},
             .not_found => return error.AssetNoPendingTransaction,
@@ -461,10 +483,38 @@ pub const Engine = struct {
         return self.resumeTransaction();
     }
 
+    /// Explicit user-authorized activation/reboot, bound to this one asset.
+    /// Revalidate its original source, BOOT plan and old target before COMMIT.
+    /// A manual SYSUPD batch is never committed as a side effect of Portex.
+    pub fn commitAsset(self: *Engine, plan: asset.Plan) !Result {
+        var release_buffer: [32]u8 = undefined;
+        const release = switch (readCurrentVersionStatus(&self.ctx, &release_buffer)) {
+            .found => |value| value,
+            else => return error.AssetRelease,
+        };
+        const prepared = try asset.prepare(self.app, plan, release);
+        if (asset_expectation != null or asset_batch_source != null) return error.AssetEngineBusy;
+        const observed = try self.resumeAsset(plan);
+        if (observed.state == .installed) return observed;
+        if (observed.state == .pending_restart or observed.state == .restart_required) self.ctx.systemReboot();
+        if (observed.state != .staged) return error.AssetNotRestartReady;
+        asset_expectation = plan;
+        asset_batch_source = prepared.path.bytes();
+        defer {
+            asset_expectation = null;
+            asset_batch_source = null;
+        }
+        return self.commitBatch();
+    }
+
     pub fn stage(self: *Engine, path: []const u8) Result {
         resetTypedResult();
         const exit_code = stageCommand(&self.ctx, path);
-        return typedResult(.stage, exit_code, &primary_info_workspace, null, &batch_journal_workspace);
+        const restart_staged = batch_journal_workspace.valid and !system_update_batch.phaseTerminal(batch_journal_workspace.phase);
+        const live = exit_code == 0 and !restart_staged and command_journal_workspace.valid and
+            !command_journal_workspace.batch and phaseTerminal(command_journal_workspace.phase) and
+            pathEqualsIgnoreCase(command_journal_workspace.sourceText(), path);
+        return typedResult(.stage, exit_code, &primary_info_workspace, if (live) &command_journal_workspace else null, if (live) null else &batch_journal_workspace);
     }
 
     pub fn commitBatch(self: *Engine) Result {
@@ -640,9 +690,13 @@ fn typedResult(
         result.transaction_step_count = transaction.payload_count;
         if (result.component_count == 0) result.component_count = transaction.component_count;
         result.committed_count = transaction.committed_count;
+        // A restart batch can also bind the owner's release marker after
+        // post-boot verification. That third step does not invalidate its
+        // committed inventory. The parsed v5 journal validates both targets.
         result.inventory_consistent = transaction.component_count == 0 or
             ((transaction.phase == .inventory or transaction.phase == .applied or transaction.phase == .cleanup) and
-                transaction.payload_count == transaction.package_payload_count + 1 and
+                (transaction.payload_count == transaction.package_payload_count + 1 or
+                    (transaction.batch and transaction.payload_count == transaction.package_payload_count + 2)) and
                 transaction.committed_count == transaction.payload_count);
         if (result.transaction_generation == 0) result.transaction_generation = transaction.transaction_generation;
         result.activation = if (transaction.reboot) .restart else result.activation;
@@ -895,12 +949,14 @@ fn verifyWithPolicy(
 fn assetTargetUnchanged(ctx: *const r4os.r4sys.Context, entry: *const PayloadEntry, plan: asset.Plan) bool {
     const expected = plan.previous orelse return !entry.target_existed;
     if (!entry.target_existed or !entry.old_known) return false;
-    const files = r4os.Files{ .sys = ctx.* };
-    const target = r4os.AbsoluteFilePath.parse(entry.targetText()) catch return false;
-    const observed = asset.digest(&files, target, &checksum_io_buf) catch return false;
+    const observed = asset.system.digest(ctx, entry.targetText(), &checksum_io_buf) catch return false;
     return asset.matches(observed, expected.size, &expected.sha256) and
         observed.checksum == expected.checksum and observed.size == entry.old_size and
         observed.checksum == entry.old_checksum;
+}
+
+fn assetBatchBound(batch: *const system_update_batch.BatchJournal, source: []const u8) bool {
+    return batch.valid and batch.package_count == 1 and pathEqualsIgnoreCase(batch.packages[0].pathText(), source);
 }
 
 fn applyCommand(ctx: *const r4os.r4sys.Context, path_raw: []const u8) i32 {
@@ -1969,6 +2025,10 @@ fn commitBatchCommand(ctx: *const r4os.r4sys.Context) i32 {
         fail(ctx, "COMMIT", "batch-changed");
         return 1;
     }
+    if (asset_batch_source) |source| if (!assetBatchBound(&batch_journal_workspace, source)) {
+        fail(ctx, "COMMIT", "asset-batch-changed");
+        return 1;
+    };
     var index: usize = 0;
     while (index < batch_journal_workspace.package_count) : (index += 1)
         batch_journal_workspace.packages[index].order = batch_verify_journal_workspace.packages[index].order;
@@ -2084,6 +2144,13 @@ fn commitPreparedBatchLocked(
         if (!assignInternalPathsAt(ctx, package_info, "COMMIT", payload_base) or
             !captureTargetStates(ctx, package_info, "COMMIT") or
             !validateTargetAliases(ctx, package_info, "COMMIT")) return 1;
+        if (asset_expectation) |plan| if (package_info.payload_count != 1 or
+            !r4u_manifest.targetEquals(package_info.payloads[0].targetText(), plan.target) or
+            !assetTargetUnchanged(ctx, &package_info.payloads[0], plan))
+        {
+            fail(ctx, "COMMIT", "asset-target-changed");
+            return 1;
+        };
         const stage_status = streamPackagePayloadsWithTransientRetry(
             ctx,
             command_path_workspace[0..].ptr,
@@ -5370,7 +5437,8 @@ fn targetParents(ctx: *const r4os.r4sys.Context, entry: *const PayloadEntry, cre
     if (entry.class == .boot_kernel) return .ok;
     const target = entry.targetText();
     if (target.len < 4 or target.len >= max_path or
-        (!startsWithIgnoreCase(target, "C:\\") and !r4u_manifest.paths.applicationTarget(target))) {
+        (!startsWithIgnoreCase(target, "C:\\") and !r4u_manifest.paths.applicationTarget(target)))
+    {
         fail(ctx, command, "parent-path");
         return .invalid;
     }

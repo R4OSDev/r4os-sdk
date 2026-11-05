@@ -441,6 +441,7 @@ pub fn build(b: *std.Build) void {
         .filters = &.{"status resnapshots"},
     });
     const run_update_status_tests = b.addRunArtifact(update_status_tests);
+    b.step("update-status-test", "Run the existing update receipt/status cases").dependOn(&run_update_status_tests.step);
 
     const vm_allocator_module = b.createModule(.{
         .root_source_file = b.path("r4os/vm_allocator.zig"),

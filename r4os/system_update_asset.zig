@@ -6,8 +6,11 @@ const r = @import("r4os");
 const manifest = r.r4u_manifest;
 const artifact = r.r4u_artifact;
 const seed: u32 = 2166136261;
-pub const Digest = struct { size: u64, sha256: [64]u8, checksum: u32 };
+pub const system = @import("system_update_asset_system.zig");
+pub const Digest = system.Digest;
 pub const Plan = struct {
+    kind: manifest.ComponentKind = .r4x,
+    boot: ?system.BootProof = null,
     source: []const u8,
     target: []const u8,
     name: []const u8,
@@ -64,8 +67,8 @@ pub fn inspect(files: *const r.Files, path: r.AbsoluteFilePath) !artifact.Identi
 }
 pub fn validate(plan: Plan) !void {
     _ = try r.AbsoluteFilePath.parse(plan.source);
-    _ = try r.AbsoluteFilePath.parse(plan.target);
-    if (!manifest.paths.applicationTarget(plan.target) or
+    if (!system.targetSupported(plan.kind, plan.target, plan.name) or
+        ((plan.kind == .kernel) != (plan.boot != null)) or
         !manifest.validToken(plan.name, manifest.component_name_max_bytes) or
         !manifest.validSemanticVersion(plan.version) or plan.size == 0 or
         plan.size > std.math.maxInt(u32) or plan.sha256.len != 64) return error.AssetPlan;
@@ -78,10 +81,20 @@ pub fn matches(value: Digest, size: u64, sha256: []const u8) bool {
 pub fn prepare(app: *r.App, plan: Plan, current: []const u8) !Prepared {
     try validate(plan);
     const ctx = app.system();
-    const target = try r.AbsoluteFilePath.parse(plan.target);
+    const target = try system.RawPath.init(plan.target);
+    const target_text = target.storage[0..target.len];
+    var component_buffer: [1024]u8 = undefined;
+    const component = manifest.canonicalInventoryTarget(&component_buffer, target_text) orelse return error.AssetTarget;
+    var derived: manifest.DerivedClass = .{};
+    manifest.includeComponent(&derived, plan.kind, component);
     // Optional operation lookup, never a software-version comparison. Older
     // kernels cannot promise replay for arbitrary chosen application paths.
-    if (!ctx.hasFn("system_update_target_supported") or ctx.systemUpdateTargetSupported(target.asZ().ptr) != 1) return error.AssetTargetUnsupported;
+    if (ctx.hasFn("system_update_target_supported")) {
+        if (ctx.systemUpdateTargetSupported(target.asZ()) != 1) return error.AssetTargetUnsupported;
+    } else if (plan.kind == .r4x) return error.AssetTargetUnsupported;
+    // System targets already belong to the existing R4U recovery contract.
+    // Arbitrary application locations require the additive native operation.
+    if (plan.boot) |proof| if (!proof.eql(try system.bootPlan(&ctx))) return error.BootPlanChanged;
     const files = app.files() orelse return error.FilesUnavailable;
     const source = try r.AbsoluteFilePath.parse(plan.source);
     const allocator = ctx.allocator();
@@ -90,12 +103,18 @@ pub fn prepare(app: *r.App, plan: Plan, current: []const u8) !Prepared {
     const observed = try digest(&files, source, scratch);
     if (!matches(observed, plan.size, plan.sha256)) return error.AssetHashMismatch;
     const identity = try inspect(&files, source);
-    if (identity.kind != .r4x or !std.ascii.eqlIgnoreCase(identity.nameText(), plan.name) or
+    if (identity.kind != plan.kind or !std.ascii.eqlIgnoreCase(identity.nameText(), plan.name) or
         !std.mem.eql(u8, identity.versionText(), plan.version)) return error.AssetIdentityMismatch;
     if (!manifest.validSemanticVersion(current)) return error.AssetRelease;
     // Include every immutable plan field, old-file observation and actual OS
     // release in the wrapper identity. An app version never becomes an OS release.
-    const encoded = try std.json.Stringify.valueAlloc(allocator, .{ plan, current }, .{});
+    // Preserve the original application's 0.89.51 wrapper identity. System
+    // envelopes have their own stable schema, independent of SDK versions.
+    const legacy = .{ .source = plan.source, .target = plan.target, .name = plan.name, .version = plan.version, .size = plan.size, .sha256 = plan.sha256, .previous = plan.previous };
+    const encoded = if (plan.kind == .r4x and derived.activation == .live)
+        try std.json.Stringify.valueAlloc(allocator, .{ legacy, current }, .{})
+    else
+        try std.json.Stringify.valueAlloc(allocator, .{ "r4u-original-system-v1", plan, current }, .{});
     defer allocator.free(encoded);
     var hash: [32]u8 = undefined;
     std.crypto.hash.sha2.Sha256.hash(encoded, &hash, .{});
@@ -109,9 +128,28 @@ pub fn prepare(app: *r.App, plan: Plan, current: []const u8) !Prepared {
     const envelope = try r.AbsoluteFilePath.parse(try std.fmt.bufPrint(&target_buffer, "{s}\\ASSET.R4U", .{directory.bytes()}));
     const stage = try r.AbsoluteFilePath.parse(try std.fmt.bufPrint(&stage_buffer, "{s}\\ASSET.NEW", .{directory.bytes()}));
     const backup = try r.AbsoluteFilePath.parse(try std.fmt.bufPrint(&backup_buffer, "{s}\\ASSET.BAK", .{directory.bytes()}));
-    var component_buffer: [1024]u8 = undefined;
-    const component = manifest.canonicalInventoryTarget(&component_buffer, target.bytes()) orelse return error.AssetTarget;
-    const text = try std.fmt.allocPrint(allocator, "R4U_MANIFEST=2\nPACKAGE=PX-{s}\nPACKAGE_VERSION={s}\nRELEASE={s}\nTITLE={s}\nDESCRIPTION=Original application artefact\nACTIVATION=live\nPRIORITY=normal\nPAYLOADS=1\nCOMPONENTS=1\nREQUIRES=0\nABI;R4M0=1;R4L=1;R4D=1;R4P=1;R4XSTART=1;R4U_COMPONENTS=1\nPAYLOAD;index=0;name=ASSET.R4X;target={s};kind=software;size={d};checksum={d};offset=0;abi=R4M0:1\nROLLBACK;target={s};backup={s}.prev;strategy=replace\nCOMPONENT;payload=0;kind=R4X;name={s};target={s};version={s};install=live\n", .{ id[0..40], plan.version, current, plan.name, target.bytes(), plan.size, observed.checksum, target.bytes(), target.bytes(), plan.name, component, plan.version });
+    const activation = derived.activation.text();
+    const priority = derived.priority.text();
+    const kind = switch (plan.kind) {
+        .r4x => "software",
+        .r4l => "system-library",
+        .kernel => "boot-kernel",
+        else => unreachable,
+    };
+    const component_kind = switch (plan.kind) {
+        .r4x => "R4X",
+        .r4l => "R4L",
+        .kernel => "KERNEL",
+        else => unreachable,
+    };
+    const extension = switch (plan.kind) {
+        .r4x => "R4X",
+        .r4l => "R4L",
+        .kernel => "ELF",
+        else => unreachable,
+    };
+    const description = if (plan.kind == .r4x and derived.activation == .live) "Original application artefact" else "Original artefact";
+    const text = try std.fmt.allocPrint(allocator, "R4U_MANIFEST=2\nPACKAGE=PX-{s}\nPACKAGE_VERSION={s}\nRELEASE={s}\nTITLE={s}\nDESCRIPTION={s}\nACTIVATION={s}\nPRIORITY={s}\nPAYLOADS=1\nCOMPONENTS=1\nREQUIRES=0\nABI;R4M0=1;R4L=1;R4D=1;R4P=1;R4XSTART=1;R4U_COMPONENTS=1\nPAYLOAD;index=0;name=ASSET.{s};target={s};kind={s};size={d};checksum={d};offset=0;abi=R4M0:1\nROLLBACK;target={s};backup={s}.prev;strategy=replace\nCOMPONENT;payload=0;kind={s};name={s};target={s};version={s};install={s}\n", .{ id[0..40], plan.version, current, plan.name, description, activation, priority, extension, target_text, kind, plan.size, observed.checksum, target_text, target_text, component_kind, plan.name, component, plan.version, activation });
     defer allocator.free(text);
     var header: [64]u8 = @splat(0);
     @memcpy(header[0..4], "R4U2");
@@ -132,6 +170,7 @@ pub fn prepare(app: *r.App, plan: Plan, current: []const u8) !Prepared {
     }
     put(u32, &header, 32, package_checksum);
     put(u32, &header, 36, 1);
+    put(u32, &header, 40, if (derived.activation == .restart) @as(u32, 1) else @as(u32, 0));
     if (try sameEnvelope(&files, envelope, source, plan, &header, text, scratch)) return .{ .path = envelope };
     if (!try sameEnvelope(&files, stage, source, plan, &header, text, scratch)) {
         var writer = switch (files.streamWriter(stage.asZ(), r.abi.file_stream_open_create)) {
