@@ -372,6 +372,11 @@ fn original_gui_pixels_frames_unicode_input_and_exact_host_session() {
     assert_eq!(field.value().unwrap(), "🙂B".as_bytes());
     assert!(field.handle_codepoint(8).unwrap());
     assert_eq!(field.value().unwrap(), b"B");
+    assert!(field.set_exact(b"").unwrap());
+    field.set_selection(0, 0).unwrap();
+    assert!(field.handle_codepoint(u32::from(b'a')).unwrap());
+    assert!(field.handle_codepoint(u32::from(b'b')).unwrap());
+    assert_eq!(field.value().unwrap(), b"ab");
     let mut secret_bytes = [0u8; 24];
     {
         let mut password = TextField::new_password(&mut secret_bytes).unwrap();

@@ -55801,14 +55801,15 @@
       "owners": [
         "Repositories/SDK/r4os/app_gui.zig",
         "Repositories/SDK/Shared/C/include/r4os/gui_bridge.h",
-        "Repositories/SDK/Rust/src/c_facades.rs"
+        "Repositories/SDK/Rust/src/c_facades.rs",
+        "Repositories/SDK/r4os/gui.zig"
       ],
       "proof": [
         "Tests/Conformance/GuiFacadePrototype05824.zig",
         "Tests/Simulation/GuiParity.c",
         "Tests/Simulation/RustGui.rs"
       ],
-      "result": "Existing Zig GUI/frame/dialog/input owners and actual native C/Rust peers pass, including complete command retention outside regional damage, invalid damage, geometry/coordinated-view promotion, both generated C replacement entries, generated Rust replacement call and missing optional callback. Three actual unsafe/Send/frame-loan negatives rejected. Compiler-generated projections and fingerprint match the shared Zig owner.",
+      "result": "Existing Zig GUI/frame/dialog/input owners and actual native C/Rust peers pass, including complete command retention outside regional damage, invalid damage, geometry/coordinated-view promotion, both generated C replacement entries, generated Rust replacement call and missing optional callback. Three actual unsafe/Send/frame-loan negatives rejected. Compiler-generated projections and fingerprint match the shared Zig owner. Existing Unicode/capacity test plus real native C/Rust fields also preserve ab after a zero-length selection; native Portex Ctrl+A in empty search then aurora remains complete. Successful insertion clears the empty selection anchor in the same generic owner for fixed and borrowed buffers.",
       "scope": "Linux host ABI and shared paint lifecycle only. Portex native view/measurement evidence belongs to Deployment/PortexPerformance090.txt; no new kernel ABI, independent C/Rust algorithm, Windows execution or physical cursor-latency claim.",
       "source_deltas": [
         {
@@ -55829,12 +55830,12 @@
         {
           "path": "Repositories/SDK/Tests/Simulation/GuiParity.c",
           "before": "43cc2a37650df61610117d640ae79d07e265c12b214be8a15c8161b867663916",
-          "after": "51fc78047c41892f076e2d09154522d8b5b1b86808f1eecc91930c7acc1883a4"
+          "after": "e4b36dcbcb12f0aae577bd98ef15c07957d236158a8a683d662e45781a550fdf"
         },
         {
           "path": "Repositories/SDK/Tests/Simulation/RustGui.rs",
           "before": "0f7cb60e9c8e365ed2c7d8a0980b1cde3bb9e0bf349b2d4580106372973c58a5",
-          "after": "12a848f7a5d75751abc6dd110ec2c7c0d98ca8b2c4e60d9c16d02541df10df19"
+          "after": "4c644bdfb3e57d2455b18f6e5173bfbbcb3197e61021ab0b97b0779c9da87be5"
         },
         {
           "path": "Repositories/SDK/build.zig.zon",
@@ -55850,6 +55851,11 @@
           "path": "Repositories/SDK/r4os/generated/gui_fingerprint.zig",
           "before": "f68a7ef18003446b44231ebd9ce5842d532ce9d2f003171e9c7ec45fe4d91461",
           "after": "d9fa74bf6e429990a33387b17922c93894a7b9c2e75ac7fc99636467c4336d8e"
+        },
+        {
+          "path": "Repositories/SDK/r4os/gui.zig",
+          "before": "0a7e8c2dc301a0777bd541d213d4c6994f791d004541ab022db98641e210e920",
+          "after": "665aeb9b5f7b84540073ed091a9d03da49daa11b45341f9dc599644a7c56eb8f"
         }
       ]
     }
@@ -56109,7 +56115,7 @@
     "contract": "0.64.76 unchanged",
     "libraries": "0.64.49 unchanged",
     "evidence": "gui_regional_0901",
-    "scope": "Independent complete replacement paint with client damage in the shared SDK GUI owner; geometry and coordinated view changes promote full paint. Existing compiler-generated C/Rust raw projections and current native fixtures exercise the same implementation.",
+    "scope": "Independent complete replacement paint with client damage in the shared SDK GUI owner; geometry and coordinated view changes promote full paint. Existing compiler-generated C/Rust raw projections and current native fixtures exercise the same implementation. Successful text insertion also collapses empty selection anchors; fixed and borrowed fields share the corrected generic owner.",
     "historical_snapshot_retained": true
   },
   "drift_guard": {
@@ -57829,7 +57835,7 @@
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/GuiParity.c",
-        "sha256": "51fc78047c41892f076e2d09154522d8b5b1b86808f1eecc91930c7acc1883a4"
+        "sha256": "e4b36dcbcb12f0aae577bd98ef15c07957d236158a8a683d662e45781a550fdf"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/PointerBindings.c",
@@ -57837,7 +57843,7 @@
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/RustGui.rs",
-        "sha256": "12a848f7a5d75751abc6dd110ec2c7c0d98ca8b2c4e60d9c16d02541df10df19"
+        "sha256": "4c644bdfb3e57d2455b18f6e5173bfbbcb3197e61021ab0b97b0779c9da87be5"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/RustServices.rs",
@@ -58389,7 +58395,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/gui.zig",
-        "sha256": "0a7e8c2dc301a0777bd541d213d4c6994f791d004541ab022db98641e210e920"
+        "sha256": "665aeb9b5f7b84540073ed091a9d03da49daa11b45341f9dc599644a7c56eb8f"
       },
       {
         "path": "Repositories/SDK/r4os/gui_bridge_schema.zig",

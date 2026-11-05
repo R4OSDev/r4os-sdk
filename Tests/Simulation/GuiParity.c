@@ -197,6 +197,11 @@ int32_t sdk_gui_c_case(void){
     R4SdkGuiSlot view=R4SdkGuiTextField_value(0,&field);checked(view);assert(view.length==5 && !memcmp(view.ptr,"\xf0\x9f\x99\x82" "B",5));
     assert(!R4SdkGuiTextField_setExact(0,&field,(const uint8_t *)"\xc0\xaf",2).bits);
     assert(R4SdkGuiTextField_value(0,&field).length==5);
+    assert(R4SdkGuiTextField_setExact(0,&field,(const uint8_t *)"",0).bits==1);
+    checked(R4SdkGuiTextField_selectAll(0,&field));
+    assert(R4SdkGuiTextField_handleCodepoint(0,&field,'a').bits==1);
+    assert(R4SdkGuiTextField_handleCodepoint(0,&field,'b').bits==1);
+    view=R4SdkGuiTextField_value(0,&field);checked(view);assert(view.length==2 && !memcmp(view.ptr,"ab",2));
     R4SdkGuiShapePoint point;const float x=1.25f,y=-2.5f;checked(R4SdkGuiShapePoint_create(&point,&x,&y));
     float value=0;checked(R4SdkGuiShapePoint_get_x(&point,&value));assert(value==x);
     R4SdkGuiShapePathStyle style;checked(R4SdkGuiShapePathStyle_create(&style));

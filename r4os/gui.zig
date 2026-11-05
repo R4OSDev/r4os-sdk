@@ -2075,6 +2075,9 @@ pub fn TextField(comptime capacity: anytype) type {
             const range = self.selectionRange();
             if (encoded_len == 0 or self.len - (range.end - range.start) + encoded_len > self.inputLimit()) return false;
             _ = self.deleteSelection();
+            // An empty selection still has an anchor (e.g. Ctrl+A in an
+            // empty field). It must not select the newly inserted scalar.
+            self.clearSelection();
             for (encoded[0..encoded_len]) |ch| _ = self.insertPrintable(ch);
             self.cursor = graphemeCeil(self.value(), self.cursor);
             return true;
@@ -5662,6 +5665,15 @@ test "checked text fields preserve selected Unicode on capacity and preload erro
     try std.testing.expect(field.handleCodepointChecked(0x20ac));
     try std.testing.expectEqualStrings("ä€", field.value());
     try std.testing.expect(bounded_text.valid(field.value()));
+    field.clear();
+    field.selectAll();
+    try std.testing.expect(field.handleCodepointChecked('a'));
+    try std.testing.expect(field.handleCodepointChecked('b'));
+    try std.testing.expectEqualStrings("ab", field.value());
+    field.setSelection(1, 1);
+    try std.testing.expect(field.handleCodepointChecked('x'));
+    try std.testing.expect(field.handleCodepointChecked('y'));
+    try std.testing.expectEqualStrings("axyb", field.value());
 }
 
 fn graphemeFloor(value: []const u8, index: usize) usize {
