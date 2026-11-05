@@ -57185,7 +57185,7 @@
       },
       {
         "path": "Repositories/SDK/Profiles/Components.json",
-        "sha256": "d69e4c34c9dbaa8943773aab8b2a43abc24e775a4671b5e38502851732b59e67"
+        "sha256": "4d3124155fe4369075e94afd09d821c48c935bf53788ebf670f8e99721ca0666"
       },
       {
         "path": "Repositories/SDK/Profiles/Tools.json",
@@ -58017,7 +58017,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "9206de89b9b59f98da1bb9661c1a88933222ec19174832b548c8f4fadd13ee10"
+        "sha256": "fd259dc5e6b83b08da4a59061245879ed40d09e4636fdf1d66417f2a2b90aaa1"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -58757,7 +58757,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/system_update_engine.zig",
-        "sha256": "609d061e897f7761cb4c9f4cad9ac4cbb23a064aee5869b13d4733e4b5300e91"
+        "sha256": "46e1c60eaa2a71631ef2621a2d0d9826496aa9a5a275d43173ac37c73ec376a6"
       },
       {
         "path": "Repositories/SDK/r4os/system_update_inventory.zig",

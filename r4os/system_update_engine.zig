@@ -5357,15 +5357,17 @@ fn ensureDirectory(ctx: *const r4os.r4sys.Context, path: [:0]const u8) bool {
     return fileInfoStatus(ctx, path, &info) == .found and info.is_dir != 0;
 }
 
-/// Provision only normalized, admitted C: payload ancestors, in root-to-leaf
-/// order. The internal boot volume keeps its existing kernel-update path.
+/// Provision normalized, admitted payload ancestors in root-to-leaf order.
+/// Chosen application paths may use another drive; the internal boot volume
+/// keeps its existing kernel-update path.
 /// Empty parents are shared namespace, not owned payloads: abort/rollback
 /// removes checked stage/target files but never deletes a directory by name.
 /// This remains replay-compatible with the existing journal and boot core.
 fn targetParents(ctx: *const r4os.r4sys.Context, entry: *const PayloadEntry, create: bool, command: []const u8) PackageVerifyStatus {
     if (entry.class == .boot_kernel) return .ok;
     const target = entry.targetText();
-    if (target.len < 4 or target.len >= max_path or !startsWithIgnoreCase(target, "C:\\")) {
+    if (target.len < 4 or target.len >= max_path or
+        (!startsWithIgnoreCase(target, "C:\\") and !r4u_manifest.paths.applicationTarget(target))) {
         fail(ctx, command, "parent-path");
         return .invalid;
     }
