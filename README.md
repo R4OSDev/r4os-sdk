@@ -1,5 +1,13 @@
 ﻿# R4OS SDK
 
+SDK 0.64.149 adds an optional synchronous `DownloadOptions.head_observer`.
+It observes the decoded response and original headers before any sink write;
+returning false rejects that response. Header slices and the observation are
+borrowed only until callback return. Cancellation is checked again afterward.
+`max_retries` defaults to the existing one read retry; set it to zero when an
+outer transaction owns the shared retry budget. The C/Rust transport projection
+and callback kind `download_head` expose the same native implementation.
+
 The host-neutral R4OS SDK provides Zig, Rust and C module roots, current
 platform and library helpers, build profiles and general project templates.
 The platform API and ABI remain canonical in the separate Contract repository.

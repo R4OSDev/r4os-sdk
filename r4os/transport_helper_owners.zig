@@ -30,4 +30,4 @@ pub fn opaqueType(comptime T: type) bool {
     inline for (.{ "array_list.", "hash_map.", "mem.Allocator", "heap.", "atomic.", "crypto.", "program.", "r4sys.", "r4net.", "r4dev.", "Io.", "std." }) |prefix| if (std.mem.startsWith(u8, name, prefix)) return true;
     return false;
 }
-pub const callbackTypes = .{ web.CookieProvider, web.CookieSink, web.TargetAuthorizer, web.DownloadProgress, web.DownloadWrite, web.PostStreamRead, web.PostStreamWrite, @FieldType(runtime_jobs.Owner, "find"), @typeInfo(@FieldType(web.FetchOptions, "progress")).optional.child };
+pub const callbackTypes = .{ web.CookieProvider, web.CookieSink, web.TargetAuthorizer, web.DownloadProgress, web.DownloadWrite, web.DownloadHeadObserver, web.PostStreamRead, web.PostStreamWrite, @FieldType(runtime_jobs.Owner, "find"), @typeInfo(@FieldType(web.FetchOptions, "progress")).optional.child };

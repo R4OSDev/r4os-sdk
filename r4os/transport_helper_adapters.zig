@@ -42,6 +42,8 @@ pub fn downloadCallbacks(options: *web.DownloadOptions, table: *const cb.Table) 
     options.progress_context = ctx;
     options.target_authorization_context = ctx;
     options.progress = if (table.has(.download_progress)) cb.pointer(web.DownloadProgress, 0, .download_progress) else null;
+    options.head_context = ctx;
+    options.head_observer = if (table.has(.download_head)) cb.pointer(web.DownloadHeadObserver, 0, .download_head) else null;
     options.target_authorizer = if (table.has(.target_authorize)) cb.pointer(web.TargetAuthorizer, 0, .target_authorize) else null;
 }
 pub fn sink(table: *const cb.Table) Error!web.DownloadSink {

@@ -14,6 +14,155 @@ fn check(v: c::R4SdkTransportSlot) -> c::R4SdkTransportSlot {
     v
 }
 #[test]
+fn download_metadata_callback_and_retry_defaults_match_the_native_owner() {
+    use core::{cell::Cell, ffi::c_void};
+    struct State<'a> {
+        allow: &'a Cell<bool>,
+        calls: &'a Cell<u32>,
+    }
+    unsafe extern "C" fn observe(
+        user: *mut c_void,
+        kind: u32,
+        args: *const c::R4SdkWebSlot,
+        count: u32,
+        _: *mut c_void,
+    ) -> c::R4SdkWebSlot {
+        let reject = || c::R4SdkWebSlot {
+            ptr: core::ptr::null_mut(),
+            length: 0,
+            bits: 0,
+            status: 0,
+            flags: 1,
+        };
+        if user.is_null()
+            || args.is_null()
+            || count != 2
+            || kind != c::R4SdkWebCallbackKind_download_head
+        {
+            return reject();
+        }
+        let args = unsafe { core::slice::from_raw_parts(args, 2) };
+        if args[0].ptr != user || args[1].ptr.is_null() {
+            return reject();
+        }
+        let head = args[1]
+            .ptr
+            .cast::<c::R4SdkTransportDownloadHeadObservation>();
+        let offset = unsafe { c::R4SdkTransportDownloadHeadObservation_get_requested_offset(head) };
+        let headers = unsafe { c::R4SdkTransportDownloadHeadObservation_get_headers(head) };
+        if offset.status != 0
+            || offset.bits != 7
+            || headers.status != 0
+            || headers.ptr.is_null()
+            || headers.length != 18
+        {
+            return reject();
+        }
+        if unsafe { core::slice::from_raw_parts(headers.ptr.cast::<u8>(), 18) }
+            != b"ETag: \"expected\"\r\n"
+        {
+            return reject();
+        }
+        let state = unsafe { &*user.cast::<State<'_>>() };
+        state.calls.set(state.calls.get() + 1);
+        c::R4SdkWebSlot {
+            bits: u64::from(state.allow.get()),
+            ..reject()
+        }
+    }
+    let allow = Cell::new(true);
+    let calls = Cell::new(0);
+    let mut state = State {
+        allow: &allow,
+        calls: &calls,
+    };
+    let mut callback_storage = MaybeUninit::uninit();
+    let callbacks = unsafe {
+        r4os_sdk::web::Callbacks::open(
+            &mut callback_storage,
+            &mut state,
+            1u64 << c::R4SdkWebCallbackKind_download_head,
+            observe,
+        )
+        .unwrap()
+    };
+    let mut options = MaybeUninit::uninit();
+    let mut response = MaybeUninit::uninit();
+    let mut head = MaybeUninit::uninit();
+    let headers = b"ETag: \"expected\"\r\n";
+    unsafe {
+        check(c::R4SdkTransportDownloadOptions_create(
+            options.as_mut_ptr(),
+        ));
+        assert_eq!(
+            check(c::R4SdkTransportDownloadOptions_get_max_retries(
+                options.as_ptr()
+            ))
+            .bits,
+            1
+        );
+        check(c::R4SdkTransportDownloadOptions_set_max_retries(
+            options.as_mut_ptr(),
+            0,
+        ));
+        assert_eq!(
+            check(c::R4SdkTransportDownloadOptions_get_max_retries(
+                options.as_ptr()
+            ))
+            .bits,
+            0
+        );
+        let absent = c::R4SdkTransportSlot {
+            ptr: core::ptr::null_mut(),
+            length: 0,
+            bits: 0,
+            status: 0,
+            flags: 0,
+        };
+        check(c::R4SdkTransportHttpStreamResponse_from_fields(
+            response.as_mut_ptr(),
+            200,
+            c::R4SdkTransportHttpTransfer_content_length,
+            6,
+            absent,
+            absent,
+            absent,
+        ));
+        check(c::R4SdkTransportDownloadHeadObservation_from_fields(
+            head.as_mut_ptr(),
+            response.as_ptr(),
+            headers.as_ptr(),
+            headers.len() as u64,
+            7,
+        ));
+        check(c::R4SdkTransport_downloadCallbacks(
+            0,
+            options.as_mut_ptr(),
+            callbacks.native(),
+        ));
+        assert_eq!(
+            check(c::R4SdkTransportDownloadOptions_observeHead(
+                0,
+                options.as_ptr(),
+                head.as_ptr()
+            ))
+            .bits,
+            1
+        );
+        allow.set(false);
+        assert_eq!(
+            check(c::R4SdkTransportDownloadOptions_observeHead(
+                0,
+                options.as_ptr(),
+                head.as_ptr()
+            ))
+            .bits,
+            0
+        );
+    }
+    assert_eq!(calls.get(), 2);
+}
+#[test]
 fn original_c_parser_cache_callbacks_and_ipv4() {
     let mut scratch = vec![0; 32768];
     let code = unsafe { sdk_transport_c_case(scratch.as_mut_ptr(), scratch.len()) };
@@ -26,15 +175,42 @@ fn generated_registration_endpoint_preserves_public_ip_and_tls_mode() {
     let name = b"138.201.253.143";
     unsafe {
         check(c::R4SdkTransportNative_app_network_Ipv4Address_init(
-            0, 138, 201, 253, 143, ip.as_mut_ptr(),
+            0,
+            138,
+            201,
+            253,
+            143,
+            ip.as_mut_ptr(),
         ));
         check(c::R4SdkTransportRegistrationEndpoint_from_fields(
-            endpoint.as_mut_ptr(), ip.as_ptr(), name.as_ptr(), name.len() as u64, 4021, 1,
+            endpoint.as_mut_ptr(),
+            ip.as_ptr(),
+            name.as_ptr(),
+            name.len() as u64,
+            4021,
+            1,
         ));
-        let hostname = check(c::R4SdkTransportRegistrationEndpoint_get_hostname(endpoint.as_ptr()));
-        assert_eq!(core::slice::from_raw_parts(hostname.ptr.cast::<u8>(), hostname.length as usize), name);
-        assert_eq!(check(c::R4SdkTransportRegistrationEndpoint_get_port(endpoint.as_ptr())).bits, 4021);
-        assert_eq!(check(c::R4SdkTransportRegistrationEndpoint_get_tls(endpoint.as_ptr())).bits, 1);
+        let hostname = check(c::R4SdkTransportRegistrationEndpoint_get_hostname(
+            endpoint.as_ptr(),
+        ));
+        assert_eq!(
+            core::slice::from_raw_parts(hostname.ptr.cast::<u8>(), hostname.length as usize),
+            name
+        );
+        assert_eq!(
+            check(c::R4SdkTransportRegistrationEndpoint_get_port(
+                endpoint.as_ptr()
+            ))
+            .bits,
+            4021
+        );
+        assert_eq!(
+            check(c::R4SdkTransportRegistrationEndpoint_get_tls(
+                endpoint.as_ptr()
+            ))
+            .bits,
+            1
+        );
     }
 }
 #[test]

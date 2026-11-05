@@ -15,9 +15,19 @@ static int32_t entropy_info(R4EntropySourceInfo *out){
     *out=(R4EntropySourceInfo){.version=1,.size=sizeof(*out),.state=R4OS_ENTROPY_STATE_READY,.generation=1,.max_request_bytes=64};return 0;
 }
 static int32_t entropy_fill(uint8_t *out,uint32_t bytes){for(uint32_t i=0;i<bytes;i++)out[i]=0x5a;return (int32_t)bytes;}
-typedef struct SinkState {uint8_t bytes[16];uint64_t next;uint32_t calls;} SinkState;
+typedef struct SinkState {uint8_t bytes[16];uint64_t next;uint32_t calls,heads;int allow_head;} SinkState;
 static R4SdkWebSlot invoke(void *user,uint32_t kind,const R4SdkWebSlot *args,uint32_t count,void *output){
     (void)output;SinkState *state=(SinkState *)user;
+    if(kind==R4SdkWebCallbackKind_download_head){
+        if(count!=2||args[0].ptr!=user||!args[1].ptr)return (R4SdkWebSlot){.flags=1};
+        const R4SdkTransportDownloadHeadObservation *head=args[1].ptr;
+        R4SdkTransportHttpStreamResponse response;
+        if(!ok(R4SdkTransportDownloadHeadObservation_get_response(head,&response))||
+            R4SdkTransportHttpStreamResponse_get_status(&response).bits!=200||
+            R4SdkTransportDownloadHeadObservation_get_requested_offset(head).bits!=7||
+            !equal(R4SdkTransportDownloadHeadObservation_get_headers(head),"ETag: \"expected\"\r\n",18))return (R4SdkWebSlot){.flags=1};
+        state->heads++;return (R4SdkWebSlot){.bits=(uint64_t)state->allow_head,.flags=1};
+    }
     if(kind!=R4SdkWebCallbackKind_download_write||count!=3||args[0].ptr!=user||args[1].bits!=state->next||args[2].length>sizeof(state->bytes)-state->next)return (R4SdkWebSlot){.flags=1};
     for(uintptr_t i=0;i<args[2].length;i++)state->bytes[state->next+i]=((const uint8_t *)args[2].ptr)[i];
     state->next+=args[2].length;state->calls++;return (R4SdkWebSlot){.bits=1,.flags=1};
@@ -79,5 +89,19 @@ int sdk_transport_c_case(uint8_t *scratch,uintptr_t capacity){
     CHECK(R4SdkTransportDownloadSink_write(0,&sink,3,B("DEF")).bits==1);
     CHECK(R4SdkTransportDownloadSink_write(0,&sink,1,B("bad")).bits==0);
     CHECK(state.next==6&&state.calls==2&&state.bytes[0]=='a'&&state.bytes[5]=='F');
+    R4SdkTransportDownloadOptions options;R4SdkTransportDownloadHeadObservation head;
+    R4SdkTransportHttpStreamResponse stream_head;
+    TRY(R4SdkTransportDownloadOptions_create(&options));
+    CHECK(R4SdkTransportDownloadOptions_get_max_retries(&options).bits==1);
+    TRY(R4SdkTransportDownloadOptions_set_max_retries(&options,0));
+    CHECK(R4SdkTransportDownloadOptions_get_max_retries(&options).bits==0);
+    TRY(R4SdkTransportHttpStreamResponse_from_fields(&stream_head,200,R4SdkTransportHttpTransfer_content_length,6,(R4SdkTransportSlot){0},(R4SdkTransportSlot){0},(R4SdkTransportSlot){0}));
+    TRY(R4SdkTransportDownloadHeadObservation_from_fields(&head,&stream_head,B("ETag: \"expected\"\r\n"),7));
+    CHECK(R4SdkTransportDownloadOptions_observeHead(0,&options,&head).bits==1);
+    CHECK(!R4SdkWebCallbackTable_from_fields(&table,(R4SdkWebSlot){.ptr=&state,.flags=1},UINT64_C(1)<<R4SdkWebCallbackKind_download_head,(R4SdkWebSlot){.ptr=(void *)(uintptr_t)&invoke,.flags=1}).status);
+    TRY(R4SdkTransport_downloadCallbacks(0,&options,&table));
+    state.allow_head=1;CHECK(R4SdkTransportDownloadOptions_observeHead(0,&options,&head).bits==1);
+    state.allow_head=0;CHECK(R4SdkTransportDownloadOptions_observeHead(0,&options,&head).bits==0);
+    CHECK(state.heads==2&&state.next==6&&state.calls==2);
     return 0;
 }

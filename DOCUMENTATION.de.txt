@@ -5,6 +5,16 @@ Dieses Repository enthaelt das hostneutrale Kern-SDK von R4OS: Zig- und
 C-Fassaden, Buildprofile, Templates, Smokeprojekte sowie die generischen
 Werkzeuge R4XBuilder, R4LContractGen und ModuleCatalog.
 
+Download-Metadaten ab0.64.149
+----------------------------
+DownloadOptions.head_observer sieht den vollstaendigen Antwortkopf vor dem
+ersten Sink-Schreibzugriff. false weist die Antwort zurueck; danach wird Stop
+nochmals geprueft. Header und Observation sind ausschliesslich waehrend des
+synchronen Callbacks geliehen. Der Sink behaelt die bisherige Ownership.
+max_retries bleibt standardmaessig 1; 0 ueberlaesst das gesamte Budget einem
+aeusseren Auftrag. C und Rust verwenden denselben nativen Besitzer und den
+angehaengten Callback download_head (40), ohne bestehende IDs umzunummerieren.
+
 Moderne Controls ab0.64.147
 --------------------------
 Canvas.withStyle(Style.light/dark) gestaltet nur den eigenen Canvas modern.

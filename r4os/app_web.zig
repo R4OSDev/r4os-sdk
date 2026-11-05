@@ -234,6 +234,14 @@ pub const RegistrationResult = union(enum) {
 
 pub const DownloadProgress = *const fn (?*anyopaque, u64, u64) bool;
 pub const DownloadWrite = *const fn (?*anyopaque, u64, []const u8) bool;
+/// Borrowed only for the synchronous observation; retain neither slice nor
+/// callback argument. Rejection happens before any bytes reach the sink.
+pub const DownloadHeadObservation = struct {
+    response: http.StreamResponse,
+    headers: []const u8,
+    requested_offset: u64,
+};
+pub const DownloadHeadObserver = *const fn (?*anyopaque, DownloadHeadObservation) bool;
 
 /// A successful write returns only after the supplied bytes are durably owned
 /// by the sink.  `offset` is absolute in the final object and makes resume
@@ -260,6 +268,15 @@ pub const DownloadOptions = struct {
     expected_size: ?u64 = null,
     target_authorizer: ?TargetAuthorizer = null,
     target_authorization_context: ?*anyopaque = null,
+    // Legacy callers retain one read retry. An outer transaction can set0
+    // and enforce one shared budget across HTTP and transport failures.
+    max_retries: u8 = 1,
+    head_observer: ?DownloadHeadObserver = null,
+    head_context: ?*anyopaque = null,
+
+    pub fn observeHead(self: *const DownloadOptions, observation: DownloadHeadObservation) bool {
+        return if (self.head_observer) |observe| observe(self.head_context, observation) else true;
+    }
 };
 
 pub const DownloadResponse = struct {
@@ -348,6 +365,9 @@ const DownloadPump = struct {
         const step = self.decoder.push(input, eof, downloadStopped(self.options));
         if (!self.head_accepted) {
             if (self.decoder.response()) |response| {
+                if (!self.options.observeHead(.{ .response = response, .headers = self.decoder.header_buffer[0..self.decoder.header_len], .requested_offset = self.resume_from }))
+                    return self.failed(if (downloadStopped(self.options)) .cancelled else .policy_rejected);
+                if (downloadStopped(self.options)) return self.failed(.cancelled);
                 switch (validateDownloadHead(response, self.options.method, self.resume_from, self.expected_size)) {
                     .body => |total| {
                         self.total_size = total;
@@ -525,7 +545,9 @@ pub const WebTransport = struct {
     /// certificate and IP-SAN verification before any secret bytes are sent.
     pub fn registerServer(self: *WebTransport, endpoint: RegistrationEndpoint, secret: []const u8, scratch: []u8, timeout: Timeout) RegistrationResult {
         if (secret.len == 0 or secret.len > 256) return .invalid_secret;
-        for (secret) |byte| if (byte < 0x21 or byte > 0x7e) { return .invalid_secret; };
+        for (secret) |byte| if (byte < 0x21 or byte > 0x7e) {
+            return .invalid_secret;
+        };
         const parsed_ip = app_network.Ipv4Address.parseCanonical(endpoint.hostname) orelse return .{ .failure = .invalid_url };
         if (!std.mem.eql(u8, &parsed_ip.octets, &endpoint.address.octets) or endpoint.port == 0) return .{ .failure = .invalid_url };
         if (endpoint.tls and scratch.len < tls_scratch_bytes) return .{ .failure = .scratch_too_small };
@@ -791,7 +813,7 @@ pub const WebTransport = struct {
                     transferred += failure.transferred;
                     resume_offset += failure.transferred;
                     if (failure.total_size) |total| expected_size = total;
-                    if (options.method == .get and shouldRetryDownload(failure.cause, read_retries)) {
+                    if (options.method == .get and shouldRetryDownload(failure.cause, read_retries, options.max_retries)) {
                         read_retries += 1;
                         continue;
                     }
@@ -1837,8 +1859,8 @@ fn downloadTargetAuthorized(options: DownloadOptions, url: []const u8) bool {
         true;
 }
 
-fn shouldRetryDownload(failure: Error, attempts: u8) bool {
-    if (attempts != 0) return false;
+fn shouldRetryDownload(failure: Error, attempts: u8, max_retries: u8) bool {
+    if (attempts >= max_retries) return false;
     return failure == .read_timeout or failure == .read_reset or failure == .read_peer_closed or failure == .read_failed or failure == .tls_close_notify;
 }
 
@@ -2106,8 +2128,12 @@ test "stream download pump resumes once with exact range and durable offsets" {
         },
         else => return error.TestUnexpectedResult,
     }
-    try std.testing.expect(shouldRetryDownload(.read_peer_closed, 0));
-    try std.testing.expect(!shouldRetryDownload(.read_peer_closed, 1));
+    try std.testing.expect(shouldRetryDownload(.read_peer_closed, 0, 1));
+    try std.testing.expect(!shouldRetryDownload(.read_peer_closed, 1, 1));
+    try std.testing.expect(!shouldRetryDownload(.read_peer_closed, 0, 0));
+    try std.testing.expect(shouldRetryDownload(.read_timeout, 2, 3));
+    try std.testing.expect(!shouldRetryDownload(.read_timeout, 3, 3));
+    try std.testing.expect(!shouldRetryDownload(.tls_certificate_rejected, 0, 3));
 
     var range_buffer: [128]u8 = undefined;
     try std.testing.expectEqualStrings("x-test: yes\nRange: bytes=2-\n", appendRangeHeader("x-test: yes\n", 2, range_buffer[0..]).?);
@@ -2249,6 +2275,50 @@ test "stream download exposes explicit abort and compiles the public entrypoint"
         .failure => |failure| failure == .scratch_too_small,
         else => false,
     });
+}
+
+test "stream download observes headers once before writes and stops before rejected or cancelled bodies" {
+    const State = struct {
+        allow: bool = true,
+        observed: u32 = 0,
+        writes: u32 = 0,
+        expected_offset: u64 = 0,
+        stop: ?*abi.R4StopFlag = null,
+
+        fn observe(context: ?*anyopaque, head: DownloadHeadObservation) bool {
+            const self: *@This() = @ptrCast(@alignCast(context.?));
+            self.observed += 1;
+            if (self.stop) |stop| @atomicStore(u32, &stop.value, 1, .release);
+            return self.allow and head.requested_offset == self.expected_offset and head.response.status == 200 and
+                std.mem.indexOf(u8, head.headers, "ETag: \"expected\"") != null;
+        }
+        fn write(context: ?*anyopaque, _: u64, _: []const u8) bool {
+            const self: *@This() = @ptrCast(@alignCast(context.?));
+            if (self.observed != 1) return false;
+            self.writes += 1;
+            return true;
+        }
+    };
+    const raw = "HTTP/1.1 200 OK\r\nContent-Length: 2\r\nETag: \"expected\"\r\n\r\na";
+    var header: [512]u8 = undefined;
+    var state = State{ .allow = false };
+    var pump = DownloadPump{ .decoder = .init(&header, .get), .sink = .{ .context = &state, .write_fn = State.write }, .options = .{ .head_observer = State.observe, .head_context = &state }, .resume_from = 0, .expected_size = 2 };
+    const rejected = pump.feed(raw, false, .read_peer_closed).?;
+    try std.testing.expect(rejected == .failure and rejected.failure.cause == .policy_rejected and rejected.failure.transferred == 0);
+    try std.testing.expectEqual(@as(u32, 0), state.writes);
+    state = .{};
+    pump = .{ .decoder = .init(&header, .get), .sink = .{ .context = &state, .write_fn = State.write }, .options = .{ .head_observer = State.observe, .head_context = &state }, .resume_from = 0, .expected_size = 2 };
+    try std.testing.expect(pump.feed(raw, false, .read_peer_closed) == null);
+    const complete = pump.feed("b", false, .read_peer_closed).?;
+    try std.testing.expect(complete == .response and complete.response.transferred == 2);
+    try std.testing.expectEqual(@as(u32, 1), state.observed);
+    try std.testing.expectEqual(@as(u32, 2), state.writes);
+    var stop: abi.R4StopFlag = .{};
+    state = .{ .stop = &stop };
+    pump = .{ .decoder = .init(&header, .get), .sink = .{ .context = &state, .write_fn = State.write }, .options = .{ .stop = &stop, .head_observer = State.observe, .head_context = &state }, .resume_from = 0, .expected_size = 2 };
+    const cancelled = pump.feed(raw, false, .read_peer_closed).?;
+    try std.testing.expect(cancelled == .failure and cancelled.failure.cause == .cancelled and cancelled.failure.transferred == 0);
+    try std.testing.expectEqual(@as(u32, 0), state.writes);
 }
 
 test "CORS preflight derives and validates non-safelisted requests" {

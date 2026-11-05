@@ -45,6 +45,7 @@ pub const Kind = enum(u6) {
     runtime_lookup,
     post_stream_write,
     post_stream_read,
+    download_head,
 };
 pub const Table = extern struct {
     user: ?*anyopaque = null,
