@@ -35,6 +35,14 @@ static inline int32_t r4sys_file_name_limits(const R4Sys *sys, const char *path,
     return ((R4SysFileNameLimitsFn)(uintptr_t)sys->table->file_name_limits)((const uint8_t *)path, out);
 }
 
+/* Pure replay-scope query: 1 supported, 0 outside scope, negative invalid or
+ * unavailable. No mount reservation, file I/O or software-version check. */
+static inline int32_t r4sys_system_update_target_supported(const R4Sys *sys, const char *path) {
+    if (!path) return R4OS_ERROR_INVALID;
+    if (!R4SYS_HAS(sys, system_update_target_supported)) return R4OS_ERR_NO_FN;
+    return ((R4SysSystemUpdateTargetSupportedFn)(uintptr_t)sys->table->system_update_target_supported)((const uint8_t *)path);
+}
+
 /* Optional explicit blocking orderly transition; accepted work is terminal.
  * Old raw slots remain independent immediate operations. No automatic retry. */
 static inline int32_t r4sys_system_power_transition(const R4Sys *sys,uint32_t action,uint64_t timeout_ticks){

@@ -512,7 +512,8 @@
         "Repositories/SDK/Tests/Conformance/StorageCodecChecks.c",
         "Repositories/SDK/r4os/recent_documents.zig",
         "directory_batch_08743",
-        "file_name_limits_08827"
+        "file_name_limits_08827",
+        "asset_paths_08951"
       ],
       "shared_core": "C-Funktionsbesitzer plus r4os/storage_runtime.zig zu bestehenden Zig-/R4STD-Kernen; keine neue Codec-/Pfad-/Registryimplementierung. Runtimeobjekte im technischen Profil mit Quellen/CPU/Hashes gebunden.",
       "extension_08743": "Bound-node batches are the current iterator path; exact provider validation precedes each buffered record. Deliberate live-index traversal after deletion stays supported; no implicit fallback on absent batch support."
@@ -1101,7 +1102,8 @@
       },
       "evidence": [
         "source_inventory",
-        "update_current_64"
+        "update_current_64",
+        "asset_paths_08951"
       ],
       "shared_core": "Grosse Update-/Dateisystem-/Recoveryalgorithmen einmal im SDK-/Storagebesitzer; keine zweite Host-/Gastimplementierung oder neue Kernelzustandsmaschine.",
       "qualification": {
@@ -55766,6 +55768,14 @@
       "report": "Docs/Deployment/Portex.txt",
       "proof": "ExFiles/Reports/Portex/0.89.50/",
       "scope": "30 existing native transport owner cases with pre-write header observation, reject/Stop and retry defaults; generated Web/Transport/C/Rust projections checked by their current generators; actual C consumer and six Rust/native transport cases plus five unsafe/ownership negatives pass. Old callback IDs0..39, fixed table and default one read retry retained. Native Portex live HTTPS download/cancel/206/readback is a separate Zig consumer proof. No new C/Rust guest or Windows execution claim."
+    },
+    "asset_paths_08951": {
+      "performed_in": "0.89.51",
+      "sdk": "0.64.150",
+      "contract": "0.64.76",
+      "libraries": "0.64.49",
+      "report": "Docs/Deployment/Portex.txt",
+      "scope": "Current update owner cases include chosen Unicode R4X paths and distinct foreign-drive inventory identities. Seven original native C/Rust update cases and five actual unsafe/ownership negatives pass, including C and Rust foreign-drive canonicalization and C optional-tail/absent-slot query refusal. Library native helpers and five ownership negatives pass. Contract layouts/26 mutation cases and Kernel Clippy pass. The real Kernel459/Zig Portex consumer installed the original public Minesweeper asset with its exact inventory/binding/R4LNK readback and desktop launch. No new C/Rust guest or Windows execution claim."
     }
   },
   "wave_bindings": [
@@ -56018,18 +56028,18 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.89.50",
-    "sdk": "0.64.149",
-    "contract": "0.64.75 unchanged",
-    "libraries": "0.64.48 unchanged",
-    "evidence": "download_headers_08950",
-    "scope": "Optional synchronous pre-write metadata callback and configurable native read-retry count. Reviewed owner, adapter, callback bridge and generated C/Rust representations; callers retain all borrows through return/join. Historical qualification and native platform ABI prefixes remain intact.",
+    "performed_in": "0.89.51",
+    "sdk": "0.64.150",
+    "contract": "0.64.76 optional R4SYS tail; existing baseline retained",
+    "libraries": "0.64.49 shared Rust ABI projection; runtime R4Ls unchanged",
+    "evidence": "asset_paths_08951",
+    "scope": "Native read-only recovery-target capability in Zig/C/Rust; shared original inventory/path/journal cores preserve foreign volume and UTF8 identity. Existing Zig update orchestration wraps a verified single original R4X into R4U and uses the same SYSLOCK/journal/inventory owner, with explicit old-target attestation. No dependency admission policy or separate GUI installer. Generated Rust ABI/projections reviewed; earlier qualification remains scoped to its original evidence.",
     "historical_snapshot_retained": true
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.89.50",
+    "reviewed_in": "0.89.51",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -56103,19 +56113,19 @@
       },
       {
         "path": "Repositories/Contract/API/ApiContract.json",
-        "sha256": "bfd6eb2b23411e2531bcede0a13c66480b411941ce88f1c9709bd501b4f55fe8"
+        "sha256": "f7f8914208935ed2bd2c08bc2f4bfe0db44a3ff7aab9fbb5f26e601271221631"
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/API.json",
-        "sha256": "785303df60daefd963e919e1c7a29160d55f43cd367100005046949e7e0f6272"
+        "sha256": "8bf309e48a4bcffb0b97548bec36f664a3ac9f175115829ce248ce67b2e118ca"
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/RustABI.json",
-        "sha256": "48fba997b5f7299066a25deee25b8af12c60248739ca53b885baace7c78a5ef4"
+        "sha256": "e313b15c594630ee6c838e083e76633490a40a43fa6bbdb74f5a092e3e9935cb"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_generated.h",
-        "sha256": "cdf1f6a619664789e80f680962ae6011a9a03fd219932ded91334daa693c3751"
+        "sha256": "aecb72191bab35b03c67db97c4bd835b51d05e0d3c7b5f56dde5590a62760432"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_technical_generated.h",
@@ -56127,7 +56137,7 @@
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Rust/src/lib.rs",
-        "sha256": "60877cce8e299a7aadd662d930dd2080d312cc4eab9ab66cd9039b01f6d819a9"
+        "sha256": "f3495e969b704861ae8cca3f8056874ce6d79a65d12b2b5ff89d5c125c1c5ffd"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi.zig",
@@ -56139,7 +56149,7 @@
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_generated.zig",
-        "sha256": "a7461d5780fe107bc67f1ee4edb78549d6d60d286cad87cba10ea68563fe16aa"
+        "sha256": "dbefd03d6ed6c320fb27e78aae33532f4432a7fc2784cca6b8ade450350c7909"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/package.zig",
@@ -56159,7 +56169,7 @@
       },
       {
         "path": "Repositories/Contract/Tools/ApiContractGen/src/main.zig",
-        "sha256": "b36ef7ea622c99ad2d890441e8d6788affbf22b86dd477737617a0ec6ac2a9e4"
+        "sha256": "d4d59cd64ea2ee4fb8b0a7ecd8c88b385f776e027fd9c350b9f295143e4c29a6"
       },
       {
         "path": "Repositories/Libraries/R4ACO/Bindings/C/r4aco.h",
@@ -57099,7 +57109,7 @@
       },
       {
         "path": "Repositories/Libraries/Shared/Rust/src/raw.rs",
-        "sha256": "a375f7003206e916d8e7bca72eb0fd034b09926b515b8ad495e66464a6b178a1"
+        "sha256": "1d4c48b57587f70fb9aeb41e291d9e73307c72d6e7aba356a0e99563b216bdcb"
       },
       {
         "path": "Repositories/Libraries/Shared/Tests/Consumer/Cargo.toml",
@@ -57191,7 +57201,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "7d14e6409f19ea7e8369f96a6817f968033133b4560f3bb00a778928ec4724c1"
+        "sha256": "af2f13deb727f1f1aa06875a5bc4b5bc325e8765850efe6ef7b4d60f07a6d926"
       },
       {
         "path": "Repositories/SDK/Rust/src/data/hash.rs",
@@ -57383,7 +57393,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/storage.rs",
-        "sha256": "9e84c7d6a3ef626e34e3f823ba4b17f1fc74cbb5577290499f910e09eb0c9fa1"
+        "sha256": "c42471561f6ffa6406a1ccc447898d42ed41694d07da45e563a43143d047b9e0"
       },
       {
         "path": "Repositories/SDK/Rust/src/subsystems/catalog.rs",
@@ -57495,7 +57505,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_storage.h",
-        "sha256": "2eb2afafc4edebcfdc44f8accc8cc98d566de31d9cc10050b889fec4f04433cd"
+        "sha256": "4164e7b7c7d959eeb973fe5b87bc2a3307c65c9e988aab2c5bdf186d384c46ea"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_tray.h",
@@ -57639,7 +57649,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/r4sys.h",
-        "sha256": "c016333e108aaa82f519a9c19c3a93669796adc416c816df269b2fa3426974fe"
+        "sha256": "70ff396b315037c9b7031d34509cf7146f17bada1c6ee0951d65772ecb6d7503"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/r4xstart.h",
@@ -58007,7 +58017,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "0af1ea9938dfdb9679a32ae3873676d05938a307828602689cd16684a5d18445"
+        "sha256": "9206de89b9b59f98da1bb9661c1a88933222ec19174832b548c8f4fadd13ee10"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -58451,7 +58461,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/program.zig",
-        "sha256": "0cf1bbc6be854e510bbd5940e22dd507c40273c8c96a32db23ca559a4a64c86b"
+        "sha256": "00b2b254995ecc98b2d918f0bc62ff5e8ec9445d2648055be1d2b6fa2381c023"
       },
       {
         "path": "Repositories/SDK/r4os/protocol.zig",
@@ -58487,7 +58497,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/r4sys.zig",
-        "sha256": "100889f19a017ce3af23d04fe33462ca413f0aa070bbf6d3c12355009dd1a294"
+        "sha256": "8b06b4503163303bc88e373988c82393970fdb83ba2f8f5a89b5fd74b1960fe8"
       },
       {
         "path": "Repositories/SDK/r4os/r4u_artifact.zig",
@@ -58495,7 +58505,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/r4u_manifest.zig",
-        "sha256": "22527bd0227a8d80d2794aaf77fbc5922805da716adada5bd871afc2fe19a05f"
+        "sha256": "09f2ac61b2ba6a9b89521eb437e8c0f3b88a72ada1469daac7e7b4e9934a0680"
       },
       {
         "path": "Repositories/SDK/r4os/r4x.zig",
@@ -58734,6 +58744,10 @@
         "sha256": "697cf75fb170c6a25d9e51703bd99e596af21817f18d5c7a921481a88daf4dec"
       },
       {
+        "path": "Repositories/SDK/r4os/system_update_asset.zig",
+        "sha256": "061b56506a3faf147447062c2a79c3189ee590335c2d24eab4566b84b2745aa2"
+      },
+      {
         "path": "Repositories/SDK/r4os/system_update_backup.zig",
         "sha256": "85617a4cc615c6c333b79da6526809b71f28b3d620005cdc61e408c34da3692f"
       },
@@ -58743,7 +58757,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/system_update_engine.zig",
-        "sha256": "86a5a21e3e6bb41ce8f8ba9fa65f04970b300a62f9c1b47443cd156e1a23e92e"
+        "sha256": "609d061e897f7761cb4c9f4cad9ac4cbb23a064aee5869b13d4733e4b5300e91"
       },
       {
         "path": "Repositories/SDK/r4os/system_update_inventory.zig",
@@ -58751,11 +58765,11 @@
       },
       {
         "path": "Repositories/SDK/r4os/system_update_paths.zig",
-        "sha256": "bf5313919d0ea8c723d4e11e8f3ac38a8cbaef8562d515ac0f7045e5b4286e1c"
+        "sha256": "524897221203f0fd9ddbb320935d4518c460f9505aeaa3fa25310b3f9c3b3624"
       },
       {
         "path": "Repositories/SDK/r4os/system_update_recovery.zig",
-        "sha256": "7b3b29dad51865d8ba89702d88b1c1ced5e81dc6bd6312db43b4285969e654ea"
+        "sha256": "215bd5fca59aba70a59ca073f8799aa86501ba59ed639291710c4bde2e2100af"
       },
       {
         "path": "Repositories/SDK/r4os/time_contract.zig",
@@ -59119,7 +59133,8 @@
           "file_name_limits_08827",
           "native_pointer_capture_08828",
           "gui_host_backpressure_08832",
-          "server_access_0893"
+          "server_access_0893",
+          "asset_paths_08951"
         ]
       },
       {
@@ -59488,7 +59503,8 @@
           "Repositories/SDK/Rust/src/update/mod.rs"
         ],
         "proof": [
-          "update_current_64"
+          "update_current_64",
+          "asset_paths_08951"
         ]
       },
       {

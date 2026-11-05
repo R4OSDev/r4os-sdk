@@ -203,6 +203,18 @@ impl Files<'_> {
         }
         Ok(value)
     }
+    /// Read-only native recovery scope. Does not reserve the target, inspect
+    /// files, or admit software dependencies; final installation revalidates.
+    pub fn update_target_supported(&self, path: &crate::path::AbsoluteFilePath) -> Result<bool> {
+        match unsafe {
+            c::r4_files_system_update_target_supported(&self.raw(), path.as_path().as_raw())
+        } {
+            0 => Ok(false),
+            1 => Ok(true),
+            raw if raw < 0 => Err(Error::Raw(raw)),
+            _ => Err(Error::InvalidProvider),
+        }
+    }
     pub fn info(&self, path: &FilePath) -> Result<Option<abi::FileInfo>> {
         let r = unsafe { c::r4_files_info(&mut self.raw(), path.as_raw()) };
         match r.state {

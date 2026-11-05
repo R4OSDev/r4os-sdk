@@ -258,6 +258,7 @@ pub fn classifySystemPath(path_raw: []const u8) SystemReplaceClass {
     if (pathHasPrefix(path, "C:\\R4OS\\SDK\\")) return .sdk;
     if (pathHasPrefix(path, "C:\\TEMP\\")) return .temp;
     if (isForeignDrivePath(path)) return .data;
+    if (update_paths.applicationTarget(path)) return .software;
     return .unknown;
 }
 
@@ -1340,6 +1341,10 @@ pub const Context = struct {
 
     pub fn fileNameLimits(self: *const Context, path: [*:0]const u8, out: *abi.FileNameLimits) i32 {
         return self.base.fileNameLimits(path, out);
+    }
+
+    pub fn systemUpdateTargetSupported(self: *const Context, path: [*:0]const u8) i32 {
+        return self.base.systemUpdateTargetSupported(path);
     }
 
     pub fn fileStreamBegin(self: *const Context, path: [*:0]const u8, flags: u32) i32 {

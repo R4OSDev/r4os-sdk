@@ -2664,6 +2664,12 @@ pub const Context = struct {
         return table_fn(path, out);
     }
 
+    /// Exact installed recovery capability; no file or journal is changed.
+    pub fn systemUpdateTargetSupported(self: *const Context, path: [*:0]const u8) i32 {
+        const function = self.sysFn("system_update_target_supported") orelse return self.unavailable("sys");
+        return function(path);
+    }
+
     pub fn fileStreamBegin(self: *const Context, path: [*:0]const u8, flags: u32) i32 {
         const table_fn = self.sysFn("file_stream_begin") orelse return self.unavailable("sys");
         return table_fn(path, flags);

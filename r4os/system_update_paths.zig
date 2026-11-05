@@ -1,4 +1,19 @@
 const std = @import("std");
+const path_contract = @import("path.zig");
+
+/// Versioned applications may occupy an ordinary chosen directory. This is
+/// a path classification only, never permission to overwrite an existing
+/// file. Native replay capability, identity and lifecycle are checked later.
+pub fn applicationTarget(value: []const u8) bool {
+    var segments = std.mem.tokenizeAny(u8, value, "/\\");
+    while (segments.next()) |segment| if (std.mem.eql(u8, segment, ".") or std.mem.eql(u8, segment, "..")) return false;
+    var buffer: [1024]u8 = undefined;
+    const native = if (value.len > 0 and value[0] == '/') std.fmt.bufPrint(&buffer, "C:{s}", .{value}) catch return false else value;
+    const parsed = path_contract.AbsoluteFilePath.parse(native) catch return false;
+    const path = parsed.bytes();
+    return std.ascii.endsWithIgnoreCase(path, ".R4X") and
+        !std.ascii.startsWithIgnoreCase(path, "C:\\BOOT\\");
+}
 
 // Package companions have no separate installed component identity. Boot
 // preloads mirror the separately versioned protocol/driver components.
@@ -48,4 +63,11 @@ pub fn preloadTarget(path: []const u8) bool {
     for ([_][]const u8{ "/boot/preload.r4i", "/boot/preload/hidreport.r4p", "/boot/preload/usbhid.r4p", "/boot/preload/usbbot.r4p", "/boot/preload/usbscsi.r4p" }) |target|
         if (samePath(path, target)) return true;
     return false;
+}
+
+test "application update targets preserve chosen paths and reject boot, traversal and invalid Unicode" {
+    for ([_][]const u8{ "C:\\Games\\Solitaire\\SOLITAIRE_7A292B66.R4X", "D:\\Apps\\Grüße\\APP.R4X", "/Games/APP.R4X" }) |value|
+        try std.testing.expect(applicationTarget(value));
+    for ([_][]const u8{ "C:\\BOOT\\APP.R4X", "/boot/APP.R4X", "C:\\Apps\\..\\APP.R4X", "C:\\Apps\\\xff.R4X", "C:\\Apps\\DATA.TXT", "relative.R4X" }) |value|
+        try std.testing.expect(!applicationTarget(value));
 }

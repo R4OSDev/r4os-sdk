@@ -1123,6 +1123,7 @@ fn parsePhase(value: []const u8) ?JournalPhase {
 /// structural sanity check - it can only ever report FEWER collisions than
 /// the backend, never more - so non-ASCII targets are installable again.
 fn validTarget(path: []const u8) bool {
+    if (update_paths.applicationTarget(path)) return true;
     if (update_paths.companionKind(path) != null) return true;
     if (pathEqualsIgnoreCase(path, "\\boot\\r4os.elf")) return true;
     if (pathEqualsIgnoreCase(path, "C:\\CONFIG.R4S")) return true;
@@ -1271,13 +1272,19 @@ fn componentFieldsKnown(line: []const u8) bool {
     return true;
 }
 
+fn foreignComponentTarget(value: []const u8) bool {
+    return value.len >= 4 and std.ascii.isAlphabetic(value[0]) and
+        std.ascii.toUpper(value[0]) != 'C' and value[1] == ':' and value[2] == '/';
+}
+
 fn componentValid(component: *const JournalComponent) bool {
     if (!componentTokenValid(component.nameText()) or
         !versionTextValid(component.versionText()) or
         component.target_len == 0 or component.target_len >= max_path or
-        component.targetText()[0] != '/') return false;
+        !(component.targetText()[0] == '/' or foreignComponentTarget(component.targetText()))) return false;
+    if (!std.unicode.utf8ValidateSlice(component.targetText())) return false;
     for (component.targetText()) |byte| {
-        if (byte < 0x20 or byte >= 0x7f or byte == ';' or byte == '=' or byte == '|' or byte == '\\') return false;
+        if (byte < 0x20 or byte == 0x7f or byte == ';' or byte == '=' or byte == '|' or byte == '\\') return false;
     }
     return switch (component.kind) {
         .kernel => equalsIgnoreCase(component.nameText(), "KERNEL") and pathEqualsIgnoreCase(component.targetText(), "/boot/r4os.elf"),

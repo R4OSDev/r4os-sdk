@@ -207,6 +207,11 @@ static inline int32_t r4_files_name_limits(R4Files *files, const R4FilePath *pat
     return r4sys_file_name_limits(files->system, (const char *)path->bytes, out);
 }
 
+static inline int32_t r4_files_system_update_target_supported(const R4Files *files, const R4FilePath *path) {
+    if (!files || !path || !path->absolute) return R4OS_ERROR_INVALID;
+    return r4sys_system_update_target_supported(files->system, (const char *)path->bytes);
+}
+
 static inline R4FileInfoRead r4_files_info(R4Files *files, const R4FilePath *path) {
     R4FileInfoRead result = {0};
     if (files == 0 || path == 0 || files->system == 0 || files->system->table == 0 || files->system->table->file_info == 0) {

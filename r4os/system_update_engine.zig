@@ -6,6 +6,10 @@ const r4u_artifact = r4os.r4u_artifact;
 const system_update_inventory = r4os.system_update_inventory;
 const system_update_batch = r4os.system_update_batch;
 const system_update_backup = r4os.system_update_backup;
+pub const asset = @import("system_update_asset.zig");
+// The engine is deliberately single-threaded, like its existing workspaces.
+// Only installAsset supplies this additional create/replace precondition.
+var asset_expectation: ?asset.Plan = null;
 
 const header_size: usize = r4u_manifest.header_size;
 const manifest_max: usize = r4u_manifest.manifest_max_bytes;
@@ -416,6 +420,45 @@ pub const Engine = struct {
         resetTypedResult();
         const exit_code = applyCommand(&self.ctx, path);
         return typedResult(.apply, exit_code, &primary_info_workspace, &command_journal_workspace, null);
+    }
+
+    /// Original R4X -> verified R4U envelope -> the same journal/inventory
+    /// transaction as SYSUPD. Running targets are refused by APPLY; accepting
+    /// a command is never reported as an installed application.
+    pub fn installAsset(self: *Engine, plan: asset.Plan) !Result {
+        var release_buffer: [32]u8 = undefined;
+        const release = switch (readCurrentVersionStatus(&self.ctx, &release_buffer)) {
+            .found => |value| value,
+            else => return error.AssetRelease,
+        };
+        const prepared = try asset.prepare(self.app, plan, release);
+        if (asset_expectation != null) return error.AssetEngineBusy;
+        asset_expectation = plan;
+        defer asset_expectation = null;
+        const files = self.app.files() orelse return error.FilesUnavailable;
+        const target = try r4os.AbsoluteFilePath.parse(plan.target);
+        const end = std.mem.lastIndexOfScalar(u8, target.bytes(), '\\') orelse return error.AssetTarget;
+        if (end > 2) try asset.ensureParents(&files, try r4os.AbsoluteFilePath.parse(target.bytes()[0..end]));
+        return self.apply(prepared.path.bytes());
+    }
+
+    /// Resume only the journal bound to this exact immutable wrapper. A
+    /// different caller's interrupted update is never adopted by Portex.
+    pub fn resumeAsset(self: *Engine, plan: asset.Plan) !Result {
+        var release_buffer: [32]u8 = undefined;
+        const release = switch (readCurrentVersionStatus(&self.ctx, &release_buffer)) {
+            .found => |value| value,
+            else => return error.AssetRelease,
+        };
+        const prepared = try asset.prepare(self.app, plan, release);
+        switch (readNewestValidJournalInto(&self.ctx, &command_journal_workspace)) {
+            .found => {},
+            .not_found => return error.AssetNoPendingTransaction,
+            .io => return error.AssetJournalRead,
+        }
+        if (phaseTerminal(command_journal_workspace.phase) or
+            !pathEqualsIgnoreCase(command_journal_workspace.sourceText(), prepared.path.bytes())) return error.AssetForeignTransaction;
+        return self.resumeTransaction();
     }
 
     pub fn stage(self: *Engine, path: []const u8) Result {
@@ -849,6 +892,17 @@ fn verifyWithPolicy(
     return 0;
 }
 
+fn assetTargetUnchanged(ctx: *const r4os.r4sys.Context, entry: *const PayloadEntry, plan: asset.Plan) bool {
+    const expected = plan.previous orelse return !entry.target_existed;
+    if (!entry.target_existed or !entry.old_known) return false;
+    const files = r4os.Files{ .sys = ctx.* };
+    const target = r4os.AbsoluteFilePath.parse(entry.targetText()) catch return false;
+    const observed = asset.digest(&files, target, &checksum_io_buf) catch return false;
+    return asset.matches(observed, expected.size, &expected.sha256) and
+        observed.checksum == expected.checksum and observed.size == entry.old_size and
+        observed.checksum == entry.old_checksum;
+}
+
 fn applyCommand(ctx: *const r4os.r4sys.Context, path_raw: []const u8) i32 {
     command_path_workspace = .{0} ** max_path;
     primary_info_workspace = .{};
@@ -979,6 +1033,14 @@ fn applyCommand(ctx: *const r4os.r4sys.Context, path_raw: []const u8) i32 {
             },
         }
         entry.already_applied = !entry.replace_required;
+    }
+    if (asset_expectation) |plan| {
+        if (info.payload_count != 1 or !r4u_manifest.targetEquals(info.payloads[0].targetText(), plan.target) or
+            !assetTargetUnchanged(ctx, &info.payloads[0], plan))
+        {
+            fail(ctx, "APPLY", "asset-target-changed");
+            return 1;
+        }
     }
     if (!bindPreviousBackups(ctx, info, previous)) {
         fail(ctx, "APPLY", "previous-backup-read");
@@ -2448,7 +2510,8 @@ fn resumeBatchCommand(ctx: *const r4os.r4sys.Context) i32 {
                 batch_journal_workspace.phase = .staged;
                 batch_journal_workspace.current_package = 0;
                 if (!writeInactiveBatchJournal(ctx, &batch_journal_workspace)) return 1;
-                releaseUpdateLock(ctx); lock_held = false;
+                releaseUpdateLock(ctx);
+                lock_held = false;
                 return commitBatchCommand(ctx);
             }
             fail(ctx, "RESUME-BATCH", "transaction-not-found");
@@ -2471,7 +2534,8 @@ fn resumeBatchCommand(ctx: *const r4os.r4sys.Context) i32 {
         batch_journal_workspace.current_package = 0;
         setBatchReason(&batch_journal_workspace, "prepare-retry");
         if (!writeInactiveBatchJournal(ctx, &batch_journal_workspace)) return 1;
-        releaseUpdateLock(ctx); lock_held = false;
+        releaseUpdateLock(ctx);
+        lock_held = false;
         return commitBatchCommand(ctx);
     }
     if (!command_journal_workspace.batch) {
@@ -5377,7 +5441,7 @@ fn componentTargetMatchesKind(kind: r4u_manifest.ComponentKind, target: []const 
         .r4l => startsWithIgnoreCase(target, "/R4OS/LIBS/") and endsWithIgnoreCase(target, ".R4L"),
         .r4d => startsWithIgnoreCase(target, "/R4OS/DRIVERS/") and endsWithIgnoreCase(target, ".R4D"),
         .r4p => startsWithIgnoreCase(target, "/R4OS/PROTOCOLS/") and endsWithIgnoreCase(target, ".R4P"),
-        .r4x => target.len > 1 and target[0] == '/' and endsWithIgnoreCase(target, ".R4X"),
+        .r4x => r4u_manifest.paths.applicationTarget(target),
     };
 }
 
@@ -5422,6 +5486,7 @@ fn validRollbackBackup(value: []const u8) bool {
 }
 
 fn kindMatchesTarget(kind: []const u8, target: []const u8) bool {
+    if (equalsIgnoreCase(kind, "software") and r4u_manifest.paths.applicationTarget(target)) return true;
     if (r4u_manifest.paths.preloadTarget(target)) return equalsIgnoreCase(kind, "preload");
     const class = r4os.r4sys.classifySystemPath(target);
     return equalsIgnoreCase(kind, r4os.r4sys.systemReplaceClassName(class));
@@ -5772,9 +5837,8 @@ fn packagePayloadPath(entry: *const PayloadEntry, index: usize) []const u8 {
 
 /// Performs the target policy that VERIFY and APPLY must agree on before any
 /// journal or stage file is written. Existing long filenames are supported:
-/// FAT changes only their stable short directory entry. A missing long target
-/// would require publishing a new multi-entry LFN run and is therefore not an
-/// atomic update target.
+/// FAT changes only their stable short directory entry and cannot create a
+/// new LFN run atomically. NTFS can publish a new long target in one entry.
 fn validatePackageTargets(ctx: *const r4os.r4sys.Context, info: *const PackageInfo, command: []const u8) bool {
     var index: usize = 0;
     while (index < info.payload_count) : (index += 1) {
@@ -5785,8 +5849,16 @@ fn validatePackageTargets(ctx: *const r4os.r4sys.Context, info: *const PackageIn
             switch (fileInfoStatus(ctx, entry.targetPtr(), &target_info)) {
                 .found => {},
                 .not_found => {
-                    fail(ctx, command, "target-lfn-missing");
-                    return false;
+                    // NTFS can publish one new long directory entry atomically.
+                    // FAT still requires an already existing LFN target.
+                    var limits: r4os.abi.FileNameLimits = .{};
+                    const atomic_long_target = ctx.fileNameLimits(entry.targetPtr(), &limits) == 0 and
+                        (limits.flags & r4os.abi.file_name_limits_flag_known) != 0 and
+                        limits.provider == r4os.abi.file_name_provider_ntfs;
+                    if (!atomic_long_target) {
+                        fail(ctx, command, "target-lfn-missing");
+                        return false;
+                    }
                 },
                 .io => {
                     fail(ctx, command, "target-info");

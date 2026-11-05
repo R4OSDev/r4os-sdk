@@ -13,6 +13,18 @@ fn c_archive_retains_original_on_each_failure_and_missing_callback() {
 #[test]
 fn original_journal_and_inventory_metadata() {
     cases::metadata().unwrap();
+    let mut output = [0u8; 128];
+    let input = "d:\\Apps\\Grüße\\APP.R4X".as_bytes();
+    let observed = unsafe {
+        c::R4SdkUpdateNative_r4u_manifest_canonicalInventoryTarget(
+            0, output.as_mut_ptr(), output.len() as u64, input.as_ptr(), input.len() as u64,
+        )
+    };
+    assert_eq!(observed.status, 0);
+    assert_ne!(observed.flags & 1, 0);
+    let length = usize::try_from(observed.length).unwrap();
+    assert!(length <= output.len());
+    assert_eq!(&output[..length], "D:/Apps/Grüße/APP.R4X".as_bytes());
 }
 #[test]
 fn original_fat32_formatter_over_scoped_memory_device() {

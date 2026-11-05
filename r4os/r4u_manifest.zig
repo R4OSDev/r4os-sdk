@@ -200,8 +200,9 @@ pub fn canonicalInventoryTarget(out: []u8, payload_target: []const u8) ?[]const 
     if (payload_target.len == 0) return null;
     var source = payload_target;
     if (payload_target.len >= 3 and std.ascii.isAlphabetic(payload_target[0]) and payload_target[1] == ':' and isSeparator(payload_target[2])) {
-        if (std.ascii.toUpper(payload_target[0]) != 'C') return null;
-        source = payload_target[2..];
+        // C: retains the established image-root form. A distinct mounted
+        // volume keeps its letter, so D: never aliases an installed C: app.
+        source = if (std.ascii.toUpper(payload_target[0]) == 'C') payload_target[2..] else payload_target;
     } else if (!isSeparator(payload_target[0])) {
         return null;
     }
@@ -216,7 +217,9 @@ pub fn canonicalInventoryTarget(out: []u8, payload_target: []const u8) ?[]const 
         len += 1;
         previous_separator = separator;
     }
-    if (len == 0 or out[0] != '/' or out[len - 1] == '/') return null;
+    const foreign = len >= 4 and std.ascii.isAlphabetic(out[0]) and out[1] == ':' and out[2] == '/';
+    if (len == 0 or (out[0] != '/' and !foreign) or out[len - 1] == '/') return null;
+    if (foreign) out[0] = std.ascii.toUpper(out[0]);
     return out[0..len];
 }
 
@@ -228,6 +231,14 @@ pub fn targetEquals(left: []const u8, right: []const u8) bool {
         if (a != b) return false;
     }
     return true;
+}
+
+test "component inventory retains foreign drive identity for application updates" {
+    var buffer: [1024]u8 = undefined;
+    const target = canonicalInventoryTarget(&buffer, "d:\\Apps\\Grüße\\APP.R4X").?;
+    try std.testing.expectEqualStrings("D:/Apps/Grüße/APP.R4X", target);
+    try std.testing.expect(!targetEquals(target, "/Apps/Grüße/APP.R4X"));
+    try std.testing.expectEqualStrings("/Apps/APP.R4X", canonicalInventoryTarget(&buffer, "C:\\Apps\\APP.R4X").?);
 }
 
 pub fn isManagedStateTarget(canonical_target: []const u8) bool {

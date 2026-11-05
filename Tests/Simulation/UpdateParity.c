@@ -92,7 +92,20 @@ int sdk_update_journal_case(const R4XStartContext *start,R4SdkUpdateRecoveryTran
     else CHECK(m.mutations==2&&!m.target_new&&!m.backup_old);
     return 0;
 }
+static uint32_t scope_calls;
+static int32_t scope_probe(const uint8_t *p){scope_calls++;return p&&p[0]=='D'?1:0;}
 int sdk_update_archive_case(void){
+    uint8_t target[128];
+    R4SdkUpdateSlot observed=R4SdkUpdateNative_r4u_manifest_canonicalInventoryTarget(0,target,sizeof(target),B("d:\\Apps\\Gr\xc3\xbc\xc3\x9f" "e\\APP.R4X"));
+    CHECK(!observed.status&&(observed.flags&1)&&observed.length==sizeof("D:/Apps/Gr\xc3\xbc\xc3\x9f" "e/APP.R4X")-1&&eq(observed.ptr,"D:/Apps/Gr\xc3\xbc\xc3\x9f" "e/APP.R4X",observed.length));
+    R4XStartR4Sys scope_table={.size=offsetof(R4XStartR4Sys,system_update_target_supported),.system_update_target_supported=(uintptr_t)&scope_probe};
+    R4Sys scope={.table=&scope_table};scope_calls=0;
+    CHECK(r4sys_system_update_target_supported(&scope,"D:\\APP.R4X")==R4OS_ERR_NO_FN&&scope_calls==0);
+    scope_table.size=sizeof(scope_table);
+    CHECK(r4sys_system_update_target_supported(&scope,"D:\\APP.R4X")==1&&scope_calls==1);
+    CHECK(r4sys_system_update_target_supported(&scope,0)==R4OS_ERROR_INVALID&&scope_calls==1);
+    scope_table.system_update_target_supported=0;
+    CHECK(r4sys_system_update_target_supported(&scope,"D:\\APP.R4X")==R4OS_ERR_NO_FN&&scope_calls==1);
     const char *names[]={"Referenced","Copy","Verification","Referenced","Verification","Remove"};const uintptr_t sizes[]={10,4,12,10,12,6};
     uint64_t mask=(UINT64_C(1)<<R4SdkUpdateCallbackKind_archive_unreferenced)|(UINT64_C(1)<<R4SdkUpdateCallbackKind_archive_copy)|(UINT64_C(1)<<R4SdkUpdateCallbackKind_archive_verify)|(UINT64_C(1)<<R4SdkUpdateCallbackKind_archive_remove);
     for(uint32_t fail=1;fail<=6;fail++){Model m={.original=1,.archive_fail=fail};R4SdkUpdateCallbackTable cb;CHECK(table(&cb,&m,mask));R4SdkUpdateSlot r=R4SdkUpdate_archive(0,&cb);CHECK(name(r,names[fail-1],sizes[fail-1])&&m.original&&m.archive_step==fail);}
