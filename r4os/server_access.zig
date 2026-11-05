@@ -18,6 +18,8 @@ pub const Code = enum(i32) {
     invalid_secret = 7,
     invalid_reply = 8,
     transport = 9,
+    bootstrap = 10,
+    credentials_write = 11,
 };
 
 /// A forced retry is conditional on the generation observed by the caller.

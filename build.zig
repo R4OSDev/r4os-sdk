@@ -358,6 +358,7 @@ pub fn build(b: *std.Build) void {
         "stream decoder exposes ranges",                 "redirect filtering removes",
         "transport target authorizer observes",          "request deadline remains absolute",
         "stream download pump resumes",                  "stream download observes headers",
+        "server credentials",                            "server profile",
         "HTTP81",                                        "CORS preflight derives",
         "TLS handshake records reassemble",              "origin policy blocks",
         "CORS requires an exact origin",                 "cookies honor host path",

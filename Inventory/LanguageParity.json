@@ -55858,6 +55858,43 @@
           "after": "665aeb9b5f7b84540073ed091a9d03da49daa11b45341f9dc599644a7c56eb8f"
         }
       ]
+    },
+    "public_bootstrap_0903": {
+      "complete": true,
+      "performed_in": "0.90.3",
+      "sdk": "0.64.154",
+      "contract": "0.64.76 unchanged",
+      "libraries": "0.64.49 unchanged",
+      "report": "Docs/SDK/LanguageParity.txt#0.90.3",
+      "scope": "Shared Zig server credential/R4SRV facade, exact registration-read document and endpoint eligibility, owned create-only atomic local persistence, append-only error codes 10/11 in unchanged 8/20-byte service messages. Existing C/Rust generic file/service APIs and generated runtime bodies are unchanged; the server convenience facade retains the explicitly documented Zig-only high-level scope from server_access_0893. No new raw ABI or C/Rust high-level facade is claimed.",
+      "checks": [
+        "Existing SDK transport-parity-test passes including strict public-document/role rejection, official/custom/LAN endpoint tests and atomic write/commit/race failure preservation.",
+        "Existing Portex owner test passes with missing/stale/current/200-empty/200-filled/304/cache-rejection/reload cases. R4SRV has a targeted generation, single-flight cooldown and path-reset owner case.",
+        "Separate server state and service cases pass with real TLS/bootstrap/fragmented token/registration-read-only, shared bans, quota and reopen persistence. Public server live HTTPS201 plus TLS4021 OK verified without recording credentials."
+      ],
+      "limits": "Normal fresh R4OS guest, OssiPC, final artifacts and STANDARD have their independent 0.90.3 deployment evidence. No Windows or additional C/Rust native consumer run is implied.",
+      "source_deltas": [
+        {
+          "path": "Repositories/SDK/build.zig",
+          "before": "554d9d48407063d93eb971cbb8e3f380d06f9fa4011629dbe56390131e59b463",
+          "after": "6248f5797121c71dbf08e6c875d64a82aeb2d3c1340191ca51884fc85a5d3a1f"
+        },
+        {
+          "path": "Repositories/SDK/build.zig.zon",
+          "before": "035bf81f0245cbc1d068f751078ce106e5d7fe00846668dde83b4d5b7e2888bb",
+          "after": "d91b5adec29b91e73e2ff1de75831a869a346b63d576266f2af67dbf65efa987"
+        },
+        {
+          "path": "Repositories/SDK/r4os/server_access.zig",
+          "before": "62056f9533e0561e4664dce745b31d7150e25d3ee5967996a02cbeb2068e66de",
+          "after": "d97f42597323a076d35938d890a4837b464f3a13b5ff9f506bc31ee458aefdcb"
+        },
+        {
+          "path": "Repositories/SDK/r4os/server_credentials.zig",
+          "before": "b61534e8bc907a66eef6f70a6fc431fc63dde111c7827cf193186c37eb435ed2",
+          "after": "731213940b3e9ae509ee53db28280648e2d4d1a8ffbfccc579150819116adf8d"
+        }
+      ]
     }
   },
   "wave_bindings": [
@@ -56110,12 +56147,12 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.90.1",
-    "sdk": "0.64.153",
+    "performed_in": "0.90.3",
+    "sdk": "0.64.154",
     "contract": "0.64.76 unchanged",
     "libraries": "0.64.49 unchanged",
-    "evidence": "gui_regional_0901",
-    "scope": "Independent complete replacement paint with client damage in the shared SDK GUI owner; geometry and coordinated view changes promote full paint. Existing compiler-generated C/Rust raw projections and current native fixtures exercise the same implementation. Successful text insertion also collapses empty selection anchors; fixed and borrowed fields share the corrected generic owner.",
+    "evidence": "public_bootstrap_0903",
+    "scope": "Shared Zig server credential/R4SRV facade, exact registration-read document and endpoint eligibility, owned create-only atomic local persistence, append-only error codes 10/11 in unchanged 8/20-byte service messages. Existing C/Rust generic file/service APIs and generated runtime bodies are unchanged; the server convenience facade retains the explicitly documented Zig-only high-level scope from server_access_0893. No new raw ABI or C/Rust high-level facade is claimed.",
     "historical_snapshot_retained": true
   },
   "drift_guard": {
@@ -58095,11 +58132,11 @@
       },
       {
         "path": "Repositories/SDK/build.zig",
-        "sha256": "554d9d48407063d93eb971cbb8e3f380d06f9fa4011629dbe56390131e59b463"
+        "sha256": "6248f5797121c71dbf08e6c875d64a82aeb2d3c1340191ca51884fc85a5d3a1f"
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "035bf81f0245cbc1d068f751078ce106e5d7fe00846668dde83b4d5b7e2888bb"
+        "sha256": "d91b5adec29b91e73e2ff1de75831a869a346b63d576266f2af67dbf65efa987"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -58651,11 +58688,11 @@
       },
       {
         "path": "Repositories/SDK/r4os/server_access.zig",
-        "sha256": "62056f9533e0561e4664dce745b31d7150e25d3ee5967996a02cbeb2068e66de"
+        "sha256": "d97f42597323a076d35938d890a4837b464f3a13b5ff9f506bc31ee458aefdcb"
       },
       {
         "path": "Repositories/SDK/r4os/server_credentials.zig",
-        "sha256": "b61534e8bc907a66eef6f70a6fc431fc63dde111c7827cf193186c37eb435ed2"
+        "sha256": "731213940b3e9ae509ee53db28280648e2d4d1a8ffbfccc579150819116adf8d"
       },
       {
         "path": "Repositories/SDK/r4os/server_profile.zig",
@@ -59224,7 +59261,8 @@
           "native_pointer_capture_08828",
           "gui_host_backpressure_08832",
           "server_access_0893",
-          "asset_paths_08951"
+          "asset_paths_08951",
+          "public_bootstrap_0903"
         ]
       },
       {
@@ -59290,7 +59328,8 @@
           "server_access_0893",
           "studio_089_host",
           "link_08916_host",
-          "dynamic_services_08921"
+          "dynamic_services_08921",
+          "public_bootstrap_0903"
         ]
       },
       {
