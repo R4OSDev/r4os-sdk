@@ -55793,6 +55793,65 @@
       "libraries": "0.64.49",
       "report": "Docs/Deployment/Portex.txt",
       "scope": "Shared Zig Engine removal helper and SYSUPD REMOVE/RESUME-REMOVE CLI; all30 original update test functions and three focused production-state-machine cases pass. Existing native STATUS/RESUME test also passes with concurrent incomplete-removal admission at SYSLOCK and exact lease release. KVM4 verifies managed and unbound manually installed catalog-app removal, idempotent original receipt, running-image wait, pre-delete cancellation, Portex reopen/resume and byte-exact preservation of changed/foreign links and adjacent user data. Exact candidate/final artifact and remaining limits are in the report. Raw ABI, C/Rust facades and runtime object sources are unchanged; no new cross-language guest, Windows or hardware qualification."
+    },
+    "gui_regional_0901": {
+      "complete": true,
+      "sdk": "0.64.153",
+      "contract": "0.64.76 unchanged",
+      "owners": [
+        "Repositories/SDK/r4os/app_gui.zig",
+        "Repositories/SDK/Shared/C/include/r4os/gui_bridge.h",
+        "Repositories/SDK/Rust/src/c_facades.rs"
+      ],
+      "proof": [
+        "Tests/Conformance/GuiFacadePrototype05824.zig",
+        "Tests/Simulation/GuiParity.c",
+        "Tests/Simulation/RustGui.rs"
+      ],
+      "result": "Existing Zig GUI/frame/dialog/input owners and actual native C/Rust peers pass, including complete command retention outside regional damage, invalid damage, geometry/coordinated-view promotion, both generated C replacement entries, generated Rust replacement call and missing optional callback. Three actual unsafe/Send/frame-loan negatives rejected. Compiler-generated projections and fingerprint match the shared Zig owner.",
+      "scope": "Linux host ABI and shared paint lifecycle only. Portex native view/measurement evidence belongs to Deployment/PortexPerformance090.txt; no new kernel ABI, independent C/Rust algorithm, Windows execution or physical cursor-latency claim.",
+      "source_deltas": [
+        {
+          "path": "Repositories/SDK/Rust/src/c_facades.rs",
+          "before": "af2f13deb727f1f1aa06875a5bc4b5bc325e8765850efe6ef7b4d60f07a6d926",
+          "after": "424e3be6bca1bc7ba4270d7dff52869ef03feaac7585ffc0f5f8cde880c84e36"
+        },
+        {
+          "path": "Repositories/SDK/Shared/C/include/r4os/gui_bridge.h",
+          "before": "83d55b55a26832ef70538b5e6c995305afdffe54cd3fe83fd55a0b71b0d1ac1f",
+          "after": "5045e4c390a841613f33fb02e9e3db88e8937c14605d294e37e2d24be36b36c2"
+        },
+        {
+          "path": "Repositories/SDK/Tests/Conformance/GuiFacadePrototype05824.zig",
+          "before": "c8b0af4144c7ea14687ec55ec0d57cf7e9b8dd2258d776f0e0099cc7a576610c",
+          "after": "c906428fdb50717d6e4cc2764d4ceb13acd73157613683d3883e7124d813c84a"
+        },
+        {
+          "path": "Repositories/SDK/Tests/Simulation/GuiParity.c",
+          "before": "43cc2a37650df61610117d640ae79d07e265c12b214be8a15c8161b867663916",
+          "after": "51fc78047c41892f076e2d09154522d8b5b1b86808f1eecc91930c7acc1883a4"
+        },
+        {
+          "path": "Repositories/SDK/Tests/Simulation/RustGui.rs",
+          "before": "0f7cb60e9c8e365ed2c7d8a0980b1cde3bb9e0bf349b2d4580106372973c58a5",
+          "after": "12a848f7a5d75751abc6dd110ec2c7c0d98ca8b2c4e60d9c16d02541df10df19"
+        },
+        {
+          "path": "Repositories/SDK/build.zig.zon",
+          "before": "5beb4f291834fbf5a17856c543145a6db2e016526d82566c90a63c0181207b53",
+          "after": "035bf81f0245cbc1d068f751078ce106e5d7fe00846668dde83b4d5b7e2888bb"
+        },
+        {
+          "path": "Repositories/SDK/r4os/app_gui.zig",
+          "before": "44178c805b8252140b27c75cf598fecf6ffa25932af380f1c4b2394d7da46e96",
+          "after": "b3f0724ad605bef6a577e076e9290451ae13121c4e48a47e5f2e7e71f4bb8924"
+        },
+        {
+          "path": "Repositories/SDK/r4os/generated/gui_fingerprint.zig",
+          "before": "f68a7ef18003446b44231ebd9ce5842d532ce9d2f003171e9c7ec45fe4d91461",
+          "after": "d9fa74bf6e429990a33387b17922c93894a7b9c2e75ac7fc99636467c4336d8e"
+        }
+      ]
     }
   },
   "wave_bindings": [
@@ -56045,12 +56104,12 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.89.54",
-    "sdk": "0.64.152",
+    "performed_in": "0.90.1",
+    "sdk": "0.64.153",
     "contract": "0.64.76 unchanged",
     "libraries": "0.64.49 unchanged",
-    "evidence": "application_removal_08954",
-    "scope": "Shared Zig SYSUPD Engine application-removal owner; durable original request, two checks for an active image, guarded native file deletion, inventory-only atomic commit and immutable completed receipts. No raw ABI or C/Rust facade change. Three targeted owner cases accompany all original update owner cases in the existing runner. Native qualification and limitations are recorded in Deployment/Portex.txt; no new C/Rust guest, Windows or hardware claim.",
+    "evidence": "gui_regional_0901",
+    "scope": "Independent complete replacement paint with client damage in the shared SDK GUI owner; geometry and coordinated view changes promote full paint. Existing compiler-generated C/Rust raw projections and current native fixtures exercise the same implementation.",
     "historical_snapshot_retained": true
   },
   "drift_guard": {
@@ -57218,7 +57277,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "af2f13deb727f1f1aa06875a5bc4b5bc325e8765850efe6ef7b4d60f07a6d926"
+        "sha256": "424e3be6bca1bc7ba4270d7dff52869ef03feaac7585ffc0f5f8cde880c84e36"
       },
       {
         "path": "Repositories/SDK/Rust/src/data/hash.rs",
@@ -57606,7 +57665,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/gui_bridge.h",
-        "sha256": "83d55b55a26832ef70538b5e6c995305afdffe54cd3fe83fd55a0b71b0d1ac1f"
+        "sha256": "5045e4c390a841613f33fb02e9e3db88e8937c14605d294e37e2d24be36b36c2"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/heap.h",
@@ -57762,7 +57821,7 @@
       },
       {
         "path": "Repositories/SDK/Tests/Conformance/GuiFacadePrototype05824.zig",
-        "sha256": "c8b0af4144c7ea14687ec55ec0d57cf7e9b8dd2258d776f0e0099cc7a576610c"
+        "sha256": "c906428fdb50717d6e4cc2764d4ceb13acd73157613683d3883e7124d813c84a"
       },
       {
         "path": "Repositories/SDK/Tests/Conformance/ServiceNetworkFacadePrototype05826.zig",
@@ -57770,7 +57829,7 @@
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/GuiParity.c",
-        "sha256": "43cc2a37650df61610117d640ae79d07e265c12b214be8a15c8161b867663916"
+        "sha256": "51fc78047c41892f076e2d09154522d8b5b1b86808f1eecc91930c7acc1883a4"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/PointerBindings.c",
@@ -57778,7 +57837,7 @@
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/RustGui.rs",
-        "sha256": "0f7cb60e9c8e365ed2c7d8a0980b1cde3bb9e0bf349b2d4580106372973c58a5"
+        "sha256": "12a848f7a5d75751abc6dd110ec2c7c0d98ca8b2c4e60d9c16d02541df10df19"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/RustServices.rs",
@@ -58034,7 +58093,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "5beb4f291834fbf5a17856c543145a6db2e016526d82566c90a63c0181207b53"
+        "sha256": "035bf81f0245cbc1d068f751078ce106e5d7fe00846668dde83b4d5b7e2888bb"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -58062,7 +58121,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/app_gui.zig",
-        "sha256": "44178c805b8252140b27c75cf598fecf6ffa25932af380f1c4b2394d7da46e96"
+        "sha256": "b3f0724ad605bef6a577e076e9290451ae13121c4e48a47e5f2e7e71f4bb8924"
       },
       {
         "path": "Repositories/SDK/r4os/app_network.zig",
@@ -58274,7 +58333,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/generated/gui_fingerprint.zig",
-        "sha256": "f68a7ef18003446b44231ebd9ce5842d532ce9d2f003171e9c7ec45fe4d91461"
+        "sha256": "d9fa74bf6e429990a33387b17922c93894a7b9c2e75ac7fc99636467c4336d8e"
       },
       {
         "path": "Repositories/SDK/r4os/generated/net_facade.zig",
@@ -59312,7 +59371,8 @@
           "desktop_actions_08898",
           "studio_089_host",
           "gui_modern_08946",
-          "gui_title_08947"
+          "gui_title_08947",
+          "gui_regional_0901"
         ]
       },
       {

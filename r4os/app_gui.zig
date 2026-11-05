@@ -379,6 +379,21 @@ pub fn beginPaintForSize(draw: *const r4draw.Context, width: i32, height: i32) P
     return .{ .paint = .{ .canvas = Canvas.initSize(draw, width, height), .transactional = true } };
 }
 
+/// A complete independent replacement with damage in client coordinates.
+/// The caller still draws the complete scene; regions only limit replay.
+pub fn beginPaintReplaceForSize(draw: *const r4draw.Context, width: i32, height: i32, regions: []const abi.DisplayDamageRect) PaintOpen {
+    if (width <= 0 or height <= 0 or !draw.supportsGuiFrameContract() or !draw.hasFn("gui_frame_begin_replace")) return .{ .failure = abi.err_no_fn };
+    if (regions.len == 0 or regions.len > abi.gui_frame_max_damage_regions) return .{ .failure = abi.gui_frame_error_invalid };
+    for (regions) |region| {
+        if (region.x < 0 or region.y < 0 or region.w == 0 or region.h == 0 or
+            @as(i64, region.x) + region.w > width or @as(i64, region.y) + region.h > height)
+            return .{ .failure = abi.gui_frame_error_invalid };
+    }
+    const raw = draw.guiFrameBeginReplace(regions);
+    if (raw < 0) return .{ .failure = raw };
+    return .{ .paint = .{ .canvas = Canvas.initSize(draw, width, height), .transactional = true } };
+}
+
 pub const Window = struct {
     sys: r4sys.Context,
     desk: r4desk.Context,
@@ -431,9 +446,19 @@ pub const Window = struct {
     }
 
     pub fn beginPaint(self: *Window) PaintOpen {
+        return self.beginPaintInternal(0, 0, null);
+    }
+
+    /// A size or coordinated view change promotes this to a full frame.
+    pub fn beginPaintReplace(self: *Window, expected_width: i32, expected_height: i32, regions: []const abi.DisplayDamageRect) PaintOpen {
+        return self.beginPaintInternal(expected_width, expected_height, regions);
+    }
+
+    fn beginPaintInternal(self: *Window, expected_width: i32, expected_height: i32, regions: ?[]const abi.DisplayDamageRect) PaintOpen {
         var value = self.info() orelse return .{ .failure = abi.err_no_fn };
         if (value.client_w <= 0 or value.client_h <= 0) return .{ .failure = abi.err_no_fn };
         var view: ?ActionPaintView = null;
+        const changed_view = self.events.action_view_pending;
         if (self.events.action_view_pending) {
             self.events.action_view_pending = false;
             const client = desktop_actions.Client{ .sys = self.sys };
@@ -450,7 +475,10 @@ pub const Window = struct {
                 }
             }
         }
-        var opened = beginPaintForSize(&self.draw, value.client_w, value.client_h);
+        var opened = if (regions != null and !changed_view and value.client_w == expected_width and value.client_h == expected_height)
+            beginPaintReplaceForSize(&self.draw, value.client_w, value.client_h, regions.?)
+        else
+            beginPaintForSize(&self.draw, value.client_w, value.client_h);
         if (opened == .paint) opened.paint.action_view = view;
         return opened;
     }

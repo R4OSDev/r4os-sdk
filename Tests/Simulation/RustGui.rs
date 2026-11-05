@@ -75,6 +75,39 @@ fn modern_controls_use_the_same_native_frames_from_zig_c_and_rust() {
             .unwrap();
         paint.present().unwrap();
         assert_eq!(unsafe { sdk_gui_modern_hash() }, expected);
+        // Exercise the generated raw Rust boundary of the shared replacement
+        // owner too; the C peer also covers Window's shared entry point.
+        let region = abi::DisplayDamageRect {
+            x: 10,
+            y: 10,
+            w: 120,
+            h: 32,
+        };
+        let mut opened = MaybeUninit::<c::R4SdkGuiPaintOpen>::uninit();
+        let mut regional = MaybeUninit::<c::R4SdkGuiPaintContext>::uninit();
+        unsafe {
+            assert_eq!(
+                c::R4SdkAppGui_beginPaintReplaceForSize(
+                    0,
+                    window.native_draw(),
+                    320,
+                    200,
+                    &region,
+                    1,
+                    opened.as_mut_ptr()
+                )
+                .status,
+                0
+            );
+            assert_eq!(
+                c::R4SdkGuiPaintOpen_get_paint(opened.as_ptr(), regional.as_mut_ptr()).status,
+                0
+            );
+            assert_eq!(
+                c::R4SdkGuiPaintContext_discard(0, regional.as_mut_ptr()).status,
+                0
+            );
+        }
     });
 }
 fn with_app(host: bool, body: impl FnOnce(&App<'_>)) {

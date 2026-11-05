@@ -1709,6 +1709,70 @@ fn enableFrameContract(draw: *r4os.abi.R4XStartR4Draw) void {
     draw.gui_frame_read = @intFromPtr(&fakeFrameRead);
 }
 
+var replacement_count: u32 = 0;
+var replacement_region: r4os.abi.DisplayDamageRect = .{};
+fn fakeFrameReplace(regions: [*]const r4os.abi.DisplayDamageRect, count: u32) callconv(.c) i32 {
+    if (count != 1) return r4os.abi.gui_frame_error_invalid;
+    replacement_count += 1;
+    replacement_region = regions[0];
+    return 0;
+}
+
+test "transactional paint regional replacement retains full commands and promotes changed geometry" {
+    resetFrameCapture();
+    replacement_count = 0;
+    frame_begin_count = 0;
+    frame_commit_count = 0;
+    frame_cancel_count = 0;
+    var tables = makeTables(true);
+    enableFrameContract(&tables[2]);
+    tables[2].gui_frame_begin_replace = @intFromPtr(&fakeFrameReplace);
+    var imports: [3]r4os.abi.R4XStartImport = undefined;
+    var context: r4os.abi.R4XStartContext = undefined;
+    var app = try makeApp(&tables, &imports, &context);
+    var timers: [0]r4os.Timer = .{};
+    var window = app.window(&timers) orelse return error.WindowMissing;
+    const info = window.info().?;
+    const regions = [_]r4os.abi.DisplayDamageRect{.{ .x = 10, .y = 20, .w = 30, .h = 40 }};
+    var paint = switch (window.beginPaintReplace(info.client_w, info.client_h, &regions)) {
+        .paint => |value| value,
+        .failure => return error.ReplacementRefused,
+    };
+    try std.testing.expectEqual(@as(u32, 1), replacement_count);
+    try std.testing.expectEqual(regions[0], replacement_region);
+    try std.testing.expectEqual(@as(u32, 0), frame_begin_count);
+    // Regional damage must not clip the independent replacement description.
+    var commands: [4]r4os.abi.GuiFrameCommand = undefined;
+    var resources: [4]u8 = undefined;
+    var builder: r4os.app_gui.FrameCanvas = undefined;
+    const canvas = paint.bufferedCanvas(&builder, &commands, &resources);
+    try std.testing.expectEqual(@as(i32, 0), canvas.clear(0x112233));
+    try std.testing.expectEqual(@as(i32, 0), canvas.rect(.{ .x = 100, .y = 100, .w = 20, .h = 10 }, 0xabcdef));
+    try std.testing.expectEqual(@as(i32, 0), paint.present());
+    try std.testing.expectEqual(@as(u32, 1), frame_commit_count);
+    try std.testing.expectEqual(@as(usize, 2), captured_command_count);
+    try std.testing.expectEqual(@as(i32, 100), captured_commands[1].x);
+    var changed = switch (window.beginPaintReplace(info.client_w - 1, info.client_h, &regions)) {
+        .paint => |value| value,
+        .failure => return error.Paint,
+    };
+    changed.discard();
+    try std.testing.expectEqual(@as(u32, 1), frame_begin_count);
+    window.events.action_view_pending = true;
+    var coordinated = switch (window.beginPaintReplace(info.client_w, info.client_h, &regions)) {
+        .paint => |value| value,
+        .failure => return error.Paint,
+    };
+    coordinated.discard();
+    try std.testing.expectEqual(@as(u32, 2), frame_begin_count);
+    try std.testing.expectEqual(@as(u32, 1), replacement_count);
+    const bad = [_]r4os.abi.DisplayDamageRect{.{ .x = -1, .y = 0, .w = 1, .h = 1 }};
+    switch (window.beginPaintReplace(info.client_w, info.client_h, &bad)) {
+        .paint => return error.InvalidDamageAccepted,
+        .failure => |code| try std.testing.expectEqual(r4os.abi.gui_frame_error_invalid, code),
+    }
+}
+
 fn readCapturedXrgb(command: r4os.abi.GuiFrameCommand, pixel_index: usize) u32 {
     const start: usize = @intCast(command.resource_offset + pixel_index * 4);
     return @as(u32, captured_resources[start]) |

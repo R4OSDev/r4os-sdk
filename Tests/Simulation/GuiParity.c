@@ -12,6 +12,13 @@ extern uint32_t sdk_gui_oracle_cancelled(void);
 extern uint64_t sdk_gui_modern_hash(void);
 static uint32_t shared_live,shared_releases;
 static uint32_t legacy_rows,font_revision_value;
+static uintptr_t replacement_begin;
+static uint32_t replacement_calls;
+static int32_t replacement_probe(const R4DisplayDamageRect *regions,uint32_t count){
+    assert(count==1 && regions[0].x==10 && regions[0].y==10 && regions[0].w==120 && regions[0].h==32);
+    ++replacement_calls;
+    return ((int32_t (*)(void))replacement_begin)();
+}
 static uint32_t revision_probe(void){return font_revision_value;}
 static uint64_t legacy_row_probe(uint32_t id,uint32_t cp,uint32_t row){(void)id;(void)cp;(void)row;++legacy_rows;return UINT64_MAX;}
 static int32_t font_info_probe(uint32_t id,R4GuiFontInfo *out){out->id=id;out->width=8;out->height=8;out->max_advance=8;out->line_height=8;return 1;}
@@ -30,6 +37,8 @@ static int32_t shared_release(const R4GuiSharedRasterLease *lease){
 }
 void sdk_gui_native_tables(R4XStartR4Sys *sys,R4XStartR4Desk *desk,R4XStartR4Draw *draw){
     sdk_gui_oracle_tables(sys,desk,draw);shared_live=shared_releases=0;
+    replacement_begin=draw->gui_frame_begin;replacement_calls=0;
+    draw->gui_frame_begin_replace=(uintptr_t)replacement_probe;
     desk->remote_frame_snapshot_acquire=(uintptr_t)capture_acquire_probe;desk->remote_frame_snapshot_release=(uintptr_t)capture_release_probe;
     draw->gui_shared_raster_acquire=(uintptr_t)shared_acquire;draw->gui_shared_raster_release=(uintptr_t)shared_release;
     draw->font_info=(uintptr_t)font_info_probe;draw->font_glyph_row=(uintptr_t)legacy_row_probe;
@@ -97,6 +106,17 @@ uint64_t sdk_gui_modern_c_case(void){
     status(R4SdkGuiCanvas_progressBar(0,canvas,&area,25,100,0,0));
     assert(R4SdkGuiSessionEnd(&s,1)==0);
     uint64_t result=sdk_gui_modern_hash();assert(result!=0);
+    R4DisplayDamageRect region={.x=10,.y=10,.w=120,.h=32};
+    R4SdkGuiPaintOpen opened;R4SdkGuiPaintContext regional;
+    checked(R4SdkGuiWindow_beginPaintReplace(0,R4SdkGuiSessionWindow(&s),320,200,&region,1,&opened));
+    checked(R4SdkGuiPaintOpen_get_paint(&opened,&regional));
+    checked(R4SdkGuiPaintContext_discard(0,&regional));assert(replacement_calls==1);
+    checked(R4SdkAppGui_beginPaintReplaceForSize(0,R4SdkGuiSessionDraw(&s),320,200,&region,1,&opened));
+    checked(R4SdkGuiPaintOpen_get_paint(&opened,&regional));
+    checked(R4SdkGuiPaintContext_discard(0,&regional));assert(replacement_calls==2);
+    draw.gui_frame_begin_replace=0;
+    checked(R4SdkAppGui_beginPaintReplaceForSize(0,R4SdkGuiSessionDraw(&s),320,200,&region,1,&opened));
+    R4SdkGuiSlot missing=R4SdkGuiPaintOpen_get_failure(&opened);checked(missing);assert((int32_t)missing.bits==R4OS_ERR_NO_FN);
     R4SdkGuiSessionClose(&s);return result;
 }
 int32_t sdk_gui_c_case(void){
