@@ -182,6 +182,23 @@ fn original_gui_pixels_frames_unicode_input_and_exact_host_session() {
         let identity = window.pointer_identity().unwrap();
         assert_eq!(identity.owner.generation, 0x100000009);
         assert_eq!(identity.epoch, 0x200000008);
+        let mut appearance = abi::GuiWindowAppearance {
+            reserved: 77,
+            ..Default::default()
+        };
+        let no_appearance = unsafe {
+            c::R4SdkGuiDesktopContext_guiWindowAppearance(
+                0,
+                window.native_desktop(),
+                &identity,
+                &mut appearance,
+            )
+        };
+        assert_eq!(no_appearance.status, 0);
+        assert_eq!(no_appearance.bits as i32, abi::err_no_fn);
+        assert_eq!(appearance.reserved, 77);
+        assert_eq!(appearance.flags, 0);
+        assert_eq!(appearance.window.owner.instance_id, 0);
         let token = window
             .pointer_capture(&identity, r4os_sdk::abi::gui_pointer_mode_relative)
             .unwrap();

@@ -169,3 +169,15 @@ are separate. A failed/unknown write retains the confirmed prefix and marks
 uncertain effect; TCP acceptance is not proof of remote POST execution.
 Drop is best effort, not a disposal acknowledgement. No full half-close-send,
 physical NIC/heap release, production Nexus or SDK speed claim follows.
+
+Modern native title colors (SDK148)
+----------------------------------
+Build `Modern.zig` with the ordinary GUI manifest and optionally add:
+```
+META=gui.title.background=341F4A
+META=gui.title.foreground=F7F0FF
+```
+The Desktop owns the real outer title bar. Missing values retain its defaults;
+its inactive title and native window buttons remain Desktop policy. These
+immutable loaded metadata do not change the Canvas style or another process's
+terminal. See `Docs/API/GuiWindowAppearance.txt` and the Contract document.

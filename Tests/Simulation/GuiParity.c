@@ -151,6 +151,18 @@ int32_t sdk_gui_c_case(void){
     assert(shared_live && map.frame_generation==UINT64_C(0x200000009));
     R4SdkGuiSlot held=R4SdkGuiDrawContext_guiSharedRasterRelease(0,R4SdkGuiSessionDraw(&s),&map.lease);assert(held.status==0 && (int32_t)held.bits==-3 && shared_live && shared_releases==1);
     status(R4SdkGuiDrawContext_guiSharedRasterRelease(0,R4SdkGuiSessionDraw(&s),&map.lease));assert(!shared_live && shared_releases==2);
+    // A valid old R4DESK prefix must never read/call its unsupported tail.
+    const uint32_t desk_bytes=desk.size;
+    desk.size=624;desk.gui_window_appearance=(uintptr_t)1;
+    R4Desk old_desk={.table=&desk};
+    R4GuiPointerWindowIdentity appearance_identity={.owner=owner,.epoch=UINT64_C(0x600000009),.window_id=1};
+    R4GuiWindowAppearance appearance;memset(&appearance,0xa5,sizeof(appearance));
+    assert(r4desk_gui_window_appearance(&old_desk,&appearance_identity,&appearance)==R4OS_ERR_NO_FN);
+    for(size_t i=0;i<sizeof(appearance);i++)assert(((const uint8_t *)&appearance)[i]==0xa5);
+    R4SdkGuiSlot no_appearance=R4SdkGuiDesktopContext_guiWindowAppearance(0,R4SdkGuiSessionDesktop(&s),&appearance_identity,&appearance);
+    assert(no_appearance.status==0 && (int32_t)no_appearance.bits==R4OS_ERR_NO_FN);
+    for(size_t i=0;i<sizeof(appearance);i++)assert(((const uint8_t *)&appearance)[i]==0xa5);
+    desk.size=desk_bytes;desk.gui_window_appearance=0;
     R4SdkGuiSessionClose(&s);
     draw.font_revision=(uintptr_t)revision_probe;draw.gui_frame_begin=0;
     assert(R4SdkGuiSessionOpen(&s,&start,0,&timer,1)==0);

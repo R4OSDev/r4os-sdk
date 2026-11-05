@@ -1574,6 +1574,12 @@ pub const Context = struct {
         return table_fn(out);
     }
 
+    /// Immutable admitted metadata, readable only by the exact registered host.
+    pub fn guiWindowAppearance(self: *const Context, window: *const abi.GuiPointerWindowIdentity, out: *abi.GuiWindowAppearance) i32 {
+        const call = self.deskFn("gui_window_appearance") orelse return self.unavailable("desk");
+        return call(window, out);
+    }
+
     pub fn guiSetWindowInfo(self: *const Context, instance_id: u32, info: *const abi.GuiWindowInfo) i32 {
         const table_fn = self.deskFn("gui_set_window_info") orelse return self.unavailable("desk");
         return table_fn(instance_id, info);

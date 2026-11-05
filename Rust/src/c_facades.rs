@@ -810,6 +810,8 @@ pub type R4GuiGradientPaint = crate::abi::GuiGradientPaint;
 const _: () = { assert!(core::mem::size_of::<R4GuiGradientPaint>() == 32); assert!(core::mem::align_of::<R4GuiGradientPaint>() == 4); assert!(core::mem::offset_of!(R4GuiGradientPaint, r#version) == 0); assert!(core::mem::offset_of!(R4GuiGradientPaint, r#size) == 4); assert!(core::mem::offset_of!(R4GuiGradientPaint, r#kind) == 8); assert!(core::mem::offset_of!(R4GuiGradientPaint, r#stop_count) == 12); assert!(core::mem::offset_of!(R4GuiGradientPaint, r#start_x_bits) == 16); assert!(core::mem::offset_of!(R4GuiGradientPaint, r#start_y_bits) == 20); assert!(core::mem::offset_of!(R4GuiGradientPaint, r#end_x_bits) == 24); assert!(core::mem::offset_of!(R4GuiGradientPaint, r#end_y_bits) == 28); };
 pub type R4GuiGradientStop = crate::abi::GuiGradientStop;
 const _: () = { assert!(core::mem::size_of::<R4GuiGradientStop>() == 8); assert!(core::mem::align_of::<R4GuiGradientStop>() == 4); assert!(core::mem::offset_of!(R4GuiGradientStop, r#position_bits) == 0); assert!(core::mem::offset_of!(R4GuiGradientStop, r#argb) == 4); };
+pub type R4GuiWindowAppearance = crate::abi::GuiWindowAppearance;
+const _: () = { assert!(core::mem::size_of::<R4GuiWindowAppearance>() == 48); assert!(core::mem::align_of::<R4GuiWindowAppearance>() == 8); assert!(core::mem::offset_of!(R4GuiWindowAppearance, r#window) == 0); assert!(core::mem::offset_of!(R4GuiWindowAppearance, r#flags) == 32); assert!(core::mem::offset_of!(R4GuiWindowAppearance, r#title_background) == 36); assert!(core::mem::offset_of!(R4GuiWindowAppearance, r#title_foreground) == 40); assert!(core::mem::offset_of!(R4GuiWindowAppearance, r#reserved) == 44); };
 pub type R4XStartContext = crate::abi::R4XStartContext;
 const _: () = { assert!(core::mem::size_of::<R4XStartContext>() == 128); assert!(core::mem::align_of::<R4XStartContext>() == 8); assert!(core::mem::offset_of!(R4XStartContext, r#magic) == 0); assert!(core::mem::offset_of!(R4XStartContext, r#abi_major) == 4); assert!(core::mem::offset_of!(R4XStartContext, r#abi_minor) == 6); assert!(core::mem::offset_of!(R4XStartContext, r#size) == 8); assert!(core::mem::offset_of!(R4XStartContext, r#flags) == 12); assert!(core::mem::offset_of!(R4XStartContext, r#instance_id) == 16); assert!(core::mem::offset_of!(R4XStartContext, r#app_class) == 24); assert!(core::mem::offset_of!(R4XStartContext, r#reserved0) == 28); assert!(core::mem::offset_of!(R4XStartContext, r#program_path) == 32); assert!(core::mem::offset_of!(R4XStartContext, r#args) == 40); assert!(core::mem::offset_of!(R4XStartContext, r#args_len) == 48); assert!(core::mem::offset_of!(R4XStartContext, r#imports) == 56); assert!(core::mem::offset_of!(R4XStartContext, r#import_count) == 64); assert!(core::mem::offset_of!(R4XStartContext, r#reserved1) == 68); assert!(core::mem::offset_of!(R4XStartContext, r#reserved_memory0) == 72); assert!(core::mem::offset_of!(R4XStartContext, r#reserved_memory1) == 80); assert!(core::mem::offset_of!(R4XStartContext, r#exit) == 88); assert!(core::mem::offset_of!(R4XStartContext, r#should_close) == 96); assert!(core::mem::offset_of!(R4XStartContext, r#yield) == 104); assert!(core::mem::offset_of!(R4XStartContext, r#reserved_runtime) == 112); assert!(core::mem::offset_of!(R4XStartContext, r#reserved2) == 120); };
 pub type R4XStartImport = crate::abi::R4XStartImport;
@@ -819,7 +821,7 @@ const _: () = { assert!(core::mem::size_of::<R4LQuery>() == 32); assert!(core::m
 pub type R4XStartR4Sys = crate::abi::R4XStartR4Sys;
 const _: () = { assert!(core::mem::size_of::<R4XStartR4Sys>() == 1408); assert!(core::mem::align_of::<R4XStartR4Sys>() == 8); assert!(core::mem::offset_of!(R4XStartR4Sys, r#magic) == 0); assert!(core::mem::offset_of!(R4XStartR4Sys, r#abi_version) == 4); assert!(core::mem::offset_of!(R4XStartR4Sys, r#size) == 8); assert!(core::mem::offset_of!(R4XStartR4Sys, r#flags) == 12); assert!(core::mem::offset_of!(R4XStartR4Sys, r#write) == 16); assert!(core::mem::offset_of!(R4XStartR4Sys, r#putc) == 24); assert!(core::mem::offset_of!(R4XStartR4Sys, r#sleep_ticks) == 32); assert!(core::mem::offset_of!(R4XStartR4Sys, r#ticks) == 40); assert!(core::mem::offset_of!(R4XStartR4Sys, r#env_get) == 48); assert!(core::mem::offset_of!(R4XStartR4Sys, r#dir_entry) == 56); assert!(core::mem::offset_of!(R4XStartR4Sys, r#program_should_close) == 64); assert!(core::mem::offset_of!(R4XStartR4Sys, r#program_class) == 72); assert!(core::mem::offset_of!(R4XStartR4Sys, r#program_instance) == 80); assert!(core::mem::offset_of!(R4XStartR4Sys, r#service_status) == 88); assert!(core::mem::offset_of!(R4XStartR4Sys, r#service_open) == 96); assert!(core::mem::offset_of!(R4XStartR4Sys, r#service_close) == 104); assert!(core::mem::offset_of!(R4XStartR4Sys, r#service_call) == 112); assert!(core::mem::offset_of!(R4XStartR4Sys, r#service_endpoint_register) == 120); assert!(core::mem::offset_of!(R4XStartR4Sys, r#service_endpoint_unregister) == 128); assert!(core::mem::offset_of!(R4XStartR4Sys, r#service_endpoint_poll) == 136); assert!(core::mem::offset_of!(R4XStartR4Sys, r#service_endpoint_recv) == 144); assert!(core::mem::offset_of!(R4XStartR4Sys, r#service_endpoint_reply) == 152); assert!(core::mem::offset_of!(R4XStartR4Sys, r#service_detail_by_name) == 160); assert!(core::mem::offset_of!(R4XStartR4Sys, r#service_start) == 168); assert!(core::mem::offset_of!(R4XStartR4Sys, r#service_stop) == 176); assert!(core::mem::offset_of!(R4XStartR4Sys, r#service_restart) == 184); assert!(core::mem::offset_of!(R4XStartR4Sys, r#service_install) == 192); assert!(core::mem::offset_of!(R4XStartR4Sys, r#service_remove) == 200); assert!(core::mem::offset_of!(R4XStartR4Sys, r#reserved0) == 208); assert!(core::mem::offset_of!(R4XStartR4Sys, r#reserved1) == 216); assert!(core::mem::offset_of!(R4XStartR4Sys, r#vm_reserve) == 224); assert!(core::mem::offset_of!(R4XStartR4Sys, r#vm_commit) == 232); assert!(core::mem::offset_of!(R4XStartR4Sys, r#vm_decommit) == 240); assert!(core::mem::offset_of!(R4XStartR4Sys, r#vm_release) == 248); assert!(core::mem::offset_of!(R4XStartR4Sys, r#vm_query) == 256); assert!(core::mem::offset_of!(R4XStartR4Sys, r#thread_create) == 264); assert!(core::mem::offset_of!(R4XStartR4Sys, r#thread_exit) == 272); assert!(core::mem::offset_of!(R4XStartR4Sys, r#thread_join) == 280); assert!(core::mem::offset_of!(R4XStartR4Sys, r#thread_current) == 288); assert!(core::mem::offset_of!(R4XStartR4Sys, r#thread_status) == 296); assert!(core::mem::offset_of!(R4XStartR4Sys, r#io_file_read) == 304); assert!(core::mem::offset_of!(R4XStartR4Sys, r#io_file_read_at) == 312); assert!(core::mem::offset_of!(R4XStartR4Sys, r#io_file_write) == 320); assert!(core::mem::offset_of!(R4XStartR4Sys, r#io_file_append) == 328); assert!(core::mem::offset_of!(R4XStartR4Sys, r#io_file_stream_begin) == 336); assert!(core::mem::offset_of!(R4XStartR4Sys, r#io_file_stream_write) == 344); assert!(core::mem::offset_of!(R4XStartR4Sys, r#io_file_stream_finish) == 352); assert!(core::mem::offset_of!(R4XStartR4Sys, r#io_file_stream_abort) == 360); assert!(core::mem::offset_of!(R4XStartR4Sys, r#io_service_call) == 368); assert!(core::mem::offset_of!(R4XStartR4Sys, r#io_status) == 376); assert!(core::mem::offset_of!(R4XStartR4Sys, r#io_wait) == 384); assert!(core::mem::offset_of!(R4XStartR4Sys, r#io_close) == 392); assert!(core::mem::offset_of!(R4XStartR4Sys, r#task_yield) == 400); assert!(core::mem::offset_of!(R4XStartR4Sys, r#reserved_shell_run) == 408); assert!(core::mem::offset_of!(R4XStartR4Sys, r#system_halt) == 416); assert!(core::mem::offset_of!(R4XStartR4Sys, r#system_reboot) == 424); assert!(core::mem::offset_of!(R4XStartR4Sys, r#system_poweroff) == 432); assert!(core::mem::offset_of!(R4XStartR4Sys, r#time_state) == 440); assert!(core::mem::offset_of!(R4XStartR4Sys, r#time_set_state) == 448); assert!(core::mem::offset_of!(R4XStartR4Sys, r#time_seconds_since_midnight) == 456); assert!(core::mem::offset_of!(R4XStartR4Sys, r#dir_list) == 464); assert!(core::mem::offset_of!(R4XStartR4Sys, r#dir_create) == 472); assert!(core::mem::offset_of!(R4XStartR4Sys, r#dir_delete) == 480); assert!(core::mem::offset_of!(R4XStartR4Sys, r#drive_info) == 488); assert!(core::mem::offset_of!(R4XStartR4Sys, r#file_info) == 496); assert!(core::mem::offset_of!(R4XStartR4Sys, r#file_delete) == 504); assert!(core::mem::offset_of!(R4XStartR4Sys, r#file_rename) == 512); assert!(core::mem::offset_of!(R4XStartR4Sys, r#file_copy) == 520); assert!(core::mem::offset_of!(R4XStartR4Sys, r#file_move) == 528); assert!(core::mem::offset_of!(R4XStartR4Sys, r#file_read) == 536); assert!(core::mem::offset_of!(R4XStartR4Sys, r#file_write) == 544); assert!(core::mem::offset_of!(R4XStartR4Sys, r#file_read_at) == 552); assert!(core::mem::offset_of!(R4XStartR4Sys, r#file_append) == 560); assert!(core::mem::offset_of!(R4XStartR4Sys, r#file_stream_begin) == 568); assert!(core::mem::offset_of!(R4XStartR4Sys, r#file_stream_write) == 576); assert!(core::mem::offset_of!(R4XStartR4Sys, r#file_stream_finish) == 584); assert!(core::mem::offset_of!(R4XStartR4Sys, r#file_stream_abort) == 592); assert!(core::mem::offset_of!(R4XStartR4Sys, r#env_set) == 600); assert!(core::mem::offset_of!(R4XStartR4Sys, r#registry_key_info) == 608); assert!(core::mem::offset_of!(R4XStartR4Sys, r#registry_enum_key) == 616); assert!(core::mem::offset_of!(R4XStartR4Sys, r#registry_enum_value) == 624); assert!(core::mem::offset_of!(R4XStartR4Sys, r#registry_get_value) == 632); assert!(core::mem::offset_of!(R4XStartR4Sys, r#registry_set_value) == 640); assert!(core::mem::offset_of!(R4XStartR4Sys, r#registry_delete_value) == 648); assert!(core::mem::offset_of!(R4XStartR4Sys, r#service_info) == 656); assert!(core::mem::offset_of!(R4XStartR4Sys, r#service_detail) == 664); assert!(core::mem::offset_of!(R4XStartR4Sys, r#service_set_start_mode) == 672); assert!(core::mem::offset_of!(R4XStartR4Sys, r#service_endpoint_wait) == 680); assert!(core::mem::offset_of!(R4XStartR4Sys, r#program_run) == 688); assert!(core::mem::offset_of!(R4XStartR4Sys, r#program_launch) == 696); assert!(core::mem::offset_of!(R4XStartR4Sys, r#program_spawn) == 704); assert!(core::mem::offset_of!(R4XStartR4Sys, r#program_kill) == 712); assert!(core::mem::offset_of!(R4XStartR4Sys, r#program_status) == 720); assert!(core::mem::offset_of!(R4XStartR4Sys, r#program_request_close) == 728); assert!(core::mem::offset_of!(R4XStartR4Sys, r#program_reap_instance) == 736); assert!(core::mem::offset_of!(R4XStartR4Sys, r#boot_log_info) == 744); assert!(core::mem::offset_of!(R4XStartR4Sys, r#boot_log_read) == 752); assert!(core::mem::offset_of!(R4XStartR4Sys, r#program_spawn_handle) == 760); assert!(core::mem::offset_of!(R4XStartR4Sys, r#program_open_handle) == 768); assert!(core::mem::offset_of!(R4XStartR4Sys, r#program_handle_status) == 776); assert!(core::mem::offset_of!(R4XStartR4Sys, r#program_handle_request_close) == 784); assert!(core::mem::offset_of!(R4XStartR4Sys, r#program_handle_kill) == 792); assert!(core::mem::offset_of!(R4XStartR4Sys, r#program_handle_wait) == 800); assert!(core::mem::offset_of!(R4XStartR4Sys, r#program_handle_reap) == 808); assert!(core::mem::offset_of!(R4XStartR4Sys, r#program_completion_read) == 816); assert!(core::mem::offset_of!(R4XStartR4Sys, r#program_inventory_begin) == 824); assert!(core::mem::offset_of!(R4XStartR4Sys, r#program_inventory_programs) == 832); assert!(core::mem::offset_of!(R4XStartR4Sys, r#program_inventory_tasks) == 840); assert!(core::mem::offset_of!(R4XStartR4Sys, r#program_inventory_threads) == 848); assert!(core::mem::offset_of!(R4XStartR4Sys, r#thread_create_handle) == 856); assert!(core::mem::offset_of!(R4XStartR4Sys, r#thread_handle_join) == 864); assert!(core::mem::offset_of!(R4XStartR4Sys, r#thread_handle_status) == 872); assert!(core::mem::offset_of!(R4XStartR4Sys, r#file_replace_atomic) == 880); assert!(core::mem::offset_of!(R4XStartR4Sys, r#file_delete_if_match) == 888); assert!(core::mem::offset_of!(R4XStartR4Sys, r#file_update_atomic_checked) == 896); assert!(core::mem::offset_of!(R4XStartR4Sys, r#path_names_equal_collated) == 904); assert!(core::mem::offset_of!(R4XStartR4Sys, r#file_update_cleanup_checked) == 912); assert!(core::mem::offset_of!(R4XStartR4Sys, r#file_stream_declare_publish) == 920); assert!(core::mem::offset_of!(R4XStartR4Sys, r#module_resource_stat) == 928); assert!(core::mem::offset_of!(R4XStartR4Sys, r#module_resource_read) == 936); assert!(core::mem::offset_of!(R4XStartR4Sys, r#program_module_path) == 944); assert!(core::mem::offset_of!(R4XStartR4Sys, r#program_module_running) == 952); assert!(core::mem::offset_of!(R4XStartR4Sys, r#monotonic_clock) == 960); assert!(core::mem::offset_of!(R4XStartR4Sys, r#boot_ready) == 968); assert!(core::mem::offset_of!(R4XStartR4Sys, r#registry_snapshot_begin) == 976); assert!(core::mem::offset_of!(R4XStartR4Sys, r#registry_snapshot_page) == 984); assert!(core::mem::offset_of!(R4XStartR4Sys, r#registry_batch_mutate) == 992); assert!(core::mem::offset_of!(R4XStartR4Sys, r#io_file_write_at) == 1000); assert!(core::mem::offset_of!(R4XStartR4Sys, r#io_file_info) == 1008); assert!(core::mem::offset_of!(R4XStartR4Sys, r#io_file_lock) == 1016); assert!(core::mem::offset_of!(R4XStartR4Sys, r#storage_inventory) == 1024); assert!(core::mem::offset_of!(R4XStartR4Sys, r#storage_device) == 1032); assert!(core::mem::offset_of!(R4XStartR4Sys, r#storage_partition) == 1040); assert!(core::mem::offset_of!(R4XStartR4Sys, r#storage_volume) == 1048); assert!(core::mem::offset_of!(R4XStartR4Sys, r#storage_claim_begin) == 1056); assert!(core::mem::offset_of!(R4XStartR4Sys, r#storage_claim_end) == 1064); assert!(core::mem::offset_of!(R4XStartR4Sys, r#storage_read) == 1072); assert!(core::mem::offset_of!(R4XStartR4Sys, r#storage_claim_read) == 1080); assert!(core::mem::offset_of!(R4XStartR4Sys, r#storage_claim_write) == 1088); assert!(core::mem::offset_of!(R4XStartR4Sys, r#storage_claim_flush) == 1096); assert!(core::mem::offset_of!(R4XStartR4Sys, r#storage_rescan) == 1104); assert!(core::mem::offset_of!(R4XStartR4Sys, r#storage_mount) == 1112); assert!(core::mem::offset_of!(R4XStartR4Sys, r#storage_unmount) == 1120); assert!(core::mem::offset_of!(R4XStartR4Sys, r#storage_use_begin) == 1128); assert!(core::mem::offset_of!(R4XStartR4Sys, r#storage_use_end) == 1136); assert!(core::mem::offset_of!(R4XStartR4Sys, r#directory_change_begin) == 1144); assert!(core::mem::offset_of!(R4XStartR4Sys, r#directory_change_poll) == 1152); assert!(core::mem::offset_of!(R4XStartR4Sys, r#file_copy_buffered) == 1160); assert!(core::mem::offset_of!(R4XStartR4Sys, r#notification_create) == 1168); assert!(core::mem::offset_of!(R4XStartR4Sys, r#notification_query) == 1176); assert!(core::mem::offset_of!(R4XStartR4Sys, r#notification_notify) == 1184); assert!(core::mem::offset_of!(R4XStartR4Sys, r#notification_wait) == 1192); assert!(core::mem::offset_of!(R4XStartR4Sys, r#notification_close) == 1200); assert!(core::mem::offset_of!(R4XStartR4Sys, r#program_local_get) == 1208); assert!(core::mem::offset_of!(R4XStartR4Sys, r#program_local_publish) == 1216); assert!(core::mem::offset_of!(R4XStartR4Sys, r#thread_current_handle) == 1224); assert!(core::mem::offset_of!(R4XStartR4Sys, r#cpu_capacity) == 1232); assert!(core::mem::offset_of!(R4XStartR4Sys, r#program_exit) == 1240); assert!(core::mem::offset_of!(R4XStartR4Sys, r#platform_input_snapshot) == 1248); assert!(core::mem::offset_of!(R4XStartR4Sys, r#directory_next) == 1256); assert!(core::mem::offset_of!(R4XStartR4Sys, r#thread_placement_get) == 1264); assert!(core::mem::offset_of!(R4XStartR4Sys, r#thread_placement_set) == 1272); assert!(core::mem::offset_of!(R4XStartR4Sys, r#system_power_transition) == 1280); assert!(core::mem::offset_of!(R4XStartR4Sys, r#entropy_source_info) == 1288); assert!(core::mem::offset_of!(R4XStartR4Sys, r#entropy_fill) == 1296); assert!(core::mem::offset_of!(R4XStartR4Sys, r#program_lifecycle_begin) == 1304); assert!(core::mem::offset_of!(R4XStartR4Sys, r#program_lifecycle_programs) == 1312); assert!(core::mem::offset_of!(R4XStartR4Sys, r#drive_info_geometry) == 1320); assert!(core::mem::offset_of!(R4XStartR4Sys, r#directory_batch) == 1328); assert!(core::mem::offset_of!(R4XStartR4Sys, r#program_observation_retain) == 1336); assert!(core::mem::offset_of!(R4XStartR4Sys, r#program_observation_wait) == 1344); assert!(core::mem::offset_of!(R4XStartR4Sys, r#program_observation_read) == 1352); assert!(core::mem::offset_of!(R4XStartR4Sys, r#program_observation_release) == 1360); assert!(core::mem::offset_of!(R4XStartR4Sys, r#file_name_limits) == 1368); assert!(core::mem::offset_of!(R4XStartR4Sys, r#service_bound_detail) == 1376); assert!(core::mem::offset_of!(R4XStartR4Sys, r#service_stop_bound) == 1384); assert!(core::mem::offset_of!(R4XStartR4Sys, r#service_inventory_page) == 1392); assert!(core::mem::offset_of!(R4XStartR4Sys, r#service_control_bound) == 1400); };
 pub type R4XStartR4Desk = crate::abi::R4XStartR4Desk;
-const _: () = { assert!(core::mem::size_of::<R4XStartR4Desk>() == 624); assert!(core::mem::align_of::<R4XStartR4Desk>() == 8); assert!(core::mem::offset_of!(R4XStartR4Desk, r#magic) == 0); assert!(core::mem::offset_of!(R4XStartR4Desk, r#abi_version) == 4); assert!(core::mem::offset_of!(R4XStartR4Desk, r#size) == 8); assert!(core::mem::offset_of!(R4XStartR4Desk, r#flags) == 12); assert!(core::mem::offset_of!(R4XStartR4Desk, r#read_key) == 16); assert!(core::mem::offset_of!(R4XStartR4Desk, r#mouse_state) == 24); assert!(core::mem::offset_of!(R4XStartR4Desk, r#mouse_show) == 32); assert!(core::mem::offset_of!(R4XStartR4Desk, r#mouse_hide) == 40); assert!(core::mem::offset_of!(R4XStartR4Desk, r#keyboard_layout_current) == 48); assert!(core::mem::offset_of!(R4XStartR4Desk, r#keyboard_layout_at) == 56); assert!(core::mem::offset_of!(R4XStartR4Desk, r#keyboard_layout_set) == 64); assert!(core::mem::offset_of!(R4XStartR4Desk, r#program_set_window) == 72); assert!(core::mem::offset_of!(R4XStartR4Desk, r#program_set_console_host) == 80); assert!(core::mem::offset_of!(R4XStartR4Desk, r#program_request_host_launch) == 88); assert!(core::mem::offset_of!(R4XStartR4Desk, r#program_take_host_launch) == 96); assert!(core::mem::offset_of!(R4XStartR4Desk, r#program_window_id) == 104); assert!(core::mem::offset_of!(R4XStartR4Desk, r#gui_window_info) == 112); assert!(core::mem::offset_of!(R4XStartR4Desk, r#gui_set_window_info) == 120); assert!(core::mem::offset_of!(R4XStartR4Desk, r#gui_poll_event) == 128); assert!(core::mem::offset_of!(R4XStartR4Desk, r#gui_push_event) == 136); assert!(core::mem::offset_of!(R4XStartR4Desk, r#gui_set_text) == 144); assert!(core::mem::offset_of!(R4XStartR4Desk, r#gui_text) == 152); assert!(core::mem::offset_of!(R4XStartR4Desk, r#gui_revision) == 160); assert!(core::mem::offset_of!(R4XStartR4Desk, r#gui_command) == 168); assert!(core::mem::offset_of!(R4XStartR4Desk, r#gui_set_title) == 176); assert!(core::mem::offset_of!(R4XStartR4Desk, r#gui_title) == 184); assert!(core::mem::offset_of!(R4XStartR4Desk, r#gui_set_min_size) == 192); assert!(core::mem::offset_of!(R4XStartR4Desk, r#gui_min_size) == 200); assert!(core::mem::offset_of!(R4XStartR4Desk, r#console_output) == 208); assert!(core::mem::offset_of!(R4XStartR4Desk, r#console_revision) == 216); assert!(core::mem::offset_of!(R4XStartR4Desk, r#console_state) == 224); assert!(core::mem::offset_of!(R4XStartR4Desk, r#console_set_metrics) == 232); assert!(core::mem::offset_of!(R4XStartR4Desk, r#console_push_key) == 240); assert!(core::mem::offset_of!(R4XStartR4Desk, r#console_write) == 248); assert!(core::mem::offset_of!(R4XStartR4Desk, r#console_read) == 256); assert!(core::mem::offset_of!(R4XStartR4Desk, r#clipboard_write) == 264); assert!(core::mem::offset_of!(R4XStartR4Desk, r#clipboard_read) == 272); assert!(core::mem::offset_of!(R4XStartR4Desk, r#clipboard_revision) == 280); assert!(core::mem::offset_of!(R4XStartR4Desk, r#clipboard_info) == 288); assert!(core::mem::offset_of!(R4XStartR4Desk, r#clipboard_clear) == 296); assert!(core::mem::offset_of!(R4XStartR4Desk, r#read_key_codepoint) == 304); assert!(core::mem::offset_of!(R4XStartR4Desk, r#reserved1) == 312); assert!(core::mem::offset_of!(R4XStartR4Desk, r#remote_frame_info) == 320); assert!(core::mem::offset_of!(R4XStartR4Desk, r#remote_frame_read) == 328); assert!(core::mem::offset_of!(R4XStartR4Desk, r#remote_frame_wait) == 336); assert!(core::mem::offset_of!(R4XStartR4Desk, r#remote_frame_publish) == 344); assert!(core::mem::offset_of!(R4XStartR4Desk, r#remote_input_push) == 352); assert!(core::mem::offset_of!(R4XStartR4Desk, r#remote_input_poll) == 360); assert!(core::mem::offset_of!(R4XStartR4Desk, r#remote_input_status) == 368); assert!(core::mem::offset_of!(R4XStartR4Desk, r#desktop_activity_wait) == 376); assert!(core::mem::offset_of!(R4XStartR4Desk, r#remote_frame_map) == 384); assert!(core::mem::offset_of!(R4XStartR4Desk, r#program_current_console_host) == 392); assert!(core::mem::offset_of!(R4XStartR4Desk, r#program_request_desktop) == 400); assert!(core::mem::offset_of!(R4XStartR4Desk, r#program_spawn_with_console_host) == 408); assert!(core::mem::offset_of!(R4XStartR4Desk, r#program_spawn_with_console_host_handle) == 416); assert!(core::mem::offset_of!(R4XStartR4Desk, r#program_set_window_handle) == 424); assert!(core::mem::offset_of!(R4XStartR4Desk, r#console_push_input) == 432); assert!(core::mem::offset_of!(R4XStartR4Desk, r#remote_frame_acquire) == 440); assert!(core::mem::offset_of!(R4XStartR4Desk, r#remote_frame_release) == 448); assert!(core::mem::offset_of!(R4XStartR4Desk, r#remote_frame_consumers) == 456); assert!(core::mem::offset_of!(R4XStartR4Desk, r#remote_frame_publish_regions) == 464); assert!(core::mem::offset_of!(R4XStartR4Desk, r#console_input_wait) == 472); assert!(core::mem::offset_of!(R4XStartR4Desk, r#physical_key_poll) == 480); assert!(core::mem::offset_of!(R4XStartR4Desk, r#mouse_motion) == 488); assert!(core::mem::offset_of!(R4XStartR4Desk, r#remote_frame_snapshot_acquire) == 496); assert!(core::mem::offset_of!(R4XStartR4Desk, r#remote_frame_snapshot_release) == 504); assert!(core::mem::offset_of!(R4XStartR4Desk, r#remote_frame_source_reset) == 512); assert!(core::mem::offset_of!(R4XStartR4Desk, r#remote_frame_capture_stats) == 520); assert!(core::mem::offset_of!(R4XStartR4Desk, r#desktop_activity_notify) == 528); assert!(core::mem::offset_of!(R4XStartR4Desk, r#console_read_events) == 536); assert!(core::mem::offset_of!(R4XStartR4Desk, r#console_push_events) == 544); assert!(core::mem::offset_of!(R4XStartR4Desk, r#console_text_info) == 552); assert!(core::mem::offset_of!(R4XStartR4Desk, r#console_set_encoding) == 560); assert!(core::mem::offset_of!(R4XStartR4Desk, r#gui_activity_wait) == 568); assert!(core::mem::offset_of!(R4XStartR4Desk, r#gui_activity_notify) == 576); assert!(core::mem::offset_of!(R4XStartR4Desk, r#gui_pointer_capture_info) == 584); assert!(core::mem::offset_of!(R4XStartR4Desk, r#gui_pointer_capture_acquire) == 592); assert!(core::mem::offset_of!(R4XStartR4Desk, r#gui_pointer_capture_release) == 600); assert!(core::mem::offset_of!(R4XStartR4Desk, r#gui_pointer_capture_host) == 608); assert!(core::mem::offset_of!(R4XStartR4Desk, r#gui_host_input) == 616); };
+const _: () = { assert!(core::mem::size_of::<R4XStartR4Desk>() == 632); assert!(core::mem::align_of::<R4XStartR4Desk>() == 8); assert!(core::mem::offset_of!(R4XStartR4Desk, r#magic) == 0); assert!(core::mem::offset_of!(R4XStartR4Desk, r#abi_version) == 4); assert!(core::mem::offset_of!(R4XStartR4Desk, r#size) == 8); assert!(core::mem::offset_of!(R4XStartR4Desk, r#flags) == 12); assert!(core::mem::offset_of!(R4XStartR4Desk, r#read_key) == 16); assert!(core::mem::offset_of!(R4XStartR4Desk, r#mouse_state) == 24); assert!(core::mem::offset_of!(R4XStartR4Desk, r#mouse_show) == 32); assert!(core::mem::offset_of!(R4XStartR4Desk, r#mouse_hide) == 40); assert!(core::mem::offset_of!(R4XStartR4Desk, r#keyboard_layout_current) == 48); assert!(core::mem::offset_of!(R4XStartR4Desk, r#keyboard_layout_at) == 56); assert!(core::mem::offset_of!(R4XStartR4Desk, r#keyboard_layout_set) == 64); assert!(core::mem::offset_of!(R4XStartR4Desk, r#program_set_window) == 72); assert!(core::mem::offset_of!(R4XStartR4Desk, r#program_set_console_host) == 80); assert!(core::mem::offset_of!(R4XStartR4Desk, r#program_request_host_launch) == 88); assert!(core::mem::offset_of!(R4XStartR4Desk, r#program_take_host_launch) == 96); assert!(core::mem::offset_of!(R4XStartR4Desk, r#program_window_id) == 104); assert!(core::mem::offset_of!(R4XStartR4Desk, r#gui_window_info) == 112); assert!(core::mem::offset_of!(R4XStartR4Desk, r#gui_set_window_info) == 120); assert!(core::mem::offset_of!(R4XStartR4Desk, r#gui_poll_event) == 128); assert!(core::mem::offset_of!(R4XStartR4Desk, r#gui_push_event) == 136); assert!(core::mem::offset_of!(R4XStartR4Desk, r#gui_set_text) == 144); assert!(core::mem::offset_of!(R4XStartR4Desk, r#gui_text) == 152); assert!(core::mem::offset_of!(R4XStartR4Desk, r#gui_revision) == 160); assert!(core::mem::offset_of!(R4XStartR4Desk, r#gui_command) == 168); assert!(core::mem::offset_of!(R4XStartR4Desk, r#gui_set_title) == 176); assert!(core::mem::offset_of!(R4XStartR4Desk, r#gui_title) == 184); assert!(core::mem::offset_of!(R4XStartR4Desk, r#gui_set_min_size) == 192); assert!(core::mem::offset_of!(R4XStartR4Desk, r#gui_min_size) == 200); assert!(core::mem::offset_of!(R4XStartR4Desk, r#console_output) == 208); assert!(core::mem::offset_of!(R4XStartR4Desk, r#console_revision) == 216); assert!(core::mem::offset_of!(R4XStartR4Desk, r#console_state) == 224); assert!(core::mem::offset_of!(R4XStartR4Desk, r#console_set_metrics) == 232); assert!(core::mem::offset_of!(R4XStartR4Desk, r#console_push_key) == 240); assert!(core::mem::offset_of!(R4XStartR4Desk, r#console_write) == 248); assert!(core::mem::offset_of!(R4XStartR4Desk, r#console_read) == 256); assert!(core::mem::offset_of!(R4XStartR4Desk, r#clipboard_write) == 264); assert!(core::mem::offset_of!(R4XStartR4Desk, r#clipboard_read) == 272); assert!(core::mem::offset_of!(R4XStartR4Desk, r#clipboard_revision) == 280); assert!(core::mem::offset_of!(R4XStartR4Desk, r#clipboard_info) == 288); assert!(core::mem::offset_of!(R4XStartR4Desk, r#clipboard_clear) == 296); assert!(core::mem::offset_of!(R4XStartR4Desk, r#read_key_codepoint) == 304); assert!(core::mem::offset_of!(R4XStartR4Desk, r#reserved1) == 312); assert!(core::mem::offset_of!(R4XStartR4Desk, r#remote_frame_info) == 320); assert!(core::mem::offset_of!(R4XStartR4Desk, r#remote_frame_read) == 328); assert!(core::mem::offset_of!(R4XStartR4Desk, r#remote_frame_wait) == 336); assert!(core::mem::offset_of!(R4XStartR4Desk, r#remote_frame_publish) == 344); assert!(core::mem::offset_of!(R4XStartR4Desk, r#remote_input_push) == 352); assert!(core::mem::offset_of!(R4XStartR4Desk, r#remote_input_poll) == 360); assert!(core::mem::offset_of!(R4XStartR4Desk, r#remote_input_status) == 368); assert!(core::mem::offset_of!(R4XStartR4Desk, r#desktop_activity_wait) == 376); assert!(core::mem::offset_of!(R4XStartR4Desk, r#remote_frame_map) == 384); assert!(core::mem::offset_of!(R4XStartR4Desk, r#program_current_console_host) == 392); assert!(core::mem::offset_of!(R4XStartR4Desk, r#program_request_desktop) == 400); assert!(core::mem::offset_of!(R4XStartR4Desk, r#program_spawn_with_console_host) == 408); assert!(core::mem::offset_of!(R4XStartR4Desk, r#program_spawn_with_console_host_handle) == 416); assert!(core::mem::offset_of!(R4XStartR4Desk, r#program_set_window_handle) == 424); assert!(core::mem::offset_of!(R4XStartR4Desk, r#console_push_input) == 432); assert!(core::mem::offset_of!(R4XStartR4Desk, r#remote_frame_acquire) == 440); assert!(core::mem::offset_of!(R4XStartR4Desk, r#remote_frame_release) == 448); assert!(core::mem::offset_of!(R4XStartR4Desk, r#remote_frame_consumers) == 456); assert!(core::mem::offset_of!(R4XStartR4Desk, r#remote_frame_publish_regions) == 464); assert!(core::mem::offset_of!(R4XStartR4Desk, r#console_input_wait) == 472); assert!(core::mem::offset_of!(R4XStartR4Desk, r#physical_key_poll) == 480); assert!(core::mem::offset_of!(R4XStartR4Desk, r#mouse_motion) == 488); assert!(core::mem::offset_of!(R4XStartR4Desk, r#remote_frame_snapshot_acquire) == 496); assert!(core::mem::offset_of!(R4XStartR4Desk, r#remote_frame_snapshot_release) == 504); assert!(core::mem::offset_of!(R4XStartR4Desk, r#remote_frame_source_reset) == 512); assert!(core::mem::offset_of!(R4XStartR4Desk, r#remote_frame_capture_stats) == 520); assert!(core::mem::offset_of!(R4XStartR4Desk, r#desktop_activity_notify) == 528); assert!(core::mem::offset_of!(R4XStartR4Desk, r#console_read_events) == 536); assert!(core::mem::offset_of!(R4XStartR4Desk, r#console_push_events) == 544); assert!(core::mem::offset_of!(R4XStartR4Desk, r#console_text_info) == 552); assert!(core::mem::offset_of!(R4XStartR4Desk, r#console_set_encoding) == 560); assert!(core::mem::offset_of!(R4XStartR4Desk, r#gui_activity_wait) == 568); assert!(core::mem::offset_of!(R4XStartR4Desk, r#gui_activity_notify) == 576); assert!(core::mem::offset_of!(R4XStartR4Desk, r#gui_pointer_capture_info) == 584); assert!(core::mem::offset_of!(R4XStartR4Desk, r#gui_pointer_capture_acquire) == 592); assert!(core::mem::offset_of!(R4XStartR4Desk, r#gui_pointer_capture_release) == 600); assert!(core::mem::offset_of!(R4XStartR4Desk, r#gui_pointer_capture_host) == 608); assert!(core::mem::offset_of!(R4XStartR4Desk, r#gui_host_input) == 616); assert!(core::mem::offset_of!(R4XStartR4Desk, r#gui_window_appearance) == 624); };
 pub type R4XStartR4Draw = crate::abi::R4XStartR4Draw;
 const _: () = { assert!(core::mem::size_of::<R4XStartR4Draw>() == 912); assert!(core::mem::align_of::<R4XStartR4Draw>() == 8); assert!(core::mem::offset_of!(R4XStartR4Draw, r#magic) == 0); assert!(core::mem::offset_of!(R4XStartR4Draw, r#abi_version) == 4); assert!(core::mem::offset_of!(R4XStartR4Draw, r#size) == 8); assert!(core::mem::offset_of!(R4XStartR4Draw, r#flags) == 12); assert!(core::mem::offset_of!(R4XStartR4Draw, r#screen_width) == 16); assert!(core::mem::offset_of!(R4XStartR4Draw, r#screen_height) == 24); assert!(core::mem::offset_of!(R4XStartR4Draw, r#clear) == 32); assert!(core::mem::offset_of!(R4XStartR4Draw, r#rect) == 40); assert!(core::mem::offset_of!(R4XStartR4Draw, r#text) == 48); assert!(core::mem::offset_of!(R4XStartR4Draw, r#display_revision) == 56); assert!(core::mem::offset_of!(R4XStartR4Draw, r#display_begin_frame) == 64); assert!(core::mem::offset_of!(R4XStartR4Draw, r#display_begin_frame_rect) == 72); assert!(core::mem::offset_of!(R4XStartR4Draw, r#display_present) == 80); assert!(core::mem::offset_of!(R4XStartR4Draw, r#display_blit_xrgb32) == 88); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gui_clear) == 96); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gui_rect) == 104); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gui_draw_text) == 112); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gui_draw_text_ex) == 120); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gui_blit) == 128); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gui_raster_read) == 136); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gui_present) == 144); assert!(core::mem::offset_of!(R4XStartR4Draw, r#font_count) == 152); assert!(core::mem::offset_of!(R4XStartR4Draw, r#font_info) == 160); assert!(core::mem::offset_of!(R4XStartR4Draw, r#font_measure) == 168); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gui_set_font) == 176); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gui_font) == 184); assert!(core::mem::offset_of!(R4XStartR4Draw, r#text_font) == 192); assert!(core::mem::offset_of!(R4XStartR4Draw, r#font_reload) == 200); assert!(core::mem::offset_of!(R4XStartR4Draw, r#font_glyph_row) == 208); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gui_blend_alpha8) == 216); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gui_frame_begin) == 224); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gui_frame_append) == 232); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gui_frame_commit) == 240); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gui_frame_cancel) == 248); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gui_frame_info) == 256); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gui_frame_read) == 264); assert!(core::mem::offset_of!(R4XStartR4Draw, r#display_blit_xrgb32_stride) == 272); assert!(core::mem::offset_of!(R4XStartR4Draw, r#display_present_regions) == 280); assert!(core::mem::offset_of!(R4XStartR4Draw, r#display_present_capabilities) == 288); assert!(core::mem::offset_of!(R4XStartR4Draw, r#display_present_completion) == 296); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gui_frame_begin_damage) == 304); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gui_frame_generation_info) == 312); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gui_frame_generation_read) == 320); assert!(core::mem::offset_of!(R4XStartR4Draw, r#font_glyph_bitmap) == 328); assert!(core::mem::offset_of!(R4XStartR4Draw, r#font_revision) == 336); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gui_frame_begin_replace) == 344); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gui_frame_stream_info) == 352); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gui_shared_raster_create) == 360); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gui_shared_raster_destroy) == 368); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gui_shared_raster_map_write) == 376); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gui_shared_raster_publish) == 384); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gui_shared_raster_acquire) == 392); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gui_shared_raster_release) == 400); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_buffer_create) == 408); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_buffer_describe) == 416); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_buffer_import) == 424); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_buffer_release) == 432); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_buffer_map) == 440); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_buffer_unmap) == 448); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_buffer_export_raster) == 456); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_buffer_stats) == 464); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_queue_open) == 472); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_queue_close) == 480); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_queue_submit) == 488); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_fence_query) == 496); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_fence_wait) == 504); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_fence_cancel) == 512); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_fence_release) == 520); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_queue_backend) == 528); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_output_revision) == 536); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_output_info) == 544); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_output_mode) == 552); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_output_edid) == 560); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_atomic_test) == 568); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_atomic_commit) == 576); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_atomic_submit) == 584); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_atomic_status) == 592); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_atomic_resolve) == 600); assert!(core::mem::offset_of!(R4XStartR4Draw, r#display_presentation_stats) == 608); assert!(core::mem::offset_of!(R4XStartR4Draw, r#display_cursor_info) == 616); assert!(core::mem::offset_of!(R4XStartR4Draw, r#display_cursor_submit) == 624); assert!(core::mem::offset_of!(R4XStartR4Draw, r#display_cursor_status) == 632); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_queue_backend_info) == 640); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_native_start) == 648); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_native_query) == 656); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_native_receive) == 664); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_native_close) == 672); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_native_wait) == 680); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_queue_submit_render_list) == 688); assert!(core::mem::offset_of!(R4XStartR4Draw, r#display_presentation_info) == 696); assert!(core::mem::offset_of!(R4XStartR4Draw, r#display_presentation_feedback) == 704); assert!(core::mem::offset_of!(R4XStartR4Draw, r#display_output_target) == 712); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_queue_submit_output) == 720); assert!(core::mem::offset_of!(R4XStartR4Draw, r#display_output_presentation_info) == 728); assert!(core::mem::offset_of!(R4XStartR4Draw, r#display_output_presentation_feedback) == 736); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_queue_submit_render_grid_list) == 744); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_output_color) == 752); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_queue_submit_render_color_list) == 760); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_atomic_test_color) == 768); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_atomic_submit_color) == 776); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_output_refresh) == 784); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_refresh_request) == 792); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_memory_budget) == 800); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_telemetry) == 808); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_output_power) == 816); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_power_request) == 824); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_virtual_start) == 832); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_virtual_query) == 840); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_virtual_close) == 848); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_virtual_wait) == 856); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_buffer_map_persistent) == 864); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_queue_backend_properties) == 872); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_queue_submit_native) == 880); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_queue_submit_render_color_grid_list) == 888); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_output_brightness) == 896); assert!(core::mem::offset_of!(R4XStartR4Draw, r#gfx_brightness_request) == 904); };
 pub type R4XStartR4Net = crate::abi::R4XStartR4Net;
@@ -3847,16 +3849,16 @@ pub struct R4SdkGuiType410 {
 const _: () = { assert!(core::mem::size_of::<R4SdkGuiType410>() == 8); assert!(core::mem::align_of::<R4SdkGuiType410>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType410, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkGuiType411 {
-    pub r#opaque_bytes: [u8; 8],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType411>() == 8); assert!(core::mem::align_of::<R4SdkGuiType411>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType411, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
 pub struct R4SdkGuiType412 {
     pub r#opaque_bytes: [u8; 8],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkGuiType412>() == 8); assert!(core::mem::align_of::<R4SdkGuiType412>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType412, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkGuiType413 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType413>() == 8); assert!(core::mem::align_of::<R4SdkGuiType413>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType413, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType414 {
@@ -3871,10 +3873,10 @@ pub struct R4SdkGuiType416 {
 const _: () = { assert!(core::mem::size_of::<R4SdkGuiType416>() == 8); assert!(core::mem::align_of::<R4SdkGuiType416>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType416, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkGuiType419 {
+pub struct R4SdkGuiType418 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType419>() == 8); assert!(core::mem::align_of::<R4SdkGuiType419>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType419, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType418>() == 8); assert!(core::mem::align_of::<R4SdkGuiType418>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType418, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType421 {
@@ -3883,10 +3885,10 @@ pub struct R4SdkGuiType421 {
 const _: () = { assert!(core::mem::size_of::<R4SdkGuiType421>() == 8); assert!(core::mem::align_of::<R4SdkGuiType421>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType421, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkGuiType422 {
+pub struct R4SdkGuiType423 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType422>() == 8); assert!(core::mem::align_of::<R4SdkGuiType422>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType422, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType423>() == 8); assert!(core::mem::align_of::<R4SdkGuiType423>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType423, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType424 {
@@ -3895,10 +3897,10 @@ pub struct R4SdkGuiType424 {
 const _: () = { assert!(core::mem::size_of::<R4SdkGuiType424>() == 8); assert!(core::mem::align_of::<R4SdkGuiType424>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType424, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkGuiType425 {
+pub struct R4SdkGuiType426 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType425>() == 8); assert!(core::mem::align_of::<R4SdkGuiType425>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType425, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType426>() == 8); assert!(core::mem::align_of::<R4SdkGuiType426>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType426, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType427 {
@@ -3907,34 +3909,28 @@ pub struct R4SdkGuiType427 {
 const _: () = { assert!(core::mem::size_of::<R4SdkGuiType427>() == 8); assert!(core::mem::align_of::<R4SdkGuiType427>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType427, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkGuiType428 {
+pub struct R4SdkGuiType429 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType428>() == 8); assert!(core::mem::align_of::<R4SdkGuiType428>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType428, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType429>() == 8); assert!(core::mem::align_of::<R4SdkGuiType429>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType429, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType430 {
-    pub r#opaque_bytes: [u8; 48],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType430>() == 48); assert!(core::mem::align_of::<R4SdkGuiType430>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType430, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkGuiType431 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType431>() == 8); assert!(core::mem::align_of::<R4SdkGuiType431>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType431, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType430>() == 8); assert!(core::mem::align_of::<R4SdkGuiType430>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType430, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkGuiType432 {
+    pub r#opaque_bytes: [u8; 48],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType432>() == 48); assert!(core::mem::align_of::<R4SdkGuiType432>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType432, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType433 {
     pub r#opaque_bytes: [u8; 8],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkGuiType433>() == 8); assert!(core::mem::align_of::<R4SdkGuiType433>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType433, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkGuiType434 {
-    pub r#opaque_bytes: [u8; 56],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType434>() == 56); assert!(core::mem::align_of::<R4SdkGuiType434>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType434, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType435 {
@@ -3944,51 +3940,51 @@ const _: () = { assert!(core::mem::size_of::<R4SdkGuiType435>() == 8); assert!(c
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType436 {
-    pub r#opaque_bytes: [u8; 104],
+    pub r#opaque_bytes: [u8; 56],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType436>() == 104); assert!(core::mem::align_of::<R4SdkGuiType436>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType436, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType436>() == 56); assert!(core::mem::align_of::<R4SdkGuiType436>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType436, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType437 {
     pub r#opaque_bytes: [u8; 8],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkGuiType437>() == 8); assert!(core::mem::align_of::<R4SdkGuiType437>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType437, r#opaque_bytes) == 0); };
-#[repr(C, align(4))]
+#[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType438 {
-    pub r#opaque_bytes: [u8; 44],
+    pub r#opaque_bytes: [u8; 104],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType438>() == 44); assert!(core::mem::align_of::<R4SdkGuiType438>() == 4); assert!(core::mem::offset_of!(R4SdkGuiType438, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType438>() == 104); assert!(core::mem::align_of::<R4SdkGuiType438>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType438, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType439 {
-    pub r#opaque_bytes: [u8; 200],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType439>() == 200); assert!(core::mem::align_of::<R4SdkGuiType439>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType439, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkGuiType440 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType440>() == 8); assert!(core::mem::align_of::<R4SdkGuiType440>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType440, r#opaque_bytes) == 0); };
-#[repr(C, align(2))]
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType439>() == 8); assert!(core::mem::align_of::<R4SdkGuiType439>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType439, r#opaque_bytes) == 0); };
+#[repr(C, align(4))]
+#[derive(Clone, Copy)]
+pub struct R4SdkGuiType440 {
+    pub r#opaque_bytes: [u8; 44],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType440>() == 44); assert!(core::mem::align_of::<R4SdkGuiType440>() == 4); assert!(core::mem::offset_of!(R4SdkGuiType440, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType441 {
-    pub r#opaque_bytes: [u8; 2],
+    pub r#opaque_bytes: [u8; 200],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType441>() == 2); assert!(core::mem::align_of::<R4SdkGuiType441>() == 2); assert!(core::mem::offset_of!(R4SdkGuiType441, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType441>() == 200); assert!(core::mem::align_of::<R4SdkGuiType441>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType441, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType442 {
     pub r#opaque_bytes: [u8; 8],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkGuiType442>() == 8); assert!(core::mem::align_of::<R4SdkGuiType442>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType442, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
+#[repr(C, align(2))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType443 {
-    pub r#opaque_bytes: [u8; 16],
+    pub r#opaque_bytes: [u8; 2],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType443>() == 16); assert!(core::mem::align_of::<R4SdkGuiType443>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType443, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType443>() == 2); assert!(core::mem::align_of::<R4SdkGuiType443>() == 2); assert!(core::mem::offset_of!(R4SdkGuiType443, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType444 {
@@ -3998,9 +3994,9 @@ const _: () = { assert!(core::mem::size_of::<R4SdkGuiType444>() == 8); assert!(c
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType445 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 16],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType445>() == 8); assert!(core::mem::align_of::<R4SdkGuiType445>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType445, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType445>() == 16); assert!(core::mem::align_of::<R4SdkGuiType445>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType445, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType446 {
@@ -4021,6 +4017,12 @@ pub struct R4SdkGuiType448 {
 const _: () = { assert!(core::mem::size_of::<R4SdkGuiType448>() == 8); assert!(core::mem::align_of::<R4SdkGuiType448>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType448, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
+pub struct R4SdkGuiType449 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType449>() == 8); assert!(core::mem::align_of::<R4SdkGuiType449>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType449, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
 pub struct R4SdkGuiType450 {
     pub r#opaque_bytes: [u8; 8],
 }
@@ -4039,10 +4041,10 @@ pub struct R4SdkGuiType454 {
 const _: () = { assert!(core::mem::size_of::<R4SdkGuiType454>() == 8); assert!(core::mem::align_of::<R4SdkGuiType454>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType454, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkGuiType455 {
+pub struct R4SdkGuiType456 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType455>() == 8); assert!(core::mem::align_of::<R4SdkGuiType455>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType455, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType456>() == 8); assert!(core::mem::align_of::<R4SdkGuiType456>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType456, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType457 {
@@ -4051,10 +4053,10 @@ pub struct R4SdkGuiType457 {
 const _: () = { assert!(core::mem::size_of::<R4SdkGuiType457>() == 8); assert!(core::mem::align_of::<R4SdkGuiType457>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType457, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkGuiType458 {
+pub struct R4SdkGuiType459 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType458>() == 8); assert!(core::mem::align_of::<R4SdkGuiType458>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType458, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType459>() == 8); assert!(core::mem::align_of::<R4SdkGuiType459>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType459, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType460 {
@@ -4087,34 +4089,28 @@ pub struct R4SdkGuiType468 {
 const _: () = { assert!(core::mem::size_of::<R4SdkGuiType468>() == 8); assert!(core::mem::align_of::<R4SdkGuiType468>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType468, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkGuiType469 {
-    pub r#opaque_bytes: [u8; 368],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType469>() == 368); assert!(core::mem::align_of::<R4SdkGuiType469>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType469, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
 pub struct R4SdkGuiType470 {
     pub r#opaque_bytes: [u8; 8],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkGuiType470>() == 8); assert!(core::mem::align_of::<R4SdkGuiType470>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType470, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkGuiType472 {
-    pub r#opaque_bytes: [u8; 32],
+pub struct R4SdkGuiType471 {
+    pub r#opaque_bytes: [u8; 368],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType472>() == 32); assert!(core::mem::align_of::<R4SdkGuiType472>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType472, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType471>() == 368); assert!(core::mem::align_of::<R4SdkGuiType471>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType471, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkGuiType473 {
+pub struct R4SdkGuiType472 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType473>() == 8); assert!(core::mem::align_of::<R4SdkGuiType473>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType473, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType472>() == 8); assert!(core::mem::align_of::<R4SdkGuiType472>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType472, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType474 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 32],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType474>() == 8); assert!(core::mem::align_of::<R4SdkGuiType474>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType474, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType474>() == 32); assert!(core::mem::align_of::<R4SdkGuiType474>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType474, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType475 {
@@ -4142,33 +4138,39 @@ const _: () = { assert!(core::mem::size_of::<R4SdkGuiType478>() == 8); assert!(c
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType479 {
-    pub r#opaque_bytes: [u8; 48],
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType479>() == 48); assert!(core::mem::align_of::<R4SdkGuiType479>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType479, r#opaque_bytes) == 0); };
-#[repr(C, align(1))]
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType479>() == 8); assert!(core::mem::align_of::<R4SdkGuiType479>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType479, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType480 {
-    pub r#opaque_bytes: [u8; 1],
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType480>() == 1); assert!(core::mem::align_of::<R4SdkGuiType480>() == 1); assert!(core::mem::offset_of!(R4SdkGuiType480, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType480>() == 8); assert!(core::mem::align_of::<R4SdkGuiType480>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType480, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType481 {
-    pub r#opaque_bytes: [u8; 40],
+    pub r#opaque_bytes: [u8; 48],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType481>() == 40); assert!(core::mem::align_of::<R4SdkGuiType481>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType481, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType481>() == 48); assert!(core::mem::align_of::<R4SdkGuiType481>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType481, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkGuiType482 {
+    pub r#opaque_bytes: [u8; 1],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType482>() == 1); assert!(core::mem::align_of::<R4SdkGuiType482>() == 1); assert!(core::mem::offset_of!(R4SdkGuiType482, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType483 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 40],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType483>() == 8); assert!(core::mem::align_of::<R4SdkGuiType483>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType483, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType483>() == 40); assert!(core::mem::align_of::<R4SdkGuiType483>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType483, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkGuiType484 {
+pub struct R4SdkGuiType485 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType484>() == 8); assert!(core::mem::align_of::<R4SdkGuiType484>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType484, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType485>() == 8); assert!(core::mem::align_of::<R4SdkGuiType485>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType485, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType486 {
@@ -4202,33 +4204,33 @@ const _: () = { assert!(core::mem::size_of::<R4SdkGuiType494>() == 8); assert!(c
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType496 {
-    pub r#opaque_bytes: [u8; 16],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType496>() == 16); assert!(core::mem::align_of::<R4SdkGuiType496>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType496, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkGuiType497 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType497>() == 8); assert!(core::mem::align_of::<R4SdkGuiType497>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType497, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType496>() == 8); assert!(core::mem::align_of::<R4SdkGuiType496>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType496, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkGuiType498 {
+    pub r#opaque_bytes: [u8; 16],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType498>() == 16); assert!(core::mem::align_of::<R4SdkGuiType498>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType498, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType499 {
     pub r#opaque_bytes: [u8; 8],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkGuiType499>() == 8); assert!(core::mem::align_of::<R4SdkGuiType499>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType499, r#opaque_bytes) == 0); };
-#[repr(C, align(1))]
-#[derive(Clone, Copy)]
-pub struct R4SdkGuiType500 {
-    pub r#opaque_bytes: [u8; 64],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType500>() == 64); assert!(core::mem::align_of::<R4SdkGuiType500>() == 1); assert!(core::mem::offset_of!(R4SdkGuiType500, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType501 {
     pub r#opaque_bytes: [u8; 8],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkGuiType501>() == 8); assert!(core::mem::align_of::<R4SdkGuiType501>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType501, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkGuiType502 {
+    pub r#opaque_bytes: [u8; 64],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType502>() == 64); assert!(core::mem::align_of::<R4SdkGuiType502>() == 1); assert!(core::mem::offset_of!(R4SdkGuiType502, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType503 {
@@ -4255,34 +4257,34 @@ pub struct R4SdkGuiType509 {
 const _: () = { assert!(core::mem::size_of::<R4SdkGuiType509>() == 8); assert!(core::mem::align_of::<R4SdkGuiType509>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType509, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkGuiType510 {
+pub struct R4SdkGuiType511 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType510>() == 8); assert!(core::mem::align_of::<R4SdkGuiType510>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType510, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkGuiType511 {
-    pub r#opaque_bytes: [u8; 184],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType511>() == 184); assert!(core::mem::align_of::<R4SdkGuiType511>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType511, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType511>() == 8); assert!(core::mem::align_of::<R4SdkGuiType511>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType511, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType512 {
-    pub r#opaque_bytes: [u8; 16],
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType512>() == 16); assert!(core::mem::align_of::<R4SdkGuiType512>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType512, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType512>() == 8); assert!(core::mem::align_of::<R4SdkGuiType512>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType512, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType513 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 184],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType513>() == 8); assert!(core::mem::align_of::<R4SdkGuiType513>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType513, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType513>() == 184); assert!(core::mem::align_of::<R4SdkGuiType513>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType513, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType514 {
+    pub r#opaque_bytes: [u8; 16],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType514>() == 16); assert!(core::mem::align_of::<R4SdkGuiType514>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType514, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkGuiType515 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType514>() == 8); assert!(core::mem::align_of::<R4SdkGuiType514>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType514, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType515>() == 8); assert!(core::mem::align_of::<R4SdkGuiType515>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType515, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType516 {
@@ -4291,10 +4293,10 @@ pub struct R4SdkGuiType516 {
 const _: () = { assert!(core::mem::size_of::<R4SdkGuiType516>() == 8); assert!(core::mem::align_of::<R4SdkGuiType516>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType516, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkGuiType517 {
+pub struct R4SdkGuiType518 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType517>() == 8); assert!(core::mem::align_of::<R4SdkGuiType517>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType517, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType518>() == 8); assert!(core::mem::align_of::<R4SdkGuiType518>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType518, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType519 {
@@ -4303,34 +4305,34 @@ pub struct R4SdkGuiType519 {
 const _: () = { assert!(core::mem::size_of::<R4SdkGuiType519>() == 8); assert!(core::mem::align_of::<R4SdkGuiType519>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType519, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkGuiType520 {
-    pub r#opaque_bytes: [u8; 368],
+pub struct R4SdkGuiType521 {
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType520>() == 368); assert!(core::mem::align_of::<R4SdkGuiType520>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType520, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType521>() == 8); assert!(core::mem::align_of::<R4SdkGuiType521>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType521, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType522 {
-    pub r#opaque_bytes: [u8; 104],
+    pub r#opaque_bytes: [u8; 368],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType522>() == 104); assert!(core::mem::align_of::<R4SdkGuiType522>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType522, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType522>() == 368); assert!(core::mem::align_of::<R4SdkGuiType522>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType522, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType524 {
-    pub r#opaque_bytes: [u8; 208],
+    pub r#opaque_bytes: [u8; 104],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType524>() == 208); assert!(core::mem::align_of::<R4SdkGuiType524>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType524, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType524>() == 104); assert!(core::mem::align_of::<R4SdkGuiType524>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType524, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType526 {
-    pub r#opaque_bytes: [u8; 184],
+    pub r#opaque_bytes: [u8; 208],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType526>() == 184); assert!(core::mem::align_of::<R4SdkGuiType526>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType526, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType526>() == 208); assert!(core::mem::align_of::<R4SdkGuiType526>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType526, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType528 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 184],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType528>() == 8); assert!(core::mem::align_of::<R4SdkGuiType528>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType528, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType528>() == 184); assert!(core::mem::align_of::<R4SdkGuiType528>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType528, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType530 {
@@ -4447,16 +4449,16 @@ pub struct R4SdkGuiType566 {
 const _: () = { assert!(core::mem::size_of::<R4SdkGuiType566>() == 8); assert!(core::mem::align_of::<R4SdkGuiType566>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType566, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkGuiType567 {
-    pub r#opaque_bytes: [u8; 8],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType567>() == 8); assert!(core::mem::align_of::<R4SdkGuiType567>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType567, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
 pub struct R4SdkGuiType568 {
     pub r#opaque_bytes: [u8; 8],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkGuiType568>() == 8); assert!(core::mem::align_of::<R4SdkGuiType568>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType568, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkGuiType569 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType569>() == 8); assert!(core::mem::align_of::<R4SdkGuiType569>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType569, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType570 {
@@ -4526,45 +4528,45 @@ const _: () = { assert!(core::mem::size_of::<R4SdkGuiType590>() == 8); assert!(c
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType592 {
-    pub r#opaque_bytes: [u8; 128],
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType592>() == 128); assert!(core::mem::align_of::<R4SdkGuiType592>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType592, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType592>() == 8); assert!(core::mem::align_of::<R4SdkGuiType592>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType592, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType594 {
-    pub r#opaque_bytes: [u8; 240],
+    pub r#opaque_bytes: [u8; 128],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType594>() == 240); assert!(core::mem::align_of::<R4SdkGuiType594>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType594, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType594>() == 128); assert!(core::mem::align_of::<R4SdkGuiType594>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType594, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType596 {
-    pub r#opaque_bytes: [u8; 256],
+    pub r#opaque_bytes: [u8; 240],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType596>() == 256); assert!(core::mem::align_of::<R4SdkGuiType596>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType596, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType596>() == 240); assert!(core::mem::align_of::<R4SdkGuiType596>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType596, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType598 {
-    pub r#opaque_bytes: [u8; 312],
+    pub r#opaque_bytes: [u8; 256],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType598>() == 312); assert!(core::mem::align_of::<R4SdkGuiType598>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType598, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType598>() == 256); assert!(core::mem::align_of::<R4SdkGuiType598>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType598, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType600 {
-    pub r#opaque_bytes: [u8; 296],
+    pub r#opaque_bytes: [u8; 312],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType600>() == 296); assert!(core::mem::align_of::<R4SdkGuiType600>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType600, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType600>() == 312); assert!(core::mem::align_of::<R4SdkGuiType600>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType600, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType602 {
-    pub r#opaque_bytes: [u8; 6360],
+    pub r#opaque_bytes: [u8; 296],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType602>() == 6360); assert!(core::mem::align_of::<R4SdkGuiType602>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType602, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType602>() == 296); assert!(core::mem::align_of::<R4SdkGuiType602>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType602, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType604 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 6360],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType604>() == 8); assert!(core::mem::align_of::<R4SdkGuiType604>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType604, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType604>() == 6360); assert!(core::mem::align_of::<R4SdkGuiType604>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType604, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType606 {
@@ -4589,138 +4591,138 @@ pub struct R4SdkGuiType612 {
     pub r#opaque_bytes: [u8; 8],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkGuiType612>() == 8); assert!(core::mem::align_of::<R4SdkGuiType612>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType612, r#opaque_bytes) == 0); };
-#[repr(C, align(4))]
-#[derive(Clone, Copy)]
-pub struct R4SdkGuiType614 {
-    pub r#opaque_bytes: [u8; 28],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType614>() == 28); assert!(core::mem::align_of::<R4SdkGuiType614>() == 4); assert!(core::mem::offset_of!(R4SdkGuiType614, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkGuiType615 {
-    pub r#opaque_bytes: [u8; 312],
+pub struct R4SdkGuiType614 {
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType615>() == 312); assert!(core::mem::align_of::<R4SdkGuiType615>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType615, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType614>() == 8); assert!(core::mem::align_of::<R4SdkGuiType614>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType614, r#opaque_bytes) == 0); };
+#[repr(C, align(4))]
+#[derive(Clone, Copy)]
+pub struct R4SdkGuiType616 {
+    pub r#opaque_bytes: [u8; 28],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType616>() == 28); assert!(core::mem::align_of::<R4SdkGuiType616>() == 4); assert!(core::mem::offset_of!(R4SdkGuiType616, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType617 {
-    pub r#opaque_bytes: [u8; 448],
+    pub r#opaque_bytes: [u8; 312],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType617>() == 448); assert!(core::mem::align_of::<R4SdkGuiType617>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType617, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType617>() == 312); assert!(core::mem::align_of::<R4SdkGuiType617>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType617, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType619 {
-    pub r#opaque_bytes: [u8; 80],
+    pub r#opaque_bytes: [u8; 448],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType619>() == 80); assert!(core::mem::align_of::<R4SdkGuiType619>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType619, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType619>() == 448); assert!(core::mem::align_of::<R4SdkGuiType619>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType619, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType621 {
-    pub r#opaque_bytes: [u8; 104],
+    pub r#opaque_bytes: [u8; 80],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType621>() == 104); assert!(core::mem::align_of::<R4SdkGuiType621>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType621, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType621>() == 80); assert!(core::mem::align_of::<R4SdkGuiType621>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType621, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType623 {
-    pub r#opaque_bytes: [u8; 152],
+    pub r#opaque_bytes: [u8; 104],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType623>() == 152); assert!(core::mem::align_of::<R4SdkGuiType623>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType623, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType623>() == 104); assert!(core::mem::align_of::<R4SdkGuiType623>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType623, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType625 {
-    pub r#opaque_bytes: [u8; 936],
+    pub r#opaque_bytes: [u8; 152],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType625>() == 936); assert!(core::mem::align_of::<R4SdkGuiType625>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType625, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType625>() == 152); assert!(core::mem::align_of::<R4SdkGuiType625>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType625, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType627 {
-    pub r#opaque_bytes: [u8; 288],
+    pub r#opaque_bytes: [u8; 936],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType627>() == 288); assert!(core::mem::align_of::<R4SdkGuiType627>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType627, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType627>() == 936); assert!(core::mem::align_of::<R4SdkGuiType627>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType627, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType629 {
-    pub r#opaque_bytes: [u8; 416],
+    pub r#opaque_bytes: [u8; 288],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType629>() == 416); assert!(core::mem::align_of::<R4SdkGuiType629>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType629, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType629>() == 288); assert!(core::mem::align_of::<R4SdkGuiType629>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType629, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType631 {
-    pub r#opaque_bytes: [u8; 56],
+    pub r#opaque_bytes: [u8; 416],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType631>() == 56); assert!(core::mem::align_of::<R4SdkGuiType631>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType631, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType631>() == 416); assert!(core::mem::align_of::<R4SdkGuiType631>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType631, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType633 {
-    pub r#opaque_bytes: [u8; 128],
+    pub r#opaque_bytes: [u8; 56],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType633>() == 128); assert!(core::mem::align_of::<R4SdkGuiType633>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType633, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType633>() == 56); assert!(core::mem::align_of::<R4SdkGuiType633>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType633, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType635 {
-    pub r#opaque_bytes: [u8; 152],
+    pub r#opaque_bytes: [u8; 128],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType635>() == 152); assert!(core::mem::align_of::<R4SdkGuiType635>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType635, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType635>() == 128); assert!(core::mem::align_of::<R4SdkGuiType635>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType635, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType637 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 152],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType637>() == 8); assert!(core::mem::align_of::<R4SdkGuiType637>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType637, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType637>() == 152); assert!(core::mem::align_of::<R4SdkGuiType637>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType637, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType639 {
-    pub r#opaque_bytes: [u8; 120],
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType639>() == 120); assert!(core::mem::align_of::<R4SdkGuiType639>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType639, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType639>() == 8); assert!(core::mem::align_of::<R4SdkGuiType639>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType639, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType641 {
-    pub r#opaque_bytes: [u8; 152],
+    pub r#opaque_bytes: [u8; 120],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType641>() == 152); assert!(core::mem::align_of::<R4SdkGuiType641>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType641, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType641>() == 120); assert!(core::mem::align_of::<R4SdkGuiType641>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType641, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType643 {
-    pub r#opaque_bytes: [u8; 160],
+    pub r#opaque_bytes: [u8; 152],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType643>() == 160); assert!(core::mem::align_of::<R4SdkGuiType643>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType643, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType643>() == 152); assert!(core::mem::align_of::<R4SdkGuiType643>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType643, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType645 {
-    pub r#opaque_bytes: [u8; 208],
+    pub r#opaque_bytes: [u8; 160],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType645>() == 208); assert!(core::mem::align_of::<R4SdkGuiType645>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType645, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType645>() == 160); assert!(core::mem::align_of::<R4SdkGuiType645>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType645, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType647 {
-    pub r#opaque_bytes: [u8; 104],
+    pub r#opaque_bytes: [u8; 208],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType647>() == 104); assert!(core::mem::align_of::<R4SdkGuiType647>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType647, r#opaque_bytes) == 0); };
-#[repr(C, align(4))]
-#[derive(Clone, Copy)]
-pub struct R4SdkGuiType649 {
-    pub r#opaque_bytes: [u8; 36],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType649>() == 36); assert!(core::mem::align_of::<R4SdkGuiType649>() == 4); assert!(core::mem::offset_of!(R4SdkGuiType649, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType647>() == 208); assert!(core::mem::align_of::<R4SdkGuiType647>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType647, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkGuiType651 {
-    pub r#opaque_bytes: [u8; 136],
+pub struct R4SdkGuiType649 {
+    pub r#opaque_bytes: [u8; 104],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType651>() == 136); assert!(core::mem::align_of::<R4SdkGuiType651>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType651, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType649>() == 104); assert!(core::mem::align_of::<R4SdkGuiType649>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType649, r#opaque_bytes) == 0); };
+#[repr(C, align(4))]
+#[derive(Clone, Copy)]
+pub struct R4SdkGuiType651 {
+    pub r#opaque_bytes: [u8; 36],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType651>() == 36); assert!(core::mem::align_of::<R4SdkGuiType651>() == 4); assert!(core::mem::offset_of!(R4SdkGuiType651, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType653 {
-    pub r#opaque_bytes: [u8; 32],
+    pub r#opaque_bytes: [u8; 136],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType653>() == 32); assert!(core::mem::align_of::<R4SdkGuiType653>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType653, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType653>() == 136); assert!(core::mem::align_of::<R4SdkGuiType653>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType653, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType655 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 32],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType655>() == 8); assert!(core::mem::align_of::<R4SdkGuiType655>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType655, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType655>() == 32); assert!(core::mem::align_of::<R4SdkGuiType655>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType655, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType657 {
@@ -4735,10 +4737,10 @@ pub struct R4SdkGuiType659 {
 const _: () = { assert!(core::mem::size_of::<R4SdkGuiType659>() == 8); assert!(core::mem::align_of::<R4SdkGuiType659>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType659, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkGuiType660 {
+pub struct R4SdkGuiType661 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType660>() == 8); assert!(core::mem::align_of::<R4SdkGuiType660>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType660, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType661>() == 8); assert!(core::mem::align_of::<R4SdkGuiType661>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType661, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType662 {
@@ -4787,60 +4789,54 @@ pub struct R4SdkGuiType676 {
     pub r#opaque_bytes: [u8; 8],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkGuiType676>() == 8); assert!(core::mem::align_of::<R4SdkGuiType676>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType676, r#opaque_bytes) == 0); };
-#[repr(C, align(4))]
-#[derive(Clone, Copy)]
-pub struct R4SdkGuiType677 {
-    pub r#opaque_bytes: [u8; 24],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType677>() == 24); assert!(core::mem::align_of::<R4SdkGuiType677>() == 4); assert!(core::mem::offset_of!(R4SdkGuiType677, r#opaque_bytes) == 0); };
-#[repr(C, align(2))]
+#[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType678 {
-    pub r#opaque_bytes: [u8; 226],
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType678>() == 226); assert!(core::mem::align_of::<R4SdkGuiType678>() == 2); assert!(core::mem::offset_of!(R4SdkGuiType678, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType678>() == 8); assert!(core::mem::align_of::<R4SdkGuiType678>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType678, r#opaque_bytes) == 0); };
+#[repr(C, align(4))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType679 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType679>() == 8); assert!(core::mem::align_of::<R4SdkGuiType679>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType679, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType679>() == 24); assert!(core::mem::align_of::<R4SdkGuiType679>() == 4); assert!(core::mem::offset_of!(R4SdkGuiType679, r#opaque_bytes) == 0); };
+#[repr(C, align(2))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType680 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 226],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType680>() == 8); assert!(core::mem::align_of::<R4SdkGuiType680>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType680, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType680>() == 226); assert!(core::mem::align_of::<R4SdkGuiType680>() == 2); assert!(core::mem::offset_of!(R4SdkGuiType680, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType681 {
-    pub r#opaque_bytes: [u8; 344],
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType681>() == 344); assert!(core::mem::align_of::<R4SdkGuiType681>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType681, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType681>() == 8); assert!(core::mem::align_of::<R4SdkGuiType681>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType681, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType682 {
-    pub r#opaque_bytes: [u8; 232],
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType682>() == 232); assert!(core::mem::align_of::<R4SdkGuiType682>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType682, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType682>() == 8); assert!(core::mem::align_of::<R4SdkGuiType682>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType682, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType683 {
-    pub r#opaque_bytes: [u8; 168],
+    pub r#opaque_bytes: [u8; 344],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType683>() == 168); assert!(core::mem::align_of::<R4SdkGuiType683>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType683, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType683>() == 344); assert!(core::mem::align_of::<R4SdkGuiType683>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType683, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType684 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 232],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType684>() == 8); assert!(core::mem::align_of::<R4SdkGuiType684>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType684, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType684>() == 232); assert!(core::mem::align_of::<R4SdkGuiType684>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType684, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType685 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 168],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType685>() == 8); assert!(core::mem::align_of::<R4SdkGuiType685>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType685, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType685>() == 168); assert!(core::mem::align_of::<R4SdkGuiType685>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType685, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType686 {
@@ -4855,28 +4851,40 @@ pub struct R4SdkGuiType687 {
 const _: () = { assert!(core::mem::size_of::<R4SdkGuiType687>() == 8); assert!(core::mem::align_of::<R4SdkGuiType687>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType687, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkGuiType689 {
-    pub r#opaque_bytes: [u8; 136],
+pub struct R4SdkGuiType688 {
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType689>() == 136); assert!(core::mem::align_of::<R4SdkGuiType689>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType689, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType688>() == 8); assert!(core::mem::align_of::<R4SdkGuiType688>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType688, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkGuiType689 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType689>() == 8); assert!(core::mem::align_of::<R4SdkGuiType689>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType689, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType691 {
-    pub r#opaque_bytes: [u8; 16],
+    pub r#opaque_bytes: [u8; 136],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType691>() == 16); assert!(core::mem::align_of::<R4SdkGuiType691>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType691, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType691>() == 136); assert!(core::mem::align_of::<R4SdkGuiType691>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType691, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkGuiType692 {
-    pub r#opaque_bytes: [u8; 40],
+pub struct R4SdkGuiType693 {
+    pub r#opaque_bytes: [u8; 16],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType692>() == 40); assert!(core::mem::align_of::<R4SdkGuiType692>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType692, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType693>() == 16); assert!(core::mem::align_of::<R4SdkGuiType693>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType693, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType694 {
+    pub r#opaque_bytes: [u8; 40],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType694>() == 40); assert!(core::mem::align_of::<R4SdkGuiType694>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType694, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkGuiType696 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType694>() == 8); assert!(core::mem::align_of::<R4SdkGuiType694>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType694, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType696>() == 8); assert!(core::mem::align_of::<R4SdkGuiType696>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType696, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiEvent {
@@ -15818,21 +15826,20 @@ pub const R4SdkGuiType406_TYPE: u32 = 406;
 pub const R4SdkGuiType407_TYPE: u32 = 407;
 pub const R4SdkGuiType409_TYPE: u32 = 409;
 pub const R4SdkGuiType410_TYPE: u32 = 410;
-pub const R4SdkGuiType411_TYPE: u32 = 411;
 pub const R4SdkGuiType412_TYPE: u32 = 412;
+pub const R4SdkGuiType413_TYPE: u32 = 413;
 pub const R4SdkGuiType414_TYPE: u32 = 414;
 pub const R4SdkGuiType416_TYPE: u32 = 416;
-pub const R4SdkGuiType419_TYPE: u32 = 419;
+pub const R4SdkGuiType418_TYPE: u32 = 418;
 pub const R4SdkGuiType421_TYPE: u32 = 421;
-pub const R4SdkGuiType422_TYPE: u32 = 422;
+pub const R4SdkGuiType423_TYPE: u32 = 423;
 pub const R4SdkGuiType424_TYPE: u32 = 424;
-pub const R4SdkGuiType425_TYPE: u32 = 425;
+pub const R4SdkGuiType426_TYPE: u32 = 426;
 pub const R4SdkGuiType427_TYPE: u32 = 427;
-pub const R4SdkGuiType428_TYPE: u32 = 428;
+pub const R4SdkGuiType429_TYPE: u32 = 429;
 pub const R4SdkGuiType430_TYPE: u32 = 430;
-pub const R4SdkGuiType431_TYPE: u32 = 431;
+pub const R4SdkGuiType432_TYPE: u32 = 432;
 pub const R4SdkGuiType433_TYPE: u32 = 433;
-pub const R4SdkGuiType434_TYPE: u32 = 434;
 pub const R4SdkGuiType435_TYPE: u32 = 435;
 pub const R4SdkGuiType436_TYPE: u32 = 436;
 pub const R4SdkGuiType437_TYPE: u32 = 437;
@@ -15847,21 +15854,21 @@ pub const R4SdkGuiType445_TYPE: u32 = 445;
 pub const R4SdkGuiType446_TYPE: u32 = 446;
 pub const R4SdkGuiType447_TYPE: u32 = 447;
 pub const R4SdkGuiType448_TYPE: u32 = 448;
+pub const R4SdkGuiType449_TYPE: u32 = 449;
 pub const R4SdkGuiType450_TYPE: u32 = 450;
 pub const R4SdkGuiType452_TYPE: u32 = 452;
 pub const R4SdkGuiType454_TYPE: u32 = 454;
-pub const R4SdkGuiType455_TYPE: u32 = 455;
+pub const R4SdkGuiType456_TYPE: u32 = 456;
 pub const R4SdkGuiType457_TYPE: u32 = 457;
-pub const R4SdkGuiType458_TYPE: u32 = 458;
+pub const R4SdkGuiType459_TYPE: u32 = 459;
 pub const R4SdkGuiType460_TYPE: u32 = 460;
 pub const R4SdkGuiType462_TYPE: u32 = 462;
 pub const R4SdkGuiType464_TYPE: u32 = 464;
 pub const R4SdkGuiType466_TYPE: u32 = 466;
 pub const R4SdkGuiType468_TYPE: u32 = 468;
-pub const R4SdkGuiType469_TYPE: u32 = 469;
 pub const R4SdkGuiType470_TYPE: u32 = 470;
+pub const R4SdkGuiType471_TYPE: u32 = 471;
 pub const R4SdkGuiType472_TYPE: u32 = 472;
-pub const R4SdkGuiType473_TYPE: u32 = 473;
 pub const R4SdkGuiType474_TYPE: u32 = 474;
 pub const R4SdkGuiType475_TYPE: u32 = 475;
 pub const R4SdkGuiType476_TYPE: u32 = 476;
@@ -15870,31 +15877,32 @@ pub const R4SdkGuiType478_TYPE: u32 = 478;
 pub const R4SdkGuiType479_TYPE: u32 = 479;
 pub const R4SdkGuiType480_TYPE: u32 = 480;
 pub const R4SdkGuiType481_TYPE: u32 = 481;
+pub const R4SdkGuiType482_TYPE: u32 = 482;
 pub const R4SdkGuiType483_TYPE: u32 = 483;
-pub const R4SdkGuiType484_TYPE: u32 = 484;
+pub const R4SdkGuiType485_TYPE: u32 = 485;
 pub const R4SdkGuiType486_TYPE: u32 = 486;
 pub const R4SdkGuiType488_TYPE: u32 = 488;
 pub const R4SdkGuiType490_TYPE: u32 = 490;
 pub const R4SdkGuiType492_TYPE: u32 = 492;
 pub const R4SdkGuiType494_TYPE: u32 = 494;
 pub const R4SdkGuiType496_TYPE: u32 = 496;
-pub const R4SdkGuiType497_TYPE: u32 = 497;
+pub const R4SdkGuiType498_TYPE: u32 = 498;
 pub const R4SdkGuiType499_TYPE: u32 = 499;
-pub const R4SdkGuiType500_TYPE: u32 = 500;
 pub const R4SdkGuiType501_TYPE: u32 = 501;
+pub const R4SdkGuiType502_TYPE: u32 = 502;
 pub const R4SdkGuiType503_TYPE: u32 = 503;
 pub const R4SdkGuiType505_TYPE: u32 = 505;
 pub const R4SdkGuiType507_TYPE: u32 = 507;
 pub const R4SdkGuiType509_TYPE: u32 = 509;
-pub const R4SdkGuiType510_TYPE: u32 = 510;
 pub const R4SdkGuiType511_TYPE: u32 = 511;
 pub const R4SdkGuiType512_TYPE: u32 = 512;
 pub const R4SdkGuiType513_TYPE: u32 = 513;
 pub const R4SdkGuiType514_TYPE: u32 = 514;
+pub const R4SdkGuiType515_TYPE: u32 = 515;
 pub const R4SdkGuiType516_TYPE: u32 = 516;
-pub const R4SdkGuiType517_TYPE: u32 = 517;
+pub const R4SdkGuiType518_TYPE: u32 = 518;
 pub const R4SdkGuiType519_TYPE: u32 = 519;
-pub const R4SdkGuiType520_TYPE: u32 = 520;
+pub const R4SdkGuiType521_TYPE: u32 = 521;
 pub const R4SdkGuiType522_TYPE: u32 = 522;
 pub const R4SdkGuiType524_TYPE: u32 = 524;
 pub const R4SdkGuiType526_TYPE: u32 = 526;
@@ -15918,8 +15926,8 @@ pub const R4SdkGuiType560_TYPE: u32 = 560;
 pub const R4SdkGuiType562_TYPE: u32 = 562;
 pub const R4SdkGuiType564_TYPE: u32 = 564;
 pub const R4SdkGuiType566_TYPE: u32 = 566;
-pub const R4SdkGuiType567_TYPE: u32 = 567;
 pub const R4SdkGuiType568_TYPE: u32 = 568;
+pub const R4SdkGuiType569_TYPE: u32 = 569;
 pub const R4SdkGuiType570_TYPE: u32 = 570;
 pub const R4SdkGuiType572_TYPE: u32 = 572;
 pub const R4SdkGuiType574_TYPE: u32 = 574;
@@ -15943,7 +15951,7 @@ pub const R4SdkGuiType608_TYPE: u32 = 608;
 pub const R4SdkGuiType610_TYPE: u32 = 610;
 pub const R4SdkGuiType612_TYPE: u32 = 612;
 pub const R4SdkGuiType614_TYPE: u32 = 614;
-pub const R4SdkGuiType615_TYPE: u32 = 615;
+pub const R4SdkGuiType616_TYPE: u32 = 616;
 pub const R4SdkGuiType617_TYPE: u32 = 617;
 pub const R4SdkGuiType619_TYPE: u32 = 619;
 pub const R4SdkGuiType621_TYPE: u32 = 621;
@@ -15966,7 +15974,7 @@ pub const R4SdkGuiType653_TYPE: u32 = 653;
 pub const R4SdkGuiType655_TYPE: u32 = 655;
 pub const R4SdkGuiType657_TYPE: u32 = 657;
 pub const R4SdkGuiType659_TYPE: u32 = 659;
-pub const R4SdkGuiType660_TYPE: u32 = 660;
+pub const R4SdkGuiType661_TYPE: u32 = 661;
 pub const R4SdkGuiType662_TYPE: u32 = 662;
 pub const R4SdkGuiType664_TYPE: u32 = 664;
 pub const R4SdkGuiType666_TYPE: u32 = 666;
@@ -15975,7 +15983,6 @@ pub const R4SdkGuiType670_TYPE: u32 = 670;
 pub const R4SdkGuiType672_TYPE: u32 = 672;
 pub const R4SdkGuiType674_TYPE: u32 = 674;
 pub const R4SdkGuiType676_TYPE: u32 = 676;
-pub const R4SdkGuiType677_TYPE: u32 = 677;
 pub const R4SdkGuiType678_TYPE: u32 = 678;
 pub const R4SdkGuiType679_TYPE: u32 = 679;
 pub const R4SdkGuiType680_TYPE: u32 = 680;
@@ -15986,11 +15993,13 @@ pub const R4SdkGuiType684_TYPE: u32 = 684;
 pub const R4SdkGuiType685_TYPE: u32 = 685;
 pub const R4SdkGuiType686_TYPE: u32 = 686;
 pub const R4SdkGuiType687_TYPE: u32 = 687;
+pub const R4SdkGuiType688_TYPE: u32 = 688;
 pub const R4SdkGuiType689_TYPE: u32 = 689;
 pub const R4SdkGuiType691_TYPE: u32 = 691;
-pub const R4SdkGuiType692_TYPE: u32 = 692;
+pub const R4SdkGuiType693_TYPE: u32 = 693;
 pub const R4SdkGuiType694_TYPE: u32 = 694;
-pub const R4SdkGui_ABI_FINGERPRINT: u64 = 5183932351987740987;
+pub const R4SdkGuiType696_TYPE: u32 = 696;
+pub const R4SdkGui_ABI_FINGERPRINT: u64 = 1792261273618434927;
 pub const R4SdkGui_font_w: i32 = 8;
 pub const R4SdkGui_font_h: i32 = 8;
 pub const R4SdkGuiChart_turns_per_circle: i32 = 65536;
@@ -16167,10 +16176,10 @@ pub const R4SdkGuiType230_remote_failure: u32 = 2;
 pub const R4SdkGuiType230_failure: u32 = 3;
 pub const R4SdkGuiType233_client: u32 = 0;
 pub const R4SdkGuiType233_failure: u32 = 1;
-pub const R4SdkGuiType480_response: u32 = 0;
-pub const R4SdkGuiType480_timed_out: u32 = 1;
-pub const R4SdkGuiType480_remote_failure: u32 = 2;
-pub const R4SdkGuiType480_failure: u32 = 3;
+pub const R4SdkGuiType482_response: u32 = 0;
+pub const R4SdkGuiType482_timed_out: u32 = 1;
+pub const R4SdkGuiType482_remote_failure: u32 = 2;
+pub const R4SdkGuiType482_failure: u32 = 3;
 pub const R4SdkGuiMessage_TAG_close: u32 = 0;
 pub const R4SdkGuiMessage_TAG_resize: u32 = 1;
 pub const R4SdkGuiMessage_TAG_key: u32 = 2;
@@ -16212,10 +16221,10 @@ pub const R4SdkPowerCpuReply_TAG_remote_failure: u32 = 2;
 pub const R4SdkPowerCpuReply_TAG_failure: u32 = 3;
 pub const R4SdkPowerOpen_TAG_client: u32 = 0;
 pub const R4SdkPowerOpen_TAG_failure: u32 = 1;
-pub const R4SdkGuiType479_TAG_response: u32 = 0;
-pub const R4SdkGuiType479_TAG_timed_out: u32 = 1;
-pub const R4SdkGuiType479_TAG_remote_failure: u32 = 2;
-pub const R4SdkGuiType479_TAG_failure: u32 = 3;
+pub const R4SdkGuiType481_TAG_response: u32 = 0;
+pub const R4SdkGuiType481_TAG_timed_out: u32 = 1;
+pub const R4SdkGuiType481_TAG_remote_failure: u32 = 2;
+pub const R4SdkGuiType481_TAG_failure: u32 = 3;
 pub const R4SdkDataJsonToken_TYPE: u32 = 0;
 pub const R4SdkDataNative_Value1_TYPE: u32 = 1;
 pub const R4SdkDataJsonCursor_TYPE: u32 = 2;
@@ -21340,6 +21349,7 @@ unsafe extern "C" {
     pub fn R4SdkGuiDesktopContext_guiPointerCaptureRelease(p0: u32, p1: *const R4SdkGuiDesktopContext, p2: *const R4GuiPointerCaptureHandle) -> R4SdkGuiSlot;
     pub fn R4SdkGuiDesktopContext_guiPointerCaptureHost(p0: u32, p1: *const R4SdkGuiDesktopContext, p2: *const R4GuiPointerHostRequest, p3: *mut R4GuiPointerCaptureInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGuiDesktopContext_guiWindowInfo(p0: u32, p1: *const R4SdkGuiDesktopContext, p2: *mut R4GuiWindowInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiDesktopContext_guiWindowAppearance(p0: u32, p1: *const R4SdkGuiDesktopContext, p2: *const R4GuiPointerWindowIdentity, p3: *mut R4GuiWindowAppearance) -> R4SdkGuiSlot;
     pub fn R4SdkGuiDesktopContext_guiSetWindowInfo(p0: u32, p1: *const R4SdkGuiDesktopContext, p2: u32, p3: *const R4GuiWindowInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGuiDesktopContext_guiPollEvent(p0: u32, p1: *const R4SdkGuiDesktopContext, p2: *mut R4GuiEvent) -> R4SdkGuiSlot;
     pub fn R4SdkGuiDesktopContext_guiPushEvent(p0: u32, p1: *const R4SdkGuiDesktopContext, p2: u32, p3: *const R4GuiEvent) -> R4SdkGuiSlot;
@@ -21489,7 +21499,7 @@ unsafe extern "C" {
     pub fn R4SdkAudioAudioStream_setVolume(p0: u32, p1: *mut R4SdkAudioAudioStream, p2: u32, p3: *const R4Timeout, p4: *mut R4SdkAudioResult) -> R4SdkGuiSlot;
     pub fn R4SdkAudioAudioStream_close(p0: u32, p1: *mut R4SdkAudioAudioStream, p2: *const R4Timeout, p3: *mut R4SdkAudioResult) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType211_valid(p0: u32, p1: *const R4SdkGuiType211) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType211_call(p0: u32, p1: *mut R4SdkGuiType211, p2: u16, p3: *const u8, p4: u64, p5: *mut u8, p6: u64, p7: *const R4Timeout, p8: *mut R4SdkGuiType479) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType211_call(p0: u32, p1: *mut R4SdkGuiType211, p2: u16, p3: *const u8, p4: u64, p5: *mut u8, p6: u64, p7: *const R4Timeout, p8: *mut R4SdkGuiType481) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType211_close(p0: u32, p1: *mut R4SdkGuiType211) -> R4SdkGuiSlot;
     pub fn R4SdkAudioAudio_available(p0: u32, p1: *const R4SdkAudioAudio) -> R4SdkGuiSlot;
     pub fn R4SdkAudioAudio_openStream(p0: u32, p1: *const R4SdkAudioAudio, p2: u32, p3: u16, p4: u32, p5: u32, p6: *const R4Timeout, p7: *mut R4SdkAudioOpenResult) -> R4SdkGuiSlot;
@@ -21502,7 +21512,7 @@ unsafe extern "C" {
     pub fn R4SdkAudioContext_audioOpenStream(p0: u32, p1: *const R4SdkAudioContext, p2: u32, p3: u16, p4: u32) -> R4SdkGuiSlot;
     pub fn R4SdkAudioContext_audioOutputInfo(p0: u32, p1: *const R4SdkAudioContext, p2: u32, p3: *mut R4AudioOutputInfo) -> R4SdkGuiSlot;
     pub fn R4SdkAudioContext_audioOutputCatalog(p0: u32, p1: *const R4SdkAudioContext, p2: *mut R4AudioOutputInfo, p3: u64, p4: *mut R4AudioOutputCatalog) -> R4SdkGuiSlot;
-    pub fn R4SdkAudioContext_audioSelectOutput(p0: u32, p1: *const R4SdkAudioContext, p2: *const R4SdkGuiType500) -> R4SdkGuiSlot;
+    pub fn R4SdkAudioContext_audioSelectOutput(p0: u32, p1: *const R4SdkAudioContext, p2: *const R4SdkGuiType502) -> R4SdkGuiSlot;
     pub fn R4SdkAudioContext_audioWrite(p0: u32, p1: *const R4SdkAudioContext, p2: u32, p3: *const u8, p4: u64) -> R4SdkGuiSlot;
     pub fn R4SdkAudioContext_audioClose(p0: u32, p1: *const R4SdkAudioContext, p2: u32) -> R4SdkGuiSlot;
     pub fn R4SdkAudioContext_audioStreamProgress(p0: u32, p1: *const R4SdkAudioContext, p2: u32, p3: u64, p4: *mut R4AudioStreamProgress) -> R4SdkGuiSlot;
@@ -21556,7 +21566,7 @@ unsafe extern "C" {
     pub fn R4SdkDevicesDevices_performance(p0: u32, p1: *const R4SdkDevicesDevices, p2: *mut R4SdkDevicesPerformanceView) -> R4SdkGuiSlot;
     pub fn R4SdkDevicesDevices_display(p0: u32, p1: *const R4SdkDevicesDevices, p2: *mut R4DisplayStateInfo) -> R4SdkGuiSlot;
     pub fn R4SdkDevicesDevices_driverModule(p0: u32, p1: *const R4SdkDevicesDevices, p2: u32, p3: *mut R4DriverModuleInfo) -> R4SdkGuiSlot;
-    pub fn R4SdkGfxDeviceContext_serial(p0: u32, p1: *const R4SdkGfxDeviceContext, p2: *mut R4SdkGuiType513) -> R4SdkGuiSlot;
+    pub fn R4SdkGfxDeviceContext_serial(p0: u32, p1: *const R4SdkGfxDeviceContext, p2: *mut R4SdkGuiType515) -> R4SdkGuiSlot;
     pub fn R4SdkGfxDeviceContext_displayState(p0: u32, p1: *const R4SdkGfxDeviceContext, p2: *mut R4DisplayStateInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGfxDeviceContext_driverModuleInfo(p0: u32, p1: *const R4SdkGfxDeviceContext, p2: u32, p3: *mut R4DriverModuleInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGfxDeviceContext_driverModuleInfoRaw(p0: u32, p1: *const R4SdkGfxDeviceContext, p2: u32, p3: *mut R4DriverModuleInfo) -> R4SdkGuiSlot;
@@ -21677,19 +21687,19 @@ unsafe extern "C" {
     pub fn R4SdkPowerClient_resumeProfile(p0: u32, p1: *mut R4SdkPowerClient, p2: *const R4Timeout, p3: *mut R4SdkPowerReply) -> R4SdkGuiSlot;
     pub fn R4SdkPowerClient_reload(p0: u32, p1: *mut R4SdkPowerClient, p2: *const R4Timeout, p3: *mut R4SdkPowerReply) -> R4SdkGuiSlot;
     pub fn R4SdkPowerClient_cpu(p0: u32, p1: *const R4SdkPowerClient, p2: u32, p3: *const R4Timeout, p4: *mut R4SdkPowerCpuReply) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType513_init(p0: u32, p1: *const R4XStartR4Dev, p2: *mut R4SdkGuiType513) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType513_count(p0: u32, p1: *const R4SdkGuiType513) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType513_portAt(p0: u32, p1: *const R4SdkGuiType513, p2: u32, p3: *mut R4SerialPortInfo) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType513_find(p0: u32, p1: *const R4SdkGuiType513, p2: u32, p3: *mut R4SerialPortInfo) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType513_open(p0: u32, p1: *const R4SdkGuiType513, p2: *const R4SerialPortInfo, p3: *const R4SerialConfig, p4: *mut R4SdkGuiType691) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType513_openNumber(p0: u32, p1: *const R4SdkGuiType513, p2: u32, p3: *const R4SerialConfig, p4: *mut R4SdkGuiType691) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType513_configure(p0: u32, p1: *const R4SdkGuiType513, p2: u64, p3: *const R4SerialConfig) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType513_read(p0: u32, p1: *const R4SdkGuiType513, p2: u64, p3: *mut u8, p4: u64, p5: u64, p6: *mut R4SdkGuiType692) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType513_write(p0: u32, p1: *const R4SdkGuiType513, p2: u64, p3: *const u8, p4: u64, p5: u64, p6: *mut R4SdkGuiType692) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType513_drain(p0: u32, p1: *const R4SdkGuiType513, p2: u64, p3: u64) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType513_status(p0: u32, p1: *const R4SdkGuiType513, p2: u64, p3: *mut R4SerialStatus) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType513_cancel(p0: u32, p1: *const R4SdkGuiType513, p2: u64) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType513_close(p0: u32, p1: *const R4SdkGuiType513, p2: u64, p3: u32, p4: u64) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType515_init(p0: u32, p1: *const R4XStartR4Dev, p2: *mut R4SdkGuiType515) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType515_count(p0: u32, p1: *const R4SdkGuiType515) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType515_portAt(p0: u32, p1: *const R4SdkGuiType515, p2: u32, p3: *mut R4SerialPortInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType515_find(p0: u32, p1: *const R4SdkGuiType515, p2: u32, p3: *mut R4SerialPortInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType515_open(p0: u32, p1: *const R4SdkGuiType515, p2: *const R4SerialPortInfo, p3: *const R4SerialConfig, p4: *mut R4SdkGuiType693) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType515_openNumber(p0: u32, p1: *const R4SdkGuiType515, p2: u32, p3: *const R4SerialConfig, p4: *mut R4SdkGuiType693) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType515_configure(p0: u32, p1: *const R4SdkGuiType515, p2: u64, p3: *const R4SerialConfig) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType515_read(p0: u32, p1: *const R4SdkGuiType515, p2: u64, p3: *mut u8, p4: u64, p5: u64, p6: *mut R4SdkGuiType694) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType515_write(p0: u32, p1: *const R4SdkGuiType515, p2: u64, p3: *const u8, p4: u64, p5: u64, p6: *mut R4SdkGuiType694) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType515_drain(p0: u32, p1: *const R4SdkGuiType515, p2: u64, p3: u64) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType515_status(p0: u32, p1: *const R4SdkGuiType515, p2: u64, p3: *mut R4SerialStatus) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType515_cancel(p0: u32, p1: *const R4SdkGuiType515, p2: u64) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType515_close(p0: u32, p1: *const R4SdkGuiType515, p2: u64, p3: u32, p4: u64) -> R4SdkGuiSlot;
     pub fn R4SdkGuiStyle_create(p0: *mut R4SdkGuiStyle) -> R4SdkGuiSlot;
     pub fn R4SdkGuiStyle_from_fields(p0: *mut R4SdkGuiStyle, p1: u32, p2: u32, p3: u32, p4: u32, p5: u32, p6: u32, p7: u32, p8: u32, p9: u32, p10: u32, p11: u32, p12: u32, p13: i32, p14: i32, p15: i32, p16: i32, p17: *const R4SdkGuiFontSet) -> R4SdkGuiSlot;
     pub fn R4SdkGuiStyle_get_background(p0: *const R4SdkGuiStyle) -> R4SdkGuiSlot;
@@ -23586,375 +23596,377 @@ unsafe extern "C" {
     pub fn R4SdkGuiType407_inspect(p0: *const R4SdkGuiType407) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType409_create(p0: *mut R4SdkGuiType409, p1: *mut R4GuiWindowInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType409_inspect(p0: *const R4SdkGuiType409) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType410_create(p0: *mut R4SdkGuiType410, p1: *const R4GuiWindowInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType410_create(p0: *mut R4SdkGuiType410, p1: *mut R4GuiWindowAppearance) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType410_inspect(p0: *const R4SdkGuiType410) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType411_create(p0: *mut R4SdkGuiType411, p1: *const R4GuiEvent) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType411_inspect(p0: *const R4SdkGuiType411) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType412_create(p0: *mut R4SdkGuiType412, p1: *mut R4GuiCommand) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType412_create(p0: *mut R4SdkGuiType412, p1: *const R4GuiWindowInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType412_inspect(p0: *const R4SdkGuiType412) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType414_create(p0: *mut R4SdkGuiType414, p1: *mut R4GuiSize) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType413_create(p0: *mut R4SdkGuiType413, p1: *const R4GuiEvent) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType413_inspect(p0: *const R4SdkGuiType413) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType414_create(p0: *mut R4SdkGuiType414, p1: *mut R4GuiCommand) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType414_inspect(p0: *const R4SdkGuiType414) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType416_create(p0: *mut R4SdkGuiType416, p1: *mut R4ConsoleState) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType416_create(p0: *mut R4SdkGuiType416, p1: *mut R4GuiSize) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType416_inspect(p0: *const R4SdkGuiType416) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType419_create(p0: *mut R4SdkGuiType419, p1: *mut R4PhysicalKeyEvent) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType419_inspect(p0: *const R4SdkGuiType419) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType421_create(p0: *mut R4SdkGuiType421, p1: *mut R4ClipboardInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType418_create(p0: *mut R4SdkGuiType418, p1: *mut R4ConsoleState) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType418_inspect(p0: *const R4SdkGuiType418) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType421_create(p0: *mut R4SdkGuiType421, p1: *mut R4PhysicalKeyEvent) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType421_inspect(p0: *const R4SdkGuiType421) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType422_create(p0: *mut R4SdkGuiType422, p1: *mut R4RemoteFrameMapInfo) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType422_inspect(p0: *const R4SdkGuiType422) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType424_create(p0: *mut R4SdkGuiType424, p1: *const R4RemoteFrameInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType423_create(p0: *mut R4SdkGuiType423, p1: *mut R4ClipboardInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType423_inspect(p0: *const R4SdkGuiType423) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType424_create(p0: *mut R4SdkGuiType424, p1: *mut R4RemoteFrameMapInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType424_inspect(p0: *const R4SdkGuiType424) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType425_create(p0: *mut R4SdkGuiType425, p1: *const R4RemoteInputEvent) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType425_inspect(p0: *const R4SdkGuiType425) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType427_create(p0: *mut R4SdkGuiType427, p1: *mut R4RemoteInputEvent) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType426_create(p0: *mut R4SdkGuiType426, p1: *const R4RemoteFrameInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType426_inspect(p0: *const R4SdkGuiType426) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType427_create(p0: *mut R4SdkGuiType427, p1: *const R4RemoteInputEvent) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType427_inspect(p0: *const R4SdkGuiType427) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType428_create(p0: *mut R4SdkGuiType428, p1: *mut R4RemoteInputStatus) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType428_inspect(p0: *const R4SdkGuiType428) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType430_create(p0: *mut R4SdkGuiType430, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType430_inspect(p0: *const R4SdkGuiType430, p1: *mut R4GuiEvent) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType431_create(p0: *mut R4SdkGuiType431, p1: *mut R4SdkGuiTimer) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType431_inspect(p0: *const R4SdkGuiType431) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType433_create(p0: *mut R4SdkGuiType433, p1: *mut R4SdkGuiEventLoop) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType429_create(p0: *mut R4SdkGuiType429, p1: *mut R4RemoteInputEvent) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType429_inspect(p0: *const R4SdkGuiType429) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType430_create(p0: *mut R4SdkGuiType430, p1: *mut R4RemoteInputStatus) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType430_inspect(p0: *const R4SdkGuiType430) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType432_create(p0: *mut R4SdkGuiType432, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType432_inspect(p0: *const R4SdkGuiType432, p1: *mut R4GuiEvent) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType433_create(p0: *mut R4SdkGuiType433, p1: *mut R4SdkGuiTimer) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType433_inspect(p0: *const R4SdkGuiType433) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType434_create(p0: *mut R4SdkGuiType434, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType434_inspect(p0: *const R4SdkGuiType434, p1: *mut R4SdkGuiMessage) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType435_create(p0: *mut R4SdkGuiType435, p1: *mut R4SdkGuiPaintContext) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType435_create(p0: *mut R4SdkGuiType435, p1: *mut R4SdkGuiEventLoop) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType435_inspect(p0: *const R4SdkGuiType435) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType436_create(p0: *mut R4SdkGuiType436, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType436_inspect(p0: *const R4SdkGuiType436, p1: *mut R4SdkGuiWindow) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType437_create(p0: *mut R4SdkGuiType437, p1: *mut R4SdkGuiWindow) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType436_inspect(p0: *const R4SdkGuiType436, p1: *mut R4SdkGuiMessage) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType437_create(p0: *mut R4SdkGuiType437, p1: *mut R4SdkGuiPaintContext) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType437_inspect(p0: *const R4SdkGuiType437) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType438_create(p0: *mut R4SdkGuiType438, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType438_inspect(p0: *const R4SdkGuiType438, p1: *mut R4GuiWindowInfo) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType439_inspect(p0: *const R4SdkGuiType439, p1: *mut R4SdkGuiShapePathBuilder) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType440_create(p0: *mut R4SdkGuiType440, p1: *mut R4SdkGuiShapePathBuilder) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType440_inspect(p0: *const R4SdkGuiType440) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType441_inspect(p0: *const R4SdkGuiType441) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType442_create(p0: *mut R4SdkGuiType442, p1: *mut R4SdkGuiInputQueue) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType438_inspect(p0: *const R4SdkGuiType438, p1: *mut R4SdkGuiWindow) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType439_create(p0: *mut R4SdkGuiType439, p1: *mut R4SdkGuiWindow) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType439_inspect(p0: *const R4SdkGuiType439) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType440_create(p0: *mut R4SdkGuiType440, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType440_inspect(p0: *const R4SdkGuiType440, p1: *mut R4GuiWindowInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType441_inspect(p0: *const R4SdkGuiType441, p1: *mut R4SdkGuiShapePathBuilder) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType442_create(p0: *mut R4SdkGuiType442, p1: *mut R4SdkGuiShapePathBuilder) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType442_inspect(p0: *const R4SdkGuiType442) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType443_create(p0: *mut R4SdkGuiType443, p1: *const R4ConsoleInputEvent, p2: u64) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType443_inspect(p0: *const R4SdkGuiType443) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType444_create(p0: *mut R4SdkGuiType444, p1: *const R4SdkGuiInputQueue) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType444_create(p0: *mut R4SdkGuiType444, p1: *mut R4SdkGuiInputQueue) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType444_inspect(p0: *const R4SdkGuiType444) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType445_create(p0: *mut R4SdkGuiType445, p1: *mut R4SdkGuiWindowModeClient) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType445_create(p0: *mut R4SdkGuiType445, p1: *const R4ConsoleInputEvent, p2: u64) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType445_inspect(p0: *const R4SdkGuiType445) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType446_create(p0: *mut R4SdkGuiType446, p1: *const R4SdkGfxBuffersContext) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType446_create(p0: *mut R4SdkGuiType446, p1: *const R4SdkGuiInputQueue) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType446_inspect(p0: *const R4SdkGuiType446) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType447_create(p0: *mut R4SdkGuiType447, p1: *const R4SdkGfxOutputsContext) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType447_create(p0: *mut R4SdkGuiType447, p1: *mut R4SdkGuiWindowModeClient) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType447_inspect(p0: *const R4SdkGuiType447) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType448_create(p0: *mut R4SdkGuiType448, p1: *mut R4GfxOutputColorState) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType448_create(p0: *mut R4SdkGuiType448, p1: *const R4SdkGfxBuffersContext) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType448_inspect(p0: *const R4SdkGuiType448) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType450_create(p0: *mut R4SdkGuiType450, p1: *const R4GfxModeColorRequest) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType449_create(p0: *mut R4SdkGuiType449, p1: *const R4SdkGfxOutputsContext) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType449_inspect(p0: *const R4SdkGuiType449) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType450_create(p0: *mut R4SdkGuiType450, p1: *mut R4GfxOutputColorState) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType450_inspect(p0: *const R4SdkGuiType450) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType452_create(p0: *mut R4SdkGuiType452, p1: *mut R4GfxModeStatus) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType452_create(p0: *mut R4SdkGuiType452, p1: *const R4GfxModeColorRequest) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType452_inspect(p0: *const R4SdkGuiType452) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType454_create(p0: *mut R4SdkGuiType454, p1: *const R4SdkGfxQueueContext) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType454_create(p0: *mut R4SdkGuiType454, p1: *mut R4GfxModeStatus) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType454_inspect(p0: *const R4SdkGuiType454) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType455_create(p0: *mut R4SdkGuiType455, p1: *mut R4GfxBackendInfo) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType455_inspect(p0: *const R4SdkGuiType455) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType457_create(p0: *mut R4SdkGuiType457, p1: *const R4GfxBackendBinding) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType456_create(p0: *mut R4SdkGuiType456, p1: *const R4SdkGfxQueueContext) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType456_inspect(p0: *const R4SdkGuiType456) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType457_create(p0: *mut R4SdkGuiType457, p1: *mut R4GfxBackendInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType457_inspect(p0: *const R4SdkGuiType457) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType458_create(p0: *mut R4SdkGuiType458, p1: *mut R4GfxBackendProperties) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType458_inspect(p0: *const R4SdkGuiType458) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType460_create(p0: *mut R4SdkGuiType460, p1: *const R4GfxRenderList) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType459_create(p0: *mut R4SdkGuiType459, p1: *const R4GfxBackendBinding) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType459_inspect(p0: *const R4SdkGuiType459) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType460_create(p0: *mut R4SdkGuiType460, p1: *mut R4GfxBackendProperties) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType460_inspect(p0: *const R4SdkGuiType460) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType462_create(p0: *mut R4SdkGuiType462, p1: *const R4GfxRenderGridList) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType462_create(p0: *mut R4SdkGuiType462, p1: *const R4GfxRenderList) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType462_inspect(p0: *const R4SdkGuiType462) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType464_create(p0: *mut R4SdkGuiType464, p1: *const R4GfxRenderColorList) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType464_create(p0: *mut R4SdkGuiType464, p1: *const R4GfxRenderGridList) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType464_inspect(p0: *const R4SdkGuiType464) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType466_create(p0: *mut R4SdkGuiType466, p1: *const R4GfxRenderColorGridList) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType466_create(p0: *mut R4SdkGuiType466, p1: *const R4GfxRenderColorList) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType466_inspect(p0: *const R4SdkGuiType466) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType468_create(p0: *mut R4SdkGuiType468, p1: *const R4SdkGfxDeviceContext) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType468_create(p0: *mut R4SdkGuiType468, p1: *const R4GfxRenderColorGridList) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType468_inspect(p0: *const R4SdkGuiType468) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType469_create(p0: *mut R4SdkGuiType469, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType469_inspect(p0: *const R4SdkGuiType469, p1: *mut R4SdkGraphicsStatusSnapshot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType470_create(p0: *mut R4SdkGuiType470, p1: *const R4SdkGraphicsStatusSnapshot) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType470_create(p0: *mut R4SdkGuiType470, p1: *const R4SdkGfxDeviceContext) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType470_inspect(p0: *const R4SdkGuiType470) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType472_create(p0: *mut R4SdkGuiType472, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType472_inspect(p0: *const R4SdkGuiType472, p1: *mut R4SdkAudioWriteCursor) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType473_create(p0: *mut R4SdkGuiType473, p1: *const R4SdkAudioWriteCursor) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType473_inspect(p0: *const R4SdkGuiType473) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType474_create(p0: *mut R4SdkGuiType474, p1: *mut R4SdkAudioWriteCursor) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType474_inspect(p0: *const R4SdkGuiType474) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType475_create(p0: *mut R4SdkGuiType475, p1: *const R4SdkAudioAudioStream) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType471_create(p0: *mut R4SdkGuiType471, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType471_inspect(p0: *const R4SdkGuiType471, p1: *mut R4SdkGraphicsStatusSnapshot) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType472_create(p0: *mut R4SdkGuiType472, p1: *const R4SdkGraphicsStatusSnapshot) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType472_inspect(p0: *const R4SdkGuiType472) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType474_create(p0: *mut R4SdkGuiType474, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType474_inspect(p0: *const R4SdkGuiType474, p1: *mut R4SdkAudioWriteCursor) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType475_create(p0: *mut R4SdkGuiType475, p1: *const R4SdkAudioWriteCursor) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType475_inspect(p0: *const R4SdkGuiType475) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType476_create(p0: *mut R4SdkGuiType476, p1: *mut R4SdkAudioAudioStream) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType476_create(p0: *mut R4SdkGuiType476, p1: *mut R4SdkAudioWriteCursor) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType476_inspect(p0: *const R4SdkGuiType476) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType477_create(p0: *mut R4SdkGuiType477, p1: *const R4SdkGuiType211) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType477_create(p0: *mut R4SdkGuiType477, p1: *const R4SdkAudioAudioStream) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType477_inspect(p0: *const R4SdkGuiType477) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType478_create(p0: *mut R4SdkGuiType478, p1: *mut R4SdkGuiType211) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType478_create(p0: *mut R4SdkGuiType478, p1: *mut R4SdkAudioAudioStream) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType478_inspect(p0: *const R4SdkGuiType478) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType479_get_response(p0: *const R4SdkGuiType479, p1: *mut R4SdkGuiType481) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType479_set_response(p0: *mut R4SdkGuiType479, p1: *const R4SdkGuiType481) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType479_get_timed_out(p0: *const R4SdkGuiType479) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType479_set_timed_out(p0: *mut R4SdkGuiType479) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType479_get_remote_failure(p0: *const R4SdkGuiType479) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType479_set_remote_failure(p0: *mut R4SdkGuiType479, p1: i32) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType479_get_failure(p0: *const R4SdkGuiType479) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType479_set_failure(p0: *mut R4SdkGuiType479, p1: i32) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType479_create(p0: *mut R4SdkGuiType479, p1: *const R4SdkGuiType211) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType479_inspect(p0: *const R4SdkGuiType479) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType480_create(p0: *mut R4SdkGuiType480, p1: u32) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType480_create(p0: *mut R4SdkGuiType480, p1: *mut R4SdkGuiType211) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType480_inspect(p0: *const R4SdkGuiType480) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType481_create(p0: *mut R4SdkGuiType481, p1: *const R4ServiceMessageHeader, p2: u64) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType481_from_fields(p0: *mut R4SdkGuiType481, p1: *const R4ServiceMessageHeader, p2: u64) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType481_get_header(p0: *const R4SdkGuiType481, p1: *mut R4ServiceMessageHeader) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType481_set_header(p0: *mut R4SdkGuiType481, p1: *const R4ServiceMessageHeader) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType481_get_bytes(p0: *const R4SdkGuiType481) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType481_set_bytes(p0: *mut R4SdkGuiType481, p1: u64) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType481_get_response(p0: *const R4SdkGuiType481, p1: *mut R4SdkGuiType483) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType481_set_response(p0: *mut R4SdkGuiType481, p1: *const R4SdkGuiType483) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType481_get_timed_out(p0: *const R4SdkGuiType481) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType481_set_timed_out(p0: *mut R4SdkGuiType481) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType481_get_remote_failure(p0: *const R4SdkGuiType481) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType481_set_remote_failure(p0: *mut R4SdkGuiType481, p1: i32) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType481_get_failure(p0: *const R4SdkGuiType481) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType481_set_failure(p0: *mut R4SdkGuiType481, p1: i32) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType481_inspect(p0: *const R4SdkGuiType481) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType483_create(p0: *mut R4SdkGuiType483, p1: *const R4SdkAudioAudio) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType482_create(p0: *mut R4SdkGuiType482, p1: u32) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType482_inspect(p0: *const R4SdkGuiType482) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType483_create(p0: *mut R4SdkGuiType483, p1: *const R4ServiceMessageHeader, p2: u64) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType483_from_fields(p0: *mut R4SdkGuiType483, p1: *const R4ServiceMessageHeader, p2: u64) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType483_get_header(p0: *const R4SdkGuiType483, p1: *mut R4ServiceMessageHeader) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType483_set_header(p0: *mut R4SdkGuiType483, p1: *const R4ServiceMessageHeader) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType483_get_bytes(p0: *const R4SdkGuiType483) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType483_set_bytes(p0: *mut R4SdkGuiType483, p1: u64) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType483_inspect(p0: *const R4SdkGuiType483) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType484_create(p0: *mut R4SdkGuiType484, p1: *mut R4AudioServiceStatus) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType484_inspect(p0: *const R4SdkGuiType484) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType486_create(p0: *mut R4SdkGuiType486, p1: *mut R4AudioServiceMasterState) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType485_create(p0: *mut R4SdkGuiType485, p1: *const R4SdkAudioAudio) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType485_inspect(p0: *const R4SdkGuiType485) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType486_create(p0: *mut R4SdkGuiType486, p1: *mut R4AudioServiceStatus) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType486_inspect(p0: *const R4SdkGuiType486) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType488_create(p0: *mut R4SdkGuiType488, p1: *const R4AudioServiceOutputRequest) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType488_create(p0: *mut R4SdkGuiType488, p1: *mut R4AudioServiceMasterState) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType488_inspect(p0: *const R4SdkGuiType488) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType490_create(p0: *mut R4SdkGuiType490, p1: *mut R4AudioServiceOutputState) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType490_create(p0: *mut R4SdkGuiType490, p1: *const R4AudioServiceOutputRequest) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType490_inspect(p0: *const R4SdkGuiType490) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType492_create(p0: *mut R4SdkGuiType492, p1: *const R4SdkAudioContext) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType492_create(p0: *mut R4SdkGuiType492, p1: *mut R4AudioServiceOutputState) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType492_inspect(p0: *const R4SdkGuiType492) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType494_create(p0: *mut R4SdkGuiType494, p1: *mut R4AudioOutputInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType494_create(p0: *mut R4SdkGuiType494, p1: *const R4SdkAudioContext) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType494_inspect(p0: *const R4SdkGuiType494) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType496_create(p0: *mut R4SdkGuiType496, p1: *mut R4AudioOutputInfo, p2: u64) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType496_create(p0: *mut R4SdkGuiType496, p1: *mut R4AudioOutputInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType496_inspect(p0: *const R4SdkGuiType496) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType497_create(p0: *mut R4SdkGuiType497, p1: *mut R4AudioOutputCatalog) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType497_inspect(p0: *const R4SdkGuiType497) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType499_create(p0: *mut R4SdkGuiType499, p1: *const R4SdkGuiType500) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType498_create(p0: *mut R4SdkGuiType498, p1: *mut R4AudioOutputInfo, p2: u64) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType498_inspect(p0: *const R4SdkGuiType498) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType499_create(p0: *mut R4SdkGuiType499, p1: *mut R4AudioOutputCatalog) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType499_inspect(p0: *const R4SdkGuiType499) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType500_create(p0: *mut R4SdkGuiType500, p1: *const R4SdkGuiType500) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType500_inspect(p0: *const R4SdkGuiType500, p1: *mut R4SdkGuiType500) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType501_create(p0: *mut R4SdkGuiType501, p1: *mut R4AudioStreamProgress) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType501_create(p0: *mut R4SdkGuiType501, p1: *const R4SdkGuiType502) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType501_inspect(p0: *const R4SdkGuiType501) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType503_create(p0: *mut R4SdkGuiType503, p1: *const R4AudioStreamExpectation) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType502_create(p0: *mut R4SdkGuiType502, p1: *const R4SdkGuiType502) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType502_inspect(p0: *const R4SdkGuiType502, p1: *mut R4SdkGuiType502) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType503_create(p0: *mut R4SdkGuiType503, p1: *mut R4AudioStreamProgress) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType503_inspect(p0: *const R4SdkGuiType503) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType505_create(p0: *mut R4SdkGuiType505, p1: *const R4AudioServiceMasterRequest) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType505_create(p0: *mut R4SdkGuiType505, p1: *const R4AudioStreamExpectation) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType505_inspect(p0: *const R4SdkGuiType505) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType507_create(p0: *mut R4SdkGuiType507, p1: *mut R4AudioServiceStreamResult) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType507_create(p0: *mut R4SdkGuiType507, p1: *const R4AudioServiceMasterRequest) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType507_inspect(p0: *const R4SdkGuiType507) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType509_create(p0: *mut R4SdkGuiType509, p1: *const R4SdkAudioAdvancedAudio) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType509_create(p0: *mut R4SdkGuiType509, p1: *mut R4AudioServiceStreamResult) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType509_inspect(p0: *const R4SdkGuiType509) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType510_create(p0: *mut R4SdkGuiType510, p1: *const R4SdkDevicesDevices) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType510_inspect(p0: *const R4SdkGuiType510) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType511_create(p0: *mut R4SdkGuiType511, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType511_inspect(p0: *const R4SdkGuiType511, p1: *mut R4DisplayStateInfo) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType512_create(p0: *mut R4SdkGuiType512, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType512_inspect(p0: *const R4SdkGuiType512, p1: *mut R4SdkGuiType513) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType513_create(p0: *mut R4SdkGuiType513, p1: *const R4XStartR4Dev) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType513_from_fields(p0: *mut R4SdkGuiType513, p1: *const R4XStartR4Dev) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType513_get_table(p0: *const R4SdkGuiType513) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType513_set_table(p0: *mut R4SdkGuiType513, p1: *const R4XStartR4Dev) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType513_inspect(p0: *const R4SdkGuiType513) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType514_create(p0: *mut R4SdkGuiType514, p1: *const R4XStartR4Dev) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType514_inspect(p0: *const R4SdkGuiType514) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType516_create(p0: *mut R4SdkGuiType516, p1: *mut R4DriverModuleInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType511_create(p0: *mut R4SdkGuiType511, p1: *const R4SdkAudioAdvancedAudio) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType511_inspect(p0: *const R4SdkGuiType511) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType512_create(p0: *mut R4SdkGuiType512, p1: *const R4SdkDevicesDevices) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType512_inspect(p0: *const R4SdkGuiType512) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType513_create(p0: *mut R4SdkGuiType513, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType513_inspect(p0: *const R4SdkGuiType513, p1: *mut R4DisplayStateInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType514_create(p0: *mut R4SdkGuiType514, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType514_inspect(p0: *const R4SdkGuiType514, p1: *mut R4SdkGuiType515) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType515_create(p0: *mut R4SdkGuiType515, p1: *const R4XStartR4Dev) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType515_from_fields(p0: *mut R4SdkGuiType515, p1: *const R4XStartR4Dev) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType515_get_table(p0: *const R4SdkGuiType515) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType515_set_table(p0: *mut R4SdkGuiType515, p1: *const R4XStartR4Dev) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType515_inspect(p0: *const R4SdkGuiType515) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType516_create(p0: *mut R4SdkGuiType516, p1: *const R4XStartR4Dev) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType516_inspect(p0: *const R4SdkGuiType516) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType517_create(p0: *mut R4SdkGuiType517, p1: *mut R4DeviceInventorySummary) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType517_inspect(p0: *const R4SdkGuiType517) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType519_create(p0: *mut R4SdkGuiType519, p1: *mut R4DeviceInventoryRecord) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType518_create(p0: *mut R4SdkGuiType518, p1: *mut R4DriverModuleInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType518_inspect(p0: *const R4SdkGuiType518) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType519_create(p0: *mut R4SdkGuiType519, p1: *mut R4DeviceInventorySummary) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType519_inspect(p0: *const R4SdkGuiType519) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType520_create(p0: *mut R4SdkGuiType520, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType520_inspect(p0: *const R4SdkGuiType520, p1: *mut R4ProgramMemorySummary) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType521_create(p0: *mut R4SdkGuiType521, p1: *mut R4DeviceInventoryRecord) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType521_inspect(p0: *const R4SdkGuiType521) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType522_create(p0: *mut R4SdkGuiType522, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType522_inspect(p0: *const R4SdkGuiType522, p1: *mut R4ProgramMemoryBlockInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType522_inspect(p0: *const R4SdkGuiType522, p1: *mut R4ProgramMemorySummary) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType524_create(p0: *mut R4SdkGuiType524, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType524_inspect(p0: *const R4SdkGuiType524, p1: *mut R4ProgramMemoryPressureSnapshot) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType524_inspect(p0: *const R4SdkGuiType524, p1: *mut R4ProgramMemoryBlockInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType526_create(p0: *mut R4SdkGuiType526, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType526_inspect(p0: *const R4SdkGuiType526, p1: *mut R4ProgramMemoryReclaimProbe) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType528_create(p0: *mut R4SdkGuiType528, p1: *mut R4ProgramKernelHeapCheck) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType528_inspect(p0: *const R4SdkGuiType528) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType530_create(p0: *mut R4SdkGuiType530, p1: *mut R4ProgramKernelSchedulerCheck) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType526_inspect(p0: *const R4SdkGuiType526, p1: *mut R4ProgramMemoryPressureSnapshot) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType528_create(p0: *mut R4SdkGuiType528, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType528_inspect(p0: *const R4SdkGuiType528, p1: *mut R4ProgramMemoryReclaimProbe) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType530_create(p0: *mut R4SdkGuiType530, p1: *mut R4ProgramKernelHeapCheck) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType530_inspect(p0: *const R4SdkGuiType530) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType532_create(p0: *mut R4SdkGuiType532, p1: *mut R4ProgramKernelUsbCheck) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType532_create(p0: *mut R4SdkGuiType532, p1: *mut R4ProgramKernelSchedulerCheck) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType532_inspect(p0: *const R4SdkGuiType532) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType534_create(p0: *mut R4SdkGuiType534, p1: *mut R4ProgramKernelNvmeCheck) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType534_create(p0: *mut R4SdkGuiType534, p1: *mut R4ProgramKernelUsbCheck) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType534_inspect(p0: *const R4SdkGuiType534) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType536_create(p0: *mut R4SdkGuiType536, p1: *mut R4ProgramKernelBlockQueueCheck) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType536_create(p0: *mut R4SdkGuiType536, p1: *mut R4ProgramKernelNvmeCheck) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType536_inspect(p0: *const R4SdkGuiType536) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType538_create(p0: *mut R4SdkGuiType538, p1: *mut R4CpuCapabilitiesInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType538_create(p0: *mut R4SdkGuiType538, p1: *mut R4ProgramKernelBlockQueueCheck) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType538_inspect(p0: *const R4SdkGuiType538) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType540_create(p0: *mut R4SdkGuiType540, p1: *mut R4CpuFeatureInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType540_create(p0: *mut R4SdkGuiType540, p1: *mut R4CpuCapabilitiesInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType540_inspect(p0: *const R4SdkGuiType540) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType542_create(p0: *mut R4SdkGuiType542, p1: *mut R4CpuRegisterInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType542_create(p0: *mut R4SdkGuiType542, p1: *mut R4CpuFeatureInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType542_inspect(p0: *const R4SdkGuiType542) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType544_create(p0: *mut R4SdkGuiType544, p1: *mut R4CpuPowerInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType544_create(p0: *mut R4SdkGuiType544, p1: *mut R4CpuRegisterInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType544_inspect(p0: *const R4SdkGuiType544) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType546_create(p0: *mut R4SdkGuiType546, p1: *const R4CpuPerformanceRequest) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType546_create(p0: *mut R4SdkGuiType546, p1: *mut R4CpuPowerInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType546_inspect(p0: *const R4SdkGuiType546) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType548_create(p0: *mut R4SdkGuiType548, p1: *mut R4CpuPerformanceInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType548_create(p0: *mut R4SdkGuiType548, p1: *const R4CpuPerformanceRequest) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType548_inspect(p0: *const R4SdkGuiType548) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType550_create(p0: *mut R4SdkGuiType550, p1: *mut R4CpuCppcInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType550_create(p0: *mut R4SdkGuiType550, p1: *mut R4CpuPerformanceInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType550_inspect(p0: *const R4SdkGuiType550) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType552_create(p0: *mut R4SdkGuiType552, p1: *mut R4CpuFirmwareInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType552_create(p0: *mut R4SdkGuiType552, p1: *mut R4CpuCppcInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType552_inspect(p0: *const R4SdkGuiType552) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType554_create(p0: *mut R4SdkGuiType554, p1: *mut R4CpuIdleInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType554_create(p0: *mut R4SdkGuiType554, p1: *mut R4CpuFirmwareInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType554_inspect(p0: *const R4SdkGuiType554) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType556_create(p0: *mut R4SdkGuiType556, p1: *mut R4CpuMachineInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType556_create(p0: *mut R4SdkGuiType556, p1: *mut R4CpuIdleInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType556_inspect(p0: *const R4SdkGuiType556) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType558_create(p0: *mut R4SdkGuiType558, p1: *mut R4CpuMicrocodeInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType558_create(p0: *mut R4SdkGuiType558, p1: *mut R4CpuMachineInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType558_inspect(p0: *const R4SdkGuiType558) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType560_create(p0: *mut R4SdkGuiType560, p1: *const R4FpuObservationRequest) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType560_create(p0: *mut R4SdkGuiType560, p1: *mut R4CpuMicrocodeInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType560_inspect(p0: *const R4SdkGuiType560) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType562_create(p0: *mut R4SdkGuiType562, p1: *mut R4FpuObservationInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType562_create(p0: *mut R4SdkGuiType562, p1: *const R4FpuObservationRequest) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType562_inspect(p0: *const R4SdkGuiType562) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType564_create(p0: *mut R4SdkGuiType564, p1: *mut R4CpuAccelerationInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType564_create(p0: *mut R4SdkGuiType564, p1: *mut R4FpuObservationInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType564_inspect(p0: *const R4SdkGuiType564) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType566_create(p0: *mut R4SdkGuiType566, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType566_create(p0: *mut R4SdkGuiType566, p1: *mut R4CpuAccelerationInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType566_inspect(p0: *const R4SdkGuiType566) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType567_create(p0: *mut R4SdkGuiType567, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType567_inspect(p0: *const R4SdkGuiType567) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType568_create(p0: *mut R4SdkGuiType568, p1: *mut R4CpuAccelerationWork) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType568_create(p0: *mut R4SdkGuiType568, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType568_inspect(p0: *const R4SdkGuiType568) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType570_create(p0: *mut R4SdkGuiType570, p1: *mut R4CpuPmuInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType569_create(p0: *mut R4SdkGuiType569, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType569_inspect(p0: *const R4SdkGuiType569) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType570_create(p0: *mut R4SdkGuiType570, p1: *mut R4CpuAccelerationWork) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType570_inspect(p0: *const R4SdkGuiType570) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType572_create(p0: *mut R4SdkGuiType572, p1: *mut R4CpuPmuResult) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType572_create(p0: *mut R4SdkGuiType572, p1: *mut R4CpuPmuInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType572_inspect(p0: *const R4SdkGuiType572) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType574_create(p0: *mut R4SdkGuiType574, p1: *mut R4CpuMachineBank) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType574_create(p0: *mut R4SdkGuiType574, p1: *mut R4CpuPmuResult) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType574_inspect(p0: *const R4SdkGuiType574) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType576_create(p0: *mut R4SdkGuiType576, p1: *mut R4CpuPerformanceHintInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType576_create(p0: *mut R4SdkGuiType576, p1: *mut R4CpuMachineBank) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType576_inspect(p0: *const R4SdkGuiType576) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType578_create(p0: *mut R4SdkGuiType578, p1: *mut R4ProgramKernelCpuRegisterCheck) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType578_create(p0: *mut R4SdkGuiType578, p1: *mut R4CpuPerformanceHintInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType578_inspect(p0: *const R4SdkGuiType578) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType580_create(p0: *mut R4SdkGuiType580, p1: *mut R4CpuLifecycleInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType580_create(p0: *mut R4SdkGuiType580, p1: *mut R4ProgramKernelCpuRegisterCheck) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType580_inspect(p0: *const R4SdkGuiType580) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType582_create(p0: *mut R4SdkGuiType582, p1: *mut R4ProgramKernelCpuLifecycleCheck) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType582_create(p0: *mut R4SdkGuiType582, p1: *mut R4CpuLifecycleInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType582_inspect(p0: *const R4SdkGuiType582) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType584_create(p0: *mut R4SdkGuiType584, p1: *mut R4ProgramKernelSmpCheck) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType584_create(p0: *mut R4SdkGuiType584, p1: *mut R4ProgramKernelCpuLifecycleCheck) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType584_inspect(p0: *const R4SdkGuiType584) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType586_create(p0: *mut R4SdkGuiType586, p1: *mut R4ProgramSmpTlbSnapshot) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType586_create(p0: *mut R4SdkGuiType586, p1: *mut R4ProgramKernelSmpCheck) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType586_inspect(p0: *const R4SdkGuiType586) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType588_create(p0: *mut R4SdkGuiType588, p1: *mut R4CpuTopologyInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType588_create(p0: *mut R4SdkGuiType588, p1: *mut R4ProgramSmpTlbSnapshot) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType588_inspect(p0: *const R4SdkGuiType588) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType590_create(p0: *mut R4SdkGuiType590, p1: *mut R4CpuCacheTopologyInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType590_create(p0: *mut R4SdkGuiType590, p1: *mut R4CpuTopologyInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType590_inspect(p0: *const R4SdkGuiType590) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType592_create(p0: *mut R4SdkGuiType592, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType592_inspect(p0: *const R4SdkGuiType592, p1: *mut R4ProgramMemoryBackingStoreProbe) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType592_create(p0: *mut R4SdkGuiType592, p1: *mut R4CpuCacheTopologyInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType592_inspect(p0: *const R4SdkGuiType592) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType594_create(p0: *mut R4SdkGuiType594, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType594_inspect(p0: *const R4SdkGuiType594, p1: *mut R4ProgramMemoryBackingStoreSlotProbe) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType594_inspect(p0: *const R4SdkGuiType594, p1: *mut R4ProgramMemoryBackingStoreProbe) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType596_create(p0: *mut R4SdkGuiType596, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType596_inspect(p0: *const R4SdkGuiType596, p1: *mut R4ProgramMemoryPagerGateProbe) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType596_inspect(p0: *const R4SdkGuiType596, p1: *mut R4ProgramMemoryBackingStoreSlotProbe) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType598_create(p0: *mut R4SdkGuiType598, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType598_inspect(p0: *const R4SdkGuiType598, p1: *mut R4ProgramMemoryPageIoProbe) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType598_inspect(p0: *const R4SdkGuiType598, p1: *mut R4ProgramMemoryPagerGateProbe) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType600_create(p0: *mut R4SdkGuiType600, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType600_inspect(p0: *const R4SdkGuiType600, p1: *mut R4ProgramMemoryVmPageStateProbe) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType600_inspect(p0: *const R4SdkGuiType600, p1: *mut R4ProgramMemoryPageIoProbe) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType602_create(p0: *mut R4SdkGuiType602, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType602_inspect(p0: *const R4SdkGuiType602, p1: *mut R4ProgramPerformanceSummary) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType604_create(p0: *mut R4SdkGuiType604, p1: *mut R4ProgramInstanceStorageSummary) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType604_inspect(p0: *const R4SdkGuiType604) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType606_create(p0: *mut R4SdkGuiType606, p1: *mut R4ProgramInstanceStorageSelfTestResult) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType602_inspect(p0: *const R4SdkGuiType602, p1: *mut R4ProgramMemoryVmPageStateProbe) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType604_create(p0: *mut R4SdkGuiType604, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType604_inspect(p0: *const R4SdkGuiType604, p1: *mut R4ProgramPerformanceSummary) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType606_create(p0: *mut R4SdkGuiType606, p1: *mut R4ProgramInstanceStorageSummary) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType606_inspect(p0: *const R4SdkGuiType606) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType608_create(p0: *mut R4SdkGuiType608, p1: *mut R4ProgramRegistrySummaryV2) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType608_create(p0: *mut R4SdkGuiType608, p1: *mut R4ProgramInstanceStorageSelfTestResult) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType608_inspect(p0: *const R4SdkGuiType608) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType610_create(p0: *mut R4SdkGuiType610, p1: *mut R4ProgramRegistrySelfTestResultV2) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType610_create(p0: *mut R4SdkGuiType610, p1: *mut R4ProgramRegistrySummaryV2) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType610_inspect(p0: *const R4SdkGuiType610) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType612_create(p0: *mut R4SdkGuiType612, p1: *mut R4ProgramInventorySummary) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType612_create(p0: *mut R4SdkGuiType612, p1: *mut R4ProgramRegistrySelfTestResultV2) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType612_inspect(p0: *const R4SdkGuiType612) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType614_create(p0: *mut R4SdkGuiType614, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType614_inspect(p0: *const R4SdkGuiType614, p1: *mut R4KernelVersion) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType615_create(p0: *mut R4SdkGuiType615, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType615_inspect(p0: *const R4SdkGuiType615, p1: *mut R4ProgramTaskPerformanceInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType614_create(p0: *mut R4SdkGuiType614, p1: *mut R4ProgramInventorySummary) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType614_inspect(p0: *const R4SdkGuiType614) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType616_create(p0: *mut R4SdkGuiType616, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType616_inspect(p0: *const R4SdkGuiType616, p1: *mut R4KernelVersion) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType617_create(p0: *mut R4SdkGuiType617, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType617_inspect(p0: *const R4SdkGuiType617, p1: *mut R4ProgramStoragePerformanceInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType617_inspect(p0: *const R4SdkGuiType617, p1: *mut R4ProgramTaskPerformanceInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType619_create(p0: *mut R4SdkGuiType619, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType619_inspect(p0: *const R4SdkGuiType619, p1: *mut R4ProgramBootPhasePerformanceInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType619_inspect(p0: *const R4SdkGuiType619, p1: *mut R4ProgramStoragePerformanceInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType621_create(p0: *mut R4SdkGuiType621, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType621_inspect(p0: *const R4SdkGuiType621, p1: *mut R4ProgramBootPhaseClockInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType621_inspect(p0: *const R4SdkGuiType621, p1: *mut R4ProgramBootPhasePerformanceInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType623_create(p0: *mut R4SdkGuiType623, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType623_inspect(p0: *const R4SdkGuiType623, p1: *mut R4ProgramBootPerformanceInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType623_inspect(p0: *const R4SdkGuiType623, p1: *mut R4ProgramBootPhaseClockInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType625_create(p0: *mut R4SdkGuiType625, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType625_inspect(p0: *const R4SdkGuiType625, p1: *mut R4ProgramDriverWorkPerformanceInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType625_inspect(p0: *const R4SdkGuiType625, p1: *mut R4ProgramBootPerformanceInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType627_create(p0: *mut R4SdkGuiType627, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType627_inspect(p0: *const R4SdkGuiType627, p1: *mut R4ProgramPciInventoryPerformanceInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType627_inspect(p0: *const R4SdkGuiType627, p1: *mut R4ProgramDriverWorkPerformanceInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType629_create(p0: *mut R4SdkGuiType629, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType629_inspect(p0: *const R4SdkGuiType629, p1: *mut R4ProgramInputPerformanceInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType629_inspect(p0: *const R4SdkGuiType629, p1: *mut R4ProgramPciInventoryPerformanceInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType631_create(p0: *mut R4SdkGuiType631, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType631_inspect(p0: *const R4SdkGuiType631, p1: *mut R4ProgramInstrumentationInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType631_inspect(p0: *const R4SdkGuiType631, p1: *mut R4ProgramInputPerformanceInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType633_create(p0: *mut R4SdkGuiType633, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType633_inspect(p0: *const R4SdkGuiType633, p1: *mut R4ProgramLockPerformanceInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType633_inspect(p0: *const R4SdkGuiType633, p1: *mut R4ProgramInstrumentationInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType635_create(p0: *mut R4SdkGuiType635, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType635_inspect(p0: *const R4SdkGuiType635, p1: *mut R4ProgramStackPerformanceInfo) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType637_create(p0: *mut R4SdkGuiType637, p1: *mut R4ProgramStackFaultInfo) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType637_inspect(p0: *const R4SdkGuiType637) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType639_create(p0: *mut R4SdkGuiType639, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType639_inspect(p0: *const R4SdkGuiType639, p1: *mut R4ProgramIrqTimingInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType635_inspect(p0: *const R4SdkGuiType635, p1: *mut R4ProgramLockPerformanceInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType637_create(p0: *mut R4SdkGuiType637, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType637_inspect(p0: *const R4SdkGuiType637, p1: *mut R4ProgramStackPerformanceInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType639_create(p0: *mut R4SdkGuiType639, p1: *mut R4ProgramStackFaultInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType639_inspect(p0: *const R4SdkGuiType639) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType641_create(p0: *mut R4SdkGuiType641, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType641_inspect(p0: *const R4SdkGuiType641, p1: *mut R4ProgramVmReserveProbe) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType641_inspect(p0: *const R4SdkGuiType641, p1: *mut R4ProgramIrqTimingInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType643_create(p0: *mut R4SdkGuiType643, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType643_inspect(p0: *const R4SdkGuiType643, p1: *mut R4PagingSummary) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType643_inspect(p0: *const R4SdkGuiType643, p1: *mut R4ProgramVmReserveProbe) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType645_create(p0: *mut R4SdkGuiType645, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType645_inspect(p0: *const R4SdkGuiType645, p1: *mut R4DisplaySummary) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType645_inspect(p0: *const R4SdkGuiType645, p1: *mut R4PagingSummary) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType647_create(p0: *mut R4SdkGuiType647, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType647_inspect(p0: *const R4SdkGuiType647, p1: *mut R4HardwareSummary) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType647_inspect(p0: *const R4SdkGuiType647, p1: *mut R4DisplaySummary) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType649_create(p0: *mut R4SdkGuiType649, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType649_inspect(p0: *const R4SdkGuiType649, p1: *mut R4FirmwareSystemUuidInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType649_inspect(p0: *const R4SdkGuiType649, p1: *mut R4HardwareSummary) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType651_create(p0: *mut R4SdkGuiType651, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType651_inspect(p0: *const R4SdkGuiType651, p1: *mut R4BootInfoSummary) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType651_inspect(p0: *const R4SdkGuiType651, p1: *mut R4FirmwareSystemUuidInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType653_create(p0: *mut R4SdkGuiType653, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType653_inspect(p0: *const R4SdkGuiType653, p1: *mut R4BootInfoMemoryEntry) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType655_create(p0: *mut R4SdkGuiType655, p1: *mut R4ProtocolStatus) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType655_inspect(p0: *const R4SdkGuiType655) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType657_create(p0: *mut R4SdkGuiType657, p1: *const R4ProtocolBuffer) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType653_inspect(p0: *const R4SdkGuiType653, p1: *mut R4BootInfoSummary) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType655_create(p0: *mut R4SdkGuiType655, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType655_inspect(p0: *const R4SdkGuiType655, p1: *mut R4BootInfoMemoryEntry) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType657_create(p0: *mut R4SdkGuiType657, p1: *mut R4ProtocolStatus) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType657_inspect(p0: *const R4SdkGuiType657) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType659_create(p0: *mut R4SdkGuiType659, p1: *mut R4ProtocolBuffer) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType659_create(p0: *mut R4SdkGuiType659, p1: *const R4ProtocolBuffer) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType659_inspect(p0: *const R4SdkGuiType659) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType660_create(p0: *mut R4SdkGuiType660, p1: *mut R4ProgramStatus) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType660_inspect(p0: *const R4SdkGuiType660) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType662_create(p0: *mut R4SdkGuiType662, p1: *mut R4ProgramInstanceInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType661_create(p0: *mut R4SdkGuiType661, p1: *mut R4ProtocolBuffer) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType661_inspect(p0: *const R4SdkGuiType661) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType662_create(p0: *mut R4SdkGuiType662, p1: *mut R4ProgramStatus) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType662_inspect(p0: *const R4SdkGuiType662) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType664_create(p0: *mut R4SdkGuiType664, p1: *mut R4IpcSummary) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType664_create(p0: *mut R4SdkGuiType664, p1: *mut R4ProgramInstanceInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType664_inspect(p0: *const R4SdkGuiType664) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType666_create(p0: *mut R4SdkGuiType666, p1: *mut R4IpcChannelInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType666_create(p0: *mut R4SdkGuiType666, p1: *mut R4IpcSummary) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType666_inspect(p0: *const R4SdkGuiType666) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType668_create(p0: *mut R4SdkGuiType668, p1: *mut R4TcpSummary) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType668_create(p0: *mut R4SdkGuiType668, p1: *mut R4IpcChannelInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType668_inspect(p0: *const R4SdkGuiType668) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType670_create(p0: *mut R4SdkGuiType670, p1: *mut R4TcpConnectionInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType670_create(p0: *mut R4SdkGuiType670, p1: *mut R4TcpSummary) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType670_inspect(p0: *const R4SdkGuiType670) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType672_create(p0: *mut R4SdkGuiType672, p1: *mut R4UdpStatus) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType672_create(p0: *mut R4SdkGuiType672, p1: *mut R4TcpConnectionInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType672_inspect(p0: *const R4SdkGuiType672) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType674_create(p0: *mut R4SdkGuiType674, p1: *mut R4NetDetailSnapshot) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType674_create(p0: *mut R4SdkGuiType674, p1: *mut R4UdpStatus) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType674_inspect(p0: *const R4SdkGuiType674) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType676_create(p0: *mut R4SdkGuiType676, p1: *const R4SdkDevicesDeviceInventoryView) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType676_create(p0: *mut R4SdkGuiType676, p1: *mut R4NetDetailSnapshot) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType676_inspect(p0: *const R4SdkGuiType676) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType677_create(p0: *mut R4SdkGuiType677, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType677_inspect(p0: *const R4SdkGuiType677, p1: *mut R4DeviceInventorySummary) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType678_create(p0: *mut R4SdkGuiType678, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType678_inspect(p0: *const R4SdkGuiType678, p1: *mut R4DeviceInventoryRecord) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType679_create(p0: *mut R4SdkGuiType679, p1: *const R4SdkDevicesMemoryView) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType679_inspect(p0: *const R4SdkGuiType679) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType680_create(p0: *mut R4SdkGuiType680, p1: *const R4SdkDevicesPerformanceView) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType680_inspect(p0: *const R4SdkGuiType680) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType681_create(p0: *mut R4SdkGuiType681, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType681_inspect(p0: *const R4SdkGuiType681, p1: *mut R4ProgramInstanceStorageSummary) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType682_create(p0: *mut R4SdkGuiType682, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType682_inspect(p0: *const R4SdkGuiType682, p1: *mut R4ProgramRegistrySummaryV2) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType678_create(p0: *mut R4SdkGuiType678, p1: *const R4SdkDevicesDeviceInventoryView) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType678_inspect(p0: *const R4SdkGuiType678) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType679_create(p0: *mut R4SdkGuiType679, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType679_inspect(p0: *const R4SdkGuiType679, p1: *mut R4DeviceInventorySummary) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType680_create(p0: *mut R4SdkGuiType680, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType680_inspect(p0: *const R4SdkGuiType680, p1: *mut R4DeviceInventoryRecord) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType681_create(p0: *mut R4SdkGuiType681, p1: *const R4SdkDevicesMemoryView) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType681_inspect(p0: *const R4SdkGuiType681) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType682_create(p0: *mut R4SdkGuiType682, p1: *const R4SdkDevicesPerformanceView) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType682_inspect(p0: *const R4SdkGuiType682) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType683_create(p0: *mut R4SdkGuiType683, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType683_inspect(p0: *const R4SdkGuiType683, p1: *mut R4ProgramInventorySummary) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType684_create(p0: *mut R4SdkGuiType684, p1: *mut R4SdkPowerClient) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType684_inspect(p0: *const R4SdkGuiType684) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType685_create(p0: *mut R4SdkGuiType685, p1: *const R4SdkPowerClient) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType685_inspect(p0: *const R4SdkGuiType685) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType686_create(p0: *mut R4SdkGuiType686, p1: *const R4SdkGuiType513) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType683_inspect(p0: *const R4SdkGuiType683, p1: *mut R4ProgramInstanceStorageSummary) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType684_create(p0: *mut R4SdkGuiType684, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType684_inspect(p0: *const R4SdkGuiType684, p1: *mut R4ProgramRegistrySummaryV2) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType685_create(p0: *mut R4SdkGuiType685, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType685_inspect(p0: *const R4SdkGuiType685, p1: *mut R4ProgramInventorySummary) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType686_create(p0: *mut R4SdkGuiType686, p1: *mut R4SdkPowerClient) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType686_inspect(p0: *const R4SdkGuiType686) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType687_create(p0: *mut R4SdkGuiType687, p1: *mut R4SerialPortInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType687_create(p0: *mut R4SdkGuiType687, p1: *const R4SdkPowerClient) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType687_inspect(p0: *const R4SdkGuiType687) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType689_create(p0: *mut R4SdkGuiType689, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType689_inspect(p0: *const R4SdkGuiType689, p1: *mut R4SerialPortInfo) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType691_create(p0: *mut R4SdkGuiType691, p1: i32) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType691_from_fields(p0: *mut R4SdkGuiType691, p1: i32, p2: u64) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType691_get_code(p0: *const R4SdkGuiType691) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType691_set_code(p0: *mut R4SdkGuiType691, p1: i32) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType691_get_handle(p0: *const R4SdkGuiType691) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType691_set_handle(p0: *mut R4SdkGuiType691, p1: u64) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType691_inspect(p0: *const R4SdkGuiType691) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType692_create(p0: *mut R4SdkGuiType692, p1: i32) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType692_from_fields(p0: *mut R4SdkGuiType692, p1: i32, p2: *const R4SerialTransfer) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType692_get_code(p0: *const R4SdkGuiType692) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType692_set_code(p0: *mut R4SdkGuiType692, p1: i32) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType692_get_info(p0: *const R4SdkGuiType692, p1: *mut R4SerialTransfer) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType692_set_info(p0: *mut R4SdkGuiType692, p1: *const R4SerialTransfer) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType692_inspect(p0: *const R4SdkGuiType692) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType694_create(p0: *mut R4SdkGuiType694, p1: *mut R4SerialStatus) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType688_create(p0: *mut R4SdkGuiType688, p1: *const R4SdkGuiType515) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType688_inspect(p0: *const R4SdkGuiType688) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType689_create(p0: *mut R4SdkGuiType689, p1: *mut R4SerialPortInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType689_inspect(p0: *const R4SdkGuiType689) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType691_create(p0: *mut R4SdkGuiType691, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType691_inspect(p0: *const R4SdkGuiType691, p1: *mut R4SerialPortInfo) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType693_create(p0: *mut R4SdkGuiType693, p1: i32) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType693_from_fields(p0: *mut R4SdkGuiType693, p1: i32, p2: u64) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType693_get_code(p0: *const R4SdkGuiType693) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType693_set_code(p0: *mut R4SdkGuiType693, p1: i32) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType693_get_handle(p0: *const R4SdkGuiType693) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType693_set_handle(p0: *mut R4SdkGuiType693, p1: u64) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType693_inspect(p0: *const R4SdkGuiType693) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType694_create(p0: *mut R4SdkGuiType694, p1: i32) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType694_from_fields(p0: *mut R4SdkGuiType694, p1: i32, p2: *const R4SerialTransfer) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType694_get_code(p0: *const R4SdkGuiType694) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType694_set_code(p0: *mut R4SdkGuiType694, p1: i32) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType694_get_info(p0: *const R4SdkGuiType694, p1: *mut R4SerialTransfer) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType694_set_info(p0: *mut R4SdkGuiType694, p1: *const R4SerialTransfer) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType694_inspect(p0: *const R4SdkGuiType694) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType696_create(p0: *mut R4SdkGuiType696, p1: *mut R4SerialStatus) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType696_inspect(p0: *const R4SdkGuiType696) -> R4SdkGuiSlot;
     pub fn R4SdkDataInvoke(p0: u64, p1: u32, p2: *const R4SdkDataSlot, p3: u32, p4: *mut core::ffi::c_void) -> R4SdkDataSlot;
     pub fn R4SdkDataConstruct(p0: u64, p1: u32, p2: *const R4SdkDataSlot, p3: u32, p4: *mut core::ffi::c_void) -> R4SdkDataSlot;
     pub fn R4SdkDataInspect(p0: u64, p1: u32, p2: *mut core::ffi::c_void, p3: *mut core::ffi::c_void) -> R4SdkDataSlot;

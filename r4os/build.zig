@@ -1203,6 +1203,14 @@ pub fn addR4XBuilder(b: *std.Build, root_source_file: std.Build.LazyPath) *std.B
             .optimize = optimize,
         }),
     });
+    // Both consumer and standalone builds use the one SDK metadata grammar.
+    // Keep the source location attached to its actual SDK LazyPath owner.
+    const sdk_root = root_source_file.dirname().dirname().dirname().dirname();
+    exe.root_module.addImport("r4os_title_appearance", b.createModule(.{
+        .root_source_file = sdk_root.path(b, "r4os/appearance_metadata.zig"),
+        .target = target,
+        .optimize = optimize,
+    }));
     return exe;
 }
 

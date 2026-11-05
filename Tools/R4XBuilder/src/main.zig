@@ -644,6 +644,8 @@ const R4MOptions = struct {
 };
 
 fn writeR4M(cwd: std.Io.Dir, io: std.Io, a: std.mem.Allocator, opts: R4MOptions) !void {
+    const appearance = try @import("r4os_title_appearance").parse(opts.metadata);
+    if (opts.format != .r4x and appearance.flags != 0) return error.TitleColorRequiresR4X;
     const kind = moduleKindFromFormat(opts.format);
     const name = opts.module_name orelse switch (opts.format) {
         .r4x => "APP",

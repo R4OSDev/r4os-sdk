@@ -483,6 +483,11 @@ pub fn build(b: *std.Build) void {
         }),
     });
     const run_r4x_builder_tests = b.addRunArtifact(r4x_builder_tests);
+    r4x_builder_tests.root_module.addImport("r4os_title_appearance", b.createModule(.{
+        .root_source_file = b.path("r4os/appearance_metadata.zig"),
+        .target = b.graph.host,
+        .optimize = sdk_profiles.defaults.debug_optimize,
+    }));
     b.step("packager-test", "Run existing R4M0/ELF packager ownership and relocation cases").dependOn(&run_r4x_builder_tests.step);
 
     const r4l_contract_tests = b.addTest(.{

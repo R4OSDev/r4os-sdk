@@ -55735,6 +55735,29 @@
       ],
       "result": "Existing GUI/editor/input suites and two actual native C/Rust peers PASS; modern semantic frame/resource hashes agree with Zig, classic pixels preserved; unsafe/Send/frame-loan misuse rejected. Legacy Canvas/TabBar C constructors compile and retain default presentation.",
       "scope": "Linux host ABI of shared owners. Actual QEMU display/input, costs and limits are separate in Docs/SDK/GuiControls.txt; no Windows execution, hardware or isolated performance claim."
+    },
+    "gui_title_08947": {
+      "complete": true,
+      "sdk": "0.64.148 source",
+      "contract": "0.64.75",
+      "owners": [
+        "Repositories/SDK/r4os/appearance_metadata.zig",
+        "Repositories/SDK/r4os/module_manifest.zig",
+        "Repositories/SDK/r4os/r4desk.zig",
+        "Repositories/SDK/r4os/program.zig",
+        "Repositories/Libraries/Shared/Rust/src/raw.rs"
+      ],
+      "proof": [
+        "Tests/Simulation/GuiParity.c",
+        "Tests/Simulation/RustGui.rs",
+        "Tools/GuiBridgeGen",
+        "Tools/CFacadeGen",
+        "Docs/API/GuiWindowAppearance.txt",
+        "Repositories/Libraries/Tools/Test-ConsumerHelpers.ps1"
+      ],
+      "result": "Canonical Contract16/16 steps and26 mutations pass; all prior payloads/slots preserved. Shared manifest owner22 cases and both actual GUI C/Rust peers pass, including missing optional appearance callback, old624-byte prefix, unchanged output and existing unsafe/Send/frame-loan negatives. Zig/C/Rust expose the same exact identity32/appearance48 transport. Library shared native C/Rust cases and all5 ownership/unsafe negatives pass; Desktop window owners13 plus geometry3 pass. Library helper C header/fingerprint remain byte-identical; no Library API or R4L change.",
+      "scope": "Host native ABI and shared syntax only; Kernel actual-loaded metadata, exact Desktop host/window admission and real title pixels/lifecycle require the separately recorded QEMU proof. Matching startup-contract requirements are unchanged; this is no old-OS startup shim.",
+      "libraries": "0.64.48 generated Rust projection only"
     }
   },
   "wave_bindings": [
@@ -55987,17 +56010,18 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.89.46",
-    "sdk": "0.64.147 source candidate",
-    "contract": "0.64.74",
-    "evidence": "gui_modern_08946",
-    "scope": "Shared optional modern GUI values and controls, generated C/Rust boundary and actual host semantic consumers. Native integration recorded separately.",
-    "historical_snapshot_retained": true
+    "performed_in": "0.89.47",
+    "sdk": "0.64.148 source candidate",
+    "contract": "0.64.75",
+    "evidence": "gui_title_08947",
+    "scope": "Shared immutable title-metadata grammar and optional generation-bound read-only GUI transport. Original input/render/style owners and previous ABI prefixes retained. Native Kernel/Desktop proof remains separate.",
+    "historical_snapshot_retained": true,
+    "libraries": "0.64.48 Rust projection only"
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.89.46",
+    "reviewed_in": "0.89.47",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -56071,19 +56095,19 @@
       },
       {
         "path": "Repositories/Contract/API/ApiContract.json",
-        "sha256": "28b37498e38fd3d80846f191b7c8721e01cf774ff3f5c703ca4810bb985e5c37"
+        "sha256": "bfd6eb2b23411e2531bcede0a13c66480b411941ce88f1c9709bd501b4f55fe8"
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/API.json",
-        "sha256": "764f842fb108d1825891c27a0ef1c95603487ad44b462fc7ac2b76aece1459cb"
+        "sha256": "785303df60daefd963e919e1c7a29160d55f43cd367100005046949e7e0f6272"
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/RustABI.json",
-        "sha256": "83c57b6d352f3887e86ff56aa08975be71ae1f9158d18d284666c4cccc250c24"
+        "sha256": "48fba997b5f7299066a25deee25b8af12c60248739ca53b885baace7c78a5ef4"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_generated.h",
-        "sha256": "1be51ea54245303c31e26192a83c1c2ec4268be1b3ab28cfd8a088f6cd1fc368"
+        "sha256": "cdf1f6a619664789e80f680962ae6011a9a03fd219932ded91334daa693c3751"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_technical_generated.h",
@@ -56095,19 +56119,19 @@
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Rust/src/lib.rs",
-        "sha256": "257b1ad0e28b87eddf580d52beab122f7e3734a3f035d61e788c24d6e2e223f0"
+        "sha256": "60877cce8e299a7aadd662d930dd2080d312cc4eab9ab66cd9039b01f6d819a9"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi.zig",
-        "sha256": "8472cab917f855b21ea81fe21c503f075936d1726d6e2f119c67a90aa73e4253"
+        "sha256": "9c5be6232358d1d4e80a6cdef5b543f6ac0edf251f10814bc0ee0f83d0a4065b"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_exports.zig",
-        "sha256": "eebdee1775ce4a1c3a88c48b36fb15f52e76ca4ea772a77356890567dfeb78a0"
+        "sha256": "170fca472231660dc5957a5d084744efb0a2a76e64132842105b097a9290b522"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_generated.zig",
-        "sha256": "e7356e0b0cd59df4df25d5de514cf105345b17176546ef677981437ddf58d240"
+        "sha256": "a7461d5780fe107bc67f1ee4edb78549d6d60d286cad87cba10ea68563fe16aa"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/package.zig",
@@ -57067,7 +57091,7 @@
       },
       {
         "path": "Repositories/Libraries/Shared/Rust/src/raw.rs",
-        "sha256": "31f6453f773394664b40f935a8c47dabfa85e81a98fbfbead759306f757d0dbf"
+        "sha256": "a375f7003206e916d8e7bca72eb0fd034b09926b515b8ad495e66464a6b178a1"
       },
       {
         "path": "Repositories/Libraries/Shared/Tests/Consumer/Cargo.toml",
@@ -57143,7 +57167,7 @@
       },
       {
         "path": "Repositories/SDK/Profiles/Components.json",
-        "sha256": "5ff8648d33695db218d3b75df1323d84876d630082d19e3b39f704aadbe3c2f9"
+        "sha256": "d69e4c34c9dbaa8943773aab8b2a43abc24e775a4671b5e38502851732b59e67"
       },
       {
         "path": "Repositories/SDK/Profiles/Tools.json",
@@ -57159,7 +57183,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "849c64e73c3a95fb3875b8cc568b9622aa78e7a2745c1a68b75901a35c958957"
+        "sha256": "297652f0abdff0e6e66394ab5f994b42338ad9730ac8e618bb1103786cca18bb"
       },
       {
         "path": "Repositories/SDK/Rust/src/data/hash.rs",
@@ -57547,7 +57571,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/gui_bridge.h",
-        "sha256": "6a7776ddeae783220f18406acaae32a80e24cab02cd1c0b9f700ae4158b9cc18"
+        "sha256": "83d55b55a26832ef70538b5e6c995305afdffe54cd3fe83fd55a0b71b0d1ac1f"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/heap.h",
@@ -57579,7 +57603,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/r4desk.h",
-        "sha256": "a67026486c575c8c07e5cd42ffc293324d262a32e38ecd521ab013b629c30c35"
+        "sha256": "06334046a68a604f6e0c9164e81906015ec3b7b0f9af1239e16ea858c6023edb"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/r4dev.h",
@@ -57711,7 +57735,7 @@
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/GuiParity.c",
-        "sha256": "463bc37f41ad2a88fc99f9686c4d888bb0f2b38d70c347291c7fed01763ac17a"
+        "sha256": "43cc2a37650df61610117d640ae79d07e265c12b214be8a15c8161b867663916"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/PointerBindings.c",
@@ -57719,7 +57743,7 @@
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/RustGui.rs",
-        "sha256": "36d23941cb029fc6d57cd0e26f0ee5699ee32791a8d638d2178819f24a8ee520"
+        "sha256": "0f7cb60e9c8e365ed2c7d8a0980b1cde3bb9e0bf349b2d4580106372973c58a5"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/RustServices.rs",
@@ -57843,11 +57867,11 @@
       },
       {
         "path": "Repositories/SDK/Tools/R4XBuilder/build.zig",
-        "sha256": "c33ea17382794c1ca8acd643f7a70b35a1d8c30f9709e35353a2d74f3fe3fa0f"
+        "sha256": "48c1a4a3dd0144cc1fa2b3081add20427110a2198b3982e6b417bbf5aac2f5f6"
       },
       {
         "path": "Repositories/SDK/Tools/R4XBuilder/src/main.zig",
-        "sha256": "cbc88670cbc7c3fc03644bbdb912bd4d06819273b7a169712783ac27eb993174"
+        "sha256": "ca8ff80d5ec204edbcef333c6516351d6b693e904d897d82f1d1bdde7b4cad55"
       },
       {
         "path": "Repositories/SDK/Tools/R4XBuilder/src/stack_probes.zig",
@@ -57971,11 +57995,11 @@
       },
       {
         "path": "Repositories/SDK/build.zig",
-        "sha256": "14a8b4067f5a9c2bd829def835f5e90ab2448192647c41f262a47ff1100a03c0"
+        "sha256": "a5401865ffdbfc8884e36e529114c73e5bfb6f2dccb5f97117256b002464c58c"
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "09c9c72cdd9df81018e7184d77395766a05d862ec4870bb8eec6e1d839822db2"
+        "sha256": "3b55a334d0515373028667bc8d6d9f3ae6a14493729b337b041a14ba4844acdb"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -58034,6 +58058,10 @@
         "sha256": "e3d97ebde0e90587bfa21dbd7752dd984a5517b2efa48bbb0b446e4d323717bd"
       },
       {
+        "path": "Repositories/SDK/r4os/appearance_metadata.zig",
+        "sha256": "c51ec301c6c3e9a6629232665e0935ae596ab913c4e1664a46661b16e2ddc3b9"
+      },
+      {
         "path": "Repositories/SDK/r4os/audio_pcm.zig",
         "sha256": "e239bf10a2e4465272a20e61615feace3402dd026e36ff8204039e9dfd6b7c02"
       },
@@ -58047,7 +58075,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/build.zig",
-        "sha256": "60c456451e1d6e93dd817727d0c2033b2ec25a2a798e014c88723d72267c7fea"
+        "sha256": "1848116a0cb7a78131034d2d20b167b9ce987229d72a1e87d1a344fb074466c1"
       },
       {
         "path": "Repositories/SDK/r4os/build_profile.zig",
@@ -58211,7 +58239,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/generated/gui_fingerprint.zig",
-        "sha256": "8028ed83032c2b1246136409900799790b4714e20cf220c94c25690f91ac698f"
+        "sha256": "f68a7ef18003446b44231ebd9ce5842d532ce9d2f003171e9c7ec45fe4d91461"
       },
       {
         "path": "Repositories/SDK/r4os/generated/net_facade.zig",
@@ -58359,7 +58387,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/module_manifest.zig",
-        "sha256": "6016668272016da51f59eb318f671b3041e944330c8ab181ac1be4f8e78fa82f"
+        "sha256": "f441e5c748fa1c0258b5319e71e3ba45559d8344cffa1c336f59cf336c0a46b5"
       },
       {
         "path": "Repositories/SDK/r4os/native_bridge_schema.zig",
@@ -58415,7 +58443,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/program.zig",
-        "sha256": "b37139f447d7aac14504e4d83e3b85ed046172b18fb420bf8231ec4e311ca931"
+        "sha256": "0cf1bbc6be854e510bbd5940e22dd507c40273c8c96a32db23ca559a4a64c86b"
       },
       {
         "path": "Repositories/SDK/r4os/protocol.zig",
@@ -58435,7 +58463,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/r4desk.zig",
-        "sha256": "507950de94d2a29194313837ae9de0f03eea8115f5f333792aa2eb6b404b3477"
+        "sha256": "4eb292e8c95352454554f0e921e5070a5b1a2a41a2e1f0fc3f9a7371179a281f"
       },
       {
         "path": "Repositories/SDK/r4os/r4dev.zig",
@@ -58969,7 +58997,8 @@
           "gui_activity_08735",
           "file_name_limits_08827",
           "native_pointer_capture_08828",
-          "gui_host_backpressure_08832"
+          "gui_host_backpressure_08832",
+          "gui_title_08947"
         ]
       },
       {
@@ -58993,6 +59022,7 @@
       {
         "id": "project-build",
         "zig": [
+          "Repositories/SDK/r4os/appearance_metadata.zig",
           "Repositories/SDK/r4os/module_manifest.zig",
           "Repositories/SDK/r4os/r4cp.zig",
           "Repositories/SDK/r4os/r4cp_convert.zig"
@@ -59014,7 +59044,8 @@
           "process_evidence_08826",
           "file_name_limits_08827",
           "native_pointer_capture_08828",
-          "gui_host_backpressure_08832"
+          "gui_host_backpressure_08832",
+          "gui_title_08947"
         ]
       },
       {
@@ -59232,7 +59263,8 @@
           "gui_host_backpressure_08832",
           "desktop_actions_08898",
           "studio_089_host",
-          "gui_modern_08946"
+          "gui_modern_08946",
+          "gui_title_08947"
         ]
       },
       {
@@ -59579,7 +59611,8 @@
           "native_pointer_capture_08828",
           "gui_host_backpressure_08832",
           "audio_selection_08856",
-          "desktop_actions_08898"
+          "desktop_actions_08898",
+          "gui_title_08947"
         ]
       },
       {
@@ -59626,7 +59659,8 @@
           "native_pointer_capture_08828",
           "gui_host_backpressure_08832",
           "audio_selection_08856",
-          "desktop_actions_08898"
+          "desktop_actions_08898",
+          "gui_title_08947"
         ]
       },
       {
@@ -59709,7 +59743,8 @@
           "native_pointer_capture_08828",
           "gui_host_backpressure_08832",
           "audio_selection_08856",
-          "desktop_actions_08898"
+          "desktop_actions_08898",
+          "gui_title_08947"
         ]
       },
       {
@@ -59774,7 +59809,8 @@
           "native_pointer_capture_08828",
           "gui_host_backpressure_08832",
           "audio_selection_08856",
-          "desktop_actions_08898"
+          "desktop_actions_08898",
+          "gui_title_08947"
         ]
       },
       {
@@ -59859,7 +59895,8 @@
           "native_pointer_capture_08828",
           "gui_host_backpressure_08832",
           "audio_selection_08856",
-          "desktop_actions_08898"
+          "desktop_actions_08898",
+          "gui_title_08947"
         ]
       },
       {

@@ -127,6 +127,11 @@ pub const Context = struct {
         return self.base.guiWindowInfo(out);
     }
 
+    /// Optional read-only exact-host projection of the loaded R4X title colors.
+    pub fn guiWindowAppearance(self: *const Context, window: *const abi.GuiPointerWindowIdentity, out: *abi.GuiWindowAppearance) i32 {
+        return self.base.guiWindowAppearance(window, out);
+    }
+
     pub fn guiSetWindowInfo(self: *const Context, instance_id: u32, info: *const abi.GuiWindowInfo) i32 {
         return self.base.guiSetWindowInfo(instance_id, info);
     }

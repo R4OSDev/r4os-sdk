@@ -5,6 +5,7 @@ pub const capabilities = @import("module_capabilities.zig");
 pub const rust_project = @import("rust_project.zig");
 pub const import_spec = @import("import_spec.zig");
 pub const startup_metadata = @import("startup_metadata.zig");
+const appearance_metadata = @import("appearance_metadata.zig");
 
 test {
     std.testing.refAllDecls(startup_metadata);
@@ -431,6 +432,8 @@ fn parseV2(allocator: std.mem.Allocator, path: []const u8, text: []const u8) !Ma
     try validateExports(exports.items);
     ensureUnique(metadata.items, true) catch return error.DuplicateMetadata;
     try validateMetadata(metadata.items);
+    const appearance = try appearance_metadata.parse(metadata.items);
+    if (parsed_kind != .r4x and appearance.flags != 0) return error.TitleColorRequiresR4X;
 
     // Ressourcen (0.61.12): Pfade nur projektintern wie SOURCE, Namen nach
     // dem R4M0-Vertrag. R4L lehnt ab, weil sein Containervertrag keinen
@@ -1048,6 +1051,7 @@ fn validateR4XImport(value: []const u8) !void {
 }
 
 fn validateMetadata(values: []const []const u8) !void {
+    _ = try appearance_metadata.parse(values);
     for (values, 0..) |value, index| {
         const eq = std.mem.indexOfScalar(u8, value, '=') orelse return error.InvalidMetadata;
         if (eq == 0 or eq + 1 >= value.len) return error.InvalidMetadata;
@@ -1332,6 +1336,9 @@ fn appendPlanBytes(out: []u8, len: *usize, value: []const u8) bool {
 }
 
 test "V2 derives profile build and fixed start contract from the SDK profile source" {
+    try validateMetadata(&.{ "gui.title.background=000000", "gui.title.foreground=FfEeDd" });
+    try std.testing.expectError(error.InvalidTitleColor, validateMetadata(&.{"gui.title.background=#123456"}));
+    try std.testing.expectError(error.DuplicateTitleColor, validateMetadata(&.{ "gui.title.foreground=123456", "gui.title.foreground=123456" }));
     try validateMetadata(&.{ "runtime.parallel=bsp", "runtime.workers=owned-v1" });
     try std.testing.expectError(error.InvalidMetadata, validateMetadata(&.{"runtime.workers=maybe"}));
     try std.testing.expectError(error.DuplicateMetadataKey, validateMetadata(&.{ "runtime.workers=bsp", "runtime.workers=owned-v1" }));

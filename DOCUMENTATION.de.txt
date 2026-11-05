@@ -1487,3 +1487,17 @@ ohne Selbsthashkreis; Verify prueft den heruntergeladenen/entpackten Satz.
 RootsFile/Assetzuordnung nennen Orte und Transport, keine eigene Politik.
 Schema3-capabilities enthaelt build_profiles/component_sets/profile_sources.
 Anleitung: Docs/SDK/Profiles.txt; finale Studio-/Server-Uebergabe in 0.89.37.
+
+Optionale App-Titelfarben ab SDK0.64.148
+--------------------------------------
+META=gui.title.background=341F4A und META=gui.title.foreground=F7F0FF
+schlagen Farben fuer die aktive eigene Titelleiste vor. Je exakt sechs
+Hexziffern und hoechstens ein Wert; fehlende Angaben verwenden Desktopfarben.
+Manifest und Hostpacker teilen die Syntaxpruefung. Der Loader speichert die
+validierten Angaben aus dem tatsaechlichen R4X unveraenderlich. Die optionale
+R4DESK-Abfrage guiWindowAppearance liefert nur dem exakten Desktop-Host die
+an Prozessgeneration und Fensterinkarnation gebundenen Werte. Frame, Knopfe,
+inaktive Darstellung und Fokus gehoeren dem Desktop; kein Laufzeitsetter.
+Normativer Vertrag: Contract/ABI/R4M0TitleAppearance.txt; Anschluss und
+Abnahme: Docs/API/GuiWindowAppearance.txt. Zig/C/Rust verwenden dieselben
+generierten Typen und die gemeinsame SDK-Fassade.
