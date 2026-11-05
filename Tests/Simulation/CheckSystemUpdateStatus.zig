@@ -24,6 +24,8 @@ var sleeps: usize = 0;
 var file_writes: usize = 0;
 var update_lease = false;
 var prepare_at_lease = false;
+var removal_at_lease = false;
+var corrupt_removal = false;
 const lock_path = "C:\\R4OS\\UPDATE\\STAGED\\SYSLOCK.LCK";
 
 fn index(path: [*:0]const u8) ?usize {
@@ -32,6 +34,11 @@ fn index(path: [*:0]const u8) ?usize {
 }
 fn info(path: [*:0]const u8, out: *r4os.abi.FileInfo) callconv(.c) i32 {
     out.* = .{};
+    if (std.mem.endsWith(u8, std.mem.span(path), "REMOVE0.JRN") or std.mem.endsWith(u8, std.mem.span(path), "REMOVE1.JRN")) {
+        if (!corrupt_removal) return 0;
+        out.exists = 1; // Truncated concurrently admitted removal journal.
+        return 1;
+    }
     const i = index(path) orelse {
         out.exists = 1;
         out.is_dir = 1;
@@ -81,21 +88,29 @@ fn writeFile(path: [*:0]const u8, bytes: [*]const u8, len: u32) callconv(.c) i32
     const i = index(path) orelse return -8;
     if (len > files[i].bytes.len) return -8;
     @memcpy(files[i].bytes[0..len], bytes[0..len]);
-    files[i].len = len; file_writes += 1;
+    files[i].len = len;
+    file_writes += 1;
     return @intCast(len);
 }
 fn streamBegin(path: [*:0]const u8, _: u32) callconv(.c) i32 {
     if (!std.mem.eql(u8, std.mem.span(path), lock_path)) return -8;
     if (update_lease) return r4os.abi.file_stream_error_exists;
+    if (removal_at_lease) {
+        removal_at_lease = false;
+        corrupt_removal = true;
+    }
     if (prepare_at_lease) {
         prepare_at_lease = false;
         var newer: batch.BatchJournal = .{};
         if (!batch.parseJournalInto(files[2].bytes[0..files[2].len], 0, &newer)) return -8;
-        newer.batch_generation += 1; newer.journal_generation += 1;
-        newer.phase = .staging; newer.current_package = 0;
+        newer.batch_generation += 1;
+        newer.journal_generation += 1;
+        newer.phase = .staging;
+        newer.current_package = 0;
         files[2].len = (batch.serializeJournal(&newer, &files[2].bytes) orelse return -8).len;
     }
-    update_lease = true; return 0;
+    update_lease = true;
+    return 0;
 }
 fn streamWrite(path: [*:0]const u8, _: u64, _: [*]const u8, len: u32, _: u32) callconv(.c) i32 {
     return if (std.mem.eql(u8, std.mem.span(path), lock_path)) @intCast(len) else -8;
@@ -105,7 +120,8 @@ fn streamFinish(path: [*:0]const u8, _: u64, _: u32) callconv(.c) i32 {
 }
 fn streamAbort(path: [*:0]const u8) callconv(.c) i32 {
     if (!std.mem.eql(u8, std.mem.span(path), lock_path)) return -8;
-    update_lease = false; return 0;
+    update_lease = false;
+    return 0;
 }
 
 fn text(out: []u8, value: []const u8) usize {
@@ -121,7 +137,10 @@ fn reset() void {
     output_len = 0;
     sleeps = 0;
     file_writes = 0;
-    update_lease = false; prepare_at_lease = false;
+    update_lease = false;
+    prepare_at_lease = false;
+    removal_at_lease = false;
+    corrupt_removal = false;
 }
 fn journal(slot: usize, generation: u64) !void {
     var value: recovery.TransactionJournal = .{
@@ -188,14 +207,17 @@ fn observe(want_resume: bool) engine.Result {
     var owner: engine.Engine = .{ .app = &app, .ctx = r4os.r4sys.Context.init(&bundle) };
     return if (want_resume) owner.resumeBatch() else owner.status();
 }
-fn status() engine.Result { return observe(false); }
+fn status() engine.Result {
+    return observe(false);
+}
 
 fn checkInstalledInventoryReceipt() !void {
     // Unmodified original journal from the native L66C installation. A
     // restart batch has payload + inventory + the owner's release marker.
     const original = @embedFile("Fixtures/installed-library-v5.jrn");
     reset();
-    @memcpy(files[0].bytes[0..original.len], original); files[0].len = original.len;
+    @memcpy(files[0].bytes[0..original.len], original);
+    files[0].len = original.len;
     const installed = status();
     try expect(installed.exit_code == 0 and installed.state == .installed and installed.inventory_consistent);
     try expect(installed.payload_count == 1 and installed.transaction_step_count == 3 and installed.component_count == 1);
@@ -209,26 +231,44 @@ fn checkInstalledInventoryReceipt() !void {
 }
 
 fn resumeFixture(phase: batch.Phase, transaction_phase: recovery.JournalPhase, same_package: bool) !void {
-    reset(); try journal(0, 10); try batchJournal(2, 7);
+    reset();
+    try journal(0, 10);
+    try batchJournal(2, 7);
     var transaction: recovery.TransactionJournal = .{};
     try expect(recovery.parseJournalInto(files[0].bytes[0..files[0].len], 0, &transaction));
-    transaction.phase = transaction_phase; transaction.batch = true;
-    transaction.reboot = true; transaction.components_bound = true;
+    transaction.phase = transaction_phase;
+    transaction.batch = true;
+    transaction.reboot = true;
+    transaction.components_bound = true;
     transaction.component_digest = std.hash.Fnv1a_32.hash(&.{ 0, 0, 0, 0 });
-    if (transaction_phase != .stage) { transaction.payloads[0].committed = true; transaction.committed_count = 1; }
+    if (transaction_phase != .stage) {
+        transaction.payloads[0].committed = true;
+        transaction.committed_count = 1;
+    }
     if (transaction_phase == .rolled_back) {
-        transaction.payloads[0].committed = false; transaction.committed_count = 0;
-        transaction.payloads[0].rolled_back = true; transaction.rollback_count = 1;
+        transaction.payloads[0].committed = false;
+        transaction.committed_count = 0;
+        transaction.payloads[0].rolled_back = true;
+        transaction.rollback_count = 1;
     }
     files[0].len = (recovery.serializeJournal(&transaction, &files[0].bytes) orelse return error.Fixture).len;
     var pending: batch.BatchJournal = .{};
     try expect(batch.parseJournalInto(files[2].bytes[0..files[2].len], 0, &pending));
-    pending.phase = phase; pending.current_package = if (phase == .pending_restart) 1 else 0;
+    pending.phase = phase;
+    pending.current_package = if (phase == .pending_restart) 1 else 0;
     pending.packages[0].package_digest = if (same_package) 0 else 1;
-    pending.packages[0].manifest_checksum = 0; pending.packages[0].component_digest = 0;
+    pending.packages[0].manifest_checksum = 0;
+    pending.packages[0].component_digest = 0;
     files[2].len = (batch.serializeJournal(&pending, &files[2].bytes) orelse return error.Fixture).len;
 }
 fn checkResumeBatchIdentity() !void {
+    // Removal may appear between the initial inspection and SYSLOCK. Even
+    // an incomplete owner receipt must stop R4U without leaking the lease.
+    try resumeFixture(.pending_restart, .cleanup, true);
+    removal_at_lease = true;
+    try std.testing.expectEqual(@as(i32, 1), observe(true).exit_code);
+    try std.testing.expectEqual(@as(usize, 0), file_writes);
+    try expect(!update_lease);
     // A new preparation needs its own COMMIT, even if the package and release
     // repeat the old completed batch. There is no installed-generation proof.
     for ([_]batch.Phase{ .staging, .staged }) |phase| {
@@ -252,7 +292,8 @@ fn checkResumeBatchIdentity() !void {
     try expect(std.mem.indexOf(u8, output[0..output_len], "Installed batch=4") != null);
     // A competing STAGE can replace even an identical package batch between
     // the initial observation and lease acquisition. Re-read its phase too.
-    try resumeFixture(.pending_restart, .cleanup, true); prepare_at_lease = true;
+    try resumeFixture(.pending_restart, .cleanup, true);
+    prepare_at_lease = true;
     try expect(observe(true).exit_code != 0);
     try expect(std.mem.indexOf(u8, output[0..output_len], "Installed") == null);
     try expect(!update_lease);

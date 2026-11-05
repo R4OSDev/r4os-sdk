@@ -6,6 +6,14 @@ pub const build_api = r4os_build;
 pub const Sdk = r4os_build.Sdk;
 pub const SdkOptions = r4os_build.SdkOptions;
 pub const HostProfile = r4os_build.HostProfile;
+fn addRemovalOwnerTests(b: *std.Build, profile: Sdk, target: std.Build.ResolvedTarget) *std.Build.Step.Run {
+    const root = b.createModule(.{ .root_source_file = b.path("Tests/Simulation/RemovalOwners.zig"), .target = target, .optimize = sdk_profiles.defaults.host_optimize });
+    const owner_sdk = profile.createR4osModule(target, sdk_profiles.defaults.host_optimize);
+    const engine = b.createModule(.{ .root_source_file = b.path("r4os/system_update_engine.zig"), .target = target, .optimize = sdk_profiles.defaults.host_optimize });
+    engine.addImport("r4os", owner_sdk);
+    root.addImport("system_update_engine", engine);
+    return b.addRunArtifact(b.addTest(.{ .root_module = root }));
+}
 pub const R4XAppOptions = r4os_build.R4XAppOptions;
 pub const R4XCAppOptions = r4os_build.R4XCAppOptions;
 pub const R4AppOptions = r4os_build.R4AppOptions;
@@ -83,6 +91,7 @@ pub fn build(b: *std.Build) void {
         cases.addImport("json_core", b.createModule(.{ .root_source_file = .{ .cwd_relative = json_file }, .target = target, .optimize = sdk_profiles.defaults.host_optimize }));
         const selected = b.addRunArtifact(b.addTest(.{ .root_module = cases, .filters = @import("Tests/Simulation/UpdateFilters.zig").names }));
         b.getInstallStep().dependOn(&selected.step);
+        b.getInstallStep().dependOn(&addRemovalOwnerTests(b, sdk_profile, target).step);
         return;
     }
 
@@ -349,13 +358,12 @@ pub fn build(b: *std.Build) void {
         "stream decoder exposes ranges",                 "redirect filtering removes",
         "transport target authorizer observes",          "request deadline remains absolute",
         "stream download pump resumes",                  "stream download observes headers",
-        "HTTP81",
-        "CORS preflight derives",                        "TLS handshake records reassemble",
-        "origin policy blocks",                          "CORS requires an exact origin",
-        "cookies honor host path",                       "response cache eviction",
-        "response cache modes freshness",                "resource scheduler rejects stale",
-        "subdocuments srcdoc inherits",                  "Headers rejects malformed",
-        "Headers preserves Set-Cookie",
+        "HTTP81",                                        "CORS preflight derives",
+        "TLS handshake records reassemble",              "origin policy blocks",
+        "CORS requires an exact origin",                 "cookies honor host path",
+        "response cache eviction",                       "response cache modes freshness",
+        "resource scheduler rejects stale",              "subdocuments srcdoc inherits",
+        "Headers rejects malformed",                     "Headers preserves Set-Cookie",
     } }));
     b.step("transport-parity-test", "Existing bounded HTTP/cache/policy/resource/download owner cases").dependOn(&transport_tests.step);
     const update_cases = b.createModule(.{ .root_source_file = b.path("test_update_owners.zig"), .target = data_target, .optimize = sdk_profiles.defaults.host_optimize });
@@ -363,7 +371,9 @@ pub fn build(b: *std.Build) void {
     update_cases.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = data_target, .optimize = sdk_profiles.defaults.host_optimize }));
     if (update_json_core) |file| update_cases.addImport("json_core", b.createModule(.{ .root_source_file = .{ .cwd_relative = file }, .target = data_target, .optimize = sdk_profiles.defaults.host_optimize }));
     const update_tests = b.addRunArtifact(b.addTest(.{ .root_module = update_cases, .filters = @import("Tests/Simulation/UpdateFilters.zig").names }));
-    b.step("update-parity-test", "Existing current update/catalog/journal/backup owner cases").dependOn(&update_tests.step);
+    const update_owner_step = b.step("update-parity-test", "Existing current update/catalog/journal/backup owner cases");
+    update_owner_step.dependOn(&update_tests.step);
+    update_owner_step.dependOn(&addRemovalOwnerTests(b, sdk_profile, data_target).step);
     const gui_cases = b.createModule(.{ .root_source_file = b.path("Tests/Conformance/GuiFacadePrototype05824.zig"), .target = b.graph.host, .optimize = sdk_profiles.defaults.debug_optimize });
     gui_cases.addImport("r4os", host_r4os);
     const gui_parity = b.addRunArtifact(b.addTest(.{ .root_module = gui_cases, .filters = &.{ "raw GUI events", "command clipboard timer", "transactional paint", "buffered Canvas", "gradient resources", "modern controls" } }));

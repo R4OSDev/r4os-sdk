@@ -7,6 +7,7 @@ const system_update_inventory = r4os.system_update_inventory;
 const system_update_batch = r4os.system_update_batch;
 const system_update_backup = r4os.system_update_backup;
 pub const asset = @import("system_update_asset.zig");
+pub const removal = @import("system_update_remove.zig");
 // The engine is deliberately single-threaded, like its existing workspaces.
 // Only installAsset supplies this additional create/replace precondition.
 var asset_expectation: ?asset.Plan = null;
@@ -401,6 +402,37 @@ pub const Engine = struct {
         refreshActiveKernelVersion(app);
         return .{ .app = app, .ctx = app.system() };
     }
+    /// The shared update owner removes one observed application. Running
+    /// images wait for their normal close; no force kill or reboot is hidden.
+    pub fn removeApplication(self: *Engine, plan: removal.Plan, stop: ?*const r4os.app_contract.StopFlag) !removal.Outcome {
+        if (!ensureUpdateDirectories(&self.ctx)) return error.RemoveDirectories;
+        switch (readNewestValidJournalInto(&self.ctx, &newest_journal_workspace)) {
+            .found => if (!phaseTerminal(newest_journal_workspace.phase)) return error.RemoveForeignTransaction,
+            .not_found => {},
+            .io => return error.RemoveJournalRead,
+        }
+        switch (readNewestValidBatchInto(&self.ctx, &batch_journal_workspace)) {
+            .found => if (!system_update_batch.phaseTerminal(batch_journal_workspace.phase)) return error.RemoveForeignTransaction,
+            .not_found => {},
+            .io => return error.RemoveJournalRead,
+        }
+        if (acquireUpdateLease(&self.ctx) != .acquired) return error.RemoveBusy;
+        defer releaseUpdateLock(&self.ctx);
+        // Recheck after acquiring the same native lease as every R4U writer.
+        switch (readNewestValidJournalInto(&self.ctx, &newest_journal_workspace)) {
+            .found => if (!phaseTerminal(newest_journal_workspace.phase)) return error.RemoveForeignTransaction,
+            .not_found => {},
+            .io => return error.RemoveJournalRead,
+        }
+        switch (readNewestValidBatchInto(&self.ctx, &batch_journal_workspace)) {
+            .found => if (!system_update_batch.phaseTerminal(batch_journal_workspace.phase)) return error.RemoveForeignTransaction,
+            .not_found => {},
+            .io => return error.RemoveJournalRead,
+        }
+        var io = removal.Native.init(&self.ctx, stop);
+        defer io.deinit();
+        return removal.execute(&io, plan);
+    }
 
     pub fn verify(self: *Engine, path: []const u8) Result {
         resetTypedResult();
@@ -574,6 +606,36 @@ pub fn runTerminal(r4_app: *r4os.App) i32 {
         printUsage(&ctx);
         return 1;
     };
+    if (equalsIgnoreCase(command, "REMOVE") or equalsIgnoreCase(command, "RESUME-REMOVE")) {
+        var io = removal.Native.init(&ctx, null);
+        defer io.deinit();
+        const path = trim(args[pos..]);
+        var parsed: ?std.json.Parsed(removal.Plan) = null;
+        defer if (parsed) |value| value.deinit();
+        const plan: removal.Plan = if (equalsIgnoreCase(command, "RESUME-REMOVE")) blk: {
+            if (path.len != 0) return 1;
+            const current = (io.load() catch return 1) orelse return 1;
+            break :blk current.plan;
+        } else blk: {
+            const native = r4os.AbsoluteFilePath.parse(path) catch return 1;
+            const memory = ctx.allocator().alloc(u8, 16384) catch return 1;
+            defer ctx.allocator().free(memory);
+            const count = ctx.fileRead(native.asZ().ptr, memory);
+            if (count <= 0 or count >= memory.len) return 1;
+            parsed = std.json.parseFromSlice(removal.Plan, ctx.allocator(), memory[0..@intCast(count)], .{ .allocate = .alloc_always }) catch return 1;
+            break :blk parsed.?.value;
+        };
+        const outcome = engine.removeApplication(plan, null) catch |err| {
+            fail(&ctx, "REMOVE", @errorName(err));
+            return 1;
+        };
+        ctx.write("SYSUPD REMOVE state=");
+        ctx.write(@tagName(outcome.state));
+        ctx.write(" generation=");
+        ctx.printU64(outcome.generation);
+        ctx.println("");
+        return if (outcome.state == .removed) 0 else 2;
+    }
     if (equalsIgnoreCase(command, "VERIFY")) {
         const path = trim(args[pos..]);
         if (path.len == 0) {
@@ -782,6 +844,8 @@ fn printUsage(ctx: *const r4os.r4sys.Context) void {
     ctx.println("  SYSUPD ARCHIVE-BOOT-BACKUP Bxxxxxxx.R4U");
     ctx.println("  SYSUPD RESUME-BATCH");
     ctx.println("  SYSUPD RESUME");
+    ctx.println("  SYSUPD REMOVE C:\\TEMP\\REMOVE.JSON");
+    ctx.println("  SYSUPD RESUME-REMOVE  (waits for normal application close)");
     ctx.println("  SYSUPD STATUS");
     ctx.println("");
     ctx.println("APPLY stages payloads beside their targets, writes a journal, uses R4SYS replace and keeps SCP/SFTP as transport only.");
@@ -5046,6 +5110,9 @@ fn archiveBootBackupCommand(ctx: *const r4os.r4sys.Context, name: []const u8) i3
 }
 
 fn acquireUpdateLock(ctx: *const r4os.r4sys.Context, allow_resume: bool) UpdateLockStatus {
+    var remove_io = removal.Native.init(ctx, null);
+    defer remove_io.deinit();
+    if (remove_io.load() catch return .io) |record| if (!record.terminal()) return .busy;
     if (!allow_resume) {
         switch (readNewestValidJournalInto(ctx, &newest_journal_workspace)) {
             .found => {
@@ -5055,6 +5122,20 @@ fn acquireUpdateLock(ctx: *const r4os.r4sys.Context, allow_resume: bool) UpdateL
             .io => return .io,
         }
     }
+    const lease = acquireUpdateLease(ctx);
+    if (lease != .acquired) return lease;
+    // The pending removal may have been admitted between the first read
+    // and our lease acquisition. Check again while holding SYSLOCK.
+    if (remove_io.load() catch {
+        releaseUpdateLock(ctx);
+        return .io;
+    }) |record| if (!record.terminal()) {
+        releaseUpdateLock(ctx);
+        return .busy;
+    };
+    return .acquired;
+}
+fn acquireUpdateLease(ctx: *const r4os.r4sys.Context) UpdateLockStatus {
     const open_flags = r4os.abi.file_stream_open_create |
         r4os.r4sys.file_stream_open_lease;
     const begin_rc = ctx.fileStreamBegin(update_lock_path, open_flags);

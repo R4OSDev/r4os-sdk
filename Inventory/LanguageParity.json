@@ -55785,6 +55785,14 @@
       "libraries": "0.64.49",
       "report": "Docs/Deployment/Portex.txt",
       "scope": "Current shared Zig system-asset wrapper, installed BOOT/normal Limine binding and explicit restart activation. Existing update status case now includes an unmodified native installed R4L journal with payload/inventory/release marker and an unconfirmed post_boot negative. Real L66C installation and generated Zig client work=805 / exact heap pass in KVM4; Kernel459 activation evidence is recorded separately in the cited Portex report. C/Rust interfaces and three rebuilt runtime objects are byte-identical to150; no new C/Rust guest, Windows or hardware claim."
+    },
+    "application_removal_08954": {
+      "performed_in": "0.89.54",
+      "sdk": "0.64.152",
+      "contract": "0.64.76",
+      "libraries": "0.64.49",
+      "report": "Docs/Deployment/Portex.txt",
+      "scope": "Shared Zig Engine removal helper and SYSUPD REMOVE/RESUME-REMOVE CLI; all30 original update test functions and three focused production-state-machine cases pass. Existing native STATUS/RESUME test also passes with concurrent incomplete-removal admission at SYSLOCK and exact lease release. KVM4 verifies managed and unbound manually installed catalog-app removal, idempotent original receipt, running-image wait, pre-delete cancellation, Portex reopen/resume and byte-exact preservation of changed/foreign links and adjacent user data. Exact candidate/final artifact and remaining limits are in the report. Raw ABI, C/Rust facades and runtime object sources are unchanged; no new cross-language guest, Windows or hardware qualification."
     }
   },
   "wave_bindings": [
@@ -56037,18 +56045,18 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.89.52",
-    "sdk": "0.64.151",
+    "performed_in": "0.89.54",
+    "sdk": "0.64.152",
     "contract": "0.64.76 unchanged",
     "libraries": "0.64.49 unchanged",
-    "evidence": "asset_restart_08952",
-    "scope": "Source review: same original R4U owner now wraps R4L/kernel and stages running R4X; explicit asset-bound commit and installed BOOT configuration proof. Raw ABI and C/Rust helper interfaces unchanged. Native qualification is recorded in the cited Portex report; no new C/Rust guest or Windows claim.",
+    "evidence": "application_removal_08954",
+    "scope": "Shared Zig SYSUPD Engine application-removal owner; durable original request, two checks for an active image, guarded native file deletion, inventory-only atomic commit and immutable completed receipts. No raw ABI or C/Rust facade change. Three targeted owner cases accompany all original update owner cases in the existing runner. Native qualification and limitations are recorded in Deployment/Portex.txt; no new C/Rust guest, Windows or hardware claim.",
     "historical_snapshot_retained": true
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.89.52",
+    "reviewed_in": "0.89.54",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -58022,11 +58030,11 @@
       },
       {
         "path": "Repositories/SDK/build.zig",
-        "sha256": "b72db479ad5d54b754a03ef1e9cc000be348e9991d61cc11e534ed26dc6c28a5"
+        "sha256": "554d9d48407063d93eb971cbb8e3f380d06f9fa4011629dbe56390131e59b463"
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "da742922ba2dd18d8706ca3b91612382eb04e1190e41636d0e01e246d95da39f"
+        "sha256": "5beb4f291834fbf5a17856c543145a6db2e016526d82566c90a63c0181207b53"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -58770,7 +58778,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/system_update_engine.zig",
-        "sha256": "15192a9f7342f927abd1c05db9b119d716f1181853ad6b38d7f9b3e2d5d01e04"
+        "sha256": "7ed1f656fb1f60aa7b99a3410aa3eef9c9b8bb47d9190dba742197ae70121cca"
       },
       {
         "path": "Repositories/SDK/r4os/system_update_inventory.zig",
@@ -58783,6 +58791,10 @@
       {
         "path": "Repositories/SDK/r4os/system_update_recovery.zig",
         "sha256": "215bd5fca59aba70a59ca073f8799aa86501ba59ed639291710c4bde2e2100af"
+      },
+      {
+        "path": "Repositories/SDK/r4os/system_update_remove.zig",
+        "sha256": "353153ce5f85b8be016dc990ddd63a5139ec785112534c77ffdbc5f3dbfc8c42"
       },
       {
         "path": "Repositories/SDK/r4os/time_contract.zig",
