@@ -3386,8 +3386,11 @@ fn verifyComponentLine(ctx: *const r4os.r4sys.Context, line: []const u8, info: *
         fail(ctx, command, "component-target");
         return false;
     }).len;
+    // Applications retain their observed filename when adopted or updated.
+    // Their technical name/version is verified from the original R4M0 bytes,
+    // independently of the chosen leaf. System components keep fixed names.
     if (!componentTargetMatchesKind(kind, component.targetText()) or
-        !std.ascii.eqlIgnoreCase(name, componentNameFromTarget(component.targetText(), kind)))
+        (kind != .r4x and !std.ascii.eqlIgnoreCase(name, componentNameFromTarget(component.targetText(), kind))))
     {
         fail(ctx, command, "component-target-identity");
         return false;
@@ -3465,7 +3468,7 @@ fn verifyRequirementLine(ctx: *const r4os.r4sys.Context, line: []const u8, info:
     }).len;
     requirement.target_path[requirement.target_len] = 0;
     if (!componentTargetMatchesKind(kind, requirement.targetText()) or
-        !std.ascii.eqlIgnoreCase(name, componentNameFromTarget(requirement.targetText(), kind)))
+        (kind != .r4x and !std.ascii.eqlIgnoreCase(name, componentNameFromTarget(requirement.targetText(), kind))))
     {
         fail(ctx, command, "requirement-target-identity");
         return false;

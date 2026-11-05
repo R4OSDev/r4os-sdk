@@ -58757,7 +58757,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/system_update_engine.zig",
-        "sha256": "46e1c60eaa2a71631ef2621a2d0d9826496aa9a5a275d43173ac37c73ec376a6"
+        "sha256": "bd3d435e08c5481c16374cc849f6e3445ad32cd1d41bf263212a71c45f50aea5"
       },
       {
         "path": "Repositories/SDK/r4os/system_update_inventory.zig",
