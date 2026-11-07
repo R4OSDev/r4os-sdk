@@ -400,8 +400,8 @@ fn parseV2(allocator: std.mem.Allocator, path: []const u8, text: []const u8) !Ma
     if (parsed_kind == .r4l and platformApiGroupId(parsed_name) != null) return error.ReservedPlatformApiName;
     const parsed_module_version = try parseModuleVersion(module_version orelse return error.MissingModuleVersion);
     const parsed_language = try parseLanguage(language orelse return error.MissingLanguage);
-    const generation = try platformGeneration(allocator, parsed_language, sdk_profile);
-    if (generation == 2 and (parsed_kind != .r4x or !std.mem.eql(u8, entry_mode orelse "", "lowlevel"))) return error.Generation2RequiresLowLevelR4X;
+    const generation = try platformGeneration(allocator, parsed_kind, parsed_language, sdk_profile);
+    if (generation == 2 and parsed_kind != .r4d and parsed_kind != .r4p and (parsed_kind != .r4x or !std.mem.eql(u8, entry_mode orelse "", "lowlevel"))) return error.Generation2RequiresLowLevelR4X;
     if (parsed_language == .rust) {
         const admission = capabilities.rust(parsed_kind.text(), entry_mode orelse "", module_role, .host);
         if (admission.failure) |err| return err;
@@ -487,6 +487,9 @@ fn parseV2(allocator: std.mem.Allocator, path: []const u8, text: []const u8) !Ma
         try validateProfileImports(parsed_class.?, imports.items);
     } else {
         if (entry_mode != null) return error.NonR4XEntryModeForbidden;
+        if (generation == 2) {
+            if (imports.items.len != 1 or !std.mem.eql(u8, imports.items[0], "R4DEV:Query2:2")) return error.InvalidImport;
+        }
         if (app_class != null) return error.NonR4XAppClassForbidden;
         if (package != null) return error.NonR4XPackageForbidden;
         // R4D and R4L share the R4X compiled-library mechanism. This adds no
@@ -1046,12 +1049,12 @@ pub fn importIsOptional(value: []const u8) bool {
     return (std.fmt.parseUnsigned(u32, text, 10) catch return false) == 1;
 }
 
-fn platformGeneration(a: std.mem.Allocator, language: Language, selection: ?[]const u8) !u8 {
+fn platformGeneration(a: std.mem.Allocator, kind: Kind, language: Language, selection: ?[]const u8) !u8 {
     _ = a;
     const id = selection orelse return 1;
     for (@import("generated/profile_policy.zig").profiles) |profile| {
         if (!std.mem.eql(u8, profile.id, id)) continue;
-        if (!std.mem.eql(u8, profile.language, language.text()) or !std.mem.eql(u8, profile.role, "module")) return error.SdkProfileRoleMismatch;
+        if (!std.mem.eql(u8, profile.language, language.text()) or !std.mem.eql(u8, profile.role, "module") or (profile.kind.len != 0 and !std.mem.eql(u8, profile.kind, kind.text()))) return error.SdkProfileRoleMismatch;
         if (!profile.explicit_platform) return error.ExplicitPlatformProfileRequired;
         if (profile.generation != 2) return error.UnsupportedSdkPlatform;
         return profile.generation;
@@ -2209,4 +2212,20 @@ test "generation2 manifest selects central profile and exact start/import names"
     try std.testing.expectError(error.UnknownSdkProfile, parse(arena.allocator(), "module.R4MF", unknown));
     const application = try std.mem.replaceOwned(u8, arena.allocator(), base, "ENTRY_MODE=lowlevel", "ENTRY_MODE=app");
     try std.testing.expectError(error.Generation2RequiresLowLevelR4X, parse(arena.allocator(), "module.R4MF", application));
+    // Every technical profile is bound to its actual language AND kind.
+    // Query2 metadata by itself never selects a new loader init callback.
+    for ([_][3][]const u8{ .{ "Zig", "zig", "zig" }, .{ "C", "c", "c" }, .{ "Rust", "rust", "rs" } }) |language| {
+        for ([_][2][]const u8{ .{ "R4D", "r4d" }, .{ "R4P", "r4p" } }) |kind| {
+            const text = try std.fmt.allocPrint(arena.allocator(), "R4OS_MODULE_MANIFEST=2\nKIND={s}\nNAME=TECH2\nVERSION=0.1.0\nLANGUAGE={s}\nSOURCE=main.{s}\nTARGET=/TECH2.{s}\nIMAGE_SCOPE=none\nSDK_PROFILE=r4os-{s}-{s}-generation2\nIMPORT=R4DEV:Query2:2\n", .{ kind[0], language[0], language[2], kind[0], language[1], kind[1] });
+            const technical = try parse(arena.allocator(), "module.R4MF", text);
+            try std.testing.expectEqual(@as(u8, 2), technical.platform_generation);
+            try std.testing.expect(technical.entry_mode == null);
+            const old_import = try std.mem.replaceOwned(u8, arena.allocator(), text, "R4DEV:Query2:2", "R4DEV:Query:1");
+            try std.testing.expectError(error.InvalidImport, parse(arena.allocator(), "module.R4MF", old_import));
+            const other_profile = try std.mem.replaceOwned(u8, arena.allocator(), text, if (std.mem.eql(u8, kind[1], "r4d")) "-r4d-generation2" else "-r4p-generation2", if (std.mem.eql(u8, kind[1], "r4d")) "-r4p-generation2" else "-r4d-generation2");
+            try std.testing.expectError(error.SdkProfileRoleMismatch, parse(arena.allocator(), "module.R4MF", other_profile));
+            const extra_import = try std.fmt.allocPrint(arena.allocator(), "{s}IMPORT=R4SYS:Query2:2\n", .{text});
+            try std.testing.expectError(error.InvalidImport, parse(arena.allocator(), "module.R4MF", extra_import));
+        }
+    }
 }

@@ -6,13 +6,31 @@
   },
   "profiles": {
     "r4os-zig-generation2": {
-      "language": "Zig", "role": "module", "codegen": "module", "toolset": "core", "components": "system", "cpu": "r4os-avx2-v1", "platform": "platform2"
+      "language": "Zig", "role": "module", "codegen": "module", "toolset": "core", "components": "system", "cpu": "r4os-avx2-v1", "kind": "R4X", "platform": "platform2"
     },
     "r4os-c-generation2": {
-      "language": "C", "role": "module", "codegen": "module", "toolset": "core", "components": "system", "cpu": "r4os-avx2-v1", "platform": "platform2"
+      "language": "C", "role": "module", "codegen": "module", "toolset": "core", "components": "system", "cpu": "r4os-avx2-v1", "kind": "R4X", "platform": "platform2"
     },
     "r4os-rust-generation2": {
       "language": "Rust", "role": "module", "codegen": "rust-module", "toolset": "core", "components": "system", "kind": "R4X", "platform": "platform2"
+    },
+    "r4os-zig-r4d-generation2": {
+      "language": "Zig", "role": "module", "codegen": "module", "toolset": "core", "components": "system", "cpu": "r4os-avx2-v1", "kind": "R4D", "platform": "platform2"
+    },
+    "r4os-c-r4d-generation2": {
+      "language": "C", "role": "module", "codegen": "module", "toolset": "core", "components": "system", "cpu": "r4os-avx2-v1", "kind": "R4D", "platform": "platform2"
+    },
+    "r4os-rust-r4d-generation2": {
+      "language": "Rust", "role": "module", "codegen": "rust-module", "toolset": "core", "components": "system", "kind": "R4D", "platform": "platform2"
+    },
+    "r4os-zig-r4p-generation2": {
+      "language": "Zig", "role": "module", "codegen": "module", "toolset": "core", "components": "system", "cpu": "r4os-avx2-v1", "kind": "R4P", "platform": "platform2"
+    },
+    "r4os-c-r4p-generation2": {
+      "language": "C", "role": "module", "codegen": "module", "toolset": "core", "components": "system", "cpu": "r4os-avx2-v1", "kind": "R4P", "platform": "platform2"
+    },
+    "r4os-rust-r4p-generation2": {
+      "language": "Rust", "role": "module", "codegen": "rust-module", "toolset": "core", "components": "system", "kind": "R4P", "platform": "platform2"
     },
     "r4os-zig-module-v1": {
       "language": "Zig",

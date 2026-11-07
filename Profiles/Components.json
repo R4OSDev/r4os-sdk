@@ -26,23 +26,23 @@
   "repositories": {
     "contract": {
       "repository": "https://github.com/R4OSDev/r4os-contract.git",
-      "commit": "b839cbf80571bc1076f17918ed1386f52d96aa5c",
-      "version": "0.64.78",
+      "commit": "ef571423a8cd2ad47b6881a1787443040e1f88ee",
+      "version": "0.64.79",
       "files": {
-        "build.zig.zon": "32c1ca5355fd7e684ef745b62bce62dead020f9416ded90c9a15ea82dc475cc6",
+        "build.zig.zon": "ef9d62e0cd16fc3185962b60cba176d40013ce672385794b1c5242e5678c2079",
         "API/ApiContract.json": "f7f8914208935ed2bd2c08bc2f4bfe0db44a3ff7aab9fbb5f26e601271221631",
         "Module/CpuBaseline.json": "eeeee03aa8fd41051c09e61e9d70ca35660f2b413c3f878fb6e5a3bb51aad10c",
         "Generated/SDK/Rust/Cargo.toml": "de464f2f9243e3d153c06b701a2126839c3e8a921a6d466467d3042370023263",
-        "Generated/SDK/Rust/src/lib.rs": "fda4687701069b1fbe6663ff02c1d36c01479abce08a591857bb86b10a36348b",
-        "API/Generation2.json": "cd7dc67c1e8704ace45b1901b5ef266f10cfca49f58d224a1583f32683972c23",
+        "Generated/SDK/Rust/src/lib.rs": "4bf39543e0c94e0840fe099e406e2b833f616114b9cdb3760ce826d9ae556c2e",
+        "API/Generation2.json": "97e69a3c69a8c664e37954087f1f081c6f4e6213afe2fd2f3723704772f2e749",
         "Generated/Generation2/Inventory.json": "0b28cc232082437e4a7c81ddcce4b02f3ab9337b4db93d9a58c2ff9beff33ae9"
       },
-      "zig_hash": "r4os_contract-0.64.78-ELhbYTsROAHmBkTd8T4AxDxDhgGDJ8mkv2-x0xTK8F6M",
-      "archive_url": "https://github.com/R4OSDev/r4os-contract/archive/b839cbf80571bc1076f17918ed1386f52d96aa5c.tar.gz",
+      "zig_hash": "r4os_contract-0.64.79-ELhbYV4rOQGjmNeOO-BMXoQE6jlpUAlBmt5s0wtaOQT-",
+      "archive_url": "https://github.com/R4OSDev/r4os-contract/archive/ef571423a8cd2ad47b6881a1787443040e1f88ee.tar.gz",
       "archive_format": "tar.gz",
       "tree": {
         "algorithm": "r4os-files-sha256-lf-v1",
-        "sha256": "2961779192c07d4cd0a17105842d106443cb3669c025099222821142c40e40ea",
+        "sha256": "79646d7aece47762b522bbfa6012f1962402ee5d645613153cd24f8754c5fdc5",
         "files": [
           ".gitattributes",
           ".gitignore",
@@ -98,6 +98,7 @@
           "Generated/SDK/Zig/abi_exports.zig",
           "Generated/SDK/Zig/abi_generated.zig",
           "Generated/SDK/Zig/package.zig",
+          "Generated/SDK/Zig/technical2_generated.zig",
           "LICENSE",
           "Module/CpuBaseline.json",
           "Module/R4MFv2.txt",
@@ -115,6 +116,7 @@
           "Tools/AbiRustGen/src/c_projection.zig",
           "Tools/AbiRustGen/src/main.zig",
           "Tools/ApiContractGen/src/generation2.zig",
+          "Tools/ApiContractGen/src/generation2_technical.zig.in",
           "Tools/ApiContractGen/src/main.zig",
           "Tools/Test-RustABI.ps1",
           "build.zig",

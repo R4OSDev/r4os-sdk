@@ -487,6 +487,7 @@ pub const Sdk = struct {
     }
 
     fn addR4MFDriver(self: Sdk, loaded: LoadedR4MF) BuildResult {
+        if (loaded.manifest.platform_generation == 2) return self.addGeneration2Provider(loaded);
         if (loaded.manifest.language == .c and (loaded.manifest.imports.len != 1 or !std.mem.eql(u8, loaded.manifest.imports[0], "R4DEV:Query:1")))
             @panic("C R4D requires the original exact R4DEV:Query:1 import");
         const companion_count = loaded.source_paths.len - 1;
@@ -546,6 +547,7 @@ pub const Sdk = struct {
     }
 
     fn addR4MFProtocol(self: Sdk, loaded: LoadedR4MF) BuildResult {
+        if (loaded.manifest.platform_generation == 2) return self.addGeneration2Provider(loaded);
         // r4p.dep= ist wiederholbar; die Reihenfolge des Manifests bleibt.
         var deps: std.ArrayList([]const u8) = .empty;
         for (loaded.manifest.metadata) |entry| {
@@ -701,6 +703,85 @@ pub const Sdk = struct {
         addNamedProjectFile(run, self.b, loaded.project_path, "--fixture-c", loaded.manifest.conformance_c.?);
         addNamedProjectFile(run, self.b, loaded.project_path, "--docs", loaded.manifest.api_reference.?);
         return run;
+    }
+
+    fn addGeneration2Provider(self: Sdk, loaded: LoadedR4MF) BuildResult {
+        const m = loaded.manifest;
+        const driver = m.kind == .r4d;
+        if (!driver and m.kind != .r4p) @panic("Technical provider kind required");
+        _ = self.manifestMeta(loaded, if (driver) "r4d.name" else "r4p.name");
+        _ = self.manifestMeta(loaded, if (driver) "r4d.type" else "r4p.role");
+        if (!driver) _ = self.manifestMeta(loaded, "r4p.category");
+        const entry = if (driver) "DriverInit2" else "ProtocolInit2";
+        const elf = switch (m.language.?) {
+            .rust => @panic("Rust providers use SDK Tools/Build-RustModule.ps1"),
+            .zig => blk: {
+                const companions = self.b.allocator.alloc(std.Build.LazyPath, loaded.source_paths.len - 1) catch @panic("OOM");
+                for (loaded.source_paths[1..], 0..) |source, i| companions[i] = userPath(self.b, source);
+                break :blk addRawModule(self.b, .{
+                    .builder = self.builder,
+                    .name = m.name,
+                    .root_source_file = userPath(self.b, loaded.source_paths[0]),
+                    .r4os_module = self.profile.r4os_module,
+                    .grapheme_source = self.profile.grapheme_source,
+                    .contract_module = self.profile.contract_module,
+                    .contract_module2 = self.profile.contract_module2,
+                    .linker_script = self.profile.linker_script,
+                    .entry_symbol = entry,
+                    .optimize = manifestOptimizeMode(m),
+                    .zig_modules = loaded.zig_modules,
+                    .native_archives = loaded.native_archives,
+                    .c_source_files = companions,
+                    .c_include_roots = self.withContractCIncludeRoot(self.manifestCIncludeRoots(loaded)),
+                    .c_defines = m.c_defines,
+                    .c_flags = m.c_flags,
+                });
+            },
+            .c => addCModule(self.b, .{
+                .name = m.name,
+                .source_root = userPath(self.b, loaded.project_path),
+                .sources = m.sources,
+                .include_root = self.profile.c_include_root,
+                .extra_include_roots = self.withContractCIncludeRoot(self.manifestCIncludeRoots(loaded)),
+                .c_defines = m.c_defines,
+                .c_flags = m.c_flags,
+                .startup_source_file = null,
+                .linker_script = self.profile.linker_script,
+                .entry_symbol = entry,
+                .optimize = manifestOptimizeMode(m),
+            }),
+        };
+        const exports: []const []const u8 = if (driver)
+            &.{ "DriverInit2:@DriverInit2:2", "DriverShutdown:@DriverShutdown:1" }
+        else
+            &.{ "ProtocolInit2:@ProtocolInit2:2", "ProtocolShutdown:@ProtocolShutdown:1", "ProtocolQuery:@ProtocolQuery:1", "ProtocolDispatch:@ProtocolDispatch:1", "ProtocolRole:@ProtocolInit2:1" };
+        var metadata: std.ArrayList([]const u8) = .empty;
+        const version = module_manifest.moduleVersionMeta(self.b.allocator, m) catch @panic("Invalid provider version");
+        const module_name = self.b.fmt("{s}_{s}", .{ m.kind.text(), m.name });
+        metadata.append(self.b.allocator, version) catch @panic("OOM");
+        for (m.metadata) |value| {
+            if (std.mem.startsWith(u8, value, "module.version=")) {
+                if (!std.mem.eql(u8, value, version)) @panic("Conflicting provider version");
+                continue;
+            }
+            if (std.mem.startsWith(u8, value, "module.name=")) {
+                if (!std.mem.eql(u8, value[12..], module_name)) @panic("Conflicting provider module name");
+                continue;
+            }
+            metadata.append(self.b.allocator, value) catch @panic("OOM");
+        }
+        return addR4MElf(self.b, .{
+            .name = m.name,
+            .module_name = module_name,
+            .kind = if (driver) "r4d" else "r4p",
+            .extension = m.kind.text(),
+            .elf = elf,
+            .builder = self.builder,
+            .imports = m.imports,
+            .exports = exports,
+            .metadata = metadata.items,
+            .resources = self.manifestResources(loaded),
+        });
     }
 
     fn addGeneration2Program(self: Sdk, loaded: LoadedR4MF) BuildResult {

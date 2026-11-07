@@ -10,7 +10,7 @@ $hash=[Convert]::ToHexString([Security.Cryptography.SHA256]::HashData([Text.Enco
 $lines=[Collections.Generic.List[string]]::new()
 $lines.Add('// Generated from Profiles/Build.json by Tools/Sync-ProfilePolicy.ps1. DO NOT EDIT.')
 $lines.Add('pub const source_sha256 = "'+$hash+'";')
-$lines.Add('pub const Profile = struct { id: []const u8, language: []const u8, role: []const u8, generation: u8, explicit_platform: bool };')
+$lines.Add('pub const Profile = struct { id: []const u8, language: []const u8, role: []const u8, kind: []const u8, generation: u8, explicit_platform: bool };')
 $lines.Add('pub const profiles = [_]Profile{')
 $ids=[string[]]@($data.profiles.Keys)
 [Array]::Sort($ids,[StringComparer]::Ordinal)
@@ -18,12 +18,14 @@ foreach($id in $ids){
     $profile=$data.profiles[$id]
     $explicit=$profile.ContainsKey('platform')
     $platform=if($explicit){$profile.platform}else{'platform1'}
+    $kind=if($profile.ContainsKey('kind')){[string]$profile.kind}else{''}
     foreach($value in @($id,$profile.language,$profile.role)){
         if($value -cnotmatch '^[A-Za-z0-9_+.-]+$'){throw 'SdkProfileProjectionStringInvalid'}
     }
     $generation=$data.platforms[$platform].generation
     if($generation -notin @(1,2)){throw 'SdkProfileProjectionGenerationInvalid'}
-    $lines.Add('    .{ .id = "'+$id+'", .language = "'+$profile.language+'", .role = "'+$profile.role+'", .generation = '+$generation+', .explicit_platform = '+$explicit.ToString().ToLowerInvariant()+' },')
+    if($kind -and $kind -cnotin @('R4X','R4D','R4P','R4L')){throw 'SdkProfileProjectionKindInvalid'}
+    $lines.Add('    .{ .id = "'+$id+'", .language = "'+$profile.language+'", .role = "'+$profile.role+'", .kind = "'+$kind+'", .generation = '+$generation+', .explicit_platform = '+$explicit.ToString().ToLowerInvariant()+' },')
 }
 $lines.Add('};')
 $generated=($lines -join "`n")+"`n"

@@ -161,7 +161,7 @@ try{
     Assert-R4SdkProjectCFlags $sdkProfiles $facts.kind $facts.name $rust.c_flags
     $profileRole=if($isLibrary){'library'}elseif($isDriver){'driver'}elseif($isProtocol){'protocol'}elseif($facts.entry_mode -ceq 'lowlevel'){'lowlevel'}else{'app'}
     $expectedProfile=if($sourceBinding.platform.generation -eq 2){
-        if($profileRole -cne 'lowlevel' -or $sourceBinding.build.kind -cne 'R4X'){throw 'RustGeneration2RequiresLowLevelR4X'}
+        if($profileRole -cnotin @('lowlevel','driver','protocol') -or $sourceBinding.build.kind -cne $facts.kind){throw 'RustGeneration2ProviderKindMismatch'}
         $facts.build_profile
     }else{$codegen.profile_ids[$profileRole]}
     if($rust.schema -ne 2 -or $codegen.schema -ne 2 -or $rust.profile -cne $expectedProfile -or $codegen.target -cne $description.kernel_target){throw 'RustModuleProfileMismatch'}
@@ -272,7 +272,8 @@ try{
     if(!$archive -or !(Test-Path -LiteralPath $archive -PathType Leaf)){throw 'RustArchiveMissing'}
     $phase='link'
     $linked=Join-Path $work 'module.elf';$script=Canonical $SdkRoot $codegen.linker_script
-    Invoke-Tool $description.linker ((@($codegen.linker_flags)+@('--entry',$(if($isLibrary){'r4l_entry'}elseif($isDriver){'r4d_init_entry'}elseif($isProtocol){'r4p_init_entry'}else{$sourceBinding.platform.entry_symbol}),'-T',$script,'-o',$linked,$archive,$heapRuntime)+$facadeObjects+$native.objects+$libraryHelpers.objects)) $work|Out-Null
+    $entrySymbol=if($isLibrary){'r4l_entry'}elseif($isDriver){if($sourceBinding.platform.generation -eq 2){'DriverInit2'}else{'r4d_init_entry'}}elseif($isProtocol){if($sourceBinding.platform.generation -eq 2){'ProtocolInit2'}else{'r4p_init_entry'}}else{$sourceBinding.platform.entry_symbol}
+    Invoke-Tool $description.linker ((@($codegen.linker_flags)+@('--entry',$entrySymbol,'-T',$script,'-o',$linked,$archive,$heapRuntime)+$facadeObjects+$native.objects+$libraryHelpers.objects)) $work|Out-Null
     $phase='package'
     $candidate=Join-Path $work ('module.'+$facts.kind)
     $packArgs=@('--r4m','--kind',$facts.kind.ToLowerInvariant(),'--elf',$linked,'--output',$candidate,'--module-name',$(if($isDriver){'R4D_'+$facts.name}elseif($isProtocol){'R4P_'+$facts.name}else{$facts.name}))
