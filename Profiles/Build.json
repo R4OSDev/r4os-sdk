@@ -1,6 +1,19 @@
 {
   "schema": 1,
+  "platforms": {
+    "platform1": { "generation": 1, "contract_module": "r4os_contract", "sdk_module": "r4os", "query_symbol": "Query", "query_version": 1, "entry_symbol": "R4XStart", "entry_version": 1 },
+    "platform2": { "generation": 2, "contract_module": "r4os_contract2", "sdk_module": "r4os_platform2", "query_symbol": "Query2", "query_version": 2, "entry_symbol": "R4XStart2", "entry_version": 2 }
+  },
   "profiles": {
+    "r4os-zig-generation2": {
+      "language": "Zig", "role": "module", "codegen": "module", "toolset": "core", "components": "system", "cpu": "r4os-avx2-v1", "platform": "platform2"
+    },
+    "r4os-c-generation2": {
+      "language": "C", "role": "module", "codegen": "module", "toolset": "core", "components": "system", "cpu": "r4os-avx2-v1", "platform": "platform2"
+    },
+    "r4os-rust-generation2": {
+      "language": "Rust", "role": "module", "codegen": "rust-module", "toolset": "core", "components": "system", "kind": "R4X", "platform": "platform2"
+    },
     "r4os-zig-module-v1": {
       "language": "Zig",
       "role": "module",

@@ -22,7 +22,7 @@ try {
     if($LASTEXITCODE -ne 0){throw 'C/Rust facade projection drift.'}
     Push-Location $sdk
     try {
-        $steps=@(if($Platform){'platform-parity-test'}elseif($Graphics){'graphics-parity-test'}else{'gui-parity-test';'dialog-text-test';'input-events-test'})
+        $steps=@(if($Platform){'platform-parity-test';'platform2-test'}elseif($Graphics){'graphics-parity-test'}else{'gui-parity-test';'dialog-text-test';'input-events-test'})
         & $Zig build ('--fork='+$ContractRoot) @steps -j1
         if($LASTEXITCODE -ne 0){throw 'Existing GUI pixels/frame/text/input owner cases failed.'}
         & $Zig build ('--fork='+$ContractRoot) -Dfacade-runtime-only=true -Dfacade-host-test=true --prefix (Join-Path $WorkRoot 'native') -j1
@@ -31,7 +31,7 @@ try {
         if($LASTEXITCODE -ne 0){throw 'Original GUI oracle object failed.'}
     }finally{Pop-Location}
     $callbacks=Join-Path $WorkRoot 'callbacks.o'
-    & $Zig cc -O1 -UNDEBUG -Werror -fPIC -ffunction-sections -fdata-sections -I (Join-Path $sdk 'Shared/C/include') -I (Join-Path $ContractRoot 'Generated/SDK/C/include') -c (Join-Path $sdk 'Tests/Simulation/GuiParity.c') -o $callbacks
+    & $Zig cc -O1 -UNDEBUG -Werror -fPIC -ffunction-sections -fdata-sections -I (Join-Path $sdk 'Shared/C/include') -I (Join-Path $ContractRoot 'Generated/SDK/C/include') -I (Join-Path $ContractRoot 'Generated/Generation2/C/include') -c (Join-Path $sdk 'Tests/Simulation/GuiParity.c') -o $callbacks
     if($LASTEXITCODE -ne 0){throw 'C compatibility and typed native GUI fixture failed.'}
     $extra=@()
     if($Platform){
@@ -81,7 +81,8 @@ r4os-sdk={path="$dependency"}
         @('E0133','pub fn bad(d:&r4os_sdk::platform::Devices<''_>){let _=d.native();}'),
         @('E0277','fn send<T:Send>(){} pub fn bad(){send::<r4os_sdk::platform::Platform<''static,''static>>();}'),
         @('E0277','fn unpin<T:Unpin>(){} pub fn bad(){unpin::<r4os_sdk::platform::PlatformStorage>();}'),
-        @('E0505','pub fn bad(mut r:r4os_sdk::platform::Resampler,input:alloc::vec::Vec<u8>){let view=r.take_direct(&input,48000,2,1,4096).unwrap();drop(input);drop(view);} extern crate alloc;')
+        @('E0505','pub fn bad(mut r:r4os_sdk::platform::Resampler,input:alloc::vec::Vec<u8>){let view=r.take_direct(&input,48000,2,1,4096).unwrap();drop(input);drop(view);} extern crate alloc;'),
+        @('E0277','fn send<T:Send>(){} pub fn bad(){send::<r4os_sdk::platform2::Context<''static>>();}')
     )}
     foreach($case in $cases){
         [IO.File]::WriteAllText($negative,$case[1],[Text.UTF8Encoding]::new($false));$failure=Join-Path $WorkRoot 'negative.log'

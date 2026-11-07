@@ -38,6 +38,12 @@ pub fn build(b: *std.Build) void {
     b.addNamedLazyPath("update_service_contract", b.path("r4os/update_service_contract.zig"));
 
     const contract_dependency = b.dependency("r4os_contract", .{});
+    const platform2 = b.addModule("r4os_platform2", .{ .root_source_file = b.path("r4os/platform2.zig") });
+    platform2.addImport("r4os_contract2", contract_dependency.module("r4os_contract2"));
+    const platform2_tests_root = b.createModule(.{ .root_source_file = b.path("r4os/platform2.zig"), .target = b.graph.host, .optimize = sdk_profiles.defaults.host_optimize });
+    platform2_tests_root.addImport("r4os_contract2", contract_dependency.module("r4os_contract2"));
+    const platform2_tests = b.addRunArtifact(b.addTest(.{ .root_module = platform2_tests_root }));
+    b.step("platform2-test", "Check explicit generation2 context selection").dependOn(&platform2_tests.step);
     const parity_check = b.addSystemCommand(&.{ "pwsh", "-NoLogo", "-NoProfile", "-File" });
     parity_check.addFileArg(b.path("Tools/Test-LanguageParity.ps1"));
     parity_check.addArg("-SdkRoot");
@@ -542,6 +548,7 @@ pub fn build(b: *std.Build) void {
     module_test_step.dependOn(&parity_check.step);
 
     const test_step = b.step("test", "Run SDK, build-tool and smoke tests");
+    test_step.dependOn(&platform2_tests.step);
     test_step.dependOn(&parity_check.step);
     const input_events_root = b.createModule(.{
         .root_source_file = b.path("r4os/input_events_tests.zig"),

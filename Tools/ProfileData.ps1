@@ -49,7 +49,21 @@ function Read-R4SdkProfiles([string]$SdkRoot) {
         $hashes[$name] = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()
     }
     $build, $tools, $components = $documents.Build, $documents.Tools, $documents.Components
-    Assert-R4ProfileKeys $build @('schema', 'profiles', 'cpu_baselines', 'codegen', 'native_c_profiles') 'Build'
+    Assert-R4ProfileKeys $build @('schema', 'profiles', 'cpu_baselines', 'codegen', 'native_c_profiles', 'platforms') 'Build'
+    Assert-R4ProfileJsonObject $build.platforms 'platforms'
+    foreach($id in $build.platforms.Keys){
+        Assert-R4ProfileId $id 'platform'
+        $platform=$build.platforms[$id]
+        Assert-R4ProfileKeys $platform @('generation','contract_module','sdk_module','query_symbol','query_version','entry_symbol','entry_version') "platforms.$id"
+        if($platform.generation -notin @(1,2)){throw "SdkPlatformGenerationUnsupported: $id"}
+        $next=$platform.generation -eq 2
+        if($platform.contract_module -cne $(if($next){'r4os_contract2'}else{'r4os_contract'}) -or
+           $platform.sdk_module -cne $(if($next){'r4os_platform2'}else{'r4os'}) -or
+           $platform.query_symbol -cne $(if($next){'Query2'}else{'Query'}) -or
+           $platform.entry_symbol -cne $(if($next){'R4XStart2'}else{'R4XStart'}) -or
+           $platform.query_version -ne $platform.generation -or $platform.entry_version -ne $platform.generation){throw "SdkPlatformIdentityMismatch: $id"}
+    }
+    if(!$build.platforms.Contains('platform1') -or $build.platforms.platform1.generation -ne 1){throw 'SdkPlatformDefaultMissing'}
     Assert-R4ProfileKeys $tools @('schema', 'toolsets', 'tools') 'Tools'
     Assert-R4ProfileKeys $components @('schema', 'policy', 'repositories', 'libraries', 'sets') 'Components'
     foreach ($entry in @(@($build.profiles, 'profiles'), @($build.codegen, 'codegen'),
@@ -64,7 +78,8 @@ function Read-R4SdkProfiles([string]$SdkRoot) {
     }
     foreach ($id in $build.profiles.Keys) {
         $profile = $build.profiles[$id]
-        Assert-R4ProfileKeys $profile @('language', 'role', 'toolset', 'components', 'codegen', 'cpu', 'kind') "profiles.$id"
+        Assert-R4ProfileKeys $profile @('language', 'role', 'toolset', 'components', 'codegen', 'cpu', 'kind', 'platform') "profiles.$id"
+        if($profile.Contains('platform')){Assert-R4ProfileReference $build.platforms $profile.platform "$id.platform"}
         if ($profile.language -cnotin @('Zig', 'C', 'C++', 'Rust') -or
             $profile.role -cnotin @('module', 'kernel', 'recovery', 'native', 'host')) {
             throw "SdkProfileUnsupportedRole: $id"
@@ -156,9 +171,10 @@ function Get-R4SdkBuildProfile([string]$SdkRoot, [string]$Id) {
     $data = Read-R4SdkProfiles $SdkRoot
     Assert-R4ProfileReference $data.Build.profiles $Id 'profile'
     $profile = $data.Build.profiles[$Id]
+    $platformId=if($profile.Contains('platform')){$profile.platform}else{'platform1'}
     return [ordered]@{
         schema=1; sdk_version=$data.sdk_version; id=$Id; hashes=$data.hashes
-        build=$profile; codegen=$data.Build.codegen[$profile.codegen]
+        build=$profile; platform=$data.Build.platforms[$platformId]; codegen=$data.Build.codegen[$profile.codegen]
         toolset=$data.Tools.toolsets[$profile.toolset]
         components=$data.Components.sets[$profile.components]
     }

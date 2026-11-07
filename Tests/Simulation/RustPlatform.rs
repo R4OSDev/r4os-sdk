@@ -340,3 +340,103 @@ fn original_platform_owners_preserve_frames_progress_and_explicit_close() {
     );
     assert!(no_audio_platform.devices().memory().unwrap().is_some());
 }
+
+#[test]
+fn generation2_c_and_rust_admit_identical_prefixes_and_reject_mixed_records() {
+    use r4os_sdk::platform2::{Context, Error, abi as a};
+    unsafe extern "C" {
+        fn sdk_platform2_admission(raw: *const a::R4XStartContext2, called: *mut i32) -> i32;
+    }
+    extern "C" fn write(data: *const u8, length: u32) -> i32 {
+        if length == 4 && unsafe { core::slice::from_raw_parts(data, 4) } == b"API2" {
+            -20002
+        } else {
+            -1
+        }
+    }
+    fn check(
+        raw: &a::R4XStartContext2,
+        table: &a::R4XStartR4Sys2,
+        imports: &[r4os_sdk::abi::R4XStartImport],
+        expected: Option<Error>,
+        called: i32,
+    ) {
+        // The ABI transports integer addresses. Keep each mutated backing
+        // explicitly observed before the real foreign/unsafe reads.
+        let _ = core::hint::black_box((table, imports));
+        let value = unsafe { Context::new(raw) };
+        if let Some(error) = expected {
+            assert_eq!(value.err(), Some(error));
+        } else {
+            let value = value.unwrap();
+            assert!(core::ptr::eq(value.raw(), raw));
+            assert!(value.group(1).is_some());
+            assert!(value.group(0).is_none() && value.group(7).is_none());
+        }
+        let mut result = 12345;
+        assert_eq!(
+            unsafe { sdk_platform2_admission(raw, &mut result) },
+            expected.map_or(0, |error| error as i32)
+        );
+        assert_eq!(result, if expected.is_none() { called } else { 12345 });
+    }
+    let mut sys = a::R4XStartR4Sys2 {
+        write: write as *const () as u64,
+        ..Default::default()
+    };
+    let import = r4os_sdk::abi::R4XStartImport {
+        group_id: 1,
+        resolved_version: 2,
+        table: core::ptr::addr_of_mut!(sys) as u64,
+        ..Default::default()
+    };
+    let mut rows = [import, import];
+    let mut raw = a::R4XStartContext2 {
+        imports: rows.as_mut_ptr() as u64,
+        import_count: 1,
+        ..Default::default()
+    };
+    check(&raw, &sys, &rows, None, -20002);
+    raw.abi_major = 1;
+    check(&raw, &sys, &rows, Some(Error::InvalidContext), 0);
+    raw.abi_major = 2;
+    raw.size = 119;
+    check(&raw, &sys, &rows, Some(Error::InvalidContext), 0);
+    raw.size = 120;
+    raw.import_count = 33;
+    check(&raw, &sys, &rows, Some(Error::InvalidImports), 0);
+    raw.import_count = 1;
+    raw.imports += 1;
+    check(&raw, &sys, &rows, Some(Error::InvalidImports), 0);
+    raw.imports -= 1;
+    rows[0].resolved_version = 1;
+    check(&raw, &sys, &rows, Some(Error::MixedGeneration), 0);
+    rows[0] = import;
+    rows[0].group_id = 7;
+    check(&raw, &sys, &rows, Some(Error::InvalidImports), 0);
+    rows[0] = import;
+    rows[0].group_id = 2;
+    check(&raw, &sys, &rows, Some(Error::MissingSystem), 0);
+    rows[0] = import;
+    rows[0].table = 0;
+    check(&raw, &sys, &rows, Some(Error::MissingSystem), 0);
+    raw.import_count = 2;
+    check(&raw, &sys, &rows, Some(Error::DuplicateGroup), 0);
+    raw.import_count = 1;
+    rows[0] = import;
+    sys.magic = (r4os_sdk::abi::R4XStartR4Sys::default()).magic;
+    check(&raw, &sys, &rows, Some(Error::InvalidTable), 0);
+    sys.magic = a::R4SYS_MAGIC;
+    sys.size = 15;
+    check(&raw, &sys, &rows, Some(Error::InvalidTable), 0);
+    sys.size = 16;
+    check(&raw, &sys, &rows, None, -20001);
+    sys.size = core::mem::size_of_val(&sys) as u32;
+    sys.abi_version = 0;
+    check(&raw, &sys, &rows, Some(Error::InvalidTable), 0);
+    sys.abi_version = 1;
+    rows[0].group_id = 0;
+    rows[0].resolved_version = 1;
+    raw.import_count = 2;
+    check(&raw, &sys, &rows, None, -20002);
+}

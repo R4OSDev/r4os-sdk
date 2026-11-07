@@ -1260,25 +1260,33 @@
       "wave": "0.86.69",
       "title": "Expliziter Lowlevelzugang",
       "modules": [
-        "lowlevel"
+        "lowlevel",
+        "platform2"
       ],
-      "semantics": "Raw Entry/ABI/Stack/CPU/FPU/Exit nur fuer explizite Rollen, getrennt vom normalen App-Start. Technische Toolchain-/CPU-Pins und optionale ISA-Grenzen erhalten.",
+      "semantics": "Raw Entry/ABI/Stack/CPU/FPU/Exit nur fuer explizite Rollen, getrennt vom normalen App-Start. Technische Toolchain-/CPU-Pins und optionale ISA-Grenzen erhalten. 0.90.12 adds explicit generation2 raw bindings and borrowed context admission with matching C/Rust/Zig header/import checks; no default App binding or guest provider activation.",
       "current_only": "current_function",
       "rust": {
         "state": "explicit_raw_context_host_profile_qualified",
         "source": "Repositories/SDK/Rust/src/lowlevel.rs",
-        "gap": "Direct Rust FP/SIMD still excluded by pinned backend policy. Arbitrary unhandled exceptions remain terminal under original kernel contract."
+        "gap": "Direct Rust FP/SIMD still excluded by pinned backend policy. Arbitrary unhandled exceptions remain terminal under original kernel contract. Generation2 Context is explicitly unsafe to construct, lifetime-bound and non-Send/non-Sync; no guest-provider or Windows runtime claim.",
+        "sources": [
+          "Repositories/Contract/Generated/Generation2/Rust/generation2.rs",
+          "Repositories/SDK/Rust/src/platform2.rs"
+        ]
       },
       "c": {
         "state": "existing_original_raw_entry_and_stack_return_qualified",
         "sources": [
+          "Repositories/Contract/Generated/Generation2/C/include/r4os/generation2.h",
+          "Repositories/SDK/Shared/C/include/r4os/platform2.h",
           "Repositories/SDK/Shared/C/include/r4os/r4m0.h",
           "Repositories/SDK/Shared/C/include/r4os/r4xstart.h"
         ],
-        "gap": "Original C lowlevel startup/ABI retained; native R4CC is a separate limited app profile."
+        "gap": "Original C lowlevel startup/ABI retained; native R4CC is a separate limited app profile. Generation2 currently qualifies host binding/admission only; Kernel Query2/Start2 providers follow separately."
       },
       "evidence": [
-        "lowlevel_current_69"
+        "lowlevel_current_69",
+        "platform_generation2_09012"
       ],
       "shared_core": "Original R4XStartContext/manifest metadata, existing App::from_raw admission, original Kernel entry/stack/runtime/fault owners; no normal App main adapter."
     }
@@ -55895,6 +55903,24 @@
           "after": "731213940b3e9ae509ee53db28280648e2d4d1a8ffbfccc579150819116adf8d"
         }
       ]
+    },
+    "platform_generation2_09012": {
+      "complete": true,
+      "performed_in": "0.90.12",
+      "sdk": "0.64.155",
+      "contract": "0.64.77",
+      "report": "Docs/API/Generation2.txt",
+      "scope": "Linux host/bare raw projections, all six new tables, actual C/Rust/Zig calls and explicit context admission; existing API1 declarations unchanged. Kernel/runtime providers, driver/audio2 records and consumer migration remain separate implementation steps.",
+      "checks": {
+        "contract": "Generator check/write/selftest, old declarations preserved, six C/Zig table layouts and native eight-group Rust/C/Zig interop; Rust host/bare and Clippy.",
+        "sdk": "Existing platform owner runner, six actual Rust/C/visual/clock groups including the new identical context vectors; five compiler negatives including Context !Send.",
+        "context": "major/size, unaligned/oversized imports, mixed query revision, invalid/duplicate group including first-null, missing SYS, old table magic, short/invalid table, version zero, group0 independent library; C failed outputs unchanged; real signed callback -20002."
+      },
+      "limits": [
+        "No Kernel Query2 or Start2 runtime claim in this step.",
+        "No Windows execution or hardware qualification.",
+        "Driver/Protocol/Audio2 materialization and providers remain 0.90.15."
+      ]
     }
   },
   "wave_bindings": [
@@ -56158,13 +56184,16 @@
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.89.54",
+    "reviewed_in": "0.90.12",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
+      "Repositories/Contract/Generated/Generation2",
       "Repositories/Contract/Generated/Inventory",
       "Repositories/Contract/Generated/SDK",
       "Repositories/Contract/Module",
+      "Repositories/Contract/Tests/Generation2.zig",
+      "Repositories/Contract/Tests/RustInterop",
       "Repositories/Contract/Tools/AbiRustGen",
       "Repositories/Contract/Tools/ApiContractGen",
       "Repositories/Libraries/R4ACO/Bindings",
@@ -56217,6 +56246,7 @@
       "Repositories/SDK/Tests/Simulation/GuiParity.c",
       "Repositories/SDK/Tests/Simulation/PointerBindings.c",
       "Repositories/SDK/Tests/Simulation/RustGui.rs",
+      "Repositories/SDK/Tests/Simulation/RustPlatform.rs",
       "Repositories/SDK/Tests/Simulation/RustServices.rs",
       "Repositories/SDK/Tests/Simulation/ServiceNetworkCallbacks.c",
       "Repositories/SDK/Tools",
@@ -56233,6 +56263,26 @@
       {
         "path": "Repositories/Contract/API/ApiContract.json",
         "sha256": "f7f8914208935ed2bd2c08bc2f4bfe0db44a3ff7aab9fbb5f26e601271221631"
+      },
+      {
+        "path": "Repositories/Contract/API/Generation2.json",
+        "sha256": "cd7dc67c1e8704ace45b1901b5ef266f10cfca49f58d224a1583f32683972c23"
+      },
+      {
+        "path": "Repositories/Contract/Generated/Generation2/C/include/r4os/generation2.h",
+        "sha256": "6cfe68060409d6f721d649a58bb09729cfd958cb4b85160fb7fc0caaccb85aa3"
+      },
+      {
+        "path": "Repositories/Contract/Generated/Generation2/Inventory.json",
+        "sha256": "0b28cc232082437e4a7c81ddcce4b02f3ab9337b4db93d9a58c2ff9beff33ae9"
+      },
+      {
+        "path": "Repositories/Contract/Generated/Generation2/Rust/generation2.rs",
+        "sha256": "74ca031e9bd06fc30e61733abb6bef25861b600b50a0898a730772d54e0fb0d5"
+      },
+      {
+        "path": "Repositories/Contract/Generated/Generation2/Zig/abi.zig",
+        "sha256": "1ba724c4f8d0e58f33706edc495237bb93445fecf06a88464c4e5c46451e397f"
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/API.json",
@@ -56256,7 +56306,7 @@
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Rust/src/lib.rs",
-        "sha256": "f3495e969b704861ae8cca3f8056874ce6d79a65d12b2b5ff89d5c125c1c5ffd"
+        "sha256": "fda4687701069b1fbe6663ff02c1d36c01479abce08a591857bb86b10a36348b"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi.zig",
@@ -56279,16 +56329,40 @@
         "sha256": "eeeee03aa8fd41051c09e61e9d70ca35660f2b413c3f878fb6e5a3bb51aad10c"
       },
       {
+        "path": "Repositories/Contract/Tests/Generation2.zig",
+        "sha256": "be714840bf0d3af786c79878b770f2dc2d209ef8dddd5a72847db8f949b6af0f"
+      },
+      {
+        "path": "Repositories/Contract/Tests/RustInterop/Cargo.toml",
+        "sha256": "aa05aa9b304db129d5fb1dfc1aee00a7ca6c97473c0ca492c1ad64adbfc70267"
+      },
+      {
+        "path": "Repositories/Contract/Tests/RustInterop/interop.c",
+        "sha256": "bcd620d5ba50cdad875804a6f16783e04218f91453d9bde158b7314459beb1a1"
+      },
+      {
+        "path": "Repositories/Contract/Tests/RustInterop/interop.zig",
+        "sha256": "2cde456c7236ba174751a3cfb4e3c722f5c7f0d58276be97a9e711686674f4f3"
+      },
+      {
+        "path": "Repositories/Contract/Tests/RustInterop/src/lib.rs",
+        "sha256": "8e6778b16eddfdd81ec377edf787796eb0daf039fdc1c949e902d2ef8db1f24a"
+      },
+      {
         "path": "Repositories/Contract/Tools/AbiRustGen/src/c_projection.zig",
         "sha256": "8b2189a623e31a1614bbe96f5f9aba6c066d31f65bc06f8e710b755ded537cfe"
       },
       {
         "path": "Repositories/Contract/Tools/AbiRustGen/src/main.zig",
-        "sha256": "61ec37eb008fb6626ed5400c2eca94f3ab0eda9595a27e84f90fa1ad32910f1c"
+        "sha256": "f3132005ff41ef15d842d6bd21e870765aa251e249c254f2e60e433287bf4c06"
+      },
+      {
+        "path": "Repositories/Contract/Tools/ApiContractGen/src/generation2.zig",
+        "sha256": "4b0bd9c583c5f0c28901069e8c6e6d5f55bd155fd9f0001f42d5233381c606e5"
       },
       {
         "path": "Repositories/Contract/Tools/ApiContractGen/src/main.zig",
-        "sha256": "d4d59cd64ea2ee4fb8b0a7ecd8c88b385f776e027fd9c350b9f295143e4c29a6"
+        "sha256": "eca19b8978e52dc2082d400dd39125ae2831edb441c94cdc34527e5098285717"
       },
       {
         "path": "Repositories/Libraries/R4ACO/Bindings/C/r4aco.h",
@@ -57300,11 +57374,11 @@
       },
       {
         "path": "Repositories/SDK/Profiles/Build.json",
-        "sha256": "6f0679f257b7f234bd9c2db1af0884fee043cec10801482d8ed4cb920c46a5f9"
+        "sha256": "e95e5fd511255341e1b0e13414d97552479fe8e8804d4b421ef729147895d96c"
       },
       {
         "path": "Repositories/SDK/Profiles/Components.json",
-        "sha256": "4d3124155fe4369075e94afd09d821c48c935bf53788ebf670f8e99721ca0666"
+        "sha256": "c137e29c1f8c68db6394790845afc7b2dc32e24a3ed304533ef897ba7a022cf0"
       },
       {
         "path": "Repositories/SDK/Profiles/Tools.json",
@@ -57392,7 +57466,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/lib.rs",
-        "sha256": "79bb78cbfe04bfb87535adb0ec79221fde50510e35ad21d6f30e224ea83f973b"
+        "sha256": "76ab55bd885879c26c57b21a5b418d60ecae615985d45e7d41733b7a7db43ed7"
       },
       {
         "path": "Repositories/SDK/Rust/src/lowlevel.rs",
@@ -57437,6 +57511,10 @@
       {
         "path": "Repositories/SDK/Rust/src/platform/power.rs",
         "sha256": "f4a0331577091ca16defc64611b40d7ceacd760c06e427e3cc50f3d9fe4e59a3"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/platform2.rs",
+        "sha256": "241167613d23e1d6dceb8380fed90c03f504ae384b2253aae86bdc06f8298ff9"
       },
       {
         "path": "Repositories/SDK/Rust/src/protocol.rs",
@@ -57727,6 +57805,10 @@
         "sha256": "0426614d41d4d59b6bf22251df33b281c7222413ebe42e0ab9cea6170d49a260"
       },
       {
+        "path": "Repositories/SDK/Shared/C/include/r4os/platform2.h",
+        "sha256": "3e5ff78c5b61a1306badf5485fdcb19b7ab56c3035f36e4301fcb963535ddcf6"
+      },
+      {
         "path": "Repositories/SDK/Shared/C/include/r4os/power_profiles.h",
         "sha256": "a004924cd6b579d7ec8712a67b061044e383c1b46a8097372ec31e80c8be0166"
       },
@@ -57872,7 +57954,7 @@
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/GuiParity.c",
-        "sha256": "e4b36dcbcb12f0aae577bd98ef15c07957d236158a8a683d662e45781a550fdf"
+        "sha256": "89309d37536fb3d1d219b46b90bce668f302db8eadb7e3ba896814e36a209c4d"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/PointerBindings.c",
@@ -57881,6 +57963,10 @@
       {
         "path": "Repositories/SDK/Tests/Simulation/RustGui.rs",
         "sha256": "4c644bdfb3e57d2455b18f6e5173bfbbcb3197e61021ab0b97b0779c9da87be5"
+      },
+      {
+        "path": "Repositories/SDK/Tests/Simulation/RustPlatform.rs",
+        "sha256": "a61f53508b15d612a0fcf15dcb09028f197c6901694c7e8a01512638d0551391"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/RustServices.rs",
@@ -57928,7 +58014,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/Export-RustTools.ps1",
-        "sha256": "0ec1f279805ab9f5d37e003b25a9eb6dea1f239afdc32bd4807b9213699fc6ca"
+        "sha256": "8d626a78764a02904b7259e20a4e4b463cc46103cf72240222fe509d96a053e9"
       },
       {
         "path": "Repositories/SDK/Tools/GuiBridgeGen/src/c_header.zig",
@@ -57980,11 +58066,11 @@
       },
       {
         "path": "Repositories/SDK/Tools/ProfileData.ps1",
-        "sha256": "5efbff1299e3266ba68f058dad31bad10a97d9ee0322bfa418ded5e632bf4b65"
+        "sha256": "42f0afb3b1bac358b3f5d6e967a6bb63d5f9eedd5f859e9f1dd202e7588fdf50"
       },
       {
         "path": "Repositories/SDK/Tools/ProfileResolver.ps1",
-        "sha256": "d13aa57fbed9827570379c73bf4f6df2a535d421fe5f41d6c6f480d11deddb2f"
+        "sha256": "edc13ca7214502f92c302f2d110c07c88c06c060dd0f4996a99552c23b4baf64"
       },
       {
         "path": "Repositories/SDK/Tools/ProfileSources.ps1",
@@ -58080,7 +58166,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/Test-RustGui.ps1",
-        "sha256": "35cf7f5c8ffdc1a394e00733e640773f669136ae9ebd05d48ce183ae063f5978"
+        "sha256": "d5ee7bdd7f96b1ebfc6fea7e77a23015b6d0887f5a197f100a01e52ed2b97b1c"
       },
       {
         "path": "Repositories/SDK/Tools/Test-RustHeap.ps1",
@@ -58132,11 +58218,11 @@
       },
       {
         "path": "Repositories/SDK/build.zig",
-        "sha256": "6248f5797121c71dbf08e6c875d64a82aeb2d3c1340191ca51884fc85a5d3a1f"
+        "sha256": "faa20c4dced3b738a5a934d76d57ef590b831a445a7c6d3cae71e8a78b5b20dd"
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "d91b5adec29b91e73e2ff1de75831a869a346b63d576266f2af67dbf65efa987"
+        "sha256": "8a75d98fd0784e1d303ea1a0aec034fb97d8656c7e745f72bf173304d0b72751"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -58565,6 +58651,10 @@
       {
         "path": "Repositories/SDK/r4os/path.zig",
         "sha256": "d0c82b3cff5a7c459bd0b4cc5d08583d0b3af8ea63a84c6bdbc5bb1ae299bcf9"
+      },
+      {
+        "path": "Repositories/SDK/r4os/platform2.zig",
+        "sha256": "fb0cc0f1948eacc55d3721bf00c795b4dbd4c146dcfa05250f41474834508b36"
       },
       {
         "path": "Repositories/SDK/r4os/platform_runtime.zig",
@@ -59727,19 +59817,26 @@
       {
         "id": "lowlevel",
         "zig": [
-          "Repositories/SDK/r4os/lowlevel.zig"
+          "Repositories/Contract/Generated/Generation2/Zig/abi.zig",
+          "Repositories/SDK/r4os/lowlevel.zig",
+          "Repositories/SDK/r4os/platform2.zig"
         ],
         "c": [
+          "Repositories/Contract/Generated/Generation2/C/include/r4os/generation2.h",
+          "Repositories/SDK/Shared/C/include/r4os/platform2.h",
           "Repositories/SDK/Shared/C/include/r4os/r4m0.h",
           "Repositories/SDK/Shared/C/include/r4os/r4xstart.h"
         ],
         "rust": [
-          "Repositories/SDK/Rust/src/lowlevel.rs"
+          "Repositories/Contract/Generated/Generation2/Rust/generation2.rs",
+          "Repositories/SDK/Rust/src/lowlevel.rs",
+          "Repositories/SDK/Rust/src/platform2.rs"
         ],
         "proof": [
-          "lowlevel_current_69",
+          "audio_duration_retirement_08859",
           "bounded_work_08755",
-          "audio_duration_retirement_08859"
+          "lowlevel_current_69",
+          "platform_generation2_09012"
         ]
       },
       {

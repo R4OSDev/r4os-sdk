@@ -240,3 +240,25 @@ int32_t sdk_gui_c_case(void){
     R4SdkGuiSessionClose(&s);assert(host_closes==2 && host_window_queries==0);
     return 0;
 }
+
+/* Generation2 admission uses the real public C view and leaves failed outputs
+ * untouched. Kept in the existing C/Rust platform interop runner. */
+#include <r4os/platform2.h>
+int32_t sdk_platform2_admission(const R4XStartContext2 *raw, int32_t *called) {
+    R4OS2Context view = {.raw=(const R4XStartContext2 *)(uintptr_t)8, .tables={1,2,3,4,5,6}};
+    R4OS2Context before = view;
+    int32_t result = R4OS2ContextInit(raw, &view);
+    if (result) {
+        assert(memcmp(&before, &view, sizeof(view)) == 0);
+        return result;
+    }
+    assert(view.raw == raw && !R4OS2ContextGroup(&view, 0) && !R4OS2ContextGroup(&view, 7));
+    const R4XStartR4Sys2 *sys = R4OS2ContextGroup(&view, 1);
+    assert(sys);
+    *called = -20001;
+    if (sys->size >= offsetof(R4XStartR4Sys2, write) + sizeof(sys->write) && sys->write) {
+        R4SysWriteFn write = (R4SysWriteFn)(uintptr_t)sys->write;
+        *called = write((const uint8_t *)"API2", 4);
+    }
+    return 0;
+}

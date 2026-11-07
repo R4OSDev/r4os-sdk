@@ -8,6 +8,7 @@ function Resolve-R4SdkComponents {
     $data=Read-R4SdkProfiles $SdkRoot
     Assert-R4ProfileReference $data.Build.profiles $Profile 'profile'
     $selected=$data.Build.profiles[$Profile]
+    $platformId=if($selected.Contains('platform')){$selected.platform}else{'platform1'}
     $set=$data.Components.sets[$selected.components]
     $required=[Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
     [void]$required.Add($set.contract)
@@ -102,7 +103,7 @@ function Resolve-R4SdkComponents {
     foreach($id in $set.system_libraries){$systemLibraries[$id]=$data.Components.libraries[$id]}
     $result=[ordered]@{schema=1;technical=$development;sdk_version=$data.sdk_version;profile=$Profile;
         hashes=$data.hashes;toolset=$selected.toolset;tools=$toolDefinitions;components=$selected.components;
-        build=$selected;codegen=$data.Build.codegen[$selected.codegen];system_libraries=$systemLibraries;
+        build=$selected;platform=$data.Build.platforms[$platformId];codegen=$data.Build.codegen[$selected.codegen];system_libraries=$systemLibraries;
         sources=$bindings;additional_libraries=$extras}
     if($CreateDevelopment){
         $own=Get-R4SdkSourceState $SdkRoot

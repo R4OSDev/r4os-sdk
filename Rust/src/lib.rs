@@ -21,6 +21,7 @@ mod network_methods;
 pub mod path;
 pub mod physical_storage;
 pub mod platform;
+pub mod platform2;
 pub mod protocol;
 pub mod r4l;
 pub mod registry_diagnostics;
