@@ -606,7 +606,8 @@
         "desktop_actions_08898",
         "studio_089_host",
         "link_08916_host",
-        "dynamic_services_08921"
+        "dynamic_services_08921",
+        "platform_generation2_09013"
       ],
       "shared_core": "Vorhandene C-AppServices/AppTray/AppNetwork/Serial/Timeout-Besitzer, Zig-ServiceLoop/-Deadline/-R4NET-Besitzer und native R4SYS/R4NET/R4DEV-Callbacks. Rust fuegt Leihen/Typen/echte Abschlussretention hinzu; keine zweite Netzwerk- oder Schedulingimplementierung."
     },
@@ -1286,7 +1287,8 @@
       },
       "evidence": [
         "lowlevel_current_69",
-        "platform_generation2_09012"
+        "platform_generation2_09012",
+        "platform_generation2_09013"
       ],
       "shared_core": "Original R4XStartContext/manifest metadata, existing App::from_raw admission, original Kernel entry/stack/runtime/fault owners; no normal App main adapter."
     }
@@ -55921,6 +55923,20 @@
         "No Windows execution or hardware qualification.",
         "Driver/Protocol/Audio2 materialization and providers remain 0.90.15."
       ]
+    },
+    "platform_generation2_09013": {
+      "complete": true,
+      "performed_in": "0.90.13",
+      "sdk": "0.64.156",
+      "contract": "0.64.77",
+      "report": "Docs/API/Generation2.txt",
+      "scope": "Matching C/Rust/Zig explicit generation2 slot lookup, unchanged failed address output, separate err_no_group(-9001)/err_no_fn(-9002), null/short/invalid offsets and real signed call; SDK bare Clippy -D warnings passes.",
+      "checks": "Existing platform runner: six Rust/C/visual/clock groups, five compiler negatives and the focused original Zig context plus new lookup case.",
+      "service_literal_review": "Three constant WINSVC CStr parses replaced by checked c-string literals and one redundant unit removed. Same bytes, endpoint, signatures, errors and ownership; no consumer code/manifest/profile change.",
+      "limits": [
+        "Kernel native providers qualified separately in0.90.13 runtime receipt.",
+        "No Windows or hardware execution claim."
+      ]
     }
   },
   "wave_bindings": [
@@ -56184,7 +56200,7 @@
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.90.12",
+    "reviewed_in": "0.90.13",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -57514,7 +57530,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/platform2.rs",
-        "sha256": "241167613d23e1d6dceb8380fed90c03f504ae384b2253aae86bdc06f8298ff9"
+        "sha256": "b3f803b77a1cff93eb9d90342501fabc559cacefd19569243fa073b23c1caecb"
       },
       {
         "path": "Repositories/SDK/Rust/src/protocol.rs",
@@ -57566,11 +57582,11 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/services/actions.rs",
-        "sha256": "126e6bf8edac6033e4bb024c2f5a3b8de0de412679c191eef323baae2ae3092e"
+        "sha256": "52bfa2721f24194049c5e6e61d4f75820130ffe5eff9882eb7e080a3bc124132"
       },
       {
         "path": "Repositories/SDK/Rust/src/services/evidence.rs",
-        "sha256": "956227b1a44e5d77e1cc50db2d5201db195ce49c9e8fb1dc3b931be3900c3152"
+        "sha256": "4ae732bbcf4cc3415651096cc0b59ed26679d19fd548380a5488b648020ba227"
       },
       {
         "path": "Repositories/SDK/Rust/src/services/inventory.rs",
@@ -57806,7 +57822,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/platform2.h",
-        "sha256": "3e5ff78c5b61a1306badf5485fdcb19b7ab56c3035f36e4301fcb963535ddcf6"
+        "sha256": "ed09784439f8f85a26ae03bb18e0d80f5b1b1f0756b7266291922a10e82c8486"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/power_profiles.h",
@@ -57954,7 +57970,7 @@
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/GuiParity.c",
-        "sha256": "89309d37536fb3d1d219b46b90bce668f302db8eadb7e3ba896814e36a209c4d"
+        "sha256": "bd79e0c3fcac777639e40ece21b5476a1b125fbe72c59f3990b62eb268a0af21"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/PointerBindings.c",
@@ -57966,7 +57982,7 @@
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/RustPlatform.rs",
-        "sha256": "a61f53508b15d612a0fcf15dcb09028f197c6901694c7e8a01512638d0551391"
+        "sha256": "c49861b177053c9f540d1ffcc7ee3785ac9fdc7d701a0132d596c4239bcf0e86"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/RustServices.rs",
@@ -58222,7 +58238,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "8a75d98fd0784e1d303ea1a0aec034fb97d8656c7e745f72bf173304d0b72751"
+        "sha256": "f836c1b02ea85ca1d40470ed720e6f3d1065f8527aac2a36eae048e53189954f"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -58654,7 +58670,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/platform2.zig",
-        "sha256": "fb0cc0f1948eacc55d3721bf00c795b4dbd4c146dcfa05250f41474834508b36"
+        "sha256": "0813a252862620b638d4fea60e9af472cc04fe3d5773e5b73bc7bee4f38ce627"
       },
       {
         "path": "Repositories/SDK/r4os/platform_runtime.zig",
@@ -59419,7 +59435,8 @@
           "studio_089_host",
           "link_08916_host",
           "dynamic_services_08921",
-          "public_bootstrap_0903"
+          "public_bootstrap_0903",
+          "platform_generation2_09013"
         ]
       },
       {
@@ -59836,7 +59853,8 @@
           "audio_duration_retirement_08859",
           "bounded_work_08755",
           "lowlevel_current_69",
-          "platform_generation2_09012"
+          "platform_generation2_09012",
+          "platform_generation2_09013"
         ]
       },
       {

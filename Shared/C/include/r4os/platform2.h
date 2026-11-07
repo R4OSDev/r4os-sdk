@@ -48,4 +48,16 @@ static inline R4OS2ContextResult R4OS2ContextInit(const R4XStartContext2 *raw, R
     *out = result;
     return R4OS2_CONTEXT_OK;
 }
+/* On failure the address is unchanged. The Contract supplies offset/type. */
+static inline int32_t R4OS2ContextFunction(const R4OS2Context *context, uint32_t group, uint32_t offset, uint64_t *out) {
+    const uint32_t *table = R4OS2ContextGroup(context, group);
+    if (!table) return R4OS_ERR_NO_GROUP;
+    if (!out || offset < 16 || offset % 8 || (uint64_t)offset + 8 > table[2]) return R4OS_ERR_NO_FN;
+    uintptr_t address = (uintptr_t)table;
+    if (address > UINTPTR_MAX - offset) return R4OS_ERR_NO_FN;
+    uint64_t slot = *(const uint64_t *)(address + offset);
+    if (!slot) return R4OS_ERR_NO_FN;
+    *out = slot;
+    return 0;
+}
 #endif

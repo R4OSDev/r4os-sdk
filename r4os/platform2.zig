@@ -59,7 +59,48 @@ pub const Context = struct {
     pub fn devices(self: *const Context) ?*const abi.R4XStartR4Dev2 {
         return self.group(abi.R4XStartR4Dev2, 6);
     }
+
+    /// Resolves an explicitly typed caller's slot; errors preserve output.
+    /// The contract owns its byte offset and C callback signature.
+    pub fn lookup(self: *const Context, id: u32, offset: u32, output: *u64) i32 {
+        inline for (.{ abi.R4XStartR4Sys2, abi.R4XStartR4Desk2, abi.R4XStartR4Draw2, abi.R4XStartR4Net2, abi.R4XStartR4Audio2, abi.R4XStartR4Dev2 }, 1..) |T, group_id| {
+            if (id == group_id) {
+                const table = self.group(T, id) orelse return abi.shared.err_no_group;
+                if (offset < 16 or offset % 8 != 0 or @as(u64, offset) + 8 > table.size) return abi.shared.err_no_fn;
+                const address = std.math.add(usize, @intFromPtr(table), offset) catch return abi.shared.err_no_fn;
+                const slot: *const u64 = @ptrFromInt(address);
+                if (slot.* == 0) return abi.shared.err_no_fn;
+                output.* = slot.*;
+                return 0;
+            }
+        }
+        return abi.shared.err_no_group;
+    }
 };
+
+test "platform2 lookup distinguishes missing groups and functions without changing failed outputs" {
+    const Provider = struct {
+        fn write(_: [*]const u8, _: u32) callconv(.c) i32 {
+            return -20002;
+        }
+    };
+    var sys: abi.R4XStartR4Sys2 = .{};
+    var rows = [_]abi.R4XStartImport{.{ .group_id = 1, .resolved_version = 2, .table = @intFromPtr(&sys) }};
+    const raw: abi.R4XStartContext2 = .{ .imports = @intFromPtr(&rows), .import_count = 1 };
+    const context = try Context.init(&raw);
+    var output: u64 = 12345;
+    try std.testing.expectEqual(abi.shared.err_no_group, context.lookup(7, 16, &output));
+    try std.testing.expectEqual(abi.shared.err_no_fn, context.lookup(1, 16, &output));
+    try std.testing.expectEqual(@as(u64, 12345), output);
+    sys.write = @intFromPtr(&Provider.write);
+    try std.testing.expectEqual(@as(i32, 0), context.lookup(1, 16, &output));
+    try std.testing.expectEqual(@intFromPtr(&Provider.write), output);
+    output = 12345;
+    sys.size = 16;
+    try std.testing.expectEqual(abi.shared.err_no_fn, context.lookup(1, 16, &output));
+    try std.testing.expectEqual(abi.shared.err_no_fn, context.lookup(1, 0xfffffff8, &output));
+    try std.testing.expectEqual(@as(u64, 12345), output);
+}
 
 test "platform2 admits only the explicitly selected generation and retains canonical tables" {
     var sys: abi.R4XStartR4Sys2 = .{};

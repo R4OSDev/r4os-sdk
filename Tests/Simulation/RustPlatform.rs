@@ -372,6 +372,16 @@ fn generation2_c_and_rust_admit_identical_prefixes_and_reject_mixed_records() {
             assert!(core::ptr::eq(value.raw(), raw));
             assert!(value.group(1).is_some());
             assert!(value.group(0).is_none() && value.group(7).is_none());
+            assert_eq!(value.lookup(7, 16), Err(r4os_sdk::abi::err_no_group));
+            assert_eq!(value.lookup(1, 0), Err(r4os_sdk::abi::err_no_fn));
+            assert_eq!(value.lookup(1, 0xfffffff8), Err(r4os_sdk::abi::err_no_fn));
+            let function = value.lookup(1, core::mem::offset_of!(a::R4XStartR4Sys2, write) as u32);
+            if called == -20002 {
+                let write: a::R4SysFns2::write = unsafe { core::mem::transmute(function.unwrap()) };
+                assert_eq!(unsafe { write(b"API2".as_ptr(), 4) }, -20002);
+            } else {
+                assert_eq!(function, Err(r4os_sdk::abi::err_no_fn));
+            }
         }
         let mut result = 12345;
         assert_eq!(

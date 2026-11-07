@@ -6,7 +6,7 @@ use crate::{
     resources::Timeout,
     storage::{Error, Result},
 };
-use core::{ffi::CStr, mem};
+use core::mem;
 
 pub type EvidenceToken = abi::DesktopEvidenceToken;
 pub type EvidenceReply = abi::DesktopEvidenceReply;
@@ -47,7 +47,7 @@ impl Services<'_> {
         request: abi::DesktopEvidenceRequest,
         out: &mut [u8],
     ) -> Result<EvidenceReply> {
-        let name = CStr::from_bytes_with_nul(b"WINSVC\0").map_err(|_| Error::InvalidProvider)?;
+        let name = c"WINSVC";
         let mut connection = self.open(name)?;
         let mut buffer = [0u8; abi::service_api_max_payload];
         let request_bytes = unsafe {

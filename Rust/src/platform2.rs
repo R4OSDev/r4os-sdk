@@ -82,6 +82,24 @@ impl<'a> Context<'a> {
     pub fn raw(&self) -> &'a abi::R4XStartContext2 {
         self.raw
     }
+    /// The Contract supplies the slot offset and C function signature.
+    /// Resolving an address neither invokes it nor changes its buffer loans.
+    pub fn lookup(&self, group: u32, offset: u32) -> Result<u64, i32> {
+        let table = self.group(group).ok_or(crate::abi::err_no_group)?;
+        let size = unsafe { *(table.cast::<u32>()).add(2) };
+        if offset < 16 || !offset.is_multiple_of(8) || u64::from(offset) + 8 > u64::from(size) {
+            return Err(crate::abi::err_no_fn);
+        }
+        let address = (table as usize)
+            .checked_add(offset as usize)
+            .ok_or(crate::abi::err_no_fn)?;
+        let slot = unsafe { *(address as *const u64) };
+        if slot == 0 {
+            Err(crate::abi::err_no_fn)
+        } else {
+            Ok(slot)
+        }
+    }
     pub fn group(&self, group: u32) -> Option<*const c_void> {
         const MAGIC: [u32; 6] = [
             abi::R4SYS_MAGIC,

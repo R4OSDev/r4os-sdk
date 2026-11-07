@@ -256,8 +256,14 @@ int32_t sdk_platform2_admission(const R4XStartContext2 *raw, int32_t *called) {
     const R4XStartR4Sys2 *sys = R4OS2ContextGroup(&view, 1);
     assert(sys);
     *called = -20001;
-    if (sys->size >= offsetof(R4XStartR4Sys2, write) + sizeof(sys->write) && sys->write) {
-        R4SysWriteFn write = (R4SysWriteFn)(uintptr_t)sys->write;
+    uint64_t address = 12345;
+    assert(R4OS2ContextFunction(&view, 7, 16, &address) == R4OS_ERR_NO_GROUP && address == 12345);
+    assert(R4OS2ContextFunction(&view, 1, 0, &address) == R4OS_ERR_NO_FN && address == 12345);
+    assert(R4OS2ContextFunction(&view, 1, UINT32_C(0xfffffff8), &address) == R4OS_ERR_NO_FN && address == 12345);
+    int32_t lookup = R4OS2ContextFunction(&view, 1, offsetof(R4XStartR4Sys2, write), &address);
+    assert(lookup == 0 || lookup == R4OS_ERR_NO_FN);
+    if (!lookup) {
+        R4SysWriteFn write = (R4SysWriteFn)(uintptr_t)address;
         *called = write((const uint8_t *)"API2", 4);
     }
     return 0;

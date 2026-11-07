@@ -6,7 +6,7 @@ use crate::{
     resources::Timeout,
     storage::{Error, Result},
 };
-use core::{ffi::CStr, mem};
+use core::mem;
 pub type ActionToken = a::DesktopActionToken;
 pub type ActionRequest = a::DesktopActionRequest;
 pub type ActionReply = a::DesktopActionReply;
@@ -47,7 +47,11 @@ pub fn prepare_actions(
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum PointerStep { Down, Move, Up }
+pub enum PointerStep {
+    Down,
+    Move,
+    Up,
+}
 impl PointerStep {
     fn raw(self) -> u32 {
         match self {
@@ -70,7 +74,12 @@ pub fn prepare_pointer_grant(
     requester: a::ProgramProcessHandle,
     controller: a::ProgramProcessHandle,
 ) -> Result<ActionToken> {
-    prepare_actions(scope, requester, controller, a::desktop_action_right_pointer)
+    prepare_actions(
+        scope,
+        requester,
+        controller,
+        a::desktop_action_right_pointer,
+    )
 }
 pub fn action_frame_ready(reply: &ActionReply) -> bool {
     reply.phase == a::desktop_action_phase_applied
@@ -89,7 +98,7 @@ pub fn action_frame_ready(reply: &ActionReply) -> bool {
 }
 impl Services<'_> {
     fn action_call(&self, op: u16, request: ActionRequest, nanos: u64) -> Result<ActionReply> {
-        let name = CStr::from_bytes_with_nul(b"WINSVC\0").map_err(|_| Error::InvalidProvider)?;
+        let name = c"WINSVC";
         let mut connection = self.open(name)?;
         let mut bytes = [0u8; mem::size_of::<ActionReply>()];
         let body = unsafe {
@@ -228,13 +237,27 @@ impl Services<'_> {
     }
     /// Persist the exact operation and deadline before sending. Recover an
     /// uncertain result by status rather than issuing another operation ID.
-    pub fn pointer_step(&self, token: ActionToken, operation: u64, deadline: u64,
-        step: PointerStep, x: i32, y: i32) -> Result<ActionReply> {
+    pub fn pointer_step(
+        &self,
+        token: ActionToken,
+        operation: u64,
+        deadline: u64,
+        step: PointerStep,
+        x: i32,
+        y: i32,
+    ) -> Result<ActionReply> {
         if token.rights != a::desktop_action_right_pointer || operation == 0 || deadline == 0 {
             return Err(Error::Raw(a::desktop_action_result_invalid));
         }
-        self.action_command(ActionRequest { token, operation, deadline,
-            kind: step.raw(), x, y, ..Default::default() })
+        self.action_command(ActionRequest {
+            token,
+            operation,
+            deadline,
+            kind: step.raw(),
+            x,
+            y,
+            ..Default::default()
+        })
     }
     pub fn pointer_status(&self, token: ActionToken, operation: u64) -> Result<ActionReply> {
         self.action_status(token, operation)
@@ -245,35 +268,53 @@ impl Services<'_> {
     /// Reads only the calling application's own window. A nonzero expected
     /// serial detects reuse; Unknown retains the most recent observation.
     pub fn focus_snapshot(&self, expected: a::WindowModeIdentity) -> Result<FocusObservation> {
-        let name = CStr::from_bytes_with_nul(b"WINSVC\0").map_err(|_| Error::InvalidProvider)?;
+        let name = c"WINSVC";
         let mut connection = self.open(name)?;
-        let body = unsafe { core::slice::from_raw_parts(
-            core::ptr::from_ref(&expected).cast(), mem::size_of_val(&expected)) };
+        let body = unsafe {
+            core::slice::from_raw_parts(
+                core::ptr::from_ref(&expected).cast(),
+                mem::size_of_val(&expected),
+            )
+        };
         let mut bytes = [0u8; mem::size_of::<a::DesktopFocusReply>()];
-        match connection.call(a::desktop_action_op_focus_snapshot, body, &mut bytes,
-            Timeout::AfterNanos(20_000_000))? {
-            Call::Response { header, bytes: count }
-                if count == bytes.len() && header.op == a::desktop_action_op_focus_snapshot
-                    && header.status == 0 => (),
+        match connection.call(
+            a::desktop_action_op_focus_snapshot,
+            body,
+            &mut bytes,
+            Timeout::AfterNanos(20_000_000),
+        )? {
+            Call::Response {
+                header,
+                bytes: count,
+            } if count == bytes.len()
+                && header.op == a::desktop_action_op_focus_snapshot
+                && header.status == 0 => {}
             Call::Response { .. } => return Err(Error::InvalidProvider),
             Call::TimedOut => return Err(Error::Raw(a::service_api_result_timeout)),
             Call::RemoteFailure(code) => return Err(Error::Raw(code)),
         }
-        let reply = unsafe { core::ptr::read_unaligned(bytes.as_ptr().cast::<a::DesktopFocusReply>()) };
-        if reply.reserved != 0 { return Err(Error::InvalidProvider); }
+        let reply =
+            unsafe { core::ptr::read_unaligned(bytes.as_ptr().cast::<a::DesktopFocusReply>()) };
+        if reply.reserved != 0 {
+            return Err(Error::InvalidProvider);
+        }
         Ok(match reply.result {
             a::desktop_focus_result_missing => FocusObservation::Missing,
             a::desktop_focus_result_stale => FocusObservation::Stale,
             a::desktop_focus_result_unknown => FocusObservation::Unknown(reply.snapshot),
             a::desktop_focus_result_ok
                 if reply.snapshot.version == 1
-                    && reply.snapshot.size as usize == mem::size_of::<a::DesktopFocusSnapshot>()
+                    && reply.snapshot.size as usize
+                        == mem::size_of::<a::DesktopFocusSnapshot>()
                     && reply.snapshot.window.window_id == expected.window_id
-                    && reply.snapshot.input_revision != 0 => match reply.snapshot.focus_state {
-                        a::desktop_focus_state_focused => FocusObservation::Focused(reply.snapshot),
-                        a::desktop_focus_state_unfocused => FocusObservation::Unfocused(reply.snapshot),
-                        _ => FocusObservation::Unknown(reply.snapshot),
-                    },
+                    && reply.snapshot.input_revision != 0 =>
+            {
+                match reply.snapshot.focus_state {
+                    a::desktop_focus_state_focused => FocusObservation::Focused(reply.snapshot),
+                    a::desktop_focus_state_unfocused => FocusObservation::Unfocused(reply.snapshot),
+                    _ => FocusObservation::Unknown(reply.snapshot),
+                }
+            }
             _ => return Err(Error::InvalidProvider),
         })
     }
