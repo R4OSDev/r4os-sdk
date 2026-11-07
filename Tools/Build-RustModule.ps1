@@ -142,7 +142,7 @@ try{
         if($IsLinux){& chmod 755 $generator;if($LASTEXITCODE -ne 0){throw 'Cannot prepare library contract generator'}}
         $contractArgs=@('--check','--module-name',$facts.name)
         foreach($spec in $facts.exports){
-            $parts=$spec.Split(':');if($parts[0] -ceq 'Query'){continue}
+            $parts=$spec.Split(':');if($parts[0] -cin @('Query','Query2')){continue}
             $contractArgs+=@('--export',($parts[0]+':'+$parts[1].TrimStart('@')+':'+$parts[2]))
         }
         $contractInputs=@()
@@ -160,7 +160,10 @@ try{
     $codegen=$sdkProfiles.Build.codegen['rust-module']
     Assert-R4SdkProjectCFlags $sdkProfiles $facts.kind $facts.name $rust.c_flags
     $profileRole=if($isLibrary){'library'}elseif($isDriver){'driver'}elseif($isProtocol){'protocol'}elseif($facts.entry_mode -ceq 'lowlevel'){'lowlevel'}else{'app'}
-    $expectedProfile=$codegen.profile_ids[$profileRole]
+    $expectedProfile=if($sourceBinding.platform.generation -eq 2){
+        if($profileRole -cne 'lowlevel' -or $sourceBinding.build.kind -cne 'R4X'){throw 'RustGeneration2RequiresLowLevelR4X'}
+        $facts.build_profile
+    }else{$codegen.profile_ids[$profileRole]}
     if($rust.schema -ne 2 -or $codegen.schema -ne 2 -or $rust.profile -cne $expectedProfile -or $codegen.target -cne $description.kernel_target){throw 'RustModuleProfileMismatch'}
     if($DependencyRootsJson){
         $decoded=ConvertFrom-Json -InputObject $DependencyRootsJson -NoEnumerate
@@ -269,11 +272,11 @@ try{
     if(!$archive -or !(Test-Path -LiteralPath $archive -PathType Leaf)){throw 'RustArchiveMissing'}
     $phase='link'
     $linked=Join-Path $work 'module.elf';$script=Canonical $SdkRoot $codegen.linker_script
-    Invoke-Tool $description.linker ((@($codegen.linker_flags)+@('--entry',$(if($isLibrary){'r4l_entry'}elseif($isDriver){'r4d_init_entry'}elseif($isProtocol){'r4p_init_entry'}else{'R4XStart'}),'-T',$script,'-o',$linked,$archive,$heapRuntime)+$facadeObjects+$native.objects+$libraryHelpers.objects)) $work|Out-Null
+    Invoke-Tool $description.linker ((@($codegen.linker_flags)+@('--entry',$(if($isLibrary){'r4l_entry'}elseif($isDriver){'r4d_init_entry'}elseif($isProtocol){'r4p_init_entry'}else{$sourceBinding.platform.entry_symbol}),'-T',$script,'-o',$linked,$archive,$heapRuntime)+$facadeObjects+$native.objects+$libraryHelpers.objects)) $work|Out-Null
     $phase='package'
     $candidate=Join-Path $work ('module.'+$facts.kind)
     $packArgs=@('--r4m','--kind',$facts.kind.ToLowerInvariant(),'--elf',$linked,'--output',$candidate,'--module-name',$(if($isDriver){'R4D_'+$facts.name}elseif($isProtocol){'R4P_'+$facts.name}else{$facts.name}))
-    if($isLibrary -or $isDriver -or $isProtocol){foreach($spec in $facts.exports){$packArgs+=@('--export',$spec)}}else{$packArgs+=@('--app-class',$facts.app_class,'--export','R4XStart:@R4XStart:1')}
+    if($isLibrary -or $isDriver -or $isProtocol){foreach($spec in $facts.exports){$packArgs+=@('--export',$spec)}}else{$packArgs+=@('--app-class',$facts.app_class,'--export',($sourceBinding.platform.entry_symbol+':@'+$sourceBinding.platform.entry_symbol+':'+$sourceBinding.platform.entry_version))}
     foreach($import in $facts.imports){$packArgs+=@('--import',$import)}
     foreach($meta in $facts.metadata){$packArgs+=@('--meta',$meta)}
     $declared=@(Input $manifest $ProjectRoot 'project';Input (Join-Path $ProjectRoot 'Cargo.lock') $ProjectRoot 'project')+$crateInputs

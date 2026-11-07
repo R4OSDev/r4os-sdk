@@ -10,6 +10,7 @@ pub const Context = struct {
 
     pub fn init(raw: *const abi.R4XStartContext2) Error!Context {
         if (raw.magic != abi.start_magic or raw.abi_major != 2 or raw.size < @sizeOf(abi.R4XStartContext2)) return error.InvalidContext;
+        if (raw.args_len > std.math.maxInt(isize) or (raw.args_len != 0 and raw.args == 0) or @addWithOverflow(raw.args, raw.args_len)[1] != 0) return error.InvalidContext;
         if (raw.import_count > 32 or (raw.import_count != 0 and (raw.imports == 0 or raw.imports % @alignOf(abi.R4XStartImport) != 0))) return error.InvalidImports;
         var result: Context = .{ .raw = raw };
         var seen: u8 = 0;
@@ -58,6 +59,23 @@ pub const Context = struct {
     }
     pub fn devices(self: *const Context) ?*const abi.R4XStartR4Dev2 {
         return self.group(abi.R4XStartR4Dev2, 6);
+    }
+
+    pub fn args(self: *const Context) []const u8 {
+        if (self.raw.args_len == 0) return &.{};
+        const data: [*]const u8 = @ptrFromInt(self.raw.args);
+        return data[0..@intCast(self.raw.args_len)];
+    }
+    pub fn shouldClose(self: *const Context) bool {
+        if (self.raw.flags & abi.shared.r4xstart_flag_close_supported == 0 or self.raw.should_close == 0) return true;
+        const callback: abi.R4XStartShouldCloseFn2 = @ptrFromInt(self.raw.should_close);
+        return callback(self.raw) != 0;
+    }
+    pub fn yieldCurrent(self: *const Context) bool {
+        if (self.raw.flags & abi.shared.r4xstart_flag_yield_supported == 0 or self.raw.yield == 0) return false;
+        const callback: abi.R4XStartYieldFn2 = @ptrFromInt(self.raw.yield);
+        callback(self.raw);
+        return true;
     }
 
     /// Resolves an explicitly typed caller's slot; errors preserve output.
@@ -143,4 +161,45 @@ test "platform2 admits only the explicitly selected generation and retains canon
     raw.imports = @intFromPtr(&duplicate);
     raw.import_count = 2;
     try std.testing.expectError(error.DuplicateGroup, Context.init(&raw));
+}
+
+/// Build-owned admission facts, never retained after the main entry returns.
+pub const StartupInfo = struct { app_class: u32, required_groups: u32, import_count: u32 };
+pub fn start(raw: *const abi.R4XStartContext2, expected: StartupInfo, main: *const fn (*const Context) callconv(.c) i32) i32 {
+    const context = Context.init(raw) catch return -1;
+    if (raw.app_class != expected.app_class or raw.import_count != expected.import_count) return -1;
+    for (context.tables, 0..) |table, i| {
+        if (expected.required_groups & (@as(u32, 1) << @intCast(i + 1)) != 0 and (table == 0 or !validGroup(&context, @intCast(i + 1)))) return -1;
+    }
+    return main(&context);
+}
+fn validGroup(context: *const Context, id: u32) bool {
+    inline for (.{ abi.R4XStartR4Sys2, abi.R4XStartR4Desk2, abi.R4XStartR4Draw2, abi.R4XStartR4Net2, abi.R4XStartR4Audio2, abi.R4XStartR4Dev2 }, 1..) |T, group_id| {
+        if (id == group_id) return context.group(T, id) != null;
+    }
+    return false;
+}
+
+test "Start2 admits class groups and import count before invoking the callback" {
+    const Callback = struct {
+        fn run(context: *const Context) callconv(.c) i32 {
+            const callback = abi.function(abi.R4SysFns2, context.system(), "write") orelse return -9;
+            return callback("API2", 4);
+        }
+        fn write(bytes: [*]const u8, len: u32) callconv(.c) i32 {
+            return if (len == 4 and std.mem.eql(u8, bytes[0..len], "API2")) -20002 else -2;
+        }
+    };
+    var sys: abi.R4XStartR4Sys2 = .{ .write = @intFromPtr(&Callback.write) };
+    var imports = [_]abi.R4XStartImport{.{ .group_id = 1, .min_version = 2, .resolved_version = 2, .flags = abi.shared.r4xstart_import_flag_group_interface, .table = @intFromPtr(&sys) }};
+    var raw: abi.R4XStartContext2 = .{ .app_class = 1, .imports = @intFromPtr(&imports), .import_count = 1 };
+    const expected: StartupInfo = .{ .app_class = 1, .required_groups = 2, .import_count = 1 };
+    try std.testing.expectEqual(@as(i32, -20002), start(&raw, expected, &Callback.run));
+    raw.app_class = 3;
+    try std.testing.expectEqual(@as(i32, -1), start(&raw, expected, &Callback.run));
+    raw.app_class = 1;
+    try std.testing.expectEqual(@as(i32, -1), start(&raw, .{ .app_class = 1, .required_groups = 2, .import_count = 2 }, &Callback.run));
+    try std.testing.expectEqual(@as(i32, -1), start(&raw, .{ .app_class = 1, .required_groups = 10, .import_count = 1 }, &Callback.run));
+    raw.size = 119;
+    try std.testing.expectEqual(@as(i32, -1), start(&raw, expected, &Callback.run));
 }

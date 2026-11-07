@@ -33,6 +33,7 @@ function Assert-R4ProfileJsonNames([System.Text.Json.JsonElement]$Element) {
 
 function Read-R4SdkProfiles([string]$SdkRoot) {
     $SdkRoot = [IO.Path]::GetFullPath($SdkRoot)
+    & (Join-Path $SdkRoot 'Tools/Sync-ProfilePolicy.ps1') -SdkRoot $SdkRoot -Check | Out-Null
     $documents = [ordered]@{}
     $hashes = [ordered]@{}
     foreach ($name in @('Build', 'Tools', 'Components')) {

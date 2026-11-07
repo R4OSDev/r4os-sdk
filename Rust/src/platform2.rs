@@ -30,6 +30,12 @@ impl<'a> Context<'a> {
         {
             return Err(Error::InvalidContext);
         }
+        if raw.args_len > isize::MAX as u64
+            || (raw.args_len != 0 && raw.args == 0)
+            || raw.args.checked_add(raw.args_len).is_none()
+        {
+            return Err(Error::InvalidContext);
+        }
         if raw.import_count > 32
             || (raw.import_count != 0
                 && (raw.imports == 0
@@ -82,6 +88,33 @@ impl<'a> Context<'a> {
     pub fn raw(&self) -> &'a abi::R4XStartContext2 {
         self.raw
     }
+    pub fn args(&self) -> &'a [u8] {
+        if self.raw.args_len == 0 {
+            return &[];
+        }
+        unsafe {
+            core::slice::from_raw_parts(self.raw.args as *const u8, self.raw.args_len as usize)
+        }
+    }
+    pub fn should_close(&self) -> bool {
+        if self.raw.flags & crate::abi::r4xstart_flag_close_supported == 0
+            || self.raw.should_close == 0
+        {
+            return true;
+        }
+        let callback: abi::R4XStartShouldCloseFn2 =
+            unsafe { mem::transmute(self.raw.should_close) };
+        unsafe { callback(self.raw) != 0 }
+    }
+    pub fn yield_current(&self) -> bool {
+        if self.raw.flags & crate::abi::r4xstart_flag_yield_supported == 0 || self.raw.r#yield == 0
+        {
+            return false;
+        }
+        let callback: abi::R4XStartYieldFn2 = unsafe { mem::transmute(self.raw.r#yield) };
+        unsafe { callback(self.raw) };
+        true
+    }
     /// The Contract supplies the slot offset and C function signature.
     /// Resolving an address neither invokes it nor changes its buffer loans.
     pub fn lookup(&self, group: u32, offset: u32) -> Result<u64, i32> {
@@ -127,4 +160,54 @@ impl<'a> Context<'a> {
         }
         Some(address as *const c_void)
     }
+}
+
+#[derive(Clone, Copy)]
+pub struct StartupInfo {
+    pub app_class: u32,
+    pub required_groups: u32,
+    pub import_count: u32,
+}
+/// # Safety
+/// Exact current loader context and all its imported prefixes remain resident
+/// throughout this entry. The callback receives a non-Send borrowed view.
+#[doc(hidden)]
+pub unsafe fn start(
+    raw: *const abi::R4XStartContext2,
+    info: StartupInfo,
+    main: fn(&Context<'_>) -> i32,
+) -> i32 {
+    if raw.is_null() || !(raw as usize).is_multiple_of(mem::align_of::<abi::R4XStartContext2>()) {
+        return -1;
+    }
+    let raw = unsafe { &*raw };
+    let context = match unsafe { Context::new(raw) } {
+        Ok(v) => v,
+        Err(_) => return -1,
+    };
+    if raw.app_class != info.app_class || raw.import_count != info.import_count {
+        return -1;
+    }
+    for i in 0..6 {
+        if info.required_groups & (1 << (i + 1)) != 0 && context.group((i + 1) as u32).is_none() {
+            return -1;
+        }
+    }
+    // No old App/allocator/entropy binder is attached to this raw generation.
+    // Panics use the kernel's existing module-fault termination boundary.
+    main(&context)
+}
+#[macro_export]
+macro_rules! lowlevel_entry2 {
+    ($main:path) => {
+        #[unsafe(no_mangle)]
+        #[unsafe(link_section = ".text.r4xstart_entry")]
+        pub unsafe extern "C" fn R4XStart2(
+            raw: *const $crate::platform2::abi::R4XStartContext2,
+        ) -> i32 {
+            use $crate as __r4os_startup;
+            let info = include!(env!("R4OS_STARTUP_INFO_FILE"));
+            unsafe { $crate::platform2::start(raw, info, $main) }
+        }
+    };
 }

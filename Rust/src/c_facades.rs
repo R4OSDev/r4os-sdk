@@ -5517,9 +5517,9 @@ const _: () = { assert!(core::mem::size_of::<R4SdkDataManifestCDefineEntry>() ==
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataManifestManifest {
-    pub r#opaque_bytes: [u8; 520],
+    pub r#opaque_bytes: [u8; 536],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkDataManifestManifest>() == 520); assert!(core::mem::align_of::<R4SdkDataManifestManifest>() == 8); assert!(core::mem::offset_of!(R4SdkDataManifestManifest, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkDataManifestManifest>() == 536); assert!(core::mem::align_of::<R4SdkDataManifestManifest>() == 8); assert!(core::mem::offset_of!(R4SdkDataManifestManifest, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataNative_Value104 {
@@ -5619,9 +5619,9 @@ const _: () = { assert!(core::mem::size_of::<R4SdkDataAllocator>() == 16); asser
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataNative_Value120 {
-    pub r#opaque_bytes: [u8; 528],
+    pub r#opaque_bytes: [u8; 544],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value120>() == 528); assert!(core::mem::align_of::<R4SdkDataNative_Value120>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value120, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value120>() == 544); assert!(core::mem::align_of::<R4SdkDataNative_Value120>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value120, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataNative_Value121 {
@@ -16422,7 +16422,7 @@ pub const R4SdkDataNative_Value181_TYPE: u32 = 181;
 pub const R4SdkDataNative_Value182_TYPE: u32 = 182;
 pub const R4SdkDataNative_Value183_TYPE: u32 = 183;
 pub const R4SdkDataNative_Value184_TYPE: u32 = 184;
-pub const R4SdkData_ABI_FINGERPRINT: u64 = 17614999946340117096;
+pub const R4SdkData_ABI_FINGERPRINT: u64 = 5400212532203429285;
 pub const R4SdkDataJson_op_open: i32 = 1;
 pub const R4SdkDataJson_op_next: i32 = 2;
 pub const R4SdkDataJson_op_select: i32 = 3;
@@ -24705,7 +24705,7 @@ unsafe extern "C" {
     pub fn R4SdkDataManifestCDefineEntry_set_value(p0: *mut R4SdkDataManifestCDefineEntry, p1: *const u8, p2: u64) -> R4SdkDataSlot;
     pub fn R4SdkDataManifestCDefineEntry_inspectNative(p0: *const R4SdkDataManifestCDefineEntry) -> R4SdkDataSlot;
     pub fn R4SdkDataManifestManifest_create(p0: *mut R4SdkDataManifestManifest, p1: u8, p2: *const u8, p3: u64, p4: u32, p5: *const u8, p6: u64, p7: *const R4SdkDataManifestModuleVersion, p8: *const u8, p9: u64) -> R4SdkDataSlot;
-    pub fn R4SdkDataManifestManifest_from_fields(p0: *mut R4SdkDataManifestManifest, p1: u8, p2: *const u8, p3: u64, p4: u32, p5: *const u8, p6: u64, p7: *const R4SdkDataManifestModuleVersion, p8: R4SdkDataSlot, p9: *const R4SdkDataNative_Value31, p10: u64, p11: R4SdkDataSlot, p12: R4SdkDataSlot, p13: R4SdkDataSlot, p14: R4SdkDataSlot, p15: R4SdkDataSlot, p16: *const R4SdkDataNative_Value31, p17: u64, p18: *const R4SdkDataManifestGuestExtensionEntry, p19: u64, p20: *const R4SdkDataManifestGuestFeatureEntry, p21: u64, p22: *const u8, p23: u64, p24: R4SdkDataSlot, p25: R4SdkDataSlot, p26: R4SdkDataSlot, p27: *const R4SdkDataNative_Value31, p28: u64, p29: *const R4SdkDataNative_Value31, p30: u64, p31: *const R4SdkDataNative_Value31, p32: u64, p33: *const R4SdkDataManifestCDefineEntry, p34: u64, p35: *const R4SdkDataNative_Value31, p36: u64, p37: *const R4SdkDataNative_Value31, p38: u64, p39: *const R4SdkDataManifestExportEntry, p40: u64, p41: R4SdkDataSlot, p42: R4SdkDataSlot, p43: R4SdkDataSlot, p44: R4SdkDataSlot, p45: R4SdkDataSlot, p46: R4SdkDataSlot, p47: R4SdkDataSlot, p48: R4SdkDataSlot, p49: R4SdkDataSlot, p50: *const R4SdkDataNative_Value31, p51: u64, p52: *const R4SdkDataNative_Value31, p53: u64, p54: R4SdkDataSlot, p55: *const R4SdkDataManifestResourceEntry, p56: u64) -> R4SdkDataSlot;
+    pub fn R4SdkDataManifestManifest_from_fields(p0: *mut R4SdkDataManifestManifest, p1: u8, p2: *const u8, p3: u64, p4: u32, p5: *const u8, p6: u64, p7: *const R4SdkDataManifestModuleVersion, p8: R4SdkDataSlot, p9: *const R4SdkDataNative_Value31, p10: u64, p11: R4SdkDataSlot, p12: R4SdkDataSlot, p13: R4SdkDataSlot, p14: R4SdkDataSlot, p15: R4SdkDataSlot, p16: *const R4SdkDataNative_Value31, p17: u64, p18: *const R4SdkDataManifestGuestExtensionEntry, p19: u64, p20: *const R4SdkDataManifestGuestFeatureEntry, p21: u64, p22: *const u8, p23: u64, p24: R4SdkDataSlot, p25: R4SdkDataSlot, p26: R4SdkDataSlot, p27: *const R4SdkDataNative_Value31, p28: u64, p29: *const R4SdkDataNative_Value31, p30: u64, p31: *const R4SdkDataNative_Value31, p32: u64, p33: *const R4SdkDataManifestCDefineEntry, p34: u64, p35: *const R4SdkDataNative_Value31, p36: u64, p37: *const R4SdkDataNative_Value31, p38: u64, p39: *const R4SdkDataManifestExportEntry, p40: u64, p41: R4SdkDataSlot, p42: R4SdkDataSlot, p43: R4SdkDataSlot, p44: R4SdkDataSlot, p45: R4SdkDataSlot, p46: R4SdkDataSlot, p47: R4SdkDataSlot, p48: R4SdkDataSlot, p49: R4SdkDataSlot, p50: *const R4SdkDataNative_Value31, p51: u64, p52: *const R4SdkDataNative_Value31, p53: u64, p54: R4SdkDataSlot, p55: *const R4SdkDataManifestResourceEntry, p56: u64, p57: R4SdkDataSlot, p58: u8) -> R4SdkDataSlot;
     pub fn R4SdkDataManifestManifest_get_version(p0: *const R4SdkDataManifestManifest) -> R4SdkDataSlot;
     pub fn R4SdkDataManifestManifest_set_version(p0: *mut R4SdkDataManifestManifest, p1: u8) -> R4SdkDataSlot;
     pub fn R4SdkDataManifestManifest_get_path(p0: *const R4SdkDataManifestManifest) -> R4SdkDataSlot;
@@ -24784,6 +24784,10 @@ unsafe extern "C" {
     pub fn R4SdkDataManifestManifest_set_help(p0: *mut R4SdkDataManifestManifest, p1: R4SdkDataSlot) -> R4SdkDataSlot;
     pub fn R4SdkDataManifestManifest_get_resources(p0: *const R4SdkDataManifestManifest) -> R4SdkDataSlot;
     pub fn R4SdkDataManifestManifest_set_resources(p0: *mut R4SdkDataManifestManifest, p1: *const R4SdkDataManifestResourceEntry, p2: u64) -> R4SdkDataSlot;
+    pub fn R4SdkDataManifestManifest_get_sdk_profile(p0: *const R4SdkDataManifestManifest) -> R4SdkDataSlot;
+    pub fn R4SdkDataManifestManifest_set_sdk_profile(p0: *mut R4SdkDataManifestManifest, p1: R4SdkDataSlot) -> R4SdkDataSlot;
+    pub fn R4SdkDataManifestManifest_get_platform_generation(p0: *const R4SdkDataManifestManifest) -> R4SdkDataSlot;
+    pub fn R4SdkDataManifestManifest_set_platform_generation(p0: *mut R4SdkDataManifestManifest, p1: u8) -> R4SdkDataSlot;
     pub fn R4SdkDataManifestManifest_inspectNative(p0: *const R4SdkDataManifestManifest) -> R4SdkDataSlot;
     pub fn R4SdkDataNative_Value104_create(p0: *mut R4SdkDataNative_Value104, p1: R4SdkDataSlot) -> R4SdkDataSlot;
     pub fn R4SdkDataNative_Value104_inspectNative(p0: *const R4SdkDataNative_Value104) -> R4SdkDataSlot;

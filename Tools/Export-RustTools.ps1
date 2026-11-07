@@ -126,6 +126,8 @@ $canonicalCommits[$SdkRoot]=$sdkSource.commit;$canonicalCommits[$ContractRoot]=$
 foreach($file in @('Rust.ps1','Rust.sh','Rust.bat','ProfileData.ps1','Setup.ps1','Setup.sh','Setup.bat')){Copy-Source $SdkRoot ('Tools/'+$file) ('Setup/'+$file)}
 Copy-Source $SdkRoot 'build.zig.zon' 'build.zig.zon'
 foreach($file in @('Build.json','Tools.json','Components.json')){Copy-Source $SdkRoot ('Profiles/'+$file) ('Profiles/'+$file)}
+Copy-Source $SdkRoot 'Tools/Sync-ProfilePolicy.ps1' 'Tools/Sync-ProfilePolicy.ps1'
+Copy-Source $SdkRoot 'r4os/generated/profile_policy.zig' 'r4os/generated/profile_policy.zig'
 [IO.File]::WriteAllText((Join-Path $Destination 'Setup/RustToolchain.json'),($pin|ConvertTo-Json -Depth 100)+"`n",$utf8) # generated compatibility projection
 Copy-Input $ReleaseManifest 'Profile/rust-release.toml'
 Copy-Source $ContractRoot 'Module/CpuBaseline.json' 'Profile/CpuBaseline.json'

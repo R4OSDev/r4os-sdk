@@ -17,10 +17,24 @@ $context=Get-R4SdkBuildContext $sdkRoot $contract $libraries $install $zigRoot -
 Assert-R4SdkBuildArguments $context $BuildArguments
 $project=[IO.File]::ReadAllText((Join-Path $OwnerRoot 'build.zig.zon'))
 $forks=@()
+$hasSdk=$project -cmatch '(?m)(?:^|[{},])\s*\.r4os_sdk\s*='
 foreach($binding in @(@('r4os_contract',$contract),@('r4os_libraries',$libraries),@('r4os_sdk',$sdkRoot))){
     # Zig rejects unused forks. A source owner such as Contract has no SDK
-    # dependencies; its selected host compiler/profile still comes from SDK.
-    if($project -cmatch ('(?m)^\s*\.'+$binding[0]+'\s*=')){$forks+=('--fork='+$binding[1])}
+    # dependencies. SDK consumers also bind its transitive system package
+    # inputs, including compact one-line fixture manifests.
+    $declaration=[regex]::Match($project,('(?ms)(?:^|[{},])\s*\.'+$binding[0]+'\s*=\s*\.\{([^}]*)\}'))
+    if($declaration.Success){
+        $local=[regex]::Match($declaration.Groups[1].Value,'\.path\s*=\s*"([^"]+)"')
+        if($local.Success){
+            # Local dependencies are already bound and cannot be Zig forks.
+            $relative=$local.Groups[1].Value.Replace('\\','/').Replace('\','/')
+            $actual=[IO.Path]::GetFullPath($relative,$OwnerRoot)
+            $comparison=if($IsWindows){[StringComparison]::OrdinalIgnoreCase}else{[StringComparison]::Ordinal}
+            if(!$actual.Equals([IO.Path]::GetFullPath($binding[1]),$comparison)){throw ('SdkLocalComponentPathMismatch: '+$binding[0])}
+            continue
+        }
+    }
+    if($declaration.Success -or ($hasSdk -and $binding[0] -cin @('r4os_contract','r4os_libraries'))){$forks+=('--fork='+$binding[1])}
 }
 $packageName=[regex]::Match($project,'\.name\s*=\s*\.([a-z0-9_]+)').Groups[1].Value
 $defaults=$context.data.Build.codegen.host.owner_optimize

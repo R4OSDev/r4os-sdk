@@ -79,3 +79,14 @@ test "common startup metadata retains optional named imports and current platfor
     try std.testing.expectEqual(abi.R4AppProfile.desktop, try profileForClass("gui"));
     try std.testing.expectError(error.InvalidImport, rust(a, .console, &.{"R4SYS:Query:1:1"}));
 }
+
+/// New raw-entry admission facts; kernel already resolves every named import.
+pub fn rust2(a: std.mem.Allocator, profile: abi.R4AppProfile, count: usize) ![]u8 {
+    const meta = abi.r4AppProfileMeta(profile);
+    return std.fmt.allocPrint(a, "__r4os_startup::platform2::StartupInfo {{ app_class: {d}, required_groups: {d}, import_count: {d} }}\n", .{ @intFromEnum(meta.app_class), meta.required_groups, count });
+}
+
+pub fn c2(a: std.mem.Allocator, profile: abi.R4AppProfile, count: usize) ![]u8 {
+    const meta = abi.r4AppProfileMeta(profile);
+    return std.fmt.allocPrint(a, "{{{d}u,{d}u,{d}u}}", .{ @intFromEnum(meta.app_class), meta.required_groups, count });
+}

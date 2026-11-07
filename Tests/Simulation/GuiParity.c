@@ -268,3 +268,13 @@ int32_t sdk_platform2_admission(const R4XStartContext2 *raw, int32_t *called) {
     }
     return 0;
 }
+
+static int32_t platform2_start_main(const R4OS2Context *context) {
+    uint64_t address = 0;
+    if (R4OS2ContextFunction(context,1,offsetof(R4XStartR4Sys2,write),&address)) return -9;
+    return ((R4SysWriteFn)(uintptr_t)address)((const uint8_t *)"API2",4);
+}
+int32_t sdk_platform2_start_case(const R4XStartContext2 *raw, uint32_t app_class, uint32_t mask, uint32_t count) {
+    const R4OS2StartupInfo info = {app_class,mask,count};
+    return R4OS2Start(raw,&info,platform2_start_main);
+}

@@ -200,7 +200,7 @@ fn run(init: std.process.Init) !void {
             if (value.kind != .r4x) return error.StartupInfoRequiresR4X;
             const profile = try manifest_contract.startup_metadata.profileForClass(value.app_class.?.text());
             const rendered = switch (value.language.?) {
-                .rust => try manifest_contract.startup_metadata.rust(allocator, profile, value.imports),
+                .rust => if (value.platform_generation == 2) try manifest_contract.startup_metadata.rust2(allocator, profile, value.imports.len) else try manifest_contract.startup_metadata.rust(allocator, profile, value.imports),
                 .c => try manifest_contract.startup_metadata.c(allocator, profile, value.imports),
                 .zig => return error.StartupInfoRequiresRustOrC,
             };
@@ -1173,7 +1173,7 @@ fn renderPlanObject(allocator: std.mem.Allocator, entry: manifest_contract.Manif
     if (entry.language == .rust) {
         const descriptor = .{
             .schema = manifest_contract.capabilities.rust_build_plan_schema,
-            .profile = if (entry.entry_mode == .lowlevel) "r4os-rust-r4x-lowlevel-v1" else manifest_contract.capabilities.rust_profile,
+            .profile = entry.sdk_profile orelse if (entry.entry_mode == .lowlevel) "r4os-rust-r4x-lowlevel-v1" else manifest_contract.capabilities.rust_profile,
             .tools = manifest_contract.capabilities.rust_tools,
             .host_build_qualified = manifest_contract.capabilities.rust_host_builder,
             .cargo_manifest = "Cargo.toml",

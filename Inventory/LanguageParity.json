@@ -423,7 +423,8 @@
         "Repositories/SDK/Tools/Test-RustDependencies.ps1",
         "Repositories/SDK/Tools/Test-RustModule.ps1",
         "Repositories/SDK/Tests/Build/RustGraph",
-        "Repositories/SDK/Smoke/AppEntry/C/Console"
+        "Repositories/SDK/Smoke/AppEntry/C/Console",
+        "platform_generation2_09014"
       ],
       "shared_core": "Gemeinsamer R4MF-Parser, Builder, Packager und PS7-Orchestrierung."
     },
@@ -451,7 +452,8 @@
       "evidence": [
         "source_inventory",
         "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.52",
-        "independent_desktop_current_71"
+        "independent_desktop_current_71",
+        "platform_generation2_09014"
       ],
       "shared_core": "SDK Tools/R4LContractGen mit sprachbezogener Rustprojektion und je Library Contract/LibraryContract.json; Baselines/Implementation/Zig unveraendert. Qualifikation52 in Docs/SDK/LanguageParity.txt."
     },
@@ -964,7 +966,8 @@
         "data_current_61",
         "web_current_62",
         "ico_bulk_08840",
-        "audio_reply_08842"
+        "audio_reply_08842",
+        "platform_generation2_09014"
       ],
       "shared_core": "Grosse Parser/Codec-/Kryptokerne einmal beim SDK-/Librarybesitzer; besitzereigene C-ABI bzw. passende existierende R4L in61 begruenden. Kein Kopieren von JSON/ZIP/Entropiealgorithmen in drei Sprachen.",
       "qualification": {
@@ -1264,12 +1267,12 @@
         "lowlevel",
         "platform2"
       ],
-      "semantics": "Raw Entry/ABI/Stack/CPU/FPU/Exit nur fuer explizite Rollen, getrennt vom normalen App-Start. Technische Toolchain-/CPU-Pins und optionale ISA-Grenzen erhalten. 0.90.12 adds explicit generation2 raw bindings and borrowed context admission with matching C/Rust/Zig header/import checks; no default App binding or guest provider activation.",
+      "semantics": "Explicit raw generation1/2 entry and borrowed context admission; profile-derived exact Start2 entry/imports/metadata, typed Context2 callbacks and existing kernel stack/fault/retirement owners. No automatic App allocator or second runtime.",
       "current_only": "current_function",
       "rust": {
         "state": "explicit_raw_context_host_profile_qualified",
         "source": "Repositories/SDK/Rust/src/lowlevel.rs",
-        "gap": "Direct Rust FP/SIMD still excluded by pinned backend policy. Arbitrary unhandled exceptions remain terminal under original kernel contract. Generation2 Context is explicitly unsafe to construct, lifetime-bound and non-Send/non-Sync; no guest-provider or Windows runtime claim.",
+        "gap": "Direct Rust FP/SIMD remains excluded by pinned backend policy. Context2 is unsafe to construct, lifetime-bound and non-Send/non-Sync. Actual KVM4 return/close/kill/panic qualified; no Windows or physical hardware execution.",
         "sources": [
           "Repositories/Contract/Generated/Generation2/Rust/generation2.rs",
           "Repositories/SDK/Rust/src/platform2.rs"
@@ -1281,16 +1284,18 @@
           "Repositories/Contract/Generated/Generation2/C/include/r4os/generation2.h",
           "Repositories/SDK/Shared/C/include/r4os/platform2.h",
           "Repositories/SDK/Shared/C/include/r4os/r4m0.h",
-          "Repositories/SDK/Shared/C/include/r4os/r4xstart.h"
+          "Repositories/SDK/Shared/C/include/r4os/r4xstart.h",
+          "Repositories/SDK/Shared/C/src/r4xstart2_startup.c"
         ],
-        "gap": "Original C lowlevel startup/ABI retained; native R4CC is a separate limited app profile. Generation2 currently qualifies host binding/admission only; Kernel Query2/Start2 providers follow separately."
+        "gap": "Actual profile-derived generation2 C startup, signed return and KVM4 lifecycle qualified. Native R4CC remains a separate limited app profile; no normal App heap adapter."
       },
       "evidence": [
         "lowlevel_current_69",
         "platform_generation2_09012",
-        "platform_generation2_09013"
+        "platform_generation2_09013",
+        "platform_generation2_09014"
       ],
-      "shared_core": "Original R4XStartContext/manifest metadata, existing App::from_raw admission, original Kernel entry/stack/runtime/fault owners; no normal App main adapter."
+      "shared_core": "Both physical start contexts borrow the same exact kernel instance storage; old entry/stack/runtime/fault/retirement owners retained; independent R4L functional contracts preserved."
     }
   ],
   "public_exports": [
@@ -2801,6 +2806,14 @@
       "expression": "@import(\"r4os/desktop_links.zig\")",
       "capability": "services",
       "wave": "0.89.16"
+    },
+    {
+      "name": "platform2",
+      "source": "Repositories/SDK/r4os.zig",
+      "line": 4,
+      "expression": "@import(\"r4os/platform2.zig\")",
+      "capability": "lowlevel",
+      "wave": "0.90.14"
     }
   ],
   "build_exports": [
@@ -55937,6 +55950,20 @@
         "Kernel native providers qualified separately in0.90.13 runtime receipt.",
         "No Windows or hardware execution claim."
       ]
+    },
+    "platform_generation2_09014": {
+      "complete": true,
+      "performed_in": "0.90.14",
+      "sdk": "0.64.157",
+      "contract": "0.64.78",
+      "report": "Docs/API/Generation2.txt",
+      "scope": "Explicit lowlevel R4XStart2 adapters and exact profile-derived entry/import/metadata in Zig/C/Rust; Context2 callbacks, borrowed arguments/imports and signed return forwarding. All3 actual artifacts execute on KVM4/Kernel462; return37, close, kill and fault complete/reap12 exact handles. Four malformed real modules fail before handle publication.",
+      "host_checks": "Contract8 interopgroups/bare/clippy; SDK Platform7 groups plus5compilernegatives, Data5 groups plus5ownershipnegatives, strict bareClippy; existing manifest/packager/context cases; canonical Zig/C and standalone Rust build paths.",
+      "provider_scope": "12 actual installed runtimeR4L artifacts add technical Query2:2, retain old Query1 and independent functional interfaces. Source contracts/bindings unchanged. NativeQuery2 borrowed R4STD validated; no physical provider hardware claim.",
+      "limits": [
+        "Broader unmodified PROGRAMSTORAGE still fails console baseline; already2active/3payloads on fresh boot before Start2 use; bounded40 kernelcases pass.",
+        "No Windows or hardware execution; no ordinary App startup/heap adapter or consumer migration."
+      ]
     }
   },
   "wave_bindings": [
@@ -56200,7 +56227,7 @@
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.90.13",
+    "reviewed_in": "0.90.14",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -56286,7 +56313,7 @@
       },
       {
         "path": "Repositories/Contract/Generated/Generation2/C/include/r4os/generation2.h",
-        "sha256": "6cfe68060409d6f721d649a58bb09729cfd958cb4b85160fb7fc0caaccb85aa3"
+        "sha256": "6f06b1dcda175a1d0bfaf85288cc28d31cb696ac131c43a02a3b3e6bb921365c"
       },
       {
         "path": "Repositories/Contract/Generated/Generation2/Inventory.json",
@@ -56294,11 +56321,11 @@
       },
       {
         "path": "Repositories/Contract/Generated/Generation2/Rust/generation2.rs",
-        "sha256": "74ca031e9bd06fc30e61733abb6bef25861b600b50a0898a730772d54e0fb0d5"
+        "sha256": "ad7300e7aa3de4523f94b665fe874aac09de8719639f01a0211942a876327e33"
       },
       {
         "path": "Repositories/Contract/Generated/Generation2/Zig/abi.zig",
-        "sha256": "1ba724c4f8d0e58f33706edc495237bb93445fecf06a88464c4e5c46451e397f"
+        "sha256": "e0aebdd21ad95fdf398c8e9e4387addcd77b91890948fccd7733070ab472180d"
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/API.json",
@@ -56374,7 +56401,7 @@
       },
       {
         "path": "Repositories/Contract/Tools/ApiContractGen/src/generation2.zig",
-        "sha256": "4b0bd9c583c5f0c28901069e8c6e6d5f55bd155fd9f0001f42d5233381c606e5"
+        "sha256": "1baef674aad676135b40efe1fd58ab408067e8a1e363a871c37a8ff83d38c57b"
       },
       {
         "path": "Repositories/Contract/Tools/ApiContractGen/src/main.zig",
@@ -57394,7 +57421,7 @@
       },
       {
         "path": "Repositories/SDK/Profiles/Components.json",
-        "sha256": "c137e29c1f8c68db6394790845afc7b2dc32e24a3ed304533ef897ba7a022cf0"
+        "sha256": "21e5381112c3b99894783b2347af3383747297391e68f90f76c4aa52186033d5"
       },
       {
         "path": "Repositories/SDK/Profiles/Tools.json",
@@ -57410,7 +57437,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "424e3be6bca1bc7ba4270d7dff52869ef03feaac7585ffc0f5f8cde880c84e36"
+        "sha256": "903f4fb3b487b3277abd54150950529c11a783d9cf8b2ac1eba9b5c144268c7a"
       },
       {
         "path": "Repositories/SDK/Rust/src/data/hash.rs",
@@ -57530,7 +57557,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/platform2.rs",
-        "sha256": "b3f803b77a1cff93eb9d90342501fabc559cacefd19569243fa073b23c1caecb"
+        "sha256": "822451a2d8a3816fb934e52b884fa853022afeaf4369f4353c3f6f396821e8e9"
       },
       {
         "path": "Repositories/SDK/Rust/src/protocol.rs",
@@ -57726,7 +57753,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/data_helpers.h",
-        "sha256": "16611fea28fdef0b9a20538a96b9a4e09ceb66f81854deaacbc1bacf97a5bc9a"
+        "sha256": "dc3da80938a74a318d3e9c4e92b479a9649c45b4c41310f6848bbd56e8d9cc03"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/desktop_actions.h",
@@ -57822,7 +57849,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/platform2.h",
-        "sha256": "ed09784439f8f85a26ae03bb18e0d80f5b1b1f0756b7266291922a10e82c8486"
+        "sha256": "44c5b5d944f29971e4322c824a9b48bc3d2cb1c33ae4c1085541e45cf9423ea9"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/power_profiles.h",
@@ -57917,6 +57944,10 @@
         "sha256": "7f52601e71e3abf5fd19c64a323a620bc635e44a93a40769ae88e739afc20a04"
       },
       {
+        "path": "Repositories/SDK/Shared/C/src/r4xstart2_startup.c",
+        "sha256": "25ab2b53e71170370a8e90bda911148daf5a13fbe73458c93201f3c24181b5e8"
+      },
+      {
         "path": "Repositories/SDK/Shared/C/src/r4xstart_startup.c",
         "sha256": "ddcd778f5929ae56fd82595636486a94695059c18f5c1e729f2a31d3cd94aff2"
       },
@@ -57970,7 +58001,7 @@
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/GuiParity.c",
-        "sha256": "bd79e0c3fcac777639e40ece21b5476a1b125fbe72c59f3990b62eb268a0af21"
+        "sha256": "1597d9f4111478c203bca55bff44dd8edbaaa55c057d00645583a8421886bc9d"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/PointerBindings.c",
@@ -57982,7 +58013,7 @@
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/RustPlatform.rs",
-        "sha256": "c49861b177053c9f540d1ffcc7ee3785ac9fdc7d701a0132d596c4239bcf0e86"
+        "sha256": "b97956ce36f38aa8bdcd0ced88c972b4187d184b0267978f2300f7ccbc8a8732"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/RustServices.rs",
@@ -57998,7 +58029,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/Build-RustModule.ps1",
-        "sha256": "2e539c218cbef65d170b3d0d067fec2794819b3e42a2370f0b3e80d47ebf93ae"
+        "sha256": "b9a6588dc41f445d0d742d05f65f4dd2ccec98662c2a818f67c99ae4859d07b7"
       },
       {
         "path": "Repositories/SDK/Tools/BuildContext.ps1",
@@ -58010,7 +58041,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/BuildOwner.ps1",
-        "sha256": "34241fbe2d9907bc2e5d5a59cc6544b59a611715b0a130d26ccb1e61063bfdcb"
+        "sha256": "87f9a2cf87ec3da6cd1657737a10a1fec23b4c9a061938b2ba5d9a14ba84e2b2"
       },
       {
         "path": "Repositories/SDK/Tools/CFacadeGen/src/main.zig",
@@ -58030,7 +58061,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/Export-RustTools.ps1",
-        "sha256": "8d626a78764a02904b7259e20a4e4b463cc46103cf72240222fe509d96a053e9"
+        "sha256": "185961aa4b9b1f69a5c1b2678ef87c05699dd7906377716a8cc73cb6358531ef"
       },
       {
         "path": "Repositories/SDK/Tools/GuiBridgeGen/src/c_header.zig",
@@ -58054,7 +58085,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/ModuleCatalog/src/main.zig",
-        "sha256": "2a30193a6386d98fc546d3ab018683e6f1b8b525712e3f89d98f1f83a4c850ee"
+        "sha256": "ab0afb7b2895361684b81ce461dbfac7bf58f26df95788267672da2aa1698dc1"
       },
       {
         "path": "Repositories/SDK/Tools/NativeProfiles.ps1",
@@ -58082,7 +58113,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/ProfileData.ps1",
-        "sha256": "42f0afb3b1bac358b3f5d6e967a6bb63d5f9eedd5f859e9f1dd202e7588fdf50"
+        "sha256": "7806f4425bd8ae879a5487ae874fc4e236f590c62f59de61920d1b5d072c5dea"
       },
       {
         "path": "Repositories/SDK/Tools/ProfileResolver.ps1",
@@ -58143,6 +58174,10 @@
       {
         "path": "Repositories/SDK/Tools/Sync-NativeProjections.ps1",
         "sha256": "9a59a871d90065559322cc398185157cc8f20176f6f061ed18cbe786fd0f10c1"
+      },
+      {
+        "path": "Repositories/SDK/Tools/Sync-ProfilePolicy.ps1",
+        "sha256": "8b21d0194cbf7b9f05083c75a0ac0b4a0081c650c61325f3223c7f2c9f94ae49"
       },
       {
         "path": "Repositories/SDK/Tools/Sync-ProfileProjections.ps1",
@@ -58238,11 +58273,11 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "f836c1b02ea85ca1d40470ed720e6f3d1065f8527aac2a36eae048e53189954f"
+        "sha256": "9de8ff116c2510520d278ee4ff4155c3aab380b44b326c27ee5332e5c95f550c"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
-        "sha256": "532f2fead59609adb5638c427fe0abfaa266b5c11e39e46f07345b634737729b"
+        "sha256": "4f8553dbf260cc1c0c00e9aeb6319814d101050cb2afc8aa6ecb57ca945500a3"
       },
       {
         "path": "Repositories/SDK/r4os/allocator_wait.zig",
@@ -58314,7 +58349,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/build.zig",
-        "sha256": "1848116a0cb7a78131034d2d20b167b9ce987229d72a1e87d1a344fb074466c1"
+        "sha256": "e1e1ab3f4e68a8bdefc1cf74932642a6aeb39cd727c8160f37e86233b1f31d4b"
       },
       {
         "path": "Repositories/SDK/r4os/build_profile.zig",
@@ -58470,7 +58505,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/generated/data_fingerprint.zig",
-        "sha256": "6954b6eef54a439c03b2be30f727d0c374e4693fc9b75757952b7975c052b2a3"
+        "sha256": "e87cf7352f1313ce55d223d0d52df68e8a8f58aa42d39ceffae56552ae430c6d"
       },
       {
         "path": "Repositories/SDK/r4os/generated/driver_fingerprint.zig",
@@ -58483,6 +58518,10 @@
       {
         "path": "Repositories/SDK/r4os/generated/net_facade.zig",
         "sha256": "968cd770bfda99731b1b982a46bbde94e9f83df07e3d70ea2fb2a101f1f78ad0"
+      },
+      {
+        "path": "Repositories/SDK/r4os/generated/profile_policy.zig",
+        "sha256": "2e6304fd4f8f27abfd7423fd601c6c3190a89bef9c3a0a860d237b0cf6601f21"
       },
       {
         "path": "Repositories/SDK/r4os/generated/subsystem_fingerprint.zig",
@@ -58626,7 +58665,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/module_manifest.zig",
-        "sha256": "f441e5c748fa1c0258b5319e71e3ba45559d8344cffa1c336f59cf336c0a46b5"
+        "sha256": "4bb755f17ccc66f5f3eb6a9281b6b804c1618fb2876d855b9c19c916d2dbfebd"
       },
       {
         "path": "Repositories/SDK/r4os/native_bridge_schema.zig",
@@ -58670,7 +58709,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/platform2.zig",
-        "sha256": "0813a252862620b638d4fea60e9af472cc04fe3d5773e5b73bc7bee4f38ce627"
+        "sha256": "592fb16e3bcf504950e82b4beed3aba8fe2c9d3079f7cffc6985e18e6d7b7022"
       },
       {
         "path": "Repositories/SDK/r4os/platform_runtime.zig",
@@ -58818,7 +58857,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/startup_metadata.zig",
-        "sha256": "2fd9ce3d4673185998025b4387e638318ea61f96e5e1b83da83d258897341783"
+        "sha256": "b9253cff13c105926e3e4735954b5abc1f0d00074a351f7bb9a14ce05a0ea4ba"
       },
       {
         "path": "Repositories/SDK/r4os/storage.zig",
@@ -59253,7 +59292,8 @@
           "file_name_limits_08827",
           "native_pointer_capture_08828",
           "gui_host_backpressure_08832",
-          "gui_title_08947"
+          "gui_title_08947",
+          "platform_generation2_09014"
         ]
       },
       {
@@ -59317,7 +59357,8 @@
         "proof": [
           "local_contract_and_baseline",
           "library_projection_current_61",
-          "current_kernel_records_80"
+          "current_kernel_records_80",
+          "platform_generation2_09014"
         ]
       },
       {
@@ -59663,7 +59704,8 @@
         "proof": [
           "data_current_61",
           "ico_bulk_08840",
-          "audio_reply_08842"
+          "audio_reply_08842",
+          "platform_generation2_09014"
         ]
       },
       {
@@ -59842,7 +59884,8 @@
           "Repositories/Contract/Generated/Generation2/C/include/r4os/generation2.h",
           "Repositories/SDK/Shared/C/include/r4os/platform2.h",
           "Repositories/SDK/Shared/C/include/r4os/r4m0.h",
-          "Repositories/SDK/Shared/C/include/r4os/r4xstart.h"
+          "Repositories/SDK/Shared/C/include/r4os/r4xstart.h",
+          "Repositories/SDK/Shared/C/src/r4xstart2_startup.c"
         ],
         "rust": [
           "Repositories/Contract/Generated/Generation2/Rust/generation2.rs",
@@ -59854,7 +59897,8 @@
           "bounded_work_08755",
           "lowlevel_current_69",
           "platform_generation2_09012",
-          "platform_generation2_09013"
+          "platform_generation2_09013",
+          "platform_generation2_09014"
         ]
       },
       {

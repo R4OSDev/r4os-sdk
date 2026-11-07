@@ -26,10 +26,10 @@
   "repositories": {
     "contract": {
       "repository": "https://github.com/R4OSDev/r4os-contract.git",
-      "commit": "33ad88ef29b2993e62a22337a6dd6dbb6f48bf57",
-      "version": "0.64.77",
+      "commit": "b839cbf80571bc1076f17918ed1386f52d96aa5c",
+      "version": "0.64.78",
       "files": {
-        "build.zig.zon": "d999e6bc631acf0d502df52d056525ec29f432b26691e4763eec9b3c51ddce76",
+        "build.zig.zon": "32c1ca5355fd7e684ef745b62bce62dead020f9416ded90c9a15ea82dc475cc6",
         "API/ApiContract.json": "f7f8914208935ed2bd2c08bc2f4bfe0db44a3ff7aab9fbb5f26e601271221631",
         "Module/CpuBaseline.json": "eeeee03aa8fd41051c09e61e9d70ca35660f2b413c3f878fb6e5a3bb51aad10c",
         "Generated/SDK/Rust/Cargo.toml": "de464f2f9243e3d153c06b701a2126839c3e8a921a6d466467d3042370023263",
@@ -37,12 +37,12 @@
         "API/Generation2.json": "cd7dc67c1e8704ace45b1901b5ef266f10cfca49f58d224a1583f32683972c23",
         "Generated/Generation2/Inventory.json": "0b28cc232082437e4a7c81ddcce4b02f3ab9337b4db93d9a58c2ff9beff33ae9"
       },
-      "zig_hash": "r4os_contract-0.64.77-ELhbYSgIOAHLpGGYGGgpLcDvMyckaN2Gp0tbanFzasZT",
-      "archive_url": "https://github.com/R4OSDev/r4os-contract/archive/33ad88ef29b2993e62a22337a6dd6dbb6f48bf57.tar.gz",
+      "zig_hash": "r4os_contract-0.64.78-ELhbYTsROAHmBkTd8T4AxDxDhgGDJ8mkv2-x0xTK8F6M",
+      "archive_url": "https://github.com/R4OSDev/r4os-contract/archive/b839cbf80571bc1076f17918ed1386f52d96aa5c.tar.gz",
       "archive_format": "tar.gz",
       "tree": {
         "algorithm": "r4os-files-sha256-lf-v1",
-        "sha256": "a527898b282d6e5b9b645dd072b9f197f326c980afa82eb8657c6cb508683865",
+        "sha256": "2961779192c07d4cd0a17105842d106443cb3669c025099222821142c40e40ea",
         "files": [
           ".gitattributes",
           ".gitignore",
@@ -124,15 +124,15 @@
     },
     "libraries": {
       "repository": "https://github.com/R4OSDev/r4os-libraries.git",
-      "commit": "b2cc58fe66d0d8cabab1232cfb8a545e54a9df31",
-      "version": "0.64.49",
+      "commit": "09c3efbf63dbde93453a6be06693ba24f1ac9a53",
+      "version": "0.64.50",
       "files": {
-        "build.zig.zon": "4a2dd2e6fbda9f31e6df37dd8f7bede9e960c8ba77ae40bc6ff24cc0e74dc632",
+        "build.zig.zon": "0b6d6018c18030a0f06c1acb69d657aea690ead9889632cd4936f3515d84c759",
         "Shared/Rust/Cargo.toml": "431c38bac8b28467b0dad7842d1626397bb061eeb94f54f604276dc81036aec4"
       },
       "tree": {
         "algorithm": "r4os-files-sha256-lf-v1",
-        "sha256": "45beae0907f59c69f015d442e9486b15f54851d01c49677edc41b99c8c62a1cb",
+        "sha256": "9e640ec8d7d440ed60d8e2334286d1b52fed1b943a17d31509b575f0f44c404d",
         "files": [
           ".gitattributes",
           ".gitignore",
@@ -2587,8 +2587,8 @@
           "consumer_oracles.zig"
         ]
       },
-      "zig_hash": "r4os_libraries-0.64.49-dH4fNSAUeAOaX_xUskH-d9PrEN_ylVC8VJ-zFOHlJUWD",
-      "archive_url": "https://github.com/R4OSDev/r4os-libraries/archive/b2cc58fe66d0d8cabab1232cfb8a545e54a9df31.tar.gz",
+      "zig_hash": "r4os_libraries-0.64.50-dH4fNWkeeANOT9WDpiKil_0YGxcLms5UcVXS3BN_6Mx4",
+      "archive_url": "https://github.com/R4OSDev/r4os-libraries/archive/09c3efbf63dbde93453a6be06693ba24f1ac9a53.tar.gz",
       "archive_format": "tar.gz"
     },
     "recovery-contract": {
@@ -3013,97 +3013,97 @@
       "name": "R4ACO",
       "repository": "libraries",
       "path": "R4ACO",
-      "version": "0.1.6",
+      "version": "0.1.7",
       "target": "/R4OS/LIBS/R4ACO.R4L",
-      "manifest_sha256": "a61b897690614a285561107aeaa4f926aefe63c8717a2430fbb151d88eeb47b1"
+      "manifest_sha256": "589793294ebffc58bcaa56226902437e772788756faa1c10bdd07257047c53af"
     },
     "r4amd": {
       "name": "R4AMD",
       "repository": "libraries",
       "path": "R4AMD",
-      "version": "0.1.8",
+      "version": "0.1.9",
       "target": "/R4OS/LIBS/R4AMD.R4L",
-      "manifest_sha256": "1b66236e6dfba28c9230b1e69160b334441a72650162e04ceff852f883df4fcc"
+      "manifest_sha256": "fde5999d81f8c2f1a2517512ad680a0cf9ef372f2277975b0e86640aab1a0a52"
     },
     "r4enc": {
       "name": "R4ENC",
       "repository": "libraries",
       "path": "R4ENC",
-      "version": "0.1.10",
+      "version": "0.1.11",
       "target": "/R4OS/LIBS/R4ENC.R4L",
-      "manifest_sha256": "089d1f5b7509f19b8fde3902a19d8f34d8f70bd14a459d85898d9be4ca1783b5"
+      "manifest_sha256": "08a1abd938467742a92f000674d8d170d26b4210b7eb32c39d4c5fd1534953b8"
     },
     "r4font": {
       "name": "R4FONT",
       "repository": "libraries",
       "path": "R4FONT",
-      "version": "0.2.3",
+      "version": "0.2.4",
       "target": "/R4OS/LIBS/R4FONT.R4L",
-      "manifest_sha256": "a22c56f9e988efbb52b30feaf115610633e842fc6ed6b6207aab1d5c9bdc2cdb"
+      "manifest_sha256": "39c0b4476f4406f8ab48b02ecfa4ec058d83ff8550b88150a47e2d91f9d24c58"
     },
     "r4gfx": {
       "name": "R4GFX",
       "repository": "libraries",
       "path": "R4GFX",
-      "version": "0.1.38",
+      "version": "0.1.39",
       "target": "/R4OS/LIBS/R4GFX.R4L",
-      "manifest_sha256": "8f83893ea115d9bfa8c29484c6ba73b18d782eaea3e342022ba9fc758cd76fc8"
+      "manifest_sha256": "ea88c42d2e985c1e54f3c1d6d2b40cdd3edd3fabfd7dfbe87f8bac21cc1a15c3"
     },
     "r4gl": {
       "name": "R4GL",
       "repository": "libraries",
       "path": "R4GL",
-      "version": "0.1.32",
+      "version": "0.1.33",
       "target": "/R4OS/LIBS/R4GL.R4L",
-      "manifest_sha256": "b1732686716ee5871f8139aae2246e1dbd8b03d9a4a25c3d3daf6c06ead87874"
+      "manifest_sha256": "77db65031d77422ed2f74c8e2b3732a9d8217588ecfea823777b7ef7f5e04cfd"
     },
     "r4img": {
       "name": "R4IMG",
       "repository": "libraries",
       "path": "R4IMG",
-      "version": "0.3.4",
+      "version": "0.3.5",
       "target": "/R4OS/LIBS/R4IMG.R4L",
-      "manifest_sha256": "1da35fc4966d42b93327c829b4d7452975a04ffddccd818aa233a84e9e1f4401"
+      "manifest_sha256": "1058363321b40c10f474ea18a24fe89557324dfcd1e144f2a5a5a19c9a7810b3"
     },
     "r4nak": {
       "name": "R4NAK",
       "repository": "libraries",
       "path": "R4NAK",
-      "version": "0.1.4",
+      "version": "0.1.5",
       "target": "/R4OS/LIBS/R4NAK.R4L",
-      "manifest_sha256": "5f75d4d2ee35c27d42a09b814bb939dd50b6f44a22b2b12b3780483a65892a18"
+      "manifest_sha256": "911abcf9437046ed6a302385227429a888b59828bf03ecb6256bbfdb31737f14"
     },
     "r4nv": {
       "name": "R4NV",
       "repository": "libraries",
       "path": "R4NV",
-      "version": "0.1.19",
+      "version": "0.1.20",
       "target": "/R4OS/LIBS/R4NV.R4L",
-      "manifest_sha256": "5694de1ed1ce6edddc6ec6399e96b97e9caf40694b5f0278d73f73a327c44e8c"
+      "manifest_sha256": "1da693e8e3c056cfb7cede912d46d35c4a3f9429124f20c7b87eac8fddd0c5d2"
     },
     "r4std": {
       "name": "R4STD",
       "repository": "libraries",
       "path": "R4STD",
-      "version": "0.2.6",
+      "version": "0.2.7",
       "target": "/R4OS/LIBS/R4STD.R4L",
-      "manifest_sha256": "63a8967043c990bf41e291d8ab01524284b2583cea4249595f5e82c5c2c471e4"
+      "manifest_sha256": "04142302d6a76c5e064dc07f6c2e79ae52b62778d10fa3b4577d9b37d94bee1c"
     },
     "r4video": {
       "name": "R4VIDEO",
       "repository": "libraries",
       "path": "R4VIDEO",
-      "version": "0.1.14",
+      "version": "0.1.15",
       "target": "/R4OS/LIBS/R4VIDEO.R4L",
-      "manifest_sha256": "5b3c2bf283cff3012dff51b493f11b9d9e01f397a61c8a629657aeffa40a9c6d"
+      "manifest_sha256": "19c2ce223f69fe1d00b668865c271bbd35c32eea486a8c72086454523d6ecaab"
     },
     "r4vk": {
       "name": "R4VK",
       "repository": "libraries",
       "path": "R4VK",
-      "version": "0.1.43",
+      "version": "0.1.44",
       "target": "/R4OS/LIBS/R4VK.R4L",
-      "manifest_sha256": "9a11f89b0bd3cb9bd29f18a4218c694e212f218dd9e0f0f9f26792358e4df72a"
+      "manifest_sha256": "cec057fba4e19eb2b7e97836488c00efb872be5a76e7edb9fd1d94b7c8adabd5"
     }
   },
   "sets": {

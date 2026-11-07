@@ -450,3 +450,81 @@ fn generation2_c_and_rust_admit_identical_prefixes_and_reject_mixed_records() {
     raw.import_count = 2;
     check(&raw, &sys, &rows, None, -20002);
 }
+
+#[test]
+fn generation2_real_start_adapters_match_c_and_reject_wrong_admission() {
+    use r4os_sdk::platform2::{self, Context, StartupInfo, abi as a};
+    unsafe extern "C" {
+        fn sdk_platform2_start_case(
+            raw: *const a::R4XStartContext2,
+            class: u32,
+            mask: u32,
+            count: u32,
+        ) -> i32;
+    }
+    unsafe extern "C" fn write(data: *const u8, len: u32) -> i32 {
+        if unsafe { core::slice::from_raw_parts(data, len as usize) } == b"API2" {
+            -20002
+        } else {
+            -2
+        }
+    }
+    fn main(context: &Context<'_>) -> i32 {
+        let raw = context
+            .lookup(1, core::mem::offset_of!(a::R4XStartR4Sys2, write) as u32)
+            .unwrap();
+        let callback: a::R4SysFns2::write = unsafe { core::mem::transmute(raw) };
+        unsafe { callback(b"API2".as_ptr(), 4) }
+    }
+    let sys = a::R4XStartR4Sys2 {
+        write: write as *const () as u64,
+        ..Default::default()
+    };
+    let imports = [abi::R4XStartImport {
+        group_id: 1,
+        min_version: 2,
+        resolved_version: 2,
+        flags: abi::r4xstart_import_flag_group_interface,
+        table: (&sys as *const _) as u64,
+        ..Default::default()
+    }];
+    let mut raw = a::R4XStartContext2 {
+        app_class: 1,
+        imports: imports.as_ptr() as u64,
+        import_count: 1,
+        ..Default::default()
+    };
+    for (class, mask, count, result) in [
+        (1, 2, 1, -20002),
+        (3, 2, 1, -1),
+        (1, 10, 1, -1),
+        (1, 2, 2, -1),
+    ] {
+        let info = StartupInfo {
+            app_class: class,
+            required_groups: mask,
+            import_count: count,
+        };
+        assert_eq!(unsafe { platform2::start(&raw, info, main) }, result);
+        assert_eq!(
+            unsafe { sdk_platform2_start_case(&raw, class, mask, count) },
+            result
+        );
+    }
+    raw.size = 119;
+    assert_eq!(
+        unsafe {
+            platform2::start(
+                &raw,
+                StartupInfo {
+                    app_class: 1,
+                    required_groups: 2,
+                    import_count: 1,
+                },
+                main,
+            )
+        },
+        -1
+    );
+    assert_eq!(unsafe { sdk_platform2_start_case(&raw, 1, 2, 1) }, -1);
+}
