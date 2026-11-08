@@ -26,7 +26,7 @@
   "repositories": {
     "contract": {
       "repository": "https://github.com/R4OSDev/r4os-contract.git",
-      "commit": "0202918c234c865cd777fd1a981b41ee8127e522",
+      "commit": "612a97d088e9cd2d87f12aba8fe1c22c5b29e652",
       "version": "0.64.86",
       "files": {
         "build.zig.zon": "5b3095dbe9f452210d516c83e10206fe58de19c7ba4db9affc561d8f13077e0c",
@@ -37,12 +37,12 @@
         "API/Generation2.json": "97e69a3c69a8c664e37954087f1f081c6f4e6213afe2fd2f3723704772f2e749",
         "Generated/Generation2/Inventory.json": "522195e4caffb163d5628e5be1d63f634cd43a98b4670162be163f3bfd5b5d6d"
       },
-      "zig_hash": "r4os_contract-0.64.86-ELhbYSY9RQH7fR9PhtTwC7P36OYpd0O9_qdYxaj5l7VK",
-      "archive_url": "https://github.com/R4OSDev/r4os-contract/archive/0202918c234c865cd777fd1a981b41ee8127e522.tar.gz",
+      "zig_hash": "r4os_contract-0.64.86-ELhbYVNBRQEZtoawiJMIb95NAkPTdtkslxaKY0QkSFpG",
+      "archive_url": "https://github.com/R4OSDev/r4os-contract/archive/612a97d088e9cd2d87f12aba8fe1c22c5b29e652.tar.gz",
       "archive_format": "tar.gz",
       "tree": {
         "algorithm": "r4os-files-sha256-lf-v1",
-        "sha256": "46a94c2b09798637307694039bc803a0011287e475d7fa7b8ca936541d32efc0",
+        "sha256": "43969adfd6c3100ba96b79ad812889d1059538e96d457779c81293218fe24a41",
         "files": [
           ".gitattributes",
           ".gitignore",

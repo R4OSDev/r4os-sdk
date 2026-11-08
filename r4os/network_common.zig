@@ -116,3 +116,17 @@ pub fn checkAttempt(sys: anytype, value: abi.NetworkDeadline) Error!void {
     const left = try remaining(sys, value);
     if (value.kind == 1 and left.kind == 0) return error.Timeout;
 }
+
+// Provider-only optional NIPC handshake. Public managed-service Info requires
+// its real process generation; the private kernel adapter deliberately has0.
+pub fn backendInfo(net: anytype, channel: u32) ?abi.NetworkProviderInfo {
+    var response: [abi.ipc_max_message_size]u8 = undefined;
+    const got = net.netServiceRequest(channel, abi.network_op_info, 0x314e4649, "", &response);
+    if (got <= 0 or got > response.len) return null;
+    var status: i32 = 0;
+    const payload = net.netServicePayload(response[0..@intCast(got)], &status) orelse return null;
+    if (status != abi.net_service_result_ok) return null;
+    const info = record(abi.NetworkProviderInfo, payload) catch return null;
+    if (info.provider != 0 or info.reserved != 0 or info.capabilities & ~@as(u64, 4095) != 0 or info.max_send > 3968 or info.max_recv > 4008 or info.max_answers != 0 or info.page_capacity != 0 or info.interface_id != 0) return null;
+    return info;
+}

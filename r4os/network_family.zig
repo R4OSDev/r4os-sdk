@@ -95,6 +95,7 @@ pub const Client = struct {
         return 0;
     }
     pub fn release(self: *const Client, provider: u64, query: u64) i32 {
+        if (self.service != .dns) return abi.network_error_invalid;
         const request: abi.NetworkResolveRequest = .{ .provider = provider, .query = query, .family = 0, .capacity = 0 };
         var bytes: [1]u8 = undefined;
         const rc = self.rpc(abi.network_op_release, std.mem.asBytes(&request), &bytes);

@@ -56535,8 +56535,8 @@
       "sdk": "0.64.174",
       "contract": "0.64.86",
       "report": "Docs/API/NetworkFamily.txt",
-      "scope": "Language-source/ABI/host qualification only. Same copied INFO/Socket/Resolve/Release access in Zig/C/Rust over original managed service endpoints. Nine fixed records; explicit address family/network bytes/host port; provider and non-wrapping socket generation; full process generation at actual service owner; checked absolute budgets; no implicit fallback.",
-      "host_checks": "Original18Contract steps incl8Zig/C/Rust interop,21existing SDK context/technical cases,539exact Rust ABI records,9additional generated C-to-Rust aliases,strict C object, actual bareSDK Clippy. Three-language controlled short/bad-generation/truncation/paging replies preserve output. Three real Rust Send/Sync/lifetime negative compiles. Seven independent NetDns A/AAAA/CNAME/compression/TTL/capacity owner wire cases; actual services build. New pure SDK owner cleanup check refuses Busy/Unavailable retirement.",
+      "scope": "Language-source/ABI/host qualification only. Same copied INFO/Socket/Resolve/Release access in Zig/C/Rust over original managed service endpoints. Nine fixed records; explicit address family/network bytes/host port; provider and non-wrapping socket generation; full process generation at actual service owner; checked absolute budgets; no implicit fallback. NewSocket creation reserves original front capacity and retains unknown cleanup until real acknowledgement; missing logical timer frequency cannot create a new cleanup busy loop.",
+      "host_checks": "Original18Contract steps incl8Zig/C/Rust interop,21existing SDK context/technical cases,539exact Rust ABI records,9additional generated C-to-Rust aliases,strict C object, actual bareSDK Clippy. Three-language controlled short/bad-generation/truncation/paging replies preserve output. Three real Rust Send/Sync/lifetime negative compiles. Seven independent NetDns A/AAAA/CNAME/compression/TTL/capacity owner wire cases; actual services build. New pure SDK owner cleanup check refuses Busy/Unavailable retirement. Final4Zig cases include explicit optional-backend rejection and uncertain-owner retention. C/Rust andZig wrong-service Release agree. Optional privateNIPC INFO advertises0 capabilities on an old backend, with actual native mixed-kernel qualification kept separate.",
       "limits": [
         "This source review is not a native provider, SMP, Windows or hardware claim. Native actual IPv4 and exact original callers are qualified separately in the report/local receipts.",
         "IPv6 transport and AAAA resolving remain false. AAAA codec is separate, exact family/scope/policy errors are explicit. No application, import or ServiceLoop migration.",
@@ -58037,7 +58037,7 @@
       },
       {
         "path": "Repositories/SDK/Profiles/Components.json",
-        "sha256": "be063e3326bc1839fac309b0689f7094b79ce4c3789f0d3e1c7163327230e84a"
+        "sha256": "8310102a5c5fb0c54dc9d2860ace91f1d1e2b8b48d718c52e518d19060eef0ce"
       },
       {
         "path": "Repositories/SDK/Profiles/Tools.json",
@@ -59085,7 +59085,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "cec00fd3fce11a5b085665ba6c624ccd4139bd67ee39d1d46363383e2c224422"
+        "sha256": "fa61e026203755937451f4b908e6f50229400bd5dcac74a70f7a7d9d89770506"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -59613,11 +59613,11 @@
       },
       {
         "path": "Repositories/SDK/r4os/network_common.zig",
-        "sha256": "36baa029dd493816d17a8841f6389dc4fdb6c75589736be51a8c84271d6d26c1"
+        "sha256": "652e35d4133216ece4eb85e340140b1d9b0470c6ea0d5542cdc9b4231e2d677f"
       },
       {
         "path": "Repositories/SDK/r4os/network_family.zig",
-        "sha256": "7d72e8d57aef427470c959f2447f1d87f4907cb6a777bd6792c2a4ca2e5d2cbe"
+        "sha256": "2e000d4ef94626583f9040b3d4bc0632b521b2295b3db2cb0acb2eb54e9c93e4"
       },
       {
         "path": "Repositories/SDK/r4os/ntfs_builder.zig",
