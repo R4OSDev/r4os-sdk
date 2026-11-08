@@ -104,6 +104,9 @@ pub struct Stream<'a> {
     _local: PhantomData<*mut ()>,
 }
 impl Stream<'_> {
+    pub(crate) fn writer_native(&mut self) -> *mut c::R4SdkAudioAudioStream {
+        self.native.as_mut_ptr()
+    }
     pub fn valid(&self) -> Result<bool> {
         Ok(value(unsafe { c::R4SdkAudioAudioStream_valid(0, self.native.as_ptr()) })?.bits != 0)
     }

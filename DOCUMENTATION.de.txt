@@ -1670,6 +1670,14 @@ Fontrevision binden die feste Sicht; eine Leerstamp-Pruefung invalidiert sie
 bei spaeterer Veroeffentlichung. Alte Canvas-/Apppfade bleiben unveraendert.
 Normativ: Docs/TextMetrics.txt und Contract/API/FontPrefixMetrics2.txt.
 
+Audio-Gesamtfrist ab SDK0.64.168
+-----------------------------
+audio_write und pcm_source teilen statische Zig-Besitzer mit C/Rust. Neue
+Writes verwenden eine Gesamtfrist; bestaetigte PCMframes bleiben erhalten.
+Der reine Source-Pacer behauptet keine Hardwarewiedergabe. Vertrag, Leihen
+und native Query2-Grenze: Docs/AudioWrite.txt. Anwendungen werden spaeter
+umgestellt; bestehendes AudioStream.write behaelt seine bisherige Semantik.
+
 Gemeinsame FilePickerSession ab SDK0.64.167
 -----------------------------------------
 file_picker verbindet die vorhandenen Metadaten-/Directoryanbieter und den

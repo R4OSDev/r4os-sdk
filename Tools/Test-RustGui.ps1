@@ -82,7 +82,10 @@ r4os-sdk={path="$dependency"}
         @('E0277','fn send<T:Send>(){} pub fn bad(){send::<r4os_sdk::platform::Platform<''static,''static>>();}'),
         @('E0277','fn unpin<T:Unpin>(){} pub fn bad(){unpin::<r4os_sdk::platform::PlatformStorage>();}'),
         @('E0505','pub fn bad(mut r:r4os_sdk::platform::Resampler,input:alloc::vec::Vec<u8>){let view=r.take_direct(&input,48000,2,1,4096).unwrap();drop(input);drop(view);} extern crate alloc;'),
-        @('E0277','fn send<T:Send>(){} pub fn bad(){send::<r4os_sdk::platform2::Context<''static>>();}')
+        @('E0277','fn send<T:Send>(){} pub fn bad(){send::<r4os_sdk::platform2::Context<''static>>();}'),
+        @('E0499','pub fn bad(s:&mut r4os_sdk::platform::Stream<''_>,data:&[u8]){let w=r4os_sdk::audio_write::Writer::new(s,data,r4os_sdk::resources::Timeout::Forever).unwrap();let _=s.close(r4os_sdk::resources::Timeout::Forever);core::hint::black_box(w.progress());}'),
+        @('E0505','pub fn bad(s:&mut r4os_sdk::platform::Stream<''_>,data:alloc::vec::Vec<u8>){let w=r4os_sdk::audio_write::Writer::new(s,&data,r4os_sdk::resources::Timeout::Forever).unwrap();drop(data);core::hint::black_box(w.progress());}extern crate alloc;'),
+        @('E0277','fn send<T:Send>(){}pub fn bad(){send::<r4os_sdk::audio_write::Writer<''static>>();}')
     )}
     foreach($case in $cases){
         [IO.File]::WriteAllText($negative,$case[1],[Text.UTF8Encoding]::new($false));$failure=Join-Path $WorkRoot 'negative.log'

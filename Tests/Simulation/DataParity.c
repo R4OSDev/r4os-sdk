@@ -2,6 +2,7 @@
 #include <r4os/metadata2.h>
 #include <r4os/text_metrics_platform2.h>
 #include <string.h>
+#include "AudioWriteParity.c"
 #define WIRE_CHECK(test,code) do { if (!(test)) return (code); } while (0)
 static uint64_t textmetrics_revision;
 static uint32_t textmetrics_calls,textmetrics_legacy_calls;

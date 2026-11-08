@@ -30,6 +30,9 @@ test "text metrics owner original comparison and frozen hits" {
 test "file picker owner bounded shared controller" {
     _ = @import("r4os/file_picker_tests.zig");
 }
+test "audio write owner total deadline and source pacing" {
+    _ = @import("r4os/audio_write_tests.zig");
+}
 test {
     _ = @import("Tests/Simulation/DataOwners.zig");
     _ = @import("Tests/Simulation/WebOwners.zig");

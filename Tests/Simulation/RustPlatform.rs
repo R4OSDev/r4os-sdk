@@ -1,6 +1,8 @@
 #![cfg(test)]
 #[path = "PreciseClock.rs"]
 mod precise_clock;
+#[path = "AudioWritePlatform.rs"]
+mod audio_write25;
 #[path = "RustGraphics.rs"]
 mod visual_regression;
 use core::{mem::MaybeUninit, pin::pin};

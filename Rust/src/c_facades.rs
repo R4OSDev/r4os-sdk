@@ -6623,6 +6623,68 @@ pub struct R4SdkFilePicker {
 const _: () = { assert!(core::mem::size_of::<R4SdkFilePicker>() == 8640); assert!(core::mem::align_of::<R4SdkFilePicker>() == 8); assert!(core::mem::offset_of!(R4SdkFilePicker, r#provider) == 0); assert!(core::mem::offset_of!(R4SdkFilePicker, r#active) == 32); assert!(core::mem::offset_of!(R4SdkFilePicker, r#candidate) == 48); assert!(core::mem::offset_of!(R4SdkFilePicker, r#active_cursor) == 64); assert!(core::mem::offset_of!(R4SdkFilePicker, r#candidate_cursor) == 2248); assert!(core::mem::offset_of!(R4SdkFilePicker, r#directory_path) == 4432); assert!(core::mem::offset_of!(R4SdkFilePicker, r#candidate_path) == 5456); assert!(core::mem::offset_of!(R4SdkFilePicker, r#extension) == 6480); assert!(core::mem::offset_of!(R4SdkFilePicker, r#filename) == 6544); assert!(core::mem::offset_of!(R4SdkFilePicker, r#confirmed) == 7312); assert!(core::mem::offset_of!(R4SdkFilePicker, r#candidate_info) == 8456); assert!(core::mem::offset_of!(R4SdkFilePicker, r#revision) == 8568); assert!(core::mem::offset_of!(R4SdkFilePicker, r#seen) == 8576); assert!(core::mem::offset_of!(R4SdkFilePicker, r#capacity) == 8584); assert!(core::mem::offset_of!(R4SdkFilePicker, r#count) == 8588); assert!(core::mem::offset_of!(R4SdkFilePicker, r#staged) == 8592); assert!(core::mem::offset_of!(R4SdkFilePicker, r#number) == 8596); assert!(core::mem::offset_of!(R4SdkFilePicker, r#candidate_number) == 8600); assert!(core::mem::offset_of!(R4SdkFilePicker, r#selected) == 8604); assert!(core::mem::offset_of!(R4SdkFilePicker, r#first_index) == 8608); assert!(core::mem::offset_of!(R4SdkFilePicker, r#focus) == 8612); assert!(core::mem::offset_of!(R4SdkFilePicker, r#pressed) == 8616); assert!(core::mem::offset_of!(R4SdkFilePicker, r#mode) == 8620); assert!(core::mem::offset_of!(R4SdkFilePicker, r#phase) == 8624); assert!(core::mem::offset_of!(R4SdkFilePicker, r#in_call) == 8628); assert!(core::mem::offset_of!(R4SdkFilePicker, r#error_code) == 8632); assert!(core::mem::offset_of!(R4SdkFilePicker, r#overwrite_pending) == 8636); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
+pub struct R4SdkAudioWriterProvider {
+    pub r#legacy: *mut R4SdkAudioAudioStream,
+    pub r#call: Option<unsafe extern "C" fn(u32, u16, *const u8, u32, *mut R4ServiceMessageHeader, *mut u8, u32, u64) -> i32>,
+    pub r#monotonic: Option<unsafe extern "C" fn(*mut R4MonotonicClockInfo) -> i32>,
+    pub r#service_handle: u32,
+    pub r#stream_id: u32,
+    pub r#frame_bytes: u32,
+    pub r#reserved0: u32,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkAudioWriterProvider>() == 40); assert!(core::mem::align_of::<R4SdkAudioWriterProvider>() == 8); assert!(core::mem::offset_of!(R4SdkAudioWriterProvider, r#legacy) == 0); assert!(core::mem::offset_of!(R4SdkAudioWriterProvider, r#call) == 8); assert!(core::mem::offset_of!(R4SdkAudioWriterProvider, r#monotonic) == 16); assert!(core::mem::offset_of!(R4SdkAudioWriterProvider, r#service_handle) == 24); assert!(core::mem::offset_of!(R4SdkAudioWriterProvider, r#stream_id) == 28); assert!(core::mem::offset_of!(R4SdkAudioWriterProvider, r#frame_bytes) == 32); assert!(core::mem::offset_of!(R4SdkAudioWriterProvider, r#reserved0) == 36); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkAudioWriteProgress {
+    pub r#io: R4SdkTransferProgress,
+    pub r#accepted_frames: u64,
+    pub r#last_frames: u32,
+    pub r#frame_bytes: u32,
+    pub r#last_service_flags: u32,
+    pub r#service_flags_valid: u32,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkAudioWriteProgress>() == 56); assert!(core::mem::align_of::<R4SdkAudioWriteProgress>() == 8); assert!(core::mem::offset_of!(R4SdkAudioWriteProgress, r#io) == 0); assert!(core::mem::offset_of!(R4SdkAudioWriteProgress, r#accepted_frames) == 32); assert!(core::mem::offset_of!(R4SdkAudioWriteProgress, r#last_frames) == 40); assert!(core::mem::offset_of!(R4SdkAudioWriteProgress, r#frame_bytes) == 44); assert!(core::mem::offset_of!(R4SdkAudioWriteProgress, r#last_service_flags) == 48); assert!(core::mem::offset_of!(R4SdkAudioWriteProgress, r#service_flags_valid) == 52); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkAudioWriter {
+    pub r#io: R4SdkTransfer,
+    pub r#source: R4SdkWireSpan,
+    pub r#provider: R4SdkAudioWriterProvider,
+    pub r#last_service_flags: u32,
+    pub r#service_flags_valid: u32,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkAudioWriter>() == 152); assert!(core::mem::align_of::<R4SdkAudioWriter>() == 8); assert!(core::mem::offset_of!(R4SdkAudioWriter, r#io) == 0); assert!(core::mem::offset_of!(R4SdkAudioWriter, r#source) == 88); assert!(core::mem::offset_of!(R4SdkAudioWriter, r#provider) == 104); assert!(core::mem::offset_of!(R4SdkAudioWriter, r#last_service_flags) == 144); assert!(core::mem::offset_of!(R4SdkAudioWriter, r#service_flags_valid) == 148); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkPcmSourceDeadline {
+    pub r#identity: R4SdkClockIdentity,
+    pub r#due_ns: u64,
+    pub r#source_end_ns: u64,
+    pub r#accepted_frames: u64,
+    pub r#wait_ns: u64,
+    pub r#rate: u32,
+    pub r#frame_bytes: u32,
+    pub r#flags: u32,
+    pub r#reserved0: u32,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkPcmSourceDeadline>() == 64); assert!(core::mem::align_of::<R4SdkPcmSourceDeadline>() == 8); assert!(core::mem::offset_of!(R4SdkPcmSourceDeadline, r#identity) == 0); assert!(core::mem::offset_of!(R4SdkPcmSourceDeadline, r#due_ns) == 16); assert!(core::mem::offset_of!(R4SdkPcmSourceDeadline, r#source_end_ns) == 24); assert!(core::mem::offset_of!(R4SdkPcmSourceDeadline, r#accepted_frames) == 32); assert!(core::mem::offset_of!(R4SdkPcmSourceDeadline, r#wait_ns) == 40); assert!(core::mem::offset_of!(R4SdkPcmSourceDeadline, r#rate) == 48); assert!(core::mem::offset_of!(R4SdkPcmSourceDeadline, r#frame_bytes) == 52); assert!(core::mem::offset_of!(R4SdkPcmSourceDeadline, r#flags) == 56); assert!(core::mem::offset_of!(R4SdkPcmSourceDeadline, r#reserved0) == 60); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkPcmSourcePacer {
+    pub r#identity: R4SdkClockIdentity,
+    pub r#end_lo: u64,
+    pub r#end_hi: u64,
+    pub r#last_ns: u64,
+    pub r#accepted_frames: u64,
+    pub r#lead_frames: u64,
+    pub r#rate: u32,
+    pub r#frame_bytes: u32,
+    pub r#flags: u32,
+    pub r#reserved0: u32,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkPcmSourcePacer>() == 72); assert!(core::mem::align_of::<R4SdkPcmSourcePacer>() == 8); assert!(core::mem::offset_of!(R4SdkPcmSourcePacer, r#identity) == 0); assert!(core::mem::offset_of!(R4SdkPcmSourcePacer, r#end_lo) == 16); assert!(core::mem::offset_of!(R4SdkPcmSourcePacer, r#end_hi) == 24); assert!(core::mem::offset_of!(R4SdkPcmSourcePacer, r#last_ns) == 32); assert!(core::mem::offset_of!(R4SdkPcmSourcePacer, r#accepted_frames) == 40); assert!(core::mem::offset_of!(R4SdkPcmSourcePacer, r#lead_frames) == 48); assert!(core::mem::offset_of!(R4SdkPcmSourcePacer, r#rate) == 56); assert!(core::mem::offset_of!(R4SdkPcmSourcePacer, r#frame_bytes) == 60); assert!(core::mem::offset_of!(R4SdkPcmSourcePacer, r#flags) == 64); assert!(core::mem::offset_of!(R4SdkPcmSourcePacer, r#reserved0) == 68); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
 pub struct R4SdkWebSlot {
     pub r#ptr: *mut core::ffi::c_void,
     pub r#length: u64,
@@ -25708,6 +25770,14 @@ unsafe extern "C" {
     pub fn R4SdkFilePickerKey(p0: *mut R4SdkFilePicker, p1: u8, p2: u32, p3: *mut R4SdkFilePickerDecision) -> i32;
     pub fn R4SdkFilePickerFocus(p0: *mut R4SdkFilePicker, p1: u32, p2: u32) -> i32;
     pub fn R4SdkFilePickerCancel(p0: *mut R4SdkFilePicker, p1: *mut R4SdkFilePickerDecision) -> i32;
+    pub fn R4SdkAudioWriterInit(p0: R4SdkWireSpan, p1: R4SdkAudioWriterProvider, p2: R4Timeout, p3: *mut R4SdkAudioWriter) -> i32;
+    pub fn R4SdkAudioWriterGetProgress(p0: *const R4SdkAudioWriter, p1: *mut R4SdkAudioWriteProgress) -> i32;
+    pub fn R4SdkAudioWriterStep(p0: *mut R4SdkAudioWriter, p1: u32, p2: u32, p3: *mut R4SdkAudioWriteProgress) -> i32;
+    pub fn R4SdkAudioWriterCancel(p0: *mut R4SdkAudioWriter, p1: *mut R4SdkAudioWriteProgress) -> i32;
+    pub fn R4SdkPcmSourceInit(p0: u32, p1: u32, p2: u64, p3: R4SdkClockSample, p4: *mut R4SdkPcmSourcePacer) -> i32;
+    pub fn R4SdkPcmSourceAccepted(p0: *mut R4SdkPcmSourcePacer, p1: u64, p2: R4SdkClockSample, p3: *mut R4SdkPcmSourceDeadline) -> i32;
+    pub fn R4SdkPcmSourceGetDeadline(p0: *mut R4SdkPcmSourcePacer, p1: R4SdkClockSample, p2: u32, p3: *mut R4SdkPcmSourceDeadline) -> i32;
+    pub fn R4SdkPcmSourcePause(p0: *mut R4SdkPcmSourcePacer, p1: R4SdkClockSample, p2: u32) -> i32;
     pub fn R4SdkWebInvoke(p0: u64, p1: u32, p2: *const R4SdkWebSlot, p3: u32, p4: *mut core::ffi::c_void) -> R4SdkWebSlot;
     pub fn R4SdkWebConstruct(p0: u64, p1: u32, p2: *const R4SdkWebSlot, p3: u32, p4: *mut core::ffi::c_void) -> R4SdkWebSlot;
     pub fn R4SdkWebInspect(p0: u64, p1: u32, p2: *mut core::ffi::c_void, p3: *mut core::ffi::c_void) -> R4SdkWebSlot;

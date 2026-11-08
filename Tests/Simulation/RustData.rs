@@ -885,3 +885,5 @@ fn bounded_picker_shared_owner_keeps_whole_views_errors_and_explicit_save_policy
     assert_eq!(s.step(1).err(), Some(Error(-206)));
     assert_eq!(s.selection().kind, 1);
 }
+#[path = "AudioWrite.rs"]
+mod audio_write25;
