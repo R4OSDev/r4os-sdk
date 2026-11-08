@@ -26,23 +26,23 @@
   "repositories": {
     "contract": {
       "repository": "https://github.com/R4OSDev/r4os-contract.git",
-      "commit": "612a97d088e9cd2d87f12aba8fe1c22c5b29e652",
-      "version": "0.64.86",
+      "commit": "afeac77ae4f460fd9017e3113f4870a2af690da7",
+      "version": "0.64.87",
       "files": {
-        "build.zig.zon": "5b3095dbe9f452210d516c83e10206fe58de19c7ba4db9affc561d8f13077e0c",
-        "API/ApiContract.json": "569c68781f1c52eb03e3be09e827d488ceb894c3ed8b7107b89d688108b387bb",
+        "build.zig.zon": "d1397b98f32258d09a3e4f897e328a57ba5120455cd4e3a980962c6ad2447f94",
+        "API/ApiContract.json": "857f3d221edc6dfb0a877fd73857ee7e0cefe9eea14a319b12df8a705ade02e9",
         "Module/CpuBaseline.json": "eeeee03aa8fd41051c09e61e9d70ca35660f2b413c3f878fb6e5a3bb51aad10c",
         "Generated/SDK/Rust/Cargo.toml": "de464f2f9243e3d153c06b701a2126839c3e8a921a6d466467d3042370023263",
-        "Generated/SDK/Rust/src/lib.rs": "ed8ae6270865c2ad1dced31cd2546d916c711c61da7cd9cd41746954de95ffd6",
-        "API/Generation2.json": "97e69a3c69a8c664e37954087f1f081c6f4e6213afe2fd2f3723704772f2e749",
+        "Generated/SDK/Rust/src/lib.rs": "dc4900c14b2a42d659da74f02db9d9a201b05ee867ef958175b0b183b9fef122",
+        "API/Generation2.json": "57f31bd124f82b22bde351bc3e1938b663cb1ad97a14ff1c8e459e825035dbc2",
         "Generated/Generation2/Inventory.json": "522195e4caffb163d5628e5be1d63f634cd43a98b4670162be163f3bfd5b5d6d"
       },
-      "zig_hash": "r4os_contract-0.64.86-ELhbYVNBRQEZtoawiJMIb95NAkPTdtkslxaKY0QkSFpG",
-      "archive_url": "https://github.com/R4OSDev/r4os-contract/archive/612a97d088e9cd2d87f12aba8fe1c22c5b29e652.tar.gz",
+      "zig_hash": "r4os_contract-0.64.87-ELhbYalNSgH9AsnpphpCJusvuuVLbZb0ScPqmJxZb_Dl",
+      "archive_url": "https://github.com/R4OSDev/r4os-contract/archive/afeac77ae4f460fd9017e3113f4870a2af690da7.tar.gz",
       "archive_format": "tar.gz",
       "tree": {
         "algorithm": "r4os-files-sha256-lf-v1",
-        "sha256": "43969adfd6c3100ba96b79ad812889d1059538e96d457779c81293218fe24a41",
+        "sha256": "8e1c6f70cf3a221b97df5b81e43b40dad50f8c4a06a8663ad19a8370db6a4a44",
         "files": [
           ".gitattributes",
           ".gitignore",
@@ -62,6 +62,7 @@
           "API/FontPrefixMetrics2.txt",
           "API/Generation2.json",
           "API/Groups.txt",
+          "API/Ipv6Providers.txt",
           "API/NetworkFamily.txt",
           "API/README.txt",
           "Build.bat",

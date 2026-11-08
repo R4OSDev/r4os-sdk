@@ -12,9 +12,15 @@ static inline int32_t R4OS2DriverInit(const R4DriverApi2 *api, R4OS2Driver *out)
     *out = (R4OS2Driver){api}; return 0;
 }
 static inline int32_t R4OS2ProtocolInit(const R4ProtocolApi2 *api, R4OS2Protocol *out) {
-    if (!api || !out || ((uintptr_t)api & 7u) || api->magic != R4OS_PROTOCOL_API2_MAGIC || api->version < R4OS_PROTOCOL_API2_VERSION || api->size < sizeof(*api) || api->reserved) return -1;
+    if (!api || !out || ((uintptr_t)api & 7u) || api->magic != R4OS_PROTOCOL_API2_MAGIC || api->version < R4OS_PROTOCOL_API2_VERSION || api->size < offsetof(R4ProtocolApi2,protocol_dispatch) || api->reserved) return -1;
     *out = (R4OS2Protocol){api}; return 0;
 }
+/* Use a stable initialized view expression. A whole readable optional slot
+ * and a non-null callback are both required; never inspect partial pointers. */
+#define R4OS2_PROTOCOL_HAS(protocol, field) \
+    ((protocol) && (protocol)->api && \
+     (protocol)->api->size >= offsetof(R4ProtocolApi2, field) + sizeof((protocol)->api->field) && \
+     (protocol)->api->field != NULL)
 /* Descriptor/callback backing stays resident even after partial registration
  * failure, until genuine unregister/terminal cleanup acknowledges retirement. */
 static inline int32_t R4OS2DriverRegisterAudio(const R4OS2Driver *driver, const uint8_t *name, const R4AudioBackend2 *backend) {

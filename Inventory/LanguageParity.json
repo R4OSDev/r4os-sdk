@@ -663,7 +663,7 @@
         "network_family",
         "network_common"
       ],
-      "semantics": "Resolver, TCP/UDP/Listener, Socketgeneration, half-close, Cancel/Ende/Fehler und gehaltene Asyncpuffer sowie R4NET/R4SYS-Optionzulassung erhalten. SDK162: shared one-step StreamTransfer exactu64 accepted prefix/one absolute budget, EOF/WouldBlock/timeout/cancel/uncertainty distinct; actual borrowed Query2 File/TCP/Service adapters with explicit operation-specific ACK and at-most-one bounded ServiceReply. Qualification limits in stream_transfer_09019. SDK174 adds copied family-aware Query2 clients, immutable DNS result pages, exact prefix/datagram truncation validation and actual process/provider/socket generations. The new provider path retains TCP EOF/reset at the original owner. This language review is host-only; actual IPv4 provider qualification is separate, IPv6 remains unavailable.",
+      "semantics": "Resolver, TCP/UDP/Listener, Socketgeneration, half-close, Cancel/Ende/Fehler und gehaltene Asyncpuffer sowie R4NET/R4SYS-Optionzulassung erhalten. SDK162: shared one-step StreamTransfer exactu64 accepted prefix/one absolute budget, EOF/WouldBlock/timeout/cancel/uncertainty distinct; actual borrowed Query2 File/TCP/Service adapters with explicit operation-specific ACK and at-most-one bounded ServiceReply. Qualification limits in stream_transfer_09019. SDK174 adds copied family-aware Query2 clients, immutable DNS result pages, exact prefix/datagram truncation validation and actual process/provider/socket generations. The new provider path retains TCP EOF/reset at the original owner. This language review is host-only; actual IPv4 provider qualification is separate, Typed endpoint IPv6/AAAA remains unavailable in32; the separate external IPv6 packet foundation is qualified independently.",
       "current_only": "current_function",
       "rust": {
         "state": "paritaet_abgenommen",
@@ -712,7 +712,8 @@
         "Repositories/SDK/Tests/Simulation/NetworkPeer.py",
         "studio_089_host",
         "stream_transfer_09019",
-        "network_family_09031"
+        "network_family_09031",
+        "ipv6_protocol_09032"
       ],
       "shared_core": "Vorhandene C-AppServices/AppTray/AppNetwork/Serial/Timeout-Besitzer, Zig-ServiceLoop/-Deadline/-R4NET-Besitzer und native R4SYS/R4NET/R4DEV-Callbacks. Rust fuegt Leihen/Typen/echte Abschlussretention hinzu; keine zweite Netzwerk- oder Schedulingimplementierung."
     },
@@ -1365,7 +1366,7 @@
         "internet_checksum",
         "block_transfer"
       ],
-      "semantics": "Original ProtocolApi1/120 and explicit distinct PPI2/120 with ProtocolInit2:2; genuine per-module owner and typed role/dispatch. Same resident loader, no implicit code unloading or automatic lifetime closure. SDK160: explicit common pure wire/native/checksum/block helpers; actual static C/Rust implementation and early R4D qualification. Protocol policy, mapped native representation, storage loans and hardware completion remain with their existing owners; no consumer migration.",
+      "semantics": "Original ProtocolApi1/120 and explicit distinct PPI2/136 preserving its original120-byte prefix with ProtocolInit2:2; genuine per-module owner and typed role/dispatch. Same resident loader, no implicit code unloading or automatic lifetime closure. SDK160: explicit common pure wire/native/checksum/block helpers; actual static C/Rust implementation and early R4D qualification. Protocol policy, mapped native representation, storage loans and hardware completion remain with their existing owners; no consumer migration. SDK175 negotiates whole optional protocol_dispatch/link_io slots in Zig/C/Rust; Rust copies only complete readable fields under the original callback/code lifetime. Fourteen copied records bind real module/interface generations; endpoint capability is separate.",
       "current_only": "current_function",
       "rust": {
         "state": "current_typed_context_and_real_r4p_lifecycle_qualified",
@@ -1388,9 +1389,10 @@
       "evidence": [
         "protocols_current_68",
         "technical_generation2_09015",
-        "wire_native_data_09017"
+        "wire_native_data_09017",
+        "ipv6_protocol_09032"
       ],
-      "shared_core": "Original ProtocolApi and SDK protocol.Context thin forwarders; native exact-argument oracle verifies the same nine methods, no second protocol dispatcher."
+      "shared_core": "One original R4P registry/loader and admitted module scope. Optional PPI dispatch follows declared acyclic dependencies; link I/O uses the existing NIC owner. No duplicate address/neighbor/route state in Kernel."
     },
     {
       "id": "lowlevel",
@@ -56542,6 +56544,20 @@
         "IPv6 transport and AAAA resolving remain false. AAAA codec is separate, exact family/scope/policy errors are explicit. No application, import or ServiceLoop migration.",
         "Some original legacy DNS parsing/cache policy remains until separate cutover; the new typed path uses one pinned NetDns codec and immutable views in the existing cache."
       ]
+    },
+    "ipv6_protocol_09032": {
+      "complete": true,
+      "performed_in": "0.90.32",
+      "sdk": "0.64.175",
+      "contract": "0.64.87",
+      "report": "Docs/API/NetworkFamily.txt",
+      "scope": "Host source/ABI/SDK view qualification. Fourteen copied IPv6/ND/link records and66 constants; optional PPI2 tail136 after exact120 prefix. No central raw platform slot, consumer migration, permission model or second Kernel IPv6 owner. Native/Windows/hardware/performance qualification remains separate.",
+      "host_checks": "Existing Contract test passed with456 payloads,16 generation2 negative and26 schema mutations, Rust host/bare Clippy and8 real C/Zig/Rust interop cases. Existing21 SDK platform/technical cases pass. Actual Linux guarded-page C and Rust views cover120/partial121..135/full128/136/future144 and original callbacks; Rust owns a complete known copy and clamps its advertised size. Zig per-slot size/null range checked in the existing technical case. Compiler-generated14 additional Rust C aliases checked; bareSDK Clippy passes.",
+      "limits": [
+        "The language matrix proves the copied ABI and scope-safe optional views, not native NIC or transport capability.",
+        "External IPv6/ICMPv6/ND providers are qualified separately. TCP/UDP/DNS IPv6, AAAA, dual-stack, mapping and PMTU capability stay false pending their own providers.",
+        "No physical NIC/IRQ/DMA, Windows execution or native clock replacement inference from host seams."
+      ]
     }
   },
   "wave_bindings": [
@@ -56805,7 +56821,7 @@
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.90.31",
+    "reviewed_in": "0.90.32",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -56893,15 +56909,15 @@
     "files": [
       {
         "path": "Repositories/Contract/API/ApiContract.baseline.json",
-        "sha256": "569c68781f1c52eb03e3be09e827d488ceb894c3ed8b7107b89d688108b387bb"
+        "sha256": "857f3d221edc6dfb0a877fd73857ee7e0cefe9eea14a319b12df8a705ade02e9"
       },
       {
         "path": "Repositories/Contract/API/ApiContract.json",
-        "sha256": "569c68781f1c52eb03e3be09e827d488ceb894c3ed8b7107b89d688108b387bb"
+        "sha256": "857f3d221edc6dfb0a877fd73857ee7e0cefe9eea14a319b12df8a705ade02e9"
       },
       {
         "path": "Repositories/Contract/API/Generation2.json",
-        "sha256": "97e69a3c69a8c664e37954087f1f081c6f4e6213afe2fd2f3723704772f2e749"
+        "sha256": "57f31bd124f82b22bde351bc3e1938b663cb1ad97a14ff1c8e459e825035dbc2"
       },
       {
         "path": "Repositories/Contract/Generated/Generation2/C/include/r4os/generation2.h",
@@ -56925,15 +56941,15 @@
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/RustABI.json",
-        "sha256": "5a62d3fb65c9885bc83ea6957e4a354b7bee3836b1909da31000314c68a8a35c"
+        "sha256": "17adcc4af0cb270df347324dcc7e25c4473a7e44581c0583adb22c941a489baf"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_generated.h",
-        "sha256": "62cd3f692c9860eee0945f4993a32572a489dad9e7bb114d269e73093f39b739"
+        "sha256": "07f24c8a03bc8f1a93bd9125cbf906d42b5195ca798f4b86d380b682dc4ef90d"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_technical_generated.h",
-        "sha256": "4348715f6ccb74fcf8231840daf7c165c90909b784108bf907f162f693323db1"
+        "sha256": "22edcf1bedd9cc09385ff447cb4a9469bd5bd814cf25202f1ad8cfa76e55abe8"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Rust/Cargo.toml",
@@ -56941,19 +56957,19 @@
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Rust/src/lib.rs",
-        "sha256": "ed8ae6270865c2ad1dced31cd2546d916c711c61da7cd9cd41746954de95ffd6"
+        "sha256": "dc4900c14b2a42d659da74f02db9d9a201b05ee867ef958175b0b183b9fef122"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi.zig",
-        "sha256": "b5cea680f8dc1fc1880333650a7b27dd9fa195d24fce9ec0452f1cd4d4a5fb61"
+        "sha256": "13276b31b9594caaba1132c947fa6837bcc49ed803e9604a6586911ad8db7289"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_exports.zig",
-        "sha256": "fbd24d23b1c415eb71bf2c6a58460429486436f821e9d8c81075fb91e77f64a2"
+        "sha256": "a8b728ce04ae32e87491677a58f76418e6a2a21c338572b302f3b343854c3399"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_generated.zig",
-        "sha256": "02f52aa7a7c4a489401a6bc5127bb577eedf06ef4298802844a535c8d8caf324"
+        "sha256": "e1219346c564c4d2d1d34ad67a7e92111377ac3cf5218ef853d2d595d47b6c4b"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/package.zig",
@@ -56961,7 +56977,7 @@
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/technical2_generated.zig",
-        "sha256": "eeccab076c9324ef6078e8cfa6dd9f85030291119c17d8152860237f4e156e64"
+        "sha256": "9ff8bd10637645ed207221445d6af7e694f98cf6ccc46c592f7abad2a8d74dfc"
       },
       {
         "path": "Repositories/Contract/Module/CpuBaseline.json",
@@ -56969,7 +56985,7 @@
       },
       {
         "path": "Repositories/Contract/Tests/Generation2.zig",
-        "sha256": "105bc845b79b5392a02a53ab6c7090300342296b3430a3a1c497d26f9da37ad3"
+        "sha256": "28f604ddfefb8865bb589dfab0d0b53a5badd2f97a7b9fc6fef46b10d57121e8"
       },
       {
         "path": "Repositories/Contract/Tests/RustInterop/Cargo.toml",
@@ -56993,15 +57009,15 @@
       },
       {
         "path": "Repositories/Contract/Tools/AbiRustGen/src/main.zig",
-        "sha256": "1301d7ac00b1aced7efb88d5aa1f0fd8d3a717a49ee245eee899eaaecd840dbd"
+        "sha256": "e142cc88ec0b2b6d76404f84fd9b5eae8c92d0db781629fa35d51737a79b3159"
       },
       {
         "path": "Repositories/Contract/Tools/ApiContractGen/src/generation2.zig",
-        "sha256": "f6d2e3bfb951bb423794ec1ccdf16982daadf02d28947a3eda9a3a246457bee9"
+        "sha256": "33bad0864643b98cc0e95e2b66b9ccc77c7e862e0154ff4089d423ae9bcbe1b6"
       },
       {
         "path": "Repositories/Contract/Tools/ApiContractGen/src/generation2_technical.zig.in",
-        "sha256": "7e55a5f9aeb75decc296029f8a45a482b8dacc22133061fc6b1a5cd31a6a7914"
+        "sha256": "7a5f016878b9c6bf304e2e15613040d5168d8dbae0a71bcba9f8b11a0d0d9ed2"
       },
       {
         "path": "Repositories/Contract/Tools/ApiContractGen/src/main.zig",
@@ -58037,7 +58053,7 @@
       },
       {
         "path": "Repositories/SDK/Profiles/Components.json",
-        "sha256": "8310102a5c5fb0c54dc9d2860ace91f1d1e2b8b48d718c52e518d19060eef0ce"
+        "sha256": "cdecbd7576a82c044e0787c7654caefae3bf8a590e7b5bee881a8b8af302cbb6"
       },
       {
         "path": "Repositories/SDK/Profiles/Tools.json",
@@ -58057,7 +58073,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "3a87ad74c3e1c89ef926b3e2d3e2a2c842ab27945e345d5fa0985697f43e4918"
+        "sha256": "2883104601fc9cbc7a2ae77a0d58b00382225612d2c9c34dac45bb5e7e465c7e"
       },
       {
         "path": "Repositories/SDK/Rust/src/cli.rs",
@@ -58313,7 +58329,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/technical2.rs",
-        "sha256": "2258d2be9a1a246e13dea2b0d65b752e9a0348f43d195bc0a2ab26860c182791"
+        "sha256": "3c4bcd742251ffd72a901480307b19ef9357649343ecfd2723b4c348ba0a249c"
       },
       {
         "path": "Repositories/SDK/Rust/src/text_metrics.rs",
@@ -58677,7 +58693,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/technical2.h",
-        "sha256": "d3ecf6e2655ebef871dc570b99253232a9e61fa16e27e9f93c51c1025a0c926f"
+        "sha256": "1c6b5bba8ba36bbab978f8adda5024aafb25083a82cb7f0067a49da68940aa80"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/text_metrics.h",
@@ -59085,7 +59101,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "fa61e026203755937451f4b908e6f50229400bd5dcac74a70f7a7d9d89770506"
+        "sha256": "731d9e20031fafff072bca017b5ccf8e9c49760522dd9616670cbcab1a36c3c3"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -60009,7 +60025,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/technical2.zig",
-        "sha256": "ca23e64f1b7dc16b3dbc841956a423dc6c233955061b822469e086b5ea2e27d8"
+        "sha256": "c77987effb482c1f1cd74de577801e51ac975added7ffedf37c84c42e10383fc"
       },
       {
         "path": "Repositories/SDK/r4os/text_metrics.zig",
@@ -60570,7 +60586,8 @@
           "server_access_0893",
           "studio_089_host",
           "stream_transfer_09019",
-          "network_family_09031"
+          "network_family_09031",
+          "ipv6_protocol_09032"
         ]
       },
       {
@@ -61039,7 +61056,8 @@
         "proof": [
           "protocols_current_68",
           "technical_generation2_09015",
-          "wire_native_data_09017"
+          "wire_native_data_09017",
+          "ipv6_protocol_09032"
         ]
       },
       {

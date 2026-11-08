@@ -3,7 +3,7 @@
 const std = @import("std");
 pub const abi = @import("platform2.zig").abi;
 
-fn View(comptime Table: type, comptime magic: u32, comptime version: u32) type {
+fn View(comptime Table: type, comptime magic: u32, comptime version: u32, comptime minimum_size: usize) type {
     return struct {
         table: *const Table,
         const Self = @This();
@@ -11,7 +11,7 @@ fn View(comptime Table: type, comptime magic: u32, comptime version: u32) type {
         /// admitted execution scope; no borrow survives module retirement.
         pub fn init(raw: ?*const Table) ?Self {
             const table = raw orelse return null;
-            if (@intFromPtr(table) % @alignOf(Table) != 0 or table.magic != magic or table.version < version or table.size < @sizeOf(Table) or table.reserved != 0) return null;
+            if (@intFromPtr(table) % @alignOf(Table) != 0 or table.magic != magic or table.version < version or table.size < minimum_size or table.reserved != 0) return null;
             return .{ .table = table };
         }
         pub fn function(self: Self, comptime field: []const u8) ?Callback(Table, field) {
@@ -26,8 +26,11 @@ fn Callback(comptime Table: type, comptime field: []const u8) type {
     if (@typeInfo(P) != .pointer or @typeInfo(@typeInfo(P).pointer.child) != .@"fn") @compileError("Technical callback field required");
     return P;
 }
-pub const Driver = View(abi.DriverApi2, abi.driver_magic, abi.driver_version);
-pub const Protocol = View(abi.ProtocolApi2, abi.protocol_magic, abi.protocol_version);
+pub const Driver = View(abi.DriverApi2, abi.driver_magic, abi.driver_version, @sizeOf(abi.DriverApi2));
+// A new SDK can use the complete original protocol2 prefix on an old kernel.
+// Optional mechanisms are negotiated by per-slot size/null, never read early.
+const protocol_prefix = if (@hasField(abi.ProtocolApi2, "protocol_dispatch")) @offsetOf(abi.ProtocolApi2, "protocol_dispatch") else @sizeOf(abi.ProtocolApi2);
+pub const Protocol = View(abi.ProtocolApi2, abi.protocol_magic, abi.protocol_version, protocol_prefix);
 
 pub fn driverClockSample(driver: Driver) @import("time_budget.zig").Error!@import("time_budget.zig").ClockSample {
     const callback = driver.function("monotonic_clock") orelse return error.ClockUnavailable;
@@ -66,4 +69,27 @@ test "technical2 views reject wrong generations and short records without invoki
     protocol.magic = abi.protocol_magic;
     protocol.version = 0;
     try std.testing.expect(Protocol.init(&protocol) == null);
+    protocol.version = abi.protocol_version;
+    protocol.size = protocol_prefix;
+    const old = Protocol.init(&protocol) orelse return error.OriginalProtocolPrefixRejected;
+    if (comptime @hasField(abi.ProtocolApi2, "link_io")) {
+        try std.testing.expect(old.function("protocol_dispatch") == null);
+        try std.testing.expect(old.function("link_io") == null);
+        // Deliberately poison every unreadable/partial optional pointer. No
+        // incomplete slot is loaded or promoted into a callable value.
+        protocol.protocol_dispatch = @ptrFromInt(8);
+        protocol.link_io = @ptrFromInt(16);
+        for (protocol_prefix..@sizeOf(abi.ProtocolApi2) + 1) |size| {
+            protocol.size = @intCast(size);
+            const partial = Protocol.init(&protocol).?;
+            try std.testing.expect((partial.function("protocol_dispatch") != null) == (size >= 128));
+            try std.testing.expect((partial.function("link_io") != null) == (size >= 136));
+        }
+        protocol.size = @sizeOf(abi.ProtocolApi2);
+        protocol.protocol_dispatch = null;
+        protocol.link_io = null;
+        const absent = Protocol.init(&protocol).?;
+        try std.testing.expect(absent.function("protocol_dispatch") == null);
+        try std.testing.expect(absent.function("link_io") == null);
+    }
 }
