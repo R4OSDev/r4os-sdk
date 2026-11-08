@@ -8,9 +8,108 @@ use r4os_sdk::{
     },
 };
 unsafe extern "C" {
+    fn sdk_cli_c_case() -> i32;
     fn sdk_wire_c_case() -> i32;
     fn sdk_data_c_case(manifest: *const u8, length: usize) -> i32;
     fn sdk_ico_c_case(bytes: *const u8, length: usize) -> i32;
+}
+#[test]
+fn shared_cli_grammar_and_record_sink_keep_input_loans_and_exact_accepted_bytes() {
+    use r4os_sdk::cli::*;
+    assert_eq!(unsafe { sdk_cli_c_case() }, 0);
+    let mut cursor = ArgCursor::new(b" \"\" /Out:  cmd  \"a b\" ", ArgPolicy::default()).unwrap();
+    let empty = cursor.next_token().unwrap().unwrap();
+    assert!(empty.quoted());
+    assert!(empty.bytes().is_empty());
+    let option = cursor.next_token().unwrap().unwrap();
+    assert!(option.switch_is(b"out").unwrap());
+    assert_eq!(
+        option.switch_parts().unwrap().unwrap().value,
+        Some(&b""[..])
+    );
+    assert_eq!(cursor.remaining_raw().unwrap(), b"  cmd  \"a b\" ");
+    assert_eq!(cursor.remaining_arguments().unwrap(), b"cmd  \"a b\" ");
+    let mut bad = ArgCursor::new(b"x \"unterminated", ArgPolicy::default()).unwrap();
+    assert!(bad.next_token().unwrap().is_some());
+    assert_eq!(
+        bad.next_token().err(),
+        Some(ArgError {
+            code: -5,
+            offset: 2
+        })
+    );
+    assert_eq!(
+        bad.next_token().err(),
+        Some(ArgError {
+            code: -5,
+            offset: 2
+        })
+    );
+    assert_eq!(
+        ArgCursor::new(b"\xc3x", ArgPolicy::default()).err(),
+        Some(ArgError {
+            code: -3,
+            offset: 0
+        })
+    );
+    let mut storage = [0u8; 24];
+    let mut queue = BoundedDiagnosticBuffer::new(&mut storage).unwrap();
+    assert_eq!(queue.append_record("€", Severity::Warning).unwrap().kind, 0);
+    let mut bytes = Vec::new();
+    let first = queue
+        .flush_once(1, |c| {
+            assert_eq!(c.total, 3);
+            assert_eq!(c.offset, 0);
+            bytes.extend_from_slice(c.bytes);
+            Ack {
+                accepted_bytes: 1,
+                kind: SinkKind::Failed,
+                error_code: -7,
+            }
+        })
+        .unwrap();
+    assert_eq!(
+        (first.kind, first.accepted_bytes, first.completed_records),
+        (3, 1, 0)
+    );
+    assert_eq!(queue.stats().unwrap().pending_bytes, 2);
+    let blocked = queue
+        .flush_once(8, |_| Ack {
+            accepted_bytes: 0,
+            kind: SinkKind::WouldBlock,
+            error_code: 0,
+        })
+        .unwrap();
+    assert_eq!((blocked.kind, queue.stats().unwrap().pending_bytes), (2, 2));
+    let last = queue
+        .flush_once(8, |c| {
+            assert_eq!(c.offset, 1);
+            bytes.extend_from_slice(c.bytes);
+            Ack::accepted(c.bytes.len() as u32)
+        })
+        .unwrap();
+    assert_eq!(last.completed_records, 1);
+    assert_eq!(bytes, "€".as_bytes());
+    queue.append_record("record", Severity::Error).unwrap();
+    assert_eq!(
+        queue
+            .flush_once(8, |_| Ack {
+                accepted_bytes: 0,
+                kind: SinkKind::Uncertain,
+                error_code: -10
+            })
+            .unwrap()
+            .kind,
+        4
+    );
+    assert_eq!(
+        queue
+            .flush_once(8, |_| panic!("poisoned buffer replayed"))
+            .unwrap()
+            .kind,
+        5
+    );
+    assert_eq!(queue.discard().unwrap().uncertain, 1);
 }
 #[test]
 fn shared_wire_cursor_checksum_and_geometry_keep_atomic_fields_and_explicit_units() {

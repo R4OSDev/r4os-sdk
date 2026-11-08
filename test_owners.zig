@@ -6,6 +6,11 @@ test "wire owner pure helpers" {
     _ = @import("r4os/internet_checksum.zig");
     _ = @import("r4os/block_transfer.zig");
 }
+test "cli owner shared helpers" {
+    _ = @import("r4os/diagnostic_sinks.zig");
+    _ = @import("r4os/arg_cursor.zig");
+    _ = @import("r4os/diagnostic_buffer.zig");
+}
 test {
     _ = @import("Tests/Simulation/DataOwners.zig");
     _ = @import("Tests/Simulation/WebOwners.zig");

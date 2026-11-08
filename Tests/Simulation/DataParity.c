@@ -1,6 +1,38 @@
 #include <r4os/facades.h>
 #include <string.h>
 #define WIRE_CHECK(test,code) do { if (!(test)) return (code); } while (0)
+typedef struct { uint8_t output[3]; uint32_t count,calls; } CliProbe;
+static R4SdkDiagnosticAck cli_write(void *raw,const R4SdkDiagnosticChunk *c) {
+    CliProbe *p=raw;p->calls++;
+    uint32_t count=c->length>1?1:c->length;
+    if(p->count+count>sizeof(p->output)) return (R4SdkDiagnosticAck){.kind=R4_DIAG_SINK_UNCERTAIN,.error_code=-99};
+    memcpy(p->output+p->count,c->data,count);p->count+=count;
+    return (R4SdkDiagnosticAck){.accepted_bytes=count};
+}
+int32_t sdk_cli_c_case(void) {
+    const uint8_t raw[]=" \"\" /Out:  cmd  \"a b\" ";
+    R4SdkArgCursor cursor;R4SdkArgFailure failure;R4SdkArgToken token;R4SdkArgSwitch option;
+    WIRE_CHECK(R4SdkArgInit(raw,sizeof(raw)-1,(R4SdkArgPolicy){1,1,4096},&cursor,&failure)==0,201);
+    WIRE_CHECK(R4SdkArgNext(&cursor,&token,&failure)==0 && token.flags==1 && token.value_start==token.value_end,202);
+    WIRE_CHECK(R4SdkArgNext(&cursor,&token,&failure)==0,203);
+    WIRE_CHECK(R4SdkArgSwitchParts(raw,sizeof(raw)-1,token,&option)==0 && option.is_switch && option.has_value && option.value_length==0,204);
+    uintptr_t start=0,len=0;
+    WIRE_CHECK(R4SdkArgRemaining(&cursor,0,&start,&len)==0 && len==sizeof(raw)-1-start && memcmp(raw+start,"  cmd  \"a b\" ",len)==0,205);
+    const uint8_t invalid[]="a\"b";
+    WIRE_CHECK(R4SdkArgInit(invalid,sizeof(invalid)-1,(R4SdkArgPolicy){1,1,4096},&cursor,&failure)==0,206);
+    memset(&token,0xa5,sizeof(token));R4SdkArgToken before=token;
+    WIRE_CHECK(R4SdkArgNext(&cursor,&token,&failure)==R4_ARG_INVALID_QUOTE && failure.offset==1 && cursor.position==0 && memcmp(&before,&token,sizeof(token))==0,207);
+    uint8_t storage[11];R4SdkDiagnosticBuffer queue;R4SdkDiagnosticAppend append;
+    WIRE_CHECK(R4SdkDiagnosticInit(storage,sizeof(storage),&queue)==0,208);
+    const uint8_t euro[]={0xe2,0x82,0xac};
+    WIRE_CHECK(R4SdkDiagnosticAppendRecord(&queue,euro,3,1,&append)==0 && append.accepted_records==1,209);
+    WIRE_CHECK(R4SdkDiagnosticAppendRecord(&queue,(const uint8_t *)"x",1,1,&append)==0 && append.kind==R4_DIAG_FULL,210);
+    CliProbe probe={0};R4SdkDiagnosticFlush result;
+    for(uint32_t i=0;i<3;i++) WIRE_CHECK(R4SdkDiagnosticFlushOnce(&queue,3,cli_write,&probe,&result)==0 && result.accepted_bytes==1,211);
+    WIRE_CHECK(probe.calls==3 && !memcmp(probe.output,euro,3) && result.completed_records==1,212);
+    R4SdkDiagnosticStats stats;WIRE_CHECK(R4SdkDiagnosticReadStats(&queue,&stats)==0 && stats.sent_bytes==3 && stats.rejected_records==1 && !stats.queued_records,213);
+    return 0;
+}
 int32_t sdk_wire_c_case(void) {
     _Alignas(8) const uint8_t data[]={0xff,1,2,3,4,5,6,7,8};
     R4SdkWireReader reader;uint64_t value=99;

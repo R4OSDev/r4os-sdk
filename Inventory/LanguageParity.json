@@ -477,9 +477,10 @@
         "bounded_text",
         "server_targets",
         "server_profile",
-        "server_credentials"
+        "server_credentials",
+        "diagnostics"
       ],
-      "semantics": "Bytes/EOF/Teilfortschritt/Fehler unterscheiden; generationstreue Handles, paginierte Verzeichnisse, Registry-Snapshots/-Batches, absolute/relative Pfade, atomare Publikation und erhaltenes Stageeigentum bei Fehlern. SDK109: konkrete Pfad-Mount-Namensgrenzen mit UTF8-Bytes/UTF16-Units, Mountsnapshot und getrennten Atomic-Regeln in Zig/C/Rust; Name-64/Laenge-65 vor Mutation, lange CREATE-/Zielnamen bleiben unterstuetzt.",
+      "semantics": "Bytes/EOF/Teilfortschritt/Fehler unterscheiden; generationstreue Handles, paginierte Verzeichnisse, Registry-Snapshots/-Batches, absolute/relative Pfade, atomare Publikation und erhaltenes Stageeigentum bei Fehlern. SDK109: konkrete Pfad-Mount-Namensgrenzen mit UTF8-Bytes/UTF16-Units, Mountsnapshot und getrennten Atomic-Regeln in Zig/C/Rust; Name-64/Laenge-65 vor Mutation, lange CREATE-/Zielnamen bleiben unterstuetzt. SDK161: shared explicit R4OS ArgCursor and whole UTF8 diagnostic records with exact byte progress/uncertainty; canonical Query2 Console/File/LogService callbacks, no synthetic tables, hidden retry or consumer migration. Qualification boundaries in cli_diagnostics_09018.",
       "current_only": "current_function",
       "rust": {
         "state": "paritaet_abgenommen",
@@ -491,7 +492,8 @@
           "Repositories/SDK/Rust/src/bounded_text.rs",
           "Repositories/SDK/Rust/src/registry_hive.rs",
           "Repositories/SDK/Rust/src/registry_diagnostics.rs",
-          "Repositories/SDK/Rust/src/c_facades.rs"
+          "Repositories/SDK/Rust/src/c_facades.rs",
+          "Repositories/SDK/Rust/src/cli.rs"
         ],
         "gap": "SDK72/Contract44: vollstaendige aktuelle Funktionsfassaden mit echten Kontext-/Pufferleihen, expliziten Abschluss-/Fortschrittszustaenden und gemeinsamem C-/Zig-Besitzer. Native Hardwareoperationen nur simuliert; reale SYSTEM-/Datei-/Snapshot-/Recent-Pfade im SMP4-Gast qualifiziert."
       },
@@ -504,7 +506,9 @@
           "Repositories/SDK/Shared/C/include/r4os/storage_helpers.h",
           "Repositories/SDK/Shared/C/include/r4os/directory_page.h",
           "Repositories/SDK/Shared/C/include/r4os/facades.h",
-          "Repositories/SDK/Shared/C/src/facades.c"
+          "Repositories/SDK/Shared/C/src/facades.c",
+          "Repositories/SDK/Shared/C/include/r4os/cli_helpers.h",
+          "Repositories/SDK/Shared/C/include/r4os/cli_platform2.h"
         ],
         "gap": "Bestehende Fassaden wiederverwendet und fehlende Document-/Recent-/Hive-/Text-/Dialog-/Snapshotfunktionen an vorhandene Zigkerne gebunden; keine zweite Registry-/Dateisystemimplementierung."
       },
@@ -517,7 +521,8 @@
         "Repositories/SDK/r4os/recent_documents.zig",
         "directory_batch_08743",
         "file_name_limits_08827",
-        "asset_paths_08951"
+        "asset_paths_08951",
+        "cli_diagnostics_09018"
       ],
       "shared_core": "C-Funktionsbesitzer plus r4os/storage_runtime.zig zu bestehenden Zig-/R4STD-Kernen; keine neue Codec-/Pfad-/Registryimplementierung. Runtimeobjekte im technischen Profil mit Quellen/CPU/Hashes gebunden.",
       "extension_08743": "Bound-node batches are the current iterator path; exact provider validation precedes each buffered record. Deliberate live-index traversal after deletion stays supported; no implicit fallback on absent batch support."
@@ -567,9 +572,10 @@
         "desktop_evidence",
         "desktop_actions",
         "server_access",
-        "desktop_links"
+        "desktop_links",
+        "diagnostics"
       ],
-      "semantics": "Endpunkt-/Connection-/Requesteigentum, begrenzte Batches, Requestfristen, Stop/Abmeldung und bereits quittiertes Ende unterscheiden; IPC-Rueckgaben/Teilantworten nicht verschlucken. Restartable broker-owned observation: persist intent beforeReserve, serial beforeOffer, canonicalToken beforeACK; read-only recovery, exact serviceepoch, independent refs versus aliases, bounded expiry/quota and no reap transfer. Original-requester delegation to a named full controller and exact original desktop child/window/service epoch; bounded grants, immutable operation/deadline and original applied receipt, independent current view/input/composition, no new app or blind retry after Unknown. Native own R4LNK binding: persist canonical original request before Activate, exact Desktop link bytes/target/process-generation proof, immutable retry, read-only Status, explicit observed end/reap/evidence cleanup. Revision-bound dynamic inventory with explicit END, caller-owned pages/allocated captures, bounded whole-capture Restart, explicit OOM, full paths and registration/start/process-bound controls.",
+      "semantics": "Endpunkt-/Connection-/Requesteigentum, begrenzte Batches, Requestfristen, Stop/Abmeldung und bereits quittiertes Ende unterscheiden; IPC-Rueckgaben/Teilantworten nicht verschlucken. Restartable broker-owned observation: persist intent beforeReserve, serial beforeOffer, canonicalToken beforeACK; read-only recovery, exact serviceepoch, independent refs versus aliases, bounded expiry/quota and no reap transfer. Original-requester delegation to a named full controller and exact original desktop child/window/service epoch; bounded grants, immutable operation/deadline and original applied receipt, independent current view/input/composition, no new app or blind retry after Unknown. Native own R4LNK binding: persist canonical original request before Activate, exact Desktop link bytes/target/process-generation proof, immutable retry, read-only Status, explicit observed end/reap/evidence cleanup. Revision-bound dynamic inventory with explicit END, caller-owned pages/allocated captures, bounded whole-capture Restart, explicit OOM, full paths and registration/start/process-bound controls. SDK161: shared explicit R4OS ArgCursor and whole UTF8 diagnostic records with exact byte progress/uncertainty; canonical Query2 Console/File/LogService callbacks, no synthetic tables, hidden retry or consumer migration. Qualification boundaries in cli_diagnostics_09018.",
       "current_only": "current_function",
       "rust": {
         "state": "paritaet_abgenommen",
@@ -581,7 +587,8 @@
           "Repositories/SDK/Rust/src/services/evidence.rs",
           "Repositories/SDK/Rust/src/services/actions.rs",
           "Repositories/SDK/Rust/src/services/links.rs",
-          "Repositories/SDK/Rust/src/services/inventory.rs"
+          "Repositories/SDK/Rust/src/services/inventory.rs",
+          "Repositories/SDK/Rust/src/cli.rs"
         ]
       },
       "c": {
@@ -592,7 +599,9 @@
           "Repositories/SDK/Shared/C/include/r4os/path_timeout.h",
           "Repositories/SDK/Shared/C/include/r4os/desktop_evidence.h",
           "Repositories/SDK/Shared/C/include/r4os/desktop_actions.h",
-          "Repositories/SDK/Shared/C/include/r4os/desktop_links.h"
+          "Repositories/SDK/Shared/C/include/r4os/desktop_links.h",
+          "Repositories/SDK/Shared/C/include/r4os/cli_helpers.h",
+          "Repositories/SDK/Shared/C/include/r4os/cli_platform2.h"
         ],
         "gap": "Bestehende aktuelle C-Besitzer erhalten; gemeinsame Zig-Loop/Deadline/Netzwerkbridge, fehlender TCP-Poll, gepackter Socketstatus und abgelaufener Poll ohne Frequenz vervollstaendigt. Slot-/Request-/Close-Quittungen bleiben explizit; keine Altkernel-Emulation."
       },
@@ -611,7 +620,8 @@
         "studio_089_host",
         "link_08916_host",
         "dynamic_services_08921",
-        "platform_generation2_09013"
+        "platform_generation2_09013",
+        "cli_diagnostics_09018"
       ],
       "shared_core": "Vorhandene C-AppServices/AppTray/AppNetwork/Serial/Timeout-Besitzer, Zig-ServiceLoop/-Deadline/-R4NET-Besitzer und native R4SYS/R4NET/R4DEV-Callbacks. Rust fuegt Leihen/Typen/echte Abschlussretention hinzu; keine zweite Netzwerk- oder Schedulingimplementierung."
     },
@@ -894,9 +904,10 @@
       "wave": "0.86.59",
       "title": "Graphemgrenzen und gepinnte Textprojektion",
       "modules": [
-        "grapheme"
+        "grapheme",
+        "arguments"
       ],
-      "semantics": "R4STD besitzt Unicode-/Codec-/Graphemdaten; keine Anzeige-/Normalisierungs-/Breitenzusage aus Grenzen ableiten; Caller besitzt Bytes/Puffer.",
+      "semantics": "R4STD besitzt Unicode-/Codec-/Graphemdaten; keine Anzeige-/Normalisierungs-/Breitenzusage aus Grenzen ableiten; Caller besitzt Bytes/Puffer. SDK161: shared explicit R4OS ArgCursor and whole UTF8 diagnostic records with exact byte progress/uncertainty; canonical Query2 Console/File/LogService callbacks, no synthetic tables, hidden retry or consumer migration. Qualification boundaries in cli_diagnostics_09018.",
       "current_only": "current_function",
       "rust": {
         "state": "higher_original_owner_helpers_qualified",
@@ -913,12 +924,17 @@
           "source_sha256": "ffecd48ec23ff2a23eb77224c79d7736a31ecc46df0fd28d0e16bd892df35da6",
           "evidence": "desktop_settings_helpers_86",
           "scope": "Thin current safe Rust document/writer/owned-shortcut views over the existing native owner. No new parser or R4L ABI."
-        }
+        },
+        "sources": [
+          "Repositories/SDK/Rust/src/cli.rs"
+        ]
       },
       "c": {
         "state": "higher_original_owner_helpers_qualified",
         "sources": [
-          "Repositories/Libraries/R4STD/Bindings/C/r4std_helpers.h"
+          "Repositories/Libraries/R4STD/Bindings/C/r4std_helpers.h",
+          "Repositories/SDK/Shared/C/include/r4os/cli_helpers.h",
+          "Repositories/SDK/Shared/C/include/r4os/cli_platform2.h"
         ],
         "gap": "",
         "qualification": {
@@ -931,7 +947,8 @@
       },
       "evidence": [
         "source_inventory",
-        "language_libraries_current_59"
+        "language_libraries_current_59",
+        "cli_diagnostics_09018"
       ],
       "shared_core": "R4STD/Bindings/Zig und vorhandene R4STD/Rust-Primitiven verbinden; keine zweite Unicode-Datenbank."
     },
@@ -2904,6 +2921,22 @@
       "expression": "@import(\"r4os/block_transfer.zig\")",
       "capability": "data-crypto",
       "wave": "0.90.17"
+    },
+    {
+      "name": "arguments",
+      "source": "Repositories/SDK/r4os.zig",
+      "line": 186,
+      "expression": "@import(\"r4os/arg_cursor.zig\")",
+      "capability": "text-primitives",
+      "wave": "0.90.18"
+    },
+    {
+      "name": "diagnostics",
+      "source": "Repositories/SDK/r4os.zig",
+      "line": 187,
+      "expression": "@import(\"r4os/diagnostics.zig\")",
+      "capability": "files-registry-console",
+      "wave": "0.90.18"
     }
   ],
   "build_exports": [
@@ -56099,6 +56132,23 @@
         "Native input requires real mapped initialized native POD and dispatch-bound lifetimes; output never reads uninitialized payload. Rust constructors unsafe; safe wire reader/writer retains original slices.",
         "No Windows/physical hardware or isolated performance claim."
       ]
+    },
+    "cli_diagnostics_09018": {
+      "complete": true,
+      "performed_in": "0.90.18",
+      "sdk": "0.64.161",
+      "contract": "0.64.79 unchanged",
+      "report": "Docs/API/CliDiagnostics.txt",
+      "scope": "One static SDK implementation for explicit R4OS argument grammar, borrowed original token/raw suffix ranges, whole UTF8 record admission, capacity/rejection saturation, exact byte prefix and unknown/invalid sink no replay. Small canonical Console/File/LOGSVC adapters, actual Query2 slot resolution, no new R4L/kernel parser or consumer migration.",
+      "host_checks": "Existing data-parity63, platform/technical21, independent exact5originaltokenizer/logwrite bodies2comparisons, unchangedDesktopRun3cases, actual shared C/Rust8groups/11compilernegatives, strictbareRustClippy;15generatedC/Rustrecords and13newstaticexports.",
+      "native_scope": "Three private actual R4XStart2 modules (Zig/C/Rust) with exact2R4SYS/R4DESK Query2 imports/noR4L run in unchangedKernel463/029 KVM4. Real Console writes, exact UTF8 file readback, one originalLOGSVC record/language with explicit severity and actual closed handles; installed modules read back whole. Original SPECTRA exports the stable complete record set.",
+      "limits": [
+        "Known prefixes may split UTF8 transport bytes; unknown commit poisons rather than guessing zero or replaying. Local discard is not peer/device stop or persistence ACK.",
+        "LOGSVC format limits, NUL/UTF8 and whole-record constraints are checked before RPC. Tagged poll/finite logical ticks only; no hidden100Hz or rawForever. Failed close retains real handle until explicit acknowledged close.",
+        "Original consumers/parsers/buildprofiles remain unchanged. The five-tokenizer comparison covers its explicit shared unquoted subset, not all legacy grammars; old log clipping is intentionally preserved separately.",
+        "Host source stands018b/c/d differ only by test-harness/dependency wiring and packaged documentation after behavioral freeze. Native stand018d is distinct from later parity-only final package metadata.",
+        "No Windows/physical hardware or isolated performance claim, and no full historical P55Q/PROGRAMSTORAGE qualification."
+      ]
     }
   },
   "wave_bindings": [
@@ -56362,7 +56412,7 @@
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.90.17",
+    "reviewed_in": "0.90.18",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -56435,7 +56485,8 @@
       "Repositories/Contract/Tools/ApiContractGen/src/generation2_technical.zig.in",
       "Repositories/SDK/Tests/Simulation/PreciseClock.rs",
       "Repositories/SDK/Tests/Simulation/DataParity.c",
-      "Repositories/SDK/Tests/Simulation/RustData.rs"
+      "Repositories/SDK/Tests/Simulation/RustData.rs",
+      "Repositories/SDK/test_owners.zig"
     ],
     "files": [
       {
@@ -57584,7 +57635,11 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "07e1293a7ddfc0480ee8f921426fba07551d60c6759d3eb9bc12796048df8003"
+        "sha256": "f284d23ed38041fec5f7bcc70e6a7fb44069bc1103ee2163ec7f2ce5d386497e"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/cli.rs",
+        "sha256": "1c8da2f1ae9cbdea542f1787c5c66f1e2deab639854e083481d65c042bfb45ab"
       },
       {
         "path": "Repositories/SDK/Rust/src/data/hash.rs",
@@ -57656,7 +57711,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/lib.rs",
-        "sha256": "4aa27d1d1282e688c0cf046cf47a724d340e320fe7a7f5ca3d841e1504750e10"
+        "sha256": "aafb82d4b000d4eef5e54c85d162dd15c0e3d35b8e5cc1bf789bdd65a87c2a2f"
       },
       {
         "path": "Repositories/SDK/Rust/src/lowlevel.rs",
@@ -57911,6 +57966,14 @@
         "sha256": "e398fe38009378c82c119e5433962782e042143e41c4b811dcb5c683cbfa646f"
       },
       {
+        "path": "Repositories/SDK/Shared/C/include/r4os/cli_helpers.h",
+        "sha256": "44a1cafb6f9358d1256351e5a3d2754b6c18ab0701037f8b8a46c2ab77e5e03b"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/cli_platform2.h",
+        "sha256": "542843a996c3bc3139530b779b6d965eba9f61075389ab5bed1f76089086b86e"
+      },
+      {
         "path": "Repositories/SDK/Shared/C/include/r4os/data_helpers.h",
         "sha256": "dc3da80938a74a318d3e9c4e92b479a9649c45b4c41310f6848bbd56e8d9cc03"
       },
@@ -57984,7 +58047,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/facades.h",
-        "sha256": "1e16cb9e08550d0307f10f4f65a4fc8bba9b6e1a9afe83cb5edb36905bfa626e"
+        "sha256": "ae5135ec8490b3b0f3908fa3c4c79fa0dc387151f82924ba7ff0288ef39bf235"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/gui_bridge.h",
@@ -58172,7 +58235,7 @@
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/DataParity.c",
-        "sha256": "3db86f60c4967b579f0ae8ecd8bb5aaee43e39bc9c48601cd054a7a8eee6aabc"
+        "sha256": "bcc9acb3a49fe2692668543672e7788efecbe265139bfb07347c09e390bf16c3"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/GuiParity.c",
@@ -58188,7 +58251,7 @@
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/RustData.rs",
-        "sha256": "1ab94d1238aada68d5dff15c1cbca9360fc21242905ac9d5d0b7fba87f1a63be"
+        "sha256": "8da30776cf3197acfcd3ad6c9ce5e1df7071cc39511c303c24a26fa3a3dc46ae"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/RustGui.rs",
@@ -58388,7 +58451,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/Test-RustData.ps1",
-        "sha256": "78ac32a9881ff4cd8d1c3fcedae6ef2a6e42f65454c2c40c817729e12c95dab9"
+        "sha256": "f8967d9c586215ae68db7c88bc52e6fe9b08be3f1a71e7633f1a3bbdd6d47f08"
       },
       {
         "path": "Repositories/SDK/Tools/Test-RustDependencies.ps1",
@@ -58452,15 +58515,15 @@
       },
       {
         "path": "Repositories/SDK/build.zig",
-        "sha256": "479bebe2d02e90cc23113661c56e06b7c76402934170a55eacd1f4d900678fe5"
+        "sha256": "1c95de2a7c13e0d7564553f7e49f644ba7b7339bd3b991b144215be680f8d133"
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "870a81d764bf3ba49d55a09c71415a7da87a467bfc646100ab3c5ca789e4449f"
+        "sha256": "8e501448e9034600eedf18a6581afad9c57210a314dfc443cbd1d2e66fa93b60"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
-        "sha256": "fbdbc9338892d5575934a11ed4730ab7d0de3f3a1ee78276e37776318d5048bb"
+        "sha256": "a3d3bffc24e450ab1d27871bcd3bdbd03ba86a929cce9bd825dbb48a2df06900"
       },
       {
         "path": "Repositories/SDK/r4os/allocator_wait.zig",
@@ -58519,6 +58582,10 @@
         "sha256": "c51ec301c6c3e9a6629232665e0935ae596ab913c4e1664a46661b16e2ddc3b9"
       },
       {
+        "path": "Repositories/SDK/r4os/arg_cursor.zig",
+        "sha256": "bdf3f40564179c436891d7d850a62e649d16bab3bbd04b4302404b50e0029197"
+      },
+      {
         "path": "Repositories/SDK/r4os/audio_pcm.zig",
         "sha256": "e239bf10a2e4465272a20e61615feace3402dd026e36ff8204039e9dfd6b7c02"
       },
@@ -58553,6 +58620,10 @@
       {
         "path": "Repositories/SDK/r4os/chart.zig",
         "sha256": "cfdf7afa55cf83bfbd1ea2c999fdef92c63e093c8e0e9937791ae2d5105cb22a"
+      },
+      {
+        "path": "Repositories/SDK/r4os/cli_runtime.zig",
+        "sha256": "48dcbaa00233bc2f73577a62fbeab678819692762d21142b77a79f76b130a302"
       },
       {
         "path": "Repositories/SDK/r4os/clipboard.zig",
@@ -58613,6 +58684,18 @@
       {
         "path": "Repositories/SDK/r4os/desktop_links.zig",
         "sha256": "2f32c1ae7b9fcbe3b86a18645a77bcce3bd6421d6fc6e247ff30751b26a1aafd"
+      },
+      {
+        "path": "Repositories/SDK/r4os/diagnostic_buffer.zig",
+        "sha256": "2aa4e4b6880e5707d8b29c6a9d530cdcb50a5879ccf405304b81b13388407a70"
+      },
+      {
+        "path": "Repositories/SDK/r4os/diagnostic_sinks.zig",
+        "sha256": "fc66efcb7e2c3f33fc0349b214ca7251135669f4a140a1c6f7b088a874d70a40"
+      },
+      {
+        "path": "Repositories/SDK/r4os/diagnostics.zig",
+        "sha256": "bf8c07aa39ee20362a0af9ddd7cdc945bf9c40b5a29968b80fbc6081fbf9ec0c"
       },
       {
         "path": "Repositories/SDK/r4os/directory_page.zig",
@@ -58692,7 +58775,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/facade_runtime.zig",
-        "sha256": "cfa0bcfca457eae6130ac859a1bb44b1a96620091e26188b1f68f99c2532a84a"
+        "sha256": "b0977d533a29c42568157aeef0f16c23ab2805787642088d7b13d3c7ab874d06"
       },
       {
         "path": "Repositories/SDK/r4os/file_stream.zig",
@@ -58912,7 +58995,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/platform2.zig",
-        "sha256": "592fb16e3bcf504950e82b4beed3aba8fe2c9d3079f7cffc6985e18e6d7b7022"
+        "sha256": "28369b1cb6630d6cd3b5cd765514f51f9c2c29823b696094adc631fefd0768ff"
       },
       {
         "path": "Repositories/SDK/r4os/platform_runtime.zig",
@@ -59449,6 +59532,10 @@
       {
         "path": "Repositories/SDK/r4os/zip.zig",
         "sha256": "a58fcffd6c692da571d4ca8a9d3cb85e3a01ea4d0b21e8159b8e295eca639cbf"
+      },
+      {
+        "path": "Repositories/SDK/test_owners.zig",
+        "sha256": "8eb557ee2c4652cb8b6c51c2adfc7e09334c837052034e747342321ba9c76339"
       }
     ],
     "coverage": [
@@ -59598,7 +59685,12 @@
           "Repositories/SDK/r4os/storage.zig",
           "Repositories/SDK/r4os/server_targets.zig",
           "Repositories/SDK/r4os/server_profile.zig",
-          "Repositories/SDK/r4os/server_credentials.zig"
+          "Repositories/SDK/r4os/server_credentials.zig",
+          "Repositories/SDK/r4os/arg_cursor.zig",
+          "Repositories/SDK/r4os/diagnostic_buffer.zig",
+          "Repositories/SDK/r4os/diagnostic_sinks.zig",
+          "Repositories/SDK/r4os/diagnostics.zig",
+          "Repositories/SDK/r4os/cli_runtime.zig"
         ],
         "c": [
           "Repositories/SDK/Shared/C/include/r4os/app_storage.h",
@@ -59607,7 +59699,9 @@
           "Repositories/SDK/Shared/C/include/r4os/path_timeout.h",
           "Repositories/SDK/Shared/C/include/r4os/storage.h",
           "Repositories/SDK/Shared/C/include/r4os/storage_helpers.h",
-          "Repositories/SDK/Shared/C/src/facades.c"
+          "Repositories/SDK/Shared/C/src/facades.c",
+          "Repositories/SDK/Shared/C/include/r4os/cli_helpers.h",
+          "Repositories/SDK/Shared/C/include/r4os/cli_platform2.h"
         ],
         "rust": [
           "Repositories/SDK/Rust/src/bounded_text.rs",
@@ -59617,7 +59711,8 @@
           "Repositories/SDK/Rust/src/physical_storage.rs",
           "Repositories/SDK/Rust/src/registry_diagnostics.rs",
           "Repositories/SDK/Rust/src/registry_hive.rs",
-          "Repositories/SDK/Rust/src/storage.rs"
+          "Repositories/SDK/Rust/src/storage.rs",
+          "Repositories/SDK/Rust/src/cli.rs"
         ],
         "proof": [
           "storage_current_53",
@@ -59630,7 +59725,8 @@
           "gui_host_backpressure_08832",
           "server_access_0893",
           "asset_paths_08951",
-          "public_bootstrap_0903"
+          "public_bootstrap_0903",
+          "cli_diagnostics_09018"
         ]
       },
       {
@@ -59668,7 +59764,12 @@
           "Repositories/SDK/r4os/desktop_evidence.zig",
           "Repositories/SDK/r4os/desktop_actions.zig",
           "Repositories/SDK/r4os/server_access.zig",
-          "Repositories/SDK/r4os/desktop_links.zig"
+          "Repositories/SDK/r4os/desktop_links.zig",
+          "Repositories/SDK/r4os/arg_cursor.zig",
+          "Repositories/SDK/r4os/diagnostic_buffer.zig",
+          "Repositories/SDK/r4os/diagnostic_sinks.zig",
+          "Repositories/SDK/r4os/diagnostics.zig",
+          "Repositories/SDK/r4os/cli_runtime.zig"
         ],
         "c": [
           "Repositories/SDK/Shared/C/include/r4os/app_services.h",
@@ -59676,7 +59777,9 @@
           "Repositories/SDK/Shared/C/include/r4os/path_timeout.h",
           "Repositories/SDK/Shared/C/include/r4os/desktop_evidence.h",
           "Repositories/SDK/Shared/C/include/r4os/desktop_actions.h",
-          "Repositories/SDK/Shared/C/include/r4os/desktop_links.h"
+          "Repositories/SDK/Shared/C/include/r4os/desktop_links.h",
+          "Repositories/SDK/Shared/C/include/r4os/cli_helpers.h",
+          "Repositories/SDK/Shared/C/include/r4os/cli_platform2.h"
         ],
         "rust": [
           "Repositories/SDK/Rust/src/services.rs",
@@ -59684,7 +59787,8 @@
           "Repositories/SDK/Rust/src/services/evidence.rs",
           "Repositories/SDK/Rust/src/services/actions.rs",
           "Repositories/SDK/Rust/src/services/links.rs",
-          "Repositories/SDK/Rust/src/services/inventory.rs"
+          "Repositories/SDK/Rust/src/services/inventory.rs",
+          "Repositories/SDK/Rust/src/cli.rs"
         ],
         "proof": [
           "service_network_current_55",
@@ -59698,7 +59802,8 @@
           "link_08916_host",
           "dynamic_services_08921",
           "public_bootstrap_0903",
-          "platform_generation2_09013"
+          "platform_generation2_09013",
+          "cli_diagnostics_09018"
         ]
       },
       {
@@ -59895,16 +60000,25 @@
       {
         "id": "text-primitives",
         "zig": [
-          "Repositories/SDK/Shared/Generated/R4STD_Grapheme/grapheme.zig"
+          "Repositories/SDK/Shared/Generated/R4STD_Grapheme/grapheme.zig",
+          "Repositories/SDK/r4os/arg_cursor.zig",
+          "Repositories/SDK/r4os/diagnostic_buffer.zig",
+          "Repositories/SDK/r4os/diagnostic_sinks.zig",
+          "Repositories/SDK/r4os/diagnostics.zig",
+          "Repositories/SDK/r4os/cli_runtime.zig"
         ],
         "c": [
-          "Repositories/Libraries/R4STD/Bindings/C/r4std_helpers.h"
+          "Repositories/Libraries/R4STD/Bindings/C/r4std_helpers.h",
+          "Repositories/SDK/Shared/C/include/r4os/cli_helpers.h",
+          "Repositories/SDK/Shared/C/include/r4os/cli_platform2.h"
         ],
         "rust": [
-          "Repositories/Libraries/R4STD/Bindings/Rust/src/helpers.rs"
+          "Repositories/Libraries/R4STD/Bindings/Rust/src/helpers.rs",
+          "Repositories/SDK/Rust/src/cli.rs"
         ],
         "proof": [
-          "language_libraries_current_59"
+          "language_libraries_current_59",
+          "cli_diagnostics_09018"
         ]
       },
       {

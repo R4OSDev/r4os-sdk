@@ -5,6 +5,14 @@ Dieses Repository enthaelt das hostneutrale Kern-SDK von R4OS: Zig- und
 C-Fassaden, Buildprofile, Templates, Smokeprojekte sowie die generischen
 Werkzeuge R4XBuilder, R4LContractGen und ModuleCatalog.
 
+Argumentcursor und begrenzte Diagnosepuffer ab0.64.161
+--------------------------------------------------
+Die gemeinsame SDK-Implementierung und ihre Zig-/C-/Rust-Zugaenge stehen in
+Docs/CliDiagnostics.txt. Sie definieren die R4OS-Quote-/Restargumentgrammatik,
+ganze UTF8-Records, exakte Teilannahme und Uncertain/Poison ohne automatisches
+Replay. Kleine Adapter nutzen echte Console-/Datei-/LogServicebesitzer.
+Bestehende Anwendungen und Parser werden nicht umgestellt.
+
 Reine Binaer-/Native-/Checksum-/Blockhelfer ab0.64.160
 ----------------------------------------------------
 binary_cursor, native_protocol_view, internet_checksum und block_transfer

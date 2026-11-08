@@ -5998,6 +5998,219 @@ pub struct R4SdkDataNative_Value184 {
 const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value184>() == 8); assert!(core::mem::align_of::<R4SdkDataNative_Value184>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value184, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
+pub struct R4SdkBudgetValue {
+    pub r#kind: u32,
+    pub r#reserved: u32,
+    pub r#value: u64,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkBudgetValue>() == 16); assert!(core::mem::align_of::<R4SdkBudgetValue>() == 8); assert!(core::mem::offset_of!(R4SdkBudgetValue, r#kind) == 0); assert!(core::mem::offset_of!(R4SdkBudgetValue, r#reserved) == 4); assert!(core::mem::offset_of!(R4SdkBudgetValue, r#value) == 8); };
+#[repr(C, align(4))]
+#[derive(Clone, Copy)]
+pub struct R4SdkClockIdentity {
+    pub r#source: u32,
+    pub r#generation: u32,
+    pub r#event_backend: u32,
+    pub r#tick_hz: u32,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkClockIdentity>() == 16); assert!(core::mem::align_of::<R4SdkClockIdentity>() == 4); assert!(core::mem::offset_of!(R4SdkClockIdentity, r#source) == 0); assert!(core::mem::offset_of!(R4SdkClockIdentity, r#generation) == 4); assert!(core::mem::offset_of!(R4SdkClockIdentity, r#event_backend) == 8); assert!(core::mem::offset_of!(R4SdkClockIdentity, r#tick_hz) == 12); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkClockSample {
+    pub r#identity: R4SdkClockIdentity,
+    pub r#instant_ns: u64,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkClockSample>() == 24); assert!(core::mem::align_of::<R4SdkClockSample>() == 8); assert!(core::mem::offset_of!(R4SdkClockSample, r#identity) == 0); assert!(core::mem::offset_of!(R4SdkClockSample, r#instant_ns) == 16); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDeadlineBudget {
+    pub r#identity: R4SdkClockIdentity,
+    pub r#deadline_ns: u64,
+    pub r#last_ns: u64,
+    pub r#kind: u32,
+    pub r#reserved: u32,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDeadlineBudget>() == 40); assert!(core::mem::align_of::<R4SdkDeadlineBudget>() == 8); assert!(core::mem::offset_of!(R4SdkDeadlineBudget, r#identity) == 0); assert!(core::mem::offset_of!(R4SdkDeadlineBudget, r#deadline_ns) == 16); assert!(core::mem::offset_of!(R4SdkDeadlineBudget, r#last_ns) == 24); assert!(core::mem::offset_of!(R4SdkDeadlineBudget, r#kind) == 32); assert!(core::mem::offset_of!(R4SdkDeadlineBudget, r#reserved) == 36); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverPollBudget {
+    pub r#context: u32,
+    pub r#kind: u32,
+    pub r#iterations: u64,
+    pub r#deadline: R4SdkDeadlineBudget,
+    pub r#outcome: u32,
+    pub r#reserved: u32,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverPollBudget>() == 64); assert!(core::mem::align_of::<R4SdkDriverPollBudget>() == 8); assert!(core::mem::offset_of!(R4SdkDriverPollBudget, r#context) == 0); assert!(core::mem::offset_of!(R4SdkDriverPollBudget, r#kind) == 4); assert!(core::mem::offset_of!(R4SdkDriverPollBudget, r#iterations) == 8); assert!(core::mem::offset_of!(R4SdkDriverPollBudget, r#deadline) == 16); assert!(core::mem::offset_of!(R4SdkDriverPollBudget, r#outcome) == 56); assert!(core::mem::offset_of!(R4SdkDriverPollBudget, r#reserved) == 60); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkPollRemaining {
+    pub r#kind: u32,
+    pub r#outcome: u32,
+    pub r#iterations: u64,
+    pub r#time: R4SdkBudgetValue,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkPollRemaining>() == 32); assert!(core::mem::align_of::<R4SdkPollRemaining>() == 8); assert!(core::mem::offset_of!(R4SdkPollRemaining, r#kind) == 0); assert!(core::mem::offset_of!(R4SdkPollRemaining, r#outcome) == 4); assert!(core::mem::offset_of!(R4SdkPollRemaining, r#iterations) == 8); assert!(core::mem::offset_of!(R4SdkPollRemaining, r#time) == 16); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkArgPolicy {
+    pub r#quotes: u32,
+    pub r#switches: u32,
+    pub r#max_bytes: u64,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkArgPolicy>() == 16); assert!(core::mem::align_of::<R4SdkArgPolicy>() == 8); assert!(core::mem::offset_of!(R4SdkArgPolicy, r#quotes) == 0); assert!(core::mem::offset_of!(R4SdkArgPolicy, r#switches) == 4); assert!(core::mem::offset_of!(R4SdkArgPolicy, r#max_bytes) == 8); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkArgFailure {
+    pub r#code: i32,
+    pub r#reserved: u32,
+    pub r#offset: u64,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkArgFailure>() == 16); assert!(core::mem::align_of::<R4SdkArgFailure>() == 8); assert!(core::mem::offset_of!(R4SdkArgFailure, r#code) == 0); assert!(core::mem::offset_of!(R4SdkArgFailure, r#reserved) == 4); assert!(core::mem::offset_of!(R4SdkArgFailure, r#offset) == 8); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkArgToken {
+    pub r#raw_start: u64,
+    pub r#raw_end: u64,
+    pub r#value_start: u64,
+    pub r#value_end: u64,
+    pub r#flags: u32,
+    pub r#switch_prefix: u32,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkArgToken>() == 40); assert!(core::mem::align_of::<R4SdkArgToken>() == 8); assert!(core::mem::offset_of!(R4SdkArgToken, r#raw_start) == 0); assert!(core::mem::offset_of!(R4SdkArgToken, r#raw_end) == 8); assert!(core::mem::offset_of!(R4SdkArgToken, r#value_start) == 16); assert!(core::mem::offset_of!(R4SdkArgToken, r#value_end) == 24); assert!(core::mem::offset_of!(R4SdkArgToken, r#flags) == 32); assert!(core::mem::offset_of!(R4SdkArgToken, r#switch_prefix) == 36); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkArgCursor {
+    pub r#address: u64,
+    pub r#length: u64,
+    pub r#position: u64,
+    pub r#policy: R4SdkArgPolicy,
+    pub r#state: u32,
+    pub r#error_code: i32,
+    pub r#error_offset: u64,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkArgCursor>() == 56); assert!(core::mem::align_of::<R4SdkArgCursor>() == 8); assert!(core::mem::offset_of!(R4SdkArgCursor, r#address) == 0); assert!(core::mem::offset_of!(R4SdkArgCursor, r#length) == 8); assert!(core::mem::offset_of!(R4SdkArgCursor, r#position) == 16); assert!(core::mem::offset_of!(R4SdkArgCursor, r#policy) == 24); assert!(core::mem::offset_of!(R4SdkArgCursor, r#state) == 40); assert!(core::mem::offset_of!(R4SdkArgCursor, r#error_code) == 44); assert!(core::mem::offset_of!(R4SdkArgCursor, r#error_offset) == 48); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkArgSwitch {
+    pub r#name_start: u64,
+    pub r#name_length: u64,
+    pub r#value_start: u64,
+    pub r#value_length: u64,
+    pub r#is_switch: u32,
+    pub r#has_value: u32,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkArgSwitch>() == 40); assert!(core::mem::align_of::<R4SdkArgSwitch>() == 8); assert!(core::mem::offset_of!(R4SdkArgSwitch, r#name_start) == 0); assert!(core::mem::offset_of!(R4SdkArgSwitch, r#name_length) == 8); assert!(core::mem::offset_of!(R4SdkArgSwitch, r#value_start) == 16); assert!(core::mem::offset_of!(R4SdkArgSwitch, r#value_length) == 24); assert!(core::mem::offset_of!(R4SdkArgSwitch, r#is_switch) == 32); assert!(core::mem::offset_of!(R4SdkArgSwitch, r#has_value) == 36); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDiagnosticAppend {
+    pub r#kind: u32,
+    pub r#accepted_records: u32,
+    pub r#required_bytes: u64,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDiagnosticAppend>() == 16); assert!(core::mem::align_of::<R4SdkDiagnosticAppend>() == 8); assert!(core::mem::offset_of!(R4SdkDiagnosticAppend, r#kind) == 0); assert!(core::mem::offset_of!(R4SdkDiagnosticAppend, r#accepted_records) == 4); assert!(core::mem::offset_of!(R4SdkDiagnosticAppend, r#required_bytes) == 8); };
+#[repr(C, align(4))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDiagnosticAck {
+    pub r#accepted_bytes: u32,
+    pub r#kind: u32,
+    pub r#error_code: i32,
+    pub r#reserved: u32,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDiagnosticAck>() == 16); assert!(core::mem::align_of::<R4SdkDiagnosticAck>() == 4); assert!(core::mem::offset_of!(R4SdkDiagnosticAck, r#accepted_bytes) == 0); assert!(core::mem::offset_of!(R4SdkDiagnosticAck, r#kind) == 4); assert!(core::mem::offset_of!(R4SdkDiagnosticAck, r#error_code) == 8); assert!(core::mem::offset_of!(R4SdkDiagnosticAck, r#reserved) == 12); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDiagnosticChunk {
+    pub r#data: *const u8,
+    pub r#length: u32,
+    pub r#total: u32,
+    pub r#offset: u32,
+    pub r#severity: u32,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDiagnosticChunk>() == 24); assert!(core::mem::align_of::<R4SdkDiagnosticChunk>() == 8); assert!(core::mem::offset_of!(R4SdkDiagnosticChunk, r#data) == 0); assert!(core::mem::offset_of!(R4SdkDiagnosticChunk, r#length) == 8); assert!(core::mem::offset_of!(R4SdkDiagnosticChunk, r#total) == 12); assert!(core::mem::offset_of!(R4SdkDiagnosticChunk, r#offset) == 16); assert!(core::mem::offset_of!(R4SdkDiagnosticChunk, r#severity) == 20); };
+#[repr(C, align(4))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDiagnosticFlush {
+    pub r#kind: u32,
+    pub r#accepted_bytes: u32,
+    pub r#completed_records: u32,
+    pub r#error_code: i32,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDiagnosticFlush>() == 16); assert!(core::mem::align_of::<R4SdkDiagnosticFlush>() == 4); assert!(core::mem::offset_of!(R4SdkDiagnosticFlush, r#kind) == 0); assert!(core::mem::offset_of!(R4SdkDiagnosticFlush, r#accepted_bytes) == 4); assert!(core::mem::offset_of!(R4SdkDiagnosticFlush, r#completed_records) == 8); assert!(core::mem::offset_of!(R4SdkDiagnosticFlush, r#error_code) == 12); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDiagnosticDiscard {
+    pub r#records: u64,
+    pub r#pending_bytes: u64,
+    pub r#known_first_prefix: u32,
+    pub r#uncertain: u32,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDiagnosticDiscard>() == 24); assert!(core::mem::align_of::<R4SdkDiagnosticDiscard>() == 8); assert!(core::mem::offset_of!(R4SdkDiagnosticDiscard, r#records) == 0); assert!(core::mem::offset_of!(R4SdkDiagnosticDiscard, r#pending_bytes) == 8); assert!(core::mem::offset_of!(R4SdkDiagnosticDiscard, r#known_first_prefix) == 16); assert!(core::mem::offset_of!(R4SdkDiagnosticDiscard, r#uncertain) == 20); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDiagnosticStats {
+    pub r#queued_records: u64,
+    pub r#pending_bytes: u64,
+    pub r#appended_records: u64,
+    pub r#rejected_records: u64,
+    pub r#rejected_input_bytes: u64,
+    pub r#sent_records: u64,
+    pub r#sent_bytes: u64,
+    pub r#counters_saturated: u32,
+    pub r#poison: u32,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDiagnosticStats>() == 64); assert!(core::mem::align_of::<R4SdkDiagnosticStats>() == 8); assert!(core::mem::offset_of!(R4SdkDiagnosticStats, r#queued_records) == 0); assert!(core::mem::offset_of!(R4SdkDiagnosticStats, r#pending_bytes) == 8); assert!(core::mem::offset_of!(R4SdkDiagnosticStats, r#appended_records) == 16); assert!(core::mem::offset_of!(R4SdkDiagnosticStats, r#rejected_records) == 24); assert!(core::mem::offset_of!(R4SdkDiagnosticStats, r#rejected_input_bytes) == 32); assert!(core::mem::offset_of!(R4SdkDiagnosticStats, r#sent_records) == 40); assert!(core::mem::offset_of!(R4SdkDiagnosticStats, r#sent_bytes) == 48); assert!(core::mem::offset_of!(R4SdkDiagnosticStats, r#counters_saturated) == 56); assert!(core::mem::offset_of!(R4SdkDiagnosticStats, r#poison) == 60); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDiagnosticBuffer {
+    pub r#address: u64,
+    pub r#capacity: u64,
+    pub r#head: u64,
+    pub r#tail: u64,
+    pub r#offset: u32,
+    pub r#busy: u32,
+    pub r#poison: u32,
+    pub r#counters_saturated: u32,
+    pub r#queued_records: u64,
+    pub r#pending_bytes: u64,
+    pub r#appended_records: u64,
+    pub r#rejected_records: u64,
+    pub r#rejected_input_bytes: u64,
+    pub r#sent_records: u64,
+    pub r#sent_bytes: u64,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDiagnosticBuffer>() == 104); assert!(core::mem::align_of::<R4SdkDiagnosticBuffer>() == 8); assert!(core::mem::offset_of!(R4SdkDiagnosticBuffer, r#address) == 0); assert!(core::mem::offset_of!(R4SdkDiagnosticBuffer, r#capacity) == 8); assert!(core::mem::offset_of!(R4SdkDiagnosticBuffer, r#head) == 16); assert!(core::mem::offset_of!(R4SdkDiagnosticBuffer, r#tail) == 24); assert!(core::mem::offset_of!(R4SdkDiagnosticBuffer, r#offset) == 32); assert!(core::mem::offset_of!(R4SdkDiagnosticBuffer, r#busy) == 36); assert!(core::mem::offset_of!(R4SdkDiagnosticBuffer, r#poison) == 40); assert!(core::mem::offset_of!(R4SdkDiagnosticBuffer, r#counters_saturated) == 44); assert!(core::mem::offset_of!(R4SdkDiagnosticBuffer, r#queued_records) == 48); assert!(core::mem::offset_of!(R4SdkDiagnosticBuffer, r#pending_bytes) == 56); assert!(core::mem::offset_of!(R4SdkDiagnosticBuffer, r#appended_records) == 64); assert!(core::mem::offset_of!(R4SdkDiagnosticBuffer, r#rejected_records) == 72); assert!(core::mem::offset_of!(R4SdkDiagnosticBuffer, r#rejected_input_bytes) == 80); assert!(core::mem::offset_of!(R4SdkDiagnosticBuffer, r#sent_records) == 88); assert!(core::mem::offset_of!(R4SdkDiagnosticBuffer, r#sent_bytes) == 96); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDiagnosticConsole {
+    pub r#write: Option<unsafe extern "C" fn(u32, *const u8, u32) -> i32>,
+    pub r#stream: u32,
+    pub r#reserved: u32,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDiagnosticConsole>() == 16); assert!(core::mem::align_of::<R4SdkDiagnosticConsole>() == 8); assert!(core::mem::offset_of!(R4SdkDiagnosticConsole, r#write) == 0); assert!(core::mem::offset_of!(R4SdkDiagnosticConsole, r#stream) == 8); assert!(core::mem::offset_of!(R4SdkDiagnosticConsole, r#reserved) == 12); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDiagnosticFile {
+    pub r#append: Option<unsafe extern "C" fn(*const u8, *const u8, u32) -> i32>,
+    pub r#path: *const u8,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDiagnosticFile>() == 16); assert!(core::mem::align_of::<R4SdkDiagnosticFile>() == 8); assert!(core::mem::offset_of!(R4SdkDiagnosticFile, r#append) == 0); assert!(core::mem::offset_of!(R4SdkDiagnosticFile, r#path) == 8); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDiagnosticLog {
+    pub r#open: Option<unsafe extern "C" fn(*const u8, *mut R4ServiceInfo) -> i32>,
+    pub r#call: Option<unsafe extern "C" fn(u32, u16, *const u8, u32, *mut R4ServiceMessageHeader, *mut u8, u32, u64) -> i32>,
+    pub r#close: Option<unsafe extern "C" fn(u32) -> i32>,
+    pub r#origin: *const u8,
+    pub r#origin_length: u64,
+    pub r#call_ticks: R4SdkBudgetValue,
+    pub r#active_handle: u32,
+    pub r#last_close_error: i32,
+    pub r#busy: u32,
+    pub r#reserved: u32,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDiagnosticLog>() == 72); assert!(core::mem::align_of::<R4SdkDiagnosticLog>() == 8); assert!(core::mem::offset_of!(R4SdkDiagnosticLog, r#open) == 0); assert!(core::mem::offset_of!(R4SdkDiagnosticLog, r#call) == 8); assert!(core::mem::offset_of!(R4SdkDiagnosticLog, r#close) == 16); assert!(core::mem::offset_of!(R4SdkDiagnosticLog, r#origin) == 24); assert!(core::mem::offset_of!(R4SdkDiagnosticLog, r#origin_length) == 32); assert!(core::mem::offset_of!(R4SdkDiagnosticLog, r#call_ticks) == 40); assert!(core::mem::offset_of!(R4SdkDiagnosticLog, r#active_handle) == 56); assert!(core::mem::offset_of!(R4SdkDiagnosticLog, r#last_close_error) == 60); assert!(core::mem::offset_of!(R4SdkDiagnosticLog, r#busy) == 64); assert!(core::mem::offset_of!(R4SdkDiagnosticLog, r#reserved) == 68); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
 pub struct R4SdkWebSlot {
     pub r#ptr: *mut core::ffi::c_void,
     pub r#length: u64,
@@ -15532,60 +15745,6 @@ pub struct R4SdkDriverNativeValue298 {
     pub r#opaque_bytes: [u8; 8],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue298>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue298>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue298, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkBudgetValue {
-    pub r#kind: u32,
-    pub r#reserved: u32,
-    pub r#value: u64,
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkBudgetValue>() == 16); assert!(core::mem::align_of::<R4SdkBudgetValue>() == 8); assert!(core::mem::offset_of!(R4SdkBudgetValue, r#kind) == 0); assert!(core::mem::offset_of!(R4SdkBudgetValue, r#reserved) == 4); assert!(core::mem::offset_of!(R4SdkBudgetValue, r#value) == 8); };
-#[repr(C, align(4))]
-#[derive(Clone, Copy)]
-pub struct R4SdkClockIdentity {
-    pub r#source: u32,
-    pub r#generation: u32,
-    pub r#event_backend: u32,
-    pub r#tick_hz: u32,
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkClockIdentity>() == 16); assert!(core::mem::align_of::<R4SdkClockIdentity>() == 4); assert!(core::mem::offset_of!(R4SdkClockIdentity, r#source) == 0); assert!(core::mem::offset_of!(R4SdkClockIdentity, r#generation) == 4); assert!(core::mem::offset_of!(R4SdkClockIdentity, r#event_backend) == 8); assert!(core::mem::offset_of!(R4SdkClockIdentity, r#tick_hz) == 12); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkClockSample {
-    pub r#identity: R4SdkClockIdentity,
-    pub r#instant_ns: u64,
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkClockSample>() == 24); assert!(core::mem::align_of::<R4SdkClockSample>() == 8); assert!(core::mem::offset_of!(R4SdkClockSample, r#identity) == 0); assert!(core::mem::offset_of!(R4SdkClockSample, r#instant_ns) == 16); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkDeadlineBudget {
-    pub r#identity: R4SdkClockIdentity,
-    pub r#deadline_ns: u64,
-    pub r#last_ns: u64,
-    pub r#kind: u32,
-    pub r#reserved: u32,
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkDeadlineBudget>() == 40); assert!(core::mem::align_of::<R4SdkDeadlineBudget>() == 8); assert!(core::mem::offset_of!(R4SdkDeadlineBudget, r#identity) == 0); assert!(core::mem::offset_of!(R4SdkDeadlineBudget, r#deadline_ns) == 16); assert!(core::mem::offset_of!(R4SdkDeadlineBudget, r#last_ns) == 24); assert!(core::mem::offset_of!(R4SdkDeadlineBudget, r#kind) == 32); assert!(core::mem::offset_of!(R4SdkDeadlineBudget, r#reserved) == 36); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkDriverPollBudget {
-    pub r#context: u32,
-    pub r#kind: u32,
-    pub r#iterations: u64,
-    pub r#deadline: R4SdkDeadlineBudget,
-    pub r#outcome: u32,
-    pub r#reserved: u32,
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkDriverPollBudget>() == 64); assert!(core::mem::align_of::<R4SdkDriverPollBudget>() == 8); assert!(core::mem::offset_of!(R4SdkDriverPollBudget, r#context) == 0); assert!(core::mem::offset_of!(R4SdkDriverPollBudget, r#kind) == 4); assert!(core::mem::offset_of!(R4SdkDriverPollBudget, r#iterations) == 8); assert!(core::mem::offset_of!(R4SdkDriverPollBudget, r#deadline) == 16); assert!(core::mem::offset_of!(R4SdkDriverPollBudget, r#outcome) == 56); assert!(core::mem::offset_of!(R4SdkDriverPollBudget, r#reserved) == 60); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkPollRemaining {
-    pub r#kind: u32,
-    pub r#outcome: u32,
-    pub r#iterations: u64,
-    pub r#time: R4SdkBudgetValue,
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkPollRemaining>() == 32); assert!(core::mem::align_of::<R4SdkPollRemaining>() == 8); assert!(core::mem::offset_of!(R4SdkPollRemaining, r#kind) == 0); assert!(core::mem::offset_of!(R4SdkPollRemaining, r#outcome) == 4); assert!(core::mem::offset_of!(R4SdkPollRemaining, r#iterations) == 8); assert!(core::mem::offset_of!(R4SdkPollRemaining, r#time) == 16); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWireSpan {
@@ -25123,6 +25282,28 @@ unsafe extern "C" {
     pub fn R4SdkDataNative_Value183_inspectNative(p0: *const R4SdkDataNative_Value183) -> R4SdkDataSlot;
     pub fn R4SdkDataNative_Value184_create(p0: *mut R4SdkDataNative_Value184, p1: *const R4SdkDataArtifactIdentity) -> R4SdkDataSlot;
     pub fn R4SdkDataNative_Value184_inspectNative(p0: *const R4SdkDataNative_Value184) -> R4SdkDataSlot;
+    pub fn R4SdkClockSampleRead(p0: *const R4MonotonicClockInfo, p1: *mut R4SdkClockSample) -> i32;
+    pub fn R4SdkMillisecondsToTicksChecked(p0: u64, p1: u32, p2: *mut u64) -> i32;
+    pub fn R4SdkTimeoutTicksChecked(p0: R4Timeout, p1: u32, p2: *mut R4SdkBudgetValue) -> i32;
+    pub fn R4SdkDeadlineBudgetInit(p0: R4SdkClockSample, p1: R4Timeout, p2: *mut R4SdkDeadlineBudget) -> i32;
+    pub fn R4SdkDeadlineBudgetRemaining(p0: *mut R4SdkDeadlineBudget, p1: R4SdkClockSample, p2: *mut R4SdkBudgetValue) -> i32;
+    pub fn R4SdkDriverPollIterations(p0: u64, p1: u32, p2: *mut R4SdkDriverPollBudget) -> i32;
+    pub fn R4SdkDriverPollTimed(p0: R4SdkClockSample, p1: R4Timeout, p2: u64, p3: u32, p4: *mut R4SdkDriverPollBudget) -> i32;
+    pub fn R4SdkDriverPollStep(p0: *mut R4SdkDriverPollBudget, p1: *const R4SdkClockSample, p2: u32) -> u32;
+    pub fn R4SdkDriverPollRemaining(p0: *mut R4SdkDriverPollBudget, p1: *const R4SdkClockSample, p2: *mut R4SdkPollRemaining) -> i32;
+    pub fn R4SdkArgInit(p0: *const u8, p1: u64, p2: R4SdkArgPolicy, p3: *mut R4SdkArgCursor, p4: *mut R4SdkArgFailure) -> i32;
+    pub fn R4SdkArgNext(p0: *mut R4SdkArgCursor, p1: *mut R4SdkArgToken, p2: *mut R4SdkArgFailure) -> i32;
+    pub fn R4SdkArgRemaining(p0: *const R4SdkArgCursor, p1: u32, p2: *mut u64, p3: *mut u64) -> i32;
+    pub fn R4SdkArgSwitchParts(p0: *const u8, p1: u64, p2: R4SdkArgToken, p3: *mut R4SdkArgSwitch) -> i32;
+    pub fn R4SdkDiagnosticInit(p0: *mut u8, p1: u64, p2: *mut R4SdkDiagnosticBuffer) -> i32;
+    pub fn R4SdkDiagnosticAppendRecord(p0: *mut R4SdkDiagnosticBuffer, p1: *const u8, p2: u64, p3: u32, p4: *mut R4SdkDiagnosticAppend) -> i32;
+    pub fn R4SdkDiagnosticFlushOnce(p0: *mut R4SdkDiagnosticBuffer, p1: u32, p2: Option<unsafe extern "C" fn(*mut core::ffi::c_void, *const R4SdkDiagnosticChunk) -> R4SdkDiagnosticAck>, p3: *mut core::ffi::c_void, p4: *mut R4SdkDiagnosticFlush) -> i32;
+    pub fn R4SdkDiagnosticReadStats(p0: *const R4SdkDiagnosticBuffer, p1: *mut R4SdkDiagnosticStats) -> i32;
+    pub fn R4SdkDiagnosticDiscardAll(p0: *mut R4SdkDiagnosticBuffer, p1: *mut R4SdkDiagnosticDiscard) -> i32;
+    pub fn R4SdkDiagnosticConsoleSend(p0: *mut core::ffi::c_void, p1: *const R4SdkDiagnosticChunk) -> R4SdkDiagnosticAck;
+    pub fn R4SdkDiagnosticFileSend(p0: *mut core::ffi::c_void, p1: *const R4SdkDiagnosticChunk) -> R4SdkDiagnosticAck;
+    pub fn R4SdkDiagnosticLogSend(p0: *mut core::ffi::c_void, p1: *const R4SdkDiagnosticChunk) -> R4SdkDiagnosticAck;
+    pub fn R4SdkDiagnosticLogClose(p0: *mut R4SdkDiagnosticLog) -> i32;
     pub fn R4SdkWebInvoke(p0: u64, p1: u32, p2: *const R4SdkWebSlot, p3: u32, p4: *mut core::ffi::c_void) -> R4SdkWebSlot;
     pub fn R4SdkWebConstruct(p0: u64, p1: u32, p2: *const R4SdkWebSlot, p3: u32, p4: *mut core::ffi::c_void) -> R4SdkWebSlot;
     pub fn R4SdkWebInspect(p0: u64, p1: u32, p2: *mut core::ffi::c_void, p3: *mut core::ffi::c_void) -> R4SdkWebSlot;
@@ -35736,15 +35917,6 @@ unsafe extern "C" {
     pub fn R4SdkDriverNativeValue296_inspectNative(p0: *const R4SdkDriverNativeValue296) -> R4SdkDriverSlot;
     pub fn R4SdkDriverNativeValue298_create(p0: *mut R4SdkDriverNativeValue298, p1: *mut R4CpuPowerCounters) -> R4SdkDriverSlot;
     pub fn R4SdkDriverNativeValue298_inspectNative(p0: *const R4SdkDriverNativeValue298) -> R4SdkDriverSlot;
-    pub fn R4SdkClockSampleRead(p0: *const R4MonotonicClockInfo, p1: *mut R4SdkClockSample) -> i32;
-    pub fn R4SdkMillisecondsToTicksChecked(p0: u64, p1: u32, p2: *mut u64) -> i32;
-    pub fn R4SdkTimeoutTicksChecked(p0: R4Timeout, p1: u32, p2: *mut R4SdkBudgetValue) -> i32;
-    pub fn R4SdkDeadlineBudgetInit(p0: R4SdkClockSample, p1: R4Timeout, p2: *mut R4SdkDeadlineBudget) -> i32;
-    pub fn R4SdkDeadlineBudgetRemaining(p0: *mut R4SdkDeadlineBudget, p1: R4SdkClockSample, p2: *mut R4SdkBudgetValue) -> i32;
-    pub fn R4SdkDriverPollIterations(p0: u64, p1: u32, p2: *mut R4SdkDriverPollBudget) -> i32;
-    pub fn R4SdkDriverPollTimed(p0: R4SdkClockSample, p1: R4Timeout, p2: u64, p3: u32, p4: *mut R4SdkDriverPollBudget) -> i32;
-    pub fn R4SdkDriverPollStep(p0: *mut R4SdkDriverPollBudget, p1: *const R4SdkClockSample, p2: u32) -> u32;
-    pub fn R4SdkDriverPollRemaining(p0: *mut R4SdkDriverPollBudget, p1: *const R4SdkClockSample, p2: *mut R4SdkPollRemaining) -> i32;
     pub fn R4SdkWireReaderInit(p0: *const u8, p1: u64, p2: *mut R4SdkWireReader) -> i32;
     pub fn R4SdkWireWriterInit(p0: *mut u8, p1: u64, p2: *mut R4SdkWireWriter) -> i32;
     pub fn R4SdkWireTake(p0: *mut R4SdkWireReader, p1: u64, p2: *mut R4SdkWireSpan) -> i32;

@@ -40,13 +40,16 @@ pub fn build(b: *std.Build) void {
     const contract_dependency = b.dependency("r4os_contract", .{});
     const platform2 = b.addModule("r4os_platform2", .{ .root_source_file = b.path("r4os/platform2.zig") });
     platform2.addImport("r4os_contract2", contract_dependency.module("r4os_contract2"));
+    platform2.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
     const platform2_tests_root = b.createModule(.{ .root_source_file = b.path("r4os/platform2.zig"), .target = b.graph.host, .optimize = sdk_profiles.defaults.host_optimize });
     platform2_tests_root.addImport("r4os_contract2", contract_dependency.module("r4os_contract2"));
+    platform2_tests_root.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
     const platform2_tests = b.addRunArtifact(b.addTest(.{ .root_module = platform2_tests_root }));
     const platform2_step = b.step("platform2-test", "Check explicit generation2 context selection");
     platform2_step.dependOn(&platform2_tests.step);
     const technical2_root = b.createModule(.{ .root_source_file = b.path("r4os/technical2.zig"), .target = b.graph.host, .optimize = sdk_profiles.defaults.host_optimize });
     technical2_root.addImport("r4os_contract2", contract_dependency.module("r4os_contract2"));
+    technical2_root.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
     platform2_step.dependOn(&b.addRunArtifact(b.addTest(.{ .root_module = technical2_root })).step);
     const parity_check = b.addSystemCommand(&.{ "pwsh", "-NoLogo", "-NoProfile", "-File" });
     parity_check.addFileArg(b.path("Tools/Test-LanguageParity.ps1"));
@@ -350,7 +353,7 @@ pub fn build(b: *std.Build) void {
     const data_cases = b.createModule(.{ .root_source_file = b.path("test_owners.zig"), .target = data_target, .optimize = sdk_profiles.defaults.host_optimize });
     data_cases.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
     data_cases.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = data_target, .optimize = sdk_profiles.defaults.host_optimize }));
-    const data_tests = b.addRunArtifact(b.addTest(.{ .root_module = data_cases, .filters = &.{ "protocol status", "ZIP protocol status", "parse Windows ICO", "parse 8bpp", "bulk ICO", "raster ", "Encoding labels", "TextEncoder", "TextDecoder", "URL", "SHA-256 digest", "release and installed", "semantic versions", "R4M0 metadata", "metadata reads", "V2 derives profile", "contract plan is deterministic", "wire owner" } }));
+    const data_tests = b.addRunArtifact(b.addTest(.{ .root_module = data_cases, .filters = &.{ "protocol status", "ZIP protocol status", "parse Windows ICO", "parse 8bpp", "bulk ICO", "raster ", "Encoding labels", "TextEncoder", "TextDecoder", "URL", "SHA-256 digest", "release and installed", "semantic versions", "R4M0 metadata", "metadata reads", "V2 derives profile", "contract plan is deterministic", "wire owner", "cli owner" } }));
     b.step("data-parity-test", "Existing bounded data, codec, raster, metadata and protocol facade owner cases").dependOn(&data_tests.step);
     const web_cases = data_cases;
     const web_tests = b.addRunArtifact(b.addTest(.{ .root_module = web_cases, .filters = &.{

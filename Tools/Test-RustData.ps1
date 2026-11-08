@@ -57,9 +57,13 @@ r4os-sdk={path="$($sdk.Replace('\','/'))/Rust"}
             @('E0502','pub fn bad(p:&mut r4os_sdk::data::SearchParams){let v=p.get(b"a").unwrap();let _=p.set(b"a",b"b");let _=v.map(|b|b.len());}'),
             @('E0133','pub fn bad(b:&r4os_sdk::abi::ProtocolBuffer){let _=r4os_sdk::wire::native::Input::<u64>::new(b,r4os_sdk::wire::native::SizeMode::Exact,r4os_sdk::wire::native::Header::NONE,0);}'),
             @('E0505','pub fn bad(b:alloc::vec::Vec<u8>){let mut c=r4os_sdk::wire::Reader::new(&b).unwrap();let v=c.take(1).unwrap();drop(b);core::hint::black_box(v);} extern crate alloc;'),
-            @('E0502','pub fn bad(b:&mut[u8]){let mut w=r4os_sdk::wire::Writer::new(b).unwrap();let v=w.written().unwrap();let _=w.put(b"x");core::hint::black_box(v);}')
+            @('E0502','pub fn bad(b:&mut[u8]){let mut w=r4os_sdk::wire::Writer::new(b).unwrap();let v=w.written().unwrap();let _=w.put(b"x");core::hint::black_box(v);}'),
+            @('E0505','extern crate alloc; pub fn bad(b:alloc::vec::Vec<u8>){let mut a=r4os_sdk::cli::ArgCursor::new(&b,Default::default()).unwrap();let t=a.next_token().unwrap().unwrap();drop(b);core::hint::black_box(t.bytes());}'),
+            @('E0499','pub fn bad(b:&mut[u8]){let q=r4os_sdk::cli::BoundedDiagnosticBuffer::new(b).unwrap();b.fill(1);let _=q.stats();}'),
+            @('E0521','pub fn bad(q:&mut r4os_sdk::cli::BoundedDiagnosticBuffer<''_>){let mut saved:Option<&[u8]>=None;let _=q.flush_once(8,|c|{saved=Some(c.bytes);r4os_sdk::cli::Ack::accepted(0)});core::hint::black_box(saved);}')
         )
         foreach($case in $cases){
+            if($case -isnot [array] -or $case.Count -ne 2 -or $case[0] -cnotmatch '^E\d{4}$'){throw 'Malformed compiler-negative case; no diagnostic claim.'}
             [IO.File]::WriteAllText($negative,$case[1],[Text.UTF8Encoding]::new($false))
             $log=(& $pwsh -NoLogo -NoProfile -File $RustLauncher cargo check --offline --manifest-path (Join-Path $WorkRoot 'Cargo.toml') --target-dir (Join-Path $WorkRoot 'negative-target') --config $patch --message-format=json 2>&1|Out-String)
             if($LASTEXITCODE -eq 0 -or $log -notmatch ('"code":"'+$case[0]+'"')){throw ('Missing expected data helper diagnostic '+$case[0]+': '+$log)}

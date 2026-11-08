@@ -97,6 +97,7 @@ pub const Context = struct {
 };
 
 test "platform2 lookup distinguishes missing groups and functions without changing failed outputs" {
+    const sinks = @import("diagnostic_sinks.zig");
     const Provider = struct {
         fn write(_: [*]const u8, _: u32) callconv(.c) i32 {
             return -20002;
@@ -106,6 +107,9 @@ test "platform2 lookup distinguishes missing groups and functions without changi
     var rows = [_]abi.R4XStartImport{.{ .group_id = 1, .resolved_version = 2, .table = @intFromPtr(&sys) }};
     const raw: abi.R4XStartContext2 = .{ .imports = @intFromPtr(&rows), .import_count = 1 };
     const context = try Context.init(&raw);
+    try std.testing.expectError(error.NoProvider, sinks.ConsoleSink.fromContext2(&context, 1));
+    try std.testing.expectError(error.NoProvider, sinks.FileSink.fromContext2(&context, "C:\\X"));
+    try std.testing.expectError(error.NoProvider, sinks.LogSink.fromContext2(&context, "T", .{}));
     var output: u64 = 12345;
     try std.testing.expectEqual(abi.shared.err_no_group, context.lookup(7, 16, &output));
     try std.testing.expectEqual(abi.shared.err_no_fn, context.lookup(1, 16, &output));

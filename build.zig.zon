@@ -1,6 +1,6 @@
 .{
     .name = .r4os_sdk,
-    .version = "0.64.160",
+    .version = "0.64.161",
     .fingerprint = 0x8e8330db02f37336,
     .minimum_zig_version = "0.16.0",
     .dependencies = .{
@@ -44,6 +44,7 @@
         "Tools",
         "README.md",
         "DOCUMENTATION.de.txt",
+        "Docs",
         "THIRD_PARTY_NOTICES.md",
         "PROVENANCE.txt",
     },
