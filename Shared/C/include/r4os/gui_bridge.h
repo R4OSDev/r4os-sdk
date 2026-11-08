@@ -1499,7 +1499,7 @@ typedef struct R4SdkGuiType694 { _Alignas(8) uint8_t opaque_bytes[40]; } R4SdkGu
 /* *abi_generated.SerialStatus; native size 8, alignment 8. */
 typedef struct R4SdkGuiType696 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkGuiType696;
 #define R4SdkGuiType696_TYPE 696u
-#define R4SdkGui_ABI_FINGERPRINT UINT64_C(3594433528973025346)
+#define R4SdkGui_ABI_FINGERPRINT UINT64_C(1640675951650447672)
 int32_t R4SdkGuiVerifyAbi(uint64_t);
 #define R4SdkGui_font_w (8)
 #define R4SdkGui_font_h (8)

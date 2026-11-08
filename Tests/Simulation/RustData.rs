@@ -8,12 +8,79 @@ use r4os_sdk::{
     },
 };
 unsafe extern "C" {
+    fn sdk_device_snapshot_c_case() -> i32;
     fn sdk_inventory_c_case() -> i32;
     fn sdk_transfer_c_case() -> i32;
     fn sdk_cli_c_case() -> i32;
     fn sdk_wire_c_case() -> i32;
     fn sdk_data_c_case(manifest: *const u8, length: usize) -> i32;
     fn sdk_ico_c_case(bytes: *const u8, length: usize) -> i32;
+}
+#[test]
+fn shared_device_capture_pages_keep_one_collection_and_borrowed_complete_views() {
+    use core::{
+        mem::MaybeUninit,
+        sync::atomic::{AtomicU64, Ordering},
+    };
+    use r4os_sdk::device_snapshot::*;
+    assert_eq!(unsafe { sdk_device_snapshot_c_case() }, 0);
+    static CALLS: AtomicU64 = AtomicU64::new(0);
+    unsafe extern "C" fn capture(
+        rows: *mut abi::DeviceInventoryRecord,
+        capacity: u32,
+        info: *mut abi::DeviceInventorySnapshotInfo,
+    ) -> i32 {
+        let call = CALLS.fetch_add(1, Ordering::Relaxed) + 1;
+        let count = capacity.min(3);
+        for i in 0..count {
+            let mut row = abi::DeviceInventoryRecord::default();
+            row.name[0] = b'A' + i as u8;
+            unsafe { rows.add(i as usize).write(row) };
+        }
+        unsafe {
+            info.write(abi::DeviceInventorySnapshotInfo {
+                snapshot_generation: if capacity >= 3 { call } else { 0 },
+                count,
+                required_count: 3,
+                capacity,
+                flags: if capacity >= 3 { 3 } else { 2 },
+                with_driver: 3,
+                source_mask: 1,
+                ..Default::default()
+            })
+        };
+        if capacity >= 3 { 0 } else { -2 }
+    }
+    CALLS.store(0, Ordering::Relaxed);
+    let provider = NativeProvider {
+        capture: Some(capture),
+    };
+    let mut rows = [MaybeUninit::uninit(); 3];
+    let mut snapshot = unsafe { Snapshot::from_native_provider(&provider, &mut rows) }.unwrap();
+    assert!(snapshot.view().is_err());
+    let done = snapshot.capture(false).unwrap();
+    assert!(done.complete && !done.in_call);
+    let mut cursor = snapshot.begin_pages().unwrap();
+    {
+        let page = snapshot.page(&mut cursor, 1).unwrap();
+        assert_eq!(page.records[0].name[0], b'A');
+        assert_eq!(page.status, PageStatus::More);
+    }
+    {
+        let page = snapshot.page(&mut cursor, 2).unwrap();
+        assert_eq!(page.records.len(), 2);
+        assert_eq!(page.records[1].name[0], b'C');
+        assert_eq!(page.status, PageStatus::Complete);
+    }
+    assert_eq!(CALLS.load(Ordering::Relaxed), 1);
+    assert_eq!(snapshot.view().unwrap().len(), 3);
+    snapshot.capture(false).unwrap();
+    let page = snapshot.page(&mut cursor, 1).unwrap();
+    assert_eq!(page.status, PageStatus::Restart);
+    assert!(page.records.is_empty());
+    assert_eq!(CALLS.load(Ordering::Relaxed), 2);
+    snapshot.close().unwrap();
+    assert!(snapshot.view().is_err());
 }
 #[test]
 fn shared_inventory_only_publishes_complete_typed_views_and_exact_borrowed_membership() {

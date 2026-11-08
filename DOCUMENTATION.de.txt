@@ -5,6 +5,14 @@ Dieses Repository enthaelt das hostneutrale Kern-SDK von R4OS: Zig- und
 C-Fassaden, Buildprofile, Templates, Smokeprojekte sowie die generischen
 Werkzeuge R4XBuilder, R4LContractGen und ModuleCatalog.
 
+Geraeteinventarkopie ab0.64.164
+------------------------------
+Docs/DeviceInventorySnapshot.txt beschreibt eine passive Sammlung in ganzen
+Callerspeicher und danach geliehene Seiten ohne erneute Providerarbeit.
+Neue Capturegenerationen erzwingen Restart alter Cursor. Keine atomare
+Hardwareaufnahme, kein Retain, keine Kernel-Snapshotregistry und keine
+automatische Umstellung bestehender Anwendungen.
+
 ProgramInventoryReader ab0.64.163
 --------------------------------
 Docs/ProgramInventoryReader.txt beschreibt explizite Full-/Lifecycle-Modi,

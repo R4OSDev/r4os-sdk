@@ -1,6 +1,30 @@
 #include <r4os/facades.h>
 #include <string.h>
 #define WIRE_CHECK(test,code) do { if (!(test)) return (code); } while (0)
+static uint32_t device_capture_calls;
+static int32_t device_capture(R4DeviceInventoryRecord *rows,uint32_t capacity,R4DeviceInventorySnapshotInfo *info){
+    device_capture_calls++;uint32_t count=capacity<3?capacity:3;
+    for(uint32_t i=0;i<count;i++){rows[i]=(R4DeviceInventoryRecord){0};rows[i].name[0]=(uint8_t)('A'+i);}
+    *info=(R4DeviceInventorySnapshotInfo){.version=1,.size=64,.snapshot_generation=capacity>=3?100+device_capture_calls:0,.count=count,.required_count=3,.capacity=capacity,.flags=capacity>=3?3:2,.with_driver=3,.source_mask=1,.record_size=224};return capacity>=3?0:-2;
+}
+int32_t sdk_device_snapshot_c_case(void){
+    device_capture_calls=0;R4DeviceInventoryRecord rows[3];R4SdkDeviceSnapshot state;R4SdkDeviceSnapshotProgress progress;R4SdkDeviceSnapshotCursor cursor;R4SdkDeviceSnapshotPageInfo page;R4SdkWireSpan span={123,456};
+    R4SdkDeviceSnapshotProvider provider={.capture=device_capture};
+    WIRE_CHECK(!R4SdkDeviceSnapshotInit((R4SdkWireSpan){(uintptr_t)rows,sizeof(rows)},3,provider,&state),451);
+    WIRE_CHECK(R4SdkDeviceSnapshotGetView(&state,&span)==-6&&span.address==123&&span.length==456,452);
+    WIRE_CHECK(!R4SdkDeviceSnapshotCapture(&state,0,&progress)&&progress.status==R4_DEV_SNAPSHOT_COMPLETE&&!(progress.flags&R4_DEV_SNAPSHOT_IN_CALL),453);
+    WIRE_CHECK(!R4SdkDeviceSnapshotBeginPages(&state,&cursor),454);
+    for(uint32_t i=0;i<3;i++){
+        WIRE_CHECK(!R4SdkDeviceSnapshotPage(&state,&cursor,1,&span,&page)&&page.returned==1&&span.address==(uintptr_t)&rows[i]&&page.status==(i==2?R4_DEV_SNAPSHOT_PAGE_COMPLETE:R4_DEV_SNAPSHOT_PAGE_MORE),455);
+    }
+    WIRE_CHECK(device_capture_calls==1,456);R4SdkDeviceSnapshotCursor saved=cursor;
+    WIRE_CHECK(!R4SdkDeviceSnapshotCapture(&state,0,&progress)&&device_capture_calls==2,457);
+    WIRE_CHECK(!R4SdkDeviceSnapshotPage(&state,&cursor,1,&span,&page)&&page.status==R4_DEV_SNAPSHOT_PAGE_RESTART&&!span.length&&!memcmp(&cursor,&saved,sizeof(cursor)),458);
+    WIRE_CHECK(!R4SdkDeviceSnapshotClose(&state,&progress)&&R4SdkDeviceSnapshotGetView(&state,&span)==-6,459);
+    WIRE_CHECK(!R4SdkDeviceSnapshotInit((R4SdkWireSpan){(uintptr_t)rows,sizeof(rows)},1,provider,&state),460);
+    WIRE_CHECK(!R4SdkDeviceSnapshotCapture(&state,0,&progress)&&progress.status==R4_DEV_SNAPSHOT_CAPACITY&&progress.info.required_count==3&&!(progress.flags&R4_DEV_SNAPSHOT_VIEW_COMPLETE),461);
+    return 0;
+}
 static int inventory_busy,inventory_full_calls;
 static int32_t inventory_clock(void *unused,R4SdkClockSample *out){(void)unused;*out=(R4SdkClockSample){.identity={1,1,0,1000},.instant_ns=100};return 0;}
 static int32_t inventory_full_begin(R4ProgramInventoryCursor *cursor,R4ProgramInventorySummary *summary){(void)cursor;(void)summary;inventory_full_calls++;return -77;}
