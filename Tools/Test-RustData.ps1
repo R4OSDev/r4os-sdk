@@ -60,7 +60,11 @@ r4os-sdk={path="$($sdk.Replace('\','/'))/Rust"}
             @('E0502','pub fn bad(b:&mut[u8]){let mut w=r4os_sdk::wire::Writer::new(b).unwrap();let v=w.written().unwrap();let _=w.put(b"x");core::hint::black_box(v);}'),
             @('E0505','extern crate alloc; pub fn bad(b:alloc::vec::Vec<u8>){let mut a=r4os_sdk::cli::ArgCursor::new(&b,Default::default()).unwrap();let t=a.next_token().unwrap().unwrap();drop(b);core::hint::black_box(t.bytes());}'),
             @('E0499','pub fn bad(b:&mut[u8]){let q=r4os_sdk::cli::BoundedDiagnosticBuffer::new(b).unwrap();b.fill(1);let _=q.stats();}'),
-            @('E0521','pub fn bad(q:&mut r4os_sdk::cli::BoundedDiagnosticBuffer<''_>){let mut saved:Option<&[u8]>=None;let _=q.flush_once(8,|c|{saved=Some(c.bytes);r4os_sdk::cli::Ack::accepted(0)});core::hint::black_box(saved);}')
+            @('E0521','pub fn bad(q:&mut r4os_sdk::cli::BoundedDiagnosticBuffer<''_>){let mut saved:Option<&[u8]>=None;let _=q.flush_once(8,|c|{saved=Some(c.bytes);r4os_sdk::cli::Ack::accepted(0)});core::hint::black_box(saved);}'),
+            @('E0505','extern crate alloc;pub fn bad(b:alloc::vec::Vec<u8>,s:r4os_sdk::time::checked::ClockSample){let w=r4os_sdk::transfer::WriteAll::new(&b,s,r4os_sdk::resources::Timeout::Forever).unwrap();drop(b);let _=w.progress();}'),
+            @('E0499','pub fn bad(b:&mut[u8],s:r4os_sdk::time::checked::ClockSample){let r=r4os_sdk::transfer::ReadExact::new(b,s,r4os_sdk::resources::Timeout::Forever).unwrap();b.fill(0);let _=r.progress();}'),
+            @('E0521','pub fn bad(r:&mut r4os_sdk::transfer::ReadExact<''_>,s:r4os_sdk::time::checked::ClockSample){let mut saved:Option<&mut[u8]>=None;let _=r.step(4,false,&mut ||Ok(s),|c|{saved=Some(c.bytes);r4os_sdk::transfer::Ack::bytes(0)});core::hint::black_box(saved);}'),
+            @('E0133','pub fn bad(c:&r4os_sdk::platform2::Context<''_>){let _=r4os_sdk::transfer::Tcp::from_borrowed_handles(c,1,2);}')
         )
         foreach($case in $cases){
             if($case -isnot [array] -or $case.Count -ne 2 -or $case[0] -cnotmatch '^E\d{4}$'){throw 'Malformed compiler-negative case; no diagnostic claim.'}

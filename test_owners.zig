@@ -11,6 +11,10 @@ test "cli owner shared helpers" {
     _ = @import("r4os/arg_cursor.zig");
     _ = @import("r4os/diagnostic_buffer.zig");
 }
+test "stream owner shared transfer" {
+    _ = @import("r4os/stream_transfer.zig");
+    _ = @import("r4os/stream_adapters.zig");
+}
 test {
     _ = @import("Tests/Simulation/DataOwners.zig");
     _ = @import("Tests/Simulation/WebOwners.zig");

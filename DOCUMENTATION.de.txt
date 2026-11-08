@@ -5,6 +5,14 @@ Dieses Repository enthaelt das hostneutrale Kern-SDK von R4OS: Zig- und
 C-Fassaden, Buildprofile, Templates, Smokeprojekte sowie die generischen
 Werkzeuge R4XBuilder, R4LContractGen und ModuleCatalog.
 
+StreamTransfer ab0.64.162
+------------------------
+Docs/StreamTransfer.txt beschreibt ReadExact/WriteAll-Schritte mit einem
+einzigen aeusseren DeadlineBudget, bekanntem U64-Praefix und getrennten EOF-/
+WouldBlock-/Timeout-/Cancel-/Uncertain-Zustaenden. Zig/C/Rust nutzen denselben
+statischen SDK-Besitzer und echte Datei-/TCPSVC-/Serviceadapter. Keine neue
+Ressourcenregistry, kein automatisches Replay und keine Verbrauchermigration.
+
 Argumentcursor und begrenzte Diagnosepuffer ab0.64.161
 --------------------------------------------------
 Die gemeinsame SDK-Implementierung und ihre Zig-/C-/Rust-Zugaenge stehen in

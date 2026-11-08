@@ -8,10 +8,84 @@ use r4os_sdk::{
     },
 };
 unsafe extern "C" {
+    fn sdk_transfer_c_case() -> i32;
     fn sdk_cli_c_case() -> i32;
     fn sdk_wire_c_case() -> i32;
     fn sdk_data_c_case(manifest: *const u8, length: usize) -> i32;
     fn sdk_ico_c_case(bytes: *const u8, length: usize) -> i32;
+}
+#[test]
+fn shared_transfer_native_state_retains_prefix_deadline_and_actual_callback_return() {
+    use core::cell::Cell;
+    use r4os_sdk::{resources::Timeout, time::checked::ClockSample, transfer::*};
+    assert_eq!(unsafe { sdk_transfer_c_case() }, 0);
+    let mut info = abi::MonotonicClockInfo::default();
+    info.flags = abi::monotonic_clock_flag_valid;
+    info.source = 1;
+    info.generation = 1;
+    info.resolution_ns = 1;
+    info.event_requested_hz = 1000;
+    info.instant_ns = 100;
+    let initial = ClockSample::from_info(&info).unwrap();
+    let now = Cell::new(100);
+    let mut clock = || {
+        let mut value = info;
+        value.instant_ns = now.get();
+        ClockSample::from_info(&value).map_err(|_| Error(-101))
+    };
+    let mut writer = WriteAll::new(b"abcdef", initial, Timeout::AfterNanos(10)).unwrap();
+    let one = writer
+        .step(4, false, &mut clock, |c| {
+            assert_eq!(c.offset, 0);
+            assert_eq!(c.bytes, b"abcd");
+            now.set(103);
+            Ack::bytes(2)
+        })
+        .unwrap();
+    assert_eq!((one.bytes, one.outcome), (2, Outcome::Pending));
+    assert!(!one.in_call);
+    let two = writer
+        .step(4, false, &mut clock, |c| {
+            assert_eq!(c.offset, 2);
+            assert_eq!(c.bytes, b"cdef");
+            now.set(110);
+            Ack::bytes(1)
+        })
+        .unwrap();
+    assert_eq!((two.bytes, two.outcome), (3, Outcome::TimedOut));
+    assert!(two.terminal);
+    let called = Cell::new(false);
+    writer
+        .step(4, false, &mut clock, |_| {
+            called.set(true);
+            Ack::bytes(0)
+        })
+        .unwrap();
+    assert!(!called.get());
+    now.set(100);
+    let mut output = [0u8; 5];
+    let mut reader = ReadExact::new(&mut output, initial, Timeout::AfterNanos(10)).unwrap();
+    let eof = reader
+        .step(5, false, &mut clock, |c| {
+            c.bytes[..2].copy_from_slice(b"AB");
+            Ack {
+                bytes: 2,
+                kind: IoKind::Eof,
+                error_code: 0,
+            }
+        })
+        .unwrap();
+    assert_eq!((eof.bytes, eof.outcome), (2, Outcome::Eof));
+    assert_eq!(reader.confirmed(), b"AB");
+    let mut invalid = WriteAll::new(b"ab", initial, Timeout::AfterNanos(10)).unwrap();
+    let result = invalid
+        .step(2, false, &mut clock, |_| Ack::bytes(3))
+        .unwrap();
+    assert_eq!(
+        (result.bytes, result.outcome),
+        (0, Outcome::InvalidProgress)
+    );
+    assert!(result.effect_uncertain);
 }
 #[test]
 fn shared_cli_grammar_and_record_sink_keep_input_loans_and_exact_accepted_bytes() {

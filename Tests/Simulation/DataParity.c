@@ -1,6 +1,35 @@
 #include <r4os/facades.h>
 #include <string.h>
 #define WIRE_CHECK(test,code) do { if (!(test)) return (code); } while (0)
+typedef struct { uint64_t now;uint32_t calls,cancel,held;R4SdkTransfer *state;uint8_t output[6]; } TransferProbe;
+static int32_t transfer_clock(void *raw,R4SdkClockSample *sample){
+    TransferProbe *p=raw;*sample=(R4SdkClockSample){.identity={1,1,0,1000},.instant_ns=p->now};return 0;
+}
+static R4SdkTransferAck transfer_write(void *raw,uint64_t offset,const uint8_t *bytes,uint32_t count,const R4SdkDeadlineBudget *deadline){
+    TransferProbe *p=raw;p->calls++;
+    if(deadline->deadline_ns!=110||offset+count>6)return (R4SdkTransferAck){.kind=R4_STREAM_XFER_IO_UNCERTAIN,.error_code=-99};
+    uint32_t n=count<2?count:2;memcpy(p->output+offset,bytes,n);p->now+=3;
+    if(p->cancel){R4SdkTransferProgress stop;if(!R4SdkTransferCancel(p->state,&stop))p->held=(stop.flags&R4_STREAM_XFER_IN_CALL)&&!(stop.flags&R4_STREAM_XFER_TERMINAL);}
+    return (R4SdkTransferAck){.bytes=n};
+}
+int32_t sdk_transfer_c_case(void){
+    TransferProbe p={.now=100};R4SdkClockSample initial;R4SdkTransfer state;R4SdkTransferProgress progress;
+    WIRE_CHECK(!transfer_clock(&p,&initial),301);
+    WIRE_CHECK(!R4SdkTransferInit(1,6,initial,(R4Timeout){.kind=1,.nanoseconds=10},&state),302);p.state=&state;
+    const uint8_t bytes[]="abcdef";
+    for(uint32_t i=0;i<3;i++){
+        WIRE_CHECK(!R4SdkTransferWriteStep(&state,bytes+state.bytes,6-state.bytes,4,0,transfer_clock,&p,transfer_write,&p,&progress),303);
+        WIRE_CHECK(progress.bytes==2*(i+1)&&!(progress.flags&R4_STREAM_XFER_IN_CALL),304);
+    }
+    WIRE_CHECK(progress.outcome==R4_STREAM_XFER_COMPLETE&&(progress.flags&R4_STREAM_XFER_TERMINAL)&&!memcmp(p.output,bytes,6),305);
+    p=(TransferProbe){.now=100,.cancel=1,.state=&state};
+    WIRE_CHECK(!R4SdkTransferInit(1,6,initial,(R4Timeout){.kind=1,.nanoseconds=10},&state),306);
+    WIRE_CHECK(!R4SdkTransferWriteStep(&state,bytes,6,4,0,transfer_clock,&p,transfer_write,&p,&progress),307);
+    WIRE_CHECK(p.held&&progress.bytes==2&&progress.outcome==R4_STREAM_XFER_CANCELLED&&!(progress.flags&R4_STREAM_XFER_IN_CALL),308);
+    uint32_t calls=p.calls;
+    WIRE_CHECK(!R4SdkTransferWriteStep(&state,bytes+2,4,4,0,transfer_clock,&p,transfer_write,&p,&progress)&&p.calls==calls,309);
+    return 0;
+}
 typedef struct { uint8_t output[3]; uint32_t count,calls; } CliProbe;
 static R4SdkDiagnosticAck cli_write(void *raw,const R4SdkDiagnosticChunk *c) {
     CliProbe *p=raw;p->calls++;

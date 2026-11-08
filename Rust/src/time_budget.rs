@@ -44,6 +44,12 @@ pub struct ClockSample {
     raw: c::R4SdkClockSample,
 }
 impl ClockSample {
+    pub(crate) fn raw(self) -> c::R4SdkClockSample {
+        self.raw
+    }
+    pub(crate) fn from_raw(raw: c::R4SdkClockSample) -> Self {
+        Self { raw }
+    }
     pub fn from_info(info: &abi::MonotonicClockInfo) -> Result<Self, Error> {
         let mut raw = MaybeUninit::uninit();
         exact(unsafe { c::R4SdkClockSampleRead(info, raw.as_mut_ptr()) })?;
@@ -76,6 +82,9 @@ pub struct DeadlineBudget {
     raw: c::R4SdkDeadlineBudget,
 }
 impl DeadlineBudget {
+    pub(crate) fn raw(&self) -> c::R4SdkDeadlineBudget {
+        self.raw
+    }
     pub fn new(sample: ClockSample, timeout: Timeout) -> Result<Self, Error> {
         let mut raw = MaybeUninit::uninit();
         exact(unsafe { c::R4SdkDeadlineBudgetInit(sample.raw, timeout.raw(), raw.as_mut_ptr()) })?;
