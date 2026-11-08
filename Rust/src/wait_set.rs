@@ -1,4 +1,4 @@
-//! Borrowed Query2 wait-any over the actual native notification/timer owners.
+//! Borrowed Query2 wait-any over the actual native resource owners.
 //! Creating task owns configuration/wait. No transfer to another task, no source
 //! consumption or work/DMA/buffer-release receipt follows from a batch.
 use crate::{abi, platform2, time::checked};
@@ -7,6 +7,69 @@ pub type Source = abi::WaitSource;
 pub type Deadline = abi::WaitSetDeadline;
 pub type Event = abi::WaitSetEvent;
 pub type Batch = abi::WaitSetBatch;
+pub type Request = abi::WaitSourceRequest;
+/// Snapshot the current source incarnation without retaining it. Enroll can
+/// still return Stale after close. Preserve the returned opaque generation.
+pub fn prepare(context: &platform2::Context<'_>, request: Request) -> Result<Source, Error> {
+    let address = context
+        .lookup(
+            1,
+            mem::offset_of!(abi::generation2::R4XStartR4Sys2, waitset_source_prepare) as u32,
+        )
+        .map_err(Error)?;
+    let call: abi::R4SysFns::waitset_source_prepare = unsafe { mem::transmute(address) };
+    let mut source = Source::default();
+    exact(unsafe { call(&request, &mut source) })?;
+    Ok(source)
+}
+pub fn io(request_id: u32, tag: u64) -> Request {
+    Request {
+        kind: abi::waitset_source_io,
+        object: u64::from(request_id),
+        user_tag: tag,
+        ..Request::default()
+    }
+}
+pub fn process(handle: abi::ProgramProcessHandle, tag: u64) -> Request {
+    Request {
+        kind: abi::waitset_source_process,
+        object: u64::from(handle.instance_id),
+        generation: handle.generation,
+        flags: u32::from(handle.reserved != 0),
+        user_tag: tag,
+        ..Request::default()
+    }
+}
+pub fn thread(handle: abi::ProgramJoinHandle, tag: u64) -> Request {
+    Request {
+        kind: abi::waitset_source_thread,
+        object: u64::from(handle.thread_id),
+        generation: handle.thread_generation,
+        scope_id: u64::from(handle.instance_id),
+        scope_generation: handle.instance_generation,
+        flags: u32::from(handle.reserved != 0),
+        user_tag: tag,
+        ..Request::default()
+    }
+}
+pub fn endpoint(handle: u32, tag: u64) -> Request {
+    Request {
+        kind: abi::waitset_source_service_endpoint,
+        object: u64::from(handle),
+        user_tag: tag,
+        ..Request::default()
+    }
+}
+/// Main GUI only. Worker tasks use IO/Thread/Notification sources and leave
+/// ordinary GUI event pumping with the owner. This never grants worker access.
+pub fn gui_activity(observed: u64, tag: u64) -> Request {
+    Request {
+        kind: abi::waitset_source_gui_activity,
+        observed_revision: observed,
+        user_tag: tag,
+        ..Request::default()
+    }
+}
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Error(pub i32);
 fn exact(code: i32) -> Result<(), Error> {

@@ -12,6 +12,31 @@ typedef struct R4SdkWaitSetProvider {
  R4SysWaitsetRearmFn rearm; R4SysWaitsetRemoveFn remove;
  R4SysWaitsetWaitFn wait; R4SysWaitsetCloseFn close;
 } R4SdkWaitSetProvider;
+/* Optional adapter extension. Core six-function provider still resolves on
+ * older kernels. Preparation never retains or consumes the resource. Legacy
+ * IO/endpoint IDs name only their CURRENT incarnation. Preserve output epoch. */
+static inline int32_t R4SdkWaitSetPrepare2(const R4OS2Context *context,const R4WaitSourceRequest *request,R4WaitSource *out){
+ if(!request||!out)return R4OS_WAITSET_ERROR_INVALID;
+ uint64_t address=0;int32_t rc=R4OS2ContextFunction(context,1,offsetof(R4XStartR4Sys2,waitset_source_prepare),&address);
+ if(rc)return rc;
+ return ((R4SysWaitsetSourcePrepareFn)(uintptr_t)address)(request,out);
+}
+static inline R4WaitSourceRequest R4SdkWaitSetIo(uint32_t id,uint64_t tag){
+ return (R4WaitSourceRequest){.version=1,.size=sizeof(R4WaitSourceRequest),.kind=R4OS_WAITSET_SOURCE_IO,.object=id,.user_tag=tag};
+}
+static inline R4WaitSourceRequest R4SdkWaitSetProcess(R4ProgramProcessHandle handle,uint64_t tag){
+ return (R4WaitSourceRequest){.version=1,.size=sizeof(R4WaitSourceRequest),.kind=R4OS_WAITSET_SOURCE_PROCESS,.object=handle.instance_id,.generation=handle.generation,.flags=handle.reserved!=0,.user_tag=tag};
+}
+static inline R4WaitSourceRequest R4SdkWaitSetThread(R4ProgramJoinHandle handle,uint64_t tag){
+ return (R4WaitSourceRequest){.version=1,.size=sizeof(R4WaitSourceRequest),.kind=R4OS_WAITSET_SOURCE_THREAD,.object=handle.thread_id,.generation=handle.thread_generation,.scope_id=handle.instance_id,.scope_generation=handle.instance_generation,.flags=handle.reserved!=0,.user_tag=tag};
+}
+static inline R4WaitSourceRequest R4SdkWaitSetEndpoint(uint32_t handle,uint64_t tag){
+ return (R4WaitSourceRequest){.version=1,.size=sizeof(R4WaitSourceRequest),.kind=R4OS_WAITSET_SOURCE_SERVICE_ENDPOINT,.object=handle,.user_tag=tag};
+}
+/* Current main GUI only; no worker may pump GUI through this descriptor. */
+static inline R4WaitSourceRequest R4SdkWaitSetGuiActivity(uint64_t observed,uint64_t tag){
+ return (R4WaitSourceRequest){.version=1,.size=sizeof(R4WaitSourceRequest),.kind=R4OS_WAITSET_SOURCE_GUI_ACTIVITY,.observed_revision=observed,.user_tag=tag};
+}
 static inline int32_t R4SdkWaitSetProvider2(const R4OS2Context *context,R4SdkWaitSetProvider *out){
  if(!out)return R4OS_WAITSET_ERROR_INVALID;
  const uint32_t offsets[6]={offsetof(R4XStartR4Sys2,waitset_create),offsetof(R4XStartR4Sys2,waitset_enroll),offsetof(R4XStartR4Sys2,waitset_rearm),offsetof(R4XStartR4Sys2,waitset_remove),offsetof(R4XStartR4Sys2,waitset_wait),offsetof(R4XStartR4Sys2,waitset_close)};
