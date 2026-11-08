@@ -23,6 +23,7 @@ pub mod heap;
 pub mod lowlevel;
 mod memory;
 pub mod network;
+pub mod network_family;
 #[path = "generated/network.rs"]
 mod network_methods;
 pub mod path;

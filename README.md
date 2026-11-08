@@ -1,5 +1,18 @@
 ﻿# R4OS SDK
 
+The active compiler/component selection is defined only by `Profiles/`.
+Version-specific notes below describe their dated changes.
+
+SDK0.64.174 adds copied family-aware Query2 service clients in Zig
+(`network_family`), C (`r4os/network_family_platform2.h`) and Rust
+(`network_family`). They share the existing TCP/UDP/DNS providers and expose
+explicit families, checked absolute budgets, provider/socket generations,
+immutable resolver pages, stream prefixes and datagram truncation. Close is
+explicit; a transport timeout grants no resource-retirement acknowledgement.
+The initial providers support IPv4 and report IPv6 unavailable. The normative
+wire and ownership contract is `Contract/API/NetworkFamily.txt`; the workspace
+guide is `Docs/API/NetworkFamily.txt`. Consumer migration remains separate.
+
 SDK 0.64.149 adds an optional synchronous `DownloadOptions.head_observer`.
 It observes the decoded response and original headers before any sink write;
 returning false rejects that response. Header slices and the observation are
@@ -46,7 +59,7 @@ only for this review. Real build receipts still hash exact compiler bytes.
 Further public API changes must update the affected language facades/packages
 and evidence in this same matrix, including later Desktop/Library work.
 
-With current SDK0.64.117/Contract0.64.61, use Libraries0.64.39 for its higher
+The historical SDK0.64.117/Contract0.64.61 combination used Libraries0.64.39 for its higher
 Rust helper projection. Its compiler-owned aliases include R4AUDIO v4,
 DriverApi v39 and the copied audio catalog records. The library C boundary,
 native fingerprint and installed R4L binaries are unchanged. A platform record

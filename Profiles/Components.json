@@ -26,23 +26,23 @@
   "repositories": {
     "contract": {
       "repository": "https://github.com/R4OSDev/r4os-contract.git",
-      "commit": "8d2af7d3d8f03cb3a3200bb31eeaffaedf9e66f0",
-      "version": "0.64.85",
+      "commit": "0202918c234c865cd777fd1a981b41ee8127e522",
+      "version": "0.64.86",
       "files": {
-        "build.zig.zon": "6ac7c3f8bab288d390202e46740144183169dd1a349e0a362123071657237dc0",
-        "API/ApiContract.json": "740e8f16e62a31ed06dc0eda73c91fa8fd3fc933ad5bc69c698c0c08d48152f3",
+        "build.zig.zon": "5b3095dbe9f452210d516c83e10206fe58de19c7ba4db9affc561d8f13077e0c",
+        "API/ApiContract.json": "569c68781f1c52eb03e3be09e827d488ceb894c3ed8b7107b89d688108b387bb",
         "Module/CpuBaseline.json": "eeeee03aa8fd41051c09e61e9d70ca35660f2b413c3f878fb6e5a3bb51aad10c",
         "Generated/SDK/Rust/Cargo.toml": "de464f2f9243e3d153c06b701a2126839c3e8a921a6d466467d3042370023263",
-        "Generated/SDK/Rust/src/lib.rs": "318b67dd4589780c0fe797f8805e956099e0aa78fb08b498ae6fdfddccf7918d",
+        "Generated/SDK/Rust/src/lib.rs": "ed8ae6270865c2ad1dced31cd2546d916c711c61da7cd9cd41746954de95ffd6",
         "API/Generation2.json": "97e69a3c69a8c664e37954087f1f081c6f4e6213afe2fd2f3723704772f2e749",
         "Generated/Generation2/Inventory.json": "522195e4caffb163d5628e5be1d63f634cd43a98b4670162be163f3bfd5b5d6d"
       },
-      "zig_hash": "r4os_contract-0.64.85-ELhbYaczQgH2i3AqcMMHeITn83uExyClNSRsVcN_2jpK",
-      "archive_url": "https://github.com/R4OSDev/r4os-contract/archive/8d2af7d3d8f03cb3a3200bb31eeaffaedf9e66f0.tar.gz",
+      "zig_hash": "r4os_contract-0.64.86-ELhbYSY9RQH7fR9PhtTwC7P36OYpd0O9_qdYxaj5l7VK",
+      "archive_url": "https://github.com/R4OSDev/r4os-contract/archive/0202918c234c865cd777fd1a981b41ee8127e522.tar.gz",
       "archive_format": "tar.gz",
       "tree": {
         "algorithm": "r4os-files-sha256-lf-v1",
-        "sha256": "dbe0c73f5532fd41248c651fb49fb61ac0a8d2a502b6341f379f78d926b3a7d9",
+        "sha256": "46a94c2b09798637307694039bc803a0011287e475d7fa7b8ca936541d32efc0",
         "files": [
           ".gitattributes",
           ".gitignore",
@@ -62,6 +62,7 @@
           "API/FontPrefixMetrics2.txt",
           "API/Generation2.json",
           "API/Groups.txt",
+          "API/NetworkFamily.txt",
           "API/README.txt",
           "Build.bat",
           "Build.ps1",

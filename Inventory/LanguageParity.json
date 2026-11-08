@@ -659,9 +659,11 @@
       "modules": [
         "app_network",
         "r4net",
-        "stream_transfer"
+        "stream_transfer",
+        "network_family",
+        "network_common"
       ],
-      "semantics": "Resolver, TCP/UDP/Listener, Socketgeneration, half-close, Cancel/Ende/Fehler und gehaltene Asyncpuffer sowie R4NET/R4SYS-Optionzulassung erhalten. SDK162: shared one-step StreamTransfer exactu64 accepted prefix/one absolute budget, EOF/WouldBlock/timeout/cancel/uncertainty distinct; actual borrowed Query2 File/TCP/Service adapters with explicit operation-specific ACK and at-most-one bounded ServiceReply. Qualification limits in stream_transfer_09019.",
+      "semantics": "Resolver, TCP/UDP/Listener, Socketgeneration, half-close, Cancel/Ende/Fehler und gehaltene Asyncpuffer sowie R4NET/R4SYS-Optionzulassung erhalten. SDK162: shared one-step StreamTransfer exactu64 accepted prefix/one absolute budget, EOF/WouldBlock/timeout/cancel/uncertainty distinct; actual borrowed Query2 File/TCP/Service adapters with explicit operation-specific ACK and at-most-one bounded ServiceReply. Qualification limits in stream_transfer_09019. SDK174 adds copied family-aware Query2 clients, immutable DNS result pages, exact prefix/datagram truncation validation and actual process/provider/socket generations. The new provider path retains TCP EOF/reset at the original owner. This language review is host-only; actual IPv4 provider qualification is separate, IPv6 remains unavailable.",
       "current_only": "current_function",
       "rust": {
         "state": "paritaet_abgenommen",
@@ -671,7 +673,8 @@
           "Repositories/SDK/Rust/src/network.rs",
           "Repositories/SDK/Rust/src/network/sockets.rs",
           "Repositories/SDK/Rust/src/generated/network.rs",
-          "Repositories/SDK/Rust/src/transfer.rs"
+          "Repositories/SDK/Rust/src/transfer.rs",
+          "Repositories/SDK/Rust/src/network_family.rs"
         ]
       },
       "c": {
@@ -680,7 +683,8 @@
           "Repositories/SDK/Shared/C/include/r4os/r4net.h",
           "Repositories/SDK/Shared/C/include/r4os/app_network.h",
           "Repositories/SDK/Shared/C/include/r4os/stream_transfer.h",
-          "Repositories/SDK/Shared/C/include/r4os/stream_platform2.h"
+          "Repositories/SDK/Shared/C/include/r4os/stream_platform2.h",
+          "Repositories/SDK/Shared/C/include/r4os/network_family_platform2.h"
         ],
         "gap": "Bestehende aktuelle C-Besitzer erhalten; gemeinsame Zig-Loop/Deadline/Netzwerkbridge, fehlender TCP-Poll, gepackter Socketstatus und abgelaufener Poll ohne Frequenz vervollstaendigt. Slot-/Request-/Close-Quittungen bleiben explizit; keine Altkernel-Emulation.",
         "canonical_wire_replies": {
@@ -707,7 +711,8 @@
         "Repositories/SDK/Tests/Build/RustServices",
         "Repositories/SDK/Tests/Simulation/NetworkPeer.py",
         "studio_089_host",
-        "stream_transfer_09019"
+        "stream_transfer_09019",
+        "network_family_09031"
       ],
       "shared_core": "Vorhandene C-AppServices/AppTray/AppNetwork/Serial/Timeout-Besitzer, Zig-ServiceLoop/-Deadline/-R4NET-Besitzer und native R4SYS/R4NET/R4DEV-Callbacks. Rust fuegt Leihen/Typen/echte Abschlussretention hinzu; keine zweite Netzwerk- oder Schedulingimplementierung."
     },
@@ -3094,6 +3099,14 @@
       "expression": "@import(\"r4os/clipboard_offer.zig\")",
       "capability": "gui",
       "wave": "0.90.30"
+    },
+    {
+      "name": "network_family",
+      "source": "Repositories/SDK/r4os.zig",
+      "line": 4,
+      "expression": "@import(\"r4os/network_family.zig\")",
+      "capability": "network",
+      "wave": "0.90.31"
     }
   ],
   "build_exports": [
@@ -56515,6 +56528,20 @@
         "Host owner clock/allocator are controlled seams; native IPC, Producerexit, provider restart, GUI activity, expiry and SMP qualify separately.",
         "No consumer migration, implicit image/path conversion, old text tightening, full PNG decoder, Windows/hardware or isolated clipboard performance claim."
       ]
+    },
+    "network_family_09031": {
+      "complete": true,
+      "performed_in": "0.90.31",
+      "sdk": "0.64.174",
+      "contract": "0.64.86",
+      "report": "Docs/API/NetworkFamily.txt",
+      "scope": "Language-source/ABI/host qualification only. Same copied INFO/Socket/Resolve/Release access in Zig/C/Rust over original managed service endpoints. Nine fixed records; explicit address family/network bytes/host port; provider and non-wrapping socket generation; full process generation at actual service owner; checked absolute budgets; no implicit fallback.",
+      "host_checks": "Original18Contract steps incl8Zig/C/Rust interop,21existing SDK context/technical cases,539exact Rust ABI records,9additional generated C-to-Rust aliases,strict C object, actual bareSDK Clippy. Three-language controlled short/bad-generation/truncation/paging replies preserve output. Three real Rust Send/Sync/lifetime negative compiles. Seven independent NetDns A/AAAA/CNAME/compression/TTL/capacity owner wire cases; actual services build. New pure SDK owner cleanup check refuses Busy/Unavailable retirement.",
+      "limits": [
+        "This source review is not a native provider, SMP, Windows or hardware claim. Native actual IPv4 and exact original callers are qualified separately in the report/local receipts.",
+        "IPv6 transport and AAAA resolving remain false. AAAA codec is separate, exact family/scope/policy errors are explicit. No application, import or ServiceLoop migration.",
+        "Some original legacy DNS parsing/cache policy remains until separate cutover; the new typed path uses one pinned NetDns codec and immutable views in the existing cache."
+      ]
     }
   },
   "wave_bindings": [
@@ -56778,7 +56805,7 @@
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.90.30",
+    "reviewed_in": "0.90.31",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -56866,11 +56893,11 @@
     "files": [
       {
         "path": "Repositories/Contract/API/ApiContract.baseline.json",
-        "sha256": "740e8f16e62a31ed06dc0eda73c91fa8fd3fc933ad5bc69c698c0c08d48152f3"
+        "sha256": "569c68781f1c52eb03e3be09e827d488ceb894c3ed8b7107b89d688108b387bb"
       },
       {
         "path": "Repositories/Contract/API/ApiContract.json",
-        "sha256": "740e8f16e62a31ed06dc0eda73c91fa8fd3fc933ad5bc69c698c0c08d48152f3"
+        "sha256": "569c68781f1c52eb03e3be09e827d488ceb894c3ed8b7107b89d688108b387bb"
       },
       {
         "path": "Repositories/Contract/API/Generation2.json",
@@ -56898,11 +56925,11 @@
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/RustABI.json",
-        "sha256": "35d1d990177bbd69109dca9555fea0fb7330314cba17f8ab9450038b800760ae"
+        "sha256": "5a62d3fb65c9885bc83ea6957e4a354b7bee3836b1909da31000314c68a8a35c"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_generated.h",
-        "sha256": "11fa3728085fce1e0c2ef6bfa34b2cf8a724295bfee8dce08ad161b0ce3886d1"
+        "sha256": "62cd3f692c9860eee0945f4993a32572a489dad9e7bb114d269e73093f39b739"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_technical_generated.h",
@@ -56914,19 +56941,19 @@
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Rust/src/lib.rs",
-        "sha256": "318b67dd4589780c0fe797f8805e956099e0aa78fb08b498ae6fdfddccf7918d"
+        "sha256": "ed8ae6270865c2ad1dced31cd2546d916c711c61da7cd9cd41746954de95ffd6"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi.zig",
-        "sha256": "d5c528a9320ad90b4b699943f5434209406aaccb051b43e54104a4efa4d252d9"
+        "sha256": "b5cea680f8dc1fc1880333650a7b27dd9fa195d24fce9ec0452f1cd4d4a5fb61"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_exports.zig",
-        "sha256": "1f78ad3ef9d44645d0dbf6f8424f25063f844dc80904c6e39b9c361262998eea"
+        "sha256": "fbd24d23b1c415eb71bf2c6a58460429486436f821e9d8c81075fb91e77f64a2"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_generated.zig",
-        "sha256": "9819a4827c95318164fe4a2dd887ccd0ec2485eba7021239a5297b862822e63e"
+        "sha256": "02f52aa7a7c4a489401a6bc5127bb577eedf06ef4298802844a535c8d8caf324"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/package.zig",
@@ -58010,7 +58037,7 @@
       },
       {
         "path": "Repositories/SDK/Profiles/Components.json",
-        "sha256": "be1daad815fbae0c1f2e9d5c8808af9a66fcf6735aa281c88c1be017ad3b133f"
+        "sha256": "be063e3326bc1839fac309b0689f7094b79ce4c3789f0d3e1c7163327230e84a"
       },
       {
         "path": "Repositories/SDK/Profiles/Tools.json",
@@ -58030,7 +58057,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "ea31a7d1213a8891add9bd083a4ec9daf4ffd79c3a07019f3f8a2036f2008bd6"
+        "sha256": "3a87ad74c3e1c89ef926b3e2d3e2a2c842ab27945e345d5fa0985697f43e4918"
       },
       {
         "path": "Repositories/SDK/Rust/src/cli.rs",
@@ -58122,7 +58149,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/lib.rs",
-        "sha256": "7a654ef9f8af4e4db9c44ab3af7687690fd48ec442096f9c970ceb175159b831"
+        "sha256": "8dd741c2f0579ed3c982dcda6ae64611a007139b3667b51b9d87a026b972550d"
       },
       {
         "path": "Repositories/SDK/Rust/src/lowlevel.rs",
@@ -58143,6 +58170,10 @@
       {
         "path": "Repositories/SDK/Rust/src/network/sockets.rs",
         "sha256": "bd94a71fece3ced1384c22c60afa750bbf93cce0d28b7f1f3b958640884a111e"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/network_family.rs",
+        "sha256": "a16f8d5188086ec5bfeafee551d458bd4237adba41669973eaf22ab9fe274852"
       },
       {
         "path": "Repositories/SDK/Rust/src/path.rs",
@@ -58539,6 +58570,10 @@
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/net_request.h",
         "sha256": "7b6b4f7417985399a6992b58c5ae220a59df6b9289e04c90606624a6cb98422f"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/network_family_platform2.h",
+        "sha256": "716ff3bca64d4ab9c75998723c51580367b6e47454021becda6e5ce6f882415b"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/path_timeout.h",
@@ -59050,11 +59085,11 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "ef198e65b0714a82a362827492e1fec8caed22845c0caeaed1ca9c61c8f897af"
+        "sha256": "cec00fd3fce11a5b085665ba6c624ccd4139bd67ee39d1d46363383e2c224422"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
-        "sha256": "c5b50181c82086c7180e2e61dbfade4f6dba28a4a981cc3e47893bb46d948b85"
+        "sha256": "e48fb8ecc91419d64aa575b56ebcd6be6f2cc94e8322b38905f6eeb91ea27f10"
       },
       {
         "path": "Repositories/SDK/r4os/allocator_wait.zig",
@@ -59575,6 +59610,14 @@
       {
         "path": "Repositories/SDK/r4os/net_request_runtime.zig",
         "sha256": "05efed17364ff27f6c2862d938fb7ccd35f14c15644743f8a9e52b0d595c5208"
+      },
+      {
+        "path": "Repositories/SDK/r4os/network_common.zig",
+        "sha256": "36baa029dd493816d17a8841f6389dc4fdb6c75589736be51a8c84271d6d26c1"
+      },
+      {
+        "path": "Repositories/SDK/r4os/network_family.zig",
+        "sha256": "7d72e8d57aef427470c959f2447f1d87f4907cb6a777bd6792c2a4ca2e5d2cbe"
       },
       {
         "path": "Repositories/SDK/r4os/ntfs_builder.zig",
@@ -60503,26 +60546,31 @@
           "Repositories/SDK/r4os/stream_transfer.zig",
           "Repositories/SDK/r4os/stream_adapters.zig",
           "Repositories/SDK/r4os/stream_api.zig",
-          "Repositories/SDK/r4os/stream_runtime.zig"
+          "Repositories/SDK/r4os/stream_runtime.zig",
+          "Repositories/SDK/r4os/network_family.zig",
+          "Repositories/SDK/r4os/network_common.zig"
         ],
         "c": [
           "Repositories/SDK/Shared/C/include/r4os/app_network.h",
           "Repositories/SDK/Shared/C/include/r4os/r4net.h",
           "Repositories/SDK/Shared/C/include/r4os/stream_transfer.h",
-          "Repositories/SDK/Shared/C/include/r4os/stream_platform2.h"
+          "Repositories/SDK/Shared/C/include/r4os/stream_platform2.h",
+          "Repositories/SDK/Shared/C/include/r4os/network_family_platform2.h"
         ],
         "rust": [
           "Repositories/SDK/Rust/src/generated/network.rs",
           "Repositories/SDK/Rust/src/network.rs",
           "Repositories/SDK/Rust/src/network/sockets.rs",
-          "Repositories/SDK/Rust/src/transfer.rs"
+          "Repositories/SDK/Rust/src/transfer.rs",
+          "Repositories/SDK/Rust/src/network_family.rs"
         ],
         "proof": [
           "service_network_current_55",
           "current_contract_78",
           "server_access_0893",
           "studio_089_host",
-          "stream_transfer_09019"
+          "stream_transfer_09019",
+          "network_family_09031"
         ]
       },
       {
