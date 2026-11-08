@@ -1,0 +1,39 @@
+﻿WaitSets - explizite Query2-Adapter
+=================================
+
+SDK0.64.171 / Contract0.64.83: r4os.wait_set, r4os/wait_set_platform2.h und
+Rust wait_set::WaitSet verwenden die sechs angehaengten R4SYS38/SYS2rev3-
+Slots. Alle Funktionen werden vor Create aufgeloest; kurze oder fehlende
+Tabellen liefern err_no_group/err_no_fn ohne Legacyfallback. Context und
+Code bleiben durch den vollstaendigen Aufruf und Close geliehen.
+
+Create(capacity1..32) erzeugt einen nativen Besitzer. Der exakte erzeugende
+Task besitzt Enroll, Rearm, Remove und Wait; dieselbe Programminstanz darf
+Close zum Abbruch aus einem anderen Task aufrufen. Zig/C-Owner nicht
+duplizieren oder auf einen anderen Task verschieben. Rust WaitSet leiht
+Context und ist weder Send noch Sync. Drop versucht Close; explizites Close
+zeigt Fehler an. Releasefehler halten den wirklichen geschlossenen Record
+im Kernel bis Retry oder exaktem Taskretirement. Kein neuer SDK-Worker.
+
+notification(handle,observed,tag,stop) beobachtet die bestehende Revision
+ohne Konsum. Erst den eigentlichen Quellbesitzer bearbeiten/rescannen,
+dann Rearm mit der neuen Revision. Notificationclose liefert SourceClosed.
+Revisionsspruenge setzen Coalesced/Rescan, kleine Batches More/Rescan und
+rotieren ueber bereite Quellen. Es gibt keine verlustfreie Ereignis-FIFO.
+Bereite Stopquellen erhalten auch bei Kapazitaet1 Vorrang und Cancelled.
+
+timer(sample,absolute_ns,tag) benutzt die gemeinsame gepruefte ClockSample-
+Identitaet; faellig bleibt LevelReady bis Rearm/Remove. Clockwechsel oder
+Ruecklauf wird beim naechsten Check gelatcht, keine sofortige Unterbrechung
+zugesagt. deadline(DeadlineBudget) behaelt den einen absoluten Zeitpunkt.
+Poll/Forever werden explizit normalisiert; ein endliches u64MAX wird nie
+Forever. Abgelaufene letzte Beobachtungen groesser als die Deadline bleiben
+gueltig. Positive Tickumrechnung rundet geprueft auf.
+
+Alle Aufrufe einschliesslich Poll benoetigen schlaffaeigen Taskkontext.
+Descriptoren werden kopiert; Caller halten gemappte disjunkte Ausgaben bis
+zum wirklichen Return. Ready/Timeout/Cancel/Close bestaetigt keinen Arbeits-
+oder DMAabschluss und erlaubt keine vorzeitige Bufferfreigabe. Nur das
+angegebene Batchpraefix ist ein Ergebnis. Keine Mutex-wait-all-Semantik.
+Dieser Umfang bindet Notification/Timer. Weitere Besitzeradapter und die
+Umstellung bestehender Anwendungen sind gesonderte Arbeitsschritte.

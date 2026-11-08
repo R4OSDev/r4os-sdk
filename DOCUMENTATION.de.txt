@@ -5,6 +5,14 @@ Dieses Repository enthaelt das hostneutrale Kern-SDK von R4OS: Zig- und
 C-Fassaden, Buildprofile, Templates, Smokeprojekte sowie die generischen
 Werkzeuge R4XBuilder, R4LContractGen und ModuleCatalog.
 
+Native WaitSets ab0.64.171
+--------------------------
+Docs/WaitSets.txt beschreibt die Query2-Fassaden fuer begrenztes wait-any
+ueber Kernelnotifications und Timer. Zig/C/Rust teilen denselben nativen
+Besitzer, absolute Clockbudgets und explizite Revisionsbestaetigung. Der
+Erzeugertask besitzt Konfiguration/Wait; Rust bindet Context und ist weder
+Send noch Sync. SourceReady/Timeout/Cancel gibt keine Arbeits-/DMAquittung.
+
 Leihe veroeffentlichter Frames ab0.64.169
 ----------------------------------------
 Docs/PublishedFrame.txt beschreibt generation-/revisionsgebundene ganze
