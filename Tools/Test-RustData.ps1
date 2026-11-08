@@ -23,7 +23,7 @@ try{
         if($LASTEXITCODE -ne 0){throw 'Native SDK facade objects failed.'}
     }finally{Pop-Location}
     $object=Join-Path $WorkRoot 'data-c.o'
-    & $Zig cc -O1 -UNDEBUG -Werror -fPIC -ffunction-sections -fdata-sections -I (Join-Path $sdk 'Shared/C/include') -I (Join-Path $ContractRoot 'Generated/SDK/C/include') -c (Join-Path $sdk 'Tests/Simulation/DataParity.c') -o $object
+    & $Zig cc -O1 -UNDEBUG -Werror -fPIC -ffunction-sections -fdata-sections -I (Join-Path $sdk 'Shared/C/include') -I (Join-Path $ContractRoot 'Generated/SDK/C/include') -I (Join-Path $ContractRoot 'Generated/Generation2/C/include') -c (Join-Path $sdk 'Tests/Simulation/DataParity.c') -o $object
     if($LASTEXITCODE -ne 0){throw 'Combined C data facade consumer failed.'}
     $source=(Join-Path $sdk 'Tests/Simulation/RustData.rs').Replace('\','/')
     $manifest=@"
@@ -68,7 +68,9 @@ r4os-sdk={path="$($sdk.Replace('\','/'))/Rust"}
             @('E0502','pub fn bad(r:&mut r4os_sdk::inventory::ProgramInventoryReader<''_>){let v=r.view().unwrap();let _=r.restart();core::hint::black_box(v);}'),
             @('E0499','pub fn bad(b:&mut[core::mem::MaybeUninit<r4os_sdk::abi::ProgramLifecycleSnapshot>],p:&r4os_sdk::inventory::NativeProvider,s:r4os_sdk::time::checked::ClockSample){let r=unsafe{r4os_sdk::inventory::LifecycleReader::from_native_provider(b,1,p,s,r4os_sdk::resources::Timeout::Forever)}.unwrap();b.fill(core::mem::MaybeUninit::uninit());let _=r.progress();}'),
             @('E0502','pub fn bad(s:&mut r4os_sdk::device_snapshot::Snapshot<''_>,c:&mut r4os_sdk::device_snapshot::Cursor){let p=s.page(c,1).unwrap();let _=s.capture(false);core::hint::black_box(p.records);}'),
-            @('E0499','pub fn bad(b:&mut[core::mem::MaybeUninit<r4os_sdk::abi::DeviceInventoryRecord>],p:&r4os_sdk::device_snapshot::NativeProvider){let s=unsafe{r4os_sdk::device_snapshot::Snapshot::from_native_provider(p,b)}.unwrap();b.fill(core::mem::MaybeUninit::uninit());let _=s.progress();}')
+            @('E0499','pub fn bad(b:&mut[core::mem::MaybeUninit<r4os_sdk::abi::DeviceInventoryRecord>],p:&r4os_sdk::device_snapshot::NativeProvider){let s=unsafe{r4os_sdk::device_snapshot::Snapshot::from_native_provider(p,b)}.unwrap();b.fill(core::mem::MaybeUninit::uninit());let _=s.progress();}'),
+            @('E0499','pub fn bad<''a>(c:&''a r4os_sdk::platform2::Context<''a>,p:&''a core::ffi::CStr,b:&''a mut[core::mem::MaybeUninit<r4os_sdk::abi::DirectoryMetadataEntry2>]){let mut d=r4os_sdk::metadata2::Directory::new(c,p,b).unwrap();let page=d.next_page().unwrap();d.reset();core::hint::black_box(page);}'),
+            @('E0499','pub fn bad<''a>(c:&''a r4os_sdk::platform2::Context<''a>,p:&''a core::ffi::CStr,b:&''a mut[core::mem::MaybeUninit<r4os_sdk::abi::DirectoryMetadataEntry2>]){let mut d=r4os_sdk::metadata2::Directory::new(c,p,b).unwrap();b.fill(core::mem::MaybeUninit::uninit());core::hint::black_box(d.next_page());}')
         )
         foreach($case in $cases){
             if($case -isnot [array] -or $case.Count -ne 2 -or $case[0] -cnotmatch '^E\d{4}$'){throw 'Malformed compiler-negative case; no diagnostic claim.'}

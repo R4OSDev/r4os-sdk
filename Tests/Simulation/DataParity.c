@@ -1,6 +1,40 @@
 #include <r4os/facades.h>
+#include <r4os/metadata2.h>
 #include <string.h>
 #define WIRE_CHECK(test,code) do { if (!(test)) return (code); } while (0)
+static int32_t metadata2_mode;
+static uint32_t metadata2_legacy_calls;
+static int32_t metadata2_old(const uint8_t *path,R4FileInfo *out){(void)path;(void)out;metadata2_legacy_calls++;return -71;}
+static int32_t metadata2_info(const uint8_t *path,R4FileMetadata2 *out){
+    if(path[0]=='m')return 0;
+    *out=(R4FileMetadata2){.version=1,.size=sizeof(*out),.flags=1|4|8|32,.byte_size=UINT64_C(0x100000003),.backend_node=UINT64_C(0x100000001),.identity={.mount_generation=11,.namespace_generation=0,.object_hi=UINT64_C(0x100000001),.flags=1|8}};return 1;
+}
+static int32_t metadata2_page(const uint8_t *path,R4DirectoryMetadataCursor2 *cursor,R4DirectoryMetadataEntry2 *out,uint32_t capacity){
+    (void)path;if(metadata2_mode==1)return 0;if(metadata2_mode)return metadata2_mode;
+    if(!capacity)return cursor->flags==1?0:-1;if(cursor->scan.backend[0]==2)return -5;
+    uint64_t index=cursor->scan.backend[0];out[0]=(R4DirectoryMetadataEntry2){0};metadata2_info((const uint8_t *)"file",&out[0].info);out[0].info.identity.object_hi+=index;out[0].path[0]=(uint8_t)('A'+index);
+    cursor->flags=1;cursor->scan.change.mount_generation=11;cursor->scan.backend[0]++;return 1;
+}
+void sdk_metadata2_mode(int32_t value){metadata2_mode=value;}
+void sdk_metadata2_tables(R4XStartR4Sys2 *table){
+    metadata2_mode=0;metadata2_legacy_calls=0;
+    *table=(R4XStartR4Sys2){.magic=R4OS2_R4SYS_MAGIC,.abi_version=2,.size=sizeof(*table),.file_info=(uintptr_t)&metadata2_old,.file_metadata2=(uintptr_t)&metadata2_info,.directory_metadata_batch2=(uintptr_t)&metadata2_page};
+}
+int32_t sdk_metadata2_c_case(void){
+    R4XStartR4Sys2 table;sdk_metadata2_tables(&table);R4XStartImport import={.group_id=1,.resolved_version=2,.table=(uintptr_t)&table};
+    R4XStartContext2 raw={.magic=R4OS2_START_MAGIC,.abi_major=2,.size=sizeof(raw),.import_count=1,.imports=(uintptr_t)&import};R4OS2Context context;
+    WIRE_CHECK(!R4OS2ContextInit(&raw,&context),481);R4FileMetadata2 info={0};
+    WIRE_CHECK(R4SdkFileMetadata2(&context,(const uint8_t *)"file",&info)==1&&info.backend_node==UINT64_C(0x100000001)&&info.byte_size==UINT64_C(0x100000003),482);
+    WIRE_CHECK(R4SdkFileMetadata2Identity(&info)&&info.identity.namespace_generation==0,483);
+    WIRE_CHECK(R4SdkFileMetadata2(&context,(const uint8_t *)"missing",&info)==0,484);
+    R4DirectoryMetadataCursor2 cursor;R4DirectoryMetadataEntry2 row;
+    WIRE_CHECK(!R4SdkDirectoryMetadata2Init(&cursor),485);
+    WIRE_CHECK(R4SdkDirectoryMetadata2Batch(&context,0,&cursor,0,0)==-1,486);
+    for(uint32_t i=0;i<2;i++)WIRE_CHECK(R4SdkDirectoryMetadata2Batch(&context,(const uint8_t *)"dir",&cursor,&row,1)==1&&row.info.identity.object_hi==UINT64_C(0x100000001)+i,487);
+    WIRE_CHECK(R4SdkDirectoryMetadata2Batch(&context,0,&cursor,&row,1)==-5,488);
+    metadata2_mode=-10;WIRE_CHECK(R4SdkDirectoryMetadata2Batch(&context,0,&cursor,&row,1)==-10,489);
+    table.file_metadata2=0;WIRE_CHECK(R4SdkFileMetadata2(&context,(const uint8_t *)"file",&info)==-9002&&!metadata2_legacy_calls,490);return 0;
+}
 static uint32_t device_capture_calls;
 static int32_t device_capture(R4DeviceInventoryRecord *rows,uint32_t capacity,R4DeviceInventorySnapshotInfo *info){
     device_capture_calls++;uint32_t count=capacity<3?capacity:3;

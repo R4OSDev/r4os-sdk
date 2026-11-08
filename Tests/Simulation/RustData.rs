@@ -8,6 +8,9 @@ use r4os_sdk::{
     },
 };
 unsafe extern "C" {
+    fn sdk_metadata2_c_case() -> i32;
+    fn sdk_metadata2_tables(out: *mut abi::generation2::R4XStartR4Sys2);
+    fn sdk_metadata2_mode(value: i32);
     fn sdk_device_snapshot_c_case() -> i32;
     fn sdk_inventory_c_case() -> i32;
     fn sdk_transfer_c_case() -> i32;
@@ -15,6 +18,70 @@ unsafe extern "C" {
     fn sdk_wire_c_case() -> i32;
     fn sdk_data_c_case(manifest: *const u8, length: usize) -> i32;
     fn sdk_ico_c_case(bytes: *const u8, length: usize) -> i32;
+}
+#[test]
+fn wide_metadata_native_query_pages_and_returned_storage_keep_exact_values_and_loans() {
+    use core::mem::MaybeUninit;
+    use r4os_sdk::{metadata2, platform2::Context};
+    assert_eq!(unsafe { sdk_metadata2_c_case() }, 0);
+    let mut table = abi::generation2::R4XStartR4Sys2::default();
+    unsafe { sdk_metadata2_tables(&mut table) };
+    let imports = [abi::R4XStartImport {
+        group_id: 1,
+        resolved_version: 2,
+        table: &table as *const _ as u64,
+        ..Default::default()
+    }];
+    let raw = abi::generation2::R4XStartContext2 {
+        import_count: 1,
+        imports: imports.as_ptr() as u64,
+        ..Default::default()
+    };
+    let context = unsafe { Context::new(&raw) }.unwrap();
+    let info = metadata2::query(&context, c"file").unwrap().unwrap();
+    assert_eq!(info.backend_node, 0x100000001);
+    assert_eq!(metadata2::file_size(&info), Some(0x100000003));
+    assert_eq!(metadata2::identity(&info).unwrap().namespace_generation, 0);
+    assert!(metadata2::query(&context, c"missing").unwrap().is_none());
+    let mut rows = [MaybeUninit::uninit(); 1];
+    let mut directory = metadata2::Directory::new(&context, c"directory", &mut rows).unwrap();
+    assert_eq!(directory.validate(), Err(metadata2::Error(-1)));
+    unsafe { sdk_metadata2_mode(1) };
+    assert!(matches!(
+        directory.next_page().unwrap(),
+        metadata2::Page::Progress
+    ));
+    unsafe { sdk_metadata2_mode(0) };
+    for i in 0..2 {
+        let metadata2::Page::Rows(page) = directory.next_page().unwrap() else {
+            panic!("missing metadata page")
+        };
+        assert_eq!(page.len(), 1);
+        assert_eq!(page[0].info.identity.object_hi, 0x100000001 + i);
+        assert_eq!(page[0].path[0], b'A' + i as u8);
+    }
+    assert!(matches!(
+        directory.next_page().unwrap(),
+        metadata2::Page::End
+    ));
+    directory.validate().unwrap();
+    unsafe { sdk_metadata2_mode(-10) };
+    assert!(matches!(
+        directory.next_page().unwrap(),
+        metadata2::Page::Restart
+    ));
+    directory.reset();
+    unsafe { sdk_metadata2_mode(0) };
+    assert!(matches!(
+        directory.next_page().unwrap(),
+        metadata2::Page::Rows(_)
+    ));
+    let unknown = abi::FileMetadata2 {
+        byte_size: 42,
+        ..Default::default()
+    };
+    assert!(metadata2::identity(&unknown).is_none());
+    assert!(metadata2::file_size(&unknown).is_none());
 }
 #[test]
 fn shared_device_capture_pages_keep_one_collection_and_borrowed_complete_views() {

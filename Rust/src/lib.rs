@@ -10,6 +10,7 @@ pub mod c_facades;
 pub mod data;
 pub mod directory_page;
 pub mod device_snapshot;
+pub mod metadata2;
 pub mod driver;
 pub mod graphics;
 pub mod gui;

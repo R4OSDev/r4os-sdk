@@ -21,6 +21,9 @@ test "inventory owner staged views" {
 test "device snapshot owner complete frozen views" {
     _ = @import("r4os/device_snapshot_tests.zig");
 }
+test "metadata2 owner exact thin provider views" {
+    _ = @import("r4os/metadata2_tests.zig");
+}
 test {
     _ = @import("Tests/Simulation/DataOwners.zig");
     _ = @import("Tests/Simulation/WebOwners.zig");
