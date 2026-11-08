@@ -129,15 +129,15 @@
     },
     "libraries": {
       "repository": "https://github.com/R4OSDev/r4os-libraries.git",
-      "commit": "09c3efbf63dbde93453a6be06693ba24f1ac9a53",
-      "version": "0.64.50",
+      "commit": "7dc6e9ec2842906184b24d316eb6319c40de1522",
+      "version": "0.64.51",
       "files": {
-        "build.zig.zon": "0b6d6018c18030a0f06c1acb69d657aea690ead9889632cd4936f3515d84c759",
+        "build.zig.zon": "019ee44de07b1420a7363a87074916145b3b929b46998ca368abd99a38598068",
         "Shared/Rust/Cargo.toml": "431c38bac8b28467b0dad7842d1626397bb061eeb94f54f604276dc81036aec4"
       },
       "tree": {
         "algorithm": "r4os-files-sha256-lf-v1",
-        "sha256": "9e640ec8d7d440ed60d8e2334286d1b52fed1b943a17d31509b575f0f44c404d",
+        "sha256": "c0cdec6526a971480281a7c4abc3b4e7ac3c30cb16dce51ef72ae657c974767e",
         "files": [
           ".gitattributes",
           ".gitignore",
@@ -2532,6 +2532,7 @@
           "Shared/Native/budgeted_memory.zig",
           "Shared/Native/c11_threads.h",
           "Shared/Native/c_runtime.h",
+          "Shared/Native/cache_codec.zig",
           "Shared/Native/calendar.zig",
           "Shared/Native/cpp.cpp",
           "Shared/Native/cpp_runtime.h",
@@ -2576,6 +2577,7 @@
           "Shared/Tests/MediaConsumer/module.R4MF",
           "Shared/Tests/MediaConsumer/src/consumer.c",
           "Shared/Tests/MediaConsumer/src/main.rs",
+          "Shared/Tests/cache_codec.zig",
           "Shared/Tests/fixtures.rs",
           "Shared/Tests/media.c",
           "Shared/Tests/media_native.rs",
@@ -2592,8 +2594,8 @@
           "consumer_oracles.zig"
         ]
       },
-      "zig_hash": "r4os_libraries-0.64.50-dH4fNWkeeANOT9WDpiKil_0YGxcLms5UcVXS3BN_6Mx4",
-      "archive_url": "https://github.com/R4OSDev/r4os-libraries/archive/09c3efbf63dbde93453a6be06693ba24f1ac9a53.tar.gz",
+      "zig_hash": "r4os_libraries-0.64.51-dH4fNbRreAO_wqsePgieLuxxK0jrG2_5SEgwONAA02qQ",
+      "archive_url": "https://github.com/R4OSDev/r4os-libraries/archive/7dc6e9ec2842906184b24d316eb6319c40de1522.tar.gz",
       "archive_format": "tar.gz"
     },
     "recovery-contract": {
@@ -3018,9 +3020,9 @@
       "name": "R4ACO",
       "repository": "libraries",
       "path": "R4ACO",
-      "version": "0.1.7",
+      "version": "0.1.8",
       "target": "/R4OS/LIBS/R4ACO.R4L",
-      "manifest_sha256": "589793294ebffc58bcaa56226902437e772788756faa1c10bdd07257047c53af"
+      "manifest_sha256": "564e07162b2fa4cd3707f63f855b7b8db334db1f9e88c52cd4dde6e0075a68cd"
     },
     "r4amd": {
       "name": "R4AMD",
@@ -3074,9 +3076,9 @@
       "name": "R4NAK",
       "repository": "libraries",
       "path": "R4NAK",
-      "version": "0.1.5",
+      "version": "0.1.6",
       "target": "/R4OS/LIBS/R4NAK.R4L",
-      "manifest_sha256": "911abcf9437046ed6a302385227429a888b59828bf03ecb6256bbfdb31737f14"
+      "manifest_sha256": "0d717e2319fad3c8d99130f4e6ddb5aabbb2968e86a322986fe33be6ee5c7805"
     },
     "r4nv": {
       "name": "R4NV",

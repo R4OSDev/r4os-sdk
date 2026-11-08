@@ -46233,7 +46233,8 @@
         "local_contract_and_baseline",
         "language_libraries_current_60",
         "library_projection_current_61",
-        "current_providers_79"
+        "current_providers_79",
+        "canonical_compiler_cache_09027"
       ],
       "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten."
     },
@@ -46941,7 +46942,8 @@
         "source_inventory",
         "local_contract_and_baseline",
         "language_libraries_current_60",
-        "library_projection_current_61"
+        "library_projection_current_61",
+        "canonical_compiler_cache_09027"
       ],
       "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten."
     },
@@ -56433,6 +56435,21 @@
         "Original GB/SNES publication/PPU host cases are separate original-owner evidence; neither adapter is migrated.",
         "Private base contains earlier15 fixtures/release14 configuration with actual Kernel466; no current fresh installation, Windows or consumer migration claim."
       ]
+    },
+    "canonical_compiler_cache_09027": {
+      "complete": true,
+      "performed_in": "0.90.27",
+      "sdk": "0.64.170",
+      "libraries": "0.64.51 R4NAK0.1.6/R4ACO0.1.8",
+      "contract": "0.64.82 unchanged",
+      "kernel": "0.1.466 unchanged",
+      "report": "Docs/API/CanonicalCacheCodec.txt",
+      "scope": "Pure Shared/Native CanonicalCacheEnvelope and ScalarSchemaCodec behind both existing COMPILER_V1:1 runtime tables. Same C01 formats, independent unchanged vendor validators and actual compiler identities; no new platform/R4L table or consumer migration.",
+      "host_checks": "Original NAK ABI and ACO ABI+3real CPU compiler groups; both original and new provider sources match independent explicit Python struct/hashlib C01 fixtures.4new schema/envelope cases and7actual compiler negatives cover signed LE fields/padding/transients, schema/capacity/descriptor aliases and atomic refusal. Native Zig/C/Rust provider callers and the exact oldQuery1 artifact are separately qualified in the final provider receipt.",
+      "limits": [
+        "Host controlled ACOa5 compileridentity is format-only; final actual ACO native build identity changes with complete input closure and rejects old identities. NAK actual fixed compiler hash remains.",
+        "Synthetic native cache payloads prove real provider/codec transport, not physical GPU instruction admission/execution. No compiler job/TLS/finalizer/worker optimization, Windows runtime or app migration."
+      ]
     }
   },
   "wave_bindings": [
@@ -56696,7 +56713,7 @@
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.90.26",
+    "reviewed_in": "0.90.27",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -56777,7 +56794,9 @@
       "Repositories/SDK/Tests/Simulation/SubsystemParity.c",
       "Repositories/SDK/Tests/Simulation/RustSubsystem.rs",
       "Repositories/SDK/Tests/Simulation/PublishedFrameParity.c",
-      "Repositories/SDK/Tests/Simulation/PublishedFrame.rs"
+      "Repositories/SDK/Tests/Simulation/PublishedFrame.rs",
+      "Repositories/Libraries/R4NAK/Source/cache.zig",
+      "Repositories/Libraries/R4ACO/Source/cache.zig"
     ],
     "files": [
       {
@@ -56935,6 +56954,10 @@
       {
         "path": "Repositories/Libraries/R4ACO/Contract/LibraryContract.json",
         "sha256": "1f15b4524b73ae0e628f05d3d55e7377ba1155f8e68921cff7f64f195bb54084"
+      },
+      {
+        "path": "Repositories/Libraries/R4ACO/Source/cache.zig",
+        "sha256": "20af0287ea278759ac27a70c67b6fa8c197a7493ee1572e324b5c63f907cf113"
       },
       {
         "path": "Repositories/Libraries/R4AMD/Bindings/C/r4amd.h",
@@ -57357,6 +57380,10 @@
         "sha256": "2a67e3cdeb7e6aaeb90dbbbd512acf62ef275bfbe9a63781d2e3cffaa2e6da60"
       },
       {
+        "path": "Repositories/Libraries/R4NAK/Source/cache.zig",
+        "sha256": "96d2b7600b655687ab0b59e53e80dc8470ca8969aa33a3b2e77169462c0bffe5"
+      },
+      {
         "path": "Repositories/Libraries/R4NV/Bindings/C/r4nv.h",
         "sha256": "d9dd92fe112cd1fb7db4b3a3402bc41b65835c1c4f851f892066aeb6add51b39"
       },
@@ -57709,6 +57736,10 @@
         "sha256": "31bacf26a40c38bde4caae2be87af1abdd0d3fe62d3c4016e1acc62ed04c290e"
       },
       {
+        "path": "Repositories/Libraries/Shared/Native/cache_codec.zig",
+        "sha256": "1133efd40dd4b77d305cd29f99400750e2fa588338fd76f413e545838d0409c6"
+      },
+      {
         "path": "Repositories/Libraries/Shared/Native/calendar.zig",
         "sha256": "983537c80fddd66662672d22ed70babec5af490329e1874e5f0f79b2abb9de9c"
       },
@@ -57861,6 +57892,10 @@
         "sha256": "947335c510bd8a9762af0caed28affc8dad06622e60f4c62f8aad9588592863b"
       },
       {
+        "path": "Repositories/Libraries/Shared/Tests/cache_codec.zig",
+        "sha256": "f41dd559b4e630da428099eb3f73d11fc63084e836df17a7e361926599bab923"
+      },
+      {
         "path": "Repositories/Libraries/Shared/Tests/fixtures.rs",
         "sha256": "5225f0f8c4339dfa7ec76c8963abd482cec9254dbd1e38b681c62fdf1f9a8cba"
       },
@@ -57910,7 +57945,7 @@
       },
       {
         "path": "Repositories/SDK/Profiles/Components.json",
-        "sha256": "4f61d9de2f47ada4401a576bddef40f08893763975f18506ece9293f8409c70f"
+        "sha256": "57296aaad785e0b1d4839b3ba3f59aeb265b2c9ad167fc852652a8936265d7bb"
       },
       {
         "path": "Repositories/SDK/Profiles/Tools.json",
@@ -58934,7 +58969,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "614c8aeef8dfbcd3f6a527b4997cc270ae868b3c159e8387f7336cef8fb7a518"
+        "sha256": "9bf81a7e1d4f827449a5ce701b6fdbf35bbd044ad6de6aaeef5f58ceddfa6c2c"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -60894,7 +60929,9 @@
         "zig": [
           "Repositories/Libraries/R4ACO/Bindings/Zig/r4aco.zig",
           "Repositories/Libraries/R4ACO/Bindings/Zig/shaders.zig",
-          "Repositories/Libraries/R4ACO/Bindings/Zig/worker.zig"
+          "Repositories/Libraries/R4ACO/Bindings/Zig/worker.zig",
+          "Repositories/Libraries/R4ACO/Source/cache.zig",
+          "Repositories/Libraries/Shared/Native/cache_codec.zig"
         ],
         "c": [
           "Repositories/Libraries/R4ACO/Bindings/C/r4aco.h",
@@ -60914,7 +60951,8 @@
           "gui_host_backpressure_08832",
           "audio_selection_08856",
           "desktop_actions_08898",
-          "gui_title_08947"
+          "gui_title_08947",
+          "canonical_compiler_cache_09027"
         ]
       },
       {
@@ -61093,7 +61131,9 @@
         "id": "library-R4NAK",
         "zig": [
           "Repositories/Libraries/R4NAK/Bindings/Zig/r4nak.zig",
-          "Repositories/Libraries/R4NAK/Bindings/Zig/worker.zig"
+          "Repositories/Libraries/R4NAK/Bindings/Zig/worker.zig",
+          "Repositories/Libraries/R4NAK/Source/cache.zig",
+          "Repositories/Libraries/Shared/Native/cache_codec.zig"
         ],
         "c": [
           "Repositories/Libraries/R4NAK/Bindings/C/r4nak.h",
@@ -61112,7 +61152,8 @@
           "gui_host_backpressure_08832",
           "audio_selection_08856",
           "desktop_actions_08898",
-          "gui_title_08947"
+          "gui_title_08947",
+          "canonical_compiler_cache_09027"
         ]
       },
       {
