@@ -15586,6 +15586,79 @@ pub struct R4SdkPollRemaining {
     pub r#time: R4SdkBudgetValue,
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkPollRemaining>() == 32); assert!(core::mem::align_of::<R4SdkPollRemaining>() == 8); assert!(core::mem::offset_of!(R4SdkPollRemaining, r#kind) == 0); assert!(core::mem::offset_of!(R4SdkPollRemaining, r#outcome) == 4); assert!(core::mem::offset_of!(R4SdkPollRemaining, r#iterations) == 8); assert!(core::mem::offset_of!(R4SdkPollRemaining, r#time) == 16); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWireSpan {
+    pub r#address: u64,
+    pub r#length: u64,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWireSpan>() == 16); assert!(core::mem::align_of::<R4SdkWireSpan>() == 8); assert!(core::mem::offset_of!(R4SdkWireSpan, r#address) == 0); assert!(core::mem::offset_of!(R4SdkWireSpan, r#length) == 8); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWireReader {
+    pub r#address: u64,
+    pub r#length: u64,
+    pub r#position: u64,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWireReader>() == 24); assert!(core::mem::align_of::<R4SdkWireReader>() == 8); assert!(core::mem::offset_of!(R4SdkWireReader, r#address) == 0); assert!(core::mem::offset_of!(R4SdkWireReader, r#length) == 8); assert!(core::mem::offset_of!(R4SdkWireReader, r#position) == 16); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWireWriter {
+    pub r#address: u64,
+    pub r#length: u64,
+    pub r#position: u64,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWireWriter>() == 24); assert!(core::mem::align_of::<R4SdkWireWriter>() == 8); assert!(core::mem::offset_of!(R4SdkWireWriter, r#address) == 0); assert!(core::mem::offset_of!(R4SdkWireWriter, r#length) == 8); assert!(core::mem::offset_of!(R4SdkWireWriter, r#position) == 16); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWireMark {
+    pub r#address: u64,
+    pub r#length: u64,
+    pub r#position: u64,
+    pub r#kind: u32,
+    pub r#reserved: u32,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWireMark>() == 32); assert!(core::mem::align_of::<R4SdkWireMark>() == 8); assert!(core::mem::offset_of!(R4SdkWireMark, r#address) == 0); assert!(core::mem::offset_of!(R4SdkWireMark, r#length) == 8); assert!(core::mem::offset_of!(R4SdkWireMark, r#position) == 16); assert!(core::mem::offset_of!(R4SdkWireMark, r#kind) == 24); assert!(core::mem::offset_of!(R4SdkWireMark, r#reserved) == 28); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkChecksum16 {
+    pub r#sum: u32,
+    pub r#pending: u8,
+    pub r#odd: u8,
+    pub r#reserved: u16,
+    pub r#bytes: u64,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkChecksum16>() == 16); assert!(core::mem::align_of::<R4SdkChecksum16>() == 8); assert!(core::mem::offset_of!(R4SdkChecksum16, r#sum) == 0); assert!(core::mem::offset_of!(R4SdkChecksum16, r#pending) == 4); assert!(core::mem::offset_of!(R4SdkChecksum16, r#odd) == 5); assert!(core::mem::offset_of!(R4SdkChecksum16, r#reserved) == 6); assert!(core::mem::offset_of!(R4SdkChecksum16, r#bytes) == 8); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkNativePolicy {
+    pub r#required_bytes: u64,
+    pub r#alignment: u64,
+    pub r#version_offset: u32,
+    pub r#size_offset: u32,
+    pub r#expected_version: u32,
+    pub r#size_mode: u32,
+    pub r#direction: u32,
+    pub r#allowed_flags: u32,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkNativePolicy>() == 40); assert!(core::mem::align_of::<R4SdkNativePolicy>() == 8); assert!(core::mem::offset_of!(R4SdkNativePolicy, r#required_bytes) == 0); assert!(core::mem::offset_of!(R4SdkNativePolicy, r#alignment) == 8); assert!(core::mem::offset_of!(R4SdkNativePolicy, r#version_offset) == 16); assert!(core::mem::offset_of!(R4SdkNativePolicy, r#size_offset) == 20); assert!(core::mem::offset_of!(R4SdkNativePolicy, r#expected_version) == 24); assert!(core::mem::offset_of!(R4SdkNativePolicy, r#size_mode) == 28); assert!(core::mem::offset_of!(R4SdkNativePolicy, r#direction) == 32); assert!(core::mem::offset_of!(R4SdkNativePolicy, r#allowed_flags) == 36); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkBlockLimits {
+    pub r#capacity_blocks: u64,
+    pub r#max_blocks: u64,
+    pub r#max_bytes: u64,
+    pub r#lba_bits: u32,
+    pub r#buffer_mode: u32,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkBlockLimits>() == 32); assert!(core::mem::align_of::<R4SdkBlockLimits>() == 8); assert!(core::mem::offset_of!(R4SdkBlockLimits, r#capacity_blocks) == 0); assert!(core::mem::offset_of!(R4SdkBlockLimits, r#max_blocks) == 8); assert!(core::mem::offset_of!(R4SdkBlockLimits, r#max_bytes) == 16); assert!(core::mem::offset_of!(R4SdkBlockLimits, r#lba_bits) == 24); assert!(core::mem::offset_of!(R4SdkBlockLimits, r#buffer_mode) == 28); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkBlockShape {
+    pub r#byte_count: u64,
+    pub r#last_lba: u64,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkBlockShape>() == 16); assert!(core::mem::align_of::<R4SdkBlockShape>() == 8); assert!(core::mem::offset_of!(R4SdkBlockShape, r#byte_count) == 0); assert!(core::mem::offset_of!(R4SdkBlockShape, r#last_lba) == 8); };
 pub const R4SdkGuiStyle_TYPE: u32 = 0;
 pub const R4SdkGuiFontSet_TYPE: u32 = 1;
 pub const R4SdkGuiTextRole_TYPE: u32 = 2;
@@ -35672,4 +35745,20 @@ unsafe extern "C" {
     pub fn R4SdkDriverPollTimed(p0: R4SdkClockSample, p1: R4Timeout, p2: u64, p3: u32, p4: *mut R4SdkDriverPollBudget) -> i32;
     pub fn R4SdkDriverPollStep(p0: *mut R4SdkDriverPollBudget, p1: *const R4SdkClockSample, p2: u32) -> u32;
     pub fn R4SdkDriverPollRemaining(p0: *mut R4SdkDriverPollBudget, p1: *const R4SdkClockSample, p2: *mut R4SdkPollRemaining) -> i32;
+    pub fn R4SdkWireReaderInit(p0: *const u8, p1: u64, p2: *mut R4SdkWireReader) -> i32;
+    pub fn R4SdkWireWriterInit(p0: *mut u8, p1: u64, p2: *mut R4SdkWireWriter) -> i32;
+    pub fn R4SdkWireTake(p0: *mut R4SdkWireReader, p1: u64, p2: *mut R4SdkWireSpan) -> i32;
+    pub fn R4SdkWireReadInteger(p0: *mut R4SdkWireReader, p1: u32, p2: u32, p3: *mut u64) -> i32;
+    pub fn R4SdkWirePut(p0: *mut R4SdkWireWriter, p1: *const u8, p2: u64) -> i32;
+    pub fn R4SdkWireWriteInteger(p0: *mut R4SdkWireWriter, p1: u32, p2: u32, p3: u64) -> i32;
+    pub fn R4SdkWireReaderMark(p0: *const R4SdkWireReader, p1: *mut R4SdkWireMark) -> i32;
+    pub fn R4SdkWireWriterMark(p0: *const R4SdkWireWriter, p1: *mut R4SdkWireMark) -> i32;
+    pub fn R4SdkWireReaderRestore(p0: *mut R4SdkWireReader, p1: R4SdkWireMark) -> i32;
+    pub fn R4SdkWireWriterRestore(p0: *mut R4SdkWireWriter, p1: R4SdkWireMark) -> i32;
+    pub fn R4SdkChecksumInit(p0: *mut R4SdkChecksum16) -> i32;
+    pub fn R4SdkChecksumAdd(p0: *mut R4SdkChecksum16, p1: *const u8, p2: u64) -> i32;
+    pub fn R4SdkChecksumFinish(p0: *const R4SdkChecksum16, p1: *mut u16) -> i32;
+    pub fn R4SdkNativeAdmit(p0: *const R4ProtocolBuffer, p1: R4SdkNativePolicy, p2: u32, p3: *mut u64) -> i32;
+    pub fn R4SdkNativePublish(p0: *mut R4ProtocolBuffer, p1: R4SdkNativePolicy, p2: u32) -> i32;
+    pub fn R4SdkBlockTransfer(p0: u64, p1: u64, p2: u64, p3: u64, p4: R4SdkBlockLimits, p5: *mut R4SdkBlockShape) -> i32;
 }

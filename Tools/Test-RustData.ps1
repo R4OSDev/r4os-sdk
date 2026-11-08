@@ -54,7 +54,10 @@ r4os-sdk={path="$($sdk.Replace('\','/'))/Rust"}
             @('E0277','fn unpin<T:Unpin>(){} pub fn bad(){unpin::<r4os_sdk::data::DataStorage>();}'),
             @('E0505','pub fn bad(d:&r4os_sdk::data::Data<''_,''_>,b:alloc::vec::Vec<u8>){let mut depth=[0;8];let mut j=d.json(&b,&mut depth).unwrap();drop(b);let _=j.next_token();} extern crate alloc;'),
             @('E0499','pub fn bad(a:&mut r4os_sdk::data::Arena<''_,''_>,b:&[u8]){let m=a.manifest(b"module.R4MF",b).unwrap();let _=a.reset();let _=m.name();}'),
-            @('E0502','pub fn bad(p:&mut r4os_sdk::data::SearchParams){let v=p.get(b"a").unwrap();let _=p.set(b"a",b"b");let _=v.map(|b|b.len());}')
+            @('E0502','pub fn bad(p:&mut r4os_sdk::data::SearchParams){let v=p.get(b"a").unwrap();let _=p.set(b"a",b"b");let _=v.map(|b|b.len());}'),
+            @('E0133','pub fn bad(b:&r4os_sdk::abi::ProtocolBuffer){let _=r4os_sdk::wire::native::Input::<u64>::new(b,r4os_sdk::wire::native::SizeMode::Exact,r4os_sdk::wire::native::Header::NONE,0);}'),
+            @('E0505','pub fn bad(b:alloc::vec::Vec<u8>){let mut c=r4os_sdk::wire::Reader::new(&b).unwrap();let v=c.take(1).unwrap();drop(b);core::hint::black_box(v);} extern crate alloc;'),
+            @('E0502','pub fn bad(b:&mut[u8]){let mut w=r4os_sdk::wire::Writer::new(b).unwrap();let v=w.written().unwrap();let _=w.put(b"x");core::hint::black_box(v);}')
         )
         foreach($case in $cases){
             [IO.File]::WriteAllText($negative,$case[1],[Text.UTF8Encoding]::new($false))

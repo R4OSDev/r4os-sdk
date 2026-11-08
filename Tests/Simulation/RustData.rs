@@ -8,8 +8,137 @@ use r4os_sdk::{
     },
 };
 unsafe extern "C" {
+    fn sdk_wire_c_case() -> i32;
     fn sdk_data_c_case(manifest: *const u8, length: usize) -> i32;
     fn sdk_ico_c_case(bytes: *const u8, length: usize) -> i32;
+}
+#[test]
+fn shared_wire_cursor_checksum_and_geometry_keep_atomic_fields_and_explicit_units() {
+    use r4os_sdk::wire::*;
+    assert_eq!(unsafe { sdk_wire_c_case() }, 0);
+    let bytes = [0xff, 1, 2, 3, 4, 5, 6, 7, 8];
+    let mut reader = Reader::new(&bytes[1..]).unwrap();
+    assert_eq!(reader.read_u16(Order::Big), Ok(0x0102));
+    let mark = reader.checkpoint().unwrap();
+    assert_eq!(reader.read_u64(Order::Little), Err(Error::Truncated));
+    assert_eq!(reader.position(), 2);
+    reader.restore(&mark).unwrap();
+    assert_eq!(reader.take(2).unwrap(), [3, 4]);
+    assert_eq!(reader.read_u32(Order::Little), Ok(0x08070605));
+    let mut output = [0u8; 6];
+    {
+        let mut writer = Writer::new(&mut output).unwrap();
+        writer.write_u16(0x1234, Order::Big).unwrap();
+        let mark = writer.checkpoint().unwrap();
+        writer.write_u32(0x55667788, Order::Little).unwrap();
+        assert_eq!(writer.write_u8(1), Err(Error::Capacity));
+        writer.restore(&mark).unwrap();
+        writer.write_u8(0xff).unwrap();
+        assert_eq!(writer.written().unwrap(), [0x12, 0x34, 0xff]);
+    }
+    assert_eq!(output, [0x12, 0x34, 0xff, 0x77, 0x66, 0x55]);
+    let mut sum = InternetChecksum16::new().unwrap();
+    sum.add(&[1]).unwrap();
+    sum.add(&[2, 3]).unwrap();
+    assert_eq!(sum.finish(), Ok(0xfbfd));
+    assert_eq!(sum.finish(), Ok(0xfbfd));
+    sum.add(&[4]).unwrap();
+    assert_eq!(sum.finish(), Ok(0xfbf9));
+    assert_eq!(sum.bytes_processed(), 4);
+    let limits = BlockLimits {
+        capacity_blocks: 1000,
+        max_blocks: 128,
+        max_bytes: 1048576,
+        lba_bits: 28,
+        buffer_mode: BufferMode::Exact,
+    };
+    assert_eq!(
+        block_transfer(996, 4, 4096, 16384, limits),
+        Ok(BlockShape {
+            byte_count: 16384,
+            last_lba: 999
+        })
+    );
+    assert_eq!(
+        block_transfer(997, 4, 4096, 16384, limits),
+        Err(BlockError::OutOfRange)
+    );
+    assert_eq!(
+        block_transfer(u64::MAX, 2, 1, 2, limits),
+        Err(BlockError::Overflow)
+    );
+}
+#[test]
+fn native_record_intake_is_unsafe_and_output_does_not_read_uninitialized_payload() {
+    use r4os_sdk::wire::native::*;
+    #[repr(C)]
+    #[derive(Clone, Copy)]
+    struct Record {
+        version: u32,
+        size: u32,
+        value: u64,
+    }
+    let header = Header {
+        version_offset: Some(0),
+        size_offset: Some(4),
+        expected_version: 1,
+    };
+    let mut record = Record {
+        version: 1,
+        size: 16,
+        value: 55,
+    };
+    let mut buffer = abi::ProtocolBuffer {
+        data: (&mut record as *mut Record).cast(),
+        len: 16,
+        capacity: 16,
+        flags: 0,
+        reserved: 0,
+    };
+    {
+        let input = unsafe { Input::<Record>::new(&buffer, SizeMode::Exact, header, 0) }.unwrap();
+        assert_eq!(input.get().value, 55);
+    }
+    record.version = 2;
+    // Renew the raw payload loan after the direct mutation of its owner.
+    buffer.data = (&mut record as *mut Record).cast();
+    assert!(matches!(
+        unsafe { Input::<Record>::new(&buffer, SizeMode::Exact, header, 0) },
+        Err(Error::UnsupportedVersion)
+    ));
+    let mut output = core::mem::MaybeUninit::<Record>::uninit();
+    buffer = abi::ProtocolBuffer {
+        data: output.as_mut_ptr().cast(),
+        len: 0,
+        capacity: 16,
+        flags: 0,
+        reserved: 0,
+    };
+    {
+        let mut view =
+            unsafe { Output::<Record>::new(&mut buffer, SizeMode::Exact, header, 0) }.unwrap();
+        assert_eq!(
+            view.write(Record {
+                version: 2,
+                size: 16,
+                value: 7
+            }),
+            Err(Error::UnsupportedVersion)
+        );
+    }
+    assert_eq!(buffer.len, 0);
+    {
+        let mut view =
+            unsafe { Output::<Record>::new(&mut buffer, SizeMode::Exact, header, 0) }.unwrap();
+        view.write(Record {
+            version: 1,
+            size: 16,
+            value: 99,
+        })
+        .unwrap();
+    }
+    assert_eq!(buffer.len, 16);
+    assert_eq!(unsafe { output.assume_init() }.value, 99);
 }
 const MANIFEST: &[u8] = include_bytes!("../Fixtures/Data/manifest.r4mf.txt");
 #[test]

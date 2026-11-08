@@ -5,6 +5,69 @@ Dieses Repository enthaelt das hostneutrale Kern-SDK von R4OS: Zig- und
 C-Fassaden, Buildprofile, Templates, Smokeprojekte sowie die generischen
 Werkzeuge R4XBuilder, R4LContractGen und ModuleCatalog.
 
+Reine Binaer-/Native-/Checksum-/Blockhelfer ab0.64.160
+----------------------------------------------------
+binary_cursor, native_protocol_view, internet_checksum und block_transfer
+besitzen die gemeinsame Freestanding-Mechanik. C wire_helpers.h und Rust
+wire verwenden denselben originalen Zig-Besitzer im bestehenden statischen
+SDK-Fassadenobjekt. Es gibt weder eine zusaetzliche Runtime-R4L noch eine
+Kernelregistry oder neue I/O-, Mapping-, Pinning- oder Geraetehoheit.
+Manifestbasierte C-Generation2-Builds fuer R4D/R4P und Programme binden die
+vorhandenen statischen Fassadenobjekte ein; dafuer wird kein IMPORT ergaenzt.
+
+Reader/Writer verarbeiten ausschliesslich Wirebytes mit ausdruecklichem
+Little-/Big-Endian. Ganze Felder werden vor Mutation geprueft; Fehler lassen
+Position, Ergebnis und Ausgabebytes unveraendert. C-Integerbreiten sind1/2/4/8
+Bytes; Werte oberhalb der gewaehlten Breite ergeben ValueOverflow. put hat
+Memmove-Semantik bei ueberlappenden Bytebereichen. Checkpoints binden exakten
+geliehenen Span samt Richtung, nicht eine globale Cursor-/Allokations-ID.
+Gleiche Spans/Richtungen duerfen Marks innerhalb derselben gueltigen Leihe
+teilen. Restore setzt nur die Position zurueck, niemals geschriebene Bytes.
+Zustand und geliehene Speicherbereiche bleiben getrennt und caller-eigen.
+
+Native Aufnahme ist ein anderer Vertrag. ProtocolBuffer.len/capacity,
+Alignment, explizites Exact/Prefix, native u32-Version-/Sizefelder und
+In-/Out-/InOut-Richtung werden geprueft. UINT32_MAX als Feldoffset bedeutet
+ausdruecklich keinen Headercheck; nicht Null als Ersatz fuer eine Version.
+Flags sind keine Richtung und keine Offloadberechtigung; erlaubt sind nur
+die vom fachlichen Aufrufer ausdruecklich benannten Bits. Groessere Praefixe
+brauchen dieselbe erwartete Version und eine passende initialisierte Laenge.
+Outputaufnahme liest keinen Payload; Kandidatenheader werden vor Write
+geprueft, len erst nach der wirklichen Initialisierung veroeffentlicht.
+Die rohe Publish-API erwartet tatsaechlich initialisierte written_bytes und
+aendert bei Fehler die Transportmetadaten nicht. Zuvor vom Caller selbst
+geschriebene Payloadbytes werden dabei nicht zurueckgerollt.
+
+Keine Bereichspruefung beweist Mapping, Objektgueltigkeit oder Lebensdauer.
+Native Pointeransichten setzen wirkliche initialisierte native POD-Records
+voraus, keine beliebigen Wirebytes. Rust-Input/InOut/Output-Konstruktoren
+sind unsafe: gueltiges natives Layout und Bitrepraesentation, keine Rust-
+Referenzen/Ownership, stabile getrennte Metadaten sowie gueltige immutable
+Input- oder exklusive Outputspeicherleihen fuer den Dispatch. Outputpayload
+darf anfangs uninitialisiert sein. Sichere Reader/Writer halten dagegen die
+urspruenglichen Rust-Sliceleihen; eine Ansicht verlaengert keine Modulleihe.
+Headeroffsets bezeichnen echte initialisierte native u32-Felder des Typs,
+keine Padding- oder unbekannten Repraesentationsbytes.
+
+InternetChecksum16 haelt gefaltete16Bit-Summe, ausstehenden hohen Oddbyte
+und geprueften64Bit-Bytezaehler ueber Chunkgrenzen. Finish ist ein lesender
+Snapshot; Wiederholung und anschliessendes Add sind erlaubt. Leere Eingabe
+ergibtffff, eine echte rohe Null wird nicht fuer UDP umgeschrieben. Der
+Protokollbesitzer liefert seine ausdruecklichen Pseudoheaderbytes zuerst
+und behaelt Nullchecksum-, Paket- und qualifizierte Offloadpolitik. Referenz
+fuer Paarung/Carry: RFC1071 (informational),
+https://www.rfc-editor.org/info/rfc1071/ . Keine API fuer den dort erwaehnten
+separaten nachtraeglichen Austausch eines Headerworts wird eingefuehrt.
+
+BlockTransfer prueft positive bekannte Blockgroesse/Kapazitaet, Count,
+checked Bytezahl/letzteLBA, Backend-Maxima und LBA-Bits. Exact und AtLeast
+fuer Pufferlaengen sind explizit; kein fester512Byte-Sektor, kein unbekanntes
+Limit als verifizierter unendlicher Bereich. LBA-Bits sind keine DMA-Bits.
+Flush, unbekannte Discovery und Geraete-/Pufferhoheit verbleiben beim
+Backend. Eine gueltige Shape ist kein Nachweis erfolgreicher I/O oder DMA.
+Bestehende Protokolle, Treiber und ihre unabhaengigen Orakel bleiben erhalten;
+die Verbraucherumstellung erfolgt spaeter gesondert.
+
 Gepruefte Zeit- und Pollbudgets ab0.64.159
 ---------------------------------------
 time_contract.checked und driver_poll_budget besitzen die neue reine SDK-

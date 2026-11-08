@@ -425,7 +425,8 @@
         "Repositories/SDK/Tests/Build/RustGraph",
         "Repositories/SDK/Smoke/AppEntry/C/Console",
         "platform_generation2_09014",
-        "technical_generation2_09015"
+        "technical_generation2_09015",
+        "wire_native_data_09017"
       ],
       "shared_core": "Gemeinsamer R4MF-Parser, Builder, Packager und PS7-Orchestrierung."
     },
@@ -949,20 +950,28 @@
         "crypto_sha256",
         "web_crypto",
         "web_url",
-        "web_encoding"
+        "web_encoding",
+        "binary_cursor",
+        "native_protocol_view",
+        "internet_checksum",
+        "block_transfer"
       ],
-      "semantics": "Callerallokation/Laengen/Ueberlauf/UTF-8/Wirewerte, Formatfehler und Teiloutput erhalten. RDRAND/ISA nur mit frischer OS-Zulassung und echten Fehlerquittungen; Softwarepfad ist aktuelle Hardwarepolitik.",
+      "semantics": "Callerallokation/Laengen/Ueberlauf/UTF-8/Wirewerte, Formatfehler und Teiloutput erhalten. RDRAND/ISA nur mit frischer OS-Zulassung und echten Fehlerquittungen; Softwarepfad ist aktuelle Hardwarepolitik. SDK160: explicit common pure wire/native/checksum/block helpers; actual static C/Rust implementation and early R4D qualification. Protocol policy, mapped native representation, storage loans and hardware completion remain with their existing owners; no consumer migration.",
       "current_only": "current_function",
       "rust": {
         "state": "original_data_helpers_qualified",
         "source": "Repositories/SDK/Rust/src/data/mod.rs",
         "gap": "",
-        "raw": "Repositories/SDK/Rust/src/c_facades.rs"
+        "raw": "Repositories/SDK/Rust/src/c_facades.rs",
+        "sources": [
+          "Repositories/SDK/Rust/src/wire.rs"
+        ]
       },
       "c": {
         "state": "original_data_helpers_qualified",
         "sources": [
-          "Repositories/SDK/Shared/C/include/r4os/data_helpers.h"
+          "Repositories/SDK/Shared/C/include/r4os/data_helpers.h",
+          "Repositories/SDK/Shared/C/include/r4os/wire_helpers.h"
         ],
         "gap": ""
       },
@@ -972,7 +981,8 @@
         "web_current_62",
         "ico_bulk_08840",
         "audio_reply_08842",
-        "platform_generation2_09014"
+        "platform_generation2_09014",
+        "wire_native_data_09017"
       ],
       "shared_core": "Grosse Parser/Codec-/Kryptokerne einmal beim SDK-/Librarybesitzer; besitzereigene C-ABI bzw. passende existierende R4L in61 begruenden. Kein Kopieren von JSON/ZIP/Entropiealgorithmen in drei Sprachen.",
       "qualification": {
@@ -1197,9 +1207,13 @@
         "driver_semaphores",
         "driver_cpu_power",
         "technical2",
-        "driver_poll_budget"
+        "driver_poll_budget",
+        "binary_cursor",
+        "native_protocol_view",
+        "internet_checksum",
+        "block_transfer"
       ],
-      "semantics": "Original DriverApi39/672 helpers and owner limits retained; explicit DriverApi2/DPI2 revision1/656 raw borrowed views/Init2 and typed AUB2/status80. Shared real IRQ/task/work/DMA/resource owner; no automatic quiescence or broad advancedHelper2 migration. SDK159: new explicit checked clock-bound budgets, tagged finiteMAX, and pure bounded DriverPollBudget; original wait/zero/saturating ABI behavior and resource ownership retained. No consumer migration or automatic sleep/quiescence.",
+      "semantics": "Original DriverApi39/672 helpers and owner limits retained; explicit DriverApi2/DPI2 revision1/656 raw borrowed views/Init2 and typed AUB2/status80. Shared real IRQ/task/work/DMA/resource owner; no automatic quiescence or broad advancedHelper2 migration. SDK159: new explicit checked clock-bound budgets, tagged finiteMAX, and pure bounded DriverPollBudget; original wait/zero/saturating ABI behavior and resource ownership retained. No consumer migration or automatic sleep/quiescence. SDK160: explicit common pure wire/native/checksum/block helpers; actual static C/Rust implementation and early R4D qualification. Protocol policy, mapped native representation, storage loans and hardware completion remain with their existing owners; no consumer migration.",
       "current_only": "current_function",
       "rust": {
         "state": "current_shared_native_core_and_typed_explicit_owners_qualified",
@@ -1207,7 +1221,8 @@
           "Repositories/SDK/Rust/src/driver.rs",
           "Repositories/SDK/Rust/src/c_facades.rs",
           "Repositories/SDK/Rust/src/technical2.rs",
-          "Repositories/SDK/Rust/src/time_budget.rs"
+          "Repositories/SDK/Rust/src/time_budget.rs",
+          "Repositories/SDK/Rust/src/wire.rs"
         ],
         "gap": "Hardware-specific ring/reset/quiescence protocols remain with the actual device driver; advanced native helpers unsafe. Windows execution and physical hotplug not qualified."
       },
@@ -1228,7 +1243,8 @@
           "Repositories/SDK/Shared/C/include/r4os/driver.h",
           "Repositories/SDK/Shared/C/include/r4os/driver_lifecycle.h",
           "Repositories/SDK/Shared/C/include/r4os/technical2.h",
-          "Repositories/SDK/Shared/C/include/r4os/poll_budget.h"
+          "Repositories/SDK/Shared/C/include/r4os/poll_budget.h",
+          "Repositories/SDK/Shared/C/include/r4os/wire_helpers.h"
         ],
         "gap": "Explicit per-device backing, callbacks and reset quiescence remain owner obligations; C has no implicit destructor."
       },
@@ -1236,7 +1252,8 @@
         "drivers_current_67",
         "audio_duration_retirement_08859",
         "technical_generation2_09015",
-        "time_poll_budgets_09016"
+        "time_poll_budgets_09016",
+        "wire_native_data_09017"
       ],
       "shared_core": {
         "source": "Repositories/SDK/r4os/driver_helper_owners.zig",
@@ -1251,29 +1268,36 @@
       "wave": "0.86.68",
       "title": "Protokollrollen",
       "modules": [
-        "r4p"
+        "r4p",
+        "binary_cursor",
+        "native_protocol_view",
+        "internet_checksum",
+        "block_transfer"
       ],
-      "semantics": "Original ProtocolApi1/120 and explicit distinct PPI2/120 with ProtocolInit2:2; genuine per-module owner and typed role/dispatch. Same resident loader, no implicit code unloading or automatic lifetime closure.",
+      "semantics": "Original ProtocolApi1/120 and explicit distinct PPI2/120 with ProtocolInit2:2; genuine per-module owner and typed role/dispatch. Same resident loader, no implicit code unloading or automatic lifetime closure. SDK160: explicit common pure wire/native/checksum/block helpers; actual static C/Rust implementation and early R4D qualification. Protocol policy, mapped native representation, storage loans and hardware completion remain with their existing owners; no consumer migration.",
       "current_only": "current_function",
       "rust": {
         "state": "current_typed_context_and_real_r4p_lifecycle_qualified",
         "source": "Repositories/SDK/Rust/src/protocol.rs",
         "gap": "Advanced optional ABI callbacks remain unsafe; physical readiness and module code unload are outside the original resident contract.",
         "sources": [
-          "Repositories/SDK/Rust/src/technical2.rs"
+          "Repositories/SDK/Rust/src/technical2.rs",
+          "Repositories/SDK/Rust/src/wire.rs"
         ]
       },
       "c": {
         "state": "current_context_and_genuine_c_r4p_root_qualified",
         "sources": [
           "Repositories/SDK/Shared/C/include/r4os/protocol.h",
-          "Repositories/SDK/Shared/C/include/r4os/technical2.h"
+          "Repositories/SDK/Shared/C/include/r4os/technical2.h",
+          "Repositories/SDK/Shared/C/include/r4os/wire_helpers.h"
         ],
         "gap": "Caller preserves exact PPI scope, stable backing and linear logical leases; no automatic destructor."
       },
       "evidence": [
         "protocols_current_68",
-        "technical_generation2_09015"
+        "technical_generation2_09015",
+        "wire_native_data_09017"
       ],
       "shared_core": "Original ProtocolApi and SDK protocol.Context thin forwarders; native exact-argument oracle verifies the same nine methods, no second protocol dispatcher."
     },
@@ -2848,6 +2872,38 @@
       "expression": "@import(\"r4os/driver_poll_budget.zig\")",
       "capability": "driver",
       "wave": "0.90.16"
+    },
+    {
+      "name": "binary_cursor",
+      "source": "Repositories/SDK/r4os.zig",
+      "line": 182,
+      "expression": "@import(\"r4os/binary_cursor.zig\")",
+      "capability": "data-crypto",
+      "wave": "0.90.17"
+    },
+    {
+      "name": "native_protocol_view",
+      "source": "Repositories/SDK/r4os.zig",
+      "line": 183,
+      "expression": "@import(\"r4os/native_protocol_view.zig\")",
+      "capability": "data-crypto",
+      "wave": "0.90.17"
+    },
+    {
+      "name": "internet_checksum",
+      "source": "Repositories/SDK/r4os.zig",
+      "line": 184,
+      "expression": "@import(\"r4os/internet_checksum.zig\")",
+      "capability": "data-crypto",
+      "wave": "0.90.17"
+    },
+    {
+      "name": "block_transfer",
+      "source": "Repositories/SDK/r4os.zig",
+      "line": 185,
+      "expression": "@import(\"r4os/block_transfer.zig\")",
+      "capability": "data-crypto",
+      "wave": "0.90.17"
     }
   ],
   "build_exports": [
@@ -56027,6 +56083,22 @@
         "IRQ32step frozen-clock case executes pure decisions in a task; no register access, wait, yield, DMA or callback quiescence is inferred.",
         "Temporary wrapper exit/argument and private fixture name errors remain in local logs; final standalone owner exits and scope receipts are authoritative."
       ]
+    },
+    "wire_native_data_09017": {
+      "complete": true,
+      "performed_in": "0.90.17",
+      "sdk": "0.64.160",
+      "contract": "0.64.79 unchanged",
+      "report": "Docs/API/Binaerhelfer.txt",
+      "scope": "Shared pure WireReader/Writer with explicit endian, atomic bounds and memmove; separate native POD admission with direction/version/size and output initialization; streamed InternetChecksum16 with odd chunks; checked explicit block geometry. Static existing SDK object, no new R4L, kernel provider or consumer migration.",
+      "host_checks": "Existing data-parity55cases, independent2comparisons with exact original6owner functions, actual shared C/Rust7groups and8compiler negatives, strict bare SDK Clippy. Generated8native C/Rust records; actual errors and whole-field state preservation.",
+      "native_scope": "Three private generation2 early R4D modules (Zig/C/Rust) loaded through the real unchanged Kernel463/029. All four helper families, exact1R4DEV Query2 import/noR4L, whole installed module and BOOT ELF readbacks. C generation2 R4D/R4P and program build uses the existing static facade objects.",
+      "limits": [
+        "Original consumers/oracles remain unchanged; six original checksum/geometry comparisons are bounded host vectors, not full protocol/controller qualification.",
+        "No new actual R4P dispatch, device I/O/DMA/flush or stop acknowledgement is inferred from pure helpers. Existing separate0.90.15 technical provider scope remains unchanged.",
+        "Native input requires real mapped initialized native POD and dispatch-bound lifetimes; output never reads uninitialized payload. Rust constructors unsafe; safe wire reader/writer retains original slices.",
+        "No Windows/physical hardware or isolated performance claim."
+      ]
     }
   },
   "wave_bindings": [
@@ -56290,7 +56362,7 @@
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.90.16",
+    "reviewed_in": "0.90.17",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -56361,7 +56433,9 @@
       "Repositories/SDK/r4os",
       "Repositories/SDK/r4os.zig",
       "Repositories/Contract/Tools/ApiContractGen/src/generation2_technical.zig.in",
-      "Repositories/SDK/Tests/Simulation/PreciseClock.rs"
+      "Repositories/SDK/Tests/Simulation/PreciseClock.rs",
+      "Repositories/SDK/Tests/Simulation/DataParity.c",
+      "Repositories/SDK/Tests/Simulation/RustData.rs"
     ],
     "files": [
       {
@@ -57510,7 +57584,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "628eb08403a3b71fa70fca2f973d448c155e75da10b204e11a0c254498a46e2d"
+        "sha256": "07e1293a7ddfc0480ee8f921426fba07551d60c6759d3eb9bc12796048df8003"
       },
       {
         "path": "Repositories/SDK/Rust/src/data/hash.rs",
@@ -57582,7 +57656,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/lib.rs",
-        "sha256": "0c3328e27dde39dbd16576ba7e01ce025529d284f4495144971a5183dee20262"
+        "sha256": "4aa27d1d1282e688c0cf046cf47a724d340e320fe7a7f5ca3d841e1504750e10"
       },
       {
         "path": "Repositories/SDK/Rust/src/lowlevel.rs",
@@ -57793,6 +57867,10 @@
         "sha256": "4393f7d5842a1f78bdfafde06d9694c7c70fd6d9f7b5acf7e752b64b4f9455cb"
       },
       {
+        "path": "Repositories/SDK/Rust/src/wire.rs",
+        "sha256": "71c0f445465e0662a87327a51fa6f329d4bd2ded583d06470d53a2fb35645545"
+      },
+      {
         "path": "Repositories/SDK/Shared/C/include/r4os/abi.h",
         "sha256": "1c6c5ba1789820da82cdbcc9bbe620da875a08424c3664add2494e83b95991c5"
       },
@@ -57906,7 +57984,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/facades.h",
-        "sha256": "f5971183bb71fc74368d220dd13a26154bc831eef50e30ff6a4f14665d16838b"
+        "sha256": "1e16cb9e08550d0307f10f4f65a4fc8bba9b6e1a9afe83cb5edb36905bfa626e"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/gui_bridge.h",
@@ -58025,6 +58103,10 @@
         "sha256": "58baf8206a84a5cfe36378a9a99d13d0929132cf809d8d27d23323d90fbb6bf1"
       },
       {
+        "path": "Repositories/SDK/Shared/C/include/r4os/wire_helpers.h",
+        "sha256": "39170099d786a7456990800bf62c440137f3240da2f299d46927978bbd275d1b"
+      },
+      {
         "path": "Repositories/SDK/Shared/C/src/facades.c",
         "sha256": "335570df4ce44c1f954e1ea76aa962f77ae5a953a943b2338345ed033eeba79f"
       },
@@ -58089,6 +58171,10 @@
         "sha256": "37970d51bd2422ffeffe354489814960f588524df6b6a28a85f8dce9695e0790"
       },
       {
+        "path": "Repositories/SDK/Tests/Simulation/DataParity.c",
+        "sha256": "3db86f60c4967b579f0ae8ecd8bb5aaee43e39bc9c48601cd054a7a8eee6aabc"
+      },
+      {
         "path": "Repositories/SDK/Tests/Simulation/GuiParity.c",
         "sha256": "bd23ff2e2eedb2b21e9c72f1ddc4bf69fa38502cbe0d3a88d31f04dd6d3c3ae8"
       },
@@ -58099,6 +58185,10 @@
       {
         "path": "Repositories/SDK/Tests/Simulation/PreciseClock.rs",
         "sha256": "f9681a4a464a3ec6ea238306fd60b014424304d7a767f12ecd3be1d889d487dc"
+      },
+      {
+        "path": "Repositories/SDK/Tests/Simulation/RustData.rs",
+        "sha256": "1ab94d1238aada68d5dff15c1cbca9360fc21242905ac9d5d0b7fba87f1a63be"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/RustGui.rs",
@@ -58298,7 +58388,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/Test-RustData.ps1",
-        "sha256": "13a8ed639ef007889c48ef5a2249d07e701d64bf99cffa2ba5bdc644001ca582"
+        "sha256": "78ac32a9881ff4cd8d1c3fcedae6ef2a6e42f65454c2c40c817729e12c95dab9"
       },
       {
         "path": "Repositories/SDK/Tools/Test-RustDependencies.ps1",
@@ -58362,15 +58452,15 @@
       },
       {
         "path": "Repositories/SDK/build.zig",
-        "sha256": "050f514000d018e3fd58fa64a2afa39deb3f8d8251943c3d9183f7274f910556"
+        "sha256": "479bebe2d02e90cc23113661c56e06b7c76402934170a55eacd1f4d900678fe5"
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "88ee3c1c62ef8b8bb656287cdf1cb3cb01804db2566fb2a16e0068df4e996ae2"
+        "sha256": "870a81d764bf3ba49d55a09c71415a7da87a467bfc646100ab3c5ca789e4449f"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
-        "sha256": "b19ab8fc179ea0f562d068dad897bfa82af0abbb7681d14ae08df4d68504b0c0"
+        "sha256": "fbdbc9338892d5575934a11ed4730ab7d0de3f3a1ee78276e37776318d5048bb"
       },
       {
         "path": "Repositories/SDK/r4os/allocator_wait.zig",
@@ -58437,12 +58527,20 @@
         "sha256": "e0b3c373a768e68887baa4b8b6a7bb9d78d3db48f4578d71934335a397e86ac0"
       },
       {
+        "path": "Repositories/SDK/r4os/binary_cursor.zig",
+        "sha256": "8d6cb693918b5c1bb1a941a45113b7ea8cb20183e0288f044e54134bd6f819c6"
+      },
+      {
+        "path": "Repositories/SDK/r4os/block_transfer.zig",
+        "sha256": "242fa66820f7df3a04e46a9009529f1307b2c39a897e2f752f264f69fd2a6664"
+      },
+      {
         "path": "Repositories/SDK/r4os/bounded_text.zig",
         "sha256": "ad927fedd95c3e633e263ece99d8d96d1e535ac7c0cd245205aa8f5ac21a594b"
       },
       {
         "path": "Repositories/SDK/r4os/build.zig",
-        "sha256": "be6c8277b2e0a1ea6b58fd83a35e7999886533a23cb22a95f5734709513a8112"
+        "sha256": "54367e8ad716213d618d4764c9fa69bda7c7e310c2b39cfe7f6f85fff3e9f3ad"
       },
       {
         "path": "Repositories/SDK/r4os/build_profile.zig",
@@ -58594,7 +58692,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/facade_runtime.zig",
-        "sha256": "76339a4513da41af46238659c3581f4eeb3b76c8db908b3c18e20a3fca82c1d0"
+        "sha256": "cfa0bcfca457eae6130ac859a1bb44b1a96620091e26188b1f68f99c2532a84a"
       },
       {
         "path": "Repositories/SDK/r4os/file_stream.zig",
@@ -58729,6 +58827,10 @@
         "sha256": "e5151bbb801de4b538cefb2cc32c23bf173e70f304b985090fdc635380ba8eea"
       },
       {
+        "path": "Repositories/SDK/r4os/internet_checksum.zig",
+        "sha256": "1f3f2143bc76afb3b9f768da64dcc9422feb8a63900ebabcc251d49632b1c24c"
+      },
+      {
         "path": "Repositories/SDK/r4os/javascript.zig",
         "sha256": "105444ca9a434a4f41c4d5acdd3861a18909d9a779e90892635d3b663528ac98"
       },
@@ -58771,6 +58873,10 @@
       {
         "path": "Repositories/SDK/r4os/native_callback_bridge.zig",
         "sha256": "a7cb874f39835c84e1b4cf5edfd82fa7081e9d5199c6471cc1d55f750e65fa8f"
+      },
+      {
+        "path": "Repositories/SDK/r4os/native_protocol_view.zig",
+        "sha256": "928bc70235edafd83035ca9018ed55203f50ca86a9cb1bb2119a46d5c275df98"
       },
       {
         "path": "Repositories/SDK/r4os/native_value_bridge.zig",
@@ -59337,6 +59443,10 @@
         "sha256": "cd403d900d711e58dd77c117fad3506960303efe7fb144f4d87e8ee5e597d3e8"
       },
       {
+        "path": "Repositories/SDK/r4os/wire_runtime.zig",
+        "sha256": "371fc51735b0ecc44344e5f5e7a457208bddd3dd14b6efc0138cfa7e2bf100c8"
+      },
+      {
         "path": "Repositories/SDK/r4os/zip.zig",
         "sha256": "a58fcffd6c692da571d4ca8a9d3cb85e3a01ea4d0b21e8159b8e295eca639cbf"
       }
@@ -59450,7 +59560,8 @@
           "native_pointer_capture_08828",
           "gui_host_backpressure_08832",
           "gui_title_08947",
-          "technical_generation2_09015"
+          "technical_generation2_09015",
+          "wire_native_data_09017"
         ]
       },
       {
@@ -59809,19 +59920,27 @@
           "Repositories/SDK/r4os/web_crypto.zig",
           "Repositories/SDK/r4os/web_encoding.zig",
           "Repositories/SDK/r4os/web_url.zig",
-          "Repositories/SDK/r4os/zip.zig"
+          "Repositories/SDK/r4os/zip.zig",
+          "Repositories/SDK/r4os/binary_cursor.zig",
+          "Repositories/SDK/r4os/native_protocol_view.zig",
+          "Repositories/SDK/r4os/internet_checksum.zig",
+          "Repositories/SDK/r4os/block_transfer.zig",
+          "Repositories/SDK/r4os/wire_runtime.zig"
         ],
         "c": [
-          "Repositories/SDK/Shared/C/include/r4os/data_helpers.h"
+          "Repositories/SDK/Shared/C/include/r4os/data_helpers.h",
+          "Repositories/SDK/Shared/C/include/r4os/wire_helpers.h"
         ],
         "rust": [
-          "Repositories/SDK/Rust/src/data/mod.rs"
+          "Repositories/SDK/Rust/src/data/mod.rs",
+          "Repositories/SDK/Rust/src/wire.rs"
         ],
         "proof": [
           "data_current_61",
           "ico_bulk_08840",
           "audio_reply_08842",
-          "platform_generation2_09014"
+          "platform_generation2_09014",
+          "wire_native_data_09017"
         ]
       },
       {
@@ -59946,7 +60065,12 @@
           "Repositories/SDK/r4os/technical2.zig",
           "Repositories/SDK/r4os/time_budget.zig",
           "Repositories/SDK/r4os/driver_poll_budget.zig",
-          "Repositories/SDK/r4os/time_budget_runtime.zig"
+          "Repositories/SDK/r4os/time_budget_runtime.zig",
+          "Repositories/SDK/r4os/binary_cursor.zig",
+          "Repositories/SDK/r4os/native_protocol_view.zig",
+          "Repositories/SDK/r4os/internet_checksum.zig",
+          "Repositories/SDK/r4os/block_transfer.zig",
+          "Repositories/SDK/r4os/wire_runtime.zig"
         ],
         "c": [
           "Repositories/SDK/Shared/C/include/r4os/driver.h",
@@ -59963,13 +60087,15 @@
           "Repositories/SDK/Shared/C/include/r4os/driver_serial.h",
           "Repositories/SDK/Shared/C/include/r4os/driver_threads.h",
           "Repositories/SDK/Shared/C/include/r4os/technical2.h",
-          "Repositories/SDK/Shared/C/include/r4os/poll_budget.h"
+          "Repositories/SDK/Shared/C/include/r4os/poll_budget.h",
+          "Repositories/SDK/Shared/C/include/r4os/wire_helpers.h"
         ],
         "rust": [
           "Repositories/SDK/Rust/src/c_facades.rs",
           "Repositories/SDK/Rust/src/driver.rs",
           "Repositories/SDK/Rust/src/technical2.rs",
-          "Repositories/SDK/Rust/src/time_budget.rs"
+          "Repositories/SDK/Rust/src/time_budget.rs",
+          "Repositories/SDK/Rust/src/wire.rs"
         ],
         "proof": [
           "drivers_current_67",
@@ -59981,26 +60107,35 @@
           "audio_catalog_08855",
           "audio_duration_retirement_08859",
           "technical_generation2_09015",
-          "time_poll_budgets_09016"
+          "time_poll_budgets_09016",
+          "wire_native_data_09017"
         ]
       },
       {
         "id": "protocol",
         "zig": [
           "Repositories/SDK/r4os/protocol.zig",
-          "Repositories/SDK/r4os/technical2.zig"
+          "Repositories/SDK/r4os/technical2.zig",
+          "Repositories/SDK/r4os/binary_cursor.zig",
+          "Repositories/SDK/r4os/native_protocol_view.zig",
+          "Repositories/SDK/r4os/internet_checksum.zig",
+          "Repositories/SDK/r4os/block_transfer.zig",
+          "Repositories/SDK/r4os/wire_runtime.zig"
         ],
         "c": [
           "Repositories/SDK/Shared/C/include/r4os/protocol.h",
-          "Repositories/SDK/Shared/C/include/r4os/technical2.h"
+          "Repositories/SDK/Shared/C/include/r4os/technical2.h",
+          "Repositories/SDK/Shared/C/include/r4os/wire_helpers.h"
         ],
         "rust": [
           "Repositories/SDK/Rust/src/protocol.rs",
-          "Repositories/SDK/Rust/src/technical2.rs"
+          "Repositories/SDK/Rust/src/technical2.rs",
+          "Repositories/SDK/Rust/src/wire.rs"
         ],
         "proof": [
           "protocols_current_68",
-          "technical_generation2_09015"
+          "technical_generation2_09015",
+          "wire_native_data_09017"
         ]
       },
       {

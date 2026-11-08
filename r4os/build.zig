@@ -746,6 +746,10 @@ pub const Sdk = struct {
                 .c_defines = m.c_defines,
                 .c_flags = m.c_flags,
                 .startup_source_file = null,
+                .extra_objects = &.{
+                    addFacadeRuntime(self.b, self.profile.sdk_root.path(self.b, "Shared/C/src/facades.c"), self.profile.c_include_root, self.profile.contract_c_include_root, false),
+                    self.addStorageRuntime(),
+                },
                 .linker_script = self.profile.linker_script,
                 .entry_symbol = entry,
                 .optimize = manifestOptimizeMode(m),
@@ -812,6 +816,10 @@ pub const Sdk = struct {
                 .c_flags = m.c_flags,
                 .startup_source_file = self.profile.sdk_root.path(self.b, "Shared/C/src/r4xstart2_startup.c"),
                 .startup_info2 = module_manifest.startup_metadata.c2(self.b.allocator, module_manifest.startup_metadata.profileForClass(m.app_class.?.text()) catch unreachable, m.imports.len) catch @panic("Invalid startup2 facts"),
+                .extra_objects = &.{
+                    addFacadeRuntime(self.b, self.profile.sdk_root.path(self.b, "Shared/C/src/facades.c"), self.profile.c_include_root, self.profile.contract_c_include_root, false),
+                    self.addStorageRuntime(),
+                },
                 .linker_script = self.profile.linker_script,
                 .entry_symbol = "R4XStart2",
                 .optimize = optimize,

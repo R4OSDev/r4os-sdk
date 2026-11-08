@@ -33,6 +33,7 @@ pub mod services;
 mod startup;
 pub mod storage;
 pub mod time;
+pub mod wire;
 pub mod update;
 pub mod web;
 pub use startup::{ImportSpec, StartupInfo};

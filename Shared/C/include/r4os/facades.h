@@ -30,3 +30,4 @@ int32_t R4SdkRegistryPath(const uint8_t *, uintptr_t, uint8_t *, uintptr_t, uint
 
 #include "driver_helpers.h"
 #include "poll_budget.h"
+#include "wire_helpers.h"
