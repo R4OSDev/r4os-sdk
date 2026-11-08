@@ -5,6 +5,14 @@ Dieses Repository enthaelt das hostneutrale Kern-SDK von R4OS: Zig- und
 C-Fassaden, Buildprofile, Templates, Smokeprojekte sowie die generischen
 Werkzeuge R4XBuilder, R4LContractGen und ModuleCatalog.
 
+ProgramInventoryReader ab0.64.163
+--------------------------------
+Docs/ProgramInventoryReader.txt beschreibt explizite Full-/Lifecycle-Modi,
+privaten Aufbau, Cursorrollback und Restart unter einer Gesamtfrist.
+Found/Missing gilt erst fuer ganze genaue ID/Generation-Sichten; Unknown
+bleibt von Abwesenheit verschieden. Zig/C/Rust teilen einen statischen
+Besitzer, ohne Registrykopie oder automatische Verbrauchermigration.
+
 StreamTransfer ab0.64.162
 ------------------------
 Docs/StreamTransfer.txt beschreibt ReadExact/WriteAll-Schritte mit einem

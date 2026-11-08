@@ -9,6 +9,7 @@ comptime {
     _ = @import("wire_runtime.zig");
     _ = @import("cli_runtime.zig");
     _ = @import("stream_runtime.zig");
+    _ = @import("inventory_runtime.zig");
     _ = @import("generated/net_facade.zig");
     _ = @import("net_request_runtime.zig");
     _ = @import("gui_value_bridge.zig");

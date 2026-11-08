@@ -1,6 +1,34 @@
 #include <r4os/facades.h>
 #include <string.h>
 #define WIRE_CHECK(test,code) do { if (!(test)) return (code); } while (0)
+static int inventory_busy,inventory_full_calls;
+static int32_t inventory_clock(void *unused,R4SdkClockSample *out){(void)unused;*out=(R4SdkClockSample){.identity={1,1,0,1000},.instant_ns=100};return 0;}
+static int32_t inventory_full_begin(R4ProgramInventoryCursor *cursor,R4ProgramInventorySummary *summary){(void)cursor;(void)summary;inventory_full_calls++;return -77;}
+static int32_t inventory_life_begin(R4ProgramInventoryCursor *cursor){*cursor=(R4ProgramInventoryCursor){.version=1,.size=sizeof(*cursor),.snapshot_generation=9,.program_epoch=9,.flags=3};return 0;}
+static int32_t inventory_life_page(R4ProgramInventoryCursor *cursor,R4ProgramLifecycleSnapshot *rows,uint32_t capacity,R4ProgramInventoryPageInfo *page){
+    if(!capacity)return -77;
+    if(inventory_busy){cursor->program_after_generation=999;return R4OS_PROGRAM_HANDLE_ERROR_WOULD_BLOCK;}
+    uint64_t generation=cursor->program_after_generation?12:11;uint32_t more=generation==11;
+    rows[0]=(R4ProgramLifecycleSnapshot){.version=1,.size=sizeof(*rows),.handle={.instance_id=(uint32_t)generation-4,.generation=generation}};
+    cursor->program_after_generation=generation;
+    *page=(R4ProgramInventoryPageInfo){.version=1,.size=sizeof(*page),.snapshot_generation=9,.next_generation=generation,.total=2,.returned=1,.has_more=more,.kind=4,.status=more?1:0};return 0;
+}
+int32_t sdk_inventory_c_case(void){
+    R4ProgramLifecycleSnapshot rows[2];R4SdkInventoryReader reader;R4SdkInventoryProgress progress;R4SdkInventoryMatch match;R4SdkWireSpan view;
+    R4SdkInventoryProvider provider={.full_begin=inventory_full_begin,.lifecycle_begin=inventory_life_begin,.lifecycle_page=inventory_life_page};R4SdkClockSample initial;
+    WIRE_CHECK(!inventory_clock(0,&initial),401);inventory_busy=0;inventory_full_calls=0;
+    WIRE_CHECK(!R4SdkInventoryInit(1,(R4SdkWireSpan){(uintptr_t)rows,sizeof(rows)},2,1,provider,initial,(R4Timeout){.kind=2},&reader),402);
+    WIRE_CHECK(!R4SdkInventoryFindExact(&reader,(R4ProgramProcessHandle){.instance_id=7,.generation=11},&match)&&match.disposition==R4_INV_READER_UNKNOWN,403);
+    WIRE_CHECK(!R4SdkInventoryStep(&reader,0,inventory_clock,0,&progress)&&!inventory_full_calls,404);
+    WIRE_CHECK(!R4SdkInventoryStep(&reader,0,inventory_clock,0,&progress)&&progress.staged_count==1&&!(progress.flags&R4_INV_READER_IN_CALL),405);
+    WIRE_CHECK(R4SdkInventoryGetView(&reader,&view)==-6,406);R4ProgramInventoryCursor saved=reader.cursor;inventory_busy=1;
+    WIRE_CHECK(!R4SdkInventoryStep(&reader,0,inventory_clock,0,&progress)&&progress.status==R4_INV_READER_WOULD_BLOCK&&!memcmp(&saved,&reader.cursor,sizeof(saved))&&reader.count==1,407);
+    inventory_busy=0;WIRE_CHECK(!R4SdkInventoryStep(&reader,0,inventory_clock,0,&progress)&&(progress.flags&R4_INV_READER_VIEW_COMPLETE),408);
+    WIRE_CHECK(!R4SdkInventoryGetView(&reader,&view)&&view.length==sizeof(rows)&&rows[1].handle.generation==12,409);
+    WIRE_CHECK(!R4SdkInventoryFindExact(&reader,(R4ProgramProcessHandle){.instance_id=7,.generation=11},&match)&&match.disposition==R4_INV_READER_FOUND&&match.index==0,410);
+    WIRE_CHECK(!R4SdkInventoryFindExact(&reader,(R4ProgramProcessHandle){.instance_id=7,.generation=12},&match)&&match.disposition==R4_INV_READER_MISSING,411);
+    WIRE_CHECK(!R4SdkInventoryRestart(&reader,&progress)&&progress.restarts==1&&R4SdkInventoryGetView(&reader,&view)==-6,412);return 0;
+}
 typedef struct { uint64_t now;uint32_t calls,cancel,held;R4SdkTransfer *state;uint8_t output[6]; } TransferProbe;
 static int32_t transfer_clock(void *raw,R4SdkClockSample *sample){
     TransferProbe *p=raw;*sample=(R4SdkClockSample){.identity={1,1,0,1000},.instant_ns=p->now};return 0;

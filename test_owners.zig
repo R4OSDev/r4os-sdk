@@ -15,6 +15,9 @@ test "stream owner shared transfer" {
     _ = @import("r4os/stream_transfer.zig");
     _ = @import("r4os/stream_adapters.zig");
 }
+test "inventory owner staged views" {
+    _ = @import("r4os/inventory_reader.zig");
+}
 test {
     _ = @import("Tests/Simulation/DataOwners.zig");
     _ = @import("Tests/Simulation/WebOwners.zig");

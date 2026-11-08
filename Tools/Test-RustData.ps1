@@ -64,7 +64,9 @@ r4os-sdk={path="$($sdk.Replace('\','/'))/Rust"}
             @('E0505','extern crate alloc;pub fn bad(b:alloc::vec::Vec<u8>,s:r4os_sdk::time::checked::ClockSample){let w=r4os_sdk::transfer::WriteAll::new(&b,s,r4os_sdk::resources::Timeout::Forever).unwrap();drop(b);let _=w.progress();}'),
             @('E0499','pub fn bad(b:&mut[u8],s:r4os_sdk::time::checked::ClockSample){let r=r4os_sdk::transfer::ReadExact::new(b,s,r4os_sdk::resources::Timeout::Forever).unwrap();b.fill(0);let _=r.progress();}'),
             @('E0521','pub fn bad(r:&mut r4os_sdk::transfer::ReadExact<''_>,s:r4os_sdk::time::checked::ClockSample){let mut saved:Option<&mut[u8]>=None;let _=r.step(4,false,&mut ||Ok(s),|c|{saved=Some(c.bytes);r4os_sdk::transfer::Ack::bytes(0)});core::hint::black_box(saved);}'),
-            @('E0133','pub fn bad(c:&r4os_sdk::platform2::Context<''_>){let _=r4os_sdk::transfer::Tcp::from_borrowed_handles(c,1,2);}')
+            @('E0133','pub fn bad(c:&r4os_sdk::platform2::Context<''_>){let _=r4os_sdk::transfer::Tcp::from_borrowed_handles(c,1,2);}'),
+            @('E0502','pub fn bad(r:&mut r4os_sdk::inventory::ProgramInventoryReader<''_>){let v=r.view().unwrap();let _=r.restart();core::hint::black_box(v);}'),
+            @('E0499','pub fn bad(b:&mut[core::mem::MaybeUninit<r4os_sdk::abi::ProgramLifecycleSnapshot>],p:&r4os_sdk::inventory::NativeProvider,s:r4os_sdk::time::checked::ClockSample){let r=unsafe{r4os_sdk::inventory::LifecycleReader::from_native_provider(b,1,p,s,r4os_sdk::resources::Timeout::Forever)}.unwrap();b.fill(core::mem::MaybeUninit::uninit());let _=r.progress();}')
         )
         foreach($case in $cases){
             if($case -isnot [array] -or $case.Count -ne 2 -or $case[0] -cnotmatch '^E\d{4}$'){throw 'Malformed compiler-negative case; no diagnostic claim.'}

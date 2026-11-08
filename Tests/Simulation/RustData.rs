@@ -8,11 +8,152 @@ use r4os_sdk::{
     },
 };
 unsafe extern "C" {
+    fn sdk_inventory_c_case() -> i32;
     fn sdk_transfer_c_case() -> i32;
     fn sdk_cli_c_case() -> i32;
     fn sdk_wire_c_case() -> i32;
     fn sdk_data_c_case(manifest: *const u8, length: usize) -> i32;
     fn sdk_ico_c_case(bytes: *const u8, length: usize) -> i32;
+}
+#[test]
+fn shared_inventory_only_publishes_complete_typed_views_and_exact_borrowed_membership() {
+    use core::mem::MaybeUninit;
+    use r4os_sdk::{inventory::*, resources::Timeout, time::checked::ClockSample};
+    assert_eq!(unsafe { sdk_inventory_c_case() }, 0);
+    unsafe extern "C" fn begin(cursor: *mut abi::ProgramInventoryCursor) -> i32 {
+        unsafe {
+            cursor.write(abi::ProgramInventoryCursor {
+                snapshot_generation: 9,
+                program_epoch: 9,
+                flags: 3,
+                ..Default::default()
+            })
+        };
+        0
+    }
+    unsafe extern "C" fn page(
+        cursor: *mut abi::ProgramInventoryCursor,
+        out: *mut abi::ProgramLifecycleSnapshot,
+        capacity: u32,
+        header: *mut abi::ProgramInventoryPageInfo,
+    ) -> i32 {
+        if capacity == 0 {
+            return -77;
+        }
+        let cursor = unsafe { &mut *cursor };
+        let generation = if cursor.program_after_generation == 0 {
+            11
+        } else {
+            12
+        };
+        unsafe {
+            out.write(abi::ProgramLifecycleSnapshot {
+                handle: abi::ProgramProcessHandle {
+                    instance_id: (generation - 4) as u32,
+                    generation,
+                    ..Default::default()
+                },
+                ..Default::default()
+            })
+        };
+        cursor.program_after_generation = generation;
+        let more = u32::from(generation == 11);
+        unsafe {
+            header.write(abi::ProgramInventoryPageInfo {
+                snapshot_generation: 9,
+                next_generation: generation,
+                total: 2,
+                returned: 1,
+                has_more: more,
+                kind: 4,
+                status: more as i32,
+                ..Default::default()
+            })
+        };
+        0
+    }
+    let provider = NativeProvider {
+        full_begin: None,
+        full_page: None,
+        lifecycle_begin: Some(begin),
+        lifecycle_page: Some(page),
+    };
+    let info = abi::MonotonicClockInfo {
+        flags: abi::monotonic_clock_flag_valid,
+        source: 1,
+        generation: 1,
+        resolution_ns: 1,
+        event_requested_hz: 1000,
+        instant_ns: 100,
+        ..Default::default()
+    };
+    let initial = ClockSample::from_info(&info).unwrap();
+    let mut rows = [MaybeUninit::uninit(); 2];
+    let mut reader = unsafe {
+        LifecycleReader::from_native_provider(&mut rows, 1, &provider, initial, Timeout::Forever)
+    }
+    .unwrap();
+    assert!(matches!(
+        reader
+            .find_exact(abi::ProgramProcessHandle {
+                instance_id: 7,
+                generation: 11,
+                ..Default::default()
+            })
+            .unwrap(),
+        Lookup::Unknown { .. }
+    ));
+    assert!(reader.view().is_err());
+    let mut clock = || Ok(initial);
+    assert_eq!(reader.step(false, &mut clock).unwrap().status, Status::More);
+    let first = reader.step(false, &mut clock).unwrap();
+    assert_eq!(first.staged_count, 1);
+    assert!(!first.in_call);
+    assert!(reader.view().is_err());
+    assert!(reader.step(false, &mut clock).unwrap().complete);
+    assert_eq!(reader.view().unwrap()[1].handle.generation, 12);
+    match reader
+        .find_exact(abi::ProgramProcessHandle {
+            instance_id: 7,
+            generation: 11,
+            ..Default::default()
+        })
+        .unwrap()
+    {
+        Lookup::Found {
+            snapshot_generation,
+            record,
+        } => assert_eq!((snapshot_generation, record.handle.instance_id), (9, 7)),
+        _ => panic!("Complete actual row must be found"),
+    }
+    assert!(matches!(
+        reader
+            .find_exact(abi::ProgramProcessHandle {
+                instance_id: 7,
+                generation: 12,
+                ..Default::default()
+            })
+            .unwrap(),
+        Lookup::Missing {
+            snapshot_generation: 9
+        }
+    ));
+    assert_eq!(reader.restart().unwrap().restarts, 1);
+    assert!(reader.view().is_err());
+    assert_eq!(reader.cancel().unwrap().status, Status::Cancelled);
+    assert!(matches!(
+        reader
+            .find_exact(abi::ProgramProcessHandle {
+                instance_id: 7,
+                generation: 11,
+                ..Default::default()
+            })
+            .unwrap(),
+        Lookup::Unknown {
+            status: Status::Cancelled,
+            ..
+        }
+    ));
 }
 #[test]
 fn shared_transfer_native_state_retains_prefix_deadline_and_actual_callback_return() {

@@ -6387,6 +6387,61 @@ pub struct R4SdkTransferServiceReply {
 const _: () = { assert!(core::mem::size_of::<R4SdkTransferServiceReply>() == 80); assert!(core::mem::align_of::<R4SdkTransferServiceReply>() == 8); assert!(core::mem::offset_of!(R4SdkTransferServiceReply, r#call) == 0); assert!(core::mem::offset_of!(R4SdkTransferServiceReply, r#monotonic) == 8); assert!(core::mem::offset_of!(R4SdkTransferServiceReply, r#service_handle) == 16); assert!(core::mem::offset_of!(R4SdkTransferServiceReply, r#op) == 20); assert!(core::mem::offset_of!(R4SdkTransferServiceReply, r#reserved) == 22); assert!(core::mem::offset_of!(R4SdkTransferServiceReply, r#request) == 24); assert!(core::mem::offset_of!(R4SdkTransferServiceReply, r#scratch) == 40); assert!(core::mem::offset_of!(R4SdkTransferServiceReply, r#position) == 56); assert!(core::mem::offset_of!(R4SdkTransferServiceReply, r#length) == 64); assert!(core::mem::offset_of!(R4SdkTransferServiceReply, r#loaded) == 72); assert!(core::mem::offset_of!(R4SdkTransferServiceReply, r#flags) == 76); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
+pub struct R4SdkInventoryProvider {
+    pub r#full_begin: Option<unsafe extern "C" fn(*mut R4ProgramInventoryCursor, *mut R4ProgramInventorySummary) -> i32>,
+    pub r#full_page: Option<unsafe extern "C" fn(*mut R4ProgramInventoryCursor, *mut R4ProgramInstanceSnapshot, u32, *mut R4ProgramInventoryPageInfo) -> i32>,
+    pub r#lifecycle_begin: Option<unsafe extern "C" fn(*mut R4ProgramInventoryCursor) -> i32>,
+    pub r#lifecycle_page: Option<unsafe extern "C" fn(*mut R4ProgramInventoryCursor, *mut R4ProgramLifecycleSnapshot, u32, *mut R4ProgramInventoryPageInfo) -> i32>,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkInventoryProvider>() == 32); assert!(core::mem::align_of::<R4SdkInventoryProvider>() == 8); assert!(core::mem::offset_of!(R4SdkInventoryProvider, r#full_begin) == 0); assert!(core::mem::offset_of!(R4SdkInventoryProvider, r#full_page) == 8); assert!(core::mem::offset_of!(R4SdkInventoryProvider, r#lifecycle_begin) == 16); assert!(core::mem::offset_of!(R4SdkInventoryProvider, r#lifecycle_page) == 24); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkInventoryProgress {
+    pub r#snapshot_generation: u64,
+    pub r#staged_count: u32,
+    pub r#total: u32,
+    pub r#status: u32,
+    pub r#error_code: i32,
+    pub r#flags: u32,
+    pub r#restarts: u32,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkInventoryProgress>() == 32); assert!(core::mem::align_of::<R4SdkInventoryProgress>() == 8); assert!(core::mem::offset_of!(R4SdkInventoryProgress, r#snapshot_generation) == 0); assert!(core::mem::offset_of!(R4SdkInventoryProgress, r#staged_count) == 8); assert!(core::mem::offset_of!(R4SdkInventoryProgress, r#total) == 12); assert!(core::mem::offset_of!(R4SdkInventoryProgress, r#status) == 16); assert!(core::mem::offset_of!(R4SdkInventoryProgress, r#error_code) == 20); assert!(core::mem::offset_of!(R4SdkInventoryProgress, r#flags) == 24); assert!(core::mem::offset_of!(R4SdkInventoryProgress, r#restarts) == 28); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkInventoryMatch {
+    pub r#snapshot_generation: u64,
+    pub r#index: u32,
+    pub r#disposition: u32,
+    pub r#status: u32,
+    pub r#error_code: i32,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkInventoryMatch>() == 24); assert!(core::mem::align_of::<R4SdkInventoryMatch>() == 8); assert!(core::mem::offset_of!(R4SdkInventoryMatch, r#snapshot_generation) == 0); assert!(core::mem::offset_of!(R4SdkInventoryMatch, r#index) == 8); assert!(core::mem::offset_of!(R4SdkInventoryMatch, r#disposition) == 12); assert!(core::mem::offset_of!(R4SdkInventoryMatch, r#status) == 16); assert!(core::mem::offset_of!(R4SdkInventoryMatch, r#error_code) == 20); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkInventoryReader {
+    pub r#deadline: R4SdkDeadlineBudget,
+    pub r#cursor: R4ProgramInventoryCursor,
+    pub r#summary: R4ProgramInventorySummary,
+    pub r#provider: R4SdkInventoryProvider,
+    pub r#storage: R4SdkWireSpan,
+    pub r#last_generation: u64,
+    pub r#mode: u32,
+    pub r#phase: u32,
+    pub r#status: u32,
+    pub r#error_code: i32,
+    pub r#capacity: u32,
+    pub r#page_limit: u32,
+    pub r#count: u32,
+    pub r#total: u32,
+    pub r#total_known: u32,
+    pub r#busy: u32,
+    pub r#stop_requested: u32,
+    pub r#poll_used: u32,
+    pub r#restarts: u32,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkInventoryReader>() == 392); assert!(core::mem::align_of::<R4SdkInventoryReader>() == 8); assert!(core::mem::offset_of!(R4SdkInventoryReader, r#deadline) == 0); assert!(core::mem::offset_of!(R4SdkInventoryReader, r#cursor) == 40); assert!(core::mem::offset_of!(R4SdkInventoryReader, r#summary) == 120); assert!(core::mem::offset_of!(R4SdkInventoryReader, r#provider) == 280); assert!(core::mem::offset_of!(R4SdkInventoryReader, r#storage) == 312); assert!(core::mem::offset_of!(R4SdkInventoryReader, r#last_generation) == 328); assert!(core::mem::offset_of!(R4SdkInventoryReader, r#mode) == 336); assert!(core::mem::offset_of!(R4SdkInventoryReader, r#phase) == 340); assert!(core::mem::offset_of!(R4SdkInventoryReader, r#status) == 344); assert!(core::mem::offset_of!(R4SdkInventoryReader, r#error_code) == 348); assert!(core::mem::offset_of!(R4SdkInventoryReader, r#capacity) == 352); assert!(core::mem::offset_of!(R4SdkInventoryReader, r#page_limit) == 356); assert!(core::mem::offset_of!(R4SdkInventoryReader, r#count) == 360); assert!(core::mem::offset_of!(R4SdkInventoryReader, r#total) == 364); assert!(core::mem::offset_of!(R4SdkInventoryReader, r#total_known) == 368); assert!(core::mem::offset_of!(R4SdkInventoryReader, r#busy) == 372); assert!(core::mem::offset_of!(R4SdkInventoryReader, r#stop_requested) == 376); assert!(core::mem::offset_of!(R4SdkInventoryReader, r#poll_used) == 380); assert!(core::mem::offset_of!(R4SdkInventoryReader, r#restarts) == 384); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
 pub struct R4SdkWebSlot {
     pub r#ptr: *mut core::ffi::c_void,
     pub r#length: u64,
@@ -25437,6 +25492,15 @@ unsafe extern "C" {
     pub fn R4SdkTransferTcpWrite(p0: *mut core::ffi::c_void, p1: u64, p2: *const u8, p3: u32, p4: *const R4SdkDeadlineBudget) -> R4SdkTransferAck;
     pub fn R4SdkTransferServiceWrite(p0: *mut core::ffi::c_void, p1: u64, p2: *const u8, p3: u32, p4: *const R4SdkDeadlineBudget) -> R4SdkTransferAck;
     pub fn R4SdkTransferServiceRead(p0: *mut core::ffi::c_void, p1: u64, p2: *mut u8, p3: u32, p4: *const R4SdkDeadlineBudget) -> R4SdkTransferAck;
+    pub fn R4SdkInventoryInit(p0: u32, p1: R4SdkWireSpan, p2: u32, p3: u32, p4: R4SdkInventoryProvider, p5: R4SdkClockSample, p6: R4Timeout, p7: *mut R4SdkInventoryReader) -> i32;
+    pub fn R4SdkInventoryInitAbsolute(p0: u32, p1: R4SdkWireSpan, p2: u32, p3: u32, p4: R4SdkInventoryProvider, p5: R4SdkDeadlineBudget, p6: *mut R4SdkInventoryReader) -> i32;
+    pub fn R4SdkInventoryGetProgress(p0: *const R4SdkInventoryReader, p1: *mut R4SdkInventoryProgress) -> i32;
+    pub fn R4SdkInventoryCancel(p0: *mut R4SdkInventoryReader, p1: *mut R4SdkInventoryProgress) -> i32;
+    pub fn R4SdkInventoryRestart(p0: *mut R4SdkInventoryReader, p1: *mut R4SdkInventoryProgress) -> i32;
+    pub fn R4SdkInventoryStep(p0: *mut R4SdkInventoryReader, p1: u32, p2: Option<unsafe extern "C" fn(*mut core::ffi::c_void, *mut R4SdkClockSample) -> i32>, p3: *mut core::ffi::c_void, p4: *mut R4SdkInventoryProgress) -> i32;
+    pub fn R4SdkInventoryGetView(p0: *const R4SdkInventoryReader, p1: *mut R4SdkWireSpan) -> i32;
+    pub fn R4SdkInventoryFindExact(p0: *const R4SdkInventoryReader, p1: R4ProgramProcessHandle, p2: *mut R4SdkInventoryMatch) -> i32;
+    pub fn R4SdkInventoryGetSummary(p0: *const R4SdkInventoryReader, p1: *mut R4ProgramInventorySummary) -> i32;
     pub fn R4SdkWebInvoke(p0: u64, p1: u32, p2: *const R4SdkWebSlot, p3: u32, p4: *mut core::ffi::c_void) -> R4SdkWebSlot;
     pub fn R4SdkWebConstruct(p0: u64, p1: u32, p2: *const R4SdkWebSlot, p3: u32, p4: *mut core::ffi::c_void) -> R4SdkWebSlot;
     pub fn R4SdkWebInspect(p0: u64, p1: u32, p2: *mut core::ffi::c_void, p3: *mut core::ffi::c_void) -> R4SdkWebSlot;

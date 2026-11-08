@@ -17,6 +17,7 @@
 #include "data_helpers.h"
 #include "cli_helpers.h"
 #include "stream_transfer.h"
+#include "inventory_reader.h"
 #include "web_helpers.h"
 #include "transport_helpers.h"
 #include "update_helpers.h"
