@@ -30,6 +30,7 @@ pub mod physical_storage;
 pub mod platform;
 pub mod platform2;
 pub mod wait_set;
+pub mod clipboard_offer;
 pub mod technical2;
 pub mod protocol;
 pub mod r4l;

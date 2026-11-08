@@ -155,6 +155,7 @@ pub const runtime_r4l = @import("r4os/runtime_r4l.zig");
 pub const vm_allocator = @import("r4os/vm_allocator.zig");
 pub const chart = @import("r4os/chart.zig");
 pub const clipboard = @import("r4os/clipboard.zig");
+pub const clipboard_offer = @import("r4os/clipboard_offer.zig");
 pub const r4d = @import("r4os/driver.zig");
 pub const r4p = @import("r4os/protocol.zig");
 pub const gui = @import("r4os/gui.zig");

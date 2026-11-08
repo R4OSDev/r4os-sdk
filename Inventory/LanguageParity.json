@@ -768,9 +768,10 @@
         "clipboard",
         "chart",
         "text_metrics",
-        "file_picker"
+        "file_picker",
+        "clipboard_offer"
       ],
-      "semantics": "GUI-Nachrichten/Unicode/Modifier/Close, Timer/Clipboard, Paint/Present und Ressourcenbesitz; gehostete App und Desktophost sind verschiedene Rollen. Kein Schlafpolling oder Abschneiden von UTF-8. Aktuelle CPU/GPU-Ausgaben und abgerundete/alpha-Pixel erhalten. Fokusgewinn/-verlust und globale Fontaenderung sind typisiert; vorhandene Fensteridentitaet/Ticks und vollstaendige Unknown-Rohdaten bleiben erhalten. Vier benannte C-Fensterflags stammen aus der kanonischen GuiWindowFlag-Wahrheit. SDK110: natives Capture bindet volle Prozessgeneration, Fensterinkarnation und Capture-ID;0 bestaetigt PENDING, ACTIVE erst nach Desktop-Grant. C/Zig/Rust erhalten typisierte Capture-/Relative-/Wheel-Nachrichten. Relative physische Deltas entstehen vor Clamping; absolute Remote-Moves werden nicht als Rohbewegung ausgegeben. Release-/Cancel-/Broker-/Fensterende und zugehoerige externe C-Belege sind getrennt qualifiziert. SDK111: Desktop bindet den genauen Prozesshandle und die native Fensterinkarnation an QUERY/POST/RESET. Busy ist keine fehlende GUI-Zustaendigkeit. C/Zig/Rust erhalten InputReset mit Grund/Fenster/Tick; lokale Press-/Repeat-/Dragzustaende enden ohne synthetischen Klick. Capture-Terminalmeldungen behalten ihren eigenen Vertrag. SDK147: Canvas-local opt-in Style/light/dark, catalog font roles, shared Button/TextField/List/TabBar/Dialog rendering and Card/TileGrid/Paragraph/Progress. Classic defaults and editing owners remain; existing C constructor prefixes keep native defaults for new fields. SDK166: one immutable-bank prefix capture plus shared bounded grapheme projection and frozen binary-search hits; exact original strict-half/Unicode boundaries and explicit source/text/font keys/current-stamp reset. No hidden old fallback or consumer change. Qualification: text_metrics_09023. SDK167: shared bounded FilePickerSession with two caller buffers and EOF-only page publication over the existing canonical metadata owner. Whole path/observed identity and nonreused view revision; explicit overwrite permission bound to the prior observation, real-return loans and Open keyboard focus skipping disabled name. Existing FileDialog retains its shared list/name select rendering group. No file write/open or application migration. Qualification: file_picker_09024.",
+      "semantics": "GUI-Nachrichten/Unicode/Modifier/Close, Timer/Clipboard, Paint/Present und Ressourcenbesitz; gehostete App und Desktophost sind verschiedene Rollen. Kein Schlafpolling oder Abschneiden von UTF-8. Aktuelle CPU/GPU-Ausgaben und abgerundete/alpha-Pixel erhalten. Fokusgewinn/-verlust und globale Fontaenderung sind typisiert; vorhandene Fensteridentitaet/Ticks und vollstaendige Unknown-Rohdaten bleiben erhalten. Vier benannte C-Fensterflags stammen aus der kanonischen GuiWindowFlag-Wahrheit. SDK110: natives Capture bindet volle Prozessgeneration, Fensterinkarnation und Capture-ID;0 bestaetigt PENDING, ACTIVE erst nach Desktop-Grant. C/Zig/Rust erhalten typisierte Capture-/Relative-/Wheel-Nachrichten. Relative physische Deltas entstehen vor Clamping; absolute Remote-Moves werden nicht als Rohbewegung ausgegeben. Release-/Cancel-/Broker-/Fensterende und zugehoerige externe C-Belege sind getrennt qualifiziert. SDK111: Desktop bindet den genauen Prozesshandle und die native Fensterinkarnation an QUERY/POST/RESET. Busy ist keine fehlende GUI-Zustaendigkeit. C/Zig/Rust erhalten InputReset mit Grund/Fenster/Tick; lokale Press-/Repeat-/Dragzustaende enden ohne synthetischen Klick. Capture-Terminalmeldungen behalten ihren eigenen Vertrag. SDK147: Canvas-local opt-in Style/light/dark, catalog font roles, shared Button/TextField/List/TabBar/Dialog rendering and Card/TileGrid/Paragraph/Progress. Classic defaults and editing owners remain; existing C constructor prefixes keep native defaults for new fields. SDK166: one immutable-bank prefix capture plus shared bounded grapheme projection and frozen binary-search hits; exact original strict-half/Unicode boundaries and explicit source/text/font keys/current-stamp reset. No hidden old fallback or consumer change. Qualification: text_metrics_09023. SDK167: shared bounded FilePickerSession with two caller buffers and EOF-only page publication over the existing canonical metadata owner. Whole path/observed identity and nonreused view revision; explicit overwrite permission bound to the prior observation, real-return loans and Open keyboard focus skipping disabled name. Existing FileDialog retains its shared list/name select rendering group. No file write/open or application migration. Qualification: file_picker_09024. SDK173 adds copied typed CLIPSVC offers with exact provider/offer identities, atomic private staging, immutable expiring snapshots and explicit bounded format/chunk contracts. Existing text bytes and ServiceLoop remain; uncertain Commit uses same-token status/idempotent replay. No application migration or silent conversion.",
       "current_only": "current_function",
       "rust": {
         "state": "paritaet_abgenommen",
@@ -782,7 +783,8 @@
           "Repositories/SDK/Rust/src/c_facades.rs",
           "Repositories/SDK/Rust/src/gui/style.rs",
           "Repositories/SDK/Rust/src/text_metrics.rs",
-          "Repositories/SDK/Rust/src/file_picker.rs"
+          "Repositories/SDK/Rust/src/file_picker.rs",
+          "Repositories/SDK/Rust/src/clipboard_offer.rs"
         ],
         "gap": null
       },
@@ -795,7 +797,8 @@
           "Repositories/SDK/Shared/C/include/r4os/text_metrics.h",
           "Repositories/SDK/Shared/C/include/r4os/text_metrics_platform2.h",
           "Repositories/SDK/Shared/C/include/r4os/file_picker.h",
-          "Repositories/SDK/Shared/C/include/r4os/file_picker_platform2.h"
+          "Repositories/SDK/Shared/C/include/r4os/file_picker_platform2.h",
+          "Repositories/SDK/Shared/C/include/r4os/clipboard_offer_platform2.h"
         ],
         "gap": null
       },
@@ -813,7 +816,8 @@
         "gui_modern_08946",
         "device_snapshot_09021",
         "text_metrics_09023",
-        "file_picker_09024"
+        "file_picker_09024",
+        "clipboard_offers_09030"
       ],
       "shared_core": "Gemeinsame GUI-/Rasterkerne beim Besitzer; keine unabhaengigen Widget-/Unicodealgorithmen pro Sprache."
     },
@@ -1450,7 +1454,7 @@
     {
       "name": "program",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 6,
+      "line": 7,
       "expression": "@import(\"r4os/program.zig\")",
       "capability": "startup",
       "wave": "0.86.49"
@@ -1458,7 +1462,7 @@
     {
       "name": "input_events",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 7,
+      "line": 8,
       "expression": "@import(\"r4os/input_events.zig\")",
       "capability": "gui",
       "wave": "0.86.56"
@@ -1466,7 +1470,7 @@
     {
       "name": "runtime_context",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 8,
+      "line": 9,
       "expression": "@import(\"r4os/runtime_context.zig\")",
       "capability": "startup",
       "wave": "0.86.49"
@@ -1474,7 +1478,7 @@
     {
       "name": "storage",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 9,
+      "line": 10,
       "expression": "@import(\"r4os/storage.zig\")",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -1482,7 +1486,7 @@
     {
       "name": "storage_tools",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 10,
+      "line": 11,
       "expression": "@import(\"r4os/storage_tools.zig\")",
       "capability": "update-storage",
       "wave": "0.86.64"
@@ -1490,7 +1494,7 @@
     {
       "name": "storage_tools_guest",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 11,
+      "line": 12,
       "expression": "@import(\"r4os/storage_tools_guest.zig\")",
       "capability": "update-storage",
       "wave": "0.86.64"
@@ -1498,7 +1502,7 @@
     {
       "name": "version_info",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 12,
+      "line": 13,
       "expression": "@import(\"r4os/version_info.zig\")",
       "capability": "update-storage",
       "wave": "0.86.64",
@@ -1508,7 +1512,7 @@
     {
       "name": "r4u_manifest",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 13,
+      "line": 14,
       "expression": "@import(\"r4os/r4u_manifest.zig\")",
       "capability": "update-storage",
       "wave": "0.86.64",
@@ -1518,7 +1522,7 @@
     {
       "name": "r4u_artifact",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 14,
+      "line": 15,
       "expression": "@import(\"r4os/r4u_artifact.zig\")",
       "capability": "update-storage",
       "wave": "0.86.64",
@@ -1528,7 +1532,7 @@
     {
       "name": "system_update_inventory",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 15,
+      "line": 16,
       "expression": "@import(\"r4os/system_update_inventory.zig\")",
       "capability": "update-storage",
       "wave": "0.86.64"
@@ -1536,7 +1540,7 @@
     {
       "name": "subsystem_catalog",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 16,
+      "line": 17,
       "expression": "@import(\"r4os/subsystem_catalog.zig\")",
       "capability": "subsystems",
       "wave": "0.86.65"
@@ -1544,7 +1548,7 @@
     {
       "name": "subsystem_launch",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 17,
+      "line": 18,
       "expression": "@import(\"r4os/subsystem_launch.zig\")",
       "capability": "subsystems",
       "wave": "0.86.65"
@@ -1552,7 +1556,7 @@
     {
       "name": "subsystem_host",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 18,
+      "line": 19,
       "expression": "@import(\"r4os/subsystem_host.zig\")",
       "capability": "subsystems",
       "wave": "0.86.65"
@@ -1560,7 +1564,7 @@
     {
       "name": "subsystem_runtime",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 20,
+      "line": 21,
       "expression": "@import(\"r4os/subsystem_runtime.zig\")",
       "capability": "subsystems",
       "wave": "0.86.65"
@@ -1568,7 +1572,7 @@
     {
       "name": "subsystem_persistence",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 21,
+      "line": 22,
       "expression": "@import(\"r4os/subsystem_persistence.zig\")",
       "capability": "subsystems",
       "wave": "0.86.65"
@@ -1576,7 +1580,7 @@
     {
       "name": "system_update_recovery",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 22,
+      "line": 23,
       "expression": "@import(\"r4os/system_update_recovery.zig\")",
       "capability": "update-storage",
       "wave": "0.86.64"
@@ -1584,7 +1588,7 @@
     {
       "name": "system_update_batch",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 23,
+      "line": 24,
       "expression": "@import(\"r4os/system_update_batch.zig\")",
       "capability": "update-storage",
       "wave": "0.86.64"
@@ -1592,7 +1596,7 @@
     {
       "name": "system_update_backup",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 24,
+      "line": 25,
       "expression": "@import(\"r4os/system_update_backup.zig\")",
       "capability": "update-storage",
       "wave": "0.86.64"
@@ -1600,7 +1604,7 @@
     {
       "name": "update_catalog",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 25,
+      "line": 26,
       "expression": "@import(\"r4os/update_catalog.zig\")",
       "capability": "update-storage",
       "wave": "0.86.64"
@@ -1608,7 +1612,7 @@
     {
       "name": "app_contract",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 30,
+      "line": 31,
       "expression": "@import(\"r4os/app_contract.zig\")",
       "capability": "startup",
       "wave": "0.86.49"
@@ -1616,7 +1620,7 @@
     {
       "name": "app_storage",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 31,
+      "line": 32,
       "expression": "@import(\"r4os/app_storage.zig\")",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -1624,7 +1628,7 @@
     {
       "name": "document_save",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 32,
+      "line": 33,
       "expression": "@import(\"r4os/document_save.zig\")",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -1632,7 +1636,7 @@
     {
       "name": "window_mode",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 33,
+      "line": 34,
       "expression": "@import(\"r4os/window_mode.zig\")",
       "capability": "gui",
       "wave": "0.86.56"
@@ -1640,7 +1644,7 @@
     {
       "name": "app_gui",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 34,
+      "line": 35,
       "expression": "@import(\"r4os/app_gui.zig\")",
       "capability": "gui",
       "wave": "0.86.56"
@@ -1648,7 +1652,7 @@
     {
       "name": "gfx_buffers",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 35,
+      "line": 36,
       "expression": "@import(\"r4os/gfx_buffers.zig\")",
       "capability": "graphics",
       "wave": "0.86.57"
@@ -1656,7 +1660,7 @@
     {
       "name": "gfx_outputs",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 36,
+      "line": 37,
       "expression": "@import(\"r4os/gfx_outputs.zig\")",
       "capability": "graphics",
       "wave": "0.86.57"
@@ -1664,7 +1668,7 @@
     {
       "name": "gfx_queue",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 37,
+      "line": 38,
       "expression": "@import(\"r4os/gfx_queue.zig\")",
       "capability": "graphics",
       "wave": "0.86.57"
@@ -1672,7 +1676,7 @@
     {
       "name": "gfx_telemetry",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 38,
+      "line": 39,
       "expression": "@import(\"r4os/gfx_telemetry.zig\")",
       "capability": "graphics",
       "wave": "0.86.57"
@@ -1680,7 +1684,7 @@
     {
       "name": "graphics_status",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 39,
+      "line": 40,
       "expression": "@import(\"r4os/graphics_status.zig\")",
       "capability": "graphics",
       "wave": "0.86.57"
@@ -1688,7 +1692,7 @@
     {
       "name": "driver_memory",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 40,
+      "line": 41,
       "expression": "@import(\"r4os/driver_memory.zig\")",
       "capability": "driver",
       "wave": "0.86.67"
@@ -1696,7 +1700,7 @@
     {
       "name": "driver_entropy",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 41,
+      "line": 42,
       "expression": "@import(\"r4os/driver_entropy.zig\")",
       "capability": "driver",
       "wave": "0.86.67"
@@ -1704,7 +1708,7 @@
     {
       "name": "driver_resources",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 42,
+      "line": 43,
       "expression": "@import(\"r4os/driver_resources.zig\")",
       "capability": "driver",
       "wave": "0.86.67"
@@ -1712,7 +1716,7 @@
     {
       "name": "driver_queue",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 43,
+      "line": 44,
       "expression": "@import(\"r4os/driver_queue.zig\")",
       "capability": "driver",
       "wave": "0.86.67"
@@ -1720,7 +1724,7 @@
     {
       "name": "driver_outputs",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 44,
+      "line": 45,
       "expression": "@import(\"r4os/driver_outputs.zig\")",
       "capability": "driver",
       "wave": "0.86.67"
@@ -1728,7 +1732,7 @@
     {
       "name": "driver_display",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 45,
+      "line": 46,
       "expression": "@import(\"r4os/driver_display.zig\")",
       "capability": "driver",
       "wave": "0.86.67"
@@ -1736,7 +1740,7 @@
     {
       "name": "app_resources",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 46,
+      "line": 47,
       "expression": "@import(\"r4os/app_resources.zig\")",
       "capability": "process-sync-vm",
       "wave": "0.86.54"
@@ -1744,7 +1748,7 @@
     {
       "name": "app_services",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 54,
+      "line": 55,
       "expression": "@import(\"r4os/app_services.zig\")",
       "capability": "services",
       "wave": "0.86.55"
@@ -1752,7 +1756,7 @@
     {
       "name": "power_profiles",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 56,
+      "line": 57,
       "expression": "@import(\"r4os/power_profiles.zig\")",
       "capability": "devices-power",
       "wave": "0.86.58"
@@ -1760,7 +1764,7 @@
     {
       "name": "app_tray",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 57,
+      "line": 58,
       "expression": "@import(\"r4os/app_tray.zig\")",
       "capability": "services",
       "wave": "0.86.55"
@@ -1768,7 +1772,7 @@
     {
       "name": "app_network",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 58,
+      "line": 59,
       "expression": "@import(\"r4os/app_network.zig\")",
       "capability": "network",
       "wave": "0.86.55"
@@ -1776,7 +1780,7 @@
     {
       "name": "app_audio",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 59,
+      "line": 60,
       "expression": "@import(\"r4os/app_audio.zig\")",
       "capability": "audio",
       "wave": "0.86.58"
@@ -1784,7 +1788,7 @@
     {
       "name": "app_devices",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 60,
+      "line": 61,
       "expression": "@import(\"r4os/app_devices.zig\")",
       "capability": "devices-power",
       "wave": "0.86.58"
@@ -1792,7 +1796,7 @@
     {
       "name": "app_web",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 61,
+      "line": 62,
       "expression": "@import(\"r4os/app_web.zig\")",
       "capability": "web-transport",
       "wave": "0.86.63"
@@ -1800,7 +1804,7 @@
     {
       "name": "http",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 62,
+      "line": 63,
       "expression": "@import(\"r4os/http.zig\")",
       "capability": "web-transport",
       "wave": "0.86.63"
@@ -1808,7 +1812,7 @@
     {
       "name": "json",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 63,
+      "line": 64,
       "expression": "@import(\"r4os/json.zig\")",
       "capability": "data-crypto",
       "wave": "0.86.61"
@@ -1816,7 +1820,7 @@
     {
       "name": "zip",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 64,
+      "line": 65,
       "expression": "@import(\"r4os/zip.zig\")",
       "capability": "data-crypto",
       "wave": "0.86.61"
@@ -1824,7 +1828,7 @@
     {
       "name": "html",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 65,
+      "line": 66,
       "expression": "@import(\"r4os/html.zig\")",
       "capability": "web-document",
       "wave": "0.86.62"
@@ -1832,7 +1836,7 @@
     {
       "name": "css",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 66,
+      "line": 67,
       "expression": "@import(\"r4os/css.zig\")",
       "capability": "web-document",
       "wave": "0.86.62"
@@ -1840,7 +1844,7 @@
     {
       "name": "web_layout",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 67,
+      "line": 68,
       "expression": "@import(\"r4os/web_layout.zig\")",
       "capability": "web-document",
       "wave": "0.86.62"
@@ -1848,7 +1852,7 @@
     {
       "name": "web_font",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 68,
+      "line": 69,
       "expression": "@import(\"r4os/web_font.zig\")",
       "capability": "web-document",
       "wave": "0.86.62"
@@ -1856,7 +1860,7 @@
     {
       "name": "web_fonts",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 69,
+      "line": 70,
       "expression": "@import(\"r4os/web_fonts.zig\")",
       "capability": "web-document",
       "wave": "0.86.62"
@@ -1864,7 +1868,7 @@
     {
       "name": "web_font_cache",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 70,
+      "line": 71,
       "expression": "@import(\"r4os/web_font_cache.zig\")",
       "capability": "web-document",
       "wave": "0.86.62"
@@ -1872,7 +1876,7 @@
     {
       "name": "web_font_activation",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 71,
+      "line": 72,
       "expression": "@import(\"r4os/web_font_activation.zig\")",
       "capability": "web-document",
       "wave": "0.86.62"
@@ -1880,7 +1884,7 @@
     {
       "name": "web_images",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 72,
+      "line": 73,
       "expression": "@import(\"r4os/web_images.zig\")",
       "capability": "web-document",
       "wave": "0.86.62"
@@ -1888,7 +1892,7 @@
     {
       "name": "web_background",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 73,
+      "line": 74,
       "expression": "@import(\"r4os/web_background.zig\")",
       "capability": "web-document",
       "wave": "0.86.62"
@@ -1896,7 +1900,7 @@
     {
       "name": "App",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 74,
+      "line": 75,
       "expression": "app_contract.App",
       "capability": "startup",
       "wave": "0.86.49"
@@ -1904,7 +1908,7 @@
     {
       "name": "AppProfile",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 75,
+      "line": 76,
       "expression": "app_contract.AppProfile",
       "capability": "startup",
       "wave": "0.86.49"
@@ -1912,7 +1916,7 @@
     {
       "name": "AppEntryFn",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 76,
+      "line": 77,
       "expression": "app_contract.AppEntryFn",
       "capability": "startup",
       "wave": "0.86.49"
@@ -1920,7 +1924,7 @@
     {
       "name": "Console",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 77,
+      "line": 78,
       "expression": "app_storage.Console",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -1928,7 +1932,7 @@
     {
       "name": "Files",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 78,
+      "line": 79,
       "expression": "app_storage.Files",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -1936,7 +1940,7 @@
     {
       "name": "directory_page",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 79,
+      "line": 80,
       "expression": "@import(\"r4os/directory_page.zig\")",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -1944,7 +1948,7 @@
     {
       "name": "DirectoryIterator",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 80,
+      "line": 81,
       "expression": "app_storage.DirectoryIterator",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -1952,7 +1956,7 @@
     {
       "name": "StreamReader",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 81,
+      "line": 82,
       "expression": "app_storage.StreamReader",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -1960,7 +1964,7 @@
     {
       "name": "StreamWriter",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 82,
+      "line": 83,
       "expression": "app_storage.StreamWriter",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -1968,7 +1972,7 @@
     {
       "name": "Registry",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 83,
+      "line": 84,
       "expression": "app_storage.Registry",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -1976,7 +1980,7 @@
     {
       "name": "RegistrySnapshot",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 84,
+      "line": 85,
       "expression": "app_storage.RegistrySnapshot",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -1984,7 +1988,7 @@
     {
       "name": "RegistrySnapshotKind",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 85,
+      "line": 86,
       "expression": "app_storage.RegistrySnapshotKind",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -1992,7 +1996,7 @@
     {
       "name": "RegistrySnapshotOpen",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 86,
+      "line": 87,
       "expression": "app_storage.RegistrySnapshotOpen",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -2000,7 +2004,7 @@
     {
       "name": "RegistryBatchBuilder",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 87,
+      "line": 88,
       "expression": "app_storage.RegistryBatchBuilder",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -2008,7 +2012,7 @@
     {
       "name": "RegistryBatchBuildError",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 88,
+      "line": 89,
       "expression": "app_storage.RegistryBatchBuildError",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -2016,7 +2020,7 @@
     {
       "name": "RegistryBatchApply",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 89,
+      "line": 90,
       "expression": "app_storage.RegistryBatchApply",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -2024,7 +2028,7 @@
     {
       "name": "FilePath",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 90,
+      "line": 91,
       "expression": "app_storage.FilePath",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -2032,7 +2036,7 @@
     {
       "name": "AbsoluteFilePath",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 91,
+      "line": 92,
       "expression": "app_storage.AbsoluteFilePath",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -2040,7 +2044,7 @@
     {
       "name": "RelativeFilePath",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 92,
+      "line": 93,
       "expression": "app_storage.RelativeFilePath",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -2048,7 +2052,7 @@
     {
       "name": "RegistryPath",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 93,
+      "line": 94,
       "expression": "app_storage.RegistryPath",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -2056,7 +2060,7 @@
     {
       "name": "Window",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 94,
+      "line": 95,
       "expression": "app_gui.Window",
       "capability": "gui",
       "wave": "0.86.56"
@@ -2064,7 +2068,7 @@
     {
       "name": "Message",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 95,
+      "line": 96,
       "expression": "app_gui.Message",
       "capability": "gui",
       "wave": "0.86.56"
@@ -2072,7 +2076,7 @@
     {
       "name": "EventLoop",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 96,
+      "line": 97,
       "expression": "app_gui.EventLoop",
       "capability": "gui",
       "wave": "0.86.56"
@@ -2080,7 +2084,7 @@
     {
       "name": "CommandId",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 97,
+      "line": 98,
       "expression": "app_gui.CommandId",
       "capability": "gui",
       "wave": "0.86.56"
@@ -2088,7 +2092,7 @@
     {
       "name": "TimerId",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 98,
+      "line": 99,
       "expression": "app_gui.TimerId",
       "capability": "gui",
       "wave": "0.86.56"
@@ -2096,7 +2100,7 @@
     {
       "name": "Timer",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 99,
+      "line": 100,
       "expression": "app_gui.Timer",
       "capability": "gui",
       "wave": "0.86.56"
@@ -2104,7 +2108,7 @@
     {
       "name": "Canvas",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 100,
+      "line": 101,
       "expression": "app_gui.Canvas",
       "capability": "gui",
       "wave": "0.86.56"
@@ -2112,7 +2116,7 @@
     {
       "name": "PaintContext",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 101,
+      "line": 102,
       "expression": "app_gui.PaintContext",
       "capability": "gui",
       "wave": "0.86.56"
@@ -2120,7 +2124,7 @@
     {
       "name": "FrameCanvas",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 102,
+      "line": 103,
       "expression": "app_gui.FrameCanvas",
       "capability": "gui",
       "wave": "0.86.56"
@@ -2128,7 +2132,7 @@
     {
       "name": "FrameCanvasStats",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 103,
+      "line": 104,
       "expression": "app_gui.FrameCanvasStats",
       "capability": "gui",
       "wave": "0.86.56"
@@ -2136,7 +2140,7 @@
     {
       "name": "Resources",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 104,
+      "line": 105,
       "expression": "app_resources.Resources",
       "capability": "process-sync-vm",
       "wave": "0.86.54"
@@ -2144,7 +2148,7 @@
     {
       "name": "ProcessHandle",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 105,
+      "line": 106,
       "expression": "app_resources.ProcessHandle",
       "capability": "process-sync-vm",
       "wave": "0.86.54"
@@ -2152,7 +2156,7 @@
     {
       "name": "ProcessOpen",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 106,
+      "line": 107,
       "expression": "app_resources.ProcessOpen",
       "capability": "process-sync-vm",
       "wave": "0.86.54"
@@ -2160,7 +2164,7 @@
     {
       "name": "ProcessInfo",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 107,
+      "line": 108,
       "expression": "app_resources.ProcessInfo",
       "capability": "process-sync-vm",
       "wave": "0.86.54"
@@ -2168,7 +2172,7 @@
     {
       "name": "ProcessReady",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 108,
+      "line": 109,
       "expression": "app_resources.ProcessReady",
       "capability": "process-sync-vm",
       "wave": "0.86.54"
@@ -2176,7 +2180,7 @@
     {
       "name": "ProcessRead",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 109,
+      "line": 110,
       "expression": "app_resources.ProcessRead",
       "capability": "process-sync-vm",
       "wave": "0.86.54"
@@ -2184,7 +2188,7 @@
     {
       "name": "ProcessWait",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 110,
+      "line": 111,
       "expression": "app_resources.ProcessWait",
       "capability": "process-sync-vm",
       "wave": "0.86.54"
@@ -2192,7 +2196,7 @@
     {
       "name": "JoinHandle",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 111,
+      "line": 112,
       "expression": "app_resources.JoinHandle",
       "capability": "process-sync-vm",
       "wave": "0.86.54"
@@ -2200,7 +2204,7 @@
     {
       "name": "VmRegion",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 112,
+      "line": 113,
       "expression": "app_resources.VmRegion",
       "capability": "process-sync-vm",
       "wave": "0.86.54"
@@ -2208,7 +2212,7 @@
     {
       "name": "IoRequest",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 113,
+      "line": 114,
       "expression": "app_resources.IoRequest",
       "capability": "process-sync-vm",
       "wave": "0.86.54"
@@ -2216,7 +2220,7 @@
     {
       "name": "Services",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 114,
+      "line": 115,
       "expression": "app_services.Services",
       "capability": "services",
       "wave": "0.86.55"
@@ -2224,7 +2228,7 @@
     {
       "name": "Tray",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 115,
+      "line": 116,
       "expression": "app_tray.Tray",
       "capability": "services",
       "wave": "0.86.55"
@@ -2232,7 +2236,7 @@
     {
       "name": "TrayItem",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 116,
+      "line": 117,
       "expression": "app_tray.Item",
       "capability": "services",
       "wave": "0.86.55"
@@ -2240,7 +2244,7 @@
     {
       "name": "ServiceConnection",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 117,
+      "line": 118,
       "expression": "app_services.ServiceConnection",
       "capability": "services",
       "wave": "0.86.55"
@@ -2248,7 +2252,7 @@
     {
       "name": "ServiceEndpoint",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 118,
+      "line": 119,
       "expression": "app_services.ServiceEndpoint",
       "capability": "services",
       "wave": "0.86.55"
@@ -2256,7 +2260,7 @@
     {
       "name": "ServiceLoop",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 119,
+      "line": 120,
       "expression": "app_services.ServiceLoop",
       "capability": "services",
       "wave": "0.86.55"
@@ -2264,7 +2268,7 @@
     {
       "name": "ServiceLoopOptions",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 120,
+      "line": 121,
       "expression": "app_services.ServiceLoopOptions",
       "capability": "services",
       "wave": "0.86.55"
@@ -2272,7 +2276,7 @@
     {
       "name": "ServiceLoopMetrics",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 121,
+      "line": 122,
       "expression": "app_services.ServiceLoopMetrics",
       "capability": "services",
       "wave": "0.86.55"
@@ -2280,7 +2284,7 @@
     {
       "name": "ServiceLoopWake",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 122,
+      "line": 123,
       "expression": "app_services.ServiceLoopWake",
       "capability": "services",
       "wave": "0.86.55"
@@ -2288,7 +2292,7 @@
     {
       "name": "ServiceBatchStep",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 123,
+      "line": 124,
       "expression": "app_services.ServiceBatchStep",
       "capability": "services",
       "wave": "0.86.55"
@@ -2296,7 +2300,7 @@
     {
       "name": "Network",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 124,
+      "line": 125,
       "expression": "app_network.Network",
       "capability": "network",
       "wave": "0.86.55"
@@ -2304,7 +2308,7 @@
     {
       "name": "Ipv4Address",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 125,
+      "line": 126,
       "expression": "app_network.Ipv4Address",
       "capability": "network",
       "wave": "0.86.55"
@@ -2312,7 +2316,7 @@
     {
       "name": "SocketAddress",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 126,
+      "line": 127,
       "expression": "app_network.SocketAddress",
       "capability": "network",
       "wave": "0.86.55"
@@ -2320,7 +2324,7 @@
     {
       "name": "Resolver",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 127,
+      "line": 128,
       "expression": "app_network.Resolver",
       "capability": "network",
       "wave": "0.86.55"
@@ -2328,7 +2332,7 @@
     {
       "name": "TcpSocket",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 128,
+      "line": 129,
       "expression": "app_network.TcpSocket",
       "capability": "network",
       "wave": "0.86.55"
@@ -2336,7 +2340,7 @@
     {
       "name": "TcpListener",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 129,
+      "line": 130,
       "expression": "app_network.TcpListener",
       "capability": "network",
       "wave": "0.86.55"
@@ -2344,7 +2348,7 @@
     {
       "name": "UdpSocket",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 130,
+      "line": 131,
       "expression": "app_network.UdpSocket",
       "capability": "network",
       "wave": "0.86.55"
@@ -2352,7 +2356,7 @@
     {
       "name": "Audio",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 131,
+      "line": 132,
       "expression": "app_audio.Audio",
       "capability": "audio",
       "wave": "0.86.58"
@@ -2360,7 +2364,7 @@
     {
       "name": "AudioStream",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 132,
+      "line": 133,
       "expression": "app_audio.AudioStream",
       "capability": "audio",
       "wave": "0.86.58"
@@ -2368,7 +2372,7 @@
     {
       "name": "AdvancedAudio",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 133,
+      "line": 134,
       "expression": "app_audio.AdvancedAudio",
       "capability": "audio",
       "wave": "0.86.58"
@@ -2376,7 +2380,7 @@
     {
       "name": "PcmFormat",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 134,
+      "line": 135,
       "expression": "app_audio.PcmFormat",
       "capability": "audio",
       "wave": "0.86.58"
@@ -2384,7 +2388,7 @@
     {
       "name": "Devices",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 135,
+      "line": 136,
       "expression": "app_devices.Devices",
       "capability": "devices-power",
       "wave": "0.86.58"
@@ -2392,7 +2396,7 @@
     {
       "name": "WebTransport",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 136,
+      "line": 137,
       "expression": "app_web.WebTransport",
       "capability": "web-transport",
       "wave": "0.86.63"
@@ -2400,7 +2404,7 @@
     {
       "name": "WebFetchOptions",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 137,
+      "line": 138,
       "expression": "app_web.FetchOptions",
       "capability": "web-transport",
       "wave": "0.86.63"
@@ -2408,7 +2412,7 @@
     {
       "name": "WebFetchResult",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 138,
+      "line": 139,
       "expression": "app_web.FetchResult",
       "capability": "web-transport",
       "wave": "0.86.63"
@@ -2416,7 +2420,7 @@
     {
       "name": "DeviceInventoryView",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 139,
+      "line": 140,
       "expression": "app_devices.DeviceInventoryView",
       "capability": "devices-power",
       "wave": "0.86.58"
@@ -2424,7 +2428,7 @@
     {
       "name": "MemoryView",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 140,
+      "line": 141,
       "expression": "app_devices.MemoryView",
       "capability": "devices-power",
       "wave": "0.86.58"
@@ -2432,7 +2436,7 @@
     {
       "name": "PerformanceView",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 141,
+      "line": 142,
       "expression": "app_devices.PerformanceView",
       "capability": "devices-power",
       "wave": "0.86.58"
@@ -2440,7 +2444,7 @@
     {
       "name": "Failure",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 142,
+      "line": 143,
       "expression": "app_contract.Failure",
       "capability": "startup",
       "wave": "0.86.49"
@@ -2448,7 +2452,7 @@
     {
       "name": "Outcome",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 143,
+      "line": 144,
       "expression": "app_contract.Outcome",
       "capability": "startup",
       "wave": "0.86.49"
@@ -2456,7 +2460,7 @@
     {
       "name": "audio_pcm",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 144,
+      "line": 145,
       "expression": "@import(\"r4os/audio_pcm.zig\")",
       "capability": "audio",
       "wave": "0.86.58"
@@ -2464,7 +2468,7 @@
     {
       "name": "r4sys",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 145,
+      "line": 146,
       "expression": "@import(\"r4os/r4sys.zig\")",
       "capability": "process-sync-vm",
       "wave": "0.86.54"
@@ -2472,7 +2476,7 @@
     {
       "name": "r4desk",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 146,
+      "line": 147,
       "expression": "@import(\"r4os/r4desk.zig\")",
       "capability": "gui",
       "wave": "0.86.56"
@@ -2480,7 +2484,7 @@
     {
       "name": "r4draw",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 147,
+      "line": 148,
       "expression": "@import(\"r4os/r4draw.zig\")",
       "capability": "graphics",
       "wave": "0.86.57"
@@ -2488,7 +2492,7 @@
     {
       "name": "r4net",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 148,
+      "line": 149,
       "expression": "@import(\"r4os/r4net.zig\")",
       "capability": "network",
       "wave": "0.86.55"
@@ -2496,7 +2500,7 @@
     {
       "name": "r4audio",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 149,
+      "line": 150,
       "expression": "@import(\"r4os/r4audio.zig\")",
       "capability": "audio",
       "wave": "0.86.58"
@@ -2504,7 +2508,7 @@
     {
       "name": "r4dev",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 150,
+      "line": 151,
       "expression": "@import(\"r4os/r4dev.zig\")",
       "capability": "devices-power",
       "wave": "0.86.58"
@@ -2512,7 +2516,7 @@
     {
       "name": "r4x",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 151,
+      "line": 152,
       "expression": "@import(\"r4os/r4x.zig\")",
       "capability": "startup",
       "wave": "0.86.49"
@@ -2520,7 +2524,7 @@
     {
       "name": "r4xstart",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 152,
+      "line": 153,
       "expression": "@import(\"r4os/r4xstart.zig\")",
       "capability": "startup",
       "wave": "0.86.49"
@@ -2528,7 +2532,7 @@
     {
       "name": "runtime_r4l",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 153,
+      "line": 154,
       "expression": "@import(\"r4os/runtime_r4l.zig\")",
       "capability": "library-bind",
       "wave": "0.86.52"
@@ -2536,7 +2540,7 @@
     {
       "name": "vm_allocator",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 154,
+      "line": 155,
       "expression": "@import(\"r4os/vm_allocator.zig\")",
       "capability": "allocation",
       "wave": "0.86.50"
@@ -2544,7 +2548,7 @@
     {
       "name": "chart",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 155,
+      "line": 156,
       "expression": "@import(\"r4os/chart.zig\")",
       "capability": "gui",
       "wave": "0.86.56"
@@ -2552,7 +2556,7 @@
     {
       "name": "clipboard",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 156,
+      "line": 157,
       "expression": "@import(\"r4os/clipboard.zig\")",
       "capability": "gui",
       "wave": "0.86.56"
@@ -2560,7 +2564,7 @@
     {
       "name": "r4d",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 157,
+      "line": 159,
       "expression": "@import(\"r4os/driver.zig\")",
       "capability": "driver",
       "wave": "0.86.67"
@@ -2568,7 +2572,7 @@
     {
       "name": "r4p",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 158,
+      "line": 160,
       "expression": "@import(\"r4os/protocol.zig\")",
       "capability": "protocol",
       "wave": "0.86.68"
@@ -2576,7 +2580,7 @@
     {
       "name": "gui",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 159,
+      "line": 161,
       "expression": "@import(\"r4os/gui.zig\")",
       "capability": "gui",
       "wave": "0.86.56"
@@ -2584,7 +2588,7 @@
     {
       "name": "bounded_text",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 160,
+      "line": 162,
       "expression": "@import(\"r4os/bounded_text.zig\")",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -2592,7 +2596,7 @@
     {
       "name": "gui_shapes",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 161,
+      "line": 163,
       "expression": "@import(\"r4os/gui_shapes.zig\")",
       "capability": "gui",
       "wave": "0.86.56"
@@ -2600,7 +2604,7 @@
     {
       "name": "ico",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 162,
+      "line": 164,
       "expression": "@import(\"r4os/ico.zig\")",
       "capability": "data-crypto",
       "wave": "0.86.61"
@@ -2608,7 +2612,7 @@
     {
       "name": "raster",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 163,
+      "line": 165,
       "expression": "@import(\"r4os/raster.zig\")",
       "capability": "data-crypto",
       "wave": "0.86.61"
@@ -2616,7 +2620,7 @@
     {
       "name": "recent_documents",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 164,
+      "line": 166,
       "expression": "@import(\"r4os/recent_documents.zig\")",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -2624,7 +2628,7 @@
     {
       "name": "registry",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 165,
+      "line": 167,
       "expression": "@import(\"r4os/registry.zig\")",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -2632,7 +2636,7 @@
     {
       "name": "registry_core",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 166,
+      "line": 168,
       "expression": "@import(\"r4os/registry_core.zig\")",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -2640,7 +2644,7 @@
     {
       "name": "registry_selftest",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 167,
+      "line": 169,
       "expression": "@import(\"r4os/registry_selftest.zig\")",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -2648,7 +2652,7 @@
     {
       "name": "web_forms",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 168,
+      "line": 170,
       "expression": "@import(\"r4os/web_forms.zig\")",
       "capability": "web-document",
       "wave": "0.86.62"
@@ -2656,7 +2660,7 @@
     {
       "name": "web_navigation",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 169,
+      "line": 171,
       "expression": "@import(\"r4os/web_navigation.zig\")",
       "capability": "web-document",
       "wave": "0.86.62"
@@ -2664,7 +2668,7 @@
     {
       "name": "javascript",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 170,
+      "line": 172,
       "expression": "@import(\"r4os/javascript.zig\")",
       "capability": "web-document",
       "wave": "0.86.62"
@@ -2672,7 +2676,7 @@
     {
       "name": "web_security",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 171,
+      "line": 173,
       "expression": "@import(\"r4os/web_security.zig\")",
       "capability": "web-transport",
       "wave": "0.86.63"
@@ -2680,7 +2684,7 @@
     {
       "name": "web_runtime",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 172,
+      "line": 174,
       "expression": "@import(\"r4os/web_runtime.zig\")",
       "capability": "web-document",
       "wave": "0.86.62"
@@ -2688,7 +2692,7 @@
     {
       "name": "web_response_cache",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 173,
+      "line": 175,
       "expression": "@import(\"r4os/web_response_cache.zig\")",
       "capability": "web-transport",
       "wave": "0.86.63"
@@ -2696,7 +2700,7 @@
     {
       "name": "app_web_jobs",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 174,
+      "line": 176,
       "expression": "@import(\"r4os/app_web_jobs.zig\")",
       "capability": "web-transport",
       "wave": "0.86.63"
@@ -2704,7 +2708,7 @@
     {
       "name": "web_runtime_jobs",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 175,
+      "line": 177,
       "expression": "@import(\"r4os/web_runtime_jobs.zig\")",
       "capability": "web-transport",
       "wave": "0.86.63"
@@ -2712,7 +2716,7 @@
     {
       "name": "web_resources",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 176,
+      "line": 178,
       "expression": "@import(\"r4os/web_resources.zig\")",
       "capability": "web-transport",
       "wave": "0.86.63"
@@ -2720,7 +2724,7 @@
     {
       "name": "web_documents",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 177,
+      "line": 179,
       "expression": "@import(\"r4os/web_documents.zig\")",
       "capability": "web-transport",
       "wave": "0.86.63"
@@ -2728,7 +2732,7 @@
     {
       "name": "secure_random",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 178,
+      "line": 180,
       "expression": "@import(\"r4os/secure_random.zig\")",
       "capability": "data-crypto",
       "wave": "0.86.61"
@@ -2736,7 +2740,7 @@
     {
       "name": "cpu_acceleration",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 179,
+      "line": 181,
       "expression": "@import(\"r4os/cpu_acceleration.zig\")",
       "capability": "data-crypto",
       "wave": "0.86.61"
@@ -2744,7 +2748,7 @@
     {
       "name": "cpu_memory",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 180,
+      "line": 182,
       "expression": "@import(\"r4os/cpu_memory.zig\")",
       "capability": "data-crypto",
       "wave": "0.86.61"
@@ -2752,7 +2756,7 @@
     {
       "name": "crypto_sha256",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 181,
+      "line": 183,
       "expression": "@import(\"r4os/crypto_sha256.zig\")",
       "capability": "data-crypto",
       "wave": "0.86.61"
@@ -2760,7 +2764,7 @@
     {
       "name": "web_crypto",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 182,
+      "line": 184,
       "expression": "@import(\"r4os/web_crypto.zig\")",
       "capability": "data-crypto",
       "wave": "0.86.61"
@@ -2768,7 +2772,7 @@
     {
       "name": "web_canvas",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 183,
+      "line": 185,
       "expression": "@import(\"r4os/web_canvas.zig\")",
       "capability": "web-document",
       "wave": "0.86.62"
@@ -2776,7 +2780,7 @@
     {
       "name": "web_url",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 184,
+      "line": 186,
       "expression": "@import(\"r4os/web_url.zig\")",
       "capability": "data-crypto",
       "wave": "0.86.61"
@@ -2784,7 +2788,7 @@
     {
       "name": "web_encoding",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 185,
+      "line": 187,
       "expression": "@import(\"r4os/web_encoding.zig\")",
       "capability": "data-crypto",
       "wave": "0.86.61"
@@ -2792,7 +2796,7 @@
     {
       "name": "web_fetch",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 186,
+      "line": 188,
       "expression": "@import(\"r4os/web_fetch.zig\")",
       "capability": "web-transport",
       "wave": "0.86.63"
@@ -2800,7 +2804,7 @@
     {
       "name": "path",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 187,
+      "line": 189,
       "expression": "@import(\"r4os/path.zig\")",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -2808,7 +2812,7 @@
     {
       "name": "time_contract",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 188,
+      "line": 190,
       "expression": "@import(\"r4os/time_contract.zig\")",
       "capability": "time-serial",
       "wave": "0.86.55"
@@ -2816,7 +2820,7 @@
     {
       "name": "service_deadline",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 197,
+      "line": 199,
       "expression": "@import(\"r4os/service_deadline.zig\")",
       "capability": "services",
       "wave": "0.86.55"
@@ -2824,7 +2828,7 @@
     {
       "name": "file_stream",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 198,
+      "line": 200,
       "expression": "@import(\"r4os/file_stream.zig\")",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -2832,7 +2836,7 @@
     {
       "name": "r4cp",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 199,
+      "line": 201,
       "expression": "@import(\"r4os/r4cp.zig\")",
       "capability": "project-build",
       "wave": "0.86.51",
@@ -2842,7 +2846,7 @@
     {
       "name": "r4cp_convert",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 200,
+      "line": 202,
       "expression": "@import(\"r4os/r4cp_convert.zig\")",
       "capability": "project-build",
       "wave": "0.86.51",
@@ -2852,7 +2856,7 @@
     {
       "name": "r4mf",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 201,
+      "line": 203,
       "expression": "@import(\"r4os/module_manifest.zig\")",
       "capability": "project-build",
       "wave": "0.86.51",
@@ -2862,7 +2866,7 @@
     {
       "name": "lowlevel",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 202,
+      "line": 204,
       "expression": "@import(\"r4os/lowlevel.zig\")",
       "capability": "lowlevel",
       "wave": "0.86.69"
@@ -2870,7 +2874,7 @@
     {
       "name": "grapheme",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 205,
+      "line": 207,
       "expression": "@import(\"r4std_grapheme\")",
       "capability": "text-primitives",
       "wave": "0.86.59"
@@ -2878,7 +2882,7 @@
     {
       "name": "desktop_evidence",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 55,
+      "line": 56,
       "expression": "@import(\"r4os/desktop_evidence.zig\")",
       "capability": "services",
       "wave": "0.88.97"
@@ -2886,7 +2890,7 @@
     {
       "name": "desktop_actions",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 207,
+      "line": 209,
       "expression": "@import(\"r4os/desktop_actions.zig\")",
       "capability": "services",
       "wave": "0.88.98"
@@ -2894,7 +2898,7 @@
     {
       "name": "server_targets",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 26,
+      "line": 27,
       "expression": "@import(\"r4os/server_targets.zig\")",
       "capability": "files-registry-console",
       "wave": "0.89.3"
@@ -2902,7 +2906,7 @@
     {
       "name": "server_access",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 27,
+      "line": 28,
       "expression": "@import(\"r4os/server_access.zig\")",
       "capability": "services",
       "wave": "0.89.3"
@@ -2910,7 +2914,7 @@
     {
       "name": "server_profile",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 28,
+      "line": 29,
       "expression": "@import(\"r4os/server_profile.zig\")",
       "capability": "files-registry-console",
       "wave": "0.89.3"
@@ -2918,7 +2922,7 @@
     {
       "name": "server_credentials",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 29,
+      "line": 30,
       "expression": "@import(\"r4os/server_credentials.zig\")",
       "capability": "files-registry-console",
       "wave": "0.89.3"
@@ -2926,7 +2930,7 @@
     {
       "name": "desktop_links",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 209,
+      "line": 211,
       "expression": "@import(\"r4os/desktop_links.zig\")",
       "capability": "services",
       "wave": "0.89.16"
@@ -2942,7 +2946,7 @@
     {
       "name": "technical2",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 5,
+      "line": 6,
       "expression": "@import(\"r4os/technical2.zig\")",
       "capability": "driver",
       "wave": "0.90.15"
@@ -2950,7 +2954,7 @@
     {
       "name": "driver_poll_budget",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 189,
+      "line": 191,
       "expression": "@import(\"r4os/driver_poll_budget.zig\")",
       "capability": "driver",
       "wave": "0.90.16"
@@ -2958,7 +2962,7 @@
     {
       "name": "binary_cursor",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 190,
+      "line": 192,
       "expression": "@import(\"r4os/binary_cursor.zig\")",
       "capability": "data-crypto",
       "wave": "0.90.17"
@@ -2966,7 +2970,7 @@
     {
       "name": "native_protocol_view",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 191,
+      "line": 193,
       "expression": "@import(\"r4os/native_protocol_view.zig\")",
       "capability": "data-crypto",
       "wave": "0.90.17"
@@ -2974,7 +2978,7 @@
     {
       "name": "internet_checksum",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 192,
+      "line": 194,
       "expression": "@import(\"r4os/internet_checksum.zig\")",
       "capability": "data-crypto",
       "wave": "0.90.17"
@@ -2982,7 +2986,7 @@
     {
       "name": "block_transfer",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 193,
+      "line": 195,
       "expression": "@import(\"r4os/block_transfer.zig\")",
       "capability": "data-crypto",
       "wave": "0.90.17"
@@ -2990,7 +2994,7 @@
     {
       "name": "arguments",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 194,
+      "line": 196,
       "expression": "@import(\"r4os/arg_cursor.zig\")",
       "capability": "text-primitives",
       "wave": "0.90.18"
@@ -2998,7 +3002,7 @@
     {
       "name": "diagnostics",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 195,
+      "line": 197,
       "expression": "@import(\"r4os/diagnostics.zig\")",
       "capability": "files-registry-console",
       "wave": "0.90.18"
@@ -3006,7 +3010,7 @@
     {
       "name": "stream_transfer",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 196,
+      "line": 198,
       "expression": "@import(\"r4os/stream_api.zig\")",
       "capability": "files-registry-console",
       "wave": "0.90.19"
@@ -3014,7 +3018,7 @@
     {
       "name": "inventory_reader",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 47,
+      "line": 48,
       "expression": "@import(\"r4os/inventory_api.zig\")",
       "capability": "process-sync-vm",
       "wave": "0.90.20"
@@ -3022,7 +3026,7 @@
     {
       "name": "device_snapshot",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 48,
+      "line": 49,
       "expression": "@import(\"r4os/device_snapshot_api.zig\")",
       "capability": "devices-power",
       "wave": "0.90.21"
@@ -3030,7 +3034,7 @@
     {
       "name": "metadata2",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 49,
+      "line": 50,
       "expression": "@import(\"r4os/metadata2.zig\")",
       "capability": "files-registry-console",
       "wave": "0.90.22"
@@ -3038,7 +3042,7 @@
     {
       "name": "text_metrics",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 50,
+      "line": 51,
       "expression": "@import(\"r4os/text_metrics_api.zig\")",
       "capability": "gui",
       "wave": "0.90.23"
@@ -3046,7 +3050,7 @@
     {
       "name": "file_picker",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 51,
+      "line": 52,
       "expression": "@import(\"r4os/file_picker_api.zig\")",
       "capability": "gui",
       "wave": "0.90.24"
@@ -3054,7 +3058,7 @@
     {
       "name": "audio_write",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 52,
+      "line": 53,
       "expression": "@import(\"r4os/audio_write_api.zig\")",
       "capability": "audio",
       "wave": "0.90.25"
@@ -3062,7 +3066,7 @@
     {
       "name": "pcm_source",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 53,
+      "line": 54,
       "expression": "@import(\"r4os/pcm_source.zig\")",
       "capability": "audio",
       "wave": "0.90.25"
@@ -3070,7 +3074,7 @@
     {
       "name": "published_frame",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 19,
+      "line": 20,
       "expression": "@import(\"r4os/published_frame.zig\")",
       "capability": "subsystems",
       "wave": "0.90.26"
@@ -3082,6 +3086,14 @@
       "expression": "@import(\"r4os/wait_set.zig\")",
       "capability": "process-sync-vm",
       "wave": "0.90.28"
+    },
+    {
+      "name": "clipboard_offer",
+      "source": "Repositories/SDK/r4os.zig",
+      "line": 158,
+      "expression": "@import(\"r4os/clipboard_offer.zig\")",
+      "capability": "gui",
+      "wave": "0.90.30"
     }
   ],
   "build_exports": [
@@ -56490,6 +56502,19 @@
         "This receipt checks sources and host language surfaces; native original resource owners/SMP proofs are separate in the linked report/local evidence. Resource admission in the generic channel host fixture is a seam, not actual IO/Service/GUI qualification.",
         "Wake is no Read/Recv/Reap/Join/IO-buffer/DMA retirement. ServiceLoop and applications remain unchanged. No Windows/hardware assertion."
       ]
+    },
+    "clipboard_offers_09030": {
+      "complete": true,
+      "performed_in": "0.90.30",
+      "sdk": "0.64.173",
+      "contract": "0.64.85",
+      "report": "Docs/API/ClipboardOffers.txt",
+      "scope": "Source and host language qualification only; actual CLIPSVC/GUI/native/benchmark receipts separate.",
+      "host_checks": "Original Contract18steps/8C-Rust-Zig ABI roundtrips;8 actual clipboard owner cases, strict C objects, bare Rust Clippy, all11 Zig/C/Rust client operations compiled. Controlled old-provider/malformed replies in all3 language clients preserve output and report Unsupported/Invalid/Closed. CFacadeGen regenerated new aliases/layout assertions.",
+      "limits": [
+        "Host owner clock/allocator are controlled seams; native IPC, Producerexit, provider restart, GUI activity, expiry and SMP qualify separately.",
+        "No consumer migration, implicit image/path conversion, old text tightening, full PNG decoder, Windows/hardware or isolated clipboard performance claim."
+      ]
     }
   },
   "wave_bindings": [
@@ -56753,7 +56778,7 @@
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.90.29",
+    "reviewed_in": "0.90.30",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -56841,11 +56866,11 @@
     "files": [
       {
         "path": "Repositories/Contract/API/ApiContract.baseline.json",
-        "sha256": "bb57ef00889ea52e9116aceae4b616d91d48624a7dfd381704b88638626c91c6"
+        "sha256": "740e8f16e62a31ed06dc0eda73c91fa8fd3fc933ad5bc69c698c0c08d48152f3"
       },
       {
         "path": "Repositories/Contract/API/ApiContract.json",
-        "sha256": "bb57ef00889ea52e9116aceae4b616d91d48624a7dfd381704b88638626c91c6"
+        "sha256": "740e8f16e62a31ed06dc0eda73c91fa8fd3fc933ad5bc69c698c0c08d48152f3"
       },
       {
         "path": "Repositories/Contract/API/Generation2.json",
@@ -56873,11 +56898,11 @@
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/RustABI.json",
-        "sha256": "447315e80fbc2829735f34a2f99794a3136a8dd8993b2c88547db08ab3650443"
+        "sha256": "35d1d990177bbd69109dca9555fea0fb7330314cba17f8ab9450038b800760ae"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_generated.h",
-        "sha256": "14c9af9ce75a151db27a59c9a34abae1227e1ce8b6fe9d6354f1713ef8e4f09e"
+        "sha256": "11fa3728085fce1e0c2ef6bfa34b2cf8a724295bfee8dce08ad161b0ce3886d1"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_technical_generated.h",
@@ -56889,19 +56914,19 @@
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Rust/src/lib.rs",
-        "sha256": "d3947ba09cd636d1105a0237ecbc129033e8e7c0bafd9f3de77ef14ea45ca4fc"
+        "sha256": "318b67dd4589780c0fe797f8805e956099e0aa78fb08b498ae6fdfddccf7918d"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi.zig",
-        "sha256": "5d59faf2ed0dfca970ef3250fc18aa7963c97ba5dfbe8edba6b7881c868c6544"
+        "sha256": "d5c528a9320ad90b4b699943f5434209406aaccb051b43e54104a4efa4d252d9"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_exports.zig",
-        "sha256": "ccc922e1bd0a31fb2c375f1872d4d1bdbfa5e29291a8133e16dbe3ed697d668c"
+        "sha256": "1f78ad3ef9d44645d0dbf6f8424f25063f844dc80904c6e39b9c361262998eea"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_generated.zig",
-        "sha256": "cdf88bd9e75db905d252cf4fe977fc8d74b4d75caea17c39dd8d31d929e47ae3"
+        "sha256": "9819a4827c95318164fe4a2dd887ccd0ec2485eba7021239a5297b862822e63e"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/package.zig",
@@ -57985,7 +58010,7 @@
       },
       {
         "path": "Repositories/SDK/Profiles/Components.json",
-        "sha256": "726d9de52260ce72131f6d15de58e3acedba8d9c7bfab04d00befb54ea2866d3"
+        "sha256": "be1daad815fbae0c1f2e9d5c8808af9a66fcf6735aa281c88c1be017ad3b133f"
       },
       {
         "path": "Repositories/SDK/Profiles/Tools.json",
@@ -58005,11 +58030,15 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "1465f814afdcbc6d3d4cd17839260f45f35fd04fb577d67f356358b5bc32ae86"
+        "sha256": "ea31a7d1213a8891add9bd083a4ec9daf4ffd79c3a07019f3f8a2036f2008bd6"
       },
       {
         "path": "Repositories/SDK/Rust/src/cli.rs",
         "sha256": "1c8da2f1ae9cbdea542f1787c5c66f1e2deab639854e083481d65c042bfb45ab"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/clipboard_offer.rs",
+        "sha256": "e3937110e50b0988d74ee4033ea3e7ad503b104ae9c175d0e238316991252bb0"
       },
       {
         "path": "Repositories/SDK/Rust/src/data/hash.rs",
@@ -58093,7 +58122,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/lib.rs",
-        "sha256": "d06e9cca9201c961c58a48a32d0620e621a66f237555d7825a106f1a513f0aa1"
+        "sha256": "7a654ef9f8af4e4db9c44ab3af7687690fd48ec442096f9c970ceb175159b831"
       },
       {
         "path": "Repositories/SDK/Rust/src/lowlevel.rs",
@@ -58386,6 +58415,10 @@
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/cli_platform2.h",
         "sha256": "542843a996c3bc3139530b779b6d965eba9f61075389ab5bed1f76089086b86e"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/clipboard_offer_platform2.h",
+        "sha256": "99720b3fc6ba101ea08326ba854f77194374550cef188d9782931db0a339089a"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/data_helpers.h",
@@ -59017,11 +59050,11 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "a7a9c9dcfb488c1bf1fc42749e6556de4b8c7e5b3f9067f025041c775a79ca29"
+        "sha256": "ef198e65b0714a82a362827492e1fec8caed22845c0caeaed1ca9c61c8f897af"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
-        "sha256": "66bd0c5868a703306b11625ad2cc428cc5d2507fcf7ae5b80b6ad00c448bcac1"
+        "sha256": "c5b50181c82086c7180e2e61dbfade4f6dba28a4a981cc3e47893bb46d948b85"
       },
       {
         "path": "Repositories/SDK/r4os/allocator_wait.zig",
@@ -59142,6 +59175,10 @@
       {
         "path": "Repositories/SDK/r4os/clipboard.zig",
         "sha256": "71f393fad452fb770e7497f53d6362963e686e443a1fbdb590ace197a09b2474"
+      },
+      {
+        "path": "Repositories/SDK/r4os/clipboard_offer.zig",
+        "sha256": "f624fa68f2fd9b3dd803101a51cba0359107fcaa266dc57a4dc596025b62b7a8"
       },
       {
         "path": "Repositories/SDK/r4os/cpu_acceleration.zig",
@@ -60536,7 +60573,8 @@
           "Repositories/SDK/r4os/file_picker.zig",
           "Repositories/SDK/r4os/file_picker_api.zig",
           "Repositories/SDK/r4os/file_picker_runtime.zig",
-          "Repositories/SDK/r4os/file_picker_tests.zig"
+          "Repositories/SDK/r4os/file_picker_tests.zig",
+          "Repositories/SDK/r4os/clipboard_offer.zig"
         ],
         "c": [
           "Repositories/SDK/Shared/C/include/r4os/app_gui.h",
@@ -60545,7 +60583,8 @@
           "Repositories/SDK/Shared/C/include/r4os/text_metrics.h",
           "Repositories/SDK/Shared/C/include/r4os/text_metrics_platform2.h",
           "Repositories/SDK/Shared/C/include/r4os/file_picker.h",
-          "Repositories/SDK/Shared/C/include/r4os/file_picker_platform2.h"
+          "Repositories/SDK/Shared/C/include/r4os/file_picker_platform2.h",
+          "Repositories/SDK/Shared/C/include/r4os/clipboard_offer_platform2.h"
         ],
         "rust": [
           "Repositories/SDK/Rust/src/c_facades.rs",
@@ -60555,7 +60594,8 @@
           "Repositories/SDK/Rust/src/gui/text.rs",
           "Repositories/SDK/Rust/src/gui/style.rs",
           "Repositories/SDK/Rust/src/text_metrics.rs",
-          "Repositories/SDK/Rust/src/file_picker.rs"
+          "Repositories/SDK/Rust/src/file_picker.rs",
+          "Repositories/SDK/Rust/src/clipboard_offer.rs"
         ],
         "proof": [
           "gui_current_56",
@@ -60573,7 +60613,8 @@
           "gui_regional_0901",
           "device_snapshot_09021",
           "text_metrics_09023",
-          "file_picker_09024"
+          "file_picker_09024",
+          "clipboard_offers_09030"
         ]
       },
       {
