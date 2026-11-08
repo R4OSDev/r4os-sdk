@@ -1,4 +1,6 @@
 //! Shared tagged timeouts, saturating absolute deadlines and request footers.
+#[path = "time_budget.rs"]
+pub mod checked;
 use crate::{
     abi, c_facades as c,
     resources::Timeout,
@@ -14,6 +16,10 @@ pub struct Clock<'a, 'context> {
 impl<'a, 'context> Clock<'a, 'context> {
     pub fn new(app: &'a crate::App<'context>) -> Self {
         Self { app }
+    }
+    pub fn checked_sample(&self) -> core::result::Result<checked::ClockSample, checked::Error> {
+        let info = self.monotonic().map_err(|_| checked::Error::ClockUnavailable)?;
+        checked::ClockSample::from_info(&info)
     }
     pub fn state(&self) -> Result<abi::TimeState> {
         let address = self

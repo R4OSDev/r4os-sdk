@@ -29,6 +29,13 @@ fn Callback(comptime Table: type, comptime field: []const u8) type {
 pub const Driver = View(abi.DriverApi2, abi.driver_magic, abi.driver_version);
 pub const Protocol = View(abi.ProtocolApi2, abi.protocol_magic, abi.protocol_version);
 
+pub fn driverClockSample(driver: Driver) @import("time_budget.zig").Error!@import("time_budget.zig").ClockSample {
+    const callback = driver.function("monotonic_clock") orelse return error.ClockUnavailable;
+    var info: abi.shared.MonotonicClockInfo = .{};
+    if (callback(&info) <= 0) return error.ClockUnavailable;
+    return @import("time_budget.zig").ClockSample.fromInfo(info);
+}
+
 pub fn driverEntriesAsm(comptime init: []const u8, comptime shutdown: []const u8) []const u8 {
     return std.fmt.comptimePrint(".pushsection .text.r4d_entries,\"ax\",@progbits\n.global DriverInit2\nDriverInit2:\n.byte 0xe9\n.long {s} - . - 4\n.global DriverShutdown\nDriverShutdown:\n.byte 0xe9\n.long {s} - . - 4\n.popsection\n", .{ init, shutdown });
 }

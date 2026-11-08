@@ -57,6 +57,16 @@ impl<'a> Driver<'a> {
     pub fn ticks(&self) -> u64 {
         unsafe { c::R4SdkDriverContext_tickCount(0, &self.raw) }.bits
     }
+    pub fn clock_sample(
+        &self,
+    ) -> core::result::Result<crate::time::checked::ClockSample, crate::time::checked::Error> {
+        let mut info = abi::MonotonicClockInfo::default();
+        let result = code(unsafe { c::R4SdkDriverContext_monotonicClock(0, &self.raw, &mut info) });
+        if !matches!(result, Ok(n) if n > 0) {
+            return Err(crate::time::checked::Error::ClockUnavailable);
+        }
+        crate::time::checked::ClockSample::from_info(&info)
+    }
     pub fn wait_ticks(&self, ticks: u64) {
         unsafe {
             c::R4SdkDriverContext_waitTicks(0, &self.raw, ticks);

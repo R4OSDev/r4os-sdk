@@ -19,6 +19,12 @@ impl<'a> Driver<'a> {
     }
     pub fn raw(&self) -> &'a abi::DriverApi2 { self.table }
     pub fn log(&self, text: &CStr) { unsafe { (self.table.log_info)(text.as_ptr().cast()) } }
+    pub fn clock_sample(&self) -> Result<crate::time::checked::ClockSample, crate::time::checked::Error> {
+        let callback = self.table.monotonic_clock.ok_or(crate::time::checked::Error::ClockUnavailable)?;
+        let mut info = abi::MonotonicClockInfo::default();
+        if unsafe { callback(&mut info) } <= 0 { return Err(crate::time::checked::Error::ClockUnavailable); }
+        crate::time::checked::ClockSample::from_info(&info)
+    }
     /// # Safety
     /// Descriptor and all callback/context backing stay immutable and resident
     /// through actual unregister/terminal retirement, even after partial error.

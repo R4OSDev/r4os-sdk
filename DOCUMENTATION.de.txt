@@ -5,6 +5,51 @@ Dieses Repository enthaelt das hostneutrale Kern-SDK von R4OS: Zig- und
 C-Fassaden, Buildprofile, Templates, Smokeprojekte sowie die generischen
 Werkzeuge R4XBuilder, R4LContractGen und ModuleCatalog.
 
+Gepruefte Zeit- und Pollbudgets ab0.64.159
+---------------------------------------
+time_contract.checked und driver_poll_budget besitzen die neue reine SDK-
+Mechanik. C/Rust rufen ueber poll_budget.h beziehungsweise time::checked
+denselben Zig-Besitzer im Fassadenobjekt auf; keine neue Kernelregistry.
+scaleCeil rechnet mit u128 und Quotient/Rest; alte saettigende Umrechnungen
+benutzen diese Rechnung mit unveraenderter Saettigung. Die neue Fassade
+meldet BudgetOverflow, statt endliche Werte in Forever umzudeuten.
+0ms ergibt0Ticks; positive Dauern werden aufgerundet. Frequenz0 ist
+UnknownFrequency. Tags trennen Poll, positive endliche Werte und Forever,
+auch bei endlichem max(u64). finite0 wird zu Poll normalisiert. Ungueltige
+Tags, Reservedbytes und Nutzlast an Poll/Forever werden abgewiesen.
+Eine Tickumrechnung mit unbekannter Frequenz scheitert auch fuer0ms.
+Fertig getaggte Poll-/Forever-Budgets brauchen keine Tickumrechnung.
+Rohe Dauer-/Millisekundenumrechnungen liefern arithmetische Tickwerte;
+diese sind kein alter Wait-Sentinelvertrag. Endliches max(u64) darf nicht
+als roher Timeout an einen alten Forever-Slot weitergegeben werden.
+Fuer Wartebudgets die getaggte timeoutTicks-Fassade verwenden.
+
+ClockSample.fromInfo prueft den wirklichen MonotonicClockInfo-Vertrag;
+Quelle, Generation, Ereignisbackend und logische Tickfrequenz bilden eine
+Identitaet. tick_hz kommt aus event_requested_hz, nicht der gerundeten
+physischen Ereignisrate oder Hardwarequellfrequenz. Eine gueltige precise
+Uhr darf unbekannte Tickfrequenz haben; erst ihre Tickumrechnung scheitert.
+DeadlineBudget bindet genau eine solche Identitaet und einen absoluten
+Nanosekundenendpunkt. Additionsoverflow, Clockwechsel und Ruecklauf sind
+sichtbare Fehler. Ein Fehler verschiebt oder erneuert keine Deadline.
+Die Identitaet ist ein kopierter Uhrkontext, keine Systemressourcenleihe.
+
+DriverPollBudget unterscheidet Task, NoSleep und IRQ sowie reine Iterationen
+von Zeit UND Iterationen. Timed verlangt ein endliches Timeout und ein
+positives hartes Schrittlimit; Forever wird dort abgewiesen. step vor jedem
+autorisierten Retry verbraucht bei Proceed genau einen Schritt. Abgelaufene,
+gestoppte oder fehlerhafte Budgets bleiben terminal. Eine stehende Uhr kann
+dadurch das Iterationslimit nicht umgehen. remaining weist beide Grenzen
+aus. Kontext ist die ausdrueckliche Callerbeschreibung, keine Berechtigung.
+Es gibt weder Register-/PCI-/MMIO-Zugriffe noch automatische Pause, Sleep,
+Yield oder Allokation. Timeout/Stop quittieren weder Geraet noch Callback,
+Mapping oder DMA; die echte Quieszenz bleibt beim bisherigen Besitzer.
+
+Neue clockSampleChecked-/ticksFromMillisecondsChecked-Zugaenge und
+Driver1-/Driver2-Adapter lesen den vorhandenen Uhrprovider. Bisherige
+ticksFromMilliseconds-, Wait- und Timeoutpfade behalten ihre Semantik.
+Vorhandene Anwendungen und Treiberschleifen werden damit nicht umgestellt.
+
 Download-Metadaten ab0.64.149
 ----------------------------
 DownloadOptions.head_observer sieht den vollstaendigen Antwortkopf vor dem

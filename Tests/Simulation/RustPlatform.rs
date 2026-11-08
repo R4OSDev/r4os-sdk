@@ -12,6 +12,7 @@ use r4os_sdk::{
     resources::Timeout,
 };
 unsafe extern "C" {
+    fn sdk_budget_c_case() -> i32;
     fn sdk_audio_c_case() -> i32;
     fn sdk_platform_oracle_tables(
         sys: *mut abi::R4XStartR4Sys,
@@ -22,6 +23,10 @@ unsafe extern "C" {
     fn sdk_platform_oracle_connections() -> u32;
     fn sdk_platform_oracle_reply_fault(action: u16, fault: u32, at: u32);
     fn sdk_platform_oracle_last_stream() -> u32;
+}
+#[test]
+fn checked_budget_c_peer_uses_the_same_native_owner() {
+    assert_eq!(unsafe { sdk_budget_c_case() }, 0);
 }
 #[test]
 fn original_platform_owners_preserve_frames_progress_and_explicit_close() {

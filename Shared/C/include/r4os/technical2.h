@@ -1,6 +1,7 @@
 #ifndef R4OS_TECHNICAL2_H
 #define R4OS_TECHNICAL2_H
 #include <r4os/generation2.h>
+#include <r4os/poll_budget.h>
 
 /* Borrows of the exact immutable loader tables. Caller scope and actual
  * callback/DMA quiescence remain with the original R4D or R4P owner. */
@@ -18,6 +19,12 @@ static inline int32_t R4OS2ProtocolInit(const R4ProtocolApi2 *api, R4OS2Protocol
  * failure, until genuine unregister/terminal cleanup acknowledges retirement. */
 static inline int32_t R4OS2DriverRegisterAudio(const R4OS2Driver *driver, const uint8_t *name, const R4AudioBackend2 *backend) {
     return driver && driver->api ? driver->api->register_audio_output_backend(name, backend) : -1;
+}
+static inline int32_t R4OS2DriverClockSample(const R4OS2Driver *driver, R4SdkClockSample *out) {
+    if (!driver || !driver->api || !driver->api->monotonic_clock) return R4_BUDGET_CLOCK_UNAVAILABLE;
+    R4MonotonicClockInfo info = {0};
+    if (driver->api->monotonic_clock(&info) <= 0) return R4_BUDGET_CLOCK_UNAVAILABLE;
+    return R4SdkClockSampleRead(&info,out);
 }
 #define R4OS_DRIVER_ENTRY2(init, shutdown) \
     __attribute__((section(".text.r4d_entries"),used)) int32_t DriverInit2(const R4DriverApi2 *api) { return (init)(api); } \

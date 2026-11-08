@@ -401,7 +401,7 @@ pub fn build(b: *std.Build) void {
     b.step("resource-parity-test", "Existing process/thread/VM/I/O resource lifecycle cases only").dependOn(&resource_parity.step);
     const service_cases = b.createModule(.{ .root_source_file = b.path("Tests/Conformance/ServiceNetworkFacadePrototype05826.zig"), .target = b.graph.host, .optimize = sdk_profiles.defaults.debug_optimize });
     service_cases.addImport("r4os", host_r4os);
-    const service_parity = b.addRunArtifact(b.addTest(.{ .root_module = service_cases, .filters = &.{ "service inventory", "service connection and endpoint", "resolver TCP and UDP", "service stop policy", "service loop", "service deadline suffix", "net socket drain", "duration conversion", "duration and deadline", "tagged timeout", "deadline budget" } }));
+    const service_parity = b.addRunArtifact(b.addTest(.{ .root_module = service_cases, .filters = &.{ "service inventory", "service connection and endpoint", "resolver TCP and UDP", "service stop policy", "service loop", "service deadline suffix", "net socket drain", "duration conversion", "duration and deadline", "tagged timeout", "deadline budget", "checked budget" } }));
     b.step("service-parity-test", "Existing service/network, bounded drain and absolute deadline owner cases").dependOn(&service_parity.step);
     const platform_cases = b.createModule(.{ .root_source_file = b.path("Tests/Conformance/AudioDeviceFacadePrototype05827.zig"), .target = b.graph.host, .optimize = sdk_profiles.defaults.debug_optimize });
     platform_cases.addImport("r4os", host_r4os);

@@ -674,9 +674,10 @@
       "title": "Zeit, Timeouts und Serial",
       "modules": [
         "time_contract",
-        "serial"
+        "serial",
+        "driver_poll_budget"
       ],
-      "semantics": "Monotone Fristen, Sattigung, Frequenz und Waitarten unterscheiden; Serialbesitz/Laengen/Timeout/Fehler erhalten. Optionale Deadline-Trailer sind ein Daten-/Protokollvertrag.",
+      "semantics": "Monotone Fristen, Sattigung, Frequenz und Waitarten unterscheiden; Serialbesitz/Laengen/Timeout/Fehler erhalten. Optionale Deadline-Trailer sind ein Daten-/Protokollvertrag. SDK159: new explicit checked clock-bound budgets, tagged finiteMAX, and pure bounded DriverPollBudget; original wait/zero/saturating ABI behavior and resource ownership retained. No consumer migration or automatic sleep/quiescence.",
       "current_only": "current_function_and_protocol_data",
       "rust": {
         "state": "paritaet_abgenommen",
@@ -684,14 +685,16 @@
         "gap": "SDK74: skalare Clocks, Dauer-/Tick-/Fristkonvertierung/Sattigung, gueltige optionale Requestfooter, Serienportidentitaet, find/openNumber, partielle IO und Handleerhalt bei fehlgeschlagenem Close. Physische Serialhardware bleibt unqualifiziert.",
         "sources": [
           "Repositories/SDK/Rust/src/time.rs",
-          "Repositories/SDK/Rust/src/serial.rs"
+          "Repositories/SDK/Rust/src/serial.rs",
+          "Repositories/SDK/Rust/src/time_budget.rs"
         ]
       },
       "c": {
         "state": "paritaet_abgenommen",
         "sources": [
           "Repositories/SDK/Shared/C/include/r4os/serial.h",
-          "Repositories/SDK/Shared/C/include/r4os/path_timeout.h"
+          "Repositories/SDK/Shared/C/include/r4os/path_timeout.h",
+          "Repositories/SDK/Shared/C/include/r4os/poll_budget.h"
         ],
         "gap": "Bestehende aktuelle C-Besitzer erhalten; gemeinsame Zig-Loop/Deadline/Netzwerkbridge, fehlender TCP-Poll, gepackter Socketstatus und abgelaufener Poll ohne Frequenz vervollstaendigt. Slot-/Request-/Close-Quittungen bleiben explizit; keine Altkernel-Emulation."
       },
@@ -701,7 +704,8 @@
         "Repositories/SDK/Tests/Simulation/RustServices.rs",
         "Repositories/SDK/Tests/Simulation/ServiceNetworkCallbacks.c",
         "Repositories/SDK/Tests/Build/RustServices",
-        "Repositories/SDK/Tests/Simulation/NetworkPeer.py"
+        "Repositories/SDK/Tests/Simulation/NetworkPeer.py",
+        "time_poll_budgets_09016"
       ],
       "shared_core": "Vorhandene C-AppServices/AppTray/AppNetwork/Serial/Timeout-Besitzer, Zig-ServiceLoop/-Deadline/-R4NET-Besitzer und native R4SYS/R4NET/R4DEV-Callbacks. Rust fuegt Leihen/Typen/echte Abschlussretention hinzu; keine zweite Netzwerk- oder Schedulingimplementierung."
     },
@@ -1192,16 +1196,18 @@
         "driver_threads",
         "driver_semaphores",
         "driver_cpu_power",
-        "technical2"
+        "technical2",
+        "driver_poll_budget"
       ],
-      "semantics": "Original DriverApi39/672 helpers and owner limits retained; explicit DriverApi2/DPI2 revision1/656 raw borrowed views/Init2 and typed AUB2/status80. Shared real IRQ/task/work/DMA/resource owner; no automatic quiescence or broad advancedHelper2 migration.",
+      "semantics": "Original DriverApi39/672 helpers and owner limits retained; explicit DriverApi2/DPI2 revision1/656 raw borrowed views/Init2 and typed AUB2/status80. Shared real IRQ/task/work/DMA/resource owner; no automatic quiescence or broad advancedHelper2 migration. SDK159: new explicit checked clock-bound budgets, tagged finiteMAX, and pure bounded DriverPollBudget; original wait/zero/saturating ABI behavior and resource ownership retained. No consumer migration or automatic sleep/quiescence.",
       "current_only": "current_function",
       "rust": {
         "state": "current_shared_native_core_and_typed_explicit_owners_qualified",
         "sources": [
           "Repositories/SDK/Rust/src/driver.rs",
           "Repositories/SDK/Rust/src/c_facades.rs",
-          "Repositories/SDK/Rust/src/technical2.rs"
+          "Repositories/SDK/Rust/src/technical2.rs",
+          "Repositories/SDK/Rust/src/time_budget.rs"
         ],
         "gap": "Hardware-specific ring/reset/quiescence protocols remain with the actual device driver; advanced native helpers unsafe. Windows execution and physical hotplug not qualified."
       },
@@ -1221,14 +1227,16 @@
           "Repositories/SDK/Shared/C/include/r4os/driver_helpers.h",
           "Repositories/SDK/Shared/C/include/r4os/driver.h",
           "Repositories/SDK/Shared/C/include/r4os/driver_lifecycle.h",
-          "Repositories/SDK/Shared/C/include/r4os/technical2.h"
+          "Repositories/SDK/Shared/C/include/r4os/technical2.h",
+          "Repositories/SDK/Shared/C/include/r4os/poll_budget.h"
         ],
         "gap": "Explicit per-device backing, callbacks and reset quiescence remain owner obligations; C has no implicit destructor."
       },
       "evidence": [
         "drivers_current_67",
         "audio_duration_retirement_08859",
-        "technical_generation2_09015"
+        "technical_generation2_09015",
+        "time_poll_budgets_09016"
       ],
       "shared_core": {
         "source": "Repositories/SDK/r4os/driver_helper_owners.zig",
@@ -2832,6 +2840,14 @@
       "expression": "@import(\"r4os/technical2.zig\")",
       "capability": "driver",
       "wave": "0.90.15"
+    },
+    {
+      "name": "driver_poll_budget",
+      "source": "Repositories/SDK/r4os.zig",
+      "line": 181,
+      "expression": "@import(\"r4os/driver_poll_budget.zig\")",
+      "capability": "driver",
+      "wave": "0.90.16"
     }
   ],
   "build_exports": [
@@ -55996,6 +56012,21 @@
         "Historical frozenP55Q service650ms one-shot assertions did not consistentlypass new463; exactfailures and clean462 comparison retained. FrozenP55Q CORE passes; separatelynamedP55NOW uses bounded2s readonlyconvergence and actualCloseACK and passes complete33page/withdraw/preference/Busy/parallelPCM requirements. No original assertion weakened or historicalPASS claimed.",
         "Native software backend acknowledgements and private ownedDMA buffers are not physical deviceDMA/speaker proof; no Windows execution, isolatedlatency or advancedgeneration2RAII parity claim."
       ]
+    },
+    "time_poll_budgets_09016": {
+      "complete": true,
+      "performed_in": "0.90.16",
+      "sdk": "0.64.159",
+      "contract": "0.64.79 unchanged",
+      "report": "Docs/API/Zeitbudgets.txt",
+      "scope": "Shared checked u128 arithmetic, tagged Poll/finite/Forever including finiteu64MAX, clock-bound absolute deadlines, pure Task/NoSleep/IRQ DriverPollBudget with independent hard step cap; genuine original monotonic provider adapters. Old timeout functions/ABI and consumer profiles retained.",
+      "host_checks": "Existing service/clock/selection23cases; nine native shared C/Rust platform/visual/clock groups and five actual compiler negatives; strict bare SDK Clippy. One direct originalDriver1/Driver2 callback probe plus C2 header semantic compile. Generated C/Rust record sizes/offsets and actual signed errors/state-preserving failures qualified.",
+      "native_scope": "Private actual generation2 R4X on unchanged Kernel463/029 ELF verified by FAT BOOT+guest artifact readback: source1/generation2/logical1000Hz, 120ms absolute budget expires after124999125ns and25steps. Guest ended before final STANDARD.",
+      "limits": [
+        "Static100/128/333/1000Hz and integer ranges are separate from actual1000Hz guest time; no physical hardware/Windows/realIRQ/isolated latency or throughput claim.",
+        "IRQ32step frozen-clock case executes pure decisions in a task; no register access, wait, yield, DMA or callback quiescence is inferred.",
+        "Temporary wrapper exit/argument and private fixture name errors remain in local logs; final standalone owner exits and scope receipts are authoritative."
+      ]
     }
   },
   "wave_bindings": [
@@ -56259,7 +56290,7 @@
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.90.15",
+    "reviewed_in": "0.90.16",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -56329,7 +56360,8 @@
       "Repositories/SDK/build.zig.zon",
       "Repositories/SDK/r4os",
       "Repositories/SDK/r4os.zig",
-      "Repositories/Contract/Tools/ApiContractGen/src/generation2_technical.zig.in"
+      "Repositories/Contract/Tools/ApiContractGen/src/generation2_technical.zig.in",
+      "Repositories/SDK/Tests/Simulation/PreciseClock.rs"
     ],
     "files": [
       {
@@ -57478,7 +57510,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "8caa118822fdb7ceb72ffc912db74dd58306436fa2b1743e9f2cc34a8e901c6c"
+        "sha256": "628eb08403a3b71fa70fca2f973d448c155e75da10b204e11a0c254498a46e2d"
       },
       {
         "path": "Repositories/SDK/Rust/src/data/hash.rs",
@@ -57510,7 +57542,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/driver.rs",
-        "sha256": "062746627951b1790efb9cc0ae71af05309b1ad5c1a5bfa2b8869d050f0ac6f7"
+        "sha256": "6e8d3d9656f9a3ee07592de247b748e08901410d80bd7aa08529fb0b5e84ef4d"
       },
       {
         "path": "Repositories/SDK/Rust/src/generated/network.rs",
@@ -57698,11 +57730,15 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/technical2.rs",
-        "sha256": "25731dbff8615299a219702934fd1e624288eee64fdeb3156329229c05360136"
+        "sha256": "2258d2be9a1a246e13dea2b0d65b752e9a0348f43d195bc0a2ab26860c182791"
       },
       {
         "path": "Repositories/SDK/Rust/src/time.rs",
-        "sha256": "e5f1881aac6c01bd2abd4c6822ae92eeab99cd7828152b764aa7dfb0c5024815"
+        "sha256": "1454d323996a7adbc16c81a135c68f76f1732c35ec5b0ae519e9b4721e5b6812"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/time_budget.rs",
+        "sha256": "1fd1fb7efbf6c4b49386ea354cc8ce39b0ef75a7549b202c0b4c80d26af55459"
       },
       {
         "path": "Repositories/SDK/Rust/src/update/catalog.rs",
@@ -57870,7 +57906,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/facades.h",
-        "sha256": "96f3a2043cbe548bab2d075d3dda6d64767eed49f2f72a0db37046dab7120b1a"
+        "sha256": "f5971183bb71fc74368d220dd13a26154bc831eef50e30ff6a4f14665d16838b"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/gui_bridge.h",
@@ -57895,6 +57931,10 @@
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/platform2.h",
         "sha256": "44c5b5d944f29971e4322c824a9b48bc3d2cb1c33ae4c1085541e45cf9423ea9"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/poll_budget.h",
+        "sha256": "f172fcd2a0e1a48e47da21b36ed13a68fa6c595c5878c869f9b257c0981598ce"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/power_profiles.h",
@@ -57970,7 +58010,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/technical2.h",
-        "sha256": "1d890981b8c4977b95223bcf55c007d656d335b185b01c2ac066bcf64c8645cd"
+        "sha256": "d3ecf6e2655ebef871dc570b99253232a9e61fa16e27e9f93c51c1025a0c926f"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/transport_helpers.h",
@@ -58046,15 +58086,19 @@
       },
       {
         "path": "Repositories/SDK/Tests/Conformance/ServiceNetworkFacadePrototype05826.zig",
-        "sha256": "0532b173c7f844d83e08331b25337f82d5cc215b9df7a11e0f439a4b794ba0f7"
+        "sha256": "37970d51bd2422ffeffe354489814960f588524df6b6a28a85f8dce9695e0790"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/GuiParity.c",
-        "sha256": "1597d9f4111478c203bca55bff44dd8edbaaa55c057d00645583a8421886bc9d"
+        "sha256": "bd23ff2e2eedb2b21e9c72f1ddc4bf69fa38502cbe0d3a88d31f04dd6d3c3ae8"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/PointerBindings.c",
         "sha256": "79c6334ce093c6c2eb375639fa3b9246d987a383130412a8cf571cdc795c0b8c"
+      },
+      {
+        "path": "Repositories/SDK/Tests/Simulation/PreciseClock.rs",
+        "sha256": "f9681a4a464a3ec6ea238306fd60b014424304d7a767f12ecd3be1d889d487dc"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/RustGui.rs",
@@ -58062,7 +58106,7 @@
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/RustPlatform.rs",
-        "sha256": "b97956ce36f38aa8bdcd0ced88c972b4187d184b0267978f2300f7ccbc8a8732"
+        "sha256": "bbe8d7902e660b7c64bb35acff1f8671f221004e9514e55da4ec1eea34608cb6"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/RustServices.rs",
@@ -58318,15 +58362,15 @@
       },
       {
         "path": "Repositories/SDK/build.zig",
-        "sha256": "d601248ac08d30b09bb0ba608325d94254b4baecaffd39d82b860051ca68ceb3"
+        "sha256": "050f514000d018e3fd58fa64a2afa39deb3f8d8251943c3d9183f7274f910556"
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "c3639d57cac4b4c32110320f83a578b8a34975ecb18b0cc5e15aca1e89627975"
+        "sha256": "88ee3c1c62ef8b8bb656287cdf1cb3cb01804db2566fb2a16e0068df4e996ae2"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
-        "sha256": "c08ea38099a04d4b0f49cf881dc5504e7e49befa9744c0b3e5931f3650eb1cba"
+        "sha256": "b19ab8fc179ea0f562d068dad897bfa82af0abbb7681d14ae08df4d68504b0c0"
       },
       {
         "path": "Repositories/SDK/r4os/allocator_wait.zig",
@@ -58521,6 +58565,10 @@
         "sha256": "b5c3eaa9b197f997b9baea069f19f74461875b7700ccce8af26ae782270868b0"
       },
       {
+        "path": "Repositories/SDK/r4os/driver_poll_budget.zig",
+        "sha256": "f9a6508d71771a244d9236db3d8df67a63da0b4b1e8d5b8de8a33fc213490c31"
+      },
+      {
         "path": "Repositories/SDK/r4os/driver_queue.zig",
         "sha256": "6f464133c157e65b0943d7d3f2bfcdb1acac9e240532d71b666604e74671e583"
       },
@@ -58546,7 +58594,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/facade_runtime.zig",
-        "sha256": "c6be8f24d39459e62a3f591e2cc10acd6cd07165430b74af156c1ea598468cf5"
+        "sha256": "76339a4513da41af46238659c3581f4eeb3b76c8db908b3c18e20a3fca82c1d0"
       },
       {
         "path": "Repositories/SDK/r4os/file_stream.zig",
@@ -58774,7 +58822,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/program.zig",
-        "sha256": "00b2b254995ecc98b2d918f0bc62ff5e8ec9445d2648055be1d2b6fa2381c023"
+        "sha256": "bc2b7d8f4d2670f82473f11806b99b1de643942638f7672eda5ac5adc5aa1800"
       },
       {
         "path": "Repositories/SDK/r4os/protocol.zig",
@@ -59094,11 +59142,19 @@
       },
       {
         "path": "Repositories/SDK/r4os/technical2.zig",
-        "sha256": "8c2e385b31ee387349bdc0278e50bbd510c1a24e07cb4620bb478f2815500b4e"
+        "sha256": "ca23e64f1b7dc16b3dbc841956a423dc6c233955061b822469e086b5ea2e27d8"
+      },
+      {
+        "path": "Repositories/SDK/r4os/time_budget.zig",
+        "sha256": "7492b67d55a453b66c6cb6053c310f659fc569af2cb001da4598e36b6adf1915"
+      },
+      {
+        "path": "Repositories/SDK/r4os/time_budget_runtime.zig",
+        "sha256": "2cfac96e1f0a7ee9120c17f7ba2962c46cd728ffc68946b18e7bb7d5cba9dff5"
       },
       {
         "path": "Repositories/SDK/r4os/time_contract.zig",
-        "sha256": "d6ccf6a9359c27f52faf3943d2d00c9ed0cbe716532ef9d5119c48d71494cc13"
+        "sha256": "705fe4bbf372168b5228c5ca678180851e8c77c83a6d7052bc42b1a42c499770"
       },
       {
         "path": "Repositories/SDK/r4os/transport_bridge_names.zig",
@@ -59561,20 +59617,26 @@
         "id": "time-serial",
         "zig": [
           "Repositories/SDK/r4os/serial.zig",
-          "Repositories/SDK/r4os/time_contract.zig"
+          "Repositories/SDK/r4os/time_contract.zig",
+          "Repositories/SDK/r4os/time_budget.zig",
+          "Repositories/SDK/r4os/driver_poll_budget.zig",
+          "Repositories/SDK/r4os/time_budget_runtime.zig"
         ],
         "c": [
           "Repositories/SDK/Shared/C/include/r4os/path_timeout.h",
-          "Repositories/SDK/Shared/C/include/r4os/serial.h"
+          "Repositories/SDK/Shared/C/include/r4os/serial.h",
+          "Repositories/SDK/Shared/C/include/r4os/poll_budget.h"
         ],
         "rust": [
           "Repositories/SDK/Rust/src/serial.rs",
-          "Repositories/SDK/Rust/src/time.rs"
+          "Repositories/SDK/Rust/src/time.rs",
+          "Repositories/SDK/Rust/src/time_budget.rs"
         ],
         "proof": [
           "service_network_current_55",
           "precise_clock_consumer_86",
-          "clock_service_08720"
+          "clock_service_08720",
+          "time_poll_budgets_09016"
         ]
       },
       {
@@ -59881,7 +59943,10 @@
           "Repositories/SDK/r4os/driver_queue.zig",
           "Repositories/SDK/r4os/driver_resources.zig",
           "Repositories/SDK/r4os/driver_serial.zig",
-          "Repositories/SDK/r4os/technical2.zig"
+          "Repositories/SDK/r4os/technical2.zig",
+          "Repositories/SDK/r4os/time_budget.zig",
+          "Repositories/SDK/r4os/driver_poll_budget.zig",
+          "Repositories/SDK/r4os/time_budget_runtime.zig"
         ],
         "c": [
           "Repositories/SDK/Shared/C/include/r4os/driver.h",
@@ -59897,12 +59962,14 @@
           "Repositories/SDK/Shared/C/include/r4os/driver_semaphores.h",
           "Repositories/SDK/Shared/C/include/r4os/driver_serial.h",
           "Repositories/SDK/Shared/C/include/r4os/driver_threads.h",
-          "Repositories/SDK/Shared/C/include/r4os/technical2.h"
+          "Repositories/SDK/Shared/C/include/r4os/technical2.h",
+          "Repositories/SDK/Shared/C/include/r4os/poll_budget.h"
         ],
         "rust": [
           "Repositories/SDK/Rust/src/c_facades.rs",
           "Repositories/SDK/Rust/src/driver.rs",
-          "Repositories/SDK/Rust/src/technical2.rs"
+          "Repositories/SDK/Rust/src/technical2.rs",
+          "Repositories/SDK/Rust/src/time_budget.rs"
         ],
         "proof": [
           "drivers_current_67",
@@ -59913,7 +59980,8 @@
           "gui_host_backpressure_08832",
           "audio_catalog_08855",
           "audio_duration_retirement_08859",
-          "technical_generation2_09015"
+          "technical_generation2_09015",
+          "time_poll_budgets_09016"
         ]
       },
       {

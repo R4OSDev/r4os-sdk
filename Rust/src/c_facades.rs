@@ -15532,6 +15532,60 @@ pub struct R4SdkDriverNativeValue298 {
     pub r#opaque_bytes: [u8; 8],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkDriverNativeValue298>() == 8); assert!(core::mem::align_of::<R4SdkDriverNativeValue298>() == 8); assert!(core::mem::offset_of!(R4SdkDriverNativeValue298, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkBudgetValue {
+    pub r#kind: u32,
+    pub r#reserved: u32,
+    pub r#value: u64,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkBudgetValue>() == 16); assert!(core::mem::align_of::<R4SdkBudgetValue>() == 8); assert!(core::mem::offset_of!(R4SdkBudgetValue, r#kind) == 0); assert!(core::mem::offset_of!(R4SdkBudgetValue, r#reserved) == 4); assert!(core::mem::offset_of!(R4SdkBudgetValue, r#value) == 8); };
+#[repr(C, align(4))]
+#[derive(Clone, Copy)]
+pub struct R4SdkClockIdentity {
+    pub r#source: u32,
+    pub r#generation: u32,
+    pub r#event_backend: u32,
+    pub r#tick_hz: u32,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkClockIdentity>() == 16); assert!(core::mem::align_of::<R4SdkClockIdentity>() == 4); assert!(core::mem::offset_of!(R4SdkClockIdentity, r#source) == 0); assert!(core::mem::offset_of!(R4SdkClockIdentity, r#generation) == 4); assert!(core::mem::offset_of!(R4SdkClockIdentity, r#event_backend) == 8); assert!(core::mem::offset_of!(R4SdkClockIdentity, r#tick_hz) == 12); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkClockSample {
+    pub r#identity: R4SdkClockIdentity,
+    pub r#instant_ns: u64,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkClockSample>() == 24); assert!(core::mem::align_of::<R4SdkClockSample>() == 8); assert!(core::mem::offset_of!(R4SdkClockSample, r#identity) == 0); assert!(core::mem::offset_of!(R4SdkClockSample, r#instant_ns) == 16); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDeadlineBudget {
+    pub r#identity: R4SdkClockIdentity,
+    pub r#deadline_ns: u64,
+    pub r#last_ns: u64,
+    pub r#kind: u32,
+    pub r#reserved: u32,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDeadlineBudget>() == 40); assert!(core::mem::align_of::<R4SdkDeadlineBudget>() == 8); assert!(core::mem::offset_of!(R4SdkDeadlineBudget, r#identity) == 0); assert!(core::mem::offset_of!(R4SdkDeadlineBudget, r#deadline_ns) == 16); assert!(core::mem::offset_of!(R4SdkDeadlineBudget, r#last_ns) == 24); assert!(core::mem::offset_of!(R4SdkDeadlineBudget, r#kind) == 32); assert!(core::mem::offset_of!(R4SdkDeadlineBudget, r#reserved) == 36); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDriverPollBudget {
+    pub r#context: u32,
+    pub r#kind: u32,
+    pub r#iterations: u64,
+    pub r#deadline: R4SdkDeadlineBudget,
+    pub r#outcome: u32,
+    pub r#reserved: u32,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDriverPollBudget>() == 64); assert!(core::mem::align_of::<R4SdkDriverPollBudget>() == 8); assert!(core::mem::offset_of!(R4SdkDriverPollBudget, r#context) == 0); assert!(core::mem::offset_of!(R4SdkDriverPollBudget, r#kind) == 4); assert!(core::mem::offset_of!(R4SdkDriverPollBudget, r#iterations) == 8); assert!(core::mem::offset_of!(R4SdkDriverPollBudget, r#deadline) == 16); assert!(core::mem::offset_of!(R4SdkDriverPollBudget, r#outcome) == 56); assert!(core::mem::offset_of!(R4SdkDriverPollBudget, r#reserved) == 60); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkPollRemaining {
+    pub r#kind: u32,
+    pub r#outcome: u32,
+    pub r#iterations: u64,
+    pub r#time: R4SdkBudgetValue,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkPollRemaining>() == 32); assert!(core::mem::align_of::<R4SdkPollRemaining>() == 8); assert!(core::mem::offset_of!(R4SdkPollRemaining, r#kind) == 0); assert!(core::mem::offset_of!(R4SdkPollRemaining, r#outcome) == 4); assert!(core::mem::offset_of!(R4SdkPollRemaining, r#iterations) == 8); assert!(core::mem::offset_of!(R4SdkPollRemaining, r#time) == 16); };
 pub const R4SdkGuiStyle_TYPE: u32 = 0;
 pub const R4SdkGuiFontSet_TYPE: u32 = 1;
 pub const R4SdkGuiTextRole_TYPE: u32 = 2;
@@ -35609,4 +35663,13 @@ unsafe extern "C" {
     pub fn R4SdkDriverNativeValue296_inspectNative(p0: *const R4SdkDriverNativeValue296) -> R4SdkDriverSlot;
     pub fn R4SdkDriverNativeValue298_create(p0: *mut R4SdkDriverNativeValue298, p1: *mut R4CpuPowerCounters) -> R4SdkDriverSlot;
     pub fn R4SdkDriverNativeValue298_inspectNative(p0: *const R4SdkDriverNativeValue298) -> R4SdkDriverSlot;
+    pub fn R4SdkClockSampleRead(p0: *const R4MonotonicClockInfo, p1: *mut R4SdkClockSample) -> i32;
+    pub fn R4SdkMillisecondsToTicksChecked(p0: u64, p1: u32, p2: *mut u64) -> i32;
+    pub fn R4SdkTimeoutTicksChecked(p0: R4Timeout, p1: u32, p2: *mut R4SdkBudgetValue) -> i32;
+    pub fn R4SdkDeadlineBudgetInit(p0: R4SdkClockSample, p1: R4Timeout, p2: *mut R4SdkDeadlineBudget) -> i32;
+    pub fn R4SdkDeadlineBudgetRemaining(p0: *mut R4SdkDeadlineBudget, p1: R4SdkClockSample, p2: *mut R4SdkBudgetValue) -> i32;
+    pub fn R4SdkDriverPollIterations(p0: u64, p1: u32, p2: *mut R4SdkDriverPollBudget) -> i32;
+    pub fn R4SdkDriverPollTimed(p0: R4SdkClockSample, p1: R4Timeout, p2: u64, p3: u32, p4: *mut R4SdkDriverPollBudget) -> i32;
+    pub fn R4SdkDriverPollStep(p0: *mut R4SdkDriverPollBudget, p1: *const R4SdkClockSample, p2: u32) -> u32;
+    pub fn R4SdkDriverPollRemaining(p0: *mut R4SdkDriverPollBudget, p1: *const R4SdkClockSample, p2: *mut R4SdkPollRemaining) -> i32;
 }

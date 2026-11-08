@@ -1125,6 +1125,17 @@ pub const Context = struct {
         return if (ticks_value == 0) 1 else ticks_value;
     }
 
+    /// One real clock snapshot; no calendar query or invented tick rate.
+    pub fn clockSampleChecked(self: *const Context) time_contract.checked.Error!time_contract.checked.ClockSample {
+        var clock: abi.MonotonicClockInfo = .{};
+        if (self.monotonicClock(&clock) <= 0) return error.ClockUnavailable;
+        return time_contract.checked.ClockSample.fromInfo(clock);
+    }
+    pub fn ticksFromMillisecondsChecked(self: *const Context, ms: u64) time_contract.checked.Error!u64 {
+        const sample = try self.clockSampleChecked();
+        return time_contract.checked.millisecondsToTicks(ms, sample.identity.tick_hz);
+    }
+
     pub fn monotonicBackend(self: *const Context) abi.TimeBackend {
         var clock: abi.MonotonicClockInfo = .{};
         const raw = if (self.monotonicClock(&clock) > 0)

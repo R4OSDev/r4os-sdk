@@ -5,6 +5,40 @@
 #undef main
 #include "PointerBindings.c"
 #include <r4os/gui_bridge.h>
+#include <r4os/poll_budget.h>
+int sdk_budget_c_case(void) {
+    uint64_t ticks=77;
+    assert(R4SdkMillisecondsToTicksChecked(100,333,&ticks)==0 && ticks==34);
+    assert(R4SdkMillisecondsToTicksChecked(UINT64_MAX,1000,&ticks)==0 && ticks==UINT64_MAX);
+    assert(R4SdkMillisecondsToTicksChecked(UINT64_MAX,1001,&ticks)==R4_BUDGET_OVERFLOW && ticks==UINT64_MAX);
+    assert(R4SdkMillisecondsToTicksChecked(0,0,&ticks)==R4_BUDGET_UNKNOWN_FREQUENCY && ticks==UINT64_MAX);
+    R4SdkBudgetValue value={7,8,9};
+    R4Timeout finite={.kind=R4OS_TIMEOUT_KIND_FINITE,.nanoseconds=UINT64_MAX};
+    assert(R4SdkTimeoutTicksChecked(finite,1000000000,&value)==0 && value.kind==R4_BUDGET_FINITE && value.value==UINT64_MAX);
+    R4MonotonicClockInfo info={.version=1,.size=sizeof(info),.flags=R4OS_MONOTONIC_CLOCK_FLAG_VALID,.source=1,.generation=9,.frequency_hz=1000000000,.resolution_ns=1,.instant_ns=100,.event_requested_hz=333,.event_effective_hz=334};
+    R4SdkClockSample sample;
+    assert(R4SdkClockSampleRead(&info,&sample)==0 && sample.identity.tick_hz==333);
+    R4SdkDeadlineBudget deadline;
+    finite.nanoseconds=10;
+    assert(R4SdkDeadlineBudgetInit(sample,finite,&deadline)==0);
+    R4SdkClockSample next=sample;next.identity.generation=10;
+    R4SdkDeadlineBudget before=deadline;
+    value=(R4SdkBudgetValue){7,8,9};
+    assert(R4SdkDeadlineBudgetRemaining(&deadline,next,&value)==R4_BUDGET_CLOCK_CHANGED);
+    assert(memcmp(&deadline,&before,sizeof(deadline))==0 && value.kind==7 && value.reserved==8 && value.value==9);
+    next=sample;next.instant_ns=109;
+    assert(R4SdkDeadlineBudgetRemaining(&deadline,next,&value)==0 && value.kind==R4_BUDGET_FINITE && value.value==1);
+    assert(R4SdkDeadlineBudgetRemaining(&deadline,sample,&value)==R4_BUDGET_CLOCK_REGRESSED);
+    R4SdkDriverPollBudget spin;
+    assert(R4SdkDriverPollTimed(sample,finite,32,R4_POLL_IRQ,&spin)==0);
+    for(unsigned i=0;i<32;++i) assert(R4SdkDriverPollStep(&spin,&sample,0)==R4_POLL_PROCEED);
+    assert(R4SdkDriverPollStep(&spin,&sample,0)==R4_POLL_EXPIRED);
+    assert(R4SdkDriverPollStep(&spin,&sample,1)==R4_POLL_EXPIRED);
+    assert(R4SdkDriverPollIterations(1,R4_POLL_NO_SLEEP,&spin)==0);
+    assert(R4SdkDriverPollStep(&spin,0,1)==R4_POLL_STOP);
+    assert(R4SdkDriverPollStep(&spin,0,0)==R4_POLL_STOP);
+    return 0;
+}
 extern void sdk_gui_oracle_tables(R4XStartR4Sys *,R4XStartR4Desk *,R4XStartR4Draw *);
 extern int32_t sdk_gui_oracle_pixels(uint32_t *,uintptr_t);
 extern void sdk_gui_oracle_fail_append(uint32_t);

@@ -3,6 +3,71 @@ use r4os_sdk::{App, ImportSpec, StartupInfo, abi as a, storage::Error, time::Clo
 use std::sync::atomic::{AtomicI32, Ordering};
 static MODE: AtomicI32 = AtomicI32::new(0);
 static CALENDAR_CALLS: AtomicI32 = AtomicI32::new(0);
+#[test]
+fn checked_budgets_keep_clock_and_retry_limits_through_native_owner() {
+    use r4os_sdk::{resources::Timeout, time::checked::*};
+    for hz in [100, 128, 333, 1000] {
+        assert_eq!(milliseconds_to_ticks(0, hz), Ok(0));
+        assert_eq!(milliseconds_to_ticks(1, hz), Ok(1));
+        assert_eq!(milliseconds_to_ticks(1000, hz), Ok(hz.into()));
+    }
+    assert_eq!(milliseconds_to_ticks(u64::MAX, 1000), Ok(u64::MAX));
+    assert_eq!(milliseconds_to_ticks(u64::MAX, 1001), Err(Error::Overflow));
+    assert_eq!(milliseconds_to_ticks(0, 0), Err(Error::UnknownFrequency));
+    assert_eq!(timeout_ticks(Timeout::Poll, 0), Ok(BudgetValue::Poll));
+    assert_eq!(timeout_ticks(Timeout::Forever, 0), Ok(BudgetValue::Forever));
+    assert_eq!(
+        timeout_ticks(Timeout::AfterNanos(u64::MAX), 1_000_000_000),
+        Ok(BudgetValue::Finite(u64::MAX))
+    );
+    let mut info = a::MonotonicClockInfo {
+        flags: a::monotonic_clock_flag_valid,
+        source: 1,
+        generation: 9,
+        resolution_ns: 1,
+        instant_ns: 100,
+        event_requested_hz: 333,
+        event_effective_hz: 334,
+        ..Default::default()
+    };
+    let sample = ClockSample::from_info(&info).unwrap();
+    assert_eq!(sample.tick_hz(), 333);
+    let mut deadline = DeadlineBudget::new(sample, Timeout::AfterNanos(10)).unwrap();
+    info.generation = 10;
+    assert_eq!(
+        deadline.remaining(ClockSample::from_info(&info).unwrap()),
+        Err(Error::ClockChanged)
+    );
+    info.generation = 9;
+    info.instant_ns = 109;
+    assert_eq!(
+        deadline.remaining(ClockSample::from_info(&info).unwrap()),
+        Ok(BudgetValue::Finite(1))
+    );
+    assert_eq!(deadline.remaining(sample), Err(Error::ClockRegressed));
+    info.instant_ns = u64::MAX;
+    assert!(matches!(
+        DeadlineBudget::new(
+            ClockSample::from_info(&info).unwrap(),
+            Timeout::AfterNanos(1)
+        ),
+        Err(Error::Overflow)
+    ));
+    let mut spin =
+        DriverPollBudget::timed(sample, Timeout::AfterNanos(20), 8, PollContext::Irq).unwrap();
+    for _ in 0..8 {
+        assert_eq!(spin.step(Some(sample), false), PollOutcome::Proceed);
+    }
+    assert_eq!(spin.remaining(Some(sample)).unwrap().iterations, 0);
+    assert_eq!(spin.step(Some(sample), false), PollOutcome::Expired);
+    assert!(matches!(
+        DriverPollBudget::timed(sample, Timeout::Forever, 8, PollContext::Task),
+        Err(Error::InvalidBudget)
+    ));
+    let mut spin = DriverPollBudget::iterations(3, PollContext::NoSleep).unwrap();
+    assert_eq!(spin.step(None, true), PollOutcome::Stop);
+    assert_eq!(spin.step(None, false), PollOutcome::Stop);
+}
 unsafe extern "C" fn state(out: *mut a::TimeState) {
     CALENDAR_CALLS.fetch_add(1, Ordering::Relaxed);
     unsafe {

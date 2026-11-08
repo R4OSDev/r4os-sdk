@@ -1,4 +1,8 @@
 const std = @import("std");
+test "checked budget driver owner cases" {
+    _ = @import("r4os").driver_poll_budget;
+    _ = @import("r4os").time_contract.checked;
+}
 const r4os = @import("r4os");
 
 const ReplyMode = enum { ok, would_block, timeout, reset, peer_close, no_service };
