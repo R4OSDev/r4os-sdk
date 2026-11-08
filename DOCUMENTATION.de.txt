@@ -1660,3 +1660,12 @@ Knoten, explizite Feldgueltigkeit und globale Namespace-/Mountidentitaet;
 kein First-Cluster-Handle oder erfundene Inhaltsrevision. Neue Cursor werden
 bei Namespacewechsel explizit neu gestartet. Rust leiht ganze Seitenpuffer.
 Normativer Vertrag: Docs/FileMetadata2.txt und Contract/API/FileMetadata2.txt.
+
+Vorbereitete Textmetriken ab SDK0.64.166
+--------------------------------------
+text_metrics nutzt einen optionalen DRAW-Query2-Prefixanbieter unter einer
+genauen Fontbank-Leihe. Danach treffen Zig/C/Rust ueber denselben SDK-Besitzer
+Graphemgrenzen ohne erneute Fontmessung oder Prefixkopie. Quellen-/Text- und
+Fontrevision binden die feste Sicht; eine Leerstamp-Pruefung invalidiert sie
+bei spaeterer Veroeffentlichung. Alte Canvas-/Apppfade bleiben unveraendert.
+Normativ: Docs/TextMetrics.txt und Contract/API/FontPrefixMetrics2.txt.

@@ -19,6 +19,7 @@
 #include "stream_transfer.h"
 #include "inventory_reader.h"
 #include "device_snapshot.h"
+#include "text_metrics.h"
 #include "web_helpers.h"
 #include "transport_helpers.h"
 #include "update_helpers.h"

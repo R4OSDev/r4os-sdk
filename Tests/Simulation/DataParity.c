@@ -1,7 +1,49 @@
 #include <r4os/facades.h>
 #include <r4os/metadata2.h>
+#include <r4os/text_metrics_platform2.h>
 #include <string.h>
 #define WIRE_CHECK(test,code) do { if (!(test)) return (code); } while (0)
+static uint64_t textmetrics_revision;
+static uint32_t textmetrics_calls,textmetrics_legacy_calls;
+static int32_t textmetrics_mode;
+static int32_t textmetrics_legacy(uint32_t id,const uint8_t *text,R4GuiTextMetrics *out){(void)id;(void)text;(void)out;textmetrics_legacy_calls++;return -71;}
+static int32_t textmetrics_measure(uint32_t id,const uint8_t *text,uint32_t length,R4FontAdvance2 *rows,uint32_t capacity,R4FontAdvanceInfo2 *out){
+ textmetrics_calls++;
+ if(textmetrics_mode==2)return -9;
+ *out=(R4FontAdvanceInfo2){.version=1,.size=sizeof(*out),.font_revision=textmetrics_revision,.font_id=id,.text_bytes=length,.required_count=length};
+ if(capacity<length)return -7;
+ uint32_t width=0;
+ for(uint32_t i=0;i<length;i++){width+=text[i]=='W'?11u:3u;rows[i]=(R4FontAdvance2){i+1,width};}
+ out->count=length;out->flags=1;return 0;
+}
+void sdk_textmetrics_mode(int32_t mode){textmetrics_mode=mode;if(mode==1)textmetrics_revision++;}
+uint32_t sdk_textmetrics_calls(void){return textmetrics_calls;}
+void sdk_textmetrics_tables(R4XStartR4Sys2 *sys,R4XStartR4Draw2 *draw){
+ textmetrics_revision=41;textmetrics_mode=0;textmetrics_calls=0;textmetrics_legacy_calls=0;
+ *sys=(R4XStartR4Sys2){.magic=R4OS2_R4SYS_MAGIC,.abi_version=2,.size=sizeof(*sys)};
+ *draw=(R4XStartR4Draw2){.magic=R4OS2_R4DRAW_MAGIC,.abi_version=2,.size=sizeof(*draw),.font_measure=(uintptr_t)&textmetrics_legacy,.font_prefix_metrics2=(uintptr_t)&textmetrics_measure};
+}
+int32_t sdk_textmetrics_c_case(void){
+ R4XStartR4Sys2 sys;R4XStartR4Draw2 draw;sdk_textmetrics_tables(&sys,&draw);
+ R4XStartImport imports[2]={{.group_id=1,.resolved_version=2,.table=(uintptr_t)&sys},{.group_id=3,.resolved_version=2,.table=(uintptr_t)&draw}};
+ R4XStartContext2 raw={.magic=R4OS2_START_MAGIC,.abi_major=2,.size=sizeof(raw),.import_count=2,.imports=(uintptr_t)imports};R4OS2Context context;
+ WIRE_CHECK(!R4OS2ContextInit(&raw,&context),501);
+ R4SdkTextMetricsProvider provider;WIRE_CHECK(!R4SdkTextMetricsProvider2(&context,&provider),502);
+ const uint8_t text[]="Wi";R4FontAdvance2 rows[2];R4SdkTextMetrics cache;R4SdkTextMetricsProgress progress;R4SdkTextMetricsKey key;R4SdkWireSpan view;uint32_t offset;
+ WIRE_CHECK(!R4SdkTextMetricsInit((R4SdkWireSpan){(uintptr_t)text,2},(R4SdkWireSpan){(uintptr_t)rows,sizeof(rows)},2,provider,&cache),503);
+ WIRE_CHECK(R4SdkTextMetricsGetKey(&cache,&key)==-104,504);
+ WIRE_CHECK(!R4SdkTextMetricsPrepare(&cache,9,33,&progress)&&progress.count==2&&progress.flags==1&&progress.required_count==2,505);
+ WIRE_CHECK(!R4SdkTextMetricsGetKey(&cache,&key)&&key.font_revision==41&&textmetrics_calls==1,506);
+ for(uint32_t i=0;i<100;i++)WIRE_CHECK(!R4SdkTextMetricsHit(&cache,key,5,&offset)&&offset==1,507);
+ WIRE_CHECK(textmetrics_calls==1&&!textmetrics_legacy_calls,508);
+ WIRE_CHECK(!R4SdkTextMetricsGetView(&cache,&view)&&view.length==sizeof(rows)&&rows[1].prefix_width==14,509);
+ WIRE_CHECK(!R4SdkTextMetricsValidateFont2(&context,&cache)&&textmetrics_calls==2,510);
+ sdk_textmetrics_mode(1);WIRE_CHECK(R4SdkTextMetricsValidateFont2(&context,&cache)==-10&&R4SdkTextMetricsGetView(&cache,&view)==-104,511);
+ sdk_textmetrics_mode(2);WIRE_CHECK(R4SdkTextMetricsPrepare(&cache,9,33,&progress)==-9&&!progress.flags,512);
+ draw.font_prefix_metrics2=0;WIRE_CHECK(R4SdkTextMetricsProvider2(&context,&provider)==-9002&&!textmetrics_legacy_calls,513);
+ return 0;
+}
+
 static int32_t metadata2_mode;
 static uint32_t metadata2_legacy_calls;
 static int32_t metadata2_old(const uint8_t *path,R4FileInfo *out){(void)path;(void)out;metadata2_legacy_calls++;return -71;}

@@ -46,6 +46,7 @@ pub const app_resources = @import("r4os/app_resources.zig");
 pub const inventory_reader = @import("r4os/inventory_api.zig");
 pub const device_snapshot = @import("r4os/device_snapshot_api.zig");
 pub const metadata2 = @import("r4os/metadata2.zig");
+pub const text_metrics = @import("r4os/text_metrics_api.zig");
 pub const app_services = @import("r4os/app_services.zig");
 pub const desktop_evidence = @import("r4os/desktop_evidence.zig");
 pub const power_profiles = @import("r4os/power_profiles.zig");

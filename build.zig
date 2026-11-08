@@ -354,7 +354,7 @@ pub fn build(b: *std.Build) void {
     data_cases.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
     data_cases.addImport("r4os_contract2", contract_dependency.module("r4os_contract2"));
     data_cases.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = data_target, .optimize = sdk_profiles.defaults.host_optimize }));
-    const data_tests = b.addRunArtifact(b.addTest(.{ .root_module = data_cases, .filters = &.{ "protocol status", "ZIP protocol status", "parse Windows ICO", "parse 8bpp", "bulk ICO", "raster ", "Encoding labels", "TextEncoder", "TextDecoder", "URL", "SHA-256 digest", "release and installed", "semantic versions", "R4M0 metadata", "metadata reads", "V2 derives profile", "contract plan is deterministic", "wire owner", "cli owner", "stream owner", "inventory owner", "device snapshot owner", "metadata2 owner" } }));
+    const data_tests = b.addRunArtifact(b.addTest(.{ .root_module = data_cases, .filters = &.{ "protocol status", "ZIP protocol status", "parse Windows ICO", "parse 8bpp", "bulk ICO", "raster ", "Encoding labels", "TextEncoder", "TextDecoder", "URL", "SHA-256 digest", "release and installed", "semantic versions", "R4M0 metadata", "metadata reads", "V2 derives profile", "contract plan is deterministic", "wire owner", "cli owner", "stream owner", "inventory owner", "device snapshot owner", "metadata2 owner", "text metrics owner" } }));
     b.step("data-parity-test", "Existing bounded data, codec, raster, metadata and protocol facade owner cases").dependOn(&data_tests.step);
     const web_cases = data_cases;
     const web_tests = b.addRunArtifact(b.addTest(.{ .root_module = web_cases, .filters = &.{

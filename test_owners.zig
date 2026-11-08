@@ -24,6 +24,9 @@ test "device snapshot owner complete frozen views" {
 test "metadata2 owner exact thin provider views" {
     _ = @import("r4os/metadata2_tests.zig");
 }
+test "text metrics owner original comparison and frozen hits" {
+    _ = @import("r4os/text_metrics_tests.zig");
+}
 test {
     _ = @import("Tests/Simulation/DataOwners.zig");
     _ = @import("Tests/Simulation/WebOwners.zig");

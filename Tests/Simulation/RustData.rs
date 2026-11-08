@@ -8,6 +8,13 @@ use r4os_sdk::{
     },
 };
 unsafe extern "C" {
+    fn sdk_textmetrics_c_case() -> i32;
+    fn sdk_textmetrics_tables(
+        sys: *mut abi::generation2::R4XStartR4Sys2,
+        draw: *mut abi::generation2::R4XStartR4Draw2,
+    );
+    fn sdk_textmetrics_mode(mode: i32);
+    fn sdk_textmetrics_calls() -> u32;
     fn sdk_metadata2_c_case() -> i32;
     fn sdk_metadata2_tables(out: *mut abi::generation2::R4XStartR4Sys2);
     fn sdk_metadata2_mode(value: i32);
@@ -730,4 +737,59 @@ fn current_manifest_parser_plan_and_scratch_bounds_are_shared() {
     let mut tiny = [0; 8];
     let mut small = Arena::open(small_storage.as_mut(), &mut tiny).unwrap();
     assert!(small.manifest(b"module.R4MF", MANIFEST).is_err());
+}
+
+#[test]
+fn prepared_text_metrics_use_shared_rows_keys_and_checked_font_invalidations() {
+    use core::mem::MaybeUninit;
+    use r4os_sdk::{platform2::Context, text_metrics::*};
+    assert_eq!(unsafe { sdk_textmetrics_c_case() }, 0);
+    let mut sys = abi::generation2::R4XStartR4Sys2::default();
+    let mut draw = abi::generation2::R4XStartR4Draw2::default();
+    unsafe { sdk_textmetrics_tables(&mut sys, &mut draw) };
+    let imports = [
+        abi::R4XStartImport {
+            group_id: 1,
+            resolved_version: 2,
+            table: &sys as *const _ as u64,
+            ..Default::default()
+        },
+        abi::R4XStartImport {
+            group_id: 3,
+            resolved_version: 2,
+            table: &draw as *const _ as u64,
+            ..Default::default()
+        },
+    ];
+    let raw = abi::generation2::R4XStartContext2 {
+        import_count: 2,
+        imports: imports.as_ptr() as u64,
+        ..Default::default()
+    };
+    let context = unsafe { Context::new(&raw) }.unwrap();
+    let mut rows = [MaybeUninit::uninit(); 2];
+    let mut cache = Cache::new(&context, "Wi", &mut rows).unwrap();
+    assert!(cache.key().is_err());
+    let done = cache.prepare(9, 33).unwrap();
+    assert!(done.complete && !done.in_call);
+    assert_eq!(done.count, 2);
+    let key = cache.key().unwrap();
+    assert_eq!(key.font_revision, 41);
+    for _ in 0..100 {
+        assert_eq!(cache.hit(key, 5).unwrap(), 1);
+    }
+    assert_eq!(unsafe { sdk_textmetrics_calls() }, 1);
+    assert_eq!(cache.rows().unwrap()[1].prefix_width, 14);
+    let mut wrong = key;
+    wrong.text_revision += 1;
+    assert_eq!(cache.hit(wrong, 5).unwrap_err().code, -10);
+    cache.validate_font().unwrap();
+    assert_eq!(unsafe { sdk_textmetrics_calls() }, 2);
+    unsafe { sdk_textmetrics_mode(1) };
+    assert_eq!(cache.validate_font().unwrap_err().code, -10);
+    assert!(cache.rows().is_err());
+    unsafe { sdk_textmetrics_mode(2) };
+    assert_eq!(cache.prepare(9, 33).err().unwrap().code, -9);
+    assert!(!cache.progress().unwrap().complete);
+    cache.reset().unwrap();
 }
