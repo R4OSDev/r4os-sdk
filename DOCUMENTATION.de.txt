@@ -1669,3 +1669,13 @@ Graphemgrenzen ohne erneute Fontmessung oder Prefixkopie. Quellen-/Text- und
 Fontrevision binden die feste Sicht; eine Leerstamp-Pruefung invalidiert sie
 bei spaeterer Veroeffentlichung. Alte Canvas-/Apppfade bleiben unveraendert.
 Normativ: Docs/TextMetrics.txt und Contract/API/FontPrefixMetrics2.txt.
+
+Gemeinsame FilePickerSession ab SDK0.64.167
+-----------------------------------------
+file_picker verbindet die vorhandenen Metadaten-/Directoryanbieter und den
+FileDialog mit einem begrenzten gemeinsamen Controller. Zwei Caller-Puffer,
+schrittweiser Kandidat bis echtem EOF, ganze Pfade und erneut gepruefte
+Identitaeten erhalten alte Sicht und Auswahl bei Fehler. Open/Save, Name,
+Fokus/Paging/Cancel und ausdrueckliche Overwriteentscheidung sind gemeinsam
+fuer Zig/C/Rust nutzbar; Schreiben und Anwendungsformat bleiben beim Caller.
+Normativer Vertrag: Docs/FilePicker.txt. Keine Anwendung wird umgestellt.

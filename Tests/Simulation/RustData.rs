@@ -793,3 +793,95 @@ fn prepared_text_metrics_use_shared_rows_keys_and_checked_font_invalidations() {
     assert!(!cache.progress().unwrap().complete);
     cache.reset().unwrap();
 }
+
+#[test]
+fn bounded_picker_shared_owner_keeps_whole_views_errors_and_explicit_save_policy() {
+    use core::{ffi::CStr, mem::MaybeUninit};
+    use r4os_sdk::{file_picker::*, platform2::Context};
+    unsafe extern "C" {
+        fn sdk_picker24_c_case() -> i32;
+        fn sdk_picker24_tables(table: *mut abi::generation2::R4XStartR4Sys2);
+        fn sdk_picker24_mode(mode: i32);
+        fn sdk_picker24_calls() -> u32;
+    }
+    assert_eq!(unsafe { sdk_picker24_c_case() }, 0);
+    let mut table = abi::generation2::R4XStartR4Sys2::default();
+    unsafe { sdk_picker24_tables(&mut table) };
+    let imports = [abi::R4XStartImport {
+        group_id: 1,
+        resolved_version: 2,
+        table: &table as *const _ as u64,
+        ..Default::default()
+    }];
+    let raw = abi::generation2::R4XStartContext2 {
+        import_count: 1,
+        imports: imports.as_ptr() as u64,
+        ..Default::default()
+    };
+    let context = unsafe { Context::new(&raw) }.unwrap();
+    let mut a = [MaybeUninit::<Row>::uninit(); 6];
+    let mut b = [MaybeUninit::<Row>::uninit(); 6];
+    let mut s = Session::new(&context, &mut a, &mut b, Mode::Save, b".TXT").unwrap();
+    assert!(s.rows().is_err());
+    s.begin(c"C:\\DIR", 0).unwrap();
+    for _ in 0..20 {
+        let before = unsafe { sdk_picker24_calls() };
+        let p = s.step(1).unwrap();
+        assert!(unsafe { sdk_picker24_calls() } - before <= 1);
+        if p.flags & 2 == 0 {
+            break;
+        }
+    }
+    let p = s.progress().unwrap();
+    assert_eq!((p.flags, p.count, p.revision), (1, 4, 1));
+    assert_eq!(s.rows().unwrap().len(), 4);
+    assert_eq!(s.directory().unwrap(), c"C:\\DIR");
+    s.select(p.revision, 1, 2).unwrap();
+    assert_eq!(s.activate(p.revision, false, false).unwrap().kind, 2);
+    assert_eq!(s.selection().kind, 0);
+    let confirmed = s.activate(p.revision, false, true).unwrap();
+    assert_eq!(confirmed.kind, 1);
+    assert_eq!(confirmed.entry.info.identity.object_hi, 2);
+    unsafe { sdk_picker24_mode(9) };
+    assert_eq!(s.activate(p.revision, false, true).err(), Some(Error(-10)));
+    let fields = |v: &abi::FileIdentity2| {
+        (
+            v.mount_generation,
+            v.namespace_generation,
+            v.object_hi,
+            v.object_lo,
+            v.mount_slot,
+            v.provider,
+            v.flags,
+            v.reserved0,
+        )
+    };
+    assert_eq!(
+        fields(&s.selection().entry.info.identity),
+        fields(&confirmed.entry.info.identity)
+    );
+    unsafe { sdk_picker24_mode(0) };
+    s.set_name("A.TXT").unwrap();
+    assert_eq!(s.activate(p.revision, true, false).unwrap().kind, 2);
+    unsafe { sdk_picker24_mode(9) };
+    assert_eq!(s.activate(p.revision, true, true).err(), Some(Error(-10)));
+    unsafe { sdk_picker24_mode(0) };
+    assert_eq!(s.activate(p.revision, true, true).unwrap().kind, 1);
+    s.set_name("NEW.TXT").unwrap();
+    assert_eq!(s.set_name(".."), Err(Error(-201)));
+    assert_eq!(s.filename().unwrap(), c"NEW.TXT");
+    let d = s.activate(p.revision, true, false).unwrap();
+    assert_eq!((d.kind, d.entry.info.flags), (1, 0));
+    assert_eq!(
+        CStr::from_bytes_until_nul(&d.entry.path).unwrap(),
+        c"C:\\DIR\\NEW.TXT"
+    );
+    unsafe { sdk_picker24_mode(-9) };
+    s.begin(c"C:\\DIR", 1).unwrap();
+    assert_eq!(s.step(64).err(), Some(Error(-9)));
+    assert_eq!(s.progress().unwrap().revision, 1);
+    assert_eq!(s.rows().unwrap().len(), 4);
+    assert_eq!(s.cancel().unwrap().kind, 3);
+    assert_eq!(s.step(1).err(), Some(Error(-206)));
+    assert_eq!(s.selection().kind, 1);
+}

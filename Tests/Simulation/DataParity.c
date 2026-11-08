@@ -310,3 +310,62 @@ int32_t sdk_ico_c_case(const uint8_t *bytes,uintptr_t length){
     if(!ok(value)||value.bits||memcmp(before,rgb,sizeof rgb))return 9;
     return 0;
 }
+
+#include <r4os/file_picker_platform2.h>
+#define PICKER24_CHECK(test,code) do { if (!(test)) return (code); } while (0)
+static int32_t picker24_mode;
+static uint32_t picker24_calls;
+static R4FileMetadata2 picker24_meta(uint64_t node,int directory){
+ return (R4FileMetadata2){.version=1,.size=sizeof(R4FileMetadata2),.flags=1|4|(directory?2:8),.byte_size=directory?0:9,.identity={.mount_generation=23,.namespace_generation=19,.object_hi=node,.mount_slot=4,.provider=2,.flags=1|4}};
+}
+static int32_t picker24_info(const uint8_t *path,R4FileMetadata2 *out){
+ picker24_calls++;
+ if(!strcmp((const char *)path,"C:\\DIR")){*out=picker24_meta(1,1);return 1;}
+ if(!strcmp((const char *)path,"C:\\DIR\\A.TXT")){*out=picker24_meta(picker24_mode==9?100:2,0);return 1;}
+ if(!strcmp((const char *)path,"C:\\DIR\\B.TXT")){*out=picker24_meta(3,0);return 1;}
+ if(!strcmp((const char *)path,"C:\\DIR\\SUB")){*out=picker24_meta(4,1);return 1;}
+ return 0;
+}
+static int32_t picker24_batch(const uint8_t *path,R4DirectoryMetadataCursor2 *cursor,R4DirectoryMetadataEntry2 *out,uint32_t capacity){
+ (void)path;picker24_calls++;
+ if(picker24_mode==-10)return -10;
+ if(!capacity)return cursor->flags==1?0:-1;
+ if(picker24_mode==-9&&cursor->scan.backend[0]==4)return -9;
+ cursor->flags=1;cursor->namespace_generation=19;cursor->scan.change.mount_generation=23;cursor->scan.change.mount_slot=4;
+ if(picker24_mode==3)return 0;
+ static const char *names[]={"C:\\DIR\\A.TXT","C:\\DIR\\HIDE.BIN","C:\\DIR\\SUB","C:\\DIR\\B.TXT"};
+ uint64_t index=cursor->scan.backend[0];if(index==4)return -5;
+ *out=(R4DirectoryMetadataEntry2){.info=picker24_meta(index==3?3:index+2,index==2)};
+ memcpy(out->path,names[index],strlen(names[index])+1);cursor->scan.backend[0]++;return 1;
+}
+void sdk_picker24_mode(int32_t mode){picker24_mode=mode;}
+uint32_t sdk_picker24_calls(void){return picker24_calls;}
+void sdk_picker24_tables(R4XStartR4Sys2 *table){
+ picker24_mode=0;picker24_calls=0;
+ *table=(R4XStartR4Sys2){.magic=R4OS2_R4SYS_MAGIC,.abi_version=2,.size=sizeof(*table),.file_metadata2=(uintptr_t)&picker24_info,.directory_metadata_batch2=(uintptr_t)&picker24_batch};
+}
+int32_t sdk_picker24_c_case(void){
+ R4XStartR4Sys2 table;sdk_picker24_tables(&table);R4XStartImport import={.group_id=1,.resolved_version=2,.table=(uintptr_t)&table};
+ R4XStartContext2 raw={.magic=R4OS2_START_MAGIC,.abi_major=2,.size=sizeof(raw),.import_count=1,.imports=(uintptr_t)&import};R4OS2Context context;
+ PICKER24_CHECK(!R4OS2ContextInit(&raw,&context),601);
+ R4SdkFilePickerProvider provider;PICKER24_CHECK(!R4SdkFilePickerProvider2(&context,&provider),602);
+ R4SdkFilePickerRow a[6],b[6];R4SdkFilePicker s;R4SdkFilePickerProgress p;R4SdkFilePickerDecision d;R4SdkWireSpan view;
+ PICKER24_CHECK(!R4SdkFilePickerInit((R4SdkWireSpan){(uintptr_t)a,sizeof(a)},(R4SdkWireSpan){(uintptr_t)b,sizeof(b)},6,2,(R4SdkWireSpan){(uintptr_t)".txt",4},provider,&s),603);
+ PICKER24_CHECK(!R4SdkFilePickerBegin(&s,(R4SdkWireSpan){(uintptr_t)"C:\\DIR",6},0)&&R4SdkFilePickerView(&s,&view)==-204,604);
+ for(uint32_t i=0;i<20;i++){uint32_t before=picker24_calls;PICKER24_CHECK(!R4SdkFilePickerStep(&s,1)&&picker24_calls-before<=1&&!R4SdkFilePickerGetProgress(&s,&p),605);if(!(p.flags&2))break;}
+ PICKER24_CHECK(p.flags==1&&p.count==4&&p.revision==1&&!R4SdkFilePickerView(&s,&view)&&view.length==4*sizeof(a[0]),606);
+ PICKER24_CHECK(!R4SdkFilePickerSelect(&s,p.revision,1,2)&&!R4SdkFilePickerActivate(&s,p.revision,0,0,&d)&&d.kind==2&&!s.confirmed.kind,607);
+ PICKER24_CHECK(!R4SdkFilePickerActivate(&s,p.revision,0,1,&d)&&d.kind==1&&d.entry.info.identity.object_hi==2,608);
+ R4SdkFilePickerDecision confirmed=s.confirmed;picker24_mode=9;
+ PICKER24_CHECK(R4SdkFilePickerActivate(&s,p.revision,0,1,&d)==-10&&!memcmp(&confirmed,&s.confirmed,sizeof(confirmed)),609);
+ picker24_mode=0;PICKER24_CHECK(!R4SdkFilePickerName(&s,(R4SdkWireSpan){(uintptr_t)"A.TXT",5})&&!R4SdkFilePickerActivate(&s,p.revision,1,0,&d)&&d.kind==2,615);
+ picker24_mode=9;PICKER24_CHECK(R4SdkFilePickerActivate(&s,p.revision,1,1,&d)==-10&&!memcmp(&confirmed,&s.confirmed,sizeof(confirmed)),616);
+ picker24_mode=0;PICKER24_CHECK(!R4SdkFilePickerActivate(&s,p.revision,1,1,&d)&&d.kind==1,617);
+ picker24_mode=0;PICKER24_CHECK(!R4SdkFilePickerName(&s,(R4SdkWireSpan){(uintptr_t)"NEW.TXT",7})&&!R4SdkFilePickerActivate(&s,p.revision,1,0,&d)&&d.kind==1&&!d.entry.info.flags,610);
+ PICKER24_CHECK(R4SdkFilePickerName(&s,(R4SdkWireSpan){(uintptr_t)"..",2})==-201,611);
+ picker24_mode=-9;PICKER24_CHECK(!R4SdkFilePickerBegin(&s,(R4SdkWireSpan){(uintptr_t)"C:\\DIR",6},1)&&R4SdkFilePickerStep(&s,64)==-9&&!R4SdkFilePickerView(&s,&view)&&s.revision==1,612);
+ PICKER24_CHECK(!R4SdkFilePickerCancel(&s,&d)&&d.kind==3&&R4SdkFilePickerStep(&s,1)==-206,613);
+ table.file_metadata2=0;PICKER24_CHECK(R4SdkFilePickerProvider2(&context,&provider)==-9002,614);return 0;
+}
+
+#undef PICKER24_CHECK

@@ -27,6 +27,9 @@ test "metadata2 owner exact thin provider views" {
 test "text metrics owner original comparison and frozen hits" {
     _ = @import("r4os/text_metrics_tests.zig");
 }
+test "file picker owner bounded shared controller" {
+    _ = @import("r4os/file_picker_tests.zig");
+}
 test {
     _ = @import("Tests/Simulation/DataOwners.zig");
     _ = @import("Tests/Simulation/WebOwners.zig");

@@ -6548,6 +6548,81 @@ pub struct R4SdkTextMetrics {
 const _: () = { assert!(core::mem::size_of::<R4SdkTextMetrics>() == 112); assert!(core::mem::align_of::<R4SdkTextMetrics>() == 8); assert!(core::mem::offset_of!(R4SdkTextMetrics, r#native_info) == 0); assert!(core::mem::offset_of!(R4SdkTextMetrics, r#source) == 40); assert!(core::mem::offset_of!(R4SdkTextMetrics, r#storage) == 56); assert!(core::mem::offset_of!(R4SdkTextMetrics, r#provider) == 72); assert!(core::mem::offset_of!(R4SdkTextMetrics, r#text_revision) == 80); assert!(core::mem::offset_of!(R4SdkTextMetrics, r#capacity) == 88); assert!(core::mem::offset_of!(R4SdkTextMetrics, r#count) == 92); assert!(core::mem::offset_of!(R4SdkTextMetrics, r#phase) == 96); assert!(core::mem::offset_of!(R4SdkTextMetrics, r#busy) == 100); assert!(core::mem::offset_of!(R4SdkTextMetrics, r#error_code) == 104); assert!(core::mem::offset_of!(R4SdkTextMetrics, r#reserved0) == 108); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
+pub struct R4SdkFilePickerProvider {
+    pub r#info: Option<unsafe extern "C" fn(*const u8, *mut R4FileMetadata2) -> i32>,
+    pub r#batch: Option<unsafe extern "C" fn(*const u8, *mut R4DirectoryMetadataCursor2, *mut R4DirectoryMetadataEntry2, u32) -> i32>,
+    pub r#filter: Option<unsafe extern "C" fn(*mut core::ffi::c_void, *const R4DirectoryMetadataEntry2) -> i32>,
+    pub r#filter_context: *mut core::ffi::c_void,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkFilePickerProvider>() == 32); assert!(core::mem::align_of::<R4SdkFilePickerProvider>() == 8); assert!(core::mem::offset_of!(R4SdkFilePickerProvider, r#info) == 0); assert!(core::mem::offset_of!(R4SdkFilePickerProvider, r#batch) == 8); assert!(core::mem::offset_of!(R4SdkFilePickerProvider, r#filter) == 16); assert!(core::mem::offset_of!(R4SdkFilePickerProvider, r#filter_context) == 24); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkFilePickerRow {
+    pub r#entry: R4DirectoryMetadataEntry2,
+    pub r#kind: u32,
+    pub r#reserved0: u32,
+    pub r#label: [u8; 256],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkFilePickerRow>() == 1400); assert!(core::mem::align_of::<R4SdkFilePickerRow>() == 8); assert!(core::mem::offset_of!(R4SdkFilePickerRow, r#entry) == 0); assert!(core::mem::offset_of!(R4SdkFilePickerRow, r#kind) == 1136); assert!(core::mem::offset_of!(R4SdkFilePickerRow, r#reserved0) == 1140); assert!(core::mem::offset_of!(R4SdkFilePickerRow, r#label) == 1144); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkFilePickerDecision {
+    pub r#entry: R4DirectoryMetadataEntry2,
+    pub r#kind: u32,
+    pub r#reserved0: u32,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkFilePickerDecision>() == 1144); assert!(core::mem::align_of::<R4SdkFilePickerDecision>() == 8); assert!(core::mem::offset_of!(R4SdkFilePickerDecision, r#entry) == 0); assert!(core::mem::offset_of!(R4SdkFilePickerDecision, r#kind) == 1136); assert!(core::mem::offset_of!(R4SdkFilePickerDecision, r#reserved0) == 1140); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkFilePickerProgress {
+    pub r#revision: u64,
+    pub r#seen: u64,
+    pub r#count: u32,
+    pub r#staged: u32,
+    pub r#number: u32,
+    pub r#selected: u32,
+    pub r#first_index: u32,
+    pub r#focus: u32,
+    pub r#pressed: u32,
+    pub r#flags: u32,
+    pub r#error_code: i32,
+    pub r#reserved0: u32,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkFilePickerProgress>() == 56); assert!(core::mem::align_of::<R4SdkFilePickerProgress>() == 8); assert!(core::mem::offset_of!(R4SdkFilePickerProgress, r#revision) == 0); assert!(core::mem::offset_of!(R4SdkFilePickerProgress, r#seen) == 8); assert!(core::mem::offset_of!(R4SdkFilePickerProgress, r#count) == 16); assert!(core::mem::offset_of!(R4SdkFilePickerProgress, r#staged) == 20); assert!(core::mem::offset_of!(R4SdkFilePickerProgress, r#number) == 24); assert!(core::mem::offset_of!(R4SdkFilePickerProgress, r#selected) == 28); assert!(core::mem::offset_of!(R4SdkFilePickerProgress, r#first_index) == 32); assert!(core::mem::offset_of!(R4SdkFilePickerProgress, r#focus) == 36); assert!(core::mem::offset_of!(R4SdkFilePickerProgress, r#pressed) == 40); assert!(core::mem::offset_of!(R4SdkFilePickerProgress, r#flags) == 44); assert!(core::mem::offset_of!(R4SdkFilePickerProgress, r#error_code) == 48); assert!(core::mem::offset_of!(R4SdkFilePickerProgress, r#reserved0) == 52); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkFilePicker {
+    pub r#provider: R4SdkFilePickerProvider,
+    pub r#active: R4SdkWireSpan,
+    pub r#candidate: R4SdkWireSpan,
+    pub r#active_cursor: R4DirectoryMetadataCursor2,
+    pub r#candidate_cursor: R4DirectoryMetadataCursor2,
+    pub r#directory_path: [u8; 1024],
+    pub r#candidate_path: [u8; 1024],
+    pub r#extension: [u8; 64],
+    pub r#filename: [u8; 768],
+    pub r#confirmed: R4SdkFilePickerDecision,
+    pub r#candidate_info: R4FileMetadata2,
+    pub r#revision: u64,
+    pub r#seen: u64,
+    pub r#capacity: u32,
+    pub r#count: u32,
+    pub r#staged: u32,
+    pub r#number: u32,
+    pub r#candidate_number: u32,
+    pub r#selected: u32,
+    pub r#first_index: u32,
+    pub r#focus: u32,
+    pub r#pressed: u32,
+    pub r#mode: u32,
+    pub r#phase: u32,
+    pub r#in_call: u32,
+    pub r#error_code: i32,
+    pub r#overwrite_pending: u32,
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkFilePicker>() == 8640); assert!(core::mem::align_of::<R4SdkFilePicker>() == 8); assert!(core::mem::offset_of!(R4SdkFilePicker, r#provider) == 0); assert!(core::mem::offset_of!(R4SdkFilePicker, r#active) == 32); assert!(core::mem::offset_of!(R4SdkFilePicker, r#candidate) == 48); assert!(core::mem::offset_of!(R4SdkFilePicker, r#active_cursor) == 64); assert!(core::mem::offset_of!(R4SdkFilePicker, r#candidate_cursor) == 2248); assert!(core::mem::offset_of!(R4SdkFilePicker, r#directory_path) == 4432); assert!(core::mem::offset_of!(R4SdkFilePicker, r#candidate_path) == 5456); assert!(core::mem::offset_of!(R4SdkFilePicker, r#extension) == 6480); assert!(core::mem::offset_of!(R4SdkFilePicker, r#filename) == 6544); assert!(core::mem::offset_of!(R4SdkFilePicker, r#confirmed) == 7312); assert!(core::mem::offset_of!(R4SdkFilePicker, r#candidate_info) == 8456); assert!(core::mem::offset_of!(R4SdkFilePicker, r#revision) == 8568); assert!(core::mem::offset_of!(R4SdkFilePicker, r#seen) == 8576); assert!(core::mem::offset_of!(R4SdkFilePicker, r#capacity) == 8584); assert!(core::mem::offset_of!(R4SdkFilePicker, r#count) == 8588); assert!(core::mem::offset_of!(R4SdkFilePicker, r#staged) == 8592); assert!(core::mem::offset_of!(R4SdkFilePicker, r#number) == 8596); assert!(core::mem::offset_of!(R4SdkFilePicker, r#candidate_number) == 8600); assert!(core::mem::offset_of!(R4SdkFilePicker, r#selected) == 8604); assert!(core::mem::offset_of!(R4SdkFilePicker, r#first_index) == 8608); assert!(core::mem::offset_of!(R4SdkFilePicker, r#focus) == 8612); assert!(core::mem::offset_of!(R4SdkFilePicker, r#pressed) == 8616); assert!(core::mem::offset_of!(R4SdkFilePicker, r#mode) == 8620); assert!(core::mem::offset_of!(R4SdkFilePicker, r#phase) == 8624); assert!(core::mem::offset_of!(R4SdkFilePicker, r#in_call) == 8628); assert!(core::mem::offset_of!(R4SdkFilePicker, r#error_code) == 8632); assert!(core::mem::offset_of!(R4SdkFilePicker, r#overwrite_pending) == 8636); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
 pub struct R4SdkWebSlot {
     pub r#ptr: *mut core::ffi::c_void,
     pub r#length: u64,
@@ -25622,6 +25697,17 @@ unsafe extern "C" {
     pub fn R4SdkTextMetricsGetView(p0: *const R4SdkTextMetrics, p1: *mut R4SdkWireSpan) -> i32;
     pub fn R4SdkTextMetricsHit(p0: *const R4SdkTextMetrics, p1: R4SdkTextMetricsKey, p2: i32, p3: *mut u32) -> i32;
     pub fn R4SdkTextMetricsReset(p0: *mut R4SdkTextMetrics) -> i32;
+    pub fn R4SdkFilePickerInit(p0: R4SdkWireSpan, p1: R4SdkWireSpan, p2: u32, p3: u32, p4: R4SdkWireSpan, p5: R4SdkFilePickerProvider, p6: *mut R4SdkFilePicker) -> i32;
+    pub fn R4SdkFilePickerBegin(p0: *mut R4SdkFilePicker, p1: R4SdkWireSpan, p2: u32) -> i32;
+    pub fn R4SdkFilePickerStep(p0: *mut R4SdkFilePicker, p1: u32) -> i32;
+    pub fn R4SdkFilePickerGetProgress(p0: *const R4SdkFilePicker, p1: *mut R4SdkFilePickerProgress) -> i32;
+    pub fn R4SdkFilePickerView(p0: *const R4SdkFilePicker, p1: *mut R4SdkWireSpan) -> i32;
+    pub fn R4SdkFilePickerSelect(p0: *mut R4SdkFilePicker, p1: u64, p2: u32, p3: u32) -> i32;
+    pub fn R4SdkFilePickerName(p0: *mut R4SdkFilePicker, p1: R4SdkWireSpan) -> i32;
+    pub fn R4SdkFilePickerActivate(p0: *mut R4SdkFilePicker, p1: u64, p2: u32, p3: u32, p4: *mut R4SdkFilePickerDecision) -> i32;
+    pub fn R4SdkFilePickerKey(p0: *mut R4SdkFilePicker, p1: u8, p2: u32, p3: *mut R4SdkFilePickerDecision) -> i32;
+    pub fn R4SdkFilePickerFocus(p0: *mut R4SdkFilePicker, p1: u32, p2: u32) -> i32;
+    pub fn R4SdkFilePickerCancel(p0: *mut R4SdkFilePicker, p1: *mut R4SdkFilePickerDecision) -> i32;
     pub fn R4SdkWebInvoke(p0: u64, p1: u32, p2: *const R4SdkWebSlot, p3: u32, p4: *mut core::ffi::c_void) -> R4SdkWebSlot;
     pub fn R4SdkWebConstruct(p0: u64, p1: u32, p2: *const R4SdkWebSlot, p3: u32, p4: *mut core::ffi::c_void) -> R4SdkWebSlot;
     pub fn R4SdkWebInspect(p0: u64, p1: u32, p2: *mut core::ffi::c_void, p3: *mut core::ffi::c_void) -> R4SdkWebSlot;

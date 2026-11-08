@@ -12,6 +12,7 @@ pub mod directory_page;
 pub mod device_snapshot;
 pub mod metadata2;
 pub mod text_metrics;
+pub mod file_picker;
 pub mod driver;
 pub mod graphics;
 pub mod gui;

@@ -72,7 +72,10 @@ r4os-sdk={path="$($sdk.Replace('\','/'))/Rust"}
             @('E0499','pub fn bad<''a>(c:&''a r4os_sdk::platform2::Context<''a>,p:&''a core::ffi::CStr,b:&''a mut[core::mem::MaybeUninit<r4os_sdk::abi::DirectoryMetadataEntry2>]){let mut d=r4os_sdk::metadata2::Directory::new(c,p,b).unwrap();let page=d.next_page().unwrap();d.reset();core::hint::black_box(page);}'),
             @('E0499','pub fn bad<''a>(c:&''a r4os_sdk::platform2::Context<''a>,p:&''a core::ffi::CStr,b:&''a mut[core::mem::MaybeUninit<r4os_sdk::abi::DirectoryMetadataEntry2>]){let mut d=r4os_sdk::metadata2::Directory::new(c,p,b).unwrap();b.fill(core::mem::MaybeUninit::uninit());core::hint::black_box(d.next_page());}'),
             @('E0502','pub fn bad(c:&mut r4os_sdk::text_metrics::Cache<''_>){let rows=c.rows().unwrap();let _=c.prepare(2,0);core::hint::black_box(rows);}'),
-            @('E0499','pub fn bad<''a>(c:&''a r4os_sdk::platform2::Context<''a>,s:&''a str,b:&''a mut[core::mem::MaybeUninit<r4os_sdk::abi::FontAdvance2>]){let mut cache=r4os_sdk::text_metrics::Cache::new(c,s,b).unwrap();b.fill(core::mem::MaybeUninit::uninit());core::hint::black_box(cache.prepare(1,0));}')
+            @('E0499','pub fn bad<''a>(c:&''a r4os_sdk::platform2::Context<''a>,s:&''a str,b:&''a mut[core::mem::MaybeUninit<r4os_sdk::abi::FontAdvance2>]){let mut cache=r4os_sdk::text_metrics::Cache::new(c,s,b).unwrap();b.fill(core::mem::MaybeUninit::uninit());core::hint::black_box(cache.prepare(1,0));}'),
+            @('E0502','pub fn bad(s:&mut r4os_sdk::file_picker::Session<''_>){let rows=s.rows().unwrap();let _=s.begin(c"C:\\DIR",0);core::hint::black_box(rows);}'),
+            @('E0499','pub fn bad<''a>(c:&''a r4os_sdk::platform2::Context<''a>,a:&''a mut[core::mem::MaybeUninit<r4os_sdk::file_picker::Row>],b:&''a mut[core::mem::MaybeUninit<r4os_sdk::file_picker::Row>]){let s=r4os_sdk::file_picker::Session::new(c,a,b,r4os_sdk::file_picker::Mode::Open,b"").unwrap();a.fill(core::mem::MaybeUninit::uninit());core::hint::black_box(s.progress());}'),
+            @('E0277','fn send<T:Send>(){} pub fn bad(){send::<r4os_sdk::file_picker::Session<''static>>();}')
         )
         foreach($case in $cases){
             if($case -isnot [array] -or $case.Count -ne 2 -or $case[0] -cnotmatch '^E\d{4}$'){throw 'Malformed compiler-negative case; no diagnostic claim.'}
