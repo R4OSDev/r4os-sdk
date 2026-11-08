@@ -333,7 +333,10 @@ test "r4desk exposes project and remote ABI metadata" {
     try std.testing.expectEqualStrings("R4DESK:Query:1", import_query);
     try std.testing.expectEqual(@as(u32, 2), @intFromEnum(group));
     try std.testing.expectEqual(abi.r4l_abi_version, abi_version);
-    try std.testing.expectEqual(abi.r4xstart_r4desk_version, (abi.R4XStartR4Desk{}).abi_version);
+    const header: abi.R4XStartR4Desk = .{};
+    try std.testing.expect(header.abi_version >= abi.r4xstart_r4desk_version);
+    try std.testing.expectEqual(abi.r4xstart_r4desk_magic, header.magic);
+    try std.testing.expectEqual(@as(u32, @sizeOf(abi.R4XStartR4Desk)), header.size);
     try std.testing.expectEqual(abi.remote_frame_version, (abi.RemoteFrameInfo{}).version);
     try std.testing.expectEqual(abi.remote_input_version, (abi.RemoteInputEvent{}).version);
     try std.testing.expectEqualStrings("Repositories/Kernel", provider_repository);

@@ -15,6 +15,7 @@ pub mod text_metrics;
 pub mod file_picker;
 pub mod audio_write;
 pub mod pcm_source;
+pub mod published_frame;
 pub mod driver;
 pub mod graphics;
 pub mod gui;

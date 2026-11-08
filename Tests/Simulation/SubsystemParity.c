@@ -234,3 +234,4 @@ int sdk65_guest_report(const R4XStartContext *start,char language,int code){
     report_text(out,&used,"\nVIDEO=");report_number(out,&used,last_video);report_text(out,&used,"\n");
     R4Transfer wrote=r4_files_write(&files,&path,(const uint8_t*)out,used);if(wrote.state!=R4_TRANSFER_BYTES||wrote.bytes!=used)return 196;return code;
 }
+#include "PublishedFrameParity.c"

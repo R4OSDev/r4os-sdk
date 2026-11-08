@@ -60,7 +60,11 @@ r4os-sdk={path="$($sdk.Replace('\','/'))/Rust",features=["alloc"]}
             @('E0499','pub fn bad(){let mut bytes=[0u8;127];let encoded=r4os_sdk::subsystems::encode_launch(b"C:\\TEMP\\G.BIN",&[],&mut bytes).unwrap();let launch=r4os_sdk::subsystems::Launch::parse(encoded).unwrap();bytes.fill(0);let _=launch.guest();}'),
             @('E0502','pub fn bad(s:&mut core::mem::MaybeUninit<r4os_sdk::subsystems::raw::R4SdkSubsystemCatalogCatalog>,w:&mut core::mem::MaybeUninit<r4os_sdk::subsystems::raw::R4SdkUpdateInventoryInventory>,bytes:&mut [u8],v:&r4os_sdk::subsystems::Callbacks<''_,''_>){let catalog=r4os_sdk::subsystems::Catalog::load(s,w,bytes,v).unwrap();bytes.fill(0);let _=catalog.count();}'),
             @('E0502','pub fn bad(s:&mut core::mem::MaybeUninit<r4os_sdk::subsystems::raw::R4SdkSubsystemCatalogCatalog>,w:&mut core::mem::MaybeUninit<r4os_sdk::subsystems::raw::R4SdkUpdateInventoryInventory>,bytes:&[u8],v:&r4os_sdk::subsystems::Callbacks<''_,''_>){let catalog=r4os_sdk::subsystems::Catalog::load(s,w,bytes,v).unwrap();let _=w.as_ptr();let _=catalog.count();}'),
-            @('E0277','fn send<T:Send>(){}pub fn bad(){send::<r4os_sdk::subsystems::Runtime<''static>>();}')
+            @('E0277','fn send<T:Send>(){}pub fn bad(){send::<r4os_sdk::subsystems::Runtime<''static>>();}'),
+            @('E0502','pub fn bad(b:&mut r4os_sdk::published_frame::Bridge<''_>,p:&mut[u32]){use r4os_sdk::published_frame::*;let s=unsafe{Published::xrgb(p,8,8,Stamp{binding_generation:1,revision:1,palette_revision:0},Damage::Full)}.unwrap();let f=b.sync(s).unwrap();p.fill(0);core::hint::black_box(f.updated());}'),
+            @('E0499','pub fn bad(b:&mut r4os_sdk::published_frame::Bridge<''_>,s:r4os_sdk::published_frame::Published<''_>){let f=b.sync(s).unwrap();let _=b.close();core::hint::black_box(f.updated());}'),
+            @('E0505','extern crate alloc;pub fn bad(b:&mut r4os_sdk::published_frame::Bridge<''_>,palette:alloc::vec::Vec<u32>){use r4os_sdk::published_frame::*;let pixels=[0u8;64];let s=unsafe{Published::indexed(&pixels,&palette,8,8,Stamp{binding_generation:1,revision:1,palette_revision:1},Damage::Full)};let f=b.sync(s).unwrap();drop(palette);core::hint::black_box(f.updated());}'),
+            @('E0277','fn send<T:Send>(){}pub fn bad(){send::<r4os_sdk::published_frame::Bridge<''static>>();}')
         )
         foreach($case in $cases){
             [IO.File]::WriteAllText($negative,$case[1],[Text.UTF8Encoding]::new($false))

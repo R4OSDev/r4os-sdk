@@ -1,6 +1,8 @@
 #![cfg(test)]
 #[path = "SubsystemCases.rs"]
 mod cases;
+#[path = "PublishedFrame.rs"]
+mod published_frame26;
 #[test]
 fn clock_and_launch() {
     cases::clock_launch().unwrap();

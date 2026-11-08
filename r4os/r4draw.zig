@@ -409,7 +409,12 @@ test "r4draw exposes project and present ABI metadata" {
     try std.testing.expectEqualStrings("R4DRAW:Query:1", import_query);
     try std.testing.expectEqual(@as(u32, 3), @intFromEnum(group));
     try std.testing.expectEqual(abi.r4l_abi_version, abi_version);
-    try std.testing.expectEqual(abi.r4xstart_r4draw_version, (abi.R4XStartR4Draw{}).abi_version);
+    const header: abi.R4XStartR4Draw = .{};
+    // The fixed historical revision is the append-only admission minimum;
+    // resolveGroupTable accepts newer initialized tables.
+    try std.testing.expect(header.abi_version >= abi.r4xstart_r4draw_version);
+    try std.testing.expectEqual(abi.r4xstart_r4draw_magic, header.magic);
+    try std.testing.expectEqual(@as(u32, @sizeOf(abi.R4XStartR4Draw)), header.size);
     try std.testing.expectEqual(abi.remote_frame_format_xrgb32, (abi.RemoteFrameInfo{}).format);
     try std.testing.expectEqualStrings("Repositories/Kernel", provider_repository);
     try std.testing.expectEqualStrings("Repositories/SDK/Shared/C/include/r4os/r4draw.h", c_header);
