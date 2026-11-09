@@ -39,7 +39,7 @@ foreach($project in Get-ChildItem -LiteralPath $LibrariesRoot -Directory|Sort-Ob
     $binding=Join-Path $project.FullName 'Bindings/Rust'
     $path=$binding.Replace('\','/').Replace('"','\"')
     $packages.Add(('r4os-'+$fields.NAME.ToLowerInvariant()+' = { path = "'+$path+'" }'))
-    & $zig cc -target x86_64-freestanding-none -std=c11 -Wall -Wextra -Werror -c -o (Join-Path $WorkRoot ($fields.NAME+'.o')) -I (Join-Path $sdk 'Shared/C/include') -I (Join-Path $ContractRoot 'Generated/SDK/C/include') -I (Join-Path $project.FullName 'Bindings/C') (Join-Path $project.FullName $fields.CONFORMANCE_C)
+    & $zig cc -target x86_64-freestanding-none -std=c11 -Wall -Wextra -Werror -c -o (Join-Path $WorkRoot ($fields.NAME+'.o')) -I (Join-Path $sdk 'Shared/C/include') -I (Join-Path $ContractRoot 'Generated/SDK/C/include') -I (Join-Path $ContractRoot 'Generated/Generation2/C/include') -I (Join-Path $project.FullName 'Bindings/C') (Join-Path $project.FullName $fields.CONFORMANCE_C)
     if($LASTEXITCODE -ne 0){throw 'Existing C conformance failed.'}
     ++$count
 }

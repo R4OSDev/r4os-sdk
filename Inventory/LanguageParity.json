@@ -345,7 +345,8 @@
           "Repositories/SDK/Shared/C/include/r4os/app_contract.h",
           "Repositories/SDK/Shared/C/include/r4os/startup.h",
           "Repositories/SDK/Shared/C/include/r4os/app2.h",
-          "Repositories/SDK/Shared/C/src/r4app2_startup.c"
+          "Repositories/SDK/Shared/C/src/r4app2_startup.c",
+          "Repositories/SDK/Shared/C/include/r4os/app_memory.h"
         ],
         "gap": "Normal explicit App2 entry and shared heap qualified. Common Generation2 business facades and productive consumer/default migration follow in their assigned roadmap phases; no Windows/hardware or fullinstallation qualification."
       },
@@ -396,7 +397,8 @@
         "state": "qualified_R4X_pooled_heap_and_existing_direct_VM",
         "sources": [
           "Repositories/SDK/Shared/C/include/r4os/heap.h",
-          "Repositories/SDK/Shared/C/include/r4os/r4sys.h"
+          "Repositories/SDK/Shared/C/include/r4os/r4sys.h",
+          "Repositories/SDK/Shared/C/include/r4os/app_memory.h"
         ],
         "gap": "Expliziter Instanz-/Generationsheap mit Alignment, malloc/calloc/realloc/free, Stats und quittiertem Finish; bestehende direkte VM-Primitiven erhalten und Ueberlauf korrigiert. Kein impliziter R4L-globaler Heap."
       },
@@ -497,7 +499,7 @@
         "stream_transfer",
         "metadata2"
       ],
-      "semantics": "Bytes/EOF/Teilfortschritt/Fehler unterscheiden; generationstreue Handles, paginierte Verzeichnisse, Registry-Snapshots/-Batches, absolute/relative Pfade, atomare Publikation und erhaltenes Stageeigentum bei Fehlern. SDK109: konkrete Pfad-Mount-Namensgrenzen mit UTF8-Bytes/UTF16-Units, Mountsnapshot und getrennten Atomic-Regeln in Zig/C/Rust; Name-64/Laenge-65 vor Mutation, lange CREATE-/Zielnamen bleiben unterstuetzt. SDK161: shared explicit R4OS ArgCursor and whole UTF8 diagnostic records with exact byte progress/uncertainty; canonical Query2 Console/File/LogService callbacks, no synthetic tables, hidden retry or consumer migration. Qualification boundaries in cli_diagnostics_09018. SDK162: shared one-step StreamTransfer exactu64 accepted prefix/one absolute budget, EOF/WouldBlock/timeout/cancel/uncertainty distinct; actual borrowed Query2 File/TCP/Service adapters with explicit operation-specific ACK and at-most-one bounded ServiceReply. Qualification limits in stream_transfer_09019. SDK165: exact optional Query2 wide metadata and bounded pages, explicit unknown flags/root, real namespace-qualified identity, conservative Restart and checked legacy range; no second VFS or provider registry. C inline header remains standalone to avoid unbacked extern symbols. Qualification: file_metadata_09022.",
+      "semantics": "Bytes/EOF/Teilfortschritt/Fehler unterscheiden; generationstreue Handles, paginierte Verzeichnisse, Registry-Snapshots/-Batches, absolute/relative Pfade, atomare Publikation und erhaltenes Stageeigentum bei Fehlern. SDK109: konkrete Pfad-Mount-Namensgrenzen mit UTF8-Bytes/UTF16-Units, Mountsnapshot und getrennten Atomic-Regeln in Zig/C/Rust; Name-64/Laenge-65 vor Mutation, lange CREATE-/Zielnamen bleiben unterstuetzt. SDK161: shared explicit R4OS ArgCursor and whole UTF8 diagnostic records with exact byte progress/uncertainty; canonical Query2 Console/File/LogService callbacks, no synthetic tables, hidden retry or consumer migration. Qualification boundaries in cli_diagnostics_09018. SDK162: shared one-step StreamTransfer exactu64 accepted prefix/one absolute budget, EOF/WouldBlock/timeout/cancel/uncertainty distinct; actual borrowed Query2 File/TCP/Service adapters with explicit operation-specific ACK and at-most-one bounded ServiceReply. Qualification limits in stream_transfer_09019. SDK165: exact optional Query2 wide metadata and bounded pages, explicit unknown flags/root, real namespace-qualified identity, conservative Restart and checked legacy range; no second VFS or provider registry. C inline header remains standalone to avoid unbacked extern symbols. Qualification: file_metadata_09022. SDK182: Normal App2 Files/Console/Registry/physical-storage dispatch uses the actual Context2. Files metadata and directory iteration use FileMetadata2 and namespace-validated pages. Full u64 values stay available; a legacy FileInfo projection refuses unrepresentable scalars/names, and buffered Restart discards private rows. No old directory-index fallback on the new path.",
       "current_only": "current_function",
       "rust": {
         "state": "paritaet_abgenommen",
@@ -547,10 +549,18 @@
         "cli_diagnostics_09018",
         "stream_transfer_09019",
         "file_metadata_09022",
-        "file_picker_09024"
+        "file_picker_09024",
+        "normal_system_facades_09041"
       ],
       "shared_core": "C-Funktionsbesitzer plus r4os/storage_runtime.zig zu bestehenden Zig-/R4STD-Kernen; keine neue Codec-/Pfad-/Registryimplementierung. Runtimeobjekte im technischen Profil mit Quellen/CPU/Hashes gebunden.",
-      "extension_08743": "Bound-node batches are the current iterator path; exact provider validation precedes each buffered record. Deliberate live-index traversal after deletion stays supported; no implicit fallback on absent batch support."
+      "extension_08743": "Bound-node batches are the current iterator path; exact provider validation precedes each buffered record. Deliberate live-index traversal after deletion stays supported; no implicit fallback on absent batch support.",
+      "generation2_qualification": {
+        "subversion": "0.90.41",
+        "sdk_package": "0.64.182",
+        "contract_package": "0.64.93",
+        "scope": "Normal App2 Files/Console/Registry/physical-storage dispatch uses the actual Context2. Files metadata and directory iteration use FileMetadata2 and namespace-validated pages. Full u64 values stay available; a legacy FileInfo projection refuses unrepresentable scalars/names, and buffered Restart discards private rows. No old directory-index fallback on the new path.",
+        "boundaries": "Productive individual consumers/defaults and remaining GUI/service/audio/serial migration stay in their assigned later phases. No Windows, physical hardware or freshinstallation qualification."
+      }
     },
     {
       "id": "process-sync-vm",
@@ -564,7 +574,7 @@
         "byte_pipe",
         "launch_io"
       ],
-      "semantics": "Instanz-/Thread-/VM-Generationen, borrowed/owned, Join/Stop/Cancel und echte Abschlussquittungen unterscheiden. Timeout/Forever/NoWait, Teilfortschritt und gehaltene I/O-Puffer unveraendert; kein ungeprueftes Send/Sync. SDK163: shared staged complete Full/Lifecycle membership, exact ID+generation Found/Missing/Unknown; one outer deadline, explicit restart, no incomplete Missing or Retain/physicalRetired claim. Qualification: inventory_reader_09020. SDK171 adds bounded native WaitSets over existing Notification/Timer owners; exact creator Task generation, explicit Rearm/Remove, short-batch More/Rescan, cancellation priority, no completion or memory-release inference. SDK172 adds optional prepared IO/Process/Thread/Endpoint/GUI sources with exact owner epochs, full typed public identities and honest current-legacy-ID limitation. Owner pumps consume work; WaitSets supply no retain/reap/DMA authority. Main GUI only and legacy subscription mask preserved. SDK177 adds copied bounded byte-pipe references with exact process lifetime, small-write atomicity, large accepted prefixes, last-writer/drain EOF, BrokenPipe and actual synchronous cancellation. C/Zig/Rust own explicit close/dup helpers, no automatic Drop, no hidden launch inheritance or WaitSource. Kernel retains resident queue/reference mechanics; host language review is separate from native provider qualification. SDK178 adds optional copied112byte LaunchIo requests and borrowed current-process stdio snapshots. Three selected pipe references bind atomically before first Ready; Default Console keeps its original routes and byte/count semantics, Poll only. No implicit inheritance or Drop; no new Console wait/EOF/atomic-write promise.",
+      "semantics": "Instanz-/Thread-/VM-Generationen, borrowed/owned, Join/Stop/Cancel und echte Abschlussquittungen unterscheiden. Timeout/Forever/NoWait, Teilfortschritt und gehaltene I/O-Puffer unveraendert; kein ungeprueftes Send/Sync. SDK163: shared staged complete Full/Lifecycle membership, exact ID+generation Found/Missing/Unknown; one outer deadline, explicit restart, no incomplete Missing or Retain/physicalRetired claim. Qualification: inventory_reader_09020. SDK171 adds bounded native WaitSets over existing Notification/Timer owners; exact creator Task generation, explicit Rearm/Remove, short-batch More/Rescan, cancellation priority, no completion or memory-release inference. SDK172 adds optional prepared IO/Process/Thread/Endpoint/GUI sources with exact owner epochs, full typed public identities and honest current-legacy-ID limitation. Owner pumps consume work; WaitSets supply no retain/reap/DMA authority. Main GUI only and legacy subscription mask preserved. SDK177 adds copied bounded byte-pipe references with exact process lifetime, small-write atomicity, large accepted prefixes, last-writer/drain EOF, BrokenPipe and actual synchronous cancellation. C/Zig/Rust own explicit close/dup helpers, no automatic Drop, no hidden launch inheritance or WaitSource. Kernel retains resident queue/reference mechanics; host language review is separate from native provider qualification. SDK178 adds optional copied112byte LaunchIo requests and borrowed current-process stdio snapshots. Three selected pipe references bind atomically before first Ready; Default Console keeps its original routes and byte/count semantics, Poll only. No implicit inheritance or Drop; no new Console wait/EOF/atomic-write promise. SDK182: Normal App2 Resources uses the actual Context2 and shared original Process/Thread/VM/IO/Notification owners. Full and Lifecycle reader factories keep their separate provider pairs and complete-view/Unknown/Restart/capacity semantics. Finite resource waits use one checked logical tick scale and never turn finite MAX into Forever. Timeout does not release retained buffers.",
       "current_only": "current_function",
       "rust": {
         "state": "paritaet_abgenommen",
@@ -602,9 +612,17 @@
         "waitset_language_surfaces_09028",
         "waitset_resource_sources_09029",
         "byte_pipe_language_09034",
-        "launch_io_language_09035"
+        "launch_io_language_09035",
+        "normal_system_facades_09041"
       ],
-      "shared_core": "Bestehender C-AppResources-Besitzer und native R4SYS-Callbacks; keine zweite VM-/Scheduler-/Prozess-/IOimplementierung. Eigener Code nur fuer Rust-Besitz und API-sichere Pufferretention."
+      "shared_core": "Bestehender C-AppResources-Besitzer und native R4SYS-Callbacks; keine zweite VM-/Scheduler-/Prozess-/IOimplementierung. Eigener Code nur fuer Rust-Besitz und API-sichere Pufferretention.",
+      "generation2_qualification": {
+        "subversion": "0.90.41",
+        "sdk_package": "0.64.182",
+        "contract_package": "0.64.93",
+        "scope": "Normal App2 Resources uses the actual Context2 and shared original Process/Thread/VM/IO/Notification owners. Full and Lifecycle reader factories keep their separate provider pairs and complete-view/Unknown/Restart/capacity semantics. Finite resource waits use one checked logical tick scale and never turn finite MAX into Forever. Timeout does not release retained buffers.",
+        "boundaries": "Productive individual consumers/defaults and remaining GUI/service/audio/serial migration stay in their assigned later phases. No Windows, physical hardware or freshinstallation qualification."
+      }
     },
     {
       "id": "services",
@@ -751,7 +769,7 @@
         "serial",
         "driver_poll_budget"
       ],
-      "semantics": "Monotone Fristen, Sattigung, Frequenz und Waitarten unterscheiden; Serialbesitz/Laengen/Timeout/Fehler erhalten. Optionale Deadline-Trailer sind ein Daten-/Protokollvertrag. SDK159: new explicit checked clock-bound budgets, tagged finiteMAX, and pure bounded DriverPollBudget; original wait/zero/saturating ABI behavior and resource ownership retained. No consumer migration or automatic sleep/quiescence.",
+      "semantics": "Monotone Fristen, Sattigung, Frequenz und Waitarten unterscheiden; Serialbesitz/Laengen/Timeout/Fehler erhalten. Optionale Deadline-Trailer sind ein Daten-/Protokollvertrag. SDK159: new explicit checked clock-bound budgets, tagged finiteMAX, and pure bounded DriverPollBudget; original wait/zero/saturating ABI behavior and resource ownership retained. No consumer migration or automatic sleep/quiescence. SDK182: Normal App2 Clock and resource waits use the real precise clock with requested logical tick frequency. Poll/Forever do not require a finite-clock conversion. Unknown frequency and overflow remain errors. Existing unchecked/saturating interfaces remain for the controlled old consumer migration; full Serial/service/wait integration is scoped to0.90.43.",
       "current_only": "current_function_and_protocol_data",
       "rust": {
         "state": "paritaet_abgenommen",
@@ -780,9 +798,17 @@
         "Repositories/SDK/Tests/Build/RustServices",
         "Repositories/SDK/Tests/Simulation/NetworkPeer.py",
         "time_poll_budgets_09016",
-        "audio_total_source_09025"
+        "audio_total_source_09025",
+        "normal_system_facades_09041"
       ],
-      "shared_core": "Vorhandene C-AppServices/AppTray/AppNetwork/Serial/Timeout-Besitzer, Zig-ServiceLoop/-Deadline/-R4NET-Besitzer und native R4SYS/R4NET/R4DEV-Callbacks. Rust fuegt Leihen/Typen/echte Abschlussretention hinzu; keine zweite Netzwerk- oder Schedulingimplementierung."
+      "shared_core": "Vorhandene C-AppServices/AppTray/AppNetwork/Serial/Timeout-Besitzer, Zig-ServiceLoop/-Deadline/-R4NET-Besitzer und native R4SYS/R4NET/R4DEV-Callbacks. Rust fuegt Leihen/Typen/echte Abschlussretention hinzu; keine zweite Netzwerk- oder Schedulingimplementierung.",
+      "generation2_qualification": {
+        "subversion": "0.90.41",
+        "sdk_package": "0.64.182",
+        "contract_package": "0.64.93",
+        "scope": "Normal App2 Clock and resource waits use the real precise clock with requested logical tick frequency. Poll/Forever do not require a finite-clock conversion. Unknown frequency and overflow remain errors. Existing unchecked/saturating interfaces remain for the controlled old consumer migration; full Serial/service/wait integration is scoped to0.90.43.",
+        "boundaries": "Productive individual consumers/defaults and remaining GUI/service/audio/serial migration stay in their assigned later phases. No Windows, physical hardware or freshinstallation qualification."
+      }
     },
     {
       "id": "gui",
@@ -967,7 +993,7 @@
         "r4dev",
         "device_snapshot"
       ],
-      "semantics": "Passive Inventare/Zaehler von ausdruecklicher Arbeit trennen. Aktuelle optionale Hardware/Transport-/Energieanfragen und asynchrone Status-/Fehlersemantik erhalten. SDK164: one real passive capture, bounded caller-owned complete frozen view and static pages. Independent source observations, explicit refresh/Restart and return-bound loans; no repeated full scan per index, no partial success or physical presence/Retain inference. Qualification: device_snapshot_09021.",
+      "semantics": "Passive Inventare/Zaehler von ausdruecklicher Arbeit trennen. Aktuelle optionale Hardware/Transport-/Energieanfragen und asynchrone Status-/Fehlersemantik erhalten. SDK164: one real passive capture, bounded caller-owned complete frozen view and static pages. Independent source observations, explicit refresh/Restart and return-bound loans; no repeated full scan per index, no partial success or physical presence/Retain inference. Qualification: device_snapshot_09021. SDK182: Normal App2 passive snapshot factories and pinned Platform::open2 borrow the actual Context2. Passive records, capacity/failure, explicit refresh and return-bound views retain the existing shared owner. This step qualifies passive devices and kernel/time observations, not new power controls or physical hardware.",
       "current_only": "current_function",
       "rust": {
         "state": "paritaet_abgenommen",
@@ -988,7 +1014,8 @@
           "Repositories/SDK/Shared/C/include/r4os/power_profiles.h",
           "Repositories/SDK/Shared/C/include/r4os/gui_bridge.h",
           "Repositories/SDK/Shared/C/include/r4os/device_snapshot.h",
-          "Repositories/SDK/Shared/C/include/r4os/device_snapshot_platform2.h"
+          "Repositories/SDK/Shared/C/include/r4os/device_snapshot_platform2.h",
+          "Repositories/SDK/Shared/C/include/r4os/platform_facade2.h"
         ],
         "gap": null
       },
@@ -997,9 +1024,17 @@
         "platform_current_58",
         "current_kernel_records_80",
         "audio_duration_retirement_08859",
-        "device_snapshot_09021"
+        "device_snapshot_09021",
+        "normal_system_facades_09041"
       ],
-      "shared_core": "Existing Zig Audio/PCM/Device/Power owners through one compiler-typed native boundary; current legacy C audio loop aligned, no third Rust algorithm."
+      "shared_core": "Existing Zig Audio/PCM/Device/Power owners through one compiler-typed native boundary; current legacy C audio loop aligned, no third Rust algorithm.",
+      "generation2_qualification": {
+        "subversion": "0.90.41",
+        "sdk_package": "0.64.182",
+        "contract_package": "0.64.93",
+        "scope": "Normal App2 passive snapshot factories and pinned Platform::open2 borrow the actual Context2. Passive records, capacity/failure, explicit refresh and return-bound views retain the existing shared owner. This step qualifies passive devices and kernel/time observations, not new power controls or physical hardware.",
+        "boundaries": "Productive individual consumers/defaults and remaining GUI/service/audio/serial migration stay in their assigned later phases. No Windows, physical hardware or freshinstallation qualification."
+      }
     },
     {
       "id": "text-primitives",
@@ -4220,85 +4255,90 @@
     },
     {
       "path": "Repositories/SDK/build.zig",
-      "sha256": "2444b609458241c39dd43bf96acfe2090acbf661d3f2585754fdc3db5b21f7d7",
+      "sha256": "e5a041b7abe04ad615bbf008a3809ad0266e47898885ee911028926fe31faa8d",
       "owner": "Repositories/SDK",
-      "version": "0.64.181",
+      "version": "0.64.182",
       "capability": "project-build",
       "declarations": [
         [
           "build_api",
           "const",
-          4
+          5
         ],
         [
           "Sdk",
           "const",
-          5
+          6
         ],
         [
           "SdkOptions",
           "const",
-          6
+          7
         ],
         [
           "HostProfile",
           "const",
-          7
+          8
         ],
         [
           "R4XAppOptions",
           "const",
-          8
+          17
         ],
         [
           "R4XCAppOptions",
           "const",
-          9
+          18
         ],
         [
           "R4AppOptions",
           "const",
-          10
+          19
         ],
         [
           "R4CAppOptions",
           "const",
-          11
+          20
         ],
         [
           "AppProfile",
           "const",
-          12
+          21
         ],
         [
           "R4DModuleOptions",
           "const",
-          13
+          22
         ],
         [
           "R4PModuleOptions",
           "const",
-          14
+          23
         ],
         [
           "R4LModuleOptions",
           "const",
-          15
+          24
         ],
         [
           "R4MFBuildOptions",
           "const",
-          16
+          25
         ],
         [
           "sdk",
           "fn",
-          18
+          27
+        ],
+        [
+          "systemLibrariesBuild",
+          "fn",
+          32
         ],
         [
           "build",
           "fn",
-          22
+          36
         ]
       ]
     },
@@ -5538,9 +5578,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/app_resources.zig",
-      "sha256": "e6e599c0e8c240e5dc3f0093bb52fc22e1c18e7a463b4175ce39a6b0fb2e9679",
+      "sha256": "3f295a5824138bf2dfda0cedf774d7cd2d86b4ba9eae7b7b3d9ea43bb3b56b5d",
       "owner": "Repositories/SDK",
-      "version": "0.64.134",
+      "version": "0.64.182",
       "capability": "process-sync-vm",
       "declarations": [
         [
@@ -5624,244 +5664,254 @@
           82
         ],
         [
-          "Resources.available",
+          "Resources.lifecycleBegin",
           "fn",
           85
         ],
         [
+          "Resources.lifecyclePrograms",
+          "fn",
+          89
+        ],
+        [
+          "Resources.available",
+          "fn",
+          93
+        ],
+        [
           "Resources.spawn",
           "fn",
-          96
+          104
         ],
         [
           "Resources.spawnWithConsoleHost",
           "fn",
-          103
+          111
         ],
         [
           "Resources.openProcess",
           "fn",
-          110
+          118
         ],
         [
           "Resources.createThread",
           "fn",
-          118
+          126
         ],
         [
           "Resources.createComputeWorker",
           "fn",
-          122
+          130
         ],
         [
           "Resources.reserveVm",
           "fn",
-          133
+          141
         ],
         [
           "Resources.asyncRead",
           "fn",
-          140
+          148
         ],
         [
           "Resources.asyncReadAt",
           "fn",
-          146
+          154
         ],
         [
           "Resources.asyncWrite",
           "fn",
-          152
+          160
         ],
         [
           "Resources.asyncAppend",
           "fn",
-          158
+          166
         ],
         [
           "Resources.asyncWriteAt",
           "fn",
-          164
+          172
         ],
         [
           "Resources.asyncFileInfo",
           "fn",
-          170
+          178
         ],
         [
           "Resources.asyncFileLock",
           "fn",
-          176
+          184
         ],
         [
           "Resources.asyncStreamBegin",
           "fn",
-          182
+          190
         ],
         [
           "Resources.asyncStreamWrite",
           "fn",
-          188
+          196
         ],
         [
           "Resources.asyncStreamFinish",
           "fn",
-          194
+          202
         ],
         [
           "Resources.asyncStreamAbort",
           "fn",
-          200
+          208
         ],
         [
           "ProcessHandle",
           "container",
-          212
+          220
         ],
         [
           "ProcessHandle.valid",
           "fn",
-          245
+          253
         ],
         [
           "ProcessHandle.instanceId",
           "fn",
-          249
+          257
         ],
         [
           "ProcessHandle.status",
           "fn",
-          253
+          261
         ],
         [
           "ProcessHandle.requestClose",
           "fn",
-          263
+          271
         ],
         [
           "ProcessHandle.kill",
           "fn",
-          269
+          277
         ],
         [
           "ProcessHandle.waitReady",
           "fn",
-          275
+          283
         ],
         [
           "ProcessHandle.completionRead",
           "fn",
-          287
+          295
         ],
         [
           "ProcessHandle.reap",
           "fn",
-          297
+          305
         ],
         [
           "ProcessHandle.wait",
           "fn",
-          309
+          317
         ],
         [
           "JoinHandle",
           "container",
-          321
+          329
         ],
         [
           "JoinHandle.valid",
           "fn",
-          326
+          334
         ],
         [
           "JoinHandle.placement",
           "fn",
-          334
+          342
         ],
         [
           "JoinHandle.setPlacement",
           "fn",
-          338
+          346
         ],
         [
           "JoinHandle.status",
           "fn",
-          343
+          351
         ],
         [
           "JoinHandle.join",
           "fn",
-          351
+          359
         ],
         [
           "VmRegion",
           "container",
-          368
+          376
         ],
         [
           "VmRegion.valid",
           "fn",
-          374
+          382
         ],
         [
           "VmRegion.info",
           "fn",
-          378
+          386
         ],
         [
           "VmRegion.commit",
           "fn",
-          387
+          395
         ],
         [
           "VmRegion.decommit",
           "fn",
-          392
+          400
         ],
         [
           "VmRegion.release",
           "fn",
-          397
+          405
         ],
         [
           "IoBufferBinding",
           "container",
-          415
+          423
         ],
         [
           "IoRequest",
           "container",
-          421
+          429
         ],
         [
           "IoRequest.valid",
           "fn",
-          428
+          436
         ],
         [
           "IoRequest.buffersHeld",
           "fn",
-          432
+          440
         ],
         [
           "IoRequest.releaseBuffers",
           "fn",
-          440
+          448
         ],
         [
           "IoRequest.status",
           "fn",
-          446
+          454
         ],
         [
           "IoRequest.wait",
           "fn",
-          455
+          463
         ],
         [
           "IoRequest.close",
           "fn",
-          466
+          474
         ]
       ]
     },
@@ -6106,460 +6156,475 @@
     },
     {
       "path": "Repositories/SDK/r4os/app_storage.zig",
-      "sha256": "4af66b0153bb4d3a742a2071a22a086adbdeb103648cf1627012573bc1e17f74",
+      "sha256": "62473f0e28ba677a04a0c1d64de4f5a36eaa6b5ea46c3badd67ced1f7627453f",
       "owner": "Repositories/SDK",
-      "version": "0.64.134",
+      "version": "0.64.182",
       "capability": "files-registry-console",
       "declarations": [
         [
           "FilePath",
           "const",
-          6
+          7
         ],
         [
           "AbsoluteFilePath",
           "const",
-          7
+          8
         ],
         [
           "RelativeFilePath",
           "const",
-          8
+          9
         ],
         [
           "RegistryPath",
           "const",
-          9
+          10
         ],
         [
           "PathZ",
           "const",
-          10
+          11
         ],
         [
           "Console",
           "container",
-          12
+          13
         ],
         [
           "Console.write",
           "fn",
-          15
+          16
         ],
         [
           "Console.line",
           "fn",
-          19
+          20
         ],
         [
           "Console.put",
           "fn",
-          23
+          24
         ],
         [
           "Transfer",
           "container",
-          28
+          29
         ],
         [
           "Operation",
           "container",
-          34
+          35
         ],
         [
           "AtomicReplaceOptions",
           "container",
-          40
+          41
         ],
         [
           "AtomicReplaceOptions.valid",
           "fn",
-          45
+          46
         ],
         [
           "AtomicReplaceResult",
           "container",
-          52
+          53
+        ],
+        [
+          "FileNameLimitsResult",
+          "container",
+          62
         ],
         [
           "FileInfoResult",
           "container",
-          61
+          67
         ],
         [
           "DirectoryKind",
           "container",
-          67
+          73
         ],
         [
           "DirectoryEntry",
           "container",
-          69
+          75
         ],
         [
           "DirectoryNext",
           "container",
-          75
+          82
         ],
         [
           "Files",
           "container",
-          81
+          88
         ],
         [
           "Files.available",
           "fn",
-          84
+          91
         ],
         [
           "Files.read",
           "fn",
-          89
+          96
         ],
         [
           "Files.readAt",
           "fn",
-          96
+          103
         ],
         [
           "Files.write",
           "fn",
-          103
+          110
         ],
         [
           "Files.append",
           "fn",
-          109
+          116
+        ],
+        [
+          "Files.nameLimits",
+          "fn",
+          124
         ],
         [
           "Files.info",
           "fn",
-          115
+          131
+        ],
+        [
+          "Files.metadata",
+          "fn",
+          146
         ],
         [
           "Files.delete",
           "fn",
-          123
+          151
         ],
         [
           "Files.rename",
           "fn",
-          127
+          155
         ],
         [
           "Files.createDirectory",
           "fn",
-          131
+          159
         ],
         [
           "Files.deleteDirectory",
           "fn",
-          135
+          163
         ],
         [
           "Files.beginDirectoryChanges",
           "fn",
-          139
+          167
         ],
         [
           "Files.pollDirectoryChanges",
           "fn",
-          145
+          173
         ],
         [
           "Files.iterate",
           "fn",
-          149
+          177
         ],
         [
           "Files.streamReader",
           "fn",
-          153
+          186
         ],
         [
           "Files.streamWriter",
           "fn",
-          157
+          190
         ],
         [
           "Files.ownedCreateWriter",
           "fn",
-          168
+          201
         ],
         [
           "Files.replaceAtomic",
           "fn",
-          182
+          215
         ],
         [
           "Files.copy",
           "fn",
-          194
+          227
         ],
         [
           "DirectoryIterator",
           "container",
-          199
+          232
         ],
         [
           "DirectoryIterator.next",
           "fn",
-          207
+          243
         ],
         [
           "DirectoryIterator.revisitAfterRemoval",
           "fn",
-          238
+          331
         ],
         [
           "StreamReader",
           "container",
-          248
+          376
         ],
         [
           "StreamReader.read",
           "fn",
-          254
+          382
         ],
         [
           "StreamWriterOpen",
           "container",
-          267
+          395
         ],
         [
           "StreamWriter",
           "container",
-          272
+          400
         ],
         [
           "StreamWriter.write",
           "fn",
-          276
+          404
         ],
         [
           "StreamWriter.finish",
           "fn",
-          281
+          409
         ],
         [
           "StreamWriter.abort",
           "fn",
-          286
+          414
         ],
         [
           "OwnedStageWriterOpen",
           "container",
-          293
+          421
         ],
         [
           "OwnedStageWriter",
           "container",
-          298
+          426
         ],
         [
           "OwnedStageWriter.write",
           "fn",
-          307
+          435
         ],
         [
           "OwnedStageWriter.finishKeepOwnership",
           "fn",
-          313
+          441
         ],
         [
           "OwnedStageWriter.abort",
           "fn",
-          331
+          459
         ],
         [
           "RegistrySnapshotKind",
           "container",
-          346
+          474
         ],
         [
           "RegistrySnapshot",
           "container",
-          351
+          479
         ],
         [
           "RegistrySnapshot.page",
           "fn",
-          355
+          483
         ],
         [
           "RegistrySnapshotOpen",
           "container",
-          360
+          488
         ],
         [
           "RegistryBatchBuildError",
           "const",
-          367
+          495
         ],
         [
           "RegistryBatchBuilder",
           "container",
-          374
+          502
         ],
         [
           "RegistryBatchBuilder.init",
           "fn",
-          380
+          508
         ],
         [
           "RegistryBatchBuilder.reset",
           "fn",
-          384
+          512
         ],
         [
           "RegistryBatchBuilder.operations",
           "fn",
-          389
+          517
         ],
         [
           "RegistryBatchBuilder.blob",
           "fn",
-          393
+          521
         ],
         [
           "RegistryBatchBuilder.setString",
           "fn",
-          397
+          525
         ],
         [
           "RegistryBatchBuilder.setU32",
           "fn",
-          401
+          529
         ],
         [
           "RegistryBatchBuilder.setU64",
           "fn",
-          407
+          535
         ],
         [
           "RegistryBatchBuilder.setBool",
           "fn",
-          413
+          541
         ],
         [
           "RegistryBatchBuilder.setBinary",
           "fn",
-          418
+          546
         ],
         [
           "RegistryBatchBuilder.delete",
           "fn",
-          422
+          550
         ],
         [
           "RegistryBatchApply",
           "container",
-          467
+          595
         ],
         [
           "RegistryBatchApply.committed",
           "fn",
-          471
+          599
         ],
         [
           "RegistryValue",
           "container",
-          477
+          605
         ],
         [
           "RegistryValue.asU32",
           "fn",
-          481
+          609
         ],
         [
           "RegistryValue.asU64",
           "fn",
-          486
+          614
         ],
         [
           "RegistryValue.asBool",
           "fn",
-          491
+          619
         ],
         [
           "RegistryValue.asString",
           "fn",
-          496
+          624
         ],
         [
           "RegistryRead",
           "container",
-          502
+          630
         ],
         [
           "Registry",
           "container",
-          508
+          636
         ],
         [
           "Registry.available",
           "fn",
-          511
+          639
         ],
         [
           "Registry.snapshotAvailable",
           "fn",
-          515
+          643
         ],
         [
           "Registry.batchAvailable",
           "fn",
-          519
+          647
         ],
         [
           "Registry.beginSnapshot",
           "fn",
-          523
+          651
         ],
         [
           "Registry.applyBatch",
           "fn",
-          533
+          661
         ],
         [
           "Registry.get",
           "fn",
-          539
+          667
         ],
         [
           "Registry.setValue",
           "fn",
-          550
+          678
         ],
         [
           "Registry.setString",
           "fn",
-          554
+          682
         ],
         [
           "Registry.setU32",
           "fn",
-          558
+          686
         ],
         [
           "Registry.setU64",
           "fn",
-          562
+          690
         ],
         [
           "Registry.setBool",
           "fn",
-          566
+          694
         ],
         [
           "Registry.setBinary",
           "fn",
-          570
+          698
         ],
         [
           "Registry.delete",
           "fn",
-          574
+          702
         ]
       ]
     },
@@ -7010,290 +7075,325 @@
     },
     {
       "path": "Repositories/SDK/r4os/build.zig",
-      "sha256": "78a0156e58a6a7b833036ff08ca269e9243393fbc4642cc09bf97ae0f8eb1889",
+      "sha256": "9fda82e25f76a241d06bd9e1bb907f7122fad20e3861f928130f5da23de23edf",
       "owner": "Repositories/SDK",
-      "version": "0.64.181",
+      "version": "0.64.182",
       "capability": "project-build",
       "declarations": [
         [
-          "module_manifest",
+          "profiles",
           "const",
           3
         ],
         [
+          "module_manifest",
+          "const",
+          4
+        ],
+        [
           "BuildResult",
           "container",
-          5
+          6
         ],
         [
           "sdk_package_name",
           "const",
-          11
+          12
         ],
         [
           "default_r4x_builder_source",
           "const",
-          15
+          16
         ],
         [
           "default_r4l_contract_generator_source",
           "const",
-          16
+          17
         ],
         [
           "SdkOptions",
           "container",
-          18
+          19
         ],
         [
           "HostProfile",
           "container",
-          28
+          29
         ],
         [
           "AppProfile",
           "container",
-          42
+          46
         ],
         [
           "ZigModuleBuild",
           "container",
-          44
+          48
         ],
         [
           "R4MFBuildOptions",
           "container",
-          52
+          56
         ],
         [
           "ResourceKind",
           "container",
-          62
+          66
         ],
         [
           "ResourceInput",
           "container",
-          63
+          67
         ],
         [
           "R4MFCatalogStats",
           "container",
-          70
+          74
         ],
         [
           "R4AppOptions",
           "container",
-          75
+          79
         ],
         [
           "R4CAppOptions",
           "container",
-          84
+          88
         ],
         [
           "manifestModuleVersionFor",
           "fn",
-          133
+          137
         ],
         [
           "R4XAppOptions",
           "container",
-          178
+          182
         ],
         [
           "R4XCAppOptions",
           "container",
-          187
+          191
         ],
         [
           "R4DModuleOptions",
           "container",
-          196
+          200
         ],
         [
           "R4PModuleOptions",
           "container",
-          211
+          215
         ],
         [
           "R4LModuleOptions",
           "container",
-          224
+          228
         ],
         [
           "Sdk",
           "container",
-          238
+          242
         ],
         [
           "Sdk.init",
           "fn",
-          244
+          248
         ],
         [
           "Sdk.fromDependency",
           "fn",
-          253
+          257
         ],
         [
           "Sdk.initFromRoot",
           "fn",
-          262
+          266
         ],
         [
           "Sdk.createR4osModule",
           "fn",
-          292
+          299
         ],
         [
           "Sdk.addR4XStart",
           "fn",
-          307
+          315
         ],
         [
           "Sdk.addR4App",
           "fn",
-          325
+          334
+        ],
+        [
+          "Sdk.addHeapRuntime",
+          "fn",
+          354
+        ],
+        [
+          "Sdk.addStorageRuntime",
+          "fn",
+          358
         ],
         [
           "Sdk.addR4XStartC",
           "fn",
-          344
+          362
         ],
         [
           "Sdk.addR4AppC",
           "fn",
-          362
+          382
         ],
         [
           "Sdk.addR4MF",
           "fn",
-          384
+          406
         ],
         [
           "Sdk.addR4MFWithOptions",
           "fn",
-          392
+          414
         ],
         [
           "Sdk.addR4MFCatalog",
           "fn",
-          718
+          938
         ],
         [
           "Sdk.addR4XService",
           "fn",
-          739
+          959
         ],
         [
           "Sdk.addR4D",
           "fn",
-          756
+          977
         ],
         [
           "Sdk.addR4P",
           "fn",
-          777
+          999
         ],
         [
           "Sdk.addR4LRaw",
           "fn",
-          796
+          1019
         ],
         [
           "R4XOptions",
           "container",
-          957
+          1181
         ],
         [
           "R4AppBuildOptions",
           "container",
-          976
+          1201
         ],
         [
           "R4XCOptions",
           "container",
-          996
+          1222
         ],
         [
           "R4CAppBuildOptions",
           "container",
-          1016
+          1244
         ],
         [
           "R4DOptions",
           "container",
-          1036
+          1266
         ],
         [
           "R4POptions",
           "container",
-          1059
+          1290
         ],
         [
           "R4LRawOptions",
           "container",
-          1078
+          1310
         ],
         [
           "R4MRawOptions",
           "container",
-          1093
+          1325
         ],
         [
           "R4MElfOptions",
           "container",
-          1111
+          1343
         ],
         [
           "addR4XBuilder",
           "fn",
-          1125
+          1357
         ],
         [
           "addR4LContractGenerator",
           "fn",
-          1140
+          1380
         ],
         [
           "addR4XStart",
           "fn",
-          1301
+          1551
         ],
         [
           "addR4XStartC",
           "fn",
-          1305
+          1555
         ],
         [
           "addR4XService",
           "fn",
-          1342
+          1594
         ],
         [
           "addR4D",
           "fn",
-          1348
+          1600
         ],
         [
           "addR4P",
           "fn",
-          1417
+          1674
         ],
         [
           "addR4LRaw",
           "fn",
-          1480
+          1742
         ],
         [
           "addR4MRaw",
           "fn",
-          1508
+          1770
         ],
         [
           "addR4MElf",
           "fn",
-          1558
+          1820
+        ],
+        [
+          "addFacadeRuntime",
+          "fn",
+          2107
+        ],
+        [
+          "addStorageRuntimeObject",
+          "fn",
+          2132
+        ],
+        [
+          "moduleTarget",
+          "fn",
+          2157
+        ],
+        [
+          "addProbedObject",
+          "fn",
+          2162
         ]
       ]
     },
@@ -15500,30 +15600,30 @@
     },
     {
       "path": "Repositories/SDK/r4os/program.zig",
-      "sha256": "9a396eb2f9d2a4e27e5969c78349f7f47ebd9ea3bcb5a1fda6247f2c1354a965",
+      "sha256": "c39706305057aca0862e5285f682782042ec82efbc1e9051b595fdcc93df6d35",
       "owner": "Repositories/SDK",
-      "version": "0.64.181",
+      "version": "0.64.182",
       "capability": "startup",
       "declarations": [
         [
           "ServiceStopPolicy",
           "container",
-          8
+          10
         ],
         [
           "Bundle",
           "container",
-          16
+          18
         ],
         [
           "bundleFromR4XStart",
           "fn",
-          43
+          45
         ],
         [
           "bundleValueFromR4XStart",
           "fn",
-          54
+          56
         ],
         [
           "EntryFn",
@@ -15633,3312 +15733,3432 @@
         [
           "Context.initBundle",
           "fn",
-          315
+          317
         ],
         [
           "Context.hasSysFn",
           "fn",
-          391
+          416
         ],
         [
           "Context.hasDeskFn",
           "fn",
-          395
+          420
         ],
         [
           "Context.hasDrawFn",
           "fn",
-          399
+          424
         ],
         [
           "Context.hasNetFn",
           "fn",
-          403
+          428
         ],
         [
           "Context.hasAudioFn",
           "fn",
-          407
+          432
         ],
         [
           "Context.hasDevFn",
           "fn",
-          411
+          436
         ],
         [
           "Context.allocator",
           "fn",
-          415
+          440
         ],
         [
           "Context.allocatorStats",
           "fn",
-          424
+          450
         ],
         [
           "Context.allocatorTrim",
           "fn",
-          429
+          455
         ],
         [
           "Context.memorySummary",
           "fn",
-          435
+          462
         ],
         [
           "Context.memoryBlockCount",
           "fn",
-          442
+          469
         ],
         [
           "Context.memoryBlock",
           "fn",
-          447
+          474
         ],
         [
           "Context.memoryPressure",
           "fn",
-          454
+          481
         ],
         [
           "Context.memoryReclaimProbe",
           "fn",
-          461
+          488
         ],
         [
           "Context.kernelHeapCheck",
           "fn",
-          470
+          497
         ],
         [
           "Context.kernelSchedulerCheck",
           "fn",
-          477
+          504
         ],
         [
           "Context.kernelUsbCheck",
           "fn",
-          483
+          510
         ],
         [
           "Context.kernelNvmeCheck",
           "fn",
-          490
+          517
         ],
         [
           "Context.kernelBlockQueueCheck",
           "fn",
-          497
+          524
         ],
         [
           "Context.cpuCapabilities",
           "fn",
-          504
+          531
         ],
         [
           "Context.cpuFeature",
           "fn",
-          508
+          535
         ],
         [
           "Context.cpuRegisterRead",
           "fn",
-          512
+          539
         ],
         [
           "Context.cpuPowerInfo",
           "fn",
-          516
+          543
         ],
         [
           "Context.cpuPerformance",
           "fn",
-          520
+          547
         ],
         [
           "Context.cpuCppc",
           "fn",
-          525
+          552
         ],
         [
           "Context.cpuFirmwarePerformance",
           "fn",
-          529
+          556
         ],
         [
           "Context.cpuIdleInfo",
           "fn",
-          533
+          560
         ],
         [
           "Context.cpuMachineInfo",
           "fn",
-          538
+          565
         ],
         [
           "Context.cpuMachineBank",
           "fn",
-          542
+          569
         ],
         [
           "Context.cpuMicrocodeInfo",
           "fn",
-          547
+          574
         ],
         [
           "Context.fpuObservation",
           "fn",
-          554
+          581
         ],
         [
           "Context.cpuAccelerationInfo",
           "fn",
-          559
+          586
         ],
         [
           "Context.cpuAccelerationInfoFunction",
           "fn",
-          563
+          590
         ],
         [
           "Context.entropyInfoFunction",
           "fn",
-          566
+          593
         ],
         [
           "Context.entropyFillFunction",
           "fn",
-          569
+          596
         ],
         [
           "Context.entropySourceInfo",
           "fn",
-          572
+          599
         ],
         [
           "Context.cpuAccelerationWorkFunction",
           "fn",
-          576
+          603
         ],
         [
           "Context.cpuAccelerationWork",
           "fn",
-          579
+          606
         ],
         [
           "Context.cpuPmuInfo",
           "fn",
-          584
+          611
         ],
         [
           "Context.cpuPmuMeasure",
           "fn",
-          591
+          618
         ],
         [
           "Context.cpuPmuResult",
           "fn",
-          596
+          623
         ],
         [
           "Context.cpuPerformanceHint",
           "fn",
-          601
+          628
         ],
         [
           "Context.cpuPowerCapture",
           "fn",
-          606
+          633
         ],
         [
           "Context.kernelCpuRegisterCheck",
           "fn",
-          610
+          637
         ],
         [
           "Context.cpuLifecycle",
           "fn",
-          615
+          642
         ],
         [
           "Context.kernelCpuLifecycleCheck",
           "fn",
-          619
+          646
         ],
         [
           "Context.kernelSmpCheck",
           "fn",
-          624
+          651
         ],
         [
           "Context.smpTlbSnapshot",
           "fn",
-          629
+          656
         ],
         [
           "Context.cpuTopology",
           "fn",
-          633
+          660
         ],
         [
           "Context.cpuCacheTopology",
           "fn",
-          638
+          665
         ],
         [
           "Context.memoryBackingStoreProbe",
           "fn",
-          643
+          670
         ],
         [
           "Context.memoryBackingStoreSlotProbe",
           "fn",
-          650
+          677
         ],
         [
           "Context.memoryPagerGateProbe",
           "fn",
-          657
+          684
         ],
         [
           "Context.memoryPageIoProbe",
           "fn",
-          664
+          691
         ],
         [
           "Context.memoryVmPageStateProbe",
           "fn",
-          673
+          700
         ],
         [
           "Context.performanceSummary",
           "fn",
-          680
+          707
         ],
         [
           "Context.programInstanceStorageSummary",
           "fn",
-          687
-        ],
-        [
-          "Context.programInstanceStorageSummaryLegacy",
-          "fn",
-          695
+          714
         ],
         [
           "Context.programInstanceStorageSummaryV2",
           "fn",
-          700
+          724
         ],
         [
           "Context.programInstanceStorageSelfTest",
           "fn",
-          705
-        ],
-        [
-          "Context.programRegistrySummary",
-          "fn",
-          710
-        ],
-        [
-          "Context.programRegistrySelfTest",
-          "fn",
-          715
+          729
         ],
         [
           "Context.programRegistrySummaryV2",
           "fn",
-          720
+          734
         ],
         [
           "Context.programRegistrySelfTestV2",
           "fn",
-          725
+          739
         ],
         [
           "Context.executionInventorySummary",
           "fn",
-          730
+          744
         ],
         [
           "Context.kernelVersion",
           "fn",
-          735
-        ],
-        [
-          "Context.programRegistrySummaryLegacy",
-          "fn",
-          740
-        ],
-        [
-          "Context.programRegistrySelfTestLegacy",
-          "fn",
-          744
+          749
         ],
         [
           "Context.performanceTask",
           "fn",
-          748
+          754
         ],
         [
           "Context.performanceStorage",
           "fn",
-          755
+          761
         ],
         [
           "Context.performanceBootPhase",
           "fn",
-          762
+          768
         ],
         [
           "Context.performanceBootPhaseClock",
           "fn",
-          769
+          775
         ],
         [
           "Context.performanceBootSummary",
           "fn",
-          776
+          782
         ],
         [
           "Context.performanceDriverWork",
           "fn",
-          783
+          789
         ],
         [
           "Context.performancePciInventory",
           "fn",
-          790
+          796
         ],
         [
           "Context.performanceInput",
           "fn",
-          797
+          803
         ],
         [
           "Context.performanceInstrumentation",
           "fn",
-          804
+          810
         ],
         [
           "Context.performanceLock",
           "fn",
-          811
+          817
         ],
         [
           "Context.performanceStack",
           "fn",
-          818
+          824
         ],
         [
           "Context.stackFault",
           "fn",
-          827
+          833
         ],
         [
           "Context.performanceIrqTiming",
           "fn",
-          832
+          838
         ],
         [
           "Context.memoryVmReserveProbe",
           "fn",
-          839
+          845
         ],
         [
           "Context.vmReserve",
           "fn",
-          846
+          852
         ],
         [
           "Context.vmReserveRaw",
           "fn",
-          852
+          858
         ],
         [
           "Context.vmCommit",
           "fn",
-          861
+          867
         ],
         [
           "Context.vmCommitFlags",
           "fn",
-          865
+          871
         ],
         [
           "Context.vmDecommit",
           "fn",
-          870
+          876
         ],
         [
           "Context.vmRelease",
           "fn",
-          875
+          881
         ],
         [
           "Context.vmQuery",
           "fn",
-          880
+          886
         ],
         [
           "Context.vmQueryRaw",
           "fn",
-          886
+          892
         ],
         [
           "Context.pagingSummary",
           "fn",
-          891
+          897
         ],
         [
           "Context.displaySummary",
           "fn",
-          898
+          904
         ],
         [
           "Context.displayState",
           "fn",
-          905
+          911
         ],
         [
           "Context.driverModuleInfo",
           "fn",
-          912
+          918
         ],
         [
           "Context.driverModuleInfoRaw",
           "fn",
-          918
+          924
         ],
         [
           "Context.hardwareSummary",
           "fn",
-          923
+          929
+        ],
+        [
+          "Context.firmwareSystemUuid",
+          "fn",
+          936
         ],
         [
           "Context.bootInfoSummary",
           "fn",
-          930
+          944
         ],
         [
           "Context.bootInfoMemoryCount",
           "fn",
-          937
+          951
         ],
         [
           "Context.bootInfoMemoryEntry",
           "fn",
-          942
+          956
         ],
         [
           "Context.print",
           "fn",
-          949
+          963
         ],
         [
           "Context.putc",
           "fn",
-          957
+          971
         ],
         [
           "Context.write",
           "fn",
-          961
+          975
         ],
         [
           "Context.println",
           "fn",
-          979
+          993
         ],
         [
           "Context.clear",
           "fn",
-          984
+          998
         ],
         [
           "Context.rect",
           "fn",
-          988
+          1002
         ],
         [
           "Context.text",
           "fn",
-          992
+          1006
         ],
         [
           "Context.screenWidth",
           "fn",
-          996
+          1010
         ],
         [
           "Context.screenHeight",
           "fn",
-          1001
+          1015
         ],
         [
           "Context.mouseState",
           "fn",
-          1006
+          1020
         ],
         [
           "Context.mouseMotion",
           "fn",
-          1009
+          1023
         ],
         [
           "Context.mouseShow",
           "fn",
-          1014
+          1028
         ],
         [
           "Context.mouseHide",
           "fn",
-          1018
+          1032
         ],
         [
           "Context.argsRaw",
           "fn",
-          1022
+          1036
         ],
         [
           "Context.envGet",
           "fn",
-          1028
+          1043
         ],
         [
           "Context.envSet",
           "fn",
-          1033
+          1048
         ],
         [
           "Context.readKey",
           "fn",
-          1038
+          1053
         ],
         [
           "Context.readKeyCodepoint",
           "fn",
-          1043
+          1058
         ],
         [
           "Context.keyboardLayoutCurrent",
           "fn",
-          1048
+          1063
         ],
         [
           "Context.keyboardLayoutAt",
           "fn",
-          1053
+          1068
         ],
         [
           "Context.keyboardLayoutSet",
           "fn",
-          1058
+          1073
         ],
         [
           "Context.ticks",
           "fn",
-          1063
+          1078
         ],
         [
           "Context.sleepTicks",
           "fn",
-          1068
+          1083
         ],
         [
           "Context.timeSecondsSinceMidnight",
           "fn",
-          1072
+          1087
         ],
         [
           "Context.timeState",
           "fn",
-          1077
+          1092
         ],
         [
           "Context.timeSetState",
           "fn",
-          1083
+          1098
         ],
         [
           "Context.platformInputSnapshot",
           "fn",
-          1088
+          1103
         ],
         [
           "Context.monotonicClock",
           "fn",
-          1094
+          1109
         ],
         [
           "Context.bootReady",
           "fn",
-          1100
+          1115
         ],
         [
           "Context.monotonicNanoseconds",
           "fn",
-          1105
+          1120
         ],
         [
           "Context.bootLogInfo",
           "fn",
-          1116
+          1131
         ],
         [
           "Context.bootLogRead",
           "fn",
-          1123
+          1138
         ],
         [
           "Context.monotonicHz",
           "fn",
-          1129
+          1144
         ],
         [
           "Context.ticksFromMilliseconds",
           "fn",
-          1136
+          1155
+        ],
+        [
+          "Context.clockSampleChecked",
+          "fn",
+          1164
+        ],
+        [
+          "Context.ticksFromMillisecondsChecked",
+          "fn",
+          1169
         ],
         [
           "Context.monotonicBackend",
           "fn",
-          1143
+          1174
         ],
         [
           "Context.systemPowerTransition",
           "fn",
-          1159
+          1190
         ],
         [
           "Context.systemHalt",
           "fn",
-          1165
+          1196
         ],
         [
           "Context.systemReboot",
           "fn",
-          1172
+          1203
         ],
         [
           "Context.programRun",
           "fn",
-          1179
+          1210
         ],
         [
           "Context.programLaunch",
           "fn",
-          1184
+          1215
         ],
         [
           "Context.programSpawn",
           "fn",
-          1189
+          1220
         ],
         [
           "Context.programSpawnHandle",
           "fn",
-          1194
+          1225
         ],
         [
           "Context.programOpenHandle",
           "fn",
-          1199
+          1230
         ],
         [
           "Context.programHandleStatus",
           "fn",
-          1204
+          1235
         ],
         [
           "Context.programHandleRequestClose",
           "fn",
-          1209
+          1240
         ],
         [
           "Context.programHandleKill",
           "fn",
-          1214
+          1245
         ],
         [
           "Context.programHandleWait",
           "fn",
-          1219
+          1250
         ],
         [
           "Context.programHandleReap",
           "fn",
-          1224
+          1255
         ],
         [
           "Context.programCompletionRead",
           "fn",
-          1229
-        ],
-        [
-          "Context.programSpawnWithConsoleHost",
-          "fn",
-          1235
-        ],
-        [
-          "Context.programSpawnWithConsoleHostHandle",
-          "fn",
-          1240
-        ],
-        [
-          "Context.programReapInstance",
-          "fn",
-          1245
-        ],
-        [
-          "Context.programRequestClose",
-          "fn",
-          1250
-        ],
-        [
-          "Context.programShouldClose",
-          "fn",
-          1255
-        ],
-        [
-          "Context.programKill",
-          "fn",
           1260
         ],
         [
-          "Context.programInstance",
+          "Context.programObservationRetain",
           "fn",
-          1265
+          1267
         ],
         [
-          "Context.programInventoryBegin",
+          "Context.programObservationWait",
           "fn",
-          1270
+          1271
         ],
         [
-          "Context.programInventoryPrograms",
+          "Context.programObservationRead",
           "fn",
           1275
         ],
         [
-          "Context.programInventoryTasks",
+          "Context.programObservationRelease",
           "fn",
-          1281
+          1280
         ],
         [
-          "Context.programInventoryThreads",
+          "Context.programSpawnWithConsoleHost",
           "fn",
-          1287
+          1285
         ],
         [
-          "Context.threadCreateRaw",
+          "Context.programSpawnWithConsoleHostHandle",
           "fn",
-          1293
+          1290
         ],
         [
-          "Context.threadCreate",
+          "Context.programReapInstance",
           "fn",
-          1298
+          1295
         ],
         [
-          "Context.threadCreateHandle",
+          "Context.programRequestClose",
           "fn",
-          1304
+          1300
         ],
         [
-          "Context.computeWorkerCreate",
+          "Context.programShouldClose",
+          "fn",
+          1305
+        ],
+        [
+          "Context.programKill",
           "fn",
           1311
         ],
         [
-          "Context.threadExit",
+          "Context.programInstance",
           "fn",
-          1315
+          1316
         ],
         [
-          "Context.programExit",
+          "Context.programLifecycleBegin",
           "fn",
-          1322
+          1321
         ],
         [
-          "Context.threadJoin",
+          "Context.programLifecyclePrograms",
           "fn",
-          1327
+          1326
         ],
         [
-          "Context.threadHandleJoin",
+          "Context.programInventoryBegin",
           "fn",
           1332
         ],
         [
-          "Context.threadJoinTimeout",
+          "Context.programInventoryPrograms",
           "fn",
           1337
         ],
         [
-          "Context.threadCurrent",
+          "Context.programInventoryTasks",
           "fn",
-          1342
+          1343
         ],
         [
-          "Context.threadCurrentHandle",
+          "Context.programInventoryThreads",
           "fn",
-          1348
+          1349
         ],
         [
-          "Context.threadPlacementGet",
+          "Context.threadCreateRaw",
           "fn",
-          1354
+          1355
         ],
         [
-          "Context.threadPlacementSet",
+          "Context.threadCreate",
           "fn",
           1360
         ],
         [
-          "Context.cpuCapacity",
+          "Context.threadCreateHandle",
           "fn",
           1366
         ],
         [
-          "Context.notificationCreate",
+          "Context.computeWorkerCreate",
           "fn",
-          1371
+          1373
         ],
         [
-          "Context.notificationQuery",
+          "Context.threadExit",
           "fn",
-          1375
+          1377
         ],
         [
-          "Context.notificationNotify",
+          "Context.programExit",
           "fn",
-          1379
+          1384
         ],
         [
-          "Context.notificationWait",
+          "Context.threadJoin",
           "fn",
-          1383
+          1389
         ],
         [
-          "Context.notificationClose",
+          "Context.threadHandleJoin",
           "fn",
-          1387
+          1394
         ],
         [
-          "Context.programLocalGet",
+          "Context.threadJoinTimeout",
           "fn",
-          1392
+          1399
         ],
         [
-          "Context.programLocalPublish",
+          "Context.threadCurrent",
           "fn",
-          1397
+          1404
         ],
         [
-          "Context.threadStatus",
+          "Context.threadCurrentHandle",
           "fn",
-          1402
+          1410
         ],
         [
-          "Context.threadHandleStatus",
+          "Context.threadPlacementGet",
           "fn",
-          1407
+          1416
         ],
         [
-          "Context.ioFileRead",
-          "fn",
-          1412
-        ],
-        [
-          "Context.ioFileReadAt",
-          "fn",
-          1417
-        ],
-        [
-          "Context.ioFileWrite",
+          "Context.threadPlacementSet",
           "fn",
           1422
         ],
         [
-          "Context.ioFileAppend",
+          "Context.cpuCapacity",
           "fn",
-          1427
+          1428
         ],
         [
-          "Context.ioFileWriteAt",
+          "Context.notificationCreate",
           "fn",
-          1432
+          1433
         ],
         [
-          "Context.ioFileInfo",
+          "Context.notificationQuery",
           "fn",
           1437
         ],
         [
-          "Context.ioFileLock",
+          "Context.notificationNotify",
           "fn",
-          1442
+          1441
         ],
         [
-          "Context.ioFileStreamBegin",
+          "Context.notificationWait",
           "fn",
-          1447
+          1445
         ],
         [
-          "Context.ioFileStreamWrite",
+          "Context.notificationClose",
           "fn",
-          1452
+          1449
         ],
         [
-          "Context.ioFileStreamFinish",
+          "Context.programLocalGet",
           "fn",
-          1457
+          1454
         ],
         [
-          "Context.ioFileStreamAbort",
+          "Context.programLocalPublish",
           "fn",
-          1462
+          1459
         ],
         [
-          "Context.ioServiceCall",
+          "Context.threadStatus",
           "fn",
-          1467
+          1464
         ],
         [
-          "Context.ioStatus",
+          "Context.threadHandleStatus",
+          "fn",
+          1469
+        ],
+        [
+          "Context.ioFileRead",
           "fn",
           1474
         ],
         [
-          "Context.ioWait",
+          "Context.ioFileReadAt",
           "fn",
           1479
         ],
         [
-          "Context.ioWaitTimeout",
+          "Context.ioFileWrite",
           "fn",
           1484
         ],
         [
-          "Context.ioClose",
+          "Context.ioFileAppend",
           "fn",
           1489
         ],
         [
-          "Context.programSetWindow",
+          "Context.ioFileWriteAt",
           "fn",
           1494
         ],
         [
-          "Context.programSetWindowHandle",
+          "Context.ioFileInfo",
           "fn",
           1499
         ],
         [
-          "Context.programSetConsoleHost",
+          "Context.ioFileLock",
           "fn",
           1504
         ],
         [
-          "Context.programCurrentConsoleHost",
+          "Context.ioFileStreamBegin",
           "fn",
           1509
         ],
         [
-          "Context.programRequestDesktop",
+          "Context.ioFileStreamWrite",
           "fn",
           1514
         ],
         [
-          "Context.programRequestHostLaunch",
+          "Context.ioFileStreamFinish",
           "fn",
           1519
         ],
         [
-          "Context.programTakeHostLaunch",
+          "Context.ioFileStreamAbort",
           "fn",
           1524
         ],
         [
-          "Context.programWindowId",
+          "Context.ioServiceCall",
           "fn",
           1529
         ],
         [
-          "Context.guiWindowInfo",
+          "Context.ioStatus",
           "fn",
-          1534
+          1536
         ],
         [
-          "Context.guiSetWindowInfo",
+          "Context.ioWait",
           "fn",
-          1539
+          1541
         ],
         [
-          "Context.guiPollEvent",
+          "Context.ioWaitTimeout",
           "fn",
-          1544
+          1546
         ],
         [
-          "Context.guiPushEvent",
+          "Context.ioClose",
           "fn",
-          1549
+          1551
         ],
         [
-          "Context.guiSetText",
+          "Context.programSetWindow",
           "fn",
-          1554
+          1556
         ],
         [
-          "Context.guiText",
+          "Context.programSetWindowHandle",
           "fn",
-          1559
+          1561
         ],
         [
-          "Context.guiRevision",
+          "Context.programSetConsoleHost",
           "fn",
-          1564
+          1566
         ],
         [
-          "Context.programClass",
+          "Context.programCurrentConsoleHost",
           "fn",
-          1569
+          1571
         ],
         [
-          "Context.guiClear",
+          "Context.programRequestDesktop",
           "fn",
-          1574
+          1576
         ],
         [
-          "Context.guiRect",
+          "Context.programRequestHostLaunch",
           "fn",
-          1579
+          1581
         ],
         [
-          "Context.guiDrawText",
+          "Context.programTakeHostLaunch",
           "fn",
-          1584
+          1586
         ],
         [
-          "Context.guiCommand",
+          "Context.programWindowId",
           "fn",
-          1589
+          1591
         ],
         [
-          "Context.guiBlit",
+          "Context.guiHostInput",
           "fn",
-          1594
+          1597
         ],
         [
-          "Context.guiBlendAlpha8",
+          "Context.guiPointerCaptureInfo",
           "fn",
-          1600
+          1602
         ],
         [
-          "Context.guiRasterRead",
+          "Context.guiPointerCaptureAcquire",
           "fn",
           1606
         ],
         [
-          "Context.supportsGuiFrameContract",
+          "Context.guiPointerCaptureRelease",
           "fn",
-          1612
+          1610
         ],
         [
-          "Context.supportsGuiFrameDamageContract",
+          "Context.guiPointerCaptureHost",
           "fn",
-          1621
+          1614
         ],
         [
-          "Context.supportsGuiFrameStreamingContract",
+          "Context.guiWindowInfo",
           "fn",
-          1628
+          1619
         ],
         [
-          "Context.supportsGuiSharedRasterContract",
+          "Context.guiWindowAppearance",
           "fn",
-          1634
+          1625
         ],
         [
-          "Context.guiFrameBegin",
+          "Context.guiSetWindowInfo",
           "fn",
-          1644
+          1630
         ],
         [
-          "Context.guiFrameBeginDamage",
+          "Context.guiPollEvent",
           "fn",
-          1649
+          1635
         ],
         [
-          "Context.guiFrameBeginReplace",
+          "Context.guiPushEvent",
+          "fn",
+          1640
+        ],
+        [
+          "Context.guiSetText",
+          "fn",
+          1645
+        ],
+        [
+          "Context.guiText",
+          "fn",
+          1650
+        ],
+        [
+          "Context.guiRevision",
           "fn",
           1655
         ],
         [
-          "Context.guiFrameAppend",
+          "Context.programClass",
           "fn",
-          1661
+          1660
         ],
         [
-          "Context.guiFrameCommit",
+          "Context.guiClear",
           "fn",
-          1668
+          1665
         ],
         [
-          "Context.guiFrameCancel",
+          "Context.guiRect",
           "fn",
-          1673
+          1670
         ],
         [
-          "Context.guiFrameInfo",
+          "Context.guiDrawText",
           "fn",
-          1678
+          1675
         ],
         [
-          "Context.guiFrameRead",
+          "Context.guiCommand",
+          "fn",
+          1680
+        ],
+        [
+          "Context.guiBlit",
           "fn",
           1685
         ],
         [
-          "Context.guiFrameGenerationInfo",
+          "Context.guiBlendAlpha8",
           "fn",
-          1694
+          1691
         ],
         [
-          "Context.guiFrameGenerationRead",
+          "Context.guiRasterRead",
           "fn",
-          1701
+          1697
         ],
         [
-          "Context.guiFrameStreamInfo",
+          "Context.supportsGuiFrameContract",
           "fn",
-          1711
+          1703
         ],
         [
-          "Context.guiSharedRasterCreate",
+          "Context.supportsGuiFrameDamageContract",
           "fn",
-          1718
+          1712
         ],
         [
-          "Context.guiSharedRasterDestroy",
+          "Context.supportsGuiFrameStreamingContract",
           "fn",
-          1723
+          1719
         ],
         [
-          "Context.guiSharedRasterMapWrite",
+          "Context.supportsGuiSharedRasterContract",
           "fn",
-          1728
+          1725
         ],
         [
-          "Context.guiSharedRasterPublish",
+          "Context.guiFrameBegin",
           "fn",
           1735
         ],
         [
-          "Context.guiSharedRasterAcquire",
+          "Context.guiFrameBeginDamage",
           "fn",
           1740
         ],
         [
-          "Context.guiSharedRasterRelease",
+          "Context.guiFrameBeginReplace",
           "fn",
-          1754
+          1746
         ],
         [
-          "Context.gfxVirtualStart",
+          "Context.guiFrameAppend",
+          "fn",
+          1752
+        ],
+        [
+          "Context.guiFrameCommit",
           "fn",
           1759
         ],
         [
-          "Context.gfxVirtualQuery",
+          "Context.guiFrameCancel",
           "fn",
-          1766
+          1764
         ],
         [
-          "Context.gfxVirtualClose",
+          "Context.guiFrameInfo",
           "fn",
-          1773
+          1769
         ],
         [
-          "Context.gfxVirtualWait",
+          "Context.guiFrameRead",
           "fn",
-          1777
+          1776
         ],
         [
-          "Context.gfxNativeStart",
+          "Context.guiFrameGenerationInfo",
           "fn",
           1785
         ],
         [
-          "Context.gfxNativeQuery",
+          "Context.guiFrameGenerationRead",
           "fn",
-          1793
+          1792
         ],
         [
-          "Context.gfxNativeReceive",
+          "Context.guiFrameStreamInfo",
           "fn",
-          1801
+          1802
         ],
         [
-          "Context.gfxNativeClose",
+          "Context.guiSharedRasterCreate",
           "fn",
           1809
         ],
         [
-          "Context.gfxNativeWait",
+          "Context.guiSharedRasterDestroy",
           "fn",
           1814
         ],
         [
+          "Context.guiSharedRasterMapWrite",
+          "fn",
+          1819
+        ],
+        [
+          "Context.guiSharedRasterPublish",
+          "fn",
+          1826
+        ],
+        [
+          "Context.guiSharedRasterAcquire",
+          "fn",
+          1831
+        ],
+        [
+          "Context.guiSharedRasterRelease",
+          "fn",
+          1845
+        ],
+        [
+          "Context.gfxVirtualStart",
+          "fn",
+          1850
+        ],
+        [
+          "Context.gfxVirtualQuery",
+          "fn",
+          1857
+        ],
+        [
+          "Context.gfxVirtualClose",
+          "fn",
+          1864
+        ],
+        [
+          "Context.gfxVirtualWait",
+          "fn",
+          1868
+        ],
+        [
+          "Context.gfxNativeStart",
+          "fn",
+          1876
+        ],
+        [
+          "Context.gfxNativeQuery",
+          "fn",
+          1884
+        ],
+        [
+          "Context.gfxNativeReceive",
+          "fn",
+          1892
+        ],
+        [
+          "Context.gfxNativeClose",
+          "fn",
+          1900
+        ],
+        [
+          "Context.gfxNativeWait",
+          "fn",
+          1905
+        ],
+        [
           "Context.gfxBufferCreate",
           "fn",
-          1822
+          1913
         ],
         [
           "Context.gfxBufferDescribe",
           "fn",
-          1829
+          1920
         ],
         [
           "Context.gfxBufferImport",
           "fn",
-          1836
+          1927
         ],
         [
           "Context.gfxBufferRelease",
           "fn",
-          1843
+          1934
         ],
         [
           "Context.gfxBufferMap",
           "fn",
-          1848
+          1939
         ],
         [
           "Context.gfxBufferUnmap",
           "fn",
-          1855
+          1946
         ],
         [
           "Context.gfxBufferMapPersistent",
           "fn",
-          1859
+          1950
         ],
         [
           "Context.gfxBufferExportRaster",
           "fn",
-          1867
+          1958
         ],
         [
           "Context.gfxMemoryBudget",
           "fn",
-          1874
+          1965
         ],
         [
           "Context.gfxTelemetry",
           "fn",
-          1882
+          1973
         ],
         [
           "Context.gfxBufferStats",
           "fn",
-          1890
+          1981
         ],
         [
           "Context.gfxOutputRevision",
           "fn",
-          1896
+          1992
         ],
         [
           "Context.gfxOutputInfo",
           "fn",
-          1902
+          1998
         ],
         [
           "Context.gfxOutputColor",
           "fn",
-          1908
+          2004
         ],
         [
           "Context.gfxOutputRefresh",
           "fn",
-          1920
+          2014
         ],
         [
           "Context.gfxOutputPower",
           "fn",
-          1927
+          2021
         ],
         [
           "Context.gfxPowerRequest",
           "fn",
-          1934
+          2028
         ],
         [
           "Context.gfxOutputBrightness",
           "fn",
-          1941
+          2035
         ],
         [
           "Context.gfxBrightnessRequest",
           "fn",
-          1948
+          2042
         ],
         [
           "Context.gfxRefreshRequest",
           "fn",
-          1955
+          2049
         ],
         [
           "Context.gfxOutputMode",
           "fn",
-          1962
+          2056
         ],
         [
           "Context.gfxOutputEdid",
           "fn",
-          1968
+          2062
         ],
         [
           "Context.gfxAtomicTest",
           "fn",
-          1974
+          2068
         ],
         [
           "Context.gfxAtomicTestColor",
           "fn",
-          1980
+          2074
         ],
         [
           "Context.gfxAtomicSubmitColor",
           "fn",
-          1986
+          2080
         ],
         [
           "Context.gfxAtomicCommit",
           "fn",
-          1992
+          2086
         ],
         [
           "Context.gfxAtomicSubmit",
           "fn",
-          1998
+          2092
         ],
         [
           "Context.gfxAtomicStatus",
           "fn",
-          2004
+          2098
         ],
         [
           "Context.gfxAtomicResolve",
           "fn",
-          2010
+          2104
         ],
         [
           "Context.gfxQueueOpen",
           "fn",
-          2017
+          2111
         ],
         [
           "Context.gfxQueueBackend",
           "fn",
-          2023
+          2117
         ],
         [
           "Context.gfxQueueBackendInfo",
           "fn",
-          2029
+          2123
         ],
         [
           "Context.gfxQueueBackendProperties",
           "fn",
-          2035
+          2129
         ],
         [
           "Context.gfxQueueClose",
           "fn",
-          2043
+          2137
         ],
         [
           "Context.gfxQueueSubmit",
           "fn",
-          2048
+          2142
         ],
         [
           "Context.gfxQueueSubmitRenderList",
           "fn",
-          2054
+          2148
         ],
         [
           "Context.gfxQueueSubmitRenderGridList",
           "fn",
-          2060
+          2154
         ],
         [
           "Context.gfxQueueSubmitOutput",
           "fn",
-          2067
+          2161
         ],
         [
           "Context.gfxQueueSubmitRenderColorList",
           "fn",
-          2073
+          2167
         ],
         [
           "Context.gfxQueueSubmitRenderColorGridList",
           "fn",
-          2079
+          2173
         ],
         [
           "Context.gfxQueueSubmitNative",
           "fn",
-          2083
+          2177
         ],
         [
           "Context.gfxFenceQuery",
           "fn",
-          2090
+          2184
         ],
         [
           "Context.gfxFenceWait",
           "fn",
-          2097
+          2191
         ],
         [
           "Context.gfxFenceCancel",
           "fn",
-          2104
+          2198
         ],
         [
           "Context.gfxFenceRelease",
           "fn",
-          2109
+          2203
         ],
         [
           "Context.guiSetTitle",
           "fn",
-          2114
+          2208
         ],
         [
           "Context.guiTitle",
           "fn",
-          2119
+          2213
         ],
         [
           "Context.guiSetMinSize",
           "fn",
-          2124
+          2218
         ],
         [
           "Context.guiMinSize",
           "fn",
-          2129
+          2223
         ],
         [
           "Context.guiPresent",
           "fn",
-          2134
+          2228
         ],
         [
           "Context.consoleOutput",
           "fn",
-          2139
+          2233
         ],
         [
           "Context.consoleRevision",
           "fn",
-          2144
+          2238
         ],
         [
           "Context.consoleState",
           "fn",
-          2149
+          2243
         ],
         [
           "Context.consoleSetMetrics",
           "fn",
-          2154
+          2248
         ],
         [
           "Context.consolePushKey",
           "fn",
-          2159
+          2253
         ],
         [
           "Context.consolePushInput",
           "fn",
-          2164
+          2258
         ],
         [
           "Context.consoleWrite",
           "fn",
-          2171
+          2265
         ],
         [
           "Context.stdout",
           "fn",
-          2176
+          2270
         ],
         [
           "Context.stderr",
           "fn",
-          2180
+          2274
         ],
         [
           "Context.consolePushEvents",
           "fn",
-          2185
+          2279
         ],
         [
           "Context.consoleReadEvents",
           "fn",
-          2191
+          2285
         ],
         [
           "Context.consoleTextInfo",
           "fn",
-          2198
+          2292
         ],
         [
           "Context.consoleSetEncoding",
           "fn",
-          2205
+          2299
         ],
         [
           "Context.consoleRead",
           "fn",
-          2210
+          2304
         ],
         [
           "Context.consoleInputWait",
           "fn",
-          2215
+          2309
         ],
         [
           "Context.physicalKeyPoll",
           "fn",
-          2221
+          2315
         ],
         [
           "Context.displayRevision",
           "fn",
-          2227
+          2321
         ],
         [
           "Context.displayBeginFrame",
           "fn",
-          2232
+          2326
         ],
         [
           "Context.displayBeginFrameRect",
           "fn",
-          2237
+          2331
         ],
         [
           "Context.displayPresent",
           "fn",
-          2242
+          2336
         ],
         [
           "Context.displayXrgb32Blit",
           "fn",
-          2247
+          2341
         ],
         [
           "Context.displayXrgb32BlitStride",
           "fn",
-          2252
+          2346
         ],
         [
           "Context.supportsDisplayPresentRegions",
           "fn",
-          2257
+          2351
         ],
         [
           "Context.displayPresentRegions",
           "fn",
-          2263
+          2357
         ],
         [
           "Context.displayPresentCapabilities",
           "fn",
-          2268
+          2362
         ],
         [
           "Context.displayPresentCompletion",
           "fn",
-          2273
+          2367
         ],
         [
           "Context.supportsDisplayPresentationStats",
           "fn",
-          2277
+          2371
         ],
         [
           "Context.supportsDisplayCursor",
           "fn",
-          2280
+          2374
         ],
         [
           "Context.displayCursorInfo",
           "fn",
-          2283
+          2377
         ],
         [
           "Context.displayCursorSubmit",
           "fn",
-          2288
+          2382
         ],
         [
           "Context.displayCursorStatus",
           "fn",
-          2293
+          2387
         ],
         [
           "Context.displayPresentationStats",
           "fn",
-          2298
+          2392
         ],
         [
           "Context.displayPresentationInfo",
           "fn",
-          2302
+          2396
         ],
         [
           "Context.displayOutputTarget",
           "fn",
-          2308
+          2402
         ],
         [
           "Context.displayOutputPresentationInfo",
           "fn",
-          2314
+          2408
         ],
         [
           "Context.displayOutputPresentationFeedback",
           "fn",
-          2320
+          2414
         ],
         [
           "Context.displayPresentationFeedback",
           "fn",
-          2326
+          2420
         ],
         [
           "Context.clipboardWrite",
           "fn",
-          2333
+          2427
         ],
         [
           "Context.clipboardRead",
           "fn",
-          2338
+          2432
         ],
         [
           "Context.clipboardRevision",
           "fn",
-          2343
+          2437
         ],
         [
           "Context.clipboardInfo",
           "fn",
-          2348
+          2442
         ],
         [
           "Context.clipboardClear",
           "fn",
-          2353
+          2447
         ],
         [
           "Context.supportsRemoteFrame",
           "fn",
-          2358
+          2452
         ],
         [
           "Context.remoteFrameInfo",
           "fn",
-          2365
+          2459
         ],
         [
           "Context.remoteFrameRead",
           "fn",
-          2370
+          2464
         ],
         [
           "Context.remoteFrameWait",
           "fn",
-          2375
+          2469
         ],
         [
           "Context.remoteFrameWaitTimeout",
           "fn",
-          2380
+          2474
         ],
         [
           "Context.desktopActivityWait",
           "fn",
-          2385
+          2479
         ],
         [
           "Context.desktopActivityWaitTimeout",
           "fn",
-          2390
+          2484
         ],
         [
           "Context.desktopActivityNotify",
           "fn",
-          2395
+          2489
+        ],
+        [
+          "Context.guiActivityWait",
+          "fn",
+          2493
+        ],
+        [
+          "Context.guiActivityNotify",
+          "fn",
+          2497
         ],
         [
           "Context.supportsRemoteFrameMap",
           "fn",
-          2400
+          2502
         ],
         [
           "Context.remoteFrameSnapshotAcquire",
           "fn",
-          2404
+          2506
         ],
         [
           "Context.remoteFrameSnapshotRelease",
           "fn",
-          2408
+          2510
         ],
         [
           "Context.remoteFrameSourceReset",
           "fn",
-          2412
+          2514
         ],
         [
           "Context.remoteFrameCaptureStats",
           "fn",
-          2416
+          2518
         ],
         [
           "Context.remoteFrameMap",
           "fn",
-          2421
+          2523
         ],
         [
           "Context.remoteFramePublish",
           "fn",
-          2426
+          2528
         ],
         [
           "Context.supportsRemoteFrameRegions",
           "fn",
-          2431
+          2533
         ],
         [
           "Context.remoteFramePublishRegions",
           "fn",
-          2435
+          2537
         ],
         [
           "Context.supportsRemoteFrameDemand",
           "fn",
-          2440
+          2542
         ],
         [
           "Context.remoteFrameAcquire",
           "fn",
-          2446
+          2548
         ],
         [
           "Context.remoteFrameRelease",
           "fn",
-          2451
+          2553
         ],
         [
           "Context.remoteFrameConsumers",
           "fn",
-          2456
+          2558
         ],
         [
           "Context.supportsRemoteInput",
           "fn",
-          2461
+          2563
         ],
         [
           "Context.remoteInputPush",
           "fn",
-          2467
+          2569
         ],
         [
           "Context.remoteInputPoll",
           "fn",
-          2472
+          2574
         ],
         [
           "Context.remoteInputStatus",
           "fn",
-          2477
+          2579
         ],
         [
           "Context.fontCount",
           "fn",
-          2482
+          2584
         ],
         [
           "Context.fontInfo",
           "fn",
-          2487
+          2589
         ],
         [
           "Context.fontMeasure",
           "fn",
-          2513
+          2594
         ],
         [
           "Context.fontGlyphRow",
           "fn",
-          2524
+          2601
         ],
         [
           "Context.fontGlyphBitmap",
           "fn",
-          2533
+          2608
         ],
         [
           "Context.fontRevision",
           "fn",
-          2556
+          2616
         ],
         [
           "Context.fontReload",
           "fn",
-          2564
+          2623
         ],
         [
           "Context.guiSetFont",
           "fn",
-          2569
+          2628
         ],
         [
           "Context.guiFont",
           "fn",
-          2574
+          2633
         ],
         [
           "Context.guiDrawTextEx",
           "fn",
-          2579
+          2638
         ],
         [
           "Context.textFont",
           "fn",
-          2584
+          2643
         ],
         [
           "Context.programStatus",
           "fn",
-          2592
+          2647
         ],
         [
           "Context.systemPoweroff",
           "fn",
-          2596
+          2651
         ],
         [
           "Context.taskYield",
           "fn",
-          2603
+          2658
         ],
         [
           "Context.fileRead",
           "fn",
-          2607
+          2666
         ],
         [
           "Context.moduleResourceStat",
           "fn",
-          2614
+          2673
         ],
         [
           "Context.moduleResourceRead",
           "fn",
-          2621
+          2680
         ],
         [
           "Context.programModulePath",
           "fn",
-          2628
+          2687
         ],
         [
           "Context.programModuleRunning",
           "fn",
-          2633
+          2692
         ],
         [
           "Context.fileWrite",
           "fn",
-          2638
+          2697
         ],
         [
           "Context.fileReadAt",
           "fn",
-          2643
+          2702
         ],
         [
           "Context.fileAppend",
           "fn",
-          2648
+          2707
+        ],
+        [
+          "Context.fileNameLimits",
+          "fn",
+          2713
+        ],
+        [
+          "Context.systemUpdateTargetSupported",
+          "fn",
+          2719
         ],
         [
           "Context.fileStreamBegin",
           "fn",
-          2653
+          2724
         ],
         [
           "Context.fileStreamWrite",
           "fn",
-          2658
+          2729
         ],
         [
           "Context.fileStreamFinish",
           "fn",
-          2663
+          2734
         ],
         [
           "Context.fileStreamAbort",
           "fn",
-          2668
+          2739
         ],
         [
           "Context.dirList",
           "fn",
-          2673
+          2744
         ],
         [
           "Context.directoryChangeBegin",
           "fn",
-          2678
+          2749
         ],
         [
           "Context.directoryChangePoll",
           "fn",
-          2683
+          2754
         ],
         [
           "Context.directoryNext",
           "fn",
-          2688
+          2759
+        ],
+        [
+          "Context.directoryBatch",
+          "fn",
+          2765
         ],
         [
           "Context.dirEntry",
           "fn",
-          2693
+          2770
         ],
         [
           "Context.driveInfo",
           "fn",
-          2698
+          2775
+        ],
+        [
+          "Context.driveInfoGeometry",
+          "fn",
+          2784
         ],
         [
           "Context.fileInfoRaw",
           "fn",
-          2705
+          2791
         ],
         [
           "Context.fileInfo",
           "fn",
-          2710
+          2796
         ],
         [
           "Context.fileDelete",
           "fn",
-          2716
+          2802
         ],
         [
           "Context.fileDeleteIfMatch",
           "fn",
-          2721
+          2807
         ],
         [
           "Context.fileStreamDeclarePublish",
           "fn",
-          2733
+          2819
         ],
         [
           "Context.pathNamesEqualCollated",
           "fn",
-          2747
+          2833
         ],
         [
           "Context.fileUpdateCleanupChecked",
           "fn",
-          2759
+          2845
         ],
         [
           "Context.fileUpdateAtomicChecked",
           "fn",
-          2790
+          2876
         ],
         [
           "Context.dirCreate",
           "fn",
-          2815
+          2901
         ],
         [
           "Context.dirDelete",
           "fn",
-          2820
+          2906
         ],
         [
           "Context.fileRename",
           "fn",
-          2825
+          2911
         ],
         [
           "Context.fileCopy",
           "fn",
-          2830
+          2916
         ],
         [
           "Context.fileCopyBuffered",
           "fn",
-          2835
+          2921
         ],
         [
           "Context.fileMove",
           "fn",
-          2841
+          2927
         ],
         [
           "Context.fileReplaceAtomic",
           "fn",
-          2846
+          2932
         ],
         [
           "Context.exists",
           "fn",
-          2851
+          2937
         ],
         [
           "Context.registryKeyInfo",
           "fn",
-          2856
+          2942
         ],
         [
           "Context.registryEnumKey",
           "fn",
-          2861
+          2947
         ],
         [
           "Context.registryEnumValue",
           "fn",
-          2866
+          2952
         ],
         [
           "Context.registryGetValue",
           "fn",
-          2871
+          2957
         ],
         [
           "Context.registrySetValue",
           "fn",
-          2876
+          2962
         ],
         [
           "Context.registryDeleteValue",
           "fn",
-          2881
+          2967
         ],
         [
           "Context.registrySnapshotBegin",
           "fn",
-          2886
+          2972
         ],
         [
           "Context.registrySnapshotPage",
           "fn",
-          2891
+          2977
         ],
         [
           "Context.registryBatchMutate",
           "fn",
-          2896
+          2982
         ],
         [
           "Context.registrySetString",
           "fn",
-          2901
+          2987
         ],
         [
           "Context.registrySetU32",
           "fn",
-          2905
+          2991
         ],
         [
           "Context.registrySetU64",
           "fn",
-          2914
+          3000
         ],
         [
           "Context.registrySetBool",
           "fn",
-          2927
+          3013
         ],
         [
           "Context.registrySetBinary",
           "fn",
-          2932
+          3018
         ],
         [
           "Context.audioOpenStream",
           "fn",
-          2936
+          3022
         ],
         [
           "Context.audioOutputInfo",
           "fn",
-          2941
+          3027
+        ],
+        [
+          "Context.audioOutputCatalog",
+          "fn",
+          3032
         ],
         [
           "Context.audioSelectOutput",
           "fn",
-          2946
+          3038
         ],
         [
           "Context.audioWrite",
           "fn",
-          2951
+          3043
         ],
         [
           "Context.audioClose",
           "fn",
-          2956
+          3048
+        ],
+        [
+          "Context.audioStreamProgress",
+          "fn",
+          3053
+        ],
+        [
+          "Context.audioSetStreamExpectation",
+          "fn",
+          3058
+        ],
+        [
+          "Context.audioCloseStreamProgress",
+          "fn",
+          3063
         ],
         [
           "Context.audioSetVolume",
           "fn",
-          2961
+          3068
         ],
         [
           "Context.sidAcquire",
           "fn",
-          2966
+          3073
         ],
         [
           "Context.sidWriteRegister",
           "fn",
-          2971
+          3078
         ],
         [
           "Context.sidRelease",
           "fn",
-          2976
+          3083
         ],
         [
           "Context.midiOpenSynth",
           "fn",
-          2981
+          3088
         ],
         [
           "Context.midiSend",
           "fn",
-          2986
+          3093
         ],
         [
           "Context.midiRender",
           "fn",
-          2991
+          3098
         ],
         [
           "Context.midiClose",
           "fn",
-          2996
+          3103
         ],
         [
           "Context.opl3WriteRegister",
           "fn",
-          3001
+          3108
         ],
         [
           "Context.opl3Reset",
           "fn",
-          3006
+          3113
         ],
         [
           "Context.opl3RenderBlock",
           "fn",
-          3011
+          3118
         ],
         [
           "Context.opl3Stop",
           "fn",
-          3016
+          3123
         ],
         [
           "Context.sidLoadData",
           "fn",
-          3021
+          3128
         ],
         [
           "Context.sidInit",
           "fn",
-          3026
+          3133
         ],
         [
           "Context.sidPlayFrame",
           "fn",
-          3031
+          3138
         ],
         [
           "Context.sidStop",
           "fn",
-          3036
+          3143
         ],
         [
           "Context.sidModelName",
           "fn",
-          3041
+          3148
         ],
         [
           "Context.deviceInventorySummary",
           "fn",
-          3046
+          3153
         ],
         [
           "Context.deviceInventoryRecord",
           "fn",
-          3051
+          3158
         ],
         [
           "Context.ipcOpen",
           "fn",
-          3056
+          3163
         ],
         [
           "Context.ipcSend",
           "fn",
-          3061
+          3168
         ],
         [
           "Context.ipcRecv",
           "fn",
-          3066
+          3173
         ],
         [
           "Context.ipcPoll",
           "fn",
-          3071
+          3178
         ],
         [
           "Context.ipcClose",
           "fn",
-          3076
+          3183
         ],
         [
           "Context.ipcSummary",
           "fn",
-          3081
+          3188
         ],
         [
           "Context.ipcChannel",
           "fn",
-          3086
+          3193
         ],
         [
           "Context.ipcPerformance",
           "fn",
-          3091
+          3198
         ],
         [
           "Context.serviceInfo",
           "fn",
-          3096
+          3203
         ],
         [
           "Context.serviceStatus",
           "fn",
-          3101
+          3208
         ],
         [
           "Context.serviceOpen",
           "fn",
-          3106
+          3213
         ],
         [
           "Context.serviceClose",
           "fn",
-          3111
+          3218
         ],
         [
           "Context.serviceCall",
           "fn",
-          3116
+          3223
         ],
         [
           "Context.serviceCallTimeout",
           "fn",
-          3123
+          3230
         ],
         [
           "Context.serviceEndpointRegister",
           "fn",
-          3128
+          3235
         ],
         [
           "Context.serviceEndpointUnregister",
           "fn",
-          3133
+          3240
         ],
         [
           "Context.serviceEndpointPoll",
           "fn",
-          3138
+          3245
         ],
         [
           "Context.serviceEndpointWait",
           "fn",
-          3145
+          3252
         ],
         [
           "Context.serviceEndpointWaitTimeout",
           "fn",
-          3153
+          3260
         ],
         [
           "Context.serviceEndpointRecv",
           "fn",
-          3158
+          3265
         ],
         [
           "Context.serviceEndpointReply",
           "fn",
-          3164
+          3271
         ],
         [
           "Context.serviceDetail",
           "fn",
-          3170
+          3277
         ],
         [
           "Context.serviceDetailByName",
           "fn",
-          3175
+          3282
+        ],
+        [
+          "Context.serviceBoundDetail",
+          "fn",
+          3289
+        ],
+        [
+          "Context.serviceInventoryPage",
+          "fn",
+          3294
+        ],
+        [
+          "Context.serviceControlBound",
+          "fn",
+          3300
         ],
         [
           "Context.serviceStart",
           "fn",
-          3180
+          3305
         ],
         [
           "Context.serviceStop",
           "fn",
-          3185
+          3310
+        ],
+        [
+          "Context.serviceStopBound",
+          "fn",
+          3315
         ],
         [
           "Context.serviceStopWithPolicy",
           "fn",
-          3190
+          3320
         ],
         [
           "Context.serviceRestart",
           "fn",
-          3198
+          3357
         ],
         [
           "Context.serviceSetStartMode",
           "fn",
-          3203
+          3362
         ],
         [
           "Context.serviceInstall",
           "fn",
-          3208
+          3367
         ],
         [
           "Context.serviceRemove",
           "fn",
-          3213
+          3372
         ],
         [
           "Context.timeServiceStatus",
           "fn",
-          3218
+          3377
         ],
         [
           "Context.timeServiceReload",
           "fn",
-          3222
+          3381
         ],
         [
           "Context.timeServiceSetTimezone",
           "fn",
-          3226
+          3385
         ],
         [
           "Context.timeServiceSetClockFormat",
           "fn",
-          3234
+          3393
         ],
         [
           "Context.timeServiceSetDate",
           "fn",
-          3242
+          3401
         ],
         [
           "Context.timeServiceSetConfig",
           "fn",
-          3252
+          3411
         ],
         [
           "Context.logServiceStatus",
           "fn",
-          3257
+          3416
         ],
         [
           "Context.logServiceSources",
           "fn",
-          3268
+          3427
         ],
         [
           "Context.logServiceRecords",
           "fn",
-          3280
+          3439
         ],
         [
           "Context.logServiceExport",
           "fn",
-          3292
+          3451
         ],
         [
           "Context.logServiceWrite",
           "fn",
-          3304
+          3463
         ],
         [
           "Context.logServiceWriteRecord",
           "fn",
-          3308
+          3467
         ],
         [
           "Context.audioServiceStatus",
           "fn",
-          3329
+          3488
         ],
         [
           "Context.audioServiceSetMasterVolume",
           "fn",
-          3333
+          3492
         ],
         [
           "Context.audioServiceMasterState",
           "fn",
-          3339
+          3498
         ],
         [
           "Context.audioServiceSetMasterState",
           "fn",
-          3343
+          3502
         ],
         [
           "Context.audioServiceOpenStream",
           "fn",
-          3347
+          3506
         ],
         [
           "Context.audioServiceOpenStreamResult",
           "fn",
-          3352
+          3511
         ],
         [
           "Context.audioServiceWrite",
           "fn",
-          3365
+          3524
         ],
         [
           "Context.audioServiceClose",
           "fn",
-          3406
+          3565
         ],
         [
           "Context.audioServiceSetVolume",
           "fn",
-          3415
+          3574
         ],
         [
           "Context.netServiceRequest",
           "fn",
-          3514
+          3673
         ],
         [
           "Context.netServiceClientId",
           "fn",
-          3546
+          3681
         ],
         [
           "Context.netServicePayload",
           "fn",
-          3555
+          3689
         ],
         [
           "Context.netSocketBegin",
           "fn",
-          3565
+          3699
         ],
         [
           "Context.netSocketStatus",
           "fn",
-          3616
+          3750
         ],
         [
           "Context.netSocketWait",
           "fn",
-          3623
+          3757
         ],
         [
           "Context.netSocketClose",
           "fn",
-          3630
+          3764
         ],
         [
           "Context.netSocketWaitAndClose",
           "fn",
-          3656
+          3791
         ],
         [
           "Context.tcpBeginStatusService",
           "fn",
-          3672
+          3807
         ],
         [
           "Context.tcpBeginStatusServiceWithTimeout",
           "fn",
-          3676
+          3811
         ],
         [
           "Context.tcpBeginServiceResult",
           "fn",
-          3680
+          3815
         ],
         [
           "Context.tcpBeginServiceResultWithTimeout",
           "fn",
-          3684
+          3819
         ],
         [
           "Context.tcpBeginConnectService",
           "fn",
-          3688
+          3823
         ],
         [
           "Context.tcpBeginWriteChunkService",
           "fn",
-          3694
+          3829
         ],
         [
           "Context.tcpBeginReadService",
           "fn",
-          3702
+          3837
         ],
         [
           "Context.tcpBeginPollService",
           "fn",
-          3710
+          3845
         ],
         [
           "Context.tcpBeginListenService",
           "fn",
-          3716
+          3851
         ],
         [
           "Context.tcpBeginAcceptService",
           "fn",
-          3722
+          3857
         ],
         [
           "Context.tcpBeginAcceptPollService",
           "fn",
-          3728
+          3863
         ],
         [
           "Context.tcpBeginAcceptReadService",
           "fn",
-          3734
+          3869
         ],
         [
           "Context.tcpBeginCloseService",
           "fn",
-          3742
+          3877
         ],
         [
           "Context.tcpBeginAbortService",
           "fn",
-          3748
+          3883
         ],
         [
           "Context.tcpBeginRetransmitService",
           "fn",
-          3754
+          3889
         ],
         [
           "Context.tcpBeginCloseListenService",
           "fn",
-          3760
+          3895
         ],
         [
           "Context.udpBeginStatusService",
           "fn",
-          3766
+          3901
         ],
         [
           "Context.udpBeginServiceResult",
           "fn",
-          3770
+          3905
         ],
         [
           "Context.udpBeginBindService",
           "fn",
-          3774
+          3909
         ],
         [
           "Context.udpBeginSendToService",
           "fn",
-          3780
+          3915
         ],
         [
           "Context.udpBeginRecvFromService",
           "fn",
-          3793
+          3928
         ],
         [
           "Context.udpBeginCloseService",
           "fn",
-          3801
+          3936
         ],
         [
           "Context.netResolveA",
           "fn",
-          3807
+          3942
         ],
         [
           "Context.netDnsResolveService",
           "fn",
-          3830
+          3965
         ],
         [
           "Context.netDnsResolveServerService",
           "fn",
-          3834
+          3969
         ],
         [
           "Context.netDnsResolveServiceResult",
           "fn",
-          3858
+          3993
         ],
         [
           "Context.netDnsResolveServerServiceResult",
           "fn",
-          3862
+          3997
         ],
         [
           "Context.netDnsServiceStatusRaw",
           "fn",
-          3873
+          4008
         ],
         [
           "Context.netDhcpAcquireService",
           "fn",
-          3917
+          4052
         ],
         [
           "Context.netDhcpRenewService",
           "fn",
-          3921
+          4056
         ],
         [
           "Context.netDhcpReleaseService",
           "fn",
-          3925
+          4060
         ],
         [
           "Context.netDhcpServiceStatus",
           "fn",
-          3929
+          4064
         ],
         [
           "Context.netDhcpServiceStatusRaw",
           "fn",
-          3962
+          4097
         ],
         [
           "Context.netDhcpServiceAction",
           "fn",
-          3968
+          4103
         ],
         [
           "Context.netDhcpServiceActionResult",
           "fn",
-          3974
+          4109
         ],
         [
           "Context.udpServiceStatusRaw",
           "fn",
-          4016
+          4151
         ],
         [
           "Context.udpServiceResult",
           "fn",
-          4022
+          4157
         ],
         [
           "Context.udpBindService",
           "fn",
-          4053
+          4188
         ],
         [
           "Context.udpSendToService",
           "fn",
-          4064
+          4199
         ],
         [
           "Context.udpRecvFromService",
           "fn",
-          4079
+          4214
         ],
         [
           "Context.udpRecvFromServiceResult",
           "fn",
-          4084
+          4219
         ],
         [
           "Context.udpRecvFromWaitService",
           "fn",
-          4102
+          4237
         ],
         [
           "Context.udpCloseService",
           "fn",
-          4116
+          4251
         ],
         [
           "Context.tcpServiceStatusRaw",
           "fn",
-          4124
+          4259
         ],
         [
           "Context.tcpServiceStatusRawWait",
           "fn",
-          4130
+          4265
         ],
         [
           "Context.tcpServiceResult",
           "fn",
-          4136
+          4271
         ],
         [
           "Context.tcpServiceResultWait",
           "fn",
-          4142
+          4277
         ],
         [
           "Context.tcpConnectServiceResult",
           "fn",
-          4185
+          4320
         ],
         [
           "Context.tcpConnectServiceResultWait",
           "fn",
-          4189
+          4324
         ],
         [
           "Context.tcpConnectService",
           "fn",
-          4197
+          4332
         ],
         [
           "Context.tcpConnectServiceWait",
           "fn",
-          4201
+          4336
         ],
         [
           "Context.tcpWriteService",
           "fn",
-          4212
+          4347
         ],
         [
           "Context.tcpWriteChunkServiceResult",
           "fn",
-          4217
+          4352
         ],
         [
           "Context.tcpWriteChunkServiceResultWait",
           "fn",
-          4221
+          4356
         ],
         [
           "Context.tcpWritePacedService",
           "fn",
-          4231
+          4366
         ],
         [
           "Context.tcpWritePacedServiceBounded",
           "fn",
-          4235
+          4370
         ],
         [
           "Context.tcpWaitForTxWindowService",
           "fn",
-          4256
+          4391
         ],
         [
           "Context.tcpWaitForTxWindowServiceBounded",
           "fn",
-          4260
+          4395
         ],
         [
           "Context.tcpWriteChunkService",
           "fn",
-          4280
+          4415
         ],
         [
           "Context.tcpWriteChunkServiceWait",
           "fn",
-          4284
+          4419
         ],
         [
           "Context.tcpReadServiceResult",
           "fn",
-          4297
+          4432
         ],
         [
           "Context.tcpReadServiceResultWait",
           "fn",
-          4301
+          4436
         ],
         [
           "Context.tcpReadService",
           "fn",
-          4311
+          4446
         ],
         [
           "Context.tcpReadServiceWait",
           "fn",
-          4315
+          4450
         ],
         [
           "Context.tcpReadAvailableService",
           "fn",
-          4328
+          4463
         ],
         [
           "Context.tcpReadWaitService",
           "fn",
-          4342
+          4477
         ],
         [
           "Context.tcpReadWaitServiceConsumeSafe",
           "fn",
-          4356
+          4491
         ],
         [
           "Context.tcpReadWaitServiceBounded",
           "fn",
-          4380
+          4515
         ],
         [
           "Context.tcpReadAvailableWaitService",
           "fn",
-          4404
+          4539
         ],
         [
           "Context.tcpListenServiceResult",
           "fn",
-          4422
+          4557
         ],
         [
           "Context.tcpListenServiceResultWait",
           "fn",
-          4426
+          4561
         ],
         [
           "Context.tcpListenService",
           "fn",
-          4433
+          4568
         ],
         [
           "Context.tcpPollService",
           "fn",
-          4439
+          4574
         ],
         [
           "Context.tcpPollServiceWait",
           "fn",
-          4443
+          4578
         ],
         [
           "Context.tcpReadinessFromResult",
           "fn",
-          4452
+          4587
         ],
         [
           "Context.tcpReadinessReadable",
           "fn",
-          4457
+          4592
         ],
         [
           "Context.tcpReadinessWritable",
           "fn",
-          4462
+          4597
         ],
         [
           "Context.tcpReadinessTerminal",
           "fn",
-          4467
+          4602
         ],
         [
           "Context.tcpAcceptServiceResult",
           "fn",
-          4472
+          4607
         ],
         [
           "Context.tcpAcceptPollServiceResult",
           "fn",
-          4482
+          4617
         ],
         [
           "Context.tcpAcceptPollServiceResultWait",
           "fn",
-          4486
+          4621
         ],
         [
           "Context.tcpAcceptWaitServiceResult",
           "fn",
-          4499
+          4634
         ],
         [
           "Context.tcpAcceptWaitServiceResultWait",
           "fn",
-          4503
+          4638
         ],
         [
           "Context.tcpAcceptService",
           "fn",
-          4515
+          4650
         ],
         [
           "Context.tcpCloseServiceResult",
           "fn",
-          4523
+          4658
         ],
         [
           "Context.tcpCloseServiceResultWait",
           "fn",
-          4527
+          4662
         ],
         [
           "Context.tcpAbortServiceResult",
           "fn",
-          4534
+          4669
         ],
         [
           "Context.tcpAbortServiceResultWait",
           "fn",
-          4538
+          4673
         ],
         [
           "Context.tcpAbortService",
           "fn",
-          4545
+          4680
         ],
         [
           "Context.tcpAbortServiceWait",
           "fn",
-          4549
+          4684
         ],
         [
           "Context.tcpRetransmitServiceResult",
           "fn",
-          4555
+          4690
         ],
         [
           "Context.tcpRetransmitServiceResultWait",
           "fn",
-          4559
+          4694
         ],
         [
           "Context.tcpRetransmitService",
           "fn",
-          4566
+          4701
         ],
         [
           "Context.tcpCloseService",
           "fn",
-          4572
+          4707
         ],
         [
           "Context.tcpCloseServiceWait",
           "fn",
-          4576
+          4711
         ],
         [
           "Context.tcpCloseListenServiceResult",
           "fn",
-          4586
+          4721
         ],
         [
           "Context.tcpCloseListenServiceResultWait",
           "fn",
-          4590
+          4725
         ],
         [
           "Context.tcpCloseListenService",
           "fn",
-          4597
+          4732
         ],
         [
           "Context.tcpCloseListenServiceWait",
           "fn",
-          4601
+          4736
         ],
         [
           "Context.tcpAcceptPollReadServiceResult",
           "fn",
-          4607
+          4742
         ],
         [
           "Context.tcpAcceptPollReadServiceResultWait",
           "fn",
-          4619
+          4754
         ],
         [
           "Context.tcpAcceptPollReadService",
           "fn",
-          4655
+          4790
         ],
         [
           "Context.tcpAcceptReadServiceResult",
           "fn",
-          4660
+          4795
         ],
         [
           "Context.tcpAcceptReadService",
           "fn",
-          4664
+          4799
         ],
         [
           "Context.tcpConnect",
           "fn",
-          4668
+          4803
         ],
         [
           "Context.tcpWrite",
           "fn",
-          4673
+          4808
         ],
         [
           "Context.tcpRead",
           "fn",
-          4678
+          4813
         ],
         [
           "Context.tcpClose",
           "fn",
-          4683
+          4818
         ],
         [
           "Context.tcpSummary",
           "fn",
-          4688
+          4823
         ],
         [
           "Context.tcpPerformance",
           "fn",
-          4693
+          4828
         ],
         [
           "Context.tcpConnection",
           "fn",
-          4698
+          4833
         ],
         [
           "Context.tcpEchoListenOnce",
           "fn",
-          4703
+          4838
         ],
         [
           "Context.tcpAcceptReadOnce",
           "fn",
-          4708
+          4843
         ],
         [
           "Context.netIpv4Send",
           "fn",
-          4713
+          4848
         ],
         [
           "Context.netIpv4Recv",
           "fn",
-          4718
+          4853
         ],
         [
           "Context.udpBind",
           "fn",
-          4723
+          4858
         ],
         [
           "Context.udpSendTo",
           "fn",
-          4734
+          4869
         ],
         [
           "Context.udpRecvFrom",
           "fn",
-          4749
+          4884
         ],
         [
           "Context.udpRecvFromWait",
           "fn",
-          4754
+          4889
         ],
         [
           "Context.udpClose",
           "fn",
-          4762
+          4897
         ],
         [
           "Context.udpStatus",
           "fn",
-          4770
+          4905
         ],
         [
           "Context.netConfigGet",
           "fn",
-          4786
+          4921
         ],
         [
           "Context.netConfigSet",
           "fn",
-          4791
+          4926
         ],
         [
           "Context.netDnsResolve",
           "fn",
-          4796
+          4931
         ],
         [
           "Context.netDnsResolveServer",
           "fn",
-          4801
+          4936
         ],
         [
           "Context.netDhcpAcquire",
           "fn",
-          4806
+          4941
         ],
         [
           "Context.netDhcpRenew",
           "fn",
-          4811
+          4946
         ],
         [
           "Context.netDhcpRelease",
           "fn",
-          4816
+          4951
         ],
         [
           "Context.netDhcpStatus",
           "fn",
-          4821
+          4956
         ],
         [
           "Context.netDetailGet",
           "fn",
-          4826
+          4961
         ],
         [
           "Context.netDiagRun",
           "fn",
-          4831
+          4966
         ],
         [
           "Context.protocolStatus",
           "fn",
-          4836
+          4971
         ],
         [
           "Context.protocolDispatch",
           "fn",
-          4842
+          4977
         ],
         [
           "Context.netDnsResultName",
           "fn",
-          4848
+          4983
         ],
         [
           "Context.netDhcpResultName",
           "fn",
-          4869
+          5004
         ],
         [
           "Context.netUdpResultName",
           "fn",
-          4881
+          5016
         ],
         [
           "Context.netTcpResultName",
           "fn",
-          4894
+          5029
         ],
         [
           "Context.netServiceResultName",
           "fn",
-          4908
+          5043
         ],
         [
           "Context.netServiceStatusCode",
           "fn",
-          4919
+          5054
         ],
         [
           "Context.netServiceStatusName",
           "fn",
-          4924
+          5059
         ],
         [
           "Context.netServiceStatusCodeName",
           "fn",
-          4928
+          5063
         ],
         [
           "Context.netSocketLifecycleName",
           "fn",
-          4942
+          5077
         ],
         [
           "Context.netServiceSemanticFlags",
           "fn",
-          4947
+          5082
         ],
         [
           "Context.netConfigResultName",
           "fn",
-          4952
+          5087
         ],
         [
           "Context.netTxResultName",
           "fn",
-          4966
+          5101
         ],
         [
           "Context.printU64",
           "fn",
-          4980
+          5115
         ],
         [
           "Context.printI32",
           "fn",
-          4996
+          5131
         ],
         [
           "Context.printHexU32",
           "fn",
-          5005
+          5140
         ]
       ],
       "reviewed_delta_08742": {
@@ -22005,9 +22225,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/r4sys.zig",
-      "sha256": "ba65572f74ddc8da3502a6c6549e3d04092789de3d7993bbb8f39f2d8c44e358",
+      "sha256": "2b7897894f4d19b7ad9b83748f5431bd13f8583cd66100daa66b26e7309fc516",
       "owner": "Repositories/SDK",
-      "version": "0.64.181",
+      "version": "0.64.182",
       "capability": "process-sync-vm",
       "declarations": [
         [
@@ -22156,1549 +22376,1634 @@
           37
         ],
         [
-          "file_replace_atomic_flag_consume_stage",
+          "file_replace_atomic_error_name_not_supported",
           "const",
           38
         ],
         [
-          "file_replace_atomic_flag_require_target_absent",
+          "file_replace_atomic_error_name_too_long",
           "const",
           39
         ],
         [
-          "file_replace_atomic_flag_require_owned_stage",
+          "file_replace_atomic_flag_consume_stage",
           "const",
           40
         ],
         [
-          "file_delete_if_match_result_not_found",
+          "file_replace_atomic_flag_require_target_absent",
           "const",
           41
         ],
         [
-          "file_delete_if_match_result_deleted",
+          "file_replace_atomic_flag_require_owned_stage",
           "const",
           42
         ],
         [
-          "file_delete_if_match_error_invalid",
+          "file_delete_if_match_result_not_found",
           "const",
           43
         ],
         [
-          "file_delete_if_match_error_unsupported",
+          "file_delete_if_match_result_deleted",
           "const",
           44
         ],
         [
-          "file_delete_if_match_error_conflict",
+          "file_delete_if_match_error_invalid",
           "const",
           45
         ],
         [
-          "file_delete_if_match_error_io",
+          "file_delete_if_match_error_unsupported",
           "const",
           46
         ],
         [
-          "file_update_atomic_checked_result_ok",
+          "file_delete_if_match_error_conflict",
           "const",
           47
         ],
         [
-          "file_update_atomic_checked_error_invalid",
+          "file_delete_if_match_error_io",
           "const",
           48
         ],
         [
-          "file_update_atomic_checked_error_unsupported",
+          "file_update_atomic_checked_result_ok",
           "const",
           49
         ],
         [
-          "file_update_atomic_checked_error_bad_path",
+          "file_update_atomic_checked_error_invalid",
           "const",
           50
         ],
         [
-          "file_update_atomic_checked_error_conflict",
+          "file_update_atomic_checked_error_unsupported",
           "const",
           51
         ],
         [
-          "file_update_atomic_checked_error_io",
+          "file_update_atomic_checked_error_bad_path",
           "const",
           52
         ],
         [
-          "file_update_atomic_checked_error_not_atomic",
+          "file_update_atomic_checked_error_conflict",
           "const",
           53
         ],
         [
-          "file_update_atomic_checked_flag_forward",
+          "file_update_atomic_checked_error_io",
           "const",
           54
         ],
         [
-          "file_update_atomic_checked_flag_rollback",
+          "file_update_atomic_checked_error_not_atomic",
           "const",
           55
         ],
         [
-          "file_update_atomic_checked_flag_target_existed",
+          "file_update_atomic_checked_flag_forward",
           "const",
           56
         ],
         [
-          "file_update_atomic_checked_flag_old_known",
+          "file_update_atomic_checked_flag_rollback",
           "const",
           57
         ],
         [
-          "file_update_atomic_checked_flag_long_stage",
+          "file_update_atomic_checked_flag_target_existed",
           "const",
-          60
+          58
         ],
         [
-          "file_stream_publish_protocol_sftp",
+          "file_update_atomic_checked_flag_old_known",
+          "const",
+          59
+        ],
+        [
+          "file_update_atomic_checked_flag_long_stage",
           "const",
           62
         ],
         [
-          "file_stream_publish_protocol_scp",
-          "const",
-          63
-        ],
-        [
-          "file_stream_publish_protocol_ftp",
+          "file_stream_publish_protocol_sftp",
           "const",
           64
         ],
         [
-          "file_stream_declare_publish_result_ok",
+          "file_stream_publish_protocol_scp",
           "const",
           65
         ],
         [
-          "file_stream_declare_publish_error_invalid",
+          "file_stream_publish_protocol_ftp",
           "const",
           66
         ],
         [
-          "file_stream_declare_publish_error_unsupported",
+          "file_stream_declare_publish_result_ok",
           "const",
           67
         ],
         [
-          "file_stream_declare_publish_error_bad_path",
+          "file_stream_declare_publish_error_invalid",
           "const",
           68
         ],
         [
-          "file_stream_declare_publish_error_not_found",
+          "file_stream_declare_publish_error_unsupported",
           "const",
           69
         ],
         [
-          "file_stream_declare_publish_error_not_atomic",
+          "file_stream_declare_publish_error_bad_path",
           "const",
           70
         ],
         [
-          "file_stream_declare_publish_error_io",
+          "file_stream_declare_publish_error_not_found",
           "const",
           71
         ],
         [
-          "path_names_equal_result_different",
+          "file_stream_declare_publish_error_not_atomic",
+          "const",
+          72
+        ],
+        [
+          "file_stream_declare_publish_error_io",
           "const",
           73
         ],
         [
-          "path_names_equal_result_equal",
-          "const",
-          74
-        ],
-        [
-          "path_names_equal_error_invalid",
+          "path_names_equal_result_different",
           "const",
           75
         ],
         [
-          "path_names_equal_error_unsupported",
+          "path_names_equal_result_equal",
           "const",
           76
         ],
         [
-          "path_names_equal_error_bad_path",
+          "path_names_equal_error_invalid",
           "const",
           77
         ],
         [
-          "path_names_equal_error_not_same_volume",
+          "path_names_equal_error_unsupported",
           "const",
           78
         ],
         [
-          "file_update_cleanup_checked_result_ok",
+          "path_names_equal_error_bad_path",
+          "const",
+          79
+        ],
+        [
+          "path_names_equal_error_not_same_volume",
           "const",
           80
         ],
         [
-          "file_update_cleanup_checked_error_invalid",
-          "const",
-          81
-        ],
-        [
-          "file_update_cleanup_checked_error_unsupported",
+          "file_update_cleanup_checked_result_ok",
           "const",
           82
         ],
         [
-          "file_update_cleanup_checked_error_bad_path",
+          "file_update_cleanup_checked_error_invalid",
           "const",
           83
         ],
         [
-          "file_update_cleanup_checked_error_conflict",
+          "file_update_cleanup_checked_error_unsupported",
           "const",
           84
         ],
         [
-          "file_update_cleanup_checked_error_io",
+          "file_update_cleanup_checked_error_bad_path",
           "const",
           85
         ],
         [
-          "file_update_cleanup_checked_error_not_atomic",
+          "file_update_cleanup_checked_error_conflict",
           "const",
           86
         ],
         [
-          "file_update_cleanup_checked_flag_target_existed",
+          "file_update_cleanup_checked_error_io",
           "const",
           87
         ],
         [
-          "file_update_cleanup_checked_flag_old_known",
+          "file_update_cleanup_checked_error_not_atomic",
           "const",
           88
         ],
         [
-          "file_update_cleanup_checked_flag_previous_known",
+          "file_update_cleanup_checked_flag_target_existed",
           "const",
           89
         ],
         [
-          "program_module_running_result_idle",
+          "file_update_cleanup_checked_flag_old_known",
           "const",
           90
         ],
         [
-          "program_module_running_result_running",
+          "file_update_cleanup_checked_flag_previous_known",
           "const",
           91
         ],
         [
-          "program_module_running_error_invalid",
+          "program_module_running_result_idle",
           "const",
           92
         ],
         [
-          "program_module_running_error_unavailable",
+          "program_module_running_result_running",
           "const",
           93
         ],
         [
-          "file_stream_open_lease",
+          "program_module_running_error_invalid",
           "const",
           94
         ],
         [
-          "file_stream_finish_keep_ownership",
+          "program_module_running_error_unavailable",
           "const",
           95
         ],
         [
-          "system_replace_flag_allow_temp",
+          "file_stream_open_lease",
+          "const",
+          96
+        ],
+        [
+          "file_stream_finish_keep_ownership",
           "const",
           97
         ],
         [
-          "system_replace_flag_allow_missing_target",
-          "const",
-          98
-        ],
-        [
-          "system_replace_flag_reboot_required",
+          "system_replace_flag_allow_temp",
           "const",
           99
         ],
         [
-          "system_replace_flag_flush_boundary",
+          "system_replace_flag_allow_missing_target",
           "const",
           100
         ],
         [
-          "system_replace_flag_backup_created",
+          "system_replace_flag_reboot_required",
           "const",
           101
         ],
         [
-          "system_replace_flag_rollback_attempted",
+          "system_replace_flag_flush_boundary",
           "const",
           102
         ],
         [
+          "system_replace_flag_backup_created",
+          "const",
+          103
+        ],
+        [
+          "system_replace_flag_rollback_attempted",
+          "const",
+          104
+        ],
+        [
           "SystemReplaceClass",
           "container",
-          104
+          106
         ],
         [
           "SystemReplacePlan",
           "container",
-          123
+          125
         ],
         [
           "SystemReplacePlan.ok",
           "fn",
-          136
+          138
         ],
         [
           "SystemReplacePlan.rebootRequired",
           "fn",
-          140
+          142
         ],
         [
           "SystemReplacePlan.className",
           "fn",
-          144
+          146
         ],
         [
           "SystemReplaceAtomicPlan",
           "container",
-          151
+          153
         ],
         [
           "SystemReplaceAtomicPlan.ok",
           "fn",
-          162
+          164
         ],
         [
           "SystemReplaceAtomicPlan.rebootRequired",
           "fn",
-          166
+          168
         ],
         [
           "entryAsm",
           "fn",
-          171
+          173
         ],
         [
           "systemReplaceClassName",
           "fn",
-          175
+          177
         ],
         [
           "systemReplaceResultName",
           "fn",
-          194
+          196
         ],
         [
           "fileUpdateAtomicCheckedResultName",
           "fn",
-          210
+          212
         ],
         [
           "systemReplaceNeedsReboot",
           "fn",
-          223
+          225
         ],
         [
           "classifySystemPath",
           "fn",
-          238
+          240
         ],
         [
           "prepareSystemReplace",
           "fn",
-          286
+          289
         ],
         [
           "applySystemReplace",
           "fn",
-          363
+          366
         ],
         [
           "prepareSystemReplaceAtomic",
           "fn",
-          435
+          438
         ],
         [
           "applySystemReplaceAtomic",
           "fn",
-          508
+          511
         ],
         [
           "rollbackSystemReplaceAtomic",
           "fn",
-          541
+          544
         ],
         [
           "bundleFromR4XStart",
           "fn",
-          628
+          631
         ],
         [
           "contextFromR4XStart",
           "fn",
-          632
+          635
         ],
         [
           "module_resource_type_icon",
           "const",
-          640
+          643
         ],
         [
           "module_resource_type_help",
           "const",
-          641
+          644
         ],
         [
           "module_resource_type_file",
           "const",
-          642
+          645
         ],
         [
           "module_resource_error_invalid",
           "const",
-          643
+          646
         ],
         [
           "module_resource_error_volume",
           "const",
-          644
+          647
         ],
         [
           "module_resource_error_not_found",
           "const",
-          645
+          648
         ],
         [
           "module_resource_error_bad_module",
           "const",
-          646
+          649
         ],
         [
           "module_resource_error_no_resources",
           "const",
-          647
+          650
         ],
         [
           "module_resource_error_no_entry",
           "const",
-          648
+          651
         ],
         [
           "module_resource_error_too_small",
           "const",
-          649
+          652
         ],
         [
           "module_resource_error_io",
           "const",
-          650
+          653
         ],
         [
           "Context",
           "container",
-          652
+          655
         ],
         [
           "Context.init",
           "fn",
-          655
+          658
         ],
         [
           "Context.fromProgram",
           "fn",
-          659
+          662
         ],
         [
           "Context.hasFn",
           "fn",
-          664
+          667
         ],
         [
           "Context.contractValid",
           "fn",
-          669
+          672
         ],
         [
           "Context.tableAbiVersion",
           "fn",
-          674
+          678
         ],
         [
           "Context.tableSize",
           "fn",
-          680
+          685
         ],
         [
           "Context.argsRaw",
           "fn",
-          686
+          692
         ],
         [
           "Context.envGet",
           "fn",
-          690
+          696
         ],
         [
           "Context.envSet",
           "fn",
-          694
+          700
         ],
         [
           "Context.readKey",
           "fn",
-          698
+          704
         ],
         [
           "Context.consolePushEvents",
           "fn",
-          702
+          708
         ],
         [
           "Context.consoleReadEvents",
           "fn",
-          706
+          712
         ],
         [
           "Context.consoleTextInfo",
           "fn",
-          710
+          716
         ],
         [
           "Context.consoleSetEncoding",
           "fn",
-          714
+          720
         ],
         [
           "Context.consoleRead",
           "fn",
-          718
+          724
         ],
         [
           "Context.consoleInputWait",
           "fn",
-          722
+          728
         ],
         [
           "Context.print",
           "fn",
-          726
+          732
         ],
         [
           "Context.putc",
           "fn",
-          730
+          736
         ],
         [
           "Context.write",
           "fn",
-          734
+          740
         ],
         [
           "Context.println",
           "fn",
-          738
+          744
         ],
         [
           "Context.printU64",
           "fn",
-          742
+          748
         ],
         [
           "Context.printI32",
           "fn",
-          746
+          752
         ],
         [
           "Context.printHexU32",
           "fn",
-          750
+          756
         ],
         [
           "Context.ticks",
           "fn",
-          754
+          760
         ],
         [
           "Context.sleepTicks",
           "fn",
-          758
+          764
         ],
         [
           "Context.timeSecondsSinceMidnight",
           "fn",
-          762
+          768
         ],
         [
           "Context.timeState",
           "fn",
-          766
+          772
         ],
         [
           "Context.timeSetState",
           "fn",
-          770
+          776
         ],
         [
           "Context.bootLogInfo",
           "fn",
-          774
+          780
         ],
         [
           "Context.bootLogRead",
           "fn",
-          778
+          784
         ],
         [
           "Context.timeServiceStatus",
           "fn",
-          782
+          788
         ],
         [
           "Context.timeServiceReload",
           "fn",
-          786
+          792
         ],
         [
           "Context.timeServiceSetTimezone",
           "fn",
-          790
+          796
         ],
         [
           "Context.timeServiceSetClockFormat",
           "fn",
-          794
+          800
         ],
         [
           "Context.timeServiceSetDate",
           "fn",
-          798
+          804
         ],
         [
           "Context.timeServiceSetConfig",
           "fn",
-          802
+          808
         ],
         [
           "Context.logServiceStatus",
           "fn",
-          806
+          812
         ],
         [
           "Context.logServiceSources",
           "fn",
-          810
+          816
         ],
         [
           "Context.logServiceRecords",
           "fn",
-          814
+          820
         ],
         [
           "Context.logServiceExport",
           "fn",
-          818
+          824
         ],
         [
           "Context.logServiceWrite",
           "fn",
-          822
+          828
         ],
         [
           "Context.logServiceWriteRecord",
           "fn",
-          826
+          832
         ],
         [
           "Context.audioServiceStatus",
           "fn",
-          830
+          836
         ],
         [
           "Context.audioServiceSetMasterVolume",
           "fn",
-          834
+          840
         ],
         [
           "Context.audioServiceMasterState",
           "fn",
-          838
+          844
         ],
         [
           "Context.audioServiceSetMasterState",
           "fn",
-          842
+          848
         ],
         [
           "Context.audioServiceOpenStream",
           "fn",
-          846
+          852
         ],
         [
           "Context.audioServiceWrite",
           "fn",
-          850
+          856
         ],
         [
           "Context.audioServiceClose",
           "fn",
-          854
+          860
         ],
         [
           "Context.audioServiceSetVolume",
           "fn",
-          858
+          864
         ],
         [
           "Context.ticksFromMilliseconds",
           "fn",
-          862
+          868
         ],
         [
           "Context.monotonicHz",
           "fn",
-          866
+          872
+        ],
+        [
+          "Context.timeoutTicks",
+          "fn",
+          876
         ],
         [
           "Context.platformInputSnapshot",
           "fn",
-          870
+          886
         ],
         [
           "Context.monotonicClock",
           "fn",
-          874
+          890
         ],
         [
           "Context.bootReady",
           "fn",
-          878
+          894
         ],
         [
           "Context.monotonicNanoseconds",
           "fn",
-          882
+          898
         ],
         [
           "Context.monotonicBackend",
           "fn",
-          886
+          902
         ],
         [
           "Context.systemPowerTransition",
           "fn",
-          890
+          906
         ],
         [
           "Context.systemHalt",
           "fn",
-          894
+          910
         ],
         [
           "Context.systemReboot",
           "fn",
-          898
+          914
         ],
         [
           "Context.systemPoweroff",
           "fn",
-          902
+          918
         ],
         [
           "Context.taskYield",
           "fn",
-          906
+          922
         ],
         [
           "Context.programRun",
           "fn",
-          910
+          926
         ],
         [
           "Context.programLaunch",
           "fn",
-          914
+          930
         ],
         [
           "Context.programSpawn",
           "fn",
-          918
+          934
         ],
         [
           "Context.programSpawnHandle",
           "fn",
-          922
+          938
         ],
         [
           "Context.programOpenHandle",
           "fn",
-          926
+          942
         ],
         [
           "Context.programHandleStatus",
           "fn",
-          930
+          946
         ],
         [
           "Context.programHandleRequestClose",
           "fn",
-          934
+          950
         ],
         [
           "Context.programHandleKill",
           "fn",
-          938
+          954
         ],
         [
           "Context.programHandleWait",
           "fn",
-          942
+          958
         ],
         [
           "Context.programHandleReap",
           "fn",
-          946
+          962
         ],
         [
           "Context.programCompletionRead",
           "fn",
-          950
-        ],
-        [
-          "Context.programSpawnWithConsoleHost",
-          "fn",
-          954
-        ],
-        [
-          "Context.programSpawnWithConsoleHostHandle",
-          "fn",
-          958
-        ],
-        [
-          "Context.programReapInstance",
-          "fn",
-          962
-        ],
-        [
-          "Context.programRequestClose",
-          "fn",
           966
         ],
         [
-          "Context.programShouldClose",
+          "Context.programObservationRetain",
           "fn",
           970
         ],
         [
+          "Context.programObservationWait",
+          "fn",
+          973
+        ],
+        [
+          "Context.programObservationRead",
+          "fn",
+          976
+        ],
+        [
+          "Context.programObservationRelease",
+          "fn",
+          979
+        ],
+        [
+          "Context.programSpawnWithConsoleHost",
+          "fn",
+          983
+        ],
+        [
+          "Context.programSpawnWithConsoleHostHandle",
+          "fn",
+          987
+        ],
+        [
+          "Context.programReapInstance",
+          "fn",
+          991
+        ],
+        [
+          "Context.programRequestClose",
+          "fn",
+          995
+        ],
+        [
+          "Context.programShouldClose",
+          "fn",
+          999
+        ],
+        [
           "Context.programKill",
           "fn",
-          974
+          1003
         ],
         [
           "Context.programInstance",
           "fn",
-          978
+          1007
+        ],
+        [
+          "Context.programLifecycleBegin",
+          "fn",
+          1011
+        ],
+        [
+          "Context.programLifecyclePrograms",
+          "fn",
+          1015
         ],
         [
           "Context.programInventoryBegin",
           "fn",
-          982
+          1019
         ],
         [
           "Context.programInventoryPrograms",
           "fn",
-          986
+          1023
         ],
         [
           "Context.programInventoryTasks",
           "fn",
-          990
+          1027
         ],
         [
           "Context.programInventoryThreads",
           "fn",
-          994
+          1031
         ],
         [
           "Context.threadCreateRaw",
           "fn",
-          998
+          1035
         ],
         [
           "Context.threadCreate",
           "fn",
-          1002
+          1039
         ],
         [
           "Context.threadCreateHandle",
           "fn",
-          1006
+          1043
         ],
         [
           "Context.computeWorkerCreate",
           "fn",
-          1010
+          1047
         ],
         [
           "Context.threadExit",
           "fn",
-          1014
+          1051
         ],
         [
           "Context.programExit",
           "fn",
-          1018
+          1055
         ],
         [
           "Context.threadJoin",
           "fn",
-          1022
+          1059
         ],
         [
           "Context.threadHandleJoin",
           "fn",
-          1026
+          1063
         ],
         [
           "Context.threadCurrent",
           "fn",
-          1030
+          1067
         ],
         [
           "Context.threadCurrentHandle",
           "fn",
-          1034
+          1071
         ],
         [
           "Context.threadPlacementGet",
           "fn",
-          1038
+          1075
         ],
         [
           "Context.threadPlacementSet",
           "fn",
-          1041
+          1078
         ],
         [
           "Context.cpuCapacity",
           "fn",
-          1045
+          1082
         ],
         [
           "Context.notificationCreate",
           "fn",
-          1049
+          1086
         ],
         [
           "Context.notificationQuery",
           "fn",
-          1052
+          1089
         ],
         [
           "Context.notificationNotify",
           "fn",
-          1055
+          1092
         ],
         [
           "Context.notificationWait",
           "fn",
-          1058
+          1095
         ],
         [
           "Context.notificationClose",
           "fn",
-          1061
+          1098
         ],
         [
           "Context.programLocalGet",
           "fn",
-          1065
+          1102
         ],
         [
           "Context.programLocalPublish",
           "fn",
-          1069
+          1106
         ],
         [
           "Context.threadStatus",
           "fn",
-          1073
+          1110
         ],
         [
           "Context.threadHandleStatus",
           "fn",
-          1077
+          1114
         ],
         [
           "Context.ioFileRead",
           "fn",
-          1081
+          1118
         ],
         [
           "Context.ioFileReadAt",
           "fn",
-          1085
+          1122
         ],
         [
           "Context.ioFileWrite",
           "fn",
-          1089
+          1126
         ],
         [
           "Context.ioFileAppend",
           "fn",
-          1093
+          1130
         ],
         [
           "Context.ioFileWriteAt",
           "fn",
-          1097
+          1134
         ],
         [
           "Context.ioFileInfo",
           "fn",
-          1101
+          1138
         ],
         [
           "Context.ioFileLock",
           "fn",
-          1105
+          1142
         ],
         [
           "Context.ioFileStreamBegin",
           "fn",
-          1109
+          1146
         ],
         [
           "Context.ioFileStreamWrite",
           "fn",
-          1113
+          1150
         ],
         [
           "Context.ioFileStreamFinish",
           "fn",
-          1117
+          1154
         ],
         [
           "Context.ioFileStreamAbort",
           "fn",
-          1121
+          1158
         ],
         [
           "Context.ioServiceCall",
           "fn",
-          1125
+          1162
         ],
         [
           "Context.ioStatus",
           "fn",
-          1129
+          1166
         ],
         [
           "Context.ioWait",
           "fn",
-          1133
+          1170
         ],
         [
           "Context.ioClose",
           "fn",
-          1137
+          1174
         ],
         [
           "Context.programStatus",
           "fn",
-          1141
+          1178
         ],
         [
           "Context.programClass",
           "fn",
-          1145
+          1182
         ],
         [
           "Context.programSetConsoleHost",
           "fn",
-          1149
+          1186
         ],
         [
           "Context.consoleOutput",
           "fn",
-          1153
+          1190
         ],
         [
           "Context.consoleRevision",
           "fn",
-          1157
+          1194
         ],
         [
           "Context.consoleState",
           "fn",
-          1161
+          1198
         ],
         [
           "Context.consoleSetMetrics",
           "fn",
-          1165
+          1202
         ],
         [
           "Context.consolePushKey",
           "fn",
-          1169
+          1206
         ],
         [
           "Context.consolePushInput",
           "fn",
-          1173
+          1210
         ],
         [
           "Context.programCurrentConsoleHost",
           "fn",
-          1177
+          1214
         ],
         [
           "Context.programRequestDesktop",
           "fn",
-          1181
+          1218
         ],
         [
           "Context.serviceInfo",
           "fn",
-          1185
+          1222
         ],
         [
           "Context.serviceStatus",
           "fn",
-          1189
+          1226
         ],
         [
           "Context.serviceOpen",
           "fn",
-          1193
+          1230
         ],
         [
           "Context.serviceClose",
           "fn",
-          1197
+          1234
         ],
         [
           "Context.serviceCall",
           "fn",
-          1201
+          1238
         ],
         [
           "Context.serviceCallTimeout",
           "fn",
-          1205
+          1242
         ],
         [
           "Context.serviceEndpointRegister",
           "fn",
-          1209
+          1246
         ],
         [
           "Context.serviceEndpointUnregister",
           "fn",
-          1213
+          1250
         ],
         [
           "Context.serviceEndpointPoll",
           "fn",
-          1217
+          1254
         ],
         [
           "Context.serviceEndpointWait",
           "fn",
-          1222
+          1259
         ],
         [
           "Context.serviceEndpointWaitTimeout",
           "fn",
-          1226
+          1263
         ],
         [
           "Context.serviceEndpointRecv",
           "fn",
-          1230
+          1267
         ],
         [
           "Context.serviceEndpointReply",
           "fn",
-          1234
+          1271
         ],
         [
           "Context.serviceDetail",
           "fn",
-          1238
+          1275
         ],
         [
           "Context.serviceDetailByName",
           "fn",
-          1242
+          1279
+        ],
+        [
+          "Context.serviceBoundDetail",
+          "fn",
+          1283
+        ],
+        [
+          "Context.serviceInventoryPage",
+          "fn",
+          1287
+        ],
+        [
+          "Context.serviceControlBound",
+          "fn",
+          1291
         ],
         [
           "Context.serviceStart",
           "fn",
-          1246
+          1295
         ],
         [
           "Context.serviceStop",
           "fn",
-          1250
+          1299
+        ],
+        [
+          "Context.serviceStopBound",
+          "fn",
+          1303
         ],
         [
           "Context.serviceRestart",
           "fn",
-          1254
+          1307
         ],
         [
           "Context.serviceSetStartMode",
           "fn",
-          1258
+          1311
         ],
         [
           "Context.serviceInstall",
           "fn",
-          1262
+          1315
         ],
         [
           "Context.serviceRemove",
           "fn",
-          1266
+          1319
         ],
         [
           "Context.fileRead",
           "fn",
-          1270
+          1323
         ],
         [
           "Context.moduleResourceStat",
           "fn",
-          1274
+          1327
         ],
         [
           "Context.moduleResourceRead",
           "fn",
-          1278
+          1331
         ],
         [
           "Context.programModulePath",
           "fn",
-          1282
+          1335
         ],
         [
           "Context.programModuleRunning",
           "fn",
-          1286
+          1339
         ],
         [
           "Context.fileWrite",
           "fn",
-          1290
+          1343
         ],
         [
           "Context.fileReadAt",
           "fn",
-          1294
+          1347
         ],
         [
           "Context.fileAppend",
           "fn",
-          1298
+          1351
+        ],
+        [
+          "Context.fileNameLimits",
+          "fn",
+          1355
+        ],
+        [
+          "Context.systemUpdateTargetSupported",
+          "fn",
+          1359
         ],
         [
           "Context.fileStreamBegin",
           "fn",
-          1302
+          1363
         ],
         [
           "Context.fileStreamWrite",
           "fn",
-          1306
+          1367
         ],
         [
           "Context.fileStreamFinish",
           "fn",
-          1310
+          1371
         ],
         [
           "Context.fileStreamAbort",
           "fn",
-          1314
+          1375
         ],
         [
           "Context.dirList",
           "fn",
-          1318
+          1379
         ],
         [
           "Context.directoryChangeBegin",
           "fn",
-          1322
+          1383
         ],
         [
           "Context.directoryChangePoll",
           "fn",
-          1326
+          1387
         ],
         [
           "Context.directoryNext",
           "fn",
-          1330
+          1391
+        ],
+        [
+          "Context.directoryBatch",
+          "fn",
+          1395
         ],
         [
           "Context.dirEntry",
           "fn",
-          1334
+          1399
         ],
         [
           "Context.driveInfo",
           "fn",
-          1338
+          1403
+        ],
+        [
+          "Context.driveInfoGeometry",
+          "fn",
+          1407
         ],
         [
           "Context.fileInfo",
           "fn",
-          1342
+          1411
         ],
         [
           "Context.fileInfoRaw",
           "fn",
-          1346
+          1415
         ],
         [
           "Context.fileDelete",
           "fn",
-          1350
+          1419
         ],
         [
           "Context.fileDeleteIfMatch",
           "fn",
-          1354
+          1423
         ],
         [
           "Context.fileStreamDeclarePublish",
           "fn",
-          1365
+          1434
         ],
         [
           "Context.pathNamesEqualCollated",
           "fn",
-          1376
+          1445
         ],
         [
           "Context.fileUpdateCleanupChecked",
           "fn",
-          1386
+          1455
         ],
         [
           "Context.fileUpdateAtomicChecked",
           "fn",
-          1415
+          1484
         ],
         [
           "Context.dirCreate",
           "fn",
-          1438
+          1507
         ],
         [
           "Context.dirDelete",
           "fn",
-          1442
+          1511
         ],
         [
           "Context.fileRename",
           "fn",
-          1446
+          1515
         ],
         [
           "Context.fileCopy",
           "fn",
-          1450
+          1519
         ],
         [
           "Context.fileCopyBuffered",
           "fn",
-          1454
+          1523
         ],
         [
           "Context.fileMove",
           "fn",
-          1458
+          1527
         ],
         [
           "Context.fileReplaceAtomic",
           "fn",
-          1462
+          1531
         ],
         [
           "Context.systemReplacePrepare",
           "fn",
-          1466
+          1535
         ],
         [
           "Context.systemReplaceApply",
           "fn",
-          1470
+          1539
         ],
         [
           "Context.systemReplacePrepareAtomic",
           "fn",
-          1474
+          1543
         ],
         [
           "Context.systemReplaceApplyAtomic",
           "fn",
-          1478
+          1547
         ],
         [
           "Context.systemReplaceRollbackAtomic",
           "fn",
-          1482
+          1551
         ],
         [
           "Context.exists",
           "fn",
-          1486
+          1555
         ],
         [
           "Context.registryKeyInfo",
           "fn",
-          1490
+          1559
         ],
         [
           "Context.registryEnumKey",
           "fn",
-          1494
+          1563
         ],
         [
           "Context.registryEnumValue",
           "fn",
-          1498
+          1567
         ],
         [
           "Context.registryGetValue",
           "fn",
-          1502
+          1571
         ],
         [
           "Context.registrySetValue",
           "fn",
-          1506
+          1575
         ],
         [
           "Context.registryDeleteValue",
           "fn",
-          1510
+          1579
         ],
         [
           "Context.registrySnapshotBegin",
           "fn",
-          1514
+          1583
         ],
         [
           "Context.registrySnapshotPage",
           "fn",
-          1518
+          1587
         ],
         [
           "Context.registryBatchMutate",
           "fn",
-          1522
+          1591
         ],
         [
           "Context.registrySetString",
           "fn",
-          1526
+          1595
         ],
         [
           "Context.registrySetU32",
           "fn",
-          1530
+          1599
         ],
         [
           "Context.registrySetU64",
           "fn",
-          1534
+          1603
         ],
         [
           "Context.registrySetBool",
           "fn",
-          1538
+          1607
         ],
         [
           "Context.registrySetBinary",
           "fn",
-          1542
+          1611
         ],
         [
           "Context.vmReserve",
           "fn",
-          1546
+          1615
         ],
         [
           "Context.vmReserveRaw",
           "fn",
-          1550
+          1619
         ],
         [
           "Context.vmCommit",
           "fn",
-          1554
+          1623
         ],
         [
           "Context.vmCommitFlags",
           "fn",
-          1558
+          1627
         ],
         [
           "Context.vmDecommit",
           "fn",
-          1562
+          1631
         ],
         [
           "Context.vmRelease",
           "fn",
-          1566
+          1635
         ],
         [
           "Context.vmQuery",
           "fn",
-          1570
+          1639
         ],
         [
           "Context.vmQueryRaw",
           "fn",
-          1574
+          1643
         ],
         [
           "Context.allocator",
           "fn",
-          1578
+          1647
         ],
         [
           "Context.allocatorStats",
           "fn",
-          1582
+          1651
         ],
         [
           "Context.allocatorTrim",
           "fn",
-          1586
+          1655
         ]
       ],
       "reviewed_delta_08742": {
@@ -46685,9 +46990,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/app2.zig",
-      "sha256": "5322565d6ca1ed7b6d305d76ecc35dd55ea59939a71428ac9e2be0fd254c7b92",
+      "sha256": "48a028be2e5392ef4077695e4ac23dd1e9cefdfe866285736ebb1fb91ea73ae8",
       "owner": "Repositories/SDK",
-      "version": "0.64.181",
+      "version": "0.64.182",
       "capability": "startup",
       "declarations": [
         [
@@ -46746,104 +47051,119 @@
           135
         ],
         [
-          "App.desktop",
+          "App.inventoryProvider",
           "fn",
           139
         ],
         [
+          "App.deviceSnapshotProvider",
+          "fn",
+          143
+        ],
+        [
+          "App.clock",
+          "fn",
+          147
+        ],
+        [
+          "App.desktop",
+          "fn",
+          151
+        ],
+        [
           "App.drawing",
           "fn",
-          144
+          156
         ],
         [
           "App.networkLowLevel",
           "fn",
-          149
+          161
         ],
         [
           "App.network",
           "fn",
-          154
+          166
         ],
         [
           "App.audioLowLevel",
           "fn",
-          160
+          172
         ],
         [
           "App.audio",
           "fn",
-          165
+          177
         ],
         [
           "App.devicesLowLevel",
           "fn",
-          171
+          183
         ],
         [
           "App.devices",
           "fn",
-          176
+          188
         ],
         [
           "App.web",
           "fn",
-          182
+          194
         ],
         [
           "App.console",
           "fn",
-          189
+          201
         ],
         [
           "App.files",
           "fn",
-          195
+          207
         ],
         [
           "App.registry",
           "fn",
-          200
+          212
         ],
         [
           "App.resources",
           "fn",
-          205
+          217
         ],
         [
           "App.services",
           "fn",
-          209
+          221
         ],
         [
           "App.tray",
           "fn",
-          214
+          226
         ],
         [
           "App.window",
           "fn",
-          218
+          230
         ],
         [
           "App.shouldClose",
           "fn",
-          224
+          236
         ],
         [
           "App.yield",
           "fn",
-          228
+          240
         ],
         [
           "App.ticks",
           "fn",
-          232
+          244
         ],
         [
           "App.allocator",
           "fn",
-          236
+          248
         ]
       ]
     },
@@ -57416,6 +57736,23 @@
         "Guest is a private overlay with SYSTEM release14/installedKernel463 and actual BOOT474; no complete freshinstallation, Windows or physical hardware claim.",
         "STANDARD/source/toolset publication and server status are separate sealed evidence; this source drift review cannot grant performance qualification."
       ]
+    },
+    "normal_system_facades_09041": {
+      "complete": true,
+      "performed_in": "0.90.41",
+      "sdk": "0.64.182",
+      "contract": "0.64.93",
+      "report": "Docs/API/ConsumerMigration.txt",
+      "scope": "Normal three-language System/Resources/Files/time/complete inventories/passive devices; no blanket consumer or remaining facade migration.",
+      "host_checks": "Original83 baseline checks,40 extended storage/time/platform checks, Rust bare alloc Clippy, real C/Rust storage and exact resource/IO-owner regressions,16 data cases/26 compiler negatives,2 GUI owner cases/3 compiler negatives, shared heap on both generations, positive caller plus5 actual new App2 facade-loan compiler rejections. Wide metadata, buffered namespace Restart and logical frequency/sentinel bounds use actual compiled facade calls.",
+      "native_checks": "Own KVM4 actual Kernel474. Three normal App2 consumers execute clock/Thread/VM/Files/FileMetadata2/directory/Full+Lifecycle/passive capture; Rust also acknowledges IO close and uses actual pinned device constructor. New normal C Resources controller exercises60 original3-language/4-role return/close/kill/fault/initfail handles and exact reap. Whole installed binary readback.",
+      "limits": [
+        "The public legacy FileInfo projection cannot express qualified FileIdentity2; new consumers use full metadata flags and identities. Current provider backend limits remain unchanged.",
+        "The raw120byte Start2, SDK-private56byte borrowed view and copied128byte heap callbacks are distinct types, never manufactured old tables.",
+        "Remaining GUI/service/audio/serial, all145 productive canonical consumers and39 Recovery variants/default cutover remain planned.",
+        "Native guest is a private stopped40/37 overlay retaining old SYSTEM release14/installed463 with actual BOOT474; no complete freshinstallation, Windows or physical device qualification.",
+        "Final normal source/tool export and the one STANDARD are separate sealed evidence; this drift review does not grant performance qualification."
+      ]
     }
   },
   "wave_bindings": [
@@ -57668,12 +58005,12 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.90.40",
-    "sdk": "0.64.181",
+    "performed_in": "0.90.41",
+    "sdk": "0.64.182",
     "contract": "0.64.93",
     "libraries": "0.64.51 unchanged",
-    "evidence": "normal_app2_09040",
-    "scope": "Normal explicit three-language Generation2 entry and existing owner regression; common high-level facade and productive module migration remains pending.",
+    "evidence": "normal_system_facades_09041",
+    "scope": "Normal three-language System/Resources/Files/time/complete inventories/passive devices; no blanket consumer or remaining facade migration.",
     "historical_snapshot_retained": true,
     "current_platform_tables": [
       {
@@ -57725,7 +58062,7 @@
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.90.40",
+    "reviewed_in": "0.90.41",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -58987,7 +59324,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "3115329e3828decaaf97daec5866b3d8165b664815912c344fea212200f91464"
+        "sha256": "1d63f9d8f2ff0979a7b29513f3756c5bea59cc82f6fc151488a1c54a37a0f048"
       },
       {
         "path": "Repositories/SDK/Rust/src/cli.rs",
@@ -59127,7 +59464,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/platform/mod.rs",
-        "sha256": "c620649a24eadbe2a6c9629029201503ef040b29ab59c429ae6a07a53d5a8e4b"
+        "sha256": "d71c04e1cef663ad589dacc697fac4c77eb19e3a1138101c41ec0493627946e8"
       },
       {
         "path": "Repositories/SDK/Rust/src/platform/pcm.rs",
@@ -59139,7 +59476,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/platform2.rs",
-        "sha256": "822451a2d8a3816fb934e52b884fa853022afeaf4369f4353c3f6f396821e8e9"
+        "sha256": "91a90e70c6c6d57d9c27dfe3bf2896952a3e31057df5a1bb1c3398be989bf4b6"
       },
       {
         "path": "Repositories/SDK/Rust/src/protocol.rs",
@@ -59167,7 +59504,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/resources/mod.rs",
-        "sha256": "a1130fe6e6b23911a5b8d0015c18fd47b6c047af78c47df93c157c9ebf86cf32"
+        "sha256": "d9f6972cf8540fa8a822b22d1b40fd4ea56884dfd9ef35be8620e91f1634ef19"
       },
       {
         "path": "Repositories/SDK/Rust/src/resources/notification.rs",
@@ -59219,7 +59556,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/storage.rs",
-        "sha256": "c42471561f6ffa6406a1ccc447898d42ed41694d07da45e563a43143d047b9e0"
+        "sha256": "6441b86d3ed3820f9be3e97fc99e982c581636af6a3a14e157f850be378810d6"
       },
       {
         "path": "Repositories/SDK/Rust/src/subsystems/catalog.rs",
@@ -59251,7 +59588,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/time.rs",
-        "sha256": "1454d323996a7adbc16c81a135c68f76f1732c35ec5b0ae519e9b4721e5b6812"
+        "sha256": "09e5985817afae1ea302497f195c2dedb3a64f732d69199d6fb26b6ed743cb39"
       },
       {
         "path": "Repositories/SDK/Rust/src/time_budget.rs",
@@ -59331,15 +59668,15 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_contract.h",
-        "sha256": "4062edd21dc779fce1eb67056a383ef87d621a2ad2e7d857ac1c7ee697062de3"
+        "sha256": "fab8ce07135aa6d55a3a3603b96e8853398cf94b33c66b3014a1c3572dd4beab"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_devices.h",
-        "sha256": "bef0cbe3d208c59c6c10933e90848be968dab3f8714dd0cfa1192effb7f365a8"
+        "sha256": "f8b2126aacaa7569320fe4ce8e5eb8156d24ad994a09ee9ff2c2623c8dce11f9"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_gui.h",
-        "sha256": "8be73880c9266211cdfd00e4b3dc1082fa9e58b79cc96ddfad46dc017afc40af"
+        "sha256": "7df9fe1283f912107f635a080ab8750bd4a0f8681c296de95f0296777a7b3b18"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_network.h",
@@ -59347,15 +59684,15 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_resources.h",
-        "sha256": "4bef93798d4c15f14a68f2175fd671c52a788e804a783d014559bcaf5d68258f"
+        "sha256": "0619e56d66cd3a81c11d6ca5280f80ff698b2b4976ab61d96651b8313352ed0b"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_services.h",
-        "sha256": "aae511d0cfb45ec1046e1bc692945107e0d0e0d4057cd802398829f217f58299"
+        "sha256": "f91e156e561a58360ba0e88c2c8adeec57df5cc2ad25259f3ccb08772b9b6c17"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_storage.h",
-        "sha256": "4164e7b7c7d959eeb973fe5b87bc2a3307c65c9e988aab2c5bdf186d384c46ea"
+        "sha256": "c1f0a792a4e2d55c0d379f2a682146e72f9d32b805fbc026a538d2cf85ccce79"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_tray.h",
@@ -59463,7 +59800,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/facades.h",
-        "sha256": "6265d5510e506aa19e9d89e21e12839e46d8957cd6c5492820c4d801ab8cce0a"
+        "sha256": "e9fa3deed95c5cf830c7ca59f6256380192f8374ec9ccef94c51df2de3a64963"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/file_picker.h",
@@ -59479,7 +59816,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/heap.h",
-        "sha256": "84492815b5db9ee50815a42d4c0557cee2730df607a726e89b9dffb18f8e63f3"
+        "sha256": "e64081fc98f009f2cbe72b65369f4f168ca50d470c3e68bfc944dcaac99dbc11"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/inventory_platform2.h",
@@ -59519,7 +59856,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/poll_budget.h",
-        "sha256": "f172fcd2a0e1a48e47da21b36ed13a68fa6c595c5878c869f9b257c0981598ce"
+        "sha256": "f4fcf41f544b3d675bb70f4ccfba8fa3d41d48b0480924a5f9163e0eaccf29a8"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/power_profiles.h",
@@ -59543,7 +59880,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/r4dev.h",
-        "sha256": "667679297bf06dc4464e1e00e5ebb582d01e9af65b9a11c68706ff674f3d9d41"
+        "sha256": "bfe8f694ff51b0131757e9067e491f3cf135e00ad74588ed8b135ad87950c1aa"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/r4draw.h",
@@ -59567,7 +59904,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/r4sys.h",
-        "sha256": "70ff396b315037c9b7031d34509cf7146f17bada1c6ee0951d65772ecb6d7503"
+        "sha256": "42fd371b2c251db780e3abd332c7114774efc2a5af4581083eb10c4005d7d727"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/r4xstart.h",
@@ -59575,7 +59912,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/serial.h",
-        "sha256": "a25ca8f65c6be81aff93f49974bee3089dd7bec0792b51e6b8c476e0ea594068"
+        "sha256": "539a577ba62d02121633179de0f31e414ab5f6ec38626d2049747030dc525e22"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/service_helpers.h",
@@ -59587,7 +59924,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/storage.h",
-        "sha256": "689c500ad57cba2d037f2f0657dc096c379c22701705180d362e53415a7c14bb"
+        "sha256": "86cb8b12ce7bc130fc8df00778960c63e52ef4b8e1faa22a1ece8a45bb172b66"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/storage_helpers.h",
@@ -59639,11 +59976,11 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/src/facades.c",
-        "sha256": "335570df4ce44c1f954e1ea76aa962f77ae5a953a943b2338345ed033eeba79f"
+        "sha256": "cc545031cb42427b0be3f8adca0313c0c6877932fb1f698f5246502e85d5a077"
       },
       {
         "path": "Repositories/SDK/Shared/C/src/r4app_startup.c",
-        "sha256": "7f52601e71e3abf5fd19c64a323a620bc635e44a93a40769ae88e739afc20a04"
+        "sha256": "8048488dfebe1e3d3cd11c533dae7ce59503a815d4636a368108ee4d49ed6af6"
       },
       {
         "path": "Repositories/SDK/Shared/C/src/r4xstart2_startup.c",
@@ -59787,7 +60124,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/CFacadeGen/src/main.zig",
-        "sha256": "2dacf64c1ea6f0df71110be3becb2041fc4c336edb1f1db6e7a90fc9218971de"
+        "sha256": "014790297e0add19a3ed8de67a53fdaa323bb3a5edff6558065de01c0bdca174"
       },
       {
         "path": "Repositories/SDK/Tools/DataBridgeGen/src/c_header.zig",
@@ -59899,7 +60236,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/RustBuildInputs.ps1",
-        "sha256": "4a9cdf5dff419a3cb3ceff905764488ca63b7b994377f6a5d85c5d566b0f7614"
+        "sha256": "7b5d25233648f74f5fe0fddbf8c8fe81364cd30b8e086ebe21e9abe146ef2165"
       },
       {
         "path": "Repositories/SDK/Tools/Setup.ps1",
@@ -59955,11 +60292,11 @@
       },
       {
         "path": "Repositories/SDK/Tools/Test-RustDrivers.ps1",
-        "sha256": "ce8b032fb981c21d9722d4ec349c82965de58d069541f12d66f81f8051eb3651"
+        "sha256": "e051627cc998932eaa39ead015ca64dc001bb0d33f5ccf519c5463207f295346"
       },
       {
         "path": "Repositories/SDK/Tools/Test-RustGui.ps1",
-        "sha256": "5ef8d75046c81741da59396f8b23832710c67b2ca0155f042270fe1e87d5c45d"
+        "sha256": "34871c95cede0ee3f3249123b99f8f5425373da20c79c1f6e8b5da1e5c1db8ff"
       },
       {
         "path": "Repositories/SDK/Tools/Test-RustHeap.ps1",
@@ -59967,7 +60304,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/Test-RustLibraries.ps1",
-        "sha256": "3d9bb110b31a55da326a1015bb022ee766c50ab3a3bf59983ca795b0a1853584"
+        "sha256": "2f467f62352572bbfb17275da22dc64b54b8e1a8a5f5c22cd5a51db17ecfed09"
       },
       {
         "path": "Repositories/SDK/Tools/Test-RustModule.ps1",
@@ -59979,43 +60316,43 @@
       },
       {
         "path": "Repositories/SDK/Tools/Test-RustProtocols.ps1",
-        "sha256": "3a16156ebb8232b3c67f3158251eb52e2739ef506f8bf4b4e893c5e45b0290aa"
+        "sha256": "b39650c07c8ac47e3cb656fdfc160fbfa36b9b009df565178cd61399701b154e"
       },
       {
         "path": "Repositories/SDK/Tools/Test-RustResources.ps1",
-        "sha256": "c2e3686592cb6b9ce967979dcaedc2283ecf19dd7a01c5367a54b6a7188d6048"
+        "sha256": "4294d488e09c4ac402ff6910db855e409376a3c82f47f16d9bf14821518f55e8"
       },
       {
         "path": "Repositories/SDK/Tools/Test-RustServices.ps1",
-        "sha256": "9de08d76b8071dab08373d5bc3a65f223f72c8318483a6d364a5372115a71198"
+        "sha256": "b5c6711423d9b147d6fb8c60cd703411a447a04201c71c92bf5c55f944753d42"
       },
       {
         "path": "Repositories/SDK/Tools/Test-RustStorage.ps1",
-        "sha256": "baae59787ffd0706337d51d2aec5f50c47d99ae94b8244ae78a7d4617432c382"
+        "sha256": "277501deb3ce4bdd8ead6a88738806b7ebd515dccdc56d25a7096bf6e5ef16c9"
       },
       {
         "path": "Repositories/SDK/Tools/Test-RustSubsystems.ps1",
-        "sha256": "c6140419f7c5df536a7f8de88d982f8bb88c99f8a0d9c3881646cc68661a14e3"
+        "sha256": "00748ce1a8eedb7497aca6d8ffcfd3db1640654f2eb054c3a1d98ebf203565fd"
       },
       {
         "path": "Repositories/SDK/Tools/Test-RustTransport.ps1",
-        "sha256": "a1237620ac7e9d6e30b55aa943811e42e34e78f00c547ca70223f05c3414c09d"
+        "sha256": "913601aa045f74ee77819492717b4b29135de5e31fcf12cf2fdf4bd3b15c65bc"
       },
       {
         "path": "Repositories/SDK/Tools/Test-RustUpdate.ps1",
-        "sha256": "9fbcd7e8b7904faa00f029508a9c7587d6c4d026b4fb4dc6b8e079a1f8ddb42f"
+        "sha256": "59fcc84c0bac3c400d794707a4e6bb10915903cc762dbcf4e4d5ab8d18be980a"
       },
       {
         "path": "Repositories/SDK/Tools/Test-RustWeb.ps1",
-        "sha256": "af4d6cb6bb3a75a6d963cb72df01440f133123fbf801f95e800eda4759d73278"
+        "sha256": "cdc99e45d17c74124cfb6fd698e4eb99cba544370ddc13ac2162f330dd121cdb"
       },
       {
         "path": "Repositories/SDK/build.zig",
-        "sha256": "2444b609458241c39dd43bf96acfe2090acbf661d3f2585754fdc3db5b21f7d7"
+        "sha256": "e5a041b7abe04ad615bbf008a3809ad0266e47898885ee911028926fe31faa8d"
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "3bd97d063c05e133c57a5cb5a0c910d37287762e2924f78063dd8fb54c16334f"
+        "sha256": "6398de72552e9b1a2d906c2180b2d1a4a01496fbafae39bcbfbe8ec9609ba50e"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -60051,7 +60388,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/app_resources.zig",
-        "sha256": "e6e599c0e8c240e5dc3f0093bb52fc22e1c18e7a463b4175ce39a6b0fb2e9679"
+        "sha256": "3f295a5824138bf2dfda0cedf774d7cd2d86b4ba9eae7b7b3d9ea43bb3b56b5d"
       },
       {
         "path": "Repositories/SDK/r4os/app_services.zig",
@@ -60059,7 +60396,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/app_storage.zig",
-        "sha256": "4af66b0153bb4d3a742a2071a22a086adbdeb103648cf1627012573bc1e17f74"
+        "sha256": "62473f0e28ba677a04a0c1d64de4f5a36eaa6b5ea46c3badd67ced1f7627453f"
       },
       {
         "path": "Repositories/SDK/r4os/app_tray.zig",
@@ -60119,7 +60456,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/build.zig",
-        "sha256": "78a0156e58a6a7b833036ff08ca269e9243393fbc4642cc09bf97ae0f8eb1889"
+        "sha256": "9fda82e25f76a241d06bd9e1bb907f7122fad20e3861f928130f5da23de23edf"
       },
       {
         "path": "Repositories/SDK/r4os/build_profile.zig",
@@ -60307,7 +60644,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/facade_runtime.zig",
-        "sha256": "438aa6b775e16813417310adc6a5de6f277b8f7330f1d521c8dcbd895138ada2"
+        "sha256": "c4f3c30230be98a26ba4851281c4bf509edaa9ac01cbd8981fe8fe727ad6c941"
       },
       {
         "path": "Repositories/SDK/r4os/file_picker.zig",
@@ -60583,7 +60920,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/platform_runtime.zig",
-        "sha256": "e476029a7d0d2563129eab44d4de9494ae5bb971e4a6089baf5c28cf0f04962e"
+        "sha256": "d3a56bb97c76a303e1b3b94b7edf8bfe152638c00ad4d5570e59e28e0e1e897e"
       },
       {
         "path": "Repositories/SDK/r4os/platform_support.zig",
@@ -60595,7 +60932,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/program.zig",
-        "sha256": "9a396eb2f9d2a4e27e5969c78349f7f47ebd9ea3bcb5a1fda6247f2c1354a965"
+        "sha256": "c39706305057aca0862e5285f682782042ec82efbc1e9051b595fdcc93df6d35"
       },
       {
         "path": "Repositories/SDK/r4os/protocol.zig",
@@ -60643,7 +60980,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/r4sys.zig",
-        "sha256": "ba65572f74ddc8da3502a6c6549e3d04092789de3d7993bbb8f39f2d8c44e358"
+        "sha256": "2b7897894f4d19b7ad9b83748f5431bd13f8583cd66100daa66b26e7309fc516"
       },
       {
         "path": "Repositories/SDK/r4os/r4u_artifact.zig",
@@ -60747,7 +61084,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/storage_runtime.zig",
-        "sha256": "684e14f750a9cf6ed96a9854339e5f81d3e2f8a6bf6090f62982986f5de5d812"
+        "sha256": "58a46bc95fc782b190bbc289efaabb2f94e57eb38126cc0d4069d7bff79005bd"
       },
       {
         "path": "Repositories/SDK/r4os/storage_tools.zig",
@@ -60963,11 +61300,11 @@
       },
       {
         "path": "Repositories/SDK/r4os/time_budget.zig",
-        "sha256": "7492b67d55a453b66c6cb6053c310f659fc569af2cb001da4598e36b6adf1915"
+        "sha256": "9fb9fa01dc9ff31dc6d8ed8b68ac410d84aa06e10c4bbfedc603b34dcdd22f73"
       },
       {
         "path": "Repositories/SDK/r4os/time_budget_runtime.zig",
-        "sha256": "2cfac96e1f0a7ee9120c17f7ba2962c46cd728ffc68946b18e7bb7d5cba9dff5"
+        "sha256": "8d629914ec2ca539c00090f603b15b739ac9177a70ae44fab809d4c3245fa7f9"
       },
       {
         "path": "Repositories/SDK/r4os/time_contract.zig",
@@ -61239,11 +61576,11 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/app2.rs",
-        "sha256": "109ad1d62f0d21e6ecebaf3f4d63501f5444e96f36522572782ef586bed841e8"
+        "sha256": "b88d3b72a2e699f5762b5875e5b451651c7aac8148f0f79d99d1d3a0966b819b"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app2.h",
-        "sha256": "a5b8c69e281aea24a546e18726395324ef1face80bffbd0bbd0c6e71d6aa9e1f"
+        "sha256": "0d77f0ef6f6c7bea00ea5870d6105112c5001a9dcfc231c84b073e6c6ea6f9a7"
       },
       {
         "path": "Repositories/SDK/Shared/C/src/r4app2_startup.c",
@@ -61299,7 +61636,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/app2.zig",
-        "sha256": "5322565d6ca1ed7b6d305d76ecc35dd55ea59939a71428ac9e2be0fd254c7b92"
+        "sha256": "48a028be2e5392ef4077695e4ac23dd1e9cefdfe866285736ebb1fb91ea73ae8"
       },
       {
         "path": "Repositories/SDK/r4os/app2_runtime.zig",
@@ -61308,6 +61645,14 @@
       {
         "path": "Repositories/SDK/r4os/runtime_fault.zig",
         "sha256": "f67c7f4029bd1f3845cc3fcab247a4bef568ccec5c853d5e2dc893dcacbf8250"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/app_memory.h",
+        "sha256": "f19fd2fd2b28d738ef0f14fdb8f84ee9dac55d5e963ba6353dfefc0c35fea1eb"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/platform_facade2.h",
+        "sha256": "dd04036f50f5f253a8c9fb9ed8cad60290c82ad24df83e29ce44abc61bbb460b"
       }
     ],
     "coverage": [
@@ -61364,7 +61709,8 @@
           "Repositories/SDK/Shared/C/include/r4os/r4xstart.h",
           "Repositories/SDK/Shared/C/include/r4os/startup.h",
           "Repositories/SDK/Shared/C/include/r4os/app2.h",
-          "Repositories/SDK/Shared/C/src/r4app2_startup.c"
+          "Repositories/SDK/Shared/C/src/r4app2_startup.c",
+          "Repositories/SDK/Shared/C/include/r4os/app_memory.h"
         ],
         "rust": [
           "Repositories/SDK/Rust/src/lib.rs",
@@ -61390,7 +61736,8 @@
         ],
         "c": [
           "Repositories/SDK/Shared/C/include/r4os/heap.h",
-          "Repositories/SDK/Shared/C/include/r4os/r4sys.h"
+          "Repositories/SDK/Shared/C/include/r4os/r4sys.h",
+          "Repositories/SDK/Shared/C/include/r4os/app_memory.h"
         ],
         "rust": [
           "Repositories/SDK/Rust/src/heap.rs"
@@ -61520,7 +61867,8 @@
           "cli_diagnostics_09018",
           "stream_transfer_09019",
           "file_metadata_09022",
-          "file_picker_09024"
+          "file_picker_09024",
+          "normal_system_facades_09041"
         ]
       },
       {
@@ -61566,7 +61914,8 @@
           "waitset_language_surfaces_09028",
           "waitset_resource_sources_09029",
           "byte_pipe_language_09034",
-          "launch_io_language_09035"
+          "launch_io_language_09035",
+          "normal_system_facades_09041"
         ]
       },
       {
@@ -61691,7 +62040,8 @@
           "precise_clock_consumer_86",
           "clock_service_08720",
           "time_poll_budgets_09016",
-          "audio_total_source_09025"
+          "audio_total_source_09025",
+          "normal_system_facades_09041"
         ]
       },
       {
@@ -61866,7 +62216,8 @@
           "Repositories/SDK/Shared/C/include/r4os/power_profiles.h",
           "Repositories/SDK/Shared/C/include/r4os/r4dev.h",
           "Repositories/SDK/Shared/C/include/r4os/device_snapshot.h",
-          "Repositories/SDK/Shared/C/include/r4os/device_snapshot_platform2.h"
+          "Repositories/SDK/Shared/C/include/r4os/device_snapshot_platform2.h",
+          "Repositories/SDK/Shared/C/include/r4os/platform_facade2.h"
         ],
         "rust": [
           "Repositories/SDK/Rust/src/c_facades.rs",
@@ -61884,7 +62235,8 @@
           "native_pointer_capture_08828",
           "gui_host_backpressure_08832",
           "audio_duration_retirement_08859",
-          "device_snapshot_09021"
+          "device_snapshot_09021",
+          "normal_system_facades_09041"
         ]
       },
       {
@@ -62524,6 +62876,61 @@
       "libraries": "0.64.51 unchanged",
       "evidence": "optional_capture_09037",
       "scope": "Completed source/ABI and original-owner host review; actual language/guest and physical hardware qualifications remain separate evidence, never inferred from this drift guard.",
+      "historical_snapshot_retained": true,
+      "current_platform_tables": [
+        {
+          "group": "R4SYS",
+          "abi_version": 41,
+          "bytes": 1560,
+          "slots": 193
+        },
+        {
+          "group": "R4DESK",
+          "abi_version": 21,
+          "bytes": 632,
+          "slots": 77
+        },
+        {
+          "group": "R4DRAW",
+          "abi_version": 40,
+          "bytes": 920,
+          "slots": 113
+        },
+        {
+          "group": "R4NET",
+          "abi_version": 2,
+          "bytes": 296,
+          "slots": 35
+        },
+        {
+          "group": "R4AUDIO",
+          "abi_version": 5,
+          "bytes": 240,
+          "slots": 28
+        },
+        {
+          "group": "R4DEV",
+          "abi_version": 37,
+          "bytes": 744,
+          "slots": 91
+        }
+      ],
+      "current_projection": {
+        "extern_structs": 575,
+        "fields": 8916,
+        "integer_enums": 20,
+        "callback_declarations": 806,
+        "constants": 3777
+      },
+      "canonical_schema_sha256": "5d7d1f631a75b4f3b7b4a6206a0a353258932c594b777cd0ca594177e3485f4c"
+    },
+    {
+      "performed_in": "0.90.40",
+      "sdk": "0.64.181",
+      "contract": "0.64.93",
+      "libraries": "0.64.51 unchanged",
+      "evidence": "normal_app2_09040",
+      "scope": "Normal explicit three-language Generation2 entry and existing owner regression; common high-level facade and productive module migration remains pending.",
       "historical_snapshot_retained": true,
       "current_platform_tables": [
         {

@@ -43,6 +43,31 @@ typedef struct R4App {
     uint8_t reserved[3];
 } R4App;
 
+/* SDK facade binding to the actual second-generation view; no old start or
+ * table is synthesized. Keep the supplied view and callbacks resident. */
+static inline int32_t r4_app_init2(const R4OS2Context *context, const R4App2Memory *memory, R4App *out) {
+    if (!out || !context || !context->raw) return R4OS_ERROR_INVALID;
+    R4App value = {0};
+    switch (context->raw->app_class) {
+    case R4XSTART_APP_CLASS_CONSOLE: value.profile = R4_APP_PROFILE_CONSOLE; break;
+    case R4XSTART_APP_CLASS_GUI: value.profile = R4_APP_PROFILE_DESKTOP; break;
+    case R4XSTART_APP_CLASS_SERVICE: value.profile = R4_APP_PROFILE_SERVICE; break;
+    default: return R4OS_ERROR_INVALID;
+    }
+    const int32_t rc = r4sys_init2(context, memory, &value.system);
+    if (rc != 0) return rc;
+    for (uint32_t group = 1; group <= 6; ++group) {
+        if (R4OS2ContextGroup(context, group)) value.group_mask |= UINT32_C(1) << group;
+    }
+    if (R4OS2ContextGroup(context, 6)) {
+        const int32_t device_rc = r4dev_init2(context, &value.devices);
+        if (device_rc != 0) return device_rc;
+    }
+    *out = value;
+    return 0;
+}
+int32_t R4SdkAppFacade2(const R4OS2Context *, const R4App2Memory *, R4App *);
+
 static inline int32_t r4app_serial(const R4App *app,R4Serial *out){return r4serial_init(app?&app->devices:0,out);}
 
 typedef struct R4OutcomeU64 {
@@ -143,17 +168,16 @@ static inline int r4_app_has_group(const R4App *app, uint32_t group_id) {
 }
 
 static inline const uint8_t *r4_app_args(const R4App *app, uint64_t *out_len) {
+    if (app && app->system.generation2) return R4OS2ContextArgs(app->system.generation2, out_len);
     if (out_len != 0) *out_len = app != 0 && app->context != 0 ? app->context->args_len : 0u;
     return app != 0 ? r4xstart_args(app->context) : 0;
 }
 
 static inline int r4_app_should_close(R4App *app) { return app != 0 ? r4sys_program_should_close(&app->system) : 1; }
 static inline uint64_t r4_app_ticks(R4App *app) {
-    if (app == 0 || app->system.table == 0 || app->system.table->ticks == 0) return 0;
-    return ((R4SysTicksFn)(uintptr_t)app->system.table->ticks)();
+    if (!app || !R4SYS_HAS(&app->system, ticks)) return 0;
+    return ((R4SysTicksFn)(uintptr_t)R4SYS_SLOT(&app->system, ticks))();
 }
-
-int32_t r4_app_main(R4App *app);
 
 #define R4_DECLARE_HANDLE(NAME, RAW) \
     typedef struct NAME { RAW raw; uint8_t owned; uint8_t reserved[7]; } NAME; \

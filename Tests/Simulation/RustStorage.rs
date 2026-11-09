@@ -14,6 +14,154 @@ unsafe extern "C" {
     fn sdk_storage_directory_stale(mode: i32);
     fn sdk_storage_close_mode(mode: i32);
     fn sdk_storage_console(out: *mut u8, capacity: u32) -> u32;
+    fn sdk_storage2_table(out: *mut abi::generation2::R4XStartR4Sys2);
+    fn sdk_storage2_mode(mode: u32);
+    fn sdk_storage2_view(
+        view: *const r4os_sdk::c_facades::R4OS2Context,
+        memory: *const r4os_sdk::c_facades::R4App2Memory,
+    ) -> i32;
+}
+
+#[test]
+fn normal_generation2_keeps_wide_metadata_and_rejects_partial_directory_after_restart() {
+    use r4os_sdk::{app2, c_facades as c};
+    let mut table = abi::generation2::R4XStartR4Sys2::default();
+    unsafe { sdk_storage2_table(&mut table) };
+    let import = abi::R4XStartImport {
+        group_id: 1,
+        min_version: 2,
+        resolved_version: 2,
+        flags: abi::r4xstart_import_flag_group_interface,
+        module_name: c"R4SYS".as_ptr() as u64,
+        symbol_name: c"Query2".as_ptr() as u64,
+        table: core::ptr::from_ref(&table) as u64,
+    };
+    unsafe extern "C" fn keep_open(_: *const abi::generation2::R4XStartContext2) -> u32 {
+        0
+    }
+    let raw = abi::generation2::R4XStartContext2 {
+        instance_id: 42,
+        app_class: 1,
+        flags: abi::r4xstart_flag_imports_valid | abi::r4xstart_flag_close_supported,
+        should_close: keep_open as *const () as u64,
+        imports: core::ptr::from_ref(&import) as u64,
+        import_count: 1,
+        ..Default::default()
+    };
+    let facts = app2::StartupInfo {
+        profile: 0,
+        app_class: 1,
+        required_groups: 2,
+        imports: &[app2::ImportSpec {
+            module_name: c"R4SYS".as_ptr().cast(),
+            symbol_name: c"Query2".as_ptr().cast(),
+            minimum: 2,
+            optional: 0,
+            group_id: 1,
+            reserved: 0,
+        }],
+    };
+    let app = unsafe { app2::App::from_raw(&raw, &facts, c"STORAGE2") }.unwrap();
+    // The actual Rust view is read by the C constructor at its asserted layout.
+    let mut facade = core::mem::MaybeUninit::<c::R4App>::uninit();
+    // Rust's normal factory makes this call too; this independent readback
+    // also verifies all six addresses against the original supplied table.
+    let rust_view = core::ptr::from_ref(app.context()).cast::<c::R4OS2Context>();
+    let memory = c::R4App2Memory {
+        version: 1,
+        size: 128,
+        generation: 2,
+        flags: 0,
+        identity: 42,
+        vm_reserve: 0,
+        vm_commit: 0,
+        vm_decommit: 0,
+        vm_release: 0,
+        notification_create: 0,
+        notification_query: 0,
+        notification_notify: 0,
+        notification_wait: 0,
+        notification_close: 0,
+        sleep_ticks: 0,
+        task_yield: 0,
+        thread_current_handle: 0,
+        program_exit: 0,
+    };
+    assert_eq!(unsafe { sdk_storage2_view(rust_view, &memory) }, 0);
+    assert_eq!(
+        unsafe { c::R4SdkAppFacade2(rust_view, &memory, facade.as_mut_ptr()) },
+        0
+    );
+    let facade = unsafe { facade.assume_init() };
+    assert_eq!(
+        unsafe { (*facade.system.generation2).tables[0] },
+        core::ptr::from_ref(&table) as u64
+    );
+    let resources = app.resources().unwrap();
+    let mut platform_storage = core::pin::pin!(r4os_sdk::platform::PlatformStorage::new());
+    let platform = r4os_sdk::platform::Platform::open2(platform_storage.as_mut(), &app).unwrap();
+    assert!(platform.devices().kernel().unwrap().is_none());
+    use r4os_sdk::resources::Timeout;
+    assert_eq!(app.clock().checked_sample().unwrap().tick_hz(), 333);
+    assert_eq!(
+        resources.timeout_ticks(Timeout::AfterNanos(1_000_000_000)),
+        Ok(333)
+    );
+    unsafe { sdk_storage2_mode(3) };
+    assert_eq!(resources.timeout_ticks(Timeout::Poll), Ok(0));
+    assert_eq!(resources.timeout_ticks(Timeout::Forever), Ok(u64::MAX));
+    assert!(matches!(
+        resources.timeout_ticks(Timeout::AfterNanos(1)),
+        Err(Error::Raw(-4))
+    ));
+    unsafe { sdk_storage2_mode(4) };
+    assert!(matches!(
+        resources.timeout_ticks(Timeout::AfterNanos(1)),
+        Err(Error::Raw(-1))
+    ));
+    unsafe { sdk_storage2_mode(5) };
+    assert!(matches!(
+        resources.timeout_ticks(Timeout::AfterNanos(u64::MAX)),
+        Err(Error::Raw(-3))
+    ));
+    unsafe { sdk_storage2_mode(0) };
+    let system = app.system().unwrap();
+    let files = system.files();
+    assert!(files.available());
+    let path = FilePath::parse(b"C:\\WIDE.TXT").unwrap();
+    let value = files.metadata(&path).unwrap().unwrap();
+    assert_eq!(
+        (value.byte_size, value.backend_node),
+        (0x100000003, 0x100000007)
+    );
+    assert!(matches!(
+        files.info(&path),
+        Err(Error::Raw(abi::file_metadata2_error_unsupported))
+    ));
+    let mut scan = files.iterate(&path);
+    let row = scan.next_entry().unwrap().unwrap();
+    assert!(row.info.is_none());
+    assert_eq!(row.metadata.unwrap().backend_node, 0x100000007);
+    unsafe { sdk_storage2_mode(2) };
+    assert!(matches!(
+        scan.next_entry(),
+        Err(Error::Raw(abi::file_metadata2_error_restart))
+    ));
+    unsafe { sdk_storage2_mode(0) };
+    let mut scan = files.iterate(&path);
+    assert!(scan.next_entry().unwrap().is_some());
+    scan.revisit_after_removal();
+    assert!(matches!(
+        scan.next_entry(),
+        Err(Error::Raw(abi::file_metadata2_error_restart))
+    ));
+    unsafe { sdk_storage2_mode(1) };
+    assert!(files.metadata(&path).unwrap().is_none());
+    unsafe { sdk_storage2_mode(2) };
+    assert!(matches!(
+        files.metadata(&path),
+        Err(Error::Raw(abi::file_metadata2_error_restart))
+    ));
 }
 #[test]
 fn existing_bytes_real_facades_and_explicit_failure_ownership() {

@@ -124,7 +124,7 @@ static inline int32_t r4_services_bound_detail(const R4Services *services, const
 static inline uint32_t r4_services_monotonic_hz(R4App *app) {
     if (app == 0 || !R4SYS_HAS(&app->system, monotonic_clock)) return 0u;
     R4MonotonicClockInfo clock = {0};
-    int32_t rc = ((R4SysMonotonicClockFn)(uintptr_t)app->system.table->monotonic_clock)(&clock);
+    int32_t rc = ((R4SysMonotonicClockFn)(uintptr_t)R4SYS_SLOT(&app->system, monotonic_clock))(&clock);
     if (rc <= 0 || !(clock.flags & R4OS_MONOTONIC_CLOCK_FLAG_VALID) ||
         clock.frequency_hz != R4OS_MONOTONIC_CLOCK_FREQUENCY_HZ) return 0u;
     /* Same logical scale as ticks()/TimeState, read anew for each conversion.

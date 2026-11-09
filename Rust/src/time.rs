@@ -10,32 +10,54 @@ pub use abi::{
     R4Deadline as Deadline, R4Duration as Duration, R4MonotonicInstant as Instant,
     R4UtcTime as UtcTime,
 };
+enum Source<'a, 'context> {
+    First(&'a crate::App<'context>),
+    Next(&'a crate::app2::App<'context>),
+}
 pub struct Clock<'a, 'context> {
-    app: &'a crate::App<'context>,
+    source: Source<'a, 'context>,
 }
 impl<'a, 'context> Clock<'a, 'context> {
     pub fn new(app: &'a crate::App<'context>) -> Self {
-        Self { app }
+        Self {
+            source: Source::First(app),
+        }
+    }
+    pub fn new2(app: &'a crate::app2::App<'context>) -> Self {
+        Self {
+            source: Source::Next(app),
+        }
+    }
+    fn slot(&self, first: usize, next: usize) -> Result<u64> {
+        match &self.source {
+            Source::First(app) => app
+                .sys_slot(first)
+                .map(|value| value as u64)
+                .ok_or(Error::Raw(abi::err_no_fn)),
+            Source::Next(app) => app.context().lookup(1, next as u32).map_err(Error::Raw),
+        }
     }
     pub fn checked_sample(&self) -> core::result::Result<checked::ClockSample, checked::Error> {
-        let info = self.monotonic().map_err(|_| checked::Error::ClockUnavailable)?;
+        let info = self
+            .monotonic()
+            .map_err(|_| checked::Error::ClockUnavailable)?;
         checked::ClockSample::from_info(&info)
     }
     pub fn state(&self) -> Result<abi::TimeState> {
-        let address = self
-            .app
-            .sys_slot(core::mem::offset_of!(abi::R4XStartR4Sys, time_state))
-            .ok_or(Error::Raw(abi::err_no_fn))?;
+        let address = self.slot(
+            core::mem::offset_of!(abi::R4XStartR4Sys, time_state),
+            core::mem::offset_of!(abi::generation2::R4XStartR4Sys2, time_state),
+        )?;
         let f: abi::R4SysFns::time_state = unsafe { core::mem::transmute(address) };
         let mut state = abi::TimeState::default();
         unsafe { f(&mut state) };
         Ok(state)
     }
     pub fn ticks(&self) -> Result<u64> {
-        let address = self
-            .app
-            .sys_slot(core::mem::offset_of!(abi::R4XStartR4Sys, ticks))
-            .ok_or(Error::Raw(abi::err_no_fn))?;
+        let address = self.slot(
+            core::mem::offset_of!(abi::R4XStartR4Sys, ticks),
+            core::mem::offset_of!(abi::generation2::R4XStartR4Sys2, ticks),
+        )?;
         let f: abi::R4SysFns::ticks = unsafe { core::mem::transmute(address) };
         Ok(unsafe { f() })
     }
@@ -54,10 +76,10 @@ impl<'a, 'context> Clock<'a, 'context> {
     /// event_requested_hz is the logical ticks()/TimeState scale; refresh it
     /// when converting a new timeout, rather than assuming it never changes.
     pub fn monotonic(&self) -> Result<abi::MonotonicClockInfo> {
-        let address = self
-            .app
-            .sys_slot(core::mem::offset_of!(abi::R4XStartR4Sys, monotonic_clock))
-            .ok_or(Error::Raw(abi::err_no_fn))?;
+        let address = self.slot(
+            core::mem::offset_of!(abi::R4XStartR4Sys, monotonic_clock),
+            core::mem::offset_of!(abi::generation2::R4XStartR4Sys2, monotonic_clock),
+        )?;
         let call: abi::R4SysFns::monotonic_clock = unsafe { core::mem::transmute(address) };
         let mut info = abi::MonotonicClockInfo::default();
         let code = unsafe { call(&mut info) };

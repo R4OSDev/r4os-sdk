@@ -24,6 +24,7 @@
 #include <r4os/storage.h>
 #include <r4os/directory_page.h>
 #include <r4os/gui_bridge.h>
+#include <r4os/platform_facade2.h>
 #include <r4os/data_helpers.h>
 #include <r4os/web_helpers.h>
 #include <r4os/transport_helpers.h>
@@ -66,4 +67,8 @@ int32_t R4SdkAppFacade(const R4XStartContext *context, R4App *out) {
     default: return R4OS_ERROR_INVALID;
     }
     return r4_app_init(context, profile, out).raw_code;
+}
+
+int32_t R4SdkAppFacade2(const R4OS2Context *context, const R4App2Memory *memory, R4App *out) {
+    return r4_app_init2(context, memory, out);
 }

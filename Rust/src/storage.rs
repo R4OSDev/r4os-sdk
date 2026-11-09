@@ -65,7 +65,22 @@ impl<'a> System<'a> {
             raw: c::R4Sys {
                 ctx: app.start_context(),
                 table,
+                generation2: core::ptr::null(),
+                memory2: core::ptr::null(),
             },
+            _loan: PhantomData,
+            _local: PhantomData,
+        })
+    }
+    pub fn new2(app: &'a crate::app2::App<'_>) -> Result<Self> {
+        let raw = c::R4Sys {
+            ctx: core::ptr::null(),
+            table: core::ptr::null(),
+            generation2: app.native_context(),
+            memory2: &app.memory,
+        };
+        Ok(Self {
+            raw,
             _loan: PhantomData,
             _local: PhantomData,
         })
@@ -132,6 +147,14 @@ impl Files<'_> {
     }
     pub fn available(&self) -> bool {
         unsafe { c::r4_files_available(&self.raw()) != 0 }
+    }
+    pub fn metadata(&self, path: &FilePath) -> Result<Option<abi::FileMetadata2>> {
+        let mut value = MaybeUninit::uninit();
+        match unsafe { c::r4_files_metadata(&self.raw(), path.as_raw(), value.as_mut_ptr()) } {
+            1 => Ok(Some(unsafe { value.assume_init() })),
+            0 => Ok(None),
+            n => Err(Error::Raw(n)),
+        }
     }
     pub fn read(&self, path: &FilePath, out: &mut [u8]) -> Result<Option<usize>> {
         transfer(
@@ -435,6 +458,7 @@ pub struct DirectoryEntry {
     pub path: FilePath,
     pub is_directory: bool,
     pub info: Option<abi::FileInfo>,
+    pub metadata: Option<abi::FileMetadata2>,
 }
 pub struct DirectoryIterator<'a> {
     raw: c::R4DirectoryIterator,
@@ -459,6 +483,11 @@ impl DirectoryIterator<'_> {
                     path,
                     is_directory: n.is_directory != 0,
                     info: if n.has_info != 0 { Some(n.info) } else { None },
+                    metadata: if self.raw.last_metadata_valid != 0 {
+                        Some(self.raw.last_metadata)
+                    } else {
+                        None
+                    },
                 }))
             }
         }

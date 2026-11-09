@@ -873,6 +873,16 @@ pub const Context = struct {
         return self.base.monotonicHz();
     }
 
+    pub fn timeoutTicks(self: *const Context, timeout: abi.R4Timeout) time_contract.checked.Error!u64 {
+        if (self.base.generation2 == null) return time_contract.timeoutToTicks(timeout, self.monotonicHz());
+        var value = try time_contract.checked.fromTimeout(timeout);
+        if (value.kind == 1) {
+            const sample = try self.base.clockSampleChecked();
+            value = try time_contract.checked.timeoutTicks(timeout, sample.identity.tick_hz);
+        }
+        return time_contract.checked.toWaitTicks(value);
+    }
+
     pub fn platformInputSnapshot(self: *const Context, out: *abi.PlatformInputSnapshot) i32 {
         return self.base.platformInputSnapshot(out);
     }

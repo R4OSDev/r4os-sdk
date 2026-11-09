@@ -227,6 +227,7 @@ pub fn build(b: *std.Build) void {
             root.addIncludePath(.{ .cwd_relative = b.pathResolve(&.{ library_root, "Shared/C/include" }) });
             root.addIncludePath(sdk_profile.profile.c_include_root);
             root.addIncludePath(sdk_profile.profile.contract_c_include_root);
+            root.addIncludePath(sdk_profile.profile.contract_c_include_root2);
             b.installArtifact(b.addExecutable(.{ .name = "library-helpers-rust-gen", .root_module = root }));
             return;
         }
@@ -263,7 +264,7 @@ pub fn build(b: *std.Build) void {
         if (generate) b.installArtifact(b.addExecutable(.{ .name = "library-helpers-gen", .root_module = root })) else {
             const object = r4os_build.addProbedObject(b, root, sdk_profile.builder, "r4libraries_helpers", native);
             b.getInstallStep().dependOn(&b.addInstallFile(object, "lib/r4libraries_helpers.o").step);
-            const facades = r4os_build.addFacadeRuntime(b, .{ .cwd_relative = b.pathResolve(&.{ library_root, "Shared/Language/facades.c" }) }, sdk_profile.profile.c_include_root, sdk_profile.profile.contract_c_include_root, native);
+            const facades = r4os_build.addFacadeRuntime(b, .{ .cwd_relative = b.pathResolve(&.{ library_root, "Shared/Language/facades.c" }) }, sdk_profile.profile.c_include_root, sdk_profile.profile.contract_c_include_root, sdk_profile.profile.contract_c_include_root2, native);
             b.getInstallStep().dependOn(&b.addInstallFile(facades, "lib/r4libraries_facades.o").step);
         }
         return;
@@ -309,13 +310,14 @@ pub fn build(b: *std.Build) void {
         root.addImport("r4os_contract2", contract_dependency.module("r4os_contract2"));
         root.addIncludePath(sdk_profile.profile.c_include_root);
         root.addIncludePath(sdk_profile.profile.contract_c_include_root);
-        @import("r4os/c_header_inputs.zig").addMacro(b, root, &.{ sdk_profile.profile.c_include_root, sdk_profile.profile.contract_c_include_root });
+        root.addIncludePath(sdk_profile.profile.contract_c_include_root2);
+        @import("r4os/c_header_inputs.zig").addMacro(b, root, &.{ sdk_profile.profile.c_include_root, sdk_profile.profile.contract_c_include_root, sdk_profile.profile.contract_c_include_root2 });
         b.installArtifact(b.addExecutable(.{ .name = "c-facade-gen", .root_module = root }));
         return;
     }
     if (b.option(bool, "facade-runtime-only", "Build the SDK C facade object for Rust consumers") orelse false) {
         const native = b.option(bool, "facade-host-test", "Use native ABI for facade interop only") orelse false;
-        const object = r4os_build.addFacadeRuntime(b, b.path("Shared/C/src/facades.c"), sdk_profile.profile.c_include_root, sdk_profile.profile.contract_c_include_root, native);
+        const object = r4os_build.addFacadeRuntime(b, b.path("Shared/C/src/facades.c"), sdk_profile.profile.c_include_root, sdk_profile.profile.contract_c_include_root, sdk_profile.profile.contract_c_include_root2, native);
         const install_c = b.addInstallFile(object, "lib/r4sdk_facades.o");
         b.getInstallStep().dependOn(&install_c.step);
         b.step("facade-c-runtime", "Build only the existing C facade object").dependOn(&install_c.step);
@@ -335,7 +337,6 @@ pub fn build(b: *std.Build) void {
         const startup = b.createModule(.{ .root_source_file = b.path("r4os/app2_runtime.zig"), .target = b.graph.host, .optimize = sdk_profiles.defaults.host_optimize, .pic = true, .single_threaded = false, .stack_check = false });
         startup.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
         startup.addImport("r4os_contract2", contract_dependency.module("r4os_contract2"));
-        startup.addImport("r4os_contract2", contract_dependency.module("r4os_contract2"));
         const startup_object = b.addObject(.{ .name = "r4sdk_startup2_host", .root_module = startup });
         b.getInstallStep().dependOn(&b.addInstallFile(startup_object.getEmittedBin(), "lib/r4sdk_startup2_host.o").step);
         return;
@@ -343,7 +344,7 @@ pub fn build(b: *std.Build) void {
     const heap_runtime = sdk_profile.addHeapRuntime();
     b.getInstallStep().dependOn(&b.addInstallFile(heap_runtime, "lib/r4sdk_heap.o").step);
     if (b.option(bool, "heap-runtime-only", "Build only the module CPU-profile shared C/Rust heap object") orelse false) return;
-    const facade_runtime = r4os_build.addFacadeRuntime(b, b.path("Shared/C/src/facades.c"), sdk_profile.profile.c_include_root, sdk_profile.profile.contract_c_include_root, false);
+    const facade_runtime = r4os_build.addFacadeRuntime(b, b.path("Shared/C/src/facades.c"), sdk_profile.profile.c_include_root, sdk_profile.profile.contract_c_include_root, sdk_profile.profile.contract_c_include_root2, false);
     b.getInstallStep().dependOn(&b.addInstallFile(facade_runtime, "lib/r4sdk_facades.o").step);
     b.getInstallStep().dependOn(&b.addInstallFile(sdk_profile.addStorageRuntime(), "lib/r4sdk_storage.o").step);
     b.installArtifact(sdk_profile.builder);
@@ -387,6 +388,7 @@ pub fn build(b: *std.Build) void {
     composition_abi.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = data_target, .optimize = sdk_profiles.defaults.host_optimize }));
     composition_abi.addIncludePath(sdk_profile.profile.c_include_root);
     composition_abi.addIncludePath(sdk_profile.profile.contract_c_include_root);
+    composition_abi.addIncludePath(sdk_profile.profile.contract_c_include_root2);
     composition_abi.addCSourceFile(.{ .file = b.path("Tests/Conformance/TextCompositionABI.c"), .flags = &.{ "-std=c11", "-Wall", "-Wextra", "-Werror" } });
     data_step.dependOn(&b.addRunArtifact(b.addExecutable(.{ .name = "sdk-text-composition-abi", .root_module = composition_abi })).step);
     const web_cases = data_cases;

@@ -1,5 +1,9 @@
 #include <r4os/app_contract.h>
 
+/* The selected startup owns the entry signature. Common facade headers are
+ * also used by App2 and must not declare an incompatible App1 entry. */
+extern int32_t r4_app_main(R4App *);
+
 #ifndef R4OS_APP_PROFILE
 #error "R4OS_APP_PROFILE must be supplied by the SDK build profile"
 #endif

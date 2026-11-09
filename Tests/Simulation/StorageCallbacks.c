@@ -3,6 +3,7 @@
 #define main sdk_storage_c_fixture
 #include "../Conformance/StorageFacadePrototype05823.c"
 #undef main
+#include <r4os/app2.h>
 
 static int mode;
 static uint8_t console_bytes[64];static uint32_t console_len;
@@ -79,3 +80,46 @@ void sdk_storage_table(R4XStartR4Sys *out){
 void sdk_storage_close_mode(int32_t result){storage_close_result=result;}
 
 void sdk_storage_directory_stale(int value){resume_stale=value;}
+
+static uint32_t metadata_mode;
+void sdk_storage2_mode(uint32_t value) { metadata_mode=value; }
+static R4FileMetadata2 metadata_value(void) {
+    return (R4FileMetadata2){.version=1,.size=sizeof(R4FileMetadata2),
+        .flags=R4OS_FILE_METADATA2_FLAG_EXISTS|R4OS_FILE_METADATA2_FLAG_BYTE_SIZE_VALID|R4OS_FILE_METADATA2_FLAG_BACKEND_NODE_VALID,
+        .byte_size=UINT64_C(0x100000003),.backend_node=UINT64_C(0x100000007),.drive_letter='C'};
+}
+static int32_t metadata_read(const uint8_t *path,R4FileMetadata2 *out) {
+    assert(path&&out);
+    if(metadata_mode==1)return 0;
+    if(metadata_mode==2)return R4OS_FILE_METADATA2_ERROR_RESTART;
+    *out=metadata_value();return 1;
+}
+static int32_t metadata_batch(const uint8_t *path,R4DirectoryMetadataCursor2 *cursor,R4DirectoryMetadataEntry2 *rows,uint32_t capacity) {
+    assert(cursor&&cursor->version==1&&cursor->size==sizeof(*cursor));
+    if(!capacity){assert(!path&&!rows);return metadata_mode==2?R4OS_FILE_METADATA2_ERROR_RESTART:0;}
+    assert(path&&rows&&capacity==4);
+    if(cursor->namespace_generation)return -5;
+    cursor->namespace_generation=7;
+    rows[0]=(R4DirectoryMetadataEntry2){.info=metadata_value()};
+    memcpy(rows[0].path,"C:\\WIDE.TXT",12);
+    rows[1]=rows[0];memcpy(rows[1].path,"C:\\NEXT.TXT",12);
+    return 2;
+}
+static int32_t metadata_clock(R4MonotonicClockInfo *out) {
+    *out=(R4MonotonicClockInfo){.version=1,.size=sizeof(*out),.flags=R4OS_MONOTONIC_CLOCK_FLAG_VALID,
+        .frequency_hz=R4OS_MONOTONIC_CLOCK_FREQUENCY_HZ,.source=metadata_mode==3?0:1,.generation=9,
+        .resolution_ns=1,.instant_ns=100,.event_requested_hz=metadata_mode==4?0:(metadata_mode==5?1000000000:333),.event_effective_hz=334};
+    return 1;
+}
+void sdk_storage2_table(R4XStartR4Sys2 *out) {
+    *out=(R4XStartR4Sys2){.magic=R4OS2_R4SYS_MAGIC,.abi_version=R4OS2_R4SYS_VERSION,.size=sizeof(*out),
+        .file_read=(uintptr_t)&fake_file_read,.file_read_at=(uintptr_t)&fake_file_read_at,
+        .file_write=(uintptr_t)&fake_file_write,.file_append=(uintptr_t)&fake_file_append,
+        .file_metadata2=(uintptr_t)&metadata_read,.directory_metadata_batch2=(uintptr_t)&metadata_batch,.monotonic_clock=(uintptr_t)&metadata_clock};
+    metadata_mode=0;
+}
+int32_t sdk_storage2_view(const R4OS2Context *view,const R4App2Memory *memory) {
+    R4App app;
+    if(r4_app_init2(view,memory,&app)!=0||app.context||app.system.ctx||app.system.table||app.system.generation2!=view||app.system.memory2!=memory)return -1;
+    return app.system.generation2->raw->size==120&&app.group_mask==2?0:-2;
+}

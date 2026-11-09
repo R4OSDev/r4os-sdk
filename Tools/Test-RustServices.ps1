@@ -26,7 +26,7 @@ try {
         if($LASTEXITCODE -ne 0){throw 'Native SDK service objects failed.'}
     }finally{Pop-Location}
     $out=Join-Path $WorkRoot 'callbacks.o'
-    & $Zig cc -O1 -UNDEBUG -Werror -I (Join-Path $sdk 'Shared/C/include') -I (Join-Path $ContractRoot 'Generated/SDK/C/include') -c (Join-Path $sdk 'Tests/Simulation/ServiceNetworkCallbacks.c') -o $out
+    & $Zig cc -O1 -UNDEBUG -Werror -I (Join-Path $sdk 'Shared/C/include') -I (Join-Path $ContractRoot 'Generated/SDK/C/include') -I (Join-Path $ContractRoot 'Generated/Generation2/C/include') -c (Join-Path $sdk 'Tests/Simulation/ServiceNetworkCallbacks.c') -o $out
     if($LASTEXITCODE -ne 0){throw 'Existing C app-service fixture/callbacks failed.'}
     $source=(Join-Path $sdk 'Tests/Simulation/RustServices.rs').Replace('\','/')
     $dependency=(Join-Path $sdk 'Rust').Replace('\','/')

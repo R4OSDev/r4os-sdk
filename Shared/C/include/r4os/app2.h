@@ -1,17 +1,13 @@
 #ifndef R4OS_APP2_H
 #define R4OS_APP2_H
 #include <r4os/platform2.h>
+#include <r4os/app_memory.h>
+#include <r4os/app_contract.h>
+#include <r4os/inventory_platform2.h>
+#include <r4os/device_snapshot_platform2.h>
 
 /* SDK-private callback input to the existing module heap. This is not a
  * platform table or another allocator. Bind2 copies it into module storage. */
-typedef struct {
-    uint32_t version, size, generation, flags;
-    uint64_t identity;
-    uint64_t vm_reserve, vm_commit, vm_decommit, vm_release;
-    uint64_t notification_create, notification_query, notification_notify;
-    uint64_t notification_wait, notification_close;
-    uint64_t sleep_ticks, task_yield, thread_current_handle, program_exit;
-} R4App2Memory;
 typedef struct {
     const char *module_name, *symbol_name;
     uint32_t minimum, optional, group_id, reserved;
@@ -25,16 +21,25 @@ typedef struct {
     R4App2Memory memory;
     uint32_t profile;
 } R4App2;
+static inline int32_t r4_app2_facade(const R4App2 *app, R4App *out) {
+    return app ? r4_app_init2(&app->context, &app->memory, out) : R4OS_ERROR_INVALID;
+}
+static inline int32_t r4_app2_system(const R4App2 *app, R4Sys *out) {
+    return app ? r4sys_init2(&app->context, &app->memory, out) : R4OS_ERROR_INVALID;
+}
+static inline int32_t r4_app2_inventory_provider(const R4App2 *app, uint32_t mode, R4SdkInventoryProvider *out) {
+    return app ? R4SdkInventoryProvider2(&app->context, mode, out) : R4OS_ERROR_INVALID;
+}
+static inline int32_t r4_app2_device_snapshot_provider(const R4App2 *app, R4SdkDeviceSnapshotProvider *out) {
+    return app ? R4SdkDeviceSnapshotProvider2(&app->context, out) : R4OS_ERROR_INVALID;
+}
+static inline int32_t r4_app2_clock(const R4App2 *app, R4SdkTransferPlatformClock *out) {
+    return app ? R4SdkTransferClock2(&app->context, out) : R4OS_ERROR_INVALID;
+}
 _Static_assert(sizeof(R4App2Memory) == 128, "SDK heap input2");
 _Static_assert(sizeof(R4App2Import) == 32 && sizeof(R4App2StartupInfo) == 24, "SDK startup2 facts");
 
 int32_t R4SdkApp2Init(const R4XStartContext2 *, const R4App2StartupInfo *, R4App2Memory *);
-int32_t R4SdkHeapBind2(const R4App2Memory *, uint64_t);
-void *R4SdkHeapAlloc2(const R4App2Memory *, uint64_t, size_t, size_t);
-void *R4SdkHeapRealloc2(const R4App2Memory *, uint64_t, void *, size_t, size_t);
-int32_t R4SdkHeapFree2(const R4App2Memory *, uint64_t, void *);
-int32_t R4SdkHeapStats2(const R4App2Memory *, uint64_t, uint64_t *, uint32_t);
-int32_t R4SdkHeapFinish2(const R4App2Memory *, uint64_t);
 
 static inline int32_t r4_app2_init(const R4XStartContext2 *raw, const R4App2StartupInfo *info, R4App2 *out) {
     if (!out) return -12;

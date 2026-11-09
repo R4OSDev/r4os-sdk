@@ -40,13 +40,29 @@ impl PlatformStorage {
 pub struct Platform<'s, 'a> {
     native: NonNull<c::R4SdkPlatformContext>,
     _storage: PhantomData<Pin<&'s mut PlatformStorage>>,
-    _app: PhantomData<&'a App<'a>>,
+    _app: PhantomData<&'a ()>,
     _local: PhantomData<*mut ()>,
 }
 impl<'s, 'a> Platform<'s, 'a> {
     pub fn open(storage: Pin<&'s mut PlatformStorage>, app: &'a App<'_>) -> Result<Self> {
         let native = unsafe { storage.get_unchecked_mut() }.native.as_mut_ptr();
         let code = unsafe { c::R4SdkPlatformOpen(native, app.start_context()) };
+        if code != 0 {
+            return Err(Error::Raw(code));
+        }
+        Ok(Self {
+            native: NonNull::new(native).ok_or(Error::InvalidProvider)?,
+            _storage: PhantomData,
+            _app: PhantomData,
+            _local: PhantomData,
+        })
+    }
+    pub fn open2(
+        storage: Pin<&'s mut PlatformStorage>,
+        app: &'a crate::app2::App<'_>,
+    ) -> Result<Self> {
+        let native = unsafe { storage.get_unchecked_mut() }.native.as_mut_ptr();
+        let code = unsafe { c::R4SdkPlatformOpen2(native, app.native_context()) };
         if code != 0 {
             return Err(Error::Raw(code));
         }

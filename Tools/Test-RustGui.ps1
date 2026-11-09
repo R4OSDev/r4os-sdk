@@ -36,7 +36,7 @@ try {
     $extra=@()
     if($Platform){
         $audioObject=Join-Path $WorkRoot 'audio-c.o'
-        & $Zig cc -O1 -UNDEBUG -Werror -fPIC -Dmain=sdk_audio_c_case -I (Join-Path $sdk 'Shared/C/include') -I (Join-Path $ContractRoot 'Generated/SDK/C/include') -c (Join-Path $sdk 'Tests/Conformance/AudioDeviceFacadePrototype05827.c') -o $audioObject
+        & $Zig cc -O1 -UNDEBUG -Werror -fPIC -Dmain=sdk_audio_c_case -I (Join-Path $sdk 'Shared/C/include') -I (Join-Path $ContractRoot 'Generated/SDK/C/include') -I (Join-Path $ContractRoot 'Generated/Generation2/C/include') -c (Join-Path $sdk 'Tests/Conformance/AudioDeviceFacadePrototype05827.c') -o $audioObject
         if($LASTEXITCODE -ne 0){throw 'Existing C Audio/Device owner cases failed.'}
         $extra+=@($audioObject,(Join-Path $WorkRoot 'oracle/lib/r4sdk_platform_oracle.o'))
     }

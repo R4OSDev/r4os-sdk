@@ -2,6 +2,7 @@ const abi = @import("r4os_contract").abi;
 const path_contract = @import("path.zig");
 const file_stream = @import("file_stream.zig");
 const r4sys = @import("r4sys.zig");
+const metadata2 = @import("metadata2.zig");
 
 pub const FilePath = path_contract.FilePath;
 pub const AbsoluteFilePath = path_contract.AbsoluteFilePath;
@@ -75,6 +76,7 @@ pub const DirectoryEntry = struct {
     kind: DirectoryKind,
     path: []const u8,
     info: ?abi.FileInfo = null,
+    metadata: ?abi.FileMetadata2 = null,
 };
 
 pub const DirectoryNext = union(enum) {
@@ -127,11 +129,23 @@ pub const Files = struct {
     }
 
     pub fn info(self: *const Files, file_path: PathZ) FileInfoResult {
+        if (self.sys.base.generation2 != null) {
+            return switch (self.metadata(file_path)) {
+                .found => |value| if (legacyInfo(value, file_path.bytes())) |old| .{ .value = old } else .{ .failure = abi.file_metadata2_error_unsupported },
+                .missing => .missing,
+                .failure => |code| .{ .failure = code },
+            };
+        }
         var value: abi.FileInfo = .{};
         const raw = self.sys.fileInfoRaw(file_path.ptr, &value);
         if (raw < 0) return .{ .failure = raw };
         if (raw == 0 or value.exists == 0) return .missing;
         return .{ .value = value };
+    }
+
+    pub fn metadata(self: *const Files, file_path: PathZ) metadata2.InfoResult {
+        const view = self.sys.base.generation2 orelse return .{ .failure = abi.file_metadata2_error_unsupported };
+        return metadata2.info(view, file_path.ptr);
     }
 
     pub fn delete(self: *const Files, file_path: PathZ) Operation {
@@ -161,7 +175,12 @@ pub const Files = struct {
     }
 
     pub fn iterate(self: Files, directory: PathZ) DirectoryIterator {
-        return .{ .files = self, .directory = directory };
+        var value = DirectoryIterator{ .files = self, .directory = directory };
+        if (self.sys.base.generation2 != null) {
+            value.cursor = .{ .next = .{} };
+            value.buffer = .{ .next = undefined };
+        }
+        return value;
     }
 
     pub fn streamReader(self: Files, file_path: PathZ) StreamReader {
@@ -215,8 +234,8 @@ pub const DirectoryIterator = struct {
     directory: PathZ,
     index: u32 = 2,
     ended: bool = false,
-    cursor: abi.DirectoryBatchCursor = .{},
-    buffer: [4]abi.DirectoryBatchEntry = @splat(.{}),
+    cursor: union { first: abi.DirectoryBatchCursor, next: abi.DirectoryMetadataCursor2 } = .{ .first = .{} },
+    buffer: union { first: [4]abi.DirectoryBatchEntry, next: [4]abi.DirectoryMetadataEntry2 } = .{ .first = @splat(.{}) },
     buffer_index: u32 = 0,
     buffer_count: u32 = 0,
     legacy_after_removal: bool = false,
@@ -225,6 +244,7 @@ pub const DirectoryIterator = struct {
         if (self.ended) return .end;
         if (out_path.len == 0) return .{ .failure = abi.file_stream_error_invalid };
         @memset(out_path, 0);
+        if (self.files.sys.base.generation2 != null) return self.next2(out_path);
         if (self.legacy_after_removal or self.index < 2) {
             const raw = self.files.sys.dirEntry(self.directory.ptr, self.index, out_path);
             if (raw == r4sys.dir_entry_result_end) {
@@ -236,13 +256,13 @@ pub const DirectoryIterator = struct {
             return .{ .entry = .{ .kind = if (raw == 1) .directory else .file, .path = spanZ(out_path), .info = null } };
         }
         while (self.buffer_index == self.buffer_count) {
-            const raw = self.files.sys.directoryBatch(self.directory.ptr, &self.cursor, &self.buffer);
+            const raw = self.files.sys.directoryBatch(self.directory.ptr, &self.cursor.first, &self.buffer.first);
             if (raw == r4sys.dir_entry_result_end) {
                 self.ended = true;
                 return .end;
             }
             if (raw < 0) return .{ .failure = raw };
-            if (raw > self.buffer.len) return .{ .failure = abi.file_stream_error_invalid };
+            if (raw > self.buffer.first.len) return .{ .failure = abi.file_stream_error_invalid };
             if (raw != 0) {
                 self.buffer_index = 0;
                 self.buffer_count = @intCast(raw);
@@ -254,9 +274,9 @@ pub const DirectoryIterator = struct {
         if (self.files.sys.programShouldClose()) return .{ .failure = -10 };
         // Buffered values remain private until exact mount/owner/namespace
         // validation. Unchanged scans take the kernel's RAM-only path.
-        const valid = self.files.sys.directoryBatch(self.directory.ptr, &self.cursor, self.buffer[0..0]);
+        const valid = self.files.sys.directoryBatch(self.directory.ptr, &self.cursor.first, self.buffer.first[0..0]);
         if (valid < 0) return .{ .failure = valid };
-        const record = &self.buffer[self.buffer_index];
+        const record = &self.buffer.first[self.buffer_index];
         const length = @import("std").mem.indexOfScalar(u8, &record.path, 0) orelse return .{ .failure = abi.file_stream_error_invalid };
         // A small output does not consume this buffered item.
         if (length >= out_path.len) return .{ .failure = -7 };
@@ -266,17 +286,92 @@ pub const DirectoryIterator = struct {
         return .{ .entry = .{ .kind = if (record.info.is_dir != 0) .directory else .file, .path = out_path[0..length], .info = record.info } };
     }
 
+    fn next2(self: *DirectoryIterator, out_path: []u8) DirectoryNext {
+        const view = self.files.sys.base.generation2.?;
+        if (self.legacy_after_removal) return .{ .failure = abi.file_metadata2_error_restart };
+        while (self.buffer_index == self.buffer_count) {
+            const raw = metadata2.batch(view, self.directory.ptr, &self.cursor.next, &self.buffer.next);
+            if (raw == r4sys.dir_entry_result_end) {
+                self.ended = true;
+                return .end;
+            }
+            if (raw < 0) return .{ .failure = raw };
+            if (raw > self.buffer.next.len) return .{ .failure = abi.file_metadata2_error_invalid };
+            if (raw != 0) {
+                self.buffer_index = 0;
+                self.buffer_count = @intCast(raw);
+                break;
+            }
+            if (self.files.sys.programShouldClose()) return .{ .failure = abi.err_closed };
+            self.files.sys.sleepTicks(0);
+        }
+        if (self.files.sys.programShouldClose()) return .{ .failure = abi.err_closed };
+        const valid = metadata2.batch(view, null, &self.cursor.next, self.buffer.next[0..0]);
+        if (valid != 0) {
+            self.buffer_index = 0;
+            self.buffer_count = 0;
+            return .{ .failure = if (valid < 0) valid else abi.file_metadata2_error_invalid };
+        }
+        const record = &self.buffer.next[self.buffer_index];
+        if (record.info.version != 1 or record.info.size < @sizeOf(abi.FileMetadata2) or record.info.flags & abi.file_metadata2_flag_exists == 0) return .{ .failure = abi.file_metadata2_error_invalid };
+        const length = @import("std").mem.indexOfScalar(u8, &record.path, 0) orelse return .{ .failure = abi.file_metadata2_error_path_bounds };
+        if (length >= out_path.len) return .{ .failure = -7 };
+        @memcpy(out_path[0..length], record.path[0..length]);
+        self.buffer_index += 1;
+        return .{ .entry = .{
+            .kind = if (record.info.flags & abi.file_metadata2_flag_directory != 0) .directory else .file,
+            .path = out_path[0..length],
+            .info = legacyInfo(record.info, record.path[0..length]),
+            .metadata = record.info,
+        } };
+    }
+
     /// Deleting the returned entry shifts its successor into the same live
     /// Nth index. This is current mutation behavior, not an old-OS fallback.
     pub fn revisitAfterRemoval(self: *DirectoryIterator) void {
         self.legacy_after_removal = true;
-        self.cursor = .{};
+        if (self.files.sys.base.generation2 != null) {
+            self.buffer_index = 0;
+            self.buffer_count = 0;
+            self.ended = false;
+            return; // Explicit Restart; never replay the old index API.
+        }
+        self.cursor = .{ .first = .{} };
         self.buffer_index = 0;
         self.buffer_count = 0;
         if (self.index > 2) self.index -= 1;
         self.ended = false;
     }
 };
+
+fn legacyInfo(value: abi.FileMetadata2, path: []const u8) ?abi.FileInfo {
+    const std = @import("std");
+    if (value.version != 1 or value.size < @sizeOf(abi.FileMetadata2) or value.flags & abi.file_metadata2_flag_exists == 0) return null;
+    if (value.flags & abi.file_metadata2_flag_backend_node_valid != 0 and value.backend_node > std.math.maxInt(u32)) return null;
+    if (value.attributes > std.math.maxInt(u8) or value.drive_letter > std.math.maxInt(u8)) return null;
+    const directory = value.flags & abi.file_metadata2_flag_directory != 0;
+    if (!directory and value.flags & abi.file_metadata2_flag_byte_size_valid == 0) return null;
+    var result: abi.FileInfo = .{
+        .exists = 1,
+        .is_dir = @intFromBool(directory),
+        .attr = @intCast(value.attributes),
+        .drive = @intCast(value.drive_letter),
+        .size = if (value.flags & abi.file_metadata2_flag_byte_size_valid != 0) value.byte_size else 0,
+        .first_cluster = if (value.flags & abi.file_metadata2_flag_backend_node_valid != 0) @intCast(value.backend_node) else 0,
+    };
+    if (value.flags & abi.file_metadata2_flag_dos_time_valid != 0) {
+        result.created_time = value.created_time;
+        result.created_date = value.created_date;
+        result.access_date = value.access_date;
+        result.modified_time = value.modified_time;
+        result.modified_date = value.modified_date;
+    }
+    const start = if (std.mem.lastIndexOfAny(u8, path, "\\/")) |i| i + 1 else 0;
+    const name = path[start..];
+    if (name.len >= result.name.len) return null;
+    @memcpy(result.name[0..name.len], name);
+    return result;
+}
 
 pub const StreamReader = struct {
     files: Files,

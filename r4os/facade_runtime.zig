@@ -1,6 +1,9 @@
 //! The single SDK helper object shared by C and Rust consumers.
 pub const panic = @import("runtime_fault.zig").panic;
 comptime {
+    // Host facade oracles link this same object. Consolidate its heap exports
+    // here; freestanding modules keep the single separate heap runtime object.
+    if (@import("builtin").os.tag != .freestanding) _ = @import("heap_runtime.zig");
     _ = @import("driver_value_bridge.zig");
     _ = @import("subsystem_value_bridge.zig");
     _ = @import("runtime_bootstrap.zig");

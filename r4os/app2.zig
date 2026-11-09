@@ -136,6 +136,18 @@ pub const App = struct {
         return r4sys.Context.fromProgram(self.lowLevel());
     }
 
+    pub fn inventoryProvider(self: *const App, mode: @import("inventory_api.zig").Mode) error{NoProvider}!@import("inventory_api.zig").Provider {
+        return @import("inventory_api.zig").fromContext2(&self.context, mode);
+    }
+
+    pub fn deviceSnapshotProvider(self: *const App) @import("device_snapshot_api.zig").Error!@import("device_snapshot_api.zig").Provider {
+        return @import("device_snapshot_api.zig").fromContext2(&self.context);
+    }
+
+    pub fn clock(self: *const App) error{NoProvider}!@import("stream_adapters.zig").PlatformClock {
+        return @import("stream_adapters.zig").PlatformClock.fromContext2(&self.context);
+    }
+
     pub fn desktop(self: *const App) ?r4desk.Context {
         if (!self.hasGroup(.r4desk)) return null;
         return r4desk.Context.fromProgram(self.lowLevel());

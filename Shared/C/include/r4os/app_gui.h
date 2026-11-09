@@ -179,7 +179,7 @@ typedef struct R4Canvas { R4PaintContext *paint; } R4Canvas;
 
 static inline uint32_t r4_gui_monotonic_hz(R4App *app) {
     if (app == 0 || !R4SYS_HAS(&app->system,time_state)) return 0u;
-    R4TimeState state = {0}; ((R4SysTimeStateFn)(uintptr_t)app->system.table->time_state)(&state); return state.monotonic_hz;
+    R4TimeState state = {0}; ((R4SysTimeStateFn)(uintptr_t)R4SYS_SLOT(&app->system, time_state))(&state); return state.monotonic_hz;
 }
 static inline int r4_gui_desk_slot(const R4Desk *desk,size_t offset) {
     return desk && desk->table && offset <= desk->table->size && sizeof(uintptr_t) <= desk->table->size-offset;

@@ -25,7 +25,7 @@ try {
     $objects=@()
     foreach($source in @('Tests/Simulation/StorageCallbacks.c','Tests/Conformance/StorageCodecChecks.c')){
         $out=Join-Path $WorkRoot (([IO.Path]::GetFileNameWithoutExtension($source))+'.o')
-        & $Zig cc -O1 -UNDEBUG -Werror -I (Join-Path $sdk 'Shared/C/include') -I (Join-Path $ContractRoot 'Generated/SDK/C/include') -c (Join-Path $sdk $source) -o $out
+        & $Zig cc -O1 -UNDEBUG -Werror -I (Join-Path $sdk 'Shared/C/include') -I (Join-Path $ContractRoot 'Generated/SDK/C/include') -I (Join-Path $ContractRoot 'Generated/Generation2/C/include') -c (Join-Path $sdk $source) -o $out
         if($LASTEXITCODE -ne 0){throw ('C fixture failed: '+$source)}
         $objects+=$out
     }

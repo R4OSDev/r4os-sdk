@@ -45,7 +45,7 @@ function Build-RustCCompanions($Rust,$Cpu,[string]$Optimization,[string]$Work,$R
     $objects=@();$inputs=@();$commands=@()
     $arguments=@('cc')+@($Rust.c_flags)+@($codegen.native_c.flags)+@($codegen.native_c.optimization[$Optimization])
     foreach($requirement in $Cpu.requirements){if($requirement.ContainsKey('c_flag')){$arguments+=$requirement.c_flag}}
-    $arguments+=@('-I',(Join-Path $SdkRoot 'Shared/C/include'),'-I',(Join-Path $ContractRoot 'Generated/SDK/C/include'))
+    $arguments+=@('-I',(Join-Path $SdkRoot 'Shared/C/include'),'-I',(Join-Path $ContractRoot 'Generated/SDK/C/include'),'-I',(Join-Path $ContractRoot 'Generated/Generation2/C/include'))
     foreach($include in $Rust.c_includes){
         $path=[IO.Path]::GetFullPath($include,$ProjectRoot)
         $null=Find-InputOwner $path $Roots

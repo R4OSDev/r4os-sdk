@@ -29,7 +29,7 @@ try{
         if($LASTEXITCODE -ne 0){throw 'Native SDK facade objects failed.'}
     }finally{Pop-Location}
     $object=Join-Path $WorkRoot 'subsystem-c.o'
-    & $Zig cc -O1 -UNDEBUG -Werror -fPIC -ffunction-sections -fdata-sections -I (Join-Path $sdk 'Shared/C/include') -I (Join-Path $ContractRoot 'Generated/SDK/C/include') -c (Join-Path $sdk 'Tests/Simulation/SubsystemParity.c') -o $object
+    & $Zig cc -O1 -UNDEBUG -Werror -fPIC -ffunction-sections -fdata-sections -I (Join-Path $sdk 'Shared/C/include') -I (Join-Path $ContractRoot 'Generated/SDK/C/include') -I (Join-Path $ContractRoot 'Generated/Generation2/C/include') -c (Join-Path $sdk 'Tests/Simulation/SubsystemParity.c') -o $object
     if($LASTEXITCODE -ne 0){throw 'Combined C subsystem consumer failed.'}
     $source=(Join-Path $sdk 'Tests/Simulation/RustSubsystem.rs').Replace('\','/')
     $manifest=@"

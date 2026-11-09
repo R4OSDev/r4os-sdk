@@ -1,5 +1,6 @@
 const std = @import("std");
 const abi = @import("r4os_contract").abi;
+const abi2 = @import("r4os_contract2");
 const c = @cImport({
     @cInclude("r4os/facades.h");
 });
@@ -24,12 +25,19 @@ fn selected(comptime name: []const u8) bool {
 fn canonical(comptime name: []const u8) ?[]const u8 {
     if (@hasDecl(abi, name)) return name;
     if (starts(name, "R4") and @hasDecl(abi, name[2..])) return name[2..];
+    if (@hasDecl(abi2, name)) return "generation2::" ++ name;
     return null;
+}
+fn canonicalType(comptime name: []const u8) type {
+    if (@hasDecl(abi, name)) return @field(abi, name);
+    if (starts(name, "R4") and @hasDecl(abi, name[2..])) return @field(abi, name[2..]);
+    if (@hasDecl(abi2, name)) return @field(abi2, name);
+    @compileError("Missing canonical facade record: " ++ name);
 }
 fn nameOf(comptime T: type) []const u8 {
     const full = @typeName(T);
     const last = full[(std.mem.lastIndexOfScalar(u8, full, '.') orelse @compileError("Unnamed facade record")) + 1 ..];
-    const prefix = if (starts(last, "struct_")) "struct_" else if (starts(last, "union_")) "union_" else @compileError("Unexpected C record: " ++ full);
+    const prefix = if (starts(last, "struct_")) "struct_" else if (starts(last, "union_")) "union_" else "";
     const name = last[prefix.len..];
     if (!typeCandidate(name) or !@hasDecl(c, name) or @field(c, name) != T) @compileError("Missing public facade record: " ++ full);
     return name;
@@ -68,8 +76,8 @@ const records = blk: {
         var fields: []const Field = &.{};
         const raw = if (@typeInfo(T) == .@"struct") @typeInfo(T).@"struct".fields else @typeInfo(T).@"union".fields;
         for (raw) |field| {
-            const field_name = if (canonical(decl.name)) |owner| blk_name: {
-                const O = @field(abi, owner);
+            const field_name = if (canonical(decl.name) != null) blk_name: {
+                const O = canonicalType(decl.name);
                 if (@hasField(O, field.name)) break :blk_name field.name;
                 const trimmed = std.mem.trimEnd(u8, field.name, "_");
                 if (!@hasField(O, trimmed)) @compileError("Canonical field mapping missing: " ++ decl.name ++ "." ++ field.name);

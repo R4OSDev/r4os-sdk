@@ -282,7 +282,7 @@ pub const ProcessHandle = struct {
 
     pub fn waitReady(self: *ProcessHandle, timeout: Timeout) ProcessReady {
         if (!self.valid()) return .{ .failure = abi.err_closed };
-        const timeout_ticks = time_contract.timeoutToTicks(timeout, self.sys.monotonicHz()) catch return .{ .failure = abi.program_handle_error_invalid };
+        const timeout_ticks = self.sys.timeoutTicks(timeout) catch return .{ .failure = abi.program_handle_error_invalid };
         var completion: abi.ProgramProcessCompletion = .{};
         const handle = self.abiHandle();
         const status_code = self.sys.programHandleWait(&handle, timeout_ticks, &completion);
@@ -359,7 +359,7 @@ pub const JoinHandle = struct {
     pub fn join(self: *JoinHandle, timeout: Timeout) JoinWait {
         if (!self.valid()) return .{ .failure = abi.err_closed };
         if (!self.owned) return .{ .failure = abi.err_not_owned };
-        const ticks = time_contract.timeoutToTicks(timeout, self.sys.monotonicHz()) catch return .{ .failure = abi.thread_error_invalid };
+        const ticks = self.sys.timeoutTicks(timeout) catch return .{ .failure = abi.thread_error_invalid };
         var exit_code: i32 = 0;
         const raw_code = self.sys.threadHandleJoin(&self.handle, ticks, &exit_code);
         if (raw_code == abi.thread_error_timeout) return .timed_out;
@@ -462,7 +462,7 @@ pub const IoRequest = struct {
 
     pub fn wait(self: *IoRequest, timeout: Timeout) IoWait {
         if (!self.valid()) return .{ .failure = abi.err_closed };
-        const ticks = time_contract.timeoutToTicks(timeout, self.sys.monotonicHz()) catch return .{ .failure = abi.io_error_invalid };
+        const ticks = self.sys.timeoutTicks(timeout) catch return .{ .failure = abi.io_error_invalid };
         var info: abi.ProgramIoInfo = .{};
         const raw_code = self.sys.ioWait(self.raw, ticks, &info);
         if (raw_code == abi.io_error_timeout) return .timed_out;

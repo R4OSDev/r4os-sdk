@@ -32,6 +32,12 @@ pub export fn R4SdkTimeoutTicksChecked(timeout: abi.R4Timeout, hz: u32, out: ?*t
     output.* = time.timeoutTicks(timeout, hz) catch |err| return failure(err);
     return 0;
 }
+pub export fn R4SdkBudgetToWaitTicks(value: ?*const time.Value, out: ?*u64) callconv(.c) i32 {
+    const output = out orelse return -7;
+    const input = value orelse return -7;
+    output.* = time.toWaitTicks(input.*) catch |err| return failure(err);
+    return 0;
+}
 pub export fn R4SdkDeadlineBudgetInit(sample: time.ClockSample, timeout: abi.R4Timeout, out: ?*time.DeadlineBudget) callconv(.c) i32 {
     const output = out orelse return -7;
     output.* = time.DeadlineBudget.init(sample, timeout) catch |err| return failure(err);

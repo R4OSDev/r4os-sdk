@@ -21,7 +21,7 @@ try {
         if($LASTEXITCODE -ne 0){throw 'Native SDK resource objects failed.'}
     }finally{Pop-Location}
     $out=Join-Path $WorkRoot 'callbacks.o'
-    & $Zig cc -O1 -UNDEBUG -Werror -I (Join-Path $sdk 'Shared/C/include') -I (Join-Path $ContractRoot 'Generated/SDK/C/include') -c (Join-Path $sdk 'Tests/Simulation/ResourceCallbacks.c') -o $out
+    & $Zig cc -O1 -UNDEBUG -Werror -I (Join-Path $sdk 'Shared/C/include') -I (Join-Path $ContractRoot 'Generated/SDK/C/include') -I (Join-Path $ContractRoot 'Generated/Generation2/C/include') -c (Join-Path $sdk 'Tests/Simulation/ResourceCallbacks.c') -o $out
     if($LASTEXITCODE -ne 0){throw 'Existing C app-resource fixture/callbacks failed.'}
     $source=(Join-Path $sdk 'Tests/Simulation/RustResources.rs').Replace('\','/')
     $dependency=(Join-Path $sdk 'Rust').Replace('\','/')

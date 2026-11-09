@@ -86,6 +86,15 @@ impl<'a> Resources<'a> {
             _local: PhantomData,
         })
     }
+    pub fn new2(app: &'a crate::app2::App<'_>) -> Result<Self> {
+        let mut raw = unsafe { core::mem::zeroed() };
+        exact(unsafe { c::R4SdkAppFacade2(app.native_context(), &app.memory, &mut raw) })?;
+        Ok(Self {
+            app: raw,
+            _loan: PhantomData,
+            _local: PhantomData,
+        })
+    }
     pub(crate) fn raw(&self) -> c::R4Resources {
         // Existing C operations read this immutable App; mutable parameters
         // refer to their own operation/handle state, never to the App.

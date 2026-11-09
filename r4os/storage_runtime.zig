@@ -11,7 +11,12 @@ const registry = @import("registry.zig");
 const registry_test = @import("registry_selftest.zig");
 const RegistryTestPaths = extern struct { hive: ?[*:0]const u8, tmp: ?[*:0]const u8, bak: ?[*:0]const u8, original: ?[*:0]const u8, stage: ?[*:0]const u8, displaced: ?[*:0]const u8 };
 
-const Sys = extern struct { ctx: ?*const abi.R4XStartContext, table: ?*const abi.R4XStartR4Sys };
+const Sys = extern struct {
+    ctx: ?*const abi.R4XStartContext,
+    table: ?*const abi.R4XStartR4Sys,
+    generation2: ?*const @import("platform2.zig").Context,
+    memory2: ?*const @import("allocator_source.zig").Memory,
+};
 const RecentEntry = extern struct { path: [recent.path_max + 1]u8, app: [32]u8, title: [64]u8 };
 const HiveHeader = extern struct {
     hive_kind: u16,
@@ -40,16 +45,34 @@ fn output(bytes: ?[*]u8, len: usize) ?[]u8 {
     if (len > std.math.maxInt(isize)) return null;
     return if (bytes) |p| p[0..len] else if (len == 0) @constCast(&.{}) else null;
 }
-fn bundle(value: ?*const Sys) ?program.Bundle {
-    const s = value orelse return null;
-    const table = s.table orelse return null;
-    if (table.magic != abi.r4xstart_r4sys_magic or table.abi_version < (abi.R4XStartR4Sys{}).abi_version or table.size < @sizeOf(abi.R4XStartR4Sys)) return null;
-    return .{ .raw = s.ctx orelse return null, .sys = table };
-}
+const Binding = struct {
+    first: program.Bundle = undefined,
+    next: ?*const @import("platform2.zig").Context = null,
+    memory: ?*const @import("allocator_source.zig").Memory = null,
+
+    fn from(value: ?*const Sys) ?Binding {
+        const source = value orelse return null;
+        if (source.generation2) |context2| {
+            _ = context2.system() orelse return null;
+            return .{ .next = context2, .memory = source.memory2 };
+        }
+        const table = source.table orelse return null;
+        if (table.magic != abi.r4xstart_r4sys_magic or table.abi_version < (abi.R4XStartR4Sys{}).abi_version or table.size < @sizeOf(abi.R4XStartR4Sys)) return null;
+        return .{ .first = .{ .raw = source.ctx orelse return null, .sys = table } };
+    }
+    // Call after this value has reached its stable local storage. No pointer
+    // to a returned temporary Bundle or Context is retained.
+    fn system(self: *const Binding) sys.Context {
+        return if (self.next) |context2|
+            sys.Context.fromProgram(.{ .generation2 = context2, .memory2 = self.memory })
+        else
+            sys.Context.init(&self.first);
+    }
+};
 export fn R4SdkConsole(s: ?*const Sys, bytes: ?[*]const u8, length: usize, operation: i32) callconv(.c) i32 {
-    var b = bundle(s) orelse return -1;
+    const b = Binding.from(s) orelse return -1;
     const value = span(bytes, length) orelse return -1;
-    const console = storage.Console{ .sys = sys.Context.init(&b) };
+    const console = storage.Console{ .sys = b.system() };
     switch (operation) {
         0 => console.write(value),
         1 => console.line(value),
@@ -62,25 +85,25 @@ export fn R4SdkConsole(s: ?*const Sys, bytes: ?[*]const u8, length: usize, opera
     return 0;
 }
 export fn R4SdkDocumentSave(s: ?*const Sys, sequence: ?*u32, path: ?[*]const u8, path_len: usize, bytes: ?[*]const u8, length: usize, require_absent: i32) callconv(.c) i32 {
-    var b = bundle(s) orelse return 2;
+    const b = Binding.from(s) orelse return 2;
     const seq = sequence orelse return 2;
     const p = storage.FilePath.parse(span(path, path_len) orelse return 2) catch return 2;
     var saver = save.Saver{ .sequence = seq.* };
-    const result = saver.save(.{ .sys = sys.Context.init(&b) }, p.asZ(), span(bytes, length) orelse return 2, require_absent != 0);
+    const result = saver.save(.{ .sys = b.system() }, p.asZ(), span(bytes, length) orelse return 2, require_absent != 0);
     seq.* = saver.sequence;
     return @intFromEnum(result);
 }
 export fn R4SdkRecentRead(s: ?*const Sys, out: ?[*]RecentEntry, capacity: usize) callconv(.c) i32 {
-    var b = bundle(s) orelse return -1;
+    const b = Binding.from(s) orelse return -1;
     if (out == null or capacity == 0) return 0;
     var entries: [recent.max_items]recent.Entry = undefined;
-    const n = recent.readEntries(sys.Context.init(&b), entries[0..@min(capacity, entries.len)]);
+    const n = recent.readEntries(b.system(), entries[0..@min(capacity, entries.len)]);
     for (entries[0..n], 0..) |entry, i| out.?[i] = .{ .path = entry.path, .app = entry.app, .title = entry.title };
     return @intCast(n);
 }
 export fn R4SdkRecentAdd(s: ?*const Sys, path: ?[*]const u8, path_len: usize, app: ?[*]const u8, app_len: usize) callconv(.c) i32 {
-    var b = bundle(s) orelse return 0;
-    return @intFromBool(recent.addOpenedFile(sys.Context.init(&b), span(path, path_len) orelse return 0, span(app, app_len) orelse return 0));
+    const b = Binding.from(s) orelse return 0;
+    return @intFromBool(recent.addOpenedFile(b.system(), span(path, path_len) orelse return 0, span(app, app_len) orelse return 0));
 }
 export fn R4SdkTextValid(bytes: ?[*]const u8, len: usize) callconv(.c) i32 {
     return @intFromBool(text.valid(span(bytes, len) orelse return 0));
@@ -97,8 +120,8 @@ export fn R4SdkTextPrefix(bytes: ?[*]const u8, len: usize, cap: usize, truncated
     return 1;
 }
 export fn R4SdkRegistrySelfTest(s: ?*const Sys, operation: i32, paths: ?*const RegistryTestPaths, had_original: i32, original: ?[*]u8, original_len: usize, check: ?[*]u8, check_len: usize) callconv(.c) i32 {
-    var b = bundle(s) orelse return -1;
-    const context = sys.Context.init(&b);
+    const b = Binding.from(s) orelse return -1;
+    const context = b.system();
     if (operation == 0) return @intFromBool(registry_test.privateImage(context));
     const source = paths orelse return -1;
     var p: registry_test.Paths = undefined;

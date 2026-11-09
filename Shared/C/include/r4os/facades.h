@@ -14,6 +14,7 @@
 #include "net_bridge.h"
 #include "net_request.h"
 #include "gui_bridge.h"
+#include "platform_facade2.h"
 #include "data_helpers.h"
 #include "cli_helpers.h"
 #include "stream_transfer.h"

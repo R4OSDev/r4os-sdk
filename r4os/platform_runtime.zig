@@ -2,6 +2,24 @@
 const a = @import("r4os_contract").abi;
 const p = @import("program.zig");
 const S = @import("platform_support.zig").Context;
+pub export fn R4SdkPlatformOpenNative2(fp: u64, out: *S, view: *const @import("platform2.zig").Context) callconv(.c) i32 {
+    if (fp != @import("gui_bridge_schema.zig").fingerprint) return a.io_error_invalid;
+    _ = view.system() orelse return a.err_no_group;
+    const base: p.Context = .{ .generation2 = view };
+    // The input view remains in the borrowed App2. No self-pointer is formed
+    // in a value that will subsequently move into caller-owned storage.
+    out.* = .{
+        .bundle = undefined,
+        .sys = @import("r4sys.zig").Context.fromProgram(base),
+        .dev = @import("r4dev.zig").Context.fromProgram(base),
+        .audio_raw = @import("r4audio.zig").Context.fromProgram(base),
+        .audio = undefined,
+        .devices = undefined,
+    };
+    out.audio = .{ .sys = out.sys, .raw = out.audio_raw };
+    out.devices = .{ .raw = out.dev };
+    return 0;
+}
 pub export fn R4SdkPlatformOpenNative(fp: u64, out: *S, raw: *const a.R4XStartContext) callconv(.c) i32 {
     if (fp != @import("gui_bridge_schema.zig").fingerprint) return a.io_error_invalid;
     const bundle = p.bundleValueFromR4XStart(raw) orelse return a.err_no_group;

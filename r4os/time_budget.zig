@@ -68,6 +68,27 @@ pub fn timeoutTicks(timeout: abi.R4Timeout, hz: u32) Error!Value {
     return result;
 }
 
+/// Explicit adapter for retained tick APIs whose largest value is Forever.
+/// A finite value with the same bits cannot be represented by those APIs.
+pub fn toWaitTicks(value: Value) Error!u64 {
+    if (value.reserved != 0) return error.InvalidBudget;
+    return switch (value.kind) {
+        0 => if (value.value == 0) 0 else error.InvalidBudget,
+        1 => if (value.value == abi.io_wait_forever) error.BudgetOverflow else value.value,
+        2 => if (value.value == 0) abi.io_wait_forever else error.InvalidBudget,
+        else => error.InvalidBudget,
+    };
+}
+
+test "checked budget wait sentinel adapter preserves finite maximum as an explicit unrepresentable budget" {
+    try std.testing.expectEqual(@as(u64, 0), try toWaitTicks(.{}));
+    try std.testing.expectEqual(abi.io_wait_forever, try toWaitTicks(.{ .kind = 2 }));
+    try std.testing.expectEqual(abi.io_wait_forever - 1, try toWaitTicks(.{ .kind = 1, .value = abi.io_wait_forever - 1 }));
+    try std.testing.expectError(error.BudgetOverflow, toWaitTicks(.{ .kind = 1, .value = abi.io_wait_forever }));
+    try std.testing.expectError(error.InvalidBudget, toWaitTicks(.{ .kind = 2, .value = 1 }));
+    try std.testing.expectError(error.InvalidBudget, toWaitTicks(.{ .reserved = 1 }));
+}
+
 pub const DeadlineBudget = extern struct {
     identity: ClockIdentity = .{},
     deadline_ns: u64 = 0,

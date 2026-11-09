@@ -13,6 +13,8 @@ pub enum Error {
     InvalidTable = 6,
 }
 
+/// SDK-private C/Zig context-view layout. This owns no start or table storage.
+#[repr(C)]
 pub struct Context<'a> {
     raw: &'a abi::R4XStartContext2,
     tables: [u64; 6],
@@ -88,6 +90,11 @@ impl<'a> Context<'a> {
     pub fn raw(&self) -> &'a abi::R4XStartContext2 {
         self.raw
     }
+    pub(crate) fn native(&self) -> *const crate::c_facades::R4OS2Context {
+        // The SDK-private view has the same raw pointer and six table addresses
+        // in all three languages. The actual start remains its own 120-byte ABI.
+        core::ptr::from_ref(self).cast()
+    }
     pub fn args(&self) -> &'a [u8] {
         if self.raw.args_len == 0 {
             return &[];
@@ -161,6 +168,13 @@ impl<'a> Context<'a> {
         Some(address as *const c_void)
     }
 }
+
+const _: () = {
+    assert!(mem::size_of::<Context<'_>>() == mem::size_of::<crate::c_facades::R4OS2Context>());
+    assert!(mem::align_of::<Context<'_>>() == mem::align_of::<crate::c_facades::R4OS2Context>());
+    assert!(mem::offset_of!(Context<'_>, raw) == 0);
+    assert!(mem::offset_of!(Context<'_>, tables) == 8);
+};
 
 #[derive(Clone, Copy)]
 pub struct StartupInfo {

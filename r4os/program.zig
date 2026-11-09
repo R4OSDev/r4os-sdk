@@ -1142,6 +1142,10 @@ pub const Context = struct {
     }
 
     pub fn monotonicHz(self: *const Context) u32 {
+        if (self.generation2 != null) {
+            const sample = self.clockSampleChecked() catch return 0;
+            return sample.identity.tick_hz;
+        }
         var clock: abi.MonotonicClockInfo = .{};
         if (self.monotonicClock(&clock) > 0 and clock.event_effective_hz != 0)
             return clock.event_effective_hz;
@@ -1149,6 +1153,7 @@ pub const Context = struct {
     }
 
     pub fn ticksFromMilliseconds(self: *const Context, ms: u64) u64 {
+        if (self.generation2 != null) return self.ticksFromMillisecondsChecked(ms) catch 0;
         const hz_raw = self.monotonicHz();
         const hz: u64 = if (hz_raw == 0) 100 else hz_raw;
         const ticks_value = (ms * hz + 999) / 1000;

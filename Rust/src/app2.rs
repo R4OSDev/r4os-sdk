@@ -1,29 +1,8 @@
 //! Normal application entry on the actual generation2 contract.
-use crate::{abi, heap, platform2};
+use crate::{abi, c_facades as c, heap, platform2};
 use core::{ffi::CStr, marker::PhantomData, mem};
 
-#[repr(C)]
-#[derive(Clone, Copy)]
-pub(crate) struct Memory {
-    pub(crate) version: u32,
-    pub(crate) size: u32,
-    pub(crate) generation: u32,
-    pub(crate) flags: u32,
-    pub(crate) identity: u64,
-    pub(crate) vm_reserve: u64,
-    pub(crate) vm_commit: u64,
-    pub(crate) vm_decommit: u64,
-    pub(crate) vm_release: u64,
-    pub(crate) notification_create: u64,
-    pub(crate) notification_query: u64,
-    pub(crate) notification_notify: u64,
-    pub(crate) notification_wait: u64,
-    pub(crate) notification_close: u64,
-    pub(crate) sleep_ticks: u64,
-    pub(crate) task_yield: u64,
-    pub(crate) thread_current_handle: u64,
-    pub(crate) program_exit: u64,
-}
+pub(crate) type Memory = c::R4App2Memory;
 #[repr(C)]
 pub struct ImportSpec {
     pub module_name: *const u8,
@@ -98,6 +77,9 @@ impl<'a> App<'a> {
     pub fn context(&self) -> &platform2::Context<'a> {
         &self.context
     }
+    pub(crate) fn native_context(&self) -> *const c::R4OS2Context {
+        self.context.native()
+    }
     pub fn start_context(&self) -> &'a platform2::abi::R4XStartContext2 {
         self.context.raw()
     }
@@ -133,6 +115,30 @@ impl<'a> App<'a> {
     }
     pub fn heap(&self) -> Result<heap::Heap<'_>, heap::Error> {
         heap::Heap::new2(self)
+    }
+    pub fn system(&self) -> crate::storage::Result<crate::storage::System<'_>> {
+        crate::storage::System::new2(self)
+    }
+    pub fn resources(&self) -> crate::resources::Result<crate::resources::Resources<'_>> {
+        crate::resources::Resources::new2(self)
+    }
+    pub fn clock(&self) -> crate::time::Clock<'_, 'a> {
+        crate::time::Clock::new2(self)
+    }
+    pub fn inventory_reader<'b, T: crate::inventory::Row>(
+        &'b self,
+        records: &'b mut [mem::MaybeUninit<T>],
+        page_limit: u32,
+        sample: crate::time::checked::ClockSample,
+        timeout: crate::resources::Timeout,
+    ) -> Result<crate::inventory::InventoryReader<'b, T>, crate::inventory::Error> {
+        crate::inventory::InventoryReader::new(self.context(), records, page_limit, sample, timeout)
+    }
+    pub fn device_snapshot<'b>(
+        &'b self,
+        records: &'b mut [mem::MaybeUninit<abi::DeviceInventoryRecord>],
+    ) -> Result<crate::device_snapshot::Snapshot<'b>, crate::device_snapshot::Error> {
+        crate::device_snapshot::Snapshot::new(self.context(), records)
     }
 }
 

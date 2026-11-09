@@ -366,7 +366,7 @@ pub const Sdk = struct {
             .source_root = opts.source_root,
             .sources = opts.sources,
             .include_root = self.profile.c_include_root,
-            .extra_include_roots = &.{self.profile.contract_c_include_root},
+            .extra_include_roots = &.{ self.profile.contract_c_include_root, self.profile.contract_c_include_root2 },
             .startup_source_file = self.profile.c_startup_source_file,
             .heap_runtime = self.addHeapRuntime(),
             .storage_runtime = self.addStorageRuntime(),
@@ -386,7 +386,7 @@ pub const Sdk = struct {
             .source_root = opts.source_root,
             .sources = opts.sources,
             .include_root = self.profile.c_include_root,
-            .extra_include_roots = &.{self.profile.contract_c_include_root},
+            .extra_include_roots = &.{ self.profile.contract_c_include_root, self.profile.contract_c_include_root2 },
             .startup_source_file = self.profile.c_app_startup_source_file,
             .heap_runtime = self.addHeapRuntime(),
             .storage_runtime = self.addStorageRuntime(),
@@ -493,14 +493,15 @@ pub const Sdk = struct {
         const companion_count = loaded.source_paths.len - 1;
         const sources = self.b.allocator.alloc(std.Build.LazyPath, companion_count) catch @panic("OOM");
         const includes = self.manifestCIncludeRoots(loaded);
-        const roots = self.b.allocator.alloc(std.Build.LazyPath, companion_count + includes.len + 2) catch @panic("OOM");
+        const roots = self.b.allocator.alloc(std.Build.LazyPath, companion_count + includes.len + 3) catch @panic("OOM");
         roots[0] = self.profile.c_include_root;
         roots[1] = self.profile.contract_c_include_root;
+        roots[2] = self.profile.contract_c_include_root2;
         for (loaded.source_paths[1..], 0..) |path, index| {
             sources[index] = userPath(self.b, path);
-            roots[index + 2] = userPath(self.b, std.fs.path.dirname(path) orelse loaded.project_path);
+            roots[index + 3] = userPath(self.b, std.fs.path.dirname(path) orelse loaded.project_path);
         }
-        for (includes, companion_count + 2..) |include, index| roots[index] = include;
+        for (includes, companion_count + 3..) |include, index| roots[index] = include;
         const options: R4DOptions = .{
             .zig_modules = loaded.zig_modules,
             .native_archives = loaded.native_archives,
@@ -536,7 +537,7 @@ pub const Sdk = struct {
                 .c_flags = loaded.manifest.c_flags,
                 .startup_source_file = null,
                 .extra_objects = &.{
-                    addFacadeRuntime(self.b, self.profile.sdk_root.path(self.b, "Shared/C/src/facades.c"), self.profile.c_include_root, self.profile.contract_c_include_root, false),
+                    addFacadeRuntime(self.b, self.profile.sdk_root.path(self.b, "Shared/C/src/facades.c"), self.profile.c_include_root, self.profile.contract_c_include_root, self.profile.contract_c_include_root2, false),
                     addStorageRuntimeObject(self.b, self.profile.sdk_root.path(self.b, "r4os/facade_runtime.zig"), self.profile.contract_module, self.profile.contract_module2, self.profile.grapheme_source.?, self.builder, false),
                 },
                 .linker_script = self.profile.linker_script,
@@ -611,19 +612,21 @@ pub const Sdk = struct {
         const companion_count = loaded.source_paths.len - 1;
         const c_source_files = self.b.allocator.alloc(std.Build.LazyPath, companion_count) catch @panic("OOM");
         const explicit_include_roots = self.manifestCIncludeRoots(loaded);
-        const c_include_roots = self.b.allocator.alloc(std.Build.LazyPath, companion_count + explicit_include_roots.len + 2) catch @panic("OOM");
+        const c_include_roots = self.b.allocator.alloc(std.Build.LazyPath, companion_count + explicit_include_roots.len + 3) catch @panic("OOM");
         c_include_roots[0] = self.profile.c_include_root;
         c_include_roots[1] = self.profile.contract_c_include_root;
+        c_include_roots[2] = self.profile.contract_c_include_root2;
         for (loaded.source_paths[1..], 0..) |source_path, index| {
             c_source_files[index] = userPath(self.b, source_path);
-            c_include_roots[index + 2] = userPath(self.b, std.fs.path.dirname(source_path) orelse loaded.project_path);
+            c_include_roots[index + 3] = userPath(self.b, std.fs.path.dirname(source_path) orelse loaded.project_path);
         }
-        for (explicit_include_roots, companion_count + 2..) |include_root, index| c_include_roots[index] = include_root;
-        const c_library_include_roots = self.b.allocator.alloc(std.Build.LazyPath, explicit_include_roots.len + 3) catch @panic("OOM");
+        for (explicit_include_roots, companion_count + 3..) |include_root, index| c_include_roots[index] = include_root;
+        const c_library_include_roots = self.b.allocator.alloc(std.Build.LazyPath, explicit_include_roots.len + 4) catch @panic("OOM");
         c_library_include_roots[0] = resolvedProjectPath(self.b, loaded.project_path, std.fs.path.dirname(loaded.manifest.binding_c.?) orelse ".");
         c_library_include_roots[1] = self.profile.contract_c_include_root;
         c_library_include_roots[2] = self.profile.c_include_root;
-        for (explicit_include_roots, 3..) |include_root, index| c_library_include_roots[index] = include_root;
+        c_library_include_roots[3] = self.profile.contract_c_include_root2;
+        for (explicit_include_roots, 4..) |include_root, index| c_library_include_roots[index] = include_root;
         const elf = switch (loaded.manifest.language.?) {
             .rust => @panic("Rust R4L projects use SDK Tools/Build-RustModule.ps1 and matched host tools; no Zig provider fallback"),
             .zig => addRawModule(self.b, .{
@@ -747,7 +750,7 @@ pub const Sdk = struct {
                 .c_flags = m.c_flags,
                 .startup_source_file = null,
                 .extra_objects = &.{
-                    addFacadeRuntime(self.b, self.profile.sdk_root.path(self.b, "Shared/C/src/facades.c"), self.profile.c_include_root, self.profile.contract_c_include_root, false),
+                    addFacadeRuntime(self.b, self.profile.sdk_root.path(self.b, "Shared/C/src/facades.c"), self.profile.c_include_root, self.profile.contract_c_include_root, self.profile.contract_c_include_root2, false),
                     self.addStorageRuntime(),
                 },
                 .linker_script = self.profile.linker_script,
@@ -830,7 +833,7 @@ pub const Sdk = struct {
                     module_manifest.startup_metadata.c2(self.b.allocator, profile, m.imports.len) catch @panic("Invalid startup2 facts"),
                 .extra_objects = &.{
                     self.addHeapRuntime(),
-                    addFacadeRuntime(self.b, self.profile.sdk_root.path(self.b, "Shared/C/src/facades.c"), self.profile.c_include_root, self.profile.contract_c_include_root, false),
+                    addFacadeRuntime(self.b, self.profile.sdk_root.path(self.b, "Shared/C/src/facades.c"), self.profile.c_include_root, self.profile.contract_c_include_root, self.profile.contract_c_include_root2, false),
                     self.addStorageRuntime(),
                 },
                 .linker_script = self.profile.linker_script,
@@ -2101,7 +2104,7 @@ fn addCModule(b: *std.Build, opts: COptions) std.Build.LazyPath {
     return exe.getEmittedBin();
 }
 
-pub fn addFacadeRuntime(b: *std.Build, source: std.Build.LazyPath, c_include: std.Build.LazyPath, contract_include: std.Build.LazyPath, native_test: bool) std.Build.LazyPath {
+pub fn addFacadeRuntime(b: *std.Build, source: std.Build.LazyPath, c_include: std.Build.LazyPath, contract_include: std.Build.LazyPath, contract_include2: std.Build.LazyPath, native_test: bool) std.Build.LazyPath {
     const root = b.createModule(.{
         .target = if (native_test) b.graph.host else profiles.target(b),
         .optimize = profiles.defaults.runtime_optimize,
@@ -2113,7 +2116,8 @@ pub fn addFacadeRuntime(b: *std.Build, source: std.Build.LazyPath, c_include: st
     });
     root.addIncludePath(c_include);
     root.addIncludePath(contract_include);
-    @import("c_header_inputs.zig").addMacro(b, root, &.{ c_include, contract_include });
+    root.addIncludePath(contract_include2);
+    @import("c_header_inputs.zig").addMacro(b, root, &.{ c_include, contract_include, contract_include2 });
     const base = profiles.strings(b.allocator, profiles.get(profiles.codegen(b.allocator, "runtime"), "c_flags"));
     const cpu_flags = profiles.cFlags(b.allocator);
     const probes: []const []const u8 = if (native_test) &.{} else profiles.strings(b.allocator, profiles.get(profiles.codegen(b.allocator, "runtime"), "probe_flags"));

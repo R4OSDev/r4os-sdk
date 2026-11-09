@@ -23,7 +23,7 @@ try{
         if($LASTEXITCODE -ne 0){throw 'Native SDK facade objects failed.'}
     }finally{Pop-Location}
     $object=Join-Path $WorkRoot 'driver-c.o'
-    & $Zig cc -O1 -UNDEBUG -Werror -fPIC -ffunction-sections -fdata-sections -I (Join-Path $sdk 'Shared/C/include') -I (Join-Path $ContractRoot 'Generated/SDK/C/include') -Dmain=sdk67_driver_c_case -c (Join-Path $sdk 'Tests/Simulation/DriverLifecycleHost.c') -o $object
+    & $Zig cc -O1 -UNDEBUG -Werror -fPIC -ffunction-sections -fdata-sections -I (Join-Path $sdk 'Shared/C/include') -I (Join-Path $ContractRoot 'Generated/SDK/C/include') -I (Join-Path $ContractRoot 'Generated/Generation2/C/include') -Dmain=sdk67_driver_c_case -c (Join-Path $sdk 'Tests/Simulation/DriverLifecycleHost.c') -o $object
     if($LASTEXITCODE -ne 0){throw 'Combined C driver consumer failed.'}
     $source=(Join-Path $sdk 'Tests/Simulation/RustDriver.rs').Replace('\','/')
     $manifest=@"

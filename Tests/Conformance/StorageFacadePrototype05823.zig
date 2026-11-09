@@ -1,6 +1,72 @@
 const std = @import("std");
 const r4os = @import("r4os");
 
+test "normal App2 file facade preserves wide metadata and restarts buffered directory observations" {
+    const a = r4os.abi;
+    const a2 = r4os.platform2.abi;
+    const Provider = struct {
+        var changed = false;
+        fn open(_: *const a2.R4XStartContext2) callconv(.c) u32 {
+            return 0;
+        }
+        fn info(_: [*:0]const u8, out: *a.FileMetadata2) callconv(.c) i32 {
+            out.* = .{ .flags = a.file_metadata2_flag_exists | a.file_metadata2_flag_byte_size_valid | a.file_metadata2_flag_backend_node_valid, .byte_size = 0x100000003, .backend_node = 0x100000007, .drive_letter = 'C' };
+            return 1;
+        }
+        fn batch(path: ?[*:0]const u8, cursor: *a.DirectoryMetadataCursor2, rows: ?[*]a.DirectoryMetadataEntry2, capacity: u32) callconv(.c) i32 {
+            if (capacity == 0) {
+                std.debug.assert(path == null and rows == null);
+                return if (changed) -10 else 0;
+            }
+            if (cursor.namespace_generation != 0) return -5;
+            std.debug.assert(path != null and rows != null and capacity == 4);
+            cursor.namespace_generation = 9;
+            rows.?[0] = .{};
+            _ = info("C:\\WIDE.TXT", &rows.?[0].info);
+            @memcpy(rows.?[0].path[0..11], "C:\\WIDE.TXT");
+            rows.?[1] = rows.?[0];
+            return 2;
+        }
+    };
+    const table: a2.R4XStartR4Sys2 = .{
+        .file_read = @intFromPtr(&fakeFileRead),
+        .file_read_at = @intFromPtr(&fakeFileReadAt),
+        .file_write = @intFromPtr(&fakeFileWrite),
+        .file_append = @intFromPtr(&fakeFileAppend),
+        .file_metadata2 = @intFromPtr(&Provider.info),
+        .directory_metadata_batch2 = @intFromPtr(&Provider.batch),
+    };
+    const imported: a.R4XStartImport = .{ .group_id = 1, .min_version = 2, .resolved_version = 2, .flags = a.r4xstart_import_flag_group_interface, .module_name = @intFromPtr("R4SYS"), .symbol_name = @intFromPtr("Query2"), .table = @intFromPtr(&table) };
+    const raw: a2.R4XStartContext2 = .{ .app_class = 1, .instance_id = 42, .flags = a.r4xstart_flag_imports_valid | a.r4xstart_flag_close_supported, .should_close = @intFromPtr(&Provider.open), .imports = @intFromPtr(&imported), .import_count = 1 };
+    const app = switch (r4os.App2.init(&raw, .console)) {
+        .value => |v| v,
+        .failure => return error.App2Init,
+    };
+    const files = app.files() orelse return error.NoFiles;
+    const path = try r4os.path.FilePath.parse("C:\\WIDE.TXT");
+    switch (files.metadata(path.asZ())) {
+        .found => |v| {
+            try std.testing.expectEqual(@as(u64, 0x100000003), v.byte_size);
+            try std.testing.expectEqual(@as(u64, 0x100000007), v.backend_node);
+        },
+        else => return error.Metadata,
+    }
+    try std.testing.expectEqual(a.file_metadata2_error_unsupported, files.info(path.asZ()).failure);
+    Provider.changed = false;
+    var scan = files.iterate(path.asZ());
+    var name: [64]u8 = undefined;
+    const row = scan.next(&name).entry;
+    try std.testing.expectEqual(@as(u64, 0x100000007), row.metadata.?.backend_node);
+    try std.testing.expect(row.info == null);
+    Provider.changed = true;
+    try std.testing.expectEqual(a.file_metadata2_error_restart, scan.next(&name).failure);
+    Provider.changed = false;
+    var next = files.iterate(path.asZ());
+    _ = next.next(&name).entry;
+    next.revisitAfterRemoval();
+    try std.testing.expectEqual(a.file_metadata2_error_restart, next.next(&name).failure);
+}
+
 test "storage parity includes the path recent registry and bounded text owners" {
     std.testing.refAllDecls(r4os.path);
     std.testing.refAllDecls(r4os.recent_documents);

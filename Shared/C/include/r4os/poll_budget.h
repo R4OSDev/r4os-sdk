@@ -37,6 +37,8 @@ typedef struct R4SdkPollRemaining {
 int32_t R4SdkClockSampleRead(const R4MonotonicClockInfo *, R4SdkClockSample *);
 int32_t R4SdkMillisecondsToTicksChecked(uint64_t, uint32_t, uint64_t *);
 int32_t R4SdkTimeoutTicksChecked(R4Timeout, uint32_t, R4SdkBudgetValue *);
+/* Only Forever maps to the old sentinel; finite MAX fails unchanged. */
+int32_t R4SdkBudgetToWaitTicks(const R4SdkBudgetValue *, uint64_t *);
 int32_t R4SdkDeadlineBudgetInit(R4SdkClockSample, R4Timeout, R4SdkDeadlineBudget *);
 int32_t R4SdkDeadlineBudgetRemaining(R4SdkDeadlineBudget *, R4SdkClockSample, R4SdkBudgetValue *);
 int32_t R4SdkDriverPollIterations(uint64_t, uint32_t, R4SdkDriverPollBudget *);
