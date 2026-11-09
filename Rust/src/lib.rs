@@ -2,9 +2,11 @@
 //! Normal R4X runtime and borrowed SDK facades. Layouts, callbacks and constants
 //! come from the matched Contract crate. `alloc` is optional; panic aborts.
 
-use core::sync::atomic::{AtomicPtr, Ordering};
+use core::sync::atomic::{AtomicU64, Ordering};
 use core::{ffi::CStr, marker::PhantomData, mem, ptr};
 pub use r4os_contract as abi;
+pub mod app2;
+pub use app2::App as App2;
 pub mod audio_capture;
 pub mod audio_write;
 pub mod bounded_text;
@@ -55,7 +57,17 @@ pub mod web;
 pub mod wire;
 pub use startup::{ImportSpec, StartupInfo};
 
-static PANIC_CONTEXT: AtomicPtr<abi::R4XStartContext> = AtomicPtr::new(ptr::null_mut());
+// Resident callbacks survive worker calls without a root App/context loan.
+static PANIC_WRITE: AtomicU64 = AtomicU64::new(0);
+static PANIC_EXIT: AtomicU64 = AtomicU64::new(0);
+pub(crate) fn bind_panic_callbacks(write: u64, exit: u64) {
+    PANIC_WRITE.store(write, Ordering::Release);
+    PANIC_EXIT.store(exit, Ordering::Release);
+}
+pub(crate) fn clear_panic_callbacks() {
+    PANIC_WRITE.store(0, Ordering::Release);
+    PANIC_EXIT.store(0, Ordering::Release);
+}
 
 fn facade_app(app: &App<'_>) -> storage::Result<c_facades::R4App> {
     let mut value = unsafe { mem::zeroed() };
@@ -538,68 +550,51 @@ pub unsafe fn start(
     if entropy_status < 0 {
         return entropy_status;
     }
-    PANIC_CONTEXT.store(raw.cast_mut(), Ordering::Release);
+    bind_panic_callbacks(
+        app.sys_slot(mem::offset_of!(abi::R4XStartR4Sys, write))
+            .unwrap_or(0) as u64,
+        app.sys_slot(mem::offset_of!(abi::R4XStartR4Sys, program_exit))
+            .unwrap_or(0) as u64,
+    );
     #[cfg(all(feature = "alloc", target_os = "none"))]
     if heap::install(&app).is_err() {
-        PANIC_CONTEXT.store(ptr::null_mut(), Ordering::Release);
+        clear_panic_callbacks();
         return -17;
     }
     let code = main(&mut app);
-    PANIC_CONTEXT.store(ptr::null_mut(), Ordering::Release);
+    clear_panic_callbacks();
     code
 }
 
 #[cfg(target_os = "none")]
 #[panic_handler]
 fn panic(info: &core::panic::PanicInfo<'_>) -> ! {
-    let raw = PANIC_CONTEXT.load(Ordering::Acquire);
-    if !raw.is_null() {
-        // The normal validated context remains pinned by the loader until
-        // actual program exit. No SDK lock/allocator is held here.
-        let app = App {
-            context: unsafe { &*raw },
-            name: c"panic",
-            _local: PhantomData,
-        };
-        let _ = app.write("[RUST] panic");
-        if let Some(location) = info.location() {
-            let _ = app.write(" at ");
-            let _ = app.write(location.file());
-            let _ = app.write(":");
-            let mut digits = [0u8; 10];
-            let mut at = digits.len();
-            let mut line = location.line();
-            loop {
-                at -= 1;
-                digits[at] = b'0' + (line % 10) as u8;
-                line /= 10;
-                if line == 0 {
-                    break;
-                }
+    struct Writer(Option<abi::R4SysFns::write>);
+    impl core::fmt::Write for Writer {
+        fn write_str(&mut self, text: &str) -> core::fmt::Result {
+            let write = self.0.ok_or(core::fmt::Error)?;
+            let length = u32::try_from(text.len()).map_err(|_| core::fmt::Error)?;
+            if unsafe { write(text.as_ptr(), length) } < 0 {
+                Err(core::fmt::Error)
+            } else {
+                Ok(())
             }
-            let _ = app.write(unsafe { core::str::from_utf8_unchecked(&digits[at..]) });
-        }
-        struct PanicWriter<'a, 'b>(&'a App<'b>);
-        impl core::fmt::Write for PanicWriter<'_, '_> {
-            fn write_str(&mut self, text: &str) -> core::fmt::Result {
-                if self.0.write(text) < 0 {
-                    Err(core::fmt::Error)
-                } else {
-                    Ok(())
-                }
-            }
-        }
-        let _ = core::fmt::write(
-            &mut PanicWriter(&app),
-            format_args!(": {}\n", info.message()),
-        );
-        if let Some(address) = app.sys_slot(mem::offset_of!(abi::R4XStartR4Sys, program_exit)) {
-            let f: abi::R4SysFns::program_exit = unsafe { mem::transmute(address) };
-            let _ = unsafe { f(-101, abi::program_exit_reason_failed as u32) };
         }
     }
-    // A missing/rejected terminal API is a real module fault, not success or
-    // an idle/spinning process. No unwinding crosses an extern-C boundary.
+    let address = PANIC_WRITE.load(Ordering::Acquire);
+    let write = if address == 0 {
+        None
+    } else {
+        Some(unsafe { mem::transmute::<u64, abi::R4SysFns::write>(address) })
+    };
+    let _ = core::fmt::write(&mut Writer(write), format_args!("[RUST] panic: {}\n", info));
+    let address = PANIC_EXIT.load(Ordering::Acquire);
+    if address != 0 {
+        let exit: abi::R4SysFns::program_exit = unsafe { mem::transmute(address) };
+        let _ = unsafe { exit(-101, abi::program_exit_reason_failed as u32) };
+    }
+    // Missing/rejected terminal calls fault the actual module. Never unwind
+    // across a native boundary or park a corrupt process in an idle loop.
     unsafe { core::arch::asm!("ud2", options(noreturn)) }
 }
 

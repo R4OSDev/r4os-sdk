@@ -3,6 +3,33 @@
 The active compiler/component selection is defined only by `Profiles/`.
 Version-specific notes below describe their dated changes.
 
+SDK0.64.181 provides normal generation2 application entry. Select
+ENTRY_MODE=app with r4os-zig-generation2, r4os-c-generation2 or
+r4os-rust-generation2 and Query2:2 imports for platform groups. Zig implements
+r4_app_main(*r4os.App2), C implements r4_app_main(R4App2*) from r4os/app2.h,
+and Rust uses r4os_sdk::app2!(main) with App2. The SDK emits R4XStart2:2 and
+complete ordered manifest facts. Console, GUI, service and subsystem roles
+retain their own rules; named library revisions remain independent.
+Handle-based GUI/subsystem launches retain the existing desktop attachment
+handshake: associate the exact process handle with its window before waiting
+for entry completion. The normal console fixture's lifecycle mode performs
+that original host operation explicitly.
+
+App2 borrows the actual 120-byte context and canonical tables. Keep its Zig
+object stationary while facades or allocators borrow it; return only after
+all tasks, callbacks and argument/import loans retire. Rust App2 stays local
+to the executing thread. Startup copies only admitted resident heap/entropy
+callbacks. C/Rust retain the existing pooled VM heap and its exact instance,
+generation, Busy, pending and release-acknowledgement rules. Optional Rust
+alloc uses the same heap and an SDK-owned callback copy across workers.
+Panic paths terminate the exact module or fault through UD2.
+
+Existing App/default profiles remain on generation1 during migration.
+SDK-private native facade storage has changed: rebuild generated headers,
+Rust projection and runtime objects together. Targeted checks are
+platform2-test, vm-allocator-test, Tools/Test-RustHeap.ps1 (also -Generation2),
+Tests/Simulation/App2Startup.c and Tests/Build/App2Zig, App2C and App2Rust.
+
 SDK0.64.174 adds copied family-aware Query2 service clients in Zig
 (`network_family`), C (`r4os/network_family_platform2.h`) and Rust
 (`network_family`). They share the existing TCP/UDP/DNS providers and expose

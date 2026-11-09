@@ -3,6 +3,9 @@
 const std = @import("std");
 const abi = @import("r4os_contract").abi;
 const vm = @import("vm_allocator.zig");
+const allocator_source = @import("allocator_source.zig");
+const Memory = allocator_source.Memory;
+const Source = allocator_source.Source;
 
 const ok = 0;
 const invalid = -1;
@@ -30,23 +33,43 @@ var calls: u32 = 0;
 var bound_api: usize = 0;
 var bound_instance: u64 = 0;
 var bound_generation: u64 = 0;
+// Published together with the one existing heap binding. No caller record is
+// retained, and no second allocator, pool or owner registry is introduced.
+var bound_memory: Memory = .{};
 
-fn current(api: *const abi.R4XStartR4Sys, instance: u64) ?abi.ProgramJoinHandle {
-    const expected: abi.R4XStartR4Sys = .{};
-    if (api.magic != expected.magic or api.abi_version < expected.abi_version or
-        api.size < @sizeOf(abi.R4XStartR4Sys) or instance == 0 or
-        api.thread_current_handle == 0 or api.vm_reserve == 0 or api.vm_commit == 0 or
-        api.vm_decommit == 0 or api.vm_release == 0) return null;
+fn current(api: anytype, instance: u64) ?abi.ProgramJoinHandle {
+    const source = Source.from(api);
+    if (comptime @TypeOf(api) == *const abi.R4XStartR4Sys) {
+        const expected: abi.R4XStartR4Sys = .{};
+        if (api.magic != expected.magic or api.abi_version < expected.abi_version or
+            api.size < @sizeOf(abi.R4XStartR4Sys)) return null;
+    } else {
+        if (!api.valid()) return null;
+    }
+    if (instance == 0 or !source.supportsVm()) return null;
+    const get = source.function("thread_current_handle") orelse return null;
     var handle: abi.ProgramJoinHandle = .{};
-    const get: abi.R4SysFns.thread_current_handle = @ptrFromInt(api.thread_current_handle);
     if (get(&handle) != 0 or handle.instance_id != instance or handle.instance_generation == 0) return null;
     return handle;
 }
 
-export fn R4SdkHeapBind(api: *const abi.R4XStartR4Sys, instance: u64) callconv(.c) i32 {
+fn identityMatches(api: anytype) bool {
+    if (bound_api != Source.from(api).identity()) return false;
+    if (comptime @TypeOf(api) == *const Memory)
+        return std.mem.eql(u8, std.mem.asBytes(api), std.mem.asBytes(&bound_memory));
+    return true;
+}
+
+fn heapAllocator(api: anytype) std.mem.Allocator {
+    if (comptime @TypeOf(api) == *const Memory) return vm.allocatorMapped(&bound_memory);
+    return vm.allocator(api);
+}
+
+fn heapBind(api: anytype, instance: u64) i32 {
     const handle = current(api, instance) orelse return wrong_owner;
     if (@cmpxchgStrong(u32, &phase, 0, 1, .acquire, .monotonic) == null) {
-        bound_api = @intFromPtr(api);
+        if (comptime @TypeOf(api) == *const Memory) bound_memory = api.*;
+        bound_api = Source.from(api).identity();
         bound_instance = instance;
         bound_generation = handle.instance_generation;
         @atomicStore(u32, &phase, 2, .release);
@@ -54,15 +77,15 @@ export fn R4SdkHeapBind(api: *const abi.R4XStartR4Sys, instance: u64) callconv(.
     }
     const state = @atomicLoad(u32, &phase, .acquire);
     if (state == 1) return busy;
-    if (bound_api != @intFromPtr(api) or bound_instance != instance or bound_generation != handle.instance_generation) return wrong_owner;
+    if (!identityMatches(api) or bound_instance != instance or bound_generation != handle.instance_generation) return wrong_owner;
     return if (state == 2) ok else closed;
 }
 
-fn enter(api: *const abi.R4XStartR4Sys, instance: u64, allocation: bool) i32 {
+fn enter(api: anytype, instance: u64, allocation: bool) i32 {
     const state = @atomicLoad(u32, &phase, .acquire);
     if (state != 2 and (allocation or state != 3)) return closed;
     const handle = current(api, instance) orelse return wrong_owner;
-    if (bound_api != @intFromPtr(api) or bound_instance != instance or bound_generation != handle.instance_generation) return wrong_owner;
+    if (!identityMatches(api) or bound_instance != instance or bound_generation != handle.instance_generation) return wrong_owner;
     while (true) {
         const previous = @atomicLoad(u32, &calls, .acquire);
         if (previous == std.math.maxInt(u32)) return busy;
@@ -89,9 +112,9 @@ fn layout(size: usize, raw_alignment: usize) ?struct { total: usize, alignment: 
     return .{ .total = total, .alignment = .fromByteUnits(alignment) };
 }
 
-fn allocate(api: *const abi.R4XStartR4Sys, instance: u64, size: usize, alignment: usize) ?*anyopaque {
+fn allocate(api: anytype, instance: u64, size: usize, alignment: usize) ?*anyopaque {
     const l = layout(size, alignment) orelse return null;
-    const buffer = vm.allocator(api).rawAlloc(l.total, l.alignment, @returnAddress()) orelse return null;
+    const buffer = heapAllocator(api).rawAlloc(l.total, l.alignment, @returnAddress()) orelse return null;
     const base = @intFromPtr(buffer);
     const user = std.mem.alignForward(usize, base + @sizeOf(Header) + @sizeOf(usize), l.alignment.toByteUnits());
     const header: *Header = @ptrCast(@alignCast(buffer));
@@ -113,22 +136,22 @@ fn headerFor(pointer: *anyopaque, instance: u64) ?*Header {
     if (user < backref.* + @sizeOf(Header) + @sizeOf(usize) or end > buffer_end) return null;
     return header;
 }
-fn release(api: *const abi.R4XStartR4Sys, header: *Header) void {
+fn release(api: anytype, header: *Header) void {
     const len = header.buffer_len;
     const alignment: std.mem.Alignment = .fromByteUnits(header.alignment);
     const buffer: [*]u8 = @ptrCast(header);
     header.magic = 0;
     // The core owns pending/cache/partial VM releases after logical free.
     // No access to this payload follows the handoff.
-    vm.allocator(api).rawFree(buffer[0..len], alignment, @returnAddress());
+    heapAllocator(api).rawFree(buffer[0..len], alignment, @returnAddress());
 }
 
-export fn R4SdkHeapAlloc(api: *const abi.R4XStartR4Sys, instance: u64, size: usize, alignment: usize) callconv(.c) ?*anyopaque {
+fn heapAlloc(api: anytype, instance: u64, size: usize, alignment: usize) ?*anyopaque {
     if (enter(api, instance, true) != ok) return null;
     defer leave();
     return allocate(api, instance, size, alignment);
 }
-export fn R4SdkHeapFree(api: *const abi.R4XStartR4Sys, instance: u64, pointer: ?*anyopaque) callconv(.c) i32 {
+fn heapFree(api: anytype, instance: u64, pointer: ?*anyopaque) i32 {
     const p = pointer orelse return ok;
     const result = enter(api, instance, false);
     if (result != ok) return result;
@@ -137,9 +160,9 @@ export fn R4SdkHeapFree(api: *const abi.R4XStartR4Sys, instance: u64, pointer: ?
     release(api, header);
     return ok;
 }
-export fn R4SdkHeapRealloc(api: *const abi.R4XStartR4Sys, instance: u64, pointer: ?*anyopaque, size: usize, alignment: usize) callconv(.c) ?*anyopaque {
+fn heapRealloc(api: anytype, instance: u64, pointer: ?*anyopaque, size: usize, alignment: usize) ?*anyopaque {
     if (size == 0) {
-        _ = R4SdkHeapFree(api, instance, pointer);
+        _ = heapFree(api, instance, pointer);
         return null;
     }
     if (enter(api, instance, true) != ok) return null;
@@ -149,7 +172,7 @@ export fn R4SdkHeapRealloc(api: *const abi.R4XStartR4Sys, instance: u64, pointer
     const l = layout(size, alignment) orelse return null;
     if (l.alignment.toByteUnits() == header.alignment) {
         const buffer: [*]u8 = @ptrCast(header);
-        if (vm.allocator(api).rawResize(buffer[0..header.buffer_len], l.alignment, l.total, @returnAddress())) {
+        if (heapAllocator(api).rawResize(buffer[0..header.buffer_len], l.alignment, l.total, @returnAddress())) {
             header.buffer_len = l.total;
             header.requested = size;
             return p;
@@ -162,7 +185,7 @@ export fn R4SdkHeapRealloc(api: *const abi.R4XStartR4Sys, instance: u64, pointer
     release(api, header);
     return next;
 }
-export fn R4SdkHeapStats(api: *const abi.R4XStartR4Sys, instance: u64, values: [*]u64, capacity: u32) callconv(.c) i32 {
+fn heapStats(api: anytype, instance: u64, values: [*]u64, capacity: u32) i32 {
     const result = enter(api, instance, false);
     if (result != ok) return result;
     defer leave();
@@ -175,11 +198,11 @@ export fn R4SdkHeapStatName(index: u32) callconv(.c) ?[*:0]const u8 {
     inline for (stats_fields, 0..) |field, i| if (i == index) return field.name ++ "\x00";
     return null;
 }
-export fn R4SdkHeapFinish(api: *const abi.R4XStartR4Sys, instance: u64) callconv(.c) i32 {
+fn heapFinish(api: anytype, instance: u64) i32 {
     const state = @atomicLoad(u32, &phase, .acquire);
     if (state == 5) {
         const handle = current(api, instance) orelse return wrong_owner;
-        return if (bound_api == @intFromPtr(api) and bound_instance == instance and bound_generation == handle.instance_generation) ok else wrong_owner;
+        return if (identityMatches(api) and bound_instance == instance and bound_generation == handle.instance_generation) ok else wrong_owner;
     }
     const admitted = enter(api, instance, false);
     if (admitted != ok) return admitted;
@@ -190,7 +213,7 @@ export fn R4SdkHeapFinish(api: *const abi.R4XStartR4Sys, instance: u64) callconv
         @atomicStore(u32, &phase, 3, .release);
         return busy;
     }
-    const result = vm.shutdown(api);
+    const result = if (comptime @TypeOf(api) == *const Memory) vm.shutdownMapped(&bound_memory) else vm.shutdown(api);
     @atomicStore(u32, &phase, if (result == .done) 5 else 3, .release);
     return switch (result) {
         .done => ok,
@@ -199,14 +222,69 @@ export fn R4SdkHeapFinish(api: *const abi.R4XStartR4Sys, instance: u64) callconv
     };
 }
 
+export fn R4SdkHeapBind(api: *const abi.R4XStartR4Sys, instance: u64) callconv(.c) i32 {
+    return heapBind(api, instance);
+}
+
+export fn R4SdkHeapBind2(api: *const Memory, instance: u64) callconv(.c) i32 {
+    return heapBind(api, instance);
+}
+
+// GlobalAlloc keeps this resident, immutable SDK copy rather than a root App
+// loan. It remains pinned by the exact module until actual task retirement.
+export fn R4SdkHeapMemory2(api: *const Memory, instance: u64) callconv(.c) ?*const Memory {
+    if (enter(api, instance, false) != ok) return null;
+    defer leave();
+    return &bound_memory;
+}
+
+export fn R4SdkHeapAlloc(api: *const abi.R4XStartR4Sys, instance: u64, size: usize, alignment: usize) callconv(.c) ?*anyopaque {
+    return heapAlloc(api, instance, size, alignment);
+}
+
+export fn R4SdkHeapAlloc2(api: *const Memory, instance: u64, size: usize, alignment: usize) callconv(.c) ?*anyopaque {
+    return heapAlloc(api, instance, size, alignment);
+}
+
+export fn R4SdkHeapFree(api: *const abi.R4XStartR4Sys, instance: u64, pointer: ?*anyopaque) callconv(.c) i32 {
+    return heapFree(api, instance, pointer);
+}
+
+export fn R4SdkHeapFree2(api: *const Memory, instance: u64, pointer: ?*anyopaque) callconv(.c) i32 {
+    return heapFree(api, instance, pointer);
+}
+
+export fn R4SdkHeapRealloc(api: *const abi.R4XStartR4Sys, instance: u64, pointer: ?*anyopaque, size: usize, alignment: usize) callconv(.c) ?*anyopaque {
+    return heapRealloc(api, instance, pointer, size, alignment);
+}
+
+export fn R4SdkHeapRealloc2(api: *const Memory, instance: u64, pointer: ?*anyopaque, size: usize, alignment: usize) callconv(.c) ?*anyopaque {
+    return heapRealloc(api, instance, pointer, size, alignment);
+}
+
+export fn R4SdkHeapStats(api: *const abi.R4XStartR4Sys, instance: u64, values: [*]u64, capacity: u32) callconv(.c) i32 {
+    return heapStats(api, instance, values, capacity);
+}
+
+export fn R4SdkHeapStats2(api: *const Memory, instance: u64, values: [*]u64, capacity: u32) callconv(.c) i32 {
+    return heapStats(api, instance, values, capacity);
+}
+
+export fn R4SdkHeapFinish(api: *const abi.R4XStartR4Sys, instance: u64) callconv(.c) i32 {
+    return heapFinish(api, instance);
+}
+
+export fn R4SdkHeapFinish2(api: *const Memory, instance: u64) callconv(.c) i32 {
+    return heapFinish(api, instance);
+}
+
 // A corrupt heap terminates the exact module. No foreign unwind or HLT loop.
 pub const panic = std.debug.FullPanic(struct {
     fn panic(_: []const u8, _: ?usize) noreturn {
         const address = @atomicLoad(usize, &bound_api, .acquire);
         if (address != 0) {
-            const api: *const abi.R4XStartR4Sys = @ptrFromInt(address);
-            if (api.program_exit != 0) {
-                const exit: abi.R4SysFns.program_exit = @ptrFromInt(api.program_exit);
+            const source = if (address & 1 != 0) Source.mapped(&bound_memory) else Source{ .encoded = address };
+            if (source.function("program_exit")) |exit| {
                 _ = exit(-103, abi.program_exit_reason_failed);
             }
         }

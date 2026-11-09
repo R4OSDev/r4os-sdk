@@ -670,17 +670,20 @@ pub const Context = struct {
 
     // Vertragsauskunft direkt aus der R4SYS-Gruppentabelle.
     pub fn contractValid(self: *const Context) bool {
+        if (self.base.generation2) |context| return context.system() != null;
         const b = self.base.bundle orelse return false;
         return b.sys != null;
     }
 
     pub fn tableAbiVersion(self: *const Context) u32 {
+        if (self.base.generation2) |context| return if (context.system()) |table| table.abi_version else 0;
         const b = self.base.bundle orelse return 0;
         const table = b.sys orelse return 0;
         return table.abi_version;
     }
 
     pub fn tableSize(self: *const Context) u32 {
+        if (self.base.generation2) |context| return if (context.system()) |table| table.size else 0;
         const b = self.base.bundle orelse return 0;
         const table = b.sys orelse return 0;
         return table.size;

@@ -56,8 +56,8 @@ typedef struct R4SdkDataJsonDocument { _Alignas(8) uint8_t opaque_bytes[64]; } R
 /* *const r4dev.Context; native size 8, alignment 8. */
 typedef struct R4SdkDataNative_Value11 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkDataNative_Value11;
 #define R4SdkDataNative_Value11_TYPE 11u
-/* r4dev.Context; native size 8, alignment 8. */
-typedef struct R4SdkDataNative_r4dev_Context { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkDataNative_r4dev_Context;
+/* r4dev.Context; native size 24, alignment 8. */
+typedef struct R4SdkDataNative_r4dev_Context { _Alignas(8) uint8_t opaque_bytes[24]; } R4SdkDataNative_r4dev_Context;
 #define R4SdkDataNative_r4dev_Context_TYPE 12u
 /* error{BadRequest,Bounds,Checksum,DuplicatePath,Inflate,InvalidArchive,Limit,OutputTooSmall,Stale,Unavailable,UnsafePath,Unsupported}!void; native size 2, alignment 2. */
 typedef struct R4SdkDataNative_Value13 { _Alignas(2) uint8_t opaque_bytes[2]; } R4SdkDataNative_Value13;
@@ -161,8 +161,8 @@ typedef struct R4SdkDataNative_Value45 { _Alignas(8) uint8_t opaque_bytes[8]; } 
 /* *const program.Context; native size 8, alignment 8. */
 typedef struct R4SdkDataNative_Value46 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkDataNative_Value46;
 #define R4SdkDataNative_Value46_TYPE 46u
-/* program.Context; native size 8, alignment 8. */
-typedef struct R4SdkDataNative_program_Context { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkDataNative_program_Context;
+/* program.Context; native size 24, alignment 8. */
+typedef struct R4SdkDataNative_program_Context { _Alignas(8) uint8_t opaque_bytes[24]; } R4SdkDataNative_program_Context;
 #define R4SdkDataNative_program_Context_TYPE 47u
 /* *const abi.ProtocolApi; native size 8, alignment 8. */
 typedef struct R4SdkDataNative_Value48 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkDataNative_Value48;
@@ -425,8 +425,8 @@ typedef struct R4SdkDataNative_Value137 { _Alignas(1) uint8_t opaque_bytes[25]; 
 /* r4u_artifact.SliceReader; native size 16, alignment 8. */
 typedef struct R4SdkDataArtifactSliceReader { _Alignas(8) uint8_t opaque_bytes[16]; } R4SdkDataArtifactSliceReader;
 #define R4SdkDataArtifactSliceReader_TYPE 138u
-/* data_helper_adapters.Context; native size 72, alignment 8. */
-typedef struct R4SdkDataContext { _Alignas(8) uint8_t opaque_bytes[72]; } R4SdkDataContext;
+/* data_helper_adapters.Context; native size 104, alignment 8. */
+typedef struct R4SdkDataContext { _Alignas(8) uint8_t opaque_bytes[104]; } R4SdkDataContext;
 #define R4SdkDataContext_TYPE 139u
 /* *data_helper_adapters.Context; native size 8, alignment 8. */
 typedef struct R4SdkDataNative_Value140 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkDataNative_Value140;
@@ -557,7 +557,7 @@ typedef struct R4SdkDataNative_Value183 { _Alignas(1) uint8_t opaque_bytes[2]; }
 /* *const r4u_artifact.Identity; native size 8, alignment 8. */
 typedef struct R4SdkDataNative_Value184 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkDataNative_Value184;
 #define R4SdkDataNative_Value184_TYPE 184u
-#define R4SdkData_ABI_FINGERPRINT UINT64_C(5400212532203429285)
+#define R4SdkData_ABI_FINGERPRINT UINT64_C(14268191799079402320)
 int32_t R4SdkDataVerifyAbi(uint64_t);
 static const uint8_t R4SdkDataJson_CONST_role[] = {102,111,114,109,97,116,46,106,115,111,110,0};
 static inline R4SdkDataSlot R4SdkDataJson_constant_role(void) { return (R4SdkDataSlot){.ptr=(void *)R4SdkDataJson_CONST_role,.length=11,.flags=1u}; }

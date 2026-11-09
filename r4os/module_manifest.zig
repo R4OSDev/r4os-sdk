@@ -401,7 +401,7 @@ fn parseV2(allocator: std.mem.Allocator, path: []const u8, text: []const u8) !Ma
     const parsed_module_version = try parseModuleVersion(module_version orelse return error.MissingModuleVersion);
     const parsed_language = try parseLanguage(language orelse return error.MissingLanguage);
     const generation = try platformGeneration(allocator, parsed_kind, parsed_language, sdk_profile);
-    if (generation == 2 and parsed_kind != .r4d and parsed_kind != .r4p and (parsed_kind != .r4x or !std.mem.eql(u8, entry_mode orelse "", "lowlevel"))) return error.Generation2RequiresLowLevelR4X;
+    if (generation == 2 and parsed_kind != .r4d and parsed_kind != .r4p and parsed_kind != .r4x) return error.Generation2RequiresExecutableModule;
     if (parsed_language == .rust) {
         const admission = capabilities.rust(parsed_kind.text(), entry_mode orelse "", module_role, .host);
         if (admission.failure) |err| return err;
@@ -2211,7 +2211,9 @@ test "generation2 manifest selects central profile and exact start/import names"
     const unknown = try std.mem.replaceOwned(u8, arena.allocator(), base, "r4os-zig-generation2", "r4os-unknown");
     try std.testing.expectError(error.UnknownSdkProfile, parse(arena.allocator(), "module.R4MF", unknown));
     const application = try std.mem.replaceOwned(u8, arena.allocator(), base, "ENTRY_MODE=lowlevel", "ENTRY_MODE=app");
-    try std.testing.expectError(error.Generation2RequiresLowLevelR4X, parse(arena.allocator(), "module.R4MF", application));
+    const app = try parse(arena.allocator(), "module.R4MF", application);
+    try std.testing.expectEqual(EntryMode.app, app.entry_mode.?);
+    try std.testing.expectEqualStrings("R4XStart2:R4XStart2:2", (try derivePlan(arena.allocator(), app)).export_contract);
     // Every technical profile is bound to its actual language AND kind.
     // Query2 metadata by itself never selects a new loader init callback.
     for ([_][3][]const u8{ .{ "Zig", "zig", "zig" }, .{ "C", "c", "c" }, .{ "Rust", "rust", "rs" } }) |language| {

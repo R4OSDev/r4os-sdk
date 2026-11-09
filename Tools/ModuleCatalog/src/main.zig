@@ -200,8 +200,11 @@ fn run(init: std.process.Init) !void {
             if (value.kind != .r4x) return error.StartupInfoRequiresR4X;
             const profile = try manifest_contract.startup_metadata.profileForClass(value.app_class.?.text());
             const rendered = switch (value.language.?) {
-                .rust => if (value.platform_generation == 2) try manifest_contract.startup_metadata.rust2(allocator, profile, value.imports.len) else try manifest_contract.startup_metadata.rust(allocator, profile, value.imports),
-                .c => try manifest_contract.startup_metadata.c(allocator, profile, value.imports),
+                .rust => if (value.platform_generation == 2)
+                    (if (value.entry_mode.? == .app) try manifest_contract.startup_metadata.app2(allocator, .rust, profile, value.imports) else try manifest_contract.startup_metadata.rust2(allocator, profile, value.imports.len))
+                else
+                    try manifest_contract.startup_metadata.rust(allocator, profile, value.imports),
+                .c => if (value.platform_generation == 2) try manifest_contract.startup_metadata.app2(allocator, .c, profile, value.imports) else try manifest_contract.startup_metadata.c(allocator, profile, value.imports),
                 .zig => return error.StartupInfoRequiresRustOrC,
             };
             defer allocator.free(rendered);

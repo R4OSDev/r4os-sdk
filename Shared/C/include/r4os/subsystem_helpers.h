@@ -233,14 +233,14 @@ typedef struct R4SdkSubsystemNativeValue78 { _Alignas(1) uint8_t opaque_bytes[25
 /* ?u16; native size 4, alignment 2. */
 typedef struct R4SdkSubsystemNativeValue79 { _Alignas(2) uint8_t opaque_bytes[4]; } R4SdkSubsystemNativeValue79;
 #define R4SdkSubsystemNativeValue79_TYPE 79u
-/* subsystem_host.Host; native size 1160, alignment 8. */
-typedef struct R4SdkSubsystemVideoHost { _Alignas(8) uint8_t opaque_bytes[1160]; } R4SdkSubsystemVideoHost;
+/* subsystem_host.Host; native size 1192, alignment 8. */
+typedef struct R4SdkSubsystemVideoHost { _Alignas(8) uint8_t opaque_bytes[1192]; } R4SdkSubsystemVideoHost;
 #define R4SdkSubsystemVideoHost_TYPE 80u
-/* r4desk.Context; native size 8, alignment 8. */
-typedef struct R4SdkSubsystemNative_r4desk_Context { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkSubsystemNative_r4desk_Context;
+/* r4desk.Context; native size 24, alignment 8. */
+typedef struct R4SdkSubsystemNative_r4desk_Context { _Alignas(8) uint8_t opaque_bytes[24]; } R4SdkSubsystemNative_r4desk_Context;
 #define R4SdkSubsystemNative_r4desk_Context_TYPE 81u
-/* r4draw.Context; native size 8, alignment 8. */
-typedef struct R4SdkSubsystemNative_r4draw_Context { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkSubsystemNative_r4draw_Context;
+/* r4draw.Context; native size 24, alignment 8. */
+typedef struct R4SdkSubsystemNative_r4draw_Context { _Alignas(8) uint8_t opaque_bytes[24]; } R4SdkSubsystemNative_r4draw_Context;
 #define R4SdkSubsystemNative_r4draw_Context_TYPE 82u
 /* ?subsystem_host.FrameOverlay; native size 24, alignment 8. */
 typedef struct R4SdkSubsystemNativeValue83 { _Alignas(8) uint8_t opaque_bytes[24]; } R4SdkSubsystemNativeValue83;
@@ -320,11 +320,11 @@ typedef struct R4SdkSubsystemNativeValue109 { _Alignas(8) uint8_t opaque_bytes[8
 /* ?*const fn (*anyopaque) i32; native size 8, alignment 8. */
 typedef struct R4SdkSubsystemNativeValue110 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkSubsystemNativeValue110;
 #define R4SdkSubsystemNativeValue110_TYPE 110u
-/* subsystem_runtime.R4AudioSink; native size 56, alignment 8. */
-typedef struct R4SdkSubsystemRuntimeR4AudioSink { _Alignas(8) uint8_t opaque_bytes[56]; } R4SdkSubsystemRuntimeR4AudioSink;
+/* subsystem_runtime.R4AudioSink; native size 88, alignment 8. */
+typedef struct R4SdkSubsystemRuntimeR4AudioSink { _Alignas(8) uint8_t opaque_bytes[88]; } R4SdkSubsystemRuntimeR4AudioSink;
 #define R4SdkSubsystemRuntimeR4AudioSink_TYPE 111u
-/* app_audio.Audio; native size 16, alignment 8. */
-typedef struct R4SdkSubsystemNative_app_audio_Audio { _Alignas(8) uint8_t opaque_bytes[16]; } R4SdkSubsystemNative_app_audio_Audio;
+/* app_audio.Audio; native size 48, alignment 8. */
+typedef struct R4SdkSubsystemNative_app_audio_Audio { _Alignas(8) uint8_t opaque_bytes[48]; } R4SdkSubsystemNative_app_audio_Audio;
 #define R4SdkSubsystemNative_app_audio_Audio_TYPE 112u
 /* subsystem_runtime.AudioStats; native size 392, alignment 8. */
 typedef struct R4SdkSubsystemRuntimeAudioStats { _Alignas(8) uint8_t opaque_bytes[392]; } R4SdkSubsystemRuntimeAudioStats;
@@ -398,17 +398,17 @@ typedef struct R4SdkSubsystemFailureStage { _Alignas(1) uint8_t opaque_bytes[1];
 /* subsystem_persistence.R4osStore(subsystem_persistence.Configuration).RecoveryTestState; native size 48, alignment 8. */
 typedef struct R4SdkSubsystemRecoveryTestState { _Alignas(8) uint8_t opaque_bytes[48]; } R4SdkSubsystemRecoveryTestState;
 #define R4SdkSubsystemRecoveryTestState_TYPE 138u
-/* subsystem_persistence.R4osStore(subsystem_persistence.Configuration).Store; native size 1144, alignment 8. */
-typedef struct R4SdkSubsystemStore { _Alignas(8) uint8_t opaque_bytes[1144]; } R4SdkSubsystemStore;
+/* subsystem_persistence.R4osStore(subsystem_persistence.Configuration).Store; native size 1176, alignment 8. */
+typedef struct R4SdkSubsystemStore { _Alignas(8) uint8_t opaque_bytes[1176]; } R4SdkSubsystemStore;
 #define R4SdkSubsystemStore_TYPE 139u
-/* app_storage.Files; native size 8, alignment 8. */
-typedef struct R4SdkSubsystemNative_app_storage_Files { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkSubsystemNative_app_storage_Files;
+/* app_storage.Files; native size 24, alignment 8. */
+typedef struct R4SdkSubsystemNative_app_storage_Files { _Alignas(8) uint8_t opaque_bytes[24]; } R4SdkSubsystemNative_app_storage_Files;
 #define R4SdkSubsystemNative_app_storage_Files_TYPE 140u
-/* ?app_storage.OwnedStageWriter; native size 1080, alignment 8. */
-typedef struct R4SdkSubsystemNativeValue141 { _Alignas(8) uint8_t opaque_bytes[1080]; } R4SdkSubsystemNativeValue141;
+/* ?app_storage.OwnedStageWriter; native size 1096, alignment 8. */
+typedef struct R4SdkSubsystemNativeValue141 { _Alignas(8) uint8_t opaque_bytes[1096]; } R4SdkSubsystemNativeValue141;
 #define R4SdkSubsystemNativeValue141_TYPE 141u
-/* app_storage.OwnedStageWriter; native size 1072, alignment 8. */
-typedef struct R4SdkSubsystemNative_app_storage_OwnedStageWriter { _Alignas(8) uint8_t opaque_bytes[1072]; } R4SdkSubsystemNative_app_storage_OwnedStageWriter;
+/* app_storage.OwnedStageWriter; native size 1088, alignment 8. */
+typedef struct R4SdkSubsystemNative_app_storage_OwnedStageWriter { _Alignas(8) uint8_t opaque_bytes[1088]; } R4SdkSubsystemNative_app_storage_OwnedStageWriter;
 #define R4SdkSubsystemNative_app_storage_OwnedStageWriter_TYPE 142u
 /* *const subsystem_persistence.Configuration; native size 8, alignment 8. */
 typedef struct R4SdkSubsystemNativeValue143 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkSubsystemNativeValue143;
@@ -416,8 +416,8 @@ typedef struct R4SdkSubsystemNativeValue143 { _Alignas(8) uint8_t opaque_bytes[8
 /* subsystem_persistence.R4osStore(subsystem_persistence.Configuration).AsyncStats; native size 64, alignment 8. */
 typedef struct R4SdkSubsystemAsyncStats { _Alignas(8) uint8_t opaque_bytes[64]; } R4SdkSubsystemAsyncStats;
 #define R4SdkSubsystemAsyncStats_TYPE 144u
-/* subsystem_persistence.R4osStore(subsystem_persistence.Configuration).AsyncStore; native size 1312, alignment 8. */
-typedef struct R4SdkSubsystemAsyncStore { _Alignas(8) uint8_t opaque_bytes[1312]; } R4SdkSubsystemAsyncStore;
+/* subsystem_persistence.R4osStore(subsystem_persistence.Configuration).AsyncStore; native size 1344, alignment 8. */
+typedef struct R4SdkSubsystemAsyncStore { _Alignas(8) uint8_t opaque_bytes[1344]; } R4SdkSubsystemAsyncStore;
 #define R4SdkSubsystemAsyncStore_TYPE 145u
 /* ?subsystem_persistence.R4osStore(subsystem_persistence.Configuration).ActiveWrite; native size 48, alignment 8. */
 typedef struct R4SdkSubsystemNativeValue147 { _Alignas(8) uint8_t opaque_bytes[48]; } R4SdkSubsystemNativeValue147;
@@ -485,20 +485,20 @@ typedef struct R4SdkSubsystemNativeValue172 { _Alignas(8) uint8_t opaque_bytes[7
 /* error{InvalidConfiguration,MissingCallback,Unavailable}!subsystem_persistence.Configuration; native size 96, alignment 8. */
 typedef struct R4SdkSubsystemNativeValue173 { _Alignas(8) uint8_t opaque_bytes[96]; } R4SdkSubsystemNativeValue173;
 #define R4SdkSubsystemNativeValue173_TYPE 173u
-/* subsystem_helper_adapters.Context; native size 88, alignment 8. */
-typedef struct R4SdkSubsystemContext { _Alignas(8) uint8_t opaque_bytes[88]; } R4SdkSubsystemContext;
+/* subsystem_helper_adapters.Context; native size 152, alignment 8. */
+typedef struct R4SdkSubsystemContext { _Alignas(8) uint8_t opaque_bytes[152]; } R4SdkSubsystemContext;
 #define R4SdkSubsystemContext_TYPE 174u
 /* program.Bundle; native size 56, alignment 8. */
 typedef struct R4SdkSubsystemNative_program_Bundle { _Alignas(8) uint8_t opaque_bytes[56]; } R4SdkSubsystemNative_program_Bundle;
 #define R4SdkSubsystemNative_program_Bundle_TYPE 175u
-/* r4sys.Context; native size 8, alignment 8. */
-typedef struct R4SdkSubsystemNative_r4sys_Context { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkSubsystemNative_r4sys_Context;
+/* r4sys.Context; native size 24, alignment 8. */
+typedef struct R4SdkSubsystemNative_r4sys_Context { _Alignas(8) uint8_t opaque_bytes[24]; } R4SdkSubsystemNative_r4sys_Context;
 #define R4SdkSubsystemNative_r4sys_Context_TYPE 176u
-/* r4audio.Context; native size 8, alignment 8. */
-typedef struct R4SdkSubsystemNative_r4audio_Context { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkSubsystemNative_r4audio_Context;
+/* r4audio.Context; native size 24, alignment 8. */
+typedef struct R4SdkSubsystemNative_r4audio_Context { _Alignas(8) uint8_t opaque_bytes[24]; } R4SdkSubsystemNative_r4audio_Context;
 #define R4SdkSubsystemNative_r4audio_Context_TYPE 177u
-/* program.Context; native size 8, alignment 8. */
-typedef struct R4SdkSubsystemNative_program_Context { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkSubsystemNative_program_Context;
+/* program.Context; native size 24, alignment 8. */
+typedef struct R4SdkSubsystemNative_program_Context { _Alignas(8) uint8_t opaque_bytes[24]; } R4SdkSubsystemNative_program_Context;
 #define R4SdkSubsystemNative_program_Context_TYPE 178u
 /* *subsystem_helper_adapters.Context; native size 8, alignment 8. */
 typedef struct R4SdkSubsystemNativeValue179 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkSubsystemNativeValue179;
@@ -590,8 +590,8 @@ typedef struct R4SdkSubsystemNativeValue210 { _Alignas(8) uint8_t opaque_bytes[7
 /* ?subsystem_host.Size; native size 12, alignment 4. */
 typedef struct R4SdkSubsystemNativeValue212 { _Alignas(4) uint8_t opaque_bytes[12]; } R4SdkSubsystemNativeValue212;
 #define R4SdkSubsystemNativeValue212_TYPE 212u
-/* error{BufferTooSmall,InvalidSize,Overflow,PaletteTooSmall,ScratchTooSmall,UnsupportedDrawContract,WindowUnavailable}!subsystem_host.Host; native size 1168, alignment 8. */
-typedef struct R4SdkSubsystemNativeValue213 { _Alignas(8) uint8_t opaque_bytes[1168]; } R4SdkSubsystemNativeValue213;
+/* error{BufferTooSmall,InvalidSize,Overflow,PaletteTooSmall,ScratchTooSmall,UnsupportedDrawContract,WindowUnavailable}!subsystem_host.Host; native size 1200, alignment 8. */
+typedef struct R4SdkSubsystemNativeValue213 { _Alignas(8) uint8_t opaque_bytes[1200]; } R4SdkSubsystemNativeValue213;
 #define R4SdkSubsystemNativeValue213_TYPE 213u
 /* ?i32; native size 8, alignment 4. */
 typedef struct R4SdkSubsystemNativeValue215 { _Alignas(4) uint8_t opaque_bytes[8]; } R4SdkSubsystemNativeValue215;
@@ -695,7 +695,7 @@ typedef struct R4SdkSubsystemNativeValue254 { _Alignas(8) uint8_t opaque_bytes[8
 /* *abi.AudioServiceStreamResult; native size 8, alignment 8. */
 typedef struct R4SdkSubsystemNativeValue256 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkSubsystemNativeValue256;
 #define R4SdkSubsystemNativeValue256_TYPE 256u
-#define R4SdkSubsystem_ABI_FINGERPRINT UINT64_C(12413102210881657404)
+#define R4SdkSubsystem_ABI_FINGERPRINT UINT64_C(14514733300798266635)
 int32_t R4SdkSubsystemVerifyAbi(uint64_t);
 #define R4SdkSubsystemCatalog_max_entries (192)
 #define R4SdkSubsystemCatalog_max_candidates (128)

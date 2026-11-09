@@ -2,7 +2,7 @@
 //! no normal App main invocation or implicit entropy/heap initialization.
 pub use crate::abi as contract;
 use crate::{App, StartupInfo, abi};
-use core::{ffi::CStr, sync::atomic::Ordering};
+use core::{ffi::CStr, mem};
 pub type Context<'a> = App<'a>;
 /// # Safety
 /// Called only from the exact current loader entry. All admitted context and
@@ -14,13 +14,18 @@ pub unsafe fn invoke(
     name: &'static CStr,
     entry: unsafe extern "C" fn(*const abi::R4XStartContext) -> i32,
 ) -> i32 {
-    let _view = match unsafe { App::from_raw(raw, expected, name) } {
+    let view = match unsafe { App::from_raw(raw, expected, name) } {
         Ok(v) => v,
         Err(e) => return e,
     };
-    crate::PANIC_CONTEXT.store(raw.cast_mut(), Ordering::Release);
+    crate::bind_panic_callbacks(
+        view.sys_slot(mem::offset_of!(abi::R4XStartR4Sys, write))
+            .unwrap_or(0) as u64,
+        view.sys_slot(mem::offset_of!(abi::R4XStartR4Sys, program_exit))
+            .unwrap_or(0) as u64,
+    );
     let code = unsafe { entry(raw) };
-    crate::PANIC_CONTEXT.store(core::ptr::null_mut(), Ordering::Release);
+    crate::clear_panic_callbacks();
     code
 }
 /// Explicit initialization for users choosing SDK entropy/global allocation.

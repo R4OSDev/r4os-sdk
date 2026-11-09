@@ -1,8 +1,10 @@
 //! The single SDK helper object shared by C and Rust consumers.
+pub const panic = @import("runtime_fault.zig").panic;
 comptime {
     _ = @import("driver_value_bridge.zig");
     _ = @import("subsystem_value_bridge.zig");
     _ = @import("runtime_bootstrap.zig");
+    _ = @import("app2_runtime.zig");
     _ = @import("storage_runtime.zig");
     _ = @import("services_runtime.zig");
     _ = @import("time_budget_runtime.zig");

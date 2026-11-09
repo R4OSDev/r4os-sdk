@@ -67,6 +67,7 @@ pub fn build(b: *std.Build) void {
         const target = b.standardTargetOptions(.{});
         const bundle = b.createModule(.{ .root_source_file = b.path("r4os/r4cp_convert.zig"), .target = target, .optimize = sdk_profiles.defaults.host_optimize });
         bundle.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
+        bundle.addImport("r4os_contract2", contract_dependency.module("r4os_contract2"));
         const root = b.createModule(.{ .root_source_file = b.path("Tools/ModuleCatalog/src/main.zig"), .target = target, .optimize = sdk_profiles.defaults.host_optimize });
         root.addImport("contract_bundle", bundle);
         b.installArtifact(b.addExecutable(.{ .name = "module-catalog", .root_module = root }));
@@ -87,6 +88,7 @@ pub fn build(b: *std.Build) void {
     if (b.option(bool, "r4l-provider-tests-only", "Only current manifest/library contract tests") orelse false) {
         const root = b.createModule(.{ .root_source_file = b.path("r4os/module_manifest.zig"), .target = b.graph.host, .optimize = sdk_profiles.defaults.host_optimize });
         root.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
+        root.addImport("r4os_contract2", contract_dependency.module("r4os_contract2"));
         const manifest_tests = b.addRunArtifact(b.addTest(.{ .root_module = root }));
         const contract_tests = b.addRunArtifact(b.addTest(.{ .root_module = sdk_profile.r4l_contract_generator.?.root_module }));
         b.getInstallStep().dependOn(&manifest_tests.step);
@@ -100,6 +102,7 @@ pub fn build(b: *std.Build) void {
         const target = b.resolveTargetQuery(.{ .cpu_arch = .x86_64, .os_tag = b.graph.host.result.os.tag, .abi = b.graph.host.result.abi, .cpu_model = .baseline });
         const cases = b.createModule(.{ .root_source_file = b.path("test_update_owners.zig"), .target = target, .optimize = sdk_profiles.defaults.host_optimize });
         cases.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
+        cases.addImport("r4os_contract2", contract_dependency.module("r4os_contract2"));
         cases.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = target, .optimize = sdk_profiles.defaults.host_optimize }));
         cases.addImport("json_core", b.createModule(.{ .root_source_file = .{ .cwd_relative = json_file }, .target = target, .optimize = sdk_profiles.defaults.host_optimize }));
         const selected = b.addRunArtifact(b.addTest(.{ .root_module = cases, .filters = @import("Tests/Simulation/UpdateFilters.zig").names }));
@@ -121,6 +124,7 @@ pub fn build(b: *std.Build) void {
         const target = b.resolveTargetQuery(.{ .cpu_arch = .x86_64, .os_tag = b.graph.host.result.os.tag, .abi = b.graph.host.result.abi, .cpu_model = .baseline });
         const cases = b.createModule(.{ .root_source_file = b.path("test_subsystem_owners.zig"), .target = target, .optimize = sdk_profiles.defaults.host_optimize });
         cases.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
+        cases.addImport("r4os_contract2", contract_dependency.module("r4os_contract2"));
         cases.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = target, .optimize = sdk_profiles.defaults.host_optimize }));
         const selected = b.addRunArtifact(b.addTest(.{ .root_module = cases, .filters = @import("Tests/Simulation/SubsystemFilters.zig").names }));
         b.getInstallStep().dependOn(&selected.step);
@@ -130,6 +134,7 @@ pub fn build(b: *std.Build) void {
         const root = b.createModule(.{ .root_source_file = b.path("Tools/DataBridgeGen/src/main.zig"), .target = b.graph.host, .optimize = sdk_profiles.defaults.debug_optimize, .strip = true });
         const schema = b.createModule(.{ .root_source_file = b.path("r4os/driver_bridge_schema.zig"), .target = b.graph.host, .optimize = sdk_profiles.defaults.debug_optimize });
         schema.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
+        schema.addImport("r4os_contract2", contract_dependency.module("r4os_contract2"));
         const options = b.createModule(.{ .root_source_file = b.path("r4os/driver_bridge_names.zig"), .target = b.graph.host, .optimize = sdk_profiles.defaults.debug_optimize });
         options.addImport("schema", schema);
         root.addImport("schema", schema);
@@ -141,6 +146,7 @@ pub fn build(b: *std.Build) void {
         const root = b.createModule(.{ .root_source_file = b.path("Tools/DataBridgeGen/src/main.zig"), .target = b.graph.host, .optimize = sdk_profiles.defaults.debug_optimize, .strip = true });
         const schema = b.createModule(.{ .root_source_file = b.path("r4os/subsystem_bridge_schema.zig"), .target = b.graph.host, .optimize = sdk_profiles.defaults.debug_optimize });
         schema.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
+        schema.addImport("r4os_contract2", contract_dependency.module("r4os_contract2"));
         schema.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = b.graph.host, .optimize = sdk_profiles.defaults.host_optimize }));
         const options = b.createModule(.{ .root_source_file = b.path("r4os/subsystem_bridge_names.zig"), .target = b.graph.host, .optimize = sdk_profiles.defaults.debug_optimize });
         options.addImport("schema", schema);
@@ -153,6 +159,7 @@ pub fn build(b: *std.Build) void {
         const root = b.createModule(.{ .root_source_file = b.path("Tools/DataBridgeGen/src/main.zig"), .target = b.graph.host, .optimize = sdk_profiles.defaults.debug_optimize, .strip = true });
         const schema = b.createModule(.{ .root_source_file = b.path("r4os/update_bridge_schema.zig"), .target = b.graph.host, .optimize = sdk_profiles.defaults.debug_optimize });
         schema.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
+        schema.addImport("r4os_contract2", contract_dependency.module("r4os_contract2"));
         schema.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = b.graph.host, .optimize = sdk_profiles.defaults.host_optimize }));
         const options = b.createModule(.{ .root_source_file = b.path("r4os/update_bridge_names.zig"), .target = b.graph.host, .optimize = sdk_profiles.defaults.debug_optimize });
         options.addImport("schema", schema);
@@ -165,6 +172,7 @@ pub fn build(b: *std.Build) void {
         const root = b.createModule(.{ .root_source_file = b.path("Tools/DataBridgeGen/src/main.zig"), .target = b.graph.host, .optimize = sdk_profiles.defaults.debug_optimize, .strip = true });
         const schema = b.createModule(.{ .root_source_file = b.path("r4os/transport_bridge_schema.zig"), .target = b.graph.host, .optimize = sdk_profiles.defaults.debug_optimize });
         schema.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
+        schema.addImport("r4os_contract2", contract_dependency.module("r4os_contract2"));
         schema.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = b.graph.host, .optimize = sdk_profiles.defaults.host_optimize }));
         const options = b.createModule(.{ .root_source_file = b.path("r4os/transport_bridge_names.zig"), .target = b.graph.host, .optimize = sdk_profiles.defaults.debug_optimize });
         options.addImport("schema", schema);
@@ -177,6 +185,7 @@ pub fn build(b: *std.Build) void {
         const root = b.createModule(.{ .root_source_file = b.path("Tools/DataBridgeGen/src/main.zig"), .target = b.graph.host, .optimize = sdk_profiles.defaults.debug_optimize, .strip = true });
         const schema = b.createModule(.{ .root_source_file = b.path("r4os/web_bridge_schema.zig"), .target = b.graph.host, .optimize = sdk_profiles.defaults.debug_optimize });
         schema.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
+        schema.addImport("r4os_contract2", contract_dependency.module("r4os_contract2"));
         schema.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = b.graph.host, .optimize = sdk_profiles.defaults.host_optimize }));
         const options = b.createModule(.{ .root_source_file = b.path("r4os/web_bridge_names.zig"), .target = b.graph.host, .optimize = sdk_profiles.defaults.debug_optimize });
         options.addImport("schema", schema);
@@ -187,7 +196,7 @@ pub fn build(b: *std.Build) void {
     }
     if (b.option(bool, "web-bridge-runtime-only", "Build only the SDK web owner boundary") orelse false) {
         const native = b.option(bool, "web-bridge-host-test", "Native ABI for web helper interop") orelse false;
-        const object = r4os_build.addStorageRuntimeObject(b, b.path("r4os/web_value_bridge.zig"), sdk_profile.profile.contract_module, sdk_profile.profile.grapheme_source.?, sdk_profile.builder, native);
+        const object = r4os_build.addStorageRuntimeObject(b, b.path("r4os/web_value_bridge.zig"), sdk_profile.profile.contract_module, sdk_profile.profile.contract_module2, sdk_profile.profile.grapheme_source.?, sdk_profile.builder, native);
         b.getInstallStep().dependOn(&b.addInstallFile(object, "lib/r4sdk_web.o").step);
         return;
     }
@@ -195,6 +204,7 @@ pub fn build(b: *std.Build) void {
         const root = b.createModule(.{ .root_source_file = b.path("Tools/DataBridgeGen/src/main.zig"), .target = b.graph.host, .optimize = sdk_profiles.defaults.debug_optimize, .strip = true });
         const schema = b.createModule(.{ .root_source_file = b.path("r4os/data_bridge_schema.zig"), .target = b.graph.host, .optimize = sdk_profiles.defaults.debug_optimize });
         schema.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
+        schema.addImport("r4os_contract2", contract_dependency.module("r4os_contract2"));
         schema.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = b.graph.host, .optimize = sdk_profiles.defaults.host_optimize }));
         root.addImport("schema", schema);
         const options = b.createModule(.{ .root_source_file = b.path("Tools/DataBridgeGen/src/options.zig"), .target = b.graph.host, .optimize = sdk_profiles.defaults.debug_optimize });
@@ -205,7 +215,7 @@ pub fn build(b: *std.Build) void {
     }
     if (b.option(bool, "data-bridge-runtime-only", "Build only the SDK data owner boundary") orelse false) {
         const native = b.option(bool, "data-bridge-host-test", "Use native ABI for data helper interop") orelse false;
-        const object = r4os_build.addStorageRuntimeObject(b, b.path("r4os/data_value_bridge.zig"), sdk_profile.profile.contract_module, sdk_profile.profile.grapheme_source.?, sdk_profile.builder, native);
+        const object = r4os_build.addStorageRuntimeObject(b, b.path("r4os/data_value_bridge.zig"), sdk_profile.profile.contract_module, sdk_profile.profile.contract_module2, sdk_profile.profile.grapheme_source.?, sdk_profile.builder, native);
         b.getInstallStep().dependOn(&b.addInstallFile(object, "lib/r4sdk_data.o").step);
         return;
     }
@@ -213,6 +223,7 @@ pub fn build(b: *std.Build) void {
         if (b.option(bool, "library-helpers-rust-generator-only", "Project the library-owned C helper header to Rust") orelse false) {
             const root = b.createModule(.{ .root_source_file = .{ .cwd_relative = b.pathResolve(&.{ library_root, "Shared/Language/rust_gen.zig" }) }, .target = b.graph.host, .optimize = sdk_profiles.defaults.debug_optimize, .strip = true, .link_libc = true });
             root.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
+            root.addImport("r4os_contract2", contract_dependency.module("r4os_contract2"));
             root.addIncludePath(.{ .cwd_relative = b.pathResolve(&.{ library_root, "Shared/C/include" }) });
             root.addIncludePath(sdk_profile.profile.c_include_root);
             root.addIncludePath(sdk_profile.profile.contract_c_include_root);
@@ -268,7 +279,7 @@ pub fn build(b: *std.Build) void {
     }
     if (b.option(bool, "gui-bridge-runtime-only", "Build only the shared GUI owner boundary") orelse false) {
         const native = b.option(bool, "gui-bridge-host-test", "Use native ABI for GUI bridge interop") orelse false;
-        const object = r4os_build.addStorageRuntimeObject(b, b.path("r4os/gui_value_bridge.zig"), sdk_profile.profile.contract_module, sdk_profile.profile.grapheme_source.?, sdk_profile.builder, native);
+        const object = r4os_build.addStorageRuntimeObject(b, b.path("r4os/gui_value_bridge.zig"), sdk_profile.profile.contract_module, sdk_profile.profile.contract_module2, sdk_profile.profile.grapheme_source.?, sdk_profile.builder, native);
         b.getInstallStep().dependOn(&b.addInstallFile(object, "lib/r4sdk_gui.o").step);
         return;
     }
@@ -276,6 +287,7 @@ pub fn build(b: *std.Build) void {
         const root = b.createModule(.{ .root_source_file = b.path("Tools/GuiBridgeGen/src/main.zig"), .target = b.graph.host, .optimize = sdk_profiles.defaults.debug_optimize });
         const schema = b.createModule(.{ .root_source_file = b.path("r4os/gui_bridge_schema.zig"), .target = b.graph.host, .optimize = sdk_profiles.defaults.debug_optimize });
         schema.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
+        schema.addImport("r4os_contract2", contract_dependency.module("r4os_contract2"));
         schema.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = b.graph.host, .optimize = sdk_profiles.defaults.host_optimize }));
         root.addImport("schema", schema);
         b.installArtifact(b.addExecutable(.{ .name = "gui-bridge-gen", .root_module = root }));
@@ -285,6 +297,7 @@ pub fn build(b: *std.Build) void {
         const root = b.createModule(.{ .root_source_file = b.path("Tools/NetBridgeGen/src/main.zig"), .target = b.graph.host, .optimize = sdk_profiles.defaults.host_optimize });
         const bridge = b.createModule(.{ .root_source_file = b.path("r4os/net_bridge_support.zig"), .target = b.graph.host, .optimize = sdk_profiles.defaults.host_optimize });
         bridge.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
+        bridge.addImport("r4os_contract2", contract_dependency.module("r4os_contract2"));
         bridge.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = b.graph.host, .optimize = sdk_profiles.defaults.host_optimize }));
         root.addImport("bridge", bridge);
         b.installArtifact(b.addExecutable(.{ .name = "net-bridge-gen", .root_module = root }));
@@ -293,6 +306,7 @@ pub fn build(b: *std.Build) void {
     if (b.option(bool, "facade-generator-only", "Build the compiler-typed SDK C/Rust facade projector") orelse false) {
         const root = b.createModule(.{ .root_source_file = b.path("Tools/CFacadeGen/src/main.zig"), .target = b.graph.host, .optimize = sdk_profiles.defaults.host_optimize, .link_libc = true });
         root.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
+        root.addImport("r4os_contract2", contract_dependency.module("r4os_contract2"));
         root.addIncludePath(sdk_profile.profile.c_include_root);
         root.addIncludePath(sdk_profile.profile.contract_c_include_root);
         @import("r4os/c_header_inputs.zig").addMacro(b, root, &.{ sdk_profile.profile.c_include_root, sdk_profile.profile.contract_c_include_root });
@@ -305,7 +319,7 @@ pub fn build(b: *std.Build) void {
         const install_c = b.addInstallFile(object, "lib/r4sdk_facades.o");
         b.getInstallStep().dependOn(&install_c.step);
         b.step("facade-c-runtime", "Build only the existing C facade object").dependOn(&install_c.step);
-        const storage_runtime = r4os_build.addStorageRuntimeObject(b, b.path("r4os/facade_runtime.zig"), sdk_profile.profile.contract_module, sdk_profile.profile.grapheme_source.?, sdk_profile.builder, native);
+        const storage_runtime = r4os_build.addStorageRuntimeObject(b, b.path("r4os/facade_runtime.zig"), sdk_profile.profile.contract_module, sdk_profile.profile.contract_module2, sdk_profile.profile.grapheme_source.?, sdk_profile.builder, native);
         b.getInstallStep().dependOn(&b.addInstallFile(storage_runtime, "lib/r4sdk_storage.o").step);
         return;
     }
@@ -315,8 +329,15 @@ pub fn build(b: *std.Build) void {
     if (b.option(bool, "heap-host-test-only", "Build the native SDK heap object for its host interop test") orelse false) {
         const root = b.createModule(.{ .root_source_file = b.path("r4os/heap_runtime.zig"), .target = b.graph.host, .optimize = sdk_profiles.defaults.host_optimize, .pic = true, .single_threaded = false, .stack_check = false });
         root.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
+        root.addImport("r4os_contract2", contract_dependency.module("r4os_contract2"));
         const object = b.addObject(.{ .name = "r4sdk_heap_host", .root_module = root });
         b.getInstallStep().dependOn(&b.addInstallFile(object.getEmittedBin(), "lib/r4sdk_heap_host.o").step);
+        const startup = b.createModule(.{ .root_source_file = b.path("r4os/app2_runtime.zig"), .target = b.graph.host, .optimize = sdk_profiles.defaults.host_optimize, .pic = true, .single_threaded = false, .stack_check = false });
+        startup.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
+        startup.addImport("r4os_contract2", contract_dependency.module("r4os_contract2"));
+        startup.addImport("r4os_contract2", contract_dependency.module("r4os_contract2"));
+        const startup_object = b.addObject(.{ .name = "r4sdk_startup2_host", .root_module = startup });
+        b.getInstallStep().dependOn(&b.addInstallFile(startup_object.getEmittedBin(), "lib/r4sdk_startup2_host.o").step);
         return;
     }
     const heap_runtime = sdk_profile.addHeapRuntime();
@@ -353,6 +374,7 @@ pub fn build(b: *std.Build) void {
     const data_cases = b.createModule(.{ .root_source_file = b.path("test_owners.zig"), .target = data_target, .optimize = sdk_profiles.defaults.host_optimize });
     data_cases.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
     data_cases.addImport("r4os_contract2", contract_dependency.module("r4os_contract2"));
+    data_cases.addImport("r4os_contract2", contract_dependency.module("r4os_contract2"));
     data_cases.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = data_target, .optimize = sdk_profiles.defaults.host_optimize }));
     const data_tests = b.addRunArtifact(b.addTest(.{ .root_module = data_cases, .filters = &.{ "protocol status", "ZIP protocol status", "parse Windows ICO", "parse 8bpp", "bulk ICO", "raster ", "Encoding labels", "TextEncoder", "TextDecoder", "URL", "SHA-256 digest", "release and installed", "semantic versions", "R4M0 metadata", "metadata reads", "V2 derives profile", "contract plan is deterministic", "wire owner", "cli owner", "stream owner", "inventory owner", "device snapshot owner", "metadata2 owner", "text metrics owner", "composition owner", "file picker owner", "audio write owner", "published frame owner" } }));
     const data_step = b.step("data-parity-test", "Existing bounded data, codec, raster, metadata and protocol facade owner cases");
@@ -361,6 +383,7 @@ pub fn build(b: *std.Build) void {
     // record layouts. Keep one small actual ABI call in the existing step.
     const composition_abi = b.createModule(.{ .root_source_file = b.path("r4os/text_composition_abi_tests.zig"), .target = data_target, .optimize = sdk_profiles.defaults.host_optimize, .link_libc = true });
     composition_abi.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
+    composition_abi.addImport("r4os_contract2", contract_dependency.module("r4os_contract2"));
     composition_abi.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = data_target, .optimize = sdk_profiles.defaults.host_optimize }));
     composition_abi.addIncludePath(sdk_profile.profile.c_include_root);
     composition_abi.addIncludePath(sdk_profile.profile.contract_c_include_root);
@@ -393,6 +416,7 @@ pub fn build(b: *std.Build) void {
     b.step("transport-parity-test", "Existing bounded HTTP/cache/policy/resource/download owner cases").dependOn(&transport_tests.step);
     const update_cases = b.createModule(.{ .root_source_file = b.path("test_update_owners.zig"), .target = data_target, .optimize = sdk_profiles.defaults.host_optimize });
     update_cases.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
+    update_cases.addImport("r4os_contract2", contract_dependency.module("r4os_contract2"));
     update_cases.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = data_target, .optimize = sdk_profiles.defaults.host_optimize }));
     if (update_json_core) |file| update_cases.addImport("json_core", b.createModule(.{ .root_source_file = .{ .cwd_relative = file }, .target = data_target, .optimize = sdk_profiles.defaults.host_optimize }));
     const update_tests = b.addRunArtifact(b.addTest(.{ .root_module = update_cases, .filters = @import("Tests/Simulation/UpdateFilters.zig").names }));
@@ -432,6 +456,7 @@ pub fn build(b: *std.Build) void {
         .optimize = sdk_profiles.defaults.debug_optimize,
     });
     dialog_root.addImport("r4os_contract", sdk_profile.profile.contract_module);
+    dialog_root.addImport("r4os_contract2", contract_dependency.module("r4os_contract2"));
     dialog_root.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = b.graph.host, .optimize = sdk_profiles.defaults.debug_optimize }));
     const dialog_tests = b.addTest(.{ .root_module = dialog_root, .filters = &.{
         "bounded text", "text field",  "text fields",
@@ -447,6 +472,7 @@ pub fn build(b: *std.Build) void {
         .optimize = sdk_profiles.defaults.host_optimize,
     });
     cpu_tests_root.addImport("r4os_contract", sdk_profile.profile.contract_module);
+    cpu_tests_root.addImport("r4os_contract2", contract_dependency.module("r4os_contract2"));
     const cpu_tests = b.addRunArtifact(b.addTest(.{ .root_module = cpu_tests_root }));
     b.step("cpu-acceleration-test", "Exact dispatch, SHA fallback/rollback, memory alignment/overlap/guard pages").dependOn(&cpu_tests.step);
     const entropy_tests_root = b.createModule(.{
@@ -455,6 +481,7 @@ pub fn build(b: *std.Build) void {
         .optimize = sdk_profiles.defaults.host_optimize,
     });
     entropy_tests_root.addImport("r4os_contract", sdk_profile.profile.contract_module);
+    entropy_tests_root.addImport("r4os_contract2", contract_dependency.module("r4os_contract2"));
     const entropy_tests = b.addRunArtifact(b.addTest(.{ .root_module = entropy_tests_root }));
     b.step("entropy-test", "Shared entropy CF bound, source fallback and whole-output failure").dependOn(&entropy_tests.step);
 
@@ -484,6 +511,7 @@ pub fn build(b: *std.Build) void {
         .optimize = sdk_profiles.defaults.debug_optimize,
     });
     vm_allocator_module.addImport("r4os_contract", sdk_profile.profile.contract_module);
+    vm_allocator_module.addImport("r4os_contract2", contract_dependency.module("r4os_contract2"));
     const vm_allocator_tests = b.addTest(.{ .root_module = vm_allocator_module });
     const run_vm_allocator_tests = b.addRunArtifact(vm_allocator_tests);
     b.step("vm-allocator-test", "Run the existing VM allocator ownership and concurrency tests").dependOn(&run_vm_allocator_tests.step);
@@ -494,6 +522,7 @@ pub fn build(b: *std.Build) void {
         .optimize = sdk_profiles.defaults.debug_optimize,
     });
     subsystem_runtime_module.addImport("r4os_contract", sdk_profile.profile.contract_module);
+    subsystem_runtime_module.addImport("r4os_contract2", contract_dependency.module("r4os_contract2"));
     const subsystem_runtime_tests = b.addTest(.{ .root_module = subsystem_runtime_module });
     const run_subsystem_runtime_tests = b.addRunArtifact(subsystem_runtime_tests);
     b.step("subsystem-runtime-test", "Run existing SubsystemRuntime owner cases").dependOn(&run_subsystem_runtime_tests.step);
@@ -542,6 +571,7 @@ pub fn build(b: *std.Build) void {
         .optimize = sdk_profiles.defaults.debug_optimize,
     });
     catalog_bundle.addImport("r4os_contract", sdk_profile.profile.contract_module);
+    catalog_bundle.addImport("r4os_contract2", contract_dependency.module("r4os_contract2"));
     const catalog_root = b.createModule(.{
         .root_source_file = b.path("Tools/ModuleCatalog/src/main.zig"),
         .target = b.graph.host,
@@ -574,6 +604,7 @@ pub fn build(b: *std.Build) void {
         .optimize = sdk_profiles.defaults.host_optimize,
     });
     input_events_root.addImport("r4os_contract", sdk_profile.profile.contract_module);
+    input_events_root.addImport("r4os_contract2", contract_dependency.module("r4os_contract2"));
     const input_events_tests = b.addRunArtifact(b.addTest(.{ .root_module = input_events_root }));
     b.step("input-events-test", "Typed console events, retained producer queue and inaccessible legacy table tail").dependOn(&input_events_tests.step);
     test_step.dependOn(&input_events_tests.step);

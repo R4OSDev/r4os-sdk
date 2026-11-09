@@ -59,8 +59,8 @@ typedef struct R4SdkGuiType11 { _Alignas(4) uint8_t opaque_bytes[8]; } R4SdkGuiT
 /* *const r4draw.Context; native size 8, alignment 8. */
 typedef struct R4SdkGuiType12 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkGuiType12;
 #define R4SdkGuiType12_TYPE 12u
-/* r4draw.Context; native size 8, alignment 8. */
-typedef struct R4SdkGuiDrawContext { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkGuiDrawContext;
+/* r4draw.Context; native size 24, alignment 8. */
+typedef struct R4SdkGuiDrawContext { _Alignas(8) uint8_t opaque_bytes[24]; } R4SdkGuiDrawContext;
 #define R4SdkGuiDrawContext_TYPE 13u
 /* gui.Align; native size 1, alignment 1. */
 typedef struct R4SdkGuiAlign { _Alignas(1) uint8_t opaque_bytes[1]; } R4SdkGuiAlign;
@@ -299,14 +299,14 @@ typedef struct R4SdkGuiTextField { _Alignas(8) uint8_t opaque_bytes[96]; } R4Sdk
 /* *const r4sys.Context; native size 8, alignment 8. */
 typedef struct R4SdkGuiType94 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkGuiType94;
 #define R4SdkGuiType94_TYPE 94u
-/* r4sys.Context; native size 8, alignment 8. */
-typedef struct R4SdkGuiSystemContext { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkGuiSystemContext;
+/* r4sys.Context; native size 24, alignment 8. */
+typedef struct R4SdkGuiSystemContext { _Alignas(8) uint8_t opaque_bytes[24]; } R4SdkGuiSystemContext;
 #define R4SdkGuiSystemContext_TYPE 95u
 /* *const r4desk.Context; native size 8, alignment 8. */
 typedef struct R4SdkGuiType96 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkGuiType96;
 #define R4SdkGuiType96_TYPE 96u
-/* r4desk.Context; native size 8, alignment 8. */
-typedef struct R4SdkGuiDesktopContext { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkGuiDesktopContext;
+/* r4desk.Context; native size 24, alignment 8. */
+typedef struct R4SdkGuiDesktopContext { _Alignas(8) uint8_t opaque_bytes[24]; } R4SdkGuiDesktopContext;
 #define R4SdkGuiDesktopContext_TYPE 97u
 /* *abi_generated.GuiEvent; native size 8, alignment 8. */
 typedef struct R4SdkGuiType98 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkGuiType98;
@@ -389,8 +389,8 @@ typedef struct R4SdkGuiType125 { _Alignas(1) uint8_t opaque_bytes[1]; } R4SdkGui
 /* app_gui.Timer; native size 24, alignment 8. */
 typedef struct R4SdkGuiTimer { _Alignas(8) uint8_t opaque_bytes[24]; } R4SdkGuiTimer;
 #define R4SdkGuiTimer_TYPE 126u
-/* app_gui.EventLoop; native size 64, alignment 8. */
-typedef struct R4SdkGuiEventLoop { _Alignas(8) uint8_t opaque_bytes[64]; } R4SdkGuiEventLoop;
+/* app_gui.EventLoop; native size 96, alignment 8. */
+typedef struct R4SdkGuiEventLoop { _Alignas(8) uint8_t opaque_bytes[96]; } R4SdkGuiEventLoop;
 #define R4SdkGuiEventLoop_TYPE 127u
 /* []app_gui.Timer; native size 16, alignment 8. */
 typedef struct R4SdkGuiType128 { _Alignas(8) uint8_t opaque_bytes[16]; } R4SdkGuiType128;
@@ -416,8 +416,8 @@ typedef struct R4SdkGuiActionPaintView { _Alignas(8) uint8_t opaque_bytes[160]; 
 /* []const abi_generated.DisplayDamageRect; native size 16, alignment 8. */
 typedef struct R4SdkGuiType136 { _Alignas(8) uint8_t opaque_bytes[16]; } R4SdkGuiType136;
 #define R4SdkGuiType136_TYPE 136u
-/* app_gui.Window; native size 96, alignment 8. */
-typedef struct R4SdkGuiWindow { _Alignas(8) uint8_t opaque_bytes[96]; } R4SdkGuiWindow;
+/* app_gui.Window; native size 176, alignment 8. */
+typedef struct R4SdkGuiWindow { _Alignas(8) uint8_t opaque_bytes[176]; } R4SdkGuiWindow;
 #define R4SdkGuiWindow_TYPE 138u
 /* gui_shapes.Point; native size 8, alignment 4. */
 typedef struct R4SdkGuiShapePoint { _Alignas(4) uint8_t opaque_bytes[8]; } R4SdkGuiShapePoint;
@@ -503,8 +503,8 @@ typedef struct R4SdkGuiClipboardReadResult { _Alignas(8) uint8_t opaque_bytes[32
 /* *const program.Context; native size 8, alignment 8. */
 typedef struct R4SdkGuiType168 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkGuiType168;
 #define R4SdkGuiType168_TYPE 168u
-/* program.Context; native size 8, alignment 8. */
-typedef struct R4SdkGuiProgramContext { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkGuiProgramContext;
+/* program.Context; native size 24, alignment 8. */
+typedef struct R4SdkGuiProgramContext { _Alignas(8) uint8_t opaque_bytes[24]; } R4SdkGuiProgramContext;
 #define R4SdkGuiProgramContext_TYPE 169u
 /* ?abi_generated.ConsoleInputEvent; native size 20, alignment 4. */
 typedef struct R4SdkGuiType170 { _Alignas(4) uint8_t opaque_bytes[20]; } R4SdkGuiType170;
@@ -542,14 +542,14 @@ typedef struct R4SdkGfxTelemetryField { _Alignas(8) uint8_t opaque_bytes[56]; } 
 /* *abi_generated.GfxTelemetryState; native size 8, alignment 8. */
 typedef struct R4SdkGuiType187 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkGuiType187;
 #define R4SdkGuiType187_TYPE 187u
-/* gfx_buffers.Context; native size 8, alignment 8. */
-typedef struct R4SdkGfxBuffersContext { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkGfxBuffersContext;
+/* gfx_buffers.Context; native size 24, alignment 8. */
+typedef struct R4SdkGfxBuffersContext { _Alignas(8) uint8_t opaque_bytes[24]; } R4SdkGfxBuffersContext;
 #define R4SdkGfxBuffersContext_TYPE 189u
-/* gfx_outputs.Context; native size 8, alignment 8. */
-typedef struct R4SdkGfxOutputsContext { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkGfxOutputsContext;
+/* gfx_outputs.Context; native size 24, alignment 8. */
+typedef struct R4SdkGfxOutputsContext { _Alignas(8) uint8_t opaque_bytes[24]; } R4SdkGfxOutputsContext;
 #define R4SdkGfxOutputsContext_TYPE 190u
-/* gfx_queue.Context; native size 8, alignment 8. */
-typedef struct R4SdkGfxQueueContext { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkGfxQueueContext;
+/* gfx_queue.Context; native size 24, alignment 8. */
+typedef struct R4SdkGfxQueueContext { _Alignas(8) uint8_t opaque_bytes[24]; } R4SdkGfxQueueContext;
 #define R4SdkGfxQueueContext_TYPE 191u
 /* *const abi_generated.GfxTelemetryState; native size 8, alignment 8. */
 typedef struct R4SdkGuiType192 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkGuiType192;
@@ -596,41 +596,41 @@ typedef struct R4SdkAudioWriteAdvance { _Alignas(8) uint8_t opaque_bytes[16]; } 
 /* app_audio.WriteCursor; native size 24, alignment 8. */
 typedef struct R4SdkAudioWriteCursor { _Alignas(8) uint8_t opaque_bytes[24]; } R4SdkAudioWriteCursor;
 #define R4SdkAudioWriteCursor_TYPE 209u
-/* app_audio.OpenResult; native size 256, alignment 8. */
-typedef struct R4SdkAudioOpenResult { _Alignas(8) uint8_t opaque_bytes[256]; } R4SdkAudioOpenResult;
+/* app_audio.OpenResult; native size 272, alignment 8. */
+typedef struct R4SdkAudioOpenResult { _Alignas(8) uint8_t opaque_bytes[272]; } R4SdkAudioOpenResult;
 #define R4SdkAudioOpenResult_TYPE 210u
 /* @typeInfo(app_audio.OpenResult).@"union".tag_type.?; native size 1, alignment 1. */
 typedef struct R4SdkGuiType211 { _Alignas(1) uint8_t opaque_bytes[1]; } R4SdkGuiType211;
 #define R4SdkGuiType211_TYPE 211u
-/* app_audio.AudioStream; native size 248, alignment 8. */
-typedef struct R4SdkAudioAudioStream { _Alignas(8) uint8_t opaque_bytes[248]; } R4SdkAudioAudioStream;
+/* app_audio.AudioStream; native size 264, alignment 8. */
+typedef struct R4SdkAudioAudioStream { _Alignas(8) uint8_t opaque_bytes[264]; } R4SdkAudioAudioStream;
 #define R4SdkAudioAudioStream_TYPE 212u
-/* app_services.ServiceConnection; native size 232, alignment 8. */
-typedef struct R4SdkGuiType213 { _Alignas(8) uint8_t opaque_bytes[232]; } R4SdkGuiType213;
+/* app_services.ServiceConnection; native size 248, alignment 8. */
+typedef struct R4SdkGuiType213 { _Alignas(8) uint8_t opaque_bytes[248]; } R4SdkGuiType213;
 #define R4SdkGuiType213_TYPE 213u
-/* app_audio.Audio; native size 16, alignment 8. */
-typedef struct R4SdkAudioAudio { _Alignas(8) uint8_t opaque_bytes[16]; } R4SdkAudioAudio;
+/* app_audio.Audio; native size 48, alignment 8. */
+typedef struct R4SdkAudioAudio { _Alignas(8) uint8_t opaque_bytes[48]; } R4SdkAudioAudio;
 #define R4SdkAudioAudio_TYPE 215u
-/* r4audio.Context; native size 8, alignment 8. */
-typedef struct R4SdkAudioContext { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkAudioContext;
+/* r4audio.Context; native size 24, alignment 8. */
+typedef struct R4SdkAudioContext { _Alignas(8) uint8_t opaque_bytes[24]; } R4SdkAudioContext;
 #define R4SdkAudioContext_TYPE 216u
-/* app_audio.AdvancedAudio; native size 8, alignment 8. */
-typedef struct R4SdkAudioAdvancedAudio { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkAudioAdvancedAudio;
+/* app_audio.AdvancedAudio; native size 24, alignment 8. */
+typedef struct R4SdkAudioAdvancedAudio { _Alignas(8) uint8_t opaque_bytes[24]; } R4SdkAudioAdvancedAudio;
 #define R4SdkAudioAdvancedAudio_TYPE 217u
-/* app_devices.Devices; native size 8, alignment 8. */
-typedef struct R4SdkDevicesDevices { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkDevicesDevices;
+/* app_devices.Devices; native size 24, alignment 8. */
+typedef struct R4SdkDevicesDevices { _Alignas(8) uint8_t opaque_bytes[24]; } R4SdkDevicesDevices;
 #define R4SdkDevicesDevices_TYPE 218u
-/* r4dev.Context; native size 8, alignment 8. */
-typedef struct R4SdkGfxDeviceContext { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkGfxDeviceContext;
+/* r4dev.Context; native size 24, alignment 8. */
+typedef struct R4SdkGfxDeviceContext { _Alignas(8) uint8_t opaque_bytes[24]; } R4SdkGfxDeviceContext;
 #define R4SdkGfxDeviceContext_TYPE 219u
-/* app_devices.DeviceInventoryView; native size 8, alignment 8. */
-typedef struct R4SdkDevicesDeviceInventoryView { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkDevicesDeviceInventoryView;
+/* app_devices.DeviceInventoryView; native size 24, alignment 8. */
+typedef struct R4SdkDevicesDeviceInventoryView { _Alignas(8) uint8_t opaque_bytes[24]; } R4SdkDevicesDeviceInventoryView;
 #define R4SdkDevicesDeviceInventoryView_TYPE 220u
-/* app_devices.MemoryView; native size 8, alignment 8. */
-typedef struct R4SdkDevicesMemoryView { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkDevicesMemoryView;
+/* app_devices.MemoryView; native size 24, alignment 8. */
+typedef struct R4SdkDevicesMemoryView { _Alignas(8) uint8_t opaque_bytes[24]; } R4SdkDevicesMemoryView;
 #define R4SdkDevicesMemoryView_TYPE 221u
-/* app_devices.PerformanceView; native size 8, alignment 8. */
-typedef struct R4SdkDevicesPerformanceView { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkDevicesPerformanceView;
+/* app_devices.PerformanceView; native size 24, alignment 8. */
+typedef struct R4SdkDevicesPerformanceView { _Alignas(8) uint8_t opaque_bytes[24]; } R4SdkDevicesPerformanceView;
 #define R4SdkDevicesPerformanceView_TYPE 222u
 /* audio_pcm.Work; native size 32, alignment 8. */
 typedef struct R4SdkPcmWork { _Alignas(8) uint8_t opaque_bytes[32]; } R4SdkPcmWork;
@@ -659,23 +659,23 @@ typedef struct R4SdkPowerCpuReply { _Alignas(8) uint8_t opaque_bytes[168]; } R4S
 /* @typeInfo(app_services.TypedServiceCall(abi_generated.PowerCpuProfileInfo)).@"union".tag_type.?; native size 1, alignment 1. */
 typedef struct R4SdkGuiType232 { _Alignas(1) uint8_t opaque_bytes[1]; } R4SdkGuiType232;
 #define R4SdkGuiType232_TYPE 232u
-/* power_profiles.Open; native size 144, alignment 8. */
-typedef struct R4SdkPowerOpen { _Alignas(8) uint8_t opaque_bytes[144]; } R4SdkPowerOpen;
+/* power_profiles.Open; native size 160, alignment 8. */
+typedef struct R4SdkPowerOpen { _Alignas(8) uint8_t opaque_bytes[160]; } R4SdkPowerOpen;
 #define R4SdkPowerOpen_TYPE 234u
 /* @typeInfo(power_profiles.Open).@"union".tag_type.?; native size 1, alignment 1. */
 typedef struct R4SdkGuiType235 { _Alignas(1) uint8_t opaque_bytes[1]; } R4SdkGuiType235;
 #define R4SdkGuiType235_TYPE 235u
-/* power_profiles.Client; native size 136, alignment 8. */
-typedef struct R4SdkPowerClient { _Alignas(8) uint8_t opaque_bytes[136]; } R4SdkPowerClient;
+/* power_profiles.Client; native size 152, alignment 8. */
+typedef struct R4SdkPowerClient { _Alignas(8) uint8_t opaque_bytes[152]; } R4SdkPowerClient;
 #define R4SdkPowerClient_TYPE 236u
-/* gui_session_support.Session; native size 1048, alignment 8. */
-typedef struct R4SdkGuiSession { _Alignas(8) uint8_t opaque_bytes[1048]; } R4SdkGuiSession;
+/* gui_session_support.Session; native size 1192, alignment 8. */
+typedef struct R4SdkGuiSession { _Alignas(8) uint8_t opaque_bytes[1192]; } R4SdkGuiSession;
 #define R4SdkGuiSession_TYPE 237u
-/* graphics_support.Context; native size 72, alignment 8. */
-typedef struct R4SdkGfxContext { _Alignas(8) uint8_t opaque_bytes[72]; } R4SdkGfxContext;
+/* graphics_support.Context; native size 104, alignment 8. */
+typedef struct R4SdkGfxContext { _Alignas(8) uint8_t opaque_bytes[104]; } R4SdkGfxContext;
 #define R4SdkGfxContext_TYPE 238u
-/* platform_support.Context; native size 104, alignment 8. */
-typedef struct R4SdkPlatformContext { _Alignas(8) uint8_t opaque_bytes[104]; } R4SdkPlatformContext;
+/* platform_support.Context; native size 200, alignment 8. */
+typedef struct R4SdkPlatformContext { _Alignas(8) uint8_t opaque_bytes[200]; } R4SdkPlatformContext;
 #define R4SdkPlatformContext_TYPE 239u
 /* *const abi_generated.GfxOutputId; native size 8, alignment 8. */
 typedef struct R4SdkGuiType240 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkGuiType240;
@@ -1031,8 +1031,8 @@ typedef struct R4SdkGuiType436 { _Alignas(8) uint8_t opaque_bytes[56]; } R4SdkGu
 /* *app_gui.PaintContext; native size 8, alignment 8. */
 typedef struct R4SdkGuiType437 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkGuiType437;
 #define R4SdkGuiType437_TYPE 437u
-/* ?app_gui.Window; native size 104, alignment 8. */
-typedef struct R4SdkGuiType438 { _Alignas(8) uint8_t opaque_bytes[104]; } R4SdkGuiType438;
+/* ?app_gui.Window; native size 184, alignment 8. */
+typedef struct R4SdkGuiType438 { _Alignas(8) uint8_t opaque_bytes[184]; } R4SdkGuiType438;
 #define R4SdkGuiType438_TYPE 438u
 /* *app_gui.Window; native size 8, alignment 8. */
 typedef struct R4SdkGuiType439 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkGuiType439;
@@ -1499,7 +1499,7 @@ typedef struct R4SdkGuiType694 { _Alignas(8) uint8_t opaque_bytes[40]; } R4SdkGu
 /* *abi_generated.SerialStatus; native size 8, alignment 8. */
 typedef struct R4SdkGuiType696 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkGuiType696;
 #define R4SdkGuiType696_TYPE 696u
-#define R4SdkGui_ABI_FINGERPRINT UINT64_C(1640675951650447672)
+#define R4SdkGui_ABI_FINGERPRINT UINT64_C(15608323675227960055)
 int32_t R4SdkGuiVerifyAbi(uint64_t);
 #define R4SdkGui_font_w (8)
 #define R4SdkGui_font_h (8)

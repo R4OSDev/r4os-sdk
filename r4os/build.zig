@@ -356,7 +356,7 @@ pub const Sdk = struct {
     }
 
     pub fn addStorageRuntime(self: Sdk) std.Build.LazyPath {
-        return addStorageRuntimeObject(self.b, self.profile.sdk_root.path(self.b, "r4os/facade_runtime.zig"), self.profile.contract_module, self.profile.grapheme_source.?, self.builder, false);
+        return addStorageRuntimeObject(self.b, self.profile.sdk_root.path(self.b, "r4os/facade_runtime.zig"), self.profile.contract_module, self.profile.contract_module2, self.profile.grapheme_source.?, self.builder, false);
     }
 
     pub fn addR4XStartC(self: Sdk, opts: R4XCAppOptions) BuildResult {
@@ -537,7 +537,7 @@ pub const Sdk = struct {
                 .startup_source_file = null,
                 .extra_objects = &.{
                     addFacadeRuntime(self.b, self.profile.sdk_root.path(self.b, "Shared/C/src/facades.c"), self.profile.c_include_root, self.profile.contract_c_include_root, false),
-                    addStorageRuntimeObject(self.b, self.profile.sdk_root.path(self.b, "r4os/facade_runtime.zig"), self.profile.contract_module, self.profile.grapheme_source.?, self.builder, false),
+                    addStorageRuntimeObject(self.b, self.profile.sdk_root.path(self.b, "r4os/facade_runtime.zig"), self.profile.contract_module, self.profile.contract_module2, self.profile.grapheme_source.?, self.builder, false),
                 },
                 .linker_script = self.profile.linker_script,
                 .entry_symbol = "r4d_init_entry",
@@ -791,12 +791,21 @@ pub const Sdk = struct {
     fn addGeneration2Program(self: Sdk, loaded: LoadedR4MF) BuildResult {
         const m = loaded.manifest;
         const optimize = manifestOptimizeMode(m);
+        const normal_app = m.entry_mode.? == .app;
+        const profile = module_manifest.startup_metadata.profileForClass(m.app_class.?.text()) catch unreachable;
+        const startup2 = if (normal_app and m.language.? == .zig)
+            self.b.addWriteFiles().add("startup2.zig", module_manifest.startup_metadata.app2(self.b.allocator, .zig, profile, m.imports) catch @panic("Invalid startup2 facts"))
+        else
+            null;
         const elf = switch (m.language.?) {
             .rust => @panic("Rust modules use SDK Tools/Build-RustModule.ps1"),
             .zig => addRawModule(self.b, .{
                 .builder = self.builder,
                 .name = m.name,
-                .root_source_file = userPath(self.b, loaded.source_paths[0]),
+                .root_source_file = if (normal_app) self.profile.sdk_root.path(self.b, "Shared/Zig/r4app2_startup.zig") else userPath(self.b, loaded.source_paths[0]),
+                .app_source_file = if (normal_app) userPath(self.b, loaded.source_paths[0]) else null,
+                .app_profile = if (normal_app) @enumFromInt(@intFromEnum(profile)) else null,
+                .startup_info2_file = startup2,
                 .r4os_module = self.profile.r4os_module,
                 .grapheme_source = self.profile.grapheme_source,
                 .contract_module = self.profile.contract_module,
@@ -814,9 +823,13 @@ pub const Sdk = struct {
                 .extra_include_roots = self.withContractCIncludeRoot(self.manifestCIncludeRoots(loaded)),
                 .c_defines = m.c_defines,
                 .c_flags = m.c_flags,
-                .startup_source_file = self.profile.sdk_root.path(self.b, "Shared/C/src/r4xstart2_startup.c"),
-                .startup_info2 = module_manifest.startup_metadata.c2(self.b.allocator, module_manifest.startup_metadata.profileForClass(m.app_class.?.text()) catch unreachable, m.imports.len) catch @panic("Invalid startup2 facts"),
+                .startup_source_file = self.profile.sdk_root.path(self.b, if (normal_app) "Shared/C/src/r4app2_startup.c" else "Shared/C/src/r4xstart2_startup.c"),
+                .startup_info2 = if (normal_app)
+                    module_manifest.startup_metadata.app2(self.b.allocator, .c, profile, m.imports) catch @panic("Invalid normal startup2 facts")
+                else
+                    module_manifest.startup_metadata.c2(self.b.allocator, profile, m.imports.len) catch @panic("Invalid startup2 facts"),
                 .extra_objects = &.{
+                    self.addHeapRuntime(),
                     addFacadeRuntime(self.b, self.profile.sdk_root.path(self.b, "Shared/C/src/facades.c"), self.profile.c_include_root, self.profile.contract_c_include_root, false),
                     self.addStorageRuntime(),
                 },
@@ -1850,6 +1863,7 @@ const RawOptions = struct {
     entry_symbol: []const u8,
     optimize: std.builtin.OptimizeMode,
     app_source_file: ?std.Build.LazyPath = null,
+    startup_info2_file: ?std.Build.LazyPath = null,
     app_profile: ?AppProfile = null,
     zig_modules: []const ZigModuleBuild = &.{},
     native_archives: []const std.Build.LazyPath = &.{},
@@ -1957,6 +1971,11 @@ fn addRawModule(b: *std.Build, opts: RawOptions) std.Build.LazyPath {
     if (opts.contract_module2) |contract2| r4os_module.addImport("r4os_contract2", contract2);
     if (opts.grapheme_source) |source| r4os_module.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = source, .target = target, .optimize = opts.optimize }));
     exe.root_module.addImport("r4os", r4os_module);
+    if (opts.startup_info2_file) |file| {
+        const startup = b.createModule(.{ .root_source_file = file, .target = target, .optimize = opts.optimize });
+        startup.addImport("r4os", r4os_module);
+        exe.root_module.addImport("r4_startup2", startup);
+    }
 
     const dependencies = b.allocator.alloc(*std.Build.Module, opts.zig_modules.len) catch @panic("OOM");
     for (opts.zig_modules, 0..) |module, index| {
@@ -2106,15 +2125,15 @@ pub fn addFacadeRuntime(b: *std.Build, source: std.Build.LazyPath, c_include: st
     return b.addObject(.{ .name = "r4sdk_facades", .root_module = root }).getEmittedBin();
 }
 
-pub fn addStorageRuntimeObject(b: *std.Build, source: std.Build.LazyPath, contract: *std.Build.Module, grapheme: std.Build.LazyPath, builder: *std.Build.Step.Compile, native: bool) std.Build.LazyPath {
-    return sharedZigRuntime(b, source, contract, grapheme, builder, "r4sdk_storage", native);
+pub fn addStorageRuntimeObject(b: *std.Build, source: std.Build.LazyPath, contract: *std.Build.Module, contract2: ?*std.Build.Module, grapheme: std.Build.LazyPath, builder: *std.Build.Step.Compile, native: bool) std.Build.LazyPath {
+    return sharedZigRuntime(b, source, contract, contract2, grapheme, builder, "r4sdk_storage", native);
 }
 
 fn heapRuntime(b: *std.Build, source: std.Build.LazyPath, contract: *std.Build.Module, builder: *std.Build.Step.Compile) std.Build.LazyPath {
-    return sharedZigRuntime(b, source, contract, null, builder, "r4sdk_heap", false);
+    return sharedZigRuntime(b, source, contract, null, null, builder, "r4sdk_heap", false);
 }
 
-fn sharedZigRuntime(b: *std.Build, source: std.Build.LazyPath, contract: *std.Build.Module, grapheme: ?std.Build.LazyPath, builder: *std.Build.Step.Compile, name: []const u8, native: bool) std.Build.LazyPath {
+fn sharedZigRuntime(b: *std.Build, source: std.Build.LazyPath, contract: *std.Build.Module, contract2: ?*std.Build.Module, grapheme: ?std.Build.LazyPath, builder: *std.Build.Step.Compile, name: []const u8, native: bool) std.Build.LazyPath {
     const root = b.createModule(.{
         .root_source_file = source,
         .target = if (native) b.graph.host else profiles.target(b),
@@ -2126,6 +2145,7 @@ fn sharedZigRuntime(b: *std.Build, source: std.Build.LazyPath, contract: *std.Bu
         .stack_protector = profiles.defaults.stack_protector,
     });
     root.addImport("r4os_contract", contract);
+    if (contract2) |next| root.addImport("r4os_contract2", next);
     if (grapheme) |path| root.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = path, .target = root.resolved_target.?, .optimize = profiles.defaults.runtime_optimize }));
     return addProbedObject(b, root, builder, name, native);
 }

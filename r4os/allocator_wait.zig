@@ -3,6 +3,7 @@
 //! left; failed close retains the exact handle for a later close attempt.
 const std = @import("std");
 const abi = @import("r4os_contract").abi;
+const Source = @import("allocator_source.zig").Source;
 
 pub const Channel = struct {
     lock: u32 = 0,
@@ -18,7 +19,8 @@ pub const Channel = struct {
         @atomicStore(u32, &self.lock, 0, .release);
     }
 
-    pub fn enroll(self: *Channel, api: *const abi.R4XStartR4Sys) ?Ticket {
+    pub fn enroll(self: *Channel, raw: anytype) ?Ticket {
+        const api = Source.from(raw);
         if (!supports(api)) return null;
         self.enter();
         if (self.changing or self.references == std.math.maxInt(u32)) {
@@ -54,7 +56,8 @@ pub const Channel = struct {
 
     /// Notify while the handle is borrowed. This callback only advances the
     /// kernel revision and wakes enrolled tasks; it never waits for a task.
-    pub fn notify(self: *Channel, api: *const abi.R4XStartR4Sys) void {
+    pub fn notify(self: *Channel, raw: anytype) void {
+        const api = Source.from(raw);
         if (@atomicLoad(u32, &self.active, .acquire) == 0) return;
         self.enter();
         defer self.leave();
@@ -65,7 +68,8 @@ pub const Channel = struct {
 
     /// Call only with the allocator metadata lock released. Closing can enter
     /// the kernel allocator; a new enrollment cannot borrow a closing handle.
-    pub fn prune(self: *Channel, api: *const abi.R4XStartR4Sys) void {
+    pub fn prune(self: *Channel, raw: anytype) void {
+        const api = Source.from(raw);
         if (@atomicLoad(u32, &self.active, .acquire) == 0) return;
         self.enter();
         if (self.handle == 0 or self.changing or self.references != 0) {
@@ -89,7 +93,7 @@ pub const Channel = struct {
 
 pub const Ticket = struct {
     channel: *Channel,
-    api: *const abi.R4XStartR4Sys,
+    api: Source,
     handle: u64,
     sequence: u64 = 0,
 
@@ -109,24 +113,20 @@ pub const Ticket = struct {
     }
 };
 
-fn supports(api: *const abi.R4XStartR4Sys) bool {
-    return api.magic == abi.r4xstart_r4sys_magic and
-        api.size >= @offsetOf(abi.R4XStartR4Sys, "notification_close") + @sizeOf(usize) and
-        api.notification_create != 0 and api.notification_query != 0 and api.notification_notify != 0 and
-        api.notification_wait != 0 and api.notification_close != 0;
+fn supports(api: Source) bool {
+    return api.supportsNotifications();
 }
 
-fn call(api: *const abi.R4XStartR4Sys, comptime field: []const u8) @field(abi.R4SysFns, field) {
-    return @ptrFromInt(@field(api.*, field));
+fn call(api: Source, comptime field: []const u8) @field(abi.R4SysFns, field) {
+    return api.call(field);
 }
 
-pub fn pause(api: ?*const abi.R4XStartR4Sys) void {
-    if (api) |table| {
-        if (table.magic != abi.r4xstart_r4sys_magic) return;
-        if (table.size >= @offsetOf(abi.R4XStartR4Sys, "sleep_ticks") + @sizeOf(usize) and table.sleep_ticks != 0) {
-            call(table, "sleep_ticks")(1);
-        } else if (table.size >= @offsetOf(abi.R4XStartR4Sys, "task_yield") + @sizeOf(usize) and table.task_yield != 0) {
-            call(table, "task_yield")();
+pub fn pause(raw: anytype) void {
+    if (Source.optional(raw)) |api| {
+        if (api.function("sleep_ticks")) |sleep| {
+            sleep(1);
+        } else if (api.function("task_yield")) |yield| {
+            yield();
         }
     }
     std.atomic.spinLoopHint();

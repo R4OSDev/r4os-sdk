@@ -1,10 +1,22 @@
 //! Real Rust -> C ABI -> shared SDK VM heap; only the kernel VM callbacks
 //! are supplied by the native host. One instance keeps the whole test scope.
 #![cfg(test)]
-use r4os_sdk::{App, ImportSpec, StartupInfo, abi, heap::Error};
+#[cfg(feature = "generation2")]
+use abi::generation2::{R4XStartContext2 as StartContext, R4XStartR4Sys2 as SystemTable};
+#[cfg(not(feature = "generation2"))]
+use abi::{R4XStartContext as StartContext, R4XStartR4Sys as SystemTable};
+#[cfg(not(feature = "generation2"))]
+use r4os_sdk::{App, ImportSpec, StartupInfo};
+#[cfg(feature = "generation2")]
+use r4os_sdk::{
+    App2 as App,
+    app2::{ImportSpec, StartupInfo},
+};
+use r4os_sdk::{abi, heap::Error};
+#[cfg(not(feature = "generation2"))]
+use std::ffi::c_void;
 use std::{
     alloc::{GlobalAlloc, Layout, System},
-    ffi::c_void,
     sync::{
         Mutex,
         atomic::{AtomicBool, AtomicU32, AtomicU64, Ordering},
@@ -98,30 +110,35 @@ unsafe extern "C" fn release(id: u32) -> i32 {
     region.live = false;
     0
 }
+#[cfg(not(feature = "generation2"))]
 unsafe extern "C" {
     fn R4SdkHeapFree(api: *const abi::R4XStartR4Sys, instance: u64, p: *mut c_void) -> i32;
 }
 
 #[test]
 fn exact_owner_alignment_resize_failure_and_all_release_acknowledgements() {
-    let api = abi::R4XStartR4Sys {
-        thread_current_handle: current as *const () as usize,
-        vm_reserve: reserve as *const () as usize,
-        vm_commit: commit as *const () as usize,
-        vm_decommit: decommit as *const () as usize,
-        vm_release: release as *const () as usize,
+    let api = SystemTable {
+        thread_current_handle: current as *const () as _,
+        vm_reserve: reserve as *const () as _,
+        vm_commit: commit as *const () as _,
+        vm_decommit: decommit as *const () as _,
+        vm_release: release as *const () as _,
         ..Default::default()
     };
     let import = abi::R4XStartImport {
         group_id: abi::R4LGroup::r4sys.0,
-        min_version: 1,
-        resolved_version: 1,
+        min_version: if cfg!(feature = "generation2") { 2 } else { 1 },
+        resolved_version: if cfg!(feature = "generation2") { 2 } else { 1 },
         flags: abi::r4xstart_import_flag_group_interface,
         module_name: c"R4SYS".as_ptr() as u64,
-        symbol_name: c"Query".as_ptr() as u64,
+        symbol_name: if cfg!(feature = "generation2") {
+            c"Query2".as_ptr()
+        } else {
+            c"Query".as_ptr()
+        } as u64,
         table: std::ptr::from_ref(&api) as u64,
     };
-    let ctx = abi::R4XStartContext {
+    let ctx = StartContext {
         app_class: abi::R4XStartAppClass::console.0,
         instance_id: 42,
         flags: abi::r4xstart_flag_imports_valid,
@@ -129,6 +146,7 @@ fn exact_owner_alignment_resize_failure_and_all_release_acknowledgements() {
         import_count: 1,
         ..Default::default()
     };
+    #[cfg(not(feature = "generation2"))]
     let expected = StartupInfo {
         app_class: abi::R4XStartAppClass::console,
         required_groups: 2,
@@ -141,6 +159,20 @@ fn exact_owner_alignment_resize_failure_and_all_release_acknowledgements() {
             magic: api.magic,
             version: api.abi_version,
             size: api.size,
+        }],
+    };
+    #[cfg(feature = "generation2")]
+    let expected = StartupInfo {
+        profile: 0,
+        app_class: 1,
+        required_groups: 2,
+        imports: &[ImportSpec {
+            module_name: c"R4SYS".as_ptr().cast(),
+            symbol_name: c"Query2".as_ptr().cast(),
+            minimum: 2,
+            optional: 0,
+            group_id: 1,
+            reserved: 0,
         }],
     };
     let app = unsafe { App::from_raw(&ctx, &expected, c"HEAPTEST") }.unwrap();
@@ -172,16 +204,22 @@ fn exact_owner_alignment_resize_failure_and_all_release_acknowledgements() {
     assert!(buffer.as_slice()[32..].iter().all(|byte| *byte == 0));
     buffer.resize(16).unwrap();
     OWNER.store(43, Ordering::Relaxed);
+    #[cfg(not(feature = "generation2"))]
     assert_eq!(
         unsafe { R4SdkHeapFree(&api, 42, buffer.as_mut_slice().as_mut_ptr().cast()) },
         -2
     );
+    #[cfg(feature = "generation2")]
+    assert!(matches!(heap.stats(), Err(Error::Runtime(-2))));
     OWNER.store(42, Ordering::Relaxed);
     GENERATION.store(8, Ordering::Relaxed);
+    #[cfg(not(feature = "generation2"))]
     assert_eq!(
         unsafe { R4SdkHeapFree(&api, 42, buffer.as_mut_slice().as_mut_ptr().cast()) },
         -2
     );
+    #[cfg(feature = "generation2")]
+    assert!(matches!(heap.stats(), Err(Error::Runtime(-2))));
     GENERATION.store(7, Ordering::Relaxed);
     assert_eq!(buffer.as_slice(), &[0xa5; 16]);
     buffer.resize(0).unwrap();

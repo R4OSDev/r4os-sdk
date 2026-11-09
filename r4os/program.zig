@@ -1,6 +1,8 @@
 const abi = @import("r4os_contract").abi;
 const std = @import("std");
 const vm_allocator = @import("vm_allocator.zig");
+const platform2 = @import("platform2.zig");
+const allocator_source = @import("allocator_source.zig");
 const r4xstart = @import("r4xstart.zig");
 const service_deadline = @import("service_deadline.zig");
 const time_contract = @import("time_contract.zig");
@@ -309,6 +311,8 @@ pub const Context = struct {
     // Rein tabellenbasiert: Die Signatur-Wahrheit sind die benannten
     // Fn-Typ-Namespaces abi.R4SysFns..R4DevFns.
     bundle: ?*const Bundle = null,
+    generation2: ?*const platform2.Context = null,
+    memory2: ?*const allocator_source.Memory = null,
 
     pub fn initBundle(bundle: *const Bundle) Context {
         return .{ .bundle = bundle };
@@ -348,37 +352,60 @@ pub const Context = struct {
     // Tabellenfeld (err_no_fn). `group` ist der Bundle-Feldname
     // ("sys".."dev").
     fn unavailable(self: *const Context, comptime group: []const u8) i32 {
+        if (self.generation2) |value| return if (value.tables[groupId(group) - 1] == 0) abi.err_no_group else abi.err_no_fn;
         const b = self.bundle orelse return abi.err_no_group;
         if (@field(b.*, group) == null) return abi.err_no_group;
         return abi.err_no_fn;
     }
 
+    fn groupId(comptime group: []const u8) u32 {
+        const names = [_][]const u8{ "sys", "desk", "draw", "net", "audio", "dev" };
+        inline for (names, 1..) |name, id| if (comptime std.mem.eql(u8, name, group)) return id;
+        @compileError("unknown platform group");
+    }
+
+    fn nextFn(self: *const Context, comptime Fns: type, comptime Table: type, comptime id: u32, comptime field: []const u8) ?@field(Fns, field) {
+        // Offsets belong to the actual canonical generation2 table. Removed
+        // slots stay unavailable; no first-generation table is fabricated.
+        if (comptime !@hasField(Table, field)) return null;
+        const context = self.generation2 orelse return null;
+        var address: u64 = 0;
+        if (context.lookup(id, @offsetOf(Table, field), &address) != 0) return null;
+        return @ptrFromInt(address);
+    }
+
     fn sysFn(self: *const Context, comptime field: []const u8) ?@field(abi.R4SysFns, field) {
+        if (self.generation2 != null) return self.nextFn(abi.R4SysFns, platform2.abi.R4XStartR4Sys2, 1, field);
         const b = self.bundle orelse return null;
         return tableFn(abi.R4SysFns, abi.R4XStartR4Sys, b.sys, field);
     }
 
     fn deskFn(self: *const Context, comptime field: []const u8) ?@field(abi.R4DeskFns, field) {
+        if (self.generation2 != null) return self.nextFn(abi.R4DeskFns, platform2.abi.R4XStartR4Desk2, 2, field);
         const b = self.bundle orelse return null;
         return tableFn(abi.R4DeskFns, abi.R4XStartR4Desk, b.desk, field);
     }
 
     fn drawFn(self: *const Context, comptime field: []const u8) ?@field(abi.R4DrawFns, field) {
+        if (self.generation2 != null) return self.nextFn(abi.R4DrawFns, platform2.abi.R4XStartR4Draw2, 3, field);
         const b = self.bundle orelse return null;
         return tableFn(abi.R4DrawFns, abi.R4XStartR4Draw, b.draw, field);
     }
 
     fn netFn(self: *const Context, comptime field: []const u8) ?@field(abi.R4NetFns, field) {
+        if (self.generation2 != null) return self.nextFn(abi.R4NetFns, platform2.abi.R4XStartR4Net2, 4, field);
         const b = self.bundle orelse return null;
         return tableFn(abi.R4NetFns, abi.R4XStartR4Net, b.net, field);
     }
 
     fn audioFn(self: *const Context, comptime field: []const u8) ?@field(abi.R4AudioFns, field) {
+        if (self.generation2 != null) return self.nextFn(abi.R4AudioFns, platform2.abi.R4XStartR4Audio2, 5, field);
         const b = self.bundle orelse return null;
         return tableFn(abi.R4AudioFns, abi.R4XStartR4Audio, b.audio, field);
     }
 
     fn devFn(self: *const Context, comptime field: []const u8) ?@field(abi.R4DevFns, field) {
+        if (self.generation2 != null) return self.nextFn(abi.R4DevFns, platform2.abi.R4XStartR4Dev2, 6, field);
         const b = self.bundle orelse return null;
         return tableFn(abi.R4DevFns, abi.R4XStartR4Dev, b.dev, field);
     }
@@ -411,6 +438,7 @@ pub const Context = struct {
     }
 
     pub fn allocator(self: *const Context) std.mem.Allocator {
+        if (self.memory2) |memory| return vm_allocator.allocatorMapped(memory);
         // 0.56.41 (B2): Allokator ueber die R4SYS-Tabelle; ohne Tabelle
         // liefert die leere Default-Tabelle einen sauber fehlschlagenden
         // Allokator (supportsVmApi=false, vm-Felder bleiben 0).
@@ -425,6 +453,7 @@ pub const Context = struct {
     }
 
     pub fn allocatorTrim(self: *const Context) void {
+        if (self.memory2) |memory| return vm_allocator.trimMapped(memory);
         const b = self.bundle orelse return;
         const t = b.sys orelse return;
         vm_allocator.trim(t);
@@ -1005,6 +1034,7 @@ pub const Context = struct {
     }
 
     pub fn argsRaw(self: *const Context) [*:0]const u8 {
+        if (self.generation2) |context| return if (context.raw.args == 0) "" else @ptrFromInt(context.raw.args);
         const b = self.bundle orelse return "";
         if (b.raw.args == 0) return "";
         return @ptrFromInt(b.raw.args);
@@ -1268,6 +1298,7 @@ pub const Context = struct {
     }
 
     pub fn programShouldClose(self: *const Context) bool {
+        if (self.generation2) |context| return context.shouldClose();
         const table_fn = self.sysFn("program_should_close") orelse return false;
         return table_fn() != 0;
     }
@@ -2620,6 +2651,10 @@ pub const Context = struct {
     }
 
     pub fn taskYield(self: *const Context) void {
+        if (self.generation2) |context| {
+            _ = context.yieldCurrent();
+            return;
+        }
         if (self.sysFn("task_yield")) |table_fn| table_fn();
     }
 
@@ -3641,8 +3676,7 @@ pub const Context = struct {
     pub fn netServiceClientId(self: *const Context) u16 {
         // Pseudo-eindeutige Client-ID aus der Adresse des R4XStart-Kontexts;
         // der Kontext ist pro Programminstanz eindeutig.
-        const b = self.bundle orelse return 1;
-        const raw = @intFromPtr(b.raw);
+        const raw = if (self.generation2) |context| @intFromPtr(context.raw) else if (self.bundle) |b| @intFromPtr(b.raw) else return 1;
         const id: u16 = @intCast(raw & 0xFFFF);
         return if (id == 0) 1 else id;
     }

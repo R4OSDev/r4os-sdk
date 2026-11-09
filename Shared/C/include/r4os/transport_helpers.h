@@ -41,32 +41,32 @@ typedef struct R4SdkTransportNativeValue6 { _Alignas(8) uint8_t opaque_bytes[8];
 /* *app_web.SessionPool; native size 8, alignment 8. */
 typedef struct R4SdkTransportNativeValue7 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkTransportNativeValue7;
 #define R4SdkTransportNativeValue7_TYPE 7u
-/* app_web.SessionPool; native size 70152, alignment 8. */
-typedef struct R4SdkTransportSessionPool { _Alignas(8) uint8_t opaque_bytes[70152]; } R4SdkTransportSessionPool;
+/* app_web.SessionPool; native size 70216, alignment 8. */
+typedef struct R4SdkTransportSessionPool { _Alignas(8) uint8_t opaque_bytes[70216]; } R4SdkTransportSessionPool;
 #define R4SdkTransportSessionPool_TYPE 8u
-/* [2]app_web.SessionPool.Entry; native size 4512, alignment 8. */
-typedef struct R4SdkTransportNativeValue9 { _Alignas(8) uint8_t opaque_bytes[4512]; } R4SdkTransportNativeValue9;
+/* [2]app_web.SessionPool.Entry; native size 4576, alignment 8. */
+typedef struct R4SdkTransportNativeValue9 { _Alignas(8) uint8_t opaque_bytes[4576]; } R4SdkTransportNativeValue9;
 #define R4SdkTransportNativeValue9_TYPE 9u
-/* app_web.SessionPool.Entry; native size 2256, alignment 8. */
-typedef struct R4SdkTransportSessionPool_Entry { _Alignas(8) uint8_t opaque_bytes[2256]; } R4SdkTransportSessionPool_Entry;
+/* app_web.SessionPool.Entry; native size 2288, alignment 8. */
+typedef struct R4SdkTransportSessionPool_Entry { _Alignas(8) uint8_t opaque_bytes[2288]; } R4SdkTransportSessionPool_Entry;
 #define R4SdkTransportSessionPool_Entry_TYPE 10u
 /* [2048]u8; native size 2048, alignment 1. */
 typedef struct R4SdkTransportNativeValue11 { _Alignas(1) uint8_t opaque_bytes[2048]; } R4SdkTransportNativeValue11;
 #define R4SdkTransportNativeValue11_TYPE 11u
-/* ?app_network.TcpSocket; native size 40, alignment 8. */
-typedef struct R4SdkTransportNativeValue12 { _Alignas(8) uint8_t opaque_bytes[40]; } R4SdkTransportNativeValue12;
+/* ?app_network.TcpSocket; native size 72, alignment 8. */
+typedef struct R4SdkTransportNativeValue12 { _Alignas(8) uint8_t opaque_bytes[72]; } R4SdkTransportNativeValue12;
 #define R4SdkTransportNativeValue12_TYPE 12u
-/* app_network.TcpSocket; native size 32, alignment 8. */
-typedef struct R4SdkTransportNative_app_network_TcpSocket { _Alignas(8) uint8_t opaque_bytes[32]; } R4SdkTransportNative_app_network_TcpSocket;
+/* app_network.TcpSocket; native size 64, alignment 8. */
+typedef struct R4SdkTransportNative_app_network_TcpSocket { _Alignas(8) uint8_t opaque_bytes[64]; } R4SdkTransportNative_app_network_TcpSocket;
 #define R4SdkTransportNative_app_network_TcpSocket_TYPE 13u
-/* app_network.Network; native size 16, alignment 8. */
-typedef struct R4SdkTransportNative_app_network_Network { _Alignas(8) uint8_t opaque_bytes[16]; } R4SdkTransportNative_app_network_Network;
+/* app_network.Network; native size 48, alignment 8. */
+typedef struct R4SdkTransportNative_app_network_Network { _Alignas(8) uint8_t opaque_bytes[48]; } R4SdkTransportNative_app_network_Network;
 #define R4SdkTransportNative_app_network_Network_TYPE 14u
-/* r4sys.Context; native size 8, alignment 8. */
-typedef struct R4SdkTransportNative_r4sys_Context { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkTransportNative_r4sys_Context;
+/* r4sys.Context; native size 24, alignment 8. */
+typedef struct R4SdkTransportNative_r4sys_Context { _Alignas(8) uint8_t opaque_bytes[24]; } R4SdkTransportNative_r4sys_Context;
 #define R4SdkTransportNative_r4sys_Context_TYPE 15u
-/* r4net.Context; native size 8, alignment 8. */
-typedef struct R4SdkTransportNative_r4net_Context { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkTransportNative_r4net_Context;
+/* r4net.Context; native size 24, alignment 8. */
+typedef struct R4SdkTransportNative_r4net_Context { _Alignas(8) uint8_t opaque_bytes[24]; } R4SdkTransportNative_r4net_Context;
 #define R4SdkTransportNative_r4net_Context_TYPE 16u
 /* app_network.SocketAddress; native size 6, alignment 2. */
 typedef struct R4SdkTransportNative_app_network_SocketAddress { _Alignas(2) uint8_t opaque_bytes[6]; } R4SdkTransportNative_app_network_SocketAddress;
@@ -182,11 +182,11 @@ typedef struct R4SdkTransportDownloadResult { _Alignas(8) uint8_t opaque_bytes[1
 /* @typeInfo(app_web.DownloadResult).@"union".tag_type.?; native size 1, alignment 1. */
 typedef struct R4SdkTransportNative__typeInfo_app_web_DownloadResult____union__tag_type__ { _Alignas(1) uint8_t opaque_bytes[1]; } R4SdkTransportNative__typeInfo_app_web_DownloadResult____union__tag_type__;
 #define R4SdkTransportNative__typeInfo_app_web_DownloadResult____union__tag_type___TYPE 63u
-/* app_web.WebTransport; native size 24, alignment 8. */
-typedef struct R4SdkTransportWebTransport { _Alignas(8) uint8_t opaque_bytes[24]; } R4SdkTransportWebTransport;
+/* app_web.WebTransport; native size 72, alignment 8. */
+typedef struct R4SdkTransportWebTransport { _Alignas(8) uint8_t opaque_bytes[72]; } R4SdkTransportWebTransport;
 #define R4SdkTransportWebTransport_TYPE 64u
-/* r4dev.Context; native size 8, alignment 8. */
-typedef struct R4SdkTransportNative_r4dev_Context { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkTransportNative_r4dev_Context;
+/* r4dev.Context; native size 24, alignment 8. */
+typedef struct R4SdkTransportNative_r4dev_Context { _Alignas(8) uint8_t opaque_bytes[24]; } R4SdkTransportNative_r4dev_Context;
 #define R4SdkTransportNative_r4dev_Context_TYPE 65u
 /* app_web.PostStreamAction; native size 1, alignment 1. */
 typedef struct R4SdkTransportPostStreamAction { _Alignas(1) uint8_t opaque_bytes[1]; } R4SdkTransportPostStreamAction;
@@ -221,8 +221,8 @@ typedef struct R4SdkTransportNativeValue75 { _Alignas(1) uint8_t opaque_bytes[2]
 /* http.ResponseError; native size 1, alignment 1. */
 typedef struct R4SdkTransportHttpResponseError { _Alignas(1) uint8_t opaque_bytes[1]; } R4SdkTransportHttpResponseError;
 #define R4SdkTransportHttpResponseError_TYPE 76u
-/* app_web.PostStream; native size 28048, alignment 8. */
-typedef struct R4SdkTransportPostStream { _Alignas(8) uint8_t opaque_bytes[28048]; } R4SdkTransportPostStream;
+/* app_web.PostStream; native size 28080, alignment 8. */
+typedef struct R4SdkTransportPostStream { _Alignas(8) uint8_t opaque_bytes[28080]; } R4SdkTransportPostStream;
 #define R4SdkTransportPostStream_TYPE 78u
 /* *[32]u8; native size 8, alignment 8. */
 typedef struct R4SdkTransportNativeValue79 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkTransportNativeValue79;
@@ -365,14 +365,14 @@ typedef struct R4SdkTransportNative_mem_SplitIterator_u8__scalar_ { _Alignas(8) 
 /* web_response_cache.Directives; native size 24, alignment 8. */
 typedef struct R4SdkTransportCacheDirectives { _Alignas(8) uint8_t opaque_bytes[24]; } R4SdkTransportCacheDirectives;
 #define R4SdkTransportCacheDirectives_TYPE 146u
-/* app_web_jobs.Job; native size 72096, alignment 8. */
-typedef struct R4SdkTransportJobsJob { _Alignas(8) uint8_t opaque_bytes[72096]; } R4SdkTransportJobsJob;
+/* app_web_jobs.Job; native size 72224, alignment 8. */
+typedef struct R4SdkTransportJobsJob { _Alignas(8) uint8_t opaque_bytes[72224]; } R4SdkTransportJobsJob;
 #define R4SdkTransportJobsJob_TYPE 147u
-/* ?app_resources.JoinHandle; native size 56, alignment 8. */
-typedef struct R4SdkTransportNativeValue148 { _Alignas(8) uint8_t opaque_bytes[56]; } R4SdkTransportNativeValue148;
+/* ?app_resources.JoinHandle; native size 72, alignment 8. */
+typedef struct R4SdkTransportNativeValue148 { _Alignas(8) uint8_t opaque_bytes[72]; } R4SdkTransportNativeValue148;
 #define R4SdkTransportNativeValue148_TYPE 148u
-/* app_resources.JoinHandle; native size 48, alignment 8. */
-typedef struct R4SdkTransportNative_app_resources_JoinHandle { _Alignas(8) uint8_t opaque_bytes[48]; } R4SdkTransportNative_app_resources_JoinHandle;
+/* app_resources.JoinHandle; native size 64, alignment 8. */
+typedef struct R4SdkTransportNative_app_resources_JoinHandle { _Alignas(8) uint8_t opaque_bytes[64]; } R4SdkTransportNative_app_resources_JoinHandle;
 #define R4SdkTransportNative_app_resources_JoinHandle_TYPE 149u
 /* ?*const fn (*anyopaque) void; native size 8, alignment 8. */
 typedef struct R4SdkTransportNativeValue151 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkTransportNativeValue151;
@@ -380,8 +380,8 @@ typedef struct R4SdkTransportNativeValue151 { _Alignas(8) uint8_t opaque_bytes[8
 /* web_runtime_jobs.Owner; native size 16, alignment 8. */
 typedef struct R4SdkTransportRuntimeJobsOwner { _Alignas(8) uint8_t opaque_bytes[16]; } R4SdkTransportRuntimeJobsOwner;
 #define R4SdkTransportRuntimeJobsOwner_TYPE 152u
-/* web_runtime_jobs.RequestJob; native size 74344, alignment 8. */
-typedef struct R4SdkTransportRuntimeJobsRequestJob { _Alignas(8) uint8_t opaque_bytes[74344]; } R4SdkTransportRuntimeJobsRequestJob;
+/* web_runtime_jobs.RequestJob; native size 74472, alignment 8. */
+typedef struct R4SdkTransportRuntimeJobsRequestJob { _Alignas(8) uint8_t opaque_bytes[74472]; } R4SdkTransportRuntimeJobsRequestJob;
 #define R4SdkTransportRuntimeJobsRequestJob_TYPE 153u
 /* [277]u8; native size 277, alignment 1. */
 typedef struct R4SdkTransportNativeValue156 { _Alignas(1) uint8_t opaque_bytes[277]; } R4SdkTransportNativeValue156;
@@ -413,8 +413,8 @@ typedef struct R4SdkTransportNativeValue179 { _Alignas(8) uint8_t opaque_bytes[7
 /* web_fetch.Header; native size 1104, alignment 8. */
 typedef struct R4SdkTransportFetchHeader { _Alignas(8) uint8_t opaque_bytes[1104]; } R4SdkTransportFetchHeader;
 #define R4SdkTransportFetchHeader_TYPE 180u
-/* transport_helper_adapters.Context; native size 80, alignment 8. */
-typedef struct R4SdkTransportContext { _Alignas(8) uint8_t opaque_bytes[80]; } R4SdkTransportContext;
+/* transport_helper_adapters.Context; native size 128, alignment 8. */
+typedef struct R4SdkTransportContext { _Alignas(8) uint8_t opaque_bytes[128]; } R4SdkTransportContext;
 #define R4SdkTransportContext_TYPE 182u
 /* *transport_helper_adapters.Context; native size 8, alignment 8. */
 typedef struct R4SdkTransportNativeValue183 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkTransportNativeValue183;
@@ -479,32 +479,32 @@ typedef struct R4SdkTransportNative__typeInfo_app_network_SocketIo____union__tag
 /* app_network.TcpCloseReceipt; native size 40, alignment 8. */
 typedef struct R4SdkTransportNative_app_network_TcpCloseReceipt { _Alignas(8) uint8_t opaque_bytes[40]; } R4SdkTransportNative_app_network_TcpCloseReceipt;
 #define R4SdkTransportNative_app_network_TcpCloseReceipt_TYPE 206u
-/* app_network.Resolver; native size 16, alignment 8. */
-typedef struct R4SdkTransportNative_app_network_Resolver { _Alignas(8) uint8_t opaque_bytes[16]; } R4SdkTransportNative_app_network_Resolver;
+/* app_network.Resolver; native size 48, alignment 8. */
+typedef struct R4SdkTransportNative_app_network_Resolver { _Alignas(8) uint8_t opaque_bytes[48]; } R4SdkTransportNative_app_network_Resolver;
 #define R4SdkTransportNative_app_network_Resolver_TYPE 207u
-/* app_network.TcpOpen; native size 40, alignment 8. */
-typedef struct R4SdkTransportNative_app_network_TcpOpen { _Alignas(8) uint8_t opaque_bytes[40]; } R4SdkTransportNative_app_network_TcpOpen;
+/* app_network.TcpOpen; native size 72, alignment 8. */
+typedef struct R4SdkTransportNative_app_network_TcpOpen { _Alignas(8) uint8_t opaque_bytes[72]; } R4SdkTransportNative_app_network_TcpOpen;
 #define R4SdkTransportNative_app_network_TcpOpen_TYPE 208u
 /* @typeInfo(app_network.TcpOpen).@"union".tag_type.?; native size 1, alignment 1. */
 typedef struct R4SdkTransportNative__typeInfo_app_network_TcpOpen____union__tag_type__ { _Alignas(1) uint8_t opaque_bytes[1]; } R4SdkTransportNative__typeInfo_app_network_TcpOpen____union__tag_type__;
 #define R4SdkTransportNative__typeInfo_app_network_TcpOpen____union__tag_type___TYPE 209u
-/* app_network.ListenerOpen; native size 32, alignment 8. */
-typedef struct R4SdkTransportNative_app_network_ListenerOpen { _Alignas(8) uint8_t opaque_bytes[32]; } R4SdkTransportNative_app_network_ListenerOpen;
+/* app_network.ListenerOpen; native size 64, alignment 8. */
+typedef struct R4SdkTransportNative_app_network_ListenerOpen { _Alignas(8) uint8_t opaque_bytes[64]; } R4SdkTransportNative_app_network_ListenerOpen;
 #define R4SdkTransportNative_app_network_ListenerOpen_TYPE 210u
 /* @typeInfo(app_network.ListenerOpen).@"union".tag_type.?; native size 1, alignment 1. */
 typedef struct R4SdkTransportNative__typeInfo_app_network_ListenerOpen____union__tag_type__ { _Alignas(1) uint8_t opaque_bytes[1]; } R4SdkTransportNative__typeInfo_app_network_ListenerOpen____union__tag_type__;
 #define R4SdkTransportNative__typeInfo_app_network_ListenerOpen____union__tag_type___TYPE 211u
-/* app_network.TcpListener; native size 24, alignment 8. */
-typedef struct R4SdkTransportNative_app_network_TcpListener { _Alignas(8) uint8_t opaque_bytes[24]; } R4SdkTransportNative_app_network_TcpListener;
+/* app_network.TcpListener; native size 56, alignment 8. */
+typedef struct R4SdkTransportNative_app_network_TcpListener { _Alignas(8) uint8_t opaque_bytes[56]; } R4SdkTransportNative_app_network_TcpListener;
 #define R4SdkTransportNative_app_network_TcpListener_TYPE 212u
-/* app_network.UdpOpen; native size 32, alignment 8. */
-typedef struct R4SdkTransportNative_app_network_UdpOpen { _Alignas(8) uint8_t opaque_bytes[32]; } R4SdkTransportNative_app_network_UdpOpen;
+/* app_network.UdpOpen; native size 64, alignment 8. */
+typedef struct R4SdkTransportNative_app_network_UdpOpen { _Alignas(8) uint8_t opaque_bytes[64]; } R4SdkTransportNative_app_network_UdpOpen;
 #define R4SdkTransportNative_app_network_UdpOpen_TYPE 213u
 /* @typeInfo(app_network.UdpOpen).@"union".tag_type.?; native size 1, alignment 1. */
 typedef struct R4SdkTransportNative__typeInfo_app_network_UdpOpen____union__tag_type__ { _Alignas(1) uint8_t opaque_bytes[1]; } R4SdkTransportNative__typeInfo_app_network_UdpOpen____union__tag_type__;
 #define R4SdkTransportNative__typeInfo_app_network_UdpOpen____union__tag_type___TYPE 214u
-/* app_network.UdpSocket; native size 24, alignment 8. */
-typedef struct R4SdkTransportNative_app_network_UdpSocket { _Alignas(8) uint8_t opaque_bytes[24]; } R4SdkTransportNative_app_network_UdpSocket;
+/* app_network.UdpSocket; native size 56, alignment 8. */
+typedef struct R4SdkTransportNative_app_network_UdpSocket { _Alignas(8) uint8_t opaque_bytes[56]; } R4SdkTransportNative_app_network_UdpSocket;
 #define R4SdkTransportNative_app_network_UdpSocket_TYPE 215u
 /* ?app_network.Ipv4Address; native size 5, alignment 1. */
 typedef struct R4SdkTransportNativeValue216 { _Alignas(1) uint8_t opaque_bytes[5]; } R4SdkTransportNativeValue216;
@@ -650,8 +650,8 @@ typedef struct R4SdkTransportNativeValue271 { _Alignas(8) uint8_t opaque_bytes[8
 /* *app_network.TcpListener; native size 8, alignment 8. */
 typedef struct R4SdkTransportNativeValue272 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkTransportNativeValue272;
 #define R4SdkTransportNativeValue272_TYPE 272u
-/* app_network.TcpAccept; native size 40, alignment 8. */
-typedef struct R4SdkTransportNative_app_network_TcpAccept { _Alignas(8) uint8_t opaque_bytes[40]; } R4SdkTransportNative_app_network_TcpAccept;
+/* app_network.TcpAccept; native size 72, alignment 8. */
+typedef struct R4SdkTransportNative_app_network_TcpAccept { _Alignas(8) uint8_t opaque_bytes[72]; } R4SdkTransportNative_app_network_TcpAccept;
 #define R4SdkTransportNative_app_network_TcpAccept_TYPE 273u
 /* @typeInfo(app_network.TcpAccept).@"union".tag_type.?; native size 1, alignment 1. */
 typedef struct R4SdkTransportNative__typeInfo_app_network_TcpAccept____union__tag_type__ { _Alignas(1) uint8_t opaque_bytes[1]; } R4SdkTransportNative__typeInfo_app_network_TcpAccept____union__tag_type__;
@@ -671,7 +671,7 @@ typedef struct R4SdkTransportNative__typeInfo_app_network_UdpReceive____union__t
 /* app_network.Datagram; native size 24, alignment 8. */
 typedef struct R4SdkTransportNative_app_network_Datagram { _Alignas(8) uint8_t opaque_bytes[24]; } R4SdkTransportNative_app_network_Datagram;
 #define R4SdkTransportNative_app_network_Datagram_TYPE 279u
-#define R4SdkTransport_ABI_FINGERPRINT UINT64_C(7705069172709722822)
+#define R4SdkTransport_ABI_FINGERPRINT UINT64_C(8297634342933637476)
 int32_t R4SdkTransportVerifyAbi(uint64_t);
 #define R4SdkTransport_tls_workspace_bytes (18432)
 #define R4SdkTransport_tls_scratch_bytes (55296)

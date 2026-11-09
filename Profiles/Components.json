@@ -26,10 +26,10 @@
   "repositories": {
     "contract": {
       "repository": "https://github.com/R4OSDev/r4os-contract.git",
-      "commit": "e3278955e61056011731a6df6c9d673c3624e169",
-      "version": "0.64.92",
+      "commit": "ebd4588477aa509383ee4448b0615948512def51",
+      "version": "0.64.93",
       "files": {
-        "build.zig.zon": "4bc525bc594a49d37708b627b1fc1920c78eb30b379ccca7899613bf6dee1508",
+        "build.zig.zon": "51fb51d5e7bba4f238dee8fe6a84ac6436bcfe14602ba6b7909b3666b1d5b2b7",
         "API/ApiContract.json": "5d7d1f631a75b4f3b7b4a6206a0a353258932c594b777cd0ca594177e3485f4c",
         "Module/CpuBaseline.json": "eeeee03aa8fd41051c09e61e9d70ca35660f2b413c3f878fb6e5a3bb51aad10c",
         "Generated/SDK/Rust/Cargo.toml": "de464f2f9243e3d153c06b701a2126839c3e8a921a6d466467d3042370023263",
@@ -37,12 +37,12 @@
         "API/Generation2.json": "08147d7960dddc7a368accb54d7c3508e99ca624fc3f808df2127c14b0a994a2",
         "Generated/Generation2/Inventory.json": "aa842b126fcfa1d14aee7b543e72aa642f2988e453aba3261692c98adf996815"
       },
-      "zig_hash": "r4os_contract-0.64.92-ELhbYTVWUgFgR-JUQQI7lfESvOwDY_iO9iCe08AnR6OQ",
-      "archive_url": "https://github.com/R4OSDev/r4os-contract/archive/e3278955e61056011731a6df6c9d673c3624e169.tar.gz",
+      "zig_hash": "r4os_contract-0.64.93-ELhbYYxcUgFy0qjySkS_OCnI-_DTEq3JyqdSqWIze1tw",
+      "archive_url": "https://github.com/R4OSDev/r4os-contract/archive/ebd4588477aa509383ee4448b0615948512def51.tar.gz",
       "archive_format": "tar.gz",
       "tree": {
         "algorithm": "r4os-files-sha256-lf-v1",
-        "sha256": "880ff8d388565e66c82014608371f8611b933cb44f8cc982ab07e37c57786479",
+        "sha256": "8726f0a3b56a4cf10922594f70aa43fc74045443f76018e52ffbdcb50430f362",
         "files": [
           ".gitattributes",
           ".gitignore",

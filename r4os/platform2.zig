@@ -1,5 +1,5 @@
-//! Explicit generation-2 provider/probe access. Existing App remains on its
-//! selected contract; no process-global binding or implicit generation fallback.
+//! Actual generation2 context used by normal App2 and explicit technical
+//! probes. No process-global context binding or implicit generation fallback.
 const std = @import("std");
 pub const abi = @import("r4os_contract2");
 pub const Error = error{ InvalidContext, InvalidImports, MixedGeneration, DuplicateGroup, MissingSystem, InvalidTable };
@@ -12,6 +12,7 @@ pub const Context = struct {
         if (raw.magic != abi.start_magic or raw.abi_major != 2 or raw.size < @sizeOf(abi.R4XStartContext2)) return error.InvalidContext;
         if (raw.args_len > std.math.maxInt(isize) or (raw.args_len != 0 and raw.args == 0) or @addWithOverflow(raw.args, raw.args_len)[1] != 0) return error.InvalidContext;
         if (raw.import_count > 32 or (raw.import_count != 0 and (raw.imports == 0 or raw.imports % @alignOf(abi.R4XStartImport) != 0))) return error.InvalidImports;
+        if (@addWithOverflow(raw.imports, @as(u64, raw.import_count) * @sizeOf(abi.R4XStartImport))[1] != 0) return error.InvalidImports;
         var result: Context = .{ .raw = raw };
         var seen: u8 = 0;
         if (raw.import_count != 0) {
@@ -206,4 +207,98 @@ test "Start2 admits class groups and import count before invoking the callback" 
     try std.testing.expectEqual(@as(i32, -1), start(&raw, .{ .app_class = 1, .required_groups = 10, .import_count = 1 }, &Callback.run));
     raw.size = 119;
     try std.testing.expectEqual(@as(i32, -1), start(&raw, expected, &Callback.run));
+}
+
+test "normal App2 validates ordered manifest libraries and keeps exact lifecycle callbacks" {
+    const startup = @import("app2.zig");
+    const Callback = struct {
+        var expected: *const abi.R4XStartContext2 = undefined;
+        var yields: u32 = 0;
+        fn close(raw: *const abi.R4XStartContext2) callconv(.c) u32 {
+            return @intFromBool(raw == expected and raw.size == 120 and raw.magic == abi.start_magic);
+        }
+        fn yield(raw: *const abi.R4XStartContext2) callconv(.c) void {
+            if (raw == expected and raw.size == 120) yields += 1;
+        }
+        fn write(data: [*]const u8, len: u32) callconv(.c) i32 {
+            return if (std.mem.eql(u8, data[0..len], "normal2")) 7 else -99;
+        }
+    };
+    var sys: abi.R4XStartR4Sys2 = .{ .write = @intFromPtr(&Callback.write) };
+    var rows = [_]abi.R4XStartImport{
+        .{ .group_id = 1, .min_version = 2, .resolved_version = 2, .flags = 1, .module_name = @intFromPtr("R4SYS"), .symbol_name = @intFromPtr("Query2"), .table = @intFromPtr(&sys) },
+        .{ .min_version = 1, .module_name = @intFromPtr("OPTIONAL"), .symbol_name = @intFromPtr("TEXT_V1") },
+    };
+    var raw: abi.R4XStartContext2 = .{
+        .app_class = 1,
+        .flags = abi.shared.r4xstart_flag_imports_valid | abi.shared.r4xstart_flag_close_supported | abi.shared.r4xstart_flag_yield_supported,
+        .imports = @intFromPtr(&rows),
+        .import_count = rows.len,
+        .args = @intFromPtr("argument"),
+        .args_len = 8,
+        .should_close = @intFromPtr(&Callback.close),
+        .yield = @intFromPtr(&Callback.yield),
+    };
+    Callback.expected = &raw;
+    Callback.yields = 0;
+    const specs = [_]startup.ImportSpec{
+        .{ .module_name = "R4SYS", .symbol_name = "Query2", .minimum = 2, .optional = 0, .group_id = 1 },
+        .{ .module_name = "OPTIONAL", .symbol_name = "TEXT_V1", .minimum = 1, .optional = 1, .group_id = 0 },
+    };
+    const facts: startup.StartupInfo = .{ .profile = 0, .app_class = 1, .required_groups = 2, .import_count = 2, .imports = &specs };
+    var app = switch (startup.App.initDeclared(&raw, &facts)) {
+        .value => |a| a,
+        .failure => return error.UnexpectedStartFailure,
+    };
+    try std.testing.expect(app.startContext() == &raw);
+    try std.testing.expect(app.lowLevel().bundle == null);
+    try std.testing.expect(app.context.system().? == &sys);
+    try std.testing.expectEqualStrings("argument", app.args());
+    app.lowLevel().write("normal2");
+    try std.testing.expect(app.shouldClose());
+    app.yield();
+    try std.testing.expectEqual(@as(u32, 1), Callback.yields);
+    try std.testing.expect(app.allocator() == null);
+    rows[1].module_name = @intFromPtr("OTHER");
+    try std.testing.expect(startup.App.initDeclared(&raw, &facts) == .failure);
+    rows[1].module_name = @intFromPtr("OPTIONAL");
+    rows[1].resolved_version = 1;
+    try std.testing.expect(startup.App.initDeclared(&raw, &facts) == .failure);
+    rows[1].resolved_version = 0;
+    std.mem.swap(abi.R4XStartImport, &rows[0], &rows[1]);
+    try std.testing.expect(startup.App.initDeclared(&raw, &facts) == .failure);
+    std.mem.swap(abi.R4XStartImport, &rows[0], &rows[1]);
+    raw.import_count = 1;
+    try std.testing.expect(startup.App.initDeclared(&raw, &facts) == .failure);
+}
+
+test "normal App2 requires actual class groups and rejects old contexts and group headers" {
+    const startup = @import("app2.zig");
+    var sys: abi.R4XStartR4Sys2 = .{};
+    var desk: abi.R4XStartR4Desk2 = .{};
+    var draw: abi.R4XStartR4Draw2 = .{};
+    var rows = [_]abi.R4XStartImport{
+        .{ .group_id = 1, .resolved_version = 2, .table = @intFromPtr(&sys) },
+        .{ .group_id = 2, .resolved_version = 2, .table = @intFromPtr(&desk) },
+        .{ .group_id = 3, .resolved_version = 2, .table = @intFromPtr(&draw) },
+    };
+    var raw: abi.R4XStartContext2 = .{ .flags = 1, .app_class = 2, .imports = @intFromPtr(&rows), .import_count = 1 };
+    try std.testing.expect(startup.App.init(&raw, .desktop) == .failure);
+    raw.import_count = 3;
+    try std.testing.expect(startup.App.init(&raw, .desktop) == .value);
+    raw.app_class = 3;
+    try std.testing.expect(startup.App.init(&raw, .service) == .value);
+    try std.testing.expect(startup.App.init(&raw, .console) == .failure);
+    raw.app_class = 1;
+    raw.flags = 0;
+    try std.testing.expect(startup.App.init(&raw, .console) == .failure);
+    raw.flags = 1;
+    raw.abi_major = 1;
+    try std.testing.expect(startup.App.init(&raw, .console) == .failure);
+    raw.abi_major = 2;
+    raw.size = 119;
+    try std.testing.expect(startup.App.init(&raw, .console) == .failure);
+    raw.size = 120;
+    sys.magic = abi.shared.r4xstart_r4sys_magic;
+    try std.testing.expect(startup.App.init(&raw, .console) == .failure);
 }

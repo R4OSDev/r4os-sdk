@@ -90,3 +90,31 @@ pub fn c2(a: std.mem.Allocator, profile: abi.R4AppProfile, count: usize) ![]u8 {
     const meta = abi.r4AppProfileMeta(profile);
     return std.fmt.allocPrint(a, "{{{d}u,{d}u,{d}u}}", .{ @intFromEnum(meta.app_class), meta.required_groups, count });
 }
+
+/// Normal App2 entry retains the complete ordered manifest, including named
+/// independent libraries. No first-generation table header enters these facts.
+pub fn app2(a: std.mem.Allocator, language: enum { zig, c, rust }, profile: abi.R4AppProfile, values: []const []const u8) ![]u8 {
+    const meta = abi.r4AppProfileMeta(profile);
+    var out: std.ArrayList(u8) = .empty;
+    errdefer out.deinit(a);
+    switch (language) {
+        .zig => try append(&out, a, "const r4os = @import(\"r4os\");\npub const startup: r4os.startup2.StartupInfo = .{{ .profile = {d}, .app_class = {d}, .required_groups = {d}, .import_count = {d}, .imports = &.{{\n", .{ @intFromEnum(profile), @intFromEnum(meta.app_class), meta.required_groups, values.len }),
+        .c => try append(&out, a, "{{ {d}u, {d}u, {d}u, {d}u, (const R4App2Import[]){{", .{ @intFromEnum(profile), @intFromEnum(meta.app_class), meta.required_groups, values.len }),
+        .rust => try append(&out, a, "__r4os_startup::app2::StartupInfo {{ profile: {d}, app_class: {d}, required_groups: {d}, imports: &[\n", .{ @intFromEnum(profile), @intFromEnum(meta.app_class), meta.required_groups }),
+    }
+    for (values) |value| {
+        const spec = try imports.parse(value);
+        const p = platformFor(spec.module_name);
+        switch (language) {
+            .zig => try append(&out, a, ".{{ .module_name = \"{s}\", .symbol_name = \"{s}\", .minimum = {d}, .optional = {d}, .group_id = {d} }},\n", .{ spec.module_name, spec.symbol_name, spec.minimum, @intFromBool(spec.optional), p.id }),
+            .c => try append(&out, a, "{{\"{s}\",\"{s}\",{d}u,{d}u,{d}u,0u}},", .{ spec.module_name, spec.symbol_name, spec.minimum, @intFromBool(spec.optional), p.id }),
+            .rust => try append(&out, a, "__r4os_startup::app2::ImportSpec {{ module_name: b\"{s}\\0\".as_ptr(), symbol_name: b\"{s}\\0\".as_ptr(), minimum: {d}, optional: {d}, group_id: {d}, reserved: 0 }},\n", .{ spec.module_name, spec.symbol_name, spec.minimum, @intFromBool(spec.optional), p.id }),
+        }
+    }
+    try out.appendSlice(a, switch (language) {
+        .zig => "} };\n",
+        .c => "} }",
+        .rust => "] }\n",
+    });
+    return out.toOwnedSlice(a);
+}

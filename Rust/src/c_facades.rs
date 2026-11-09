@@ -2146,9 +2146,9 @@ const _: () = { assert!(core::mem::size_of::<R4SdkGuiType12>() == 8); assert!(co
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiDrawContext {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiDrawContext>() == 8); assert!(core::mem::align_of::<R4SdkGuiDrawContext>() == 8); assert!(core::mem::offset_of!(R4SdkGuiDrawContext, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiDrawContext>() == 24); assert!(core::mem::align_of::<R4SdkGuiDrawContext>() == 8); assert!(core::mem::offset_of!(R4SdkGuiDrawContext, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiAlign {
@@ -2626,9 +2626,9 @@ const _: () = { assert!(core::mem::size_of::<R4SdkGuiType94>() == 8); assert!(co
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiSystemContext {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiSystemContext>() == 8); assert!(core::mem::align_of::<R4SdkGuiSystemContext>() == 8); assert!(core::mem::offset_of!(R4SdkGuiSystemContext, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiSystemContext>() == 24); assert!(core::mem::align_of::<R4SdkGuiSystemContext>() == 8); assert!(core::mem::offset_of!(R4SdkGuiSystemContext, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType96 {
@@ -2638,9 +2638,9 @@ const _: () = { assert!(core::mem::size_of::<R4SdkGuiType96>() == 8); assert!(co
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiDesktopContext {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiDesktopContext>() == 8); assert!(core::mem::align_of::<R4SdkGuiDesktopContext>() == 8); assert!(core::mem::offset_of!(R4SdkGuiDesktopContext, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiDesktopContext>() == 24); assert!(core::mem::align_of::<R4SdkGuiDesktopContext>() == 8); assert!(core::mem::offset_of!(R4SdkGuiDesktopContext, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType98 {
@@ -2806,9 +2806,9 @@ const _: () = { assert!(core::mem::size_of::<R4SdkGuiTimer>() == 24); assert!(co
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiEventLoop {
-    pub r#opaque_bytes: [u8; 64],
+    pub r#opaque_bytes: [u8; 96],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiEventLoop>() == 64); assert!(core::mem::align_of::<R4SdkGuiEventLoop>() == 8); assert!(core::mem::offset_of!(R4SdkGuiEventLoop, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiEventLoop>() == 96); assert!(core::mem::align_of::<R4SdkGuiEventLoop>() == 8); assert!(core::mem::offset_of!(R4SdkGuiEventLoop, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType128 {
@@ -2860,9 +2860,9 @@ const _: () = { assert!(core::mem::size_of::<R4SdkGuiType136>() == 16); assert!(
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiWindow {
-    pub r#opaque_bytes: [u8; 96],
+    pub r#opaque_bytes: [u8; 176],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiWindow>() == 96); assert!(core::mem::align_of::<R4SdkGuiWindow>() == 8); assert!(core::mem::offset_of!(R4SdkGuiWindow, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiWindow>() == 176); assert!(core::mem::align_of::<R4SdkGuiWindow>() == 8); assert!(core::mem::offset_of!(R4SdkGuiWindow, r#opaque_bytes) == 0); };
 #[repr(C, align(4))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiShapePoint {
@@ -3034,9 +3034,9 @@ const _: () = { assert!(core::mem::size_of::<R4SdkGuiType168>() == 8); assert!(c
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiProgramContext {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiProgramContext>() == 8); assert!(core::mem::align_of::<R4SdkGuiProgramContext>() == 8); assert!(core::mem::offset_of!(R4SdkGuiProgramContext, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiProgramContext>() == 24); assert!(core::mem::align_of::<R4SdkGuiProgramContext>() == 8); assert!(core::mem::offset_of!(R4SdkGuiProgramContext, r#opaque_bytes) == 0); };
 #[repr(C, align(4))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType170 {
@@ -3112,21 +3112,21 @@ const _: () = { assert!(core::mem::size_of::<R4SdkGuiType187>() == 8); assert!(c
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGfxBuffersContext {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGfxBuffersContext>() == 8); assert!(core::mem::align_of::<R4SdkGfxBuffersContext>() == 8); assert!(core::mem::offset_of!(R4SdkGfxBuffersContext, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGfxBuffersContext>() == 24); assert!(core::mem::align_of::<R4SdkGfxBuffersContext>() == 8); assert!(core::mem::offset_of!(R4SdkGfxBuffersContext, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGfxOutputsContext {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGfxOutputsContext>() == 8); assert!(core::mem::align_of::<R4SdkGfxOutputsContext>() == 8); assert!(core::mem::offset_of!(R4SdkGfxOutputsContext, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGfxOutputsContext>() == 24); assert!(core::mem::align_of::<R4SdkGfxOutputsContext>() == 8); assert!(core::mem::offset_of!(R4SdkGfxOutputsContext, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGfxQueueContext {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGfxQueueContext>() == 8); assert!(core::mem::align_of::<R4SdkGfxQueueContext>() == 8); assert!(core::mem::offset_of!(R4SdkGfxQueueContext, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGfxQueueContext>() == 24); assert!(core::mem::align_of::<R4SdkGfxQueueContext>() == 8); assert!(core::mem::offset_of!(R4SdkGfxQueueContext, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType192 {
@@ -3220,9 +3220,9 @@ const _: () = { assert!(core::mem::size_of::<R4SdkAudioWriteCursor>() == 24); as
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkAudioOpenResult {
-    pub r#opaque_bytes: [u8; 256],
+    pub r#opaque_bytes: [u8; 272],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkAudioOpenResult>() == 256); assert!(core::mem::align_of::<R4SdkAudioOpenResult>() == 8); assert!(core::mem::offset_of!(R4SdkAudioOpenResult, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkAudioOpenResult>() == 272); assert!(core::mem::align_of::<R4SdkAudioOpenResult>() == 8); assert!(core::mem::offset_of!(R4SdkAudioOpenResult, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType211 {
@@ -3232,63 +3232,63 @@ const _: () = { assert!(core::mem::size_of::<R4SdkGuiType211>() == 1); assert!(c
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkAudioAudioStream {
-    pub r#opaque_bytes: [u8; 248],
+    pub r#opaque_bytes: [u8; 264],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkAudioAudioStream>() == 248); assert!(core::mem::align_of::<R4SdkAudioAudioStream>() == 8); assert!(core::mem::offset_of!(R4SdkAudioAudioStream, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkAudioAudioStream>() == 264); assert!(core::mem::align_of::<R4SdkAudioAudioStream>() == 8); assert!(core::mem::offset_of!(R4SdkAudioAudioStream, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType213 {
-    pub r#opaque_bytes: [u8; 232],
+    pub r#opaque_bytes: [u8; 248],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType213>() == 232); assert!(core::mem::align_of::<R4SdkGuiType213>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType213, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType213>() == 248); assert!(core::mem::align_of::<R4SdkGuiType213>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType213, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkAudioAudio {
-    pub r#opaque_bytes: [u8; 16],
+    pub r#opaque_bytes: [u8; 48],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkAudioAudio>() == 16); assert!(core::mem::align_of::<R4SdkAudioAudio>() == 8); assert!(core::mem::offset_of!(R4SdkAudioAudio, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkAudioAudio>() == 48); assert!(core::mem::align_of::<R4SdkAudioAudio>() == 8); assert!(core::mem::offset_of!(R4SdkAudioAudio, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkAudioContext {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkAudioContext>() == 8); assert!(core::mem::align_of::<R4SdkAudioContext>() == 8); assert!(core::mem::offset_of!(R4SdkAudioContext, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkAudioContext>() == 24); assert!(core::mem::align_of::<R4SdkAudioContext>() == 8); assert!(core::mem::offset_of!(R4SdkAudioContext, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkAudioAdvancedAudio {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkAudioAdvancedAudio>() == 8); assert!(core::mem::align_of::<R4SdkAudioAdvancedAudio>() == 8); assert!(core::mem::offset_of!(R4SdkAudioAdvancedAudio, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkAudioAdvancedAudio>() == 24); assert!(core::mem::align_of::<R4SdkAudioAdvancedAudio>() == 8); assert!(core::mem::offset_of!(R4SdkAudioAdvancedAudio, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDevicesDevices {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkDevicesDevices>() == 8); assert!(core::mem::align_of::<R4SdkDevicesDevices>() == 8); assert!(core::mem::offset_of!(R4SdkDevicesDevices, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkDevicesDevices>() == 24); assert!(core::mem::align_of::<R4SdkDevicesDevices>() == 8); assert!(core::mem::offset_of!(R4SdkDevicesDevices, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGfxDeviceContext {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGfxDeviceContext>() == 8); assert!(core::mem::align_of::<R4SdkGfxDeviceContext>() == 8); assert!(core::mem::offset_of!(R4SdkGfxDeviceContext, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGfxDeviceContext>() == 24); assert!(core::mem::align_of::<R4SdkGfxDeviceContext>() == 8); assert!(core::mem::offset_of!(R4SdkGfxDeviceContext, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDevicesDeviceInventoryView {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkDevicesDeviceInventoryView>() == 8); assert!(core::mem::align_of::<R4SdkDevicesDeviceInventoryView>() == 8); assert!(core::mem::offset_of!(R4SdkDevicesDeviceInventoryView, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkDevicesDeviceInventoryView>() == 24); assert!(core::mem::align_of::<R4SdkDevicesDeviceInventoryView>() == 8); assert!(core::mem::offset_of!(R4SdkDevicesDeviceInventoryView, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDevicesMemoryView {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkDevicesMemoryView>() == 8); assert!(core::mem::align_of::<R4SdkDevicesMemoryView>() == 8); assert!(core::mem::offset_of!(R4SdkDevicesMemoryView, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkDevicesMemoryView>() == 24); assert!(core::mem::align_of::<R4SdkDevicesMemoryView>() == 8); assert!(core::mem::offset_of!(R4SdkDevicesMemoryView, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDevicesPerformanceView {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkDevicesPerformanceView>() == 8); assert!(core::mem::align_of::<R4SdkDevicesPerformanceView>() == 8); assert!(core::mem::offset_of!(R4SdkDevicesPerformanceView, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkDevicesPerformanceView>() == 24); assert!(core::mem::align_of::<R4SdkDevicesPerformanceView>() == 8); assert!(core::mem::offset_of!(R4SdkDevicesPerformanceView, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkPcmWork {
@@ -3346,9 +3346,9 @@ const _: () = { assert!(core::mem::size_of::<R4SdkGuiType232>() == 1); assert!(c
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkPowerOpen {
-    pub r#opaque_bytes: [u8; 144],
+    pub r#opaque_bytes: [u8; 160],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkPowerOpen>() == 144); assert!(core::mem::align_of::<R4SdkPowerOpen>() == 8); assert!(core::mem::offset_of!(R4SdkPowerOpen, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkPowerOpen>() == 160); assert!(core::mem::align_of::<R4SdkPowerOpen>() == 8); assert!(core::mem::offset_of!(R4SdkPowerOpen, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType235 {
@@ -3358,27 +3358,27 @@ const _: () = { assert!(core::mem::size_of::<R4SdkGuiType235>() == 1); assert!(c
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkPowerClient {
-    pub r#opaque_bytes: [u8; 136],
+    pub r#opaque_bytes: [u8; 152],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkPowerClient>() == 136); assert!(core::mem::align_of::<R4SdkPowerClient>() == 8); assert!(core::mem::offset_of!(R4SdkPowerClient, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkPowerClient>() == 152); assert!(core::mem::align_of::<R4SdkPowerClient>() == 8); assert!(core::mem::offset_of!(R4SdkPowerClient, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiSession {
-    pub r#opaque_bytes: [u8; 1048],
+    pub r#opaque_bytes: [u8; 1192],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiSession>() == 1048); assert!(core::mem::align_of::<R4SdkGuiSession>() == 8); assert!(core::mem::offset_of!(R4SdkGuiSession, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiSession>() == 1192); assert!(core::mem::align_of::<R4SdkGuiSession>() == 8); assert!(core::mem::offset_of!(R4SdkGuiSession, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGfxContext {
-    pub r#opaque_bytes: [u8; 72],
+    pub r#opaque_bytes: [u8; 104],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGfxContext>() == 72); assert!(core::mem::align_of::<R4SdkGfxContext>() == 8); assert!(core::mem::offset_of!(R4SdkGfxContext, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGfxContext>() == 104); assert!(core::mem::align_of::<R4SdkGfxContext>() == 8); assert!(core::mem::offset_of!(R4SdkGfxContext, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkPlatformContext {
-    pub r#opaque_bytes: [u8; 104],
+    pub r#opaque_bytes: [u8; 200],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkPlatformContext>() == 104); assert!(core::mem::align_of::<R4SdkPlatformContext>() == 8); assert!(core::mem::offset_of!(R4SdkPlatformContext, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkPlatformContext>() == 200); assert!(core::mem::align_of::<R4SdkPlatformContext>() == 8); assert!(core::mem::offset_of!(R4SdkPlatformContext, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType240 {
@@ -4090,9 +4090,9 @@ const _: () = { assert!(core::mem::size_of::<R4SdkGuiType437>() == 8); assert!(c
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType438 {
-    pub r#opaque_bytes: [u8; 104],
+    pub r#opaque_bytes: [u8; 184],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType438>() == 104); assert!(core::mem::align_of::<R4SdkGuiType438>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType438, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType438>() == 184); assert!(core::mem::align_of::<R4SdkGuiType438>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType438, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType439 {
@@ -5127,9 +5127,9 @@ const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value11>() == 8); a
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataNative_r4dev_Context {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_r4dev_Context>() == 8); assert!(core::mem::align_of::<R4SdkDataNative_r4dev_Context>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_r4dev_Context, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_r4dev_Context>() == 24); assert!(core::mem::align_of::<R4SdkDataNative_r4dev_Context>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_r4dev_Context, r#opaque_bytes) == 0); };
 #[repr(C, align(2))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataNative_Value13 {
@@ -5337,9 +5337,9 @@ const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value46>() == 8); a
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataNative_program_Context {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_program_Context>() == 8); assert!(core::mem::align_of::<R4SdkDataNative_program_Context>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_program_Context, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_program_Context>() == 24); assert!(core::mem::align_of::<R4SdkDataNative_program_Context>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_program_Context, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataNative_Value48 {
@@ -5865,9 +5865,9 @@ const _: () = { assert!(core::mem::size_of::<R4SdkDataArtifactSliceReader>() == 
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataContext {
-    pub r#opaque_bytes: [u8; 72],
+    pub r#opaque_bytes: [u8; 104],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkDataContext>() == 72); assert!(core::mem::align_of::<R4SdkDataContext>() == 8); assert!(core::mem::offset_of!(R4SdkDataContext, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkDataContext>() == 104); assert!(core::mem::align_of::<R4SdkDataContext>() == 8); assert!(core::mem::offset_of!(R4SdkDataContext, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataNative_Value140 {
@@ -7256,21 +7256,21 @@ const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue79>() == 4
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemVideoHost {
-    pub r#opaque_bytes: [u8; 1160],
+    pub r#opaque_bytes: [u8; 1192],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemVideoHost>() == 1160); assert!(core::mem::align_of::<R4SdkSubsystemVideoHost>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemVideoHost, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemVideoHost>() == 1192); assert!(core::mem::align_of::<R4SdkSubsystemVideoHost>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemVideoHost, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNative_r4desk_Context {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNative_r4desk_Context>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNative_r4desk_Context>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNative_r4desk_Context, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNative_r4desk_Context>() == 24); assert!(core::mem::align_of::<R4SdkSubsystemNative_r4desk_Context>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNative_r4desk_Context, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNative_r4draw_Context {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNative_r4draw_Context>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNative_r4draw_Context>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNative_r4draw_Context, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNative_r4draw_Context>() == 24); assert!(core::mem::align_of::<R4SdkSubsystemNative_r4draw_Context>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNative_r4draw_Context, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue83 {
@@ -7430,15 +7430,15 @@ const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue110>() == 
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemRuntimeR4AudioSink {
-    pub r#opaque_bytes: [u8; 56],
+    pub r#opaque_bytes: [u8; 88],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemRuntimeR4AudioSink>() == 56); assert!(core::mem::align_of::<R4SdkSubsystemRuntimeR4AudioSink>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemRuntimeR4AudioSink, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemRuntimeR4AudioSink>() == 88); assert!(core::mem::align_of::<R4SdkSubsystemRuntimeR4AudioSink>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemRuntimeR4AudioSink, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNative_app_audio_Audio {
-    pub r#opaque_bytes: [u8; 16],
+    pub r#opaque_bytes: [u8; 48],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNative_app_audio_Audio>() == 16); assert!(core::mem::align_of::<R4SdkSubsystemNative_app_audio_Audio>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNative_app_audio_Audio, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNative_app_audio_Audio>() == 48); assert!(core::mem::align_of::<R4SdkSubsystemNative_app_audio_Audio>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNative_app_audio_Audio, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemRuntimeAudioStats {
@@ -7586,27 +7586,27 @@ const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemRecoveryTestState>() 
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemStore {
-    pub r#opaque_bytes: [u8; 1144],
+    pub r#opaque_bytes: [u8; 1176],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemStore>() == 1144); assert!(core::mem::align_of::<R4SdkSubsystemStore>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemStore, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemStore>() == 1176); assert!(core::mem::align_of::<R4SdkSubsystemStore>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemStore, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNative_app_storage_Files {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNative_app_storage_Files>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNative_app_storage_Files>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNative_app_storage_Files, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNative_app_storage_Files>() == 24); assert!(core::mem::align_of::<R4SdkSubsystemNative_app_storage_Files>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNative_app_storage_Files, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue141 {
-    pub r#opaque_bytes: [u8; 1080],
+    pub r#opaque_bytes: [u8; 1096],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue141>() == 1080); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue141>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue141, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue141>() == 1096); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue141>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue141, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNative_app_storage_OwnedStageWriter {
-    pub r#opaque_bytes: [u8; 1072],
+    pub r#opaque_bytes: [u8; 1088],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNative_app_storage_OwnedStageWriter>() == 1072); assert!(core::mem::align_of::<R4SdkSubsystemNative_app_storage_OwnedStageWriter>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNative_app_storage_OwnedStageWriter, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNative_app_storage_OwnedStageWriter>() == 1088); assert!(core::mem::align_of::<R4SdkSubsystemNative_app_storage_OwnedStageWriter>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNative_app_storage_OwnedStageWriter, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue143 {
@@ -7622,9 +7622,9 @@ const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemAsyncStats>() == 64);
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemAsyncStore {
-    pub r#opaque_bytes: [u8; 1312],
+    pub r#opaque_bytes: [u8; 1344],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemAsyncStore>() == 1312); assert!(core::mem::align_of::<R4SdkSubsystemAsyncStore>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemAsyncStore, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemAsyncStore>() == 1344); assert!(core::mem::align_of::<R4SdkSubsystemAsyncStore>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemAsyncStore, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue147 {
@@ -7760,9 +7760,9 @@ const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue173>() == 
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemContext {
-    pub r#opaque_bytes: [u8; 88],
+    pub r#opaque_bytes: [u8; 152],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemContext>() == 88); assert!(core::mem::align_of::<R4SdkSubsystemContext>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemContext, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemContext>() == 152); assert!(core::mem::align_of::<R4SdkSubsystemContext>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemContext, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNative_program_Bundle {
@@ -7772,21 +7772,21 @@ const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNative_program_Bundle
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNative_r4sys_Context {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNative_r4sys_Context>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNative_r4sys_Context>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNative_r4sys_Context, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNative_r4sys_Context>() == 24); assert!(core::mem::align_of::<R4SdkSubsystemNative_r4sys_Context>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNative_r4sys_Context, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNative_r4audio_Context {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNative_r4audio_Context>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNative_r4audio_Context>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNative_r4audio_Context, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNative_r4audio_Context>() == 24); assert!(core::mem::align_of::<R4SdkSubsystemNative_r4audio_Context>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNative_r4audio_Context, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNative_program_Context {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNative_program_Context>() == 8); assert!(core::mem::align_of::<R4SdkSubsystemNative_program_Context>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNative_program_Context, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNative_program_Context>() == 24); assert!(core::mem::align_of::<R4SdkSubsystemNative_program_Context>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNative_program_Context, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue179 {
@@ -7970,9 +7970,9 @@ const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue212>() == 
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue213 {
-    pub r#opaque_bytes: [u8; 1168],
+    pub r#opaque_bytes: [u8; 1200],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue213>() == 1168); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue213>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue213, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkSubsystemNativeValue213>() == 1200); assert!(core::mem::align_of::<R4SdkSubsystemNativeValue213>() == 8); assert!(core::mem::offset_of!(R4SdkSubsystemNativeValue213, r#opaque_bytes) == 0); };
 #[repr(C, align(4))]
 #[derive(Clone, Copy)]
 pub struct R4SdkSubsystemNativeValue215 {
@@ -14117,21 +14117,21 @@ const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue7>() == 8)
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkTransportSessionPool {
-    pub r#opaque_bytes: [u8; 70152],
+    pub r#opaque_bytes: [u8; 70216],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkTransportSessionPool>() == 70152); assert!(core::mem::align_of::<R4SdkTransportSessionPool>() == 8); assert!(core::mem::offset_of!(R4SdkTransportSessionPool, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportSessionPool>() == 70216); assert!(core::mem::align_of::<R4SdkTransportSessionPool>() == 8); assert!(core::mem::offset_of!(R4SdkTransportSessionPool, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkTransportNativeValue9 {
-    pub r#opaque_bytes: [u8; 4512],
+    pub r#opaque_bytes: [u8; 4576],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue9>() == 4512); assert!(core::mem::align_of::<R4SdkTransportNativeValue9>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue9, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue9>() == 4576); assert!(core::mem::align_of::<R4SdkTransportNativeValue9>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue9, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkTransportSessionPool_Entry {
-    pub r#opaque_bytes: [u8; 2256],
+    pub r#opaque_bytes: [u8; 2288],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkTransportSessionPool_Entry>() == 2256); assert!(core::mem::align_of::<R4SdkTransportSessionPool_Entry>() == 8); assert!(core::mem::offset_of!(R4SdkTransportSessionPool_Entry, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportSessionPool_Entry>() == 2288); assert!(core::mem::align_of::<R4SdkTransportSessionPool_Entry>() == 8); assert!(core::mem::offset_of!(R4SdkTransportSessionPool_Entry, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
 pub struct R4SdkTransportNativeValue11 {
@@ -14141,33 +14141,33 @@ const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue11>() == 2
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkTransportNativeValue12 {
-    pub r#opaque_bytes: [u8; 40],
+    pub r#opaque_bytes: [u8; 72],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue12>() == 40); assert!(core::mem::align_of::<R4SdkTransportNativeValue12>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue12, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue12>() == 72); assert!(core::mem::align_of::<R4SdkTransportNativeValue12>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue12, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkTransportNative_app_network_TcpSocket {
-    pub r#opaque_bytes: [u8; 32],
+    pub r#opaque_bytes: [u8; 64],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_app_network_TcpSocket>() == 32); assert!(core::mem::align_of::<R4SdkTransportNative_app_network_TcpSocket>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_app_network_TcpSocket, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_app_network_TcpSocket>() == 64); assert!(core::mem::align_of::<R4SdkTransportNative_app_network_TcpSocket>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_app_network_TcpSocket, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkTransportNative_app_network_Network {
-    pub r#opaque_bytes: [u8; 16],
+    pub r#opaque_bytes: [u8; 48],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_app_network_Network>() == 16); assert!(core::mem::align_of::<R4SdkTransportNative_app_network_Network>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_app_network_Network, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_app_network_Network>() == 48); assert!(core::mem::align_of::<R4SdkTransportNative_app_network_Network>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_app_network_Network, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkTransportNative_r4sys_Context {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_r4sys_Context>() == 8); assert!(core::mem::align_of::<R4SdkTransportNative_r4sys_Context>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_r4sys_Context, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_r4sys_Context>() == 24); assert!(core::mem::align_of::<R4SdkTransportNative_r4sys_Context>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_r4sys_Context, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkTransportNative_r4net_Context {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_r4net_Context>() == 8); assert!(core::mem::align_of::<R4SdkTransportNative_r4net_Context>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_r4net_Context, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_r4net_Context>() == 24); assert!(core::mem::align_of::<R4SdkTransportNative_r4net_Context>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_r4net_Context, r#opaque_bytes) == 0); };
 #[repr(C, align(2))]
 #[derive(Clone, Copy)]
 pub struct R4SdkTransportNative_app_network_SocketAddress {
@@ -14399,15 +14399,15 @@ const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative__typeInfo_app_
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkTransportWebTransport {
-    pub r#opaque_bytes: [u8; 24],
+    pub r#opaque_bytes: [u8; 72],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkTransportWebTransport>() == 24); assert!(core::mem::align_of::<R4SdkTransportWebTransport>() == 8); assert!(core::mem::offset_of!(R4SdkTransportWebTransport, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportWebTransport>() == 72); assert!(core::mem::align_of::<R4SdkTransportWebTransport>() == 8); assert!(core::mem::offset_of!(R4SdkTransportWebTransport, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkTransportNative_r4dev_Context {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_r4dev_Context>() == 8); assert!(core::mem::align_of::<R4SdkTransportNative_r4dev_Context>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_r4dev_Context, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_r4dev_Context>() == 24); assert!(core::mem::align_of::<R4SdkTransportNative_r4dev_Context>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_r4dev_Context, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
 pub struct R4SdkTransportPostStreamAction {
@@ -14477,9 +14477,9 @@ const _: () = { assert!(core::mem::size_of::<R4SdkTransportHttpResponseError>() 
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkTransportPostStream {
-    pub r#opaque_bytes: [u8; 28048],
+    pub r#opaque_bytes: [u8; 28080],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkTransportPostStream>() == 28048); assert!(core::mem::align_of::<R4SdkTransportPostStream>() == 8); assert!(core::mem::offset_of!(R4SdkTransportPostStream, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportPostStream>() == 28080); assert!(core::mem::align_of::<R4SdkTransportPostStream>() == 8); assert!(core::mem::offset_of!(R4SdkTransportPostStream, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkTransportNativeValue79 {
@@ -14765,21 +14765,21 @@ const _: () = { assert!(core::mem::size_of::<R4SdkTransportCacheDirectives>() ==
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkTransportJobsJob {
-    pub r#opaque_bytes: [u8; 72096],
+    pub r#opaque_bytes: [u8; 72224],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkTransportJobsJob>() == 72096); assert!(core::mem::align_of::<R4SdkTransportJobsJob>() == 8); assert!(core::mem::offset_of!(R4SdkTransportJobsJob, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportJobsJob>() == 72224); assert!(core::mem::align_of::<R4SdkTransportJobsJob>() == 8); assert!(core::mem::offset_of!(R4SdkTransportJobsJob, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkTransportNativeValue148 {
-    pub r#opaque_bytes: [u8; 56],
+    pub r#opaque_bytes: [u8; 72],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue148>() == 56); assert!(core::mem::align_of::<R4SdkTransportNativeValue148>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue148, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue148>() == 72); assert!(core::mem::align_of::<R4SdkTransportNativeValue148>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNativeValue148, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkTransportNative_app_resources_JoinHandle {
-    pub r#opaque_bytes: [u8; 48],
+    pub r#opaque_bytes: [u8; 64],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_app_resources_JoinHandle>() == 48); assert!(core::mem::align_of::<R4SdkTransportNative_app_resources_JoinHandle>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_app_resources_JoinHandle, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_app_resources_JoinHandle>() == 64); assert!(core::mem::align_of::<R4SdkTransportNative_app_resources_JoinHandle>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_app_resources_JoinHandle, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkTransportNativeValue151 {
@@ -14795,9 +14795,9 @@ const _: () = { assert!(core::mem::size_of::<R4SdkTransportRuntimeJobsOwner>() =
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkTransportRuntimeJobsRequestJob {
-    pub r#opaque_bytes: [u8; 74344],
+    pub r#opaque_bytes: [u8; 74472],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkTransportRuntimeJobsRequestJob>() == 74344); assert!(core::mem::align_of::<R4SdkTransportRuntimeJobsRequestJob>() == 8); assert!(core::mem::offset_of!(R4SdkTransportRuntimeJobsRequestJob, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportRuntimeJobsRequestJob>() == 74472); assert!(core::mem::align_of::<R4SdkTransportRuntimeJobsRequestJob>() == 8); assert!(core::mem::offset_of!(R4SdkTransportRuntimeJobsRequestJob, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
 pub struct R4SdkTransportNativeValue156 {
@@ -14861,9 +14861,9 @@ const _: () = { assert!(core::mem::size_of::<R4SdkTransportFetchHeader>() == 110
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkTransportContext {
-    pub r#opaque_bytes: [u8; 80],
+    pub r#opaque_bytes: [u8; 128],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkTransportContext>() == 80); assert!(core::mem::align_of::<R4SdkTransportContext>() == 8); assert!(core::mem::offset_of!(R4SdkTransportContext, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportContext>() == 128); assert!(core::mem::align_of::<R4SdkTransportContext>() == 8); assert!(core::mem::offset_of!(R4SdkTransportContext, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkTransportNativeValue183 {
@@ -14993,15 +14993,15 @@ const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_app_network_Tc
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkTransportNative_app_network_Resolver {
-    pub r#opaque_bytes: [u8; 16],
+    pub r#opaque_bytes: [u8; 48],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_app_network_Resolver>() == 16); assert!(core::mem::align_of::<R4SdkTransportNative_app_network_Resolver>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_app_network_Resolver, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_app_network_Resolver>() == 48); assert!(core::mem::align_of::<R4SdkTransportNative_app_network_Resolver>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_app_network_Resolver, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkTransportNative_app_network_TcpOpen {
-    pub r#opaque_bytes: [u8; 40],
+    pub r#opaque_bytes: [u8; 72],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_app_network_TcpOpen>() == 40); assert!(core::mem::align_of::<R4SdkTransportNative_app_network_TcpOpen>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_app_network_TcpOpen, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_app_network_TcpOpen>() == 72); assert!(core::mem::align_of::<R4SdkTransportNative_app_network_TcpOpen>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_app_network_TcpOpen, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
 pub struct R4SdkTransportNative__typeInfo_app_network_TcpOpen____union__tag_type__ {
@@ -15011,9 +15011,9 @@ const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative__typeInfo_app_
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkTransportNative_app_network_ListenerOpen {
-    pub r#opaque_bytes: [u8; 32],
+    pub r#opaque_bytes: [u8; 64],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_app_network_ListenerOpen>() == 32); assert!(core::mem::align_of::<R4SdkTransportNative_app_network_ListenerOpen>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_app_network_ListenerOpen, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_app_network_ListenerOpen>() == 64); assert!(core::mem::align_of::<R4SdkTransportNative_app_network_ListenerOpen>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_app_network_ListenerOpen, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
 pub struct R4SdkTransportNative__typeInfo_app_network_ListenerOpen____union__tag_type__ {
@@ -15023,15 +15023,15 @@ const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative__typeInfo_app_
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkTransportNative_app_network_TcpListener {
-    pub r#opaque_bytes: [u8; 24],
+    pub r#opaque_bytes: [u8; 56],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_app_network_TcpListener>() == 24); assert!(core::mem::align_of::<R4SdkTransportNative_app_network_TcpListener>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_app_network_TcpListener, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_app_network_TcpListener>() == 56); assert!(core::mem::align_of::<R4SdkTransportNative_app_network_TcpListener>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_app_network_TcpListener, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkTransportNative_app_network_UdpOpen {
-    pub r#opaque_bytes: [u8; 32],
+    pub r#opaque_bytes: [u8; 64],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_app_network_UdpOpen>() == 32); assert!(core::mem::align_of::<R4SdkTransportNative_app_network_UdpOpen>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_app_network_UdpOpen, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_app_network_UdpOpen>() == 64); assert!(core::mem::align_of::<R4SdkTransportNative_app_network_UdpOpen>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_app_network_UdpOpen, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
 pub struct R4SdkTransportNative__typeInfo_app_network_UdpOpen____union__tag_type__ {
@@ -15041,9 +15041,9 @@ const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative__typeInfo_app_
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkTransportNative_app_network_UdpSocket {
-    pub r#opaque_bytes: [u8; 24],
+    pub r#opaque_bytes: [u8; 56],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_app_network_UdpSocket>() == 24); assert!(core::mem::align_of::<R4SdkTransportNative_app_network_UdpSocket>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_app_network_UdpSocket, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_app_network_UdpSocket>() == 56); assert!(core::mem::align_of::<R4SdkTransportNative_app_network_UdpSocket>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_app_network_UdpSocket, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
 pub struct R4SdkTransportNativeValue216 {
@@ -15335,9 +15335,9 @@ const _: () = { assert!(core::mem::size_of::<R4SdkTransportNativeValue272>() == 
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkTransportNative_app_network_TcpAccept {
-    pub r#opaque_bytes: [u8; 40],
+    pub r#opaque_bytes: [u8; 72],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_app_network_TcpAccept>() == 40); assert!(core::mem::align_of::<R4SdkTransportNative_app_network_TcpAccept>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_app_network_TcpAccept, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkTransportNative_app_network_TcpAccept>() == 72); assert!(core::mem::align_of::<R4SdkTransportNative_app_network_TcpAccept>() == 8); assert!(core::mem::offset_of!(R4SdkTransportNative_app_network_TcpAccept, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
 pub struct R4SdkTransportNative__typeInfo_app_network_TcpAccept____union__tag_type__ {
@@ -16933,7 +16933,7 @@ pub const R4SdkGuiType691_TYPE: u32 = 691;
 pub const R4SdkGuiType693_TYPE: u32 = 693;
 pub const R4SdkGuiType694_TYPE: u32 = 694;
 pub const R4SdkGuiType696_TYPE: u32 = 696;
-pub const R4SdkGui_ABI_FINGERPRINT: u64 = 1640675951650447672;
+pub const R4SdkGui_ABI_FINGERPRINT: u64 = 15608323675227960055;
 pub const R4SdkGui_font_w: i32 = 8;
 pub const R4SdkGui_font_h: i32 = 8;
 pub const R4SdkGuiChart_turns_per_circle: i32 = 65536;
@@ -17338,7 +17338,7 @@ pub const R4SdkDataNative_Value181_TYPE: u32 = 181;
 pub const R4SdkDataNative_Value182_TYPE: u32 = 182;
 pub const R4SdkDataNative_Value183_TYPE: u32 = 183;
 pub const R4SdkDataNative_Value184_TYPE: u32 = 184;
-pub const R4SdkData_ABI_FINGERPRINT: u64 = 5400212532203429285;
+pub const R4SdkData_ABI_FINGERPRINT: u64 = 14268191799079402320;
 pub const R4SdkDataJson_op_open: i32 = 1;
 pub const R4SdkDataJson_op_next: i32 = 2;
 pub const R4SdkDataJson_op_select: i32 = 3;
@@ -17692,7 +17692,7 @@ pub const R4SdkSubsystemNativeValue250_TYPE: u32 = 250;
 pub const R4SdkSubsystemNativeValue252_TYPE: u32 = 252;
 pub const R4SdkSubsystemNativeValue254_TYPE: u32 = 254;
 pub const R4SdkSubsystemNativeValue256_TYPE: u32 = 256;
-pub const R4SdkSubsystem_ABI_FINGERPRINT: u64 = 12413102210881657404;
+pub const R4SdkSubsystem_ABI_FINGERPRINT: u64 = 14514733300798266635;
 pub const R4SdkSubsystemCatalog_max_entries: i32 = 192;
 pub const R4SdkSubsystemCatalog_max_candidates: i32 = 128;
 pub const R4SdkSubsystemCatalog_max_associations: i32 = 64;
@@ -20649,7 +20649,7 @@ pub const R4SdkTransportNativeValue276_TYPE: u32 = 276;
 pub const R4SdkTransportNative_app_network_UdpReceive_TYPE: u32 = 277;
 pub const R4SdkTransportNative__typeInfo_app_network_UdpReceive____union__tag_type___TYPE: u32 = 278;
 pub const R4SdkTransportNative_app_network_Datagram_TYPE: u32 = 279;
-pub const R4SdkTransport_ABI_FINGERPRINT: u64 = 7705069172709722822;
+pub const R4SdkTransport_ABI_FINGERPRINT: u64 = 8297634342933637476;
 pub const R4SdkTransport_tls_workspace_bytes: i32 = 18432;
 pub const R4SdkTransport_tls_scratch_bytes: i32 = 55296;
 pub const R4SdkTransportHttp_max_header_bytes: i32 = 16384;
