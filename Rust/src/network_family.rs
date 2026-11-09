@@ -219,11 +219,14 @@ impl<'a> Client<'a> {
             return Err(INVALID);
         }
         let x: abi::NetworkSocketResult = decode(&response[..base])?;
+        let accepted = op == abi::network_op_accept && x.state == abi::network_state_ready;
         if x.provider != request.provider
             || x.socket == 0
             || x.generation == 0
             || request.socket != 0
+                && !accepted
                 && (x.socket != request.socket || x.generation != request.generation)
+            || accepted && x.socket == request.socket && x.generation == request.generation
             || !endpoint_valid(x.endpoint)
             || !(1..=6).contains(&x.state)
             || x.flags & !abi::network_flag_truncated != 0

@@ -58,7 +58,8 @@ static inline int32_t R4SdkNetworkSocket(const R4SdkNetwork *client,uint16_t op,
  uint8_t payload[4096],response[4096];__builtin_memcpy(payload,&request,sizeof(request));if(length)__builtin_memcpy(payload+sizeof(request),data,length);
  int32_t rc=R4SdkNetworkRpc(client,op,payload,sizeof(request)+length,response,sizeof(response));if(rc<0)return rc;
  R4NetworkSocketResult x;if(rc<sizeof(x))return R4OS_NETWORK_ERROR_INVALID;__builtin_memcpy(&x,response,sizeof(x));
- if(!R4SdkNetworkRecord(&x,sizeof(x))||x.provider!=request.provider||!x.socket||!x.generation||(request.socket&&(x.socket!=request.socket||x.generation!=request.generation))||!R4SdkNetworkEndpointValid(x.endpoint)||x.state<1||x.state>6||(x.flags&~(uint32_t)R4OS_NETWORK_FLAG_TRUNCATED)||x.bytes>request.bytes||x.original_bytes<x.bytes||rc!=sizeof(x)+(receiving?x.bytes:0))return R4OS_NETWORK_ERROR_INVALID;
+ int accepted=op==R4OS_NETWORK_OP_ACCEPT&&x.state==R4OS_NETWORK_STATE_READY;
+ if(!R4SdkNetworkRecord(&x,sizeof(x))||x.provider!=request.provider||!x.socket||!x.generation||(request.socket&&!accepted&&(x.socket!=request.socket||x.generation!=request.generation))||(accepted&&x.socket==request.socket&&x.generation==request.generation)||!R4SdkNetworkEndpointValid(x.endpoint)||x.state<1||x.state>6||(x.flags&~(uint32_t)R4OS_NETWORK_FLAG_TRUNCATED)||x.bytes>request.bytes||x.original_bytes<x.bytes||rc!=sizeof(x)+(receiving?x.bytes:0))return R4OS_NETWORK_ERROR_INVALID;
  if((op!=R4OS_NETWORK_OP_RECV&&(x.flags||x.original_bytes!=x.bytes))||(op==R4OS_NETWORK_OP_RECV&&((!!(x.flags&R4OS_NETWORK_FLAG_TRUNCATED))!=(x.original_bytes>x.bytes))))return R4OS_NETWORK_ERROR_INVALID;
  if(receiving&&x.bytes)__builtin_memcpy(out_data,response+sizeof(x),x.bytes);*out=x;return 0;
 }

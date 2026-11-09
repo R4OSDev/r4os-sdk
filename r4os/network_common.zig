@@ -2,7 +2,7 @@
 const std = @import("std");
 pub const abi = @import("r4os_contract").abi;
 const checked = @import("time_budget.zig");
-pub const Error = error{ Invalid, UnsupportedFamily, UnsupportedPolicy, UnsupportedScope, ProviderChanged, BadSocket, Capacity, ClockChanged, Timeout, WouldBlock, Reset, Backend, NotFound, TruncatedDns };
+pub const Error = error{ Invalid, UnsupportedFamily, UnsupportedPolicy, UnsupportedScope, ProviderChanged, BadSocket, Capacity, ClockChanged, Timeout, WouldBlock, Reset, Backend, NotFound, TruncatedDns, PacketTooBig };
 pub fn code(err: Error) i32 {
     return switch (err) {
         error.Invalid => abi.network_error_invalid,
@@ -19,6 +19,7 @@ pub fn code(err: Error) i32 {
         error.Backend => abi.network_error_backend,
         error.NotFound => abi.network_error_not_found,
         error.TruncatedDns => abi.network_error_truncated_dns,
+        error.PacketTooBig => abi.network_error_packet_too_big,
     };
 }
 pub fn record(comptime T: type, bytes: []const u8) Error!T {

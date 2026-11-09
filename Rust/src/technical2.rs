@@ -94,6 +94,7 @@ impl<'a> Protocol<'a> {
         for offset in [
             mem::offset_of!(abi::ProtocolApi2, protocol_dispatch),
             mem::offset_of!(abi::ProtocolApi2, link_io),
+            mem::offset_of!(abi::ProtocolApi2, process_status),
         ] {
             if readable >= offset + mem::size_of::<usize>() {
                 unsafe {

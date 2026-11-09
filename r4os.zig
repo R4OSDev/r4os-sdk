@@ -3,6 +3,7 @@ pub const driver_serial = @import("r4os/driver_serial.zig");
 pub const abi = @import("r4os_contract").abi;
 pub const platform2 = @import("r4os/platform2.zig");
 pub const network_family = @import("r4os/network_family.zig");
+pub const network_transport = @import("r4os/network_transport.zig");
 pub const wait_set = @import("r4os/wait_set.zig");
 pub const technical2 = @import("r4os/technical2.zig");
 pub const program = @import("r4os/program.zig");

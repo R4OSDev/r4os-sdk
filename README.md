@@ -1319,3 +1319,14 @@ profile authority. Schema3 capabilities includes build_profiles,
 component_sets and profile_sources. Generated project starters forward
 LibrariesRoot, DevelopmentProfile and AdditionalLibrariesFile. Studio selects
 the SDK/profile; Server serves the immutable matching original assets.
+
+## Provider transport adapter
+
+`r4os.network_transport` is a provider-only copied adapter for NetTcp/NetUdp
+and their managed service brokers. It reuses the existing IPv6 packet/source/
+route owner and ICMPv6 pseudoheader codec, and does not keep socket or routing
+state. It requires whole optional PPI2 dispatch/link/process-status callbacks.
+Public Query2 callers keep `network_family` in Zig/C/Rust; Accept success
+returns a distinct child identity while WouldBlock retains the listener.
+The normative lifetimes, finite budgets and limits are in
+Contract/API/Ipv6Transport.txt. Existing application profiles stay unchanged.

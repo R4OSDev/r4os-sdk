@@ -79,17 +79,21 @@ test "technical2 views reject wrong generations and short records without invoki
         // incomplete slot is loaded or promoted into a callable value.
         protocol.protocol_dispatch = @ptrFromInt(8);
         protocol.link_io = @ptrFromInt(16);
+        protocol.process_status = @ptrFromInt(24);
         for (protocol_prefix..@sizeOf(abi.ProtocolApi2) + 1) |size| {
             protocol.size = @intCast(size);
             const partial = Protocol.init(&protocol).?;
             try std.testing.expect((partial.function("protocol_dispatch") != null) == (size >= 128));
             try std.testing.expect((partial.function("link_io") != null) == (size >= 136));
+            try std.testing.expect((partial.function("process_status") != null) == (size >= 144));
         }
         protocol.size = @sizeOf(abi.ProtocolApi2);
         protocol.protocol_dispatch = null;
         protocol.link_io = null;
+        protocol.process_status = null;
         const absent = Protocol.init(&protocol).?;
         try std.testing.expect(absent.function("protocol_dispatch") == null);
         try std.testing.expect(absent.function("link_io") == null);
+        try std.testing.expect(absent.function("process_status") == null);
     }
 }

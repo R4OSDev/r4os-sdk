@@ -18,6 +18,17 @@ pub const Client = struct {
         const open = platform.abi.function(platform.abi.R4SysFns2, table, "service_open") orelse return abi.err_no_fn;
         const call = platform.abi.function(platform.abi.R4SysFns2, table, "service_call") orelse return abi.err_no_fn;
         const close_call = platform.abi.function(platform.abi.R4SysFns2, table, "service_close") orelse return abi.err_no_fn;
+        return openWith(open, call, close_call, service, out);
+    }
+    /// Explicit bridge for existing provider modules serving the new copied
+    /// service contract. It changes no application start/import generation.
+    pub fn connectProvider(sys: @import("r4sys.zig").Context, service: Service, out: *Client) i32 {
+        if (!sys.hasFn("service_open") or !sys.hasFn("service_call") or !sys.hasFn("service_close")) return abi.err_no_fn;
+        const bundle = sys.base.bundle orelse return abi.err_no_group;
+        const table = bundle.sys orelse return abi.err_no_group;
+        return openWith(@ptrFromInt(table.service_open), @ptrFromInt(table.service_call), @ptrFromInt(table.service_close), service, out);
+    }
+    fn openWith(open: abi.R4SysFns.service_open, call: abi.R4SysFns.service_call, close_call: abi.R4SysFns.service_close, service: Service, out: *Client) i32 {
         const name: [*:0]const u8 = switch (service) {
             .dns => "DNSSVC",
             .tcp => "TCPSVC",
@@ -70,7 +81,8 @@ pub const Client = struct {
         if (rc < 0) return rc;
         if (rc < @sizeOf(abi.NetworkSocketResult) or rc > response.len) return abi.network_error_invalid;
         const value = common.record(abi.NetworkSocketResult, response[0..@sizeOf(abi.NetworkSocketResult)]) catch return abi.network_error_invalid;
-        if (value.provider != request.provider or value.socket == 0 or value.generation == 0 or request.socket != 0 and (value.socket != request.socket or value.generation != request.generation) or !common.endpointValid(value.endpoint) or value.state < 1 or value.state > 6 or value.flags & ~@as(u32, abi.network_flag_truncated) != 0) return abi.network_error_invalid;
+        const accepted = op == abi.network_op_accept and value.state == abi.network_state_ready;
+        if (value.provider != request.provider or value.socket == 0 or value.generation == 0 or request.socket != 0 and !accepted and (value.socket != request.socket or value.generation != request.generation) or accepted and value.socket == request.socket and value.generation == request.generation or !common.endpointValid(value.endpoint) or value.state < 1 or value.state > 6 or value.flags & ~@as(u32, abi.network_flag_truncated) != 0) return abi.network_error_invalid;
         if (value.bytes > request.bytes or value.original_bytes < value.bytes or rc != @sizeOf(abi.NetworkSocketResult) + (if (receiving) value.bytes else @as(u32, 0))) return abi.network_error_invalid;
         if (op != abi.network_op_recv and (value.flags != 0 or value.original_bytes != value.bytes) or op == abi.network_op_recv and ((value.flags & abi.network_flag_truncated != 0) != (value.original_bytes > value.bytes))) return abi.network_error_invalid;
         if (receiving) @memcpy(data_out[0..value.bytes], response[@sizeOf(abi.NetworkSocketResult)..][0..value.bytes]);
