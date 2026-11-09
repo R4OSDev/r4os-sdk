@@ -892,9 +892,10 @@
         "audio_pcm",
         "r4audio",
         "audio_write",
-        "pcm_source"
+        "pcm_source",
+        "audio_capture"
       ],
-      "semantics": "Genaue Stream-/Device-/Generation, S16LE/Format, Druck/Teilschreiben, Completion und Close; stiller physischer Ring ist kein Audiostopp. SDK168: explicit single total deadline, bounded actual AUDSVC RPC admission, frame-aligned exact prefix and conservative uncertain-effect terminal state over the original transfer/time owners. Borrow the real old stream; existing relative per-RPC behavior/layout remains. Pure rational accepted-source estimate with explicit clock/pause/reset, no hardware/DMA/audible retirement claim. Qualification: audio_total_source_09025.",
+      "semantics": "Genaue Stream-/Device-/Generation, S16LE/Format, Druck/Teilschreiben, Completion und Close; stiller physischer Ring ist kein Audiostopp. SDK168: explicit single total deadline, bounded actual AUDSVC RPC admission, frame-aligned exact prefix and conservative uncertain-effect terminal state over the original transfer/time owners. Borrow the real old stream; existing relative per-RPC behavior/layout remains. Pure rational accepted-source estimate with explicit clock/pause/reset, no hardware/DMA/audible retirement claim. Qualification: audio_total_source_09025. SDK180/C92: additional copied optional AUDSVC capture transport with exact service/source/client/stream generations, final caller buffer capacity, whole S16LE frames and explicit Poll/Finite/Forever/Cancel over the original clock budget. Logical Open activates only on Read. Unknown outcome never implies replay, Stop, Close or Drop. Queues and physical Stop/Close ACKs remain with the original service and R4D owners. Shipped HDA/AC97 have no qualified ADC; CONTROLLED input and real hardware are separate.",
       "current_only": "current_function",
       "rust": {
         "state": "paritaet_abgenommen",
@@ -903,7 +904,8 @@
           "Repositories/SDK/Rust/src/platform/pcm.rs",
           "Repositories/SDK/Rust/src/c_facades.rs",
           "Repositories/SDK/Rust/src/audio_write.rs",
-          "Repositories/SDK/Rust/src/pcm_source.rs"
+          "Repositories/SDK/Rust/src/pcm_source.rs",
+          "Repositories/SDK/Rust/src/audio_capture.rs"
         ],
         "gap": null
       },
@@ -916,7 +918,8 @@
           "Repositories/SDK/Shared/C/include/r4os/data_helpers.h",
           "Repositories/SDK/Shared/C/include/r4os/audio_write.h",
           "Repositories/SDK/Shared/C/include/r4os/audio_write_platform2.h",
-          "Repositories/SDK/Shared/C/include/r4os/pcm_source.h"
+          "Repositories/SDK/Shared/C/include/r4os/pcm_source.h",
+          "Repositories/SDK/Shared/C/include/r4os/audio_capture_platform2.h"
         ],
         "gap": null
       },
@@ -927,7 +930,8 @@
         "audio_reply_08842",
         "audio_drain_08843",
         "audio_duration_retirement_08859",
-        "audio_total_source_09025"
+        "audio_total_source_09025",
+        "optional_capture_09037"
       ],
       "shared_core": "Existing Zig Audio/PCM/Device/Power owners through one compiler-typed native boundary; current legacy C audio loop aligned, no third Rust algorithm.",
       "current_reply_validation_08842": {
@@ -1320,7 +1324,7 @@
         "internet_checksum",
         "block_transfer"
       ],
-      "semantics": "Original DriverApi39/672 helpers and owner limits retained; explicit DriverApi2/DPI2 revision1/656 raw borrowed views/Init2 and typed AUB2/status80. Shared real IRQ/task/work/DMA/resource owner; no automatic quiescence or broad advancedHelper2 migration. SDK159: new explicit checked clock-bound budgets, tagged finiteMAX, and pure bounded DriverPollBudget; original wait/zero/saturating ABI behavior and resource ownership retained. No consumer migration or automatic sleep/quiescence. SDK160: explicit common pure wire/native/checksum/block helpers; actual static C/Rust implementation and early R4D qualification. Protocol policy, mapped native representation, storage loans and hardware completion remain with their existing owners; no consumer migration.",
+      "semantics": "Original DriverApi39/672 helpers and owner limits retained; explicit DriverApi2/DPI2 revision1/656 raw borrowed views/Init2 and typed AUB2/status80. Shared real IRQ/task/work/DMA/resource owner; no automatic quiescence or broad advancedHelper2 migration. SDK159: new explicit checked clock-bound budgets, tagged finiteMAX, and pure bounded DriverPollBudget; original wait/zero/saturating ABI behavior and resource ownership retained. No consumer migration or automatic sleep/quiescence. SDK160: explicit common pure wire/native/checksum/block helpers; actual static C/Rust implementation and early R4D qualification. Protocol policy, mapped native representation, storage loans and hardware completion remain with their existing owners; no consumer migration. SDK180: DriverApi2 retains its original656-byte prefix and negotiates the complete optional8-byte input-registration tail. New Rust views copy only initialized prefix/complete tail into owned known-size storage; C/Zig per-slot size/null checks never load partial pointers. Separate immutable40-byte capture descriptor, no reinterpretation of AudioBackend2.",
       "current_only": "current_function",
       "rust": {
         "state": "current_shared_native_core_and_typed_explicit_owners_qualified",
@@ -1360,7 +1364,8 @@
         "audio_duration_retirement_08859",
         "technical_generation2_09015",
         "time_poll_budgets_09016",
-        "wire_native_data_09017"
+        "wire_native_data_09017",
+        "optional_capture_09037"
       ],
       "shared_core": {
         "source": "Repositories/SDK/r4os/driver_helper_owners.zig",
@@ -3156,6 +3161,14 @@
       "expression": "@import(\"r4os/text_composition.zig\")",
       "capability": "gui",
       "wave": "0.90.36"
+    },
+    {
+      "name": "audio_capture",
+      "source": "Repositories/SDK/r4os.zig",
+      "line": 57,
+      "expression": "@import(\"r4os/audio_capture.zig\")",
+      "capability": "audio",
+      "wave": "0.90.37"
     }
   ],
   "build_exports": [
@@ -46519,6 +46532,125 @@
           249
         ]
       ]
+    },
+    {
+      "path": "Repositories/SDK/r4os/audio_capture.zig",
+      "sha256": "7a4c576f415e83dd58e4c5677e505fd8c5836603e0c3089032d185f6e718df89",
+      "owner": "Repositories/SDK",
+      "version": "0.64.180",
+      "capability": "audio",
+      "declarations": [
+        [
+          "abi",
+          "const",
+          3
+        ],
+        [
+          "Source",
+          "const",
+          6
+        ],
+        [
+          "Format",
+          "const",
+          7
+        ],
+        [
+          "Handle",
+          "const",
+          8
+        ],
+        [
+          "Reply",
+          "const",
+          9
+        ],
+        [
+          "Backend",
+          "container",
+          12
+        ],
+        [
+          "Backend.io",
+          "fn",
+          14
+        ],
+        [
+          "Client",
+          "container",
+          27
+        ],
+        [
+          "Client.connect",
+          "fn",
+          34
+        ],
+        [
+          "Client.disconnect",
+          "fn",
+          52
+        ],
+        [
+          "Client.sample",
+          "fn",
+          58
+        ],
+        [
+          "Client.request",
+          "fn",
+          64
+        ],
+        [
+          "Client.catalog",
+          "fn",
+          85
+        ],
+        [
+          "Client.open",
+          "fn",
+          88
+        ],
+        [
+          "Client.query",
+          "fn",
+          91
+        ],
+        [
+          "Client.stop",
+          "fn",
+          94
+        ],
+        [
+          "Client.close",
+          "fn",
+          97
+        ],
+        [
+          "Client.readPoll",
+          "fn",
+          100
+        ],
+        [
+          "Read",
+          "container",
+          106
+        ],
+        [
+          "Read.init",
+          "fn",
+          112
+        ],
+        [
+          "Read.cancel",
+          "fn",
+          118
+        ],
+        [
+          "Read.step",
+          "fn",
+          121
+        ]
+      ]
     }
   ],
   "libraries": [
@@ -56943,6 +57075,20 @@
         "Host original focus cases are distinct from guest capability/zero-window query; no actual Desktop editor focus integration or unpublished physical focus transition claim.",
         "Native C/Zig/Rust, sole STANDARD, Windows and physical hardware qualifications do not follow from this review-drift record. See separate local evidence and documented limits."
       ]
+    },
+    "optional_capture_09037": {
+      "complete": true,
+      "performed_in": "0.90.37",
+      "sdk": "0.64.180",
+      "contract": "0.64.92",
+      "report": "Docs/API/AudioCapture.txt",
+      "scope": "Completed source/ABI and original-owner host review; actual language/guest and physical hardware qualifications remain separate evidence, never inferred from this drift guard.",
+      "host_checks": "Contract18 steps/8 existing native interop cases, all536 old slots/471 old type prefixes exact. SDK137 incl original partial optional-slot poison checks and executed C composition ABI program. Bare Rust Clippy. Original AudioService5 capture cases execute queue/whole-frame/capacity (including larger RPC staging), generation/exhaustion, source/clock/provider loss, sticky failure after Stop, and retained Stop/Close ACKs. Existing AudioService test step, no additional global gate.",
+      "limits": [
+        "ADC capability is unavailable without a qualified input extension; CONTROLLED fixture is no microphone, physical DMA engine/IRQ/pin or hardware timestamp proof.",
+        "Copied IDs retain nothing. Caller waits outside GUI/text/IRQ locks; cancellation/expiry/disconnect do not release stream/native resources. Unknown mutating/read outcome never authorizes automatic replay.",
+        "Native three-language KVM transport, exact old providers, sole STANDARD and Windows/hardware scopes do not follow from this host drift review. See the separate product report and local sealed receipts."
+      ]
     }
   },
   "wave_bindings": [
@@ -57195,18 +57341,64 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.90.36",
-    "sdk": "0.64.179",
-    "contract": "0.64.91",
+    "performed_in": "0.90.37",
+    "sdk": "0.64.180",
+    "contract": "0.64.92",
     "libraries": "0.64.51 unchanged",
-    "evidence": "text_composition_09036",
-    "scope": "Host source/ABI owner qualification. Original SDK137 cases plus one executed actual C-to-original-Zig runtime regression in existing data-parity-test. Original WINSVC9 owner cases qualify acknowledged focus ordering; actual native transport and languages are separately evidenced. Pure transitions perform no I/O/wait/callback/allocation.",
-    "historical_snapshot_retained": true
+    "evidence": "optional_capture_09037",
+    "scope": "Completed source/ABI and original-owner host review; actual language/guest and physical hardware qualifications remain separate evidence, never inferred from this drift guard.",
+    "historical_snapshot_retained": true,
+    "current_platform_tables": [
+      {
+        "group": "R4SYS",
+        "abi_version": 41,
+        "bytes": 1560,
+        "slots": 193
+      },
+      {
+        "group": "R4DESK",
+        "abi_version": 21,
+        "bytes": 632,
+        "slots": 77
+      },
+      {
+        "group": "R4DRAW",
+        "abi_version": 40,
+        "bytes": 920,
+        "slots": 113
+      },
+      {
+        "group": "R4NET",
+        "abi_version": 2,
+        "bytes": 296,
+        "slots": 35
+      },
+      {
+        "group": "R4AUDIO",
+        "abi_version": 5,
+        "bytes": 240,
+        "slots": 28
+      },
+      {
+        "group": "R4DEV",
+        "abi_version": 37,
+        "bytes": 744,
+        "slots": 91
+      }
+    ],
+    "current_projection": {
+      "extern_structs": 575,
+      "fields": 8916,
+      "integer_enums": 20,
+      "callback_declarations": 806,
+      "constants": 3777
+    },
+    "canonical_schema_sha256": "5d7d1f631a75b4f3b7b4a6206a0a353258932c594b777cd0ca594177e3485f4c"
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.90.36",
+    "reviewed_in": "0.90.37",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -57295,11 +57487,11 @@
     "files": [
       {
         "path": "Repositories/Contract/API/ApiContract.baseline.json",
-        "sha256": "77e05090e59b940987259201dab9538665facd1d4ecd43fe12c6e06e26db762e"
+        "sha256": "5d7d1f631a75b4f3b7b4a6206a0a353258932c594b777cd0ca594177e3485f4c"
       },
       {
         "path": "Repositories/Contract/API/ApiContract.json",
-        "sha256": "77e05090e59b940987259201dab9538665facd1d4ecd43fe12c6e06e26db762e"
+        "sha256": "5d7d1f631a75b4f3b7b4a6206a0a353258932c594b777cd0ca594177e3485f4c"
       },
       {
         "path": "Repositories/Contract/API/Generation2.json",
@@ -57307,35 +57499,35 @@
       },
       {
         "path": "Repositories/Contract/Generated/Generation2/C/include/r4os/generation2.h",
-        "sha256": "f7aa9bb780a2cb0b941c3bbe457e71e507aefb71c64322247cd5936cab4bac9e"
+        "sha256": "aff5482159b9fb08a420f96d784d139969eadbd0d58ae838b1b985ad2cb8ffb0"
       },
       {
         "path": "Repositories/Contract/Generated/Generation2/Inventory.json",
-        "sha256": "7977f71929f52eac0e00cbaceb1f777412f3f3702a0c53ea3b1205b7ba88b569"
+        "sha256": "aa842b126fcfa1d14aee7b543e72aa642f2988e453aba3261692c98adf996815"
       },
       {
         "path": "Repositories/Contract/Generated/Generation2/Rust/generation2.rs",
-        "sha256": "702c9f2d47093bab13a39b96b8ff95fb094a322f5fb56e605603469310042597"
+        "sha256": "15d0bf2ff8e3aa6cda3737b3a689b0c00389ea1852deafb875bc3b2df61d2ce7"
       },
       {
         "path": "Repositories/Contract/Generated/Generation2/Zig/abi.zig",
-        "sha256": "6646668f7963876bf3187e83ee4231868cc1aa097c96651810d20aedc47da7c0"
+        "sha256": "d38f2dbe6159a7e9142c4086585f26143a854ea6b4f1e3663acd74fc749feeec"
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/API.json",
-        "sha256": "84d3365ec21d5ef8a0b77aa0d807f9c2f5b1e20027fb35994142ac8424c46f10"
+        "sha256": "ecbcf513028dfadde448852e2aace8a015ea7655c5bd9dc76d4a8cbd96b32402"
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/RustABI.json",
-        "sha256": "928c74e6c34cc5ab436040aa909604af71671d4c707e3ac95c7d1d25cae21b3e"
+        "sha256": "869db47628eb31508781510131e8bbb88c1e17db039ee3bcd4bdde5db53706d9"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_generated.h",
-        "sha256": "9cc923ec122792d77b9b083405b7fd7d4704ea15ba4cbb20d9b6e750ba409b47"
+        "sha256": "25879175afafbae9ca50b80876aac07a7ee993717ebb3c25f6a32a8afa6cf637"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_technical_generated.h",
-        "sha256": "13c05cd10fd760af3be37e995be82954eeff069246652b056984797bf5eb07de"
+        "sha256": "b3c262b72ebcea7ac1da914afa5299e2688eabbed75a17c523b6ab2b5c45fdaf"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Rust/Cargo.toml",
@@ -57343,19 +57535,19 @@
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Rust/src/lib.rs",
-        "sha256": "e200a21b1da838b1efb07378b576569b11df713166c84fc22829c5c12b3a0ac3"
+        "sha256": "d3db6f761ef25784b08efa92cd43e2721124d58215a70a9b1ed0f7cfeb6caf2d"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi.zig",
-        "sha256": "c07961d7f20bc1025d303c77a2d1f450b6ac05a3549c9fcdedc1d1fda675e943"
+        "sha256": "0411b7fbf787e3d8fb334acb11c858cc3b6e8e85a6fa4509a324ac8e35122483"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_exports.zig",
-        "sha256": "772314fe78313862dde0637b9dd19cd3a150eec653e987bd795744fbd288432a"
+        "sha256": "df1c112b3e0b90237247ab5d5dfdc315c92abfa4c52cac212688e8ee4d39aaec"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_generated.zig",
-        "sha256": "ed08d488c0e9e453bae9e274ddce0a002dfbe047ef0f33000ff797615ce9019d"
+        "sha256": "9733c75b1fe911c966081d2f0d496be8d5c9fd4cfbac1f088bc56d9a42e9b0ab"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/package.zig",
@@ -57363,7 +57555,7 @@
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/technical2_generated.zig",
-        "sha256": "6bc98f270fdac91d5bcff6cffe65510b8e71ef266973d7792fde451582fb3d35"
+        "sha256": "43551ad1faf1668199a2ce1df048374fa1aa2b221869d29a4d0d4bfa4f4498ce"
       },
       {
         "path": "Repositories/Contract/Module/CpuBaseline.json",
@@ -57371,7 +57563,7 @@
       },
       {
         "path": "Repositories/Contract/Tests/Generation2.zig",
-        "sha256": "b692e6925f3c6493a4fcac49d7a7b8130008cd962edb1a101e08c4e669a9f396"
+        "sha256": "7640cbab82333da7143b1c97aee4a4da9e8c51c8eb3f3aec286398d146493770"
       },
       {
         "path": "Repositories/Contract/Tests/RustInterop/Cargo.toml",
@@ -57395,19 +57587,19 @@
       },
       {
         "path": "Repositories/Contract/Tools/AbiRustGen/src/main.zig",
-        "sha256": "f9ef764f49612b1cbd2945230469eba103ff7dd023db370c125e983ffd0d3924"
+        "sha256": "17cabdec5304aec2dc88c4e08a405534543e234fe41f33d9a2277ed50636ce30"
       },
       {
         "path": "Repositories/Contract/Tools/ApiContractGen/src/generation2.zig",
-        "sha256": "9a32145e5a066ae547e490fb7ada67bc941e1036cb01c21af0bc5530a57ef277"
+        "sha256": "d42079a6797861f3bf4f182666292c327254672c0240989175bdcbdf2b867dd8"
       },
       {
         "path": "Repositories/Contract/Tools/ApiContractGen/src/generation2_technical.zig.in",
-        "sha256": "aef643a222a0dbc1f9341e4179fe1dfd595c1cad7d176ff63558be32c9093610"
+        "sha256": "49af5079355b84d34afeb0db357d20fec18b2e5dcec528ca8f3b449b1dcd49ef"
       },
       {
         "path": "Repositories/Contract/Tools/ApiContractGen/src/main.zig",
-        "sha256": "ddff6fbd98e4afd04a310b5c992dc693f38d87892c99e6d14c81f26fd72da776"
+        "sha256": "27ae05404555844090ca4a48d45cb73ea8a5e3ca84b8469c02494be368396afe"
       },
       {
         "path": "Repositories/Libraries/R4ACO/Bindings/C/r4aco.h",
@@ -58439,7 +58631,7 @@
       },
       {
         "path": "Repositories/SDK/Profiles/Components.json",
-        "sha256": "15d71db870349048dbf5fb30e3aa6b9d5261748103c79d69cfa35daa324c6ee8"
+        "sha256": "4fc6ca52773d2e87005db89339d78a60c87ef10cf0350416e425ce13489a7962"
       },
       {
         "path": "Repositories/SDK/Profiles/Tools.json",
@@ -58459,7 +58651,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "4890e8c5042745f5b8d2faefcd59d35bb8866d1c781d2cc8cc6ad4cdecb82a40"
+        "sha256": "dde379d111080a8a5f2f665645efc8e8b4ebf934d977b9db3e49ab8af1511f46"
       },
       {
         "path": "Repositories/SDK/Rust/src/cli.rs",
@@ -58551,7 +58743,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/lib.rs",
-        "sha256": "ae10b410f50577fd4e17c3755ce1309599766952dbaa841ccc2b4117bbc1b9dc"
+        "sha256": "b54925d5dda88ea711f8308e79e53f76fb750f08d4b4aaf31e3db2e3b55e7eb6"
       },
       {
         "path": "Repositories/SDK/Rust/src/lowlevel.rs",
@@ -58715,7 +58907,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/technical2.rs",
-        "sha256": "4fc7c325df3e4c2a15116999a4402610e689efcae2b71aabba16d42d125034ac"
+        "sha256": "5b46e969198a32ad8fd80320af3f5ef64044a68c59235b2a0c4c02ee16de102b"
       },
       {
         "path": "Repositories/SDK/Rust/src/text_metrics.rs",
@@ -59079,7 +59271,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/technical2.h",
-        "sha256": "1c6b5bba8ba36bbab978f8adda5024aafb25083a82cb7f0067a49da68940aa80"
+        "sha256": "4438cec6da25c81610d76f7ad39e7c66214d0db2fc871bb4c959aebcecc19740"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/text_metrics.h",
@@ -59487,11 +59679,11 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "7fa62e23bc7052751b24d7ec2f7a194badb568e2e0f86b22e1ae46b6467d17b7"
+        "sha256": "4185e43888dd3e011fcddf7e6e8f479d607096551effa6e6f21d9bad2a04b118"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
-        "sha256": "4bcaecd32661dbde5188bf36e5f83ad6b28a3371662b702f0718cf67c3351030"
+        "sha256": "2278a251148030acb1ab7c94c84e0f12183d8c21f9c77b47f7b344d1df507c7c"
       },
       {
         "path": "Repositories/SDK/r4os/allocator_wait.zig",
@@ -60415,7 +60607,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/technical2.zig",
-        "sha256": "1751f83046bba18ff018f5f02cae740030cb82ade9efceed085b408a463af0f3"
+        "sha256": "b204764c24fced3b90f4ca50e4f576058881b2dda3629cd1b3912ef0eb57af1a"
       },
       {
         "path": "Repositories/SDK/r4os/text_metrics.zig",
@@ -60696,6 +60888,18 @@
       {
         "path": "Repositories/SDK/r4os/text_composition_tests.zig",
         "sha256": "8e2fba0c452e39a8eddf0dd1db1d2b407c30fcdb234385c0f5be7a233ad76c2c"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/audio_capture.rs",
+        "sha256": "c1e710a202e8458ba8273ca9bd493529bf25823c0a77b1698dda49de6e65ad46"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/audio_capture_platform2.h",
+        "sha256": "6997b49df903efc8a8a6fade5c352721ad29815eb586761624eb782321511db0"
+      },
+      {
+        "path": "Repositories/SDK/r4os/audio_capture.zig",
+        "sha256": "7a4c576f415e83dd58e4c5677e505fd8c5836603e0c3089032d185f6e718df89"
       }
     ],
     "coverage": [
@@ -61189,7 +61393,8 @@
           "Repositories/SDK/r4os/audio_write_api.zig",
           "Repositories/SDK/r4os/audio_write_runtime.zig",
           "Repositories/SDK/r4os/audio_write_tests.zig",
-          "Repositories/SDK/r4os/pcm_source.zig"
+          "Repositories/SDK/r4os/pcm_source.zig",
+          "Repositories/SDK/r4os/audio_capture.zig"
         ],
         "c": [
           "Repositories/SDK/Shared/C/include/r4os/app_audio.h",
@@ -61198,14 +61403,16 @@
           "Repositories/SDK/Shared/C/include/r4os/r4audio.h",
           "Repositories/SDK/Shared/C/include/r4os/audio_write.h",
           "Repositories/SDK/Shared/C/include/r4os/audio_write_platform2.h",
-          "Repositories/SDK/Shared/C/include/r4os/pcm_source.h"
+          "Repositories/SDK/Shared/C/include/r4os/pcm_source.h",
+          "Repositories/SDK/Shared/C/include/r4os/audio_capture_platform2.h"
         ],
         "rust": [
           "Repositories/SDK/Rust/src/c_facades.rs",
           "Repositories/SDK/Rust/src/platform/audio.rs",
           "Repositories/SDK/Rust/src/platform/pcm.rs",
           "Repositories/SDK/Rust/src/audio_write.rs",
-          "Repositories/SDK/Rust/src/pcm_source.rs"
+          "Repositories/SDK/Rust/src/pcm_source.rs",
+          "Repositories/SDK/Rust/src/audio_capture.rs"
         ],
         "proof": [
           "platform_current_58",
@@ -61221,7 +61428,8 @@
           "audio_catalog_08855",
           "runtime_wait_08858",
           "audio_duration_retirement_08859",
-          "audio_total_source_09025"
+          "audio_total_source_09025",
+          "optional_capture_09037"
         ]
       },
       {
@@ -61493,7 +61701,8 @@
           "audio_duration_retirement_08859",
           "technical_generation2_09015",
           "time_poll_budgets_09016",
-          "wire_native_data_09017"
+          "wire_native_data_09017",
+          "optional_capture_09037"
         ]
       },
       {

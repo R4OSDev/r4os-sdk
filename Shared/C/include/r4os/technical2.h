@@ -8,7 +8,7 @@
 typedef struct { const R4DriverApi2 *api; } R4OS2Driver;
 typedef struct { const R4ProtocolApi2 *api; } R4OS2Protocol;
 static inline int32_t R4OS2DriverInit(const R4DriverApi2 *api, R4OS2Driver *out) {
-    if (!api || !out || ((uintptr_t)api & 7u) || api->magic != R4OS_DRIVER_API2_MAGIC || api->version < R4OS_DRIVER_API2_VERSION || api->size < sizeof(*api) || api->reserved) return -1;
+    if (!api || !out || ((uintptr_t)api & 7u) || api->magic != R4OS_DRIVER_API2_MAGIC || api->version < R4OS_DRIVER_API2_VERSION || api->size < offsetof(R4DriverApi2,register_audio_capture_backend) || api->reserved) return -1;
     *out = (R4OS2Driver){api}; return 0;
 }
 static inline int32_t R4OS2ProtocolInit(const R4ProtocolApi2 *api, R4OS2Protocol *out) {
@@ -25,6 +25,13 @@ static inline int32_t R4OS2ProtocolInit(const R4ProtocolApi2 *api, R4OS2Protocol
  * failure, until genuine unregister/terminal cleanup acknowledges retirement. */
 static inline int32_t R4OS2DriverRegisterAudio(const R4OS2Driver *driver, const uint8_t *name, const R4AudioBackend2 *backend) {
     return driver && driver->api ? driver->api->register_audio_output_backend(name, backend) : -1;
+}
+#define R4OS2_DRIVER_HAS(driver, field) \
+    ((driver) && (driver)->api && \
+     (driver)->api->size >= offsetof(R4DriverApi2, field) + sizeof((driver)->api->field) && \
+     (driver)->api->field != NULL)
+static inline int32_t R4OS2DriverRegisterCapture(const R4OS2Driver *driver, const uint8_t *name, const R4AudioCaptureBackend2 *input) {
+    return R4OS2_DRIVER_HAS(driver,register_audio_capture_backend) ? driver->api->register_audio_capture_backend(name,input) : R4OS_AUDIO_CAPTURE_ERROR_UNSUPPORTED;
 }
 static inline int32_t R4OS2DriverClockSample(const R4OS2Driver *driver, R4SdkClockSample *out) {
     if (!driver || !driver->api || !driver->api->monotonic_clock) return R4_BUDGET_CLOCK_UNAVAILABLE;

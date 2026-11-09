@@ -1330,3 +1330,18 @@ Public Query2 callers keep `network_family` in Zig/C/Rust; Accept success
 returns a distinct child identity while WouldBlock retains the listener.
 The normative lifetimes, finite budgets and limits are in
 Contract/API/Ipv6Transport.txt. Existing application profiles stay unchanged.
+
+## Optional PCM capture
+
+SDK0.64.180 exposes copied AUDSVC capture clients in Zig, C and Rust. Use
+`audio_capture` or `audio_capture_platform2.h` with explicit stream Stop/Close
+and separate channel Disconnect. Final caller capacity, complete S16LE frames,
+exact generations and the existing checked read budgets remain explicit.
+Rust transport errors and the copied reply result are distinct. Uncertain
+reads or mutations never authorize automatic replay or implicit resource release.
+
+The infrastructure adapter and optional DriverApi2 tail share the original
+service/R4D owners. Negotiate the whole optional pointer; the original656-byte
+driver prefix remains valid. Contract/API/AudioCapture.txt defines the wire
+and lifetime. CONTROLLED input is a fixture capability; shipped HDA/AC97
+backends expose no qualified ADC. Application migration remains separate.

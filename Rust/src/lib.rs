@@ -5,6 +5,7 @@
 use core::sync::atomic::{AtomicPtr, Ordering};
 use core::{ffi::CStr, marker::PhantomData, mem, ptr};
 pub use r4os_contract as abi;
+pub mod audio_capture;
 pub mod audio_write;
 pub mod bounded_text;
 pub mod byte_pipe;

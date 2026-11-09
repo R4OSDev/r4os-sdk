@@ -26,23 +26,23 @@
   "repositories": {
     "contract": {
       "repository": "https://github.com/R4OSDev/r4os-contract.git",
-      "commit": "68680689e8a122415dd7224ed9dcd91d7f60c8e3",
-      "version": "0.64.91",
+      "commit": "e3278955e61056011731a6df6c9d673c3624e169",
+      "version": "0.64.92",
       "files": {
-        "build.zig.zon": "0df235b84ae0cc59baba17dc1d1b397989f17fa25a0c87b7f6dc3ba06fed1418",
-        "API/ApiContract.json": "77e05090e59b940987259201dab9538665facd1d4ecd43fe12c6e06e26db762e",
+        "build.zig.zon": "4bc525bc594a49d37708b627b1fc1920c78eb30b379ccca7899613bf6dee1508",
+        "API/ApiContract.json": "5d7d1f631a75b4f3b7b4a6206a0a353258932c594b777cd0ca594177e3485f4c",
         "Module/CpuBaseline.json": "eeeee03aa8fd41051c09e61e9d70ca35660f2b413c3f878fb6e5a3bb51aad10c",
         "Generated/SDK/Rust/Cargo.toml": "de464f2f9243e3d153c06b701a2126839c3e8a921a6d466467d3042370023263",
-        "Generated/SDK/Rust/src/lib.rs": "e200a21b1da838b1efb07378b576569b11df713166c84fc22829c5c12b3a0ac3",
+        "Generated/SDK/Rust/src/lib.rs": "d3db6f761ef25784b08efa92cd43e2721124d58215a70a9b1ed0f7cfeb6caf2d",
         "API/Generation2.json": "08147d7960dddc7a368accb54d7c3508e99ca624fc3f808df2127c14b0a994a2",
-        "Generated/Generation2/Inventory.json": "7977f71929f52eac0e00cbaceb1f777412f3f3702a0c53ea3b1205b7ba88b569"
+        "Generated/Generation2/Inventory.json": "aa842b126fcfa1d14aee7b543e72aa642f2988e453aba3261692c98adf996815"
       },
-      "zig_hash": "r4os_contract-0.64.91-ELhbYRmvTwE21o-oZc1bErQazQAfwmTkq8Gilkkk56pF",
-      "archive_url": "https://github.com/R4OSDev/r4os-contract/archive/68680689e8a122415dd7224ed9dcd91d7f60c8e3.tar.gz",
+      "zig_hash": "r4os_contract-0.64.92-ELhbYTVWUgFgR-JUQQI7lfESvOwDY_iO9iCe08AnR6OQ",
+      "archive_url": "https://github.com/R4OSDev/r4os-contract/archive/e3278955e61056011731a6df6c9d673c3624e169.tar.gz",
       "archive_format": "tar.gz",
       "tree": {
         "algorithm": "r4os-files-sha256-lf-v1",
-        "sha256": "54cc76ab2680c6aadfe3f72cdcf856c1a34b8baa2e64021a233a4445f6eb9246",
+        "sha256": "880ff8d388565e66c82014608371f8611b933cb44f8cc982ab07e37c57786479",
         "files": [
           ".gitattributes",
           ".gitignore",
@@ -56,6 +56,7 @@
           "ABI/SubsystemLaunch.txt",
           "API/ApiContract.baseline.json",
           "API/ApiContract.json",
+          "API/AudioCapture.txt",
           "API/BytePipes.txt",
           "API/ClipboardOffers.txt",
           "API/DeviceInventorySnapshot.txt",

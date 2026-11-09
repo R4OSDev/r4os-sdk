@@ -1702,3 +1702,21 @@ Identitaeten erhalten alte Sicht und Auswahl bei Fehler. Open/Save, Name,
 Fokus/Paging/Cancel und ausdrueckliche Overwriteentscheidung sind gemeinsam
 fuer Zig/C/Rust nutzbar; Schreiben und Anwendungsformat bleiben beim Caller.
 Normativer Vertrag: Docs/FilePicker.txt. Keine Anwendung wird umgestellt.
+
+Optionale PCM-Aufnahme ab SDK0.64.180
+-----------------------------------
+audio_capture (Zig/Rust) und audio_capture_platform2.h (C) sprechen den
+kopierten AUDSVC-Vertrag6100 an. Catalog/Open/Read/Query/Stop/Close verwenden
+ganze S16LE-Frames und volle Dienst-/Quell-/Client-/Streamgenerationen. Die
+finale Caller-Kapazitaet begrenzt die Entnahme bereits beim Dienst.
+Read verwendet die vorhandenen Poll-/Finite-/Forever-Budgets. Cancel,
+Timeout und Disconnect geben keinen Stream frei; Close bleibt explizit.
+Rust trennt Transport-/Validierungsfehler von Reply.result. Unbekannte
+schreibende/lesende Ausgaenge werden niemals automatisch wiederholt.
+
+Der begrenzte Backend-Adapter ist Infrastruktur fuer AUDSVC. Die optionale
+DriverApi2-Tailfunktion wird nur nach ganzer Groessen-/Nullzeigerpruefung
+benutzt; der alte656-Byte-Praefix bleibt zugaenglich. Normativer Draht-/
+Lebenszeitvertrag: Contract/API/AudioCapture.txt. Ein CONTROLLED-Testeingang
+ist kein ADC. Ohne qualifizierten Inputanbieter ist Aufnahme nicht verfuegbar;
+die ausgelieferten HDA-/AC97-Backends liefern hier keinen Audioeingang.

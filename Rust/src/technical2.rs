@@ -4,7 +4,8 @@ use crate::abi;
 use core::{ffi::CStr, marker::PhantomData, mem};
 
 pub struct Driver<'a> {
-    table: &'a abi::DriverApi2,
+    table: abi::DriverApi2,
+    _callbacks: PhantomData<&'a ()>,
     _local: PhantomData<*mut ()>,
 }
 impl<'a> Driver<'a> {
@@ -15,22 +16,44 @@ impl<'a> Driver<'a> {
         if raw.is_null() || !(raw as usize).is_multiple_of(8) {
             return Err(-1);
         }
+        let prefix = mem::offset_of!(abi::DriverApi2, register_audio_capture_backend);
         let valid = unsafe {
             (*raw).magic == abi::driver_api2_magic
                 && (*raw).version >= abi::driver_api2_version
-                && (*raw).size as usize >= mem::size_of::<abi::DriverApi2>()
+                && (*raw).size as usize >= prefix
                 && (*raw).reserved == 0
         };
         if !valid {
             return Err(-1);
         }
+        let readable = unsafe { (*raw).size as usize };
+        let mut table = mem::MaybeUninit::<abi::DriverApi2>::zeroed();
+        unsafe {
+            core::ptr::copy_nonoverlapping(
+                raw.cast::<u8>(),
+                table.as_mut_ptr().cast::<u8>(),
+                prefix,
+            );
+        }
+        if readable >= prefix + mem::size_of::<usize>() {
+            unsafe {
+                core::ptr::copy_nonoverlapping(
+                    raw.cast::<u8>().add(prefix),
+                    table.as_mut_ptr().cast::<u8>().add(prefix),
+                    mem::size_of::<usize>(),
+                );
+            }
+        }
+        let mut table = unsafe { table.assume_init() };
+        table.size = readable.min(mem::size_of::<abi::DriverApi2>()) as u32;
         Ok(Self {
-            table: unsafe { &*raw },
+            table,
+            _callbacks: PhantomData,
             _local: PhantomData,
         })
     }
-    pub fn raw(&self) -> &'a abi::DriverApi2 {
-        self.table
+    pub fn raw(&self) -> &abi::DriverApi2 {
+        &self.table
     }
     pub fn log(&self, text: &CStr) {
         unsafe { (self.table.log_info)(text.as_ptr().cast()) }
@@ -53,6 +76,19 @@ impl<'a> Driver<'a> {
     /// through actual unregister/terminal retirement, even after partial error.
     pub unsafe fn register_audio(&self, name: &CStr, backend: *const abi::AudioBackend2) -> i32 {
         unsafe { (self.table.register_audio_output_backend)(name.as_ptr().cast(), backend) }
+    }
+    /// # Safety
+    /// Immutable input descriptor/context/code remain retained until genuine
+    /// hardware shutdown and original registry retirement acknowledge release.
+    pub unsafe fn register_capture(
+        &self,
+        name: &CStr,
+        input: *const abi::AudioCaptureBackend2,
+    ) -> i32 {
+        match self.table.register_audio_capture_backend {
+            Some(register) => unsafe { register(name.as_ptr().cast(), input) },
+            None => abi::audio_capture_error_unsupported,
+        }
     }
 }
 pub struct Protocol<'a> {

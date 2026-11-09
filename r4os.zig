@@ -54,6 +54,7 @@ pub const device_snapshot = @import("r4os/device_snapshot_api.zig");
 pub const metadata2 = @import("r4os/metadata2.zig");
 pub const text_metrics = @import("r4os/text_metrics_api.zig");
 pub const text_composition = @import("r4os/text_composition.zig");
+pub const audio_capture = @import("r4os/audio_capture.zig");
 pub const file_picker = @import("r4os/file_picker_api.zig");
 pub const audio_write = @import("r4os/audio_write_api.zig");
 pub const pcm_source = @import("r4os/pcm_source.zig");
