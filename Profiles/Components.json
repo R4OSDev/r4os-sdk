@@ -26,23 +26,23 @@
   "repositories": {
     "contract": {
       "repository": "https://github.com/R4OSDev/r4os-contract.git",
-      "commit": "b99d97fbaadbd988b071559ec327063f5c240a94",
-      "version": "0.64.89",
+      "commit": "753d7225f51f376114e752d2132407ae24035825",
+      "version": "0.64.90",
       "files": {
-        "build.zig.zon": "018b3212b1d38fe8ad86784866090779ed9ba7114333e6134660b9dfebf728a8",
-        "API/ApiContract.json": "87f490f8edde33020cb79b12ef73d37632157dc6ef6fefdf5b351085bacdb0e0",
+        "build.zig.zon": "b66917df0a7153ad110cdbef574dd8df0a266c60b7bd6f817c2ff8e8218c23e9",
+        "API/ApiContract.json": "ebf1cb784aa9a578e8cc2a3e3f1dbce4a3d1f81b5d5353a6ef59ce5ee4b1c20a",
         "Module/CpuBaseline.json": "eeeee03aa8fd41051c09e61e9d70ca35660f2b413c3f878fb6e5a3bb51aad10c",
         "Generated/SDK/Rust/Cargo.toml": "de464f2f9243e3d153c06b701a2126839c3e8a921a6d466467d3042370023263",
-        "Generated/SDK/Rust/src/lib.rs": "c6be8ec0b48e34b9634ab2156c46d36131c9ab29507ad80ccef59220e0597206",
+        "Generated/SDK/Rust/src/lib.rs": "bc0d213d34b03a3e21787999a9e2a3da9aaf4e0da92f5ca0c6f93d690ca6563c",
         "API/Generation2.json": "08147d7960dddc7a368accb54d7c3508e99ca624fc3f808df2127c14b0a994a2",
-        "Generated/Generation2/Inventory.json": "f1f3e24b458c66b00bafe72c2d3c86894b5309a52808219a215f466568dcdf2f"
+        "Generated/Generation2/Inventory.json": "7977f71929f52eac0e00cbaceb1f777412f3f3702a0c53ea3b1205b7ba88b569"
       },
-      "zig_hash": "r4os_contract-0.64.89-ELhbYafoTAEeXKGQXcB1NZteJO5Qm7YpnL96oU0Vbr8s",
-      "archive_url": "https://github.com/R4OSDev/r4os-contract/archive/b99d97fbaadbd988b071559ec327063f5c240a94.tar.gz",
+      "zig_hash": "r4os_contract-0.64.90-ELhbYfTbTQE3qgCKc1O2ZHkEWpOhPRCYThdW6W9quctl",
+      "archive_url": "https://github.com/R4OSDev/r4os-contract/archive/753d7225f51f376114e752d2132407ae24035825.tar.gz",
       "archive_format": "tar.gz",
       "tree": {
         "algorithm": "r4os-files-sha256-lf-v1",
-        "sha256": "94348a9cdd5135d2c0aeb7111322650059226b072010bbb9716595d65ba6aac1",
+        "sha256": "23842da25f0a9be6b59181d34971fea02a73841c408832de9d40717091d14f0d",
         "files": [
           ".gitattributes",
           ".gitignore",
@@ -65,6 +65,7 @@
           "API/Groups.txt",
           "API/Ipv6Providers.txt",
           "API/Ipv6Transport.txt",
+          "API/LaunchIo.txt",
           "API/NetworkFamily.txt",
           "API/README.txt",
           "Build.bat",

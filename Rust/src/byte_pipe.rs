@@ -12,8 +12,26 @@ fn exact(code: i32) -> Result<(), Error> {
     if code == 0 { Ok(()) } else { Err(Error(code)) }
 }
 #[derive(Clone, Copy)]
-struct Provider {
-    functions: [u64; 7],
+pub(crate) struct Provider {
+    pub(crate) functions: [u64; 7],
+}
+impl Provider {
+    pub(crate) fn from_context(context: &platform2::Context<'_>) -> Result<Self, Error> {
+        let offsets = [
+            mem::offset_of!(abi::generation2::R4XStartR4Sys2, byte_pipe_create),
+            mem::offset_of!(abi::generation2::R4XStartR4Sys2, byte_pipe_dup),
+            mem::offset_of!(abi::generation2::R4XStartR4Sys2, byte_pipe_read),
+            mem::offset_of!(abi::generation2::R4XStartR4Sys2, byte_pipe_write),
+            mem::offset_of!(abi::generation2::R4XStartR4Sys2, byte_pipe_cancel),
+            mem::offset_of!(abi::generation2::R4XStartR4Sys2, byte_pipe_close),
+            mem::offset_of!(abi::generation2::R4XStartR4Sys2, byte_pipe_info),
+        ];
+        let mut functions = [0; 7];
+        for (out, offset) in functions.iter_mut().zip(offsets) {
+            *out = context.lookup(1, offset as u32).map_err(Error)?;
+        }
+        Ok(Self { functions })
+    }
 }
 pub struct Endpoint<'a, 'c> {
     _context: &'a platform2::Context<'c>,
@@ -97,23 +115,10 @@ pub fn create<'a, 'c>(
     context: &'a platform2::Context<'c>,
     capacity: u64,
 ) -> Result<Pair<'a, 'c>, Error> {
-    let offsets = [
-        mem::offset_of!(abi::generation2::R4XStartR4Sys2, byte_pipe_create),
-        mem::offset_of!(abi::generation2::R4XStartR4Sys2, byte_pipe_dup),
-        mem::offset_of!(abi::generation2::R4XStartR4Sys2, byte_pipe_read),
-        mem::offset_of!(abi::generation2::R4XStartR4Sys2, byte_pipe_write),
-        mem::offset_of!(abi::generation2::R4XStartR4Sys2, byte_pipe_cancel),
-        mem::offset_of!(abi::generation2::R4XStartR4Sys2, byte_pipe_close),
-        mem::offset_of!(abi::generation2::R4XStartR4Sys2, byte_pipe_info),
-    ];
-    let mut functions = [0; 7];
-    for (out, offset) in functions.iter_mut().zip(offsets) {
-        *out = context.lookup(1, offset as u32).map_err(Error)?;
-    }
-    let call: abi::R4SysFns::byte_pipe_create = unsafe { mem::transmute(functions[0]) };
+    let provider = Provider::from_context(context)?;
+    let call: abi::R4SysFns::byte_pipe_create = unsafe { mem::transmute(provider.functions[0]) };
     let mut pair = abi::BytePipePair::default();
     exact(unsafe { call(capacity, &mut pair) })?;
-    let provider = Provider { functions };
     Ok(Pair {
         reader: Endpoint {
             _context: context,

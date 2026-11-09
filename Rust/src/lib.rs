@@ -20,6 +20,7 @@ pub mod graphics;
 pub mod gui;
 pub mod heap;
 pub mod inventory;
+pub mod launch_io;
 pub mod lowlevel;
 mod memory;
 pub mod metadata2;

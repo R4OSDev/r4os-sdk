@@ -6,6 +6,7 @@ pub const network_family = @import("r4os/network_family.zig");
 pub const network_transport = @import("r4os/network_transport.zig");
 pub const wait_set = @import("r4os/wait_set.zig");
 pub const byte_pipe = @import("r4os/byte_pipe.zig");
+pub const launch_io = @import("r4os/launch_io.zig");
 pub const technical2 = @import("r4os/technical2.zig");
 pub const program = @import("r4os/program.zig");
 pub const input_events = @import("r4os/input_events.zig");

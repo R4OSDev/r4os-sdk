@@ -546,9 +546,10 @@
         "r4sys",
         "inventory_reader",
         "wait_set",
-        "byte_pipe"
+        "byte_pipe",
+        "launch_io"
       ],
-      "semantics": "Instanz-/Thread-/VM-Generationen, borrowed/owned, Join/Stop/Cancel und echte Abschlussquittungen unterscheiden. Timeout/Forever/NoWait, Teilfortschritt und gehaltene I/O-Puffer unveraendert; kein ungeprueftes Send/Sync. SDK163: shared staged complete Full/Lifecycle membership, exact ID+generation Found/Missing/Unknown; one outer deadline, explicit restart, no incomplete Missing or Retain/physicalRetired claim. Qualification: inventory_reader_09020. SDK171 adds bounded native WaitSets over existing Notification/Timer owners; exact creator Task generation, explicit Rearm/Remove, short-batch More/Rescan, cancellation priority, no completion or memory-release inference. SDK172 adds optional prepared IO/Process/Thread/Endpoint/GUI sources with exact owner epochs, full typed public identities and honest current-legacy-ID limitation. Owner pumps consume work; WaitSets supply no retain/reap/DMA authority. Main GUI only and legacy subscription mask preserved. SDK177 adds copied bounded byte-pipe references with exact process lifetime, small-write atomicity, large accepted prefixes, last-writer/drain EOF, BrokenPipe and actual synchronous cancellation. C/Zig/Rust own explicit close/dup helpers, no automatic Drop, no hidden launch inheritance or WaitSource. Kernel retains resident queue/reference mechanics; host language review is separate from native provider qualification.",
+      "semantics": "Instanz-/Thread-/VM-Generationen, borrowed/owned, Join/Stop/Cancel und echte Abschlussquittungen unterscheiden. Timeout/Forever/NoWait, Teilfortschritt und gehaltene I/O-Puffer unveraendert; kein ungeprueftes Send/Sync. SDK163: shared staged complete Full/Lifecycle membership, exact ID+generation Found/Missing/Unknown; one outer deadline, explicit restart, no incomplete Missing or Retain/physicalRetired claim. Qualification: inventory_reader_09020. SDK171 adds bounded native WaitSets over existing Notification/Timer owners; exact creator Task generation, explicit Rearm/Remove, short-batch More/Rescan, cancellation priority, no completion or memory-release inference. SDK172 adds optional prepared IO/Process/Thread/Endpoint/GUI sources with exact owner epochs, full typed public identities and honest current-legacy-ID limitation. Owner pumps consume work; WaitSets supply no retain/reap/DMA authority. Main GUI only and legacy subscription mask preserved. SDK177 adds copied bounded byte-pipe references with exact process lifetime, small-write atomicity, large accepted prefixes, last-writer/drain EOF, BrokenPipe and actual synchronous cancellation. C/Zig/Rust own explicit close/dup helpers, no automatic Drop, no hidden launch inheritance or WaitSource. Kernel retains resident queue/reference mechanics; host language review is separate from native provider qualification. SDK178 adds optional copied112byte LaunchIo requests and borrowed current-process stdio snapshots. Three selected pipe references bind atomically before first Ready; Default Console keeps its original routes and byte/count semantics, Poll only. No implicit inheritance or Drop; no new Console wait/EOF/atomic-write promise.",
       "current_only": "current_function",
       "rust": {
         "state": "paritaet_abgenommen",
@@ -557,7 +558,8 @@
         "sources": [
           "Repositories/SDK/Rust/src/inventory.rs",
           "Repositories/SDK/Rust/src/wait_set.rs",
-          "Repositories/SDK/Rust/src/byte_pipe.rs"
+          "Repositories/SDK/Rust/src/byte_pipe.rs",
+          "Repositories/SDK/Rust/src/launch_io.rs"
         ]
       },
       "c": {
@@ -568,7 +570,8 @@
           "Repositories/SDK/Shared/C/include/r4os/inventory_reader.h",
           "Repositories/SDK/Shared/C/include/r4os/inventory_platform2.h",
           "Repositories/SDK/Shared/C/include/r4os/wait_set_platform2.h",
-          "Repositories/SDK/Shared/C/include/r4os/byte_pipe_platform2.h"
+          "Repositories/SDK/Shared/C/include/r4os/byte_pipe_platform2.h",
+          "Repositories/SDK/Shared/C/include/r4os/launch_io_platform2.h"
         ],
         "gap": "Vorhandene C-Kerne projiziert und fehlende aktuelle Funktionen ergaenzt; per-operation Slotzulassung, Cursorgenerationen, rohe Placement-/Publish-Statuswerte und expliziter Close erhalten. Keine Altkernel-Emulation."
       },
@@ -583,7 +586,8 @@
         "inventory_reader_09020",
         "waitset_language_surfaces_09028",
         "waitset_resource_sources_09029",
-        "byte_pipe_language_09034"
+        "byte_pipe_language_09034",
+        "launch_io_language_09035"
       ],
       "shared_core": "Bestehender C-AppResources-Besitzer und native R4SYS-Callbacks; keine zweite VM-/Scheduler-/Prozess-/IOimplementierung. Eigener Code nur fuer Rust-Besitz und API-sichere Pufferretention."
     },
@@ -3131,6 +3135,14 @@
       "expression": "@import(\"r4os/byte_pipe.zig\")",
       "capability": "process-sync-vm",
       "wave": "0.90.34"
+    },
+    {
+      "name": "launch_io",
+      "source": "Repositories/SDK/r4os.zig",
+      "line": 9,
+      "expression": "@import(\"r4os/launch_io.zig\")",
+      "capability": "process-sync-vm",
+      "wave": "0.90.35"
     }
   ],
   "build_exports": [
@@ -46301,6 +46313,70 @@
           59
         ]
       ]
+    },
+    {
+      "path": "Repositories/SDK/r4os/launch_io.zig",
+      "sha256": "c4bda461850d850660ba0b8df57349dd4fc0b91aeac6d6114f22dfa689b9aa7b",
+      "owner": "Repositories/SDK",
+      "version": "0.64.178",
+      "capability": "process-sync-vm",
+      "declarations": [
+        [
+          "Request",
+          "const",
+          8
+        ],
+        [
+          "Binding",
+          "const",
+          9
+        ],
+        [
+          "pipeBinding",
+          "fn",
+          10
+        ],
+        [
+          "launch",
+          "fn",
+          13
+        ],
+        [
+          "Stdio",
+          "container",
+          30
+        ],
+        [
+          "Stdio.init",
+          "fn",
+          34
+        ],
+        [
+          "Stdio.binding",
+          "fn",
+          67
+        ],
+        [
+          "Stdio.read",
+          "fn",
+          75
+        ],
+        [
+          "Stdio.write",
+          "fn",
+          98
+        ],
+        [
+          "Stdio.cancel",
+          "fn",
+          119
+        ],
+        [
+          "Stdio.close",
+          "fn",
+          125
+        ]
+      ]
     }
   ],
   "libraries": [
@@ -56697,6 +56773,20 @@
         "Host queue/heap/clock leaves are controlled seams. No physical failure, caller page-fault or task detach claim follows from them.",
         "No application/import/start/profile migration. Atomic LaunchIo is a separate subversion; the new pipe core requires no WaitSet adapter."
       ]
+    },
+    "launch_io_language_09035": {
+      "complete": true,
+      "performed_in": "0.90.35",
+      "sdk": "0.64.178",
+      "contract": "0.64.90",
+      "report": "Docs/API/LaunchIo.txt",
+      "scope": "Host source/ABI review only: two optional appended functions preserve original534slots and Start1/Start2 records. Copied112byte launch, three32byte bindings and borrowed24byte ends. Equivalent C/Zig/Rust explicit stdio with pipe Poll/Finite/Forever and original Default Console Poll byte/count semantics. No implicit Drop or routing change.",
+      "host_checks": "Contract18steps/8native C-Zig-Rust ABI roundtrips and strict optional table6/tail checks. SDK21context/technical+110dataowner cases, bareSDKClippy, actual generated C/Rust facade and strict C probe compile. Kernel19actual-owner/treap/deadline cases over controlled Heap/Runtime/Clock/Queue leaves, including3binding capacity preflight, same-pipe separate writers, full-generation owner and failed unpublished finalfree ACK retry. Native C/Zig functional results are separate; Rust guest is pending matched source tools.",
+      "limits": [
+        "Host source review grants no native Windows, hardware, new Console wait/EOF or pipe throughput qualification. Native3language proof and whole-release results are separate local evidence.",
+        "Runtime fake leaves control allocator/clock/wake. Real registry failures1..6, parent physical retirement, native blocked-task kill and same-public-ID generation reuse are separately tested in the actual guest.",
+        "No application/import/start/profile migration, shell pipe syntax, log capture or terminal behavior changes."
+      ]
     }
   },
   "wave_bindings": [
@@ -56949,18 +57039,18 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.90.34",
-    "sdk": "0.64.177",
-    "contract": "0.64.89",
+    "performed_in": "0.90.35",
+    "sdk": "0.64.178",
+    "contract": "0.64.90",
     "libraries": "0.64.51 unchanged",
-    "evidence": "byte_pipe_language_09034",
-    "scope": "Host source/ABI review only. Seven optional appended R4SYS calls retain both prior prefixes, exact24/56/24/48byte records, borrowed spans through actual return, cached complete Query2 providers and explicit same-direction references. Same owned create/dup/read/write/cancel/info/close semantics in C/Zig/Rust. No implicit Drop, launch binding or WaitSource.",
+    "evidence": "launch_io_language_09035",
+    "scope": "Host source/ABI review only: two optional appended functions preserve original534slots and Start1/Start2 records. Copied112byte launch, three32byte bindings and borrowed24byte ends. Equivalent C/Zig/Rust explicit stdio with pipe Poll/Finite/Forever and original Default Console Poll byte/count semantics. No implicit Drop or routing change.",
     "historical_snapshot_retained": true
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.90.34",
+    "reviewed_in": "0.90.35",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -57048,11 +57138,11 @@
     "files": [
       {
         "path": "Repositories/Contract/API/ApiContract.baseline.json",
-        "sha256": "87f490f8edde33020cb79b12ef73d37632157dc6ef6fefdf5b351085bacdb0e0"
+        "sha256": "ebf1cb784aa9a578e8cc2a3e3f1dbce4a3d1f81b5d5353a6ef59ce5ee4b1c20a"
       },
       {
         "path": "Repositories/Contract/API/ApiContract.json",
-        "sha256": "87f490f8edde33020cb79b12ef73d37632157dc6ef6fefdf5b351085bacdb0e0"
+        "sha256": "ebf1cb784aa9a578e8cc2a3e3f1dbce4a3d1f81b5d5353a6ef59ce5ee4b1c20a"
       },
       {
         "path": "Repositories/Contract/API/Generation2.json",
@@ -57060,35 +57150,35 @@
       },
       {
         "path": "Repositories/Contract/Generated/Generation2/C/include/r4os/generation2.h",
-        "sha256": "28da90746a1927fc9f739faa1f1d3da44f9c1ecc07df78b1e95182fb0fb48bef"
+        "sha256": "f7aa9bb780a2cb0b941c3bbe457e71e507aefb71c64322247cd5936cab4bac9e"
       },
       {
         "path": "Repositories/Contract/Generated/Generation2/Inventory.json",
-        "sha256": "f1f3e24b458c66b00bafe72c2d3c86894b5309a52808219a215f466568dcdf2f"
+        "sha256": "7977f71929f52eac0e00cbaceb1f777412f3f3702a0c53ea3b1205b7ba88b569"
       },
       {
         "path": "Repositories/Contract/Generated/Generation2/Rust/generation2.rs",
-        "sha256": "090cd17e424a6e1d81ba80d66e1963f657ac288fcbdc96ec3a8411b3102b358c"
+        "sha256": "702c9f2d47093bab13a39b96b8ff95fb094a322f5fb56e605603469310042597"
       },
       {
         "path": "Repositories/Contract/Generated/Generation2/Zig/abi.zig",
-        "sha256": "8a40ebc511151e74fe6f3547014eeebf2b974304b8fed000b29e8e42e0b8d483"
+        "sha256": "6646668f7963876bf3187e83ee4231868cc1aa097c96651810d20aedc47da7c0"
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/API.json",
-        "sha256": "40f999e010eb468cf33c900e5e8a12ea115ff928c4d0cd9bcc0a3e108dfb9abd"
+        "sha256": "84d3365ec21d5ef8a0b77aa0d807f9c2f5b1e20027fb35994142ac8424c46f10"
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/RustABI.json",
-        "sha256": "9bcde78815b5824a8ea3603f80e2817d1479a4b8dcb12f06c0d5ad9c3997d34a"
+        "sha256": "dbde5a3b6173ebb7b038c982a3c8ed3a20c652a5a491fdb5e1b2562543503a3f"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_generated.h",
-        "sha256": "a7db40b4ef291de769c6faf46273d532886a3a3065f65b4b4a1cfa97e5c3d491"
+        "sha256": "a42ec59e180e6e4ab6bdcde502faea7e1d8a86bb24d1e34fbbb3b2f52b6f9cf8"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_technical_generated.h",
-        "sha256": "b4706fb336dad3377df353b62b326e2981d256acabe7823513abee77d6769cff"
+        "sha256": "ee9e1594211d53eeb2d8d193de31146d7219a900adf23cc2f67eff2e4149cbd5"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Rust/Cargo.toml",
@@ -57096,19 +57186,19 @@
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Rust/src/lib.rs",
-        "sha256": "c6be8ec0b48e34b9634ab2156c46d36131c9ab29507ad80ccef59220e0597206"
+        "sha256": "bc0d213d34b03a3e21787999a9e2a3da9aaf4e0da92f5ca0c6f93d690ca6563c"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi.zig",
-        "sha256": "4cdb3e26a49723ce7b39cbce69b3d3a4e83b547aa2033ce19f50610f4fbcd32e"
+        "sha256": "405f0adb76b6aa9d8c2c7616988c659329a2bf53bc2c9a0c30ae06727817f7d6"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_exports.zig",
-        "sha256": "bb89b9173ef2fefcee9b38bbab5d1220ce7d0ec3210034f23377f0abb0d065ca"
+        "sha256": "c7ccdfa5e179164aeea1e5ddc92f35c96f002cb1101a111982d152dee4387ef4"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_generated.zig",
-        "sha256": "3deb45bb6d4c4afcaaa08f08ee9283568c92d99b2dca2e62b977e7f5da3b103f"
+        "sha256": "5de7f655bf8b73af36225eb8f68dfa30be8811de97655a967e2f214cad140987"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/package.zig",
@@ -57124,7 +57214,7 @@
       },
       {
         "path": "Repositories/Contract/Tests/Generation2.zig",
-        "sha256": "ed3f4a8db5754fa8767a0c13f25d656ed1195cf968e1c0c931651bf76d3daac6"
+        "sha256": "b692e6925f3c6493a4fcac49d7a7b8130008cd962edb1a101e08c4e669a9f396"
       },
       {
         "path": "Repositories/Contract/Tests/RustInterop/Cargo.toml",
@@ -57132,7 +57222,7 @@
       },
       {
         "path": "Repositories/Contract/Tests/RustInterop/interop.c",
-        "sha256": "24c590d560b4413c4d7bbf5ef0172a26e3c0918e4aa4eb361dbe9f52f05e14dd"
+        "sha256": "c2575a9315b4cbb6b6a82878bdfddd485b64554b53c61dfb4a639dfc1dd3adf2"
       },
       {
         "path": "Repositories/Contract/Tests/RustInterop/interop.zig",
@@ -57140,7 +57230,7 @@
       },
       {
         "path": "Repositories/Contract/Tests/RustInterop/src/lib.rs",
-        "sha256": "aa602c1eec76c74363a82e2dab2bba3f5b6e945b3938bbdb0c27e23f11b07d2b"
+        "sha256": "1661e19b6934347f2a48690d006dc13362f43dd4387514d958cd733f7e292ed9"
       },
       {
         "path": "Repositories/Contract/Tools/AbiRustGen/src/c_projection.zig",
@@ -57160,7 +57250,7 @@
       },
       {
         "path": "Repositories/Contract/Tools/ApiContractGen/src/main.zig",
-        "sha256": "fbfe38f66ca732f7ce902debb78a16fa04e90a4eb0f1efcbaf0c63d878aab379"
+        "sha256": "ddff6fbd98e4afd04a310b5c992dc693f38d87892c99e6d14c81f26fd72da776"
       },
       {
         "path": "Repositories/Libraries/R4ACO/Bindings/C/r4aco.h",
@@ -58192,7 +58282,7 @@
       },
       {
         "path": "Repositories/SDK/Profiles/Components.json",
-        "sha256": "08519ab2462123448da50c0af9a27dc6c8ab256da2cfd4a85e3dd4f405bbd786"
+        "sha256": "bd9e3514f87847d1ca514f615b80baffac6fd1db8398a79cd0514d12ee5d0ada"
       },
       {
         "path": "Repositories/SDK/Profiles/Tools.json",
@@ -58212,7 +58302,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "532352ac1fe5bf1505ceaa6c142a4d72ee701af4cd2601d2d8704d567b3c9074"
+        "sha256": "d34b06038eb966cc7419486fceb3874f5d0728e33aded8c3da087a69d37ce561"
       },
       {
         "path": "Repositories/SDK/Rust/src/cli.rs",
@@ -58304,7 +58394,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/lib.rs",
-        "sha256": "07255cf868ed890b0697a37fa1287a9b05d90fba79912e626fc777511df6288b"
+        "sha256": "e0b76a57d15de7e258750b80df94950d44fca7f8bf0a188a99cc9a53a198c7c7"
       },
       {
         "path": "Repositories/SDK/Rust/src/lowlevel.rs",
@@ -59240,11 +59330,11 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "b6ccaf5292457e1d835f837f1d3d6470702acc99210e1c4b283f25b26989cc0a"
+        "sha256": "e126a08398cb997de4a3c14186cf1a0df12ca93675cf311f826c456d96275e9e"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
-        "sha256": "0ef489a9ae876019f35dfe63392971afb1a7c9af9fc4078fcf3d586ddb3a9a5e"
+        "sha256": "27379d19a81c8e1bfea88c5c70f09c4c078318a9250d52fdd4419ff06811d127"
       },
       {
         "path": "Repositories/SDK/r4os/allocator_wait.zig",
@@ -60396,7 +60486,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/byte_pipe.rs",
-        "sha256": "08c693a792b9c294473fccc2cdbd9dc0e38b76f21ca77b3e5b4277db0e126020"
+        "sha256": "cfde4137e0efb5be8f8b4610adbfb381c83e17ab9d501c5c3c7336b387061bbd"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/byte_pipe_platform2.h",
@@ -60405,6 +60495,18 @@
       {
         "path": "Repositories/SDK/r4os/byte_pipe.zig",
         "sha256": "8614673aac69384a20d60388624439e8c2f22a5cd3331a61fcf6b250108322b3"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/launch_io.rs",
+        "sha256": "14232e84915ceeb0ff1cc32a983b7d121434d355cb82093a4c9e52014a5233c0"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/launch_io_platform2.h",
+        "sha256": "504c8c71879cb75a5239b5b4a1435e31a59c65e59640113b12ccca4513538ad0"
+      },
+      {
+        "path": "Repositories/SDK/r4os/launch_io.zig",
+        "sha256": "c4bda461850d850660ba0b8df57349dd4fc0b91aeac6d6114f22dfa689b9aa7b"
       }
     ],
     "coverage": [
@@ -60620,7 +60722,8 @@
           "Repositories/SDK/r4os/inventory_api.zig",
           "Repositories/SDK/r4os/inventory_runtime.zig",
           "Repositories/SDK/r4os/wait_set.zig",
-          "Repositories/SDK/r4os/byte_pipe.zig"
+          "Repositories/SDK/r4os/byte_pipe.zig",
+          "Repositories/SDK/r4os/launch_io.zig"
         ],
         "c": [
           "Repositories/SDK/Shared/C/include/r4os/app_resources.h",
@@ -60628,7 +60731,8 @@
           "Repositories/SDK/Shared/C/include/r4os/inventory_reader.h",
           "Repositories/SDK/Shared/C/include/r4os/inventory_platform2.h",
           "Repositories/SDK/Shared/C/include/r4os/wait_set_platform2.h",
-          "Repositories/SDK/Shared/C/include/r4os/byte_pipe_platform2.h"
+          "Repositories/SDK/Shared/C/include/r4os/byte_pipe_platform2.h",
+          "Repositories/SDK/Shared/C/include/r4os/launch_io_platform2.h"
         ],
         "rust": [
           "Repositories/SDK/Rust/src/resources/io.rs",
@@ -60639,7 +60743,8 @@
           "Repositories/SDK/Rust/src/resources/vm.rs",
           "Repositories/SDK/Rust/src/inventory.rs",
           "Repositories/SDK/Rust/src/wait_set.rs",
-          "Repositories/SDK/Rust/src/byte_pipe.rs"
+          "Repositories/SDK/Rust/src/byte_pipe.rs",
+          "Repositories/SDK/Rust/src/launch_io.rs"
         ],
         "proof": [
           "resource_current_54",
@@ -60650,7 +60755,8 @@
           "inventory_reader_09020",
           "waitset_language_surfaces_09028",
           "waitset_resource_sources_09029",
-          "byte_pipe_language_09034"
+          "byte_pipe_language_09034",
+          "launch_io_language_09035"
         ]
       },
       {
