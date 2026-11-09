@@ -12,6 +12,7 @@ comptime {
     _ = @import("inventory_runtime.zig");
     _ = @import("device_snapshot_runtime.zig");
     _ = @import("text_metrics_runtime.zig");
+    _ = @import("text_composition_runtime.zig");
     _ = @import("file_picker_runtime.zig");
     _ = @import("audio_write_runtime.zig");
     _ = @import("published_frame_runtime.zig");

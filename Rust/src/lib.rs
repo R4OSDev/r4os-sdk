@@ -44,6 +44,7 @@ pub mod services;
 mod startup;
 pub mod storage;
 pub mod technical2;
+pub mod text_composition;
 pub mod text_metrics;
 pub mod time;
 pub mod transfer;

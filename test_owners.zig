@@ -41,3 +41,7 @@ test {
     _ = @import("Tests/Simulation/WebOwners.zig");
     _ = @import("Tests/Simulation/TransportOwners.zig");
 }
+
+test "composition owner copied text and exact focus" {
+    _ = @import("r4os/text_composition_tests.zig");
+}

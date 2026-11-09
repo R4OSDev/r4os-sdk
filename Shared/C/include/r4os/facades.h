@@ -20,6 +20,7 @@
 #include "inventory_reader.h"
 #include "device_snapshot.h"
 #include "text_metrics.h"
+#include "text_composition.h"
 #include "file_picker.h"
 #include "audio_write.h"
 #include "pcm_source.h"

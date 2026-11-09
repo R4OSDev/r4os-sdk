@@ -785,9 +785,10 @@
         "chart",
         "text_metrics",
         "file_picker",
-        "clipboard_offer"
+        "clipboard_offer",
+        "text_composition"
       ],
-      "semantics": "GUI-Nachrichten/Unicode/Modifier/Close, Timer/Clipboard, Paint/Present und Ressourcenbesitz; gehostete App und Desktophost sind verschiedene Rollen. Kein Schlafpolling oder Abschneiden von UTF-8. Aktuelle CPU/GPU-Ausgaben und abgerundete/alpha-Pixel erhalten. Fokusgewinn/-verlust und globale Fontaenderung sind typisiert; vorhandene Fensteridentitaet/Ticks und vollstaendige Unknown-Rohdaten bleiben erhalten. Vier benannte C-Fensterflags stammen aus der kanonischen GuiWindowFlag-Wahrheit. SDK110: natives Capture bindet volle Prozessgeneration, Fensterinkarnation und Capture-ID;0 bestaetigt PENDING, ACTIVE erst nach Desktop-Grant. C/Zig/Rust erhalten typisierte Capture-/Relative-/Wheel-Nachrichten. Relative physische Deltas entstehen vor Clamping; absolute Remote-Moves werden nicht als Rohbewegung ausgegeben. Release-/Cancel-/Broker-/Fensterende und zugehoerige externe C-Belege sind getrennt qualifiziert. SDK111: Desktop bindet den genauen Prozesshandle und die native Fensterinkarnation an QUERY/POST/RESET. Busy ist keine fehlende GUI-Zustaendigkeit. C/Zig/Rust erhalten InputReset mit Grund/Fenster/Tick; lokale Press-/Repeat-/Dragzustaende enden ohne synthetischen Klick. Capture-Terminalmeldungen behalten ihren eigenen Vertrag. SDK147: Canvas-local opt-in Style/light/dark, catalog font roles, shared Button/TextField/List/TabBar/Dialog rendering and Card/TileGrid/Paragraph/Progress. Classic defaults and editing owners remain; existing C constructor prefixes keep native defaults for new fields. SDK166: one immutable-bank prefix capture plus shared bounded grapheme projection and frozen binary-search hits; exact original strict-half/Unicode boundaries and explicit source/text/font keys/current-stamp reset. No hidden old fallback or consumer change. Qualification: text_metrics_09023. SDK167: shared bounded FilePickerSession with two caller buffers and EOF-only page publication over the existing canonical metadata owner. Whole path/observed identity and nonreused view revision; explicit overwrite permission bound to the prior observation, real-return loans and Open keyboard focus skipping disabled name. Existing FileDialog retains its shared list/name select rendering group. No file write/open or application migration. Qualification: file_picker_09024. SDK173 adds copied typed CLIPSVC offers with exact provider/offer identities, atomic private staging, immutable expiring snapshots and explicit bounded format/chunk contracts. Existing text bytes and ServiceLoop remain; uncertain Commit uses same-token status/idempotent replay. No application migration or silent conversion.",
+      "semantics": "GUI-Nachrichten/Unicode/Modifier/Close, Timer/Clipboard, Paint/Present und Ressourcenbesitz; gehostete App und Desktophost sind verschiedene Rollen. Kein Schlafpolling oder Abschneiden von UTF-8. Aktuelle CPU/GPU-Ausgaben und abgerundete/alpha-Pixel erhalten. Fokusgewinn/-verlust und globale Fontaenderung sind typisiert; vorhandene Fensteridentitaet/Ticks und vollstaendige Unknown-Rohdaten bleiben erhalten. Vier benannte C-Fensterflags stammen aus der kanonischen GuiWindowFlag-Wahrheit. SDK110: natives Capture bindet volle Prozessgeneration, Fensterinkarnation und Capture-ID;0 bestaetigt PENDING, ACTIVE erst nach Desktop-Grant. C/Zig/Rust erhalten typisierte Capture-/Relative-/Wheel-Nachrichten. Relative physische Deltas entstehen vor Clamping; absolute Remote-Moves werden nicht als Rohbewegung ausgegeben. Release-/Cancel-/Broker-/Fensterende und zugehoerige externe C-Belege sind getrennt qualifiziert. SDK111: Desktop bindet den genauen Prozesshandle und die native Fensterinkarnation an QUERY/POST/RESET. Busy ist keine fehlende GUI-Zustaendigkeit. C/Zig/Rust erhalten InputReset mit Grund/Fenster/Tick; lokale Press-/Repeat-/Dragzustaende enden ohne synthetischen Klick. Capture-Terminalmeldungen behalten ihren eigenen Vertrag. SDK147: Canvas-local opt-in Style/light/dark, catalog font roles, shared Button/TextField/List/TabBar/Dialog rendering and Card/TileGrid/Paragraph/Progress. Classic defaults and editing owners remain; existing C constructor prefixes keep native defaults for new fields. SDK166: one immutable-bank prefix capture plus shared bounded grapheme projection and frozen binary-search hits; exact original strict-half/Unicode boundaries and explicit source/text/font keys/current-stamp reset. No hidden old fallback or consumer change. Qualification: text_metrics_09023. SDK167: shared bounded FilePickerSession with two caller buffers and EOF-only page publication over the existing canonical metadata owner. Whole path/observed identity and nonreused view revision; explicit overwrite permission bound to the prior observation, real-return loans and Open keyboard focus skipping disabled name. Existing FileDialog retains its shared list/name select rendering group. No file write/open or application migration. Qualification: file_picker_09024. SDK173 adds copied typed CLIPSVC offers with exact provider/offer identities, atomic private staging, immutable expiring snapshots and explicit bounded format/chunk contracts. Existing text bytes and ServiceLoop remain; uncertain Commit uses same-token status/idempotent replay. No application migration or silent conversion. SDK179: one bounded synchronous editor owner for Preedit/Commit/Cancel with strict UTF8 whole-grapheme ranges, exact window/view/focus/provider/editor/session/text generations, staged atomic Commit, copied caret and explicit surrounding text. C/Rust share the original Zig owner through borrowed record-pointer FFI. Copied WINSVC observations are separate from owner transitions; actual availability is NoProvider. No installed languageIME or application migration.",
       "current_only": "current_function",
       "rust": {
         "state": "paritaet_abgenommen",
@@ -800,7 +801,8 @@
           "Repositories/SDK/Rust/src/gui/style.rs",
           "Repositories/SDK/Rust/src/text_metrics.rs",
           "Repositories/SDK/Rust/src/file_picker.rs",
-          "Repositories/SDK/Rust/src/clipboard_offer.rs"
+          "Repositories/SDK/Rust/src/clipboard_offer.rs",
+          "Repositories/SDK/Rust/src/text_composition.rs"
         ],
         "gap": null
       },
@@ -814,7 +816,9 @@
           "Repositories/SDK/Shared/C/include/r4os/text_metrics_platform2.h",
           "Repositories/SDK/Shared/C/include/r4os/file_picker.h",
           "Repositories/SDK/Shared/C/include/r4os/file_picker_platform2.h",
-          "Repositories/SDK/Shared/C/include/r4os/clipboard_offer_platform2.h"
+          "Repositories/SDK/Shared/C/include/r4os/clipboard_offer_platform2.h",
+          "Repositories/SDK/Shared/C/include/r4os/text_composition.h",
+          "Repositories/SDK/Shared/C/include/r4os/text_composition_platform2.h"
         ],
         "gap": null
       },
@@ -833,7 +837,8 @@
         "device_snapshot_09021",
         "text_metrics_09023",
         "file_picker_09024",
-        "clipboard_offers_09030"
+        "clipboard_offers_09030",
+        "text_composition_09036"
       ],
       "shared_core": "Gemeinsame GUI-/Rasterkerne beim Besitzer; keine unabhaengigen Widget-/Unicodealgorithmen pro Sprache."
     },
@@ -3143,6 +3148,14 @@
       "expression": "@import(\"r4os/launch_io.zig\")",
       "capability": "process-sync-vm",
       "wave": "0.90.35"
+    },
+    {
+      "name": "text_composition",
+      "source": "Repositories/SDK/r4os.zig",
+      "line": 56,
+      "expression": "@import(\"r4os/text_composition.zig\")",
+      "capability": "gui",
+      "wave": "0.90.36"
     }
   ],
   "build_exports": [
@@ -46377,6 +46390,135 @@
           125
         ]
       ]
+    },
+    {
+      "path": "Repositories/SDK/r4os/text_composition.zig",
+      "sha256": "67e2ca3605b7dd7bacccbbfb04c79887383eac8c936271ac8a8a441334ec216e",
+      "owner": "Repositories/SDK",
+      "version": "0.64.179",
+      "capability": "gui",
+      "declarations": [
+        [
+          "Id",
+          "const",
+          7
+        ],
+        [
+          "Focus",
+          "const",
+          8
+        ],
+        [
+          "Provider",
+          "const",
+          9
+        ],
+        [
+          "Event",
+          "const",
+          10
+        ],
+        [
+          "Caret",
+          "const",
+          11
+        ],
+        [
+          "Range",
+          "const",
+          12
+        ],
+        [
+          "validHandle",
+          "fn",
+          14
+        ],
+        [
+          "providerStatus",
+          "fn",
+          17
+        ],
+        [
+          "focusStatus",
+          "fn",
+          23
+        ],
+        [
+          "Owner",
+          "container",
+          51
+        ],
+        [
+          "Owner.init",
+          "fn",
+          66
+        ],
+        [
+          "Owner.begin",
+          "fn",
+          79
+        ],
+        [
+          "Owner.refresh",
+          "fn",
+          106
+        ],
+        [
+          "Owner.apply",
+          "fn",
+          121
+        ],
+        [
+          "Owner.cancel",
+          "fn",
+          161
+        ],
+        [
+          "Owner.preedit",
+          "fn",
+          166
+        ],
+        [
+          "Owner.queryCaret",
+          "fn",
+          170
+        ],
+        [
+          "Owner.setCaret",
+          "fn",
+          176
+        ],
+        [
+          "Owner.surrounding",
+          "fn",
+          183
+        ],
+        [
+          "Client",
+          "container",
+          205
+        ],
+        [
+          "Client.connect",
+          "fn",
+          210
+        ],
+        [
+          "Client.close",
+          "fn",
+          224
+        ],
+        [
+          "Client.capability",
+          "fn",
+          240
+        ],
+        [
+          "Client.focus",
+          "fn",
+          249
+        ]
+      ]
     }
   ],
   "libraries": [
@@ -56787,6 +56929,20 @@
         "Runtime fake leaves control allocator/clock/wake. Real registry failures1..6, parent physical retirement, native blocked-task kill and same-public-ID generation reuse are separately tested in the actual guest.",
         "No application/import/start/profile migration, shell pipe syntax, log capture or terminal behavior changes."
       ]
+    },
+    "text_composition_09036": {
+      "complete": true,
+      "performed_in": "0.90.36",
+      "sdk": "0.64.179",
+      "contract": "0.64.91",
+      "report": "Docs/API/TextComposition.txt",
+      "scope": "Host source/ABI owner qualification. Original SDK137 cases plus one executed actual C-to-original-Zig runtime regression in existing data-parity-test. Original WINSVC9 owner cases qualify acknowledged focus ordering; actual native transport and languages are separately evidenced. Pure transitions perform no I/O/wait/callback/allocation.",
+      "host_checks": "Contract18 steps/8 existing native interop cases, all536 original slots/463 type prefixes exact;8 fixed wire records added. SDK137 incl6 new imported composition owner cases; actual C ABI program tests register/stack pressure, NoProvider, Preedit/Commit, whole-grapheme/Capacity, copied caret/surrounding and stale scope. The earlier byvalue C signature reproduced a real caller/callee argument mismatch despite matching record layouts; corrected new FFI uses only scalar and borrowed record-pointer parameters. Generated Rust raw C declarations and safe wrappers share the original owner.",
+      "limits": [
+        "No active languageIME, candidate UI/database or application migration. Installed WINSVC explicitly returns NoProvider; controlled positive owner metadata is separate.",
+        "Host original focus cases are distinct from guest capability/zero-window query; no actual Desktop editor focus integration or unpublished physical focus transition claim.",
+        "Native C/Zig/Rust, sole STANDARD, Windows and physical hardware qualifications do not follow from this review-drift record. See separate local evidence and documented limits."
+      ]
     }
   },
   "wave_bindings": [
@@ -57039,18 +57195,18 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.90.35",
-    "sdk": "0.64.178",
-    "contract": "0.64.90",
+    "performed_in": "0.90.36",
+    "sdk": "0.64.179",
+    "contract": "0.64.91",
     "libraries": "0.64.51 unchanged",
-    "evidence": "launch_io_language_09035",
-    "scope": "Host source/ABI review only: two optional appended functions preserve original534slots and Start1/Start2 records. Copied112byte launch, three32byte bindings and borrowed24byte ends. Equivalent C/Zig/Rust explicit stdio with pipe Poll/Finite/Forever and original Default Console Poll byte/count semantics. No implicit Drop or routing change.",
+    "evidence": "text_composition_09036",
+    "scope": "Host source/ABI owner qualification. Original SDK137 cases plus one executed actual C-to-original-Zig runtime regression in existing data-parity-test. Original WINSVC9 owner cases qualify acknowledged focus ordering; actual native transport and languages are separately evidenced. Pure transitions perform no I/O/wait/callback/allocation.",
     "historical_snapshot_retained": true
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.90.35",
+    "reviewed_in": "0.90.36",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -57133,16 +57289,17 @@
       "Repositories/SDK/Tests/Simulation/PublishedFrameParity.c",
       "Repositories/SDK/Tests/Simulation/PublishedFrame.rs",
       "Repositories/Libraries/R4NAK/Source/cache.zig",
-      "Repositories/Libraries/R4ACO/Source/cache.zig"
+      "Repositories/Libraries/R4ACO/Source/cache.zig",
+      "Repositories/SDK/Tests/Conformance/TextCompositionABI.c"
     ],
     "files": [
       {
         "path": "Repositories/Contract/API/ApiContract.baseline.json",
-        "sha256": "ebf1cb784aa9a578e8cc2a3e3f1dbce4a3d1f81b5d5353a6ef59ce5ee4b1c20a"
+        "sha256": "77e05090e59b940987259201dab9538665facd1d4ecd43fe12c6e06e26db762e"
       },
       {
         "path": "Repositories/Contract/API/ApiContract.json",
-        "sha256": "ebf1cb784aa9a578e8cc2a3e3f1dbce4a3d1f81b5d5353a6ef59ce5ee4b1c20a"
+        "sha256": "77e05090e59b940987259201dab9538665facd1d4ecd43fe12c6e06e26db762e"
       },
       {
         "path": "Repositories/Contract/API/Generation2.json",
@@ -57170,15 +57327,15 @@
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/RustABI.json",
-        "sha256": "dbde5a3b6173ebb7b038c982a3c8ed3a20c652a5a491fdb5e1b2562543503a3f"
+        "sha256": "928c74e6c34cc5ab436040aa909604af71671d4c707e3ac95c7d1d25cae21b3e"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_generated.h",
-        "sha256": "a42ec59e180e6e4ab6bdcde502faea7e1d8a86bb24d1e34fbbb3b2f52b6f9cf8"
+        "sha256": "9cc923ec122792d77b9b083405b7fd7d4704ea15ba4cbb20d9b6e750ba409b47"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_technical_generated.h",
-        "sha256": "ee9e1594211d53eeb2d8d193de31146d7219a900adf23cc2f67eff2e4149cbd5"
+        "sha256": "13c05cd10fd760af3be37e995be82954eeff069246652b056984797bf5eb07de"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Rust/Cargo.toml",
@@ -57186,19 +57343,19 @@
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Rust/src/lib.rs",
-        "sha256": "bc0d213d34b03a3e21787999a9e2a3da9aaf4e0da92f5ca0c6f93d690ca6563c"
+        "sha256": "e200a21b1da838b1efb07378b576569b11df713166c84fc22829c5c12b3a0ac3"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi.zig",
-        "sha256": "405f0adb76b6aa9d8c2c7616988c659329a2bf53bc2c9a0c30ae06727817f7d6"
+        "sha256": "c07961d7f20bc1025d303c77a2d1f450b6ac05a3549c9fcdedc1d1fda675e943"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_exports.zig",
-        "sha256": "c7ccdfa5e179164aeea1e5ddc92f35c96f002cb1101a111982d152dee4387ef4"
+        "sha256": "772314fe78313862dde0637b9dd19cd3a150eec653e987bd795744fbd288432a"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_generated.zig",
-        "sha256": "5de7f655bf8b73af36225eb8f68dfa30be8811de97655a967e2f214cad140987"
+        "sha256": "ed08d488c0e9e453bae9e274ddce0a002dfbe047ef0f33000ff797615ce9019d"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/package.zig",
@@ -58282,7 +58439,7 @@
       },
       {
         "path": "Repositories/SDK/Profiles/Components.json",
-        "sha256": "bd9e3514f87847d1ca514f615b80baffac6fd1db8398a79cd0514d12ee5d0ada"
+        "sha256": "15d71db870349048dbf5fb30e3aa6b9d5261748103c79d69cfa35daa324c6ee8"
       },
       {
         "path": "Repositories/SDK/Profiles/Tools.json",
@@ -58302,7 +58459,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "d34b06038eb966cc7419486fceb3874f5d0728e33aded8c3da087a69d37ce561"
+        "sha256": "4890e8c5042745f5b8d2faefcd59d35bb8866d1c781d2cc8cc6ad4cdecb82a40"
       },
       {
         "path": "Repositories/SDK/Rust/src/cli.rs",
@@ -58394,7 +58551,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/lib.rs",
-        "sha256": "e0b76a57d15de7e258750b80df94950d44fca7f8bf0a188a99cc9a53a198c7c7"
+        "sha256": "ae10b410f50577fd4e17c3755ce1309599766952dbaa841ccc2b4117bbc1b9dc"
       },
       {
         "path": "Repositories/SDK/Rust/src/lowlevel.rs",
@@ -58778,7 +58935,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/facades.h",
-        "sha256": "8ba3bb9ad46a859af07ca57648d38c22b2a5b4bde794b7f4eee3f40a478a71dc"
+        "sha256": "6265d5510e506aa19e9d89e21e12839e46d8957cd6c5492820c4d801ab8cce0a"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/file_picker.h",
@@ -59326,15 +59483,15 @@
       },
       {
         "path": "Repositories/SDK/build.zig",
-        "sha256": "52db52be1dc0baed52bc76591aecd7b5a71e572164930fb028db2705cc38c0f8"
+        "sha256": "5181d070ee10e09ce5be8be0b6e618eefbe870aa5a64fa47c5942be62b7adf9f"
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "e126a08398cb997de4a3c14186cf1a0df12ca93675cf311f826c456d96275e9e"
+        "sha256": "7fa62e23bc7052751b24d7ec2f7a194badb568e2e0f86b22e1ae46b6467d17b7"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
-        "sha256": "27379d19a81c8e1bfea88c5c70f09c4c078318a9250d52fdd4419ff06811d127"
+        "sha256": "4bcaecd32661dbde5188bf36e5f83ad6b28a3371662b702f0718cf67c3351030"
       },
       {
         "path": "Repositories/SDK/r4os/allocator_wait.zig",
@@ -59622,7 +59779,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/facade_runtime.zig",
-        "sha256": "49d2e78b45cdcd569b4bd5ce450bc366b60bba7074e15cdb5166456a93e90163"
+        "sha256": "05d39d9a19a636781ed0d563aedd1cb80d6c48778dd420e652e6c06adbff673c"
       },
       {
         "path": "Repositories/SDK/r4os/file_picker.zig",
@@ -60482,7 +60639,7 @@
       },
       {
         "path": "Repositories/SDK/test_owners.zig",
-        "sha256": "66a87508c4f4edb48bf60b787e5663c1411d16b4826f0cf6a3aef7a677d15b5b"
+        "sha256": "b2308017fbe62c3c615a5e523ac0e22501bd3af1ac87d598033b12420809019b"
       },
       {
         "path": "Repositories/SDK/Rust/src/byte_pipe.rs",
@@ -60507,6 +60664,38 @@
       {
         "path": "Repositories/SDK/r4os/launch_io.zig",
         "sha256": "c4bda461850d850660ba0b8df57349dd4fc0b91aeac6d6114f22dfa689b9aa7b"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/text_composition.rs",
+        "sha256": "a4995c537c182c080ee76f252a011636ee08260763ac51fc708cd1d9ae3106c6"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/text_composition.h",
+        "sha256": "3af776448536977ad2b3b2dc95d8fde3d2d737d92fd9145a4071e87fdc506c71"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/text_composition_platform2.h",
+        "sha256": "90978316f285b88490e08c6a3a0f0e40deeeb336a6f4c6ed9221300cda9cb3f9"
+      },
+      {
+        "path": "Repositories/SDK/Tests/Conformance/TextCompositionABI.c",
+        "sha256": "f59b22a5cee247191dc691b15ad47aa84858ce90cc7a8c7f5a7e7536c1c02904"
+      },
+      {
+        "path": "Repositories/SDK/r4os/text_composition.zig",
+        "sha256": "67e2ca3605b7dd7bacccbbfb04c79887383eac8c936271ac8a8a441334ec216e"
+      },
+      {
+        "path": "Repositories/SDK/r4os/text_composition_abi_tests.zig",
+        "sha256": "e6f973eee4645d519edcfd8b43cbe4fec4a0374c7f4efaa2da74eb87b6854ccf"
+      },
+      {
+        "path": "Repositories/SDK/r4os/text_composition_runtime.zig",
+        "sha256": "082bd41e63e6bccb29b8d87aaa4c731c5171687b7e18c9060211dcd076a9b36a"
+      },
+      {
+        "path": "Repositories/SDK/r4os/text_composition_tests.zig",
+        "sha256": "8e2fba0c452e39a8eddf0dd1db1d2b407c30fcdb234385c0f5be7a233ad76c2c"
       }
     ],
     "coverage": [
@@ -60906,7 +61095,11 @@
           "Repositories/SDK/r4os/file_picker_api.zig",
           "Repositories/SDK/r4os/file_picker_runtime.zig",
           "Repositories/SDK/r4os/file_picker_tests.zig",
-          "Repositories/SDK/r4os/clipboard_offer.zig"
+          "Repositories/SDK/r4os/clipboard_offer.zig",
+          "Repositories/SDK/r4os/text_composition.zig",
+          "Repositories/SDK/r4os/text_composition_runtime.zig",
+          "Repositories/SDK/r4os/text_composition_tests.zig",
+          "Repositories/SDK/r4os/text_composition_abi_tests.zig"
         ],
         "c": [
           "Repositories/SDK/Shared/C/include/r4os/app_gui.h",
@@ -60916,7 +61109,9 @@
           "Repositories/SDK/Shared/C/include/r4os/text_metrics_platform2.h",
           "Repositories/SDK/Shared/C/include/r4os/file_picker.h",
           "Repositories/SDK/Shared/C/include/r4os/file_picker_platform2.h",
-          "Repositories/SDK/Shared/C/include/r4os/clipboard_offer_platform2.h"
+          "Repositories/SDK/Shared/C/include/r4os/clipboard_offer_platform2.h",
+          "Repositories/SDK/Shared/C/include/r4os/text_composition.h",
+          "Repositories/SDK/Shared/C/include/r4os/text_composition_platform2.h"
         ],
         "rust": [
           "Repositories/SDK/Rust/src/c_facades.rs",
@@ -60927,7 +61122,8 @@
           "Repositories/SDK/Rust/src/gui/style.rs",
           "Repositories/SDK/Rust/src/text_metrics.rs",
           "Repositories/SDK/Rust/src/file_picker.rs",
-          "Repositories/SDK/Rust/src/clipboard_offer.rs"
+          "Repositories/SDK/Rust/src/clipboard_offer.rs",
+          "Repositories/SDK/Rust/src/text_composition.rs"
         ],
         "proof": [
           "gui_current_56",
@@ -60946,7 +61142,8 @@
           "device_snapshot_09021",
           "text_metrics_09023",
           "file_picker_09024",
-          "clipboard_offers_09030"
+          "clipboard_offers_09030",
+          "text_composition_09036"
         ]
       },
       {

@@ -1,6 +1,6 @@
 .{
     .name = .r4os_sdk,
-    .version = "0.64.178",
+    .version = "0.64.179",
     .fingerprint = 0x8e8330db02f37336,
     .minimum_zig_version = "0.16.0",
     .dependencies = .{
@@ -12,8 +12,8 @@
         // Bootstrap projection of Profiles/Components.json. The host starters map the actual
         // checkout from Settings.R4S and provide it as a local Zig fork.
         .r4os_contract = .{
-            .url = "https://github.com/R4OSDev/r4os-contract/archive/753d7225f51f376114e752d2132407ae24035825.tar.gz",
-            .hash = "r4os_contract-0.64.90-ELhbYfTbTQE3qgCKc1O2ZHkEWpOhPRCYThdW6W9quctl",
+            .url = "https://github.com/R4OSDev/r4os-contract/archive/68680689e8a122415dd7224ed9dcd91d7f60c8e3.tar.gz",
+            .hash = "r4os_contract-0.64.91-ELhbYRmvTwE21o-oZc1bErQazQAfwmTkq8Gilkkk56pF",
         },
     },
     .paths = .{

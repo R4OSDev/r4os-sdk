@@ -912,6 +912,22 @@ pub type R4LaunchIoBinding = crate::abi::LaunchIoBinding;
 const _: () = { assert!(core::mem::size_of::<R4LaunchIoBinding>() == 32); assert!(core::mem::align_of::<R4LaunchIoBinding>() == 8); assert!(core::mem::offset_of!(R4LaunchIoBinding, r#kind) == 0); assert!(core::mem::offset_of!(R4LaunchIoBinding, r#reserved) == 4); assert!(core::mem::offset_of!(R4LaunchIoBinding, r#end) == 8); };
 pub type R4LaunchIo = crate::abi::LaunchIo;
 const _: () = { assert!(core::mem::size_of::<R4LaunchIo>() == 112); assert!(core::mem::align_of::<R4LaunchIo>() == 8); assert!(core::mem::offset_of!(R4LaunchIo, r#version) == 0); assert!(core::mem::offset_of!(R4LaunchIo, r#size) == 4); assert!(core::mem::offset_of!(R4LaunchIo, r#policy) == 8); assert!(core::mem::offset_of!(R4LaunchIo, r#console_host) == 12); assert!(core::mem::offset_of!(R4LaunchIo, r#stdin_binding) == 16); assert!(core::mem::offset_of!(R4LaunchIo, r#stdout_binding) == 48); assert!(core::mem::offset_of!(R4LaunchIo, r#stderr_binding) == 80); };
+pub type R4Utf8ByteRange = crate::abi::Utf8ByteRange;
+const _: () = { assert!(core::mem::size_of::<R4Utf8ByteRange>() == 16); assert!(core::mem::align_of::<R4Utf8ByteRange>() == 8); assert!(core::mem::offset_of!(R4Utf8ByteRange, r#start) == 0); assert!(core::mem::offset_of!(R4Utf8ByteRange, r#end) == 8); };
+pub type R4CompositionCaret = crate::abi::CompositionCaret;
+const _: () = { assert!(core::mem::size_of::<R4CompositionCaret>() == 24); assert!(core::mem::align_of::<R4CompositionCaret>() == 4); assert!(core::mem::offset_of!(R4CompositionCaret, r#x) == 0); assert!(core::mem::offset_of!(R4CompositionCaret, r#y) == 4); assert!(core::mem::offset_of!(R4CompositionCaret, r#width) == 8); assert!(core::mem::offset_of!(R4CompositionCaret, r#height) == 12); assert!(core::mem::offset_of!(R4CompositionCaret, r#scale_numerator) == 16); assert!(core::mem::offset_of!(R4CompositionCaret, r#scale_denominator) == 20); };
+pub type R4CompositionProvider = crate::abi::CompositionProvider;
+const _: () = { assert!(core::mem::size_of::<R4CompositionProvider>() == 40); assert!(core::mem::align_of::<R4CompositionProvider>() == 8); assert!(core::mem::offset_of!(R4CompositionProvider, r#version) == 0); assert!(core::mem::offset_of!(R4CompositionProvider, r#size) == 4); assert!(core::mem::offset_of!(R4CompositionProvider, r#process) == 8); assert!(core::mem::offset_of!(R4CompositionProvider, r#generation) == 24); assert!(core::mem::offset_of!(R4CompositionProvider, r#features) == 32); assert!(core::mem::offset_of!(R4CompositionProvider, r#max_text_bytes) == 36); };
+pub type R4CompositionFocus = crate::abi::CompositionFocus;
+const _: () = { assert!(core::mem::size_of::<R4CompositionFocus>() == 112); assert!(core::mem::align_of::<R4CompositionFocus>() == 8); assert!(core::mem::offset_of!(R4CompositionFocus, r#version) == 0); assert!(core::mem::offset_of!(R4CompositionFocus, r#size) == 4); assert!(core::mem::offset_of!(R4CompositionFocus, r#window) == 8); assert!(core::mem::offset_of!(R4CompositionFocus, r#view_generation) == 72); assert!(core::mem::offset_of!(R4CompositionFocus, r#focus_generation) == 80); assert!(core::mem::offset_of!(R4CompositionFocus, r#input_revision) == 88); assert!(core::mem::offset_of!(R4CompositionFocus, r#observed_tick) == 96); assert!(core::mem::offset_of!(R4CompositionFocus, r#focused) == 104); assert!(core::mem::offset_of!(R4CompositionFocus, r#reserved) == 108); };
+pub type R4CompositionId = crate::abi::CompositionId;
+const _: () = { assert!(core::mem::size_of::<R4CompositionId>() == 120); assert!(core::mem::align_of::<R4CompositionId>() == 8); assert!(core::mem::offset_of!(R4CompositionId, r#window) == 0); assert!(core::mem::offset_of!(R4CompositionId, r#view_generation) == 64); assert!(core::mem::offset_of!(R4CompositionId, r#focus_generation) == 72); assert!(core::mem::offset_of!(R4CompositionId, r#owner_generation) == 80); assert!(core::mem::offset_of!(R4CompositionId, r#session_generation) == 88); assert!(core::mem::offset_of!(R4CompositionId, r#provider) == 96); assert!(core::mem::offset_of!(R4CompositionId, r#provider_generation) == 112); };
+pub type R4CompositionEvent = crate::abi::CompositionEvent;
+const _: () = { assert!(core::mem::size_of::<R4CompositionEvent>() == 184); assert!(core::mem::align_of::<R4CompositionEvent>() == 8); assert!(core::mem::offset_of!(R4CompositionEvent, r#version) == 0); assert!(core::mem::offset_of!(R4CompositionEvent, r#size) == 4); assert!(core::mem::offset_of!(R4CompositionEvent, r#id) == 8); assert!(core::mem::offset_of!(R4CompositionEvent, r#sequence) == 128); assert!(core::mem::offset_of!(R4CompositionEvent, r#text_revision) == 136); assert!(core::mem::offset_of!(R4CompositionEvent, r#replacement) == 144); assert!(core::mem::offset_of!(R4CompositionEvent, r#selection) == 160); assert!(core::mem::offset_of!(R4CompositionEvent, r#kind) == 176); assert!(core::mem::offset_of!(R4CompositionEvent, r#text_bytes) == 180); };
+pub type R4CompositionFocusReply = crate::abi::CompositionFocusReply;
+const _: () = { assert!(core::mem::size_of::<R4CompositionFocusReply>() == 120); assert!(core::mem::align_of::<R4CompositionFocusReply>() == 8); assert!(core::mem::offset_of!(R4CompositionFocusReply, r#result) == 0); assert!(core::mem::offset_of!(R4CompositionFocusReply, r#reserved) == 4); assert!(core::mem::offset_of!(R4CompositionFocusReply, r#focus) == 8); };
+pub type R4CompositionCapabilityReply = crate::abi::CompositionCapabilityReply;
+const _: () = { assert!(core::mem::size_of::<R4CompositionCapabilityReply>() == 48); assert!(core::mem::align_of::<R4CompositionCapabilityReply>() == 8); assert!(core::mem::offset_of!(R4CompositionCapabilityReply, r#result) == 0); assert!(core::mem::offset_of!(R4CompositionCapabilityReply, r#reserved) == 4); assert!(core::mem::offset_of!(R4CompositionCapabilityReply, r#provider) == 8); };
 pub type R4XStartContext = crate::abi::R4XStartContext;
 const _: () = { assert!(core::mem::size_of::<R4XStartContext>() == 128); assert!(core::mem::align_of::<R4XStartContext>() == 8); assert!(core::mem::offset_of!(R4XStartContext, r#magic) == 0); assert!(core::mem::offset_of!(R4XStartContext, r#abi_major) == 4); assert!(core::mem::offset_of!(R4XStartContext, r#abi_minor) == 6); assert!(core::mem::offset_of!(R4XStartContext, r#size) == 8); assert!(core::mem::offset_of!(R4XStartContext, r#flags) == 12); assert!(core::mem::offset_of!(R4XStartContext, r#instance_id) == 16); assert!(core::mem::offset_of!(R4XStartContext, r#app_class) == 24); assert!(core::mem::offset_of!(R4XStartContext, r#reserved0) == 28); assert!(core::mem::offset_of!(R4XStartContext, r#program_path) == 32); assert!(core::mem::offset_of!(R4XStartContext, r#args) == 40); assert!(core::mem::offset_of!(R4XStartContext, r#args_len) == 48); assert!(core::mem::offset_of!(R4XStartContext, r#imports) == 56); assert!(core::mem::offset_of!(R4XStartContext, r#import_count) == 64); assert!(core::mem::offset_of!(R4XStartContext, r#reserved1) == 68); assert!(core::mem::offset_of!(R4XStartContext, r#reserved_memory0) == 72); assert!(core::mem::offset_of!(R4XStartContext, r#reserved_memory1) == 80); assert!(core::mem::offset_of!(R4XStartContext, r#exit) == 88); assert!(core::mem::offset_of!(R4XStartContext, r#should_close) == 96); assert!(core::mem::offset_of!(R4XStartContext, r#yield) == 104); assert!(core::mem::offset_of!(R4XStartContext, r#reserved_runtime) == 112); assert!(core::mem::offset_of!(R4XStartContext, r#reserved2) == 120); };
 pub type R4XStartImport = crate::abi::R4XStartImport;
@@ -6632,6 +6648,24 @@ pub struct R4SdkTextMetrics {
     pub r#reserved0: u32,
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkTextMetrics>() == 112); assert!(core::mem::align_of::<R4SdkTextMetrics>() == 8); assert!(core::mem::offset_of!(R4SdkTextMetrics, r#native_info) == 0); assert!(core::mem::offset_of!(R4SdkTextMetrics, r#source) == 40); assert!(core::mem::offset_of!(R4SdkTextMetrics, r#storage) == 56); assert!(core::mem::offset_of!(R4SdkTextMetrics, r#provider) == 72); assert!(core::mem::offset_of!(R4SdkTextMetrics, r#text_revision) == 80); assert!(core::mem::offset_of!(R4SdkTextMetrics, r#capacity) == 88); assert!(core::mem::offset_of!(R4SdkTextMetrics, r#count) == 92); assert!(core::mem::offset_of!(R4SdkTextMetrics, r#phase) == 96); assert!(core::mem::offset_of!(R4SdkTextMetrics, r#busy) == 100); assert!(core::mem::offset_of!(R4SdkTextMetrics, r#error_code) == 104); assert!(core::mem::offset_of!(R4SdkTextMetrics, r#reserved0) == 108); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkComposition {
+    pub r#stamp: u64,
+    pub r#id: R4CompositionId,
+    pub r#replacement: R4Utf8ByteRange,
+    pub r#selection: R4Utf8ByteRange,
+    pub r#caret: R4CompositionCaret,
+    pub r#provider: R4CompositionProvider,
+    pub r#revision: u64,
+    pub r#sequence: u64,
+    pub r#next_generation: u64,
+    pub r#owner_generation: u64,
+    pub r#phase: u32,
+    pub r#preedit_bytes: u32,
+    pub r#data: [u8; 1024],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkComposition>() == 1288); assert!(core::mem::align_of::<R4SdkComposition>() == 8); assert!(core::mem::offset_of!(R4SdkComposition, r#stamp) == 0); assert!(core::mem::offset_of!(R4SdkComposition, r#id) == 8); assert!(core::mem::offset_of!(R4SdkComposition, r#replacement) == 128); assert!(core::mem::offset_of!(R4SdkComposition, r#selection) == 144); assert!(core::mem::offset_of!(R4SdkComposition, r#caret) == 160); assert!(core::mem::offset_of!(R4SdkComposition, r#provider) == 184); assert!(core::mem::offset_of!(R4SdkComposition, r#revision) == 224); assert!(core::mem::offset_of!(R4SdkComposition, r#sequence) == 232); assert!(core::mem::offset_of!(R4SdkComposition, r#next_generation) == 240); assert!(core::mem::offset_of!(R4SdkComposition, r#owner_generation) == 248); assert!(core::mem::offset_of!(R4SdkComposition, r#phase) == 256); assert!(core::mem::offset_of!(R4SdkComposition, r#preedit_bytes) == 260); assert!(core::mem::offset_of!(R4SdkComposition, r#data) == 264); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkFilePickerProvider {
@@ -25932,6 +25966,15 @@ unsafe extern "C" {
     pub fn R4SdkTextMetricsGetView(p0: *const R4SdkTextMetrics, p1: *mut R4SdkWireSpan) -> i32;
     pub fn R4SdkTextMetricsHit(p0: *const R4SdkTextMetrics, p1: R4SdkTextMetricsKey, p2: i32, p3: *mut u32) -> i32;
     pub fn R4SdkTextMetricsReset(p0: *mut R4SdkTextMetrics) -> i32;
+    pub fn R4SdkCompositionInit(p0: u64, p1: *mut R4SdkComposition) -> i32;
+    pub fn R4SdkCompositionBegin(p0: *mut R4SdkComposition, p1: *const R4CompositionFocus, p2: *const R4CompositionProvider, p3: u64, p4: *const R4SdkWireSpan, p5: *const R4Utf8ByteRange, p6: *const R4CompositionCaret, p7: *mut R4CompositionId) -> i32;
+    pub fn R4SdkCompositionRefresh(p0: *mut R4SdkComposition, p1: *const R4CompositionFocus, p2: *const R4CompositionProvider, p3: u64) -> i32;
+    pub fn R4SdkCompositionApply(p0: *mut R4SdkComposition, p1: *const R4CompositionFocus, p2: *const R4CompositionProvider, p3: *const R4CompositionEvent, p4: *const R4SdkWireSpan, p5: *const R4SdkWireSpan, p6: *mut u64, p7: *mut u64) -> i32;
+    pub fn R4SdkCompositionCancel(p0: *mut R4SdkComposition, p1: *const R4CompositionId) -> i32;
+    pub fn R4SdkCompositionPreedit(p0: *const R4SdkComposition, p1: *mut R4SdkWireSpan) -> i32;
+    pub fn R4SdkCompositionCaret(p0: *mut R4SdkComposition, p1: *const R4CompositionFocus, p2: *const R4CompositionProvider, p3: u64, p4: *mut R4CompositionCaret) -> i32;
+    pub fn R4SdkCompositionSetCaret(p0: *mut R4SdkComposition, p1: *const R4CompositionFocus, p2: *const R4CompositionProvider, p3: u64, p4: *const R4CompositionCaret) -> i32;
+    pub fn R4SdkCompositionSurrounding(p0: *mut R4SdkComposition, p1: *const R4CompositionFocus, p2: *const R4CompositionProvider, p3: u64, p4: *const R4SdkWireSpan, p5: *const R4Utf8ByteRange, p6: *const R4SdkWireSpan, p7: *mut u64) -> i32;
     pub fn R4SdkFilePickerInit(p0: R4SdkWireSpan, p1: R4SdkWireSpan, p2: u32, p3: u32, p4: R4SdkWireSpan, p5: R4SdkFilePickerProvider, p6: *mut R4SdkFilePicker) -> i32;
     pub fn R4SdkFilePickerBegin(p0: *mut R4SdkFilePicker, p1: R4SdkWireSpan, p2: u32) -> i32;
     pub fn R4SdkFilePickerStep(p0: *mut R4SdkFilePicker, p1: u32) -> i32;

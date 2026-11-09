@@ -354,8 +354,18 @@ pub fn build(b: *std.Build) void {
     data_cases.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
     data_cases.addImport("r4os_contract2", contract_dependency.module("r4os_contract2"));
     data_cases.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = data_target, .optimize = sdk_profiles.defaults.host_optimize }));
-    const data_tests = b.addRunArtifact(b.addTest(.{ .root_module = data_cases, .filters = &.{ "protocol status", "ZIP protocol status", "parse Windows ICO", "parse 8bpp", "bulk ICO", "raster ", "Encoding labels", "TextEncoder", "TextDecoder", "URL", "SHA-256 digest", "release and installed", "semantic versions", "R4M0 metadata", "metadata reads", "V2 derives profile", "contract plan is deterministic", "wire owner", "cli owner", "stream owner", "inventory owner", "device snapshot owner", "metadata2 owner", "text metrics owner", "file picker owner", "audio write owner", "published frame owner" } }));
-    b.step("data-parity-test", "Existing bounded data, codec, raster, metadata and protocol facade owner cases").dependOn(&data_tests.step);
+    const data_tests = b.addRunArtifact(b.addTest(.{ .root_module = data_cases, .filters = &.{ "protocol status", "ZIP protocol status", "parse Windows ICO", "parse 8bpp", "bulk ICO", "raster ", "Encoding labels", "TextEncoder", "TextDecoder", "URL", "SHA-256 digest", "release and installed", "semantic versions", "R4M0 metadata", "metadata reads", "V2 derives profile", "contract plan is deterministic", "wire owner", "cli owner", "stream owner", "inventory owner", "device snapshot owner", "metadata2 owner", "text metrics owner", "composition owner", "file picker owner", "audio write owner", "published frame owner" } }));
+    const data_step = b.step("data-parity-test", "Existing bounded data, codec, raster, metadata and protocol facade owner cases");
+    data_step.dependOn(&data_tests.step);
+    // This boundary had a real C/Zig aggregate-call mismatch despite matching
+    // record layouts. Keep one small actual ABI call in the existing step.
+    const composition_abi = b.createModule(.{ .root_source_file = b.path("r4os/text_composition_abi_tests.zig"), .target = data_target, .optimize = sdk_profiles.defaults.host_optimize, .link_libc = true });
+    composition_abi.addImport("r4os_contract", contract_dependency.module("r4os_contract"));
+    composition_abi.addImport("r4std_grapheme", b.createModule(.{ .root_source_file = sdk_profile.profile.grapheme_source.?, .target = data_target, .optimize = sdk_profiles.defaults.host_optimize }));
+    composition_abi.addIncludePath(sdk_profile.profile.c_include_root);
+    composition_abi.addIncludePath(sdk_profile.profile.contract_c_include_root);
+    composition_abi.addCSourceFile(.{ .file = b.path("Tests/Conformance/TextCompositionABI.c"), .flags = &.{ "-std=c11", "-Wall", "-Wextra", "-Werror" } });
+    data_step.dependOn(&b.addRunArtifact(b.addExecutable(.{ .name = "sdk-text-composition-abi", .root_module = composition_abi })).step);
     const web_cases = data_cases;
     const web_tests = b.addRunArtifact(b.addTest(.{ .root_module = web_cases, .filters = &.{
         "HTML parser builds DOM",                  "loaded document MIME",              "CSS parser handles selectors cascade",
