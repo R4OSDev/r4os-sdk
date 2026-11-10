@@ -13,6 +13,15 @@ pub const Backend = struct {
     audio: *const @import("r4audio.zig").Context,
     pub fn io(self: *Backend, input: *const abi.AudioCaptureRequest, out: *abi.AudioCaptureReply, bytes: []u8) i32 {
         if (bytes.len > abi.audio_capture_max_read_bytes) return abi.audio_capture_error_capacity;
+        if (self.audio.base.generation2) |context| {
+            var address: u64 = 0;
+            if (context.lookup(5, @offsetOf(platform.abi.R4XStartR4Audio2, "audio_capture_io"), &address) != 0) {
+                out.* = .{ .result = abi.audio_capture_error_unsupported };
+                return 0;
+            }
+            const invoke: abi.R4AudioFns.audio_capture_io = @ptrFromInt(address);
+            return invoke(input, out, bytes.ptr, @intCast(bytes.len));
+        }
         if (!self.audio.hasFn("audio_capture_io")) {
             out.* = .{ .result = abi.audio_capture_error_unsupported };
             return 0;
@@ -24,6 +33,61 @@ pub const Backend = struct {
         return invoke(input, out, bytes.ptr, @intCast(bytes.len));
     }
 };
+
+test "capture backend selects actual2 callbacks without a legacy bundle and preserves missing-prefix and legacy results" {
+    const t = std.testing;
+    const Audio = @import("r4audio.zig");
+    const program = @import("program.zig");
+    const P = struct {
+        var calls: u32 = 0;
+        fn invoke(request: *const abi.AudioCaptureRequest, out: *Reply, bytes: [*]u8, capacity: u32) callconv(.c) i32 {
+            if (request.op != abi.audio_capture_op_read or capacity != 4) return -99;
+            calls += 1;
+            bytes[0] = 0x52;
+            out.* = .{};
+            return 17;
+        }
+    };
+    var raw2: platform.abi.R4XStartContext2 = .{};
+    var table2: platform.abi.R4XStartR4Audio2 = .{};
+    table2.audio_capture_io = @intFromPtr(&P.invoke);
+    var actual = platform.Context{ .raw = &raw2, .tables = .{ 0, 0, 0, 0, @intFromPtr(&table2), 0 } };
+    const audio2 = Audio.Context.fromProgram(.{ .generation2 = &actual });
+    try t.expect(audio2.base.bundle == null);
+    var backend = Backend{ .audio = &audio2 };
+    const request: abi.AudioCaptureRequest = .{ .op = abi.audio_capture_op_read, .buffer_bytes = 4 };
+    var reply: Reply = .{};
+    var bytes: [4]u8 = @splat(0xA5);
+    P.calls = 0;
+    try t.expectEqual(@as(i32, 17), backend.io(&request, &reply, &bytes));
+    try t.expectEqualSlices(u8, &.{ 0x52, 0xA5, 0xA5, 0xA5 }, &bytes);
+    table2.size = @offsetOf(platform.abi.R4XStartR4Audio2, "audio_capture_io");
+    try t.expectEqual(@as(i32, 0), backend.io(&request, &reply, &bytes));
+    try t.expectEqual(abi.audio_capture_error_unsupported, reply.result);
+    try t.expectEqual(@as(u32, 1), P.calls);
+    table2.size = @sizeOf(platform.abi.R4XStartR4Audio2);
+    table2.audio_capture_io = 0;
+    try t.expectEqual(@as(i32, 0), backend.io(&request, &reply, &bytes));
+    try t.expectEqual(abi.audio_capture_error_unsupported, reply.result);
+    var raw1: abi.R4XStartContext = .{};
+    var table1: abi.R4XStartR4Audio = .{};
+    table1.audio_capture_io = @intFromPtr(&P.invoke);
+    const bundle = program.Bundle{ .raw = &raw1, .audio = &table1 };
+    const audio1 = Audio.Context.init(&bundle);
+    backend.audio = &audio1;
+    try t.expectEqual(@as(i32, 17), backend.io(&request, &reply, &bytes));
+    try t.expectEqual(@as(u32, 2), P.calls);
+    const both = Audio.Context.fromProgram(.{ .bundle = &bundle, .generation2 = &actual });
+    backend.audio = &both;
+    actual.tables[4] = 0;
+    try t.expectEqual(@as(i32, 0), backend.io(&request, &reply, &bytes));
+    try t.expectEqual(abi.audio_capture_error_unsupported, reply.result);
+    try t.expectEqual(@as(u32, 2), P.calls);
+    var oversized: [abi.audio_capture_max_read_bytes + 1]u8 = @splat(0xA5);
+    const before = reply;
+    try t.expectEqual(abi.audio_capture_error_capacity, backend.io(&request, &reply, &oversized));
+    try t.expect(std.meta.eql(before, reply));
+}
 pub const Client = struct {
     call: abi.R4SysFns.service_call,
     close_call: abi.R4SysFns.service_close,

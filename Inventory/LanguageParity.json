@@ -1012,7 +1012,7 @@
         "pcm_source",
         "audio_capture"
       ],
-      "semantics": "Genaue Stream-/Device-/Generation, S16LE/Format, Druck/Teilschreiben, Completion und Close; stiller physischer Ring ist kein Audiostopp. SDK168: explicit single total deadline, bounded actual AUDSVC RPC admission, frame-aligned exact prefix and conservative uncertain-effect terminal state over the original transfer/time owners. Borrow the real old stream; existing relative per-RPC behavior/layout remains. Pure rational accepted-source estimate with explicit clock/pause/reset, no hardware/DMA/audible retirement claim. Qualification: audio_total_source_09025. SDK180/C92: additional copied optional AUDSVC capture transport with exact service/source/client/stream generations, final caller buffer capacity, whole S16LE frames and explicit Poll/Finite/Forever/Cancel over the original clock budget. Logical Open activates only on Read. Unknown outcome never implies replay, Stop, Close or Drop. Queues and physical Stop/Close ACKs remain with the original service and R4D owners. Shipped HDA/AC97 have no qualified ADC; CONTROLLED input and real hardware are separate. SDK184: Normal actual App2/Context2 ServiceLoop, network and owned requests, audio and devices, ArgCursor/diagnostics, StreamTransfer, family clients, WaitSets, BytePipe/LaunchIO and optional Capture. One shared total RPC budget across audio writes and Clipboard chunks; source identity and canonical absolute tick epoch retained. SDK193: typed actual2 backend/status admission, original stop/close/source-frame receipts; SDK Pacer remains source-only.",
+      "semantics": "Genaue Stream-/Device-/Generation, S16LE/Format, Druck/Teilschreiben, Completion und Close; stiller physischer Ring ist kein Audiostopp. SDK168: explicit single total deadline, bounded actual AUDSVC RPC admission, frame-aligned exact prefix and conservative uncertain-effect terminal state over the original transfer/time owners. Borrow the real old stream; existing relative per-RPC behavior/layout remains. Pure rational accepted-source estimate with explicit clock/pause/reset, no hardware/DMA/audible retirement claim. Qualification: audio_total_source_09025. SDK180/C92: additional copied optional AUDSVC capture transport with exact service/source/client/stream generations, final caller buffer capacity, whole S16LE frames and explicit Poll/Finite/Forever/Cancel over the original clock budget. Logical Open activates only on Read. Unknown outcome never implies replay, Stop, Close or Drop. Queues and physical Stop/Close ACKs remain with the original service and R4D owners. Shipped HDA/AC97 have no qualified ADC; CONTROLLED input and real hardware are separate. SDK184: Normal actual App2/Context2 ServiceLoop, network and owned requests, audio and devices, ArgCursor/diagnostics, StreamTransfer, family clients, WaitSets, BytePipe/LaunchIO and optional Capture. One shared total RPC budget across audio writes and Clipboard chunks; source identity and canonical absolute tick epoch retained. SDK193: typed actual2 backend/status admission, original stop/close/source-frame receipts; SDK Pacer remains source-only. Final SDK193 candidate fixes capture backend actual2 lookup after exact native crash mapping; no legacy-bundle dereference for App2, independent1 path retained.",
       "current_only": "current_function",
       "rust": {
         "state": "paritaet_abgenommen",
@@ -58927,7 +58927,16 @@
       "libraries": "0.64.56",
       "report": "Docs/API/ConsumerMigration.txt",
       "scope": "SDK193 adds checked actual DriverApi2 typed AudioBackend2/Synth/output-epoch/work bindings and independent graphics-output record query. Existing Driver2 record tests cover seven independent factories. The lifecycle streaming pager and complete-view Reader share precisely the same validated cursor/page/row/order/total checks. A validated more-page establishes positive observed membership; only complete grants absence. WouldBlock rolls back, restart is explicit, busy admission and failed rebegin retain no old authority. No global staging, implicit diagnostics or hardware ownership. Existing complete Reader extern fields and all old C/Rust helper bodies/layouts remain unchanged; both existing foreign whole-view helpers still enter this common core. The new streaming convenience is explicitly Zig-only and grants no new C/Rust ABI or platform slot.",
-      "limits": "110 original platform2/manifest cases passed before the expected stale-review guard.9core inventory cases include actual cursor mutation on WouldBlock and explicit restart,20original AudioService ownership/capture/close cases keep the same assertions; only modeled table2 attachments and canonical successful fixture ordering/totals were adapted.90HDA/29AC97 actual owner cases include frozen-clock polls and retained Work until real completion. Windows compilation, native playback/NoADC/controlled capture, fresh normal source tools and final single STANDARD have separate final receipts. No physical ADC/NIC, hardware latency or Windows execution claim."
+      "limits": "110 original platform2/manifest cases passed before the expected stale-review guard.9core inventory cases include actual cursor mutation on WouldBlock and explicit restart,20original AudioService ownership/capture/close cases keep the same assertions; only modeled table2 attachments and canonical successful fixture ordering/totals were adapted.90HDA/29AC97 actual owner cases include frozen-clock polls and retained Work until real completion. Windows compilation, native playback/NoADC/controlled capture, fresh normal source tools and final single STANDARD have separate final receipts. No physical ADC/NIC, hardware latency or Windows execution claim. First native SDK193 candidate panicked in the previously legacy-only capture backend; host results remain scoped originals. Superseded for final capture acceptance by audio_capture_backend_actual_generation_09052_candidate_fix."
+    },
+    "audio_capture_backend_actual_generation_09052_candidate_fix": {
+      "complete": true,
+      "performed_in": "0.90.52",
+      "sdk": "0.64.193",
+      "libraries": "0.64.56",
+      "report": "Docs/API/ConsumerMigration.txt",
+      "scope": "Pre-release SDK193 native capture regression fixed: actual2 hasFn was followed by a null legacy bundle.audio read. Exact failed R4M0 text equals the ELF; offset7c19 is the null0x28 load in Backend.io. The adapter selects declared generation before table access, resolves the real Query2 AUDIO capture callback by checked lookup and never falls back on missing2. Legacy1 remains independently guarded. Shared callback/record layouts and all C/Rust helper bodies remain unchanged. No new slot or owning resource.",
+      "limits": "New actual adapter case passes native host: real2 context without legacy bundle, exact callback/status/buffer, absent/short slot, independent old1, forbidden fallback and oversize output untouched. Candidate193 was not published; final normal rebuild and native acceptance remain separate. No clean shutdown claimed for the panicked guest."
     }
   },
   "wave_bindings": [
@@ -59184,8 +59193,8 @@
     "sdk": "0.64.193",
     "contract": "0.64.93",
     "libraries": "0.64.56",
-    "evidence": "typed_audio_and_shared_lifecycle_pages_generation2_09052",
-    "scope": "SDK193 adds checked actual DriverApi2 typed AudioBackend2/Synth/output-epoch/work bindings and independent graphics-output record query. Existing Driver2 record tests cover seven independent factories. The lifecycle streaming pager and complete-view Reader share precisely the same validated cursor/page/row/order/total checks. A validated more-page establishes positive observed membership; only complete grants absence. WouldBlock rolls back, restart is explicit, busy admission and failed rebegin retain no old authority. No global staging, implicit diagnostics or hardware ownership. Existing complete Reader extern fields and all old C/Rust helper bodies/layouts remain unchanged; both existing foreign whole-view helpers still enter this common core. The new streaming convenience is explicitly Zig-only and grants no new C/Rust ABI or platform slot.",
+    "evidence": "audio_capture_backend_actual_generation_09052_candidate_fix",
+    "scope": "Pre-release SDK193 native capture regression fixed: actual2 hasFn was followed by a null legacy bundle.audio read. Exact failed R4M0 text equals the ELF; offset7c19 is the null0x28 load in Backend.io. The adapter selects declared generation before table access, resolves the real Query2 AUDIO capture callback by checked lookup and never falls back on missing2. Legacy1 remains independently guarded. Shared callback/record layouts and all C/Rust helper bodies remain unchanged. No new slot or owning resource.",
     "historical_snapshot_retained": true,
     "current_platform_tables": [
       {
@@ -61724,7 +61733,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/audio_capture.zig",
-        "sha256": "7a4c576f415e83dd58e4c5677e505fd8c5836603e0c3089032d185f6e718df89"
+        "sha256": "7e838233e5ee710d3d45b65537c3eef977c7610dc645ea65cce5f41d6b32ed18"
       },
       {
         "path": "Repositories/SDK/r4os/audio_pcm.zig",
@@ -63427,7 +63436,8 @@
           "audio_total_source_09025",
           "optional_capture_09037",
           "normal_service_stream_facades_09043",
-          "typed_audio_and_shared_lifecycle_pages_generation2_09052"
+          "typed_audio_and_shared_lifecycle_pages_generation2_09052",
+          "audio_capture_backend_actual_generation_09052_candidate_fix"
         ]
       },
       {
@@ -64805,6 +64815,61 @@
       "libraries": "0.64.56",
       "evidence": "network_entropy_serial_driver_generation2_host_09051",
       "scope": "SDK192 adds actual DriverApi2 typed network/PCI/option calls and serial/MMIO record factories. The common pure record query retains each independent record revision1, original success value, minimum size and owner; existing four factories share it without changing old foreign layouts. Actual five Zig consumers use real Init2, exact field admission and the existing bounded poll value in retry/IRQ/entropy callers. No legacy outer table or canonical platform slot is introduced. Foreign C/Rust driver helper bodies remain exactly the already qualified state; new specialized Zig convenience does not claim a foreign generation2 driver execution.",
+      "historical_snapshot_retained": true,
+      "current_platform_tables": [
+        {
+          "group": "R4SYS",
+          "abi_version": 41,
+          "bytes": 1560,
+          "slots": 193
+        },
+        {
+          "group": "R4DESK",
+          "abi_version": 21,
+          "bytes": 632,
+          "slots": 77
+        },
+        {
+          "group": "R4DRAW",
+          "abi_version": 40,
+          "bytes": 920,
+          "slots": 113
+        },
+        {
+          "group": "R4NET",
+          "abi_version": 2,
+          "bytes": 296,
+          "slots": 35
+        },
+        {
+          "group": "R4AUDIO",
+          "abi_version": 5,
+          "bytes": 240,
+          "slots": 28
+        },
+        {
+          "group": "R4DEV",
+          "abi_version": 37,
+          "bytes": 744,
+          "slots": 91
+        }
+      ],
+      "current_projection": {
+        "extern_structs": 575,
+        "fields": 8916,
+        "integer_enums": 20,
+        "callback_declarations": 806,
+        "constants": 3777
+      },
+      "canonical_schema_sha256": "5d7d1f631a75b4f3b7b4a6206a0a353258932c594b777cd0ca594177e3485f4c"
+    },
+    {
+      "performed_in": "0.90.52",
+      "sdk": "0.64.193",
+      "contract": "0.64.93",
+      "libraries": "0.64.56",
+      "evidence": "typed_audio_and_shared_lifecycle_pages_generation2_09052",
+      "scope": "SDK193 adds checked actual DriverApi2 typed AudioBackend2/Synth/output-epoch/work bindings and independent graphics-output record query. Existing Driver2 record tests cover seven independent factories. The lifecycle streaming pager and complete-view Reader share precisely the same validated cursor/page/row/order/total checks. A validated more-page establishes positive observed membership; only complete grants absence. WouldBlock rolls back, restart is explicit, busy admission and failed rebegin retain no old authority. No global staging, implicit diagnostics or hardware ownership. Existing complete Reader extern fields and all old C/Rust helper bodies/layouts remain unchanged; both existing foreign whole-view helpers still enter this common core. The new streaming convenience is explicitly Zig-only and grants no new C/Rust ABI or platform slot.",
       "historical_snapshot_retained": true,
       "current_platform_tables": [
         {
