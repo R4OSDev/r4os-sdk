@@ -1193,6 +1193,36 @@ pub fn r4xManifestMetadata(allocator: std.mem.Allocator, manifest: Manifest) ![]
     return metadata.toOwnedSlice(allocator);
 }
 
+/// The SDK admission profile differs from the historical native build-profile
+/// display name. Defaults are generated only from Profiles/Build.json.
+pub fn sdkBuildProfile(manifest: Manifest) ![]const u8 {
+    if (manifest.sdk_profile) |profile| return profile;
+    const language = manifest.language orelse return error.MissingLanguage;
+    const entry = if (manifest.entry_mode) |mode| mode.text() else "";
+    for (@import("generated/profile_policy.zig").module_defaults) |selection| {
+        if (std.mem.eql(u8, selection.language, language.text()) and
+            std.mem.eql(u8, selection.kind, manifest.kind.text()) and
+            (selection.entry.len == 0 or std.mem.eql(u8, selection.entry, entry))) return selection.profile;
+    }
+    return error.UnknownSdkProfile;
+}
+
+/// Canonical role exports for tooling and container generation. Runtime R4Ls
+/// preserve their own explicitly declared interface revisions.
+pub fn moduleExports(allocator: std.mem.Allocator, manifest: Manifest) ![]const []const u8 {
+    const next = manifest.platform_generation == 2;
+    return switch (manifest.kind) {
+        .r4x => if (next) &.{"R4XStart2:@R4XStart2:2"} else &.{"R4XStart:@R4XStart:1"},
+        .r4d => if (next) &.{ "DriverInit2:@DriverInit2:2", "DriverShutdown:@DriverShutdown:1" } else &.{ "DriverInit:@r4d_init_entry:1", "DriverShutdown:@r4d_shutdown_entry:1" },
+        .r4p => if (next) &.{ "ProtocolInit2:@ProtocolInit2:2", "ProtocolShutdown:@ProtocolShutdown:1", "ProtocolQuery:@ProtocolQuery:1", "ProtocolDispatch:@ProtocolDispatch:1", "ProtocolRole:@ProtocolInit2:1" } else &.{ "ProtocolInit:@r4p_init_entry:1", "ProtocolShutdown:@r4p_shutdown_entry:1", "ProtocolQuery:@r4p_query_entry:1", "ProtocolDispatch:@r4p_dispatch_entry:1", "ProtocolRole:@r4p_init_entry:1" },
+        .r4l => block: {
+            var exports: std.ArrayList([]const u8) = .empty;
+            for (manifest.exports) |value| try exports.append(allocator, try std.fmt.allocPrint(allocator, "{s}:@{s}:{d}", .{ value.name, value.symbol, value.revision }));
+            break :block try exports.toOwnedSlice(allocator);
+        },
+    };
+}
+
 pub fn derivePlan(allocator: std.mem.Allocator, manifest: Manifest) !Plan {
     if (manifest.version != manifest_version or manifest.kind != .r4x) return error.CurrentManifestRequired;
     const language = manifest.language orelse return error.MissingLanguage;

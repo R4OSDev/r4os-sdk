@@ -3717,7 +3717,7 @@ static inline R4SdkUpdateSlot R4SdkUpdatePartitionSource_create(R4SdkUpdateParti
  a[2].flags=R4SDKUPDATE_DEFAULT;
  return R4SdkUpdateConstruct(R4SdkUpdate_ABI_FINGERPRINT,32u,a,3u,output);
 }
-static inline R4SdkUpdateSlot R4SdkUpdatePartitionSource_from_fields(R4SdkUpdatePartitionSource *output, const R4SdkUpdateNativeValue33 * p0, uint64_t p1, const R4SdkDataNative_Value156 * p2) {
+static inline R4SdkUpdateSlot R4SdkUpdatePartitionSource_from_fields(R4SdkUpdatePartitionSource *output, const R4SdkUpdateNativeValue33 * p0, uint64_t p1, const R4SdkDataNative_Value158 * p2) {
  R4SdkUpdateSlot a[3]={0};
  a[0] = (R4SdkUpdateSlot){.ptr=(void *)p0,.flags=R4SDKUPDATE_PRESENT};
  a[1] = (R4SdkUpdateSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKUPDATE_PRESENT};
@@ -3732,8 +3732,8 @@ static inline R4SdkUpdateSlot R4SdkUpdatePartitionSource_get_count(const R4SdkUp
 static inline R4SdkUpdateSlot R4SdkUpdatePartitionSource_set_count(R4SdkUpdatePartitionSource *self, uint64_t p0) { R4SdkUpdateSlot a[1]={0};
  a[0] = (R4SdkUpdateSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKUPDATE_PRESENT};
  return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,32u,1u,self,a,0); }
-static inline R4SdkUpdateSlot R4SdkUpdatePartitionSource_get_digest(const R4SdkUpdatePartitionSource *self, R4SdkDataNative_Value156 *output) { return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,32u,2u,(void *)self,0,output); }
-static inline R4SdkUpdateSlot R4SdkUpdatePartitionSource_set_digest(R4SdkUpdatePartitionSource *self, const R4SdkDataNative_Value156 * p0) { R4SdkUpdateSlot a[1]={0};
+static inline R4SdkUpdateSlot R4SdkUpdatePartitionSource_get_digest(const R4SdkUpdatePartitionSource *self, R4SdkDataNative_Value158 *output) { return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,32u,2u,(void *)self,0,output); }
+static inline R4SdkUpdateSlot R4SdkUpdatePartitionSource_set_digest(R4SdkUpdatePartitionSource *self, const R4SdkDataNative_Value158 * p0) { R4SdkUpdateSlot a[1]={0};
  a[0] = (R4SdkUpdateSlot){.ptr=(void *)p0,.flags=R4SDKUPDATE_PRESENT};
  return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,32u,2u,self,a,0); }
 static inline R4SdkUpdateSlot R4SdkUpdatePartitionSource_inspectNative(const R4SdkUpdatePartitionSource *self) { return R4SdkUpdateInspect(R4SdkUpdate_ABI_FINGERPRINT,32u,(void *)self,0); }
@@ -4041,7 +4041,7 @@ static inline R4SdkUpdateSlot R4SdkUpdateNativeValue60_create(R4SdkUpdateNativeV
  return R4SdkUpdateConstruct(R4SdkUpdate_ABI_FINGERPRINT,60u,a,1u,output); }
 static inline R4SdkUpdateSlot R4SdkUpdateNativeValue60_inspectNative(const R4SdkUpdateNativeValue60 *self) { return R4SdkUpdateInspect(R4SdkUpdate_ABI_FINGERPRINT,60u,(void *)self,0); }
 static inline R4SdkUpdateSlot R4SdkUpdateNativeValue61_inspectNative(const R4SdkUpdateNativeValue61 *self, R4SdkUpdateStoragefat32_update_Prepared *output) { return R4SdkUpdateInspect(R4SdkUpdate_ABI_FINGERPRINT,61u,(void *)self,output); }
-static inline R4SdkUpdateSlot R4SdkUpdateStoragefat32_update_Prepared_create(R4SdkUpdateStoragefat32_update_Prepared *output, const R4SdkDataAllocator * p0, uint8_t * p1, uintptr_t n1, R4SdkUpdateStoragefat32_update_Write * p2, uintptr_t n2, const R4SdkDataNative_Value156 * p3, uint64_t p5) {
+static inline R4SdkUpdateSlot R4SdkUpdateStoragefat32_update_Prepared_create(R4SdkUpdateStoragefat32_update_Prepared *output, const R4SdkDataAllocator * p0, uint8_t * p1, uintptr_t n1, R4SdkUpdateStoragefat32_update_Write * p2, uintptr_t n2, const R4SdkDataNative_Value158 * p3, uint64_t p5) {
  R4SdkUpdateSlot a[8]={0};
  a[0] = (R4SdkUpdateSlot){.ptr=(void *)p0,.flags=R4SDKUPDATE_PRESENT};
  a[1] = (R4SdkUpdateSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDKUPDATE_PRESENT};
@@ -4053,7 +4053,7 @@ static inline R4SdkUpdateSlot R4SdkUpdateStoragefat32_update_Prepared_create(R4S
  a[7].flags=R4SDKUPDATE_DEFAULT;
  return R4SdkUpdateConstruct(R4SdkUpdate_ABI_FINGERPRINT,62u,a,8u,output);
 }
-static inline R4SdkUpdateSlot R4SdkUpdateStoragefat32_update_Prepared_from_fields(R4SdkUpdateStoragefat32_update_Prepared *output, const R4SdkDataAllocator * p0, uint8_t * p1, uintptr_t n1, R4SdkUpdateStoragefat32_update_Write * p2, uintptr_t n2, const R4SdkDataNative_Value156 * p3, R4SdkUpdateStoragefat32_update_SourceRange * p4, uintptr_t n4, uint64_t p5, uint64_t p6, uint8_t p7) {
+static inline R4SdkUpdateSlot R4SdkUpdateStoragefat32_update_Prepared_from_fields(R4SdkUpdateStoragefat32_update_Prepared *output, const R4SdkDataAllocator * p0, uint8_t * p1, uintptr_t n1, R4SdkUpdateStoragefat32_update_Write * p2, uintptr_t n2, const R4SdkDataNative_Value158 * p3, R4SdkUpdateStoragefat32_update_SourceRange * p4, uintptr_t n4, uint64_t p5, uint64_t p6, uint8_t p7) {
  R4SdkUpdateSlot a[8]={0};
  a[0] = (R4SdkUpdateSlot){.ptr=(void *)p0,.flags=R4SDKUPDATE_PRESENT};
  a[1] = (R4SdkUpdateSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDKUPDATE_PRESENT};
@@ -4077,8 +4077,8 @@ static inline R4SdkUpdateSlot R4SdkUpdateStoragefat32_update_Prepared_get_writes
 static inline R4SdkUpdateSlot R4SdkUpdateStoragefat32_update_Prepared_set_writes(R4SdkUpdateStoragefat32_update_Prepared *self, R4SdkUpdateStoragefat32_update_Write * p0, uintptr_t n0) { R4SdkUpdateSlot a[1]={0};
  a[0] = (R4SdkUpdateSlot){.ptr=(void *)p0,.length=n0,.flags=R4SDKUPDATE_PRESENT};
  return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,62u,2u,self,a,0); }
-static inline R4SdkUpdateSlot R4SdkUpdateStoragefat32_update_Prepared_get_source_sha256(const R4SdkUpdateStoragefat32_update_Prepared *self, R4SdkDataNative_Value156 *output) { return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,62u,3u,(void *)self,0,output); }
-static inline R4SdkUpdateSlot R4SdkUpdateStoragefat32_update_Prepared_set_source_sha256(R4SdkUpdateStoragefat32_update_Prepared *self, const R4SdkDataNative_Value156 * p0) { R4SdkUpdateSlot a[1]={0};
+static inline R4SdkUpdateSlot R4SdkUpdateStoragefat32_update_Prepared_get_source_sha256(const R4SdkUpdateStoragefat32_update_Prepared *self, R4SdkDataNative_Value158 *output) { return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,62u,3u,(void *)self,0,output); }
+static inline R4SdkUpdateSlot R4SdkUpdateStoragefat32_update_Prepared_set_source_sha256(R4SdkUpdateStoragefat32_update_Prepared *self, const R4SdkDataNative_Value158 * p0) { R4SdkUpdateSlot a[1]={0};
  a[0] = (R4SdkUpdateSlot){.ptr=(void *)p0,.flags=R4SDKUPDATE_PRESENT};
  return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,62u,3u,self,a,0); }
 static inline R4SdkUpdateSlot R4SdkUpdateStoragefat32_update_Prepared_get_source_ranges(const R4SdkUpdateStoragefat32_update_Prepared *self) { return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,62u,4u,(void *)self,0,0); }
@@ -5138,7 +5138,7 @@ static inline R4SdkUpdateSlot R4SdkUpdateStoragentfs_resize_Plan_create(R4SdkUpd
  a[24].flags=R4SDKUPDATE_DEFAULT;
  return R4SdkUpdateConstruct(R4SdkUpdate_ABI_FINGERPRINT,101u,a,25u,output);
 }
-static inline R4SdkUpdateSlot R4SdkUpdateStoragentfs_resize_Plan_from_fields(R4SdkUpdateStoragentfs_resize_Plan *output, const R4SdkDataAllocator * p0, uint64_t p1, uint64_t p2, uint64_t p3, uint32_t p4, uint64_t p5, uint64_t p6, uint64_t p7, uint64_t p8, uint64_t p9, const R4SdkUpdateStoragentfs_resize_Map * p10, const R4SdkUpdateStoragentfs_resize_ShrinkLimits * p11, const R4SdkDataNative_Value156 * p12, const R4SdkUpdateStoragentfs_resize_Map * p13, R4SdkUpdateSlot p14, uint64_t p15, uint16_t p16, const R4SdkUpdateNativeValue105 * p17, uint64_t p18, const R4SdkUpdateNativeValue107 * p19, uint64_t p20, const R4SdkUpdateNativeValue110 * p21, const R4SdkUpdateNativeValue110 * p22, uint64_t p23, const R4SdkUpdateNativeValue42 * p24) {
+static inline R4SdkUpdateSlot R4SdkUpdateStoragentfs_resize_Plan_from_fields(R4SdkUpdateStoragentfs_resize_Plan *output, const R4SdkDataAllocator * p0, uint64_t p1, uint64_t p2, uint64_t p3, uint32_t p4, uint64_t p5, uint64_t p6, uint64_t p7, uint64_t p8, uint64_t p9, const R4SdkUpdateStoragentfs_resize_Map * p10, const R4SdkUpdateStoragentfs_resize_ShrinkLimits * p11, const R4SdkDataNative_Value158 * p12, const R4SdkUpdateStoragentfs_resize_Map * p13, R4SdkUpdateSlot p14, uint64_t p15, uint16_t p16, const R4SdkUpdateNativeValue105 * p17, uint64_t p18, const R4SdkUpdateNativeValue107 * p19, uint64_t p20, const R4SdkUpdateNativeValue110 * p21, const R4SdkUpdateNativeValue110 * p22, uint64_t p23, const R4SdkUpdateNativeValue42 * p24) {
  R4SdkUpdateSlot a[25]={0};
  a[0] = (R4SdkUpdateSlot){.ptr=(void *)p0,.flags=R4SDKUPDATE_PRESENT};
  a[1] = (R4SdkUpdateSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKUPDATE_PRESENT};
@@ -5215,15 +5215,15 @@ static inline R4SdkUpdateSlot R4SdkUpdateStoragentfs_resize_Plan_get_shrink(cons
 static inline R4SdkUpdateSlot R4SdkUpdateStoragentfs_resize_Plan_set_shrink(R4SdkUpdateStoragentfs_resize_Plan *self, const R4SdkUpdateStoragentfs_resize_ShrinkLimits * p0) { R4SdkUpdateSlot a[1]={0};
  a[0] = (R4SdkUpdateSlot){.ptr=(void *)p0,.flags=R4SDKUPDATE_PRESENT};
  return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,101u,11u,self,a,0); }
-static inline R4SdkUpdateSlot R4SdkUpdateStoragentfs_resize_Plan_get_bitmap_sha(const R4SdkUpdateStoragentfs_resize_Plan *self, R4SdkDataNative_Value156 *output) { return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,101u,12u,(void *)self,0,output); }
-static inline R4SdkUpdateSlot R4SdkUpdateStoragentfs_resize_Plan_set_bitmap_sha(R4SdkUpdateStoragentfs_resize_Plan *self, const R4SdkDataNative_Value156 * p0) { R4SdkUpdateSlot a[1]={0};
+static inline R4SdkUpdateSlot R4SdkUpdateStoragentfs_resize_Plan_get_bitmap_sha(const R4SdkUpdateStoragentfs_resize_Plan *self, R4SdkDataNative_Value158 *output) { return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,101u,12u,(void *)self,0,output); }
+static inline R4SdkUpdateSlot R4SdkUpdateStoragentfs_resize_Plan_set_bitmap_sha(R4SdkUpdateStoragentfs_resize_Plan *self, const R4SdkDataNative_Value158 * p0) { R4SdkUpdateSlot a[1]={0};
  a[0] = (R4SdkUpdateSlot){.ptr=(void *)p0,.flags=R4SDKUPDATE_PRESENT};
  return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,101u,12u,self,a,0); }
 static inline R4SdkUpdateSlot R4SdkUpdateStoragentfs_resize_Plan_get_mft(const R4SdkUpdateStoragentfs_resize_Plan *self, R4SdkUpdateStoragentfs_resize_Map *output) { return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,101u,13u,(void *)self,0,output); }
 static inline R4SdkUpdateSlot R4SdkUpdateStoragentfs_resize_Plan_set_mft(R4SdkUpdateStoragentfs_resize_Plan *self, const R4SdkUpdateStoragentfs_resize_Map * p0) { R4SdkUpdateSlot a[1]={0};
  a[0] = (R4SdkUpdateSlot){.ptr=(void *)p0,.flags=R4SDKUPDATE_PRESENT};
  return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,101u,13u,self,a,0); }
-static inline R4SdkUpdateSlot R4SdkUpdateStoragentfs_resize_Plan_get_mft_sha(const R4SdkUpdateStoragentfs_resize_Plan *self, R4SdkDataNative_Value156 *output) { return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,101u,14u,(void *)self,0,output); }
+static inline R4SdkUpdateSlot R4SdkUpdateStoragentfs_resize_Plan_get_mft_sha(const R4SdkUpdateStoragentfs_resize_Plan *self, R4SdkDataNative_Value158 *output) { return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,101u,14u,(void *)self,0,output); }
 static inline R4SdkUpdateSlot R4SdkUpdateStoragentfs_resize_Plan_set_mft_sha(R4SdkUpdateStoragentfs_resize_Plan *self, R4SdkUpdateSlot p0) { R4SdkUpdateSlot a[1]={0};
  a[0] = p0;
  return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,101u,14u,self,a,0); }
@@ -5308,19 +5308,19 @@ static inline R4SdkUpdateSlot R4SdkUpdateNativeValue103_inspectNative(const R4Sd
 static inline R4SdkUpdateSlot R4SdkUpdateNativeValue104_create(R4SdkUpdateNativeValue104 *output, R4SdkUpdateSlot p0) { R4SdkUpdateSlot a[1]={0};
  a[0] = p0;
  return R4SdkUpdateConstruct(R4SdkUpdate_ABI_FINGERPRINT,104u,a,1u,output); }
-static inline R4SdkUpdateSlot R4SdkUpdateNativeValue104_inspectNative(const R4SdkUpdateNativeValue104 *self, R4SdkDataNative_Value156 *output) { return R4SdkUpdateInspect(R4SdkUpdate_ABI_FINGERPRINT,104u,(void *)self,output); }
+static inline R4SdkUpdateSlot R4SdkUpdateNativeValue104_inspectNative(const R4SdkUpdateNativeValue104 *self, R4SdkDataNative_Value158 *output) { return R4SdkUpdateInspect(R4SdkUpdate_ABI_FINGERPRINT,104u,(void *)self,output); }
 static inline R4SdkUpdateSlot R4SdkUpdateNativeValue105_create(R4SdkUpdateNativeValue105 *output, const R4SdkUpdateNativeValue105 * p0) { R4SdkUpdateSlot a[1]={0};
  a[0] = (R4SdkUpdateSlot){.ptr=(void *)p0,.flags=R4SDKUPDATE_PRESENT};
  return R4SdkUpdateConstruct(R4SdkUpdate_ABI_FINGERPRINT,105u,a,1u,output); }
 static inline R4SdkUpdateSlot R4SdkUpdateNativeValue105_inspectNative(const R4SdkUpdateNativeValue105 *self, R4SdkUpdateNativeValue105 *output) { return R4SdkUpdateInspect(R4SdkUpdate_ABI_FINGERPRINT,105u,(void *)self,output); }
-static inline R4SdkUpdateSlot R4SdkUpdateStoragentfs_resize_Source_create(R4SdkUpdateStoragentfs_resize_Source *output, uint64_t p0, uint32_t p1, const R4SdkDataNative_Value156 * p2) {
+static inline R4SdkUpdateSlot R4SdkUpdateStoragentfs_resize_Source_create(R4SdkUpdateStoragentfs_resize_Source *output, uint64_t p0, uint32_t p1, const R4SdkDataNative_Value158 * p2) {
  R4SdkUpdateSlot a[3]={0};
  a[0] = (R4SdkUpdateSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKUPDATE_PRESENT};
  a[1] = (R4SdkUpdateSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKUPDATE_PRESENT};
  a[2] = (R4SdkUpdateSlot){.ptr=(void *)p2,.flags=R4SDKUPDATE_PRESENT};
  return R4SdkUpdateConstruct(R4SdkUpdate_ABI_FINGERPRINT,106u,a,3u,output);
 }
-static inline R4SdkUpdateSlot R4SdkUpdateStoragentfs_resize_Source_from_fields(R4SdkUpdateStoragentfs_resize_Source *output, uint64_t p0, uint32_t p1, const R4SdkDataNative_Value156 * p2) {
+static inline R4SdkUpdateSlot R4SdkUpdateStoragentfs_resize_Source_from_fields(R4SdkUpdateStoragentfs_resize_Source *output, uint64_t p0, uint32_t p1, const R4SdkDataNative_Value158 * p2) {
  R4SdkUpdateSlot a[3]={0};
  a[0] = (R4SdkUpdateSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKUPDATE_PRESENT};
  a[1] = (R4SdkUpdateSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKUPDATE_PRESENT};
@@ -5335,8 +5335,8 @@ static inline R4SdkUpdateSlot R4SdkUpdateStoragentfs_resize_Source_get_count(con
 static inline R4SdkUpdateSlot R4SdkUpdateStoragentfs_resize_Source_set_count(R4SdkUpdateStoragentfs_resize_Source *self, uint32_t p0) { R4SdkUpdateSlot a[1]={0};
  a[0] = (R4SdkUpdateSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKUPDATE_PRESENT};
  return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,106u,1u,self,a,0); }
-static inline R4SdkUpdateSlot R4SdkUpdateStoragentfs_resize_Source_get_sha(const R4SdkUpdateStoragentfs_resize_Source *self, R4SdkDataNative_Value156 *output) { return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,106u,2u,(void *)self,0,output); }
-static inline R4SdkUpdateSlot R4SdkUpdateStoragentfs_resize_Source_set_sha(R4SdkUpdateStoragentfs_resize_Source *self, const R4SdkDataNative_Value156 * p0) { R4SdkUpdateSlot a[1]={0};
+static inline R4SdkUpdateSlot R4SdkUpdateStoragentfs_resize_Source_get_sha(const R4SdkUpdateStoragentfs_resize_Source *self, R4SdkDataNative_Value158 *output) { return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,106u,2u,(void *)self,0,output); }
+static inline R4SdkUpdateSlot R4SdkUpdateStoragentfs_resize_Source_set_sha(R4SdkUpdateStoragentfs_resize_Source *self, const R4SdkDataNative_Value158 * p0) { R4SdkUpdateSlot a[1]={0};
  a[0] = (R4SdkUpdateSlot){.ptr=(void *)p0,.flags=R4SDKUPDATE_PRESENT};
  return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,106u,2u,self,a,0); }
 static inline R4SdkUpdateSlot R4SdkUpdateStoragentfs_resize_Source_inspectNative(const R4SdkUpdateStoragentfs_resize_Source *self) { return R4SdkUpdateInspect(R4SdkUpdate_ABI_FINGERPRINT,106u,(void *)self,0); }
@@ -6091,7 +6091,7 @@ static inline R4SdkUpdateSlot R4SdkUpdateBatchPackageEntry_create(R4SdkUpdateBat
  a[14].flags=R4SDKUPDATE_DEFAULT;
  return R4SdkUpdateConstruct(R4SdkUpdate_ABI_FINGERPRINT,167u,a,15u,output);
 }
-static inline R4SdkUpdateSlot R4SdkUpdateBatchPackageEntry_from_fields(R4SdkUpdateBatchPackageEntry *output, uint8_t p0, const R4SdkUpdateNativeValue154 * p1, uint64_t p2, const R4SdkDataNative_Value136 * p3, uint64_t p4, const R4SdkDataNative_Value137 * p5, uint64_t p6, const R4SdkDataNative_Value137 * p7, uint64_t p8, uint64_t p9, uint32_t p10, uint32_t p11, uint32_t p12, uint32_t p13, uint32_t p14) {
+static inline R4SdkUpdateSlot R4SdkUpdateBatchPackageEntry_from_fields(R4SdkUpdateBatchPackageEntry *output, uint8_t p0, const R4SdkUpdateNativeValue154 * p1, uint64_t p2, const R4SdkDataNative_Value138 * p3, uint64_t p4, const R4SdkDataNative_Value139 * p5, uint64_t p6, const R4SdkDataNative_Value139 * p7, uint64_t p8, uint64_t p9, uint32_t p10, uint32_t p11, uint32_t p12, uint32_t p13, uint32_t p14) {
  R4SdkUpdateSlot a[15]={0};
  a[0] = (R4SdkUpdateSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKUPDATE_PRESENT};
  a[1] = (R4SdkUpdateSlot){.ptr=(void *)p1,.flags=R4SDKUPDATE_PRESENT};
@@ -6122,24 +6122,24 @@ static inline R4SdkUpdateSlot R4SdkUpdateBatchPackageEntry_get_path_len(const R4
 static inline R4SdkUpdateSlot R4SdkUpdateBatchPackageEntry_set_path_len(R4SdkUpdateBatchPackageEntry *self, uint64_t p0) { R4SdkUpdateSlot a[1]={0};
  a[0] = (R4SdkUpdateSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKUPDATE_PRESENT};
  return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,167u,2u,self,a,0); }
-static inline R4SdkUpdateSlot R4SdkUpdateBatchPackageEntry_get_package(const R4SdkUpdateBatchPackageEntry *self, R4SdkDataNative_Value136 *output) { return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,167u,3u,(void *)self,0,output); }
-static inline R4SdkUpdateSlot R4SdkUpdateBatchPackageEntry_set_package(R4SdkUpdateBatchPackageEntry *self, const R4SdkDataNative_Value136 * p0) { R4SdkUpdateSlot a[1]={0};
+static inline R4SdkUpdateSlot R4SdkUpdateBatchPackageEntry_get_package(const R4SdkUpdateBatchPackageEntry *self, R4SdkDataNative_Value138 *output) { return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,167u,3u,(void *)self,0,output); }
+static inline R4SdkUpdateSlot R4SdkUpdateBatchPackageEntry_set_package(R4SdkUpdateBatchPackageEntry *self, const R4SdkDataNative_Value138 * p0) { R4SdkUpdateSlot a[1]={0};
  a[0] = (R4SdkUpdateSlot){.ptr=(void *)p0,.flags=R4SDKUPDATE_PRESENT};
  return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,167u,3u,self,a,0); }
 static inline R4SdkUpdateSlot R4SdkUpdateBatchPackageEntry_get_package_len(const R4SdkUpdateBatchPackageEntry *self) { return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,167u,4u,(void *)self,0,0); }
 static inline R4SdkUpdateSlot R4SdkUpdateBatchPackageEntry_set_package_len(R4SdkUpdateBatchPackageEntry *self, uint64_t p0) { R4SdkUpdateSlot a[1]={0};
  a[0] = (R4SdkUpdateSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKUPDATE_PRESENT};
  return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,167u,4u,self,a,0); }
-static inline R4SdkUpdateSlot R4SdkUpdateBatchPackageEntry_get_package_version(const R4SdkUpdateBatchPackageEntry *self, R4SdkDataNative_Value137 *output) { return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,167u,5u,(void *)self,0,output); }
-static inline R4SdkUpdateSlot R4SdkUpdateBatchPackageEntry_set_package_version(R4SdkUpdateBatchPackageEntry *self, const R4SdkDataNative_Value137 * p0) { R4SdkUpdateSlot a[1]={0};
+static inline R4SdkUpdateSlot R4SdkUpdateBatchPackageEntry_get_package_version(const R4SdkUpdateBatchPackageEntry *self, R4SdkDataNative_Value139 *output) { return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,167u,5u,(void *)self,0,output); }
+static inline R4SdkUpdateSlot R4SdkUpdateBatchPackageEntry_set_package_version(R4SdkUpdateBatchPackageEntry *self, const R4SdkDataNative_Value139 * p0) { R4SdkUpdateSlot a[1]={0};
  a[0] = (R4SdkUpdateSlot){.ptr=(void *)p0,.flags=R4SDKUPDATE_PRESENT};
  return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,167u,5u,self,a,0); }
 static inline R4SdkUpdateSlot R4SdkUpdateBatchPackageEntry_get_package_version_len(const R4SdkUpdateBatchPackageEntry *self) { return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,167u,6u,(void *)self,0,0); }
 static inline R4SdkUpdateSlot R4SdkUpdateBatchPackageEntry_set_package_version_len(R4SdkUpdateBatchPackageEntry *self, uint64_t p0) { R4SdkUpdateSlot a[1]={0};
  a[0] = (R4SdkUpdateSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKUPDATE_PRESENT};
  return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,167u,6u,self,a,0); }
-static inline R4SdkUpdateSlot R4SdkUpdateBatchPackageEntry_get_release(const R4SdkUpdateBatchPackageEntry *self, R4SdkDataNative_Value137 *output) { return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,167u,7u,(void *)self,0,output); }
-static inline R4SdkUpdateSlot R4SdkUpdateBatchPackageEntry_set_release(R4SdkUpdateBatchPackageEntry *self, const R4SdkDataNative_Value137 * p0) { R4SdkUpdateSlot a[1]={0};
+static inline R4SdkUpdateSlot R4SdkUpdateBatchPackageEntry_get_release(const R4SdkUpdateBatchPackageEntry *self, R4SdkDataNative_Value139 *output) { return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,167u,7u,(void *)self,0,output); }
+static inline R4SdkUpdateSlot R4SdkUpdateBatchPackageEntry_set_release(R4SdkUpdateBatchPackageEntry *self, const R4SdkDataNative_Value139 * p0) { R4SdkUpdateSlot a[1]={0};
  a[0] = (R4SdkUpdateSlot){.ptr=(void *)p0,.flags=R4SDKUPDATE_PRESENT};
  return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,167u,7u,self,a,0); }
 static inline R4SdkUpdateSlot R4SdkUpdateBatchPackageEntry_get_release_len(const R4SdkUpdateBatchPackageEntry *self) { return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,167u,8u,(void *)self,0,0); }
@@ -6189,7 +6189,7 @@ static inline R4SdkUpdateSlot R4SdkUpdateBatchBatchJournal_create(R4SdkUpdateBat
  a[13].flags=R4SDKUPDATE_DEFAULT;
  return R4SdkUpdateConstruct(R4SdkUpdate_ABI_FINGERPRINT,170u,a,14u,output);
 }
-static inline R4SdkUpdateSlot R4SdkUpdateBatchBatchJournal_from_fields(R4SdkUpdateBatchBatchJournal *output, uint8_t p0, uint8_t p1, uint64_t p2, uint64_t p3, uint32_t p4, uint32_t p5, uint32_t p6, const R4SdkDataNative_Value137 * p7, uint64_t p8, const R4SdkDataNative_Value137 * p9, uint64_t p10, const R4SdkUpdateNativeValue171 * p11, uint64_t p12, const R4SdkUpdateNativeValue172 * p13) {
+static inline R4SdkUpdateSlot R4SdkUpdateBatchBatchJournal_from_fields(R4SdkUpdateBatchBatchJournal *output, uint8_t p0, uint8_t p1, uint64_t p2, uint64_t p3, uint32_t p4, uint32_t p5, uint32_t p6, const R4SdkDataNative_Value139 * p7, uint64_t p8, const R4SdkDataNative_Value139 * p9, uint64_t p10, const R4SdkUpdateNativeValue171 * p11, uint64_t p12, const R4SdkUpdateNativeValue172 * p13) {
  R4SdkUpdateSlot a[14]={0};
  a[0] = (R4SdkUpdateSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKUPDATE_PRESENT};
  a[1] = (R4SdkUpdateSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKUPDATE_PRESENT};
@@ -6235,16 +6235,16 @@ static inline R4SdkUpdateSlot R4SdkUpdateBatchBatchJournal_get_current_package(c
 static inline R4SdkUpdateSlot R4SdkUpdateBatchBatchJournal_set_current_package(R4SdkUpdateBatchBatchJournal *self, uint32_t p0) { R4SdkUpdateSlot a[1]={0};
  a[0] = (R4SdkUpdateSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKUPDATE_PRESENT};
  return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,170u,6u,self,a,0); }
-static inline R4SdkUpdateSlot R4SdkUpdateBatchBatchJournal_get_source_release(const R4SdkUpdateBatchBatchJournal *self, R4SdkDataNative_Value137 *output) { return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,170u,7u,(void *)self,0,output); }
-static inline R4SdkUpdateSlot R4SdkUpdateBatchBatchJournal_set_source_release(R4SdkUpdateBatchBatchJournal *self, const R4SdkDataNative_Value137 * p0) { R4SdkUpdateSlot a[1]={0};
+static inline R4SdkUpdateSlot R4SdkUpdateBatchBatchJournal_get_source_release(const R4SdkUpdateBatchBatchJournal *self, R4SdkDataNative_Value139 *output) { return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,170u,7u,(void *)self,0,output); }
+static inline R4SdkUpdateSlot R4SdkUpdateBatchBatchJournal_set_source_release(R4SdkUpdateBatchBatchJournal *self, const R4SdkDataNative_Value139 * p0) { R4SdkUpdateSlot a[1]={0};
  a[0] = (R4SdkUpdateSlot){.ptr=(void *)p0,.flags=R4SDKUPDATE_PRESENT};
  return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,170u,7u,self,a,0); }
 static inline R4SdkUpdateSlot R4SdkUpdateBatchBatchJournal_get_source_release_len(const R4SdkUpdateBatchBatchJournal *self) { return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,170u,8u,(void *)self,0,0); }
 static inline R4SdkUpdateSlot R4SdkUpdateBatchBatchJournal_set_source_release_len(R4SdkUpdateBatchBatchJournal *self, uint64_t p0) { R4SdkUpdateSlot a[1]={0};
  a[0] = (R4SdkUpdateSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKUPDATE_PRESENT};
  return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,170u,8u,self,a,0); }
-static inline R4SdkUpdateSlot R4SdkUpdateBatchBatchJournal_get_target_release(const R4SdkUpdateBatchBatchJournal *self, R4SdkDataNative_Value137 *output) { return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,170u,9u,(void *)self,0,output); }
-static inline R4SdkUpdateSlot R4SdkUpdateBatchBatchJournal_set_target_release(R4SdkUpdateBatchBatchJournal *self, const R4SdkDataNative_Value137 * p0) { R4SdkUpdateSlot a[1]={0};
+static inline R4SdkUpdateSlot R4SdkUpdateBatchBatchJournal_get_target_release(const R4SdkUpdateBatchBatchJournal *self, R4SdkDataNative_Value139 *output) { return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,170u,9u,(void *)self,0,output); }
+static inline R4SdkUpdateSlot R4SdkUpdateBatchBatchJournal_set_target_release(R4SdkUpdateBatchBatchJournal *self, const R4SdkDataNative_Value139 * p0) { R4SdkUpdateSlot a[1]={0};
  a[0] = (R4SdkUpdateSlot){.ptr=(void *)p0,.flags=R4SDKUPDATE_PRESENT};
  return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,170u,9u,self,a,0); }
 static inline R4SdkUpdateSlot R4SdkUpdateBatchBatchJournal_get_target_release_len(const R4SdkUpdateBatchBatchJournal *self) { return R4SdkUpdateField(R4SdkUpdate_ABI_FINGERPRINT,170u,10u,(void *)self,0,0); }

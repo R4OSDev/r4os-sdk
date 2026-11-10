@@ -758,10 +758,7 @@ pub const Sdk = struct {
                 .optimize = manifestOptimizeMode(m),
             }),
         };
-        const exports: []const []const u8 = if (driver)
-            &.{ "DriverInit2:@DriverInit2:2", "DriverShutdown:@DriverShutdown:1" }
-        else
-            &.{ "ProtocolInit2:@ProtocolInit2:2", "ProtocolShutdown:@ProtocolShutdown:1", "ProtocolQuery:@ProtocolQuery:1", "ProtocolDispatch:@ProtocolDispatch:1", "ProtocolRole:@ProtocolInit2:1" };
+        const exports = module_manifest.moduleExports(self.b.allocator, m) catch @panic("Invalid provider exports");
         var metadata: std.ArrayList([]const u8) = .empty;
         const version = module_manifest.moduleVersionMeta(self.b.allocator, m) catch @panic("Invalid provider version");
         const module_name = self.b.fmt("{s}_{s}", .{ m.kind.text(), m.name });
@@ -842,7 +839,7 @@ pub const Sdk = struct {
             }),
         };
         const plan = module_manifest.derivePlan(self.b.allocator, m) catch @panic("Invalid generation2 manifest");
-        return addR4MElf(self.b, .{ .name = m.name, .kind = "r4x", .extension = "R4X", .elf = elf, .builder = self.builder, .imports = m.imports, .exports = &.{"R4XStart2:@R4XStart2:2"}, .metadata = plan.metadata, .app_class = m.app_class.?.text(), .resources = self.manifestResources(loaded) });
+        return addR4MElf(self.b, .{ .name = m.name, .kind = "r4x", .extension = "R4X", .elf = elf, .builder = self.builder, .imports = m.imports, .exports = module_manifest.moduleExports(self.b.allocator, m) catch @panic("Invalid program exports"), .metadata = plan.metadata, .app_class = m.app_class.?.text(), .resources = self.manifestResources(loaded) });
     }
 
     fn addR4MFProgram(self: Sdk, loaded: LoadedR4MF) BuildResult {

@@ -160,10 +160,8 @@ try{
     $codegen=$sdkProfiles.Build.codegen['rust-module']
     Assert-R4SdkProjectCFlags $sdkProfiles $facts.kind $facts.name $rust.c_flags
     $profileRole=if($isLibrary){'library'}elseif($isDriver){'driver'}elseif($isProtocol){'protocol'}elseif($facts.entry_mode -ceq 'lowlevel'){'lowlevel'}else{'app'}
-    $expectedProfile=if($sourceBinding.platform.generation -eq 2){
-        if($profileRole -cnotin @('app','lowlevel','driver','protocol') -or $sourceBinding.build.kind -cne $facts.kind){throw 'RustGeneration2ProviderKindMismatch'}
-        $facts.build_profile
-    }else{$codegen.profile_ids[$profileRole]}
+    if($sourceBinding.platform.generation -eq 2 -and ($profileRole -cnotin @('app','lowlevel','driver','protocol') -or $sourceBinding.build.kind -cne $facts.kind)){throw 'RustGeneration2ProviderKindMismatch'}
+    $expectedProfile=$facts.sdk_profile
     if($rust.schema -ne 2 -or $codegen.schema -ne 2 -or $rust.profile -cne $expectedProfile -or $codegen.target -cne $description.kernel_target){throw 'RustModuleProfileMismatch'}
     if($DependencyRootsJson){
         $decoded=ConvertFrom-Json -InputObject $DependencyRootsJson -NoEnumerate

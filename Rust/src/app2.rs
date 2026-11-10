@@ -27,6 +27,7 @@ struct RawStartupInfo {
     imports: *const ImportSpec,
 }
 unsafe extern "C" {
+    fn R4SdkApp2InitRaw(raw: *const platform2::abi::R4XStartContext2, output: *mut Memory) -> i32;
     fn R4SdkApp2Init(
         raw: *const platform2::abi::R4XStartContext2,
         expected: *const RawStartupInfo,
@@ -76,6 +77,25 @@ impl<'a> App<'a> {
     }
     pub fn context(&self) -> &platform2::Context<'a> {
         &self.context
+    }
+    /// Opt into SDK helper/entropy callbacks from an already admitted raw
+    /// generation2 context. This does not install the global allocator or call
+    /// an application main; the immutable original context remains borrowed.
+    pub fn from_context(
+        context: &platform2::Context<'a>,
+        name: &'static CStr,
+    ) -> Result<Self, i32> {
+        let mut memory = unsafe { mem::zeroed() };
+        let rc = unsafe { R4SdkApp2InitRaw(context.raw(), &mut memory) };
+        if rc < 0 {
+            return Err(rc);
+        }
+        Ok(Self {
+            context: unsafe { platform2::Context::new(context.raw()) }.map_err(|_| -12)?,
+            memory,
+            name,
+            local: PhantomData,
+        })
     }
     pub(crate) fn native_context(&self) -> *const c::R4OS2Context {
         self.context.native()

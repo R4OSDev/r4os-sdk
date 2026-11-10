@@ -1,3 +1,4 @@
+#include <r4os/app2.h>
 #include <r4os/r4os.h>
 
 R4OS_TEXT(window_title, "{ProjectName}");
@@ -43,5 +44,7 @@ static int32_t work(R4App *app)
     }
 }
 
-int32_t r4_main(const R4XStartContext *raw,R4Sys *sys){(void)sys;R4App app;
- R4Status status=r4_app_init(raw,R4_APP_PROFILE_DESKTOP,&app);if(!r4_status_succeeded(status))return status.raw_code;return work(&app);}
+int32_t r4_main2(const R4OS2Context *context){
+ R4App2Memory memory;int32_t rc=R4SdkApp2InitRaw(context->raw,&memory);if(rc<0)return rc;
+ R4App app;rc=r4_app_init2(context,&memory,&app);if(rc<0)return rc;return work(&app);
+}

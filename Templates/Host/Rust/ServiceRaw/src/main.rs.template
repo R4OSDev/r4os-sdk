@@ -1,8 +1,8 @@
 #![no_std]
-use r4os_sdk::{App, abi, services::{Services, Receive, Wake}};
+use r4os_sdk::{App2, abi, services::{Receive, Wake}};
 
-fn work(app: &mut App<'_>) -> i32 {
-    let services=match Services::new(app){Ok(value)=>value,Err(_)=>return 1};
+fn work(app: &mut App2<'_>) -> i32 {
+    let services=match app.services(){Ok(value)=>value,Err(_)=>return 1};
     let mut service=match services.register(app.name(),0){Ok(value)=>value,Err(_)=>return 2};
     let mut owner=match service.service_loop(200,abi::service_api_endpoint_queue_depth as u32){Ok(value)=>value,Err(_)=>return 3};
     let _=app.write("[RUST] {ProjectName}: service ready\n");
@@ -35,9 +35,9 @@ fn work(app: &mut App<'_>) -> i32 {
     0
 }
 
-unsafe extern "C" fn raw(context:*const r4os_sdk::abi::R4XStartContext)->i32{
- let mut app=match unsafe{r4os_sdk::lowlevel_context!(context)}{Ok(v)=>v,Err(n)=>return n};
- if let Err(n)=r4os_sdk::lowlevel::initialize_runtime(&app){return n;}
+fn raw(context:&r4os_sdk::platform2::Context<'_>)->i32{
+ let mut app=match r4os_sdk::lowlevel_context2!(context){Ok(v)=>v,Err(n)=>return n};
+ if let Err(n)=r4os_sdk::lowlevel::initialize_runtime2(&app){return n;}
  work(&mut app)
 }
-r4os_sdk::lowlevel_entry!(raw);
+r4os_sdk::lowlevel_entry2!(raw);

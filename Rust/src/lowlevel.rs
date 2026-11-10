@@ -79,3 +79,27 @@ macro_rules! lowlevel_context {
         )
     }};
 }
+
+/// Explicitly install the existing generation2 global heap. Checked App2
+/// admission already binds its SDK callback/entropy scope; no old table is used.
+pub fn initialize_runtime2(view: &crate::App2<'_>) -> Result<(), i32> {
+    #[cfg(all(feature = "alloc", target_os = "none"))]
+    crate::heap::install2(view).map_err(|_| -17)?;
+    #[cfg(not(all(feature = "alloc", target_os = "none")))]
+    let _ = view;
+    Ok(())
+}
+
+/// Explicit SDK-helper view of an already admitted raw generation2 context.
+/// App2 construction binds SDK callback/entropy scope; allocation remains an
+/// explicit initialize_runtime2 choice. The original raw entry stays unchanged.
+#[macro_export]
+macro_rules! lowlevel_context2 {
+    ($context:expr) => {{
+        $crate::App2::from_context($context, unsafe {
+            core::ffi::CStr::from_bytes_with_nul_unchecked(
+                concat!(env!("R4OS_MODULE_NAME"), "\0").as_bytes(),
+            )
+        })
+    }};
+}

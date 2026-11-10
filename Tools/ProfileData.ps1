@@ -50,7 +50,7 @@ function Read-R4SdkProfiles([string]$SdkRoot) {
         $hashes[$name] = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()
     }
     $build, $tools, $components = $documents.Build, $documents.Tools, $documents.Components
-    Assert-R4ProfileKeys $build @('schema', 'profiles', 'cpu_baselines', 'codegen', 'native_c_profiles', 'platforms') 'Build'
+    Assert-R4ProfileKeys $build @('schema', 'profiles', 'cpu_baselines', 'codegen', 'native_c_profiles', 'platforms', 'module_defaults') 'Build'
     Assert-R4ProfileJsonObject $build.platforms 'platforms'
     foreach($id in $build.platforms.Keys){
         Assert-R4ProfileId $id 'platform'
@@ -90,6 +90,26 @@ function Read-R4SdkProfiles([string]$SdkRoot) {
         Assert-R4ProfileReference $components.sets $profile.components "$id.components"
         Assert-R4ProfileReference $build.codegen $profile.codegen "$id.codegen"
         if ($profile.Contains('cpu')) { Assert-R4ProfileReference $build.cpu_baselines $profile.cpu "$id.cpu" }
+    }
+    if($build.module_defaults -isnot [array] -or !$build.module_defaults.Count){throw 'SdkModuleDefaultsRequired'}
+    $defaultGroups=@{}
+    foreach($item in $build.module_defaults){
+        Assert-R4ProfileKeys $item @('language','kind','entry','profile','profile_role') 'module_defaults'
+        if($item.language -cnotin @('Zig','C','Rust') -or $item.kind -cnotin @('R4X','R4L','R4D','R4P') -or
+           $item.entry -cnotin @('','app','lowlevel') -or ($item.kind -cne 'R4X' -and $item.entry)){throw 'SdkModuleDefaultInvalid'}
+        if($item.Contains('profile') -eq $item.Contains('profile_role')){throw 'SdkModuleDefaultReferenceRequired'}
+        $defaultProfileId=if($item.Contains('profile')){$item.profile}else{
+            if($item.language -cne 'Rust' -or !$build.codegen.'rust-module'.profile_ids.Contains($item.profile_role)){throw 'SdkModuleDefaultRoleInvalid'}
+            $build.codegen.'rust-module'.profile_ids[$item.profile_role]
+        }
+        Assert-R4ProfileReference $build.profiles $defaultProfileId 'module_defaults.profile'
+        $defaultProfile=$build.profiles[$defaultProfileId]
+        if($defaultProfile.language -cne $item.language -or $defaultProfile.role -cne 'module' -or
+           ($defaultProfile.Contains('kind') -and $defaultProfile.kind -cne $item.kind)){throw 'SdkModuleDefaultRoleMismatch'}
+        $group=$item.language+'/'+$item.kind
+        if(!$defaultGroups.ContainsKey($group)){$defaultGroups[$group]=[Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)}
+        $entries=$defaultGroups[$group]
+        if($entries.Contains('') -or (!$item.entry -and $entries.Count) -or !$entries.Add($item.entry)){throw 'SdkModuleDefaultAmbiguous'}
     }
     foreach ($id in $tools.toolsets.Keys) {
         $ids = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)

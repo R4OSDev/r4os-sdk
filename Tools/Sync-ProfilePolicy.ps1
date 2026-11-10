@@ -28,6 +28,16 @@ foreach($id in $ids){
     $lines.Add('    .{ .id = "'+$id+'", .language = "'+$profile.language+'", .role = "'+$profile.role+'", .kind = "'+$kind+'", .generation = '+$generation+', .explicit_platform = '+$explicit.ToString().ToLowerInvariant()+' },')
 }
 $lines.Add('};')
+$lines.Add('pub const ModuleDefault = struct { language: []const u8, kind: []const u8, entry: []const u8, profile: []const u8 };')
+$lines.Add('pub const module_defaults = [_]ModuleDefault{')
+$seen=[Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
+foreach($item in $data.module_defaults){
+    $key=$item.language+'/'+$item.kind+'/'+$item.entry
+    $selected=if($item.ContainsKey('profile')){$item.profile}elseif($item.language -ceq 'Rust' -and $item.ContainsKey('profile_role')){$data.codegen.'rust-module'.profile_ids[$item.profile_role]}else{throw 'SdkModuleDefaultInvalid'}
+    if(!$seen.Add($key) -or $item.language -cnotin @('Zig','C','Rust') -or $item.kind -cnotin @('R4X','R4L','R4D','R4P') -or $item.entry -cnotin @('','app','lowlevel') -or !$data.profiles.ContainsKey($selected) -or $data.profiles[$selected].language -cne $item.language){throw 'SdkModuleDefaultInvalid'}
+    $lines.Add('    .{ .language = "'+$item.language+'", .kind = "'+$item.kind+'", .entry = "'+$item.entry+'", .profile = "'+$selected+'" },')
+}
+$lines.Add('};')
 $generated=($lines -join "`n")+"`n"
 $path=Join-Path $SdkRoot 'r4os/generated/profile_policy.zig'
 if($Check){

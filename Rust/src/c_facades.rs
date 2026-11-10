@@ -6313,9 +6313,21 @@ const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value122>() == 24);
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataNative_Value123 {
+    pub r#opaque_bytes: [u8; 24],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value123>() == 24); assert!(core::mem::align_of::<R4SdkDataNative_Value123>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value123, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDataNative_Value124 {
+    pub r#opaque_bytes: [u8; 24],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value124>() == 24); assert!(core::mem::align_of::<R4SdkDataNative_Value124>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value124, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDataNative_Value125 {
     pub r#opaque_bytes: [u8; 184],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value123>() == 184); assert!(core::mem::align_of::<R4SdkDataNative_Value123>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value123, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value125>() == 184); assert!(core::mem::align_of::<R4SdkDataNative_Value125>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value125, r#opaque_bytes) == 0); };
 #[repr(C, align(4))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataVersionSemanticVersion {
@@ -6324,10 +6336,10 @@ pub struct R4SdkDataVersionSemanticVersion {
 const _: () = { assert!(core::mem::size_of::<R4SdkDataVersionSemanticVersion>() == 12); assert!(core::mem::align_of::<R4SdkDataVersionSemanticVersion>() == 4); assert!(core::mem::offset_of!(R4SdkDataVersionSemanticVersion, r#opaque_bytes) == 0); };
 #[repr(C, align(4))]
 #[derive(Clone, Copy)]
-pub struct R4SdkDataNative_Value125 {
+pub struct R4SdkDataNative_Value127 {
     pub r#opaque_bytes: [u8; 16],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value125>() == 16); assert!(core::mem::align_of::<R4SdkDataNative_Value125>() == 4); assert!(core::mem::offset_of!(R4SdkDataNative_Value125, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value127>() == 16); assert!(core::mem::align_of::<R4SdkDataNative_Value127>() == 4); assert!(core::mem::offset_of!(R4SdkDataNative_Value127, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataUpdateMetadataComponentKind {
@@ -6360,22 +6372,22 @@ pub struct R4SdkDataUpdateMetadataDerivedClass {
 const _: () = { assert!(core::mem::size_of::<R4SdkDataUpdateMetadataDerivedClass>() == 2); assert!(core::mem::align_of::<R4SdkDataUpdateMetadataDerivedClass>() == 1); assert!(core::mem::offset_of!(R4SdkDataUpdateMetadataDerivedClass, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkDataNative_Value132 {
+pub struct R4SdkDataNative_Value134 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value132>() == 8); assert!(core::mem::align_of::<R4SdkDataNative_Value132>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value132, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value134>() == 8); assert!(core::mem::align_of::<R4SdkDataNative_Value134>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value134, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
-pub struct R4SdkDataNative_Value133 {
+pub struct R4SdkDataNative_Value135 {
     pub r#opaque_bytes: [u8; 2],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value133>() == 2); assert!(core::mem::align_of::<R4SdkDataNative_Value133>() == 1); assert!(core::mem::offset_of!(R4SdkDataNative_Value133, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value135>() == 2); assert!(core::mem::align_of::<R4SdkDataNative_Value135>() == 1); assert!(core::mem::offset_of!(R4SdkDataNative_Value135, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
-pub struct R4SdkDataNative_Value134 {
+pub struct R4SdkDataNative_Value136 {
     pub r#opaque_bytes: [u8; 2],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value134>() == 2); assert!(core::mem::align_of::<R4SdkDataNative_Value134>() == 1); assert!(core::mem::offset_of!(R4SdkDataNative_Value134, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value136>() == 2); assert!(core::mem::align_of::<R4SdkDataNative_Value136>() == 1); assert!(core::mem::offset_of!(R4SdkDataNative_Value136, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataArtifactIdentity {
@@ -6384,16 +6396,16 @@ pub struct R4SdkDataArtifactIdentity {
 const _: () = { assert!(core::mem::size_of::<R4SdkDataArtifactIdentity>() == 96); assert!(core::mem::align_of::<R4SdkDataArtifactIdentity>() == 8); assert!(core::mem::offset_of!(R4SdkDataArtifactIdentity, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
-pub struct R4SdkDataNative_Value136 {
+pub struct R4SdkDataNative_Value138 {
     pub r#opaque_bytes: [u8; 49],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value136>() == 49); assert!(core::mem::align_of::<R4SdkDataNative_Value136>() == 1); assert!(core::mem::offset_of!(R4SdkDataNative_Value136, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value138>() == 49); assert!(core::mem::align_of::<R4SdkDataNative_Value138>() == 1); assert!(core::mem::offset_of!(R4SdkDataNative_Value138, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
-pub struct R4SdkDataNative_Value137 {
+pub struct R4SdkDataNative_Value139 {
     pub r#opaque_bytes: [u8; 25],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value137>() == 25); assert!(core::mem::align_of::<R4SdkDataNative_Value137>() == 1); assert!(core::mem::offset_of!(R4SdkDataNative_Value137, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value139>() == 25); assert!(core::mem::align_of::<R4SdkDataNative_Value139>() == 1); assert!(core::mem::offset_of!(R4SdkDataNative_Value139, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataArtifactSliceReader {
@@ -6408,16 +6420,10 @@ pub struct R4SdkDataContext {
 const _: () = { assert!(core::mem::size_of::<R4SdkDataContext>() == 104); assert!(core::mem::align_of::<R4SdkDataContext>() == 8); assert!(core::mem::offset_of!(R4SdkDataContext, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkDataNative_Value140 {
+pub struct R4SdkDataNative_Value142 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value140>() == 8); assert!(core::mem::align_of::<R4SdkDataNative_Value140>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value140, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkDataNative_Value141 {
-    pub r#opaque_bytes: [u8; 8],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value141>() == 8); assert!(core::mem::align_of::<R4SdkDataNative_Value141>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value141, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value142>() == 8); assert!(core::mem::align_of::<R4SdkDataNative_Value142>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value142, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataNative_Value143 {
@@ -6426,16 +6432,22 @@ pub struct R4SdkDataNative_Value143 {
 const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value143>() == 8); assert!(core::mem::align_of::<R4SdkDataNative_Value143>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value143, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkDataNative_Value144 {
-    pub r#opaque_bytes: [u8; 8],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value144>() == 8); assert!(core::mem::align_of::<R4SdkDataNative_Value144>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value144, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
 pub struct R4SdkDataNative_Value145 {
     pub r#opaque_bytes: [u8; 8],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value145>() == 8); assert!(core::mem::align_of::<R4SdkDataNative_Value145>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value145, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDataNative_Value146 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value146>() == 8); assert!(core::mem::align_of::<R4SdkDataNative_Value146>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value146, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDataNative_Value147 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value147>() == 8); assert!(core::mem::align_of::<R4SdkDataNative_Value147>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value147, r#opaque_bytes) == 0); };
 #[repr(C, align(16))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataSha256 {
@@ -6456,22 +6468,22 @@ pub struct R4SdkDataArena {
 const _: () = { assert!(core::mem::size_of::<R4SdkDataArena>() == 24); assert!(core::mem::align_of::<R4SdkDataArena>() == 8); assert!(core::mem::offset_of!(R4SdkDataArena, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkDataNative_Value149 {
-    pub r#opaque_bytes: [u8; 8],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value149>() == 8); assert!(core::mem::align_of::<R4SdkDataNative_Value149>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value149, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkDataNative_Value150 {
-    pub r#opaque_bytes: [u8; 8],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value150>() == 8); assert!(core::mem::align_of::<R4SdkDataNative_Value150>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value150, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
 pub struct R4SdkDataNative_Value151 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value151>() == 8); assert!(core::mem::align_of::<R4SdkDataNative_Value151>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value151, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDataNative_Value152 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value152>() == 8); assert!(core::mem::align_of::<R4SdkDataNative_Value152>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value152, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDataNative_Value153 {
     pub r#opaque_bytes: [u8; 104],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value151>() == 104); assert!(core::mem::align_of::<R4SdkDataNative_Value151>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value151, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value153>() == 104); assert!(core::mem::align_of::<R4SdkDataNative_Value153>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value153, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataReader {
@@ -6480,10 +6492,10 @@ pub struct R4SdkDataReader {
 const _: () = { assert!(core::mem::size_of::<R4SdkDataReader>() == 16); assert!(core::mem::align_of::<R4SdkDataReader>() == 8); assert!(core::mem::offset_of!(R4SdkDataReader, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkDataNative_Value153 {
+pub struct R4SdkDataNative_Value155 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value153>() == 8); assert!(core::mem::align_of::<R4SdkDataNative_Value153>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value153, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value155>() == 8); assert!(core::mem::align_of::<R4SdkDataNative_Value155>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value155, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataNative_crypto_sha2_Sha2x32____1779033703__3144134277__1013904242__2773480762__1359893119__2600822924__528734635__1541459225___256__Options {
@@ -6492,40 +6504,28 @@ pub struct R4SdkDataNative_crypto_sha2_Sha2x32____1779033703__3144134277__101390
 const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_crypto_sha2_Sha2x32____1779033703__3144134277__1013904242__2773480762__1359893119__2600822924__528734635__1541459225___256__Options>() == 1); assert!(core::mem::align_of::<R4SdkDataNative_crypto_sha2_Sha2x32____1779033703__3144134277__1013904242__2773480762__1359893119__2600822924__528734635__1541459225___256__Options>() == 1); assert!(core::mem::offset_of!(R4SdkDataNative_crypto_sha2_Sha2x32____1779033703__3144134277__1013904242__2773480762__1359893119__2600822924__528734635__1541459225___256__Options, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkDataNative_Value155 {
-    pub r#opaque_bytes: [u8; 8],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value155>() == 8); assert!(core::mem::align_of::<R4SdkDataNative_Value155>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value155, r#opaque_bytes) == 0); };
-#[repr(C, align(1))]
-#[derive(Clone, Copy)]
-pub struct R4SdkDataNative_Value156 {
-    pub r#opaque_bytes: [u8; 32],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value156>() == 32); assert!(core::mem::align_of::<R4SdkDataNative_Value156>() == 1); assert!(core::mem::offset_of!(R4SdkDataNative_Value156, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
 pub struct R4SdkDataNative_Value157 {
     pub r#opaque_bytes: [u8; 8],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value157>() == 8); assert!(core::mem::align_of::<R4SdkDataNative_Value157>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value157, r#opaque_bytes) == 0); };
-#[repr(C, align(2))]
+#[repr(C, align(1))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataNative_Value158 {
-    pub r#opaque_bytes: [u8; 2],
+    pub r#opaque_bytes: [u8; 32],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value158>() == 2); assert!(core::mem::align_of::<R4SdkDataNative_Value158>() == 2); assert!(core::mem::offset_of!(R4SdkDataNative_Value158, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value158>() == 32); assert!(core::mem::align_of::<R4SdkDataNative_Value158>() == 1); assert!(core::mem::offset_of!(R4SdkDataNative_Value158, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataNative_Value159 {
-    pub r#opaque_bytes: [u8; 24],
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value159>() == 24); assert!(core::mem::align_of::<R4SdkDataNative_Value159>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value159, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
+const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value159>() == 8); assert!(core::mem::align_of::<R4SdkDataNative_Value159>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value159, r#opaque_bytes) == 0); };
+#[repr(C, align(2))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataNative_Value160 {
-    pub r#opaque_bytes: [u8; 16],
+    pub r#opaque_bytes: [u8; 2],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value160>() == 16); assert!(core::mem::align_of::<R4SdkDataNative_Value160>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value160, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value160>() == 2); assert!(core::mem::align_of::<R4SdkDataNative_Value160>() == 2); assert!(core::mem::offset_of!(R4SdkDataNative_Value160, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataNative_Value161 {
@@ -6541,51 +6541,57 @@ const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value162>() == 16);
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataNative_Value163 {
-    pub r#opaque_bytes: [u8; 48],
+    pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value163>() == 48); assert!(core::mem::align_of::<R4SdkDataNative_Value163>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value163, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value163>() == 24); assert!(core::mem::align_of::<R4SdkDataNative_Value163>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value163, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataNative_Value164 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 16],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value164>() == 8); assert!(core::mem::align_of::<R4SdkDataNative_Value164>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value164, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value164>() == 16); assert!(core::mem::align_of::<R4SdkDataNative_Value164>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value164, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataNative_Value165 {
-    pub r#opaque_bytes: [u8; 24],
+    pub r#opaque_bytes: [u8; 48],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value165>() == 24); assert!(core::mem::align_of::<R4SdkDataNative_Value165>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value165, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value165>() == 48); assert!(core::mem::align_of::<R4SdkDataNative_Value165>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value165, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataNative_Value166 {
-    pub r#opaque_bytes: [u8; 16],
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value166>() == 16); assert!(core::mem::align_of::<R4SdkDataNative_Value166>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value166, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value166>() == 8); assert!(core::mem::align_of::<R4SdkDataNative_Value166>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value166, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataNative_Value167 {
-    pub r#opaque_bytes: [u8; 16],
+    pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value167>() == 16); assert!(core::mem::align_of::<R4SdkDataNative_Value167>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value167, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value167>() == 24); assert!(core::mem::align_of::<R4SdkDataNative_Value167>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value167, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataNative_Value168 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 16],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value168>() == 8); assert!(core::mem::align_of::<R4SdkDataNative_Value168>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value168, r#opaque_bytes) == 0); };
-#[repr(C, align(2))]
+const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value168>() == 16); assert!(core::mem::align_of::<R4SdkDataNative_Value168>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value168, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataNative_Value169 {
-    pub r#opaque_bytes: [u8; 2],
+    pub r#opaque_bytes: [u8; 16],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value169>() == 2); assert!(core::mem::align_of::<R4SdkDataNative_Value169>() == 2); assert!(core::mem::offset_of!(R4SdkDataNative_Value169, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value169>() == 16); assert!(core::mem::align_of::<R4SdkDataNative_Value169>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value169, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataNative_Value170 {
     pub r#opaque_bytes: [u8; 8],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value170>() == 8); assert!(core::mem::align_of::<R4SdkDataNative_Value170>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value170, r#opaque_bytes) == 0); };
+#[repr(C, align(2))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDataNative_Value171 {
+    pub r#opaque_bytes: [u8; 2],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value171>() == 2); assert!(core::mem::align_of::<R4SdkDataNative_Value171>() == 2); assert!(core::mem::offset_of!(R4SdkDataNative_Value171, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataNative_Value172 {
@@ -6594,34 +6600,28 @@ pub struct R4SdkDataNative_Value172 {
 const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value172>() == 8); assert!(core::mem::align_of::<R4SdkDataNative_Value172>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value172, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkDataNative_Value173 {
+pub struct R4SdkDataNative_Value174 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value173>() == 8); assert!(core::mem::align_of::<R4SdkDataNative_Value173>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value173, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkDataNative_Value174 {
-    pub r#opaque_bytes: [u8; 24],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value174>() == 24); assert!(core::mem::align_of::<R4SdkDataNative_Value174>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value174, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value174>() == 8); assert!(core::mem::align_of::<R4SdkDataNative_Value174>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value174, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataNative_Value175 {
-    pub r#opaque_bytes: [u8; 2072],
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value175>() == 2072); assert!(core::mem::align_of::<R4SdkDataNative_Value175>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value175, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value175>() == 8); assert!(core::mem::align_of::<R4SdkDataNative_Value175>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value175, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataNative_Value176 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value176>() == 8); assert!(core::mem::align_of::<R4SdkDataNative_Value176>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value176, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value176>() == 24); assert!(core::mem::align_of::<R4SdkDataNative_Value176>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value176, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataNative_Value177 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 2072],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value177>() == 8); assert!(core::mem::align_of::<R4SdkDataNative_Value177>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value177, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value177>() == 2072); assert!(core::mem::align_of::<R4SdkDataNative_Value177>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value177, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataNative_Value178 {
@@ -6631,21 +6631,21 @@ const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value178>() == 8); 
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataNative_Value179 {
-    pub r#opaque_bytes: [u8; 16],
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value179>() == 16); assert!(core::mem::align_of::<R4SdkDataNative_Value179>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value179, r#opaque_bytes) == 0); };
-#[repr(C, align(1))]
+const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value179>() == 8); assert!(core::mem::align_of::<R4SdkDataNative_Value179>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value179, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataNative_Value180 {
-    pub r#opaque_bytes: [u8; 2],
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value180>() == 2); assert!(core::mem::align_of::<R4SdkDataNative_Value180>() == 1); assert!(core::mem::offset_of!(R4SdkDataNative_Value180, r#opaque_bytes) == 0); };
-#[repr(C, align(1))]
+const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value180>() == 8); assert!(core::mem::align_of::<R4SdkDataNative_Value180>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value180, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataNative_Value181 {
-    pub r#opaque_bytes: [u8; 2],
+    pub r#opaque_bytes: [u8; 16],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value181>() == 2); assert!(core::mem::align_of::<R4SdkDataNative_Value181>() == 1); assert!(core::mem::offset_of!(R4SdkDataNative_Value181, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value181>() == 16); assert!(core::mem::align_of::<R4SdkDataNative_Value181>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value181, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataNative_Value182 {
@@ -6658,12 +6658,24 @@ pub struct R4SdkDataNative_Value183 {
     pub r#opaque_bytes: [u8; 2],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value183>() == 2); assert!(core::mem::align_of::<R4SdkDataNative_Value183>() == 1); assert!(core::mem::offset_of!(R4SdkDataNative_Value183, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
+#[repr(C, align(1))]
 #[derive(Clone, Copy)]
 pub struct R4SdkDataNative_Value184 {
+    pub r#opaque_bytes: [u8; 2],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value184>() == 2); assert!(core::mem::align_of::<R4SdkDataNative_Value184>() == 1); assert!(core::mem::offset_of!(R4SdkDataNative_Value184, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDataNative_Value185 {
+    pub r#opaque_bytes: [u8; 2],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value185>() == 2); assert!(core::mem::align_of::<R4SdkDataNative_Value185>() == 1); assert!(core::mem::offset_of!(R4SdkDataNative_Value185, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkDataNative_Value186 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value184>() == 8); assert!(core::mem::align_of::<R4SdkDataNative_Value184>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value184, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkDataNative_Value186>() == 8); assert!(core::mem::align_of::<R4SdkDataNative_Value186>() == 8); assert!(core::mem::offset_of!(R4SdkDataNative_Value186, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkArgPolicy {
@@ -17661,37 +17673,37 @@ pub const R4SdkDataNative_Value120_TYPE: u32 = 120;
 pub const R4SdkDataNative_Value121_TYPE: u32 = 121;
 pub const R4SdkDataNative_Value122_TYPE: u32 = 122;
 pub const R4SdkDataNative_Value123_TYPE: u32 = 123;
-pub const R4SdkDataVersionSemanticVersion_TYPE: u32 = 124;
+pub const R4SdkDataNative_Value124_TYPE: u32 = 124;
 pub const R4SdkDataNative_Value125_TYPE: u32 = 125;
-pub const R4SdkDataUpdateMetadataComponentKind_TYPE: u32 = 127;
-pub const R4SdkDataUpdateMetadataInstallMode_TYPE: u32 = 128;
-pub const R4SdkDataUpdateMetadataPriority_TYPE: u32 = 129;
-pub const R4SdkDataUpdateMetadataRequirementState_TYPE: u32 = 130;
-pub const R4SdkDataUpdateMetadataDerivedClass_TYPE: u32 = 131;
-pub const R4SdkDataNative_Value132_TYPE: u32 = 132;
-pub const R4SdkDataNative_Value133_TYPE: u32 = 133;
+pub const R4SdkDataVersionSemanticVersion_TYPE: u32 = 126;
+pub const R4SdkDataNative_Value127_TYPE: u32 = 127;
+pub const R4SdkDataUpdateMetadataComponentKind_TYPE: u32 = 129;
+pub const R4SdkDataUpdateMetadataInstallMode_TYPE: u32 = 130;
+pub const R4SdkDataUpdateMetadataPriority_TYPE: u32 = 131;
+pub const R4SdkDataUpdateMetadataRequirementState_TYPE: u32 = 132;
+pub const R4SdkDataUpdateMetadataDerivedClass_TYPE: u32 = 133;
 pub const R4SdkDataNative_Value134_TYPE: u32 = 134;
-pub const R4SdkDataArtifactIdentity_TYPE: u32 = 135;
+pub const R4SdkDataNative_Value135_TYPE: u32 = 135;
 pub const R4SdkDataNative_Value136_TYPE: u32 = 136;
-pub const R4SdkDataNative_Value137_TYPE: u32 = 137;
-pub const R4SdkDataArtifactSliceReader_TYPE: u32 = 138;
-pub const R4SdkDataContext_TYPE: u32 = 139;
-pub const R4SdkDataNative_Value140_TYPE: u32 = 140;
-pub const R4SdkDataNative_Value141_TYPE: u32 = 141;
+pub const R4SdkDataArtifactIdentity_TYPE: u32 = 137;
+pub const R4SdkDataNative_Value138_TYPE: u32 = 138;
+pub const R4SdkDataNative_Value139_TYPE: u32 = 139;
+pub const R4SdkDataArtifactSliceReader_TYPE: u32 = 140;
+pub const R4SdkDataContext_TYPE: u32 = 141;
+pub const R4SdkDataNative_Value142_TYPE: u32 = 142;
 pub const R4SdkDataNative_Value143_TYPE: u32 = 143;
-pub const R4SdkDataNative_Value144_TYPE: u32 = 144;
 pub const R4SdkDataNative_Value145_TYPE: u32 = 145;
-pub const R4SdkDataSha256_TYPE: u32 = 146;
-pub const R4SdkDataNative_crypto_sha2_Sha2x32____1779033703__3144134277__1013904242__2773480762__1359893119__2600822924__528734635__1541459225___256__TYPE: u32 = 147;
-pub const R4SdkDataArena_TYPE: u32 = 148;
-pub const R4SdkDataNative_Value149_TYPE: u32 = 149;
-pub const R4SdkDataNative_Value150_TYPE: u32 = 150;
+pub const R4SdkDataNative_Value146_TYPE: u32 = 146;
+pub const R4SdkDataNative_Value147_TYPE: u32 = 147;
+pub const R4SdkDataSha256_TYPE: u32 = 148;
+pub const R4SdkDataNative_crypto_sha2_Sha2x32____1779033703__3144134277__1013904242__2773480762__1359893119__2600822924__528734635__1541459225___256__TYPE: u32 = 149;
+pub const R4SdkDataArena_TYPE: u32 = 150;
 pub const R4SdkDataNative_Value151_TYPE: u32 = 151;
-pub const R4SdkDataReader_TYPE: u32 = 152;
+pub const R4SdkDataNative_Value152_TYPE: u32 = 152;
 pub const R4SdkDataNative_Value153_TYPE: u32 = 153;
-pub const R4SdkDataNative_crypto_sha2_Sha2x32____1779033703__3144134277__1013904242__2773480762__1359893119__2600822924__528734635__1541459225___256__Options_TYPE: u32 = 154;
+pub const R4SdkDataReader_TYPE: u32 = 154;
 pub const R4SdkDataNative_Value155_TYPE: u32 = 155;
-pub const R4SdkDataNative_Value156_TYPE: u32 = 156;
+pub const R4SdkDataNative_crypto_sha2_Sha2x32____1779033703__3144134277__1013904242__2773480762__1359893119__2600822924__528734635__1541459225___256__Options_TYPE: u32 = 156;
 pub const R4SdkDataNative_Value157_TYPE: u32 = 157;
 pub const R4SdkDataNative_Value158_TYPE: u32 = 158;
 pub const R4SdkDataNative_Value159_TYPE: u32 = 159;
@@ -17706,8 +17718,8 @@ pub const R4SdkDataNative_Value167_TYPE: u32 = 167;
 pub const R4SdkDataNative_Value168_TYPE: u32 = 168;
 pub const R4SdkDataNative_Value169_TYPE: u32 = 169;
 pub const R4SdkDataNative_Value170_TYPE: u32 = 170;
+pub const R4SdkDataNative_Value171_TYPE: u32 = 171;
 pub const R4SdkDataNative_Value172_TYPE: u32 = 172;
-pub const R4SdkDataNative_Value173_TYPE: u32 = 173;
 pub const R4SdkDataNative_Value174_TYPE: u32 = 174;
 pub const R4SdkDataNative_Value175_TYPE: u32 = 175;
 pub const R4SdkDataNative_Value176_TYPE: u32 = 176;
@@ -17719,7 +17731,9 @@ pub const R4SdkDataNative_Value181_TYPE: u32 = 181;
 pub const R4SdkDataNative_Value182_TYPE: u32 = 182;
 pub const R4SdkDataNative_Value183_TYPE: u32 = 183;
 pub const R4SdkDataNative_Value184_TYPE: u32 = 184;
-pub const R4SdkData_ABI_FINGERPRINT: u64 = 14268191799079402320;
+pub const R4SdkDataNative_Value185_TYPE: u32 = 185;
+pub const R4SdkDataNative_Value186_TYPE: u32 = 186;
+pub const R4SdkData_ABI_FINGERPRINT: u64 = 10602740399689007244;
 pub const R4SdkDataJson_op_open: i32 = 1;
 pub const R4SdkDataJson_op_next: i32 = 2;
 pub const R4SdkDataJson_op_select: i32 = 3;
@@ -25724,6 +25738,8 @@ unsafe extern "C" {
     pub fn R4SdkDataManifest_importIsOptional(p0: u32, p1: *const u8, p2: u64) -> R4SdkDataSlot;
     pub fn R4SdkDataManifest_moduleVersionMeta(p0: u32, p1: *const R4SdkDataAllocator, p2: *const R4SdkDataManifestManifest) -> R4SdkDataSlot;
     pub fn R4SdkDataManifest_r4xManifestMetadata(p0: u32, p1: *const R4SdkDataAllocator, p2: *const R4SdkDataManifestManifest) -> R4SdkDataSlot;
+    pub fn R4SdkDataManifest_sdkBuildProfile(p0: u32, p1: *const R4SdkDataManifestManifest) -> R4SdkDataSlot;
+    pub fn R4SdkDataManifest_moduleExports(p0: u32, p1: *const R4SdkDataAllocator, p2: *const R4SdkDataManifestManifest) -> R4SdkDataSlot;
     pub fn R4SdkDataManifest_derivePlan(p0: u32, p1: *const R4SdkDataAllocator, p2: *const R4SdkDataManifestManifest, p3: *mut R4SdkDataManifestPlan) -> R4SdkDataSlot;
     pub fn R4SdkDataManifest_buildProfileName(p0: u32, p1: u32, p2: u32, p3: u32) -> R4SdkDataSlot;
     pub fn R4SdkDataManifest_appProfileName(p0: u32, p1: u32) -> R4SdkDataSlot;
@@ -25766,12 +25782,12 @@ unsafe extern "C" {
     pub fn R4SdkData_inspectReader(p0: u32, p1: *const R4SdkDataReader, p2: u64, p3: *mut R4SdkDataArtifactIdentity) -> R4SdkDataSlot;
     pub fn R4SdkData_audioStreamReplyValid(p0: u32, p1: *const u8, p2: u64, p3: u16, p4: u32, p5: u32, p6: u64) -> R4SdkDataSlot;
     pub fn R4SdkDataSha256_init(p0: u32, p1: *const R4SdkDataNative_crypto_sha2_Sha2x32____1779033703__3144134277__1013904242__2773480762__1359893119__2600822924__528734635__1541459225___256__Options, p2: *mut R4SdkDataSha256) -> R4SdkDataSlot;
-    pub fn R4SdkDataSha256_hash(p0: u32, p1: *const u8, p2: u64, p3: *mut R4SdkDataNative_Value156, p4: *const R4SdkDataNative_crypto_sha2_Sha2x32____1779033703__3144134277__1013904242__2773480762__1359893119__2600822924__528734635__1541459225___256__Options) -> R4SdkDataSlot;
+    pub fn R4SdkDataSha256_hash(p0: u32, p1: *const u8, p2: u64, p3: *mut R4SdkDataNative_Value158, p4: *const R4SdkDataNative_crypto_sha2_Sha2x32____1779033703__3144134277__1013904242__2773480762__1359893119__2600822924__528734635__1541459225___256__Options) -> R4SdkDataSlot;
     pub fn R4SdkDataSha256_update(p0: u32, p1: *mut R4SdkDataSha256, p2: *const u8, p3: u64) -> R4SdkDataSlot;
     pub fn R4SdkDataSha256_updateWithExecutor(p0: u32, p1: *mut R4SdkDataSha256, p2: *const u8, p3: u64, p4: R4SdkDataSlot) -> R4SdkDataSlot;
-    pub fn R4SdkDataSha256_final(p0: u32, p1: *mut R4SdkDataSha256, p2: *mut R4SdkDataNative_Value156) -> R4SdkDataSlot;
-    pub fn R4SdkDataSha256_finalResult(p0: u32, p1: *mut R4SdkDataSha256, p2: *mut R4SdkDataNative_Value156) -> R4SdkDataSlot;
-    pub fn R4SdkDataSha256_peek(p0: u32, p1: *const R4SdkDataSha256, p2: *mut R4SdkDataNative_Value156) -> R4SdkDataSlot;
+    pub fn R4SdkDataSha256_final(p0: u32, p1: *mut R4SdkDataSha256, p2: *mut R4SdkDataNative_Value158) -> R4SdkDataSlot;
+    pub fn R4SdkDataSha256_finalResult(p0: u32, p1: *mut R4SdkDataSha256, p2: *mut R4SdkDataNative_Value158) -> R4SdkDataSlot;
+    pub fn R4SdkDataSha256_peek(p0: u32, p1: *const R4SdkDataSha256, p2: *mut R4SdkDataNative_Value158) -> R4SdkDataSlot;
     pub fn R4SdkDataJsonDocument_init(p0: u32, p1: *const R4SdkDataNative_r4dev_Context, p2: *const u8, p3: u64, p4: *mut u8, p5: u64, p6: *mut R4SdkDataJsonDocument) -> R4SdkDataSlot;
     pub fn R4SdkDataJsonDocument_token(p0: u32, p1: *const R4SdkDataJsonDocument) -> R4SdkDataSlot;
     pub fn R4SdkDataJsonDocument_tokenBytes(p0: u32, p1: *const R4SdkDataJsonDocument) -> R4SdkDataSlot;
@@ -26524,7 +26540,9 @@ unsafe extern "C" {
     pub fn R4SdkDataNative_Value120_inspectNative(p0: *const R4SdkDataNative_Value120, p1: *mut R4SdkDataManifestManifest) -> R4SdkDataSlot;
     pub fn R4SdkDataNative_Value121_inspectNative(p0: *const R4SdkDataNative_Value121) -> R4SdkDataSlot;
     pub fn R4SdkDataNative_Value122_inspectNative(p0: *const R4SdkDataNative_Value122) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value123_inspectNative(p0: *const R4SdkDataNative_Value123, p1: *mut R4SdkDataManifestPlan) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value123_inspectNative(p0: *const R4SdkDataNative_Value123) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value124_inspectNative(p0: *const R4SdkDataNative_Value124) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value125_inspectNative(p0: *const R4SdkDataNative_Value125, p1: *mut R4SdkDataManifestPlan) -> R4SdkDataSlot;
     pub fn R4SdkDataVersionSemanticVersion_create(p0: *mut R4SdkDataVersionSemanticVersion, p1: u32, p2: u32, p3: u32) -> R4SdkDataSlot;
     pub fn R4SdkDataVersionSemanticVersion_from_fields(p0: *mut R4SdkDataVersionSemanticVersion, p1: u32, p2: u32, p3: u32) -> R4SdkDataSlot;
     pub fn R4SdkDataVersionSemanticVersion_get_major(p0: *const R4SdkDataVersionSemanticVersion) -> R4SdkDataSlot;
@@ -26534,8 +26552,8 @@ unsafe extern "C" {
     pub fn R4SdkDataVersionSemanticVersion_get_patch(p0: *const R4SdkDataVersionSemanticVersion) -> R4SdkDataSlot;
     pub fn R4SdkDataVersionSemanticVersion_set_patch(p0: *mut R4SdkDataVersionSemanticVersion, p1: u32) -> R4SdkDataSlot;
     pub fn R4SdkDataVersionSemanticVersion_inspectNative(p0: *const R4SdkDataVersionSemanticVersion) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value125_create(p0: *mut R4SdkDataNative_Value125, p1: R4SdkDataSlot) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value125_inspectNative(p0: *const R4SdkDataNative_Value125, p1: *mut R4SdkDataVersionSemanticVersion) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value127_create(p0: *mut R4SdkDataNative_Value127, p1: R4SdkDataSlot) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value127_inspectNative(p0: *const R4SdkDataNative_Value127, p1: *mut R4SdkDataVersionSemanticVersion) -> R4SdkDataSlot;
     pub fn R4SdkDataUpdateMetadataComponentKind_create(p0: *mut R4SdkDataUpdateMetadataComponentKind, p1: u32) -> R4SdkDataSlot;
     pub fn R4SdkDataUpdateMetadataComponentKind_inspectNative(p0: *const R4SdkDataUpdateMetadataComponentKind) -> R4SdkDataSlot;
     pub fn R4SdkDataUpdateMetadataInstallMode_create(p0: *mut R4SdkDataUpdateMetadataInstallMode, p1: u32) -> R4SdkDataSlot;
@@ -26551,44 +26569,44 @@ unsafe extern "C" {
     pub fn R4SdkDataUpdateMetadataDerivedClass_get_priority(p0: *const R4SdkDataUpdateMetadataDerivedClass) -> R4SdkDataSlot;
     pub fn R4SdkDataUpdateMetadataDerivedClass_set_priority(p0: *mut R4SdkDataUpdateMetadataDerivedClass, p1: u32) -> R4SdkDataSlot;
     pub fn R4SdkDataUpdateMetadataDerivedClass_inspectNative(p0: *const R4SdkDataUpdateMetadataDerivedClass) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value132_create(p0: *mut R4SdkDataNative_Value132, p1: *mut R4SdkDataUpdateMetadataDerivedClass) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value132_inspectNative(p0: *const R4SdkDataNative_Value132) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value133_create(p0: *mut R4SdkDataNative_Value133, p1: R4SdkDataSlot) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value133_inspectNative(p0: *const R4SdkDataNative_Value133) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value134_create(p0: *mut R4SdkDataNative_Value134, p1: R4SdkDataSlot) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value134_create(p0: *mut R4SdkDataNative_Value134, p1: *mut R4SdkDataUpdateMetadataDerivedClass) -> R4SdkDataSlot;
     pub fn R4SdkDataNative_Value134_inspectNative(p0: *const R4SdkDataNative_Value134) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value135_create(p0: *mut R4SdkDataNative_Value135, p1: R4SdkDataSlot) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value135_inspectNative(p0: *const R4SdkDataNative_Value135) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value136_create(p0: *mut R4SdkDataNative_Value136, p1: R4SdkDataSlot) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value136_inspectNative(p0: *const R4SdkDataNative_Value136) -> R4SdkDataSlot;
     pub fn R4SdkDataArtifactIdentity_create(p0: *mut R4SdkDataArtifactIdentity, p1: u32) -> R4SdkDataSlot;
-    pub fn R4SdkDataArtifactIdentity_from_fields(p0: *mut R4SdkDataArtifactIdentity, p1: u32, p2: *const R4SdkDataNative_Value136, p3: u64, p4: *const R4SdkDataNative_Value137, p5: u64) -> R4SdkDataSlot;
+    pub fn R4SdkDataArtifactIdentity_from_fields(p0: *mut R4SdkDataArtifactIdentity, p1: u32, p2: *const R4SdkDataNative_Value138, p3: u64, p4: *const R4SdkDataNative_Value139, p5: u64) -> R4SdkDataSlot;
     pub fn R4SdkDataArtifactIdentity_get_kind(p0: *const R4SdkDataArtifactIdentity) -> R4SdkDataSlot;
     pub fn R4SdkDataArtifactIdentity_set_kind(p0: *mut R4SdkDataArtifactIdentity, p1: u32) -> R4SdkDataSlot;
-    pub fn R4SdkDataArtifactIdentity_get_name(p0: *const R4SdkDataArtifactIdentity, p1: *mut R4SdkDataNative_Value136) -> R4SdkDataSlot;
-    pub fn R4SdkDataArtifactIdentity_set_name(p0: *mut R4SdkDataArtifactIdentity, p1: *const R4SdkDataNative_Value136) -> R4SdkDataSlot;
+    pub fn R4SdkDataArtifactIdentity_get_name(p0: *const R4SdkDataArtifactIdentity, p1: *mut R4SdkDataNative_Value138) -> R4SdkDataSlot;
+    pub fn R4SdkDataArtifactIdentity_set_name(p0: *mut R4SdkDataArtifactIdentity, p1: *const R4SdkDataNative_Value138) -> R4SdkDataSlot;
     pub fn R4SdkDataArtifactIdentity_get_name_len(p0: *const R4SdkDataArtifactIdentity) -> R4SdkDataSlot;
     pub fn R4SdkDataArtifactIdentity_set_name_len(p0: *mut R4SdkDataArtifactIdentity, p1: u64) -> R4SdkDataSlot;
-    pub fn R4SdkDataArtifactIdentity_get_version(p0: *const R4SdkDataArtifactIdentity, p1: *mut R4SdkDataNative_Value137) -> R4SdkDataSlot;
-    pub fn R4SdkDataArtifactIdentity_set_version(p0: *mut R4SdkDataArtifactIdentity, p1: *const R4SdkDataNative_Value137) -> R4SdkDataSlot;
+    pub fn R4SdkDataArtifactIdentity_get_version(p0: *const R4SdkDataArtifactIdentity, p1: *mut R4SdkDataNative_Value139) -> R4SdkDataSlot;
+    pub fn R4SdkDataArtifactIdentity_set_version(p0: *mut R4SdkDataArtifactIdentity, p1: *const R4SdkDataNative_Value139) -> R4SdkDataSlot;
     pub fn R4SdkDataArtifactIdentity_get_version_len(p0: *const R4SdkDataArtifactIdentity) -> R4SdkDataSlot;
     pub fn R4SdkDataArtifactIdentity_set_version_len(p0: *mut R4SdkDataArtifactIdentity, p1: u64) -> R4SdkDataSlot;
     pub fn R4SdkDataArtifactIdentity_inspectNative(p0: *const R4SdkDataArtifactIdentity) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value136_create(p0: *mut R4SdkDataNative_Value136, p1: *const R4SdkDataNative_Value136) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value136_inspectNative(p0: *const R4SdkDataNative_Value136, p1: *mut R4SdkDataNative_Value136) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value137_create(p0: *mut R4SdkDataNative_Value137, p1: *const R4SdkDataNative_Value137) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value137_inspectNative(p0: *const R4SdkDataNative_Value137, p1: *mut R4SdkDataNative_Value137) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value138_create(p0: *mut R4SdkDataNative_Value138, p1: *const R4SdkDataNative_Value138) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value138_inspectNative(p0: *const R4SdkDataNative_Value138, p1: *mut R4SdkDataNative_Value138) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value139_create(p0: *mut R4SdkDataNative_Value139, p1: *const R4SdkDataNative_Value139) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value139_inspectNative(p0: *const R4SdkDataNative_Value139, p1: *mut R4SdkDataNative_Value139) -> R4SdkDataSlot;
     pub fn R4SdkDataArtifactSliceReader_create(p0: *mut R4SdkDataArtifactSliceReader, p1: *const u8, p2: u64) -> R4SdkDataSlot;
     pub fn R4SdkDataArtifactSliceReader_from_fields(p0: *mut R4SdkDataArtifactSliceReader, p1: *const u8, p2: u64) -> R4SdkDataSlot;
     pub fn R4SdkDataArtifactSliceReader_get_bytes(p0: *const R4SdkDataArtifactSliceReader) -> R4SdkDataSlot;
     pub fn R4SdkDataArtifactSliceReader_set_bytes(p0: *mut R4SdkDataArtifactSliceReader, p1: *const u8, p2: u64) -> R4SdkDataSlot;
     pub fn R4SdkDataArtifactSliceReader_inspectNative(p0: *const R4SdkDataArtifactSliceReader) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value140_create(p0: *mut R4SdkDataNative_Value140, p1: *mut R4SdkDataContext) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value140_inspectNative(p0: *const R4SdkDataNative_Value140) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value141_create(p0: *mut R4SdkDataNative_Value141, p1: *const R4XStartContext) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value141_inspectNative(p0: *const R4SdkDataNative_Value141) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value143_create(p0: *mut R4SdkDataNative_Value143, p1: *mut R4SdkDataJsonDocument) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value142_create(p0: *mut R4SdkDataNative_Value142, p1: *mut R4SdkDataContext) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value142_inspectNative(p0: *const R4SdkDataNative_Value142) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value143_create(p0: *mut R4SdkDataNative_Value143, p1: *const R4XStartContext) -> R4SdkDataSlot;
     pub fn R4SdkDataNative_Value143_inspectNative(p0: *const R4SdkDataNative_Value143) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value144_create(p0: *mut R4SdkDataNative_Value144, p1: *const R4SdkDataContext) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value144_inspectNative(p0: *const R4SdkDataNative_Value144) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value145_create(p0: *mut R4SdkDataNative_Value145, p1: *mut R4SdkDataSha256) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value145_create(p0: *mut R4SdkDataNative_Value145, p1: *mut R4SdkDataJsonDocument) -> R4SdkDataSlot;
     pub fn R4SdkDataNative_Value145_inspectNative(p0: *const R4SdkDataNative_Value145) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value146_create(p0: *mut R4SdkDataNative_Value146, p1: *const R4SdkDataContext) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value146_inspectNative(p0: *const R4SdkDataNative_Value146) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value147_create(p0: *mut R4SdkDataNative_Value147, p1: *mut R4SdkDataSha256) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value147_inspectNative(p0: *const R4SdkDataNative_Value147) -> R4SdkDataSlot;
     pub fn R4SdkDataSha256_create(p0: *mut R4SdkDataSha256, p1: *const R4SdkDataNative_crypto_sha2_Sha2x32____1779033703__3144134277__1013904242__2773480762__1359893119__2600822924__528734635__1541459225___256_) -> R4SdkDataSlot;
     pub fn R4SdkDataSha256_from_fields(p0: *mut R4SdkDataSha256, p1: *const R4SdkDataNative_crypto_sha2_Sha2x32____1779033703__3144134277__1013904242__2773480762__1359893119__2600822924__528734635__1541459225___256_, p2: u64, p3: u64) -> R4SdkDataSlot;
     pub fn R4SdkDataSha256_get_inner(p0: *const R4SdkDataSha256, p1: *mut R4SdkDataNative_crypto_sha2_Sha2x32____1779033703__3144134277__1013904242__2773480762__1359893119__2600822924__528734635__1541459225___256_) -> R4SdkDataSlot;
@@ -26598,12 +26616,12 @@ unsafe extern "C" {
     pub fn R4SdkDataSha256_get_refused_windows(p0: *const R4SdkDataSha256) -> R4SdkDataSlot;
     pub fn R4SdkDataSha256_set_refused_windows(p0: *mut R4SdkDataSha256, p1: u64) -> R4SdkDataSlot;
     pub fn R4SdkDataSha256_inspectNative(p0: *const R4SdkDataSha256) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value149_create(p0: *mut R4SdkDataNative_Value149, p1: *mut R4SdkDataArena) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value149_inspectNative(p0: *const R4SdkDataNative_Value149) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value150_create(p0: *mut R4SdkDataNative_Value150, p1: *const R4SdkDataArena) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value150_inspectNative(p0: *const R4SdkDataNative_Value150) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value151_create(p0: *mut R4SdkDataNative_Value151, p1: R4SdkDataSlot) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value151_inspectNative(p0: *const R4SdkDataNative_Value151, p1: *mut R4SdkDataArtifactIdentity) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value151_create(p0: *mut R4SdkDataNative_Value151, p1: *mut R4SdkDataArena) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value151_inspectNative(p0: *const R4SdkDataNative_Value151) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value152_create(p0: *mut R4SdkDataNative_Value152, p1: *const R4SdkDataArena) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value152_inspectNative(p0: *const R4SdkDataNative_Value152) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value153_create(p0: *mut R4SdkDataNative_Value153, p1: R4SdkDataSlot) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value153_inspectNative(p0: *const R4SdkDataNative_Value153, p1: *mut R4SdkDataArtifactIdentity) -> R4SdkDataSlot;
     pub fn R4SdkDataReader_create(p0: *mut R4SdkDataReader, p1: u64) -> R4SdkDataSlot;
     pub fn R4SdkDataReader_from_fields(p0: *mut R4SdkDataReader, p1: R4SdkDataSlot, p2: u64) -> R4SdkDataSlot;
     pub fn R4SdkDataReader_get_user(p0: *const R4SdkDataReader) -> R4SdkDataSlot;
@@ -26611,57 +26629,57 @@ unsafe extern "C" {
     pub fn R4SdkDataReader_get_callback(p0: *const R4SdkDataReader) -> R4SdkDataSlot;
     pub fn R4SdkDataReader_set_callback(p0: *mut R4SdkDataReader, p1: u64) -> R4SdkDataSlot;
     pub fn R4SdkDataReader_inspectNative(p0: *const R4SdkDataReader) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value153_create(p0: *mut R4SdkDataNative_Value153, p1: R4SdkDataSlot) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value153_inspectNative(p0: *const R4SdkDataNative_Value153) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value155_create(p0: *mut R4SdkDataNative_Value155, p1: *mut R4SdkDataNative_Value156) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value155_create(p0: *mut R4SdkDataNative_Value155, p1: R4SdkDataSlot) -> R4SdkDataSlot;
     pub fn R4SdkDataNative_Value155_inspectNative(p0: *const R4SdkDataNative_Value155) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value156_create(p0: *mut R4SdkDataNative_Value156, p1: *const R4SdkDataNative_Value156) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value156_inspectNative(p0: *const R4SdkDataNative_Value156, p1: *mut R4SdkDataNative_Value156) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value157_create(p0: *mut R4SdkDataNative_Value157, p1: *const R4SdkDataJsonDocument) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value157_create(p0: *mut R4SdkDataNative_Value157, p1: *mut R4SdkDataNative_Value158) -> R4SdkDataSlot;
     pub fn R4SdkDataNative_Value157_inspectNative(p0: *const R4SdkDataNative_Value157) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value158_inspectNative(p0: *const R4SdkDataNative_Value158) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value158_create(p0: *mut R4SdkDataNative_Value158, p1: *const R4SdkDataNative_Value158) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value158_inspectNative(p0: *const R4SdkDataNative_Value158, p1: *mut R4SdkDataNative_Value158) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value159_create(p0: *mut R4SdkDataNative_Value159, p1: *const R4SdkDataJsonDocument) -> R4SdkDataSlot;
     pub fn R4SdkDataNative_Value159_inspectNative(p0: *const R4SdkDataNative_Value159) -> R4SdkDataSlot;
     pub fn R4SdkDataNative_Value160_inspectNative(p0: *const R4SdkDataNative_Value160) -> R4SdkDataSlot;
     pub fn R4SdkDataNative_Value161_inspectNative(p0: *const R4SdkDataNative_Value161) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value162_create(p0: *mut R4SdkDataNative_Value162, p1: *mut R4SdkDataZipEntry, p2: u64) -> R4SdkDataSlot;
     pub fn R4SdkDataNative_Value162_inspectNative(p0: *const R4SdkDataNative_Value162) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value163_inspectNative(p0: *const R4SdkDataNative_Value163, p1: *mut R4SdkDataZipInfo) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value164_create(p0: *mut R4SdkDataNative_Value164, p1: *mut R4SdkDataZipWork) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value163_inspectNative(p0: *const R4SdkDataNative_Value163) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value164_create(p0: *mut R4SdkDataNative_Value164, p1: *mut R4SdkDataZipEntry, p2: u64) -> R4SdkDataSlot;
     pub fn R4SdkDataNative_Value164_inspectNative(p0: *const R4SdkDataNative_Value164) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value165_inspectNative(p0: *const R4SdkDataNative_Value165, p1: *mut R4SdkDataZipProgress) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value166_create(p0: *mut R4SdkDataNative_Value166, p1: *const u32, p2: u64) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value165_inspectNative(p0: *const R4SdkDataNative_Value165, p1: *mut R4SdkDataZipInfo) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value166_create(p0: *mut R4SdkDataNative_Value166, p1: *mut R4SdkDataZipWork) -> R4SdkDataSlot;
     pub fn R4SdkDataNative_Value166_inspectNative(p0: *const R4SdkDataNative_Value166) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value167_create(p0: *mut R4SdkDataNative_Value167, p1: R4SdkDataSlot) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value167_inspectNative(p0: *const R4SdkDataNative_Value167) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value168_create(p0: *mut R4SdkDataNative_Value168, p1: *mut R4SdkDataRasterImage) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value167_inspectNative(p0: *const R4SdkDataNative_Value167, p1: *mut R4SdkDataZipProgress) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value168_create(p0: *mut R4SdkDataNative_Value168, p1: *const u32, p2: u64) -> R4SdkDataSlot;
     pub fn R4SdkDataNative_Value168_inspectNative(p0: *const R4SdkDataNative_Value168) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value169_create(p0: *mut R4SdkDataNative_Value169, p1: R4SdkDataSlot) -> R4SdkDataSlot;
     pub fn R4SdkDataNative_Value169_inspectNative(p0: *const R4SdkDataNative_Value169) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value170_create(p0: *mut R4SdkDataNative_Value170, p1: *const R4CpuAccelerationInfo) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value170_create(p0: *mut R4SdkDataNative_Value170, p1: *mut R4SdkDataRasterImage) -> R4SdkDataSlot;
     pub fn R4SdkDataNative_Value170_inspectNative(p0: *const R4SdkDataNative_Value170) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value172_create(p0: *mut R4SdkDataNative_Value172, p1: *const R4SdkDataEncodingDecoder) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value171_inspectNative(p0: *const R4SdkDataNative_Value171) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value172_create(p0: *mut R4SdkDataNative_Value172, p1: *const R4CpuAccelerationInfo) -> R4SdkDataSlot;
     pub fn R4SdkDataNative_Value172_inspectNative(p0: *const R4SdkDataNative_Value172) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value173_create(p0: *mut R4SdkDataNative_Value173, p1: *mut R4SdkDataEncodingDecoder) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value173_inspectNative(p0: *const R4SdkDataNative_Value173) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value174_create(p0: *mut R4SdkDataNative_Value174, p1: *const R4SdkDataEncodingDecoder) -> R4SdkDataSlot;
     pub fn R4SdkDataNative_Value174_inspectNative(p0: *const R4SdkDataNative_Value174) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value175_inspectNative(p0: *const R4SdkDataNative_Value175, p1: *mut R4SdkDataUrlSearchParams) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value176_create(p0: *mut R4SdkDataNative_Value176, p1: *mut R4SdkDataUrlSearchParams) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value175_create(p0: *mut R4SdkDataNative_Value175, p1: *mut R4SdkDataEncodingDecoder) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value175_inspectNative(p0: *const R4SdkDataNative_Value175) -> R4SdkDataSlot;
     pub fn R4SdkDataNative_Value176_inspectNative(p0: *const R4SdkDataNative_Value176) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value177_create(p0: *mut R4SdkDataNative_Value177, p1: *const R4SdkDataUrlSearchParams) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value177_inspectNative(p0: *const R4SdkDataNative_Value177) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value178_create(p0: *mut R4SdkDataNative_Value178, p1: *const R4SdkDataProjectProject) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value177_inspectNative(p0: *const R4SdkDataNative_Value177, p1: *mut R4SdkDataUrlSearchParams) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value178_create(p0: *mut R4SdkDataNative_Value178, p1: *mut R4SdkDataUrlSearchParams) -> R4SdkDataSlot;
     pub fn R4SdkDataNative_Value178_inspectNative(p0: *const R4SdkDataNative_Value178) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value179_create(p0: *mut R4SdkDataNative_Value179, p1: *const R4SdkDataProjectItem, p2: u64) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value179_create(p0: *mut R4SdkDataNative_Value179, p1: *const R4SdkDataUrlSearchParams) -> R4SdkDataSlot;
     pub fn R4SdkDataNative_Value179_inspectNative(p0: *const R4SdkDataNative_Value179) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value180_create(p0: *mut R4SdkDataNative_Value180, p1: R4SdkDataSlot) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value180_create(p0: *mut R4SdkDataNative_Value180, p1: *const R4SdkDataProjectProject) -> R4SdkDataSlot;
     pub fn R4SdkDataNative_Value180_inspectNative(p0: *const R4SdkDataNative_Value180) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value181_create(p0: *mut R4SdkDataNative_Value181, p1: R4SdkDataSlot) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value181_create(p0: *mut R4SdkDataNative_Value181, p1: *const R4SdkDataProjectItem, p2: u64) -> R4SdkDataSlot;
     pub fn R4SdkDataNative_Value181_inspectNative(p0: *const R4SdkDataNative_Value181) -> R4SdkDataSlot;
     pub fn R4SdkDataNative_Value182_create(p0: *mut R4SdkDataNative_Value182, p1: R4SdkDataSlot) -> R4SdkDataSlot;
     pub fn R4SdkDataNative_Value182_inspectNative(p0: *const R4SdkDataNative_Value182) -> R4SdkDataSlot;
     pub fn R4SdkDataNative_Value183_create(p0: *mut R4SdkDataNative_Value183, p1: R4SdkDataSlot) -> R4SdkDataSlot;
     pub fn R4SdkDataNative_Value183_inspectNative(p0: *const R4SdkDataNative_Value183) -> R4SdkDataSlot;
-    pub fn R4SdkDataNative_Value184_create(p0: *mut R4SdkDataNative_Value184, p1: *const R4SdkDataArtifactIdentity) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value184_create(p0: *mut R4SdkDataNative_Value184, p1: R4SdkDataSlot) -> R4SdkDataSlot;
     pub fn R4SdkDataNative_Value184_inspectNative(p0: *const R4SdkDataNative_Value184) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value185_create(p0: *mut R4SdkDataNative_Value185, p1: R4SdkDataSlot) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value185_inspectNative(p0: *const R4SdkDataNative_Value185) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value186_create(p0: *mut R4SdkDataNative_Value186, p1: *const R4SdkDataArtifactIdentity) -> R4SdkDataSlot;
+    pub fn R4SdkDataNative_Value186_inspectNative(p0: *const R4SdkDataNative_Value186) -> R4SdkDataSlot;
     pub fn R4SdkArgInit(p0: *const u8, p1: u64, p2: R4SdkArgPolicy, p3: *mut R4SdkArgCursor, p4: *mut R4SdkArgFailure) -> i32;
     pub fn R4SdkArgNext(p0: *mut R4SdkArgCursor, p1: *mut R4SdkArgToken, p2: *mut R4SdkArgFailure) -> i32;
     pub fn R4SdkArgRemaining(p0: *const R4SdkArgCursor, p1: u32, p2: *mut u64, p3: *mut u64) -> i32;
@@ -27309,13 +27327,13 @@ unsafe extern "C" {
     pub fn R4SdkUpdateNativeValue31_create(p0: *mut R4SdkUpdateNativeValue31, p1: *const R4SdkUpdateNativeValue31) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateNativeValue31_inspectNative(p0: *const R4SdkUpdateNativeValue31, p1: *mut R4SdkUpdateNativeValue31) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdatePartitionSource_create(p0: *mut R4SdkUpdatePartitionSource) -> R4SdkUpdateSlot;
-    pub fn R4SdkUpdatePartitionSource_from_fields(p0: *mut R4SdkUpdatePartitionSource, p1: *const R4SdkUpdateNativeValue33, p2: u64, p3: *const R4SdkDataNative_Value156) -> R4SdkUpdateSlot;
+    pub fn R4SdkUpdatePartitionSource_from_fields(p0: *mut R4SdkUpdatePartitionSource, p1: *const R4SdkUpdateNativeValue33, p2: u64, p3: *const R4SdkDataNative_Value158) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdatePartitionSource_get_spans(p0: *const R4SdkUpdatePartitionSource, p1: *mut R4SdkUpdateNativeValue33) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdatePartitionSource_set_spans(p0: *mut R4SdkUpdatePartitionSource, p1: *const R4SdkUpdateNativeValue33) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdatePartitionSource_get_count(p0: *const R4SdkUpdatePartitionSource) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdatePartitionSource_set_count(p0: *mut R4SdkUpdatePartitionSource, p1: u64) -> R4SdkUpdateSlot;
-    pub fn R4SdkUpdatePartitionSource_get_digest(p0: *const R4SdkUpdatePartitionSource, p1: *mut R4SdkDataNative_Value156) -> R4SdkUpdateSlot;
-    pub fn R4SdkUpdatePartitionSource_set_digest(p0: *mut R4SdkUpdatePartitionSource, p1: *const R4SdkDataNative_Value156) -> R4SdkUpdateSlot;
+    pub fn R4SdkUpdatePartitionSource_get_digest(p0: *const R4SdkUpdatePartitionSource, p1: *mut R4SdkDataNative_Value158) -> R4SdkUpdateSlot;
+    pub fn R4SdkUpdatePartitionSource_set_digest(p0: *mut R4SdkUpdatePartitionSource, p1: *const R4SdkDataNative_Value158) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdatePartitionSource_inspectNative(p0: *const R4SdkUpdatePartitionSource) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateNativeValue33_create(p0: *mut R4SdkUpdateNativeValue33, p1: *const R4SdkUpdateNativeValue33) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateNativeValue33_inspectNative(p0: *const R4SdkUpdateNativeValue33, p1: *mut R4SdkUpdateNativeValue33) -> R4SdkUpdateSlot;
@@ -27429,16 +27447,16 @@ unsafe extern "C" {
     pub fn R4SdkUpdateNativeValue60_create(p0: *mut R4SdkUpdateNativeValue60, p1: *const R4SdkUpdateStoragefat32_update_Change, p2: u64) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateNativeValue60_inspectNative(p0: *const R4SdkUpdateNativeValue60) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateNativeValue61_inspectNative(p0: *const R4SdkUpdateNativeValue61, p1: *mut R4SdkUpdateStoragefat32_update_Prepared) -> R4SdkUpdateSlot;
-    pub fn R4SdkUpdateStoragefat32_update_Prepared_create(p0: *mut R4SdkUpdateStoragefat32_update_Prepared, p1: *const R4SdkDataAllocator, p2: *mut u8, p3: u64, p4: *mut R4SdkUpdateStoragefat32_update_Write, p5: u64, p6: *const R4SdkDataNative_Value156, p7: u64) -> R4SdkUpdateSlot;
-    pub fn R4SdkUpdateStoragefat32_update_Prepared_from_fields(p0: *mut R4SdkUpdateStoragefat32_update_Prepared, p1: *const R4SdkDataAllocator, p2: *mut u8, p3: u64, p4: *mut R4SdkUpdateStoragefat32_update_Write, p5: u64, p6: *const R4SdkDataNative_Value156, p7: *mut R4SdkUpdateStoragefat32_update_SourceRange, p8: u64, p9: u64, p10: u64, p11: u8) -> R4SdkUpdateSlot;
+    pub fn R4SdkUpdateStoragefat32_update_Prepared_create(p0: *mut R4SdkUpdateStoragefat32_update_Prepared, p1: *const R4SdkDataAllocator, p2: *mut u8, p3: u64, p4: *mut R4SdkUpdateStoragefat32_update_Write, p5: u64, p6: *const R4SdkDataNative_Value158, p7: u64) -> R4SdkUpdateSlot;
+    pub fn R4SdkUpdateStoragefat32_update_Prepared_from_fields(p0: *mut R4SdkUpdateStoragefat32_update_Prepared, p1: *const R4SdkDataAllocator, p2: *mut u8, p3: u64, p4: *mut R4SdkUpdateStoragefat32_update_Write, p5: u64, p6: *const R4SdkDataNative_Value158, p7: *mut R4SdkUpdateStoragefat32_update_SourceRange, p8: u64, p9: u64, p10: u64, p11: u8) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateStoragefat32_update_Prepared_get_allocator(p0: *const R4SdkUpdateStoragefat32_update_Prepared, p1: *mut R4SdkDataAllocator) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateStoragefat32_update_Prepared_set_allocator(p0: *mut R4SdkUpdateStoragefat32_update_Prepared, p1: *const R4SdkDataAllocator) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateStoragefat32_update_Prepared_get_bytes(p0: *const R4SdkUpdateStoragefat32_update_Prepared) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateStoragefat32_update_Prepared_set_bytes(p0: *mut R4SdkUpdateStoragefat32_update_Prepared, p1: *mut u8, p2: u64) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateStoragefat32_update_Prepared_get_writes(p0: *const R4SdkUpdateStoragefat32_update_Prepared) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateStoragefat32_update_Prepared_set_writes(p0: *mut R4SdkUpdateStoragefat32_update_Prepared, p1: *mut R4SdkUpdateStoragefat32_update_Write, p2: u64) -> R4SdkUpdateSlot;
-    pub fn R4SdkUpdateStoragefat32_update_Prepared_get_source_sha256(p0: *const R4SdkUpdateStoragefat32_update_Prepared, p1: *mut R4SdkDataNative_Value156) -> R4SdkUpdateSlot;
-    pub fn R4SdkUpdateStoragefat32_update_Prepared_set_source_sha256(p0: *mut R4SdkUpdateStoragefat32_update_Prepared, p1: *const R4SdkDataNative_Value156) -> R4SdkUpdateSlot;
+    pub fn R4SdkUpdateStoragefat32_update_Prepared_get_source_sha256(p0: *const R4SdkUpdateStoragefat32_update_Prepared, p1: *mut R4SdkDataNative_Value158) -> R4SdkUpdateSlot;
+    pub fn R4SdkUpdateStoragefat32_update_Prepared_set_source_sha256(p0: *mut R4SdkUpdateStoragefat32_update_Prepared, p1: *const R4SdkDataNative_Value158) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateStoragefat32_update_Prepared_get_source_ranges(p0: *const R4SdkUpdateStoragefat32_update_Prepared) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateStoragefat32_update_Prepared_set_source_ranges(p0: *mut R4SdkUpdateStoragefat32_update_Prepared, p1: *mut R4SdkUpdateStoragefat32_update_SourceRange, p2: u64) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateStoragefat32_update_Prepared_get_changed_files(p0: *const R4SdkUpdateStoragefat32_update_Prepared) -> R4SdkUpdateSlot;
@@ -27794,7 +27812,7 @@ unsafe extern "C" {
     pub fn R4SdkUpdateStoragentfs_resize_ShrinkLimits_set_bitmap_lcn(p0: *mut R4SdkUpdateStoragentfs_resize_ShrinkLimits, p1: R4SdkUpdateSlot) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateStoragentfs_resize_ShrinkLimits_inspectNative(p0: *const R4SdkUpdateStoragentfs_resize_ShrinkLimits) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateStoragentfs_resize_Plan_create(p0: *mut R4SdkUpdateStoragentfs_resize_Plan, p1: *const R4SdkDataAllocator, p2: u64, p3: u64, p4: u64, p5: u32, p6: u64, p7: u64, p8: u64, p9: u64, p10: u64) -> R4SdkUpdateSlot;
-    pub fn R4SdkUpdateStoragentfs_resize_Plan_from_fields(p0: *mut R4SdkUpdateStoragentfs_resize_Plan, p1: *const R4SdkDataAllocator, p2: u64, p3: u64, p4: u64, p5: u32, p6: u64, p7: u64, p8: u64, p9: u64, p10: u64, p11: *const R4SdkUpdateStoragentfs_resize_Map, p12: *const R4SdkUpdateStoragentfs_resize_ShrinkLimits, p13: *const R4SdkDataNative_Value156, p14: *const R4SdkUpdateStoragentfs_resize_Map, p15: R4SdkUpdateSlot, p16: u64, p17: u16, p18: *const R4SdkUpdateNativeValue105, p19: u64, p20: *const R4SdkUpdateNativeValue107, p21: u64, p22: *const R4SdkUpdateNativeValue110, p23: *const R4SdkUpdateNativeValue110, p24: u64, p25: *const R4SdkUpdateNativeValue42) -> R4SdkUpdateSlot;
+    pub fn R4SdkUpdateStoragentfs_resize_Plan_from_fields(p0: *mut R4SdkUpdateStoragentfs_resize_Plan, p1: *const R4SdkDataAllocator, p2: u64, p3: u64, p4: u64, p5: u32, p6: u64, p7: u64, p8: u64, p9: u64, p10: u64, p11: *const R4SdkUpdateStoragentfs_resize_Map, p12: *const R4SdkUpdateStoragentfs_resize_ShrinkLimits, p13: *const R4SdkDataNative_Value158, p14: *const R4SdkUpdateStoragentfs_resize_Map, p15: R4SdkUpdateSlot, p16: u64, p17: u16, p18: *const R4SdkUpdateNativeValue105, p19: u64, p20: *const R4SdkUpdateNativeValue107, p21: u64, p22: *const R4SdkUpdateNativeValue110, p23: *const R4SdkUpdateNativeValue110, p24: u64, p25: *const R4SdkUpdateNativeValue42) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateStoragentfs_resize_Plan_get_allocator(p0: *const R4SdkUpdateStoragentfs_resize_Plan, p1: *mut R4SdkDataAllocator) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateStoragentfs_resize_Plan_set_allocator(p0: *mut R4SdkUpdateStoragentfs_resize_Plan, p1: *const R4SdkDataAllocator) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateStoragentfs_resize_Plan_get_first(p0: *const R4SdkUpdateStoragentfs_resize_Plan) -> R4SdkUpdateSlot;
@@ -27819,11 +27837,11 @@ unsafe extern "C" {
     pub fn R4SdkUpdateStoragentfs_resize_Plan_set_bitmap(p0: *mut R4SdkUpdateStoragentfs_resize_Plan, p1: *const R4SdkUpdateStoragentfs_resize_Map) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateStoragentfs_resize_Plan_get_shrink(p0: *const R4SdkUpdateStoragentfs_resize_Plan, p1: *mut R4SdkUpdateStoragentfs_resize_ShrinkLimits) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateStoragentfs_resize_Plan_set_shrink(p0: *mut R4SdkUpdateStoragentfs_resize_Plan, p1: *const R4SdkUpdateStoragentfs_resize_ShrinkLimits) -> R4SdkUpdateSlot;
-    pub fn R4SdkUpdateStoragentfs_resize_Plan_get_bitmap_sha(p0: *const R4SdkUpdateStoragentfs_resize_Plan, p1: *mut R4SdkDataNative_Value156) -> R4SdkUpdateSlot;
-    pub fn R4SdkUpdateStoragentfs_resize_Plan_set_bitmap_sha(p0: *mut R4SdkUpdateStoragentfs_resize_Plan, p1: *const R4SdkDataNative_Value156) -> R4SdkUpdateSlot;
+    pub fn R4SdkUpdateStoragentfs_resize_Plan_get_bitmap_sha(p0: *const R4SdkUpdateStoragentfs_resize_Plan, p1: *mut R4SdkDataNative_Value158) -> R4SdkUpdateSlot;
+    pub fn R4SdkUpdateStoragentfs_resize_Plan_set_bitmap_sha(p0: *mut R4SdkUpdateStoragentfs_resize_Plan, p1: *const R4SdkDataNative_Value158) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateStoragentfs_resize_Plan_get_mft(p0: *const R4SdkUpdateStoragentfs_resize_Plan, p1: *mut R4SdkUpdateStoragentfs_resize_Map) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateStoragentfs_resize_Plan_set_mft(p0: *mut R4SdkUpdateStoragentfs_resize_Plan, p1: *const R4SdkUpdateStoragentfs_resize_Map) -> R4SdkUpdateSlot;
-    pub fn R4SdkUpdateStoragentfs_resize_Plan_get_mft_sha(p0: *const R4SdkUpdateStoragentfs_resize_Plan, p1: *mut R4SdkDataNative_Value156) -> R4SdkUpdateSlot;
+    pub fn R4SdkUpdateStoragentfs_resize_Plan_get_mft_sha(p0: *const R4SdkUpdateStoragentfs_resize_Plan, p1: *mut R4SdkDataNative_Value158) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateStoragentfs_resize_Plan_set_mft_sha(p0: *mut R4SdkUpdateStoragentfs_resize_Plan, p1: R4SdkUpdateSlot) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateStoragentfs_resize_Plan_get_mirror_lcn(p0: *const R4SdkUpdateStoragentfs_resize_Plan) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateStoragentfs_resize_Plan_set_mirror_lcn(p0: *mut R4SdkUpdateStoragentfs_resize_Plan, p1: u64) -> R4SdkUpdateSlot;
@@ -27860,17 +27878,17 @@ unsafe extern "C" {
     pub fn R4SdkUpdateNativeValue103_create(p0: *mut R4SdkUpdateNativeValue103, p1: *const R4SdkUpdateNativeValue103) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateNativeValue103_inspectNative(p0: *const R4SdkUpdateNativeValue103, p1: *mut R4SdkUpdateNativeValue103) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateNativeValue104_create(p0: *mut R4SdkUpdateNativeValue104, p1: R4SdkUpdateSlot) -> R4SdkUpdateSlot;
-    pub fn R4SdkUpdateNativeValue104_inspectNative(p0: *const R4SdkUpdateNativeValue104, p1: *mut R4SdkDataNative_Value156) -> R4SdkUpdateSlot;
+    pub fn R4SdkUpdateNativeValue104_inspectNative(p0: *const R4SdkUpdateNativeValue104, p1: *mut R4SdkDataNative_Value158) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateNativeValue105_create(p0: *mut R4SdkUpdateNativeValue105, p1: *const R4SdkUpdateNativeValue105) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateNativeValue105_inspectNative(p0: *const R4SdkUpdateNativeValue105, p1: *mut R4SdkUpdateNativeValue105) -> R4SdkUpdateSlot;
-    pub fn R4SdkUpdateStoragentfs_resize_Source_create(p0: *mut R4SdkUpdateStoragentfs_resize_Source, p1: u64, p2: u32, p3: *const R4SdkDataNative_Value156) -> R4SdkUpdateSlot;
-    pub fn R4SdkUpdateStoragentfs_resize_Source_from_fields(p0: *mut R4SdkUpdateStoragentfs_resize_Source, p1: u64, p2: u32, p3: *const R4SdkDataNative_Value156) -> R4SdkUpdateSlot;
+    pub fn R4SdkUpdateStoragentfs_resize_Source_create(p0: *mut R4SdkUpdateStoragentfs_resize_Source, p1: u64, p2: u32, p3: *const R4SdkDataNative_Value158) -> R4SdkUpdateSlot;
+    pub fn R4SdkUpdateStoragentfs_resize_Source_from_fields(p0: *mut R4SdkUpdateStoragentfs_resize_Source, p1: u64, p2: u32, p3: *const R4SdkDataNative_Value158) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateStoragentfs_resize_Source_get_lba(p0: *const R4SdkUpdateStoragentfs_resize_Source) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateStoragentfs_resize_Source_set_lba(p0: *mut R4SdkUpdateStoragentfs_resize_Source, p1: u64) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateStoragentfs_resize_Source_get_count(p0: *const R4SdkUpdateStoragentfs_resize_Source) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateStoragentfs_resize_Source_set_count(p0: *mut R4SdkUpdateStoragentfs_resize_Source, p1: u32) -> R4SdkUpdateSlot;
-    pub fn R4SdkUpdateStoragentfs_resize_Source_get_sha(p0: *const R4SdkUpdateStoragentfs_resize_Source, p1: *mut R4SdkDataNative_Value156) -> R4SdkUpdateSlot;
-    pub fn R4SdkUpdateStoragentfs_resize_Source_set_sha(p0: *mut R4SdkUpdateStoragentfs_resize_Source, p1: *const R4SdkDataNative_Value156) -> R4SdkUpdateSlot;
+    pub fn R4SdkUpdateStoragentfs_resize_Source_get_sha(p0: *const R4SdkUpdateStoragentfs_resize_Source, p1: *mut R4SdkDataNative_Value158) -> R4SdkUpdateSlot;
+    pub fn R4SdkUpdateStoragentfs_resize_Source_set_sha(p0: *mut R4SdkUpdateStoragentfs_resize_Source, p1: *const R4SdkDataNative_Value158) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateStoragentfs_resize_Source_inspectNative(p0: *const R4SdkUpdateStoragentfs_resize_Source) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateNativeValue107_create(p0: *mut R4SdkUpdateNativeValue107, p1: *const R4SdkUpdateNativeValue107) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateNativeValue107_inspectNative(p0: *const R4SdkUpdateNativeValue107, p1: *mut R4SdkUpdateNativeValue107) -> R4SdkUpdateSlot;
@@ -28142,23 +28160,23 @@ unsafe extern "C" {
     pub fn R4SdkUpdateBatchPhase_create(p0: *mut R4SdkUpdateBatchPhase, p1: u32) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateBatchPhase_inspectNative(p0: *const R4SdkUpdateBatchPhase) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateBatchPackageEntry_create(p0: *mut R4SdkUpdateBatchPackageEntry) -> R4SdkUpdateSlot;
-    pub fn R4SdkUpdateBatchPackageEntry_from_fields(p0: *mut R4SdkUpdateBatchPackageEntry, p1: u8, p2: *const R4SdkUpdateNativeValue154, p3: u64, p4: *const R4SdkDataNative_Value136, p5: u64, p6: *const R4SdkDataNative_Value137, p7: u64, p8: *const R4SdkDataNative_Value137, p9: u64, p10: u64, p11: u32, p12: u32, p13: u32, p14: u32, p15: u32) -> R4SdkUpdateSlot;
+    pub fn R4SdkUpdateBatchPackageEntry_from_fields(p0: *mut R4SdkUpdateBatchPackageEntry, p1: u8, p2: *const R4SdkUpdateNativeValue154, p3: u64, p4: *const R4SdkDataNative_Value138, p5: u64, p6: *const R4SdkDataNative_Value139, p7: u64, p8: *const R4SdkDataNative_Value139, p9: u64, p10: u64, p11: u32, p12: u32, p13: u32, p14: u32, p15: u32) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateBatchPackageEntry_get_order(p0: *const R4SdkUpdateBatchPackageEntry) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateBatchPackageEntry_set_order(p0: *mut R4SdkUpdateBatchPackageEntry, p1: u8) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateBatchPackageEntry_get_path(p0: *const R4SdkUpdateBatchPackageEntry, p1: *mut R4SdkUpdateNativeValue154) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateBatchPackageEntry_set_path(p0: *mut R4SdkUpdateBatchPackageEntry, p1: *const R4SdkUpdateNativeValue154) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateBatchPackageEntry_get_path_len(p0: *const R4SdkUpdateBatchPackageEntry) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateBatchPackageEntry_set_path_len(p0: *mut R4SdkUpdateBatchPackageEntry, p1: u64) -> R4SdkUpdateSlot;
-    pub fn R4SdkUpdateBatchPackageEntry_get_package(p0: *const R4SdkUpdateBatchPackageEntry, p1: *mut R4SdkDataNative_Value136) -> R4SdkUpdateSlot;
-    pub fn R4SdkUpdateBatchPackageEntry_set_package(p0: *mut R4SdkUpdateBatchPackageEntry, p1: *const R4SdkDataNative_Value136) -> R4SdkUpdateSlot;
+    pub fn R4SdkUpdateBatchPackageEntry_get_package(p0: *const R4SdkUpdateBatchPackageEntry, p1: *mut R4SdkDataNative_Value138) -> R4SdkUpdateSlot;
+    pub fn R4SdkUpdateBatchPackageEntry_set_package(p0: *mut R4SdkUpdateBatchPackageEntry, p1: *const R4SdkDataNative_Value138) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateBatchPackageEntry_get_package_len(p0: *const R4SdkUpdateBatchPackageEntry) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateBatchPackageEntry_set_package_len(p0: *mut R4SdkUpdateBatchPackageEntry, p1: u64) -> R4SdkUpdateSlot;
-    pub fn R4SdkUpdateBatchPackageEntry_get_package_version(p0: *const R4SdkUpdateBatchPackageEntry, p1: *mut R4SdkDataNative_Value137) -> R4SdkUpdateSlot;
-    pub fn R4SdkUpdateBatchPackageEntry_set_package_version(p0: *mut R4SdkUpdateBatchPackageEntry, p1: *const R4SdkDataNative_Value137) -> R4SdkUpdateSlot;
+    pub fn R4SdkUpdateBatchPackageEntry_get_package_version(p0: *const R4SdkUpdateBatchPackageEntry, p1: *mut R4SdkDataNative_Value139) -> R4SdkUpdateSlot;
+    pub fn R4SdkUpdateBatchPackageEntry_set_package_version(p0: *mut R4SdkUpdateBatchPackageEntry, p1: *const R4SdkDataNative_Value139) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateBatchPackageEntry_get_package_version_len(p0: *const R4SdkUpdateBatchPackageEntry) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateBatchPackageEntry_set_package_version_len(p0: *mut R4SdkUpdateBatchPackageEntry, p1: u64) -> R4SdkUpdateSlot;
-    pub fn R4SdkUpdateBatchPackageEntry_get_release(p0: *const R4SdkUpdateBatchPackageEntry, p1: *mut R4SdkDataNative_Value137) -> R4SdkUpdateSlot;
-    pub fn R4SdkUpdateBatchPackageEntry_set_release(p0: *mut R4SdkUpdateBatchPackageEntry, p1: *const R4SdkDataNative_Value137) -> R4SdkUpdateSlot;
+    pub fn R4SdkUpdateBatchPackageEntry_get_release(p0: *const R4SdkUpdateBatchPackageEntry, p1: *mut R4SdkDataNative_Value139) -> R4SdkUpdateSlot;
+    pub fn R4SdkUpdateBatchPackageEntry_set_release(p0: *mut R4SdkUpdateBatchPackageEntry, p1: *const R4SdkDataNative_Value139) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateBatchPackageEntry_get_release_len(p0: *const R4SdkUpdateBatchPackageEntry) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateBatchPackageEntry_set_release_len(p0: *mut R4SdkUpdateBatchPackageEntry, p1: u64) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateBatchPackageEntry_get_package_length(p0: *const R4SdkUpdateBatchPackageEntry) -> R4SdkUpdateSlot;
@@ -28175,7 +28193,7 @@ unsafe extern "C" {
     pub fn R4SdkUpdateBatchPackageEntry_set_priority(p0: *mut R4SdkUpdateBatchPackageEntry, p1: u32) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateBatchPackageEntry_inspectNative(p0: *const R4SdkUpdateBatchPackageEntry) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateBatchBatchJournal_create(p0: *mut R4SdkUpdateBatchBatchJournal) -> R4SdkUpdateSlot;
-    pub fn R4SdkUpdateBatchBatchJournal_from_fields(p0: *mut R4SdkUpdateBatchBatchJournal, p1: u8, p2: u8, p3: u64, p4: u64, p5: u32, p6: u32, p7: u32, p8: *const R4SdkDataNative_Value137, p9: u64, p10: *const R4SdkDataNative_Value137, p11: u64, p12: *const R4SdkUpdateNativeValue171, p13: u64, p14: *const R4SdkUpdateNativeValue172) -> R4SdkUpdateSlot;
+    pub fn R4SdkUpdateBatchBatchJournal_from_fields(p0: *mut R4SdkUpdateBatchBatchJournal, p1: u8, p2: u8, p3: u64, p4: u64, p5: u32, p6: u32, p7: u32, p8: *const R4SdkDataNative_Value139, p9: u64, p10: *const R4SdkDataNative_Value139, p11: u64, p12: *const R4SdkUpdateNativeValue171, p13: u64, p14: *const R4SdkUpdateNativeValue172) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateBatchBatchJournal_get_slot(p0: *const R4SdkUpdateBatchBatchJournal) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateBatchBatchJournal_set_slot(p0: *mut R4SdkUpdateBatchBatchJournal, p1: u8) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateBatchBatchJournal_get_valid(p0: *const R4SdkUpdateBatchBatchJournal) -> R4SdkUpdateSlot;
@@ -28190,12 +28208,12 @@ unsafe extern "C" {
     pub fn R4SdkUpdateBatchBatchJournal_set_package_count(p0: *mut R4SdkUpdateBatchBatchJournal, p1: u32) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateBatchBatchJournal_get_current_package(p0: *const R4SdkUpdateBatchBatchJournal) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateBatchBatchJournal_set_current_package(p0: *mut R4SdkUpdateBatchBatchJournal, p1: u32) -> R4SdkUpdateSlot;
-    pub fn R4SdkUpdateBatchBatchJournal_get_source_release(p0: *const R4SdkUpdateBatchBatchJournal, p1: *mut R4SdkDataNative_Value137) -> R4SdkUpdateSlot;
-    pub fn R4SdkUpdateBatchBatchJournal_set_source_release(p0: *mut R4SdkUpdateBatchBatchJournal, p1: *const R4SdkDataNative_Value137) -> R4SdkUpdateSlot;
+    pub fn R4SdkUpdateBatchBatchJournal_get_source_release(p0: *const R4SdkUpdateBatchBatchJournal, p1: *mut R4SdkDataNative_Value139) -> R4SdkUpdateSlot;
+    pub fn R4SdkUpdateBatchBatchJournal_set_source_release(p0: *mut R4SdkUpdateBatchBatchJournal, p1: *const R4SdkDataNative_Value139) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateBatchBatchJournal_get_source_release_len(p0: *const R4SdkUpdateBatchBatchJournal) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateBatchBatchJournal_set_source_release_len(p0: *mut R4SdkUpdateBatchBatchJournal, p1: u64) -> R4SdkUpdateSlot;
-    pub fn R4SdkUpdateBatchBatchJournal_get_target_release(p0: *const R4SdkUpdateBatchBatchJournal, p1: *mut R4SdkDataNative_Value137) -> R4SdkUpdateSlot;
-    pub fn R4SdkUpdateBatchBatchJournal_set_target_release(p0: *mut R4SdkUpdateBatchBatchJournal, p1: *const R4SdkDataNative_Value137) -> R4SdkUpdateSlot;
+    pub fn R4SdkUpdateBatchBatchJournal_get_target_release(p0: *const R4SdkUpdateBatchBatchJournal, p1: *mut R4SdkDataNative_Value139) -> R4SdkUpdateSlot;
+    pub fn R4SdkUpdateBatchBatchJournal_set_target_release(p0: *mut R4SdkUpdateBatchBatchJournal, p1: *const R4SdkDataNative_Value139) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateBatchBatchJournal_get_target_release_len(p0: *const R4SdkUpdateBatchBatchJournal) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateBatchBatchJournal_set_target_release_len(p0: *mut R4SdkUpdateBatchBatchJournal, p1: u64) -> R4SdkUpdateSlot;
     pub fn R4SdkUpdateBatchBatchJournal_get_reason(p0: *const R4SdkUpdateBatchBatchJournal, p1: *mut R4SdkUpdateNativeValue171) -> R4SdkUpdateSlot;
@@ -28586,8 +28604,8 @@ unsafe extern "C" {
     pub fn R4SdkSubsystemLaunch_encode(p0: u32, p1: *const u8, p2: u64, p3: *const R4SdkSubsystemLaunchOption, p4: u64, p5: *mut u8, p6: u64) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemLaunch_parse(p0: u32, p1: *const u8, p2: u64, p3: *mut R4SdkSubsystemLaunchRequest) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemVideo_calculateViewport(p0: u32, p1: i32, p2: i32, p3: u32, p4: u32, p5: *mut R4SdkSubsystemVideoViewport) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemPersistence_digestHex(p0: u32, p1: *const R4SdkDataNative_Value156, p2: *mut R4SdkSubsystemNativeValue131) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__dataPath(p0: u32, p1: *const R4SdkSubsystemPersistenceConfiguration, p2: *const R4SdkDataNative_Value156, p3: u32, p4: *mut R4SdkSubsystemNative_path_AbsoluteFilePath) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemPersistence_digestHex(p0: u32, p1: *const R4SdkDataNative_Value158, p2: *mut R4SdkSubsystemNativeValue131) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__dataPath(p0: u32, p1: *const R4SdkSubsystemPersistenceConfiguration, p2: *const R4SdkDataNative_Value158, p3: u32, p4: *mut R4SdkSubsystemNative_path_AbsoluteFilePath) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__wallSeconds(p0: u32, p1: *const R4TimeState) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystem_hostVerifier(p0: u32, p1: *const R4SdkSubsystemCallbackTable, p2: *mut R4SdkSubsystemCatalogHostVerifier) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystem_videoBackend(p0: u32, p1: *const R4SdkSubsystemCallbackTable, p2: u8, p3: u8, p4: u8, p5: *mut R4SdkSubsystemVideoBackend) -> R4SdkSubsystemSlot;
@@ -28690,10 +28708,10 @@ unsafe extern "C" {
     pub fn R4SdkSubsystemRuntimeRuntime_cycle(p0: u32, p1: *mut R4SdkSubsystemRuntimeRuntime, p2: u64, p3: *const R4SdkSubsystemRuntimeGuestDriver, p4: *const R4SdkSubsystemRuntimeHostDriver, p5: *mut R4SdkSubsystemRuntimeCycleResult) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeRuntime_run(p0: u32, p1: *mut R4SdkSubsystemRuntimeRuntime, p2: *const R4SdkSubsystemNative_r4sys_Context, p3: *const R4SdkSubsystemRuntimeGuestDriver, p4: *const R4SdkSubsystemRuntimeHostDriver) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRuntimeRuntime_shutdown(p0: u32, p1: *mut R4SdkSubsystemRuntimeRuntime) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemPersistenceBackend_acquire(p0: u32, p1: *const R4SdkSubsystemPersistenceBackend, p2: *const R4SdkDataNative_Value156, p3: u64) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemPersistenceBackend_release(p0: u32, p1: *const R4SdkSubsystemPersistenceBackend, p2: *const R4SdkDataNative_Value156, p3: u64) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemPersistenceBackend_readExact(p0: u32, p1: *const R4SdkSubsystemPersistenceBackend, p2: *const R4SdkDataNative_Value156, p3: u32, p4: *mut u8, p5: u64) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemPersistenceBackend_writeAtomic(p0: u32, p1: *const R4SdkSubsystemPersistenceBackend, p2: *const R4SdkDataNative_Value156, p3: u32, p4: *const u8, p5: u64) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemPersistenceBackend_acquire(p0: u32, p1: *const R4SdkSubsystemPersistenceBackend, p2: *const R4SdkDataNative_Value158, p3: u64) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemPersistenceBackend_release(p0: u32, p1: *const R4SdkSubsystemPersistenceBackend, p2: *const R4SdkDataNative_Value158, p3: u64) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemPersistenceBackend_readExact(p0: u32, p1: *const R4SdkSubsystemPersistenceBackend, p2: *const R4SdkDataNative_Value158, p3: u32, p4: *mut u8, p5: u64) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemPersistenceBackend_writeAtomic(p0: u32, p1: *const R4SdkSubsystemPersistenceBackend, p2: *const R4SdkDataNative_Value158, p3: u32, p4: *const u8, p5: u64) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemPersistenceBackend_drain(p0: u32, p1: *const R4SdkSubsystemPersistenceBackend) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemPersistenceBackend_pending(p0: u32, p1: *const R4SdkSubsystemPersistenceBackend) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemPersistenceBackend_poll(p0: u32, p1: *const R4SdkSubsystemPersistenceBackend) -> R4SdkSubsystemSlot;
@@ -28702,14 +28720,14 @@ unsafe extern "C" {
     pub fn R4SdkSubsystemStore_backend(p0: u32, p1: *mut R4SdkSubsystemStore, p2: *mut R4SdkSubsystemPersistenceBackend) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemStore_failureStageName(p0: u32, p1: *const R4SdkSubsystemStore) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemStore_failureCode(p0: u32, p1: *const R4SdkSubsystemStore) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemStore_removeTestFiles(p0: u32, p1: *mut R4SdkSubsystemStore, p2: *const R4SdkDataNative_Value156) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemStore_prepareInterruptedPublishForTest(p0: u32, p1: *mut R4SdkSubsystemStore, p2: *const R4SdkDataNative_Value156, p3: u32, p4: *const u8, p5: u64) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemStore_recoveryTestStateForTest(p0: u32, p1: *mut R4SdkSubsystemStore, p2: *const R4SdkDataNative_Value156, p3: u32, p4: *mut R4SdkSubsystemRecoveryTestState) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemStore_removeTestFiles(p0: u32, p1: *mut R4SdkSubsystemStore, p2: *const R4SdkDataNative_Value158) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemStore_prepareInterruptedPublishForTest(p0: u32, p1: *mut R4SdkSubsystemStore, p2: *const R4SdkDataNative_Value158, p3: u32, p4: *const u8, p5: u64) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemStore_recoveryTestStateForTest(p0: u32, p1: *mut R4SdkSubsystemStore, p2: *const R4SdkDataNative_Value158, p3: u32, p4: *mut R4SdkSubsystemRecoveryTestState) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemAsyncStore_init(p0: u32, p1: *const R4SdkSubsystemNative_app_storage_Files, p2: *const R4SdkDataAllocator, p3: *const R4SdkSubsystemPersistenceConfiguration, p4: *mut R4SdkSubsystemAsyncStore) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemAsyncStore_backend(p0: u32, p1: *mut R4SdkSubsystemAsyncStore, p2: *mut R4SdkSubsystemPersistenceBackend) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemAsyncStore_failureStageName(p0: u32, p1: *const R4SdkSubsystemAsyncStore) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemAsyncStore_failureCode(p0: u32, p1: *const R4SdkSubsystemAsyncStore) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemAsyncStore_removeTestFiles(p0: u32, p1: *mut R4SdkSubsystemAsyncStore, p2: *const R4SdkDataNative_Value156) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemAsyncStore_removeTestFiles(p0: u32, p1: *mut R4SdkSubsystemAsyncStore, p2: *const R4SdkDataNative_Value158) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNative_path_AbsoluteFilePath_parse(p0: u32, p1: *const u8, p2: u64, p3: *mut R4SdkSubsystemNative_path_AbsoluteFilePath) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNative_path_AbsoluteFilePath_bytes(p0: u32, p1: *const R4SdkSubsystemNative_path_AbsoluteFilePath) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNative_path_AbsoluteFilePath_asZ(p0: u32, p1: *const R4SdkSubsystemNative_path_AbsoluteFilePath, p2: *mut R4SdkSubsystemNative_path_PathZ) -> R4SdkSubsystemSlot;
@@ -29919,7 +29937,7 @@ unsafe extern "C" {
     pub fn R4SdkSubsystemRuntimeRuntime_inspectNative(p0: *const R4SdkSubsystemRuntimeRuntime) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemPersistenceFileKind_create(p0: *mut R4SdkSubsystemPersistenceFileKind, p1: u32) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemPersistenceFileKind_inspectNative(p0: *const R4SdkSubsystemPersistenceFileKind) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemNativeValue128_create(p0: *mut R4SdkSubsystemNativeValue128, p1: *const R4SdkDataNative_Value156) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemNativeValue128_create(p0: *mut R4SdkSubsystemNativeValue128, p1: *const R4SdkDataNative_Value158) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNativeValue128_inspectNative(p0: *const R4SdkSubsystemNativeValue128) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNativeValue130_create(p0: *mut R4SdkSubsystemNativeValue130, p1: *mut R4SdkSubsystemNativeValue131) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNativeValue130_inspectNative(p0: *const R4SdkSubsystemNativeValue130) -> R4SdkSubsystemSlot;
@@ -29981,15 +29999,15 @@ unsafe extern "C" {
     pub fn R4SdkSubsystemRecoveryTestState_set_backup_size(p0: *mut R4SdkSubsystemRecoveryTestState, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemRecoveryTestState_inspectNative(p0: *const R4SdkSubsystemRecoveryTestState) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemStore_create(p0: *mut R4SdkSubsystemStore, p1: *const R4SdkSubsystemNative_app_storage_Files) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemStore_from_fields(p0: *mut R4SdkSubsystemStore, p1: *const R4SdkSubsystemNative_app_storage_Files, p2: R4SdkSubsystemSlot, p3: u64, p4: *const R4SdkDataNative_Value156, p5: u32, p6: i32, p7: *const R4SdkSubsystemPersistenceConfiguration) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemStore_from_fields(p0: *mut R4SdkSubsystemStore, p1: *const R4SdkSubsystemNative_app_storage_Files, p2: R4SdkSubsystemSlot, p3: u64, p4: *const R4SdkDataNative_Value158, p5: u32, p6: i32, p7: *const R4SdkSubsystemPersistenceConfiguration) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemStore_get_files(p0: *const R4SdkSubsystemStore, p1: *mut R4SdkSubsystemNative_app_storage_Files) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemStore_set_files(p0: *mut R4SdkSubsystemStore, p1: *const R4SdkSubsystemNative_app_storage_Files) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemStore_get_lock_writer(p0: *const R4SdkSubsystemStore, p1: *mut R4SdkSubsystemNative_app_storage_OwnedStageWriter) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemStore_set_lock_writer(p0: *mut R4SdkSubsystemStore, p1: R4SdkSubsystemSlot) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemStore_get_lock_generation(p0: *const R4SdkSubsystemStore) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemStore_set_lock_generation(p0: *mut R4SdkSubsystemStore, p1: u64) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemStore_get_lock_digest(p0: *const R4SdkSubsystemStore, p1: *mut R4SdkDataNative_Value156) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemStore_set_lock_digest(p0: *mut R4SdkSubsystemStore, p1: *const R4SdkDataNative_Value156) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemStore_get_lock_digest(p0: *const R4SdkSubsystemStore, p1: *mut R4SdkDataNative_Value158) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemStore_set_lock_digest(p0: *mut R4SdkSubsystemStore, p1: *const R4SdkDataNative_Value158) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemStore_get_failure_stage(p0: *const R4SdkSubsystemStore) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemStore_set_failure_stage(p0: *mut R4SdkSubsystemStore, p1: u32) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemStore_get_failure_code(p0: *const R4SdkSubsystemStore) -> R4SdkSubsystemSlot;
@@ -30048,12 +30066,12 @@ unsafe extern "C" {
     pub fn R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__ActiveWrite_inspectNative(p0: *const R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__ActiveWrite) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNativeValue149_create(p0: *mut R4SdkSubsystemNativeValue149, p1: *mut R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemNativeValue149_inspectNative(p0: *const R4SdkSubsystemNativeValue149) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob_create(p0: *mut R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob, p1: *mut R4SdkSubsystemStore, p2: *const R4SdkDataNative_Value156, p3: u32, p4: *mut u8, p5: u64, p6: u64) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob_from_fields(p0: *mut R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob, p1: *mut R4SdkSubsystemStore, p2: *const R4SdkDataNative_Value156, p3: u32, p4: *mut u8, p5: u64, p6: u64, p7: u32) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob_create(p0: *mut R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob, p1: *mut R4SdkSubsystemStore, p2: *const R4SdkDataNative_Value158, p3: u32, p4: *mut u8, p5: u64, p6: u64) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob_from_fields(p0: *mut R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob, p1: *mut R4SdkSubsystemStore, p2: *const R4SdkDataNative_Value158, p3: u32, p4: *mut u8, p5: u64, p6: u64, p7: u32) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob_get_store(p0: *const R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob_set_store(p0: *mut R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob, p1: *mut R4SdkSubsystemStore) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob_get_digest(p0: *const R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob, p1: *mut R4SdkDataNative_Value156) -> R4SdkSubsystemSlot;
-    pub fn R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob_set_digest(p0: *mut R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob, p1: *const R4SdkDataNative_Value156) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob_get_digest(p0: *const R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob, p1: *mut R4SdkDataNative_Value158) -> R4SdkSubsystemSlot;
+    pub fn R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob_set_digest(p0: *mut R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob, p1: *const R4SdkDataNative_Value158) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob_get_kind(p0: *const R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob_set_kind(p0: *mut R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob, p1: u32) -> R4SdkSubsystemSlot;
     pub fn R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob_get_bytes(p0: *const R4SdkSubsystemPersistenceR4osStore_subsystem_persistence_Configuration__AsyncWriteJob) -> R4SdkSubsystemSlot;

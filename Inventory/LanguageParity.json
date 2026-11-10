@@ -328,7 +328,7 @@
         "allocator_source",
         "runtime_fault"
       ],
-      "semantics": "Geborgter genauer R4XStart-Kontext, Manifestreihenfolge und Imports; required/optional und nicht aufgeloeste optionale Tabellen unterscheiden. Keine Leihe ueber Instanzende; Exit/Panic beim vorhandenen Owner. SDK181/Contract93: explicit normal Generation2 App entry, complete ordered manifest facts, actual120byte Context2 and24byte Query2, independent revision1 library imports and absent optionals. Existing VM/heap/wait owners are shared through copied SDK-private typed callbacks, never a synthesized Query1 table or old start context. Resident panic/entropy callbacks retain no App/context loan.",
+      "semantics": "Geborgter genauer R4XStart-Kontext, Manifestreihenfolge und Imports; required/optional und nicht aufgeloeste optionale Tabellen unterscheiden. Keine Leihe ueber Instanzende; Exit/Panic beim vorhandenen Owner. SDK181/Contract93: explicit normal Generation2 App entry, complete ordered manifest facts, actual120byte Context2 and24byte Query2, independent revision1 library imports and absent optionals. Existing VM/heap/wait owners are shared through copied SDK-private typed callbacks, never a synthesized Query1 table or old start context. Resident panic/entropy callbacks retain no App/context loan. SDK185: Central manifest-selected SDK admission/default/profile/export truth, real C/Zig/Rust normal/raw and technical templates, independent R4L contracts plus technical Query2, complete native C include/hash roots and actual matched tool packages.",
       "current_only": "current_function",
       "rust": {
         "state": "normal_generation2_startup_scoped",
@@ -355,7 +355,8 @@
         "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.49",
         "current_contract_78",
         "gui_activity_08735",
-        "normal_app2_09040"
+        "normal_app2_09040",
+        "tooling_templates_generation2_09044"
       ],
       "shared_core": "SDK/r4os/import_spec.zig und startup_metadata.zig mit aktuellen Contractdefaults; ModuleCatalog/C-Appbuilder projizieren denselben Datensatz. Keine neue Prozess-/Kernelruntime oder Runtime-Zweitgrammatik. Normal Generation2 startup uses App2.initDeclared, SDK-private128byte Memory callback descriptor, actual Context2, shared heap/allocator and module-owned copied callback storage. Default/consumer migration remains separate.",
       "qualification": {
@@ -373,10 +374,11 @@
         "scope": "Nur Host-/SDK-/Testfixturearbeit; normale Kernel-/Produktartefakte unveraendert, kein STANDARD. Windowskatalog crossgebaut, keine Windows-/Hardwareausfuehrung. Lokale R4L-Resolver und hoeherer Desktophost bleiben52/56."
       },
       "generation2_qualification": {
-        "subversion": "0.90.40",
-        "sdk_package": "0.64.181",
+        "subversion": "0.90.44",
+        "sdk_package": "0.64.185",
         "contract_package": "0.64.93",
-        "scope": "Actual three-language normal entry and shared owner qualification. Original generation1 qualification remains above; no blanket migration claim."
+        "scope": "Central manifest-selected SDK admission/default/profile/export truth, real C/Zig/Rust normal/raw and technical templates, independent R4L contracts plus technical Query2, complete native C include/hash roots and actual matched tool packages.",
+        "boundaries": "Host33 role containers, actual6 new console starts and3 independent template-library calls. Native R4BUILD/R4CC stays explicitly pending72; no Windows execution, hardware, visual desktop, productive-module or freshinstallation qualification."
       }
     },
     {
@@ -420,7 +422,7 @@
         "r4cp",
         "r4cp_convert"
       ],
-      "semantics": "R4MF besitzt Modulidentitaet/Imports/Ressourcen; Cargo besitzt Crates/Lock. Technische SDK-/Contract-/Toolchainpins bleiben; externe Versionsauswahl/Projektpins bleiben beim Verbraucher. Eingaben und fehlgeschlagene Outputs exakt verfolgen.",
+      "semantics": "R4MF besitzt Modulidentitaet/Imports/Ressourcen; Cargo besitzt Crates/Lock. Technische SDK-/Contract-/Toolchainpins bleiben; externe Versionsauswahl/Projektpins bleiben beim Verbraucher. Eingaben und fehlgeschlagene Outputs exakt verfolgen. SDK185: Central manifest-selected SDK admission/default/profile/export truth, real C/Zig/Rust normal/raw and technical templates, independent R4L contracts plus technical Query2, complete native C include/hash roots and actual matched tool packages.",
       "current_only": "current_build_and_explicit_project_data",
       "rust": {
         "state": "qualified_current_local_dependency_graph_and_C_companions",
@@ -443,9 +445,17 @@
         "Repositories/SDK/Smoke/AppEntry/C/Console",
         "platform_generation2_09014",
         "technical_generation2_09015",
-        "wire_native_data_09017"
+        "wire_native_data_09017",
+        "tooling_templates_generation2_09044"
       ],
-      "shared_core": "Gemeinsamer R4MF-Parser, Builder, Packager und PS7-Orchestrierung."
+      "shared_core": "Gemeinsamer R4MF-Parser, Builder, Packager und PS7-Orchestrierung.",
+      "generation2_qualification": {
+        "subversion": "0.90.44",
+        "sdk_package": "0.64.185",
+        "contract_package": "0.64.93",
+        "scope": "Central manifest-selected SDK admission/default/profile/export truth, real C/Zig/Rust normal/raw and technical templates, independent R4L contracts plus technical Query2, complete native C include/hash roots and actual matched tool packages.",
+        "boundaries": "Host33 role containers, actual6 new console starts and3 independent template-library calls. Native R4BUILD/R4CC stays explicitly pending72; no Windows execution, hardware, visual desktop, productive-module or freshinstallation qualification."
+      }
     },
     {
       "id": "library-bind",
@@ -454,7 +464,7 @@
       "modules": [
         "runtime_r4l"
       ],
-      "semantics": "Genauen Import/Interface-ID/Major/Revision/Groesse/Flags pruefen, optionale Nullimports erhalten, geladene Instanzgeneration waehrend Leihen/Callbacks festhalten; lokale Library bleibt Vertragseigner.",
+      "semantics": "Genauen Import/Interface-ID/Major/Revision/Groesse/Flags pruefen, optionale Nullimports erhalten, geladene Instanzgeneration waehrend Leihen/Callbacks festhalten; lokale Library bleibt Vertragseigner. SDK185: Central manifest-selected SDK admission/default/profile/export truth, real C/Zig/Rust normal/raw and technical templates, independent R4L contracts plus technical Query2, complete native C include/hash roots and actual matched tool packages.",
       "current_only": "current_function",
       "rust": {
         "state": "qualified_current_local_contract_consumers",
@@ -472,9 +482,17 @@
         "source_inventory",
         "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.52",
         "independent_desktop_current_71",
-        "platform_generation2_09014"
+        "platform_generation2_09014",
+        "tooling_templates_generation2_09044"
       ],
-      "shared_core": "SDK Tools/R4LContractGen mit sprachbezogener Rustprojektion und je Library Contract/LibraryContract.json; Baselines/Implementation/Zig unveraendert. Qualifikation52 in Docs/SDK/LanguageParity.txt."
+      "shared_core": "SDK Tools/R4LContractGen mit sprachbezogener Rustprojektion und je Library Contract/LibraryContract.json; Baselines/Implementation/Zig unveraendert. Qualifikation52 in Docs/SDK/LanguageParity.txt.",
+      "generation2_qualification": {
+        "subversion": "0.90.44",
+        "sdk_package": "0.64.185",
+        "contract_package": "0.64.93",
+        "scope": "Central manifest-selected SDK admission/default/profile/export truth, real C/Zig/Rust normal/raw and technical templates, independent R4L contracts plus technical Query2, complete native C include/hash roots and actual matched tool packages.",
+        "boundaries": "Host33 role containers, actual6 new console starts and3 independent template-library calls. Native R4BUILD/R4CC stays explicitly pending72; no Windows execution, hardware, visual desktop, productive-module or freshinstallation qualification."
+      }
     },
     {
       "id": "files-registry-console",
@@ -1146,7 +1164,7 @@
         "internet_checksum",
         "block_transfer"
       ],
-      "semantics": "Callerallokation/Laengen/Ueberlauf/UTF-8/Wirewerte, Formatfehler und Teiloutput erhalten. RDRAND/ISA nur mit frischer OS-Zulassung und echten Fehlerquittungen; Softwarepfad ist aktuelle Hardwarepolitik. SDK160: explicit common pure wire/native/checksum/block helpers; actual static C/Rust implementation and early R4D qualification. Protocol policy, mapped native representation, storage loans and hardware completion remain with their existing owners; no consumer migration.",
+      "semantics": "Callerallokation/Laengen/Ueberlauf/UTF-8/Wirewerte, Formatfehler und Teiloutput erhalten. RDRAND/ISA nur mit frischer OS-Zulassung und echten Fehlerquittungen; Softwarepfad ist aktuelle Hardwarepolitik. SDK160: explicit common pure wire/native/checksum/block helpers; actual static C/Rust implementation and early R4D qualification. Protocol policy, mapped native representation, storage loans and hardware completion remain with their existing owners; no consumer migration. SDK185: Central manifest-selected SDK admission/default/profile/export truth, real C/Zig/Rust normal/raw and technical templates, independent R4L contracts plus technical Query2, complete native C include/hash roots and actual matched tool packages.",
       "current_only": "current_function",
       "rust": {
         "state": "original_data_helpers_qualified",
@@ -1172,7 +1190,8 @@
         "ico_bulk_08840",
         "audio_reply_08842",
         "platform_generation2_09014",
-        "wire_native_data_09017"
+        "wire_native_data_09017",
+        "tooling_templates_generation2_09044"
       ],
       "shared_core": "Grosse Parser/Codec-/Kryptokerne einmal beim SDK-/Librarybesitzer; besitzereigene C-ABI bzw. passende existierende R4L in61 begruenden. Kein Kopieren von JSON/ZIP/Entropiealgorithmen in drei Sprachen.",
       "qualification": {
@@ -1186,6 +1205,13 @@
         "sdk": "0.64.112",
         "evidence": "ico_bulk_08840",
         "scope": "Original ICO owner, typed generated C and safe Rust bulk RGB/alpha copy; no new platform ABI or independent parser."
+      },
+      "generation2_qualification": {
+        "subversion": "0.90.44",
+        "sdk_package": "0.64.185",
+        "contract_package": "0.64.93",
+        "scope": "Central manifest-selected SDK admission/default/profile/export truth, real C/Zig/Rust normal/raw and technical templates, independent R4L contracts plus technical Query2, complete native C include/hash roots and actual matched tool packages.",
+        "boundaries": "Host33 role containers, actual6 new console starts and3 independent template-library calls. Native R4BUILD/R4CC stays explicitly pending72; no Windows execution, hardware, visual desktop, productive-module or freshinstallation qualification."
       }
     },
     {
@@ -1508,7 +1534,7 @@
         "lowlevel",
         "platform2"
       ],
-      "semantics": "Explicit raw generation1/2 entry and borrowed context admission; profile-derived exact Start2 entry/imports/metadata, typed Context2 callbacks and existing kernel stack/fault/retirement owners. No automatic App allocator or second runtime.",
+      "semantics": "Explicit raw generation1/2 entry and borrowed context admission; profile-derived exact Start2 entry/imports/metadata, typed Context2 callbacks and existing kernel stack/fault/retirement owners. No automatic App allocator or second runtime. SDK185: Central manifest-selected SDK admission/default/profile/export truth, real C/Zig/Rust normal/raw and technical templates, independent R4L contracts plus technical Query2, complete native C include/hash roots and actual matched tool packages.",
       "current_only": "current_function",
       "rust": {
         "state": "explicit_raw_context_host_profile_qualified",
@@ -1534,9 +1560,17 @@
         "lowlevel_current_69",
         "platform_generation2_09012",
         "platform_generation2_09013",
-        "platform_generation2_09014"
+        "platform_generation2_09014",
+        "tooling_templates_generation2_09044"
       ],
-      "shared_core": "Both physical start contexts borrow the same exact kernel instance storage; old entry/stack/runtime/fault/retirement owners retained; independent R4L functional contracts preserved."
+      "shared_core": "Both physical start contexts borrow the same exact kernel instance storage; old entry/stack/runtime/fault/retirement owners retained; independent R4L functional contracts preserved.",
+      "generation2_qualification": {
+        "subversion": "0.90.44",
+        "sdk_package": "0.64.185",
+        "contract_package": "0.64.93",
+        "scope": "Central manifest-selected SDK admission/default/profile/export truth, real C/Zig/Rust normal/raw and technical templates, independent R4L contracts plus technical Query2, complete native C include/hash roots and actual matched tool packages.",
+        "boundaries": "Host33 role containers, actual6 new console starts and3 independent template-library calls. Native R4BUILD/R4CC stays explicitly pending72; no Windows execution, hardware, visual desktop, productive-module or freshinstallation qualification."
+      }
     }
   ],
   "public_exports": [
@@ -7432,9 +7466,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/build.zig",
-      "sha256": "9fda82e25f76a241d06bd9e1bb907f7122fad20e3861f928130f5da23de23edf",
+      "sha256": "1c4abb710551242db45d2ca1db77c79d95a72a8c1a40319999a70c1e171758bf",
       "owner": "Repositories/SDK",
-      "version": "0.64.182",
+      "version": "0.64.185",
       "capability": "project-build",
       "declarations": [
         [
@@ -7615,142 +7649,142 @@
         [
           "Sdk.addR4MFCatalog",
           "fn",
-          938
+          935
         ],
         [
           "Sdk.addR4XService",
           "fn",
-          959
+          956
         ],
         [
           "Sdk.addR4D",
           "fn",
-          977
+          974
         ],
         [
           "Sdk.addR4P",
           "fn",
-          999
+          996
         ],
         [
           "Sdk.addR4LRaw",
           "fn",
-          1019
+          1016
         ],
         [
           "R4XOptions",
           "container",
-          1181
+          1178
         ],
         [
           "R4AppBuildOptions",
           "container",
-          1201
+          1198
         ],
         [
           "R4XCOptions",
           "container",
-          1222
+          1219
         ],
         [
           "R4CAppBuildOptions",
           "container",
-          1244
+          1241
         ],
         [
           "R4DOptions",
           "container",
-          1266
+          1263
         ],
         [
           "R4POptions",
           "container",
-          1290
+          1287
         ],
         [
           "R4LRawOptions",
           "container",
-          1310
+          1307
         ],
         [
           "R4MRawOptions",
           "container",
-          1325
+          1322
         ],
         [
           "R4MElfOptions",
           "container",
-          1343
+          1340
         ],
         [
           "addR4XBuilder",
           "fn",
-          1357
+          1354
         ],
         [
           "addR4LContractGenerator",
           "fn",
-          1380
+          1377
         ],
         [
           "addR4XStart",
           "fn",
-          1551
+          1548
         ],
         [
           "addR4XStartC",
           "fn",
-          1555
+          1552
         ],
         [
           "addR4XService",
           "fn",
-          1594
+          1591
         ],
         [
           "addR4D",
           "fn",
-          1600
+          1597
         ],
         [
           "addR4P",
           "fn",
-          1674
+          1671
         ],
         [
           "addR4LRaw",
           "fn",
-          1742
+          1739
         ],
         [
           "addR4MRaw",
           "fn",
-          1770
+          1767
         ],
         [
           "addR4MElf",
           "fn",
-          1820
+          1817
         ],
         [
           "addFacadeRuntime",
           "fn",
-          2107
+          2104
         ],
         [
           "addStorageRuntimeObject",
           "fn",
-          2132
+          2129
         ],
         [
           "moduleTarget",
           "fn",
-          2157
+          2154
         ],
         [
           "addProbedObject",
           "fn",
-          2162
+          2159
         ]
       ]
     },
@@ -14485,9 +14519,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/module_capabilities.zig",
-      "sha256": "ba2b26d864fee90d24d529c7a50ca09e3848c7d83cb6cd6da5786b0d6ce8cb81",
+      "sha256": "7562da0e0875cee020fe977b18f67a7798e00922a1ec873473dc738c3997bbb8",
       "owner": "Repositories/SDK",
-      "version": "0.64.134",
+      "version": "0.64.185",
       "capability": "project-build",
       "declarations": [
         [
@@ -14523,30 +14557,30 @@
         [
           "Decision",
           "container",
-          19
+          20
         ],
         [
           "rust",
           "fn",
-          28
+          29
         ],
         [
           "requireRustHost",
           "fn",
-          38
+          48
         ],
         [
           "query",
           "fn",
-          44
+          54
         ]
       ]
     },
     {
       "path": "Repositories/SDK/r4os/module_manifest.zig",
-      "sha256": "2ec18f9dd19ccbc7feac62632ebb6fc440aa9ed9ad0e2141a66314742fe5fc5a",
+      "sha256": "4886468a44d352ff0e5e6ba64c1e7ecb21fa49a8a17097c13a3aa9552ac5a0f5",
       "owner": "Repositories/SDK",
-      "version": "0.64.181",
+      "version": "0.64.185",
       "capability": "project-build",
       "declarations": [
         [
@@ -14560,224 +14594,244 @@
           5
         ],
         [
-          "manifest_version",
+          "import_spec",
+          "const",
+          6
+        ],
+        [
+          "startup_metadata",
           "const",
           7
         ],
         [
+          "manifest_version",
+          "const",
+          14
+        ],
+        [
           "max_manifest_bytes",
           "const",
-          8
+          15
         ],
         [
           "plan_contract_version",
           "const",
-          9
+          16
         ],
         [
           "platformApiGroupId",
           "fn",
-          11
+          18
         ],
         [
           "Kind",
           "container",
-          18
+          22
         ],
         [
           "Kind.text",
           "fn",
-          24
+          28
         ],
         [
           "Language",
           "container",
-          34
+          38
         ],
         [
           "Language.text",
           "fn",
-          39
+          43
         ],
         [
           "AppClass",
           "container",
-          48
+          52
         ],
         [
           "AppClass.text",
           "fn",
-          53
+          57
         ],
         [
           "EntryMode",
           "container",
-          58
+          62
         ],
         [
           "EntryMode.text",
           "fn",
-          62
+          66
         ],
         [
           "ImageScope",
           "container",
-          67
+          71
         ],
         [
           "ImageScope.text",
           "fn",
-          73
+          77
         ],
         [
           "Optimization",
           "container",
-          78
+          82
         ],
         [
           "Optimization.text",
           "fn",
-          82
+          86
         ],
         [
           "ModuleRole",
           "container",
-          89
+          93
         ],
         [
           "ModuleRole.text",
           "fn",
-          92
+          96
         ],
         [
           "GuestExtensionEntry",
           "container",
-          99
+          103
         ],
         [
           "GuestFeatureEntry",
           "container",
-          105
+          109
         ],
         [
           "subsystem_id_max_bytes",
           "const",
-          110
+          114
         ],
         [
           "subsystem_display_name_max_bytes",
           "const",
-          111
+          115
         ],
         [
           "guest_format_id_max_bytes",
           "const",
-          112
+          116
         ],
         [
           "guest_feature_max_bytes",
           "const",
-          113
+          117
         ],
         [
           "guest_extension_max_bytes",
           "const",
-          114
+          118
         ],
         [
           "max_guest_formats",
           "const",
-          115
+          119
         ],
         [
           "max_guest_extensions",
           "const",
-          116
+          120
         ],
         [
           "max_guest_features",
           "const",
-          117
+          121
         ],
         [
           "ModuleVersion",
           "container",
-          122
+          126
         ],
         [
           "ResourceEntry",
           "container",
-          133
+          137
         ],
         [
           "ExportEntry",
           "container",
-          142
+          146
         ],
         [
           "CDefineEntry",
           "container",
-          151
+          155
         ],
         [
           "max_resource_entries",
           "const",
-          158
+          162
         ],
         [
           "Manifest",
           "container",
-          160
+          164
         ],
         [
           "Plan",
           "container",
-          209
+          216
         ],
         [
           "RenderResult",
           "container",
-          223
+          230
         ],
         [
           "parse",
           "fn",
-          228
+          235
         ],
         [
           "importIsOptional",
           "fn",
-          1027
+          1043
         ],
         [
           "moduleVersionMeta",
           "fn",
-          1133
+          1168
         ],
         [
           "r4xManifestMetadata",
           "fn",
-          1140
+          1175
+        ],
+        [
+          "sdkBuildProfile",
+          "fn",
+          1198
+        ],
+        [
+          "moduleExports",
+          "fn",
+          1212
         ],
         [
           "derivePlan",
           "fn",
-          1161
+          1226
         ],
         [
           "buildProfileName",
           "fn",
-          1207
+          1277
         ],
         [
           "appProfileName",
           "fn",
-          1241
+          1318
         ],
         [
           "renderContractPlan",
           "fn",
-          1252
+          1329
         ]
       ]
     },
@@ -47706,9 +47760,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/app2_runtime.zig",
-      "sha256": "d2502fc946c4d4225d0a0f1ebc5fc5ed1aeb65bc15a0b10f5341709e635f0126",
+      "sha256": "b2cd571cb9e1fc25020403327e20ca4fe12ee7a8ebf2e5d2844b1d8b58eb64ad",
       "owner": "Repositories/SDK",
-      "version": "0.64.181",
+      "version": "0.64.185",
       "capability": "startup",
       "declarations": []
     },
@@ -58419,6 +58473,22 @@
         "Backend absence and exact NoEndpoint handling, logical silence and captured metadata are distinguished from physical audio playback. No ADC, physical-hardware, Windows-execution, visual-GUI or freshinstallation claim.",
         "Normal9 inputs/output readback and the single final STANDARD remain independent closure proofs; no isolated facade performance inference."
       ]
+    },
+    "tooling_templates_generation2_09044": {
+      "complete": true,
+      "performed_in": "0.90.44",
+      "sdk": "0.64.185",
+      "contract": "0.64.93",
+      "report": "Docs/API/ConsumerMigration.txt",
+      "scope": "Central manifest-selected SDK admission/default/profile/export truth, real C/Zig/Rust normal/raw and technical templates, independent R4L contracts plus technical Query2, complete native C include/hash roots and actual matched tool packages.",
+      "host_checks": "Existing Data120/Platform2 36+37 and C composition ABI193, original C/Rust startup/heap cases with explicit raw helper admission and unchanged failure output, Data16/26 compiler negatives, final baretarget alloc Clippy, all8 compiler-owned generated bridges and C/Rust projection. Compiler-free capability query and all33 real created/built role templates, canonical inspect and independently decoded exports/entry addresses; creator/compiler refusal with exact stale-output cleanup and retained successful project recovery. Technical all9 actual source/output hashes read back independently.",
+      "native_checks": "Own KVM4 actual unchanged Kernel474, six new C/Zig/Rust normal/raw console templates, exact process waits/reaps and complete installed-file readbacks. The same real collector imports Query2:2 plus API_V1:1 from all3 new template-language libraries, validates original IDs/header/revision/slots and executes add21+21=42.",
+      "limits": [
+        "Old provider/default retirement remains controlled86/89/90; independent API_V1 versions are not platform generation1.",
+        "Native R4BUILD/R4CC is explicitly native-generation2-consumer-pending until actual consumer migration72. Existing native support is not inferred from supplied C2 SDK assets.",
+        "Crossbuilt Linux/Windows tool files, shared PS7 and actual Linux builds are no Windows execution proof. No physical hardware/IME/ADC/audio/visual desktop/freshinstallation claim.",
+        "Normal9 clean-source admission, archive and single final STANDARD remain separate closure evidence. Initial technical native receipts remain unchanged; no relabelling as normal."
+      ]
     }
   },
   "wave_bindings": [
@@ -58671,12 +58741,12 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.90.43",
-    "sdk": "0.64.184",
+    "performed_in": "0.90.44",
+    "sdk": "0.64.185",
     "contract": "0.64.93",
     "libraries": "0.64.51 unchanged",
-    "evidence": "normal_service_stream_facades_09043",
-    "scope": "Normal actual App2/Context2 ServiceLoop, network and owned requests, audio and devices, ArgCursor/diagnostics, StreamTransfer, family clients, WaitSets, BytePipe/LaunchIO and optional Capture. One shared total RPC budget across audio writes and Clipboard chunks; source identity and canonical absolute tick epoch retained.",
+    "evidence": "tooling_templates_generation2_09044",
+    "scope": "Central manifest-selected SDK admission/default/profile/export truth, real C/Zig/Rust normal/raw and technical templates, independent R4L contracts plus technical Query2, complete native C include/hash roots and actual matched tool packages.",
     "historical_snapshot_retained": true,
     "current_platform_tables": [
       {
@@ -58728,7 +58798,7 @@
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.90.43",
+    "reviewed_in": "0.90.44",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -59674,11 +59744,11 @@
       },
       {
         "path": "Repositories/Libraries/Shared/Native/AMDProfile.json",
-        "sha256": "c685a952c668c46ed682e822e3181d55d1cd8bbb1bb77254a39e24a62f53b1be"
+        "sha256": "356ed819fd290bbad556f9b1eaf5d0782e53f27d1174420f4a6ff0e4399c546d"
       },
       {
         "path": "Repositories/Libraries/Shared/Native/BuildPortability.ps1",
-        "sha256": "3b18066d9c6f198436fa2589544536b63850f8222a4a673cc50a31ca05427904"
+        "sha256": "469bab6c8df5751119cb2423680c9dd1983b2c3b6f64a2d342f9d9844e3aa4cd"
       },
       {
         "path": "Repositories/Libraries/Shared/Native/Math/Build.ps1",
@@ -59954,7 +60024,7 @@
       },
       {
         "path": "Repositories/SDK/BuildProfiles/README.txt",
-        "sha256": "a986642e0f1b14792e811dbf9f7b8a87d1dfcdf8d2155b23c9bb525c3f698add"
+        "sha256": "cb7ce6847feef01410f261e3e63555e28c494df89bef386c9bbd482b8d8890a6"
       },
       {
         "path": "Repositories/SDK/Examples/DesktopEvidence.c",
@@ -59966,11 +60036,11 @@
       },
       {
         "path": "Repositories/SDK/Profiles/Build.json",
-        "sha256": "dd9e61f4b93d74ddc5c5a0fd96b65b8b56a6693dff526d0c92ce2d026b25559f"
+        "sha256": "272055320ab16524173b35e1cdd8f20fc68076236cc636b2384d753ac7112904"
       },
       {
         "path": "Repositories/SDK/Profiles/Components.json",
-        "sha256": "8aca9624fdda9b9a2c07a13a3af4839a06a6376762469be7a2c0bc4761f7be9e"
+        "sha256": "1b28d470ee53aec92cdfe78d51feb4c10e67e81d9e3feb240067aace98a4548a"
       },
       {
         "path": "Repositories/SDK/Profiles/Tools.json",
@@ -59990,7 +60060,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "a45f4df5f2f262fe4a70dd59d21ec6754676a56e43db57748372cdc927a17f7e"
+        "sha256": "0c791637f75f16dcbfabe9c8fe4fb431cb00fc294edb88a0e38a3f0310f6a005"
       },
       {
         "path": "Repositories/SDK/Rust/src/cli.rs",
@@ -60086,7 +60156,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/lowlevel.rs",
-        "sha256": "21dcb6ec6d2999daa735a60f7f9c6e362124ff28c2efffd9c458cd2eeb952609"
+        "sha256": "22d90b177434466b4019da2a2fffa0ae623986c2680f6ae0332ca51244911338"
       },
       {
         "path": "Repositories/SDK/Rust/src/memory.rs",
@@ -60386,7 +60456,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/data_helpers.h",
-        "sha256": "1d6e7620b7420cb71139e4f78031e5acab5eec10e4caf5d68ec54fd512457335"
+        "sha256": "989130cb310940daf05af5b124cc533a3e116f6b7eba2a23ff2bfeb59a529078"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/desktop_actions.h",
@@ -60606,7 +60676,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/subsystem_helpers.h",
-        "sha256": "b9170b773c19177c2f245630e8a935c379b8d95658b769976b2faca8562a226c"
+        "sha256": "89908a0e573561a28a9e8b2f77af32bf8ed58a547a013a4af776bdf025c817c2"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/technical2.h",
@@ -60626,7 +60696,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/update_helpers.h",
-        "sha256": "7ee1a7c028abac6e4b7a7a1a7ae3865bdcb84cbeeb9749bace35467f8bdd0542"
+        "sha256": "9dd9716d3ca255f35c00cfee4ca1557a7102719056cbccb88710ae8c0d2bc223"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/wait_set_platform2.h",
@@ -60770,11 +60840,11 @@
       },
       {
         "path": "Repositories/SDK/Tools/Build-Project.ps1",
-        "sha256": "d8b49b05c47516475ecd96c5c1cbb0d2839f25f8024d92ff573a96d1b63cb52c"
+        "sha256": "bdb802d773159fb491ea1882e37db63270cbe9107da9ee1566f9f5f5897c21d4"
       },
       {
         "path": "Repositories/SDK/Tools/Build-RustModule.ps1",
-        "sha256": "5664db1ad7c5482cf99c3644384ee9e1a4dd441c1d78964312d9ba1e3f2b6473"
+        "sha256": "4d9ce52d9ea9a06c94f3427bd9c3942e46ffc031bb8d180da2e051347f7c5809"
       },
       {
         "path": "Repositories/SDK/Tools/BuildContext.ps1",
@@ -60826,11 +60896,11 @@
       },
       {
         "path": "Repositories/SDK/Tools/ModuleCatalog/src/capabilities.zig",
-        "sha256": "3738d7b8486a51613e28c3c544feb8a7ae5f872322eaa78a825a30b5d527e3d3"
+        "sha256": "55d604da4e68f7fabcd377783065e5cb43b513e1ee87adcd34f5cdf39d1569a1"
       },
       {
         "path": "Repositories/SDK/Tools/ModuleCatalog/src/main.zig",
-        "sha256": "b6fef2cc5ddf6ee6067335609db56e598a1d7effad061d3dd1b9e76aefa2ccbc"
+        "sha256": "0cf3d614d757d2845f6685eaecb09b91e22fa2123fa4e3afba464861805cc647"
       },
       {
         "path": "Repositories/SDK/Tools/NativeProfiles.ps1",
@@ -60858,7 +60928,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/ProfileData.ps1",
-        "sha256": "7806f4425bd8ae879a5487ae874fc4e236f590c62f59de61920d1b5d072c5dea"
+        "sha256": "dd8476dea28a713e7cb48b60ec0317f41b4a30f168daec0cb5a05b3bb542ccf9"
       },
       {
         "path": "Repositories/SDK/Tools/ProfileResolver.ps1",
@@ -60922,7 +60992,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/Sync-ProfilePolicy.ps1",
-        "sha256": "c4d7b20aafc02a990410cc6616d119e5ceabede85fa7e58eaabb5aa49853a9cf"
+        "sha256": "9f7bc41a569f8801aa0f790be20ad0ecee7792d60d42d4ab2707cdcf3985f993"
       },
       {
         "path": "Repositories/SDK/Tools/Sync-ProfileProjections.ps1",
@@ -60934,7 +61004,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/Test-Capabilities.ps1",
-        "sha256": "92c48bf6c7ea006b6afd1a3bb777ee103dfc75c15232c7678b2b78c5f44f66c8"
+        "sha256": "8c01e13fe23a020eebdbabd6ce72eb5ebdf2237cffad0a634e36160ed5e1eb62"
       },
       {
         "path": "Repositories/SDK/Tools/Test-DesktopHostBuild.ps1",
@@ -60946,7 +61016,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/Test-ProjectTemplates.ps1",
-        "sha256": "abc35269f08d598cba7ea14900ff36615822b5e1c00774aabf0b77e9187400da"
+        "sha256": "306a98fab28cc461f3fb322fe5e3a96b8c85e7f268ad66a8e0618dc07c142bee"
       },
       {
         "path": "Repositories/SDK/Tools/Test-RustData.ps1",
@@ -61018,7 +61088,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "3fe0a6ef16a16244114ae01a030936652eb797cd2c8cc21626eb123035a0a508"
+        "sha256": "51d9816dd1625bd0e3dc42abfecb1b7a95fe829cf02c205d05ceb0913562db74"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -61122,7 +61192,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/build.zig",
-        "sha256": "9fda82e25f76a241d06bd9e1bb907f7122fad20e3861f928130f5da23de23edf"
+        "sha256": "1c4abb710551242db45d2ca1db77c79d95a72a8c1a40319999a70c1e171758bf"
       },
       {
         "path": "Repositories/SDK/r4os/build_profile.zig",
@@ -61334,7 +61404,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/generated/data_fingerprint.zig",
-        "sha256": "6dede5caf50455dff3de6caa5cfc379d0726db93f542a244a8dfa747a49c7479"
+        "sha256": "79d547cfdea88ef1b65189296941f2107bdb556e05c420e2b7f1ccbd6fbe6f1d"
       },
       {
         "path": "Repositories/SDK/r4os/generated/driver_fingerprint.zig",
@@ -61350,7 +61420,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/generated/profile_policy.zig",
-        "sha256": "492c168ea60d2764440e9a2c48cf18a78ff9e0bb2fa460ae1728fe06de25fe30"
+        "sha256": "70a7e1ae04d75931c3b0ee775a8761329042f6c5cc5bb675d910d99a519eabf8"
       },
       {
         "path": "Repositories/SDK/r4os/generated/subsystem_fingerprint.zig",
@@ -61514,11 +61584,11 @@
       },
       {
         "path": "Repositories/SDK/r4os/module_capabilities.zig",
-        "sha256": "ba2b26d864fee90d24d529c7a50ca09e3848c7d83cb6cd6da5786b0d6ce8cb81"
+        "sha256": "7562da0e0875cee020fe977b18f67a7798e00922a1ec873473dc738c3997bbb8"
       },
       {
         "path": "Repositories/SDK/r4os/module_manifest.zig",
-        "sha256": "2ec18f9dd19ccbc7feac62632ebb6fc440aa9ed9ad0e2141a66314742fe5fc5a"
+        "sha256": "4886468a44d352ff0e5e6ba64c1e7ecb21fa49a8a17097c13a3aa9552ac5a0f5"
       },
       {
         "path": "Repositories/SDK/r4os/native_bridge_schema.zig",
@@ -62242,11 +62312,11 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/app2.rs",
-        "sha256": "d7b4241291d8b2975fb0855a5df4b99ecdab01b4c1f08dc78fbebacf6956accf"
+        "sha256": "c7116e478d8adeb67a9b6561112912a9d28b14f6f34a4b70f02c01f617bd355f"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app2.h",
-        "sha256": "87a1c35ae38f6c1432f9e7f9b477c2b07b21ca1d49da5f672ff5aa4b4d667b7b"
+        "sha256": "92f122668cbe3863babeb2479ba6476aed2569a2395218ecccd2ef63048fa2a3"
       },
       {
         "path": "Repositories/SDK/Shared/C/src/r4app2_startup.c",
@@ -62290,7 +62360,7 @@
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/App2Startup.c",
-        "sha256": "79a4bb06d8b3e7b3406242c99344376923a685915ad48d5e0fa458a1b2e42280"
+        "sha256": "9ff60656c3fc5961192704689a01ee0b2d210a6bad4509dd3a9715e9ee3903fa"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/RustHeap.rs",
@@ -62306,7 +62376,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/app2_runtime.zig",
-        "sha256": "d2502fc946c4d4225d0a0f1ebc5fc5ed1aeb65bc15a0b10f5341709e635f0126"
+        "sha256": "b2cd571cb9e1fc25020403327e20ca4fe12ee7a8ebf2e5d2844b1d8b58eb64ad"
       },
       {
         "path": "Repositories/SDK/r4os/runtime_fault.zig",
@@ -62404,7 +62474,8 @@
           "gui_host_backpressure_08832",
           "gui_title_08947",
           "platform_generation2_09014",
-          "normal_app2_09040"
+          "normal_app2_09040",
+          "tooling_templates_generation2_09044"
         ]
       },
       {
@@ -62454,7 +62525,8 @@
           "gui_host_backpressure_08832",
           "gui_title_08947",
           "technical_generation2_09015",
-          "wire_native_data_09017"
+          "wire_native_data_09017",
+          "tooling_templates_generation2_09044"
         ]
       },
       {
@@ -62472,7 +62544,8 @@
           "local_contract_and_baseline",
           "library_projection_current_61",
           "current_kernel_records_80",
-          "platform_generation2_09014"
+          "platform_generation2_09014",
+          "tooling_templates_generation2_09044"
         ]
       },
       {
@@ -62982,7 +63055,8 @@
           "ico_bulk_08840",
           "audio_reply_08842",
           "platform_generation2_09014",
-          "wire_native_data_09017"
+          "wire_native_data_09017",
+          "tooling_templates_generation2_09044"
         ]
       },
       {
@@ -63213,7 +63287,8 @@
           "lowlevel_current_69",
           "platform_generation2_09012",
           "platform_generation2_09013",
-          "platform_generation2_09014"
+          "platform_generation2_09014",
+          "tooling_templates_generation2_09044"
         ]
       },
       {
@@ -63244,7 +63319,8 @@
           "audio_selection_08856",
           "desktop_actions_08898",
           "gui_title_08947",
-          "canonical_compiler_cache_09027"
+          "canonical_compiler_cache_09027",
+          "tooling_templates_generation2_09044"
         ]
       },
       {
@@ -63262,7 +63338,8 @@
           "local_contract_and_baseline",
           "library_projection_current_61",
           "language_libraries_current_60",
-          "current_kernel_records_80"
+          "current_kernel_records_80",
+          "tooling_templates_generation2_09044"
         ]
       },
       {
@@ -63292,7 +63369,8 @@
           "gui_host_backpressure_08832",
           "audio_selection_08856",
           "desktop_actions_08898",
-          "gui_title_08947"
+          "gui_title_08947",
+          "tooling_templates_generation2_09044"
         ]
       },
       {
@@ -63317,7 +63395,8 @@
           "local_contract_and_baseline",
           "library_projection_current_61",
           "language_libraries_current_59",
-          "desktop_settings_helpers_86"
+          "desktop_settings_helpers_86",
+          "tooling_templates_generation2_09044"
         ]
       },
       {
@@ -63376,7 +63455,8 @@
           "gui_host_backpressure_08832",
           "audio_selection_08856",
           "desktop_actions_08898",
-          "gui_title_08947"
+          "gui_title_08947",
+          "tooling_templates_generation2_09044"
         ]
       },
       {
@@ -63394,7 +63474,8 @@
         "proof": [
           "local_contract_and_baseline",
           "library_projection_current_61",
-          "language_libraries_current_60"
+          "language_libraries_current_60",
+          "tooling_templates_generation2_09044"
         ]
       },
       {
@@ -63416,7 +63497,8 @@
         "proof": [
           "local_contract_and_baseline",
           "library_projection_current_61",
-          "language_libraries_current_59"
+          "language_libraries_current_59",
+          "tooling_templates_generation2_09044"
         ]
       },
       {
@@ -63445,7 +63527,8 @@
           "audio_selection_08856",
           "desktop_actions_08898",
           "gui_title_08947",
-          "canonical_compiler_cache_09027"
+          "canonical_compiler_cache_09027",
+          "tooling_templates_generation2_09044"
         ]
       },
       {
@@ -63462,7 +63545,8 @@
         "proof": [
           "local_contract_and_baseline",
           "library_projection_current_61",
-          "language_libraries_current_60"
+          "language_libraries_current_60",
+          "tooling_templates_generation2_09044"
         ]
       },
       {
@@ -63501,7 +63585,8 @@
         "proof": [
           "local_contract_and_baseline",
           "library_projection_current_61",
-          "language_libraries_current_59"
+          "language_libraries_current_59",
+          "tooling_templates_generation2_09044"
         ]
       },
       {
@@ -63531,7 +63616,8 @@
           "gui_host_backpressure_08832",
           "audio_selection_08856",
           "desktop_actions_08898",
-          "gui_title_08947"
+          "gui_title_08947",
+          "tooling_templates_generation2_09044"
         ]
       },
       {
@@ -63549,7 +63635,8 @@
         "proof": [
           "local_contract_and_baseline",
           "library_projection_current_61",
-          "language_libraries_current_60"
+          "language_libraries_current_60",
+          "tooling_templates_generation2_09044"
         ]
       }
     ]
@@ -63727,6 +63814,61 @@
       "libraries": "0.64.51 unchanged",
       "evidence": "normal_gui_facades_09042",
       "scope": "Normal actual Context2 GUI/Canvas/Tray, explicit text/font keyed metrics loans, original FilePicker renderer, typed clipboard control staging/paste and pure composition transitions with actual NoProvider. Full service loops and transport remain0.90.43.",
+      "historical_snapshot_retained": true,
+      "current_platform_tables": [
+        {
+          "group": "R4SYS",
+          "abi_version": 41,
+          "bytes": 1560,
+          "slots": 193
+        },
+        {
+          "group": "R4DESK",
+          "abi_version": 21,
+          "bytes": 632,
+          "slots": 77
+        },
+        {
+          "group": "R4DRAW",
+          "abi_version": 40,
+          "bytes": 920,
+          "slots": 113
+        },
+        {
+          "group": "R4NET",
+          "abi_version": 2,
+          "bytes": 296,
+          "slots": 35
+        },
+        {
+          "group": "R4AUDIO",
+          "abi_version": 5,
+          "bytes": 240,
+          "slots": 28
+        },
+        {
+          "group": "R4DEV",
+          "abi_version": 37,
+          "bytes": 744,
+          "slots": 91
+        }
+      ],
+      "current_projection": {
+        "extern_structs": 575,
+        "fields": 8916,
+        "integer_enums": 20,
+        "callback_declarations": 806,
+        "constants": 3777
+      },
+      "canonical_schema_sha256": "5d7d1f631a75b4f3b7b4a6206a0a353258932c594b777cd0ca594177e3485f4c"
+    },
+    {
+      "performed_in": "0.90.43",
+      "sdk": "0.64.184",
+      "contract": "0.64.93",
+      "libraries": "0.64.51 unchanged",
+      "evidence": "normal_service_stream_facades_09043",
+      "scope": "Normal actual App2/Context2 ServiceLoop, network and owned requests, audio and devices, ArgCursor/diagnostics, StreamTransfer, family clients, WaitSets, BytePipe/LaunchIO and optional Capture. One shared total RPC budget across audio writes and Clipboard chunks; source identity and canonical absolute tick epoch retained.",
       "historical_snapshot_retained": true,
       "current_platform_tables": [
         {

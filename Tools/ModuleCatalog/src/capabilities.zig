@@ -28,6 +28,10 @@ const Template = struct {
     default_name: []const u8,
     language: []const u8,
     kind: []const u8,
+    platform_generation: u8,
+    build_profile: []const u8,
+    exports: []const []const u8,
+    derived_metadata: ?[]const []const u8,
     app_class: ?[]const u8,
     entry_mode: ?[]const u8,
     role: ?[]const u8,
@@ -197,10 +201,11 @@ fn templates(a: std.mem.Allocator, io: std.Io, cwd: std.Io.Dir, root: []const u8
             try tokens(a, &fields, contents);
         }
         const execution = meta.get("Execution") orelse "native_r4os";
-        const request = capabilities.Request{ .language = m.language.?.text(), .kind = m.kind.text(), .app_class = if (m.app_class) |c| c.text() else null, .entry_mode = if (m.entry_mode) |e| e.text() else null, .role = if (m.module_role) |r| r.text() else null, .execution = if (std.mem.eql(u8, execution, "host")) .host else .native_r4os };
+        const request = capabilities.Request{ .platform_generation = m.platform_generation, .language = m.language.?.text(), .kind = m.kind.text(), .app_class = if (m.app_class) |c| c.text() else null, .entry_mode = if (m.entry_mode) |e| e.text() else null, .role = if (m.module_role) |r| r.text() else null, .execution = if (std.mem.eql(u8, execution, "host")) .host else .native_r4os };
         const d = capabilities.query(request);
+        const plan = if (m.kind == .r4x) try manifest.derivePlan(a, m) else null;
         const rust = std.mem.eql(u8, request.language, "Rust");
-        try result.append(a, .{ .id = id, .display_name = meta.get("DisplayName") orelse id, .description = meta.get("Description") orelse "", .default_name = default_name, .language = request.language, .kind = request.kind, .app_class = request.app_class, .entry_mode = request.entry_mode, .role = request.role, .execution = execution, .target = m.target, .module_version = m.module_version.text, .imports = m.imports, .metadata = m.metadata, .resources = m.resources, .icons = m.icons, .help = m.help, .supported = d.supported, .reason_code = d.code, .files = try files.toOwnedSlice(a), .input_tokens = try fields.toOwnedSlice(a), .creator = if (request.execution == .host) "Tools/New-Project.ps1" else null, .required_components = if (rust and m.kind == .r4l) &.{ "SDK", "Contract", "r4os-rust-tools-v1", "r4l-contract-gen", "local-library-contract-baseline-conformance" } else if (rust) &.{ "SDK", "Contract", "r4os-rust-tools-v1" } else if (m.kind == .r4l) &.{ "SDK", "Contract", "zig-host", "r4l-contract-gen", "local-library-contract-baseline-conformance" } else if (request.execution == .host) &.{ "SDK", "Contract", "zig-host" } else &.{"native-r4build-r4cc"} });
+        try result.append(a, .{ .id = id, .display_name = meta.get("DisplayName") orelse id, .description = meta.get("Description") orelse "", .default_name = default_name, .language = request.language, .kind = request.kind, .platform_generation = m.platform_generation, .build_profile = try manifest.sdkBuildProfile(m), .exports = try manifest.moduleExports(a, m), .derived_metadata = if (plan) |value| value.metadata else null, .app_class = request.app_class, .entry_mode = request.entry_mode, .role = request.role, .execution = execution, .target = m.target, .module_version = m.module_version.text, .imports = m.imports, .metadata = m.metadata, .resources = m.resources, .icons = m.icons, .help = m.help, .supported = d.supported, .reason_code = d.code, .files = try files.toOwnedSlice(a), .input_tokens = try fields.toOwnedSlice(a), .creator = if (request.execution == .host) "Tools/New-Project.ps1" else null, .required_components = if (rust and m.kind == .r4l) &.{ "SDK", "Contract", "r4os-rust-tools-v1", "r4l-contract-gen", "local-library-contract-baseline-conformance" } else if (rust) &.{ "SDK", "Contract", "r4os-rust-tools-v1" } else if (m.kind == .r4l) &.{ "SDK", "Contract", "zig-host", "r4l-contract-gen", "local-library-contract-baseline-conformance" } else if (request.execution == .host) &.{ "SDK", "Contract", "zig-host" } else &.{"native-r4build-r4cc"} });
     }
     return result.toOwnedSlice(a);
 }

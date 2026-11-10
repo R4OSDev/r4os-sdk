@@ -1176,7 +1176,7 @@ fn renderPlanObject(allocator: std.mem.Allocator, entry: manifest_contract.Manif
     if (entry.language == .rust) {
         const descriptor = .{
             .schema = manifest_contract.capabilities.rust_build_plan_schema,
-            .profile = entry.sdk_profile orelse if (entry.entry_mode == .lowlevel) "r4os-rust-r4x-lowlevel-v1" else manifest_contract.capabilities.rust_profile,
+            .profile = try manifest_contract.sdkBuildProfile(entry),
             .tools = manifest_contract.capabilities.rust_tools,
             .host_build_qualified = manifest_contract.capabilities.rust_host_builder,
             .cargo_manifest = "Cargo.toml",
@@ -1228,6 +1228,12 @@ fn renderPlanObject(allocator: std.mem.Allocator, entry: manifest_contract.Manif
     try appendJsonString(&out, allocator, entry.image_scope.?.text());
     try out.appendSlice(allocator, ",\n    \"build_profile\": ");
     try appendJsonString(&out, allocator, plan.build_profile);
+    try out.appendSlice(allocator, ",\n    \"sdk_profile\": ");
+    try appendJsonString(&out, allocator, try manifest_contract.sdkBuildProfile(entry));
+    try out.appendSlice(allocator, ",\n    \"platform_generation\": ");
+    try appendFmt(&out, allocator, "{d}", .{entry.platform_generation});
+    try out.appendSlice(allocator, ",\n    \"exports\": ");
+    try appendStringArray(&out, allocator, try manifest_contract.moduleExports(allocator, entry));
     try out.appendSlice(allocator, ",\n    \"app_profile\": ");
     try appendJsonString(&out, allocator, plan.app_profile);
     try out.appendSlice(allocator, ",\n    \"app_class\": ");
@@ -1457,17 +1463,16 @@ test "workspace image plan requires artifacts only for selected manifests" {
     try std.testing.expectEqualStrings("", excluded);
 }
 
-/// Additive explicit R4L host plan; existing R4X plan bytes/meaning stay intact.
+/// R4L plans retain the library-owned interface revisions and metadata.
 fn renderLibraryPlan(a: std.mem.Allocator, entry: manifest_contract.Manifest) ![]u8 {
     if (entry.kind != .r4l) return error.LibraryPlanRequiresR4L;
-    var exports: std.ArrayList([]const u8) = .empty;
-    for (entry.exports) |value| try exports.append(a, try std.fmt.allocPrint(a, "{s}:@{s}:{d}", .{ value.name, value.symbol, value.revision }));
+    const exports = try manifest_contract.moduleExports(a, entry);
     var metadata: std.ArrayList([]const u8) = .empty;
     try metadata.append(a, try manifest_contract.moduleVersionMeta(a, entry));
     try metadata.appendSlice(a, entry.metadata);
     const library_contract = .{ .contract = entry.contract, .baseline = entry.contract_baseline, .implementation_zig = entry.implementation_zig, .binding_zig = entry.binding_zig, .binding_c = entry.binding_c, .binding_rust = entry.binding_rust, .fixture_zig = entry.conformance_zig, .fixture_c = entry.conformance_c, .docs = entry.api_reference };
-    const rust_project = .{ .schema = manifest_contract.capabilities.rust_build_plan_schema, .profile = "r4os-rust-r4l-v1", .tools = manifest_contract.capabilities.rust_tools, .host_build_qualified = manifest_contract.capabilities.rust_host_builder, .cargo_manifest = "Cargo.toml", .cargo_lock = "Cargo.lock", .target = "x86_64-unknown-none", .source = entry.sources[0], .c_sources = entry.sources[1..], .c_includes = entry.c_includes, .c_defines = entry.c_defines, .c_flags = entry.c_flags, .module_version = entry.module_version.text, .icons = entry.icons, .help = entry.help, .resources = entry.resources };
-    return std.json.Stringify.valueAlloc(a, .{ .schema = @as(u32, 1), .manifest = entry.path, .plan = .{ .kind = "R4L", .name = entry.name, .language = entry.language.?.text(), .sources = entry.sources, .entry_mode = @as(?[]const u8, null), .app_class = @as(?[]const u8, null), .target = entry.target, .optimization = entry.optimization.?.text(), .imports = entry.imports, .metadata = metadata.items, .exports = exports.items, .library_contract = library_contract, .rust_project = if (entry.language == .rust) rust_project else null } }, .{ .whitespace = .indent_2 });
+    const rust_project = .{ .schema = manifest_contract.capabilities.rust_build_plan_schema, .profile = try manifest_contract.sdkBuildProfile(entry), .tools = manifest_contract.capabilities.rust_tools, .host_build_qualified = manifest_contract.capabilities.rust_host_builder, .cargo_manifest = "Cargo.toml", .cargo_lock = "Cargo.lock", .target = "x86_64-unknown-none", .source = entry.sources[0], .c_sources = entry.sources[1..], .c_includes = entry.c_includes, .c_defines = entry.c_defines, .c_flags = entry.c_flags, .module_version = entry.module_version.text, .icons = entry.icons, .help = entry.help, .resources = entry.resources };
+    return std.json.Stringify.valueAlloc(a, .{ .schema = @as(u32, 1), .manifest = entry.path, .plan = .{ .kind = "R4L", .sdk_profile = try manifest_contract.sdkBuildProfile(entry), .platform_generation = entry.platform_generation, .name = entry.name, .language = entry.language.?.text(), .sources = entry.sources, .entry_mode = @as(?[]const u8, null), .app_class = @as(?[]const u8, null), .target = entry.target, .optimization = entry.optimization.?.text(), .imports = entry.imports, .metadata = metadata.items, .exports = exports, .library_contract = library_contract, .rust_project = if (entry.language == .rust) rust_project else null } }, .{ .whitespace = .indent_2 });
 }
 
 fn ownerMeta(entry: manifest_contract.Manifest, key: []const u8) ![]const u8 {
@@ -1501,10 +1506,8 @@ fn renderOwnerPlan(a: std.mem.Allocator, entry: manifest_contract.Manifest) ![]u
     }
     const next = entry.platform_generation == 2;
     if (entry.imports.len != 1 or !std.mem.eql(u8, entry.imports[0], if (next) "R4DEV:Query2:2" else "R4DEV:Query:1")) return error.OwnerImportsMismatch;
-    const profile = entry.sdk_profile orelse if (driver) "r4os-rust-r4d-v1" else "r4os-rust-r4p-v1";
+    const profile = try manifest_contract.sdkBuildProfile(entry);
     const rust_project = .{ .schema = manifest_contract.capabilities.rust_build_plan_schema, .profile = profile, .tools = manifest_contract.capabilities.rust_tools, .host_build_qualified = manifest_contract.capabilities.rust_host_builder, .cargo_manifest = "Cargo.toml", .cargo_lock = "Cargo.lock", .target = "x86_64-unknown-none", .source = entry.sources[0], .c_sources = entry.sources[1..], .c_includes = entry.c_includes, .c_defines = entry.c_defines, .c_flags = entry.c_flags, .module_version = entry.module_version.text, .icons = entry.icons, .help = entry.help, .resources = entry.resources };
-    const exports: []const []const u8 = if (next)
-        (if (driver) &.{ "DriverInit2:@DriverInit2:2", "DriverShutdown:@DriverShutdown:1" } else &.{ "ProtocolInit2:@ProtocolInit2:2", "ProtocolShutdown:@ProtocolShutdown:1", "ProtocolQuery:@ProtocolQuery:1", "ProtocolDispatch:@ProtocolDispatch:1", "ProtocolRole:@ProtocolInit2:1" })
-    else if (driver) &.{ "DriverInit:@r4d_init_entry:1", "DriverShutdown:@r4d_shutdown_entry:1" } else &.{ "ProtocolInit:@r4p_init_entry:1", "ProtocolShutdown:@r4p_shutdown_entry:1", "ProtocolQuery:@r4p_query_entry:1", "ProtocolDispatch:@r4p_dispatch_entry:1", "ProtocolRole:@r4p_init_entry:1" };
-    return std.json.Stringify.valueAlloc(a, .{ .schema = @as(u32, 1), .manifest = entry.path, .plan = .{ .kind = entry.kind.text(), .name = entry.name, .language = entry.language.?.text(), .sources = entry.sources, .build_profile = profile, .entry_mode = @as(?[]const u8, null), .app_class = @as(?[]const u8, null), .target = entry.target, .optimization = entry.optimization.?.text(), .imports = entry.imports, .metadata = metadata.items, .exports = exports, .rust_project = if (entry.language == .rust) rust_project else null } }, .{ .whitespace = .indent_2 });
+    const exports = try manifest_contract.moduleExports(a, entry);
+    return std.json.Stringify.valueAlloc(a, .{ .schema = @as(u32, 1), .manifest = entry.path, .plan = .{ .kind = entry.kind.text(), .name = entry.name, .language = entry.language.?.text(), .sources = entry.sources, .build_profile = profile, .sdk_profile = try manifest_contract.sdkBuildProfile(entry), .platform_generation = entry.platform_generation, .entry_mode = @as(?[]const u8, null), .app_class = @as(?[]const u8, null), .target = entry.target, .optimization = entry.optimization.?.text(), .imports = entry.imports, .metadata = metadata.items, .exports = exports, .rust_project = if (entry.language == .rust) rust_project else null } }, .{ .whitespace = .indent_2 });
 }

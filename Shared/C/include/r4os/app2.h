@@ -56,6 +56,8 @@ _Static_assert(sizeof(R4App2Memory) == 128, "SDK heap input2");
 _Static_assert(sizeof(R4App2Import) == 32 && sizeof(R4App2StartupInfo) == 24, "SDK startup2 facts");
 
 int32_t R4SdkApp2Init(const R4XStartContext2 *, const R4App2StartupInfo *, R4App2Memory *);
+/* Explicit helper scope for a raw entry; no global allocator is installed. */
+int32_t R4SdkApp2InitRaw(const R4XStartContext2 *, R4App2Memory *);
 
 static inline int32_t r4_app2_init(const R4XStartContext2 *raw, const R4App2StartupInfo *info, R4App2 *out) {
     if (!out) return -12;

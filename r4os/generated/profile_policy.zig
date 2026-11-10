@@ -1,5 +1,5 @@
 // Generated from Profiles/Build.json by Tools/Sync-ProfilePolicy.ps1. DO NOT EDIT.
-pub const source_sha256 = "dd9e61f4b93d74ddc5c5a0fd96b65b8b56a6693dff526d0c92ce2d026b25559f";
+pub const source_sha256 = "272055320ab16524173b35e1cdd8f20fc68076236cc636b2384d753ac7112904";
 pub const Profile = struct { id: []const u8, language: []const u8, role: []const u8, kind: []const u8, generation: u8, explicit_platform: bool };
 pub const profiles = [_]Profile{
     .{ .id = "r4os-c-generation2", .language = "C", .role = "module", .kind = "R4X", .generation = 2, .explicit_platform = true },
@@ -22,4 +22,20 @@ pub const profiles = [_]Profile{
     .{ .id = "r4os-zig-module-v1", .language = "Zig", .role = "module", .kind = "", .generation = 1, .explicit_platform = false },
     .{ .id = "r4os-zig-r4d-generation2", .language = "Zig", .role = "module", .kind = "R4D", .generation = 2, .explicit_platform = true },
     .{ .id = "r4os-zig-r4p-generation2", .language = "Zig", .role = "module", .kind = "R4P", .generation = 2, .explicit_platform = true },
+};
+pub const ModuleDefault = struct { language: []const u8, kind: []const u8, entry: []const u8, profile: []const u8 };
+pub const module_defaults = [_]ModuleDefault{
+    .{ .language = "Zig", .kind = "R4X", .entry = "", .profile = "r4os-zig-module-v1" },
+    .{ .language = "Zig", .kind = "R4L", .entry = "", .profile = "r4os-zig-module-v1" },
+    .{ .language = "Zig", .kind = "R4D", .entry = "", .profile = "r4os-zig-module-v1" },
+    .{ .language = "Zig", .kind = "R4P", .entry = "", .profile = "r4os-zig-module-v1" },
+    .{ .language = "C", .kind = "R4X", .entry = "", .profile = "r4os-c-module-v1" },
+    .{ .language = "C", .kind = "R4L", .entry = "", .profile = "r4os-c-module-v1" },
+    .{ .language = "C", .kind = "R4D", .entry = "", .profile = "r4os-c-module-v1" },
+    .{ .language = "C", .kind = "R4P", .entry = "", .profile = "r4os-c-module-v1" },
+    .{ .language = "Rust", .kind = "R4X", .entry = "app", .profile = "r4os-rust-r4x-v2" },
+    .{ .language = "Rust", .kind = "R4X", .entry = "lowlevel", .profile = "r4os-rust-r4x-lowlevel-v1" },
+    .{ .language = "Rust", .kind = "R4L", .entry = "", .profile = "r4os-rust-r4l-v1" },
+    .{ .language = "Rust", .kind = "R4D", .entry = "", .profile = "r4os-rust-r4d-v1" },
+    .{ .language = "Rust", .kind = "R4P", .entry = "", .profile = "r4os-rust-r4p-v1" },
 };

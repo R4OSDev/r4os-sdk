@@ -28,6 +28,16 @@ foreach($hostName in @('Linux','Windows')){
 }
 $hostRows=@($data.support|Where-Object {$_.execution -ceq 'host' -and $_.supported})
 if($hostRows.Count -ne 33){throw 'Expected eleven original host role/entry combinations per language.'}
+foreach($template in @($data.templates|Where-Object {$_.kind -cne 'R4L'})){
+    if($template.platform_generation -ne 2 -or $template.build_profile -cnotmatch '-generation2$' -or !$template.exports.Count){throw 'Executable template lacks actual generation2 plan facts'}
+    if(@($template.imports|Where-Object {$_ -cmatch '^R4(SYS|DESK|DRAW|NET|AUDIO|DEV):Query:1'}).Count){throw 'Executable template retained an old platform import'}
+}
+foreach($template in @($data.templates|Where-Object {$_.kind -ceq 'R4L'})){
+    if(@($template.exports|Where-Object {$_ -cmatch '^Query2:[^:]+:2$'}).Count -ne 1 -or @($template.exports|Where-Object {$_ -cmatch '^API_V1:[^:]+:1$'}).Count -ne 1){throw 'Library template lost its generation2 technical descriptor or independent interface revision'}
+}
+foreach($template in @($data.templates|Where-Object {$_.execution -ceq 'native_r4os' -and $_.language -ceq 'C' -and $_.platform_generation -eq 2})){
+    if($template.supported -or $template.reason_code -cne 'native-generation2-consumer-pending'){throw 'Unmigrated native compiler was advertised as generation2 qualified'}
+}
 foreach($row in $hostRows){
     $template=@($data.templates|Where-Object {$_.execution -ceq 'host' -and $_.language -ceq $row.language -and $_.kind -ceq $row.kind -and $_.app_class -ceq $row.app_class -and $_.entry_mode -ceq $row.entry_mode -and $_.role -ceq $row.role})
     if($template.Count -ne 1 -or !$template[0].supported -or $template[0].creator -cne 'Tools/New-Project.ps1' -or $template[0].files.Count -lt 7){throw ('Missing complete host template '+($row|ConvertTo-Json -Compress))}
