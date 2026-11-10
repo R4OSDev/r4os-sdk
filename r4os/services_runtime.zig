@@ -32,7 +32,13 @@ pub export fn R4SdkServiceLoopWait(context: *const abi.R4XStartContext, state: *
     var owner = restore(state, &bundle);
     const result = owner.wait(if (has_deadline != 0) tick else null);
     store(state, owner);
-    return switch (result) { .requests => |n| .{ .kind = 0, .value = @intCast(n) }, .deadline => .{ .kind = 1, .value = 0 }, .idle => .{ .kind = 2, .value = 0 }, .stop => .{ .kind = 3, .value = 0 }, .failure => |raw| .{ .kind = 4, .value = raw } };
+    return switch (result) {
+        .requests => |n| .{ .kind = 0, .value = @intCast(n) },
+        .deadline => .{ .kind = 1, .value = 0 },
+        .idle => .{ .kind = 2, .value = 0 },
+        .stop => .{ .kind = 3, .value = 0 },
+        .failure => |raw| .{ .kind = 4, .value = raw },
+    };
 }
 pub export fn R4SdkServiceLoopBatch(context: *const abi.R4XStartContext, state: *Loop, announced: u32, out: *Batch) callconv(.c) i32 {
     const bundle = bridge.bundle(context) orelse return abi.err_no_group;
@@ -49,10 +55,17 @@ pub export fn R4SdkServiceBatchNext(context: *const abi.R4XStartContext, state: 
     const result = active.next();
     store(state, owner);
     batch.* = .{ .announced = active.announced, .processed = active.processed, .done = @intFromBool(active.done) };
-    return switch (result) { .request => .{ .kind = 0, .value = 0 }, .complete => .{ .kind = 1, .value = 0 }, .yielded => .{ .kind = 2, .value = 0 }, .failure => |raw| .{ .kind = 3, .value = raw } };
+    return switch (result) {
+        .request => .{ .kind = 0, .value = 0 },
+        .complete => .{ .kind = 1, .value = 0 },
+        .yielded => .{ .kind = 2, .value = 0 },
+        .failure => |raw| .{ .kind = 3, .value = raw },
+    };
 }
 const Handler = *const fn (?*anyopaque) callconv(.c) i32;
-fn invoke(handler: Handler, data: ?*anyopaque) i32 { return handler(data); }
+fn invoke(handler: Handler, data: ?*anyopaque) i32 {
+    return handler(data);
+}
 pub export fn R4SdkServiceLoopDrain(context: *const abi.R4XStartContext, state: *Loop, announced: u32, handler: Handler, data: ?*anyopaque) callconv(.c) i32 {
     const bundle = bridge.bundle(context) orelse return abi.err_no_group;
     var owner = restore(state, &bundle);
@@ -69,11 +82,20 @@ pub export fn R4SdkServiceLoopReport(context: *const abi.R4XStartContext, state:
 pub export fn R4SdkServiceDetails(context: *const abi.R4XStartContext, out: [*]abi.ServiceDetail, capacity: u32) callconv(.c) i32 {
     const bundle = bridge.bundle(context) orelse return abi.err_no_group;
     const owner = sys.Context.init(&bundle);
-    return switch (services.readCompleteDetails(&owner, out[0..capacity])) { .complete => |n| @intCast(n), .failure => |raw| raw };
+    return details(&owner, out[0..capacity]);
+}
+fn details(owner: *const sys.Context, rows: []abi.ServiceDetail) i32 {
+    return switch (services.readCompleteDetails(owner, rows)) {
+        .complete => |n| @intCast(n),
+        .failure => |raw| raw,
+    };
 }
 pub export fn R4SdkServiceControl(context: *const abi.R4XStartContext, operation: u32, name: [*:0]const u8, path: ?[*:0]const u8, args: ?[*:0]const u8, mode: u32, description: ?[*:0]const u8, timeout_ticks: u64, out: *abi.ServiceInfo) callconv(.c) i32 {
     const bundle = bridge.bundle(context) orelse return abi.err_no_group;
     const owner = sys.Context.init(&bundle);
+    return control(&owner, operation, name, path, args, mode, description, timeout_ticks, out);
+}
+fn control(owner: *const sys.Context, operation: u32, name: [*:0]const u8, path: ?[*:0]const u8, args: ?[*:0]const u8, mode: u32, description: ?[*:0]const u8, timeout_ticks: u64, out: *abi.ServiceInfo) i32 {
     return switch (operation) {
         0 => owner.serviceStatus(name, out),
         1 => owner.serviceStart(name, out),
@@ -93,7 +115,26 @@ pub export fn R4SdkServiceDetail(context: *const abi.R4XStartContext, name: [*:0
     const bundle = bridge.bundle(context) orelse return abi.err_no_group;
     return sys.Context.init(&bundle).serviceDetailByName(name, out);
 }
-pub export fn R4SdkCompletedReply(raw: i32) callconv(.c) i32 { return services.completedReplyResult(raw); }
+fn system2(context: *const @import("platform2.zig").Context) sys.Context {
+    return sys.Context.fromProgram(.{ .generation2 = context });
+}
+pub export fn R4SdkServiceDetails2(context: *const @import("platform2.zig").Context, out: [*]abi.ServiceDetail, capacity: u32) callconv(.c) i32 {
+    const owner = system2(context);
+    return details(&owner, out[0..capacity]);
+}
+pub export fn R4SdkServiceControl2(context: *const @import("platform2.zig").Context, operation: u32, name: [*:0]const u8, path: ?[*:0]const u8, args: ?[*:0]const u8, mode: u32, description: ?[*:0]const u8, timeout_ticks: u64, out: *abi.ServiceInfo) callconv(.c) i32 {
+    const owner = system2(context);
+    return control(&owner, operation, name, path, args, mode, description, timeout_ticks, out);
+}
+pub export fn R4SdkServiceInfo2(context: *const @import("platform2.zig").Context, index: u32, out: *abi.ServiceInfo) callconv(.c) i32 {
+    return system2(context).serviceInfo(index, out);
+}
+pub export fn R4SdkServiceDetail2(context: *const @import("platform2.zig").Context, name: [*:0]const u8, out: *abi.ServiceDetail) callconv(.c) i32 {
+    return system2(context).serviceDetailByName(name, out);
+}
+pub export fn R4SdkCompletedReply(raw: i32) callconv(.c) i32 {
+    return services.completedReplyResult(raw);
+}
 pub export fn R4SdkDeadlineAppend(out: [*]u8, capacity: u32, payload: [*]const u8, len: u32, tick: u64) callconv(.c) i32 {
     const result = deadline.append(out[0..capacity], payload[0..len], tick) orelse return abi.service_api_result_buffer_too_small;
     return @intCast(result.len);
@@ -106,7 +147,9 @@ pub export fn R4SdkDeadlineFromTimeout(timeout: abi.R4Timeout, now: u64, hz: u32
     out.* = deadline.deadlineFromTimeout(timeout, now, hz) catch return abi.service_api_result_invalid;
     return 0;
 }
-pub export fn R4SdkDeadlineRemaining(tick: u64, now: u64, hz: u32) callconv(.c) abi.R4Timeout { return deadline.remainingTimeout(tick, now, hz); }
+pub export fn R4SdkDeadlineRemaining(tick: u64, now: u64, hz: u32) callconv(.c) abi.R4Timeout {
+    return deadline.remainingTimeout(tick, now, hz);
+}
 pub export fn R4SdkDurationFromTicks(ticks: u64, hz: u32, out: *abi.R4Duration) callconv(.c) i32 {
     out.* = time.durationFromTicks(ticks, hz) catch return abi.service_api_result_invalid;
     return 0;

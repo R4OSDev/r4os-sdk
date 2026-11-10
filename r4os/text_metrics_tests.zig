@@ -179,3 +179,64 @@ test "text metrics owner capacity invalid provider encoding alias and exact retu
     try std.testing.expect(busy_seen);
     try std.testing.expectEqual(@as(u32, 0), cache.busy);
 }
+
+test "text metrics owner normal Context2 Canvas prepares once and borrows exact cached revisions" {
+    const p2 = @import("platform2.zig");
+    mode = 0;
+    revision = 77;
+    reentrant = null;
+    var system: p2.abi.R4XStartR4Sys2 = .{};
+    var drawing: p2.abi.R4XStartR4Draw2 = .{};
+    drawing.font_measure = @intFromPtr(&legacy);
+    drawing.font_prefix_metrics2 = @intFromPtr(&collect);
+    var imports = [_]a.R4XStartImport{
+        .{ .group_id = 1, .resolved_version = 2, .table = @intFromPtr(&system) },
+        .{ .group_id = 3, .resolved_version = 2, .table = @intFromPtr(&drawing) },
+    };
+    var start: p2.abi.R4XStartContext2 = .{ .imports = @intFromPtr(&imports), .import_count = imports.len };
+    const context = try p2.Context.init(&start);
+    const binding = draw.Context.fromProgram(.{ .generation2 = &context });
+    var canvas: gui.Canvas = .{ .ctx = &binding, .w = 50000, .h = 20 };
+    const large = "W" ** 4096;
+    old_calls = 0;
+    new_calls = 0;
+    new_bytes = 0;
+    var hit: usize = 0;
+    try std.testing.expectEqual(@as(i32, 0), canvas.textIndexChecked(large, std.math.maxInt(i32), &hit));
+    try std.testing.expectEqual(@as(usize, 4096), hit);
+    try std.testing.expectEqual(@as(usize, 1), new_calls);
+    try std.testing.expectEqual(@as(usize, 4096), new_bytes);
+    try std.testing.expectEqual(@as(usize, 0), old_calls);
+
+    const text = "iWe\u{301}🙂";
+    var memory: [32]a.FontAdvance2 = undefined;
+    var cache = try m.Cache.init(span(text), storage(&memory), memory.len, .{ .measure = &collect });
+    _ = try cache.prepare(19, 0);
+    const key = try cache.key();
+    try std.testing.expectEqual(@as(i32, 0), canvas.bindTextMetrics(&cache, &key));
+    const calls = new_calls;
+    const bytes = new_bytes;
+    for (0..66) |x| {
+        try std.testing.expectEqual(@as(i32, 0), canvas.textIndexChecked(text, @intCast(x), &hit));
+        try std.testing.expectEqual(@as(usize, try cache.hit(key, @intCast(x))), hit);
+    }
+    try std.testing.expectEqual(calls, new_calls);
+    try std.testing.expectEqual(bytes, new_bytes);
+    try std.testing.expectEqual(@as(usize, 0), old_calls);
+    var other: [text.len]u8 = undefined;
+    @memcpy(&other, text);
+    hit = 0x1234;
+    try std.testing.expectEqual(a.font_metrics2_stale, canvas.textIndexChecked(&other, 8, &hit));
+    try std.testing.expectEqual(@as(usize, 0x1234), hit);
+    var wrong = key;
+    wrong.text_revision += 1;
+    try std.testing.expectEqual(a.font_metrics2_stale, canvas.bindTextMetrics(&cache, &wrong));
+    canvas.clearTextMetrics();
+    drawing.font_prefix_metrics2 = 0;
+    try std.testing.expectEqual(a.err_no_fn, canvas.textIndexChecked(text, 8, &hit));
+    try std.testing.expectEqual(@as(usize, 0x1234), hit);
+    try std.testing.expectEqual(@as(usize, 0), old_calls);
+    try std.testing.expectEqual(a.font_metrics2_encoding, canvas.textIndexChecked("\xc3", 8, &hit));
+    try std.testing.expectEqual(@as(usize, 0x1234), hit);
+    std.debug.print("TX042 normal Canvas input4096 callbacks1 legacy0; bound hits66 additional_callbacks0; exact source/revision failures preserve output\n", .{});
+}

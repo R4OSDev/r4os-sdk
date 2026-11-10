@@ -1,6 +1,97 @@
 const std = @import("std");
 const r4os = @import("r4os");
 
+test "command clipboard timer Context2 preserves checked clock deadlines and finite limits" {
+    const a = r4os.abi;
+    const p = r4os.platform2;
+    const Fake = struct {
+        var now: u64 = 100;
+        var ticks: u64 = 10;
+        var generation: u32 = 9;
+        var hz: u32 = 333;
+        var mode: u32 = 0;
+        var waits: u32 = 0;
+        var clocks: u32 = 0;
+        fn clock(out: *a.MonotonicClockInfo) callconv(.c) i32 {
+            clocks += 1;
+            out.* = .{ .flags = a.monotonic_clock_flag_valid, .source = 1, .generation = generation, .frequency_hz = a.monotonic_clock_frequency_hz, .resolution_ns = 1, .instant_ns = now, .event_requested_hz = hz, .event_effective_hz = hz + 1 };
+            return 1;
+        }
+        fn tick() callconv(.c) u64 {
+            return ticks;
+        }
+        fn poll(_: *a.GuiEvent) callconv(.c) i32 {
+            return 0;
+        }
+        fn close(_: *const p.abi.R4XStartContext2) callconv(.c) u32 {
+            return 0;
+        }
+        fn wait(sequence: u64, duration: u64, _: u32, out: *u64) callconv(.c) i32 {
+            std.debug.assert(duration == 1);
+            waits += 1;
+            switch (mode) {
+                0 => now += 10,
+                1 => generation += 1,
+                else => now -= 1,
+            }
+            out.* = sequence + 1;
+            return 1;
+        }
+    };
+    var sys: p.abi.R4XStartR4Sys2 = .{};
+    sys.monotonic_clock = @intFromPtr(&Fake.clock);
+    sys.ticks = @intFromPtr(&Fake.tick);
+    var desk: p.abi.R4XStartR4Desk2 = .{};
+    desk.gui_poll_event = @intFromPtr(&Fake.poll);
+    desk.gui_activity_wait = @intFromPtr(&Fake.wait);
+    var draw: p.abi.R4XStartR4Draw2 = .{};
+    var imports = [_]a.R4XStartImport{
+        .{ .group_id = 1, .resolved_version = 2, .table = @intFromPtr(&sys) },
+        .{ .group_id = 2, .resolved_version = 2, .table = @intFromPtr(&desk) },
+        .{ .group_id = 3, .resolved_version = 2, .table = @intFromPtr(&draw) },
+    };
+    var raw: p.abi.R4XStartContext2 = .{ .instance_id = 7, .app_class = 2, .flags = a.r4xstart_flag_imports_valid | a.r4xstart_flag_close_supported, .should_close = @intFromPtr(&Fake.close), .imports = @intFromPtr(&imports), .import_count = imports.len };
+    var app = switch (r4os.App2.init(&raw, .desktop)) {
+        .value => |v| v,
+        .failure => return error.App2,
+    };
+    const system = app.system();
+    const desktop = app.desktop().?;
+    for (0..3) |mode| {
+        Fake.now = 100;
+        Fake.generation = 9;
+        Fake.hz = 333;
+        Fake.mode = @intCast(mode);
+        Fake.waits = 0;
+        Fake.clocks = 0;
+        var loop = r4os.EventLoop.init(system, desktop, &.{});
+        const result = loop.wait(.{ .kind = a.timeout_kind_finite, .nanoseconds = 10 });
+        switch (result) {
+            .timed_out => try std.testing.expectEqual(@as(usize, 0), mode),
+            .failure => |status| try std.testing.expectEqual(if (mode == 1) @as(i32, -5) else @as(i32, -6), status),
+            else => return error.UnexpectedMessage,
+        }
+        try std.testing.expectEqual(@as(u32, 1), Fake.waits);
+    }
+    Fake.now = 100;
+    Fake.generation = 9;
+    Fake.hz = 333;
+    Fake.waits = 0;
+    var loop = r4os.EventLoop.init(system, desktop, &.{});
+    try std.testing.expectEqual(@as(i32, -3), loop.wait(.{ .kind = a.timeout_kind_finite, .nanoseconds = std.math.maxInt(u64) }).failure);
+    try std.testing.expectEqual(@as(u32, 0), Fake.waits);
+    Fake.hz = 0;
+    Fake.clocks = 0;
+    try std.testing.expect(loop.wait(.{ .kind = a.timeout_kind_poll }) == .timed_out);
+    try std.testing.expectEqual(@as(u32, 0), Fake.clocks);
+    Fake.hz = 333;
+    Fake.ticks = std.math.maxInt(u64) - 1;
+    var timer: r4os.Timer = .{ .id = .{ .value = 19 }, .active = true };
+    const before = timer;
+    try std.testing.expect(!timer.start(&system, .{ .value = 20 }, .{ .nanoseconds = 10_000_000 }, false));
+    try std.testing.expectEqualDeep(before, timer);
+}
+
 test "modern controls preserve classic defaults and share bounded native resources" {
     resetFrameCapture();
     var tables = makeTables(true);

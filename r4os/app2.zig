@@ -148,6 +148,22 @@ pub const App = struct {
         return @import("stream_adapters.zig").PlatformClock.fromContext2(&self.context);
     }
 
+    pub fn textMetricsProvider(self: *const App) @import("text_metrics_api.zig").Binding {
+        return @import("text_metrics_api.zig").provider2(&self.context);
+    }
+
+    pub fn filePickerProvider(self: *const App) @import("file_picker_api.zig").Binding {
+        return @import("file_picker_api.zig").provider2(&self.context);
+    }
+
+    pub fn clipboardOffers(self: *const App, out: *@import("clipboard_offer.zig").Client) i32 {
+        return @import("clipboard_offer.zig").Client.connect(&self.context, out);
+    }
+
+    pub fn compositionClient(self: *const App, timeout_ticks: u64, out: *@import("text_composition_client.zig").Client) i32 {
+        return @import("text_composition_client.zig").Client.connect(&self.context, timeout_ticks, out);
+    }
+
     pub fn desktop(self: *const App) ?r4desk.Context {
         if (!self.hasGroup(.r4desk)) return null;
         return r4desk.Context.fromProgram(self.lowLevel());

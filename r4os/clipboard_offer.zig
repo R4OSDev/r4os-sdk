@@ -18,7 +18,9 @@ pub fn transfer(lease: Lease, item: u32, format: u32, offset: u64, total: u64) T
 /// Context/tables/code remain live through all calls and successful Close.
 /// A transport error can leave a mutation outcome unknown; retain the stage
 /// token and use Status/idempotent Commit, never publish a replacement blindly.
-pub const Client = struct {
+// Shared with the existing C/Rust R4SdkClipboardOffers record. Auto layout
+// reorders handle/timeout and cannot cross the normal control FFI boundary.
+pub const Client = extern struct {
     call: abi.R4SysFns.service_call,
     close_call: abi.R4SysFns.service_close,
     handle: u32,

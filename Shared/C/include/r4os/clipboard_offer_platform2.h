@@ -91,7 +91,7 @@ static inline int32_t R4SdkClipboardOffersEnumerate(const R4SdkClipboardOffers *
  if(!formats||!out||!capacity||capacity>16)return R4OS_CLIPBOARD_OFFER_ERROR_INVALID;
  R4ClipboardOfferEnumerate request={.version=1,.size=sizeof(request),.provider=snapshot.provider,.id=snapshot.id,.cursor=cursor,.capacity=capacity};uint8_t payload[4096];
  int32_t rc=R4SdkClipboardOffersRpc(client,R4OS_CLIPBOARD_OFFER_OP_ENUMERATE,&request,sizeof(request),payload,sizeof(payload));if(rc<0)return rc;
- R4ClipboardOfferPage page;if(rc<sizeof(page))return R4OS_CLIPBOARD_OFFER_ERROR_INVALID;__builtin_memcpy(&page,payload,sizeof(page));
+ R4ClipboardOfferPage page;if((uint32_t)rc<sizeof(page))return R4OS_CLIPBOARD_OFFER_ERROR_INVALID;__builtin_memcpy(&page,payload,sizeof(page));
  if(!R4SdkClipboardOfferRecord(&page,sizeof(page))||page.provider!=snapshot.provider||page.id!=snapshot.id||page.revision!=snapshot.revision||page.reserved||page.count>capacity||page.total>16||cursor>page.total||page.count>page.total-cursor||page.next!=cursor+page.count||rc!=sizeof(page)+page.count*sizeof(*formats))return R4OS_CLIPBOARD_OFFER_ERROR_INVALID;
  for(uint32_t i=0;i<page.count;++i){R4ClipboardOfferFormat record;__builtin_memcpy(&record,payload+sizeof(page)+i*sizeof(record),sizeof(record));if(record.item>=8||record.format<1||record.format>5||record.total_bytes>R4OS_CLIPBOARD_OFFER_MAX_OFFER_BYTES||record.flags||record.reserved)return R4OS_CLIPBOARD_OFFER_ERROR_INVALID;}
  if(page.count)__builtin_memcpy(formats,payload+sizeof(page),page.count*sizeof(*formats));*out=page;return 0;
@@ -101,7 +101,7 @@ static inline int32_t R4SdkClipboardOffersRead(const R4SdkClipboardOffers *clien
  if(capacity>R4OS_CLIPBOARD_OFFER_READ_CHUNK)return R4OS_CLIPBOARD_OFFER_ERROR_TOO_LARGE;
  R4ClipboardOfferTransfer request=R4SdkClipboardOfferTransfer(snapshot,item,format,offset,capacity);uint8_t payload[4096];
  int32_t rc=R4SdkClipboardOffersRpc(client,R4OS_CLIPBOARD_OFFER_OP_READ,&request,sizeof(request),payload,sizeof(payload));if(rc<0)return rc;
- R4ClipboardOfferChunk chunk;if(rc<sizeof(chunk))return R4OS_CLIPBOARD_OFFER_ERROR_INVALID;__builtin_memcpy(&chunk,payload,sizeof(chunk));
+ R4ClipboardOfferChunk chunk;if((uint32_t)rc<sizeof(chunk))return R4OS_CLIPBOARD_OFFER_ERROR_INVALID;__builtin_memcpy(&chunk,payload,sizeof(chunk));
  if(!R4SdkClipboardOfferRecord(&chunk,sizeof(chunk))||chunk.provider!=snapshot.provider||chunk.id!=snapshot.id||chunk.revision!=snapshot.revision||chunk.offset!=offset||chunk.bytes>capacity||chunk.total_bytes>R4OS_CLIPBOARD_OFFER_MAX_OFFER_BYTES||offset>chunk.total_bytes||chunk.bytes>chunk.total_bytes-offset||chunk.flags>1||((chunk.flags==1)!=(offset+chunk.bytes==chunk.total_bytes))||rc!=sizeof(chunk)+chunk.bytes)return R4OS_CLIPBOARD_OFFER_ERROR_INVALID;
  if(chunk.bytes)__builtin_memcpy(bytes,payload+sizeof(chunk),chunk.bytes);*out=chunk;return 0;
 }

@@ -37,6 +37,11 @@ int32_t R4SdkServiceDetails(const R4XStartContext *, R4ServiceDetail *, uint32_t
 int32_t R4SdkServiceControl(const R4XStartContext *, uint32_t, const uint8_t *, const uint8_t *, const uint8_t *, uint32_t, const uint8_t *, uint64_t, R4ServiceInfo *);
 int32_t R4SdkServiceInfo(const R4XStartContext *, uint32_t, R4ServiceInfo *);
 int32_t R4SdkServiceDetail(const R4XStartContext *, const uint8_t *, R4ServiceDetail *);
+/* Same original owners over a borrowed actual SDK Context2 view. */
+int32_t R4SdkServiceDetails2(const R4OS2Context *, R4ServiceDetail *, uint32_t);
+int32_t R4SdkServiceControl2(const R4OS2Context *, uint32_t, const uint8_t *, const uint8_t *, const uint8_t *, uint32_t, const uint8_t *, uint64_t, R4ServiceInfo *);
+int32_t R4SdkServiceInfo2(const R4OS2Context *, uint32_t, R4ServiceInfo *);
+int32_t R4SdkServiceDetail2(const R4OS2Context *, const uint8_t *, R4ServiceDetail *);
 int32_t R4SdkCompletedReply(int32_t);
 int32_t R4SdkDeadlineAppend(uint8_t *, uint32_t, const uint8_t *, uint32_t, uint64_t);
 R4SdkDeadlineView R4SdkDeadlineSplit(const uint8_t *, uint32_t);

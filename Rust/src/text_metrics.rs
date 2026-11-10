@@ -69,6 +69,9 @@ pub struct Cache<'a> {
     _local: PhantomData<*mut ()>,
 }
 impl<'a> Cache<'a> {
+    pub(crate) fn native(&self) -> *const c::R4SdkTextMetrics {
+        &self.raw
+    }
     pub fn new(
         context: &'a Context<'a>,
         source: &'a str,

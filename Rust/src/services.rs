@@ -7,17 +7,17 @@ use crate::{
 use core::{cell::Cell, ffi::CStr, marker::PhantomData};
 
 pub use c::R4SdkServiceLoopMetrics as LoopMetrics;
-mod tray;
-mod evidence;
 mod actions;
-mod links;
+mod evidence;
 mod inventory;
+mod links;
+mod tray;
+pub use actions::{FocusObservation, PointerStep, prepare_pointer_grant};
+pub use evidence::{EvidenceLease, EvidenceReply, EvidenceToken, prepare_evidence};
 pub use inventory::InventoryAction;
 #[cfg(feature = "alloc")]
 pub use inventory::ServiceInventory;
-pub use links::{LinkToken, LinkRequest, LinkReply, link_supported, prepare_link_binding};
-pub use evidence::{EvidenceLease, EvidenceReply, EvidenceToken, prepare_evidence};
-pub use actions::{FocusObservation, PointerStep, prepare_pointer_grant};
+pub use links::{LinkReply, LinkRequest, LinkToken, link_supported, prepare_link_binding};
 pub use tray::{Tray, TrayCall, TrayItem};
 pub struct Control {
     pub raw_code: i32,
@@ -33,6 +33,7 @@ pub struct BoundDetail {
 pub struct Services<'a> {
     app: c::R4App,
     context: *const abi::R4XStartContext,
+    context2: *const c::R4OS2Context,
     _loan: PhantomData<&'a ()>,
     _local: PhantomData<*mut ()>,
 }
@@ -44,6 +45,18 @@ impl<'a> Services<'a> {
         Ok(Self {
             app: crate::facade_app(app)?,
             context: app.start_context(),
+            context2: core::ptr::null(),
+            _loan: PhantomData,
+            _local: PhantomData,
+        })
+    }
+    pub fn new2(app: &'a crate::app2::App<'_>) -> Result<Self> {
+        let mut raw = unsafe { core::mem::zeroed() };
+        exact(unsafe { c::R4SdkAppFacade2(app.native_context(), &app.memory, &mut raw) })?;
+        Ok(Self {
+            app: raw,
+            context: core::ptr::null(),
+            context2: app.native_context(),
             _loan: PhantomData,
             _local: PhantomData,
         })
@@ -83,7 +96,11 @@ impl<'a> Services<'a> {
     /// publish a partially refreshed inventory.
     pub fn details(&self, staging: &mut [abi::ServiceDetail]) -> Result<usize> {
         let n = unsafe {
-            c::R4SdkServiceDetails(self.context, staging.as_mut_ptr(), length(staging.len())?)
+            if self.context2.is_null() {
+                c::R4SdkServiceDetails(self.context, staging.as_mut_ptr(), length(staging.len())?)
+            } else {
+                c::R4SdkServiceDetails2(self.context2, staging.as_mut_ptr(), length(staging.len())?)
+            }
         };
         if n < 0 {
             return Err(Error::Raw(n));
@@ -108,17 +125,31 @@ impl<'a> Services<'a> {
         let pointer = |v: Option<&CStr>| v.map_or(core::ptr::null(), |s| s.as_ptr().cast());
         let mut info = abi::ServiceInfo::default();
         let raw_code = unsafe {
-            c::R4SdkServiceControl(
-                self.context,
-                operation,
-                name.as_ptr().cast(),
-                pointer(path),
-                pointer(args),
-                mode,
-                pointer(description),
-                ticks,
-                &mut info,
-            )
+            if self.context2.is_null() {
+                c::R4SdkServiceControl(
+                    self.context,
+                    operation,
+                    name.as_ptr().cast(),
+                    pointer(path),
+                    pointer(args),
+                    mode,
+                    pointer(description),
+                    ticks,
+                    &mut info,
+                )
+            } else {
+                c::R4SdkServiceControl2(
+                    self.context2,
+                    operation,
+                    name.as_ptr().cast(),
+                    pointer(path),
+                    pointer(args),
+                    mode,
+                    pointer(description),
+                    ticks,
+                    &mut info,
+                )
+            }
         };
         Control { raw_code, info }
     }
@@ -192,7 +223,13 @@ impl<'a> Services<'a> {
     }
     pub fn info(&self, index: u32) -> Control {
         let mut info = abi::ServiceInfo::default();
-        let raw_code = unsafe { c::R4SdkServiceInfo(self.context, index, &mut info) };
+        let raw_code = unsafe {
+            if self.context2.is_null() {
+                c::R4SdkServiceInfo(self.context, index, &mut info)
+            } else {
+                c::R4SdkServiceInfo2(self.context2, index, &mut info)
+            }
+        };
         Control { raw_code, info }
     }
     pub fn bound_detail(&self, name: &CStr) -> Result<BoundDetail> {
@@ -209,7 +246,13 @@ impl<'a> Services<'a> {
     }
     pub fn detail(&self, name: &CStr) -> (i32, abi::ServiceDetail) {
         let mut info = abi::ServiceDetail::default();
-        let code = unsafe { c::R4SdkServiceDetail(self.context, name.as_ptr().cast(), &mut info) };
+        let code = unsafe {
+            if self.context2.is_null() {
+                c::R4SdkServiceDetail(self.context, name.as_ptr().cast(), &mut info)
+            } else {
+                c::R4SdkServiceDetail2(self.context2, name.as_ptr().cast(), &mut info)
+            }
+        };
         (code, info)
     }
 }
@@ -367,6 +410,11 @@ impl Endpoint<'_> {
         }
     }
     pub fn service_loop(&self, stop_check_ms: u64, drain_limit: u32) -> Result<ServiceLoop<'_>> {
+        // Shared generation2 loop admission belongs to the following service
+        // migration. Never pass its absent generation1 start to the old FFI.
+        if !self.owner.context2.is_null() {
+            return Err(Error::Raw(abi::err_no_fn));
+        }
         let mut state = unsafe { core::mem::zeroed() };
         exact(unsafe {
             c::R4SdkServiceLoopInit(
@@ -492,4 +540,4 @@ impl Batch<'_, '_> {
     }
 }
 
-pub use actions::{ActionToken, ActionRequest, ActionReply, prepare_actions, action_frame_ready};
+pub use actions::{ActionReply, ActionRequest, ActionToken, action_frame_ready, prepare_actions};

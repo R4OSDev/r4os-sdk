@@ -79,6 +79,19 @@ pub struct Client<'a> {
     _local: PhantomData<*mut ()>,
 }
 impl<'a> Client<'a> {
+    pub(crate) fn control_native(
+        &mut self,
+    ) -> Result<crate::c_facades::R4SdkClipboardOffers, Error> {
+        if self.handle == 0 {
+            return Err(Error(abi::clipboard_offer_error_closed));
+        }
+        Ok(crate::c_facades::R4SdkClipboardOffers {
+            call: Some(self.call),
+            close: Some(self.close),
+            handle: self.handle,
+            timeout_ticks: 500,
+        })
+    }
     pub fn connect(context: &'a Context<'a>) -> Result<Self, Error> {
         let open = context
             .lookup(

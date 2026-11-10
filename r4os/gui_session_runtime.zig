@@ -7,7 +7,6 @@ const desk = @import("r4desk.zig");
 const draw = @import("r4draw.zig");
 const app = @import("app_gui.zig");
 const gui = @import("gui.zig");
-const time = @import("time_contract.zig");
 const support = @import("gui_session_support.zig");
 const S = support.Session;
 const E = support.Event;
@@ -21,13 +20,31 @@ pub export fn R4SdkGuiSessionOpenNative(fingerprint: u64, s: *S, raw: *const a.R
         const table = entry[0] orelse return a.err_no_group;
         if (table.abi_version < entry[1].abi_version or table.size < entry[1].size) return a.err_no_fn;
     }
-    s.* = .{ .bundle = bundle, .program = undefined, .sys = undefined, .desk = undefined, .draw = undefined, .timers = if (count == 0) &.{} else timers.?[0..count], .role = role };
+    s.* = .{ .bundle = bundle, .instance_id = @intCast(raw.instance_id), .program = undefined, .sys = undefined, .desk = undefined, .draw = undefined, .timers = if (count == 0) &.{} else timers.?[0..count], .role = role };
     s.program = p.Context.initBundle(&s.bundle);
     s.sys = sys.Context.init(&s.bundle);
     s.desk = desk.Context.init(&s.bundle);
     s.draw = draw.Context.init(&s.bundle);
+    return finishOpen(s);
+}
+pub export fn R4SdkGuiSessionOpenNative2(fingerprint: u64, s: *S, raw: *const @import("platform2.zig").abi.R4XStartContext2, role: u32, timers: ?[*]app.Timer, count: usize) callconv(.c) i32 {
+    if (fingerprint != @import("gui_bridge_schema.zig").fingerprint) return a.io_error_invalid;
+    if (role > 1 or raw.instance_id == 0 or raw.instance_id > std.math.maxInt(u32) or (count != 0 and timers == null) or count > std.math.maxInt(isize) / @sizeOf(app.Timer)) return a.io_error_invalid;
+    const context = @import("platform2.zig").Context.init(raw) catch return a.io_error_invalid;
+    if (context.desktop() == null or context.drawing() == null) return a.err_no_group;
+    s.* = .{ .bundle = undefined, .context2 = context, .instance_id = @intCast(raw.instance_id), .program = undefined, .sys = undefined, .desk = undefined, .draw = undefined, .timers = if (count == 0) &.{} else timers.?[0..count], .role = role };
+    // The caller pins Session before admission. Both pointers target its final
+    // storage and remain borrowed until explicit Close and all subloans retire.
+    s.memory2 = @import("allocator_source.zig").Memory.fromContext2(&s.context2.?);
+    s.program = .{ .generation2 = &s.context2.?, .memory2 = &s.memory2 };
+    s.sys = sys.Context.fromProgram(s.program);
+    s.desk = desk.Context.fromProgram(s.program);
+    s.draw = draw.Context.fromProgram(s.program);
+    return finishOpen(s);
+}
+fn finishOpen(s: *S) i32 {
     for (s.timers) |*timer| timer.* = .{};
-    if (role == 0) s.window = app.Window.init(s.sys, s.desk, s.draw, s.timers) orelse return a.err_no_fn;
+    if (s.role == 0) s.window = app.Window.init(s.sys, s.desk, s.draw, s.timers) orelse return a.err_no_fn;
     // Host admission deliberately never queries or binds an application window.
     return 0;
 }
@@ -48,6 +65,27 @@ pub export fn R4SdkGuiSessionWindow(s: *S) callconv(.c) ?*app.Window {
 }
 pub export fn R4SdkGuiSessionCanvas(s: *S) callconv(.c) ?*gui.Canvas {
     return if (s.paint != null) &s.canvas else null;
+}
+
+/// Draws the original FileDialog from one immutable complete picker page.
+/// All records, title, label/scratch storage, Canvas, picker and row buffers
+/// are mapped and disjoint. No labels or controller pointers escape the call.
+pub export fn R4SdkGuiPickerDrawNative(fingerprint: u64, canvas: *const gui.Canvas, picker: *const @import("file_picker.zig").Session, rectangle: *const gui.Rect, title: *const @import("binary_cursor.zig").Span, label_storage: *const @import("binary_cursor.zig").Span, scratch: *const @import("binary_cursor.zig").Span) callconv(.c) i32 {
+    const picker_api = @import("file_picker_api.zig");
+    const picker_owner = @import("file_picker.zig");
+    if (fingerprint != @import("gui_bridge_schema.zig").fingerprint) return a.io_error_invalid;
+    const title_value = title.*;
+    const labels_value = label_storage.*;
+    const scratch_value = scratch.*;
+    const heading = title_value.bytes() catch return picker_owner.storage_error;
+    labels_value.validate() catch return picker_owner.storage_error;
+    scratch_value.validate() catch return picker_owner.storage_error;
+    const rows = picker.rows() orelse return picker_owner.incomplete;
+    if (labels_value.address % @alignOf([]const u8) != 0 or labels_value.length % @sizeOf([]const u8) != 0 or labels_value.length / @sizeOf([]const u8) < rows.len) return picker_owner.storage_error;
+    const labels: [][]const u8 = if (rows.len == 0) &.{} else @as([*][]const u8, @ptrFromInt(labels_value.address))[0..rows.len];
+    const text_scratch: []u8 = if (scratch_value.length == 0) &.{} else @as([*]u8, @ptrFromInt(scratch_value.address))[0..scratch_value.length];
+    const dialog = picker_api.dialog(picker, rectangle.*, heading, labels) orelse return picker_owner.incomplete;
+    return dialog.draw(canvas.*, text_scratch);
 }
 pub export fn R4SdkGuiSessionBegin(s: *S, commands: ?[*]a.GuiFrameCommand, count: usize, resources: ?[*]u8, length: usize) callconv(.c) i32 {
     if (s.paint != null or (count != 0 and commands == null) or (length != 0 and resources == null) or count > std.math.maxInt(isize) / @sizeOf(a.GuiFrameCommand) or length > std.math.maxInt(isize)) return a.io_error_invalid;
@@ -202,7 +240,7 @@ pub export fn R4SdkGuiSessionCommand(s: *S, id: u32) callconv(.c) i32 {
 pub export fn R4SdkGuiSessionMode(s: *S, action: u32, value: u32, out: *a.WindowModeReply) callconv(.c) i32 {
     const w = if (s.window) |*v| v else return a.err_no_fn;
     if (s.mode == null) {
-        if (s.sys.programOpenHandle(@intCast(s.bundle.raw.instance_id), &s.owner) != a.program_handle_ok) return a.io_error_invalid;
+        if (s.sys.programOpenHandle(s.instance_id, &s.owner) != a.program_handle_ok) return a.io_error_invalid;
         s.mode = .{ .owner = s.owner, .window_id = @intCast(w.id) };
     }
     const client = &s.mode.?;
@@ -230,7 +268,7 @@ pub export fn R4SdkGuiSessionHostExchange(s: *S, op: u16, request: *const a.Tray
     if (s.role != 1 or s.endpoint == 0 or !std.meta.eql(request.desktop_owner, s.owner)) return a.tray_result_not_owner;
     if (op != a.tray_service_op_desktop_sync and op != a.tray_service_op_desktop_activate and op != a.tray_service_op_desktop_visibility) return a.tray_result_bad_request;
     if (!s.claimed and op != a.tray_service_op_desktop_sync) return a.tray_result_not_owner;
-    const ticks = time.timeoutToTicks(timeout.*, s.sys.monotonicHz()) catch return a.io_error_invalid;
+    const ticks = s.sys.timeoutTicks(timeout.*) catch return a.io_error_invalid;
     const immutable = request.*;
     var header: a.ServiceMessageHeader = .{};
     out.* = .{};
@@ -254,7 +292,7 @@ pub export fn R4SdkGuiSessionHostExchange(s: *S, op: u16, request: *const a.Tray
 }
 pub export fn R4SdkGuiSessionHostClaim(s: *S, out: *a.TrayDesktopExchange, timeout: *const a.R4Timeout) callconv(.c) i32 {
     if (s.role != 1 or s.endpoint != 0) return a.io_error_invalid;
-    if (s.sys.programOpenHandle(@intCast(s.bundle.raw.instance_id), &s.owner) != a.program_handle_ok or s.owner.instance_id != s.bundle.raw.instance_id or s.owner.generation == 0 or s.owner.reserved != 0) return a.tray_result_not_owner;
+    if (s.sys.programOpenHandle(s.instance_id, &s.owner) != a.program_handle_ok or s.owner.instance_id != s.instance_id or s.owner.generation == 0 or s.owner.reserved != 0) return a.tray_result_not_owner;
     var info: a.ServiceInfo = .{};
     const rc = s.sys.serviceOpen(a.window_service_name, &info);
     if (rc != 0 or info.handle == 0) return if (rc != 0) rc else a.service_api_result_no_endpoint;

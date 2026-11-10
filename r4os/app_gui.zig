@@ -161,10 +161,16 @@ pub const Timer = struct {
     active: bool = false,
 
     pub fn start(self: *Timer, sys: *const r4sys.Context, id: TimerId, duration: time_contract.Duration, repeating: bool) bool {
-        const ticks = time_contract.durationToTicks(duration, sys.monotonicHz()) catch return false;
+        const ticks = if (sys.base.generation2 != null) blk: {
+            if (!sys.hasFn("ticks")) return false;
+            const sample = sys.base.clockSampleChecked() catch return false;
+            break :blk time_contract.checked.durationToTicks(duration, sample.identity.tick_hz) catch return false;
+        } else time_contract.durationToTicks(duration, sys.monotonicHz()) catch return false;
+        const now = sys.ticks();
+        const end = if (sys.base.generation2 != null) @import("std").math.add(u64, now, ticks) catch return false else now +| ticks;
         self.* = .{
             .id = id,
-            .deadline_tick = sys.ticks() +| ticks,
+            .deadline_tick = end,
             .interval_ticks = if (repeating) @max(@as(u64, 1), ticks) else 0,
             .active = true,
         };
@@ -254,6 +260,7 @@ pub const EventLoop = struct {
 
     pub fn wait(self: *EventLoop, timeout: time_contract.Timeout) WaitResult {
         if (!self.desk.hasFn("gui_activity_wait")) return .{ .failure = abi.err_no_fn };
+        if (self.sys.base.generation2 != null) return self.wait2(timeout);
         const timeout_ticks = time_contract.timeoutToTicks(timeout, self.sys.monotonicHz()) catch return .{ .failure = abi.remote_frame_error_invalid };
         const started = self.sys.ticks();
         const deadline: ?u64 = if (timeout.kind == abi.timeout_kind_forever) null else started +| timeout_ticks;
@@ -263,6 +270,33 @@ pub const EventLoop = struct {
             var remaining = if (deadline) |end| if (now >= end) @as(u64, 0) else end - now else abi.io_wait_forever;
             if (remaining == 0) return .timed_out;
             if (self.nextTimerDelay(now)) |timer_delay| remaining = @min(remaining, timer_delay);
+            if (remaining == 0) continue;
+            var sequence = self.activity_sequence;
+            const raw = self.desk.guiActivityWait(self.activity_sequence, remaining, self.subscriptions, &sequence);
+            self.activity_sequence = sequence;
+            if (raw < 0) return .{ .failure = raw };
+        }
+    }
+
+    fn wait2(self: *EventLoop, timeout: time_contract.Timeout) WaitResult {
+        const checked = time_contract.checked;
+        const kind = checked.fromTimeout(timeout) catch |err| return .{ .failure = @import("time_budget_runtime.zig").failure(err) };
+        var deadline: ?checked.DeadlineBudget = null;
+        if (kind.kind == @intFromEnum(checked.Kind.finite)) {
+            const sample = self.sys.base.clockSampleChecked() catch |err| return .{ .failure = @import("time_budget_runtime.zig").failure(err) };
+            deadline = checked.DeadlineBudget.init(sample, timeout) catch |err| return .{ .failure = @import("time_budget_runtime.zig").failure(err) };
+        }
+        while (true) {
+            if (self.poll()) |message| return .{ .message = message };
+            var remaining: u64 = if (kind.kind == @intFromEnum(checked.Kind.forever)) abi.io_wait_forever else 0;
+            if (deadline) |*budget| {
+                const sample = self.sys.base.clockSampleChecked() catch |err| return .{ .failure = @import("time_budget_runtime.zig").failure(err) };
+                var value = budget.remaining(sample) catch |err| return .{ .failure = @import("time_budget_runtime.zig").failure(err) };
+                if (value.kind == @intFromEnum(checked.Kind.finite)) value.value = checked.durationToTicks(.{ .nanoseconds = value.value }, sample.identity.tick_hz) catch |err| return .{ .failure = @import("time_budget_runtime.zig").failure(err) };
+                remaining = checked.toWaitTicks(value) catch |err| return .{ .failure = @import("time_budget_runtime.zig").failure(err) };
+            }
+            if (remaining == 0) return .timed_out;
+            if (self.nextTimerDelay(self.sys.ticks())) |delay| remaining = @min(remaining, delay);
             if (remaining == 0) continue;
             var sequence = self.activity_sequence;
             const raw = self.desk.guiActivityWait(self.activity_sequence, remaining, self.subscriptions, &sequence);

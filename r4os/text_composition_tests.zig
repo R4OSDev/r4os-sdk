@@ -2,6 +2,7 @@ const std = @import("std");
 const o = @import("text_composition.zig");
 const a = @import("r4os_contract").abi;
 const t = std.testing;
+const gui = @import("gui.zig");
 fn h(id: u32) a.ProgramProcessHandle {
     return .{ .instance_id = id, .generation = 100 + id };
 }
@@ -19,6 +20,95 @@ fn begin(state: *o.Owner, revision: u64, doc: []const u8, range: o.Range) !o.Id 
     try t.expectEqual(@as(i32, 0), o.Owner.init(99, state));
     try t.expectEqual(@as(i32, 0), state.begin(focus(), provider(), revision, doc, range, .{}, &id));
     return id;
+}
+
+test "composition owner normal control empty offers still validate exact provider snapshot and close" {
+    const offers = @import("clipboard_offer.zig");
+    const control = @import("gui_text_control.zig");
+    const Provider = struct {
+        var calls: usize = 0;
+        fn call(_: u32, op: u16, request: [*]const u8, size: u32, header: *a.ServiceMessageHeader, output: [*]u8, capacity: u32, _: u64) callconv(.c) i32 {
+            calls += 1;
+            if (op != a.clipboard_offer_op_read or size != @sizeOf(a.ClipboardOfferTransfer) or capacity < @sizeOf(offers.Chunk)) return -99;
+            const input = std.mem.bytesToValue(a.ClipboardOfferTransfer, request[0..@sizeOf(a.ClipboardOfferTransfer)]);
+            if (input.provider != 17) return a.clipboard_offer_error_provider_changed;
+            if (input.id != 3) return a.clipboard_offer_error_not_found;
+            header.* = .{};
+            const chunk: offers.Chunk = .{ .provider = 17, .id = 3, .revision = 9, .flags = a.clipboard_offer_flag_eof };
+            @memcpy(output[0..@sizeOf(offers.Chunk)], std.mem.asBytes(&chunk));
+            return @sizeOf(offers.Chunk);
+        }
+        fn close(_: u32) callconv(.c) i32 {
+            return 0;
+        }
+    };
+    Provider.calls = 0;
+    var client: offers.Client = .{ .call = Provider.call, .close_call = Provider.close, .handle = 1 };
+    var lease: offers.Lease = .{ .provider = 17, .id = 3, .revision = 9, .expires_ns = 100, .state = a.clipboard_offer_state_snapshot };
+    const format: offers.Format = .{ .format = a.clipboard_offer_format_text_utf8 };
+    var empty: [0]u8 = .{};
+    try t.expectEqual(@as(i32, 0), control.readText(&client, &lease, &format, &empty));
+    try t.expectEqual(@as(usize, 1), Provider.calls);
+    var field: gui.TextField(32) = .{};
+    try t.expect(field.setExact("kept"));
+    lease.provider = 18;
+    try t.expectEqual(a.clipboard_offer_error_provider_changed, field.pasteOffer(&client, &lease, &format, &empty));
+    try t.expectEqualStrings("kept", field.value());
+    lease.provider = 17;
+    lease.revision = 10;
+    try t.expectEqual(a.clipboard_offer_error_invalid, field.pasteOffer(&client, &lease, &format, &empty));
+    try t.expectEqualStrings("kept", field.value());
+    try t.expectEqual(@as(i32, 0), client.close());
+    try t.expectEqual(a.clipboard_offer_error_closed, field.pasteOffer(&client, &lease, &format, &empty));
+    try t.expectEqual(@as(usize, 3), Provider.calls);
+}
+
+test "composition owner normal controls preserve preedit cancel and exact atomic commit" {
+    var field: gui.TextField(64) = .{};
+    try t.expect(field.setExact("abcd"));
+    field.setSelection(1, 3);
+    var state: o.Owner = undefined;
+    var rev: u64 = 7;
+    var id: o.Id = undefined;
+    const view = focus();
+    const method = provider();
+    const caret: o.Caret = .{};
+    try t.expectEqual(@as(i32, 0), o.Owner.init(99, &state));
+    const absent: o.Provider = .{};
+    try t.expectEqual(a.composition_error_no_provider, field.beginComposition(&state, &view, &absent, rev, &caret, &id));
+    try t.expectEqualStrings("abcd", field.value());
+    try t.expectEqual(@as(i32, 0), field.beginComposition(&state, &view, &method, rev, &caret, &id));
+    const preedit = event(id, 1, a.composition_event_preedit, rev, .{ .start = 1, .end = 3 }, "e\u{301}");
+    try t.expectEqual(@as(i32, 0), field.applyComposition(&state, &view, &method, &preedit, "e\u{301}", &rev));
+    try t.expectEqualStrings("abcd", field.value());
+    try t.expectEqual(@as(u64, 7), rev);
+    const commit = event(id, 2, a.composition_event_commit, rev, .{ .start = 1, .end = 3 }, "e\u{301}");
+    try t.expectEqual(@as(i32, 0), field.applyComposition(&state, &view, &method, &commit, "e\u{301}", &rev));
+    try t.expectEqualStrings("ae\u{301}d", field.value());
+    try t.expectEqual(@as(u64, 8), rev);
+    try t.expectEqual(@as(usize, 4), field.cursor);
+    try t.expect(!field.hasSelection());
+
+    var area: gui.TextArea(64) = .{};
+    try t.expectEqual(@as(i32, 0), o.Owner.init(100, &state));
+    area.set("e\u{301}x");
+    area.setSelection(0, 3);
+    const area_view = gui.TextAreaView.init(20, 4);
+    try t.expectEqual(@as(i32, 0), area.beginComposition(&state, &view, &method, rev, &caret, &id));
+    const invalid = event(id, 1, a.composition_event_commit, rev, .{ .start = 1, .end = 3 }, "z");
+    try t.expectEqual(a.composition_error_range, area.applyComposition(&state, &view, &method, &invalid, "z", &rev, &area_view));
+    try t.expectEqualStrings("e\u{301}x", area.value());
+    var changed = view;
+    changed.focus_generation += 1;
+    const pending = event(id, 1, a.composition_event_commit, rev, .{ .start = 0, .end = 3 }, "z");
+    try t.expectEqual(a.composition_error_stale_view, area.applyComposition(&state, &changed, &method, &pending, "z", &rev, &area_view));
+    try t.expectEqualStrings("e\u{301}x", area.value());
+    try t.expectEqual(@as(u64, 8), rev);
+    try t.expectEqual(@as(i32, 0), area.beginComposition(&state, &view, &method, rev, &caret, &id));
+    const cancel = event(id, 1, a.composition_event_cancel, rev, .{}, "");
+    try t.expectEqual(@as(i32, 0), area.applyComposition(&state, &view, &method, &cancel, "", &rev, &area_view));
+    try t.expectEqualStrings("e\u{301}x", area.value());
+    try t.expectEqual(@as(u64, 8), rev);
 }
 test "composition owner preedit leaves document exact until original valid commit" {
     var doc: [64]u8 = @splat(0xa5);

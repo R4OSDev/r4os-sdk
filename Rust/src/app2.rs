@@ -122,8 +122,38 @@ impl<'a> App<'a> {
     pub fn resources(&self) -> crate::resources::Result<crate::resources::Resources<'_>> {
         crate::resources::Resources::new2(self)
     }
+    pub fn services(&self) -> crate::storage::Result<crate::services::Services<'_>> {
+        crate::services::Services::new2(self)
+    }
     pub fn clock(&self) -> crate::time::Clock<'_, 'a> {
         crate::time::Clock::new2(self)
+    }
+    pub fn text_metrics<'b>(
+        &'b self,
+        source: &'b str,
+        storage: &'b mut [mem::MaybeUninit<abi::FontAdvance2>],
+    ) -> Result<crate::text_metrics::Cache<'b>, crate::text_metrics::Error> {
+        crate::text_metrics::Cache::new(self.context(), source, storage)
+    }
+    pub fn file_picker<'b>(
+        &'b self,
+        first: &'b mut [mem::MaybeUninit<crate::file_picker::Row>],
+        second: &'b mut [mem::MaybeUninit<crate::file_picker::Row>],
+        mode: crate::file_picker::Mode,
+        extension: &[u8],
+    ) -> Result<crate::file_picker::Session<'b>, crate::file_picker::Error> {
+        crate::file_picker::Session::new(self.context(), first, second, mode, extension)
+    }
+    pub fn clipboard_offers(
+        &self,
+    ) -> Result<crate::clipboard_offer::Client<'_>, crate::clipboard_offer::Error> {
+        crate::clipboard_offer::Client::connect(self.context())
+    }
+    pub fn composition_client(
+        &self,
+        timeout_ticks: u64,
+    ) -> Result<crate::text_composition::Client<'_>, crate::text_composition::Error> {
+        crate::text_composition::Client::connect(self.context(), timeout_ticks)
     }
     pub fn inventory_reader<'b, T: crate::inventory::Row>(
         &'b self,

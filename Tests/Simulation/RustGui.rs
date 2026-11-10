@@ -13,6 +13,7 @@ unsafe extern "C" {
     fn sdk_gui_modern_expected() -> u64;
     fn sdk_gui_modern_c_case() -> u64;
     fn sdk_gui_c_case() -> i32;
+    fn sdk_gui_control_clipboard_case() -> i32;
     fn sdk_gui_native_tables(
         sys: *mut abi::R4XStartR4Sys,
         desk: *mut abi::R4XStartR4Desk,
@@ -187,6 +188,7 @@ fn with_app(host: bool, body: impl FnOnce(&App<'_>)) {
 #[test]
 fn original_gui_pixels_frames_unicode_input_and_exact_host_session() {
     assert_eq!(unsafe { sdk_gui_c_case() }, 0);
+    assert_eq!(unsafe { sdk_gui_control_clipboard_case() }, 0);
     with_app(false, |app| {
         let mut storage = pin!(SessionStorage::new());
         let mut timers = [MaybeUninit::uninit(); 1];

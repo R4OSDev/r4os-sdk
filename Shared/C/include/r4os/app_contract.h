@@ -59,6 +59,14 @@ static inline int32_t r4_app_init2(const R4OS2Context *context, const R4App2Memo
     for (uint32_t group = 1; group <= 6; ++group) {
         if (R4OS2ContextGroup(context, group)) value.group_mask |= UINT32_C(1) << group;
     }
+    if (R4OS2ContextGroup(context, 2)) {
+        const int32_t desktop_rc = r4desk_init2(context, &value.desktop);
+        if (desktop_rc != 0) return desktop_rc;
+    }
+    if (R4OS2ContextGroup(context, 3)) {
+        const int32_t drawing_rc = r4draw_init2(context, &value.drawing);
+        if (drawing_rc != 0) return drawing_rc;
+    }
     if (R4OS2ContextGroup(context, 6)) {
         const int32_t device_rc = r4dev_init2(context, &value.devices);
         if (device_rc != 0) return device_rc;
@@ -165,6 +173,12 @@ static inline R4Status r4_app_init_declared(const R4XStartContext *context, cons
 
 static inline int r4_app_has_group(const R4App *app, uint32_t group_id) {
     return app != 0 && group_id < 32u && (app->group_mask & (1u << group_id)) != 0u;
+}
+
+static inline uint64_t r4_app_instance_id(const R4App *app) {
+    if (!app) return 0;
+    if (app->system.generation2) return app->system.generation2->raw->instance_id;
+    return app->context ? app->context->instance_id : 0;
 }
 
 static inline const uint8_t *r4_app_args(const R4App *app, uint64_t *out_len) {

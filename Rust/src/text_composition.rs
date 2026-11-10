@@ -32,6 +32,9 @@ pub struct Session {
     _local: PhantomData<*mut ()>,
 }
 impl Session {
+    pub(crate) fn native_mut(&mut self) -> *mut c::R4SdkComposition {
+        &mut self.raw
+    }
     pub fn new(owner_generation: u64) -> Result<Self, Error> {
         let mut raw = MaybeUninit::uninit();
         exact(unsafe { c::R4SdkCompositionInit(owner_generation, raw.as_mut_ptr()) })?;

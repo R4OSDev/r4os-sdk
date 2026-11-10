@@ -3,7 +3,7 @@ const std = @import("std");
 const abi = @import("r4os_contract").abi;
 const time = @import("time_budget.zig");
 const poll = @import("driver_poll_budget.zig");
-fn failure(err: time.Error) i32 {
+pub fn failure(err: time.Error) i32 {
     return switch (err) {
         error.UnknownFrequency => -1,
         error.InvalidTimeout => -2,

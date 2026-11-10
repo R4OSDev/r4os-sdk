@@ -6,7 +6,7 @@ comptime {
         @sizeOf(owner.Cache) != 112 or @offsetOf(owner.Cache, "provider") != 72 or @offsetOf(owner.Cache, "busy") != 100)
         @compileError("Text metrics C/Rust layout drift");
 }
-fn code(err: owner.Error) i32 {
+pub fn code(err: owner.Error) i32 {
     return switch (err) {
         error.InvalidState => -101,
         error.InvalidStorage => -102,

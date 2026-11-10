@@ -6,6 +6,38 @@
 #include "PointerBindings.c"
 #include <r4os/gui_bridge.h>
 #include <r4os/poll_budget.h>
+static uint32_t control_offer_calls;
+static int32_t control_offer_call(uint32_t handle,uint16_t op,const uint8_t *request,uint32_t length,R4ServiceMessageHeader *header,uint8_t *output,uint32_t capacity,uint64_t timeout){
+    (void)output;(void)capacity;
+    assert(handle==31 && timeout==12345);
+    assert(length>=sizeof(R4ClipboardOfferTransfer));
+    R4ClipboardOfferTransfer transfer;memcpy(&transfer,request,sizeof(transfer));
+    assert(transfer.version==1 && transfer.size==sizeof(transfer) && transfer.provider==UINT64_C(0x100000007) && transfer.id==UINT64_C(0x200000009));
+    assert(!transfer.item && transfer.format==R4OS_CLIPBOARD_OFFER_FORMAT_TEXT_UTF8 && !transfer.offset && transfer.total_bytes==9);
+    if(op==R4OS_CLIPBOARD_OFFER_OP_DECLARE){assert(!control_offer_calls && length==sizeof(transfer));}
+    else{assert(op==R4OS_CLIPBOARD_OFFER_OP_PUT && control_offer_calls==1 && length==sizeof(transfer)+9 && !memcmp(request+sizeof(transfer),"iWe\xcc\x81\xf0\x9f\x99\x82",9));}
+    ++control_offer_calls;*header=(R4ServiceMessageHeader){0};return 0;
+}
+static int32_t control_offer_close(uint32_t handle){assert(handle==31);return 0;}
+int sdk_gui_control_clipboard_case(void){
+    uint8_t bytes[64];R4SdkGuiTextField field;
+    R4SdkGuiSlot opened=R4SdkGui_borrowedTextField(0,bytes,sizeof(bytes),&field);
+    assert(!opened.status && (opened.flags&R4SDK_GUI_PRESENT));
+    static const uint8_t text[]="iWe\xcc\x81\xf0\x9f\x99\x82";
+    R4SdkGuiSlot set=R4SdkGuiTextField_setExact(0,&field,text,9);
+    assert(!set.status && set.bits==1);
+    R4SdkClipboardOffers client={.call=control_offer_call,.close=control_offer_close,.handle=31,.timeout_ticks=12345};
+    R4ClipboardOfferLease lease={.version=1,.size=sizeof(lease),.provider=UINT64_C(0x100000007),.id=UINT64_C(0x200000009),.revision=4,.expires_ns=5,.state=R4OS_CLIPBOARD_OFFER_STATE_WRITING};
+    control_offer_calls=0;
+    R4SdkGuiSlot staged=R4SdkGuiTextField_stageSelection(0,&field,&client,&lease);
+    assert(!staged.status && (int32_t)staged.bits==0 && control_offer_calls==2);
+    client.handle=0;
+    staged=R4SdkGuiTextField_stageSelection(0,&field,&client,&lease);
+    assert(!staged.status && (int32_t)staged.bits==R4OS_CLIPBOARD_OFFER_ERROR_CLOSED && control_offer_calls==2);
+    R4SdkGuiSlot value=R4SdkGuiTextField_value(0,&field);
+    assert(!value.status && value.length==9 && !memcmp(value.ptr,text,9));
+    return 0;
+}
 int sdk_budget_c_case(void) {
     uint64_t ticks=77;
     assert(R4SdkMillisecondsToTicksChecked(100,333,&ticks)==0 && ticks==34);

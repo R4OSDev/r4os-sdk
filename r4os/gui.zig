@@ -6,6 +6,11 @@ const r4sys = @import("r4sys.zig");
 const r4desk = @import("r4desk.zig");
 const r4draw = @import("r4draw.zig");
 const modern = @import("gui_modern.zig");
+const text_metrics = @import("text_metrics.zig");
+const text_metrics_runtime = @import("text_metrics_runtime.zig");
+const text_control = @import("gui_text_control.zig");
+const offers = @import("clipboard_offer.zig");
+const composition = @import("text_composition.zig");
 pub const Style = modern.Style;
 pub const FontSet = modern.FontSet;
 pub const TextRole = modern.TextRole;
@@ -1566,6 +1571,37 @@ pub fn TextArea(comptime capacity: anytype) type {
             return ctx.clipboardWrite(selected) >= 0;
         }
 
+        /// Caller begins/commits the exact stage and cuts only after its ACK.
+        pub fn stageSelection(self: *const Self, client: *const offers.Client, stage: *const offers.Lease) i32 {
+            if (!self.hasSelection()) return abi.clipboard_offer_error_not_found;
+            return text_control.stageText(client, stage, self.selectedValue());
+        }
+
+        pub fn pasteOffer(self: *Self, client: *const offers.Client, snapshot: *const offers.Lease, format: *const offers.Format, scratch: []u8, view: *const TextAreaView) i32 {
+            if (self.disabled) return abi.clipboard_offer_error_unsupported;
+            const count = text_control.readText(client, snapshot, format, scratch);
+            if (count < 0) return count;
+            return @intFromBool(self.pasteSlice(scratch[0..@intCast(count)], view.*));
+        }
+
+        pub fn beginComposition(self: *const Self, state: *composition.Owner, focus: *const composition.Focus, provider: *const composition.Provider, revision: u64, caret: *const composition.Caret, out: *composition.Id) i32 {
+            if (self.disabled) return abi.composition_error_unsupported;
+            const range = self.selectionRange();
+            return state.begin(focus.*, provider.*, revision, self.value(), .{ .start = range.start, .end = range.end }, caret.*, out);
+        }
+
+        pub fn applyComposition(self: *Self, state: *composition.Owner, focus: *const composition.Focus, provider: *const composition.Provider, event: *const composition.Event, text: []const u8, revision: *u64, view: *const TextAreaView) i32 {
+            if (self.disabled) return abi.composition_error_unsupported;
+            const rc = state.apply(focus.*, provider.*, event.*, text, self.buffer[0..self.maxTextLen()], &self.len, revision);
+            if (rc == 0 and event.kind == abi.composition_event_commit) {
+                self.buffer[self.len] = 0;
+                self.cursor = @intCast(event.replacement.start + text.len);
+                self.clearSelection();
+                self.afterEdit(view.*);
+            }
+            return rc;
+        }
+
         pub fn cutToClipboard(self: *Self, ctx: *const r4desk.Context) bool {
             if (self.disabled) return false;
             if (!self.copyToClipboard(ctx)) return false;
@@ -2102,6 +2138,37 @@ pub fn TextField(comptime capacity: anytype) type {
             return ctx.clipboardWrite(self.clipboardValue()) >= 0;
         }
 
+        /// No publication occurs here: caller retains the stage through ACK.
+        pub fn stageSelection(self: *const Self, client: *const offers.Client, stage: *const offers.Lease) i32 {
+            if (self.password) return abi.clipboard_offer_error_unsupported;
+            return text_control.stageText(client, stage, self.clipboardValue());
+        }
+
+        pub fn pasteOffer(self: *Self, client: *const offers.Client, snapshot: *const offers.Lease, format: *const offers.Format, scratch: []u8) i32 {
+            if (self.disabled) return abi.clipboard_offer_error_unsupported;
+            defer if (self.password) @memset(scratch, 0);
+            const count = text_control.readText(client, snapshot, format, scratch);
+            if (count < 0) return count;
+            return @intFromBool(self.pasteSlice(scratch[0..@intCast(count)]));
+        }
+
+        pub fn beginComposition(self: *const Self, state: *composition.Owner, focus: *const composition.Focus, provider: *const composition.Provider, revision: u64, caret: *const composition.Caret, out: *composition.Id) i32 {
+            if (self.disabled or self.password) return abi.composition_error_unsupported;
+            const range = self.selectionRange();
+            return state.begin(focus.*, provider.*, revision, self.value(), .{ .start = range.start, .end = range.end }, caret.*, out);
+        }
+
+        pub fn applyComposition(self: *Self, state: *composition.Owner, focus: *const composition.Focus, provider: *const composition.Provider, event: *const composition.Event, text: []const u8, revision: *u64) i32 {
+            if (self.disabled or self.password) return abi.composition_error_unsupported;
+            const rc = state.apply(focus.*, provider.*, event.*, text, self.buffer[0..self.inputLimit()], &self.len, revision);
+            if (rc == 0 and event.kind == abi.composition_event_commit) {
+                self.buffer[self.len] = 0;
+                self.cursor = graphemeCeil(self.value(), @intCast(event.replacement.start + text.len));
+                self.clearSelection();
+            }
+            return rc;
+        }
+
         pub fn cutToClipboard(self: *Self, ctx: *const r4desk.Context) bool {
             if (self.disabled or self.password) return false;
             if (!self.copyToClipboard(ctx)) return false;
@@ -2528,6 +2595,10 @@ pub const Canvas = struct {
     frame_canvas: ?*FrameCanvas = null,
     /// Application-local opt-in. null preserves the complete classic path.
     style: ?Style = null,
+    /// Immutable source, rows, cache and provider code outlive this Canvas.
+    /// Font publication requires explicit ValidateFont/reprepare or clear.
+    text_metrics_cache: ?*const text_metrics.Cache = null,
+    text_metrics_key: text_metrics.Key = .{},
 
     pub fn init(ctx: *const r4draw.Context, info: abi.GuiWindowInfo) Canvas {
         return initSize(ctx, info.client_w, info.client_h);
@@ -2698,6 +2769,65 @@ pub const Canvas = struct {
     /// Grapheme-safe hit testing using the same font as rendering. Single-line
     /// controls accept at most 4096 display bytes here; editing stays TextField's.
     pub fn textIndexAt(self: Canvas, value: []const u8, x: i32) usize {
+        if (self.ctx.base.generation2 != null) {
+            var result: usize = 0;
+            if (self.textIndexChecked(value, x, &result) != 0) return 0;
+            return result;
+        }
+        return self.originalTextIndexAt(value, x);
+    }
+
+    /// Every Canvas copy keeps this loan until clear/destruction. No provider
+    /// call is made by subsequent hits; the caller supplies exact revision keys.
+    pub fn bindTextMetrics(self: *Canvas, cache: *const text_metrics.Cache, expected: *const text_metrics.Key) i32 {
+        const actual = cache.key() catch |err| return text_metrics_runtime.code(err);
+        if (!std.meta.eql(actual, expected.*) or actual.font_id != self.font.id) return abi.font_metrics2_stale;
+        self.text_metrics_cache = cache;
+        self.text_metrics_key = actual;
+        return 0;
+    }
+
+    /// Drops a logical view only, without stopping an active callback/hardware.
+    pub fn clearTextMetrics(self: *Canvas) void {
+        self.text_metrics_cache = null;
+        self.text_metrics_key = .{};
+    }
+
+    /// Failure preserves output. Context2 never calls the old prefix algorithm.
+    pub fn textIndexChecked(self: Canvas, value: []const u8, x: i32, out: *usize) i32 {
+        if (value.len > abi.font_metrics2_max_bytes) return abi.font_metrics2_capacity;
+        if (self.text_metrics_cache) |cache| {
+            const key = self.text_metrics_key;
+            if (key.source_address != @intFromPtr(value.ptr) or key.text_bytes != value.len or key.font_id != self.font.id) return abi.font_metrics2_stale;
+            const result = cache.hit(key, x) catch |err| return text_metrics_runtime.code(err);
+            out.* = result;
+            return 0;
+        }
+        if (!bounded_text.valid(value)) return abi.font_metrics2_encoding;
+        const context = self.ctx.base.generation2 orelse {
+            out.* = self.originalTextIndexAt(value, x);
+            return 0;
+        };
+        const binding = @import("text_metrics_api.zig").provider2(context);
+        if (binding.status != 0) return binding.status;
+        var rows: [abi.font_metrics2_max_bytes]abi.FontAdvance2 = undefined;
+        var cache = text_metrics.Cache.init(
+            .{ .address = @intFromPtr(value.ptr), .length = value.len },
+            .{ .address = @intFromPtr(&rows), .length = @sizeOf(@TypeOf(rows)) },
+            @intCast(rows.len),
+            binding.provider,
+        ) catch |err| return text_metrics_runtime.code(err);
+        // This fresh preparation never exposes its source/rows/key outside the
+        // call. Persistent views instead bind explicit caller revision keys.
+        const prepared = cache.prepare(1, self.font.id) catch |err| return text_metrics_runtime.code(err);
+        if (prepared.error_code != 0) return prepared.error_code;
+        const key = cache.key() catch |err| return text_metrics_runtime.code(err);
+        const result = cache.hit(key, x) catch |err| return text_metrics_runtime.code(err);
+        out.* = result;
+        return 0;
+    }
+
+    fn originalTextIndexAt(self: Canvas, value: []const u8, x: i32) usize {
         if (x <= 0 or !bounded_text.valid(value)) return 0;
         var iterator = DisplayIterator{ .inner = .{ .bytes = value } };
         var previous: usize = 0;

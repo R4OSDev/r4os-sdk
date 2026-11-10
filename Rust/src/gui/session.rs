@@ -82,6 +82,34 @@ impl<'app, 'storage> Session<'app, 'storage> {
         // Never recreate an exclusive Rust reference after native admission.
         self.native.as_ptr()
     }
+    /// The actual generation2 start remains borrowed for every native subloan.
+    pub fn open2(
+        storage: Pin<&'storage mut SessionStorage>,
+        app: &'app crate::app2::App<'_>,
+        role: Role,
+        timers: &'storage mut [TimerStorage],
+    ) -> Result<Self> {
+        let native = unsafe { storage.get_unchecked_mut() }.native.as_mut_ptr();
+        exact(unsafe {
+            c::R4SdkGuiSessionOpen2(
+                native,
+                app.start_context(),
+                match role {
+                    Role::Window => 0,
+                    Role::DesktopHost => 1,
+                },
+                timers.as_mut_ptr().cast(),
+                timers.len() as _,
+            )
+        })?;
+        Ok(Self {
+            native: NonNull::new(native).ok_or(Error::InvalidProvider)?,
+            _storage: PhantomData,
+            _timers: PhantomData,
+            _app: PhantomData,
+            _local: PhantomData,
+        })
+    }
     pub fn set_title(&mut self, title: &CStr) -> Result<i32> {
         let w = unsafe { c::R4SdkGuiSessionWindow(self.pointer()) };
         if w.is_null() {
@@ -322,7 +350,109 @@ pub struct Paint<'s, 'app, 'storage> {
     active: bool,
     _buffers: PhantomData<(&'s mut [abi::GuiFrameCommand], &'s mut [u8])>,
 }
+
+/// A logical native cache loan. It borrows the Paint exclusively and keeps
+/// Cache/source/whole rows resident. No Deref exposes a swappable Paint.
+pub struct PreparedTextPaint<'paint, 'context> {
+    canvas: NonNull<c::R4SdkGuiCanvas>,
+    _paint: PhantomData<&'paint mut ()>,
+    _cache: &'paint crate::text_metrics::Cache<'context>,
+}
+impl PreparedTextPaint<'_, '_> {
+    pub fn text_index(&self, text: &str, x: i32) -> Result<usize> {
+        let mut index = 0u64;
+        code(unsafe {
+            c::R4SdkGuiCanvas_textIndexChecked(
+                0,
+                self.canvas.as_ptr(),
+                text.as_ptr(),
+                text.len() as _,
+                x,
+                &mut index,
+            )
+        })?;
+        usize::try_from(index).map_err(|_| Error::Length)
+    }
+}
+impl Drop for PreparedTextPaint<'_, '_> {
+    fn drop(&mut self) {
+        // Bind succeeded on the same resident static SDK/fingerprint. This
+        // only clears its pointer; no resource retirement is being asserted.
+        unsafe {
+            c::R4SdkGuiCanvas_clearTextMetrics(0, self.canvas.as_ptr());
+        }
+    }
+}
 impl Paint<'_, '_, '_> {
+    pub fn font_id(&self) -> Result<u32> {
+        let mut font = MaybeUninit::<c::R4SdkGuiFontMetrics>::uninit();
+        slot(unsafe { c::R4SdkGuiCanvas_get_font(self.canvas.as_ptr(), font.as_mut_ptr()) })?;
+        let value = slot(unsafe { c::R4SdkGuiFontMetrics_get_id(font.as_ptr()) })?;
+        u32::try_from(value.bits).map_err(|_| Error::Length)
+    }
+    pub fn text_index(&self, text: &str, x: i32) -> Result<usize> {
+        let mut index = 0u64;
+        code(unsafe {
+            c::R4SdkGuiCanvas_textIndexChecked(
+                0,
+                self.canvas.as_ptr(),
+                text.as_ptr(),
+                text.len() as _,
+                x,
+                &mut index,
+            )
+        })?;
+        usize::try_from(index).map_err(|_| Error::Length)
+    }
+    pub fn prepared_text<'paint, 'context>(
+        &'paint mut self,
+        cache: &'paint crate::text_metrics::Cache<'context>,
+        expected: crate::text_metrics::Key,
+    ) -> Result<PreparedTextPaint<'paint, 'context>> {
+        code(unsafe {
+            c::R4SdkGuiCanvas_bindTextMetrics(0, self.canvas.as_ptr(), cache.native(), &expected)
+        })?;
+        Ok(PreparedTextPaint {
+            canvas: self.canvas,
+            _paint: PhantomData,
+            _cache: cache,
+        })
+    }
+    /// Renders the original dialog from one immutable complete picker page.
+    /// Label descriptors are private temporary native storage, never read here.
+    pub fn file_picker(
+        &mut self,
+        picker: &crate::file_picker::Session<'_>,
+        rectangle: Rect,
+        title: &str,
+        labels: &mut [MaybeUninit<[usize; 2]>],
+        scratch: &mut [u8],
+    ) -> Result<i32> {
+        let rect = rectangle.native()?;
+        let title_span = c::R4SdkWireSpan {
+            address: title.as_ptr() as u64,
+            length: title.len() as u64,
+        };
+        let label_span = c::R4SdkWireSpan {
+            address: labels.as_mut_ptr() as u64,
+            length: core::mem::size_of_val(labels) as u64,
+        };
+        let scratch_span = c::R4SdkWireSpan {
+            address: scratch.as_mut_ptr() as u64,
+            length: scratch.len() as u64,
+        };
+        let rc = unsafe {
+            c::R4SdkGuiPickerDraw(
+                self.canvas.as_ptr(),
+                picker.native(),
+                rect.as_ptr(),
+                &title_span,
+                &label_span,
+                &scratch_span,
+            )
+        };
+        if rc < 0 { Err(Error::Raw(rc)) } else { Ok(rc) }
+    }
     /// Copies presentation values into this paint's Canvas only.
     pub fn set_style(&mut self, style: &Style) -> Result<i32> {
         code(unsafe { c::R4SdkGuiCanvas_setStyle(0, self.canvas.as_ptr(), style.native.as_ptr()) })

@@ -18,6 +18,85 @@ pub struct TextField<'b> {
     _loan: PhantomData<&'b mut [u8]>,
 }
 impl<'b> TextField<'b> {
+    pub fn stage_selection(
+        &self,
+        client: &mut crate::clipboard_offer::Client<'_>,
+        stage: &crate::clipboard_offer::Lease,
+    ) -> Result<()> {
+        let native = client.control_native().map_err(|e| Error::Raw(e.0))?;
+        super::code(unsafe {
+            c::R4SdkGuiTextField_stageSelection(0, self.native.as_ptr(), &native, stage)
+        })?;
+        Ok(())
+    }
+    pub fn paste_offer(
+        &mut self,
+        client: &mut crate::clipboard_offer::Client<'_>,
+        snapshot: &crate::clipboard_offer::Lease,
+        format: &crate::clipboard_offer::Format,
+        scratch: &mut [u8],
+    ) -> Result<bool> {
+        let native = client.control_native().map_err(|e| Error::Raw(e.0))?;
+        Ok(super::code(unsafe {
+            c::R4SdkGuiTextField_pasteOffer(
+                0,
+                self.native.as_mut_ptr(),
+                &native,
+                snapshot,
+                format,
+                scratch.as_mut_ptr(),
+                scratch.len() as _,
+            )
+        })? != 0)
+    }
+    /// Caller advances revision for every other successful document edit.
+    pub fn begin_composition(
+        &self,
+        state: &mut crate::text_composition::Session,
+        focus: crate::text_composition::Focus,
+        provider: crate::text_composition::Provider,
+        revision: u64,
+        caret: crate::text_composition::Caret,
+    ) -> Result<crate::text_composition::Id> {
+        let mut id = crate::text_composition::Id::default();
+        super::code(unsafe {
+            c::R4SdkGuiTextField_beginComposition(
+                0,
+                self.native.as_ptr(),
+                state.native_mut(),
+                &focus,
+                &provider,
+                revision,
+                &caret,
+                &mut id,
+            )
+        })?;
+        Ok(id)
+    }
+    pub fn apply_composition(
+        &mut self,
+        state: &mut crate::text_composition::Session,
+        focus: crate::text_composition::Focus,
+        provider: crate::text_composition::Provider,
+        event: &crate::text_composition::Event,
+        text: &str,
+        revision: &mut u64,
+    ) -> Result<()> {
+        super::code(unsafe {
+            c::R4SdkGuiTextField_applyComposition(
+                0,
+                self.native.as_mut_ptr(),
+                state.native_mut(),
+                &focus,
+                &provider,
+                event,
+                text.as_ptr(),
+                text.len() as _,
+                revision,
+            )
+        })?;
+        Ok(())
+    }
     pub fn new(buffer: &'b mut [u8]) -> Result<Self> {
         if buffer.is_empty() {
             return Err(Error::Length);
@@ -126,6 +205,87 @@ pub struct TextArea<'b> {
     _loan: PhantomData<&'b mut [u8]>,
 }
 impl<'b> TextArea<'b> {
+    pub fn stage_selection(
+        &self,
+        client: &mut crate::clipboard_offer::Client<'_>,
+        stage: &crate::clipboard_offer::Lease,
+    ) -> Result<()> {
+        let native = client.control_native().map_err(|e| Error::Raw(e.0))?;
+        super::code(unsafe {
+            c::R4SdkGuiTextArea_stageSelection(0, self.native.as_ptr(), &native, stage)
+        })?;
+        Ok(())
+    }
+    pub fn paste_offer(
+        &mut self,
+        client: &mut crate::clipboard_offer::Client<'_>,
+        snapshot: &crate::clipboard_offer::Lease,
+        format: &crate::clipboard_offer::Format,
+        scratch: &mut [u8],
+    ) -> Result<bool> {
+        let native = client.control_native().map_err(|e| Error::Raw(e.0))?;
+        Ok(super::code(unsafe {
+            c::R4SdkGuiTextArea_pasteOffer(
+                0,
+                self.native.as_mut_ptr(),
+                &native,
+                snapshot,
+                format,
+                scratch.as_mut_ptr(),
+                scratch.len() as _,
+                self.view.as_ptr(),
+            )
+        })? != 0)
+    }
+    /// Focus/provider are current copied observations from the original broker.
+    pub fn begin_composition(
+        &self,
+        state: &mut crate::text_composition::Session,
+        focus: crate::text_composition::Focus,
+        provider: crate::text_composition::Provider,
+        revision: u64,
+        caret: crate::text_composition::Caret,
+    ) -> Result<crate::text_composition::Id> {
+        let mut id = crate::text_composition::Id::default();
+        super::code(unsafe {
+            c::R4SdkGuiTextArea_beginComposition(
+                0,
+                self.native.as_ptr(),
+                state.native_mut(),
+                &focus,
+                &provider,
+                revision,
+                &caret,
+                &mut id,
+            )
+        })?;
+        Ok(id)
+    }
+    pub fn apply_composition(
+        &mut self,
+        state: &mut crate::text_composition::Session,
+        focus: crate::text_composition::Focus,
+        provider: crate::text_composition::Provider,
+        event: &crate::text_composition::Event,
+        text: &str,
+        revision: &mut u64,
+    ) -> Result<()> {
+        super::code(unsafe {
+            c::R4SdkGuiTextArea_applyComposition(
+                0,
+                self.native.as_mut_ptr(),
+                state.native_mut(),
+                &focus,
+                &provider,
+                event,
+                text.as_ptr(),
+                text.len() as _,
+                revision,
+                self.view.as_ptr(),
+            )
+        })?;
+        Ok(())
+    }
     pub fn new(buffer: &'b mut [u8], columns: usize, rows: usize) -> Result<Self> {
         if buffer.len() < 2 {
             return Err(Error::Length);

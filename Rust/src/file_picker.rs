@@ -35,6 +35,9 @@ pub struct Session<'a> {
     _local: PhantomData<*mut ()>,
 }
 impl<'a> Session<'a> {
+    pub(crate) fn native(&self) -> *const c::R4SdkFilePicker {
+        &self.raw
+    }
     pub fn new(
         context: &'a Context<'a>,
         a: &'a mut [MaybeUninit<Row>],

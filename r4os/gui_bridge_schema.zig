@@ -2,6 +2,9 @@
 //! Native layouts remain opaque; no foreign language guesses Zig slice,
 //! optional, tagged-union, private-state or enum storage layouts.
 const std = @import("std");
+pub const metrics = @import("text_metrics.zig");
+pub const offers = @import("clipboard_offer.zig");
+pub const composition = @import("text_composition.zig");
 pub const abi = @import("r4os_contract").abi;
 pub const program = @import("program.zig");
 pub const sys = @import("r4sys.zig");
@@ -41,6 +44,9 @@ pub fn context(comptime T: type) bool {
     return T == program.Context or T == sys.Context or T == desk.Context or T == draw.Context or T == session.Session or T == gfx.Context or T == dev.Context or T == gfx_buffers.Context or T == gfx_outputs.Context or T == gfx_queue.Context or T == audio.Context or T == platform.Context;
 }
 pub fn canonical(comptime T: type) bool {
+    // These records already have one native owner and its complete C boundary.
+    if (T == metrics.Cache or T == metrics.Key) return true;
+    if (T == offers.Client or T == composition.Owner) return true;
     const full = @typeName(T);
     const start = (std.mem.lastIndexOfScalar(u8, full, '.') orelse return false) + 1;
     return @hasDecl(abi, full[start..]) and @field(abi, full[start..]) == T;

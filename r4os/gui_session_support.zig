@@ -9,6 +9,9 @@ const gui = @import("gui.zig");
 const mode = @import("window_mode.zig");
 pub const Session = struct {
     bundle: program.Bundle,
+    context2: ?@import("platform2.zig").Context = null,
+    memory2: @import("allocator_source.zig").Memory = undefined,
+    instance_id: u32,
     program: program.Context,
     sys: sys.Context,
     desk: desk.Context,

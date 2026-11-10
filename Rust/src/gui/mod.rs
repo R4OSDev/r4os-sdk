@@ -13,7 +13,7 @@ mod session;
 mod style;
 mod text;
 pub use input::InputQueue;
-pub use session::{Event, Paint, Role, Session, SessionStorage, TimerStorage};
+pub use session::{Event, Paint, PreparedTextPaint, Role, Session, SessionStorage, TimerStorage};
 pub use style::{ButtonState, Style};
 pub use text::{TextArea, TextField, TextFieldMode};
 /// Semantic events from the shared loop; distinct from raw GuiEventKind.

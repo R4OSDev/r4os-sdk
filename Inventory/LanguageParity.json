@@ -827,9 +827,11 @@
         "text_metrics",
         "file_picker",
         "clipboard_offer",
-        "text_composition"
+        "text_composition",
+        "gui_text_control",
+        "text_composition_client"
       ],
-      "semantics": "GUI-Nachrichten/Unicode/Modifier/Close, Timer/Clipboard, Paint/Present und Ressourcenbesitz; gehostete App und Desktophost sind verschiedene Rollen. Kein Schlafpolling oder Abschneiden von UTF-8. Aktuelle CPU/GPU-Ausgaben und abgerundete/alpha-Pixel erhalten. Fokusgewinn/-verlust und globale Fontaenderung sind typisiert; vorhandene Fensteridentitaet/Ticks und vollstaendige Unknown-Rohdaten bleiben erhalten. Vier benannte C-Fensterflags stammen aus der kanonischen GuiWindowFlag-Wahrheit. SDK110: natives Capture bindet volle Prozessgeneration, Fensterinkarnation und Capture-ID;0 bestaetigt PENDING, ACTIVE erst nach Desktop-Grant. C/Zig/Rust erhalten typisierte Capture-/Relative-/Wheel-Nachrichten. Relative physische Deltas entstehen vor Clamping; absolute Remote-Moves werden nicht als Rohbewegung ausgegeben. Release-/Cancel-/Broker-/Fensterende und zugehoerige externe C-Belege sind getrennt qualifiziert. SDK111: Desktop bindet den genauen Prozesshandle und die native Fensterinkarnation an QUERY/POST/RESET. Busy ist keine fehlende GUI-Zustaendigkeit. C/Zig/Rust erhalten InputReset mit Grund/Fenster/Tick; lokale Press-/Repeat-/Dragzustaende enden ohne synthetischen Klick. Capture-Terminalmeldungen behalten ihren eigenen Vertrag. SDK147: Canvas-local opt-in Style/light/dark, catalog font roles, shared Button/TextField/List/TabBar/Dialog rendering and Card/TileGrid/Paragraph/Progress. Classic defaults and editing owners remain; existing C constructor prefixes keep native defaults for new fields. SDK166: one immutable-bank prefix capture plus shared bounded grapheme projection and frozen binary-search hits; exact original strict-half/Unicode boundaries and explicit source/text/font keys/current-stamp reset. No hidden old fallback or consumer change. Qualification: text_metrics_09023. SDK167: shared bounded FilePickerSession with two caller buffers and EOF-only page publication over the existing canonical metadata owner. Whole path/observed identity and nonreused view revision; explicit overwrite permission bound to the prior observation, real-return loans and Open keyboard focus skipping disabled name. Existing FileDialog retains its shared list/name select rendering group. No file write/open or application migration. Qualification: file_picker_09024. SDK173 adds copied typed CLIPSVC offers with exact provider/offer identities, atomic private staging, immutable expiring snapshots and explicit bounded format/chunk contracts. Existing text bytes and ServiceLoop remain; uncertain Commit uses same-token status/idempotent replay. No application migration or silent conversion. SDK179: one bounded synchronous editor owner for Preedit/Commit/Cancel with strict UTF8 whole-grapheme ranges, exact window/view/focus/provider/editor/session/text generations, staged atomic Commit, copied caret and explicit surrounding text. C/Rust share the original Zig owner through borrowed record-pointer FFI. Copied WINSVC observations are separate from owner transitions; actual availability is NoProvider. No installed languageIME or application migration.",
+      "semantics": "GUI-Nachrichten/Unicode/Modifier/Close, Timer/Clipboard, Paint/Present und Ressourcenbesitz; gehostete App und Desktophost sind verschiedene Rollen. Kein Schlafpolling oder Abschneiden von UTF-8. Aktuelle CPU/GPU-Ausgaben und abgerundete/alpha-Pixel erhalten. Fokusgewinn/-verlust und globale Fontaenderung sind typisiert; vorhandene Fensteridentitaet/Ticks und vollstaendige Unknown-Rohdaten bleiben erhalten. Vier benannte C-Fensterflags stammen aus der kanonischen GuiWindowFlag-Wahrheit. SDK110: natives Capture bindet volle Prozessgeneration, Fensterinkarnation und Capture-ID;0 bestaetigt PENDING, ACTIVE erst nach Desktop-Grant. C/Zig/Rust erhalten typisierte Capture-/Relative-/Wheel-Nachrichten. Relative physische Deltas entstehen vor Clamping; absolute Remote-Moves werden nicht als Rohbewegung ausgegeben. Release-/Cancel-/Broker-/Fensterende und zugehoerige externe C-Belege sind getrennt qualifiziert. SDK111: Desktop bindet den genauen Prozesshandle und die native Fensterinkarnation an QUERY/POST/RESET. Busy ist keine fehlende GUI-Zustaendigkeit. C/Zig/Rust erhalten InputReset mit Grund/Fenster/Tick; lokale Press-/Repeat-/Dragzustaende enden ohne synthetischen Klick. Capture-Terminalmeldungen behalten ihren eigenen Vertrag. SDK147: Canvas-local opt-in Style/light/dark, catalog font roles, shared Button/TextField/List/TabBar/Dialog rendering and Card/TileGrid/Paragraph/Progress. Classic defaults and editing owners remain; existing C constructor prefixes keep native defaults for new fields. SDK166: one immutable-bank prefix capture plus shared bounded grapheme projection and frozen binary-search hits; exact original strict-half/Unicode boundaries and explicit source/text/font keys/current-stamp reset. No hidden old fallback or consumer change. Qualification: text_metrics_09023. SDK167: shared bounded FilePickerSession with two caller buffers and EOF-only page publication over the existing canonical metadata owner. Whole path/observed identity and nonreused view revision; explicit overwrite permission bound to the prior observation, real-return loans and Open keyboard focus skipping disabled name. Existing FileDialog retains its shared list/name select rendering group. No file write/open or application migration. Qualification: file_picker_09024. SDK173 adds copied typed CLIPSVC offers with exact provider/offer identities, atomic private staging, immutable expiring snapshots and explicit bounded format/chunk contracts. Existing text bytes and ServiceLoop remain; uncertain Commit uses same-token status/idempotent replay. No application migration or silent conversion. SDK179: one bounded synchronous editor owner for Preedit/Commit/Cancel with strict UTF8 whole-grapheme ranges, exact window/view/focus/provider/editor/session/text generations, staged atomic Commit, copied caret and explicit surrounding text. C/Rust share the original Zig owner through borrowed record-pointer FFI. Copied WINSVC observations are separate from owner transitions; actual availability is NoProvider. No installed languageIME or application migration. SDK183: Normal actual Context2 GUI/Canvas/Tray, explicit text/font keyed metrics loans, original FilePicker renderer, typed clipboard control staging/paste and pure composition transitions with actual NoProvider. Full service loops and transport remain0.90.43. Cached hits preserve source/whole-row/paint loans; font refresh remains explicit. Empty offers validate the live exact owner even at zero bytes. No implicit Commit, cut, snapshot release, overwrite, old table or synthesized IME.",
       "current_only": "current_function",
       "rust": {
         "state": "paritaet_abgenommen",
@@ -879,9 +881,17 @@
         "text_metrics_09023",
         "file_picker_09024",
         "clipboard_offers_09030",
-        "text_composition_09036"
+        "text_composition_09036",
+        "normal_gui_facades_09042"
       ],
-      "shared_core": "Gemeinsame GUI-/Rasterkerne beim Besitzer; keine unabhaengigen Widget-/Unicodealgorithmen pro Sprache."
+      "shared_core": "Gemeinsame GUI-/Rasterkerne beim Besitzer; keine unabhaengigen Widget-/Unicodealgorithmen pro Sprache.",
+      "generation2_qualification": {
+        "subversion": "0.90.42",
+        "sdk_package": "0.64.183",
+        "contract_package": "0.64.93",
+        "scope": "Normal actual Context2 GUI/Canvas/Tray, explicit text/font keyed metrics loans, original FilePicker renderer, typed clipboard control staging/paste and pure composition transitions with actual NoProvider. Full service loops and transport remain0.90.43.",
+        "boundaries": "Productive GUI apps, default cutover, visual desktop/focus leases, Windows, physical hardware and freshinstallation remain separate."
+      }
     },
     {
       "id": "graphics",
@@ -1825,7 +1835,7 @@
     {
       "name": "app_services",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 63,
+      "line": 64,
       "expression": "@import(\"r4os/app_services.zig\")",
       "capability": "services",
       "wave": "0.86.55"
@@ -1833,7 +1843,7 @@
     {
       "name": "power_profiles",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 65,
+      "line": 66,
       "expression": "@import(\"r4os/power_profiles.zig\")",
       "capability": "devices-power",
       "wave": "0.86.58"
@@ -1841,7 +1851,7 @@
     {
       "name": "app_tray",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 66,
+      "line": 67,
       "expression": "@import(\"r4os/app_tray.zig\")",
       "capability": "services",
       "wave": "0.86.55"
@@ -1849,7 +1859,7 @@
     {
       "name": "app_network",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 67,
+      "line": 68,
       "expression": "@import(\"r4os/app_network.zig\")",
       "capability": "network",
       "wave": "0.86.55"
@@ -1857,7 +1867,7 @@
     {
       "name": "app_audio",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 68,
+      "line": 69,
       "expression": "@import(\"r4os/app_audio.zig\")",
       "capability": "audio",
       "wave": "0.86.58"
@@ -1865,7 +1875,7 @@
     {
       "name": "app_devices",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 69,
+      "line": 70,
       "expression": "@import(\"r4os/app_devices.zig\")",
       "capability": "devices-power",
       "wave": "0.86.58"
@@ -1873,7 +1883,7 @@
     {
       "name": "app_web",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 70,
+      "line": 71,
       "expression": "@import(\"r4os/app_web.zig\")",
       "capability": "web-transport",
       "wave": "0.86.63"
@@ -1881,7 +1891,7 @@
     {
       "name": "http",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 71,
+      "line": 72,
       "expression": "@import(\"r4os/http.zig\")",
       "capability": "web-transport",
       "wave": "0.86.63"
@@ -1889,7 +1899,7 @@
     {
       "name": "json",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 72,
+      "line": 73,
       "expression": "@import(\"r4os/json.zig\")",
       "capability": "data-crypto",
       "wave": "0.86.61"
@@ -1897,7 +1907,7 @@
     {
       "name": "zip",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 73,
+      "line": 74,
       "expression": "@import(\"r4os/zip.zig\")",
       "capability": "data-crypto",
       "wave": "0.86.61"
@@ -1905,7 +1915,7 @@
     {
       "name": "html",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 74,
+      "line": 75,
       "expression": "@import(\"r4os/html.zig\")",
       "capability": "web-document",
       "wave": "0.86.62"
@@ -1913,7 +1923,7 @@
     {
       "name": "css",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 75,
+      "line": 76,
       "expression": "@import(\"r4os/css.zig\")",
       "capability": "web-document",
       "wave": "0.86.62"
@@ -1921,7 +1931,7 @@
     {
       "name": "web_layout",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 76,
+      "line": 77,
       "expression": "@import(\"r4os/web_layout.zig\")",
       "capability": "web-document",
       "wave": "0.86.62"
@@ -1929,7 +1939,7 @@
     {
       "name": "web_font",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 77,
+      "line": 78,
       "expression": "@import(\"r4os/web_font.zig\")",
       "capability": "web-document",
       "wave": "0.86.62"
@@ -1937,7 +1947,7 @@
     {
       "name": "web_fonts",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 78,
+      "line": 79,
       "expression": "@import(\"r4os/web_fonts.zig\")",
       "capability": "web-document",
       "wave": "0.86.62"
@@ -1945,7 +1955,7 @@
     {
       "name": "web_font_cache",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 79,
+      "line": 80,
       "expression": "@import(\"r4os/web_font_cache.zig\")",
       "capability": "web-document",
       "wave": "0.86.62"
@@ -1953,7 +1963,7 @@
     {
       "name": "web_font_activation",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 80,
+      "line": 81,
       "expression": "@import(\"r4os/web_font_activation.zig\")",
       "capability": "web-document",
       "wave": "0.86.62"
@@ -1961,7 +1971,7 @@
     {
       "name": "web_images",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 81,
+      "line": 82,
       "expression": "@import(\"r4os/web_images.zig\")",
       "capability": "web-document",
       "wave": "0.86.62"
@@ -1969,7 +1979,7 @@
     {
       "name": "web_background",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 82,
+      "line": 83,
       "expression": "@import(\"r4os/web_background.zig\")",
       "capability": "web-document",
       "wave": "0.86.62"
@@ -1977,7 +1987,7 @@
     {
       "name": "App",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 83,
+      "line": 84,
       "expression": "app_contract.App",
       "capability": "startup",
       "wave": "0.86.49"
@@ -1985,7 +1995,7 @@
     {
       "name": "AppProfile",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 84,
+      "line": 85,
       "expression": "app_contract.AppProfile",
       "capability": "startup",
       "wave": "0.86.49"
@@ -1993,7 +2003,7 @@
     {
       "name": "AppEntryFn",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 85,
+      "line": 86,
       "expression": "app_contract.AppEntryFn",
       "capability": "startup",
       "wave": "0.86.49"
@@ -2001,7 +2011,7 @@
     {
       "name": "Console",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 86,
+      "line": 87,
       "expression": "app_storage.Console",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -2009,7 +2019,7 @@
     {
       "name": "Files",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 87,
+      "line": 88,
       "expression": "app_storage.Files",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -2017,7 +2027,7 @@
     {
       "name": "directory_page",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 88,
+      "line": 89,
       "expression": "@import(\"r4os/directory_page.zig\")",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -2025,7 +2035,7 @@
     {
       "name": "DirectoryIterator",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 89,
+      "line": 90,
       "expression": "app_storage.DirectoryIterator",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -2033,7 +2043,7 @@
     {
       "name": "StreamReader",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 90,
+      "line": 91,
       "expression": "app_storage.StreamReader",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -2041,7 +2051,7 @@
     {
       "name": "StreamWriter",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 91,
+      "line": 92,
       "expression": "app_storage.StreamWriter",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -2049,7 +2059,7 @@
     {
       "name": "Registry",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 92,
+      "line": 93,
       "expression": "app_storage.Registry",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -2057,7 +2067,7 @@
     {
       "name": "RegistrySnapshot",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 93,
+      "line": 94,
       "expression": "app_storage.RegistrySnapshot",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -2065,7 +2075,7 @@
     {
       "name": "RegistrySnapshotKind",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 94,
+      "line": 95,
       "expression": "app_storage.RegistrySnapshotKind",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -2073,7 +2083,7 @@
     {
       "name": "RegistrySnapshotOpen",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 95,
+      "line": 96,
       "expression": "app_storage.RegistrySnapshotOpen",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -2081,7 +2091,7 @@
     {
       "name": "RegistryBatchBuilder",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 96,
+      "line": 97,
       "expression": "app_storage.RegistryBatchBuilder",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -2089,7 +2099,7 @@
     {
       "name": "RegistryBatchBuildError",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 97,
+      "line": 98,
       "expression": "app_storage.RegistryBatchBuildError",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -2097,7 +2107,7 @@
     {
       "name": "RegistryBatchApply",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 98,
+      "line": 99,
       "expression": "app_storage.RegistryBatchApply",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -2105,7 +2115,7 @@
     {
       "name": "FilePath",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 99,
+      "line": 100,
       "expression": "app_storage.FilePath",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -2113,7 +2123,7 @@
     {
       "name": "AbsoluteFilePath",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 100,
+      "line": 101,
       "expression": "app_storage.AbsoluteFilePath",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -2121,7 +2131,7 @@
     {
       "name": "RelativeFilePath",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 101,
+      "line": 102,
       "expression": "app_storage.RelativeFilePath",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -2129,7 +2139,7 @@
     {
       "name": "RegistryPath",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 102,
+      "line": 103,
       "expression": "app_storage.RegistryPath",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -2137,7 +2147,7 @@
     {
       "name": "Window",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 103,
+      "line": 104,
       "expression": "app_gui.Window",
       "capability": "gui",
       "wave": "0.86.56"
@@ -2145,7 +2155,7 @@
     {
       "name": "Message",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 104,
+      "line": 105,
       "expression": "app_gui.Message",
       "capability": "gui",
       "wave": "0.86.56"
@@ -2153,7 +2163,7 @@
     {
       "name": "EventLoop",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 105,
+      "line": 106,
       "expression": "app_gui.EventLoop",
       "capability": "gui",
       "wave": "0.86.56"
@@ -2161,7 +2171,7 @@
     {
       "name": "CommandId",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 106,
+      "line": 107,
       "expression": "app_gui.CommandId",
       "capability": "gui",
       "wave": "0.86.56"
@@ -2169,7 +2179,7 @@
     {
       "name": "TimerId",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 107,
+      "line": 108,
       "expression": "app_gui.TimerId",
       "capability": "gui",
       "wave": "0.86.56"
@@ -2177,7 +2187,7 @@
     {
       "name": "Timer",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 108,
+      "line": 109,
       "expression": "app_gui.Timer",
       "capability": "gui",
       "wave": "0.86.56"
@@ -2185,7 +2195,7 @@
     {
       "name": "Canvas",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 109,
+      "line": 110,
       "expression": "app_gui.Canvas",
       "capability": "gui",
       "wave": "0.86.56"
@@ -2193,7 +2203,7 @@
     {
       "name": "PaintContext",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 110,
+      "line": 111,
       "expression": "app_gui.PaintContext",
       "capability": "gui",
       "wave": "0.86.56"
@@ -2201,7 +2211,7 @@
     {
       "name": "FrameCanvas",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 111,
+      "line": 112,
       "expression": "app_gui.FrameCanvas",
       "capability": "gui",
       "wave": "0.86.56"
@@ -2209,7 +2219,7 @@
     {
       "name": "FrameCanvasStats",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 112,
+      "line": 113,
       "expression": "app_gui.FrameCanvasStats",
       "capability": "gui",
       "wave": "0.86.56"
@@ -2217,7 +2227,7 @@
     {
       "name": "Resources",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 113,
+      "line": 114,
       "expression": "app_resources.Resources",
       "capability": "process-sync-vm",
       "wave": "0.86.54"
@@ -2225,7 +2235,7 @@
     {
       "name": "ProcessHandle",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 114,
+      "line": 115,
       "expression": "app_resources.ProcessHandle",
       "capability": "process-sync-vm",
       "wave": "0.86.54"
@@ -2233,7 +2243,7 @@
     {
       "name": "ProcessOpen",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 115,
+      "line": 116,
       "expression": "app_resources.ProcessOpen",
       "capability": "process-sync-vm",
       "wave": "0.86.54"
@@ -2241,7 +2251,7 @@
     {
       "name": "ProcessInfo",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 116,
+      "line": 117,
       "expression": "app_resources.ProcessInfo",
       "capability": "process-sync-vm",
       "wave": "0.86.54"
@@ -2249,7 +2259,7 @@
     {
       "name": "ProcessReady",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 117,
+      "line": 118,
       "expression": "app_resources.ProcessReady",
       "capability": "process-sync-vm",
       "wave": "0.86.54"
@@ -2257,7 +2267,7 @@
     {
       "name": "ProcessRead",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 118,
+      "line": 119,
       "expression": "app_resources.ProcessRead",
       "capability": "process-sync-vm",
       "wave": "0.86.54"
@@ -2265,7 +2275,7 @@
     {
       "name": "ProcessWait",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 119,
+      "line": 120,
       "expression": "app_resources.ProcessWait",
       "capability": "process-sync-vm",
       "wave": "0.86.54"
@@ -2273,7 +2283,7 @@
     {
       "name": "JoinHandle",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 120,
+      "line": 121,
       "expression": "app_resources.JoinHandle",
       "capability": "process-sync-vm",
       "wave": "0.86.54"
@@ -2281,7 +2291,7 @@
     {
       "name": "VmRegion",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 121,
+      "line": 122,
       "expression": "app_resources.VmRegion",
       "capability": "process-sync-vm",
       "wave": "0.86.54"
@@ -2289,7 +2299,7 @@
     {
       "name": "IoRequest",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 122,
+      "line": 123,
       "expression": "app_resources.IoRequest",
       "capability": "process-sync-vm",
       "wave": "0.86.54"
@@ -2297,7 +2307,7 @@
     {
       "name": "Services",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 123,
+      "line": 124,
       "expression": "app_services.Services",
       "capability": "services",
       "wave": "0.86.55"
@@ -2305,7 +2315,7 @@
     {
       "name": "Tray",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 124,
+      "line": 125,
       "expression": "app_tray.Tray",
       "capability": "services",
       "wave": "0.86.55"
@@ -2313,7 +2323,7 @@
     {
       "name": "TrayItem",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 125,
+      "line": 126,
       "expression": "app_tray.Item",
       "capability": "services",
       "wave": "0.86.55"
@@ -2321,7 +2331,7 @@
     {
       "name": "ServiceConnection",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 126,
+      "line": 127,
       "expression": "app_services.ServiceConnection",
       "capability": "services",
       "wave": "0.86.55"
@@ -2329,7 +2339,7 @@
     {
       "name": "ServiceEndpoint",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 127,
+      "line": 128,
       "expression": "app_services.ServiceEndpoint",
       "capability": "services",
       "wave": "0.86.55"
@@ -2337,7 +2347,7 @@
     {
       "name": "ServiceLoop",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 128,
+      "line": 129,
       "expression": "app_services.ServiceLoop",
       "capability": "services",
       "wave": "0.86.55"
@@ -2345,7 +2355,7 @@
     {
       "name": "ServiceLoopOptions",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 129,
+      "line": 130,
       "expression": "app_services.ServiceLoopOptions",
       "capability": "services",
       "wave": "0.86.55"
@@ -2353,7 +2363,7 @@
     {
       "name": "ServiceLoopMetrics",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 130,
+      "line": 131,
       "expression": "app_services.ServiceLoopMetrics",
       "capability": "services",
       "wave": "0.86.55"
@@ -2361,7 +2371,7 @@
     {
       "name": "ServiceLoopWake",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 131,
+      "line": 132,
       "expression": "app_services.ServiceLoopWake",
       "capability": "services",
       "wave": "0.86.55"
@@ -2369,7 +2379,7 @@
     {
       "name": "ServiceBatchStep",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 132,
+      "line": 133,
       "expression": "app_services.ServiceBatchStep",
       "capability": "services",
       "wave": "0.86.55"
@@ -2377,7 +2387,7 @@
     {
       "name": "Network",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 133,
+      "line": 134,
       "expression": "app_network.Network",
       "capability": "network",
       "wave": "0.86.55"
@@ -2385,7 +2395,7 @@
     {
       "name": "Ipv4Address",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 134,
+      "line": 135,
       "expression": "app_network.Ipv4Address",
       "capability": "network",
       "wave": "0.86.55"
@@ -2393,7 +2403,7 @@
     {
       "name": "SocketAddress",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 135,
+      "line": 136,
       "expression": "app_network.SocketAddress",
       "capability": "network",
       "wave": "0.86.55"
@@ -2401,7 +2411,7 @@
     {
       "name": "Resolver",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 136,
+      "line": 137,
       "expression": "app_network.Resolver",
       "capability": "network",
       "wave": "0.86.55"
@@ -2409,7 +2419,7 @@
     {
       "name": "TcpSocket",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 137,
+      "line": 138,
       "expression": "app_network.TcpSocket",
       "capability": "network",
       "wave": "0.86.55"
@@ -2417,7 +2427,7 @@
     {
       "name": "TcpListener",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 138,
+      "line": 139,
       "expression": "app_network.TcpListener",
       "capability": "network",
       "wave": "0.86.55"
@@ -2425,7 +2435,7 @@
     {
       "name": "UdpSocket",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 139,
+      "line": 140,
       "expression": "app_network.UdpSocket",
       "capability": "network",
       "wave": "0.86.55"
@@ -2433,7 +2443,7 @@
     {
       "name": "Audio",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 140,
+      "line": 141,
       "expression": "app_audio.Audio",
       "capability": "audio",
       "wave": "0.86.58"
@@ -2441,7 +2451,7 @@
     {
       "name": "AudioStream",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 141,
+      "line": 142,
       "expression": "app_audio.AudioStream",
       "capability": "audio",
       "wave": "0.86.58"
@@ -2449,7 +2459,7 @@
     {
       "name": "AdvancedAudio",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 142,
+      "line": 143,
       "expression": "app_audio.AdvancedAudio",
       "capability": "audio",
       "wave": "0.86.58"
@@ -2457,7 +2467,7 @@
     {
       "name": "PcmFormat",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 143,
+      "line": 144,
       "expression": "app_audio.PcmFormat",
       "capability": "audio",
       "wave": "0.86.58"
@@ -2465,7 +2475,7 @@
     {
       "name": "Devices",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 144,
+      "line": 145,
       "expression": "app_devices.Devices",
       "capability": "devices-power",
       "wave": "0.86.58"
@@ -2473,7 +2483,7 @@
     {
       "name": "WebTransport",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 145,
+      "line": 146,
       "expression": "app_web.WebTransport",
       "capability": "web-transport",
       "wave": "0.86.63"
@@ -2481,7 +2491,7 @@
     {
       "name": "WebFetchOptions",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 146,
+      "line": 147,
       "expression": "app_web.FetchOptions",
       "capability": "web-transport",
       "wave": "0.86.63"
@@ -2489,7 +2499,7 @@
     {
       "name": "WebFetchResult",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 147,
+      "line": 148,
       "expression": "app_web.FetchResult",
       "capability": "web-transport",
       "wave": "0.86.63"
@@ -2497,7 +2507,7 @@
     {
       "name": "DeviceInventoryView",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 148,
+      "line": 149,
       "expression": "app_devices.DeviceInventoryView",
       "capability": "devices-power",
       "wave": "0.86.58"
@@ -2505,7 +2515,7 @@
     {
       "name": "MemoryView",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 149,
+      "line": 150,
       "expression": "app_devices.MemoryView",
       "capability": "devices-power",
       "wave": "0.86.58"
@@ -2513,7 +2523,7 @@
     {
       "name": "PerformanceView",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 150,
+      "line": 151,
       "expression": "app_devices.PerformanceView",
       "capability": "devices-power",
       "wave": "0.86.58"
@@ -2521,7 +2531,7 @@
     {
       "name": "Failure",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 151,
+      "line": 152,
       "expression": "app_contract.Failure",
       "capability": "startup",
       "wave": "0.86.49"
@@ -2529,7 +2539,7 @@
     {
       "name": "Outcome",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 152,
+      "line": 153,
       "expression": "app_contract.Outcome",
       "capability": "startup",
       "wave": "0.86.49"
@@ -2537,7 +2547,7 @@
     {
       "name": "audio_pcm",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 153,
+      "line": 154,
       "expression": "@import(\"r4os/audio_pcm.zig\")",
       "capability": "audio",
       "wave": "0.86.58"
@@ -2545,7 +2555,7 @@
     {
       "name": "r4sys",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 154,
+      "line": 155,
       "expression": "@import(\"r4os/r4sys.zig\")",
       "capability": "process-sync-vm",
       "wave": "0.86.54"
@@ -2553,7 +2563,7 @@
     {
       "name": "r4desk",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 155,
+      "line": 156,
       "expression": "@import(\"r4os/r4desk.zig\")",
       "capability": "gui",
       "wave": "0.86.56"
@@ -2561,7 +2571,7 @@
     {
       "name": "r4draw",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 156,
+      "line": 157,
       "expression": "@import(\"r4os/r4draw.zig\")",
       "capability": "graphics",
       "wave": "0.86.57"
@@ -2569,7 +2579,7 @@
     {
       "name": "r4net",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 157,
+      "line": 158,
       "expression": "@import(\"r4os/r4net.zig\")",
       "capability": "network",
       "wave": "0.86.55"
@@ -2577,7 +2587,7 @@
     {
       "name": "r4audio",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 158,
+      "line": 159,
       "expression": "@import(\"r4os/r4audio.zig\")",
       "capability": "audio",
       "wave": "0.86.58"
@@ -2585,7 +2595,7 @@
     {
       "name": "r4dev",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 159,
+      "line": 160,
       "expression": "@import(\"r4os/r4dev.zig\")",
       "capability": "devices-power",
       "wave": "0.86.58"
@@ -2593,7 +2603,7 @@
     {
       "name": "r4x",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 160,
+      "line": 161,
       "expression": "@import(\"r4os/r4x.zig\")",
       "capability": "startup",
       "wave": "0.86.49"
@@ -2601,7 +2611,7 @@
     {
       "name": "r4xstart",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 161,
+      "line": 162,
       "expression": "@import(\"r4os/r4xstart.zig\")",
       "capability": "startup",
       "wave": "0.86.49"
@@ -2609,7 +2619,7 @@
     {
       "name": "runtime_r4l",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 162,
+      "line": 163,
       "expression": "@import(\"r4os/runtime_r4l.zig\")",
       "capability": "library-bind",
       "wave": "0.86.52"
@@ -2617,7 +2627,7 @@
     {
       "name": "vm_allocator",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 163,
+      "line": 164,
       "expression": "@import(\"r4os/vm_allocator.zig\")",
       "capability": "allocation",
       "wave": "0.86.50"
@@ -2625,7 +2635,7 @@
     {
       "name": "chart",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 164,
+      "line": 165,
       "expression": "@import(\"r4os/chart.zig\")",
       "capability": "gui",
       "wave": "0.86.56"
@@ -2633,7 +2643,7 @@
     {
       "name": "clipboard",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 165,
+      "line": 166,
       "expression": "@import(\"r4os/clipboard.zig\")",
       "capability": "gui",
       "wave": "0.86.56"
@@ -2641,7 +2651,7 @@
     {
       "name": "r4d",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 167,
+      "line": 168,
       "expression": "@import(\"r4os/driver.zig\")",
       "capability": "driver",
       "wave": "0.86.67"
@@ -2649,7 +2659,7 @@
     {
       "name": "r4p",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 168,
+      "line": 169,
       "expression": "@import(\"r4os/protocol.zig\")",
       "capability": "protocol",
       "wave": "0.86.68"
@@ -2657,7 +2667,7 @@
     {
       "name": "gui",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 169,
+      "line": 170,
       "expression": "@import(\"r4os/gui.zig\")",
       "capability": "gui",
       "wave": "0.86.56"
@@ -2665,7 +2675,7 @@
     {
       "name": "bounded_text",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 170,
+      "line": 171,
       "expression": "@import(\"r4os/bounded_text.zig\")",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -2673,7 +2683,7 @@
     {
       "name": "gui_shapes",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 171,
+      "line": 172,
       "expression": "@import(\"r4os/gui_shapes.zig\")",
       "capability": "gui",
       "wave": "0.86.56"
@@ -2681,7 +2691,7 @@
     {
       "name": "ico",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 172,
+      "line": 173,
       "expression": "@import(\"r4os/ico.zig\")",
       "capability": "data-crypto",
       "wave": "0.86.61"
@@ -2689,7 +2699,7 @@
     {
       "name": "raster",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 173,
+      "line": 174,
       "expression": "@import(\"r4os/raster.zig\")",
       "capability": "data-crypto",
       "wave": "0.86.61"
@@ -2697,7 +2707,7 @@
     {
       "name": "recent_documents",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 174,
+      "line": 175,
       "expression": "@import(\"r4os/recent_documents.zig\")",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -2705,7 +2715,7 @@
     {
       "name": "registry",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 175,
+      "line": 176,
       "expression": "@import(\"r4os/registry.zig\")",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -2713,7 +2723,7 @@
     {
       "name": "registry_core",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 176,
+      "line": 177,
       "expression": "@import(\"r4os/registry_core.zig\")",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -2721,7 +2731,7 @@
     {
       "name": "registry_selftest",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 177,
+      "line": 178,
       "expression": "@import(\"r4os/registry_selftest.zig\")",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -2729,7 +2739,7 @@
     {
       "name": "web_forms",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 178,
+      "line": 179,
       "expression": "@import(\"r4os/web_forms.zig\")",
       "capability": "web-document",
       "wave": "0.86.62"
@@ -2737,7 +2747,7 @@
     {
       "name": "web_navigation",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 179,
+      "line": 180,
       "expression": "@import(\"r4os/web_navigation.zig\")",
       "capability": "web-document",
       "wave": "0.86.62"
@@ -2745,7 +2755,7 @@
     {
       "name": "javascript",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 180,
+      "line": 181,
       "expression": "@import(\"r4os/javascript.zig\")",
       "capability": "web-document",
       "wave": "0.86.62"
@@ -2753,7 +2763,7 @@
     {
       "name": "web_security",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 181,
+      "line": 182,
       "expression": "@import(\"r4os/web_security.zig\")",
       "capability": "web-transport",
       "wave": "0.86.63"
@@ -2761,7 +2771,7 @@
     {
       "name": "web_runtime",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 182,
+      "line": 183,
       "expression": "@import(\"r4os/web_runtime.zig\")",
       "capability": "web-document",
       "wave": "0.86.62"
@@ -2769,7 +2779,7 @@
     {
       "name": "web_response_cache",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 183,
+      "line": 184,
       "expression": "@import(\"r4os/web_response_cache.zig\")",
       "capability": "web-transport",
       "wave": "0.86.63"
@@ -2777,7 +2787,7 @@
     {
       "name": "app_web_jobs",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 184,
+      "line": 185,
       "expression": "@import(\"r4os/app_web_jobs.zig\")",
       "capability": "web-transport",
       "wave": "0.86.63"
@@ -2785,7 +2795,7 @@
     {
       "name": "web_runtime_jobs",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 185,
+      "line": 186,
       "expression": "@import(\"r4os/web_runtime_jobs.zig\")",
       "capability": "web-transport",
       "wave": "0.86.63"
@@ -2793,7 +2803,7 @@
     {
       "name": "web_resources",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 186,
+      "line": 187,
       "expression": "@import(\"r4os/web_resources.zig\")",
       "capability": "web-transport",
       "wave": "0.86.63"
@@ -2801,7 +2811,7 @@
     {
       "name": "web_documents",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 187,
+      "line": 188,
       "expression": "@import(\"r4os/web_documents.zig\")",
       "capability": "web-transport",
       "wave": "0.86.63"
@@ -2809,7 +2819,7 @@
     {
       "name": "secure_random",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 188,
+      "line": 189,
       "expression": "@import(\"r4os/secure_random.zig\")",
       "capability": "data-crypto",
       "wave": "0.86.61"
@@ -2817,7 +2827,7 @@
     {
       "name": "cpu_acceleration",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 189,
+      "line": 190,
       "expression": "@import(\"r4os/cpu_acceleration.zig\")",
       "capability": "data-crypto",
       "wave": "0.86.61"
@@ -2825,7 +2835,7 @@
     {
       "name": "cpu_memory",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 190,
+      "line": 191,
       "expression": "@import(\"r4os/cpu_memory.zig\")",
       "capability": "data-crypto",
       "wave": "0.86.61"
@@ -2833,7 +2843,7 @@
     {
       "name": "crypto_sha256",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 191,
+      "line": 192,
       "expression": "@import(\"r4os/crypto_sha256.zig\")",
       "capability": "data-crypto",
       "wave": "0.86.61"
@@ -2841,7 +2851,7 @@
     {
       "name": "web_crypto",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 192,
+      "line": 193,
       "expression": "@import(\"r4os/web_crypto.zig\")",
       "capability": "data-crypto",
       "wave": "0.86.61"
@@ -2849,7 +2859,7 @@
     {
       "name": "web_canvas",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 193,
+      "line": 194,
       "expression": "@import(\"r4os/web_canvas.zig\")",
       "capability": "web-document",
       "wave": "0.86.62"
@@ -2857,7 +2867,7 @@
     {
       "name": "web_url",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 194,
+      "line": 195,
       "expression": "@import(\"r4os/web_url.zig\")",
       "capability": "data-crypto",
       "wave": "0.86.61"
@@ -2865,7 +2875,7 @@
     {
       "name": "web_encoding",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 195,
+      "line": 196,
       "expression": "@import(\"r4os/web_encoding.zig\")",
       "capability": "data-crypto",
       "wave": "0.86.61"
@@ -2873,7 +2883,7 @@
     {
       "name": "web_fetch",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 196,
+      "line": 197,
       "expression": "@import(\"r4os/web_fetch.zig\")",
       "capability": "web-transport",
       "wave": "0.86.63"
@@ -2881,7 +2891,7 @@
     {
       "name": "path",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 197,
+      "line": 198,
       "expression": "@import(\"r4os/path.zig\")",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -2889,7 +2899,7 @@
     {
       "name": "time_contract",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 198,
+      "line": 199,
       "expression": "@import(\"r4os/time_contract.zig\")",
       "capability": "time-serial",
       "wave": "0.86.55"
@@ -2897,7 +2907,7 @@
     {
       "name": "service_deadline",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 207,
+      "line": 208,
       "expression": "@import(\"r4os/service_deadline.zig\")",
       "capability": "services",
       "wave": "0.86.55"
@@ -2905,7 +2915,7 @@
     {
       "name": "file_stream",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 208,
+      "line": 209,
       "expression": "@import(\"r4os/file_stream.zig\")",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -2913,7 +2923,7 @@
     {
       "name": "r4cp",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 209,
+      "line": 210,
       "expression": "@import(\"r4os/r4cp.zig\")",
       "capability": "project-build",
       "wave": "0.86.51",
@@ -2923,7 +2933,7 @@
     {
       "name": "r4cp_convert",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 210,
+      "line": 211,
       "expression": "@import(\"r4os/r4cp_convert.zig\")",
       "capability": "project-build",
       "wave": "0.86.51",
@@ -2933,7 +2943,7 @@
     {
       "name": "r4mf",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 211,
+      "line": 212,
       "expression": "@import(\"r4os/module_manifest.zig\")",
       "capability": "project-build",
       "wave": "0.86.51",
@@ -2943,7 +2953,7 @@
     {
       "name": "lowlevel",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 212,
+      "line": 213,
       "expression": "@import(\"r4os/lowlevel.zig\")",
       "capability": "lowlevel",
       "wave": "0.86.69"
@@ -2951,7 +2961,7 @@
     {
       "name": "grapheme",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 215,
+      "line": 216,
       "expression": "@import(\"r4std_grapheme\")",
       "capability": "text-primitives",
       "wave": "0.86.59"
@@ -2959,7 +2969,7 @@
     {
       "name": "desktop_evidence",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 64,
+      "line": 65,
       "expression": "@import(\"r4os/desktop_evidence.zig\")",
       "capability": "services",
       "wave": "0.88.97"
@@ -2967,7 +2977,7 @@
     {
       "name": "desktop_actions",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 217,
+      "line": 218,
       "expression": "@import(\"r4os/desktop_actions.zig\")",
       "capability": "services",
       "wave": "0.88.98"
@@ -3007,7 +3017,7 @@
     {
       "name": "desktop_links",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 219,
+      "line": 220,
       "expression": "@import(\"r4os/desktop_links.zig\")",
       "capability": "services",
       "wave": "0.89.16"
@@ -3031,7 +3041,7 @@
     {
       "name": "driver_poll_budget",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 199,
+      "line": 200,
       "expression": "@import(\"r4os/driver_poll_budget.zig\")",
       "capability": "driver",
       "wave": "0.90.16"
@@ -3039,7 +3049,7 @@
     {
       "name": "binary_cursor",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 200,
+      "line": 201,
       "expression": "@import(\"r4os/binary_cursor.zig\")",
       "capability": "data-crypto",
       "wave": "0.90.17"
@@ -3047,7 +3057,7 @@
     {
       "name": "native_protocol_view",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 201,
+      "line": 202,
       "expression": "@import(\"r4os/native_protocol_view.zig\")",
       "capability": "data-crypto",
       "wave": "0.90.17"
@@ -3055,7 +3065,7 @@
     {
       "name": "internet_checksum",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 202,
+      "line": 203,
       "expression": "@import(\"r4os/internet_checksum.zig\")",
       "capability": "data-crypto",
       "wave": "0.90.17"
@@ -3063,7 +3073,7 @@
     {
       "name": "block_transfer",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 203,
+      "line": 204,
       "expression": "@import(\"r4os/block_transfer.zig\")",
       "capability": "data-crypto",
       "wave": "0.90.17"
@@ -3071,7 +3081,7 @@
     {
       "name": "arguments",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 204,
+      "line": 205,
       "expression": "@import(\"r4os/arg_cursor.zig\")",
       "capability": "text-primitives",
       "wave": "0.90.18"
@@ -3079,7 +3089,7 @@
     {
       "name": "diagnostics",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 205,
+      "line": 206,
       "expression": "@import(\"r4os/diagnostics.zig\")",
       "capability": "files-registry-console",
       "wave": "0.90.18"
@@ -3087,7 +3097,7 @@
     {
       "name": "stream_transfer",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 206,
+      "line": 207,
       "expression": "@import(\"r4os/stream_api.zig\")",
       "capability": "files-registry-console",
       "wave": "0.90.19"
@@ -3127,7 +3137,7 @@
     {
       "name": "file_picker",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 60,
+      "line": 61,
       "expression": "@import(\"r4os/file_picker_api.zig\")",
       "capability": "gui",
       "wave": "0.90.24"
@@ -3135,7 +3145,7 @@
     {
       "name": "audio_write",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 61,
+      "line": 62,
       "expression": "@import(\"r4os/audio_write_api.zig\")",
       "capability": "audio",
       "wave": "0.90.25"
@@ -3143,7 +3153,7 @@
     {
       "name": "pcm_source",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 62,
+      "line": 63,
       "expression": "@import(\"r4os/pcm_source.zig\")",
       "capability": "audio",
       "wave": "0.90.25"
@@ -3167,7 +3177,7 @@
     {
       "name": "clipboard_offer",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 166,
+      "line": 167,
       "expression": "@import(\"r4os/clipboard_offer.zig\")",
       "capability": "gui",
       "wave": "0.90.30"
@@ -3215,7 +3225,7 @@
     {
       "name": "audio_capture",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 59,
+      "line": 60,
       "expression": "@import(\"r4os/audio_capture.zig\")",
       "capability": "audio",
       "wave": "0.90.37"
@@ -3235,6 +3245,14 @@
       "expression": "@import(\"r4os/app2.zig\")",
       "capability": "startup",
       "wave": "0.90.40"
+    },
+    {
+      "name": "text_composition_client",
+      "source": "Repositories/SDK/r4os.zig",
+      "line": 59,
+      "expression": "@import(\"r4os/text_composition_client.zig\")",
+      "capability": "gui",
+      "wave": "0.90.42"
     }
   ],
   "build_exports": [
@@ -3346,9 +3364,9 @@
   "source_inventory": [
     {
       "path": "Repositories/SDK/r4os.zig",
-      "sha256": "efa3d183d55580bbd363d7ae98c64b24a667abaa6477647133beada4842b1a8f",
+      "sha256": "a9ad00ed2a950ea5bc5de945b804ebeb9eb2965389004156ebea39417e176393",
       "owner": "Repositories/SDK",
-      "version": "0.64.181",
+      "version": "0.64.183",
       "capability": "public-root",
       "declarations": [
         [
@@ -3367,889 +3385,1069 @@
           3
         ],
         [
-          "program",
+          "platform2",
           "const",
           4
         ],
         [
-          "input_events",
+          "App2",
           "const",
           5
         ],
         [
-          "runtime_context",
+          "startup2",
           "const",
           6
         ],
         [
-          "storage",
+          "network_family",
           "const",
           7
         ],
         [
-          "storage_tools",
+          "network_transport",
           "const",
           8
         ],
         [
-          "storage_tools_guest",
+          "wait_set",
           "const",
           9
         ],
         [
-          "version_info",
+          "byte_pipe",
           "const",
           10
         ],
         [
-          "r4u_manifest",
+          "launch_io",
           "const",
           11
         ],
         [
-          "r4u_artifact",
+          "technical2",
           "const",
           12
         ],
         [
-          "system_update_inventory",
+          "program",
           "const",
           13
         ],
         [
-          "subsystem_catalog",
+          "input_events",
           "const",
           14
         ],
         [
-          "subsystem_launch",
+          "runtime_context",
           "const",
           15
         ],
         [
-          "subsystem_host",
+          "storage",
           "const",
           16
         ],
         [
-          "subsystem_runtime",
+          "storage_tools",
           "const",
           17
         ],
         [
-          "subsystem_persistence",
+          "storage_tools_guest",
           "const",
           18
         ],
         [
-          "system_update_recovery",
+          "version_info",
           "const",
           19
         ],
         [
-          "system_update_batch",
+          "r4u_manifest",
           "const",
           20
         ],
         [
-          "system_update_backup",
+          "r4u_artifact",
           "const",
           21
         ],
         [
-          "update_catalog",
+          "system_update_inventory",
           "const",
           22
         ],
         [
-          "app_contract",
+          "subsystem_catalog",
           "const",
           23
         ],
         [
-          "app_storage",
+          "subsystem_launch",
           "const",
           24
         ],
         [
-          "document_save",
+          "subsystem_host",
           "const",
           25
         ],
         [
-          "window_mode",
+          "published_frame",
           "const",
           26
         ],
         [
-          "app_gui",
+          "subsystem_runtime",
           "const",
           27
         ],
         [
-          "gfx_buffers",
+          "subsystem_persistence",
           "const",
           28
         ],
         [
-          "gfx_outputs",
+          "system_update_recovery",
           "const",
           29
         ],
         [
-          "gfx_queue",
+          "system_update_batch",
           "const",
           30
         ],
         [
-          "gfx_telemetry",
+          "system_update_backup",
           "const",
           31
         ],
         [
-          "graphics_status",
+          "update_catalog",
           "const",
           32
         ],
         [
-          "driver_memory",
+          "server_targets",
           "const",
           33
         ],
         [
-          "driver_entropy",
+          "server_access",
           "const",
           34
         ],
         [
-          "driver_resources",
+          "server_profile",
           "const",
           35
         ],
         [
-          "driver_queue",
+          "server_credentials",
           "const",
           36
         ],
         [
-          "driver_outputs",
+          "app_contract",
           "const",
           37
         ],
         [
-          "driver_display",
+          "app_storage",
           "const",
           38
         ],
         [
-          "app_resources",
+          "document_save",
           "const",
           39
         ],
         [
-          "app_services",
+          "window_mode",
           "const",
           40
         ],
         [
-          "power_profiles",
+          "app_gui",
           "const",
           41
         ],
         [
-          "app_tray",
+          "gfx_buffers",
           "const",
           42
         ],
         [
-          "app_network",
+          "gfx_outputs",
           "const",
           43
         ],
         [
-          "app_audio",
+          "gfx_queue",
           "const",
           44
         ],
         [
-          "app_devices",
+          "gfx_telemetry",
           "const",
           45
         ],
         [
-          "app_web",
+          "graphics_status",
           "const",
           46
         ],
         [
-          "http",
+          "driver_memory",
           "const",
           47
         ],
         [
-          "json",
+          "driver_entropy",
           "const",
           48
         ],
         [
-          "zip",
+          "driver_resources",
           "const",
           49
         ],
         [
-          "html",
+          "driver_queue",
           "const",
           50
         ],
         [
-          "css",
+          "driver_outputs",
           "const",
           51
         ],
         [
-          "web_layout",
+          "driver_display",
           "const",
           52
         ],
         [
-          "web_font",
+          "app_resources",
           "const",
           53
         ],
         [
-          "web_fonts",
+          "inventory_reader",
           "const",
           54
         ],
         [
-          "web_font_cache",
+          "device_snapshot",
           "const",
           55
         ],
         [
-          "web_font_activation",
+          "metadata2",
           "const",
           56
         ],
         [
-          "web_images",
+          "text_metrics",
           "const",
           57
         ],
         [
-          "web_background",
+          "text_composition",
           "const",
           58
         ],
         [
-          "App",
+          "text_composition_client",
           "const",
           59
         ],
         [
-          "AppProfile",
+          "audio_capture",
           "const",
           60
         ],
         [
-          "AppEntryFn",
+          "file_picker",
           "const",
           61
         ],
         [
-          "Console",
+          "audio_write",
           "const",
           62
         ],
         [
-          "Files",
+          "pcm_source",
           "const",
           63
         ],
         [
-          "directory_page",
+          "app_services",
           "const",
           64
         ],
         [
-          "DirectoryIterator",
+          "desktop_evidence",
           "const",
           65
         ],
         [
-          "StreamReader",
+          "power_profiles",
           "const",
           66
         ],
         [
-          "StreamWriter",
+          "app_tray",
           "const",
           67
         ],
         [
-          "Registry",
+          "app_network",
           "const",
           68
         ],
         [
-          "RegistrySnapshot",
+          "app_audio",
           "const",
           69
         ],
         [
-          "RegistrySnapshotKind",
+          "app_devices",
           "const",
           70
         ],
         [
-          "RegistrySnapshotOpen",
+          "app_web",
           "const",
           71
         ],
         [
-          "RegistryBatchBuilder",
+          "http",
           "const",
           72
         ],
         [
-          "RegistryBatchBuildError",
+          "json",
           "const",
           73
         ],
         [
-          "RegistryBatchApply",
+          "zip",
           "const",
           74
         ],
         [
-          "FilePath",
+          "html",
           "const",
           75
         ],
         [
-          "AbsoluteFilePath",
+          "css",
           "const",
           76
         ],
         [
-          "RelativeFilePath",
+          "web_layout",
           "const",
           77
         ],
         [
-          "RegistryPath",
+          "web_font",
           "const",
           78
         ],
         [
-          "Window",
+          "web_fonts",
           "const",
           79
         ],
         [
-          "Message",
+          "web_font_cache",
           "const",
           80
         ],
         [
-          "EventLoop",
+          "web_font_activation",
           "const",
           81
         ],
         [
-          "CommandId",
+          "web_images",
           "const",
           82
         ],
         [
-          "TimerId",
+          "web_background",
           "const",
           83
         ],
         [
-          "Timer",
+          "App",
           "const",
           84
         ],
         [
-          "Canvas",
+          "AppProfile",
           "const",
           85
         ],
         [
-          "PaintContext",
+          "AppEntryFn",
           "const",
           86
         ],
         [
-          "FrameCanvas",
+          "Console",
           "const",
           87
         ],
         [
-          "FrameCanvasStats",
+          "Files",
           "const",
           88
         ],
         [
-          "Resources",
+          "directory_page",
           "const",
           89
         ],
         [
-          "ProcessHandle",
+          "DirectoryIterator",
           "const",
           90
         ],
         [
-          "ProcessOpen",
+          "StreamReader",
           "const",
           91
         ],
         [
-          "ProcessInfo",
+          "StreamWriter",
           "const",
           92
         ],
         [
-          "ProcessReady",
+          "Registry",
           "const",
           93
         ],
         [
-          "ProcessRead",
+          "RegistrySnapshot",
           "const",
           94
         ],
         [
-          "ProcessWait",
+          "RegistrySnapshotKind",
           "const",
           95
         ],
         [
-          "JoinHandle",
+          "RegistrySnapshotOpen",
           "const",
           96
         ],
         [
-          "VmRegion",
+          "RegistryBatchBuilder",
           "const",
           97
         ],
         [
-          "IoRequest",
+          "RegistryBatchBuildError",
           "const",
           98
         ],
         [
-          "Services",
+          "RegistryBatchApply",
           "const",
           99
         ],
         [
-          "Tray",
+          "FilePath",
           "const",
           100
         ],
         [
-          "TrayItem",
+          "AbsoluteFilePath",
           "const",
           101
         ],
         [
-          "ServiceConnection",
+          "RelativeFilePath",
           "const",
           102
         ],
         [
-          "ServiceEndpoint",
+          "RegistryPath",
           "const",
           103
         ],
         [
-          "ServiceLoop",
+          "Window",
           "const",
           104
         ],
         [
-          "ServiceLoopOptions",
+          "Message",
           "const",
           105
         ],
         [
-          "ServiceLoopMetrics",
+          "EventLoop",
           "const",
           106
         ],
         [
-          "ServiceLoopWake",
+          "CommandId",
           "const",
           107
         ],
         [
-          "ServiceBatchStep",
+          "TimerId",
           "const",
           108
         ],
         [
-          "Network",
+          "Timer",
           "const",
           109
         ],
         [
-          "Ipv4Address",
+          "Canvas",
           "const",
           110
         ],
         [
-          "SocketAddress",
+          "PaintContext",
           "const",
           111
         ],
         [
-          "Resolver",
+          "FrameCanvas",
           "const",
           112
         ],
         [
-          "TcpSocket",
+          "FrameCanvasStats",
           "const",
           113
         ],
         [
-          "TcpListener",
+          "Resources",
           "const",
           114
         ],
         [
-          "UdpSocket",
+          "ProcessHandle",
           "const",
           115
         ],
         [
-          "Audio",
+          "ProcessOpen",
           "const",
           116
         ],
         [
-          "AudioStream",
+          "ProcessInfo",
           "const",
           117
         ],
         [
-          "AdvancedAudio",
+          "ProcessReady",
           "const",
           118
         ],
         [
-          "PcmFormat",
+          "ProcessRead",
           "const",
           119
         ],
         [
-          "Devices",
+          "ProcessWait",
           "const",
           120
         ],
         [
-          "WebTransport",
+          "JoinHandle",
           "const",
           121
         ],
         [
-          "WebFetchOptions",
+          "VmRegion",
           "const",
           122
         ],
         [
-          "WebFetchResult",
+          "IoRequest",
           "const",
           123
         ],
         [
-          "DeviceInventoryView",
+          "Services",
           "const",
           124
         ],
         [
-          "MemoryView",
+          "Tray",
           "const",
           125
         ],
         [
-          "PerformanceView",
+          "TrayItem",
           "const",
           126
         ],
         [
-          "Failure",
+          "ServiceConnection",
           "const",
           127
         ],
         [
-          "Outcome",
+          "ServiceEndpoint",
           "const",
           128
         ],
         [
-          "audio_pcm",
+          "ServiceLoop",
           "const",
           129
         ],
         [
-          "r4sys",
+          "ServiceLoopOptions",
           "const",
           130
         ],
         [
-          "r4desk",
+          "ServiceLoopMetrics",
           "const",
           131
         ],
         [
-          "r4draw",
+          "ServiceLoopWake",
           "const",
           132
         ],
         [
-          "r4net",
+          "ServiceBatchStep",
           "const",
           133
         ],
         [
-          "r4audio",
+          "Network",
           "const",
           134
         ],
         [
-          "r4dev",
+          "Ipv4Address",
           "const",
           135
         ],
         [
-          "r4x",
+          "SocketAddress",
           "const",
           136
         ],
         [
-          "r4xstart",
+          "Resolver",
           "const",
           137
         ],
         [
-          "runtime_r4l",
+          "TcpSocket",
           "const",
           138
         ],
         [
-          "vm_allocator",
+          "TcpListener",
           "const",
           139
         ],
         [
-          "chart",
+          "UdpSocket",
           "const",
           140
         ],
         [
-          "clipboard",
+          "Audio",
           "const",
           141
         ],
         [
-          "r4d",
+          "AudioStream",
           "const",
           142
         ],
         [
-          "r4p",
+          "AdvancedAudio",
           "const",
           143
         ],
         [
-          "gui",
+          "PcmFormat",
           "const",
           144
         ],
         [
-          "bounded_text",
+          "Devices",
           "const",
           145
         ],
         [
-          "gui_shapes",
+          "WebTransport",
           "const",
           146
         ],
         [
-          "ico",
+          "WebFetchOptions",
           "const",
           147
         ],
         [
-          "raster",
+          "WebFetchResult",
           "const",
           148
         ],
         [
-          "recent_documents",
+          "DeviceInventoryView",
           "const",
           149
         ],
         [
-          "registry",
+          "MemoryView",
           "const",
           150
         ],
         [
-          "registry_core",
+          "PerformanceView",
           "const",
           151
         ],
         [
-          "registry_selftest",
+          "Failure",
           "const",
           152
         ],
         [
-          "web_forms",
+          "Outcome",
           "const",
           153
         ],
         [
-          "web_navigation",
+          "audio_pcm",
           "const",
           154
         ],
         [
-          "javascript",
+          "r4sys",
           "const",
           155
         ],
         [
-          "web_security",
+          "r4desk",
           "const",
           156
         ],
         [
-          "web_runtime",
+          "r4draw",
           "const",
           157
         ],
         [
-          "web_response_cache",
+          "r4net",
           "const",
           158
         ],
         [
-          "app_web_jobs",
+          "r4audio",
           "const",
           159
         ],
         [
-          "web_runtime_jobs",
+          "r4dev",
           "const",
           160
         ],
         [
-          "web_resources",
+          "r4x",
           "const",
           161
         ],
         [
-          "web_documents",
+          "r4xstart",
           "const",
           162
         ],
         [
-          "secure_random",
+          "runtime_r4l",
           "const",
           163
         ],
         [
-          "cpu_acceleration",
+          "vm_allocator",
           "const",
           164
         ],
         [
-          "cpu_memory",
+          "chart",
           "const",
           165
         ],
         [
-          "crypto_sha256",
+          "clipboard",
           "const",
           166
         ],
         [
-          "web_crypto",
+          "clipboard_offer",
           "const",
           167
         ],
         [
-          "web_canvas",
+          "r4d",
           "const",
           168
         ],
         [
-          "web_url",
+          "r4p",
           "const",
           169
         ],
         [
-          "web_encoding",
+          "gui",
           "const",
           170
         ],
         [
-          "web_fetch",
+          "bounded_text",
           "const",
           171
         ],
         [
-          "path",
+          "gui_shapes",
           "const",
           172
         ],
         [
-          "time_contract",
+          "ico",
           "const",
           173
         ],
         [
-          "service_deadline",
+          "raster",
           "const",
           174
         ],
         [
-          "file_stream",
+          "recent_documents",
           "const",
           175
         ],
         [
-          "r4cp",
+          "registry",
           "const",
           176
         ],
         [
-          "r4cp_convert",
+          "registry_core",
           "const",
           177
         ],
         [
-          "r4mf",
+          "registry_selftest",
           "const",
           178
         ],
         [
-          "lowlevel",
+          "web_forms",
           "const",
           179
         ],
         [
-          "grapheme",
+          "web_navigation",
+          "const",
+          180
+        ],
+        [
+          "javascript",
+          "const",
+          181
+        ],
+        [
+          "web_security",
           "const",
           182
+        ],
+        [
+          "web_runtime",
+          "const",
+          183
+        ],
+        [
+          "web_response_cache",
+          "const",
+          184
+        ],
+        [
+          "app_web_jobs",
+          "const",
+          185
+        ],
+        [
+          "web_runtime_jobs",
+          "const",
+          186
+        ],
+        [
+          "web_resources",
+          "const",
+          187
+        ],
+        [
+          "web_documents",
+          "const",
+          188
+        ],
+        [
+          "secure_random",
+          "const",
+          189
+        ],
+        [
+          "cpu_acceleration",
+          "const",
+          190
+        ],
+        [
+          "cpu_memory",
+          "const",
+          191
+        ],
+        [
+          "crypto_sha256",
+          "const",
+          192
+        ],
+        [
+          "web_crypto",
+          "const",
+          193
+        ],
+        [
+          "web_canvas",
+          "const",
+          194
+        ],
+        [
+          "web_url",
+          "const",
+          195
+        ],
+        [
+          "web_encoding",
+          "const",
+          196
+        ],
+        [
+          "web_fetch",
+          "const",
+          197
+        ],
+        [
+          "path",
+          "const",
+          198
+        ],
+        [
+          "time_contract",
+          "const",
+          199
+        ],
+        [
+          "driver_poll_budget",
+          "const",
+          200
+        ],
+        [
+          "binary_cursor",
+          "const",
+          201
+        ],
+        [
+          "native_protocol_view",
+          "const",
+          202
+        ],
+        [
+          "internet_checksum",
+          "const",
+          203
+        ],
+        [
+          "block_transfer",
+          "const",
+          204
+        ],
+        [
+          "arguments",
+          "const",
+          205
+        ],
+        [
+          "diagnostics",
+          "const",
+          206
+        ],
+        [
+          "stream_transfer",
+          "const",
+          207
+        ],
+        [
+          "service_deadline",
+          "const",
+          208
+        ],
+        [
+          "file_stream",
+          "const",
+          209
+        ],
+        [
+          "r4cp",
+          "const",
+          210
+        ],
+        [
+          "r4cp_convert",
+          "const",
+          211
+        ],
+        [
+          "r4mf",
+          "const",
+          212
+        ],
+        [
+          "lowlevel",
+          "const",
+          213
+        ],
+        [
+          "grapheme",
+          "const",
+          216
+        ],
+        [
+          "desktop_actions",
+          "const",
+          218
+        ],
+        [
+          "desktop_links",
+          "const",
+          220
         ]
       ]
     },
@@ -5185,200 +5383,260 @@
     },
     {
       "path": "Repositories/SDK/r4os/app_gui.zig",
-      "sha256": "44178c805b8252140b27c75cf598fecf6ffa25932af380f1c4b2394d7da46e96",
+      "sha256": "7b9e7984d0c9b12763b98b0601fc72acfb946b163498b6e8bcdc8c19096372b2",
       "owner": "Repositories/SDK",
-      "version": "0.64.134",
+      "version": "0.64.183",
       "capability": "gui",
       "declarations": [
         [
           "Canvas",
           "const",
-          8
+          9
         ],
         [
           "FrameCanvas",
           "const",
-          9
+          10
         ],
         [
           "FrameCanvasStats",
           "const",
-          10
+          11
         ],
         [
           "CommandId",
           "container",
-          12
+          13
         ],
         [
           "CommandId.init",
           "fn",
-          15
+          16
         ],
         [
           "TimerId",
           "container",
-          20
+          21
         ],
         [
           "TimerId.init",
           "fn",
-          23
+          24
         ],
         [
           "ResizeMessage",
           "container",
-          28
+          29
         ],
         [
           "KeyMessage",
           "container",
-          35
+          36
         ],
         [
           "MouseAction",
           "container",
-          43
+          44
         ],
         [
           "MouseMessage",
           "container",
-          45
+          46
         ],
         [
           "ClipboardMessage",
           "container",
-          55
+          56
         ],
         [
           "TimerMessage",
           "container",
-          59
+          60
+        ],
+        [
+          "FocusMessage",
+          "container",
+          65
+        ],
+        [
+          "FontChangedMessage",
+          "container",
+          71
+        ],
+        [
+          "WheelMessage",
+          "container",
+          76
+        ],
+        [
+          "RelativeMouseMessage",
+          "container",
+          85
+        ],
+        [
+          "PointerCaptureMessage",
+          "container",
+          94
+        ],
+        [
+          "InputResetMessage",
+          "container",
+          103
         ],
         [
           "Message",
           "container",
-          64
+          109
         ],
         [
           "Message.guiEvent",
           "fn",
-          76
+          128
         ],
         [
           "WaitResult",
           "container",
-          92
+          151
         ],
         [
           "Timer",
           "container",
-          98
+          157
         ],
         [
           "Timer.start",
           "fn",
-          104
+          163
         ],
         [
           "Timer.cancel",
           "fn",
-          115
+          180
         ],
         [
           "EventLoop",
           "container",
-          133
+          198
         ],
         [
           "EventLoop.init",
           "fn",
-          142
+          209
         ],
         [
           "EventLoop.postCommand",
           "fn",
-          151
+          218
         ],
         [
           "EventLoop.poll",
           "fn",
-          157
+          224
         ],
         [
           "EventLoop.wait",
           "fn",
-          194
+          261
         ],
         [
           "PaintOpen",
           "container",
-          243
+          346
         ],
         [
           "PaintContext",
           "container",
-          248
+          352
         ],
         [
           "PaintContext.bufferedCanvas",
           "fn",
-          256
+          361
         ],
         [
           "PaintContext.present",
           "fn",
-          264
+          369
         ],
         [
           "PaintContext.discard",
           "fn",
-          287
+          399
         ],
         [
           "beginPaintForSize",
           "fn",
-          297
+          409
+        ],
+        [
+          "beginPaintReplaceForSize",
+          "fn",
+          418
         ],
         [
           "Window",
           "container",
-          307
+          431
         ],
         [
           "Window.init",
           "fn",
-          314
+          438
+        ],
+        [
+          "Window.pointerIdentity",
+          "fn",
+          448
+        ],
+        [
+          "Window.pointerCapture",
+          "fn",
+          457
+        ],
+        [
+          "Window.pointerStatus",
+          "fn",
+          461
+        ],
+        [
+          "Window.pointerRelease",
+          "fn",
+          464
         ],
         [
           "Window.setTitle",
           "fn",
-          324
+          468
         ],
         [
           "Window.setMinimumSize",
           "fn",
-          328
+          472
         ],
         [
           "Window.info",
           "fn",
-          332
+          476
         ],
         [
           "Window.beginPaint",
           "fn",
-          338
+          482
+        ],
+        [
+          "Window.beginPaintReplace",
+          "fn",
+          487
         ],
         [
           "Window.pollMessage",
           "fn",
-          344
+          520
         ],
         [
           "Window.waitMessage",
           "fn",
-          348
+          524
         ]
       ]
     },
@@ -10106,2025 +10364,2155 @@
     },
     {
       "path": "Repositories/SDK/r4os/gui.zig",
-      "sha256": "0f10213b736e9d37b27ddb5f42189735f09e346a34c09a82016d48ad74646035",
+      "sha256": "96347ba1aa08c26137d503c6797b5663cf98e36c3fc6c745d362d8370858e04b",
       "owner": "Repositories/SDK",
-      "version": "0.64.134",
+      "version": "0.64.183",
       "capability": "gui",
       "declarations": [
         [
+          "Style",
+          "const",
+          14
+        ],
+        [
+          "FontSet",
+          "const",
+          15
+        ],
+        [
+          "TextRole",
+          "const",
+          16
+        ],
+        [
+          "SurfaceRole",
+          "const",
+          17
+        ],
+        [
+          "Card",
+          "const",
+          18
+        ],
+        [
+          "TileGrid",
+          "const",
+          19
+        ],
+        [
+          "Progress",
+          "const",
+          20
+        ],
+        [
+          "Paragraph",
+          "const",
+          21
+        ],
+        [
+          "modernSupported",
+          "const",
+          22
+        ],
+        [
           "font_w",
           "const",
-          9
+          24
         ],
         [
           "font_h",
           "const",
-          10
+          25
         ],
         [
           "Align",
           "container",
-          13
+          28
         ],
         [
           "Palette",
           "container",
-          19
+          34
         ],
         [
           "default_palette",
           "const",
-          32
+          47
         ],
         [
           "ControlMetrics",
           "container",
-          34
+          49
         ],
         [
           "default_metrics",
           "const",
-          64
+          79
         ],
         [
           "FontMetrics",
           "container",
-          66
+          81
         ],
         [
           "Key",
           "container",
-          74
+          89
         ],
         [
           "Key.ctrl_a",
           "const",
-          75
+          90
         ],
         [
           "Key.ctrl_c",
           "const",
-          76
+          91
         ],
         [
           "Key.ctrl_v",
           "const",
-          77
+          92
         ],
         [
           "Key.ctrl_x",
           "const",
-          78
+          93
         ],
         [
           "Key.backspace",
           "const",
-          79
+          94
         ],
         [
           "Key.tab",
           "const",
-          80
+          95
         ],
         [
           "Key.enter",
           "const",
-          81
+          96
         ],
         [
           "Key.escape",
           "const",
-          82
+          97
         ],
         [
           "Key.delete",
           "const",
-          83
+          98
         ],
         [
           "Key.up",
           "const",
-          84
+          99
         ],
         [
           "Key.down",
           "const",
-          85
+          100
         ],
         [
           "Key.f3",
           "const",
-          86
+          101
         ],
         [
           "Key.shift_tab",
           "const",
-          87
+          102
         ],
         [
           "Key.left",
           "const",
-          88
+          103
         ],
         [
           "Key.right",
           "const",
-          89
+          104
         ],
         [
           "Key.home",
           "const",
-          90
+          105
         ],
         [
           "Key.end",
           "const",
-          91
+          106
         ],
         [
           "Key.start_menu",
           "const",
-          92
+          107
         ],
         [
           "Key.page_up",
           "const",
-          93
+          108
         ],
         [
           "Key.page_down",
           "const",
-          94
+          109
         ],
         [
           "Key.menu_focus",
           "const",
-          95
+          110
         ],
         [
           "Key.f10",
           "const",
-          96
+          111
         ],
         [
           "ControlAction",
           "container",
-          99
+          114
         ],
         [
           "FocusDirection",
           "container",
-          108
+          123
         ],
         [
           "FocusItem",
           "container",
-          113
+          128
         ],
         [
           "FocusResult",
           "container",
-          117
+          132
         ],
         [
           "FocusState",
           "container",
-          122
+          137
         ],
         [
           "FocusState.normalize",
           "fn",
-          125
+          140
         ],
         [
           "FocusState.set",
           "fn",
-          139
+          154
         ],
         [
           "FocusState.move",
           "fn",
-          145
+          160
         ],
         [
           "FocusState.handleKey",
           "fn",
-          163
+          178
         ],
         [
           "MouseCapture",
           "container",
-          176
+          193
         ],
         [
           "MouseCapture.begin",
           "fn",
-          180
+          197
         ],
         [
           "MouseCapture.release",
           "fn",
-          185
+          202
         ],
         [
           "MouseCapture.clear",
           "fn",
-          192
+          209
         ],
         [
           "MouseCapture.isActive",
           "fn",
-          197
+          214
         ],
         [
           "SelectionStep",
           "container",
-          202
+          219
         ],
         [
           "TextRange",
           "container",
-          207
+          224
         ],
         [
           "TextRange.normalized",
           "fn",
-          211
+          228
         ],
         [
           "TextRange.isEmpty",
           "fn",
-          215
+          232
         ],
         [
           "TextRange.count",
           "fn",
-          219
+          236
         ],
         [
           "TextAreaPoint",
           "container",
-          224
+          241
         ],
         [
           "TextAreaView",
           "container",
-          229
+          246
         ],
         [
           "TextAreaView.init",
           "fn",
-          234
+          251
         ],
         [
           "TextAreaView.effectiveVisibleCols",
           "fn",
-          243
+          260
         ],
         [
           "TextAreaView.effectiveVisibleRows",
           "fn",
-          247
+          264
         ],
         [
           "TextAreaView.effectiveWrapCols",
           "fn",
-          251
+          268
         ],
         [
           "MenuKeyResult",
           "container",
-          257
+          274
         ],
         [
           "MenubarResult",
           "container",
-          263
+          280
         ],
         [
           "MenubarResult.hasCommand",
           "fn",
-          269
+          286
         ],
         [
           "MenubarHitPart",
           "container",
-          274
+          291
         ],
         [
           "MenubarHit",
           "container",
-          281
+          298
         ],
         [
           "Rect",
           "container",
-          288
+          305
         ],
         [
           "Rect.isEmpty",
           "fn",
-          294
+          311
         ],
         [
           "Rect.inset",
           "fn",
-          298
+          315
         ],
         [
           "Rect.contains",
           "fn",
-          307
+          324
         ],
         [
           "Rect.right",
           "fn",
-          311
+          328
         ],
         [
           "Rect.bottom",
           "fn",
-          315
+          332
         ],
         [
           "Rect.translated",
           "fn",
-          319
+          336
         ],
         [
           "LayoutCursor",
           "container",
-          329
+          346
         ],
         [
           "LayoutCursor.init",
           "fn",
-          332
+          349
         ],
         [
           "LayoutCursor.remaining",
           "fn",
-          336
+          353
         ],
         [
           "LayoutCursor.takeTop",
           "fn",
-          340
+          357
         ],
         [
           "LayoutCursor.takeBottom",
           "fn",
-          349
+          366
         ],
         [
           "LayoutCursor.takeLeft",
           "fn",
-          357
+          374
         ],
         [
           "LayoutCursor.takeRight",
           "fn",
-          366
+          383
         ],
         [
           "HostedAppFrame",
           "container",
-          375
+          392
         ],
         [
           "HostedAppFrame.refresh",
           "fn",
-          381
+          398
         ],
         [
           "Label",
           "container",
-          386
+          403
         ],
         [
           "Label.draw",
           "fn",
-          395
+          412
         ],
         [
           "ButtonState",
           "container",
-          401
+          418
         ],
         [
           "Button",
           "container",
-          408
+          425
         ],
         [
           "Button.draw",
           "fn",
-          417
+          434
         ],
         [
           "Button.contains",
           "fn",
-          421
+          438
         ],
         [
           "Button.minWidth",
           "fn",
-          425
+          442
         ],
         [
           "List",
           "container",
-          430
+          447
         ],
         [
           "List.draw",
           "fn",
-          441
+          458
         ],
         [
           "List.indexAt",
           "fn",
-          447
+          464
         ],
         [
           "List.visibleRows",
           "fn",
-          451
+          468
         ],
         [
           "List.firstIndexForSelection",
           "fn",
-          455
+          472
         ],
         [
           "List.keyAction",
           "fn",
-          459
+          476
         ],
         [
           "Orientation",
           "container",
-          466
+          483
         ],
         [
           "ScrollbarPart",
           "container",
-          471
+          488
         ],
         [
           "ScrollbarStep",
           "container",
-          480
+          497
         ],
         [
           "Scrollbar",
           "container",
-          486
+          503
         ],
         [
           "Scrollbar.draw",
           "fn",
-          495
+          512
         ],
         [
           "Scrollbar.maxFirst",
           "fn",
-          499
+          516
         ],
         [
           "Scrollbar.clampedFirst",
           "fn",
-          504
+          521
         ],
         [
           "Scrollbar.decrementRect",
           "fn",
-          508
+          525
         ],
         [
           "Scrollbar.incrementRect",
           "fn",
-          512
+          529
         ],
         [
           "Scrollbar.trackRect",
           "fn",
-          516
+          533
         ],
         [
           "Scrollbar.thumbRect",
           "fn",
-          520
+          537
         ],
         [
           "Scrollbar.partAt",
           "fn",
-          524
+          541
         ],
         [
           "Scrollbar.step",
           "fn",
-          528
+          545
         ],
         [
           "Scrollbar.wheel",
           "fn",
-          532
+          549
         ],
         [
           "ToolbarButton",
           "container",
-          538
+          555
         ],
         [
           "ToolbarButton.draw",
           "fn",
-          547
+          564
         ],
         [
           "ToolbarButton.contains",
           "fn",
-          552
+          569
         ],
         [
           "TabItem",
           "container",
-          557
+          574
         ],
         [
           "TabBar",
           "container",
-          562
+          579
         ],
         [
           "TabBar.draw",
           "fn",
-          571
+          590
         ],
         [
           "TabBar.tabRect",
           "fn",
-          575
+          594
         ],
         [
           "TabBar.indexAt",
           "fn",
-          579
+          598
         ],
         [
           "TabBar.keyAction",
           "fn",
-          583
+          605
         ],
         [
           "TableColumn",
           "container",
-          601
+          623
         ],
         [
           "TableView",
           "container",
-          607
+          629
         ],
         [
           "TableView.draw",
           "fn",
-          620
+          642
         ],
         [
           "TableView.effectiveRowCount",
           "fn",
-          624
+          646
         ],
         [
           "TableView.headerRect",
           "fn",
-          630
+          652
         ],
         [
           "TableView.bodyRect",
           "fn",
-          634
+          656
         ],
         [
           "TableView.scrollbarRect",
           "fn",
-          638
+          660
         ],
         [
           "TableView.needsScrollbar",
           "fn",
-          642
+          664
         ],
         [
           "TableView.visibleRows",
           "fn",
-          646
+          668
         ],
         [
           "TableView.indexAt",
           "fn",
-          650
+          672
         ],
         [
           "TableView.firstIndexForSelection",
           "fn",
-          654
+          676
         ],
         [
           "TableView.keyAction",
           "fn",
-          658
+          680
         ],
         [
           "TableView.cell",
           "fn",
-          663
+          685
         ],
         [
           "Checkbox",
           "container",
-          671
+          693
         ],
         [
           "Checkbox.draw",
           "fn",
-          679
+          701
         ],
         [
           "Checkbox.contains",
           "fn",
-          683
+          705
         ],
         [
           "RadioButton",
           "container",
-          688
+          710
         ],
         [
           "RadioButton.draw",
           "fn",
-          696
+          718
         ],
         [
           "RadioButton.contains",
           "fn",
-          700
+          722
         ],
         [
           "GroupBox",
           "container",
-          705
+          727
         ],
         [
           "GroupBox.draw",
           "fn",
-          710
+          732
         ],
         [
           "Separator",
           "container",
-          715
+          737
         ],
         [
           "Separator.draw",
           "fn",
-          720
+          742
         ],
         [
           "Dropdown",
           "container",
-          725
+          747
         ],
         [
           "Dropdown.draw",
           "fn",
-          737
+          759
         ],
         [
           "Dropdown.contains",
           "fn",
-          741
+          763
         ],
         [
           "Dropdown.listRect",
           "fn",
-          745
+          767
         ],
         [
           "Dropdown.indexAt",
           "fn",
-          749
+          771
         ],
         [
           "Dropdown.keyAction",
           "fn",
-          754
+          776
         ],
         [
           "Dropdown.firstIndexForSelection",
           "fn",
-          763
+          785
         ],
         [
           "Dropdown.visibleRows",
           "fn",
-          767
+          789
         ],
         [
           "MenuItem",
           "container",
-          777
+          799
         ],
         [
           "Menu",
           "container",
-          785
+          807
         ],
         [
           "Menu.draw",
           "fn",
-          793
+          815
         ],
         [
           "Menu.indexAt",
           "fn",
-          797
+          819
         ],
         [
           "Menu.keyAction",
           "fn",
-          801
+          823
         ],
         [
           "MenubarMenu",
           "container",
-          806
+          828
         ],
         [
           "MenubarState",
           "container",
-          813
+          835
         ],
         [
           "MenubarState.isOpen",
           "fn",
-          820
+          842
         ],
         [
           "MenubarState.close",
           "fn",
-          824
+          846
         ],
         [
           "MenubarState.open",
           "fn",
-          832
+          854
         ],
         [
           "MenubarState.openFirst",
           "fn",
-          842
+          864
         ],
         [
           "MenubarState.switchMenu",
           "fn",
-          847
+          869
         ],
         [
           "MenubarState.keyAction",
           "fn",
-          852
+          874
         ],
         [
           "MenubarState.mouseMove",
           "fn",
-          900
+          922
         ],
         [
           "MenubarState.mouseDown",
           "fn",
-          918
+          940
         ],
         [
           "MenubarState.mouseUp",
           "fn",
-          945
+          967
         ],
         [
           "Menubar",
           "container",
-          966
+          988
         ],
         [
           "Menubar.draw",
           "fn",
-          972
+          994
         ],
         [
           "Menubar.headerRect",
           "fn",
-          976
+          998
         ],
         [
           "Menubar.popupRect",
           "fn",
-          980
+          1002
         ],
         [
           "Menubar.menuIndexAt",
           "fn",
-          984
+          1006
         ],
         [
           "Menubar.hitTest",
           "fn",
-          988
+          1010
         ],
         [
           "DialogAction",
           "container",
-          993
+          1015
         ],
         [
           "DialogButtonRole",
           "container",
-          1004
+          1026
         ],
         [
           "DialogButtonAlign",
           "container",
-          1010
+          1032
         ],
         [
           "DialogButton",
           "container",
-          1015
+          1037
         ],
         [
           "DialogFocusItem",
           "container",
-          1022
+          1044
         ],
         [
           "DialogEvent",
           "container",
-          1027
+          1049
         ],
         [
           "ModalHitPart",
           "container",
-          1034
+          1056
         ],
         [
           "ModalHit",
           "container",
-          1043
+          1065
         ],
         [
           "DialogState",
           "container",
-          1048
+          1070
         ],
         [
           "DialogState.normalizeFocus",
           "fn",
-          1052
+          1074
         ],
         [
           "DialogState.keyAction",
           "fn",
-          1058
+          1080
         ],
         [
           "DialogState.mouseDown",
           "fn",
-          1075
+          1097
         ],
         [
           "DialogState.mouseUp",
           "fn",
-          1088
+          1110
         ],
         [
           "ModalDialog",
           "container",
-          1102
+          1124
         ],
         [
           "ModalDialog.centered",
           "fn",
-          1109
+          1131
         ],
         [
           "ModalDialog.titleRect",
           "fn",
-          1113
+          1135
         ],
         [
           "ModalDialog.contentRect",
           "fn",
-          1117
+          1139
         ],
         [
           "ModalDialog.buttonBarRect",
           "fn",
-          1121
+          1143
         ],
         [
           "ModalDialog.statusRect",
           "fn",
-          1125
+          1147
         ],
         [
           "ModalDialog.buttonRect",
           "fn",
-          1129
+          1151
         ],
         [
           "ModalDialog.buttonActionAt",
           "fn",
-          1133
+          1155
         ],
         [
           "ModalDialog.hitTest",
           "fn",
-          1137
+          1159
         ],
         [
           "ModalDialog.drawFrame",
           "fn",
-          1146
+          1168
         ],
         [
           "ModalDialog.drawButtons",
           "fn",
-          1150
+          1172
         ],
         [
           "ModalOverlay",
           "container",
-          1155
+          1177
         ],
         [
           "ModalOverlay.capturesInput",
           "fn",
-          1161
+          1183
         ],
         [
           "ModalOverlay.hitTest",
           "fn",
-          1165
+          1187
         ],
         [
           "ModalOverlay.actionAt",
           "fn",
-          1170
+          1192
         ],
         [
           "MessageKind",
           "container",
-          1178
+          1200
         ],
         [
           "MessageButtons",
           "container",
-          1185
+          1207
         ],
         [
           "FileDialogMode",
           "container",
-          1191
+          1213
         ],
         [
           "MessageDialog",
           "container",
-          1196
+          1218
         ],
         [
           "MessageDialog.draw",
           "fn",
-          1210
+          1232
         ],
         [
           "MessageDialog.okRect",
           "fn",
-          1214
+          1236
         ],
         [
           "MessageDialog.yesRect",
           "fn",
-          1218
+          1240
         ],
         [
           "MessageDialog.noRect",
           "fn",
-          1222
+          1244
         ],
         [
           "MessageDialog.cancelRect",
           "fn",
-          1226
+          1248
         ],
         [
           "MessageDialog.actionAt",
           "fn",
-          1230
+          1252
         ],
         [
           "MessageDialog.keyAction",
           "fn",
-          1253
+          1275
         ],
         [
           "FileDialog",
           "container",
-          1285
+          1307
         ],
         [
           "FileDialog.draw",
           "fn",
-          1304
+          1326
         ],
         [
           "FileDialog.listRect",
           "fn",
-          1308
+          1330
         ],
         [
           "FileDialog.fileNameRect",
           "fn",
-          1312
+          1334
         ],
         [
           "FileDialog.okRect",
           "fn",
-          1316
+          1338
         ],
         [
           "FileDialog.cancelRect",
           "fn",
-          1320
+          1342
         ],
         [
           "FileDialog.indexAt",
           "fn",
-          1324
+          1346
         ],
         [
           "FileDialog.visibleRows",
           "fn",
-          1328
+          1350
         ],
         [
           "FileDialog.firstIndexForSelection",
           "fn",
-          1333
+          1355
         ],
         [
           "FileDialog.actionAt",
           "fn",
-          1337
+          1359
         ],
         [
           "FileDialog.keyAction",
           "fn",
-          1348
+          1370
         ],
         [
           "FileDialog.selectedIndexForAction",
           "fn",
-          1365
+          1387
         ],
         [
           "InputDialog",
           "container",
-          1376
+          1398
         ],
         [
           "InputDialog.draw",
           "fn",
-          1389
+          1411
         ],
         [
           "InputDialog.valueRect",
           "fn",
-          1393
+          1415
         ],
         [
           "InputDialog.okRect",
           "fn",
-          1397
+          1419
         ],
         [
           "InputDialog.cancelRect",
           "fn",
-          1401
+          1423
         ],
         [
           "InputDialog.actionAt",
           "fn",
-          1405
+          1427
         ],
         [
           "InputDialog.keyAction",
           "fn",
-          1416
+          1438
+        ],
+        [
+          "borrowedTextArea",
+          "fn",
+          1457
         ],
         [
           "TextArea",
           "fn",
-          1432
+          1464
+        ],
+        [
+          "borrowedTextField",
+          "fn",
+          1945
         ],
         [
           "TextField",
           "fn",
-          1881
+          1952
         ],
         [
           "FrameCanvasStats",
           "container",
-          2119
+          2280
         ],
         [
           "FrameCanvasStats.drawTransitions",
           "fn",
-          2128
+          2289
         ],
         [
           "FrameCanvasStats.frameMutationEntries",
           "fn",
-          2132
+          2293
         ],
         [
           "FrameCanvas",
           "container",
-          2142
+          2303
         ],
         [
           "FrameCanvas.init",
           "fn",
-          2159
+          2320
         ],
         [
           "FrameCanvas.bind",
           "fn",
-          2168
+          2329
         ],
         [
           "FrameCanvas.finish",
           "fn",
-          2174
+          2335
         ],
         [
           "FrameCanvas.complete",
           "fn",
-          2180
+          2341
         ],
         [
           "FrameCanvas.cancel",
           "fn",
-          2186
+          2347
         ],
         [
           "FrameCanvas.clear",
           "fn",
-          2190
+          2351
         ],
         [
           "FrameCanvas.rect",
           "fn",
-          2204
+          2365
         ],
         [
           "FrameCanvas.text",
           "fn",
-          2210
+          2371
         ],
         [
           "FrameCanvas.raster",
           "fn",
-          2229
+          2390
         ],
         [
           "FrameCanvas.alpha8",
           "fn",
-          2275
+          2436
         ],
         [
           "FrameCanvas.appendCommand",
           "fn",
-          2327
+          2488
         ],
         [
           "Canvas",
           "container",
-          2429
+          2590
         ],
         [
           "Canvas.init",
           "fn",
-          2436
+          2603
         ],
         [
           "Canvas.initSize",
           "fn",
-          2440
+          2607
         ],
         [
           "Canvas.bounds",
           "fn",
-          2453
+          2620
         ],
         [
           "Canvas.withFontId",
           "fn",
-          2457
+          2624
+        ],
+        [
+          "Canvas.withStyle",
+          "fn",
+          2630
+        ],
+        [
+          "Canvas.setStyle",
+          "fn",
+          2637
+        ],
+        [
+          "Canvas.withTextRole",
+          "fn",
+          2643
+        ],
+        [
+          "Canvas.layoutTabs",
+          "fn",
+          2648
+        ],
+        [
+          "Canvas.surface",
+          "fn",
+          2655
+        ],
+        [
+          "Canvas.card",
+          "fn",
+          2666
+        ],
+        [
+          "Canvas.actionButton",
+          "fn",
+          2670
+        ],
+        [
+          "Canvas.progressBar",
+          "fn",
+          2673
+        ],
+        [
+          "Canvas.progress",
+          "fn",
+          2676
+        ],
+        [
+          "Canvas.paragraph",
+          "fn",
+          2679
         ],
         [
           "Canvas.clear",
           "fn",
-          2463
+          2683
         ],
         [
           "Canvas.rect",
           "fn",
-          2468
+          2688
         ],
         [
           "Canvas.raster",
           "fn",
-          2474
+          2694
         ],
         [
           "Canvas.blendAlpha8",
           "fn",
-          2481
+          2701
         ],
         [
           "Canvas.text",
           "fn",
-          2521
+          2741
         ],
         [
           "Canvas.textFont",
           "fn",
-          2526
+          2746
         ],
         [
           "Canvas.frameCommand",
           "fn",
-          2535
+          2755
         ],
         [
           "Canvas.textWidthZ",
           "fn",
-          2543
+          2763
         ],
         [
-          "Canvas.charsForWidth",
+          "Canvas.textIndexAt",
           "fn",
-          2549
+          2771
         ],
         [
-          "Canvas.textClipped",
+          "Canvas.bindTextMetrics",
           "fn",
-          2554
+          2782
         ],
         [
-          "Canvas.label",
-          "fn",
-          2560
-        ],
-        [
-          "Canvas.button",
-          "fn",
-          2564
-        ],
-        [
-          "Canvas.checkbox",
-          "fn",
-          2568
-        ],
-        [
-          "Canvas.radioButton",
-          "fn",
-          2572
-        ],
-        [
-          "Canvas.groupBox",
-          "fn",
-          2576
-        ],
-        [
-          "Canvas.separator",
-          "fn",
-          2580
-        ],
-        [
-          "Canvas.textField",
-          "fn",
-          2584
-        ],
-        [
-          "Canvas.textArea",
-          "fn",
-          2588
-        ],
-        [
-          "Canvas.list",
-          "fn",
-          2592
-        ],
-        [
-          "Canvas.scrollbar",
-          "fn",
-          2596
-        ],
-        [
-          "Canvas.toolbarButton",
-          "fn",
-          2600
-        ],
-        [
-          "Canvas.tabBar",
-          "fn",
-          2604
-        ],
-        [
-          "Canvas.tableView",
-          "fn",
-          2608
-        ],
-        [
-          "Canvas.menu",
-          "fn",
-          2612
-        ],
-        [
-          "Canvas.menubar",
-          "fn",
-          2616
-        ],
-        [
-          "Canvas.dropdown",
-          "fn",
-          2620
-        ],
-        [
-          "Canvas.messageDialog",
-          "fn",
-          2624
-        ],
-        [
-          "Canvas.fileDialog",
-          "fn",
-          2628
-        ],
-        [
-          "Canvas.inputDialog",
-          "fn",
-          2632
-        ],
-        [
-          "Canvas.present",
-          "fn",
-          2636
-        ],
-        [
-          "hostedAppFrame",
-          "fn",
-          2641
-        ],
-        [
-          "pollHostedEvent",
-          "fn",
-          2656
-        ],
-        [
-          "eventKey",
-          "fn",
-          2661
-        ],
-        [
-          "eventCodepoint",
-          "fn",
-          2665
-        ],
-        [
-          "charsForWidth",
-          "fn",
-          2669
-        ],
-        [
-          "textWidth",
-          "fn",
-          2674
-        ],
-        [
-          "copyEllipsized",
-          "fn",
-          2681
-        ],
-        [
-          "copyEllipsizedForCanvas",
-          "fn",
-          2708
-        ],
-        [
-          "spanZ",
-          "fn",
-          2766
-        ],
-        [
-          "textAreaClientRect",
-          "fn",
-          2772
-        ],
-        [
-          "textAreaViewForRect",
-          "fn",
-          2776
-        ],
-        [
-          "textAreaVisualPoint",
-          "fn",
-          2785
-        ],
-        [
-          "textAreaIndexForVisualPosition",
+          "Canvas.clearTextMetrics",
           "fn",
           2791
         ],
         [
+          "Canvas.textIndexChecked",
+          "fn",
+          2797
+        ],
+        [
+          "Canvas.charsForWidth",
+          "fn",
+          2846
+        ],
+        [
+          "Canvas.textClipped",
+          "fn",
+          2851
+        ],
+        [
+          "Canvas.label",
+          "fn",
+          2857
+        ],
+        [
+          "Canvas.button",
+          "fn",
+          2861
+        ],
+        [
+          "Canvas.checkbox",
+          "fn",
+          2865
+        ],
+        [
+          "Canvas.radioButton",
+          "fn",
+          2869
+        ],
+        [
+          "Canvas.groupBox",
+          "fn",
+          2873
+        ],
+        [
+          "Canvas.separator",
+          "fn",
+          2877
+        ],
+        [
+          "Canvas.textField",
+          "fn",
+          2881
+        ],
+        [
+          "Canvas.textArea",
+          "fn",
+          2885
+        ],
+        [
+          "Canvas.list",
+          "fn",
+          2889
+        ],
+        [
+          "Canvas.scrollbar",
+          "fn",
+          2893
+        ],
+        [
+          "Canvas.toolbarButton",
+          "fn",
+          2897
+        ],
+        [
+          "Canvas.tabBar",
+          "fn",
+          2901
+        ],
+        [
+          "Canvas.tableView",
+          "fn",
+          2905
+        ],
+        [
+          "Canvas.menu",
+          "fn",
+          2909
+        ],
+        [
+          "Canvas.menubar",
+          "fn",
+          2913
+        ],
+        [
+          "Canvas.dropdown",
+          "fn",
+          2917
+        ],
+        [
+          "Canvas.messageDialog",
+          "fn",
+          2921
+        ],
+        [
+          "Canvas.fileDialog",
+          "fn",
+          2925
+        ],
+        [
+          "Canvas.inputDialog",
+          "fn",
+          2929
+        ],
+        [
+          "Canvas.present",
+          "fn",
+          2933
+        ],
+        [
+          "hostedAppFrame",
+          "fn",
+          2938
+        ],
+        [
+          "pollHostedEvent",
+          "fn",
+          2953
+        ],
+        [
+          "eventKey",
+          "fn",
+          2958
+        ],
+        [
+          "eventCodepoint",
+          "fn",
+          2962
+        ],
+        [
+          "charsForWidth",
+          "fn",
+          2966
+        ],
+        [
+          "textWidth",
+          "fn",
+          2971
+        ],
+        [
+          "copyEllipsized",
+          "fn",
+          2978
+        ],
+        [
+          "copyEllipsizedForCanvas",
+          "fn",
+          3005
+        ],
+        [
+          "spanZ",
+          "fn",
+          3063
+        ],
+        [
+          "textAreaClientRect",
+          "fn",
+          3069
+        ],
+        [
+          "textAreaViewForRect",
+          "fn",
+          3073
+        ],
+        [
+          "textAreaVisualPoint",
+          "fn",
+          3082
+        ],
+        [
+          "textAreaIndexForVisualPosition",
+          "fn",
+          3088
+        ],
+        [
           "textAreaVisualLineRange",
           "fn",
-          2814
+          3111
         ],
         [
           "textAreaVisualLineCount",
           "fn",
-          2819
+          3116
         ],
         [
           "TextAreaLayout",
           "container",
-          2826
+          3123
         ],
         [
           "textAreaLayout",
           "fn",
-          2844
+          3141
         ],
         [
           "textAreaVisualMaxColumns",
           "fn",
-          2880
+          3177
         ],
         [
           "drawTextInRect",
           "fn",
-          3015
+          3312
         ],
         [
           "drawButton",
           "fn",
-          3024
+          3321
         ],
         [
           "drawButtonEx",
           "fn",
-          3028
+          3325
         ],
         [
           "buttonMinWidth",
           "fn",
-          3068
+          3366
         ],
         [
           "drawTextField",
           "fn",
-          3072
+          3370
         ],
         [
           "drawTextFieldEx",
           "fn",
-          3076
+          3374
         ],
         [
           "drawTextArea",
           "fn",
-          3120
+          3442
         ],
         [
           "drawTextAreaEx",
           "fn",
-          3124
+          3446
         ],
         [
           "drawTextAreaExWithWrap",
           "fn",
-          3128
+          3450
         ],
         [
           "drawTextAreaWithLayout",
           "fn",
-          3135
+          3457
         ],
         [
           "drawCheckbox",
           "fn",
-          3187
+          3509
         ],
         [
           "drawRadioButton",
           "fn",
-          3200
+          3522
         ],
         [
           "drawGroupBox",
           "fn",
-          3215
+          3537
         ],
         [
           "drawSeparator",
           "fn",
-          3230
+          3552
         ],
         [
           "drawDropdown",
           "fn",
-          3242
+          3564
         ],
         [
           "drawDropdownEx",
           "fn",
-          3246
+          3568
         ],
         [
           "drawList",
           "fn",
-          3260
+          3582
         ],
         [
           "drawListEx",
           "fn",
-          3264
+          3586
         ],
         [
           "drawScrollbar",
           "fn",
-          3296
+          3634
         ],
         [
           "drawToolbarButton",
           "fn",
-          3338
+          3676
         ],
         [
           "drawTabBar",
           "fn",
-          3343
+          3681
         ],
         [
           "drawTableView",
           "fn",
-          3367
+          3720
         ],
         [
           "listIndexAt",
           "fn",
-          3429
+          3782
         ],
         [
           "listIndexAtEx",
           "fn",
-          3433
+          3786
         ],
         [
           "visibleListRows",
           "fn",
-          3444
+          3797
         ],
         [
           "listFirstIndexForSelection",
           "fn",
-          3450
+          3803
         ],
         [
           "selectionStep",
           "fn",
-          3458
+          3811
         ],
         [
           "selectionStepPaged",
           "fn",
-          3474
+          3827
         ],
         [
           "drawMenu",
           "fn",
-          3489
+          3842
         ],
         [
           "drawMenubar",
           "fn",
-          3493
+          3846
         ],
         [
           "drawMenuEx",
           "fn",
-          3518
+          3871
         ],
         [
           "menubarHeaderRect",
           "fn",
-          3561
+          3914
         ],
         [
           "menubarPopupRect",
           "fn",
-          3570
+          3923
         ],
         [
           "menubarMenuIndexAt",
           "fn",
-          3582
+          3935
         ],
         [
           "menubarHitTest",
           "fn",
-          3593
+          3946
         ],
         [
           "menubarHeaderWidth",
           "fn",
-          3606
+          3959
         ],
         [
           "menuPopupWidth",
           "fn",
-          3610
+          3963
         ],
         [
           "menuPopupHeight",
           "fn",
-          3619
+          3972
         ],
         [
           "menuIndexAt",
           "fn",
-          3623
+          3976
         ],
         [
           "menuKeyAction",
           "fn",
-          3633
+          3986
         ],
         [
           "modalDialogRect",
           "fn",
-          3646
+          3999
         ],
         [
           "dialogTitleRect",
           "fn",
-          3650
+          4003
         ],
         [
           "dialogContentRect",
           "fn",
-          3659
+          4012
         ],
         [
           "dialogButtonBarRect",
           "fn",
-          3670
+          4023
         ],
         [
           "dialogStatusRect",
           "fn",
-          3680
+          4033
         ],
         [
           "dialogRowRect",
           "fn",
-          3690
+          4043
         ],
         [
           "dialogLabelRect",
           "fn",
-          3702
+          4055
         ],
         [
           "dialogFieldRect",
           "fn",
-          3711
+          4064
         ],
         [
           "dialogDropdownRect",
           "fn",
-          3722
+          4075
         ],
         [
           "dialogButtonRect",
           "fn",
-          3726
+          4079
         ],
         [
           "dialogButtonActionAt",
           "fn",
-          3744
+          4097
         ],
         [
           "dialogDefaultAction",
           "fn",
-          3753
+          4106
         ],
         [
           "dialogCancelAction",
           "fn",
-          3763
+          4116
         ],
         [
           "dialogSubmitAction",
           "fn",
-          3770
+          4123
         ],
         [
           "dialogKeyAction",
           "fn",
-          3777
+          4130
         ],
         [
           "dialogFirstFocusAction",
           "fn",
-          3785
+          4138
         ],
         [
           "dialogFocusIndex",
           "fn",
-          3792
+          4145
         ],
         [
           "dialogFocusStep",
           "fn",
-          3801
+          4154
         ],
         [
           "drawDialogFrame",
           "fn",
-          3818
+          4171
         ],
         [
           "drawDialogButtons",
           "fn",
-          3831
+          4190
         ],
         [
           "drawDialogStatus",
           "fn",
-          3852
+          4211
         ],
         [
           "drawMessageDialog",
           "fn",
-          3859
+          4218
         ],
         [
           "drawMessageBox",
           "fn",
-          3863
+          4222
         ],
         [
           "messageDialogOkRect",
           "fn",
-          3890
+          4249
         ],
         [
           "messageDialogOkRectFor",
           "fn",
-          3894
+          4253
         ],
         [
           "messageDialogYesRect",
           "fn",
-          3902
+          4261
         ],
         [
           "messageDialogNoRect",
           "fn",
-          3906
+          4265
         ],
         [
           "messageDialogCancelRect",
           "fn",
-          3910
+          4269
         ],
         [
           "drawFileDialog",
           "fn",
-          3932
+          4291
         ],
         [
           "drawFileDialogEx",
           "fn",
-          3936
+          4295
         ],
         [
           "fileDialogFileNameRect",
           "fn",
-          3972
+          4331
         ],
         [
           "fileDialogListRect",
           "fn",
-          3981
+          4340
         ],
         [
           "fileDialogListOuterRect",
           "fn",
-          3991
+          4350
         ],
         [
           "fileDialogScrollbarRect",
           "fn",
-          4000
+          4359
         ],
         [
           "fileDialogOkRect",
           "fn",
-          4010
+          4369
         ],
         [
           "fileDialogCancelRect",
           "fn",
-          4014
+          4373
         ],
         [
           "drawInputDialog",
           "fn",
-          4026
+          4385
         ],
         [
           "inputDialogLabelRect",
           "fn",
-          4038
+          4397
         ],
         [
           "inputDialogValueRect",
           "fn",
-          4047
+          4406
         ],
         [
           "inputDialogOkRect",
           "fn",
-          4056
+          4415
         ],
         [
           "inputDialogCancelRect",
           "fn",
-          4060
+          4419
         ],
         [
           "scrollbarButtonRect",
           "fn",
-          4064
+          4423
         ],
         [
           "scrollbarTrackRect",
           "fn",
-          4080
+          4439
         ],
         [
           "scrollbarThumbRect",
           "fn",
-          4098
+          4457
         ],
         [
           "scrollbarPartAt",
           "fn",
-          4117
+          4476
         ],
         [
           "scrollbarStep",
           "fn",
-          4131
+          4490
         ],
         [
           "tabBarItemRect",
           "fn",
-          4149
+          4508
+        ],
+        [
+          "tabBarItemRectWithAdvance",
+          "fn",
+          4512
         ],
         [
           "tabBarIndexAt",
           "fn",
-          4160
+          4523
         ],
         [
           "tableHeaderRect",
           "fn",
-          4208
+          4577
         ],
         [
           "tableBodyRect",
           "fn",
-          4213
+          4582
         ],
         [
           "tableScrollbarRect",
           "fn",
-          4224
+          4593
         ],
         [
           "visibleTableRows",
           "fn",
-          4234
+          4603
         ],
         [
           "checkboxBoxRect",
           "fn",
-          4239
+          4608
         ],
         [
           "dropdownArrowRect",
           "fn",
-          4249
+          4618
         ],
         [
           "dropdownListRect",
           "fn",
-          4259
+          4628
         ],
         [
           "dropdownListRectEx",
           "fn",
-          4263
+          4632
         ],
         [
           "screenRect",
           "fn",
-          4275
+          4644
         ],
         [
           "paddedRect",
           "fn",
-          4279
+          4648
         ],
         [
           "toolbarRect",
           "fn",
-          4283
+          4652
         ],
         [
           "contentBelowToolbar",
           "fn",
-          4287
+          4656
         ],
         [
           "statusBarRect",
           "fn",
-          4292
+          4661
         ],
         [
           "contentAboveStatus",
           "fn",
-          4297
+          4666
         ],
         [
           "dialogButtonRowRect",
           "fn",
-          4302
+          4671
         ],
         [
           "dialogButtonFromRightRect",
           "fn",
-          4311
+          4680
         ],
         [
           "centeredRect",
           "fn",
-          4322
+          4691
         ],
         [
           "alignedTextX",
           "fn",
-          4439
+          4812
         ],
         [
           "alignedTextXWidth",
           "fn",
-          4444
+          4817
         ],
         [
           "fontMetricsForId",
           "fn",
-          4460
+          4833
         ],
         [
           "checkGraphemeEditing",
           "fn",
-          5435
+          5848
         ]
       ]
     },
@@ -46990,9 +47378,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/app2.zig",
-      "sha256": "48a028be2e5392ef4077695e4ac23dd1e9cefdfe866285736ebb1fb91ea73ae8",
+      "sha256": "b80a4076704a5ea702382283f23dbc0af2bc66da929f6e980eeca0c462e6573e",
       "owner": "Repositories/SDK",
-      "version": "0.64.182",
+      "version": "0.64.183",
       "capability": "startup",
       "declarations": [
         [
@@ -47066,104 +47454,124 @@
           147
         ],
         [
-          "App.desktop",
+          "App.textMetricsProvider",
           "fn",
           151
         ],
         [
+          "App.filePickerProvider",
+          "fn",
+          155
+        ],
+        [
+          "App.clipboardOffers",
+          "fn",
+          159
+        ],
+        [
+          "App.compositionClient",
+          "fn",
+          163
+        ],
+        [
+          "App.desktop",
+          "fn",
+          167
+        ],
+        [
           "App.drawing",
-          "fn",
-          156
-        ],
-        [
-          "App.networkLowLevel",
-          "fn",
-          161
-        ],
-        [
-          "App.network",
-          "fn",
-          166
-        ],
-        [
-          "App.audioLowLevel",
           "fn",
           172
         ],
         [
-          "App.audio",
+          "App.networkLowLevel",
           "fn",
           177
         ],
         [
-          "App.devicesLowLevel",
+          "App.network",
           "fn",
-          183
+          182
         ],
         [
-          "App.devices",
+          "App.audioLowLevel",
           "fn",
           188
         ],
         [
+          "App.audio",
+          "fn",
+          193
+        ],
+        [
+          "App.devicesLowLevel",
+          "fn",
+          199
+        ],
+        [
+          "App.devices",
+          "fn",
+          204
+        ],
+        [
           "App.web",
           "fn",
-          194
+          210
         ],
         [
           "App.console",
           "fn",
-          201
+          217
         ],
         [
           "App.files",
           "fn",
-          207
+          223
         ],
         [
           "App.registry",
           "fn",
-          212
+          228
         ],
         [
           "App.resources",
           "fn",
-          217
+          233
         ],
         [
           "App.services",
           "fn",
-          221
+          237
         ],
         [
           "App.tray",
           "fn",
-          226
+          242
         ],
         [
           "App.window",
           "fn",
-          230
+          246
         ],
         [
           "App.shouldClose",
           "fn",
-          236
+          252
         ],
         [
           "App.yield",
           "fn",
-          240
+          256
         ],
         [
           "App.ticks",
           "fn",
-          244
+          260
         ],
         [
           "App.allocator",
           "fn",
-          248
+          264
         ]
       ]
     },
@@ -47280,6 +47688,59 @@
           "panic",
           "container",
           11
+        ]
+      ]
+    },
+    {
+      "path": "Repositories/SDK/r4os/gui_text_control.zig",
+      "owner": "Repositories/SDK",
+      "version": "0.64.183",
+      "capability": "gui",
+      "sha256": "b525c72621b958182a2e35727cd4b7c4dcb234624375349e7fb70a43d8ae3ceb",
+      "declarations": [
+        [
+          "stageText",
+          "fn",
+          9
+        ],
+        [
+          "readText",
+          "fn",
+          27
+        ]
+      ]
+    },
+    {
+      "path": "Repositories/SDK/r4os/text_composition_client.zig",
+      "owner": "Repositories/SDK",
+      "version": "0.64.183",
+      "capability": "gui",
+      "sha256": "eaf99449c9f0e42b57484d9ebc466614376f0447daba5775a0b34326bc24666d",
+      "declarations": [
+        [
+          "Client",
+          "container",
+          7
+        ],
+        [
+          "Client.connect",
+          "fn",
+          13
+        ],
+        [
+          "Client.close",
+          "fn",
+          26
+        ],
+        [
+          "Client.capability",
+          "fn",
+          45
+        ],
+        [
+          "Client.focus",
+          "fn",
+          54
         ]
       ]
     }
@@ -57753,6 +58214,22 @@
         "Native guest is a private stopped40/37 overlay retaining old SYSTEM release14/installed463 with actual BOOT474; no complete freshinstallation, Windows or physical device qualification.",
         "Final normal source/tool export and the one STANDARD are separate sealed evidence; this drift review does not grant performance qualification."
       ]
+    },
+    "normal_gui_facades_09042": {
+      "complete": true,
+      "performed_in": "0.90.42",
+      "sdk": "0.64.183",
+      "contract": "0.64.93",
+      "report": "Docs/API/ConsumerMigration.txt",
+      "scope": "Normal actual Context2 GUI/Canvas/Tray, explicit text/font keyed metrics loans, original FilePicker renderer, typed clipboard control staging/paste and pure composition transitions with actual NoProvider. Full service loops and transport remain0.90.43.",
+      "host_checks": "119 original/extended data owner cases,10 GUI owner cases, original C/Rust GUI2+3 negatives, Data16+26 negatives and service regressions, bare alloc Clippy, nine paired positive/actual loan compiler rejections. Eight typed generators and canonical C/Rust projection read back.",
+      "native_checks": "Own KVM4 Kernel474 over immutable stopped41/40/37; three ordinary actual App2 consumers execute GUI paint/132 text hits/picker/typed offers/foreign provider/actual NoProvider/Tray. Exact process/window0 association before entry, three normal completions and reaps, whole artifact readback. Original030 CLIPSVC7 and original034 WINSVC34 retained.",
+      "limits": [
+        "No visual desktop workflow, focus/capture lease or real IME qualification. Existing original focus/view/grapheme/UTF8/commit/cancel oracles remain separate.",
+        "Caller keeps source and full metric rows resident and explicitly refreshes a published font; cache reset is no physical resource retirement.",
+        "Services::new2 and scalar service callbacks serve Tray; ServiceLoop2/transport/time integration remains43; Endpoint::service_loop refuses NoFn on2 before old Start1 FFI.",
+        "Normal9 output/source readback and one final STANDARD are independently sealed; this review grants no performance result."
+      ]
     }
   },
   "wave_bindings": [
@@ -58005,12 +58482,12 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.90.41",
-    "sdk": "0.64.182",
+    "performed_in": "0.90.42",
+    "sdk": "0.64.183",
     "contract": "0.64.93",
     "libraries": "0.64.51 unchanged",
-    "evidence": "normal_system_facades_09041",
-    "scope": "Normal three-language System/Resources/Files/time/complete inventories/passive devices; no blanket consumer or remaining facade migration.",
+    "evidence": "normal_gui_facades_09042",
+    "scope": "Normal actual Context2 GUI/Canvas/Tray, explicit text/font keyed metrics loans, original FilePicker renderer, typed clipboard control staging/paste and pure composition transitions with actual NoProvider. Full service loops and transport remain0.90.43.",
     "historical_snapshot_retained": true,
     "current_platform_tables": [
       {
@@ -58062,7 +58539,7 @@
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.90.41",
+    "reviewed_in": "0.90.42",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -59324,7 +59801,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "1d63f9d8f2ff0979a7b29513f3756c5bea59cc82f6fc151488a1c54a37a0f048"
+        "sha256": "8122c4ec0d046af7b261e797b57417fbad84881395a08960b18cff08d6d8b7b0"
       },
       {
         "path": "Repositories/SDK/Rust/src/cli.rs",
@@ -59332,7 +59809,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/clipboard_offer.rs",
-        "sha256": "e3937110e50b0988d74ee4033ea3e7ad503b104ae9c175d0e238316991252bb0"
+        "sha256": "f6e79b4bd8d3ac0a168e3dcf22464673b69f8bbcc67e726d9c7817b4936221d5"
       },
       {
         "path": "Repositories/SDK/Rust/src/data/hash.rs",
@@ -59372,7 +59849,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/file_picker.rs",
-        "sha256": "68965bb9c54851deb8e54ee222ac3a16914c5d8e026f47b9d6a70d577304edb8"
+        "sha256": "fb8f4c3b474e67d7ebfd72d84934285873a590cb93798e51f1521821c8775d36"
       },
       {
         "path": "Repositories/SDK/Rust/src/generated/network.rs",
@@ -59392,11 +59869,11 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/gui/mod.rs",
-        "sha256": "3f57d056e807de650f8d85313ef42cdd085136f86ce104eac3438116c3395812"
+        "sha256": "6fa4aced16001a0960124ac9a7dc749c8575e905d5172a963046165035c00da3"
       },
       {
         "path": "Repositories/SDK/Rust/src/gui/session.rs",
-        "sha256": "bd70541c31f6e8827b24ce8c413389fa87d9d52b6d5be84ca180e684a712565a"
+        "sha256": "ad025599a6ba8fc36065184d3b87ac8f3248e24e0177c12eb6111c282522d36a"
       },
       {
         "path": "Repositories/SDK/Rust/src/gui/style.rs",
@@ -59404,7 +59881,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/gui/text.rs",
-        "sha256": "787857b4e753ed05613c5b5cb5db6e445ce0f0da95c6084b861489fcd7eb7e9b"
+        "sha256": "dc881af176e77cd5ae4fbf0aaea18754d992a07a7cceb1836d9e555f1c9fd098"
       },
       {
         "path": "Repositories/SDK/Rust/src/heap.rs",
@@ -59528,7 +60005,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/services.rs",
-        "sha256": "3e0452703149e6221b9b8b601bce43b427e7caab0058b78454875f0fc55b38b9"
+        "sha256": "7dae4c2aebafba50ce17b7b468a1412c67113170db60edeefe0aa68d7762387d"
       },
       {
         "path": "Repositories/SDK/Rust/src/services/actions.rs",
@@ -59584,7 +60061,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/text_metrics.rs",
-        "sha256": "783c6dfeb2ae6e9deb7b3580e7cec79c970d006c4b16eff6361ed1e57f49b7b5"
+        "sha256": "6035c2be3021d8bfb8d6f8838245c215ebc4f3abe1cf7e77d0648431df71764c"
       },
       {
         "path": "Repositories/SDK/Rust/src/time.rs",
@@ -59668,7 +60145,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_contract.h",
-        "sha256": "fab8ce07135aa6d55a3a3603b96e8853398cf94b33c66b3014a1c3572dd4beab"
+        "sha256": "093e15c060a3517c6b755e826ee244fd82381834f76690ffa8554c3cb7e28023"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_devices.h",
@@ -59676,7 +60153,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_gui.h",
-        "sha256": "7df9fe1283f912107f635a080ab8750bd4a0f8681c296de95f0296777a7b3b18"
+        "sha256": "9785c2230325c0e05bc00f327780870fbd0517b9ce9643119a541fca2f50aba3"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_network.h",
@@ -59688,7 +60165,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_services.h",
-        "sha256": "f91e156e561a58360ba0e88c2c8adeec57df5cc2ad25259f3ccb08772b9b6c17"
+        "sha256": "f8c0ed21dfe53d4eed1b6c8bf4fda3485675bf54ccb93feae977b01f4cbf5e2b"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_storage.h",
@@ -59696,7 +60173,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_tray.h",
-        "sha256": "e398fe38009378c82c119e5433962782e042143e41c4b811dcb5c683cbfa646f"
+        "sha256": "8aaa2fa6815fc5b68ca8099cb2c7a9eb00d7dcfd77ac05426149f337293f2dc1"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/audio_write.h",
@@ -59716,7 +60193,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/clipboard_offer_platform2.h",
-        "sha256": "99720b3fc6ba101ea08326ba854f77194374550cef188d9782931db0a339089a"
+        "sha256": "9733bff84a4c11d3b10b4beae5a58780a3c5cb4763f5d16a6b60537ea3955e6c"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/data_helpers.h",
@@ -59812,7 +60289,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/gui_bridge.h",
-        "sha256": "821bd8ccbc38f1ce113571e2684f7ec8a52065af6b15eeaeb91cfcf299bd5714"
+        "sha256": "4381fa0ad91d5f82fd3c4c40c8482bc442b125aeaa373e688aed98fd2f80d437"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/heap.h",
@@ -59876,7 +60353,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/r4desk.h",
-        "sha256": "06334046a68a604f6e0c9164e81906015ec3b7b0f9af1239e16ea858c6023edb"
+        "sha256": "a1147f1fa5a8058c89aa1a4cbdb5861ec35e1192f0eeedf957329be2b38b4754"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/r4dev.h",
@@ -59884,7 +60361,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/r4draw.h",
-        "sha256": "85547798efc5e8bf72f3a6f93802b98dae54b6e6cf8c1177f475d13c7af8eafd"
+        "sha256": "bef823521639801a55b1c380e582eff8b64156a9d159535435155fdf7faba2a4"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/r4l.h",
@@ -59916,7 +60393,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/service_helpers.h",
-        "sha256": "ac0b43d4f4fb81b3db2a03fdf4619cca085680e0246775d847c44f9993825683"
+        "sha256": "7cd6cbeecbdb98d6f32fb356303f6ab2fec4c568c8c545a498f0c81ba81a653b"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/startup.h",
@@ -60032,7 +60509,7 @@
       },
       {
         "path": "Repositories/SDK/Tests/Conformance/GuiFacadePrototype05824.zig",
-        "sha256": "c906428fdb50717d6e4cc2764d4ceb13acd73157613683d3883e7124d813c84a"
+        "sha256": "f86878a303a2929b0b766c879c0b4be582db06ce8bf6e4681e15ff50eb637fdc"
       },
       {
         "path": "Repositories/SDK/Tests/Conformance/ServiceNetworkFacadePrototype05826.zig",
@@ -60056,7 +60533,7 @@
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/GuiParity.c",
-        "sha256": "bd23ff2e2eedb2b21e9c72f1ddc4bf69fa38502cbe0d3a88d31f04dd6d3c3ae8"
+        "sha256": "ad2e60f8cacef184cdb4d82a438fb818e79426e40716be5c3b8ad09ffe5e6c2e"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/PointerBindings.c",
@@ -60080,7 +60557,7 @@
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/RustGui.rs",
-        "sha256": "4c644bdfb3e57d2455b18f6e5173bfbbcb3197e61021ab0b97b0779c9da87be5"
+        "sha256": "28c1bd1beaf14fbe9fc1e940f25db2f9055cc8c8d51a8402b07163f26e902797"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/RustPlatform.rs",
@@ -60144,7 +60621,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/GuiBridgeGen/src/c_header.zig",
-        "sha256": "36d5f574f11111f4f2914c9f0a8fafeeb3a77cb50b721fc175ebc79ce5db551f"
+        "sha256": "4c7b6e3eea6fda9e38ceccb72efaa348dcb2b76a262bd26b318a1c080b0f30f0"
       },
       {
         "path": "Repositories/SDK/Tools/GuiBridgeGen/src/main.zig",
@@ -60352,11 +60829,11 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "6398de72552e9b1a2d906c2180b2d1a4a01496fbafae39bcbfbe8ec9609ba50e"
+        "sha256": "19611df7e06c9d079448179905eda4aed9ccf4d09dae03346a89a320d08acfe6"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
-        "sha256": "efa3d183d55580bbd363d7ae98c64b24a667abaa6477647133beada4842b1a8f"
+        "sha256": "a9ad00ed2a950ea5bc5de945b804ebeb9eb2965389004156ebea39417e176393"
       },
       {
         "path": "Repositories/SDK/r4os/allocator_wait.zig",
@@ -60380,7 +60857,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/app_gui.zig",
-        "sha256": "b3f0724ad605bef6a577e076e9290451ae13121c4e48a47e5f2e7e71f4bb8924"
+        "sha256": "7b9e7984d0c9b12763b98b0601fc72acfb946b163498b6e8bcdc8c19096372b2"
       },
       {
         "path": "Repositories/SDK/r4os/app_network.zig",
@@ -60480,7 +60957,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/clipboard_offer.zig",
-        "sha256": "f624fa68f2fd9b3dd803101a51cba0359107fcaa266dc57a4dc596025b62b7a8"
+        "sha256": "5f2602ed601bab3099da2286c9d5058d4bb5332409d5332aabca8d8ad9e83a17"
       },
       {
         "path": "Repositories/SDK/r4os/cpu_acceleration.zig",
@@ -60676,7 +61153,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/generated/gui_fingerprint.zig",
-        "sha256": "e3e8e9aa43091ffca56d1997e5d78706f9074b57376736d1eb475f67590c6422"
+        "sha256": "61cb0ea51e933ba84a5ec75e92eb36fe8ca221784d5a2eb18e825a7c6f88c728"
       },
       {
         "path": "Repositories/SDK/r4os/generated/net_facade.zig",
@@ -60736,11 +61213,11 @@
       },
       {
         "path": "Repositories/SDK/r4os/gui.zig",
-        "sha256": "665aeb9b5f7b84540073ed091a9d03da49daa11b45341f9dc599644a7c56eb8f"
+        "sha256": "96347ba1aa08c26137d503c6797b5663cf98e36c3fc6c745d362d8370858e04b"
       },
       {
         "path": "Repositories/SDK/r4os/gui_bridge_schema.zig",
-        "sha256": "8e1cc1e2594818c405f4c6871fc73d1636a7c56e9a57aef3fd37f408b23c1a5f"
+        "sha256": "4d4dff86daace0e6740b19fa0c2245f5984fe8a6a8dd6df30f744da39656c5be"
       },
       {
         "path": "Repositories/SDK/r4os/gui_language.zig",
@@ -60752,11 +61229,11 @@
       },
       {
         "path": "Repositories/SDK/r4os/gui_session_runtime.zig",
-        "sha256": "219bc8570221e72da8e9aabde077c7b20f7e505334c859375f7a0c759e3be1df"
+        "sha256": "39e097df37a4401bf6a795f434d8bb620aa77faef42d4a7d85c331764470e5d1"
       },
       {
         "path": "Repositories/SDK/r4os/gui_session_support.zig",
-        "sha256": "de6cedc0402d4d3c9f9ef0cbbc2c0640300854218526d94e94576b0238420a06"
+        "sha256": "9a0b5bd39d5ae03ca2b000522bd6c71e4d0634cd069648947406c3c0c6ecdc55"
       },
       {
         "path": "Repositories/SDK/r4os/gui_shapes.zig",
@@ -61072,7 +61549,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/services_runtime.zig",
-        "sha256": "d1e471131b35c371bade543a564f700603b279d3e7c1781e5bff74671a61fb47"
+        "sha256": "81e08b603bedd1953dcb4fb9612f2f1c48c098903ed4252d6bc1dbe5861bd5f5"
       },
       {
         "path": "Repositories/SDK/r4os/startup_metadata.zig",
@@ -61292,11 +61769,11 @@
       },
       {
         "path": "Repositories/SDK/r4os/text_metrics_runtime.zig",
-        "sha256": "7da3db31af87372eb2c37364dba729688f3d5abcbd61860a449da42a85c3ee95"
+        "sha256": "6b269bd0ae7ba87daad45bc62addb3b62eca289d83e47fec3427964999504242"
       },
       {
         "path": "Repositories/SDK/r4os/text_metrics_tests.zig",
-        "sha256": "c4537c08fdf8e5463624399f252675d43b5842d937e023e631a3e44f9971db62"
+        "sha256": "f4606a22fc9092f194200a0fbdb5a022746642077b22099599141cffb52e3402"
       },
       {
         "path": "Repositories/SDK/r4os/time_budget.zig",
@@ -61304,7 +61781,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/time_budget_runtime.zig",
-        "sha256": "8d629914ec2ca539c00090f603b15b739ac9177a70ae44fab809d4c3245fa7f9"
+        "sha256": "d54787d3b83840e0e4bc74d1c75ab971e5a4342206eeeaff043b942f2208d6c3"
       },
       {
         "path": "Repositories/SDK/r4os/time_contract.zig",
@@ -61532,7 +62009,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/text_composition.rs",
-        "sha256": "a4995c537c182c080ee76f252a011636ee08260763ac51fc708cd1d9ae3106c6"
+        "sha256": "360f665a025b77dbd4f064258b4098327f97f64ba7d37c235b83bbcd74cb9a0d"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/text_composition.h",
@@ -61560,7 +62037,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/text_composition_tests.zig",
-        "sha256": "8e2fba0c452e39a8eddf0dd1db1d2b407c30fcdb234385c0f5be7a233ad76c2c"
+        "sha256": "8c6b9a4f4759a298058db59ecb9020b1d198df6b04122cc3334a3cd6be25ef2e"
       },
       {
         "path": "Repositories/SDK/Rust/src/audio_capture.rs",
@@ -61576,11 +62053,11 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/app2.rs",
-        "sha256": "b88d3b72a2e699f5762b5875e5b451651c7aac8148f0f79d99d1d3a0966b819b"
+        "sha256": "f95f01581bc8750e2c1c5c65979db1da39cc5125d8030ad04382f98733d3dccb"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app2.h",
-        "sha256": "0d77f0ef6f6c7bea00ea5870d6105112c5001a9dcfc231c84b073e6c6ea6f9a7"
+        "sha256": "87a1c35ae38f6c1432f9e7f9b477c2b07b21ca1d49da5f672ff5aa4b4d667b7b"
       },
       {
         "path": "Repositories/SDK/Shared/C/src/r4app2_startup.c",
@@ -61636,7 +62113,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/app2.zig",
-        "sha256": "48a028be2e5392ef4077695e4ac23dd1e9cefdfe866285736ebb1fb91ea73ae8"
+        "sha256": "b80a4076704a5ea702382283f23dbc0af2bc66da929f6e980eeca0c462e6573e"
       },
       {
         "path": "Repositories/SDK/r4os/app2_runtime.zig",
@@ -61653,6 +62130,14 @@
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/platform_facade2.h",
         "sha256": "dd04036f50f5f253a8c9fb9ed8cad60290c82ad24df83e29ce44abc61bbb460b"
+      },
+      {
+        "path": "Repositories/SDK/r4os/gui_text_control.zig",
+        "sha256": "b525c72621b958182a2e35727cd4b7c4dcb234624375349e7fb70a43d8ae3ceb"
+      },
+      {
+        "path": "Repositories/SDK/r4os/text_composition_client.zig",
+        "sha256": "eaf99449c9f0e42b57484d9ebc466614376f0447daba5775a0b34326bc24666d"
       }
     ],
     "coverage": [
@@ -62070,7 +62555,9 @@
           "Repositories/SDK/r4os/text_composition.zig",
           "Repositories/SDK/r4os/text_composition_runtime.zig",
           "Repositories/SDK/r4os/text_composition_tests.zig",
-          "Repositories/SDK/r4os/text_composition_abi_tests.zig"
+          "Repositories/SDK/r4os/text_composition_abi_tests.zig",
+          "Repositories/SDK/r4os/gui_text_control.zig",
+          "Repositories/SDK/r4os/text_composition_client.zig"
         ],
         "c": [
           "Repositories/SDK/Shared/C/include/r4os/app_gui.h",
@@ -62114,7 +62601,8 @@
           "text_metrics_09023",
           "file_picker_09024",
           "clipboard_offers_09030",
-          "text_composition_09036"
+          "text_composition_09036",
+          "normal_gui_facades_09042"
         ]
       },
       {
@@ -62931,6 +63419,61 @@
       "libraries": "0.64.51 unchanged",
       "evidence": "normal_app2_09040",
       "scope": "Normal explicit three-language Generation2 entry and existing owner regression; common high-level facade and productive module migration remains pending.",
+      "historical_snapshot_retained": true,
+      "current_platform_tables": [
+        {
+          "group": "R4SYS",
+          "abi_version": 41,
+          "bytes": 1560,
+          "slots": 193
+        },
+        {
+          "group": "R4DESK",
+          "abi_version": 21,
+          "bytes": 632,
+          "slots": 77
+        },
+        {
+          "group": "R4DRAW",
+          "abi_version": 40,
+          "bytes": 920,
+          "slots": 113
+        },
+        {
+          "group": "R4NET",
+          "abi_version": 2,
+          "bytes": 296,
+          "slots": 35
+        },
+        {
+          "group": "R4AUDIO",
+          "abi_version": 5,
+          "bytes": 240,
+          "slots": 28
+        },
+        {
+          "group": "R4DEV",
+          "abi_version": 37,
+          "bytes": 744,
+          "slots": 91
+        }
+      ],
+      "current_projection": {
+        "extern_structs": 575,
+        "fields": 8916,
+        "integer_enums": 20,
+        "callback_declarations": 806,
+        "constants": 3777
+      },
+      "canonical_schema_sha256": "5d7d1f631a75b4f3b7b4a6206a0a353258932c594b777cd0ca594177e3485f4c"
+    },
+    {
+      "performed_in": "0.90.41",
+      "sdk": "0.64.182",
+      "contract": "0.64.93",
+      "libraries": "0.64.51 unchanged",
+      "evidence": "normal_system_facades_09041",
+      "scope": "Normal three-language System/Resources/Files/time/complete inventories/passive devices; no blanket consumer or remaining facade migration.",
       "historical_snapshot_retained": true,
       "current_platform_tables": [
         {

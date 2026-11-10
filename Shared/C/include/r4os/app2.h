@@ -5,6 +5,10 @@
 #include <r4os/app_contract.h>
 #include <r4os/inventory_platform2.h>
 #include <r4os/device_snapshot_platform2.h>
+#include <r4os/text_metrics_platform2.h>
+#include <r4os/file_picker_platform2.h>
+#include <r4os/clipboard_offer_platform2.h>
+#include <r4os/text_composition_platform2.h>
 
 /* SDK-private callback input to the existing module heap. This is not a
  * platform table or another allocator. Bind2 copies it into module storage. */
@@ -35,6 +39,18 @@ static inline int32_t r4_app2_device_snapshot_provider(const R4App2 *app, R4SdkD
 }
 static inline int32_t r4_app2_clock(const R4App2 *app, R4SdkTransferPlatformClock *out) {
     return app ? R4SdkTransferClock2(&app->context, out) : R4OS_ERROR_INVALID;
+}
+static inline int32_t r4_app2_text_metrics_provider(const R4App2 *app, R4SdkTextMetricsProvider *out) {
+    return app ? R4SdkTextMetricsProvider2(&app->context, out) : R4OS_ERROR_INVALID;
+}
+static inline int32_t r4_app2_file_picker_provider(const R4App2 *app, R4SdkFilePickerProvider *out) {
+    return app ? R4SdkFilePickerProvider2(&app->context, out) : R4OS_ERROR_INVALID;
+}
+static inline int32_t r4_app2_clipboard_offers(const R4App2 *app, R4SdkClipboardOffers *out) {
+    return app ? R4SdkClipboardOffersConnect(&app->context, out) : R4OS_ERROR_INVALID;
+}
+static inline int32_t r4_app2_composition_client(const R4App2 *app, uint64_t timeout, R4SdkCompositionClient *out) {
+    return app ? R4SdkCompositionConnect2(&app->context, timeout, out) : R4OS_ERROR_INVALID;
 }
 _Static_assert(sizeof(R4App2Memory) == 128, "SDK heap input2");
 _Static_assert(sizeof(R4App2Import) == 32 && sizeof(R4App2StartupInfo) == 24, "SDK startup2 facts");
