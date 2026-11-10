@@ -1,6 +1,6 @@
 //! Generic Runtime-R4L transport. Library IDs, records, slots and operation
 //! contracts remain in each library's generated consumer crate.
-use crate::{App, abi};
+use crate::{App, App2, abi};
 use core::{marker::PhantomData, mem};
 
 pub const INTERFACE_MAGIC: u32 = 0x3149_3452;
@@ -74,6 +74,41 @@ pub struct Interface<'a> {
     _local: PhantomData<*mut ()>,
 }
 impl<'a> Interface<'a> {
+    pub fn new2(
+        app: &'a App2<'_>,
+        module: &str,
+        export: &str,
+        expected: Expectation,
+    ) -> Result<Self, Error> {
+        check_expectation(expected)?;
+        query2(app, module)?;
+        let item = app.import(module, export).ok_or(Error::MissingImport)?;
+        let header = unsafe { validate(item, expected) }?;
+        Ok(Self {
+            header,
+            _local: PhantomData,
+        })
+    }
+    pub fn optional2(
+        app: &'a App2<'_>,
+        module: &str,
+        export: &str,
+        expected: Expectation,
+    ) -> Result<Option<Self>, Error> {
+        check_expectation(expected)?;
+        let Some(item) = app.import(module, export) else {
+            return Ok(None);
+        };
+        if item.table == 0
+            && item.resolved_version == 0
+            && item.group_id == 0
+            && item.flags == 0
+            && item.min_version != 0
+        {
+            return Ok(None);
+        }
+        Self::new2(app, module, export, expected).map(Some)
+    }
     pub fn new(
         app: &'a App<'_>,
         module: &str,
@@ -236,6 +271,34 @@ pub fn query<'a>(app: &'a App<'_>, module: &str) -> Result<&'a abi::R4LQuery, Er
         || table.size < mem::size_of::<abi::R4LQuery>() as u32
         || table.group != 0
         || table.kernel_bridge != 0
+        || table.reserved != 0
+    {
+        return Err(Error::InvalidQuery);
+    }
+    Ok(table)
+}
+
+/// Technical Query2 admission leaves the independent named API revision alone.
+pub fn query2<'a>(
+    app: &'a App2<'_>,
+    module: &str,
+) -> Result<&'a abi::generation2::R4LQuery2, Error> {
+    let item = app.import(module, "Query2").ok_or(Error::MissingImport)?;
+    if item.group_id != 0 || item.min_version != 2 || item.resolved_version != 2 || item.table == 0
+    {
+        return Err(Error::InvalidImport);
+    }
+    if !item
+        .table
+        .is_multiple_of(mem::align_of::<abi::generation2::R4LQuery2>() as u64)
+    {
+        return Err(Error::MisalignedTable);
+    }
+    let table = unsafe { &*(item.table as *const abi::generation2::R4LQuery2) };
+    if table.magic != abi::generation2::QUERY_MAGIC
+        || table.abi_version != 2
+        || table.size < mem::size_of::<abi::generation2::R4LQuery2>() as u32
+        || table.group != 0
         || table.reserved != 0
     {
         return Err(Error::InvalidQuery);

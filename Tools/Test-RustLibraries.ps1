@@ -27,7 +27,7 @@ foreach($project in Get-ChildItem -LiteralPath $LibrariesRoot -Directory|Sort-Ob
     foreach($line in [IO.File]::ReadLines($manifest)){
         if(!$line.Trim() -or $line.TrimStart().StartsWith('#') -or !$line.Contains('=')){continue}
         $key,$value=$line.Split('=',2)
-        if($key -ceq 'EXPORT' -and !$value.StartsWith('Query:')){$exports.Add($value)}else{$fields[$key]=$value}
+        if($key -ceq 'EXPORT' -and !$value.StartsWith('Query:') -and !$value.StartsWith('Query2:')){$exports.Add($value)}else{$fields[$key]=$value}
     }
     if($fields.KIND -cne 'R4L'){continue}
     if(!$fields.ContainsKey('BINDING_RUST')){throw 'Current library lacks its Rust projection.'}
@@ -65,11 +65,15 @@ $runner=Join-Path $ToolsRoot 'Setup/Rust.ps1'
 if($LASTEXITCODE -ne 0){throw 'Rust generated layout/slot conformance failed.'}
 $hostSource=Join-Path $hostRoot 'lib.rs';$positive=[IO.File]::ReadAllText($hostSource)
 try{
-    $negative='#![no_std]'+"`n"+'pub fn escape(app: &r4os_sdk::App<''_>) -> r4os_r4std::TextV1Client<''static> { r4os_r4std::TextV1Client::init(app).unwrap() }'+"`n"
-    [IO.File]::WriteAllText($hostSource,$negative,$utf8)
-    $failure=Join-Path $WorkRoot 'lifetime.log'
-    & $pwsh -NoLogo -NoProfile -File $runner --root $InstallRoot --cache-root $CacheRoot cargo check --offline --manifest-path (Join-Path $hostRoot 'Cargo.toml') --target-dir (Join-Path $WorkRoot 'target') @patches > $failure 2>&1
-    if($LASTEXITCODE -eq 0 -or !([IO.File]::ReadAllText($failure).Contains('lifetime may not live long enough'))){throw 'Library client escaped its exact App borrow or failed for an unrelated reason.'}
+    foreach($generation in @(1,2)){
+        $app=if($generation -eq 2){'App2'}else{'App'}
+        $init=if($generation -eq 2){'init2'}else{'init'}
+        $negative='#![no_std]'+"`n"+('pub fn escape(app: &r4os_sdk::'+$app+'<''_>) -> r4os_r4std::TextV1Client<''static> { r4os_r4std::TextV1Client::'+$init+'(app).unwrap() }')+"`n"
+        [IO.File]::WriteAllText($hostSource,$negative,$utf8)
+        $failure=Join-Path $WorkRoot ('lifetime'+$generation+'.log')
+        & $pwsh -NoLogo -NoProfile -File $runner --root $InstallRoot --cache-root $CacheRoot cargo check --offline --manifest-path (Join-Path $hostRoot 'Cargo.toml') --target-dir (Join-Path $WorkRoot 'target') @patches > $failure 2>&1
+        if($LASTEXITCODE -eq 0 -or !([IO.File]::ReadAllText($failure).Contains('lifetime may not live long enough'))){throw 'Library client escaped its exact App/App2 borrow or failed for an unrelated reason.'}
+    }
 }finally{[IO.File]::WriteAllText($hostSource,$positive,$utf8)}
 
 $guest=Join-Path $WorkRoot 'Guest'
@@ -77,6 +81,8 @@ Copy-Item -LiteralPath (Join-Path $sdk 'Tests/Build/RustLibrary') -Destination $
 Move-Item -LiteralPath (Join-Path $guest 'module.R4MF.template') -Destination (Join-Path $guest 'module.R4MF')
 $template=[IO.File]::ReadAllText((Join-Path $guest 'Cargo.toml.template'))
 $template=$template.Replace('{R4StdRoot}',(Join-Path $LibrariesRoot 'R4STD/Bindings/Rust').Replace('\','/').Replace('"','\"'))
+$template=$template.Replace('{R4FontRoot}',(Join-Path $LibrariesRoot 'R4FONT/Bindings/Rust').Replace('\','/').Replace('"','\"'))
+$template=$template.Replace('{R4ImgRoot}',(Join-Path $LibrariesRoot 'R4IMG/Bindings/Rust').Replace('\','/').Replace('"','\"'))
 [IO.File]::WriteAllText((Join-Path $guest 'Cargo.toml'),$template,$utf8)
 $include=Join-Path $guest 'include';[IO.Directory]::CreateDirectory($include)|Out-Null
 Copy-Item -LiteralPath (Join-Path $LibrariesRoot 'R4STD/Bindings/C/r4std_abi.h') -Destination $include

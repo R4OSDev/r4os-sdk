@@ -90,6 +90,23 @@ impl<'a> Context<'a> {
     pub fn raw(&self) -> &'a abi::R4XStartContext2 {
         self.raw
     }
+    pub fn imports(&self) -> &[crate::abi::R4XStartImport] {
+        if self.raw.import_count == 0 {
+            return &[];
+        }
+        unsafe {
+            core::slice::from_raw_parts(
+                self.raw.imports as *const crate::abi::R4XStartImport,
+                self.raw.import_count as usize,
+            )
+        }
+    }
+    pub fn import(&self, module: &str, symbol: &str) -> Option<&crate::abi::R4XStartImport> {
+        self.imports().iter().find(|entry| unsafe {
+            crate::startup::name_equals(entry.module_name, module.as_bytes())
+                && crate::startup::name_equals(entry.symbol_name, symbol.as_bytes())
+        })
+    }
     pub(crate) fn native(&self) -> *const crate::c_facades::R4OS2Context {
         // The SDK-private view has the same raw pointer and six table addresses
         // in all three languages. The actual start remains its own 120-byte ABI.

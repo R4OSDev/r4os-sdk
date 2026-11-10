@@ -103,6 +103,9 @@ impl<'a> App<'a> {
     pub fn start_context(&self) -> &'a platform2::abi::R4XStartContext2 {
         self.context.raw()
     }
+    pub fn import(&self, module: &str, symbol: &str) -> Option<&abi::R4XStartImport> {
+        self.context.import(module, symbol)
+    }
     pub fn name(&self) -> &'static CStr {
         self.name
     }

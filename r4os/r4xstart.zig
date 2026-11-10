@@ -285,20 +285,7 @@ pub const Context = struct {
     }
 };
 
-fn importNameEquals(raw: u64, expected: []const u8) bool {
-    if (raw == 0 or expected.len == 0 or expected.len >= 32) return false;
-    const value: [*]const u8 = @ptrFromInt(raw);
-    var index: usize = 0;
-    while (index < expected.len) : (index += 1) {
-        const actual = value[index];
-        if (actual == 0 or asciiUpper(actual) != asciiUpper(expected[index])) return false;
-    }
-    return value[expected.len] == 0;
-}
-
-fn asciiUpper(value: u8) u8 {
-    return if (value >= 'a' and value <= 'z') value - ('a' - 'A') else value;
-}
+const importNameEquals = @import("runtime_r4l.zig").importNameEquals;
 
 pub const R4Sys = struct {
     raw: *const abi.R4XStartContext,

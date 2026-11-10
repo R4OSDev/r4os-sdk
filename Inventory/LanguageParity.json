@@ -328,7 +328,7 @@
         "allocator_source",
         "runtime_fault"
       ],
-      "semantics": "Geborgter genauer R4XStart-Kontext, Manifestreihenfolge und Imports; required/optional und nicht aufgeloeste optionale Tabellen unterscheiden. Keine Leihe ueber Instanzende; Exit/Panic beim vorhandenen Owner. SDK181/Contract93: explicit normal Generation2 App entry, complete ordered manifest facts, actual120byte Context2 and24byte Query2, independent revision1 library imports and absent optionals. Existing VM/heap/wait owners are shared through copied SDK-private typed callbacks, never a synthesized Query1 table or old start context. Resident panic/entropy callbacks retain no App/context loan. SDK185: Central manifest-selected SDK admission/default/profile/export truth, real C/Zig/Rust normal/raw and technical templates, independent R4L contracts plus technical Query2, complete native C include/hash roots and actual matched tool packages.",
+      "semantics": "Geborgter genauer R4XStart-Kontext, Manifestreihenfolge und Imports; required/optional und nicht aufgeloeste optionale Tabellen unterscheiden. Keine Leihe ueber Instanzende; Exit/Panic beim vorhandenen Owner. SDK181/Contract93: explicit normal Generation2 App entry, complete ordered manifest facts, actual120byte Context2 and24byte Query2, independent revision1 library imports and absent optionals. Existing VM/heap/wait owners are shared through copied SDK-private typed callbacks, never a synthesized Query1 table or old start context. Resident panic/entropy callbacks retain no App/context loan. SDK185: Central manifest-selected SDK admission/default/profile/export truth, real C/Zig/Rust normal/raw and technical templates, independent R4L contracts plus technical Query2, complete native C include/hash roots and actual matched tool packages. SDK186: Typed generation2 named library imports and technical Query2 validation in C/Zig/Rust, independent API1 revisions preserved, canonical STD/FONT/IMG calls and exact caller/allocator ownership.",
       "current_only": "current_function",
       "rust": {
         "state": "normal_generation2_startup_scoped",
@@ -356,7 +356,8 @@
         "current_contract_78",
         "gui_activity_08735",
         "normal_app2_09040",
-        "tooling_templates_generation2_09044"
+        "tooling_templates_generation2_09044",
+        "canonical_text_font_image_generation2_09045"
       ],
       "shared_core": "SDK/r4os/import_spec.zig und startup_metadata.zig mit aktuellen Contractdefaults; ModuleCatalog/C-Appbuilder projizieren denselben Datensatz. Keine neue Prozess-/Kernelruntime oder Runtime-Zweitgrammatik. Normal Generation2 startup uses App2.initDeclared, SDK-private128byte Memory callback descriptor, actual Context2, shared heap/allocator and module-owned copied callback storage. Default/consumer migration remains separate.",
       "qualification": {
@@ -374,11 +375,11 @@
         "scope": "Nur Host-/SDK-/Testfixturearbeit; normale Kernel-/Produktartefakte unveraendert, kein STANDARD. Windowskatalog crossgebaut, keine Windows-/Hardwareausfuehrung. Lokale R4L-Resolver und hoeherer Desktophost bleiben52/56."
       },
       "generation2_qualification": {
-        "subversion": "0.90.44",
-        "sdk_package": "0.64.185",
+        "subversion": "0.90.45",
+        "sdk_package": "0.64.186",
         "contract_package": "0.64.93",
-        "scope": "Central manifest-selected SDK admission/default/profile/export truth, real C/Zig/Rust normal/raw and technical templates, independent R4L contracts plus technical Query2, complete native C include/hash roots and actual matched tool packages.",
-        "boundaries": "Host33 role containers, actual6 new console starts and3 independent template-library calls. Native R4BUILD/R4CC stays explicitly pending72; no Windows execution, hardware, visual desktop, productive-module or freshinstallation qualification."
+        "scope": "Typed generation2 named library imports and technical Query2 validation in C/Zig/Rust, independent API1 revisions preserved, canonical STD/FONT/IMG calls and exact caller/allocator ownership.",
+        "boundaries": "Actual C/Zig/Rust canonical STD/FONT/IMG consumers in own KVM4; other9 library generated bindings mechanically updated, their functional qualification follows46-48. No Windows, physical hardware or freshinstallation claim."
       }
     },
     {
@@ -464,7 +465,7 @@
       "modules": [
         "runtime_r4l"
       ],
-      "semantics": "Genauen Import/Interface-ID/Major/Revision/Groesse/Flags pruefen, optionale Nullimports erhalten, geladene Instanzgeneration waehrend Leihen/Callbacks festhalten; lokale Library bleibt Vertragseigner. SDK185: Central manifest-selected SDK admission/default/profile/export truth, real C/Zig/Rust normal/raw and technical templates, independent R4L contracts plus technical Query2, complete native C include/hash roots and actual matched tool packages.",
+      "semantics": "Genauen Import/Interface-ID/Major/Revision/Groesse/Flags pruefen, optionale Nullimports erhalten, geladene Instanzgeneration waehrend Leihen/Callbacks festhalten; lokale Library bleibt Vertragseigner. SDK185: Central manifest-selected SDK admission/default/profile/export truth, real C/Zig/Rust normal/raw and technical templates, independent R4L contracts plus technical Query2, complete native C include/hash roots and actual matched tool packages. SDK186: Typed generation2 named library imports and technical Query2 validation in C/Zig/Rust, independent API1 revisions preserved, canonical STD/FONT/IMG calls and exact caller/allocator ownership.",
       "current_only": "current_function",
       "rust": {
         "state": "qualified_current_local_contract_consumers",
@@ -483,15 +484,16 @@
         "Docs/SDK/LanguageParity.txt#Fortschreibung-0.86.52",
         "independent_desktop_current_71",
         "platform_generation2_09014",
-        "tooling_templates_generation2_09044"
+        "tooling_templates_generation2_09044",
+        "canonical_text_font_image_generation2_09045"
       ],
       "shared_core": "SDK Tools/R4LContractGen mit sprachbezogener Rustprojektion und je Library Contract/LibraryContract.json; Baselines/Implementation/Zig unveraendert. Qualifikation52 in Docs/SDK/LanguageParity.txt.",
       "generation2_qualification": {
-        "subversion": "0.90.44",
-        "sdk_package": "0.64.185",
+        "subversion": "0.90.45",
+        "sdk_package": "0.64.186",
         "contract_package": "0.64.93",
-        "scope": "Central manifest-selected SDK admission/default/profile/export truth, real C/Zig/Rust normal/raw and technical templates, independent R4L contracts plus technical Query2, complete native C include/hash roots and actual matched tool packages.",
-        "boundaries": "Host33 role containers, actual6 new console starts and3 independent template-library calls. Native R4BUILD/R4CC stays explicitly pending72; no Windows execution, hardware, visual desktop, productive-module or freshinstallation qualification."
+        "scope": "Typed generation2 named library imports and technical Query2 validation in C/Zig/Rust, independent API1 revisions preserved, canonical STD/FONT/IMG calls and exact caller/allocator ownership.",
+        "boundaries": "Actual C/Zig/Rust canonical STD/FONT/IMG consumers in own KVM4; other9 library generated bindings mechanically updated, their functional qualification follows46-48. No Windows, physical hardware or freshinstallation claim."
       }
     },
     {
@@ -517,7 +519,7 @@
         "stream_transfer",
         "metadata2"
       ],
-      "semantics": "Bytes/EOF/Teilfortschritt/Fehler unterscheiden; generationstreue Handles, paginierte Verzeichnisse, Registry-Snapshots/-Batches, absolute/relative Pfade, atomare Publikation und erhaltenes Stageeigentum bei Fehlern. SDK109: konkrete Pfad-Mount-Namensgrenzen mit UTF8-Bytes/UTF16-Units, Mountsnapshot und getrennten Atomic-Regeln in Zig/C/Rust; Name-64/Laenge-65 vor Mutation, lange CREATE-/Zielnamen bleiben unterstuetzt. SDK161: shared explicit R4OS ArgCursor and whole UTF8 diagnostic records with exact byte progress/uncertainty; canonical Query2 Console/File/LogService callbacks, no synthetic tables, hidden retry or consumer migration. Qualification boundaries in cli_diagnostics_09018. SDK162: shared one-step StreamTransfer exactu64 accepted prefix/one absolute budget, EOF/WouldBlock/timeout/cancel/uncertainty distinct; actual borrowed Query2 File/TCP/Service adapters with explicit operation-specific ACK and at-most-one bounded ServiceReply. Qualification limits in stream_transfer_09019. SDK165: exact optional Query2 wide metadata and bounded pages, explicit unknown flags/root, real namespace-qualified identity, conservative Restart and checked legacy range; no second VFS or provider registry. C inline header remains standalone to avoid unbacked extern symbols. Qualification: file_metadata_09022. SDK182: Normal App2 Files/Console/Registry/physical-storage dispatch uses the actual Context2. Files metadata and directory iteration use FileMetadata2 and namespace-validated pages. Full u64 values stay available; a legacy FileInfo projection refuses unrepresentable scalars/names, and buffered Restart discards private rows. No old directory-index fallback on the new path.",
+      "semantics": "Bytes/EOF/Teilfortschritt/Fehler unterscheiden; generationstreue Handles, paginierte Verzeichnisse, Registry-Snapshots/-Batches, absolute/relative Pfade, atomare Publikation und erhaltenes Stageeigentum bei Fehlern. SDK109: konkrete Pfad-Mount-Namensgrenzen mit UTF8-Bytes/UTF16-Units, Mountsnapshot und getrennten Atomic-Regeln in Zig/C/Rust; Name-64/Laenge-65 vor Mutation, lange CREATE-/Zielnamen bleiben unterstuetzt. SDK161: shared explicit R4OS ArgCursor and whole UTF8 diagnostic records with exact byte progress/uncertainty; canonical Query2 Console/File/LogService callbacks, no synthetic tables, hidden retry or consumer migration. Qualification boundaries in cli_diagnostics_09018. SDK162: shared one-step StreamTransfer exactu64 accepted prefix/one absolute budget, EOF/WouldBlock/timeout/cancel/uncertainty distinct; actual borrowed Query2 File/TCP/Service adapters with explicit operation-specific ACK and at-most-one bounded ServiceReply. Qualification limits in stream_transfer_09019. SDK165: exact optional Query2 wide metadata and bounded pages, explicit unknown flags/root, real namespace-qualified identity, conservative Restart and checked legacy range; no second VFS or provider registry. C inline header remains standalone to avoid unbacked extern symbols. Qualification: file_metadata_09022. SDK182: Normal App2 Files/Console/Registry/physical-storage dispatch uses the actual Context2. Files metadata and directory iteration use FileMetadata2 and namespace-validated pages. Full u64 values stay available; a legacy FileInfo projection refuses unrepresentable scalars/names, and buffered Restart discards private rows. No old directory-index fallback on the new path. SDK186: Typed generation2 named library imports and technical Query2 validation in C/Zig/Rust, independent API1 revisions preserved, canonical STD/FONT/IMG calls and exact caller/allocator ownership.",
       "current_only": "current_function",
       "rust": {
         "state": "paritaet_abgenommen",
@@ -568,16 +570,17 @@
         "stream_transfer_09019",
         "file_metadata_09022",
         "file_picker_09024",
-        "normal_system_facades_09041"
+        "normal_system_facades_09041",
+        "canonical_text_font_image_generation2_09045"
       ],
       "shared_core": "C-Funktionsbesitzer plus r4os/storage_runtime.zig zu bestehenden Zig-/R4STD-Kernen; keine neue Codec-/Pfad-/Registryimplementierung. Runtimeobjekte im technischen Profil mit Quellen/CPU/Hashes gebunden.",
       "extension_08743": "Bound-node batches are the current iterator path; exact provider validation precedes each buffered record. Deliberate live-index traversal after deletion stays supported; no implicit fallback on absent batch support.",
       "generation2_qualification": {
-        "subversion": "0.90.41",
-        "sdk_package": "0.64.182",
+        "subversion": "0.90.45",
+        "sdk_package": "0.64.186",
         "contract_package": "0.64.93",
-        "scope": "Normal App2 Files/Console/Registry/physical-storage dispatch uses the actual Context2. Files metadata and directory iteration use FileMetadata2 and namespace-validated pages. Full u64 values stay available; a legacy FileInfo projection refuses unrepresentable scalars/names, and buffered Restart discards private rows. No old directory-index fallback on the new path.",
-        "boundaries": "Productive individual consumers/defaults and remaining GUI/service/audio/serial migration stay in their assigned later phases. No Windows, physical hardware or freshinstallation qualification."
+        "scope": "Typed generation2 named library imports and technical Query2 validation in C/Zig/Rust, independent API1 revisions preserved, canonical STD/FONT/IMG calls and exact caller/allocator ownership.",
+        "boundaries": "Actual C/Zig/Rust canonical STD/FONT/IMG consumers in own KVM4; other9 library generated bindings mechanically updated, their functional qualification follows46-48. No Windows, physical hardware or freshinstallation claim."
       }
     },
     {
@@ -1098,7 +1101,7 @@
         "grapheme",
         "arguments"
       ],
-      "semantics": "R4STD besitzt Unicode-/Codec-/Graphemdaten; keine Anzeige-/Normalisierungs-/Breitenzusage aus Grenzen ableiten; Caller besitzt Bytes/Puffer. SDK161: shared explicit R4OS ArgCursor and whole UTF8 diagnostic records with exact byte progress/uncertainty; canonical Query2 Console/File/LogService callbacks, no synthetic tables, hidden retry or consumer migration. Qualification boundaries in cli_diagnostics_09018.",
+      "semantics": "R4STD besitzt Unicode-/Codec-/Graphemdaten; keine Anzeige-/Normalisierungs-/Breitenzusage aus Grenzen ableiten; Caller besitzt Bytes/Puffer. SDK161: shared explicit R4OS ArgCursor and whole UTF8 diagnostic records with exact byte progress/uncertainty; canonical Query2 Console/File/LogService callbacks, no synthetic tables, hidden retry or consumer migration. Qualification boundaries in cli_diagnostics_09018. SDK186: Typed generation2 named library imports and technical Query2 validation in C/Zig/Rust, independent API1 revisions preserved, canonical STD/FONT/IMG calls and exact caller/allocator ownership.",
       "current_only": "current_function",
       "rust": {
         "state": "higher_original_owner_helpers_qualified",
@@ -1139,9 +1142,17 @@
       "evidence": [
         "source_inventory",
         "language_libraries_current_59",
-        "cli_diagnostics_09018"
+        "cli_diagnostics_09018",
+        "canonical_text_font_image_generation2_09045"
       ],
-      "shared_core": "R4STD/Bindings/Zig und vorhandene R4STD/Rust-Primitiven verbinden; keine zweite Unicode-Datenbank."
+      "shared_core": "R4STD/Bindings/Zig und vorhandene R4STD/Rust-Primitiven verbinden; keine zweite Unicode-Datenbank.",
+      "generation2_qualification": {
+        "subversion": "0.90.45",
+        "sdk_package": "0.64.186",
+        "contract_package": "0.64.93",
+        "scope": "Typed generation2 named library imports and technical Query2 validation in C/Zig/Rust, independent API1 revisions preserved, canonical STD/FONT/IMG calls and exact caller/allocator ownership.",
+        "boundaries": "Actual C/Zig/Rust canonical STD/FONT/IMG consumers in own KVM4; other9 library generated bindings mechanically updated, their functional qualification follows46-48. No Windows, physical hardware or freshinstallation claim."
+      }
     },
     {
       "id": "data-crypto",
@@ -1164,7 +1175,7 @@
         "internet_checksum",
         "block_transfer"
       ],
-      "semantics": "Callerallokation/Laengen/Ueberlauf/UTF-8/Wirewerte, Formatfehler und Teiloutput erhalten. RDRAND/ISA nur mit frischer OS-Zulassung und echten Fehlerquittungen; Softwarepfad ist aktuelle Hardwarepolitik. SDK160: explicit common pure wire/native/checksum/block helpers; actual static C/Rust implementation and early R4D qualification. Protocol policy, mapped native representation, storage loans and hardware completion remain with their existing owners; no consumer migration. SDK185: Central manifest-selected SDK admission/default/profile/export truth, real C/Zig/Rust normal/raw and technical templates, independent R4L contracts plus technical Query2, complete native C include/hash roots and actual matched tool packages.",
+      "semantics": "Callerallokation/Laengen/Ueberlauf/UTF-8/Wirewerte, Formatfehler und Teiloutput erhalten. RDRAND/ISA nur mit frischer OS-Zulassung und echten Fehlerquittungen; Softwarepfad ist aktuelle Hardwarepolitik. SDK160: explicit common pure wire/native/checksum/block helpers; actual static C/Rust implementation and early R4D qualification. Protocol policy, mapped native representation, storage loans and hardware completion remain with their existing owners; no consumer migration. SDK185: Central manifest-selected SDK admission/default/profile/export truth, real C/Zig/Rust normal/raw and technical templates, independent R4L contracts plus technical Query2, complete native C include/hash roots and actual matched tool packages. SDK186: Typed generation2 named library imports and technical Query2 validation in C/Zig/Rust, independent API1 revisions preserved, canonical STD/FONT/IMG calls and exact caller/allocator ownership.",
       "current_only": "current_function",
       "rust": {
         "state": "original_data_helpers_qualified",
@@ -1191,7 +1202,8 @@
         "audio_reply_08842",
         "platform_generation2_09014",
         "wire_native_data_09017",
-        "tooling_templates_generation2_09044"
+        "tooling_templates_generation2_09044",
+        "canonical_text_font_image_generation2_09045"
       ],
       "shared_core": "Grosse Parser/Codec-/Kryptokerne einmal beim SDK-/Librarybesitzer; besitzereigene C-ABI bzw. passende existierende R4L in61 begruenden. Kein Kopieren von JSON/ZIP/Entropiealgorithmen in drei Sprachen.",
       "qualification": {
@@ -1207,11 +1219,11 @@
         "scope": "Original ICO owner, typed generated C and safe Rust bulk RGB/alpha copy; no new platform ABI or independent parser."
       },
       "generation2_qualification": {
-        "subversion": "0.90.44",
-        "sdk_package": "0.64.185",
+        "subversion": "0.90.45",
+        "sdk_package": "0.64.186",
         "contract_package": "0.64.93",
-        "scope": "Central manifest-selected SDK admission/default/profile/export truth, real C/Zig/Rust normal/raw and technical templates, independent R4L contracts plus technical Query2, complete native C include/hash roots and actual matched tool packages.",
-        "boundaries": "Host33 role containers, actual6 new console starts and3 independent template-library calls. Native R4BUILD/R4CC stays explicitly pending72; no Windows execution, hardware, visual desktop, productive-module or freshinstallation qualification."
+        "scope": "Typed generation2 named library imports and technical Query2 validation in C/Zig/Rust, independent API1 revisions preserved, canonical STD/FONT/IMG calls and exact caller/allocator ownership.",
+        "boundaries": "Actual C/Zig/Rust canonical STD/FONT/IMG consumers in own KVM4; other9 library generated bindings mechanically updated, their functional qualification follows46-48. No Windows, physical hardware or freshinstallation claim."
       }
     },
     {
@@ -24926,9 +24938,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/r4xstart.zig",
-      "sha256": "53f984ac8df446fb1f6c7d0c0ab5ab4848733b86645ed54e24832fc0bec857b9",
+      "sha256": "5a462c49bc73b56de0a1f21ca31607262c4d6a941a4467cf9743f7db94806f59",
       "owner": "Repositories/SDK",
-      "version": "0.64.134",
+      "version": "0.64.186",
       "capability": "startup",
       "declarations": [
         [
@@ -24939,1102 +24951,1132 @@
         [
           "Context",
           "container",
-          200
+          202
         ],
         [
           "Context.init",
           "fn",
-          203
+          205
         ],
         [
           "Context.valid",
           "fn",
-          207
+          209
         ],
         [
           "Context.args",
           "fn",
-          213
+          215
         ],
         [
           "Context.importCount",
           "fn",
-          219
+          221
         ],
         [
           "Context.importAt",
           "fn",
-          224
+          226
         ],
         [
           "Context.findImport",
           "fn",
-          230
+          232
         ],
         [
           "Context.findImportNamed",
           "fn",
-          239
+          241
         ],
         [
           "Context.r4sys",
           "fn",
-          249
+          251
         ],
         [
           "Context.r4desk",
           "fn",
-          261
+          263
         ],
         [
           "Context.r4draw",
           "fn",
-          273
+          275
         ],
         [
           "R4Sys",
           "container",
-          301
+          290
         ],
         [
           "R4Sys.hasFn",
           "fn",
-          305
+          294
         ],
         [
           "R4Sys.argsRaw",
           "fn",
-          310
+          299
         ],
         [
           "R4Sys.args",
           "fn",
-          315
+          304
         ],
         [
           "R4Sys.write",
           "fn",
-          321
+          310
         ],
         [
           "R4Sys.print",
           "fn",
-          327
+          316
         ],
         [
           "R4Sys.println",
           "fn",
-          331
+          320
         ],
         [
           "R4Sys.putc",
           "fn",
-          336
+          325
         ],
         [
           "R4Sys.printU64",
           "fn",
-          341
+          330
         ],
         [
           "R4Sys.printI32",
           "fn",
-          357
+          346
         ],
         [
           "R4Sys.ticks",
           "fn",
-          367
+          356
         ],
         [
           "R4Sys.sleepTicks",
           "fn",
-          373
+          362
         ],
         [
           "R4Sys.taskYield",
           "fn",
-          382
+          371
         ],
         [
           "R4Sys.programShouldClose",
           "fn",
-          388
+          377
         ],
         [
           "R4Sys.envGet",
           "fn",
-          400
+          389
         ],
         [
           "R4Sys.dirEntry",
           "fn",
-          406
+          395
         ],
         [
           "R4Sys.programClass",
           "fn",
-          412
+          401
         ],
         [
           "R4Sys.programInstance",
           "fn",
-          418
+          407
+        ],
+        [
+          "R4Sys.programLifecycleBegin",
+          "fn",
+          413
+        ],
+        [
+          "R4Sys.programLifecyclePrograms",
+          "fn",
+          419
         ],
         [
           "R4Sys.programInventoryBegin",
           "fn",
-          424
+          426
         ],
         [
           "R4Sys.programInventoryPrograms",
           "fn",
-          430
+          432
         ],
         [
           "R4Sys.programInventoryTasks",
           "fn",
-          436
+          438
         ],
         [
           "R4Sys.programInventoryThreads",
           "fn",
-          442
+          444
         ],
         [
           "R4Sys.supportsThreads",
           "fn",
-          448
+          450
         ],
         [
           "R4Sys.threadCreateRaw",
           "fn",
-          456
+          458
         ],
         [
           "R4Sys.threadCreate",
           "fn",
-          462
+          464
         ],
         [
           "R4Sys.threadCreateHandle",
           "fn",
-          468
+          470
         ],
         [
           "R4Sys.threadExit",
           "fn",
-          474
+          476
         ],
         [
           "R4Sys.threadJoin",
           "fn",
-          482
+          484
         ],
         [
           "R4Sys.threadHandleJoin",
           "fn",
-          488
+          490
         ],
         [
           "R4Sys.threadCurrent",
           "fn",
-          494
+          496
         ],
         [
           "R4Sys.threadCurrentHandle",
           "fn",
-          500
+          502
         ],
         [
           "R4Sys.threadPlacementGet",
           "fn",
-          507
+          509
         ],
         [
           "R4Sys.threadPlacementSet",
           "fn",
-          514
+          516
         ],
         [
           "R4Sys.cpuCapacity",
           "fn",
-          521
+          523
         ],
         [
           "R4Sys.programExit",
           "fn",
-          527
+          529
         ],
         [
           "R4Sys.threadStatus",
           "fn",
-          533
+          535
         ],
         [
           "R4Sys.threadHandleStatus",
           "fn",
-          539
+          541
         ],
         [
           "R4Sys.supportsAsyncIo",
           "fn",
-          545
+          547
         ],
         [
           "R4Sys.ioFileRead",
           "fn",
-          555
+          557
         ],
         [
           "R4Sys.ioFileReadAt",
           "fn",
-          561
+          563
         ],
         [
           "R4Sys.ioFileWrite",
           "fn",
-          567
+          569
         ],
         [
           "R4Sys.ioFileAppend",
           "fn",
-          573
+          575
         ],
         [
           "R4Sys.ioFileWriteAt",
           "fn",
-          579
+          581
         ],
         [
           "R4Sys.ioFileInfo",
           "fn",
-          585
+          587
         ],
         [
           "R4Sys.ioFileLock",
           "fn",
-          591
+          593
         ],
         [
           "R4Sys.ioFileStreamBegin",
           "fn",
-          597
+          599
         ],
         [
           "R4Sys.ioFileStreamWrite",
           "fn",
-          603
+          605
         ],
         [
           "R4Sys.ioFileStreamFinish",
           "fn",
-          609
+          611
         ],
         [
           "R4Sys.ioFileStreamAbort",
           "fn",
-          615
+          617
         ],
         [
           "R4Sys.ioServiceCall",
           "fn",
-          621
+          623
         ],
         [
           "R4Sys.ioStatus",
           "fn",
-          629
+          631
         ],
         [
           "R4Sys.ioWait",
           "fn",
-          635
+          637
         ],
         [
           "R4Sys.ioClose",
           "fn",
-          641
+          643
         ],
         [
           "R4Sys.supportsVmApi",
           "fn",
-          647
+          649
         ],
         [
           "R4Sys.vmReserve",
           "fn",
-          655
+          657
         ],
         [
           "R4Sys.vmCommit",
           "fn",
-          663
+          665
         ],
         [
           "R4Sys.vmCommitFlags",
           "fn",
-          667
+          669
         ],
         [
           "R4Sys.vmDecommit",
           "fn",
-          673
+          675
         ],
         [
           "R4Sys.vmRelease",
           "fn",
-          679
+          681
         ],
         [
           "R4Sys.vmQuery",
           "fn",
-          685
+          687
         ],
         [
           "R4Sys.supportsServiceApi",
           "fn",
-          693
+          695
         ],
         [
           "R4Sys.supportsServiceManager",
           "fn",
-          700
+          702
         ],
         [
           "R4Sys.serviceStatus",
           "fn",
-          708
+          710
         ],
         [
           "R4Sys.serviceOpen",
           "fn",
-          714
+          716
         ],
         [
           "R4Sys.serviceClose",
           "fn",
-          720
+          722
         ],
         [
           "R4Sys.serviceCall",
           "fn",
-          726
+          728
         ],
         [
           "R4Sys.serviceEndpointRegister",
           "fn",
-          737
+          739
         ],
         [
           "R4Sys.serviceEndpointUnregister",
           "fn",
-          743
+          745
         ],
         [
           "R4Sys.serviceEndpointPoll",
           "fn",
-          749
+          751
         ],
         [
           "R4Sys.serviceEndpointRecv",
           "fn",
-          755
+          757
         ],
         [
           "R4Sys.serviceEndpointReply",
           "fn",
-          764
+          766
         ],
         [
           "R4Sys.serviceDetailByName",
           "fn",
-          772
+          774
+        ],
+        [
+          "R4Sys.serviceBoundDetail",
+          "fn",
+          780
         ],
         [
           "R4Sys.serviceStart",
           "fn",
-          778
+          786
         ],
         [
           "R4Sys.serviceStop",
           "fn",
-          784
+          792
+        ],
+        [
+          "R4Sys.serviceStopBound",
+          "fn",
+          798
         ],
         [
           "R4Sys.serviceRestart",
           "fn",
-          790
+          804
         ],
         [
           "R4Sys.serviceInstall",
           "fn",
-          796
+          810
         ],
         [
           "R4Sys.serviceRemove",
           "fn",
-          802
+          816
         ],
         [
           "R4Desk",
           "container",
-          809
+          823
         ],
         [
           "R4Desk.hasFn",
           "fn",
-          813
+          827
         ],
         [
           "R4Desk.readKey",
           "fn",
-          818
+          832
         ],
         [
           "R4Desk.readKeyCodepoint",
           "fn",
-          824
+          838
         ],
         [
           "R4Desk.mouseState",
           "fn",
-          830
+          844
         ],
         [
           "R4Desk.mouseMotion",
           "fn",
-          838
+          852
         ],
         [
           "R4Desk.mouseShow",
           "fn",
-          844
+          858
         ],
         [
           "R4Desk.mouseHide",
           "fn",
-          850
+          864
         ],
         [
           "R4Desk.keyboardLayoutCurrent",
           "fn",
-          856
+          870
         ],
         [
           "R4Desk.keyboardLayoutAt",
           "fn",
-          862
+          876
         ],
         [
           "R4Desk.keyboardLayoutSet",
           "fn",
-          868
+          882
         ],
         [
           "R4Desk.programSetWindow",
           "fn",
-          874
+          888
         ],
         [
           "R4Desk.programSetConsoleHost",
           "fn",
-          880
+          894
         ],
         [
           "R4Desk.programRequestHostLaunch",
           "fn",
-          886
+          900
         ],
         [
           "R4Desk.programTakeHostLaunch",
           "fn",
-          892
+          906
         ],
         [
           "R4Desk.programWindowId",
           "fn",
-          898
+          912
         ],
         [
           "R4Desk.guiWindowInfo",
           "fn",
-          904
+          918
         ],
         [
           "R4Desk.guiSetWindowInfo",
           "fn",
-          910
+          924
         ],
         [
           "R4Desk.guiPollEvent",
           "fn",
-          916
+          930
         ],
         [
           "R4Desk.guiPushEvent",
           "fn",
-          922
+          936
         ],
         [
           "R4Desk.guiSetText",
           "fn",
-          928
+          942
         ],
         [
           "R4Desk.guiText",
           "fn",
-          934
+          948
         ],
         [
           "R4Desk.guiRevision",
           "fn",
-          940
+          954
         ],
         [
           "R4Desk.guiCommand",
           "fn",
-          946
+          960
         ],
         [
           "R4Desk.guiSetTitle",
           "fn",
-          952
+          966
         ],
         [
           "R4Desk.guiTitle",
           "fn",
-          958
+          972
         ],
         [
           "R4Desk.guiSetMinSize",
           "fn",
-          964
+          978
         ],
         [
           "R4Desk.guiMinSize",
           "fn",
-          970
+          984
         ],
         [
           "R4Desk.consoleOutput",
           "fn",
-          976
+          990
         ],
         [
           "R4Desk.consoleRevision",
           "fn",
-          982
+          996
         ],
         [
           "R4Desk.consoleState",
           "fn",
-          988
+          1002
         ],
         [
           "R4Desk.consoleSetMetrics",
           "fn",
-          994
+          1008
         ],
         [
           "R4Desk.consolePushKey",
           "fn",
-          1000
+          1014
         ],
         [
           "R4Desk.consolePushInput",
           "fn",
-          1006
+          1020
         ],
         [
           "R4Desk.consoleWrite",
           "fn",
-          1013
+          1027
         ],
         [
           "R4Desk.stdout",
           "fn",
-          1020
+          1034
         ],
         [
           "R4Desk.stderr",
           "fn",
-          1024
+          1038
         ],
         [
           "R4Desk.consoleRead",
           "fn",
-          1028
+          1042
         ],
         [
           "R4Desk.consoleInputWait",
           "fn",
-          1034
+          1048
         ],
         [
           "R4Desk.physicalKeyPoll",
           "fn",
-          1041
+          1055
         ],
         [
           "R4Desk.supportsClipboardContract",
           "fn",
-          1048
+          1062
         ],
         [
           "R4Desk.clipboardWrite",
           "fn",
-          1052
+          1066
         ],
         [
           "R4Desk.clipboardRead",
           "fn",
-          1059
+          1073
         ],
         [
           "R4Desk.clipboardRevision",
           "fn",
-          1066
+          1080
         ],
         [
           "R4Desk.clipboardInfo",
           "fn",
-          1072
+          1086
         ],
         [
           "R4Desk.clipboardClear",
           "fn",
-          1078
+          1092
         ],
         [
           "R4Desk.supportsRemoteFrame",
           "fn",
-          1086
+          1100
         ],
         [
           "R4Desk.remoteFrameInfo",
           "fn",
-          1093
+          1107
         ],
         [
           "R4Desk.remoteFrameRead",
           "fn",
-          1099
+          1113
         ],
         [
           "R4Desk.remoteFrameWait",
           "fn",
-          1105
+          1119
         ],
         [
           "R4Desk.desktopActivityWait",
           "fn",
-          1111
+          1125
         ],
         [
           "R4Desk.desktopActivityNotify",
           "fn",
-          1117
+          1131
+        ],
+        [
+          "R4Desk.guiActivityWait",
+          "fn",
+          1136
+        ],
+        [
+          "R4Desk.guiActivityNotify",
+          "fn",
+          1141
         ],
         [
           "R4Desk.supportsRemoteFrameMap",
           "fn",
-          1123
+          1147
         ],
         [
           "R4Desk.remoteFrameSnapshotAcquire",
           "fn",
-          1127
+          1151
         ],
         [
           "R4Desk.remoteFrameSnapshotRelease",
           "fn",
-          1132
+          1156
         ],
         [
           "R4Desk.remoteFrameSourceReset",
           "fn",
-          1137
+          1161
         ],
         [
           "R4Desk.remoteFrameCaptureStats",
           "fn",
-          1142
+          1166
         ],
         [
           "R4Desk.remoteFrameMap",
           "fn",
-          1148
+          1172
         ],
         [
           "R4Desk.remoteFramePublish",
           "fn",
-          1154
+          1178
         ],
         [
           "R4Desk.supportsRemoteFrameRegions",
           "fn",
-          1160
+          1184
         ],
         [
           "R4Desk.remoteFramePublishRegions",
           "fn",
-          1164
+          1188
         ],
         [
           "R4Desk.supportsRemoteFrameDemand",
           "fn",
-          1170
+          1194
         ],
         [
           "R4Desk.remoteFrameAcquire",
           "fn",
-          1176
+          1200
         ],
         [
           "R4Desk.remoteFrameRelease",
           "fn",
-          1182
+          1206
         ],
         [
           "R4Desk.remoteFrameConsumers",
           "fn",
-          1188
+          1212
         ],
         [
           "R4Desk.supportsRemoteInput",
           "fn",
-          1194
+          1218
         ],
         [
           "R4Desk.remoteInputPush",
           "fn",
-          1200
+          1224
         ],
         [
           "R4Desk.remoteInputPoll",
           "fn",
-          1206
+          1230
         ],
         [
           "R4Desk.remoteInputStatus",
           "fn",
-          1212
+          1236
         ],
         [
           "R4Draw",
           "container",
-          1219
+          1243
         ],
         [
           "R4Draw.hasFn",
           "fn",
-          1223
+          1247
         ],
         [
           "R4Draw.screenWidth",
           "fn",
-          1228
+          1252
         ],
         [
           "R4Draw.screenHeight",
           "fn",
-          1234
+          1258
         ],
         [
           "R4Draw.clear",
           "fn",
-          1240
+          1264
         ],
         [
           "R4Draw.rect",
           "fn",
-          1246
+          1270
         ],
         [
           "R4Draw.text",
           "fn",
-          1252
+          1276
         ],
         [
           "R4Draw.displayRevision",
           "fn",
-          1258
+          1282
         ],
         [
           "R4Draw.displayBeginFrame",
           "fn",
-          1264
+          1288
         ],
         [
           "R4Draw.displayBeginFrameRect",
           "fn",
-          1270
+          1294
         ],
         [
           "R4Draw.displayPresent",
           "fn",
-          1276
+          1300
         ],
         [
           "R4Draw.displayBlitXrgb32",
           "fn",
-          1282
+          1306
         ],
         [
           "R4Draw.displayBlitXrgb32Stride",
           "fn",
-          1289
+          1313
         ],
         [
           "R4Draw.supportsDisplayPresentRegions",
           "fn",
-          1296
+          1320
         ],
         [
           "R4Draw.displayPresentRegions",
           "fn",
-          1302
+          1326
         ],
         [
           "R4Draw.displayPresentCapabilities",
           "fn",
-          1308
+          1332
         ],
         [
           "R4Draw.displayPresentCompletion",
           "fn",
-          1314
+          1338
         ],
         [
           "R4Draw.supportsDisplayPresentationStats",
           "fn",
-          1319
+          1343
         ],
         [
           "R4Draw.supportsDisplayPresentationInfo",
           "fn",
-          1322
+          1346
         ],
         [
           "R4Draw.displayPresentationInfo",
           "fn",
-          1325
+          1349
         ],
         [
           "R4Draw.displayOutputTarget",
           "fn",
-          1332
+          1356
         ],
         [
           "R4Draw.displayOutputPresentationInfo",
           "fn",
-          1339
+          1363
         ],
         [
           "R4Draw.displayOutputPresentationFeedback",
           "fn",
-          1346
+          1370
         ],
         [
           "R4Draw.displayPresentationFeedback",
           "fn",
-          1353
+          1377
         ],
         [
           "R4Draw.supportsDisplayCursor",
           "fn",
-          1360
+          1384
         ],
         [
           "R4Draw.displayCursorInfo",
           "fn",
-          1363
+          1387
         ],
         [
           "R4Draw.displayCursorSubmit",
           "fn",
-          1368
+          1392
         ],
         [
           "R4Draw.displayCursorStatus",
           "fn",
-          1373
+          1397
         ],
         [
           "R4Draw.displayPresentationStats",
           "fn",
-          1378
+          1402
         ],
         [
           "R4Draw.guiClear",
           "fn",
-          1384
+          1408
         ],
         [
           "R4Draw.guiRect",
           "fn",
-          1390
+          1414
         ],
         [
           "R4Draw.guiDrawText",
           "fn",
-          1396
+          1420
         ],
         [
           "R4Draw.guiDrawTextEx",
           "fn",
-          1402
+          1426
         ],
         [
           "R4Draw.guiBlit",
           "fn",
-          1408
+          1432
         ],
         [
           "R4Draw.guiBlendAlpha8",
           "fn",
-          1415
+          1439
         ],
         [
           "R4Draw.guiRasterRead",
           "fn",
-          1422
+          1446
         ],
         [
           "R4Draw.supportsGuiFrameContract",
           "fn",
-          1429
+          1453
         ],
         [
           "R4Draw.supportsGuiFrameDamageContract",
           "fn",
-          1438
+          1462
         ],
         [
           "R4Draw.supportsGuiFrameStreamingContract",
           "fn",
-          1445
+          1469
         ],
         [
           "R4Draw.guiFrameBegin",
           "fn",
-          1451
+          1475
         ],
         [
           "R4Draw.guiFrameBeginDamage",
           "fn",
-          1457
+          1481
         ],
         [
           "R4Draw.guiFrameBeginReplace",
           "fn",
-          1464
+          1488
         ],
         [
           "R4Draw.guiFrameAppend",
           "fn",
-          1471
+          1495
         ],
         [
           "R4Draw.guiFrameCommit",
           "fn",
-          1479
+          1503
         ],
         [
           "R4Draw.guiFrameCancel",
           "fn",
-          1485
+          1509
         ],
         [
           "R4Draw.guiFrameInfo",
           "fn",
-          1491
+          1515
         ],
         [
           "R4Draw.guiFrameRead",
           "fn",
-          1499
+          1523
         ],
         [
           "R4Draw.guiFrameGenerationInfo",
           "fn",
-          1509
+          1533
         ],
         [
           "R4Draw.guiFrameGenerationRead",
           "fn",
-          1517
+          1541
         ],
         [
           "R4Draw.guiFrameStreamInfo",
           "fn",
-          1528
+          1552
         ],
         [
           "R4Draw.guiPresent",
           "fn",
-          1536
+          1560
         ],
         [
           "R4Draw.supportsGuiFonts",
           "fn",
-          1542
+          1566
         ],
         [
           "R4Draw.supportsGuiRaster",
           "fn",
-          1546
+          1570
         ],
         [
           "R4Draw.fontCount",
           "fn",
-          1550
+          1574
         ],
         [
           "R4Draw.fontInfo",
           "fn",
-          1556
+          1580
         ],
         [
           "R4Draw.fontMeasure",
           "fn",
-          1562
+          1586
         ],
         [
           "R4Draw.fontGlyphRow",
           "fn",
-          1571
+          1592
         ],
         [
           "R4Draw.fontGlyphBitmap",
           "fn",
-          1581
+          1600
         ],
         [
           "R4Draw.fontRevision",
           "fn",
-          1607
+          1609
         ],
         [
           "R4Draw.fontReload",
           "fn",
-          1614
+          1615
         ],
         [
           "R4Draw.guiSetFont",
           "fn",
-          1620
+          1621
         ],
         [
           "R4Draw.guiFont",
           "fn",
-          1626
+          1627
         ],
         [
           "R4Draw.textFont",
           "fn",
-          1634
+          1633
         ]
       ]
     },
@@ -26570,9 +26612,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/runtime_r4l.zig",
-      "sha256": "1ebd2ab5d60d602ce8ceaf0038ad3e58cf1283fb07475ef7d9a6915143ccc18f",
+      "sha256": "bfc576168ffd004a694b077c3aae7c6d684e40eca06ca623e76617185943a716",
       "owner": "Repositories/SDK",
-      "version": "0.64.66",
+      "version": "0.64.186",
       "capability": "library-bind",
       "declarations": [
         [
@@ -26616,24 +26658,34 @@
           29
         ],
         [
+          "importNameEquals",
+          "fn",
+          49
+        ],
+        [
+          "query2",
+          "fn",
+          64
+        ],
+        [
           "validateImport",
           "fn",
-          66
+          94
         ],
         [
           "hasSlot",
           "fn",
-          93
+          121
         ],
         [
           "slotAddress",
           "fn",
-          98
+          126
         ],
         [
           "functionAt",
           "fn",
-          106
+          134
         ]
       ]
     },
@@ -34581,7 +34633,7 @@
     },
     {
       "path": "Repositories/Libraries/R4ACO/Bindings/Zig/r4aco.zig",
-      "sha256": "55386326a7975641348ec9eab1eebfc53fd0a1bf9a3f3a74da48d90f80bc3f23",
+      "sha256": "9c131bf02a32c92b163678af985d8354e8289f14fb7edcf8443bb3e70fdad7fa",
       "owner": "Repositories/Libraries/R4ACO",
       "version": "0.1.5",
       "capability": "library-R4ACO",
@@ -34767,34 +34819,44 @@
           204
         ],
         [
-          "InfoV1Client.get_info",
+          "InfoV1Client.init2",
           "fn",
-          218
+          208
         ],
         [
-          "CompilerV1Client",
-          "container",
-          224
-        ],
-        [
-          "CompilerV1Client.init",
+          "InfoV1Client.get_info",
           "fn",
           227
         ],
         [
+          "CompilerV1Client",
+          "container",
+          233
+        ],
+        [
+          "CompilerV1Client.init",
+          "fn",
+          236
+        ],
+        [
+          "CompilerV1Client.init2",
+          "fn",
+          240
+        ],
+        [
           "CompilerV1Client.compile",
           "fn",
-          243
+          261
         ],
         [
           "CompilerV1Client.cache_write",
           "fn",
-          248
+          266
         ],
         [
           "CompilerV1Client.cache_read",
           "fn",
-          253
+          271
         ]
       ]
     },
@@ -34883,7 +34945,7 @@
     },
     {
       "path": "Repositories/Libraries/R4AMD/Bindings/Zig/r4amd.zig",
-      "sha256": "1fa039505eff4d14c458fa5396a02293230181cfa9b7968874ff98085b4400c2",
+      "sha256": "c5635b71e162e3ec8f522da880a20accc0de705afc382de7e2301d25ce6e8baf",
       "owner": "Repositories/Libraries/R4AMD",
       "version": "0.1.8",
       "capability": "library-R4AMD",
@@ -35449,110 +35511,130 @@
           679
         ],
         [
-          "InfoV1Client.get_info",
+          "InfoV1Client.init2",
           "fn",
-          693
+          683
         ],
         [
-          "BackendV1Client",
-          "container",
-          699
-        ],
-        [
-          "BackendV1Client.init",
+          "InfoV1Client.get_info",
           "fn",
           702
         ],
         [
+          "BackendV1Client",
+          "container",
+          708
+        ],
+        [
+          "BackendV1Client.init",
+          "fn",
+          711
+        ],
+        [
+          "BackendV1Client.init2",
+          "fn",
+          715
+        ],
+        [
           "BackendV1Client.negotiate",
           "fn",
-          720
+          738
         ],
         [
           "BackendV1Client.encode_copy",
           "fn",
-          725
+          743
         ],
         [
           "BackendV1Client.encode_fill",
           "fn",
-          730
+          748
         ],
         [
           "BackendV1Client.encode_pm4_frame",
           "fn",
-          735
+          753
         ],
         [
           "BackendV1Client.media_caps",
           "fn",
-          740
+          758
         ],
         [
           "ImageV1Client",
           "container",
-          746
+          764
         ],
         [
           "ImageV1Client.init",
           "fn",
-          749
+          767
+        ],
+        [
+          "ImageV1Client.init2",
+          "fn",
+          771
         ],
         [
           "ImageV1Client.calculate",
           "fn",
-          767
+          794
         ],
         [
           "ImageV1Client.address",
           "fn",
-          772
+          799
         ],
         [
           "ImageV1Client.metadata",
           "fn",
-          777
+          804
         ],
         [
           "ImageV1Client.import_image",
           "fn",
-          782
+          809
         ],
         [
           "ImageV1Client.descriptors",
           "fn",
-          787
+          814
         ],
         [
           "RenderV1Client",
           "container",
-          793
+          820
         ],
         [
           "RenderV1Client.init",
           "fn",
-          796
+          823
+        ],
+        [
+          "RenderV1Client.init2",
+          "fn",
+          827
         ],
         [
           "RenderV1Client.shader",
           "fn",
-          812
+          848
         ],
         [
           "RenderV1Client.encode_pipeline",
           "fn",
-          817
+          853
         ],
         [
           "RenderV1Client.encode_draw",
           "fn",
-          822
+          858
         ]
       ]
     },
     {
       "path": "Repositories/Libraries/R4ENC/Bindings/Zig/r4enc.zig",
-      "sha256": "a77abeec0fe12ff0213bc3190270b423e0c14044f4cbbfc18c7bbe3e9f9cfc12",
+      "sha256": "9a020410cd3a83c0a1210131c5c8fbd437ecf3b449a89b40b6d5a2cc8830bb75",
       "owner": "Repositories/Libraries/R4ENC",
       "version": "0.1.9",
       "capability": "library-R4ENC",
@@ -36078,49 +36160,54 @@
           300
         ],
         [
+          "EncodeV1Client.init2",
+          "fn",
+          304
+        ],
+        [
           "EncodeV1Client.open",
           "fn",
-          322
+          331
         ],
         [
           "EncodeV1Client.query_caps",
           "fn",
-          327
+          336
         ],
         [
           "EncodeV1Client.create",
           "fn",
-          332
+          341
         ],
         [
           "EncodeV1Client.send",
           "fn",
-          337
+          346
         ],
         [
           "EncodeV1Client.receive",
           "fn",
-          342
+          351
         ],
         [
           "EncodeV1Client.release",
           "fn",
-          347
+          356
         ],
         [
           "EncodeV1Client.control",
           "fn",
-          352
+          361
         ],
         [
           "EncodeV1Client.destroy",
           "fn",
-          357
+          366
         ],
         [
           "EncodeV1Client.finish",
           "fn",
-          362
+          371
         ]
       ]
     },
@@ -36745,7 +36832,7 @@
     },
     {
       "path": "Repositories/Libraries/R4FONT/Bindings/Zig/r4font.zig",
-      "sha256": "28cb127566eb302fc3ba6d9f7ef56ff7a990facb88404496cc96ff668ffe7033",
+      "sha256": "8b3dadddf16359e49fc98e36027ec82fb72bd8fa587ef30c3487faecf2b7d7b9",
       "owner": "Repositories/Libraries/R4FONT",
       "version": "0.2.3",
       "capability": "library-R4FONT",
@@ -36831,90 +36918,95 @@
           92
         ],
         [
-          "Context.initTable",
+          "Context.init2",
           "fn",
           96
         ],
         [
-          "Context.initHeader",
+          "Context.initTable",
           "fn",
           100
         ],
         [
+          "Context.initHeader",
+          "fn",
+          104
+        ],
+        [
           "Context.sniff",
           "fn",
-          115
+          119
         ],
         [
           "Context.createDecoder",
           "fn",
-          121
+          125
         ],
         [
           "Decoder",
           "container",
-          139
+          143
         ],
         [
           "Decoder.deinit",
           "fn",
-          144
+          148
         ],
         [
           "Decoder.diagnostics",
           "fn",
-          151
+          155
         ],
         [
           "Decoder.openFace",
           "fn",
-          165
+          169
         ],
         [
           "Decoder.testingSetFaultInjection",
           "fn",
-          173
+          177
         ],
         [
           "Face",
           "container",
-          179
+          183
         ],
         [
           "Face.deinit",
           "fn",
-          183
+          187
         ],
         [
           "Face.info",
           "fn",
-          188
+          192
         ],
         [
           "Face.glyphIndex",
           "fn",
-          207
+          211
         ],
         [
           "Face.glyphMetrics",
           "fn",
-          213
+          217
         ],
         [
           "Face.kerning",
           "fn",
-          227
+          231
         ],
         [
           "Face.rasterize",
           "fn",
-          233
+          237
         ]
       ]
     },
     {
       "path": "Repositories/Libraries/R4FONT/Bindings/Zig/r4font_abi.zig",
-      "sha256": "5a1a543b8c6743895ce8f83c907303861d0d829dd266bcec2d4d7fe2646f9f12",
+      "sha256": "62ea3957814c2033316c01a450c2b2d02a8c06fa2285bffd5c4535e52e7b9f42",
       "owner": "Repositories/Libraries/R4FONT",
       "version": "0.2.3",
       "capability": "library-R4FONT",
@@ -37155,59 +37247,64 @@
           129
         ],
         [
+          "ApiV1Client.init2",
+          "fn",
+          133
+        ],
+        [
           "ApiV1Client.sniff",
           "fn",
-          153
+          162
         ],
         [
           "ApiV1Client.decoder_create",
           "fn",
-          158
+          167
         ],
         [
           "ApiV1Client.decoder_destroy",
           "fn",
-          163
+          172
         ],
         [
           "ApiV1Client.decoder_diagnostics",
           "fn",
-          168
+          177
         ],
         [
           "ApiV1Client.decoder_open_face",
           "fn",
-          173
+          182
         ],
         [
           "ApiV1Client.face_close",
           "fn",
-          178
+          187
         ],
         [
           "ApiV1Client.face_info",
           "fn",
-          183
+          192
         ],
         [
           "ApiV1Client.glyph_index",
           "fn",
-          188
+          197
         ],
         [
           "ApiV1Client.glyph_metrics",
           "fn",
-          193
+          202
         ],
         [
           "ApiV1Client.kerning",
           "fn",
-          198
+          207
         ],
         [
           "ApiV1Client.rasterize",
           "fn",
-          203
+          212
         ]
       ]
     },
@@ -37291,7 +37388,7 @@
     },
     {
       "path": "Repositories/Libraries/R4GFX/Bindings/Zig/r4gfx_abi.zig",
-      "sha256": "ca53a3d7c75462bd3a2b212990c8a90fbe5a02f1d419d30ed992c536fbb718f0",
+      "sha256": "c058f5df7a6095227c8b78c8d1ae9a715c9e8330e59f476021016741963f90a0",
       "owner": "Repositories/Libraries/R4GFX",
       "version": "0.1.36",
       "capability": "library-R4GFX",
@@ -38712,305 +38809,325 @@
           965
         ],
         [
+          "ApiV1Client.init2",
+          "fn",
+          969
+        ],
+        [
           "ApiV1Client.linear_layout",
           "fn",
-          980
+          989
         ],
         [
           "ApiV1Client.fill_rect",
           "fn",
-          985
+          994
         ],
         [
           "RenderV1Client",
           "container",
-          991
+          1000
         ],
         [
           "RenderV1Client.init",
           "fn",
-          994
+          1003
+        ],
+        [
+          "RenderV1Client.init2",
+          "fn",
+          1007
         ],
         [
           "RenderV1Client.capabilities",
           "fn",
-          1009
+          1027
         ],
         [
           "RenderV1Client.execute_cpu",
           "fn",
-          1014
+          1032
         ],
         [
           "DeviceV1Client",
           "container",
-          1020
+          1038
         ],
         [
           "DeviceV1Client.init",
           "fn",
-          1023
+          1041
+        ],
+        [
+          "DeviceV1Client.init2",
+          "fn",
+          1045
         ],
         [
           "DeviceV1Client.storage_size",
           "fn",
-          1070
+          1097
         ],
         [
           "DeviceV1Client.device_open",
           "fn",
-          1075
+          1102
         ],
         [
           "DeviceV1Client.device_close",
           "fn",
-          1080
+          1107
         ],
         [
           "DeviceV1Client.device_info",
           "fn",
-          1085
+          1112
         ],
         [
           "DeviceV1Client.device_refresh",
           "fn",
-          1090
+          1117
         ],
         [
           "DeviceV1Client.resource_create",
           "fn",
-          1095
+          1122
         ],
         [
           "DeviceV1Client.resource_retain",
           "fn",
-          1100
+          1127
         ],
         [
           "DeviceV1Client.resource_release",
           "fn",
-          1105
+          1132
         ],
         [
           "DeviceV1Client.resource_info",
           "fn",
-          1110
+          1137
         ],
         [
           "DeviceV1Client.render",
           "fn",
-          1115
+          1142
         ],
         [
           "DeviceV1Client.copy_submit",
           "fn",
-          1120
+          1147
         ],
         [
           "DeviceV1Client.job_info",
           "fn",
-          1125
+          1152
         ],
         [
           "DeviceV1Client.job_cancel",
           "fn",
-          1130
+          1157
         ],
         [
           "DeviceV1Client.job_release",
           "fn",
-          1135
+          1162
         ],
         [
           "DeviceV1Client.copy_submit_ex",
           "fn",
-          1140
+          1167
         ],
         [
           "DeviceV1Client.job_fence",
           "fn",
-          1145
+          1172
         ],
         [
           "DeviceV1Client.render_submit",
           "fn",
-          1150
+          1177
         ],
         [
           "DeviceV1Client.image_prepare",
           "fn",
-          1155
+          1182
         ],
         [
           "DeviceV1Client.image_present",
           "fn",
-          1160
+          1187
         ],
         [
           "DeviceV1Client.render_submit_list",
           "fn",
-          1165
+          1192
         ],
         [
           "DeviceV1Client.presentation_info",
           "fn",
-          1170
+          1197
         ],
         [
           "DeviceV1Client.swapchain_open",
           "fn",
-          1175
+          1202
         ],
         [
           "DeviceV1Client.swapchain_acquire",
           "fn",
-          1180
+          1207
         ],
         [
           "DeviceV1Client.swapchain_present",
           "fn",
-          1185
+          1212
         ],
         [
           "DeviceV1Client.swapchain_poll",
           "fn",
-          1190
+          1217
         ],
         [
           "DeviceV1Client.swapchain_release",
           "fn",
-          1195
+          1222
         ],
         [
           "DeviceV1Client.swapchain_resize",
           "fn",
-          1200
+          1227
         ],
         [
           "DeviceV1Client.swapchain_close",
           "fn",
-          1205
+          1232
         ],
         [
           "DeviceV1Client.presentation_plan",
           "fn",
-          1210
+          1237
         ],
         [
           "DeviceV1Client.render_submit_grid_list",
           "fn",
-          1215
+          1242
         ],
         [
           "DeviceV1Client.memory_info",
           "fn",
-          1220
+          1247
         ],
         [
           "DeviceV1Client.memory_trim",
           "fn",
-          1225
+          1252
         ],
         [
           "DeviceV1Client.resource_resident",
           "fn",
-          1230
+          1257
         ],
         [
           "DeviceV1Client.resource_priority",
           "fn",
-          1235
+          1262
         ],
         [
           "ColorV1Client",
           "container",
-          1241
+          1268
         ],
         [
           "ColorV1Client.init",
           "fn",
-          1244
+          1271
+        ],
+        [
+          "ColorV1Client.init2",
+          "fn",
+          1275
         ],
         [
           "ColorV1Client.color_description_validate",
           "fn",
-          1272
+          1308
         ],
         [
           "ColorV1Client.color_profile_storage_size",
           "fn",
-          1277
+          1313
         ],
         [
           "ColorV1Client.color_profile_open",
           "fn",
-          1282
+          1318
         ],
         [
           "ColorV1Client.color_profile_info",
           "fn",
-          1287
+          1323
         ],
         [
           "ColorV1Client.color_profile_apply",
           "fn",
-          1292
+          1328
         ],
         [
           "ColorV1Client.color_profile_close",
           "fn",
-          1297
+          1333
         ],
         [
           "ColorV1Client.color_image_transform",
           "fn",
-          1302
+          1338
         ],
         [
           "ColorV1Client.color_resource_create",
           "fn",
-          1307
+          1343
         ],
         [
           "ColorV1Client.color_resource_info",
           "fn",
-          1312
+          1348
         ],
         [
           "ColorV1Client.color_resource_transform",
           "fn",
-          1317
+          1353
         ],
         [
           "ColorV1Client.color_profile_generate",
           "fn",
-          1322
+          1358
         ],
         [
           "ColorV1Client.color_render_submit",
           "fn",
-          1327
+          1363
         ],
         [
           "ColorV1Client.color_render_submit_grid",
           "fn",
-          1332
+          1368
         ],
         [
           "ColorV1Client.color_yuv_image_transform",
           "fn",
-          1337
+          1373
         ],
         [
           "ColorV1Client.color_yuv_render_submit",
           "fn",
-          1342
+          1378
         ]
       ]
     },
     {
       "path": "Repositories/Libraries/R4GL/Bindings/Zig/r4gl.zig",
-      "sha256": "eebcaf220cc603f9f8277089e213d01d8286de3bdcd0483fab9fed890ca4fd44",
+      "sha256": "14a2015e43bc42d2db825b10ac739f0a7ef71bf9c72dfb9cf4d21c37884e343e",
       "owner": "Repositories/Libraries/R4GL",
       "version": "0.1.31",
       "capability": "library-R4GL",
@@ -39101,19 +39218,24 @@
           51
         ],
         [
+          "EglV1Client.init2",
+          "fn",
+          55
+        ],
+        [
           "EglV1Client.open",
           "fn",
-          67
+          76
         ],
         [
           "EglV1Client.release_thread",
           "fn",
-          72
+          81
         ],
         [
           "EglV1Client.finish",
           "fn",
-          77
+          86
         ]
       ]
     },
@@ -39157,7 +39279,7 @@
     },
     {
       "path": "Repositories/Libraries/R4IMG/Bindings/Zig/r4img.zig",
-      "sha256": "409dab4879d1f9da9b9db3ea01e43957e2cc2a6188176fdbdc0adb4eed2dfd25",
+      "sha256": "f08983d9157005ea77a34e40eb4981ded16c094b6643dd4b715193f027ab5109",
       "owner": "Repositories/Libraries/R4IMG",
       "version": "0.3.4",
       "capability": "library-R4IMG",
@@ -39288,105 +39410,120 @@
           84
         ],
         [
-          "RasterContext.color",
+          "RasterContext.init2",
           "fn",
           87
         ],
         [
+          "RasterContext.color",
+          "fn",
+          90
+        ],
+        [
           "RasterContext.iccProfile",
           "fn",
-          92
+          95
         ],
         [
           "Image16",
           "container",
-          99
+          102
         ],
         [
           "DecoderDiagnostic",
           "container",
-          101
+          104
         ],
         [
           "Context",
           "container",
-          191
+          194
         ],
         [
           "Context.init",
           "fn",
-          194
+          197
+        ],
+        [
+          "Context.init2",
+          "fn",
+          200
         ],
         [
           "Context.probe",
           "fn",
-          198
+          204
         ],
         [
           "Context.scratchBytesFor",
           "fn",
-          206
+          212
         ],
         [
           "Context.decode",
           "fn",
-          213
+          219
         ],
         [
           "Context.decodeSvg",
           "fn",
-          233
+          239
         ],
         [
           "Context.decodeSvgAt",
           "fn",
-          239
+          245
         ],
         [
           "Context.scaleComposite",
           "fn",
-          263
+          269
         ],
         [
           "Context.decoderDiagnostic",
           "fn",
-          282
+          288
         ],
         [
           "PngContext",
           "container",
-          300
+          306
         ],
         [
           "PngContext.init",
           "fn",
-          302
+          308
+        ],
+        [
+          "PngContext.init2",
+          "fn",
+          311
         ],
         [
           "PngContext.pngColor",
           "fn",
-          305
+          314
         ],
         [
           "PngContext.pngIccProfile",
           "fn",
-          310
+          319
         ],
         [
           "PngContext.pngScratchBytes16",
           "fn",
-          316
+          325
         ],
         [
           "PngContext.pngDecode16",
           "fn",
-          322
+          331
         ]
       ]
     },
     {
       "path": "Repositories/Libraries/R4IMG/Bindings/Zig/r4img_abi.zig",
-      "sha256": "12f4c14bf12b52fa769b4b768faf3f05dead4d36fa599d5ee3cd7d62c70fa4c7",
+      "sha256": "b85e54539e8611628a2d22260da305cca6677c2811466b2890e8741c6a53e9aa",
       "owner": "Repositories/Libraries/R4IMG",
       "version": "0.3.4",
       "capability": "library-R4IMG",
@@ -39787,90 +39924,105 @@
           216
         ],
         [
+          "ApiV1Client.init2",
+          "fn",
+          220
+        ],
+        [
           "ApiV1Client.probe",
           "fn",
-          235
+          244
         ],
         [
           "ApiV1Client.scratch_bytes",
           "fn",
-          240
+          249
         ],
         [
           "ApiV1Client.decode",
           "fn",
-          245
+          254
         ],
         [
           "ApiV1Client.decode_svg_at",
           "fn",
-          250
+          259
         ],
         [
           "ApiV1Client.scale_composite",
           "fn",
-          255
+          264
         ],
         [
           "ApiV1Client.decoder_diagnostic",
           "fn",
-          260
+          269
         ],
         [
           "PngV1Client",
           "container",
-          266
+          275
         ],
         [
           "PngV1Client.init",
           "fn",
-          269
+          278
+        ],
+        [
+          "PngV1Client.init2",
+          "fn",
+          282
         ],
         [
           "PngV1Client.png_color_info",
           "fn",
-          286
+          304
         ],
         [
           "PngV1Client.png_icc_profile",
           "fn",
-          291
+          309
         ],
         [
           "PngV1Client.png_scratch_bytes16",
           "fn",
-          296
+          314
         ],
         [
           "PngV1Client.png_decode16",
           "fn",
-          301
+          319
         ],
         [
           "RasterV1Client",
           "container",
-          307
+          325
         ],
         [
           "RasterV1Client.init",
           "fn",
-          310
+          328
+        ],
+        [
+          "RasterV1Client.init2",
+          "fn",
+          332
         ],
         [
           "RasterV1Client.raster_color_info",
           "fn",
-          325
+          352
         ],
         [
           "RasterV1Client.raster_icc_profile",
           "fn",
-          330
+          357
         ]
       ]
     },
     {
       "path": "Repositories/Libraries/R4NAK/Bindings/Zig/r4nak.zig",
-      "sha256": "055ff2dd85255b3d34c01b963726eec9ffb1ec8f7259cdb4232a379f046426c7",
+      "sha256": "a3c35de2facdaa0c27ab84667de89a9b63200f3fc1c9624b32b1094ae9cfd98c",
       "owner": "Repositories/Libraries/R4NAK",
       "version": "0.1.3",
       "capability": "library-R4NAK",
@@ -40021,24 +40173,29 @@
           170
         ],
         [
+          "CompilerV1Client.init2",
+          "fn",
+          174
+        ],
+        [
           "CompilerV1Client.compile",
           "fn",
-          187
+          196
         ],
         [
           "CompilerV1Client.cache_write",
           "fn",
-          192
+          201
         ],
         [
           "CompilerV1Client.cache_read",
           "fn",
-          197
+          206
         ],
         [
           "CompilerV1Client.format_info",
           "fn",
-          202
+          211
         ]
       ]
     },
@@ -40088,7 +40245,7 @@
     },
     {
       "path": "Repositories/Libraries/R4NV/Bindings/Zig/r4nv.zig",
-      "sha256": "728de011b9df184095a35e0e1efe7cf7f86d750b5a06be214cb182e07abc6958",
+      "sha256": "2cd1ffd42d20cff49dac9478a0084e5f8c42a125a641aea562832108dc99cbe8",
       "owner": "Repositories/Libraries/R4NV",
       "version": "0.1.19",
       "capability": "library-R4NV",
@@ -40614,74 +40771,89 @@
           392
         ],
         [
+          "BackendV1Client.init2",
+          "fn",
+          396
+        ],
+        [
           "BackendV1Client.negotiate",
           "fn",
-          409
+          418
         ],
         [
           "BackendV1Client.encode_copy",
           "fn",
-          414
+          423
         ],
         [
           "BackendV1Client.encode_copy_layout",
           "fn",
-          419
+          428
         ],
         [
           "BackendV1Client.image_layout",
           "fn",
-          424
+          433
         ],
         [
           "ShaderV1Client",
           "container",
-          430
+          439
         ],
         [
           "ShaderV1Client.init",
           "fn",
-          433
+          442
+        ],
+        [
+          "ShaderV1Client.init2",
+          "fn",
+          446
         ],
         [
           "ShaderV1Client.shader_info",
           "fn",
-          449
+          467
         ],
         [
           "ShaderV1Client.shader_cache_write",
           "fn",
-          454
+          472
         ],
         [
           "ShaderV1Client.shader_cache_read",
           "fn",
-          459
+          477
         ],
         [
           "RenderV1Client",
           "container",
-          465
+          483
         ],
         [
           "RenderV1Client.init",
           "fn",
-          468
+          486
+        ],
+        [
+          "RenderV1Client.init2",
+          "fn",
+          490
         ],
         [
           "RenderV1Client.render_info",
           "fn",
-          484
+          511
         ],
         [
           "RenderV1Client.render_upload",
           "fn",
-          489
+          516
         ],
         [
           "RenderV1Client.encode_yuv",
           "fn",
-          494
+          521
         ]
       ]
     },
@@ -41693,7 +41865,7 @@
     },
     {
       "path": "Repositories/Libraries/R4STD/Bindings/Zig/r4std.zig",
-      "sha256": "d633e16cc0d85ace166d66ac5998b4179d12b6bc88d614e1c1afec1056828df7",
+      "sha256": "efa4f6030863221a7fe2743efef13ef657769762430313c833f914bea2160fe8",
       "owner": "Repositories/Libraries/R4STD",
       "version": "0.2.6",
       "capability": "library-R4STD",
@@ -41799,20 +41971,25 @@
           25
         ],
         [
-          "initialized",
+          "init2",
           "fn",
           29
         ],
         [
-          "resetForTesting",
+          "initialized",
           "fn",
           33
+        ],
+        [
+          "resetForTesting",
+          "fn",
+          37
         ]
       ]
     },
     {
       "path": "Repositories/Libraries/R4STD/Bindings/Zig/r4std_abi.zig",
-      "sha256": "a06e4842a1af2b45691598e5efd28e01cf3c43ab790e6ad8f40e0f4d40ac52ab",
+      "sha256": "3aec707d93e50b9582ab4f197eedb56e647bee45826afe57c9242a3f63fa5b20",
       "owner": "Repositories/Libraries/R4STD",
       "version": "0.2.6",
       "capability": "library-R4STD",
@@ -42733,325 +42910,355 @@
           409
         ],
         [
+          "TextV1Client.init2",
+          "fn",
+          413
+        ],
+        [
           "TextV1Client.inspect",
           "fn",
-          424
+          433
         ],
         [
           "TextV1Client.write",
           "fn",
-          429
+          438
         ],
         [
           "SettingsV1Client",
           "container",
-          435
+          444
         ],
         [
           "SettingsV1Client.init",
           "fn",
-          438
+          447
+        ],
+        [
+          "SettingsV1Client.init2",
+          "fn",
+          451
         ],
         [
           "SettingsV1Client.entry_next",
           "fn",
-          463
+          481
         ],
         [
           "SettingsV1Client.value",
           "fn",
-          468
+          486
         ],
         [
           "SettingsV1Client.parse_scalar",
           "fn",
-          473
+          491
         ],
         [
           "SettingsV1Client.writer_append",
           "fn",
-          478
+          496
         ],
         [
           "SettingsV1Client.equals_key",
           "fn",
-          483
+          501
         ],
         [
           "SettingsV1Client.writeback_policy",
           "fn",
-          488
+          506
         ],
         [
           "SettingsV1Client.writeback_default_delay",
           "fn",
-          493
+          511
         ],
         [
           "SettingsV1Client.writeback_init",
           "fn",
-          498
+          516
         ],
         [
           "SettingsV1Client.writeback_configure",
           "fn",
-          503
+          521
         ],
         [
           "SettingsV1Client.writeback_mark_dirty",
           "fn",
-          508
+          526
         ],
         [
           "SettingsV1Client.writeback_prepare",
           "fn",
-          513
+          531
         ],
         [
           "SettingsV1Client.writeback_complete",
           "fn",
-          518
+          536
         ],
         [
           "DateV1Client",
           "container",
-          524
+          542
         ],
         [
           "DateV1Client.init",
           "fn",
-          527
+          545
+        ],
+        [
+          "DateV1Client.init2",
+          "fn",
+          549
         ],
         [
           "DateV1Client.days_in_month",
           "fn",
-          552
+          579
         ],
         [
           "DateV1Client.valid_date",
           "fn",
-          557
+          584
         ],
         [
           "DateV1Client.compare_date_time",
           "fn",
-          562
+          589
         ],
         [
           "DateV1Client.weekday_number",
           "fn",
-          567
+          594
         ],
         [
           "DateV1Client.shift_minutes",
           "fn",
-          572
+          599
         ],
         [
           "DateV1Client.from_time_state",
           "fn",
-          577
+          604
         ],
         [
           "DateV1Client.to_time_state",
           "fn",
-          582
+          609
         ],
         [
           "DateV1Client.utc_from_date_time",
           "fn",
-          587
+          614
         ],
         [
           "DateV1Client.date_time_from_utc",
           "fn",
-          592
+          619
         ],
         [
           "DateV1Client.format",
           "fn",
-          597
+          624
         ],
         [
           "DateV1Client.parse",
           "fn",
-          602
+          629
         ],
         [
           "DateV1Client.decode_fat",
           "fn",
-          607
+          634
         ],
         [
           "TimeV1Client",
           "container",
-          613
+          640
         ],
         [
           "TimeV1Client.init",
           "fn",
-          616
+          643
+        ],
+        [
+          "TimeV1Client.init2",
+          "fn",
+          647
         ],
         [
           "TimeV1Client.zone_count",
           "fn",
-          644
+          680
         ],
         [
           "TimeV1Client.copy_zone_id",
           "fn",
-          649
+          685
         ],
         [
           "TimeV1Client.copy_zone_label",
           "fn",
-          654
+          690
         ],
         [
           "TimeV1Client.index_for_id",
           "fn",
-          659
+          695
         ],
         [
           "TimeV1Client.offset_at_state",
           "fn",
-          664
+          700
         ],
         [
           "TimeV1Client.seconds_in_zone",
           "fn",
-          669
+          705
         ],
         [
           "TimeV1Client.split_time",
           "fn",
-          674
+          710
         ],
         [
           "TimeV1Client.local_date_time",
           "fn",
-          679
+          715
         ],
         [
           "TimeV1Client.format_clock",
           "fn",
-          684
+          720
         ],
         [
           "TimeV1Client.format_offset",
           "fn",
-          689
+          725
         ],
         [
           "TimeV1Client.config_load",
           "fn",
-          694
+          730
         ],
         [
           "TimeV1Client.config_write",
           "fn",
-          699
+          735
         ],
         [
           "TimeV1Client.config_normalize",
           "fn",
-          704
+          740
         ],
         [
           "TimeV1Client.config_offset",
           "fn",
-          709
+          745
         ],
         [
           "TimeV1Client.standard_offset",
           "fn",
-          714
+          750
         ],
         [
           "ConfigV1Client",
           "container",
-          720
+          756
         ],
         [
           "ConfigV1Client.init",
           "fn",
-          723
+          759
+        ],
+        [
+          "ConfigV1Client.init2",
+          "fn",
+          763
         ],
         [
           "ConfigV1Client.read",
           "fn",
-          742
+          787
         ],
         [
           "ConfigV1Client.write",
           "fn",
-          747
+          792
         ],
         [
           "ConfigV1Client.save_document",
           "fn",
-          752
+          797
         ],
         [
           "ConfigV1Client.recover_document",
           "fn",
-          757
+          802
         ],
         [
           "ConfigV1Client.has_leftovers",
           "fn",
-          762
+          807
         ],
         [
           "ConfigV1Client.ensure_dirs",
           "fn",
-          767
+          812
         ],
         [
           "CodecV1Client",
           "container",
-          773
+          818
         ],
         [
           "CodecV1Client.init",
           "fn",
-          776
+          821
+        ],
+        [
+          "CodecV1Client.init2",
+          "fn",
+          825
         ],
         [
           "CodecV1Client.legacy_decode",
           "fn",
-          795
+          849
         ],
         [
           "CodecV1Client.legacy_encode",
           "fn",
-          800
+          854
         ],
         [
           "CodecV1Client.utf8_decode",
           "fn",
-          805
+          859
         ],
         [
           "CodecV1Client.utf8_encode",
           "fn",
-          810
+          864
         ],
         [
           "CodecV1Client.utf8_push",
           "fn",
-          815
+          869
         ],
         [
           "CodecV1Client.utf8_finish",
           "fn",
-          820
+          874
         ]
       ]
     },
     {
       "path": "Repositories/Libraries/R4STD/Bindings/Zig/runtime.zig",
-      "sha256": "77bb3d383f86f00cedad5e5495c972b2543394bb0aadb32ce6b259e1f5442e0b",
+      "sha256": "6b481788932ba0ef47d830616da8d47aea2b9a8bb6b573e6ee662d0b363f481e",
       "owner": "Repositories/Libraries/R4STD",
       "version": "0.2.6",
       "capability": "library-R4STD",
@@ -43069,82 +43276,87 @@
         [
           "init",
           "fn",
-          18
+          19
+        ],
+        [
+          "init2",
+          "fn",
+          32
         ],
         [
           "initialized",
           "fn",
-          35
+          53
         ],
         [
           "text",
           "fn",
-          44
+          62
         ],
         [
           "settings",
           "fn",
-          49
+          67
         ],
         [
           "date",
           "fn",
-          54
+          72
         ],
         [
           "time",
           "fn",
-          59
+          77
         ],
         [
           "config",
           "fn",
-          64
+          82
         ],
         [
           "hasText",
           "fn",
-          69
+          87
         ],
         [
           "hasSettings",
           "fn",
-          73
+          91
         ],
         [
           "hasDate",
           "fn",
-          77
+          95
         ],
         [
           "hasTime",
           "fn",
-          81
+          99
         ],
         [
           "hasConfig",
           "fn",
-          85
+          103
         ],
         [
           "rawAddress",
           "fn",
-          89
+          107
         ],
         [
           "hasCodec",
           "fn",
-          93
+          111
         ],
         [
           "codec",
           "fn",
-          97
+          115
         ],
         [
           "resetForTesting",
           "fn",
-          102
+          120
         ]
       ]
     },
@@ -44440,7 +44652,7 @@
     },
     {
       "path": "Repositories/Libraries/R4VIDEO/Bindings/Zig/r4video.zig",
-      "sha256": "e3835fd245a01ff5c6f4109b4ea0bd2d494277bc583aeb8ea45029124217ab60",
+      "sha256": "ba916685f353cad0f3f25e535d14a6eec3b68cc97a2477e98378cf30e50cc7fb",
       "owner": "Repositories/Libraries/R4VIDEO",
       "version": "0.1.13",
       "capability": "library-R4VIDEO",
@@ -44966,55 +45178,60 @@
           296
         ],
         [
+          "VideoV1Client.init2",
+          "fn",
+          300
+        ],
+        [
           "VideoV1Client.open",
           "fn",
-          318
+          327
         ],
         [
           "VideoV1Client.query_caps",
           "fn",
-          323
+          332
         ],
         [
           "VideoV1Client.create",
           "fn",
-          328
+          337
         ],
         [
           "VideoV1Client.send",
           "fn",
-          333
+          342
         ],
         [
           "VideoV1Client.receive",
           "fn",
-          338
+          347
         ],
         [
           "VideoV1Client.release",
           "fn",
-          343
+          352
         ],
         [
           "VideoV1Client.control",
           "fn",
-          348
+          357
         ],
         [
           "VideoV1Client.destroy",
           "fn",
-          353
+          362
         ],
         [
           "VideoV1Client.finish",
           "fn",
-          358
+          367
         ]
       ]
     },
     {
       "path": "Repositories/Libraries/R4VK/Bindings/Zig/r4vk.zig",
-      "sha256": "cba7d83d37229ccc9a9181fb2fa12316cb25d3a4342f10cb87f21ea5741ad091",
+      "sha256": "f7253dda3002b136c6eeb92e167ff352e10c0587d4867483673807bea3af22bf",
       "owner": "Repositories/Libraries/R4VK",
       "version": "0.1.42",
       "capability": "library-R4VK",
@@ -45085,9 +45302,14 @@
           47
         ],
         [
+          "VulkanV1Client.init2",
+          "fn",
+          51
+        ],
+        [
           "VulkanV1Client.open",
           "fn",
-          61
+          70
         ]
       ]
     },
@@ -48327,7 +48549,8 @@
         "source_inventory",
         "local_contract_and_baseline",
         "language_libraries_current_59",
-        "library_projection_current_61"
+        "library_projection_current_61",
+        "canonical_text_font_image_generation2_09045"
       ],
       "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten."
     },
@@ -48688,7 +48911,8 @@
         "source_inventory",
         "local_contract_and_baseline",
         "language_libraries_current_59",
-        "library_projection_current_61"
+        "library_projection_current_61",
+        "canonical_text_font_image_generation2_09045"
       ],
       "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten."
     },
@@ -48864,7 +49088,7 @@
     {
       "id": "library-R4STD",
       "owner": "Repositories/Libraries/R4STD",
-      "version": "0.2.6",
+      "version": "0.2.8",
       "wave": "0.86.59",
       "binding_wave": "0.86.52",
       "contract": {
@@ -49039,7 +49263,8 @@
         "source_inventory",
         "local_contract_and_baseline",
         "language_libraries_current_59",
-        "library_projection_current_61"
+        "library_projection_current_61",
+        "canonical_text_font_image_generation2_09045"
       ],
       "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten."
     },
@@ -58489,6 +58714,24 @@
         "Crossbuilt Linux/Windows tool files, shared PS7 and actual Linux builds are no Windows execution proof. No physical hardware/IME/ADC/audio/visual desktop/freshinstallation claim.",
         "Normal9 clean-source admission, archive and single final STANDARD remain separate closure evidence. Initial technical native receipts remain unchanged; no relabelling as normal."
       ]
+    },
+    "canonical_text_font_image_generation2_09045": {
+      "complete": true,
+      "performed_in": "0.90.45",
+      "sdk": "0.64.186",
+      "contract": "0.64.93",
+      "libraries": "0.64.53",
+      "report": "Docs/API/ConsumerMigration.txt",
+      "scope": "Typed generation2 named library imports and technical Query2 validation in C/Zig/Rust, independent API1 revisions preserved, canonical STD/FONT/IMG calls and exact caller/allocator ownership.",
+      "host_checks": "Original STD54/FONT20/IMG22 and Platform2 73 tests, contract generator and baretarget strict Clippy. All12 independent generated C/Rust layouts and slots; both exact App1 and App2 borrow escape negatives rejected. Original all12 independent contracts/baselines unchanged. All9 technical tools input and output bytes independently checked.",
+      "native_checks": "Own KVM4 Kernel474; boot-admitted exact canonical STD0.2.8, FONT0.2.4 and IMG0.3.5. Actual4 C/Zig/Rust actors and exact4 waits/reaps. Real STD text, arbitrary document bytes, CP437 codec and CONFIG I/O through exact Context2; actual font decoder create/destroy with Rust callback allocation balance and Zig process VM allocation balance; exact decoded BMP pixel0xff112233. Wholefile installed readbacks.",
+      "limits": [
+        "Independent API1 revisions and Query2 technical platform admission are separate. No contract IDs/revisions/slots changed.",
+        "All12 generated library projections expose init2/optional2; only STD/FONT/IMG functional consumers qualified in45. Graphics/video/compiler provider migrations remain46-48.",
+        "Font/image provider artifact bytes unchanged, no module version increase; STD opaque caller bug changed runtime bytes and module version2.8.",
+        "Old defaults/providers remain until86/89/90. Native R4BUILD/R4CC remains pending72.",
+        "Single final STANDARD and clean normal/technical source admission are separate closure evidence. Initial technical receipts stay original. No Windows/physicalhardware/visual desktop/freshinstallation proof."
+      ]
     }
   },
   "wave_bindings": [
@@ -58741,12 +58984,12 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.90.44",
-    "sdk": "0.64.185",
+    "performed_in": "0.90.45",
+    "sdk": "0.64.186",
     "contract": "0.64.93",
-    "libraries": "0.64.51 unchanged",
-    "evidence": "tooling_templates_generation2_09044",
-    "scope": "Central manifest-selected SDK admission/default/profile/export truth, real C/Zig/Rust normal/raw and technical templates, independent R4L contracts plus technical Query2, complete native C include/hash roots and actual matched tool packages.",
+    "libraries": "0.64.53",
+    "evidence": "canonical_text_font_image_generation2_09045",
+    "scope": "Typed generation2 named library imports and technical Query2 validation in C/Zig/Rust, independent API1 revisions preserved, canonical STD/FONT/IMG calls and exact caller/allocator ownership.",
     "historical_snapshot_retained": true,
     "current_platform_tables": [
       {
@@ -58798,7 +59041,7 @@
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.90.44",
+    "reviewed_in": "0.90.45",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -59012,7 +59255,7 @@
       },
       {
         "path": "Repositories/Libraries/R4ACO/Bindings/C/r4aco.h",
-        "sha256": "c3cea82c98631bca53c4fdbbe60bf0507be7d6be19c1a7a7b791e288c233d86a"
+        "sha256": "8d08fa19a381271b228dbe14ce11f76333df5d16eab83af32f96d28f7db859d2"
       },
       {
         "path": "Repositories/Libraries/R4ACO/Bindings/C/r4aco_helpers.h",
@@ -59024,11 +59267,11 @@
       },
       {
         "path": "Repositories/Libraries/R4ACO/Bindings/Rust/src/lib.rs",
-        "sha256": "b80e918e2d27e112fd279792e1f4a146f173de24e5698aa84233ced55c442afb"
+        "sha256": "4b1ffde16530c4d400c8b6cf801128cc92841a678dbc7cf098c7703830795a35"
       },
       {
         "path": "Repositories/Libraries/R4ACO/Bindings/Zig/r4aco.zig",
-        "sha256": "55386326a7975641348ec9eab1eebfc53fd0a1bf9a3f3a74da48d90f80bc3f23"
+        "sha256": "9c131bf02a32c92b163678af985d8354e8289f14fb7edcf8443bb3e70fdad7fa"
       },
       {
         "path": "Repositories/Libraries/R4ACO/Bindings/Zig/shaders.zig",
@@ -59056,7 +59299,7 @@
       },
       {
         "path": "Repositories/Libraries/R4AMD/Bindings/C/r4amd.h",
-        "sha256": "1456aa3f22eac23b45aaa38025f8d612cc73178c198758d5735601f3363d8a5b"
+        "sha256": "2467f8ce513a7b58827f42753b5b6389622cad8110618f329b20ab076b0f3acd"
       },
       {
         "path": "Repositories/Libraries/R4AMD/Bindings/Rust/Cargo.toml",
@@ -59064,11 +59307,11 @@
       },
       {
         "path": "Repositories/Libraries/R4AMD/Bindings/Rust/src/lib.rs",
-        "sha256": "0852125ac3832e0a65a153e3548d9569bef16637fda8a26a9774fc2fd6cb0559"
+        "sha256": "266cc63a310da032b190b474e22bc1b3eccc988a200642cdb7ef1f928570dc1d"
       },
       {
         "path": "Repositories/Libraries/R4AMD/Bindings/Zig/r4amd.zig",
-        "sha256": "1fa039505eff4d14c458fa5396a02293230181cfa9b7968874ff98085b4400c2"
+        "sha256": "c5635b71e162e3ec8f522da880a20accc0de705afc382de7e2301d25ce6e8baf"
       },
       {
         "path": "Repositories/Libraries/R4AMD/Contract/Generated/implementation_abi.zig",
@@ -59084,7 +59327,7 @@
       },
       {
         "path": "Repositories/Libraries/R4ENC/Bindings/C/r4enc.h",
-        "sha256": "4355b6ceb1314b06bb898a073a194049da53c489214b3d3ba1849d74301317b3"
+        "sha256": "6bcec650c61aace7ad7471b7fdb983ff867b318c0954b73d29d364610cff3482"
       },
       {
         "path": "Repositories/Libraries/R4ENC/Bindings/C/r4enc_helpers.h",
@@ -59100,11 +59343,11 @@
       },
       {
         "path": "Repositories/Libraries/R4ENC/Bindings/Rust/src/lib.rs",
-        "sha256": "0da10d14abefb0b8d1930a128ea574ff2c09093f2d222442be379219651182a2"
+        "sha256": "ad023fbf3d526bfe7a6e15df2a1571c587876a61f07f8fe0496f35d2fe7cad86"
       },
       {
         "path": "Repositories/Libraries/R4ENC/Bindings/Zig/r4enc.zig",
-        "sha256": "a77abeec0fe12ff0213bc3190270b423e0c14044f4cbbfc18c7bbe3e9f9cfc12"
+        "sha256": "9a020410cd3a83c0a1210131c5c8fbd437ecf3b449a89b40b6d5a2cc8830bb75"
       },
       {
         "path": "Repositories/Libraries/R4ENC/Bindings/Zig/recording_mux.zig",
@@ -59128,7 +59371,7 @@
       },
       {
         "path": "Repositories/Libraries/R4FONT/Bindings/C/r4font.h",
-        "sha256": "0e62e8299dc16ae52abd809d9dc93a3d27fa1b8cdd383f6332c0a1e4bf9222e0"
+        "sha256": "ba88b2ee5f19b9089234ed7dab80bc3a86db10dfc099d2091bbe2e1a94111bcc"
       },
       {
         "path": "Repositories/Libraries/R4FONT/Bindings/C/r4font_helpers.h",
@@ -59144,7 +59387,7 @@
       },
       {
         "path": "Repositories/Libraries/R4FONT/Bindings/Rust/src/lib.rs",
-        "sha256": "6bd8bff40512a0f1f95d56392bee2d876f43c6b42717a95ed09a7bcc5eb998f1"
+        "sha256": "787bfc4fb6cee506f69e8fb46abdc2d0807e421b783ee8f29652b7d364d4c404"
       },
       {
         "path": "Repositories/Libraries/R4FONT/Bindings/Zig/app_fonts.zig",
@@ -59164,11 +59407,11 @@
       },
       {
         "path": "Repositories/Libraries/R4FONT/Bindings/Zig/r4font.zig",
-        "sha256": "28cb127566eb302fc3ba6d9f7ef56ff7a990facb88404496cc96ff668ffe7033"
+        "sha256": "8b3dadddf16359e49fc98e36027ec82fb72bd8fa587ef30c3487faecf2b7d7b9"
       },
       {
         "path": "Repositories/Libraries/R4FONT/Bindings/Zig/r4font_abi.zig",
-        "sha256": "5a1a543b8c6743895ce8f83c907303861d0d829dd266bcec2d4d7fe2646f9f12"
+        "sha256": "62ea3957814c2033316c01a450c2b2d02a8c06fa2285bffd5c4535e52e7b9f42"
       },
       {
         "path": "Repositories/Libraries/R4FONT/Contract/Generated/implementation_abi.zig",
@@ -59184,7 +59427,7 @@
       },
       {
         "path": "Repositories/Libraries/R4GFX/Bindings/C/r4gfx.h",
-        "sha256": "e5d4ef9b0c10ef932be1173a2301a44f8d626af2ba495b3ecdb84600b7efd241"
+        "sha256": "e5295debb40560bf300a675ccf85946942b45f8132b35f283091711054ce9db0"
       },
       {
         "path": "Repositories/Libraries/R4GFX/Bindings/C/r4gfx_helpers.h",
@@ -59200,7 +59443,7 @@
       },
       {
         "path": "Repositories/Libraries/R4GFX/Bindings/Rust/src/lib.rs",
-        "sha256": "8ab6536e2b519480724eb8fd643254b81f9f844886c0f87abb4a73573e0adac4"
+        "sha256": "9a0cfaddf8de70b8d587214713212e32b95b5d473a7a26df8ef141e30da5eb7e"
       },
       {
         "path": "Repositories/Libraries/R4GFX/Bindings/Zig/outputs.zig",
@@ -59212,7 +59455,7 @@
       },
       {
         "path": "Repositories/Libraries/R4GFX/Bindings/Zig/r4gfx_abi.zig",
-        "sha256": "ca53a3d7c75462bd3a2b212990c8a90fbe5a02f1d419d30ed992c536fbb718f0"
+        "sha256": "c058f5df7a6095227c8b78c8d1ae9a715c9e8330e59f476021016741963f90a0"
       },
       {
         "path": "Repositories/Libraries/R4GFX/Contract/Generated/implementation_abi.zig",
@@ -59360,7 +59603,7 @@
       },
       {
         "path": "Repositories/Libraries/R4GL/Bindings/C/r4gl.h",
-        "sha256": "981450081bc257eb5925d2a4838e882bf76eb4a99076d0dd557478d702baf217"
+        "sha256": "bf15b2d51fbe28f2fc75546366b3f31104967d4fcf1d95c12db1b6ce246019d0"
       },
       {
         "path": "Repositories/Libraries/R4GL/Bindings/C/r4gl_api.h",
@@ -59372,11 +59615,11 @@
       },
       {
         "path": "Repositories/Libraries/R4GL/Bindings/Rust/src/lib.rs",
-        "sha256": "c4e80e8649d7d5547cd63a0200e304333dbfea19579f68477f26961c5389968a"
+        "sha256": "1384092279e183b4ea1ac0aea0aadd84068d5bbf04ca613e162ca026f45a63bf"
       },
       {
         "path": "Repositories/Libraries/R4GL/Bindings/Zig/r4gl.zig",
-        "sha256": "eebcaf220cc603f9f8277089e213d01d8286de3bdcd0483fab9fed890ca4fd44"
+        "sha256": "14a2015e43bc42d2db825b10ac739f0a7ef71bf9c72dfb9cf4d21c37884e343e"
       },
       {
         "path": "Repositories/Libraries/R4GL/Contract/Generated/implementation_abi.zig",
@@ -59392,7 +59635,7 @@
       },
       {
         "path": "Repositories/Libraries/R4IMG/Bindings/C/r4img.h",
-        "sha256": "a5307c8834e9acaa506e787e8960410d9dcf32c00a15cd52ca7bab7bf27644b9"
+        "sha256": "b51e41aef52843a0f75d295e92f993873a16a407a8dbb1c91c335b8452b4f2c1"
       },
       {
         "path": "Repositories/Libraries/R4IMG/Bindings/C/r4img_helpers.h",
@@ -59408,7 +59651,7 @@
       },
       {
         "path": "Repositories/Libraries/R4IMG/Bindings/Rust/src/lib.rs",
-        "sha256": "146bd23a2bb4b0031fce247f717da99b3cc775240a99a3bfb48b25d2b7354187"
+        "sha256": "c69692ae5294dbd24a6d7c665ac97b382e539cce8e31c6d0c50d344a5e7d8d63"
       },
       {
         "path": "Repositories/Libraries/R4IMG/Bindings/Zig/color.zig",
@@ -59420,11 +59663,11 @@
       },
       {
         "path": "Repositories/Libraries/R4IMG/Bindings/Zig/r4img.zig",
-        "sha256": "409dab4879d1f9da9b9db3ea01e43957e2cc2a6188176fdbdc0adb4eed2dfd25"
+        "sha256": "f08983d9157005ea77a34e40eb4981ded16c094b6643dd4b715193f027ab5109"
       },
       {
         "path": "Repositories/Libraries/R4IMG/Bindings/Zig/r4img_abi.zig",
-        "sha256": "12f4c14bf12b52fa769b4b768faf3f05dead4d36fa599d5ee3cd7d62c70fa4c7"
+        "sha256": "b85e54539e8611628a2d22260da305cca6677c2811466b2890e8741c6a53e9aa"
       },
       {
         "path": "Repositories/Libraries/R4IMG/Contract/Generated/implementation_abi.zig",
@@ -59440,7 +59683,7 @@
       },
       {
         "path": "Repositories/Libraries/R4NAK/Bindings/C/r4nak.h",
-        "sha256": "44be23ef0a2551604d2552e8f946d858346d166a31937e7d455257a648c8db7d"
+        "sha256": "c6fec1fef639bae28ab5d45b2ccd08080e2eeb3d458b3bb249d5c11fce174b55"
       },
       {
         "path": "Repositories/Libraries/R4NAK/Bindings/C/r4nak_helpers.h",
@@ -59452,11 +59695,11 @@
       },
       {
         "path": "Repositories/Libraries/R4NAK/Bindings/Rust/src/lib.rs",
-        "sha256": "57ed6483c26b401bf139c6cdbc5eabd6bf69df74bab9ee78a09693aa4cff41c7"
+        "sha256": "7fe970e0358b013c6b5172366dbbde3450fe652493b36747018fe5fbe2667894"
       },
       {
         "path": "Repositories/Libraries/R4NAK/Bindings/Zig/r4nak.zig",
-        "sha256": "055ff2dd85255b3d34c01b963726eec9ffb1ec8f7259cdb4232a379f046426c7"
+        "sha256": "a3c35de2facdaa0c27ab84667de89a9b63200f3fc1c9624b32b1094ae9cfd98c"
       },
       {
         "path": "Repositories/Libraries/R4NAK/Bindings/Zig/worker.zig",
@@ -59480,7 +59723,7 @@
       },
       {
         "path": "Repositories/Libraries/R4NV/Bindings/C/r4nv.h",
-        "sha256": "d9dd92fe112cd1fb7db4b3a3402bc41b65835c1c4f851f892066aeb6add51b39"
+        "sha256": "8731c1c75169e32006dac07f71d7928b80697282c5615085e382b90f100c86f8"
       },
       {
         "path": "Repositories/Libraries/R4NV/Bindings/Rust/Cargo.toml",
@@ -59488,11 +59731,11 @@
       },
       {
         "path": "Repositories/Libraries/R4NV/Bindings/Rust/src/lib.rs",
-        "sha256": "c1d628aa9fdfa23aabacbd4fa838d391f5842c586d8ce7ee4ca76546322ec2e7"
+        "sha256": "f7aac5c28a6a255def52d82bd9f2389818445059c1e321158df549f580ea3ecd"
       },
       {
         "path": "Repositories/Libraries/R4NV/Bindings/Zig/r4nv.zig",
-        "sha256": "728de011b9df184095a35e0e1efe7cf7f86d750b5a06be214cb182e07abc6958"
+        "sha256": "2cd1ffd42d20cff49dac9478a0084e5f8c42a125a641aea562832108dc99cbe8"
       },
       {
         "path": "Repositories/Libraries/R4NV/Contract/Generated/implementation_abi.zig",
@@ -59512,7 +59755,7 @@
       },
       {
         "path": "Repositories/Libraries/R4STD/Bindings/C/r4std_abi.h",
-        "sha256": "d10aea9f9e7cde07df2e8da12e02390d700847d2992a66d4b4888c9e00412e0f"
+        "sha256": "bdbe9bfda8a43f56a4afe6a0bfed19d5065a130f6ec4fadae39656c278624f26"
       },
       {
         "path": "Repositories/Libraries/R4STD/Bindings/C/r4std_helpers.h",
@@ -59528,7 +59771,7 @@
       },
       {
         "path": "Repositories/Libraries/R4STD/Bindings/Rust/src/lib.rs",
-        "sha256": "dabd260e38b6667757261d4aabd55485ec5c7e55fcc6031f596e9b64b848df70"
+        "sha256": "41a2635c475e3ee9e8ce5d9bb5bbfce96f8f447b57d6210c4d97cd90367d1853"
       },
       {
         "path": "Repositories/Libraries/R4STD/Bindings/Zig/app_assoc.zig",
@@ -59568,15 +59811,15 @@
       },
       {
         "path": "Repositories/Libraries/R4STD/Bindings/Zig/r4std.zig",
-        "sha256": "d633e16cc0d85ace166d66ac5998b4179d12b6bc88d614e1c1afec1056828df7"
+        "sha256": "efa4f6030863221a7fe2743efef13ef657769762430313c833f914bea2160fe8"
       },
       {
         "path": "Repositories/Libraries/R4STD/Bindings/Zig/r4std_abi.zig",
-        "sha256": "a06e4842a1af2b45691598e5efd28e01cf3c43ab790e6ad8f40e0f4d40ac52ab"
+        "sha256": "3aec707d93e50b9582ab4f197eedb56e647bee45826afe57c9242a3f63fa5b20"
       },
       {
         "path": "Repositories/Libraries/R4STD/Bindings/Zig/runtime.zig",
-        "sha256": "77bb3d383f86f00cedad5e5495c972b2543394bb0aadb32ce6b259e1f5442e0b"
+        "sha256": "6b481788932ba0ef47d830616da8d47aea2b9a8bb6b573e6ee662d0b363f481e"
       },
       {
         "path": "Repositories/Libraries/R4STD/Bindings/Zig/settings.zig",
@@ -59624,7 +59867,7 @@
       },
       {
         "path": "Repositories/Libraries/R4VIDEO/Bindings/C/r4video.h",
-        "sha256": "eca23dd194583c840d1108297008b2c56a2fb7ec1f8218a34bf2e49075b5b469"
+        "sha256": "761eb31e2da3d98eb17120aab137d5cee738b9ded3e468dd620e9234f20f71f5"
       },
       {
         "path": "Repositories/Libraries/R4VIDEO/Bindings/C/r4video_helpers.h",
@@ -59640,7 +59883,7 @@
       },
       {
         "path": "Repositories/Libraries/R4VIDEO/Bindings/Rust/src/lib.rs",
-        "sha256": "5e59f26cc4c53e7d3576c0cf35def76853a1d89ffc64bdfc2181bd33303c1a2c"
+        "sha256": "a498004ba3f9b02ebb18aac90a9bde5a76fbd79809cf91f5fd954902ab678697"
       },
       {
         "path": "Repositories/Libraries/R4VIDEO/Bindings/Zig/playback.zig",
@@ -59660,7 +59903,7 @@
       },
       {
         "path": "Repositories/Libraries/R4VIDEO/Bindings/Zig/r4video.zig",
-        "sha256": "e3835fd245a01ff5c6f4109b4ea0bd2d494277bc583aeb8ea45029124217ab60"
+        "sha256": "ba916685f353cad0f3f25e535d14a6eec3b68cc97a2477e98378cf30e50cc7fb"
       },
       {
         "path": "Repositories/Libraries/R4VIDEO/Contract/Generated/implementation_abi.zig",
@@ -59676,7 +59919,7 @@
       },
       {
         "path": "Repositories/Libraries/R4VK/Bindings/C/r4vk.h",
-        "sha256": "8e4489774480cc115bd47795b139153f0eb6ab508f77757533e54cf0623110bd"
+        "sha256": "ac8b65869dc067ae74aef8798685c48a976009d3571d98ddd652b6a8b5ddcff6"
       },
       {
         "path": "Repositories/Libraries/R4VK/Bindings/C/r4vk_wsi.h",
@@ -59688,11 +59931,11 @@
       },
       {
         "path": "Repositories/Libraries/R4VK/Bindings/Rust/src/lib.rs",
-        "sha256": "33bac0ac4ae5c5939001d88c51f2d3c0123028fd72eb75997b6a7623c4e70f36"
+        "sha256": "318a8ebc9d1095a522caf8567d54302b5914050cc5c34d2f39b9f537cb953a3d"
       },
       {
         "path": "Repositories/Libraries/R4VK/Bindings/Zig/r4vk.zig",
-        "sha256": "cba7d83d37229ccc9a9181fb2fa12316cb25d3a4342f10cb87f21ea5741ad091"
+        "sha256": "f7253dda3002b136c6eeb92e167ff352e10c0587d4867483673807bea3af22bf"
       },
       {
         "path": "Repositories/Libraries/R4VK/Contract/Generated/implementation_abi.zig",
@@ -60040,7 +60283,7 @@
       },
       {
         "path": "Repositories/SDK/Profiles/Components.json",
-        "sha256": "1b28d470ee53aec92cdfe78d51feb4c10e67e81d9e3feb240067aace98a4548a"
+        "sha256": "4737ae4667d3e1418e10b4b231270cb912ca6ee792cf0cc4c8d1388fc57007d3"
       },
       {
         "path": "Repositories/SDK/Profiles/Tools.json",
@@ -60212,7 +60455,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/platform2.rs",
-        "sha256": "91a90e70c6c6d57d9c27dfe3bf2896952a3e31057df5a1bb1c3398be989bf4b6"
+        "sha256": "d6a9c2e8d595207bc8b8a95f86820b31f216c77852c9b98c711a7bb01e0dd75c"
       },
       {
         "path": "Repositories/SDK/Rust/src/protocol.rs",
@@ -60224,7 +60467,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/r4l.rs",
-        "sha256": "71203e1193c4fbee5a2fa927dff31d1908fd61f137bb81bb07b2275e523497d4"
+        "sha256": "8eebc366da88cbcf01204a45291fb5ce5f110de5d8d1560d288c83ff1d693ba6"
       },
       {
         "path": "Repositories/SDK/Rust/src/registry_diagnostics.rs",
@@ -60624,7 +60867,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/r4l.h",
-        "sha256": "15f25769ff13d405b1e573464130d8f77468e451df2b52a9361dd24e6b63badb"
+        "sha256": "48aa72cd01af623a470156c3c6ccbf6287a61ce0b74691ec7348c12ab45e8056"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/r4m0.h",
@@ -60944,11 +61187,11 @@
       },
       {
         "path": "Repositories/SDK/Tools/R4LContractGen/src/main.zig",
-        "sha256": "09ef74f89fcf46413ec081e4edc189b59546375bf9db9eb155355bec19958a19"
+        "sha256": "3dbf14415867682ad9c5be9d3c7611ef6bc36d0b203a01fd3d1c056fb17f6f09"
       },
       {
         "path": "Repositories/SDK/Tools/R4LContractGen/src/rust.zig",
-        "sha256": "4d3238f69d44408df9e8d3cbbd6bc439213c9acea120a242e90465ab340d80b6"
+        "sha256": "1f8b33f86ea91263c9d37ac366696142a387fb2de1fd346af1485d2fc6e60363"
       },
       {
         "path": "Repositories/SDK/Tools/R4XBuilder/build.zig",
@@ -61040,7 +61283,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/Test-RustLibraries.ps1",
-        "sha256": "2f467f62352572bbfb17275da22dc64b54b8e1a8a5f5c22cd5a51db17ecfed09"
+        "sha256": "aab0413b337bdbf704de414012928c3d795aaf9821a8b3e5f597f48e4c891105"
       },
       {
         "path": "Repositories/SDK/Tools/Test-RustModule.ps1",
@@ -61088,7 +61331,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "51d9816dd1625bd0e3dc42abfecb1b7a95fe829cf02c205d05ceb0913562db74"
+        "sha256": "1750c29e86f623bc3e36afcf0b4a8a2bf7c03ebfebd1a2c934d73c10e8e93e25"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -61652,7 +61895,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/platform2.zig",
-        "sha256": "83e834233e8ff756870a4e724477fdd672dc08306a629378fa8e71f151de19e4"
+        "sha256": "7fb5e646ff85fd7a73b4a7afe50582ddaffc3a9a241a3c5edc6971691aa71b31"
       },
       {
         "path": "Repositories/SDK/r4os/platform_runtime.zig",
@@ -61732,7 +61975,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/r4xstart.zig",
-        "sha256": "53f984ac8df446fb1f6c7d0c0ab5ab4848733b86645ed54e24832fc0bec857b9"
+        "sha256": "5a462c49bc73b56de0a1f21ca31607262c4d6a941a4467cf9743f7db94806f59"
       },
       {
         "path": "Repositories/SDK/r4os/raster.zig",
@@ -61764,7 +62007,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/runtime_r4l.zig",
-        "sha256": "1ebd2ab5d60d602ce8ceaf0038ad3e58cf1283fb07475ef7d9a6915143ccc18f"
+        "sha256": "bfc576168ffd004a694b077c3aae7c6d684e40eca06ca623e76617185943a716"
       },
       {
         "path": "Repositories/SDK/r4os/rust_module_profile.json",
@@ -62312,7 +62555,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/app2.rs",
-        "sha256": "c7116e478d8adeb67a9b6561112912a9d28b14f6f34a4b70f02c01f617bd355f"
+        "sha256": "bae5499a24100d56de4481fa8cf80b96d444c6a8588c6afc41b4253f27f4f943"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app2.h",
@@ -62475,7 +62718,8 @@
           "gui_title_08947",
           "platform_generation2_09014",
           "normal_app2_09040",
-          "tooling_templates_generation2_09044"
+          "tooling_templates_generation2_09044",
+          "canonical_text_font_image_generation2_09045"
         ]
       },
       {
@@ -62545,7 +62789,8 @@
           "library_projection_current_61",
           "current_kernel_records_80",
           "platform_generation2_09014",
-          "tooling_templates_generation2_09044"
+          "tooling_templates_generation2_09044",
+          "canonical_text_font_image_generation2_09045"
         ]
       },
       {
@@ -62619,7 +62864,8 @@
           "stream_transfer_09019",
           "file_metadata_09022",
           "file_picker_09024",
-          "normal_system_facades_09041"
+          "normal_system_facades_09041",
+          "canonical_text_font_image_generation2_09045"
         ]
       },
       {
@@ -63019,7 +63265,8 @@
         ],
         "proof": [
           "language_libraries_current_59",
-          "cli_diagnostics_09018"
+          "cli_diagnostics_09018",
+          "canonical_text_font_image_generation2_09045"
         ]
       },
       {
@@ -63056,7 +63303,8 @@
           "audio_reply_08842",
           "platform_generation2_09014",
           "wire_native_data_09017",
-          "tooling_templates_generation2_09044"
+          "tooling_templates_generation2_09044",
+          "canonical_text_font_image_generation2_09045"
         ]
       },
       {
@@ -63320,7 +63568,8 @@
           "desktop_actions_08898",
           "gui_title_08947",
           "canonical_compiler_cache_09027",
-          "tooling_templates_generation2_09044"
+          "tooling_templates_generation2_09044",
+          "canonical_text_font_image_generation2_09045"
         ]
       },
       {
@@ -63339,7 +63588,8 @@
           "library_projection_current_61",
           "language_libraries_current_60",
           "current_kernel_records_80",
-          "tooling_templates_generation2_09044"
+          "tooling_templates_generation2_09044",
+          "canonical_text_font_image_generation2_09045"
         ]
       },
       {
@@ -63370,7 +63620,8 @@
           "audio_selection_08856",
           "desktop_actions_08898",
           "gui_title_08947",
-          "tooling_templates_generation2_09044"
+          "tooling_templates_generation2_09044",
+          "canonical_text_font_image_generation2_09045"
         ]
       },
       {
@@ -63396,7 +63647,8 @@
           "library_projection_current_61",
           "language_libraries_current_59",
           "desktop_settings_helpers_86",
-          "tooling_templates_generation2_09044"
+          "tooling_templates_generation2_09044",
+          "canonical_text_font_image_generation2_09045"
         ]
       },
       {
@@ -63456,7 +63708,8 @@
           "audio_selection_08856",
           "desktop_actions_08898",
           "gui_title_08947",
-          "tooling_templates_generation2_09044"
+          "tooling_templates_generation2_09044",
+          "canonical_text_font_image_generation2_09045"
         ]
       },
       {
@@ -63475,7 +63728,8 @@
           "local_contract_and_baseline",
           "library_projection_current_61",
           "language_libraries_current_60",
-          "tooling_templates_generation2_09044"
+          "tooling_templates_generation2_09044",
+          "canonical_text_font_image_generation2_09045"
         ]
       },
       {
@@ -63498,7 +63752,8 @@
           "local_contract_and_baseline",
           "library_projection_current_61",
           "language_libraries_current_59",
-          "tooling_templates_generation2_09044"
+          "tooling_templates_generation2_09044",
+          "canonical_text_font_image_generation2_09045"
         ]
       },
       {
@@ -63528,7 +63783,8 @@
           "desktop_actions_08898",
           "gui_title_08947",
           "canonical_compiler_cache_09027",
-          "tooling_templates_generation2_09044"
+          "tooling_templates_generation2_09044",
+          "canonical_text_font_image_generation2_09045"
         ]
       },
       {
@@ -63546,7 +63802,8 @@
           "local_contract_and_baseline",
           "library_projection_current_61",
           "language_libraries_current_60",
-          "tooling_templates_generation2_09044"
+          "tooling_templates_generation2_09044",
+          "canonical_text_font_image_generation2_09045"
         ]
       },
       {
@@ -63586,7 +63843,8 @@
           "local_contract_and_baseline",
           "library_projection_current_61",
           "language_libraries_current_59",
-          "tooling_templates_generation2_09044"
+          "tooling_templates_generation2_09044",
+          "canonical_text_font_image_generation2_09045"
         ]
       },
       {
@@ -63617,7 +63875,8 @@
           "audio_selection_08856",
           "desktop_actions_08898",
           "gui_title_08947",
-          "tooling_templates_generation2_09044"
+          "tooling_templates_generation2_09044",
+          "canonical_text_font_image_generation2_09045"
         ]
       },
       {
@@ -63636,7 +63895,8 @@
           "local_contract_and_baseline",
           "library_projection_current_61",
           "language_libraries_current_60",
-          "tooling_templates_generation2_09044"
+          "tooling_templates_generation2_09044",
+          "canonical_text_font_image_generation2_09045"
         ]
       }
     ]
@@ -63869,6 +64129,61 @@
       "libraries": "0.64.51 unchanged",
       "evidence": "normal_service_stream_facades_09043",
       "scope": "Normal actual App2/Context2 ServiceLoop, network and owned requests, audio and devices, ArgCursor/diagnostics, StreamTransfer, family clients, WaitSets, BytePipe/LaunchIO and optional Capture. One shared total RPC budget across audio writes and Clipboard chunks; source identity and canonical absolute tick epoch retained.",
+      "historical_snapshot_retained": true,
+      "current_platform_tables": [
+        {
+          "group": "R4SYS",
+          "abi_version": 41,
+          "bytes": 1560,
+          "slots": 193
+        },
+        {
+          "group": "R4DESK",
+          "abi_version": 21,
+          "bytes": 632,
+          "slots": 77
+        },
+        {
+          "group": "R4DRAW",
+          "abi_version": 40,
+          "bytes": 920,
+          "slots": 113
+        },
+        {
+          "group": "R4NET",
+          "abi_version": 2,
+          "bytes": 296,
+          "slots": 35
+        },
+        {
+          "group": "R4AUDIO",
+          "abi_version": 5,
+          "bytes": 240,
+          "slots": 28
+        },
+        {
+          "group": "R4DEV",
+          "abi_version": 37,
+          "bytes": 744,
+          "slots": 91
+        }
+      ],
+      "current_projection": {
+        "extern_structs": 575,
+        "fields": 8916,
+        "integer_enums": 20,
+        "callback_declarations": 806,
+        "constants": 3777
+      },
+      "canonical_schema_sha256": "5d7d1f631a75b4f3b7b4a6206a0a353258932c594b777cd0ca594177e3485f4c"
+    },
+    {
+      "performed_in": "0.90.44",
+      "sdk": "0.64.185",
+      "contract": "0.64.93",
+      "libraries": "0.64.51 unchanged",
+      "evidence": "tooling_templates_generation2_09044",
+      "scope": "Central manifest-selected SDK admission/default/profile/export truth, real C/Zig/Rust normal/raw and technical templates, independent R4L contracts plus technical Query2, complete native C include/hash roots and actual matched tool packages.",
       "historical_snapshot_retained": true,
       "current_platform_tables": [
         {

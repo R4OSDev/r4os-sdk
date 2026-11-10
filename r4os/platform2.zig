@@ -67,6 +67,15 @@ pub const Context = struct {
         const data: [*]const u8 = @ptrFromInt(self.raw.args);
         return data[0..@intCast(self.raw.args_len)];
     }
+    pub fn findImportNamed(self: *const Context, module: []const u8, symbol: []const u8) ?*const abi.R4XStartImport {
+        if (self.raw.import_count == 0) return null;
+        const items: [*]const abi.R4XStartImport = @ptrFromInt(self.raw.imports);
+        const equal = @import("runtime_r4l.zig").importNameEquals;
+        for (items[0..self.raw.import_count]) |*item| {
+            if (equal(item.module_name, module) and equal(item.symbol_name, symbol)) return item;
+        }
+        return null;
+    }
     pub fn shouldClose(self: *const Context) bool {
         if (self.raw.flags & abi.shared.r4xstart_flag_close_supported == 0 or self.raw.should_close == 0) return true;
         const callback: abi.R4XStartShouldCloseFn2 = @ptrFromInt(self.raw.should_close);

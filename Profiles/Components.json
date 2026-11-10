@@ -137,15 +137,15 @@
     },
     "libraries": {
       "repository": "https://github.com/R4OSDev/r4os-libraries.git",
-      "commit": "e8dfb4e4eb3fa70844c39938065d6f108a13ea45",
-      "version": "0.64.52",
+      "commit": "a807d24f9ebc471a26594ff35c5996540cc05af3",
+      "version": "0.64.53",
       "files": {
-        "build.zig.zon": "9cd6b6cb5f2961eebe81544318311e3eed6cbd544f60c07b9a6083075b73ef25",
+        "build.zig.zon": "8a2c5aeeb5051c334fc761a75d9d7741f26ef840815edc97c47813c217c98b4f",
         "Shared/Rust/Cargo.toml": "431c38bac8b28467b0dad7842d1626397bb061eeb94f54f604276dc81036aec4"
       },
       "tree": {
         "algorithm": "r4os-files-sha256-lf-v1",
-        "sha256": "055d8e92ead68bef02974582a8c9d7c4294d3843957052d5b4b1d1c149f5e23f",
+        "sha256": "4f822acf91e36024efc965fc39c06d5b3d3a31bdde0af5d6595e5ff765c3a85f",
         "files": [
           ".gitattributes",
           ".gitignore",
@@ -2602,8 +2602,8 @@
           "consumer_oracles.zig"
         ]
       },
-      "zig_hash": "r4os_libraries-0.64.52-dH4fNchzeAPO6oApd4SJ_VvS1lvEMmpXwU3WSsbKhuum",
-      "archive_url": "https://github.com/R4OSDev/r4os-libraries/archive/e8dfb4e4eb3fa70844c39938065d6f108a13ea45.tar.gz",
+      "zig_hash": "r4os_libraries-0.64.53-dH4fNclyeQNBXgt-UY1b5PnN50n1DPI4XaHMo139moyl",
+      "archive_url": "https://github.com/R4OSDev/r4os-libraries/archive/a807d24f9ebc471a26594ff35c5996540cc05af3.tar.gz",
       "archive_format": "tar.gz"
     },
     "recovery-contract": {
@@ -3100,9 +3100,9 @@
       "name": "R4STD",
       "repository": "libraries",
       "path": "R4STD",
-      "version": "0.2.7",
+      "version": "0.2.8",
       "target": "/R4OS/LIBS/R4STD.R4L",
-      "manifest_sha256": "04142302d6a76c5e064dc07f6c2e79ae52b62778d10fa3b4577d9b37d94bee1c"
+      "manifest_sha256": "02689669481bc01156e88d9752e48c84707dd6c0678a7e6f4e91d02c92f496d5"
     },
     "r4video": {
       "name": "R4VIDEO",

@@ -5,6 +5,7 @@
 #include <stdint.h>
 
 #include "r4xstart.h"
+#include "platform2.h"
 
 #define R4L_INTERFACE_MAGIC 0x31493452u
 #define R4L_INTERFACE_HEADER_VERSION 1u
@@ -118,6 +119,30 @@ static inline const R4XStartImport *r4xstart_find_import_named(const R4XStartCon
             r4xstart_import_name_equal(item->symbol_name, symbol_name)) return item;
     }
     return 0;
+}
+
+/* The view was admitted by R4OS2ContextInit; only the shared import payload
+ * is inspected. No generation-1 context or platform table is constructed. */
+static inline const R4XStartImport *r4xstart2_find_import_named(const R4OS2Context *ctx, const char *module_name, const char *symbol_name) {
+    if (!ctx || !ctx->raw) return NULL;
+    const R4XStartImport *items = (const R4XStartImport *)(uintptr_t)ctx->raw->imports;
+    for (uint32_t i = 0; i < ctx->raw->import_count; ++i) {
+        if (r4xstart_import_name_equal(items[i].module_name, module_name) &&
+            r4xstart_import_name_equal(items[i].symbol_name, symbol_name)) return &items[i];
+    }
+    return NULL;
+}
+
+static inline int32_t r4l_query2(const R4OS2Context *ctx, const char *module_name, const R4LQuery2 **out_query) {
+    if (!out_query) return R4L_BINDING_INVALID_EXPECTATION;
+    *out_query = NULL;
+    const R4XStartImport *item = r4xstart2_find_import_named(ctx, module_name, "Query2");
+    if (!item || item->group_id || item->min_version != 2 || item->resolved_version != 2 || !item->table) return R4L_BINDING_INVALID_IMPORT;
+    if (item->table % _Alignof(R4LQuery2)) return R4L_BINDING_MISALIGNED_TABLE;
+    const R4LQuery2 *value = (const R4LQuery2 *)(uintptr_t)item->table;
+    if (value->magic != R4OS2_QUERY_MAGIC || value->abi_version != 2 || value->size < sizeof(*value) || value->group || value->reserved) return R4L_BINDING_INVALID_QUERY;
+    *out_query = value;
+    return R4L_BINDING_OK;
 }
 
 static inline int32_t r4l_validate_import(const R4XStartImport *item, const R4LInterfaceExpectation *expected, const R4LInterfaceHeader **out_header) {
