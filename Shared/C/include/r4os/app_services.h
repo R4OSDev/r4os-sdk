@@ -2,6 +2,7 @@
 #define R4OS_APP_SERVICES_H
 
 #include "app_contract.h"
+#include "poll_budget.h"
 
 typedef struct R4Services { R4App *app; } R4Services;
 
@@ -179,7 +180,13 @@ static inline R4ServiceCallResult r4_service_connection_call(R4ServiceConnection
     if (!r4_service_connection_valid(connection)) return (R4ServiceCallResult){R4_SERVICE_CALL_FAILED, R4OS_ERR_CLOSED, 0u, {0}};
     if (request_len > R4OS_SERVICE_API_MAX_PAYLOAD || response_capacity > R4OS_SERVICE_API_MAX_PAYLOAD || (request_len != 0u && request == 0) || (response_capacity != 0u && response == 0)) return (R4ServiceCallResult){R4_SERVICE_CALL_FAILED, R4OS_SERVICE_API_RESULT_INVALID, 0u, {0}};
     if (!R4SYS_HAS(&connection->app->system, service_call)) return (R4ServiceCallResult){R4_SERVICE_CALL_FAILED, R4OS_ERR_NO_FN, 0u, {0}};
-    if (r4_timeout_to_ticks(timeout, r4_services_monotonic_hz(connection->app), &ticks) != R4OS_OK) return (R4ServiceCallResult){R4_SERVICE_CALL_FAILED, R4OS_SERVICE_API_RESULT_INVALID, 0u, {0}};
+    if (connection->app->system.generation2) {
+        R4SdkRpcBudget operation;
+        R4SysMonotonicClockFn clock = R4SYS_HAS(&connection->app->system,monotonic_clock) ? (R4SysMonotonicClockFn)(uintptr_t)R4SYS_SLOT(&connection->app->system,monotonic_clock) : 0;
+        int32_t rc = R4SdkRpcBudgetInit(clock,&timeout,&operation);
+        if (!rc) rc = R4SdkRpcBudgetRemaining(&operation,&ticks);
+        if (rc) return (R4ServiceCallResult){rc==R4OS_SERVICE_API_RESULT_TIMEOUT ? R4_SERVICE_CALL_TIMED_OUT : R4_SERVICE_CALL_FAILED,rc,0u,{0}};
+    } else if (r4_timeout_to_ticks(timeout, r4_services_monotonic_hz(connection->app), &ticks) != R4OS_OK) return (R4ServiceCallResult){R4_SERVICE_CALL_FAILED, R4OS_SERVICE_API_RESULT_INVALID, 0u, {0}};
     return r4_service_connection_call_ticks(connection, op, request, request_len, response, response_capacity, ticks);
 }
 

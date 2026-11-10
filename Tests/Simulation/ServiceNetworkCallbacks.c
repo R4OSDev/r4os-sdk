@@ -30,6 +30,12 @@ uint32_t sdk_service_yielded(void){return yielded;}
 uint64_t sdk_service_last_wait(void){return last_wait;}
 uint32_t sdk_service_open_handles(void){return open_handles;}
 static uint64_t ticks(void){return clock_tick;}
+static int32_t service2_clock(R4MonotonicClockInfo *out){
+ *out=(R4MonotonicClockInfo){.version=1,.size=sizeof(*out),.flags=R4OS_MONOTONIC_CLOCK_FLAG_VALID,.source=1,.generation=43,.frequency_hz=R4OS_MONOTONIC_CLOCK_FREQUENCY_HZ,.resolution_ns=1,.instant_ns=(clock_tick+100000)*1000000,.event_requested_hz=1000,.event_effective_hz=1007};return 1;
+}
+uint32_t sdk_service2_should_close(const R4XStartContext2 *raw){(void)raw;return stopping;}
+void sdk_service2_yield(const R4XStartContext2 *raw){(void)raw;++yielded;}
+static int32_t service2_ipc_poll(uint32_t id){return id==11?17:-99;}
 static void time_state(R4TimeState *out){++calendar_calls;memset(out,0,sizeof(*out));out->monotonic_hz=1000;}
 static uint32_t should_close(void){return stopping;}
 static void task_yield(void){++yielded;}
@@ -372,4 +378,26 @@ int sdk_inventory_c_case(void){
     sys.size=offsetof(R4XStartR4Sys,service_inventory_page);
     if(r4_services_inventory_available(&services)||r4_services_inventory_page(&services,&cursor,&row,1)!=R4OS_ERR_NO_FN)return 6;
     return 0;
+}
+
+void sdk_service2_tables(R4XStartR4Sys2 *sys,R4XStartR4Net2 *net){
+ R4XStartR4Sys old={0};R4XStartR4Net old_net={0};R4XStartR4Desk desk={0};R4XStartR4Dev dev={0};
+ sdk_service_tables(&old,&old_net,&desk,&dev);clock_tick=100;
+ *sys=(R4XStartR4Sys2){.magic=R4OS2_R4SYS_MAGIC,.abi_version=2,.size=sizeof(*sys),.monotonic_clock=(uintptr_t)&service2_clock};
+ sys->service_open=old.service_open;
+ sys->service_close=old.service_close;
+ sys->service_call=old.service_call;
+ sys->service_endpoint_register=old.service_endpoint_register;
+ sys->service_endpoint_unregister=old.service_endpoint_unregister;
+ sys->service_endpoint_wait=old.service_endpoint_wait;
+ sys->service_endpoint_poll=old.service_endpoint_poll;
+ sys->service_endpoint_recv=old.service_endpoint_recv;
+ sys->service_endpoint_reply=old.service_endpoint_reply;
+ sys->ticks=old.ticks;
+ sys->task_yield=old.task_yield;
+ sys->io_service_call=old.io_service_call;
+ sys->io_status=old.io_status;
+ sys->io_wait=old.io_wait;
+ sys->io_close=old.io_close;
+ *net=(R4XStartR4Net2){.magic=R4OS2_R4NET_MAGIC,.abi_version=2,.size=sizeof(*net),.ipc_poll=(uintptr_t)&service2_ipc_poll};
 }

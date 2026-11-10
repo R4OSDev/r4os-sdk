@@ -125,8 +125,53 @@ impl<'a> App<'a> {
     pub fn services(&self) -> crate::storage::Result<crate::services::Services<'_>> {
         crate::services::Services::new2(self)
     }
+    pub fn network(&self) -> crate::storage::Result<crate::network::Network<'_>> {
+        crate::network::Network::new2(self)
+    }
+    pub fn serial(&self) -> crate::storage::Result<crate::serial::Serial<'_>> {
+        crate::serial::Serial::new2(self)
+    }
+    pub fn platform<'s, 'b>(
+        &'b self,
+        storage: core::pin::Pin<&'s mut crate::platform::PlatformStorage>,
+    ) -> crate::storage::Result<crate::platform::Platform<'s, 'b>> {
+        crate::platform::Platform::open2(storage, self)
+    }
+    pub fn audio_capture(
+        &self,
+        transport_ticks: u64,
+    ) -> Result<crate::audio_capture::Client<'_>, crate::audio_capture::Error> {
+        crate::audio_capture::Client::connect(self.context(), transport_ticks)
+    }
+    pub fn arg_cursor(
+        &self,
+        policy: crate::cli::ArgPolicy,
+    ) -> Result<crate::cli::ArgCursor<'_>, crate::cli::ArgError> {
+        crate::cli::ArgCursor::new(self.args(), policy)
+    }
     pub fn clock(&self) -> crate::time::Clock<'_, 'a> {
         crate::time::Clock::new2(self)
+    }
+    pub fn wait_set(
+        &self,
+        capacity: u32,
+    ) -> Result<crate::wait_set::WaitSet<'_, 'a>, crate::wait_set::Error> {
+        crate::wait_set::WaitSet::new(self.context(), capacity)
+    }
+    pub fn byte_pipe(
+        &self,
+        capacity: u64,
+    ) -> Result<crate::byte_pipe::Pair<'_, 'a>, crate::byte_pipe::Error> {
+        crate::byte_pipe::create(self.context(), capacity)
+    }
+    pub fn stdio(&self) -> Result<crate::launch_io::Stdio<'_, 'a>, crate::launch_io::Error> {
+        crate::launch_io::Stdio::open(self.context())
+    }
+    pub fn network_family(
+        &self,
+        service: crate::network_family::Service,
+    ) -> Result<crate::network_family::Client<'_>, crate::network_family::Error> {
+        crate::network_family::Client::connect(self.context(), service)
     }
     pub fn text_metrics<'b>(
         &'b self,

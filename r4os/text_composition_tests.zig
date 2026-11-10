@@ -43,7 +43,7 @@ test "composition owner normal control empty offers still validate exact provide
         }
     };
     Provider.calls = 0;
-    var client: offers.Client = .{ .call = Provider.call, .close_call = Provider.close, .handle = 1 };
+    var client: offers.Client = .{ .call = Provider.call, .close_call = Provider.close, .handle = 1, .timeout_ticks = a.io_wait_forever };
     var lease: offers.Lease = .{ .provider = 17, .id = 3, .revision = 9, .expires_ns = 100, .state = a.clipboard_offer_state_snapshot };
     const format: offers.Format = .{ .format = a.clipboard_offer_format_text_utf8 };
     var empty: [0]u8 = .{};
@@ -61,6 +61,60 @@ test "composition owner normal control empty offers still validate exact provide
     try t.expectEqual(@as(i32, 0), client.close());
     try t.expectEqual(a.clipboard_offer_error_closed, field.pasteOffer(&client, &lease, &format, &empty));
     try t.expectEqual(@as(usize, 3), Provider.calls);
+}
+
+test "composition owner chunk staging shares one deadline and retains uncertain mutation identity" {
+    const offers = @import("clipboard_offer.zig");
+    const control = @import("gui_text_control.zig");
+    const Peer = struct {
+        var now: u64 = 1_000_000_000;
+        var generation: u32 = 3;
+        var calls: u32 = 0;
+        var mode: u32 = 0;
+        var budgets: [4]u64 = @splat(0);
+        fn clock(out: *a.MonotonicClockInfo) callconv(.c) i32 {
+            out.* = .{ .flags = a.monotonic_clock_flag_valid, .source = 1, .generation = generation, .frequency_hz = a.monotonic_clock_frequency_hz, .resolution_ns = 1, .instant_ns = now, .event_requested_hz = 1000, .event_effective_hz = 999 };
+            return 1;
+        }
+        fn call(channel: u32, op: u16, request: [*]const u8, size: u32, header: *a.ServiceMessageHeader, _: [*]u8, _: u32, ticks: u64) callconv(.c) i32 {
+            std.debug.assert(channel == 17 and size >= @sizeOf(offers.Transfer));
+            std.debug.assert(op == a.clipboard_offer_op_declare or op == a.clipboard_offer_op_put);
+            const transfer = std.mem.bytesToValue(offers.Transfer, request[0..@sizeOf(offers.Transfer)]);
+            std.debug.assert(transfer.provider == 19 and transfer.id == 23);
+            budgets[calls] = ticks;
+            calls += 1;
+            now += 3_000_000;
+            header.* = .{};
+            if (mode == 1 and calls == 2) generation += 1;
+            if (mode == 2 and calls == 2) return a.service_api_result_timeout;
+            return 0;
+        }
+        fn close(_: u32) callconv(.c) i32 {
+            return 0;
+        }
+    };
+    const stage: offers.Lease = .{ .provider = 19, .id = 23, .state = a.clipboard_offer_state_writing };
+    const before = stage;
+    const text = [_]u8{'x'} ** (a.clipboard_offer_put_chunk * 4);
+    const client: offers.Client = .{ .call = Peer.call, .close_call = Peer.close, .handle = 17, .timeout_ticks = 10, .clock = Peer.clock };
+    for (0..3) |mode| {
+        Peer.now = 1_000_000_000;
+        Peer.generation = 3;
+        Peer.calls = 0;
+        Peer.mode = @intCast(mode);
+        Peer.budgets = @splat(0);
+        const rc = control.stageText(&client, &stage, &text);
+        try t.expectEqual(if (mode == 1) @as(i32, -5) else a.service_api_result_timeout, rc);
+        try t.expectEqual(if (mode == 0) @as(u32, 4) else @as(u32, 2), Peer.calls);
+        try t.expectEqual(@as(u64, 10), Peer.budgets[0]);
+        try t.expectEqual(@as(u64, 7), Peer.budgets[1]);
+        if (mode == 0) {
+            try t.expectEqual(@as(u64, 4), Peer.budgets[2]);
+            try t.expectEqual(@as(u64, 1), Peer.budgets[3]);
+        }
+        try t.expectEqualDeep(before, stage);
+        try t.expectEqual(@as(u32, 17), client.handle);
+    }
 }
 
 test "composition owner normal controls preserve preedit cancel and exact atomic commit" {

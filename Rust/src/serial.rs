@@ -18,6 +18,23 @@ pub struct IoResult {
     pub info: Transfer,
 }
 impl<'a> Serial<'a> {
+    pub fn new2(app: &'a crate::app2::App<'_>) -> Result<Self> {
+        let mut snapshot = unsafe { core::mem::zeroed() };
+        let rc = unsafe { c::R4SdkAppFacade2(app.native_context(), &app.memory, &mut snapshot) };
+        if rc != 0 {
+            return Err(Error::Raw(rc));
+        }
+        let mut raw = unsafe { core::mem::zeroed() };
+        let rc = unsafe { c::r4serial_init(&snapshot.devices, &mut raw) };
+        if rc != 0 {
+            return Err(Error::Raw(rc));
+        }
+        Ok(Self {
+            raw,
+            _loan: PhantomData,
+            _local: PhantomData,
+        })
+    }
     pub fn new(app: &'a App<'_>) -> Result<Self> {
         let snapshot = crate::facade_app(app)?;
         let mut raw = unsafe { core::mem::zeroed() };

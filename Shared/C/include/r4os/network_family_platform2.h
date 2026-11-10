@@ -57,7 +57,7 @@ static inline int32_t R4SdkNetworkSocket(const R4SdkNetwork *client,uint16_t op,
  if(length!=(sending?request.bytes:0)||(receiving&&request.bytes>capacity))return R4OS_NETWORK_ERROR_INVALID;
  uint8_t payload[4096],response[4096];__builtin_memcpy(payload,&request,sizeof(request));if(length)__builtin_memcpy(payload+sizeof(request),data,length);
  int32_t rc=R4SdkNetworkRpc(client,op,payload,sizeof(request)+length,response,sizeof(response));if(rc<0)return rc;
- R4NetworkSocketResult x;if(rc<sizeof(x))return R4OS_NETWORK_ERROR_INVALID;__builtin_memcpy(&x,response,sizeof(x));
+ R4NetworkSocketResult x;if((uint32_t)rc<sizeof(x))return R4OS_NETWORK_ERROR_INVALID;__builtin_memcpy(&x,response,sizeof(x));
  int accepted=op==R4OS_NETWORK_OP_ACCEPT&&x.state==R4OS_NETWORK_STATE_READY;
  if(!R4SdkNetworkRecord(&x,sizeof(x))||x.provider!=request.provider||!x.socket||!x.generation||(request.socket&&!accepted&&(x.socket!=request.socket||x.generation!=request.generation))||(accepted&&x.socket==request.socket&&x.generation==request.generation)||!R4SdkNetworkEndpointValid(x.endpoint)||x.state<1||x.state>6||(x.flags&~(uint32_t)R4OS_NETWORK_FLAG_TRUNCATED)||x.bytes>request.bytes||x.original_bytes<x.bytes||rc!=sizeof(x)+(receiving?x.bytes:0))return R4OS_NETWORK_ERROR_INVALID;
  if((op!=R4OS_NETWORK_OP_RECV&&(x.flags||x.original_bytes!=x.bytes))||(op==R4OS_NETWORK_OP_RECV&&((!!(x.flags&R4OS_NETWORK_FLAG_TRUNCATED))!=(x.original_bytes>x.bytes))))return R4OS_NETWORK_ERROR_INVALID;
@@ -66,7 +66,7 @@ static inline int32_t R4SdkNetworkSocket(const R4SdkNetwork *client,uint16_t op,
 static inline int32_t R4SdkNetworkResolve(const R4SdkNetwork *client,R4NetworkResolveRequest request,R4NetworkResolveAnswer *answers,uint32_t capacity,R4NetworkResolvePage *out){
  if(!client||client->service!=0||!out||!answers||!request.capacity||request.capacity>16||request.capacity>capacity)return R4OS_NETWORK_ERROR_INVALID;
  uint8_t response[4096];int32_t rc=R4SdkNetworkRpc(client,R4OS_NETWORK_OP_RESOLVE,&request,sizeof(request),response,sizeof(response));if(rc<0)return rc;
- R4NetworkResolvePage x;if(rc<sizeof(x))return R4OS_NETWORK_ERROR_INVALID;__builtin_memcpy(&x,response,sizeof(x));
+ R4NetworkResolvePage x;if((uint32_t)rc<sizeof(x))return R4OS_NETWORK_ERROR_INVALID;__builtin_memcpy(&x,response,sizeof(x));
  if(!R4SdkNetworkRecord(&x,sizeof(x))||!request.provider||x.provider!=request.provider||!x.query||(request.query&&x.query!=request.query)||!x.expires_ns||!x.total||x.total>32||!x.count||x.count>request.capacity||request.cursor>x.total||x.count>x.total-request.cursor||x.next!=request.cursor+x.count||x.flags!=(x.next<x.total?R4OS_NETWORK_FLAG_MORE:0)||rc!=sizeof(x)+x.count*sizeof(*answers))return R4OS_NETWORK_ERROR_INVALID;
  for(uint32_t i=0;i<x.count;++i){R4NetworkResolveAnswer a;__builtin_memcpy(&a,response+sizeof(x)+i*sizeof(a),sizeof(a));if(!R4SdkNetworkAddressValid(a.address)||a.reserved||(!request.query&&a.address.family!=request.family))return R4OS_NETWORK_ERROR_INVALID;}
  __builtin_memcpy(answers,response+sizeof(x),x.count*sizeof(*answers));*out=x;return 0;

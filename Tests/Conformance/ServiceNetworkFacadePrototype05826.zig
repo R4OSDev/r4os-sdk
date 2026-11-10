@@ -5,6 +5,117 @@ test "checked budget driver owner cases" {
 }
 const r4os = @import("r4os");
 
+test "service loop RPC budget retains one tick boundary through progress and rejects changed sources" {
+    const rpc = r4os.rpc_budget;
+    const abi = r4os.abi;
+    const Fake = struct {
+        var now: u64 = 1_000_000_000;
+        var generation: u32 = 9;
+        fn clock(out: *abi.MonotonicClockInfo) callconv(.c) i32 {
+            out.* = .{ .flags = abi.monotonic_clock_flag_valid, .source = 1, .generation = generation, .frequency_hz = abi.monotonic_clock_frequency_hz, .resolution_ns = 1, .instant_ns = now, .event_requested_hz = 333, .event_effective_hz = 334 };
+            return 1;
+        }
+    };
+    var poll = try rpc.Budget.fromTicks(null, 0);
+    var forever = try rpc.Budget.fromTicks(null, abi.io_wait_forever);
+    try std.testing.expectEqual(@as(u64, 0), try poll.remainingTicks());
+    try std.testing.expectEqual(abi.io_wait_forever, try forever.remainingTicks());
+    Fake.now = 1_000_000_000;
+    Fake.generation = 9;
+    var operation = try rpc.Budget.fromTicks(Fake.clock, 100);
+    try std.testing.expectEqual(@as(u64, 100), try operation.remainingTicks());
+    Fake.now = 1_150_150_151;
+    try std.testing.expectEqual(@as(u64, 50), try operation.remainingTicks());
+    Fake.generation = 10;
+    const before = operation;
+    try std.testing.expectError(error.ClockChanged, operation.remainingTicks());
+    try std.testing.expectEqualDeep(before, operation);
+    Fake.generation = 9;
+    Fake.now = 1_300_300_301;
+    try std.testing.expectError(error.TimedOut, operation.remainingTicks());
+    Fake.now = 1_000_000_000;
+    try std.testing.expectError(error.BudgetOverflow, rpc.Budget.fromTicks(Fake.clock, abi.io_wait_forever - 1));
+}
+
+test "service loop Context2 retains checked clock scale deadline and source across actual waits" {
+    const a = r4os.abi;
+    const p = r4os.platform2;
+    const Fake = struct {
+        var now: u64 = 1_000_000_000;
+        var generation: u32 = 9;
+        var hz: u32 = 333;
+        var mode: u32 = 0;
+        var waits: u32 = 0;
+        var ticks_calls: u32 = 0;
+        var tick_now: u64 = 9999;
+        fn clock(out: *a.MonotonicClockInfo) callconv(.c) i32 {
+            out.* = .{ .flags = a.monotonic_clock_flag_valid, .source = 1, .generation = generation, .frequency_hz = a.monotonic_clock_frequency_hz, .resolution_ns = 1, .instant_ns = now, .event_requested_hz = hz, .event_effective_hz = hz + 1 };
+            return 1;
+        }
+        fn ticks() callconv(.c) u64 {
+            ticks_calls += 1;
+            return tick_now;
+        }
+        fn close(_: *const p.abi.R4XStartContext2) callconv(.c) u32 {
+            return 0;
+        }
+        fn wait(endpoint: u32, timeout: u64) callconv(.c) i32 {
+            std.debug.assert(endpoint == 7 and timeout == 10);
+            waits += 1;
+            switch (mode) {
+                0 => {
+                    now += 30_030_031;
+                    tick_now += 10;
+                },
+                1 => generation += 1,
+                2 => now -= 1,
+                else => tick_now -= 1,
+            }
+            return 0;
+        }
+    };
+    var sys: p.abi.R4XStartR4Sys2 = .{};
+    sys.monotonic_clock = @intFromPtr(&Fake.clock);
+    sys.ticks = @intFromPtr(&Fake.ticks);
+    sys.service_endpoint_wait = @intFromPtr(&Fake.wait);
+    var imports = [_]a.R4XStartImport{.{ .group_id = 1, .resolved_version = 2, .table = @intFromPtr(&sys) }};
+    var raw: p.abi.R4XStartContext2 = .{ .instance_id = 7, .app_class = 1, .flags = a.r4xstart_flag_imports_valid | a.r4xstart_flag_close_supported, .should_close = @intFromPtr(&Fake.close), .imports = @intFromPtr(&imports), .import_count = imports.len };
+    var app = switch (r4os.App2.init(&raw, .console)) {
+        .value => |value| value,
+        .failure => return error.App2,
+    };
+    for (0..4) |mode| {
+        Fake.now = 1_000_000_000;
+        Fake.generation = 9;
+        Fake.hz = 333;
+        Fake.mode = @intCast(mode);
+        Fake.waits = 0;
+        Fake.ticks_calls = 0;
+        Fake.tick_now = 9999;
+        var loop = r4os.ServiceLoop.init(app.system(), 7, .{ .stop_check_ms = 100 });
+        try std.testing.expectEqual(@as(i32, 0), loop.init_error);
+        try std.testing.expectEqual(@as(u64, 9999), loop.started_tick);
+        try std.testing.expectEqual(@as(u64, 34), loop.stop_check_ticks);
+        const result = loop.wait(10009);
+        if (mode == 0) try std.testing.expect(result == .deadline) else try std.testing.expectEqual(if (mode == 1) @as(i32, -5) else @as(i32, -6), result.failure);
+        try std.testing.expectEqual(@as(u32, 1), Fake.waits);
+        try std.testing.expectEqual(if (mode == 0 or mode == 3) @as(u32, 3) else @as(u32, 2), Fake.ticks_calls);
+    }
+    Fake.now = 1_000_000_000;
+    Fake.generation = 9;
+    Fake.hz = 1000;
+    Fake.waits = 0;
+    var overflow = r4os.ServiceLoop.init(app.system(), 7, .{ .stop_check_ms = std.math.maxInt(u64) });
+    try std.testing.expectEqual(@as(i32, -3), overflow.init_error);
+    try std.testing.expectEqual(@as(i32, -3), overflow.wait(null).failure);
+    var batch = overflow.beginBatch(1);
+    try std.testing.expectEqual(@as(i32, -3), batch.next().failure);
+    Fake.hz = 0;
+    const unknown = r4os.ServiceLoop.init(app.system(), 7, .{});
+    try std.testing.expectEqual(@as(i32, -1), unknown.init_error);
+    try std.testing.expectEqual(@as(u32, 0), Fake.waits);
+}
+
 const ReplyMode = enum { ok, would_block, timeout, reset, peer_close, no_service };
 
 // Exercise the real SDK policy against controlled ABI callbacks. Acceptance of

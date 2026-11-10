@@ -42,10 +42,18 @@ fn zType(comptime T: type) []const u8 {
         else => @compileError("Unsupported native type " ++ @typeName(T)),
     };
 }
-fn sliceType(comptime T: type) bool { return @typeInfo(T) == .pointer and @typeInfo(T).pointer.size == .slice; }
-fn pointer(comptime T: type) bool { return @typeInfo(T) == .pointer; }
-fn requestPointer(comptime T: type) bool { return pointer(T) and @typeInfo(T).pointer.child == program.NetSocketRequest; }
-fn resolverPointer(comptime T: type) bool { return pointer(T) and @typeInfo(T).pointer.child == program.ResolverResult; }
+fn sliceType(comptime T: type) bool {
+    return @typeInfo(T) == .pointer and @typeInfo(T).pointer.size == .slice;
+}
+fn pointer(comptime T: type) bool {
+    return @typeInfo(T) == .pointer;
+}
+fn requestPointer(comptime T: type) bool {
+    return pointer(T) and @typeInfo(T).pointer.child == program.NetSocketRequest;
+}
+fn resolverPointer(comptime T: type) bool {
+    return pointer(T) and @typeInfo(T).pointer.child == program.ResolverResult;
+}
 fn cParam(comptime T: type) []const u8 {
     if (comptime sliceType(T)) return if (@typeInfo(T).pointer.is_const) "const uint8_t *" else "uint8_t *";
     if (T == [4]u8) return "const uint8_t *";
@@ -64,15 +72,23 @@ fn zParam(comptime T: type) []const u8 {
     if (comptime resolverPointer(T)) return "*bridge.ResolverResult";
     return comptime zType(T);
 }
-fn resultSlice(comptime T: type) bool { return sliceType(T) or (@typeInfo(T) == .optional and sliceType(@typeInfo(T).optional.child)); }
-fn cResult(comptime T: type) []const u8 { return comptime if (resultSlice(T)) "R4SdkNetSlice" else if (T == program.TcpReadiness) "R4SdkTcpReadiness" else cType(T); }
-fn zResult(comptime T: type) []const u8 { return comptime if (resultSlice(T)) "bridge.Slice" else zType(T); }
+fn resultSlice(comptime T: type) bool {
+    return sliceType(T) or (@typeInfo(T) == .optional and sliceType(@typeInfo(T).optional.child));
+}
+fn cResult(comptime T: type) []const u8 {
+    return comptime if (resultSlice(T)) "R4SdkNetSlice" else if (T == program.TcpReadiness) "R4SdkTcpReadiness" else cType(T);
+}
+fn zResult(comptime T: type) []const u8 {
+    return comptime if (resultSlice(T)) "bridge.Slice" else zType(T);
+}
 fn failure(comptime T: type) []const u8 {
     if (T == program.TcpReadiness) return "std.mem.zeroes(bridge.Readiness)";
     if (comptime resultSlice(T) or @typeInfo(T) == .@"struct") return ".{}";
     return if (@typeInfo(T) == .int and @typeInfo(T).int.signedness == .signed) "abi.err_no_group" else "0";
 }
-fn selected(comptime name: []const u8) bool { return !std.mem.eql(u8, name, "init") and !std.mem.eql(u8, name, "fromProgram") and !std.mem.eql(u8, name, "hasFn"); }
+fn selected(comptime name: []const u8) bool {
+    return !std.mem.eql(u8, name, "init") and !std.mem.eql(u8, name, "fromProgram") and !std.mem.eql(u8, name, "hasFn");
+}
 fn emitFlat(comptime T: type, comptime name: []const u8, w: *std.Io.Writer) !void {
     try w.print("typedef struct {s} {{\n", .{name});
     inline for (@typeInfo(T).@"struct".fields) |field| {
@@ -85,7 +101,7 @@ fn emitFlat(comptime T: type, comptime name: []const u8, w: *std.Io.Writer) !voi
 }
 fn emit(c: *std.Io.Writer, z: *std.Io.Writer) !void {
     @setEvalBranchQuota(12_000_000);
-    try c.writeAll("/* Generated from compiler-typed SDK networking owners; do not edit. */\n#ifndef R4OS_NET_BRIDGE_H\n#define R4OS_NET_BRIDGE_H\n#include \"abi.h\"\n/* Every context/buffer is borrowed for its call. Initialized request storage\n * must remain at the same address until actual wait/close acknowledgements;\n * do not reset, copy or release an active request. This is an SDK-local ABI. */\n");
+    try c.writeAll("/* Generated from compiler-typed SDK networking owners; do not edit. */\n#ifndef R4OS_NET_BRIDGE_H\n#define R4OS_NET_BRIDGE_H\n#include \"platform2.h\"\n/* Every context/buffer is borrowed for its call. Initialized request storage\n * must remain at the same address until actual wait/close acknowledgements;\n * do not reset, copy or release an active request. This is an SDK-local ABI. */\n");
     try c.print("typedef struct R4SdkNetRequest {{ _Alignas({d}) uint8_t data[{d}]; }} R4SdkNetRequest;\n", .{ @alignOf(bridge.Request), @sizeOf(bridge.Request) });
     try c.writeAll("typedef struct R4SdkNetSlice { const uint8_t *ptr; uintptr_t length; uint32_t valid, reserved; } R4SdkNetSlice;\n");
     try emitFlat(bridge.Options, "R4SdkResolverOptions", c);
@@ -96,47 +112,54 @@ fn emit(c: *std.Io.Writer, z: *std.Io.Writer) !void {
         if (comptime !selected(decl.name)) continue;
         const f = @typeInfo(@TypeOf(@field(net.Context, decl.name))).@"fn";
         const Ret = f.return_type.?;
-        try c.print("{s} R4SdkNet_{s}(const R4XStartContext *context", .{ cResult(Ret), decl.name });
-        try z.print("pub export fn R4SdkNet_{s}(context: *const abi.R4XStartContext", .{decl.name});
-        inline for (f.params[1..], 0..) |param, i| {
-            const T = param.type.?;
-            try c.print(", {s} p{d}", .{ cParam(T), i });
-            try z.print(", p{d}: {s}", .{ i, zParam(T) });
-            if (comptime sliceType(T)) {
-                try c.print(", uint32_t n{d}", .{i});
-                try z.print(", n{d}: u32", .{i});
+        inline for (.{ false, true }) |generation2| {
+            const prefix = if (generation2) "R4SdkNet2_" else "R4SdkNet_";
+            try c.print("{s} {s}{s}(const {s} *context", .{ cResult(Ret), prefix, decl.name, if (generation2) "R4OS2Context" else "R4XStartContext" });
+            try z.print("pub export fn {s}{s}(context: *const {s}", .{ prefix, decl.name, if (generation2) "@import(\"../platform2.zig\").Context" else "abi.R4XStartContext" });
+            inline for (f.params[1..], 0..) |param, i| {
+                const T = param.type.?;
+                try c.print(", {s} p{d}", .{ cParam(T), i });
+                try z.print(", p{d}: {s}", .{ i, zParam(T) });
+                if (comptime sliceType(T)) {
+                    try c.print(", uint32_t n{d}", .{i});
+                    try z.print(", n{d}: u32", .{i});
+                }
             }
+            try c.writeAll(");\n");
+            if (generation2) {
+                try z.print(") callconv(.c) {s} {{\n    _ = context.system() orelse return {s};\n    const owner = net.Context.fromProgram(.{{ .generation2 = context }});\n", .{ zResult(Ret), failure(Ret) });
+            } else {
+                try z.print(") callconv(.c) {s} {{\n    const bundle = bridge.bundle(context) orelse return {s};\n    const owner = net.Context.init(&bundle);\n", .{ zResult(Ret), failure(Ret) });
+            }
+            inline for (f.params[1..], 0..) |param, i| {
+                const T = param.type.?;
+                if (comptime resolverPointer(T)) try z.print("    var result{d}: program.ResolverResult = .{{}};\n", .{i});
+                if (comptime T == program.NetSocketService) try z.print("    const enum{d}: program.NetSocketService = switch (p{d}) {{ 0 => .tcp, 1 => .udp, else => return abi.io_error_invalid }};\n", .{ i, i });
+            }
+            try z.print("    const value = owner.{s}(", .{decl.name});
+            inline for (f.params[1..], 0..) |param, i| {
+                const T = param.type.?;
+                if (i != 0) try z.writeAll(", ");
+                if (comptime sliceType(T)) {
+                    try z.print("p{d}[0..n{d}]", .{ i, i });
+                } else if (T == [4]u8) {
+                    try z.print("p{d}.*", .{i});
+                } else if (T == program.NetSocketService) {
+                    try z.print("enum{d}", .{i});
+                } else if (T == program.ResolverOptions) {
+                    try z.print(".{{ .server = if (p{d}.has_server != 0) p{d}.server else null }}", .{ i, i });
+                } else if (comptime requestPointer(T)) {
+                    try z.print("bridge.request(p{d})", .{i});
+                } else if (comptime resolverPointer(T)) {
+                    try z.print("&result{d}", .{i});
+                } else try z.print("p{d}", .{i});
+            }
+            try z.writeAll(");\n");
+            inline for (f.params[1..], 0..) |param, i| {
+                if (comptime resolverPointer(param.type.?)) try z.print("    p{d}.* = bridge.flatten(bridge.ResolverResult, result{d});\n", .{ i, i });
+            }
+            if (comptime resultSlice(Ret)) try z.writeAll("    return bridge.slice(value);\n}\n") else if (Ret == bool) try z.writeAll("    return @intFromBool(value);\n}\n") else if (Ret == program.TcpReadiness) try z.writeAll("    return bridge.flatten(bridge.Readiness, value);\n}\n") else try z.writeAll("    return value;\n}\n");
         }
-        try c.writeAll(");\n");
-        try z.print(") callconv(.c) {s} {{\n    const bundle = bridge.bundle(context) orelse return {s};\n    const owner = net.Context.init(&bundle);\n", .{ zResult(Ret), failure(Ret) });
-        inline for (f.params[1..], 0..) |param, i| {
-            const T = param.type.?;
-            if (comptime resolverPointer(T)) try z.print("    var result{d}: program.ResolverResult = .{{}};\n", .{i});
-            if (comptime T == program.NetSocketService) try z.print("    const enum{d}: program.NetSocketService = switch (p{d}) {{ 0 => .tcp, 1 => .udp, else => return abi.io_error_invalid }};\n", .{ i, i });
-        }
-        try z.print("    const value = owner.{s}(", .{decl.name});
-        inline for (f.params[1..], 0..) |param, i| {
-            const T = param.type.?;
-            if (i != 0) try z.writeAll(", ");
-            if (comptime sliceType(T)) {
-                try z.print("p{d}[0..n{d}]", .{ i, i });
-            } else if (T == [4]u8) {
-                try z.print("p{d}.*", .{i});
-            } else if (T == program.NetSocketService) {
-                try z.print("enum{d}", .{i});
-            } else if (T == program.ResolverOptions) {
-                try z.print(".{{ .server = if (p{d}.has_server != 0) p{d}.server else null }}", .{ i, i });
-            } else if (comptime requestPointer(T)) {
-                try z.print("bridge.request(p{d})", .{i});
-            } else if (comptime resolverPointer(T)) {
-                try z.print("&result{d}", .{i});
-            } else try z.print("p{d}", .{i});
-        }
-        try z.writeAll(");\n");
-        inline for (f.params[1..], 0..) |param, i| {
-            if (comptime resolverPointer(param.type.?)) try z.print("    p{d}.* = bridge.flatten(bridge.ResolverResult, result{d});\n", .{ i, i });
-        }
-        if (comptime resultSlice(Ret)) try z.writeAll("    return bridge.slice(value);\n}\n") else if (Ret == bool) try z.writeAll("    return @intFromBool(value);\n}\n") else if (Ret == program.TcpReadiness) try z.writeAll("    return bridge.flatten(bridge.Readiness, value);\n}\n") else try z.writeAll("    return value;\n}\n");
     }
     try c.writeAll("#endif\n");
 }
@@ -182,22 +205,25 @@ fn emitRust(w: *std.Io.Writer) !void {
         inline for (f.params[1..], 0..) |p, i| {
             if (comptime sliceType(p.type.?)) try w.print("        if p{d}.len() > u32::MAX as usize {{ return {s}; }}\n", .{ i, if (comptime resultSlice(Ret)) "None" else if (Ret == bool) "false" else if (Ret == program.TcpReadiness) "unsafe { core::mem::zeroed() }" else if (Ret == i32) "abi::io_error_invalid" else "0" });
         }
-        try w.print("        let value = unsafe {{ c::R4SdkNet_{s}(self.context", .{decl.name});
-        inline for (f.params[1..], 0..) |p, i| {
-            const T = p.type.?;
-            if (comptime sliceType(T)) {
-                try w.print(", p{d}.as_{s}ptr(), p{d}.len() as u32", .{ i, if (@typeInfo(T).pointer.is_const) "" else "mut_", i });
-            } else if (comptime @typeInfo(T) == .pointer and @typeInfo(T).pointer.child == [4]u8) {
-                try w.print(", p{d}.as_{s}ptr()", .{ i, if (@typeInfo(T).pointer.is_const) "" else "mut_" });
-            } else if (T == [4]u8) {
-                try w.print(", p{d}.as_ptr()", .{i});
-            } else if (T == program.NetSocketService) {
-                try w.print(", p{d} as u8", .{i});
-            } else if (T == usize) {
-                try w.print(", p{d} as u64", .{i});
-            } else try w.print(", p{d}", .{i});
+        try w.writeAll("        let value = unsafe { if self.context2.is_null() { ");
+        inline for (.{ false, true }) |generation2| {
+            try w.print("c::{s}{s}({s}", .{ if (generation2) "R4SdkNet2_" else "R4SdkNet_", decl.name, if (generation2) "self.context2" else "self.context" });
+            inline for (f.params[1..], 0..) |p, i| {
+                const T = p.type.?;
+                if (comptime sliceType(T)) {
+                    try w.print(", p{d}.as_{s}ptr(), p{d}.len() as u32", .{ i, if (@typeInfo(T).pointer.is_const) "" else "mut_", i });
+                } else if (comptime @typeInfo(T) == .pointer and @typeInfo(T).pointer.child == [4]u8) {
+                    try w.print(", p{d}.as_{s}ptr()", .{ i, if (@typeInfo(T).pointer.is_const) "" else "mut_" });
+                } else if (T == [4]u8) {
+                    try w.print(", p{d}.as_ptr()", .{i});
+                } else if (T == program.NetSocketService) {
+                    try w.print(", p{d} as u8", .{i});
+                } else if (T == usize) {
+                    try w.print(", p{d} as u64", .{i});
+                } else try w.print(", p{d}", .{i});
+            }
+            try w.writeAll(if (generation2) ") } };\n" else ") } else { ");
         }
-        try w.writeAll(") };\n");
         if (comptime resultSlice(Ret)) try w.writeAll("        // Owner returns only a view of the input or resident label storage.\n        unsafe { crate::network::view(value) }\n") else if (Ret == bool) try w.writeAll("        value != 0\n") else try w.writeAll("        value\n");
         try w.writeAll("    }\n");
     }
@@ -221,22 +247,25 @@ fn emitRust(w: *std.Io.Writer) !void {
         inline for (f.params[1..], 0..) |p, i| {
             if (comptime sliceType(p.type.?)) try w.print("        if p{d}.len() > u32::MAX as usize {{ return abi::io_error_invalid; }}\n", .{i});
         }
-        try w.print("        unsafe {{ c::R4SdkNet_{s}(self.network.context", .{decl.name});
-        inline for (f.params[1..], 0..) |p, i| {
-            const T = p.type.?;
-            if (comptime requestPointer(T)) {
-                try w.writeAll(", self.raw.as_ptr()");
-            } else if (comptime sliceType(T)) {
-                try w.print(", p{d}.as_{s}ptr(), p{d}.len() as u32", .{ i, if (@typeInfo(T).pointer.is_const) "" else "mut_", i });
-            } else if (T == [4]u8) {
-                try w.print(", p{d}.as_ptr()", .{i});
-            } else if (T == program.NetSocketService) {
-                try w.print(", p{d} as u8", .{i});
-            } else if (T == usize) {
-                try w.print(", p{d} as u64", .{i});
-            } else try w.print(", p{d}", .{i});
+        try w.writeAll("        unsafe { if self.network.context2.is_null() { ");
+        inline for (.{ false, true }) |generation2| {
+            try w.print("c::{s}{s}({s}", .{ if (generation2) "R4SdkNet2_" else "R4SdkNet_", decl.name, if (generation2) "self.network.context2" else "self.network.context" });
+            inline for (f.params[1..], 0..) |p, i| {
+                const T = p.type.?;
+                if (comptime requestPointer(T)) {
+                    try w.writeAll(", self.raw.as_ptr()");
+                } else if (comptime sliceType(T)) {
+                    try w.print(", p{d}.as_{s}ptr(), p{d}.len() as u32", .{ i, if (@typeInfo(T).pointer.is_const) "" else "mut_", i });
+                } else if (T == [4]u8) {
+                    try w.print(", p{d}.as_ptr()", .{i});
+                } else if (T == program.NetSocketService) {
+                    try w.print(", p{d} as u8", .{i});
+                } else if (T == usize) {
+                    try w.print(", p{d} as u64", .{i});
+                } else try w.print(", p{d}", .{i});
+            }
+            try w.writeAll(if (generation2) ") } }\n    }\n" else ") } else { ");
         }
-        try w.writeAll(") }\n    }\n");
     }
     try w.writeAll("}\n");
 }

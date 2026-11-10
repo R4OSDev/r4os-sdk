@@ -203,6 +203,7 @@ pub const native_protocol_view = @import("r4os/native_protocol_view.zig");
 pub const internet_checksum = @import("r4os/internet_checksum.zig");
 pub const block_transfer = @import("r4os/block_transfer.zig");
 pub const arguments = @import("r4os/arg_cursor.zig");
+pub const rpc_budget = @import("r4os/rpc_budget.zig");
 pub const diagnostics = @import("r4os/diagnostics.zig");
 pub const stream_transfer = @import("r4os/stream_api.zig");
 pub const service_deadline = @import("r4os/service_deadline.zig");

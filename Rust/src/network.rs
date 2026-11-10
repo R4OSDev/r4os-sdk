@@ -22,6 +22,7 @@ pub enum SocketService {
 }
 pub struct Network<'a> {
     pub(crate) context: *const abi::R4XStartContext,
+    pub(crate) context2: *const c::R4OS2Context,
     app: c::R4App,
     _loan: PhantomData<&'a ()>,
     _local: PhantomData<*mut ()>,
@@ -30,7 +31,22 @@ impl<'a> Network<'a> {
     pub fn new(app: &'a App<'_>) -> crate::storage::Result<Self> {
         Ok(Self {
             context: app.start_context(),
+            context2: core::ptr::null(),
             app: crate::facade_app(app)?,
+            _loan: PhantomData,
+            _local: PhantomData,
+        })
+    }
+    pub fn new2(app: &'a crate::app2::App<'_>) -> crate::storage::Result<Self> {
+        let mut facade = unsafe { core::mem::zeroed() };
+        let rc = unsafe { c::R4SdkAppFacade2(app.native_context(), &app.memory, &mut facade) };
+        if rc != 0 {
+            return Err(crate::storage::Error::Raw(rc));
+        }
+        Ok(Self {
+            context: core::ptr::null(),
+            context2: app.native_context(),
+            app: facade,
             _loan: PhantomData,
             _local: PhantomData,
         })
@@ -139,16 +155,34 @@ impl<'a> OwnedRequest<'a> {
         unsafe { view(c::R4SdkNetRequestUdpData(self.raw.as_ptr(), result)) }
     }
     pub fn status(&mut self) -> i32 {
-        unsafe { c::R4SdkNet_netSocketStatus(self.network.context, self.raw.as_ptr()) }
+        unsafe {
+            if self.network.context2.is_null() {
+                c::R4SdkNet_netSocketStatus(self.network.context, self.raw.as_ptr())
+            } else {
+                c::R4SdkNet2_netSocketStatus(self.network.context2, self.raw.as_ptr())
+            }
+        }
     }
     pub fn wait(&mut self, ticks: u64) -> i32 {
-        unsafe { c::R4SdkNet_netSocketWait(self.network.context, self.raw.as_ptr(), ticks) }
+        unsafe {
+            if self.network.context2.is_null() {
+                c::R4SdkNet_netSocketWait(self.network.context, self.raw.as_ptr(), ticks)
+            } else {
+                c::R4SdkNet2_netSocketWait(self.network.context2, self.raw.as_ptr(), ticks)
+            }
+        }
     }
     pub fn close(&mut self) -> i32 {
         if !self.active() {
             return 0;
         }
-        unsafe { c::R4SdkNet_netSocketClose(self.network.context, self.raw.as_ptr()) }
+        unsafe {
+            if self.network.context2.is_null() {
+                c::R4SdkNet_netSocketClose(self.network.context, self.raw.as_ptr())
+            } else {
+                c::R4SdkNet2_netSocketClose(self.network.context2, self.raw.as_ptr())
+            }
+        }
     }
     pub fn reset(&mut self) -> i32 {
         unsafe { c::R4SdkNetRequestReset(self.raw.as_ptr()) }

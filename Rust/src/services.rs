@@ -410,20 +410,25 @@ impl Endpoint<'_> {
         }
     }
     pub fn service_loop(&self, stop_check_ms: u64, drain_limit: u32) -> Result<ServiceLoop<'_>> {
-        // Shared generation2 loop admission belongs to the following service
-        // migration. Never pass its absent generation1 start to the old FFI.
-        if !self.owner.context2.is_null() {
-            return Err(Error::Raw(abi::err_no_fn));
-        }
         let mut state = unsafe { core::mem::zeroed() };
         exact(unsafe {
-            c::R4SdkServiceLoopInit(
-                self.owner.context,
-                self.handle(),
-                stop_check_ms,
-                drain_limit,
-                &mut state,
-            )
+            if self.owner.context2.is_null() {
+                c::R4SdkServiceLoopInit(
+                    self.owner.context,
+                    self.handle(),
+                    stop_check_ms,
+                    drain_limit,
+                    &mut state,
+                )
+            } else {
+                c::R4SdkServiceLoopInit2(
+                    self.owner.context2,
+                    self.handle(),
+                    stop_check_ms,
+                    drain_limit,
+                    &mut state,
+                )
+            }
         })?;
         Ok(ServiceLoop {
             endpoint: self,
@@ -457,12 +462,21 @@ impl<'a> ServiceLoop<'a> {
     }
     pub fn wait(&mut self, deadline: Option<u64>) -> Result<Wake> {
         let v = unsafe {
-            c::R4SdkServiceLoopWait(
-                self.endpoint.owner.context,
-                &mut self.state,
-                deadline.is_some() as u32,
-                deadline.unwrap_or(0),
-            )
+            if self.endpoint.owner.context2.is_null() {
+                c::R4SdkServiceLoopWait(
+                    self.endpoint.owner.context,
+                    &mut self.state,
+                    deadline.is_some() as u32,
+                    deadline.unwrap_or(0),
+                )
+            } else {
+                c::R4SdkServiceLoopWait2(
+                    self.endpoint.owner.context2,
+                    &mut self.state,
+                    deadline.is_some() as u32,
+                    deadline.unwrap_or(0),
+                )
+            }
         };
         match v.kind {
             0 => Ok(Wake::Requests(v.value as u32)),
@@ -475,12 +489,21 @@ impl<'a> ServiceLoop<'a> {
     pub fn batch(&mut self, announced: u32) -> Result<Batch<'_, 'a>> {
         let mut state = unsafe { core::mem::zeroed() };
         exact(unsafe {
-            c::R4SdkServiceLoopBatch(
-                self.endpoint.owner.context,
-                &mut self.state,
-                announced,
-                &mut state,
-            )
+            if self.endpoint.owner.context2.is_null() {
+                c::R4SdkServiceLoopBatch(
+                    self.endpoint.owner.context,
+                    &mut self.state,
+                    announced,
+                    &mut state,
+                )
+            } else {
+                c::R4SdkServiceLoopBatch2(
+                    self.endpoint.owner.context2,
+                    &mut self.state,
+                    announced,
+                    &mut state,
+                )
+            }
         })?;
         Ok(Batch { owner: self, state })
     }
@@ -489,25 +512,46 @@ impl<'a> ServiceLoop<'a> {
             unsafe { (&mut *data.cast::<F>())() }
         }
         unsafe {
-            c::R4SdkServiceLoopDrain(
-                self.endpoint.owner.context,
-                &mut self.state,
-                announced,
-                Some(invoke::<F>),
-                core::ptr::from_mut(&mut handler).cast(),
-            )
+            if self.endpoint.owner.context2.is_null() {
+                c::R4SdkServiceLoopDrain(
+                    self.endpoint.owner.context,
+                    &mut self.state,
+                    announced,
+                    Some(invoke::<F>),
+                    core::ptr::from_mut(&mut handler).cast(),
+                )
+            } else {
+                c::R4SdkServiceLoopDrain2(
+                    self.endpoint.owner.context2,
+                    &mut self.state,
+                    announced,
+                    Some(invoke::<F>),
+                    core::ptr::from_mut(&mut handler).cast(),
+                )
+            }
         }
     }
     pub fn format_report(&self, name: &[u8], out: &mut [u8]) -> Result<usize> {
         let rc = unsafe {
-            c::R4SdkServiceLoopReport(
-                self.endpoint.owner.context,
-                &self.state,
-                name.as_ptr().cast(),
-                length(name.len())?,
-                out.as_mut_ptr(),
-                length(out.len())?,
-            )
+            if self.endpoint.owner.context2.is_null() {
+                c::R4SdkServiceLoopReport(
+                    self.endpoint.owner.context,
+                    &self.state,
+                    name.as_ptr().cast(),
+                    length(name.len())?,
+                    out.as_mut_ptr(),
+                    length(out.len())?,
+                )
+            } else {
+                c::R4SdkServiceLoopReport2(
+                    self.endpoint.owner.context2,
+                    &self.state,
+                    name.as_ptr().cast(),
+                    length(name.len())?,
+                    out.as_mut_ptr(),
+                    length(out.len())?,
+                )
+            }
         };
         if rc < 0 {
             Err(Error::Raw(rc))
@@ -525,11 +569,19 @@ pub struct Batch<'a, 'b> {
 impl Batch<'_, '_> {
     pub fn next_request(&mut self) -> Result<BatchStep> {
         let v = unsafe {
-            c::R4SdkServiceBatchNext(
-                self.owner.endpoint.owner.context,
-                &mut self.owner.state,
-                &mut self.state,
-            )
+            if self.owner.endpoint.owner.context2.is_null() {
+                c::R4SdkServiceBatchNext(
+                    self.owner.endpoint.owner.context,
+                    &mut self.owner.state,
+                    &mut self.state,
+                )
+            } else {
+                c::R4SdkServiceBatchNext2(
+                    self.owner.endpoint.owner.context2,
+                    &mut self.owner.state,
+                    &mut self.state,
+                )
+            }
         };
         match v.kind {
             0 => Ok(BatchStep::Request),

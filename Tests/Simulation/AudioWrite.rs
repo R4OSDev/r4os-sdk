@@ -10,6 +10,61 @@ unsafe extern "C" {
 #[test]
 fn actual_audio_writer_c_rust_total_budget_prefix_poll_uncertain() {
     assert_eq!(unsafe { sdk_audio25_c_case() }, 0);
+    // The ordinary App2/Platform/Stream route enters the same Zig writer.
+    {
+        use r4os_sdk::{
+            app2::{App, ImportSpec, StartupInfo},
+            platform::{PlatformStorage, WriteKind},
+        };
+        let mut sys = abi::generation2::R4XStartR4Sys2::default();
+        unsafe { sdk_audio25_tables(&mut sys, 0) };
+        let import = abi::R4XStartImport {
+            group_id: 1,
+            min_version: 2,
+            resolved_version: 2,
+            flags: abi::r4xstart_import_flag_group_interface,
+            module_name: c"R4SYS".as_ptr() as u64,
+            symbol_name: c"Query2".as_ptr() as u64,
+            table: &sys as *const _ as u64,
+            ..Default::default()
+        };
+        let raw = abi::generation2::R4XStartContext2 {
+            instance_id: 43,
+            app_class: abi::R4XStartAppClass::console.0,
+            flags: abi::r4xstart_flag_imports_valid,
+            import_count: 1,
+            imports: &import as *const _ as u64,
+            ..Default::default()
+        };
+        let imports = [ImportSpec {
+            module_name: c"R4SYS".as_ptr().cast(),
+            symbol_name: c"Query2".as_ptr().cast(),
+            minimum: 2,
+            optional: 0,
+            group_id: 1,
+            reserved: 0,
+        }];
+        let facts = StartupInfo {
+            profile: abi::R4AppProfile::console.0 as u32,
+            app_class: abi::R4XStartAppClass::console.0,
+            required_groups: 2,
+            imports: &imports,
+        };
+        let app = unsafe { App::from_raw(&raw, &facts, c"AUDIO43") }.unwrap();
+        let mut storage = core::pin::pin!(PlatformStorage::default());
+        let platform = app.platform(storage.as_mut()).unwrap();
+        let audio = platform.audio().unwrap();
+        let mut stream = audio
+            .open_stream(48000, 2, 65536, Timeout::Forever)
+            .unwrap();
+        let progress = stream
+            .write(&[0; 64], Timeout::AfterNanos(10_000_000), false)
+            .unwrap();
+        assert_eq!(progress.kind, WriteKind::TimedOut);
+        assert_eq!(progress.accepted, 16);
+        assert_eq!(unsafe { sdk_audio25_calls() }, 4);
+        stream.close(Timeout::Forever).unwrap();
+    }
     for mode in 0..4 {
         let mut sys = abi::generation2::R4XStartR4Sys2::default();
         unsafe { sdk_audio25_tables(&mut sys, mode) };

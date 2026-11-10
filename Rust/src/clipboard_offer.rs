@@ -90,6 +90,16 @@ impl<'a> Client<'a> {
             close: Some(self.close),
             handle: self.handle,
             timeout_ticks: 500,
+            clock: self
+                ._context
+                .lookup(
+                    1,
+                    mem::offset_of!(abi::generation2::R4XStartR4Sys2, monotonic_clock) as u32,
+                )
+                .ok()
+                .map(|address| unsafe {
+                    mem::transmute::<u64, abi::R4SysFns::monotonic_clock>(address)
+                }),
         })
     }
     pub fn connect(context: &'a Context<'a>) -> Result<Self, Error> {

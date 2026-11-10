@@ -148,6 +148,30 @@ pub const App = struct {
         return @import("stream_adapters.zig").PlatformClock.fromContext2(&self.context);
     }
 
+    pub fn argCursor(self: *const App, policy: @import("arg_cursor.zig").Policy, detail: *@import("arg_cursor.zig").Failure) @import("arg_cursor.zig").Error!@import("arg_cursor.zig").ArgCursor {
+        return @import("arg_cursor.zig").ArgCursor.init(self.args(), policy, detail);
+    }
+
+    pub fn waitSet(self: *const App, capacity: u32, out: *@import("wait_set.zig").Set) i32 {
+        return @import("wait_set.zig").Set.init(&self.context, capacity, out);
+    }
+
+    pub fn bytePipe(self: *const App, capacity: u64, out: *@import("byte_pipe.zig").Pair) i32 {
+        return @import("byte_pipe.zig").create(&self.context, capacity, out);
+    }
+
+    pub fn stdio(self: *const App, out: *@import("launch_io.zig").Stdio) i32 {
+        return @import("launch_io.zig").Stdio.init(&self.context, out);
+    }
+
+    pub fn networkFamily(self: *const App, service: @import("network_family.zig").Service, out: *@import("network_family.zig").Client) i32 {
+        return @import("network_family.zig").Client.connect(&self.context, service, out);
+    }
+
+    pub fn audioCapture(self: *const App, transport_ticks: u64, out: *@import("audio_capture.zig").Client) i32 {
+        return @import("audio_capture.zig").Client.connect(&self.context, transport_ticks, out);
+    }
+
     pub fn textMetricsProvider(self: *const App) @import("text_metrics_api.zig").Binding {
         return @import("text_metrics_api.zig").provider2(&self.context);
     }

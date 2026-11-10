@@ -253,6 +253,8 @@ pub const AudioStream = struct {
             return .{ .failure = .{ .raw = abi.service_api_result_invalid, .written = 0 } };
         var offset: usize = 0;
         var calls: u32 = 0;
+        if (data.len == 0) return .{ .written = 0 };
+        var operation = self.connection.budget(timeout) catch |err| return .{ .failure = .{ .raw = @import("rpc_budget.zig").code(err), .written = 0 } };
         while (offset < data.len) {
             if (calls == max_calls) return .{ .busy = offset };
             calls += 1;
@@ -263,7 +265,7 @@ pub const AudioStream = struct {
             @memcpy(payload[0..@sizeOf(abi.AudioServiceStreamWriteRequest)], std.mem.asBytes(&request));
             @memcpy(payload[@sizeOf(abi.AudioServiceStreamWriteRequest)..][0..chunk_len], data[offset..][0..chunk_len]);
             var response: abi.AudioServiceStreamResult = .{};
-            const called = self.connection.call(abi.audio_service_op_write_stream, payload[0 .. @sizeOf(abi.AudioServiceStreamWriteRequest) + chunk_len], std.mem.asBytes(&response), timeout);
+            const called = self.connection.callBudget(abi.audio_service_op_write_stream, payload[0 .. @sizeOf(abi.AudioServiceStreamWriteRequest) + chunk_len], std.mem.asBytes(&response), &operation);
             switch (called) {
                 .response => |meta| {
                     if (meta.bytes != @sizeOf(abi.AudioServiceStreamResult) or !validResponse(&response, abi.audio_service_op_write_stream, self.stream_id, @intCast(chunk_len), self.frame_bytes)) {
@@ -433,7 +435,7 @@ test "packet limits keep the complete header and PCM in both audio writers" {
             return 0;
         }
         fn clock(out: *abi.MonotonicClockInfo) callconv(.c) i32 {
-            out.* = .{ .event_effective_hz = 1000 };
+            out.* = .{ .flags = abi.monotonic_clock_flag_valid, .source = 1, .generation = 1, .frequency_hz = abi.monotonic_clock_frequency_hz, .resolution_ns = 1, .instant_ns = 1_000_000_000, .event_requested_hz = 1000, .event_effective_hz = 1001 };
             return 1;
         }
         fn call(_: u32, op: u16, bytes: [*]const u8, len: u32, header: *abi.ServiceMessageHeader, response: [*]u8, capacity: u32, _: u64) callconv(.c) i32 {

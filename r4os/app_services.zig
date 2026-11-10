@@ -2,6 +2,8 @@ const std = @import("std");
 const abi = @import("r4os_contract").abi;
 const r4sys = @import("r4sys.zig");
 const time_contract = @import("time_contract.zig");
+const checked = @import("time_budget.zig");
+const checkedFailure = @import("time_budget_runtime.zig").failure;
 
 pub const Timeout = time_contract.Timeout;
 
@@ -189,7 +191,27 @@ pub const ServiceConnection = struct {
 
     pub fn call(self: *ServiceConnection, op: u16, request: []const u8, response: []u8, timeout: Timeout) ServiceCall {
         if (!self.valid()) return .{ .failure = abi.err_closed };
+        if (self.sys.base.generation2 != null) {
+            var operation = self.budget(timeout) catch |err| return .{ .failure = @import("rpc_budget.zig").code(err) };
+            return self.callBudget(op, request, response, &operation);
+        }
         const ticks = time_contract.timeoutToTicks(timeout, self.sys.monotonicHz()) catch return .{ .failure = abi.service_api_result_invalid };
+        return callWithTicks(self, op, request, response, ticks);
+    }
+
+    pub fn budget(self: *const ServiceConnection, timeout: Timeout) @import("rpc_budget.zig").Error!@import("rpc_budget.zig").Budget {
+        var clock: @import("rpc_budget.zig").Clock = null;
+        if (self.sys.base.generation2) |context| {
+            clock = @import("platform2.zig").abi.function(@import("platform2.zig").abi.R4SysFns2, context.system(), "monotonic_clock");
+        } else if (self.sys.hasFn("monotonic_clock")) {
+            clock = @ptrFromInt(self.sys.base.bundle.?.sys.?.monotonic_clock);
+        }
+        return @import("rpc_budget.zig").Budget.fromTimeout(clock, timeout);
+    }
+
+    pub fn callBudget(self: *ServiceConnection, op: u16, request: []const u8, response: []u8, operation: *@import("rpc_budget.zig").Budget) ServiceCall {
+        if (!self.valid()) return .{ .failure = abi.err_closed };
+        const ticks = operation.remainingTicks() catch |err| return if (err == error.TimedOut) .timed_out else .{ .failure = @import("rpc_budget.zig").code(err) };
         return callWithTicks(self, op, request, response, ticks);
     }
 
@@ -305,8 +327,39 @@ pub const ServiceLoop = struct {
     stop_check_ticks: u64,
     drain_limit: u32,
     metrics: ServiceLoopMetrics = .{},
+    clock_guard: ?checked.DeadlineBudget = null,
+    init_error: i32 = 0,
 
     pub fn init(sys: r4sys.Context, endpoint_handle: u32, options: ServiceLoopOptions) ServiceLoop {
+        if (sys.base.generation2 != null) {
+            var loop: ServiceLoop = .{ .sys = sys, .endpoint_handle = endpoint_handle, .started_tick = 0, .stop_check_ticks = 1, .drain_limit = normalizeDrainLimit(options.drain_limit) };
+            const sample = sys.base.clockSampleChecked() catch |err| {
+                loop.init_error = checkedFailure(err);
+                return loop;
+            };
+            const stop = checked.millisecondsToTicks(options.stop_check_ms, sample.identity.tick_hz) catch |err| {
+                loop.init_error = checkedFailure(err);
+                return loop;
+            };
+            loop.stop_check_ticks = checked.toWaitTicks(.{ .kind = 1, .value = @max(stop, 1) }) catch |err| {
+                loop.init_error = checkedFailure(err);
+                return loop;
+            };
+            if (!sys.hasFn("ticks")) {
+                loop.init_error = checkedFailure(error.ClockUnavailable);
+                return loop;
+            }
+            // Absolute caller deadlines use the canonical timer's epoch.
+            // Its rebased tick counter is not instant_ns * requested_hz.
+            loop.started_tick = sys.ticks();
+            // An indefinite service lifetime still binds one actual source.
+            // Each endpoint wait retains its finite bounded Stop check.
+            loop.clock_guard = checked.DeadlineBudget.init(sample, .{ .kind = abi.timeout_kind_forever }) catch |err| {
+                loop.init_error = checkedFailure(err);
+                return loop;
+            };
+            return loop;
+        }
         const configured_stop_ticks = sys.ticksFromMilliseconds(options.stop_check_ms);
         return .{
             .sys = sys,
@@ -326,7 +379,9 @@ pub const ServiceLoop = struct {
             return .stop;
         }
 
-        const budget = serviceLoopWaitBudget(self.sys.ticks(), deadline_tick, self.stop_check_ticks);
+        if (self.init_error != 0) return .{ .failure = self.init_error };
+        const now = self.nowChecked() catch |err| return .{ .failure = checkedFailure(err) };
+        const budget = serviceLoopWaitBudget(now, deadline_tick, self.stop_check_ticks);
         if (budget.deadline_due) {
             self.metrics.deadline_wakes +%= 1;
             return .deadline;
@@ -349,6 +404,7 @@ pub const ServiceLoop = struct {
             self.metrics.stop_wakes +%= 1;
             return .stop;
         }
+        const after = if (self.clock_guard != null) self.nowChecked() catch |err| return .{ .failure = checkedFailure(err) } else 0;
         if (pending > 0) {
             const queued: u32 = @intCast(pending);
             self.metrics.request_wakes +%= 1;
@@ -356,13 +412,38 @@ pub const ServiceLoop = struct {
             return .{ .requests = queued };
         }
         if (deadline_tick) |deadline| {
-            if (self.sys.ticks() >= deadline) {
+            const current = if (self.clock_guard != null) after else self.sys.ticks();
+            if (current >= deadline) {
                 self.metrics.deadline_wakes +%= 1;
                 return .deadline;
             }
         }
         self.metrics.idle_wakes +%= 1;
         return .idle;
+    }
+
+    fn nowChecked(self: *ServiceLoop) checked.Error!u64 {
+        if (self.clock_guard) |*guard| {
+            const sample = try self.sys.base.clockSampleChecked();
+            _ = try guard.remaining(sample);
+            const ticks = self.sys.ticks();
+            if (ticks < self.started_tick) return error.ClockRegressed;
+            return ticks;
+        }
+        return self.sys.ticks();
+    }
+
+    fn reportNowChecked(self: *const ServiceLoop) checked.Error!u64 {
+        if (self.init_error != 0) return error.InvalidBudget;
+        if (self.clock_guard) |value| {
+            var guard = value;
+            const sample = try self.sys.base.clockSampleChecked();
+            _ = try guard.remaining(sample);
+            const ticks = self.sys.ticks();
+            if (ticks < self.started_tick) return error.ClockRegressed;
+            return ticks;
+        }
+        return self.sys.ticks();
     }
 
     pub fn beginBatch(self: *ServiceLoop, announced_requests: u32) ServiceRequestBatch {
@@ -400,12 +481,17 @@ pub const ServiceLoop = struct {
     }
 
     pub fn formatReport(self: *const ServiceLoop, service_name: []const u8, out: []u8) ?[]const u8 {
+        return self.formatReportChecked(service_name, out) catch null;
+    }
+
+    pub fn formatReportChecked(self: *const ServiceLoop, service_name: []const u8, out: []u8) (checked.Error || error{NoSpaceLeft})![]const u8 {
+        const now = try self.reportNowChecked();
         return std.fmt.bufPrint(
             out,
             "SVCLOOP|1|{s}|{d}|{d}|{d}|{d}|{d}|{d}|{d}|{d}|{d}|{d}|{d}|{d}|{d}|{d}|{d}|{d}|{d}",
             .{
                 service_name,
-                self.sys.ticks() -| self.started_tick,
+                now -| self.started_tick,
                 self.stop_check_ticks,
                 self.drain_limit,
                 self.metrics.wait_calls,
@@ -423,7 +509,7 @@ pub const ServiceLoop = struct {
                 self.metrics.fairness_yields,
                 self.metrics.max_batch,
             },
-        ) catch null;
+        );
     }
 };
 
@@ -438,6 +524,10 @@ pub const ServiceRequestBatch = struct {
 
     pub fn next(self: *ServiceRequestBatch) ServiceBatchStep {
         if (self.done) return .complete;
+        if (self.loop.init_error != 0) {
+            self.done = true;
+            return .{ .failure = self.loop.init_error };
+        }
         if (self.processed >= self.loop.drain_limit) return self.finishLimit();
 
         if (self.announced == 0) {

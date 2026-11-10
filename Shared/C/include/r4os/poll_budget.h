@@ -35,6 +35,16 @@ typedef struct R4SdkPollRemaining {
 } R4SdkPollRemaining;
 
 int32_t R4SdkClockSampleRead(const R4MonotonicClockInfo *, R4SdkClockSample *);
+/* One logical RPC/stream operation; expiry never cancels or replays a mutation. */
+typedef struct R4SdkRpcBudget {
+    R4SysMonotonicClockFn clock;
+    R4SdkDeadlineBudget deadline;
+    uint64_t tick_deadline;
+    uint32_t has_tick_deadline, reserved;
+} R4SdkRpcBudget;
+int32_t R4SdkRpcBudgetInit(R4SysMonotonicClockFn, const R4Timeout *, R4SdkRpcBudget *);
+int32_t R4SdkRpcBudgetRemaining(R4SdkRpcBudget *, uint64_t *);
+_Static_assert(sizeof(R4SdkRpcBudget)==64u, "RPC budget");
 int32_t R4SdkMillisecondsToTicksChecked(uint64_t, uint32_t, uint64_t *);
 int32_t R4SdkTimeoutTicksChecked(R4Timeout, uint32_t, R4SdkBudgetValue *);
 /* Only Forever maps to the old sentinel; finite MAX fails unchanged. */

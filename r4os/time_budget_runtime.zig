@@ -3,6 +3,20 @@ const std = @import("std");
 const abi = @import("r4os_contract").abi;
 const time = @import("time_budget.zig");
 const poll = @import("driver_poll_budget.zig");
+const rpc = @import("rpc_budget.zig");
+// New FFI records are borrowed pointers. No callback or output is retained.
+pub export fn R4SdkRpcBudgetInit(clock: rpc.Clock, timeout: ?*const abi.R4Timeout, out: ?*rpc.Budget) callconv(.c) i32 {
+    const output = out orelse return -7;
+    const limit = timeout orelse return -7;
+    output.* = rpc.Budget.fromTimeout(clock, limit.*) catch |err| return rpc.code(err);
+    return 0;
+}
+pub export fn R4SdkRpcBudgetRemaining(owner: ?*rpc.Budget, out: ?*u64) callconv(.c) i32 {
+    const output = out orelse return -7;
+    const budget = owner orelse return -7;
+    output.* = budget.remainingTicks() catch |err| return rpc.code(err);
+    return 0;
+}
 pub fn failure(err: time.Error) i32 {
     return switch (err) {
         error.UnknownFrequency => -1,

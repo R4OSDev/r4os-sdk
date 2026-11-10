@@ -158,31 +158,65 @@ fn service_network_serial_deadline_owners_and_retained_requests() {
     let services = Services::new(&app).unwrap();
     assert!(services.available());
     assert_eq!(unsafe { sdk_inventory_c_case() }, 0);
-    unsafe { sdk_inventory_tables(&mut sys); sdk_inventory_reset(1); }
+    unsafe {
+        sdk_inventory_tables(&mut sys);
+        sdk_inventory_reset(1);
+    }
     assert!(services.inventory_available());
-    let inventory=services.inventory().unwrap();
-    assert_eq!(inventory.rows.len(),300);
-    assert_eq!(inventory.revision,12);
-    for (index,row) in inventory.rows.iter().enumerate(){assert_eq!(row.registration_id,index as u64+1);}
-    services.control_entry(&inventory.rows[299],r4os_sdk::services::InventoryAction::Start).unwrap();
-    let mut stale=inventory.rows[299];stale.process.generation-=1;
-    assert_eq!(services.control_entry(&stale,r4os_sdk::services::InventoryAction::Start),Err(r4os_sdk::storage::Error::Raw(abi::service_api_result_busy)));
+    let inventory = services.inventory().unwrap();
+    assert_eq!(inventory.rows.len(), 300);
+    assert_eq!(inventory.revision, 12);
+    for (index, row) in inventory.rows.iter().enumerate() {
+        assert_eq!(row.registration_id, index as u64 + 1);
+    }
+    services
+        .control_entry(
+            &inventory.rows[299],
+            r4os_sdk::services::InventoryAction::Start,
+        )
+        .unwrap();
+    let mut stale = inventory.rows[299];
+    stale.process.generation -= 1;
+    assert_eq!(
+        services.control_entry(&stale, r4os_sdk::services::InventoryAction::Start),
+        Err(r4os_sdk::storage::Error::Raw(abi::service_api_result_busy))
+    );
     drop(inventory);
-    unsafe { sdk_inventory_reset(2); }
-    assert!(matches!(services.inventory(),Err(r4os_sdk::storage::Error::Raw(code)) if code==abi::service_api_result_busy));
-    unsafe { sdk_inventory_reset(0); }
+    unsafe {
+        sdk_inventory_reset(2);
+    }
+    assert!(
+        matches!(services.inventory(),Err(r4os_sdk::storage::Error::Raw(code)) if code==abi::service_api_result_busy)
+    );
+    unsafe {
+        sdk_inventory_reset(0);
+    }
 
     assert_eq!(unsafe { sdk_link_c_case() }, 0);
     unsafe { sdk_link_tables(&mut sys) };
     let link_scope = services.link_scope().unwrap();
     assert!(r4os_sdk::services::link_supported(&link_scope));
-    let link_intent = r4os_sdk::services::prepare_link_binding(link_scope.request.token, abi::ProgramProcessHandle { instance_id: 42, generation: 123, reserved: 0 }, [1,2,3], 999, b"C:\\TEMP\\SELF.LNK", b"R4S_FORMAT=1\nSCHEMA=R4LNK\nTARGET=C:\\TEMP\\SELF.R4X\n").unwrap();
+    let link_intent = r4os_sdk::services::prepare_link_binding(
+        link_scope.request.token,
+        abi::ProgramProcessHandle {
+            instance_id: 42,
+            generation: 123,
+            reserved: 0,
+        },
+        [1, 2, 3],
+        999,
+        b"C:\\TEMP\\SELF.LNK",
+        b"R4S_FORMAT=1\nSCHEMA=R4LNK\nTARGET=C:\\TEMP\\SELF.R4X\n",
+    )
+    .unwrap();
     let link_saved = services.link_prepare(&link_intent).unwrap().request;
     assert_eq!(link_saved.token.serial, 55);
-    assert!(matches!(services.link_activate(&link_saved),Err(r4os_sdk::storage::Error::Raw(code)) if code == abi::service_api_result_timeout));
+    assert!(
+        matches!(services.link_activate(&link_saved),Err(r4os_sdk::storage::Error::Raw(code)) if code == abi::service_api_result_timeout)
+    );
     let link_readback = services.link_status(&link_saved).unwrap();
-    assert_eq!(link_readback.process.generation,0xfedcba9876543210);
-    assert_eq!(unsafe { sdk_link_activations() },1);
+    assert_eq!(link_readback.process.generation, 0xfedcba9876543210);
+    assert_eq!(unsafe { sdk_link_activations() }, 1);
 
     let bound = services.bound_detail(c"MANAGED").unwrap();
     assert_eq!(bound.process.instance_id, 41);
@@ -259,62 +293,7 @@ fn service_network_serial_deadline_owners_and_retained_requests() {
     connection.close().unwrap();
     assert_eq!(connection.handle(), 0);
     assert_eq!(connection.info.handle, 0);
-    let mut endpoint = services.register(c"EXAMPLE", 0).unwrap();
-    assert_eq!(endpoint.wait(Timeout::Poll).unwrap(), None);
-    let mut loop_owner = endpoint.service_loop(200, 2).unwrap();
-    assert!(matches!(
-        loop_owner.wait(Some(100)).unwrap(),
-        Wake::Deadline
-    ));
-    assert!(matches!(loop_owner.wait(Some(105)).unwrap(), Wake::Idle));
-    assert_eq!(unsafe { sdk_service_last_wait() }, 5);
-    unsafe { sdk_service_queue(3) };
-    assert!(matches!(loop_owner.wait(None).unwrap(), Wake::Requests(3)));
-    let mut processed = 0;
-    assert_eq!(
-        loop_owner.drain(3, || {
-            match endpoint.receive(&mut response).unwrap() {
-                Receive::Message { header, bytes: 4 } => {
-                    processed += 1;
-                    endpoint.reply(header.request_id, 0, &[])
-                }
-                _ => -99,
-            }
-        }),
-        0
-    );
-    assert_eq!(processed, 2);
-    assert_eq!(unsafe { sdk_service_yielded() }, 1);
-    assert_eq!(
-        loop_owner.drain(0, || {
-            match endpoint.receive(&mut response).unwrap() {
-                Receive::Message { header, .. } => endpoint.reply(header.request_id, 0, &[]),
-                _ => -99,
-            }
-        }),
-        0
-    );
-    assert_eq!(loop_owner.metrics().drained_requests, 3);
-    assert_eq!(loop_owner.metrics().limited_batches, 1);
-    let mut report = [0; 384];
-    let n = loop_owner.format_report(b"EXAMPLE", &mut report).unwrap();
-    assert!(report[..n].starts_with(b"SVCLOOP|1|EXAMPLE|"));
-    unsafe { sdk_service_cancel_reply(1) };
-    assert_eq!(
-        endpoint.reply(88, 0, &[]),
-        abi::service_api_result_not_found
-    );
-    assert_eq!(endpoint.reply_if_pending(88, 0, &[]), 0);
-    unsafe {
-        sdk_service_cancel_reply(0);
-        sdk_service_stop(1);
-    }
-    assert!(matches!(loop_owner.wait(None).unwrap(), Wake::Stop));
-    drop(loop_owner);
-    endpoint.close().unwrap();
-    assert_eq!(endpoint.handle(), 0);
-    assert_eq!(endpoint.info.handle, 0);
-    unsafe { sdk_service_stop(0) };
+    check_service_loop(&services, &mut response);
 
     assert_eq!(
         time::duration_to_ticks(time::Duration { nanoseconds: 1 }, 333).unwrap(),
@@ -463,6 +442,150 @@ fn service_network_serial_deadline_owners_and_retained_requests() {
     assert_eq!(network.udp_close_service(601), 0);
     assert_eq!(unsafe { sdk_service_open_handles() }, 0);
 
+    check_owned_requests(&network);
+    let serial = Serial::new(&app).unwrap();
+    let info = serial.find(3).unwrap();
+    assert!(serial.find(4).is_none());
+    assert_eq!(info.generation, 0x99aabbccddeeff00);
+    let mut port = serial.open(&info, &abi::SerialConfig::default()).unwrap();
+    let read = port.read(&mut response, 19);
+    assert_eq!(read.code, abi::serial_error_timeout);
+    assert_eq!(read.info.completed, 2);
+    assert_eq!(&response[..2], b"RX");
+    let write = port.write(b"SEND", 19);
+    assert_eq!(write.code, 0);
+    assert_eq!(write.info.completed, 2);
+    unsafe { sdk_serial_busy(1) };
+    assert_eq!(port.close(0, 0), abi::serial_error_busy);
+    assert_ne!(port.handle(), 0);
+    assert_eq!(unsafe { sdk_serial_live() }, 1);
+    assert_eq!(port.cancel(), 0);
+    assert_eq!(port.close(0, 0), 0);
+    assert_eq!(port.handle(), 0);
+    actual_app2_service_loop_and_network_use_the_same_original_oracles();
+}
+
+fn check_service_loop(services: &Services<'_>, response: &mut [u8]) {
+    let mut endpoint = services.register(c"EXAMPLE", 0).unwrap();
+    assert_eq!(endpoint.wait(Timeout::Poll).unwrap(), None);
+    let mut loop_owner = endpoint.service_loop(200, 2).unwrap();
+    assert!(matches!(
+        loop_owner.wait(Some(100)).unwrap(),
+        Wake::Deadline
+    ));
+    assert!(matches!(loop_owner.wait(Some(105)).unwrap(), Wake::Idle));
+    assert_eq!(unsafe { sdk_service_last_wait() }, 5);
+    unsafe { sdk_service_queue(3) };
+    assert!(matches!(loop_owner.wait(None).unwrap(), Wake::Requests(3)));
+    let mut processed = 0;
+    assert_eq!(
+        loop_owner.drain(3, || {
+            match endpoint.receive(response).unwrap() {
+                Receive::Message { header, bytes: 4 } => {
+                    processed += 1;
+                    endpoint.reply(header.request_id, 0, &[])
+                }
+                _ => -99,
+            }
+        }),
+        0
+    );
+    assert_eq!(processed, 2);
+    assert_eq!(unsafe { sdk_service_yielded() }, 1);
+    assert_eq!(
+        loop_owner.drain(0, || {
+            match endpoint.receive(response).unwrap() {
+                Receive::Message { header, .. } => endpoint.reply(header.request_id, 0, &[]),
+                _ => -99,
+            }
+        }),
+        0
+    );
+    assert_eq!(loop_owner.metrics().drained_requests, 3);
+    assert_eq!(loop_owner.metrics().limited_batches, 1);
+    let mut report = [0; 384];
+    let n = loop_owner.format_report(b"EXAMPLE", &mut report).unwrap();
+    assert!(report[..n].starts_with(b"SVCLOOP|1|EXAMPLE|"));
+    unsafe { sdk_service_cancel_reply(1) };
+    assert_eq!(
+        endpoint.reply(88, 0, &[]),
+        abi::service_api_result_not_found
+    );
+    assert_eq!(endpoint.reply_if_pending(88, 0, &[]), 0);
+    unsafe {
+        sdk_service_cancel_reply(0);
+        sdk_service_stop(1);
+    }
+    assert!(matches!(loop_owner.wait(None).unwrap(), Wake::Stop));
+    drop(loop_owner);
+    endpoint.close().unwrap();
+    assert_eq!(endpoint.handle(), 0);
+    assert_eq!(endpoint.info.handle, 0);
+    unsafe { sdk_service_stop(0) };
+}
+
+fn actual_app2_service_loop_and_network_use_the_same_original_oracles() {
+    use r4os_sdk::app2::{App, ImportSpec, StartupInfo};
+    unsafe extern "C" {
+        fn sdk_service2_tables(
+            sys: *mut abi::generation2::R4XStartR4Sys2,
+            net: *mut abi::generation2::R4XStartR4Net2,
+        );
+        fn sdk_service2_should_close(raw: *const abi::generation2::R4XStartContext2) -> u32;
+        fn sdk_service2_yield(raw: *const abi::generation2::R4XStartContext2);
+    }
+    let mut sys = abi::generation2::R4XStartR4Sys2::default();
+    let mut net = abi::generation2::R4XStartR4Net2::default();
+    unsafe { sdk_service2_tables(&mut sys, &mut net) };
+    let groups = [
+        (1, c"R4SYS", &sys as *const _ as u64),
+        (4, c"R4NET", &net as *const _ as u64),
+    ];
+    let imports = groups.map(|(group_id, name, table)| abi::R4XStartImport {
+        group_id,
+        table,
+        min_version: 2,
+        resolved_version: 2,
+        flags: abi::r4xstart_import_flag_group_interface,
+        module_name: name.as_ptr() as u64,
+        symbol_name: c"Query2".as_ptr() as u64,
+    });
+    let specs = groups.map(|(group_id, name, _)| ImportSpec {
+        group_id,
+        module_name: name.as_ptr().cast(),
+        symbol_name: c"Query2".as_ptr().cast(),
+        minimum: 2,
+        optional: 0,
+        reserved: 0,
+    });
+    let raw = abi::generation2::R4XStartContext2 {
+        instance_id: 43,
+        app_class: abi::R4XStartAppClass::console.0,
+        flags: abi::r4xstart_flag_imports_valid
+            | abi::r4xstart_flag_close_supported
+            | abi::r4xstart_flag_yield_supported,
+        import_count: 2,
+        imports: imports.as_ptr() as u64,
+        should_close: sdk_service2_should_close as *const () as u64,
+        r#yield: sdk_service2_yield as *const () as u64,
+        ..Default::default()
+    };
+    let facts = StartupInfo {
+        profile: abi::R4AppProfile::console.0 as u32,
+        app_class: abi::R4XStartAppClass::console.0,
+        required_groups: 2,
+        imports: &specs,
+    };
+    let app = unsafe { App::from_raw(&raw, &facts, c"SERVICE2-INTEROP") }.unwrap();
+    let services = app.services().unwrap();
+    let network = app.network().unwrap();
+    assert_eq!(network.ipc_poll(11), 17);
+    check_owned_requests(&network);
+    let mut response = [0; 512];
+    check_service_loop(&services, &mut response);
+}
+
+fn check_owned_requests(network: &Network<'_>) {
     TRACK.store(true, Ordering::Relaxed);
     FREED.store(0, Ordering::Relaxed);
     let mut request = network.request();
@@ -516,23 +639,4 @@ fn service_network_serial_deadline_owners_and_retained_requests() {
     }
     assert_eq!(FREED.load(Ordering::Relaxed), 0);
     assert_eq!(unsafe { sdk_service_open_handles() }, 0);
-    let serial = Serial::new(&app).unwrap();
-    let info = serial.find(3).unwrap();
-    assert!(serial.find(4).is_none());
-    assert_eq!(info.generation, 0x99aabbccddeeff00);
-    let mut port = serial.open(&info, &abi::SerialConfig::default()).unwrap();
-    let read = port.read(&mut response, 19);
-    assert_eq!(read.code, abi::serial_error_timeout);
-    assert_eq!(read.info.completed, 2);
-    assert_eq!(&response[..2], b"RX");
-    let write = port.write(b"SEND", 19);
-    assert_eq!(write.code, 0);
-    assert_eq!(write.info.completed, 2);
-    unsafe { sdk_serial_busy(1) };
-    assert_eq!(port.close(0, 0), abi::serial_error_busy);
-    assert_ne!(port.handle(), 0);
-    assert_eq!(unsafe { sdk_serial_live() }, 1);
-    assert_eq!(port.cancel(), 0);
-    assert_eq!(port.close(0, 0), 0);
-    assert_eq!(port.handle(), 0);
 }

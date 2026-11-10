@@ -32,6 +32,15 @@ pub const ClockSample = extern struct {
     pub fn validate(self: ClockSample) Error!void {
         if (self.identity.source == 0 or self.identity.generation == 0) return error.ClockUnavailable;
     }
+    pub fn ticks(self: ClockSample) Error!u64 {
+        // Relative-budget coordinate only. The canonical ticks() provider
+        // retains a separate rebased epoch for absolute tick deadlines.
+        try self.validate();
+        if (self.identity.tick_hz == 0) return error.UnknownFrequency;
+        const value = @as(u128, self.instant_ns) * self.identity.tick_hz / abi.nanoseconds_per_second;
+        if (value > std.math.maxInt(u64)) return error.BudgetOverflow;
+        return @intCast(value);
+    }
 };
 
 /// Shared u128 arithmetic for the old saturating and new checked surfaces.
@@ -116,6 +125,16 @@ pub const DeadlineBudget = extern struct {
 };
 
 test "checked budget conversion preserves poll finite forever and full arithmetic range" {
+    const sample = ClockSample{ .identity = .{ .source = 1, .generation = 1, .tick_hz = 333 }, .instant_ns = abi.nanoseconds_per_second };
+    try std.testing.expectEqual(@as(u64, 333), try sample.ticks());
+    var wide = sample;
+    wide.instant_ns = std.math.maxInt(u64);
+    wide.identity.tick_hz = 1_000_000_000;
+    try std.testing.expectEqual(std.math.maxInt(u64), try wide.ticks());
+    wide.identity.tick_hz = std.math.maxInt(u32);
+    try std.testing.expectError(error.BudgetOverflow, wide.ticks());
+    wide.identity.tick_hz = 0;
+    try std.testing.expectError(error.UnknownFrequency, wide.ticks());
     for ([_]u32{ 100, 128, 333, 1000 }) |hz| {
         try std.testing.expectEqual(@as(u64, 0), try millisecondsToTicks(0, hz));
         try std.testing.expectEqual(@as(u64, 1), try millisecondsToTicks(1, hz));

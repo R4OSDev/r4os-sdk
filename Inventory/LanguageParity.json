@@ -637,9 +637,10 @@
         "server_access",
         "desktop_links",
         "diagnostics",
-        "stream_transfer"
+        "stream_transfer",
+        "rpc_budget"
       ],
-      "semantics": "Endpunkt-/Connection-/Requesteigentum, begrenzte Batches, Requestfristen, Stop/Abmeldung und bereits quittiertes Ende unterscheiden; IPC-Rueckgaben/Teilantworten nicht verschlucken. Restartable broker-owned observation: persist intent beforeReserve, serial beforeOffer, canonicalToken beforeACK; read-only recovery, exact serviceepoch, independent refs versus aliases, bounded expiry/quota and no reap transfer. Original-requester delegation to a named full controller and exact original desktop child/window/service epoch; bounded grants, immutable operation/deadline and original applied receipt, independent current view/input/composition, no new app or blind retry after Unknown. Native own R4LNK binding: persist canonical original request before Activate, exact Desktop link bytes/target/process-generation proof, immutable retry, read-only Status, explicit observed end/reap/evidence cleanup. Revision-bound dynamic inventory with explicit END, caller-owned pages/allocated captures, bounded whole-capture Restart, explicit OOM, full paths and registration/start/process-bound controls. SDK161: shared explicit R4OS ArgCursor and whole UTF8 diagnostic records with exact byte progress/uncertainty; canonical Query2 Console/File/LogService callbacks, no synthetic tables, hidden retry or consumer migration. Qualification boundaries in cli_diagnostics_09018. SDK162: shared one-step StreamTransfer exactu64 accepted prefix/one absolute budget, EOF/WouldBlock/timeout/cancel/uncertainty distinct; actual borrowed Query2 File/TCP/Service adapters with explicit operation-specific ACK and at-most-one bounded ServiceReply. Qualification limits in stream_transfer_09019.",
+      "semantics": "Endpunkt-/Connection-/Requesteigentum, begrenzte Batches, Requestfristen, Stop/Abmeldung und bereits quittiertes Ende unterscheiden; IPC-Rueckgaben/Teilantworten nicht verschlucken. Restartable broker-owned observation: persist intent beforeReserve, serial beforeOffer, canonicalToken beforeACK; read-only recovery, exact serviceepoch, independent refs versus aliases, bounded expiry/quota and no reap transfer. Original-requester delegation to a named full controller and exact original desktop child/window/service epoch; bounded grants, immutable operation/deadline and original applied receipt, independent current view/input/composition, no new app or blind retry after Unknown. Native own R4LNK binding: persist canonical original request before Activate, exact Desktop link bytes/target/process-generation proof, immutable retry, read-only Status, explicit observed end/reap/evidence cleanup. Revision-bound dynamic inventory with explicit END, caller-owned pages/allocated captures, bounded whole-capture Restart, explicit OOM, full paths and registration/start/process-bound controls. SDK161: shared explicit R4OS ArgCursor and whole UTF8 diagnostic records with exact byte progress/uncertainty; canonical Query2 Console/File/LogService callbacks, no synthetic tables, hidden retry or consumer migration. Qualification boundaries in cli_diagnostics_09018. SDK162: shared one-step StreamTransfer exactu64 accepted prefix/one absolute budget, EOF/WouldBlock/timeout/cancel/uncertainty distinct; actual borrowed Query2 File/TCP/Service adapters with explicit operation-specific ACK and at-most-one bounded ServiceReply. Qualification limits in stream_transfer_09019. SDK184: Normal actual App2/Context2 ServiceLoop, network and owned requests, audio and devices, ArgCursor/diagnostics, StreamTransfer, family clients, WaitSets, BytePipe/LaunchIO and optional Capture. One shared total RPC budget across audio writes and Clipboard chunks; source identity and canonical absolute tick epoch retained.",
       "current_only": "current_function",
       "rust": {
         "state": "paritaet_abgenommen",
@@ -689,9 +690,17 @@
         "dynamic_services_08921",
         "platform_generation2_09013",
         "cli_diagnostics_09018",
-        "stream_transfer_09019"
+        "stream_transfer_09019",
+        "normal_service_stream_facades_09043"
       ],
-      "shared_core": "Vorhandene C-AppServices/AppTray/AppNetwork/Serial/Timeout-Besitzer, Zig-ServiceLoop/-Deadline/-R4NET-Besitzer und native R4SYS/R4NET/R4DEV-Callbacks. Rust fuegt Leihen/Typen/echte Abschlussretention hinzu; keine zweite Netzwerk- oder Schedulingimplementierung."
+      "shared_core": "Vorhandene C-AppServices/AppTray/AppNetwork/Serial/Timeout-Besitzer, Zig-ServiceLoop/-Deadline/-R4NET-Besitzer und native R4SYS/R4NET/R4DEV-Callbacks. Rust fuegt Leihen/Typen/echte Abschlussretention hinzu; keine zweite Netzwerk- oder Schedulingimplementierung.",
+      "generation2_qualification": {
+        "subversion": "0.90.43",
+        "sdk_package": "0.64.184",
+        "contract_package": "0.64.93",
+        "scope": "Normal actual App2/Context2 ServiceLoop, network and owned requests, audio and devices, ArgCursor/diagnostics, StreamTransfer, family clients, WaitSets, BytePipe/LaunchIO and optional Capture. One shared total RPC budget across audio writes and Clipboard chunks; source identity and canonical absolute tick epoch retained.",
+        "boundaries": "Productive module migration and controlled default/old-provider retirement remain their planned steps. Native audio hardware and IPv6 transport are not inferred from host facade qualification."
+      }
     },
     {
       "id": "network",
@@ -705,7 +714,7 @@
         "network_common",
         "network_transport"
       ],
-      "semantics": "Resolver, TCP/UDP/Listener, Socketgeneration, half-close, Cancel/Ende/Fehler und gehaltene Asyncpuffer sowie R4NET/R4SYS-Optionzulassung erhalten. SDK162: shared one-step StreamTransfer exactu64 accepted prefix/one absolute budget, EOF/WouldBlock/timeout/cancel/uncertainty distinct; actual borrowed Query2 File/TCP/Service adapters with explicit operation-specific ACK and at-most-one bounded ServiceReply. Qualification limits in stream_transfer_09019. SDK174 adds copied family-aware Query2 clients, immutable DNS result pages, exact prefix/datagram truncation validation and actual process/provider/socket generations. The new provider path retains TCP EOF/reset at the original owner. This language review is host-only; actual IPv4 provider qualification is separate, Typed endpoint IPv6/AAAA remains unavailable in32; the separate external IPv6 packet foundation is qualified independently. SDK176: Accept ready-child/WouldBlock-listener validation and PacketTooBig status; Zig-only stateless provider broker adapter, exact copied/raw PPI access already available in C/Rust. Runtime IPv6/DNS33 qualification is separate; old32 unavailability is historical.",
+      "semantics": "Resolver, TCP/UDP/Listener, Socketgeneration, half-close, Cancel/Ende/Fehler und gehaltene Asyncpuffer sowie R4NET/R4SYS-Optionzulassung erhalten. SDK162: shared one-step StreamTransfer exactu64 accepted prefix/one absolute budget, EOF/WouldBlock/timeout/cancel/uncertainty distinct; actual borrowed Query2 File/TCP/Service adapters with explicit operation-specific ACK and at-most-one bounded ServiceReply. Qualification limits in stream_transfer_09019. SDK174 adds copied family-aware Query2 clients, immutable DNS result pages, exact prefix/datagram truncation validation and actual process/provider/socket generations. The new provider path retains TCP EOF/reset at the original owner. This language review is host-only; actual IPv4 provider qualification is separate, Typed endpoint IPv6/AAAA remains unavailable in32; the separate external IPv6 packet foundation is qualified independently. SDK176: Accept ready-child/WouldBlock-listener validation and PacketTooBig status; Zig-only stateless provider broker adapter, exact copied/raw PPI access already available in C/Rust. Runtime IPv6/DNS33 qualification is separate; old32 unavailability is historical. SDK184: Normal actual App2/Context2 ServiceLoop, network and owned requests, audio and devices, ArgCursor/diagnostics, StreamTransfer, family clients, WaitSets, BytePipe/LaunchIO and optional Capture. One shared total RPC budget across audio writes and Clipboard chunks; source identity and canonical absolute tick epoch retained.",
       "current_only": "current_function",
       "rust": {
         "state": "paritaet_abgenommen",
@@ -756,9 +765,17 @@
         "stream_transfer_09019",
         "network_family_09031",
         "ipv6_protocol_09032",
-        "ipv6_transport_09033"
+        "ipv6_transport_09033",
+        "normal_service_stream_facades_09043"
       ],
-      "shared_core": "Vorhandene C-AppServices/AppTray/AppNetwork/Serial/Timeout-Besitzer, Zig-ServiceLoop/-Deadline/-R4NET-Besitzer und native R4SYS/R4NET/R4DEV-Callbacks. Rust fuegt Leihen/Typen/echte Abschlussretention hinzu; keine zweite Netzwerk- oder Schedulingimplementierung."
+      "shared_core": "Vorhandene C-AppServices/AppTray/AppNetwork/Serial/Timeout-Besitzer, Zig-ServiceLoop/-Deadline/-R4NET-Besitzer und native R4SYS/R4NET/R4DEV-Callbacks. Rust fuegt Leihen/Typen/echte Abschlussretention hinzu; keine zweite Netzwerk- oder Schedulingimplementierung.",
+      "generation2_qualification": {
+        "subversion": "0.90.43",
+        "sdk_package": "0.64.184",
+        "contract_package": "0.64.93",
+        "scope": "Normal actual App2/Context2 ServiceLoop, network and owned requests, audio and devices, ArgCursor/diagnostics, StreamTransfer, family clients, WaitSets, BytePipe/LaunchIO and optional Capture. One shared total RPC budget across audio writes and Clipboard chunks; source identity and canonical absolute tick epoch retained.",
+        "boundaries": "Productive module migration and controlled default/old-provider retirement remain their planned steps. Native audio hardware and IPv6 transport are not inferred from host facade qualification."
+      }
     },
     {
       "id": "time-serial",
@@ -831,7 +848,7 @@
         "gui_text_control",
         "text_composition_client"
       ],
-      "semantics": "GUI-Nachrichten/Unicode/Modifier/Close, Timer/Clipboard, Paint/Present und Ressourcenbesitz; gehostete App und Desktophost sind verschiedene Rollen. Kein Schlafpolling oder Abschneiden von UTF-8. Aktuelle CPU/GPU-Ausgaben und abgerundete/alpha-Pixel erhalten. Fokusgewinn/-verlust und globale Fontaenderung sind typisiert; vorhandene Fensteridentitaet/Ticks und vollstaendige Unknown-Rohdaten bleiben erhalten. Vier benannte C-Fensterflags stammen aus der kanonischen GuiWindowFlag-Wahrheit. SDK110: natives Capture bindet volle Prozessgeneration, Fensterinkarnation und Capture-ID;0 bestaetigt PENDING, ACTIVE erst nach Desktop-Grant. C/Zig/Rust erhalten typisierte Capture-/Relative-/Wheel-Nachrichten. Relative physische Deltas entstehen vor Clamping; absolute Remote-Moves werden nicht als Rohbewegung ausgegeben. Release-/Cancel-/Broker-/Fensterende und zugehoerige externe C-Belege sind getrennt qualifiziert. SDK111: Desktop bindet den genauen Prozesshandle und die native Fensterinkarnation an QUERY/POST/RESET. Busy ist keine fehlende GUI-Zustaendigkeit. C/Zig/Rust erhalten InputReset mit Grund/Fenster/Tick; lokale Press-/Repeat-/Dragzustaende enden ohne synthetischen Klick. Capture-Terminalmeldungen behalten ihren eigenen Vertrag. SDK147: Canvas-local opt-in Style/light/dark, catalog font roles, shared Button/TextField/List/TabBar/Dialog rendering and Card/TileGrid/Paragraph/Progress. Classic defaults and editing owners remain; existing C constructor prefixes keep native defaults for new fields. SDK166: one immutable-bank prefix capture plus shared bounded grapheme projection and frozen binary-search hits; exact original strict-half/Unicode boundaries and explicit source/text/font keys/current-stamp reset. No hidden old fallback or consumer change. Qualification: text_metrics_09023. SDK167: shared bounded FilePickerSession with two caller buffers and EOF-only page publication over the existing canonical metadata owner. Whole path/observed identity and nonreused view revision; explicit overwrite permission bound to the prior observation, real-return loans and Open keyboard focus skipping disabled name. Existing FileDialog retains its shared list/name select rendering group. No file write/open or application migration. Qualification: file_picker_09024. SDK173 adds copied typed CLIPSVC offers with exact provider/offer identities, atomic private staging, immutable expiring snapshots and explicit bounded format/chunk contracts. Existing text bytes and ServiceLoop remain; uncertain Commit uses same-token status/idempotent replay. No application migration or silent conversion. SDK179: one bounded synchronous editor owner for Preedit/Commit/Cancel with strict UTF8 whole-grapheme ranges, exact window/view/focus/provider/editor/session/text generations, staged atomic Commit, copied caret and explicit surrounding text. C/Rust share the original Zig owner through borrowed record-pointer FFI. Copied WINSVC observations are separate from owner transitions; actual availability is NoProvider. No installed languageIME or application migration. SDK183: Normal actual Context2 GUI/Canvas/Tray, explicit text/font keyed metrics loans, original FilePicker renderer, typed clipboard control staging/paste and pure composition transitions with actual NoProvider. Full service loops and transport remain0.90.43. Cached hits preserve source/whole-row/paint loans; font refresh remains explicit. Empty offers validate the live exact owner even at zero bytes. No implicit Commit, cut, snapshot release, overwrite, old table or synthesized IME.",
+      "semantics": "GUI-Nachrichten/Unicode/Modifier/Close, Timer/Clipboard, Paint/Present und Ressourcenbesitz; gehostete App und Desktophost sind verschiedene Rollen. Kein Schlafpolling oder Abschneiden von UTF-8. Aktuelle CPU/GPU-Ausgaben und abgerundete/alpha-Pixel erhalten. Fokusgewinn/-verlust und globale Fontaenderung sind typisiert; vorhandene Fensteridentitaet/Ticks und vollstaendige Unknown-Rohdaten bleiben erhalten. Vier benannte C-Fensterflags stammen aus der kanonischen GuiWindowFlag-Wahrheit. SDK110: natives Capture bindet volle Prozessgeneration, Fensterinkarnation und Capture-ID;0 bestaetigt PENDING, ACTIVE erst nach Desktop-Grant. C/Zig/Rust erhalten typisierte Capture-/Relative-/Wheel-Nachrichten. Relative physische Deltas entstehen vor Clamping; absolute Remote-Moves werden nicht als Rohbewegung ausgegeben. Release-/Cancel-/Broker-/Fensterende und zugehoerige externe C-Belege sind getrennt qualifiziert. SDK111: Desktop bindet den genauen Prozesshandle und die native Fensterinkarnation an QUERY/POST/RESET. Busy ist keine fehlende GUI-Zustaendigkeit. C/Zig/Rust erhalten InputReset mit Grund/Fenster/Tick; lokale Press-/Repeat-/Dragzustaende enden ohne synthetischen Klick. Capture-Terminalmeldungen behalten ihren eigenen Vertrag. SDK147: Canvas-local opt-in Style/light/dark, catalog font roles, shared Button/TextField/List/TabBar/Dialog rendering and Card/TileGrid/Paragraph/Progress. Classic defaults and editing owners remain; existing C constructor prefixes keep native defaults for new fields. SDK166: one immutable-bank prefix capture plus shared bounded grapheme projection and frozen binary-search hits; exact original strict-half/Unicode boundaries and explicit source/text/font keys/current-stamp reset. No hidden old fallback or consumer change. Qualification: text_metrics_09023. SDK167: shared bounded FilePickerSession with two caller buffers and EOF-only page publication over the existing canonical metadata owner. Whole path/observed identity and nonreused view revision; explicit overwrite permission bound to the prior observation, real-return loans and Open keyboard focus skipping disabled name. Existing FileDialog retains its shared list/name select rendering group. No file write/open or application migration. Qualification: file_picker_09024. SDK173 adds copied typed CLIPSVC offers with exact provider/offer identities, atomic private staging, immutable expiring snapshots and explicit bounded format/chunk contracts. Existing text bytes and ServiceLoop remain; uncertain Commit uses same-token status/idempotent replay. No application migration or silent conversion. SDK179: one bounded synchronous editor owner for Preedit/Commit/Cancel with strict UTF8 whole-grapheme ranges, exact window/view/focus/provider/editor/session/text generations, staged atomic Commit, copied caret and explicit surrounding text. C/Rust share the original Zig owner through borrowed record-pointer FFI. Copied WINSVC observations are separate from owner transitions; actual availability is NoProvider. No installed languageIME or application migration. SDK183: Normal actual Context2 GUI/Canvas/Tray, explicit text/font keyed metrics loans, original FilePicker renderer, typed clipboard control staging/paste and pure composition transitions with actual NoProvider. Full service loops and transport remain0.90.43. Cached hits preserve source/whole-row/paint loans; font refresh remains explicit. Empty offers validate the live exact owner even at zero bytes. No implicit Commit, cut, snapshot release, overwrite, old table or synthesized IME. SDK184: Normal actual App2/Context2 ServiceLoop, network and owned requests, audio and devices, ArgCursor/diagnostics, StreamTransfer, family clients, WaitSets, BytePipe/LaunchIO and optional Capture. One shared total RPC budget across audio writes and Clipboard chunks; source identity and canonical absolute tick epoch retained.",
       "current_only": "current_function",
       "rust": {
         "state": "paritaet_abgenommen",
@@ -882,15 +899,16 @@
         "file_picker_09024",
         "clipboard_offers_09030",
         "text_composition_09036",
-        "normal_gui_facades_09042"
+        "normal_gui_facades_09042",
+        "normal_service_stream_facades_09043"
       ],
       "shared_core": "Gemeinsame GUI-/Rasterkerne beim Besitzer; keine unabhaengigen Widget-/Unicodealgorithmen pro Sprache.",
       "generation2_qualification": {
-        "subversion": "0.90.42",
-        "sdk_package": "0.64.183",
+        "subversion": "0.90.43",
+        "sdk_package": "0.64.184",
         "contract_package": "0.64.93",
-        "scope": "Normal actual Context2 GUI/Canvas/Tray, explicit text/font keyed metrics loans, original FilePicker renderer, typed clipboard control staging/paste and pure composition transitions with actual NoProvider. Full service loops and transport remain0.90.43.",
-        "boundaries": "Productive GUI apps, default cutover, visual desktop/focus leases, Windows, physical hardware and freshinstallation remain separate."
+        "scope": "Normal actual App2/Context2 ServiceLoop, network and owned requests, audio and devices, ArgCursor/diagnostics, StreamTransfer, family clients, WaitSets, BytePipe/LaunchIO and optional Capture. One shared total RPC budget across audio writes and Clipboard chunks; source identity and canonical absolute tick epoch retained.",
+        "boundaries": "Productive module migration and controlled default/old-provider retirement remain their planned steps. Native audio hardware and IPv6 transport are not inferred from host facade qualification."
       }
     },
     {
@@ -946,7 +964,7 @@
         "pcm_source",
         "audio_capture"
       ],
-      "semantics": "Genaue Stream-/Device-/Generation, S16LE/Format, Druck/Teilschreiben, Completion und Close; stiller physischer Ring ist kein Audiostopp. SDK168: explicit single total deadline, bounded actual AUDSVC RPC admission, frame-aligned exact prefix and conservative uncertain-effect terminal state over the original transfer/time owners. Borrow the real old stream; existing relative per-RPC behavior/layout remains. Pure rational accepted-source estimate with explicit clock/pause/reset, no hardware/DMA/audible retirement claim. Qualification: audio_total_source_09025. SDK180/C92: additional copied optional AUDSVC capture transport with exact service/source/client/stream generations, final caller buffer capacity, whole S16LE frames and explicit Poll/Finite/Forever/Cancel over the original clock budget. Logical Open activates only on Read. Unknown outcome never implies replay, Stop, Close or Drop. Queues and physical Stop/Close ACKs remain with the original service and R4D owners. Shipped HDA/AC97 have no qualified ADC; CONTROLLED input and real hardware are separate.",
+      "semantics": "Genaue Stream-/Device-/Generation, S16LE/Format, Druck/Teilschreiben, Completion und Close; stiller physischer Ring ist kein Audiostopp. SDK168: explicit single total deadline, bounded actual AUDSVC RPC admission, frame-aligned exact prefix and conservative uncertain-effect terminal state over the original transfer/time owners. Borrow the real old stream; existing relative per-RPC behavior/layout remains. Pure rational accepted-source estimate with explicit clock/pause/reset, no hardware/DMA/audible retirement claim. Qualification: audio_total_source_09025. SDK180/C92: additional copied optional AUDSVC capture transport with exact service/source/client/stream generations, final caller buffer capacity, whole S16LE frames and explicit Poll/Finite/Forever/Cancel over the original clock budget. Logical Open activates only on Read. Unknown outcome never implies replay, Stop, Close or Drop. Queues and physical Stop/Close ACKs remain with the original service and R4D owners. Shipped HDA/AC97 have no qualified ADC; CONTROLLED input and real hardware are separate. SDK184: Normal actual App2/Context2 ServiceLoop, network and owned requests, audio and devices, ArgCursor/diagnostics, StreamTransfer, family clients, WaitSets, BytePipe/LaunchIO and optional Capture. One shared total RPC budget across audio writes and Clipboard chunks; source identity and canonical absolute tick epoch retained.",
       "current_only": "current_function",
       "rust": {
         "state": "paritaet_abgenommen",
@@ -982,7 +1000,8 @@
         "audio_drain_08843",
         "audio_duration_retirement_08859",
         "audio_total_source_09025",
-        "optional_capture_09037"
+        "optional_capture_09037",
+        "normal_service_stream_facades_09043"
       ],
       "shared_core": "Existing Zig Audio/PCM/Device/Power owners through one compiler-typed native boundary; current legacy C audio loop aligned, no third Rust algorithm.",
       "current_reply_validation_08842": {
@@ -991,6 +1010,13 @@
         "owner": "Repositories/SDK/r4os/audio_stream_reply.zig",
         "C_legacy_transport": "Retained; acceptance delegates to the same SDK owner through generated data helper.",
         "Rust": "Existing generated canonical Audio/AudioStream calls; no parallel validation."
+      },
+      "generation2_qualification": {
+        "subversion": "0.90.43",
+        "sdk_package": "0.64.184",
+        "contract_package": "0.64.93",
+        "scope": "Normal actual App2/Context2 ServiceLoop, network and owned requests, audio and devices, ArgCursor/diagnostics, StreamTransfer, family clients, WaitSets, BytePipe/LaunchIO and optional Capture. One shared total RPC budget across audio writes and Clipboard chunks; source identity and canonical absolute tick epoch retained.",
+        "boundaries": "Productive module migration and controlled default/old-provider retirement remain their planned steps. Native audio hardware and IPv6 transport are not inferred from host facade qualification."
       }
     },
     {
@@ -2907,7 +2933,7 @@
     {
       "name": "service_deadline",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 208,
+      "line": 209,
       "expression": "@import(\"r4os/service_deadline.zig\")",
       "capability": "services",
       "wave": "0.86.55"
@@ -2915,7 +2941,7 @@
     {
       "name": "file_stream",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 209,
+      "line": 210,
       "expression": "@import(\"r4os/file_stream.zig\")",
       "capability": "files-registry-console",
       "wave": "0.86.53"
@@ -2923,7 +2949,7 @@
     {
       "name": "r4cp",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 210,
+      "line": 211,
       "expression": "@import(\"r4os/r4cp.zig\")",
       "capability": "project-build",
       "wave": "0.86.51",
@@ -2933,7 +2959,7 @@
     {
       "name": "r4cp_convert",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 211,
+      "line": 212,
       "expression": "@import(\"r4os/r4cp_convert.zig\")",
       "capability": "project-build",
       "wave": "0.86.51",
@@ -2943,7 +2969,7 @@
     {
       "name": "r4mf",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 212,
+      "line": 213,
       "expression": "@import(\"r4os/module_manifest.zig\")",
       "capability": "project-build",
       "wave": "0.86.51",
@@ -2953,7 +2979,7 @@
     {
       "name": "lowlevel",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 213,
+      "line": 214,
       "expression": "@import(\"r4os/lowlevel.zig\")",
       "capability": "lowlevel",
       "wave": "0.86.69"
@@ -2961,7 +2987,7 @@
     {
       "name": "grapheme",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 216,
+      "line": 217,
       "expression": "@import(\"r4std_grapheme\")",
       "capability": "text-primitives",
       "wave": "0.86.59"
@@ -2977,7 +3003,7 @@
     {
       "name": "desktop_actions",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 218,
+      "line": 219,
       "expression": "@import(\"r4os/desktop_actions.zig\")",
       "capability": "services",
       "wave": "0.88.98"
@@ -3017,7 +3043,7 @@
     {
       "name": "desktop_links",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 220,
+      "line": 221,
       "expression": "@import(\"r4os/desktop_links.zig\")",
       "capability": "services",
       "wave": "0.89.16"
@@ -3089,7 +3115,7 @@
     {
       "name": "diagnostics",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 206,
+      "line": 207,
       "expression": "@import(\"r4os/diagnostics.zig\")",
       "capability": "files-registry-console",
       "wave": "0.90.18"
@@ -3097,7 +3123,7 @@
     {
       "name": "stream_transfer",
       "source": "Repositories/SDK/r4os.zig",
-      "line": 207,
+      "line": 208,
       "expression": "@import(\"r4os/stream_api.zig\")",
       "capability": "files-registry-console",
       "wave": "0.90.19"
@@ -3253,6 +3279,14 @@
       "expression": "@import(\"r4os/text_composition_client.zig\")",
       "capability": "gui",
       "wave": "0.90.42"
+    },
+    {
+      "name": "rpc_budget",
+      "source": "Repositories/SDK/r4os.zig",
+      "line": 206,
+      "expression": "@import(\"r4os/rpc_budget.zig\")",
+      "capability": "services",
+      "wave": "0.90.43"
     }
   ],
   "build_exports": [
@@ -3364,9 +3398,9 @@
   "source_inventory": [
     {
       "path": "Repositories/SDK/r4os.zig",
-      "sha256": "a9ad00ed2a950ea5bc5de945b804ebeb9eb2965389004156ebea39417e176393",
+      "sha256": "a5a9eb16b2b5d2f76efe0c0dcad403506d7d5ec104ff50488d1e3e8f90b94364",
       "owner": "Repositories/SDK",
-      "version": "0.64.183",
+      "version": "0.64.184",
       "capability": "public-root",
       "declarations": [
         [
@@ -4395,59 +4429,64 @@
           205
         ],
         [
-          "diagnostics",
+          "rpc_budget",
           "const",
           206
         ],
         [
-          "stream_transfer",
+          "diagnostics",
           "const",
           207
         ],
         [
-          "service_deadline",
+          "stream_transfer",
           "const",
           208
         ],
         [
-          "file_stream",
+          "service_deadline",
           "const",
           209
         ],
         [
-          "r4cp",
+          "file_stream",
           "const",
           210
         ],
         [
-          "r4cp_convert",
+          "r4cp",
           "const",
           211
         ],
         [
-          "r4mf",
+          "r4cp_convert",
           "const",
           212
         ],
         [
-          "lowlevel",
+          "r4mf",
           "const",
           213
         ],
         [
+          "lowlevel",
+          "const",
+          214
+        ],
+        [
           "grapheme",
           "const",
-          216
+          217
         ],
         [
           "desktop_actions",
           "const",
-          218
+          219
         ],
         [
           "desktop_links",
           "const",
-          220
+          221
         ]
       ]
     },
@@ -4596,245 +4635,245 @@
     },
     {
       "path": "Repositories/SDK/r4os/app_audio.zig",
-      "sha256": "f0c761034551e20321f71511aa7f46101875c0ad603c1ea43ac8ba7a8e857018",
+      "sha256": "658a592583c81e27152a738ebc6b4483a5e3b08bc78bd5d1120298f531d86793",
       "owner": "Repositories/SDK",
-      "version": "0.64.134",
+      "version": "0.64.184",
       "capability": "audio",
       "declarations": [
         [
           "Timeout",
           "const",
-          8
+          9
         ],
         [
           "default_volume",
           "const",
-          9
+          10
         ],
         [
           "max_write_payload",
           "const",
-          10
+          11
         ],
         [
           "PcmFormat",
           "container",
-          11
+          12
         ],
         [
           "MasterUpdate",
           "container",
-          13
+          14
         ],
         [
           "Result",
           "container",
-          19
+          20
         ],
         [
           "WriteResult",
           "container",
-          25
+          26
         ],
         [
           "WriteOutcome",
           "container",
-          32
+          33
         ],
         [
           "WriteAdvance",
           "container",
-          40
+          41
         ],
         [
           "WriteCursor",
           "container",
-          49
+          50
         ],
         [
           "WriteCursor.init",
           "fn",
-          54
+          55
         ],
         [
           "WriteCursor.remaining",
           "fn",
-          59
+          60
         ],
         [
           "WriteCursor.done",
           "fn",
-          63
+          64
         ],
         [
           "WriteCursor.apply",
           "fn",
-          67
+          68
         ],
         [
           "OpenResult",
           "container",
-          90
+          91
         ],
         [
           "Audio",
           "container",
-          97
+          98
         ],
         [
           "Audio.available",
           "fn",
-          101
+          102
         ],
         [
           "Audio.openStream",
           "fn",
-          105
+          108
         ],
         [
           "Audio.status",
           "fn",
-          142
+          146
         ],
         [
           "Audio.masterState",
           "fn",
-          157
+          161
         ],
         [
           "Audio.outputs",
           "fn",
-          161
+          165
         ],
         [
           "Audio.selectOutput",
           "fn",
-          165
+          169
         ],
         [
           "Audio.setMasterState",
           "fn",
-          189
+          193
         ],
         [
           "Audio.advanced",
           "fn",
-          221
+          225
         ],
         [
           "AudioStream",
           "container",
-          226
+          230
         ],
         [
           "AudioStream.valid",
           "fn",
-          232
+          236
         ],
         [
           "AudioStream.write",
           "fn",
-          236
+          240
         ],
         [
           "AudioStream.writeOnce",
           "fn",
-          242
+          246
         ],
         [
           "AudioStream.setVolume",
           "fn",
-          284
+          289
         ],
         [
           "AudioStream.close",
           "fn",
-          290
+          295
         ],
         [
           "AdvancedAudio",
           "container",
-          316
+          322
         ],
         [
           "AdvancedAudio.sidAcquire",
           "fn",
-          319
+          325
         ],
         [
           "AdvancedAudio.sidWriteRegister",
           "fn",
-          322
+          328
         ],
         [
           "AdvancedAudio.sidRelease",
           "fn",
-          325
+          331
         ],
         [
           "AdvancedAudio.sidLoadData",
           "fn",
-          328
+          334
         ],
         [
           "AdvancedAudio.sidInit",
           "fn",
-          331
+          337
         ],
         [
           "AdvancedAudio.sidPlayFrame",
           "fn",
-          334
+          340
         ],
         [
           "AdvancedAudio.sidStop",
           "fn",
-          337
+          343
         ],
         [
           "AdvancedAudio.sidModelName",
           "fn",
-          340
+          346
         ],
         [
           "AdvancedAudio.midiOpenSynth",
           "fn",
-          343
+          349
         ],
         [
           "AdvancedAudio.midiSend",
           "fn",
-          346
+          352
         ],
         [
           "AdvancedAudio.midiRender",
           "fn",
-          349
+          355
         ],
         [
           "AdvancedAudio.midiClose",
           "fn",
-          352
+          358
         ],
         [
           "AdvancedAudio.opl3WriteRegister",
           "fn",
-          355
+          361
         ],
         [
           "AdvancedAudio.opl3Reset",
           "fn",
-          358
+          364
         ],
         [
           "AdvancedAudio.opl3RenderBlock",
           "fn",
-          361
+          367
         ],
         [
           "AdvancedAudio.opl3Stop",
           "fn",
-          364
+          370
         ]
       ]
     },
@@ -6175,240 +6214,300 @@
     },
     {
       "path": "Repositories/SDK/r4os/app_services.zig",
-      "sha256": "f13ffa13400e0f9085a770e66cfa33dac77a6082c69a3bcb5ab05a9e7ac7357d",
+      "sha256": "16d4411e005c36fbf2647f507febb9dce25b8ef8d6f95a69a5cc8ea853bc2270",
       "owner": "Repositories/SDK",
-      "version": "0.64.135",
+      "version": "0.64.184",
       "capability": "services",
       "declarations": [
         [
           "Timeout",
           "const",
-          6
+          8
+        ],
+        [
+          "Inventory",
+          "container",
+          10
+        ],
+        [
+          "Inventory.deinit",
+          "fn",
+          15
+        ],
+        [
+          "InventoryRead",
+          "container",
+          20
+        ],
+        [
+          "inventoryAvailable",
+          "fn",
+          22
+        ],
+        [
+          "readInventory",
+          "fn",
+          28
+        ],
+        [
+          "InventoryAction",
+          "container",
+          66
+        ],
+        [
+          "controlEntry",
+          "fn",
+          74
         ],
         [
           "DetailRead",
           "container",
-          12
+          100
         ],
         [
           "readCompleteDetails",
           "fn",
-          14
+          102
         ],
         [
           "Services",
           "container",
-          34
+          122
         ],
         [
           "Services.available",
           "fn",
-          37
+          125
         ],
         [
           "Services.open",
           "fn",
-          44
+          132
         ],
         [
           "Services.register",
           "fn",
-          53
+          141
         ],
         [
           "ServiceOpen",
           "container",
-          63
+          151
         ],
         [
           "EndpointOpen",
           "container",
-          68
+          156
         ],
         [
           "ServiceResponse",
           "container",
-          73
+          161
         ],
         [
           "ServiceCall",
           "container",
-          78
+          166
         ],
         [
           "TypedServiceCall",
           "fn",
-          85
+          173
         ],
         [
           "ServiceConnection",
           "container",
-          94
+          182
         ],
         [
           "ServiceConnection.valid",
           "fn",
-          100
+          188
         ],
         [
           "ServiceConnection.call",
           "fn",
-          104
+          192
+        ],
+        [
+          "ServiceConnection.budget",
+          "fn",
+          202
+        ],
+        [
+          "ServiceConnection.callBudget",
+          "fn",
+          212
         ],
         [
           "ServiceConnection.callTyped",
           "fn",
-          119
+          218
         ],
         [
           "ServiceConnection.close",
           "fn",
-          130
+          229
+        ],
+        [
+          "callWithTicks",
+          "fn",
+          243
         ],
         [
           "EndpointWait",
           "container",
-          143
+          258
         ],
         [
           "EndpointMessage",
           "container",
-          149
+          264
         ],
         [
           "EndpointReceive",
           "container",
-          154
+          269
         ],
         [
           "service_loop_default_stop_check_ms",
           "const",
-          160
+          275
         ],
         [
           "ServiceLoopOptions",
           "container",
-          162
+          277
         ],
         [
           "ServiceLoopMetrics",
           "container",
-          167
+          282
         ],
         [
           "ServiceLoopWake",
           "container",
-          184
+          299
         ],
         [
           "ServiceBatchStep",
           "container",
-          192
+          307
         ],
         [
           "ServiceLoop",
           "container",
-          208
+          323
         ],
         [
           "ServiceLoop.init",
           "fn",
-          216
+          333
         ],
         [
           "ServiceLoop.wait",
           "fn",
-          230
+          376
         ],
         [
           "ServiceLoop.beginBatch",
           "fn",
-          275
+          449
         ],
         [
           "ServiceLoop.drain",
           "fn",
-          286
+          460
         ],
         [
           "ServiceLoop.report",
           "fn",
-          303
+          477
         ],
         [
           "ServiceLoop.formatReport",
           "fn",
-          309
+          483
+        ],
+        [
+          "ServiceLoop.formatReportChecked",
+          "fn",
+          487
         ],
         [
           "ServiceRequestBatch",
           "container",
-          340
+          519
         ],
         [
           "ServiceRequestBatch.next",
           "fn",
-          346
+          525
         ],
         [
           "TypedEndpointReceive",
           "fn",
-          406
+          589
         ],
         [
           "replyIfPending",
           "fn",
-          418
+          601
+        ],
+        [
+          "completedReplyResult",
+          "fn",
+          605
         ],
         [
           "ServiceEndpoint",
           "container",
-          426
+          609
         ],
         [
           "ServiceEndpoint.valid",
           "fn",
-          432
+          615
         ],
         [
           "ServiceEndpoint.wait",
           "fn",
-          436
+          619
         ],
         [
           "ServiceEndpoint.recv",
           "fn",
-          448
+          631
         ],
         [
           "ServiceEndpoint.recvTyped",
           "fn",
-          461
+          644
         ],
         [
           "ServiceEndpoint.reply",
           "fn",
-          470
+          653
         ],
         [
           "ServiceEndpoint.replyTyped",
           "fn",
-          477
+          660
         ],
         [
           "ServiceEndpoint.replyIfPending",
           "fn",
-          482
+          665
         ],
         [
           "ServiceEndpoint.replyTypedIfPending",
           "fn",
-          486
+          669
         ],
         [
           "ServiceEndpoint.unregister",
           "fn",
-          490
+          673
         ]
       ]
     },
@@ -47378,9 +47477,9 @@
     },
     {
       "path": "Repositories/SDK/r4os/app2.zig",
-      "sha256": "b80a4076704a5ea702382283f23dbc0af2bc66da929f6e980eeca0c462e6573e",
+      "sha256": "85b42da8be3e192bb804fec7131ef26e0fba288ce7bfff20a316d0cc1ab6bd42",
       "owner": "Repositories/SDK",
-      "version": "0.64.183",
+      "version": "0.64.184",
       "capability": "startup",
       "declarations": [
         [
@@ -47454,124 +47553,154 @@
           147
         ],
         [
-          "App.textMetricsProvider",
+          "App.argCursor",
           "fn",
           151
         ],
         [
-          "App.filePickerProvider",
+          "App.waitSet",
           "fn",
           155
         ],
         [
-          "App.clipboardOffers",
+          "App.bytePipe",
           "fn",
           159
         ],
         [
-          "App.compositionClient",
+          "App.stdio",
           "fn",
           163
         ],
         [
-          "App.desktop",
+          "App.networkFamily",
           "fn",
           167
         ],
         [
+          "App.audioCapture",
+          "fn",
+          171
+        ],
+        [
+          "App.textMetricsProvider",
+          "fn",
+          175
+        ],
+        [
+          "App.filePickerProvider",
+          "fn",
+          179
+        ],
+        [
+          "App.clipboardOffers",
+          "fn",
+          183
+        ],
+        [
+          "App.compositionClient",
+          "fn",
+          187
+        ],
+        [
+          "App.desktop",
+          "fn",
+          191
+        ],
+        [
           "App.drawing",
           "fn",
-          172
+          196
         ],
         [
           "App.networkLowLevel",
           "fn",
-          177
+          201
         ],
         [
           "App.network",
           "fn",
-          182
+          206
         ],
         [
           "App.audioLowLevel",
           "fn",
-          188
+          212
         ],
         [
           "App.audio",
           "fn",
-          193
+          217
         ],
         [
           "App.devicesLowLevel",
           "fn",
-          199
+          223
         ],
         [
           "App.devices",
           "fn",
-          204
+          228
         ],
         [
           "App.web",
           "fn",
-          210
+          234
         ],
         [
           "App.console",
           "fn",
-          217
+          241
         ],
         [
           "App.files",
           "fn",
-          223
+          247
         ],
         [
           "App.registry",
           "fn",
-          228
+          252
         ],
         [
           "App.resources",
           "fn",
-          233
+          257
         ],
         [
           "App.services",
           "fn",
-          237
+          261
         ],
         [
           "App.tray",
           "fn",
-          242
+          266
         ],
         [
           "App.window",
           "fn",
-          246
+          270
         ],
         [
           "App.shouldClose",
           "fn",
-          252
+          276
         ],
         [
           "App.yield",
           "fn",
-          256
+          280
         ],
         [
           "App.ticks",
           "fn",
-          260
+          284
         ],
         [
           "App.allocator",
           "fn",
-          264
+          288
         ]
       ]
     },
@@ -47694,19 +47823,19 @@
     {
       "path": "Repositories/SDK/r4os/gui_text_control.zig",
       "owner": "Repositories/SDK",
-      "version": "0.64.183",
+      "version": "0.64.184",
       "capability": "gui",
-      "sha256": "b525c72621b958182a2e35727cd4b7c4dcb234624375349e7fb70a43d8ae3ceb",
+      "sha256": "9ccce39c0d71b150d7c6c5b42a4bc05f02995d3a6a5bbba35607280b6e3dd260",
       "declarations": [
         [
           "stageText",
           "fn",
-          9
+          10
         ],
         [
           "readText",
           "fn",
-          27
+          32
         ]
       ]
     },
@@ -47741,6 +47870,50 @@
           "Client.focus",
           "fn",
           54
+        ]
+      ]
+    },
+    {
+      "path": "Repositories/SDK/r4os/rpc_budget.zig",
+      "owner": "Repositories/SDK",
+      "version": "0.64.184",
+      "capability": "services",
+      "sha256": "6ba3793220c5e627c04ad9ed63c0854ddff46d34aeab4737e2a5820863f8907e",
+      "declarations": [
+        [
+          "Error",
+          "const",
+          6
+        ],
+        [
+          "Clock",
+          "const",
+          7
+        ],
+        [
+          "code",
+          "fn",
+          8
+        ],
+        [
+          "Budget",
+          "container",
+          16
+        ],
+        [
+          "Budget.fromTicks",
+          "fn",
+          23
+        ],
+        [
+          "Budget.fromTimeout",
+          "fn",
+          31
+        ],
+        [
+          "Budget.remainingTicks",
+          "fn",
+          37
         ]
       ]
     }
@@ -58230,6 +58403,22 @@
         "Services::new2 and scalar service callbacks serve Tray; ServiceLoop2/transport/time integration remains43; Endpoint::service_loop refuses NoFn on2 before old Start1 FFI.",
         "Normal9 output/source readback and one final STANDARD are independently sealed; this review grants no performance result."
       ]
+    },
+    "normal_service_stream_facades_09043": {
+      "complete": true,
+      "performed_in": "0.90.43",
+      "sdk": "0.64.184",
+      "contract": "0.64.93",
+      "report": "Docs/API/ConsumerMigration.txt",
+      "scope": "Normal actual App2/Context2 ServiceLoop, network and owned requests, audio and devices, ArgCursor/diagnostics, StreamTransfer, family clients, WaitSets, BytePipe/LaunchIO and optional Capture. One shared total RPC budget across audio writes and Clipboard chunks; source identity and canonical absolute tick epoch retained.",
+      "host_checks": "Original166 owner cases, corrected canonical-epoch Service18, Data16/26 compiler negatives, original Gui2/3 negatives, Platform10/original negatives, exact common old/new ServiceLoop and owned-request/lifetime oracle,2 original service negatives; final baretarget alloc Clippy. Eight typed generators and final canonical C/Rust projection read back.",
+      "native_checks": "Own KVM4 actual Kernel474. Three managed Service2 consumers use actual SCM binding, normal facade calls and exact detached completions for return/Close/Kill/Restart;15 full process bindings and15 released observations. SCM owns reaping. Installed whole artifacts read back.",
+      "limits": [
+        "Existing Query1 provider transition retained until planned cutover; no synthetic old startup/table used by the App2 consumers.",
+        "Canonical timer ticks have an independent rebased epoch. ClockSample.ticks is only a relative budget coordinate; source/generation/regression guard remains mandatory.",
+        "Backend absence and exact NoEndpoint handling, logical silence and captured metadata are distinguished from physical audio playback. No ADC, physical-hardware, Windows-execution, visual-GUI or freshinstallation claim.",
+        "Normal9 inputs/output readback and the single final STANDARD remain independent closure proofs; no isolated facade performance inference."
+      ]
     }
   },
   "wave_bindings": [
@@ -58482,12 +58671,12 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.90.42",
-    "sdk": "0.64.183",
+    "performed_in": "0.90.43",
+    "sdk": "0.64.184",
     "contract": "0.64.93",
     "libraries": "0.64.51 unchanged",
-    "evidence": "normal_gui_facades_09042",
-    "scope": "Normal actual Context2 GUI/Canvas/Tray, explicit text/font keyed metrics loans, original FilePicker renderer, typed clipboard control staging/paste and pure composition transitions with actual NoProvider. Full service loops and transport remain0.90.43.",
+    "evidence": "normal_service_stream_facades_09043",
+    "scope": "Normal actual App2/Context2 ServiceLoop, network and owned requests, audio and devices, ArgCursor/diagnostics, StreamTransfer, family clients, WaitSets, BytePipe/LaunchIO and optional Capture. One shared total RPC budget across audio writes and Clipboard chunks; source identity and canonical absolute tick epoch retained.",
     "historical_snapshot_retained": true,
     "current_platform_tables": [
       {
@@ -58539,7 +58728,7 @@
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.90.42",
+    "reviewed_in": "0.90.43",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -59801,7 +59990,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "8122c4ec0d046af7b261e797b57417fbad84881395a08960b18cff08d6d8b7b0"
+        "sha256": "a45f4df5f2f262fe4a70dd59d21ec6754676a56e43db57748372cdc927a17f7e"
       },
       {
         "path": "Repositories/SDK/Rust/src/cli.rs",
@@ -59809,7 +59998,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/clipboard_offer.rs",
-        "sha256": "f6e79b4bd8d3ac0a168e3dcf22464673b69f8bbcc67e726d9c7817b4936221d5"
+        "sha256": "cfaaa33b48942fc8177316391331f99f33de3b89d3f71fe6f6574aeef46cbebc"
       },
       {
         "path": "Repositories/SDK/Rust/src/data/hash.rs",
@@ -59853,7 +60042,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/generated/network.rs",
-        "sha256": "b895489acc44e7e17525a8b1fbc2d3fdc5a82b9242c115263dbe19c9c5604ffb"
+        "sha256": "b4d0ff52254df6dd85eeda3c8de62f02a966e0d519366bdf22bfef556862148c"
       },
       {
         "path": "Repositories/SDK/Rust/src/graphics/groups.rs",
@@ -59909,7 +60098,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/network.rs",
-        "sha256": "865887a8d6b4d6b051253d3d73fe89e42cb87db1a397847d733cbfa0bb64b1ea"
+        "sha256": "3513fc11f32f6d1e936f9983239d406ddeb1d4c7b7c64f46dfc5956955f773dc"
       },
       {
         "path": "Repositories/SDK/Rust/src/network/sockets.rs",
@@ -60001,11 +60190,11 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/serial.rs",
-        "sha256": "4f15fce193e4b4a48fd743f43f50db130b0aa1a0027408a0673c8e9a944c6298"
+        "sha256": "24712a452a7a6fbe1d8e6cf8ea7da914bf1364d49aaa02d12f6691b05e27250e"
       },
       {
         "path": "Repositories/SDK/Rust/src/services.rs",
-        "sha256": "7dae4c2aebafba50ce17b7b468a1412c67113170db60edeefe0aa68d7762387d"
+        "sha256": "13a85b45e6ea40cd19b3b155d13b771aeb96dc213365ff520106ee056b4447e9"
       },
       {
         "path": "Repositories/SDK/Rust/src/services/actions.rs",
@@ -60141,11 +60330,11 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_audio.h",
-        "sha256": "553ae7b72e86fecf2a060b572b35e56a334da9547654595a35b9bed6f4dea073"
+        "sha256": "93deb2748f7e703046a95b1e357628bbbfe282c8e66b1ee682cc0c928000cf90"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_contract.h",
-        "sha256": "093e15c060a3517c6b755e826ee244fd82381834f76690ffa8554c3cb7e28023"
+        "sha256": "bcf8495bb3f1652d183ba7bff56568759917bc3eee19878e0999f83cae9f4b92"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_devices.h",
@@ -60157,7 +60346,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_network.h",
-        "sha256": "6606de35b4e0cf37eaad4dad33bc882193ebcdd4275582f6e77204f48612bca3"
+        "sha256": "9197d458886ba3cbf7bc9087f50b701bdb3fe44ff7f37d6991688dc79b804014"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_resources.h",
@@ -60165,7 +60354,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_services.h",
-        "sha256": "f8c0ed21dfe53d4eed1b6c8bf4fda3485675bf54ccb93feae977b01f4cbf5e2b"
+        "sha256": "69267d503bfed71074c92b83fd27da7e09cc3b09f327c2a7da16eb8d9944e491"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_storage.h",
@@ -60193,7 +60382,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/clipboard_offer_platform2.h",
-        "sha256": "9733bff84a4c11d3b10b4beae5a58780a3c5cb4763f5d16a6b60537ea3955e6c"
+        "sha256": "6c6f5f46661e36ca0f5e666b6b6fcdc59e883fef18a9c9ad560e4e8a6927a8b4"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/data_helpers.h",
@@ -60277,7 +60466,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/facades.h",
-        "sha256": "e9fa3deed95c5cf830c7ca59f6256380192f8374ec9ccef94c51df2de3a64963"
+        "sha256": "aba6a0b648c0f4565593312e8e76c4c7486ec1ffc6605b2ed694af41ee6eccee"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/file_picker.h",
@@ -60289,7 +60478,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/gui_bridge.h",
-        "sha256": "4381fa0ad91d5f82fd3c4c40c8482bc442b125aeaa373e688aed98fd2f80d437"
+        "sha256": "2226f364478cfaacc251641845642c9bcf93bd9ae16b83ce70838c3623fb872f"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/heap.h",
@@ -60309,7 +60498,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/net_bridge.h",
-        "sha256": "67c072b270f10b409976b2d06d27c31e6e836cab960eb432991d68f2d9593ff6"
+        "sha256": "eb36fa1b4fe8417505b57f63e1ca29cd65c324d698c68044aec512278635b657"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/net_request.h",
@@ -60317,7 +60506,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/network_family_platform2.h",
-        "sha256": "d472c2208fa7031a84a2501dd64d02e4c567d5164f8a555d37368a243d1c32a3"
+        "sha256": "3475683f0528d9a5215417303b17866131c980136c7076abe44bcf317a101455"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/path_timeout.h",
@@ -60333,7 +60522,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/poll_budget.h",
-        "sha256": "f4fcf41f544b3d675bb70f4ccfba8fa3d41d48b0480924a5f9163e0eaccf29a8"
+        "sha256": "12b43393190fc461c22967c14b6429c8f0725688eba2bc70a936601abd01fbca"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/power_profiles.h",
@@ -60349,7 +60538,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/r4audio.h",
-        "sha256": "8132fec6f6cb31a3926c7e3b9f743b559ea858329f9a17d353c54ad94b0f800f"
+        "sha256": "44cbe78fde1ec31dfb620952f81d689efe5233884755619d309284024cd4ce34"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/r4desk.h",
@@ -60373,7 +60562,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/r4net.h",
-        "sha256": "195794cc2e82abfa290de6dfa0dac06532ffbce0a89f4ec3ac721fd46af96a1a"
+        "sha256": "15eaf74d2fbb3ea80d3230ffe1a7212c8e4341c31c6657988811b82446046a75"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/r4os.h",
@@ -60393,7 +60582,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/service_helpers.h",
-        "sha256": "7cd6cbeecbdb98d6f32fb356303f6ab2fec4c568c8c545a498f0c81ba81a653b"
+        "sha256": "bebf3bc3bcc53d984dcae9a872d305755e25e0aa062b49159f5a8e74254277b3"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/startup.h",
@@ -60513,15 +60702,15 @@
       },
       {
         "path": "Repositories/SDK/Tests/Conformance/ServiceNetworkFacadePrototype05826.zig",
-        "sha256": "37970d51bd2422ffeffe354489814960f588524df6b6a28a85f8dce9695e0790"
+        "sha256": "09d6abf73dc0fea9a5f7e48afec2fc43e4b6da3df150d3bf07e8bd7cfb9d3f28"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/AudioWrite.rs",
-        "sha256": "7f414a91f51717ee38f9acfac6c0ea8dc1031f7cb3ae472882189a913a3f0b14"
+        "sha256": "2e03df3e9f42c0204b28184228ae51a5163b0682653f977c362137acf7c91ca3"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/AudioWriteParity.c",
-        "sha256": "b8e9e6d5566f7e3113ac4a444238577025d9689d07d3d9f89920838e929c3147"
+        "sha256": "bd970004c3f5b5c01d36fe59192168819769e081dcea132a66356ee500d7d587"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/AudioWritePlatform.rs",
@@ -60533,7 +60722,7 @@
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/GuiParity.c",
-        "sha256": "ad2e60f8cacef184cdb4d82a438fb818e79426e40716be5c3b8ad09ffe5e6c2e"
+        "sha256": "20b25983256581747761a2705ce8150e18e5b2f0dc5375c4a92ebeae6bf10382"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/PointerBindings.c",
@@ -60565,7 +60754,7 @@
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/RustServices.rs",
-        "sha256": "9f8430838cc577092a09927410d6ef336f72d54687eddf054fd6e04871531150"
+        "sha256": "f1b6acdad9feec57edc6716c0707962ebef8d107371705324864229afcde62cd"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/RustSubsystem.rs",
@@ -60573,7 +60762,7 @@
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/ServiceNetworkCallbacks.c",
-        "sha256": "d42d4bc1777fa9f055fbabe859166969b80e5c054f4d73b8aa61508add51041e"
+        "sha256": "ef6ceef48869abfb819e74ba2d034ddb3b7998ce8f8f13951ea0127463e1b2be"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/SubsystemParity.c",
@@ -60649,7 +60838,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/NetBridgeGen/src/main.zig",
-        "sha256": "247222450c6dd83069fcae572a1f3f3f448f3c2dfcc38441c19d2a018574206b"
+        "sha256": "bef718c9cf836db581fd52c71bf9645826ba5e9c3c4e2e01c182855580119e9e"
       },
       {
         "path": "Repositories/SDK/Tools/New-Project.ps1",
@@ -60829,11 +61018,11 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "19611df7e06c9d079448179905eda4aed9ccf4d09dae03346a89a320d08acfe6"
+        "sha256": "3fe0a6ef16a16244114ae01a030936652eb797cd2c8cc21626eb123035a0a508"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
-        "sha256": "a9ad00ed2a950ea5bc5de945b804ebeb9eb2965389004156ebea39417e176393"
+        "sha256": "a5a9eb16b2b5d2f76efe0c0dcad403506d7d5ec104ff50488d1e3e8f90b94364"
       },
       {
         "path": "Repositories/SDK/r4os/allocator_wait.zig",
@@ -60845,7 +61034,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/app_audio.zig",
-        "sha256": "f0c761034551e20321f71511aa7f46101875c0ad603c1ea43ac8ba7a8e857018"
+        "sha256": "658a592583c81e27152a738ebc6b4483a5e3b08bc78bd5d1120298f531d86793"
       },
       {
         "path": "Repositories/SDK/r4os/app_contract.zig",
@@ -60869,7 +61058,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/app_services.zig",
-        "sha256": "f13ffa13400e0f9085a770e66cfa33dac77a6082c69a3bcb5ab05a9e7ac7357d"
+        "sha256": "16d4411e005c36fbf2647f507febb9dce25b8ef8d6f95a69a5cc8ea853bc2270"
       },
       {
         "path": "Repositories/SDK/r4os/app_storage.zig",
@@ -60957,7 +61146,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/clipboard_offer.zig",
-        "sha256": "5f2602ed601bab3099da2286c9d5058d4bb5332409d5332aabca8d8ad9e83a17"
+        "sha256": "501aae6498b61fc007521b98253b05cccf5ee5dbb10b3d2dcbc7ded4bf588b16"
       },
       {
         "path": "Repositories/SDK/r4os/cpu_acceleration.zig",
@@ -61153,11 +61342,11 @@
       },
       {
         "path": "Repositories/SDK/r4os/generated/gui_fingerprint.zig",
-        "sha256": "61cb0ea51e933ba84a5ec75e92eb36fe8ca221784d5a2eb18e825a7c6f88c728"
+        "sha256": "d6f671c7205e33df3baeb8db441eacabf62f6314f5c0376c6d2740c9e8be2bfe"
       },
       {
         "path": "Repositories/SDK/r4os/generated/net_facade.zig",
-        "sha256": "968cd770bfda99731b1b982a46bbde94e9f83df07e3d70ea2fb2a101f1f78ad0"
+        "sha256": "0bebfbd5698d22b261368decc731f24fffcdfc4a49c8ada1893e904d0020581e"
       },
       {
         "path": "Repositories/SDK/r4os/generated/profile_policy.zig",
@@ -61549,7 +61738,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/services_runtime.zig",
-        "sha256": "81e08b603bedd1953dcb4fb9612f2f1c48c098903ed4252d6bc1dbe5861bd5f5"
+        "sha256": "0d8fdc8125b8cdf5938727d4b9e6b5e2d7b9f026a017d3796fedf9ef95464f4b"
       },
       {
         "path": "Repositories/SDK/r4os/startup_metadata.zig",
@@ -61777,11 +61966,11 @@
       },
       {
         "path": "Repositories/SDK/r4os/time_budget.zig",
-        "sha256": "9fb9fa01dc9ff31dc6d8ed8b68ac410d84aa06e10c4bbfedc603b34dcdd22f73"
+        "sha256": "d56618c11d061c8339d4b7570dfdd92c06e9d24281d67cb577c8a0b72c1321e7"
       },
       {
         "path": "Repositories/SDK/r4os/time_budget_runtime.zig",
-        "sha256": "d54787d3b83840e0e4bc74d1c75ab971e5a4342206eeeaff043b942f2208d6c3"
+        "sha256": "1429e7191a2d6e74871d83d87fe7bc21b077459847a8261c809dd574ae531ac3"
       },
       {
         "path": "Repositories/SDK/r4os/time_contract.zig",
@@ -62037,7 +62226,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/text_composition_tests.zig",
-        "sha256": "8c6b9a4f4759a298058db59ecb9020b1d198df6b04122cc3334a3cd6be25ef2e"
+        "sha256": "0e7b3d3ff2916f4a56f9792719f94f137a8fe163a99c3cd5cc9bcd91fcdf3942"
       },
       {
         "path": "Repositories/SDK/Rust/src/audio_capture.rs",
@@ -62053,7 +62242,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/app2.rs",
-        "sha256": "f95f01581bc8750e2c1c5c65979db1da39cc5125d8030ad04382f98733d3dccb"
+        "sha256": "d7b4241291d8b2975fb0855a5df4b99ecdab01b4c1f08dc78fbebacf6956accf"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app2.h",
@@ -62113,7 +62302,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/app2.zig",
-        "sha256": "b80a4076704a5ea702382283f23dbc0af2bc66da929f6e980eeca0c462e6573e"
+        "sha256": "85b42da8be3e192bb804fec7131ef26e0fba288ce7bfff20a316d0cc1ab6bd42"
       },
       {
         "path": "Repositories/SDK/r4os/app2_runtime.zig",
@@ -62133,11 +62322,15 @@
       },
       {
         "path": "Repositories/SDK/r4os/gui_text_control.zig",
-        "sha256": "b525c72621b958182a2e35727cd4b7c4dcb234624375349e7fb70a43d8ae3ceb"
+        "sha256": "9ccce39c0d71b150d7c6c5b42a4bc05f02995d3a6a5bbba35607280b6e3dd260"
       },
       {
         "path": "Repositories/SDK/r4os/text_composition_client.zig",
         "sha256": "eaf99449c9f0e42b57484d9ebc466614376f0447daba5775a0b34326bc24666d"
+      },
+      {
+        "path": "Repositories/SDK/r4os/rpc_budget.zig",
+        "sha256": "6ba3793220c5e627c04ad9ed63c0854ddff46d34aeab4737e2a5820863f8907e"
       }
     ],
     "coverage": [
@@ -62421,7 +62614,8 @@
           "Repositories/SDK/r4os/stream_transfer.zig",
           "Repositories/SDK/r4os/stream_adapters.zig",
           "Repositories/SDK/r4os/stream_api.zig",
-          "Repositories/SDK/r4os/stream_runtime.zig"
+          "Repositories/SDK/r4os/stream_runtime.zig",
+          "Repositories/SDK/r4os/rpc_budget.zig"
         ],
         "c": [
           "Repositories/SDK/Shared/C/include/r4os/app_services.h",
@@ -62459,7 +62653,8 @@
           "public_bootstrap_0903",
           "platform_generation2_09013",
           "cli_diagnostics_09018",
-          "stream_transfer_09019"
+          "stream_transfer_09019",
+          "normal_service_stream_facades_09043"
         ]
       },
       {
@@ -62498,7 +62693,8 @@
           "stream_transfer_09019",
           "network_family_09031",
           "ipv6_protocol_09032",
-          "ipv6_transport_09033"
+          "ipv6_transport_09033",
+          "normal_service_stream_facades_09043"
         ]
       },
       {
@@ -62602,7 +62798,8 @@
           "file_picker_09024",
           "clipboard_offers_09030",
           "text_composition_09036",
-          "normal_gui_facades_09042"
+          "normal_gui_facades_09042",
+          "normal_service_stream_facades_09043"
         ]
       },
       {
@@ -62684,7 +62881,8 @@
           "runtime_wait_08858",
           "audio_duration_retirement_08859",
           "audio_total_source_09025",
-          "optional_capture_09037"
+          "optional_capture_09037",
+          "normal_service_stream_facades_09043"
         ]
       },
       {
@@ -63474,6 +63672,61 @@
       "libraries": "0.64.51 unchanged",
       "evidence": "normal_system_facades_09041",
       "scope": "Normal three-language System/Resources/Files/time/complete inventories/passive devices; no blanket consumer or remaining facade migration.",
+      "historical_snapshot_retained": true,
+      "current_platform_tables": [
+        {
+          "group": "R4SYS",
+          "abi_version": 41,
+          "bytes": 1560,
+          "slots": 193
+        },
+        {
+          "group": "R4DESK",
+          "abi_version": 21,
+          "bytes": 632,
+          "slots": 77
+        },
+        {
+          "group": "R4DRAW",
+          "abi_version": 40,
+          "bytes": 920,
+          "slots": 113
+        },
+        {
+          "group": "R4NET",
+          "abi_version": 2,
+          "bytes": 296,
+          "slots": 35
+        },
+        {
+          "group": "R4AUDIO",
+          "abi_version": 5,
+          "bytes": 240,
+          "slots": 28
+        },
+        {
+          "group": "R4DEV",
+          "abi_version": 37,
+          "bytes": 744,
+          "slots": 91
+        }
+      ],
+      "current_projection": {
+        "extern_structs": 575,
+        "fields": 8916,
+        "integer_enums": 20,
+        "callback_declarations": 806,
+        "constants": 3777
+      },
+      "canonical_schema_sha256": "5d7d1f631a75b4f3b7b4a6206a0a353258932c594b777cd0ca594177e3485f4c"
+    },
+    {
+      "performed_in": "0.90.42",
+      "sdk": "0.64.183",
+      "contract": "0.64.93",
+      "libraries": "0.64.51 unchanged",
+      "evidence": "normal_gui_facades_09042",
+      "scope": "Normal actual Context2 GUI/Canvas/Tray, explicit text/font keyed metrics loans, original FilePicker renderer, typed clipboard control staging/paste and pure composition transitions with actual NoProvider. Full service loops and transport remain0.90.43.",
       "historical_snapshot_retained": true,
       "current_platform_tables": [
         {

@@ -67,6 +67,14 @@ static inline int32_t r4_app_init2(const R4OS2Context *context, const R4App2Memo
         const int32_t drawing_rc = r4draw_init2(context, &value.drawing);
         if (drawing_rc != 0) return drawing_rc;
     }
+    if (R4OS2ContextGroup(context, 4)) {
+        const int32_t network_rc = r4net_init2(context, &value.network);
+        if (network_rc != 0) return network_rc;
+    }
+    if (R4OS2ContextGroup(context, 5)) {
+        const int32_t audio_rc = r4audio_init2(context, &value.audio);
+        if (audio_rc != 0) return audio_rc;
+    }
     if (R4OS2ContextGroup(context, 6)) {
         const int32_t device_rc = r4dev_init2(context, &value.devices);
         if (device_rc != 0) return device_rc;

@@ -7,6 +7,7 @@
 typedef struct R4SdkClipboardOffers {
  R4SysServiceCallFn call; R4SysServiceCloseFn close; uint32_t handle;
  uint64_t timeout_ticks;
+ R4SysMonotonicClockFn clock;
 } R4SdkClipboardOffers;
 static inline R4ClipboardOfferLease R4SdkClipboardOfferToken(R4ClipboardOfferLease x){
  return (R4ClipboardOfferLease){.version=1,.size=sizeof(x),.provider=x.provider,.id=x.id};
@@ -22,7 +23,8 @@ static inline int32_t R4SdkClipboardOffersConnect(const R4OS2Context *context,R4
  rc=R4OS2ContextFunction(context,1,offsetof(R4XStartR4Sys2,service_close),&close);if(rc)return rc;
  R4ServiceInfo info={0};rc=((R4SysServiceOpenFn)(uintptr_t)open)((const uint8_t *)"CLIPSVC",&info);if(rc)return rc;
  if(!info.handle)return R4OS_SERVICE_API_RESULT_NO_ENDPOINT;
- *out=(R4SdkClipboardOffers){(R4SysServiceCallFn)(uintptr_t)call,(R4SysServiceCloseFn)(uintptr_t)close,info.handle,500};return 0;
+ uint64_t clock=0;(void)R4OS2ContextFunction(context,1,offsetof(R4XStartR4Sys2,monotonic_clock),&clock);
+ *out=(R4SdkClipboardOffers){(R4SysServiceCallFn)(uintptr_t)call,(R4SysServiceCloseFn)(uintptr_t)close,info.handle,500,(R4SysMonotonicClockFn)(uintptr_t)clock};return 0;
 }
 static inline int32_t R4SdkClipboardOffersClose(R4SdkClipboardOffers *client){
  if(!client||!client->handle)return R4OS_CLIPBOARD_OFFER_ERROR_CLOSED;

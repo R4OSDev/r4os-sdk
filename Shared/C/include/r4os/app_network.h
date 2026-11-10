@@ -95,7 +95,7 @@ static inline R4Ipv4Address r4_ipv4(uint8_t a, uint8_t b, uint8_t c, uint8_t d) 
 static inline int r4_ipv4_is_unspecified(R4Ipv4Address value) { return value.octets[0] == 0u && value.octets[1] == 0u && value.octets[2] == 0u && value.octets[3] == 0u; }
 static inline R4Network r4_app_network(R4App *app) { R4Network value = {app}; return value; }
 static inline R4Resolver r4_network_resolver(R4Network network) { R4Resolver value = {network}; return value; }
-static inline int r4_network_available(const R4Network *network) { R4Services services = r4_app_services(network != 0 ? network->app : 0); return network != 0 && network->app != 0 && network->app->network.table != 0 && network->app->network.table->tcp_connect != 0 && r4_services_available(&services); }
+static inline int r4_network_available(const R4Network *network) { R4Services services = r4_app_services(network != 0 ? network->app : 0); return network != 0 && network->app != 0 && R4NET_HAS(&network->app->network, tcp_connect) && r4_services_available(&services); }
 static inline int r4_tcp_socket_valid(const R4TcpSocket *socket) { return socket != 0 && socket->network.app != 0 && socket->raw != 0u; }
 static inline int r4_tcp_listener_valid(const R4TcpListener *listener) { return listener != 0 && listener->network.app != 0 && listener->port != 0u; }
 static inline int r4_udp_socket_valid(const R4UdpSocket *socket) { return socket != 0 && socket->network.app != 0 && socket->raw != 0u; }

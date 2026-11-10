@@ -1,6 +1,7 @@
 #ifndef R4OS_SERVICE_HELPERS_H
 #define R4OS_SERVICE_HELPERS_H
 #include "app_services.h"
+#include "poll_budget.h"
 
 /* SDK-local, pointer-free loop state. The original Zig loop owns scheduling,
  * bounded drain and counters. No pointer to a temporary App/Bundle is kept. */
@@ -15,6 +16,9 @@ typedef struct R4SdkServiceLoop {
     uint64_t started_tick, stop_check_ticks;
     uint32_t drain_limit;
     R4SdkServiceLoopMetrics metrics;
+    R4SdkDeadlineBudget clock_guard;
+    uint32_t clock_bound;
+    int32_t init_error;
 } R4SdkServiceLoop;
 typedef struct R4SdkServiceBatch { uint32_t announced, processed, done; } R4SdkServiceBatch;
 typedef struct R4SdkServiceStep { uint32_t kind; int32_t value; } R4SdkServiceStep;
@@ -25,11 +29,17 @@ typedef int32_t (*R4SdkServiceHandler)(void *);
  * Endpoint must outlive the loop. No overlapping loop calls; callbacks must
  * not reenter this loop or unwind across the C boundary. */
 int32_t R4SdkServiceLoopInit(const R4XStartContext *, uint32_t, uint64_t, uint32_t, R4SdkServiceLoop *);
+int32_t R4SdkServiceLoopInit2(const R4OS2Context *, uint32_t, uint64_t, uint32_t, R4SdkServiceLoop *);
 R4SdkServiceStep R4SdkServiceLoopWait(const R4XStartContext *, R4SdkServiceLoop *, uint32_t, uint64_t);
+R4SdkServiceStep R4SdkServiceLoopWait2(const R4OS2Context *, R4SdkServiceLoop *, uint32_t, uint64_t);
 int32_t R4SdkServiceLoopBatch(const R4XStartContext *, R4SdkServiceLoop *, uint32_t, R4SdkServiceBatch *);
+int32_t R4SdkServiceLoopBatch2(const R4OS2Context *, R4SdkServiceLoop *, uint32_t, R4SdkServiceBatch *);
 R4SdkServiceStep R4SdkServiceBatchNext(const R4XStartContext *, R4SdkServiceLoop *, R4SdkServiceBatch *);
+R4SdkServiceStep R4SdkServiceBatchNext2(const R4OS2Context *, R4SdkServiceLoop *, R4SdkServiceBatch *);
 int32_t R4SdkServiceLoopDrain(const R4XStartContext *, R4SdkServiceLoop *, uint32_t, R4SdkServiceHandler, void *);
+int32_t R4SdkServiceLoopDrain2(const R4OS2Context *, R4SdkServiceLoop *, uint32_t, R4SdkServiceHandler, void *);
 int32_t R4SdkServiceLoopReport(const R4XStartContext *, const R4SdkServiceLoop *, const uint8_t *, uint32_t, uint8_t *, uint32_t);
+int32_t R4SdkServiceLoopReport2(const R4OS2Context *, const R4SdkServiceLoop *, const uint8_t *, uint32_t, uint8_t *, uint32_t);
 int32_t R4SdkServiceDetails(const R4XStartContext *, R4ServiceDetail *, uint32_t);
 /* control: status=0,start=1,stop=2,restart=3,install=4,remove=5,startmode=6.
  * path/args/description may be null outside install. Stop uses native ticks.

@@ -7,6 +7,9 @@
 #include <r4os/gui_bridge.h>
 #include <r4os/poll_budget.h>
 static uint32_t control_offer_calls;
+static int32_t control_offer_clock(R4MonotonicClockInfo *out){
+    *out=(R4MonotonicClockInfo){.version=1,.size=sizeof(*out),.flags=R4OS_MONOTONIC_CLOCK_FLAG_VALID,.source=1,.generation=9,.frequency_hz=1000000000,.resolution_ns=1,.instant_ns=1000000000,.event_requested_hz=1000,.event_effective_hz=1001};return 1;
+}
 static int32_t control_offer_call(uint32_t handle,uint16_t op,const uint8_t *request,uint32_t length,R4ServiceMessageHeader *header,uint8_t *output,uint32_t capacity,uint64_t timeout){
     (void)output;(void)capacity;
     assert(handle==31 && timeout==12345);
@@ -26,7 +29,7 @@ int sdk_gui_control_clipboard_case(void){
     static const uint8_t text[]="iWe\xcc\x81\xf0\x9f\x99\x82";
     R4SdkGuiSlot set=R4SdkGuiTextField_setExact(0,&field,text,9);
     assert(!set.status && set.bits==1);
-    R4SdkClipboardOffers client={.call=control_offer_call,.close=control_offer_close,.handle=31,.timeout_ticks=12345};
+    R4SdkClipboardOffers client={.call=control_offer_call,.close=control_offer_close,.handle=31,.timeout_ticks=12345,.clock=control_offer_clock};
     R4ClipboardOfferLease lease={.version=1,.size=sizeof(lease),.provider=UINT64_C(0x100000007),.id=UINT64_C(0x200000009),.revision=4,.expires_ns=5,.state=R4OS_CLIPBOARD_OFFER_STATE_WRITING};
     control_offer_calls=0;
     R4SdkGuiSlot staged=R4SdkGuiTextField_stageSelection(0,&field,&client,&lease);

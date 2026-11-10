@@ -25,6 +25,17 @@ pub const Client = extern struct {
     close_call: abi.R4SysFns.service_close,
     handle: u32,
     timeout_ticks: u64 = 500,
+    clock: @import("rpc_budget.zig").Clock = null,
+
+    pub fn budget(self: *const Client) @import("rpc_budget.zig").Error!@import("rpc_budget.zig").Budget {
+        return @import("rpc_budget.zig").Budget.fromTicks(self.clock, self.timeout_ticks);
+    }
+    /// A synchronous borrowed call view, not a duplicated channel owner.
+    pub fn withBudget(self: *const Client, remaining: *@import("rpc_budget.zig").Budget) @import("rpc_budget.zig").Error!Client {
+        var view = self.*;
+        view.timeout_ticks = try remaining.remainingTicks();
+        return view;
+    }
 
     pub fn connect(context: *const platform.Context, out: *Client) i32 {
         const table = context.system();
@@ -35,7 +46,7 @@ pub const Client = extern struct {
         const rc = open("CLIPSVC", &endpoint);
         if (rc != 0) return rc;
         if (endpoint.handle == 0) return abi.service_api_result_no_endpoint;
-        out.* = .{ .call = call, .close_call = close_call, .handle = endpoint.handle };
+        out.* = .{ .call = call, .close_call = close_call, .handle = endpoint.handle, .clock = platform.abi.function(platform.abi.R4SysFns2, table, "monotonic_clock") };
         return 0;
     }
     pub fn close(self: *Client) i32 {
