@@ -27,6 +27,25 @@ pub const Context = struct {
         inline for (fields) |field| if (self.function(field) == null) return false;
         return true;
     }
+    pub fn registerAudioOutputBackend(self: *const Context, name: [*:0]const u8, backend: *const abi.AudioBackend2) i32 {
+        return self.required("register_audio_output_backend")(name, backend);
+    }
+    pub fn registerSynthEngineEx(self: *const Context, name: [*:0]const u8, engine: *const abi.SynthEngine) i32 {
+        return self.required("register_synth_engine_v2")(name, engine);
+    }
+    pub fn unregisterAudioBackend(self: *const Context, name: [*:0]const u8) i32 {
+        return self.required("unregister_audio_backend")(name);
+    }
+    pub fn registerAudioOutputEpoch(self: *const Context, name: [*:0]const u8, callback: abi.AudioOutputEpochFn) i32 {
+        const bind = self.function("register_audio_output_epoch") orelse return abi.err_no_fn;
+        return bind(name, callback);
+    }
+    pub fn workSubmitRequest(self: *const Context, request: *const abi.DriverWorkRequest, out: *u32) i32 {
+        return self.required("driver_work_submit_request")(request, out);
+    }
+    pub fn graphicsOutputs(self: *const Context) ?@import("driver_outputs.zig").Context {
+        return .{ .table = self.record("gfx_output_query", abi.GfxDriverOutputApi, 24, abi.gfx_output_ok) orelse return null };
+    }
     fn required(self: *const Context, comptime field: []const u8) Callback(field) {
         return self.function(field) orelse @trap();
     }
@@ -282,6 +301,10 @@ test "DriverApi2 queries preserve independent record revision and reject missing
             const rc = result(abi.GfxDriverMemoryApi, out);
             return if (rc == 0) abi.gfx_buffer_result_ok else rc;
         }
+        fn outputs(out: *abi.GfxDriverOutputApi) callconv(.c) i32 {
+            const rc = result(abi.GfxDriverOutputApi, out);
+            return if (rc == 0) abi.gfx_output_ok else rc;
+        }
     };
     var api: Api = undefined;
     @memset(std.mem.asBytes(&api), 0);
@@ -290,27 +313,28 @@ test "DriverApi2 queries preserve independent record revision and reject missing
     api.size = @sizeOf(Api);
     const ctx = Context.init(&api);
     try std.testing.expect(ctx.heap() == null and ctx.resources() == null and ctx.threads() == null and ctx.semaphores() == null);
-    try std.testing.expect(ctx.serial() == null and ctx.memory() == null);
+    try std.testing.expect(ctx.serial() == null and ctx.memory() == null and ctx.graphicsOutputs() == null);
     api.heap_query = F.heap;
     api.resource_query = F.resources;
     api.thread_query = F.threads;
     api.semaphore_query = F.semaphores;
     api.serial_query = F.serial;
     api.gfx_memory_query = F.memory;
+    api.gfx_output_query = F.outputs;
     const heap = ctx.heap().?;
     try std.testing.expect(ctx.resources() != null and ctx.threads() != null and ctx.semaphores() != null);
-    try std.testing.expect(ctx.serial() != null and ctx.memory() != null);
+    try std.testing.expect(ctx.serial() != null and ctx.memory() != null and ctx.graphicsOutputs() != null);
     try std.testing.expectEqual(@as(u32, 1), heap.table.version);
     for (1..4) |mode| {
         F.mode = @intCast(mode);
         try std.testing.expect(ctx.heap() == null and ctx.resources() == null and ctx.threads() == null and ctx.semaphores() == null);
-        try std.testing.expect(ctx.serial() == null and ctx.memory() == null);
+        try std.testing.expect(ctx.serial() == null and ctx.memory() == null and ctx.graphicsOutputs() == null);
     }
     try std.testing.expectEqual(@as(u32, 1), heap.table.version);
     const calls = F.calls;
     api.size = @offsetOf(Api, "gfx_memory_query");
     try std.testing.expect(ctx.heap() == null and ctx.resources() == null and ctx.threads() == null and ctx.semaphores() == null);
-    try std.testing.expect(ctx.serial() == null and ctx.memory() == null);
+    try std.testing.expect(ctx.serial() == null and ctx.memory() == null and ctx.graphicsOutputs() == null);
     try std.testing.expectEqual(calls, F.calls);
 }
 

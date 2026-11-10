@@ -1,6 +1,7 @@
 //! Explicit complete full diagnostics or lightweight lifecycle membership.
 pub const core = @import("inventory_reader.zig");
 pub const Reader = core.Reader;
+pub const LifecyclePages = core.LifecyclePages;
 pub const Provider = core.Provider;
 pub const Mode = core.Mode;
 pub const Status = core.Status;

@@ -171,37 +171,26 @@ pub const Reader = extern struct {
         const code = if (self.mode == 0) (self.provider.full_page orelse return self.finish(.no_provider, abi.err_no_fn, true))(&cursor, &scratch.full, self.page_limit, &page) else (self.provider.lifecycle_page orelse return self.finish(.no_provider, abi.err_no_fn, true))(&cursor, &scratch.life, self.page_limit, &page);
         if (try self.clockCheck(clock, clock_context)) |ended| return ended;
         if (code != 0) return self.providerError(code); // saved cursor/rows unchanged on WouldBlock
-        if (page.version != abi.program_inventory_version or page.size != @sizeOf(abi.ProgramInventoryPageInfo) or page.reserved0 != 0 or page.snapshot_generation != self.cursor.snapshot_generation or page.kind != (if (self.mode == 0) @as(u32, abi.program_inventory_kind_program) else abi.program_inventory_kind_lifecycle) or page.returned > self.page_limit or page.has_more > 1) return self.finish(.invalid_provider, -203, true);
-        if (page.status == abi.program_inventory_status_restart) {
-            if (page.returned != 0 or !std.meta.eql(cursor, self.cursor)) return self.finish(.invalid_provider, -204, true);
-            self.count = 0;
-            self.last_generation = 0;
-            self.total = 0;
-            self.total_known = 0;
-            self.phase = 3;
-            self.status = @intFromEnum(Status.restart);
-            self.error_code = 0;
-            return self.finishAttempt();
-        }
-        var expected_cursor = self.cursor;
-        expected_cursor.program_after_generation = cursor.program_after_generation;
-        if (!std.meta.eql(cursor, expected_cursor) or page.next_generation != cursor.program_after_generation or (self.total_known != 0 and page.total != self.total)) return self.finish(.invalid_provider, -205, true);
-        const sum = std.math.add(u32, self.count, page.returned) catch return self.finish(.invalid_provider, -206, true);
-        if (sum > page.total) return self.finish(.invalid_provider, -206, true);
-        if (page.status == abi.program_inventory_status_complete) {
-            if (page.has_more != 0 or sum != page.total) return self.finish(.invalid_provider, -207, true);
-        } else if (page.status == abi.program_inventory_status_more) {
-            if (page.has_more != 1 or page.returned == 0 or sum >= page.total) return self.finish(.invalid_provider, -208, true);
-        } else return self.finish(.invalid_provider, -209, true);
-        var last = self.last_generation;
-        for (0..page.returned) |index| {
-            const handle = if (self.mode == 0) scratch.full[index].handle else scratch.life[index].handle;
-            const version = if (self.mode == 0) scratch.full[index].version else scratch.life[index].version;
-            const size = if (self.mode == 0) scratch.full[index].size else scratch.life[index].size;
-            if (version != abi.program_inventory_version or size != self.recordSize() or handle.instance_id == 0 or handle.reserved != 0 or handle.generation <= last or (self.mode == 0 and scratch.full[index].info.id != handle.instance_id)) return self.finish(.invalid_provider, -210, true);
-            last = handle.generation;
-        }
-        if (last != page.next_generation) return self.finish(.invalid_provider, -211, true);
+        const checked = if (self.mode == 0)
+            checkPage(abi.ProgramInstanceSnapshot, self.cursor, cursor, page, scratch.full[0..self.page_limit], self.count, self.last_generation, if (self.total_known != 0) self.total else null)
+        else
+            checkPage(abi.ProgramLifecycleSnapshot, self.cursor, cursor, page, scratch.life[0..self.page_limit], self.count, self.last_generation, if (self.total_known != 0) self.total else null);
+        const valid = switch (checked) {
+            .invalid => |code_value| return self.finish(.invalid_provider, code_value, true),
+            .restart => {
+                self.count = 0;
+                self.last_generation = 0;
+                self.total = 0;
+                self.total_known = 0;
+                self.phase = 3;
+                self.status = @intFromEnum(Status.restart);
+                self.error_code = 0;
+                return self.finishAttempt();
+            },
+            .valid => |value| value,
+        };
+        const sum = valid.count;
+        const last = valid.last;
         self.total = page.total;
         self.total_known = 1;
         if (sum > self.capacity or self.total > self.capacity) return self.finish(.capacity, 0, true);
@@ -255,6 +244,112 @@ pub const Reader = extern struct {
         }
         match.disposition = @intFromEnum(Disposition.missing);
         return match;
+    }
+};
+
+const CheckedPage = union(enum) { valid: struct { count: u32, last: u64 }, restart, invalid: i32 };
+
+// Both complete views and positive-only streaming membership use precisely
+// the same cursor, row, ordering and total validation. Only a complete page
+// grants absence; a validated more page can establish a positive owner.
+fn checkPage(comptime T: type, before: abi.ProgramInventoryCursor, after: abi.ProgramInventoryCursor, page: abi.ProgramInventoryPageInfo, rows: []const T, seen: u32, last_generation: u64, total: ?u32) CheckedPage {
+    const full = T == abi.ProgramInstanceSnapshot;
+    if (page.version != abi.program_inventory_version or page.size != @sizeOf(abi.ProgramInventoryPageInfo) or page.reserved0 != 0 or page.snapshot_generation != before.snapshot_generation or page.kind != (if (full) @as(u32, abi.program_inventory_kind_program) else abi.program_inventory_kind_lifecycle) or page.returned > rows.len or page.has_more > 1) return .{ .invalid = -203 };
+    if (page.status == abi.program_inventory_status_restart) {
+        if (page.returned != 0 or !std.meta.eql(after, before)) return .{ .invalid = -204 };
+        return .restart;
+    }
+    var expected = before;
+    expected.program_after_generation = after.program_after_generation;
+    if (!std.meta.eql(after, expected) or page.next_generation != after.program_after_generation or (total != null and page.total != total.?)) return .{ .invalid = -205 };
+    const sum = std.math.add(u32, seen, page.returned) catch return .{ .invalid = -206 };
+    if (sum > page.total) return .{ .invalid = -206 };
+    if (page.status == abi.program_inventory_status_complete) {
+        if (page.has_more != 0 or sum != page.total) return .{ .invalid = -207 };
+    } else if (page.status == abi.program_inventory_status_more) {
+        if (page.has_more != 1 or page.returned == 0 or sum >= page.total) return .{ .invalid = -208 };
+    } else return .{ .invalid = -209 };
+    var last = last_generation;
+    for (rows[0..page.returned]) |row| {
+        if (row.version != abi.program_inventory_version or row.size != @sizeOf(T) or row.handle.instance_id == 0 or row.handle.reserved != 0 or row.handle.generation <= last or (full and row.info.id != row.handle.instance_id)) return .{ .invalid = -210 };
+        last = row.handle.generation;
+    }
+    if (last != page.next_generation) return .{ .invalid = -211 };
+    return .{ .valid = .{ .count = sum, .last = last } };
+}
+
+/// Nonblocking lifecycle pages for owners that can stop after every requested
+/// live identity was observed. There is no allocation, global staging, hidden
+/// retry or diagnostic fallback. The caller owns its bounded traversal and
+/// output storage; discard rows on null. Missing is authorized only by a
+/// returned complete page. Failed calls never advance the saved cursor.
+pub const LifecyclePages = struct {
+    provider: Provider,
+    cursor: abi.ProgramInventoryCursor = .{},
+    count: u32 = 0,
+    total: ?u32 = null,
+    last_generation: u64 = 0,
+    status: Status = .initial,
+    begun: bool = false,
+    busy: bool = false,
+
+    pub fn begin(self: *LifecyclePages) bool {
+        if (self.busy) return false;
+        self.busy = true;
+        defer self.busy = false;
+        self.begun = false;
+        var cursor: abi.ProgramInventoryCursor = .{};
+        const begin_fn = self.provider.lifecycle_begin orelse {
+            self.status = .no_provider;
+            return false;
+        };
+        const rc = begin_fn(&cursor);
+        if (rc != 0) {
+            self.status = if (rc == abi.program_handle_error_would_block) .would_block else .failed;
+            return false;
+        }
+        if (!Reader.validCursor(cursor, 1) or cursor.program_after_generation != 0) {
+            self.status = .invalid_provider;
+            return false;
+        }
+        self.* = .{ .provider = self.provider, .cursor = cursor, .begun = true, .status = .more };
+        return true;
+    }
+    pub fn next(self: *LifecyclePages, rows: []abi.ProgramLifecycleSnapshot) ?abi.ProgramInventoryPageInfo {
+        if (self.busy or !self.begun or rows.len == 0 or rows.len > abi.program_inventory_page_max or (self.status != .more and self.status != .would_block)) return null;
+        self.busy = true;
+        defer self.busy = false;
+        const page_fn = self.provider.lifecycle_page orelse {
+            self.status = .no_provider;
+            return null;
+        };
+        var cursor = self.cursor;
+        var page: abi.ProgramInventoryPageInfo = .{};
+        @memset(std.mem.sliceAsBytes(rows), 0);
+        const rc = page_fn(&cursor, rows.ptr, @intCast(rows.len), &page);
+        if (rc != 0) {
+            self.status = if (rc == abi.program_handle_error_would_block) .would_block else .failed;
+            return null;
+        }
+        switch (checkPage(abi.ProgramLifecycleSnapshot, self.cursor, cursor, page, rows, self.count, self.last_generation, self.total)) {
+            .invalid => {
+                self.status = .invalid_provider;
+                return null;
+            },
+            .restart => {
+                self.status = .restart;
+                return null;
+            },
+            .valid => |checked| {
+                self.cursor = cursor;
+                self.count = checked.count;
+                self.last_generation = checked.last;
+                self.total = page.total;
+                self.status = if (page.status == abi.program_inventory_status_complete) .complete else .more;
+                self.begun = self.status != .complete;
+                return page;
+            },
+        }
     }
 };
 
@@ -366,6 +461,41 @@ const Probe = struct {
         return Reader.init(mode, .{ .address = @intFromPtr(storage.ptr), .length = storage.len }, capacity, 1, provider, initial, timeout);
     }
 };
+
+test "inventory owner streaming lifecycle positive pages preserve rollback and explicit restart" {
+    const t = std.testing;
+    Probe.reset();
+    var pages = LifecyclePages{ .provider = Probe.provider };
+    var rows: [1]abi.ProgramLifecycleSnapshot = undefined;
+    try t.expect(pages.begin());
+    const first = pages.next(&rows) orelse return error.TestUnexpectedResult;
+    try t.expectEqual(abi.program_inventory_status_more, first.status);
+    try t.expectEqual(@as(u32, 7), rows[0].handle.instance_id);
+    try t.expectEqual(@as(u64, 11), rows[0].handle.generation);
+    const before = pages.cursor;
+    Probe.fault = .page_busy; // provider deliberately writes cursor999 before WouldBlock
+    try t.expect(pages.next(&rows) == null);
+    try t.expectEqual(Status.would_block, pages.status);
+    try t.expect(std.meta.eql(before, pages.cursor));
+    try t.expectEqual(@as(u32, 1), pages.count);
+    Probe.fault = .none;
+    const last = pages.next(&rows) orelse return error.TestUnexpectedResult;
+    try t.expectEqual(abi.program_inventory_status_complete, last.status);
+    try t.expectEqual(@as(u64, 12), rows[0].handle.generation);
+    try t.expectEqual(@as(u32, 2), pages.count);
+    try t.expectEqual(@as(u32, 0), Probe.full_begins);
+    Probe.fault = .begin_busy;
+    try t.expect(!pages.begin());
+    try t.expect(pages.next(&rows) == null);
+    Probe.fault = .none;
+    try t.expect(pages.begin());
+    Probe.fault = .restart;
+    try t.expect(pages.next(&rows) == null);
+    try t.expectEqual(Status.restart, pages.status);
+    const calls = Probe.pages;
+    try t.expect(pages.next(&rows) == null);
+    try t.expectEqual(calls, Probe.pages);
+}
 
 test "inventory owner whole staged view only exact generation and lifecycle does not trigger diagnostic summary" {
     Probe.reset();
