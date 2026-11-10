@@ -137,15 +137,15 @@
     },
     "libraries": {
       "repository": "https://github.com/R4OSDev/r4os-libraries.git",
-      "commit": "2ffdfc11984d18afdf41c8347ac93e62b196b3fb",
-      "version": "0.64.55",
+      "commit": "a45419c21ff78699d2a5599615b7c09aefa9fbe9",
+      "version": "0.64.56",
       "files": {
-        "build.zig.zon": "df49f4701a766c5001e28d332d7c12c6b024a18261808bed1f8c399b9048567a",
+        "build.zig.zon": "2951d3f0fe362451e7d08f82b86748db829415101f0433c51b89ecc06e1d308f",
         "Shared/Rust/Cargo.toml": "431c38bac8b28467b0dad7842d1626397bb061eeb94f54f604276dc81036aec4"
       },
       "tree": {
         "algorithm": "r4os-files-sha256-lf-v1",
-        "sha256": "694965e90ed1e398e93215c8daf8be82d7c3915bd95795920dd883f91de68f25",
+        "sha256": "758121084c98fad1c80a5e17903168a992ee763c5e0da5dc25d3f34a909d840f",
         "files": [
           ".gitattributes",
           ".gitignore",
@@ -2604,8 +2604,8 @@
           "consumer_oracles.zig"
         ]
       },
-      "zig_hash": "r4os_libraries-0.64.55-dH4fNXuPewOP-RCIlChRDcLcrvo4gsVKY44uAD4iCPK2",
-      "archive_url": "https://github.com/R4OSDev/r4os-libraries/archive/2ffdfc11984d18afdf41c8347ac93e62b196b3fb.tar.gz",
+      "zig_hash": "r4os_libraries-0.64.56-dH4fNU-WewNliHU_Xt4JeUaDx--FxuHeDmsW1NqITRs4",
+      "archive_url": "https://github.com/R4OSDev/r4os-libraries/archive/a45419c21ff78699d2a5599615b7c09aefa9fbe9.tar.gz",
       "archive_format": "tar.gz"
     },
     "recovery-contract": {
@@ -3046,9 +3046,9 @@
       "name": "R4ENC",
       "repository": "libraries",
       "path": "R4ENC",
-      "version": "0.1.11",
+      "version": "0.1.12",
       "target": "/R4OS/LIBS/R4ENC.R4L",
-      "manifest_sha256": "08a1abd938467742a92f000674d8d170d26b4210b7eb32c39d4c5fd1534953b8"
+      "manifest_sha256": "880ac46301e87b53b5b4c884085cf486e1f5f9e7fb602a00fa8aa0ca5eae46d7"
     },
     "r4font": {
       "name": "R4FONT",
@@ -3110,9 +3110,9 @@
       "name": "R4VIDEO",
       "repository": "libraries",
       "path": "R4VIDEO",
-      "version": "0.1.15",
+      "version": "0.1.16",
       "target": "/R4OS/LIBS/R4VIDEO.R4L",
-      "manifest_sha256": "19c2ce223f69fe1d00b668865c271bbd35c32eea486a8c72086454523d6ecaab"
+      "manifest_sha256": "f8076652a0e5f1e6744635d98a229eec1c5928bbb87d1ff4a0e47988dbd6b316"
     },
     "r4vk": {
       "name": "R4VK",

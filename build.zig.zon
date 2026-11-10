@@ -1,12 +1,12 @@
 .{
     .name = .r4os_sdk,
-    .version = "0.64.188",
+    .version = "0.64.189",
     .fingerprint = 0x8e8330db02f37336,
     .minimum_zig_version = "0.16.0",
     .dependencies = .{
         .r4os_libraries = .{
-            .url = "https://github.com/R4OSDev/r4os-libraries/archive/2ffdfc11984d18afdf41c8347ac93e62b196b3fb.tar.gz",
-            .hash = "r4os_libraries-0.64.55-dH4fNXuPewOP-RCIlChRDcLcrvo4gsVKY44uAD4iCPK2",
+            .url = "https://github.com/R4OSDev/r4os-libraries/archive/a45419c21ff78699d2a5599615b7c09aefa9fbe9.tar.gz",
+            .hash = "r4os_libraries-0.64.56-dH4fNU-WewNliHU_Xt4JeUaDx--FxuHeDmsW1NqITRs4",
             .lazy = true,
         },
         // Bootstrap projection of Profiles/Components.json. The host starters map the actual

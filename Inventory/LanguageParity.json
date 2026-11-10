@@ -48473,7 +48473,7 @@
     {
       "id": "library-R4ENC",
       "owner": "Repositories/Libraries/R4ENC",
-      "version": "0.1.9",
+      "version": "0.1.12",
       "wave": "0.86.60",
       "binding_wave": "0.86.52",
       "contract": {
@@ -48548,7 +48548,8 @@
         "local_contract_and_baseline",
         "language_libraries_current_60",
         "library_projection_current_61",
-        "current_kernel_records_80"
+        "current_kernel_records_80",
+        "canonical_video_encoder_generation2_09048"
       ],
       "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten."
     },
@@ -49373,7 +49374,7 @@
     {
       "id": "library-R4VIDEO",
       "owner": "Repositories/Libraries/R4VIDEO",
-      "version": "0.1.13",
+      "version": "0.1.16",
       "wave": "0.86.60",
       "binding_wave": "0.86.52",
       "contract": {
@@ -49449,7 +49450,8 @@
         "source_inventory",
         "local_contract_and_baseline",
         "language_libraries_current_60",
-        "library_projection_current_61"
+        "library_projection_current_61",
+        "canonical_video_encoder_generation2_09048"
       ],
       "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten."
     },
@@ -58871,6 +58873,15 @@
       "report": "Docs/API/ConsumerMigration.txt",
       "scope": "Independent vendor/compiler contracts unchanged; actual generation2 NAK/ACO workers, complete lightweight lifecycle reader, exact join loans. Compiler-typed C/Rust worker layouts and CompilerContext2 bridge expose the same original owner; private Zig App2 is constructed in its owner, never cast from a foreign App layout.",
       "limits": "C/Rust native helper host tests plus owned KVM4 Zig compiler consumers. No Windows execution or new physical GPU qualification. Original code/cache fixtures retained; no compiler identity bump for path-only artifact metadata."
+    },
+    "canonical_video_encoder_generation2_09048": {
+      "complete": true,
+      "performed_in": "0.90.48",
+      "sdk": "0.64.189",
+      "libraries": "0.64.56",
+      "report": "Docs/API/ConsumerMigration.txt",
+      "scope": "Actual generation2 R4VIDEO/R4ENC startup, prefix-checked system/drawing callbacks, stable process caller snapshots and synchronization. Independent VIDEO_V1/ENCODE_V1 contracts, generated C/Zig/Rust layouts and codec algorithms unchanged. Original PCM partial-write/death/close oracle repeated through actual SYS2 with a valid monotonic clock.",
+      "limits": "Independent ABI C/Zig host conformance plus actual generation2 original video/encoder KVM4 consumers; no Windows execution or new physical GPU qualification. Existing C/Rust helper signatures and all217 SDK exports unchanged."
     }
   },
   "wave_bindings": [
@@ -59123,12 +59134,12 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.90.47",
-    "sdk": "0.64.188",
+    "performed_in": "0.90.48",
+    "sdk": "0.64.189",
     "contract": "0.64.93",
-    "libraries": "0.64.55",
-    "evidence": "canonical_compiler_workers_generation2_09047",
-    "scope": "Independent vendor/compiler contracts unchanged; actual generation2 NAK/ACO workers, complete lightweight lifecycle reader, exact join loans. Compiler-typed C/Rust worker layouts and CompilerContext2 bridge expose the same original owner; private Zig App2 is constructed in its owner, never cast from a foreign App layout.",
+    "libraries": "0.64.56",
+    "evidence": "canonical_video_encoder_generation2_09048",
+    "scope": "Actual generation2 R4VIDEO/R4ENC startup, prefix-checked system/drawing callbacks, stable process caller snapshots and synchronization. Independent VIDEO_V1/ENCODE_V1 contracts, generated C/Zig/Rust layouts and codec algorithms unchanged. Original PCM partial-write/death/close oracle repeated through actual SYS2 with a valid monotonic clock.",
     "historical_snapshot_retained": true,
     "current_platform_tables": [
       {
@@ -59180,7 +59191,7 @@
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.90.47",
+    "reviewed_in": "0.90.48",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -60435,7 +60446,7 @@
       },
       {
         "path": "Repositories/SDK/Profiles/Components.json",
-        "sha256": "719d5d69ca104e3dc3b7d215fa0451a42453c13dd92d034e63ccfecad0af5775"
+        "sha256": "d0acd9967c681ababc8b061314468d218d173036cbbf66b874d4c624b42e10c2"
       },
       {
         "path": "Repositories/SDK/Profiles/Tools.json",
@@ -61587,7 +61598,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "7fcf0ec05ebe79785cf95703a23fd4123d20c71c42db2bae06e6ebab49a43168"
+        "sha256": "efaf456d1057f929609365a442550ca180a787e04d4dd5574ceda55710907ae8"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -64457,6 +64468,61 @@
       "libraries": "0.64.54",
       "evidence": "canonical_graphics_native_generation2_09046",
       "scope": "Actual Context2 graphics-library consumers, stable process/caller snapshots and explicit CView, mapped SYS2 heaps and native C11/TLS retirement. Independent library interfaces keep their own IDs/revisions/layouts.",
+      "historical_snapshot_retained": true,
+      "current_platform_tables": [
+        {
+          "group": "R4SYS",
+          "abi_version": 41,
+          "bytes": 1560,
+          "slots": 193
+        },
+        {
+          "group": "R4DESK",
+          "abi_version": 21,
+          "bytes": 632,
+          "slots": 77
+        },
+        {
+          "group": "R4DRAW",
+          "abi_version": 40,
+          "bytes": 920,
+          "slots": 113
+        },
+        {
+          "group": "R4NET",
+          "abi_version": 2,
+          "bytes": 296,
+          "slots": 35
+        },
+        {
+          "group": "R4AUDIO",
+          "abi_version": 5,
+          "bytes": 240,
+          "slots": 28
+        },
+        {
+          "group": "R4DEV",
+          "abi_version": 37,
+          "bytes": 744,
+          "slots": 91
+        }
+      ],
+      "current_projection": {
+        "extern_structs": 575,
+        "fields": 8916,
+        "integer_enums": 20,
+        "callback_declarations": 806,
+        "constants": 3777
+      },
+      "canonical_schema_sha256": "5d7d1f631a75b4f3b7b4a6206a0a353258932c594b777cd0ca594177e3485f4c"
+    },
+    {
+      "performed_in": "0.90.47",
+      "sdk": "0.64.188",
+      "contract": "0.64.93",
+      "libraries": "0.64.55",
+      "evidence": "canonical_compiler_workers_generation2_09047",
+      "scope": "Independent vendor/compiler contracts unchanged; actual generation2 NAK/ACO workers, complete lightweight lifecycle reader, exact join loans. Compiler-typed C/Rust worker layouts and CompilerContext2 bridge expose the same original owner; private Zig App2 is constructed in its owner, never cast from a foreign App layout.",
       "historical_snapshot_retained": true,
       "current_platform_tables": [
         {
