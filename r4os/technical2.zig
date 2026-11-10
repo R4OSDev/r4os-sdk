@@ -56,6 +56,7 @@ pub fn protocolEntriesAsm(comptime init: []const u8, comptime shutdown: []const 
 
 test "technical2 views reject wrong generations and short records without invoking callbacks" {
     _ = @import("driver2.zig");
+    _ = @import("protocol2.zig");
     var missing: abi.DriverApi2 = undefined;
     @memset(std.mem.asBytes(&missing), 0);
     missing.magic = abi.driver_magic;

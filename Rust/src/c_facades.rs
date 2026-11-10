@@ -17733,7 +17733,7 @@ pub const R4SdkDataNative_Value183_TYPE: u32 = 183;
 pub const R4SdkDataNative_Value184_TYPE: u32 = 184;
 pub const R4SdkDataNative_Value185_TYPE: u32 = 185;
 pub const R4SdkDataNative_Value186_TYPE: u32 = 186;
-pub const R4SdkData_ABI_FINGERPRINT: u64 = 10602740399689007244;
+pub const R4SdkData_ABI_FINGERPRINT: u64 = 7347244320787593821;
 pub const R4SdkDataJson_op_open: i32 = 1;
 pub const R4SdkDataJson_op_next: i32 = 2;
 pub const R4SdkDataJson_op_select: i32 = 3;
@@ -25815,6 +25815,7 @@ unsafe extern "C" {
     pub fn R4SdkDataRasterImage_pixelAt(p0: u32, p1: *const R4SdkDataRasterImage, p2: u32, p3: u32) -> R4SdkDataSlot;
     pub fn R4SdkDataRasterImage_fill(p0: u32, p1: *const R4SdkDataRasterImage, p2: u32) -> R4SdkDataSlot;
     pub fn R4SdkDataRasterImage_resize(p0: u32, p1: *mut R4SdkDataRasterImage, p2: u32, p3: u32, p4: u32) -> R4SdkDataSlot;
+    pub fn R4SdkDataRandomProvider_bind(p0: u32, p1: *const R4SdkDataRandomProvider) -> R4SdkDataSlot;
     pub fn R4SdkDataRandomProvider_available(p0: u32, p1: *const R4SdkDataRandomProvider) -> R4SdkDataSlot;
     pub fn R4SdkDataRandomProvider_fill(p0: u32, p1: *const R4SdkDataRandomProvider, p2: *mut u8, p3: u64) -> R4SdkDataSlot;
     pub fn R4SdkDataMemoryPolicy_fromInfo(p0: u32, p1: *const R4CpuAccelerationInfo, p2: *mut R4SdkDataMemoryPolicy) -> R4SdkDataSlot;

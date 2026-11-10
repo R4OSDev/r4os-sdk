@@ -11,6 +11,12 @@ pub const Provider = struct {
     hardware_info: ?cpu.InfoFn = null,
     hardware: ?cpu.WorkFn = null,
 
+    /// Publish callbacks before workers start; an empty provider clears the
+    /// former scope. The caller retains its real callback owner lifetime.
+    pub fn bind(self: Provider) void {
+        provider = self;
+    }
+
     pub fn available(self: Provider) bool {
         if (self.hardware != null) if (self.hardware_info) |get| {
             var info: abi.CpuAccelerationInfo = .{};
@@ -81,6 +87,46 @@ pub fn sourceInfo(out: *abi.EntropySourceInfo) i32 {
 }
 
 const Stage = struct { words: [64]u64 = @splat(0) };
+test "Protocol2 entropy binding rejects old headers and drops retired callbacks" {
+    const Fake = struct {
+        fn info(out: *abi.EntropySourceInfo) callconv(.c) i32 {
+            out.* = .{ .state = abi.entropy_state_ready, .generation = 1, .max_request_bytes = 64 };
+            return 0;
+        }
+        fn read(out: [*]u8, bytes: u32) callconv(.c) i32 {
+            @memset(out[0..bytes], 0x56);
+            return @intCast(bytes);
+        }
+    };
+    var api: abi.ProtocolApi2 = undefined;
+    @memset(std.mem.asBytes(&api), 0);
+    api.magic = @import("technical2.zig").abi.protocol_magic;
+    api.version = @import("technical2.zig").abi.protocol_version;
+    api.size = 120;
+    api.entropy_source_info = Fake.info;
+    api.entropy_fill = Fake.read;
+    const context = @import("protocol2.zig").Context.init(&api);
+    context.bindEntropy();
+    defer Provider.bind(.{});
+    var out: [64]u8 = @splat(0);
+    try std.testing.expect(available());
+    try std.testing.expect(fill(&out));
+    for (out) |byte| try std.testing.expectEqual(@as(u8, 0x56), byte);
+    api.magic = abi.protocol_magic;
+    context.bindEntropy();
+    try std.testing.expect(!available());
+    try std.testing.expect(!fill(&out));
+    for (out) |byte| try std.testing.expectEqual(@as(u8, 0), byte);
+    api.magic = @import("technical2.zig").abi.protocol_magic;
+    api.size = 119;
+    context.bindEntropy();
+    try std.testing.expect(!available());
+    api.size = 120;
+    context.bindEntropy();
+    try std.testing.expect(available());
+    Provider.bind(.{});
+    try std.testing.expect(!available());
+}
 fn hardwareFill(work: cpu.WorkFn, out: []u8) bool {
     var offset: usize = 0;
     while (offset < out.len) {

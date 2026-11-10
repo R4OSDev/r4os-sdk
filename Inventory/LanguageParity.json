@@ -58941,10 +58941,10 @@
     "typed_display_dma_and_work_consumers_generation2_09053": {
       "complete": true,
       "performed_in": "0.90.53",
-      "sdk": "0.64.195",
+      "sdk": "0.64.196",
       "libraries": "0.64.56",
       "report": "Docs/API/ConsumerMigration.txt",
-      "scope": "SDK195 adds checked actual DriverApi2 display/queue queries through their independent revision1 records and ten direct/optional callback helpers for synchronous blit, USB example admission, DMA sync, IRQ/work diagnostics and owned work. Existing record-query case covers nine factories, including actual full/short/missing/malformed callbacks; independent record revisions stay1. All callback addresses come from the genuine API2 table; no legacy outer cast/table synthesis. Five driver consumers use actual DriverInit2/Query2, preserve conditional passive/software policy and exact owner/fence/Work lifetimes. Existing C/Rust helper bodies, foreign layouts, platform slots and Libraries56 remain unchanged; no new foreign helper ABI. Capacity repair: all nine independent DriverApi2 record factories request the full actual Zig allocation, preserving returned prefix/version checks. GfxDriverQueueApi default128 is a legacy prefix, shorter than the current record; the old factory silently omitted optional current tails. Existing factory test now verifies requested capacity before the fake provider writes any output. No independent record revision, foreign layout or platform slot changed.",
+      "scope": "SDK195 adds checked actual DriverApi2 display/queue queries through their independent revision1 records and ten direct/optional callback helpers for synchronous blit, USB example admission, DMA sync, IRQ/work diagnostics and owned work. Existing record-query case covers nine factories, including actual full/short/missing/malformed callbacks; independent record revisions stay1. All callback addresses come from the genuine API2 table; no legacy outer cast/table synthesis. Five driver consumers use actual DriverInit2/Query2, preserve conditional passive/software policy and exact owner/fence/Work lifetimes. Existing C/Rust helper bodies, foreign layouts, platform slots and Libraries56 remain unchanged; no new foreign helper ABI. Capacity repair: all nine independent DriverApi2 record factories request the full actual Zig allocation, preserving returned prefix/version checks. GfxDriverQueueApi default128 is a legacy prefix, shorter than the current record; the old factory silently omitted optional current tails. Existing factory test now verifies requested capacity before the fake provider writes any output. No independent record revision, foreign layout or platform slot changed. SDK196 adds an explicit Zig ProtocolApi2 convenience view and entropy binder; real independently tagged table and per-slot admission only, no old outer table synthesis. Required roles/status/file callbacks are checked before publication. Entropy binding is cleared on invalid rebinding and terminal retirement; optional CPU instructions still require the unchanged actual per-call grant and receipt. Existing C/Rust raw technical2 tables already expose these same callbacks. This is a Zig convenience addition, not a new platform slot or a new C/Rust runtime qualification. Independent payload records retain their canonical revision; ProtocolApi2 current table version remains1 under its distinct API2 magic. The compiler-derived data helper catalogue retains all187 original native types and adds one typed Provider.bind operation (172 functions). ProtocolApi2 admission belongs exclusively to ProtocolContext2; the portable entropy owner only binds its original Provider callbacks. The C header, native fingerprint and compiler-derived Rust C projection are regenerated together. Existing compiled modules retain their own old matched SDK runtime. No Kernel/Contract ABI slot or independent protocol record changes. Original C/Rust Data interop and final normal nine tool outputs provide their own bounded evidence.",
       "limits": "110 platform2/manifest cases pass before the expected stale-review guard.43AMD/53NVIDIA/2Virtio wire owner cases pass with unchanged original result/retention assertions. API1 numeric-version negative fixtures are modeled as actual unsupported API2 header or missing callbacks; independent resource records stay unchanged. Shared DriverPollBudget values enter real AMD4096retry and NVIDIA8step/no_sleep slices, preserving original5s/250us and exact completion/cancel/release. Extended existing AMD check confirms frozen-clock deadline retains Work until real callback receipt. Normal tools, Windows compile, native software/Example/Virtio models and final single STANDARD have separate receipts; no physical AMD/NVIDIA or old shutdown-hang cure is claimed. Capacity red: existing platform2 test76/77, exact independent factory case fails. SDK195 final host/normal/windows/native receipts remain separate; no physical qualification granted by this review."
     }
   },
@@ -59199,11 +59199,11 @@
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
     "performed_in": "0.90.53",
-    "sdk": "0.64.195",
+    "sdk": "0.64.196",
     "contract": "0.64.93",
     "libraries": "0.64.56",
     "evidence": "typed_display_dma_and_work_consumers_generation2_09053",
-    "scope": "SDK195 adds checked actual DriverApi2 display/queue queries through their independent revision1 records and ten direct/optional callback helpers for synchronous blit, USB example admission, DMA sync, IRQ/work diagnostics and owned work. Existing record-query case covers nine factories, including actual full/short/missing/malformed callbacks; independent record revisions stay1. All callback addresses come from the genuine API2 table; no legacy outer cast/table synthesis. Five driver consumers use actual DriverInit2/Query2, preserve conditional passive/software policy and exact owner/fence/Work lifetimes. Existing C/Rust helper bodies, foreign layouts, platform slots and Libraries56 remain unchanged; no new foreign helper ABI. Capacity repair: all nine independent DriverApi2 record factories request the full actual Zig allocation, preserving returned prefix/version checks. GfxDriverQueueApi default128 is a legacy prefix, shorter than the current record; the old factory silently omitted optional current tails. Existing factory test now verifies requested capacity before the fake provider writes any output. No independent record revision, foreign layout or platform slot changed.",
+    "scope": "SDK195 adds checked actual DriverApi2 display/queue queries through their independent revision1 records and ten direct/optional callback helpers for synchronous blit, USB example admission, DMA sync, IRQ/work diagnostics and owned work. Existing record-query case covers nine factories, including actual full/short/missing/malformed callbacks; independent record revisions stay1. All callback addresses come from the genuine API2 table; no legacy outer cast/table synthesis. Five driver consumers use actual DriverInit2/Query2, preserve conditional passive/software policy and exact owner/fence/Work lifetimes. Existing C/Rust helper bodies, foreign layouts, platform slots and Libraries56 remain unchanged; no new foreign helper ABI. Capacity repair: all nine independent DriverApi2 record factories request the full actual Zig allocation, preserving returned prefix/version checks. GfxDriverQueueApi default128 is a legacy prefix, shorter than the current record; the old factory silently omitted optional current tails. Existing factory test now verifies requested capacity before the fake provider writes any output. No independent record revision, foreign layout or platform slot changed. SDK196 adds an explicit Zig ProtocolApi2 convenience view and entropy binder; real independently tagged table and per-slot admission only, no old outer table synthesis. Required roles/status/file callbacks are checked before publication. Entropy binding is cleared on invalid rebinding and terminal retirement; optional CPU instructions still require the unchanged actual per-call grant and receipt. Existing C/Rust raw technical2 tables already expose these same callbacks. This is a Zig convenience addition, not a new platform slot or a new C/Rust runtime qualification. Independent payload records retain their canonical revision; ProtocolApi2 current table version remains1 under its distinct API2 magic. The compiler-derived data helper catalogue retains all187 original native types and adds one typed Provider.bind operation (172 functions). ProtocolApi2 admission belongs exclusively to ProtocolContext2; the portable entropy owner only binds its original Provider callbacks. The C header, native fingerprint and compiler-derived Rust C projection are regenerated together. Existing compiled modules retain their own old matched SDK runtime. No Kernel/Contract ABI slot or independent protocol record changes. Original C/Rust Data interop and final normal nine tool outputs provide their own bounded evidence.",
     "historical_snapshot_retained": true,
     "current_platform_tables": [
       {
@@ -60542,7 +60542,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "91737c7c2c170281b69f69508157a67fd4c578e9fbb70c420224a92ccb25510b"
+        "sha256": "f913e7cdebc1becb61962bb6a78fbde14c074f532c73c369d9fc9993f6246aaa"
       },
       {
         "path": "Repositories/SDK/Rust/src/cli.rs",
@@ -60962,7 +60962,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/data_helpers.h",
-        "sha256": "989130cb310940daf05af5b124cc533a3e116f6b7eba2a23ff2bfeb59a529078"
+        "sha256": "beb9fa8011dce00a3e85ceb67ed5be955345868baa84286618349ac758ef267e"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/desktop_actions.h",
@@ -61662,7 +61662,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "d7d4d43f7806fab4eb72ab28af710c3dfcca0405ccfce7b38a27145b0dc8d966"
+        "sha256": "7e6cd34d953cce6950d4eafc67891553503936412d787cb35b36f983aebc9fe2"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -62006,7 +62006,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/generated/data_fingerprint.zig",
-        "sha256": "79d547cfdea88ef1b65189296941f2107bdb556e05c420e2b7f1ccbd6fbe6f1d"
+        "sha256": "b1801c09b016fd6e49a3b5c1c00c7a517ab022df175d7ce0187ab947ded9b9c1"
       },
       {
         "path": "Repositories/SDK/r4os/generated/driver_fingerprint.zig",
@@ -62285,6 +62285,10 @@
         "sha256": "179a9d357cf0bcc974083591cd0b259b6f46a08829333a138ba5b1864797e9d7"
       },
       {
+        "path": "Repositories/SDK/r4os/protocol2.zig",
+        "sha256": "49c44bcb600877d8b7a4b46aed80e5f4f7e8a755aaf576df03e6b9e2a0dd1c1d"
+      },
+      {
         "path": "Repositories/SDK/r4os/published_frame.zig",
         "sha256": "2bd8f1171bd45ed3df73f6e66062d179b98655f824f1a3059320d2064b01adbe"
       },
@@ -62314,7 +62318,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/r4dev.zig",
-        "sha256": "68aa6284cff982c99cabcecbc994848a13ca8c8cd8883a81925bba32c61efe3e"
+        "sha256": "95a23d7df09d7f42cf91fb8be8ef23e4653610687208815c72a7a0daa4b8a66f"
       },
       {
         "path": "Repositories/SDK/r4os/r4draw.zig",
@@ -62398,7 +62402,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/secure_random.zig",
-        "sha256": "e1eb97e24ce3ad657481d6d92defb001bd33a80460be77cd98cd5601d613e3ae"
+        "sha256": "0f1a28db505587c88642095c23b471c4ae2853d21e9a099fbc73b375e0dd9c08"
       },
       {
         "path": "Repositories/SDK/r4os/serial.zig",
@@ -62634,7 +62638,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/technical2.zig",
-        "sha256": "7a5d9bb9168eff819bab8767add22ef3b7813c27156e31f6cfb96ddb7ff01ccf"
+        "sha256": "1b626a228f37a0b07d1d4e53137e23a247a43fc3065a1bddca72c08ad772c59b"
       },
       {
         "path": "Repositories/SDK/r4os/text_composition.zig",
@@ -64990,6 +64994,61 @@
       "libraries": "0.64.56",
       "evidence": "typed_display_dma_and_work_consumers_generation2_09053",
       "scope": "SDK194 adds checked actual DriverApi2 display/queue queries through their independent revision1 records and ten direct/optional callback helpers for synchronous blit, USB example admission, DMA sync, IRQ/work diagnostics and owned work. Existing record-query case covers nine factories, including actual full/short/missing/malformed callbacks; independent record revisions stay1. All callback addresses come from the genuine API2 table; no legacy outer cast/table synthesis. Five driver consumers use actual DriverInit2/Query2, preserve conditional passive/software policy and exact owner/fence/Work lifetimes. Existing C/Rust helper bodies, foreign layouts, platform slots and Libraries56 remain unchanged; no new foreign helper ABI.",
+      "historical_snapshot_retained": true,
+      "current_platform_tables": [
+        {
+          "group": "R4SYS",
+          "abi_version": 41,
+          "bytes": 1560,
+          "slots": 193
+        },
+        {
+          "group": "R4DESK",
+          "abi_version": 21,
+          "bytes": 632,
+          "slots": 77
+        },
+        {
+          "group": "R4DRAW",
+          "abi_version": 40,
+          "bytes": 920,
+          "slots": 113
+        },
+        {
+          "group": "R4NET",
+          "abi_version": 2,
+          "bytes": 296,
+          "slots": 35
+        },
+        {
+          "group": "R4AUDIO",
+          "abi_version": 5,
+          "bytes": 240,
+          "slots": 28
+        },
+        {
+          "group": "R4DEV",
+          "abi_version": 37,
+          "bytes": 744,
+          "slots": 91
+        }
+      ],
+      "current_projection": {
+        "extern_structs": 575,
+        "fields": 8916,
+        "integer_enums": 20,
+        "callback_declarations": 806,
+        "constants": 3777
+      },
+      "canonical_schema_sha256": "5d7d1f631a75b4f3b7b4a6206a0a353258932c594b777cd0ca594177e3485f4c"
+    },
+    {
+      "performed_in": "0.90.53",
+      "sdk": "0.64.195",
+      "contract": "0.64.93",
+      "libraries": "0.64.56",
+      "evidence": "typed_display_dma_and_work_consumers_generation2_09053",
+      "scope": "SDK195 adds checked actual DriverApi2 display/queue queries through their independent revision1 records and ten direct/optional callback helpers for synchronous blit, USB example admission, DMA sync, IRQ/work diagnostics and owned work. Existing record-query case covers nine factories, including actual full/short/missing/malformed callbacks; independent record revisions stay1. All callback addresses come from the genuine API2 table; no legacy outer cast/table synthesis. Five driver consumers use actual DriverInit2/Query2, preserve conditional passive/software policy and exact owner/fence/Work lifetimes. Existing C/Rust helper bodies, foreign layouts, platform slots and Libraries56 remain unchanged; no new foreign helper ABI. Capacity repair: all nine independent DriverApi2 record factories request the full actual Zig allocation, preserving returned prefix/version checks. GfxDriverQueueApi default128 is a legacy prefix, shorter than the current record; the old factory silently omitted optional current tails. Existing factory test now verifies requested capacity before the fake provider writes any output. No independent record revision, foreign layout or platform slot changed.",
       "historical_snapshot_retained": true,
       "current_platform_tables": [
         {

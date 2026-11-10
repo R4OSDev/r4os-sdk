@@ -1213,6 +1213,20 @@ Ressourcenquittungen bleiben Pflicht des Treibers. Gezielte Pruefung:
 Build.sh entropy-test bzw. Build.bat entropy-test; Linux prueft alte Tabellen
 zusaetzlich an einer echten unzugreifbaren Seitengrenze.
 
+Seit SDK 0.64.196 bindet ProtocolContext2.bindEntropy ausschliesslich die echte
+ProtocolApi2 mit ihrer eigenen Kennung. Die aktuelle Tabellenrevision ist1;
+Query2/ProtocolInit2 und Datensatzrevisionen sind getrennte Identitaeten.
+Groesse und Nullwert werden pro Callback geprueft. Ungueltiges Neubinden und
+secure_random.Provider.bind(.{}) loeschen die gespeicherten Funktionen.
+Fehlgeschlagener Start und
+terminaler Shutdown des Protokolls muessen diese Bindung beenden.
+r4dev.ProtocolContext2 prueft denselben echten Tabellenkopf und benoetigte
+Slots vor Allokation oder Veroeffentlichung. Er erzeugt keine alte Tabelle.
+Optionale CPU-Arbeit braucht unveraendert eine echte Freigabe pro Aufruf;
+Zeitwerte, gespeicherte CPU-Masken und Callbacknamen ersetzen diese nicht.
+Die compilerabgeleiteten Datenhelfer werden bei neuen oeffentlichen
+Entropiehelfern gemeinsam neu erzeugt; ihr Fingerprint wird nicht umgangen.
+
 Seit Kernel0.1.305 sind die alten untypisierten Audio-/Synth-Anmeldeslots
 reserviert: immer-1, ohne Argumentzugriff oder Seiteneffekt. Der SDK-Helper
 registerSynthEngine entfaellt; registerSynthEngineEx und die typisierten

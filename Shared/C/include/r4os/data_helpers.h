@@ -563,7 +563,7 @@ typedef struct R4SdkDataNative_Value185 { _Alignas(1) uint8_t opaque_bytes[2]; }
 /* *const r4u_artifact.Identity; native size 8, alignment 8. */
 typedef struct R4SdkDataNative_Value186 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkDataNative_Value186;
 #define R4SdkDataNative_Value186_TYPE 186u
-#define R4SdkData_ABI_FINGERPRINT UINT64_C(10602740399689007244)
+#define R4SdkData_ABI_FINGERPRINT UINT64_C(7347244320787593821)
 int32_t R4SdkDataVerifyAbi(uint64_t);
 static const uint8_t R4SdkDataJson_CONST_role[] = {102,111,114,109,97,116,46,106,115,111,110,0};
 static inline R4SdkDataSlot R4SdkDataJson_constant_role(void) { return (R4SdkDataSlot){.ptr=(void *)R4SdkDataJson_CONST_role,.length=11,.flags=1u}; }
@@ -1569,24 +1569,30 @@ static inline R4SdkDataSlot R4SdkDataRasterImage_resize(uint32_t reserved, R4Sdk
  a[3] = (R4SdkDataSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDKDATA_PRESENT};
  return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,122u,a,4u,0);
 }
+/* secure_random.Provider.bind -> void */
+static inline R4SdkDataSlot R4SdkDataRandomProvider_bind(uint32_t reserved, const R4SdkDataRandomProvider * p0) {
+ (void)reserved; R4SdkDataSlot a[1]={0};
+ a[0] = (R4SdkDataSlot){.ptr=(void *)p0,.flags=R4SDKDATA_PRESENT};
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,123u,a,1u,0);
+}
 /* secure_random.Provider.available -> bool */
 static inline R4SdkDataSlot R4SdkDataRandomProvider_available(uint32_t reserved, const R4SdkDataRandomProvider * p0) {
  (void)reserved; R4SdkDataSlot a[1]={0};
  a[0] = (R4SdkDataSlot){.ptr=(void *)p0,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,123u,a,1u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,124u,a,1u,0);
 }
 /* secure_random.Provider.fill -> bool */
 static inline R4SdkDataSlot R4SdkDataRandomProvider_fill(uint32_t reserved, const R4SdkDataRandomProvider * p0, uint8_t * p1, uintptr_t n1) {
  (void)reserved; R4SdkDataSlot a[2]={0};
  a[0] = (R4SdkDataSlot){.ptr=(void *)p0,.flags=R4SDKDATA_PRESENT};
  a[1] = (R4SdkDataSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,124u,a,2u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,125u,a,2u,0);
 }
 /* cpu_memory.Policy.fromInfo -> cpu_memory.Policy */
 static inline R4SdkDataSlot R4SdkDataMemoryPolicy_fromInfo(uint32_t reserved, const R4CpuAccelerationInfo * p0, R4SdkDataMemoryPolicy *output) {
  (void)reserved; R4SdkDataSlot a[1]={0};
  a[0] = (R4SdkDataSlot){.ptr=(void *)p0,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,125u,a,1u,output);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,126u,a,1u,output);
 }
 /* cpu_memory.Policy.move -> void */
 static inline R4SdkDataSlot R4SdkDataMemoryPolicy_move(uint32_t reserved, const R4SdkDataMemoryPolicy * p0, uint8_t * p1, uintptr_t n1, const uint8_t * p2, uintptr_t n2) {
@@ -1594,13 +1600,13 @@ static inline R4SdkDataSlot R4SdkDataMemoryPolicy_move(uint32_t reserved, const 
  a[0] = (R4SdkDataSlot){.ptr=(void *)p0,.flags=R4SDKDATA_PRESENT};
  a[1] = (R4SdkDataSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDKDATA_PRESENT};
  a[2] = (R4SdkDataSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,126u,a,3u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,127u,a,3u,0);
 }
 /* web_encoding.Encoding.name -> []const u8 */
 static inline R4SdkDataSlot R4SdkDataEncodingEncoding_name(uint32_t reserved, uint32_t p0) {
  (void)reserved; R4SdkDataSlot a[1]={0};
  a[0] = (R4SdkDataSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,127u,a,1u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,128u,a,1u,0);
 }
 /* web_encoding.Decoder.init -> web_encoding.Decoder */
 static inline R4SdkDataSlot R4SdkDataEncodingDecoder_init(uint32_t reserved, uint32_t p0, uint8_t p1, uint8_t p2, R4SdkDataEncodingDecoder *output) {
@@ -1608,19 +1614,19 @@ static inline R4SdkDataSlot R4SdkDataEncodingDecoder_init(uint32_t reserved, uin
  a[0] = (R4SdkDataSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKDATA_PRESENT};
  a[1] = (R4SdkDataSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKDATA_PRESENT};
  a[2] = (R4SdkDataSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,128u,a,3u,output);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,129u,a,3u,output);
 }
 /* web_encoding.Decoder.packState -> u64 */
 static inline R4SdkDataSlot R4SdkDataEncodingDecoder_packState(uint32_t reserved, const R4SdkDataEncodingDecoder * p0) {
  (void)reserved; R4SdkDataSlot a[1]={0};
  a[0] = (R4SdkDataSlot){.ptr=(void *)p0,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,129u,a,1u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,130u,a,1u,0);
 }
 /* web_encoding.Decoder.fromPackedState -> web_encoding.Decoder */
 static inline R4SdkDataSlot R4SdkDataEncodingDecoder_fromPackedState(uint32_t reserved, uint64_t p0, R4SdkDataEncodingDecoder *output) {
  (void)reserved; R4SdkDataSlot a[1]={0};
  a[0] = (R4SdkDataSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,130u,a,1u,output);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,131u,a,1u,output);
 }
 /* web_encoding.Decoder.decode -> error{InputTooLarge,InvalidSequence,OutputTooSmall,UnknownEncoding}![]const u8 */
 static inline R4SdkDataSlot R4SdkDataEncodingDecoder_decode(uint32_t reserved, R4SdkDataEncodingDecoder * p0, const uint8_t * p1, uintptr_t n1, uint8_t * p2, uintptr_t n2, uint8_t p3) {
@@ -1629,34 +1635,34 @@ static inline R4SdkDataSlot R4SdkDataEncodingDecoder_decode(uint32_t reserved, R
  a[1] = (R4SdkDataSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDKDATA_PRESENT};
  a[2] = (R4SdkDataSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDKDATA_PRESENT};
  a[3] = (R4SdkDataSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,131u,a,4u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,132u,a,4u,0);
 }
 /* web_url.SearchParams.init -> error{InvalidUrl,PairLimit,TooLong}!web_url.SearchParams */
 static inline R4SdkDataSlot R4SdkDataUrlSearchParams_init(uint32_t reserved, const uint8_t * p0, uintptr_t n0, R4SdkDataUrlSearchParams *output) {
  (void)reserved; R4SdkDataSlot a[1]={0};
  a[0] = (R4SdkDataSlot){.ptr=(void *)p0,.length=n0,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,132u,a,1u,output);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,133u,a,1u,output);
 }
 /* web_url.SearchParams.replace -> error{InvalidUrl,PairLimit,TooLong}!void */
 static inline R4SdkDataSlot R4SdkDataUrlSearchParams_replace(uint32_t reserved, R4SdkDataUrlSearchParams * p0, const uint8_t * p1, uintptr_t n1) {
  (void)reserved; R4SdkDataSlot a[2]={0};
  a[0] = (R4SdkDataSlot){.ptr=(void *)p0,.flags=R4SDKDATA_PRESENT};
  a[1] = (R4SdkDataSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,133u,a,2u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,134u,a,2u,0);
 }
 /* web_url.SearchParams.name -> []const u8 */
 static inline R4SdkDataSlot R4SdkDataUrlSearchParams_name(uint32_t reserved, const R4SdkDataUrlSearchParams * p0, uint64_t p1) {
  (void)reserved; R4SdkDataSlot a[2]={0};
  a[0] = (R4SdkDataSlot){.ptr=(void *)p0,.flags=R4SDKDATA_PRESENT};
  a[1] = (R4SdkDataSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,134u,a,2u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,135u,a,2u,0);
 }
 /* web_url.SearchParams.value -> []const u8 */
 static inline R4SdkDataSlot R4SdkDataUrlSearchParams_value(uint32_t reserved, const R4SdkDataUrlSearchParams * p0, uint64_t p1) {
  (void)reserved; R4SdkDataSlot a[2]={0};
  a[0] = (R4SdkDataSlot){.ptr=(void *)p0,.flags=R4SDKDATA_PRESENT};
  a[1] = (R4SdkDataSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,135u,a,2u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,136u,a,2u,0);
 }
 /* web_url.SearchParams.append -> error{InvalidUrl,PairLimit,TooLong}!void */
 static inline R4SdkDataSlot R4SdkDataUrlSearchParams_append(uint32_t reserved, R4SdkDataUrlSearchParams * p0, const uint8_t * p1, uintptr_t n1, const uint8_t * p2, uintptr_t n2) {
@@ -1664,14 +1670,14 @@ static inline R4SdkDataSlot R4SdkDataUrlSearchParams_append(uint32_t reserved, R
  a[0] = (R4SdkDataSlot){.ptr=(void *)p0,.flags=R4SDKDATA_PRESENT};
  a[1] = (R4SdkDataSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDKDATA_PRESENT};
  a[2] = (R4SdkDataSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,136u,a,3u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,137u,a,3u,0);
 }
 /* web_url.SearchParams.get -> ?[]const u8 */
 static inline R4SdkDataSlot R4SdkDataUrlSearchParams_get(uint32_t reserved, const R4SdkDataUrlSearchParams * p0, const uint8_t * p1, uintptr_t n1) {
  (void)reserved; R4SdkDataSlot a[2]={0};
  a[0] = (R4SdkDataSlot){.ptr=(void *)p0,.flags=R4SDKDATA_PRESENT};
  a[1] = (R4SdkDataSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,137u,a,2u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,138u,a,2u,0);
 }
 /* web_url.SearchParams.has -> bool */
 static inline R4SdkDataSlot R4SdkDataUrlSearchParams_has(uint32_t reserved, const R4SdkDataUrlSearchParams * p0, const uint8_t * p1, uintptr_t n1, R4SdkDataSlot p2) {
@@ -1679,7 +1685,7 @@ static inline R4SdkDataSlot R4SdkDataUrlSearchParams_has(uint32_t reserved, cons
  a[0] = (R4SdkDataSlot){.ptr=(void *)p0,.flags=R4SDKDATA_PRESENT};
  a[1] = (R4SdkDataSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDKDATA_PRESENT};
  a[2] = p2;
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,138u,a,3u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,139u,a,3u,0);
 }
 /* web_url.SearchParams.delete -> void */
 static inline R4SdkDataSlot R4SdkDataUrlSearchParams_delete(uint32_t reserved, R4SdkDataUrlSearchParams * p0, const uint8_t * p1, uintptr_t n1, R4SdkDataSlot p2) {
@@ -1687,7 +1693,7 @@ static inline R4SdkDataSlot R4SdkDataUrlSearchParams_delete(uint32_t reserved, R
  a[0] = (R4SdkDataSlot){.ptr=(void *)p0,.flags=R4SDKDATA_PRESENT};
  a[1] = (R4SdkDataSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDKDATA_PRESENT};
  a[2] = p2;
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,139u,a,3u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,140u,a,3u,0);
 }
 /* web_url.SearchParams.set -> error{InvalidUrl,PairLimit,TooLong}!void */
 static inline R4SdkDataSlot R4SdkDataUrlSearchParams_set(uint32_t reserved, R4SdkDataUrlSearchParams * p0, const uint8_t * p1, uintptr_t n1, const uint8_t * p2, uintptr_t n2) {
@@ -1695,177 +1701,177 @@ static inline R4SdkDataSlot R4SdkDataUrlSearchParams_set(uint32_t reserved, R4Sd
  a[0] = (R4SdkDataSlot){.ptr=(void *)p0,.flags=R4SDKDATA_PRESENT};
  a[1] = (R4SdkDataSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDKDATA_PRESENT};
  a[2] = (R4SdkDataSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,140u,a,3u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,141u,a,3u,0);
 }
 /* web_url.SearchParams.sort -> void */
 static inline R4SdkDataSlot R4SdkDataUrlSearchParams_sort(uint32_t reserved, R4SdkDataUrlSearchParams * p0) {
  (void)reserved; R4SdkDataSlot a[1]={0};
  a[0] = (R4SdkDataSlot){.ptr=(void *)p0,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,141u,a,1u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,142u,a,1u,0);
 }
 /* web_url.SearchParams.serialize -> error{InvalidUrl,PairLimit,TooLong}![]const u8 */
 static inline R4SdkDataSlot R4SdkDataUrlSearchParams_serialize(uint32_t reserved, const R4SdkDataUrlSearchParams * p0, uint8_t * p1, uintptr_t n1) {
  (void)reserved; R4SdkDataSlot a[2]={0};
  a[0] = (R4SdkDataSlot){.ptr=(void *)p0,.flags=R4SDKDATA_PRESENT};
  a[1] = (R4SdkDataSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,142u,a,2u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,143u,a,2u,0);
 }
 /* r4cp.Project.sources -> []const r4cp.Item */
 static inline R4SdkDataSlot R4SdkDataProjectProject_sources(uint32_t reserved, const R4SdkDataProjectProject * p0) {
  (void)reserved; R4SdkDataSlot a[1]={0};
  a[0] = (R4SdkDataSlot){.ptr=(void *)p0,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,143u,a,1u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,144u,a,1u,0);
 }
 /* r4cp.Project.imports -> []const r4cp.Item */
 static inline R4SdkDataSlot R4SdkDataProjectProject_imports(uint32_t reserved, const R4SdkDataProjectProject * p0) {
  (void)reserved; R4SdkDataSlot a[1]={0};
  a[0] = (R4SdkDataSlot){.ptr=(void *)p0,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,144u,a,1u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,145u,a,1u,0);
 }
 /* r4cp.Project.exports -> []const r4cp.Item */
 static inline R4SdkDataSlot R4SdkDataProjectProject_exports(uint32_t reserved, const R4SdkDataProjectProject * p0) {
  (void)reserved; R4SdkDataSlot a[1]={0};
  a[0] = (R4SdkDataSlot){.ptr=(void *)p0,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,145u,a,1u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,146u,a,1u,0);
 }
 /* r4cp.Project.metadata -> []const r4cp.Item */
 static inline R4SdkDataSlot R4SdkDataProjectProject_metadata(uint32_t reserved, const R4SdkDataProjectProject * p0) {
  (void)reserved; R4SdkDataSlot a[1]={0};
  a[0] = (R4SdkDataSlot){.ptr=(void *)p0,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,146u,a,1u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,147u,a,1u,0);
 }
 /* r4cp.Project.contracts -> []const r4cp.Item */
 static inline R4SdkDataSlot R4SdkDataProjectProject_contracts(uint32_t reserved, const R4SdkDataProjectProject * p0) {
  (void)reserved; R4SdkDataSlot a[1]={0};
  a[0] = (R4SdkDataSlot){.ptr=(void *)p0,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,147u,a,1u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,148u,a,1u,0);
 }
 /* r4cp.Project.hasR4XStart -> bool */
 static inline R4SdkDataSlot R4SdkDataProjectProject_hasR4XStart(uint32_t reserved, const R4SdkDataProjectProject * p0) {
  (void)reserved; R4SdkDataSlot a[1]={0};
  a[0] = (R4SdkDataSlot){.ptr=(void *)p0,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,148u,a,1u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,149u,a,1u,0);
 }
 /* r4cp.Project.profileClass -> ?r4cp.ProfileClass */
 static inline R4SdkDataSlot R4SdkDataProjectProject_profileClass(uint32_t reserved, const R4SdkDataProjectProject * p0) {
  (void)reserved; R4SdkDataSlot a[1]={0};
  a[0] = (R4SdkDataSlot){.ptr=(void *)p0,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,149u,a,1u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,150u,a,1u,0);
 }
 /* r4cp_convert.Result.ok -> bool */
 static inline R4SdkDataSlot R4SdkDataProjectConvertResult_ok(uint32_t reserved, const R4SdkDataProjectConvertResult * p0) {
  (void)reserved; R4SdkDataSlot a[1]={0};
  a[0] = (R4SdkDataSlot){.ptr=(void *)p0,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,150u,a,1u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,151u,a,1u,0);
 }
 /* module_manifest.Kind.text -> []const u8 */
 static inline R4SdkDataSlot R4SdkDataManifestKind_text(uint32_t reserved, uint32_t p0) {
  (void)reserved; R4SdkDataSlot a[1]={0};
  a[0] = (R4SdkDataSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,151u,a,1u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,152u,a,1u,0);
 }
 /* module_manifest.Language.text -> []const u8 */
 static inline R4SdkDataSlot R4SdkDataManifestLanguage_text(uint32_t reserved, uint32_t p0) {
  (void)reserved; R4SdkDataSlot a[1]={0};
  a[0] = (R4SdkDataSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,152u,a,1u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,153u,a,1u,0);
 }
 /* module_manifest.AppClass.text -> []const u8 */
 static inline R4SdkDataSlot R4SdkDataManifestAppClass_text(uint32_t reserved, uint32_t p0) {
  (void)reserved; R4SdkDataSlot a[1]={0};
  a[0] = (R4SdkDataSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,153u,a,1u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,154u,a,1u,0);
 }
 /* module_manifest.EntryMode.text -> []const u8 */
 static inline R4SdkDataSlot R4SdkDataManifestEntryMode_text(uint32_t reserved, uint32_t p0) {
  (void)reserved; R4SdkDataSlot a[1]={0};
  a[0] = (R4SdkDataSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,154u,a,1u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,155u,a,1u,0);
 }
 /* module_manifest.ImageScope.text -> []const u8 */
 static inline R4SdkDataSlot R4SdkDataManifestImageScope_text(uint32_t reserved, uint32_t p0) {
  (void)reserved; R4SdkDataSlot a[1]={0};
  a[0] = (R4SdkDataSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,155u,a,1u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,156u,a,1u,0);
 }
 /* module_manifest.Optimization.text -> []const u8 */
 static inline R4SdkDataSlot R4SdkDataManifestOptimization_text(uint32_t reserved, uint32_t p0) {
  (void)reserved; R4SdkDataSlot a[1]={0};
  a[0] = (R4SdkDataSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,156u,a,1u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,157u,a,1u,0);
 }
 /* module_manifest.ModuleRole.text -> []const u8 */
 static inline R4SdkDataSlot R4SdkDataManifestModuleRole_text(uint32_t reserved, uint32_t p0) {
  (void)reserved; R4SdkDataSlot a[1]={0};
  a[0] = (R4SdkDataSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,157u,a,1u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,158u,a,1u,0);
 }
 /* version_info.SemanticVersion.eql -> bool */
 static inline R4SdkDataSlot R4SdkDataVersionSemanticVersion_eql(uint32_t reserved, const R4SdkDataVersionSemanticVersion * p0, const R4SdkDataVersionSemanticVersion * p1) {
  (void)reserved; R4SdkDataSlot a[2]={0};
  a[0] = (R4SdkDataSlot){.ptr=(void *)p0,.flags=R4SDKDATA_PRESENT};
  a[1] = (R4SdkDataSlot){.ptr=(void *)p1,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,158u,a,2u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,159u,a,2u,0);
 }
 /* r4u_manifest.ComponentKind.text -> []const u8 */
 static inline R4SdkDataSlot R4SdkDataUpdateMetadataComponentKind_text(uint32_t reserved, uint32_t p0) {
  (void)reserved; R4SdkDataSlot a[1]={0};
  a[0] = (R4SdkDataSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,159u,a,1u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,160u,a,1u,0);
 }
 /* r4u_manifest.ComponentKind.parse -> ?r4u_manifest.ComponentKind */
 static inline R4SdkDataSlot R4SdkDataUpdateMetadataComponentKind_parse(uint32_t reserved, const uint8_t * p0, uintptr_t n0) {
  (void)reserved; R4SdkDataSlot a[1]={0};
  a[0] = (R4SdkDataSlot){.ptr=(void *)p0,.length=n0,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,160u,a,1u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,161u,a,1u,0);
 }
 /* r4u_manifest.InstallMode.text -> []const u8 */
 static inline R4SdkDataSlot R4SdkDataUpdateMetadataInstallMode_text(uint32_t reserved, uint32_t p0) {
  (void)reserved; R4SdkDataSlot a[1]={0};
  a[0] = (R4SdkDataSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,161u,a,1u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,162u,a,1u,0);
 }
 /* r4u_manifest.InstallMode.parse -> ?r4u_manifest.InstallMode */
 static inline R4SdkDataSlot R4SdkDataUpdateMetadataInstallMode_parse(uint32_t reserved, const uint8_t * p0, uintptr_t n0) {
  (void)reserved; R4SdkDataSlot a[1]={0};
  a[0] = (R4SdkDataSlot){.ptr=(void *)p0,.length=n0,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,162u,a,1u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,163u,a,1u,0);
 }
 /* r4u_manifest.Priority.text -> []const u8 */
 static inline R4SdkDataSlot R4SdkDataUpdateMetadataPriority_text(uint32_t reserved, uint32_t p0) {
  (void)reserved; R4SdkDataSlot a[1]={0};
  a[0] = (R4SdkDataSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,163u,a,1u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,164u,a,1u,0);
 }
 /* r4u_manifest.Priority.parse -> ?r4u_manifest.Priority */
 static inline R4SdkDataSlot R4SdkDataUpdateMetadataPriority_parse(uint32_t reserved, const uint8_t * p0, uintptr_t n0) {
  (void)reserved; R4SdkDataSlot a[1]={0};
  a[0] = (R4SdkDataSlot){.ptr=(void *)p0,.length=n0,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,164u,a,1u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,165u,a,1u,0);
 }
 /* r4u_manifest.RequirementState.text -> []const u8 */
 static inline R4SdkDataSlot R4SdkDataUpdateMetadataRequirementState_text(uint32_t reserved, uint32_t p0) {
  (void)reserved; R4SdkDataSlot a[1]={0};
  a[0] = (R4SdkDataSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,165u,a,1u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,166u,a,1u,0);
 }
 /* r4u_manifest.RequirementState.parse -> ?r4u_manifest.RequirementState */
 static inline R4SdkDataSlot R4SdkDataUpdateMetadataRequirementState_parse(uint32_t reserved, const uint8_t * p0, uintptr_t n0) {
  (void)reserved; R4SdkDataSlot a[1]={0};
  a[0] = (R4SdkDataSlot){.ptr=(void *)p0,.length=n0,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,166u,a,1u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,167u,a,1u,0);
 }
 /* r4u_artifact.Identity.nameText -> []const u8 */
 static inline R4SdkDataSlot R4SdkDataArtifactIdentity_nameText(uint32_t reserved, const R4SdkDataArtifactIdentity * p0) {
  (void)reserved; R4SdkDataSlot a[1]={0};
  a[0] = (R4SdkDataSlot){.ptr=(void *)p0,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,167u,a,1u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,168u,a,1u,0);
 }
 /* r4u_artifact.Identity.versionText -> []const u8 */
 static inline R4SdkDataSlot R4SdkDataArtifactIdentity_versionText(uint32_t reserved, const R4SdkDataArtifactIdentity * p0) {
  (void)reserved; R4SdkDataSlot a[1]={0};
  a[0] = (R4SdkDataSlot){.ptr=(void *)p0,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,168u,a,1u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,169u,a,1u,0);
 }
 /* r4u_artifact.SliceReader.readAt -> bool */
 static inline R4SdkDataSlot R4SdkDataArtifactSliceReader_readAt(uint32_t reserved, const R4SdkDataArtifactSliceReader * p0, uint64_t p1, uint8_t * p2, uintptr_t n2) {
@@ -1873,7 +1879,7 @@ static inline R4SdkDataSlot R4SdkDataArtifactSliceReader_readAt(uint32_t reserve
  a[0] = (R4SdkDataSlot){.ptr=(void *)p0,.flags=R4SDKDATA_PRESENT};
  a[1] = (R4SdkDataSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKDATA_PRESENT};
  a[2] = (R4SdkDataSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,169u,a,3u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,170u,a,3u,0);
 }
 /* data_helper_adapters.Reader.readAt -> bool */
 static inline R4SdkDataSlot R4SdkDataReader_readAt(uint32_t reserved, const R4SdkDataReader * p0, uint64_t p1, uint8_t * p2, uintptr_t n2) {
@@ -1881,7 +1887,7 @@ static inline R4SdkDataSlot R4SdkDataReader_readAt(uint32_t reserved, const R4Sd
  a[0] = (R4SdkDataSlot){.ptr=(void *)p0,.flags=R4SDKDATA_PRESENT};
  a[1] = (R4SdkDataSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKDATA_PRESENT};
  a[2] = (R4SdkDataSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDKDATA_PRESENT};
- return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,170u,a,3u,0);
+ return R4SdkDataInvoke(R4SdkData_ABI_FINGERPRINT,171u,a,3u,0);
 }
 static inline R4SdkDataSlot R4SdkDataJsonToken_create(R4SdkDataJsonToken *output, uint32_t p0) { R4SdkDataSlot a[1]={0};
  a[0] = (R4SdkDataSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKDATA_PRESENT};
