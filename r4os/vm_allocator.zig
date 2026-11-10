@@ -195,7 +195,7 @@ const DirectActivation = struct {
 
 var state: State = .{};
 
-const vtable = AllocatorContext(false).vtable;
+const vtable = AllocatorContext(.default).vtable;
 
 /// Caller-owned VM heap for shared runtime libraries. Keep this object at a
 /// stable address until every allocation and concurrent caller has retired.
@@ -205,7 +205,7 @@ pub const Heap = struct {
     storage: State = .{},
 
     pub fn allocator(self: *Heap) std.mem.Allocator {
-        return .{ .ptr = self, .vtable = &AllocatorContext(true).vtable };
+        return .{ .ptr = self, .vtable = &AllocatorContext(.legacy).vtable };
     }
     pub fn stats(self: *Heap) Stats {
         return stateStats(&self.storage);
@@ -215,7 +215,29 @@ pub const Heap = struct {
     }
 };
 
-fn AllocatorContext(comptime explicit: bool) type {
+/// An explicit shared-library heap whose callbacks were admitted from the
+/// actual Context2. The copied mapping and all heap metadata belong to this
+/// stable object; no caller stack or fabricated legacy table is retained.
+pub const MappedHeap = struct {
+    memory: allocator_source.Memory,
+    storage: State = .{},
+
+    pub fn init(self: *MappedHeap, table: *const @import("r4os_contract2").R4XStartR4Sys2) void {
+        self.* = .{ .memory = allocator_source.Memory.fromSystem2(table) };
+    }
+
+    pub fn allocator(self: *MappedHeap) std.mem.Allocator {
+        return .{ .ptr = self, .vtable = &AllocatorContext(.mapped).vtable };
+    }
+    pub fn stats(self: *MappedHeap) Stats {
+        return stateStats(&self.storage);
+    }
+    pub fn trim(self: *MappedHeap) void {
+        stateTrim(&self.storage, &self.memory);
+    }
+};
+
+fn AllocatorContext(comptime explicit: enum { default, legacy, mapped }) type {
     return struct {
         const vtable: std.mem.Allocator.VTable = .{
             .alloc = alloc,
@@ -224,16 +246,21 @@ fn AllocatorContext(comptime explicit: bool) type {
             .free = free,
         };
         fn storage(ptr: *anyopaque) *State {
-            if (explicit) {
-                const value: *Heap = @ptrCast(@alignCast(ptr));
+            if (explicit != .default) {
+                const Owner = if (explicit == .legacy) Heap else MappedHeap;
+                const value: *Owner = @ptrCast(@alignCast(ptr));
                 return &value.storage;
             }
             return &state;
         }
         fn api(ptr: *anyopaque) *anyopaque {
-            if (explicit) {
+            if (explicit == .legacy) {
                 const value: *Heap = @ptrCast(@alignCast(ptr));
                 return @constCast(value.api);
+            }
+            if (explicit == .mapped) {
+                const value: *MappedHeap = @ptrCast(@alignCast(ptr));
+                return Source.mapped(&value.memory).toOpaque();
             }
             return ptr;
         }
@@ -1805,6 +1832,42 @@ test "explicit VM heaps keep allocation state separate from each other and the R
     try std.testing.expectEqual(@as(u8, 0xA5), memory[127]);
     a1.free(memory);
     try std.testing.expectEqual(@as(u64, 0), first.stats().active_allocations);
+}
+
+test "mapped VM heaps own generation2 callbacks and independent stable state" {
+    resetTestVm();
+    const a2 = @import("r4os_contract2");
+    var sys: a2.R4XStartR4Sys2 = .{};
+    inline for (.{ "vm_reserve", "vm_commit", "vm_decommit", "vm_release" }) |field|
+        @field(sys, field) = @field(test_vm_table, field);
+    var first: MappedHeap = undefined;
+    var second: MappedHeap = undefined;
+    first.init(&sys);
+    second.init(&sys);
+    // Keep only the mapped callbacks. No caller table or context is retained.
+    sys.magic = 0;
+    sys.vm_reserve = 0;
+    sys.vm_commit = 0;
+    sys.vm_decommit = 0;
+    sys.vm_release = 0;
+    const a1 = first.allocator();
+    const memory = try a1.alloc(u8, 257);
+    @memset(memory, 0x93);
+    try std.testing.expectError(error.OutOfMemory, second.allocator().alloc(u8, 64));
+    try std.testing.expectEqual(@as(u64, 1), first.stats().active_allocations);
+    try std.testing.expectEqual(@as(u64, 0), second.stats().active_allocations);
+    try std.testing.expectEqual(@as(u64, 1), second.stats().allocation_errors);
+    try std.testing.expectEqual(@as(u64, 0), stats().active_allocations);
+    try std.testing.expectEqual(@as(u8, 0x93), memory[256]);
+    a1.free(memory);
+    first.trim();
+    try std.testing.expectEqual(@as(u64, 0), first.stats().active_allocations);
+    try std.testing.expect(test_vm_reserve_calls > 0 and test_vm_commit_calls > 0);
+    var short: a2.R4XStartR4Sys2 = .{ .size = 16 };
+    var invalid: MappedHeap = undefined;
+    invalid.init(&short);
+    try std.testing.expectError(error.OutOfMemory, invalid.allocator().alloc(u8, 64));
+    try std.testing.expectEqual(@as(u64, 0), invalid.stats().active_allocations);
 }
 
 test "VM owner records the simultaneous active peak between stats calls" {

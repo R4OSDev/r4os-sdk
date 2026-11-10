@@ -21,7 +21,7 @@ static inline int r4draw_available(const R4Draw *value) {
 static inline int r4draw_reaches(const R4Draw *value, size_t offset1, uint32_t offset2) {
     if (!value) return 0;
     if (value->generation2) {
-        const R4XStartR4Draw2 *table = R4OS2ContextGroup(value->generation2, 3);
+        const R4XStartR4Draw2 *table = (const R4XStartR4Draw2 *)R4OS2ContextGroup(value->generation2, 3);
         return table && offset2 <= table->size && sizeof(uintptr_t) <= table->size - offset2;
     }
     return value->table && offset1 <= value->table->size && sizeof(uintptr_t) <= value->table->size - offset1;

@@ -3,6 +3,7 @@
 //! neither a Query1 table nor an owner, allocator or registry of its own.
 const std = @import("std");
 const abi = @import("r4os_contract").abi;
+const abi2 = @import("r4os_contract2");
 
 pub const Memory = extern struct {
     version: u32 = 1,
@@ -30,14 +31,22 @@ pub const Memory = extern struct {
     }
 
     pub fn fromContext2(context: anytype) Memory {
+        return fromSystem2(context.system() orelse return .{});
+    }
+
+    /// Shared native libraries may retain the immutable actual SYS2 table,
+    /// independently of the caller's temporary Context2 view.
+    pub fn fromSystem2(table: *const abi2.R4XStartR4Sys2) Memory {
         var out: Memory = .{};
-        const table = context.system() orelse return out;
         const Table = @TypeOf(table.*);
+        const expected: Table = .{};
+        if (table.magic != expected.magic or table.abi_version < 1 or table.size < 16) return out;
         out.identity = @intFromPtr(table);
         inline for (std.meta.fields(Memory)) |field| {
             if (comptime @hasDecl(abi.R4SysFns, field.name) and @hasField(Table, field.name)) {
-                var address: u64 = 0;
-                if (context.lookup(1, @offsetOf(Table, field.name), &address) == 0) @field(out, field.name) = address;
+                const offset = @offsetOf(Table, field.name);
+                if (offset + 8 <= table.size and @addWithOverflow(@intFromPtr(table), offset + 8)[1] == 0)
+                    @field(out, field.name) = @field(table.*, field.name);
             }
         }
         return out;

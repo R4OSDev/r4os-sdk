@@ -137,15 +137,15 @@
     },
     "libraries": {
       "repository": "https://github.com/R4OSDev/r4os-libraries.git",
-      "commit": "a807d24f9ebc471a26594ff35c5996540cc05af3",
-      "version": "0.64.53",
+      "commit": "340f5400319afda7282c5945209863b977848c47",
+      "version": "0.64.54",
       "files": {
-        "build.zig.zon": "8a2c5aeeb5051c334fc761a75d9d7741f26ef840815edc97c47813c217c98b4f",
+        "build.zig.zon": "7ad34fe873ecbf7e1c23169fa66521af2d892fa10beca0c8d55e365a515fdec3",
         "Shared/Rust/Cargo.toml": "431c38bac8b28467b0dad7842d1626397bb061eeb94f54f604276dc81036aec4"
       },
       "tree": {
         "algorithm": "r4os-files-sha256-lf-v1",
-        "sha256": "4f822acf91e36024efc965fc39c06d5b3d3a31bdde0af5d6595e5ff765c3a85f",
+        "sha256": "4edf4a664fc5eb9e122e07642e0e76664811c2fb5996707261143e10a1499c77",
         "files": [
           ".gitattributes",
           ".gitignore",
@@ -2542,6 +2542,7 @@
           "Shared/Native/c_runtime.h",
           "Shared/Native/cache_codec.zig",
           "Shared/Native/calendar.zig",
+          "Shared/Native/caller.zig",
           "Shared/Native/cpp.cpp",
           "Shared/Native/cpp_runtime.h",
           "Shared/Native/errno.c",
@@ -2562,6 +2563,7 @@
           "Shared/Native/sort.c",
           "Shared/Native/stdio.c",
           "Shared/Native/string.c",
+          "Shared/Native/system.zig",
           "Shared/Native/system_info.zig",
           "Shared/Native/thread_lifecycle.zig",
           "Shared/Native/thread_local.zig",
@@ -2602,8 +2604,8 @@
           "consumer_oracles.zig"
         ]
       },
-      "zig_hash": "r4os_libraries-0.64.53-dH4fNclyeQNBXgt-UY1b5PnN50n1DPI4XaHMo139moyl",
-      "archive_url": "https://github.com/R4OSDev/r4os-libraries/archive/a807d24f9ebc471a26594ff35c5996540cc05af3.tar.gz",
+      "zig_hash": "r4os_libraries-0.64.54-dH4fNSXHeQMLL9glOGBbH5Qf__BWC73WRpGQJ2g1fCfp",
+      "archive_url": "https://github.com/R4OSDev/r4os-libraries/archive/340f5400319afda7282c5945209863b977848c47.tar.gz",
       "archive_format": "tar.gz"
     },
     "recovery-contract": {
@@ -3060,17 +3062,17 @@
       "name": "R4GFX",
       "repository": "libraries",
       "path": "R4GFX",
-      "version": "0.1.39",
+      "version": "0.1.40",
       "target": "/R4OS/LIBS/R4GFX.R4L",
-      "manifest_sha256": "ea88c42d2e985c1e54f3c1d6d2b40cdd3edd3fabfd7dfbe87f8bac21cc1a15c3"
+      "manifest_sha256": "2b1008bc201422e45f41137155a8e143ed4a11187680bccb54d36cf112c3401a"
     },
     "r4gl": {
       "name": "R4GL",
       "repository": "libraries",
       "path": "R4GL",
-      "version": "0.1.33",
+      "version": "0.1.34",
       "target": "/R4OS/LIBS/R4GL.R4L",
-      "manifest_sha256": "77db65031d77422ed2f74c8e2b3732a9d8217588ecfea823777b7ef7f5e04cfd"
+      "manifest_sha256": "821f977920580131b28c1ea0042e946b178d48fa88db122b7e3b89f77bfd3852"
     },
     "r4img": {
       "name": "R4IMG",
@@ -3116,9 +3118,9 @@
       "name": "R4VK",
       "repository": "libraries",
       "path": "R4VK",
-      "version": "0.1.44",
+      "version": "0.1.45",
       "target": "/R4OS/LIBS/R4VK.R4L",
-      "manifest_sha256": "cec057fba4e19eb2b7e97836488c00efb872be5a76e7edb9fd1d94b7c8adabd5"
+      "manifest_sha256": "5c4407e4a4a6cd8b58d71c83336089295a303a5e03a8c51333aecd023bed3066"
     }
   },
   "sets": {

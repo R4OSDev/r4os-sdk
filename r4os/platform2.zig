@@ -4,9 +4,20 @@ const std = @import("std");
 pub const abi = @import("r4os_contract2");
 pub const Error = error{ InvalidContext, InvalidImports, MixedGeneration, DuplicateGroup, MissingSystem, InvalidTable };
 
+/// SDK C-facing view. Context's native Zig layout is never exposed through
+/// FFI; this explicit projection borrows the same resident start/import data.
+pub const CView = extern struct {
+    raw: *const abi.R4XStartContext2,
+    tables: [6]u64,
+};
+
 pub const Context = struct {
     raw: *const abi.R4XStartContext2,
     tables: [6]u64 = @splat(0),
+
+    pub fn cView(self: *const Context) CView {
+        return .{ .raw = self.raw, .tables = self.tables };
+    }
 
     pub fn init(raw: *const abi.R4XStartContext2) Error!Context {
         if (raw.magic != abi.start_magic or raw.abi_major != 2 or raw.size < @sizeOf(abi.R4XStartContext2)) return error.InvalidContext;
@@ -117,6 +128,15 @@ test "platform2 lookup distinguishes missing groups and functions without changi
     var rows = [_]abi.R4XStartImport{.{ .group_id = 1, .resolved_version = 2, .table = @intFromPtr(&sys) }};
     const raw: abi.R4XStartContext2 = .{ .imports = @intFromPtr(&rows), .import_count = 1 };
     const context = try Context.init(&raw);
+    // The C ABI projection has an explicit layout. Native Context is free to
+    // use Zig's own field order; exporting a pointer to it would be invalid.
+    try std.testing.expectEqual(@as(usize, 56), @sizeOf(CView));
+    try std.testing.expectEqual(@as(usize, 0), @offsetOf(CView, "raw"));
+    try std.testing.expectEqual(@as(usize, 8), @offsetOf(CView, "tables"));
+    const c_view = context.cView();
+    try std.testing.expect(c_view.raw == &raw);
+    try std.testing.expectEqual(@intFromPtr(&sys), c_view.tables[0]);
+    try std.testing.expect(std.mem.allEqual(u64, c_view.tables[1..], 0));
     try std.testing.expectError(error.NoProvider, sinks.ConsoleSink.fromContext2(&context, 1));
     try std.testing.expectError(error.NoProvider, sinks.FileSink.fromContext2(&context, "C:\\X"));
     try std.testing.expectError(error.NoProvider, sinks.LogSink.fromContext2(&context, "T", .{}));

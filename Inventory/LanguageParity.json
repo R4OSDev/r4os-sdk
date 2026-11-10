@@ -200,7 +200,7 @@
       "modules": [
         "abi"
       ],
-      "semantics": "Contract bleibt einzige Layout-/Slot-/Callbackwahrheit. Groessengepruefte Tabellen, nullable Funktionszeiger, unbekannte Wirewerte und aktuelle optionale Gruppen behalten.",
+      "semantics": "Contract bleibt einzige Layout-/Slot-/Callbackwahrheit. Groessengepruefte Tabellen, nullable Funktionszeiger, unbekannte Wirewerte und aktuelle optionale Gruppen behalten. SDK187: Actual Context2 graphics-library consumers, stable process/caller snapshots and explicit CView, mapped SYS2 heaps and native C11/TLS retirement. Independent library interfaces keep their own IDs/revisions/layouts.",
       "current_only": "current_function",
       "rust": {
         "state": "generated_raw_abi_current_interop_qualified",
@@ -221,7 +221,8 @@
         "source_inventory",
         "central_abi_interop",
         "gui_activity_08735",
-        "audio_duration_retirement_08859"
+        "audio_duration_retirement_08859",
+        "canonical_graphics_native_generation2_09046"
       ],
       "shared_core": "Contract-Generatoren und vorhandene Layout-/Callbackfixtures wiederverwenden.",
       "qualification": {
@@ -312,6 +313,13 @@
           }
         ],
         "scope": "ABI-Schema/Baseline/Slots und Zig/Rust-Bytes unveraendert; keine neue normale Produktlaufzeit und kein STANDARD. Daten hinter Zeigern sind kein direkter Float-/SIMD-Aufruf. Rollen/hoehere Fassaden bleiben49-72."
+      },
+      "generation2_qualification": {
+        "subversion": "0.90.46",
+        "sdk_package": "0.64.187",
+        "contract_package": "0.64.93",
+        "scope": "Actual Context2 graphics-library consumers, stable process/caller snapshots and explicit CView, mapped SYS2 heaps and native C11/TLS retirement. Independent library interfaces keep their own IDs/revisions/layouts.",
+        "boundaries": "Actual canonical GFX/VK/GL consumers and native4thread ownership in own KVM4; CView C ABI executed on host. GPU admission callbacks migrated, no new physical NVIDIA/AMD qualification. Windows headers/tools crosscompiled, no Windows execution."
       }
     },
     {
@@ -389,7 +397,7 @@
       "modules": [
         "vm_allocator"
       ],
-      "semantics": "R4SYS-VM-Owner, Alignment/Nullgroesse, checked Groessen, Failure-Retry, Metadatenlock ohne unzulaessige Waitleihe; exakte Freigabe/Trim/Stats.",
+      "semantics": "R4SYS-VM-Owner, Alignment/Nullgroesse, checked Groessen, Failure-Retry, Metadatenlock ohne unzulaessige Waitleihe; exakte Freigabe/Trim/Stats. SDK187: Actual Context2 graphics-library consumers, stable process/caller snapshots and explicit CView, mapped SYS2 heaps and native C11/TLS retirement. Independent library interfaces keep their own IDs/revisions/layouts.",
       "current_only": "current_function",
       "rust": {
         "state": "qualified_R4X_alloc_and_borrowed_buffers",
@@ -410,9 +418,17 @@
         "Repositories/SDK/Tests/Simulation/RustHeap.rs",
         "Repositories/SDK/Tests/Build/RustHeap",
         "Repositories/SDK/Smoke/AppEntry/C/Console",
-        "studio_089_host"
+        "studio_089_host",
+        "canonical_graphics_native_generation2_09046"
       ],
-      "shared_core": "SDK/r4os/vm_allocator.zig ueber pro R4X gelinktes heap_runtime.zig; echte Stackprobes, gehashter CPU-/Quellvertrag. Ein Algorithmus fuer Zig/C/Rust; Kernel besitzt VM/Taskabbau. SDK69/Contract42. Normale Consumer Desktop137/Spectra49 wegen Direct-Retirement-Korrektur neu gebunden; finaler STANDARD im gemeinsamen Fachbeleg."
+      "shared_core": "SDK/r4os/vm_allocator.zig ueber pro R4X gelinktes heap_runtime.zig; echte Stackprobes, gehashter CPU-/Quellvertrag. Ein Algorithmus fuer Zig/C/Rust; Kernel besitzt VM/Taskabbau. SDK69/Contract42. Normale Consumer Desktop137/Spectra49 wegen Direct-Retirement-Korrektur neu gebunden; finaler STANDARD im gemeinsamen Fachbeleg.",
+      "generation2_qualification": {
+        "subversion": "0.90.46",
+        "sdk_package": "0.64.187",
+        "contract_package": "0.64.93",
+        "scope": "Actual Context2 graphics-library consumers, stable process/caller snapshots and explicit CView, mapped SYS2 heaps and native C11/TLS retirement. Independent library interfaces keep their own IDs/revisions/layouts.",
+        "boundaries": "Actual canonical GFX/VK/GL consumers and native4thread ownership in own KVM4; CView C ABI executed on host. GPU admission callbacks migrated, no new physical NVIDIA/AMD qualification. Windows headers/tools crosscompiled, no Windows execution."
+      }
     },
     {
       "id": "project-build",
@@ -465,7 +481,7 @@
       "modules": [
         "runtime_r4l"
       ],
-      "semantics": "Genauen Import/Interface-ID/Major/Revision/Groesse/Flags pruefen, optionale Nullimports erhalten, geladene Instanzgeneration waehrend Leihen/Callbacks festhalten; lokale Library bleibt Vertragseigner. SDK185: Central manifest-selected SDK admission/default/profile/export truth, real C/Zig/Rust normal/raw and technical templates, independent R4L contracts plus technical Query2, complete native C include/hash roots and actual matched tool packages. SDK186: Typed generation2 named library imports and technical Query2 validation in C/Zig/Rust, independent API1 revisions preserved, canonical STD/FONT/IMG calls and exact caller/allocator ownership.",
+      "semantics": "Genauen Import/Interface-ID/Major/Revision/Groesse/Flags pruefen, optionale Nullimports erhalten, geladene Instanzgeneration waehrend Leihen/Callbacks festhalten; lokale Library bleibt Vertragseigner. SDK185: Central manifest-selected SDK admission/default/profile/export truth, real C/Zig/Rust normal/raw and technical templates, independent R4L contracts plus technical Query2, complete native C include/hash roots and actual matched tool packages. SDK186: Typed generation2 named library imports and technical Query2 validation in C/Zig/Rust, independent API1 revisions preserved, canonical STD/FONT/IMG calls and exact caller/allocator ownership. SDK187: Actual Context2 graphics-library consumers, stable process/caller snapshots and explicit CView, mapped SYS2 heaps and native C11/TLS retirement. Independent library interfaces keep their own IDs/revisions/layouts.",
       "current_only": "current_function",
       "rust": {
         "state": "qualified_current_local_contract_consumers",
@@ -485,15 +501,16 @@
         "independent_desktop_current_71",
         "platform_generation2_09014",
         "tooling_templates_generation2_09044",
-        "canonical_text_font_image_generation2_09045"
+        "canonical_text_font_image_generation2_09045",
+        "canonical_graphics_native_generation2_09046"
       ],
       "shared_core": "SDK Tools/R4LContractGen mit sprachbezogener Rustprojektion und je Library Contract/LibraryContract.json; Baselines/Implementation/Zig unveraendert. Qualifikation52 in Docs/SDK/LanguageParity.txt.",
       "generation2_qualification": {
-        "subversion": "0.90.45",
-        "sdk_package": "0.64.186",
+        "subversion": "0.90.46",
+        "sdk_package": "0.64.187",
         "contract_package": "0.64.93",
-        "scope": "Typed generation2 named library imports and technical Query2 validation in C/Zig/Rust, independent API1 revisions preserved, canonical STD/FONT/IMG calls and exact caller/allocator ownership.",
-        "boundaries": "Actual C/Zig/Rust canonical STD/FONT/IMG consumers in own KVM4; other9 library generated bindings mechanically updated, their functional qualification follows46-48. No Windows, physical hardware or freshinstallation claim."
+        "scope": "Actual Context2 graphics-library consumers, stable process/caller snapshots and explicit CView, mapped SYS2 heaps and native C11/TLS retirement. Independent library interfaces keep their own IDs/revisions/layouts.",
+        "boundaries": "Actual canonical GFX/VK/GL consumers and native4thread ownership in own KVM4; CView C ABI executed on host. GPU admission callbacks migrated, no new physical NVIDIA/AMD qualification. Windows headers/tools crosscompiled, no Windows execution."
       }
     },
     {
@@ -595,7 +612,7 @@
         "byte_pipe",
         "launch_io"
       ],
-      "semantics": "Instanz-/Thread-/VM-Generationen, borrowed/owned, Join/Stop/Cancel und echte Abschlussquittungen unterscheiden. Timeout/Forever/NoWait, Teilfortschritt und gehaltene I/O-Puffer unveraendert; kein ungeprueftes Send/Sync. SDK163: shared staged complete Full/Lifecycle membership, exact ID+generation Found/Missing/Unknown; one outer deadline, explicit restart, no incomplete Missing or Retain/physicalRetired claim. Qualification: inventory_reader_09020. SDK171 adds bounded native WaitSets over existing Notification/Timer owners; exact creator Task generation, explicit Rearm/Remove, short-batch More/Rescan, cancellation priority, no completion or memory-release inference. SDK172 adds optional prepared IO/Process/Thread/Endpoint/GUI sources with exact owner epochs, full typed public identities and honest current-legacy-ID limitation. Owner pumps consume work; WaitSets supply no retain/reap/DMA authority. Main GUI only and legacy subscription mask preserved. SDK177 adds copied bounded byte-pipe references with exact process lifetime, small-write atomicity, large accepted prefixes, last-writer/drain EOF, BrokenPipe and actual synchronous cancellation. C/Zig/Rust own explicit close/dup helpers, no automatic Drop, no hidden launch inheritance or WaitSource. Kernel retains resident queue/reference mechanics; host language review is separate from native provider qualification. SDK178 adds optional copied112byte LaunchIo requests and borrowed current-process stdio snapshots. Three selected pipe references bind atomically before first Ready; Default Console keeps its original routes and byte/count semantics, Poll only. No implicit inheritance or Drop; no new Console wait/EOF/atomic-write promise. SDK182: Normal App2 Resources uses the actual Context2 and shared original Process/Thread/VM/IO/Notification owners. Full and Lifecycle reader factories keep their separate provider pairs and complete-view/Unknown/Restart/capacity semantics. Finite resource waits use one checked logical tick scale and never turn finite MAX into Forever. Timeout does not release retained buffers.",
+      "semantics": "Instanz-/Thread-/VM-Generationen, borrowed/owned, Join/Stop/Cancel und echte Abschlussquittungen unterscheiden. Timeout/Forever/NoWait, Teilfortschritt und gehaltene I/O-Puffer unveraendert; kein ungeprueftes Send/Sync. SDK163: shared staged complete Full/Lifecycle membership, exact ID+generation Found/Missing/Unknown; one outer deadline, explicit restart, no incomplete Missing or Retain/physicalRetired claim. Qualification: inventory_reader_09020. SDK171 adds bounded native WaitSets over existing Notification/Timer owners; exact creator Task generation, explicit Rearm/Remove, short-batch More/Rescan, cancellation priority, no completion or memory-release inference. SDK172 adds optional prepared IO/Process/Thread/Endpoint/GUI sources with exact owner epochs, full typed public identities and honest current-legacy-ID limitation. Owner pumps consume work; WaitSets supply no retain/reap/DMA authority. Main GUI only and legacy subscription mask preserved. SDK177 adds copied bounded byte-pipe references with exact process lifetime, small-write atomicity, large accepted prefixes, last-writer/drain EOF, BrokenPipe and actual synchronous cancellation. C/Zig/Rust own explicit close/dup helpers, no automatic Drop, no hidden launch inheritance or WaitSource. Kernel retains resident queue/reference mechanics; host language review is separate from native provider qualification. SDK178 adds optional copied112byte LaunchIo requests and borrowed current-process stdio snapshots. Three selected pipe references bind atomically before first Ready; Default Console keeps its original routes and byte/count semantics, Poll only. No implicit inheritance or Drop; no new Console wait/EOF/atomic-write promise. SDK182: Normal App2 Resources uses the actual Context2 and shared original Process/Thread/VM/IO/Notification owners. Full and Lifecycle reader factories keep their separate provider pairs and complete-view/Unknown/Restart/capacity semantics. Finite resource waits use one checked logical tick scale and never turn finite MAX into Forever. Timeout does not release retained buffers. SDK187: Actual Context2 graphics-library consumers, stable process/caller snapshots and explicit CView, mapped SYS2 heaps and native C11/TLS retirement. Independent library interfaces keep their own IDs/revisions/layouts.",
       "current_only": "current_function",
       "rust": {
         "state": "paritaet_abgenommen",
@@ -634,15 +651,16 @@
         "waitset_resource_sources_09029",
         "byte_pipe_language_09034",
         "launch_io_language_09035",
-        "normal_system_facades_09041"
+        "normal_system_facades_09041",
+        "canonical_graphics_native_generation2_09046"
       ],
       "shared_core": "Bestehender C-AppResources-Besitzer und native R4SYS-Callbacks; keine zweite VM-/Scheduler-/Prozess-/IOimplementierung. Eigener Code nur fuer Rust-Besitz und API-sichere Pufferretention.",
       "generation2_qualification": {
-        "subversion": "0.90.41",
-        "sdk_package": "0.64.182",
+        "subversion": "0.90.46",
+        "sdk_package": "0.64.187",
         "contract_package": "0.64.93",
-        "scope": "Normal App2 Resources uses the actual Context2 and shared original Process/Thread/VM/IO/Notification owners. Full and Lifecycle reader factories keep their separate provider pairs and complete-view/Unknown/Restart/capacity semantics. Finite resource waits use one checked logical tick scale and never turn finite MAX into Forever. Timeout does not release retained buffers.",
-        "boundaries": "Productive individual consumers/defaults and remaining GUI/service/audio/serial migration stay in their assigned later phases. No Windows, physical hardware or freshinstallation qualification."
+        "scope": "Actual Context2 graphics-library consumers, stable process/caller snapshots and explicit CView, mapped SYS2 heaps and native C11/TLS retirement. Independent library interfaces keep their own IDs/revisions/layouts.",
+        "boundaries": "Actual canonical GFX/VK/GL consumers and native4thread ownership in own KVM4; CView C ABI executed on host. GPU admission callbacks migrated, no new physical NVIDIA/AMD qualification. Windows headers/tools crosscompiled, no Windows execution."
       }
     },
     {
@@ -869,7 +887,7 @@
         "gui_text_control",
         "text_composition_client"
       ],
-      "semantics": "GUI-Nachrichten/Unicode/Modifier/Close, Timer/Clipboard, Paint/Present und Ressourcenbesitz; gehostete App und Desktophost sind verschiedene Rollen. Kein Schlafpolling oder Abschneiden von UTF-8. Aktuelle CPU/GPU-Ausgaben und abgerundete/alpha-Pixel erhalten. Fokusgewinn/-verlust und globale Fontaenderung sind typisiert; vorhandene Fensteridentitaet/Ticks und vollstaendige Unknown-Rohdaten bleiben erhalten. Vier benannte C-Fensterflags stammen aus der kanonischen GuiWindowFlag-Wahrheit. SDK110: natives Capture bindet volle Prozessgeneration, Fensterinkarnation und Capture-ID;0 bestaetigt PENDING, ACTIVE erst nach Desktop-Grant. C/Zig/Rust erhalten typisierte Capture-/Relative-/Wheel-Nachrichten. Relative physische Deltas entstehen vor Clamping; absolute Remote-Moves werden nicht als Rohbewegung ausgegeben. Release-/Cancel-/Broker-/Fensterende und zugehoerige externe C-Belege sind getrennt qualifiziert. SDK111: Desktop bindet den genauen Prozesshandle und die native Fensterinkarnation an QUERY/POST/RESET. Busy ist keine fehlende GUI-Zustaendigkeit. C/Zig/Rust erhalten InputReset mit Grund/Fenster/Tick; lokale Press-/Repeat-/Dragzustaende enden ohne synthetischen Klick. Capture-Terminalmeldungen behalten ihren eigenen Vertrag. SDK147: Canvas-local opt-in Style/light/dark, catalog font roles, shared Button/TextField/List/TabBar/Dialog rendering and Card/TileGrid/Paragraph/Progress. Classic defaults and editing owners remain; existing C constructor prefixes keep native defaults for new fields. SDK166: one immutable-bank prefix capture plus shared bounded grapheme projection and frozen binary-search hits; exact original strict-half/Unicode boundaries and explicit source/text/font keys/current-stamp reset. No hidden old fallback or consumer change. Qualification: text_metrics_09023. SDK167: shared bounded FilePickerSession with two caller buffers and EOF-only page publication over the existing canonical metadata owner. Whole path/observed identity and nonreused view revision; explicit overwrite permission bound to the prior observation, real-return loans and Open keyboard focus skipping disabled name. Existing FileDialog retains its shared list/name select rendering group. No file write/open or application migration. Qualification: file_picker_09024. SDK173 adds copied typed CLIPSVC offers with exact provider/offer identities, atomic private staging, immutable expiring snapshots and explicit bounded format/chunk contracts. Existing text bytes and ServiceLoop remain; uncertain Commit uses same-token status/idempotent replay. No application migration or silent conversion. SDK179: one bounded synchronous editor owner for Preedit/Commit/Cancel with strict UTF8 whole-grapheme ranges, exact window/view/focus/provider/editor/session/text generations, staged atomic Commit, copied caret and explicit surrounding text. C/Rust share the original Zig owner through borrowed record-pointer FFI. Copied WINSVC observations are separate from owner transitions; actual availability is NoProvider. No installed languageIME or application migration. SDK183: Normal actual Context2 GUI/Canvas/Tray, explicit text/font keyed metrics loans, original FilePicker renderer, typed clipboard control staging/paste and pure composition transitions with actual NoProvider. Full service loops and transport remain0.90.43. Cached hits preserve source/whole-row/paint loans; font refresh remains explicit. Empty offers validate the live exact owner even at zero bytes. No implicit Commit, cut, snapshot release, overwrite, old table or synthesized IME. SDK184: Normal actual App2/Context2 ServiceLoop, network and owned requests, audio and devices, ArgCursor/diagnostics, StreamTransfer, family clients, WaitSets, BytePipe/LaunchIO and optional Capture. One shared total RPC budget across audio writes and Clipboard chunks; source identity and canonical absolute tick epoch retained.",
+      "semantics": "GUI-Nachrichten/Unicode/Modifier/Close, Timer/Clipboard, Paint/Present und Ressourcenbesitz; gehostete App und Desktophost sind verschiedene Rollen. Kein Schlafpolling oder Abschneiden von UTF-8. Aktuelle CPU/GPU-Ausgaben und abgerundete/alpha-Pixel erhalten. Fokusgewinn/-verlust und globale Fontaenderung sind typisiert; vorhandene Fensteridentitaet/Ticks und vollstaendige Unknown-Rohdaten bleiben erhalten. Vier benannte C-Fensterflags stammen aus der kanonischen GuiWindowFlag-Wahrheit. SDK110: natives Capture bindet volle Prozessgeneration, Fensterinkarnation und Capture-ID;0 bestaetigt PENDING, ACTIVE erst nach Desktop-Grant. C/Zig/Rust erhalten typisierte Capture-/Relative-/Wheel-Nachrichten. Relative physische Deltas entstehen vor Clamping; absolute Remote-Moves werden nicht als Rohbewegung ausgegeben. Release-/Cancel-/Broker-/Fensterende und zugehoerige externe C-Belege sind getrennt qualifiziert. SDK111: Desktop bindet den genauen Prozesshandle und die native Fensterinkarnation an QUERY/POST/RESET. Busy ist keine fehlende GUI-Zustaendigkeit. C/Zig/Rust erhalten InputReset mit Grund/Fenster/Tick; lokale Press-/Repeat-/Dragzustaende enden ohne synthetischen Klick. Capture-Terminalmeldungen behalten ihren eigenen Vertrag. SDK147: Canvas-local opt-in Style/light/dark, catalog font roles, shared Button/TextField/List/TabBar/Dialog rendering and Card/TileGrid/Paragraph/Progress. Classic defaults and editing owners remain; existing C constructor prefixes keep native defaults for new fields. SDK166: one immutable-bank prefix capture plus shared bounded grapheme projection and frozen binary-search hits; exact original strict-half/Unicode boundaries and explicit source/text/font keys/current-stamp reset. No hidden old fallback or consumer change. Qualification: text_metrics_09023. SDK167: shared bounded FilePickerSession with two caller buffers and EOF-only page publication over the existing canonical metadata owner. Whole path/observed identity and nonreused view revision; explicit overwrite permission bound to the prior observation, real-return loans and Open keyboard focus skipping disabled name. Existing FileDialog retains its shared list/name select rendering group. No file write/open or application migration. Qualification: file_picker_09024. SDK173 adds copied typed CLIPSVC offers with exact provider/offer identities, atomic private staging, immutable expiring snapshots and explicit bounded format/chunk contracts. Existing text bytes and ServiceLoop remain; uncertain Commit uses same-token status/idempotent replay. No application migration or silent conversion. SDK179: one bounded synchronous editor owner for Preedit/Commit/Cancel with strict UTF8 whole-grapheme ranges, exact window/view/focus/provider/editor/session/text generations, staged atomic Commit, copied caret and explicit surrounding text. C/Rust share the original Zig owner through borrowed record-pointer FFI. Copied WINSVC observations are separate from owner transitions; actual availability is NoProvider. No installed languageIME or application migration. SDK183: Normal actual Context2 GUI/Canvas/Tray, explicit text/font keyed metrics loans, original FilePicker renderer, typed clipboard control staging/paste and pure composition transitions with actual NoProvider. Full service loops and transport remain0.90.43. Cached hits preserve source/whole-row/paint loans; font refresh remains explicit. Empty offers validate the live exact owner even at zero bytes. No implicit Commit, cut, snapshot release, overwrite, old table or synthesized IME. SDK184: Normal actual App2/Context2 ServiceLoop, network and owned requests, audio and devices, ArgCursor/diagnostics, StreamTransfer, family clients, WaitSets, BytePipe/LaunchIO and optional Capture. One shared total RPC budget across audio writes and Clipboard chunks; source identity and canonical absolute tick epoch retained. SDK187: Actual Context2 graphics-library consumers, stable process/caller snapshots and explicit CView, mapped SYS2 heaps and native C11/TLS retirement. Independent library interfaces keep their own IDs/revisions/layouts.",
       "current_only": "current_function",
       "rust": {
         "state": "paritaet_abgenommen",
@@ -921,15 +939,16 @@
         "clipboard_offers_09030",
         "text_composition_09036",
         "normal_gui_facades_09042",
-        "normal_service_stream_facades_09043"
+        "normal_service_stream_facades_09043",
+        "canonical_graphics_native_generation2_09046"
       ],
       "shared_core": "Gemeinsame GUI-/Rasterkerne beim Besitzer; keine unabhaengigen Widget-/Unicodealgorithmen pro Sprache.",
       "generation2_qualification": {
-        "subversion": "0.90.43",
-        "sdk_package": "0.64.184",
+        "subversion": "0.90.46",
+        "sdk_package": "0.64.187",
         "contract_package": "0.64.93",
-        "scope": "Normal actual App2/Context2 ServiceLoop, network and owned requests, audio and devices, ArgCursor/diagnostics, StreamTransfer, family clients, WaitSets, BytePipe/LaunchIO and optional Capture. One shared total RPC budget across audio writes and Clipboard chunks; source identity and canonical absolute tick epoch retained.",
-        "boundaries": "Productive module migration and controlled default/old-provider retirement remain their planned steps. Native audio hardware and IPv6 transport are not inferred from host facade qualification."
+        "scope": "Actual Context2 graphics-library consumers, stable process/caller snapshots and explicit CView, mapped SYS2 heaps and native C11/TLS retirement. Independent library interfaces keep their own IDs/revisions/layouts.",
+        "boundaries": "Actual canonical GFX/VK/GL consumers and native4thread ownership in own KVM4; CView C ABI executed on host. GPU admission callbacks migrated, no new physical NVIDIA/AMD qualification. Windows headers/tools crosscompiled, no Windows execution."
       }
     },
     {
@@ -944,7 +963,7 @@
         "gfx_telemetry",
         "graphics_status"
       ],
-      "semantics": "Buffer/Map/Lease/Output/Queue/Fencegenerationen, Pending/Retained/Busy/Reset/Retire, Cursor und Present-Sichtbarkeit exakt erhalten. Software-/Nativeausgabe und echte optionale Treiber bleiben gueltig.",
+      "semantics": "Buffer/Map/Lease/Output/Queue/Fencegenerationen, Pending/Retained/Busy/Reset/Retire, Cursor und Present-Sichtbarkeit exakt erhalten. Software-/Nativeausgabe und echte optionale Treiber bleiben gueltig. SDK187: Actual Context2 graphics-library consumers, stable process/caller snapshots and explicit CView, mapped SYS2 heaps and native C11/TLS retirement. Independent library interfaces keep their own IDs/revisions/layouts.",
       "current_only": "current_function",
       "rust": {
         "state": "paritaet_abgenommen",
@@ -969,9 +988,17 @@
         "platform_current_58",
         "current_contract_78",
         "current_kernel_records_80",
-        "text_metrics_09023"
+        "text_metrics_09023",
+        "canonical_graphics_native_generation2_09046"
       ],
-      "shared_core": "Kernel-API nur binden; R4GFX-Owner/Renderer und dessen C-ABI wiederverwenden."
+      "shared_core": "Kernel-API nur binden; R4GFX-Owner/Renderer und dessen C-ABI wiederverwenden.",
+      "generation2_qualification": {
+        "subversion": "0.90.46",
+        "sdk_package": "0.64.187",
+        "contract_package": "0.64.93",
+        "scope": "Actual Context2 graphics-library consumers, stable process/caller snapshots and explicit CView, mapped SYS2 heaps and native C11/TLS retirement. Independent library interfaces keep their own IDs/revisions/layouts.",
+        "boundaries": "Actual canonical GFX/VK/GL consumers and native4thread ownership in own KVM4; CView C ABI executed on host. GPU admission callbacks migrated, no new physical NVIDIA/AMD qualification. Windows headers/tools crosscompiled, no Windows execution."
+      }
     },
     {
       "id": "audio",
@@ -31076,50 +31103,100 @@
     },
     {
       "path": "Repositories/SDK/r4os/vm_allocator.zig",
-      "sha256": "9839651c7b641d6bcb3e645cbd6d8f7f2e14cfeaa4cfd8cad396fb062e725bc4",
+      "sha256": "d4c461a5513e74c539a8d18467b1bf5b77950072d34c91ec0be5644eada4be49",
       "owner": "Repositories/SDK",
-      "version": "0.64.181",
+      "version": "0.64.187",
       "capability": "allocation",
       "declarations": [
         [
           "Stats",
           "container",
-          140
+          146
         ],
         [
           "Heap",
           "container",
-          193
+          203
         ],
         [
           "Heap.allocator",
           "fn",
-          197
+          207
         ],
         [
           "Heap.stats",
           "fn",
-          200
+          210
         ],
         [
           "Heap.trim",
           "fn",
-          203
+          213
+        ],
+        [
+          "MappedHeap",
+          "container",
+          221
+        ],
+        [
+          "MappedHeap.init",
+          "fn",
+          225
+        ],
+        [
+          "MappedHeap.allocator",
+          "fn",
+          229
+        ],
+        [
+          "MappedHeap.stats",
+          "fn",
+          232
+        ],
+        [
+          "MappedHeap.trim",
+          "fn",
+          235
         ],
         [
           "stats",
           "fn",
-          245
+          282
         ],
         [
           "trim",
           "fn",
-          248
+          285
+        ],
+        [
+          "Shutdown",
+          "container",
+          289
+        ],
+        [
+          "shutdown",
+          "fn",
+          296
         ],
         [
           "allocator",
           "fn",
-          255
+          329
+        ],
+        [
+          "allocatorMapped",
+          "fn",
+          335
+        ],
+        [
+          "trimMapped",
+          "fn",
+          338
+        ],
+        [
+          "shutdownMapped",
+          "fn",
+          341
         ]
       ]
     },
@@ -47990,95 +48067,100 @@
     },
     {
       "path": "Repositories/SDK/r4os/allocator_source.zig",
-      "sha256": "73e2f7d678da7dde72d758897d21bf276d1221a2c2af01e30a76ea49afb7143e",
+      "sha256": "3ef76c726974816c412939d73d86b285bf3d60d37d2cd5ae7baf4d150cc2a4f4",
       "owner": "Repositories/SDK",
-      "version": "0.64.181",
+      "version": "0.64.187",
       "capability": "startup",
       "declarations": [
         [
           "Memory",
           "container",
-          7
+          8
         ],
         [
           "Memory.valid",
           "fn",
-          27
+          28
         ],
         [
           "Memory.fromContext2",
           "fn",
-          32
+          33
+        ],
+        [
+          "Memory.fromSystem2",
+          "fn",
+          39
         ],
         [
           "Source",
           "container",
-          50
+          59
         ],
         [
           "Source.legacy",
           "fn",
-          53
+          62
         ],
         [
           "Source.mapped",
           "fn",
-          56
+          65
         ],
         [
           "Source.from",
           "fn",
-          59
+          68
         ],
         [
           "Source.optional",
           "fn",
-          66
+          75
         ],
         [
           "Source.toOpaque",
           "fn",
-          71
+          80
         ],
         [
           "Source.fromOpaque",
           "fn",
-          74
+          83
         ],
         [
           "Source.oldTable",
           "fn",
-          77
+          86
         ],
         [
           "Source.memory",
           "fn",
-          81
+          90
         ],
         [
           "Source.identity",
           "fn",
-          85
+          94
         ],
         [
           "Source.function",
           "fn",
-          89
+          98
         ],
         [
           "Source.supportsVm",
           "fn",
-          101
+          110
         ],
         [
           "Source.supportsNotifications",
           "fn",
-          109
+          118
         ],
         [
           "Source.call",
           "fn",
-          114
+          123
         ]
       ]
     },
@@ -48557,16 +48639,16 @@
     {
       "id": "library-R4GFX",
       "owner": "Repositories/Libraries/R4GFX",
-      "version": "0.1.36",
+      "version": "0.1.40",
       "wave": "0.86.60",
       "binding_wave": "0.86.52",
       "contract": {
         "path": "Repositories/Libraries/R4GFX/Contract/LibraryContract.json",
-        "sha256": "a4d28f983091271e22b59e4f5928592ebf3c6ac336d2df132f7247f2478bb3b3"
+        "sha256": "588b3f5c69d25722fbd93f12765b215e599fff6ad35204abf31b7c7b53f0a31d"
       },
       "baseline": {
         "path": "Repositories/Libraries/R4GFX/Contract/LibraryContract.baseline.json",
-        "sha256": "a4d28f983091271e22b59e4f5928592ebf3c6ac336d2df132f7247f2478bb3b3"
+        "sha256": "588b3f5c69d25722fbd93f12765b215e599fff6ad35204abf31b7c7b53f0a31d"
       },
       "description": "Userland graphics library with software/native rendering, explicit queue receipts, presentation, color management and fence-safe managed-image residency.",
       "interfaces": [
@@ -48727,7 +48809,8 @@
         "language_libraries_current_60",
         "library_projection_current_61",
         "geometry_current_83",
-        "display_geometry_parsers_94"
+        "display_geometry_parsers_94",
+        "canonical_graphics_native_generation2_09046"
       ],
       "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten.",
       "rust_sources": [
@@ -48741,21 +48824,28 @@
       "source_display_review_08694": {
         "evidence": "display_geometry_parsers_94",
         "scope": "Shared current local projection and strict document lexer; same C/Rust generic functions through unchanged native owner. Existing historical contracts/qualification preserved."
+      },
+      "generation2_qualification": {
+        "subversion": "0.90.46",
+        "evidence": "canonical_graphics_native_generation2_09046",
+        "runtime_module": "0.1.40",
+        "scope": "Actual Context2 graphics-library consumers, stable process/caller snapshots and explicit CView, mapped SYS2 heaps and native C11/TLS retirement. Independent library interfaces keep their own IDs/revisions/layouts.",
+        "contract_change": "Descriptions and one ownership-rule explanation only. All structural fields/IDs/revisions/slots/operations unchanged; actual generator declarations/fixtures byte-equal except generated Rust doc comments."
       }
     },
     {
       "id": "library-R4GL",
       "owner": "Repositories/Libraries/R4GL",
-      "version": "0.1.31",
+      "version": "0.1.34",
       "wave": "0.86.60",
       "binding_wave": "0.86.52",
       "contract": {
         "path": "Repositories/Libraries/R4GL/Contract/LibraryContract.json",
-        "sha256": "a822099c21fb7456ffb4d83c96e8406c76e21715785c2c2c9dfb273c8db32b97"
+        "sha256": "69ead863e7195df4fa59229107cb79778960f7cdca7017363d4486e4d71c0f04"
       },
       "baseline": {
         "path": "Repositories/Libraries/R4GL/Contract/LibraryContract.baseline.json",
-        "sha256": "a822099c21fb7456ffb4d83c96e8406c76e21715785c2c2c9dfb273c8db32b97"
+        "sha256": "69ead863e7195df4fa59229107cb79778960f7cdca7017363d4486e4d71c0f04"
       },
       "description": "Native EGL/OpenGL bootstrap and process lifecycle. Mesa owns GL/EGL semantics; R4OS owns presentation and resources.",
       "interfaces": [
@@ -48810,10 +48900,18 @@
         "source_inventory",
         "local_contract_and_baseline",
         "language_libraries_current_60",
-        "library_projection_current_61"
+        "library_projection_current_61",
+        "canonical_graphics_native_generation2_09046"
       ],
       "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten.",
-      "higher_helper_review": "Current public Zig binding contains generated local contract only; no additional higher consumer helper is omitted. Binding52 evidence remains."
+      "higher_helper_review": "Current public Zig binding contains generated local contract only; no additional higher consumer helper is omitted. Binding52 evidence remains.",
+      "generation2_qualification": {
+        "subversion": "0.90.46",
+        "evidence": "canonical_graphics_native_generation2_09046",
+        "runtime_module": "0.1.34",
+        "scope": "Actual Context2 graphics-library consumers, stable process/caller snapshots and explicit CView, mapped SYS2 heaps and native C11/TLS retirement. Independent library interfaces keep their own IDs/revisions/layouts.",
+        "contract_change": "Descriptions and one ownership-rule explanation only. All structural fields/IDs/revisions/slots/operations unchanged; actual generator declarations/fixtures byte-equal except generated Rust doc comments."
+      }
     },
     {
       "id": "library-R4IMG",
@@ -49354,16 +49452,16 @@
     {
       "id": "library-R4VK",
       "owner": "Repositories/Libraries/R4VK",
-      "version": "0.1.42",
+      "version": "0.1.45",
       "wave": "0.86.60",
       "binding_wave": "0.86.52",
       "contract": {
         "path": "Repositories/Libraries/R4VK/Contract/LibraryContract.json",
-        "sha256": "6c71430315e500f1a67371b63a302a770b4b3a282b63a930031228b009d5a68d"
+        "sha256": "94f08c05b1219635c65e9a44988638e4d494410863eac4b863bdba9ac96c37c1"
       },
       "baseline": {
         "path": "Repositories/Libraries/R4VK/Contract/LibraryContract.baseline.json",
-        "sha256": "6c71430315e500f1a67371b63a302a770b4b3a282b63a930031228b009d5a68d"
+        "sha256": "94f08c05b1219635c65e9a44988638e4d494410863eac4b863bdba9ac96c37c1"
       },
       "description": "Native Vulkan ICD bootstrap. Vulkan objects and commands retain their standard C ABI; NVIDIA.R4D owns hardware.",
       "interfaces": [
@@ -49416,10 +49514,18 @@
         "source_inventory",
         "local_contract_and_baseline",
         "language_libraries_current_60",
-        "library_projection_current_61"
+        "library_projection_current_61",
+        "canonical_graphics_native_generation2_09046"
       ],
       "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten.",
-      "higher_helper_review": "Current public Zig binding contains generated local contract only; no additional higher consumer helper is omitted. Binding52 evidence remains."
+      "higher_helper_review": "Current public Zig binding contains generated local contract only; no additional higher consumer helper is omitted. Binding52 evidence remains.",
+      "generation2_qualification": {
+        "subversion": "0.90.46",
+        "evidence": "canonical_graphics_native_generation2_09046",
+        "runtime_module": "0.1.45",
+        "scope": "Actual Context2 graphics-library consumers, stable process/caller snapshots and explicit CView, mapped SYS2 heaps and native C11/TLS retirement. Independent library interfaces keep their own IDs/revisions/layouts.",
+        "contract_change": "Descriptions and one ownership-rule explanation only. All structural fields/IDs/revisions/slots/operations unchanged; actual generator declarations/fixtures byte-equal except generated Rust doc comments."
+      }
     }
   ],
   "module_roles": [
@@ -58732,6 +58838,26 @@
         "Old defaults/providers remain until86/89/90. Native R4BUILD/R4CC remains pending72.",
         "Single final STANDARD and clean normal/technical source admission are separate closure evidence. Initial technical receipts stay original. No Windows/physicalhardware/visual desktop/freshinstallation proof."
       ]
+    },
+    "canonical_graphics_native_generation2_09046": {
+      "complete": true,
+      "performed_in": "0.90.46",
+      "sdk": "0.64.187",
+      "contract": "0.64.93",
+      "libraries": "0.64.54",
+      "report": "Docs/API/ConsumerMigration.txt",
+      "scope": "Actual Context2 graphics-library consumers, stable process/caller snapshots and explicit CView, mapped SYS2 heaps and native C11/TLS retirement. Independent library interfaces keep their own IDs/revisions/layouts.",
+      "host_checks": "SDK existing allocator/platform2 85; existing GFX9 including original large color/job/swapchain/resource oracles and an additional actual2 snapshot/resource case; VK1/GL1 C-Zig conformance and complete actual native Mesa archives; all12 independent C-Rust layout/slot/lifetime checks; real Zig-C CView56-byte ABI call and failure prefixes; C++ headers syntax-compiled for Linux and WindowsGNU by actual Clang19. Canonical App2 Vulkan example compiled with actual pinned header. Existing module/packager/generator final checks are separate closure requirements.",
+      "native_checks": "Own KVM4 Kernel474. Exact installed canonical GFX40/VK45/GL34 wholefile readbacks and normal boot admission. Actual imported graphics BO exact64byte software copy, real CPU queue receipt and retirement; actual Vulkan instance/enumeration0/destroy; real Mesa Softpipe pbuffer exactgreenRGBA plus EGL/thread/finish retry. Actual canonical App2 Triangle Desktop/WINSVC software window produces2green frames434x212, swaps, closes and retires. Native C11 SYS2-only4workers512alloccycles, exactjoins/TLS/destructors/once/closedadmission/APIcleanup retry. Ccontroller4exactprocess completions/reaps include hardkill of4liveworkers and fresh restart.",
+      "limits": [
+        "Technical Query2 and independent library interface revisions are separate; no platform slot/layout changes or kernel source change. Existing explicit legacy admission/defaults remain until86/89/90.",
+        "Only descriptions/ownership explanation changed in3local contracts/baselines. No declaration/slot/ID/operation change. Module versions reflect actual different whole artifacts.",
+        "Software queue receipt proves CPU retirement. No software Vulkan device or physical GPU/scanout performance/conformance is inferred from0devices or green software pixels.",
+        "The GUI fixture closes immediately after actual native frame. DESKRUN /WAITFRAME reports process_ended11 with content/raw0; its launcher receipt is not a frame acceptance. Actual GUI trace independently records exact pixels, successful swaps and complete cleanup; no launcher regression is inferred.",
+        "Early failed temporary fixtures and C++ harnesses are retained separately. A normal Zig R4X rejects multipleSOURCE; its CView cross-language case uses a host test instead, without changing manifest policy.",
+        "First final owner check correctly rejected an outdated parity review while all41functional cases passed. Final reviewed guard/normal source admission must pass before closure.",
+        "Normal/technical9 tool inputs/outputs, actual final-source actor byte equality, unchanged kernel artifact and one final STANDARD are separate closure evidence. No new server/Windows execution/physicalhardware/freshinstallation claim."
+      ]
     }
   },
   "wave_bindings": [
@@ -58984,12 +59110,12 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.90.45",
-    "sdk": "0.64.186",
+    "performed_in": "0.90.46",
+    "sdk": "0.64.187",
     "contract": "0.64.93",
-    "libraries": "0.64.53",
-    "evidence": "canonical_text_font_image_generation2_09045",
-    "scope": "Typed generation2 named library imports and technical Query2 validation in C/Zig/Rust, independent API1 revisions preserved, canonical STD/FONT/IMG calls and exact caller/allocator ownership.",
+    "libraries": "0.64.54",
+    "evidence": "canonical_graphics_native_generation2_09046",
+    "scope": "Actual Context2 graphics-library consumers, stable process/caller snapshots and explicit CView, mapped SYS2 heaps and native C11/TLS retirement. Independent library interfaces keep their own IDs/revisions/layouts.",
     "historical_snapshot_retained": true,
     "current_platform_tables": [
       {
@@ -59041,7 +59167,7 @@
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.90.45",
+    "reviewed_in": "0.90.46",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -59443,7 +59569,7 @@
       },
       {
         "path": "Repositories/Libraries/R4GFX/Bindings/Rust/src/lib.rs",
-        "sha256": "9a0cfaddf8de70b8d587214713212e32b95b5d473a7a26df8ef141e30da5eb7e"
+        "sha256": "c064c099e0aa91fb25c33420db43f482ecce1b17213bd6dfb1e9704190b97ad8"
       },
       {
         "path": "Repositories/Libraries/R4GFX/Bindings/Zig/outputs.zig",
@@ -59463,11 +59589,11 @@
       },
       {
         "path": "Repositories/Libraries/R4GFX/Contract/LibraryContract.baseline.json",
-        "sha256": "a4d28f983091271e22b59e4f5928592ebf3c6ac336d2df132f7247f2478bb3b3"
+        "sha256": "588b3f5c69d25722fbd93f12765b215e599fff6ad35204abf31b7c7b53f0a31d"
       },
       {
         "path": "Repositories/Libraries/R4GFX/Contract/LibraryContract.json",
-        "sha256": "a4d28f983091271e22b59e4f5928592ebf3c6ac336d2df132f7247f2478bb3b3"
+        "sha256": "588b3f5c69d25722fbd93f12765b215e599fff6ad35204abf31b7c7b53f0a31d"
       },
       {
         "path": "Repositories/Libraries/R4GFX/Display/Rust/Cargo.toml",
@@ -59615,7 +59741,7 @@
       },
       {
         "path": "Repositories/Libraries/R4GL/Bindings/Rust/src/lib.rs",
-        "sha256": "1384092279e183b4ea1ac0aea0aadd84068d5bbf04ca613e162ca026f45a63bf"
+        "sha256": "d01e3e93b4b3128553ee7d35e70341ca4de934a56b948401cb58587e46adceeb"
       },
       {
         "path": "Repositories/Libraries/R4GL/Bindings/Zig/r4gl.zig",
@@ -59627,11 +59753,11 @@
       },
       {
         "path": "Repositories/Libraries/R4GL/Contract/LibraryContract.baseline.json",
-        "sha256": "a822099c21fb7456ffb4d83c96e8406c76e21715785c2c2c9dfb273c8db32b97"
+        "sha256": "69ead863e7195df4fa59229107cb79778960f7cdca7017363d4486e4d71c0f04"
       },
       {
         "path": "Repositories/Libraries/R4GL/Contract/LibraryContract.json",
-        "sha256": "a822099c21fb7456ffb4d83c96e8406c76e21715785c2c2c9dfb273c8db32b97"
+        "sha256": "69ead863e7195df4fa59229107cb79778960f7cdca7017363d4486e4d71c0f04"
       },
       {
         "path": "Repositories/Libraries/R4IMG/Bindings/C/r4img.h",
@@ -59923,7 +60049,7 @@
       },
       {
         "path": "Repositories/Libraries/R4VK/Bindings/C/r4vk_wsi.h",
-        "sha256": "81fb29e28b548c277750c76270711005eb8c3453c060bb10d0e4991363f42000"
+        "sha256": "6b994b83a769337bb93803980b4af0f86ffa87b32f916c3cb21cbd2eff75361f"
       },
       {
         "path": "Repositories/Libraries/R4VK/Bindings/Rust/Cargo.toml",
@@ -59931,7 +60057,7 @@
       },
       {
         "path": "Repositories/Libraries/R4VK/Bindings/Rust/src/lib.rs",
-        "sha256": "318a8ebc9d1095a522caf8567d54302b5914050cc5c34d2f39b9f537cb953a3d"
+        "sha256": "8fc065978e78fa03587a99abcb81c594cbbd86bb1f2a8b554be98df1fe2a3049"
       },
       {
         "path": "Repositories/Libraries/R4VK/Bindings/Zig/r4vk.zig",
@@ -59943,11 +60069,11 @@
       },
       {
         "path": "Repositories/Libraries/R4VK/Contract/LibraryContract.baseline.json",
-        "sha256": "6c71430315e500f1a67371b63a302a770b4b3a282b63a930031228b009d5a68d"
+        "sha256": "94f08c05b1219635c65e9a44988638e4d494410863eac4b863bdba9ac96c37c1"
       },
       {
         "path": "Repositories/Libraries/R4VK/Contract/LibraryContract.json",
-        "sha256": "6c71430315e500f1a67371b63a302a770b4b3a282b63a930031228b009d5a68d"
+        "sha256": "94f08c05b1219635c65e9a44988638e4d494410863eac4b863bdba9ac96c37c1"
       },
       {
         "path": "Repositories/Libraries/Shared/C/include/r4libraries/helpers.h",
@@ -60051,7 +60177,7 @@
       },
       {
         "path": "Repositories/Libraries/Shared/Native/application.zig",
-        "sha256": "00de7004f49460cf0ade04ffdd249370a65a5f4c40d9486c5dc6c3ae61bef5ce"
+        "sha256": "f06dceeb527f89f4025bc24e52a72e90330e527e48b20bc6408c4e8241dd548e"
       },
       {
         "path": "Repositories/Libraries/Shared/Native/budget.zig",
@@ -60063,7 +60189,7 @@
       },
       {
         "path": "Repositories/Libraries/Shared/Native/budgeted_memory.zig",
-        "sha256": "3395df4d8bcd6a060e7320905eee3946510264d1aadfbca589825aa1dfcbf87d"
+        "sha256": "a0affc78b8ee8c12bbcf91fada17e45ba671923dba1e31138eecc60b28645c0b"
       },
       {
         "path": "Repositories/Libraries/Shared/Native/c11_threads.h",
@@ -60080,6 +60206,10 @@
       {
         "path": "Repositories/Libraries/Shared/Native/calendar.zig",
         "sha256": "983537c80fddd66662672d22ed70babec5af490329e1874e5f0f79b2abb9de9c"
+      },
+      {
+        "path": "Repositories/Libraries/Shared/Native/caller.zig",
+        "sha256": "a848017eaf12e3510cde8f3515a3422fb9bdd955d7a61796eae2ad036dfbf015"
       },
       {
         "path": "Repositories/Libraries/Shared/Native/cpp_runtime.h",
@@ -60099,11 +60229,11 @@
       },
       {
         "path": "Repositories/Libraries/Shared/Native/files.zig",
-        "sha256": "38fa730a0d36fb83256d1611fa8e447c65ef4fb8095ae6053b56a2def500d4e0"
+        "sha256": "89cefa89211084dcf2bf406ca86667dee1f2ff4a3ad0b83bae3aa8b2e9780748"
       },
       {
         "path": "Repositories/Libraries/Shared/Native/finalizers.zig",
-        "sha256": "30dcb8eab9679eda6e908fdeff92a3abfe7f6a12fb28c32ec557db2186316365"
+        "sha256": "749e7ab201d4a7c31d366e4eac037dcba85bc8d32c896e0ba64f803807dcd675"
       },
       {
         "path": "Repositories/Libraries/Shared/Native/format.c",
@@ -60119,7 +60249,7 @@
       },
       {
         "path": "Repositories/Libraries/Shared/Native/memory.zig",
-        "sha256": "33815303e480a0f37ba1711b6b1762d3342bc370b7bb3e826d270b1e57a78492"
+        "sha256": "30303062dd3b993de91c46e2820debf1d47a05c67e3c6ba84043e5d82db2b525"
       },
       {
         "path": "Repositories/Libraries/Shared/Native/numeric.c",
@@ -60131,11 +60261,11 @@
       },
       {
         "path": "Repositories/Libraries/Shared/Native/process.zig",
-        "sha256": "4c7dbfee44e33271f1048d890a17b85d4da1ddf961c7274d768acbd2bd548017"
+        "sha256": "1570aee0dbbde98d0d89edceb1e87b2aafe3faf4e966f778018bfc88405075ae"
       },
       {
         "path": "Repositories/Libraries/Shared/Native/process_local.zig",
-        "sha256": "b2fba6f078212043e9cbb56dead4db3c1a23317d73df2fd4930078d7a28d6657"
+        "sha256": "def6d2ef6201df4893528547141de004896255aaab7739b4ef09900a4e399f42"
       },
       {
         "path": "Repositories/Libraries/Shared/Native/random.zig",
@@ -60143,7 +60273,7 @@
       },
       {
         "path": "Repositories/Libraries/Shared/Native/root.zig",
-        "sha256": "92f4ac4f51b906da5d00e977798e87e077713c7953adf6dcaedc68c6f33eff32"
+        "sha256": "3385955488a3df0716031af8a4f36aa747ff4ff4410388a81ed98bf6c45bf0be"
       },
       {
         "path": "Repositories/Libraries/Shared/Native/sort.c",
@@ -60158,28 +60288,32 @@
         "sha256": "b60b78bc9984409ca1e232951d7b9da34eabcb92a2e7b4f2eb3e7e09c9541e49"
       },
       {
+        "path": "Repositories/Libraries/Shared/Native/system.zig",
+        "sha256": "7038dd1b6b473a1cbcc4dc79811d80963045ade89cefc234b32a6d8138b198f5"
+      },
+      {
         "path": "Repositories/Libraries/Shared/Native/system_info.zig",
-        "sha256": "5b06696832350fa32d85f7b17e482f163ab84af4eccfe1c022e4ed9915d17fe8"
+        "sha256": "a1c3b68bf69340aac80809e1324d4f2b5a55d2a32aee001e21fccf072c3ef10f"
       },
       {
         "path": "Repositories/Libraries/Shared/Native/thread_lifecycle.zig",
-        "sha256": "485b36abb1198a4fac9ca60c25483beeda7ae4290e6c99811dee38c327eb4f05"
+        "sha256": "883d1868924acb13f06f8109799e7d5e53534d75c8b521b136bd5f6b36d63204"
       },
       {
         "path": "Repositories/Libraries/Shared/Native/thread_local.zig",
-        "sha256": "620f1952339ec7e58e96dbb00d6c2779726916cf07df407a5881ec3e24e350dc"
+        "sha256": "1361599b548adae3104b208c67342fbb0ab3e6cb75bfe9b3c4a9cf4fe3d07db8"
       },
       {
         "path": "Repositories/Libraries/Shared/Native/threading.zig",
-        "sha256": "3536bee5332c2f956ac3f96470bf77c39090c57f3d159bf7f545e5df43e2ef55"
+        "sha256": "d0e0f27a660114e70365a980a4cd097c524173611aae3178ac950eb839044b1f"
       },
       {
         "path": "Repositories/Libraries/Shared/Native/threads.zig",
-        "sha256": "2ca94b4e5b50e97a542aee636a27c36da94a204d366cb56452e73ee4e6e452e9"
+        "sha256": "91ed0cb07d360c37f78946cf228c6fa86b11ce05d6f3b441833ce91457844b36"
       },
       {
         "path": "Repositories/Libraries/Shared/Native/time.zig",
-        "sha256": "7e59cd9c0a1967fb7a350bb3374aab58e030922f8c336823759aaebc043da7fb"
+        "sha256": "e17beba13caeaecfaa018365c8a483bdc7cbc41c13ef7ef41cf8d351a1c58da4"
       },
       {
         "path": "Repositories/Libraries/Shared/Native/tokenize.c",
@@ -60187,11 +60321,11 @@
       },
       {
         "path": "Repositories/Libraries/Shared/Native/wall_clock.zig",
-        "sha256": "7b34ca06832adad51e5e868e995e2bf0b95847895d9475a68d6c7414b5d85793"
+        "sha256": "bb0ffc2a78357329c8900202f737986ff788c0f7f640ed78f2b798370c620ba6"
       },
       {
         "path": "Repositories/Libraries/Shared/Native/window.zig",
-        "sha256": "bbcb2ec9065a29c2fe2b1cf9b2f5fe4f1507cfedb78bcaef3848a4a6589c757e"
+        "sha256": "6fefe5b70802f7e4f2ac2b8f79600be16f2e5e359f58f672243ad43a10624537"
       },
       {
         "path": "Repositories/Libraries/Shared/Rust/Cargo.toml",
@@ -60283,7 +60417,7 @@
       },
       {
         "path": "Repositories/SDK/Profiles/Components.json",
-        "sha256": "4737ae4667d3e1418e10b4b231270cb912ca6ee792cf0cc4c8d1388fc57007d3"
+        "sha256": "1630eb58e6afbe014da361eba47242953d43f714bf09000f54f0bbcb9837d8b3"
       },
       {
         "path": "Repositories/SDK/Profiles/Tools.json",
@@ -60294,12 +60428,24 @@
         "sha256": "a3b42a9432ab0c5ea69caa99b417e84ad2c3e265baeaa74befa386aa2782d581"
       },
       {
+        "path": "Repositories/SDK/Rust/src/app2.rs",
+        "sha256": "bae5499a24100d56de4481fa8cf80b96d444c6a8588c6afc41b4253f27f4f943"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/audio_capture.rs",
+        "sha256": "c1e710a202e8458ba8273ca9bd493529bf25823c0a77b1698dda49de6e65ad46"
+      },
+      {
         "path": "Repositories/SDK/Rust/src/audio_write.rs",
         "sha256": "843ae156659135cd9ce252c7697e60240445fb85b3279803c5911c35d21b4310"
       },
       {
         "path": "Repositories/SDK/Rust/src/bounded_text.rs",
         "sha256": "67c1c01b9b620d3bf37341366afb90ac571d92d563da43dca0b20abd6bf4c081"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/byte_pipe.rs",
+        "sha256": "cfde4137e0efb5be8f8b4610adbfb381c83e17ab9d501c5c3c7336b387061bbd"
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
@@ -60392,6 +60538,10 @@
       {
         "path": "Repositories/SDK/Rust/src/inventory.rs",
         "sha256": "967a796cec1ff39a061301719577eb391c5e92def81f046f8fba44c1f79f66de"
+      },
+      {
+        "path": "Repositories/SDK/Rust/src/launch_io.rs",
+        "sha256": "14232e84915ceeb0ff1cc32a983b7d121434d355cb82093a4c9e52014a5233c0"
       },
       {
         "path": "Repositories/SDK/Rust/src/lib.rs",
@@ -60562,6 +60712,10 @@
         "sha256": "5b46e969198a32ad8fd80320af3f5ef64044a68c59235b2a0c4c02ee16de102b"
       },
       {
+        "path": "Repositories/SDK/Rust/src/text_composition.rs",
+        "sha256": "360f665a025b77dbd4f064258b4098327f97f64ba7d37c235b83bbcd74cb9a0d"
+      },
+      {
         "path": "Repositories/SDK/Rust/src/text_metrics.rs",
         "sha256": "6035c2be3021d8bfb8d6f8838245c215ebc4f3abe1cf7e77d0648431df71764c"
       },
@@ -60642,6 +60796,10 @@
         "sha256": "1c6c5ba1789820da82cdbcc9bbe620da875a08424c3664add2494e83b95991c5"
       },
       {
+        "path": "Repositories/SDK/Shared/C/include/r4os/app2.h",
+        "sha256": "92f122668cbe3863babeb2479ba6476aed2569a2395218ecccd2ef63048fa2a3"
+      },
+      {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_audio.h",
         "sha256": "93deb2748f7e703046a95b1e357628bbbfe282c8e66b1ee682cc0c928000cf90"
       },
@@ -60656,6 +60814,10 @@
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_gui.h",
         "sha256": "9785c2230325c0e05bc00f327780870fbd0517b9ce9643119a541fca2f50aba3"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/app_memory.h",
+        "sha256": "f19fd2fd2b28d738ef0f14fdb8f84ee9dac55d5e963ba6353dfefc0c35fea1eb"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/app_network.h",
@@ -60678,12 +60840,20 @@
         "sha256": "8aaa2fa6815fc5b68ca8099cb2c7a9eb00d7dcfd77ac05426149f337293f2dc1"
       },
       {
+        "path": "Repositories/SDK/Shared/C/include/r4os/audio_capture_platform2.h",
+        "sha256": "6997b49df903efc8a8a6fade5c352721ad29815eb586761624eb782321511db0"
+      },
+      {
         "path": "Repositories/SDK/Shared/C/include/r4os/audio_write.h",
         "sha256": "22f6bd7aad0dd02f36184d079e19d2c9c0998510f759211f90c11fc456a31a4e"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/audio_write_platform2.h",
         "sha256": "13c4fb64a5caae430176ec3cbfc2ba4015c04f18e64bece243559cc76f1e958e"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/byte_pipe_platform2.h",
+        "sha256": "617349cfc72d7af0022407cd5855431239d210df58147de7123288a48e714412"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/cli_helpers.h",
@@ -60806,6 +60976,10 @@
         "sha256": "82545fd4ec17aa2cc4139f18f35599a6fcf69d79e58fc04854703e30172523e4"
       },
       {
+        "path": "Repositories/SDK/Shared/C/include/r4os/launch_io_platform2.h",
+        "sha256": "504c8c71879cb75a5239b5b4a1435e31a59c65e59640113b12ccca4513538ad0"
+      },
+      {
         "path": "Repositories/SDK/Shared/C/include/r4os/metadata2.h",
         "sha256": "b726d1fef6e0687fdd862176cf7d43bffdd8049fb74ff3c75d4dc14ace5aea9d"
       },
@@ -60831,7 +61005,11 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/platform2.h",
-        "sha256": "44c5b5d944f29971e4322c824a9b48bc3d2cb1c33ae4c1085541e45cf9423ea9"
+        "sha256": "d21f9ad4c6d0fbf56b6d4d06c52647e1c5321abb4316b2064440a96f3b6bb7c2"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/platform_facade2.h",
+        "sha256": "dd04036f50f5f253a8c9fb9ed8cad60290c82ad24df83e29ce44abc61bbb460b"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/poll_budget.h",
@@ -60851,11 +61029,11 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/r4audio.h",
-        "sha256": "44cbe78fde1ec31dfb620952f81d689efe5233884755619d309284024cd4ce34"
+        "sha256": "574c9b75f4416e4a50fc76cbf376dd69af7ae996076a60e47c1d9876cf3202f1"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/r4desk.h",
-        "sha256": "a1147f1fa5a8058c89aa1a4cbdb5861ec35e1192f0eeedf957329be2b38b4754"
+        "sha256": "3a4c8a16c68f403b736d1d3d089905e54c4beb3f40b090a6a4d40f34d4d21b28"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/r4dev.h",
@@ -60863,7 +61041,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/r4draw.h",
-        "sha256": "bef823521639801a55b1c380e582eff8b64156a9d159535435155fdf7faba2a4"
+        "sha256": "35ce7b1a2833aba5174a3f6d38b358953ca2028785efee47324b2525f10462d9"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/r4l.h",
@@ -60875,7 +61053,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/r4net.h",
-        "sha256": "15eaf74d2fbb3ea80d3230ffe1a7212c8e4341c31c6657988811b82446046a75"
+        "sha256": "b07fe74ae447068a77801780c5ea8f709cfbd1c5ab28d1420d28158e58d96f34"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/r4os.h",
@@ -60883,7 +61061,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/r4sys.h",
-        "sha256": "42fd371b2c251db780e3abd332c7114774efc2a5af4581083eb10c4005d7d727"
+        "sha256": "7cd7ef59238bcceed09495ddf912d576f0daea0925ff33effaaeb74acb45d98f"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/r4xstart.h",
@@ -60926,6 +61104,14 @@
         "sha256": "4438cec6da25c81610d76f7ad39e7c66214d0db2fc871bb4c959aebcecc19740"
       },
       {
+        "path": "Repositories/SDK/Shared/C/include/r4os/text_composition.h",
+        "sha256": "3af776448536977ad2b3b2dc95d8fde3d2d737d92fd9145a4071e87fdc506c71"
+      },
+      {
+        "path": "Repositories/SDK/Shared/C/include/r4os/text_composition_platform2.h",
+        "sha256": "90978316f285b88490e08c6a3a0f0e40deeeb336a6f4c6ed9221300cda9cb3f9"
+      },
+      {
         "path": "Repositories/SDK/Shared/C/include/r4os/text_metrics.h",
         "sha256": "ceeb2f9930451b9db7ed7d8429cff7e9161c47828cc6f1b4f67ef556c3d1ab79"
       },
@@ -60958,6 +61144,10 @@
         "sha256": "cc545031cb42427b0be3f8adca0313c0c6877932fb1f698f5246502e85d5a077"
       },
       {
+        "path": "Repositories/SDK/Shared/C/src/r4app2_startup.c",
+        "sha256": "36382791757ec235ef41222896f362e2e6aacae02fc11e23bba962d7163d9564"
+      },
+      {
         "path": "Repositories/SDK/Shared/C/src/r4app_startup.c",
         "sha256": "8048488dfebe1e3d3cd11c533dae7ce59503a815d4636a368108ee4d49ed6af6"
       },
@@ -60986,8 +61176,44 @@
         "sha256": "4919b83b1f3004efbb6445e9e08655b06f31cad00cfab5b79717003db706770e"
       },
       {
+        "path": "Repositories/SDK/Shared/Zig/r4app2_startup.zig",
+        "sha256": "ff9867c048b2391aff1a835e01547d6fa7c58c1969655b76f07d37161b80c212"
+      },
+      {
         "path": "Repositories/SDK/Shared/Zig/r4app_startup.zig",
         "sha256": "c90b5f9032ea4ef924b824b9b146fe4c1a78b62c136024595ad1f921fc609b8c"
+      },
+      {
+        "path": "Repositories/SDK/Tests/Build/App2C/module.R4MF",
+        "sha256": "920514bcd1e22bd4393a2d376b5eacf6eb128be1281635da521832a8482ccfc7"
+      },
+      {
+        "path": "Repositories/SDK/Tests/Build/App2C/src/main.c",
+        "sha256": "eb4abb3f73c4e7ec77dcc666f5a1b18fb1268193e519415163ed803ee8e3db4b"
+      },
+      {
+        "path": "Repositories/SDK/Tests/Build/App2Rust/Cargo.lock",
+        "sha256": "1e8aa77c28b2527e53ece32d3503a46af247eb2f5eeb5c432431f9ed06be3de7"
+      },
+      {
+        "path": "Repositories/SDK/Tests/Build/App2Rust/Cargo.toml",
+        "sha256": "af5451f5450b630b39ce54ec8b60d274d633386250c49be4c7db75a139512a71"
+      },
+      {
+        "path": "Repositories/SDK/Tests/Build/App2Rust/module.R4MF",
+        "sha256": "e0f5e6609ee624c68619053c26c81a8affa1cebf5eb70f46e3e6aea1fdfe4f98"
+      },
+      {
+        "path": "Repositories/SDK/Tests/Build/App2Rust/src/main.rs",
+        "sha256": "c69a9600a594c1777d51a46058b8c69af0b2dd87f1da4c92a255a8725aafdec9"
+      },
+      {
+        "path": "Repositories/SDK/Tests/Build/App2Zig/module.R4MF",
+        "sha256": "88e9a2171f7779bbfcd2b3238135c0684d38d0a4ffb2d3e1727857649d24c162"
+      },
+      {
+        "path": "Repositories/SDK/Tests/Build/App2Zig/src/main.zig",
+        "sha256": "7c3d6e0dbe7a7db2bc47f52b0a81e3c8a1caeef10a10c5b5870988acac425a7d"
       },
       {
         "path": "Repositories/SDK/Tests/Build/MouseLook/Contender/main.c",
@@ -61016,6 +61242,14 @@
       {
         "path": "Repositories/SDK/Tests/Conformance/ServiceNetworkFacadePrototype05826.zig",
         "sha256": "09d6abf73dc0fea9a5f7e48afec2fc43e4b6da3df150d3bf07e8bd7cfb9d3f28"
+      },
+      {
+        "path": "Repositories/SDK/Tests/Conformance/TextCompositionABI.c",
+        "sha256": "f59b22a5cee247191dc691b15ad47aa84858ce90cc7a8c7f5a7e7536c1c02904"
+      },
+      {
+        "path": "Repositories/SDK/Tests/Simulation/App2Startup.c",
+        "sha256": "9ff60656c3fc5961192704689a01ee0b2d210a6bad4509dd3a9715e9ee3903fa"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/AudioWrite.rs",
@@ -61060,6 +61294,10 @@
       {
         "path": "Repositories/SDK/Tests/Simulation/RustGui.rs",
         "sha256": "28c1bd1beaf14fbe9fc1e940f25db2f9055cc8c8d51a8402b07163f26e902797"
+      },
+      {
+        "path": "Repositories/SDK/Tests/Simulation/RustHeap.rs",
+        "sha256": "ed6bf7e26963ac702e05ff2b1ff9f7f88169c951a41bb0dc90368b850b9b4bea"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/RustPlatform.rs",
@@ -61331,11 +61569,15 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "1750c29e86f623bc3e36afcf0b4a8a2bf7c03ebfebd1a2c934d73c10e8e93e25"
+        "sha256": "09e468ab0087810ad54693c4764b93e4ad3f57378203338ffaa7a1f967111f09"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
         "sha256": "a5a9eb16b2b5d2f76efe0c0dcad403506d7d5ec104ff50488d1e3e8f90b94364"
+      },
+      {
+        "path": "Repositories/SDK/r4os/allocator_source.zig",
+        "sha256": "3ef76c726974816c412939d73d86b285bf3d60d37d2cd5ae7baf4d150cc2a4f4"
       },
       {
         "path": "Repositories/SDK/r4os/allocator_wait.zig",
@@ -61344,6 +61586,14 @@
       {
         "path": "Repositories/SDK/r4os/allocator_wait_test.zig",
         "sha256": "ac44e1f3e314cda66a7f639fc1c4d96d38efb0e54e547a26f5784c7b62fad03b"
+      },
+      {
+        "path": "Repositories/SDK/r4os/app2.zig",
+        "sha256": "85b42da8be3e192bb804fec7131ef26e0fba288ce7bfff20a316d0cc1ab6bd42"
+      },
+      {
+        "path": "Repositories/SDK/r4os/app2_runtime.zig",
+        "sha256": "b2cd571cb9e1fc25020403327e20ca4fe12ee7a8ebf2e5d2844b1d8b58eb64ad"
       },
       {
         "path": "Repositories/SDK/r4os/app_audio.zig",
@@ -61398,6 +61648,10 @@
         "sha256": "bdf3f40564179c436891d7d850a62e649d16bab3bbd04b4302404b50e0029197"
       },
       {
+        "path": "Repositories/SDK/r4os/audio_capture.zig",
+        "sha256": "7a4c576f415e83dd58e4c5677e505fd8c5836603e0c3089032d185f6e718df89"
+      },
+      {
         "path": "Repositories/SDK/r4os/audio_pcm.zig",
         "sha256": "e239bf10a2e4465272a20e61615feace3402dd026e36ff8204039e9dfd6b7c02"
       },
@@ -61440,6 +61694,10 @@
       {
         "path": "Repositories/SDK/r4os/build_profile.zig",
         "sha256": "8f26eff0d3795be0da24e5db61d93ad9a912083ac2efa878d486e3daa37e7fee"
+      },
+      {
+        "path": "Repositories/SDK/r4os/byte_pipe.zig",
+        "sha256": "8614673aac69384a20d60388624439e8c2f22a5cd3331a61fcf6b250108322b3"
       },
       {
         "path": "Repositories/SDK/r4os/c_header_inputs.zig",
@@ -61742,6 +62000,10 @@
         "sha256": "92059df70e0e55051042db5c035ebd2180797210423512e648d3a4fca5985152"
       },
       {
+        "path": "Repositories/SDK/r4os/gui_text_control.zig",
+        "sha256": "9ccce39c0d71b150d7c6c5b42a4bc05f02995d3a6a5bbba35607280b6e3dd260"
+      },
+      {
         "path": "Repositories/SDK/r4os/gui_value_bridge.zig",
         "sha256": "38087ad0821bc3cdf827f430d1639609a2dafa26c5412831f7cf4e1c309e6489"
       },
@@ -61812,6 +62074,10 @@
       {
         "path": "Repositories/SDK/r4os/json.zig",
         "sha256": "7d6b07a0f627df12599b49313e5a19c8df3e685bdf11aacc0398adb072ca1b73"
+      },
+      {
+        "path": "Repositories/SDK/r4os/launch_io.zig",
+        "sha256": "c4bda461850d850660ba0b8df57349dd4fc0b91aeac6d6114f22dfa689b9aa7b"
       },
       {
         "path": "Repositories/SDK/r4os/lowlevel.zig",
@@ -61895,7 +62161,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/platform2.zig",
-        "sha256": "7fb5e646ff85fd7a73b4a7afe50582ddaffc3a9a241a3c5edc6971691aa71b31"
+        "sha256": "ee55c571eaeb18530f2a5835e952b95c2aa067a820e2306f9776d48a8722702f"
       },
       {
         "path": "Repositories/SDK/r4os/platform_runtime.zig",
@@ -61998,12 +62264,20 @@
         "sha256": "18a41559b21d5df21c39de6686b05b9231c9cad49e3b52e0a95297075f731a5c"
       },
       {
+        "path": "Repositories/SDK/r4os/rpc_budget.zig",
+        "sha256": "6ba3793220c5e627c04ad9ed63c0854ddff46d34aeab4737e2a5820863f8907e"
+      },
+      {
         "path": "Repositories/SDK/r4os/runtime_bootstrap.zig",
         "sha256": "dead6787ae258937ed4d136a739b23a0cda46f7b4ffe57dadf1013a8082f34da"
       },
       {
         "path": "Repositories/SDK/r4os/runtime_context.zig",
         "sha256": "10e935fa11f4b2d95444280cd0cb4027441d5ebae792e62e17d70d800986a743"
+      },
+      {
+        "path": "Repositories/SDK/r4os/runtime_fault.zig",
+        "sha256": "f67c7f4029bd1f3845cc3fcab247a4bef568ccec5c853d5e2dc893dcacbf8250"
       },
       {
         "path": "Repositories/SDK/r4os/runtime_r4l.zig",
@@ -62262,6 +62536,26 @@
         "sha256": "b204764c24fced3b90f4ca50e4f576058881b2dda3629cd1b3912ef0eb57af1a"
       },
       {
+        "path": "Repositories/SDK/r4os/text_composition.zig",
+        "sha256": "67e2ca3605b7dd7bacccbbfb04c79887383eac8c936271ac8a8a441334ec216e"
+      },
+      {
+        "path": "Repositories/SDK/r4os/text_composition_abi_tests.zig",
+        "sha256": "e6f973eee4645d519edcfd8b43cbe4fec4a0374c7f4efaa2da74eb87b6854ccf"
+      },
+      {
+        "path": "Repositories/SDK/r4os/text_composition_client.zig",
+        "sha256": "eaf99449c9f0e42b57484d9ebc466614376f0447daba5775a0b34326bc24666d"
+      },
+      {
+        "path": "Repositories/SDK/r4os/text_composition_runtime.zig",
+        "sha256": "082bd41e63e6bccb29b8d87aaa4c731c5171687b7e18c9060211dcd076a9b36a"
+      },
+      {
+        "path": "Repositories/SDK/r4os/text_composition_tests.zig",
+        "sha256": "0e7b3d3ff2916f4a56f9792719f94f137a8fe163a99c3cd5cc9bcd91fcdf3942"
+      },
+      {
         "path": "Repositories/SDK/r4os/text_metrics.zig",
         "sha256": "41bcb25618be06e2f7500e6e1f7f30b347b798d7209a03769ce1003dfda24ccc"
       },
@@ -62359,7 +62653,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/vm_allocator.zig",
-        "sha256": "9839651c7b641d6bcb3e645cbd6d8f7f2e14cfeaa4cfd8cad396fb062e725bc4"
+        "sha256": "d4c461a5513e74c539a8d18467b1bf5b77950072d34c91ec0be5644eada4be49"
       },
       {
         "path": "Repositories/SDK/r4os/wait_set.zig",
@@ -62484,166 +62778,6 @@
       {
         "path": "Repositories/SDK/test_owners.zig",
         "sha256": "b2308017fbe62c3c615a5e523ac0e22501bd3af1ac87d598033b12420809019b"
-      },
-      {
-        "path": "Repositories/SDK/Rust/src/byte_pipe.rs",
-        "sha256": "cfde4137e0efb5be8f8b4610adbfb381c83e17ab9d501c5c3c7336b387061bbd"
-      },
-      {
-        "path": "Repositories/SDK/Shared/C/include/r4os/byte_pipe_platform2.h",
-        "sha256": "617349cfc72d7af0022407cd5855431239d210df58147de7123288a48e714412"
-      },
-      {
-        "path": "Repositories/SDK/r4os/byte_pipe.zig",
-        "sha256": "8614673aac69384a20d60388624439e8c2f22a5cd3331a61fcf6b250108322b3"
-      },
-      {
-        "path": "Repositories/SDK/Rust/src/launch_io.rs",
-        "sha256": "14232e84915ceeb0ff1cc32a983b7d121434d355cb82093a4c9e52014a5233c0"
-      },
-      {
-        "path": "Repositories/SDK/Shared/C/include/r4os/launch_io_platform2.h",
-        "sha256": "504c8c71879cb75a5239b5b4a1435e31a59c65e59640113b12ccca4513538ad0"
-      },
-      {
-        "path": "Repositories/SDK/r4os/launch_io.zig",
-        "sha256": "c4bda461850d850660ba0b8df57349dd4fc0b91aeac6d6114f22dfa689b9aa7b"
-      },
-      {
-        "path": "Repositories/SDK/Rust/src/text_composition.rs",
-        "sha256": "360f665a025b77dbd4f064258b4098327f97f64ba7d37c235b83bbcd74cb9a0d"
-      },
-      {
-        "path": "Repositories/SDK/Shared/C/include/r4os/text_composition.h",
-        "sha256": "3af776448536977ad2b3b2dc95d8fde3d2d737d92fd9145a4071e87fdc506c71"
-      },
-      {
-        "path": "Repositories/SDK/Shared/C/include/r4os/text_composition_platform2.h",
-        "sha256": "90978316f285b88490e08c6a3a0f0e40deeeb336a6f4c6ed9221300cda9cb3f9"
-      },
-      {
-        "path": "Repositories/SDK/Tests/Conformance/TextCompositionABI.c",
-        "sha256": "f59b22a5cee247191dc691b15ad47aa84858ce90cc7a8c7f5a7e7536c1c02904"
-      },
-      {
-        "path": "Repositories/SDK/r4os/text_composition.zig",
-        "sha256": "67e2ca3605b7dd7bacccbbfb04c79887383eac8c936271ac8a8a441334ec216e"
-      },
-      {
-        "path": "Repositories/SDK/r4os/text_composition_abi_tests.zig",
-        "sha256": "e6f973eee4645d519edcfd8b43cbe4fec4a0374c7f4efaa2da74eb87b6854ccf"
-      },
-      {
-        "path": "Repositories/SDK/r4os/text_composition_runtime.zig",
-        "sha256": "082bd41e63e6bccb29b8d87aaa4c731c5171687b7e18c9060211dcd076a9b36a"
-      },
-      {
-        "path": "Repositories/SDK/r4os/text_composition_tests.zig",
-        "sha256": "0e7b3d3ff2916f4a56f9792719f94f137a8fe163a99c3cd5cc9bcd91fcdf3942"
-      },
-      {
-        "path": "Repositories/SDK/Rust/src/audio_capture.rs",
-        "sha256": "c1e710a202e8458ba8273ca9bd493529bf25823c0a77b1698dda49de6e65ad46"
-      },
-      {
-        "path": "Repositories/SDK/Shared/C/include/r4os/audio_capture_platform2.h",
-        "sha256": "6997b49df903efc8a8a6fade5c352721ad29815eb586761624eb782321511db0"
-      },
-      {
-        "path": "Repositories/SDK/r4os/audio_capture.zig",
-        "sha256": "7a4c576f415e83dd58e4c5677e505fd8c5836603e0c3089032d185f6e718df89"
-      },
-      {
-        "path": "Repositories/SDK/Rust/src/app2.rs",
-        "sha256": "bae5499a24100d56de4481fa8cf80b96d444c6a8588c6afc41b4253f27f4f943"
-      },
-      {
-        "path": "Repositories/SDK/Shared/C/include/r4os/app2.h",
-        "sha256": "92f122668cbe3863babeb2479ba6476aed2569a2395218ecccd2ef63048fa2a3"
-      },
-      {
-        "path": "Repositories/SDK/Shared/C/src/r4app2_startup.c",
-        "sha256": "36382791757ec235ef41222896f362e2e6aacae02fc11e23bba962d7163d9564"
-      },
-      {
-        "path": "Repositories/SDK/Shared/Zig/r4app2_startup.zig",
-        "sha256": "ff9867c048b2391aff1a835e01547d6fa7c58c1969655b76f07d37161b80c212"
-      },
-      {
-        "path": "Repositories/SDK/Tests/Build/App2C/module.R4MF",
-        "sha256": "920514bcd1e22bd4393a2d376b5eacf6eb128be1281635da521832a8482ccfc7"
-      },
-      {
-        "path": "Repositories/SDK/Tests/Build/App2C/src/main.c",
-        "sha256": "eb4abb3f73c4e7ec77dcc666f5a1b18fb1268193e519415163ed803ee8e3db4b"
-      },
-      {
-        "path": "Repositories/SDK/Tests/Build/App2Rust/Cargo.lock",
-        "sha256": "1e8aa77c28b2527e53ece32d3503a46af247eb2f5eeb5c432431f9ed06be3de7"
-      },
-      {
-        "path": "Repositories/SDK/Tests/Build/App2Rust/Cargo.toml",
-        "sha256": "af5451f5450b630b39ce54ec8b60d274d633386250c49be4c7db75a139512a71"
-      },
-      {
-        "path": "Repositories/SDK/Tests/Build/App2Rust/module.R4MF",
-        "sha256": "e0f5e6609ee624c68619053c26c81a8affa1cebf5eb70f46e3e6aea1fdfe4f98"
-      },
-      {
-        "path": "Repositories/SDK/Tests/Build/App2Rust/src/main.rs",
-        "sha256": "c69a9600a594c1777d51a46058b8c69af0b2dd87f1da4c92a255a8725aafdec9"
-      },
-      {
-        "path": "Repositories/SDK/Tests/Build/App2Zig/module.R4MF",
-        "sha256": "88e9a2171f7779bbfcd2b3238135c0684d38d0a4ffb2d3e1727857649d24c162"
-      },
-      {
-        "path": "Repositories/SDK/Tests/Build/App2Zig/src/main.zig",
-        "sha256": "7c3d6e0dbe7a7db2bc47f52b0a81e3c8a1caeef10a10c5b5870988acac425a7d"
-      },
-      {
-        "path": "Repositories/SDK/Tests/Simulation/App2Startup.c",
-        "sha256": "9ff60656c3fc5961192704689a01ee0b2d210a6bad4509dd3a9715e9ee3903fa"
-      },
-      {
-        "path": "Repositories/SDK/Tests/Simulation/RustHeap.rs",
-        "sha256": "ed6bf7e26963ac702e05ff2b1ff9f7f88169c951a41bb0dc90368b850b9b4bea"
-      },
-      {
-        "path": "Repositories/SDK/r4os/allocator_source.zig",
-        "sha256": "73e2f7d678da7dde72d758897d21bf276d1221a2c2af01e30a76ea49afb7143e"
-      },
-      {
-        "path": "Repositories/SDK/r4os/app2.zig",
-        "sha256": "85b42da8be3e192bb804fec7131ef26e0fba288ce7bfff20a316d0cc1ab6bd42"
-      },
-      {
-        "path": "Repositories/SDK/r4os/app2_runtime.zig",
-        "sha256": "b2cd571cb9e1fc25020403327e20ca4fe12ee7a8ebf2e5d2844b1d8b58eb64ad"
-      },
-      {
-        "path": "Repositories/SDK/r4os/runtime_fault.zig",
-        "sha256": "f67c7f4029bd1f3845cc3fcab247a4bef568ccec5c853d5e2dc893dcacbf8250"
-      },
-      {
-        "path": "Repositories/SDK/Shared/C/include/r4os/app_memory.h",
-        "sha256": "f19fd2fd2b28d738ef0f14fdb8f84ee9dac55d5e963ba6353dfefc0c35fea1eb"
-      },
-      {
-        "path": "Repositories/SDK/Shared/C/include/r4os/platform_facade2.h",
-        "sha256": "dd04036f50f5f253a8c9fb9ed8cad60290c82ad24df83e29ce44abc61bbb460b"
-      },
-      {
-        "path": "Repositories/SDK/r4os/gui_text_control.zig",
-        "sha256": "9ccce39c0d71b150d7c6c5b42a4bc05f02995d3a6a5bbba35607280b6e3dd260"
-      },
-      {
-        "path": "Repositories/SDK/r4os/text_composition_client.zig",
-        "sha256": "eaf99449c9f0e42b57484d9ebc466614376f0447daba5775a0b34326bc24666d"
-      },
-      {
-        "path": "Repositories/SDK/r4os/rpc_budget.zig",
-        "sha256": "6ba3793220c5e627c04ad9ed63c0854ddff46d34aeab4737e2a5820863f8907e"
       }
     ],
     "coverage": [
@@ -62678,7 +62812,8 @@
           "audio_duration_retirement_08859",
           "desktop_evidence_handoff_08897",
           "desktop_actions_08898",
-          "studio_089_host"
+          "studio_089_host",
+          "canonical_graphics_native_generation2_09046"
         ]
       },
       {
@@ -62738,7 +62873,8 @@
         "proof": [
           "independent_desktop_current_71",
           "file_name_limits_08827",
-          "studio_089_host"
+          "studio_089_host",
+          "canonical_graphics_native_generation2_09046"
         ]
       },
       {
@@ -62776,7 +62912,9 @@
       {
         "id": "library-bind",
         "zig": [
-          "Repositories/SDK/r4os/runtime_r4l.zig"
+          "Repositories/SDK/r4os/runtime_r4l.zig",
+          "Repositories/Libraries/Shared/Native/system.zig",
+          "Repositories/Libraries/Shared/Native/caller.zig"
         ],
         "c": [
           "Repositories/SDK/Shared/C/include/r4os/r4l.h"
@@ -62790,7 +62928,8 @@
           "current_kernel_records_80",
           "platform_generation2_09014",
           "tooling_templates_generation2_09044",
-          "canonical_text_font_image_generation2_09045"
+          "canonical_text_font_image_generation2_09045",
+          "canonical_graphics_native_generation2_09046"
         ]
       },
       {
@@ -62912,7 +63051,8 @@
           "waitset_resource_sources_09029",
           "byte_pipe_language_09034",
           "launch_io_language_09035",
-          "normal_system_facades_09041"
+          "normal_system_facades_09041",
+          "canonical_graphics_native_generation2_09046"
         ]
       },
       {
@@ -63118,7 +63258,8 @@
           "clipboard_offers_09030",
           "text_composition_09036",
           "normal_gui_facades_09042",
-          "normal_service_stream_facades_09043"
+          "normal_service_stream_facades_09043",
+          "canonical_graphics_native_generation2_09046"
         ]
       },
       {
@@ -63148,7 +63289,8 @@
           "file_name_limits_08827",
           "native_pointer_capture_08828",
           "gui_host_backpressure_08832",
-          "text_metrics_09023"
+          "text_metrics_09023",
+          "canonical_graphics_native_generation2_09046"
         ]
       },
       {
@@ -63621,7 +63763,8 @@
           "desktop_actions_08898",
           "gui_title_08947",
           "tooling_templates_generation2_09044",
-          "canonical_text_font_image_generation2_09045"
+          "canonical_text_font_image_generation2_09045",
+          "canonical_graphics_native_generation2_09046"
         ]
       },
       {
@@ -63729,7 +63872,8 @@
           "library_projection_current_61",
           "language_libraries_current_60",
           "tooling_templates_generation2_09044",
-          "canonical_text_font_image_generation2_09045"
+          "canonical_text_font_image_generation2_09045",
+          "canonical_graphics_native_generation2_09046"
         ]
       },
       {
@@ -63896,7 +64040,8 @@
           "library_projection_current_61",
           "language_libraries_current_60",
           "tooling_templates_generation2_09044",
-          "canonical_text_font_image_generation2_09045"
+          "canonical_text_font_image_generation2_09045",
+          "canonical_graphics_native_generation2_09046"
         ]
       }
     ]
@@ -64184,6 +64329,61 @@
       "libraries": "0.64.51 unchanged",
       "evidence": "tooling_templates_generation2_09044",
       "scope": "Central manifest-selected SDK admission/default/profile/export truth, real C/Zig/Rust normal/raw and technical templates, independent R4L contracts plus technical Query2, complete native C include/hash roots and actual matched tool packages.",
+      "historical_snapshot_retained": true,
+      "current_platform_tables": [
+        {
+          "group": "R4SYS",
+          "abi_version": 41,
+          "bytes": 1560,
+          "slots": 193
+        },
+        {
+          "group": "R4DESK",
+          "abi_version": 21,
+          "bytes": 632,
+          "slots": 77
+        },
+        {
+          "group": "R4DRAW",
+          "abi_version": 40,
+          "bytes": 920,
+          "slots": 113
+        },
+        {
+          "group": "R4NET",
+          "abi_version": 2,
+          "bytes": 296,
+          "slots": 35
+        },
+        {
+          "group": "R4AUDIO",
+          "abi_version": 5,
+          "bytes": 240,
+          "slots": 28
+        },
+        {
+          "group": "R4DEV",
+          "abi_version": 37,
+          "bytes": 744,
+          "slots": 91
+        }
+      ],
+      "current_projection": {
+        "extern_structs": 575,
+        "fields": 8916,
+        "integer_enums": 20,
+        "callback_declarations": 806,
+        "constants": 3777
+      },
+      "canonical_schema_sha256": "5d7d1f631a75b4f3b7b4a6206a0a353258932c594b777cd0ca594177e3485f4c"
+    },
+    {
+      "performed_in": "0.90.45",
+      "sdk": "0.64.186",
+      "contract": "0.64.93",
+      "libraries": "0.64.53",
+      "evidence": "canonical_text_font_image_generation2_09045",
+      "scope": "Typed generation2 named library imports and technical Query2 validation in C/Zig/Rust, independent API1 revisions preserved, canonical STD/FONT/IMG calls and exact caller/allocator ownership.",
       "historical_snapshot_retained": true,
       "current_platform_tables": [
         {

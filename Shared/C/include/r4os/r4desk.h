@@ -21,7 +21,7 @@ static inline int r4desk_available(const R4Desk *value) {
 static inline int r4desk_reaches(const R4Desk *value, size_t offset1, uint32_t offset2) {
     if (!value) return 0;
     if (value->generation2) {
-        const R4XStartR4Desk2 *table = R4OS2ContextGroup(value->generation2, 2);
+        const R4XStartR4Desk2 *table = (const R4XStartR4Desk2 *)R4OS2ContextGroup(value->generation2, 2);
         return table && offset2 <= table->size && sizeof(uintptr_t) <= table->size - offset2;
     }
     return value->table && offset1 <= value->table->size && sizeof(uintptr_t) <= value->table->size - offset1;

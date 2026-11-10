@@ -692,7 +692,7 @@ static inline int32_t r4sys_io_file_stream_abort(R4Sys *sys, const char *path, u
 static inline int32_t r4sys_io_service_call(R4Sys *sys, uint32_t handle, uint16_t op, const uint8_t *request, uint32_t request_len, void *response_header, uint8_t *response, uint32_t response_capacity, uint64_t timeout_ticks, uint32_t flags, uint32_t *out_request_id) {
     if (!R4SYS_HAS(sys, io_service_call) || response_header == 0 || response == 0 || out_request_id == 0) return R4OS_IO_ERROR_UNSUPPORTED;
     R4SysIoServiceCallFn io_fn = (R4SysIoServiceCallFn)(uintptr_t)R4SYS_SLOT(sys, io_service_call);
-    return io_fn(handle, op, request, request_len, response_header, response, response_capacity, timeout_ticks, flags, out_request_id);
+    return io_fn(handle, op, request, request_len, (R4ServiceMessageHeader *)response_header, response, response_capacity, timeout_ticks, flags, out_request_id);
 }
 
 static inline int32_t r4sys_io_status(R4Sys *sys, uint32_t request_id, R4ProgramIoInfo *out_info) {
