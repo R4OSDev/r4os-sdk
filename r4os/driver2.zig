@@ -37,34 +37,64 @@ pub const Context = struct {
     // These records have their own revision and owner. Query them through
     // DriverApi2 without constructing a legacy platform table or wrapper.
     pub fn heap(self: *const Context) ?@import("driver_heap.zig").Context {
-        const query = self.function("heap_query") orelse return null;
-        var table: abi.DriverHeapApi = .{};
-        if (query(&table) != abi.driver_heap_ok or table.version != 1 or table.size < @sizeOf(abi.DriverHeapApi)) return null;
-        return .{ .table = table };
+        return .{ .table = self.record("heap_query", abi.DriverHeapApi, @sizeOf(abi.DriverHeapApi), abi.driver_heap_ok) orelse return null };
     }
     pub fn resources(self: *const Context) ?@import("driver_resources.zig").Context {
-        const query = self.function("resource_query") orelse return null;
-        var table: abi.DriverResourceApi = .{};
-        if (query(&table) != abi.driver_resource_ok or table.version != 1 or table.size < 32) return null;
-        return .{ .table = table };
+        return .{ .table = self.record("resource_query", abi.DriverResourceApi, 32, abi.driver_resource_ok) orelse return null };
     }
     pub fn threads(self: *const Context) ?@import("driver_threads.zig").Context {
-        const query = self.function("thread_query") orelse return null;
-        var table: abi.DriverThreadApi = .{};
-        if (query(&table) != 0 or table.version != 1 or table.size < abi.driver_thread_api_min_bytes) return null;
-        return .{ .table = table };
+        return .{ .table = self.record("thread_query", abi.DriverThreadApi, abi.driver_thread_api_min_bytes, 0) orelse return null };
     }
     pub fn semaphores(self: *const Context) ?@import("driver_semaphores.zig").Context {
-        const query = self.function("semaphore_query") orelse return null;
-        var table: abi.DriverSemaphoreApi = .{};
-        if (query(&table) != 0 or table.version != 1 or table.size < @sizeOf(abi.DriverSemaphoreApi)) return null;
-        return .{ .table = table };
+        return .{ .table = self.record("semaphore_query", abi.DriverSemaphoreApi, @sizeOf(abi.DriverSemaphoreApi), 0) orelse return null };
     }
     pub fn activateUsbHostController(self: *const Context, name: [*:0]const u8, source: u32) i32 {
         return self.required("activate_usb_host_controller")(name, source);
     }
     pub fn unregisterUsbHostController(self: *const Context, name: [*:0]const u8) i32 {
         return self.required("unregister_usb_host_controller")(name);
+    }
+    /// Independent records retain their own revision, size, status and owner.
+    /// This validates the actual DriverApi2 slot; it never fabricates a legacy
+    /// outer table or transfers admission to another execution scope.
+    pub fn record(self: *const Context, comptime field: []const u8, comptime T: type, comptime minimum: u32, comptime success: i32) ?T {
+        const query = self.function(field) orelse return null;
+        var table: T = .{};
+        if (query(&table) != success or table.version != 1 or table.size < minimum) return null;
+        return table;
+    }
+    pub fn serial(self: *const Context) ?@import("driver_serial.zig").Context {
+        return .{ .table = self.record("serial_query", abi.DriverSerialApi, @sizeOf(abi.DriverSerialApi), abi.serial_ok) orelse return null };
+    }
+    pub fn memory(self: *const Context) ?@import("driver_memory.zig").Context {
+        return .{ .table = self.record("gfx_memory_query", abi.GfxDriverMemoryApi, 112, abi.gfx_buffer_result_ok) orelse return null };
+    }
+    pub fn getOption(self: *const Context, driver_name: [*:0]const u8, key: [*:0]const u8) [*:0]const u8 {
+        return self.required("get_option")(driver_name, key);
+    }
+    pub fn registerNetBackend(self: *const Context, name: [*:0]const u8, backend: *const abi.NetBackend) i32 {
+        return self.required("register_net_backend")(name, backend);
+    }
+    pub fn netReceiveFrame(self: *const Context, adapter_index: i32, frame: []const u8) i32 {
+        return self.required("net_receive_frame")(adapter_index, frame.ptr, @intCast(frame.len));
+    }
+    pub fn netScheduleRx(self: *const Context, adapter_index: i32) i32 {
+        return self.required("net_schedule_rx")(adapter_index);
+    }
+    pub fn netBackendQuery(self: *const Context, adapter_index: i32, out: *abi.NetBackendNegotiation) i32 {
+        return self.required("net_backend_query")(adapter_index, out);
+    }
+    pub fn netReceivePacket(self: *const Context, adapter_index: i32, packet: *const abi.NetPacket) i32 {
+        return self.required("net_receive_packet")(adapter_index, packet);
+    }
+    pub fn pciDeviceCount(self: *const Context) u32 {
+        return self.required("pci_device_count")();
+    }
+    pub fn pciDeviceAt(self: *const Context, index: u32, out: *abi.PciDeviceInfo) i32 {
+        return self.required("pci_device_at")(index, out);
+    }
+    pub fn pciReadBar(self: *const Context, info: abi.PciDeviceInfo, index: u8) u32 {
+        return self.required("pci_read_bar")(info.bus_kind, info.bus, info.device, info.function, index);
     }
     pub fn createSharedDmaBuffer(self: *const Context, bytes: u32, max_phys: u64) ?*driver.SharedDmaBuffer {
         return driver.createSharedDmaBuffer(self, bytes, max_phys);
@@ -245,6 +275,13 @@ test "DriverApi2 queries preserve independent record revision and reject missing
         fn semaphores(out: *abi.DriverSemaphoreApi) callconv(.c) i32 {
             return result(abi.DriverSemaphoreApi, out);
         }
+        fn serial(out: *abi.DriverSerialApi) callconv(.c) i32 {
+            return result(abi.DriverSerialApi, out);
+        }
+        fn memory(out: *abi.GfxDriverMemoryApi) callconv(.c) i32 {
+            const rc = result(abi.GfxDriverMemoryApi, out);
+            return if (rc == 0) abi.gfx_buffer_result_ok else rc;
+        }
     };
     var api: Api = undefined;
     @memset(std.mem.asBytes(&api), 0);
@@ -253,21 +290,27 @@ test "DriverApi2 queries preserve independent record revision and reject missing
     api.size = @sizeOf(Api);
     const ctx = Context.init(&api);
     try std.testing.expect(ctx.heap() == null and ctx.resources() == null and ctx.threads() == null and ctx.semaphores() == null);
+    try std.testing.expect(ctx.serial() == null and ctx.memory() == null);
     api.heap_query = F.heap;
     api.resource_query = F.resources;
     api.thread_query = F.threads;
     api.semaphore_query = F.semaphores;
+    api.serial_query = F.serial;
+    api.gfx_memory_query = F.memory;
     const heap = ctx.heap().?;
     try std.testing.expect(ctx.resources() != null and ctx.threads() != null and ctx.semaphores() != null);
+    try std.testing.expect(ctx.serial() != null and ctx.memory() != null);
     try std.testing.expectEqual(@as(u32, 1), heap.table.version);
     for (1..4) |mode| {
         F.mode = @intCast(mode);
         try std.testing.expect(ctx.heap() == null and ctx.resources() == null and ctx.threads() == null and ctx.semaphores() == null);
+        try std.testing.expect(ctx.serial() == null and ctx.memory() == null);
     }
     try std.testing.expectEqual(@as(u32, 1), heap.table.version);
     const calls = F.calls;
-    api.size = @offsetOf(Api, "resource_query");
+    api.size = @offsetOf(Api, "gfx_memory_query");
     try std.testing.expect(ctx.heap() == null and ctx.resources() == null and ctx.threads() == null and ctx.semaphores() == null);
+    try std.testing.expect(ctx.serial() == null and ctx.memory() == null);
     try std.testing.expectEqual(calls, F.calls);
 }
 

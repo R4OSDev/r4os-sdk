@@ -1477,7 +1477,7 @@
         "driver2",
         "driver_dma_cleanup"
       ],
-      "semantics": "Original DriverApi39/672 helpers and owner limits retained; explicit DriverApi2/DPI2 revision1/656 raw borrowed views/Init2 and typed AUB2/status80. Shared real IRQ/task/work/DMA/resource owner; no automatic quiescence or broad advancedHelper2 migration. SDK159: new explicit checked clock-bound budgets, tagged finiteMAX, and pure bounded DriverPollBudget; original wait/zero/saturating ABI behavior and resource ownership retained. No consumer migration or automatic sleep/quiescence. SDK160: explicit common pure wire/native/checksum/block helpers; actual static C/Rust implementation and early R4D qualification. Protocol policy, mapped native representation, storage loans and hardware completion remain with their existing owners; no consumer migration. SDK180: DriverApi2 retains its original656-byte prefix and negotiates the complete optional8-byte input-registration tail. New Rust views copy only initialized prefix/complete tail into owned known-size storage; C/Zig per-slot size/null checks never load partial pointers. Separate immutable40-byte capture descriptor, no reinterpretation of AudioBackend2. SDK190: typed Zig DriverContext2 actual slot admission, shared unchanged SharedDmaBuffer allocation/refcount owner, and original NVMe DMA unmap-then-unpin acknowledgment policy shared by mass-storage consumers. Canonical platform2 tables and old foreign helper layouts/signatures remain unchanged. SDK191: actual DriverApi2 queries retain independently revisioned heap/resource/thread/semaphore table copies and owner callbacks; USB activation/retirement and port32 forwarding are typed. No foreign helper layout or canonical platform2 slot changes.",
+      "semantics": "Original DriverApi39/672 helpers and owner limits retained; explicit DriverApi2/DPI2 revision1/656 raw borrowed views/Init2 and typed AUB2/status80. Shared real IRQ/task/work/DMA/resource owner; no automatic quiescence or broad advancedHelper2 migration. SDK159: new explicit checked clock-bound budgets, tagged finiteMAX, and pure bounded DriverPollBudget; original wait/zero/saturating ABI behavior and resource ownership retained. No consumer migration or automatic sleep/quiescence. SDK160: explicit common pure wire/native/checksum/block helpers; actual static C/Rust implementation and early R4D qualification. Protocol policy, mapped native representation, storage loans and hardware completion remain with their existing owners; no consumer migration. SDK180: DriverApi2 retains its original656-byte prefix and negotiates the complete optional8-byte input-registration tail. New Rust views copy only initialized prefix/complete tail into owned known-size storage; C/Zig per-slot size/null checks never load partial pointers. Separate immutable40-byte capture descriptor, no reinterpretation of AudioBackend2. SDK190: typed Zig DriverContext2 actual slot admission, shared unchanged SharedDmaBuffer allocation/refcount owner, and original NVMe DMA unmap-then-unpin acknowledgment policy shared by mass-storage consumers. Canonical platform2 tables and old foreign helper layouts/signatures remain unchanged. SDK191: actual DriverApi2 queries retain independently revisioned heap/resource/thread/semaphore table copies and owner callbacks; USB activation/retirement and port32 forwarding are typed. No foreign helper layout or canonical platform2 slot changes. SDK192: actual2 network/PCI/option forwarding, exact generic independent-record query shared by six typed factories, serial/MMIO independent-record admission. No legacy outer casts, frozen-slot or foreign helper ABI changes.",
       "current_only": "current_function",
       "rust": {
         "state": "current_shared_native_core_and_typed_explicit_owners_qualified",
@@ -58910,6 +58910,15 @@
       "report": "Docs/API/ConsumerMigration.txt",
       "scope": "SDK191 typed Zig DriverContext2 obtains the existing independent heap/resource/thread/semaphore records through actual prefix/null-checked DriverApi2 queries and forwards port32 and USB activation/retirement calls. Independent record revision1 is preserved; no legacy DriverApi is synthesized and no new platform slot or C/Rust helper ABI is introduced. Existing foreign driver cores and all other watched sources remain byte-identical to the previously qualified SDK190 state. EC/Pstate retry and void Stall use the existing pure SDK poll value in the actual C firmware caller through a private Zig port; no hardware or task acknowledgement is inferred from expiry.",
       "limits": "Zig platform2 existing77 cases, including actual four independent query callbacks, malformed results, missing/short tails and copy retention. Existing manifest33 cases passed; parity refresh follows. Actual C/Zig firmware wire layout and existing AML/EC/GPE/Notify/firmware68/idle17 plus frozen-clock integration execute on Linux; CPUPOWER simulated39 and XHCI exact Init/Shutdown owner are recorded separately. Foreign C/Rust bodies and all frozen platform2 declarations unchanged, not newly requalified physical hardware. Native boot, Windows compilation/execution and final single STANDARD are separate scopes."
+    },
+    "network_entropy_serial_driver_generation2_host_09051": {
+      "complete": true,
+      "performed_in": "0.90.51",
+      "sdk": "0.64.192",
+      "libraries": "0.64.56",
+      "report": "Docs/API/ConsumerMigration.txt",
+      "scope": "SDK192 adds actual DriverApi2 typed network/PCI/option calls and serial/MMIO record factories. The common pure record query retains each independent record revision1, original success value, minimum size and owner; existing four factories share it without changing old foreign layouts. Actual five Zig consumers use real Init2, exact field admission and the existing bounded poll value in retry/IRQ/entropy callers. No legacy outer table or canonical platform slot is introduced. Foreign C/Rust driver helper bodies remain exactly the already qualified state; new specialized Zig convenience does not claim a foreign generation2 driver execution.",
+      "limits": "Existing77 platform2 cases including six independent record factories with real callbacks, absent/short slots, malformed results and preserved copied records. RTL8139 original5, RTL8168 original29 plus frozen-clock DMA-retention case30, VirtioNet original IRQ2, VirtioRng actual7 and Serial actual3 callback/IRQ/UART ownership cases pass on Linux. Canonical platform2 and old foreign helper source unchanged. Windows compilation, native NIC/RNG/Serial peers, added checksum step and final single STANDARD have separate final receipts; no physical NIC/IRQ/DMA claim."
     }
   },
   "wave_bindings": [
@@ -59162,12 +59171,12 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.90.50",
-    "sdk": "0.64.191",
+    "performed_in": "0.90.51",
+    "sdk": "0.64.192",
     "contract": "0.64.93",
     "libraries": "0.64.56",
-    "evidence": "firmware_usb_driver_generation2_host_09050",
-    "scope": "SDK191 typed Zig DriverContext2 obtains the existing independent heap/resource/thread/semaphore records through actual prefix/null-checked DriverApi2 queries and forwards port32 and USB activation/retirement calls. Independent record revision1 is preserved; no legacy DriverApi is synthesized and no new platform slot or C/Rust helper ABI is introduced. Existing foreign driver cores and all other watched sources remain byte-identical to the previously qualified SDK190 state. EC/Pstate retry and void Stall use the existing pure SDK poll value in the actual C firmware caller through a private Zig port; no hardware or task acknowledgement is inferred from expiry.",
+    "evidence": "network_entropy_serial_driver_generation2_host_09051",
+    "scope": "SDK192 adds actual DriverApi2 typed network/PCI/option calls and serial/MMIO record factories. The common pure record query retains each independent record revision1, original success value, minimum size and owner; existing four factories share it without changing old foreign layouts. Actual five Zig consumers use real Init2, exact field admission and the existing bounded poll value in retry/IRQ/entropy callers. No legacy outer table or canonical platform slot is introduced. Foreign C/Rust driver helper bodies remain exactly the already qualified state; new specialized Zig convenience does not claim a foreign generation2 driver execution.",
     "historical_snapshot_retained": true,
     "current_platform_tables": [
       {
@@ -61626,7 +61635,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "6cd729f82b49ce5d7912dcf1fae44e1fb36b1bac8ba1430b8c1c817578fd8880"
+        "sha256": "8a1b4f39ce9ee31de5b5dedc724cc47fa7baf97a3933f811eef1d59c3a371cf4"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -61874,7 +61883,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/driver2.zig",
-        "sha256": "d69dbc483f5d3ef8bb297732034349b0f570e0bdfbb77bbbf697e186d0f97e78"
+        "sha256": "e86d4f2512ebde2bad114fadf614559925aafb0392cee8861d0431490a142d51"
       },
       {
         "path": "Repositories/SDK/r4os/driver_bridge_names.zig",
@@ -63690,7 +63699,8 @@
           "wire_native_data_09017",
           "optional_capture_09037",
           "storage_driver_generation2_host_09049",
-          "firmware_usb_driver_generation2_host_09050"
+          "firmware_usb_driver_generation2_host_09050",
+          "network_entropy_serial_driver_generation2_host_09051"
         ]
       },
       {
@@ -64673,6 +64683,61 @@
       "libraries": "0.64.56",
       "evidence": "storage_driver_generation2_host_09049",
       "scope": "SDK190 typed Zig DriverContext2 checks actual DriverApi2 per slot before calls; original SharedDmaBuffer allocation/refcount implementation shared with legacy Context without changing the C/Rust bridge ABI. Original NVMe DMA acknowledgment-order helper moved unchanged to SDK and used by AHCI and NVMe; no hardware completion is implied by timeouts. New compile-time generic Zig cleanup helper is implementation sharing, not a foreign table cast or a new platform slot.",
+      "historical_snapshot_retained": true,
+      "current_platform_tables": [
+        {
+          "group": "R4SYS",
+          "abi_version": 41,
+          "bytes": 1560,
+          "slots": 193
+        },
+        {
+          "group": "R4DESK",
+          "abi_version": 21,
+          "bytes": 632,
+          "slots": 77
+        },
+        {
+          "group": "R4DRAW",
+          "abi_version": 40,
+          "bytes": 920,
+          "slots": 113
+        },
+        {
+          "group": "R4NET",
+          "abi_version": 2,
+          "bytes": 296,
+          "slots": 35
+        },
+        {
+          "group": "R4AUDIO",
+          "abi_version": 5,
+          "bytes": 240,
+          "slots": 28
+        },
+        {
+          "group": "R4DEV",
+          "abi_version": 37,
+          "bytes": 744,
+          "slots": 91
+        }
+      ],
+      "current_projection": {
+        "extern_structs": 575,
+        "fields": 8916,
+        "integer_enums": 20,
+        "callback_declarations": 806,
+        "constants": 3777
+      },
+      "canonical_schema_sha256": "5d7d1f631a75b4f3b7b4a6206a0a353258932c594b777cd0ca594177e3485f4c"
+    },
+    {
+      "performed_in": "0.90.50",
+      "sdk": "0.64.191",
+      "contract": "0.64.93",
+      "libraries": "0.64.56",
+      "evidence": "firmware_usb_driver_generation2_host_09050",
+      "scope": "SDK191 typed Zig DriverContext2 obtains the existing independent heap/resource/thread/semaphore records through actual prefix/null-checked DriverApi2 queries and forwards port32 and USB activation/retirement calls. Independent record revision1 is preserved; no legacy DriverApi is synthesized and no new platform slot or C/Rust helper ABI is introduced. Existing foreign driver cores and all other watched sources remain byte-identical to the previously qualified SDK190 state. EC/Pstate retry and void Stall use the existing pure SDK poll value in the actual C firmware caller through a private Zig port; no hardware or task acknowledgement is inferred from expiry.",
       "historical_snapshot_retained": true,
       "current_platform_tables": [
         {
