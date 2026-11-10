@@ -1747,3 +1747,13 @@ die Startgeneration noch den Anbieter. Tabellen werden nicht umgegossen.
 Die eigentlichen Netzwerk-, Socket-, Resolver- und Leihbesitzer bleiben
 beim jeweiligen Dienst beziehungsweise Protokoll. Kein neuer Transport-
 oder asynchroner Rueckgabevertrag entsteht durch diese Anschlusskorrektur.
+
+Storage-Fassade ab0.64.198 (Migration0.90.61)
+--------------------------------------------------
+Die physische Storage-Fassade liest bei App2 den wirklichen R4SYS-Query2-
+Slot. Sie darf nach einer Verfuegbarkeitspruefung nicht auf ein altes
+Bundle zugreifen. Der an SFTP reproduzierte Nullzugriff entfällt damit
+auch bei den anderen Funktionen derselben Fassade. App2-Volume-Leihen
+benoetigen Begin und End vor der Anmeldung. Nur der kontrollierte alte
+Kernel ohne Storage-Leihvertrag behaelt den bisherigen Transferpfad ohne
+Leihe; fehlende Query2-Slots werden als nicht unterstuetzt gemeldet.
