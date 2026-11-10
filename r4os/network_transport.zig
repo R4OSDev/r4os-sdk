@@ -61,8 +61,8 @@ pub const Reply = struct { result: a.NetworkSocketResult, data: []const u8 };
 /// Explicit provider broker. The service retains the response buffer, exact
 /// client identity and front handle; this adapter owns no transport resource.
 pub fn broker(sys: @import("r4sys.zig").Context, dev: @import("r4dev.zig").Context, role: []const u8, module_provider: u64, client: a.ProgramProcessHandle, op: u32, request_value: a.NetworkSocketRequest, data: []const u8, response: []u8) Error!Reply {
-    const bundle = sys.base.bundle orelse return error.Backend;
-    const id = std.math.cast(u32, bundle.raw.instance_id) orelse return error.Backend;
+    const raw_instance = if (sys.base.generation2) |context| context.raw.instance_id else if (sys.base.bundle) |bundle| bundle.raw.instance_id else return error.Backend;
+    const id = std.math.cast(u32, raw_instance) orelse return error.Backend;
     const process = try common.owner(sys, id);
     var request_copy = request_value;
     request_copy.provider = process.generation;

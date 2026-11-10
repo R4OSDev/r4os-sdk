@@ -1734,3 +1734,16 @@ benutzt; der alte656-Byte-Praefix bleibt zugaenglich. Normativer Draht-/
 Lebenszeitvertrag: Contract/API/AudioCapture.txt. Ein CONTROLLED-Testeingang
 ist kein ADC. Ohne qualifizierten Inputanbieter ist Aufnahme nicht verfuegbar;
 die ausgelieferten HDA-/AC97-Backends liefern hier keinen Audioeingang.
+
+Netzdienstverbraucher ab0.64.197 (Migration0.90.60)
+--------------------------------------------------
+network_common.provider und network_transport.broker beziehen ihre eigene
+Prozess-ID aus dem wirklichen Startkontext. App2 verwendet ausschliesslich
+R4XStartContext2; der kontrollierte alte Verbraucher behaelt sein Bundle.
+Provider benoetigen eine passende ID, gueltige Generation und reserved0.
+network_family.Client.connectProvider verwendet bei App2 die wirklichen
+Query2-Servicefunktionen. Fehlende Funktionen oder Fehler wechseln weder
+die Startgeneration noch den Anbieter. Tabellen werden nicht umgegossen.
+Die eigentlichen Netzwerk-, Socket-, Resolver- und Leihbesitzer bleiben
+beim jeweiligen Dienst beziehungsweise Protokoll. Kein neuer Transport-
+oder asynchroner Rueckgabevertrag entsteht durch diese Anschlusskorrektur.

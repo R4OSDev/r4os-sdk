@@ -58,10 +58,10 @@ pub fn sample(sys: anytype) Error!checked.ClockSample {
     return checked.ClockSample.fromInfo(info) catch error.ClockChanged;
 }
 pub fn provider(sys: anytype) Error!u64 {
-    const bundle = sys.base.bundle orelse return error.Backend;
-    const instance = std.math.cast(u32, bundle.raw.instance_id) orelse return error.Backend;
+    const raw_instance = if (sys.base.generation2) |context| context.raw.instance_id else if (sys.base.bundle) |bundle| bundle.raw.instance_id else return error.Backend;
+    const instance = std.math.cast(u32, raw_instance) orelse return error.Backend;
     var process: abi.ProgramProcessHandle = .{};
-    if (sys.programOpenHandle(instance, &process) != 0 or process.generation == 0) return error.Backend;
+    if (instance == 0 or sys.programOpenHandle(instance, &process) != 0 or process.instance_id != instance or process.reserved != 0 or process.generation == 0) return error.Backend;
     return process.generation;
 }
 pub fn owner(sys: anytype, id: u32) Error!abi.ProgramProcessHandle {

@@ -20,9 +20,10 @@ pub const Client = struct {
         const close_call = platform.abi.function(platform.abi.R4SysFns2, table, "service_close") orelse return abi.err_no_fn;
         return openWith(open, call, close_call, service, out);
     }
-    /// Explicit bridge for existing provider modules serving the new copied
-    /// service contract. It changes no application start/import generation.
+    /// Use the caller's actual start generation for the copied service
+    /// contract. A failed generation2 lookup never enters the legacy path.
     pub fn connectProvider(sys: @import("r4sys.zig").Context, service: Service, out: *Client) i32 {
+        if (sys.base.generation2) |context| return connect(context, service, out);
         if (!sys.hasFn("service_open") or !sys.hasFn("service_call") or !sys.hasFn("service_close")) return abi.err_no_fn;
         const bundle = sys.base.bundle orelse return abi.err_no_group;
         const table = bundle.sys orelse return abi.err_no_group;
