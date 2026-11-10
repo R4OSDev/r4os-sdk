@@ -46,6 +46,48 @@ pub const Context = struct {
     pub fn graphicsOutputs(self: *const Context) ?@import("driver_outputs.zig").Context {
         return .{ .table = self.record("gfx_output_query", abi.GfxDriverOutputApi, 24, abi.gfx_output_ok) orelse return null };
     }
+    pub fn graphicsDisplay(self: *const Context) ?@import("driver_display.zig").Context {
+        return .{ .table = self.record("gfx_display_query", abi.GfxDriverDisplayApi, 40, abi.gfx_output_ok) orelse return null };
+    }
+    pub fn graphicsQueue(self: *const Context) ?@import("driver_queue.zig").Context {
+        return .{ .table = self.record("gfx_queue_query", abi.GfxDriverQueueApi, 56, abi.gfx_queue_ok) orelse return null };
+    }
+    pub fn registerDisplayBlitBackend(self: *const Context, name: [*:0]const u8, backend: *const abi.DisplayBlitBackend) i32 {
+        return self.required("register_display_blit_backend")(name, backend);
+    }
+    pub fn unregisterDisplayBlitBackend(self: *const Context, name: [*:0]const u8) i32 {
+        return self.required("unregister_display_blit_backend")(name);
+    }
+    pub fn registerUsbHostController(self: *const Context, name: [*:0]const u8, backend: *const abi.UsbHostController) i32 {
+        return self.required("register_usb_host_controller")(name, backend);
+    }
+    pub fn syncDmaForDevice(self: *const Context, mapping: *const abi.DmaMapping) i32 {
+        return self.required("dma_sync_for_device")(mapping);
+    }
+    pub fn syncDmaForCpu(self: *const Context, mapping: *const abi.DmaMapping) i32 {
+        return self.required("dma_sync_for_cpu")(mapping);
+    }
+    pub fn syncDmaRangeForDevice(self: *const Context, mapping: *const abi.DmaMapping, offset: u32, bytes: u32) i32 {
+        const callback = self.function("dma_sync_range_for_device") orelse return abi.err_no_fn;
+        return callback(mapping, offset, bytes);
+    }
+    pub fn syncDmaRangeForCpu(self: *const Context, mapping: *const abi.DmaMapping, offset: u32, bytes: u32) i32 {
+        const callback = self.function("dma_sync_range_for_cpu") orelse return abi.err_no_fn;
+        return callback(mapping, offset, bytes);
+    }
+    pub fn irqStats(self: *const Context, irq: u8, out: *abi.IrqStats) i32 {
+        return self.required("irq_stats")(irq, out);
+    }
+    pub fn workSummary(self: *const Context, out: *abi.DriverWorkSummary) i32 {
+        return self.required("driver_work_summary")(out);
+    }
+    /// Optional API2 callback under the original lifecycle owner. An absent
+    /// slot admits no work; only the real completion permits retirement.
+    pub fn workSubmitOwned(self: *const Context, handler: abi.DriverWorkHandler, context: usize, out_handle: *u32) i32 {
+        out_handle.* = 0;
+        const callback = self.function("driver_work_submit_owned") orelse return abi.err_no_fn;
+        return callback(handler, context, out_handle);
+    }
     fn required(self: *const Context, comptime field: []const u8) Callback(field) {
         return self.function(field) orelse @trap();
     }
@@ -305,6 +347,14 @@ test "DriverApi2 queries preserve independent record revision and reject missing
             const rc = result(abi.GfxDriverOutputApi, out);
             return if (rc == 0) abi.gfx_output_ok else rc;
         }
+        fn display(out: *abi.GfxDriverDisplayApi) callconv(.c) i32 {
+            const rc = result(abi.GfxDriverDisplayApi, out);
+            return if (rc == 0) abi.gfx_output_ok else rc;
+        }
+        fn queue(out: *abi.GfxDriverQueueApi) callconv(.c) i32 {
+            const rc = result(abi.GfxDriverQueueApi, out);
+            return if (rc == 0) abi.gfx_queue_ok else rc;
+        }
     };
     var api: Api = undefined;
     @memset(std.mem.asBytes(&api), 0);
@@ -314,6 +364,7 @@ test "DriverApi2 queries preserve independent record revision and reject missing
     const ctx = Context.init(&api);
     try std.testing.expect(ctx.heap() == null and ctx.resources() == null and ctx.threads() == null and ctx.semaphores() == null);
     try std.testing.expect(ctx.serial() == null and ctx.memory() == null and ctx.graphicsOutputs() == null);
+    try std.testing.expect(ctx.graphicsDisplay() == null and ctx.graphicsQueue() == null);
     api.heap_query = F.heap;
     api.resource_query = F.resources;
     api.thread_query = F.threads;
@@ -321,20 +372,25 @@ test "DriverApi2 queries preserve independent record revision and reject missing
     api.serial_query = F.serial;
     api.gfx_memory_query = F.memory;
     api.gfx_output_query = F.outputs;
+    api.gfx_display_query = F.display;
+    api.gfx_queue_query = F.queue;
     const heap = ctx.heap().?;
     try std.testing.expect(ctx.resources() != null and ctx.threads() != null and ctx.semaphores() != null);
     try std.testing.expect(ctx.serial() != null and ctx.memory() != null and ctx.graphicsOutputs() != null);
+    try std.testing.expect(ctx.graphicsDisplay() != null and ctx.graphicsQueue() != null);
     try std.testing.expectEqual(@as(u32, 1), heap.table.version);
     for (1..4) |mode| {
         F.mode = @intCast(mode);
         try std.testing.expect(ctx.heap() == null and ctx.resources() == null and ctx.threads() == null and ctx.semaphores() == null);
         try std.testing.expect(ctx.serial() == null and ctx.memory() == null and ctx.graphicsOutputs() == null);
+        try std.testing.expect(ctx.graphicsDisplay() == null and ctx.graphicsQueue() == null);
     }
     try std.testing.expectEqual(@as(u32, 1), heap.table.version);
     const calls = F.calls;
     api.size = @offsetOf(Api, "gfx_memory_query");
     try std.testing.expect(ctx.heap() == null and ctx.resources() == null and ctx.threads() == null and ctx.semaphores() == null);
     try std.testing.expect(ctx.serial() == null and ctx.memory() == null and ctx.graphicsOutputs() == null);
+    try std.testing.expect(ctx.graphicsDisplay() == null and ctx.graphicsQueue() == null);
     try std.testing.expectEqual(calls, F.calls);
 }
 
