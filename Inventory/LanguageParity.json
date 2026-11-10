@@ -1473,9 +1473,11 @@
         "binary_cursor",
         "native_protocol_view",
         "internet_checksum",
-        "block_transfer"
+        "block_transfer",
+        "driver2",
+        "driver_dma_cleanup"
       ],
-      "semantics": "Original DriverApi39/672 helpers and owner limits retained; explicit DriverApi2/DPI2 revision1/656 raw borrowed views/Init2 and typed AUB2/status80. Shared real IRQ/task/work/DMA/resource owner; no automatic quiescence or broad advancedHelper2 migration. SDK159: new explicit checked clock-bound budgets, tagged finiteMAX, and pure bounded DriverPollBudget; original wait/zero/saturating ABI behavior and resource ownership retained. No consumer migration or automatic sleep/quiescence. SDK160: explicit common pure wire/native/checksum/block helpers; actual static C/Rust implementation and early R4D qualification. Protocol policy, mapped native representation, storage loans and hardware completion remain with their existing owners; no consumer migration. SDK180: DriverApi2 retains its original656-byte prefix and negotiates the complete optional8-byte input-registration tail. New Rust views copy only initialized prefix/complete tail into owned known-size storage; C/Zig per-slot size/null checks never load partial pointers. Separate immutable40-byte capture descriptor, no reinterpretation of AudioBackend2.",
+      "semantics": "Original DriverApi39/672 helpers and owner limits retained; explicit DriverApi2/DPI2 revision1/656 raw borrowed views/Init2 and typed AUB2/status80. Shared real IRQ/task/work/DMA/resource owner; no automatic quiescence or broad advancedHelper2 migration. SDK159: new explicit checked clock-bound budgets, tagged finiteMAX, and pure bounded DriverPollBudget; original wait/zero/saturating ABI behavior and resource ownership retained. No consumer migration or automatic sleep/quiescence. SDK160: explicit common pure wire/native/checksum/block helpers; actual static C/Rust implementation and early R4D qualification. Protocol policy, mapped native representation, storage loans and hardware completion remain with their existing owners; no consumer migration. SDK180: DriverApi2 retains its original656-byte prefix and negotiates the complete optional8-byte input-registration tail. New Rust views copy only initialized prefix/complete tail into owned known-size storage; C/Zig per-slot size/null checks never load partial pointers. Separate immutable40-byte capture descriptor, no reinterpretation of AudioBackend2. SDK190: typed Zig DriverContext2 actual slot admission, shared unchanged SharedDmaBuffer allocation/refcount owner, and original NVMe DMA unmap-then-unpin acknowledgment policy shared by mass-storage consumers. Canonical platform2 tables and old foreign helper layouts/signatures remain unchanged.",
       "current_only": "current_function",
       "rust": {
         "state": "current_shared_native_core_and_typed_explicit_owners_qualified",
@@ -3360,6 +3362,14 @@
       "expression": "@import(\"r4os/rpc_budget.zig\")",
       "capability": "services",
       "wave": "0.90.43"
+    },
+    {
+      "name": "driver_dma_cleanup",
+      "source": "Repositories/SDK/r4os.zig",
+      "line": 201,
+      "expression": "@import(\"r4os/driver_dma_cleanup.zig\")",
+      "capability": "driver",
+      "wave": "0.90.49"
     }
   ],
   "build_exports": [
@@ -58882,6 +58892,15 @@
       "report": "Docs/API/ConsumerMigration.txt",
       "scope": "Actual generation2 R4VIDEO/R4ENC startup, prefix-checked system/drawing callbacks, stable process caller snapshots and synchronization. Independent VIDEO_V1/ENCODE_V1 contracts, generated C/Zig/Rust layouts and codec algorithms unchanged. Original PCM partial-write/death/close oracle repeated through actual SYS2 with a valid monotonic clock.",
       "limits": "Independent ABI C/Zig host conformance plus actual generation2 original video/encoder KVM4 consumers; no Windows execution or new physical GPU qualification. Existing C/Rust helper signatures and all217 SDK exports unchanged."
+    },
+    "storage_driver_generation2_host_09049": {
+      "complete": true,
+      "performed_in": "0.90.49",
+      "sdk": "0.64.190",
+      "libraries": "0.64.56",
+      "report": "Docs/API/ConsumerMigration.txt",
+      "scope": "SDK190 typed Zig DriverContext2 checks actual DriverApi2 per slot before calls; original SharedDmaBuffer allocation/refcount implementation shared with legacy Context without changing the C/Rust bridge ABI. Original NVMe DMA acknowledgment-order helper moved unchanged to SDK and used by AHCI and NVMe; no hardware completion is implied by timeouts. New compile-time generic Zig cleanup helper is implementation sharing, not a foreign table cast or a new platform slot.",
+      "limits": "Host qualification only: platform2 76/76, unchanged native C/Rust driver owner cases and three ownership negatives; four original cleanup oracle cases plus actual AHCI finish/rejection cases. Independent frozen platform2 layouts and low-level C/Rust views unchanged. New Zig specialized convenience wrapper is exercised as Zig; this does not claim execution of a Rust generation2 driver, Windows, physical hardware, native boot or performance. Native storage and single STANDARD are separate closure receipts."
     }
   },
   "wave_bindings": [
@@ -59134,12 +59153,12 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.90.48",
-    "sdk": "0.64.189",
+    "performed_in": "0.90.49",
+    "sdk": "0.64.190",
     "contract": "0.64.93",
     "libraries": "0.64.56",
-    "evidence": "canonical_video_encoder_generation2_09048",
-    "scope": "Actual generation2 R4VIDEO/R4ENC startup, prefix-checked system/drawing callbacks, stable process caller snapshots and synchronization. Independent VIDEO_V1/ENCODE_V1 contracts, generated C/Zig/Rust layouts and codec algorithms unchanged. Original PCM partial-write/death/close oracle repeated through actual SYS2 with a valid monotonic clock.",
+    "evidence": "storage_driver_generation2_host_09049",
+    "scope": "SDK190 typed Zig DriverContext2 checks actual DriverApi2 per slot before calls; original SharedDmaBuffer allocation/refcount implementation shared with legacy Context without changing the C/Rust bridge ABI. Original NVMe DMA acknowledgment-order helper moved unchanged to SDK and used by AHCI and NVMe; no hardware completion is implied by timeouts. New compile-time generic Zig cleanup helper is implementation sharing, not a foreign table cast or a new platform slot.",
     "historical_snapshot_retained": true,
     "current_platform_tables": [
       {
@@ -60478,7 +60497,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "0c791637f75f16dcbfabe9c8fe4fb431cb00fc294edb88a0e38a3f0310f6a005"
+        "sha256": "91737c7c2c170281b69f69508157a67fd4c578e9fbb70c420224a92ccb25510b"
       },
       {
         "path": "Repositories/SDK/Rust/src/cli.rs",
@@ -61598,11 +61617,11 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "efaf456d1057f929609365a442550ca180a787e04d4dd5574ceda55710907ae8"
+        "sha256": "7cb5484612f67f75568a390b463692a0d3c2f6d203aab9f6387720e42e9e0a99"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
-        "sha256": "a5a9eb16b2b5d2f76efe0c0dcad403506d7d5ec104ff50488d1e3e8f90b94364"
+        "sha256": "25eac77603f903d251a701b323ff101768d33e470f391de20cb73168b5ed34aa"
       },
       {
         "path": "Repositories/SDK/r4os/allocator_source.zig",
@@ -61842,7 +61861,11 @@
       },
       {
         "path": "Repositories/SDK/r4os/driver.zig",
-        "sha256": "72e8e61aaf360bca3b762634dc060aa8da72bae7e01250765e4ae50f41629c5c"
+        "sha256": "6581ba6d494e746a997a03e5eb0cc45d9f0b8e0de7b4a37d076ed3c7112aef3c"
+      },
+      {
+        "path": "Repositories/SDK/r4os/driver2.zig",
+        "sha256": "b5128263e1a0f158e66d102d79e4c3e3568039583fa5b41ebe779e6ecac0f4cd"
       },
       {
         "path": "Repositories/SDK/r4os/driver_bridge_names.zig",
@@ -61859,6 +61882,10 @@
       {
         "path": "Repositories/SDK/r4os/driver_display.zig",
         "sha256": "1089b34ae0fcbaa398fcb82354556df18234c3c9aa7f79fd966f2829ed44bf8c"
+      },
+      {
+        "path": "Repositories/SDK/r4os/driver_dma_cleanup.zig",
+        "sha256": "5a96319ee68d1de4e481d99a0401f26d95334cece82b644f033654f5df82f672"
       },
       {
         "path": "Repositories/SDK/r4os/driver_entropy.zig",
@@ -62242,7 +62269,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/r4dev.zig",
-        "sha256": "66ec41f15b5f0b463e8285d97a096b01ae88107d89e1426c0cfb742f3b2f0e1e"
+        "sha256": "68aa6284cff982c99cabcecbc994848a13ca8c8cd8883a81925bba32c61efe3e"
       },
       {
         "path": "Repositories/SDK/r4os/r4draw.zig",
@@ -62562,7 +62589,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/technical2.zig",
-        "sha256": "b204764c24fced3b90f4ca50e4f576058881b2dda3629cd1b3912ef0eb57af1a"
+        "sha256": "7a5d9bb9168eff819bab8767add22ef3b7813c27156e31f6cfb96ddb7ff01ccf"
       },
       {
         "path": "Repositories/SDK/r4os/text_composition.zig",
@@ -63611,7 +63638,9 @@
           "Repositories/SDK/r4os/native_protocol_view.zig",
           "Repositories/SDK/r4os/internet_checksum.zig",
           "Repositories/SDK/r4os/block_transfer.zig",
-          "Repositories/SDK/r4os/wire_runtime.zig"
+          "Repositories/SDK/r4os/wire_runtime.zig",
+          "Repositories/SDK/r4os/driver2.zig",
+          "Repositories/SDK/r4os/driver_dma_cleanup.zig"
         ],
         "c": [
           "Repositories/SDK/Shared/C/include/r4os/driver.h",
@@ -63650,7 +63679,8 @@
           "technical_generation2_09015",
           "time_poll_budgets_09016",
           "wire_native_data_09017",
-          "optional_capture_09037"
+          "optional_capture_09037",
+          "storage_driver_generation2_host_09049"
         ]
       },
       {
@@ -64523,6 +64553,61 @@
       "libraries": "0.64.55",
       "evidence": "canonical_compiler_workers_generation2_09047",
       "scope": "Independent vendor/compiler contracts unchanged; actual generation2 NAK/ACO workers, complete lightweight lifecycle reader, exact join loans. Compiler-typed C/Rust worker layouts and CompilerContext2 bridge expose the same original owner; private Zig App2 is constructed in its owner, never cast from a foreign App layout.",
+      "historical_snapshot_retained": true,
+      "current_platform_tables": [
+        {
+          "group": "R4SYS",
+          "abi_version": 41,
+          "bytes": 1560,
+          "slots": 193
+        },
+        {
+          "group": "R4DESK",
+          "abi_version": 21,
+          "bytes": 632,
+          "slots": 77
+        },
+        {
+          "group": "R4DRAW",
+          "abi_version": 40,
+          "bytes": 920,
+          "slots": 113
+        },
+        {
+          "group": "R4NET",
+          "abi_version": 2,
+          "bytes": 296,
+          "slots": 35
+        },
+        {
+          "group": "R4AUDIO",
+          "abi_version": 5,
+          "bytes": 240,
+          "slots": 28
+        },
+        {
+          "group": "R4DEV",
+          "abi_version": 37,
+          "bytes": 744,
+          "slots": 91
+        }
+      ],
+      "current_projection": {
+        "extern_structs": 575,
+        "fields": 8916,
+        "integer_enums": 20,
+        "callback_declarations": 806,
+        "constants": 3777
+      },
+      "canonical_schema_sha256": "5d7d1f631a75b4f3b7b4a6206a0a353258932c594b777cd0ca594177e3485f4c"
+    },
+    {
+      "performed_in": "0.90.48",
+      "sdk": "0.64.189",
+      "contract": "0.64.93",
+      "libraries": "0.64.56",
+      "evidence": "canonical_video_encoder_generation2_09048",
+      "scope": "Actual generation2 R4VIDEO/R4ENC startup, prefix-checked system/drawing callbacks, stable process caller snapshots and synchronization. Independent VIDEO_V1/ENCODE_V1 contracts, generated C/Zig/Rust layouts and codec algorithms unchanged. Original PCM partial-write/death/close oracle repeated through actual SYS2 with a valid monotonic clock.",
       "historical_snapshot_retained": true,
       "current_platform_tables": [
         {

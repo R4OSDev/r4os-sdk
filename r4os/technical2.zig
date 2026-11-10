@@ -11,12 +11,19 @@ fn View(comptime Table: type, comptime magic: u32, comptime version: u32, compti
         /// admitted execution scope; no borrow survives module retirement.
         pub fn init(raw: ?*const Table) ?Self {
             const table = raw orelse return null;
-            if (@intFromPtr(table) % @alignOf(Table) != 0 or table.magic != magic or table.version < version or table.size < minimum_size or table.reserved != 0) return null;
+            const address = @intFromPtr(table);
+            if (address % @alignOf(Table) != 0 or @addWithOverflow(address, minimum_size)[1] != 0) return null;
+            if (table.magic != magic or table.version < version or table.size < minimum_size or table.reserved != 0) return null;
             return .{ .table = table };
         }
         pub fn function(self: Self, comptime field: []const u8) ?Callback(Table, field) {
-            if (self.table.size < @offsetOf(Table, field) + @sizeOf(@FieldType(Table, field))) return null;
-            return @field(self.table, field);
+            const offset = @offsetOf(Table, field);
+            const address = @intFromPtr(self.table);
+            if (self.table.size < offset + @sizeOf(usize) or @addWithOverflow(address, offset + @sizeOf(usize))[1] != 0) return null;
+            // Mandatory C callback types are non-null Zig pointers. Check the
+            // foreign slot as an integer before constructing that pointer.
+            const slot: *const usize = @ptrFromInt(address + offset);
+            return if (slot.* == 0) null else @ptrFromInt(slot.*);
         }
     };
 }
@@ -48,6 +55,16 @@ pub fn protocolEntriesAsm(comptime init: []const u8, comptime shutdown: []const 
 }
 
 test "technical2 views reject wrong generations and short records without invoking callbacks" {
+    _ = @import("driver2.zig");
+    var missing: abi.DriverApi2 = undefined;
+    @memset(std.mem.asBytes(&missing), 0);
+    missing.magic = abi.driver_magic;
+    missing.version = abi.driver_version;
+    missing.size = @sizeOf(abi.DriverApi2);
+    // Even a nominally mandatory C function pointer may be absent in a
+    // malformed foreign record. Never construct/invoke a null Zig pointer.
+    try std.testing.expect(Driver.init(&missing).?.function("log_info") == null);
+    try std.testing.expect(Driver.init(@ptrFromInt(std.math.maxInt(usize) - 7)) == null);
     var driver: abi.DriverApi2 = undefined;
     driver.magic = abi.driver_magic;
     driver.version = abi.driver_version;

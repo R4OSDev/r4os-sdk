@@ -198,6 +198,7 @@ pub const web_fetch = @import("r4os/web_fetch.zig");
 pub const path = @import("r4os/path.zig");
 pub const time_contract = @import("r4os/time_contract.zig");
 pub const driver_poll_budget = @import("r4os/driver_poll_budget.zig");
+pub const driver_dma_cleanup = @import("r4os/driver_dma_cleanup.zig");
 pub const binary_cursor = @import("r4os/binary_cursor.zig");
 pub const native_protocol_view = @import("r4os/native_protocol_view.zig");
 pub const internet_checksum = @import("r4os/internet_checksum.zig");

@@ -11,16 +11,7 @@ pub const SharedDmaBuffer = struct {
     const payload_offset: u32 = 4096;
 
     pub fn create(ctx: *const Context, bytes: u32, max_phys: u64) ?*SharedDmaBuffer {
-        if (bytes == 0 or bytes > abi.dma_mapping_max_bytes) return null;
-        var region: abi.DmaBuffer = .{};
-        if (ctx.allocDmaRegionConstrained(bytes + payload_offset, payload_offset, max_phys, &region) != 0) return null;
-        if (region.virt_addr == 0 or region.bytes < bytes + payload_offset) {
-            ctx.freeDmaRegion(&region);
-            return null;
-        }
-        const self: *SharedDmaBuffer = @ptrFromInt(region.virt_addr);
-        self.* = .{ .region = region, .payload_bytes = bytes };
-        return self;
+        return createSharedDmaBuffer(ctx, bytes, max_phys);
     }
 
     pub fn data(self: *const SharedDmaBuffer) []u8 {
@@ -35,14 +26,32 @@ pub const SharedDmaBuffer = struct {
     }
 
     pub fn release(self: *SharedDmaBuffer, ctx: *const Context) void {
-        const previous = @atomicRmw(u32, &self.references, .Sub, 1, .acq_rel);
-        if (previous == 0) unreachable;
-        if (previous != 1) return;
-        // The descriptor passed to free must outlive the allocation it frees.
-        var region = self.region;
-        ctx.freeDmaRegion(&region);
+        releaseSharedDmaBuffer(self, ctx);
     }
 };
+
+// One allocation/refcount owner for both explicit technical generations.
+// Generic entry points are not foreign helper ABI exports.
+pub fn createSharedDmaBuffer(ctx: anytype, bytes: u32, max_phys: u64) ?*SharedDmaBuffer {
+    if (bytes == 0 or bytes > abi.dma_mapping_max_bytes) return null;
+    var region: abi.DmaBuffer = .{};
+    if (ctx.allocDmaRegionConstrained(bytes + SharedDmaBuffer.payload_offset, SharedDmaBuffer.payload_offset, max_phys, &region) != 0) return null;
+    if (region.virt_addr == 0 or region.bytes < bytes + SharedDmaBuffer.payload_offset) {
+        ctx.freeDmaRegion(&region);
+        return null;
+    }
+    const self: *SharedDmaBuffer = @ptrFromInt(region.virt_addr);
+    self.* = .{ .region = region, .payload_bytes = bytes };
+    return self;
+}
+pub fn releaseSharedDmaBuffer(self: *SharedDmaBuffer, ctx: anytype) void {
+    const previous = @atomicRmw(u32, &self.references, .Sub, 1, .acq_rel);
+    if (previous == 0) unreachable;
+    if (previous != 1) return;
+    // The descriptor passed to free must outlive the allocation it frees.
+    var region = self.region;
+    ctx.freeDmaRegion(&region);
+}
 
 /// Version 3 adds the canonical output callbacks to the unchanged v2 prefix.
 pub const AudioOutputBackend = extern struct {
