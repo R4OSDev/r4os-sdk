@@ -137,15 +137,15 @@
     },
     "libraries": {
       "repository": "https://github.com/R4OSDev/r4os-libraries.git",
-      "commit": "340f5400319afda7282c5945209863b977848c47",
-      "version": "0.64.54",
+      "commit": "2ffdfc11984d18afdf41c8347ac93e62b196b3fb",
+      "version": "0.64.55",
       "files": {
-        "build.zig.zon": "7ad34fe873ecbf7e1c23169fa66521af2d892fa10beca0c8d55e365a515fdec3",
+        "build.zig.zon": "df49f4701a766c5001e28d332d7c12c6b024a18261808bed1f8c399b9048567a",
         "Shared/Rust/Cargo.toml": "431c38bac8b28467b0dad7842d1626397bb061eeb94f54f604276dc81036aec4"
       },
       "tree": {
         "algorithm": "r4os-files-sha256-lf-v1",
-        "sha256": "4edf4a664fc5eb9e122e07642e0e76664811c2fb5996707261143e10a1499c77",
+        "sha256": "694965e90ed1e398e93215c8daf8be82d7c3915bd95795920dd883f91de68f25",
         "files": [
           ".gitattributes",
           ".gitignore",
@@ -2604,8 +2604,8 @@
           "consumer_oracles.zig"
         ]
       },
-      "zig_hash": "r4os_libraries-0.64.54-dH4fNSXHeQMLL9glOGBbH5Qf__BWC73WRpGQJ2g1fCfp",
-      "archive_url": "https://github.com/R4OSDev/r4os-libraries/archive/340f5400319afda7282c5945209863b977848c47.tar.gz",
+      "zig_hash": "r4os_libraries-0.64.55-dH4fNXuPewOP-RCIlChRDcLcrvo4gsVKY44uAD4iCPK2",
+      "archive_url": "https://github.com/R4OSDev/r4os-libraries/archive/2ffdfc11984d18afdf41c8347ac93e62b196b3fb.tar.gz",
       "archive_format": "tar.gz"
     },
     "recovery-contract": {
@@ -3030,9 +3030,9 @@
       "name": "R4ACO",
       "repository": "libraries",
       "path": "R4ACO",
-      "version": "0.1.8",
+      "version": "0.1.9",
       "target": "/R4OS/LIBS/R4ACO.R4L",
-      "manifest_sha256": "564e07162b2fa4cd3707f63f855b7b8db334db1f9e88c52cd4dde6e0075a68cd"
+      "manifest_sha256": "4b75c57fe62f13204b2b4dea569644894f888b0c14fce759726460a914b7d89c"
     },
     "r4amd": {
       "name": "R4AMD",
@@ -3086,9 +3086,9 @@
       "name": "R4NAK",
       "repository": "libraries",
       "path": "R4NAK",
-      "version": "0.1.6",
+      "version": "0.1.7",
       "target": "/R4OS/LIBS/R4NAK.R4L",
-      "manifest_sha256": "0d717e2319fad3c8d99130f4e6ddb5aabbb2968e86a322986fe33be6ee5c7805"
+      "manifest_sha256": "0313edddb217dc105c89ce034c3546ebe94e9248358d7de0b5e43366ef19d2b0"
     },
     "r4nv": {
       "name": "R4NV",

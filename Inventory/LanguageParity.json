@@ -48280,7 +48280,7 @@
     {
       "id": "library-R4ACO",
       "owner": "Repositories/Libraries/R4ACO",
-      "version": "0.1.5",
+      "version": "0.1.9",
       "wave": "0.86.60",
       "binding_wave": "0.86.52",
       "contract": {
@@ -48358,14 +48358,15 @@
         "language_libraries_current_60",
         "library_projection_current_61",
         "current_providers_79",
-        "canonical_compiler_cache_09027"
+        "canonical_compiler_cache_09027",
+        "canonical_compiler_workers_generation2_09047"
       ],
       "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten."
     },
     {
       "id": "library-R4AMD",
       "owner": "Repositories/Libraries/R4AMD",
-      "version": "0.1.8",
+      "version": "0.1.9",
       "wave": "0.86.60",
       "binding_wave": "0.86.52",
       "contract": {
@@ -48463,7 +48464,8 @@
         "source_inventory",
         "local_contract_and_baseline",
         "language_libraries_current_60",
-        "library_projection_current_61"
+        "library_projection_current_61",
+        "canonical_compiler_workers_generation2_09047"
       ],
       "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten.",
       "higher_helper_review": "Current public Zig binding contains generated local contract only; no additional higher consumer helper is omitted. Binding52 evidence remains."
@@ -49017,7 +49019,7 @@
     {
       "id": "library-R4NAK",
       "owner": "Repositories/Libraries/R4NAK",
-      "version": "0.1.3",
+      "version": "0.1.7",
       "wave": "0.86.60",
       "binding_wave": "0.86.52",
       "contract": {
@@ -49085,14 +49087,15 @@
         "local_contract_and_baseline",
         "language_libraries_current_60",
         "library_projection_current_61",
-        "canonical_compiler_cache_09027"
+        "canonical_compiler_cache_09027",
+        "canonical_compiler_workers_generation2_09047"
       ],
       "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten."
     },
     {
       "id": "library-R4NV",
       "owner": "Repositories/Libraries/R4NV",
-      "version": "0.1.19",
+      "version": "0.1.20",
       "wave": "0.86.60",
       "binding_wave": "0.86.52",
       "contract": {
@@ -49178,7 +49181,8 @@
         "source_inventory",
         "local_contract_and_baseline",
         "language_libraries_current_60",
-        "library_projection_current_61"
+        "library_projection_current_61",
+        "canonical_compiler_workers_generation2_09047"
       ],
       "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten.",
       "higher_helper_review": "Current public Zig binding contains generated local contract only; no additional higher consumer helper is omitted. Binding52 evidence remains."
@@ -58858,6 +58862,15 @@
         "First final owner check correctly rejected an outdated parity review while all41functional cases passed. Final reviewed guard/normal source admission must pass before closure.",
         "Normal/technical9 tool inputs/outputs, actual final-source actor byte equality, unchanged kernel artifact and one final STANDARD are separate closure evidence. No new server/Windows execution/physicalhardware/freshinstallation claim."
       ]
+    },
+    "canonical_compiler_workers_generation2_09047": {
+      "complete": true,
+      "performed_in": "0.90.47",
+      "sdk": "0.64.188",
+      "libraries": "0.64.55",
+      "report": "Docs/API/ConsumerMigration.txt",
+      "scope": "Independent vendor/compiler contracts unchanged; actual generation2 NAK/ACO workers, complete lightweight lifecycle reader, exact join loans. Compiler-typed C/Rust worker layouts and CompilerContext2 bridge expose the same original owner; private Zig App2 is constructed in its owner, never cast from a foreign App layout.",
+      "limits": "C/Rust native helper host tests plus owned KVM4 Zig compiler consumers. No Windows execution or new physical GPU qualification. Original code/cache fixtures retained; no compiler identity bump for path-only artifact metadata."
     }
   },
   "wave_bindings": [
@@ -59110,12 +59123,12 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.90.46",
-    "sdk": "0.64.187",
+    "performed_in": "0.90.47",
+    "sdk": "0.64.188",
     "contract": "0.64.93",
-    "libraries": "0.64.54",
-    "evidence": "canonical_graphics_native_generation2_09046",
-    "scope": "Actual Context2 graphics-library consumers, stable process/caller snapshots and explicit CView, mapped SYS2 heaps and native C11/TLS retirement. Independent library interfaces keep their own IDs/revisions/layouts.",
+    "libraries": "0.64.55",
+    "evidence": "canonical_compiler_workers_generation2_09047",
+    "scope": "Independent vendor/compiler contracts unchanged; actual generation2 NAK/ACO workers, complete lightweight lifecycle reader, exact join loans. Compiler-typed C/Rust worker layouts and CompilerContext2 bridge expose the same original owner; private Zig App2 is constructed in its owner, never cast from a foreign App layout.",
     "historical_snapshot_retained": true,
     "current_platform_tables": [
       {
@@ -59167,7 +59180,7 @@
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.90.46",
+    "reviewed_in": "0.90.47",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -59260,7 +59273,8 @@
       "Repositories/SDK/Tests/Build/App2Zig/module.R4MF",
       "Repositories/SDK/Tests/Build/App2C/module.R4MF",
       "Repositories/SDK/Tests/Build/App2Rust/module.R4MF",
-      "Repositories/SDK/Tests/Build/App2Rust/Cargo.lock"
+      "Repositories/SDK/Tests/Build/App2Rust/Cargo.lock",
+      "Repositories/Libraries/consumer_media_adapters.zig"
     ],
     "files": [
       {
@@ -59405,7 +59419,7 @@
       },
       {
         "path": "Repositories/Libraries/R4ACO/Bindings/Zig/worker.zig",
-        "sha256": "eac4d5742a05a2f0aa6f7ef2102278eb0acb9b6c0f35b65444ca8df925db9d8c"
+        "sha256": "c456401d65d3d4b257d3a71806c09c1781f989b8f1f00823a7dc5e388c8f1d92"
       },
       {
         "path": "Repositories/Libraries/R4ACO/Contract/Generated/implementation_abi.zig",
@@ -59829,7 +59843,7 @@
       },
       {
         "path": "Repositories/Libraries/R4NAK/Bindings/Zig/worker.zig",
-        "sha256": "2552876eb159e0906f71450ac788328198b7aff4497b18119b400a9971383723"
+        "sha256": "c75899ea66ee638c0881349a81a39d3c4d0fd45691c49a6609bf7d3f7ee41a5b"
       },
       {
         "path": "Repositories/Libraries/R4NAK/Contract/Generated/implementation_abi.zig",
@@ -60077,7 +60091,7 @@
       },
       {
         "path": "Repositories/Libraries/Shared/C/include/r4libraries/helpers.h",
-        "sha256": "17e4c9e66a5523ed0e766cc2993689a9b9d835e43f6ecda128d00498cefd0ff8"
+        "sha256": "29ce45e592fc6e2f5fc074d7f169b316d0b3976493633f033260828a4c8da48c"
       },
       {
         "path": "Repositories/Libraries/Shared/Language/c_header.zig",
@@ -60089,7 +60103,7 @@
       },
       {
         "path": "Repositories/Libraries/Shared/Language/fingerprint.zig",
-        "sha256": "7f28ce9a78603c278481bfec8926ab6cb0a3d02d8a2738007104a897539bed2a"
+        "sha256": "0c13e359227de1a93ef8d0ea2a40d9f68ac36c0e908cba6206cefd89089975a4"
       },
       {
         "path": "Repositories/Libraries/Shared/Language/gen.zig",
@@ -60337,7 +60351,7 @@
       },
       {
         "path": "Repositories/Libraries/Shared/Rust/src/raw.rs",
-        "sha256": "1d4c48b57587f70fb9aeb41e291d9e73307c72d6e7aba356a0e99563b216bdcb"
+        "sha256": "0b90ab8f72c51258fc090b774e03bfd61eab45db26613f3f92bed7c025493b3b"
       },
       {
         "path": "Repositories/Libraries/Shared/Tests/Consumer/Cargo.toml",
@@ -60373,11 +60387,11 @@
       },
       {
         "path": "Repositories/Libraries/Shared/Tests/media.c",
-        "sha256": "1bf482b523b6512b21590ce01d4709d80608029aa67f31b4f94e3300bcdc2c02"
+        "sha256": "8f13705071c52fd6d4344476f0ec58852c91ce81fb2f0981ec5690a3f0940690"
       },
       {
         "path": "Repositories/Libraries/Shared/Tests/media_native.rs",
-        "sha256": "061c9dbafd99107536dda67576f5df9828f418669c3ede771a06d54b331c4e64"
+        "sha256": "5f52524321b408f1a46355a6dcd376e8163c2fcb3eaaf9ddaec865ac9e6d1a87"
       },
       {
         "path": "Repositories/Libraries/Shared/Tests/native.rs",
@@ -60400,6 +60414,10 @@
         "sha256": "b0faafa6792889e5489baef14db5d1064fc228898cafec8309cb2546990f1180"
       },
       {
+        "path": "Repositories/Libraries/consumer_media_adapters.zig",
+        "sha256": "a873f64582b2e2dc950727c619e2199a3bbdbe6d353a0b8efa75ad90f4e9a39c"
+      },
+      {
         "path": "Repositories/SDK/BuildProfiles/README.txt",
         "sha256": "cb7ce6847feef01410f261e3e63555e28c494df89bef386c9bbd482b8d8890a6"
       },
@@ -60417,7 +60435,7 @@
       },
       {
         "path": "Repositories/SDK/Profiles/Components.json",
-        "sha256": "1630eb58e6afbe014da361eba47242953d43f714bf09000f54f0bbcb9837d8b3"
+        "sha256": "719d5d69ca104e3dc3b7d215fa0451a42453c13dd92d034e63ccfecad0af5775"
       },
       {
         "path": "Repositories/SDK/Profiles/Tools.json",
@@ -61569,7 +61587,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "09e468ab0087810ad54693c4764b93e4ad3f57378203338ffaa7a1f967111f09"
+        "sha256": "7fcf0ec05ebe79785cf95703a23fd4123d20c71c42db2bae06e6ebab49a43168"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -64384,6 +64402,61 @@
       "libraries": "0.64.53",
       "evidence": "canonical_text_font_image_generation2_09045",
       "scope": "Typed generation2 named library imports and technical Query2 validation in C/Zig/Rust, independent API1 revisions preserved, canonical STD/FONT/IMG calls and exact caller/allocator ownership.",
+      "historical_snapshot_retained": true,
+      "current_platform_tables": [
+        {
+          "group": "R4SYS",
+          "abi_version": 41,
+          "bytes": 1560,
+          "slots": 193
+        },
+        {
+          "group": "R4DESK",
+          "abi_version": 21,
+          "bytes": 632,
+          "slots": 77
+        },
+        {
+          "group": "R4DRAW",
+          "abi_version": 40,
+          "bytes": 920,
+          "slots": 113
+        },
+        {
+          "group": "R4NET",
+          "abi_version": 2,
+          "bytes": 296,
+          "slots": 35
+        },
+        {
+          "group": "R4AUDIO",
+          "abi_version": 5,
+          "bytes": 240,
+          "slots": 28
+        },
+        {
+          "group": "R4DEV",
+          "abi_version": 37,
+          "bytes": 744,
+          "slots": 91
+        }
+      ],
+      "current_projection": {
+        "extern_structs": 575,
+        "fields": 8916,
+        "integer_enums": 20,
+        "callback_declarations": 806,
+        "constants": 3777
+      },
+      "canonical_schema_sha256": "5d7d1f631a75b4f3b7b4a6206a0a353258932c594b777cd0ca594177e3485f4c"
+    },
+    {
+      "performed_in": "0.90.46",
+      "sdk": "0.64.187",
+      "contract": "0.64.93",
+      "libraries": "0.64.54",
+      "evidence": "canonical_graphics_native_generation2_09046",
+      "scope": "Actual Context2 graphics-library consumers, stable process/caller snapshots and explicit CView, mapped SYS2 heaps and native C11/TLS retirement. Independent library interfaces keep their own IDs/revisions/layouts.",
       "historical_snapshot_retained": true,
       "current_platform_tables": [
         {
