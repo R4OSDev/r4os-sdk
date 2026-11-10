@@ -121,6 +121,10 @@ pub const Context = struct {
     pub fn record(self: *const Context, comptime field: []const u8, comptime T: type, comptime minimum: u32, comptime success: i32) ?T {
         const query = self.function(field) orelse return null;
         var table: T = .{};
+        // A record's default size may name its original stable prefix.
+        // Request the entire actual allocation so optional current slots are
+        // available; the provider still controls its returned prefix.
+        table.size = @sizeOf(T);
         if (query(&table) != success or table.version != 1 or table.size < minimum) return null;
         return table;
     }
@@ -317,8 +321,10 @@ test "DriverApi2 queries preserve independent record revision and reject missing
     const F = struct {
         var mode: u32 = 0;
         var calls: usize = 0;
+        var full_capacity: bool = true;
         fn result(comptime T: type, out: *T) i32 {
             calls += 1;
+            full_capacity = full_capacity and out.size == @sizeOf(T);
             out.* = .{};
             out.version = if (mode == 1) 2 else 1;
             out.size = if (mode == 2) 8 else @sizeOf(T);
@@ -387,6 +393,7 @@ test "DriverApi2 queries preserve independent record revision and reject missing
     }
     try std.testing.expectEqual(@as(u32, 1), heap.table.version);
     const calls = F.calls;
+    try std.testing.expect(F.full_capacity);
     api.size = @offsetOf(Api, "gfx_memory_query");
     try std.testing.expect(ctx.heap() == null and ctx.resources() == null and ctx.threads() == null and ctx.semaphores() == null);
     try std.testing.expect(ctx.serial() == null and ctx.memory() == null and ctx.graphicsOutputs() == null);

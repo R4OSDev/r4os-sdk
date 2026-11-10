@@ -1477,7 +1477,7 @@
         "driver2",
         "driver_dma_cleanup"
       ],
-      "semantics": "Original DriverApi39/672 helpers and owner limits retained; explicit DriverApi2/DPI2 revision1/656 raw borrowed views/Init2 and typed AUB2/status80. Shared real IRQ/task/work/DMA/resource owner; no automatic quiescence or broad advancedHelper2 migration. SDK159: new explicit checked clock-bound budgets, tagged finiteMAX, and pure bounded DriverPollBudget; original wait/zero/saturating ABI behavior and resource ownership retained. No consumer migration or automatic sleep/quiescence. SDK160: explicit common pure wire/native/checksum/block helpers; actual static C/Rust implementation and early R4D qualification. Protocol policy, mapped native representation, storage loans and hardware completion remain with their existing owners; no consumer migration. SDK180: DriverApi2 retains its original656-byte prefix and negotiates the complete optional8-byte input-registration tail. New Rust views copy only initialized prefix/complete tail into owned known-size storage; C/Zig per-slot size/null checks never load partial pointers. Separate immutable40-byte capture descriptor, no reinterpretation of AudioBackend2. SDK190: typed Zig DriverContext2 actual slot admission, shared unchanged SharedDmaBuffer allocation/refcount owner, and original NVMe DMA unmap-then-unpin acknowledgment policy shared by mass-storage consumers. Canonical platform2 tables and old foreign helper layouts/signatures remain unchanged. SDK191: actual DriverApi2 queries retain independently revisioned heap/resource/thread/semaphore table copies and owner callbacks; USB activation/retirement and port32 forwarding are typed. No foreign helper layout or canonical platform2 slot changes. SDK192: actual2 network/PCI/option forwarding, exact generic independent-record query shared by six typed factories, serial/MMIO independent-record admission. No legacy outer casts, frozen-slot or foreign helper ABI changes. SDK193: actual2 typed audio/synth/work/output-epoch forwarding and seventh independent graphics-output record factory; no old outer cast. SDK194: actual2 graphicsDisplay/Queue and blit/DMA/IRQ/work/USB example forwarding, nine independent record factories; no legacy version gate.",
+      "semantics": "Original DriverApi39/672 helpers and owner limits retained; explicit DriverApi2/DPI2 revision1/656 raw borrowed views/Init2 and typed AUB2/status80. Shared real IRQ/task/work/DMA/resource owner; no automatic quiescence or broad advancedHelper2 migration. SDK159: new explicit checked clock-bound budgets, tagged finiteMAX, and pure bounded DriverPollBudget; original wait/zero/saturating ABI behavior and resource ownership retained. No consumer migration or automatic sleep/quiescence. SDK160: explicit common pure wire/native/checksum/block helpers; actual static C/Rust implementation and early R4D qualification. Protocol policy, mapped native representation, storage loans and hardware completion remain with their existing owners; no consumer migration. SDK180: DriverApi2 retains its original656-byte prefix and negotiates the complete optional8-byte input-registration tail. New Rust views copy only initialized prefix/complete tail into owned known-size storage; C/Zig per-slot size/null checks never load partial pointers. Separate immutable40-byte capture descriptor, no reinterpretation of AudioBackend2. SDK190: typed Zig DriverContext2 actual slot admission, shared unchanged SharedDmaBuffer allocation/refcount owner, and original NVMe DMA unmap-then-unpin acknowledgment policy shared by mass-storage consumers. Canonical platform2 tables and old foreign helper layouts/signatures remain unchanged. SDK191: actual DriverApi2 queries retain independently revisioned heap/resource/thread/semaphore table copies and owner callbacks; USB activation/retirement and port32 forwarding are typed. No foreign helper layout or canonical platform2 slot changes. SDK192: actual2 network/PCI/option forwarding, exact generic independent-record query shared by six typed factories, serial/MMIO independent-record admission. No legacy outer casts, frozen-slot or foreign helper ABI changes. SDK193: actual2 typed audio/synth/work/output-epoch forwarding and seventh independent graphics-output record factory; no old outer cast. SDK194: actual2 graphicsDisplay/Queue and blit/DMA/IRQ/work/USB example forwarding, nine independent record factories; no legacy version gate. SDK195 requests full allocated independent records; provider-returned prefix still governs optional slots.",
       "current_only": "current_function",
       "rust": {
         "state": "current_shared_native_core_and_typed_explicit_owners_qualified",
@@ -58941,11 +58941,11 @@
     "typed_display_dma_and_work_consumers_generation2_09053": {
       "complete": true,
       "performed_in": "0.90.53",
-      "sdk": "0.64.194",
+      "sdk": "0.64.195",
       "libraries": "0.64.56",
       "report": "Docs/API/ConsumerMigration.txt",
-      "scope": "SDK194 adds checked actual DriverApi2 display/queue queries through their independent revision1 records and ten direct/optional callback helpers for synchronous blit, USB example admission, DMA sync, IRQ/work diagnostics and owned work. Existing record-query case covers nine factories, including actual full/short/missing/malformed callbacks; independent record revisions stay1. All callback addresses come from the genuine API2 table; no legacy outer cast/table synthesis. Five driver consumers use actual DriverInit2/Query2, preserve conditional passive/software policy and exact owner/fence/Work lifetimes. Existing C/Rust helper bodies, foreign layouts, platform slots and Libraries56 remain unchanged; no new foreign helper ABI.",
-      "limits": "110 platform2/manifest cases pass before the expected stale-review guard.43AMD/53NVIDIA/2Virtio wire owner cases pass with unchanged original result/retention assertions. API1 numeric-version negative fixtures are modeled as actual unsupported API2 header or missing callbacks; independent resource records stay unchanged. Shared DriverPollBudget values enter real AMD4096retry and NVIDIA8step/no_sleep slices, preserving original5s/250us and exact completion/cancel/release. Extended existing AMD check confirms frozen-clock deadline retains Work until real callback receipt. Normal tools, Windows compile, native software/Example/Virtio models and final single STANDARD have separate receipts; no physical AMD/NVIDIA or old shutdown-hang cure is claimed."
+      "scope": "SDK195 adds checked actual DriverApi2 display/queue queries through their independent revision1 records and ten direct/optional callback helpers for synchronous blit, USB example admission, DMA sync, IRQ/work diagnostics and owned work. Existing record-query case covers nine factories, including actual full/short/missing/malformed callbacks; independent record revisions stay1. All callback addresses come from the genuine API2 table; no legacy outer cast/table synthesis. Five driver consumers use actual DriverInit2/Query2, preserve conditional passive/software policy and exact owner/fence/Work lifetimes. Existing C/Rust helper bodies, foreign layouts, platform slots and Libraries56 remain unchanged; no new foreign helper ABI. Capacity repair: all nine independent DriverApi2 record factories request the full actual Zig allocation, preserving returned prefix/version checks. GfxDriverQueueApi default128 is a legacy prefix, shorter than the current record; the old factory silently omitted optional current tails. Existing factory test now verifies requested capacity before the fake provider writes any output. No independent record revision, foreign layout or platform slot changed.",
+      "limits": "110 platform2/manifest cases pass before the expected stale-review guard.43AMD/53NVIDIA/2Virtio wire owner cases pass with unchanged original result/retention assertions. API1 numeric-version negative fixtures are modeled as actual unsupported API2 header or missing callbacks; independent resource records stay unchanged. Shared DriverPollBudget values enter real AMD4096retry and NVIDIA8step/no_sleep slices, preserving original5s/250us and exact completion/cancel/release. Extended existing AMD check confirms frozen-clock deadline retains Work until real callback receipt. Normal tools, Windows compile, native software/Example/Virtio models and final single STANDARD have separate receipts; no physical AMD/NVIDIA or old shutdown-hang cure is claimed. Capacity red: existing platform2 test76/77, exact independent factory case fails. SDK195 final host/normal/windows/native receipts remain separate; no physical qualification granted by this review."
     }
   },
   "wave_bindings": [
@@ -59199,11 +59199,11 @@
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
     "performed_in": "0.90.53",
-    "sdk": "0.64.194",
+    "sdk": "0.64.195",
     "contract": "0.64.93",
     "libraries": "0.64.56",
     "evidence": "typed_display_dma_and_work_consumers_generation2_09053",
-    "scope": "SDK194 adds checked actual DriverApi2 display/queue queries through their independent revision1 records and ten direct/optional callback helpers for synchronous blit, USB example admission, DMA sync, IRQ/work diagnostics and owned work. Existing record-query case covers nine factories, including actual full/short/missing/malformed callbacks; independent record revisions stay1. All callback addresses come from the genuine API2 table; no legacy outer cast/table synthesis. Five driver consumers use actual DriverInit2/Query2, preserve conditional passive/software policy and exact owner/fence/Work lifetimes. Existing C/Rust helper bodies, foreign layouts, platform slots and Libraries56 remain unchanged; no new foreign helper ABI.",
+    "scope": "SDK195 adds checked actual DriverApi2 display/queue queries through their independent revision1 records and ten direct/optional callback helpers for synchronous blit, USB example admission, DMA sync, IRQ/work diagnostics and owned work. Existing record-query case covers nine factories, including actual full/short/missing/malformed callbacks; independent record revisions stay1. All callback addresses come from the genuine API2 table; no legacy outer cast/table synthesis. Five driver consumers use actual DriverInit2/Query2, preserve conditional passive/software policy and exact owner/fence/Work lifetimes. Existing C/Rust helper bodies, foreign layouts, platform slots and Libraries56 remain unchanged; no new foreign helper ABI. Capacity repair: all nine independent DriverApi2 record factories request the full actual Zig allocation, preserving returned prefix/version checks. GfxDriverQueueApi default128 is a legacy prefix, shorter than the current record; the old factory silently omitted optional current tails. Existing factory test now verifies requested capacity before the fake provider writes any output. No independent record revision, foreign layout or platform slot changed.",
     "historical_snapshot_retained": true,
     "current_platform_tables": [
       {
@@ -61662,7 +61662,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "55d6d88253dce9774fa688d9a041bf4afe6650b87fcd6c06cd23c5ac3bad3765"
+        "sha256": "d7d4d43f7806fab4eb72ab28af710c3dfcca0405ccfce7b38a27145b0dc8d966"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -61910,7 +61910,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/driver2.zig",
-        "sha256": "27070e8f523f16ca2f2829d1861f24c98c92df3deb63a04ab1d2c4588d412c48"
+        "sha256": "31ea8b3a6c96985423bbfd30a40b6b837dfe4d0be72a3da366c8a53201d11107"
       },
       {
         "path": "Repositories/SDK/r4os/driver_bridge_names.zig",
@@ -64935,6 +64935,61 @@
       "libraries": "0.64.56",
       "evidence": "audio_capture_backend_actual_generation_09052_candidate_fix",
       "scope": "Pre-release SDK193 native capture regression fixed: actual2 hasFn was followed by a null legacy bundle.audio read. Exact failed R4M0 text equals the ELF; offset7c19 is the null0x28 load in Backend.io. The adapter selects declared generation before table access, resolves the real Query2 AUDIO capture callback by checked lookup and never falls back on missing2. Legacy1 remains independently guarded. Shared callback/record layouts and all C/Rust helper bodies remain unchanged. No new slot or owning resource.",
+      "historical_snapshot_retained": true,
+      "current_platform_tables": [
+        {
+          "group": "R4SYS",
+          "abi_version": 41,
+          "bytes": 1560,
+          "slots": 193
+        },
+        {
+          "group": "R4DESK",
+          "abi_version": 21,
+          "bytes": 632,
+          "slots": 77
+        },
+        {
+          "group": "R4DRAW",
+          "abi_version": 40,
+          "bytes": 920,
+          "slots": 113
+        },
+        {
+          "group": "R4NET",
+          "abi_version": 2,
+          "bytes": 296,
+          "slots": 35
+        },
+        {
+          "group": "R4AUDIO",
+          "abi_version": 5,
+          "bytes": 240,
+          "slots": 28
+        },
+        {
+          "group": "R4DEV",
+          "abi_version": 37,
+          "bytes": 744,
+          "slots": 91
+        }
+      ],
+      "current_projection": {
+        "extern_structs": 575,
+        "fields": 8916,
+        "integer_enums": 20,
+        "callback_declarations": 806,
+        "constants": 3777
+      },
+      "canonical_schema_sha256": "5d7d1f631a75b4f3b7b4a6206a0a353258932c594b777cd0ca594177e3485f4c"
+    },
+    {
+      "performed_in": "0.90.53",
+      "sdk": "0.64.194",
+      "contract": "0.64.93",
+      "libraries": "0.64.56",
+      "evidence": "typed_display_dma_and_work_consumers_generation2_09053",
+      "scope": "SDK194 adds checked actual DriverApi2 display/queue queries through their independent revision1 records and ten direct/optional callback helpers for synchronous blit, USB example admission, DMA sync, IRQ/work diagnostics and owned work. Existing record-query case covers nine factories, including actual full/short/missing/malformed callbacks; independent record revisions stay1. All callback addresses come from the genuine API2 table; no legacy outer cast/table synthesis. Five driver consumers use actual DriverInit2/Query2, preserve conditional passive/software policy and exact owner/fence/Work lifetimes. Existing C/Rust helper bodies, foreign layouts, platform slots and Libraries56 remain unchanged; no new foreign helper ABI.",
       "historical_snapshot_retained": true,
       "current_platform_tables": [
         {
