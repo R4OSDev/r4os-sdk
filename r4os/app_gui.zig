@@ -280,20 +280,20 @@ pub const EventLoop = struct {
 
     fn wait2(self: *EventLoop, timeout: time_contract.Timeout) WaitResult {
         const checked = time_contract.checked;
-        const kind = checked.fromTimeout(timeout) catch |err| return .{ .failure = @import("time_budget_runtime.zig").failure(err) };
+        const kind = checked.fromTimeout(timeout) catch |err| return .{ .failure = checked.failure(err) };
         var deadline: ?checked.DeadlineBudget = null;
         if (kind.kind == @intFromEnum(checked.Kind.finite)) {
-            const sample = self.sys.base.clockSampleChecked() catch |err| return .{ .failure = @import("time_budget_runtime.zig").failure(err) };
-            deadline = checked.DeadlineBudget.init(sample, timeout) catch |err| return .{ .failure = @import("time_budget_runtime.zig").failure(err) };
+            const sample = self.sys.base.clockSampleChecked() catch |err| return .{ .failure = checked.failure(err) };
+            deadline = checked.DeadlineBudget.init(sample, timeout) catch |err| return .{ .failure = checked.failure(err) };
         }
         while (true) {
             if (self.poll()) |message| return .{ .message = message };
             var remaining: u64 = if (kind.kind == @intFromEnum(checked.Kind.forever)) abi.io_wait_forever else 0;
             if (deadline) |*budget| {
-                const sample = self.sys.base.clockSampleChecked() catch |err| return .{ .failure = @import("time_budget_runtime.zig").failure(err) };
-                var value = budget.remaining(sample) catch |err| return .{ .failure = @import("time_budget_runtime.zig").failure(err) };
-                if (value.kind == @intFromEnum(checked.Kind.finite)) value.value = checked.durationToTicks(.{ .nanoseconds = value.value }, sample.identity.tick_hz) catch |err| return .{ .failure = @import("time_budget_runtime.zig").failure(err) };
-                remaining = checked.toWaitTicks(value) catch |err| return .{ .failure = @import("time_budget_runtime.zig").failure(err) };
+                const sample = self.sys.base.clockSampleChecked() catch |err| return .{ .failure = checked.failure(err) };
+                var value = budget.remaining(sample) catch |err| return .{ .failure = checked.failure(err) };
+                if (value.kind == @intFromEnum(checked.Kind.finite)) value.value = checked.durationToTicks(.{ .nanoseconds = value.value }, sample.identity.tick_hz) catch |err| return .{ .failure = checked.failure(err) };
+                remaining = checked.toWaitTicks(value) catch |err| return .{ .failure = checked.failure(err) };
             }
             if (remaining == 0) return .timed_out;
             if (self.nextTimerDelay(self.sys.ticks())) |delay| remaining = @min(remaining, delay);

@@ -272,6 +272,11 @@ impl<'a, T: Row> InventoryReader<'a, T> {
         exact(unsafe { c::R4SdkInventoryGetProgress(&self.raw, out.as_mut_ptr()) })?;
         progress(unsafe { out.assume_init() })
     }
+    /// Copied acquisition metadata. A matching current epoch can renew a
+    /// caller's previous complete view. Use `view` for newly acquired rows.
+    pub fn cursor(&self) -> abi::ProgramInventoryCursor {
+        self.raw.cursor
+    }
     pub fn cancel(&mut self) -> Result<Progress, Error> {
         let mut out = MaybeUninit::uninit();
         exact(unsafe { c::R4SdkInventoryCancel(&mut self.raw, out.as_mut_ptr()) })?;

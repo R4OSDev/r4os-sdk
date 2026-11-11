@@ -77,6 +77,13 @@ pub struct Resources<'a> {
     _local: PhantomData<*mut ()>,
 }
 impl<'a> Resources<'a> {
+    /// # Safety
+    /// This resources object and its application stay stationary and resident
+    /// throughout every synchronous native call using the returned descriptor.
+    /// Preserve each operation's ownership, generation and buffer contracts.
+    pub unsafe fn native(&self) -> c::R4Resources {
+        self.raw()
+    }
     pub fn new(app: &'a App<'_>) -> Result<Self> {
         let mut raw = unsafe { core::mem::zeroed() };
         exact(unsafe { c::R4SdkAppFacade(app.start_context(), &mut raw) })?;

@@ -3746,9 +3746,9 @@ const _: () = { assert!(core::mem::size_of::<R4SdkGuiSession>() == 1464); assert
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGfxContext {
-    pub r#opaque_bytes: [u8; 104],
+    pub r#opaque_bytes: [u8; 296],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGfxContext>() == 104); assert!(core::mem::align_of::<R4SdkGfxContext>() == 8); assert!(core::mem::offset_of!(R4SdkGfxContext, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGfxContext>() == 296); assert!(core::mem::align_of::<R4SdkGfxContext>() == 8); assert!(core::mem::offset_of!(R4SdkGfxContext, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkPlatformContext {
@@ -17326,7 +17326,7 @@ pub const R4SdkGuiType733_TYPE: u32 = 733;
 pub const R4SdkGuiType735_TYPE: u32 = 735;
 pub const R4SdkGuiType736_TYPE: u32 = 736;
 pub const R4SdkGuiType737_TYPE: u32 = 737;
-pub const R4SdkGui_ABI_FINGERPRINT: u64 = 3363826284474928117;
+pub const R4SdkGui_ABI_FINGERPRINT: u64 = 1999330418745243685;
 pub const R4SdkGui_font_w: i32 = 8;
 pub const R4SdkGui_font_h: i32 = 8;
 pub const R4SdkGuiChart_turns_per_circle: i32 = 65536;
@@ -22330,6 +22330,8 @@ unsafe extern "C" {
     pub fn R4SdkGfxOpen(p0: *mut R4SdkGfxContext, p1: *const R4XStartContext) -> i32;
     pub fn R4SdkGfxDraw(p0: *mut R4SdkGfxContext) -> *mut R4SdkGuiDrawContext;
     pub fn R4SdkGfxDevice(p0: *mut R4SdkGfxContext) -> *mut R4SdkGfxDeviceContext;
+    pub fn R4SdkGfxOpenNative2(p0: u64, p1: *mut R4SdkGfxContext, p2: *const R4XStartContext2) -> i32;
+    pub fn R4SdkGfxOpen2(p0: *mut R4SdkGfxContext, p1: *const R4XStartContext2) -> i32;
     pub fn R4SdkGuiSessionOpenNative(p0: u64, p1: *mut R4SdkGuiSession, p2: *const R4XStartContext, p3: u32, p4: *mut R4SdkGuiTimer, p5: u64) -> i32;
     pub fn R4SdkGuiSessionOpen(p0: *mut R4SdkGuiSession, p1: *const R4XStartContext, p2: u32, p3: *mut R4SdkGuiTimer, p4: u64) -> i32;
     pub fn R4SdkGuiSessionClose(p0: *mut R4SdkGuiSession) -> ();

@@ -58972,6 +58972,12 @@
       "scope": "77 existing platform cases including effective application classes, unchanged manifest admission and service role. Existing C and Rust host startup/heap cases exercise the shared boundary with a GUI override. Native Services console and desktop proof is separate.",
       "receipt": "Research/API-ABI/Migration/0.90.64/Host.json",
       "log": "Temp/ApiMigrationRun/064/App2Sdk.log"
+    },
+    "rust_desktop_shared_contexts_09065": {
+      "complete": true,
+      "scope": "77 existing platform/technical cases, original C/Rust generation2 startup/shared heap, three original graphics/GUI interop cases and five ownership/unsafe compile refusals, 286 Desktop native owner/original cases, three common geometry cases and one precise clock admission. The additional Desktop case covers shared full/lifecycle buffer growth. Historical render hashes use the exact original menu facts and current menu policy has its own assertions.",
+      "receipt": "Research/API-ABI/Migration/0.90.65/Host.json",
+      "limits": "Linux native source models and shared FFI. Normal freestanding artifacts and actual Kernel/runtime, Windows execution and physical graphics need their own evidence."
     }
   },
   "wave_bindings": [
@@ -59224,18 +59230,18 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.90.64",
-    "sdk": "0.64.200",
+    "performed_in": "0.90.65",
+    "sdk": "0.64.201",
     "contract": "0.64.93",
-    "libraries": "0.64.56",
-    "evidence": "normal_app2_launch_class_09064",
+    "libraries": "0.64.57",
+    "evidence": "rust_desktop_shared_contexts_09065",
     "historical_snapshot_retained": true,
-    "scope": "Normal App2 admits the effective Console or GUI application class selected by the loader. Manifest profile and ordered imports retain their own checks. The service profile requires the exact service class. Zig, C and Rust normal startup share one implementation."
+    "scope": "Resident actual2 Rust graphics and Library helper contexts, immutable joined-worker startup facts, synchronous resource loans and copied shared inventory acquisition metadata. Pure checked-time error mapping composes one native export owner. Existing C/Rust declarations project the same typed owners. Desktop actual2 tests use the common complete inventory reader, typed clipboard offers and main-task GUI wait sources. Native guest and normal packaged artifact qualification are recorded separately."
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.90.48",
+    "reviewed_in": "0.90.65",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -59962,7 +59968,7 @@
       },
       {
         "path": "Repositories/Libraries/R4STD/Bindings/Rust/src/helpers.rs",
-        "sha256": "ffecd48ec23ff2a23eb77224c79d7736a31ecc46df0fd28d0e16bd892df35da6"
+        "sha256": "e48cb024b37b659836ce7410501bddc64984e665c6af79060b35e79529e61510"
       },
       {
         "path": "Repositories/Libraries/R4STD/Bindings/Rust/src/lib.rs",
@@ -60146,7 +60152,7 @@
       },
       {
         "path": "Repositories/Libraries/Shared/C/include/r4libraries/helpers.h",
-        "sha256": "29ce45e592fc6e2f5fc074d7f169b316d0b3976493633f033260828a4c8da48c"
+        "sha256": "a5eac1bae365b88630b561d01cfe2607d14273e3d1d612997a5db0d036b4b00a"
       },
       {
         "path": "Repositories/Libraries/Shared/Language/c_header.zig",
@@ -60158,7 +60164,7 @@
       },
       {
         "path": "Repositories/Libraries/Shared/Language/fingerprint.zig",
-        "sha256": "0c13e359227de1a93ef8d0ea2a40d9f68ac36c0e908cba6206cefd89089975a4"
+        "sha256": "9ad7d04822d080e2223a65b56e7973a64b95d8f5354c5974f096689b8d61159d"
       },
       {
         "path": "Repositories/Libraries/Shared/Language/gen.zig",
@@ -60178,7 +60184,7 @@
       },
       {
         "path": "Repositories/Libraries/Shared/Language/support.zig",
-        "sha256": "37afc85e43573dbfb89470932c085f805e4cd568161e2cd270d5b112b354ad8e"
+        "sha256": "12c0aded3ed801bd7d320f5c9c2d5b73211e50c282e760dda4fa4e9ea1d9d5aa"
       },
       {
         "path": "Repositories/Libraries/Shared/Native/AMDProfile.json",
@@ -60406,7 +60412,7 @@
       },
       {
         "path": "Repositories/Libraries/Shared/Rust/src/raw.rs",
-        "sha256": "0b90ab8f72c51258fc090b774e03bfd61eab45db26613f3f92bed7c025493b3b"
+        "sha256": "d98ec8b4e3c1ad9a98929bae318a1ec5dc53b8c86e99bb648b0dbabbfcff4c53"
       },
       {
         "path": "Repositories/Libraries/Shared/Tests/Consumer/Cargo.toml",
@@ -60490,7 +60496,7 @@
       },
       {
         "path": "Repositories/SDK/Profiles/Components.json",
-        "sha256": "d0acd9967c681ababc8b061314468d218d173036cbbf66b874d4c624b42e10c2"
+        "sha256": "3f5822d5b183a80fffbec7a9da409d6faa4b1fbf7adbd696350bc0e8f45ab0c0"
       },
       {
         "path": "Repositories/SDK/Profiles/Tools.json",
@@ -60502,7 +60508,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/app2.rs",
-        "sha256": "bae5499a24100d56de4481fa8cf80b96d444c6a8588c6afc41b4253f27f4f943"
+        "sha256": "05608f736a0be0f4f975cd0ba271197b12a22da29a3c0fccb876092644e32361"
       },
       {
         "path": "Repositories/SDK/Rust/src/audio_capture.rs",
@@ -60522,7 +60528,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "f913e7cdebc1becb61962bb6a78fbde14c074f532c73c369d9fc9993f6246aaa"
+        "sha256": "55d31e8718413f31d3782941f019fcfad0fe49fe6ec55fbc24a2a7570b5edb28"
       },
       {
         "path": "Repositories/SDK/Rust/src/cli.rs",
@@ -60582,7 +60588,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/graphics/mod.rs",
-        "sha256": "e37b40967a387cd02782ed7d6429352db246b0632328b86788a7d443028b5283"
+        "sha256": "f4f2342db96ce6eb672b5bde746797128eaebd2d1d8497f8f5ac5cbb96271621"
       },
       {
         "path": "Repositories/SDK/Rust/src/gui/input.rs",
@@ -60610,7 +60616,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/inventory.rs",
-        "sha256": "967a796cec1ff39a061301719577eb391c5e92def81f046f8fba44c1f79f66de"
+        "sha256": "b04529aab4fe1b69ac5c3c3649654bf03fad4816d161376d994af4ab818959fd"
       },
       {
         "path": "Repositories/SDK/Rust/src/launch_io.rs",
@@ -60706,7 +60712,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/resources/mod.rs",
-        "sha256": "d9f6972cf8540fa8a822b22d1b40fd4ea56884dfd9ef35be8620e91f1634ef19"
+        "sha256": "a3b21c7df502bd93436e92402e4b285e8f57f19f9b6129de4d3003cb31cc5805"
       },
       {
         "path": "Repositories/SDK/Rust/src/resources/notification.rs",
@@ -61034,7 +61040,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/gui_bridge.h",
-        "sha256": "2226f364478cfaacc251641845642c9bcf93bd9ae16b83ce70838c3623fb872f"
+        "sha256": "f81df5c8b02e1abc8d1d21613ca69bc86be9d3e0c990a8bec9bdb28235dad415"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/heap.h",
@@ -61434,7 +61440,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/GuiBridgeGen/src/c_header.zig",
-        "sha256": "4c7b6e3eea6fda9e38ceccb72efaa348dcb2b76a262bd26b318a1c080b0f30f0"
+        "sha256": "c1c0ba0e3c532037c9b8c305cd59e15f4de6e7c30f216082fdb676f9f30ca7e1"
       },
       {
         "path": "Repositories/SDK/Tools/GuiBridgeGen/src/main.zig",
@@ -61586,7 +61592,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/Test-RustGui.ps1",
-        "sha256": "34871c95cede0ee3f3249123b99f8f5425373da20c79c1f6e8b5da1e5c1db8ff"
+        "sha256": "e0d2f2b70133762c2512955dde32cba723118f2219492fb9576021c0cab414d4"
       },
       {
         "path": "Repositories/SDK/Tools/Test-RustHeap.ps1",
@@ -61642,7 +61648,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "0e1866fd8b667cf9fbefa815da0088b79c4db5da0cbc20d034f9c9a1a20c0837"
+        "sha256": "8c44eb83b7f786c4cdd516bbecf9511e55bfc34db51cd63d338907e06b367215"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -61682,7 +61688,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/app_gui.zig",
-        "sha256": "7b9e7984d0c9b12763b98b0601fc72acfb946b163498b6e8bcdc8c19096372b2"
+        "sha256": "524d5e666559454ebf8dddaf2d6d412a64c9f161091619eeb6aaccae12ef7fa4"
       },
       {
         "path": "Repositories/SDK/r4os/app_network.zig",
@@ -61694,7 +61700,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/app_services.zig",
-        "sha256": "f5be7845f523a0f01f08acb2d56d25452ce2a767785dce5a42218be6c9e1cdca"
+        "sha256": "2e1933c3086b6daf84a32f0df8269204be8e90afd025d297fb61e2d887324e54"
       },
       {
         "path": "Repositories/SDK/r4os/app_storage.zig",
@@ -61994,7 +62000,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/generated/gui_fingerprint.zig",
-        "sha256": "d6f671c7205e33df3baeb8db441eacabf62f6314f5c0376c6d2740c9e8be2bfe"
+        "sha256": "7d6e5cdab95b437e77af1c91b21a8fd7219de81da6ca7aefdf225268d0954e37"
       },
       {
         "path": "Repositories/SDK/r4os/generated/net_facade.zig",
@@ -62042,7 +62048,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/graphics_runtime.zig",
-        "sha256": "d004d5bb10f381e2dc5328b8a61370050dfcae84d8d96409e7fdbe23764598db"
+        "sha256": "f6b018e0cabe6fe91e17d538a4644d54d8ddb74c98452335ec7c4f1ea8f85155"
       },
       {
         "path": "Repositories/SDK/r4os/graphics_status.zig",
@@ -62050,7 +62056,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/graphics_support.zig",
-        "sha256": "10b1472a4bbbb43662230ab91308cfa6a7057bd7ea90f6b809aac8c7a0eb8357"
+        "sha256": "427aa026771b438c97fe8cc3b83e0445558d22bcbb9961a9812344dc18c0d4b3"
       },
       {
         "path": "Repositories/SDK/r4os/gui.zig",
@@ -62350,7 +62356,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/rpc_budget.zig",
-        "sha256": "f4a45c52130b5566783c057903566275b2a4703985cba476751a4c74b4ddca69"
+        "sha256": "cfa6f6efd07a8b9060ec8fd42f6f9b0bc6dea1736933951e87c46ed346ebc9e6"
       },
       {
         "path": "Repositories/SDK/r4os/runtime_bootstrap.zig",
@@ -62658,11 +62664,11 @@
       },
       {
         "path": "Repositories/SDK/r4os/time_budget.zig",
-        "sha256": "d56618c11d061c8339d4b7570dfdd92c06e9d24281d67cb577c8a0b72c1321e7"
+        "sha256": "b88a6338bff43d4c511d325501605c96a639d02921dd473d6a39df3f40dd43cd"
       },
       {
         "path": "Repositories/SDK/r4os/time_budget_runtime.zig",
-        "sha256": "1429e7191a2d6e74871d83d87fe7bc21b077459847a8261c809dd574ae531ac3"
+        "sha256": "4b863c3f1f823a7a75236406c1ac8b7f62cc64841ead3e0306ceac7c6640e0f0"
       },
       {
         "path": "Repositories/SDK/r4os/time_contract.zig",
@@ -62940,7 +62946,8 @@
           "normal_app2_09040",
           "tooling_templates_generation2_09044",
           "canonical_text_font_image_generation2_09045",
-          "normal_app2_launch_class_09064"
+          "normal_app2_launch_class_09064",
+          "rust_desktop_shared_contexts_09065"
         ]
       },
       {
@@ -63015,7 +63022,8 @@
           "platform_generation2_09014",
           "tooling_templates_generation2_09044",
           "canonical_text_font_image_generation2_09045",
-          "canonical_graphics_native_generation2_09046"
+          "canonical_graphics_native_generation2_09046",
+          "rust_desktop_shared_contexts_09065"
         ]
       },
       {
@@ -63139,7 +63147,8 @@
           "byte_pipe_language_09034",
           "launch_io_language_09035",
           "normal_system_facades_09041",
-          "canonical_graphics_native_generation2_09046"
+          "canonical_graphics_native_generation2_09046",
+          "rust_desktop_shared_contexts_09065"
         ]
       },
       {
@@ -63270,7 +63279,8 @@
           "clock_service_08720",
           "time_poll_budgets_09016",
           "audio_total_source_09025",
-          "normal_system_facades_09041"
+          "normal_system_facades_09041",
+          "rust_desktop_shared_contexts_09065"
         ]
       },
       {
@@ -63379,7 +63389,8 @@
           "native_pointer_capture_08828",
           "gui_host_backpressure_08832",
           "text_metrics_09023",
-          "canonical_graphics_native_generation2_09046"
+          "canonical_graphics_native_generation2_09046",
+          "rust_desktop_shared_contexts_09065"
         ]
       },
       {
@@ -63781,7 +63792,8 @@
           "platform_generation2_09013",
           "platform_generation2_09014",
           "tooling_templates_generation2_09044",
-          "normal_app2_launch_class_09064"
+          "normal_app2_launch_class_09064",
+          "rust_desktop_shared_contexts_09065"
         ]
       },
       {
@@ -64000,7 +64012,8 @@
           "library_projection_current_61",
           "language_libraries_current_59",
           "tooling_templates_generation2_09044",
-          "canonical_text_font_image_generation2_09045"
+          "canonical_text_font_image_generation2_09045",
+          "rust_desktop_shared_contexts_09065"
         ]
       },
       {
@@ -65166,6 +65179,15 @@
       "evidence": "server_access_update_start2_09062",
       "historical_snapshot_retained": true,
       "scope": "Native Start2 registration, one-shot HTTP and downloads use a typed TCP socket. The update engine borrows the original system and file facades. Checked RPC time and service admission helpers share one budget. The generated GUI and transport bridges compile with the existing fingerprints."
+    },
+    {
+      "performed_in": "0.90.64",
+      "sdk": "0.64.200",
+      "contract": "0.64.93",
+      "libraries": "0.64.56",
+      "evidence": "normal_app2_launch_class_09064",
+      "historical_snapshot_retained": true,
+      "scope": "Normal App2 admits the effective Console or GUI application class selected by the loader. Manifest profile and ordered imports retain their own checks. The service profile requires the exact service class. Zig, C and Rust normal startup share one implementation."
     }
   ]
 }

@@ -6,7 +6,7 @@ const time = @import("time_budget.zig");
 pub const Error = time.Error || error{TimedOut};
 pub const Clock = ?a.R4SysFns.monotonic_clock;
 pub fn code(err: Error) i32 {
-    return if (err == error.TimedOut) a.service_api_result_timeout else @import("time_budget_runtime.zig").failure(@errorCast(err));
+    return if (err == error.TimedOut) a.service_api_result_timeout else time.failure(@errorCast(err));
 }
 fn sample(clock: Clock) time.Error!time.ClockSample {
     var info: a.MonotonicClockInfo = .{};

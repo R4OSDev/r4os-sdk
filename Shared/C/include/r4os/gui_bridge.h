@@ -682,8 +682,8 @@ typedef struct R4SdkPowerClient { _Alignas(8) uint8_t opaque_bytes[152]; } R4Sdk
 /* gui_session_support.Session; native size 1464, alignment 8. */
 typedef struct R4SdkGuiSession { _Alignas(8) uint8_t opaque_bytes[1464]; } R4SdkGuiSession;
 #define R4SdkGuiSession_TYPE 241u
-/* graphics_support.Context; native size 104, alignment 8. */
-typedef struct R4SdkGfxContext { _Alignas(8) uint8_t opaque_bytes[104]; } R4SdkGfxContext;
+/* graphics_support.Context; native size 296, alignment 8. */
+typedef struct R4SdkGfxContext { _Alignas(8) uint8_t opaque_bytes[296]; } R4SdkGfxContext;
 #define R4SdkGfxContext_TYPE 242u
 /* platform_support.Context; native size 200, alignment 8. */
 typedef struct R4SdkPlatformContext { _Alignas(8) uint8_t opaque_bytes[200]; } R4SdkPlatformContext;
@@ -1591,7 +1591,7 @@ typedef struct R4SdkGuiType736 { _Alignas(2) uint8_t opaque_bytes[2]; } R4SdkGui
 /* error{BudgetOverflow,ClockChanged,ClockRegressed,ClockUnavailable,InvalidBudget,InvalidTimeout,UnknownFrequency}!u64; native size 16, alignment 8. */
 typedef struct R4SdkGuiType737 { _Alignas(8) uint8_t opaque_bytes[16]; } R4SdkGuiType737;
 #define R4SdkGuiType737_TYPE 737u
-#define R4SdkGui_ABI_FINGERPRINT UINT64_C(3363826284474928117)
+#define R4SdkGui_ABI_FINGERPRINT UINT64_C(1999330418745243685)
 int32_t R4SdkGuiVerifyAbi(uint64_t);
 #define R4SdkGui_font_w (8)
 #define R4SdkGui_font_h (8)
@@ -1619,6 +1619,8 @@ int32_t R4SdkGfxOpenNative(uint64_t,R4SdkGfxContext *,const R4XStartContext *);
 static inline int32_t R4SdkGfxOpen(R4SdkGfxContext *s,const R4XStartContext *ctx) { return R4SdkGfxOpenNative(R4SdkGui_ABI_FINGERPRINT,s,ctx); }
 R4SdkGuiDrawContext *R4SdkGfxDraw(R4SdkGfxContext *);
 R4SdkGfxDeviceContext *R4SdkGfxDevice(R4SdkGfxContext *);
+int32_t R4SdkGfxOpenNative2(uint64_t,R4SdkGfxContext *,const R4XStartContext2 *);
+static inline int32_t R4SdkGfxOpen2(R4SdkGfxContext *s,const R4XStartContext2 *ctx) { return R4SdkGfxOpenNative2(R4SdkGui_ABI_FINGERPRINT,s,ctx); }
 #define R4SdkGuiEventKind_close 1u
 #define R4SdkGuiEventKind_resize 2u
 #define R4SdkGuiEventKind_key 3u

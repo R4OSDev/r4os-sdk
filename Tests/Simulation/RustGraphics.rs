@@ -181,4 +181,72 @@ fn current_offscreen_graphics_reuses_original_descriptors_and_receipts() {
         },
         abi::io_error_invalid
     );
+    let sys2 = abi::generation2::R4XStartR4Sys2::default();
+    let draw2 = abi::generation2::R4XStartR4Draw2 {
+        gfx_buffer_map: draw.gfx_buffer_map as u64,
+        gfx_buffer_map_persistent: draw.gfx_buffer_map_persistent as u64,
+        gfx_fence_wait: draw.gfx_fence_wait as u64,
+        gfx_queue_backend_info: draw.gfx_queue_backend_info as u64,
+        display_cursor_info: draw.display_cursor_info as u64,
+        display_cursor_submit: draw.display_cursor_submit as u64,
+        display_cursor_status: draw.display_cursor_status as u64,
+        ..Default::default()
+    };
+    let imports2 = [
+        abi::R4XStartImport {
+            group_id: 1,
+            min_version: 2,
+            resolved_version: 2,
+            table: core::ptr::from_ref(&sys2) as u64,
+            ..Default::default()
+        },
+        abi::R4XStartImport {
+            group_id: 3,
+            min_version: 2,
+            resolved_version: 2,
+            table: core::ptr::from_ref(&draw2) as u64,
+            ..Default::default()
+        },
+    ];
+    let start2 = abi::generation2::R4XStartContext2 {
+        app_class: abi::R4XStartAppClass::console.0,
+        instance_id: 42,
+        flags: abi::r4xstart_flag_imports_valid,
+        imports: imports2.as_ptr() as u64,
+        import_count: imports2.len() as u32,
+        ..Default::default()
+    };
+    let context2 = unsafe { r4os_sdk::platform2::Context::new(&start2) }.unwrap();
+    let app2 = r4os_sdk::App2::from_context(&context2, c"GfxParity2").unwrap();
+    let mut storage2 = pin!(GraphicsStorage::new());
+    let gfx2 = Graphics::open2(storage2.as_mut(), &app2).unwrap();
+    assert_eq!(
+        gfx2.buffers()
+            .map(&handle, 1, 0x100000003, 0x200000000, true)
+            .unwrap()
+            .byte_length,
+        mapped.byte_length
+    );
+    let receipt2 = gfx2.queues().wait(&fence, 0x300000003, 1).unwrap();
+    assert_eq!(receipt2.fence.point, receipt.fence.point);
+    assert_eq!(receipt2.phase, abi::gfx_queue_phase_queued);
+    assert_eq!(receipt2.result, abi::gfx_queue_result_pending);
+    assert_eq!(
+        gfx2.queues().backend_info(16).unwrap().memory_generation,
+        backend.memory_generation
+    );
+    assert_eq!(
+        gfx2.outputs().cursor_info().unwrap().display_generation,
+        0x100000079
+    );
+    assert_eq!(
+        unsafe {
+            c::R4SdkGfxOpenNative2(
+                c::R4SdkGui_ABI_FINGERPRINT ^ 1,
+                output.as_mut_ptr(),
+                &start2,
+            )
+        },
+        abi::io_error_invalid
+    );
 }

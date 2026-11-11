@@ -75,7 +75,8 @@ r4os-sdk={path="$dependency"}
         @('E0133','pub fn bad(q:&r4os_sdk::graphics::Queues<''_>,h:&r4os_sdk::abi::GfxQueueHandle,s:&r4os_sdk::abi::GfxSubmission){let _=q.submit(h,s);}'),
         @('E0277','fn send<T:Send>(){} pub fn bad(){send::<r4os_sdk::graphics::Graphics<''static,''static>>();}'),
         @('E0277','fn unpin<T:Unpin>(){} pub fn bad(){unpin::<r4os_sdk::graphics::GraphicsStorage>();}'),
-        @('E0499','pub fn bad(mut s:core::pin::Pin<&mut r4os_sdk::graphics::GraphicsStorage>,a:&r4os_sdk::App<''_>){let first=r4os_sdk::graphics::Graphics::open(s.as_mut(),a).unwrap();let _second=r4os_sdk::graphics::Graphics::open(s.as_mut(),a);drop(first);}')
+        @('E0499','pub fn bad(mut s:core::pin::Pin<&mut r4os_sdk::graphics::GraphicsStorage>,a:&r4os_sdk::App<''_>){let first=r4os_sdk::graphics::Graphics::open(s.as_mut(),a).unwrap();let _second=r4os_sdk::graphics::Graphics::open(s.as_mut(),a);drop(first);}'),
+        @('E0499','pub fn bad(mut s:core::pin::Pin<&mut r4os_sdk::graphics::GraphicsStorage>,a:&r4os_sdk::App2<''_>){let first=r4os_sdk::graphics::Graphics::open2(s.as_mut(),a).unwrap();let _second=r4os_sdk::graphics::Graphics::open2(s.as_mut(),a);drop(first);}')
     )}
     if($Platform){$cases=@(
         @('E0133','pub fn bad(d:&r4os_sdk::platform::Devices<''_>){let _=d.native();}'),

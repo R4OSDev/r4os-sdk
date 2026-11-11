@@ -12,6 +12,10 @@ pub struct ImportSpec {
     pub group_id: u32,
     pub reserved: u32,
 }
+// Sharing the immutable descriptor exposes only scalar values and raw name
+// pointers. Dereferencing those names occurs at the unsafe startup boundary,
+// whose caller retains their immutable resident storage through entry return.
+unsafe impl Sync for ImportSpec {}
 pub struct StartupInfo<'a> {
     pub profile: u32,
     pub app_class: u32,
@@ -42,8 +46,9 @@ pub struct App<'a> {
 }
 impl<'a> App<'a> {
     /// # Safety
-    /// The actual generation2 start, imports, names and declared table prefixes
-    /// stay resident through the exact entry. All caller and buffer loans must
+    /// The actual generation2 start, immutable import descriptors and names,
+    /// and declared table prefixes stay resident through the exact entry.
+    /// All caller and buffer loans must
     /// retire before it returns. This borrowed App is neither Send nor Sync.
     pub unsafe fn from_raw(
         raw: *const platform2::abi::R4XStartContext2,
@@ -120,6 +125,17 @@ impl<'a> App<'a> {
     }
     pub fn yield_current(&self) {
         let _ = self.context.yield_current();
+    }
+    pub fn sleep(&self, ticks: u64) {
+        let address = match self.context.lookup(
+            1,
+            mem::offset_of!(platform2::abi::R4XStartR4Sys2, sleep_ticks) as u32,
+        ) {
+            Ok(address) => address,
+            Err(_) => return,
+        };
+        let callback: abi::R4SysFns::sleep_ticks = unsafe { mem::transmute(address) };
+        unsafe { callback(ticks) };
     }
     pub fn write(&self, text: &str) -> i32 {
         let length = match u32::try_from(text.len()) {

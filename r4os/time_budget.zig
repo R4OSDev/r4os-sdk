@@ -3,6 +3,17 @@ const std = @import("std");
 const abi = @import("r4os_contract").abi;
 
 pub const Error = error{ UnknownFrequency, InvalidTimeout, BudgetOverflow, ClockUnavailable, ClockChanged, ClockRegressed, InvalidBudget };
+pub fn failure(err: Error) i32 {
+    return switch (err) {
+        error.UnknownFrequency => -1,
+        error.InvalidTimeout => -2,
+        error.BudgetOverflow => -3,
+        error.ClockUnavailable => -4,
+        error.ClockChanged => -5,
+        error.ClockRegressed => -6,
+        error.InvalidBudget => -7,
+    };
+}
 pub const Kind = enum(u32) { poll = 0, finite = 1, forever = 2 };
 pub const Value = extern struct {
     kind: u32 = @intFromEnum(Kind.poll),

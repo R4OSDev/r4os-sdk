@@ -3,7 +3,7 @@ const abi = @import("r4os_contract").abi;
 const r4sys = @import("r4sys.zig");
 const time_contract = @import("time_contract.zig");
 const checked = @import("time_budget.zig");
-const checkedFailure = @import("time_budget_runtime.zig").failure;
+const checkedFailure = checked.failure;
 const rpc_budget = @import("rpc_budget.zig");
 
 pub const Timeout = time_contract.Timeout;

@@ -1785,3 +1785,16 @@ Dateioperationen und Journale nutzen den gemeinsamen Engine-Besitzer.
 Der Erstzugang veroeffentlicht sein Secret aus einem eigenen 8.3-Temporaernamen.
 Der Name bleibt auch bei lang laufenden Systemen fuer den atomaren Austausch
 gueltig.
+
+Rust-Desktopanschluss ab0.64.201 (Migration0.90.65)
+------------------------------------------------
+Graphics::open2 bindet die echten Query2-Zeichen- und Geraetefassaden an
+gepinnten GraphicsStorage. App2::sleep verwendet den aufgeloesten SYS2-Slot.
+Unveraenderliche ImportSpec-Metadaten koennen zwischen gejointen eigenen
+Workern geteilt werden. Jeder Worker konstruiert seinen tasklokalen App2.
+Die native Resources-Leihe bleibt synchron an Anwendung und Ressourcen
+gebunden. InventoryReader::cursor liefert kopierte Akquisitionsmetadaten
+fuer den UI-Epochencache. Neue Zeilen stammen aus der vollstaendigen view.
+Zeitbudget-Fehlercodes gehoeren dem reinen time_budget-Besitzer. Statische
+Library-Helfer binden dadurch ausschliesslich die benoetigten Funktionen ein.
+Die C-/Rust-Laufzeit stellt ihre fremdsprachigen Exporte bereit.

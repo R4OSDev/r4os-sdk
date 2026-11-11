@@ -17,17 +17,7 @@ pub export fn R4SdkRpcBudgetRemaining(owner: ?*rpc.Budget, out: ?*u64) callconv(
     output.* = budget.remainingTicks() catch |err| return rpc.code(err);
     return 0;
 }
-pub fn failure(err: time.Error) i32 {
-    return switch (err) {
-        error.UnknownFrequency => -1,
-        error.InvalidTimeout => -2,
-        error.BudgetOverflow => -3,
-        error.ClockUnavailable => -4,
-        error.ClockChanged => -5,
-        error.ClockRegressed => -6,
-        error.InvalidBudget => -7,
-    };
-}
+pub const failure = time.failure;
 fn context(raw: u32) ?poll.Context {
     return std.enums.fromInt(poll.Context, raw);
 }
