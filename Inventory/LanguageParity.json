@@ -58984,6 +58984,12 @@
       "scope": "77 existing platform/technical cases, original C/Rust generation2 startup/shared heap, three original graphics/GUI interop cases and five ownership/unsafe compile refusals, 286 Desktop native owner/original cases, three common geometry cases and one precise clock admission. The additional Desktop case covers shared full/lifecycle buffer growth. Historical render hashes use the exact original menu facts and current menu policy has its own assertions.",
       "receipt": "Research/API-ABI/Migration/0.90.65/Host.json",
       "limits": "Linux native source models and shared FFI. Normal freestanding artifacts and actual Kernel/runtime, Windows execution and physical graphics need their own evidence."
+    },
+    "network_frontend_composition_09069": {
+      "complete": true,
+      "scope": "Four precise Zig consumer composition cases cover decimal/scoped addresses, whole copied protocol output, DNS pagination identity and single uncertain Release, exact DHCP results and canonical shared deadlines. Existing C/Rust copied record/dispatch/service facades keep their original reviewed scope. Normal five-app native and physical/Windows qualification are separate.",
+      "receipt": "Research/API-ABI/Migration/0.90.69/SdkHost.json",
+      "limits": "Linux native Zig owner cases. The four added convenience compositions are Zig helpers over existing copied public contracts. Original C/Rust transport owner qualification remains the corresponding earlier evidence. Normal artifacts and guest behavior require their own migration receipt."
     }
   },
   "wave_bindings": [
@@ -59236,18 +59242,18 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.90.65",
-    "sdk": "0.64.201",
+    "performed_in": "0.90.69",
+    "sdk": "0.64.202",
     "contract": "0.64.93",
     "libraries": "0.64.57",
-    "evidence": "rust_desktop_shared_contexts_09065",
+    "evidence": "network_frontend_composition_09069",
     "historical_snapshot_retained": true,
-    "scope": "Resident actual2 Rust graphics and Library helper contexts, immutable joined-worker startup facts, synchronous resource loans and copied shared inventory acquisition metadata. Pure checked-time error mapping composes one native export owner. Existing C/Rust declarations project the same typed owners. Desktop actual2 tests use the common complete inventory reader, typed clipboard offers and main-task GUI wait sources. Native guest and normal packaged artifact qualification are recorded separately. Packager import storage admits all32 complete records and rejects33 before replacing the output. Seven existing scoped packager/ELF cases pass with the new boundary case."
+    "scope": "Four precise Zig consumer composition cases cover decimal/scoped addresses, whole copied protocol output, DNS pagination identity and single uncertain Release, exact DHCP results and canonical shared deadlines. Existing C/Rust copied record/dispatch/service facades keep their original reviewed scope. Normal five-app native and physical/Windows qualification are separate."
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.90.65",
+    "reviewed_in": "0.90.69",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -61650,11 +61656,11 @@
       },
       {
         "path": "Repositories/SDK/build.zig",
-        "sha256": "e5a041b7abe04ad615bbf008a3809ad0266e47898885ee911028926fe31faa8d"
+        "sha256": "35ac9d81b10df06f1e63bc0b8f1e99a2dff6468684ce43345122bada1241febc"
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "8c44eb83b7f786c4cdd516bbecf9511e55bfc34db51cd63d338907e06b367215"
+        "sha256": "0db053a828ed7a16ad4bc8de0705a378dc6f04b7bff3810ed76514adf76d0f0a"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -62222,7 +62228,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/network_family.zig",
-        "sha256": "28c27aa91321bbf4e056993ae9d4ea95087694c9fbfc71e34bd3aef105dd99cb"
+        "sha256": "099714d2d0b402e5b588932d82f792c29a9757512f0ffd6cfb7c7ad866f286c4"
       },
       {
         "path": "Repositories/SDK/r4os/network_transport.zig",
@@ -62874,7 +62880,7 @@
       },
       {
         "path": "Repositories/SDK/test_owners.zig",
-        "sha256": "b2308017fbe62c3c615a5e523ac0e22501bd3af1ac87d598033b12420809019b"
+        "sha256": "8a8e7dc912cf38461bb49bc63d5d4a5348cb9c497cf3cc5081022a415fb6941e"
       }
     ],
     "coverage": [
@@ -63257,7 +63263,8 @@
           "ipv6_protocol_09032",
           "ipv6_transport_09033",
           "normal_service_stream_facades_09043",
-          "network_provider_actual_generation_host_09060"
+          "network_provider_actual_generation_host_09060",
+          "network_frontend_composition_09069"
         ]
       },
       {
@@ -65194,6 +65201,15 @@
       "evidence": "normal_app2_launch_class_09064",
       "historical_snapshot_retained": true,
       "scope": "Normal App2 admits the effective Console or GUI application class selected by the loader. Manifest profile and ordered imports retain their own checks. The service profile requires the exact service class. Zig, C and Rust normal startup share one implementation."
+    },
+    {
+      "performed_in": "0.90.65",
+      "sdk": "0.64.201",
+      "contract": "0.64.93",
+      "libraries": "0.64.57",
+      "evidence": "rust_desktop_shared_contexts_09065",
+      "historical_snapshot_retained": true,
+      "scope": "Resident actual2 Rust graphics and Library helper contexts, immutable joined-worker startup facts, synchronous resource loans and copied shared inventory acquisition metadata. Pure checked-time error mapping composes one native export owner. Existing C/Rust declarations project the same typed owners. Desktop actual2 tests use the common complete inventory reader, typed clipboard offers and main-task GUI wait sources. Native guest and normal packaged artifact qualification are recorded separately. Packager import storage admits all32 complete records and rejects33 before replacing the output. Seven existing scoped packager/ELF cases pass with the new boundary case."
     }
   ]
 }
