@@ -1902,3 +1902,30 @@ TextArea bietet vollstaendig geprueftes Einfuegen und gemessene Treffer.
 Context2 zeichnet sichtbare Zeilen und Auswahl ueber FontPrefixMetrics2
 und laengengetragene Frame-Ressourcen. Die bestehenden C-/Rust-GUI-
 Projektionen verwenden den gemeinsamen nativen Controlbesitzer.
+
+Typisierte Bildangebote und Clipboardbelege ab SDK0.64.207
+---------------------------------------------------------
+Der gemeinsame gui.TextClipboard-Besitzer bietet copyFormat/readFormat fuer
+eine ausdrueckliche Standarddarstellung an. Paint verwendet XRGB32 mit
+Breite, Hoehe, Stride, Flags und vollstaendigen Pixelbytes. Der fachliche
+Formatbesitzer prueft die Daten, CLIPSVC prueft das komplette private Angebot
+vor Commit. copy/read behalten ihren UTF8-Vertrag. readFormat gibt die
+vollstaendigen Scratchbytes nach der bestaetigten Snapshotfreigabe zurueck.
+
+Nach Commit wird auch der Beleg explizit freigegeben. Eine fehlgeschlagene
+Belegfreigabe behaelt dessen genaue Identitaet fuer die naechste Aktion
+oder Close. Eine bereits bestaetigte Publikation bleibt erfolgreich.
+Ein ungewisser Commit behaelt weiterhin seinen Stage fuer Status/Abort.
+Die RPCs einer Publikation beziehungsweise eines Reads teilen ihre Frist.
+Die native Clipboardstruktur umfasst224Bytes. C-Header, Fingerprint und
+Rustprojektion sind compiler-generiert und verwenden dieselbe Implementierung.
+Die gezielte C/Rust-Probe ruft beide neuen Formatmethoden und den echten
+Defaultkonstruktor ohne Anbieter auf. Die echten Bildtransfers werden durch
+den Zig-Verbraucher im laufenden System geprueft.
+
+Beep und R4Synth verwenden audio_write.Writer mit einer Gesamtfrist je
+PCMblock sowie pcm_source.Pacer fuer angenommene ganze Frames. Ihre lokalen
+Pacingakkumulatoren entfallen. Sourcewartezeit, Streamclose, Synth-Stop und
+physische Wiedergabe behalten ihre eigenen Bedeutungen. Der zentrale
+Plattformvertrag und die unabhaengigen Libraryinterfaces bleiben beim
+jeweiligen Besitzer. Belege stehen in Research/API-ABI/Migration/0.90.74/.

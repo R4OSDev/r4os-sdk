@@ -2432,9 +2432,9 @@ const _: () = { assert!(core::mem::size_of::<R4SdkFilePicker>() == 8640); assert
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType0 {
-    pub r#opaque_bytes: [u8; 168],
+    pub r#opaque_bytes: [u8; 224],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType0>() == 168); assert!(core::mem::align_of::<R4SdkGuiType0>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType0, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType0>() == 224); assert!(core::mem::align_of::<R4SdkGuiType0>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType0, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType1 {
@@ -17368,7 +17368,7 @@ pub const R4SdkGuiType739_TYPE: u32 = 739;
 pub const R4SdkGuiType741_TYPE: u32 = 741;
 pub const R4SdkGuiType742_TYPE: u32 = 742;
 pub const R4SdkGuiType743_TYPE: u32 = 743;
-pub const R4SdkGui_ABI_FINGERPRINT: u64 = 11004913450554638433;
+pub const R4SdkGui_ABI_FINGERPRINT: u64 = 15180597270868012611;
 pub const R4SdkGui_font_w: i32 = 8;
 pub const R4SdkGui_font_h: i32 = 8;
 pub const R4SdkGuiChart_turns_per_circle: i32 = 65536;
@@ -22569,7 +22569,9 @@ unsafe extern "C" {
     pub fn R4SdkPower_valid(p0: u32, p1: *const R4PowerProfileInfo) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType0_connect(p0: u32, p1: *mut R4SdkGuiType0, p2: *const R4SdkGuiSystemContext) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType0_copy(p0: u32, p1: *mut R4SdkGuiType0, p2: *const u8, p3: u64) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType0_copyFormat(p0: u32, p1: *mut R4SdkGuiType0, p2: u32, p3: *const u8, p4: u64) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType0_read(p0: u32, p1: *mut R4SdkGuiType0, p2: *mut u8, p3: u64) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType0_readFormat(p0: u32, p1: *mut R4SdkGuiType0, p2: u32, p3: *mut u8, p4: u64) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType0_close(p0: u32, p1: *mut R4SdkGuiType0) -> R4SdkGuiSlot;
     pub fn R4SdkGuiStyle_light(p0: u32, p1: *mut R4SdkGuiStyle) -> R4SdkGuiSlot;
     pub fn R4SdkGuiStyle_dark(p0: u32, p1: *mut R4SdkGuiStyle) -> R4SdkGuiSlot;
@@ -23364,13 +23366,15 @@ unsafe extern "C" {
     pub fn R4SdkGuiType726_validate(p0: u32, p1: *const R4SdkGuiType726) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType726_ticks(p0: u32, p1: *const R4SdkGuiType726) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType0_create(p0: *mut R4SdkGuiType0) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType0_from_fields(p0: *mut R4SdkGuiType0, p1: R4SdkGuiSlot, p2: R4SdkGuiSlot, p3: R4SdkGuiSlot) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType0_from_fields(p0: *mut R4SdkGuiType0, p1: R4SdkGuiSlot, p2: R4SdkGuiSlot, p3: R4SdkGuiSlot, p4: R4SdkGuiSlot) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType0_get_client(p0: *const R4SdkGuiType0, p1: *mut R4SdkClipboardOffers) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType0_set_client(p0: *mut R4SdkGuiType0, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType0_get_pending(p0: *const R4SdkGuiType0, p1: *mut R4SdkGuiType4) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType0_set_pending(p0: *mut R4SdkGuiType0, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType0_get_snapshot(p0: *const R4SdkGuiType0, p1: *mut R4ClipboardOfferLease) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType0_set_snapshot(p0: *mut R4SdkGuiType0, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType0_get_receipt(p0: *const R4SdkGuiType0, p1: *mut R4ClipboardOfferLease) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType0_set_receipt(p0: *mut R4SdkGuiType0, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType0_inspect(p0: *const R4SdkGuiType0) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType1_create(p0: *mut R4SdkGuiType1, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType1_inspect(p0: *const R4SdkGuiType1, p1: *mut R4SdkClipboardOffers) -> R4SdkGuiSlot;

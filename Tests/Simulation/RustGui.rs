@@ -1,5 +1,43 @@
 #![cfg(test)]
 use core::{mem::MaybeUninit, pin::pin};
+
+#[test]
+fn typed_image_clipboard_native_layout_and_generated_calls_without_provider() {
+    unsafe extern "C" {
+        fn sdk_gui_clipboard_formats_no_provider() -> i32;
+    }
+    unsafe {
+        assert_eq!(sdk_gui_clipboard_formats_no_provider(), 0);
+        let mut clipboard = MaybeUninit::<c::R4SdkGuiType0>::uninit();
+        assert_eq!(c::R4SdkGuiType0_create(clipboard.as_mut_ptr()).status, 0);
+        let image = [
+            1u8, 0, 0, 0, 1, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0x33, 0x22, 0x11, 0,
+        ];
+        let copied = c::R4SdkGuiType0_copyFormat(
+            0,
+            clipboard.as_mut_ptr(),
+            abi::clipboard_offer_format_xrgb32,
+            image.as_ptr(),
+            image.len() as u64,
+        );
+        assert_eq!(copied.status, 0);
+        assert_eq!(copied.bits as i32, abi::clipboard_offer_error_closed);
+        let mut scratch = [0xa5; 20];
+        let read = c::R4SdkGuiType0_readFormat(
+            0,
+            clipboard.as_mut_ptr(),
+            abi::clipboard_offer_format_xrgb32,
+            scratch.as_mut_ptr(),
+            scratch.len() as u64,
+        );
+        assert_eq!(read.status, 0);
+        assert_eq!(read.bits as i32, abi::clipboard_offer_error_closed);
+        assert_eq!(scratch, [0xa5; 20]);
+        let closed = c::R4SdkGuiType0_close(0, clipboard.as_mut_ptr());
+        assert_eq!(closed.status, 0);
+        assert_eq!(closed.bits as i32, 0);
+    }
+}
 use r4os_sdk::{
     App, ImportSpec, StartupInfo, abi,
     gui::{

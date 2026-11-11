@@ -59029,6 +59029,12 @@
       "scope": "SDK206 editor composition over the existing metadata, StreamTransfer, FilePicker, typed clipboard and text-metric owners. Stable private document reads, exact copied picker identities, one-deadline text clipboard publication/release and measured TextArea hits/rendering have scoped Zig owner regressions. Complete supplementary UTF8 paths retain UTF16-unit limits in Zig/C and the Rust C-owner adaptation. Compiler-generated C/Rust GUI projections use the same native controls. The convenience Files/DialogPage/TextClipboard orchestration is used by the Zig editors. Existing data, storage and GUI interoperation cases execute under Linux. Native normal editor artifacts and final runtime qualification have separate receipts.",
       "receipt": "Research/API-ABI/Migration/0.90.73/SdkHost.json",
       "limits": "Linux host/interoperation and source review. Normal native apps, Windows execution, actual IME providers and performance require their own evidence."
+    },
+    "paint_audio_consumers_09074": {
+      "complete": true,
+      "scope": "SDK207 extends the existing clipboard control owner with explicit standard-format copy/read. Confirmed commit receipts are released and retained through failed release. Native Clipboard storage is224bytes. Compiler-generated GUI C layouts, fingerprint and Rust projection share the same owner. A focused C/Rust generated-call case executes the real default constructor, both new format methods and Close without a provider, preserving scratch on failure. Actual XRGB32 chunk publication/read and repeated receipt retirement are exercised by the native Zig Paint consumer. The unchanged shared total PCM writer and rational source Pacer are used by Beep/R4Synth. Existing data134, GUI and audio/platform interoperation and compiler-negative checks execute under Linux. Normal app artifacts, native lifecycle and performance have separate receipts.",
+      "receipt": "Research/API-ABI/Migration/0.90.74/SdkHost.json",
+      "limits": "Scoped Linux host and language interoperation. Native current-app, actual hardware/device changes, Windows execution and performance require their own evidence."
     }
   },
   "wave_bindings": [
@@ -59281,18 +59287,18 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.90.73",
-    "sdk": "0.64.206",
+    "performed_in": "0.90.74",
+    "sdk": "0.64.207",
     "contract": "0.64.93",
     "libraries": "0.64.57",
-    "evidence": "editor_consumers_09073",
+    "evidence": "paint_audio_consumers_09074",
     "historical_snapshot_retained": true,
-    "scope": "SDK206 editor composition over the existing metadata, StreamTransfer, FilePicker, typed clipboard and text-metric owners. Stable private document reads, exact copied picker identities, one-deadline text clipboard publication/release and measured TextArea hits/rendering have scoped Zig owner regressions. Complete supplementary UTF8 paths retain UTF16-unit limits in Zig/C and the Rust C-owner adaptation. Compiler-generated C/Rust GUI projections use the same native controls. The convenience Files/DialogPage/TextClipboard orchestration is used by the Zig editors. Existing data, storage and GUI interoperation cases execute under Linux. Native normal editor artifacts and final runtime qualification have separate receipts."
+    "scope": "SDK207 extends the existing clipboard control owner with explicit standard-format copy/read. Confirmed commit receipts are released and retained through failed release. Native Clipboard storage is224bytes. Compiler-generated GUI C layouts, fingerprint and Rust projection share the same owner. A focused C/Rust generated-call case executes the real default constructor, both new format methods and Close without a provider, preserving scratch on failure. Actual XRGB32 chunk publication/read and repeated receipt retirement are exercised by the native Zig Paint consumer. The unchanged shared total PCM writer and rational source Pacer are used by Beep/R4Synth. Existing data134, GUI and audio/platform interoperation and compiler-negative checks execute under Linux. Normal app artifacts, native lifecycle and performance have separate receipts."
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.90.73",
+    "reviewed_in": "0.90.74",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -60579,7 +60585,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "56835cc03e96081f7204824e231e136172e2fefe75f5226c5cc5a2cf46e81b62"
+        "sha256": "73da321efab7d4c6dc6d60fc326eef3fbfcb8883bf492c3e5ade7d20cea329b6"
       },
       {
         "path": "Repositories/SDK/Rust/src/cli.rs",
@@ -61091,7 +61097,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/gui_bridge.h",
-        "sha256": "6d99039cdf01a52f81fd1b345e21d1d63d92c1fb8ebff2967950be96e95825d7"
+        "sha256": "36a8f51eccc73eb4821cacaf1029cf6ac93a1aef1cac076d019188031a3ee466"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/heap.h",
@@ -61399,7 +61405,7 @@
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/GuiParity.c",
-        "sha256": "20b25983256581747761a2705ce8150e18e5b2f0dc5375c4a92ebeae6bf10382"
+        "sha256": "01369fb268118a8477fe5412788babfac5a1a9feb0cfb54ee18a355a43fc07cd"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/PointerBindings.c",
@@ -61423,7 +61429,7 @@
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/RustGui.rs",
-        "sha256": "28c1bd1beaf14fbe9fc1e940f25db2f9055cc8c8d51a8402b07163f26e902797"
+        "sha256": "3b70e6af2c31775659672b3194503ac29b2261596e2c1f2e17dcef6c5e578077"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/RustHeap.rs",
@@ -61699,7 +61705,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "e25deb722127b992aa44ee85972417ffe34a542382d6cb48d0f59bafb5e8d60b"
+        "sha256": "6e6c4e76e5d8e8b5266b5f60a799729640c0a78e516a26a03619bb513bc6ae4c"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -62051,7 +62057,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/generated/gui_fingerprint.zig",
-        "sha256": "deb437366c1fd4c3461cb90ac6e810d3711b416a2b0bbcabb7862c4b07757273"
+        "sha256": "14e063858b554346ef71f47c09c0add8851b442790fad23f7c57a3783b2c43d3"
       },
       {
         "path": "Repositories/SDK/r4os/generated/net_facade.zig",
@@ -62139,7 +62145,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/gui_text_control.zig",
-        "sha256": "9abab25a123032dcc388b555d0d96987fb639ecea0742126fb22c3d87da40a12"
+        "sha256": "a7fd3690eb72c22f6aae49990f3327d550eb484b08d5ced4fc8d0fc131f70f0e"
       },
       {
         "path": "Repositories/SDK/r4os/gui_value_bridge.zig",
@@ -63425,7 +63431,8 @@
           "normal_gui_facades_09042",
           "normal_service_stream_facades_09043",
           "canonical_graphics_native_generation2_09046",
-          "editor_consumers_09073"
+          "editor_consumers_09073",
+          "paint_audio_consumers_09074"
         ]
       },
       {
@@ -65300,6 +65307,15 @@
       "evidence": "native_tools_09072",
       "historical_snapshot_retained": true,
       "scope": "SDK205 source/ABI consumer composition. Output.recordSink connects the existing bounded diagnostic records to real stdio/StreamTransfer with exact known-prefix acknowledgement and sticky uncertain/failed state. The extra sink is Zig composition over the earlier C/Rust record/pipe primitives. Native C2 templates use actual public App2 and Stdio2 headers and exact Query2 class imports. Manifest text plans preserve explicit SDK profiles. The catalogue distinguishes native C platform generations and admits the implemented one-source console/gui subset. Actual host owner tests, strict native C syntax/object compilation and independent native C core lowering have distinct scopes. Final real R4OS source compilation/stdio/GUI/lifecycle qualification is separately bound to the migration receipt."
+    },
+    {
+      "performed_in": "0.90.73",
+      "sdk": "0.64.206",
+      "contract": "0.64.93",
+      "libraries": "0.64.57",
+      "evidence": "editor_consumers_09073",
+      "historical_snapshot_retained": true,
+      "scope": "SDK206 editor composition over the existing metadata, StreamTransfer, FilePicker, typed clipboard and text-metric owners. Stable private document reads, exact copied picker identities, one-deadline text clipboard publication/release and measured TextArea hits/rendering have scoped Zig owner regressions. Complete supplementary UTF8 paths retain UTF16-unit limits in Zig/C and the Rust C-owner adaptation. Compiler-generated C/Rust GUI projections use the same native controls. The convenience Files/DialogPage/TextClipboard orchestration is used by the Zig editors. Existing data, storage and GUI interoperation cases execute under Linux. Native normal editor artifacts and final runtime qualification have separate receipts."
     }
   ]
 }

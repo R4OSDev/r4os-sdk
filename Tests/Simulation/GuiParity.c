@@ -6,6 +6,23 @@
 #include "PointerBindings.c"
 #include <r4os/gui_bridge.h>
 #include <r4os/poll_budget.h>
+
+int32_t sdk_gui_clipboard_formats_no_provider(void) {
+    R4SdkGuiType0 clipboard;
+    const uint8_t image[20] = {1, 0, 0, 0, 1, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0x33, 0x22, 0x11, 0};
+    uint8_t scratch[20];
+    memset(scratch, 0xa5, sizeof(scratch));
+    assert(R4SdkGuiType0_create(&clipboard).status == 0);
+    R4SdkGuiSlot copied = R4SdkGuiType0_copyFormat(0, &clipboard, R4OS_CLIPBOARD_OFFER_FORMAT_XRGB32, image, sizeof(image));
+    assert(copied.status == 0 && (int32_t)copied.bits == R4OS_CLIPBOARD_OFFER_ERROR_CLOSED);
+    R4SdkGuiSlot read = R4SdkGuiType0_readFormat(0, &clipboard, R4OS_CLIPBOARD_OFFER_FORMAT_XRGB32, scratch, sizeof(scratch));
+    assert(read.status == 0 && (int32_t)read.bits == R4OS_CLIPBOARD_OFFER_ERROR_CLOSED);
+    for (size_t index = 0; index < sizeof(scratch); ++index) assert(scratch[index] == 0xa5);
+    R4SdkGuiSlot closed = R4SdkGuiType0_close(0, &clipboard);
+    assert(closed.status == 0 && (int32_t)closed.bits == 0);
+    return 0;
+}
+
 static uint32_t control_offer_calls;
 static int32_t control_offer_clock(R4MonotonicClockInfo *out){
     *out=(R4MonotonicClockInfo){.version=1,.size=sizeof(*out),.flags=R4OS_MONOTONIC_CLOCK_FLAG_VALID,.source=1,.generation=9,.frequency_hz=1000000000,.resolution_ns=1,.instant_ns=1000000000,.event_requested_hz=1000,.event_effective_hz=1001};return 1;

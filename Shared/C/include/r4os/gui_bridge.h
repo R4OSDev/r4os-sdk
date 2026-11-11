@@ -25,8 +25,8 @@ R4SdkGuiSlot R4SdkGuiField(uint64_t,uint32_t,uint32_t,void *,const R4SdkGuiSlot 
 #include "clipboard_offer_platform2.h"
 #include "text_composition.h"
 #include "file_picker.h"
-/* gui_text_control.Clipboard; native size 168, alignment 8. */
-typedef struct R4SdkGuiType0 { _Alignas(8) uint8_t opaque_bytes[168]; } R4SdkGuiType0;
+/* gui_text_control.Clipboard; native size 224, alignment 8. */
+typedef struct R4SdkGuiType0 { _Alignas(8) uint8_t opaque_bytes[224]; } R4SdkGuiType0;
 #define R4SdkGuiType0_TYPE 0u
 /* ?clipboard_offer.Client; native size 48, alignment 8. */
 typedef struct R4SdkGuiType1 { _Alignas(8) uint8_t opaque_bytes[48]; } R4SdkGuiType1;
@@ -1609,7 +1609,7 @@ typedef struct R4SdkGuiType742 { _Alignas(2) uint8_t opaque_bytes[2]; } R4SdkGui
 /* error{BudgetOverflow,ClockChanged,ClockRegressed,ClockUnavailable,InvalidBudget,InvalidTimeout,UnknownFrequency}!u64; native size 16, alignment 8. */
 typedef struct R4SdkGuiType743 { _Alignas(8) uint8_t opaque_bytes[16]; } R4SdkGuiType743;
 #define R4SdkGuiType743_TYPE 743u
-#define R4SdkGui_ABI_FINGERPRINT UINT64_C(11004913450554638433)
+#define R4SdkGui_ABI_FINGERPRINT UINT64_C(15180597270868012611)
 int32_t R4SdkGuiVerifyAbi(uint64_t);
 #define R4SdkGui_font_w (8)
 #define R4SdkGui_font_h (8)
@@ -3266,67 +3266,83 @@ static inline R4SdkGuiSlot R4SdkGuiType0_copy(uint32_t reserved, R4SdkGuiType0 *
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDK_GUI_PRESENT};
  return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,171u,a,2u,0);
 }
+/* gui_text_control.Clipboard.copyFormat -> i32 */
+static inline R4SdkGuiSlot R4SdkGuiType0_copyFormat(uint32_t reserved, R4SdkGuiType0 * p0, uint32_t p1, const uint8_t * p2, uintptr_t n2) {
+ (void)reserved; R4SdkGuiSlot a[3]={0};
+ a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
+ a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
+ a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,172u,a,3u,0);
+}
 /* gui_text_control.Clipboard.read -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiType0_read(uint32_t reserved, R4SdkGuiType0 * p0, uint8_t * p1, uintptr_t n1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,172u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,173u,a,2u,0);
+}
+/* gui_text_control.Clipboard.readFormat -> i32 */
+static inline R4SdkGuiSlot R4SdkGuiType0_readFormat(uint32_t reserved, R4SdkGuiType0 * p0, uint32_t p1, uint8_t * p2, uintptr_t n2) {
+ (void)reserved; R4SdkGuiSlot a[3]={0};
+ a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
+ a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
+ a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,174u,a,3u,0);
 }
 /* gui_text_control.Clipboard.close -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiType0_close(uint32_t reserved, R4SdkGuiType0 * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,173u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,175u,a,1u,0);
 }
 /* gui_modern.Style.light -> gui_modern.Style */
 static inline R4SdkGuiSlot R4SdkGuiStyle_light(uint32_t reserved, R4SdkGuiStyle *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,174u,a,0u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,176u,a,0u,output);
 }
 /* gui_modern.Style.dark -> gui_modern.Style */
 static inline R4SdkGuiSlot R4SdkGuiStyle_dark(uint32_t reserved, R4SdkGuiStyle *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,175u,a,0u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,177u,a,0u,output);
 }
 /* gui_modern.Style.withSystemFonts -> gui_modern.Style */
 static inline R4SdkGuiSlot R4SdkGuiStyle_withSystemFonts(uint32_t reserved, const R4SdkGuiStyle * p0, const R4SdkGuiDrawContext * p1, R4SdkGuiStyle *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,176u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,178u,a,2u,output);
 }
 /* gui_modern.Style.valid -> bool */
 static inline R4SdkGuiSlot R4SdkGuiStyle_valid(uint32_t reserved, const R4SdkGuiStyle * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,177u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,179u,a,1u,0);
 }
 /* gui_modern.Style.palette -> gui.Palette */
 static inline R4SdkGuiSlot R4SdkGuiStyle_palette(uint32_t reserved, const R4SdkGuiStyle * p0, R4SdkGuiPalette *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,178u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,180u,a,1u,output);
 }
 /* gui_modern.Style.controlHeight -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiStyle_controlHeight(uint32_t reserved, const R4SdkGuiStyle * p0, const R4SdkGuiFontMetrics * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,179u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,181u,a,2u,0);
 }
 /* gui_modern.FontSet.system -> gui_modern.FontSet */
 static inline R4SdkGuiSlot R4SdkGuiFontSet_system(uint32_t reserved, const R4SdkGuiDrawContext * p0, R4SdkGuiFontSet *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,180u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,182u,a,1u,output);
 }
 /* gui_modern.FontSet.id -> u32 */
 static inline R4SdkGuiSlot R4SdkGuiFontSet_id(uint32_t reserved, const R4SdkGuiFontSet * p0, uint32_t p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,181u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,183u,a,2u,0);
 }
 /* gui_modern.Card.contains -> bool */
 static inline R4SdkGuiSlot R4SdkGuiCard_contains(uint32_t reserved, const R4SdkGuiCard * p0, int32_t p1, int32_t p2) {
@@ -3334,21 +3350,21 @@ static inline R4SdkGuiSlot R4SdkGuiCard_contains(uint32_t reserved, const R4SdkG
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,182u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,184u,a,3u,0);
 }
 /* gui_modern.Card.keyAction -> gui.ControlAction */
 static inline R4SdkGuiSlot R4SdkGuiCard_keyAction(uint32_t reserved, const R4SdkGuiCard * p0, uint8_t p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,183u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,185u,a,2u,0);
 }
 /* gui_modern.Card.iconRect -> gui.Rect */
 static inline R4SdkGuiSlot R4SdkGuiCard_iconRect(uint32_t reserved, const R4SdkGuiCard * p0, const R4SdkGuiStyle * p1, R4SdkGuiRect *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,184u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,186u,a,2u,output);
 }
 /* gui_modern.Card.draw -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiCard_draw(uint32_t reserved, const R4SdkGuiCard * p0, const R4SdkGuiCanvas * p1, uint8_t * p2, uintptr_t n2) {
@@ -3356,13 +3372,13 @@ static inline R4SdkGuiSlot R4SdkGuiCard_draw(uint32_t reserved, const R4SdkGuiCa
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,185u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,187u,a,3u,0);
 }
 /* gui.Rect.isEmpty -> bool */
 static inline R4SdkGuiSlot R4SdkGuiRect_isEmpty(uint32_t reserved, const R4SdkGuiRect * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,186u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,188u,a,1u,0);
 }
 /* gui.Rect.inset -> gui.Rect */
 static inline R4SdkGuiSlot R4SdkGuiRect_inset(uint32_t reserved, const R4SdkGuiRect * p0, int32_t p1, int32_t p2, R4SdkGuiRect *output) {
@@ -3370,7 +3386,7 @@ static inline R4SdkGuiSlot R4SdkGuiRect_inset(uint32_t reserved, const R4SdkGuiR
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,187u,a,3u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,189u,a,3u,output);
 }
 /* gui.Rect.contains -> bool */
 static inline R4SdkGuiSlot R4SdkGuiRect_contains(uint32_t reserved, const R4SdkGuiRect * p0, int32_t p1, int32_t p2) {
@@ -3378,19 +3394,19 @@ static inline R4SdkGuiSlot R4SdkGuiRect_contains(uint32_t reserved, const R4SdkG
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,188u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,190u,a,3u,0);
 }
 /* gui.Rect.right -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiRect_right(uint32_t reserved, const R4SdkGuiRect * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,189u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,191u,a,1u,0);
 }
 /* gui.Rect.bottom -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiRect_bottom(uint32_t reserved, const R4SdkGuiRect * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,190u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,192u,a,1u,0);
 }
 /* gui.Rect.translated -> gui.Rect */
 static inline R4SdkGuiSlot R4SdkGuiRect_translated(uint32_t reserved, const R4SdkGuiRect * p0, int32_t p1, int32_t p2, R4SdkGuiRect *output) {
@@ -3398,26 +3414,26 @@ static inline R4SdkGuiSlot R4SdkGuiRect_translated(uint32_t reserved, const R4Sd
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,191u,a,3u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,193u,a,3u,output);
 }
 /* gui_modern.TileGrid.columns -> usize */
 static inline R4SdkGuiSlot R4SdkGuiTileGrid_columns(uint32_t reserved, const R4SdkGuiTileGrid * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,192u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,194u,a,1u,0);
 }
 /* gui_modern.TileGrid.visibleCount -> usize */
 static inline R4SdkGuiSlot R4SdkGuiTileGrid_visibleCount(uint32_t reserved, const R4SdkGuiTileGrid * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,193u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,195u,a,1u,0);
 }
 /* gui_modern.TileGrid.itemRect -> gui.Rect */
 static inline R4SdkGuiSlot R4SdkGuiTileGrid_itemRect(uint32_t reserved, const R4SdkGuiTileGrid * p0, uint64_t p1, R4SdkGuiRect *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,194u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,196u,a,2u,output);
 }
 /* gui_modern.TileGrid.indexAt -> ?usize */
 static inline R4SdkGuiSlot R4SdkGuiTileGrid_indexAt(uint32_t reserved, const R4SdkGuiTileGrid * p0, int32_t p1, int32_t p2) {
@@ -3425,14 +3441,14 @@ static inline R4SdkGuiSlot R4SdkGuiTileGrid_indexAt(uint32_t reserved, const R4S
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,195u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,197u,a,3u,0);
 }
 /* gui_modern.Progress.draw -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiProgress_draw(uint32_t reserved, const R4SdkGuiProgress * p0, const R4SdkGuiCanvas * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,196u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,198u,a,2u,0);
 }
 /* gui_modern.Paragraph.draw -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiParagraph_draw(uint32_t reserved, const R4SdkGuiParagraph * p0, const R4SdkGuiCanvas * p1, uint8_t * p2, uintptr_t n2) {
@@ -3440,7 +3456,7 @@ static inline R4SdkGuiSlot R4SdkGuiParagraph_draw(uint32_t reserved, const R4Sdk
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,197u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,199u,a,3u,0);
 }
 /* r4draw.Context.gfxOutputPower -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxOutputPower(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GfxOutputId * p1, R4GfxOutputPower * p2) {
@@ -3448,7 +3464,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxOutputPower(uint32_t reserved,
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,198u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,200u,a,3u,0);
 }
 /* r4draw.Context.gfxPowerRequest -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxPowerRequest(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GfxPowerRequest * p1, R4GfxPowerRequest * p2) {
@@ -3456,7 +3472,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxPowerRequest(uint32_t reserved
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,199u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,201u,a,3u,0);
 }
 /* r4draw.Context.gfxOutputBrightness -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxOutputBrightness(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GfxOutputId * p1, R4GfxOutputBrightness * p2) {
@@ -3464,7 +3480,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxOutputBrightness(uint32_t rese
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,200u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,202u,a,3u,0);
 }
 /* r4draw.Context.gfxBrightnessRequest -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxBrightnessRequest(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GfxBrightnessRequest * p1, R4GfxBrightnessRequest * p2) {
@@ -3472,13 +3488,13 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxBrightnessRequest(uint32_t res
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,201u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,203u,a,3u,0);
 }
 /* r4draw.Context.outputs -> gfx_outputs.Context */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_outputs(uint32_t reserved, const R4SdkGuiDrawContext * p0, R4SdkGfxOutputsContext *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,202u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,204u,a,1u,output);
 }
 /* r4draw.Context.gfxOutputRefresh -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxOutputRefresh(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GfxOutputTarget * p1, R4GfxOutputRefresh * p2) {
@@ -3486,7 +3502,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxOutputRefresh(uint32_t reserve
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,203u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,205u,a,3u,0);
 }
 /* r4draw.Context.gfxRefreshRequest -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxRefreshRequest(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GfxRefreshRequest * p1, R4GfxRefreshRequest * p2) {
@@ -3494,7 +3510,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxRefreshRequest(uint32_t reserv
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,204u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,206u,a,3u,0);
 }
 /* r4draw.Context.gfxVirtualStart -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxVirtualStart(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GfxVirtualRequest * p1, R4GfxVirtualStatus * p2) {
@@ -3502,7 +3518,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxVirtualStart(uint32_t reserved
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,205u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,207u,a,3u,0);
 }
 /* r4draw.Context.gfxVirtualQuery -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxVirtualQuery(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GfxBufferHandle * p1, R4GfxVirtualStatus * p2) {
@@ -3510,7 +3526,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxVirtualQuery(uint32_t reserved
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,206u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,208u,a,3u,0);
 }
 /* r4draw.Context.gfxVirtualClose -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxVirtualClose(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GfxBufferHandle * p1, uint32_t p2) {
@@ -3518,7 +3534,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxVirtualClose(uint32_t reserved
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,207u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,209u,a,3u,0);
 }
 /* r4draw.Context.gfxVirtualWait -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxVirtualWait(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GfxBufferHandle * p1, uint32_t p2, uint64_t p3, R4GfxVirtualStatus * p4) {
@@ -3528,7 +3544,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxVirtualWait(uint32_t reserved,
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.ptr=(void *)p4,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,208u,a,5u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,210u,a,5u,0);
 }
 /* r4draw.Context.gfxNativeStart -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxNativeStart(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GfxNativeAllocation * p1, R4GfxNativeStatus * p2) {
@@ -3536,7 +3552,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxNativeStart(uint32_t reserved,
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,209u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,211u,a,3u,0);
 }
 /* r4draw.Context.gfxNativeQuery -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxNativeQuery(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GfxBufferHandle * p1, R4GfxNativeStatus * p2) {
@@ -3544,7 +3560,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxNativeQuery(uint32_t reserved,
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,210u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,212u,a,3u,0);
 }
 /* r4draw.Context.gfxNativeReceive -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxNativeReceive(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GfxBufferHandle * p1, R4GfxBufferReference * p2) {
@@ -3552,14 +3568,14 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxNativeReceive(uint32_t reserve
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,211u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,213u,a,3u,0);
 }
 /* r4draw.Context.gfxNativeClose -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxNativeClose(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GfxBufferHandle * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,212u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,214u,a,2u,0);
 }
 /* r4draw.Context.gfxNativeWait -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxNativeWait(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GfxBufferHandle * p1, uint64_t p2, R4GfxNativeStatus * p3) {
@@ -3568,7 +3584,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxNativeWait(uint32_t reserved, 
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,213u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,215u,a,4u,0);
 }
 /* r4draw.Context.gfxBufferCreate -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxBufferCreate(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GfxBufferDescriptor * p1, R4GfxBufferReference * p2) {
@@ -3576,7 +3592,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxBufferCreate(uint32_t reserved
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,214u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,216u,a,3u,0);
 }
 /* r4draw.Context.gfxBufferDescribe -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxBufferDescribe(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GfxBufferHandle * p1, R4GfxBufferDescriptor * p2) {
@@ -3584,7 +3600,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxBufferDescribe(uint32_t reserv
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,215u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,217u,a,3u,0);
 }
 /* r4draw.Context.gfxBufferImport -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxBufferImport(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GfxBufferHandle * p1, R4GfxBufferReference * p2) {
@@ -3592,14 +3608,14 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxBufferImport(uint32_t reserved
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,216u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,218u,a,3u,0);
 }
 /* r4draw.Context.gfxBufferRelease -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxBufferRelease(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GfxBufferHandle * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,217u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,219u,a,2u,0);
 }
 /* r4draw.Context.gfxBufferMap -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxBufferMap(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GfxBufferHandle * p1, uint32_t p2, uint64_t p3, uint64_t p4, R4GfxBufferMap * p5) {
@@ -3610,7 +3626,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxBufferMap(uint32_t reserved, c
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.ptr=(void *)p5,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,218u,a,6u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,220u,a,6u,0);
 }
 /* r4draw.Context.gfxBufferMapPersistent -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxBufferMapPersistent(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GfxBufferHandle * p1, uint32_t p2, uint64_t p3, uint64_t p4, R4GfxBufferMap * p5) {
@@ -3621,14 +3637,14 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxBufferMapPersistent(uint32_t r
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.ptr=(void *)p5,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,219u,a,6u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,221u,a,6u,0);
 }
 /* r4draw.Context.gfxBufferUnmap -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxBufferUnmap(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GfxBufferHandle * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,220u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,222u,a,2u,0);
 }
 /* r4draw.Context.gfxBufferExportRaster -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxBufferExportRaster(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GuiSharedRasterLease * p1, R4GfxBufferReference * p2) {
@@ -3636,14 +3652,14 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxBufferExportRaster(uint32_t re
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,221u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,223u,a,3u,0);
 }
 /* r4draw.Context.gfxBufferStats -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxBufferStats(uint32_t reserved, const R4SdkGuiDrawContext * p0, R4GfxBufferStats * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,222u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,224u,a,2u,0);
 }
 /* r4draw.Context.gfxMemoryBudget -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxMemoryBudget(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GfxDeviceBudgetRequest * p1, R4GfxDeviceBudgetState * p2) {
@@ -3651,7 +3667,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxMemoryBudget(uint32_t reserved
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,223u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,225u,a,3u,0);
 }
 /* r4draw.Context.gfxTelemetry -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxTelemetry(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GfxTelemetryRequest * p1, R4GfxTelemetryState * p2) {
@@ -3659,20 +3675,20 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxTelemetry(uint32_t reserved, c
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,224u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,226u,a,3u,0);
 }
 /* r4draw.Context.buffers -> gfx_buffers.Context */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_buffers(uint32_t reserved, const R4SdkGuiDrawContext * p0, R4SdkGfxBuffersContext *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,225u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,227u,a,1u,output);
 }
 /* r4draw.Context.gfxOutputRevision -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxOutputRevision(uint32_t reserved, const R4SdkGuiDrawContext * p0, R4GfxDisplayRevision * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,226u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,228u,a,2u,0);
 }
 /* r4draw.Context.gfxOutputInfo -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxOutputInfo(uint32_t reserved, const R4SdkGuiDrawContext * p0, uint32_t p1, R4GfxOutputInfo * p2) {
@@ -3680,7 +3696,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxOutputInfo(uint32_t reserved, 
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,227u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,229u,a,3u,0);
 }
 /* r4draw.Context.gfxOutputMode -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxOutputMode(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GfxOutputId * p1, uint32_t p2, R4GfxOutputMode * p3) {
@@ -3689,7 +3705,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxOutputMode(uint32_t reserved, 
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,228u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,230u,a,4u,0);
 }
 /* r4draw.Context.gfxOutputEdid -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxOutputEdid(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GfxOutputId * p1, uint32_t p2, R4GfxEdidBlock * p3) {
@@ -3698,7 +3714,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxOutputEdid(uint32_t reserved, 
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,229u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,231u,a,4u,0);
 }
 /* r4draw.Context.gfxAtomicTest -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxAtomicTest(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GfxAtomicState * p1, R4GfxAtomicResult * p2) {
@@ -3706,7 +3722,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxAtomicTest(uint32_t reserved, 
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,230u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,232u,a,3u,0);
 }
 /* r4draw.Context.gfxAtomicCommit -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxAtomicCommit(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GfxAtomicState * p1, R4GfxAtomicResult * p2) {
@@ -3714,7 +3730,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxAtomicCommit(uint32_t reserved
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,231u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,233u,a,3u,0);
 }
 /* r4draw.Context.gfxQueueOpen -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxQueueOpen(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GfxQueueConfig * p1, R4GfxQueueHandle * p2) {
@@ -3722,7 +3738,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxQueueOpen(uint32_t reserved, c
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,232u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,234u,a,3u,0);
 }
 /* r4draw.Context.gfxQueueBackend -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxQueueBackend(uint32_t reserved, const R4SdkGuiDrawContext * p0, uint32_t p1, R4GfxBackendBinding * p2) {
@@ -3730,14 +3746,14 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxQueueBackend(uint32_t reserved
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,233u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,235u,a,3u,0);
 }
 /* r4draw.Context.gfxQueueClose -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxQueueClose(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GfxQueueHandle * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,234u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,236u,a,2u,0);
 }
 /* r4draw.Context.gfxQueueSubmit -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxQueueSubmit(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GfxQueueHandle * p1, const R4GfxSubmission * p2, R4GfxFenceStatus * p3) {
@@ -3746,7 +3762,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxQueueSubmit(uint32_t reserved,
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,235u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,237u,a,4u,0);
 }
 /* r4draw.Context.gfxQueueSubmitNative -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxQueueSubmitNative(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GfxQueueHandle * p1, const R4GfxSubmission * p2, const R4GfxNativeSubmission * p3, R4GfxFenceStatus * p4) {
@@ -3756,7 +3772,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxQueueSubmitNative(uint32_t res
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.ptr=(void *)p4,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,236u,a,5u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,238u,a,5u,0);
 }
 /* r4draw.Context.gfxFenceQuery -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxFenceQuery(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GfxFence * p1, R4GfxFenceStatus * p2) {
@@ -3764,7 +3780,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxFenceQuery(uint32_t reserved, 
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,237u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,239u,a,3u,0);
 }
 /* r4draw.Context.gfxFenceWait -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxFenceWait(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GfxFence * p1, uint64_t p2, uint32_t p3, R4GfxFenceStatus * p4) {
@@ -3774,46 +3790,46 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxFenceWait(uint32_t reserved, c
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.ptr=(void *)p4,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,238u,a,5u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,240u,a,5u,0);
 }
 /* r4draw.Context.gfxFenceCancel -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxFenceCancel(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GfxFence * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,239u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,241u,a,2u,0);
 }
 /* r4draw.Context.gfxFenceRelease -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_gfxFenceRelease(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GfxFence * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,240u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,242u,a,2u,0);
 }
 /* r4draw.Context.queues -> gfx_queue.Context */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_queues(uint32_t reserved, const R4SdkGuiDrawContext * p0, R4SdkGfxQueueContext *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,241u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,243u,a,1u,output);
 }
 /* r4draw.Context.screenWidth -> u32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_screenWidth(uint32_t reserved, const R4SdkGuiDrawContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,242u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,244u,a,1u,0);
 }
 /* r4draw.Context.screenHeight -> u32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_screenHeight(uint32_t reserved, const R4SdkGuiDrawContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,243u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,245u,a,1u,0);
 }
 /* r4draw.Context.clear -> void */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_clear(uint32_t reserved, const R4SdkGuiDrawContext * p0, uint32_t p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,244u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,246u,a,2u,0);
 }
 /* r4draw.Context.rect -> void */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_rect(uint32_t reserved, const R4SdkGuiDrawContext * p0, int32_t p1, int32_t p2, uint32_t p3, uint32_t p4, uint32_t p5) {
@@ -3824,7 +3840,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_rect(uint32_t reserved, const R4S
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p5,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,245u,a,6u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,247u,a,6u,0);
 }
 /* r4draw.Context.text -> void */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_text(uint32_t reserved, const R4SdkGuiDrawContext * p0, int32_t p1, int32_t p2, const uint8_t * p3, uint32_t p4, uint32_t p5) {
@@ -3835,19 +3851,19 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_text(uint32_t reserved, const R4S
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p5,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,246u,a,6u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,248u,a,6u,0);
 }
 /* r4draw.Context.displayRevision -> u32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_displayRevision(uint32_t reserved, const R4SdkGuiDrawContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,247u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,249u,a,1u,0);
 }
 /* r4draw.Context.displayBeginFrame -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_displayBeginFrame(uint32_t reserved, const R4SdkGuiDrawContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,248u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,250u,a,1u,0);
 }
 /* r4draw.Context.displayBeginFrameRect -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_displayBeginFrameRect(uint32_t reserved, const R4SdkGuiDrawContext * p0, int32_t p1, int32_t p2, uint32_t p3, uint32_t p4) {
@@ -3857,13 +3873,13 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_displayBeginFrameRect(uint32_t re
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,249u,a,5u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,251u,a,5u,0);
 }
 /* r4draw.Context.displayPresent -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_displayPresent(uint32_t reserved, const R4SdkGuiDrawContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,250u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,252u,a,1u,0);
 }
 /* r4draw.Context.displayBlitXrgb32 -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_displayBlitXrgb32(uint32_t reserved, const R4SdkGuiDrawContext * p0, int32_t p1, int32_t p2, uint32_t p3, uint32_t p4, const uint32_t * p5, uintptr_t n5) {
@@ -3874,7 +3890,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_displayBlitXrgb32(uint32_t reserv
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.ptr=(void *)p5,.length=n5,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,251u,a,6u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,253u,a,6u,0);
 }
 /* r4draw.Context.displayBlitXrgb32Stride -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_displayBlitXrgb32Stride(uint32_t reserved, const R4SdkGuiDrawContext * p0, int32_t p1, int32_t p2, uint32_t p3, uint32_t p4, uint32_t p5, const uint32_t * p6, uintptr_t n6) {
@@ -3886,13 +3902,13 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_displayBlitXrgb32Stride(uint32_t 
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p5,.flags=R4SDK_GUI_PRESENT};
  a[6] = (R4SdkGuiSlot){.ptr=(void *)p6,.length=n6,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,252u,a,7u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,254u,a,7u,0);
 }
 /* r4draw.Context.supportsDisplayPresentRegions -> bool */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_supportsDisplayPresentRegions(uint32_t reserved, const R4SdkGuiDrawContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,253u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,255u,a,1u,0);
 }
 /* r4draw.Context.displayPresentRegions -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_displayPresentRegions(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4DisplayPresentRequest * p1, const uint32_t * p2, uintptr_t n2, const R4DisplayDamageRect * p3, uintptr_t n3, R4DisplayPresentResult * p4) {
@@ -3902,14 +3918,14 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_displayPresentRegions(uint32_t re
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.length=n3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.ptr=(void *)p4,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,254u,a,5u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,256u,a,5u,0);
 }
 /* r4draw.Context.displayPresentCapabilities -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_displayPresentCapabilities(uint32_t reserved, const R4SdkGuiDrawContext * p0, R4DisplayPresentCapabilities * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,255u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,257u,a,2u,0);
 }
 /* r4draw.Context.displayPresentCompletion -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_displayPresentCompletion(uint32_t reserved, const R4SdkGuiDrawContext * p0, uint64_t p1, R4DisplayPresentCompletion * p2) {
@@ -3917,26 +3933,26 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_displayPresentCompletion(uint32_t
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,256u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,258u,a,3u,0);
 }
 /* r4draw.Context.supportsDisplayPresentationStats -> bool */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_supportsDisplayPresentationStats(uint32_t reserved, const R4SdkGuiDrawContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,257u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,259u,a,1u,0);
 }
 /* r4draw.Context.supportsDisplayCursor -> bool */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_supportsDisplayCursor(uint32_t reserved, const R4SdkGuiDrawContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,258u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,260u,a,1u,0);
 }
 /* r4draw.Context.displayCursorInfo -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_displayCursorInfo(uint32_t reserved, const R4SdkGuiDrawContext * p0, R4DisplayCursorInfo * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,259u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,261u,a,2u,0);
 }
 /* r4draw.Context.displayCursorSubmit -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_displayCursorSubmit(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4DisplayCursorRequest * p1, R4DisplayCursorStatus * p2) {
@@ -3944,14 +3960,14 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_displayCursorSubmit(uint32_t rese
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,260u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,262u,a,3u,0);
 }
 /* r4draw.Context.displayCursorStatus -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_displayCursorStatus(uint32_t reserved, const R4SdkGuiDrawContext * p0, R4DisplayCursorStatus * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,261u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,263u,a,2u,0);
 }
 /* r4draw.Context.displayPresentationStats -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_displayPresentationStats(uint32_t reserved, const R4SdkGuiDrawContext * p0, uint32_t p1, R4DisplayPresentationStats * p2) {
@@ -3959,13 +3975,13 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_displayPresentationStats(uint32_t
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,262u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,264u,a,3u,0);
 }
 /* r4draw.Context.supportsDisplayPresentationInfo -> bool */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_supportsDisplayPresentationInfo(uint32_t reserved, const R4SdkGuiDrawContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,263u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,265u,a,1u,0);
 }
 /* r4draw.Context.displayPresentationInfo -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_displayPresentationInfo(uint32_t reserved, const R4SdkGuiDrawContext * p0, uint32_t p1, R4DisplayPresentationInfo * p2) {
@@ -3973,7 +3989,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_displayPresentationInfo(uint32_t 
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,264u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,266u,a,3u,0);
 }
 /* r4draw.Context.displayOutputTarget -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_displayOutputTarget(uint32_t reserved, const R4SdkGuiDrawContext * p0, uint32_t p1, uint32_t p2, R4GfxOutputTarget * p3) {
@@ -3982,7 +3998,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_displayOutputTarget(uint32_t rese
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,265u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,267u,a,4u,0);
 }
 /* r4draw.Context.displayOutputPresentationInfo -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_displayOutputPresentationInfo(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GfxOutputTarget * p1, R4DisplayPresentationInfo * p2) {
@@ -3990,7 +4006,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_displayOutputPresentationInfo(uin
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,266u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,268u,a,3u,0);
 }
 /* r4draw.Context.displayOutputPresentationFeedback -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_displayOutputPresentationFeedback(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GfxOutputTarget * p1, const R4GfxFence * p2, R4DisplayPresentationStats * p3) {
@@ -3999,7 +4015,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_displayOutputPresentationFeedback
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,267u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,269u,a,4u,0);
 }
 /* r4draw.Context.displayPresentationFeedback -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_displayPresentationFeedback(uint32_t reserved, const R4SdkGuiDrawContext * p0, uint32_t p1, const R4GfxFence * p2, R4DisplayPresentationStats * p3) {
@@ -4008,14 +4024,14 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_displayPresentationFeedback(uint3
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,268u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,270u,a,4u,0);
 }
 /* r4draw.Context.guiClear -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiClear(uint32_t reserved, const R4SdkGuiDrawContext * p0, uint32_t p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,269u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,271u,a,2u,0);
 }
 /* r4draw.Context.guiRect -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiRect(uint32_t reserved, const R4SdkGuiDrawContext * p0, int32_t p1, int32_t p2, uint32_t p3, uint32_t p4, uint32_t p5) {
@@ -4026,7 +4042,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiRect(uint32_t reserved, const 
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p5,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,270u,a,6u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,272u,a,6u,0);
 }
 /* r4draw.Context.guiDrawText -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiDrawText(uint32_t reserved, const R4SdkGuiDrawContext * p0, int32_t p1, int32_t p2, const uint8_t * p3, uint32_t p4, uint32_t p5) {
@@ -4037,7 +4053,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiDrawText(uint32_t reserved, co
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p5,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,271u,a,6u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,273u,a,6u,0);
 }
 /* r4draw.Context.guiDrawTextEx -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiDrawTextEx(uint32_t reserved, const R4SdkGuiDrawContext * p0, int32_t p1, int32_t p2, const uint8_t * p3, uint32_t p4, uint32_t p5, uint32_t p6, uint32_t p7) {
@@ -4050,7 +4066,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiDrawTextEx(uint32_t reserved, 
  a[5] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p5,.flags=R4SDK_GUI_PRESENT};
  a[6] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p6,.flags=R4SDK_GUI_PRESENT};
  a[7] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p7,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,272u,a,8u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,274u,a,8u,0);
 }
 /* r4draw.Context.guiBlit -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiBlit(uint32_t reserved, const R4SdkGuiDrawContext * p0, int32_t p1, int32_t p2, uint32_t p3, uint32_t p4, uint32_t p5, const uint32_t * p6, uintptr_t n6) {
@@ -4062,7 +4078,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiBlit(uint32_t reserved, const 
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p5,.flags=R4SDK_GUI_PRESENT};
  a[6] = (R4SdkGuiSlot){.ptr=(void *)p6,.length=n6,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,273u,a,7u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,275u,a,7u,0);
 }
 /* r4draw.Context.guiBlendAlpha8 -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiBlendAlpha8(uint32_t reserved, const R4SdkGuiDrawContext * p0, int32_t p1, int32_t p2, uint32_t p3, uint32_t p4, uint32_t p5, uint32_t p6, const uint8_t * p7, uintptr_t n7) {
@@ -4075,7 +4091,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiBlendAlpha8(uint32_t reserved,
  a[5] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p5,.flags=R4SDK_GUI_PRESENT};
  a[6] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p6,.flags=R4SDK_GUI_PRESENT};
  a[7] = (R4SdkGuiSlot){.ptr=(void *)p7,.length=n7,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,274u,a,8u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,276u,a,8u,0);
 }
 /* r4draw.Context.guiRasterRead -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiRasterRead(uint32_t reserved, const R4SdkGuiDrawContext * p0, uint32_t p1, uint32_t p2, uint32_t * p3, uintptr_t n3) {
@@ -4084,51 +4100,51 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiRasterRead(uint32_t reserved, 
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.length=n3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,275u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,277u,a,4u,0);
 }
 /* r4draw.Context.supportsGuiFrameContract -> bool */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_supportsGuiFrameContract(uint32_t reserved, const R4SdkGuiDrawContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,276u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,278u,a,1u,0);
 }
 /* r4draw.Context.supportsGuiFrameDamageContract -> bool */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_supportsGuiFrameDamageContract(uint32_t reserved, const R4SdkGuiDrawContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,277u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,279u,a,1u,0);
 }
 /* r4draw.Context.supportsGuiFrameStreamingContract -> bool */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_supportsGuiFrameStreamingContract(uint32_t reserved, const R4SdkGuiDrawContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,278u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,280u,a,1u,0);
 }
 /* r4draw.Context.supportsGuiSharedRasterContract -> bool */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_supportsGuiSharedRasterContract(uint32_t reserved, const R4SdkGuiDrawContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,279u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,281u,a,1u,0);
 }
 /* r4draw.Context.guiFrameBegin -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiFrameBegin(uint32_t reserved, const R4SdkGuiDrawContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,280u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,282u,a,1u,0);
 }
 /* r4draw.Context.guiFrameBeginDamage -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiFrameBeginDamage(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4DisplayDamageRect * p1, uintptr_t n1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,281u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,283u,a,2u,0);
 }
 /* r4draw.Context.guiFrameBeginReplace -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiFrameBeginReplace(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4DisplayDamageRect * p1, uintptr_t n1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,282u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,284u,a,2u,0);
 }
 /* r4draw.Context.guiFrameAppend -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiFrameAppend(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GuiFrameCommand * p1, uintptr_t n1, const uint8_t * p2, uintptr_t n2) {
@@ -4136,19 +4152,19 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiFrameAppend(uint32_t reserved,
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,283u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,285u,a,3u,0);
 }
 /* r4draw.Context.guiFrameCommit -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiFrameCommit(uint32_t reserved, const R4SdkGuiDrawContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,284u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,286u,a,1u,0);
 }
 /* r4draw.Context.guiFrameCancel -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiFrameCancel(uint32_t reserved, const R4SdkGuiDrawContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,285u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,287u,a,1u,0);
 }
 /* r4draw.Context.guiFrameInfo -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiFrameInfo(uint32_t reserved, const R4SdkGuiDrawContext * p0, R4SdkGuiSlot p1, R4GuiFrameInfo * p2) {
@@ -4156,7 +4172,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiFrameInfo(uint32_t reserved, c
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = p1;
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,286u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,288u,a,3u,0);
 }
 /* r4draw.Context.guiFrameRead -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiFrameRead(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4ProgramProcessHandle * p1, uint64_t p2, R4GuiFrameCommand * p3, uintptr_t n3, uint8_t * p4, uintptr_t n4, R4GuiFrameInfo * p5) {
@@ -4167,7 +4183,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiFrameRead(uint32_t reserved, c
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.length=n3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.ptr=(void *)p4,.length=n4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.ptr=(void *)p5,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,287u,a,6u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,289u,a,6u,0);
 }
 /* r4draw.Context.guiFrameGenerationInfo -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiFrameGenerationInfo(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4ProgramProcessHandle * p1, uint64_t p2, R4GuiFrameGenerationInfo * p3) {
@@ -4176,7 +4192,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiFrameGenerationInfo(uint32_t r
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,288u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,290u,a,4u,0);
 }
 /* r4draw.Context.guiFrameGenerationRead -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiFrameGenerationRead(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4ProgramProcessHandle * p1, uint64_t p2, R4GuiFrameCommand * p3, uintptr_t n3, uint8_t * p4, uintptr_t n4, R4DisplayDamageRect * p5, uintptr_t n5, R4GuiFrameGenerationInfo * p6) {
@@ -4188,7 +4204,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiFrameGenerationRead(uint32_t r
  a[4] = (R4SdkGuiSlot){.ptr=(void *)p4,.length=n4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.ptr=(void *)p5,.length=n5,.flags=R4SDK_GUI_PRESENT};
  a[6] = (R4SdkGuiSlot){.ptr=(void *)p6,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,289u,a,7u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,291u,a,7u,0);
 }
 /* r4draw.Context.guiFrameStreamInfo -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiFrameStreamInfo(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4ProgramProcessHandle * p1, R4GuiFrameStreamInfo * p2) {
@@ -4196,7 +4212,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiFrameStreamInfo(uint32_t reser
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,290u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,292u,a,3u,0);
 }
 /* r4draw.Context.guiSharedRasterCreate -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiSharedRasterCreate(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GuiSharedRasterCreateInfo * p1, R4GuiSharedRasterHandle * p2) {
@@ -4204,14 +4220,14 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiSharedRasterCreate(uint32_t re
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,291u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,293u,a,3u,0);
 }
 /* r4draw.Context.guiSharedRasterDestroy -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiSharedRasterDestroy(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GuiSharedRasterHandle * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,292u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,294u,a,2u,0);
 }
 /* r4draw.Context.guiSharedRasterMapWrite -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiSharedRasterMapWrite(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GuiSharedRasterHandle * p1, R4GuiSharedRasterWriteMap * p2) {
@@ -4219,7 +4235,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiSharedRasterMapWrite(uint32_t 
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,293u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,295u,a,3u,0);
 }
 /* r4draw.Context.guiSharedRasterPublish -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiSharedRasterPublish(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GuiSharedRasterWriteMap * p1, uint64_t * p2) {
@@ -4227,7 +4243,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiSharedRasterPublish(uint32_t r
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,294u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,296u,a,3u,0);
 }
 /* r4draw.Context.guiSharedRasterAcquire -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiSharedRasterAcquire(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4ProgramProcessHandle * p1, uint64_t p2, const R4GuiSharedRasterHandle * p3, uint64_t p4, R4GuiSharedRasterMap * p5) {
@@ -4238,26 +4254,26 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiSharedRasterAcquire(uint32_t r
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.ptr=(void *)p5,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,295u,a,6u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,297u,a,6u,0);
 }
 /* r4draw.Context.guiSharedRasterRelease -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiSharedRasterRelease(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GuiSharedRasterLease * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,296u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,298u,a,2u,0);
 }
 /* r4draw.Context.guiPresent -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiPresent(uint32_t reserved, const R4SdkGuiDrawContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,297u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,299u,a,1u,0);
 }
 /* r4draw.Context.fontCount -> u32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_fontCount(uint32_t reserved, const R4SdkGuiDrawContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,298u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,300u,a,1u,0);
 }
 /* r4draw.Context.fontInfo -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_fontInfo(uint32_t reserved, const R4SdkGuiDrawContext * p0, uint32_t p1, R4GuiFontInfo * p2) {
@@ -4265,7 +4281,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_fontInfo(uint32_t reserved, const
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,299u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,301u,a,3u,0);
 }
 /* r4draw.Context.fontMeasure -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_fontMeasure(uint32_t reserved, const R4SdkGuiDrawContext * p0, uint32_t p1, const uint8_t * p2, R4GuiTextMetrics * p3) {
@@ -4274,7 +4290,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_fontMeasure(uint32_t reserved, co
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,300u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,302u,a,4u,0);
 }
 /* r4draw.Context.fontGlyphRow -> u64 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_fontGlyphRow(uint32_t reserved, const R4SdkGuiDrawContext * p0, uint32_t p1, uint32_t p2, uint32_t p3) {
@@ -4283,7 +4299,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_fontGlyphRow(uint32_t reserved, c
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,301u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,303u,a,4u,0);
 }
 /* r4draw.Context.fontGlyphBitmap -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_fontGlyphBitmap(uint32_t reserved, const R4SdkGuiDrawContext * p0, uint32_t p1, uint32_t p2, R4GuiGlyphBitmap * p3) {
@@ -4292,26 +4308,26 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_fontGlyphBitmap(uint32_t reserved
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,302u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,304u,a,4u,0);
 }
 /* r4draw.Context.fontRevision -> u32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_fontRevision(uint32_t reserved, const R4SdkGuiDrawContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,303u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,305u,a,1u,0);
 }
 /* r4draw.Context.fontReload -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_fontReload(uint32_t reserved, const R4SdkGuiDrawContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,304u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,306u,a,1u,0);
 }
 /* r4draw.Context.guiSetFont -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiSetFont(uint32_t reserved, const R4SdkGuiDrawContext * p0, uint32_t p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,305u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,307u,a,2u,0);
 }
 /* r4draw.Context.guiFont -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiFont(uint32_t reserved, const R4SdkGuiDrawContext * p0, uint32_t p1, R4GuiFontInfo * p2) {
@@ -4319,7 +4335,7 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_guiFont(uint32_t reserved, const 
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,306u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,308u,a,3u,0);
 }
 /* r4draw.Context.textFont -> void */
 static inline R4SdkGuiSlot R4SdkGuiDrawContext_textFont(uint32_t reserved, const R4SdkGuiDrawContext * p0, uint32_t p1, int32_t p2, int32_t p3, const uint8_t * p4, uint32_t p5, uint32_t p6) {
@@ -4331,14 +4347,14 @@ static inline R4SdkGuiSlot R4SdkGuiDrawContext_textFont(uint32_t reserved, const
  a[4] = (R4SdkGuiSlot){.ptr=(void *)p4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p5,.flags=R4SDK_GUI_PRESENT};
  a[6] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p6,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,307u,a,7u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,309u,a,7u,0);
 }
 /* gui.FocusState.normalize -> bool */
 static inline R4SdkGuiSlot R4SdkGuiFocusState_normalize(uint32_t reserved, R4SdkGuiFocusState * p0, const R4SdkGuiFocusItem * p1, uintptr_t n1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,308u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,310u,a,2u,0);
 }
 /* gui.FocusState.set -> bool */
 static inline R4SdkGuiSlot R4SdkGuiFocusState_set(uint32_t reserved, R4SdkGuiFocusState * p0, const R4SdkGuiFocusItem * p1, uintptr_t n1, uint64_t p2) {
@@ -4346,7 +4362,7 @@ static inline R4SdkGuiSlot R4SdkGuiFocusState_set(uint32_t reserved, R4SdkGuiFoc
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,309u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,311u,a,3u,0);
 }
 /* gui.FocusState.move -> bool */
 static inline R4SdkGuiSlot R4SdkGuiFocusState_move(uint32_t reserved, R4SdkGuiFocusState * p0, const R4SdkGuiFocusItem * p1, uintptr_t n1, uint32_t p2) {
@@ -4354,7 +4370,7 @@ static inline R4SdkGuiSlot R4SdkGuiFocusState_move(uint32_t reserved, R4SdkGuiFo
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,310u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,312u,a,3u,0);
 }
 /* gui.FocusState.handleKey -> gui.FocusResult */
 static inline R4SdkGuiSlot R4SdkGuiFocusState_handleKey(uint32_t reserved, R4SdkGuiFocusState * p0, const R4SdkGuiFocusItem * p1, uintptr_t n1, uint8_t p2, R4SdkGuiFocusResult *output) {
@@ -4362,7 +4378,7 @@ static inline R4SdkGuiSlot R4SdkGuiFocusState_handleKey(uint32_t reserved, R4Sdk
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,311u,a,3u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,313u,a,3u,output);
 }
 /* gui.MouseCapture.begin -> void */
 static inline R4SdkGuiSlot R4SdkGuiMouseCapture_begin(uint32_t reserved, R4SdkGuiMouseCapture * p0, uint64_t p1, uint32_t p2) {
@@ -4370,7 +4386,7 @@ static inline R4SdkGuiSlot R4SdkGuiMouseCapture_begin(uint32_t reserved, R4SdkGu
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,312u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,314u,a,3u,0);
 }
 /* gui.MouseCapture.release -> gui.ControlAction */
 static inline R4SdkGuiSlot R4SdkGuiMouseCapture_release(uint32_t reserved, R4SdkGuiMouseCapture * p0, uint64_t p1, uint8_t p2) {
@@ -4378,82 +4394,82 @@ static inline R4SdkGuiSlot R4SdkGuiMouseCapture_release(uint32_t reserved, R4Sdk
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,313u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,315u,a,3u,0);
 }
 /* gui.MouseCapture.clear -> void */
 static inline R4SdkGuiSlot R4SdkGuiMouseCapture_clear(uint32_t reserved, R4SdkGuiMouseCapture * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,314u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,316u,a,1u,0);
 }
 /* gui.MouseCapture.isActive -> bool */
 static inline R4SdkGuiSlot R4SdkGuiMouseCapture_isActive(uint32_t reserved, const R4SdkGuiMouseCapture * p0, uint64_t p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,315u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,317u,a,2u,0);
 }
 /* gui.TextRange.normalized -> gui.TextRange */
 static inline R4SdkGuiSlot R4SdkGuiTextRange_normalized(uint32_t reserved, uint64_t p0, uint64_t p1, R4SdkGuiTextRange *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,316u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,318u,a,2u,output);
 }
 /* gui.TextRange.isEmpty -> bool */
 static inline R4SdkGuiSlot R4SdkGuiTextRange_isEmpty(uint32_t reserved, const R4SdkGuiTextRange * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,317u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,319u,a,1u,0);
 }
 /* gui.TextRange.count -> usize */
 static inline R4SdkGuiSlot R4SdkGuiTextRange_count(uint32_t reserved, const R4SdkGuiTextRange * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,318u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,320u,a,1u,0);
 }
 /* gui.TextAreaView.init -> gui.TextAreaView */
 static inline R4SdkGuiSlot R4SdkGuiTextAreaView_init(uint32_t reserved, uint64_t p0, uint64_t p1, R4SdkGuiTextAreaView *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,319u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,321u,a,2u,output);
 }
 /* gui.TextAreaView.effectiveVisibleCols -> usize */
 static inline R4SdkGuiSlot R4SdkGuiTextAreaView_effectiveVisibleCols(uint32_t reserved, const R4SdkGuiTextAreaView * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,320u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,322u,a,1u,0);
 }
 /* gui.TextAreaView.effectiveVisibleRows -> usize */
 static inline R4SdkGuiSlot R4SdkGuiTextAreaView_effectiveVisibleRows(uint32_t reserved, const R4SdkGuiTextAreaView * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,321u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,323u,a,1u,0);
 }
 /* gui.TextAreaView.effectiveWrapCols -> usize */
 static inline R4SdkGuiSlot R4SdkGuiTextAreaView_effectiveWrapCols(uint32_t reserved, const R4SdkGuiTextAreaView * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,322u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,324u,a,1u,0);
 }
 /* gui.MenubarResult.hasCommand -> bool */
 static inline R4SdkGuiSlot R4SdkGuiMenubarResult_hasCommand(uint32_t reserved, const R4SdkGuiMenubarResult * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,323u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,325u,a,1u,0);
 }
 /* gui.LayoutCursor.init -> gui.LayoutCursor */
 static inline R4SdkGuiSlot R4SdkGuiLayoutCursor_init(uint32_t reserved, const R4SdkGuiRect * p0, R4SdkGuiLayoutCursor *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,324u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,326u,a,1u,output);
 }
 /* gui.LayoutCursor.remaining -> gui.Rect */
 static inline R4SdkGuiSlot R4SdkGuiLayoutCursor_remaining(uint32_t reserved, const R4SdkGuiLayoutCursor * p0, R4SdkGuiRect *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,325u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,327u,a,1u,output);
 }
 /* gui.LayoutCursor.takeTop -> gui.Rect */
 static inline R4SdkGuiSlot R4SdkGuiLayoutCursor_takeTop(uint32_t reserved, R4SdkGuiLayoutCursor * p0, int32_t p1, int32_t p2, R4SdkGuiRect *output) {
@@ -4461,7 +4477,7 @@ static inline R4SdkGuiSlot R4SdkGuiLayoutCursor_takeTop(uint32_t reserved, R4Sdk
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,326u,a,3u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,328u,a,3u,output);
 }
 /* gui.LayoutCursor.takeBottom -> gui.Rect */
 static inline R4SdkGuiSlot R4SdkGuiLayoutCursor_takeBottom(uint32_t reserved, R4SdkGuiLayoutCursor * p0, int32_t p1, int32_t p2, R4SdkGuiRect *output) {
@@ -4469,7 +4485,7 @@ static inline R4SdkGuiSlot R4SdkGuiLayoutCursor_takeBottom(uint32_t reserved, R4
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,327u,a,3u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,329u,a,3u,output);
 }
 /* gui.LayoutCursor.takeLeft -> gui.Rect */
 static inline R4SdkGuiSlot R4SdkGuiLayoutCursor_takeLeft(uint32_t reserved, R4SdkGuiLayoutCursor * p0, int32_t p1, int32_t p2, R4SdkGuiRect *output) {
@@ -4477,7 +4493,7 @@ static inline R4SdkGuiSlot R4SdkGuiLayoutCursor_takeLeft(uint32_t reserved, R4Sd
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,328u,a,3u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,330u,a,3u,output);
 }
 /* gui.LayoutCursor.takeRight -> gui.Rect */
 static inline R4SdkGuiSlot R4SdkGuiLayoutCursor_takeRight(uint32_t reserved, R4SdkGuiLayoutCursor * p0, int32_t p1, int32_t p2, R4SdkGuiRect *output) {
@@ -4485,7 +4501,7 @@ static inline R4SdkGuiSlot R4SdkGuiLayoutCursor_takeRight(uint32_t reserved, R4S
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,329u,a,3u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,331u,a,3u,output);
 }
 /* gui.HostedAppFrame.refresh -> void */
 static inline R4SdkGuiSlot R4SdkGuiHostedAppFrame_refresh(uint32_t reserved, R4SdkGuiHostedAppFrame * p0, const R4SdkGuiSystemContext * p1, const R4SdkGuiDesktopContext * p2, const R4SdkGuiDrawContext * p3, int32_t p4, int32_t p5) {
@@ -4496,14 +4512,14 @@ static inline R4SdkGuiSlot R4SdkGuiHostedAppFrame_refresh(uint32_t reserved, R4S
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p5,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,330u,a,6u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,332u,a,6u,0);
 }
 /* gui.Canvas.init -> gui.Canvas */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_init(uint32_t reserved, const R4SdkGuiDrawContext * p0, const R4GuiWindowInfo * p1, R4SdkGuiCanvas *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,331u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,333u,a,2u,output);
 }
 /* gui.Canvas.initSize -> gui.Canvas */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_initSize(uint32_t reserved, const R4SdkGuiDrawContext * p0, int32_t p1, int32_t p2, R4SdkGuiCanvas *output) {
@@ -4511,48 +4527,48 @@ static inline R4SdkGuiSlot R4SdkGuiCanvas_initSize(uint32_t reserved, const R4Sd
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,332u,a,3u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,334u,a,3u,output);
 }
 /* gui.Canvas.bounds -> gui.Rect */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_bounds(uint32_t reserved, const R4SdkGuiCanvas * p0, R4SdkGuiRect *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,333u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,335u,a,1u,output);
 }
 /* gui.Canvas.withFontId -> gui.Canvas */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_withFontId(uint32_t reserved, const R4SdkGuiCanvas * p0, uint32_t p1, R4SdkGuiCanvas *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,334u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,336u,a,2u,output);
 }
 /* gui.Canvas.withStyle -> gui.Canvas */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_withStyle(uint32_t reserved, const R4SdkGuiCanvas * p0, const R4SdkGuiStyle * p1, R4SdkGuiCanvas *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,335u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,337u,a,2u,output);
 }
 /* gui.Canvas.setStyle -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_setStyle(uint32_t reserved, R4SdkGuiCanvas * p0, const R4SdkGuiStyle * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,336u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,338u,a,2u,0);
 }
 /* gui.Canvas.withTextRole -> gui.Canvas */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_withTextRole(uint32_t reserved, const R4SdkGuiCanvas * p0, uint32_t p1, R4SdkGuiCanvas *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,337u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,339u,a,2u,output);
 }
 /* gui.Canvas.layoutTabs -> gui.TabBar */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_layoutTabs(uint32_t reserved, const R4SdkGuiCanvas * p0, const R4SdkGuiTabBar * p1, R4SdkGuiTabBar *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,338u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,340u,a,2u,output);
 }
 /* gui.Canvas.surface -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_surface(uint32_t reserved, const R4SdkGuiCanvas * p0, const R4SdkGuiRect * p1, uint32_t p2) {
@@ -4560,7 +4576,7 @@ static inline R4SdkGuiSlot R4SdkGuiCanvas_surface(uint32_t reserved, const R4Sdk
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,339u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,341u,a,3u,0);
 }
 /* gui.Canvas.card -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_card(uint32_t reserved, const R4SdkGuiCanvas * p0, const R4SdkGuiCard * p1, uint8_t * p2, uintptr_t n2) {
@@ -4568,7 +4584,7 @@ static inline R4SdkGuiSlot R4SdkGuiCanvas_card(uint32_t reserved, const R4SdkGui
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,340u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,342u,a,3u,0);
 }
 /* gui.Canvas.actionButton -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_actionButton(uint32_t reserved, const R4SdkGuiCanvas * p0, const R4SdkGuiRect * p1, const uint8_t * p2, uintptr_t n2, uint32_t p3, uint8_t p4, uint8_t p5, uint8_t * p6, uintptr_t n6) {
@@ -4580,7 +4596,7 @@ static inline R4SdkGuiSlot R4SdkGuiCanvas_actionButton(uint32_t reserved, const 
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p5,.flags=R4SDK_GUI_PRESENT};
  a[6] = (R4SdkGuiSlot){.ptr=(void *)p6,.length=n6,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,341u,a,7u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,343u,a,7u,0);
 }
 /* gui.Canvas.progressBar -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_progressBar(uint32_t reserved, const R4SdkGuiCanvas * p0, const R4SdkGuiRect * p1, uint64_t p2, uint64_t p3, uint32_t p4, uint8_t p5) {
@@ -4591,14 +4607,14 @@ static inline R4SdkGuiSlot R4SdkGuiCanvas_progressBar(uint32_t reserved, const R
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p5,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,342u,a,6u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,344u,a,6u,0);
 }
 /* gui.Canvas.progress -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_progress(uint32_t reserved, const R4SdkGuiCanvas * p0, const R4SdkGuiProgress * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,343u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,345u,a,2u,0);
 }
 /* gui.Canvas.paragraph -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_paragraph(uint32_t reserved, const R4SdkGuiCanvas * p0, const R4SdkGuiParagraph * p1, uint8_t * p2, uintptr_t n2) {
@@ -4606,14 +4622,14 @@ static inline R4SdkGuiSlot R4SdkGuiCanvas_paragraph(uint32_t reserved, const R4S
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,344u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,346u,a,3u,0);
 }
 /* gui.Canvas.clear -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_clear(uint32_t reserved, const R4SdkGuiCanvas * p0, uint32_t p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,345u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,347u,a,2u,0);
 }
 /* gui.Canvas.rect -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_rect(uint32_t reserved, const R4SdkGuiCanvas * p0, const R4SdkGuiRect * p1, uint32_t p2) {
@@ -4621,7 +4637,7 @@ static inline R4SdkGuiSlot R4SdkGuiCanvas_rect(uint32_t reserved, const R4SdkGui
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,346u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,348u,a,3u,0);
 }
 /* gui.Canvas.raster -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_raster(uint32_t reserved, const R4SdkGuiCanvas * p0, int32_t p1, int32_t p2, uint32_t p3, uint32_t p4, uint32_t p5, const uint32_t * p6, uintptr_t n6) {
@@ -4633,7 +4649,7 @@ static inline R4SdkGuiSlot R4SdkGuiCanvas_raster(uint32_t reserved, const R4SdkG
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p5,.flags=R4SDK_GUI_PRESENT};
  a[6] = (R4SdkGuiSlot){.ptr=(void *)p6,.length=n6,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,347u,a,7u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,349u,a,7u,0);
 }
 /* gui.Canvas.blendAlpha8 -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_blendAlpha8(uint32_t reserved, const R4SdkGuiCanvas * p0, int32_t p1, int32_t p2, uint32_t p3, uint32_t p4, uint32_t p5, uint32_t p6, const uint8_t * p7, uintptr_t n7) {
@@ -4646,7 +4662,7 @@ static inline R4SdkGuiSlot R4SdkGuiCanvas_blendAlpha8(uint32_t reserved, const R
  a[5] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p5,.flags=R4SDK_GUI_PRESENT};
  a[6] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p6,.flags=R4SDK_GUI_PRESENT};
  a[7] = (R4SdkGuiSlot){.ptr=(void *)p7,.length=n7,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,348u,a,8u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,350u,a,8u,0);
 }
 /* gui.Canvas.text -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_text(uint32_t reserved, const R4SdkGuiCanvas * p0, int32_t p1, int32_t p2, const uint8_t * p3, uint32_t p4, uint32_t p5) {
@@ -4657,7 +4673,7 @@ static inline R4SdkGuiSlot R4SdkGuiCanvas_text(uint32_t reserved, const R4SdkGui
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p5,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,349u,a,6u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,351u,a,6u,0);
 }
 /* gui.Canvas.textFont -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_textFont(uint32_t reserved, const R4SdkGuiCanvas * p0, uint32_t p1, int32_t p2, int32_t p3, const uint8_t * p4, uint32_t p5, uint32_t p6) {
@@ -4669,7 +4685,7 @@ static inline R4SdkGuiSlot R4SdkGuiCanvas_textFont(uint32_t reserved, const R4Sd
  a[4] = (R4SdkGuiSlot){.ptr=(void *)p4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p5,.flags=R4SDK_GUI_PRESENT};
  a[6] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p6,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,350u,a,7u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,352u,a,7u,0);
 }
 /* gui.Canvas.frameCommand -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_frameCommand(uint32_t reserved, const R4SdkGuiCanvas * p0, const R4GuiFrameCommand * p1, const uint8_t * p2, uintptr_t n2) {
@@ -4677,14 +4693,14 @@ static inline R4SdkGuiSlot R4SdkGuiCanvas_frameCommand(uint32_t reserved, const 
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,351u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,353u,a,3u,0);
 }
 /* gui.Canvas.textWidthZ -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_textWidthZ(uint32_t reserved, const R4SdkGuiCanvas * p0, const uint8_t * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,352u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,354u,a,2u,0);
 }
 /* gui.Canvas.textIndexAt -> usize */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_textIndexAt(uint32_t reserved, const R4SdkGuiCanvas * p0, const uint8_t * p1, uintptr_t n1, int32_t p2) {
@@ -4692,7 +4708,7 @@ static inline R4SdkGuiSlot R4SdkGuiCanvas_textIndexAt(uint32_t reserved, const R
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,353u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,355u,a,3u,0);
 }
 /* gui.Canvas.bindTextMetrics -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_bindTextMetrics(uint32_t reserved, R4SdkGuiCanvas * p0, const R4SdkTextMetrics * p1, const R4SdkTextMetricsKey * p2) {
@@ -4700,13 +4716,13 @@ static inline R4SdkGuiSlot R4SdkGuiCanvas_bindTextMetrics(uint32_t reserved, R4S
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,354u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,356u,a,3u,0);
 }
 /* gui.Canvas.clearTextMetrics -> void */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_clearTextMetrics(uint32_t reserved, R4SdkGuiCanvas * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,355u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,357u,a,1u,0);
 }
 /* gui.Canvas.textIndexChecked -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_textIndexChecked(uint32_t reserved, const R4SdkGuiCanvas * p0, const uint8_t * p1, uintptr_t n1, int32_t p2, uint64_t * p3) {
@@ -4715,14 +4731,14 @@ static inline R4SdkGuiSlot R4SdkGuiCanvas_textIndexChecked(uint32_t reserved, co
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,356u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,358u,a,4u,0);
 }
 /* gui.Canvas.charsForWidth -> usize */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_charsForWidth(uint32_t reserved, const R4SdkGuiCanvas * p0, int32_t p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,357u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,359u,a,2u,0);
 }
 /* gui.Canvas.textClipped -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_textClipped(uint32_t reserved, const R4SdkGuiCanvas * p0, int32_t p1, int32_t p2, int32_t p3, uint8_t * p4, uintptr_t n4, const uint8_t * p5, uintptr_t n5, uint32_t p6, uint32_t p7) {
@@ -4735,7 +4751,7 @@ static inline R4SdkGuiSlot R4SdkGuiCanvas_textClipped(uint32_t reserved, const R
  a[5] = (R4SdkGuiSlot){.ptr=(void *)p5,.length=n5,.flags=R4SDK_GUI_PRESENT};
  a[6] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p6,.flags=R4SDK_GUI_PRESENT};
  a[7] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p7,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,358u,a,8u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,360u,a,8u,0);
 }
 /* gui.Canvas.label -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_label(uint32_t reserved, const R4SdkGuiCanvas * p0, const R4SdkGuiLabel * p1, uint8_t * p2, uintptr_t n2) {
@@ -4743,7 +4759,7 @@ static inline R4SdkGuiSlot R4SdkGuiCanvas_label(uint32_t reserved, const R4SdkGu
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,359u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,361u,a,3u,0);
 }
 /* gui.Canvas.button -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_button(uint32_t reserved, const R4SdkGuiCanvas * p0, const R4SdkGuiButton * p1, uint8_t * p2, uintptr_t n2) {
@@ -4751,7 +4767,7 @@ static inline R4SdkGuiSlot R4SdkGuiCanvas_button(uint32_t reserved, const R4SdkG
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,360u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,362u,a,3u,0);
 }
 /* gui.Canvas.checkbox -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_checkbox(uint32_t reserved, const R4SdkGuiCanvas * p0, const R4SdkGuiCheckbox * p1, uint8_t * p2, uintptr_t n2) {
@@ -4759,7 +4775,7 @@ static inline R4SdkGuiSlot R4SdkGuiCanvas_checkbox(uint32_t reserved, const R4Sd
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,361u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,363u,a,3u,0);
 }
 /* gui.Canvas.radioButton -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_radioButton(uint32_t reserved, const R4SdkGuiCanvas * p0, const R4SdkGuiRadioButton * p1, uint8_t * p2, uintptr_t n2) {
@@ -4767,7 +4783,7 @@ static inline R4SdkGuiSlot R4SdkGuiCanvas_radioButton(uint32_t reserved, const R
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,362u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,364u,a,3u,0);
 }
 /* gui.Canvas.groupBox -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_groupBox(uint32_t reserved, const R4SdkGuiCanvas * p0, const R4SdkGuiGroupBox * p1, uint8_t * p2, uintptr_t n2) {
@@ -4775,14 +4791,14 @@ static inline R4SdkGuiSlot R4SdkGuiCanvas_groupBox(uint32_t reserved, const R4Sd
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,363u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,365u,a,3u,0);
 }
 /* gui.Canvas.separator -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_separator(uint32_t reserved, const R4SdkGuiCanvas * p0, const R4SdkGuiSeparator * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,364u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,366u,a,2u,0);
 }
 /* gui.Canvas.textField -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_textField(uint32_t reserved, const R4SdkGuiCanvas * p0, const R4SdkGuiRect * p1, uint8_t * p2, uintptr_t n2, const uint8_t * p3, uintptr_t n3, uint8_t p4, uint8_t p5) {
@@ -4793,7 +4809,7 @@ static inline R4SdkGuiSlot R4SdkGuiCanvas_textField(uint32_t reserved, const R4S
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.length=n3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p5,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,365u,a,6u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,367u,a,6u,0);
 }
 /* gui.Canvas.textArea -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_textArea(uint32_t reserved, const R4SdkGuiCanvas * p0, const R4SdkGuiRect * p1, uint8_t * p2, uintptr_t n2, const uint8_t * p3, uintptr_t n3, uint64_t p4, const R4SdkGuiTextRange * p5, uint64_t p6, uint64_t p7, uint8_t p8, uint8_t p9) {
@@ -4808,7 +4824,7 @@ static inline R4SdkGuiSlot R4SdkGuiCanvas_textArea(uint32_t reserved, const R4Sd
  a[7] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p7,.flags=R4SDK_GUI_PRESENT};
  a[8] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p8,.flags=R4SDK_GUI_PRESENT};
  a[9] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p9,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,366u,a,10u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,368u,a,10u,0);
 }
 /* gui.Canvas.list -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_list(uint32_t reserved, const R4SdkGuiCanvas * p0, const R4SdkGuiList * p1, uint8_t * p2, uintptr_t n2) {
@@ -4816,7 +4832,7 @@ static inline R4SdkGuiSlot R4SdkGuiCanvas_list(uint32_t reserved, const R4SdkGui
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,367u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,369u,a,3u,0);
 }
 /* gui.Canvas.scrollbar -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_scrollbar(uint32_t reserved, const R4SdkGuiCanvas * p0, const R4SdkGuiScrollbar * p1, uint8_t * p2, uintptr_t n2) {
@@ -4824,7 +4840,7 @@ static inline R4SdkGuiSlot R4SdkGuiCanvas_scrollbar(uint32_t reserved, const R4S
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,368u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,370u,a,3u,0);
 }
 /* gui.Canvas.toolbarButton -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_toolbarButton(uint32_t reserved, const R4SdkGuiCanvas * p0, const R4SdkGuiToolbarButton * p1, uint8_t * p2, uintptr_t n2) {
@@ -4832,7 +4848,7 @@ static inline R4SdkGuiSlot R4SdkGuiCanvas_toolbarButton(uint32_t reserved, const
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,369u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,371u,a,3u,0);
 }
 /* gui.Canvas.tabBar -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_tabBar(uint32_t reserved, const R4SdkGuiCanvas * p0, const R4SdkGuiTabBar * p1, uint8_t * p2, uintptr_t n2) {
@@ -4840,7 +4856,7 @@ static inline R4SdkGuiSlot R4SdkGuiCanvas_tabBar(uint32_t reserved, const R4SdkG
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,370u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,372u,a,3u,0);
 }
 /* gui.Canvas.tableView -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_tableView(uint32_t reserved, const R4SdkGuiCanvas * p0, const R4SdkGuiTableView * p1, uint8_t * p2, uintptr_t n2) {
@@ -4848,7 +4864,7 @@ static inline R4SdkGuiSlot R4SdkGuiCanvas_tableView(uint32_t reserved, const R4S
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,371u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,373u,a,3u,0);
 }
 /* gui.Canvas.menu -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_menu(uint32_t reserved, const R4SdkGuiCanvas * p0, const R4SdkGuiMenu * p1, uint8_t * p2, uintptr_t n2) {
@@ -4856,7 +4872,7 @@ static inline R4SdkGuiSlot R4SdkGuiCanvas_menu(uint32_t reserved, const R4SdkGui
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,372u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,374u,a,3u,0);
 }
 /* gui.Canvas.menubar -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_menubar(uint32_t reserved, const R4SdkGuiCanvas * p0, const R4SdkGuiMenubar * p1, uint8_t * p2, uintptr_t n2) {
@@ -4864,7 +4880,7 @@ static inline R4SdkGuiSlot R4SdkGuiCanvas_menubar(uint32_t reserved, const R4Sdk
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,373u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,375u,a,3u,0);
 }
 /* gui.Canvas.dropdown -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_dropdown(uint32_t reserved, const R4SdkGuiCanvas * p0, const R4SdkGuiDropdown * p1, uint8_t * p2, uintptr_t n2) {
@@ -4872,7 +4888,7 @@ static inline R4SdkGuiSlot R4SdkGuiCanvas_dropdown(uint32_t reserved, const R4Sd
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,374u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,376u,a,3u,0);
 }
 /* gui.Canvas.messageDialog -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_messageDialog(uint32_t reserved, const R4SdkGuiCanvas * p0, const R4SdkGuiMessageDialog * p1, uint8_t * p2, uintptr_t n2) {
@@ -4880,7 +4896,7 @@ static inline R4SdkGuiSlot R4SdkGuiCanvas_messageDialog(uint32_t reserved, const
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,375u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,377u,a,3u,0);
 }
 /* gui.Canvas.fileDialog -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_fileDialog(uint32_t reserved, const R4SdkGuiCanvas * p0, const R4SdkGuiFileDialog * p1, uint8_t * p2, uintptr_t n2) {
@@ -4888,7 +4904,7 @@ static inline R4SdkGuiSlot R4SdkGuiCanvas_fileDialog(uint32_t reserved, const R4
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,376u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,378u,a,3u,0);
 }
 /* gui.Canvas.inputDialog -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_inputDialog(uint32_t reserved, const R4SdkGuiCanvas * p0, const R4SdkGuiInputDialog * p1, uint8_t * p2, uintptr_t n2) {
@@ -4896,13 +4912,13 @@ static inline R4SdkGuiSlot R4SdkGuiCanvas_inputDialog(uint32_t reserved, const R
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,377u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,379u,a,3u,0);
 }
 /* gui.Canvas.present -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiCanvas_present(uint32_t reserved, const R4SdkGuiCanvas * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,378u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,380u,a,1u,0);
 }
 /* gui.FrameCanvas.init -> gui.FrameCanvas */
 static inline R4SdkGuiSlot R4SdkGuiFrameCanvas_init(uint32_t reserved, const R4SdkGuiDrawContext * p0, R4GuiFrameCommand * p1, uintptr_t n1, uint8_t * p2, uintptr_t n2, uint8_t p3, R4SdkGuiFrameCanvas *output) {
@@ -4911,39 +4927,39 @@ static inline R4SdkGuiSlot R4SdkGuiFrameCanvas_init(uint32_t reserved, const R4S
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,379u,a,4u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,381u,a,4u,output);
 }
 /* gui.FrameCanvas.bind -> gui.Canvas */
 static inline R4SdkGuiSlot R4SdkGuiFrameCanvas_bind(uint32_t reserved, R4SdkGuiFrameCanvas * p0, const R4SdkGuiCanvas * p1, R4SdkGuiCanvas *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,380u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,382u,a,2u,output);
 }
 /* gui.FrameCanvas.finish -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiFrameCanvas_finish(uint32_t reserved, R4SdkGuiFrameCanvas * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,381u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,383u,a,1u,0);
 }
 /* gui.FrameCanvas.complete -> void */
 static inline R4SdkGuiSlot R4SdkGuiFrameCanvas_complete(uint32_t reserved, R4SdkGuiFrameCanvas * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,382u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,384u,a,1u,0);
 }
 /* gui.FrameCanvas.cancel -> void */
 static inline R4SdkGuiSlot R4SdkGuiFrameCanvas_cancel(uint32_t reserved, R4SdkGuiFrameCanvas * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,383u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,385u,a,1u,0);
 }
 /* gui.FrameCanvas.clear -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiFrameCanvas_clear(uint32_t reserved, R4SdkGuiFrameCanvas * p0, uint32_t p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,384u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,386u,a,2u,0);
 }
 /* gui.FrameCanvas.rect -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiFrameCanvas_rect(uint32_t reserved, R4SdkGuiFrameCanvas * p0, int32_t p1, int32_t p2, uint32_t p3, uint32_t p4, uint32_t p5) {
@@ -4954,7 +4970,7 @@ static inline R4SdkGuiSlot R4SdkGuiFrameCanvas_rect(uint32_t reserved, R4SdkGuiF
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p5,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,385u,a,6u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,387u,a,6u,0);
 }
 /* gui.FrameCanvas.text -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiFrameCanvas_text(uint32_t reserved, R4SdkGuiFrameCanvas * p0, int32_t p1, int32_t p2, const uint8_t * p3, uint32_t p4, uint32_t p5, const R4SdkGuiFontMetrics * p6) {
@@ -4966,7 +4982,7 @@ static inline R4SdkGuiSlot R4SdkGuiFrameCanvas_text(uint32_t reserved, R4SdkGuiF
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p5,.flags=R4SDK_GUI_PRESENT};
  a[6] = (R4SdkGuiSlot){.ptr=(void *)p6,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,386u,a,7u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,388u,a,7u,0);
 }
 /* gui.FrameCanvas.raster -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiFrameCanvas_raster(uint32_t reserved, R4SdkGuiFrameCanvas * p0, int32_t p1, int32_t p2, uint32_t p3, uint32_t p4, uint32_t p5, const uint32_t * p6, uintptr_t n6) {
@@ -4978,7 +4994,7 @@ static inline R4SdkGuiSlot R4SdkGuiFrameCanvas_raster(uint32_t reserved, R4SdkGu
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p5,.flags=R4SDK_GUI_PRESENT};
  a[6] = (R4SdkGuiSlot){.ptr=(void *)p6,.length=n6,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,387u,a,7u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,389u,a,7u,0);
 }
 /* gui.FrameCanvas.alpha8 -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiFrameCanvas_alpha8(uint32_t reserved, R4SdkGuiFrameCanvas * p0, int32_t p1, int32_t p2, uint32_t p3, uint32_t p4, uint32_t p5, uint32_t p6, const uint8_t * p7, uintptr_t n7) {
@@ -4991,7 +5007,7 @@ static inline R4SdkGuiSlot R4SdkGuiFrameCanvas_alpha8(uint32_t reserved, R4SdkGu
  a[5] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p5,.flags=R4SDK_GUI_PRESENT};
  a[6] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p6,.flags=R4SDK_GUI_PRESENT};
  a[7] = (R4SdkGuiSlot){.ptr=(void *)p7,.length=n7,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,388u,a,8u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,390u,a,8u,0);
 }
 /* gui.FrameCanvas.appendCommand -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiFrameCanvas_appendCommand(uint32_t reserved, R4SdkGuiFrameCanvas * p0, const R4GuiFrameCommand * p1, const uint8_t * p2, uintptr_t n2) {
@@ -4999,19 +5015,19 @@ static inline R4SdkGuiSlot R4SdkGuiFrameCanvas_appendCommand(uint32_t reserved, 
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,389u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,391u,a,3u,0);
 }
 /* gui.FrameCanvasStats.drawTransitions -> u64 */
 static inline R4SdkGuiSlot R4SdkGuiFrameCanvasStats_drawTransitions(uint32_t reserved, const R4SdkGuiFrameCanvasStats * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,390u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,392u,a,1u,0);
 }
 /* gui.FrameCanvasStats.frameMutationEntries -> u64 */
 static inline R4SdkGuiSlot R4SdkGuiFrameCanvasStats_frameMutationEntries(uint32_t reserved, const R4SdkGuiFrameCanvasStats * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,391u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,393u,a,1u,0);
 }
 /* gui.Label.draw -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiLabel_draw(uint32_t reserved, const R4SdkGuiLabel * p0, const R4SdkGuiCanvas * p1, uint8_t * p2, uintptr_t n2) {
@@ -5019,7 +5035,7 @@ static inline R4SdkGuiSlot R4SdkGuiLabel_draw(uint32_t reserved, const R4SdkGuiL
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,392u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,394u,a,3u,0);
 }
 /* gui.Button.draw -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiButton_draw(uint32_t reserved, const R4SdkGuiButton * p0, const R4SdkGuiCanvas * p1, uint8_t * p2, uintptr_t n2) {
@@ -5027,7 +5043,7 @@ static inline R4SdkGuiSlot R4SdkGuiButton_draw(uint32_t reserved, const R4SdkGui
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,393u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,395u,a,3u,0);
 }
 /* gui.Button.contains -> bool */
 static inline R4SdkGuiSlot R4SdkGuiButton_contains(uint32_t reserved, const R4SdkGuiButton * p0, int32_t p1, int32_t p2) {
@@ -5035,13 +5051,13 @@ static inline R4SdkGuiSlot R4SdkGuiButton_contains(uint32_t reserved, const R4Sd
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,394u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,396u,a,3u,0);
 }
 /* gui.Button.minWidth -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiButton_minWidth(uint32_t reserved, const R4SdkGuiButton * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,395u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,397u,a,1u,0);
 }
 /* gui.List.draw -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiList_draw(uint32_t reserved, const R4SdkGuiList * p0, const R4SdkGuiCanvas * p1, uint8_t * p2, uintptr_t n2) {
@@ -5049,7 +5065,7 @@ static inline R4SdkGuiSlot R4SdkGuiList_draw(uint32_t reserved, const R4SdkGuiLi
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,396u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,398u,a,3u,0);
 }
 /* gui.List.indexAt -> ?usize */
 static inline R4SdkGuiSlot R4SdkGuiList_indexAt(uint32_t reserved, const R4SdkGuiList * p0, int32_t p1, int32_t p2) {
@@ -5057,26 +5073,26 @@ static inline R4SdkGuiSlot R4SdkGuiList_indexAt(uint32_t reserved, const R4SdkGu
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,397u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,399u,a,3u,0);
 }
 /* gui.List.visibleRows -> usize */
 static inline R4SdkGuiSlot R4SdkGuiList_visibleRows(uint32_t reserved, const R4SdkGuiList * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,398u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,400u,a,1u,0);
 }
 /* gui.List.firstIndexForSelection -> usize */
 static inline R4SdkGuiSlot R4SdkGuiList_firstIndexForSelection(uint32_t reserved, const R4SdkGuiList * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,399u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,401u,a,1u,0);
 }
 /* gui.List.keyAction -> gui.SelectionStep */
 static inline R4SdkGuiSlot R4SdkGuiList_keyAction(uint32_t reserved, const R4SdkGuiList * p0, uint8_t p1, R4SdkGuiSelectionStep *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,400u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,402u,a,2u,output);
 }
 /* gui.Scrollbar.draw -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiScrollbar_draw(uint32_t reserved, const R4SdkGuiScrollbar * p0, const R4SdkGuiCanvas * p1, uint8_t * p2, uintptr_t n2) {
@@ -5084,43 +5100,43 @@ static inline R4SdkGuiSlot R4SdkGuiScrollbar_draw(uint32_t reserved, const R4Sdk
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,401u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,403u,a,3u,0);
 }
 /* gui.Scrollbar.maxFirst -> usize */
 static inline R4SdkGuiSlot R4SdkGuiScrollbar_maxFirst(uint32_t reserved, const R4SdkGuiScrollbar * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,402u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,404u,a,1u,0);
 }
 /* gui.Scrollbar.clampedFirst -> usize */
 static inline R4SdkGuiSlot R4SdkGuiScrollbar_clampedFirst(uint32_t reserved, const R4SdkGuiScrollbar * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,403u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,405u,a,1u,0);
 }
 /* gui.Scrollbar.decrementRect -> gui.Rect */
 static inline R4SdkGuiSlot R4SdkGuiScrollbar_decrementRect(uint32_t reserved, const R4SdkGuiScrollbar * p0, R4SdkGuiRect *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,404u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,406u,a,1u,output);
 }
 /* gui.Scrollbar.incrementRect -> gui.Rect */
 static inline R4SdkGuiSlot R4SdkGuiScrollbar_incrementRect(uint32_t reserved, const R4SdkGuiScrollbar * p0, R4SdkGuiRect *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,405u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,407u,a,1u,output);
 }
 /* gui.Scrollbar.trackRect -> gui.Rect */
 static inline R4SdkGuiSlot R4SdkGuiScrollbar_trackRect(uint32_t reserved, const R4SdkGuiScrollbar * p0, R4SdkGuiRect *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,406u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,408u,a,1u,output);
 }
 /* gui.Scrollbar.thumbRect -> gui.Rect */
 static inline R4SdkGuiSlot R4SdkGuiScrollbar_thumbRect(uint32_t reserved, const R4SdkGuiScrollbar * p0, R4SdkGuiRect *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,407u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,409u,a,1u,output);
 }
 /* gui.Scrollbar.partAt -> gui.ScrollbarPart */
 static inline R4SdkGuiSlot R4SdkGuiScrollbar_partAt(uint32_t reserved, const R4SdkGuiScrollbar * p0, int32_t p1, int32_t p2) {
@@ -5128,21 +5144,21 @@ static inline R4SdkGuiSlot R4SdkGuiScrollbar_partAt(uint32_t reserved, const R4S
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,408u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,410u,a,3u,0);
 }
 /* gui.Scrollbar.step -> gui.ScrollbarStep */
 static inline R4SdkGuiSlot R4SdkGuiScrollbar_step(uint32_t reserved, const R4SdkGuiScrollbar * p0, uint32_t p1, R4SdkGuiScrollbarStep *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,409u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,411u,a,2u,output);
 }
 /* gui.Scrollbar.wheel -> gui.ScrollbarStep */
 static inline R4SdkGuiSlot R4SdkGuiScrollbar_wheel(uint32_t reserved, const R4SdkGuiScrollbar * p0, int32_t p1, R4SdkGuiScrollbarStep *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,410u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,412u,a,2u,output);
 }
 /* gui.ToolbarButton.draw -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiToolbarButton_draw(uint32_t reserved, const R4SdkGuiToolbarButton * p0, const R4SdkGuiCanvas * p1, uint8_t * p2, uintptr_t n2) {
@@ -5150,7 +5166,7 @@ static inline R4SdkGuiSlot R4SdkGuiToolbarButton_draw(uint32_t reserved, const R
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,411u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,413u,a,3u,0);
 }
 /* gui.ToolbarButton.contains -> bool */
 static inline R4SdkGuiSlot R4SdkGuiToolbarButton_contains(uint32_t reserved, const R4SdkGuiToolbarButton * p0, int32_t p1, int32_t p2) {
@@ -5158,7 +5174,7 @@ static inline R4SdkGuiSlot R4SdkGuiToolbarButton_contains(uint32_t reserved, con
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,412u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,414u,a,3u,0);
 }
 /* gui.TabBar.draw -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiTabBar_draw(uint32_t reserved, const R4SdkGuiTabBar * p0, const R4SdkGuiCanvas * p1, uint8_t * p2, uintptr_t n2) {
@@ -5166,14 +5182,14 @@ static inline R4SdkGuiSlot R4SdkGuiTabBar_draw(uint32_t reserved, const R4SdkGui
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,413u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,415u,a,3u,0);
 }
 /* gui.TabBar.tabRect -> gui.Rect */
 static inline R4SdkGuiSlot R4SdkGuiTabBar_tabRect(uint32_t reserved, const R4SdkGuiTabBar * p0, uint64_t p1, R4SdkGuiRect *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,414u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,416u,a,2u,output);
 }
 /* gui.TabBar.indexAt -> ?usize */
 static inline R4SdkGuiSlot R4SdkGuiTabBar_indexAt(uint32_t reserved, const R4SdkGuiTabBar * p0, int32_t p1, int32_t p2) {
@@ -5181,14 +5197,14 @@ static inline R4SdkGuiSlot R4SdkGuiTabBar_indexAt(uint32_t reserved, const R4Sdk
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,415u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,417u,a,3u,0);
 }
 /* gui.TabBar.keyAction -> gui.SelectionStep */
 static inline R4SdkGuiSlot R4SdkGuiTabBar_keyAction(uint32_t reserved, const R4SdkGuiTabBar * p0, uint8_t p1, R4SdkGuiSelectionStep *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,416u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,418u,a,2u,output);
 }
 /* gui.TableView.draw -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiTableView_draw(uint32_t reserved, const R4SdkGuiTableView * p0, const R4SdkGuiCanvas * p1, uint8_t * p2, uintptr_t n2) {
@@ -5196,43 +5212,43 @@ static inline R4SdkGuiSlot R4SdkGuiTableView_draw(uint32_t reserved, const R4Sdk
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,417u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,419u,a,3u,0);
 }
 /* gui.TableView.effectiveRowCount -> usize */
 static inline R4SdkGuiSlot R4SdkGuiTableView_effectiveRowCount(uint32_t reserved, const R4SdkGuiTableView * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,418u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,420u,a,1u,0);
 }
 /* gui.TableView.headerRect -> gui.Rect */
 static inline R4SdkGuiSlot R4SdkGuiTableView_headerRect(uint32_t reserved, const R4SdkGuiTableView * p0, R4SdkGuiRect *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,419u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,421u,a,1u,output);
 }
 /* gui.TableView.bodyRect -> gui.Rect */
 static inline R4SdkGuiSlot R4SdkGuiTableView_bodyRect(uint32_t reserved, const R4SdkGuiTableView * p0, R4SdkGuiRect *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,420u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,422u,a,1u,output);
 }
 /* gui.TableView.scrollbarRect -> gui.Rect */
 static inline R4SdkGuiSlot R4SdkGuiTableView_scrollbarRect(uint32_t reserved, const R4SdkGuiTableView * p0, R4SdkGuiRect *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,421u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,423u,a,1u,output);
 }
 /* gui.TableView.needsScrollbar -> bool */
 static inline R4SdkGuiSlot R4SdkGuiTableView_needsScrollbar(uint32_t reserved, const R4SdkGuiTableView * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,422u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,424u,a,1u,0);
 }
 /* gui.TableView.visibleRows -> usize */
 static inline R4SdkGuiSlot R4SdkGuiTableView_visibleRows(uint32_t reserved, const R4SdkGuiTableView * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,423u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,425u,a,1u,0);
 }
 /* gui.TableView.indexAt -> ?usize */
 static inline R4SdkGuiSlot R4SdkGuiTableView_indexAt(uint32_t reserved, const R4SdkGuiTableView * p0, int32_t p1, int32_t p2) {
@@ -5240,20 +5256,20 @@ static inline R4SdkGuiSlot R4SdkGuiTableView_indexAt(uint32_t reserved, const R4
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,424u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,426u,a,3u,0);
 }
 /* gui.TableView.firstIndexForSelection -> usize */
 static inline R4SdkGuiSlot R4SdkGuiTableView_firstIndexForSelection(uint32_t reserved, const R4SdkGuiTableView * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,425u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,427u,a,1u,0);
 }
 /* gui.TableView.keyAction -> gui.SelectionStep */
 static inline R4SdkGuiSlot R4SdkGuiTableView_keyAction(uint32_t reserved, const R4SdkGuiTableView * p0, uint8_t p1, R4SdkGuiSelectionStep *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,426u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,428u,a,2u,output);
 }
 /* gui.TableView.cell -> []const u8 */
 static inline R4SdkGuiSlot R4SdkGuiTableView_cell(uint32_t reserved, const R4SdkGuiTableView * p0, uint64_t p1, uint64_t p2) {
@@ -5261,7 +5277,7 @@ static inline R4SdkGuiSlot R4SdkGuiTableView_cell(uint32_t reserved, const R4Sdk
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,427u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,429u,a,3u,0);
 }
 /* gui.Checkbox.draw -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiCheckbox_draw(uint32_t reserved, const R4SdkGuiCheckbox * p0, const R4SdkGuiCanvas * p1, uint8_t * p2, uintptr_t n2) {
@@ -5269,7 +5285,7 @@ static inline R4SdkGuiSlot R4SdkGuiCheckbox_draw(uint32_t reserved, const R4SdkG
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,428u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,430u,a,3u,0);
 }
 /* gui.Checkbox.contains -> bool */
 static inline R4SdkGuiSlot R4SdkGuiCheckbox_contains(uint32_t reserved, const R4SdkGuiCheckbox * p0, int32_t p1, int32_t p2) {
@@ -5277,7 +5293,7 @@ static inline R4SdkGuiSlot R4SdkGuiCheckbox_contains(uint32_t reserved, const R4
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,429u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,431u,a,3u,0);
 }
 /* gui.RadioButton.draw -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiRadioButton_draw(uint32_t reserved, const R4SdkGuiRadioButton * p0, const R4SdkGuiCanvas * p1, uint8_t * p2, uintptr_t n2) {
@@ -5285,7 +5301,7 @@ static inline R4SdkGuiSlot R4SdkGuiRadioButton_draw(uint32_t reserved, const R4S
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,430u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,432u,a,3u,0);
 }
 /* gui.RadioButton.contains -> bool */
 static inline R4SdkGuiSlot R4SdkGuiRadioButton_contains(uint32_t reserved, const R4SdkGuiRadioButton * p0, int32_t p1, int32_t p2) {
@@ -5293,7 +5309,7 @@ static inline R4SdkGuiSlot R4SdkGuiRadioButton_contains(uint32_t reserved, const
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,431u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,433u,a,3u,0);
 }
 /* gui.GroupBox.draw -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiGroupBox_draw(uint32_t reserved, const R4SdkGuiGroupBox * p0, const R4SdkGuiCanvas * p1, uint8_t * p2, uintptr_t n2) {
@@ -5301,14 +5317,14 @@ static inline R4SdkGuiSlot R4SdkGuiGroupBox_draw(uint32_t reserved, const R4SdkG
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,432u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,434u,a,3u,0);
 }
 /* gui.Separator.draw -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiSeparator_draw(uint32_t reserved, const R4SdkGuiSeparator * p0, const R4SdkGuiCanvas * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,433u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,435u,a,2u,0);
 }
 /* gui.Dropdown.draw -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDropdown_draw(uint32_t reserved, const R4SdkGuiDropdown * p0, const R4SdkGuiCanvas * p1, uint8_t * p2, uintptr_t n2) {
@@ -5316,7 +5332,7 @@ static inline R4SdkGuiSlot R4SdkGuiDropdown_draw(uint32_t reserved, const R4SdkG
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,434u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,436u,a,3u,0);
 }
 /* gui.Dropdown.contains -> bool */
 static inline R4SdkGuiSlot R4SdkGuiDropdown_contains(uint32_t reserved, const R4SdkGuiDropdown * p0, int32_t p1, int32_t p2) {
@@ -5324,13 +5340,13 @@ static inline R4SdkGuiSlot R4SdkGuiDropdown_contains(uint32_t reserved, const R4
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,435u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,437u,a,3u,0);
 }
 /* gui.Dropdown.listRect -> gui.Rect */
 static inline R4SdkGuiSlot R4SdkGuiDropdown_listRect(uint32_t reserved, const R4SdkGuiDropdown * p0, R4SdkGuiRect *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,436u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,438u,a,1u,output);
 }
 /* gui.Dropdown.indexAt -> ?usize */
 static inline R4SdkGuiSlot R4SdkGuiDropdown_indexAt(uint32_t reserved, const R4SdkGuiDropdown * p0, int32_t p1, int32_t p2) {
@@ -5338,26 +5354,26 @@ static inline R4SdkGuiSlot R4SdkGuiDropdown_indexAt(uint32_t reserved, const R4S
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,437u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,439u,a,3u,0);
 }
 /* gui.Dropdown.keyAction -> gui.SelectionStep */
 static inline R4SdkGuiSlot R4SdkGuiDropdown_keyAction(uint32_t reserved, const R4SdkGuiDropdown * p0, uint8_t p1, R4SdkGuiSelectionStep *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,438u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,440u,a,2u,output);
 }
 /* gui.Dropdown.firstIndexForSelection -> usize */
 static inline R4SdkGuiSlot R4SdkGuiDropdown_firstIndexForSelection(uint32_t reserved, const R4SdkGuiDropdown * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,439u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,441u,a,1u,0);
 }
 /* gui.Dropdown.visibleRows -> usize */
 static inline R4SdkGuiSlot R4SdkGuiDropdown_visibleRows(uint32_t reserved, const R4SdkGuiDropdown * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,440u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,442u,a,1u,0);
 }
 /* gui.Menu.draw -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiMenu_draw(uint32_t reserved, const R4SdkGuiMenu * p0, const R4SdkGuiCanvas * p1, uint8_t * p2, uintptr_t n2) {
@@ -5365,7 +5381,7 @@ static inline R4SdkGuiSlot R4SdkGuiMenu_draw(uint32_t reserved, const R4SdkGuiMe
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,441u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,443u,a,3u,0);
 }
 /* gui.Menu.indexAt -> ?usize */
 static inline R4SdkGuiSlot R4SdkGuiMenu_indexAt(uint32_t reserved, const R4SdkGuiMenu * p0, int32_t p1, int32_t p2) {
@@ -5373,26 +5389,26 @@ static inline R4SdkGuiSlot R4SdkGuiMenu_indexAt(uint32_t reserved, const R4SdkGu
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,442u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,444u,a,3u,0);
 }
 /* gui.Menu.keyAction -> gui.MenuKeyResult */
 static inline R4SdkGuiSlot R4SdkGuiMenu_keyAction(uint32_t reserved, const R4SdkGuiMenu * p0, uint8_t p1, R4SdkGuiMenuKeyResult *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,443u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,445u,a,2u,output);
 }
 /* gui.MenubarState.isOpen -> bool */
 static inline R4SdkGuiSlot R4SdkGuiMenubarState_isOpen(uint32_t reserved, const R4SdkGuiMenubarState * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,444u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,446u,a,1u,0);
 }
 /* gui.MenubarState.close -> void */
 static inline R4SdkGuiSlot R4SdkGuiMenubarState_close(uint32_t reserved, R4SdkGuiMenubarState * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,445u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,447u,a,1u,0);
 }
 /* gui.MenubarState.open -> bool */
 static inline R4SdkGuiSlot R4SdkGuiMenubarState_open(uint32_t reserved, R4SdkGuiMenubarState * p0, const R4SdkGuiMenubarMenu * p1, uintptr_t n1, uint64_t p2, uint8_t p3) {
@@ -5401,14 +5417,14 @@ static inline R4SdkGuiSlot R4SdkGuiMenubarState_open(uint32_t reserved, R4SdkGui
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,446u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,448u,a,4u,0);
 }
 /* gui.MenubarState.openFirst -> bool */
 static inline R4SdkGuiSlot R4SdkGuiMenubarState_openFirst(uint32_t reserved, R4SdkGuiMenubarState * p0, const R4SdkGuiMenubarMenu * p1, uintptr_t n1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,447u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,449u,a,2u,0);
 }
 /* gui.MenubarState.switchMenu -> bool */
 static inline R4SdkGuiSlot R4SdkGuiMenubarState_switchMenu(uint32_t reserved, R4SdkGuiMenubarState * p0, const R4SdkGuiMenubarMenu * p1, uintptr_t n1, uint32_t p2) {
@@ -5416,7 +5432,7 @@ static inline R4SdkGuiSlot R4SdkGuiMenubarState_switchMenu(uint32_t reserved, R4
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,448u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,450u,a,3u,0);
 }
 /* gui.MenubarState.keyAction -> gui.MenubarResult */
 static inline R4SdkGuiSlot R4SdkGuiMenubarState_keyAction(uint32_t reserved, R4SdkGuiMenubarState * p0, const R4SdkGuiMenubarMenu * p1, uintptr_t n1, uint8_t p2, R4SdkGuiMenubarResult *output) {
@@ -5424,7 +5440,7 @@ static inline R4SdkGuiSlot R4SdkGuiMenubarState_keyAction(uint32_t reserved, R4S
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,449u,a,3u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,451u,a,3u,output);
 }
 /* gui.MenubarState.mouseMove -> gui.MenubarResult */
 static inline R4SdkGuiSlot R4SdkGuiMenubarState_mouseMove(uint32_t reserved, R4SdkGuiMenubarState * p0, const R4SdkGuiRect * p1, const R4SdkGuiMenubarMenu * p2, uintptr_t n2, int32_t p3, int32_t p4, R4SdkGuiMenubarResult *output) {
@@ -5434,7 +5450,7 @@ static inline R4SdkGuiSlot R4SdkGuiMenubarState_mouseMove(uint32_t reserved, R4S
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,450u,a,5u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,452u,a,5u,output);
 }
 /* gui.MenubarState.mouseDown -> gui.MenubarResult */
 static inline R4SdkGuiSlot R4SdkGuiMenubarState_mouseDown(uint32_t reserved, R4SdkGuiMenubarState * p0, const R4SdkGuiRect * p1, const R4SdkGuiMenubarMenu * p2, uintptr_t n2, int32_t p3, int32_t p4, R4SdkGuiMenubarResult *output) {
@@ -5444,7 +5460,7 @@ static inline R4SdkGuiSlot R4SdkGuiMenubarState_mouseDown(uint32_t reserved, R4S
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,451u,a,5u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,453u,a,5u,output);
 }
 /* gui.MenubarState.mouseUp -> gui.MenubarResult */
 static inline R4SdkGuiSlot R4SdkGuiMenubarState_mouseUp(uint32_t reserved, R4SdkGuiMenubarState * p0, const R4SdkGuiRect * p1, const R4SdkGuiMenubarMenu * p2, uintptr_t n2, int32_t p3, int32_t p4, R4SdkGuiMenubarResult *output) {
@@ -5454,7 +5470,7 @@ static inline R4SdkGuiSlot R4SdkGuiMenubarState_mouseUp(uint32_t reserved, R4Sdk
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,452u,a,5u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,454u,a,5u,output);
 }
 /* gui.Menubar.draw -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiMenubar_draw(uint32_t reserved, const R4SdkGuiMenubar * p0, const R4SdkGuiCanvas * p1, uint8_t * p2, uintptr_t n2) {
@@ -5462,21 +5478,21 @@ static inline R4SdkGuiSlot R4SdkGuiMenubar_draw(uint32_t reserved, const R4SdkGu
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,453u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,455u,a,3u,0);
 }
 /* gui.Menubar.headerRect -> gui.Rect */
 static inline R4SdkGuiSlot R4SdkGuiMenubar_headerRect(uint32_t reserved, const R4SdkGuiMenubar * p0, uint64_t p1, R4SdkGuiRect *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,454u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,456u,a,2u,output);
 }
 /* gui.Menubar.popupRect -> gui.Rect */
 static inline R4SdkGuiSlot R4SdkGuiMenubar_popupRect(uint32_t reserved, const R4SdkGuiMenubar * p0, uint64_t p1, R4SdkGuiRect *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,455u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,457u,a,2u,output);
 }
 /* gui.Menubar.menuIndexAt -> ?usize */
 static inline R4SdkGuiSlot R4SdkGuiMenubar_menuIndexAt(uint32_t reserved, const R4SdkGuiMenubar * p0, int32_t p1, int32_t p2) {
@@ -5484,7 +5500,7 @@ static inline R4SdkGuiSlot R4SdkGuiMenubar_menuIndexAt(uint32_t reserved, const 
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,456u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,458u,a,3u,0);
 }
 /* gui.Menubar.hitTest -> gui.MenubarHit */
 static inline R4SdkGuiSlot R4SdkGuiMenubar_hitTest(uint32_t reserved, const R4SdkGuiMenubar * p0, int32_t p1, int32_t p2, R4SdkGuiMenubarHit *output) {
@@ -5492,14 +5508,14 @@ static inline R4SdkGuiSlot R4SdkGuiMenubar_hitTest(uint32_t reserved, const R4Sd
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,457u,a,3u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,459u,a,3u,output);
 }
 /* gui.DialogState.normalizeFocus -> void */
 static inline R4SdkGuiSlot R4SdkGuiDialogState_normalizeFocus(uint32_t reserved, R4SdkGuiDialogState * p0, const R4SdkGuiDialogFocusItem * p1, uintptr_t n1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,458u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,460u,a,2u,0);
 }
 /* gui.DialogState.keyAction -> gui.DialogAction */
 static inline R4SdkGuiSlot R4SdkGuiDialogState_keyAction(uint32_t reserved, R4SdkGuiDialogState * p0, const R4SdkGuiDialogFocusItem * p1, uintptr_t n1, const R4SdkGuiDialogButton * p2, uintptr_t n2, uint8_t p3) {
@@ -5508,7 +5524,7 @@ static inline R4SdkGuiSlot R4SdkGuiDialogState_keyAction(uint32_t reserved, R4Sd
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,459u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,461u,a,4u,0);
 }
 /* gui.DialogState.mouseDown -> gui.DialogEvent */
 static inline R4SdkGuiSlot R4SdkGuiDialogState_mouseDown(uint32_t reserved, R4SdkGuiDialogState * p0, const R4SdkGuiModalDialog * p1, const R4SdkGuiDialogButton * p2, uintptr_t n2, uint32_t p3, int32_t p4, int32_t p5, R4SdkGuiDialogEvent *output) {
@@ -5519,7 +5535,7 @@ static inline R4SdkGuiSlot R4SdkGuiDialogState_mouseDown(uint32_t reserved, R4Sd
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p5,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,460u,a,6u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,462u,a,6u,output);
 }
 /* gui.DialogState.mouseUp -> gui.DialogEvent */
 static inline R4SdkGuiSlot R4SdkGuiDialogState_mouseUp(uint32_t reserved, R4SdkGuiDialogState * p0, const R4SdkGuiModalDialog * p1, const R4SdkGuiDialogButton * p2, uintptr_t n2, uint32_t p3, int32_t p4, int32_t p5, R4SdkGuiDialogEvent *output) {
@@ -5530,7 +5546,7 @@ static inline R4SdkGuiSlot R4SdkGuiDialogState_mouseUp(uint32_t reserved, R4SdkG
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p5,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,461u,a,6u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,463u,a,6u,output);
 }
 /* gui.ModalDialog.centered -> gui.ModalDialog */
 static inline R4SdkGuiSlot R4SdkGuiModalDialog_centered(uint32_t reserved, const R4SdkGuiRect * p0, int32_t p1, int32_t p2, const uint8_t * p3, uintptr_t n3, R4SdkGuiModalDialog *output) {
@@ -5539,31 +5555,31 @@ static inline R4SdkGuiSlot R4SdkGuiModalDialog_centered(uint32_t reserved, const
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.length=n3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,462u,a,4u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,464u,a,4u,output);
 }
 /* gui.ModalDialog.titleRect -> gui.Rect */
 static inline R4SdkGuiSlot R4SdkGuiModalDialog_titleRect(uint32_t reserved, const R4SdkGuiModalDialog * p0, R4SdkGuiRect *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,463u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,465u,a,1u,output);
 }
 /* gui.ModalDialog.contentRect -> gui.Rect */
 static inline R4SdkGuiSlot R4SdkGuiModalDialog_contentRect(uint32_t reserved, const R4SdkGuiModalDialog * p0, R4SdkGuiRect *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,464u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,466u,a,1u,output);
 }
 /* gui.ModalDialog.buttonBarRect -> gui.Rect */
 static inline R4SdkGuiSlot R4SdkGuiModalDialog_buttonBarRect(uint32_t reserved, const R4SdkGuiModalDialog * p0, R4SdkGuiRect *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,465u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,467u,a,1u,output);
 }
 /* gui.ModalDialog.statusRect -> gui.Rect */
 static inline R4SdkGuiSlot R4SdkGuiModalDialog_statusRect(uint32_t reserved, const R4SdkGuiModalDialog * p0, R4SdkGuiRect *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,466u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,468u,a,1u,output);
 }
 /* gui.ModalDialog.buttonRect -> gui.Rect */
 static inline R4SdkGuiSlot R4SdkGuiModalDialog_buttonRect(uint32_t reserved, const R4SdkGuiModalDialog * p0, uint64_t p1, uint64_t p2, uint32_t p3, R4SdkGuiRect *output) {
@@ -5572,7 +5588,7 @@ static inline R4SdkGuiSlot R4SdkGuiModalDialog_buttonRect(uint32_t reserved, con
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,467u,a,4u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,469u,a,4u,output);
 }
 /* gui.ModalDialog.buttonActionAt -> gui.DialogAction */
 static inline R4SdkGuiSlot R4SdkGuiModalDialog_buttonActionAt(uint32_t reserved, const R4SdkGuiModalDialog * p0, const R4SdkGuiDialogButton * p1, uintptr_t n1, uint32_t p2, int32_t p3, int32_t p4) {
@@ -5582,7 +5598,7 @@ static inline R4SdkGuiSlot R4SdkGuiModalDialog_buttonActionAt(uint32_t reserved,
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,468u,a,5u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,470u,a,5u,0);
 }
 /* gui.ModalDialog.hitTest -> gui.ModalHit */
 static inline R4SdkGuiSlot R4SdkGuiModalDialog_hitTest(uint32_t reserved, const R4SdkGuiModalDialog * p0, const R4SdkGuiDialogButton * p1, uintptr_t n1, uint32_t p2, int32_t p3, int32_t p4, R4SdkGuiModalHit *output) {
@@ -5592,7 +5608,7 @@ static inline R4SdkGuiSlot R4SdkGuiModalDialog_hitTest(uint32_t reserved, const 
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,469u,a,5u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,471u,a,5u,output);
 }
 /* gui.ModalDialog.drawFrame -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiModalDialog_drawFrame(uint32_t reserved, const R4SdkGuiModalDialog * p0, const R4SdkGuiCanvas * p1, uint8_t * p2, uintptr_t n2) {
@@ -5600,7 +5616,7 @@ static inline R4SdkGuiSlot R4SdkGuiModalDialog_drawFrame(uint32_t reserved, cons
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,470u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,472u,a,3u,0);
 }
 /* gui.ModalDialog.drawButtons -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiModalDialog_drawButtons(uint32_t reserved, const R4SdkGuiModalDialog * p0, const R4SdkGuiCanvas * p1, uint8_t * p2, uintptr_t n2, const R4SdkGuiDialogButton * p3, uintptr_t n3, uint32_t p4) {
@@ -5610,7 +5626,7 @@ static inline R4SdkGuiSlot R4SdkGuiModalDialog_drawButtons(uint32_t reserved, co
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.length=n3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,471u,a,5u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,473u,a,5u,0);
 }
 /* gui.ModalOverlay.capturesInput -> bool */
 static inline R4SdkGuiSlot R4SdkGuiModalOverlay_capturesInput(uint32_t reserved, const R4SdkGuiModalOverlay * p0, int32_t p1, int32_t p2) {
@@ -5618,7 +5634,7 @@ static inline R4SdkGuiSlot R4SdkGuiModalOverlay_capturesInput(uint32_t reserved,
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,472u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,474u,a,3u,0);
 }
 /* gui.ModalOverlay.hitTest -> gui.ModalHit */
 static inline R4SdkGuiSlot R4SdkGuiModalOverlay_hitTest(uint32_t reserved, const R4SdkGuiModalOverlay * p0, const R4SdkGuiDialogButton * p1, uintptr_t n1, uint32_t p2, int32_t p3, int32_t p4, R4SdkGuiModalHit *output) {
@@ -5628,7 +5644,7 @@ static inline R4SdkGuiSlot R4SdkGuiModalOverlay_hitTest(uint32_t reserved, const
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,473u,a,5u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,475u,a,5u,output);
 }
 /* gui.ModalOverlay.actionAt -> gui.DialogAction */
 static inline R4SdkGuiSlot R4SdkGuiModalOverlay_actionAt(uint32_t reserved, const R4SdkGuiModalOverlay * p0, const R4SdkGuiDialogButton * p1, uintptr_t n1, uint32_t p2, int32_t p3, int32_t p4) {
@@ -5638,7 +5654,7 @@ static inline R4SdkGuiSlot R4SdkGuiModalOverlay_actionAt(uint32_t reserved, cons
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,474u,a,5u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,476u,a,5u,0);
 }
 /* gui.MessageDialog.draw -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiMessageDialog_draw(uint32_t reserved, const R4SdkGuiMessageDialog * p0, const R4SdkGuiCanvas * p1, uint8_t * p2, uintptr_t n2) {
@@ -5646,31 +5662,31 @@ static inline R4SdkGuiSlot R4SdkGuiMessageDialog_draw(uint32_t reserved, const R
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,475u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,477u,a,3u,0);
 }
 /* gui.MessageDialog.okRect -> gui.Rect */
 static inline R4SdkGuiSlot R4SdkGuiMessageDialog_okRect(uint32_t reserved, const R4SdkGuiMessageDialog * p0, R4SdkGuiRect *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,476u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,478u,a,1u,output);
 }
 /* gui.MessageDialog.yesRect -> gui.Rect */
 static inline R4SdkGuiSlot R4SdkGuiMessageDialog_yesRect(uint32_t reserved, const R4SdkGuiMessageDialog * p0, R4SdkGuiRect *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,477u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,479u,a,1u,output);
 }
 /* gui.MessageDialog.noRect -> gui.Rect */
 static inline R4SdkGuiSlot R4SdkGuiMessageDialog_noRect(uint32_t reserved, const R4SdkGuiMessageDialog * p0, R4SdkGuiRect *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,478u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,480u,a,1u,output);
 }
 /* gui.MessageDialog.cancelRect -> gui.Rect */
 static inline R4SdkGuiSlot R4SdkGuiMessageDialog_cancelRect(uint32_t reserved, const R4SdkGuiMessageDialog * p0, R4SdkGuiRect *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,479u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,481u,a,1u,output);
 }
 /* gui.MessageDialog.actionAt -> gui.DialogAction */
 static inline R4SdkGuiSlot R4SdkGuiMessageDialog_actionAt(uint32_t reserved, const R4SdkGuiMessageDialog * p0, int32_t p1, int32_t p2) {
@@ -5678,14 +5694,14 @@ static inline R4SdkGuiSlot R4SdkGuiMessageDialog_actionAt(uint32_t reserved, con
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,480u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,482u,a,3u,0);
 }
 /* gui.MessageDialog.keyAction -> gui.DialogAction */
 static inline R4SdkGuiSlot R4SdkGuiMessageDialog_keyAction(uint32_t reserved, const R4SdkGuiMessageDialog * p0, uint8_t p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,481u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,483u,a,2u,0);
 }
 /* gui.FileDialog.draw -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiFileDialog_draw(uint32_t reserved, const R4SdkGuiFileDialog * p0, const R4SdkGuiCanvas * p1, uint8_t * p2, uintptr_t n2) {
@@ -5693,31 +5709,31 @@ static inline R4SdkGuiSlot R4SdkGuiFileDialog_draw(uint32_t reserved, const R4Sd
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,482u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,484u,a,3u,0);
 }
 /* gui.FileDialog.listRect -> gui.Rect */
 static inline R4SdkGuiSlot R4SdkGuiFileDialog_listRect(uint32_t reserved, const R4SdkGuiFileDialog * p0, R4SdkGuiRect *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,483u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,485u,a,1u,output);
 }
 /* gui.FileDialog.fileNameRect -> gui.Rect */
 static inline R4SdkGuiSlot R4SdkGuiFileDialog_fileNameRect(uint32_t reserved, const R4SdkGuiFileDialog * p0, R4SdkGuiRect *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,484u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,486u,a,1u,output);
 }
 /* gui.FileDialog.okRect -> gui.Rect */
 static inline R4SdkGuiSlot R4SdkGuiFileDialog_okRect(uint32_t reserved, const R4SdkGuiFileDialog * p0, R4SdkGuiRect *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,485u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,487u,a,1u,output);
 }
 /* gui.FileDialog.cancelRect -> gui.Rect */
 static inline R4SdkGuiSlot R4SdkGuiFileDialog_cancelRect(uint32_t reserved, const R4SdkGuiFileDialog * p0, R4SdkGuiRect *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,486u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,488u,a,1u,output);
 }
 /* gui.FileDialog.indexAt -> ?usize */
 static inline R4SdkGuiSlot R4SdkGuiFileDialog_indexAt(uint32_t reserved, const R4SdkGuiFileDialog * p0, int32_t p1, int32_t p2) {
@@ -5725,19 +5741,19 @@ static inline R4SdkGuiSlot R4SdkGuiFileDialog_indexAt(uint32_t reserved, const R
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,487u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,489u,a,3u,0);
 }
 /* gui.FileDialog.visibleRows -> usize */
 static inline R4SdkGuiSlot R4SdkGuiFileDialog_visibleRows(uint32_t reserved, const R4SdkGuiFileDialog * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,488u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,490u,a,1u,0);
 }
 /* gui.FileDialog.firstIndexForSelection -> usize */
 static inline R4SdkGuiSlot R4SdkGuiFileDialog_firstIndexForSelection(uint32_t reserved, const R4SdkGuiFileDialog * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,489u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,491u,a,1u,0);
 }
 /* gui.FileDialog.actionAt -> gui.DialogAction */
 static inline R4SdkGuiSlot R4SdkGuiFileDialog_actionAt(uint32_t reserved, const R4SdkGuiFileDialog * p0, int32_t p1, int32_t p2) {
@@ -5745,21 +5761,21 @@ static inline R4SdkGuiSlot R4SdkGuiFileDialog_actionAt(uint32_t reserved, const 
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,490u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,492u,a,3u,0);
 }
 /* gui.FileDialog.keyAction -> gui.DialogAction */
 static inline R4SdkGuiSlot R4SdkGuiFileDialog_keyAction(uint32_t reserved, const R4SdkGuiFileDialog * p0, uint8_t p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,491u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,493u,a,2u,0);
 }
 /* gui.FileDialog.selectedIndexForAction -> usize */
 static inline R4SdkGuiSlot R4SdkGuiFileDialog_selectedIndexForAction(uint32_t reserved, const R4SdkGuiFileDialog * p0, uint32_t p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,492u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,494u,a,2u,0);
 }
 /* gui.InputDialog.draw -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiInputDialog_draw(uint32_t reserved, const R4SdkGuiInputDialog * p0, const R4SdkGuiCanvas * p1, uint8_t * p2, uintptr_t n2) {
@@ -5767,25 +5783,25 @@ static inline R4SdkGuiSlot R4SdkGuiInputDialog_draw(uint32_t reserved, const R4S
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,493u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,495u,a,3u,0);
 }
 /* gui.InputDialog.valueRect -> gui.Rect */
 static inline R4SdkGuiSlot R4SdkGuiInputDialog_valueRect(uint32_t reserved, const R4SdkGuiInputDialog * p0, R4SdkGuiRect *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,494u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,496u,a,1u,output);
 }
 /* gui.InputDialog.okRect -> gui.Rect */
 static inline R4SdkGuiSlot R4SdkGuiInputDialog_okRect(uint32_t reserved, const R4SdkGuiInputDialog * p0, R4SdkGuiRect *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,495u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,497u,a,1u,output);
 }
 /* gui.InputDialog.cancelRect -> gui.Rect */
 static inline R4SdkGuiSlot R4SdkGuiInputDialog_cancelRect(uint32_t reserved, const R4SdkGuiInputDialog * p0, R4SdkGuiRect *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,496u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,498u,a,1u,output);
 }
 /* gui.InputDialog.actionAt -> gui.DialogAction */
 static inline R4SdkGuiSlot R4SdkGuiInputDialog_actionAt(uint32_t reserved, const R4SdkGuiInputDialog * p0, int32_t p1, int32_t p2) {
@@ -5793,75 +5809,75 @@ static inline R4SdkGuiSlot R4SdkGuiInputDialog_actionAt(uint32_t reserved, const
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,497u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,499u,a,3u,0);
 }
 /* gui.InputDialog.keyAction -> gui.DialogAction */
 static inline R4SdkGuiSlot R4SdkGuiInputDialog_keyAction(uint32_t reserved, const R4SdkGuiInputDialog * p0, uint8_t p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,498u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,500u,a,2u,0);
 }
 /* gui.TextArea([]u8).maxTextLen -> usize */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_maxTextLen(uint32_t reserved, const R4SdkGuiTextArea * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,499u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,501u,a,1u,0);
 }
 /* gui.TextArea([]u8).value -> []const u8 */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_value(uint32_t reserved, const R4SdkGuiTextArea * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,500u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,502u,a,1u,0);
 }
 /* gui.TextArea([]u8).isFull -> bool */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_isFull(uint32_t reserved, const R4SdkGuiTextArea * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,501u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,503u,a,1u,0);
 }
 /* gui.TextArea([]u8).available -> usize */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_available(uint32_t reserved, const R4SdkGuiTextArea * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,502u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,504u,a,1u,0);
 }
 /* gui.TextArea([]u8).set -> void */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_set(uint32_t reserved, R4SdkGuiTextArea * p0, const uint8_t * p1, uintptr_t n1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,503u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,505u,a,2u,0);
 }
 /* gui.TextArea([]u8).clear -> void */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_clear(uint32_t reserved, R4SdkGuiTextArea * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,504u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,506u,a,1u,0);
 }
 /* gui.TextArea([]u8).selectAll -> void */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_selectAll(uint32_t reserved, R4SdkGuiTextArea * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,505u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,507u,a,1u,0);
 }
 /* gui.TextArea([]u8).clearSelection -> void */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_clearSelection(uint32_t reserved, R4SdkGuiTextArea * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,506u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,508u,a,1u,0);
 }
 /* gui.TextArea([]u8).hasSelection -> bool */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_hasSelection(uint32_t reserved, const R4SdkGuiTextArea * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,507u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,509u,a,1u,0);
 }
 /* gui.TextArea([]u8).selectionRange -> gui.TextRange */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_selectionRange(uint32_t reserved, const R4SdkGuiTextArea * p0, R4SdkGuiTextRange *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,508u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,510u,a,1u,output);
 }
 /* gui.TextArea([]u8).setSelection -> void */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_setSelection(uint32_t reserved, R4SdkGuiTextArea * p0, uint64_t p1, uint64_t p2) {
@@ -5869,34 +5885,34 @@ static inline R4SdkGuiSlot R4SdkGuiTextArea_setSelection(uint32_t reserved, R4Sd
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,509u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,511u,a,3u,0);
 }
 /* gui.TextArea([]u8).selectedValue -> []const u8 */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_selectedValue(uint32_t reserved, const R4SdkGuiTextArea * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,510u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,512u,a,1u,0);
 }
 /* gui.TextArea([]u8).copySelection -> bool */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_copySelection(uint32_t reserved, const R4SdkGuiTextArea * p0, uint8_t * p1, uintptr_t n1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,511u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,513u,a,2u,0);
 }
 /* gui.TextArea([]u8).cutSelection -> bool */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_cutSelection(uint32_t reserved, R4SdkGuiTextArea * p0, uint8_t * p1, uintptr_t n1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,512u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,514u,a,2u,0);
 }
 /* gui.TextArea([]u8).copyToClipboard -> bool */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_copyToClipboard(uint32_t reserved, const R4SdkGuiTextArea * p0, const R4SdkGuiDesktopContext * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,513u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,515u,a,2u,0);
 }
 /* gui.TextArea([]u8).stageSelection -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_stageSelection(uint32_t reserved, const R4SdkGuiTextArea * p0, const R4SdkClipboardOffers * p1, const R4ClipboardOfferLease * p2) {
@@ -5904,7 +5920,7 @@ static inline R4SdkGuiSlot R4SdkGuiTextArea_stageSelection(uint32_t reserved, co
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,514u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,516u,a,3u,0);
 }
 /* gui.TextArea([]u8).pasteOffer -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_pasteOffer(uint32_t reserved, R4SdkGuiTextArea * p0, const R4SdkClipboardOffers * p1, const R4ClipboardOfferLease * p2, const R4ClipboardOfferFormat * p3, uint8_t * p4, uintptr_t n4, const R4SdkGuiTextAreaView * p5) {
@@ -5915,7 +5931,7 @@ static inline R4SdkGuiSlot R4SdkGuiTextArea_pasteOffer(uint32_t reserved, R4SdkG
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.ptr=(void *)p4,.length=n4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.ptr=(void *)p5,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,515u,a,6u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,517u,a,6u,0);
 }
 /* gui.TextArea([]u8).beginComposition -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_beginComposition(uint32_t reserved, const R4SdkGuiTextArea * p0, R4SdkComposition * p1, const R4CompositionFocus * p2, const R4CompositionProvider * p3, uint64_t p4, const R4CompositionCaret * p5, R4CompositionId * p6) {
@@ -5927,7 +5943,7 @@ static inline R4SdkGuiSlot R4SdkGuiTextArea_beginComposition(uint32_t reserved, 
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.ptr=(void *)p5,.flags=R4SDK_GUI_PRESENT};
  a[6] = (R4SdkGuiSlot){.ptr=(void *)p6,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,516u,a,7u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,518u,a,7u,0);
 }
 /* gui.TextArea([]u8).applyComposition -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_applyComposition(uint32_t reserved, R4SdkGuiTextArea * p0, R4SdkComposition * p1, const R4CompositionFocus * p2, const R4CompositionProvider * p3, const R4CompositionEvent * p4, const uint8_t * p5, uintptr_t n5, uint64_t * p6, const R4SdkGuiTextAreaView * p7) {
@@ -5940,14 +5956,14 @@ static inline R4SdkGuiSlot R4SdkGuiTextArea_applyComposition(uint32_t reserved, 
  a[5] = (R4SdkGuiSlot){.ptr=(void *)p5,.length=n5,.flags=R4SDK_GUI_PRESENT};
  a[6] = (R4SdkGuiSlot){.ptr=(void *)p6,.flags=R4SDK_GUI_PRESENT};
  a[7] = (R4SdkGuiSlot){.ptr=(void *)p7,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,517u,a,8u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,519u,a,8u,0);
 }
 /* gui.TextArea([]u8).cutToClipboard -> bool */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_cutToClipboard(uint32_t reserved, R4SdkGuiTextArea * p0, const R4SdkGuiDesktopContext * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,518u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,520u,a,2u,0);
 }
 /* gui.TextArea([]u8).pasteFromClipboard -> bool */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_pasteFromClipboard(uint32_t reserved, R4SdkGuiTextArea * p0, const R4SdkGuiDesktopContext * p1, const R4SdkGuiTextAreaView * p2) {
@@ -5955,7 +5971,7 @@ static inline R4SdkGuiSlot R4SdkGuiTextArea_pasteFromClipboard(uint32_t reserved
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,519u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,521u,a,3u,0);
 }
 /* gui.TextArea([]u8).pasteSlice -> bool */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_pasteSlice(uint32_t reserved, R4SdkGuiTextArea * p0, const uint8_t * p1, uintptr_t n1, const R4SdkGuiTextAreaView * p2) {
@@ -5963,7 +5979,7 @@ static inline R4SdkGuiSlot R4SdkGuiTextArea_pasteSlice(uint32_t reserved, R4SdkG
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,520u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,522u,a,3u,0);
 }
 /* gui.TextArea([]u8).pasteSliceChecked -> bool */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_pasteSliceChecked(uint32_t reserved, R4SdkGuiTextArea * p0, const uint8_t * p1, uintptr_t n1, const R4SdkGuiTextAreaView * p2) {
@@ -5971,7 +5987,7 @@ static inline R4SdkGuiSlot R4SdkGuiTextArea_pasteSliceChecked(uint32_t reserved,
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,521u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,523u,a,3u,0);
 }
 /* gui.TextArea([]u8).insertByte -> bool */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_insertByte(uint32_t reserved, R4SdkGuiTextArea * p0, uint8_t p1, const R4SdkGuiTextAreaView * p2) {
@@ -5979,7 +5995,7 @@ static inline R4SdkGuiSlot R4SdkGuiTextArea_insertByte(uint32_t reserved, R4SdkG
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,522u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,524u,a,3u,0);
 }
 /* gui.TextArea([]u8).insertSlice -> bool */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_insertSlice(uint32_t reserved, R4SdkGuiTextArea * p0, const uint8_t * p1, uintptr_t n1, const R4SdkGuiTextAreaView * p2) {
@@ -5987,27 +6003,27 @@ static inline R4SdkGuiSlot R4SdkGuiTextArea_insertSlice(uint32_t reserved, R4Sdk
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,523u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,525u,a,3u,0);
 }
 /* gui.TextArea([]u8).deleteSelection -> bool */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_deleteSelection(uint32_t reserved, R4SdkGuiTextArea * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,524u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,526u,a,1u,0);
 }
 /* gui.TextArea([]u8).deleteBackward -> bool */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_deleteBackward(uint32_t reserved, R4SdkGuiTextArea * p0, const R4SdkGuiTextAreaView * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,525u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,527u,a,2u,0);
 }
 /* gui.TextArea([]u8).deleteForward -> bool */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_deleteForward(uint32_t reserved, R4SdkGuiTextArea * p0, const R4SdkGuiTextAreaView * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,526u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,528u,a,2u,0);
 }
 /* gui.TextArea([]u8).removeRange -> void */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_removeRange(uint32_t reserved, R4SdkGuiTextArea * p0, uint64_t p1, uint64_t p2) {
@@ -6015,7 +6031,7 @@ static inline R4SdkGuiSlot R4SdkGuiTextArea_removeRange(uint32_t reserved, R4Sdk
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,527u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,529u,a,3u,0);
 }
 /* gui.TextArea([]u8).moveCursorTo -> bool */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_moveCursorTo(uint32_t reserved, R4SdkGuiTextArea * p0, uint64_t p1, uint8_t p2, const R4SdkGuiTextAreaView * p3) {
@@ -6024,7 +6040,7 @@ static inline R4SdkGuiSlot R4SdkGuiTextArea_moveCursorTo(uint32_t reserved, R4Sd
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,528u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,530u,a,4u,0);
 }
 /* gui.TextArea([]u8).moveLeft -> bool */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_moveLeft(uint32_t reserved, R4SdkGuiTextArea * p0, uint8_t p1, const R4SdkGuiTextAreaView * p2) {
@@ -6032,7 +6048,7 @@ static inline R4SdkGuiSlot R4SdkGuiTextArea_moveLeft(uint32_t reserved, R4SdkGui
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,529u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,531u,a,3u,0);
 }
 /* gui.TextArea([]u8).moveRight -> bool */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_moveRight(uint32_t reserved, R4SdkGuiTextArea * p0, uint8_t p1, const R4SdkGuiTextAreaView * p2) {
@@ -6040,7 +6056,7 @@ static inline R4SdkGuiSlot R4SdkGuiTextArea_moveRight(uint32_t reserved, R4SdkGu
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,530u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,532u,a,3u,0);
 }
 /* gui.TextArea([]u8).moveHome -> bool */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_moveHome(uint32_t reserved, R4SdkGuiTextArea * p0, uint8_t p1, const R4SdkGuiTextAreaView * p2) {
@@ -6048,7 +6064,7 @@ static inline R4SdkGuiSlot R4SdkGuiTextArea_moveHome(uint32_t reserved, R4SdkGui
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,531u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,533u,a,3u,0);
 }
 /* gui.TextArea([]u8).moveEnd -> bool */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_moveEnd(uint32_t reserved, R4SdkGuiTextArea * p0, uint8_t p1, const R4SdkGuiTextAreaView * p2) {
@@ -6056,7 +6072,7 @@ static inline R4SdkGuiSlot R4SdkGuiTextArea_moveEnd(uint32_t reserved, R4SdkGuiT
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,532u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,534u,a,3u,0);
 }
 /* gui.TextArea([]u8).moveVertical -> bool */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_moveVertical(uint32_t reserved, R4SdkGuiTextArea * p0, int32_t p1, uint8_t p2, const R4SdkGuiTextAreaView * p3) {
@@ -6065,7 +6081,7 @@ static inline R4SdkGuiSlot R4SdkGuiTextArea_moveVertical(uint32_t reserved, R4Sd
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,533u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,535u,a,4u,0);
 }
 /* gui.TextArea([]u8).handleKey -> bool */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_handleKey(uint32_t reserved, R4SdkGuiTextArea * p0, uint8_t p1, const R4SdkGuiTextAreaView * p2) {
@@ -6073,7 +6089,7 @@ static inline R4SdkGuiSlot R4SdkGuiTextArea_handleKey(uint32_t reserved, R4SdkGu
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,534u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,536u,a,3u,0);
 }
 /* gui.TextArea([]u8).handleKeyEx -> bool */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_handleKeyEx(uint32_t reserved, R4SdkGuiTextArea * p0, uint8_t p1, uint8_t p2, const R4SdkGuiTextAreaView * p3) {
@@ -6082,7 +6098,7 @@ static inline R4SdkGuiSlot R4SdkGuiTextArea_handleKeyEx(uint32_t reserved, R4Sdk
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,535u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,537u,a,4u,0);
 }
 /* gui.TextArea([]u8).handleCodepointEx -> bool */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_handleCodepointEx(uint32_t reserved, R4SdkGuiTextArea * p0, uint32_t p1, uint8_t p2, const R4SdkGuiTextAreaView * p3) {
@@ -6091,7 +6107,7 @@ static inline R4SdkGuiSlot R4SdkGuiTextArea_handleCodepointEx(uint32_t reserved,
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,536u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,538u,a,4u,0);
 }
 /* gui.TextArea([]u8).handleClipboardKey -> bool */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_handleClipboardKey(uint32_t reserved, R4SdkGuiTextArea * p0, const R4SdkGuiDesktopContext * p1, uint8_t p2, const R4SdkGuiTextAreaView * p3) {
@@ -6100,7 +6116,7 @@ static inline R4SdkGuiSlot R4SdkGuiTextArea_handleClipboardKey(uint32_t reserved
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,537u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,539u,a,4u,0);
 }
 /* gui.TextArea([]u8).beginMouseSelection -> void */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_beginMouseSelection(uint32_t reserved, R4SdkGuiTextArea * p0, uint64_t p1, const R4SdkGuiTextAreaView * p2) {
@@ -6108,7 +6124,7 @@ static inline R4SdkGuiSlot R4SdkGuiTextArea_beginMouseSelection(uint32_t reserve
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,538u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,540u,a,3u,0);
 }
 /* gui.TextArea([]u8).dragMouseSelection -> void */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_dragMouseSelection(uint32_t reserved, R4SdkGuiTextArea * p0, uint64_t p1, const R4SdkGuiTextAreaView * p2) {
@@ -6116,13 +6132,13 @@ static inline R4SdkGuiSlot R4SdkGuiTextArea_dragMouseSelection(uint32_t reserved
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,539u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,541u,a,3u,0);
 }
 /* gui.TextArea([]u8).finishMouseSelection -> void */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_finishMouseSelection(uint32_t reserved, R4SdkGuiTextArea * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,540u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,542u,a,1u,0);
 }
 /* gui.TextArea([]u8).hitTest -> usize */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_hitTest(uint32_t reserved, const R4SdkGuiTextArea * p0, int32_t p1, int32_t p2, int32_t p3, int32_t p4, const R4SdkGuiTextAreaView * p5) {
@@ -6133,7 +6149,7 @@ static inline R4SdkGuiSlot R4SdkGuiTextArea_hitTest(uint32_t reserved, const R4S
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.ptr=(void *)p5,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,541u,a,6u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,543u,a,6u,0);
 }
 /* gui.TextArea([]u8).hitTestChecked -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_hitTestChecked(uint32_t reserved, const R4SdkGuiTextArea * p0, const R4SdkGuiCanvas * p1, int32_t p2, int32_t p3, const R4SdkGuiTextAreaView * p4, uint64_t * p5) {
@@ -6144,7 +6160,7 @@ static inline R4SdkGuiSlot R4SdkGuiTextArea_hitTestChecked(uint32_t reserved, co
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.ptr=(void *)p4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.ptr=(void *)p5,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,542u,a,6u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,544u,a,6u,0);
 }
 /* gui.TextArea([]u8).scrollTo -> void */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_scrollTo(uint32_t reserved, R4SdkGuiTextArea * p0, uint64_t p1, uint64_t p2, const R4SdkGuiTextAreaView * p3) {
@@ -6153,7 +6169,7 @@ static inline R4SdkGuiSlot R4SdkGuiTextArea_scrollTo(uint32_t reserved, R4SdkGui
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,543u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,545u,a,4u,0);
 }
 /* gui.TextArea([]u8).scrollByLines -> void */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_scrollByLines(uint32_t reserved, R4SdkGuiTextArea * p0, int32_t p1, const R4SdkGuiTextAreaView * p2) {
@@ -6161,21 +6177,21 @@ static inline R4SdkGuiSlot R4SdkGuiTextArea_scrollByLines(uint32_t reserved, R4S
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,544u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,546u,a,3u,0);
 }
 /* gui.TextArea([]u8).clampScroll -> void */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_clampScroll(uint32_t reserved, R4SdkGuiTextArea * p0, const R4SdkGuiTextAreaView * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,545u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,547u,a,2u,0);
 }
 /* gui.TextArea([]u8).ensureCursorVisible -> void */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_ensureCursorVisible(uint32_t reserved, R4SdkGuiTextArea * p0, const R4SdkGuiTextAreaView * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,546u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,548u,a,2u,0);
 }
 /* gui.TextArea([]u8).draw -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiTextArea_draw(uint32_t reserved, const R4SdkGuiTextArea * p0, const R4SdkGuiCanvas * p1, const R4SdkGuiRect * p2, uint8_t * p3, uintptr_t n3) {
@@ -6184,34 +6200,34 @@ static inline R4SdkGuiSlot R4SdkGuiTextArea_draw(uint32_t reserved, const R4SdkG
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.length=n3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,547u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,549u,a,4u,0);
 }
 /* gui.TextField([]u8).setPasswordMode -> bool */
 static inline R4SdkGuiSlot R4SdkGuiTextField_setPasswordMode(uint32_t reserved, R4SdkGuiTextField * p0, uint8_t p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,548u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,550u,a,2u,0);
 }
 /* gui.TextField([]u8).value -> []const u8 */
 static inline R4SdkGuiSlot R4SdkGuiTextField_value(uint32_t reserved, const R4SdkGuiTextField * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,549u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,551u,a,1u,0);
 }
 /* gui.TextField([]u8).set -> void */
 static inline R4SdkGuiSlot R4SdkGuiTextField_set(uint32_t reserved, R4SdkGuiTextField * p0, const uint8_t * p1, uintptr_t n1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,550u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,552u,a,2u,0);
 }
 /* gui.TextField([]u8).setExact -> bool */
 static inline R4SdkGuiSlot R4SdkGuiTextField_setExact(uint32_t reserved, R4SdkGuiTextField * p0, const uint8_t * p1, uintptr_t n1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,551u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,553u,a,2u,0);
 }
 /* gui.TextField([]u8).setSelection -> void */
 static inline R4SdkGuiSlot R4SdkGuiTextField_setSelection(uint32_t reserved, R4SdkGuiTextField * p0, uint64_t p1, uint64_t p2) {
@@ -6219,58 +6235,58 @@ static inline R4SdkGuiSlot R4SdkGuiTextField_setSelection(uint32_t reserved, R4S
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,552u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,554u,a,3u,0);
 }
 /* gui.TextField([]u8).handleCodepointChecked -> bool */
 static inline R4SdkGuiSlot R4SdkGuiTextField_handleCodepointChecked(uint32_t reserved, R4SdkGuiTextField * p0, uint32_t p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,553u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,555u,a,2u,0);
 }
 /* gui.TextField([]u8).clear -> void */
 static inline R4SdkGuiSlot R4SdkGuiTextField_clear(uint32_t reserved, R4SdkGuiTextField * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,554u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,556u,a,1u,0);
 }
 /* gui.TextField([]u8).selectAll -> void */
 static inline R4SdkGuiSlot R4SdkGuiTextField_selectAll(uint32_t reserved, R4SdkGuiTextField * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,555u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,557u,a,1u,0);
 }
 /* gui.TextField([]u8).clearSelection -> void */
 static inline R4SdkGuiSlot R4SdkGuiTextField_clearSelection(uint32_t reserved, R4SdkGuiTextField * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,556u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,558u,a,1u,0);
 }
 /* gui.TextField([]u8).hasSelection -> bool */
 static inline R4SdkGuiSlot R4SdkGuiTextField_hasSelection(uint32_t reserved, const R4SdkGuiTextField * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,557u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,559u,a,1u,0);
 }
 /* gui.TextField([]u8).selectionRange -> gui.TextField([]u8).selectionRange__struct_ */
 static inline R4SdkGuiSlot R4SdkGuiTextField_selectionRange(uint32_t reserved, const R4SdkGuiTextField * p0, R4SdkGuiType403 *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,558u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,560u,a,1u,output);
 }
 /* gui.TextField([]u8).handleKey -> bool */
 static inline R4SdkGuiSlot R4SdkGuiTextField_handleKey(uint32_t reserved, R4SdkGuiTextField * p0, uint8_t p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,559u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,561u,a,2u,0);
 }
 /* gui.TextField([]u8).handleCodepoint -> bool */
 static inline R4SdkGuiSlot R4SdkGuiTextField_handleCodepoint(uint32_t reserved, R4SdkGuiTextField * p0, uint32_t p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,560u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,562u,a,2u,0);
 }
 /* gui.TextField([]u8).handleClipboardCodepoint -> bool */
 static inline R4SdkGuiSlot R4SdkGuiTextField_handleClipboardCodepoint(uint32_t reserved, R4SdkGuiTextField * p0, const R4SdkGuiDesktopContext * p1, uint32_t p2) {
@@ -6278,7 +6294,7 @@ static inline R4SdkGuiSlot R4SdkGuiTextField_handleClipboardCodepoint(uint32_t r
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,561u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,563u,a,3u,0);
 }
 /* gui.TextField([]u8).handleClipboardKey -> bool */
 static inline R4SdkGuiSlot R4SdkGuiTextField_handleClipboardKey(uint32_t reserved, R4SdkGuiTextField * p0, const R4SdkGuiDesktopContext * p1, uint8_t p2) {
@@ -6286,14 +6302,14 @@ static inline R4SdkGuiSlot R4SdkGuiTextField_handleClipboardKey(uint32_t reserve
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,562u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,564u,a,3u,0);
 }
 /* gui.TextField([]u8).copyToClipboard -> bool */
 static inline R4SdkGuiSlot R4SdkGuiTextField_copyToClipboard(uint32_t reserved, const R4SdkGuiTextField * p0, const R4SdkGuiDesktopContext * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,563u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,565u,a,2u,0);
 }
 /* gui.TextField([]u8).stageSelection -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiTextField_stageSelection(uint32_t reserved, const R4SdkGuiTextField * p0, const R4SdkClipboardOffers * p1, const R4ClipboardOfferLease * p2) {
@@ -6301,7 +6317,7 @@ static inline R4SdkGuiSlot R4SdkGuiTextField_stageSelection(uint32_t reserved, c
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,564u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,566u,a,3u,0);
 }
 /* gui.TextField([]u8).pasteOffer -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiTextField_pasteOffer(uint32_t reserved, R4SdkGuiTextField * p0, const R4SdkClipboardOffers * p1, const R4ClipboardOfferLease * p2, const R4ClipboardOfferFormat * p3, uint8_t * p4, uintptr_t n4) {
@@ -6311,7 +6327,7 @@ static inline R4SdkGuiSlot R4SdkGuiTextField_pasteOffer(uint32_t reserved, R4Sdk
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.ptr=(void *)p4,.length=n4,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,565u,a,5u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,567u,a,5u,0);
 }
 /* gui.TextField([]u8).beginComposition -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiTextField_beginComposition(uint32_t reserved, const R4SdkGuiTextField * p0, R4SdkComposition * p1, const R4CompositionFocus * p2, const R4CompositionProvider * p3, uint64_t p4, const R4CompositionCaret * p5, R4CompositionId * p6) {
@@ -6323,7 +6339,7 @@ static inline R4SdkGuiSlot R4SdkGuiTextField_beginComposition(uint32_t reserved,
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.ptr=(void *)p5,.flags=R4SDK_GUI_PRESENT};
  a[6] = (R4SdkGuiSlot){.ptr=(void *)p6,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,566u,a,7u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,568u,a,7u,0);
 }
 /* gui.TextField([]u8).applyComposition -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiTextField_applyComposition(uint32_t reserved, R4SdkGuiTextField * p0, R4SdkComposition * p1, const R4CompositionFocus * p2, const R4CompositionProvider * p3, const R4CompositionEvent * p4, const uint8_t * p5, uintptr_t n5, uint64_t * p6) {
@@ -6335,28 +6351,28 @@ static inline R4SdkGuiSlot R4SdkGuiTextField_applyComposition(uint32_t reserved,
  a[4] = (R4SdkGuiSlot){.ptr=(void *)p4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.ptr=(void *)p5,.length=n5,.flags=R4SDK_GUI_PRESENT};
  a[6] = (R4SdkGuiSlot){.ptr=(void *)p6,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,567u,a,7u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,569u,a,7u,0);
 }
 /* gui.TextField([]u8).cutToClipboard -> bool */
 static inline R4SdkGuiSlot R4SdkGuiTextField_cutToClipboard(uint32_t reserved, R4SdkGuiTextField * p0, const R4SdkGuiDesktopContext * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,568u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,570u,a,2u,0);
 }
 /* gui.TextField([]u8).pasteFromClipboard -> bool */
 static inline R4SdkGuiSlot R4SdkGuiTextField_pasteFromClipboard(uint32_t reserved, R4SdkGuiTextField * p0, const R4SdkGuiDesktopContext * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,569u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,571u,a,2u,0);
 }
 /* gui.TextField([]u8).pasteSlice -> bool */
 static inline R4SdkGuiSlot R4SdkGuiTextField_pasteSlice(uint32_t reserved, R4SdkGuiTextField * p0, const uint8_t * p1, uintptr_t n1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,570u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,572u,a,2u,0);
 }
 /* gui.TextField([]u8).draw -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiTextField_draw(uint32_t reserved, const R4SdkGuiTextField * p0, const R4SdkGuiCanvas * p1, const R4SdkGuiRect * p2, uint8_t * p3, uintptr_t n3) {
@@ -6365,64 +6381,64 @@ static inline R4SdkGuiSlot R4SdkGuiTextField_draw(uint32_t reserved, const R4Sdk
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.length=n3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,571u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,573u,a,4u,0);
 }
 /* r4sys.Context.timeState -> abi_generated.TimeState */
 static inline R4SdkGuiSlot R4SdkGuiSystemContext_timeState(uint32_t reserved, const R4SdkGuiSystemContext * p0, R4TimeState *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,572u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,574u,a,1u,output);
 }
 /* r4sys.Context.monotonicHz -> u32 */
 static inline R4SdkGuiSlot R4SdkGuiSystemContext_monotonicHz(uint32_t reserved, const R4SdkGuiSystemContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,573u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,575u,a,1u,0);
 }
 /* r4sys.Context.monotonicClock -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiSystemContext_monotonicClock(uint32_t reserved, const R4SdkGuiSystemContext * p0, R4MonotonicClockInfo * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,574u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,576u,a,2u,0);
 }
 /* r4sys.Context.monotonicNanoseconds -> ?u64 */
 static inline R4SdkGuiSlot R4SdkGuiSystemContext_monotonicNanoseconds(uint32_t reserved, const R4SdkGuiSystemContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,575u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,577u,a,1u,0);
 }
 /* r4sys.Context.monotonicBackend -> abi.TimeBackend */
 static inline R4SdkGuiSlot R4SdkGuiSystemContext_monotonicBackend(uint32_t reserved, const R4SdkGuiSystemContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,576u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,578u,a,1u,0);
 }
 /* r4desk.Context.readKey -> u8 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_readKey(uint32_t reserved, const R4SdkGuiDesktopContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,577u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,579u,a,1u,0);
 }
 /* r4desk.Context.readKeyCodepoint -> u32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_readKeyCodepoint(uint32_t reserved, const R4SdkGuiDesktopContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,578u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,580u,a,1u,0);
 }
 /* r4desk.Context.mouseState -> void */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_mouseState(uint32_t reserved, const R4SdkGuiDesktopContext * p0, R4Mouse * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,579u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,581u,a,2u,0);
 }
 /* r4desk.Context.mouseMotion -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_mouseMotion(uint32_t reserved, const R4SdkGuiDesktopContext * p0, R4MouseMotion * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,580u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,582u,a,2u,0);
 }
 /* r4desk.Context.remoteFrameSnapshotAcquire -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_remoteFrameSnapshotAcquire(uint32_t reserved, const R4SdkGuiDesktopContext * p0, uint32_t p1, R4RemoteFrameInfo * p2, R4RemoteFrameLease * p3) {
@@ -6431,46 +6447,46 @@ static inline R4SdkGuiSlot R4SdkGuiDesktopContext_remoteFrameSnapshotAcquire(uin
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,581u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,583u,a,4u,0);
 }
 /* r4desk.Context.remoteFrameSnapshotRelease -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_remoteFrameSnapshotRelease(uint32_t reserved, const R4SdkGuiDesktopContext * p0, const R4RemoteFrameLease * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,582u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,584u,a,2u,0);
 }
 /* r4desk.Context.remoteFrameSourceReset -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_remoteFrameSourceReset(uint32_t reserved, const R4SdkGuiDesktopContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,583u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,585u,a,1u,0);
 }
 /* r4desk.Context.remoteFrameCaptureStats -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_remoteFrameCaptureStats(uint32_t reserved, const R4SdkGuiDesktopContext * p0, R4RemoteFrameCaptureStats * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,584u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,586u,a,2u,0);
 }
 /* r4desk.Context.mouseShow -> void */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_mouseShow(uint32_t reserved, const R4SdkGuiDesktopContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,585u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,587u,a,1u,0);
 }
 /* r4desk.Context.mouseHide -> void */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_mouseHide(uint32_t reserved, const R4SdkGuiDesktopContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,586u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,588u,a,1u,0);
 }
 /* r4desk.Context.keyboardLayoutCurrent -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_keyboardLayoutCurrent(uint32_t reserved, const R4SdkGuiDesktopContext * p0, R4KeyboardLayoutInfo * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,587u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,589u,a,2u,0);
 }
 /* r4desk.Context.keyboardLayoutAt -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_keyboardLayoutAt(uint32_t reserved, const R4SdkGuiDesktopContext * p0, uint32_t p1, R4KeyboardLayoutInfo * p2) {
@@ -6478,14 +6494,14 @@ static inline R4SdkGuiSlot R4SdkGuiDesktopContext_keyboardLayoutAt(uint32_t rese
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,588u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,590u,a,3u,0);
 }
 /* r4desk.Context.keyboardLayoutSet -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_keyboardLayoutSet(uint32_t reserved, const R4SdkGuiDesktopContext * p0, const uint8_t * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,589u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,591u,a,2u,0);
 }
 /* r4desk.Context.programSetWindow -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_programSetWindow(uint32_t reserved, const R4SdkGuiDesktopContext * p0, uint32_t p1, int32_t p2) {
@@ -6493,7 +6509,7 @@ static inline R4SdkGuiSlot R4SdkGuiDesktopContext_programSetWindow(uint32_t rese
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,590u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,592u,a,3u,0);
 }
 /* r4desk.Context.programSetWindowHandle -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_programSetWindowHandle(uint32_t reserved, const R4SdkGuiDesktopContext * p0, const R4ProgramProcessHandle * p1, int32_t p2) {
@@ -6501,7 +6517,7 @@ static inline R4SdkGuiSlot R4SdkGuiDesktopContext_programSetWindowHandle(uint32_
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,591u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,593u,a,3u,0);
 }
 /* r4desk.Context.programSetConsoleHost -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_programSetConsoleHost(uint32_t reserved, const R4SdkGuiDesktopContext * p0, uint32_t p1, uint32_t p2) {
@@ -6509,7 +6525,7 @@ static inline R4SdkGuiSlot R4SdkGuiDesktopContext_programSetConsoleHost(uint32_t
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,592u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,594u,a,3u,0);
 }
 /* r4desk.Context.programSpawnWithConsoleHost -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_programSpawnWithConsoleHost(uint32_t reserved, const R4SdkGuiDesktopContext * p0, const uint8_t * p1, const uint8_t * p2, uint32_t p3, uint32_t p4) {
@@ -6519,7 +6535,7 @@ static inline R4SdkGuiSlot R4SdkGuiDesktopContext_programSpawnWithConsoleHost(ui
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,593u,a,5u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,595u,a,5u,0);
 }
 /* r4desk.Context.programSpawnWithConsoleHostHandle -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_programSpawnWithConsoleHostHandle(uint32_t reserved, const R4SdkGuiDesktopContext * p0, const uint8_t * p1, const uint8_t * p2, uint32_t p3, uint32_t p4, R4ProgramProcessHandle * p5) {
@@ -6530,7 +6546,7 @@ static inline R4SdkGuiSlot R4SdkGuiDesktopContext_programSpawnWithConsoleHostHan
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.ptr=(void *)p5,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,594u,a,6u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,596u,a,6u,0);
 }
 /* r4desk.Context.programRequestHostLaunch -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_programRequestHostLaunch(uint32_t reserved, const R4SdkGuiDesktopContext * p0, const uint8_t * p1, const uint8_t * p2, uint32_t p3) {
@@ -6539,7 +6555,7 @@ static inline R4SdkGuiSlot R4SdkGuiDesktopContext_programRequestHostLaunch(uint3
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,595u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,597u,a,4u,0);
 }
 /* r4desk.Context.programTakeHostLaunch -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_programTakeHostLaunch(uint32_t reserved, const R4SdkGuiDesktopContext * p0, uint32_t p1, R4ProgramHostLaunchRequest * p2) {
@@ -6547,13 +6563,13 @@ static inline R4SdkGuiSlot R4SdkGuiDesktopContext_programTakeHostLaunch(uint32_t
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,596u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,598u,a,3u,0);
 }
 /* r4desk.Context.programWindowId -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_programWindowId(uint32_t reserved, const R4SdkGuiDesktopContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,597u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,599u,a,1u,0);
 }
 /* r4desk.Context.guiHostInput -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_guiHostInput(uint32_t reserved, const R4SdkGuiDesktopContext * p0, const R4GuiHostInputRequest * p1, R4GuiPointerWindowIdentity * p2) {
@@ -6561,7 +6577,7 @@ static inline R4SdkGuiSlot R4SdkGuiDesktopContext_guiHostInput(uint32_t reserved
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,598u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,600u,a,3u,0);
 }
 /* r4desk.Context.guiPointerCaptureInfo -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_guiPointerCaptureInfo(uint32_t reserved, const R4SdkGuiDesktopContext * p0, R4SdkGuiSlot p1, R4GuiPointerCaptureInfo * p2) {
@@ -6569,7 +6585,7 @@ static inline R4SdkGuiSlot R4SdkGuiDesktopContext_guiPointerCaptureInfo(uint32_t
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = p1;
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,599u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,601u,a,3u,0);
 }
 /* r4desk.Context.guiPointerCaptureAcquire -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_guiPointerCaptureAcquire(uint32_t reserved, const R4SdkGuiDesktopContext * p0, const R4GuiPointerWindowIdentity * p1, uint32_t p2, R4GuiPointerCaptureHandle * p3) {
@@ -6578,14 +6594,14 @@ static inline R4SdkGuiSlot R4SdkGuiDesktopContext_guiPointerCaptureAcquire(uint3
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,600u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,602u,a,4u,0);
 }
 /* r4desk.Context.guiPointerCaptureRelease -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_guiPointerCaptureRelease(uint32_t reserved, const R4SdkGuiDesktopContext * p0, const R4GuiPointerCaptureHandle * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,601u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,603u,a,2u,0);
 }
 /* r4desk.Context.guiPointerCaptureHost -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_guiPointerCaptureHost(uint32_t reserved, const R4SdkGuiDesktopContext * p0, const R4GuiPointerHostRequest * p1, R4GuiPointerCaptureInfo * p2) {
@@ -6593,14 +6609,14 @@ static inline R4SdkGuiSlot R4SdkGuiDesktopContext_guiPointerCaptureHost(uint32_t
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,602u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,604u,a,3u,0);
 }
 /* r4desk.Context.guiWindowInfo -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_guiWindowInfo(uint32_t reserved, const R4SdkGuiDesktopContext * p0, R4GuiWindowInfo * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,603u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,605u,a,2u,0);
 }
 /* r4desk.Context.guiWindowAppearance -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_guiWindowAppearance(uint32_t reserved, const R4SdkGuiDesktopContext * p0, const R4GuiPointerWindowIdentity * p1, R4GuiWindowAppearance * p2) {
@@ -6608,7 +6624,7 @@ static inline R4SdkGuiSlot R4SdkGuiDesktopContext_guiWindowAppearance(uint32_t r
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,604u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,606u,a,3u,0);
 }
 /* r4desk.Context.guiSetWindowInfo -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_guiSetWindowInfo(uint32_t reserved, const R4SdkGuiDesktopContext * p0, uint32_t p1, const R4GuiWindowInfo * p2) {
@@ -6616,14 +6632,14 @@ static inline R4SdkGuiSlot R4SdkGuiDesktopContext_guiSetWindowInfo(uint32_t rese
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,605u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,607u,a,3u,0);
 }
 /* r4desk.Context.guiPollEvent -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_guiPollEvent(uint32_t reserved, const R4SdkGuiDesktopContext * p0, R4GuiEvent * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,606u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,608u,a,2u,0);
 }
 /* r4desk.Context.guiPushEvent -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_guiPushEvent(uint32_t reserved, const R4SdkGuiDesktopContext * p0, uint32_t p1, const R4GuiEvent * p2) {
@@ -6631,14 +6647,14 @@ static inline R4SdkGuiSlot R4SdkGuiDesktopContext_guiPushEvent(uint32_t reserved
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,607u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,609u,a,3u,0);
 }
 /* r4desk.Context.guiSetText -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_guiSetText(uint32_t reserved, const R4SdkGuiDesktopContext * p0, const uint8_t * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,608u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,610u,a,2u,0);
 }
 /* r4desk.Context.guiText -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_guiText(uint32_t reserved, const R4SdkGuiDesktopContext * p0, uint32_t p1, uint8_t * p2, uintptr_t n2) {
@@ -6646,14 +6662,14 @@ static inline R4SdkGuiSlot R4SdkGuiDesktopContext_guiText(uint32_t reserved, con
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,609u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,611u,a,3u,0);
 }
 /* r4desk.Context.guiRevision -> u32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_guiRevision(uint32_t reserved, const R4SdkGuiDesktopContext * p0, uint32_t p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,610u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,612u,a,2u,0);
 }
 /* r4desk.Context.guiCommand -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_guiCommand(uint32_t reserved, const R4SdkGuiDesktopContext * p0, uint32_t p1, uint32_t p2, R4GuiCommand * p3) {
@@ -6662,14 +6678,14 @@ static inline R4SdkGuiSlot R4SdkGuiDesktopContext_guiCommand(uint32_t reserved, 
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,611u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,613u,a,4u,0);
 }
 /* r4desk.Context.guiSetTitle -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_guiSetTitle(uint32_t reserved, const R4SdkGuiDesktopContext * p0, const uint8_t * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,612u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,614u,a,2u,0);
 }
 /* r4desk.Context.guiTitle -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_guiTitle(uint32_t reserved, const R4SdkGuiDesktopContext * p0, uint32_t p1, uint8_t * p2, uintptr_t n2) {
@@ -6677,7 +6693,7 @@ static inline R4SdkGuiSlot R4SdkGuiDesktopContext_guiTitle(uint32_t reserved, co
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,613u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,615u,a,3u,0);
 }
 /* r4desk.Context.guiSetMinSize -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_guiSetMinSize(uint32_t reserved, const R4SdkGuiDesktopContext * p0, int32_t p1, int32_t p2) {
@@ -6685,7 +6701,7 @@ static inline R4SdkGuiSlot R4SdkGuiDesktopContext_guiSetMinSize(uint32_t reserve
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,614u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,616u,a,3u,0);
 }
 /* r4desk.Context.guiMinSize -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_guiMinSize(uint32_t reserved, const R4SdkGuiDesktopContext * p0, uint32_t p1, R4GuiSize * p2) {
@@ -6693,7 +6709,7 @@ static inline R4SdkGuiSlot R4SdkGuiDesktopContext_guiMinSize(uint32_t reserved, 
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,615u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,617u,a,3u,0);
 }
 /* r4desk.Context.consoleOutput -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_consoleOutput(uint32_t reserved, const R4SdkGuiDesktopContext * p0, uint32_t p1, uint8_t * p2, uintptr_t n2) {
@@ -6701,14 +6717,14 @@ static inline R4SdkGuiSlot R4SdkGuiDesktopContext_consoleOutput(uint32_t reserve
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,616u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,618u,a,3u,0);
 }
 /* r4desk.Context.consoleRevision -> u32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_consoleRevision(uint32_t reserved, const R4SdkGuiDesktopContext * p0, uint32_t p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,617u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,619u,a,2u,0);
 }
 /* r4desk.Context.consoleState -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_consoleState(uint32_t reserved, const R4SdkGuiDesktopContext * p0, uint32_t p1, R4ConsoleState * p2) {
@@ -6716,7 +6732,7 @@ static inline R4SdkGuiSlot R4SdkGuiDesktopContext_consoleState(uint32_t reserved
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,618u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,620u,a,3u,0);
 }
 /* r4desk.Context.consoleSetMetrics -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_consoleSetMetrics(uint32_t reserved, const R4SdkGuiDesktopContext * p0, uint32_t p1, uint32_t p2, uint32_t p3) {
@@ -6725,7 +6741,7 @@ static inline R4SdkGuiSlot R4SdkGuiDesktopContext_consoleSetMetrics(uint32_t res
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,619u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,621u,a,4u,0);
 }
 /* r4desk.Context.consolePushKey -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_consolePushKey(uint32_t reserved, const R4SdkGuiDesktopContext * p0, uint32_t p1, uint8_t p2) {
@@ -6733,7 +6749,7 @@ static inline R4SdkGuiSlot R4SdkGuiDesktopContext_consolePushKey(uint32_t reserv
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,620u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,622u,a,3u,0);
 }
 /* r4desk.Context.consolePushInput -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_consolePushInput(uint32_t reserved, const R4SdkGuiDesktopContext * p0, uint32_t p1, const uint8_t * p2, uintptr_t n2) {
@@ -6741,7 +6757,7 @@ static inline R4SdkGuiSlot R4SdkGuiDesktopContext_consolePushInput(uint32_t rese
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,621u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,623u,a,3u,0);
 }
 /* r4desk.Context.consoleWrite -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_consoleWrite(uint32_t reserved, const R4SdkGuiDesktopContext * p0, uint32_t p1, const uint8_t * p2, uintptr_t n2) {
@@ -6749,28 +6765,28 @@ static inline R4SdkGuiSlot R4SdkGuiDesktopContext_consoleWrite(uint32_t reserved
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,622u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,624u,a,3u,0);
 }
 /* r4desk.Context.stdout -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_stdout(uint32_t reserved, const R4SdkGuiDesktopContext * p0, const uint8_t * p1, uintptr_t n1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,623u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,625u,a,2u,0);
 }
 /* r4desk.Context.stderr -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_stderr(uint32_t reserved, const R4SdkGuiDesktopContext * p0, const uint8_t * p1, uintptr_t n1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,624u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,626u,a,2u,0);
 }
 /* r4desk.Context.consoleRead -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_consoleRead(uint32_t reserved, const R4SdkGuiDesktopContext * p0, uint8_t * p1, uintptr_t n1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,625u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,627u,a,2u,0);
 }
 /* r4desk.Context.consoleInputWait -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_consoleInputWait(uint32_t reserved, const R4SdkGuiDesktopContext * p0, uint64_t p1, uint64_t p2, uint64_t * p3) {
@@ -6779,60 +6795,60 @@ static inline R4SdkGuiSlot R4SdkGuiDesktopContext_consoleInputWait(uint32_t rese
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,626u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,628u,a,4u,0);
 }
 /* r4desk.Context.physicalKeyPoll -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_physicalKeyPoll(uint32_t reserved, const R4SdkGuiDesktopContext * p0, R4PhysicalKeyEvent * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,627u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,629u,a,2u,0);
 }
 /* r4desk.Context.clipboardWrite -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_clipboardWrite(uint32_t reserved, const R4SdkGuiDesktopContext * p0, const uint8_t * p1, uintptr_t n1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,628u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,630u,a,2u,0);
 }
 /* r4desk.Context.clipboardRead -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_clipboardRead(uint32_t reserved, const R4SdkGuiDesktopContext * p0, uint8_t * p1, uintptr_t n1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,629u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,631u,a,2u,0);
 }
 /* r4desk.Context.clipboardRevision -> u32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_clipboardRevision(uint32_t reserved, const R4SdkGuiDesktopContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,630u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,632u,a,1u,0);
 }
 /* r4desk.Context.clipboardInfo -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_clipboardInfo(uint32_t reserved, const R4SdkGuiDesktopContext * p0, R4ClipboardInfo * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,631u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,633u,a,2u,0);
 }
 /* r4desk.Context.clipboardClear -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_clipboardClear(uint32_t reserved, const R4SdkGuiDesktopContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,632u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,634u,a,1u,0);
 }
 /* r4desk.Context.supportsRemoteFrame -> bool */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_supportsRemoteFrame(uint32_t reserved, const R4SdkGuiDesktopContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,633u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,635u,a,1u,0);
 }
 /* r4desk.Context.remoteFrameInfo -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_remoteFrameInfo(uint32_t reserved, const R4SdkGuiDesktopContext * p0, R4RemoteFrameInfo * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,634u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,636u,a,2u,0);
 }
 /* r4desk.Context.remoteFrameRead -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_remoteFrameRead(uint32_t reserved, const R4SdkGuiDesktopContext * p0, uint32_t p1, uint32_t * p2, uintptr_t n2, R4RemoteFrameInfo * p3) {
@@ -6841,7 +6857,7 @@ static inline R4SdkGuiSlot R4SdkGuiDesktopContext_remoteFrameRead(uint32_t reser
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,635u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,637u,a,4u,0);
 }
 /* r4desk.Context.remoteFrameWait -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_remoteFrameWait(uint32_t reserved, const R4SdkGuiDesktopContext * p0, uint32_t p1, uint64_t p2, R4RemoteFrameInfo * p3) {
@@ -6850,7 +6866,7 @@ static inline R4SdkGuiSlot R4SdkGuiDesktopContext_remoteFrameWait(uint32_t reser
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,636u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,638u,a,4u,0);
 }
 /* r4desk.Context.desktopActivityWait -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_desktopActivityWait(uint32_t reserved, const R4SdkGuiDesktopContext * p0, uint64_t p1, uint64_t p2, uint64_t * p3) {
@@ -6859,13 +6875,13 @@ static inline R4SdkGuiSlot R4SdkGuiDesktopContext_desktopActivityWait(uint32_t r
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,637u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,639u,a,4u,0);
 }
 /* r4desk.Context.desktopActivityNotify -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_desktopActivityNotify(uint32_t reserved, const R4SdkGuiDesktopContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,638u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,640u,a,1u,0);
 }
 /* r4desk.Context.guiActivityWait -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_guiActivityWait(uint32_t reserved, const R4SdkGuiDesktopContext * p0, uint64_t p1, uint64_t p2, uint32_t p3, uint64_t * p4) {
@@ -6875,27 +6891,27 @@ static inline R4SdkGuiSlot R4SdkGuiDesktopContext_guiActivityWait(uint32_t reser
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.ptr=(void *)p4,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,639u,a,5u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,641u,a,5u,0);
 }
 /* r4desk.Context.guiActivityNotify -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_guiActivityNotify(uint32_t reserved, const R4SdkGuiDesktopContext * p0, uint32_t p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,640u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,642u,a,2u,0);
 }
 /* r4desk.Context.supportsRemoteFrameMap -> bool */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_supportsRemoteFrameMap(uint32_t reserved, const R4SdkGuiDesktopContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,641u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,643u,a,1u,0);
 }
 /* r4desk.Context.remoteFrameMap -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_remoteFrameMap(uint32_t reserved, const R4SdkGuiDesktopContext * p0, R4RemoteFrameMapInfo * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,642u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,644u,a,2u,0);
 }
 /* r4desk.Context.remoteFramePublish -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_remoteFramePublish(uint32_t reserved, const R4SdkGuiDesktopContext * p0, const R4RemoteFrameInfo * p1, const uint32_t * p2, uintptr_t n2) {
@@ -6903,13 +6919,13 @@ static inline R4SdkGuiSlot R4SdkGuiDesktopContext_remoteFramePublish(uint32_t re
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,643u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,645u,a,3u,0);
 }
 /* r4desk.Context.supportsRemoteFrameRegions -> bool */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_supportsRemoteFrameRegions(uint32_t reserved, const R4SdkGuiDesktopContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,644u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,646u,a,1u,0);
 }
 /* r4desk.Context.remoteFramePublishRegions -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_remoteFramePublishRegions(uint32_t reserved, const R4SdkGuiDesktopContext * p0, const R4RemoteFrameInfo * p1, const uint32_t * p2, uintptr_t n2, const R4DisplayDamageRect * p3, uintptr_t n3) {
@@ -6918,76 +6934,76 @@ static inline R4SdkGuiSlot R4SdkGuiDesktopContext_remoteFramePublishRegions(uint
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.length=n3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,645u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,647u,a,4u,0);
 }
 /* r4desk.Context.supportsRemoteFrameDemand -> bool */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_supportsRemoteFrameDemand(uint32_t reserved, const R4SdkGuiDesktopContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,646u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,648u,a,1u,0);
 }
 /* r4desk.Context.remoteFrameAcquire -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_remoteFrameAcquire(uint32_t reserved, const R4SdkGuiDesktopContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,647u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,649u,a,1u,0);
 }
 /* r4desk.Context.remoteFrameRelease -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_remoteFrameRelease(uint32_t reserved, const R4SdkGuiDesktopContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,648u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,650u,a,1u,0);
 }
 /* r4desk.Context.remoteFrameConsumers -> u32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_remoteFrameConsumers(uint32_t reserved, const R4SdkGuiDesktopContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,649u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,651u,a,1u,0);
 }
 /* r4desk.Context.supportsRemoteInput -> bool */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_supportsRemoteInput(uint32_t reserved, const R4SdkGuiDesktopContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,650u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,652u,a,1u,0);
 }
 /* r4desk.Context.remoteInputPush -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_remoteInputPush(uint32_t reserved, const R4SdkGuiDesktopContext * p0, const R4RemoteInputEvent * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,651u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,653u,a,2u,0);
 }
 /* r4desk.Context.remoteInputPoll -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_remoteInputPoll(uint32_t reserved, const R4SdkGuiDesktopContext * p0, R4RemoteInputEvent * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,652u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,654u,a,2u,0);
 }
 /* r4desk.Context.remoteInputStatus -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiDesktopContext_remoteInputStatus(uint32_t reserved, const R4SdkGuiDesktopContext * p0, R4RemoteInputStatus * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,653u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,655u,a,2u,0);
 }
 /* app_gui.CommandId.init -> app_gui.CommandId */
 static inline R4SdkGuiSlot R4SdkGuiCommandId_init(uint32_t reserved, uint32_t p0, R4SdkGuiCommandId *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,654u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,656u,a,1u,output);
 }
 /* app_gui.TimerId.init -> app_gui.TimerId */
 static inline R4SdkGuiSlot R4SdkGuiTimerId_init(uint32_t reserved, uint32_t p0, R4SdkGuiTimerId *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,655u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,657u,a,1u,output);
 }
 /* app_gui.Message.guiEvent -> ?abi_generated.GuiEvent */
 static inline R4SdkGuiSlot R4SdkGuiMessage_guiEvent(uint32_t reserved, const R4SdkGuiMessage * p0, R4GuiEvent *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,656u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,658u,a,1u,output);
 }
 /* app_gui.Timer.start -> bool */
 static inline R4SdkGuiSlot R4SdkGuiTimer_start(uint32_t reserved, R4SdkGuiTimer * p0, const R4SdkGuiSystemContext * p1, const R4SdkGuiTimerId * p2, const R4Duration * p3, uint8_t p4) {
@@ -6997,13 +7013,13 @@ static inline R4SdkGuiSlot R4SdkGuiTimer_start(uint32_t reserved, R4SdkGuiTimer 
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,657u,a,5u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,659u,a,5u,0);
 }
 /* app_gui.Timer.cancel -> void */
 static inline R4SdkGuiSlot R4SdkGuiTimer_cancel(uint32_t reserved, R4SdkGuiTimer * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,658u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,660u,a,1u,0);
 }
 /* app_gui.EventLoop.init -> app_gui.EventLoop */
 static inline R4SdkGuiSlot R4SdkGuiEventLoop_init(uint32_t reserved, const R4SdkGuiSystemContext * p0, const R4SdkGuiDesktopContext * p1, R4SdkGuiTimer * p2, uintptr_t n2, R4SdkGuiEventLoop *output) {
@@ -7011,27 +7027,27 @@ static inline R4SdkGuiSlot R4SdkGuiEventLoop_init(uint32_t reserved, const R4Sdk
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,659u,a,3u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,661u,a,3u,output);
 }
 /* app_gui.EventLoop.postCommand -> bool */
 static inline R4SdkGuiSlot R4SdkGuiEventLoop_postCommand(uint32_t reserved, R4SdkGuiEventLoop * p0, const R4SdkGuiCommandId * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,660u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,662u,a,2u,0);
 }
 /* app_gui.EventLoop.poll -> ?app_gui.Message */
 static inline R4SdkGuiSlot R4SdkGuiEventLoop_poll(uint32_t reserved, R4SdkGuiEventLoop * p0, R4SdkGuiMessage *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,661u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,663u,a,1u,output);
 }
 /* app_gui.EventLoop.wait -> app_gui.WaitResult */
 static inline R4SdkGuiSlot R4SdkGuiEventLoop_wait(uint32_t reserved, R4SdkGuiEventLoop * p0, const R4Timeout * p1, R4SdkGuiWaitResult *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,662u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,664u,a,2u,output);
 }
 /* app_gui.PaintContext.bufferedCanvas -> gui.Canvas */
 static inline R4SdkGuiSlot R4SdkGuiPaintContext_bufferedCanvas(uint32_t reserved, R4SdkGuiPaintContext * p0, R4SdkGuiFrameCanvas * p1, R4GuiFrameCommand * p2, uintptr_t n2, uint8_t * p3, uintptr_t n3, R4SdkGuiCanvas *output) {
@@ -7040,19 +7056,19 @@ static inline R4SdkGuiSlot R4SdkGuiPaintContext_bufferedCanvas(uint32_t reserved
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.length=n3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,663u,a,4u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,665u,a,4u,output);
 }
 /* app_gui.PaintContext.present -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiPaintContext_present(uint32_t reserved, R4SdkGuiPaintContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,664u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,666u,a,1u,0);
 }
 /* app_gui.PaintContext.discard -> void */
 static inline R4SdkGuiSlot R4SdkGuiPaintContext_discard(uint32_t reserved, R4SdkGuiPaintContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,665u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,667u,a,1u,0);
 }
 /* app_gui.Window.init -> ?app_gui.Window */
 static inline R4SdkGuiSlot R4SdkGuiWindow_init(uint32_t reserved, const R4SdkGuiSystemContext * p0, const R4SdkGuiDesktopContext * p1, const R4SdkGuiDrawContext * p2, R4SdkGuiTimer * p3, uintptr_t n3, R4SdkGuiWindow *output) {
@@ -7061,14 +7077,14 @@ static inline R4SdkGuiSlot R4SdkGuiWindow_init(uint32_t reserved, const R4SdkGui
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.length=n3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,666u,a,4u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,668u,a,4u,output);
 }
 /* app_gui.Window.pointerIdentity -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiWindow_pointerIdentity(uint32_t reserved, R4SdkGuiWindow * p0, R4GuiPointerWindowIdentity * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,667u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,669u,a,2u,0);
 }
 /* app_gui.Window.pointerCapture -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiWindow_pointerCapture(uint32_t reserved, R4SdkGuiWindow * p0, const R4GuiPointerWindowIdentity * p1, uint32_t p2, R4GuiPointerCaptureHandle * p3) {
@@ -7077,7 +7093,7 @@ static inline R4SdkGuiSlot R4SdkGuiWindow_pointerCapture(uint32_t reserved, R4Sd
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,668u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,670u,a,4u,0);
 }
 /* app_gui.Window.pointerStatus -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiWindow_pointerStatus(uint32_t reserved, R4SdkGuiWindow * p0, const R4GuiPointerCaptureHandle * p1, R4GuiPointerCaptureInfo * p2) {
@@ -7085,21 +7101,21 @@ static inline R4SdkGuiSlot R4SdkGuiWindow_pointerStatus(uint32_t reserved, R4Sdk
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,669u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,671u,a,3u,0);
 }
 /* app_gui.Window.pointerRelease -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiWindow_pointerRelease(uint32_t reserved, R4SdkGuiWindow * p0, const R4GuiPointerCaptureHandle * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,670u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,672u,a,2u,0);
 }
 /* app_gui.Window.setTitle -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiWindow_setTitle(uint32_t reserved, R4SdkGuiWindow * p0, const uint8_t * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,671u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,673u,a,2u,0);
 }
 /* app_gui.Window.setMinimumSize -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiWindow_setMinimumSize(uint32_t reserved, R4SdkGuiWindow * p0, int32_t p1, int32_t p2) {
@@ -7107,19 +7123,19 @@ static inline R4SdkGuiSlot R4SdkGuiWindow_setMinimumSize(uint32_t reserved, R4Sd
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,672u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,674u,a,3u,0);
 }
 /* app_gui.Window.info -> ?abi_generated.GuiWindowInfo */
 static inline R4SdkGuiSlot R4SdkGuiWindow_info(uint32_t reserved, R4SdkGuiWindow * p0, R4GuiWindowInfo *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,673u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,675u,a,1u,output);
 }
 /* app_gui.Window.beginPaint -> app_gui.PaintOpen */
 static inline R4SdkGuiSlot R4SdkGuiWindow_beginPaint(uint32_t reserved, R4SdkGuiWindow * p0, R4SdkGuiPaintOpen *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,674u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,676u,a,1u,output);
 }
 /* app_gui.Window.beginPaintReplace -> app_gui.PaintOpen */
 static inline R4SdkGuiSlot R4SdkGuiWindow_beginPaintReplace(uint32_t reserved, R4SdkGuiWindow * p0, int32_t p1, int32_t p2, const R4DisplayDamageRect * p3, uintptr_t n3, R4SdkGuiPaintOpen *output) {
@@ -7128,41 +7144,41 @@ static inline R4SdkGuiSlot R4SdkGuiWindow_beginPaintReplace(uint32_t reserved, R
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.length=n3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,675u,a,4u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,677u,a,4u,output);
 }
 /* app_gui.Window.pollMessage -> ?app_gui.Message */
 static inline R4SdkGuiSlot R4SdkGuiWindow_pollMessage(uint32_t reserved, R4SdkGuiWindow * p0, R4SdkGuiMessage *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,676u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,678u,a,1u,output);
 }
 /* app_gui.Window.waitMessage -> app_gui.WaitResult */
 static inline R4SdkGuiSlot R4SdkGuiWindow_waitMessage(uint32_t reserved, R4SdkGuiWindow * p0, const R4Timeout * p1, R4SdkGuiWaitResult *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,677u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,679u,a,2u,output);
 }
 /* gui_shapes.PathBuilder.init -> error{BufferTooSmall,InvalidValue,SegmentLimit}!gui_shapes.PathBuilder */
 static inline R4SdkGuiSlot R4SdkGuiShapePathBuilder_init(uint32_t reserved, uint8_t * p0, uintptr_t n0, const R4SdkGuiShapePathStyle * p1, R4SdkGuiShapePathBuilder *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.length=n0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,678u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,680u,a,2u,output);
 }
 /* gui_shapes.PathBuilder.moveTo -> error{BufferTooSmall,InvalidValue,SegmentLimit}!void */
 static inline R4SdkGuiSlot R4SdkGuiShapePathBuilder_moveTo(uint32_t reserved, R4SdkGuiShapePathBuilder * p0, const R4SdkGuiShapePoint * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,679u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,681u,a,2u,0);
 }
 /* gui_shapes.PathBuilder.lineTo -> error{BufferTooSmall,InvalidValue,SegmentLimit}!void */
 static inline R4SdkGuiSlot R4SdkGuiShapePathBuilder_lineTo(uint32_t reserved, R4SdkGuiShapePathBuilder * p0, const R4SdkGuiShapePoint * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,680u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,682u,a,2u,0);
 }
 /* gui_shapes.PathBuilder.quadraticTo -> error{BufferTooSmall,InvalidValue,SegmentLimit}!void */
 static inline R4SdkGuiSlot R4SdkGuiShapePathBuilder_quadraticTo(uint32_t reserved, R4SdkGuiShapePathBuilder * p0, const R4SdkGuiShapePoint * p1, const R4SdkGuiShapePoint * p2) {
@@ -7170,7 +7186,7 @@ static inline R4SdkGuiSlot R4SdkGuiShapePathBuilder_quadraticTo(uint32_t reserve
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,681u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,683u,a,3u,0);
 }
 /* gui_shapes.PathBuilder.cubicTo -> error{BufferTooSmall,InvalidValue,SegmentLimit}!void */
 static inline R4SdkGuiSlot R4SdkGuiShapePathBuilder_cubicTo(uint32_t reserved, R4SdkGuiShapePathBuilder * p0, const R4SdkGuiShapePoint * p1, const R4SdkGuiShapePoint * p2, const R4SdkGuiShapePoint * p3) {
@@ -7179,58 +7195,58 @@ static inline R4SdkGuiSlot R4SdkGuiShapePathBuilder_cubicTo(uint32_t reserved, R
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,682u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,684u,a,4u,0);
 }
 /* gui_shapes.PathBuilder.close -> error{BufferTooSmall,InvalidValue,SegmentLimit}!void */
 static inline R4SdkGuiSlot R4SdkGuiShapePathBuilder_close(uint32_t reserved, R4SdkGuiShapePathBuilder * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,683u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,685u,a,1u,0);
 }
 /* gui_shapes.PathBuilder.finish -> error{BufferTooSmall,InvalidValue,SegmentLimit}![]const u8 */
 static inline R4SdkGuiSlot R4SdkGuiShapePathBuilder_finish(uint32_t reserved, R4SdkGuiShapePathBuilder * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,684u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,686u,a,1u,0);
 }
 /* clipboard.ReadResult.ok -> bool */
 static inline R4SdkGuiSlot R4SdkGuiClipboardReadResult_ok(uint32_t reserved, const R4SdkGuiClipboardReadResult * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,685u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,687u,a,1u,0);
 }
 /* input_events.Queue([]abi_generated.ConsoleInputEvent).append -> bool */
 static inline R4SdkGuiSlot R4SdkGuiInputQueue_append(uint32_t reserved, R4SdkGuiInputQueue * p0, const R4ConsoleInputEvent * p1, uintptr_t n1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,686u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,688u,a,2u,0);
 }
 /* input_events.Queue([]abi_generated.ConsoleInputEvent).peek -> []const abi_generated.ConsoleInputEvent */
 static inline R4SdkGuiSlot R4SdkGuiInputQueue_peek(uint32_t reserved, const R4SdkGuiInputQueue * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,687u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,689u,a,1u,0);
 }
 /* input_events.Queue([]abi_generated.ConsoleInputEvent).consume -> bool */
 static inline R4SdkGuiSlot R4SdkGuiInputQueue_consume(uint32_t reserved, R4SdkGuiInputQueue * p0, uint64_t p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,688u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,690u,a,2u,0);
 }
 /* input_events.Queue([]abi_generated.ConsoleInputEvent).clear -> void */
 static inline R4SdkGuiSlot R4SdkGuiInputQueue_clear(uint32_t reserved, R4SdkGuiInputQueue * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,689u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,691u,a,1u,0);
 }
 /* window_mode.Client.poll -> bool */
 static inline R4SdkGuiSlot R4SdkGuiWindowModeClient_poll(uint32_t reserved, R4SdkGuiWindowModeClient * p0, const R4SdkGuiSystemContext * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,690u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,692u,a,2u,0);
 }
 /* window_mode.Client.set -> bool */
 static inline R4SdkGuiSlot R4SdkGuiWindowModeClient_set(uint32_t reserved, R4SdkGuiWindowModeClient * p0, const R4SdkGuiSystemContext * p1, uint32_t p2) {
@@ -7238,14 +7254,14 @@ static inline R4SdkGuiSlot R4SdkGuiWindowModeClient_set(uint32_t reserved, R4Sdk
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,691u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,693u,a,3u,0);
 }
 /* window_mode.Client.retry -> bool */
 static inline R4SdkGuiSlot R4SdkGuiWindowModeClient_retry(uint32_t reserved, R4SdkGuiWindowModeClient * p0, const R4SdkGuiSystemContext * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,692u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,694u,a,2u,0);
 }
 /* gfx_buffers.Context.nativeStart -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxBuffersContext_nativeStart(uint32_t reserved, const R4SdkGfxBuffersContext * p0, const R4GfxNativeAllocation * p1, R4GfxNativeStatus * p2) {
@@ -7253,7 +7269,7 @@ static inline R4SdkGuiSlot R4SdkGfxBuffersContext_nativeStart(uint32_t reserved,
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,693u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,695u,a,3u,0);
 }
 /* gfx_buffers.Context.nativeQuery -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxBuffersContext_nativeQuery(uint32_t reserved, const R4SdkGfxBuffersContext * p0, const R4GfxBufferHandle * p1, R4GfxNativeStatus * p2) {
@@ -7261,7 +7277,7 @@ static inline R4SdkGuiSlot R4SdkGfxBuffersContext_nativeQuery(uint32_t reserved,
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,694u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,696u,a,3u,0);
 }
 /* gfx_buffers.Context.nativeReceive -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxBuffersContext_nativeReceive(uint32_t reserved, const R4SdkGfxBuffersContext * p0, const R4GfxBufferHandle * p1, R4GfxBufferReference * p2) {
@@ -7269,14 +7285,14 @@ static inline R4SdkGuiSlot R4SdkGfxBuffersContext_nativeReceive(uint32_t reserve
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,695u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,697u,a,3u,0);
 }
 /* gfx_buffers.Context.nativeClose -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxBuffersContext_nativeClose(uint32_t reserved, const R4SdkGfxBuffersContext * p0, const R4GfxBufferHandle * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,696u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,698u,a,2u,0);
 }
 /* gfx_buffers.Context.nativeWait -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxBuffersContext_nativeWait(uint32_t reserved, const R4SdkGfxBuffersContext * p0, const R4GfxBufferHandle * p1, uint64_t p2, R4GfxNativeStatus * p3) {
@@ -7285,7 +7301,7 @@ static inline R4SdkGuiSlot R4SdkGfxBuffersContext_nativeWait(uint32_t reserved, 
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,697u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,699u,a,4u,0);
 }
 /* gfx_buffers.Context.create -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxBuffersContext_create(uint32_t reserved, const R4SdkGfxBuffersContext * p0, const R4GfxBufferDescriptor * p1, R4GfxBufferReference * p2) {
@@ -7293,7 +7309,7 @@ static inline R4SdkGuiSlot R4SdkGfxBuffersContext_create(uint32_t reserved, cons
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,698u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,700u,a,3u,0);
 }
 /* gfx_buffers.Context.describe -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxBuffersContext_describe(uint32_t reserved, const R4SdkGfxBuffersContext * p0, const R4GfxBufferHandle * p1, R4GfxBufferDescriptor * p2) {
@@ -7301,7 +7317,7 @@ static inline R4SdkGuiSlot R4SdkGfxBuffersContext_describe(uint32_t reserved, co
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,699u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,701u,a,3u,0);
 }
 /* gfx_buffers.Context.import -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxBuffersContext_import(uint32_t reserved, const R4SdkGfxBuffersContext * p0, const R4GfxBufferHandle * p1, R4GfxBufferReference * p2) {
@@ -7309,14 +7325,14 @@ static inline R4SdkGuiSlot R4SdkGfxBuffersContext_import(uint32_t reserved, cons
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,700u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,702u,a,3u,0);
 }
 /* gfx_buffers.Context.release -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxBuffersContext_release(uint32_t reserved, const R4SdkGfxBuffersContext * p0, const R4GfxBufferHandle * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,701u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,703u,a,2u,0);
 }
 /* gfx_buffers.Context.map -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxBuffersContext_map(uint32_t reserved, const R4SdkGfxBuffersContext * p0, const R4GfxBufferHandle * p1, uint32_t p2, uint64_t p3, uint64_t p4, R4GfxBufferMap * p5) {
@@ -7327,7 +7343,7 @@ static inline R4SdkGuiSlot R4SdkGfxBuffersContext_map(uint32_t reserved, const R
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.ptr=(void *)p5,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,702u,a,6u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,704u,a,6u,0);
 }
 /* gfx_buffers.Context.mapPersistent -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxBuffersContext_mapPersistent(uint32_t reserved, const R4SdkGfxBuffersContext * p0, const R4GfxBufferHandle * p1, uint32_t p2, uint64_t p3, uint64_t p4, R4GfxBufferMap * p5) {
@@ -7338,14 +7354,14 @@ static inline R4SdkGuiSlot R4SdkGfxBuffersContext_mapPersistent(uint32_t reserve
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.ptr=(void *)p5,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,703u,a,6u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,705u,a,6u,0);
 }
 /* gfx_buffers.Context.unmap -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxBuffersContext_unmap(uint32_t reserved, const R4SdkGfxBuffersContext * p0, const R4GfxBufferHandle * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,704u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,706u,a,2u,0);
 }
 /* gfx_buffers.Context.exportRaster -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxBuffersContext_exportRaster(uint32_t reserved, const R4SdkGfxBuffersContext * p0, const R4GuiSharedRasterLease * p1, R4GfxBufferReference * p2) {
@@ -7353,14 +7369,14 @@ static inline R4SdkGuiSlot R4SdkGfxBuffersContext_exportRaster(uint32_t reserved
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,705u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,707u,a,3u,0);
 }
 /* gfx_buffers.Context.stats -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxBuffersContext_stats(uint32_t reserved, const R4SdkGfxBuffersContext * p0, R4GfxBufferStats * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,706u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,708u,a,2u,0);
 }
 /* gfx_buffers.Context.memoryBudget -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxBuffersContext_memoryBudget(uint32_t reserved, const R4SdkGfxBuffersContext * p0, const R4GfxDeviceBudgetRequest * p1, R4GfxDeviceBudgetState * p2) {
@@ -7368,7 +7384,7 @@ static inline R4SdkGuiSlot R4SdkGfxBuffersContext_memoryBudget(uint32_t reserved
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,707u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,709u,a,3u,0);
 }
 /* gfx_outputs.Context.power -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxOutputsContext_power(uint32_t reserved, const R4SdkGfxOutputsContext * p0, const R4GfxOutputId * p1, R4GfxOutputPower * p2) {
@@ -7376,7 +7392,7 @@ static inline R4SdkGuiSlot R4SdkGfxOutputsContext_power(uint32_t reserved, const
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,708u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,710u,a,3u,0);
 }
 /* gfx_outputs.Context.requestPower -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxOutputsContext_requestPower(uint32_t reserved, const R4SdkGfxOutputsContext * p0, const R4GfxPowerRequest * p1, R4GfxPowerRequest * p2) {
@@ -7384,7 +7400,7 @@ static inline R4SdkGuiSlot R4SdkGfxOutputsContext_requestPower(uint32_t reserved
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,709u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,711u,a,3u,0);
 }
 /* gfx_outputs.Context.brightness -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxOutputsContext_brightness(uint32_t reserved, const R4SdkGfxOutputsContext * p0, const R4GfxOutputId * p1, R4GfxOutputBrightness * p2) {
@@ -7392,7 +7408,7 @@ static inline R4SdkGuiSlot R4SdkGfxOutputsContext_brightness(uint32_t reserved, 
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,710u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,712u,a,3u,0);
 }
 /* gfx_outputs.Context.requestBrightness -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxOutputsContext_requestBrightness(uint32_t reserved, const R4SdkGfxOutputsContext * p0, const R4GfxBrightnessRequest * p1, R4GfxBrightnessRequest * p2) {
@@ -7400,14 +7416,14 @@ static inline R4SdkGuiSlot R4SdkGfxOutputsContext_requestBrightness(uint32_t res
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,711u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,713u,a,3u,0);
 }
 /* gfx_outputs.Context.revision -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxOutputsContext_revision(uint32_t reserved, const R4SdkGfxOutputsContext * p0, R4GfxDisplayRevision * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,712u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,714u,a,2u,0);
 }
 /* gfx_outputs.Context.info -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxOutputsContext_info(uint32_t reserved, const R4SdkGfxOutputsContext * p0, uint32_t p1, R4GfxOutputInfo * p2) {
@@ -7415,7 +7431,7 @@ static inline R4SdkGuiSlot R4SdkGfxOutputsContext_info(uint32_t reserved, const 
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,713u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,715u,a,3u,0);
 }
 /* gfx_outputs.Context.color -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxOutputsContext_color(uint32_t reserved, const R4SdkGfxOutputsContext * p0, const R4GfxOutputId * p1, R4GfxOutputColorState * p2) {
@@ -7423,7 +7439,7 @@ static inline R4SdkGuiSlot R4SdkGfxOutputsContext_color(uint32_t reserved, const
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,714u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,716u,a,3u,0);
 }
 /* gfx_outputs.Context.refresh -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxOutputsContext_refresh(uint32_t reserved, const R4SdkGfxOutputsContext * p0, const R4GfxOutputTarget * p1, R4GfxOutputRefresh * p2) {
@@ -7431,7 +7447,7 @@ static inline R4SdkGuiSlot R4SdkGfxOutputsContext_refresh(uint32_t reserved, con
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,715u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,717u,a,3u,0);
 }
 /* gfx_outputs.Context.requestRefresh -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxOutputsContext_requestRefresh(uint32_t reserved, const R4SdkGfxOutputsContext * p0, const R4GfxRefreshRequest * p1, R4GfxRefreshRequest * p2) {
@@ -7439,7 +7455,7 @@ static inline R4SdkGuiSlot R4SdkGfxOutputsContext_requestRefresh(uint32_t reserv
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,716u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,718u,a,3u,0);
 }
 /* gfx_outputs.Context.mode -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxOutputsContext_mode(uint32_t reserved, const R4SdkGfxOutputsContext * p0, const R4GfxOutputId * p1, uint32_t p2, R4GfxOutputMode * p3) {
@@ -7448,7 +7464,7 @@ static inline R4SdkGuiSlot R4SdkGfxOutputsContext_mode(uint32_t reserved, const 
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,717u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,719u,a,4u,0);
 }
 /* gfx_outputs.Context.edid -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxOutputsContext_edid(uint32_t reserved, const R4SdkGfxOutputsContext * p0, const R4GfxOutputId * p1, uint32_t p2, R4GfxEdidBlock * p3) {
@@ -7457,7 +7473,7 @@ static inline R4SdkGuiSlot R4SdkGfxOutputsContext_edid(uint32_t reserved, const 
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,718u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,720u,a,4u,0);
 }
 /* gfx_outputs.Context.testState -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxOutputsContext_testState(uint32_t reserved, const R4SdkGfxOutputsContext * p0, const R4GfxAtomicState * p1, R4GfxAtomicResult * p2) {
@@ -7465,7 +7481,7 @@ static inline R4SdkGuiSlot R4SdkGfxOutputsContext_testState(uint32_t reserved, c
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,719u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,721u,a,3u,0);
 }
 /* gfx_outputs.Context.testColor -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxOutputsContext_testColor(uint32_t reserved, const R4SdkGfxOutputsContext * p0, const R4GfxModeColorRequest * p1, R4GfxAtomicResult * p2) {
@@ -7473,7 +7489,7 @@ static inline R4SdkGuiSlot R4SdkGfxOutputsContext_testColor(uint32_t reserved, c
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,720u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,722u,a,3u,0);
 }
 /* gfx_outputs.Context.submitColor -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxOutputsContext_submitColor(uint32_t reserved, const R4SdkGfxOutputsContext * p0, const R4GfxModeColorRequest * p1, uint32_t p2, R4GfxModeStatus * p3) {
@@ -7482,7 +7498,7 @@ static inline R4SdkGuiSlot R4SdkGfxOutputsContext_submitColor(uint32_t reserved,
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,721u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,723u,a,4u,0);
 }
 /* gfx_outputs.Context.commit -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxOutputsContext_commit(uint32_t reserved, const R4SdkGfxOutputsContext * p0, const R4GfxAtomicState * p1, R4GfxAtomicResult * p2) {
@@ -7490,7 +7506,7 @@ static inline R4SdkGuiSlot R4SdkGfxOutputsContext_commit(uint32_t reserved, cons
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,722u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,724u,a,3u,0);
 }
 /* gfx_outputs.Context.submit -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxOutputsContext_submit(uint32_t reserved, const R4SdkGfxOutputsContext * p0, const R4GfxAtomicState * p1, uint32_t p2, R4GfxModeStatus * p3) {
@@ -7499,7 +7515,7 @@ static inline R4SdkGuiSlot R4SdkGfxOutputsContext_submit(uint32_t reserved, cons
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,723u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,725u,a,4u,0);
 }
 /* gfx_outputs.Context.status -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxOutputsContext_status(uint32_t reserved, const R4SdkGfxOutputsContext * p0, uint64_t p1, R4GfxModeStatus * p2) {
@@ -7507,7 +7523,7 @@ static inline R4SdkGuiSlot R4SdkGfxOutputsContext_status(uint32_t reserved, cons
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,724u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,726u,a,3u,0);
 }
 /* gfx_outputs.Context.resolve -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxOutputsContext_resolve(uint32_t reserved, const R4SdkGfxOutputsContext * p0, uint64_t p1, uint32_t p2, R4GfxModeStatus * p3) {
@@ -7516,7 +7532,7 @@ static inline R4SdkGuiSlot R4SdkGfxOutputsContext_resolve(uint32_t reserved, con
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,725u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,727u,a,4u,0);
 }
 /* gfx_queue.Context.backend -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxQueueContext_backend(uint32_t reserved, const R4SdkGfxQueueContext * p0, uint32_t p1, R4GfxBackendBinding * p2) {
@@ -7524,7 +7540,7 @@ static inline R4SdkGuiSlot R4SdkGfxQueueContext_backend(uint32_t reserved, const
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,726u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,728u,a,3u,0);
 }
 /* gfx_queue.Context.backendInfo -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxQueueContext_backendInfo(uint32_t reserved, const R4SdkGfxQueueContext * p0, uint32_t p1, R4GfxBackendInfo * p2) {
@@ -7532,7 +7548,7 @@ static inline R4SdkGuiSlot R4SdkGfxQueueContext_backendInfo(uint32_t reserved, c
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,727u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,729u,a,3u,0);
 }
 /* gfx_queue.Context.backendProperties -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxQueueContext_backendProperties(uint32_t reserved, const R4SdkGfxQueueContext * p0, const R4GfxBackendBinding * p1, R4GfxBackendProperties * p2) {
@@ -7540,7 +7556,7 @@ static inline R4SdkGuiSlot R4SdkGfxQueueContext_backendProperties(uint32_t reser
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,728u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,730u,a,3u,0);
 }
 /* gfx_queue.Context.open -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxQueueContext_open(uint32_t reserved, const R4SdkGfxQueueContext * p0, const R4GfxQueueConfig * p1, R4GfxQueueHandle * p2) {
@@ -7548,14 +7564,14 @@ static inline R4SdkGuiSlot R4SdkGfxQueueContext_open(uint32_t reserved, const R4
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,729u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,731u,a,3u,0);
 }
 /* gfx_queue.Context.close -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxQueueContext_close(uint32_t reserved, const R4SdkGfxQueueContext * p0, const R4GfxQueueHandle * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,730u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,732u,a,2u,0);
 }
 /* gfx_queue.Context.submit -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxQueueContext_submit(uint32_t reserved, const R4SdkGfxQueueContext * p0, const R4GfxQueueHandle * p1, const R4GfxSubmission * p2, R4GfxFenceStatus * p3) {
@@ -7564,7 +7580,7 @@ static inline R4SdkGuiSlot R4SdkGfxQueueContext_submit(uint32_t reserved, const 
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,731u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,733u,a,4u,0);
 }
 /* gfx_queue.Context.submitNative -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxQueueContext_submitNative(uint32_t reserved, const R4SdkGfxQueueContext * p0, const R4GfxQueueHandle * p1, const R4GfxSubmission * p2, const R4GfxNativeSubmission * p3, R4GfxFenceStatus * p4) {
@@ -7574,7 +7590,7 @@ static inline R4SdkGuiSlot R4SdkGfxQueueContext_submitNative(uint32_t reserved, 
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.ptr=(void *)p4,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,732u,a,5u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,734u,a,5u,0);
 }
 /* gfx_queue.Context.submitRenderList -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxQueueContext_submitRenderList(uint32_t reserved, const R4SdkGfxQueueContext * p0, const R4GfxQueueHandle * p1, const R4GfxSubmission * p2, const R4GfxRenderList * p3, R4GfxFenceStatus * p4) {
@@ -7584,7 +7600,7 @@ static inline R4SdkGuiSlot R4SdkGfxQueueContext_submitRenderList(uint32_t reserv
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.ptr=(void *)p4,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,733u,a,5u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,735u,a,5u,0);
 }
 /* gfx_queue.Context.submitRenderGridList -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxQueueContext_submitRenderGridList(uint32_t reserved, const R4SdkGfxQueueContext * p0, const R4GfxQueueHandle * p1, const R4GfxSubmission * p2, const R4GfxRenderGridList * p3, R4GfxFenceStatus * p4) {
@@ -7594,7 +7610,7 @@ static inline R4SdkGuiSlot R4SdkGfxQueueContext_submitRenderGridList(uint32_t re
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.ptr=(void *)p4,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,734u,a,5u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,736u,a,5u,0);
 }
 /* gfx_queue.Context.submitOutput -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxQueueContext_submitOutput(uint32_t reserved, const R4SdkGfxQueueContext * p0, const R4GfxQueueHandle * p1, const R4GfxSubmission * p2, const R4GfxOutputTarget * p3, R4GfxFenceStatus * p4) {
@@ -7604,7 +7620,7 @@ static inline R4SdkGuiSlot R4SdkGfxQueueContext_submitOutput(uint32_t reserved, 
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.ptr=(void *)p4,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,735u,a,5u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,737u,a,5u,0);
 }
 /* gfx_queue.Context.submitRenderColorList -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxQueueContext_submitRenderColorList(uint32_t reserved, const R4SdkGfxQueueContext * p0, const R4GfxQueueHandle * p1, const R4GfxSubmission * p2, const R4GfxRenderColorList * p3, R4GfxFenceStatus * p4) {
@@ -7614,7 +7630,7 @@ static inline R4SdkGuiSlot R4SdkGfxQueueContext_submitRenderColorList(uint32_t r
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.ptr=(void *)p4,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,736u,a,5u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,738u,a,5u,0);
 }
 /* gfx_queue.Context.submitRenderColorGridList -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxQueueContext_submitRenderColorGridList(uint32_t reserved, const R4SdkGfxQueueContext * p0, const R4GfxQueueHandle * p1, const R4GfxSubmission * p2, const R4GfxRenderColorGridList * p3, R4GfxFenceStatus * p4) {
@@ -7624,7 +7640,7 @@ static inline R4SdkGuiSlot R4SdkGfxQueueContext_submitRenderColorGridList(uint32
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.ptr=(void *)p4,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,737u,a,5u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,739u,a,5u,0);
 }
 /* gfx_queue.Context.query -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxQueueContext_query(uint32_t reserved, const R4SdkGfxQueueContext * p0, const R4GfxFence * p1, R4GfxFenceStatus * p2) {
@@ -7632,7 +7648,7 @@ static inline R4SdkGuiSlot R4SdkGfxQueueContext_query(uint32_t reserved, const R
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,738u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,740u,a,3u,0);
 }
 /* gfx_queue.Context.wait -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxQueueContext_wait(uint32_t reserved, const R4SdkGfxQueueContext * p0, const R4GfxFence * p1, uint64_t p2, uint32_t p3, R4GfxFenceStatus * p4) {
@@ -7642,34 +7658,34 @@ static inline R4SdkGuiSlot R4SdkGfxQueueContext_wait(uint32_t reserved, const R4
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.ptr=(void *)p4,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,739u,a,5u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,741u,a,5u,0);
 }
 /* gfx_queue.Context.cancel -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxQueueContext_cancel(uint32_t reserved, const R4SdkGfxQueueContext * p0, const R4GfxFence * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,740u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,742u,a,2u,0);
 }
 /* gfx_queue.Context.release -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxQueueContext_release(uint32_t reserved, const R4SdkGfxQueueContext * p0, const R4GfxFence * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,741u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,743u,a,2u,0);
 }
 /* graphics_status.Snapshot.read -> ?graphics_status.Snapshot */
 static inline R4SdkGuiSlot R4SdkGraphicsStatusSnapshot_read(uint32_t reserved, const R4SdkGfxDeviceContext * p0, R4SdkGraphicsStatusSnapshot *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,742u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,744u,a,1u,output);
 }
 /* graphics_status.Snapshot.matchesAdapter -> bool */
 static inline R4SdkGuiSlot R4SdkGraphicsStatusSnapshot_matchesAdapter(uint32_t reserved, const R4SdkGraphicsStatusSnapshot * p0, const R4DeviceInventoryRecord * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,743u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,745u,a,2u,0);
 }
 /* graphics_status.Snapshot.line -> []const u8 */
 static inline R4SdkGuiSlot R4SdkGraphicsStatusSnapshot_line(uint32_t reserved, const R4SdkGraphicsStatusSnapshot * p0, uint8_t * p1, uintptr_t n1, uint64_t p2) {
@@ -7677,39 +7693,39 @@ static inline R4SdkGuiSlot R4SdkGraphicsStatusSnapshot_line(uint32_t reserved, c
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,744u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,746u,a,3u,0);
 }
 /* app_audio.WriteCursor.init -> ?app_audio.WriteCursor */
 static inline R4SdkGuiSlot R4SdkAudioWriteCursor_init(uint32_t reserved, uint64_t p0, uint64_t p1, R4SdkAudioWriteCursor *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,745u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,747u,a,2u,output);
 }
 /* app_audio.WriteCursor.remaining -> usize */
 static inline R4SdkGuiSlot R4SdkAudioWriteCursor_remaining(uint32_t reserved, const R4SdkAudioWriteCursor * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,746u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,748u,a,1u,0);
 }
 /* app_audio.WriteCursor.done -> bool */
 static inline R4SdkGuiSlot R4SdkAudioWriteCursor_done(uint32_t reserved, const R4SdkAudioWriteCursor * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,747u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,749u,a,1u,0);
 }
 /* app_audio.WriteCursor.apply -> app_audio.WriteAdvance */
 static inline R4SdkGuiSlot R4SdkAudioWriteCursor_apply(uint32_t reserved, R4SdkAudioWriteCursor * p0, const R4SdkAudioWriteResult * p1, R4SdkAudioWriteAdvance *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,748u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,750u,a,2u,output);
 }
 /* app_audio.AudioStream.valid -> bool */
 static inline R4SdkGuiSlot R4SdkAudioAudioStream_valid(uint32_t reserved, const R4SdkAudioAudioStream * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,749u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,751u,a,1u,0);
 }
 /* app_audio.AudioStream.write -> app_audio.WriteResult */
 static inline R4SdkGuiSlot R4SdkAudioAudioStream_write(uint32_t reserved, R4SdkAudioAudioStream * p0, const uint8_t * p1, uintptr_t n1, const R4Timeout * p2, R4SdkAudioWriteResult *output) {
@@ -7717,7 +7733,7 @@ static inline R4SdkGuiSlot R4SdkAudioAudioStream_write(uint32_t reserved, R4SdkA
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,750u,a,3u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,752u,a,3u,output);
 }
 /* app_audio.AudioStream.writeOnce -> app_audio.WriteResult */
 static inline R4SdkGuiSlot R4SdkAudioAudioStream_writeOnce(uint32_t reserved, R4SdkAudioAudioStream * p0, const uint8_t * p1, uintptr_t n1, const R4Timeout * p2, R4SdkAudioWriteResult *output) {
@@ -7725,7 +7741,7 @@ static inline R4SdkGuiSlot R4SdkAudioAudioStream_writeOnce(uint32_t reserved, R4
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,751u,a,3u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,753u,a,3u,output);
 }
 /* app_audio.AudioStream.setVolume -> app_audio.Result */
 static inline R4SdkGuiSlot R4SdkAudioAudioStream_setVolume(uint32_t reserved, R4SdkAudioAudioStream * p0, uint32_t p1, const R4Timeout * p2, R4SdkAudioResult *output) {
@@ -7733,20 +7749,20 @@ static inline R4SdkGuiSlot R4SdkAudioAudioStream_setVolume(uint32_t reserved, R4
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,752u,a,3u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,754u,a,3u,output);
 }
 /* app_audio.AudioStream.close -> app_audio.Result */
 static inline R4SdkGuiSlot R4SdkAudioAudioStream_close(uint32_t reserved, R4SdkAudioAudioStream * p0, const R4Timeout * p1, R4SdkAudioResult *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,753u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,755u,a,2u,output);
 }
 /* app_services.ServiceConnection.valid -> bool */
 static inline R4SdkGuiSlot R4SdkGuiType224_valid(uint32_t reserved, const R4SdkGuiType224 * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,754u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,756u,a,1u,0);
 }
 /* app_services.ServiceConnection.call -> app_services.ServiceCall */
 static inline R4SdkGuiSlot R4SdkGuiType224_call(uint32_t reserved, R4SdkGuiType224 * p0, uint16_t p1, const uint8_t * p2, uintptr_t n2, uint8_t * p3, uintptr_t n3, const R4Timeout * p4, R4SdkGuiType512 *output) {
@@ -7756,14 +7772,14 @@ static inline R4SdkGuiSlot R4SdkGuiType224_call(uint32_t reserved, R4SdkGuiType2
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.length=n3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.ptr=(void *)p4,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,755u,a,5u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,757u,a,5u,output);
 }
 /* app_services.ServiceConnection.budget -> error{BudgetOverflow,ClockChanged,ClockRegressed,ClockUnavailable,InvalidBudget,InvalidTimeout,TimedOut,UnknownFrequency}!rpc_budget.Budget */
 static inline R4SdkGuiSlot R4SdkGuiType224_budget(uint32_t reserved, const R4SdkGuiType224 * p0, const R4Timeout * p1, R4SdkGuiType517 *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,756u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,758u,a,2u,output);
 }
 /* app_services.ServiceConnection.callBudget -> app_services.ServiceCall */
 static inline R4SdkGuiSlot R4SdkGuiType224_callBudget(uint32_t reserved, R4SdkGuiType224 * p0, uint16_t p1, const uint8_t * p2, uintptr_t n2, uint8_t * p3, uintptr_t n3, R4SdkGuiType517 * p4, R4SdkGuiType512 *output) {
@@ -7773,19 +7789,19 @@ static inline R4SdkGuiSlot R4SdkGuiType224_callBudget(uint32_t reserved, R4SdkGu
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.length=n3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.ptr=(void *)p4,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,757u,a,5u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,759u,a,5u,output);
 }
 /* app_services.ServiceConnection.close -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiType224_close(uint32_t reserved, R4SdkGuiType224 * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,758u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,760u,a,1u,0);
 }
 /* app_audio.Audio.available -> bool */
 static inline R4SdkGuiSlot R4SdkAudioAudio_available(uint32_t reserved, const R4SdkAudioAudio * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,759u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,761u,a,1u,0);
 }
 /* app_audio.Audio.openStream -> app_audio.OpenResult */
 static inline R4SdkGuiSlot R4SdkAudioAudio_openStream(uint32_t reserved, const R4SdkAudioAudio * p0, uint32_t p1, uint16_t p2, uint32_t p3, uint32_t p4, const R4Timeout * p5, R4SdkAudioOpenResult *output) {
@@ -7796,7 +7812,7 @@ static inline R4SdkGuiSlot R4SdkAudioAudio_openStream(uint32_t reserved, const R
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.ptr=(void *)p5,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,760u,a,6u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,762u,a,6u,output);
 }
 /* app_audio.Audio.status -> app_audio.Result */
 static inline R4SdkGuiSlot R4SdkAudioAudio_status(uint32_t reserved, const R4SdkAudioAudio * p0, const R4Timeout * p1, R4AudioServiceStatus * p2, R4SdkAudioResult *output) {
@@ -7804,7 +7820,7 @@ static inline R4SdkGuiSlot R4SdkAudioAudio_status(uint32_t reserved, const R4Sdk
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,761u,a,3u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,763u,a,3u,output);
 }
 /* app_audio.Audio.masterState -> app_audio.Result */
 static inline R4SdkGuiSlot R4SdkAudioAudio_masterState(uint32_t reserved, const R4SdkAudioAudio * p0, const R4Timeout * p1, R4AudioServiceMasterState * p2, R4SdkAudioResult *output) {
@@ -7812,7 +7828,7 @@ static inline R4SdkGuiSlot R4SdkAudioAudio_masterState(uint32_t reserved, const 
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,762u,a,3u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,764u,a,3u,output);
 }
 /* app_audio.Audio.outputs -> app_audio.Result */
 static inline R4SdkGuiSlot R4SdkAudioAudio_outputs(uint32_t reserved, const R4SdkAudioAudio * p0, const R4AudioServiceOutputRequest * p1, const R4Timeout * p2, R4AudioServiceOutputState * p3, R4SdkAudioResult *output) {
@@ -7821,7 +7837,7 @@ static inline R4SdkGuiSlot R4SdkAudioAudio_outputs(uint32_t reserved, const R4Sd
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,763u,a,4u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,765u,a,4u,output);
 }
 /* app_audio.Audio.selectOutput -> app_audio.Result */
 static inline R4SdkGuiSlot R4SdkAudioAudio_selectOutput(uint32_t reserved, const R4SdkAudioAudio * p0, const R4AudioServiceOutputRequest * p1, const R4Timeout * p2, R4AudioServiceOutputState * p3, R4SdkAudioResult *output) {
@@ -7830,7 +7846,7 @@ static inline R4SdkGuiSlot R4SdkAudioAudio_selectOutput(uint32_t reserved, const
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,764u,a,4u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,766u,a,4u,output);
 }
 /* app_audio.Audio.setMasterState -> app_audio.Result */
 static inline R4SdkGuiSlot R4SdkAudioAudio_setMasterState(uint32_t reserved, const R4SdkAudioAudio * p0, const R4SdkAudioMasterUpdate * p1, const R4Timeout * p2, R4AudioServiceMasterState * p3, R4SdkAudioResult *output) {
@@ -7839,13 +7855,13 @@ static inline R4SdkGuiSlot R4SdkAudioAudio_setMasterState(uint32_t reserved, con
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,765u,a,4u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,767u,a,4u,output);
 }
 /* app_audio.Audio.advanced -> app_audio.AdvancedAudio */
 static inline R4SdkGuiSlot R4SdkAudioAudio_advanced(uint32_t reserved, const R4SdkAudioAudio * p0, R4SdkAudioAdvancedAudio *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,766u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,768u,a,1u,output);
 }
 /* r4audio.Context.audioOpenStream -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioContext_audioOpenStream(uint32_t reserved, const R4SdkAudioContext * p0, uint32_t p1, uint16_t p2, uint32_t p3) {
@@ -7854,7 +7870,7 @@ static inline R4SdkGuiSlot R4SdkAudioContext_audioOpenStream(uint32_t reserved, 
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,767u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,769u,a,4u,0);
 }
 /* r4audio.Context.audioOutputInfo -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioContext_audioOutputInfo(uint32_t reserved, const R4SdkAudioContext * p0, uint32_t p1, R4AudioOutputInfo * p2) {
@@ -7862,7 +7878,7 @@ static inline R4SdkGuiSlot R4SdkAudioContext_audioOutputInfo(uint32_t reserved, 
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,768u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,770u,a,3u,0);
 }
 /* r4audio.Context.audioOutputCatalog -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioContext_audioOutputCatalog(uint32_t reserved, const R4SdkAudioContext * p0, R4AudioOutputInfo * p1, uintptr_t n1, R4AudioOutputCatalog * p2) {
@@ -7870,14 +7886,14 @@ static inline R4SdkGuiSlot R4SdkAudioContext_audioOutputCatalog(uint32_t reserve
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,769u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,771u,a,3u,0);
 }
 /* r4audio.Context.audioSelectOutput -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioContext_audioSelectOutput(uint32_t reserved, const R4SdkAudioContext * p0, const R4SdkGuiType539 * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,770u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,772u,a,2u,0);
 }
 /* r4audio.Context.audioWrite -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioContext_audioWrite(uint32_t reserved, const R4SdkAudioContext * p0, uint32_t p1, const uint8_t * p2, uintptr_t n2) {
@@ -7885,14 +7901,14 @@ static inline R4SdkGuiSlot R4SdkAudioContext_audioWrite(uint32_t reserved, const
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,771u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,773u,a,3u,0);
 }
 /* r4audio.Context.audioClose -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioContext_audioClose(uint32_t reserved, const R4SdkAudioContext * p0, uint32_t p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,772u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,774u,a,2u,0);
 }
 /* r4audio.Context.audioStreamProgress -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioContext_audioStreamProgress(uint32_t reserved, const R4SdkAudioContext * p0, uint32_t p1, uint64_t p2, R4AudioStreamProgress * p3) {
@@ -7901,7 +7917,7 @@ static inline R4SdkGuiSlot R4SdkAudioContext_audioStreamProgress(uint32_t reserv
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,773u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,775u,a,4u,0);
 }
 /* r4audio.Context.audioSetStreamExpectation -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioContext_audioSetStreamExpectation(uint32_t reserved, const R4SdkAudioContext * p0, uint32_t p1, const R4AudioStreamExpectation * p2) {
@@ -7909,7 +7925,7 @@ static inline R4SdkGuiSlot R4SdkAudioContext_audioSetStreamExpectation(uint32_t 
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,774u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,776u,a,3u,0);
 }
 /* r4audio.Context.audioCloseStreamProgress -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioContext_audioCloseStreamProgress(uint32_t reserved, const R4SdkAudioContext * p0, uint32_t p1, uint64_t p2, R4AudioStreamProgress * p3) {
@@ -7918,7 +7934,7 @@ static inline R4SdkGuiSlot R4SdkAudioContext_audioCloseStreamProgress(uint32_t r
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,775u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,777u,a,4u,0);
 }
 /* r4audio.Context.audioSetVolume -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioContext_audioSetVolume(uint32_t reserved, const R4SdkAudioContext * p0, uint32_t p1, uint32_t p2) {
@@ -7926,14 +7942,14 @@ static inline R4SdkGuiSlot R4SdkAudioContext_audioSetVolume(uint32_t reserved, c
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,776u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,778u,a,3u,0);
 }
 /* r4audio.Context.audioServiceStatus -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioContext_audioServiceStatus(uint32_t reserved, const R4SdkAudioContext * p0, R4AudioServiceStatus * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,777u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,779u,a,2u,0);
 }
 /* r4audio.Context.audioServiceSetMasterVolume -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioContext_audioServiceSetMasterVolume(uint32_t reserved, const R4SdkAudioContext * p0, uint32_t p1, R4AudioServiceStatus * p2) {
@@ -7941,14 +7957,14 @@ static inline R4SdkGuiSlot R4SdkAudioContext_audioServiceSetMasterVolume(uint32_
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,778u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,780u,a,3u,0);
 }
 /* r4audio.Context.audioServiceMasterState -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioContext_audioServiceMasterState(uint32_t reserved, const R4SdkAudioContext * p0, R4AudioServiceMasterState * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,779u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,781u,a,2u,0);
 }
 /* r4audio.Context.audioServiceSetMasterState -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioContext_audioServiceSetMasterState(uint32_t reserved, const R4SdkAudioContext * p0, const R4AudioServiceMasterRequest * p1, R4AudioServiceMasterState * p2) {
@@ -7956,7 +7972,7 @@ static inline R4SdkGuiSlot R4SdkAudioContext_audioServiceSetMasterState(uint32_t
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,780u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,782u,a,3u,0);
 }
 /* r4audio.Context.audioServiceOpenStream -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioContext_audioServiceOpenStream(uint32_t reserved, const R4SdkAudioContext * p0, uint32_t p1, uint16_t p2, uint32_t p3) {
@@ -7965,7 +7981,7 @@ static inline R4SdkGuiSlot R4SdkAudioContext_audioServiceOpenStream(uint32_t res
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,781u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,783u,a,4u,0);
 }
 /* r4audio.Context.audioServiceOpenStreamResult -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioContext_audioServiceOpenStreamResult(uint32_t reserved, const R4SdkAudioContext * p0, uint32_t p1, uint16_t p2, uint32_t p3, uint32_t p4, R4AudioServiceStreamResult * p5) {
@@ -7976,7 +7992,7 @@ static inline R4SdkGuiSlot R4SdkAudioContext_audioServiceOpenStreamResult(uint32
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.ptr=(void *)p5,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,782u,a,6u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,784u,a,6u,0);
 }
 /* r4audio.Context.audioServiceWrite -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioContext_audioServiceWrite(uint32_t reserved, const R4SdkAudioContext * p0, uint32_t p1, const uint8_t * p2, uintptr_t n2) {
@@ -7984,14 +8000,14 @@ static inline R4SdkGuiSlot R4SdkAudioContext_audioServiceWrite(uint32_t reserved
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,783u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,785u,a,3u,0);
 }
 /* r4audio.Context.audioServiceClose -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioContext_audioServiceClose(uint32_t reserved, const R4SdkAudioContext * p0, uint32_t p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,784u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,786u,a,2u,0);
 }
 /* r4audio.Context.audioServiceSetVolume -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioContext_audioServiceSetVolume(uint32_t reserved, const R4SdkAudioContext * p0, uint32_t p1, uint32_t p2) {
@@ -7999,13 +8015,13 @@ static inline R4SdkGuiSlot R4SdkAudioContext_audioServiceSetVolume(uint32_t rese
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,785u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,787u,a,3u,0);
 }
 /* r4audio.Context.sidAcquire -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioContext_sidAcquire(uint32_t reserved, const R4SdkAudioContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,786u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,788u,a,1u,0);
 }
 /* r4audio.Context.sidWriteRegister -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioContext_sidWriteRegister(uint32_t reserved, const R4SdkAudioContext * p0, uint32_t p1, uint8_t p2, uint8_t p3) {
@@ -8014,14 +8030,14 @@ static inline R4SdkGuiSlot R4SdkAudioContext_sidWriteRegister(uint32_t reserved,
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,787u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,789u,a,4u,0);
 }
 /* r4audio.Context.sidRelease -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioContext_sidRelease(uint32_t reserved, const R4SdkAudioContext * p0, uint32_t p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,788u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,790u,a,2u,0);
 }
 /* r4audio.Context.sidLoadData -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioContext_sidLoadData(uint32_t reserved, const R4SdkAudioContext * p0, uint32_t p1, uint16_t p2, const uint8_t * p3, uintptr_t n3) {
@@ -8030,7 +8046,7 @@ static inline R4SdkGuiSlot R4SdkAudioContext_sidLoadData(uint32_t reserved, cons
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.length=n3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,789u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,791u,a,4u,0);
 }
 /* r4audio.Context.sidInit -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioContext_sidInit(uint32_t reserved, const R4SdkAudioContext * p0, uint32_t p1, uint16_t p2, uint16_t p3) {
@@ -8039,7 +8055,7 @@ static inline R4SdkGuiSlot R4SdkAudioContext_sidInit(uint32_t reserved, const R4
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,790u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,792u,a,4u,0);
 }
 /* r4audio.Context.sidPlayFrame -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioContext_sidPlayFrame(uint32_t reserved, const R4SdkAudioContext * p0, uint32_t p1, uint16_t p2, uint16_t p3) {
@@ -8048,27 +8064,27 @@ static inline R4SdkGuiSlot R4SdkAudioContext_sidPlayFrame(uint32_t reserved, con
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,791u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,793u,a,4u,0);
 }
 /* r4audio.Context.sidStop -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioContext_sidStop(uint32_t reserved, const R4SdkAudioContext * p0, uint32_t p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,792u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,794u,a,2u,0);
 }
 /* r4audio.Context.sidModelName -> [*:0]const u8 */
 static inline R4SdkGuiSlot R4SdkAudioContext_sidModelName(uint32_t reserved, const R4SdkAudioContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,793u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,795u,a,1u,0);
 }
 /* r4audio.Context.midiOpenSynth -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioContext_midiOpenSynth(uint32_t reserved, const R4SdkAudioContext * p0, const uint8_t * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,794u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,796u,a,2u,0);
 }
 /* r4audio.Context.midiSend -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioContext_midiSend(uint32_t reserved, const R4SdkAudioContext * p0, uint32_t p1, uint8_t p2, uint8_t p3, uint8_t p4, uint8_t p5) {
@@ -8079,7 +8095,7 @@ static inline R4SdkGuiSlot R4SdkAudioContext_midiSend(uint32_t reserved, const R
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p5,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,795u,a,6u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,797u,a,6u,0);
 }
 /* r4audio.Context.midiRender -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioContext_midiRender(uint32_t reserved, const R4SdkAudioContext * p0, uint32_t p1, uint16_t p2) {
@@ -8087,14 +8103,14 @@ static inline R4SdkGuiSlot R4SdkAudioContext_midiRender(uint32_t reserved, const
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,796u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,798u,a,3u,0);
 }
 /* r4audio.Context.midiClose -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioContext_midiClose(uint32_t reserved, const R4SdkAudioContext * p0, uint32_t p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,797u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,799u,a,2u,0);
 }
 /* r4audio.Context.opl3WriteRegister -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioContext_opl3WriteRegister(uint32_t reserved, const R4SdkAudioContext * p0, uint8_t p1, uint8_t p2, uint8_t p3) {
@@ -8103,31 +8119,31 @@ static inline R4SdkGuiSlot R4SdkAudioContext_opl3WriteRegister(uint32_t reserved
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,798u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,800u,a,4u,0);
 }
 /* r4audio.Context.opl3Reset -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioContext_opl3Reset(uint32_t reserved, const R4SdkAudioContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,799u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,801u,a,1u,0);
 }
 /* r4audio.Context.opl3RenderBlock -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioContext_opl3RenderBlock(uint32_t reserved, const R4SdkAudioContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,800u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,802u,a,1u,0);
 }
 /* r4audio.Context.opl3Stop -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioContext_opl3Stop(uint32_t reserved, const R4SdkAudioContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,801u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,803u,a,1u,0);
 }
 /* app_audio.AdvancedAudio.sidAcquire -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioAdvancedAudio_sidAcquire(uint32_t reserved, const R4SdkAudioAdvancedAudio * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,802u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,804u,a,1u,0);
 }
 /* app_audio.AdvancedAudio.sidWriteRegister -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioAdvancedAudio_sidWriteRegister(uint32_t reserved, const R4SdkAudioAdvancedAudio * p0, uint32_t p1, uint8_t p2, uint8_t p3) {
@@ -8136,14 +8152,14 @@ static inline R4SdkGuiSlot R4SdkAudioAdvancedAudio_sidWriteRegister(uint32_t res
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,803u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,805u,a,4u,0);
 }
 /* app_audio.AdvancedAudio.sidRelease -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioAdvancedAudio_sidRelease(uint32_t reserved, const R4SdkAudioAdvancedAudio * p0, uint32_t p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,804u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,806u,a,2u,0);
 }
 /* app_audio.AdvancedAudio.sidLoadData -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioAdvancedAudio_sidLoadData(uint32_t reserved, const R4SdkAudioAdvancedAudio * p0, uint32_t p1, uint16_t p2, const uint8_t * p3, uintptr_t n3) {
@@ -8152,7 +8168,7 @@ static inline R4SdkGuiSlot R4SdkAudioAdvancedAudio_sidLoadData(uint32_t reserved
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.length=n3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,805u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,807u,a,4u,0);
 }
 /* app_audio.AdvancedAudio.sidInit -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioAdvancedAudio_sidInit(uint32_t reserved, const R4SdkAudioAdvancedAudio * p0, uint32_t p1, uint16_t p2, uint16_t p3) {
@@ -8161,7 +8177,7 @@ static inline R4SdkGuiSlot R4SdkAudioAdvancedAudio_sidInit(uint32_t reserved, co
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,806u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,808u,a,4u,0);
 }
 /* app_audio.AdvancedAudio.sidPlayFrame -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioAdvancedAudio_sidPlayFrame(uint32_t reserved, const R4SdkAudioAdvancedAudio * p0, uint32_t p1, uint16_t p2, uint16_t p3) {
@@ -8170,27 +8186,27 @@ static inline R4SdkGuiSlot R4SdkAudioAdvancedAudio_sidPlayFrame(uint32_t reserve
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,807u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,809u,a,4u,0);
 }
 /* app_audio.AdvancedAudio.sidStop -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioAdvancedAudio_sidStop(uint32_t reserved, const R4SdkAudioAdvancedAudio * p0, uint32_t p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,808u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,810u,a,2u,0);
 }
 /* app_audio.AdvancedAudio.sidModelName -> [*:0]const u8 */
 static inline R4SdkGuiSlot R4SdkAudioAdvancedAudio_sidModelName(uint32_t reserved, const R4SdkAudioAdvancedAudio * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,809u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,811u,a,1u,0);
 }
 /* app_audio.AdvancedAudio.midiOpenSynth -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioAdvancedAudio_midiOpenSynth(uint32_t reserved, const R4SdkAudioAdvancedAudio * p0, const uint8_t * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,810u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,812u,a,2u,0);
 }
 /* app_audio.AdvancedAudio.midiSend -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioAdvancedAudio_midiSend(uint32_t reserved, const R4SdkAudioAdvancedAudio * p0, uint32_t p1, uint8_t p2, uint8_t p3, uint8_t p4, uint8_t p5) {
@@ -8201,7 +8217,7 @@ static inline R4SdkGuiSlot R4SdkAudioAdvancedAudio_midiSend(uint32_t reserved, c
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p5,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,811u,a,6u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,813u,a,6u,0);
 }
 /* app_audio.AdvancedAudio.midiRender -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioAdvancedAudio_midiRender(uint32_t reserved, const R4SdkAudioAdvancedAudio * p0, uint32_t p1, uint16_t p2) {
@@ -8209,14 +8225,14 @@ static inline R4SdkGuiSlot R4SdkAudioAdvancedAudio_midiRender(uint32_t reserved,
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,812u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,814u,a,3u,0);
 }
 /* app_audio.AdvancedAudio.midiClose -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioAdvancedAudio_midiClose(uint32_t reserved, const R4SdkAudioAdvancedAudio * p0, uint32_t p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,813u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,815u,a,2u,0);
 }
 /* app_audio.AdvancedAudio.opl3WriteRegister -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioAdvancedAudio_opl3WriteRegister(uint32_t reserved, const R4SdkAudioAdvancedAudio * p0, uint8_t p1, uint8_t p2, uint8_t p3) {
@@ -8225,81 +8241,81 @@ static inline R4SdkGuiSlot R4SdkAudioAdvancedAudio_opl3WriteRegister(uint32_t re
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,814u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,816u,a,4u,0);
 }
 /* app_audio.AdvancedAudio.opl3Reset -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioAdvancedAudio_opl3Reset(uint32_t reserved, const R4SdkAudioAdvancedAudio * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,815u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,817u,a,1u,0);
 }
 /* app_audio.AdvancedAudio.opl3RenderBlock -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioAdvancedAudio_opl3RenderBlock(uint32_t reserved, const R4SdkAudioAdvancedAudio * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,816u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,818u,a,1u,0);
 }
 /* app_audio.AdvancedAudio.opl3Stop -> i32 */
 static inline R4SdkGuiSlot R4SdkAudioAdvancedAudio_opl3Stop(uint32_t reserved, const R4SdkAudioAdvancedAudio * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,817u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,819u,a,1u,0);
 }
 /* app_devices.Devices.available -> bool */
 static inline R4SdkGuiSlot R4SdkDevicesDevices_available(uint32_t reserved, const R4SdkDevicesDevices * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,818u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,820u,a,1u,0);
 }
 /* app_devices.Devices.inventory -> app_devices.DeviceInventoryView */
 static inline R4SdkGuiSlot R4SdkDevicesDevices_inventory(uint32_t reserved, const R4SdkDevicesDevices * p0, R4SdkDevicesDeviceInventoryView *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,819u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,821u,a,1u,output);
 }
 /* app_devices.Devices.memory -> app_devices.MemoryView */
 static inline R4SdkGuiSlot R4SdkDevicesDevices_memory(uint32_t reserved, const R4SdkDevicesDevices * p0, R4SdkDevicesMemoryView *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,820u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,822u,a,1u,output);
 }
 /* app_devices.Devices.performance -> app_devices.PerformanceView */
 static inline R4SdkGuiSlot R4SdkDevicesDevices_performance(uint32_t reserved, const R4SdkDevicesDevices * p0, R4SdkDevicesPerformanceView *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,821u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,823u,a,1u,output);
 }
 /* app_devices.Devices.display -> ?abi_generated.DisplayStateInfo */
 static inline R4SdkGuiSlot R4SdkDevicesDevices_display(uint32_t reserved, const R4SdkDevicesDevices * p0, R4DisplayStateInfo *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,822u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,824u,a,1u,output);
 }
 /* app_devices.Devices.driverModule -> ?abi_generated.DriverModuleInfo */
 static inline R4SdkGuiSlot R4SdkDevicesDevices_driverModule(uint32_t reserved, const R4SdkDevicesDevices * p0, uint32_t p1, R4DriverModuleInfo *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,823u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,825u,a,2u,output);
 }
 /* r4dev.Context.serial -> ?serial.Context */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_serial(uint32_t reserved, const R4SdkGfxDeviceContext * p0, R4SdkGuiType552 *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,824u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,826u,a,1u,output);
 }
 /* r4dev.Context.displayState -> ?abi_generated.DisplayStateInfo */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_displayState(uint32_t reserved, const R4SdkGfxDeviceContext * p0, R4DisplayStateInfo *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,825u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,827u,a,1u,output);
 }
 /* r4dev.Context.driverModuleInfo -> ?abi_generated.DriverModuleInfo */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_driverModuleInfo(uint32_t reserved, const R4SdkGfxDeviceContext * p0, uint32_t p1, R4DriverModuleInfo *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,826u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,828u,a,2u,output);
 }
 /* r4dev.Context.driverModuleInfoRaw -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_driverModuleInfoRaw(uint32_t reserved, const R4SdkGfxDeviceContext * p0, uint32_t p1, R4DriverModuleInfo * p2) {
@@ -8307,14 +8323,14 @@ static inline R4SdkGuiSlot R4SdkGfxDeviceContext_driverModuleInfoRaw(uint32_t re
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,827u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,829u,a,3u,0);
 }
 /* r4dev.Context.deviceInventorySummary -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_deviceInventorySummary(uint32_t reserved, const R4SdkGfxDeviceContext * p0, R4DeviceInventorySummary * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,828u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,830u,a,2u,0);
 }
 /* r4dev.Context.deviceInventoryRecord -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_deviceInventoryRecord(uint32_t reserved, const R4SdkGfxDeviceContext * p0, uint32_t p1, R4DeviceInventoryRecord * p2) {
@@ -8322,46 +8338,46 @@ static inline R4SdkGuiSlot R4SdkGfxDeviceContext_deviceInventoryRecord(uint32_t 
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,829u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,831u,a,3u,0);
 }
 /* r4dev.Context.memorySummary -> ?abi_generated.ProgramMemorySummary */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_memorySummary(uint32_t reserved, const R4SdkGfxDeviceContext * p0, R4ProgramMemorySummary *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,830u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,832u,a,1u,output);
 }
 /* r4dev.Context.memoryBlockCount -> u32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_memoryBlockCount(uint32_t reserved, const R4SdkGfxDeviceContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,831u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,833u,a,1u,0);
 }
 /* r4dev.Context.memoryBlock -> ?abi_generated.ProgramMemoryBlockInfo */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_memoryBlock(uint32_t reserved, const R4SdkGfxDeviceContext * p0, uint32_t p1, R4ProgramMemoryBlockInfo *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,832u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,834u,a,2u,output);
 }
 /* r4dev.Context.memoryPressure -> ?abi_generated.ProgramMemoryPressureSnapshot */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_memoryPressure(uint32_t reserved, const R4SdkGfxDeviceContext * p0, R4ProgramMemoryPressureSnapshot *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,833u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,835u,a,1u,output);
 }
 /* r4dev.Context.memoryReclaimProbe -> ?abi_generated.ProgramMemoryReclaimProbe */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_memoryReclaimProbe(uint32_t reserved, const R4SdkGfxDeviceContext * p0, uint32_t p1, R4ProgramMemoryReclaimProbe *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,834u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,836u,a,2u,output);
 }
 /* r4dev.Context.kernelHeapCheck -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_kernelHeapCheck(uint32_t reserved, const R4SdkGfxDeviceContext * p0, R4ProgramKernelHeapCheck * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,835u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,837u,a,2u,0);
 }
 /* r4dev.Context.kernelSchedulerCheck -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_kernelSchedulerCheck(uint32_t reserved, const R4SdkGfxDeviceContext * p0, uint32_t p1, R4ProgramKernelSchedulerCheck * p2) {
@@ -8369,28 +8385,28 @@ static inline R4SdkGuiSlot R4SdkGfxDeviceContext_kernelSchedulerCheck(uint32_t r
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,836u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,838u,a,3u,0);
 }
 /* r4dev.Context.kernelUsbCheck -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_kernelUsbCheck(uint32_t reserved, const R4SdkGfxDeviceContext * p0, R4ProgramKernelUsbCheck * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,837u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,839u,a,2u,0);
 }
 /* r4dev.Context.kernelNvmeCheck -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_kernelNvmeCheck(uint32_t reserved, const R4SdkGfxDeviceContext * p0, R4ProgramKernelNvmeCheck * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,838u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,840u,a,2u,0);
 }
 /* r4dev.Context.kernelBlockQueueCheck -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_kernelBlockQueueCheck(uint32_t reserved, const R4SdkGfxDeviceContext * p0, R4ProgramKernelBlockQueueCheck * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,839u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,841u,a,2u,0);
 }
 /* r4dev.Context.cpuCapabilities -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuCapabilities(uint32_t reserved, const R4SdkGfxDeviceContext * p0, uint32_t p1, R4CpuCapabilitiesInfo * p2) {
@@ -8398,7 +8414,7 @@ static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuCapabilities(uint32_t reserv
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,840u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,842u,a,3u,0);
 }
 /* r4dev.Context.cpuFeature -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuFeature(uint32_t reserved, const R4SdkGfxDeviceContext * p0, uint32_t p1, uint64_t p2, uint32_t p3, R4CpuFeatureInfo * p4) {
@@ -8408,7 +8424,7 @@ static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuFeature(uint32_t reserved, c
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.ptr=(void *)p4,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,841u,a,5u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,843u,a,5u,0);
 }
 /* r4dev.Context.cpuRegisterRead -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuRegisterRead(uint32_t reserved, const R4SdkGfxDeviceContext * p0, uint32_t p1, uint64_t p2, uint32_t p3, R4CpuRegisterInfo * p4) {
@@ -8418,7 +8434,7 @@ static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuRegisterRead(uint32_t reserv
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.ptr=(void *)p4,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,842u,a,5u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,844u,a,5u,0);
 }
 /* r4dev.Context.cpuPowerInfo -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuPowerInfo(uint32_t reserved, const R4SdkGfxDeviceContext * p0, uint32_t p1, uint64_t p2, R4CpuPowerInfo * p3) {
@@ -8427,7 +8443,7 @@ static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuPowerInfo(uint32_t reserved,
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,843u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,845u,a,4u,0);
 }
 /* r4dev.Context.cpuPerformance -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuPerformance(uint32_t reserved, const R4SdkGfxDeviceContext * p0, const R4CpuPerformanceRequest * p1, R4CpuPerformanceInfo * p2) {
@@ -8435,7 +8451,7 @@ static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuPerformance(uint32_t reserve
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,844u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,846u,a,3u,0);
 }
 /* r4dev.Context.cpuCppc -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuCppc(uint32_t reserved, const R4SdkGfxDeviceContext * p0, const R4CpuPerformanceRequest * p1, R4CpuCppcInfo * p2) {
@@ -8443,7 +8459,7 @@ static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuCppc(uint32_t reserved, cons
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,845u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,847u,a,3u,0);
 }
 /* r4dev.Context.cpuFirmwarePerformance -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuFirmwarePerformance(uint32_t reserved, const R4SdkGfxDeviceContext * p0, const R4CpuPerformanceRequest * p1, R4CpuFirmwareInfo * p2) {
@@ -8451,7 +8467,7 @@ static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuFirmwarePerformance(uint32_t
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,846u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,848u,a,3u,0);
 }
 /* r4dev.Context.cpuIdleInfo -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuIdleInfo(uint32_t reserved, const R4SdkGfxDeviceContext * p0, uint32_t p1, R4CpuIdleInfo * p2) {
@@ -8459,7 +8475,7 @@ static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuIdleInfo(uint32_t reserved, 
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,847u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,849u,a,3u,0);
 }
 /* r4dev.Context.cpuMachineInfo -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuMachineInfo(uint32_t reserved, const R4SdkGfxDeviceContext * p0, uint32_t p1, R4CpuMachineInfo * p2) {
@@ -8467,7 +8483,7 @@ static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuMachineInfo(uint32_t reserve
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,848u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,850u,a,3u,0);
 }
 /* r4dev.Context.cpuMicrocodeInfo -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuMicrocodeInfo(uint32_t reserved, const R4SdkGfxDeviceContext * p0, uint32_t p1, R4CpuMicrocodeInfo * p2) {
@@ -8475,7 +8491,7 @@ static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuMicrocodeInfo(uint32_t reser
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,849u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,851u,a,3u,0);
 }
 /* r4dev.Context.fpuObservation -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_fpuObservation(uint32_t reserved, const R4SdkGfxDeviceContext * p0, const R4FpuObservationRequest * p1, R4FpuObservationInfo * p2) {
@@ -8483,20 +8499,20 @@ static inline R4SdkGuiSlot R4SdkGfxDeviceContext_fpuObservation(uint32_t reserve
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,850u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,852u,a,3u,0);
 }
 /* r4dev.Context.cpuAccelerationInfo -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuAccelerationInfo(uint32_t reserved, const R4SdkGfxDeviceContext * p0, R4CpuAccelerationInfo * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,851u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,853u,a,2u,0);
 }
 /* r4dev.Context.cpuAccelerationWorkFunction -> ?*const fn (u32, u32, ?*const *const fn (u64, u32) callconv(.c) i32, u64, *abi_generated.CpuAccelerationWork) callconv(.c) i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuAccelerationWorkFunction(uint32_t reserved, const R4SdkGfxDeviceContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,852u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,854u,a,1u,0);
 }
 /* r4dev.Context.cpuAccelerationWork -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuAccelerationWork(uint32_t reserved, const R4SdkGfxDeviceContext * p0, uint32_t p1, uint32_t p2, R4SdkGuiSlot p3, uint64_t p4, R4CpuAccelerationWork * p5) {
@@ -8507,7 +8523,7 @@ static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuAccelerationWork(uint32_t re
  a[3] = p3;
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.ptr=(void *)p5,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,853u,a,6u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,855u,a,6u,0);
 }
 /* r4dev.Context.cpuPmuInfo -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuPmuInfo(uint32_t reserved, const R4SdkGfxDeviceContext * p0, uint32_t p1, R4CpuPmuInfo * p2) {
@@ -8515,7 +8531,7 @@ static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuPmuInfo(uint32_t reserved, c
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,854u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,856u,a,3u,0);
 }
 /* r4dev.Context.cpuPmuMeasure -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuPmuMeasure(uint32_t reserved, const R4SdkGfxDeviceContext * p0, uint32_t p1, uint64_t p2, uint32_t p3, uint32_t p4, R4SdkGuiSlot p5, uint64_t p6, R4CpuPmuResult * p7) {
@@ -8528,7 +8544,7 @@ static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuPmuMeasure(uint32_t reserved
  a[5] = p5;
  a[6] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p6,.flags=R4SDK_GUI_PRESENT};
  a[7] = (R4SdkGuiSlot){.ptr=(void *)p7,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,855u,a,8u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,857u,a,8u,0);
 }
 /* r4dev.Context.cpuPmuResult -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuPmuResult(uint32_t reserved, const R4SdkGfxDeviceContext * p0, uint32_t p1, uint64_t p2, uint64_t p3, R4CpuPmuResult * p4) {
@@ -8538,7 +8554,7 @@ static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuPmuResult(uint32_t reserved,
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.ptr=(void *)p4,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,856u,a,5u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,858u,a,5u,0);
 }
 /* r4dev.Context.cpuMachineBank -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuMachineBank(uint32_t reserved, const R4SdkGfxDeviceContext * p0, uint32_t p1, uint64_t p2, uint64_t p3, uint32_t p4, R4CpuMachineBank * p5) {
@@ -8549,7 +8565,7 @@ static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuMachineBank(uint32_t reserve
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.ptr=(void *)p5,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,857u,a,6u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,859u,a,6u,0);
 }
 /* r4dev.Context.cpuPerformanceHint -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuPerformanceHint(uint32_t reserved, const R4SdkGfxDeviceContext * p0, uint32_t p1, uint64_t p2, R4CpuPerformanceHintInfo * p3) {
@@ -8558,7 +8574,7 @@ static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuPerformanceHint(uint32_t res
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,858u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,860u,a,4u,0);
 }
 /* r4dev.Context.cpuPowerCapture -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuPowerCapture(uint32_t reserved, const R4SdkGfxDeviceContext * p0, uint32_t p1, uint64_t p2, R4CpuPowerInfo * p3) {
@@ -8567,7 +8583,7 @@ static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuPowerCapture(uint32_t reserv
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,859u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,861u,a,4u,0);
 }
 /* r4dev.Context.kernelCpuRegisterCheck -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_kernelCpuRegisterCheck(uint32_t reserved, const R4SdkGfxDeviceContext * p0, uint32_t p1, uint64_t p2, R4ProgramKernelCpuRegisterCheck * p3) {
@@ -8576,7 +8592,7 @@ static inline R4SdkGuiSlot R4SdkGfxDeviceContext_kernelCpuRegisterCheck(uint32_t
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,860u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,862u,a,4u,0);
 }
 /* r4dev.Context.cpuLifecycle -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuLifecycle(uint32_t reserved, const R4SdkGfxDeviceContext * p0, uint32_t p1, uint32_t p2, uint64_t p3, R4CpuLifecycleInfo * p4) {
@@ -8586,28 +8602,28 @@ static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuLifecycle(uint32_t reserved,
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.ptr=(void *)p4,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,861u,a,5u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,863u,a,5u,0);
 }
 /* r4dev.Context.kernelCpuLifecycleCheck -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_kernelCpuLifecycleCheck(uint32_t reserved, const R4SdkGfxDeviceContext * p0, R4ProgramKernelCpuLifecycleCheck * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,862u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,864u,a,2u,0);
 }
 /* r4dev.Context.kernelSmpCheck -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_kernelSmpCheck(uint32_t reserved, const R4SdkGfxDeviceContext * p0, R4ProgramKernelSmpCheck * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,863u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,865u,a,2u,0);
 }
 /* r4dev.Context.smpTlbSnapshot -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_smpTlbSnapshot(uint32_t reserved, const R4SdkGfxDeviceContext * p0, R4ProgramSmpTlbSnapshot * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,864u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,866u,a,2u,0);
 }
 /* r4dev.Context.cpuTopology -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuTopology(uint32_t reserved, const R4SdkGfxDeviceContext * p0, uint32_t p1, R4CpuTopologyInfo * p2) {
@@ -8615,7 +8631,7 @@ static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuTopology(uint32_t reserved, 
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,865u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,867u,a,3u,0);
 }
 /* r4dev.Context.cpuCacheTopology -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuCacheTopology(uint32_t reserved, const R4SdkGfxDeviceContext * p0, uint32_t p1, uint32_t p2, R4CpuCacheTopologyInfo * p3) {
@@ -8624,7 +8640,7 @@ static inline R4SdkGuiSlot R4SdkGfxDeviceContext_cpuCacheTopology(uint32_t reser
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,866u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,868u,a,4u,0);
 }
 /* r4dev.Context.memoryBackingStoreProbe -> ?abi_generated.ProgramMemoryBackingStoreProbe */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_memoryBackingStoreProbe(uint32_t reserved, const R4SdkGfxDeviceContext * p0, const uint8_t * p1, uint64_t p2, uint32_t p3, R4ProgramMemoryBackingStoreProbe *output) {
@@ -8633,7 +8649,7 @@ static inline R4SdkGuiSlot R4SdkGfxDeviceContext_memoryBackingStoreProbe(uint32_
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,867u,a,4u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,869u,a,4u,output);
 }
 /* r4dev.Context.memoryBackingStoreSlotProbe -> ?abi_generated.ProgramMemoryBackingStoreSlotProbe */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_memoryBackingStoreSlotProbe(uint32_t reserved, const R4SdkGfxDeviceContext * p0, const uint8_t * p1, uint64_t p2, uint32_t p3, uint64_t p4, uint32_t p5, uint32_t p6, uint32_t p7, uint32_t p8, uint32_t p9, R4ProgramMemoryBackingStoreSlotProbe *output) {
@@ -8648,7 +8664,7 @@ static inline R4SdkGuiSlot R4SdkGfxDeviceContext_memoryBackingStoreSlotProbe(uin
  a[7] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p7,.flags=R4SDK_GUI_PRESENT};
  a[8] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p8,.flags=R4SDK_GUI_PRESENT};
  a[9] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p9,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,868u,a,10u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,870u,a,10u,output);
 }
 /* r4dev.Context.memoryPagerGateProbe -> ?abi_generated.ProgramMemoryPagerGateProbe */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_memoryPagerGateProbe(uint32_t reserved, const R4SdkGfxDeviceContext * p0, const uint8_t * p1, uint64_t p2, uint32_t p3, uint64_t p4, uint32_t p5, R4ProgramMemoryPagerGateProbe *output) {
@@ -8659,7 +8675,7 @@ static inline R4SdkGuiSlot R4SdkGfxDeviceContext_memoryPagerGateProbe(uint32_t r
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p5,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,869u,a,6u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,871u,a,6u,output);
 }
 /* r4dev.Context.memoryPageIoProbe -> ?abi_generated.ProgramMemoryPageIoProbe */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_memoryPageIoProbe(uint32_t reserved, const R4SdkGfxDeviceContext * p0, const uint8_t * p1, uint64_t p2, uint32_t p3, uint32_t p4, uint64_t p5, uint32_t p6, uint64_t p7, uint64_t p8, uint32_t p9, uint32_t p10, uint64_t p11, uint8_t * p12, uintptr_t n12, uint32_t p13, R4ProgramMemoryPageIoProbe *output) {
@@ -8678,7 +8694,7 @@ static inline R4SdkGuiSlot R4SdkGfxDeviceContext_memoryPageIoProbe(uint32_t rese
  a[11] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p11,.flags=R4SDK_GUI_PRESENT};
  a[12] = (R4SdkGuiSlot){.ptr=(void *)p12,.length=n12,.flags=R4SDK_GUI_PRESENT};
  a[13] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p13,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,870u,a,14u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,872u,a,14u,output);
 }
 /* r4dev.Context.memoryVmPageStateProbe -> ?abi_generated.ProgramMemoryVmPageStateProbe */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_memoryVmPageStateProbe(uint32_t reserved, const R4SdkGfxDeviceContext * p0, uint32_t p1, uint64_t p2, uint64_t p3, uint32_t p4, uint32_t p5, uint64_t p6, uint64_t p7, uint32_t p8, R4ProgramMemoryVmPageStateProbe *output) {
@@ -8692,134 +8708,134 @@ static inline R4SdkGuiSlot R4SdkGfxDeviceContext_memoryVmPageStateProbe(uint32_t
  a[6] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p6,.flags=R4SDK_GUI_PRESENT};
  a[7] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p7,.flags=R4SDK_GUI_PRESENT};
  a[8] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p8,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,871u,a,9u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,873u,a,9u,output);
 }
 /* r4dev.Context.performanceSummary -> ?abi_generated.ProgramPerformanceSummary */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_performanceSummary(uint32_t reserved, const R4SdkGfxDeviceContext * p0, R4ProgramPerformanceSummary *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,872u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,874u,a,1u,output);
 }
 /* r4dev.Context.programInstanceStorageSummary -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_programInstanceStorageSummary(uint32_t reserved, const R4SdkGfxDeviceContext * p0, R4ProgramInstanceStorageSummary * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,873u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,875u,a,2u,0);
 }
 /* r4dev.Context.programInstanceStorageSummaryV2 -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_programInstanceStorageSummaryV2(uint32_t reserved, const R4SdkGfxDeviceContext * p0, R4ProgramInstanceStorageSummary * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,874u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,876u,a,2u,0);
 }
 /* r4dev.Context.programInstanceStorageSelfTest -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_programInstanceStorageSelfTest(uint32_t reserved, const R4SdkGfxDeviceContext * p0, R4ProgramInstanceStorageSelfTestResult * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,875u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,877u,a,2u,0);
 }
 /* r4dev.Context.programRegistrySummaryV2 -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_programRegistrySummaryV2(uint32_t reserved, const R4SdkGfxDeviceContext * p0, R4ProgramRegistrySummaryV2 * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,876u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,878u,a,2u,0);
 }
 /* r4dev.Context.programRegistrySelfTestV2 -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_programRegistrySelfTestV2(uint32_t reserved, const R4SdkGfxDeviceContext * p0, R4ProgramRegistrySelfTestResultV2 * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,877u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,879u,a,2u,0);
 }
 /* r4dev.Context.executionInventorySummary -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_executionInventorySummary(uint32_t reserved, const R4SdkGfxDeviceContext * p0, R4ProgramInventorySummary * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,878u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,880u,a,2u,0);
 }
 /* r4dev.Context.kernelVersion -> ?abi_generated.KernelVersion */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_kernelVersion(uint32_t reserved, const R4SdkGfxDeviceContext * p0, R4KernelVersion *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,879u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,881u,a,1u,output);
 }
 /* r4dev.Context.performanceTask -> ?abi_generated.ProgramTaskPerformanceInfo */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_performanceTask(uint32_t reserved, const R4SdkGfxDeviceContext * p0, uint32_t p1, R4ProgramTaskPerformanceInfo *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,880u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,882u,a,2u,output);
 }
 /* r4dev.Context.performanceStorage -> ?abi_generated.ProgramStoragePerformanceInfo */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_performanceStorage(uint32_t reserved, const R4SdkGfxDeviceContext * p0, uint32_t p1, R4ProgramStoragePerformanceInfo *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,881u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,883u,a,2u,output);
 }
 /* r4dev.Context.performanceBootPhase -> ?abi_generated.ProgramBootPhasePerformanceInfo */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_performanceBootPhase(uint32_t reserved, const R4SdkGfxDeviceContext * p0, uint32_t p1, R4ProgramBootPhasePerformanceInfo *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,882u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,884u,a,2u,output);
 }
 /* r4dev.Context.performanceBootPhaseClock -> ?abi_generated.ProgramBootPhaseClockInfo */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_performanceBootPhaseClock(uint32_t reserved, const R4SdkGfxDeviceContext * p0, uint32_t p1, R4ProgramBootPhaseClockInfo *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,883u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,885u,a,2u,output);
 }
 /* r4dev.Context.performanceBootSummary -> ?abi_generated.ProgramBootPerformanceInfo */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_performanceBootSummary(uint32_t reserved, const R4SdkGfxDeviceContext * p0, R4ProgramBootPerformanceInfo *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,884u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,886u,a,1u,output);
 }
 /* r4dev.Context.performanceDriverWork -> ?abi_generated.ProgramDriverWorkPerformanceInfo */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_performanceDriverWork(uint32_t reserved, const R4SdkGfxDeviceContext * p0, uint32_t p1, R4ProgramDriverWorkPerformanceInfo *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,885u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,887u,a,2u,output);
 }
 /* r4dev.Context.performancePciInventory -> ?abi_generated.ProgramPciInventoryPerformanceInfo */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_performancePciInventory(uint32_t reserved, const R4SdkGfxDeviceContext * p0, R4ProgramPciInventoryPerformanceInfo *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,886u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,888u,a,1u,output);
 }
 /* r4dev.Context.performanceInput -> ?abi_generated.ProgramInputPerformanceInfo */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_performanceInput(uint32_t reserved, const R4SdkGfxDeviceContext * p0, R4ProgramInputPerformanceInfo *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,887u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,889u,a,1u,output);
 }
 /* r4dev.Context.performanceInstrumentation -> ?abi_generated.ProgramInstrumentationInfo */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_performanceInstrumentation(uint32_t reserved, const R4SdkGfxDeviceContext * p0, R4ProgramInstrumentationInfo *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,888u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,890u,a,1u,output);
 }
 /* r4dev.Context.performanceLock -> ?abi_generated.ProgramLockPerformanceInfo */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_performanceLock(uint32_t reserved, const R4SdkGfxDeviceContext * p0, uint32_t p1, R4ProgramLockPerformanceInfo *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,889u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,891u,a,2u,output);
 }
 /* r4dev.Context.performanceStack -> ?abi_generated.ProgramStackPerformanceInfo */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_performanceStack(uint32_t reserved, const R4SdkGfxDeviceContext * p0, uint32_t p1, R4ProgramStackPerformanceInfo *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,890u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,892u,a,2u,output);
 }
 /* r4dev.Context.stackFault -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_stackFault(uint32_t reserved, const R4SdkGfxDeviceContext * p0, uint32_t p1, R4ProgramStackFaultInfo * p2) {
@@ -8827,64 +8843,64 @@ static inline R4SdkGuiSlot R4SdkGfxDeviceContext_stackFault(uint32_t reserved, c
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,891u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,893u,a,3u,0);
 }
 /* r4dev.Context.performanceIrqTiming -> ?abi_generated.ProgramIrqTimingInfo */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_performanceIrqTiming(uint32_t reserved, const R4SdkGfxDeviceContext * p0, uint32_t p1, R4ProgramIrqTimingInfo *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,892u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,894u,a,2u,output);
 }
 /* r4dev.Context.memoryVmReserveProbe -> ?abi_generated.ProgramVmReserveProbe */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_memoryVmReserveProbe(uint32_t reserved, const R4SdkGfxDeviceContext * p0, uint64_t p1, R4ProgramVmReserveProbe *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,893u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,895u,a,2u,output);
 }
 /* r4dev.Context.pagingSummary -> ?abi_generated.PagingSummary */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_pagingSummary(uint32_t reserved, const R4SdkGfxDeviceContext * p0, R4PagingSummary *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,894u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,896u,a,1u,output);
 }
 /* r4dev.Context.displaySummary -> ?abi_generated.DisplaySummary */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_displaySummary(uint32_t reserved, const R4SdkGfxDeviceContext * p0, R4DisplaySummary *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,895u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,897u,a,1u,output);
 }
 /* r4dev.Context.hardwareSummary -> ?abi_generated.HardwareSummary */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_hardwareSummary(uint32_t reserved, const R4SdkGfxDeviceContext * p0, R4HardwareSummary *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,896u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,898u,a,1u,output);
 }
 /* r4dev.Context.firmwareSystemUuid -> ?abi_generated.FirmwareSystemUuidInfo */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_firmwareSystemUuid(uint32_t reserved, const R4SdkGfxDeviceContext * p0, R4FirmwareSystemUuidInfo *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,897u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,899u,a,1u,output);
 }
 /* r4dev.Context.bootInfoSummary -> ?abi_generated.BootInfoSummary */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_bootInfoSummary(uint32_t reserved, const R4SdkGfxDeviceContext * p0, R4BootInfoSummary *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,898u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,900u,a,1u,output);
 }
 /* r4dev.Context.bootInfoMemoryCount -> u32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_bootInfoMemoryCount(uint32_t reserved, const R4SdkGfxDeviceContext * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,899u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,901u,a,1u,0);
 }
 /* r4dev.Context.bootInfoMemoryEntry -> ?abi_generated.BootInfoMemoryEntry */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_bootInfoMemoryEntry(uint32_t reserved, const R4SdkGfxDeviceContext * p0, uint32_t p1, R4BootInfoMemoryEntry *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,900u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,902u,a,2u,output);
 }
 /* r4dev.Context.protocolStatus -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_protocolStatus(uint32_t reserved, const R4SdkGfxDeviceContext * p0, const uint8_t * p1, uintptr_t n1, R4ProtocolStatus * p2) {
@@ -8892,7 +8908,7 @@ static inline R4SdkGuiSlot R4SdkGfxDeviceContext_protocolStatus(uint32_t reserve
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,901u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,903u,a,3u,0);
 }
 /* r4dev.Context.protocolDispatch -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_protocolDispatch(uint32_t reserved, const R4SdkGfxDeviceContext * p0, const uint8_t * p1, uintptr_t n1, uint32_t p2, const R4ProtocolBuffer * p3, R4ProtocolBuffer * p4) {
@@ -8902,14 +8918,14 @@ static inline R4SdkGuiSlot R4SdkGfxDeviceContext_protocolDispatch(uint32_t reser
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
  a[4] = (R4SdkGuiSlot){.ptr=(void *)p4,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,902u,a,5u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,904u,a,5u,0);
 }
 /* r4dev.Context.programStatus -> void */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_programStatus(uint32_t reserved, const R4SdkGfxDeviceContext * p0, R4ProgramStatus * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,903u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,905u,a,2u,0);
 }
 /* r4dev.Context.programInstance -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_programInstance(uint32_t reserved, const R4SdkGfxDeviceContext * p0, uint32_t p1, R4ProgramInstanceInfo * p2) {
@@ -8917,14 +8933,14 @@ static inline R4SdkGuiSlot R4SdkGfxDeviceContext_programInstance(uint32_t reserv
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,904u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,906u,a,3u,0);
 }
 /* r4dev.Context.ipcSummary -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_ipcSummary(uint32_t reserved, const R4SdkGfxDeviceContext * p0, R4IpcSummary * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,905u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,907u,a,2u,0);
 }
 /* r4dev.Context.ipcChannel -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_ipcChannel(uint32_t reserved, const R4SdkGfxDeviceContext * p0, uint32_t p1, R4IpcChannelInfo * p2) {
@@ -8932,14 +8948,14 @@ static inline R4SdkGuiSlot R4SdkGfxDeviceContext_ipcChannel(uint32_t reserved, c
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,906u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,908u,a,3u,0);
 }
 /* r4dev.Context.tcpSummary -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_tcpSummary(uint32_t reserved, const R4SdkGfxDeviceContext * p0, R4TcpSummary * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,907u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,909u,a,2u,0);
 }
 /* r4dev.Context.tcpConnection -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_tcpConnection(uint32_t reserved, const R4SdkGfxDeviceContext * p0, uint32_t p1, R4TcpConnectionInfo * p2) {
@@ -8947,14 +8963,14 @@ static inline R4SdkGuiSlot R4SdkGfxDeviceContext_tcpConnection(uint32_t reserved
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,908u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,910u,a,3u,0);
 }
 /* r4dev.Context.udpStatus -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_udpStatus(uint32_t reserved, const R4SdkGfxDeviceContext * p0, R4UdpStatus * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,909u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,911u,a,2u,0);
 }
 /* r4dev.Context.netDetailGet -> i32 */
 static inline R4SdkGuiSlot R4SdkGfxDeviceContext_netDetailGet(uint32_t reserved, const R4SdkGfxDeviceContext * p0, uint32_t p1, R4NetDetailSnapshot * p2) {
@@ -8962,144 +8978,144 @@ static inline R4SdkGuiSlot R4SdkGfxDeviceContext_netDetailGet(uint32_t reserved,
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,910u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,912u,a,3u,0);
 }
 /* app_devices.DeviceInventoryView.summary -> ?abi_generated.DeviceInventorySummary */
 static inline R4SdkGuiSlot R4SdkDevicesDeviceInventoryView_summary(uint32_t reserved, const R4SdkDevicesDeviceInventoryView * p0, R4DeviceInventorySummary *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,911u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,913u,a,1u,output);
 }
 /* app_devices.DeviceInventoryView.record -> ?abi_generated.DeviceInventoryRecord */
 static inline R4SdkGuiSlot R4SdkDevicesDeviceInventoryView_record(uint32_t reserved, const R4SdkDevicesDeviceInventoryView * p0, uint32_t p1, R4DeviceInventoryRecord *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,912u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,914u,a,2u,output);
 }
 /* app_devices.DeviceInventoryView.hardware -> ?abi_generated.HardwareSummary */
 static inline R4SdkGuiSlot R4SdkDevicesDeviceInventoryView_hardware(uint32_t reserved, const R4SdkDevicesDeviceInventoryView * p0, R4HardwareSummary *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,913u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,915u,a,1u,output);
 }
 /* app_devices.MemoryView.summary -> ?abi_generated.ProgramMemorySummary */
 static inline R4SdkGuiSlot R4SdkDevicesMemoryView_summary(uint32_t reserved, const R4SdkDevicesMemoryView * p0, R4ProgramMemorySummary *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,914u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,916u,a,1u,output);
 }
 /* app_devices.MemoryView.pressure -> ?abi_generated.ProgramMemoryPressureSnapshot */
 static inline R4SdkGuiSlot R4SdkDevicesMemoryView_pressure(uint32_t reserved, const R4SdkDevicesMemoryView * p0, R4ProgramMemoryPressureSnapshot *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,915u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,917u,a,1u,output);
 }
 /* app_devices.MemoryView.blockCount -> u32 */
 static inline R4SdkGuiSlot R4SdkDevicesMemoryView_blockCount(uint32_t reserved, const R4SdkDevicesMemoryView * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,916u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,918u,a,1u,0);
 }
 /* app_devices.MemoryView.block -> ?abi_generated.ProgramMemoryBlockInfo */
 static inline R4SdkGuiSlot R4SdkDevicesMemoryView_block(uint32_t reserved, const R4SdkDevicesMemoryView * p0, uint32_t p1, R4ProgramMemoryBlockInfo *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,917u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,919u,a,2u,output);
 }
 /* app_devices.PerformanceView.summary -> ?abi_generated.ProgramPerformanceSummary */
 static inline R4SdkGuiSlot R4SdkDevicesPerformanceView_summary(uint32_t reserved, const R4SdkDevicesPerformanceView * p0, R4ProgramPerformanceSummary *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,918u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,920u,a,1u,output);
 }
 /* app_devices.PerformanceView.programInstanceStorage -> ?abi_generated.ProgramInstanceStorageSummary */
 static inline R4SdkGuiSlot R4SdkDevicesPerformanceView_programInstanceStorage(uint32_t reserved, const R4SdkDevicesPerformanceView * p0, R4ProgramInstanceStorageSummary *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,919u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,921u,a,1u,output);
 }
 /* app_devices.PerformanceView.programInstanceStorageSelfTest -> i32 */
 static inline R4SdkGuiSlot R4SdkDevicesPerformanceView_programInstanceStorageSelfTest(uint32_t reserved, const R4SdkDevicesPerformanceView * p0, R4ProgramInstanceStorageSelfTestResult * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,920u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,922u,a,2u,0);
 }
 /* app_devices.PerformanceView.programRegistryV2 -> ?abi_generated.ProgramRegistrySummaryV2 */
 static inline R4SdkGuiSlot R4SdkDevicesPerformanceView_programRegistryV2(uint32_t reserved, const R4SdkDevicesPerformanceView * p0, R4ProgramRegistrySummaryV2 *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,921u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,923u,a,1u,output);
 }
 /* app_devices.PerformanceView.programRegistrySelfTestV2 -> i32 */
 static inline R4SdkGuiSlot R4SdkDevicesPerformanceView_programRegistrySelfTestV2(uint32_t reserved, const R4SdkDevicesPerformanceView * p0, R4ProgramRegistrySelfTestResultV2 * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,922u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,924u,a,2u,0);
 }
 /* app_devices.PerformanceView.executionInventorySummary -> i32 */
 static inline R4SdkGuiSlot R4SdkDevicesPerformanceView_executionInventorySummary(uint32_t reserved, const R4SdkDevicesPerformanceView * p0, R4ProgramInventorySummary * p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,923u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,925u,a,2u,0);
 }
 /* app_devices.PerformanceView.executionInventory -> ?abi_generated.ProgramInventorySummary */
 static inline R4SdkGuiSlot R4SdkDevicesPerformanceView_executionInventory(uint32_t reserved, const R4SdkDevicesPerformanceView * p0, R4ProgramInventorySummary *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,924u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,926u,a,1u,output);
 }
 /* app_devices.PerformanceView.task -> ?abi_generated.ProgramTaskPerformanceInfo */
 static inline R4SdkGuiSlot R4SdkDevicesPerformanceView_task(uint32_t reserved, const R4SdkDevicesPerformanceView * p0, uint32_t p1, R4ProgramTaskPerformanceInfo *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,925u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,927u,a,2u,output);
 }
 /* app_devices.PerformanceView.storage -> ?abi_generated.ProgramStoragePerformanceInfo */
 static inline R4SdkGuiSlot R4SdkDevicesPerformanceView_storage(uint32_t reserved, const R4SdkDevicesPerformanceView * p0, uint32_t p1, R4ProgramStoragePerformanceInfo *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,926u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,928u,a,2u,output);
 }
 /* app_devices.PerformanceView.bootPhase -> ?abi_generated.ProgramBootPhasePerformanceInfo */
 static inline R4SdkGuiSlot R4SdkDevicesPerformanceView_bootPhase(uint32_t reserved, const R4SdkDevicesPerformanceView * p0, uint32_t p1, R4ProgramBootPhasePerformanceInfo *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,927u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,929u,a,2u,output);
 }
 /* app_devices.PerformanceView.bootPhaseClock -> ?abi_generated.ProgramBootPhaseClockInfo */
 static inline R4SdkGuiSlot R4SdkDevicesPerformanceView_bootPhaseClock(uint32_t reserved, const R4SdkDevicesPerformanceView * p0, uint32_t p1, R4ProgramBootPhaseClockInfo *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,928u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,930u,a,2u,output);
 }
 /* app_devices.PerformanceView.instrumentation -> ?abi_generated.ProgramInstrumentationInfo */
 static inline R4SdkGuiSlot R4SdkDevicesPerformanceView_instrumentation(uint32_t reserved, const R4SdkDevicesPerformanceView * p0, R4ProgramInstrumentationInfo *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,929u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,931u,a,1u,output);
 }
 /* app_devices.PerformanceView.lock -> ?abi_generated.ProgramLockPerformanceInfo */
 static inline R4SdkGuiSlot R4SdkDevicesPerformanceView_lock(uint32_t reserved, const R4SdkDevicesPerformanceView * p0, uint32_t p1, R4ProgramLockPerformanceInfo *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,930u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,932u,a,2u,output);
 }
 /* app_devices.PerformanceView.stack -> ?abi_generated.ProgramStackPerformanceInfo */
 static inline R4SdkGuiSlot R4SdkDevicesPerformanceView_stack(uint32_t reserved, const R4SdkDevicesPerformanceView * p0, uint32_t p1, R4ProgramStackPerformanceInfo *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,931u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,933u,a,2u,output);
 }
 /* app_devices.PerformanceView.stackFault -> i32 */
 static inline R4SdkGuiSlot R4SdkDevicesPerformanceView_stackFault(uint32_t reserved, const R4SdkDevicesPerformanceView * p0, uint32_t p1, R4ProgramStackFaultInfo * p2) {
@@ -9107,27 +9123,27 @@ static inline R4SdkGuiSlot R4SdkDevicesPerformanceView_stackFault(uint32_t reser
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,932u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,934u,a,3u,0);
 }
 /* app_devices.PerformanceView.irqTiming -> ?abi_generated.ProgramIrqTimingInfo */
 static inline R4SdkGuiSlot R4SdkDevicesPerformanceView_irqTiming(uint32_t reserved, const R4SdkDevicesPerformanceView * p0, uint32_t p1, R4ProgramIrqTimingInfo *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,933u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,935u,a,2u,output);
 }
 /* app_devices.PerformanceView.driverWork -> ?abi_generated.ProgramDriverWorkPerformanceInfo */
 static inline R4SdkGuiSlot R4SdkDevicesPerformanceView_driverWork(uint32_t reserved, const R4SdkDevicesPerformanceView * p0, uint32_t p1, R4ProgramDriverWorkPerformanceInfo *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,934u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,936u,a,2u,output);
 }
 /* audio_pcm.ResamplerState.reset -> void */
 static inline R4SdkGuiSlot R4SdkPcmResamplerState_reset(uint32_t reserved, R4SdkPcmResamplerState * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,935u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,937u,a,1u,0);
 }
 /* audio_pcm.ResamplerState.resetIfFormatChanged -> void */
 static inline R4SdkGuiSlot R4SdkPcmResamplerState_resetIfFormatChanged(uint32_t reserved, R4SdkPcmResamplerState * p0, uint32_t p1, uint16_t p2, uint16_t p3) {
@@ -9136,7 +9152,7 @@ static inline R4SdkGuiSlot R4SdkPcmResamplerState_resetIfFormatChanged(uint32_t 
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,936u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,938u,a,4u,0);
 }
 /* audio_pcm.ResamplerState.beginChunk -> void */
 static inline R4SdkGuiSlot R4SdkPcmResamplerState_beginChunk(uint32_t reserved, R4SdkPcmResamplerState * p0, uint32_t p1, uint16_t p2, uint16_t p3) {
@@ -9145,21 +9161,21 @@ static inline R4SdkGuiSlot R4SdkPcmResamplerState_beginChunk(uint32_t reserved, 
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,937u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,939u,a,4u,0);
 }
 /* power_profiles.Client.open -> power_profiles.Open */
 static inline R4SdkGuiSlot R4SdkPowerClient_open(uint32_t reserved, const R4SdkGuiSystemContext * p0, const R4Timeout * p1, R4SdkPowerOpen *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,938u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,940u,a,2u,output);
 }
 /* power_profiles.Client.status -> app_services.TypedServiceCall(abi_generated.PowerProfileInfo) */
 static inline R4SdkGuiSlot R4SdkPowerClient_status(uint32_t reserved, R4SdkPowerClient * p0, const R4Timeout * p1, R4SdkPowerReply *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,939u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,941u,a,2u,output);
 }
 /* power_profiles.Client.select -> app_services.TypedServiceCall(abi_generated.PowerProfileInfo) */
 static inline R4SdkGuiSlot R4SdkPowerClient_select(uint32_t reserved, R4SdkPowerClient * p0, uint32_t p1, uint8_t p2, const R4Timeout * p3, R4SdkPowerReply *output) {
@@ -9168,28 +9184,28 @@ static inline R4SdkGuiSlot R4SdkPowerClient_select(uint32_t reserved, R4SdkPower
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.ptr=(void *)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,940u,a,4u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,942u,a,4u,output);
 }
 /* power_profiles.Client.quiesce -> app_services.TypedServiceCall(abi_generated.PowerProfileInfo) */
 static inline R4SdkGuiSlot R4SdkPowerClient_quiesce(uint32_t reserved, R4SdkPowerClient * p0, const R4Timeout * p1, R4SdkPowerReply *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,941u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,943u,a,2u,output);
 }
 /* power_profiles.Client.resumeProfile -> app_services.TypedServiceCall(abi_generated.PowerProfileInfo) */
 static inline R4SdkGuiSlot R4SdkPowerClient_resumeProfile(uint32_t reserved, R4SdkPowerClient * p0, const R4Timeout * p1, R4SdkPowerReply *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,942u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,944u,a,2u,output);
 }
 /* power_profiles.Client.reload -> app_services.TypedServiceCall(abi_generated.PowerProfileInfo) */
 static inline R4SdkGuiSlot R4SdkPowerClient_reload(uint32_t reserved, R4SdkPowerClient * p0, const R4Timeout * p1, R4SdkPowerReply *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,943u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,945u,a,2u,output);
 }
 /* power_profiles.Client.cpu -> app_services.TypedServiceCall(abi_generated.PowerCpuProfileInfo) */
 static inline R4SdkGuiSlot R4SdkPowerClient_cpu(uint32_t reserved, const R4SdkPowerClient * p0, uint32_t p1, const R4Timeout * p2, R4SdkPowerCpuReply *output) {
@@ -9197,53 +9213,53 @@ static inline R4SdkGuiSlot R4SdkPowerClient_cpu(uint32_t reserved, const R4SdkPo
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,944u,a,3u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,946u,a,3u,output);
 }
 /* rpc_budget.Budget.fromTicks -> error{BudgetOverflow,ClockChanged,ClockRegressed,ClockUnavailable,InvalidBudget,InvalidTimeout,TimedOut,UnknownFrequency}!rpc_budget.Budget */
 static inline R4SdkGuiSlot R4SdkGuiType517_fromTicks(uint32_t reserved, R4SdkGuiSlot p0, uint64_t p1, R4SdkGuiType517 *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = p0;
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,945u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,947u,a,2u,output);
 }
 /* rpc_budget.Budget.fromTimeout -> error{BudgetOverflow,ClockChanged,ClockRegressed,ClockUnavailable,InvalidBudget,InvalidTimeout,TimedOut,UnknownFrequency}!rpc_budget.Budget */
 static inline R4SdkGuiSlot R4SdkGuiType517_fromTimeout(uint32_t reserved, R4SdkGuiSlot p0, const R4Timeout * p1, R4SdkGuiType517 *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = p0;
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,946u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,948u,a,2u,output);
 }
 /* rpc_budget.Budget.remainingTicks -> error{BudgetOverflow,ClockChanged,ClockRegressed,ClockUnavailable,InvalidBudget,InvalidTimeout,TimedOut,UnknownFrequency}!u64 */
 static inline R4SdkGuiSlot R4SdkGuiType517_remainingTicks(uint32_t reserved, R4SdkGuiType517 * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,947u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,949u,a,1u,0);
 }
 /* time_budget.DeadlineBudget.init -> error{BudgetOverflow,ClockChanged,ClockRegressed,ClockUnavailable,InvalidBudget,InvalidTimeout,UnknownFrequency}!time_budget.DeadlineBudget */
 static inline R4SdkGuiSlot R4SdkGuiType519_init(uint32_t reserved, const R4SdkGuiType726 * p0, const R4Timeout * p1, R4SdkGuiType519 *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,948u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,950u,a,2u,output);
 }
 /* time_budget.DeadlineBudget.remaining -> error{BudgetOverflow,ClockChanged,ClockRegressed,ClockUnavailable,InvalidBudget,InvalidTimeout,UnknownFrequency}!time_budget.Value */
 static inline R4SdkGuiSlot R4SdkGuiType519_remaining(uint32_t reserved, R4SdkGuiType519 * p0, const R4SdkGuiType726 * p1, R4SdkGuiType730 *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,949u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,951u,a,2u,output);
 }
 /* serial.Context.init -> ?serial.Context */
 static inline R4SdkGuiSlot R4SdkGuiType552_init(uint32_t reserved, const R4XStartR4Dev * p0, R4SdkGuiType552 *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,950u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,952u,a,1u,output);
 }
 /* serial.Context.count -> u32 */
 static inline R4SdkGuiSlot R4SdkGuiType552_count(uint32_t reserved, const R4SdkGuiType552 * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,951u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,953u,a,1u,0);
 }
 /* serial.Context.portAt -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiType552_portAt(uint32_t reserved, const R4SdkGuiType552 * p0, uint32_t p1, R4SerialPortInfo * p2) {
@@ -9251,14 +9267,14 @@ static inline R4SdkGuiSlot R4SdkGuiType552_portAt(uint32_t reserved, const R4Sdk
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,952u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,954u,a,3u,0);
 }
 /* serial.Context.find -> ?abi_generated.SerialPortInfo */
 static inline R4SdkGuiSlot R4SdkGuiType552_find(uint32_t reserved, const R4SdkGuiType552 * p0, uint32_t p1, R4SerialPortInfo *output) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,953u,a,2u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,955u,a,2u,output);
 }
 /* serial.Context.open -> serial.OpenResult */
 static inline R4SdkGuiSlot R4SdkGuiType552_open(uint32_t reserved, const R4SdkGuiType552 * p0, const R4SerialPortInfo * p1, const R4SerialConfig * p2, R4SdkGuiType736 *output) {
@@ -9266,7 +9282,7 @@ static inline R4SdkGuiSlot R4SdkGuiType552_open(uint32_t reserved, const R4SdkGu
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.ptr=(void *)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,954u,a,3u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,956u,a,3u,output);
 }
 /* serial.Context.openNumber -> serial.OpenResult */
 static inline R4SdkGuiSlot R4SdkGuiType552_openNumber(uint32_t reserved, const R4SdkGuiType552 * p0, uint32_t p1, const R4SerialConfig * p2, R4SdkGuiType736 *output) {
@@ -9274,7 +9290,7 @@ static inline R4SdkGuiSlot R4SdkGuiType552_openNumber(uint32_t reserved, const R
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,955u,a,3u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,957u,a,3u,output);
 }
 /* serial.Context.configure -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiType552_configure(uint32_t reserved, const R4SdkGuiType552 * p0, uint64_t p1, const R4SerialConfig * p2) {
@@ -9282,7 +9298,7 @@ static inline R4SdkGuiSlot R4SdkGuiType552_configure(uint32_t reserved, const R4
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,956u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,958u,a,3u,0);
 }
 /* serial.Context.read -> serial.IoResult */
 static inline R4SdkGuiSlot R4SdkGuiType552_read(uint32_t reserved, const R4SdkGuiType552 * p0, uint64_t p1, uint8_t * p2, uintptr_t n2, uint64_t p3, R4SdkGuiType737 *output) {
@@ -9291,7 +9307,7 @@ static inline R4SdkGuiSlot R4SdkGuiType552_read(uint32_t reserved, const R4SdkGu
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,957u,a,4u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,959u,a,4u,output);
 }
 /* serial.Context.write -> serial.IoResult */
 static inline R4SdkGuiSlot R4SdkGuiType552_write(uint32_t reserved, const R4SdkGuiType552 * p0, uint64_t p1, const uint8_t * p2, uintptr_t n2, uint64_t p3, R4SdkGuiType737 *output) {
@@ -9300,7 +9316,7 @@ static inline R4SdkGuiSlot R4SdkGuiType552_write(uint32_t reserved, const R4SdkG
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.length=n2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,958u,a,4u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,960u,a,4u,output);
 }
 /* serial.Context.drain -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiType552_drain(uint32_t reserved, const R4SdkGuiType552 * p0, uint64_t p1, uint64_t p2) {
@@ -9308,7 +9324,7 @@ static inline R4SdkGuiSlot R4SdkGuiType552_drain(uint32_t reserved, const R4SdkG
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,959u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,961u,a,3u,0);
 }
 /* serial.Context.status -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiType552_status(uint32_t reserved, const R4SdkGuiType552 * p0, uint64_t p1, R4SerialStatus * p2) {
@@ -9316,14 +9332,14 @@ static inline R4SdkGuiSlot R4SdkGuiType552_status(uint32_t reserved, const R4Sdk
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.ptr=(void *)p2,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,960u,a,3u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,962u,a,3u,0);
 }
 /* serial.Context.cancel -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiType552_cancel(uint32_t reserved, const R4SdkGuiType552 * p0, uint64_t p1) {
  (void)reserved; R4SdkGuiSlot a[2]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,961u,a,2u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,963u,a,2u,0);
 }
 /* serial.Context.close -> i32 */
 static inline R4SdkGuiSlot R4SdkGuiType552_close(uint32_t reserved, const R4SdkGuiType552 * p0, uint64_t p1, uint32_t p2, uint64_t p3) {
@@ -9332,39 +9348,41 @@ static inline R4SdkGuiSlot R4SdkGuiType552_close(uint32_t reserved, const R4SdkG
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
  a[3] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,962u,a,4u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,964u,a,4u,0);
 }
 /* time_budget.ClockSample.fromInfo -> error{BudgetOverflow,ClockChanged,ClockRegressed,ClockUnavailable,InvalidBudget,InvalidTimeout,UnknownFrequency}!time_budget.ClockSample */
 static inline R4SdkGuiSlot R4SdkGuiType726_fromInfo(uint32_t reserved, const R4MonotonicClockInfo * p0, R4SdkGuiType726 *output) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,963u,a,1u,output);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,965u,a,1u,output);
 }
 /* time_budget.ClockSample.validate -> error{BudgetOverflow,ClockChanged,ClockRegressed,ClockUnavailable,InvalidBudget,InvalidTimeout,UnknownFrequency}!void */
 static inline R4SdkGuiSlot R4SdkGuiType726_validate(uint32_t reserved, const R4SdkGuiType726 * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,964u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,966u,a,1u,0);
 }
 /* time_budget.ClockSample.ticks -> error{BudgetOverflow,ClockChanged,ClockRegressed,ClockUnavailable,InvalidBudget,InvalidTimeout,UnknownFrequency}!u64 */
 static inline R4SdkGuiSlot R4SdkGuiType726_ticks(uint32_t reserved, const R4SdkGuiType726 * p0) {
  (void)reserved; R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,965u,a,1u,0);
+ return R4SdkGuiInvoke(R4SdkGui_ABI_FINGERPRINT,967u,a,1u,0);
 }
 static inline R4SdkGuiSlot R4SdkGuiType0_create(R4SdkGuiType0 *output) {
- R4SdkGuiSlot a[3]={0};
+ R4SdkGuiSlot a[4]={0};
  a[0].flags=R4SDK_GUI_DEFAULT;
  a[1].flags=R4SDK_GUI_DEFAULT;
  a[2].flags=R4SDK_GUI_DEFAULT;
- return R4SdkGuiConstruct(R4SdkGui_ABI_FINGERPRINT,0u,a,3u,output);
+ a[3].flags=R4SDK_GUI_DEFAULT;
+ return R4SdkGuiConstruct(R4SdkGui_ABI_FINGERPRINT,0u,a,4u,output);
 }
-static inline R4SdkGuiSlot R4SdkGuiType0_from_fields(R4SdkGuiType0 *output, R4SdkGuiSlot p0, R4SdkGuiSlot p1, R4SdkGuiSlot p2) {
- R4SdkGuiSlot a[3]={0};
+static inline R4SdkGuiSlot R4SdkGuiType0_from_fields(R4SdkGuiType0 *output, R4SdkGuiSlot p0, R4SdkGuiSlot p1, R4SdkGuiSlot p2, R4SdkGuiSlot p3) {
+ R4SdkGuiSlot a[4]={0};
  a[0] = p0;
  a[1] = p1;
  a[2] = p2;
- return R4SdkGuiConstruct(R4SdkGui_ABI_FINGERPRINT,0u,a,3u,output);
+ a[3] = p3;
+ return R4SdkGuiConstruct(R4SdkGui_ABI_FINGERPRINT,0u,a,4u,output);
 }
 static inline R4SdkGuiSlot R4SdkGuiType0_get_client(const R4SdkGuiType0 *self, R4SdkClipboardOffers *output) { return R4SdkGuiField(R4SdkGui_ABI_FINGERPRINT,0u,0u,(void *)self,0,output); }
 static inline R4SdkGuiSlot R4SdkGuiType0_set_client(R4SdkGuiType0 *self, R4SdkGuiSlot p0) { R4SdkGuiSlot a[1]={0};
@@ -9378,6 +9396,10 @@ static inline R4SdkGuiSlot R4SdkGuiType0_get_snapshot(const R4SdkGuiType0 *self,
 static inline R4SdkGuiSlot R4SdkGuiType0_set_snapshot(R4SdkGuiType0 *self, R4SdkGuiSlot p0) { R4SdkGuiSlot a[1]={0};
  a[0] = p0;
  return R4SdkGuiField(R4SdkGui_ABI_FINGERPRINT,0u,2u,self,a,0); }
+static inline R4SdkGuiSlot R4SdkGuiType0_get_receipt(const R4SdkGuiType0 *self, R4ClipboardOfferLease *output) { return R4SdkGuiField(R4SdkGui_ABI_FINGERPRINT,0u,3u,(void *)self,0,output); }
+static inline R4SdkGuiSlot R4SdkGuiType0_set_receipt(R4SdkGuiType0 *self, R4SdkGuiSlot p0) { R4SdkGuiSlot a[1]={0};
+ a[0] = p0;
+ return R4SdkGuiField(R4SdkGui_ABI_FINGERPRINT,0u,3u,self,a,0); }
 static inline R4SdkGuiSlot R4SdkGuiType0_inspect(const R4SdkGuiType0 *self) { return R4SdkGuiInspect(R4SdkGui_ABI_FINGERPRINT,0u,(void *)self,0); }
 static inline R4SdkGuiSlot R4SdkGuiType1_create(R4SdkGuiType1 *output, R4SdkGuiSlot p0) { R4SdkGuiSlot a[1]={0};
  a[0] = p0;
