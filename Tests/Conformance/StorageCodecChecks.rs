@@ -19,7 +19,8 @@ pub fn codecs() {
     assert!(FilePath::parse(b"C:\\..\\FILE").is_err());
     assert!(FilePath::parse(b"C:\\BAD\0FILE").is_err());
     assert!(FilePath::parse("C:\\ä€\\FILE.TXT".as_bytes()).is_ok());
-    assert!(FilePath::parse("C:\\🙂.TXT".as_bytes()).is_err());
+    assert!(FilePath::parse("C:\\🙂.TXT".as_bytes()).is_ok());
+    assert!(FilePath::parse(b"C:\\\xf4\x90\x80\x80.TXT").is_err());
     assert!(FilePath::parse(b"C:\\BAD*.TXT").is_err());
     assert!(FilePath::parse(b"C:\\\xc3").is_err());
     assert_eq!(

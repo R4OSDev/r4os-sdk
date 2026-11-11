@@ -1,5 +1,10 @@
 #include <r4os/storage_helpers.h>
 uint64_t SDKStorageCodecC(void){
+    R4FilePath path;
+    const uint8_t valid[]="C:\\\xf0\x9f\x99\x82.TXT";
+    const uint8_t invalid[]="C:\\\xf4\x90\x80\x80.TXT";
+    if(r4_file_path(valid,sizeof(valid)-1,&path)!=R4_PATH_OK ||
+       r4_file_path(invalid,sizeof(invalid)-1,&path)!=R4_PATH_INVALID_CHARACTER)return 0;
     uint8_t scratch[64*1024],bytes[4096];uintptr_t length=0;
     const uint8_t count[4]={42,0,0,0},enabled[1]={1};
     const R4HiveBuildValue values[]={

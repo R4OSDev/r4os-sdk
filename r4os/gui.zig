@@ -11,6 +11,7 @@ const text_metrics_runtime = @import("text_metrics_runtime.zig");
 const text_control = @import("gui_text_control.zig");
 const offers = @import("clipboard_offer.zig");
 const composition = @import("text_composition.zig");
+pub const TextClipboard = text_control.Clipboard;
 pub const Style = modern.Style;
 pub const FontSet = modern.FontSet;
 pub const TextRole = modern.TextRole;
@@ -1629,6 +1630,14 @@ pub fn TextArea(comptime capacity: anytype) type {
             return changed;
         }
 
+        /// Complete typed representations must fit before selection deletion.
+        pub fn pasteSliceChecked(self: *Self, value_text: []const u8, view: TextAreaView) bool {
+            const cap = self.available() + self.selectionRange().count();
+            const end = editablePrefix(value_text, cap, true) orelse return false;
+            if (end != value_text.len) return false;
+            return self.pasteSlice(value_text, view);
+        }
+
         pub fn insertByte(self: *Self, ch: u8, view: TextAreaView) bool {
             if (self.disabled) return false;
             const normalized = normalizeTextAreaByte(ch) orelse return false;
@@ -1838,6 +1847,20 @@ pub fn TextArea(comptime capacity: anytype) type {
                 self.scroll_col + local_col,
                 view.effectiveWrapCols(),
             );
+        }
+
+        /// Uses the same visible line, font and whole grapheme advances as
+        /// measured rendering. A failed receipt preserves the caller's index.
+        pub fn hitTestChecked(self: *const Self, canvas: Canvas, x: i32, y: i32, view: TextAreaView, out: *usize) i32 {
+            const row: usize = if (y <= 0) 0 else @intCast(@divTrunc(y, @max(1, canvas.font.line_height)));
+            const range = textAreaVisualLineRange(self.value(), self.scroll_line + row, view.effectiveWrapCols());
+            const first = utf8ByteIndexForColumns(self.value(), range.start, range.end, self.scroll_col);
+            const last = utf8ByteIndexForColumns(self.value(), first, range.end, view.effectiveVisibleCols());
+            var local: usize = 0;
+            const rc = canvas.textIndexChecked(self.value()[first..last], x, &local);
+            if (rc != 0) return rc;
+            out.* = first + local;
+            return 0;
         }
 
         pub fn scrollTo(self: *Self, line: usize, column: usize, view: TextAreaView) void {
@@ -3470,6 +3493,7 @@ pub fn drawTextAreaWithLayout(canvas: Canvas, rect: Rect, scratch: []u8, value: 
     const visible_text_cols = if (scratch.len == 0) @as(usize, 0) else @min(visible_cols, scratch.len - 1);
     const scroll_line = layout.first_line;
     const text_color = if (disabled) palette.disabled_text else palette.text;
+    var measured_caret: ?i32 = null;
 
     var row: usize = 0;
     while (row < @min(visible_rows, layout.range_count)) : (row += 1) {
@@ -3478,6 +3502,16 @@ pub fn drawTextAreaWithLayout(canvas: Canvas, rect: Rect, scratch: []u8, value: 
         const draw_end = utf8ByteIndexForColumns(value, draw_start, line_range.end, visible_text_cols);
         const y = text_rect.y + @as(i32, @intCast(row)) * line_h;
         if (draw_end <= draw_start) continue;
+
+        if (canvas.ctx.base.generation2 != null) {
+            const caret = if (focused and !disabled and layout.caret.line == scroll_line + row)
+                utf8ByteIndexForColumns(value, line_range.start, line_range.end, layout.caret.column)
+            else
+                null;
+            const rc = drawMeasuredTextAreaLine(canvas, scratch, value, draw_start, draw_end, selection, caret, text_rect.x, y, @min(line_h, @max(1, text_rect.bottom() - y)), disabled, palette, bg, &measured_caret);
+            if (rc != 0) return rc;
+            continue;
+        }
 
         const selected = TextRange.normalized(@min(selection.start, value.len), @min(selection.end, value.len));
         const sel_start = @max(draw_start, selected.start);
@@ -3498,10 +3532,77 @@ pub fn drawTextAreaWithLayout(canvas: Canvas, rect: Rect, scratch: []u8, value: 
         const caret = layout.caret;
         if (caret.line >= scroll_line and caret.line < scroll_line + visible_rows and caret.column >= scroll_col and caret.column <= scroll_col + visible_cols) {
             const row_y = text_rect.y + @as(i32, @intCast(caret.line - scroll_line)) * line_h;
-            const raw_x = text_rect.x + @as(i32, @intCast(caret.column - scroll_col)) * char_w;
+            const raw_x = measured_caret orelse text_rect.x + @as(i32, @intCast(caret.column - scroll_col)) * char_w;
             const x = @min(@max(text_rect.x, raw_x), @max(text_rect.x, text_rect.right() - 1));
             _ = canvas.rect(.{ .x = x, .y = row_y, .w = 1, .h = @min(line_h, @max(1, text_rect.bottom() - row_y)) }, palette.text);
         }
+    }
+    return 0;
+}
+
+fn measuredPrefix(rows: []const abi.FontAdvance2, end: usize) i32 {
+    var width: i32 = 0;
+    for (rows) |row| {
+        if (row.byte_end > end) break;
+        width = @intCast(row.prefix_width);
+    }
+    return width;
+}
+
+fn drawMeasuredAreaSegment(canvas: Canvas, text: []const u8, rows: []const abi.FontAdvance2, first: usize, last: usize, x: i32, y: i32, fg: u32, bg: u32) i32 {
+    if (first == last) return 0;
+    const left = measuredPrefix(rows, first);
+    return canvas.frameCommand(.{
+        .kind = abi.gui_frame_command_kind_text,
+        .x = x + left,
+        .y = y,
+        .fg = fg,
+        .bg = bg,
+        .font_id = canvas.font.id,
+        .text_w = @intCast(@max(0, measuredPrefix(rows, last) - left)),
+        .text_h = @intCast(@max(1, canvas.font.height)),
+        .baseline = canvas.font.baseline,
+        .line_height = @intCast(@max(1, canvas.font.line_height)),
+    }, text[first..last]);
+}
+
+fn drawMeasuredTextAreaLine(canvas: Canvas, _: []u8, value: []const u8, first: usize, last: usize, selection: TextRange, caret: ?usize, x: i32, y: i32, line_h: i32, disabled: bool, palette: Palette, bg: u32, caret_x: *?i32) i32 {
+    const text = value[first..last];
+    if (text.len > abi.font_metrics2_max_bytes) return abi.font_metrics2_capacity;
+    const context = canvas.ctx.base.generation2 orelse return abi.err_no_group;
+    const binding = @import("text_metrics_api.zig").provider2(context);
+    if (binding.status != 0) return binding.status;
+    var memory: [abi.font_metrics2_max_bytes]abi.FontAdvance2 = undefined;
+    var cache = text_metrics.Cache.init(
+        .{ .address = @intFromPtr(text.ptr), .length = text.len },
+        .{ .address = @intFromPtr(&memory), .length = @sizeOf(@TypeOf(memory)) },
+        memory.len,
+        binding.provider,
+    ) catch |err| return text_metrics_runtime.code(err);
+    const progress = cache.prepare(1, canvas.font.id) catch |err| return text_metrics_runtime.code(err);
+    if (progress.error_code != 0) return progress.error_code;
+    const rows = cache.rows() catch |err| return text_metrics_runtime.code(err);
+    const selected = TextRange.normalized(@min(selection.start, value.len), @min(selection.end, value.len));
+    const start = @max(first, selected.start);
+    const end = @min(last, selected.end);
+    const color = if (disabled) palette.disabled_text else palette.text;
+    if (!disabled and start < end) {
+        const left = measuredPrefix(rows, start - first);
+        const right = measuredPrefix(rows, end - first);
+        const painted = canvas.rect(.{ .x = x + left, .y = y, .w = right - left, .h = line_h }, palette.select_bg);
+        if (painted < 0) return painted;
+        var rc = drawMeasuredAreaSegment(canvas, text, rows, 0, start - first, x, y, color, bg);
+        if (rc != 0) return rc;
+        rc = drawMeasuredAreaSegment(canvas, text, rows, start - first, end - first, x, y, palette.select_text, palette.select_bg);
+        if (rc != 0) return rc;
+        rc = drawMeasuredAreaSegment(canvas, text, rows, end - first, text.len, x, y, color, bg);
+        if (rc != 0) return rc;
+    } else {
+        const rc = drawMeasuredAreaSegment(canvas, text, rows, 0, text.len, x, y, color, bg);
+        if (rc != 0) return rc;
+    }
+    if (caret) |at| {
+        if (at >= first and at <= last) caret_x.* = x + measuredPrefix(rows, at - first);
     }
     return 0;
 }
@@ -5660,6 +5761,15 @@ test "text area selection supports copy cut paste and select all" {
     try std.testing.expectEqualStrings("Hello Desk", area.value());
     try std.testing.expect(area.handleKey(Key.ctrl_a, view));
     try std.testing.expectEqual(TextRange{ .start = 0, .end = 10 }, area.selectionRange());
+    area.set("A€🙂Z");
+    area.setSelection(1, 8);
+    const before = area;
+    try std.testing.expect(!area.pasteSliceChecked("W" ** 32, view));
+    try std.testing.expectEqualDeep(before, area);
+    try std.testing.expect(!area.pasteSliceChecked("\xc3", view));
+    try std.testing.expectEqualDeep(before, area);
+    try std.testing.expect(area.pasteSliceChecked("e\u{301}\r\n🙂", view));
+    try std.testing.expectEqualStrings("Ae\u{301}\n🙂Z", area.value());
 }
 
 test "text area maps wrapped visual lines and hit tests cells" {

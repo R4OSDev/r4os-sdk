@@ -59023,6 +59023,12 @@
       "scope": "SDK205 source/ABI consumer composition. Output.recordSink connects the existing bounded diagnostic records to real stdio/StreamTransfer with exact known-prefix acknowledgement and sticky uncertain/failed state. The extra sink is Zig composition over the earlier C/Rust record/pipe primitives. Native C2 templates use actual public App2 and Stdio2 headers and exact Query2 class imports. Manifest text plans preserve explicit SDK profiles. The catalogue distinguishes native C platform generations and admits the implemented one-source console/gui subset. Actual host owner tests, strict native C syntax/object compilation and independent native C core lowering have distinct scopes. Final real R4OS source compilation/stdio/GUI/lifecycle qualification is separately bound to the migration receipt.",
       "receipt": "Research/API-ABI/Migration/0.90.72/SdkHost.json",
       "limits": "Linux host checks and source review. Windows binaries, native guest semantics, physical hardware and performance have their own evidence scopes."
+    },
+    "editor_consumers_09073": {
+      "complete": true,
+      "scope": "SDK206 editor composition over the existing metadata, StreamTransfer, FilePicker, typed clipboard and text-metric owners. Stable private document reads, exact copied picker identities, one-deadline text clipboard publication/release and measured TextArea hits/rendering have scoped Zig owner regressions. Complete supplementary UTF8 paths retain UTF16-unit limits in Zig/C and the Rust C-owner adaptation. Compiler-generated C/Rust GUI projections use the same native controls. The convenience Files/DialogPage/TextClipboard orchestration is used by the Zig editors. Existing data, storage and GUI interoperation cases execute under Linux. Native normal editor artifacts and final runtime qualification have separate receipts.",
+      "receipt": "Research/API-ABI/Migration/0.90.73/SdkHost.json",
+      "limits": "Linux host/interoperation and source review. Normal native apps, Windows execution, actual IME providers and performance require their own evidence."
     }
   },
   "wave_bindings": [
@@ -59275,18 +59281,18 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.90.72",
-    "sdk": "0.64.205",
+    "performed_in": "0.90.73",
+    "sdk": "0.64.206",
     "contract": "0.64.93",
     "libraries": "0.64.57",
-    "evidence": "native_tools_09072",
+    "evidence": "editor_consumers_09073",
     "historical_snapshot_retained": true,
-    "scope": "SDK205 source/ABI consumer composition. Output.recordSink connects the existing bounded diagnostic records to real stdio/StreamTransfer with exact known-prefix acknowledgement and sticky uncertain/failed state. The extra sink is Zig composition over the earlier C/Rust record/pipe primitives. Native C2 templates use actual public App2 and Stdio2 headers and exact Query2 class imports. Manifest text plans preserve explicit SDK profiles. The catalogue distinguishes native C platform generations and admits the implemented one-source console/gui subset. Actual host owner tests, strict native C syntax/object compilation and independent native C core lowering have distinct scopes. Final real R4OS source compilation/stdio/GUI/lifecycle qualification is separately bound to the migration receipt."
+    "scope": "SDK206 editor composition over the existing metadata, StreamTransfer, FilePicker, typed clipboard and text-metric owners. Stable private document reads, exact copied picker identities, one-deadline text clipboard publication/release and measured TextArea hits/rendering have scoped Zig owner regressions. Complete supplementary UTF8 paths retain UTF16-unit limits in Zig/C and the Rust C-owner adaptation. Compiler-generated C/Rust GUI projections use the same native controls. The convenience Files/DialogPage/TextClipboard orchestration is used by the Zig editors. Existing data, storage and GUI interoperation cases execute under Linux. Native normal editor artifacts and final runtime qualification have separate receipts."
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.90.72",
+    "reviewed_in": "0.90.73",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -60573,7 +60579,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "55d31e8718413f31d3782941f019fcfad0fe49fe6ec55fbc24a2a7570b5edb28"
+        "sha256": "56835cc03e96081f7204824e231e136172e2fefe75f5226c5cc5a2cf46e81b62"
       },
       {
         "path": "Repositories/SDK/Rust/src/cli.rs",
@@ -61085,7 +61091,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/gui_bridge.h",
-        "sha256": "f81df5c8b02e1abc8d1d21613ca69bc86be9d3e0c990a8bec9bdb28235dad415"
+        "sha256": "6d99039cdf01a52f81fd1b345e21d1d63d92c1fb8ebff2967950be96e95825d7"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/heap.h",
@@ -61121,7 +61127,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/path_timeout.h",
-        "sha256": "0426614d41d4d59b6bf22251df33b281c7222413ebe42e0ab9cea6170d49a260"
+        "sha256": "000a97e537aca49396e9c28565a256d1c13b6c5f666f9e6c75006ff72b5e9694"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/pcm_source.h",
@@ -61693,7 +61699,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "ade734fd1cf709ebd4d2c2cc91779c41015d0ce09a365002e06303c70a1f0bf3"
+        "sha256": "e25deb722127b992aa44ee85972417ffe34a542382d6cb48d0f59bafb5e8d60b"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -61749,7 +61755,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/app_storage.zig",
-        "sha256": "62473f0e28ba677a04a0c1d64de4f5a36eaa6b5ea46c3badd67ced1f7627453f"
+        "sha256": "78da7d2a243118c108638fc4935f1344016889f56e7683a3257b77a2043c9148"
       },
       {
         "path": "Repositories/SDK/r4os/app_tray.zig",
@@ -61929,7 +61935,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/directory_page.zig",
-        "sha256": "c0e9560b6a68b952a4388b08b092b36ab6b4f92840080b76649d600dc2dde332"
+        "sha256": "b461945424a71dea13ffaec111aa3e6382f20512221ecfdc38e73e5332f1db4b"
       },
       {
         "path": "Repositories/SDK/r4os/document_save.zig",
@@ -62029,7 +62035,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/file_picker_tests.zig",
-        "sha256": "df3ba9dc16a90c71c0b9be6699881e0a7adfea13e0349b825ad8643b54c60ec2"
+        "sha256": "22b7731a731d1f5dcd81d3368454725f28830b723864bfa6b3723ef1c2e5d238"
       },
       {
         "path": "Repositories/SDK/r4os/file_stream.zig",
@@ -62045,7 +62051,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/generated/gui_fingerprint.zig",
-        "sha256": "7d6e5cdab95b437e77af1c91b21a8fd7219de81da6ca7aefdf225268d0954e37"
+        "sha256": "deb437366c1fd4c3461cb90ac6e810d3711b416a2b0bbcabb7862c4b07757273"
       },
       {
         "path": "Repositories/SDK/r4os/generated/net_facade.zig",
@@ -62105,7 +62111,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/gui.zig",
-        "sha256": "96347ba1aa08c26137d503c6797b5663cf98e36c3fc6c745d362d8370858e04b"
+        "sha256": "0abcb132b285abce1a34f77c69df3569d66539761595549cf3f50f1bed2a2ba9"
       },
       {
         "path": "Repositories/SDK/r4os/gui_bridge_schema.zig",
@@ -62133,7 +62139,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/gui_text_control.zig",
-        "sha256": "9ccce39c0d71b150d7c6c5b42a4bc05f02995d3a6a5bbba35607280b6e3dd260"
+        "sha256": "9abab25a123032dcc388b555d0d96987fb639ecea0742126fb22c3d87da40a12"
       },
       {
         "path": "Repositories/SDK/r4os/gui_value_bridge.zig",
@@ -62289,7 +62295,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/path.zig",
-        "sha256": "d0c82b3cff5a7c459bd0b4cc5d08583d0b3af8ea63a84c6bdbc5bb1ae299bcf9"
+        "sha256": "1059c396f6409f86c8c4b8f108279f9ccb226f80dcf7adac1473a4568c8f1a8a"
       },
       {
         "path": "Repositories/SDK/r4os/pcm_source.zig",
@@ -62709,7 +62715,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/text_metrics_tests.zig",
-        "sha256": "f4606a22fc9092f194200a0fbdb5a022746642077b22099599141cffb52e3402"
+        "sha256": "5268bde2fb68e4e258232543a07058f41c4c877048f788b49a904cfa2b9d5928"
       },
       {
         "path": "Repositories/SDK/r4os/time_budget.zig",
@@ -63154,7 +63160,8 @@
           "storage_actual2_volume_lease_09061",
           "network_stream_consumers_09070",
           "software_update_consumers_09071",
-          "native_tools_09072"
+          "native_tools_09072",
+          "editor_consumers_09073"
         ]
       },
       {
@@ -63417,7 +63424,8 @@
           "text_composition_09036",
           "normal_gui_facades_09042",
           "normal_service_stream_facades_09043",
-          "canonical_graphics_native_generation2_09046"
+          "canonical_graphics_native_generation2_09046",
+          "editor_consumers_09073"
         ]
       },
       {
@@ -65283,6 +65291,15 @@
       "evidence": "software_update_consumers_09071",
       "historical_snapshot_retained": true,
       "scope": "Two exact Zig terminal command grammar cases and the existing status/journal-resnapshot owner oracle execute on Linux. Shared runTerminal accepts the actual App and App2 system/file contexts. Whole UTF8/quote validation precedes dispatch, the established unquoted whole path remainder is accepted and commands without a path check the exact argument end. The status fixture supplies the current Engine context/files constructor. New terminal composition is a Zig helper. Existing C/Rust record, dispatch, resource and storage primitives have their earlier implementation/evidence scopes. Native software/update consumer qualification has its separate migration receipt."
+    },
+    {
+      "performed_in": "0.90.72",
+      "sdk": "0.64.205",
+      "contract": "0.64.93",
+      "libraries": "0.64.57",
+      "evidence": "native_tools_09072",
+      "historical_snapshot_retained": true,
+      "scope": "SDK205 source/ABI consumer composition. Output.recordSink connects the existing bounded diagnostic records to real stdio/StreamTransfer with exact known-prefix acknowledgement and sticky uncertain/failed state. The extra sink is Zig composition over the earlier C/Rust record/pipe primitives. Native C2 templates use actual public App2 and Stdio2 headers and exact Query2 class imports. Manifest text plans preserve explicit SDK profiles. The catalogue distinguishes native C platform generations and admits the implemented one-source console/gui subset. Actual host owner tests, strict native C syntax/object compilation and independent native C core lowering have distinct scopes. Final real R4OS source compilation/stdio/GUI/lifecycle qualification is separately bound to the migration receipt."
     }
   ]
 }

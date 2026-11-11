@@ -1882,3 +1882,23 @@ Der R4MF-Textplan verwendet ein explizit gewaehltes SDK-Profil. Der native
 Packer uebernimmt Name, Modulversion und deklarierte Metadaten aus dem
 Manifest. Host-/Quellpruefungen und native Verbraucherbelege stehen unter
 Research/API-ABI/Migration/0.90.72 im R4OS-Workspace.
+
+Fortschreibung 0.90.73 / SDK0.64.206
+----------------------------------
+Editoren erhalten einen privaten DocumentPrefix ueber weite Metadaten,
+StreamTransfer und eine gemeinsame Gesamtfrist. Ein Namespacewechsel
+verwirft den privaten Kandidaten. Groesse, zertifizierte Identitaet und
+Inhaltsrevision werden vor der Publikation erneut verglichen.
+DialogPage verwendet an Context2 die bestehende FilePickerSession und
+prueft Cursor und ganze Objektidentitaet vor einer Auswahlaktion.
+Der gemeinsame Pfadparser akzeptiert gueltige supplementary UTF8-Skalare.
+Sie zaehlen als zwei UTF16-Einheiten innerhalb der bestehenden Grenzen.
+Zig und C verwenden dieselben Regeln. Rust verwendet den C-Pfadbesitzer.
+TextClipboard kapselt den typisierten Angebotsbesitzer fuer Textcontrols.
+Unsichere Stages und unbestaetigte Snapshotfreigaben behalten ihre Token.
+Ein Copy-/Read-Vorgang verwendet eine gemeinsame Frist einschliesslich
+seiner Publikations- beziehungsweise Freigabequittung.
+TextArea bietet vollstaendig geprueftes Einfuegen und gemessene Treffer.
+Context2 zeichnet sichtbare Zeilen und Auswahl ueber FontPrefixMetrics2
+und laengengetragene Frame-Ressourcen. Die bestehenden C-/Rust-GUI-
+Projektionen verwenden den gemeinsamen nativen Controlbesitzer.

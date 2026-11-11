@@ -241,8 +241,9 @@ test "file picker owner navigation keyboard save overwrite and callback lifetime
     try std.testing.expectEqual(@as(i32, 0), session.activate(session.revision, true, true, &decision));
     try std.testing.expectEqual(m.decision_file, decision.kind);
     const saved = session.confirmed;
-    for ([_][]const u8{ "..", ".", "a/b", "a\\b", "bad?", "\xc3", "🙂.TXT" }) |bad| try std.testing.expectEqual(m.invalid, session.setName(bad));
+    for ([_][]const u8{ "..", ".", "a/b", "a\\b", "bad?", "\xc3", "\xf4\x90\x80\x80.TXT" }) |bad| try std.testing.expectEqual(m.invalid, session.setName(bad));
     try std.testing.expectEqualStrings("A.TXT", std.mem.sliceTo(&session.filename, 0));
+    try std.testing.expectEqual(@as(i32, 0), session.setName("🙂.TXT"));
     try std.testing.expectEqual(@as(i32, 0), session.setName("NEW.TXT"));
     try std.testing.expectEqual(@as(i32, 0), session.activate(session.revision, true, false, &decision));
     try std.testing.expectEqual(m.decision_file, decision.kind);

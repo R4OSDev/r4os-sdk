@@ -32,6 +32,67 @@ pub const Transfer = union(enum) {
     failure: i32,
 };
 
+pub const DocumentPrefix = union(enum) {
+    value: struct { bytes: usize, truncated: bool },
+    failure: i32,
+};
+
+test "stream owner document prefix discards a restarted snapshot within one deadline" {
+    const std = @import("std");
+    const p2 = @import("platform2.zig");
+    const Peer = struct {
+        var meta_calls: usize = 0;
+        var read_calls: usize = 0;
+        var tick: u64 = 0;
+        var always_restart: bool = false;
+        fn shouldClose(_: *const p2.abi.R4XStartContext2) callconv(.c) u32 {
+            return 0;
+        }
+        fn clock(out: *abi.MonotonicClockInfo) callconv(.c) i32 {
+            tick += 1000;
+            out.* = .{ .instant_ns = tick, .flags = abi.monotonic_clock_flag_valid, .source = 1, .generation = 1, .resolution_ns = 1, .event_requested_hz = 1000 };
+            return 1;
+        }
+        fn metadata(_: [*:0]const u8, out: *abi.FileMetadata2) callconv(.c) i32 {
+            meta_calls += 1;
+            if (always_restart or meta_calls == 2) return abi.file_metadata2_error_restart;
+            out.* = .{ .byte_size = 3, .content_revision = if (meta_calls == 1) 1 else 2, .flags = abi.file_metadata2_flag_exists | abi.file_metadata2_flag_byte_size_valid |
+                abi.file_metadata2_flag_identity_valid | abi.file_metadata2_flag_content_revision_valid, .identity = .{ .mount_slot = 2, .mount_generation = 1, .namespace_generation = if (meta_calls == 1) 1 else 2, .object_lo = 17 } };
+            return 1;
+        }
+        fn read(_: [*:0]const u8, offset: u32, out: [*]u8, capacity: u32) callconv(.c) i32 {
+            read_calls += 1;
+            if (offset != 0 or capacity != 3) return abi.file_metadata2_error_invalid;
+            @memcpy(out[0..3], if (read_calls == 1) "old" else "new");
+            return 3;
+        }
+    };
+    Peer.meta_calls = 0;
+    Peer.read_calls = 0;
+    Peer.tick = 0;
+    Peer.always_restart = false;
+    var system: p2.abi.R4XStartR4Sys2 = .{};
+    system.monotonic_clock = @intFromPtr(&Peer.clock);
+    system.file_metadata2 = @intFromPtr(&Peer.metadata);
+    system.file_read_at = @intFromPtr(&Peer.read);
+    var imports = [_]abi.R4XStartImport{.{ .group_id = 1, .resolved_version = 2, .table = @intFromPtr(&system) }};
+    var start: p2.abi.R4XStartContext2 = .{ .imports = @intFromPtr(&imports), .import_count = imports.len, .flags = abi.r4xstart_flag_close_supported, .should_close = @intFromPtr(&Peer.shouldClose) };
+    const context = try p2.Context.init(&start);
+    const files = Files{ .sys = r4sys.Context.fromProgram(.{ .generation2 = &context }) };
+    var memory: [8]u8 = undefined;
+    var path = try AbsoluteFilePath.parse("C:\\DOCUMENT.TXT");
+    const value = files.readDocumentPrefix(path.asZ(), &memory, .{ .kind = abi.timeout_kind_finite, .nanoseconds = 1_000_000_000 });
+    try std.testing.expectEqualDeep(DocumentPrefix{ .value = .{ .bytes = 3, .truncated = false } }, value);
+    try std.testing.expectEqualStrings("new", memory[0..value.value.bytes]);
+    try std.testing.expect(!value.value.truncated);
+    try std.testing.expectEqual(@as(usize, 2), Peer.read_calls);
+    try std.testing.expectEqual(@as(usize, 4), Peer.meta_calls);
+    Peer.always_restart = true;
+    const expired = files.readDocumentPrefix(path.asZ(), &memory, .{ .kind = abi.timeout_kind_finite, .nanoseconds = 10_000 });
+    try std.testing.expectEqual(abi.service_api_result_timeout, expired.failure);
+    try std.testing.expectEqual(@as(usize, 2), Peer.read_calls);
+}
+
 pub const Operation = union(enum) {
     ok,
     missing,
@@ -146,6 +207,64 @@ pub const Files = struct {
     pub fn metadata(self: *const Files, file_path: PathZ) metadata2.InfoResult {
         const view = self.sys.base.generation2 orelse return .{ .failure = abi.file_metadata2_error_unsupported };
         return metadata2.info(view, file_path.ptr);
+    }
+
+    /// Private editor candidate, including one lookahead byte. Publication is
+    /// the caller's operation. Compare every identity/revision the provider
+    /// certifies and discard all partial bytes on a readonly namespace restart.
+    pub fn readDocumentPrefix(self: *const Files, file_path: PathZ, out: []u8, timeout: abi.R4Timeout) DocumentPrefix {
+        if (out.len == 0) return .{ .failure = abi.file_metadata2_error_invalid };
+        const context = self.sys.base.generation2 orelse return .{ .failure = abi.file_metadata2_error_unsupported };
+        const platform = @import("platform2.zig");
+        const stream = @import("stream_api.zig");
+        const rpc = @import("rpc_budget.zig");
+        const clock_fn = platform.abi.function(platform.abi.R4SysFns2, context.system(), "monotonic_clock");
+        var clock = stream.adapters.PlatformClock{ .read = clock_fn };
+        var budget = rpc.Budget.fromTimeout(clock_fn, timeout) catch |err| return .{ .failure = rpc.code(err) };
+        read_snapshot: while (true) {
+            _ = budget.remainingTicks() catch |err| return .{ .failure = rpc.code(err) };
+            if (self.sys.programShouldClose()) return .{ .failure = abi.file_metadata2_error_io };
+            const before = switch (metadata2.info(context, file_path.ptr)) {
+                .found => |value| value,
+                .missing => return .{ .failure = abi.file_stream_error_not_found },
+                .failure => |code| {
+                    if (code != abi.file_metadata2_error_restart) return .{ .failure = code };
+                    self.sys.sleepTicks(0);
+                    continue :read_snapshot;
+                },
+            };
+            const size = metadata2.fileSize(&before) orelse return .{ .failure = abi.file_metadata2_error_unsupported };
+            if (before.version != 1 or before.size != @sizeOf(abi.FileMetadata2) or
+                before.flags & abi.file_metadata2_flag_directory != 0) return .{ .failure = abi.file_metadata2_error_invalid };
+            const count: usize = @intCast(@min(size, out.len));
+            var source = stream.adapters.FileRead.fromContext2(context, file_path.ptr, 0) catch return .{ .failure = abi.err_no_fn };
+            const driver: stream.adapters.Driver = .{ .sys = self.sys, .clock = &clock, .budget = &budget };
+            const progress = driver.read(out[0..count], 64 * 1024, stream.adapters.FileRead.step, &source, true) catch return .{ .failure = abi.file_metadata2_error_io };
+            if (progress.outcome != @intFromEnum(stream.Outcome.complete) or progress.bytes != count) {
+                return .{ .failure = if (progress.error_code < 0) progress.error_code else abi.file_metadata2_error_io };
+            }
+            const after = switch (metadata2.info(context, file_path.ptr)) {
+                .found => |value| value,
+                .missing => return .{ .failure = abi.file_stream_error_not_found },
+                .failure => |code| {
+                    if (code != abi.file_metadata2_error_restart) return .{ .failure = code };
+                    self.sys.sleepTicks(0);
+                    continue :read_snapshot;
+                },
+            };
+            _ = budget.remainingTicks() catch |err| return .{ .failure = rpc.code(err) };
+            if (after.version != 1 or after.size != @sizeOf(abi.FileMetadata2) or
+                after.flags & abi.file_metadata2_flag_directory != 0) return .{ .failure = abi.file_metadata2_error_invalid };
+            if (metadata2.fileSize(&after) != size) continue :read_snapshot;
+            if (metadata2.identity(&before)) |identity| {
+                const observed = metadata2.identity(&after) orelse return .{ .failure = abi.file_metadata2_error_restart };
+                if (!@import("std").meta.eql(identity.*, observed.*)) continue :read_snapshot;
+            }
+            if (before.flags & abi.file_metadata2_flag_content_revision_valid != 0 and
+                (after.flags & abi.file_metadata2_flag_content_revision_valid == 0 or
+                    before.content_revision != after.content_revision)) continue :read_snapshot;
+            return .{ .value = .{ .bytes = count, .truncated = size >= out.len } };
+        }
     }
 
     pub fn delete(self: *const Files, file_path: PathZ) Operation {

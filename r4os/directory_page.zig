@@ -1,6 +1,9 @@
 const std = @import("std");
 const storage = @import("app_storage.zig");
 const text = @import("bounded_text.zig");
+const abi = @import("r4os_contract").abi;
+const picker = @import("file_picker_api.zig");
+const metadata = @import("metadata2.zig");
 
 /// Bounded dialog pages own paths and kinds. Labels are presentation only;
 /// activating a row never enumerates its old filesystem index again.
@@ -14,16 +17,26 @@ pub fn DialogPage(comptime capacity: usize, comptime path_bytes: usize, comptime
             kind: Kind = .file,
             path: [path_bytes]u8 = .{0} ** path_bytes,
             label: [label_bytes]u8 = .{0} ** label_bytes,
+            identity: abi.FileIdentity2 = .{},
         };
         directory: [path_bytes]u8 = .{0} ** path_bytes,
         rows: [capacity]Row = .{Row{}} ** capacity,
         count: usize = 0,
         number: u32 = 0,
+        cursor: ?abi.DirectoryMetadataCursor2 = null,
+        last_error: i32 = 0,
 
         /// Builds privately through the real end, including entries beyond
         /// the visible page, so an I/O error cannot publish a partial view.
         pub fn load(self: *Self, files: storage.Files, directory: storage.PathZ, number: u32, extension: []const u8) bool {
             if (directory.len >= path_bytes) return false;
+            if (capacity <= 256) {
+                if (files.sys.base.generation2) |context| {
+                    const result = self.loadPicker(files, context, directory, number, extension);
+                    self.last_error = result;
+                    return result == 0;
+                }
+            }
             var next = Self{ .number = number };
             if (!text.assignZ(&next.directory, directory.bytes())) return false;
             var iterator = files.iterate(directory);
@@ -57,6 +70,76 @@ pub fn DialogPage(comptime capacity: usize, comptime path_bytes: usize, comptime
             if (seen > first + page_size and !next.add(.next, "", "Next page >>")) return false;
             self.* = next;
             return true;
+        }
+
+        fn loadPicker(self: *Self, files: storage.Files, context: *const @import("platform2.zig").Context, directory: storage.PathZ, number: u32, extension: []const u8) i32 {
+            const binding = picker.provider2(context);
+            if (binding.status != 0) return binding.status;
+            const buffers = files.sys.allocator().alloc(picker.Row, capacity * 2) catch return picker.codes.storage_error;
+            defer files.sys.allocator().free(buffers);
+            var session: picker.Session = undefined;
+            const initialized = picker.Session.init(buffers[0..capacity], buffers[capacity..], picker.codes.mode_open, extension, binding.provider, &session);
+            if (initialized != 0) return initialized;
+            defer {
+                var decision: picker.Decision = undefined;
+                _ = session.cancel(&decision);
+            }
+            var path = directory.bytes();
+            while (path.len > 3 and (path[path.len - 1] == '\\' or path[path.len - 1] == '/')) path = path[0 .. path.len - 1];
+            const begun = session.begin(path, number);
+            if (begun != 0) return begun;
+            const platform = @import("platform2.zig");
+            const clock = platform.abi.function(platform.abi.R4SysFns2, context.system(), "monotonic_clock");
+            const rpc = @import("rpc_budget.zig");
+            var budget = rpc.Budget.fromTimeout(clock, .{ .kind = 1, .nanoseconds = 5_000_000_000 }) catch |err| return rpc.code(err);
+            while (session.phase != 0) {
+                _ = budget.remainingTicks() catch |err| return rpc.code(err);
+                const advanced = session.step(64);
+                if (advanced != 0) return advanced;
+                if (session.phase != 0) files.sys.taskYield();
+            }
+            const rows = session.rows() orelse return picker.codes.incomplete;
+            var next = Self{ .number = number, .cursor = session.active_cursor };
+            if (!text.assignZ(&next.directory, std.mem.sliceTo(&session.directory_path, 0))) return picker.codes.storage_error;
+            for (rows) |row| {
+                const kind: Kind = switch (row.kind) {
+                    picker.codes.file => .file,
+                    picker.codes.directory => .directory,
+                    picker.codes.previous => .previous,
+                    picker.codes.next => .next,
+                    else => return picker.codes.bad_provider,
+                };
+                const at = next.count;
+                var label: [label_bytes]u8 = undefined;
+                if (!text.labelZ(&label, std.mem.sliceTo(&row.label, 0)) or
+                    !next.add(kind, std.mem.sliceTo(&row.entry.path, 0), std.mem.sliceTo(&label, 0))) return picker.codes.storage_error;
+                if (row.entry.info.flags & abi.file_metadata2_flag_identity_valid != 0) next.rows[at].identity = row.entry.info.identity;
+            }
+            self.* = next;
+            return 0;
+        }
+
+        /// A copied UI row is an observation. Validate the exact directory
+        /// cursor and object identity again before acting on its full path.
+        pub fn verify(self: *const Self, files: storage.Files, index: usize) i32 {
+            if (index >= self.count) return picker.codes.invalid;
+            var cursor = self.cursor orelse return 0;
+            const context = files.sys.base.generation2 orelse return abi.err_no_group;
+            var empty: [0]abi.DirectoryMetadataEntry2 = .{};
+            const rc = metadata.batch(context, null, &cursor, &empty);
+            if (rc != 0) return rc;
+            const row = &self.rows[index];
+            if (row.identity.mount_generation == 0) return 0;
+            const info = switch (metadata.info(context, @ptrCast(&row.path))) {
+                .found => |value| value,
+                .missing => return picker.codes.missing,
+                .failure => |code| return code,
+            };
+            if (info.version != 1 or info.size != @sizeOf(abi.FileMetadata2) or
+                info.flags & abi.file_metadata2_flag_identity_valid == 0 or
+                !std.meta.eql(row.identity, info.identity) or
+                (info.flags & abi.file_metadata2_flag_directory != 0) != (row.kind == .directory)) return picker.codes.stale;
+            return 0;
         }
 
         fn add(self: *Self, kind: Kind, path: []const u8, label: []const u8) bool {

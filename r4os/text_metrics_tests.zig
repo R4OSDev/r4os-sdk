@@ -238,5 +238,22 @@ test "text metrics owner normal Context2 Canvas prepares once and borrows exact 
     try std.testing.expectEqual(@as(usize, 0), old_calls);
     try std.testing.expectEqual(a.font_metrics2_encoding, canvas.textIndexChecked("\xc3", 8, &hit));
     try std.testing.expectEqual(@as(usize, 0x1234), hit);
+    drawing.font_prefix_metrics2 = @intFromPtr(&collect);
+    var area = gui.TextArea(32){};
+    area.set("iWe\u{301}🙂\nWi");
+    const view = gui.TextAreaView.init(12, 2);
+    try std.testing.expectEqual(@as(i32, 0), area.hitTestChecked(canvas, 2, 0, view, &hit));
+    try std.testing.expectEqual(@as(usize, 1), hit);
+    try std.testing.expectEqual(@as(i32, 0), area.hitTestChecked(canvas, 17, 0, view, &hit));
+    try std.testing.expectEqual(@as(usize, 5), hit);
+    area.scroll_line = 1;
+    area.scroll_col = 1;
+    try std.testing.expectEqual(@as(i32, 0), area.hitTestChecked(canvas, 2, 0, view, &hit));
+    try std.testing.expectEqual(@as(usize, 12), hit);
+    drawing.font_prefix_metrics2 = 0;
+    hit = 0x1234;
+    try std.testing.expectEqual(a.err_no_fn, area.hitTestChecked(canvas, 2, 0, view, &hit));
+    try std.testing.expectEqual(@as(usize, 0x1234), hit);
+    try std.testing.expectEqual(@as(usize, 0), old_calls);
     std.debug.print("TX042 normal Canvas input4096 callbacks1 legacy0; bound hits66 additional_callbacks0; exact source/revision failures preserve output\n", .{});
 }
