@@ -1799,4 +1799,35 @@ Zeitbudget-Fehlercodes gehoeren dem reinen time_budget-Besitzer. Statische
 Library-Helfer binden dadurch ausschliesslich die benoetigten Funktionen ein.
 Die C-/Rust-Laufzeit stellt ihre fremdsprachigen Exporte bereit.
 
-SDK201 / Migration0.90.65: Der Hostpackager nimmt32 technische und fachliche Imports auf. Der passende Kernel476 uebergibt alle32 Records und genaue Library-Codebindungen. R4M0-Header und16Byte-Importrecords bleiben im bisherigen Format. Die bestehenden Packagertests pruefen0/16/17/22/32 sowie die Ablehnung33 vor Dateiersetzung.
+Mit SDK201 aus Migration0.90.65 nimmt der Hostpackager32 technische und fachliche Imports auf. Der passende Kernel476 uebergibt alle32 Records und genaue Library-Codebindungen. R4M0-Header und16Byte-Importrecords bleiben im bisherigen Format. Die bestehenden Packagertests pruefen0/16/17/22/32 sowie die Ablehnung33 vor Dateiersetzung.
+
+
+Familienfaehige Netzwerkprogramme ab SDK0.64.202
+----------------------------------------------
+Migration0.90.69 verwendet network_family im normalen App2-Verbraucher.
+parseIpv4 erhaelt dezimale fuehrende Nullen der bisherigen Netzwerktools.
+parseAddress/parseEndpoint verlangen fuer linklokales IPv6 eine ausdrueckliche
+numerische Interfaceidentitaet. Systeminterfaces kommen aus dem IPv6-Owner.
+Globale Adressen besitzen Scope0. Gemappte IPv4-Adressen und Multicast werden
+von diesen Unicast-Kommandohelfern abgewiesen. addressText formatiert reine
+Adressdaten ohne Hostnetzaufruf.
+
+resolveAll sammelt bis32 Antworten ueber echte maximal16er-Pins privat.
+Provider, Query, Gesamtzahl und Ablaufzeit bleiben ueber alle Seiten gleich.
+Ein gemeinsames Clockbudget gilt fuer Info, Resolve, Seiten und Release.
+Erst eine bestaetigte Freigabe veroeffentlicht das komplette Ergebnis. Eine
+verlorene Release-Antwort wird einmal gemeldet. Das Ergebnis bleibt privat.
+Fehlerbereinigung versucht eine vorhandene Lease innerhalb des Restbudgets
+einmal freizugeben. Der bestehende DNS-Owner behaelt seine Ablauf- und
+Besitzerbereinigung. Service-Close ist gesondert zu quittieren.
+
+Ipv6 leiht R4DEV fuer exakte kopierte Protokollrecords. Interface, Provider
+und Linkgeneration binden Address/Route/Packet an den externen IPv6-Owner.
+Dhcp verwendet dessen bestehenden DHCPSVC-Recordvertrag mit gemeinsamem
+Budget und kanonischer absoluter Tickdeadline. Ein fehlender Dienst liefert
+einen Fehler. Das Statusziel bleibt dabei unveraendert.
+
+Diese Zig-Verbraucherhelfer komponieren die vorhandenen kopierten Vertrage.
+C und Rust behalten ihre bisherigen Record-/Dispatch-/Servicefassaden.
+Die neuen Komforthelfer besitzen hier eigene Zig-Faelle. Aussagen zur
+Sprachparitaet der bestehenden Transportfassaden behalten ihren Umfang.

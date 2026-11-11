@@ -814,6 +814,12 @@
         "contract_package": "0.64.93",
         "scope": "Normal actual App2/Context2 ServiceLoop, network and owned requests, audio and devices, ArgCursor/diagnostics, StreamTransfer, family clients, WaitSets, BytePipe/LaunchIO and optional Capture. One shared total RPC budget across audio writes and Clipboard chunks; source identity and canonical absolute tick epoch retained.",
         "boundaries": "Productive module migration and controlled default/old-provider retirement remain their planned steps. Native audio hardware and IPv6 transport are not inferred from host facade qualification."
+      },
+      "zig_frontend_helpers_09069": {
+        "sdk": "0.64.202",
+        "source": "Repositories/SDK/r4os/network_family.zig",
+        "scope": "Stateless address parsing/formatting, complete paginated DNS collection, typed R4DEV IPv6 record views and budgeted existing DHCPv4 service records. Zig convenience composition for the five Zig apps. Existing C/Rust copied records, protocol dispatch and service calls retain their established qualification scope.",
+        "tests": "Four specific network family cases in the existing data-parity-test owner entry. Native five-consumer qualification belongs to migration0.90.69."
       }
     },
     {
