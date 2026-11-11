@@ -58966,6 +58966,12 @@
       "scope": "167 original platform, service, transport, update and resource SDK tests; direct native consumer evidence is recorded separately. Final freestanding C/Rust facade runtime accepts the existing generated fingerprints. The original credential test checks 8.3 stage names at a wide clock value.",
       "receipt": "Research/API-ABI/Migration/0.90.62/Host.json",
       "log": "Temp/ApiMigrationRun/062/SdkReviewed.log"
+    },
+    "normal_app2_launch_class_09064": {
+      "complete": true,
+      "scope": "77 existing platform cases including effective application classes, unchanged manifest admission and service role. Existing C and Rust host startup/heap cases exercise the shared boundary with a GUI override. Native Services console and desktop proof is separate.",
+      "receipt": "Research/API-ABI/Migration/0.90.64/Host.json",
+      "log": "Temp/ApiMigrationRun/064/App2Sdk.log"
     }
   },
   "wave_bindings": [
@@ -59218,13 +59224,13 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.90.62",
-    "sdk": "0.64.199",
+    "performed_in": "0.90.64",
+    "sdk": "0.64.200",
     "contract": "0.64.93",
     "libraries": "0.64.56",
-    "evidence": "server_access_update_start2_09062",
+    "evidence": "normal_app2_launch_class_09064",
     "historical_snapshot_retained": true,
-    "scope": "Native Start2 registration, one-shot HTTP and downloads use a typed TCP socket. The update engine borrows the original system and file facades. Checked RPC time and service admission helpers share one budget. The generated GUI and transport bridges compile with the existing fingerprints."
+    "scope": "Normal App2 admits the effective Console or GUI application class selected by the loader. Manifest profile and ordered imports retain their own checks. The service profile requires the exact service class. Zig, C and Rust normal startup share one implementation."
   },
   "drift_guard": {
     "schema": 1,
@@ -61316,7 +61322,7 @@
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/App2Startup.c",
-        "sha256": "9ff60656c3fc5961192704689a01ee0b2d210a6bad4509dd3a9715e9ee3903fa"
+        "sha256": "9c13cdd58f9d722d2e294fddc8cd68893b51bf921475ad8fcf8b4d4a0af2d9f6"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/AudioWrite.rs",
@@ -61364,7 +61370,7 @@
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/RustHeap.rs",
-        "sha256": "ed6bf7e26963ac702e05ff2b1ff9f7f88169c951a41bb0dc90368b850b9b4bea"
+        "sha256": "00dcd3249af5ec3c077fa437772132e35a65db01ac87b7c7a00795d0edcadf27"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/RustPlatform.rs",
@@ -61636,7 +61642,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "9a0ff93c82e1cdc518ebb29402b4da4e534d65677acb0d07b8197d8cab97a1be"
+        "sha256": "0e1866fd8b667cf9fbefa815da0088b79c4db5da0cbc20d034f9c9a1a20c0837"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -61656,7 +61662,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/app2.zig",
-        "sha256": "85b42da8be3e192bb804fec7131ef26e0fba288ce7bfff20a316d0cc1ab6bd42"
+        "sha256": "dd43efc33c2e771a0f677aec67e0d94ab14417c53f36efb51f7e6d698730fb71"
       },
       {
         "path": "Repositories/SDK/r4os/app2_runtime.zig",
@@ -62236,7 +62242,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/platform2.zig",
-        "sha256": "ee55c571eaeb18530f2a5835e952b95c2aa067a820e2306f9776d48a8722702f"
+        "sha256": "0e4839ce28860dff9a84358fa8d5c5b0e4c65506ecef716cf95559262419e396"
       },
       {
         "path": "Repositories/SDK/r4os/platform_runtime.zig",
@@ -62933,7 +62939,8 @@
           "platform_generation2_09014",
           "normal_app2_09040",
           "tooling_templates_generation2_09044",
-          "canonical_text_font_image_generation2_09045"
+          "canonical_text_font_image_generation2_09045",
+          "normal_app2_launch_class_09064"
         ]
       },
       {
@@ -63773,7 +63780,8 @@
           "platform_generation2_09012",
           "platform_generation2_09013",
           "platform_generation2_09014",
-          "tooling_templates_generation2_09044"
+          "tooling_templates_generation2_09044",
+          "normal_app2_launch_class_09064"
         ]
       },
       {
@@ -65149,6 +65157,15 @@
       "evidence": "storage_actual2_volume_lease_09061",
       "historical_snapshot_retained": true,
       "scope": "Existing Zig physical-storage facade resolves actual Start2 Query2 slots without a Bundle. The two focused host cases exercise the complete 64-bit lease, failed End retention, and missing Begin/End with a live legacy fixture present. Controlled Start1 dispatch is preserved. C/Rust/shared generated source bytes, slots and payload layouts are unchanged. SFTP/FTP and other runtime evidence are separately qualified at Migration0.90.61."
+    },
+    {
+      "performed_in": "0.90.62",
+      "sdk": "0.64.199",
+      "contract": "0.64.93",
+      "libraries": "0.64.56",
+      "evidence": "server_access_update_start2_09062",
+      "historical_snapshot_retained": true,
+      "scope": "Native Start2 registration, one-shot HTTP and downloads use a typed TCP socket. The update engine borrows the original system and file facades. Checked RPC time and service admission helpers share one budget. The generated GUI and transport bridges compile with the existing fingerprints."
     }
   ]
 }

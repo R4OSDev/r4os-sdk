@@ -288,6 +288,12 @@ test "normal App2 validates ordered manifest libraries and keeps exact lifecycle
     app.yield();
     try std.testing.expectEqual(@as(u32, 1), Callback.yields);
     try std.testing.expect(app.allocator() == null);
+    raw.app_class = @intFromEnum(abi.shared.R4XStartAppClass.gui);
+    try std.testing.expect(startup.App.initDeclared(&raw, &facts) == .value);
+    var wrong_facts = facts;
+    wrong_facts.app_class = raw.app_class;
+    try std.testing.expect(startup.App.initDeclared(&raw, &wrong_facts) == .failure);
+    raw.app_class = @intFromEnum(abi.shared.R4XStartAppClass.console);
     rows[1].module_name = @intFromPtr("OTHER");
     try std.testing.expect(startup.App.initDeclared(&raw, &facts) == .failure);
     rows[1].module_name = @intFromPtr("OPTIONAL");
@@ -317,6 +323,15 @@ test "normal App2 requires actual class groups and rejects old contexts and grou
     try std.testing.expect(startup.App.init(&raw, .desktop) == .value);
     raw.app_class = 3;
     try std.testing.expect(startup.App.init(&raw, .service) == .value);
+    try std.testing.expect(startup.App.init(&raw, .console) == .failure);
+    try std.testing.expect(startup.App.init(&raw, .desktop) == .failure);
+    raw.app_class = 1;
+    try std.testing.expect(startup.App.init(&raw, .desktop) == .value);
+    try std.testing.expect(startup.App.init(&raw, .service) == .failure);
+    raw.import_count = 2;
+    try std.testing.expect(startup.App.init(&raw, .desktop) == .failure);
+    raw.import_count = 3;
+    raw.app_class = 0;
     try std.testing.expect(startup.App.init(&raw, .console) == .failure);
     raw.app_class = 1;
     raw.flags = 0;

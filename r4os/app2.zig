@@ -47,8 +47,15 @@ pub const App = struct {
     pub fn init(raw: *const platform2.abi.R4XStartContext2, profile: abi.R4AppProfile) contract.Outcome(App) {
         const context = platform2.Context.init(raw) catch return failure(-12);
         const meta = abi.r4AppProfileMeta(profile);
-        if (raw.app_class != @intFromEnum(meta.app_class) or
-            raw.flags & abi.r4xstart_flag_imports_valid == 0) return failure(-12);
+        // LaunchPolicy may select either application class. Service admission
+        // always binds the declared service profile to the actual service role.
+        const class_matches = switch (meta.app_class) {
+            .console, .gui => raw.app_class == @intFromEnum(abi.R4XStartAppClass.console) or
+                raw.app_class == @intFromEnum(abi.R4XStartAppClass.gui),
+            .service => raw.app_class == @intFromEnum(abi.R4XStartAppClass.service),
+            .auto => false,
+        };
+        if (!class_matches or raw.flags & abi.r4xstart_flag_imports_valid == 0) return failure(-12);
         inline for (std.meta.tags(abi.R4LGroup)) |group| {
             if (meta.required_groups & (@as(u32, 1) << @as(u5, @intCast(@intFromEnum(group)))) != 0 and
                 !hasContextGroup(&context, group)) return failure(-15);

@@ -175,6 +175,15 @@ fn exact_owner_alignment_resize_failure_and_all_release_acknowledgements() {
             reserved: 0,
         }],
     };
+    #[cfg(feature = "generation2")]
+    {
+        let gui = StartContext {
+            app_class: abi::R4XStartAppClass::gui.0,
+            ..ctx
+        };
+        let app = unsafe { App::from_raw(&gui, &expected, c"HEAPTEST") }.unwrap();
+        assert!(std::ptr::eq(app.start_context(), &gui));
+    }
     let app = unsafe { App::from_raw(&ctx, &expected, c"HEAPTEST") }.unwrap();
     let heap = app.heap().unwrap();
     let empty = heap.allocate(0, 4096).unwrap();

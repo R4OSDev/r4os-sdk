@@ -5,6 +5,15 @@ Dieses Repository enthaelt das hostneutrale Kern-SDK von R4OS: Zig- und
 C-Fassaden, Buildprofile, Templates, Smokeprojekte sowie die generischen
 Werkzeuge R4XBuilder, R4LContractGen und ModuleCatalog.
 
+Startklasse normaler App2-Module ab0.64.200
+------------------------------------------
+Das Manifest bestimmt Profil, benoetigte Gruppen und geordnete Imports.
+Die Startpolicy kann fuer Anwendungen die effektive Klasse Konsole oder
+GUI waehlen. Eine GUI-Anwendung kann damit ihre vorhandenen Befehlszeilen-
+aktionen auch in der Konsole ausfuehren. Die fachlichen APIs richten sich
+nach dem tatsaechlichen Startkontext. Der Dienststart erfordert auf beiden
+Seiten die Dienstrolle. Zig, C und Rust verwenden dieselbe App2-Pruefung.
+
 Native WaitSets ab0.64.171
 --------------------------
 Docs/WaitSets.txt beschreibt die Query2-Fassaden fuer begrenztes wait-any

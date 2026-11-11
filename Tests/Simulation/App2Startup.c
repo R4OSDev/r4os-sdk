@@ -60,6 +60,9 @@ int main(void) {
     assert(!r4_app2_should_close(&app)); close_requested=1; assert(r4_app2_should_close(&app));
     assert(r4_app2_yield(&app)==1 && yields==1);
     assert(r4_app2_write(&app,(const uint8_t *)"app2-c",6)==3 && writes==1);
+    raw.app_class=2;
+    assert(r4_app2_init(&raw,&facts,&app)==0 && app.context.raw==&raw);
+    raw.app_class=1;
     R4App2Memory sentinel; memset(&sentinel,0xa5,sizeof(sentinel)); R4App2Memory output=sentinel;
     /* A raw entry explicitly opts into the same SDK helper owner. It does not
      * install/allocate a global heap and preserves output on failed admission. */
