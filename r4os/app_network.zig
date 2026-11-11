@@ -244,6 +244,28 @@ pub const Resolver = struct {
     pub fn resolveA(self: *Resolver, name: []const u8, server: ?Ipv4Address, timeout: Timeout) ResolveResult {
         if (name.len == 0 or name.len > abi.service_api_max_payload - 4) return .{ .failure = abi.dns_result_name };
         if (Ipv4Address.parseCanonical(name)) |address| return .{ .address = address };
+        if (self.network.sys.base.generation2) |context| {
+            const family = @import("network_family.zig");
+            const rpc = @import("rpc_budget.zig");
+            const clock = @import("stream_adapters.zig").PlatformClock.fromContext2(context) catch
+                return .{ .failure = rpc.code(error.ClockUnavailable) };
+            var budget = rpc.Budget.fromTimeout(clock.read, timeout) catch |err|
+                return .{ .failure = rpc.code(err) };
+            var client: family.Client = undefined;
+            const opened = family.Client.connect(context, .dns, &client);
+            if (opened == abi.service_api_result_not_found or opened == abi.service_api_result_no_endpoint or opened == abi.service_api_result_not_running) return .no_service;
+            if (opened != 0) return .{ .failure = opened };
+            defer _ = client.close();
+            var answers: [32]abi.NetworkResolveAnswer = undefined;
+            var count: u32 = 0;
+            const selected_server = if (server) |address| family.common.v4Endpoint(address.octets, 53) else abi.NetworkEndpoint{};
+            const result = family.resolveAll(&client, name, 4, selected_server, &budget, &answers, &count);
+            if (result == abi.network_error_timeout or result == abi.service_api_result_timeout) return .timed_out;
+            if (result == abi.network_error_not_found) return .not_found;
+            if (result != 0) return .{ .failure = result };
+            if (count == 0) return .not_found;
+            return .{ .address = Ipv4Address.fromBytes(answers[0].address.bytes[0..4].*) };
+        }
         var request: [abi.service_api_max_payload]u8 = undefined;
         var len: usize = 0;
         const op: u16 = if (server) |address| blk: {

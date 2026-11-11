@@ -59038,7 +59038,7 @@
     },
     "browser_snapshot_consumers_09075": {
       "complete": true,
-      "scope": "SDK208 adds the actual validated snapshot file_size to the existing Zig DocumentPrefix result. The original preview boundary remains file_size >= capacity, while whole-file consumers can require file_size == bytes. This is a logical Zig convenience result. Native C/Rust metadata records and their exact provider calls retain the recorded existing language evidence. Data qualification ran all134 existing cases,133 passed and the extended prefix case exposed its old final read-counter expectation after one additional fixture read. Only that test expectation was corrected. The complete focused original prefix case then passed, including its new size assertion and no-read-after-expiry boundary. All55 existing/new browser repository cases passed. Native consumers, normal tools and performance have separate receipts.",
+      "scope": "SDK208 adds the actual validated snapshot file_size to the existing Zig DocumentPrefix result. The original preview boundary remains file_size >= capacity, while whole-file consumers can require file_size == bytes. This is a logical Zig convenience result. Native C/Rust metadata records and their exact provider calls retain the recorded existing language evidence. Data qualification ran all134 existing cases,133 passed and the extended prefix case exposed its old final read-counter expectation after one additional fixture read. Only that test expectation was corrected. The complete focused original prefix case then passed, including its new size assertion and no-read-after-expiry boundary. All55 existing/new browser repository cases passed. Native consumers, normal tools and performance have separate receipts. The completed unpublished SDK208 also routes the productive App2 web resolver through network_family.resolveAll with one checked budget, all pinned pages, exact Release ACK and endpoint Close. The existing pagination case now exercises the actual App2 resolver with20 answers, changed identity, lost Release ACK and a missing-clock boundary without provider work. All134 existing data cases and the native composition ABI pass together on this final source. Original133/134 and corrected focused prefix attempts remain historical evidence. Native wire and normal final consumer artifacts have separate receipts.",
       "receipt": "Research/API-ABI/Migration/0.90.75/SdkHost.json",
       "limits": "Logical Zig helper result with actual Linux owner qualification. Native browser/device/network, normal tool outputs, Windows execution and performance have their own scopes."
     }
@@ -59299,7 +59299,7 @@
     "libraries": "0.64.57",
     "evidence": "browser_snapshot_consumers_09075",
     "historical_snapshot_retained": true,
-    "scope": "SDK208 adds the actual validated snapshot file_size to the existing Zig DocumentPrefix result. The original preview boundary remains file_size >= capacity, while whole-file consumers can require file_size == bytes. This is a logical Zig convenience result. Native C/Rust metadata records and their exact provider calls retain the recorded existing language evidence. Data qualification ran all134 existing cases,133 passed and the extended prefix case exposed its old final read-counter expectation after one additional fixture read. Only that test expectation was corrected. The complete focused original prefix case then passed, including its new size assertion and no-read-after-expiry boundary. All55 existing/new browser repository cases passed. Native consumers, normal tools and performance have separate receipts."
+    "scope": "SDK208 adds the actual validated snapshot file_size to the existing Zig DocumentPrefix result. The original preview boundary remains file_size >= capacity, while whole-file consumers can require file_size == bytes. This is a logical Zig convenience result. Native C/Rust metadata records and their exact provider calls retain the recorded existing language evidence. Data qualification ran all134 existing cases,133 passed and the extended prefix case exposed its old final read-counter expectation after one additional fixture read. Only that test expectation was corrected. The complete focused original prefix case then passed, including its new size assertion and no-read-after-expiry boundary. All55 existing/new browser repository cases passed. Native consumers, normal tools and performance have separate receipts. The completed unpublished SDK208 also routes the productive App2 web resolver through network_family.resolveAll with one checked budget, all pinned pages, exact Release ACK and endpoint Close. The existing pagination case now exercises the actual App2 resolver with20 answers, changed identity, lost Release ACK and a missing-clock boundary without provider work. All134 existing data cases and the native composition ABI pass together on this final source. Original133/134 and corrected focused prefix attempts remain historical evidence. Native wire and normal final consumer artifacts have separate receipts."
   },
   "drift_guard": {
     "schema": 1,
@@ -61755,7 +61755,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/app_network.zig",
-        "sha256": "9454a7269e0abc750e3f14f04f7f65d64f37698d8b3a0a979b1856fe6df5e9d1"
+        "sha256": "27133d1d387de6a40185da6727d8462af6d0ab91261f34986183aecc7898b99b"
       },
       {
         "path": "Repositories/SDK/r4os/app_resources.zig",
@@ -62279,7 +62279,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/network_family.zig",
-        "sha256": "099714d2d0b402e5b588932d82f792c29a9757512f0ffd6cfb7c7ad866f286c4"
+        "sha256": "afd3145e523f95cd22d5a627f1159d433f45e99f4cd475aa8ac862c1900b0296"
       },
       {
         "path": "Repositories/SDK/r4os/network_stream.zig",
@@ -63330,7 +63330,8 @@
           "normal_service_stream_facades_09043",
           "network_provider_actual_generation_host_09060",
           "network_frontend_composition_09069",
-          "network_stream_consumers_09070"
+          "network_stream_consumers_09070",
+          "browser_snapshot_consumers_09075"
         ]
       },
       {
@@ -63684,7 +63685,8 @@
           "transport_current_63",
           "server_access_0893",
           "benchmark_put_transport_0895",
-          "server_access_update_start2_09062"
+          "server_access_update_start2_09062",
+          "browser_snapshot_consumers_09075"
         ]
       },
       {

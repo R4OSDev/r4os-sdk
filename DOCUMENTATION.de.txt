@@ -1937,3 +1937,19 @@ Browserprofil- und Fontcacheleser koennen dadurch volle Dateien von einem
 kapazitaetsbegrenzten Praefix unterscheiden. Der vorhandene SDK-Ownerfall
 enthaelt Restart-, Groessen- und Ablaufpruefungen. FileMetadata2.txt nennt
 den genauen Ergebnisvertrag und die Sprachreichweite.
+
+Der gemeinsame App2-Resolver hinter WebTransport verwendet die vorhandene
+network_family.resolveAll-Komposition fuer IPv4-Namen. Alle gepinnten Seiten
+werden privat validiert und vor der Publikation mit genau einem Release
+quittiert. Ein verlorenes Release-ACK liefert einen Fehler. DNS-Info,
+Abfrage, Seiten und Release teilen eine validierte Gesamtfrist. Der echte
+Service-Endpunkt wird danach geschlossen. Numerische IPv4-Ziele behalten
+ihren direkten Parsepfad. Name-/Timeout-/NotFound- und NoService-Ergebnisse
+werden den bestehenden Resolvervarianten zugeordnet.
+
+Der vorhandene Paginationfall prueft jetzt denselben produktiven App2-
+Resolver mit zwanzig Antworten, zwei Seiten, einer Releasequittung und
+einem echten Endpoint-Close. Identitaetswechsel, verlorenes Release-ACK und
+fehlende Uhr geben kein erfolgreiches Ergebnis frei. Alle134 bestehenden
+SDK-Datenfaelle bestehen am finalen Quellstand. Die gemeinsame C-/Rust-
+Service-/Netzfassade und der native ABI-Aufbau behalten ihre Schnittstellen.

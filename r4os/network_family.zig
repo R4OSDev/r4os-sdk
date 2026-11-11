@@ -420,11 +420,20 @@ test "network family pagination keeps complete pinned identity and releases once
         var mode: u8 = 0;
         var pages: u32 = 0;
         var releases: u32 = 0;
+        var opens: u32 = 0;
+        var closes: u32 = 0;
         fn clock(out: *abi.MonotonicClockInfo) callconv(.c) i32 {
             out.* = .{ .flags = abi.monotonic_clock_flag_valid, .source = 1, .generation = 9, .instant_ns = 1_000_000_000, .resolution_ns = 1, .event_requested_hz = 1000, .event_effective_hz = 1000 };
             return 1;
         }
+        fn open(name: [*:0]const u8, out: *abi.ServiceInfo) callconv(.c) i32 {
+            if (!std.mem.eql(u8, std.mem.span(name), "DNSSVC")) return abi.service_api_result_no_endpoint;
+            opens += 1;
+            out.* = .{ .handle = 1 };
+            return 0;
+        }
         fn close(_: u32) callconv(.c) i32 {
+            closes += 1;
             return 0;
         }
         fn call(_: u32, op: u16, input: [*]const u8, length: u32, header: *abi.ServiceMessageHeader, output: [*]u8, _: u32, _: u64) callconv(.c) i32 {
@@ -469,6 +478,41 @@ test "network family pagination keeps complete pinned identity and releases once
             try std.testing.expect(rc < 0);
             try std.testing.expectEqual(@as(u32, 99), count);
             try std.testing.expectEqualDeep([_]abi.NetworkResolveAnswer{.{}} ** 32, answers);
+        }
+        Peer.pages = 0;
+        Peer.releases = 0;
+        Peer.opens = 0;
+        Peer.closes = 0;
+        var table: platform.abi.R4XStartR4Sys2 = .{
+            .monotonic_clock = @intFromPtr(&Peer.clock),
+            .service_open = @intFromPtr(&Peer.open),
+            .service_call = @intFromPtr(&Peer.call),
+            .service_close = @intFromPtr(&Peer.close),
+        };
+        const imports = [_]platform.abi.R4XStartImport{.{ .group_id = 1, .resolved_version = 2, .table = @intFromPtr(&table) }};
+        const raw: platform.abi.R4XStartContext2 = .{ .import_count = imports.len, .imports = @intFromPtr(&imports) };
+        const context = try platform.Context.init(&raw);
+        const program = @import("program.zig").Context{ .generation2 = &context };
+        var resolver = @import("app_network.zig").Resolver{ .network = .{
+            .sys = @import("r4sys.zig").Context.fromProgram(program),
+            .net = .{ .base = program },
+        } };
+        const answer = resolver.resolveA("pages.r4os", null, .{ .kind = abi.timeout_kind_finite, .nanoseconds = 5_000_000_000 });
+        try std.testing.expectEqual(@as(u32, 2), Peer.pages);
+        try std.testing.expectEqual(@as(u32, 1), Peer.releases);
+        try std.testing.expectEqual(@as(u32, 1), Peer.opens);
+        try std.testing.expectEqual(@as(u32, 1), Peer.closes);
+        if (mode == 0) {
+            try std.testing.expect(answer == .address);
+            try std.testing.expectEqual([4]u8{ 10, 0, 0, 1 }, answer.address.octets);
+            table.monotonic_clock = 0;
+            const unavailable = resolver.resolveA("pages.r4os", null, .{ .kind = abi.timeout_kind_finite, .nanoseconds = 5_000_000_000 });
+            try std.testing.expect(unavailable == .failure);
+            try std.testing.expectEqual(@import("rpc_budget.zig").code(error.ClockUnavailable), unavailable.failure);
+            try std.testing.expectEqual(@as(u32, 1), Peer.opens);
+            try std.testing.expectEqual(@as(u32, 2), Peer.pages);
+        } else {
+            try std.testing.expect(answer != .address);
         }
     }
 }
