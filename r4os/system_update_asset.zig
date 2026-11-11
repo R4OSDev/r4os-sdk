@@ -233,6 +233,14 @@ pub fn ensureParents(files: *const r.Files, directory: r.AbsoluteFilePath) !void
     var i: usize = 3;
     while (i <= text.len) : (i += 1) if (i == text.len or text[i] == '\\') {
         const parent = try r.AbsoluteFilePath.parse(text[0..i]);
+        if (files.sys.base.generation2 != null) {
+            switch (files.metadata(parent.asZ())) {
+                .found => |value| if (value.flags & r.abi.file_metadata2_flag_directory == 0) return error.AssetParentType,
+                .missing => if (files.createDirectory(parent.asZ()) != .ok) return error.AssetParentCreate,
+                .failure => return error.AssetParentInfo,
+            }
+            continue;
+        }
         switch (files.info(parent.asZ())) {
             .value => |v| {
                 if (v.is_dir == 0) return error.AssetParentType;

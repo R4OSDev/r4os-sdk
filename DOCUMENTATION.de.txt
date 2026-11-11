@@ -1855,3 +1855,9 @@ Grammatikgrenzen. Der vorhandene Status-/Journalwechseltest verwendet den
 aktuellen Engine-Konstruktor mit System- und Dateifassade und fuehrt seine
 bestehenden Vergleichsorakel aus. Native Portex-/SysUpdate-Belege stehen
 unter Research/API-ABI/Migration/0.90.71 im R4OS-Workspace.
+
+0.90.71 verwendet der Generation2-Originalassetadapter beim Anlegen seiner
+Elternverzeichnisse die vollstaendigen FileMetadata2-Verzeichnisflags.
+Dadurch sind vorhandene64-stellige SHA-Verzeichnisnamen im UPDATE-INBOX
+auch nach der Migration zulaessig. Der Erstgenerationpfad behaelt seinen
+eigenen Dateivertrag. API-Fehler im neuen Pfad bleiben sichtbar.
