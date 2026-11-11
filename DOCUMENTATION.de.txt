@@ -1757,3 +1757,22 @@ auch bei den anderen Funktionen derselben Fassade. App2-Volume-Leihen
 benoetigen Begin und End vor der Anmeldung. Nur der kontrollierte alte
 Kernel ohne Storage-Leihvertrag behaelt den bisherigen Transferpfad ohne
 Leihe; fehlende Query2-Slots werden als nicht unterstuetzt gemeldet.
+
+Serverzugang und Update-Engine ab0.64.199 (Migration0.90.62)
+---------------------------------------------------------
+Registrierung, einzelne HTTP-Abrufe und Downloads beziehen bei Start2 den
+TCP-Anbieter ueber den Familienvertrag von TCPSVC. Read, Write und Close
+verwenden Anbieter, Socket und Generation der Verbindung. Der HTTP-Client
+wertet vom Anbieter bestaetigte Bytes
+als Praefix aus. Ein RPC-Abbruch ohne Bestaetigung beendet den Transfer.
+Start1 verwendet den eigenen bestehenden IPv4-Transport.
+
+RpcBudget liefert die Restzeit fuer zeitbasierte Fassaden. R4SRV teilt
+sein Budget auf Erstzugang und Registrierung auf. UPDSVC verwendet ein
+Budget fuer Registrierung, Katalog, autorisierten Wiederholungsabruf
+und Pakettransfer des jeweiligen Auftrags. Der Update-Engine werden
+System- und Dateifassaden aus dem jeweiligen echten Startkontext geliehen.
+Dateioperationen und Journale nutzen den gemeinsamen Engine-Besitzer.
+Der Erstzugang veroeffentlicht sein Secret aus einem eigenen 8.3-Temporaernamen.
+Der Name bleibt auch bei lang laufenden Systemen fuer den atomaren Austausch
+gueltig.

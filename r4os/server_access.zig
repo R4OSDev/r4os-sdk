@@ -6,6 +6,7 @@ const time_contract = @import("time_contract.zig");
 
 pub const service_name: [*:0]const u8 = "R4SRV";
 pub const op_ensure: u16 = 1;
+const default_timeout = time_contract.timeoutFinite(time_contract.durationFromNanoseconds(15_000_000_000));
 
 pub const Code = enum(i32) {
     ok = 0,
@@ -53,23 +54,24 @@ pub const Client = struct {
     services: services_api.Services,
 
     pub fn ensure(self: *const Client, component: server_targets.Component) Call {
-        return self.send(.{ .component = @intFromEnum(component) });
+        return self.ensureBounded(component, null, default_timeout);
     }
 
     /// Use only after a definitive registration_required response to an
     /// idempotent read. Do not use for 403, 429, or an uncertain PUT.
     pub fn retryAfterRegistrationRequired(self: *const Client, component: server_targets.Component, generation: u32) Call {
-        return self.send(.{ .component = @intFromEnum(component), .force = 1, .observed_generation = generation });
+        return self.ensureBounded(component, generation, default_timeout);
     }
 
-    fn send(self: *const Client, request: EnsureRequest) Call {
+    /// A generation selects the same conditional retry as the default API.
+    pub fn ensureBounded(self: *const Client, component: server_targets.Component, generation: ?u32, timeout: time_contract.Timeout) Call {
+        const request: EnsureRequest = .{ .component = @intFromEnum(component), .force = @intFromBool(generation != null), .observed_generation = generation orelse 0 };
         var connection = switch (self.services.open(service_name)) {
             .connection => |value| value,
             .failure => |raw| return .{ .unavailable = raw },
         };
         defer _ = connection.close();
         var response: EnsureResponse = .{};
-        const timeout = time_contract.timeoutFinite(time_contract.durationFromNanoseconds(15_000_000_000));
         return switch (connection.call(op_ensure, std.mem.asBytes(&request), std.mem.asBytes(&response), timeout)) {
             .response => |received| if (received.bytes == @sizeOf(EnsureResponse)) .{ .response = response } else .malformed,
             .timed_out => .timed_out,

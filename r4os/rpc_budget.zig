@@ -49,3 +49,21 @@ pub const Budget = extern struct {
         return time.toWaitTicks(.{ .kind = 1, .value = try time.durationToTicks(.{ .nanoseconds = remaining.value }, now.identity.tick_hz) });
     }
 };
+
+/// Pass the remaining duration to facades that accept R4Timeout.
+pub fn remainingTimeout(budget: *Budget) Error!a.R4Timeout {
+    if (budget.has_tick_deadline > 1 or budget.reserved != 0) return error.InvalidBudget;
+    if (budget.has_tick_deadline == 0 and budget.deadline.kind != 1) {
+        _ = try time.toWaitTicks(.{ .kind = budget.deadline.kind });
+        return .{ .kind = @intCast(budget.deadline.kind) };
+    }
+    const now = try sample(budget.clock);
+    const remaining = try budget.deadline.remaining(now);
+    if (budget.has_tick_deadline != 0) {
+        const ticks = try now.ticks();
+        if (ticks >= budget.tick_deadline) return error.TimedOut;
+        return .{ .kind = 1, .nanoseconds = try time.scaleCeil(budget.tick_deadline - ticks, a.nanoseconds_per_second, now.identity.tick_hz) };
+    }
+    if (remaining.kind == 0) return error.TimedOut;
+    return .{ .kind = 1, .nanoseconds = remaining.value };
+}

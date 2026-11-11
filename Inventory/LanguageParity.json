@@ -58960,6 +58960,12 @@
       "receipt": "Research/API-ABI/Migration/0.90.61/Host.json",
       "source": "Temp/ApiMigrationRun/061/StorageHost.zig",
       "log": "Temp/ApiMigrationRun/061/StorageHost.log"
+    },
+    "server_access_update_start2_09062": {
+      "complete": true,
+      "scope": "167 original platform, service, transport, update and resource SDK tests; direct native consumer evidence is recorded separately. Final freestanding C/Rust facade runtime accepts the existing generated fingerprints. The original credential test checks 8.3 stage names at a wide clock value.",
+      "receipt": "Research/API-ABI/Migration/0.90.62/Host.json",
+      "log": "Temp/ApiMigrationRun/062/SdkReviewed.log"
     }
   },
   "wave_bindings": [
@@ -59212,13 +59218,13 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.90.61",
-    "sdk": "0.64.198",
+    "performed_in": "0.90.62",
+    "sdk": "0.64.199",
     "contract": "0.64.93",
     "libraries": "0.64.56",
-    "evidence": "storage_actual2_volume_lease_09061",
+    "evidence": "server_access_update_start2_09062",
     "historical_snapshot_retained": true,
-    "scope": "Existing Zig physical-storage facade resolves actual Start2 Query2 slots without a Bundle. The two focused host cases exercise the complete 64-bit lease, failed End retention, and missing Begin/End with a live legacy fixture present. Controlled Start1 dispatch is preserved. C/Rust/shared generated source bytes, slots and payload layouts are unchanged. SFTP/FTP and other runtime evidence are separately qualified at Migration0.90.61."
+    "scope": "Native Start2 registration, one-shot HTTP and downloads use a typed TCP socket. The update engine borrows the original system and file facades. Checked RPC time and service admission helpers share one budget. The generated GUI and transport bridges compile with the existing fingerprints."
   },
   "drift_guard": {
     "schema": 1,
@@ -61630,7 +61636,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "144ceff01823ac7e34df42e57613b12950e3a4d5bb9c36609c151d00fa2e84ee"
+        "sha256": "9a0ff93c82e1cdc518ebb29402b4da4e534d65677acb0d07b8197d8cab97a1be"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -61682,7 +61688,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/app_services.zig",
-        "sha256": "16d4411e005c36fbf2647f507febb9dce25b8ef8d6f95a69a5cc8ea853bc2270"
+        "sha256": "f5be7845f523a0f01f08acb2d56d25452ce2a767785dce5a42218be6c9e1cdca"
       },
       {
         "path": "Repositories/SDK/r4os/app_storage.zig",
@@ -61694,7 +61700,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/app_web.zig",
-        "sha256": "ff852399525f33bd8d49f5bde3ee6f8babc02d4b58cf8adc2aa0d9b4e5392709"
+        "sha256": "281ec6954b5bc599696526a53db5b923f778d3f95078c0a20787c80e0c7d0b6c"
       },
       {
         "path": "Repositories/SDK/r4os/app_web_jobs.zig",
@@ -62338,7 +62344,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/rpc_budget.zig",
-        "sha256": "6ba3793220c5e627c04ad9ed63c0854ddff46d34aeab4737e2a5820863f8907e"
+        "sha256": "f4a45c52130b5566783c057903566275b2a4703985cba476751a4c74b4ddca69"
       },
       {
         "path": "Repositories/SDK/r4os/runtime_bootstrap.zig",
@@ -62378,11 +62384,11 @@
       },
       {
         "path": "Repositories/SDK/r4os/server_access.zig",
-        "sha256": "d97f42597323a076d35938d890a4837b464f3a13b5ff9f506bc31ee458aefdcb"
+        "sha256": "24f49e59e99c07215550df74b94ace278412d2322f5bbf923c0bd4530457525c"
       },
       {
         "path": "Repositories/SDK/r4os/server_credentials.zig",
-        "sha256": "731213940b3e9ae509ee53db28280648e2d4d1a8ffbfccc579150819116adf8d"
+        "sha256": "bdb96417ad2e43197f60d41fc22b7c75237ebe3bc974ec6f84eaf12e3b806b63"
       },
       {
         "path": "Repositories/SDK/r4os/server_profile.zig",
@@ -62570,7 +62576,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/system_update_asset.zig",
-        "sha256": "5a9e2e614274d7c341dfc70b6a9d935676969104650b63ebd1934f7ff0118536"
+        "sha256": "a59848338b67bf5511e512a5f5ee1b51a2677185a08fc546f5fa2f5eaf7c4328"
       },
       {
         "path": "Repositories/SDK/r4os/system_update_asset_system.zig",
@@ -62586,7 +62592,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/system_update_engine.zig",
-        "sha256": "7ed1f656fb1f60aa7b99a3410aa3eef9c9b8bb47d9190dba742197ae70121cca"
+        "sha256": "9c92f49a354319f44161afd5ba2898cd993743cbbc1ff54f97e69f8e2b4d4da0"
       },
       {
         "path": "Repositories/SDK/r4os/system_update_inventory.zig",
@@ -63578,7 +63584,8 @@
         "proof": [
           "transport_current_63",
           "server_access_0893",
-          "benchmark_put_transport_0895"
+          "benchmark_put_transport_0895",
+          "server_access_update_start2_09062"
         ]
       },
       {
@@ -63605,7 +63612,8 @@
           "update_current_64",
           "asset_paths_08951",
           "asset_restart_08952",
-          "storage_actual2_volume_lease_09061"
+          "storage_actual2_volume_lease_09061",
+          "server_access_update_start2_09062"
         ]
       },
       {
@@ -65132,6 +65140,15 @@
       "evidence": "network_provider_actual_generation_host_09060",
       "historical_snapshot_retained": true,
       "scope": "Three existing Zig provider adapters now select the actual caller start generation. Provider rejects zero/mismatched/reserved identity. App2 connectProvider uses real Query2 functions and preserves exact open errors and missing-function status; no legacy fallback. Broker carries exact own and independent client identities. Three temporary actual2 host cases passed. C/Rust/shared generated sources are byte-equal to SDK196; no new foreign facade, slot, layout, symbol or helper ABI. Existing foreign qualifications remain bounded at their original receipts. Native whole-service/three-language-client, Windows compile and STANDARD evidence belong to Migration0.90.60 separately and are not granted by this source review."
+    },
+    {
+      "performed_in": "0.90.61",
+      "sdk": "0.64.198",
+      "contract": "0.64.93",
+      "libraries": "0.64.56",
+      "evidence": "storage_actual2_volume_lease_09061",
+      "historical_snapshot_retained": true,
+      "scope": "Existing Zig physical-storage facade resolves actual Start2 Query2 slots without a Bundle. The two focused host cases exercise the complete 64-bit lease, failed End retention, and missing Begin/End with a live legacy fixture present. Controlled Start1 dispatch is preserved. C/Rust/shared generated source bytes, slots and payload layouts are unchanged. SFTP/FTP and other runtime evidence are separately qualified at Migration0.90.61."
     }
   ]
 }

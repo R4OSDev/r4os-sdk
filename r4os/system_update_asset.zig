@@ -79,8 +79,11 @@ pub fn matches(value: Digest, size: u64, sha256: []const u8) bool {
     return value.size == size and std.ascii.eqlIgnoreCase(&value.sha256, sha256);
 }
 pub fn prepare(app: *r.App, plan: Plan, current: []const u8) !Prepared {
+    return prepareWithFiles(app.system(), app.files(), plan, current);
+}
+
+pub fn prepareWithFiles(ctx: r.r4sys.Context, file_api: ?r.Files, plan: Plan, current: []const u8) !Prepared {
     try validate(plan);
-    const ctx = app.system();
     const target = try system.RawPath.init(plan.target);
     const target_text = target.storage[0..target.len];
     var component_buffer: [1024]u8 = undefined;
@@ -95,7 +98,7 @@ pub fn prepare(app: *r.App, plan: Plan, current: []const u8) !Prepared {
     // System targets already belong to the existing R4U recovery contract.
     // Arbitrary application locations require the additive native operation.
     if (plan.boot) |proof| if (!proof.eql(try system.bootPlan(&ctx))) return error.BootPlanChanged;
-    const files = app.files() orelse return error.FilesUnavailable;
+    const files = file_api orelse return error.FilesUnavailable;
     const source = try r.AbsoluteFilePath.parse(plan.source);
     const allocator = ctx.allocator();
     const scratch = try allocator.alloc(u8, 64 * 1024);

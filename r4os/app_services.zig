@@ -4,6 +4,7 @@ const r4sys = @import("r4sys.zig");
 const time_contract = @import("time_contract.zig");
 const checked = @import("time_budget.zig");
 const checkedFailure = @import("time_budget_runtime.zig").failure;
+const rpc_budget = @import("rpc_budget.zig");
 
 pub const Timeout = time_contract.Timeout;
 
@@ -147,6 +148,39 @@ pub const Services = struct {
         return .{ .endpoint = .{ .sys = self.sys, .raw = info.handle, .owned = true, .info = info } };
     }
 };
+
+/// Retrying admission is source-level policy over the existing service ABI.
+pub fn registerUntil(services: *const Services, name: [*:0]const u8, flags: u32, budget: *rpc_budget.Budget) EndpointOpen {
+    while (!services.sys.programShouldClose()) {
+        _ = budget.remainingTicks() catch |err| return .{ .failure = rpc_budget.code(err) };
+        const result = services.register(name, flags);
+        switch (result) {
+            .endpoint => return result,
+            .failure => |code| switch (code) {
+                abi.service_api_result_busy, abi.service_api_result_duplicate, abi.service_api_result_not_running => {},
+                else => return result,
+            },
+        }
+        services.sys.sleepTicks(1);
+    }
+    return .{ .failure = abi.service_api_result_not_running };
+}
+
+pub fn openUntil(services: *const Services, name: [*:0]const u8, budget: *rpc_budget.Budget) ServiceOpen {
+    while (!services.sys.programShouldClose()) {
+        _ = budget.remainingTicks() catch |err| return .{ .failure = rpc_budget.code(err) };
+        const result = services.open(name);
+        switch (result) {
+            .connection => return result,
+            .failure => |code| switch (code) {
+                abi.service_api_result_busy, abi.service_api_result_not_found, abi.service_api_result_not_running, abi.service_api_result_no_endpoint => {},
+                else => return result,
+            },
+        }
+        services.sys.sleepTicks(1);
+    }
+    return .{ .failure = abi.service_api_result_not_running };
+}
 
 pub const ServiceOpen = union(enum) {
     connection: ServiceConnection,

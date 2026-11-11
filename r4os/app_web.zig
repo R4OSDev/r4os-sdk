@@ -2,6 +2,7 @@ const std = @import("std");
 const abi = @import("r4os_contract").abi;
 const app_network = @import("app_network.zig");
 const http = @import("http.zig");
+const family = @import("network_family.zig");
 const r4dev = @import("r4dev.zig");
 const time_contract = @import("time_contract.zig");
 const web_crypto = @import("web_crypto.zig");
@@ -19,6 +20,7 @@ const max_request_bytes: usize = 12 * 1024;
 const max_url_bytes: usize = 1024;
 const max_tls_flight_bytes: usize = 16 * 1024;
 const max_tls_record_bytes: usize = 5 + 16 * 1024 + 8 + 16;
+const socket_close_timeout = time_contract.timeoutFinite(time_contract.durationFromNanoseconds(250_000_000));
 pub const tls_workspace_bytes: usize = 18 * 1024;
 pub const tls_scratch_bytes: usize = tls_workspace_bytes * 3;
 comptime {
@@ -26,6 +28,122 @@ comptime {
 }
 
 pub const Timeout = time_contract.Timeout;
+
+const Socket = struct {
+    const Open = union(enum) { socket: Socket, timed_out, failed };
+    const Typed = struct {
+        client: family.Client,
+        identity: abi.NetworkSocketResult,
+    };
+
+    network: app_network.Network,
+    connection: union(enum) { start1: app_network.TcpSocket, start2: Typed },
+
+    fn open(network: app_network.Network, remote: app_network.SocketAddress, timeout: Timeout) Open {
+        const actual = network.sys.base.generation2 orelse return switch (network.connectTcp(remote, timeout)) {
+            .socket => |socket| .{ .socket = .{ .network = network, .connection = .{ .start1 = socket } } },
+            .timed_out => .timed_out,
+            else => .failed,
+        };
+        const sample = family.common.sample(network.sys) catch return .failed;
+        var budget = time_contract.checked.DeadlineBudget.init(sample, timeout) catch return .failed;
+        const limit = family.fromBudget(budget) catch return .failed;
+        var client: family.Client = undefined;
+        if (family.Client.connect(actual, .tcp, &client) != 0) return .failed;
+        var keep = false;
+        defer if (!keep) {
+            _ = client.close();
+        };
+        client.timeout_ticks = remainingTicks(network, &budget) orelse return .timed_out;
+        var info: abi.NetworkProviderInfo = .{};
+        if (client.info(&info) != 0 or info.capabilities & (abi.network_cap_ipv4 | abi.network_cap_tcp) != (abi.network_cap_ipv4 | abi.network_cap_tcp)) return .failed;
+        client.timeout_ticks = remainingTicks(network, &budget) orelse return .timed_out;
+        var result: abi.NetworkSocketResult = .{};
+        const rc = client.socket(abi.network_op_connect, .{
+            .provider = info.provider,
+            .endpoint = family.common.v4Endpoint(remote.address.octets, remote.port),
+            .deadline = limit,
+        }, "", &.{}, &result);
+        if (rc == abi.network_error_timeout or rc == abi.service_api_result_timeout) return .timed_out;
+        if (rc != 0 or result.state != abi.network_state_ready) return .failed;
+        keep = true;
+        return .{ .socket = .{ .network = network, .connection = .{ .start2 = .{ .client = client, .identity = result } } } };
+    }
+
+    fn remainingTicks(network: app_network.Network, budget: *time_contract.checked.DeadlineBudget) ?u64 {
+        const sample = family.common.sample(network.sys) catch return null;
+        const left = budget.remaining(sample) catch return null;
+        return switch (left.kind) {
+            0 => if (budget.kind == 0) 0 else null,
+            1 => time_contract.checked.durationToTicks(.{ .nanoseconds = left.value }, sample.identity.tick_hz) catch null,
+            2 => abi.io_wait_forever,
+            else => null,
+        };
+    }
+
+    fn read(self: *Socket, out: []u8, timeout: Timeout) app_network.SocketIo {
+        return switch (self.connection) {
+            .start1 => |*socket| socket.read(out, timeout),
+            .start2 => |*socket| self.call(socket, abi.network_op_read, "", out[0..@min(out.len, 4008)], timeout),
+        };
+    }
+
+    fn write(self: *Socket, data: []const u8, timeout: Timeout) app_network.SocketIo {
+        return switch (self.connection) {
+            .start1 => |*socket| socket.write(data, timeout),
+            .start2 => |*socket| self.call(socket, abi.network_op_write, data[0..@min(data.len, 3968)], &.{}, timeout),
+        };
+    }
+
+    fn dispose(self: *Socket, legacy_timeout: Timeout) void {
+        switch (self.connection) {
+            .start1 => |*socket| _ = socket.close(legacy_timeout),
+            .start2 => |*socket| {
+                // The transport budget may already be exhausted. Give the
+                // exact socket a close attempt, then release its IPC endpoint.
+                defer _ = socket.client.close();
+                _ = self.call(socket, abi.network_op_close, "", &.{}, socket_close_timeout);
+            },
+        }
+    }
+
+    fn call(self: *const Socket, socket: *Typed, op: u16, data: []const u8, out: []u8, timeout: Timeout) app_network.SocketIo {
+        if (socket.identity.socket == 0) return .{ .failure = abi.err_closed };
+        const sample = family.common.sample(self.network.sys) catch return .{ .failure = abi.network_error_clock_changed };
+        var budget = time_contract.checked.DeadlineBudget.init(sample, timeout) catch return .{ .failure = abi.network_error_clock_changed };
+        const limit = family.fromBudget(budget) catch return .{ .failure = abi.network_error_clock_changed };
+        socket.client.timeout_ticks = remainingTicks(self.network, &budget) orelse return .timed_out;
+        var result: abi.NetworkSocketResult = .{};
+        const rc = socket.client.socket(op, .{
+            .provider = socket.identity.provider,
+            .socket = socket.identity.socket,
+            .generation = socket.identity.generation,
+            .bytes = @intCast(if (op == abi.network_op_read) out.len else data.len),
+            .deadline = limit,
+        }, data, out, &result);
+        // An RPC timeout can have consumed bytes. Only a provider timeout
+        // carries a known zero prefix for a safe later read attempt.
+        if (rc != 0) return switch (rc) {
+            abi.network_error_timeout => .timed_out,
+            abi.network_error_reset => .reset,
+            abi.network_error_would_block => .would_block,
+            else => .{ .failure = rc },
+        };
+        if (op == abi.network_op_close and result.state == abi.network_state_local_closed) {
+            socket.identity = .{};
+        }
+        if (result.bytes != 0) return .{ .bytes = result.bytes };
+        return switch (result.state) {
+            abi.network_state_ready => .{ .bytes = 0 },
+            abi.network_state_would_block => .would_block,
+            abi.network_state_eof => .peer_closed,
+            abi.network_state_reset => .reset,
+            abi.network_state_local_closed => .closed,
+            abi.network_state_timeout => .timed_out,
+            else => .{ .failure = abi.network_error_invalid },
+        };
+    }
+};
 
 pub const RequestDeadline = struct {
     deadline_tick: u64 = 0,
@@ -455,7 +573,7 @@ pub const SessionPool = struct {
         for (&self.preflights) |*entry| entry.key_len = 0;
     }
     fn closeEntry(entry: *Entry) void {
-        if (entry.socket) |*socket| _ = socket.close(time_contract.timeoutFinite(time_contract.durationFromNanoseconds(250_000_000)));
+        if (entry.socket) |*socket| _ = socket.close(socket_close_timeout);
         entry.* = .{};
     }
     fn acquire(self: *SessionPool, key: []const u8, now: u64) ?*Entry {
@@ -553,14 +671,19 @@ pub const WebTransport = struct {
         if (endpoint.tls and scratch.len < tls_scratch_bytes) return .{ .failure = .scratch_too_small };
         defer std.crypto.secureZero(u8, scratch);
 
-        const options = FetchOptions{ .timeout = timeout };
+        const options = FetchOptions{
+            .timeout = timeout,
+            .progress = if (self.network.sys.base.generation2 != null) ownerRunning else null,
+            .progress_context = &self.network.sys,
+        };
+        if (shouldStop(options)) return .{ .failure = .cancelled };
         const deadline = RequestDeadline.start(&self.network, timeout);
-        var socket = switch (self.network.connectTcp(.{ .address = endpoint.address, .port = endpoint.port }, deadline.remaining(&self.network))) {
+        var socket = switch (Socket.open(self.network, .{ .address = endpoint.address, .port = endpoint.port }, deadline.remaining(&self.network))) {
             .socket => |value| value,
             .timed_out => return .{ .failure = .connect_timeout },
             else => return .{ .failure = .connect_failed },
         };
-        defer _ = socket.close(deadline.remaining(&self.network));
+        defer socket.dispose(deadline.remaining(&self.network));
 
         var received: usize = 0;
         var reply: [2]u8 = undefined;
@@ -901,7 +1024,7 @@ pub const WebTransport = struct {
         was_reused.* = false;
         var key_buffer: [2048]u8 = undefined;
         const key = sessionKey(url, options, &key_buffer);
-        const may_pool = options.sessions != null and key != null and
+        const may_pool = self.network.sys.base.generation2 == null and options.sessions != null and key != null and
             !http.serializedHeadersContain(headers, "Connection") and !http.serializedHeadersContain(headers, "Upgrade");
         const leased = if (may_pool) options.sessions.?.acquire(key.?, self.network.sys.ticks()) else null;
         var temporary: SessionPool.Entry = .{};
@@ -910,7 +1033,16 @@ pub const WebTransport = struct {
         defer if (leased) |entry| {
             options.sessions.?.release(entry, reusable and !shouldStop(options), self.network.sys.ticks(), self.network.sys.monotonicHz());
         } else SessionPool.closeEntry(connection);
-        if (connection.socket == null) {
+        var opened: ?Socket = null;
+        defer if (opened) |*socket| switch (socket.connection) {
+            .start1 => |legacy| connection.socket = legacy,
+            .start2 => socket.dispose(socket_close_timeout),
+        };
+        if (connection.socket) |legacy| {
+            opened = .{ .network = self.network, .connection = .{ .start1 = legacy } };
+            was_reused.* = true;
+            if (options.stats) |stats| stats.reused_connections +|= 1;
+        } else {
             if (options.stats) |stats| stats.dns_resolutions +|= 1;
             var resolver = self.network.resolver();
             const address = switch (resolver.resolveA(url.host, null, deadline.remaining(&self.network))) {
@@ -919,17 +1051,14 @@ pub const WebTransport = struct {
                 .not_found => return .{ .failure = .dns_not_found },
                 else => return .{ .failure = .dns_failed },
             };
-            connection.socket = switch (self.network.connectTcp(.{ .address = address, .port = url.port }, deadline.remaining(&self.network))) {
+            opened = switch (Socket.open(self.network, .{ .address = address, .port = url.port }, deadline.remaining(&self.network))) {
                 .socket => |value| value,
                 .timed_out => return .{ .failure = .connect_timeout },
                 else => return .{ .failure = .connect_failed },
             };
             if (options.stats) |stats| stats.connections +|= 1;
-        } else {
-            was_reused.* = true;
-            if (options.stats) |stats| stats.reused_connections +|= 1;
         }
-        const socket = &connection.socket.?;
+        const socket = &opened.?;
 
         var cookie_buffer: [1024]u8 = undefined;
         const cookie = if (!allow_cookies)
@@ -984,12 +1113,12 @@ pub const WebTransport = struct {
             .not_found => return downloadFailure(.dns_not_found),
             else => return downloadFailure(.dns_failed),
         };
-        var socket = switch (self.network.connectTcp(.{ .address = address, .port = url.port }, deadline.remaining(&self.network))) {
+        var socket = switch (Socket.open(self.network, .{ .address = address, .port = url.port }, deadline.remaining(&self.network))) {
             .socket => |value| value,
             .timed_out => return downloadFailure(.connect_timeout),
             else => return downloadFailure(.connect_failed),
         };
-        defer _ = socket.close(deadline.remaining(&self.network));
+        defer socket.dispose(deadline.remaining(&self.network));
 
         var request_buffer: [max_request_bytes]u8 = undefined;
         const request = switch (http.buildRequest(request_buffer[0..], options.method, url, .{ .headers = headers })) {
@@ -1045,7 +1174,7 @@ pub const WebTransport = struct {
         }
     }
 
-    fn fetchPlain(self: *WebTransport, socket: *app_network.TcpSocket, request: []const u8, raw_response: []u8, body_out: []u8, options: FetchOptions, deadline: RequestDeadline) OnceResult {
+    fn fetchPlain(self: *WebTransport, socket: *Socket, request: []const u8, raw_response: []u8, body_out: []u8, options: FetchOptions, deadline: RequestDeadline) OnceResult {
         _ = self;
         if (!writeAll(socket, request, options, deadline)) return .{ .failure = if (shouldStop(options)) .cancelled else .write_failed };
         var receiver = ResponseReceiver{ .decoder = http.ResponseDecoder.init(options.method) };
@@ -1081,7 +1210,7 @@ pub const WebTransport = struct {
         }
     }
 
-    fn fetchTls(self: *WebTransport, socket: *app_network.TcpSocket, url: http.ParsedUrl, cached_session: *?TlsSession, request: []const u8, raw_response: []u8, body_out: []u8, scratch: []u8, options: FetchOptions, deadline: RequestDeadline) OnceResult {
+    fn fetchTls(self: *WebTransport, socket: *Socket, url: http.ParsedUrl, cached_session: *?TlsSession, request: []const u8, raw_response: []u8, body_out: []u8, scratch: []u8, options: FetchOptions, deadline: RequestDeadline) OnceResult {
         if (cached_session.* == null) cached_session.* = switch (self.openTlsSession(socket, url, scratch, options, deadline)) {
             .session => |value| value,
             .failure => |failure| return .{ .failure = failure },
@@ -1128,7 +1257,7 @@ pub const WebTransport = struct {
         }
     }
 
-    fn openTlsSession(self: *WebTransport, socket: *app_network.TcpSocket, url: http.ParsedUrl, scratch: []u8, options: FetchOptions, deadline: RequestDeadline) TlsSessionResult {
+    fn openTlsSession(self: *WebTransport, socket: anytype, url: http.ParsedUrl, scratch: []u8, options: FetchOptions, deadline: RequestDeadline) TlsSessionResult {
         if (options.stats) |stats| stats.tls_handshakes +|= 1;
         var generated_entropy: [32]u8 = undefined;
         const entropy = options.entropy orelse blk: {
@@ -1231,7 +1360,7 @@ pub const WebTransport = struct {
         return .{ .session = session };
     }
 
-    fn writeTlsApplication(self: *WebTransport, socket: *app_network.TcpSocket, session: *TlsSession, bytes: []const u8, scratch: []u8, options: FetchOptions, deadline: RequestDeadline) TlsWriteResult {
+    fn writeTlsApplication(self: *WebTransport, socket: anytype, session: *TlsSession, bytes: []const u8, scratch: []u8, options: FetchOptions, deadline: RequestDeadline) TlsWriteResult {
         const wire = switch (self.protectTlsApplication(session, bytes, scratch)) {
             .bytes => |value| value,
             .failure => |failure| return .{ .failure = failure },
@@ -1253,7 +1382,7 @@ pub const WebTransport = struct {
         return .{ .bytes = protected[tls_app_header_len..] };
     }
 
-    fn readTlsApplication(self: *WebTransport, socket: *app_network.TcpSocket, session: *TlsSession, scratch: []u8, options: FetchOptions, deadline: RequestDeadline) TlsApplicationRead {
+    fn readTlsApplication(self: *WebTransport, socket: anytype, session: *TlsSession, scratch: []u8, options: FetchOptions, deadline: RequestDeadline) TlsApplicationRead {
         const first = scratch[0..tls_workspace_bytes];
         const second = scratch[tls_workspace_bytes .. tls_workspace_bytes * 2];
         const third = scratch[tls_workspace_bytes * 2 .. tls_workspace_bytes * 3];
@@ -2385,7 +2514,7 @@ pub fn fillSecureEntropy(out: *[32]u8) bool {
     return web_crypto.fillSecureRandom(out[0..]);
 }
 
-fn writeAll(socket: *app_network.TcpSocket, bytes: []const u8, options: FetchOptions, deadline: RequestDeadline) bool {
+fn writeAll(socket: anytype, bytes: []const u8, options: FetchOptions, deadline: RequestDeadline) bool {
     var pos: usize = 0;
     while (pos < bytes.len) {
         if (shouldStop(options)) return false;
@@ -2424,7 +2553,7 @@ const BoundedSocketRead = union(enum) {
     failed,
 };
 
-fn readSocketBounded(socket: *app_network.TcpSocket, out: []u8, options: FetchOptions, deadline: RequestDeadline) BoundedSocketRead {
+fn readSocketBounded(socket: anytype, out: []u8, options: FetchOptions, deadline: RequestDeadline) BoundedSocketRead {
     while (true) {
         if (shouldStop(options)) return .cancelled;
         if (deadline.expired(&socket.network)) return .timed_out;
@@ -2441,7 +2570,7 @@ fn readSocketBounded(socket: *app_network.TcpSocket, out: []u8, options: FetchOp
     }
 }
 
-fn readTlsRecord(socket: *app_network.TcpSocket, out: []u8, options: FetchOptions, deadline: RequestDeadline) TlsRecordReadResult {
+fn readTlsRecord(socket: anytype, out: []u8, options: FetchOptions, deadline: RequestDeadline) TlsRecordReadResult {
     var received: usize = 0;
     var expected: ?usize = null;
     while (expected == null or received < expected.?) {
@@ -2485,7 +2614,7 @@ const TlsHandshakeFlightResult = union(enum) {
     read_failed,
 };
 
-fn readTlsHandshakeFlight(socket: *app_network.TcpSocket, out: []u8, record_storage: []u8, options: FetchOptions, deadline: RequestDeadline) TlsHandshakeFlightResult {
+fn readTlsHandshakeFlight(socket: anytype, out: []u8, record_storage: []u8, options: FetchOptions, deadline: RequestDeadline) TlsHandshakeFlightResult {
     if (out.len < 5 or record_storage.len < 5) return .malformed;
     out[0] = 0;
     out[1] = 0;
@@ -2610,7 +2739,7 @@ fn tlsHandshakeFlightComplete(fragment: []const u8) bool {
     return false;
 }
 
-fn readTlsFlight(socket: *app_network.TcpSocket, out: []u8, options: FetchOptions, deadline: RequestDeadline) ?[]u8 {
+fn readTlsFlight(socket: anytype, out: []u8, options: FetchOptions, deadline: RequestDeadline) ?[]u8 {
     var used: usize = 0;
     var saw_change_cipher_spec = false;
     var record_count: usize = 0;
@@ -2646,6 +2775,11 @@ fn shouldStop(options: FetchOptions) bool {
     if (isStopped(options.stop)) return true;
     if (options.progress) |progress| return !progress(options.progress_context);
     return false;
+}
+
+fn ownerRunning(raw: ?*anyopaque) callconv(.c) bool {
+    const sys: *const @import("r4sys.zig").Context = @ptrCast(@alignCast(raw orelse return false));
+    return !sys.programShouldClose();
 }
 
 fn packedUtc(state: abi.TimeState) u64 {

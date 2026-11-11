@@ -155,8 +155,11 @@ pub fn persistPublic(files: anytype, document: []const u8, nonce: u64) Error!voi
     }
     var stage_buffer: [96]u8 = undefined;
     var backup_buffer: [96]u8 = undefined;
-    const stage_text = std.fmt.bufPrint(&stage_buffer, "C:\\R4OS\\SECRETS\\PUB{X}.NEW", .{nonce}) catch unreachable;
-    const backup_text = std.fmt.bufPrint(&backup_buffer, "C:\\R4OS\\SECRETS\\PUB{X}.BAK", .{nonce}) catch unreachable;
+    // Atomic replacement requires 8.3 names for its temporary entries.
+    // Create-only admission and the owned stream retain exact file identity.
+    const temporary_id: u20 = @truncate(nonce);
+    const stage_text = std.fmt.bufPrint(&stage_buffer, "C:\\R4OS\\SECRETS\\PUB{X}.NEW", .{temporary_id}) catch unreachable;
+    const backup_text = std.fmt.bufPrint(&backup_buffer, "C:\\R4OS\\SECRETS\\PUB{X}.BAK", .{temporary_id}) catch unreachable;
     const stage = storage.AbsoluteFilePath.parse(stage_text) catch unreachable;
     const backup = storage.AbsoluteFilePath.parse(backup_text) catch unreachable;
     var writer = switch (files.ownedCreateWriter(stage.asZ())) {
@@ -214,6 +217,8 @@ test "server credentials publish preserves existing data on failures and races" 
         fail_commit: bool = false,
         race: bool = false,
         aborted: u32 = 0,
+        stage_name_length: usize = 0,
+        backup_name_length: usize = 0,
         const Writer = struct {
             owner: *Self,
             pub fn write(w: *@This(), bytes: []const u8) storage.Operation {
@@ -244,11 +249,13 @@ test "server credentials publish preserves existing data on failures and races" 
         pub fn createDirectory(_: *Self, _: storage.PathZ) storage.Operation {
             return .ok;
         }
-        pub fn ownedCreateWriter(self: *Self, _: storage.PathZ) union(enum) { writer: Writer, failure: i32 } {
+        pub fn ownedCreateWriter(self: *Self, name: storage.PathZ) union(enum) { writer: Writer, failure: i32 } {
+            self.stage_name_length = name.bytes().len - "C:\\R4OS\\SECRETS\\".len;
             return .{ .writer = .{ .owner = self } };
         }
-        pub fn replaceAtomic(self: *Self, _: storage.PathZ, _: storage.PathZ, _: storage.PathZ, options: storage.AtomicReplaceOptions) storage.AtomicReplaceResult {
+        pub fn replaceAtomic(self: *Self, _: storage.PathZ, _: storage.PathZ, backup: storage.PathZ, options: storage.AtomicReplaceOptions) storage.AtomicReplaceResult {
             std.debug.assert(options.consume_stage and options.require_target_absent and options.require_owned_stage);
+            self.backup_name_length = backup.bytes().len - "C:\\R4OS\\SECRETS\\".len;
             if (self.race) {
                 @memcpy(self.target[0..7], "foreign");
                 self.target_len = 7;
@@ -266,7 +273,9 @@ test "server credentials publish preserves existing data on failures and races" 
     };
     const document = "SCHEMA=R4OS_PUBLIC_REGISTRATION\nVERSION=1\nSCOPE=REGISTRATION_READ\nREGISTRATION_SECRET=R4C1_" ++ "b" ** 64 ++ "\n";
     var good: Fake = .{};
-    try persistPublic(&good, document, 10);
+    try persistPublic(&good, document, 0x1234_5678_89ab_cdef);
+    try std.testing.expectEqual(@as(usize, 12), good.stage_name_length);
+    try std.testing.expectEqual(@as(usize, 12), good.backup_name_length);
     try std.testing.expectEqualStrings(document, good.target[0..good.target_len]);
     try std.testing.expectEqual(@as(u32, 1), good.aborted);
     try std.testing.expectError(error.CredentialsConflict, persistPublic(&good, document, 11));

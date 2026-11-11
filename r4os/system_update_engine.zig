@@ -395,12 +395,14 @@ var last_status_has_journal = false;
 var last_status_has_batch = false;
 
 pub const Engine = struct {
-    app: *r4os.App,
     ctx: r4os.r4sys.Context,
+    files: ?r4os.Files,
 
-    pub fn init(app: *r4os.App) Engine {
-        refreshActiveKernelVersion(app);
-        return .{ .app = app, .ctx = app.system() };
+    /// Both start contracts expose the same update operations. The borrowed
+    /// facades retain their original context through the transaction.
+    pub fn init(app: anytype) Engine {
+        refreshActiveKernelVersion(app.devicesLowLevel());
+        return .{ .ctx = app.system(), .files = app.files() };
     }
     /// The shared update owner removes one observed application. Running
     /// images wait for their normal close; no force kill or reboot is hidden.
@@ -464,7 +466,7 @@ pub const Engine = struct {
             .found => |value| value,
             else => return error.AssetRelease,
         };
-        const prepared = try asset.prepare(self.app, plan, release);
+        const prepared = try asset.prepareWithFiles(self.ctx, self.files, plan, release);
         switch (readNewestValidBatchInto(&self.ctx, &batch_journal_workspace)) {
             .found => {
                 if (assetBatchBound(&batch_journal_workspace, prepared.path.bytes()) and
@@ -477,7 +479,7 @@ pub const Engine = struct {
         if (asset_expectation != null) return error.AssetEngineBusy;
         asset_expectation = plan;
         defer asset_expectation = null;
-        const files = self.app.files() orelse return error.FilesUnavailable;
+        const files = self.files orelse return error.FilesUnavailable;
         if (plan.kind != .kernel) {
             const target = try r4os.AbsoluteFilePath.parse(plan.target);
             const end = std.mem.lastIndexOfScalar(u8, target.bytes(), '\\') orelse return error.AssetTarget;
@@ -494,7 +496,7 @@ pub const Engine = struct {
             .found => |value| value,
             else => return error.AssetRelease,
         };
-        const prepared = try asset.prepare(self.app, plan, release);
+        const prepared = try asset.prepareWithFiles(self.ctx, self.files, plan, release);
         switch (readNewestValidBatchInto(&self.ctx, &batch_journal_workspace)) {
             .found => if (assetBatchBound(&batch_journal_workspace, prepared.path.bytes())) {
                 const observed = self.status();
@@ -524,7 +526,7 @@ pub const Engine = struct {
             .found => |value| value,
             else => return error.AssetRelease,
         };
-        const prepared = try asset.prepare(self.app, plan, release);
+        const prepared = try asset.prepareWithFiles(self.ctx, self.files, plan, release);
         if (asset_expectation != null or asset_batch_source != null) return error.AssetEngineBusy;
         const observed = try self.resumeAsset(plan);
         if (observed.state == .installed) return observed;
@@ -689,10 +691,10 @@ pub fn runTerminal(r4_app: *r4os.App) i32 {
     return 1;
 }
 
-fn refreshActiveKernelVersion(r4_app: *const r4os.App) void {
+fn refreshActiveKernelVersion(devices: ?r4os.r4dev.Context) void {
     active_kernel_version_len = 0;
     @memset(active_kernel_version[0..], 0);
-    const dev = r4_app.devicesLowLevel() orelse return;
+    const dev = devices orelse return;
     const version = dev.kernelVersion() orelse return;
     const rendered = r4os.version_info.formatKernelVersion(version, active_kernel_version[0 .. active_kernel_version.len - 1]) orelse return;
     active_kernel_version_len = rendered.len;
