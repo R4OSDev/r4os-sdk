@@ -3030,9 +3030,9 @@
       "name": "R4ACO",
       "repository": "libraries",
       "path": "R4ACO",
-      "version": "0.1.9",
+      "version": "0.1.10",
       "target": "/R4OS/LIBS/R4ACO.R4L",
-      "manifest_sha256": "4b75c57fe62f13204b2b4dea569644894f888b0c14fce759726460a914b7d89c"
+      "manifest_sha256": "20275650c1976d7950f0cfe74c876ba0ed1678cba1b25c047d19f4814674dea1"
     },
     "r4amd": {
       "name": "R4AMD",
@@ -3070,9 +3070,9 @@
       "name": "R4GL",
       "repository": "libraries",
       "path": "R4GL",
-      "version": "0.1.34",
+      "version": "0.1.35",
       "target": "/R4OS/LIBS/R4GL.R4L",
-      "manifest_sha256": "821f977920580131b28c1ea0042e946b178d48fa88db122b7e3b89f77bfd3852"
+      "manifest_sha256": "7b2abcdfb7912a05fd707ad759f71c6d18e6417affa03d416c7fad365287a2d3"
     },
     "r4img": {
       "name": "R4IMG",
@@ -3086,9 +3086,9 @@
       "name": "R4NAK",
       "repository": "libraries",
       "path": "R4NAK",
-      "version": "0.1.7",
+      "version": "0.1.8",
       "target": "/R4OS/LIBS/R4NAK.R4L",
-      "manifest_sha256": "0313edddb217dc105c89ce034c3546ebe94e9248358d7de0b5e43366ef19d2b0"
+      "manifest_sha256": "a59e844d24941f45302b0b9afea7f0fed550a927bfdc0faabc7cdfc8febbcb2e"
     },
     "r4nv": {
       "name": "R4NV",
@@ -3102,25 +3102,25 @@
       "name": "R4STD",
       "repository": "libraries",
       "path": "R4STD",
-      "version": "0.2.8",
+      "version": "0.2.9",
       "target": "/R4OS/LIBS/R4STD.R4L",
-      "manifest_sha256": "02689669481bc01156e88d9752e48c84707dd6c0678a7e6f4e91d02c92f496d5"
+      "manifest_sha256": "1f38416dc4184785d9e190961a405300aa2f589906b0255162cb2dbbff0b46f1"
     },
     "r4video": {
       "name": "R4VIDEO",
       "repository": "libraries",
       "path": "R4VIDEO",
-      "version": "0.1.16",
+      "version": "0.1.17",
       "target": "/R4OS/LIBS/R4VIDEO.R4L",
-      "manifest_sha256": "f8076652a0e5f1e6744635d98a229eec1c5928bbb87d1ff4a0e47988dbd6b316"
+      "manifest_sha256": "c338f0f464742f4d56a740ecaee3655efe153dd6f42aa63629a0f07c4d945bc6"
     },
     "r4vk": {
       "name": "R4VK",
       "repository": "libraries",
       "path": "R4VK",
-      "version": "0.1.45",
+      "version": "0.1.46",
       "target": "/R4OS/LIBS/R4VK.R4L",
-      "manifest_sha256": "5c4407e4a4a6cd8b58d71c83336089295a303a5e03a8c51333aecd023bed3066"
+      "manifest_sha256": "1e8323c9132f2fb0a5876d8cd3a739d690092364ad9c03bd99158f37677ac804"
     }
   },
   "sets": {
