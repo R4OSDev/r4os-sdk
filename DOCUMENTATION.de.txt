@@ -1929,3 +1929,11 @@ Pacingakkumulatoren entfallen. Sourcewartezeit, Streamclose, Synth-Stop und
 physische Wiedergabe behalten ihre eigenen Bedeutungen. Der zentrale
 Plattformvertrag und die unabhaengigen Libraryinterfaces bleiben beim
 jeweiligen Besitzer. Belege stehen in Research/API-ABI/Migration/0.90.74/.
+
+Fortschreibung 0.64.208 / R4OS0.90.75
+-------------------------------------
+Der private DocumentPrefix-Read transportiert seine validierte file_size.
+Browserprofil- und Fontcacheleser koennen dadurch volle Dateien von einem
+kapazitaetsbegrenzten Praefix unterscheiden. Der vorhandene SDK-Ownerfall
+enthaelt Restart-, Groessen- und Ablaufpruefungen. FileMetadata2.txt nennt
+den genauen Ergebnisvertrag und die Sprachreichweite.

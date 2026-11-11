@@ -51,3 +51,16 @@ Bestehende Explorer-, Picker- und Editormodule und ihre Importprofile werden
 nicht migriert. Anbieter-/Host-/Gast-/Hardwarequalifikation und Originale
 stehen im Abschlussbericht Docs/API/FileMetadata2.txt sowie lokal unter
 Research/API-ABI/Umsetzung/0.90.22/.
+
+SDK0.64.208 - Dateigroesse des validierten privaten Snapshots
+-----------------------------------------------------------
+Files.readDocumentPrefix liefert bytes, truncated und file_size. file_size
+stammt aus demselben vor und nach dem Read geprueften Metadatenstand.
+Die Vorschaugrenze gilt bei file_size groesser oder gleich Pufferlaenge.
+Ein Voll-Leser verlangt file_size gleich bytes sowie seinen fachlichen
+Maximalumfang vor der Publikation. Identitaets-/Revisionswechsel verwerfen
+den Teilkandidaten innerhalb derselben Gesamtfrist. Der bestehende Ownerfall
+prueft Restart, exakte Groesse, einen gleich langen Praefix einer groesseren
+Datei und Ablauf ohne weiteren Read. Dieses logische Resultat wird von
+Zig-Dateikompositionen verwendet. Die nativen C-/Rust-Metadatentabellen
+binden die bestehenden gemeinsamen Providerrecords.

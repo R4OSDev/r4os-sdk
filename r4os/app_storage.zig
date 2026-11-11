@@ -33,7 +33,7 @@ pub const Transfer = union(enum) {
 };
 
 pub const DocumentPrefix = union(enum) {
-    value: struct { bytes: usize, truncated: bool },
+    value: struct { bytes: usize, truncated: bool, file_size: u64 = 0 },
     failure: i32,
 };
 
@@ -45,6 +45,7 @@ test "stream owner document prefix discards a restarted snapshot within one dead
         var read_calls: usize = 0;
         var tick: u64 = 0;
         var always_restart: bool = false;
+        var file_size: u64 = 3;
         fn shouldClose(_: *const p2.abi.R4XStartContext2) callconv(.c) u32 {
             return 0;
         }
@@ -56,7 +57,7 @@ test "stream owner document prefix discards a restarted snapshot within one dead
         fn metadata(_: [*:0]const u8, out: *abi.FileMetadata2) callconv(.c) i32 {
             meta_calls += 1;
             if (always_restart or meta_calls == 2) return abi.file_metadata2_error_restart;
-            out.* = .{ .byte_size = 3, .content_revision = if (meta_calls == 1) 1 else 2, .flags = abi.file_metadata2_flag_exists | abi.file_metadata2_flag_byte_size_valid |
+            out.* = .{ .byte_size = file_size, .content_revision = if (meta_calls == 1) 1 else 2, .flags = abi.file_metadata2_flag_exists | abi.file_metadata2_flag_byte_size_valid |
                 abi.file_metadata2_flag_identity_valid | abi.file_metadata2_flag_content_revision_valid, .identity = .{ .mount_slot = 2, .mount_generation = 1, .namespace_generation = if (meta_calls == 1) 1 else 2, .object_lo = 17 } };
             return 1;
         }
@@ -71,6 +72,7 @@ test "stream owner document prefix discards a restarted snapshot within one dead
     Peer.read_calls = 0;
     Peer.tick = 0;
     Peer.always_restart = false;
+    Peer.file_size = 3;
     var system: p2.abi.R4XStartR4Sys2 = .{};
     system.monotonic_clock = @intFromPtr(&Peer.clock);
     system.file_metadata2 = @intFromPtr(&Peer.metadata);
@@ -82,15 +84,23 @@ test "stream owner document prefix discards a restarted snapshot within one dead
     var memory: [8]u8 = undefined;
     var path = try AbsoluteFilePath.parse("C:\\DOCUMENT.TXT");
     const value = files.readDocumentPrefix(path.asZ(), &memory, .{ .kind = abi.timeout_kind_finite, .nanoseconds = 1_000_000_000 });
-    try std.testing.expectEqualDeep(DocumentPrefix{ .value = .{ .bytes = 3, .truncated = false } }, value);
+    try std.testing.expectEqualDeep(DocumentPrefix{ .value = .{ .bytes = 3, .truncated = false, .file_size = 3 } }, value);
     try std.testing.expectEqualStrings("new", memory[0..value.value.bytes]);
     try std.testing.expect(!value.value.truncated);
     try std.testing.expectEqual(@as(usize, 2), Peer.read_calls);
     try std.testing.expectEqual(@as(usize, 4), Peer.meta_calls);
+    Peer.file_size = 6;
+    var exact_capacity: [3]u8 = undefined;
+    const prefix = files.readDocumentPrefix(path.asZ(), &exact_capacity, .{ .kind = abi.timeout_kind_finite, .nanoseconds = 1_000_000_000 });
+    try std.testing.expectEqualDeep(DocumentPrefix{ .value = .{ .bytes = 3, .truncated = true, .file_size = 6 } }, prefix);
+    try std.testing.expectEqualStrings("new", &exact_capacity);
+    try std.testing.expectEqual(@as(usize, 3), Peer.read_calls);
+    const reads_before_timeout = Peer.read_calls;
+    Peer.file_size = 3;
     Peer.always_restart = true;
     const expired = files.readDocumentPrefix(path.asZ(), &memory, .{ .kind = abi.timeout_kind_finite, .nanoseconds = 10_000 });
     try std.testing.expectEqual(abi.service_api_result_timeout, expired.failure);
-    try std.testing.expectEqual(@as(usize, 2), Peer.read_calls);
+    try std.testing.expectEqual(reads_before_timeout, Peer.read_calls);
 }
 
 pub const Operation = union(enum) {
@@ -212,6 +222,7 @@ pub const Files = struct {
     /// Private editor candidate, including one lookahead byte. Publication is
     /// the caller's operation. Compare every identity/revision the provider
     /// certifies and discard all partial bytes on a readonly namespace restart.
+    /// file_size belongs to that validated snapshot, including a bounded prefix.
     pub fn readDocumentPrefix(self: *const Files, file_path: PathZ, out: []u8, timeout: abi.R4Timeout) DocumentPrefix {
         if (out.len == 0) return .{ .failure = abi.file_metadata2_error_invalid };
         const context = self.sys.base.generation2 orelse return .{ .failure = abi.file_metadata2_error_unsupported };
@@ -263,7 +274,7 @@ pub const Files = struct {
             if (before.flags & abi.file_metadata2_flag_content_revision_valid != 0 and
                 (after.flags & abi.file_metadata2_flag_content_revision_valid == 0 or
                     before.content_revision != after.content_revision)) continue :read_snapshot;
-            return .{ .value = .{ .bytes = count, .truncated = size >= out.len } };
+            return .{ .value = .{ .bytes = count, .truncated = size >= out.len, .file_size = size } };
         }
     }
 

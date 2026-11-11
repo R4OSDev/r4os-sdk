@@ -59035,6 +59035,12 @@
       "scope": "SDK207 extends the existing clipboard control owner with explicit standard-format copy/read. Confirmed commit receipts are released and retained through failed release. Native Clipboard storage is224bytes. Compiler-generated GUI C layouts, fingerprint and Rust projection share the same owner. A focused C/Rust generated-call case executes the real default constructor, both new format methods and Close without a provider, preserving scratch on failure. Actual XRGB32 chunk publication/read and repeated receipt retirement are exercised by the native Zig Paint consumer. The unchanged shared total PCM writer and rational source Pacer are used by Beep/R4Synth. Existing data134, GUI and audio/platform interoperation and compiler-negative checks execute under Linux. Normal app artifacts, native lifecycle and performance have separate receipts.",
       "receipt": "Research/API-ABI/Migration/0.90.74/SdkHost.json",
       "limits": "Scoped Linux host and language interoperation. Native current-app, actual hardware/device changes, Windows execution and performance require their own evidence."
+    },
+    "browser_snapshot_consumers_09075": {
+      "complete": true,
+      "scope": "SDK208 adds the actual validated snapshot file_size to the existing Zig DocumentPrefix result. The original preview boundary remains file_size >= capacity, while whole-file consumers can require file_size == bytes. This is a logical Zig convenience result. Native C/Rust metadata records and their exact provider calls retain the recorded existing language evidence. Data qualification ran all134 existing cases,133 passed and the extended prefix case exposed its old final read-counter expectation after one additional fixture read. Only that test expectation was corrected. The complete focused original prefix case then passed, including its new size assertion and no-read-after-expiry boundary. All55 existing/new browser repository cases passed. Native consumers, normal tools and performance have separate receipts.",
+      "receipt": "Research/API-ABI/Migration/0.90.75/SdkHost.json",
+      "limits": "Logical Zig helper result with actual Linux owner qualification. Native browser/device/network, normal tool outputs, Windows execution and performance have their own scopes."
     }
   },
   "wave_bindings": [
@@ -59287,18 +59293,18 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.90.74",
-    "sdk": "0.64.207",
+    "performed_in": "0.90.75",
+    "sdk": "0.64.208",
     "contract": "0.64.93",
     "libraries": "0.64.57",
-    "evidence": "paint_audio_consumers_09074",
+    "evidence": "browser_snapshot_consumers_09075",
     "historical_snapshot_retained": true,
-    "scope": "SDK207 extends the existing clipboard control owner with explicit standard-format copy/read. Confirmed commit receipts are released and retained through failed release. Native Clipboard storage is224bytes. Compiler-generated GUI C layouts, fingerprint and Rust projection share the same owner. A focused C/Rust generated-call case executes the real default constructor, both new format methods and Close without a provider, preserving scratch on failure. Actual XRGB32 chunk publication/read and repeated receipt retirement are exercised by the native Zig Paint consumer. The unchanged shared total PCM writer and rational source Pacer are used by Beep/R4Synth. Existing data134, GUI and audio/platform interoperation and compiler-negative checks execute under Linux. Normal app artifacts, native lifecycle and performance have separate receipts."
+    "scope": "SDK208 adds the actual validated snapshot file_size to the existing Zig DocumentPrefix result. The original preview boundary remains file_size >= capacity, while whole-file consumers can require file_size == bytes. This is a logical Zig convenience result. Native C/Rust metadata records and their exact provider calls retain the recorded existing language evidence. Data qualification ran all134 existing cases,133 passed and the extended prefix case exposed its old final read-counter expectation after one additional fixture read. Only that test expectation was corrected. The complete focused original prefix case then passed, including its new size assertion and no-read-after-expiry boundary. All55 existing/new browser repository cases passed. Native consumers, normal tools and performance have separate receipts."
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.90.74",
+    "reviewed_in": "0.90.75",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -61705,7 +61711,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "6e6c4e76e5d8e8b5266b5f60a799729640c0a78e516a26a03619bb513bc6ae4c"
+        "sha256": "d90655883fef02ee0b06f70914bcdf77eff2e64541d35a13b21e691babd00d57"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -61761,7 +61767,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/app_storage.zig",
-        "sha256": "78da7d2a243118c108638fc4935f1344016889f56e7683a3257b77a2043c9148"
+        "sha256": "239a099c44f088b18b1908e5b62e3053fdd444fafc6d3387d283431fbb5a0a05"
       },
       {
         "path": "Repositories/SDK/r4os/app_tray.zig",
@@ -63167,7 +63173,8 @@
           "network_stream_consumers_09070",
           "software_update_consumers_09071",
           "native_tools_09072",
-          "editor_consumers_09073"
+          "editor_consumers_09073",
+          "browser_snapshot_consumers_09075"
         ]
       },
       {
@@ -65316,6 +65323,15 @@
       "evidence": "editor_consumers_09073",
       "historical_snapshot_retained": true,
       "scope": "SDK206 editor composition over the existing metadata, StreamTransfer, FilePicker, typed clipboard and text-metric owners. Stable private document reads, exact copied picker identities, one-deadline text clipboard publication/release and measured TextArea hits/rendering have scoped Zig owner regressions. Complete supplementary UTF8 paths retain UTF16-unit limits in Zig/C and the Rust C-owner adaptation. Compiler-generated C/Rust GUI projections use the same native controls. The convenience Files/DialogPage/TextClipboard orchestration is used by the Zig editors. Existing data, storage and GUI interoperation cases execute under Linux. Native normal editor artifacts and final runtime qualification have separate receipts."
+    },
+    {
+      "performed_in": "0.90.74",
+      "sdk": "0.64.207",
+      "contract": "0.64.93",
+      "libraries": "0.64.57",
+      "evidence": "paint_audio_consumers_09074",
+      "historical_snapshot_retained": true,
+      "scope": "SDK207 extends the existing clipboard control owner with explicit standard-format copy/read. Confirmed commit receipts are released and retained through failed release. Native Clipboard storage is224bytes. Compiler-generated GUI C layouts, fingerprint and Rust projection share the same owner. A focused C/Rust generated-call case executes the real default constructor, both new format methods and Close without a provider, preserving scratch on failure. Actual XRGB32 chunk publication/read and repeated receipt retirement are exercised by the native Zig Paint consumer. The unchanged shared total PCM writer and rational source Pacer are used by Beep/R4Synth. Existing data134, GUI and audio/platform interoperation and compiler-negative checks execute under Linux. Normal app artifacts, native lifecycle and performance have separate receipts."
     }
   ]
 }
