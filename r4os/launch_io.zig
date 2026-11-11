@@ -23,6 +23,10 @@ fn consolePoll(limit: pipe.Deadline) i32 {
     if (!std.meta.eql(limit, pipe.Deadline{})) return a.byte_pipe_error_invalid;
     return 0;
 }
+fn validProgress(value: pipe.Progress, count: usize) bool {
+    return value.version == 1 and value.size == @sizeOf(pipe.Progress) and value.flags == 0 and
+        value.bytes <= count and value.state >= a.byte_pipe_ready and value.state <= a.byte_pipe_closed;
+}
 /// Pipe operations have full native deadlines. Default Console preserves its
 /// existing byte/count/routing behavior: Poll only, no EOF/atomic-write claim.
 /// Returned console write count means legacy-call handoff, not pipe queueing
@@ -116,6 +120,29 @@ pub const Stdio = struct {
         out.* = .{ .bytes = n, .state = if (n != 0) a.byte_pipe_ready else a.byte_pipe_would_block };
         return 0;
     }
+    /// Validated source composition. Malformed replies keep caller storage
+    /// private and leave the public progress target unchanged.
+    pub fn readChecked(self: *const Stdio, storage: []u8, limit: pipe.Deadline, out: *pipe.Progress) i32 {
+        if (storage.len == 0) return a.byte_pipe_error_invalid;
+        var private_bytes: [a.byte_pipe_max_step]u8 = undefined;
+        const count = @min(storage.len, private_bytes.len);
+        var progress: pipe.Progress = .{};
+        const rc = self.read(private_bytes[0..count], limit, &progress);
+        if (rc != 0) return rc;
+        if (!validProgress(progress, count)) return a.byte_pipe_error_invalid;
+        @memcpy(storage[0..@intCast(progress.bytes)], private_bytes[0..@intCast(progress.bytes)]);
+        out.* = progress;
+        return 0;
+    }
+    pub fn writeChecked(self: *const Stdio, stream: u32, bytes: []const u8, limit: pipe.Deadline, out: *pipe.Progress) i32 {
+        const count = @min(bytes.len, a.byte_pipe_max_step);
+        var progress: pipe.Progress = .{};
+        const rc = self.write(stream, bytes[0..count], limit, &progress);
+        if (rc != 0) return rc;
+        if (!validProgress(progress, count)) return a.byte_pipe_error_invalid;
+        out.* = progress;
+        return 0;
+    }
     pub fn cancel(self: *Stdio, stream: u32) i32 {
         const b = self.selected(stream) orelse return a.byte_pipe_error_invalid;
         if (b.kind != a.launch_io_pipe) return a.byte_pipe_error_unsupported;
@@ -159,7 +186,7 @@ pub const Output = struct {
         else
             .{};
         var progress: pipe.Progress = .{};
-        const rc = self.io.write(1, bytes[0..count], limit, &progress);
+        const rc = self.io.writeChecked(1, bytes[0..count], limit, &progress);
         if (rc != 0) return .{ .kind = @intFromEnum(core.IoKind.uncertain), .error_code = rc };
         if (progress.bytes > count or progress.state < a.byte_pipe_ready or progress.state > a.byte_pipe_closed) return .{ .kind = @intFromEnum(core.IoKind.uncertain), .error_code = a.byte_pipe_error_invalid };
         return .{ .bytes = @intCast(progress.bytes), .kind = @intFromEnum(switch (progress.state) {
@@ -258,5 +285,52 @@ test "network stream normal output preserves short handoff prefix and closed sin
             try std.testing.expectEqual(calls, Peer.calls);
         }
         try std.testing.expectEqual(@as(i32, 0), output.close());
+    }
+}
+
+test "network stream stdio malformed pipe records preserve caller outputs" {
+    const Peer = struct {
+        var mode: enum { version, size, flags, count } = .version;
+        fn result(out: *a.BytePipeProgress, count: u64) void {
+            out.* = .{ .bytes = 2, .state = a.byte_pipe_ready };
+            switch (mode) {
+                .version => out.version = 99,
+                .size => out.size = 1,
+                .flags => out.flags = 1,
+                .count => out.bytes = count + 1,
+            }
+        }
+        fn read(_: a.BytePipeEnd, bytes: [*]u8, count: u64, _: *const a.WaitSetDeadline, out: *a.BytePipeProgress) callconv(.c) i32 {
+            @memcpy(bytes[0..2], "zz");
+            result(out, count);
+            return 0;
+        }
+        fn write(_: a.BytePipeEnd, _: [*]const u8, count: u64, _: *const a.WaitSetDeadline, out: *a.BytePipeProgress) callconv(.c) i32 {
+            result(out, count);
+            return 0;
+        }
+    };
+    var table: platform.abi.R4XStartR4Sys2 = .{};
+    const imports = [_]platform.abi.R4XStartImport{.{ .group_id = 1, .resolved_version = 2, .table = @intFromPtr(&table) }};
+    const raw: platform.abi.R4XStartContext2 = .{ .import_count = imports.len, .imports = @intFromPtr(&imports) };
+    const context = try platform.Context.init(&raw);
+    // Only these two operations are reachable in this synchronous fixture.
+    var provider: pipe.Provider = undefined;
+    provider.read = Peer.read;
+    provider.write = Peer.write;
+    const io: Stdio = .{ .context = &context, .pipes = provider, .snapshot = .{
+        .stdin_binding = pipeBinding(.{ .handle = 13, .generation = 17, .direction = a.byte_pipe_reader }),
+        .stdout_binding = pipeBinding(.{ .handle = 19, .generation = 23, .direction = a.byte_pipe_writer }),
+    } };
+    for ([_]@TypeOf(Peer.mode){ .version, .size, .flags, .count }) |mode| {
+        Peer.mode = mode;
+        var bytes = [_]u8{'?'} ** 3;
+        const before: pipe.Progress = .{ .bytes = 99, .state = a.byte_pipe_eof };
+        var progress = before;
+        try std.testing.expectEqual(a.byte_pipe_error_invalid, io.readChecked(&bytes, .{}, &progress));
+        try std.testing.expectEqualStrings("???", &bytes);
+        try std.testing.expectEqualDeep(before, progress);
+        try std.testing.expectEqual(a.byte_pipe_error_invalid, io.writeChecked(1, "abc", .{}, &progress));
+        try std.testing.expectEqualDeep(before, progress);
     }
 }

@@ -217,7 +217,17 @@ behandelt. Eine leere Console-Pollantwort liefert WouldBlock.
 Diese synchronen Komfortkompositionen sind Zig-Quellfassaden. Die bisher
 qualifizierten C-/Rust-StreamTransfer-Kerne, kopierten Netzwerkrecords,
 Service- und Stdio-Aufrufe behalten ihren dokumentierten Pruefumfang.
-Vier gezielte Zig-Faelle pruefen kurze Praefixe, verlorene Replies, Cancel,
+Fuenf gezielte Zig-Faelle pruefen kurze Praefixe, verlorene Replies, Cancel,
 gepufferte Steuer-/Bodygrenzen, EOF, fehlerhafte Recordidentitaet, komplette
 Argumentgrammatik und den kurz schreibenden beziehungsweise defekten Sink.
 Normale App-Artefakte und ihre Gastqualifikation folgen als eigener Beleg.
+
+readChecked/writeChecked komponieren die bestehenden Stdio-Aufrufe mit einer
+privaten Ergebnispruefung. Version1, Recordgroesse, Flags0, Zustandsbereich
+und angebotene Bytezahl werden vor Veroeffentlichung validiert. ReadChecked
+verwendet einen privaten Puffer fuer hoechstens einen4-KB-Schritt. Ungueltige
+Ergebnisse lassen Callerbytes und Fortschrittsrecord unveraendert. Output
+und der normale interaktive NETCAT-Eingang verwenden diese Zig-Komposition.
+Der zusaetzliche praezise Fall verletzt einzeln Version, Groesse, Flags und
+Bytegrenze. Der rohe Stdio-Ausgangsaufruf nimmt diese Replies zuvor an.
+Der neue gepruefte Aufruf weist sie mit erhaltenem Callerzustand zurueck.

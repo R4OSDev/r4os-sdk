@@ -824,8 +824,8 @@
       "zig_frontend_helpers_09070": {
         "sdk": "0.64.203",
         "source": "Repositories/SDK/r4os/network_stream.zig",
-        "scope": "Four precise native Linux Zig cases cover copied TCP identities, short/WouldBlock prefixes and one absolute deadline, uncertain mutations without replay, explicit cancellation, split/coalesced control-body buffering, EOF prefixes, malformed output, complete argument grammar, and short/failed normal Stdio sinks. These are Zig convenience compositions over the previously qualified shared C/Rust StreamTransfer and copied network/stdio service contracts. Five normal app runtime qualification remains separate.",
-        "tests": "Four existing-owner entry cases plus normal five-consumer native qualification."
+        "scope": "Five precise native Linux Zig cases cover copied TCP identities, short/WouldBlock prefixes and one absolute deadline, uncertain mutations without replay, explicit cancellation, split/coalesced control-body buffering, EOF prefixes, malformed output, complete argument grammar, and short/failed normal Stdio sinks. These are Zig convenience compositions over the previously qualified shared C/Rust StreamTransfer and copied network/stdio service contracts. Five normal app runtime qualification remains separate. Checked Zig Stdio read/write compositions privately validate progress version, size, flags, state and offered prefix before publication. The existing low-level Stdio methods and C/Rust primitive bodies remain byte-identical.",
+        "tests": "Five existing-owner entry cases plus normal five-consumer native qualification."
       }
     },
     {
@@ -59007,9 +59007,9 @@
     },
     "network_stream_consumers_09070": {
       "complete": true,
-      "scope": "Four precise native Linux Zig cases cover copied TCP identities, short/WouldBlock prefixes and one absolute deadline, uncertain mutations without replay, explicit cancellation, split/coalesced control-body buffering, EOF prefixes, malformed output, complete argument grammar, and short/failed normal Stdio sinks. These are Zig convenience compositions over the previously qualified shared C/Rust StreamTransfer and copied network/stdio service contracts. Five normal app runtime qualification remains separate.",
+      "scope": "Five precise native Linux Zig cases cover copied TCP identities, short/WouldBlock prefixes and one absolute deadline, uncertain mutations without replay, explicit cancellation, split/coalesced control-body buffering, EOF prefixes, malformed output, complete argument grammar, and short/failed normal Stdio sinks. These are Zig convenience compositions over the previously qualified shared C/Rust StreamTransfer and copied network/stdio service contracts. Five normal app runtime qualification remains separate. Checked Zig Stdio read/write compositions privately validate progress version, size, flags, state and offered prefix before publication. The existing low-level Stdio methods and C/Rust primitive bodies remain byte-identical.",
       "receipt": "Research/API-ABI/Migration/0.90.70/SdkHost.json",
-      "limits": "Four Zig cases and seven unnamed import carriers. Existing C/Rust primitives retain their earlier reviewed scope. Windows runtime and physical hardware require their own evidence."
+      "limits": "Five Zig cases and seven unnamed import carriers. Existing C/Rust primitives retain their earlier reviewed scope. Windows runtime and physical hardware require their own evidence."
     }
   },
   "wave_bindings": [
@@ -59268,7 +59268,7 @@
     "libraries": "0.64.57",
     "evidence": "network_stream_consumers_09070",
     "historical_snapshot_retained": true,
-    "scope": "Four precise native Linux Zig cases cover copied TCP identities, short/WouldBlock prefixes and one absolute deadline, uncertain mutations without replay, explicit cancellation, split/coalesced control-body buffering, EOF prefixes, malformed output, complete argument grammar, and short/failed normal Stdio sinks. These are Zig convenience compositions over the previously qualified shared C/Rust StreamTransfer and copied network/stdio service contracts. Five normal app runtime qualification remains separate."
+    "scope": "Five precise native Linux Zig cases cover copied TCP identities, short/WouldBlock prefixes and one absolute deadline, uncertain mutations without replay, explicit cancellation, split/coalesced control-body buffering, EOF prefixes, malformed output, complete argument grammar, and short/failed normal Stdio sinks. These are Zig convenience compositions over the previously qualified shared C/Rust StreamTransfer and copied network/stdio service contracts. Five normal app runtime qualification remains separate. Checked Zig Stdio read/write compositions privately validate progress version, size, flags, state and offered prefix before publication. The existing low-level Stdio methods and C/Rust primitive bodies remain byte-identical."
   },
   "drift_guard": {
     "schema": 1,
@@ -62196,7 +62196,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/launch_io.zig",
-        "sha256": "6572478c75bac05f38afdbc2a5260175ea3c7cc6077fc51cb72d232696793d82"
+        "sha256": "b38abc972fba4c8a5bdd131f050b54a507aaa9fd254d42a5d869b646af763f4a"
       },
       {
         "path": "Repositories/SDK/r4os/lowlevel.zig",
