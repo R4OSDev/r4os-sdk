@@ -593,7 +593,7 @@ pub const Engine = struct {
     }
 };
 
-pub fn runTerminal(r4_app: *r4os.App) i32 {
+pub fn runTerminal(r4_app: anytype) i32 {
     var engine = Engine.init(r4_app);
     const ctx = engine.ctx;
     defer printPayloadWork(&ctx);
@@ -603,15 +603,23 @@ pub fn runTerminal(r4_app: *r4os.App) i32 {
         return 0;
     }
 
-    var pos: usize = 0;
-    const command = nextToken(args, &pos) orelse {
-        printUsage(&ctx);
+    const parsed_args = parseTerminalArguments(args) catch {
+        fail(&ctx, "arguments", "invalid-command-line");
         return 1;
     };
+    const command = parsed_args.command;
+    const path_argument = parsed_args.argument;
+    const takes_path = equalsIgnoreCase(command, "VERIFY") or equalsIgnoreCase(command, "APPLY") or
+        equalsIgnoreCase(command, "STAGE") or equalsIgnoreCase(command, "REMOVE") or
+        equalsIgnoreCase(command, "ARCHIVE-BOOT-BACKUP");
+    if (!takes_path and path_argument.len != 0) {
+        fail(&ctx, "arguments", "unexpected-argument");
+        return 1;
+    }
     if (equalsIgnoreCase(command, "REMOVE") or equalsIgnoreCase(command, "RESUME-REMOVE")) {
         var io = removal.Native.init(&ctx, null);
         defer io.deinit();
-        const path = trim(args[pos..]);
+        const path = path_argument;
         var parsed: ?std.json.Parsed(removal.Plan) = null;
         defer if (parsed) |value| value.deinit();
         const plan: removal.Plan = if (equalsIgnoreCase(command, "RESUME-REMOVE")) blk: {
@@ -639,7 +647,7 @@ pub fn runTerminal(r4_app: *r4os.App) i32 {
         return if (outcome.state == .removed) 0 else 2;
     }
     if (equalsIgnoreCase(command, "VERIFY")) {
-        const path = trim(args[pos..]);
+        const path = path_argument;
         if (path.len == 0) {
             fail(&ctx, "VERIFY", "missing-path");
             return 1;
@@ -647,7 +655,7 @@ pub fn runTerminal(r4_app: *r4os.App) i32 {
         return engine.verify(path).exit_code;
     }
     if (equalsIgnoreCase(command, "APPLY")) {
-        const path = trim(args[pos..]);
+        const path = path_argument;
         if (path.len == 0) {
             fail(&ctx, "APPLY", "missing-path");
             return 1;
@@ -655,7 +663,7 @@ pub fn runTerminal(r4_app: *r4os.App) i32 {
         return engine.apply(path).exit_code;
     }
     if (equalsIgnoreCase(command, "STAGE")) {
-        const path = trim(args[pos..]);
+        const path = path_argument;
         if (path.len == 0) {
             fail(&ctx, "STAGE", "missing-path");
             return 1;
@@ -666,11 +674,11 @@ pub fn runTerminal(r4_app: *r4os.App) i32 {
         return engine.commitBatch().exit_code;
     }
     if (equalsIgnoreCase(command, "ROLLBACK-LAST")) {
-        if (trim(args[pos..]).len != 0) return 1;
+        if (path_argument.len != 0) return 1;
         return rollbackLastCommand(&ctx);
     }
     if (equalsIgnoreCase(command, "ARCHIVE-BOOT-BACKUP")) {
-        return archiveBootBackupCommand(&ctx, trim(args[pos..]));
+        return archiveBootBackupCommand(&ctx, path_argument);
     }
     if (equalsIgnoreCase(command, "ABORT-BATCH")) {
         return abortPreparedBatchCommand(&ctx);
@@ -5821,12 +5829,38 @@ fn incompatible(ctx: *const r4os.r4sys.Context, command: []const u8, reason: []c
     ctx.println(required);
 }
 
-fn nextToken(value: []const u8, pos: *usize) ?[]const u8 {
-    while (pos.* < value.len and isSpace(value[pos.*])) : (pos.* += 1) {}
-    if (pos.* >= value.len) return null;
-    const start = pos.*;
-    while (pos.* < value.len and !isSpace(value[pos.*])) : (pos.* += 1) {}
-    return value[start..pos.*];
+const TerminalArguments = struct { command: []const u8, argument: []const u8 };
+
+fn parseTerminalArguments(raw: []const u8) !TerminalArguments {
+    var detail: r4os.arguments.Failure = .{};
+    var cursor = try r4os.arguments.ArgCursor.init(raw, .{ .switches = 0 }, &detail);
+    var grammar = cursor;
+    while (try grammar.next()) |_| {}
+    const first = (try cursor.next()) orelse return .{ .command = "", .argument = "" };
+    const command = try first.bytes(raw);
+    const second = (try cursor.next()) orelse return .{ .command = command, .argument = "" };
+    if (second.quoted()) {
+        if (try cursor.next() != null) return error.UnexpectedArgument;
+        return .{ .command = command, .argument = try second.bytes(raw) };
+    }
+    // The established CLI also accepts an unquoted whole path remainder.
+    return .{ .command = command, .argument = trim(raw[first.raw_end..]) };
+}
+
+test "migration terminal keeps quoted and original whole path arguments" {
+    const quoted = try parseTerminalArguments("VERIFY \"C:\\Folder One\\UPDATE.R4U\"");
+    try std.testing.expectEqualStrings("VERIFY", quoted.command);
+    try std.testing.expectEqualStrings("C:\\Folder One\\UPDATE.R4U", quoted.argument);
+    const original = try parseTerminalArguments("APPLY C:\\Folder One\\UPDATE.R4U");
+    try std.testing.expectEqualStrings("C:\\Folder One\\UPDATE.R4U", original.argument);
+}
+
+test "migration terminal validates the complete command before dispatch" {
+    try std.testing.expectError(error.UnclosedQuote, parseTerminalArguments("STATUS \"unfinished"));
+    try std.testing.expectError(error.UnexpectedArgument, parseTerminalArguments("VERIFY \"C:\\X.R4U\" extra"));
+    try std.testing.expectError(error.InvalidEncoding, parseTerminalArguments("STATUS \xff"));
+    const extra = try parseTerminalArguments("STATUS extra");
+    try std.testing.expectEqualStrings("extra", extra.argument);
 }
 
 fn nextLine(value: []const u8, pos: *usize) ?[]const u8 {

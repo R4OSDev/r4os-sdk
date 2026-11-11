@@ -59010,6 +59010,12 @@
       "scope": "Five precise native Linux Zig cases cover copied TCP identities, short/WouldBlock prefixes and one absolute deadline, uncertain mutations without replay, explicit cancellation, split/coalesced control-body buffering, EOF prefixes, malformed output, complete argument grammar, and short/failed normal Stdio sinks. These are Zig convenience compositions over the previously qualified shared C/Rust StreamTransfer and copied network/stdio service contracts. Five normal app runtime qualification remains separate. Checked Zig Stdio read/write compositions privately validate progress version, size, flags, state and offered prefix before publication. The existing low-level Stdio methods and C/Rust primitive bodies remain byte-identical.",
       "receipt": "Research/API-ABI/Migration/0.90.70/SdkHost.json",
       "limits": "Five Zig cases and seven unnamed import carriers. Existing C/Rust primitives retain their earlier reviewed scope. Windows runtime and physical hardware require their own evidence."
+    },
+    "software_update_consumers_09071": {
+      "complete": true,
+      "scope": "Two exact Zig terminal command grammar cases and the existing status/journal-resnapshot owner oracle execute on Linux. Shared runTerminal accepts the actual App and App2 system/file contexts. Whole UTF8/quote validation precedes dispatch, the established unquoted whole path remainder is accepted and commands without a path check the exact argument end. The status fixture supplies the current Engine context/files constructor. New terminal composition is a Zig helper. Existing C/Rust record, dispatch, resource and storage primitives have their earlier implementation/evidence scopes. Native software/update consumer qualification has its separate migration receipt.",
+      "receipt": "Research/API-ABI/Migration/0.90.71/SdkHost.json",
+      "limits": "Two actual Zig parser owner cases plus the existing journal/status oracle. Native applications, Windows execution and physical hardware have separate evidence scopes."
     }
   },
   "wave_bindings": [
@@ -59262,18 +59268,18 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.90.70",
-    "sdk": "0.64.203",
+    "performed_in": "0.90.71",
+    "sdk": "0.64.204",
     "contract": "0.64.93",
     "libraries": "0.64.57",
-    "evidence": "network_stream_consumers_09070",
+    "evidence": "software_update_consumers_09071",
     "historical_snapshot_retained": true,
-    "scope": "Five precise native Linux Zig cases cover copied TCP identities, short/WouldBlock prefixes and one absolute deadline, uncertain mutations without replay, explicit cancellation, split/coalesced control-body buffering, EOF prefixes, malformed output, complete argument grammar, and short/failed normal Stdio sinks. These are Zig convenience compositions over the previously qualified shared C/Rust StreamTransfer and copied network/stdio service contracts. Five normal app runtime qualification remains separate. Checked Zig Stdio read/write compositions privately validate progress version, size, flags, state and offered prefix before publication. The existing low-level Stdio methods and C/Rust primitive bodies remain byte-identical."
+    "scope": "Two exact Zig terminal command grammar cases and the existing status/journal-resnapshot owner oracle execute on Linux. Shared runTerminal accepts the actual App and App2 system/file contexts. Whole UTF8/quote validation precedes dispatch, the established unquoted whole path remainder is accepted and commands without a path check the exact argument end. The status fixture supplies the current Engine context/files constructor. New terminal composition is a Zig helper. Existing C/Rust record, dispatch, resource and storage primitives have their earlier implementation/evidence scopes. Native software/update consumer qualification has its separate migration receipt."
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.90.70",
+    "reviewed_in": "0.90.71",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -61680,7 +61686,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "a4a826de4601bbf75bc2f08d8feee16e906b2e677c7945fea875ad8ce3ded329"
+        "sha256": "b3168dc0ce1c50e9ff39d8a8e8868698bb994ae0c20ae89f697694bc701372ab"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -62640,7 +62646,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/system_update_engine.zig",
-        "sha256": "9c92f49a354319f44161afd5ba2898cd993743cbbc1ff54f97e69f8e2b4d4da0"
+        "sha256": "02c07ef6ba34224768c148474272a310956bde8e953a0bd939977b9839662eed"
       },
       {
         "path": "Repositories/SDK/r4os/system_update_inventory.zig",
@@ -63036,7 +63042,8 @@
           "technical_generation2_09015",
           "wire_native_data_09017",
           "tooling_templates_generation2_09044",
-          "network_stream_consumers_09070"
+          "network_stream_consumers_09070",
+          "software_update_consumers_09071"
         ]
       },
       {
@@ -63137,7 +63144,8 @@
           "normal_system_facades_09041",
           "canonical_text_font_image_generation2_09045",
           "storage_actual2_volume_lease_09061",
-          "network_stream_consumers_09070"
+          "network_stream_consumers_09070",
+          "software_update_consumers_09071"
         ]
       },
       {
@@ -65248,6 +65256,15 @@
       "evidence": "network_frontend_composition_09069",
       "historical_snapshot_retained": true,
       "scope": "Four precise Zig consumer composition cases cover decimal/scoped addresses, whole copied protocol output, DNS pagination identity and single uncertain Release, exact DHCP results and canonical shared deadlines. Existing C/Rust copied record/dispatch/service facades keep their original reviewed scope. Normal five-app native and physical/Windows qualification are separate."
+    },
+    {
+      "performed_in": "0.90.70",
+      "sdk": "0.64.203",
+      "contract": "0.64.93",
+      "libraries": "0.64.57",
+      "evidence": "network_stream_consumers_09070",
+      "historical_snapshot_retained": true,
+      "scope": "Five precise native Linux Zig cases cover copied TCP identities, short/WouldBlock prefixes and one absolute deadline, uncertain mutations without replay, explicit cancellation, split/coalesced control-body buffering, EOF prefixes, malformed output, complete argument grammar, and short/failed normal Stdio sinks. These are Zig convenience compositions over the previously qualified shared C/Rust StreamTransfer and copied network/stdio service contracts. Five normal app runtime qualification remains separate. Checked Zig Stdio read/write compositions privately validate progress version, size, flags, state and offered prefix before publication. The existing low-level Stdio methods and C/Rust primitive bodies remain byte-identical."
     }
   ]
 }

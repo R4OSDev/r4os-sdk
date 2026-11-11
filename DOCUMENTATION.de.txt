@@ -1842,3 +1842,16 @@ stream_transfer.adapters.Driver fuehrt die gemeinsamen Read-/Write-Schritte
 mit einer bestehenden Gesamtfrist aus. launch_io.Output verwendet die
 wirklichen Start2-stdio-Bindungen und merkt einen fehlgeschlagenen Sink.
 Der Besitzervertrag und die Grenzen stehen in Docs/StreamTransfer.txt.
+
+Terminalanschluss ab SDK0.64.204
+------------------------------
+system_update_engine.runTerminal nimmt die normalen App- und App2-Kontexte
+an. Engine bindet deren System-/Dateifassaden fuer die Transaktionsdauer.
+ArgCursor prueft UTF8 und die gesamte Quotegrammatik vor dem Dispatch.
+Ein ganzes gequotetes Pfadargument wird dekodiert. Der bisher zulaessige
+ungequotete ganze Pfadrest bleibt als Pfad verwendbar. Argumentlose Befehle
+pruefen das genaue Ende. Zwei spezifische Zig-Quellfaelle pruefen Pfad- und
+Grammatikgrenzen. Der vorhandene Status-/Journalwechseltest verwendet den
+aktuellen Engine-Konstruktor mit System- und Dateifassade und fuehrt seine
+bestehenden Vergleichsorakel aus. Native Portex-/SysUpdate-Belege stehen
+unter Research/API-ABI/Migration/0.90.71 im R4OS-Workspace.

@@ -203,8 +203,8 @@ fn observe(want_resume: bool) engine.Result {
         .file_stream_abort = @intFromPtr(&streamAbort),
     };
     const bundle: r4os.program.Bundle = .{ .raw = undefined, .sys = &api };
-    var app: r4os.App = undefined;
-    var owner: engine.Engine = .{ .app = &app, .ctx = r4os.r4sys.Context.init(&bundle) };
+    const sys = r4os.r4sys.Context.init(&bundle);
+    var owner: engine.Engine = .{ .ctx = sys, .files = .{ .sys = sys } };
     return if (want_resume) owner.resumeBatch() else owner.status();
 }
 fn status() engine.Result {
