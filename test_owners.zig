@@ -49,3 +49,8 @@ test "composition owner copied text and exact focus" {
 test {
     _ = @import("r4os/network_family.zig");
 }
+
+test {
+    _ = @import("r4os/network_stream.zig");
+    _ = @import("r4os/launch_io.zig");
+}

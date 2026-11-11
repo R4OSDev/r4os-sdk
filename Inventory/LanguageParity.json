@@ -820,6 +820,12 @@
         "source": "Repositories/SDK/r4os/network_family.zig",
         "scope": "Stateless address parsing/formatting, complete paginated DNS collection, typed R4DEV IPv6 record views and budgeted existing DHCPv4 service records. Zig convenience composition for the five Zig apps. Existing C/Rust copied records, protocol dispatch and service calls retain their established qualification scope.",
         "tests": "Four specific network family cases in the existing data-parity-test owner entry. Native five-consumer qualification belongs to migration0.90.69."
+      },
+      "zig_frontend_helpers_09070": {
+        "sdk": "0.64.203",
+        "source": "Repositories/SDK/r4os/network_stream.zig",
+        "scope": "Four precise native Linux Zig cases cover copied TCP identities, short/WouldBlock prefixes and one absolute deadline, uncertain mutations without replay, explicit cancellation, split/coalesced control-body buffering, EOF prefixes, malformed output, complete argument grammar, and short/failed normal Stdio sinks. These are Zig convenience compositions over the previously qualified shared C/Rust StreamTransfer and copied network/stdio service contracts. Five normal app runtime qualification remains separate.",
+        "tests": "Four existing-owner entry cases plus normal five-consumer native qualification."
       }
     },
     {
@@ -3376,6 +3382,14 @@
       "expression": "@import(\"r4os/driver_dma_cleanup.zig\")",
       "capability": "driver",
       "wave": "0.90.49"
+    },
+    {
+      "name": "network_stream",
+      "source": "Repositories/SDK/r4os.zig",
+      "line": 8,
+      "expression": "@import(\"r4os/network_stream.zig\")",
+      "capability": "network",
+      "wave": "0.90.70"
     }
   ],
   "build_exports": [
@@ -58990,6 +59004,12 @@
       "scope": "Four precise Zig consumer composition cases cover decimal/scoped addresses, whole copied protocol output, DNS pagination identity and single uncertain Release, exact DHCP results and canonical shared deadlines. Existing C/Rust copied record/dispatch/service facades keep their original reviewed scope. Normal five-app native and physical/Windows qualification are separate.",
       "receipt": "Research/API-ABI/Migration/0.90.69/SdkHost.json",
       "limits": "Linux native Zig owner cases. The four added convenience compositions are Zig helpers over existing copied public contracts. Original C/Rust transport owner qualification remains the corresponding earlier evidence. Normal artifacts and guest behavior require their own migration receipt."
+    },
+    "network_stream_consumers_09070": {
+      "complete": true,
+      "scope": "Four precise native Linux Zig cases cover copied TCP identities, short/WouldBlock prefixes and one absolute deadline, uncertain mutations without replay, explicit cancellation, split/coalesced control-body buffering, EOF prefixes, malformed output, complete argument grammar, and short/failed normal Stdio sinks. These are Zig convenience compositions over the previously qualified shared C/Rust StreamTransfer and copied network/stdio service contracts. Five normal app runtime qualification remains separate.",
+      "receipt": "Research/API-ABI/Migration/0.90.70/SdkHost.json",
+      "limits": "Four Zig cases and seven unnamed import carriers. Existing C/Rust primitives retain their earlier reviewed scope. Windows runtime and physical hardware require their own evidence."
     }
   },
   "wave_bindings": [
@@ -59242,18 +59262,18 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.90.69",
-    "sdk": "0.64.202",
+    "performed_in": "0.90.70",
+    "sdk": "0.64.203",
     "contract": "0.64.93",
     "libraries": "0.64.57",
-    "evidence": "network_frontend_composition_09069",
+    "evidence": "network_stream_consumers_09070",
     "historical_snapshot_retained": true,
-    "scope": "Four precise Zig consumer composition cases cover decimal/scoped addresses, whole copied protocol output, DNS pagination identity and single uncertain Release, exact DHCP results and canonical shared deadlines. Existing C/Rust copied record/dispatch/service facades keep their original reviewed scope. Normal five-app native and physical/Windows qualification are separate."
+    "scope": "Four precise native Linux Zig cases cover copied TCP identities, short/WouldBlock prefixes and one absolute deadline, uncertain mutations without replay, explicit cancellation, split/coalesced control-body buffering, EOF prefixes, malformed output, complete argument grammar, and short/failed normal Stdio sinks. These are Zig convenience compositions over the previously qualified shared C/Rust StreamTransfer and copied network/stdio service contracts. Five normal app runtime qualification remains separate."
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.90.69",
+    "reviewed_in": "0.90.70",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -61656,15 +61676,15 @@
       },
       {
         "path": "Repositories/SDK/build.zig",
-        "sha256": "35ac9d81b10df06f1e63bc0b8f1e99a2dff6468684ce43345122bada1241febc"
+        "sha256": "910a59f0fe353eb966304bd244a7401983fc6445fb66f8f6764b4c509a9643f1"
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "0db053a828ed7a16ad4bc8de0705a378dc6f04b7bff3810ed76514adf76d0f0a"
+        "sha256": "a4a826de4601bbf75bc2f08d8feee16e906b2e677c7945fea875ad8ce3ded329"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
-        "sha256": "25eac77603f903d251a701b323ff101768d33e470f391de20cb73168b5ed34aa"
+        "sha256": "b2a328970b9a6ef36fa24af2bd0f6a585b67386054f0b8e3224f21cfa137891a"
       },
       {
         "path": "Repositories/SDK/r4os/allocator_source.zig",
@@ -62176,7 +62196,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/launch_io.zig",
-        "sha256": "c4bda461850d850660ba0b8df57349dd4fc0b91aeac6d6114f22dfa689b9aa7b"
+        "sha256": "6572478c75bac05f38afdbc2a5260175ea3c7cc6077fc51cb72d232696793d82"
       },
       {
         "path": "Repositories/SDK/r4os/lowlevel.zig",
@@ -62229,6 +62249,10 @@
       {
         "path": "Repositories/SDK/r4os/network_family.zig",
         "sha256": "099714d2d0b402e5b588932d82f792c29a9757512f0ffd6cfb7c7ad866f286c4"
+      },
+      {
+        "path": "Repositories/SDK/r4os/network_stream.zig",
+        "sha256": "677a95c21bc2241b77054ef4c42d86d13533e0c457dd26540a191b7ec3597997"
       },
       {
         "path": "Repositories/SDK/r4os/network_transport.zig",
@@ -62536,7 +62560,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/stream_adapters.zig",
-        "sha256": "2a0371a86ddaae750c6547a701529e0e21a517e120d79e049bfd5d1a0e4d2189"
+        "sha256": "30ad6852fd0c53b59f29619ff5b77497515a7dd3ae1aee33c8d7c2c4ad8ba292"
       },
       {
         "path": "Repositories/SDK/r4os/stream_api.zig",
@@ -62880,7 +62904,7 @@
       },
       {
         "path": "Repositories/SDK/test_owners.zig",
-        "sha256": "8a8e7dc912cf38461bb49bc63d5d4a5348cb9c497cf3cc5081022a415fb6941e"
+        "sha256": "040f2fa5327259ebd66119425c531f8778e17096a094c242b5bfecdc717b709d"
       }
     ],
     "coverage": [
@@ -63011,7 +63035,8 @@
           "gui_title_08947",
           "technical_generation2_09015",
           "wire_native_data_09017",
-          "tooling_templates_generation2_09044"
+          "tooling_templates_generation2_09044",
+          "network_stream_consumers_09070"
         ]
       },
       {
@@ -63111,7 +63136,8 @@
           "file_picker_09024",
           "normal_system_facades_09041",
           "canonical_text_font_image_generation2_09045",
-          "storage_actual2_volume_lease_09061"
+          "storage_actual2_volume_lease_09061",
+          "network_stream_consumers_09070"
         ]
       },
       {
@@ -63160,7 +63186,8 @@
           "launch_io_language_09035",
           "normal_system_facades_09041",
           "canonical_graphics_native_generation2_09046",
-          "rust_desktop_shared_contexts_09065"
+          "rust_desktop_shared_contexts_09065",
+          "network_stream_consumers_09070"
         ]
       },
       {
@@ -63237,7 +63264,8 @@
           "Repositories/SDK/r4os/stream_runtime.zig",
           "Repositories/SDK/r4os/network_family.zig",
           "Repositories/SDK/r4os/network_common.zig",
-          "Repositories/SDK/r4os/network_transport.zig"
+          "Repositories/SDK/r4os/network_transport.zig",
+          "Repositories/SDK/r4os/network_stream.zig"
         ],
         "c": [
           "Repositories/SDK/Shared/C/include/r4os/app_network.h",
@@ -63264,7 +63292,8 @@
           "ipv6_transport_09033",
           "normal_service_stream_facades_09043",
           "network_provider_actual_generation_host_09060",
-          "network_frontend_composition_09069"
+          "network_frontend_composition_09069",
+          "network_stream_consumers_09070"
         ]
       },
       {
@@ -65210,6 +65239,15 @@
       "evidence": "rust_desktop_shared_contexts_09065",
       "historical_snapshot_retained": true,
       "scope": "Resident actual2 Rust graphics and Library helper contexts, immutable joined-worker startup facts, synchronous resource loans and copied shared inventory acquisition metadata. Pure checked-time error mapping composes one native export owner. Existing C/Rust declarations project the same typed owners. Desktop actual2 tests use the common complete inventory reader, typed clipboard offers and main-task GUI wait sources. Native guest and normal packaged artifact qualification are recorded separately. Packager import storage admits all32 complete records and rejects33 before replacing the output. Seven existing scoped packager/ELF cases pass with the new boundary case."
+    },
+    {
+      "performed_in": "0.90.69",
+      "sdk": "0.64.202",
+      "contract": "0.64.93",
+      "libraries": "0.64.57",
+      "evidence": "network_frontend_composition_09069",
+      "historical_snapshot_retained": true,
+      "scope": "Four precise Zig consumer composition cases cover decimal/scoped addresses, whole copied protocol output, DNS pagination identity and single uncertain Release, exact DHCP results and canonical shared deadlines. Existing C/Rust copied record/dispatch/service facades keep their original reviewed scope. Normal five-app native and physical/Windows qualification are separate."
     }
   ]
 }

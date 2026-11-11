@@ -132,3 +132,131 @@ pub const Stdio = struct {
         return code;
     }
 };
+
+/// Checked normal output, including explicitly supplied child pipe bindings.
+/// A write has one bounded deadline. Console counts retain handoff semantics.
+pub const Output = struct {
+    io: Stdio,
+    sys: @import("r4sys.zig").Context,
+    clock: @import("stream_adapters.zig").PlatformClock,
+    failed: bool = false,
+    last: ?@import("stream_transfer.zig").Progress = null,
+
+    pub fn init(app: *const @import("app2.zig").App, out: *Output) i32 {
+        var io: Stdio = undefined;
+        const rc = app.stdio(&io);
+        if (rc != 0) return rc;
+        const clock = app.clock() catch return a.err_no_fn;
+        out.* = .{ .io = io, .sys = app.system(), .clock = clock };
+        return 0;
+    }
+
+    fn callback(raw: ?*anyopaque, _: u64, bytes: [*]const u8, count: u32, absolute: *const @import("time_budget.zig").DeadlineBudget) callconv(.c) @import("stream_transfer.zig").Ack {
+        const self: *Output = @ptrCast(@alignCast(raw.?));
+        const core = @import("stream_transfer.zig");
+        const limit: pipe.Deadline = if (self.io.snapshot.stdout_binding.kind == a.launch_io_pipe)
+            pipe.deadline(absolute.*) catch return .{ .kind = @intFromEnum(core.IoKind.failed), .error_code = a.byte_pipe_error_clock_changed }
+        else
+            .{};
+        var progress: pipe.Progress = .{};
+        const rc = self.io.write(1, bytes[0..count], limit, &progress);
+        if (rc != 0) return .{ .kind = @intFromEnum(core.IoKind.uncertain), .error_code = rc };
+        if (progress.bytes > count or progress.state < a.byte_pipe_ready or progress.state > a.byte_pipe_closed) return .{ .kind = @intFromEnum(core.IoKind.uncertain), .error_code = a.byte_pipe_error_invalid };
+        return .{ .bytes = @intCast(progress.bytes), .kind = @intFromEnum(switch (progress.state) {
+            a.byte_pipe_ready => core.IoKind.progress,
+            a.byte_pipe_would_block => .would_block,
+            a.byte_pipe_timed_out => .timed_out,
+            a.byte_pipe_closed, a.byte_pipe_broken_pipe => .closed,
+            else => .failed,
+        }), .error_code = if (progress.state == a.byte_pipe_cancelled) @import("stream_adapters.zig").cancelled else 0 };
+    }
+
+    pub fn write(self: *Output, bytes: []const u8) void {
+        if (self.failed or bytes.len == 0) return;
+        const core = @import("stream_transfer.zig");
+        const adapters = @import("stream_adapters.zig");
+        var budget = @import("rpc_budget.zig").Budget.fromTimeout(self.clock.read, .{ .kind = 1, .nanoseconds = 2_000_000_000 }) catch {
+            self.failed = true;
+            return;
+        };
+        const driver: adapters.Driver = .{ .sys = self.sys, .clock = &self.clock, .budget = &budget };
+        const progress = driver.write(bytes, a.byte_pipe_max_step, callback, self) catch {
+            self.failed = true;
+            return;
+        };
+        self.last = progress;
+        self.failed = progress.outcome != @intFromEnum(core.Outcome.complete);
+    }
+
+    pub fn put(self: *Output, byte: u8) void {
+        self.write(&.{byte});
+    }
+
+    pub fn number(self: *Output, value: u64) void {
+        var buffer: [20]u8 = undefined;
+        self.write(std.fmt.bufPrint(&buffer, "{d}", .{value}) catch unreachable);
+    }
+
+    pub fn close(self: *Output) i32 {
+        var first: i32 = 0;
+        for (0..3) |index| {
+            if (self.io.binding(@intCast(index)).?.kind == a.launch_io_pipe) {
+                const rc = self.io.close(@intCast(index));
+                if (first == 0) first = rc;
+            }
+        }
+        return first;
+    }
+};
+
+test "network stream normal output preserves short handoff prefix and closed sink failure" {
+    const Peer = struct {
+        var bytes: [64]u8 = undefined;
+        var used: usize = 0;
+        var calls: u32 = 0;
+        var fail_after_prefix = false;
+        var now: u64 = 1_000_000_000;
+        fn clock(out: *a.MonotonicClockInfo) callconv(.c) i32 {
+            now += 100_000;
+            out.* = .{ .flags = a.monotonic_clock_flag_valid, .source = 1, .generation = 9, .instant_ns = now, .resolution_ns = 1, .event_requested_hz = 1000 };
+            return 1;
+        }
+        fn closeContext(_: *const platform.abi.R4XStartContext2) callconv(.c) u32 {
+            return 0;
+        }
+        fn sleep(_: u64) callconv(.c) void {}
+        fn write(_: u32, input: [*]const u8, length: u32) callconv(.c) i32 {
+            calls += 1;
+            if (fail_after_prefix and calls > 1) return a.byte_pipe_error_stale;
+            const count = @min(length, 3);
+            @memcpy(bytes[used..][0..count], input[0..count]);
+            used += count;
+            return @intCast(count);
+        }
+    };
+    var sys_table: platform.abi.R4XStartR4Sys2 = .{ .sleep_ticks = @intFromPtr(&Peer.sleep) };
+    var desk_table: platform.abi.R4XStartR4Desk2 = .{ .console_write = @intFromPtr(&Peer.write) };
+    const imports = [_]platform.abi.R4XStartImport{
+        .{ .group_id = 1, .resolved_version = 2, .table = @intFromPtr(&sys_table) },
+        .{ .group_id = 2, .resolved_version = 2, .table = @intFromPtr(&desk_table) },
+    };
+    const raw: platform.abi.R4XStartContext2 = .{ .import_count = imports.len, .imports = @intFromPtr(&imports), .flags = a.r4xstart_flag_close_supported, .should_close = @intFromPtr(&Peer.closeContext) };
+    const context = try platform.Context.init(&raw);
+    for ([_]bool{ false, true }) |fail| {
+        Peer.used = 0;
+        Peer.calls = 0;
+        Peer.fail_after_prefix = fail;
+        var output: Output = .{ .io = .{ .context = &context, .snapshot = .{}, .pipes = null }, .sys = .{ .base = .{ .generation2 = &context } }, .clock = .{ .read = Peer.clock } };
+        output.write("abcdefgh");
+        try std.testing.expectEqual(fail, output.failed);
+        try std.testing.expectEqualStrings(if (fail) "abc" else "abcdefgh", Peer.bytes[0..Peer.used]);
+        if (fail) {
+            try std.testing.expectEqual(@as(u64, 3), output.last.?.bytes);
+            try std.testing.expectEqual(@intFromEnum(@import("stream_transfer.zig").Outcome.uncertain), output.last.?.outcome);
+            const calls = Peer.calls;
+            output.write("must not replay");
+            try std.testing.expectEqual(calls, Peer.calls);
+        }
+        try std.testing.expectEqual(@as(i32, 0), output.close());
+    }
+}

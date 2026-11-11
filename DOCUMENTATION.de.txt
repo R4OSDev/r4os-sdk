@@ -1831,3 +1831,14 @@ Diese Zig-Verbraucherhelfer komponieren die vorhandenen kopierten Vertrage.
 C und Rust behalten ihre bisherigen Record-/Dispatch-/Servicefassaden.
 Die neuen Komforthelfer besitzen hier eigene Zig-Faelle. Aussagen zur
 Sprachparitaet der bestehenden Transportfassaden behalten ihren Umfang.
+
+
+Familienfaehige Stream-Verbraucher ab SDK0.64.203
+-----------------------------------------------
+network_stream.Session bindet TCPSVC-Info, Provideridentitaet und wirkliche
+Socketgenerationen. Socket und Session besitzen ihre Ressourcen eindeutig.
+Reader erhaelt gepufferte Suffixe zwischen Steuerzeile und Dateikoerper.
+stream_transfer.adapters.Driver fuehrt die gemeinsamen Read-/Write-Schritte
+mit einer bestehenden Gesamtfrist aus. launch_io.Output verwendet die
+wirklichen Start2-stdio-Bindungen und merkt einen fehlgeschlagenen Sink.
+Der Besitzervertrag und die Grenzen stehen in Docs/StreamTransfer.txt.

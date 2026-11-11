@@ -172,3 +172,52 @@ Rust:
   let mut file = FileAppender::new(context2,c"C:\\Temp\\TRACE.TXT")?;
   let step = transfer.step(1024,false,&mut ||clock.sample(),|chunk|file.write(chunk))?;
   // Die Eingabe bleibt bis zur Rueckkehr geliehen. Kein impliziter Retry.
+
+
+Normale Transferprogramme mit SDK0.64.203
+--------------------------------------
+Migration0.90.70 verwendet network_stream.Session/Socket/Reader im normalen
+App2-Verbraucher. Session liest wirkliche TCPSVC-Faehigkeiten und bindet
+Provider, Socket und Generation. Resolverlisten werden ueber resolveAll
+vollstaendig gepinnt gelesen und freigegeben. IPv4 und IPv6 samt numerischem
+linklokalem Scope verwenden bestehende kopierte Records. Ein fuehrendes
+-4 beziehungsweise -6 waehlt die Familie. Hostnamen verwenden standardmaessig
+A-Abfragen. Der vollstaendige Argumenttext wird vor Effekten validiert.
+
+stream_adapters.Driver behaelt eine bestehende finite absolute Clockfrist
+ueber alle Schritte und gibt den zuletzt beobachteten Clockstand zurueck.
+ReadSome beendet sich nach einem bestimmten positiven Praefix. ReadExact
+und WriteAll laufen bis zum Ziel oder einem terminalen Ergebnis. Bekannte
+WouldBlock-Replies erlauben Wiederaufnahme innerhalb derselben Frist.
+Ein unklarer RPC-/Recordabschluss beendet den Transfer als Uncertain und
+bewahrt den zuvor bestaetigten Praefix. Es gibt genau einen eingereichten
+RPC je Stream-Schritt. Eine Socketantwort bestimmt Byteannahme und Endgrund.
+
+Reader behaelt bereits empfangene Bytes ueber eine CRLF-Steuerzeile hinaus
+fuer die anschliessende Lesephase. Ein ausdrueckliches EOF erlaubt einen
+letzten ungerahmten Rest. Weitere terminale Ergebnisse beenden den Aufruf.
+Protokollbedeutung, Laenge, Pruefsumme und Dateipublish bleiben beim App-Owner.
+
+Socket-Close besitzt eine getrennte250-ms-Bereinigungsfrist. Bestaetigtes
+WouldBlock darf innerhalb dieser Frist fortgesetzt werden. Eine fehlende
+Closequittung behaelt die genaue Identitaet und setzt cleanup_failed.
+Session.close meldet verbleibende Socketbesitzer und die Dienstquittung.
+Die normale Prozessbereinigung behaelt ihre eigene Besitzerverantwortung.
+
+launch_io.Output bindet das wirkliche Stdio-Snapshot des App2-Starts.
+Jeder logische Ausgabestring hat eine gemeinsame finite2-s-Frist. Kurze
+Annahmen werden mit StreamTransfer weitergefuehrt. Ein fehlender oder
+ungueltiger Reply beendet den Sink. last erhaelt dessen letzten bestimmten
+Praefix, und weitere Ausgaben werden unterdrueckt. Consoleausgabe behaelt
+ihren bestehenden Handoff-Vertrag. Pipeausgabe verwendet die eigenen
+nativen BytePipe-Endpunkte. close quittiert jede uebernommene Pipereferenz.
+Input wird ueber Stdio mit seinen ausdruecklichen EOF-/Cancel-Zustaenden
+behandelt. Eine leere Console-Pollantwort liefert WouldBlock.
+
+Diese synchronen Komfortkompositionen sind Zig-Quellfassaden. Die bisher
+qualifizierten C-/Rust-StreamTransfer-Kerne, kopierten Netzwerkrecords,
+Service- und Stdio-Aufrufe behalten ihren dokumentierten Pruefumfang.
+Vier gezielte Zig-Faelle pruefen kurze Praefixe, verlorene Replies, Cancel,
+gepufferte Steuer-/Bodygrenzen, EOF, fehlerhafte Recordidentitaet, komplette
+Argumentgrammatik und den kurz schreibenden beziehungsweise defekten Sink.
+Normale App-Artefakte und ihre Gastqualifikation folgen als eigener Beleg.

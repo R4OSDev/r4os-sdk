@@ -5,6 +5,7 @@ pub const platform2 = @import("r4os/platform2.zig");
 pub const App2 = @import("r4os/app2.zig").App;
 pub const startup2 = @import("r4os/app2.zig");
 pub const network_family = @import("r4os/network_family.zig");
+pub const network_stream = @import("r4os/network_stream.zig");
 pub const network_transport = @import("r4os/network_transport.zig");
 pub const wait_set = @import("r4os/wait_set.zig");
 pub const byte_pipe = @import("r4os/byte_pipe.zig");

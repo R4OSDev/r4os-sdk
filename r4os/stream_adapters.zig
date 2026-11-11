@@ -10,6 +10,35 @@ const readiness = @import("r4net.zig").tcpResultReadiness;
 pub const invalid: i32 = -11001;
 pub const offset_unavailable: i32 = -11002;
 pub const clock_unavailable: i32 = -11003;
+pub const cancelled: i32 = -11004;
+
+/// Normal synchronous consumer driver. All steps retain the caller's single
+/// absolute budget. Only confirmed WouldBlock permits a further owner call.
+pub const Driver = struct {
+    sys: @import("r4sys.zig").Context,
+    clock: *PlatformClock,
+    budget: *@import("rpc_budget.zig").Budget,
+
+    pub fn read(self: Driver, bytes: []u8, limit: u32, reader: core.Read, context: ?*anyopaque, exact: bool) core.Error!core.Progress {
+        var transfer = try core.Transfer.initAbsolute(.read_exact, bytes.len, self.budget.deadline);
+        defer self.budget.deadline = transfer.deadline;
+        while (true) {
+            const progress = try transfer.readStep(bytes[@intCast(transfer.bytes)..], limit, self.sys.programShouldClose(), PlatformClock.sample, self.clock, reader, context);
+            if (progress.flags & core.terminal != 0 or !exact and progress.bytes != 0) return progress;
+            if (progress.outcome == @intFromEnum(core.Outcome.would_block)) self.sys.sleepTicks(1);
+        }
+    }
+
+    pub fn write(self: Driver, bytes: []const u8, limit: u32, writer: core.Write, context: ?*anyopaque) core.Error!core.Progress {
+        var transfer = try core.Transfer.initAbsolute(.write_all, bytes.len, self.budget.deadline);
+        defer self.budget.deadline = transfer.deadline;
+        while (true) {
+            const progress = try transfer.writeStep(bytes[@intCast(transfer.bytes)..], limit, self.sys.programShouldClose(), PlatformClock.sample, self.clock, writer, context);
+            if (progress.flags & core.terminal != 0) return progress;
+            if (progress.outcome == @intFromEnum(core.Outcome.would_block)) self.sys.sleepTicks(1);
+        }
+    }
+};
 fn result(kind: core.IoKind, code: i32) core.Ack {
     return .{ .kind = @intFromEnum(kind), .error_code = code };
 }
