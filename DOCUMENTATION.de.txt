@@ -1798,3 +1798,5 @@ fuer den UI-Epochencache. Neue Zeilen stammen aus der vollstaendigen view.
 Zeitbudget-Fehlercodes gehoeren dem reinen time_budget-Besitzer. Statische
 Library-Helfer binden dadurch ausschliesslich die benoetigten Funktionen ein.
 Die C-/Rust-Laufzeit stellt ihre fremdsprachigen Exporte bereit.
+
+SDK201 / Migration0.90.65: Der Hostpackager nimmt32 technische und fachliche Imports auf. Der passende Kernel476 uebergibt alle32 Records und genaue Library-Codebindungen. R4M0-Header und16Byte-Importrecords bleiben im bisherigen Format. Die bestehenden Packagertests pruefen0/16/17/22/32 sowie die Ablehnung33 vor Dateiersetzung.

@@ -20,7 +20,7 @@ const R4M_VERSION: u16 = 1;
 const R4D_API_VERSION: u32 = 11;
 const R4P_API_VERSION: u32 = 1;
 const MAX_PROTOCOL_DEPENDENCIES: usize = 16;
-const MAX_MODULE_IMPORTS: usize = 16;
+const MAX_MODULE_IMPORTS: usize = 32;
 const MAX_MODULE_EXPORTS: usize = 16;
 const MAX_MODULE_RELOCATIONS: usize = 4096;
 const R4X_FLAG_APP_CLASS_CONSOLE: u32 = 0x00000001;
@@ -2024,6 +2024,60 @@ fn moduleKindName(kind: u16) ?[]const u8 {
         @intFromEnum(ModuleKind.kernel_module_reserved) => "kernel_module_reserved",
         else => null,
     };
+}
+
+test "R4M0 writes every admitted import and rejects the next count before publication" {
+    var directory = std.testing.tmpDir(.{});
+    defer directory.cleanup();
+    var names: [33][16]u8 = undefined;
+    var imports: [33]ModuleImport = undefined;
+    for (&imports, &names, 0..) |*import, *name, index| {
+        import.* = .{
+            .module = try std.fmt.bufPrint(name, "LIB{d}", .{index}),
+            .symbol = "Query2",
+            .min_version = 2,
+            .flags = 1,
+        };
+    }
+    const sections = [_]InputSection{.{
+        .name = ".text",
+        .data = "\xc3",
+        .mem_size = 1,
+        .alignment = 16,
+        .flags = R4M_SECTION_FLAG_ALLOC | R4M_SECTION_FLAG_EXEC,
+    }};
+    var options: R4MOptions = .{
+        .out = "imports.r4x",
+        .format = .r4x,
+        .sections = &sections,
+        .module_name = "IMPORTS",
+        .driver_name = "",
+        .protocol_name = "",
+        .app_class = .console,
+        .imports = &.{},
+        .exports = &.{},
+        .relocations = &.{},
+        .metadata = &.{},
+    };
+    for ([_]usize{ 0, 16, 17, 22, 32 }) |count| {
+        options.imports = imports[0..count];
+        try writeR4M(directory.dir, std.testing.io, std.testing.allocator, options);
+        const image = try directory.dir.readFileAlloc(std.testing.io, options.out, std.testing.allocator, .limited(8192));
+        defer std.testing.allocator.free(image);
+        try std.testing.expectEqual(count, rU32(image, 28));
+        for (options.imports, 0..) |import, index| {
+            const offset = rU32(image, 24) + index * R4M_IMPORT_SIZE;
+            const name_offset = rU32(image, offset);
+            try std.testing.expectEqualStrings(import.module, std.mem.sliceTo(image[name_offset..], 0));
+            try std.testing.expectEqual(@as(u32, 2), rU32(image, offset + 8));
+            try std.testing.expectEqual(@as(u32, 1), rU32(image, offset + 12));
+        }
+    }
+    options.imports = &imports;
+    try std.testing.expectError(error.BadArgs, writeR4M(directory.dir, std.testing.io, std.testing.allocator, options));
+    const previous = try directory.dir.readFileAlloc(std.testing.io, options.out, std.testing.allocator, .limited(8192));
+    defer std.testing.allocator.free(previous);
+    try std.testing.expectEqual(@as(u32, 32), rU32(previous, 28));
 }
 
 test "ELF exports retain a symbolic source until section resolution" {

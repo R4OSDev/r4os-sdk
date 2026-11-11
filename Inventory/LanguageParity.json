@@ -59236,7 +59236,7 @@
     "libraries": "0.64.57",
     "evidence": "rust_desktop_shared_contexts_09065",
     "historical_snapshot_retained": true,
-    "scope": "Resident actual2 Rust graphics and Library helper contexts, immutable joined-worker startup facts, synchronous resource loans and copied shared inventory acquisition metadata. Pure checked-time error mapping composes one native export owner. Existing C/Rust declarations project the same typed owners. Desktop actual2 tests use the common complete inventory reader, typed clipboard offers and main-task GUI wait sources. Native guest and normal packaged artifact qualification are recorded separately."
+    "scope": "Resident actual2 Rust graphics and Library helper contexts, immutable joined-worker startup facts, synchronous resource loans and copied shared inventory acquisition metadata. Pure checked-time error mapping composes one native export owner. Existing C/Rust declarations project the same typed owners. Desktop actual2 tests use the common complete inventory reader, typed clipboard offers and main-task GUI wait sources. Native guest and normal packaged artifact qualification are recorded separately. Packager import storage admits all32 complete records and rejects33 before replacing the output. Seven existing scoped packager/ELF cases pass with the new boundary case."
   },
   "drift_guard": {
     "schema": 1,
@@ -61516,7 +61516,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/R4XBuilder/src/main.zig",
-        "sha256": "ca8ff80d5ec204edbcef333c6516351d6b693e904d897d82f1d1bdde7b4cad55"
+        "sha256": "2cce45a235ec1df4ecf358d0e59c0d10dbee6dcbae9f9fd6400de8263fec2545"
       },
       {
         "path": "Repositories/SDK/Tools/R4XBuilder/src/stack_probes.zig",
