@@ -1861,3 +1861,24 @@ Elternverzeichnisse die vollstaendigen FileMetadata2-Verzeichnisflags.
 Dadurch sind vorhandene64-stellige SHA-Verzeichnisnamen im UPDATE-INBOX
 auch nach der Migration zulaessig. Der Erstgenerationpfad behaelt seinen
 eigenen Dateivertrag. API-Fehler im neuen Pfad bleiben sichtbar.
+
+Native Entwicklungswerkzeuge ab SDK0.64.205
+------------------------------------------
+Die native C-Teilmenge ist fuer Generation2 angeschlossen. Die SDK-Templates
+verwenden R4App2 und die Profile R4X_C2_Console beziehungsweise
+R4X_C2_Desktop_OK. Das Consoletemplate bindet R4SdkStdio2 und schreibt mit
+genauen Praefixzaehlern, WouldBlock und Close. R4CC.STATUS beschreibt diesen
+Stand fuer den nativen R4BUILD. Der Faehigkeitskatalog unterscheidet die
+Plattformgenerationen ausdruecklich.
+
+launch_io.Output.recordSink verbindet den vorhandenen begrenzten
+Diagnoserecordpuffer mit dem echten stdio-/StreamTransfer-Adapter. Bestaetigte
+Praefixe werden quittiert. Ein unbekannter Effekt vergiftet den Restrecord.
+Ein fehlgeschlagener Sink wird fuer weitere Records geschlossen gehalten.
+Die C-/Rust-Record- und Bytepipe-Primitiven besitzen ihre eigenen bestehenden
+Vertraege. Der zusaetzliche Sink ist eine Zig-Komposition dieser Besitzer.
+
+Der R4MF-Textplan verwendet ein explizit gewaehltes SDK-Profil. Der native
+Packer uebernimmt Name, Modulversion und deklarierte Metadaten aus dem
+Manifest. Host-/Quellpruefungen und native Verbraucherbelege stehen unter
+Research/API-ABI/Migration/0.90.72 im R4OS-Workspace.

@@ -1,5 +1,5 @@
 // Generated from Profiles/Build.json by Tools/Sync-ProfilePolicy.ps1. DO NOT EDIT.
-pub const source_sha256 = "272055320ab16524173b35e1cdd8f20fc68076236cc636b2384d753ac7112904";
+pub const source_sha256 = "7435a451cc58d6d3220d4c54a576b1702f3d34ae8f8b0290f83e1a98c3bd516f";
 pub const Profile = struct { id: []const u8, language: []const u8, role: []const u8, kind: []const u8, generation: u8, explicit_platform: bool };
 pub const profiles = [_]Profile{
     .{ .id = "r4os-c-generation2", .language = "C", .role = "module", .kind = "R4X", .generation = 2, .explicit_platform = true },

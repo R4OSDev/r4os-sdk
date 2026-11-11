@@ -59017,6 +59017,12 @@
       "receipt": "Research/API-ABI/Migration/0.90.71/SdkHost.json",
       "limits": "Two actual Zig parser owner cases plus the existing journal/status oracle. Native applications, Windows execution and physical hardware have separate evidence scopes.",
       "asset_parent_scope": "Generation2 original-asset parent admission uses FileMetadata2 directory flags for existing64-character SHA directories. Existing legacy callers retain their generation-exact parent observation. Native failed AssetParentInfo iteration retained, final native receipt records actual acceptance separately."
+    },
+    "native_tools_09072": {
+      "complete": true,
+      "scope": "SDK205 source/ABI consumer composition. Output.recordSink connects the existing bounded diagnostic records to real stdio/StreamTransfer with exact known-prefix acknowledgement and sticky uncertain/failed state. The extra sink is Zig composition over the earlier C/Rust record/pipe primitives. Native C2 templates use actual public App2 and Stdio2 headers and exact Query2 class imports. Manifest text plans preserve explicit SDK profiles. The catalogue distinguishes native C platform generations and admits the implemented one-source console/gui subset. Actual host owner tests, strict native C syntax/object compilation and independent native C core lowering have distinct scopes. Final real R4OS source compilation/stdio/GUI/lifecycle qualification is separately bound to the migration receipt.",
+      "receipt": "Research/API-ABI/Migration/0.90.72/SdkHost.json",
+      "limits": "Linux host checks and source review. Windows binaries, native guest semantics, physical hardware and performance have their own evidence scopes."
     }
   },
   "wave_bindings": [
@@ -59269,18 +59275,18 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.90.71",
-    "sdk": "0.64.204",
+    "performed_in": "0.90.72",
+    "sdk": "0.64.205",
     "contract": "0.64.93",
     "libraries": "0.64.57",
-    "evidence": "software_update_consumers_09071",
+    "evidence": "native_tools_09072",
     "historical_snapshot_retained": true,
-    "scope": "Two exact Zig terminal command grammar cases and the existing status/journal-resnapshot owner oracle execute on Linux. Shared runTerminal accepts the actual App and App2 system/file contexts. Whole UTF8/quote validation precedes dispatch, the established unquoted whole path remainder is accepted and commands without a path check the exact argument end. The status fixture supplies the current Engine context/files constructor. New terminal composition is a Zig helper. Existing C/Rust record, dispatch, resource and storage primitives have their earlier implementation/evidence scopes. Native software/update consumer qualification has its separate migration receipt."
+    "scope": "SDK205 source/ABI consumer composition. Output.recordSink connects the existing bounded diagnostic records to real stdio/StreamTransfer with exact known-prefix acknowledgement and sticky uncertain/failed state. The extra sink is Zig composition over the earlier C/Rust record/pipe primitives. Native C2 templates use actual public App2 and Stdio2 headers and exact Query2 class imports. Manifest text plans preserve explicit SDK profiles. The catalogue distinguishes native C platform generations and admits the implemented one-source console/gui subset. Actual host owner tests, strict native C syntax/object compilation and independent native C core lowering have distinct scopes. Final real R4OS source compilation/stdio/GUI/lifecycle qualification is separately bound to the migration receipt."
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.90.71",
+    "reviewed_in": "0.90.72",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -60531,7 +60537,7 @@
       },
       {
         "path": "Repositories/SDK/Profiles/Build.json",
-        "sha256": "272055320ab16524173b35e1cdd8f20fc68076236cc636b2384d753ac7112904"
+        "sha256": "7435a451cc58d6d3220d4c54a576b1702f3d34ae8f8b0290f83e1a98c3bd516f"
       },
       {
         "path": "Repositories/SDK/Profiles/Components.json",
@@ -61495,7 +61501,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/ModuleCatalog/src/capabilities.zig",
-        "sha256": "55d604da4e68f7fabcd377783065e5cb43b513e1ee87adcd34f5cdf39d1569a1"
+        "sha256": "7fc81a574475d3ee7df2c4a086c3685283583c984bbc6e17d8a96adee2fdc6bd"
       },
       {
         "path": "Repositories/SDK/Tools/ModuleCatalog/src/main.zig",
@@ -61603,7 +61609,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/Test-Capabilities.ps1",
-        "sha256": "8c01e13fe23a020eebdbabd6ce72eb5ebdf2237cffad0a634e36160ed5e1eb62"
+        "sha256": "b4fd591548227f2d3e8393b456139784420c8afe24a2243716b256e2e73e694a"
       },
       {
         "path": "Repositories/SDK/Tools/Test-DesktopHostBuild.ps1",
@@ -61687,7 +61693,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "b3168dc0ce1c50e9ff39d8a8e8868698bb994ae0c20ae89f697694bc701372ab"
+        "sha256": "ade734fd1cf709ebd4d2c2cc91779c41015d0ce09a365002e06303c70a1f0bf3"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -62047,7 +62053,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/generated/profile_policy.zig",
-        "sha256": "70a7e1ae04d75931c3b0ee775a8761329042f6c5cc5bb675d910d99a519eabf8"
+        "sha256": "6cd31fcc637970ab46bb3283a2cf0788d408aa61e93b86db36079d0a3c010469"
       },
       {
         "path": "Repositories/SDK/r4os/generated/subsystem_fingerprint.zig",
@@ -62203,7 +62209,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/launch_io.zig",
-        "sha256": "b38abc972fba4c8a5bdd131f050b54a507aaa9fd254d42a5d869b646af763f4a"
+        "sha256": "c1722ae287c9a3578f6c57659a7e01a0ea2178f418c9c2d69375681cc4c365ba"
       },
       {
         "path": "Repositories/SDK/r4os/lowlevel.zig",
@@ -62219,11 +62225,11 @@
       },
       {
         "path": "Repositories/SDK/r4os/module_capabilities.zig",
-        "sha256": "7562da0e0875cee020fe977b18f67a7798e00922a1ec873473dc738c3997bbb8"
+        "sha256": "bb45596d912382a806376a3d1eb11002330709e1dfb33b02f6a585eeac8a33cf"
       },
       {
         "path": "Repositories/SDK/r4os/module_manifest.zig",
-        "sha256": "4886468a44d352ff0e5e6ba64c1e7ecb21fa49a8a17097c13a3aa9552ac5a0f5"
+        "sha256": "bef506e302093f7381efc84cb0a2b8834e4e60cf8e2ba5eea31eb56b125be78a"
       },
       {
         "path": "Repositories/SDK/r4os/native_bridge_schema.zig",
@@ -63044,7 +63050,8 @@
           "wire_native_data_09017",
           "tooling_templates_generation2_09044",
           "network_stream_consumers_09070",
-          "software_update_consumers_09071"
+          "software_update_consumers_09071",
+          "native_tools_09072"
         ]
       },
       {
@@ -63146,7 +63153,8 @@
           "canonical_text_font_image_generation2_09045",
           "storage_actual2_volume_lease_09061",
           "network_stream_consumers_09070",
-          "software_update_consumers_09071"
+          "software_update_consumers_09071",
+          "native_tools_09072"
         ]
       },
       {
@@ -65266,6 +65274,15 @@
       "evidence": "network_stream_consumers_09070",
       "historical_snapshot_retained": true,
       "scope": "Five precise native Linux Zig cases cover copied TCP identities, short/WouldBlock prefixes and one absolute deadline, uncertain mutations without replay, explicit cancellation, split/coalesced control-body buffering, EOF prefixes, malformed output, complete argument grammar, and short/failed normal Stdio sinks. These are Zig convenience compositions over the previously qualified shared C/Rust StreamTransfer and copied network/stdio service contracts. Five normal app runtime qualification remains separate. Checked Zig Stdio read/write compositions privately validate progress version, size, flags, state and offered prefix before publication. The existing low-level Stdio methods and C/Rust primitive bodies remain byte-identical."
+    },
+    {
+      "performed_in": "0.90.71",
+      "sdk": "0.64.204",
+      "contract": "0.64.93",
+      "libraries": "0.64.57",
+      "evidence": "software_update_consumers_09071",
+      "historical_snapshot_retained": true,
+      "scope": "Two exact Zig terminal command grammar cases and the existing status/journal-resnapshot owner oracle execute on Linux. Shared runTerminal accepts the actual App and App2 system/file contexts. Whole UTF8/quote validation precedes dispatch, the established unquoted whole path remainder is accepted and commands without a path check the exact argument end. The status fixture supplies the current Engine context/files constructor. New terminal composition is a Zig helper. Existing C/Rust record, dispatch, resource and storage primitives have their earlier implementation/evidence scopes. Native software/update consumer qualification has its separate migration receipt."
     }
   ]
 }

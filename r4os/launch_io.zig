@@ -215,6 +215,32 @@ pub const Output = struct {
         self.failed = progress.outcome != @intFromEnum(core.Outcome.complete);
     }
 
+    pub fn recordSink(raw: ?*anyopaque, chunk: *const @import("diagnostic_buffer.zig").Chunk) callconv(.c) @import("diagnostic_buffer.zig").Ack {
+        const records = @import("diagnostic_buffer.zig");
+        const core = @import("stream_transfer.zig");
+        const self: *Output = @ptrCast(@alignCast(raw orelse return .{
+            .kind = @intFromEnum(records.SinkKind.failed),
+            .error_code = a.byte_pipe_error_invalid,
+        }));
+        if (self.failed or chunk.offset > chunk.total or chunk.length > chunk.total - chunk.offset) return .{
+            .kind = @intFromEnum(records.SinkKind.failed),
+            .error_code = a.byte_pipe_error_invalid,
+        };
+        if (chunk.length == 0) return .{};
+        self.last = null;
+        self.write(chunk.data[0..chunk.length]);
+        const progress = self.last orelse return .{
+            .kind = @intFromEnum(records.SinkKind.uncertain),
+            .error_code = a.byte_pipe_error_invalid,
+        };
+        const uncertain = progress.flags & core.effect_uncertain != 0;
+        return .{
+            .accepted_bytes = @intCast(progress.bytes),
+            .kind = @intFromEnum(if (uncertain) records.SinkKind.uncertain else if (self.failed) records.SinkKind.failed else records.SinkKind.accepted),
+            .error_code = progress.error_code,
+        };
+    }
+
     pub fn put(self: *Output, byte: u8) void {
         self.write(&.{byte});
     }
@@ -285,6 +311,27 @@ test "network stream normal output preserves short handoff prefix and closed sin
             try std.testing.expectEqual(calls, Peer.calls);
         }
         try std.testing.expectEqual(@as(i32, 0), output.close());
+
+        Peer.used = 0;
+        Peer.calls = 0;
+        output.failed = false;
+        output.last = null;
+        const records = @import("diagnostic_buffer.zig");
+        var storage: [64]u8 = undefined;
+        var buffered = try records.BoundedDiagnosticBuffer.init(&storage);
+        _ = try buffered.appendRecord("abcdefgh", .info);
+        const flushed = try buffered.flushOnce(8, Output.recordSink, &output);
+        try std.testing.expectEqualStrings(if (fail) "abc" else "abcdefgh", Peer.bytes[0..Peer.used]);
+        try std.testing.expectEqual(@as(u64, if (fail) 5 else 0), buffered.pending_bytes);
+        try std.testing.expectEqual(@as(u32, if (fail) 2 else 0), buffered.poison);
+        if (fail) {
+            try std.testing.expectEqual(@intFromEnum(records.FlushKind.uncertain), flushed.kind);
+            try std.testing.expectEqual(@as(u32, 3), flushed.accepted_bytes);
+            const calls = Peer.calls;
+            const stopped = try buffered.flushOnce(8, Output.recordSink, &output);
+            try std.testing.expectEqual(@intFromEnum(records.FlushKind.poisoned), stopped.kind);
+            try std.testing.expectEqual(calls, Peer.calls);
+        }
     }
 }
 

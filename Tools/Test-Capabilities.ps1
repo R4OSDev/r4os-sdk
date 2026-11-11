@@ -36,7 +36,7 @@ foreach($template in @($data.templates|Where-Object {$_.kind -ceq 'R4L'})){
     if(@($template.exports|Where-Object {$_ -cmatch '^Query2:[^:]+:2$'}).Count -ne 1 -or @($template.exports|Where-Object {$_ -cmatch '^API_V1:[^:]+:1$'}).Count -ne 1){throw 'Library template lost its generation2 technical descriptor or independent interface revision'}
 }
 foreach($template in @($data.templates|Where-Object {$_.execution -ceq 'native_r4os' -and $_.language -ceq 'C' -and $_.platform_generation -eq 2})){
-    if($template.supported -or $template.reason_code -cne 'native-generation2-consumer-pending'){throw 'Unmigrated native compiler was advertised as generation2 qualified'}
+    if(!$template.supported -or $template.reason_code -cne 'native-r4cc-subset'){throw 'Qualified native C2 subset is missing'}
 }
 foreach($row in $hostRows){
     $template=@($data.templates|Where-Object {$_.execution -ceq 'host' -and $_.language -ceq $row.language -and $_.kind -ceq $row.kind -and $_.app_class -ceq $row.app_class -and $_.entry_mode -ceq $row.entry_mode -and $_.role -ceq $row.role})

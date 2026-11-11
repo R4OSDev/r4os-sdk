@@ -1361,7 +1361,7 @@ pub fn renderContractPlan(manifest: Manifest, out: []u8) RenderResult {
     if (!appendPlanLine(out, &len, "TARGET", manifest.target) or
         !appendPlanLine(out, &len, "IMAGE_SCOPE", image_scope.text()) or
         !appendPlanLine(out, &len, "OPTIMIZE", manifest.optimization.?.text()) or
-        !appendPlanLine(out, &len, "BUILD_PROFILE", buildProfileName(language, entry_mode, app_class)) or
+        !appendPlanLine(out, &len, "BUILD_PROFILE", manifest.sdk_profile orelse buildProfileName(language, entry_mode, app_class)) or
         !appendPlanLine(out, &len, "APP_PROFILE", appProfileName(app_class)))
     {
         return .{ .bytes = out[0..0], .ok = false };
@@ -2232,6 +2232,10 @@ test "generation2 manifest selects central profile and exact start/import names"
     try std.testing.expectEqual(@as(u8, 2), manifest.platform_generation);
     try std.testing.expectEqualStrings("R4XStart2:R4XStart2:2", plan.export_contract);
     try std.testing.expectEqualStrings("r4os-zig-generation2", plan.build_profile);
+    var text_buffer: [4096]u8 = undefined;
+    const text_plan = renderContractPlan(manifest, &text_buffer);
+    try std.testing.expect(text_plan.ok);
+    try std.testing.expect(std.mem.indexOf(u8, text_plan.bytes, "BUILD_PROFILE=r4os-zig-generation2\n") != null);
     const wrong = try std.mem.replaceOwned(u8, arena.allocator(), base, "Query2:2", "Query:1");
     try std.testing.expectError(error.InvalidImport, parse(arena.allocator(), "module.R4MF", wrong));
     const ambiguous = try std.fmt.allocPrint(arena.allocator(), "{s}IMPORT=R4SYS:Query:1\n", .{base});

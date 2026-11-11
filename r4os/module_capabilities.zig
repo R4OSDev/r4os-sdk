@@ -52,12 +52,12 @@ pub fn requireRustHost(kind: []const u8, entry: []const u8, role: ?[]const u8) !
 }
 
 pub fn query(request: Request) Decision {
+    if (request.platform_generation != 1 and request.platform_generation != 2) return .{ .supported = false, .code = "unknown-platform-generation", .reason = "Only declared platform generations have a build profile." };
     if (!std.mem.eql(u8, request.kind, "R4X") and !std.mem.eql(u8, request.kind, "R4L") and !std.mem.eql(u8, request.kind, "R4D") and !std.mem.eql(u8, request.kind, "R4P")) return .{ .supported = false, .code = "unknown-module-kind", .reason = "Unknown module kind has no build profile." };
     if (std.mem.eql(u8, request.language, "Rust")) return rust(request.kind, request.entry_mode orelse "", request.role, request.execution);
     if (!std.mem.eql(u8, request.language, "Zig") and !std.mem.eql(u8, request.language, "C")) return .{ .supported = false, .code = "unknown-language", .reason = "Only manifest-admitted languages have a build profile." };
     if (request.execution == .native_r4os) {
         if (!std.mem.eql(u8, request.language, "C")) return .{ .supported = false, .code = "native-zig-compiler-unavailable", .reason = "R4OS has no native Zig compiler; use the host SDK." };
-        if (request.platform_generation == 2) return .{ .supported = false, .code = "native-generation2-consumer-pending", .reason = "Generation2 projects currently require the host SDK. Native R4BUILD/R4CC migration is pending.", .owner_contract = "Docs/API/ConsumerMigration.txt", .missing_steps = &.{"Migrate and qualify native R4BUILD/R4CC compilation, startup and packaging against the generation2 SDK"} };
         if (request.role != null) return .{ .supported = false, .code = "native-r4cc-subsystem-unavailable", .reason = "Native R4CC does not yet build subsystem-role metadata; use the host SDK." };
         if (!std.mem.eql(u8, request.kind, "R4X") or !std.mem.eql(u8, request.entry_mode orelse "", "app") or std.mem.eql(u8, request.app_class orelse "", "service")) return .{ .supported = false, .code = "native-r4cc-profile-unsupported", .reason = "Native R4BUILD/R4CC supports one C source, R4X app console/gui and exact class imports only; C language syntax remains the R4CC subset." };
         return .{ .supported = true, .code = "native-r4cc-subset", .reason = "One C source, R4X app console or gui, exact class imports, R4CC C subset and bounded native resources. This is not the Zig/Clang host compiler." };

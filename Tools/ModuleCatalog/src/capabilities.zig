@@ -4,6 +4,7 @@ const capabilities = manifest.capabilities;
 const Value = std.json.Value;
 
 const Rule = struct {
+    platform_generation: u8,
     language: []const u8,
     kind: []const u8,
     app_class: ?[]const u8,
@@ -80,8 +81,10 @@ fn relative(a: std.mem.Allocator, root: []const u8, path: []const u8) ![]const u
 fn addRule(a: std.mem.Allocator, list: *std.ArrayList(Rule), request: capabilities.Request) !void {
     const d = capabilities.query(request);
     const native_c = request.execution == .native_r4os and std.mem.eql(u8, request.language, "C");
-    const imports: []const []const u8 = if (native_c and std.mem.eql(u8, request.app_class orelse "", "gui")) &.{ "R4SYS:Query:1", "R4DESK:Query:1", "R4DRAW:Query:1" } else if (native_c) &.{"R4SYS:Query:1"} else &.{};
-    try list.append(a, .{ .language = request.language, .kind = request.kind, .app_class = request.app_class, .entry_mode = request.entry_mode, .role = request.role, .execution = @tagName(request.execution), .hosts = if (request.execution == .host) &.{ "Linux", "Windows" } else &.{"R4OS"}, .supported = d.supported, .code = d.code, .reason = d.reason, .owner_contract = d.owner_contract, .missing_steps = d.missing_steps, .source_count = if (native_c) 1 else null, .exact_imports = imports, .language_subset = if (native_c) "R4CC C subset" else null });
+    const imports: []const []const u8 = if (native_c and request.platform_generation == 2)
+        (if (std.mem.eql(u8, request.app_class orelse "", "gui")) &.{ "R4SYS:Query2:2", "R4DESK:Query2:2", "R4DRAW:Query2:2" } else &.{ "R4SYS:Query2:2", "R4DESK:Query2:2" })
+    else if (native_c and std.mem.eql(u8, request.app_class orelse "", "gui")) &.{ "R4SYS:Query:1", "R4DESK:Query:1", "R4DRAW:Query:1" } else if (native_c) &.{"R4SYS:Query:1"} else &.{};
+    try list.append(a, .{ .platform_generation = request.platform_generation, .language = request.language, .kind = request.kind, .app_class = request.app_class, .entry_mode = request.entry_mode, .role = request.role, .execution = @tagName(request.execution), .hosts = if (request.execution == .host) &.{ "Linux", "Windows" } else &.{"R4OS"}, .supported = d.supported, .code = d.code, .reason = d.reason, .owner_contract = d.owner_contract, .missing_steps = d.missing_steps, .source_count = if (native_c) 1 else null, .exact_imports = imports, .language_subset = if (native_c) "R4CC C subset" else null });
 }
 fn rules(a: std.mem.Allocator) ![]const Rule {
     var list: std.ArrayList(Rule) = .empty;
@@ -95,6 +98,7 @@ fn rules(a: std.mem.Allocator) ![]const Rule {
                         const class = class_tag.text();
                         const entry = entry_tag.text();
                         try addRule(a, &list, .{ .language = language, .kind = kind, .app_class = class, .entry_mode = entry, .execution = execution });
+                        if (execution == .native_r4os and std.mem.eql(u8, language, "C")) try addRule(a, &list, .{ .platform_generation = 2, .language = language, .kind = kind, .app_class = class, .entry_mode = entry, .execution = execution });
                         if (std.mem.eql(u8, class, "gui")) try addRule(a, &list, .{ .language = language, .kind = kind, .app_class = class, .entry_mode = entry, .role = "subsystem", .execution = execution });
                     };
                 } else try addRule(a, &list, .{ .language = language, .kind = kind, .execution = execution });
