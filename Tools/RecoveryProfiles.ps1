@@ -5,7 +5,10 @@ function Get-R4SdkRecoveryContext {
     $sdk=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
     $root=[IO.Path]::GetFullPath($RecoveryRoot)
     if(!$DevelopmentProfile){$DevelopmentProfile=$env:R4OS_SDK_DEVELOPMENT_PROFILE}
-    $roots=@{'recovery-sdk'=(Join-Path $root 'Platform/SDK');'recovery-contract'=(Join-Path $root 'Platform/Contract');'recovery-libraries'=(Join-Path $root 'Legal/Sources/Libraries.zip')}
+    $configuration=Read-R4SdkProfiles $sdk
+    $librarySource=$configuration.Components.repositories['recovery-libraries']
+    $libraryRoot=if($librarySource.ContainsKey('source_subdir')){Join-Path $root $librarySource.source_subdir}else{Join-Path $root 'Legal/Sources/Libraries.zip'}
+    $roots=@{'recovery-sdk'=(Join-Path $root 'Platform/SDK');'recovery-contract'=(Join-Path $root 'Platform/Contract');'recovery-libraries'=$libraryRoot}
     $options=@{SdkRoot=$sdk;Profile='r4os-recovery-zig-v1';Roots=$roots}
     if($DevelopmentProfile){$options.DevelopmentProfile=$DevelopmentProfile}
     $resolved=Resolve-R4SdkComponents @options
