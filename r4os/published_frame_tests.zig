@@ -44,15 +44,18 @@ const Monitor = struct {
     bridge: ?*p.Bridge = null,
     request_close: bool = false,
     saw_active_close: bool = false,
+    inside_transaction: bool = false,
     fn get(raw: *anyopaque) *Monitor {
         return @ptrCast(@alignCast(raw));
     }
     fn begin(raw: *anyopaque) i32 {
         get(raw).full += 1;
+        get(raw).inside_transaction = true;
         return 0;
     }
     fn damageBegin(raw: *anyopaque, _: []const a.DisplayDamageRect) i32 {
         get(raw).damage += 1;
+        get(raw).inside_transaction = true;
         return 0;
     }
     fn clear(raw: *anyopaque, color: u32) i32 {
@@ -85,10 +88,12 @@ const Monitor = struct {
     }
     fn commit(raw: *anyopaque) i32 {
         get(raw).commits += 1;
+        get(raw).inside_transaction = false;
         return 0;
     }
     fn cancel(raw: *anyopaque) i32 {
         get(raw).cancels += 1;
+        get(raw).inside_transaction = false;
         return 0;
     }
     fn backend(self: *Monitor) v.Backend {
@@ -328,4 +333,60 @@ test "published frame owner paused complete frame and failed render preserve ret
     try t.expectEqual(@as(i32, 0), bridge.release(acquired.ticket));
     try t.expectEqual(@as(i32, 0), bridge.pause(false));
     try t.expectEqual(@as(i32, 0), bridge.close());
+}
+
+test "published frame owner overlay failure retry and reentrant close retain the real source" {
+    const Overlay = struct {
+        bridge: *p.Bridge,
+        monitor: *Monitor,
+        source: usize,
+        failure: i32 = -713,
+        close_requested: bool = false,
+        calls: u32 = 0,
+        fn append(raw: *anyopaque) i32 {
+            const self: *@This() = @ptrCast(@alignCast(raw));
+            std.debug.assert(self.monitor.inside_transaction);
+            std.debug.assert(self.bridge.call_active == 1 and self.bridge.active_ticket != 0);
+            std.debug.assert(self.bridge.frame.pixels.address == self.source);
+            self.calls += 1;
+            if (self.close_requested) {
+                std.debug.assert(self.bridge.close() == p.busy);
+                std.debug.assert(self.bridge.frame.pixels.address == self.source);
+                std.debug.assert(self.bridge.release(self.bridge.active_ticket) == p.busy);
+            }
+            self.monitor.pixels[0] = 0xff5500;
+            return self.failure;
+        }
+    };
+    var pixels: [64]u32 = @splat(0x112233);
+    var monitor: Monitor = .{};
+    var scratch: [v.tile_max_pixels]u32 = undefined;
+    var bridge: p.Bridge = undefined;
+    try init(&bridge, &monitor, &scratch);
+    const acquired = try sync(&bridge, rgb(&pixels, 8, 8, 1));
+    var overlay = Overlay{ .bridge = &bridge, .monitor = &monitor, .source = @intFromPtr(&pixels) };
+    const hook = v.FrameOverlay{ .context = &overlay, .append_fn = Overlay.append };
+    var result: p.Presentation = undefined;
+    try t.expectEqual(@as(i32, 0), bridge.presentWithOverlay(acquired.ticket, 16, 16, &result, hook));
+    try t.expectEqual(@as(u32, 3), result.kind);
+    try t.expectEqual(@as(i32, -713), result.error_code);
+    try t.expectEqual(@as(u32, 1), monitor.cancels);
+    try t.expectEqual(@as(u32, 0), monitor.commits);
+    try t.expect(!monitor.inside_transaction);
+    try t.expectEqual(acquired.ticket, bridge.active_ticket);
+    overlay.failure = 0;
+    try t.expectEqual(@as(i32, 0), bridge.presentWithOverlay(acquired.ticket, 16, 16, &result, hook));
+    try t.expectEqual(@as(u32, 2), result.kind);
+    try t.expectEqual(@as(u32, 1), monitor.commits);
+    try t.expectEqual(@as(u32, 0xff5500), monitor.pixels[0]);
+    try t.expectEqual(@as(u32, 0x112233), pixels[0]);
+    bridge.presenter.invalidateClient(.{ .x = 0, .y = 0, .w = 2, .h = 2 });
+    overlay.close_requested = true;
+    try t.expectEqual(@as(i32, 0), bridge.presentWithOverlay(acquired.ticket, 16, 16, &result, hook));
+    try t.expectEqual(@as(u32, 2), result.kind);
+    try t.expectEqual(@as(u32, 3), overlay.calls);
+    try t.expectEqual(p.ended, bridge.state);
+    try t.expectEqual(@as(u64, 0), bridge.active_ticket);
+    try t.expectEqual(@as(usize, 0), bridge.frame.pixels.address);
+    try t.expectEqual(p.no_lease, bridge.release(acquired.ticket));
 }

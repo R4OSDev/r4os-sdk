@@ -330,6 +330,11 @@ pub const Bridge = struct {
         return 0;
     }
     pub fn present(self: *Bridge, ticket: u64, width: i32, height: i32, out: *Presentation) i32 {
+        return self.presentWithOverlay(ticket, width, height, out, null);
+    }
+    /// Native client overlays append inside the same synchronous copy call.
+    /// Callback clients can compose their existing commit callback instead.
+    pub fn presentWithOverlay(self: *Bridge, ticket: u64, width: i32, height: i32, out: *Presentation, overlay: ?video.FrameOverlay) i32 {
         const rc = self.check();
         if (rc != 0) return rc;
         if (self.call_active != 0) return busy;
@@ -338,7 +343,7 @@ pub const Bridge = struct {
         const result_span = spanOf(out);
         if (!self.disjoint(result_span) or overlap(result_span, self.frame.pixels) or overlap(result_span, self.frame.palette)) return invalid_buffer;
         self.call_active = 1;
-        const native = self.presenter.presentTo(self.backend, width, height);
+        const native = self.presenter.presentToWithOverlay(self.backend, width, height, overlay);
         var value: Presentation = .{};
         switch (native) {
             .unchanged => if (self.presenter.currentViewport()) |viewport| {

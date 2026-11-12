@@ -84,3 +84,20 @@ Keine gleichzeitigen oder ueberlappenden safe Callbackleihen.
 Fehler -401..-413: Invalid, Surface, Buffer, StaleGeneration, StaleRevision,
 StaleDamage, Busy, Closed, Exhausted, NoProvider, Unsupported, NoLease,
 ScratchSmall. Die exakten Namen und Formate stehen in published_frame.h.
+
+Native Overlays seit SDK0.64.210 / 0.90.79
+---------------------------------------
+Der native Zig-Zugang presentWithOverlay verwendet dieselbe Ticket-,
+Puffer-, Fehler- und Closepruefung wie present. Der vorhandene FrameOverlay
+wird im wirklichen Presenter nach der Kopie und vor Commit angehaengt.
+Sein Kontext und Code bleiben bis zum Return geliehen; die publizierten
+Quellen bleiben dabei unveraenderlich. Ein Overlayfehler cancelt die
+Transaktion und erhaelt Damage und Ticket fuer den definierten Wiederholfall.
+Reentrant Close bleibt Busy und trennt erst nach Rueckkehr des Callbacks.
+Die vorhandene Methode present entspricht einem fehlenden Overlay.
+
+Dies ergaenzt keine binaeren Records oder Runtime-Exporte. C-/Rust-Clients
+koennen dieselbe app-eigene Overlayarbeit im vorhandenen Commitcallback
+vor ihrem eigentlichen Commit ausfuehren. Ihre Leih-/Callbackvertraege und
+ABI bleiben erhalten. R4SNES nutzt den nativen Zugang fuer die bestehende
+FPS-Anzeige; Frame- und Overlayarbeit bleiben eine Transaktion.

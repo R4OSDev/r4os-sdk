@@ -59047,6 +59047,41 @@
       "scope": "SDK209 corrects all five shared cartridge persistence size/type lookups on generation2 to use Metadata2 directly. Full SHA256 save/stage/backup names and wide backend nodes are not narrowed into FileInfo; missing size remains a failure. Generation1 provider behavior, Store/AsyncStore ABI, formats, leases, atomic recovery and joined worker ownership are unchanged. The existing canonical save-path case now exercises the actual recovery lookup with a full hash filename, wide backend node and unknown size. Corrected control with the original five Files.info call sites fails1of59; fixed source passes59of59. Two earlier lease-less fixture attempts were invalid and remain explicitly identified. This is Linux owner/model qualification, not native C/Rust or Windows execution. Normal tools, current consumers, native runtime and final STANDARD have separate receipts. The review also reconciles the already-shipped SDK208 Components selection of Libraries58; that file is unchanged by209, with the completed75 dependency closure retained.",
       "receipt": "Research/API-ABI/Migration/0.90.78/SdkHost.json",
       "limits": "Shared compiled store helper and unchanged public layout. Native current209 consumer/tools and performance must be separately qualified; original native78 failure remains."
+    },
+    "published_frame_overlay_09079": {
+      "complete": true,
+      "subversion": "0.90.79",
+      "scope": "SDK210 adds native Zig Bridge.presentWithOverlay as composition of the existing synchronous copy Presenter/FrameOverlay. Original present delegates with no overlay. Ticket/span validation, active-call exclusion, backend failure/retry, deferred reentrant Close and source retirement are unchanged. The existing C persistence fixture is corrected from the obsolete generated Value156 spelling to the current 32-byte digest Value158; expectations and actual operations remain unchanged. The PS7 test helper clears the final expected negative compiler exit only after every positive and negative case has passed, so callers receive the actual successful suite result. No layout, binary record, static runtime export, platform Contract or C/Rust entry changes. Current compiler-based C facade and data/web/subsystem boundaries check unchanged. Existing135 owner cases include one targeted overlay failure/retry/reentrant-close case; actual unchanged C/Rust subsystem/frame native fixtures and nine original ownership negatives pass. C/Rust clients compose app-owned overlays through their existing commit callbacks. This is candidate-source Linux host qualification; clean normal tools, productive SNES/GB artifacts, actual OS and final STANDARD remain separate scopes.",
+      "source_inputs": [
+        {
+          "path": "Repositories/SDK/Tests/Simulation/SubsystemParity.c",
+          "previous_sha256": "311b069537d2f2f1bf0100f12089a847dce0ab971222278201b326d2e5017a1a",
+          "sha256": "24cf42494c6c2fd023e36fb4678eb549ae194369a62218228813bff22af107c5"
+        },
+        {
+          "path": "Repositories/SDK/Tools/Test-RustSubsystems.ps1",
+          "previous_sha256": "00748ce1a8eedb7497aca6d8ffcfd3db1640654f2eb054c3a1d98ebf203565fd",
+          "sha256": "61ffa0a475fd17d0e97b1d772799eddb574d77525f24d4c42a4ffaf6d4c9eaa2"
+        },
+        {
+          "path": "Repositories/SDK/build.zig.zon",
+          "previous_sha256": "cbbea228c31027134610dc02b0970f937142ce1e1abcb64e5821933892ea38e7",
+          "sha256": "2f3cbccff3781ad3056c00a5bc531db74add0833f98ac7d4679ccf2b2c008edf"
+        },
+        {
+          "path": "Repositories/SDK/r4os/published_frame.zig",
+          "previous_sha256": "2bd8f1171bd45ed3df73f6e66062d179b98655f824f1a3059320d2064b01adbe",
+          "sha256": "1f3eff770063130156abbb8705362d1901aac900ca104b6156d4c978a1206619"
+        },
+        {
+          "path": "Repositories/SDK/r4os/published_frame_tests.zig",
+          "previous_sha256": "a4f9d1a15b032959fe385da3bfa904c29a1265714491b9cbb55158c3fd02863e",
+          "sha256": "2673dccd0186b553f0b8c7a112614d00640afd2c8490735e8bc5ec6bedb1c0d6"
+        }
+      ],
+      "host_owner": "SDK data-parity-test135/135 plus existing composition ABI",
+      "native_language": "Tools/Test-RustSubsystems.ps1 actual C/Rust fixtures and9 ownership negatives",
+      "local_receipt": "Research/API-ABI/Migration/0.90.79/SdkHost.json"
     }
   },
   "wave_bindings": [
@@ -59299,18 +59334,18 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.90.78",
-    "sdk": "0.64.209",
+    "performed_in": "0.90.79",
+    "sdk": "0.64.210",
     "contract": "0.64.93",
     "libraries": "0.64.58",
-    "evidence": "subsystem_metadata_09078",
+    "evidence": "published_frame_overlay_09079",
     "historical_snapshot_retained": true,
-    "scope": "SDK209 corrects all five shared cartridge persistence size/type lookups on generation2 to use Metadata2 directly. Full SHA256 save/stage/backup names and wide backend nodes are not narrowed into FileInfo; missing size remains a failure. Generation1 provider behavior, Store/AsyncStore ABI, formats, leases, atomic recovery and joined worker ownership are unchanged. The existing canonical save-path case now exercises the actual recovery lookup with a full hash filename, wide backend node and unknown size. Corrected control with the original five Files.info call sites fails1of59; fixed source passes59of59. Two earlier lease-less fixture attempts were invalid and remain explicitly identified. This is Linux owner/model qualification, not native C/Rust or Windows execution. Normal tools, current consumers, native runtime and final STANDARD have separate receipts. The review also reconciles the already-shipped SDK208 Components selection of Libraries58; that file is unchanged by209, with the completed75 dependency closure retained."
+    "scope": "SDK210 adds native Zig Bridge.presentWithOverlay as composition of the existing synchronous copy Presenter/FrameOverlay. Original present delegates with no overlay. Ticket/span validation, active-call exclusion, backend failure/retry, deferred reentrant Close and source retirement are unchanged. The existing C persistence fixture is corrected from the obsolete generated Value156 spelling to the current 32-byte digest Value158; expectations and actual operations remain unchanged. The PS7 test helper clears the final expected negative compiler exit only after every positive and negative case has passed, so callers receive the actual successful suite result. No layout, binary record, static runtime export, platform Contract or C/Rust entry changes. Current compiler-based C facade and data/web/subsystem boundaries check unchanged. Existing135 owner cases include one targeted overlay failure/retry/reentrant-close case; actual unchanged C/Rust subsystem/frame native fixtures and nine original ownership negatives pass. C/Rust clients compose app-owned overlays through their existing commit callbacks. This is candidate-source Linux host qualification; clean normal tools, productive SNES/GB artifacts, actual OS and final STANDARD remain separate scopes."
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.90.78",
+    "reviewed_in": "0.90.79",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -61465,7 +61500,7 @@
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/SubsystemParity.c",
-        "sha256": "311b069537d2f2f1bf0100f12089a847dce0ab971222278201b326d2e5017a1a"
+        "sha256": "24cf42494c6c2fd023e36fb4678eb549ae194369a62218228813bff22af107c5"
       },
       {
         "path": "Repositories/SDK/Tools/Build-Project.ps1",
@@ -61697,7 +61732,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/Test-RustSubsystems.ps1",
-        "sha256": "00748ce1a8eedb7497aca6d8ffcfd3db1640654f2eb054c3a1d98ebf203565fd"
+        "sha256": "61ffa0a475fd17d0e97b1d772799eddb574d77525f24d4c42a4ffaf6d4c9eaa2"
       },
       {
         "path": "Repositories/SDK/Tools/Test-RustTransport.ps1",
@@ -61717,7 +61752,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "cbbea228c31027134610dc02b0970f937142ce1e1abcb64e5821933892ea38e7"
+        "sha256": "2f3cbccff3781ad3056c00a5bc531db74add0833f98ac7d4679ccf2b2c008edf"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -62349,7 +62384,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/published_frame.zig",
-        "sha256": "2bd8f1171bd45ed3df73f6e66062d179b98655f824f1a3059320d2064b01adbe"
+        "sha256": "1f3eff770063130156abbb8705362d1901aac900ca104b6156d4c978a1206619"
       },
       {
         "path": "Repositories/SDK/r4os/published_frame_runtime.zig",
@@ -62357,7 +62392,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/published_frame_tests.zig",
-        "sha256": "a4f9d1a15b032959fe385da3bfa904c29a1265714491b9cbb55158c3fd02863e"
+        "sha256": "2673dccd0186b553f0b8c7a112614d00640afd2c8490735e8bc5ec6bedb1c0d6"
       },
       {
         "path": "Repositories/SDK/r4os/r4audio.zig",
@@ -63756,7 +63791,8 @@
           "audio_catalog_08855",
           "runtime_wait_08858",
           "published_frame_09026",
-          "subsystem_metadata_09078"
+          "subsystem_metadata_09078",
+          "published_frame_overlay_09079"
         ]
       },
       {
@@ -65350,6 +65386,15 @@
       "evidence": "browser_snapshot_consumers_09075",
       "historical_snapshot_retained": true,
       "scope": "SDK208 adds the actual validated snapshot file_size to the existing Zig DocumentPrefix result. The original preview boundary remains file_size >= capacity, while whole-file consumers can require file_size == bytes. This is a logical Zig convenience result. Native C/Rust metadata records and their exact provider calls retain the recorded existing language evidence. Data qualification ran all134 existing cases,133 passed and the extended prefix case exposed its old final read-counter expectation after one additional fixture read. Only that test expectation was corrected. The complete focused original prefix case then passed, including its new size assertion and no-read-after-expiry boundary. All55 existing/new browser repository cases passed. Native consumers, normal tools and performance have separate receipts. The completed unpublished SDK208 also routes the productive App2 web resolver through network_family.resolveAll with one checked budget, all pinned pages, exact Release ACK and endpoint Close. The existing pagination case now exercises the actual App2 resolver with20 answers, changed identity, lost Release ACK and a missing-clock boundary without provider work. All134 existing data cases and the native composition ABI pass together on this final source. Original133/134 and corrected focused prefix attempts remain historical evidence. Native wire and normal final consumer artifacts have separate receipts."
+    },
+    {
+      "performed_in": "0.90.78",
+      "sdk": "0.64.209",
+      "contract": "0.64.93",
+      "libraries": "0.64.58",
+      "evidence": "subsystem_metadata_09078",
+      "historical_snapshot_retained": true,
+      "scope": "SDK209 corrects all five shared cartridge persistence size/type lookups on generation2 to use Metadata2 directly. Full SHA256 save/stage/backup names and wide backend nodes are not narrowed into FileInfo; missing size remains a failure. Generation1 provider behavior, Store/AsyncStore ABI, formats, leases, atomic recovery and joined worker ownership are unchanged. The existing canonical save-path case now exercises the actual recovery lookup with a full hash filename, wide backend node and unknown size. Corrected control with the original five Files.info call sites fails1of59; fixed source passes59of59. Two earlier lease-less fixture attempts were invalid and remain explicitly identified. This is Linux owner/model qualification, not native C/Rust or Windows execution. Normal tools, current consumers, native runtime and final STANDARD have separate receipts. The review also reconciles the already-shipped SDK208 Components selection of Libraries58; that file is unchanged by209, with the completed75 dependency closure retained."
     }
   ]
 }

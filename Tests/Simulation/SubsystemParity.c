@@ -105,7 +105,7 @@ int sdk65_guest_media_save(const R4XStartContext *start) {
     R4SdkSubsystemStore first,second;R4SdkSubsystemPersistenceBackend a,b;
     NEED(OK(R4SdkSubsystemStore_init(0,&files,&config,&first)),107);NEED(OK(R4SdkSubsystemStore_init(0,&files,&config,&second)),108);
     NEED(OK(R4SdkSubsystemStore_backend(0,&first,&a)),109);NEED(OK(R4SdkSubsystemStore_backend(0,&second,&b)),110);
-    R4SdkDataSha256 hash;R4SdkDataNative_Value156 digest;
+    R4SdkDataSha256 hash;R4SdkDataNative_Value158 digest;
     NEED(R4SdkData_hashInit(0,&hash).status==0,111);NEED(R4SdkDataSha256_update(0,&hash,(const uint8_t*)"S65!",4).status==0,112);NEED(R4SdkDataSha256_final(0,&hash,&digest).status==0,113);
     NEED(OK(R4SdkSubsystemPersistenceBackend_acquire(0,&a,&digest,5)),114);
     S busy=R4SdkSubsystemPersistenceBackend_acquire(0,&b,&digest,6);NEED(busy.status==0 && (busy.flags&R4SDKSUBSYSTEM_NATIVE_ERROR) && busy.length==4 && !bytes_compare(busy.ptr,"Busy",4),115);

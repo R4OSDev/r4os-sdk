@@ -77,3 +77,5 @@ r4os-sdk={path="$($sdk.Replace('\','/'))/Rust",features=["alloc"]}
     $env:CARGO_ENCODED_RUSTFLAGS=$previous
     if($success){Remove-Item -LiteralPath $WorkRoot -Recurse -Force}
 }
+# The final expected compile rejection must not escape as this helper's result.
+$global:LASTEXITCODE=0
