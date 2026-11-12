@@ -32,6 +32,29 @@ function New-R4SdkRecoveryOverlay($Context) {
         [IO.Directory]::CreateDirectory([IO.Path]::GetDirectoryName($target))|Out-Null
         [IO.File]::Copy((Join-Path $base $relative),$target,$true)
     }
+    if(Test-Path -LiteralPath (Join-Path $output 'r4os/build_profile.zig')) {
+        # Current SDK sources interpret one Build.json instead of embedding
+        # compiler switches in build.zig. Project the selected Recovery policy
+        # into this generated overlay; never patch the pinned owner snapshot.
+        $projected=($Context.data.Build|ConvertTo-Json -Depth 100)|ConvertFrom-Json -AsHashtable -Depth 100
+        $recovery=$Context.data.Build.codegen.'recovery-module'
+        $module=$projected.codegen.module
+        foreach($key in @('single_threaded','strip','pic','red_zone','sanitize_c','stack_check','stack_protector','link_emit_relocs')) {
+            $module[$key]=$recovery[$key]
+        }
+        $module.optimization.size=$recovery.optimize_size
+        $module.optimization.speed=$recovery.optimize_speed
+        $module.c_flags=@($recovery.c_flags)
+        $projected.codegen.host.optimize=$recovery.host_optimize
+        $projected.codegen.host.packager_optimize=$recovery.contract_generator_optimize
+        $policy=Join-Path $output 'Profiles/Build.json'
+        [IO.File]::WriteAllText($policy,($projected|ConvertTo-Json -Depth 100)+"`n",[Text.UTF8Encoding]::new($false))
+        & (Join-Path $PSScriptRoot 'Sync-ProfilePolicy.ps1') -SdkRoot $output
+        $record=@{schema=1;technical=$Context.resolved.technical;sdk_version=$Context.data.sdk_version;profile=$Context.resolved.profile;hashes=$Context.data.hashes;frozen_sources=$Context.resolved.sources;overlay=@{kind='current-sdk-json';sdk_build_sha256=(Get-R4SdkFileDigest (Join-Path $output 'r4os/build.zig'));policy_sha256=(Get-R4SdkFileDigest $policy);source_policy='codegen.recovery-module'}}
+        $recordPath=Join-Path $Context.root 'Artifacts/SDKProfile/profile.json'
+        [IO.File]::WriteAllText($recordPath,($record|ConvertTo-Json -Depth 100)+"`n",[Text.UTF8Encoding]::new($false))
+        return $output
+    }
     $profile=$Context.data.Build.codegen.'recovery-module'
     $lines=[Collections.Generic.List[string]]::new()
     $lines.Add('// Generated solely from selected SDK Profiles/Build.json. Do not edit.')

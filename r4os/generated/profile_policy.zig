@@ -1,5 +1,5 @@
 // Generated from Profiles/Build.json by Tools/Sync-ProfilePolicy.ps1. DO NOT EDIT.
-pub const source_sha256 = "7435a451cc58d6d3220d4c54a576b1702f3d34ae8f8b0290f83e1a98c3bd516f";
+pub const source_sha256 = "0e236ec3400a500b0548581998d59c7be81d45290f087aabf6da98fca9224769";
 pub const Profile = struct { id: []const u8, language: []const u8, role: []const u8, kind: []const u8, generation: u8, explicit_platform: bool };
 pub const profiles = [_]Profile{
     .{ .id = "r4os-c-generation2", .language = "C", .role = "module", .kind = "R4X", .generation = 2, .explicit_platform = true },
@@ -9,7 +9,7 @@ pub const profiles = [_]Profile{
     .{ .id = "r4os-host-tools-v1", .language = "Zig", .role = "host", .kind = "", .generation = 1, .explicit_platform = false },
     .{ .id = "r4os-kernel-rust-v1", .language = "Rust", .role = "kernel", .kind = "", .generation = 1, .explicit_platform = false },
     .{ .id = "r4os-native-graphics-v1", .language = "C++", .role = "native", .kind = "", .generation = 1, .explicit_platform = false },
-    .{ .id = "r4os-recovery-zig-v1", .language = "Zig", .role = "recovery", .kind = "", .generation = 1, .explicit_platform = false },
+    .{ .id = "r4os-recovery-zig-v1", .language = "Zig", .role = "recovery", .kind = "", .generation = 2, .explicit_platform = true },
     .{ .id = "r4os-rust-generation2", .language = "Rust", .role = "module", .kind = "R4X", .generation = 2, .explicit_platform = true },
     .{ .id = "r4os-rust-r4d-generation2", .language = "Rust", .role = "module", .kind = "R4D", .generation = 2, .explicit_platform = true },
     .{ .id = "r4os-rust-r4d-v1", .language = "Rust", .role = "module", .kind = "R4D", .generation = 1, .explicit_platform = false },
