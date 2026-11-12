@@ -15,6 +15,36 @@ pub const digest_bytes: usize = 32;
 pub const digest_hex_bytes: usize = digest_bytes * 2;
 pub const FileKind = enum { sram, rtc, sram_delta };
 
+// Save/recovery needs only size and type. Generation2 identities and hash-
+// based filenames must never be narrowed into the legacy FileInfo shape.
+const PathShape = union(enum) {
+    value: struct { size: u64, is_dir: u8 },
+    missing,
+    failure: i32,
+};
+fn pathShape(files: *const storage.Files, path: storage.PathZ) PathShape {
+    if (files.sys.base.generation2 != null) {
+        return switch (files.metadata(path)) {
+            .found => |info| blk: {
+                if (info.version != 1 or info.size < @sizeOf(r4os.abi.FileMetadata2) or
+                    info.flags & r4os.abi.file_metadata2_flag_exists == 0)
+                    break :blk .{ .failure = r4os.abi.file_metadata2_error_unsupported };
+                const directory = info.flags & r4os.abi.file_metadata2_flag_directory != 0;
+                if (!directory and info.flags & r4os.abi.file_metadata2_flag_byte_size_valid == 0)
+                    break :blk .{ .failure = r4os.abi.file_metadata2_error_unsupported };
+                break :blk .{ .value = .{ .size = if (directory) 0 else info.byte_size, .is_dir = @intFromBool(directory) } };
+            },
+            .missing => .missing,
+            .failure => |code| .{ .failure = code },
+        };
+    }
+    return switch (files.info(path)) {
+        .value => |info| .{ .value = .{ .size = info.size, .is_dir = info.is_dir } },
+        .missing => .missing,
+        .failure => |code| .{ .failure = code },
+    };
+}
+
 pub fn digestHex(digest: *const [digest_bytes]u8, out: *[digest_hex_bytes]u8) []const u8 {
     const alphabet = "0123456789ABCDEF";
     for (digest, 0..) |byte, index| {
@@ -421,7 +451,7 @@ pub fn R4osStore(comptime Config: type) type {
                 }) catch return .io;
                 const info = info_retry: {
                     for (0..create_retry_attempts) |attempt| {
-                        switch (self.files.info(path.asZ())) {
+                        switch (pathShape(&self.files, path.asZ())) {
                             .value => |value| break :info_retry value,
                             .missing => return .missing,
                             .failure => |fault| {
@@ -1060,7 +1090,7 @@ pub fn R4osStore(comptime Config: type) type {
             failure_stage: FailureStage,
         ) BackendError!?u64 {
             for (0..create_retry_attempts) |attempt| {
-                switch (self.files.info(path.asZ())) {
+                switch (pathShape(&self.files, path.asZ())) {
                     .value => |info| {
                         if (info.is_dir == 0) return info.size;
                         self.recordFailure(failure_stage, r4os.r4sys.file_replace_atomic_error_conflict);
@@ -1089,7 +1119,7 @@ pub fn R4osStore(comptime Config: type) type {
             failure_stage: FailureStage,
         ) BackendError!?u64 {
             for (0..create_retry_attempts) |attempt| {
-                switch (self.files.info(path.asZ())) {
+                switch (pathShape(&self.files, path.asZ())) {
                     .value => |info| {
                         if (info.is_dir == 0) return info.size;
                         self.recordFailure(failure_stage, r4os.r4sys.file_replace_atomic_error_conflict);
@@ -1223,7 +1253,7 @@ pub fn R4osStore(comptime Config: type) type {
             failure_stage: FailureStage,
         ) BackendError!bool {
             for (0..create_retry_attempts) |attempt| {
-                switch (self.files.info(path.asZ())) {
+                switch (pathShape(&self.files, path.asZ())) {
                     .value => |info| {
                         if (info.is_dir == 0) return true;
                         self.recordFailure(failure_stage, r4os.r4sys.file_replace_atomic_error_conflict);
@@ -1304,7 +1334,7 @@ pub fn R4osStore(comptime Config: type) type {
                 var visible = false;
                 for (0..create_retry_attempts) |attempt| {
                     _ = files.createDirectory(path.asZ());
-                    visible = switch (files.info(path.asZ())) {
+                    visible = switch (pathShape(files, path.asZ())) {
                         .value => |info| info.is_dir != 0,
                         .missing, .failure => false,
                     };
@@ -1493,6 +1523,34 @@ pub fn R4osStore(comptime Config: type) type {
             try std.testing.expect(std.mem.startsWith(u8, canonical.bytes(), Config.save_root));
             try std.testing.expect(std.mem.endsWith(u8, canonical.bytes(), ".SAV"));
             try std.testing.expect(std.mem.indexOf(u8, canonical.bytes(), "\\APPDATA\\") == null);
+
+            // Exercise the real recovery size lookup, not a shortened name:
+            // 64hex+.SAV and a wide backend node cannot become FileInfo.
+            const p2 = @import("platform2.zig");
+            const Peer = struct {
+                var flags: u32 = 0;
+                fn metadata(_: [*:0]const u8, out: *r4os.abi.FileMetadata2) callconv(.c) i32 {
+                    out.* = .{ .flags = flags, .byte_size = 4, .backend_node = @as(u64, 1) << 40 };
+                    return 1;
+                }
+            };
+            Peer.flags = r4os.abi.file_metadata2_flag_exists | r4os.abi.file_metadata2_flag_byte_size_valid |
+                r4os.abi.file_metadata2_flag_backend_node_valid;
+            var sys: p2.abi.R4XStartR4Sys2 = .{};
+            sys.file_metadata2 = @intFromPtr(&Peer.metadata);
+            var imports = [_]r4os.abi.R4XStartImport{.{ .group_id = 1, .resolved_version = 2, .table = @intFromPtr(&sys) }};
+            var start: p2.abi.R4XStartContext2 = .{ .imports = @intFromPtr(&imports), .import_count = imports.len };
+            const context = try p2.Context.init(&start);
+            const files = storage.Files{ .sys = system.Context.fromProgram(.{ .generation2 = &context }) };
+            try std.testing.expectEqual(r4os.abi.file_metadata2_error_unsupported, files.info(canonical.asZ()).failure);
+            var store = Store.init(files);
+            try std.testing.expectEqual(@as(?u64, 4), try pathSizeWithRetry(&store, &canonical, .sram_info));
+            Peer.flags = r4os.abi.file_metadata2_flag_exists;
+            if (pathSizeWithRetry(&store, &canonical, .sram_info)) |_| {
+                return error.UnknownSizeAccepted;
+            } else |_| {}
+            try std.testing.expectEqual(FailureStage.sram_info, store.failure_stage);
+            try std.testing.expectEqual(r4os.abi.file_metadata2_error_unsupported, store.failure_code);
         }
 
         test "atomic recovery never removes an orphaned last-good backup" {

@@ -5,6 +5,12 @@ SDK0.64.165 / Contract0.64.81, R4SYS37 und kompakte Revision2.
 Normativer Anbieter: Contract/API/FileMetadata2.txt.
 Zig r4os.metadata2, C r4os/metadata2.h, Rust r4os_sdk::metadata2.
 
+SeitSDK0.64.209 verwendet auch die gemeinsame Subsystem-Speicherhilfe
+diesen Zugang fuer reine Groessen-/Typabfragen. Ein SHA256-Dateiname
+hat bereits vor der Endung64Zeichen und passt nicht in FileInfo.name[64].
+Save-, Stage- und Backupabfragen duerfen deshalb weder Namen noch
+Backendknoten verengen. Speicherformate und Transaktionsbesitzer bleiben.
+
 Alle drei Fassaden rufen genau die beiden optionalen Query2-Slots auf.
 Es gibt keinen Rueckfall durch FileInfo96/32-Bit-Knoten, keinen zweiten
 Directoryalgorithmus, keine Registry und keine neue Runtime-R4L. Der

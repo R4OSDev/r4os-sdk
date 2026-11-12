@@ -5,6 +5,16 @@ Dieses Repository enthaelt das hostneutrale Kern-SDK von R4OS: Zig- und
 C-Fassaden, Buildprofile, Templates, Smokeprojekte sowie die generischen
 Werkzeuge R4XBuilder, R4LContractGen und ModuleCatalog.
 
+Subsystem-Speichermetadaten ab0.64.209
+------------------------------------
+Die gemeinsame Cartridge-Speicherhilfe liest Groesse und Typ unter App2
+direkt aus Metadata2. SHA256-SAV/RTC-/Stage-/Backupnamen und breite
+Backendknoten werden nicht in das alte FileInfo-Namensfeld projiziert.
+Unbekannte Dateigroesse bleibt ein Fehler. Formate, exklusive Schreiblease,
+atomare Wiederaufnahme und der bis zum Join gehaltene Worker bleiben
+erhalten; Generation1 verwendet weiterhin ihren bisherigen Anbieter.
+Die bestehende Savepfadpruefung enthaelt den konkreten Namens-/Knotenfall.
+
 Startklasse normaler App2-Module ab0.64.200
 ------------------------------------------
 Das Manifest bestimmt Profil, benoetigte Gruppen und geordnete Imports.

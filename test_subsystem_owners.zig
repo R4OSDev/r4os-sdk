@@ -6,8 +6,8 @@ const runtime = @import("r4os/subsystem_runtime.zig");
 const persistence = @import("r4os/subsystem_persistence.zig");
 const Config = struct {
     pub const save_root = "C:\\TEMP\\SD65\\";
-    pub const root_directories = .{"C:\\TEMP\\SD65"};
-    pub const rtc_record_bytes = 4;
+    pub const root_directories = [_][]const u8{"C:\\TEMP\\SD65"};
+    pub const rtc_record_bytes: usize = 4;
     pub fn validateRtc(bytes: []const u8) bool {
         return std.mem.eql(u8, bytes, "RTC!");
     }
