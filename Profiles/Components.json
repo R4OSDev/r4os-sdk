@@ -2610,14 +2610,14 @@
     },
     "recovery-contract": {
       "repository": "https://github.com/R4OSDev/r4os-recovery.git",
-      "commit": "fe839226b01c5d99e8743b17ef568120c5e1ab21",
+      "commit": "a104286900a953c3c7aae0f75672d56d65c3ded8",
       "version": "0.64.93",
       "files": {
         "build.zig.zon": "51fb51d5e7bba4f238dee8fe6a84ac6436bcfe14602ba6b7909b3666b1d5b2b7"
       },
       "tree": {
         "algorithm": "r4os-files-sha256-lf-v1",
-        "sha256": "8726f0a3b56a4cf10922594f70aa43fc74045443f76018e52ffbdcb50430f362",
+        "sha256": "cbc318dc3c3a1a6b3a2e144ed02a2d9a97f72eb0f217c7d4bee70773da08c340",
         "files": [
           ".gitattributes",
           ".gitignore",
@@ -2718,19 +2718,19 @@
         "commit": "ebd4588477aa509383ee4448b0615948512def51"
       },
       "source_subdir": "Platform/Contract",
-      "archive_url": "https://github.com/R4OSDev/r4os-recovery/archive/fe839226b01c5d99e8743b17ef568120c5e1ab21.tar.gz",
+      "archive_url": "https://github.com/R4OSDev/r4os-recovery/archive/a104286900a953c3c7aae0f75672d56d65c3ded8.tar.gz",
       "archive_format": "tar.gz"
     },
     "recovery-sdk": {
       "repository": "https://github.com/R4OSDev/r4os-recovery.git",
-      "commit": "fe839226b01c5d99e8743b17ef568120c5e1ab21",
+      "commit": "a104286900a953c3c7aae0f75672d56d65c3ded8",
       "version": "0.64.210",
       "files": {
         "build.zig.zon": "2f3cbccff3781ad3056c00a5bc531db74add0833f98ac7d4679ccf2b2c008edf"
       },
       "tree": {
         "algorithm": "r4os-files-sha256-lf-v1",
-        "sha256": "582fd5cc5175860117500a79b37424c373c408c68093a43edb1630f81a20db2e",
+        "sha256": "44df9b65b3f953ac7bc736fe54d0db6d9e6f6821600206e587e2f9d73637d6b3",
         "files": [
           ".gitattributes",
           ".gitignore",
@@ -3901,7 +3901,7 @@
         "commit": "f3fa008ceeed9c9c7f1d88a059d662171580c700"
       },
       "source_subdir": "Platform/SDK",
-      "archive_url": "https://github.com/R4OSDev/r4os-recovery/archive/fe839226b01c5d99e8743b17ef568120c5e1ab21.tar.gz",
+      "archive_url": "https://github.com/R4OSDev/r4os-recovery/archive/a104286900a953c3c7aae0f75672d56d65c3ded8.tar.gz",
       "archive_format": "tar.gz"
     },
     "recovery-libraries": {
