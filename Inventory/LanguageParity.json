@@ -59207,6 +59207,15 @@
       "libraries": "0.64.61",
       "report": "Docs/API/ConsumerMigration.txt",
       "scope": "Metadata-only continuation after actual whole12 Library comparison: only changed artifact manifests and package61 identity advanced; SDK Components and own dependency pins select that exact clean source. No Zig/C/Rust/generator/ABI implementation changes after clean19a6 SDK216. Original full SDK216 test remains the actual earlier code qualification; current Profile Validate, final matched tools/objects, all12 Library/final132 owners, real current native and sole STANDARD remain separate. No Windows execution or physical provider claim."
+    },
+    "technical_query1_retirement_library_metadata_09089": {
+      "complete": true,
+      "performed_in": "0.90.89",
+      "sdk": "0.64.217",
+      "contract": "0.64.95",
+      "libraries": "0.64.62",
+      "report": "Docs/API/ConsumerMigration.txt",
+      "scope": "Completed isolated source/metadata review only: SDK217 changes Components/ZON/parity metadata, no SDK implementation/ABI/generator code after the original qualified216b code epoch. Library62 removes exactly12 obsolete Query1 descriptor initializers/manifest exports and updates their actual module versions; current Query2 and all functional interfaces/implementations retained, existing R4STD metadata test selects2. All889 watched source bodies reviewed; only the two watched SDK supplier metadata files differ; Library62 package identity is separately checked by the Components whole-tree/build-ZON digests. Original full SDK216 test remains historical code qualification, not a new217 execution. Future exact tools/actual12/132 builds/current native/refusals/Recovery supplier update/soleSTANDARD and final89 acceptance/push remain required. Existing positive legacy host profiles remain visibly assigned90."
     }
   },
   "wave_bindings": [
@@ -59459,14 +59468,14 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.90.88",
-    "sdk": "0.64.216",
+    "performed_in": "0.90.89",
+    "sdk": "0.64.217",
     "contract": "0.64.95",
-    "libraries": "0.64.61",
-    "evidence": "canonical_generation2_artifact_version_metadata_09088",
+    "libraries": "0.64.62",
+    "evidence": "technical_query1_retirement_library_metadata_09089",
     "historical_snapshot_retained": true,
     "prepared_only": false,
-    "scope": "Metadata-only continuation after actual whole12 Library comparison: only changed artifact manifests and package61 identity advanced; SDK Components and own dependency pins select that exact clean source. No Zig/C/Rust/generator/ABI implementation changes after clean19a6 SDK216. Original full SDK216 test remains the actual earlier code qualification; current Profile Validate, final matched tools/objects, all12 Library/final132 owners, real current native and sole STANDARD remain separate. No Windows execution or physical provider claim."
+    "scope": "Completed isolated source/metadata review only: SDK217 changes Components/ZON/parity metadata, no SDK implementation/ABI/generator code after the original qualified216b code epoch. Library62 removes exactly12 obsolete Query1 descriptor initializers/manifest exports and updates their actual module versions; current Query2 and all functional interfaces/implementations retained, existing R4STD metadata test selects2. All889 watched source bodies reviewed; only the two watched SDK supplier metadata files differ; Library62 package identity is separately checked by the Components whole-tree/build-ZON digests. Original full SDK216 test remains historical code qualification, not a new217 execution. Future exact tools/actual12/132 builds/current native/refusals/Recovery supplier update/soleSTANDARD and final89 acceptance/push remain required. Existing positive legacy host profiles remain visibly assigned90."
   },
   "drift_guard": {
     "schema": 1,
@@ -60733,7 +60742,7 @@
       },
       {
         "path": "Repositories/SDK/Profiles/Components.json",
-        "sha256": "7e43f524cf3683184ce6fd8a7fdfebd52d52ed28b3ccea068d50ac36e89fc5bc"
+        "sha256": "70766420e094a301f1fea229e2dc77d53878f324e5da044d5e911d159db85f8c"
       },
       {
         "path": "Repositories/SDK/Profiles/Tools.json",
@@ -61897,7 +61906,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "4e979466a9859cc3e8961807c518869e267c66ff151726bca9a506bf9b0ea2ba"
+        "sha256": "f5d4c19b751f0e04afad8437ab27d507b763870a45784dc44778b77865f26d9d"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -65697,6 +65706,16 @@
       "historical_snapshot_retained": true,
       "prepared_only": false,
       "scope": "Source/ABI parity review: sole active533 slot/signature/semantics source, both current roots and5 direct technical records;477 shared payloads/3151 constants/errors/limits unchanged. Original26/17 mutation oracles retained in current representation, complete frozen independent type/default graph and both original8 C/Rust/Zig crossover directions pass. C/Rust actual2 call case now uses directly generated2 function aliases; original payload/signed/vector/tail oracles unchanged. SDK216 selects exact clean normal95 plus explicitly source-admitted Recovery95 supplier and two exact dependency edges. SDK facade/codegen/host implementation bodies otherwise unchanged; old positive host fixture sides/explicit legacy profiles remain deliberately90 work. This evidence qualifies those concrete Contract/host interface facts only; full SDK gates/tools, current native/Recovery/profile packages and sole88 STANDARD remain separate pending work. Exact three-output regeneration after the direct DriverApi2 compiler type replaces extendDriver().306 SDK-private catalogue types/339 operations retain every original number, signature and layout; complete C header diff is one nominal-type comment and its64-bit fingerprint. Rust facade diff is exactly the same fingerprint constant; Zig guard matches it. Original stale-source compile failure and intentionally stopped remaining obsolete compiles retained. Both original generator checks pass; no guard weakened. Original SDK C/Rust driver/ownership and full normal source tests, final tool/runtime objects and native qualifications still required separately."
+    },
+    {
+      "performed_in": "0.90.88",
+      "sdk": "0.64.216",
+      "contract": "0.64.95",
+      "libraries": "0.64.61",
+      "evidence": "canonical_generation2_artifact_version_metadata_09088",
+      "historical_snapshot_retained": true,
+      "prepared_only": false,
+      "scope": "Metadata-only continuation after actual whole12 Library comparison: only changed artifact manifests and package61 identity advanced; SDK Components and own dependency pins select that exact clean source. No Zig/C/Rust/generator/ABI implementation changes after clean19a6 SDK216. Original full SDK216 test remains the actual earlier code qualification; current Profile Validate, final matched tools/objects, all12 Library/final132 owners, real current native and sole STANDARD remain separate. No Windows execution or physical provider claim."
     }
   ]
 }

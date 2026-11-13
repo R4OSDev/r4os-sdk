@@ -141,15 +141,15 @@
     },
     "libraries": {
       "repository": "https://github.com/R4OSDev/r4os-libraries.git",
-      "commit": "cae24d0ae79c2b8bee96d9615298605d05153bdb",
-      "version": "0.64.61",
+      "commit": "8fc5437b33bf531409b76fc8aba45e481902e58d",
+      "version": "0.64.62",
       "files": {
-        "build.zig.zon": "a37e6e748c1f1f4e36f7c064c13d2b85478f52e1e238d1b59ab19def73a9cea1",
+        "build.zig.zon": "6117c79ab6717d4634a3d6eccb8311195fb07ceac2843069f57ef34ed80b7291",
         "Shared/Rust/Cargo.toml": "431c38bac8b28467b0dad7842d1626397bb061eeb94f54f604276dc81036aec4"
       },
       "tree": {
         "algorithm": "r4os-files-sha256-lf-v1",
-        "sha256": "9c3f6631aea66d75ab1fffad2902b70cbc9df818442742e890ec84775b44b960",
+        "sha256": "739ab36e7c26908ff82355d9116fe50e4473517efe15036d5f49293571474919",
         "files": [
           ".gitattributes",
           ".gitignore",
@@ -2608,8 +2608,8 @@
           "consumer_oracles.zig"
         ]
       },
-      "zig_hash": "r4os_libraries-0.64.61-dH4fNfvGewOPSpuaAHM0DkcsPaMG8V-3s9fzPu-6OrM8",
-      "archive_url": "https://github.com/R4OSDev/r4os-libraries/archive/cae24d0ae79c2b8bee96d9615298605d05153bdb.tar.gz",
+      "zig_hash": "r4os_libraries-0.64.62-dH4fNY-5ewO7AX8hkbfKPxn2mVKTvSHex_RMNyZjctg-",
+      "archive_url": "https://github.com/R4OSDev/r4os-libraries/archive/8fc5437b33bf531409b76fc8aba45e481902e58d.tar.gz",
       "archive_format": "tar.gz"
     },
     "recovery-contract": {
@@ -6394,97 +6394,97 @@
       "name": "R4ACO",
       "repository": "libraries",
       "path": "R4ACO",
-      "version": "0.1.13",
+      "version": "0.1.14",
       "target": "/R4OS/LIBS/R4ACO.R4L",
-      "manifest_sha256": "878773a75e445761de31952009ec41829b284ea44309d9fb389d5a4b75caef4b"
+      "manifest_sha256": "a83405f7f7629d47a023bc030866f7da0b7601c3d7a6f630b64acc64e324b7fe"
     },
     "r4amd": {
       "name": "R4AMD",
       "repository": "libraries",
       "path": "R4AMD",
-      "version": "0.1.9",
+      "version": "0.1.10",
       "target": "/R4OS/LIBS/R4AMD.R4L",
-      "manifest_sha256": "fde5999d81f8c2f1a2517512ad680a0cf9ef372f2277975b0e86640aab1a0a52"
+      "manifest_sha256": "78e3eb5eeb6fbf229f548990bbf4465066735aa771f12e07dc262203823be8cd"
     },
     "r4enc": {
       "name": "R4ENC",
       "repository": "libraries",
       "path": "R4ENC",
-      "version": "0.1.12",
+      "version": "0.1.13",
       "target": "/R4OS/LIBS/R4ENC.R4L",
-      "manifest_sha256": "880ac46301e87b53b5b4c884085cf486e1f5f9e7fb602a00fa8aa0ca5eae46d7"
+      "manifest_sha256": "342e527deac7bb7553f109e56e326289031d716372f4e7e7f2b34f15fdf5e0d0"
     },
     "r4font": {
       "name": "R4FONT",
       "repository": "libraries",
       "path": "R4FONT",
-      "version": "0.2.4",
+      "version": "0.2.5",
       "target": "/R4OS/LIBS/R4FONT.R4L",
-      "manifest_sha256": "39c0b4476f4406f8ab48b02ecfa4ec058d83ff8550b88150a47e2d91f9d24c58"
+      "manifest_sha256": "9b121f6a70b5dd4b98a172d8a529ce3b62f6c71e1aa4dba66e7e761fffe4d934"
     },
     "r4gfx": {
       "name": "R4GFX",
       "repository": "libraries",
       "path": "R4GFX",
-      "version": "0.1.40",
+      "version": "0.1.41",
       "target": "/R4OS/LIBS/R4GFX.R4L",
-      "manifest_sha256": "2b1008bc201422e45f41137155a8e143ed4a11187680bccb54d36cf112c3401a"
+      "manifest_sha256": "18ff3d8f6008ad557e4d807d0a6ebb6fb32416b9ec25eeebd2fe1d36abb190e0"
     },
     "r4gl": {
       "name": "R4GL",
       "repository": "libraries",
       "path": "R4GL",
-      "version": "0.1.35",
+      "version": "0.1.36",
       "target": "/R4OS/LIBS/R4GL.R4L",
-      "manifest_sha256": "7b2abcdfb7912a05fd707ad759f71c6d18e6417affa03d416c7fad365287a2d3"
+      "manifest_sha256": "5547fd81b3fcdcba82824dad43cc357bb5bf581edfa733af458b655337630411"
     },
     "r4img": {
       "name": "R4IMG",
       "repository": "libraries",
       "path": "R4IMG",
-      "version": "0.3.5",
+      "version": "0.3.6",
       "target": "/R4OS/LIBS/R4IMG.R4L",
-      "manifest_sha256": "1058363321b40c10f474ea18a24fe89557324dfcd1e144f2a5a5a19c9a7810b3"
+      "manifest_sha256": "b2653fe8b2f7f5495c0ccfcafcc279cec6d458ba023aa648f68db085aa4edd0d"
     },
     "r4nak": {
       "name": "R4NAK",
       "repository": "libraries",
       "path": "R4NAK",
-      "version": "0.1.11",
+      "version": "0.1.12",
       "target": "/R4OS/LIBS/R4NAK.R4L",
-      "manifest_sha256": "b6faf366776df30d3112c84438f52ba71800cab99e6dcaa47d7a9554cd0ee2fd"
+      "manifest_sha256": "90ba974543c646ade012cdd63b5a3338b4039cba85f93b7e4e369ea44c6abcb1"
     },
     "r4nv": {
       "name": "R4NV",
       "repository": "libraries",
       "path": "R4NV",
-      "version": "0.1.20",
+      "version": "0.1.21",
       "target": "/R4OS/LIBS/R4NV.R4L",
-      "manifest_sha256": "1da693e8e3c056cfb7cede912d46d35c4a3f9429124f20c7b87eac8fddd0c5d2"
+      "manifest_sha256": "c9d0d7b846828b45e82a0d53d830544e810a0fa774cb6c28988d5b50e9b8ae26"
     },
     "r4std": {
       "name": "R4STD",
       "repository": "libraries",
       "path": "R4STD",
-      "version": "0.2.9",
+      "version": "0.2.10",
       "target": "/R4OS/LIBS/R4STD.R4L",
-      "manifest_sha256": "1f38416dc4184785d9e190961a405300aa2f589906b0255162cb2dbbff0b46f1"
+      "manifest_sha256": "2fb5b965aa666676c40046952f7b8946376ebfb84b054219e17dc9eec4b9cb53"
     },
     "r4video": {
       "name": "R4VIDEO",
       "repository": "libraries",
       "path": "R4VIDEO",
-      "version": "0.1.17",
+      "version": "0.1.18",
       "target": "/R4OS/LIBS/R4VIDEO.R4L",
-      "manifest_sha256": "c338f0f464742f4d56a740ecaee3655efe153dd6f42aa63629a0f07c4d945bc6"
+      "manifest_sha256": "0c2c313e778243129059bdc5c72a7e7273480b86f8b177f47fe857c08a3143d1"
     },
     "r4vk": {
       "name": "R4VK",
       "repository": "libraries",
       "path": "R4VK",
-      "version": "0.1.49",
+      "version": "0.1.50",
       "target": "/R4OS/LIBS/R4VK.R4L",
-      "manifest_sha256": "b1939a7599146c59d98648c4d18bccdaefe665db24387da95faf884bffa47b7c"
+      "manifest_sha256": "e9e62a1b9ba03e7de55c24823a5009c7afdf8dc08bccf1dc61f230882713c31a"
     }
   },
   "sets": {
