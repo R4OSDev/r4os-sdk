@@ -6,7 +6,7 @@ static const char *roles[2]={"misc.sdk68.c","misc.sdk68.rust"};
 static int32_t call(uint32_t which,uint32_t op,Request *input,Request *output){
  R4ProtocolBuffer in={.data=input,.len=input?sizeof(*input):0,.capacity=input?sizeof(*input):0};
  R4ProtocolBuffer out={.data=output,.capacity=output?sizeof(*output):0};
- R4DevProtocolDispatchFn f=(R4DevProtocolDispatchFn)(uintptr_t)app->devices.table->protocol_dispatch;
+ R4DevProtocolDispatchFn f=(R4DevProtocolDispatchFn)(uintptr_t)R4DEV_SLOT(&app->devices,protocol_dispatch);
  return f((const uint8_t *)roles[which],r4os_cstr_len(roles[which]),op,&in,&out);
 }
 static int32_t run(R4App *context){

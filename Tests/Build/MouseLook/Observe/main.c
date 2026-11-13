@@ -36,8 +36,8 @@ static int32_t run(R4App *a){
   return query==R4OS_GUI_POINTER_ERROR_STALE&&release==R4OS_GUI_POINTER_ERROR_STALE&&untouched?0:1;
  }
  if(args[0]=='X'||args[0]=='C'){
-  int32_t rc=args[0]=='X'?((R4SysProgramHandleKillFn)(uintptr_t)a->system.table->program_handle_kill)(&process)
-   :((R4SysProgramHandleRequestCloseFn)(uintptr_t)a->system.table->program_handle_request_close)(&process);
+  int32_t rc=args[0]=='X'?((R4SysProgramHandleKillFn)(uintptr_t)R4SYS_SLOT(&a->system,program_handle_kill))(&process)
+   :((R4SysProgramHandleRequestCloseFn)(uintptr_t)R4SYS_SLOT(&a->system,program_handle_request_close))(&process);
   text(a,"M28CONTROL");f(a," action=",args[0]);f(a," rc=",rc);text(a,"\n");return rc?1:0;
  }
  R4Resources resources={.app=a};R4ProgramObservationHandle observation={.process=process};
