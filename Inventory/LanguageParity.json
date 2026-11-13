@@ -59156,6 +59156,15 @@
       "libraries": "0.64.59",
       "report": "Docs/API/ConsumerMigration.txt",
       "scope": "Exactly one reviewed SDK metadata body: align existing central system-library identities and manifest digests with actual R4NAK9/R4ACO11/R4VK47 artifact version source. Actual normal resolver rejected the previous stale r4aco/VERSION entry; that original failure remains. All12 central NAME/VERSION/TARGET/manifest identities are checked against their owner. The current source root/self-pin was already exact. All886 other watched bodies remain unchanged. The affected normal owner module gate and matched tool/target/runtime epoch are re-executed separately; no assertion or source guard is weakened."
+    },
+    "remaining_positive_generation2_consumers_09087": {
+      "complete": true,
+      "performed_in": "0.90.87",
+      "sdk": "0.64.215",
+      "contract": "0.64.94",
+      "libraries": "0.64.60",
+      "report": "Docs/API/ConsumerMigration.txt",
+      "scope": "Explicit ten-body source review: three higher Rust open2 constructors delegate to the existing genuine2 native helper entrypoints and retain original application/heap/NoSend loans; four original C/Rust positive library consumers bind actual2 context and private memory128 through all original cleanup. The MouseLook observer admits exact2 operation slots through its actual2 facade rather than dereferencing the deliberately null old table. SDK215 metadata selects clean Library60. Original native-host C/Rust media, ICC, font, UTF8, calendar, byte/data/recording/cache cases pass, with all7 original unsafe/ownership compile negatives; the profile heap negative now targets actual App2/open2. Six Linux/Windows host binaries and three runtime objects compile. Other877 watched source bodies remain exact. Whole original module/SDK gates, current positive containers, real guest functional cases, source/profile/Recovery bindings and sole87 STANDARD are separate requirements. No Windows execution or physical provider claim."
     }
   },
   "wave_bindings": [
@@ -59408,14 +59417,14 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.90.86",
-    "sdk": "0.64.214",
+    "performed_in": "0.90.87",
+    "sdk": "0.64.215",
     "contract": "0.64.94",
-    "libraries": "0.64.59",
-    "evidence": "central_generation2_defaults_and_foreign_helpers_09086",
+    "libraries": "0.64.60",
+    "evidence": "remaining_positive_generation2_consumers_09087",
     "historical_snapshot_retained": true,
-    "scope": "SDK213: central13 target selections, three independent R4L profiles and matching parser/build/semantic-plan defaults use actual Query2/Start2/DriverInit2/ProtocolInit2. Positive C/Rust/Zig consumers, original templates and generated startup descriptors are ported. C driver2/protocol2 and safe Rust constructors borrow actual canonical technical2 tables; independent DMA/IRQ/work/logical-session/backing owners and API_V1 library payloads remain. Data/transport/subsystem open2 bind caller-pinned actual contexts/memory, without fabricated old platform tables; async get2 reuses the same job owner. The compiler regenerates the complete6-helper C chain and canonical Rust aliases. Its strict host check admits the actual4.3MB projection using the exclusive expected-length+1 bound; exact bytes still required. Historic R4CP conversion preserves original unknown source/imports and the new default rejects them; no active old profile is inserted. This review qualifies explicitly separated source/ABI/host/target scopes, not complete native OS or hardware parity. Actual version/component metadata review: central_generation2_actual_component_binding_09086. Full current guest/coherent-set qualification is separate. Final metadata-only SDK214/Library59 binding: generation2_library_bootstrap_and_final_selection_09086. Remaining positive host defaults and precise entry error: remaining_positive_rust_helpers_and_precise_admission_09086. Missing existing Driver2 retirement helper: driver2_existing_storage_retirement_helper_09086. Actual system-library metadata: actual_library_module_metadata_closure_09086.",
-    "prepared_only": false
+    "prepared_only": false,
+    "scope": "Explicit ten-body source review: three higher Rust open2 constructors delegate to the existing genuine2 native helper entrypoints and retain original application/heap/NoSend loans; four original C/Rust positive library consumers bind actual2 context and private memory128 through all original cleanup. The MouseLook observer admits exact2 operation slots through its actual2 facade rather than dereferencing the deliberately null old table. SDK215 metadata selects clean Library60. Original native-host C/Rust media, ICC, font, UTF8, calendar, byte/data/recording/cache cases pass, with all7 original unsafe/ownership compile negatives; the profile heap negative now targets actual App2/open2. Six Linux/Windows host binaries and three runtime objects compile. Other877 watched source bodies remain exact. Whole original module/SDK gates, current positive containers, real guest functional cases, source/profile/Recovery bindings and sole87 STANDARD are separate requirements. No Windows execution or physical provider claim."
   },
   "drift_guard": {
     "schema": 1,
@@ -59763,7 +59772,7 @@
       },
       {
         "path": "Repositories/Libraries/R4FONT/Bindings/Rust/src/helpers.rs",
-        "sha256": "23b1ae37d24ccee6f9597c1f41f9294d6a94d49ae7c9a732802bb1c238d11a70"
+        "sha256": "89a8c10649d1d48b58a16ca054c09b18241d0e5131c83ed143bc153383509ca2"
       },
       {
         "path": "Repositories/Libraries/R4FONT/Bindings/Rust/src/lib.rs",
@@ -59819,7 +59828,7 @@
       },
       {
         "path": "Repositories/Libraries/R4GFX/Bindings/Rust/src/helpers.rs",
-        "sha256": "d5eca7e094ed979a2b842fb43ff240105673837ee116458825cddc9c6699a3b6"
+        "sha256": "7cfd9c09843059068c079f9a673b440a4b89ebabe4a3006b7c88d89025042ec0"
       },
       {
         "path": "Repositories/Libraries/R4GFX/Bindings/Rust/src/lib.rs",
@@ -60027,7 +60036,7 @@
       },
       {
         "path": "Repositories/Libraries/R4IMG/Bindings/Rust/src/helpers.rs",
-        "sha256": "b4378d6bcde5dc283c578ee3c9f6dc8cce3f4b0ac73cd62b8f48cd42d7c13eab"
+        "sha256": "ec4277b30ee04f1045a87b74faa3f04ca577bb59d826b70c7ae883af9236c2be"
       },
       {
         "path": "Repositories/Libraries/R4IMG/Bindings/Rust/src/lib.rs",
@@ -60599,11 +60608,11 @@
       },
       {
         "path": "Repositories/Libraries/Shared/Tests/Consumer/src/consumer.c",
-        "sha256": "d338a4777968cd12c3aa1116db0ea660a5d505c352eddbedc5e7a1cd4f95d9a2"
+        "sha256": "e7b1bcb2efd116e2e9716a174c75876913a10ead46b1a618b88c9482fbc07dcf"
       },
       {
         "path": "Repositories/Libraries/Shared/Tests/Consumer/src/main.rs",
-        "sha256": "13e626c4998d4ee1b00a2c00180519439cbd4212b31adccaf1c94ed08db187d3"
+        "sha256": "9c1d15248d00f80799b20f7a2cd2cb2870957299429c6a9156087f25adb15145"
       },
       {
         "path": "Repositories/Libraries/Shared/Tests/MediaConsumer/Cargo.toml",
@@ -60611,11 +60620,11 @@
       },
       {
         "path": "Repositories/Libraries/Shared/Tests/MediaConsumer/src/consumer.c",
-        "sha256": "a0b03d631977beb2cc55b32bc0e3a31d8a6debfcd14e1b1ee97d7ee1e647a15c"
+        "sha256": "29f082790a6c59ce0d261f591816a7ea3a04dee3d532c0a8807c756da1680554"
       },
       {
         "path": "Repositories/Libraries/Shared/Tests/MediaConsumer/src/main.rs",
-        "sha256": "947335c510bd8a9762af0caed28affc8dad06622e60f4c62f8aad9588592863b"
+        "sha256": "15891a4d4a2721e1012a9e78d6b4b049b36c42e50fd947ee3f7f391a9d8a9c8c"
       },
       {
         "path": "Repositories/Libraries/Shared/Tests/cache_codec.zig",
@@ -60675,7 +60684,7 @@
       },
       {
         "path": "Repositories/SDK/Profiles/Components.json",
-        "sha256": "44002805f21755380fdfb45c393b92a2d5c117b4a88704af97499b4050ac9f3c"
+        "sha256": "699dc3941f67de44cea6e9495e2762f518a6ab17f6caba343a56f87bcbd20b17"
       },
       {
         "path": "Repositories/SDK/Profiles/Tools.json",
@@ -61491,7 +61500,7 @@
       },
       {
         "path": "Repositories/SDK/Tests/Build/MouseLook/Observe/main.c",
-        "sha256": "f12713f246d3430b88bb678ec67d946e510b4a9e1059c1fec021d53581cbb683"
+        "sha256": "c643ebf8852fd5ab9370729a2669150393ca372c0e5384d9a253a1c0de1bfd52"
       },
       {
         "path": "Repositories/SDK/Tests/Build/MouseLook/main.c",
@@ -61839,7 +61848,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "b8ba784dabb91b44385a5079c1e8ec9ef2cbf7b44ec7be4eaddd37548ed1bf9b"
+        "sha256": "2b574a6cde186612728db6fc1b62d7df805a16b2dd7c53bb82389988ecc54e6b"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -64143,7 +64152,8 @@
           "language_libraries_current_59",
           "desktop_settings_helpers_86",
           "tooling_templates_generation2_09044",
-          "canonical_text_font_image_generation2_09045"
+          "canonical_text_font_image_generation2_09045",
+          "remaining_positive_generation2_consumers_09087"
         ]
       },
       {
@@ -64204,7 +64214,8 @@
           "desktop_actions_08898",
           "gui_title_08947",
           "tooling_templates_generation2_09044",
-          "canonical_text_font_image_generation2_09045"
+          "canonical_text_font_image_generation2_09045",
+          "remaining_positive_generation2_consumers_09087"
         ]
       },
       {
@@ -64250,7 +64261,8 @@
           "language_libraries_current_59",
           "tooling_templates_generation2_09044",
           "canonical_text_font_image_generation2_09045",
-          "rust_desktop_shared_contexts_09065"
+          "rust_desktop_shared_contexts_09065",
+          "remaining_positive_generation2_consumers_09087"
         ]
       },
       {
@@ -65564,6 +65576,16 @@
       "evidence": "central_generation2_defaults_and_foreign_helpers_09086",
       "historical_snapshot_retained": true,
       "scope": "SDK213: central13 target selections, three independent R4L profiles and matching parser/build/semantic-plan defaults use actual Query2/Start2/DriverInit2/ProtocolInit2. Positive C/Rust/Zig consumers, original templates and generated startup descriptors are ported. C driver2/protocol2 and safe Rust constructors borrow actual canonical technical2 tables; independent DMA/IRQ/work/logical-session/backing owners and API_V1 library payloads remain. Data/transport/subsystem open2 bind caller-pinned actual contexts/memory, without fabricated old platform tables; async get2 reuses the same job owner. The compiler regenerates the complete6-helper C chain and canonical Rust aliases. Its strict host check admits the actual4.3MB projection using the exclusive expected-length+1 bound; exact bytes still required. Historic R4CP conversion preserves original unknown source/imports and the new default rejects them; no active old profile is inserted. This review qualifies explicitly separated source/ABI/host/target scopes, not complete native OS or hardware parity. Actual version/component metadata review: central_generation2_actual_component_binding_09086. Full current guest/coherent-set qualification is separate. Final metadata-only SDK214/Library59 binding: generation2_library_bootstrap_and_final_selection_09086. Remaining positive host defaults and precise entry error: remaining_positive_rust_helpers_and_precise_admission_09086. Missing existing Driver2 retirement helper: driver2_existing_storage_retirement_helper_09086.",
+      "prepared_only": false
+    },
+    {
+      "performed_in": "0.90.86",
+      "sdk": "0.64.214",
+      "contract": "0.64.94",
+      "libraries": "0.64.59",
+      "evidence": "central_generation2_defaults_and_foreign_helpers_09086",
+      "historical_snapshot_retained": true,
+      "scope": "SDK213: central13 target selections, three independent R4L profiles and matching parser/build/semantic-plan defaults use actual Query2/Start2/DriverInit2/ProtocolInit2. Positive C/Rust/Zig consumers, original templates and generated startup descriptors are ported. C driver2/protocol2 and safe Rust constructors borrow actual canonical technical2 tables; independent DMA/IRQ/work/logical-session/backing owners and API_V1 library payloads remain. Data/transport/subsystem open2 bind caller-pinned actual contexts/memory, without fabricated old platform tables; async get2 reuses the same job owner. The compiler regenerates the complete6-helper C chain and canonical Rust aliases. Its strict host check admits the actual4.3MB projection using the exclusive expected-length+1 bound; exact bytes still required. Historic R4CP conversion preserves original unknown source/imports and the new default rejects them; no active old profile is inserted. This review qualifies explicitly separated source/ABI/host/target scopes, not complete native OS or hardware parity. Actual version/component metadata review: central_generation2_actual_component_binding_09086. Full current guest/coherent-set qualification is separate. Final metadata-only SDK214/Library59 binding: generation2_library_bootstrap_and_final_selection_09086. Remaining positive host defaults and precise entry error: remaining_positive_rust_helpers_and_precise_admission_09086. Missing existing Driver2 retirement helper: driver2_existing_storage_retirement_helper_09086. Actual system-library metadata: actual_library_module_metadata_closure_09086.",
       "prepared_only": false
     }
   ]
