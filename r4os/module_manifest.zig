@@ -400,12 +400,12 @@ fn parseV2(allocator: std.mem.Allocator, path: []const u8, text: []const u8) !Ma
     if (parsed_kind == .r4l and platformApiGroupId(parsed_name) != null) return error.ReservedPlatformApiName;
     const parsed_module_version = try parseModuleVersion(module_version orelse return error.MissingModuleVersion);
     const parsed_language = try parseLanguage(language orelse return error.MissingLanguage);
-    const generation = try platformGeneration(parsed_kind, parsed_language, entry_mode orelse "", sdk_profile);
     if (parsed_language == .rust) {
         const admission = capabilities.rust(parsed_kind.text(), entry_mode orelse "", module_role, .host);
         if (admission.failure) |err| return err;
         if (zig_modules.items.len != 0 or native_archives.items.len != 0) return error.RustForbidsForeignBuildFields;
     }
+    const generation = try platformGeneration(parsed_kind, parsed_language, entry_mode orelse "", sdk_profile);
     if (sources.items.len == 0) return error.MissingSource;
     // One Zig root, followed by optional C companions in R4L/R4D. They are
     // linked into the same owning artifact; no extra runtime module or source

@@ -59129,6 +59129,15 @@
       "libraries": "0.64.59",
       "report": "Docs/API/ConsumerMigration.txt",
       "scope": "Explicit metadata-only review after actual SDK213 whole/default and original module gates passed: all12 standalone library SDK35 bootstrap pins now select that clean G2-default213 source. Library59 changes only12 producer ZON pins plus its root package version; independent library contracts/manifests/runtime implementation bodies are exact. Final normal SDK214 selects Library59. Every885 other watched body remains identical to actual reviewed SDK213; only SDK version/components/self-pins differ. Separate current whole owner builds, tool export, coherent sets and real guest cases remain mandatory. No raw old-default bootstrap remains in these normal standalone producers."
+    },
+    "remaining_positive_rust_helpers_and_precise_admission_09086": {
+      "complete": true,
+      "performed_in": "0.90.86",
+      "sdk": "0.64.214",
+      "contract": "0.64.94",
+      "libraries": "0.64.59",
+      "report": "Docs/API/ConsumerMigration.txt",
+      "scope": "Exact three-source review after the original complete normal SDK214 test target passed. Remaining Rust project helper now uses Query2 GUI imports, generation2 raw entry and canonical semantic profile. Existing heap helper defaults to its already qualified G2 branch. Rust role/entry admission precedes default profile selection again, preserving the original precise RustLowlevelUnsupported negative oracle instead of misleading UnknownSdkProfile. Actual candidate original project/Cargo/positive/raw/negative cases and real C App2/Rust heap ownership/release-ACK host cases pass. No negative assertion weakened. Other884 watched bodies remain exact; current owner gate, rebuilt matched tools, bare role packaging and real guest/coherent-system qualification are separate."
     }
   },
   "wave_bindings": [
@@ -59387,7 +59396,7 @@
     "libraries": "0.64.59",
     "evidence": "central_generation2_defaults_and_foreign_helpers_09086",
     "historical_snapshot_retained": true,
-    "scope": "SDK213: central13 target selections, three independent R4L profiles and matching parser/build/semantic-plan defaults use actual Query2/Start2/DriverInit2/ProtocolInit2. Positive C/Rust/Zig consumers, original templates and generated startup descriptors are ported. C driver2/protocol2 and safe Rust constructors borrow actual canonical technical2 tables; independent DMA/IRQ/work/logical-session/backing owners and API_V1 library payloads remain. Data/transport/subsystem open2 bind caller-pinned actual contexts/memory, without fabricated old platform tables; async get2 reuses the same job owner. The compiler regenerates the complete6-helper C chain and canonical Rust aliases. Its strict host check admits the actual4.3MB projection using the exclusive expected-length+1 bound; exact bytes still required. Historic R4CP conversion preserves original unknown source/imports and the new default rejects them; no active old profile is inserted. This review qualifies explicitly separated source/ABI/host/target scopes, not complete native OS or hardware parity. Actual version/component metadata review: central_generation2_actual_component_binding_09086. Full current guest/coherent-set qualification is separate. Final metadata-only SDK214/Library59 binding: generation2_library_bootstrap_and_final_selection_09086.",
+    "scope": "SDK213: central13 target selections, three independent R4L profiles and matching parser/build/semantic-plan defaults use actual Query2/Start2/DriverInit2/ProtocolInit2. Positive C/Rust/Zig consumers, original templates and generated startup descriptors are ported. C driver2/protocol2 and safe Rust constructors borrow actual canonical technical2 tables; independent DMA/IRQ/work/logical-session/backing owners and API_V1 library payloads remain. Data/transport/subsystem open2 bind caller-pinned actual contexts/memory, without fabricated old platform tables; async get2 reuses the same job owner. The compiler regenerates the complete6-helper C chain and canonical Rust aliases. Its strict host check admits the actual4.3MB projection using the exclusive expected-length+1 bound; exact bytes still required. Historic R4CP conversion preserves original unknown source/imports and the new default rejects them; no active old profile is inserted. This review qualifies explicitly separated source/ABI/host/target scopes, not complete native OS or hardware parity. Actual version/component metadata review: central_generation2_actual_component_binding_09086. Full current guest/coherent-set qualification is separate. Final metadata-only SDK214/Library59 binding: generation2_library_bootstrap_and_final_selection_09086. Remaining positive host defaults and precise entry error: remaining_positive_rust_helpers_and_precise_admission_09086.",
     "prepared_only": false
   },
   "drift_guard": {
@@ -61760,7 +61769,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/Test-RustHeap.ps1",
-        "sha256": "5292e3777cb952c9500db28abbcc17c93cecee9a40fbda66c860bedd78774980"
+        "sha256": "74758550d90072711be280e96628b825d074367e60b032b8ebacb55c85c2bbfc"
       },
       {
         "path": "Repositories/SDK/Tools/Test-RustLibraries.ps1",
@@ -61772,7 +61781,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/Test-RustProjects.ps1",
-        "sha256": "b4cc78176eaa56e09bc996d72420ea325a64cf68da22d1f4fcb3c41bba745e19"
+        "sha256": "69e705f142cc07d094401da44579a54dac4955a05fe73c5f61899d03d6a24b4f"
       },
       {
         "path": "Repositories/SDK/Tools/Test-RustProtocols.ps1",
@@ -62348,7 +62357,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/module_manifest.zig",
-        "sha256": "4c744baaf8c3314a128a4dd181d102009830f3f11108e1bd68fc08b9277a9511"
+        "sha256": "d68796fc3672f0e42e1b278be872cf7b3755184f8940436bc33c15bcd0e5b134"
       },
       {
         "path": "Repositories/SDK/r4os/native_bridge_schema.zig",
@@ -63171,7 +63180,8 @@
           "network_stream_consumers_09070",
           "software_update_consumers_09071",
           "native_tools_09072",
-          "central_generation2_defaults_and_foreign_helpers_09086"
+          "central_generation2_defaults_and_foreign_helpers_09086",
+          "remaining_positive_rust_helpers_and_precise_admission_09086"
         ]
       },
       {
@@ -65500,6 +65510,16 @@
       "evidence": "central_generation2_defaults_and_foreign_helpers_09086",
       "historical_snapshot_retained": true,
       "scope": "SDK213: central13 target selections, three independent R4L profiles and matching parser/build/semantic-plan defaults use actual Query2/Start2/DriverInit2/ProtocolInit2. Positive C/Rust/Zig consumers, original templates and generated startup descriptors are ported. C driver2/protocol2 and safe Rust constructors borrow actual canonical technical2 tables; independent DMA/IRQ/work/logical-session/backing owners and API_V1 library payloads remain. Data/transport/subsystem open2 bind caller-pinned actual contexts/memory, without fabricated old platform tables; async get2 reuses the same job owner. The compiler regenerates the complete6-helper C chain and canonical Rust aliases. Its strict host check admits the actual4.3MB projection using the exclusive expected-length+1 bound; exact bytes still required. Historic R4CP conversion preserves original unknown source/imports and the new default rejects them; no active old profile is inserted. This review qualifies explicitly separated source/ABI/host/target scopes, not complete native OS or hardware parity. Actual version/component metadata review: central_generation2_actual_component_binding_09086. Full current guest/coherent-set qualification is separate.",
+      "prepared_only": false
+    },
+    {
+      "performed_in": "0.90.86",
+      "sdk": "0.64.214",
+      "contract": "0.64.94",
+      "libraries": "0.64.59",
+      "evidence": "central_generation2_defaults_and_foreign_helpers_09086",
+      "historical_snapshot_retained": true,
+      "scope": "SDK213: central13 target selections, three independent R4L profiles and matching parser/build/semantic-plan defaults use actual Query2/Start2/DriverInit2/ProtocolInit2. Positive C/Rust/Zig consumers, original templates and generated startup descriptors are ported. C driver2/protocol2 and safe Rust constructors borrow actual canonical technical2 tables; independent DMA/IRQ/work/logical-session/backing owners and API_V1 library payloads remain. Data/transport/subsystem open2 bind caller-pinned actual contexts/memory, without fabricated old platform tables; async get2 reuses the same job owner. The compiler regenerates the complete6-helper C chain and canonical Rust aliases. Its strict host check admits the actual4.3MB projection using the exclusive expected-length+1 bound; exact bytes still required. Historic R4CP conversion preserves original unknown source/imports and the new default rejects them; no active old profile is inserted. This review qualifies explicitly separated source/ABI/host/target scopes, not complete native OS or hardware parity. Actual version/component metadata review: central_generation2_actual_component_binding_09086. Full current guest/coherent-set qualification is separate. Final metadata-only SDK214/Library59 binding: generation2_library_bootstrap_and_final_selection_09086.",
       "prepared_only": false
     }
   ]
