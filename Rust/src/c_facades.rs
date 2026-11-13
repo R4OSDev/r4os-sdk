@@ -21843,7 +21843,7 @@ pub const R4SdkDriverNativeValue298_TYPE: u32 = 298;
 pub const R4SdkDriverNativeValue300_TYPE: u32 = 300;
 pub const R4SdkDriverNativeValue302_TYPE: u32 = 302;
 pub const R4SdkDriverNativeValue304_TYPE: u32 = 304;
-pub const R4SdkDriver_ABI_FINGERPRINT: u64 = 8629375248608672133;
+pub const R4SdkDriver_ABI_FINGERPRINT: u64 = 3633988596098818796;
 pub const R4SdkDriver_r4d_shutdown_entry_offset: i32 = 5;
 unsafe extern "C" {
     pub fn r4serial_callback(p0: *const R4Serial, p1: u64, p2: u32) -> u64;

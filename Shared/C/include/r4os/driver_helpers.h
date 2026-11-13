@@ -54,7 +54,7 @@ typedef struct R4SdkDriverNativeValue12 { _Alignas(8) uint8_t opaque_bytes[8]; }
 /* driver2.Context; native size 8, alignment 8. */
 typedef struct R4SdkDriver2Context { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkDriver2Context;
 #define R4SdkDriver2Context_TYPE 15u
-/* *const technical2_generated.extendDriver(); native size 8, alignment 8. */
+/* *const technical2_generated.DriverApi2; native size 8, alignment 8. */
 typedef struct R4SdkDriverNativeValue16 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkDriverNativeValue16;
 #define R4SdkDriverNativeValue16_TYPE 16u
 /* driver_serial.Context; native size 40, alignment 8. */
@@ -561,7 +561,7 @@ typedef struct R4SdkDriverNativeValue302 { _Alignas(8) uint8_t opaque_bytes[8]; 
 /* *abi_generated.CpuPowerCounters; native size 8, alignment 8. */
 typedef struct R4SdkDriverNativeValue304 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkDriverNativeValue304;
 #define R4SdkDriverNativeValue304_TYPE 304u
-#define R4SdkDriver_ABI_FINGERPRINT UINT64_C(8629375248608672133)
+#define R4SdkDriver_ABI_FINGERPRINT UINT64_C(3633988596098818796)
 int32_t R4SdkDriverVerifyAbi(uint64_t);
 #define R4SdkDriver_r4d_shutdown_entry_offset (5)
 #include "r4os/update_helpers.h"

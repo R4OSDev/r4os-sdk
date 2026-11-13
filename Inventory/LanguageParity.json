@@ -59189,6 +59189,15 @@
         "Temp/ApiMigrationRun/088/FrozenC_Rust_CurrentZig.json",
         "Temp/ApiMigrationRun/088/CurrentC_Rust_FrozenZig.json"
       ]
+    },
+    "canonical_driver_catalogue_fingerprint_09088": {
+      "complete": true,
+      "performed_in": "0.90.88",
+      "sdk": "0.64.216",
+      "contract": "0.64.95",
+      "libraries": "0.64.60",
+      "report": "Docs/API/Generation2.txt",
+      "scope": "Exact three-output regeneration after the direct DriverApi2 compiler type replaces extendDriver().306 SDK-private catalogue types/339 operations retain every original number, signature and layout; complete C header diff is one nominal-type comment and its64-bit fingerprint. Rust facade diff is exactly the same fingerprint constant; Zig guard matches it. Original stale-source compile failure and intentionally stopped remaining obsolete compiles retained. Both original generator checks pass; no guard weakened. Original SDK C/Rust driver/ownership and full normal source tests, final tool/runtime objects and native qualifications still required separately."
     }
   },
   "wave_bindings": [
@@ -59448,7 +59457,7 @@
     "evidence": "independent_canonical_generation2_09088",
     "historical_snapshot_retained": true,
     "prepared_only": false,
-    "scope": "Source/ABI parity review: sole active533 slot/signature/semantics source, both current roots and5 direct technical records;477 shared payloads/3151 constants/errors/limits unchanged. Original26/17 mutation oracles retained in current representation, complete frozen independent type/default graph and both original8 C/Rust/Zig crossover directions pass. C/Rust actual2 call case now uses directly generated2 function aliases; original payload/signed/vector/tail oracles unchanged. SDK216 selects exact clean normal95 plus explicitly source-admitted Recovery95 supplier and two exact dependency edges. SDK facade/codegen/host implementation bodies otherwise unchanged; old positive host fixture sides/explicit legacy profiles remain deliberately90 work. This evidence qualifies those concrete Contract/host interface facts only; full SDK gates/tools, current native/Recovery/profile packages and sole88 STANDARD remain separate pending work."
+    "scope": "Source/ABI parity review: sole active533 slot/signature/semantics source, both current roots and5 direct technical records;477 shared payloads/3151 constants/errors/limits unchanged. Original26/17 mutation oracles retained in current representation, complete frozen independent type/default graph and both original8 C/Rust/Zig crossover directions pass. C/Rust actual2 call case now uses directly generated2 function aliases; original payload/signed/vector/tail oracles unchanged. SDK216 selects exact clean normal95 plus explicitly source-admitted Recovery95 supplier and two exact dependency edges. SDK facade/codegen/host implementation bodies otherwise unchanged; old positive host fixture sides/explicit legacy profiles remain deliberately90 work. This evidence qualifies those concrete Contract/host interface facts only; full SDK gates/tools, current native/Recovery/profile packages and sole88 STANDARD remain separate pending work. Exact three-output regeneration after the direct DriverApi2 compiler type replaces extendDriver().306 SDK-private catalogue types/339 operations retain every original number, signature and layout; complete C header diff is one nominal-type comment and its64-bit fingerprint. Rust facade diff is exactly the same fingerprint constant; Zig guard matches it. Original stale-source compile failure and intentionally stopped remaining obsolete compiles retained. Both original generator checks pass; no guard weakened. Original SDK C/Rust driver/ownership and full normal source tests, final tool/runtime objects and native qualifications still required separately."
   },
   "drift_guard": {
     "schema": 1,
@@ -60747,7 +60756,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "3c9df65c2bf0d44d8b7d777361903c6ae6cfc1495691c7c863350f6ea6de3209"
+        "sha256": "a486819322fe0b0221b9e6ee5c93b907dfd946d39b81b0b9f4a7378d19605075"
       },
       {
         "path": "Repositories/SDK/Rust/src/cli.rs",
@@ -61219,7 +61228,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/driver_helpers.h",
-        "sha256": "59725a9a2bb89842e3920ba5c8278295f16350bb52445f986217733d12e8eae1"
+        "sha256": "47a9330ee6ce196f5d23cd2fb09e93b4e98c196b49c9f7bc972150e509985e20"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/driver_lifecycle.h",
@@ -62227,7 +62236,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/generated/driver_fingerprint.zig",
-        "sha256": "0e248c60f8757cc823119068eb3f0f6d071bb106de44e87efed2c4fc804a72b2"
+        "sha256": "2255c734cc68bc7cef094f9c57c471473e3e62634cc5251d1eadfa458e1f1965"
       },
       {
         "path": "Repositories/SDK/r4os/generated/gui_fingerprint.zig",
@@ -63348,7 +63357,8 @@
           "editor_consumers_09073",
           "browser_snapshot_consumers_09075",
           "central_generation2_defaults_and_foreign_helpers_09086",
-          "driver2_existing_storage_retirement_helper_09086"
+          "driver2_existing_storage_retirement_helper_09086",
+          "canonical_driver_catalogue_fingerprint_09088"
         ]
       },
       {
@@ -63616,7 +63626,8 @@
           "editor_consumers_09073",
           "paint_audio_consumers_09074",
           "central_generation2_defaults_and_foreign_helpers_09086",
-          "driver2_existing_storage_retirement_helper_09086"
+          "driver2_existing_storage_retirement_helper_09086",
+          "canonical_driver_catalogue_fingerprint_09088"
         ]
       },
       {
@@ -63650,7 +63661,8 @@
           "canonical_graphics_native_generation2_09046",
           "rust_desktop_shared_contexts_09065",
           "central_generation2_defaults_and_foreign_helpers_09086",
-          "driver2_existing_storage_retirement_helper_09086"
+          "driver2_existing_storage_retirement_helper_09086",
+          "canonical_driver_catalogue_fingerprint_09088"
         ]
       },
       {
@@ -63707,7 +63719,8 @@
           "typed_audio_and_shared_lifecycle_pages_generation2_09052",
           "audio_capture_backend_actual_generation_09052_candidate_fix",
           "central_generation2_defaults_and_foreign_helpers_09086",
-          "driver2_existing_storage_retirement_helper_09086"
+          "driver2_existing_storage_retirement_helper_09086",
+          "canonical_driver_catalogue_fingerprint_09088"
         ]
       },
       {
@@ -63749,7 +63762,8 @@
           "device_snapshot_09021",
           "normal_system_facades_09041",
           "central_generation2_defaults_and_foreign_helpers_09086",
-          "driver2_existing_storage_retirement_helper_09086"
+          "driver2_existing_storage_retirement_helper_09086",
+          "canonical_driver_catalogue_fingerprint_09088"
         ]
       },
       {
@@ -64010,7 +64024,8 @@
           "typed_audio_and_shared_lifecycle_pages_generation2_09052",
           "typed_display_dma_and_work_consumers_generation2_09053",
           "central_generation2_defaults_and_foreign_helpers_09086",
-          "driver2_existing_storage_retirement_helper_09086"
+          "driver2_existing_storage_retirement_helper_09086",
+          "canonical_driver_catalogue_fingerprint_09088"
         ]
       },
       {
