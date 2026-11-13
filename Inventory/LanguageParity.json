@@ -176,11 +176,11 @@
       "API/ApiContract.json",
       "Generated/SDK/Zig/abi.zig"
     ],
-    "extern_structs": 465,
-    "fields": 7894,
+    "extern_structs": 575,
+    "fields": 8916,
     "integer_enums": 20,
-    "callback_declarations": 649,
-    "constants": 3174,
+    "callback_declarations": 806,
+    "constants": 3777,
     "scalar_float_abi_values": 0,
     "direct_vector_abi_values": 0,
     "excluded_zig_metadata_types": [
@@ -189,8 +189,8 @@
       "R4ApiSlotMeta"
     ],
     "target": "x86_64-unknown-none",
-    "reviewed_in": "0.87.43",
-    "evolution": "One R4SYS tail callback and two pointer-free directory payloads/two bounds constants appended: R4SYS31/1336; full164-slot/1328-byte prefix and369 existing payloads retained. Other5 groups unchanged. No new scalar-float/vector ABI values."
+    "reviewed_in": "0.90.88",
+    "evolution": "Independent canonical current2 materialization preserves complete pre-change compiled ABI/type/default graph.575 base extern structs/8916 fields/806 callbacks reflect actual current typed source; both8 original crossed-language cases pass. Temporary reverse base view is explicit until89/90; no new hardware/runtime capability claimed."
   },
   "capabilities": [
     {
@@ -59174,6 +59174,21 @@
       "libraries": "0.64.60",
       "report": "Docs/API/ConsumerMigration.txt",
       "scope": "Explicit two-body metadata review: actual132 owner plus12 Library builds yield142 identical whole canonical bodies and3 genuine R4NAK/R4ACO/R4VK deltas. Advance only their actual module versions to10/12/48 and bind clean Library60 source/archive plus all12 central module manifest identities. All885 other watched bodies remain exact to the prior complete original SDK215 test and Library helper5/negative7 source epoch. Current Rust README constructor/profile guidance corrected from actual declarations; independent source/data/ownership guidance retained. Versioned artifact builds, matched tools/current source graph, native compiler/software graphics and final coherent87 measurement remain separate; no prior native result is relabeled as new libraries."
+    },
+    "independent_canonical_generation2_09088": {
+      "complete": true,
+      "performed_in": "0.90.88",
+      "sdk": "0.64.216",
+      "contract": "0.64.95",
+      "libraries": "0.64.60",
+      "report": "Docs/API/Generation2.txt",
+      "scope": "Source/ABI parity review: sole active533 slot/signature/semantics source, both current roots and5 direct technical records;477 shared payloads/3151 constants/errors/limits unchanged. Original26/17 mutation oracles retained in current representation, complete frozen independent type/default graph and both original8 C/Rust/Zig crossover directions pass. C/Rust actual2 call case now uses directly generated2 function aliases; original payload/signed/vector/tail oracles unchanged. SDK216 selects exact clean normal95 plus explicitly source-admitted Recovery95 supplier and two exact dependency edges. SDK facade/codegen/host implementation bodies otherwise unchanged; old positive host fixture sides/explicit legacy profiles remain deliberately90 work. This evidence qualifies those concrete Contract/host interface facts only; full SDK gates/tools, current native/Recovery/profile packages and sole88 STANDARD remain separate pending work.",
+      "proofs": [
+        "Temp/ApiMigrationRun/088/CanonicalContinuityProof.json",
+        "Temp/ApiMigrationRun/088/FrozenAbiHostD.json",
+        "Temp/ApiMigrationRun/088/FrozenC_Rust_CurrentZig.json",
+        "Temp/ApiMigrationRun/088/CurrentC_Rust_FrozenZig.json"
+      ]
     }
   },
   "wave_bindings": [
@@ -59426,19 +59441,19 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "No known open functional language-parity row in the qualified current scope. Exact standalone release/publication identities are separate SDK-Release.json facts. Subsequent public owner changes require the affected implementation/evidence delta review; no Windows, cross-host, direct Rust FP/SIMD, native Rust/Zig compiler, hardware or performance qualification is implied.",
   "current_review": {
-    "performed_in": "0.90.87",
-    "sdk": "0.64.215",
-    "contract": "0.64.94",
+    "performed_in": "0.90.88",
+    "sdk": "0.64.216",
+    "contract": "0.64.95",
     "libraries": "0.64.60",
-    "evidence": "remaining_positive_generation2_consumers_09087",
+    "evidence": "independent_canonical_generation2_09088",
     "historical_snapshot_retained": true,
     "prepared_only": false,
-    "scope": "Explicit ten-body source review: three higher Rust open2 constructors delegate to the existing genuine2 native helper entrypoints and retain original application/heap/NoSend loans; four original C/Rust positive library consumers bind actual2 context and private memory128 through all original cleanup. The MouseLook observer admits exact2 operation slots through its actual2 facade rather than dereferencing the deliberately null old table. SDK215 metadata selects clean Library60. Original native-host C/Rust media, ICC, font, UTF8, calendar, byte/data/recording/cache cases pass, with all7 original unsafe/ownership compile negatives; the profile heap negative now targets actual App2/open2. Six Linux/Windows host binaries and three runtime objects compile. Other877 watched source bodies remain exact. Whole original module/SDK gates, current positive containers, real guest functional cases, source/profile/Recovery bindings and sole87 STANDARD are separate requirements. No Windows execution or physical provider claim. Artifact version/source binding review: actual_compiler_artifact_versions_09087."
+    "scope": "Source/ABI parity review: sole active533 slot/signature/semantics source, both current roots and5 direct technical records;477 shared payloads/3151 constants/errors/limits unchanged. Original26/17 mutation oracles retained in current representation, complete frozen independent type/default graph and both original8 C/Rust/Zig crossover directions pass. C/Rust actual2 call case now uses directly generated2 function aliases; original payload/signed/vector/tail oracles unchanged. SDK216 selects exact clean normal95 plus explicitly source-admitted Recovery95 supplier and two exact dependency edges. SDK facade/codegen/host implementation bodies otherwise unchanged; old positive host fixture sides/explicit legacy profiles remain deliberately90 work. This evidence qualifies those concrete Contract/host interface facts only; full SDK gates/tools, current native/Recovery/profile packages and sole88 STANDARD remain separate pending work."
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.90.79",
+    "reviewed_in": "0.90.88",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -59508,7 +59523,6 @@
       "Repositories/SDK/build.zig.zon",
       "Repositories/SDK/r4os",
       "Repositories/SDK/r4os.zig",
-      "Repositories/Contract/Tools/ApiContractGen/src/generation2_technical.zig.in",
       "Repositories/SDK/Tests/Simulation/PreciseClock.rs",
       "Repositories/SDK/Tests/Simulation/DataParity.c",
       "Repositories/SDK/Tests/Simulation/RustData.rs",
@@ -59537,35 +59551,43 @@
     "files": [
       {
         "path": "Repositories/Contract/API/ApiContract.baseline.json",
-        "sha256": "5d7d1f631a75b4f3b7b4a6206a0a353258932c594b777cd0ca594177e3485f4c"
+        "sha256": "536e25513c405ac5b96d7609aeb8da89db4e5ff1ea4b34b439ea0242ddb5d0a3"
       },
       {
         "path": "Repositories/Contract/API/ApiContract.json",
-        "sha256": "5d7d1f631a75b4f3b7b4a6206a0a353258932c594b777cd0ca594177e3485f4c"
+        "sha256": "536e25513c405ac5b96d7609aeb8da89db4e5ff1ea4b34b439ea0242ddb5d0a3"
+      },
+      {
+        "path": "Repositories/Contract/API/Generation2.baseline.json",
+        "sha256": "0be6677ab2572b26ca8c09b16012ffcbf90c3f2478bd0490981130b08fd1e878"
       },
       {
         "path": "Repositories/Contract/API/Generation2.json",
-        "sha256": "3426e9a68e4da46b3ef375eee7c72862a50e1a9c3908fbc0d84215a5fde2038b"
+        "sha256": "0be6677ab2572b26ca8c09b16012ffcbf90c3f2478bd0490981130b08fd1e878"
+      },
+      {
+        "path": "Repositories/Contract/API/LegacyProjection.json",
+        "sha256": "dfea92dc5967ca7594d3f1679bdce69440b01b5771826e6635e07e7e5f27bce7"
       },
       {
         "path": "Repositories/Contract/Generated/Generation2/C/include/r4os/generation2.h",
-        "sha256": "aff5482159b9fb08a420f96d784d139969eadbd0d58ae838b1b985ad2cb8ffb0"
+        "sha256": "2b89052fe66fc75587ec8e6f99a30a3d1de9e1f1bcb88812d8eb42dfd533c1af"
       },
       {
         "path": "Repositories/Contract/Generated/Generation2/Inventory.json",
-        "sha256": "aa842b126fcfa1d14aee7b543e72aa642f2988e453aba3261692c98adf996815"
+        "sha256": "c903909a5f62ce37b084d91a7647732eb20ad27ccdf6fb3fa937c332f36cddf6"
       },
       {
         "path": "Repositories/Contract/Generated/Generation2/Rust/generation2.rs",
-        "sha256": "15d0bf2ff8e3aa6cda3737b3a689b0c00389ea1852deafb875bc3b2df61d2ce7"
+        "sha256": "87262572445c56dea4d06bfc0dd5b8f21a325ddf402fc06fc37b91a9bd87c816"
       },
       {
         "path": "Repositories/Contract/Generated/Generation2/Zig/abi.zig",
-        "sha256": "d38f2dbe6159a7e9142c4086585f26143a854ea6b4f1e3663acd74fc749feeec"
+        "sha256": "9e9e2483254f5c4991ab54162cf7c01c63b680b2ed951e49223e1becece24617"
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/API.json",
-        "sha256": "ecbcf513028dfadde448852e2aace8a015ea7655c5bd9dc76d4a8cbd96b32402"
+        "sha256": "05468be62618c51d1ef98687847805d39102c5bfe79667c3836a3b654dec6b16"
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/RustABI.json",
@@ -59585,7 +59607,7 @@
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Rust/src/lib.rs",
-        "sha256": "d3db6f761ef25784b08efa92cd43e2721124d58215a70a9b1ed0f7cfeb6caf2d"
+        "sha256": "75b154a95484213ccb1b4b845196887c42b294ab14c50668123986685e6c4692"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi.zig",
@@ -59605,7 +59627,7 @@
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/technical2_generated.zig",
-        "sha256": "43551ad1faf1668199a2ce1df048374fa1aa2b221869d29a4d0d4bfa4f4498ce"
+        "sha256": "98df0a381107809dc49e950aa6656e203631814bba3f19d7015c5c2b4255cd0f"
       },
       {
         "path": "Repositories/Contract/Module/CpuBaseline.json",
@@ -59621,7 +59643,7 @@
       },
       {
         "path": "Repositories/Contract/Tests/RustInterop/interop.c",
-        "sha256": "c2575a9315b4cbb6b6a82878bdfddd485b64554b53c61dfb4a639dfc1dd3adf2"
+        "sha256": "c098aa5f0e8e66f60617e8ce9b0d30873c8233aa0826fb3657f9dae9b11a5a33"
       },
       {
         "path": "Repositories/Contract/Tests/RustInterop/interop.zig",
@@ -59629,7 +59651,7 @@
       },
       {
         "path": "Repositories/Contract/Tests/RustInterop/src/lib.rs",
-        "sha256": "1661e19b6934347f2a48690d006dc13362f43dd4387514d958cd733f7e292ed9"
+        "sha256": "fb754440c5931d35ce432ce14c7920b8ca9ba1c71dd6d4432eef98a38c2e6105"
       },
       {
         "path": "Repositories/Contract/Tools/AbiRustGen/src/c_projection.zig",
@@ -59637,19 +59659,19 @@
       },
       {
         "path": "Repositories/Contract/Tools/AbiRustGen/src/main.zig",
-        "sha256": "17cabdec5304aec2dc88c4e08a405534543e234fe41f33d9a2277ed50636ce30"
+        "sha256": "766518aa1cb4aaae63bb6d23ee4037904fd98cd090bfa0f2ea79cdca98d9b892"
       },
       {
         "path": "Repositories/Contract/Tools/ApiContractGen/src/generation2.zig",
-        "sha256": "87f80be496bba3e2128a4940da913740bf4cb39b92220c7d3be98f495c1fe285"
+        "sha256": "d1bc1ca342bbc6363fd33bd6491a3c22c4c6efd118464f42af33fe62070a2131"
       },
       {
-        "path": "Repositories/Contract/Tools/ApiContractGen/src/generation2_technical.zig.in",
-        "sha256": "49af5079355b84d34afeb0db357d20fec18b2e5dcec528ca8f3b449b1dcd49ef"
+        "path": "Repositories/Contract/Tools/ApiContractGen/src/legacy_projection.zig",
+        "sha256": "58a2259a813322078c45b97af60da84604da5090213a637a00003ae283ce3c26"
       },
       {
         "path": "Repositories/Contract/Tools/ApiContractGen/src/main.zig",
-        "sha256": "27ae05404555844090ca4a48d45cb73ea8a5e3ca84b8469c02494be368396afe"
+        "sha256": "5bfd3f0f137fc75ac948dd0ee4243bd005be124040706760d7656d73ed2cafb7"
       },
       {
         "path": "Repositories/Libraries/R4ACO/Bindings/C/r4aco.h",
@@ -60693,7 +60715,7 @@
       },
       {
         "path": "Repositories/SDK/Profiles/Components.json",
-        "sha256": "6b96cc7d5a49c81afa5c57855589862c0e3b0ff3f9eb05350150afd6e1c0c99c"
+        "sha256": "6efa24f935a87dc7f065c02aaf0135c6f6a00c56cb9c90e8376aeb2c40ac62a2"
       },
       {
         "path": "Repositories/SDK/Profiles/Tools.json",
@@ -61857,7 +61879,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "deaab321e0620d1e42df07bce16658bab965d2b4fc09d9a92c0a1dbcfb6785e5"
+        "sha256": "c519e5ef243c0fde437a350262ea2ba3ac8e020e75435dcf0ff891f463f2a720"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -63117,7 +63139,8 @@
           "desktop_evidence_handoff_08897",
           "desktop_actions_08898",
           "studio_089_host",
-          "canonical_graphics_native_generation2_09046"
+          "canonical_graphics_native_generation2_09046",
+          "independent_canonical_generation2_09088"
         ]
       },
       {
@@ -64048,7 +64071,8 @@
           "platform_generation2_09014",
           "tooling_templates_generation2_09044",
           "normal_app2_launch_class_09064",
-          "rust_desktop_shared_contexts_09065"
+          "rust_desktop_shared_contexts_09065",
+          "independent_canonical_generation2_09088"
         ]
       },
       {
@@ -65606,6 +65630,39 @@
       "historical_snapshot_retained": true,
       "prepared_only": false,
       "scope": "Explicit ten-body source review: three higher Rust open2 constructors delegate to the existing genuine2 native helper entrypoints and retain original application/heap/NoSend loans; four original C/Rust positive library consumers bind actual2 context and private memory128 through all original cleanup. The MouseLook observer admits exact2 operation slots through its actual2 facade rather than dereferencing the deliberately null old table. SDK215 metadata selects clean Library60. Original native-host C/Rust media, ICC, font, UTF8, calendar, byte/data/recording/cache cases pass, with all7 original unsafe/ownership compile negatives; the profile heap negative now targets actual App2/open2. Six Linux/Windows host binaries and three runtime objects compile. Other877 watched source bodies remain exact. Whole original module/SDK gates, current positive containers, real guest functional cases, source/profile/Recovery bindings and sole87 STANDARD are separate requirements. No Windows execution or physical provider claim."
+    },
+    {
+      "performed_in": "0.90.87",
+      "sdk": "0.64.215",
+      "contract": "0.64.94",
+      "libraries": "0.64.60",
+      "evidence": "remaining_positive_generation2_consumers_09087",
+      "historical_snapshot_retained": true,
+      "prepared_only": false,
+      "scope": "Explicit ten-body source review: three higher Rust open2 constructors delegate to the existing genuine2 native helper entrypoints and retain original application/heap/NoSend loans; four original C/Rust positive library consumers bind actual2 context and private memory128 through all original cleanup. The MouseLook observer admits exact2 operation slots through its actual2 facade rather than dereferencing the deliberately null old table. SDK215 metadata selects clean Library60. Original native-host C/Rust media, ICC, font, UTF8, calendar, byte/data/recording/cache cases pass, with all7 original unsafe/ownership compile negatives; the profile heap negative now targets actual App2/open2. Six Linux/Windows host binaries and three runtime objects compile. Other877 watched source bodies remain exact. Whole original module/SDK gates, current positive containers, real guest functional cases, source/profile/Recovery bindings and sole87 STANDARD are separate requirements. No Windows execution or physical provider claim. Artifact version/source binding review: actual_compiler_artifact_versions_09087.",
+      "prior_raw_rust_projection": {
+        "schema": 1,
+        "binding": "Generated/SDK/Rust/src/lib.rs",
+        "sources": [
+          "API/ApiContract.json",
+          "Generated/SDK/Zig/abi.zig"
+        ],
+        "extern_structs": 465,
+        "fields": 7894,
+        "integer_enums": 20,
+        "callback_declarations": 649,
+        "constants": 3174,
+        "scalar_float_abi_values": 0,
+        "direct_vector_abi_values": 0,
+        "excluded_zig_metadata_types": [
+          "R4AppProfileMeta",
+          "R4PlatformApiMeta",
+          "R4ApiSlotMeta"
+        ],
+        "target": "x86_64-unknown-none",
+        "reviewed_in": "0.87.43",
+        "evolution": "One R4SYS tail callback and two pointer-free directory payloads/two bounds constants appended: R4SYS31/1336; full164-slot/1328-byte prefix and369 existing payloads retained. Other5 groups unchanged. No new scalar-float/vector ABI values."
+      }
     }
   ]
 }

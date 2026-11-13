@@ -26,23 +26,25 @@
   "repositories": {
     "contract": {
       "repository": "https://github.com/R4OSDev/r4os-contract.git",
-      "commit": "6b36f118a7055dc7e7078ad95084a53db29c96bc",
-      "version": "0.64.94",
+      "commit": "8fb41b466fb64a6df866c564feb4d598c66411b2",
+      "version": "0.64.95",
       "files": {
-        "build.zig.zon": "3933083951aba8734809a02b60f9d712ba7d07210f046c80651fd1758e073389",
-        "API/ApiContract.json": "5d7d1f631a75b4f3b7b4a6206a0a353258932c594b777cd0ca594177e3485f4c",
+        "build.zig.zon": "c6db8b1b6e251f7825594058a766b535327d99b8c3bf5c0d377b0766e6425243",
+        "API/ApiContract.json": "536e25513c405ac5b96d7609aeb8da89db4e5ff1ea4b34b439ea0242ddb5d0a3",
         "Module/CpuBaseline.json": "eeeee03aa8fd41051c09e61e9d70ca35660f2b413c3f878fb6e5a3bb51aad10c",
         "Generated/SDK/Rust/Cargo.toml": "de464f2f9243e3d153c06b701a2126839c3e8a921a6d466467d3042370023263",
-        "Generated/SDK/Rust/src/lib.rs": "d3db6f761ef25784b08efa92cd43e2721124d58215a70a9b1ed0f7cfeb6caf2d",
-        "API/Generation2.json": "3426e9a68e4da46b3ef375eee7c72862a50e1a9c3908fbc0d84215a5fde2038b",
-        "Generated/Generation2/Inventory.json": "aa842b126fcfa1d14aee7b543e72aa642f2988e453aba3261692c98adf996815"
+        "Generated/SDK/Rust/src/lib.rs": "75b154a95484213ccb1b4b845196887c42b294ab14c50668123986685e6c4692",
+        "API/Generation2.json": "0be6677ab2572b26ca8c09b16012ffcbf90c3f2478bd0490981130b08fd1e878",
+        "Generated/Generation2/Inventory.json": "c903909a5f62ce37b084d91a7647732eb20ad27ccdf6fb3fa937c332f36cddf6",
+        "API/Generation2.baseline.json": "0be6677ab2572b26ca8c09b16012ffcbf90c3f2478bd0490981130b08fd1e878",
+        "API/LegacyProjection.json": "dfea92dc5967ca7594d3f1679bdce69440b01b5771826e6635e07e7e5f27bce7"
       },
-      "zig_hash": "r4os_contract-0.64.94-ELhbYYxcUgE97im4wTTcJOlmXOMgf4tIbmN5pHVGeljS",
-      "archive_url": "https://github.com/R4OSDev/r4os-contract/archive/6b36f118a7055dc7e7078ad95084a53db29c96bc.tar.gz",
+      "zig_hash": "r4os_contract-0.64.95-ELhbYUmucgEqHNyLzdLH5v1X5D4tUkiOiBSx20BAe_Fv",
+      "archive_url": "https://github.com/R4OSDev/r4os-contract/archive/8fb41b466fb64a6df866c564feb4d598c66411b2.tar.gz",
       "archive_format": "tar.gz",
       "tree": {
         "algorithm": "r4os-files-sha256-lf-v1",
-        "sha256": "722b90a7c1d3a716a197258b439d09066ee8af4140db9c9ed4a90dd946a06a4c",
+        "sha256": "e1d6a31de3e164160e83e9a77be27e77f729fcaf6a90b110902faca99486d74f",
         "files": [
           ".gitattributes",
           ".gitignore",
@@ -62,11 +64,13 @@
           "API/DeviceInventorySnapshot.txt",
           "API/FileMetadata2.txt",
           "API/FontPrefixMetrics2.txt",
+          "API/Generation2.baseline.json",
           "API/Generation2.json",
           "API/Groups.txt",
           "API/Ipv6Providers.txt",
           "API/Ipv6Transport.txt",
           "API/LaunchIo.txt",
+          "API/LegacyProjection.json",
           "API/NetworkFamily.txt",
           "API/README.txt",
           "API/TextComposition.txt",
@@ -127,7 +131,7 @@
           "Tools/AbiRustGen/src/c_projection.zig",
           "Tools/AbiRustGen/src/main.zig",
           "Tools/ApiContractGen/src/generation2.zig",
-          "Tools/ApiContractGen/src/generation2_technical.zig.in",
+          "Tools/ApiContractGen/src/legacy_projection.zig",
           "Tools/ApiContractGen/src/main.zig",
           "Tools/Test-RustABI.ps1",
           "build.zig",
@@ -2610,14 +2614,14 @@
     },
     "recovery-contract": {
       "repository": "https://github.com/R4OSDev/r4os-recovery.git",
-      "commit": "321261665971e77885e74a18e039b941025b892e",
-      "version": "0.64.93",
+      "commit": "09b7f7794cab975deec67a7550e38170699aa07a",
+      "version": "0.64.95",
       "files": {
-        "build.zig.zon": "51fb51d5e7bba4f238dee8fe6a84ac6436bcfe14602ba6b7909b3666b1d5b2b7"
+        "build.zig.zon": "c6db8b1b6e251f7825594058a766b535327d99b8c3bf5c0d377b0766e6425243"
       },
       "tree": {
         "algorithm": "r4os-files-sha256-lf-v1",
-        "sha256": "cbc318dc3c3a1a6b3a2e144ed02a2d9a97f72eb0f217c7d4bee70773da08c340",
+        "sha256": "76de44a5ed8f0a63deba83e277b89822d18ba99057a0777f95ecdaf186dde137",
         "files": [
           ".gitattributes",
           ".gitignore",
@@ -2637,11 +2641,13 @@
           "API/DeviceInventorySnapshot.txt",
           "API/FileMetadata2.txt",
           "API/FontPrefixMetrics2.txt",
+          "API/Generation2.baseline.json",
           "API/Generation2.json",
           "API/Groups.txt",
           "API/Ipv6Providers.txt",
           "API/Ipv6Transport.txt",
           "API/LaunchIo.txt",
+          "API/LegacyProjection.json",
           "API/NetworkFamily.txt",
           "API/README.txt",
           "API/TextComposition.txt",
@@ -2702,35 +2708,35 @@
           "Tools/AbiRustGen/src/c_projection.zig",
           "Tools/AbiRustGen/src/main.zig",
           "Tools/ApiContractGen/src/generation2.zig",
-          "Tools/ApiContractGen/src/generation2_technical.zig.in",
+          "Tools/ApiContractGen/src/legacy_projection.zig",
           "Tools/ApiContractGen/src/main.zig",
           "Tools/Test-RustABI.ps1",
           "build.zig",
           "build.zig.zon"
         ]
       },
-      "zig_archive_url": "https://github.com/R4OSDev/r4os-contract/archive/ebd4588477aa509383ee4448b0615948512def51.tar.gz",
-      "zig_hash": "r4os_contract-0.64.93-ELhbYYxcUgFy0qjySkS_OCnI-_DTEq3JyqdSqWIze1tw",
+      "zig_archive_url": "https://github.com/R4OSDev/r4os-contract/archive/8fb41b466fb64a6df866c564feb4d598c66411b2.tar.gz",
+      "zig_hash": "r4os_contract-0.64.95-ELhbYUmucgEqHNyLzdLH5v1X5D4tUkiOiBSx20BAe_Fv",
       "provenance": {
-        "version": "0.64.93",
-        "archive_sha256": "9e18169fc9f6020ae7cc42acd935b42b77410bed59dc699a1682d3aff5c6f0d7",
+        "version": "0.64.95",
+        "archive_sha256": "1fd7ca2690c08183bd2f217f6df064333254d908103cec959cabdb740d2a6b1a",
         "repository": "https://github.com/R4OSDev/r4os-contract.git",
-        "commit": "ebd4588477aa509383ee4448b0615948512def51"
+        "commit": "8fb41b466fb64a6df866c564feb4d598c66411b2"
       },
       "source_subdir": "Platform/Contract",
-      "archive_url": "https://github.com/R4OSDev/r4os-recovery/archive/321261665971e77885e74a18e039b941025b892e.tar.gz",
+      "archive_url": "https://github.com/R4OSDev/r4os-recovery/archive/09b7f7794cab975deec67a7550e38170699aa07a.tar.gz",
       "archive_format": "tar.gz"
     },
     "recovery-sdk": {
       "repository": "https://github.com/R4OSDev/r4os-recovery.git",
-      "commit": "321261665971e77885e74a18e039b941025b892e",
+      "commit": "09b7f7794cab975deec67a7550e38170699aa07a",
       "version": "0.64.210",
       "files": {
-        "build.zig.zon": "2f3cbccff3781ad3056c00a5bc531db74add0833f98ac7d4679ccf2b2c008edf"
+        "build.zig.zon": "f9f92b3487a7d2a7b0c8e599ece5b49fdf75439766d3b3f89d75315cc030b611"
       },
       "tree": {
         "algorithm": "r4os-files-sha256-lf-v1",
-        "sha256": "44df9b65b3f953ac7bc736fe54d0db6d9e6f6821600206e587e2f9d73637d6b3",
+        "sha256": "63b6519ebcff68c61b3e533dee3f4df32c3f036da1b9e4011130df6f7529db2a",
         "files": [
           ".gitattributes",
           ".gitignore",
@@ -3901,7 +3907,7 @@
         "commit": "f3fa008ceeed9c9c7f1d88a059d662171580c700"
       },
       "source_subdir": "Platform/SDK",
-      "archive_url": "https://github.com/R4OSDev/r4os-recovery/archive/321261665971e77885e74a18e039b941025b892e.tar.gz",
+      "archive_url": "https://github.com/R4OSDev/r4os-recovery/archive/09b7f7794cab975deec67a7550e38170699aa07a.tar.gz",
       "archive_format": "tar.gz"
     },
     "recovery-libraries": {
@@ -6366,7 +6372,7 @@
           "consumer_oracles.zig"
         ]
       },
-      "archive_url": "https://github.com/R4OSDev/r4os-recovery/archive/321261665971e77885e74a18e039b941025b892e.tar.gz",
+      "archive_url": "https://github.com/R4OSDev/r4os-recovery/archive/09b7f7794cab975deec67a7550e38170699aa07a.tar.gz",
       "version": "0.64.58",
       "repository": "https://github.com/R4OSDev/r4os-recovery.git",
       "files": {
@@ -6380,7 +6386,7 @@
       },
       "archive_format": "tar.gz",
       "source_subdir": "Platform/Libraries",
-      "commit": "321261665971e77885e74a18e039b941025b892e"
+      "commit": "09b7f7794cab975deec67a7550e38170699aa07a"
     }
   },
   "libraries": {
