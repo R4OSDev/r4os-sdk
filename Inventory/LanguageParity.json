@@ -59165,6 +59165,15 @@
       "libraries": "0.64.60",
       "report": "Docs/API/ConsumerMigration.txt",
       "scope": "Explicit ten-body source review: three higher Rust open2 constructors delegate to the existing genuine2 native helper entrypoints and retain original application/heap/NoSend loans; four original C/Rust positive library consumers bind actual2 context and private memory128 through all original cleanup. The MouseLook observer admits exact2 operation slots through its actual2 facade rather than dereferencing the deliberately null old table. SDK215 metadata selects clean Library60. Original native-host C/Rust media, ICC, font, UTF8, calendar, byte/data/recording/cache cases pass, with all7 original unsafe/ownership compile negatives; the profile heap negative now targets actual App2/open2. Six Linux/Windows host binaries and three runtime objects compile. Other877 watched source bodies remain exact. Whole original module/SDK gates, current positive containers, real guest functional cases, source/profile/Recovery bindings and sole87 STANDARD are separate requirements. No Windows execution or physical provider claim."
+    },
+    "actual_compiler_artifact_versions_09087": {
+      "complete": true,
+      "performed_in": "0.90.87",
+      "sdk": "0.64.215",
+      "contract": "0.64.94",
+      "libraries": "0.64.60",
+      "report": "Docs/API/ConsumerMigration.txt",
+      "scope": "Explicit two-body metadata review: actual132 owner plus12 Library builds yield142 identical whole canonical bodies and3 genuine R4NAK/R4ACO/R4VK deltas. Advance only their actual module versions to10/12/48 and bind clean Library60 source/archive plus all12 central module manifest identities. All885 other watched bodies remain exact to the prior complete original SDK215 test and Library helper5/negative7 source epoch. Current Rust README constructor/profile guidance corrected from actual declarations; independent source/data/ownership guidance retained. Versioned artifact builds, matched tools/current source graph, native compiler/software graphics and final coherent87 measurement remain separate; no prior native result is relabeled as new libraries."
     }
   },
   "wave_bindings": [
@@ -59424,7 +59433,7 @@
     "evidence": "remaining_positive_generation2_consumers_09087",
     "historical_snapshot_retained": true,
     "prepared_only": false,
-    "scope": "Explicit ten-body source review: three higher Rust open2 constructors delegate to the existing genuine2 native helper entrypoints and retain original application/heap/NoSend loans; four original C/Rust positive library consumers bind actual2 context and private memory128 through all original cleanup. The MouseLook observer admits exact2 operation slots through its actual2 facade rather than dereferencing the deliberately null old table. SDK215 metadata selects clean Library60. Original native-host C/Rust media, ICC, font, UTF8, calendar, byte/data/recording/cache cases pass, with all7 original unsafe/ownership compile negatives; the profile heap negative now targets actual App2/open2. Six Linux/Windows host binaries and three runtime objects compile. Other877 watched source bodies remain exact. Whole original module/SDK gates, current positive containers, real guest functional cases, source/profile/Recovery bindings and sole87 STANDARD are separate requirements. No Windows execution or physical provider claim."
+    "scope": "Explicit ten-body source review: three higher Rust open2 constructors delegate to the existing genuine2 native helper entrypoints and retain original application/heap/NoSend loans; four original C/Rust positive library consumers bind actual2 context and private memory128 through all original cleanup. The MouseLook observer admits exact2 operation slots through its actual2 facade rather than dereferencing the deliberately null old table. SDK215 metadata selects clean Library60. Original native-host C/Rust media, ICC, font, UTF8, calendar, byte/data/recording/cache cases pass, with all7 original unsafe/ownership compile negatives; the profile heap negative now targets actual App2/open2. Six Linux/Windows host binaries and three runtime objects compile. Other877 watched source bodies remain exact. Whole original module/SDK gates, current positive containers, real guest functional cases, source/profile/Recovery bindings and sole87 STANDARD are separate requirements. No Windows execution or physical provider claim. Artifact version/source binding review: actual_compiler_artifact_versions_09087."
   },
   "drift_guard": {
     "schema": 1,
@@ -60684,7 +60693,7 @@
       },
       {
         "path": "Repositories/SDK/Profiles/Components.json",
-        "sha256": "699dc3941f67de44cea6e9495e2762f518a6ab17f6caba343a56f87bcbd20b17"
+        "sha256": "6b96cc7d5a49c81afa5c57855589862c0e3b0ff3f9eb05350150afd6e1c0c99c"
       },
       {
         "path": "Repositories/SDK/Profiles/Tools.json",
@@ -61848,7 +61857,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "2b574a6cde186612728db6fc1b62d7df805a16b2dd7c53bb82389988ecc54e6b"
+        "sha256": "deaab321e0620d1e42df07bce16658bab965d2b4fc09d9a92c0a1dbcfb6785e5"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -65587,6 +65596,16 @@
       "historical_snapshot_retained": true,
       "scope": "SDK213: central13 target selections, three independent R4L profiles and matching parser/build/semantic-plan defaults use actual Query2/Start2/DriverInit2/ProtocolInit2. Positive C/Rust/Zig consumers, original templates and generated startup descriptors are ported. C driver2/protocol2 and safe Rust constructors borrow actual canonical technical2 tables; independent DMA/IRQ/work/logical-session/backing owners and API_V1 library payloads remain. Data/transport/subsystem open2 bind caller-pinned actual contexts/memory, without fabricated old platform tables; async get2 reuses the same job owner. The compiler regenerates the complete6-helper C chain and canonical Rust aliases. Its strict host check admits the actual4.3MB projection using the exclusive expected-length+1 bound; exact bytes still required. Historic R4CP conversion preserves original unknown source/imports and the new default rejects them; no active old profile is inserted. This review qualifies explicitly separated source/ABI/host/target scopes, not complete native OS or hardware parity. Actual version/component metadata review: central_generation2_actual_component_binding_09086. Full current guest/coherent-set qualification is separate. Final metadata-only SDK214/Library59 binding: generation2_library_bootstrap_and_final_selection_09086. Remaining positive host defaults and precise entry error: remaining_positive_rust_helpers_and_precise_admission_09086. Missing existing Driver2 retirement helper: driver2_existing_storage_retirement_helper_09086. Actual system-library metadata: actual_library_module_metadata_closure_09086.",
       "prepared_only": false
+    },
+    {
+      "performed_in": "0.90.87",
+      "sdk": "0.64.215",
+      "contract": "0.64.94",
+      "libraries": "0.64.60",
+      "evidence": "remaining_positive_generation2_consumers_09087",
+      "historical_snapshot_retained": true,
+      "prepared_only": false,
+      "scope": "Explicit ten-body source review: three higher Rust open2 constructors delegate to the existing genuine2 native helper entrypoints and retain original application/heap/NoSend loans; four original C/Rust positive library consumers bind actual2 context and private memory128 through all original cleanup. The MouseLook observer admits exact2 operation slots through its actual2 facade rather than dereferencing the deliberately null old table. SDK215 metadata selects clean Library60. Original native-host C/Rust media, ICC, font, UTF8, calendar, byte/data/recording/cache cases pass, with all7 original unsafe/ownership compile negatives; the profile heap negative now targets actual App2/open2. Six Linux/Windows host binaries and three runtime objects compile. Other877 watched source bodies remain exact. Whole original module/SDK gates, current positive containers, real guest functional cases, source/profile/Recovery bindings and sole87 STANDARD are separate requirements. No Windows execution or physical provider claim."
     }
   ]
 }
