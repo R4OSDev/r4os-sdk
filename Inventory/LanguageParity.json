@@ -59198,6 +59198,15 @@
       "libraries": "0.64.60",
       "report": "Docs/API/Generation2.txt",
       "scope": "Exact three-output regeneration after the direct DriverApi2 compiler type replaces extendDriver().306 SDK-private catalogue types/339 operations retain every original number, signature and layout; complete C header diff is one nominal-type comment and its64-bit fingerprint. Rust facade diff is exactly the same fingerprint constant; Zig guard matches it. Original stale-source compile failure and intentionally stopped remaining obsolete compiles retained. Both original generator checks pass; no guard weakened. Original SDK C/Rust driver/ownership and full normal source tests, final tool/runtime objects and native qualifications still required separately."
+    },
+    "canonical_generation2_artifact_version_metadata_09088": {
+      "complete": true,
+      "performed_in": "0.90.88",
+      "sdk": "0.64.216",
+      "contract": "0.64.95",
+      "libraries": "0.64.61",
+      "report": "Docs/API/ConsumerMigration.txt",
+      "scope": "Metadata-only continuation after actual whole12 Library comparison: only changed artifact manifests and package61 identity advanced; SDK Components and own dependency pins select that exact clean source. No Zig/C/Rust/generator/ABI implementation changes after clean19a6 SDK216. Original full SDK216 test remains the actual earlier code qualification; current Profile Validate, final matched tools/objects, all12 Library/final132 owners, real current native and sole STANDARD remain separate. No Windows execution or physical provider claim."
     }
   },
   "wave_bindings": [
@@ -59453,11 +59462,11 @@
     "performed_in": "0.90.88",
     "sdk": "0.64.216",
     "contract": "0.64.95",
-    "libraries": "0.64.60",
-    "evidence": "independent_canonical_generation2_09088",
+    "libraries": "0.64.61",
+    "evidence": "canonical_generation2_artifact_version_metadata_09088",
     "historical_snapshot_retained": true,
     "prepared_only": false,
-    "scope": "Source/ABI parity review: sole active533 slot/signature/semantics source, both current roots and5 direct technical records;477 shared payloads/3151 constants/errors/limits unchanged. Original26/17 mutation oracles retained in current representation, complete frozen independent type/default graph and both original8 C/Rust/Zig crossover directions pass. C/Rust actual2 call case now uses directly generated2 function aliases; original payload/signed/vector/tail oracles unchanged. SDK216 selects exact clean normal95 plus explicitly source-admitted Recovery95 supplier and two exact dependency edges. SDK facade/codegen/host implementation bodies otherwise unchanged; old positive host fixture sides/explicit legacy profiles remain deliberately90 work. This evidence qualifies those concrete Contract/host interface facts only; full SDK gates/tools, current native/Recovery/profile packages and sole88 STANDARD remain separate pending work. Exact three-output regeneration after the direct DriverApi2 compiler type replaces extendDriver().306 SDK-private catalogue types/339 operations retain every original number, signature and layout; complete C header diff is one nominal-type comment and its64-bit fingerprint. Rust facade diff is exactly the same fingerprint constant; Zig guard matches it. Original stale-source compile failure and intentionally stopped remaining obsolete compiles retained. Both original generator checks pass; no guard weakened. Original SDK C/Rust driver/ownership and full normal source tests, final tool/runtime objects and native qualifications still required separately."
+    "scope": "Metadata-only continuation after actual whole12 Library comparison: only changed artifact manifests and package61 identity advanced; SDK Components and own dependency pins select that exact clean source. No Zig/C/Rust/generator/ABI implementation changes after clean19a6 SDK216. Original full SDK216 test remains the actual earlier code qualification; current Profile Validate, final matched tools/objects, all12 Library/final132 owners, real current native and sole STANDARD remain separate. No Windows execution or physical provider claim."
   },
   "drift_guard": {
     "schema": 1,
@@ -60724,7 +60733,7 @@
       },
       {
         "path": "Repositories/SDK/Profiles/Components.json",
-        "sha256": "6efa24f935a87dc7f065c02aaf0135c6f6a00c56cb9c90e8376aeb2c40ac62a2"
+        "sha256": "7e43f524cf3683184ce6fd8a7fdfebd52d52ed28b3ccea068d50ac36e89fc5bc"
       },
       {
         "path": "Repositories/SDK/Profiles/Tools.json",
@@ -61888,7 +61897,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "c519e5ef243c0fde437a350262ea2ba3ac8e020e75435dcf0ff891f463f2a720"
+        "sha256": "4e979466a9859cc3e8961807c518869e267c66ff151726bca9a506bf9b0ea2ba"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -65678,6 +65687,16 @@
         "reviewed_in": "0.87.43",
         "evolution": "One R4SYS tail callback and two pointer-free directory payloads/two bounds constants appended: R4SYS31/1336; full164-slot/1328-byte prefix and369 existing payloads retained. Other5 groups unchanged. No new scalar-float/vector ABI values."
       }
+    },
+    {
+      "performed_in": "0.90.88",
+      "sdk": "0.64.216",
+      "contract": "0.64.95",
+      "libraries": "0.64.60",
+      "evidence": "independent_canonical_generation2_09088",
+      "historical_snapshot_retained": true,
+      "prepared_only": false,
+      "scope": "Source/ABI parity review: sole active533 slot/signature/semantics source, both current roots and5 direct technical records;477 shared payloads/3151 constants/errors/limits unchanged. Original26/17 mutation oracles retained in current representation, complete frozen independent type/default graph and both original8 C/Rust/Zig crossover directions pass. C/Rust actual2 call case now uses directly generated2 function aliases; original payload/signed/vector/tail oracles unchanged. SDK216 selects exact clean normal95 plus explicitly source-admitted Recovery95 supplier and two exact dependency edges. SDK facade/codegen/host implementation bodies otherwise unchanged; old positive host fixture sides/explicit legacy profiles remain deliberately90 work. This evidence qualifies those concrete Contract/host interface facts only; full SDK gates/tools, current native/Recovery/profile packages and sole88 STANDARD remain separate pending work. Exact three-output regeneration after the direct DriverApi2 compiler type replaces extendDriver().306 SDK-private catalogue types/339 operations retain every original number, signature and layout; complete C header diff is one nominal-type comment and its64-bit fingerprint. Rust facade diff is exactly the same fingerprint constant; Zig guard matches it. Original stale-source compile failure and intentionally stopped remaining obsolete compiles retained. Both original generator checks pass; no guard weakened. Original SDK C/Rust driver/ownership and full normal source tests, final tool/runtime objects and native qualifications still required separately."
     }
   ]
 }
