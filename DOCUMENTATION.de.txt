@@ -5,6 +5,18 @@ Dieses Repository enthaelt das hostneutrale Kern-SDK von R4OS: Zig- und
 C-Fassaden, Buildprofile, Templates, Smokeprojekte sowie die generischen
 Werkzeuge R4XBuilder, R4LContractGen und ModuleCatalog.
 
+Zentrale Zieldefaults ab0.64.213
+--------------------------------
+Alle zentralen Moduldefaults waehlen Generation2. Parser, semantischer
+Buildplan und tatsaechlicher Bau bestimmen dasselbe Profil; positive
+Zig-/C-/C++-/Rust-Smokes und Projektvorlagen erzeugen Query2 sowie den
+passenden Start2-, DriverInit2- oder ProtocolInit2-Einstieg. Runtime-R4Ls
+verwenden Query2-Metadaten und behalten ihre eigenen API-Revisionen.
+Historische Konverter aendern unbekannte alte Quellen nicht automatisch;
+deren alte Imports werden vom neuen Standard gezielt abgelehnt.
+Die vorhandenen Generation1-Definitionen bleiben waehrend des geplanten
+Uebergangs erhalten. Die gemeinsame Abschaltung folgt nach dem Audit.
+
 Subsystem-Speichermetadaten ab0.64.209
 ------------------------------------
 Die gemeinsame Cartridge-Speicherhilfe liest Groesse und Typ unter App2

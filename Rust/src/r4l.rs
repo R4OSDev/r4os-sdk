@@ -454,3 +454,23 @@ macro_rules! r4l_provider {
         pub static $query: $crate::abi::R4LQuery = $crate::r4l::PROVIDER_QUERY;
     };
 }
+
+/// Generation2 admission for independent library-owned interfaces. The API
+/// records and each caller's allocators/callbacks remain library-owned.
+pub const PROVIDER_QUERY2: abi::generation2::R4LQuery2 = abi::generation2::R4LQuery2 {
+    magic: abi::generation2::QUERY_MAGIC,
+    abi_version: 2,
+    size: core::mem::size_of::<abi::generation2::R4LQuery2>() as u32,
+    group: 0,
+    reserved: 0,
+};
+#[macro_export]
+macro_rules! r4l_provider2 {
+    ($query:ident) => {
+        #[unsafe(no_mangle)]
+        pub extern "C" fn r4l_entry() {}
+        #[unsafe(no_mangle)]
+        #[unsafe(link_section = ".data.r4l_exports")]
+        pub static $query: $crate::abi::generation2::R4LQuery2 = $crate::r4l::PROVIDER_QUERY2;
+    };
+}

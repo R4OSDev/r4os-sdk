@@ -145,7 +145,9 @@ pub fn main(init: std.process.Init) !void {
     if (std.mem.eql(u8, args[1], "write")) {
         try std.Io.Dir.cwd().writeFile(init.io, .{ .sub_path = args[2], .data = out.written() });
     } else {
-        const actual = try std.Io.Dir.cwd().readFileAlloc(init.io, args[2], init.arena.allocator(), .limited(4 * 1024 * 1024));
+        // readFileAlloc rejects a file that reaches its exclusive limit.
+        // Admit the exact rendered length; mem.eql still rejects any drift.
+        const actual = try std.Io.Dir.cwd().readFileAlloc(init.io, args[2], init.arena.allocator(), .limited(out.written().len + 1));
         if (!std.mem.eql(u8, actual, out.written())) return error.CFacadeProjectionDrift;
     }
 }

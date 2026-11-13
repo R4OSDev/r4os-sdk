@@ -1,7 +1,8 @@
 #include <r4os/facades.h>
+#include "../../../Simulation/GuestContext2.h"
 static int compare_bytes(const void *left,const void *right,uint32_t count){const uint8_t *a=left,*b=right;for(uint32_t i=0;i<count;++i)if(a[i]!=b[i])return 1;return 0;}
-int32_t sdk55_c_network(const R4XStartContext *context){
-    R4App app;if(R4SdkAppFacade(context,&app)!=0)return 1;
+int32_t sdk55_c_network(const R4XStartContext2 *context){
+    R4App2 actual;R4App app;if(sdk_guest_app2(context,&actual,&app)!=0)return 1;
     R4Services services=r4_app_services(&app);R4ServiceConnection service;
     if(r4_services_open(&services,"NET55SVC",&service)!=0)return 2;
     R4Timeout timeout=r4_timeout_finite((R4Duration){2000000000});

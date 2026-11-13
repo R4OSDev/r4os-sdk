@@ -62,8 +62,9 @@ pub fn persistenceConfiguration(table: *const cb.Table, root: []const u8, direct
     return result;
 }
 /// Initialize at the final address; hosts, streams and stores borrow this bundle.
-pub const Context = struct { bundle: p.Bundle, sys: @import("r4sys.zig").Context, desk: @import("r4desk.zig").Context, draw: @import("r4draw.zig").Context, audio: @import("r4audio.zig").Context };
+pub const Context = struct { bundle: p.Bundle, sys: @import("r4sys.zig").Context, desk: @import("r4desk.zig").Context, draw: @import("r4draw.zig").Context, audio: @import("r4audio.zig").Context , context2: ?@import("platform2.zig").Context = null, memory2: @import("allocator_source.zig").Memory = undefined };
 pub fn open(out: *Context, raw: *const a.R4XStartContext) bool {
+    out.context2 = null;
     out.bundle = p.bundleValueFromR4XStart(raw) orelse return false;
     out.sys = .init(&out.bundle);
     out.desk = .init(&out.bundle);
@@ -85,4 +86,18 @@ pub fn platformFiles(ctx: *const Context) @import("app_storage.zig").Files {
 }
 pub fn run(runtime: *rt.Runtime, ctx: *const Context, guest: rt.GuestDriver, host: rt.HostDriver) i32 {
     return runtime.run(&ctx.sys, guest, host);
+}
+
+/// Initialize at the final pinned address. Every derived helper borrows this
+/// exact generation2 context and memory input until its real close/quiescence.
+pub fn open2(output: *Context, raw: *const @import("platform2.zig").abi.R4XStartContext2) bool {
+    const context = @import("platform2.zig").Context.init(raw) catch return false;
+    output.context2 = context;
+    output.memory2 = @import("allocator_source.zig").Memory.fromContext2(&output.context2.?);
+    const program: p.Context = .{ .generation2 = &output.context2.?, .memory2 = &output.memory2 };
+    output.sys = @import("r4sys.zig").Context.fromProgram(program);
+    output.desk = @import("r4desk.zig").Context.fromProgram(program);
+    output.draw = @import("r4draw.zig").Context.fromProgram(program);
+    output.audio = @import("r4audio.zig").Context.fromProgram(program);
+    return true;
 }

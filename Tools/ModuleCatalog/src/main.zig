@@ -1389,7 +1389,7 @@ test "catalog exposes common optimization for non-R4X modules" {
         \\TARGET=/R4OS/DRIVERS/FASTDRV.R4D
         \\IMAGE_SCOPE=slim
         \\OPTIMIZE=speed
-        \\IMPORT=R4DEV:Query:1
+        \\IMPORT=R4DEV:Query2:2
         \\META=r4d.name=FASTDRV
         \\META=r4d.type=test
     ;

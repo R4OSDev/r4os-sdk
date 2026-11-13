@@ -69,6 +69,13 @@ _Static_assert(offsetof(R4LInterfaceHeader, interface_id_hi) == 24u, "R4LInterfa
     R4LQuery symbol_ __attribute__((aligned(8),section(".data.r4l_exports"))) = \
         {R4L_ABI_MAGIC,R4L_ABI_VERSION,sizeof(R4LQuery),0,0,0}
 
+/* Independent library interfaces keep their own ABI and caller ownership.
+ * Query2 only admits their generation2 loader transport. */
+#define R4L_PROVIDER_QUERY2(symbol_) \
+    void r4l_entry(void) {} \
+    R4LQuery2 symbol_ __attribute__((aligned(8),section(".data.r4l_exports"))) = \
+        {R4OS2_QUERY_MAGIC,2,sizeof(R4LQuery2),0,0}
+
 static inline int r4xstart_context_valid(const R4XStartContext *ctx) {
     return ctx != 0 &&
         ctx->magic == R4XSTART_MAGIC &&

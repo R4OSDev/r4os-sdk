@@ -24,7 +24,12 @@ generation, Busy, pending and release-acknowledgement rules. Optional Rust
 alloc uses the same heap and an SDK-owned callback copy across workers.
 Panic paths terminate the exact module or fault through UD2.
 
-Existing App/default profiles remain on generation1 during migration.
+SDK0.64.213 selects generation2 for every central Zig/C/C++/Rust module
+default. New application, driver and protocol templates use the matching
+Query2 and Start2/DriverInit2/ProtocolInit2 identities. Runtime libraries
+select Query2 metadata while keeping their independent API revisions.
+Existing generation1 definitions are retained only for the planned transition
+and retirement; new positive fixtures use the current generation2 profiles.
 SDK-private native facade storage has changed: rebuild generated headers,
 Rust projection and runtime objects together. Targeted checks are
 platform2-test, vm-allocator-test, Tools/Test-RustHeap.ps1 (also -Generation2),
