@@ -21843,7 +21843,7 @@ pub const R4SdkDriverNativeValue298_TYPE: u32 = 298;
 pub const R4SdkDriverNativeValue300_TYPE: u32 = 300;
 pub const R4SdkDriverNativeValue302_TYPE: u32 = 302;
 pub const R4SdkDriverNativeValue304_TYPE: u32 = 304;
-pub const R4SdkDriver_ABI_FINGERPRINT: u64 = 17284212720627801483;
+pub const R4SdkDriver_ABI_FINGERPRINT: u64 = 8629375248608672133;
 pub const R4SdkDriver_r4d_shutdown_entry_offset: i32 = 5;
 unsafe extern "C" {
     pub fn r4serial_callback(p0: *const R4Serial, p1: u64, p2: u32) -> u64;
@@ -38483,6 +38483,7 @@ unsafe extern "C" {
     pub fn R4SdkDriver2Context_portOutw(p0: u32, p1: *const R4SdkDriver2Context, p2: u16, p3: u16) -> R4SdkDriverSlot;
     pub fn R4SdkDriver2Context_portOutl(p0: u32, p1: *const R4SdkDriver2Context, p2: u16, p3: u32) -> R4SdkDriverSlot;
     pub fn R4SdkDriver2Context_registerStorageBackend(p0: u32, p1: *const R4SdkDriver2Context, p2: *const u8, p3: *const R4StorageBackend) -> R4SdkDriverSlot;
+    pub fn R4SdkDriver2Context_unregisterStorageBackend(p0: u32, p1: *const R4SdkDriver2Context, p2: *const u8) -> R4SdkDriverSlot;
     pub fn R4SdkDriver2Context_storageBackendRecoveryBegin(p0: u32, p1: *const R4SdkDriver2Context, p2: *const u8) -> R4SdkDriverSlot;
     pub fn R4SdkDriver2Context_storageBackendRecoveryFinish(p0: u32, p1: *const R4SdkDriver2Context, p2: *const u8, p3: u8) -> R4SdkDriverSlot;
     pub fn R4SdkDriver2Context_tickCount(p0: u32, p1: *const R4SdkDriver2Context) -> R4SdkDriverSlot;

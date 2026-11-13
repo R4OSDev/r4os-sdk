@@ -59138,6 +59138,15 @@
       "libraries": "0.64.59",
       "report": "Docs/API/ConsumerMigration.txt",
       "scope": "Exact three-source review after the original complete normal SDK214 test target passed. Remaining Rust project helper now uses Query2 GUI imports, generation2 raw entry and canonical semantic profile. Existing heap helper defaults to its already qualified G2 branch. Rust role/entry admission precedes default profile selection again, preserving the original precise RustLowlevelUnsupported negative oracle instead of misleading UnknownSdkProfile. Actual candidate original project/Cargo/positive/raw/negative cases and real C App2/Rust heap ownership/release-ACK host cases pass. No negative assertion weakened. Other884 watched bodies remain exact; current owner gate, rebuilt matched tools, bare role packaging and real guest/coherent-system qualification are separate."
+    },
+    "driver2_existing_storage_retirement_helper_09086": {
+      "complete": true,
+      "performed_in": "0.90.86",
+      "sdk": "0.64.214",
+      "contract": "0.64.94",
+      "libraries": "0.64.59",
+      "report": "Docs/API/ConsumerMigration.txt",
+      "scope": "Exactly six reviewed bodies: closed component/self-pin metadata after three actual library artifact versions9/11/47, plus four typed/generated SDK bodies: add the missing typed Driver2 unregisterStorageBackend convenience wrapper for an already existing DriverApi2 kernel callback and regenerate compiler-reflected C, driver fingerprint and canonical Rust facade. No Contract slot, kernel callback, Busy/refusal or retry semantics change. Direct typed refusal/retry test, unchanged actual C backend compilation and the original C/Zig/Rust driver ownership plus negative interop all pass. Insertion changes private reflected helper IDs and their fingerprint together; matched runtime objects must be rebuilt and stale ABI rejection remains enforced. Other881 watched bodies remain exact. The Library59 source changes only the three actual artifact manifests; R4VK has a real linked-code/layout delta that still requires current native qualification; independent library contracts and implementations are exact. Earlier bare role prefix and source epochs remain original receipts; the final25-role set, matched tools and canonical target epoch are rebuilt separately."
     }
   },
   "wave_bindings": [
@@ -59396,7 +59405,7 @@
     "libraries": "0.64.59",
     "evidence": "central_generation2_defaults_and_foreign_helpers_09086",
     "historical_snapshot_retained": true,
-    "scope": "SDK213: central13 target selections, three independent R4L profiles and matching parser/build/semantic-plan defaults use actual Query2/Start2/DriverInit2/ProtocolInit2. Positive C/Rust/Zig consumers, original templates and generated startup descriptors are ported. C driver2/protocol2 and safe Rust constructors borrow actual canonical technical2 tables; independent DMA/IRQ/work/logical-session/backing owners and API_V1 library payloads remain. Data/transport/subsystem open2 bind caller-pinned actual contexts/memory, without fabricated old platform tables; async get2 reuses the same job owner. The compiler regenerates the complete6-helper C chain and canonical Rust aliases. Its strict host check admits the actual4.3MB projection using the exclusive expected-length+1 bound; exact bytes still required. Historic R4CP conversion preserves original unknown source/imports and the new default rejects them; no active old profile is inserted. This review qualifies explicitly separated source/ABI/host/target scopes, not complete native OS or hardware parity. Actual version/component metadata review: central_generation2_actual_component_binding_09086. Full current guest/coherent-set qualification is separate. Final metadata-only SDK214/Library59 binding: generation2_library_bootstrap_and_final_selection_09086. Remaining positive host defaults and precise entry error: remaining_positive_rust_helpers_and_precise_admission_09086.",
+    "scope": "SDK213: central13 target selections, three independent R4L profiles and matching parser/build/semantic-plan defaults use actual Query2/Start2/DriverInit2/ProtocolInit2. Positive C/Rust/Zig consumers, original templates and generated startup descriptors are ported. C driver2/protocol2 and safe Rust constructors borrow actual canonical technical2 tables; independent DMA/IRQ/work/logical-session/backing owners and API_V1 library payloads remain. Data/transport/subsystem open2 bind caller-pinned actual contexts/memory, without fabricated old platform tables; async get2 reuses the same job owner. The compiler regenerates the complete6-helper C chain and canonical Rust aliases. Its strict host check admits the actual4.3MB projection using the exclusive expected-length+1 bound; exact bytes still required. Historic R4CP conversion preserves original unknown source/imports and the new default rejects them; no active old profile is inserted. This review qualifies explicitly separated source/ABI/host/target scopes, not complete native OS or hardware parity. Actual version/component metadata review: central_generation2_actual_component_binding_09086. Full current guest/coherent-set qualification is separate. Final metadata-only SDK214/Library59 binding: generation2_library_bootstrap_and_final_selection_09086. Remaining positive host defaults and precise entry error: remaining_positive_rust_helpers_and_precise_admission_09086. Missing existing Driver2 retirement helper: driver2_existing_storage_retirement_helper_09086.",
     "prepared_only": false
   },
   "drift_guard": {
@@ -60657,7 +60666,7 @@
       },
       {
         "path": "Repositories/SDK/Profiles/Components.json",
-        "sha256": "2802093d9cd3cda3315fac5ea7ea5f5edd610c7c2861c7b1e8bc41063660c952"
+        "sha256": "8e5e82b69ce92bc88e5296458aefa3fa5333c9ab228bdfcb6b2eee5f207fe2bd"
       },
       {
         "path": "Repositories/SDK/Profiles/Tools.json",
@@ -60689,7 +60698,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "c6ff1b88d6b28167a24697c0c92b4c70e0471b537104193a454c259d7f7686ac"
+        "sha256": "3c9df65c2bf0d44d8b7d777361903c6ae6cfc1495691c7c863350f6ea6de3209"
       },
       {
         "path": "Repositories/SDK/Rust/src/cli.rs",
@@ -61161,7 +61170,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/driver_helpers.h",
-        "sha256": "d84c7b44264532638f3de79f8e42b10543acf0a29a56d5eb2d6a04300ec09458"
+        "sha256": "59725a9a2bb89842e3920ba5c8278295f16350bb52445f986217733d12e8eae1"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/driver_lifecycle.h",
@@ -61821,7 +61830,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "29ac82737c618581ab0e67360e688f1a8e8413cde54734214a2e6f1217c48b31"
+        "sha256": "b8ba784dabb91b44385a5079c1e8ec9ef2cbf7b44ec7be4eaddd37548ed1bf9b"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -62069,7 +62078,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/driver2.zig",
-        "sha256": "31ea8b3a6c96985423bbfd30a40b6b837dfe4d0be72a3da366c8a53201d11107"
+        "sha256": "44a532a26192b8153541d5fe6edf6a22c79581bc892cfd2a8c23feaf9dd2fb97"
       },
       {
         "path": "Repositories/SDK/r4os/driver_bridge_names.zig",
@@ -62169,7 +62178,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/generated/driver_fingerprint.zig",
-        "sha256": "b96ad56ae02748f912cc65bc0993c68d694e19e532b91f6fbdb6ed57c09600da"
+        "sha256": "0e248c60f8757cc823119068eb3f0f6d071bb106de44e87efed2c4fc804a72b2"
       },
       {
         "path": "Repositories/SDK/r4os/generated/gui_fingerprint.zig",
@@ -63288,7 +63297,8 @@
           "native_tools_09072",
           "editor_consumers_09073",
           "browser_snapshot_consumers_09075",
-          "central_generation2_defaults_and_foreign_helpers_09086"
+          "central_generation2_defaults_and_foreign_helpers_09086",
+          "driver2_existing_storage_retirement_helper_09086"
         ]
       },
       {
@@ -63555,7 +63565,8 @@
           "canonical_graphics_native_generation2_09046",
           "editor_consumers_09073",
           "paint_audio_consumers_09074",
-          "central_generation2_defaults_and_foreign_helpers_09086"
+          "central_generation2_defaults_and_foreign_helpers_09086",
+          "driver2_existing_storage_retirement_helper_09086"
         ]
       },
       {
@@ -63588,7 +63599,8 @@
           "text_metrics_09023",
           "canonical_graphics_native_generation2_09046",
           "rust_desktop_shared_contexts_09065",
-          "central_generation2_defaults_and_foreign_helpers_09086"
+          "central_generation2_defaults_and_foreign_helpers_09086",
+          "driver2_existing_storage_retirement_helper_09086"
         ]
       },
       {
@@ -63644,7 +63656,8 @@
           "normal_service_stream_facades_09043",
           "typed_audio_and_shared_lifecycle_pages_generation2_09052",
           "audio_capture_backend_actual_generation_09052_candidate_fix",
-          "central_generation2_defaults_and_foreign_helpers_09086"
+          "central_generation2_defaults_and_foreign_helpers_09086",
+          "driver2_existing_storage_retirement_helper_09086"
         ]
       },
       {
@@ -63685,7 +63698,8 @@
           "audio_duration_retirement_08859",
           "device_snapshot_09021",
           "normal_system_facades_09041",
-          "central_generation2_defaults_and_foreign_helpers_09086"
+          "central_generation2_defaults_and_foreign_helpers_09086",
+          "driver2_existing_storage_retirement_helper_09086"
         ]
       },
       {
@@ -63945,7 +63959,8 @@
           "network_entropy_serial_driver_generation2_host_09051",
           "typed_audio_and_shared_lifecycle_pages_generation2_09052",
           "typed_display_dma_and_work_consumers_generation2_09053",
-          "central_generation2_defaults_and_foreign_helpers_09086"
+          "central_generation2_defaults_and_foreign_helpers_09086",
+          "driver2_existing_storage_retirement_helper_09086"
         ]
       },
       {
@@ -65520,6 +65535,16 @@
       "evidence": "central_generation2_defaults_and_foreign_helpers_09086",
       "historical_snapshot_retained": true,
       "scope": "SDK213: central13 target selections, three independent R4L profiles and matching parser/build/semantic-plan defaults use actual Query2/Start2/DriverInit2/ProtocolInit2. Positive C/Rust/Zig consumers, original templates and generated startup descriptors are ported. C driver2/protocol2 and safe Rust constructors borrow actual canonical technical2 tables; independent DMA/IRQ/work/logical-session/backing owners and API_V1 library payloads remain. Data/transport/subsystem open2 bind caller-pinned actual contexts/memory, without fabricated old platform tables; async get2 reuses the same job owner. The compiler regenerates the complete6-helper C chain and canonical Rust aliases. Its strict host check admits the actual4.3MB projection using the exclusive expected-length+1 bound; exact bytes still required. Historic R4CP conversion preserves original unknown source/imports and the new default rejects them; no active old profile is inserted. This review qualifies explicitly separated source/ABI/host/target scopes, not complete native OS or hardware parity. Actual version/component metadata review: central_generation2_actual_component_binding_09086. Full current guest/coherent-set qualification is separate. Final metadata-only SDK214/Library59 binding: generation2_library_bootstrap_and_final_selection_09086.",
+      "prepared_only": false
+    },
+    {
+      "performed_in": "0.90.86",
+      "sdk": "0.64.214",
+      "contract": "0.64.94",
+      "libraries": "0.64.59",
+      "evidence": "central_generation2_defaults_and_foreign_helpers_09086",
+      "historical_snapshot_retained": true,
+      "scope": "SDK213: central13 target selections, three independent R4L profiles and matching parser/build/semantic-plan defaults use actual Query2/Start2/DriverInit2/ProtocolInit2. Positive C/Rust/Zig consumers, original templates and generated startup descriptors are ported. C driver2/protocol2 and safe Rust constructors borrow actual canonical technical2 tables; independent DMA/IRQ/work/logical-session/backing owners and API_V1 library payloads remain. Data/transport/subsystem open2 bind caller-pinned actual contexts/memory, without fabricated old platform tables; async get2 reuses the same job owner. The compiler regenerates the complete6-helper C chain and canonical Rust aliases. Its strict host check admits the actual4.3MB projection using the exclusive expected-length+1 bound; exact bytes still required. Historic R4CP conversion preserves original unknown source/imports and the new default rejects them; no active old profile is inserted. This review qualifies explicitly separated source/ABI/host/target scopes, not complete native OS or hardware parity. Actual version/component metadata review: central_generation2_actual_component_binding_09086. Full current guest/coherent-set qualification is separate. Final metadata-only SDK214/Library59 binding: generation2_library_bootstrap_and_final_selection_09086. Remaining positive host defaults and precise entry error: remaining_positive_rust_helpers_and_precise_admission_09086.",
       "prepared_only": false
     }
   ]
