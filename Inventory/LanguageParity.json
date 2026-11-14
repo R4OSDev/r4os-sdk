@@ -59225,6 +59225,15 @@
       "libraries": "0.64.62",
       "report": "Docs/API/ConsumerMigration.txt",
       "scope": "Completed isolated supplier metadata review: Recovery source snapshots now select exact canonical Library62; frozen SDK210 has only its reviewed Library dependency edge updated, Contract95 unchanged. All three source selections bind clean Recovery preparation commit0a748bb; current runtime39 source builds, admission and native qualification remain pending. All889 watched files reviewed; only Components metadata changed, no SDK implementation/ABI/generator code. This is source review, not a new SDK217 full test or a completed89 acceptance."
+    },
+    "recovery_current_only_source_closure_09089": {
+      "complete": true,
+      "performed_in": "0.90.89",
+      "sdk": "0.64.217",
+      "contract": "0.64.95",
+      "libraries": "0.64.62",
+      "report": "Docs/API/ConsumerMigration.txt",
+      "scope": "Completed isolated final source-selection review: the three Recovery supplier selections now name the clean source-closed Recovery checkpoint after actual split39 source equality, paired Kernel72/Runtime73 and original owner host tests0. All three selected supplier trees, files, versions and provenance are exactly unchanged from the actual SDK217 build epoch37c65a1; only their Recovery commit/archive references differ. Normal Library62/Contract95 and every SDK implementation/ABI/generator body remain unchanged. All889 watched files reviewed; only Components metadata changed. Historical actual build epoch archived independently. This is completed metadata review, not a new full SDK217 test, native89 qualification or final89 acceptance."
     }
   },
   "wave_bindings": [
@@ -59481,10 +59490,10 @@
     "sdk": "0.64.217",
     "contract": "0.64.95",
     "libraries": "0.64.62",
-    "evidence": "recovery_library62_source_selection_09089",
+    "evidence": "recovery_current_only_source_closure_09089",
     "historical_snapshot_retained": true,
     "prepared_only": false,
-    "scope": "Completed isolated supplier metadata review: Recovery source snapshots now select exact canonical Library62; frozen SDK210 has only its reviewed Library dependency edge updated, Contract95 unchanged. All three source selections bind clean Recovery preparation commit0a748bb; current runtime39 source builds, admission and native qualification remain pending. All889 watched files reviewed; only Components metadata changed, no SDK implementation/ABI/generator code. This is source review, not a new SDK217 full test or a completed89 acceptance."
+    "scope": "Completed isolated final source-selection review: the three Recovery supplier selections now name the clean source-closed Recovery checkpoint after actual split39 source equality, paired Kernel72/Runtime73 and original owner host tests0. All three selected supplier trees, files, versions and provenance are exactly unchanged from the actual SDK217 build epoch37c65a1; only their Recovery commit/archive references differ. Normal Library62/Contract95 and every SDK implementation/ABI/generator body remain unchanged. All889 watched files reviewed; only Components metadata changed. Historical actual build epoch archived independently. This is completed metadata review, not a new full SDK217 test, native89 qualification or final89 acceptance."
   },
   "drift_guard": {
     "schema": 1,
@@ -60751,7 +60760,7 @@
       },
       {
         "path": "Repositories/SDK/Profiles/Components.json",
-        "sha256": "d80ba0913e31002674f2ff75cd58305115b3fdfcf94e3b774ac9336090405f61"
+        "sha256": "485db13cee461e18bb22e8ee3e9f6e4e908e6cf545b7de573d949e34ca35ea19"
       },
       {
         "path": "Repositories/SDK/Profiles/Tools.json",
@@ -65735,6 +65744,16 @@
       "historical_snapshot_retained": true,
       "prepared_only": false,
       "scope": "Completed isolated source/metadata review only: SDK217 changes Components/ZON/parity metadata, no SDK implementation/ABI/generator code after the original qualified216b code epoch. Library62 removes exactly12 obsolete Query1 descriptor initializers/manifest exports and updates their actual module versions; current Query2 and all functional interfaces/implementations retained, existing R4STD metadata test selects2. All889 watched source bodies reviewed; only the two watched SDK supplier metadata files differ; Library62 package identity is separately checked by the Components whole-tree/build-ZON digests. Original full SDK216 test remains historical code qualification, not a new217 execution. Future exact tools/actual12/132 builds/current native/refusals/Recovery supplier update/soleSTANDARD and final89 acceptance/push remain required. Existing positive legacy host profiles remain visibly assigned90."
+    },
+    {
+      "performed_in": "0.90.89",
+      "sdk": "0.64.217",
+      "contract": "0.64.95",
+      "libraries": "0.64.62",
+      "evidence": "recovery_library62_source_selection_09089",
+      "historical_snapshot_retained": true,
+      "prepared_only": false,
+      "scope": "Completed isolated supplier metadata review: Recovery source snapshots now select exact canonical Library62; frozen SDK210 has only its reviewed Library dependency edge updated, Contract95 unchanged. All three source selections bind clean Recovery preparation commit0a748bb; current runtime39 source builds, admission and native qualification remain pending. All889 watched files reviewed; only Components metadata changed, no SDK implementation/ABI/generator code. This is source review, not a new SDK217 full test or a completed89 acceptance."
     }
   ]
 }

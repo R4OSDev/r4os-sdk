@@ -2614,7 +2614,7 @@
     },
     "recovery-contract": {
       "repository": "https://github.com/R4OSDev/r4os-recovery.git",
-      "commit": "0a748bb1586446e372150dbd53f12f0295238cf1",
+      "commit": "b8c7a46c18a399bd1ad385def486756376a97808",
       "version": "0.64.95",
       "files": {
         "build.zig.zon": "c6db8b1b6e251f7825594058a766b535327d99b8c3bf5c0d377b0766e6425243"
@@ -2724,12 +2724,12 @@
         "commit": "8fb41b466fb64a6df866c564feb4d598c66411b2"
       },
       "source_subdir": "Platform/Contract",
-      "archive_url": "https://github.com/R4OSDev/r4os-recovery/archive/0a748bb1586446e372150dbd53f12f0295238cf1.tar.gz",
+      "archive_url": "https://github.com/R4OSDev/r4os-recovery/archive/b8c7a46c18a399bd1ad385def486756376a97808.tar.gz",
       "archive_format": "tar.gz"
     },
     "recovery-sdk": {
       "repository": "https://github.com/R4OSDev/r4os-recovery.git",
-      "commit": "0a748bb1586446e372150dbd53f12f0295238cf1",
+      "commit": "b8c7a46c18a399bd1ad385def486756376a97808",
       "version": "0.64.210",
       "files": {
         "build.zig.zon": "87fbf5b5ceaa9698cbed93a35a25cc8ef1808374c3a67707b7b4cd224b4d59f3"
@@ -3907,7 +3907,7 @@
         "commit": "f3fa008ceeed9c9c7f1d88a059d662171580c700"
       },
       "source_subdir": "Platform/SDK",
-      "archive_url": "https://github.com/R4OSDev/r4os-recovery/archive/0a748bb1586446e372150dbd53f12f0295238cf1.tar.gz",
+      "archive_url": "https://github.com/R4OSDev/r4os-recovery/archive/b8c7a46c18a399bd1ad385def486756376a97808.tar.gz",
       "archive_format": "tar.gz"
     },
     "recovery-libraries": {
@@ -6372,7 +6372,7 @@
           "Tools/Test-ConsumerHelpers.ps1"
         ]
       },
-      "archive_url": "https://github.com/R4OSDev/r4os-recovery/archive/0a748bb1586446e372150dbd53f12f0295238cf1.tar.gz",
+      "archive_url": "https://github.com/R4OSDev/r4os-recovery/archive/b8c7a46c18a399bd1ad385def486756376a97808.tar.gz",
       "version": "0.64.62",
       "repository": "https://github.com/R4OSDev/r4os-recovery.git",
       "files": {
@@ -6386,7 +6386,7 @@
       },
       "archive_format": "tar.gz",
       "source_subdir": "Platform/Libraries",
-      "commit": "0a748bb1586446e372150dbd53f12f0295238cf1"
+      "commit": "b8c7a46c18a399bd1ad385def486756376a97808"
     }
   },
   "libraries": {
