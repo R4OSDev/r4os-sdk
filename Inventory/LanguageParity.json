@@ -51514,7 +51514,7 @@
       },
       {
         "path": "Repositories/SDK/Profiles/Components.json",
-        "sha256": "8c9f71502e17e83c7de857a2be9cdd05c2570da448cd9245285d7e26dd87d980"
+        "sha256": "7294935c64137735bf9c53f5abdb735c3913bf9cdc66e9fb91535bcd05b1e4a1"
       },
       {
         "path": "Repositories/SDK/r4os/rust_module_profile.json",
@@ -59388,6 +59388,15 @@
       "libraries": "0.64.64",
       "report": "Docs/API/ConsumerMigration.txt",
       "scope": "SDK218 epochG changes only exact clean Library64 source/package metadata and its reviewed receipt. Library64 fixes the actual standalone Vulkan/NAK compiler constructor workspace binding, proved by before1/after0 unchanged invocation. No SDK implementation/template/generator/policy or frozen Recovery source changed. All9 matched tools/export and12+132 normal builds will use exact G; whole145/version-law, current graphics/compiler native/browser and soleSTANDARD90 remain required."
+    },
+    "complete_vulkan_nil_workspace_09090": {
+      "complete": true,
+      "performed_in": "0.90.90",
+      "sdk": "0.64.218",
+      "contract": "0.64.95",
+      "libraries": "0.64.64",
+      "report": "Docs/API/ConsumerMigration.txt",
+      "scope": "SDK218 H changes only exact Library64 source/package selection and this explicit reviewed receipt. Library64 changes only one NIL build-helper workspace assignment, with all shared NAK call sites audited and the entire actual Vulkan build passing before source selection. Every SDK implementation, template, generator, Build/Tools policy, Library binding and ordinary consumer source remains identical to the actually normal-built G inputs. Actual132 G outputs are retained with full source/flag/package-semantic reconciliation for H; they are not relabelled new H builds. Normal H providers and source-matched tools, fresh exact145/SDK native/browser, coherent packages and soleSTANDARD90 remain required. No extra ordinary rebuild solely for this one-line Vulkan-only host recipe."
     }
   },
   "wave_bindings": [
@@ -59644,10 +59653,10 @@
     "sdk": "0.64.218",
     "contract": "0.64.95",
     "libraries": "0.64.64",
-    "evidence": "explicit_vulkan_nak_workspace_09090",
+    "evidence": "complete_vulkan_nil_workspace_09090",
     "historical_snapshot_retained": true,
     "prepared_only": true,
-    "scope": "SDK218 epochG changes only exact clean Library64 source/package metadata and its reviewed receipt. Library64 fixes the actual standalone Vulkan/NAK compiler constructor workspace binding, proved by before1/after0 unchanged invocation. No SDK implementation/template/generator/policy or frozen Recovery source changed. All9 matched tools/export and12+132 normal builds will use exact G; whole145/version-law, current graphics/compiler native/browser and soleSTANDARD90 remain required."
+    "scope": "SDK218 H changes only exact Library64 source/package selection and this explicit reviewed receipt. Library64 changes only one NIL build-helper workspace assignment, with all shared NAK call sites audited and the entire actual Vulkan build passing before source selection. Every SDK implementation, template, generator, Build/Tools policy, Library binding and ordinary consumer source remains identical to the actually normal-built G inputs. Actual132 G outputs are retained with full source/flag/package-semantic reconciliation for H; they are not relabelled new H builds. Normal H providers and source-matched tools, fresh exact145/SDK native/browser, coherent packages and soleSTANDARD90 remain required. No extra ordinary rebuild solely for this one-line Vulkan-only host recipe."
   },
   "drift_guard": {
     "schema": 1,
@@ -61371,7 +61380,7 @@
       },
       {
         "path": "Repositories/SDK/Profiles/Components.json",
-        "sha256": "8c9f71502e17e83c7de857a2be9cdd05c2570da448cd9245285d7e26dd87d980"
+        "sha256": "7294935c64137735bf9c53f5abdb735c3913bf9cdc66e9fb91535bcd05b1e4a1"
       },
       {
         "path": "Repositories/SDK/Profiles/Tools.json",
@@ -63127,7 +63136,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "29628259c7ca10d5d7d9adf4dc56049490bd707acf5fdc4b483d2759d7b20fed"
+        "sha256": "8a6d304de4e0ba5000d03c9a1544512373184db14e0d1233ad65c12b8adf5ae7"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -67079,6 +67088,16 @@
       "historical_snapshot_retained": true,
       "prepared_only": true,
       "scope": "SDK218 epochF changes only the exact clean Library64 source selection/package metadata and this reviewed receipt. Library64 changes only NAK C/Rust filename prefix maps; no SDK implementation, template, generator, ABI, policy or frozen Recovery source changed. Actual development NAK13 build and original owner ABI test passed. Final matched normal tools/export, native caches, 145 bodies and exact-current compiler/graphics qualification remain separate. Final artifact/version decisions compare closed89; none of the private90 epochs were published."
+    },
+    {
+      "performed_in": "0.90.90",
+      "sdk": "0.64.218",
+      "contract": "0.64.95",
+      "libraries": "0.64.64",
+      "evidence": "explicit_vulkan_nak_workspace_09090",
+      "historical_snapshot_retained": true,
+      "prepared_only": true,
+      "scope": "SDK218 epochG changes only exact clean Library64 source/package metadata and its reviewed receipt. Library64 fixes the actual standalone Vulkan/NAK compiler constructor workspace binding, proved by before1/after0 unchanged invocation. No SDK implementation/template/generator/policy or frozen Recovery source changed. All9 matched tools/export and12+132 normal builds will use exact G; whole145/version-law, current graphics/compiler native/browser and soleSTANDARD90 remain required."
     }
   ],
   "source_inventory_scope": "Historical declaration census retained at its explicit row epochs. Current reviewed source identities are drift_guard.files; counts and names do not qualify implementations.",
