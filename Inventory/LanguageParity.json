@@ -51514,7 +51514,7 @@
       },
       {
         "path": "Repositories/SDK/Profiles/Components.json",
-        "sha256": "9b0b8bf09e4860617e75b9cbeb91409fa96538150ae360ed68426509fd3a2132"
+        "sha256": "8c9f71502e17e83c7de857a2be9cdd05c2570da448cd9245285d7e26dd87d980"
       },
       {
         "path": "Repositories/SDK/r4os/rust_module_profile.json",
@@ -59379,6 +59379,15 @@
       "libraries": "0.64.64",
       "report": "Docs/API/ConsumerMigration.txt",
       "scope": "SDK218 epochF changes only the exact clean Library64 source selection/package metadata and this reviewed receipt. Library64 changes only NAK C/Rust filename prefix maps; no SDK implementation, template, generator, ABI, policy or frozen Recovery source changed. Actual development NAK13 build and original owner ABI test passed. Final matched normal tools/export, native caches, 145 bodies and exact-current compiler/graphics qualification remain separate. Final artifact/version decisions compare closed89; none of the private90 epochs were published."
+    },
+    "explicit_vulkan_nak_workspace_09090": {
+      "complete": true,
+      "performed_in": "0.90.90",
+      "sdk": "0.64.218",
+      "contract": "0.64.95",
+      "libraries": "0.64.64",
+      "report": "Docs/API/ConsumerMigration.txt",
+      "scope": "SDK218 epochG changes only exact clean Library64 source/package metadata and its reviewed receipt. Library64 fixes the actual standalone Vulkan/NAK compiler constructor workspace binding, proved by before1/after0 unchanged invocation. No SDK implementation/template/generator/policy or frozen Recovery source changed. All9 matched tools/export and12+132 normal builds will use exact G; whole145/version-law, current graphics/compiler native/browser and soleSTANDARD90 remain required."
     }
   },
   "wave_bindings": [
@@ -59635,10 +59644,10 @@
     "sdk": "0.64.218",
     "contract": "0.64.95",
     "libraries": "0.64.64",
-    "evidence": "normalized_nak_build_source_09090",
+    "evidence": "explicit_vulkan_nak_workspace_09090",
     "historical_snapshot_retained": true,
     "prepared_only": true,
-    "scope": "SDK218 epochF changes only the exact clean Library64 source selection/package metadata and this reviewed receipt. Library64 changes only NAK C/Rust filename prefix maps; no SDK implementation, template, generator, ABI, policy or frozen Recovery source changed. Actual development NAK13 build and original owner ABI test passed. Final matched normal tools/export, native caches, 145 bodies and exact-current compiler/graphics qualification remain separate. Final artifact/version decisions compare closed89; none of the private90 epochs were published."
+    "scope": "SDK218 epochG changes only exact clean Library64 source/package metadata and its reviewed receipt. Library64 fixes the actual standalone Vulkan/NAK compiler constructor workspace binding, proved by before1/after0 unchanged invocation. No SDK implementation/template/generator/policy or frozen Recovery source changed. All9 matched tools/export and12+132 normal builds will use exact G; whole145/version-law, current graphics/compiler native/browser and soleSTANDARD90 remain required."
   },
   "drift_guard": {
     "schema": 1,
@@ -61362,7 +61371,7 @@
       },
       {
         "path": "Repositories/SDK/Profiles/Components.json",
-        "sha256": "9b0b8bf09e4860617e75b9cbeb91409fa96538150ae360ed68426509fd3a2132"
+        "sha256": "8c9f71502e17e83c7de857a2be9cdd05c2570da448cd9245285d7e26dd87d980"
       },
       {
         "path": "Repositories/SDK/Profiles/Tools.json",
@@ -63118,7 +63127,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "9aaab90be9fdb734db60ee0b7d2ca0be7feed8fbbb9c3abb93ec110b4b69e957"
+        "sha256": "29628259c7ca10d5d7d9adf4dc56049490bd707acf5fdc4b483d2759d7b20fed"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -67060,6 +67069,16 @@
       "historical_snapshot_retained": true,
       "prepared_only": true,
       "scope": "Six manual Contract documents now consistently describe current Query2/Start2 and the independent unchanged32-byte Library interface header. Normal SDK218 epochE changes only exact Contract source selection/package metadata and this parity receipt. Every SDK implementation, generator, template, build policy and frozen Recovery supplier selection is byte-identical to qualified epochD. Frozen Recovery retains the exact earlier documented Contract source snapshot; original runtime/ABI95 is unchanged. Final normal whole bodies must be checked against the already qualified native/browser bodies before their proofs are reused. No additional runtime or benchmark acceptance is inferred here."
+    },
+    {
+      "performed_in": "0.90.90",
+      "sdk": "0.64.218",
+      "contract": "0.64.95",
+      "libraries": "0.64.64",
+      "evidence": "normalized_nak_build_source_09090",
+      "historical_snapshot_retained": true,
+      "prepared_only": true,
+      "scope": "SDK218 epochF changes only the exact clean Library64 source selection/package metadata and this reviewed receipt. Library64 changes only NAK C/Rust filename prefix maps; no SDK implementation, template, generator, ABI, policy or frozen Recovery source changed. Actual development NAK13 build and original owner ABI test passed. Final matched normal tools/export, native caches, 145 bodies and exact-current compiler/graphics qualification remain separate. Final artifact/version decisions compare closed89; none of the private90 epochs were published."
     }
   ],
   "source_inventory_scope": "Historical declaration census retained at its explicit row epochs. Current reviewed source identities are drift_guard.files; counts and names do not qualify implementations.",
