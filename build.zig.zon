@@ -12,8 +12,8 @@
         // Bootstrap projection of Profiles/Components.json. The host starters map the actual
         // checkout from Settings.R4S and provide it as a local Zig fork.
         .r4os_contract = .{
-            .url = "https://github.com/R4OSDev/r4os-contract/archive/0f93f6ca116ca920ada8cf23fbb79545cfce063e.tar.gz",
-            .hash = "r4os_contract-0.64.95-ELhbYVq0cgEor7-mlk1ijxAPGzAGjbQoCSCOHZrdLUEa",
+            .url = "https://github.com/R4OSDev/r4os-contract/archive/a4acae607f5ad64b4a1ab71da03a3e66d10f7034.tar.gz",
+            .hash = "r4os_contract-0.64.95-ELhbYZS5cgEwnkGnTHqEg8HZ78sIQmtiAY-WCoDQMiFR",
         },
     },
     .paths = .{
