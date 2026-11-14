@@ -29,7 +29,9 @@ impl<'a> Protocol<'a> {
         unsafe { (self.api.raw().log_error)(text.as_ptr().cast()) }
     }
     pub fn register(&self, role: &CStr, category: abi::ProtocolCategory, flags: u32) -> i32 {
-        unsafe { (self.api.raw().register_role)(role.as_ptr().cast(), u32::from(category.0), flags) }
+        unsafe {
+            (self.api.raw().register_role)(role.as_ptr().cast(), u32::from(category.0), flags)
+        }
     }
     pub fn set_status(&self, state: abi::ProtocolState, note: &CStr) -> i32 {
         unsafe { (self.api.raw().set_status)(state.0, note.as_ptr().cast()) }
@@ -56,7 +58,8 @@ impl<'a> Protocol<'a> {
         if bytes == 0 || !alignment.is_power_of_two() {
             return Err(-1);
         }
-        let pointer = NonNull::new(unsafe { (self.api.raw().alloc)(bytes, alignment) }).ok_or(-1)?;
+        let pointer =
+            NonNull::new(unsafe { (self.api.raw().alloc)(bytes, alignment) }).ok_or(-1)?;
         Ok(Allocation {
             owner: self,
             pointer: Some(pointer),

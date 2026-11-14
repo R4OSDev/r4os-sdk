@@ -210,7 +210,7 @@ pub const Manifest = struct {
     resources: []const ResourceEntry = &.{},
     /// Optional build-owned platform selection; existing field offsets stay fixed.
     sdk_profile: ?[]const u8 = null,
-    platform_generation: u8 = 1,
+    platform_generation: u8 = 2,
 };
 
 pub const Plan = struct {
@@ -220,9 +220,9 @@ pub const Plan = struct {
     app_profile: []const u8,
     app_class: []const u8,
     optimization: []const u8,
-    export_contract: []const u8 = "R4XStart:R4XStart:1",
+    export_contract: []const u8 = "R4XStart2:R4XStart2:2",
     module_contract: []const u8 = "R4M0:1",
-    r4x_start_abi: []const u8 = "R4XStart:1",
+    r4x_start_abi: []const u8 = "R4XStart2:2",
     imports: []const []const u8,
     metadata: []const []const u8,
 };
@@ -637,15 +637,15 @@ fn validateExports(exports: []const ExportEntry) !void {
 }
 
 fn validateRuntimeR4LExports(exports: []const ExportEntry, generation: u8) !void {
+    if (generation != 2) return error.UnsupportedSdkPlatform;
     var has_query = false;
     var interface_count: usize = 0;
     for (exports) |entry| {
         if (std.ascii.eqlIgnoreCase(entry.name, "Query")) {
-            if (entry.revision != 1) return error.InvalidR4LQueryExport;
-            has_query = has_query or generation == 1;
+            return error.InvalidR4LQueryExport;
         } else if (std.ascii.eqlIgnoreCase(entry.name, "Query2")) {
             if (entry.revision != 2) return error.InvalidR4LQueryExport;
-            has_query = has_query or generation == 2;
+            has_query = true;
         } else {
             interface_count += 1;
         }
@@ -1064,16 +1064,17 @@ fn platformGeneration(kind: Kind, language: Language, entry: []const u8, selecti
         if (!std.mem.eql(u8, profile.id, id)) continue;
         if (!std.mem.eql(u8, profile.language, language.text()) or !std.mem.eql(u8, profile.role, "module") or (profile.kind.len != 0 and !std.mem.eql(u8, profile.kind, kind.text()))) return error.SdkProfileRoleMismatch;
         if (selection != null and !profile.explicit_platform) return error.ExplicitPlatformProfileRequired;
-        if (profile.generation != 1 and profile.generation != 2) return error.UnsupportedSdkPlatform;
+        if (profile.generation != 2) return error.UnsupportedSdkPlatform;
         return profile.generation;
     }
     return error.UnknownSdkProfile;
 }
 
 fn validateR4XImport(value: []const u8) !void {
-    return validateR4XImportGeneration(value, 1);
+    return validateR4XImportGeneration(value, 2);
 }
 fn validateR4XImportGeneration(value: []const u8, generation: u8) !void {
+    if (generation != 2) return error.UnsupportedSdkPlatform;
     var parts = std.mem.splitScalar(u8, value, ':');
     const group = parts.next() orelse return error.InvalidImport;
     const symbol = parts.next() orelse return error.InvalidImport;
@@ -1082,11 +1083,11 @@ fn validateR4XImportGeneration(value: []const u8, generation: u8) !void {
     if (parts.next() != null) return error.InvalidImport;
 
     // Nur die sechs kernelimplementierten Plattformgruppen besitzen den
-    // festen Query:1-Vertrag. Alle anderen R4Ls werden direkt ueber ihren
+    // festen Query2:2-Vertrag. Alle anderen R4Ls werden direkt ueber ihren
     // Modul- und Exportnamen importiert; dafuer ist keine zentrale
     // R4LGroup-Konstante erforderlich.
-    const query = if (generation == 2) "Query2" else "Query";
-    const revision = if (generation == 2) "2" else "1";
+    const query = "Query2";
+    const revision = "2";
     if ((isPlatformGroup(group) or std.mem.eql(u8, symbol, "Query") or std.mem.eql(u8, symbol, "Query2")) and (!std.mem.eql(u8, symbol, query) or !std.mem.eql(u8, major, revision))) {
         return error.InvalidImport;
     }
@@ -1181,6 +1182,7 @@ pub fn moduleVersionMeta(allocator: std.mem.Allocator, manifest: Manifest) ![]co
 /// Diese Funktion wird sowohl vom semantischen Plan als auch vom wirklichen
 /// Packagerpfad benutzt, damit der Container keine zweite Rollenwahrheit hat.
 pub fn r4xManifestMetadata(allocator: std.mem.Allocator, manifest: Manifest) ![]const []const u8 {
+    if (manifest.platform_generation != 2) return error.UnsupportedSdkPlatform;
     if (manifest.version != manifest_version or manifest.kind != .r4x) return error.CurrentManifestRequired;
     if (manifest.module_role == null) return manifest.metadata;
 
@@ -1204,18 +1206,17 @@ pub fn r4xManifestMetadata(allocator: std.mem.Allocator, manifest: Manifest) ![]
 /// The SDK admission profile differs from the historical native build-profile
 /// display name. Defaults are generated only from Profiles/Build.json.
 pub fn sdkBuildProfile(manifest: Manifest) ![]const u8 {
-    return selectedSdkProfile(manifest.kind, manifest.language orelse return error.MissingLanguage,
-        if (manifest.entry_mode) |mode| mode.text() else "", manifest.sdk_profile);
+    return selectedSdkProfile(manifest.kind, manifest.language orelse return error.MissingLanguage, if (manifest.entry_mode) |mode| mode.text() else "", manifest.sdk_profile);
 }
 
 /// Canonical role exports for tooling and container generation. Runtime R4Ls
 /// preserve their own explicitly declared interface revisions.
 pub fn moduleExports(allocator: std.mem.Allocator, manifest: Manifest) ![]const []const u8 {
-    const next = manifest.platform_generation == 2;
+    if (manifest.platform_generation != 2) return error.UnsupportedSdkPlatform;
     return switch (manifest.kind) {
-        .r4x => if (next) &.{"R4XStart2:@R4XStart2:2"} else &.{"R4XStart:@R4XStart:1"},
-        .r4d => if (next) &.{ "DriverInit2:@DriverInit2:2", "DriverShutdown:@DriverShutdown:1" } else &.{ "DriverInit:@r4d_init_entry:1", "DriverShutdown:@r4d_shutdown_entry:1" },
-        .r4p => if (next) &.{ "ProtocolInit2:@ProtocolInit2:2", "ProtocolShutdown:@ProtocolShutdown:1", "ProtocolQuery:@ProtocolQuery:1", "ProtocolDispatch:@ProtocolDispatch:1", "ProtocolRole:@ProtocolInit2:1" } else &.{ "ProtocolInit:@r4p_init_entry:1", "ProtocolShutdown:@r4p_shutdown_entry:1", "ProtocolQuery:@r4p_query_entry:1", "ProtocolDispatch:@r4p_dispatch_entry:1", "ProtocolRole:@r4p_init_entry:1" },
+        .r4x => &.{"R4XStart2:@R4XStart2:2"},
+        .r4d => &.{ "DriverInit2:@DriverInit2:2", "DriverShutdown:@DriverShutdown:1" },
+        .r4p => &.{ "ProtocolInit2:@ProtocolInit2:2", "ProtocolShutdown:@ProtocolShutdown:1", "ProtocolQuery:@ProtocolQuery:1", "ProtocolDispatch:@ProtocolDispatch:1", "ProtocolRole:@ProtocolInit2:1" },
         .r4l => block: {
             var exports: std.ArrayList([]const u8) = .empty;
             for (manifest.exports) |value| try exports.append(allocator, try std.fmt.allocPrint(allocator, "{s}:@{s}:{d}", .{ value.name, value.symbol, value.revision }));
@@ -1225,28 +1226,18 @@ pub fn moduleExports(allocator: std.mem.Allocator, manifest: Manifest) ![]const 
 }
 
 pub fn derivePlan(allocator: std.mem.Allocator, manifest: Manifest) !Plan {
+    if (manifest.platform_generation != 2) return error.UnsupportedSdkPlatform;
     if (manifest.version != manifest_version or manifest.kind != .r4x) return error.CurrentManifestRequired;
-    const language = manifest.language orelse return error.MissingLanguage;
+    _ = manifest.language orelse return error.MissingLanguage;
     const app_class = manifest.app_class orelse return error.MissingAppClass;
     const profile = profileMeta(app_class) orelse return error.ProfileSourceDrift;
     const source_project = pathProject(manifest.path) orelse ".";
     const artifact = try std.fmt.allocPrint(allocator, "Code/zig-out/{s}.R4X", .{manifest.name});
-    const profile_suffix = switch (app_class) {
-        .console => "Console",
-        .gui => "Desktop",
-        .service => "Service",
-    };
-    const entry_mode = manifest.entry_mode orelse return error.MissingEntryMode;
-    const build_profile = try std.fmt.allocPrint(allocator, "R4X_{s}_{s}_{s}", .{ language.text(), if (entry_mode == .app) "App" else "LowLevel", profile_suffix });
-
     var metadata: std.ArrayList([]const u8) = .empty;
     try metadata.append(allocator, try std.fmt.allocPrint(allocator, "r4x.name={s}", .{manifest.name}));
     try metadata.append(allocator, try std.fmt.allocPrint(allocator, "r4x.class={s}", .{app_class.text()}));
     try metadata.append(allocator, try moduleVersionMeta(allocator, manifest));
-    try metadata.appendSlice(allocator, if (manifest.platform_generation == 2)
-        &.{ "feature=program-module", "r4x.start=r4xstart2", "r4x.entry=R4XStart2", "r4x.start_abi=2", "r4x.context=R4XStartContext2" }
-    else
-        &.{ "feature=program-module", "r4x.start=r4xstart", "r4x.entry=R4XStart", "r4x.start_abi=1", "r4x.context=R4XStartContext" });
+    try metadata.appendSlice(allocator, &.{ "feature=program-module", "r4x.start=r4xstart2", "r4x.entry=R4XStart2", "r4x.start_abi=2", "r4x.context=R4XStartContext2" });
     var has_memory_profile = false;
     for (manifest.metadata) |entry| {
         if (std.mem.startsWith(u8, entry, "memory.profile=")) has_memory_profile = true;
@@ -1264,9 +1255,9 @@ pub fn derivePlan(allocator: std.mem.Allocator, manifest: Manifest) !Plan {
     return .{
         .source_project = source_project,
         .artifact = artifact,
-        .build_profile = if (manifest.platform_generation == 2) try sdkBuildProfile(manifest) else manifest.sdk_profile orelse build_profile,
-        .export_contract = if (manifest.platform_generation == 2) "R4XStart2:R4XStart2:2" else "R4XStart:R4XStart:1",
-        .r4x_start_abi = if (manifest.platform_generation == 2) "R4XStart2:2" else "R4XStart:1",
+        .build_profile = try sdkBuildProfile(manifest),
+        .export_contract = "R4XStart2:R4XStart2:2",
+        .r4x_start_abi = "R4XStart2:2",
         .app_profile = profile.name,
         .app_class = app_class.text(),
         .optimization = manifest.optimization.?.text(),
@@ -1276,44 +1267,8 @@ pub fn derivePlan(allocator: std.mem.Allocator, manifest: Manifest) !Plan {
 }
 
 pub fn buildProfileName(language: Language, entry_mode: EntryMode, app_class: AppClass) []const u8 {
-    return switch (language) {
-        .rust => switch (entry_mode) {
-            .app => switch (app_class) {
-                .console => "R4X_Rust_App_Console",
-                .gui => "R4X_Rust_App_Desktop",
-                .service => "R4X_Rust_App_Service",
-            },
-            .lowlevel => switch (app_class) {
-                .console => "R4X_Rust_LowLevel_Console",
-                .gui => "R4X_Rust_LowLevel_Desktop",
-                .service => "R4X_Rust_LowLevel_Service",
-            },
-        },
-        .zig => switch (entry_mode) {
-            .app => switch (app_class) {
-                .console => "R4X_Zig_App_Console",
-                .gui => "R4X_Zig_App_Desktop",
-                .service => "R4X_Zig_App_Service",
-            },
-            .lowlevel => switch (app_class) {
-                .console => "R4X_Zig_LowLevel_Console",
-                .gui => "R4X_Zig_LowLevel_Desktop",
-                .service => "R4X_Zig_LowLevel_Service",
-            },
-        },
-        .c => switch (entry_mode) {
-            .app => switch (app_class) {
-                .console => "R4X_C_App_Console",
-                .gui => "R4X_C_App_Desktop",
-                .service => "R4X_C_App_Service",
-            },
-            .lowlevel => switch (app_class) {
-                .console => "R4X_C_LowLevel_Console",
-                .gui => "R4X_C_LowLevel_Desktop",
-                .service => "R4X_C_LowLevel_Service",
-            },
-        },
-    };
+    _ = app_class;
+    return selectedSdkProfile(.r4x, language, entry_mode.text(), null) catch unreachable;
 }
 
 pub fn appProfileName(app_class: AppClass) []const u8 {
@@ -1328,12 +1283,13 @@ pub fn appProfileName(app_class: AppClass) []const u8 {
 /// catalog and inside-R4OS tools. Artifact locations are deliberately absent:
 /// the host aggregate and R4BUILD install into different build directories.
 pub fn renderContractPlan(manifest: Manifest, out: []u8) RenderResult {
+    if (manifest.platform_generation != 2) return .{ .bytes = out[0..0], .ok = false };
     if (manifest.version != manifest_version or manifest.kind != .r4x) return .{ .bytes = out[0..0], .ok = false };
     const language = manifest.language orelse return .{ .bytes = out[0..0], .ok = false };
     const entry_mode = manifest.entry_mode orelse return .{ .bytes = out[0..0], .ok = false };
     const app_class = manifest.app_class orelse return .{ .bytes = out[0..0], .ok = false };
     const image_scope = manifest.image_scope orelse return .{ .bytes = out[0..0], .ok = false };
-    const build_profile = if (manifest.platform_generation == 2) (sdkBuildProfile(manifest) catch return .{ .bytes = out[0..0], .ok = false }) else manifest.sdk_profile orelse buildProfileName(language, entry_mode, app_class);
+    const build_profile = sdkBuildProfile(manifest) catch return .{ .bytes = out[0..0], .ok = false };
 
     var len: usize = 0;
     if (!appendPlanLine(out, &len, "R4MF_PLAN", "1") or
@@ -2098,7 +2054,7 @@ test "runtime R4L owns symbolic exports contract and language bindings" {
     try std.testing.expectError(error.MissingR4LImplementationZig, parse(allocator, "Vendor/Zig/module.R4MF", no_zig_implementation));
     const parsed = try parse(allocator, "Vendor/Library/module.R4MF", base);
     const old_query_only = try std.mem.replaceOwned(u8, allocator, base, "EXPORT=Query2:acme_query:2", "EXPORT=Query:acme_query:1");
-    try std.testing.expectError(error.MissingR4LQueryExport, parse(allocator, "Vendor/Library/module.R4MF", old_query_only));
+    try std.testing.expectError(error.InvalidR4LQueryExport, parse(allocator, "Vendor/Library/module.R4MF", old_query_only));
     const old_import = base ++ "\nIMPORT=R4SYS:Query:1\n";
     try std.testing.expectError(error.InvalidImport, parse(allocator, "Vendor/Library/module.R4MF", old_import));
     try std.testing.expectEqual(Kind.r4l, parsed.kind);

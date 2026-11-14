@@ -135,17 +135,7 @@ pub struct Data<'s, 'a> {
 }
 impl<'s, 'a> Data<'s, 'a> {
     pub fn open(storage: Pin<&'s mut DataStorage>, app: &'a App<'_>) -> Result<Self> {
-        // Capture once before native subcontexts acquire self-pointers.
-        let native = unsafe { storage.get_unchecked_mut() }.native.as_mut_ptr();
-        if scalar(unsafe { c::R4SdkData_open(0, native, app.start_context()) })? != 1 {
-            return Err(Error::Unavailable);
-        }
-        Ok(Self {
-            native,
-            _storage: PhantomData,
-            _app: PhantomData,
-            _local: PhantomData,
-        })
+        Self::open2(storage, app)
     }
     pub fn open2(storage: Pin<&'s mut DataStorage>, app: &'a App2<'_>) -> Result<Self> {
         // Capture once before native subcontexts acquire self-pointers.

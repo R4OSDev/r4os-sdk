@@ -244,18 +244,7 @@ impl<'s, 'a> Transport<'s, 'a> {
         storage: &'s mut MaybeUninit<c::R4SdkTransportContext>,
         app: &'a App<'_>,
     ) -> Result<Self> {
-        let v = required(unsafe {
-            c::R4SdkTransport_open(0, storage.as_mut_ptr(), app.start_context())
-        })?;
-        if v.bits == 0 {
-            return Err(Error::Unavailable);
-        }
-        Ok(Self {
-            native: storage.as_mut_ptr(),
-            _storage: PhantomData,
-            _app: PhantomData,
-            _local: PhantomData,
-        })
+        Self::open2(storage, app)
     }
     pub fn open2(
         storage: &'s mut MaybeUninit<c::R4SdkTransportContext>,

@@ -1,7 +1,7 @@
 extern crate alloc;
 use super::{
-    App, App2, Error, MaybeUninit, PhantomData, Request, Response, Result, SCRATCH_BYTES, Timeout, c,
-    options, required, response, result,
+    App, App2, Error, MaybeUninit, PhantomData, Request, Response, Result, SCRATCH_BYTES, Timeout,
+    c, options, required, response, result,
 };
 use alloc::{boxed::Box, vec, vec::Vec};
 /// Owns every address retained by the native worker. Even forgetting this
@@ -28,16 +28,7 @@ impl Job {
         body_capacity: usize,
         timeout: Timeout,
     ) -> Result<Self> {
-        let mut context = Box::<c::R4SdkTransportContext>::new_uninit();
-        if required(unsafe {
-            c::R4SdkTransport_open(0, context.as_mut_ptr(), app.start_context())
-        })?
-        .bits
-            == 0
-        {
-            return Err(Error::Unavailable);
-        }
-        Self::start(context, url, raw_capacity, body_capacity, timeout)
+        Self::get2(app, url, raw_capacity, body_capacity, timeout)
     }
     pub fn get2(
         app: &App2<'_>,
@@ -49,7 +40,10 @@ impl Job {
         let mut context = Box::<c::R4SdkTransportContext>::new_uninit();
         if required(unsafe {
             c::R4SdkTransport_open2(0, context.as_mut_ptr(), app.start_context())
-        })?.bits == 0 {
+        })?
+        .bits
+            == 0
+        {
             return Err(Error::Unavailable);
         }
         Self::start(context, url, raw_capacity, body_capacity, timeout)

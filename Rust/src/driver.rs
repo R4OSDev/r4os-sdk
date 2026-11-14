@@ -37,7 +37,8 @@ impl<'a> Driver<'a> {
         let (magic, version, size) = unsafe { ((*api).magic, (*api).version, (*api).size) };
         if magic != abi::driver_api2_magic
             || version < abi::driver_api2_version
-            || (size as usize) < core::mem::offset_of!(abi::DriverApi2, register_audio_capture_backend)
+            || (size as usize)
+                < core::mem::offset_of!(abi::DriverApi2, register_audio_capture_backend)
             || unsafe { (*api).reserved } != 0
         {
             return Err(-1);
@@ -62,7 +63,8 @@ impl<'a> Driver<'a> {
         &self,
     ) -> core::result::Result<crate::time::checked::ClockSample, crate::time::checked::Error> {
         let mut info = abi::MonotonicClockInfo::default();
-        let result = code(unsafe { c::R4SdkDriver2Context_monotonicClock(0, &self.raw, &mut info) });
+        let result =
+            code(unsafe { c::R4SdkDriver2Context_monotonicClock(0, &self.raw, &mut info) });
         if !matches!(result, Ok(n) if n > 0) {
             return Err(crate::time::checked::Error::ClockUnavailable);
         }
@@ -218,7 +220,9 @@ impl Work<'_> {
         {
             return Err(abi::driver_work_owner_busy);
         }
-        code(unsafe { c::R4SdkDriver2Context_completionRelease(0, &self.driver.raw, self.handle) })?;
+        code(unsafe {
+            c::R4SdkDriver2Context_completionRelease(0, &self.driver.raw, self.handle)
+        })?;
         self.handle = 0;
         Ok(())
     }

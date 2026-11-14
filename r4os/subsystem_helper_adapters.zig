@@ -62,16 +62,7 @@ pub fn persistenceConfiguration(table: *const cb.Table, root: []const u8, direct
     return result;
 }
 /// Initialize at the final address; hosts, streams and stores borrow this bundle.
-pub const Context = struct { bundle: p.Bundle, sys: @import("r4sys.zig").Context, desk: @import("r4desk.zig").Context, draw: @import("r4draw.zig").Context, audio: @import("r4audio.zig").Context , context2: ?@import("platform2.zig").Context = null, memory2: @import("allocator_source.zig").Memory = undefined };
-pub fn open(out: *Context, raw: *const a.R4XStartContext) bool {
-    out.context2 = null;
-    out.bundle = p.bundleValueFromR4XStart(raw) orelse return false;
-    out.sys = .init(&out.bundle);
-    out.desk = .init(&out.bundle);
-    out.draw = .init(&out.bundle);
-    out.audio = .init(&out.bundle);
-    return true;
-}
+pub const Context = struct { sys: @import("r4sys.zig").Context, desk: @import("r4desk.zig").Context, draw: @import("r4draw.zig").Context, audio: @import("r4audio.zig").Context, context2: ?@import("platform2.zig").Context = null, memory2: @import("allocator_source.zig").Memory = undefined };
 pub fn guiHost(out: *video.Host, ctx: *const Context, surface: video.Surface, scratch: []u32) video.Error!void {
     out.* = try video.Host.init(ctx.desk, ctx.draw, surface, scratch);
 }

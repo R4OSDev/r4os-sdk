@@ -200,7 +200,7 @@ try{
     $cargo=Join-Path $description.toolchain ('bin/cargo'+$(if($IsWindows){'.exe'}else{''}))
     $targetDir=Join-Path $CacheRoot ('Projects/'+[Convert]::ToHexString([Security.Cryptography.SHA256]::HashData([Text.Encoding]::UTF8.GetBytes($ProjectRoot+'|'+$description.toolset_manifest_sha256))).ToLowerInvariant())
     $cpuPath=Join-Path $ContractRoot 'Module/CpuBaseline.json'
-    $cpu=$sdkProfiles.Build.cpu_baselines[$sdkProfiles.Build.profiles['r4os-zig-module-v1'].cpu]
+    $cpu=$sdkProfiles.Build.cpu_baselines[$sdkProfiles.Build.profiles['r4os-zig-generation2'].cpu]
     if((Hash $cpuPath) -cne $rustToolProfile.runtime.heap.cpu_baseline_sha256){throw 'HeapRuntimeCpuContractMismatch'}
     foreach($name in @('facades','storage')){if((Hash $cpuPath) -cne $rustToolProfile.runtime[$name].cpu_baseline_sha256){throw ('SdkRuntimeCpuContractMismatch: '+$name)}}
     if($cpu.format -ne 1 -or $cpu.xcr0_mask -ne 7){throw 'Unsupported CPU baseline'}

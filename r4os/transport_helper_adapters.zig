@@ -8,13 +8,7 @@ const jobs = @import("app_web_jobs.zig");
 const runtime_jobs = @import("web_runtime_jobs.zig");
 const cb = @import("web_callback_bridge.zig");
 pub const Error = error{MissingCallback};
-pub const Context = struct { bundle: program.Bundle, transport: web.WebTransport , context2: ?@import("platform2.zig").Context = null, memory2: @import("allocator_source.zig").Memory = undefined };
-pub fn open(output: *Context, raw: *const a.R4XStartContext) bool {
-    output.context2 = null;
-    output.bundle = program.bundleValueFromR4XStart(raw) orelse return false;
-    output.transport = .{ .network = .{ .sys = .init(&output.bundle), .net = .init(&output.bundle) }, .dev = .init(&output.bundle) };
-    return true;
-}
+pub const Context = struct { transport: web.WebTransport, context2: ?@import("platform2.zig").Context = null, memory2: @import("allocator_source.zig").Memory = undefined };
 pub fn transport(self: *Context) *web.WebTransport {
     return &self.transport;
 }

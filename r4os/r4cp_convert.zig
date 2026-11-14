@@ -22,10 +22,10 @@ pub const Result = struct {
 /// contract. The caller owns persistence and must never replace the source.
 pub fn render(project: legacy.Project, out: []u8) Result {
     if (project.module_kind != .r4x) return failed(out, .unsupported_module_kind);
-    const entry_mode: []const u8 = if (equalsIgnoreCase(project.build_profile, "R4X_C_Console") or
-        equalsIgnoreCase(project.build_profile, "R4X_C_Desktop_OK"))
+    const entry_mode: []const u8 = if ((equalsIgnoreCase(project.build_profile, "R4X_C_Console") or equalsIgnoreCase(project.build_profile, "R4X_C2_Console")) or
+        (equalsIgnoreCase(project.build_profile, "R4X_C_Desktop_OK") or equalsIgnoreCase(project.build_profile, "R4X_C2_Desktop_OK")))
         "app"
-    else if (equalsIgnoreCase(project.build_profile, "R4X_C") or equalsIgnoreCase(project.build_profile, "R4X_Zig"))
+    else if ((equalsIgnoreCase(project.build_profile, "R4X_C") or equalsIgnoreCase(project.build_profile, "R4X_C2")) or equalsIgnoreCase(project.build_profile, "R4X_Zig"))
         "lowlevel"
     else
         return failed(out, .unsupported_profile);

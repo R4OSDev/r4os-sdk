@@ -3,15 +3,8 @@ const std = @import("std");
 const a = @import("r4os_contract").abi;
 const p = @import("program.zig");
 const owners = @import("data_helper_owners.zig");
-pub const Context = struct { bundle: p.Bundle, dev: @import("r4dev.zig").Context, system: @import("r4sys.zig").Context , context2: ?@import("platform2.zig").Context = null, memory2: @import("allocator_source.zig").Memory = undefined };
+pub const Context = struct { dev: @import("r4dev.zig").Context, system: @import("r4sys.zig").Context, context2: ?@import("platform2.zig").Context = null, memory2: @import("allocator_source.zig").Memory = undefined };
 /// Initialize at its final address; all derived protocol views borrow it.
-pub fn open(output: *Context, raw: *const a.R4XStartContext) bool {
-    output.context2 = null;
-    output.bundle = p.bundleValueFromR4XStart(raw) orelse return false;
-    output.dev = .init(&output.bundle);
-    output.system = .init(&output.bundle);
-    return true;
-}
 pub fn json(output: *owners.json.Document, ctx: *const Context, bytes: []const u8, depth: []u8) void {
     output.* = .init(&ctx.dev, bytes, depth);
 }

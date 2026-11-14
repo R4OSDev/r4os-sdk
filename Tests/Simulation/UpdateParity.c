@@ -99,7 +99,7 @@ int sdk_update_archive_case(void){
     uint8_t target[128];
     R4SdkUpdateSlot observed=R4SdkUpdateNative_r4u_manifest_canonicalInventoryTarget(0,target,sizeof(target),B("d:\\Apps\\Gr\xc3\xbc\xc3\x9f" "e\\APP.R4X"));
     CHECK(!observed.status&&(observed.flags&1)&&observed.length==sizeof("D:/Apps/Gr\xc3\xbc\xc3\x9f" "e/APP.R4X")-1&&eq(observed.ptr,"D:/Apps/Gr\xc3\xbc\xc3\x9f" "e/APP.R4X",observed.length));
-    R4XStartR4Sys scope_table={.size=offsetof(R4XStartR4Sys,system_update_target_supported),.system_update_target_supported=(uintptr_t)&scope_probe};
+    R4XStartR4Sys2 scope_table={.magic=R4OS2_R4SYS_MAGIC,.abi_version=R4OS2_R4SYS_VERSION,.size=offsetof(R4XStartR4Sys2,system_update_target_supported),.system_update_target_supported=(uintptr_t)&scope_probe};
     R4Sys scope={.table=&scope_table};scope_calls=0;
     CHECK(r4sys_system_update_target_supported(&scope,"D:\\APP.R4X")==R4OS_ERR_NO_FN&&scope_calls==0);
     scope_table.size=sizeof(scope_table);
