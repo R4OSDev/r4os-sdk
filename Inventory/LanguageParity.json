@@ -59216,6 +59216,15 @@
       "libraries": "0.64.62",
       "report": "Docs/API/ConsumerMigration.txt",
       "scope": "Completed isolated source/metadata review only: SDK217 changes Components/ZON/parity metadata, no SDK implementation/ABI/generator code after the original qualified216b code epoch. Library62 removes exactly12 obsolete Query1 descriptor initializers/manifest exports and updates their actual module versions; current Query2 and all functional interfaces/implementations retained, existing R4STD metadata test selects2. All889 watched source bodies reviewed; only the two watched SDK supplier metadata files differ; Library62 package identity is separately checked by the Components whole-tree/build-ZON digests. Original full SDK216 test remains historical code qualification, not a new217 execution. Future exact tools/actual12/132 builds/current native/refusals/Recovery supplier update/soleSTANDARD and final89 acceptance/push remain required. Existing positive legacy host profiles remain visibly assigned90."
+    },
+    "recovery_library62_source_selection_09089": {
+      "complete": true,
+      "performed_in": "0.90.89",
+      "sdk": "0.64.217",
+      "contract": "0.64.95",
+      "libraries": "0.64.62",
+      "report": "Docs/API/ConsumerMigration.txt",
+      "scope": "Completed isolated supplier metadata review: Recovery source snapshots now select exact canonical Library62; frozen SDK210 has only its reviewed Library dependency edge updated, Contract95 unchanged. All three source selections bind clean Recovery preparation commit0a748bb; current runtime39 source builds, admission and native qualification remain pending. All889 watched files reviewed; only Components metadata changed, no SDK implementation/ABI/generator code. This is source review, not a new SDK217 full test or a completed89 acceptance."
     }
   },
   "wave_bindings": [
@@ -59472,10 +59481,10 @@
     "sdk": "0.64.217",
     "contract": "0.64.95",
     "libraries": "0.64.62",
-    "evidence": "technical_query1_retirement_library_metadata_09089",
+    "evidence": "recovery_library62_source_selection_09089",
     "historical_snapshot_retained": true,
     "prepared_only": false,
-    "scope": "Completed isolated source/metadata review only: SDK217 changes Components/ZON/parity metadata, no SDK implementation/ABI/generator code after the original qualified216b code epoch. Library62 removes exactly12 obsolete Query1 descriptor initializers/manifest exports and updates their actual module versions; current Query2 and all functional interfaces/implementations retained, existing R4STD metadata test selects2. All889 watched source bodies reviewed; only the two watched SDK supplier metadata files differ; Library62 package identity is separately checked by the Components whole-tree/build-ZON digests. Original full SDK216 test remains historical code qualification, not a new217 execution. Future exact tools/actual12/132 builds/current native/refusals/Recovery supplier update/soleSTANDARD and final89 acceptance/push remain required. Existing positive legacy host profiles remain visibly assigned90."
+    "scope": "Completed isolated supplier metadata review: Recovery source snapshots now select exact canonical Library62; frozen SDK210 has only its reviewed Library dependency edge updated, Contract95 unchanged. All three source selections bind clean Recovery preparation commit0a748bb; current runtime39 source builds, admission and native qualification remain pending. All889 watched files reviewed; only Components metadata changed, no SDK implementation/ABI/generator code. This is source review, not a new SDK217 full test or a completed89 acceptance."
   },
   "drift_guard": {
     "schema": 1,
@@ -60742,7 +60751,7 @@
       },
       {
         "path": "Repositories/SDK/Profiles/Components.json",
-        "sha256": "70766420e094a301f1fea229e2dc77d53878f324e5da044d5e911d159db85f8c"
+        "sha256": "d80ba0913e31002674f2ff75cd58305115b3fdfcf94e3b774ac9336090405f61"
       },
       {
         "path": "Repositories/SDK/Profiles/Tools.json",
@@ -65716,6 +65725,16 @@
       "historical_snapshot_retained": true,
       "prepared_only": false,
       "scope": "Metadata-only continuation after actual whole12 Library comparison: only changed artifact manifests and package61 identity advanced; SDK Components and own dependency pins select that exact clean source. No Zig/C/Rust/generator/ABI implementation changes after clean19a6 SDK216. Original full SDK216 test remains the actual earlier code qualification; current Profile Validate, final matched tools/objects, all12 Library/final132 owners, real current native and sole STANDARD remain separate. No Windows execution or physical provider claim."
+    },
+    {
+      "performed_in": "0.90.89",
+      "sdk": "0.64.217",
+      "contract": "0.64.95",
+      "libraries": "0.64.62",
+      "evidence": "technical_query1_retirement_library_metadata_09089",
+      "historical_snapshot_retained": true,
+      "prepared_only": false,
+      "scope": "Completed isolated source/metadata review only: SDK217 changes Components/ZON/parity metadata, no SDK implementation/ABI/generator code after the original qualified216b code epoch. Library62 removes exactly12 obsolete Query1 descriptor initializers/manifest exports and updates their actual module versions; current Query2 and all functional interfaces/implementations retained, existing R4STD metadata test selects2. All889 watched source bodies reviewed; only the two watched SDK supplier metadata files differ; Library62 package identity is separately checked by the Components whole-tree/build-ZON digests. Original full SDK216 test remains historical code qualification, not a new217 execution. Future exact tools/actual12/132 builds/current native/refusals/Recovery supplier update/soleSTANDARD and final89 acceptance/push remain required. Existing positive legacy host profiles remain visibly assigned90."
     }
   ]
 }
