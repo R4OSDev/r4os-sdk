@@ -78,13 +78,23 @@ test "technical2 views reject wrong generations and short records without invoki
     driver.size = driver_prefix - 1;
     try std.testing.expect(Driver.init(&driver) == null);
     driver.register_audio_capture_backend = @ptrFromInt(8);
-    for (driver_prefix..@sizeOf(abi.DriverApi2)) |size| {
+    const capture_end = @offsetOf(abi.DriverApi2, "register_audio_capture_backend") + @sizeOf(usize);
+    for (driver_prefix..capture_end) |size| {
         driver.size = @intCast(size);
         const old = Driver.init(&driver) orelse return error.OriginalDriverPrefixRejected;
         try std.testing.expect(old.function("register_audio_capture_backend") == null);
     }
     driver.size = @sizeOf(abi.DriverApi2);
     try std.testing.expect(Driver.init(&driver).?.function("register_audio_capture_backend") != null);
+    driver.audio_output_progress = @ptrFromInt(8);
+    for (capture_end..@sizeOf(abi.DriverApi2)) |size| {
+        driver.size = @intCast(size);
+        const old = Driver.init(&driver) orelse return error.OriginalDriverPrefixRejected;
+        try std.testing.expect(old.function("register_audio_capture_backend") != null);
+        try std.testing.expect(old.function("audio_output_progress") == null);
+    }
+    driver.size = @sizeOf(abi.DriverApi2);
+    try std.testing.expect(Driver.init(&driver).?.function("audio_output_progress") != null);
     var protocol: abi.ProtocolApi2 = undefined;
     protocol.magic = abi.protocol_magic;
     protocol.version = abi.protocol_version;

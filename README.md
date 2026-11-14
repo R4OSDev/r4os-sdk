@@ -3,6 +3,12 @@
 The active compiler/component selection is defined only by `Profiles/`.
 Version-specific notes below describe their dated changes.
 
+SDK 0.64.219 adds DriverContext2.notifyAudioOutputProgress for completed
+audio period work, using Contract 0.64.96. It negotiates the optional
+DriverApi2 tail without reading beyond older tables; absence keeps the core
+fallback. The driver must release its owners before sending this task-context
+hint. No cursor or PCM ownership crosses it.
+
 SDK0.64.181 provides normal generation2 application entry. Select
 ENTRY_MODE=app with r4os-zig-generation2, r4os-c-generation2 or
 r4os-rust-generation2 and Query2:2 imports for platform groups. Zig implements

@@ -40,6 +40,12 @@ pub const Context = struct {
         const bind = self.function("register_audio_output_epoch") orelse return abi.err_no_fn;
         return bind(name, callback);
     }
+    /// Hint after period work releases all driver owners; older tables retain
+    /// the core's finite fallback. No device cursor or PCM is transferred.
+    pub fn notifyAudioOutputProgress(self: *const Context) void {
+        const notify = self.function("audio_output_progress") orelse return;
+        notify();
+    }
     pub fn workSubmitRequest(self: *const Context, request: *const abi.DriverWorkRequest, out: *u32) i32 {
         return self.required("driver_work_submit_request")(request, out);
     }
