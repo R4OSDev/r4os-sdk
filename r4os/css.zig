@@ -657,10 +657,165 @@ const MatchContext = struct {
     }
 };
 
+const selector_bucket_count = 64;
+const rule_words = (max_rules + 63) / 64;
+
+const RuleSet = struct {
+    words: [rule_words]u64 = .{0} ** rule_words,
+
+    fn include(self: *RuleSet, index: usize) void {
+        self.words[index / 64] |= @as(u64, 1) << @as(u6, @intCast(index % 64));
+    }
+
+    fn merge(self: *RuleSet, other: *const RuleSet) void {
+        for (&self.words, other.words) |*word, value| word.* |= value;
+    }
+
+    fn iterator(self: RuleSet) Iterator {
+        return .{ .remaining = self };
+    }
+
+    const Iterator = struct {
+        remaining: RuleSet,
+        word_index: usize = 0,
+
+        fn next(self: *Iterator) ?usize {
+            while (self.word_index < rule_words) {
+                const word = &self.remaining.words[self.word_index];
+                if (word.* == 0) {
+                    self.word_index += 1;
+                    continue;
+                }
+                const bit = @ctz(word.*);
+                word.* &= word.* - 1;
+                return self.word_index * 64 + bit;
+            }
+            return null;
+        }
+    };
+};
+
+const SelectorKey = struct {
+    kind: enum { generic, id, class, tag } = .generic,
+    bucket: u6 = 0,
+};
+
+fn selectorBucket(value: []const u8, fold_case: bool) u6 {
+    var hash: u64 = 0xcbf29ce484222325;
+    for (value) |byte| hash = (hash ^ @as(u64, if (fold_case) toLower(byte) else byte)) *% 0x100000001b3;
+    return @truncate(hash);
+}
+
+fn mandatorySelectorKey(compound: []const u8) SelectorKey {
+    var key = SelectorKey{};
+    var cursor: usize = 0;
+    if (cursor < compound.len and compound[cursor] == '*') {
+        cursor += 1;
+    } else if (cursor < compound.len and isIdentStart(compound[cursor])) {
+        while (cursor < compound.len and isIdentByte(compound[cursor])) : (cursor += 1) {}
+        key = .{ .kind = .tag, .bucket = selectorBucket(compound[0..cursor], true) };
+    }
+    while (cursor < compound.len) {
+        const marker = compound[cursor];
+        cursor += 1;
+        if (marker == '#' or marker == '.') {
+            const start = cursor;
+            scanCssIdentifier(compound, &cursor);
+            const atom = compound[start..cursor];
+            // The ordinary matcher decodes CSS escapes. Such atoms retain a
+            // generic/type fallback instead of hashing their encoded spelling.
+            if (atom.len == 0 or std.mem.indexOfScalar(u8, atom, '\\') != null) continue;
+            if (marker == '#') return .{ .kind = .id, .bucket = selectorBucket(atom, false) };
+            if (key.kind != .class) key = .{ .kind = .class, .bucket = selectorBucket(atom, false) };
+        } else if (marker == '[') {
+            const close = findClosingDelimiter(compound, cursor - 1, '[', ']') orelse return key;
+            cursor = close + 1;
+        } else if (marker == ':') {
+            while (cursor < compound.len and isIdentByte(compound[cursor])) : (cursor += 1) {}
+            if (cursor < compound.len and compound[cursor] == '(') {
+                const close = findClosingDelimiter(compound, cursor, '(', ')') orelse return key;
+                cursor = close + 1;
+            }
+        } else return key;
+    }
+    return key;
+}
+
+const PreparedSelector = struct {
+    const Part = struct { start: u32 = 0, end: u32 = 0 };
+    span: StringRef = .{}, // relative to Rule.selector, never a stored pointer
+    parts: [max_selector_parts]Part = [_]Part{.{}} ** max_selector_parts,
+    combinators: [max_selector_parts]u8 = .{' '} ** max_selector_parts,
+    count: u8 = 0,
+    pseudo: PseudoElement = .none,
+    key: SelectorKey = .{},
+
+    fn prepare(raw: []const u8) PreparedSelector {
+        var selector = trim(raw);
+        const pseudo = selectorPseudoElement(selector);
+        if (pseudo != .none) selector = stripPseudoElement(selector);
+        var parts: [max_selector_parts]Range = undefined;
+        var combinators: [max_selector_parts]u8 = .{' '} ** max_selector_parts;
+        const count = splitSelector(selector, &parts, &combinators) catch return .{};
+        if (count == 0) return .{};
+        var result = PreparedSelector{
+            .span = .{ .offset = @intCast(@intFromPtr(selector.ptr) - @intFromPtr(raw.ptr)), .len = @intCast(selector.len) },
+            .combinators = combinators,
+            .count = @intCast(count),
+            .pseudo = pseudo,
+            .key = mandatorySelectorKey(selector[parts[count - 1].start..parts[count - 1].end]),
+        };
+        for (parts[0..count], 0..) |part, index| result.parts[index] = .{ .start = @intCast(part.start), .end = @intCast(part.end) };
+        return result;
+    }
+
+    fn matches(self: *const PreparedSelector, context: MatchContext, node: u16, raw: []const u8, state: ElementState, pseudo: PseudoElement) bool {
+        if (self.count == 0 or self.pseudo != pseudo) return false;
+        return selectorPartsMatch(context, node, node, self.span.bytes(raw), &self.parts, &self.combinators, self.count - 1, state);
+    }
+};
+
+const SelectorIndex = struct {
+    generic: RuleSet = .{},
+    ids: [selector_bucket_count]RuleSet = [_]RuleSet{.{}} ** selector_bucket_count,
+    classes: [selector_bucket_count]RuleSet = [_]RuleSet{.{}} ** selector_bucket_count,
+    tags: [selector_bucket_count]RuleSet = [_]RuleSet{.{}} ** selector_bucket_count,
+
+    fn include(self: *SelectorIndex, index: usize, prepared: *const PreparedSelector) void {
+        if (prepared.count == 0) return;
+        const set = switch (prepared.key.kind) {
+            .generic => &self.generic,
+            .id => &self.ids[prepared.key.bucket],
+            .class => &self.classes[prepared.key.bucket],
+            .tag => &self.tags[prepared.key.bucket],
+        };
+        set.include(index);
+    }
+
+    fn candidates(self: *const SelectorIndex, document: *const html.Document, node: u16) RuleSet {
+        var result = self.generic;
+        if (node >= document.node_count or document.nodes[node].kind != .element) return result;
+        result.merge(&self.tags[selectorBucket(document.nodeName(node), true)]);
+        if (document.attribute(node, "id")) |id| result.merge(&self.ids[selectorBucket(id, false)]);
+        if (document.attribute(node, "class")) |classes| {
+            var cursor: usize = 0;
+            while (cursor < classes.len) {
+                while (cursor < classes.len and isSpace(classes[cursor])) : (cursor += 1) {}
+                const start = cursor;
+                while (cursor < classes.len and !isSpace(classes[cursor])) : (cursor += 1) {}
+                if (cursor > start) result.merge(&self.classes[selectorBucket(classes[start..cursor], false)]);
+            }
+        }
+        return result;
+    }
+};
+
 pub const Stylesheet = struct {
     source: [max_source_bytes]u8 = undefined,
     base_urls: [max_base_url_bytes]u8 = undefined,
     rules: [max_rules]Rule = undefined,
+    prepared_selectors: [max_rules]PreparedSelector = undefined,
+    selector_index: SelectorIndex = .{},
     declarations: [max_declarations]Declaration = undefined,
     layers: [max_layers]Layer = undefined,
     source_sections: [max_source_sections]SourceSection = undefined,
@@ -678,6 +833,7 @@ pub const Stylesheet = struct {
         self.source_len = 0;
         self.base_url_len = 0;
         self.rule_count = 0;
+        self.selector_index = .{};
         self.declaration_count = 0;
         self.layer_count = 0;
         self.source_section_count = 0;
@@ -720,6 +876,7 @@ pub const Stylesheet = struct {
             self.source_section_count = previous_source_section_count;
             self.font_face_rule_count = previous_font_face_rule_count;
             self.ignored_rules = previous_ignored_rules;
+            self.rebuildSelectorIndex();
         }
 
         const base_url = try self.internBaseUrl(final_base_url);
@@ -734,6 +891,12 @@ pub const Stylesheet = struct {
         };
         self.source_section_count += 1;
         try self.parseRange(base, base + source.len, .{}, 0, source_section, true);
+    }
+
+    fn rebuildSelectorIndex(self: *Stylesheet) void {
+        self.selector_index = .{};
+        for (self.prepared_selectors[0..self.rule_count], 0..) |*prepared, index|
+            self.selector_index.include(index, prepared);
     }
 
     pub fn appendDocumentStyles(self: *Stylesheet, document: *const html.Document) Error!void {
@@ -861,6 +1024,23 @@ pub const Stylesheet = struct {
         viewport_height: i32,
         siblings: ?*const SiblingIndex,
     ) ComputedStyle {
+        return self.computeSelected(document, node_index, parent, state, pseudo, viewport_width, viewport_height, siblings, true);
+    }
+
+    // The non-indexed specialization is a test oracle using the original
+    // selector parser and complete rule traversal. Production selects true.
+    fn computeSelected(
+        self: *const Stylesheet,
+        document: *const html.Document,
+        node_index: u16,
+        parent: ?*const ComputedStyle,
+        state: ElementState,
+        pseudo: PseudoElement,
+        viewport_width: i32,
+        viewport_height: i32,
+        siblings: ?*const SiblingIndex,
+        comptime indexed: bool,
+    ) ComputedStyle {
         const context = MatchContext{ .document = document, .siblings = siblings };
         var style = initialStyle(document, node_index, parent, state, pseudo);
         const reverted_style = style;
@@ -878,12 +1058,21 @@ pub const Stylesheet = struct {
             custom_count = inherited.custom_count;
         }
 
-        var rule_index: usize = 0;
-        while (rule_index < self.rule_count) : (rule_index += 1) {
+        const candidates = if (indexed) self.selector_index.candidates(document, node_index) else all_rules: {
+            var all = RuleSet{};
+            for (0..self.rule_count) |index| all.include(index);
+            break :all_rules all;
+        };
+        var selected = candidates.iterator();
+        while (selected.next()) |rule_index| {
             const rule = self.rules[rule_index];
             if (!rule.media.matches(viewport_width, viewport_height)) continue;
             const selector = rule.selector.bytes(self.source[0..self.source_len]);
-            if (!selectorMatches(context, node_index, selector, state, pseudo)) continue;
+            const matches = if (indexed)
+                self.prepared_selectors[rule_index].matches(context, node_index, selector, state, pseudo)
+            else
+                selectorMatches(context, node_index, selector, state, pseudo);
+            if (!matches) continue;
             const base_url = self.sourceSectionBase(rule.source_section);
             var declaration_index: usize = rule.declaration_start;
             const end = declaration_index + rule.declaration_count;
@@ -1069,6 +1258,8 @@ pub const Stylesheet = struct {
                 .source_section = source_section,
                 .media = media,
             };
+            self.prepared_selectors[self.rule_count] = PreparedSelector.prepare(self.source[selector.start..selector.end]);
+            self.selector_index.include(self.rule_count, &self.prepared_selectors[self.rule_count]);
             self.rule_count += 1;
         }
     }
@@ -2307,7 +2498,7 @@ fn selectorPartsMatch(
     target_node: u16,
     current_node: u16,
     selector: []const u8,
-    parts: *const [max_selector_parts]Range,
+    parts: anytype,
     combinators: *const [max_selector_parts]u8,
     part_index: usize,
     target_state: ElementState,
@@ -4665,4 +4856,83 @@ test "CSS sibling pass matches scans after reorder detach and replacement" {
         if (pass == 1) try std.testing.expect(selectorMatches(cached, d, "span:first-child:first-of-type", .{}, .none));
         if (pass == 2) try std.testing.expect(!selectorMatches(cached, c, ":first-child", .{}, .none));
     }
+}
+
+test "CSS prepared candidates retain the full selector oracle across state and DOM changes" {
+    var document = html.Document{};
+    _ = try document.parse("<!doctype html><body><section id=group class=parent><span id=lead></span>" ++
+        "<span id=target class='target target sm:hidden' data-case=Mixed>Text</span><em></em></section></body>", .{});
+    const target = testElementById(&document, "target");
+    var sheet = Stylesheet{};
+    try sheet.append("*{--accent:#123456;color:var(--accent)}SPAN{color:#334455}" ++
+        ".target{color:#456789}#target{font-weight:700}" ++
+        ".parent:hover .target{color:red}.target:focus{color:blue}" ++
+        ".target:active{opacity:.5}section:has(>span.target){padding:2px}" ++
+        "span:is(.target,.other):not(.excluded){margin:3px}" ++
+        ":where(.target,#missing){background-color:#aabbcc}" ++
+        "#lead + .target:nth-child(2)[data-case=mixed i]{font-size:19px}" ++
+        ".target::before{content:'before'}.target::after{content:'after'}" ++
+        "@media(min-width:640px){.sm\\:hidden{display:none}}" ++
+        "@layer lower{.target{color:purple!important}}.target{color:green!important}");
+    const parent = ComputedStyle{ .color = 0x203040, .font_size = 17 };
+    const states = [_]ElementState{
+        .{},                                        .{ .hover = true, .hovered_node = target },
+        .{ .focus = true, .focused_node = target }, .{ .active = true, .active_node = target },
+        .{ .disabled = true },                      .{ .hovered_node = testElementById(&document, "group") },
+    };
+    for ([_][]const u8{ "target target sm:hidden", "other", "excluded target" }) |classes| {
+        try document.setAttribute(target, "class", classes);
+        var siblings = SiblingIndex{};
+        siblings.prepare(&document);
+        for (states) |state| for ([_]PseudoElement{ .none, .before, .after }) |pseudo| {
+            for ([_]i32{ 360, 800 }) |width| {
+                const actual = sheet.computeForViewportSizeWithSiblings(&document, target, &parent, state, pseudo, width, 600, &siblings);
+                const original = sheet.computeSelected(&document, target, &parent, state, pseudo, width, 600, &siblings, false);
+                try std.testing.expectEqualDeep(original, actual);
+            }
+        };
+    }
+    try document.setAttribute(target, "id", "other");
+    const actual = sheet.compute(&document, target, &parent, .{}, .none);
+    const original = sheet.computeSelected(&document, target, &parent, .{}, .none, std.math.maxInt(i32), std.math.maxInt(i32), null, false);
+    try std.testing.expectEqualDeep(original, actual);
+}
+
+test "CSS indexed candidates remain bounded ordered transactional and movable" {
+    var document = html.Document{};
+    _ = try document.parse("<body><div id=r777 class='target target'>Text</div></body>", .{});
+    const node = document.findFirstElement("div").?;
+    var sheet = Stylesheet{};
+    try sheet.append("*{font-size:19px}");
+    for (0..1000) |index| {
+        var source: [64]u8 = undefined;
+        try sheet.append(try std.fmt.bufPrint(&source, "#r{d}{{color:#123456}}", .{index}));
+    }
+    const before = sheet.selector_index.candidates(&document, node);
+    var selected = before.iterator();
+    var checks: usize = 0;
+    var last: ?usize = null;
+    while (selected.next()) |index| {
+        if (last) |old| try std.testing.expect(index > old);
+        last = index;
+        checks += 1;
+    }
+    // Hash collisions remain valid candidates, then the exact matcher decides.
+    try std.testing.expect(checks > 1 and checks < 100);
+    const style = sheet.compute(&document, node, null, .{}, .none);
+    const original = sheet.computeSelected(&document, node, null, .{}, .none, std.math.maxInt(i32), std.math.maxInt(i32), null, false);
+    try std.testing.expectEqualDeep(original, style);
+    try std.testing.expectEqual(@as(u32, 0x123456), style.color);
+    const failed_append = "#r777{color:#abcdef}" ** 32;
+    try std.testing.expectError(error.RuleLimit, sheet.append(failed_append));
+    try std.testing.expectEqual(@as(usize, 1001), sheet.rule_count);
+    try std.testing.expectEqualDeep(before, sheet.selector_index.candidates(&document, node));
+    try std.testing.expectEqual(@as(u32, 0x123456), sheet.compute(&document, node, null, .{}, .none).color);
+    const copied = try std.testing.allocator.create(Stylesheet);
+    defer std.testing.allocator.destroy(copied);
+    copied.* = sheet;
+    @memset(&sheet.source, 0);
+    const moved_style = copied.compute(&document, node, null, .{}, .none);
+    try std.testing.expectEqual(@as(u32, 0x123456), moved_style.color);
+    try std.testing.expectEqual(@as(i32, 19), moved_style.font_size);
 }

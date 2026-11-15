@@ -926,7 +926,7 @@ int32_t R4SdkTransportVerifyAbi(uint64_t);
 #define R4SdkTransportNative__typeInfo_app_network_UdpReceive____union__tag_type___no_service 6u
 #define R4SdkTransportNative__typeInfo_app_network_UdpReceive____union__tag_type___failure 7u
 /* app_web.fillSecureEntropy -> bool */
-static inline R4SdkTransportSlot R4SdkTransport_fillSecureEntropy(uint32_t reserved, R4SdkWebNativeValue151 * p0) {
+static inline R4SdkTransportSlot R4SdkTransport_fillSecureEntropy(uint32_t reserved, R4SdkWebNativeValue162 * p0) {
  (void)reserved; R4SdkTransportSlot a[1]={0};
  a[0] = (R4SdkTransportSlot){.ptr=(void *)p0,.flags=R4SDKTRANSPORT_PRESENT};
  return R4SdkTransportInvoke(R4SdkTransport_ABI_FINGERPRINT,0u,a,1u,0);
@@ -2100,7 +2100,7 @@ static inline R4SdkTransportSlot R4SdkTransportFetchOptions_get_redirect(const R
 static inline R4SdkTransportSlot R4SdkTransportFetchOptions_set_redirect(R4SdkTransportFetchOptions *self, uint32_t p0) { R4SdkTransportSlot a[1]={0};
  a[0] = (R4SdkTransportSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKTRANSPORT_PRESENT};
  return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,5u,6u,self,a,0); }
-static inline R4SdkTransportSlot R4SdkTransportFetchOptions_get_entropy(const R4SdkTransportFetchOptions *self, R4SdkWebNativeValue151 *output) { return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,5u,7u,(void *)self,0,output); }
+static inline R4SdkTransportSlot R4SdkTransportFetchOptions_get_entropy(const R4SdkTransportFetchOptions *self, R4SdkWebNativeValue162 *output) { return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,5u,7u,(void *)self,0,output); }
 static inline R4SdkTransportSlot R4SdkTransportFetchOptions_set_entropy(R4SdkTransportFetchOptions *self, R4SdkTransportSlot p0) { R4SdkTransportSlot a[1]={0};
  a[0] = p0;
  return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,5u,7u,self,a,0); }
@@ -2414,7 +2414,7 @@ static inline R4SdkTransportSlot R4SdkTransportSessionPool_Preflight_create(R4Sd
  a[3].flags=R4SDKTRANSPORT_DEFAULT;
  return R4SdkTransportConstruct(R4SdkTransport_ABI_FINGERPRINT,24u,a,4u,output);
 }
-static inline R4SdkTransportSlot R4SdkTransportSessionPool_Preflight_from_fields(R4SdkTransportSessionPool_Preflight *output, const R4SdkWebNativeValue367 * p0, uint64_t p1, uint64_t p2, uint64_t p3) {
+static inline R4SdkTransportSlot R4SdkTransportSessionPool_Preflight_from_fields(R4SdkTransportSessionPool_Preflight *output, const R4SdkWebNativeValue378 * p0, uint64_t p1, uint64_t p2, uint64_t p3) {
  R4SdkTransportSlot a[4]={0};
  a[0] = (R4SdkTransportSlot){.ptr=(void *)p0,.flags=R4SDKTRANSPORT_PRESENT};
  a[1] = (R4SdkTransportSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKTRANSPORT_PRESENT};
@@ -2422,8 +2422,8 @@ static inline R4SdkTransportSlot R4SdkTransportSessionPool_Preflight_from_fields
  a[3] = (R4SdkTransportSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDKTRANSPORT_PRESENT};
  return R4SdkTransportConstruct(R4SdkTransport_ABI_FINGERPRINT,24u,a,4u,output);
 }
-static inline R4SdkTransportSlot R4SdkTransportSessionPool_Preflight_get_key(const R4SdkTransportSessionPool_Preflight *self, R4SdkWebNativeValue367 *output) { return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,24u,0u,(void *)self,0,output); }
-static inline R4SdkTransportSlot R4SdkTransportSessionPool_Preflight_set_key(R4SdkTransportSessionPool_Preflight *self, const R4SdkWebNativeValue367 * p0) { R4SdkTransportSlot a[1]={0};
+static inline R4SdkTransportSlot R4SdkTransportSessionPool_Preflight_get_key(const R4SdkTransportSessionPool_Preflight *self, R4SdkWebNativeValue378 *output) { return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,24u,0u,(void *)self,0,output); }
+static inline R4SdkTransportSlot R4SdkTransportSessionPool_Preflight_set_key(R4SdkTransportSessionPool_Preflight *self, const R4SdkWebNativeValue378 * p0) { R4SdkTransportSlot a[1]={0};
  a[0] = (R4SdkTransportSlot){.ptr=(void *)p0,.flags=R4SDKTRANSPORT_PRESENT};
  return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,24u,0u,self,a,0); }
 static inline R4SdkTransportSlot R4SdkTransportSessionPool_Preflight_get_key_len(const R4SdkTransportSessionPool_Preflight *self) { return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,24u,1u,(void *)self,0,0); }
@@ -2475,7 +2475,7 @@ static inline R4SdkTransportSlot R4SdkTransportNativeValue40_create(R4SdkTranspo
  a[0] = p0;
  return R4SdkTransportConstruct(R4SdkTransport_ABI_FINGERPRINT,40u,a,1u,output); }
 static inline R4SdkTransportSlot R4SdkTransportNativeValue40_inspectNative(const R4SdkTransportNativeValue40 *self) { return R4SdkTransportInspect(R4SdkTransport_ABI_FINGERPRINT,40u,(void *)self,0); }
-static inline R4SdkTransportSlot R4SdkTransportFetchResponse_create(R4SdkTransportFetchResponse *output, uint16_t p0, uint8_t * p1, uintptr_t n1, const uint8_t * p2, uintptr_t n2, R4SdkTransportSlot p3, R4SdkTransportSlot p4, R4SdkTransportSlot p5, uint8_t p6, R4SdkTransportSlot p7, const R4SdkWebNativeValue373 * p8, uint64_t p9, uint8_t p10, uint8_t p11, uint8_t p12, const R4SdkTransportFinalUrl * p13) {
+static inline R4SdkTransportSlot R4SdkTransportFetchResponse_create(R4SdkTransportFetchResponse *output, uint16_t p0, uint8_t * p1, uintptr_t n1, const uint8_t * p2, uintptr_t n2, R4SdkTransportSlot p3, R4SdkTransportSlot p4, R4SdkTransportSlot p5, uint8_t p6, R4SdkTransportSlot p7, const R4SdkWebNativeValue384 * p8, uint64_t p9, uint8_t p10, uint8_t p11, uint8_t p12, const R4SdkTransportFinalUrl * p13) {
  R4SdkTransportSlot a[14]={0};
  a[0] = (R4SdkTransportSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKTRANSPORT_PRESENT};
  a[1] = (R4SdkTransportSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDKTRANSPORT_PRESENT};
@@ -2493,7 +2493,7 @@ static inline R4SdkTransportSlot R4SdkTransportFetchResponse_create(R4SdkTranspo
  a[13] = (R4SdkTransportSlot){.ptr=(void *)p13,.flags=R4SDKTRANSPORT_PRESENT};
  return R4SdkTransportConstruct(R4SdkTransport_ABI_FINGERPRINT,41u,a,14u,output);
 }
-static inline R4SdkTransportSlot R4SdkTransportFetchResponse_from_fields(R4SdkTransportFetchResponse *output, uint16_t p0, uint8_t * p1, uintptr_t n1, const uint8_t * p2, uintptr_t n2, R4SdkTransportSlot p3, R4SdkTransportSlot p4, R4SdkTransportSlot p5, uint8_t p6, R4SdkTransportSlot p7, const R4SdkWebNativeValue373 * p8, uint64_t p9, uint8_t p10, uint8_t p11, uint8_t p12, const R4SdkTransportFinalUrl * p13) {
+static inline R4SdkTransportSlot R4SdkTransportFetchResponse_from_fields(R4SdkTransportFetchResponse *output, uint16_t p0, uint8_t * p1, uintptr_t n1, const uint8_t * p2, uintptr_t n2, R4SdkTransportSlot p3, R4SdkTransportSlot p4, R4SdkTransportSlot p5, uint8_t p6, R4SdkTransportSlot p7, const R4SdkWebNativeValue384 * p8, uint64_t p9, uint8_t p10, uint8_t p11, uint8_t p12, const R4SdkTransportFinalUrl * p13) {
  R4SdkTransportSlot a[14]={0};
  a[0] = (R4SdkTransportSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKTRANSPORT_PRESENT};
  a[1] = (R4SdkTransportSlot){.ptr=(void *)p1,.length=n1,.flags=R4SDKTRANSPORT_PRESENT};
@@ -2543,8 +2543,8 @@ static inline R4SdkTransportSlot R4SdkTransportFetchResponse_get_set_cookie(cons
 static inline R4SdkTransportSlot R4SdkTransportFetchResponse_set_set_cookie(R4SdkTransportFetchResponse *self, R4SdkTransportSlot p0) { R4SdkTransportSlot a[1]={0};
  a[0] = p0;
  return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,41u,7u,self,a,0); }
-static inline R4SdkTransportSlot R4SdkTransportFetchResponse_get_set_cookies(const R4SdkTransportFetchResponse *self, R4SdkWebNativeValue373 *output) { return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,41u,8u,(void *)self,0,output); }
-static inline R4SdkTransportSlot R4SdkTransportFetchResponse_set_set_cookies(R4SdkTransportFetchResponse *self, const R4SdkWebNativeValue373 * p0) { R4SdkTransportSlot a[1]={0};
+static inline R4SdkTransportSlot R4SdkTransportFetchResponse_get_set_cookies(const R4SdkTransportFetchResponse *self, R4SdkWebNativeValue384 *output) { return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,41u,8u,(void *)self,0,output); }
+static inline R4SdkTransportSlot R4SdkTransportFetchResponse_set_set_cookies(R4SdkTransportFetchResponse *self, const R4SdkWebNativeValue384 * p0) { R4SdkTransportSlot a[1]={0};
  a[0] = (R4SdkTransportSlot){.ptr=(void *)p0,.flags=R4SDKTRANSPORT_PRESENT};
  return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,41u,8u,self,a,0); }
 static inline R4SdkTransportSlot R4SdkTransportFetchResponse_get_set_cookie_count(const R4SdkTransportFetchResponse *self) { return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,41u,9u,(void *)self,0,0); }
@@ -2843,7 +2843,7 @@ static inline R4SdkTransportSlot R4SdkTransportDownloadOptions_get_redirect_limi
 static inline R4SdkTransportSlot R4SdkTransportDownloadOptions_set_redirect_limit(R4SdkTransportDownloadOptions *self, uint8_t p0) { R4SdkTransportSlot a[1]={0};
  a[0] = (R4SdkTransportSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKTRANSPORT_PRESENT};
  return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,57u,1u,self,a,0); }
-static inline R4SdkTransportSlot R4SdkTransportDownloadOptions_get_entropy(const R4SdkTransportDownloadOptions *self, R4SdkWebNativeValue151 *output) { return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,57u,2u,(void *)self,0,output); }
+static inline R4SdkTransportSlot R4SdkTransportDownloadOptions_get_entropy(const R4SdkTransportDownloadOptions *self, R4SdkWebNativeValue162 *output) { return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,57u,2u,(void *)self,0,output); }
 static inline R4SdkTransportSlot R4SdkTransportDownloadOptions_set_entropy(R4SdkTransportDownloadOptions *self, R4SdkTransportSlot p0) { R4SdkTransportSlot a[1]={0};
  a[0] = p0;
  return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,57u,2u,self,a,0); }
@@ -3273,7 +3273,7 @@ static inline R4SdkTransportSlot R4SdkTransportHttpResponseError_create(R4SdkTra
  a[0] = (R4SdkTransportSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKTRANSPORT_PRESENT};
  return R4SdkTransportConstruct(R4SdkTransport_ABI_FINGERPRINT,76u,a,1u,output); }
 static inline R4SdkTransportSlot R4SdkTransportHttpResponseError_inspectNative(const R4SdkTransportHttpResponseError *self) { return R4SdkTransportInspect(R4SdkTransport_ABI_FINGERPRINT,76u,(void *)self,0); }
-static inline R4SdkTransportSlot R4SdkTransportNativeValue79_create(R4SdkTransportNativeValue79 *output, R4SdkWebNativeValue151 * p0) { R4SdkTransportSlot a[1]={0};
+static inline R4SdkTransportSlot R4SdkTransportNativeValue79_create(R4SdkTransportNativeValue79 *output, R4SdkWebNativeValue162 * p0) { R4SdkTransportSlot a[1]={0};
  a[0] = (R4SdkTransportSlot){.ptr=(void *)p0,.flags=R4SDKTRANSPORT_PRESENT};
  return R4SdkTransportConstruct(R4SdkTransport_ABI_FINGERPRINT,79u,a,1u,output); }
 static inline R4SdkTransportSlot R4SdkTransportNativeValue79_inspectNative(const R4SdkTransportNativeValue79 *self) { return R4SdkTransportInspect(R4SdkTransport_ABI_FINGERPRINT,79u,(void *)self,0); }
@@ -3421,7 +3421,7 @@ static inline R4SdkTransportSlot R4SdkTransportNative__typeInfo_http_BuildResult
  a[0] = (R4SdkTransportSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKTRANSPORT_PRESENT};
  return R4SdkTransportConstruct(R4SdkTransport_ABI_FINGERPRINT,88u,a,1u,output); }
 static inline R4SdkTransportSlot R4SdkTransportNative__typeInfo_http_BuildResult____union__tag_type___inspectNative(const R4SdkTransportNative__typeInfo_http_BuildResult____union__tag_type__ *self) { return R4SdkTransportInspect(R4SdkTransport_ABI_FINGERPRINT,88u,(void *)self,0); }
-static inline R4SdkTransportSlot R4SdkTransportHttpResponse_create(R4SdkTransportHttpResponse *output, uint16_t p0, uint32_t p1, uint8_t * p2, uintptr_t n2, const uint8_t * p3, uintptr_t n3, R4SdkTransportSlot p4, R4SdkTransportSlot p5, R4SdkTransportSlot p6, R4SdkTransportSlot p7, uint8_t p8, R4SdkTransportSlot p9, const R4SdkWebNativeValue373 * p10, uint64_t p11, R4SdkTransportSlot p12, uint64_t p13) {
+static inline R4SdkTransportSlot R4SdkTransportHttpResponse_create(R4SdkTransportHttpResponse *output, uint16_t p0, uint32_t p1, uint8_t * p2, uintptr_t n2, const uint8_t * p3, uintptr_t n3, R4SdkTransportSlot p4, R4SdkTransportSlot p5, R4SdkTransportSlot p6, R4SdkTransportSlot p7, uint8_t p8, R4SdkTransportSlot p9, const R4SdkWebNativeValue384 * p10, uint64_t p11, R4SdkTransportSlot p12, uint64_t p13) {
  R4SdkTransportSlot a[14]={0};
  a[0] = (R4SdkTransportSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKTRANSPORT_PRESENT};
  a[1] = (R4SdkTransportSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKTRANSPORT_PRESENT};
@@ -3439,7 +3439,7 @@ static inline R4SdkTransportSlot R4SdkTransportHttpResponse_create(R4SdkTranspor
  a[13] = (R4SdkTransportSlot){.bits=(uint64_t)(int64_t)p13,.flags=R4SDKTRANSPORT_PRESENT};
  return R4SdkTransportConstruct(R4SdkTransport_ABI_FINGERPRINT,89u,a,14u,output);
 }
-static inline R4SdkTransportSlot R4SdkTransportHttpResponse_from_fields(R4SdkTransportHttpResponse *output, uint16_t p0, uint32_t p1, uint8_t * p2, uintptr_t n2, const uint8_t * p3, uintptr_t n3, R4SdkTransportSlot p4, R4SdkTransportSlot p5, R4SdkTransportSlot p6, R4SdkTransportSlot p7, uint8_t p8, R4SdkTransportSlot p9, const R4SdkWebNativeValue373 * p10, uint64_t p11, R4SdkTransportSlot p12, uint64_t p13) {
+static inline R4SdkTransportSlot R4SdkTransportHttpResponse_from_fields(R4SdkTransportHttpResponse *output, uint16_t p0, uint32_t p1, uint8_t * p2, uintptr_t n2, const uint8_t * p3, uintptr_t n3, R4SdkTransportSlot p4, R4SdkTransportSlot p5, R4SdkTransportSlot p6, R4SdkTransportSlot p7, uint8_t p8, R4SdkTransportSlot p9, const R4SdkWebNativeValue384 * p10, uint64_t p11, R4SdkTransportSlot p12, uint64_t p13) {
  R4SdkTransportSlot a[14]={0};
  a[0] = (R4SdkTransportSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKTRANSPORT_PRESENT};
  a[1] = (R4SdkTransportSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKTRANSPORT_PRESENT};
@@ -3497,8 +3497,8 @@ static inline R4SdkTransportSlot R4SdkTransportHttpResponse_get_set_cookie(const
 static inline R4SdkTransportSlot R4SdkTransportHttpResponse_set_set_cookie(R4SdkTransportHttpResponse *self, R4SdkTransportSlot p0) { R4SdkTransportSlot a[1]={0};
  a[0] = p0;
  return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,89u,9u,self,a,0); }
-static inline R4SdkTransportSlot R4SdkTransportHttpResponse_get_set_cookies(const R4SdkTransportHttpResponse *self, R4SdkWebNativeValue373 *output) { return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,89u,10u,(void *)self,0,output); }
-static inline R4SdkTransportSlot R4SdkTransportHttpResponse_set_set_cookies(R4SdkTransportHttpResponse *self, const R4SdkWebNativeValue373 * p0) { R4SdkTransportSlot a[1]={0};
+static inline R4SdkTransportSlot R4SdkTransportHttpResponse_get_set_cookies(const R4SdkTransportHttpResponse *self, R4SdkWebNativeValue384 *output) { return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,89u,10u,(void *)self,0,output); }
+static inline R4SdkTransportSlot R4SdkTransportHttpResponse_set_set_cookies(R4SdkTransportHttpResponse *self, const R4SdkWebNativeValue384 * p0) { R4SdkTransportSlot a[1]={0};
  a[0] = (R4SdkTransportSlot){.ptr=(void *)p0,.flags=R4SDKTRANSPORT_PRESENT};
  return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,89u,10u,self,a,0); }
 static inline R4SdkTransportSlot R4SdkTransportHttpResponse_get_set_cookie_count(const R4SdkTransportHttpResponse *self) { return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,89u,11u,(void *)self,0,0); }
@@ -3640,7 +3640,7 @@ static inline R4SdkTransportSlot R4SdkTransportNativeValue93_create(R4SdkTranspo
  a[0] = p0;
  return R4SdkTransportConstruct(R4SdkTransport_ABI_FINGERPRINT,93u,a,1u,output); }
 static inline R4SdkTransportSlot R4SdkTransportNativeValue93_inspectNative(const R4SdkTransportNativeValue93 *self, R4SdkTransportHttpParsedHead *output) { return R4SdkTransportInspect(R4SdkTransport_ABI_FINGERPRINT,93u,(void *)self,output); }
-static inline R4SdkTransportSlot R4SdkTransportHttpParsedHead_create(R4SdkTransportHttpParsedHead *output, uint16_t p0, uint64_t p1, uint32_t p2, uint64_t p3, const uint8_t * p4, uintptr_t n4, R4SdkTransportSlot p5, R4SdkTransportSlot p6, R4SdkTransportSlot p7, R4SdkTransportSlot p8, uint8_t p9, R4SdkTransportSlot p10, const R4SdkWebNativeValue373 * p11, uint64_t p12, R4SdkTransportSlot p13) {
+static inline R4SdkTransportSlot R4SdkTransportHttpParsedHead_create(R4SdkTransportHttpParsedHead *output, uint16_t p0, uint64_t p1, uint32_t p2, uint64_t p3, const uint8_t * p4, uintptr_t n4, R4SdkTransportSlot p5, R4SdkTransportSlot p6, R4SdkTransportSlot p7, R4SdkTransportSlot p8, uint8_t p9, R4SdkTransportSlot p10, const R4SdkWebNativeValue384 * p11, uint64_t p12, R4SdkTransportSlot p13) {
  R4SdkTransportSlot a[14]={0};
  a[0] = (R4SdkTransportSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKTRANSPORT_PRESENT};
  a[1] = (R4SdkTransportSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKTRANSPORT_PRESENT};
@@ -3658,7 +3658,7 @@ static inline R4SdkTransportSlot R4SdkTransportHttpParsedHead_create(R4SdkTransp
  a[13] = p13;
  return R4SdkTransportConstruct(R4SdkTransport_ABI_FINGERPRINT,94u,a,14u,output);
 }
-static inline R4SdkTransportSlot R4SdkTransportHttpParsedHead_from_fields(R4SdkTransportHttpParsedHead *output, uint16_t p0, uint64_t p1, uint32_t p2, uint64_t p3, const uint8_t * p4, uintptr_t n4, R4SdkTransportSlot p5, R4SdkTransportSlot p6, R4SdkTransportSlot p7, R4SdkTransportSlot p8, uint8_t p9, R4SdkTransportSlot p10, const R4SdkWebNativeValue373 * p11, uint64_t p12, R4SdkTransportSlot p13) {
+static inline R4SdkTransportSlot R4SdkTransportHttpParsedHead_from_fields(R4SdkTransportHttpParsedHead *output, uint16_t p0, uint64_t p1, uint32_t p2, uint64_t p3, const uint8_t * p4, uintptr_t n4, R4SdkTransportSlot p5, R4SdkTransportSlot p6, R4SdkTransportSlot p7, R4SdkTransportSlot p8, uint8_t p9, R4SdkTransportSlot p10, const R4SdkWebNativeValue384 * p11, uint64_t p12, R4SdkTransportSlot p13) {
  R4SdkTransportSlot a[14]={0};
  a[0] = (R4SdkTransportSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKTRANSPORT_PRESENT};
  a[1] = (R4SdkTransportSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKTRANSPORT_PRESENT};
@@ -3720,8 +3720,8 @@ static inline R4SdkTransportSlot R4SdkTransportHttpParsedHead_get_set_cookie(con
 static inline R4SdkTransportSlot R4SdkTransportHttpParsedHead_set_set_cookie(R4SdkTransportHttpParsedHead *self, R4SdkTransportSlot p0) { R4SdkTransportSlot a[1]={0};
  a[0] = p0;
  return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,94u,10u,self,a,0); }
-static inline R4SdkTransportSlot R4SdkTransportHttpParsedHead_get_set_cookies(const R4SdkTransportHttpParsedHead *self, R4SdkWebNativeValue373 *output) { return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,94u,11u,(void *)self,0,output); }
-static inline R4SdkTransportSlot R4SdkTransportHttpParsedHead_set_set_cookies(R4SdkTransportHttpParsedHead *self, const R4SdkWebNativeValue373 * p0) { R4SdkTransportSlot a[1]={0};
+static inline R4SdkTransportSlot R4SdkTransportHttpParsedHead_get_set_cookies(const R4SdkTransportHttpParsedHead *self, R4SdkWebNativeValue384 *output) { return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,94u,11u,(void *)self,0,output); }
+static inline R4SdkTransportSlot R4SdkTransportHttpParsedHead_set_set_cookies(R4SdkTransportHttpParsedHead *self, const R4SdkWebNativeValue384 * p0) { R4SdkTransportSlot a[1]={0};
  a[0] = (R4SdkTransportSlot){.ptr=(void *)p0,.flags=R4SDKTRANSPORT_PRESENT};
  return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,94u,11u,self,a,0); }
 static inline R4SdkTransportSlot R4SdkTransportHttpParsedHead_get_set_cookie_count(const R4SdkTransportHttpParsedHead *self) { return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,94u,12u,(void *)self,0,0); }
@@ -3924,7 +3924,7 @@ static inline R4SdkTransportSlot R4SdkTransportHttpPayloadStreamDecoder_create(R
  a[14].flags=R4SDKTRANSPORT_DEFAULT;
  return R4SdkTransportConstruct(R4SdkTransport_ABI_FINGERPRINT,106u,a,15u,output);
 }
-static inline R4SdkTransportSlot R4SdkTransportHttpPayloadStreamDecoder_from_fields(R4SdkTransportHttpPayloadStreamDecoder *output, uint8_t * p0, uintptr_t n0, uint32_t p1, const R4SdkTransportHttpPayloadStreamLimits * p2, R4SdkTransportSlot p3, uint64_t p4, uint64_t p5, uint64_t p6, const R4SdkWebNativeValue351 * p7, uint64_t p8, uint64_t p9, uint64_t p10, uint8_t p11, uint8_t p12, uint32_t p13, uint32_t p14) {
+static inline R4SdkTransportSlot R4SdkTransportHttpPayloadStreamDecoder_from_fields(R4SdkTransportHttpPayloadStreamDecoder *output, uint8_t * p0, uintptr_t n0, uint32_t p1, const R4SdkTransportHttpPayloadStreamLimits * p2, R4SdkTransportSlot p3, uint64_t p4, uint64_t p5, uint64_t p6, const R4SdkWebNativeValue362 * p7, uint64_t p8, uint64_t p9, uint64_t p10, uint8_t p11, uint8_t p12, uint32_t p13, uint32_t p14) {
  R4SdkTransportSlot a[15]={0};
  a[0] = (R4SdkTransportSlot){.ptr=(void *)p0,.length=n0,.flags=R4SDKTRANSPORT_PRESENT};
  a[1] = (R4SdkTransportSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKTRANSPORT_PRESENT};
@@ -3971,8 +3971,8 @@ static inline R4SdkTransportSlot R4SdkTransportHttpPayloadStreamDecoder_get_rema
 static inline R4SdkTransportSlot R4SdkTransportHttpPayloadStreamDecoder_set_remaining(R4SdkTransportHttpPayloadStreamDecoder *self, uint64_t p0) { R4SdkTransportSlot a[1]={0};
  a[0] = (R4SdkTransportSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKTRANSPORT_PRESENT};
  return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,106u,6u,self,a,0); }
-static inline R4SdkTransportSlot R4SdkTransportHttpPayloadStreamDecoder_get_line(const R4SdkTransportHttpPayloadStreamDecoder *self, R4SdkWebNativeValue351 *output) { return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,106u,7u,(void *)self,0,output); }
-static inline R4SdkTransportSlot R4SdkTransportHttpPayloadStreamDecoder_set_line(R4SdkTransportHttpPayloadStreamDecoder *self, const R4SdkWebNativeValue351 * p0) { R4SdkTransportSlot a[1]={0};
+static inline R4SdkTransportSlot R4SdkTransportHttpPayloadStreamDecoder_get_line(const R4SdkTransportHttpPayloadStreamDecoder *self, R4SdkWebNativeValue362 *output) { return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,106u,7u,(void *)self,0,output); }
+static inline R4SdkTransportSlot R4SdkTransportHttpPayloadStreamDecoder_set_line(R4SdkTransportHttpPayloadStreamDecoder *self, const R4SdkWebNativeValue362 * p0) { R4SdkTransportSlot a[1]={0};
  a[0] = (R4SdkTransportSlot){.ptr=(void *)p0,.flags=R4SDKTRANSPORT_PRESENT};
  return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,106u,7u,self,a,0); }
 static inline R4SdkTransportSlot R4SdkTransportHttpPayloadStreamDecoder_get_line_len(const R4SdkTransportHttpPayloadStreamDecoder *self) { return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,106u,8u,(void *)self,0,0); }
@@ -4624,7 +4624,7 @@ static inline R4SdkTransportSlot R4SdkTransportRuntimeJobsRequestJob_create(R4Sd
  a[16].flags=R4SDKTRANSPORT_DEFAULT;
  return R4SdkTransportConstruct(R4SdkTransport_ABI_FINGERPRINT,153u,a,17u,output);
 }
-static inline R4SdkTransportSlot R4SdkTransportRuntimeJobsRequestJob_from_fields(R4SdkTransportRuntimeJobsRequestJob *output, const R4SdkTransportJobsJob * p0, const R4SdkTransportRuntimeJobsOwner * p1, const R4SdkDataAllocator * p2, uint8_t * p3, uintptr_t n3, uint8_t p4, uint32_t p5, const R4SdkWebNativeValue629 * p6, uint64_t p7, uint32_t p8, uint32_t p9, uint32_t p10, uint32_t p11, const R4SdkWebNative_web_security_Origin * p12, const R4SdkTransportNativeValue156 * p13, const R4SdkWebNativeValue226 * p14, const R4SdkWebNavigationUrl * p15, const R4SdkTransportFetchOptions * p16) {
+static inline R4SdkTransportSlot R4SdkTransportRuntimeJobsRequestJob_from_fields(R4SdkTransportRuntimeJobsRequestJob *output, const R4SdkTransportJobsJob * p0, const R4SdkTransportRuntimeJobsOwner * p1, const R4SdkDataAllocator * p2, uint8_t * p3, uintptr_t n3, uint8_t p4, uint32_t p5, const R4SdkWebNativeValue640 * p6, uint64_t p7, uint32_t p8, uint32_t p9, uint32_t p10, uint32_t p11, const R4SdkWebNative_web_security_Origin * p12, const R4SdkTransportNativeValue156 * p13, const R4SdkWebNativeValue237 * p14, const R4SdkWebNavigationUrl * p15, const R4SdkTransportFetchOptions * p16) {
  R4SdkTransportSlot a[17]={0};
  a[0] = (R4SdkTransportSlot){.ptr=(void *)p0,.flags=R4SDKTRANSPORT_PRESENT};
  a[1] = (R4SdkTransportSlot){.ptr=(void *)p1,.flags=R4SDKTRANSPORT_PRESENT};
@@ -4669,8 +4669,8 @@ static inline R4SdkTransportSlot R4SdkTransportRuntimeJobsRequestJob_get_generat
 static inline R4SdkTransportSlot R4SdkTransportRuntimeJobsRequestJob_set_generation(R4SdkTransportRuntimeJobsRequestJob *self, uint32_t p0) { R4SdkTransportSlot a[1]={0};
  a[0] = (R4SdkTransportSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKTRANSPORT_PRESENT};
  return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,153u,5u,self,a,0); }
-static inline R4SdkTransportSlot R4SdkTransportRuntimeJobsRequestJob_get_ids(const R4SdkTransportRuntimeJobsRequestJob *self, R4SdkWebNativeValue629 *output) { return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,153u,6u,(void *)self,0,output); }
-static inline R4SdkTransportSlot R4SdkTransportRuntimeJobsRequestJob_set_ids(R4SdkTransportRuntimeJobsRequestJob *self, const R4SdkWebNativeValue629 * p0) { R4SdkTransportSlot a[1]={0};
+static inline R4SdkTransportSlot R4SdkTransportRuntimeJobsRequestJob_get_ids(const R4SdkTransportRuntimeJobsRequestJob *self, R4SdkWebNativeValue640 *output) { return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,153u,6u,(void *)self,0,output); }
+static inline R4SdkTransportSlot R4SdkTransportRuntimeJobsRequestJob_set_ids(R4SdkTransportRuntimeJobsRequestJob *self, const R4SdkWebNativeValue640 * p0) { R4SdkTransportSlot a[1]={0};
  a[0] = (R4SdkTransportSlot){.ptr=(void *)p0,.flags=R4SDKTRANSPORT_PRESENT};
  return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,153u,6u,self,a,0); }
 static inline R4SdkTransportSlot R4SdkTransportRuntimeJobsRequestJob_get_count(const R4SdkTransportRuntimeJobsRequestJob *self) { return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,153u,7u,(void *)self,0,0); }
@@ -4701,8 +4701,8 @@ static inline R4SdkTransportSlot R4SdkTransportRuntimeJobsRequestJob_get_origin_
 static inline R4SdkTransportSlot R4SdkTransportRuntimeJobsRequestJob_set_origin_text(R4SdkTransportRuntimeJobsRequestJob *self, const R4SdkTransportNativeValue156 * p0) { R4SdkTransportSlot a[1]={0};
  a[0] = (R4SdkTransportSlot){.ptr=(void *)p0,.flags=R4SDKTRANSPORT_PRESENT};
  return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,153u,13u,self,a,0); }
-static inline R4SdkTransportSlot R4SdkTransportRuntimeJobsRequestJob_get_partition(const R4SdkTransportRuntimeJobsRequestJob *self, R4SdkWebNativeValue226 *output) { return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,153u,14u,(void *)self,0,output); }
-static inline R4SdkTransportSlot R4SdkTransportRuntimeJobsRequestJob_set_partition(R4SdkTransportRuntimeJobsRequestJob *self, const R4SdkWebNativeValue226 * p0) { R4SdkTransportSlot a[1]={0};
+static inline R4SdkTransportSlot R4SdkTransportRuntimeJobsRequestJob_get_partition(const R4SdkTransportRuntimeJobsRequestJob *self, R4SdkWebNativeValue237 *output) { return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,153u,14u,(void *)self,0,output); }
+static inline R4SdkTransportSlot R4SdkTransportRuntimeJobsRequestJob_set_partition(R4SdkTransportRuntimeJobsRequestJob *self, const R4SdkWebNativeValue237 * p0) { R4SdkTransportSlot a[1]={0};
  a[0] = (R4SdkTransportSlot){.ptr=(void *)p0,.flags=R4SDKTRANSPORT_PRESENT};
  return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,153u,14u,self,a,0); }
 static inline R4SdkTransportSlot R4SdkTransportRuntimeJobsRequestJob_get_url(const R4SdkTransportRuntimeJobsRequestJob *self, R4SdkWebNavigationUrl *output) { return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,153u,15u,(void *)self,0,output); }
@@ -4887,7 +4887,7 @@ static inline R4SdkTransportSlot R4SdkTransportFetchHeader_create(R4SdkTransport
  a[3].flags=R4SDKTRANSPORT_DEFAULT;
  return R4SdkTransportConstruct(R4SdkTransport_ABI_FINGERPRINT,180u,a,4u,output);
 }
-static inline R4SdkTransportSlot R4SdkTransportFetchHeader_from_fields(R4SdkTransportFetchHeader *output, const R4SdkWebNativeValue164 * p0, uint64_t p1, const R4SdkWebNativeValue351 * p2, uint64_t p3) {
+static inline R4SdkTransportSlot R4SdkTransportFetchHeader_from_fields(R4SdkTransportFetchHeader *output, const R4SdkWebNativeValue175 * p0, uint64_t p1, const R4SdkWebNativeValue362 * p2, uint64_t p3) {
  R4SdkTransportSlot a[4]={0};
  a[0] = (R4SdkTransportSlot){.ptr=(void *)p0,.flags=R4SDKTRANSPORT_PRESENT};
  a[1] = (R4SdkTransportSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKTRANSPORT_PRESENT};
@@ -4895,16 +4895,16 @@ static inline R4SdkTransportSlot R4SdkTransportFetchHeader_from_fields(R4SdkTran
  a[3] = (R4SdkTransportSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDKTRANSPORT_PRESENT};
  return R4SdkTransportConstruct(R4SdkTransport_ABI_FINGERPRINT,180u,a,4u,output);
 }
-static inline R4SdkTransportSlot R4SdkTransportFetchHeader_get_name(const R4SdkTransportFetchHeader *self, R4SdkWebNativeValue164 *output) { return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,180u,0u,(void *)self,0,output); }
-static inline R4SdkTransportSlot R4SdkTransportFetchHeader_set_name(R4SdkTransportFetchHeader *self, const R4SdkWebNativeValue164 * p0) { R4SdkTransportSlot a[1]={0};
+static inline R4SdkTransportSlot R4SdkTransportFetchHeader_get_name(const R4SdkTransportFetchHeader *self, R4SdkWebNativeValue175 *output) { return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,180u,0u,(void *)self,0,output); }
+static inline R4SdkTransportSlot R4SdkTransportFetchHeader_set_name(R4SdkTransportFetchHeader *self, const R4SdkWebNativeValue175 * p0) { R4SdkTransportSlot a[1]={0};
  a[0] = (R4SdkTransportSlot){.ptr=(void *)p0,.flags=R4SDKTRANSPORT_PRESENT};
  return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,180u,0u,self,a,0); }
 static inline R4SdkTransportSlot R4SdkTransportFetchHeader_get_name_len(const R4SdkTransportFetchHeader *self) { return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,180u,1u,(void *)self,0,0); }
 static inline R4SdkTransportSlot R4SdkTransportFetchHeader_set_name_len(R4SdkTransportFetchHeader *self, uint64_t p0) { R4SdkTransportSlot a[1]={0};
  a[0] = (R4SdkTransportSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKTRANSPORT_PRESENT};
  return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,180u,1u,self,a,0); }
-static inline R4SdkTransportSlot R4SdkTransportFetchHeader_get_value(const R4SdkTransportFetchHeader *self, R4SdkWebNativeValue351 *output) { return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,180u,2u,(void *)self,0,output); }
-static inline R4SdkTransportSlot R4SdkTransportFetchHeader_set_value(R4SdkTransportFetchHeader *self, const R4SdkWebNativeValue351 * p0) { R4SdkTransportSlot a[1]={0};
+static inline R4SdkTransportSlot R4SdkTransportFetchHeader_get_value(const R4SdkTransportFetchHeader *self, R4SdkWebNativeValue362 *output) { return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,180u,2u,(void *)self,0,output); }
+static inline R4SdkTransportSlot R4SdkTransportFetchHeader_set_value(R4SdkTransportFetchHeader *self, const R4SdkWebNativeValue362 * p0) { R4SdkTransportSlot a[1]={0};
  a[0] = (R4SdkTransportSlot){.ptr=(void *)p0,.flags=R4SDKTRANSPORT_PRESENT};
  return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,180u,2u,self,a,0); }
 static inline R4SdkTransportSlot R4SdkTransportFetchHeader_get_value_len(const R4SdkTransportFetchHeader *self) { return R4SdkTransportField(R4SdkTransport_ABI_FINGERPRINT,180u,3u,(void *)self,0,0); }

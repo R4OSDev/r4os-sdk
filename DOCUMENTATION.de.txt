@@ -1978,3 +1978,17 @@ einem echten Endpoint-Close. Identitaetswechsel, verlorenes Release-ACK und
 fehlende Uhr geben kein erfolgreiches Ergebnis frei. Alle134 bestehenden
 SDK-Datenfaelle bestehen am finalen Quellstand. Die gemeinsame C-/Rust-
 Service-/Netzfassade und der native ABI-Aufbau behalten ihre Schnittstellen.
+
+CSS-Selektoraufbereitung ab SDK 0.64.224 (R4OS 0.91.28)
+----------------------------------------------------
+Das SDK besitzt den CSS-Parser und die Stilberechnung; R4CSS, Klickifax und
+KFXLIVE binden diese Quelle ein. Stylesheets halten ihre zerlegten aeusseren
+Selektorteile als relative Bereiche und einen begrenzten ID-/Klassen-/Tag-
+Kandidatenindex. Die geordneten Kandidaten durchlaufen den bisherigen
+exakten Matcher und die Kaskade. Hashkollisionen sind zulaessig, keine
+Treffer. Funktionale Unterselektoren behalten den bisherigen Matcher.
+DOM-Attribute, Zustand und Viewport werden weiterhin frisch gelesen;
+berechnete Stile erhalten keinen persistenten Cache. Der Index vergroessert
+ein Stylesheet um 147584 Bytes. C- und Rust-Webprojektionen und ihr lokaler
+SDK-Fingerprint werden aus dem Compilerlayout neu erzeugt; der zentrale
+Plattformvertrag und die R4L-Versionen bleiben gleich.

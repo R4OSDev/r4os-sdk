@@ -3,6 +3,13 @@
 The active compiler/component selection is defined only by `Profiles/`.
 Version-specific notes below describe their dated changes.
 
+SDK 0.64.224 prepares CSS top-level selector parts and ordered candidate
+indexes when a stylesheet is loaded. Exact matching and the existing cascade
+remain authoritative; state, DOM attributes and viewport are read on every
+calculation. The compiler-generated C/Rust web boundary follows the enlarged
+stylesheet layout and its SDK-local fingerprint. Platform Contract97 and
+independent runtime-library versions remain unchanged.
+
 SDK0.64.223 adds the size-gated DriverContext2.irqRearm facade for the
 optional Contract97 deferred level IRQ mechanism. Existing672-byte providers
 return err_no_fn for that optional call. Typed C/Rust projections follow the
