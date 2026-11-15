@@ -288,6 +288,25 @@ pub struct Irq<'a> {
 }
 impl Irq<'_> {
     /// # Safety
+    /// The owning task completed device status/ACK for this deferred level
+    /// interrupt. A retired binding may discharge that debt, but cannot regain
+    /// hardware admission. Busy/error retains the exact registration token.
+    pub unsafe fn rearm(&self) -> Result<()> {
+        if !self.active {
+            return Err(-1);
+        }
+        code(unsafe {
+            c::R4SdkDriver2Context_irqRearm(
+                0,
+                &self.driver.raw,
+                self.line,
+                self.handler as usize as u64,
+                self.context as u64,
+            )
+        })?;
+        Ok(())
+    }
+    /// # Safety
     /// Device interrupt production is stopped or otherwise handled by its
     /// owner protocol; callback storage stays resident on every refusal.
     pub unsafe fn close(&mut self) -> Result<()> {

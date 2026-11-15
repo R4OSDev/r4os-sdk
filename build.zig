@@ -317,11 +317,14 @@ pub fn build(b: *std.Build) void {
     }
     if (b.option(bool, "facade-runtime-only", "Build the SDK C facade object for Rust consumers") orelse false) {
         const native = b.option(bool, "facade-host-test", "Use native ABI for facade interop only") orelse false;
+        const driver_only = b.option(bool, "facade-driver-host-test", "Only the original driver bridge for native driver interop") orelse false;
+        if (driver_only and !native) @panic("Driver-only facade is a native host test fixture");
         const object = r4os_build.addFacadeRuntime(b, b.path("Shared/C/src/facades.c"), sdk_profile.profile.c_include_root, sdk_profile.profile.contract_c_include_root, sdk_profile.profile.contract_c_include_root2, native);
         const install_c = b.addInstallFile(object, "lib/r4sdk_facades.o");
         b.getInstallStep().dependOn(&install_c.step);
         b.step("facade-c-runtime", "Build only the existing C facade object").dependOn(&install_c.step);
-        const storage_runtime = r4os_build.addStorageRuntimeObject(b, b.path("r4os/facade_runtime.zig"), sdk_profile.profile.contract_module, sdk_profile.profile.contract_module2, sdk_profile.profile.grapheme_source.?, sdk_profile.builder, native);
+        const runtime_root = if (driver_only) b.path("r4os/driver_host_runtime.zig") else b.path("r4os/facade_runtime.zig");
+        const storage_runtime = r4os_build.addStorageRuntimeObject(b, runtime_root, sdk_profile.profile.contract_module, sdk_profile.profile.contract_module2, sdk_profile.profile.grapheme_source.?, sdk_profile.builder, native);
         b.getInstallStep().dependOn(&b.addInstallFile(storage_runtime, "lib/r4sdk_storage.o").step);
         return;
     }

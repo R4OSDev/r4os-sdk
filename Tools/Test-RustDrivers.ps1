@@ -19,7 +19,7 @@ try{
     if($LASTEXITCODE -ne 0){throw 'C/Rust facade drift.'}
     Push-Location $sdk
     try{
-        & $Zig build ('--fork='+$ContractRoot) -Dfacade-runtime-only=true -Dfacade-host-test=true --prefix (Join-Path $WorkRoot 'native') -j1
+        & $Zig build ('--fork='+$ContractRoot) -Dfacade-runtime-only=true -Dfacade-host-test=true -Dfacade-driver-host-test=true --prefix (Join-Path $WorkRoot 'native') -j1
         if($LASTEXITCODE -ne 0){throw 'Native SDK facade objects failed.'}
     }finally{Pop-Location}
     $object=Join-Path $WorkRoot 'driver-c.o'

@@ -3,6 +3,12 @@
 The active compiler/component selection is defined only by `Profiles/`.
 Version-specific notes below describe their dated changes.
 
+SDK0.64.223 adds the size-gated DriverContext2.irqRearm facade for the
+optional Contract97 deferred level IRQ mechanism. Existing672-byte providers
+return err_no_fn for that optional call. Typed C/Rust projections follow the
+same contract; platform tables and independent runtime libraries retain their
+versions. Recovery keeps its explicitly frozen source set.
+
 SDK 0.64.219 adds DriverContext2.notifyAudioOutputProgress for completed
 audio period work, using Contract 0.64.96. It negotiates the optional
 DriverApi2 tail without reading beyond older tables; absence keeps the core

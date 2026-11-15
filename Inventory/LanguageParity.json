@@ -16,7 +16,7 @@
   "canonical_platform_sources": [
     {
       "path": "Repositories/Contract/API/ApiContract.json",
-      "sha256": "536e25513c405ac5b96d7609aeb8da89db4e5ff1ea4b34b439ea0242ddb5d0a3"
+      "sha256": "9790da4743ac019492679f2fd32f984d17cef46d98fc7e3e40875571857cd9df"
     },
     {
       "path": "Repositories/Contract/Generated/Inventory/API.json",
@@ -24,7 +24,7 @@
     },
     {
       "path": "Repositories/Contract/Generated/Inventory/RustABI.json",
-      "sha256": "869db47628eb31508781510131e8bbb88c1e17db039ee3bcd4bdde5db53706d9"
+      "sha256": "441b653ee3e7027a7ef1a4d2275092ebd23d9305a6296a5b5b06ef01109bde05"
     }
   ],
   "platform_groups": [
@@ -234,7 +234,8 @@
         "central_abi_interop",
         "gui_activity_08735",
         "audio_duration_retirement_08859",
-        "canonical_graphics_native_generation2_09046"
+        "canonical_graphics_native_generation2_09046",
+        "deferred_level_irq_09123"
       ],
       "shared_core": "Contract-Generatoren und vorhandene Layout-/Callbackfixtures wiederverwenden.",
       "qualification": {
@@ -332,7 +333,8 @@
         "contract_package": "0.64.93",
         "scope": "Actual Context2 graphics-library consumers, stable process/caller snapshots and explicit CView, mapped SYS2 heaps and native C11/TLS retirement. Independent library interfaces keep their own IDs/revisions/layouts.",
         "boundaries": "Actual canonical GFX/VK/GL consumers and native4thread ownership in own KVM4; CView C ABI executed on host. GPU admission callbacks migrated, no new physical NVIDIA/AMD qualification. Windows headers/tools crosscompiled, no Windows execution."
-      }
+      },
+      "extension_09123": "Contract97 optional DriverApi2 tail680/irq_rearm; former672 bytes and all platform group versions unchanged. SDK223 Zig/C/Rust helpers retain exact IRQ tokens across refusal and gate old providers. Host and real SCI guest scopes remain distinct."
     },
     {
       "id": "startup",
@@ -1544,7 +1546,8 @@
         "technical_generation2_09015",
         "time_poll_budgets_09016",
         "wire_native_data_09017",
-        "optional_capture_09037"
+        "optional_capture_09037",
+        "deferred_level_irq_09123"
       ],
       "shared_core": {
         "source": "Repositories/SDK/r4os/driver_helper_owners.zig",
@@ -1552,7 +1555,8 @@
         "types": 295,
         "functions": 259,
         "fingerprint": 2151242634955201969
-      }
+      },
+      "extension_09123": "Contract97 optional DriverApi2 tail680/irq_rearm; former672 bytes and all platform group versions unchanged. SDK223 Zig/C/Rust helpers retain exact IRQ tokens across refusal and gate old providers. Host and real SCI guest scopes remain distinct."
     },
     {
       "id": "protocol",
@@ -48680,7 +48684,8 @@
         "local_contract_and_baseline",
         "language_libraries_current_59",
         "library_projection_current_61",
-        "canonical_text_font_image_generation2_09045"
+        "canonical_text_font_image_generation2_09045",
+        "decoder_arena_reentrant_09115"
       ],
       "semantics": "Kanonische Parameter-direction/ownership/lifetime und operation.blocking/threading/reentrancy/error_domain/ownership sowie ownership_rules im lokalen Contract verbindlich. Views/Jobs/Callbacks/Handles bis realer Quittung halten."
     },
@@ -59397,6 +59402,23 @@
       "libraries": "0.64.64",
       "report": "Docs/API/ConsumerMigration.txt",
       "scope": "SDK218 H changes only exact Library64 source/package selection and this explicit reviewed receipt. Library64 changes only one NIL build-helper workspace assignment, with all shared NAK call sites audited and the entire actual Vulkan build passing before source selection. Every SDK implementation, template, generator, Build/Tools policy, Library binding and ordinary consumer source remains identical to the actually normal-built G inputs. Actual132 G outputs are retained with full source/flag/package-semantic reconciliation for H; they are not relabelled new H builds. Normal H providers and source-matched tools, fresh exact145/SDK native/browser, coherent packages and soleSTANDARD90 remain required. No extra ordinary rebuild solely for this one-line Vulkan-only host recipe."
+    },
+    "deferred_level_irq_09123": {
+      "complete": true,
+      "performed_in": "0.91.23",
+      "sdk": "0.64.223",
+      "contract": "0.64.97",
+      "report": "Docs/SDK/LanguageParity.txt#Fortschreibung-0.91.23",
+      "kind": "actual_C_Zig_Rust_host_helpers_and_separate_native_SCI",
+      "scope": "Full prior672-byte DriverApi2 prefix retained, optional irq_rearm at672. Existing Zig technical slot guard test, all Contract layouts/selftests and native C/Zig/Rust callback cases. Existing C/Rust driver oracle retains DMA/work/IRQ refusal and Drop assertions; new C and Rust calls cover old672-byte table/no_fn, Busy, exact tuple retry and retained retired token. All3 original compiler ownership/unsafe negatives pass. Host fixture imports the exact production driver_value_bridge, without unrelated SDK/browser runtimes. Separate real KVM4 SCI guest qualifies the Zig R4D/Kernel path, not native C/Rust hardware or Windows execution.",
+      "evidence_archive": "ExFiles/Reports/Fable091/0.91.23/"
+    },
+    "decoder_arena_reentrant_09115": {
+      "complete": true,
+      "performed_in": "0.91.15",
+      "report": "Docs/API/R4IMG.md",
+      "scope": "Reviewed existing published per-call allocator/concurrent-decoder proof and current Libraries67 source selection from0.91.15/16. The three changed watched R4IMG files only revise operation threading/reentrancy/ownership/descriptions and generated Rust comments; layouts/slots/signatures and Rust bodies are unchanged. No repeated Library/browser qualification in23.",
+      "evidence_archive": "ExFiles/Reports/Fable091/0.91.15/"
     }
   },
   "wave_bindings": [
@@ -59649,19 +59671,19 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "Current source/host language review is qualified only in its explicit bounded scopes. Final SDK/source/normal artifacts/Recovery/current native90 and soleSTANDARD90 remain required; no Windows/hardware claim.",
   "current_review": {
-    "performed_in": "0.90.90",
-    "sdk": "0.64.218",
-    "contract": "0.64.95",
-    "libraries": "0.64.64",
-    "evidence": "complete_vulkan_nil_workspace_09090",
+    "performed_in": "0.91.23",
+    "sdk": "0.64.223",
+    "contract": "0.64.97",
+    "libraries": "0.64.67",
+    "evidence": "deferred_level_irq_09123",
     "historical_snapshot_retained": true,
-    "prepared_only": true,
-    "scope": "SDK218 H changes only exact Library64 source/package selection and this explicit reviewed receipt. Library64 changes only one NIL build-helper workspace assignment, with all shared NAK call sites audited and the entire actual Vulkan build passing before source selection. Every SDK implementation, template, generator, Build/Tools policy, Library binding and ordinary consumer source remains identical to the actually normal-built G inputs. Actual132 G outputs are retained with full source/flag/package-semantic reconciliation for H; they are not relabelled new H builds. Normal H providers and source-matched tools, fresh exact145/SDK native/browser, coherent packages and soleSTANDARD90 remain required. No extra ordinary rebuild solely for this one-line Vulkan-only host recipe."
+    "prepared_only": false,
+    "scope": "Reviewed24 prior/current changed inputs plus driver-host build selection; prior audio progress96 and R4IMG reentrancy15/16 source evidence retained. No other capability requalified, and no new Windows/hardware/global SDK performance assertion. Existing35 capability scopes/219 root exports remain."
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.90.90",
+    "reviewed_in": "0.91.23",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -59763,24 +59785,26 @@
       "Repositories/SDK/build.zig.zon",
       "Repositories/SDK/r4os",
       "Repositories/SDK/r4os.zig",
-      "Repositories/SDK/test_owners.zig"
+      "Repositories/SDK/test_owners.zig",
+      "Repositories/SDK/Tests/Simulation/DriverLifecycleHost.c",
+      "Repositories/SDK/Tests/Simulation/RustDriver.rs"
     ],
     "files": [
       {
         "path": "Repositories/Contract/API/ApiContract.baseline.json",
-        "sha256": "536e25513c405ac5b96d7609aeb8da89db4e5ff1ea4b34b439ea0242ddb5d0a3"
+        "sha256": "9790da4743ac019492679f2fd32f984d17cef46d98fc7e3e40875571857cd9df"
       },
       {
         "path": "Repositories/Contract/API/ApiContract.json",
-        "sha256": "536e25513c405ac5b96d7609aeb8da89db4e5ff1ea4b34b439ea0242ddb5d0a3"
+        "sha256": "9790da4743ac019492679f2fd32f984d17cef46d98fc7e3e40875571857cd9df"
       },
       {
         "path": "Repositories/Contract/API/Generation2.baseline.json",
-        "sha256": "0be6677ab2572b26ca8c09b16012ffcbf90c3f2478bd0490981130b08fd1e878"
+        "sha256": "a68c412b94492a394956463aa55d76b1865a8378839ef1859ed49bad9e5c9e2c"
       },
       {
         "path": "Repositories/Contract/API/Generation2.json",
-        "sha256": "0be6677ab2572b26ca8c09b16012ffcbf90c3f2478bd0490981130b08fd1e878"
+        "sha256": "a68c412b94492a394956463aa55d76b1865a8378839ef1859ed49bad9e5c9e2c"
       },
       {
         "path": "Repositories/Contract/API/LegacyProjection.json",
@@ -59808,15 +59832,15 @@
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/RustABI.json",
-        "sha256": "869db47628eb31508781510131e8bbb88c1e17db039ee3bcd4bdde5db53706d9"
+        "sha256": "441b653ee3e7027a7ef1a4d2275092ebd23d9305a6296a5b5b06ef01109bde05"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_generated.h",
-        "sha256": "25879175afafbae9ca50b80876aac07a7ee993717ebb3c25f6a32a8afa6cf637"
+        "sha256": "bcb6390f8430b3669005ac0c2c80b29d56e3a0d9ad44e0addc733856b3e2ab0d"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_technical_generated.h",
-        "sha256": "b3c262b72ebcea7ac1da914afa5299e2688eabbed75a17c523b6ab2b5c45fdaf"
+        "sha256": "19285080fa6af4f7438c6773c3b9c39f0a07f3681fe4fcb11b300e7e84d7f368"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Rust/Cargo.toml",
@@ -59824,19 +59848,19 @@
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Rust/src/lib.rs",
-        "sha256": "75b154a95484213ccb1b4b845196887c42b294ab14c50668123986685e6c4692"
+        "sha256": "1676c37f01eff85f17402e75aa961f922863de233b9efacfb9307f2dbc96de1b"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi.zig",
-        "sha256": "0411b7fbf787e3d8fb334acb11c858cc3b6e8e85a6fa4509a324ac8e35122483"
+        "sha256": "c4e263aa6fb7cf621048fb976ea34e5bb9fcfca606d81acd1360a864c9dbd987"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_exports.zig",
-        "sha256": "df1c112b3e0b90237247ab5d5dfdc315c92abfa4c52cac212688e8ee4d39aaec"
+        "sha256": "9d5f4b2926df3c85425a3ec712f69bcee0aee4e8af499a4c285a87949c4ff9ac"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_generated.zig",
-        "sha256": "9733c75b1fe911c966081d2f0d496be8d5c9fd4cfbac1f088bc56d9a42e9b0ab"
+        "sha256": "b0622ec9e70f12e18d05f0037f9d2c20c0463adce36ddd6f4ddf43dba0caa9d4"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/package.zig",
@@ -59844,7 +59868,7 @@
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/technical2_generated.zig",
-        "sha256": "98df0a381107809dc49e950aa6656e203631814bba3f19d7015c5c2b4255cd0f"
+        "sha256": "a451b261d42ea9913543b739ece13b823afa0807ad34c5633b7005d8433bee05"
       },
       {
         "path": "Repositories/Contract/Module/CpuBaseline.json",
@@ -59852,7 +59876,7 @@
       },
       {
         "path": "Repositories/Contract/Tests/Generation2.zig",
-        "sha256": "7640cbab82333da7143b1c97aee4a4da9e8c51c8eb3f3aec286398d146493770"
+        "sha256": "08e6b184b2843c69688844b45dea6334389c4aa01325d3d368c1ae0f34ea7c27"
       },
       {
         "path": "Repositories/Contract/Tests/RustInterop/Cargo.toml",
@@ -60420,7 +60444,7 @@
       },
       {
         "path": "Repositories/Libraries/R4IMG/Bindings/Rust/src/lib.rs",
-        "sha256": "c69692ae5294dbd24a6d7c665ac97b382e539cce8e31c6d0c50d344a5e7d8d63"
+        "sha256": "4e4cd6969bd6203417aa0e20e2b8a08f6320d592f82ff0f4a1aa61401c21f78f"
       },
       {
         "path": "Repositories/Libraries/R4IMG/Bindings/Zig/color.zig",
@@ -60444,11 +60468,11 @@
       },
       {
         "path": "Repositories/Libraries/R4IMG/Contract/LibraryContract.baseline.json",
-        "sha256": "b952f0d45d32dd238c4a8d0327640e623cf09c6ee2bd8c7aadd1a6d845f0ec11"
+        "sha256": "a4d5ed00e3a25a5b4a5345d655f0ab7c8fb8f3f928b46161e8ef47050dae7251"
       },
       {
         "path": "Repositories/Libraries/R4IMG/Contract/LibraryContract.json",
-        "sha256": "b952f0d45d32dd238c4a8d0327640e623cf09c6ee2bd8c7aadd1a6d845f0ec11"
+        "sha256": "a4d5ed00e3a25a5b4a5345d655f0ab7c8fb8f3f928b46161e8ef47050dae7251"
       },
       {
         "path": "Repositories/Libraries/R4NAK/Bindings/C/r4nak.h",
@@ -61380,7 +61404,7 @@
       },
       {
         "path": "Repositories/SDK/Profiles/Components.json",
-        "sha256": "7294935c64137735bf9c53f5abdb735c3913bf9cdc66e9fb91535bcd05b1e4a1"
+        "sha256": "ad17d443adabb5a7bd6357fc5ec85207ff9f7fc545cf1ee39941ca25fbb97519"
       },
       {
         "path": "Repositories/SDK/Profiles/Tools.json",
@@ -61412,7 +61436,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "297f2984a2d0d0885b1f4d33dce8a4cb3800a2b32e30f45e247555934eeffc29"
+        "sha256": "0fd3e400ba0a84637ac6820f1b2003835aa9ec3205365d9cb7219952934a0d18"
       },
       {
         "path": "Repositories/SDK/Rust/src/cli.rs",
@@ -61456,7 +61480,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/driver.rs",
-        "sha256": "f06f64b12e4ad323caf6d51f7d1ab99688738ddc4fd184d68547f5144dacd9de"
+        "sha256": "a01c5b55a12b61098f2f42c7d5a6c79327e951a81f03a259a0be0e844cf0d9ed"
       },
       {
         "path": "Repositories/SDK/Rust/src/file_picker.rs",
@@ -61884,7 +61908,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/driver_helpers.h",
-        "sha256": "c5dd7e9277b933a11ef660ac648f78213d558efe20cf101da67dd7b9ab7bf9e9"
+        "sha256": "e91de17a368f84edb76bca88de21234541a0e0f150abb4d2c16421ed34c01932"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/driver_lifecycle.h",
@@ -62787,6 +62811,10 @@
         "sha256": "6301ac91adfc31af644e3f9edbdd4f2c62cb5e5080af46e17579b0929866cdcb"
       },
       {
+        "path": "Repositories/SDK/Tests/Simulation/DriverLifecycleHost.c",
+        "sha256": "370dd4882fba7f00d385fbb301ab552d51658fda497325e8f005e779e40369bc"
+      },
+      {
         "path": "Repositories/SDK/Tests/Simulation/GuiParity.c",
         "sha256": "40964f837099cf65ded4039fd3126f95d4794b156f78b28d128e9a7b904dea21"
       },
@@ -62809,6 +62837,10 @@
       {
         "path": "Repositories/SDK/Tests/Simulation/RustData.rs",
         "sha256": "0b926cb062db3c218f2dee9b13b2b43f5b9edf22db3d40873f1250cd4e374053"
+      },
+      {
+        "path": "Repositories/SDK/Tests/Simulation/RustDriver.rs",
+        "sha256": "4aafbfbfcc85a5b590d33c2bd76e98e87d63e41af4a07b32f44a3691a892327b"
       },
       {
         "path": "Repositories/SDK/Tests/Simulation/RustGui.rs",
@@ -63076,7 +63108,7 @@
       },
       {
         "path": "Repositories/SDK/Tools/Test-RustDrivers.ps1",
-        "sha256": "e051627cc998932eaa39ead015ca64dc001bb0d33f5ccf519c5463207f295346"
+        "sha256": "736493c35a0601b6c668b1b2fb33191bdcf2ca0f9847aa4fcf51f8848681eb9f"
       },
       {
         "path": "Repositories/SDK/Tools/Test-RustGui.ps1",
@@ -63132,11 +63164,11 @@
       },
       {
         "path": "Repositories/SDK/build.zig",
-        "sha256": "18539918303277636c55ec4eeeb1acd8868b0cc380bd550b90312dc73f2c75b8"
+        "sha256": "fe5cbac26c77f203688d809ba753c8a45bdd69323fb6ee4954694917ce0f000b"
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "8a6d304de4e0ba5000d03c9a1544512373184db14e0d1233ad65c12b8adf5ae7"
+        "sha256": "690f2d6e0d8d05f1d863925b3f8cab9e96025df166afd8a69dac88c4fedeadb7"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -63384,7 +63416,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/driver2.zig",
-        "sha256": "44a532a26192b8153541d5fe6edf6a22c79581bc892cfd2a8c23feaf9dd2fb97"
+        "sha256": "ae7089cc7ce4cf07f1f2ab544364d499a72816c7eb7053a2d25105b881313ee8"
       },
       {
         "path": "Repositories/SDK/r4os/driver_bridge_names.zig",
@@ -63417,6 +63449,10 @@
       {
         "path": "Repositories/SDK/r4os/driver_helper_owners.zig",
         "sha256": "c87efa53d115804bf7f7c9ff5af51a45b276366a9658f7f7ece7b8b92b39de2b"
+      },
+      {
+        "path": "Repositories/SDK/r4os/driver_host_runtime.zig",
+        "sha256": "24f1a5aea6e8c7bf555d86f8453fab89e1eef4bae000a449ecc7073e2ba3aad4"
       },
       {
         "path": "Repositories/SDK/r4os/driver_memory.zig",
@@ -63484,7 +63520,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/generated/driver_fingerprint.zig",
-        "sha256": "75d6f0034238c2bd67f24b7468e702c9a0a73e9c459a729ef449d1c335c2e26d"
+        "sha256": "1d5b692c6ed7862bea900b1aa5d601892ccdfa6b746399285c6bfcf1d1701c87"
       },
       {
         "path": "Repositories/SDK/r4os/generated/gui_fingerprint.zig",
@@ -64116,7 +64152,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/technical2.zig",
-        "sha256": "1b626a228f37a0b07d1d4e53137e23a247a43fc3065a1bddca72c08ad772c59b"
+        "sha256": "62d08a51a6c440ebb8f83866f22442e4f85f4dcfa8405751eaac58864af26d91"
       },
       {
         "path": "Repositories/SDK/r4os/text_composition.zig",
@@ -64399,7 +64435,8 @@
           "canonical_graphics_native_generation2_09046",
           "independent_canonical_generation2_09088",
           "sdk_current_only_09090",
-          "contract_docs_current_09090"
+          "contract_docs_current_09090",
+          "deferred_level_irq_09123"
         ]
       },
       {
@@ -65299,7 +65336,8 @@
           "driver2_existing_storage_retirement_helper_09086",
           "canonical_driver_catalogue_fingerprint_09088",
           "sdk_current_only_09090",
-          "templates_current_only_09090"
+          "templates_current_only_09090",
+          "deferred_level_irq_09123"
         ]
       },
       {
@@ -65595,7 +65633,8 @@
           "canonical_text_font_image_generation2_09045",
           "rust_desktop_shared_contexts_09065",
           "remaining_positive_generation2_consumers_09087",
-          "library_current_only_09090"
+          "library_current_only_09090",
+          "decoder_arena_reentrant_09115"
         ]
       },
       {
@@ -67098,6 +67137,16 @@
       "historical_snapshot_retained": true,
       "prepared_only": true,
       "scope": "SDK218 epochG changes only exact clean Library64 source/package metadata and its reviewed receipt. Library64 fixes the actual standalone Vulkan/NAK compiler constructor workspace binding, proved by before1/after0 unchanged invocation. No SDK implementation/template/generator/policy or frozen Recovery source changed. All9 matched tools/export and12+132 normal builds will use exact G; whole145/version-law, current graphics/compiler native/browser and soleSTANDARD90 remain required."
+    },
+    {
+      "performed_in": "0.90.90",
+      "sdk": "0.64.218",
+      "contract": "0.64.95",
+      "libraries": "0.64.64",
+      "evidence": "complete_vulkan_nil_workspace_09090",
+      "historical_snapshot_retained": true,
+      "prepared_only": true,
+      "scope": "SDK218 H changes only exact Library64 source/package selection and this explicit reviewed receipt. Library64 changes only one NIL build-helper workspace assignment, with all shared NAK call sites audited and the entire actual Vulkan build passing before source selection. Every SDK implementation, template, generator, Build/Tools policy, Library binding and ordinary consumer source remains identical to the actually normal-built G inputs. Actual132 G outputs are retained with full source/flag/package-semantic reconciliation for H; they are not relabelled new H builds. Normal H providers and source-matched tools, fresh exact145/SDK native/browser, coherent packages and soleSTANDARD90 remain required. No extra ordinary rebuild solely for this one-line Vulkan-only host recipe."
     }
   ],
   "source_inventory_scope": "Historical declaration census retained at its explicit row epochs. Current reviewed source identities are drift_guard.files; counts and names do not qualify implementations.",

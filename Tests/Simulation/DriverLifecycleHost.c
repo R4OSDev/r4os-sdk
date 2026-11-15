@@ -2,6 +2,9 @@
 #include <stdio.h>
 #include "r4os/driver2_lifecycle.h"
 static int unmaps,unpins,releases,terminal;
+static int rearms;
+static uint32_t probe_irq(uint8_t line,uintptr_t context){(void)line;(void)context;return 0;}
+static int32_t rearm_mock(uint8_t line,uint32_t (*handler)(uint8_t,uintptr_t),uintptr_t context){assert(line==9&&handler&&context==71);return ++rearms==1?-3:0;}
 static int32_t unmap(R4DmaMapping *m){assert(m->handle==31);unmaps++;if(unmaps==1)return -6;m->handle=0;return 0;}
 static int32_t unpin(R4DmaPinnedBuffer *p){assert(p->handle==17);assert(unmaps==2);unpins++;p->handle=0;return 0;}
 static int32_t status(uint32_t handle,R4DriverCompletionStatus *s){assert(handle==19);s->state=terminal?R4OS_DRIVER_WORK_STATE_COMPLETED:1;return 0;}
@@ -11,6 +14,14 @@ int main(void){
  R4SdkDriver2Context ctx;
  assert(r4driver2_init(0,&ctx)<0);api.size=16;assert(r4driver2_init(&api,&ctx)<0);api.size=sizeof(api);
  assert(r4driver2_init(&api,&ctx)==0);
+ api.irq_rearm=rearm_mock;api.size=672;
+ R4SdkDriverSlot arm=R4SdkDriver2Context_irqRearm(0,&ctx,9,(uintptr_t)probe_irq,71);
+ assert(!arm.status&&(int32_t)arm.bits==R4OS_ERR_NO_FN&&!rearms);
+ api.size=sizeof(api);
+ arm=R4SdkDriver2Context_irqRearm(0,&ctx,9,(uintptr_t)probe_irq,71);
+ assert(!arm.status&&(int32_t)arm.bits==-3&&rearms==1);
+ arm=R4SdkDriver2Context_irqRearm(0,&ctx,9,(uintptr_t)probe_irq,71);
+ assert(!arm.status&&(int32_t)arm.bits==0&&rearms==2);
  R4DriverDmaLease2 d={.owner=&ctx,.pin={.version=1,.size=sizeof(d.pin),.handle=17},.mapping={.version=1,.size=sizeof(d.mapping),.handle=31,.pin_handle=17}};
  assert(r4driver2_dma_close_quiesced(&d)==-6);assert(d.mapping.handle==31 && d.pin.handle==17 && unpins==0);
  assert(r4driver2_dma_close_quiesced(&d)==0);assert(!d.mapping.handle && !d.pin.handle && unpins==1);
@@ -27,12 +38,15 @@ static int32_t pin_mock(uint64_t address,uint32_t bytes,uint32_t flags,R4DmaPinn
 static int32_t map_mock(const R4DmaPinnedBuffer *pin,const R4DmaConstraints *constraints,uint32_t direction,R4DmaMapping *out){(void)constraints;assert(pin->handle==17);*out=(R4DmaMapping){.version=1,.size=sizeof(*out),.handle=31,.pin_handle=17,.direction=direction};return 0;}
 static int32_t work_mock(int32_t (*handler)(uintptr_t),uintptr_t context,uint32_t flags,uint32_t *out){(void)handler;(void)context;(void)flags;*out=19;return 0;}
 static int32_t irq_mock(uint8_t line,uint32_t (*handler)(uint8_t,uintptr_t),uintptr_t context,uint32_t flags){(void)handler;assert(line==9 && context==71 && flags==1);return 0;}
+static int32_t deferred_irq_mock(uint8_t line,uint32_t (*handler)(uint8_t,uintptr_t),uintptr_t context,uint32_t flags){assert(line==9&&handler&&context==71&&flags==10);return 0;}
 static int32_t irq_close_mock(uint8_t line,uint32_t (*handler)(uint8_t,uintptr_t),uintptr_t context){(void)handler;assert(line==9 && context==71);return ++irq_closes==1?-6:0;}
 const R4DriverApi2 *sdk67_driver_oracle(void){
  static R4DriverApi2 api;
  api=(R4DriverApi2){.magic=R4OS_DRIVER_API2_MAGIC,.version=R4OS_DRIVER_API2_VERSION,.size=sizeof(api),.dma_pin_buffer=pin_mock,.dma_map_pinned=map_mock,.dma_unmap=unmap,.dma_unpin_buffer=unpin,
-  .driver_work_submit=work_mock,.driver_completion_status=status,.driver_completion_release=release,.irq_register=irq_mock,.irq_unregister=irq_close_mock};
- unmaps=unpins=releases=terminal=irq_closes=0;return &api;
+  .driver_work_submit=work_mock,.driver_completion_status=status,.driver_completion_release=release,.irq_register=irq_mock,.irq_unregister=irq_close_mock,.irq_rearm=rearm_mock};
+ unmaps=unpins=releases=terminal=irq_closes=rearms=0;return &api;
 }
+const R4DriverApi2 *sdk23_driver_old_oracle(void){static R4DriverApi2 old;old=*sdk67_driver_oracle();old.size=672;return &old;}
+const R4DriverApi2 *sdk23_driver_deferred_oracle(void){static R4DriverApi2 current;current=*sdk67_driver_oracle();current.irq_register=deferred_irq_mock;return &current;}
 void sdk67_driver_terminal(void){terminal=1;}
 uint32_t sdk67_driver_counts(void){return (uint32_t)(unmaps+16*unpins+256*releases+4096*irq_closes);}

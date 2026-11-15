@@ -205,6 +205,13 @@ pub const Context = struct {
         return self.required("irq_unregister")(irq, handler, context);
     }
 
+    /// Finish device service for an exclusive deferred level IRQ. Busy keeps
+    /// the masked registration alive; withdrawal never regains admission.
+    pub fn irqRearm(self: *const Context, irq: u8, handler: abi.IrqHandler, context: usize) i32 {
+        const callback = self.function("irq_rearm") orelse return abi.err_no_fn;
+        return callback(irq, handler, context);
+    }
+
     pub fn logError(self: *const Context, text: [*:0]const u8) void {
         if (self.function("log_error")) |callback| callback(text);
     }

@@ -87,7 +87,8 @@ test "technical2 views reject wrong generations and short records without invoki
     driver.size = @sizeOf(abi.DriverApi2);
     try std.testing.expect(Driver.init(&driver).?.function("register_audio_capture_backend") != null);
     driver.audio_output_progress = @ptrFromInt(8);
-    for (capture_end..@sizeOf(abi.DriverApi2)) |size| {
+    const progress_end = @offsetOf(abi.DriverApi2, "audio_output_progress") + @sizeOf(usize);
+    for (capture_end..progress_end) |size| {
         driver.size = @intCast(size);
         const old = Driver.init(&driver) orelse return error.OriginalDriverPrefixRejected;
         try std.testing.expect(old.function("register_audio_capture_backend") != null);
@@ -95,6 +96,30 @@ test "technical2 views reject wrong generations and short records without invoki
     }
     driver.size = @sizeOf(abi.DriverApi2);
     try std.testing.expect(Driver.init(&driver).?.function("audio_output_progress") != null);
+    driver.irq_rearm = undefined;
+    // A partial optional function pointer is never read. Every byte of the
+    // old 672-byte provider prefix remains usable by a new consumer.
+    for (progress_end..@sizeOf(abi.DriverApi2)) |size| {
+        driver.size = @intCast(size);
+        const old = Driver.init(&driver) orelse return error.OriginalDriverPrefixRejected;
+        try std.testing.expect(old.function("audio_output_progress") != null);
+        try std.testing.expect(old.function("irq_rearm") == null);
+    }
+    driver.irq_rearm = null;
+    driver.size = @sizeOf(abi.DriverApi2);
+    try std.testing.expect(Driver.init(&driver).?.function("irq_rearm") == null);
+    const Probe = struct {
+        fn irq(_: u8, _: usize) callconv(.c) u32 {
+            return 0;
+        }
+        fn rearm(line: u8, handler: abi.shared.IrqHandler, context: usize) callconv(.c) i32 {
+            return if (line == 9 and handler == irq and context == 83) 17 else -1;
+        }
+    };
+    driver.irq_rearm = Probe.rearm;
+    try std.testing.expectEqual(@as(i32, 17), @import("driver2.zig").Context.init(&driver).irqRearm(9, Probe.irq, 83));
+    driver.size = progress_end;
+    try std.testing.expectEqual(abi.shared.err_no_fn, @import("driver2.zig").Context.init(&driver).irqRearm(9, Probe.irq, 83));
     var protocol: abi.ProtocolApi2 = undefined;
     protocol.magic = abi.protocol_magic;
     protocol.version = abi.protocol_version;

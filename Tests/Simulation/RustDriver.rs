@@ -5,6 +5,8 @@ unsafe extern "C" {
     fn sdk67_driver_terminal();
     fn sdk67_driver_counts() -> u32;
     fn sdk67_driver_c_case() -> i32;
+    fn sdk23_driver_old_oracle() -> *const abi::DriverApi2;
+    fn sdk23_driver_deferred_oracle() -> *const abi::DriverApi2;
 }
 unsafe extern "C" fn work(_: usize) -> i32 {
     0
@@ -47,4 +49,16 @@ fn exact_dma_irq_and_work_tokens_survive_refusal_and_drop_does_not_quiesce() {
     let dropped = unsafe { driver.work(work, 71, 0) }.unwrap();
     drop(dropped);
     assert_eq!(unsafe { sdk67_driver_counts() }, before);
+    let current = unsafe { Driver::from_raw(sdk23_driver_deferred_oracle()) }.unwrap();
+    let mut deferred = unsafe { current.irq(9, irq, 71, 10) }.unwrap();
+    assert_eq!(unsafe { deferred.close() }, Err(-6));
+    assert_eq!(unsafe { deferred.rearm() }, Err(-3));
+    unsafe { deferred.rearm() }.unwrap();
+    unsafe { deferred.close() }.unwrap();
+    assert_eq!(unsafe { deferred.rearm() }, Err(-1));
+    let old = unsafe { Driver::from_raw(sdk23_driver_old_oracle()) }.unwrap();
+    let mut old_irq = unsafe { old.irq(9, irq, 71, 1) }.unwrap();
+    assert_eq!(unsafe { old_irq.rearm() }, Err(abi::err_no_fn));
+    assert_eq!(unsafe { old_irq.close() }, Err(-6));
+    unsafe { old_irq.close() }.unwrap();
 }
