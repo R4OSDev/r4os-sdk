@@ -12197,9 +12197,15 @@ const _: () = { assert!(core::mem::size_of::<R4SdkWebJsDiagnosticPhase>() == 1);
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebJsProgram {
-    pub r#opaque_bytes: [u8; 4718848],
+    pub r#opaque_bytes: [u8; 4718856],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebJsProgram>() == 4718848); assert!(core::mem::align_of::<R4SdkWebJsProgram>() == 8); assert!(core::mem::offset_of!(R4SdkWebJsProgram, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebJsProgram>() == 4718856); assert!(core::mem::align_of::<R4SdkWebJsProgram>() == 8); assert!(core::mem::offset_of!(R4SdkWebJsProgram, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWebJsSyntaxDepth {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWebJsSyntaxDepth>() == 8); assert!(core::mem::align_of::<R4SdkWebJsSyntaxDepth>() == 8); assert!(core::mem::offset_of!(R4SdkWebJsSyntaxDepth, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebJsProgramWorkspace {
@@ -12208,10 +12214,10 @@ pub struct R4SdkWebJsProgramWorkspace {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebJsProgramWorkspace>() == 2097152); assert!(core::mem::align_of::<R4SdkWebJsProgramWorkspace>() == 8); assert!(core::mem::offset_of!(R4SdkWebJsProgramWorkspace, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue268 {
+pub struct R4SdkWebNativeValue269 {
     pub r#opaque_bytes: [u8; 2097152],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue268>() == 2097152); assert!(core::mem::align_of::<R4SdkWebNativeValue268>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue268, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue269>() == 2097152); assert!(core::mem::align_of::<R4SdkWebNativeValue269>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue269, r#opaque_bytes) == 0); };
 #[repr(C, align(4))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebJsCompiledProgramStorage {
@@ -12220,46 +12226,46 @@ pub struct R4SdkWebJsCompiledProgramStorage {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebJsCompiledProgramStorage>() == 2015232); assert!(core::mem::align_of::<R4SdkWebJsCompiledProgramStorage>() == 4); assert!(core::mem::offset_of!(R4SdkWebJsCompiledProgramStorage, r#opaque_bytes) == 0); };
 #[repr(C, align(2))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue270 {
+pub struct R4SdkWebNativeValue271 {
     pub r#opaque_bytes: [u8; 1179648],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue270>() == 1179648); assert!(core::mem::align_of::<R4SdkWebNativeValue270>() == 2); assert!(core::mem::offset_of!(R4SdkWebNativeValue270, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue271>() == 1179648); assert!(core::mem::align_of::<R4SdkWebNativeValue271>() == 2); assert!(core::mem::offset_of!(R4SdkWebNativeValue271, r#opaque_bytes) == 0); };
 #[repr(C, align(4))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue271 {
+pub struct R4SdkWebNativeValue272 {
     pub r#opaque_bytes: [u8; 196608],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue271>() == 196608); assert!(core::mem::align_of::<R4SdkWebNativeValue271>() == 4); assert!(core::mem::offset_of!(R4SdkWebNativeValue271, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue272>() == 196608); assert!(core::mem::align_of::<R4SdkWebNativeValue272>() == 4); assert!(core::mem::offset_of!(R4SdkWebNativeValue272, r#opaque_bytes) == 0); };
 #[repr(C, align(2))]
-#[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue272 {
-    pub r#opaque_bytes: [u8; 98304],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue272>() == 98304); assert!(core::mem::align_of::<R4SdkWebNativeValue272>() == 2); assert!(core::mem::offset_of!(R4SdkWebNativeValue272, r#opaque_bytes) == 0); };
-#[repr(C, align(1))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue273 {
-    pub r#opaque_bytes: [u8; 49152],
+    pub r#opaque_bytes: [u8; 98304],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue273>() == 49152); assert!(core::mem::align_of::<R4SdkWebNativeValue273>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue273, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue274 {
-    pub r#opaque_bytes: [u8; 2359296],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue274>() == 2359296); assert!(core::mem::align_of::<R4SdkWebNativeValue274>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue274, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue273>() == 98304); assert!(core::mem::align_of::<R4SdkWebNativeValue273>() == 2); assert!(core::mem::offset_of!(R4SdkWebNativeValue273, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue275 {
-    pub r#opaque_bytes: [u8; 128],
+pub struct R4SdkWebNativeValue274 {
+    pub r#opaque_bytes: [u8; 49152],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue275>() == 128); assert!(core::mem::align_of::<R4SdkWebNativeValue275>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue275, r#opaque_bytes) == 0); };
-#[repr(C, align(2))]
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue274>() == 49152); assert!(core::mem::align_of::<R4SdkWebNativeValue274>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue274, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWebNativeValue275 {
+    pub r#opaque_bytes: [u8; 2359296],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue275>() == 2359296); assert!(core::mem::align_of::<R4SdkWebNativeValue275>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue275, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue276 {
+    pub r#opaque_bytes: [u8; 128],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue276>() == 128); assert!(core::mem::align_of::<R4SdkWebNativeValue276>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue276, r#opaque_bytes) == 0); };
+#[repr(C, align(2))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWebNativeValue277 {
     pub r#opaque_bytes: [u8; 2],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue276>() == 2); assert!(core::mem::align_of::<R4SdkWebNativeValue276>() == 2); assert!(core::mem::offset_of!(R4SdkWebNativeValue276, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue277>() == 2); assert!(core::mem::align_of::<R4SdkWebNativeValue277>() == 2); assert!(core::mem::offset_of!(R4SdkWebNativeValue277, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebJsCellKind {
@@ -12280,16 +12286,16 @@ pub struct R4SdkWebJsClockSource {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebJsClockSource>() == 24); assert!(core::mem::align_of::<R4SdkWebJsClockSource>() == 8); assert!(core::mem::offset_of!(R4SdkWebJsClockSource, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue280 {
-    pub r#opaque_bytes: [u8; 8],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue280>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue280>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue280, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue281 {
     pub r#opaque_bytes: [u8; 8],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue281>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue281>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue281, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWebNativeValue282 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue282>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue282>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue282, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebJsPromiseState {
@@ -12304,10 +12310,10 @@ pub struct R4SdkWebJsPromiseRejectionTracker {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebJsPromiseRejectionTracker>() == 16); assert!(core::mem::align_of::<R4SdkWebJsPromiseRejectionTracker>() == 8); assert!(core::mem::offset_of!(R4SdkWebJsPromiseRejectionTracker, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue284 {
+pub struct R4SdkWebNativeValue285 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue284>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue284>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue284, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue285>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue285>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue285, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebJsProperty {
@@ -12340,16 +12346,10 @@ pub struct R4SdkWebJsCell {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebJsCell>() == 1016); assert!(core::mem::align_of::<R4SdkWebJsCell>() == 8); assert!(core::mem::offset_of!(R4SdkWebJsCell, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue290 {
+pub struct R4SdkWebNativeValue291 {
     pub r#opaque_bytes: [u8; 2],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue290>() == 2); assert!(core::mem::align_of::<R4SdkWebNativeValue290>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue290, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue291 {
-    pub r#opaque_bytes: [u8; 8],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue291>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue291>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue291, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue291>() == 2); assert!(core::mem::align_of::<R4SdkWebNativeValue291>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue291, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue292 {
@@ -12425,9 +12425,15 @@ const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue303>() == 8); as
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue304 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue304>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue304>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue304, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWebNativeValue305 {
     pub r#opaque_bytes: [u8; 128],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue304>() == 128); assert!(core::mem::align_of::<R4SdkWebNativeValue304>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue304, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue305>() == 128); assert!(core::mem::align_of::<R4SdkWebNativeValue305>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue305, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebJsCellStorage {
@@ -12442,16 +12448,16 @@ pub struct R4SdkWebJsCollectionCursor {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebJsCollectionCursor>() == 16); assert!(core::mem::align_of::<R4SdkWebJsCollectionCursor>() == 8); assert!(core::mem::offset_of!(R4SdkWebJsCollectionCursor, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue307 {
+pub struct R4SdkWebNativeValue308 {
     pub r#opaque_bytes: [u8; 640],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue307>() == 640); assert!(core::mem::align_of::<R4SdkWebNativeValue307>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue307, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue308>() == 640); assert!(core::mem::align_of::<R4SdkWebNativeValue308>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue308, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue308 {
+pub struct R4SdkWebNativeValue309 {
     pub r#opaque_bytes: [u8; 256],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue308>() == 256); assert!(core::mem::align_of::<R4SdkWebNativeValue308>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue308, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue309>() == 256); assert!(core::mem::align_of::<R4SdkWebNativeValue309>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue309, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebJsJobKind {
@@ -12484,10 +12490,10 @@ pub struct R4SdkWebJsExternalRootMarker {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebJsExternalRootMarker>() == 32); assert!(core::mem::align_of::<R4SdkWebJsExternalRootMarker>() == 8); assert!(core::mem::offset_of!(R4SdkWebJsExternalRootMarker, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue314 {
+pub struct R4SdkWebNativeValue315 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue314>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue314>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue314, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue315>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue315>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue315, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebJsModule {
@@ -12496,22 +12502,22 @@ pub struct R4SdkWebJsModule {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebJsModule>() == 2616); assert!(core::mem::align_of::<R4SdkWebJsModule>() == 8); assert!(core::mem::offset_of!(R4SdkWebJsModule, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue316 {
-    pub r#opaque_bytes: [u8; 8],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue316>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue316>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue316, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue317 {
     pub r#opaque_bytes: [u8; 8],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue317>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue317>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue317, r#opaque_bytes) == 0); };
-#[repr(C, align(4))]
+#[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue318 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue318>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue318>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue318, r#opaque_bytes) == 0); };
+#[repr(C, align(4))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWebNativeValue319 {
     pub r#opaque_bytes: [u8; 2560],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue318>() == 2560); assert!(core::mem::align_of::<R4SdkWebNativeValue318>() == 4); assert!(core::mem::offset_of!(R4SdkWebNativeValue318, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue319>() == 2560); assert!(core::mem::align_of::<R4SdkWebNativeValue319>() == 4); assert!(core::mem::offset_of!(R4SdkWebNativeValue319, r#opaque_bytes) == 0); };
 #[repr(C, align(4))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebJsModuleExport {
@@ -12550,52 +12556,46 @@ pub struct R4SdkWebJsRuntime {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebJsRuntime>() == 35201944); assert!(core::mem::align_of::<R4SdkWebJsRuntime>() == 8); assert!(core::mem::offset_of!(R4SdkWebJsRuntime, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue325 {
+pub struct R4SdkWebNativeValue326 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue325>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue325>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue325, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue326>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue326>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue326, r#opaque_bytes) == 0); };
 #[repr(C, align(4))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue326 {
+pub struct R4SdkWebNativeValue327 {
     pub r#opaque_bytes: [u8; 524288],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue326>() == 524288); assert!(core::mem::align_of::<R4SdkWebNativeValue326>() == 4); assert!(core::mem::offset_of!(R4SdkWebNativeValue326, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue327 {
-    pub r#opaque_bytes: [u8; 32768],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue327>() == 32768); assert!(core::mem::align_of::<R4SdkWebNativeValue327>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue327, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue327>() == 524288); assert!(core::mem::align_of::<R4SdkWebNativeValue327>() == 4); assert!(core::mem::offset_of!(R4SdkWebNativeValue327, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue328 {
-    pub r#opaque_bytes: [u8; 65568],
+    pub r#opaque_bytes: [u8; 32768],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue328>() == 65568); assert!(core::mem::align_of::<R4SdkWebNativeValue328>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue328, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue328>() == 32768); assert!(core::mem::align_of::<R4SdkWebNativeValue328>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue328, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue329 {
-    pub r#opaque_bytes: [u8; 131072],
+    pub r#opaque_bytes: [u8; 65568],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue329>() == 131072); assert!(core::mem::align_of::<R4SdkWebNativeValue329>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue329, r#opaque_bytes) == 0); };
-#[repr(C, align(4))]
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue329>() == 65568); assert!(core::mem::align_of::<R4SdkWebNativeValue329>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue329, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue330 {
     pub r#opaque_bytes: [u8; 131072],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue330>() == 131072); assert!(core::mem::align_of::<R4SdkWebNativeValue330>() == 4); assert!(core::mem::offset_of!(R4SdkWebNativeValue330, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue330>() == 131072); assert!(core::mem::align_of::<R4SdkWebNativeValue330>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue330, r#opaque_bytes) == 0); };
+#[repr(C, align(4))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue331 {
-    pub r#opaque_bytes: [u8; 33292288],
+    pub r#opaque_bytes: [u8; 131072],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue331>() == 33292288); assert!(core::mem::align_of::<R4SdkWebNativeValue331>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue331, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue331>() == 131072); assert!(core::mem::align_of::<R4SdkWebNativeValue331>() == 4); assert!(core::mem::offset_of!(R4SdkWebNativeValue331, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue332 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 33292288],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue332>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue332>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue332, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue332>() == 33292288); assert!(core::mem::align_of::<R4SdkWebNativeValue332>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue332, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue333 {
@@ -12605,27 +12605,27 @@ const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue333>() == 8); as
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue334 {
-    pub r#opaque_bytes: [u8; 20928],
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue334>() == 20928); assert!(core::mem::align_of::<R4SdkWebNativeValue334>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue334, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue334>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue334>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue334, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue335 {
-    pub r#opaque_bytes: [u8; 32],
+    pub r#opaque_bytes: [u8; 20928],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue335>() == 32); assert!(core::mem::align_of::<R4SdkWebNativeValue335>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue335, r#opaque_bytes) == 0); };
-#[repr(C, align(2))]
-#[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue336 {
-    pub r#opaque_bytes: [u8; 24],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue336>() == 24); assert!(core::mem::align_of::<R4SdkWebNativeValue336>() == 2); assert!(core::mem::offset_of!(R4SdkWebNativeValue336, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue335>() == 20928); assert!(core::mem::align_of::<R4SdkWebNativeValue335>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue335, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue337 {
-    pub r#opaque_bytes: [u8; 8192],
+pub struct R4SdkWebNativeValue336 {
+    pub r#opaque_bytes: [u8; 32],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue337>() == 8192); assert!(core::mem::align_of::<R4SdkWebNativeValue337>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue337, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue336>() == 32); assert!(core::mem::align_of::<R4SdkWebNativeValue336>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue336, r#opaque_bytes) == 0); };
+#[repr(C, align(2))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWebNativeValue337 {
+    pub r#opaque_bytes: [u8; 24],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue337>() == 24); assert!(core::mem::align_of::<R4SdkWebNativeValue337>() == 2); assert!(core::mem::offset_of!(R4SdkWebNativeValue337, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue338 {
@@ -12634,16 +12634,22 @@ pub struct R4SdkWebNativeValue338 {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue338>() == 8192); assert!(core::mem::align_of::<R4SdkWebNativeValue338>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue338, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
+pub struct R4SdkWebNativeValue339 {
+    pub r#opaque_bytes: [u8; 8192],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue339>() == 8192); assert!(core::mem::align_of::<R4SdkWebNativeValue339>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue339, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
 pub struct R4SdkWebJsBytecodeFrame {
     pub r#opaque_bytes: [u8; 32],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkWebJsBytecodeFrame>() == 32); assert!(core::mem::align_of::<R4SdkWebJsBytecodeFrame>() == 8); assert!(core::mem::offset_of!(R4SdkWebJsBytecodeFrame, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue340 {
+pub struct R4SdkWebNativeValue341 {
     pub r#opaque_bytes: [u8; 163840],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue340>() == 163840); assert!(core::mem::align_of::<R4SdkWebNativeValue340>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue340, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue341>() == 163840); assert!(core::mem::align_of::<R4SdkWebNativeValue341>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue341, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebJsIdentifierCacheEntry {
@@ -12652,16 +12658,16 @@ pub struct R4SdkWebJsIdentifierCacheEntry {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebJsIdentifierCacheEntry>() == 40); assert!(core::mem::align_of::<R4SdkWebJsIdentifierCacheEntry>() == 8); assert!(core::mem::offset_of!(R4SdkWebJsIdentifierCacheEntry, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue342 {
-    pub r#opaque_bytes: [u8; 8],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue342>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue342>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue342, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue343 {
     pub r#opaque_bytes: [u8; 8],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue343>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue343>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue343, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWebNativeValue344 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue344>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue344>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue344, r#opaque_bytes) == 0); };
 #[repr(C, align(16))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebJsGeneratorFiberState {
@@ -12670,10 +12676,10 @@ pub struct R4SdkWebJsGeneratorFiberState {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebJsGeneratorFiberState>() == 58592); assert!(core::mem::align_of::<R4SdkWebJsGeneratorFiberState>() == 16); assert!(core::mem::offset_of!(R4SdkWebJsGeneratorFiberState, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue345 {
+pub struct R4SdkWebNativeValue346 {
     pub r#opaque_bytes: [u8; 2048],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue345>() == 2048); assert!(core::mem::align_of::<R4SdkWebNativeValue345>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue345, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue346>() == 2048); assert!(core::mem::align_of::<R4SdkWebNativeValue346>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue346, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebJsGeneratorStatus {
@@ -12688,10 +12694,10 @@ pub struct R4SdkWebJsGeneratorResumeKind {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebJsGeneratorResumeKind>() == 1); assert!(core::mem::align_of::<R4SdkWebJsGeneratorResumeKind>() == 1); assert!(core::mem::offset_of!(R4SdkWebJsGeneratorResumeKind, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue348 {
+pub struct R4SdkWebNativeValue349 {
     pub r#opaque_bytes: [u8; 3072],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue348>() == 3072); assert!(core::mem::align_of::<R4SdkWebNativeValue348>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue348, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue349>() == 3072); assert!(core::mem::align_of::<R4SdkWebNativeValue349>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue349, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebJsAsyncGeneratorRequest {
@@ -12706,22 +12712,22 @@ pub struct R4SdkWebJsFiberContext {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebJsFiberContext>() == 256); assert!(core::mem::align_of::<R4SdkWebJsFiberContext>() == 16); assert!(core::mem::offset_of!(R4SdkWebJsFiberContext, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue351 {
+pub struct R4SdkWebNativeValue352 {
     pub r#opaque_bytes: [u8; 2],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue351>() == 2); assert!(core::mem::align_of::<R4SdkWebNativeValue351>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue351, r#opaque_bytes) == 0); };
-#[repr(C, align(1))]
-#[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue352 {
-    pub r#opaque_bytes: [u8; 160],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue352>() == 160); assert!(core::mem::align_of::<R4SdkWebNativeValue352>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue352, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue352>() == 2); assert!(core::mem::align_of::<R4SdkWebNativeValue352>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue352, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue353 {
+    pub r#opaque_bytes: [u8; 160],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue353>() == 160); assert!(core::mem::align_of::<R4SdkWebNativeValue353>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue353, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWebNativeValue354 {
     pub r#opaque_bytes: [u8; 16],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue353>() == 16); assert!(core::mem::align_of::<R4SdkWebNativeValue353>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue353, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue354>() == 16); assert!(core::mem::align_of::<R4SdkWebNativeValue354>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue354, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebJsExecutionSnapshot {
@@ -12730,16 +12736,16 @@ pub struct R4SdkWebJsExecutionSnapshot {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebJsExecutionSnapshot>() == 26408); assert!(core::mem::align_of::<R4SdkWebJsExecutionSnapshot>() == 8); assert!(core::mem::offset_of!(R4SdkWebJsExecutionSnapshot, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue355 {
-    pub r#opaque_bytes: [u8; 8],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue355>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue355>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue355, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue356 {
     pub r#opaque_bytes: [u8; 8],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue356>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue356>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue356, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWebNativeValue357 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue357>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue357>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue357, r#opaque_bytes) == 0); };
 #[repr(C, align(16))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebJsAsyncFiberState {
@@ -12754,34 +12760,34 @@ pub struct R4SdkWebJsAsyncStatus {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebJsAsyncStatus>() == 1); assert!(core::mem::align_of::<R4SdkWebJsAsyncStatus>() == 1); assert!(core::mem::offset_of!(R4SdkWebJsAsyncStatus, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue359 {
+pub struct R4SdkWebNativeValue360 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue359>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue359>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue359, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue360>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue360>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue360, r#opaque_bytes) == 0); };
 #[repr(C, align(2))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue360 {
+pub struct R4SdkWebNativeValue361 {
     pub r#opaque_bytes: [u8; 128],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue360>() == 128); assert!(core::mem::align_of::<R4SdkWebNativeValue360>() == 2); assert!(core::mem::offset_of!(R4SdkWebNativeValue360, r#opaque_bytes) == 0); };
-#[repr(C, align(1))]
-#[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue361 {
-    pub r#opaque_bytes: [u8; 192],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue361>() == 192); assert!(core::mem::align_of::<R4SdkWebNativeValue361>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue361, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue361>() == 128); assert!(core::mem::align_of::<R4SdkWebNativeValue361>() == 2); assert!(core::mem::offset_of!(R4SdkWebNativeValue361, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue362 {
-    pub r#opaque_bytes: [u8; 1024],
+    pub r#opaque_bytes: [u8; 192],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue362>() == 1024); assert!(core::mem::align_of::<R4SdkWebNativeValue362>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue362, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue362>() == 192); assert!(core::mem::align_of::<R4SdkWebNativeValue362>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue362, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue363 {
+    pub r#opaque_bytes: [u8; 1024],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue363>() == 1024); assert!(core::mem::align_of::<R4SdkWebNativeValue363>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue363, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWebNativeValue364 {
     pub r#opaque_bytes: [u8; 5120],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue363>() == 5120); assert!(core::mem::align_of::<R4SdkWebNativeValue363>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue363, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue364>() == 5120); assert!(core::mem::align_of::<R4SdkWebNativeValue364>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue364, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebJsTemplateObjectCache {
@@ -12790,22 +12796,22 @@ pub struct R4SdkWebJsTemplateObjectCache {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebJsTemplateObjectCache>() == 40); assert!(core::mem::align_of::<R4SdkWebJsTemplateObjectCache>() == 8); assert!(core::mem::offset_of!(R4SdkWebJsTemplateObjectCache, r#opaque_bytes) == 0); };
 #[repr(C, align(2))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue365 {
+pub struct R4SdkWebNativeValue366 {
     pub r#opaque_bytes: [u8; 65536],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue365>() == 65536); assert!(core::mem::align_of::<R4SdkWebNativeValue365>() == 2); assert!(core::mem::offset_of!(R4SdkWebNativeValue365, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue366>() == 65536); assert!(core::mem::align_of::<R4SdkWebNativeValue366>() == 2); assert!(core::mem::offset_of!(R4SdkWebNativeValue366, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue366 {
+pub struct R4SdkWebNativeValue367 {
     pub r#opaque_bytes: [u8; 6144],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue366>() == 6144); assert!(core::mem::align_of::<R4SdkWebNativeValue366>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue366, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue367>() == 6144); assert!(core::mem::align_of::<R4SdkWebNativeValue367>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue367, r#opaque_bytes) == 0); };
 #[repr(C, align(4))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue367 {
+pub struct R4SdkWebNativeValue368 {
     pub r#opaque_bytes: [u8; 1024],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue367>() == 1024); assert!(core::mem::align_of::<R4SdkWebNativeValue367>() == 4); assert!(core::mem::offset_of!(R4SdkWebNativeValue367, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue368>() == 1024); assert!(core::mem::align_of::<R4SdkWebNativeValue368>() == 4); assert!(core::mem::offset_of!(R4SdkWebNativeValue368, r#opaque_bytes) == 0); };
 #[repr(C, align(4))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebJsSymbolRegistryEntry {
@@ -12814,10 +12820,10 @@ pub struct R4SdkWebJsSymbolRegistryEntry {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebJsSymbolRegistryEntry>() == 16); assert!(core::mem::align_of::<R4SdkWebJsSymbolRegistryEntry>() == 4); assert!(core::mem::offset_of!(R4SdkWebJsSymbolRegistryEntry, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue369 {
+pub struct R4SdkWebNativeValue370 {
     pub r#opaque_bytes: [u8; 32768],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue369>() == 32768); assert!(core::mem::align_of::<R4SdkWebNativeValue369>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue369, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue370>() == 32768); assert!(core::mem::align_of::<R4SdkWebNativeValue370>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue370, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNative_web_response_cache_Mode {
@@ -12868,10 +12874,10 @@ pub struct R4SdkWebNative_http_Method {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebNative_http_Method>() == 1); assert!(core::mem::align_of::<R4SdkWebNative_http_Method>() == 1); assert!(core::mem::offset_of!(R4SdkWebNative_http_Method, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue378 {
+pub struct R4SdkWebNativeValue379 {
     pub r#opaque_bytes: [u8; 16384],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue378>() == 16384); assert!(core::mem::align_of::<R4SdkWebNativeValue378>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue378, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue379>() == 16384); assert!(core::mem::align_of::<R4SdkWebNativeValue379>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue379, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNative_web_security_Origin {
@@ -12886,16 +12892,16 @@ pub struct R4SdkWebNative_web_security_OriginScheme {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebNative_web_security_OriginScheme>() == 1); assert!(core::mem::align_of::<R4SdkWebNative_web_security_OriginScheme>() == 1); assert!(core::mem::offset_of!(R4SdkWebNative_web_security_OriginScheme, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue381 {
+pub struct R4SdkWebNativeValue382 {
     pub r#opaque_bytes: [u8; 254],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue381>() == 254); assert!(core::mem::align_of::<R4SdkWebNativeValue381>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue381, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue382>() == 254); assert!(core::mem::align_of::<R4SdkWebNativeValue382>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue382, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue382 {
+pub struct R4SdkWebNativeValue383 {
     pub r#opaque_bytes: [u8; 256],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue382>() == 256); assert!(core::mem::align_of::<R4SdkWebNativeValue382>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue382, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue383>() == 256); assert!(core::mem::align_of::<R4SdkWebNativeValue383>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue383, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebRuntimeResponseMeta {
@@ -12904,10 +12910,10 @@ pub struct R4SdkWebRuntimeResponseMeta {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebRuntimeResponseMeta>() == 360); assert!(core::mem::align_of::<R4SdkWebRuntimeResponseMeta>() == 8); assert!(core::mem::offset_of!(R4SdkWebRuntimeResponseMeta, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue384 {
+pub struct R4SdkWebNativeValue385 {
     pub r#opaque_bytes: [u8; 256],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue384>() == 256); assert!(core::mem::align_of::<R4SdkWebNativeValue384>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue384, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue385>() == 256); assert!(core::mem::align_of::<R4SdkWebNativeValue385>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue385, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebRuntimeResourceCompletion {
@@ -12940,10 +12946,10 @@ pub struct R4SdkWebRuntimeResourceHandler {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebRuntimeResourceHandler>() == 16); assert!(core::mem::align_of::<R4SdkWebRuntimeResourceHandler>() == 8); assert!(core::mem::offset_of!(R4SdkWebRuntimeResourceHandler, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue390 {
+pub struct R4SdkWebNativeValue391 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue390>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue390>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue390, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue391>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue391>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue391, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebRuntimeFontDemand {
@@ -12976,16 +12982,16 @@ pub struct R4SdkWebRuntimeFontSourceHandler {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebRuntimeFontSourceHandler>() == 24); assert!(core::mem::align_of::<R4SdkWebRuntimeFontSourceHandler>() == 8); assert!(core::mem::offset_of!(R4SdkWebRuntimeFontSourceHandler, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue396 {
-    pub r#opaque_bytes: [u8; 8],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue396>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue396>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue396, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue397 {
     pub r#opaque_bytes: [u8; 8],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue397>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue397>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue397, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWebNativeValue398 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue398>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue398>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue398, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebRuntimeCssImageSource {
@@ -13018,10 +13024,10 @@ pub struct R4SdkWebNative_web_security_Fixed_256_ {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebNative_web_security_Fixed_256_>() == 272); assert!(core::mem::align_of::<R4SdkWebNative_web_security_Fixed_256_>() == 8); assert!(core::mem::offset_of!(R4SdkWebNative_web_security_Fixed_256_, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue403 {
+pub struct R4SdkWebNativeValue404 {
     pub r#opaque_bytes: [u8; 257],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue403>() == 257); assert!(core::mem::align_of::<R4SdkWebNativeValue403>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue403, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue404>() == 257); assert!(core::mem::align_of::<R4SdkWebNativeValue404>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue404, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebRuntimeResourceEvent {
@@ -13036,22 +13042,16 @@ pub struct R4SdkWebRuntimeResourceObserver {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebRuntimeResourceObserver>() == 16); assert!(core::mem::align_of::<R4SdkWebRuntimeResourceObserver>() == 8); assert!(core::mem::offset_of!(R4SdkWebRuntimeResourceObserver, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue406 {
+pub struct R4SdkWebNativeValue407 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue406>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue406>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue406, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue407>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue407>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue407, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebRuntimeFrameInfo {
     pub r#opaque_bytes: [u8; 808],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkWebRuntimeFrameInfo>() == 808); assert!(core::mem::align_of::<R4SdkWebRuntimeFrameInfo>() == 8); assert!(core::mem::offset_of!(R4SdkWebRuntimeFrameInfo, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue408 {
-    pub r#opaque_bytes: [u8; 8],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue408>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue408>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue408, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue409 {
@@ -13072,22 +13072,28 @@ pub struct R4SdkWebNativeValue411 {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue411>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue411>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue411, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
+pub struct R4SdkWebNativeValue412 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue412>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue412>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue412, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
 pub struct R4SdkWebRuntimeWebRuntime {
     pub r#opaque_bytes: [u8; 2666248],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkWebRuntimeWebRuntime>() == 2666248); assert!(core::mem::align_of::<R4SdkWebRuntimeWebRuntime>() == 8); assert!(core::mem::offset_of!(R4SdkWebRuntimeWebRuntime, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue413 {
+pub struct R4SdkWebNativeValue414 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue413>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue413>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue413, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue414>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue414>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue414, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue414 {
+pub struct R4SdkWebNativeValue415 {
     pub r#opaque_bytes: [u8; 128],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue414>() == 128); assert!(core::mem::align_of::<R4SdkWebNativeValue414>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue414, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue415>() == 128); assert!(core::mem::align_of::<R4SdkWebNativeValue415>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue415, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebRuntimeScriptObserver {
@@ -13096,10 +13102,10 @@ pub struct R4SdkWebRuntimeScriptObserver {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebRuntimeScriptObserver>() == 16); assert!(core::mem::align_of::<R4SdkWebRuntimeScriptObserver>() == 8); assert!(core::mem::offset_of!(R4SdkWebRuntimeScriptObserver, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue416 {
+pub struct R4SdkWebNativeValue417 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue416>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue416>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue416, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue417>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue417>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue417, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebRuntimeMonotonicClock {
@@ -13108,16 +13114,16 @@ pub struct R4SdkWebRuntimeMonotonicClock {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebRuntimeMonotonicClock>() == 16); assert!(core::mem::align_of::<R4SdkWebRuntimeMonotonicClock>() == 8); assert!(core::mem::offset_of!(R4SdkWebRuntimeMonotonicClock, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue418 {
-    pub r#opaque_bytes: [u8; 8],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue418>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue418>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue418, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue419 {
     pub r#opaque_bytes: [u8; 8],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue419>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue419>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue419, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWebNativeValue420 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue420>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue420>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue420, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNative_web_security_BrowserStorage {
@@ -13132,10 +13138,10 @@ pub struct R4SdkWebNative_web_security_CookieJar {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebNative_web_security_CookieJar>() == 151816); assert!(core::mem::align_of::<R4SdkWebNative_web_security_CookieJar>() == 8); assert!(core::mem::offset_of!(R4SdkWebNative_web_security_CookieJar, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue422 {
+pub struct R4SdkWebNativeValue423 {
     pub r#opaque_bytes: [u8; 151808],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue422>() == 151808); assert!(core::mem::align_of::<R4SdkWebNativeValue422>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue422, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue423>() == 151808); assert!(core::mem::align_of::<R4SdkWebNativeValue423>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue423, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNative_web_security_Cookie {
@@ -13150,10 +13156,10 @@ pub struct R4SdkWebNative_web_security_Fixed_64_ {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebNative_web_security_Fixed_64_>() == 80); assert!(core::mem::align_of::<R4SdkWebNative_web_security_Fixed_64_>() == 8); assert!(core::mem::offset_of!(R4SdkWebNative_web_security_Fixed_64_, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue425 {
+pub struct R4SdkWebNativeValue426 {
     pub r#opaque_bytes: [u8; 65],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue425>() == 65); assert!(core::mem::align_of::<R4SdkWebNativeValue425>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue425, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue426>() == 65); assert!(core::mem::align_of::<R4SdkWebNativeValue426>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue426, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNative_web_security_Fixed_4096_ {
@@ -13162,10 +13168,10 @@ pub struct R4SdkWebNative_web_security_Fixed_4096_ {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebNative_web_security_Fixed_4096_>() == 4112); assert!(core::mem::align_of::<R4SdkWebNative_web_security_Fixed_4096_>() == 8); assert!(core::mem::offset_of!(R4SdkWebNative_web_security_Fixed_4096_, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue427 {
+pub struct R4SdkWebNativeValue428 {
     pub r#opaque_bytes: [u8; 4097],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue427>() == 4097); assert!(core::mem::align_of::<R4SdkWebNativeValue427>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue427, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue428>() == 4097); assert!(core::mem::align_of::<R4SdkWebNativeValue428>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue428, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNative_web_security_Fixed_253_ {
@@ -13186,10 +13192,10 @@ pub struct R4SdkWebNative_web_security_StorageSet {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebNative_web_security_StorageSet>() == 126656); assert!(core::mem::align_of::<R4SdkWebNative_web_security_StorageSet>() == 8); assert!(core::mem::offset_of!(R4SdkWebNative_web_security_StorageSet, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue431 {
+pub struct R4SdkWebNativeValue432 {
     pub r#opaque_bytes: [u8; 126656],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue431>() == 126656); assert!(core::mem::align_of::<R4SdkWebNativeValue431>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue431, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue432>() == 126656); assert!(core::mem::align_of::<R4SdkWebNativeValue432>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue432, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNative_web_security_StorageArea {
@@ -13198,10 +13204,10 @@ pub struct R4SdkWebNative_web_security_StorageArea {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebNative_web_security_StorageArea>() == 15832); assert!(core::mem::align_of::<R4SdkWebNative_web_security_StorageArea>() == 8); assert!(core::mem::offset_of!(R4SdkWebNative_web_security_StorageArea, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue433 {
+pub struct R4SdkWebNativeValue434 {
     pub r#opaque_bytes: [u8; 15552],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue433>() == 15552); assert!(core::mem::align_of::<R4SdkWebNativeValue433>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue433, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue434>() == 15552); assert!(core::mem::align_of::<R4SdkWebNativeValue434>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue434, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNative_web_security_StorageEntry {
@@ -13216,10 +13222,10 @@ pub struct R4SdkWebNative_web_security_Fixed_96_ {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebNative_web_security_Fixed_96_>() == 112); assert!(core::mem::align_of::<R4SdkWebNative_web_security_Fixed_96_>() == 8); assert!(core::mem::offset_of!(R4SdkWebNative_web_security_Fixed_96_, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue436 {
+pub struct R4SdkWebNativeValue437 {
     pub r#opaque_bytes: [u8; 97],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue436>() == 97); assert!(core::mem::align_of::<R4SdkWebNativeValue436>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue436, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue437>() == 97); assert!(core::mem::align_of::<R4SdkWebNativeValue437>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue437, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNative_web_security_Fixed_512_ {
@@ -13228,10 +13234,10 @@ pub struct R4SdkWebNative_web_security_Fixed_512_ {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebNative_web_security_Fixed_512_>() == 528); assert!(core::mem::align_of::<R4SdkWebNative_web_security_Fixed_512_>() == 8); assert!(core::mem::offset_of!(R4SdkWebNative_web_security_Fixed_512_, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue438 {
+pub struct R4SdkWebNativeValue439 {
     pub r#opaque_bytes: [u8; 513],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue438>() == 513); assert!(core::mem::align_of::<R4SdkWebNativeValue438>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue438, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue439>() == 513); assert!(core::mem::align_of::<R4SdkWebNativeValue439>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue439, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNative_web_security_SecurityContext {
@@ -13252,22 +13258,22 @@ pub struct R4SdkWebNative_web_security_ContentSecurityPolicy_Slice {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebNative_web_security_ContentSecurityPolicy_Slice>() == 4); assert!(core::mem::align_of::<R4SdkWebNative_web_security_ContentSecurityPolicy_Slice>() == 2); assert!(core::mem::offset_of!(R4SdkWebNative_web_security_ContentSecurityPolicy_Slice, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue442 {
+pub struct R4SdkWebNativeValue443 {
     pub r#opaque_bytes: [u8; 512],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue442>() == 512); assert!(core::mem::align_of::<R4SdkWebNativeValue442>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue442, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue443>() == 512); assert!(core::mem::align_of::<R4SdkWebNativeValue443>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue443, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue443 {
+pub struct R4SdkWebNativeValue444 {
     pub r#opaque_bytes: [u8; 32],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue443>() == 32); assert!(core::mem::align_of::<R4SdkWebNativeValue443>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue443, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue444>() == 32); assert!(core::mem::align_of::<R4SdkWebNativeValue444>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue444, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue444 {
+pub struct R4SdkWebNativeValue445 {
     pub r#opaque_bytes: [u8; 3840],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue444>() == 3840); assert!(core::mem::align_of::<R4SdkWebNativeValue444>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue444, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue445>() == 3840); assert!(core::mem::align_of::<R4SdkWebNativeValue445>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue445, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebRuntimeListener {
@@ -13282,16 +13288,16 @@ pub struct R4SdkWebNative_web_security_Fixed_32_ {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebNative_web_security_Fixed_32_>() == 48); assert!(core::mem::align_of::<R4SdkWebNative_web_security_Fixed_32_>() == 8); assert!(core::mem::offset_of!(R4SdkWebNative_web_security_Fixed_32_, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue447 {
+pub struct R4SdkWebNativeValue448 {
     pub r#opaque_bytes: [u8; 33],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue447>() == 33); assert!(core::mem::align_of::<R4SdkWebNativeValue447>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue447, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue448>() == 33); assert!(core::mem::align_of::<R4SdkWebNativeValue448>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue448, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue448 {
+pub struct R4SdkWebNativeValue449 {
     pub r#opaque_bytes: [u8; 1536],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue448>() == 1536); assert!(core::mem::align_of::<R4SdkWebNativeValue448>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue448, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue449>() == 1536); assert!(core::mem::align_of::<R4SdkWebNativeValue449>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue449, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebRuntimeTimer {
@@ -13300,10 +13306,10 @@ pub struct R4SdkWebRuntimeTimer {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebRuntimeTimer>() == 48); assert!(core::mem::align_of::<R4SdkWebRuntimeTimer>() == 8); assert!(core::mem::offset_of!(R4SdkWebRuntimeTimer, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue450 {
+pub struct R4SdkWebNativeValue451 {
     pub r#opaque_bytes: [u8; 1024],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue450>() == 1024); assert!(core::mem::align_of::<R4SdkWebNativeValue450>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue450, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue451>() == 1024); assert!(core::mem::align_of::<R4SdkWebNativeValue451>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue451, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebRuntimeAbortDeadline {
@@ -13312,10 +13318,10 @@ pub struct R4SdkWebRuntimeAbortDeadline {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebRuntimeAbortDeadline>() == 32); assert!(core::mem::align_of::<R4SdkWebRuntimeAbortDeadline>() == 8); assert!(core::mem::offset_of!(R4SdkWebRuntimeAbortDeadline, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue452 {
+pub struct R4SdkWebNativeValue453 {
     pub r#opaque_bytes: [u8; 2560],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue452>() == 2560); assert!(core::mem::align_of::<R4SdkWebNativeValue452>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue452, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue453>() == 2560); assert!(core::mem::align_of::<R4SdkWebNativeValue453>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue453, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebRuntimeAbortFollower {
@@ -13324,10 +13330,10 @@ pub struct R4SdkWebRuntimeAbortFollower {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebRuntimeAbortFollower>() == 40); assert!(core::mem::align_of::<R4SdkWebRuntimeAbortFollower>() == 8); assert!(core::mem::offset_of!(R4SdkWebRuntimeAbortFollower, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue454 {
+pub struct R4SdkWebNativeValue455 {
     pub r#opaque_bytes: [u8; 1336640],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue454>() == 1336640); assert!(core::mem::align_of::<R4SdkWebNativeValue454>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue454, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue455>() == 1336640); assert!(core::mem::align_of::<R4SdkWebNativeValue455>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue455, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNative_web_resources_Scheduler {
@@ -13336,10 +13342,10 @@ pub struct R4SdkWebNative_web_resources_Scheduler {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebNative_web_resources_Scheduler>() == 1312); assert!(core::mem::align_of::<R4SdkWebNative_web_resources_Scheduler>() == 8); assert!(core::mem::offset_of!(R4SdkWebNative_web_resources_Scheduler, r#opaque_bytes) == 0); };
 #[repr(C, align(4))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue456 {
+pub struct R4SdkWebNativeValue457 {
     pub r#opaque_bytes: [u8; 1280],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue456>() == 1280); assert!(core::mem::align_of::<R4SdkWebNativeValue456>() == 4); assert!(core::mem::offset_of!(R4SdkWebNativeValue456, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue457>() == 1280); assert!(core::mem::align_of::<R4SdkWebNativeValue457>() == 4); assert!(core::mem::offset_of!(R4SdkWebNativeValue457, r#opaque_bytes) == 0); };
 #[repr(C, align(4))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNative_web_resources_Entry {
@@ -13360,10 +13366,10 @@ pub struct R4SdkWebNative_web_resources_State {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebNative_web_resources_State>() == 1); assert!(core::mem::align_of::<R4SdkWebNative_web_resources_State>() == 1); assert!(core::mem::offset_of!(R4SdkWebNative_web_resources_State, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue460 {
+pub struct R4SdkWebNativeValue461 {
     pub r#opaque_bytes: [u8; 6400],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue460>() == 6400); assert!(core::mem::align_of::<R4SdkWebNativeValue460>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue460, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue461>() == 6400); assert!(core::mem::align_of::<R4SdkWebNativeValue461>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue461, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebRuntimeModuleLoad {
@@ -13378,16 +13384,16 @@ pub struct R4SdkWebRuntimeModuleLoadState {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebRuntimeModuleLoadState>() == 1); assert!(core::mem::align_of::<R4SdkWebRuntimeModuleLoadState>() == 1); assert!(core::mem::offset_of!(R4SdkWebRuntimeModuleLoadState, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue463 {
+pub struct R4SdkWebNativeValue464 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue463>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue463>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue463, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue464>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue464>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue464, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue464 {
+pub struct R4SdkWebNativeValue465 {
     pub r#opaque_bytes: [u8; 101376],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue464>() == 101376); assert!(core::mem::align_of::<R4SdkWebNativeValue464>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue464, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue465>() == 101376); assert!(core::mem::align_of::<R4SdkWebNativeValue465>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue465, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebRuntimeImageResourceState {
@@ -13402,10 +13408,10 @@ pub struct R4SdkWebNative_web_security_Fixed_767_ {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebNative_web_security_Fixed_767_>() == 776); assert!(core::mem::align_of::<R4SdkWebNative_web_security_Fixed_767_>() == 8); assert!(core::mem::offset_of!(R4SdkWebNative_web_security_Fixed_767_, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue467 {
+pub struct R4SdkWebNativeValue468 {
     pub r#opaque_bytes: [u8; 101888],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue467>() == 101888); assert!(core::mem::align_of::<R4SdkWebNativeValue467>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue467, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue468>() == 101888); assert!(core::mem::align_of::<R4SdkWebNativeValue468>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue468, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebRuntimeFontResourceState {
@@ -13414,10 +13420,10 @@ pub struct R4SdkWebRuntimeFontResourceState {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebRuntimeFontResourceState>() == 1592); assert!(core::mem::align_of::<R4SdkWebRuntimeFontResourceState>() == 8); assert!(core::mem::offset_of!(R4SdkWebRuntimeFontResourceState, r#opaque_bytes) == 0); };
 #[repr(C, align(4))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue469 {
+pub struct R4SdkWebNativeValue470 {
     pub r#opaque_bytes: [u8; 512],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue469>() == 512); assert!(core::mem::align_of::<R4SdkWebNativeValue469>() == 4); assert!(core::mem::offset_of!(R4SdkWebNativeValue469, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue470>() == 512); assert!(core::mem::align_of::<R4SdkWebNativeValue470>() == 4); assert!(core::mem::offset_of!(R4SdkWebNativeValue470, r#opaque_bytes) == 0); };
 #[repr(C, align(4))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebRuntimeFontFaceResourceState {
@@ -13432,10 +13438,10 @@ pub struct R4SdkWebRuntimeFontFacePhase {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebRuntimeFontFacePhase>() == 1); assert!(core::mem::align_of::<R4SdkWebRuntimeFontFacePhase>() == 1); assert!(core::mem::offset_of!(R4SdkWebRuntimeFontFacePhase, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue472 {
+pub struct R4SdkWebNativeValue473 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue472>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue472>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue472, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue473>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue473>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue473, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebRuntimeFrameLookup {
@@ -13444,16 +13450,16 @@ pub struct R4SdkWebRuntimeFrameLookup {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebRuntimeFrameLookup>() == 16); assert!(core::mem::align_of::<R4SdkWebRuntimeFrameLookup>() == 8); assert!(core::mem::offset_of!(R4SdkWebRuntimeFrameLookup, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue474 {
+pub struct R4SdkWebNativeValue475 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue474>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue474>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue474, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue475>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue475>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue475, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue475 {
+pub struct R4SdkWebNativeValue476 {
     pub r#opaque_bytes: [u8; 12800],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue475>() == 12800); assert!(core::mem::align_of::<R4SdkWebNativeValue475>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue475, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue476>() == 12800); assert!(core::mem::align_of::<R4SdkWebNativeValue476>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue476, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebRuntimeAction {
@@ -13468,10 +13474,10 @@ pub struct R4SdkWebRuntimeActionKind {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebRuntimeActionKind>() == 1); assert!(core::mem::align_of::<R4SdkWebRuntimeActionKind>() == 1); assert!(core::mem::offset_of!(R4SdkWebRuntimeActionKind, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue478 {
+pub struct R4SdkWebNativeValue479 {
     pub r#opaque_bytes: [u8; 6592],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue478>() == 6592); assert!(core::mem::align_of::<R4SdkWebNativeValue478>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue478, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue479>() == 6592); assert!(core::mem::align_of::<R4SdkWebNativeValue479>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue479, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebRuntimeXhr {
@@ -13480,10 +13486,10 @@ pub struct R4SdkWebRuntimeXhr {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebRuntimeXhr>() == 824); assert!(core::mem::align_of::<R4SdkWebRuntimeXhr>() == 8); assert!(core::mem::offset_of!(R4SdkWebRuntimeXhr, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue480 {
+pub struct R4SdkWebNativeValue481 {
     pub r#opaque_bytes: [u8; 119040],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue480>() == 119040); assert!(core::mem::align_of::<R4SdkWebNativeValue480>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue480, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue481>() == 119040); assert!(core::mem::align_of::<R4SdkWebNativeValue481>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue481, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebRuntimeMutationObserverState {
@@ -13492,10 +13498,10 @@ pub struct R4SdkWebRuntimeMutationObserverState {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebRuntimeMutationObserverState>() == 7440); assert!(core::mem::align_of::<R4SdkWebRuntimeMutationObserverState>() == 8); assert!(core::mem::offset_of!(R4SdkWebRuntimeMutationObserverState, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue482 {
+pub struct R4SdkWebNativeValue483 {
     pub r#opaque_bytes: [u8; 5312],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue482>() == 5312); assert!(core::mem::align_of::<R4SdkWebNativeValue482>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue482, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue483>() == 5312); assert!(core::mem::align_of::<R4SdkWebNativeValue483>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue483, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebRuntimeMutationRegistration {
@@ -13504,16 +13510,10 @@ pub struct R4SdkWebRuntimeMutationRegistration {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebRuntimeMutationRegistration>() == 664); assert!(core::mem::align_of::<R4SdkWebRuntimeMutationRegistration>() == 8); assert!(core::mem::offset_of!(R4SdkWebRuntimeMutationRegistration, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue484 {
+pub struct R4SdkWebNativeValue485 {
     pub r#opaque_bytes: [u8; 640],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue484>() == 640); assert!(core::mem::align_of::<R4SdkWebNativeValue484>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue484, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue485 {
-    pub r#opaque_bytes: [u8; 1024],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue485>() == 1024); assert!(core::mem::align_of::<R4SdkWebNativeValue485>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue485, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue485>() == 640); assert!(core::mem::align_of::<R4SdkWebNativeValue485>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue485, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue486 {
@@ -13522,22 +13522,28 @@ pub struct R4SdkWebNativeValue486 {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue486>() == 1024); assert!(core::mem::align_of::<R4SdkWebNativeValue486>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue486, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
+pub struct R4SdkWebNativeValue487 {
+    pub r#opaque_bytes: [u8; 1024],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue487>() == 1024); assert!(core::mem::align_of::<R4SdkWebNativeValue487>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue487, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
 pub struct R4SdkWebRuntimeTransientMutationRoot {
     pub r#opaque_bytes: [u8; 16],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkWebRuntimeTransientMutationRoot>() == 16); assert!(core::mem::align_of::<R4SdkWebRuntimeTransientMutationRoot>() == 8); assert!(core::mem::offset_of!(R4SdkWebRuntimeTransientMutationRoot, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue488 {
+pub struct R4SdkWebNativeValue489 {
     pub r#opaque_bytes: [u8; 65536],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue488>() == 65536); assert!(core::mem::align_of::<R4SdkWebNativeValue488>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue488, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue489>() == 65536); assert!(core::mem::align_of::<R4SdkWebNativeValue489>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue489, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue489 {
+pub struct R4SdkWebNativeValue490 {
     pub r#opaque_bytes: [u8; 1536],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue489>() == 1536); assert!(core::mem::align_of::<R4SdkWebNativeValue489>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue489, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue490>() == 1536); assert!(core::mem::align_of::<R4SdkWebNativeValue490>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue490, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebRuntimeFrameNodeCache {
@@ -13558,10 +13564,10 @@ pub struct R4SdkWebRuntimeDocumentReadyState {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebRuntimeDocumentReadyState>() == 1); assert!(core::mem::align_of::<R4SdkWebRuntimeDocumentReadyState>() == 1); assert!(core::mem::offset_of!(R4SdkWebRuntimeDocumentReadyState, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue493 {
+pub struct R4SdkWebNativeValue494 {
     pub r#opaque_bytes: [u8; 393219],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue493>() == 393219); assert!(core::mem::align_of::<R4SdkWebNativeValue493>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue493, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue494>() == 393219); assert!(core::mem::align_of::<R4SdkWebNativeValue494>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue494, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNative_web_security_BlockReason {
@@ -13588,10 +13594,10 @@ pub struct R4SdkWebCanvasAllocator {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebCanvasAllocator>() == 24); assert!(core::mem::align_of::<R4SdkWebCanvasAllocator>() == 8); assert!(core::mem::offset_of!(R4SdkWebCanvasAllocator, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue498 {
+pub struct R4SdkWebNativeValue499 {
     pub r#opaque_bytes: [u8; 86976],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue498>() == 86976); assert!(core::mem::align_of::<R4SdkWebNativeValue498>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue498, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue499>() == 86976); assert!(core::mem::align_of::<R4SdkWebNativeValue499>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue499, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebCanvasSurface {
@@ -13600,16 +13606,16 @@ pub struct R4SdkWebCanvasSurface {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebCanvasSurface>() == 10872); assert!(core::mem::align_of::<R4SdkWebCanvasSurface>() == 8); assert!(core::mem::offset_of!(R4SdkWebCanvasSurface, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue500 {
+pub struct R4SdkWebNativeValue501 {
     pub r#opaque_bytes: [u8; 48],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue500>() == 48); assert!(core::mem::align_of::<R4SdkWebNativeValue500>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue500, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue501>() == 48); assert!(core::mem::align_of::<R4SdkWebNativeValue501>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue501, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue501 {
+pub struct R4SdkWebNativeValue502 {
     pub r#opaque_bytes: [u8; 3072],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue501>() == 3072); assert!(core::mem::align_of::<R4SdkWebNativeValue501>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue501, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue502>() == 3072); assert!(core::mem::align_of::<R4SdkWebNativeValue502>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue502, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebCanvasPoint {
@@ -13618,10 +13624,10 @@ pub struct R4SdkWebCanvasPoint {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebCanvasPoint>() == 24); assert!(core::mem::align_of::<R4SdkWebCanvasPoint>() == 8); assert!(core::mem::offset_of!(R4SdkWebCanvasPoint, r#opaque_bytes) == 0); };
 #[repr(C, align(4))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue503 {
+pub struct R4SdkWebNativeValue504 {
     pub r#opaque_bytes: [u8; 6656],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue503>() == 6656); assert!(core::mem::align_of::<R4SdkWebNativeValue503>() == 4); assert!(core::mem::offset_of!(R4SdkWebNativeValue503, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue504>() == 6656); assert!(core::mem::align_of::<R4SdkWebNativeValue504>() == 4); assert!(core::mem::offset_of!(R4SdkWebNativeValue504, r#opaque_bytes) == 0); };
 #[repr(C, align(4))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebCanvasTextOp {
@@ -13630,10 +13636,10 @@ pub struct R4SdkWebCanvasTextOp {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebCanvasTextOp>() == 208); assert!(core::mem::align_of::<R4SdkWebCanvasTextOp>() == 4); assert!(core::mem::offset_of!(R4SdkWebCanvasTextOp, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue505 {
+pub struct R4SdkWebNativeValue506 {
     pub r#opaque_bytes: [u8; 1024],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue505>() == 1024); assert!(core::mem::align_of::<R4SdkWebNativeValue505>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue505, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue506>() == 1024); assert!(core::mem::align_of::<R4SdkWebNativeValue506>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue506, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebCanvasDrawState {
@@ -13642,10 +13648,10 @@ pub struct R4SdkWebCanvasDrawState {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebCanvasDrawState>() == 64); assert!(core::mem::align_of::<R4SdkWebCanvasDrawState>() == 8); assert!(core::mem::offset_of!(R4SdkWebCanvasDrawState, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue507 {
+pub struct R4SdkWebNativeValue508 {
     pub r#opaque_bytes: [u8; 128],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue507>() == 128); assert!(core::mem::align_of::<R4SdkWebNativeValue507>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue507, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue508>() == 128); assert!(core::mem::align_of::<R4SdkWebNativeValue508>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue508, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebRuntimeScriptDiagnostics {
@@ -13690,10 +13696,10 @@ pub struct R4SdkWebCanvasSurfaceView {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebCanvasSurfaceView>() == 40); assert!(core::mem::align_of::<R4SdkWebCanvasSurfaceView>() == 8); assert!(core::mem::offset_of!(R4SdkWebCanvasSurfaceView, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue515 {
+pub struct R4SdkWebNativeValue516 {
     pub r#opaque_bytes: [u8; 16],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue515>() == 16); assert!(core::mem::align_of::<R4SdkWebNativeValue515>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue515, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue516>() == 16); assert!(core::mem::align_of::<R4SdkWebNativeValue516>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue516, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebCallbackKind {
@@ -13708,12 +13714,6 @@ pub struct R4SdkWebCallbackTable {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebCallbackTable>() == 24); assert!(core::mem::align_of::<R4SdkWebCallbackTable>() == 8); assert!(core::mem::offset_of!(R4SdkWebCallbackTable, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue518 {
-    pub r#opaque_bytes: [u8; 8],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue518>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue518>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue518, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue519 {
     pub r#opaque_bytes: [u8; 8],
 }
@@ -13721,9 +13721,15 @@ const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue519>() == 8); as
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue520 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue520>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue520>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue520, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWebNativeValue521 {
     pub r#opaque_bytes: [u8; 1856],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue520>() == 1856); assert!(core::mem::align_of::<R4SdkWebNativeValue520>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue520, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue521>() == 1856); assert!(core::mem::align_of::<R4SdkWebNativeValue521>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue521, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebRunResolver {
@@ -13732,10 +13738,10 @@ pub struct R4SdkWebRunResolver {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebRunResolver>() == 1848); assert!(core::mem::align_of::<R4SdkWebRunResolver>() == 8); assert!(core::mem::offset_of!(R4SdkWebRunResolver, r#opaque_bytes) == 0); };
 #[repr(C, align(4))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue522 {
+pub struct R4SdkWebNativeValue523 {
     pub r#opaque_bytes: [u8; 1792],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue522>() == 1792); assert!(core::mem::align_of::<R4SdkWebNativeValue522>() == 4); assert!(core::mem::offset_of!(R4SdkWebNativeValue522, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue523>() == 1792); assert!(core::mem::align_of::<R4SdkWebNativeValue523>() == 4); assert!(core::mem::offset_of!(R4SdkWebNativeValue523, r#opaque_bytes) == 0); };
 #[repr(C, align(4))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebFontRunResolver_web_layout_FontFace__Entry {
@@ -13744,34 +13750,28 @@ pub struct R4SdkWebFontRunResolver_web_layout_FontFace__Entry {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebFontRunResolver_web_layout_FontFace__Entry>() == 28); assert!(core::mem::align_of::<R4SdkWebFontRunResolver_web_layout_FontFace__Entry>() == 4); assert!(core::mem::offset_of!(R4SdkWebFontRunResolver_web_layout_FontFace__Entry, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue524 {
+pub struct R4SdkWebNativeValue525 {
     pub r#opaque_bytes: [u8; 40],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue524>() == 40); assert!(core::mem::align_of::<R4SdkWebNativeValue524>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue524, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue525 {
-    pub r#opaque_bytes: [u8; 48],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue525>() == 48); assert!(core::mem::align_of::<R4SdkWebNativeValue525>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue525, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue525>() == 40); assert!(core::mem::align_of::<R4SdkWebNativeValue525>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue525, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue526 {
+    pub r#opaque_bytes: [u8; 48],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue526>() == 48); assert!(core::mem::align_of::<R4SdkWebNativeValue526>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue526, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWebNativeValue527 {
     pub r#opaque_bytes: [u8; 32],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue526>() == 32); assert!(core::mem::align_of::<R4SdkWebNativeValue526>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue526, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue527>() == 32); assert!(core::mem::align_of::<R4SdkWebNativeValue527>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue527, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebMemory {
     pub r#opaque_bytes: [u8; 16],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkWebMemory>() == 16); assert!(core::mem::align_of::<R4SdkWebMemory>() == 8); assert!(core::mem::offset_of!(R4SdkWebMemory, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue529 {
-    pub r#opaque_bytes: [u8; 8],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue529>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue529>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue529, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue530 {
@@ -13787,57 +13787,57 @@ const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue531>() == 8); as
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue532 {
-    pub r#opaque_bytes: [u8; 16],
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue532>() == 16); assert!(core::mem::align_of::<R4SdkWebNativeValue532>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue532, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue532>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue532>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue532, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue533 {
-    pub r#opaque_bytes: [u8; 24],
+    pub r#opaque_bytes: [u8; 16],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue533>() == 24); assert!(core::mem::align_of::<R4SdkWebNativeValue533>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue533, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue533>() == 16); assert!(core::mem::align_of::<R4SdkWebNativeValue533>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue533, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue534 {
-    pub r#opaque_bytes: [u8; 32],
+    pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue534>() == 32); assert!(core::mem::align_of::<R4SdkWebNativeValue534>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue534, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue534>() == 24); assert!(core::mem::align_of::<R4SdkWebNativeValue534>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue534, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue535 {
-    pub r#opaque_bytes: [u8; 24],
+    pub r#opaque_bytes: [u8; 32],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue535>() == 24); assert!(core::mem::align_of::<R4SdkWebNativeValue535>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue535, r#opaque_bytes) == 0); };
-#[repr(C, align(2))]
-#[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue536 {
-    pub r#opaque_bytes: [u8; 4],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue536>() == 4); assert!(core::mem::align_of::<R4SdkWebNativeValue536>() == 2); assert!(core::mem::offset_of!(R4SdkWebNativeValue536, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue535>() == 32); assert!(core::mem::align_of::<R4SdkWebNativeValue535>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue535, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue537 {
-    pub r#opaque_bytes: [u8; 8],
+pub struct R4SdkWebNativeValue536 {
+    pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue537>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue537>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue537, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue536>() == 24); assert!(core::mem::align_of::<R4SdkWebNativeValue536>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue536, r#opaque_bytes) == 0); };
+#[repr(C, align(2))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWebNativeValue537 {
+    pub r#opaque_bytes: [u8; 4],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue537>() == 4); assert!(core::mem::align_of::<R4SdkWebNativeValue537>() == 2); assert!(core::mem::offset_of!(R4SdkWebNativeValue537, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue538 {
-    pub r#opaque_bytes: [u8; 816],
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue538>() == 816); assert!(core::mem::align_of::<R4SdkWebNativeValue538>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue538, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue538>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue538>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue538, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue539 {
-    pub r#opaque_bytes: [u8; 56],
+    pub r#opaque_bytes: [u8; 816],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue539>() == 56); assert!(core::mem::align_of::<R4SdkWebNativeValue539>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue539, r#opaque_bytes) == 0); };
-#[repr(C, align(2))]
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue539>() == 816); assert!(core::mem::align_of::<R4SdkWebNativeValue539>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue539, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue540 {
-    pub r#opaque_bytes: [u8; 4],
+    pub r#opaque_bytes: [u8; 56],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue540>() == 4); assert!(core::mem::align_of::<R4SdkWebNativeValue540>() == 2); assert!(core::mem::offset_of!(R4SdkWebNativeValue540, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue540>() == 56); assert!(core::mem::align_of::<R4SdkWebNativeValue540>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue540, r#opaque_bytes) == 0); };
 #[repr(C, align(2))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue541 {
@@ -13847,75 +13847,75 @@ const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue541>() == 4); as
 #[repr(C, align(2))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue542 {
-    pub r#opaque_bytes: [u8; 2],
+    pub r#opaque_bytes: [u8; 4],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue542>() == 2); assert!(core::mem::align_of::<R4SdkWebNativeValue542>() == 2); assert!(core::mem::offset_of!(R4SdkWebNativeValue542, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue542>() == 4); assert!(core::mem::align_of::<R4SdkWebNativeValue542>() == 2); assert!(core::mem::offset_of!(R4SdkWebNativeValue542, r#opaque_bytes) == 0); };
 #[repr(C, align(2))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue543 {
-    pub r#opaque_bytes: [u8; 4],
+    pub r#opaque_bytes: [u8; 2],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue543>() == 4); assert!(core::mem::align_of::<R4SdkWebNativeValue543>() == 2); assert!(core::mem::offset_of!(R4SdkWebNativeValue543, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue543>() == 2); assert!(core::mem::align_of::<R4SdkWebNativeValue543>() == 2); assert!(core::mem::offset_of!(R4SdkWebNativeValue543, r#opaque_bytes) == 0); };
+#[repr(C, align(2))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue544 {
-    pub r#opaque_bytes: [u8; 24],
+    pub r#opaque_bytes: [u8; 4],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue544>() == 24); assert!(core::mem::align_of::<R4SdkWebNativeValue544>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue544, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue544>() == 4); assert!(core::mem::align_of::<R4SdkWebNativeValue544>() == 2); assert!(core::mem::offset_of!(R4SdkWebNativeValue544, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue545 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue545>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue545>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue545, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue545>() == 24); assert!(core::mem::align_of::<R4SdkWebNativeValue545>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue545, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue546 {
     pub r#opaque_bytes: [u8; 8],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue546>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue546>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue546, r#opaque_bytes) == 0); };
-#[repr(C, align(4))]
-#[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue547 {
-    pub r#opaque_bytes: [u8; 16],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue547>() == 16); assert!(core::mem::align_of::<R4SdkWebNativeValue547>() == 4); assert!(core::mem::offset_of!(R4SdkWebNativeValue547, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue548 {
+pub struct R4SdkWebNativeValue547 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue548>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue548>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue548, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue547>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue547>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue547, r#opaque_bytes) == 0); };
+#[repr(C, align(4))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWebNativeValue548 {
+    pub r#opaque_bytes: [u8; 16],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue548>() == 16); assert!(core::mem::align_of::<R4SdkWebNativeValue548>() == 4); assert!(core::mem::offset_of!(R4SdkWebNativeValue548, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue549 {
-    pub r#opaque_bytes: [u8; 48],
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue549>() == 48); assert!(core::mem::align_of::<R4SdkWebNativeValue549>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue549, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue549>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue549>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue549, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue550 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 48],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue550>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue550>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue550, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue550>() == 48); assert!(core::mem::align_of::<R4SdkWebNativeValue550>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue550, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue551 {
-    pub r#opaque_bytes: [u8; 32],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue551>() == 32); assert!(core::mem::align_of::<R4SdkWebNativeValue551>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue551, r#opaque_bytes) == 0); };
-#[repr(C, align(2))]
-#[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue552 {
-    pub r#opaque_bytes: [u8; 2],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue552>() == 2); assert!(core::mem::align_of::<R4SdkWebNativeValue552>() == 2); assert!(core::mem::offset_of!(R4SdkWebNativeValue552, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue553 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue553>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue553>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue553, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue551>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue551>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue551, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWebNativeValue552 {
+    pub r#opaque_bytes: [u8; 32],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue552>() == 32); assert!(core::mem::align_of::<R4SdkWebNativeValue552>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue552, r#opaque_bytes) == 0); };
+#[repr(C, align(2))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWebNativeValue553 {
+    pub r#opaque_bytes: [u8; 2],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue553>() == 2); assert!(core::mem::align_of::<R4SdkWebNativeValue553>() == 2); assert!(core::mem::offset_of!(R4SdkWebNativeValue553, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue554 {
@@ -13943,15 +13943,15 @@ const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue557>() == 8); as
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue558 {
-    pub r#opaque_bytes: [u8; 16],
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue558>() == 16); assert!(core::mem::align_of::<R4SdkWebNativeValue558>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue558, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue558>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue558>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue558, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue559 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 16],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue559>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue559>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue559, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue559>() == 16); assert!(core::mem::align_of::<R4SdkWebNativeValue559>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue559, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue560 {
@@ -13961,39 +13961,45 @@ const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue560>() == 8); as
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue561 {
-    pub r#opaque_bytes: [u8; 32],
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue561>() == 32); assert!(core::mem::align_of::<R4SdkWebNativeValue561>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue561, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue561>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue561>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue561, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue562 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 32],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue562>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue562>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue562, r#opaque_bytes) == 0); };
-#[repr(C, align(4))]
-#[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue563 {
-    pub r#opaque_bytes: [u8; 28],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue563>() == 28); assert!(core::mem::align_of::<R4SdkWebNativeValue563>() == 4); assert!(core::mem::offset_of!(R4SdkWebNativeValue563, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue562>() == 32); assert!(core::mem::align_of::<R4SdkWebNativeValue562>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue562, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue564 {
+pub struct R4SdkWebNativeValue563 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue564>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue564>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue564, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue563>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue563>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue563, r#opaque_bytes) == 0); };
+#[repr(C, align(4))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWebNativeValue564 {
+    pub r#opaque_bytes: [u8; 28],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue564>() == 28); assert!(core::mem::align_of::<R4SdkWebNativeValue564>() == 4); assert!(core::mem::offset_of!(R4SdkWebNativeValue564, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue565 {
-    pub r#opaque_bytes: [u8; 16],
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue565>() == 16); assert!(core::mem::align_of::<R4SdkWebNativeValue565>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue565, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue565>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue565>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue565, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue566 {
+    pub r#opaque_bytes: [u8; 16],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue566>() == 16); assert!(core::mem::align_of::<R4SdkWebNativeValue566>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue566, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWebNativeValue567 {
     pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue566>() == 24); assert!(core::mem::align_of::<R4SdkWebNativeValue566>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue566, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue567>() == 24); assert!(core::mem::align_of::<R4SdkWebNativeValue567>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue567, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebFontCatalogReader_Snapshot {
@@ -14002,46 +14008,40 @@ pub struct R4SdkWebFontCatalogReader_Snapshot {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebFontCatalogReader_Snapshot>() == 16); assert!(core::mem::align_of::<R4SdkWebFontCatalogReader_Snapshot>() == 8); assert!(core::mem::offset_of!(R4SdkWebFontCatalogReader_Snapshot, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue568 {
+pub struct R4SdkWebNativeValue569 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue568>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue568>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue568, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue569 {
-    pub r#opaque_bytes: [u8; 32],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue569>() == 32); assert!(core::mem::align_of::<R4SdkWebNativeValue569>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue569, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue569>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue569>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue569, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue570 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 32],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue570>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue570>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue570, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue570>() == 32); assert!(core::mem::align_of::<R4SdkWebNativeValue570>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue570, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue571 {
-    pub r#opaque_bytes: [u8; 32],
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue571>() == 32); assert!(core::mem::align_of::<R4SdkWebNativeValue571>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue571, r#opaque_bytes) == 0); };
-#[repr(C, align(4))]
-#[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue572 {
-    pub r#opaque_bytes: [u8; 24],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue572>() == 24); assert!(core::mem::align_of::<R4SdkWebNativeValue572>() == 4); assert!(core::mem::offset_of!(R4SdkWebNativeValue572, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue571>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue571>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue571, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue573 {
-    pub r#opaque_bytes: [u8; 72],
+pub struct R4SdkWebNativeValue572 {
+    pub r#opaque_bytes: [u8; 32],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue573>() == 72); assert!(core::mem::align_of::<R4SdkWebNativeValue573>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue573, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue572>() == 32); assert!(core::mem::align_of::<R4SdkWebNativeValue572>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue572, r#opaque_bytes) == 0); };
+#[repr(C, align(4))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWebNativeValue573 {
+    pub r#opaque_bytes: [u8; 24],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue573>() == 24); assert!(core::mem::align_of::<R4SdkWebNativeValue573>() == 4); assert!(core::mem::offset_of!(R4SdkWebNativeValue573, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue574 {
-    pub r#opaque_bytes: [u8; 16],
+    pub r#opaque_bytes: [u8; 72],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue574>() == 16); assert!(core::mem::align_of::<R4SdkWebNativeValue574>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue574, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue574>() == 72); assert!(core::mem::align_of::<R4SdkWebNativeValue574>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue574, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue575 {
@@ -14051,15 +14051,15 @@ const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue575>() == 16); a
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue576 {
-    pub r#opaque_bytes: [u8; 24],
+    pub r#opaque_bytes: [u8; 16],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue576>() == 24); assert!(core::mem::align_of::<R4SdkWebNativeValue576>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue576, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue576>() == 16); assert!(core::mem::align_of::<R4SdkWebNativeValue576>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue576, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue577 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue577>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue577>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue577, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue577>() == 24); assert!(core::mem::align_of::<R4SdkWebNativeValue577>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue577, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue578 {
@@ -14096,78 +14096,78 @@ pub struct R4SdkWebNativeValue583 {
     pub r#opaque_bytes: [u8; 8],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue583>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue583>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue583, r#opaque_bytes) == 0); };
-#[repr(C, align(2))]
-#[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue584 {
-    pub r#opaque_bytes: [u8; 4],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue584>() == 4); assert!(core::mem::align_of::<R4SdkWebNativeValue584>() == 2); assert!(core::mem::offset_of!(R4SdkWebNativeValue584, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue585 {
+pub struct R4SdkWebNativeValue584 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue585>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue585>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue585, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue584>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue584>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue584, r#opaque_bytes) == 0); };
+#[repr(C, align(2))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWebNativeValue585 {
+    pub r#opaque_bytes: [u8; 4],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue585>() == 4); assert!(core::mem::align_of::<R4SdkWebNativeValue585>() == 2); assert!(core::mem::offset_of!(R4SdkWebNativeValue585, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue586 {
-    pub r#opaque_bytes: [u8; 984],
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue586>() == 984); assert!(core::mem::align_of::<R4SdkWebNativeValue586>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue586, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue586>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue586>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue586, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue587 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 984],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue587>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue587>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue587, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue587>() == 984); assert!(core::mem::align_of::<R4SdkWebNativeValue587>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue587, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue588 {
-    pub r#opaque_bytes: [u8; 16],
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue588>() == 16); assert!(core::mem::align_of::<R4SdkWebNativeValue588>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue588, r#opaque_bytes) == 0); };
-#[repr(C, align(2))]
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue588>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue588>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue588, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue589 {
-    pub r#opaque_bytes: [u8; 2],
+    pub r#opaque_bytes: [u8; 16],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue589>() == 2); assert!(core::mem::align_of::<R4SdkWebNativeValue589>() == 2); assert!(core::mem::offset_of!(R4SdkWebNativeValue589, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue589>() == 16); assert!(core::mem::align_of::<R4SdkWebNativeValue589>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue589, r#opaque_bytes) == 0); };
+#[repr(C, align(2))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue590 {
-    pub r#opaque_bytes: [u8; 8],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue590>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue590>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue590, r#opaque_bytes) == 0); };
-#[repr(C, align(1))]
-#[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue591 {
     pub r#opaque_bytes: [u8; 2],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue591>() == 2); assert!(core::mem::align_of::<R4SdkWebNativeValue591>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue591, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue590>() == 2); assert!(core::mem::align_of::<R4SdkWebNativeValue590>() == 2); assert!(core::mem::offset_of!(R4SdkWebNativeValue590, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue592 {
+pub struct R4SdkWebNativeValue591 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue592>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue592>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue592, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue591>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue591>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue591, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWebNativeValue592 {
+    pub r#opaque_bytes: [u8; 2],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue592>() == 2); assert!(core::mem::align_of::<R4SdkWebNativeValue592>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue592, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue593 {
     pub r#opaque_bytes: [u8; 8],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue593>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue593>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue593, r#opaque_bytes) == 0); };
-#[repr(C, align(2))]
-#[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue594 {
-    pub r#opaque_bytes: [u8; 2],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue594>() == 2); assert!(core::mem::align_of::<R4SdkWebNativeValue594>() == 2); assert!(core::mem::offset_of!(R4SdkWebNativeValue594, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue595 {
+pub struct R4SdkWebNativeValue594 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue595>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue595>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue595, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue594>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue594>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue594, r#opaque_bytes) == 0); };
+#[repr(C, align(2))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWebNativeValue595 {
+    pub r#opaque_bytes: [u8; 2],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue595>() == 2); assert!(core::mem::align_of::<R4SdkWebNativeValue595>() == 2); assert!(core::mem::offset_of!(R4SdkWebNativeValue595, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue596 {
@@ -14186,30 +14186,30 @@ pub struct R4SdkWebNativeValue598 {
     pub r#opaque_bytes: [u8; 8],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue598>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue598>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue598, r#opaque_bytes) == 0); };
-#[repr(C, align(2))]
-#[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue599 {
-    pub r#opaque_bytes: [u8; 4],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue599>() == 4); assert!(core::mem::align_of::<R4SdkWebNativeValue599>() == 2); assert!(core::mem::offset_of!(R4SdkWebNativeValue599, r#opaque_bytes) == 0); };
-#[repr(C, align(1))]
-#[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue600 {
-    pub r#opaque_bytes: [u8; 1],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue600>() == 1); assert!(core::mem::align_of::<R4SdkWebNativeValue600>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue600, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue601 {
-    pub r#opaque_bytes: [u8; 64],
+pub struct R4SdkWebNativeValue599 {
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue601>() == 64); assert!(core::mem::align_of::<R4SdkWebNativeValue601>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue601, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue599>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue599>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue599, r#opaque_bytes) == 0); };
+#[repr(C, align(2))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWebNativeValue600 {
+    pub r#opaque_bytes: [u8; 4],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue600>() == 4); assert!(core::mem::align_of::<R4SdkWebNativeValue600>() == 2); assert!(core::mem::offset_of!(R4SdkWebNativeValue600, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWebNativeValue601 {
+    pub r#opaque_bytes: [u8; 1],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue601>() == 1); assert!(core::mem::align_of::<R4SdkWebNativeValue601>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue601, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue602 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 64],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue602>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue602>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue602, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue602>() == 64); assert!(core::mem::align_of::<R4SdkWebNativeValue602>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue602, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue603 {
@@ -14225,33 +14225,33 @@ const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue604>() == 8); as
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue605 {
-    pub r#opaque_bytes: [u8; 64],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue605>() == 64); assert!(core::mem::align_of::<R4SdkWebNativeValue605>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue605, r#opaque_bytes) == 0); };
-#[repr(C, align(2))]
-#[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue606 {
-    pub r#opaque_bytes: [u8; 2],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue606>() == 2); assert!(core::mem::align_of::<R4SdkWebNativeValue606>() == 2); assert!(core::mem::offset_of!(R4SdkWebNativeValue606, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue607 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue607>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue607>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue607, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue605>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue605>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue605, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWebNativeValue606 {
+    pub r#opaque_bytes: [u8; 64],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue606>() == 64); assert!(core::mem::align_of::<R4SdkWebNativeValue606>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue606, r#opaque_bytes) == 0); };
+#[repr(C, align(2))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWebNativeValue607 {
+    pub r#opaque_bytes: [u8; 2],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue607>() == 2); assert!(core::mem::align_of::<R4SdkWebNativeValue607>() == 2); assert!(core::mem::offset_of!(R4SdkWebNativeValue607, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue608 {
-    pub r#opaque_bytes: [u8; 32],
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue608>() == 32); assert!(core::mem::align_of::<R4SdkWebNativeValue608>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue608, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue608>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue608>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue608, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue609 {
-    pub r#opaque_bytes: [u8; 16],
+    pub r#opaque_bytes: [u8; 32],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue609>() == 16); assert!(core::mem::align_of::<R4SdkWebNativeValue609>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue609, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue609>() == 32); assert!(core::mem::align_of::<R4SdkWebNativeValue609>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue609, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue610 {
@@ -14267,9 +14267,9 @@ const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue611>() == 16); a
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue612 {
-    pub r#opaque_bytes: [u8; 24],
+    pub r#opaque_bytes: [u8; 16],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue612>() == 24); assert!(core::mem::align_of::<R4SdkWebNativeValue612>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue612, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue612>() == 16); assert!(core::mem::align_of::<R4SdkWebNativeValue612>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue612, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue613 {
@@ -14279,45 +14279,45 @@ const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue613>() == 24); a
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue614 {
-    pub r#opaque_bytes: [u8; 40],
+    pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue614>() == 40); assert!(core::mem::align_of::<R4SdkWebNativeValue614>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue614, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue614>() == 24); assert!(core::mem::align_of::<R4SdkWebNativeValue614>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue614, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue615 {
-    pub r#opaque_bytes: [u8; 32],
+    pub r#opaque_bytes: [u8; 40],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue615>() == 32); assert!(core::mem::align_of::<R4SdkWebNativeValue615>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue615, r#opaque_bytes) == 0); };
-#[repr(C, align(2))]
-#[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue616 {
-    pub r#opaque_bytes: [u8; 4],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue616>() == 4); assert!(core::mem::align_of::<R4SdkWebNativeValue616>() == 2); assert!(core::mem::offset_of!(R4SdkWebNativeValue616, r#opaque_bytes) == 0); };
-#[repr(C, align(1))]
-#[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue617 {
-    pub r#opaque_bytes: [u8; 2],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue617>() == 2); assert!(core::mem::align_of::<R4SdkWebNativeValue617>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue617, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue615>() == 40); assert!(core::mem::align_of::<R4SdkWebNativeValue615>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue615, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue618 {
-    pub r#opaque_bytes: [u8; 8],
+pub struct R4SdkWebNativeValue616 {
+    pub r#opaque_bytes: [u8; 32],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue618>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue618>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue618, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue616>() == 32); assert!(core::mem::align_of::<R4SdkWebNativeValue616>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue616, r#opaque_bytes) == 0); };
+#[repr(C, align(2))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWebNativeValue617 {
+    pub r#opaque_bytes: [u8; 4],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue617>() == 4); assert!(core::mem::align_of::<R4SdkWebNativeValue617>() == 2); assert!(core::mem::offset_of!(R4SdkWebNativeValue617, r#opaque_bytes) == 0); };
+#[repr(C, align(1))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWebNativeValue618 {
+    pub r#opaque_bytes: [u8; 2],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue618>() == 2); assert!(core::mem::align_of::<R4SdkWebNativeValue618>() == 1); assert!(core::mem::offset_of!(R4SdkWebNativeValue618, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue619 {
-    pub r#opaque_bytes: [u8; 280],
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue619>() == 280); assert!(core::mem::align_of::<R4SdkWebNativeValue619>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue619, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue619>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue619>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue619, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue620 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 280],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue620>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue620>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue620, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue620>() == 280); assert!(core::mem::align_of::<R4SdkWebNativeValue620>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue620, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue621 {
@@ -14330,18 +14330,18 @@ pub struct R4SdkWebNativeValue622 {
     pub r#opaque_bytes: [u8; 8],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue622>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue622>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue622, r#opaque_bytes) == 0); };
-#[repr(C, align(2))]
-#[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue623 {
-    pub r#opaque_bytes: [u8; 2],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue623>() == 2); assert!(core::mem::align_of::<R4SdkWebNativeValue623>() == 2); assert!(core::mem::offset_of!(R4SdkWebNativeValue623, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue624 {
+pub struct R4SdkWebNativeValue623 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue624>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue624>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue624, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue623>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue623>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue623, r#opaque_bytes) == 0); };
+#[repr(C, align(2))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWebNativeValue624 {
+    pub r#opaque_bytes: [u8; 2],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue624>() == 2); assert!(core::mem::align_of::<R4SdkWebNativeValue624>() == 2); assert!(core::mem::offset_of!(R4SdkWebNativeValue624, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue625 {
@@ -14351,33 +14351,33 @@ const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue625>() == 8); as
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue626 {
-    pub r#opaque_bytes: [u8; 16],
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue626>() == 16); assert!(core::mem::align_of::<R4SdkWebNativeValue626>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue626, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue626>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue626>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue626, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue627 {
-    pub r#opaque_bytes: [u8; 48],
+    pub r#opaque_bytes: [u8; 16],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue627>() == 48); assert!(core::mem::align_of::<R4SdkWebNativeValue627>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue627, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue627>() == 16); assert!(core::mem::align_of::<R4SdkWebNativeValue627>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue627, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue628 {
-    pub r#opaque_bytes: [u8; 16],
+    pub r#opaque_bytes: [u8; 48],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue628>() == 16); assert!(core::mem::align_of::<R4SdkWebNativeValue628>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue628, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue628>() == 48); assert!(core::mem::align_of::<R4SdkWebNativeValue628>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue628, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue629 {
-    pub r#opaque_bytes: [u8; 48],
+    pub r#opaque_bytes: [u8; 16],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue629>() == 48); assert!(core::mem::align_of::<R4SdkWebNativeValue629>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue629, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue629>() == 16); assert!(core::mem::align_of::<R4SdkWebNativeValue629>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue629, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue630 {
-    pub r#opaque_bytes: [u8; 16],
+    pub r#opaque_bytes: [u8; 48],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue630>() == 16); assert!(core::mem::align_of::<R4SdkWebNativeValue630>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue630, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue630>() == 48); assert!(core::mem::align_of::<R4SdkWebNativeValue630>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue630, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue631 {
@@ -14390,24 +14390,24 @@ pub struct R4SdkWebNativeValue632 {
     pub r#opaque_bytes: [u8; 16],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue632>() == 16); assert!(core::mem::align_of::<R4SdkWebNativeValue632>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue632, r#opaque_bytes) == 0); };
-#[repr(C, align(2))]
-#[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue633 {
-    pub r#opaque_bytes: [u8; 2],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue633>() == 2); assert!(core::mem::align_of::<R4SdkWebNativeValue633>() == 2); assert!(core::mem::offset_of!(R4SdkWebNativeValue633, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue634 {
+pub struct R4SdkWebNativeValue633 {
     pub r#opaque_bytes: [u8; 16],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue634>() == 16); assert!(core::mem::align_of::<R4SdkWebNativeValue634>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue634, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue633>() == 16); assert!(core::mem::align_of::<R4SdkWebNativeValue633>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue633, r#opaque_bytes) == 0); };
+#[repr(C, align(2))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWebNativeValue634 {
+    pub r#opaque_bytes: [u8; 2],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue634>() == 2); assert!(core::mem::align_of::<R4SdkWebNativeValue634>() == 2); assert!(core::mem::offset_of!(R4SdkWebNativeValue634, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue635 {
-    pub r#opaque_bytes: [u8; 24],
+    pub r#opaque_bytes: [u8; 16],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue635>() == 24); assert!(core::mem::align_of::<R4SdkWebNativeValue635>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue635, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue635>() == 16); assert!(core::mem::align_of::<R4SdkWebNativeValue635>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue635, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue636 {
@@ -14417,9 +14417,9 @@ const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue636>() == 24); a
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue637 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue637>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue637>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue637, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue637>() == 24); assert!(core::mem::align_of::<R4SdkWebNativeValue637>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue637, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue638 {
@@ -14432,42 +14432,42 @@ pub struct R4SdkWebNativeValue639 {
     pub r#opaque_bytes: [u8; 8],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue639>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue639>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue639, r#opaque_bytes) == 0); };
-#[repr(C, align(4))]
-#[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue640 {
-    pub r#opaque_bytes: [u8; 32],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue640>() == 32); assert!(core::mem::align_of::<R4SdkWebNativeValue640>() == 4); assert!(core::mem::offset_of!(R4SdkWebNativeValue640, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue641 {
-    pub r#opaque_bytes: [u8; 808],
+pub struct R4SdkWebNativeValue640 {
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue641>() == 808); assert!(core::mem::align_of::<R4SdkWebNativeValue641>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue641, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue640>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue640>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue640, r#opaque_bytes) == 0); };
+#[repr(C, align(4))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWebNativeValue641 {
+    pub r#opaque_bytes: [u8; 32],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue641>() == 32); assert!(core::mem::align_of::<R4SdkWebNativeValue641>() == 4); assert!(core::mem::offset_of!(R4SdkWebNativeValue641, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue642 {
-    pub r#opaque_bytes: [u8; 48],
+    pub r#opaque_bytes: [u8; 808],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue642>() == 48); assert!(core::mem::align_of::<R4SdkWebNativeValue642>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue642, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue642>() == 808); assert!(core::mem::align_of::<R4SdkWebNativeValue642>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue642, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue643 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 48],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue643>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue643>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue643, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue643>() == 48); assert!(core::mem::align_of::<R4SdkWebNativeValue643>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue643, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue644 {
-    pub r#opaque_bytes: [u8; 24],
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue644>() == 24); assert!(core::mem::align_of::<R4SdkWebNativeValue644>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue644, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue644>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue644>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue644, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue645 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 24],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue645>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue645>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue645, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue645>() == 24); assert!(core::mem::align_of::<R4SdkWebNativeValue645>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue645, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue646 {
@@ -14519,15 +14519,15 @@ const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue653>() == 8); as
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue654 {
-    pub r#opaque_bytes: [u8; 16],
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue654>() == 16); assert!(core::mem::align_of::<R4SdkWebNativeValue654>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue654, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue654>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue654>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue654, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue655 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 16],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue655>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue655>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue655, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue655>() == 16); assert!(core::mem::align_of::<R4SdkWebNativeValue655>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue655, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue656 {
@@ -14561,15 +14561,21 @@ const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue660>() == 8); as
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue661 {
-    pub r#opaque_bytes: [u8; 1360],
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue661>() == 1360); assert!(core::mem::align_of::<R4SdkWebNativeValue661>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue661, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue661>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue661>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue661, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue662 {
+    pub r#opaque_bytes: [u8; 1360],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue662>() == 1360); assert!(core::mem::align_of::<R4SdkWebNativeValue662>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue662, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWebNativeValue663 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue662>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue662>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue662, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue663>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue663>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue663, r#opaque_bytes) == 0); };
 #[repr(C, align(1))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNative_web_security_ResourceKind {
@@ -14584,16 +14590,10 @@ pub struct R4SdkWebNative_web_security_Decision {
 const _: () = { assert!(core::mem::size_of::<R4SdkWebNative_web_security_Decision>() == 280); assert!(core::mem::align_of::<R4SdkWebNative_web_security_Decision>() == 8); assert!(core::mem::offset_of!(R4SdkWebNative_web_security_Decision, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue665 {
+pub struct R4SdkWebNativeValue666 {
     pub r#opaque_bytes: [u8; 1080],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue665>() == 1080); assert!(core::mem::align_of::<R4SdkWebNativeValue665>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue665, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue666 {
-    pub r#opaque_bytes: [u8; 8],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue666>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue666>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue666, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue666>() == 1080); assert!(core::mem::align_of::<R4SdkWebNativeValue666>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue666, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue667 {
@@ -14615,27 +14615,27 @@ const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue669>() == 8); as
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue670 {
-    pub r#opaque_bytes: [u8; 16],
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue670>() == 16); assert!(core::mem::align_of::<R4SdkWebNativeValue670>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue670, r#opaque_bytes) == 0); };
-#[repr(C, align(2))]
-#[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue671 {
-    pub r#opaque_bytes: [u8; 2],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue671>() == 2); assert!(core::mem::align_of::<R4SdkWebNativeValue671>() == 2); assert!(core::mem::offset_of!(R4SdkWebNativeValue671, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue670>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue670>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue670, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkWebNativeValue672 {
+pub struct R4SdkWebNativeValue671 {
     pub r#opaque_bytes: [u8; 16],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue672>() == 16); assert!(core::mem::align_of::<R4SdkWebNativeValue672>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue672, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue671>() == 16); assert!(core::mem::align_of::<R4SdkWebNativeValue671>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue671, r#opaque_bytes) == 0); };
+#[repr(C, align(2))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWebNativeValue672 {
+    pub r#opaque_bytes: [u8; 2],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue672>() == 2); assert!(core::mem::align_of::<R4SdkWebNativeValue672>() == 2); assert!(core::mem::offset_of!(R4SdkWebNativeValue672, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue673 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 16],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue673>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue673>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue673, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue673>() == 16); assert!(core::mem::align_of::<R4SdkWebNativeValue673>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue673, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue674 {
@@ -14657,15 +14657,15 @@ const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue676>() == 8); as
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue677 {
-    pub r#opaque_bytes: [u8; 16],
+    pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue677>() == 16); assert!(core::mem::align_of::<R4SdkWebNativeValue677>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue677, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue677>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue677>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue677, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue678 {
-    pub r#opaque_bytes: [u8; 8],
+    pub r#opaque_bytes: [u8; 16],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue678>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue678>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue678, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue678>() == 16); assert!(core::mem::align_of::<R4SdkWebNativeValue678>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue678, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkWebNativeValue679 {
@@ -14684,6 +14684,12 @@ pub struct R4SdkWebNativeValue681 {
     pub r#opaque_bytes: [u8; 8],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue681>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue681>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue681, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkWebNativeValue682 {
+    pub r#opaque_bytes: [u8; 8],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkWebNativeValue682>() == 8); assert!(core::mem::align_of::<R4SdkWebNativeValue682>() == 8); assert!(core::mem::offset_of!(R4SdkWebNativeValue682, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkTransportSlot {
@@ -19333,30 +19339,30 @@ pub const R4SdkWebJsBytecodeSegment_TYPE: u32 = 263;
 pub const R4SdkWebJsParseStats_TYPE: u32 = 264;
 pub const R4SdkWebJsDiagnosticPhase_TYPE: u32 = 265;
 pub const R4SdkWebJsProgram_TYPE: u32 = 266;
-pub const R4SdkWebJsProgramWorkspace_TYPE: u32 = 267;
-pub const R4SdkWebNativeValue268_TYPE: u32 = 268;
-pub const R4SdkWebJsCompiledProgramStorage_TYPE: u32 = 269;
-pub const R4SdkWebNativeValue270_TYPE: u32 = 270;
+pub const R4SdkWebJsSyntaxDepth_TYPE: u32 = 267;
+pub const R4SdkWebJsProgramWorkspace_TYPE: u32 = 268;
+pub const R4SdkWebNativeValue269_TYPE: u32 = 269;
+pub const R4SdkWebJsCompiledProgramStorage_TYPE: u32 = 270;
 pub const R4SdkWebNativeValue271_TYPE: u32 = 271;
 pub const R4SdkWebNativeValue272_TYPE: u32 = 272;
 pub const R4SdkWebNativeValue273_TYPE: u32 = 273;
 pub const R4SdkWebNativeValue274_TYPE: u32 = 274;
 pub const R4SdkWebNativeValue275_TYPE: u32 = 275;
 pub const R4SdkWebNativeValue276_TYPE: u32 = 276;
-pub const R4SdkWebJsCellKind_TYPE: u32 = 277;
-pub const R4SdkWebJsNativeId_TYPE: u32 = 278;
-pub const R4SdkWebJsClockSource_TYPE: u32 = 279;
-pub const R4SdkWebNativeValue280_TYPE: u32 = 280;
+pub const R4SdkWebNativeValue277_TYPE: u32 = 277;
+pub const R4SdkWebJsCellKind_TYPE: u32 = 278;
+pub const R4SdkWebJsNativeId_TYPE: u32 = 279;
+pub const R4SdkWebJsClockSource_TYPE: u32 = 280;
 pub const R4SdkWebNativeValue281_TYPE: u32 = 281;
-pub const R4SdkWebJsPromiseState_TYPE: u32 = 282;
-pub const R4SdkWebJsPromiseRejectionTracker_TYPE: u32 = 283;
-pub const R4SdkWebNativeValue284_TYPE: u32 = 284;
-pub const R4SdkWebJsProperty_TYPE: u32 = 285;
-pub const R4SdkWebJsAccessor_TYPE: u32 = 286;
-pub const R4SdkWebJsBinding_TYPE: u32 = 287;
-pub const R4SdkWebJsReaction_TYPE: u32 = 288;
-pub const R4SdkWebJsCell_TYPE: u32 = 289;
-pub const R4SdkWebNativeValue290_TYPE: u32 = 290;
+pub const R4SdkWebNativeValue282_TYPE: u32 = 282;
+pub const R4SdkWebJsPromiseState_TYPE: u32 = 283;
+pub const R4SdkWebJsPromiseRejectionTracker_TYPE: u32 = 284;
+pub const R4SdkWebNativeValue285_TYPE: u32 = 285;
+pub const R4SdkWebJsProperty_TYPE: u32 = 286;
+pub const R4SdkWebJsAccessor_TYPE: u32 = 287;
+pub const R4SdkWebJsBinding_TYPE: u32 = 288;
+pub const R4SdkWebJsReaction_TYPE: u32 = 289;
+pub const R4SdkWebJsCell_TYPE: u32 = 290;
 pub const R4SdkWebNativeValue291_TYPE: u32 = 291;
 pub const R4SdkWebNativeValue292_TYPE: u32 = 292;
 pub const R4SdkWebNativeValue293_TYPE: u32 = 293;
@@ -19371,27 +19377,27 @@ pub const R4SdkWebNativeValue301_TYPE: u32 = 301;
 pub const R4SdkWebNativeValue302_TYPE: u32 = 302;
 pub const R4SdkWebNativeValue303_TYPE: u32 = 303;
 pub const R4SdkWebNativeValue304_TYPE: u32 = 304;
-pub const R4SdkWebJsCellStorage_TYPE: u32 = 305;
-pub const R4SdkWebJsCollectionCursor_TYPE: u32 = 306;
-pub const R4SdkWebNativeValue307_TYPE: u32 = 307;
+pub const R4SdkWebNativeValue305_TYPE: u32 = 305;
+pub const R4SdkWebJsCellStorage_TYPE: u32 = 306;
+pub const R4SdkWebJsCollectionCursor_TYPE: u32 = 307;
 pub const R4SdkWebNativeValue308_TYPE: u32 = 308;
-pub const R4SdkWebJsJobKind_TYPE: u32 = 309;
-pub const R4SdkWebJsJob_TYPE: u32 = 310;
-pub const R4SdkWebJsModuleState_TYPE: u32 = 311;
-pub const R4SdkWebJsProgramAllocator_TYPE: u32 = 312;
-pub const R4SdkWebJsExternalRootMarker_TYPE: u32 = 313;
-pub const R4SdkWebNativeValue314_TYPE: u32 = 314;
-pub const R4SdkWebJsModule_TYPE: u32 = 315;
-pub const R4SdkWebNativeValue316_TYPE: u32 = 316;
+pub const R4SdkWebNativeValue309_TYPE: u32 = 309;
+pub const R4SdkWebJsJobKind_TYPE: u32 = 310;
+pub const R4SdkWebJsJob_TYPE: u32 = 311;
+pub const R4SdkWebJsModuleState_TYPE: u32 = 312;
+pub const R4SdkWebJsProgramAllocator_TYPE: u32 = 313;
+pub const R4SdkWebJsExternalRootMarker_TYPE: u32 = 314;
+pub const R4SdkWebNativeValue315_TYPE: u32 = 315;
+pub const R4SdkWebJsModule_TYPE: u32 = 316;
 pub const R4SdkWebNativeValue317_TYPE: u32 = 317;
 pub const R4SdkWebNativeValue318_TYPE: u32 = 318;
-pub const R4SdkWebJsModuleExport_TYPE: u32 = 319;
-pub const R4SdkWebJsModuleExportKind_TYPE: u32 = 320;
-pub const R4SdkWebJsRuntimeStats_TYPE: u32 = 321;
-pub const R4SdkWebJsExecutionSite_TYPE: u32 = 322;
-pub const R4SdkWebJsDiagnosticSite_TYPE: u32 = 323;
-pub const R4SdkWebJsRuntime_TYPE: u32 = 324;
-pub const R4SdkWebNativeValue325_TYPE: u32 = 325;
+pub const R4SdkWebNativeValue319_TYPE: u32 = 319;
+pub const R4SdkWebJsModuleExport_TYPE: u32 = 320;
+pub const R4SdkWebJsModuleExportKind_TYPE: u32 = 321;
+pub const R4SdkWebJsRuntimeStats_TYPE: u32 = 322;
+pub const R4SdkWebJsExecutionSite_TYPE: u32 = 323;
+pub const R4SdkWebJsDiagnosticSite_TYPE: u32 = 324;
+pub const R4SdkWebJsRuntime_TYPE: u32 = 325;
 pub const R4SdkWebNativeValue326_TYPE: u32 = 326;
 pub const R4SdkWebNativeValue327_TYPE: u32 = 327;
 pub const R4SdkWebNativeValue328_TYPE: u32 = 328;
@@ -19405,196 +19411,196 @@ pub const R4SdkWebNativeValue335_TYPE: u32 = 335;
 pub const R4SdkWebNativeValue336_TYPE: u32 = 336;
 pub const R4SdkWebNativeValue337_TYPE: u32 = 337;
 pub const R4SdkWebNativeValue338_TYPE: u32 = 338;
-pub const R4SdkWebJsBytecodeFrame_TYPE: u32 = 339;
-pub const R4SdkWebNativeValue340_TYPE: u32 = 340;
-pub const R4SdkWebJsIdentifierCacheEntry_TYPE: u32 = 341;
-pub const R4SdkWebNativeValue342_TYPE: u32 = 342;
+pub const R4SdkWebNativeValue339_TYPE: u32 = 339;
+pub const R4SdkWebJsBytecodeFrame_TYPE: u32 = 340;
+pub const R4SdkWebNativeValue341_TYPE: u32 = 341;
+pub const R4SdkWebJsIdentifierCacheEntry_TYPE: u32 = 342;
 pub const R4SdkWebNativeValue343_TYPE: u32 = 343;
-pub const R4SdkWebJsGeneratorFiberState_TYPE: u32 = 344;
-pub const R4SdkWebNativeValue345_TYPE: u32 = 345;
-pub const R4SdkWebJsGeneratorStatus_TYPE: u32 = 346;
-pub const R4SdkWebJsGeneratorResumeKind_TYPE: u32 = 347;
-pub const R4SdkWebNativeValue348_TYPE: u32 = 348;
-pub const R4SdkWebJsAsyncGeneratorRequest_TYPE: u32 = 349;
-pub const R4SdkWebJsFiberContext_TYPE: u32 = 350;
-pub const R4SdkWebNativeValue351_TYPE: u32 = 351;
+pub const R4SdkWebNativeValue344_TYPE: u32 = 344;
+pub const R4SdkWebJsGeneratorFiberState_TYPE: u32 = 345;
+pub const R4SdkWebNativeValue346_TYPE: u32 = 346;
+pub const R4SdkWebJsGeneratorStatus_TYPE: u32 = 347;
+pub const R4SdkWebJsGeneratorResumeKind_TYPE: u32 = 348;
+pub const R4SdkWebNativeValue349_TYPE: u32 = 349;
+pub const R4SdkWebJsAsyncGeneratorRequest_TYPE: u32 = 350;
+pub const R4SdkWebJsFiberContext_TYPE: u32 = 351;
 pub const R4SdkWebNativeValue352_TYPE: u32 = 352;
 pub const R4SdkWebNativeValue353_TYPE: u32 = 353;
-pub const R4SdkWebJsExecutionSnapshot_TYPE: u32 = 354;
-pub const R4SdkWebNativeValue355_TYPE: u32 = 355;
+pub const R4SdkWebNativeValue354_TYPE: u32 = 354;
+pub const R4SdkWebJsExecutionSnapshot_TYPE: u32 = 355;
 pub const R4SdkWebNativeValue356_TYPE: u32 = 356;
-pub const R4SdkWebJsAsyncFiberState_TYPE: u32 = 357;
-pub const R4SdkWebJsAsyncStatus_TYPE: u32 = 358;
-pub const R4SdkWebNativeValue359_TYPE: u32 = 359;
+pub const R4SdkWebNativeValue357_TYPE: u32 = 357;
+pub const R4SdkWebJsAsyncFiberState_TYPE: u32 = 358;
+pub const R4SdkWebJsAsyncStatus_TYPE: u32 = 359;
 pub const R4SdkWebNativeValue360_TYPE: u32 = 360;
 pub const R4SdkWebNativeValue361_TYPE: u32 = 361;
 pub const R4SdkWebNativeValue362_TYPE: u32 = 362;
 pub const R4SdkWebNativeValue363_TYPE: u32 = 363;
-pub const R4SdkWebJsTemplateObjectCache_TYPE: u32 = 364;
-pub const R4SdkWebNativeValue365_TYPE: u32 = 365;
+pub const R4SdkWebNativeValue364_TYPE: u32 = 364;
+pub const R4SdkWebJsTemplateObjectCache_TYPE: u32 = 365;
 pub const R4SdkWebNativeValue366_TYPE: u32 = 366;
 pub const R4SdkWebNativeValue367_TYPE: u32 = 367;
-pub const R4SdkWebJsSymbolRegistryEntry_TYPE: u32 = 368;
-pub const R4SdkWebNativeValue369_TYPE: u32 = 369;
-pub const R4SdkWebNative_web_response_cache_Mode_TYPE: u32 = 370;
-pub const R4SdkWebRuntimeRequestKind_TYPE: u32 = 371;
-pub const R4SdkWebRuntimeRequestState_TYPE: u32 = 372;
-pub const R4SdkWebRuntimeFetchRedirectMode_TYPE: u32 = 373;
-pub const R4SdkWebRuntimePendingRequest_TYPE: u32 = 374;
-pub const R4SdkWebNative_web_security_RequestMode_TYPE: u32 = 375;
-pub const R4SdkWebNative_web_security_CredentialsMode_TYPE: u32 = 376;
-pub const R4SdkWebNative_http_Method_TYPE: u32 = 377;
-pub const R4SdkWebNativeValue378_TYPE: u32 = 378;
-pub const R4SdkWebNative_web_security_Origin_TYPE: u32 = 379;
-pub const R4SdkWebNative_web_security_OriginScheme_TYPE: u32 = 380;
-pub const R4SdkWebNativeValue381_TYPE: u32 = 381;
+pub const R4SdkWebNativeValue368_TYPE: u32 = 368;
+pub const R4SdkWebJsSymbolRegistryEntry_TYPE: u32 = 369;
+pub const R4SdkWebNativeValue370_TYPE: u32 = 370;
+pub const R4SdkWebNative_web_response_cache_Mode_TYPE: u32 = 371;
+pub const R4SdkWebRuntimeRequestKind_TYPE: u32 = 372;
+pub const R4SdkWebRuntimeRequestState_TYPE: u32 = 373;
+pub const R4SdkWebRuntimeFetchRedirectMode_TYPE: u32 = 374;
+pub const R4SdkWebRuntimePendingRequest_TYPE: u32 = 375;
+pub const R4SdkWebNative_web_security_RequestMode_TYPE: u32 = 376;
+pub const R4SdkWebNative_web_security_CredentialsMode_TYPE: u32 = 377;
+pub const R4SdkWebNative_http_Method_TYPE: u32 = 378;
+pub const R4SdkWebNativeValue379_TYPE: u32 = 379;
+pub const R4SdkWebNative_web_security_Origin_TYPE: u32 = 380;
+pub const R4SdkWebNative_web_security_OriginScheme_TYPE: u32 = 381;
 pub const R4SdkWebNativeValue382_TYPE: u32 = 382;
-pub const R4SdkWebRuntimeResponseMeta_TYPE: u32 = 383;
-pub const R4SdkWebNativeValue384_TYPE: u32 = 384;
-pub const R4SdkWebRuntimeResourceCompletion_TYPE: u32 = 385;
-pub const R4SdkWebNative_web_resources_Kind_TYPE: u32 = 386;
-pub const R4SdkWebRuntimeImageRole_TYPE: u32 = 387;
-pub const R4SdkWebRuntimeFontSourceOrigin_TYPE: u32 = 388;
-pub const R4SdkWebRuntimeResourceHandler_TYPE: u32 = 389;
-pub const R4SdkWebNativeValue390_TYPE: u32 = 390;
-pub const R4SdkWebRuntimeFontDemand_TYPE: u32 = 391;
-pub const R4SdkWebRuntimeFontDemandSyncStats_TYPE: u32 = 392;
-pub const R4SdkWebRuntimeFontFaceStatus_TYPE: u32 = 393;
-pub const R4SdkWebRuntimeFontSourceProbe_TYPE: u32 = 394;
-pub const R4SdkWebRuntimeFontSourceHandler_TYPE: u32 = 395;
-pub const R4SdkWebNativeValue396_TYPE: u32 = 396;
+pub const R4SdkWebNativeValue383_TYPE: u32 = 383;
+pub const R4SdkWebRuntimeResponseMeta_TYPE: u32 = 384;
+pub const R4SdkWebNativeValue385_TYPE: u32 = 385;
+pub const R4SdkWebRuntimeResourceCompletion_TYPE: u32 = 386;
+pub const R4SdkWebNative_web_resources_Kind_TYPE: u32 = 387;
+pub const R4SdkWebRuntimeImageRole_TYPE: u32 = 388;
+pub const R4SdkWebRuntimeFontSourceOrigin_TYPE: u32 = 389;
+pub const R4SdkWebRuntimeResourceHandler_TYPE: u32 = 390;
+pub const R4SdkWebNativeValue391_TYPE: u32 = 391;
+pub const R4SdkWebRuntimeFontDemand_TYPE: u32 = 392;
+pub const R4SdkWebRuntimeFontDemandSyncStats_TYPE: u32 = 393;
+pub const R4SdkWebRuntimeFontFaceStatus_TYPE: u32 = 394;
+pub const R4SdkWebRuntimeFontSourceProbe_TYPE: u32 = 395;
+pub const R4SdkWebRuntimeFontSourceHandler_TYPE: u32 = 396;
 pub const R4SdkWebNativeValue397_TYPE: u32 = 397;
-pub const R4SdkWebRuntimeCssImageSource_TYPE: u32 = 398;
-pub const R4SdkWebRuntimeCssImageSyncStats_TYPE: u32 = 399;
-pub const R4SdkWebRuntimeResourcePhase_TYPE: u32 = 400;
-pub const R4SdkWebRuntimeResourceFailure_TYPE: u32 = 401;
-pub const R4SdkWebNative_web_security_Fixed_256__TYPE: u32 = 402;
-pub const R4SdkWebNativeValue403_TYPE: u32 = 403;
-pub const R4SdkWebRuntimeResourceEvent_TYPE: u32 = 404;
-pub const R4SdkWebRuntimeResourceObserver_TYPE: u32 = 405;
-pub const R4SdkWebNativeValue406_TYPE: u32 = 406;
-pub const R4SdkWebRuntimeFrameInfo_TYPE: u32 = 407;
-pub const R4SdkWebNativeValue408_TYPE: u32 = 408;
+pub const R4SdkWebNativeValue398_TYPE: u32 = 398;
+pub const R4SdkWebRuntimeCssImageSource_TYPE: u32 = 399;
+pub const R4SdkWebRuntimeCssImageSyncStats_TYPE: u32 = 400;
+pub const R4SdkWebRuntimeResourcePhase_TYPE: u32 = 401;
+pub const R4SdkWebRuntimeResourceFailure_TYPE: u32 = 402;
+pub const R4SdkWebNative_web_security_Fixed_256__TYPE: u32 = 403;
+pub const R4SdkWebNativeValue404_TYPE: u32 = 404;
+pub const R4SdkWebRuntimeResourceEvent_TYPE: u32 = 405;
+pub const R4SdkWebRuntimeResourceObserver_TYPE: u32 = 406;
+pub const R4SdkWebNativeValue407_TYPE: u32 = 407;
+pub const R4SdkWebRuntimeFrameInfo_TYPE: u32 = 408;
 pub const R4SdkWebNativeValue409_TYPE: u32 = 409;
 pub const R4SdkWebNativeValue410_TYPE: u32 = 410;
 pub const R4SdkWebNativeValue411_TYPE: u32 = 411;
-pub const R4SdkWebRuntimeWebRuntime_TYPE: u32 = 412;
-pub const R4SdkWebNativeValue413_TYPE: u32 = 413;
+pub const R4SdkWebNativeValue412_TYPE: u32 = 412;
+pub const R4SdkWebRuntimeWebRuntime_TYPE: u32 = 413;
 pub const R4SdkWebNativeValue414_TYPE: u32 = 414;
-pub const R4SdkWebRuntimeScriptObserver_TYPE: u32 = 415;
-pub const R4SdkWebNativeValue416_TYPE: u32 = 416;
-pub const R4SdkWebRuntimeMonotonicClock_TYPE: u32 = 417;
-pub const R4SdkWebNativeValue418_TYPE: u32 = 418;
+pub const R4SdkWebNativeValue415_TYPE: u32 = 415;
+pub const R4SdkWebRuntimeScriptObserver_TYPE: u32 = 416;
+pub const R4SdkWebNativeValue417_TYPE: u32 = 417;
+pub const R4SdkWebRuntimeMonotonicClock_TYPE: u32 = 418;
 pub const R4SdkWebNativeValue419_TYPE: u32 = 419;
-pub const R4SdkWebNative_web_security_BrowserStorage_TYPE: u32 = 420;
-pub const R4SdkWebNative_web_security_CookieJar_TYPE: u32 = 421;
-pub const R4SdkWebNativeValue422_TYPE: u32 = 422;
-pub const R4SdkWebNative_web_security_Cookie_TYPE: u32 = 423;
-pub const R4SdkWebNative_web_security_Fixed_64__TYPE: u32 = 424;
-pub const R4SdkWebNativeValue425_TYPE: u32 = 425;
-pub const R4SdkWebNative_web_security_Fixed_4096__TYPE: u32 = 426;
-pub const R4SdkWebNativeValue427_TYPE: u32 = 427;
-pub const R4SdkWebNative_web_security_Fixed_253__TYPE: u32 = 428;
-pub const R4SdkWebNative_web_security_SameSite_TYPE: u32 = 429;
-pub const R4SdkWebNative_web_security_StorageSet_TYPE: u32 = 430;
-pub const R4SdkWebNativeValue431_TYPE: u32 = 431;
-pub const R4SdkWebNative_web_security_StorageArea_TYPE: u32 = 432;
-pub const R4SdkWebNativeValue433_TYPE: u32 = 433;
-pub const R4SdkWebNative_web_security_StorageEntry_TYPE: u32 = 434;
-pub const R4SdkWebNative_web_security_Fixed_96__TYPE: u32 = 435;
-pub const R4SdkWebNativeValue436_TYPE: u32 = 436;
-pub const R4SdkWebNative_web_security_Fixed_512__TYPE: u32 = 437;
-pub const R4SdkWebNativeValue438_TYPE: u32 = 438;
-pub const R4SdkWebNative_web_security_SecurityContext_TYPE: u32 = 439;
-pub const R4SdkWebNative_web_security_ContentSecurityPolicy_TYPE: u32 = 440;
-pub const R4SdkWebNative_web_security_ContentSecurityPolicy_Slice_TYPE: u32 = 441;
-pub const R4SdkWebNativeValue442_TYPE: u32 = 442;
+pub const R4SdkWebNativeValue420_TYPE: u32 = 420;
+pub const R4SdkWebNative_web_security_BrowserStorage_TYPE: u32 = 421;
+pub const R4SdkWebNative_web_security_CookieJar_TYPE: u32 = 422;
+pub const R4SdkWebNativeValue423_TYPE: u32 = 423;
+pub const R4SdkWebNative_web_security_Cookie_TYPE: u32 = 424;
+pub const R4SdkWebNative_web_security_Fixed_64__TYPE: u32 = 425;
+pub const R4SdkWebNativeValue426_TYPE: u32 = 426;
+pub const R4SdkWebNative_web_security_Fixed_4096__TYPE: u32 = 427;
+pub const R4SdkWebNativeValue428_TYPE: u32 = 428;
+pub const R4SdkWebNative_web_security_Fixed_253__TYPE: u32 = 429;
+pub const R4SdkWebNative_web_security_SameSite_TYPE: u32 = 430;
+pub const R4SdkWebNative_web_security_StorageSet_TYPE: u32 = 431;
+pub const R4SdkWebNativeValue432_TYPE: u32 = 432;
+pub const R4SdkWebNative_web_security_StorageArea_TYPE: u32 = 433;
+pub const R4SdkWebNativeValue434_TYPE: u32 = 434;
+pub const R4SdkWebNative_web_security_StorageEntry_TYPE: u32 = 435;
+pub const R4SdkWebNative_web_security_Fixed_96__TYPE: u32 = 436;
+pub const R4SdkWebNativeValue437_TYPE: u32 = 437;
+pub const R4SdkWebNative_web_security_Fixed_512__TYPE: u32 = 438;
+pub const R4SdkWebNativeValue439_TYPE: u32 = 439;
+pub const R4SdkWebNative_web_security_SecurityContext_TYPE: u32 = 440;
+pub const R4SdkWebNative_web_security_ContentSecurityPolicy_TYPE: u32 = 441;
+pub const R4SdkWebNative_web_security_ContentSecurityPolicy_Slice_TYPE: u32 = 442;
 pub const R4SdkWebNativeValue443_TYPE: u32 = 443;
 pub const R4SdkWebNativeValue444_TYPE: u32 = 444;
-pub const R4SdkWebRuntimeListener_TYPE: u32 = 445;
-pub const R4SdkWebNative_web_security_Fixed_32__TYPE: u32 = 446;
-pub const R4SdkWebNativeValue447_TYPE: u32 = 447;
+pub const R4SdkWebNativeValue445_TYPE: u32 = 445;
+pub const R4SdkWebRuntimeListener_TYPE: u32 = 446;
+pub const R4SdkWebNative_web_security_Fixed_32__TYPE: u32 = 447;
 pub const R4SdkWebNativeValue448_TYPE: u32 = 448;
-pub const R4SdkWebRuntimeTimer_TYPE: u32 = 449;
-pub const R4SdkWebNativeValue450_TYPE: u32 = 450;
-pub const R4SdkWebRuntimeAbortDeadline_TYPE: u32 = 451;
-pub const R4SdkWebNativeValue452_TYPE: u32 = 452;
-pub const R4SdkWebRuntimeAbortFollower_TYPE: u32 = 453;
-pub const R4SdkWebNativeValue454_TYPE: u32 = 454;
-pub const R4SdkWebNative_web_resources_Scheduler_TYPE: u32 = 455;
-pub const R4SdkWebNativeValue456_TYPE: u32 = 456;
-pub const R4SdkWebNative_web_resources_Entry_TYPE: u32 = 457;
-pub const R4SdkWebNative_web_resources_ScriptMode_TYPE: u32 = 458;
-pub const R4SdkWebNative_web_resources_State_TYPE: u32 = 459;
-pub const R4SdkWebNativeValue460_TYPE: u32 = 460;
-pub const R4SdkWebRuntimeModuleLoad_TYPE: u32 = 461;
-pub const R4SdkWebRuntimeModuleLoadState_TYPE: u32 = 462;
-pub const R4SdkWebNativeValue463_TYPE: u32 = 463;
+pub const R4SdkWebNativeValue449_TYPE: u32 = 449;
+pub const R4SdkWebRuntimeTimer_TYPE: u32 = 450;
+pub const R4SdkWebNativeValue451_TYPE: u32 = 451;
+pub const R4SdkWebRuntimeAbortDeadline_TYPE: u32 = 452;
+pub const R4SdkWebNativeValue453_TYPE: u32 = 453;
+pub const R4SdkWebRuntimeAbortFollower_TYPE: u32 = 454;
+pub const R4SdkWebNativeValue455_TYPE: u32 = 455;
+pub const R4SdkWebNative_web_resources_Scheduler_TYPE: u32 = 456;
+pub const R4SdkWebNativeValue457_TYPE: u32 = 457;
+pub const R4SdkWebNative_web_resources_Entry_TYPE: u32 = 458;
+pub const R4SdkWebNative_web_resources_ScriptMode_TYPE: u32 = 459;
+pub const R4SdkWebNative_web_resources_State_TYPE: u32 = 460;
+pub const R4SdkWebNativeValue461_TYPE: u32 = 461;
+pub const R4SdkWebRuntimeModuleLoad_TYPE: u32 = 462;
+pub const R4SdkWebRuntimeModuleLoadState_TYPE: u32 = 463;
 pub const R4SdkWebNativeValue464_TYPE: u32 = 464;
-pub const R4SdkWebRuntimeImageResourceState_TYPE: u32 = 465;
-pub const R4SdkWebNative_web_security_Fixed_767__TYPE: u32 = 466;
-pub const R4SdkWebNativeValue467_TYPE: u32 = 467;
-pub const R4SdkWebRuntimeFontResourceState_TYPE: u32 = 468;
-pub const R4SdkWebNativeValue469_TYPE: u32 = 469;
-pub const R4SdkWebRuntimeFontFaceResourceState_TYPE: u32 = 470;
-pub const R4SdkWebRuntimeFontFacePhase_TYPE: u32 = 471;
-pub const R4SdkWebNativeValue472_TYPE: u32 = 472;
-pub const R4SdkWebRuntimeFrameLookup_TYPE: u32 = 473;
-pub const R4SdkWebNativeValue474_TYPE: u32 = 474;
+pub const R4SdkWebNativeValue465_TYPE: u32 = 465;
+pub const R4SdkWebRuntimeImageResourceState_TYPE: u32 = 466;
+pub const R4SdkWebNative_web_security_Fixed_767__TYPE: u32 = 467;
+pub const R4SdkWebNativeValue468_TYPE: u32 = 468;
+pub const R4SdkWebRuntimeFontResourceState_TYPE: u32 = 469;
+pub const R4SdkWebNativeValue470_TYPE: u32 = 470;
+pub const R4SdkWebRuntimeFontFaceResourceState_TYPE: u32 = 471;
+pub const R4SdkWebRuntimeFontFacePhase_TYPE: u32 = 472;
+pub const R4SdkWebNativeValue473_TYPE: u32 = 473;
+pub const R4SdkWebRuntimeFrameLookup_TYPE: u32 = 474;
 pub const R4SdkWebNativeValue475_TYPE: u32 = 475;
-pub const R4SdkWebRuntimeAction_TYPE: u32 = 476;
-pub const R4SdkWebRuntimeActionKind_TYPE: u32 = 477;
-pub const R4SdkWebNativeValue478_TYPE: u32 = 478;
-pub const R4SdkWebRuntimeXhr_TYPE: u32 = 479;
-pub const R4SdkWebNativeValue480_TYPE: u32 = 480;
-pub const R4SdkWebRuntimeMutationObserverState_TYPE: u32 = 481;
-pub const R4SdkWebNativeValue482_TYPE: u32 = 482;
-pub const R4SdkWebRuntimeMutationRegistration_TYPE: u32 = 483;
-pub const R4SdkWebNativeValue484_TYPE: u32 = 484;
+pub const R4SdkWebNativeValue476_TYPE: u32 = 476;
+pub const R4SdkWebRuntimeAction_TYPE: u32 = 477;
+pub const R4SdkWebRuntimeActionKind_TYPE: u32 = 478;
+pub const R4SdkWebNativeValue479_TYPE: u32 = 479;
+pub const R4SdkWebRuntimeXhr_TYPE: u32 = 480;
+pub const R4SdkWebNativeValue481_TYPE: u32 = 481;
+pub const R4SdkWebRuntimeMutationObserverState_TYPE: u32 = 482;
+pub const R4SdkWebNativeValue483_TYPE: u32 = 483;
+pub const R4SdkWebRuntimeMutationRegistration_TYPE: u32 = 484;
 pub const R4SdkWebNativeValue485_TYPE: u32 = 485;
 pub const R4SdkWebNativeValue486_TYPE: u32 = 486;
-pub const R4SdkWebRuntimeTransientMutationRoot_TYPE: u32 = 487;
-pub const R4SdkWebNativeValue488_TYPE: u32 = 488;
+pub const R4SdkWebNativeValue487_TYPE: u32 = 487;
+pub const R4SdkWebRuntimeTransientMutationRoot_TYPE: u32 = 488;
 pub const R4SdkWebNativeValue489_TYPE: u32 = 489;
-pub const R4SdkWebRuntimeFrameNodeCache_TYPE: u32 = 490;
-pub const R4SdkWebRuntimeTiming_TYPE: u32 = 491;
-pub const R4SdkWebRuntimeDocumentReadyState_TYPE: u32 = 492;
-pub const R4SdkWebNativeValue493_TYPE: u32 = 493;
-pub const R4SdkWebNative_web_security_BlockReason_TYPE: u32 = 494;
-pub const R4SdkWebRuntimeEnvironment_TYPE: u32 = 495;
-pub const R4SdkWebCanvasManager_TYPE: u32 = 496;
-pub const R4SdkWebCanvasAllocator_TYPE: u32 = 497;
-pub const R4SdkWebNativeValue498_TYPE: u32 = 498;
-pub const R4SdkWebCanvasSurface_TYPE: u32 = 499;
-pub const R4SdkWebNativeValue500_TYPE: u32 = 500;
+pub const R4SdkWebNativeValue490_TYPE: u32 = 490;
+pub const R4SdkWebRuntimeFrameNodeCache_TYPE: u32 = 491;
+pub const R4SdkWebRuntimeTiming_TYPE: u32 = 492;
+pub const R4SdkWebRuntimeDocumentReadyState_TYPE: u32 = 493;
+pub const R4SdkWebNativeValue494_TYPE: u32 = 494;
+pub const R4SdkWebNative_web_security_BlockReason_TYPE: u32 = 495;
+pub const R4SdkWebRuntimeEnvironment_TYPE: u32 = 496;
+pub const R4SdkWebCanvasManager_TYPE: u32 = 497;
+pub const R4SdkWebCanvasAllocator_TYPE: u32 = 498;
+pub const R4SdkWebNativeValue499_TYPE: u32 = 499;
+pub const R4SdkWebCanvasSurface_TYPE: u32 = 500;
 pub const R4SdkWebNativeValue501_TYPE: u32 = 501;
-pub const R4SdkWebCanvasPoint_TYPE: u32 = 502;
-pub const R4SdkWebNativeValue503_TYPE: u32 = 503;
-pub const R4SdkWebCanvasTextOp_TYPE: u32 = 504;
-pub const R4SdkWebNativeValue505_TYPE: u32 = 505;
-pub const R4SdkWebCanvasDrawState_TYPE: u32 = 506;
-pub const R4SdkWebNativeValue507_TYPE: u32 = 507;
-pub const R4SdkWebRuntimeScriptDiagnostics_TYPE: u32 = 508;
-pub const R4SdkWebRuntimeScriptExecutionPhase_TYPE: u32 = 509;
-pub const R4SdkWebRuntimeScriptExecutionEvent_TYPE: u32 = 510;
-pub const R4SdkWebRuntimeEventTarget_TYPE: u32 = 511;
-pub const R4SdkWebNative__typeInfo_web_runtime_EventTarget____union__tag_type___TYPE: u32 = 512;
-pub const R4SdkWebRuntimeDispatch_TYPE: u32 = 513;
-pub const R4SdkWebCanvasSurfaceView_TYPE: u32 = 514;
-pub const R4SdkWebNativeValue515_TYPE: u32 = 515;
-pub const R4SdkWebCallbackKind_TYPE: u32 = 516;
-pub const R4SdkWebCallbackTable_TYPE: u32 = 517;
-pub const R4SdkWebNativeValue518_TYPE: u32 = 518;
+pub const R4SdkWebNativeValue502_TYPE: u32 = 502;
+pub const R4SdkWebCanvasPoint_TYPE: u32 = 503;
+pub const R4SdkWebNativeValue504_TYPE: u32 = 504;
+pub const R4SdkWebCanvasTextOp_TYPE: u32 = 505;
+pub const R4SdkWebNativeValue506_TYPE: u32 = 506;
+pub const R4SdkWebCanvasDrawState_TYPE: u32 = 507;
+pub const R4SdkWebNativeValue508_TYPE: u32 = 508;
+pub const R4SdkWebRuntimeScriptDiagnostics_TYPE: u32 = 509;
+pub const R4SdkWebRuntimeScriptExecutionPhase_TYPE: u32 = 510;
+pub const R4SdkWebRuntimeScriptExecutionEvent_TYPE: u32 = 511;
+pub const R4SdkWebRuntimeEventTarget_TYPE: u32 = 512;
+pub const R4SdkWebNative__typeInfo_web_runtime_EventTarget____union__tag_type___TYPE: u32 = 513;
+pub const R4SdkWebRuntimeDispatch_TYPE: u32 = 514;
+pub const R4SdkWebCanvasSurfaceView_TYPE: u32 = 515;
+pub const R4SdkWebNativeValue516_TYPE: u32 = 516;
+pub const R4SdkWebCallbackKind_TYPE: u32 = 517;
+pub const R4SdkWebCallbackTable_TYPE: u32 = 518;
 pub const R4SdkWebNativeValue519_TYPE: u32 = 519;
 pub const R4SdkWebNativeValue520_TYPE: u32 = 520;
-pub const R4SdkWebRunResolver_TYPE: u32 = 521;
-pub const R4SdkWebNativeValue522_TYPE: u32 = 522;
-pub const R4SdkWebFontRunResolver_web_layout_FontFace__Entry_TYPE: u32 = 523;
-pub const R4SdkWebNativeValue524_TYPE: u32 = 524;
+pub const R4SdkWebNativeValue521_TYPE: u32 = 521;
+pub const R4SdkWebRunResolver_TYPE: u32 = 522;
+pub const R4SdkWebNativeValue523_TYPE: u32 = 523;
+pub const R4SdkWebFontRunResolver_web_layout_FontFace__Entry_TYPE: u32 = 524;
 pub const R4SdkWebNativeValue525_TYPE: u32 = 525;
 pub const R4SdkWebNativeValue526_TYPE: u32 = 526;
-pub const R4SdkWebMemory_TYPE: u32 = 527;
-pub const R4SdkWebNativeValue529_TYPE: u32 = 529;
+pub const R4SdkWebNativeValue527_TYPE: u32 = 527;
+pub const R4SdkWebMemory_TYPE: u32 = 528;
 pub const R4SdkWebNativeValue530_TYPE: u32 = 530;
 pub const R4SdkWebNativeValue531_TYPE: u32 = 531;
 pub const R4SdkWebNativeValue532_TYPE: u32 = 532;
@@ -19632,8 +19638,8 @@ pub const R4SdkWebNativeValue563_TYPE: u32 = 563;
 pub const R4SdkWebNativeValue564_TYPE: u32 = 564;
 pub const R4SdkWebNativeValue565_TYPE: u32 = 565;
 pub const R4SdkWebNativeValue566_TYPE: u32 = 566;
-pub const R4SdkWebFontCatalogReader_Snapshot_TYPE: u32 = 567;
-pub const R4SdkWebNativeValue568_TYPE: u32 = 568;
+pub const R4SdkWebNativeValue567_TYPE: u32 = 567;
+pub const R4SdkWebFontCatalogReader_Snapshot_TYPE: u32 = 568;
 pub const R4SdkWebNativeValue569_TYPE: u32 = 569;
 pub const R4SdkWebNativeValue570_TYPE: u32 = 570;
 pub const R4SdkWebNativeValue571_TYPE: u32 = 571;
@@ -19728,9 +19734,9 @@ pub const R4SdkWebNativeValue659_TYPE: u32 = 659;
 pub const R4SdkWebNativeValue660_TYPE: u32 = 660;
 pub const R4SdkWebNativeValue661_TYPE: u32 = 661;
 pub const R4SdkWebNativeValue662_TYPE: u32 = 662;
-pub const R4SdkWebNative_web_security_ResourceKind_TYPE: u32 = 663;
-pub const R4SdkWebNative_web_security_Decision_TYPE: u32 = 664;
-pub const R4SdkWebNativeValue665_TYPE: u32 = 665;
+pub const R4SdkWebNativeValue663_TYPE: u32 = 663;
+pub const R4SdkWebNative_web_security_ResourceKind_TYPE: u32 = 664;
+pub const R4SdkWebNative_web_security_Decision_TYPE: u32 = 665;
 pub const R4SdkWebNativeValue666_TYPE: u32 = 666;
 pub const R4SdkWebNativeValue667_TYPE: u32 = 667;
 pub const R4SdkWebNativeValue668_TYPE: u32 = 668;
@@ -19747,7 +19753,8 @@ pub const R4SdkWebNativeValue678_TYPE: u32 = 678;
 pub const R4SdkWebNativeValue679_TYPE: u32 = 679;
 pub const R4SdkWebNativeValue680_TYPE: u32 = 680;
 pub const R4SdkWebNativeValue681_TYPE: u32 = 681;
-pub const R4SdkWeb_ABI_FINGERPRINT: u64 = 11115701048478061906;
+pub const R4SdkWebNativeValue682_TYPE: u32 = 682;
+pub const R4SdkWeb_ABI_FINGERPRINT: u64 = 12971636411280281861;
 pub const R4SdkWebHtml_max_source_bytes: i32 = 262144;
 pub const R4SdkWebHtml_max_string_bytes: i32 = 163840;
 pub const R4SdkWebHtml_max_nodes: i32 = 4096;
@@ -19826,6 +19833,7 @@ pub const R4SdkWebJs_max_dynamic_programs: i32 = 4;
 pub const R4SdkWebJs_max_jobs: i32 = 128;
 pub const R4SdkWebJs_max_roots: i32 = 512;
 pub const R4SdkWebJs_max_call_depth: i32 = 64;
+pub const R4SdkWebJs_max_syntax_depth: i32 = 128;
 pub const R4SdkWebJs_max_template_objects: i32 = 128;
 pub const R4SdkWebJs_default_step_budget: i32 = 2000000;
 pub const R4SdkWebJs_none: i32 = 65535;
@@ -21040,10 +21048,10 @@ pub const R4SdkWebCallbackKind_runtime_lookup: u32 = 37;
 pub const R4SdkWebCallbackKind_post_stream_write: u32 = 38;
 pub const R4SdkWebCallbackKind_post_stream_read: u32 = 39;
 pub const R4SdkWebCallbackKind_download_head: u32 = 40;
-pub const R4SdkWebNativeValue600_left: u32 = 0;
-pub const R4SdkWebNativeValue600_right: u32 = 1;
-pub const R4SdkWebNativeValue600_home: u32 = 2;
-pub const R4SdkWebNativeValue600_end: u32 = 3;
+pub const R4SdkWebNativeValue601_left: u32 = 0;
+pub const R4SdkWebNativeValue601_right: u32 = 1;
+pub const R4SdkWebNativeValue601_home: u32 = 2;
+pub const R4SdkWebNativeValue601_end: u32 = 3;
 pub const R4SdkWebNative_web_security_ResourceKind_document: u32 = 0;
 pub const R4SdkWebNative_web_security_ResourceKind_script: u32 = 1;
 pub const R4SdkWebNative_web_security_ResourceKind_style: u32 = 2;
@@ -32110,7 +32118,7 @@ unsafe extern "C" {
     pub fn R4SdkWebJsRuntime_createHostConstructor(p0: u32, p1: *mut R4SdkWebJsRuntime, p2: u16, p3: R4SdkWebSlot, p4: u64, p5: *mut R4SdkWebJsValue) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_setHostPropertyHooks(p0: u32, p1: *mut R4SdkWebJsRuntime, p2: *const R4SdkWebJsValue, p3: u16, p4: R4SdkWebSlot, p5: R4SdkWebSlot, p6: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_setHostState(p0: u32, p1: *mut R4SdkWebJsRuntime, p2: *const R4SdkWebJsValue, p3: u16, p4: *const R4SdkWebJsValue, p5: *const R4SdkWebJsValue) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_hostState(p0: u32, p1: *mut R4SdkWebJsRuntime, p2: *const R4SdkWebJsValue, p3: u16, p4: *mut R4SdkWebNativeValue615) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_hostState(p0: u32, p1: *mut R4SdkWebJsRuntime, p2: *const R4SdkWebJsValue, p3: u16, p4: *mut R4SdkWebNativeValue616) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_hostTag(p0: u32, p1: *mut R4SdkWebJsRuntime, p2: *const R4SdkWebJsValue) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_setPrototype(p0: u32, p1: *mut R4SdkWebJsRuntime, p2: *const R4SdkWebJsValue, p3: *const R4SdkWebJsValue) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_setFunctionMetadata(p0: u32, p1: *mut R4SdkWebJsRuntime, p2: *const R4SdkWebJsValue, p3: *const u8, p4: u64, p5: u64) -> R4SdkWebSlot;
@@ -32168,7 +32176,7 @@ unsafe extern "C" {
     pub fn R4SdkWebRuntimeWebRuntime_eventCancelled(p0: u32, p1: *const R4SdkWebRuntimeWebRuntime, p2: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_authorizeRequestTarget(p0: u32, p1: *mut R4SdkWebRuntimeWebRuntime, p2: u32, p3: u32, p4: u32, p5: *const u8, p6: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_takeRequest(p0: u32, p1: *mut R4SdkWebRuntimeWebRuntime) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_joinResourceRequests(p0: u32, p1: *mut R4SdkWebRuntimeWebRuntime, p2: *const R4SdkWebRuntimePendingRequest, p3: *mut R4SdkWebNativeValue640) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_joinResourceRequests(p0: u32, p1: *mut R4SdkWebRuntimeWebRuntime, p2: *const R4SdkWebRuntimePendingRequest, p3: *mut R4SdkWebNativeValue641) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_requestInFlight(p0: u32, p1: *mut R4SdkWebRuntimeWebRuntime, p2: u32, p3: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_completeRequest(p0: u32, p1: *mut R4SdkWebRuntimeWebRuntime, p2: u32, p3: u32, p4: *const R4SdkWebRuntimeResponseMeta, p5: *const u8, p6: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_failRequest(p0: u32, p1: *mut R4SdkWebRuntimeWebRuntime, p2: u32, p3: u32, p4: *const u8, p5: u64) -> R4SdkWebSlot;
@@ -34161,15 +34169,17 @@ unsafe extern "C" {
     pub fn R4SdkWebJsDiagnosticPhase_create(p0: *mut R4SdkWebJsDiagnosticPhase, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebJsDiagnosticPhase_inspectNative(p0: *const R4SdkWebJsDiagnosticPhase) -> R4SdkWebSlot;
     pub fn R4SdkWebJsProgram_create(p0: *mut R4SdkWebJsProgram) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsProgram_from_fields(p0: *mut R4SdkWebJsProgram, p1: *const R4SdkWebNativeValue18, p2: *const R4SdkWebNativeValue18, p3: *const R4SdkWebJsProgramWorkspace, p4: *const R4SdkWebNativeValue274, p5: u64, p6: u64, p7: u64, p8: u64, p9: u16, p10: u16, p11: u64, p12: u64, p13: u8, p14: u64, p15: u64, p16: u64, p17: u8, p18: u64, p19: u64, p20: u64, p21: *const R4SdkWebNativeValue275, p22: u64, p23: u32, p24: R4SdkWebSlot, p25: u64) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsProgram_from_fields(p0: *mut R4SdkWebJsProgram, p1: *const R4SdkWebJsSyntaxDepth, p2: *const R4SdkWebNativeValue18, p3: *const R4SdkWebNativeValue18, p4: *const R4SdkWebJsProgramWorkspace, p5: *const R4SdkWebNativeValue275, p6: u64, p7: u64, p8: u64, p9: u64, p10: u16, p11: u16, p12: u64, p13: u64, p14: u8, p15: u64, p16: u64, p17: u64, p18: u8, p19: u64, p20: u64, p21: u64, p22: *const R4SdkWebNativeValue276, p23: u64, p24: u32, p25: R4SdkWebSlot, p26: u64) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsProgram_get_syntax_depth(p0: *const R4SdkWebJsProgram, p1: *mut R4SdkWebJsSyntaxDepth) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsProgram_set_syntax_depth(p0: *mut R4SdkWebJsProgram, p1: *const R4SdkWebJsSyntaxDepth) -> R4SdkWebSlot;
     pub fn R4SdkWebJsProgram_get_source(p0: *const R4SdkWebJsProgram, p1: *mut R4SdkWebNativeValue18) -> R4SdkWebSlot;
     pub fn R4SdkWebJsProgram_set_source(p0: *mut R4SdkWebJsProgram, p1: *const R4SdkWebNativeValue18) -> R4SdkWebSlot;
     pub fn R4SdkWebJsProgram_get_identifier_storage(p0: *const R4SdkWebJsProgram, p1: *mut R4SdkWebNativeValue18) -> R4SdkWebSlot;
     pub fn R4SdkWebJsProgram_set_identifier_storage(p0: *mut R4SdkWebJsProgram, p1: *const R4SdkWebNativeValue18) -> R4SdkWebSlot;
     pub fn R4SdkWebJsProgram_get_workspace(p0: *const R4SdkWebJsProgram, p1: *mut R4SdkWebJsProgramWorkspace) -> R4SdkWebSlot;
     pub fn R4SdkWebJsProgram_set_workspace(p0: *mut R4SdkWebJsProgram, p1: *const R4SdkWebJsProgramWorkspace) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsProgram_get_nodes(p0: *const R4SdkWebJsProgram, p1: *mut R4SdkWebNativeValue274) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsProgram_set_nodes(p0: *mut R4SdkWebJsProgram, p1: *const R4SdkWebNativeValue274) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsProgram_get_nodes(p0: *const R4SdkWebJsProgram, p1: *mut R4SdkWebNativeValue275) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsProgram_set_nodes(p0: *mut R4SdkWebJsProgram, p1: *const R4SdkWebNativeValue275) -> R4SdkWebSlot;
     pub fn R4SdkWebJsProgram_get_source_len(p0: *const R4SdkWebJsProgram) -> R4SdkWebSlot;
     pub fn R4SdkWebJsProgram_set_source_len(p0: *mut R4SdkWebJsProgram, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebJsProgram_get_identifier_len(p0: *const R4SdkWebJsProgram) -> R4SdkWebSlot;
@@ -34202,8 +34212,8 @@ unsafe extern "C" {
     pub fn R4SdkWebJsProgram_set_function_count(p0: *mut R4SdkWebJsProgram, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebJsProgram_get_module_statement_count(p0: *const R4SdkWebJsProgram) -> R4SdkWebSlot;
     pub fn R4SdkWebJsProgram_set_module_statement_count(p0: *mut R4SdkWebJsProgram, p1: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsProgram_get_source_name(p0: *const R4SdkWebJsProgram, p1: *mut R4SdkWebNativeValue275) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsProgram_set_source_name(p0: *mut R4SdkWebJsProgram, p1: *const R4SdkWebNativeValue275) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsProgram_get_source_name(p0: *const R4SdkWebJsProgram, p1: *mut R4SdkWebNativeValue276) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsProgram_set_source_name(p0: *mut R4SdkWebJsProgram, p1: *const R4SdkWebNativeValue276) -> R4SdkWebSlot;
     pub fn R4SdkWebJsProgram_get_source_name_len(p0: *const R4SdkWebJsProgram) -> R4SdkWebSlot;
     pub fn R4SdkWebJsProgram_set_source_name_len(p0: *mut R4SdkWebJsProgram, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebJsProgram_get_diagnostic_phase(p0: *const R4SdkWebJsProgram) -> R4SdkWebSlot;
@@ -34213,34 +34223,37 @@ unsafe extern "C" {
     pub fn R4SdkWebJsProgram_get_diagnostic_offset(p0: *const R4SdkWebJsProgram) -> R4SdkWebSlot;
     pub fn R4SdkWebJsProgram_set_diagnostic_offset(p0: *mut R4SdkWebJsProgram, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebJsProgram_inspectNative(p0: *const R4SdkWebJsProgram) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsProgramWorkspace_get_tokens(p0: *const R4SdkWebJsProgramWorkspace, p1: *mut R4SdkWebNativeValue268) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsProgramWorkspace_set_tokens(p0: *mut R4SdkWebJsProgramWorkspace, p1: *const R4SdkWebNativeValue268) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsSyntaxDepth_create(p0: *mut R4SdkWebJsSyntaxDepth) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsSyntaxDepth_from_fields(p0: *mut R4SdkWebJsSyntaxDepth, p1: u64) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsSyntaxDepth_get_value(p0: *const R4SdkWebJsSyntaxDepth) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsSyntaxDepth_set_value(p0: *mut R4SdkWebJsSyntaxDepth, p1: u64) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsSyntaxDepth_inspectNative(p0: *const R4SdkWebJsSyntaxDepth) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsProgramWorkspace_get_tokens(p0: *const R4SdkWebJsProgramWorkspace, p1: *mut R4SdkWebNativeValue269) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsProgramWorkspace_set_tokens(p0: *mut R4SdkWebJsProgramWorkspace, p1: *const R4SdkWebNativeValue269) -> R4SdkWebSlot;
     pub fn R4SdkWebJsProgramWorkspace_get_compiled(p0: *const R4SdkWebJsProgramWorkspace, p1: *mut R4SdkWebJsCompiledProgramStorage) -> R4SdkWebSlot;
     pub fn R4SdkWebJsProgramWorkspace_set_compiled(p0: *mut R4SdkWebJsProgramWorkspace, p1: *const R4SdkWebJsCompiledProgramStorage) -> R4SdkWebSlot;
     pub fn R4SdkWebJsProgramWorkspace_inspectNative(p0: *const R4SdkWebJsProgramWorkspace) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue268_create(p0: *mut R4SdkWebNativeValue268, p1: *const R4SdkWebNativeValue268) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue268_inspectNative(p0: *const R4SdkWebNativeValue268, p1: *mut R4SdkWebNativeValue268) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsCompiledProgramStorage_create(p0: *mut R4SdkWebJsCompiledProgramStorage, p1: *const R4SdkWebNativeValue270, p2: *const R4SdkWebNativeValue271, p3: *const R4SdkWebNativeValue271, p4: *const R4SdkWebNativeValue272, p5: *const R4SdkWebNativeValue272, p6: *const R4SdkWebNativeValue273, p7: *const R4SdkWebNativeValue272, p8: *const R4SdkWebNativeValue272) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsCompiledProgramStorage_from_fields(p0: *mut R4SdkWebJsCompiledProgramStorage, p1: *const R4SdkWebNativeValue270, p2: *const R4SdkWebNativeValue271, p3: *const R4SdkWebNativeValue271, p4: *const R4SdkWebNativeValue272, p5: *const R4SdkWebNativeValue272, p6: *const R4SdkWebNativeValue273, p7: *const R4SdkWebNativeValue272, p8: *const R4SdkWebNativeValue272) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsCompiledProgramStorage_get_instructions(p0: *const R4SdkWebJsCompiledProgramStorage, p1: *mut R4SdkWebNativeValue270) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsCompiledProgramStorage_set_instructions(p0: *mut R4SdkWebJsCompiledProgramStorage, p1: *const R4SdkWebNativeValue270) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsCompiledProgramStorage_get_segment_starts(p0: *const R4SdkWebJsCompiledProgramStorage, p1: *mut R4SdkWebNativeValue271) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsCompiledProgramStorage_set_segment_starts(p0: *mut R4SdkWebJsCompiledProgramStorage, p1: *const R4SdkWebNativeValue271) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsCompiledProgramStorage_get_segment_ends(p0: *const R4SdkWebJsCompiledProgramStorage, p1: *mut R4SdkWebNativeValue271) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsCompiledProgramStorage_set_segment_ends(p0: *mut R4SdkWebJsCompiledProgramStorage, p1: *const R4SdkWebNativeValue271) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsCompiledProgramStorage_get_segment_nodes(p0: *const R4SdkWebJsCompiledProgramStorage, p1: *mut R4SdkWebNativeValue272) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsCompiledProgramStorage_set_segment_nodes(p0: *mut R4SdkWebJsCompiledProgramStorage, p1: *const R4SdkWebNativeValue272) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsCompiledProgramStorage_get_segment_max_stacks(p0: *const R4SdkWebJsCompiledProgramStorage, p1: *mut R4SdkWebNativeValue272) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsCompiledProgramStorage_set_segment_max_stacks(p0: *mut R4SdkWebJsCompiledProgramStorage, p1: *const R4SdkWebNativeValue272) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsCompiledProgramStorage_get_segment_kinds(p0: *const R4SdkWebJsCompiledProgramStorage, p1: *mut R4SdkWebNativeValue273) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsCompiledProgramStorage_set_segment_kinds(p0: *mut R4SdkWebJsCompiledProgramStorage, p1: *const R4SdkWebNativeValue273) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsCompiledProgramStorage_get_node_segments(p0: *const R4SdkWebJsCompiledProgramStorage, p1: *mut R4SdkWebNativeValue272) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsCompiledProgramStorage_set_node_segments(p0: *mut R4SdkWebJsCompiledProgramStorage, p1: *const R4SdkWebNativeValue272) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsCompiledProgramStorage_get_function_prologue_segments(p0: *const R4SdkWebJsCompiledProgramStorage, p1: *mut R4SdkWebNativeValue272) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsCompiledProgramStorage_set_function_prologue_segments(p0: *mut R4SdkWebJsCompiledProgramStorage, p1: *const R4SdkWebNativeValue272) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue269_create(p0: *mut R4SdkWebNativeValue269, p1: *const R4SdkWebNativeValue269) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue269_inspectNative(p0: *const R4SdkWebNativeValue269, p1: *mut R4SdkWebNativeValue269) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsCompiledProgramStorage_create(p0: *mut R4SdkWebJsCompiledProgramStorage, p1: *const R4SdkWebNativeValue271, p2: *const R4SdkWebNativeValue272, p3: *const R4SdkWebNativeValue272, p4: *const R4SdkWebNativeValue273, p5: *const R4SdkWebNativeValue273, p6: *const R4SdkWebNativeValue274, p7: *const R4SdkWebNativeValue273, p8: *const R4SdkWebNativeValue273) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsCompiledProgramStorage_from_fields(p0: *mut R4SdkWebJsCompiledProgramStorage, p1: *const R4SdkWebNativeValue271, p2: *const R4SdkWebNativeValue272, p3: *const R4SdkWebNativeValue272, p4: *const R4SdkWebNativeValue273, p5: *const R4SdkWebNativeValue273, p6: *const R4SdkWebNativeValue274, p7: *const R4SdkWebNativeValue273, p8: *const R4SdkWebNativeValue273) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsCompiledProgramStorage_get_instructions(p0: *const R4SdkWebJsCompiledProgramStorage, p1: *mut R4SdkWebNativeValue271) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsCompiledProgramStorage_set_instructions(p0: *mut R4SdkWebJsCompiledProgramStorage, p1: *const R4SdkWebNativeValue271) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsCompiledProgramStorage_get_segment_starts(p0: *const R4SdkWebJsCompiledProgramStorage, p1: *mut R4SdkWebNativeValue272) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsCompiledProgramStorage_set_segment_starts(p0: *mut R4SdkWebJsCompiledProgramStorage, p1: *const R4SdkWebNativeValue272) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsCompiledProgramStorage_get_segment_ends(p0: *const R4SdkWebJsCompiledProgramStorage, p1: *mut R4SdkWebNativeValue272) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsCompiledProgramStorage_set_segment_ends(p0: *mut R4SdkWebJsCompiledProgramStorage, p1: *const R4SdkWebNativeValue272) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsCompiledProgramStorage_get_segment_nodes(p0: *const R4SdkWebJsCompiledProgramStorage, p1: *mut R4SdkWebNativeValue273) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsCompiledProgramStorage_set_segment_nodes(p0: *mut R4SdkWebJsCompiledProgramStorage, p1: *const R4SdkWebNativeValue273) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsCompiledProgramStorage_get_segment_max_stacks(p0: *const R4SdkWebJsCompiledProgramStorage, p1: *mut R4SdkWebNativeValue273) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsCompiledProgramStorage_set_segment_max_stacks(p0: *mut R4SdkWebJsCompiledProgramStorage, p1: *const R4SdkWebNativeValue273) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsCompiledProgramStorage_get_segment_kinds(p0: *const R4SdkWebJsCompiledProgramStorage, p1: *mut R4SdkWebNativeValue274) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsCompiledProgramStorage_set_segment_kinds(p0: *mut R4SdkWebJsCompiledProgramStorage, p1: *const R4SdkWebNativeValue274) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsCompiledProgramStorage_get_node_segments(p0: *const R4SdkWebJsCompiledProgramStorage, p1: *mut R4SdkWebNativeValue273) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsCompiledProgramStorage_set_node_segments(p0: *mut R4SdkWebJsCompiledProgramStorage, p1: *const R4SdkWebNativeValue273) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsCompiledProgramStorage_get_function_prologue_segments(p0: *const R4SdkWebJsCompiledProgramStorage, p1: *mut R4SdkWebNativeValue273) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsCompiledProgramStorage_set_function_prologue_segments(p0: *mut R4SdkWebJsCompiledProgramStorage, p1: *const R4SdkWebNativeValue273) -> R4SdkWebSlot;
     pub fn R4SdkWebJsCompiledProgramStorage_inspectNative(p0: *const R4SdkWebJsCompiledProgramStorage) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue270_create(p0: *mut R4SdkWebNativeValue270, p1: *const R4SdkWebNativeValue270) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue270_inspectNative(p0: *const R4SdkWebNativeValue270, p1: *mut R4SdkWebNativeValue270) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue271_create(p0: *mut R4SdkWebNativeValue271, p1: *const R4SdkWebNativeValue271) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue271_inspectNative(p0: *const R4SdkWebNativeValue271, p1: *mut R4SdkWebNativeValue271) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue272_create(p0: *mut R4SdkWebNativeValue272, p1: *const R4SdkWebNativeValue272) -> R4SdkWebSlot;
@@ -34251,8 +34264,10 @@ unsafe extern "C" {
     pub fn R4SdkWebNativeValue274_inspectNative(p0: *const R4SdkWebNativeValue274, p1: *mut R4SdkWebNativeValue274) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue275_create(p0: *mut R4SdkWebNativeValue275, p1: *const R4SdkWebNativeValue275) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue275_inspectNative(p0: *const R4SdkWebNativeValue275, p1: *mut R4SdkWebNativeValue275) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue276_create(p0: *mut R4SdkWebNativeValue276, p1: R4SdkWebSlot) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue276_inspectNative(p0: *const R4SdkWebNativeValue276) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue276_create(p0: *mut R4SdkWebNativeValue276, p1: *const R4SdkWebNativeValue276) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue276_inspectNative(p0: *const R4SdkWebNativeValue276, p1: *mut R4SdkWebNativeValue276) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue277_create(p0: *mut R4SdkWebNativeValue277, p1: R4SdkWebSlot) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue277_inspectNative(p0: *const R4SdkWebNativeValue277) -> R4SdkWebSlot;
     pub fn R4SdkWebJsCellKind_create(p0: *mut R4SdkWebJsCellKind, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebJsCellKind_inspectNative(p0: *const R4SdkWebJsCellKind) -> R4SdkWebSlot;
     pub fn R4SdkWebJsNativeId_create(p0: *mut R4SdkWebJsNativeId, p1: u32) -> R4SdkWebSlot;
@@ -34266,10 +34281,10 @@ unsafe extern "C" {
     pub fn R4SdkWebJsClockSource_get_offset_minutes(p0: *const R4SdkWebJsClockSource) -> R4SdkWebSlot;
     pub fn R4SdkWebJsClockSource_set_offset_minutes(p0: *mut R4SdkWebJsClockSource, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebJsClockSource_inspectNative(p0: *const R4SdkWebJsClockSource) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue280_create(p0: *mut R4SdkWebNativeValue280, p1: R4SdkWebSlot) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue280_inspectNative(p0: *const R4SdkWebNativeValue280) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue281_create(p0: *mut R4SdkWebNativeValue281, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue281_inspectNative(p0: *const R4SdkWebNativeValue281) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue282_create(p0: *mut R4SdkWebNativeValue282, p1: R4SdkWebSlot) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue282_inspectNative(p0: *const R4SdkWebNativeValue282) -> R4SdkWebSlot;
     pub fn R4SdkWebJsPromiseState_create(p0: *mut R4SdkWebJsPromiseState, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebJsPromiseState_inspectNative(p0: *const R4SdkWebJsPromiseState) -> R4SdkWebSlot;
     pub fn R4SdkWebJsPromiseRejectionTracker_create(p0: *mut R4SdkWebJsPromiseRejectionTracker) -> R4SdkWebSlot;
@@ -34279,8 +34294,8 @@ unsafe extern "C" {
     pub fn R4SdkWebJsPromiseRejectionTracker_get_track(p0: *const R4SdkWebJsPromiseRejectionTracker) -> R4SdkWebSlot;
     pub fn R4SdkWebJsPromiseRejectionTracker_set_track(p0: *mut R4SdkWebJsPromiseRejectionTracker, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebJsPromiseRejectionTracker_inspectNative(p0: *const R4SdkWebJsPromiseRejectionTracker) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue284_create(p0: *mut R4SdkWebNativeValue284, p1: R4SdkWebSlot) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue284_inspectNative(p0: *const R4SdkWebNativeValue284) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue285_create(p0: *mut R4SdkWebNativeValue285, p1: R4SdkWebSlot) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue285_inspectNative(p0: *const R4SdkWebNativeValue285) -> R4SdkWebSlot;
     pub fn R4SdkWebJsProperty_create(p0: *mut R4SdkWebJsProperty) -> R4SdkWebSlot;
     pub fn R4SdkWebJsProperty_from_fields(p0: *mut R4SdkWebJsProperty, p1: *const R4SdkWebJsStringRef, p2: *const R4SdkWebJsValue, p3: u8, p4: u8, p5: u8) -> R4SdkWebSlot;
     pub fn R4SdkWebJsProperty_get_key(p0: *const R4SdkWebJsProperty, p1: *mut R4SdkWebJsStringRef) -> R4SdkWebSlot;
@@ -34340,7 +34355,7 @@ unsafe extern "C" {
     pub fn R4SdkWebJsReaction_set_async_generator(p0: *mut R4SdkWebJsReaction, p1: u16) -> R4SdkWebSlot;
     pub fn R4SdkWebJsReaction_inspectNative(p0: *const R4SdkWebJsReaction) -> R4SdkWebSlot;
     pub fn R4SdkWebJsCell_create(p0: *mut R4SdkWebJsCell) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsCell_from_fields(p0: *mut R4SdkWebJsCell, p1: u8, p2: u32, p3: u8, p4: u8, p5: u8, p6: u8, p7: u8, p8: R4SdkWebSlot, p9: u32, p10: u16, p11: u16, p12: u16, p13: u16, p14: u16, p15: u32, p16: R4SdkWebSlot, p17: R4SdkWebSlot, p18: u16, p19: u8, p20: R4SdkWebSlot, p21: R4SdkWebSlot, p22: R4SdkWebSlot, p23: *const R4SdkWebJsValue, p24: *const R4SdkWebJsStringRef, p25: *const R4SdkWebJsStringRef, p26: u64, p27: u64, p28: u64, p29: u64, p30: u64, p31: u8, p32: u16, p33: R4SdkWebSlot, p34: u64, p35: R4SdkWebSlot, p36: u64, p37: R4SdkWebSlot, p38: u64, p39: R4SdkWebSlot, p40: u64, p41: u64, p42: u8, p43: u8, p44: u32, p45: *const R4SdkWebJsValue, p46: *const R4SdkWebNativeValue304, p47: *const R4SdkWebJsCellStorage) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsCell_from_fields(p0: *mut R4SdkWebJsCell, p1: u8, p2: u32, p3: u8, p4: u8, p5: u8, p6: u8, p7: u8, p8: R4SdkWebSlot, p9: u32, p10: u16, p11: u16, p12: u16, p13: u16, p14: u16, p15: u32, p16: R4SdkWebSlot, p17: R4SdkWebSlot, p18: u16, p19: u8, p20: R4SdkWebSlot, p21: R4SdkWebSlot, p22: R4SdkWebSlot, p23: *const R4SdkWebJsValue, p24: *const R4SdkWebJsStringRef, p25: *const R4SdkWebJsStringRef, p26: u64, p27: u64, p28: u64, p29: u64, p30: u64, p31: u8, p32: u16, p33: R4SdkWebSlot, p34: u64, p35: R4SdkWebSlot, p36: u64, p37: R4SdkWebSlot, p38: u64, p39: R4SdkWebSlot, p40: u64, p41: u64, p42: u8, p43: u8, p44: u32, p45: *const R4SdkWebJsValue, p46: *const R4SdkWebNativeValue305, p47: *const R4SdkWebJsCellStorage) -> R4SdkWebSlot;
     pub fn R4SdkWebJsCell_get_occupied(p0: *const R4SdkWebJsCell) -> R4SdkWebSlot;
     pub fn R4SdkWebJsCell_set_occupied(p0: *mut R4SdkWebJsCell, p1: u8) -> R4SdkWebSlot;
     pub fn R4SdkWebJsCell_get_generation(p0: *const R4SdkWebJsCell) -> R4SdkWebSlot;
@@ -34431,13 +34446,11 @@ unsafe extern "C" {
     pub fn R4SdkWebJsCell_set_promise_state(p0: *mut R4SdkWebJsCell, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebJsCell_get_promise_value(p0: *const R4SdkWebJsCell, p1: *mut R4SdkWebJsValue) -> R4SdkWebSlot;
     pub fn R4SdkWebJsCell_set_promise_value(p0: *mut R4SdkWebJsCell, p1: *const R4SdkWebJsValue) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsCell_get_properties(p0: *const R4SdkWebJsCell, p1: *mut R4SdkWebNativeValue304) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsCell_set_properties(p0: *mut R4SdkWebJsCell, p1: *const R4SdkWebNativeValue304) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsCell_get_properties(p0: *const R4SdkWebJsCell, p1: *mut R4SdkWebNativeValue305) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsCell_set_properties(p0: *mut R4SdkWebJsCell, p1: *const R4SdkWebNativeValue305) -> R4SdkWebSlot;
     pub fn R4SdkWebJsCell_get_storage(p0: *const R4SdkWebJsCell, p1: *mut R4SdkWebJsCellStorage) -> R4SdkWebSlot;
     pub fn R4SdkWebJsCell_set_storage(p0: *mut R4SdkWebJsCell, p1: *const R4SdkWebJsCellStorage) -> R4SdkWebSlot;
     pub fn R4SdkWebJsCell_inspectNative(p0: *const R4SdkWebJsCell) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue290_create(p0: *mut R4SdkWebNativeValue290, p1: R4SdkWebSlot) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue290_inspectNative(p0: *const R4SdkWebNativeValue290) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue291_create(p0: *mut R4SdkWebNativeValue291, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue291_inspectNative(p0: *const R4SdkWebNativeValue291) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue292_create(p0: *mut R4SdkWebNativeValue292, p1: R4SdkWebSlot) -> R4SdkWebSlot;
@@ -34446,32 +34459,34 @@ unsafe extern "C" {
     pub fn R4SdkWebNativeValue293_inspectNative(p0: *const R4SdkWebNativeValue293) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue294_create(p0: *mut R4SdkWebNativeValue294, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue294_inspectNative(p0: *const R4SdkWebNativeValue294) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue295_create(p0: *mut R4SdkWebNativeValue295, p1: *const R4SdkWebJsProgram) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue295_create(p0: *mut R4SdkWebNativeValue295, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue295_inspectNative(p0: *const R4SdkWebNativeValue295) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue296_create(p0: *mut R4SdkWebNativeValue296, p1: R4SdkWebSlot) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue296_create(p0: *mut R4SdkWebNativeValue296, p1: *const R4SdkWebJsProgram) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue296_inspectNative(p0: *const R4SdkWebNativeValue296) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue297_create(p0: *mut R4SdkWebNativeValue297, p1: *mut R4SdkWebJsBinding) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue297_create(p0: *mut R4SdkWebNativeValue297, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue297_inspectNative(p0: *const R4SdkWebNativeValue297) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue298_create(p0: *mut R4SdkWebNativeValue298, p1: R4SdkWebSlot) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue298_create(p0: *mut R4SdkWebNativeValue298, p1: *mut R4SdkWebJsBinding) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue298_inspectNative(p0: *const R4SdkWebNativeValue298) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue299_create(p0: *mut R4SdkWebNativeValue299, p1: *mut R4SdkWebJsValue) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue299_create(p0: *mut R4SdkWebNativeValue299, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue299_inspectNative(p0: *const R4SdkWebNativeValue299) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue300_create(p0: *mut R4SdkWebNativeValue300, p1: R4SdkWebSlot) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue300_create(p0: *mut R4SdkWebNativeValue300, p1: *mut R4SdkWebJsValue) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue300_inspectNative(p0: *const R4SdkWebNativeValue300) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue301_create(p0: *mut R4SdkWebNativeValue301, p1: *mut u64) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue301_create(p0: *mut R4SdkWebNativeValue301, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue301_inspectNative(p0: *const R4SdkWebNativeValue301) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue302_create(p0: *mut R4SdkWebNativeValue302, p1: R4SdkWebSlot) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue302_create(p0: *mut R4SdkWebNativeValue302, p1: *mut u64) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue302_inspectNative(p0: *const R4SdkWebNativeValue302) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue303_create(p0: *mut R4SdkWebNativeValue303, p1: *mut R4SdkWebJsProperty) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue303_create(p0: *mut R4SdkWebNativeValue303, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue303_inspectNative(p0: *const R4SdkWebNativeValue303) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue304_create(p0: *mut R4SdkWebNativeValue304, p1: *const R4SdkWebNativeValue304) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue304_inspectNative(p0: *const R4SdkWebNativeValue304, p1: *mut R4SdkWebNativeValue304) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue304_create(p0: *mut R4SdkWebNativeValue304, p1: *mut R4SdkWebJsProperty) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue304_inspectNative(p0: *const R4SdkWebNativeValue304) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue305_create(p0: *mut R4SdkWebNativeValue305, p1: *const R4SdkWebNativeValue305) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue305_inspectNative(p0: *const R4SdkWebNativeValue305, p1: *mut R4SdkWebNativeValue305) -> R4SdkWebSlot;
     pub fn R4SdkWebJsCellStorage_get_collection_cursor(p0: *const R4SdkWebJsCellStorage, p1: *mut R4SdkWebJsCollectionCursor) -> R4SdkWebSlot;
     pub fn R4SdkWebJsCellStorage_set_collection_cursor(p0: *mut R4SdkWebJsCellStorage, p1: *const R4SdkWebJsCollectionCursor) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsCellStorage_get_bindings(p0: *const R4SdkWebJsCellStorage, p1: *mut R4SdkWebNativeValue307) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsCellStorage_set_bindings(p0: *mut R4SdkWebJsCellStorage, p1: *const R4SdkWebNativeValue307) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsCellStorage_get_items(p0: *const R4SdkWebJsCellStorage, p1: *mut R4SdkWebNativeValue308) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsCellStorage_set_items(p0: *mut R4SdkWebJsCellStorage, p1: *const R4SdkWebNativeValue308) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsCellStorage_get_bindings(p0: *const R4SdkWebJsCellStorage, p1: *mut R4SdkWebNativeValue308) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsCellStorage_set_bindings(p0: *mut R4SdkWebJsCellStorage, p1: *const R4SdkWebNativeValue308) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsCellStorage_get_items(p0: *const R4SdkWebJsCellStorage, p1: *mut R4SdkWebNativeValue309) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsCellStorage_set_items(p0: *mut R4SdkWebJsCellStorage, p1: *const R4SdkWebNativeValue309) -> R4SdkWebSlot;
     pub fn R4SdkWebJsCellStorage_inspectNative(p0: *const R4SdkWebJsCellStorage) -> R4SdkWebSlot;
     pub fn R4SdkWebJsCollectionCursor_create(p0: *mut R4SdkWebJsCollectionCursor) -> R4SdkWebSlot;
     pub fn R4SdkWebJsCollectionCursor_from_fields(p0: *mut R4SdkWebJsCollectionCursor, p1: u32, p2: u64) -> R4SdkWebSlot;
@@ -34480,10 +34495,10 @@ unsafe extern "C" {
     pub fn R4SdkWebJsCollectionCursor_get_last_serial(p0: *const R4SdkWebJsCollectionCursor) -> R4SdkWebSlot;
     pub fn R4SdkWebJsCollectionCursor_set_last_serial(p0: *mut R4SdkWebJsCollectionCursor, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebJsCollectionCursor_inspectNative(p0: *const R4SdkWebJsCollectionCursor) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue307_create(p0: *mut R4SdkWebNativeValue307, p1: *const R4SdkWebNativeValue307) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue307_inspectNative(p0: *const R4SdkWebNativeValue307, p1: *mut R4SdkWebNativeValue307) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue308_create(p0: *mut R4SdkWebNativeValue308, p1: *const R4SdkWebNativeValue308) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue308_inspectNative(p0: *const R4SdkWebNativeValue308, p1: *mut R4SdkWebNativeValue308) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue309_create(p0: *mut R4SdkWebNativeValue309, p1: *const R4SdkWebNativeValue309) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue309_inspectNative(p0: *const R4SdkWebNativeValue309, p1: *mut R4SdkWebNativeValue309) -> R4SdkWebSlot;
     pub fn R4SdkWebJsJobKind_create(p0: *mut R4SdkWebJsJobKind, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebJsJobKind_inspectNative(p0: *const R4SdkWebJsJobKind) -> R4SdkWebSlot;
     pub fn R4SdkWebJsJob_create(p0: *mut R4SdkWebJsJob) -> R4SdkWebSlot;
@@ -34531,10 +34546,10 @@ unsafe extern "C" {
     pub fn R4SdkWebJsExternalRootMarker_get_sweep(p0: *const R4SdkWebJsExternalRootMarker) -> R4SdkWebSlot;
     pub fn R4SdkWebJsExternalRootMarker_set_sweep(p0: *mut R4SdkWebJsExternalRootMarker, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebJsExternalRootMarker_inspectNative(p0: *const R4SdkWebJsExternalRootMarker) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue314_create(p0: *mut R4SdkWebNativeValue314, p1: R4SdkWebSlot) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue314_inspectNative(p0: *const R4SdkWebNativeValue314) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue315_create(p0: *mut R4SdkWebNativeValue315, p1: R4SdkWebSlot) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue315_inspectNative(p0: *const R4SdkWebNativeValue315) -> R4SdkWebSlot;
     pub fn R4SdkWebJsModule_create(p0: *mut R4SdkWebJsModule) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsModule_from_fields(p0: *mut R4SdkWebJsModule, p1: u8, p2: *const R4SdkWebJsStringRef, p3: R4SdkWebSlot, p4: u32, p5: u16, p6: u16, p7: u16, p8: R4SdkWebSlot, p9: *const R4SdkWebJsValue, p10: u64, p11: *const R4SdkWebNativeValue318) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsModule_from_fields(p0: *mut R4SdkWebJsModule, p1: u8, p2: *const R4SdkWebJsStringRef, p3: R4SdkWebSlot, p4: u32, p5: u16, p6: u16, p7: u16, p8: R4SdkWebSlot, p9: *const R4SdkWebJsValue, p10: u64, p11: *const R4SdkWebNativeValue319) -> R4SdkWebSlot;
     pub fn R4SdkWebJsModule_get_occupied(p0: *const R4SdkWebJsModule) -> R4SdkWebSlot;
     pub fn R4SdkWebJsModule_set_occupied(p0: *mut R4SdkWebJsModule, p1: u8) -> R4SdkWebSlot;
     pub fn R4SdkWebJsModule_get_name(p0: *const R4SdkWebJsModule, p1: *mut R4SdkWebJsStringRef) -> R4SdkWebSlot;
@@ -34555,15 +34570,15 @@ unsafe extern "C" {
     pub fn R4SdkWebJsModule_set_failure_value(p0: *mut R4SdkWebJsModule, p1: *const R4SdkWebJsValue) -> R4SdkWebSlot;
     pub fn R4SdkWebJsModule_get_export_count(p0: *const R4SdkWebJsModule) -> R4SdkWebSlot;
     pub fn R4SdkWebJsModule_set_export_count(p0: *mut R4SdkWebJsModule, p1: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsModule_get_export_entries(p0: *const R4SdkWebJsModule, p1: *mut R4SdkWebNativeValue318) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsModule_set_export_entries(p0: *mut R4SdkWebJsModule, p1: *const R4SdkWebNativeValue318) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsModule_get_export_entries(p0: *const R4SdkWebJsModule, p1: *mut R4SdkWebNativeValue319) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsModule_set_export_entries(p0: *mut R4SdkWebJsModule, p1: *const R4SdkWebNativeValue319) -> R4SdkWebSlot;
     pub fn R4SdkWebJsModule_inspectNative(p0: *const R4SdkWebJsModule) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue316_create(p0: *mut R4SdkWebNativeValue316, p1: R4SdkWebSlot) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue316_inspectNative(p0: *const R4SdkWebNativeValue316) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue317_create(p0: *mut R4SdkWebNativeValue317, p1: *mut R4SdkWebJsProgram) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue317_create(p0: *mut R4SdkWebNativeValue317, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue317_inspectNative(p0: *const R4SdkWebNativeValue317) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue318_create(p0: *mut R4SdkWebNativeValue318, p1: *const R4SdkWebNativeValue318) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue318_inspectNative(p0: *const R4SdkWebNativeValue318, p1: *mut R4SdkWebNativeValue318) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue318_create(p0: *mut R4SdkWebNativeValue318, p1: *mut R4SdkWebJsProgram) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue318_inspectNative(p0: *const R4SdkWebNativeValue318) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue319_create(p0: *mut R4SdkWebNativeValue319, p1: *const R4SdkWebNativeValue319) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue319_inspectNative(p0: *const R4SdkWebNativeValue319, p1: *mut R4SdkWebNativeValue319) -> R4SdkWebSlot;
     pub fn R4SdkWebJsModuleExport_create(p0: *mut R4SdkWebJsModuleExport) -> R4SdkWebSlot;
     pub fn R4SdkWebJsModuleExport_from_fields(p0: *mut R4SdkWebJsModuleExport, p1: *const R4SdkWebJsStringRef, p2: *const R4SdkWebJsStringRef, p3: u16, p4: u32, p5: u8) -> R4SdkWebSlot;
     pub fn R4SdkWebJsModuleExport_get_name(p0: *const R4SdkWebJsModuleExport, p1: *mut R4SdkWebJsStringRef) -> R4SdkWebSlot;
@@ -34624,45 +34639,45 @@ unsafe extern "C" {
     pub fn R4SdkWebJsDiagnosticSite_create(p0: *mut R4SdkWebJsDiagnosticSite, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebJsDiagnosticSite_inspectNative(p0: *const R4SdkWebJsDiagnosticSite) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_create(p0: *mut R4SdkWebJsRuntime) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_from_fields(p0: *mut R4SdkWebJsRuntime, p1: *mut u8, p2: u64, p3: *const R4SdkWebNativeValue18, p4: *const R4SdkWebNativeValue326, p5: *const R4SdkWebNativeValue11, p6: *const R4SdkWebNativeValue11, p7: *const R4SdkWebNativeValue327, p8: *const R4SdkWebNativeValue327, p9: *const R4SdkWebNativeValue328, p10: u64, p11: *const R4SdkWebNativeValue329, p12: *const R4SdkWebNativeValue330, p13: *const R4SdkWebNativeValue331, p14: R4SdkWebSlot, p15: u64, p16: u64, p17: *const R4SdkWebNativeValue334, p18: u64, p19: *const R4SdkWebNativeValue335, p20: u64, p21: u16, p22: u16, p23: u16, p24: u16, p25: u16, p26: u16, p27: u16, p28: u16, p29: u16, p30: u16, p31: u16, p32: u16, p33: u16, p34: u16, p35: u16, p36: u16, p37: u16, p38: u16, p39: *const R4SdkWebNativeValue336, p40: u16, p41: u16, p42: u16, p43: u16, p44: u16, p45: u16, p46: *const R4SdkWebNativeValue337, p47: R4SdkWebSlot, p48: u8, p49: u16, p50: u16, p51: u16, p52: *const R4SdkWebNativeValue337, p53: u64, p54: *const R4SdkWebNativeValue337, p55: u64, p56: *const R4SdkWebNativeValue338, p57: u64, p58: *const R4SdkWebNativeValue340, p59: R4SdkWebSlot, p60: R4SdkWebSlot, p61: R4SdkWebSlot, p62: R4SdkWebSlot, p63: *const R4SdkWebNativeValue363, p64: u64, p65: *const R4SdkWebNativeValue365, p66: u64, p67: u64, p68: *const R4SdkWebNativeValue366, p69: u64, p70: u64, p71: *const R4SdkWebNativeValue366, p72: u64, p73: u64, p74: *const R4SdkWebJsStop, p75: u64, p76: u64, p77: u64, p78: *const R4SdkWebNativeValue360, p79: *const R4SdkWebJsValue, p80: *const R4SdkWebJsValue, p81: u64, p82: *const R4SdkWebNativeValue175, p83: u64, p84: *const R4SdkWebNativeValue361, p85: u64, p86: *const R4SdkWebNativeValue175, p87: u64, p88: R4SdkWebSlot, p89: u16, p90: u32, p91: *const R4SdkWebJsValue, p92: u32, p93: u64, p94: u64, p95: u32, p96: *const R4SdkWebNativeValue162, p97: u64, p98: *const R4SdkWebNativeValue275, p99: u64, p100: u32, p101: u32, p102: *const R4SdkWebNativeValue362, p103: u64, p104: u64, p105: u32, p106: *const R4SdkWebJsStringRef, p107: *const R4SdkWebJsStringRef, p108: *const R4SdkWebJsStringRef, p109: *const R4SdkWebJsStringRef, p110: *const R4SdkWebJsStringRef, p111: *const R4SdkWebJsStringRef, p112: *const R4SdkWebJsStringRef, p113: *const R4SdkWebJsStringRef, p114: *const R4SdkWebJsStringRef, p115: *const R4SdkWebJsStringRef, p116: *const R4SdkWebJsStringRef, p117: *const R4SdkWebJsStringRef, p118: *const R4SdkWebJsStringRef, p119: *const R4SdkWebJsStringRef, p120: *const R4SdkWebJsStringRef, p121: *const R4SdkWebNativeValue367, p122: u64, p123: *const R4SdkWebNativeValue369, p124: u64, p125: u64, p126: u64, p127: *const R4SdkWebJsRuntimeStats, p128: *const R4SdkWebJsProgramAllocator, p129: *const R4SdkWebJsExternalRootMarker, p130: *const R4SdkWebJsClockSource, p131: *const R4SdkWebJsPromiseRejectionTracker) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_from_fields(p0: *mut R4SdkWebJsRuntime, p1: *mut u8, p2: u64, p3: *const R4SdkWebNativeValue18, p4: *const R4SdkWebNativeValue327, p5: *const R4SdkWebNativeValue11, p6: *const R4SdkWebNativeValue11, p7: *const R4SdkWebNativeValue328, p8: *const R4SdkWebNativeValue328, p9: *const R4SdkWebNativeValue329, p10: u64, p11: *const R4SdkWebNativeValue330, p12: *const R4SdkWebNativeValue331, p13: *const R4SdkWebNativeValue332, p14: R4SdkWebSlot, p15: u64, p16: u64, p17: *const R4SdkWebNativeValue335, p18: u64, p19: *const R4SdkWebNativeValue336, p20: u64, p21: u16, p22: u16, p23: u16, p24: u16, p25: u16, p26: u16, p27: u16, p28: u16, p29: u16, p30: u16, p31: u16, p32: u16, p33: u16, p34: u16, p35: u16, p36: u16, p37: u16, p38: u16, p39: *const R4SdkWebNativeValue337, p40: u16, p41: u16, p42: u16, p43: u16, p44: u16, p45: u16, p46: *const R4SdkWebNativeValue338, p47: R4SdkWebSlot, p48: u8, p49: u16, p50: u16, p51: u16, p52: *const R4SdkWebNativeValue338, p53: u64, p54: *const R4SdkWebNativeValue338, p55: u64, p56: *const R4SdkWebNativeValue339, p57: u64, p58: *const R4SdkWebNativeValue341, p59: R4SdkWebSlot, p60: R4SdkWebSlot, p61: R4SdkWebSlot, p62: R4SdkWebSlot, p63: *const R4SdkWebNativeValue364, p64: u64, p65: *const R4SdkWebNativeValue366, p66: u64, p67: u64, p68: *const R4SdkWebNativeValue367, p69: u64, p70: u64, p71: *const R4SdkWebNativeValue367, p72: u64, p73: u64, p74: *const R4SdkWebJsStop, p75: u64, p76: u64, p77: u64, p78: *const R4SdkWebNativeValue361, p79: *const R4SdkWebJsValue, p80: *const R4SdkWebJsValue, p81: u64, p82: *const R4SdkWebNativeValue175, p83: u64, p84: *const R4SdkWebNativeValue362, p85: u64, p86: *const R4SdkWebNativeValue175, p87: u64, p88: R4SdkWebSlot, p89: u16, p90: u32, p91: *const R4SdkWebJsValue, p92: u32, p93: u64, p94: u64, p95: u32, p96: *const R4SdkWebNativeValue162, p97: u64, p98: *const R4SdkWebNativeValue276, p99: u64, p100: u32, p101: u32, p102: *const R4SdkWebNativeValue363, p103: u64, p104: u64, p105: u32, p106: *const R4SdkWebJsStringRef, p107: *const R4SdkWebJsStringRef, p108: *const R4SdkWebJsStringRef, p109: *const R4SdkWebJsStringRef, p110: *const R4SdkWebJsStringRef, p111: *const R4SdkWebJsStringRef, p112: *const R4SdkWebJsStringRef, p113: *const R4SdkWebJsStringRef, p114: *const R4SdkWebJsStringRef, p115: *const R4SdkWebJsStringRef, p116: *const R4SdkWebJsStringRef, p117: *const R4SdkWebJsStringRef, p118: *const R4SdkWebJsStringRef, p119: *const R4SdkWebJsStringRef, p120: *const R4SdkWebJsStringRef, p121: *const R4SdkWebNativeValue368, p122: u64, p123: *const R4SdkWebNativeValue370, p124: u64, p125: u64, p126: u64, p127: *const R4SdkWebJsRuntimeStats, p128: *const R4SdkWebJsProgramAllocator, p129: *const R4SdkWebJsExternalRootMarker, p130: *const R4SdkWebJsClockSource, p131: *const R4SdkWebJsPromiseRejectionTracker) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_strings(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_set_strings(p0: *mut R4SdkWebJsRuntime, p1: *mut u8) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_string_capacity(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_set_string_capacity(p0: *mut R4SdkWebJsRuntime, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_string_scratch(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue18) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_set_string_scratch(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue18) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_get_unicode_scratch(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue326) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_set_unicode_scratch(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue326) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_get_unicode_scratch(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue327) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_set_unicode_scratch(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue327) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_regex_pattern_scratch(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue11) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_set_regex_pattern_scratch(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue11) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_regex_input_scratch(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue11) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_set_regex_input_scratch(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue11) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_get_bigint_result_scratch(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue327) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_set_bigint_result_scratch(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue327) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_get_bigint_remainder_scratch(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue327) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_set_bigint_remainder_scratch(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue327) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_get_bigint_work_scratch(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue328) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_set_bigint_work_scratch(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue328) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_get_bigint_result_scratch(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue328) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_set_bigint_result_scratch(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue328) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_get_bigint_remainder_scratch(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue328) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_set_bigint_remainder_scratch(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue328) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_get_bigint_work_scratch(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue329) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_set_bigint_work_scratch(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue329) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_string_len(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_set_string_len(p0: *mut R4SdkWebJsRuntime, p1: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_get_interned_string_hashes(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue329) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_set_interned_string_hashes(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue329) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_get_interned_string_refs(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue330) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_set_interned_string_refs(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue330) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_get_cells(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue331) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_set_cells(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue331) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_get_interned_string_hashes(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue330) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_set_interned_string_hashes(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue330) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_get_interned_string_refs(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue331) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_set_interned_string_refs(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue331) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_get_cells(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue332) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_set_cells(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue332) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_accessor_memory(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_set_accessor_memory(p0: *mut R4SdkWebJsRuntime, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_accessor_capacity(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_set_accessor_capacity(p0: *mut R4SdkWebJsRuntime, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_free_accessor(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_set_free_accessor(p0: *mut R4SdkWebJsRuntime, p1: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_get_modules(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue334) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_set_modules(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue334) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_get_modules(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue335) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_set_modules(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue335) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_module_count(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_set_module_count(p0: *mut R4SdkWebJsRuntime, p1: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_get_dynamic_programs(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue335) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_set_dynamic_programs(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue335) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_get_dynamic_programs(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue336) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_set_dynamic_programs(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue336) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_dynamic_program_count(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_set_dynamic_program_count(p0: *mut R4SdkWebJsRuntime, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_global_env(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
@@ -34701,8 +34716,8 @@ unsafe extern "C" {
     pub fn R4SdkWebJsRuntime_set_data_view_prototype(p0: *mut R4SdkWebJsRuntime, p1: u16) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_typed_array_prototype(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_set_typed_array_prototype(p0: *mut R4SdkWebJsRuntime, p1: u16) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_get_typed_array_prototypes(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue336) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_set_typed_array_prototypes(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue336) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_get_typed_array_prototypes(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue337) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_set_typed_array_prototypes(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue337) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_string_prototype(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_set_string_prototype(p0: *mut R4SdkWebJsRuntime, p1: u16) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_string_iterator_prototype(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
@@ -34715,8 +34730,8 @@ unsafe extern "C" {
     pub fn R4SdkWebJsRuntime_set_map_iterator_prototype(p0: *mut R4SdkWebJsRuntime, p1: u16) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_set_iterator_prototype(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_set_set_iterator_prototype(p0: *mut R4SdkWebJsRuntime, p1: u16) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_get_shared_natives(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue337) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_set_shared_natives(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue337) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_get_shared_natives(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue338) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_set_shared_natives(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue338) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_active_program(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_set_active_program(p0: *mut R4SdkWebJsRuntime, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_active_host_construct(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
@@ -34727,20 +34742,20 @@ unsafe extern "C" {
     pub fn R4SdkWebJsRuntime_set_active_exports(p0: *mut R4SdkWebJsRuntime, p1: u16) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_active_module(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_set_active_module(p0: *mut R4SdkWebJsRuntime, p1: u16) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_get_roots(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue337) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_set_roots(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue337) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_get_roots(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue338) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_set_roots(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue338) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_root_count(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_set_root_count(p0: *mut R4SdkWebJsRuntime, p1: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_get_bytecode_values(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue337) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_set_bytecode_values(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue337) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_get_bytecode_values(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue338) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_set_bytecode_values(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue338) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_bytecode_value_count(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_set_bytecode_value_count(p0: *mut R4SdkWebJsRuntime, p1: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_get_bytecode_frames(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue338) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_set_bytecode_frames(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue338) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_get_bytecode_frames(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue339) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_set_bytecode_frames(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue339) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_bytecode_frame_count(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_set_bytecode_frame_count(p0: *mut R4SdkWebJsRuntime, p1: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_get_identifier_cache(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue340) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_set_identifier_cache(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue340) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_get_identifier_cache(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue341) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_set_identifier_cache(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue341) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_generator_state_head(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_set_generator_state_head(p0: *mut R4SdkWebJsRuntime, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_active_generator_state(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
@@ -34749,24 +34764,24 @@ unsafe extern "C" {
     pub fn R4SdkWebJsRuntime_set_async_state_head(p0: *mut R4SdkWebJsRuntime, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_active_async_state(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_set_active_async_state(p0: *mut R4SdkWebJsRuntime, p1: R4SdkWebSlot) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_get_template_objects(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue363) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_set_template_objects(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue363) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_get_template_objects(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue364) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_set_template_objects(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue364) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_template_object_count(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_set_template_object_count(p0: *mut R4SdkWebJsRuntime, p1: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_get_mark_queue(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue365) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_set_mark_queue(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue365) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_get_mark_queue(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue366) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_set_mark_queue(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue366) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_mark_queue_head(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_set_mark_queue_head(p0: *mut R4SdkWebJsRuntime, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_mark_queue_count(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_set_mark_queue_count(p0: *mut R4SdkWebJsRuntime, p1: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_get_tasks(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue366) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_set_tasks(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue366) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_get_tasks(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue367) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_set_tasks(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue367) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_task_head(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_set_task_head(p0: *mut R4SdkWebJsRuntime, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_task_count(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_set_task_count(p0: *mut R4SdkWebJsRuntime, p1: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_get_microtasks(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue366) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_set_microtasks(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue366) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_get_microtasks(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue367) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_set_microtasks(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue367) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_microtask_head(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_set_microtask_head(p0: *mut R4SdkWebJsRuntime, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_microtask_count(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
@@ -34779,8 +34794,8 @@ unsafe extern "C" {
     pub fn R4SdkWebJsRuntime_set_step_budget(p0: *mut R4SdkWebJsRuntime, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_call_depth(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_set_call_depth(p0: *mut R4SdkWebJsRuntime, p1: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_get_call_environments(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue360) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_set_call_environments(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue360) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_get_call_environments(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue361) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_set_call_environments(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue361) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_pending_exception(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebJsValue) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_set_pending_exception(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebJsValue) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_pending_generator_return(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebJsValue) -> R4SdkWebSlot;
@@ -34791,8 +34806,8 @@ unsafe extern "C" {
     pub fn R4SdkWebJsRuntime_set_diagnostic_name(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue175) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_diagnostic_name_len(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_set_diagnostic_name_len(p0: *mut R4SdkWebJsRuntime, p1: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_get_diagnostic_context(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue361) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_set_diagnostic_context(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue361) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_get_diagnostic_context(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue362) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_set_diagnostic_context(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue362) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_diagnostic_context_len(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_set_diagnostic_context_len(p0: *mut R4SdkWebJsRuntime, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_diagnostic_call_name(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue175) -> R4SdkWebSlot;
@@ -34819,16 +34834,16 @@ unsafe extern "C" {
     pub fn R4SdkWebJsRuntime_set_diagnostic_error_name(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue162) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_diagnostic_error_name_len(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_set_diagnostic_error_name_len(p0: *mut R4SdkWebJsRuntime, p1: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_get_diagnostic_source_name(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue275) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_set_diagnostic_source_name(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue275) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_get_diagnostic_source_name(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue276) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_set_diagnostic_source_name(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue276) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_diagnostic_source_name_len(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_set_diagnostic_source_name_len(p0: *mut R4SdkWebJsRuntime, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_diagnostic_line(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_set_diagnostic_line(p0: *mut R4SdkWebJsRuntime, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_diagnostic_column(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_set_diagnostic_column(p0: *mut R4SdkWebJsRuntime, p1: u32) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_get_diagnostic_stack(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue362) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_set_diagnostic_stack(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue362) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_get_diagnostic_stack(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue363) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_set_diagnostic_stack(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue363) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_diagnostic_stack_len(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_set_diagnostic_stack_len(p0: *mut R4SdkWebJsRuntime, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_random_state(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
@@ -34865,12 +34880,12 @@ unsafe extern "C" {
     pub fn R4SdkWebJsRuntime_set_symbol_dispose(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebJsStringRef) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_symbol_async_dispose(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebJsStringRef) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_set_symbol_async_dispose(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebJsStringRef) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_get_symbol_registry(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue367) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_set_symbol_registry(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue367) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_get_symbol_registry(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue368) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_set_symbol_registry(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue368) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_symbol_registry_count(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_set_symbol_registry_count(p0: *mut R4SdkWebJsRuntime, p1: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_get_gc_symbol_marks(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue369) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsRuntime_set_gc_symbol_marks(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue369) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_get_gc_symbol_marks(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebNativeValue370) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsRuntime_set_gc_symbol_marks(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebNativeValue370) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_gc_mark_progress(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_set_gc_mark_progress(p0: *mut R4SdkWebJsRuntime, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_get_next_gc_allocation(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
@@ -34888,10 +34903,8 @@ unsafe extern "C" {
     pub fn R4SdkWebJsRuntime_get_promise_rejection_tracker(p0: *const R4SdkWebJsRuntime, p1: *mut R4SdkWebJsPromiseRejectionTracker) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_set_promise_rejection_tracker(p0: *mut R4SdkWebJsRuntime, p1: *const R4SdkWebJsPromiseRejectionTracker) -> R4SdkWebSlot;
     pub fn R4SdkWebJsRuntime_inspectNative(p0: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue325_create(p0: *mut R4SdkWebNativeValue325, p1: *mut u8) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue325_inspectNative(p0: *const R4SdkWebNativeValue325) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue326_create(p0: *mut R4SdkWebNativeValue326, p1: *const R4SdkWebNativeValue326) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue326_inspectNative(p0: *const R4SdkWebNativeValue326, p1: *mut R4SdkWebNativeValue326) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue326_create(p0: *mut R4SdkWebNativeValue326, p1: *mut u8) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue326_inspectNative(p0: *const R4SdkWebNativeValue326) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue327_create(p0: *mut R4SdkWebNativeValue327, p1: *const R4SdkWebNativeValue327) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue327_inspectNative(p0: *const R4SdkWebNativeValue327, p1: *mut R4SdkWebNativeValue327) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue328_create(p0: *mut R4SdkWebNativeValue328, p1: *const R4SdkWebNativeValue328) -> R4SdkWebSlot;
@@ -34902,12 +34915,12 @@ unsafe extern "C" {
     pub fn R4SdkWebNativeValue330_inspectNative(p0: *const R4SdkWebNativeValue330, p1: *mut R4SdkWebNativeValue330) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue331_create(p0: *mut R4SdkWebNativeValue331, p1: *const R4SdkWebNativeValue331) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue331_inspectNative(p0: *const R4SdkWebNativeValue331, p1: *mut R4SdkWebNativeValue331) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue332_create(p0: *mut R4SdkWebNativeValue332, p1: R4SdkWebSlot) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue332_inspectNative(p0: *const R4SdkWebNativeValue332) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue333_create(p0: *mut R4SdkWebNativeValue333, p1: *mut R4SdkWebJsAccessor) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue332_create(p0: *mut R4SdkWebNativeValue332, p1: *const R4SdkWebNativeValue332) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue332_inspectNative(p0: *const R4SdkWebNativeValue332, p1: *mut R4SdkWebNativeValue332) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue333_create(p0: *mut R4SdkWebNativeValue333, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue333_inspectNative(p0: *const R4SdkWebNativeValue333) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue334_create(p0: *mut R4SdkWebNativeValue334, p1: *const R4SdkWebNativeValue334) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue334_inspectNative(p0: *const R4SdkWebNativeValue334, p1: *mut R4SdkWebNativeValue334) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue334_create(p0: *mut R4SdkWebNativeValue334, p1: *mut R4SdkWebJsAccessor) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue334_inspectNative(p0: *const R4SdkWebNativeValue334) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue335_create(p0: *mut R4SdkWebNativeValue335, p1: *const R4SdkWebNativeValue335) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue335_inspectNative(p0: *const R4SdkWebNativeValue335, p1: *mut R4SdkWebNativeValue335) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue336_create(p0: *mut R4SdkWebNativeValue336, p1: *const R4SdkWebNativeValue336) -> R4SdkWebSlot;
@@ -34916,6 +34929,8 @@ unsafe extern "C" {
     pub fn R4SdkWebNativeValue337_inspectNative(p0: *const R4SdkWebNativeValue337, p1: *mut R4SdkWebNativeValue337) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue338_create(p0: *mut R4SdkWebNativeValue338, p1: *const R4SdkWebNativeValue338) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue338_inspectNative(p0: *const R4SdkWebNativeValue338, p1: *mut R4SdkWebNativeValue338) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue339_create(p0: *mut R4SdkWebNativeValue339, p1: *const R4SdkWebNativeValue339) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue339_inspectNative(p0: *const R4SdkWebNativeValue339, p1: *mut R4SdkWebNativeValue339) -> R4SdkWebSlot;
     pub fn R4SdkWebJsBytecodeFrame_create(p0: *mut R4SdkWebJsBytecodeFrame) -> R4SdkWebSlot;
     pub fn R4SdkWebJsBytecodeFrame_from_fields(p0: *mut R4SdkWebJsBytecodeFrame, p1: R4SdkWebSlot, p2: u16, p3: u16, p4: u16, p5: *const R4SdkWebJsValue) -> R4SdkWebSlot;
     pub fn R4SdkWebJsBytecodeFrame_get_program(p0: *const R4SdkWebJsBytecodeFrame) -> R4SdkWebSlot;
@@ -34929,8 +34944,8 @@ unsafe extern "C" {
     pub fn R4SdkWebJsBytecodeFrame_get_last_value(p0: *const R4SdkWebJsBytecodeFrame, p1: *mut R4SdkWebJsValue) -> R4SdkWebSlot;
     pub fn R4SdkWebJsBytecodeFrame_set_last_value(p0: *mut R4SdkWebJsBytecodeFrame, p1: *const R4SdkWebJsValue) -> R4SdkWebSlot;
     pub fn R4SdkWebJsBytecodeFrame_inspectNative(p0: *const R4SdkWebJsBytecodeFrame) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue340_create(p0: *mut R4SdkWebNativeValue340, p1: *const R4SdkWebNativeValue340) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue340_inspectNative(p0: *const R4SdkWebNativeValue340, p1: *mut R4SdkWebNativeValue340) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue341_create(p0: *mut R4SdkWebNativeValue341, p1: *const R4SdkWebNativeValue341) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue341_inspectNative(p0: *const R4SdkWebNativeValue341, p1: *mut R4SdkWebNativeValue341) -> R4SdkWebSlot;
     pub fn R4SdkWebJsIdentifierCacheEntry_create(p0: *mut R4SdkWebJsIdentifierCacheEntry) -> R4SdkWebSlot;
     pub fn R4SdkWebJsIdentifierCacheEntry_from_fields(p0: *mut R4SdkWebJsIdentifierCacheEntry, p1: R4SdkWebSlot, p2: u64, p3: u16, p4: u16, p5: u16, p6: u16, p7: u32, p8: u16, p9: u16, p10: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebJsIdentifierCacheEntry_get_program(p0: *const R4SdkWebJsIdentifierCacheEntry) -> R4SdkWebSlot;
@@ -34954,12 +34969,12 @@ unsafe extern "C" {
     pub fn R4SdkWebJsIdentifierCacheEntry_get_binding_generation(p0: *const R4SdkWebJsIdentifierCacheEntry) -> R4SdkWebSlot;
     pub fn R4SdkWebJsIdentifierCacheEntry_set_binding_generation(p0: *mut R4SdkWebJsIdentifierCacheEntry, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebJsIdentifierCacheEntry_inspectNative(p0: *const R4SdkWebJsIdentifierCacheEntry) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue342_create(p0: *mut R4SdkWebNativeValue342, p1: R4SdkWebSlot) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue342_inspectNative(p0: *const R4SdkWebNativeValue342) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue343_create(p0: *mut R4SdkWebNativeValue343, p1: *mut R4SdkWebJsGeneratorFiberState) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue343_create(p0: *mut R4SdkWebNativeValue343, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue343_inspectNative(p0: *const R4SdkWebNativeValue343) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue344_create(p0: *mut R4SdkWebNativeValue344, p1: *mut R4SdkWebJsGeneratorFiberState) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue344_inspectNative(p0: *const R4SdkWebNativeValue344) -> R4SdkWebSlot;
     pub fn R4SdkWebJsGeneratorFiberState_create(p0: *mut R4SdkWebJsGeneratorFiberState) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsGeneratorFiberState_from_fields(p0: *mut R4SdkWebJsGeneratorFiberState, p1: u8, p2: u16, p3: u16, p4: R4SdkWebSlot, p5: *const R4SdkWebJsValue, p6: *const R4SdkWebNativeValue345, p7: u64, p8: u8, p9: u32, p10: u8, p11: u32, p12: *const R4SdkWebJsValue, p13: *const R4SdkWebJsValue, p14: R4SdkWebSlot, p15: u8, p16: u8, p17: *const R4SdkWebJsValue, p18: *const R4SdkWebNativeValue348, p19: u64, p20: u64, p21: R4SdkWebSlot, p22: R4SdkWebSlot, p23: *const R4SdkWebJsFiberContext, p24: *const R4SdkWebJsFiberContext, p25: *const R4SdkWebJsExecutionSnapshot, p26: *const R4SdkWebJsExecutionSnapshot, p27: R4SdkWebSlot) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsGeneratorFiberState_from_fields(p0: *mut R4SdkWebJsGeneratorFiberState, p1: u8, p2: u16, p3: u16, p4: R4SdkWebSlot, p5: *const R4SdkWebJsValue, p6: *const R4SdkWebNativeValue346, p7: u64, p8: u8, p9: u32, p10: u8, p11: u32, p12: *const R4SdkWebJsValue, p13: *const R4SdkWebJsValue, p14: R4SdkWebSlot, p15: u8, p16: u8, p17: *const R4SdkWebJsValue, p18: *const R4SdkWebNativeValue349, p19: u64, p20: u64, p21: R4SdkWebSlot, p22: R4SdkWebSlot, p23: *const R4SdkWebJsFiberContext, p24: *const R4SdkWebJsFiberContext, p25: *const R4SdkWebJsExecutionSnapshot, p26: *const R4SdkWebJsExecutionSnapshot, p27: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebJsGeneratorFiberState_get_occupied(p0: *const R4SdkWebJsGeneratorFiberState) -> R4SdkWebSlot;
     pub fn R4SdkWebJsGeneratorFiberState_set_occupied(p0: *mut R4SdkWebJsGeneratorFiberState, p1: u8) -> R4SdkWebSlot;
     pub fn R4SdkWebJsGeneratorFiberState_get_owner_cell(p0: *const R4SdkWebJsGeneratorFiberState) -> R4SdkWebSlot;
@@ -34970,8 +34985,8 @@ unsafe extern "C" {
     pub fn R4SdkWebJsGeneratorFiberState_set_program(p0: *mut R4SdkWebJsGeneratorFiberState, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebJsGeneratorFiberState_get_receiver(p0: *const R4SdkWebJsGeneratorFiberState, p1: *mut R4SdkWebJsValue) -> R4SdkWebSlot;
     pub fn R4SdkWebJsGeneratorFiberState_set_receiver(p0: *mut R4SdkWebJsGeneratorFiberState, p1: *const R4SdkWebJsValue) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsGeneratorFiberState_get_arguments(p0: *const R4SdkWebJsGeneratorFiberState, p1: *mut R4SdkWebNativeValue345) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsGeneratorFiberState_set_arguments(p0: *mut R4SdkWebJsGeneratorFiberState, p1: *const R4SdkWebNativeValue345) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsGeneratorFiberState_get_arguments(p0: *const R4SdkWebJsGeneratorFiberState, p1: *mut R4SdkWebNativeValue346) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsGeneratorFiberState_set_arguments(p0: *mut R4SdkWebJsGeneratorFiberState, p1: *const R4SdkWebNativeValue346) -> R4SdkWebSlot;
     pub fn R4SdkWebJsGeneratorFiberState_get_argument_count(p0: *const R4SdkWebJsGeneratorFiberState) -> R4SdkWebSlot;
     pub fn R4SdkWebJsGeneratorFiberState_set_argument_count(p0: *mut R4SdkWebJsGeneratorFiberState, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebJsGeneratorFiberState_get_async_generator(p0: *const R4SdkWebJsGeneratorFiberState) -> R4SdkWebSlot;
@@ -34994,8 +35009,8 @@ unsafe extern "C" {
     pub fn R4SdkWebJsGeneratorFiberState_set_awaiting_completion(p0: *mut R4SdkWebJsGeneratorFiberState, p1: u8) -> R4SdkWebSlot;
     pub fn R4SdkWebJsGeneratorFiberState_get_await_value(p0: *const R4SdkWebJsGeneratorFiberState, p1: *mut R4SdkWebJsValue) -> R4SdkWebSlot;
     pub fn R4SdkWebJsGeneratorFiberState_set_await_value(p0: *mut R4SdkWebJsGeneratorFiberState, p1: *const R4SdkWebJsValue) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsGeneratorFiberState_get_requests(p0: *const R4SdkWebJsGeneratorFiberState, p1: *mut R4SdkWebNativeValue348) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsGeneratorFiberState_set_requests(p0: *mut R4SdkWebJsGeneratorFiberState, p1: *const R4SdkWebNativeValue348) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsGeneratorFiberState_get_requests(p0: *const R4SdkWebJsGeneratorFiberState, p1: *mut R4SdkWebNativeValue349) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsGeneratorFiberState_set_requests(p0: *mut R4SdkWebJsGeneratorFiberState, p1: *const R4SdkWebNativeValue349) -> R4SdkWebSlot;
     pub fn R4SdkWebJsGeneratorFiberState_get_request_head(p0: *const R4SdkWebJsGeneratorFiberState) -> R4SdkWebSlot;
     pub fn R4SdkWebJsGeneratorFiberState_set_request_head(p0: *mut R4SdkWebJsGeneratorFiberState, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebJsGeneratorFiberState_get_request_count(p0: *const R4SdkWebJsGeneratorFiberState) -> R4SdkWebSlot;
@@ -35015,14 +35030,14 @@ unsafe extern "C" {
     pub fn R4SdkWebJsGeneratorFiberState_get_stack_memory(p0: *const R4SdkWebJsGeneratorFiberState) -> R4SdkWebSlot;
     pub fn R4SdkWebJsGeneratorFiberState_set_stack_memory(p0: *mut R4SdkWebJsGeneratorFiberState, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebJsGeneratorFiberState_inspectNative(p0: *const R4SdkWebJsGeneratorFiberState) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue345_create(p0: *mut R4SdkWebNativeValue345, p1: *const R4SdkWebNativeValue345) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue345_inspectNative(p0: *const R4SdkWebNativeValue345, p1: *mut R4SdkWebNativeValue345) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue346_create(p0: *mut R4SdkWebNativeValue346, p1: *const R4SdkWebNativeValue346) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue346_inspectNative(p0: *const R4SdkWebNativeValue346, p1: *mut R4SdkWebNativeValue346) -> R4SdkWebSlot;
     pub fn R4SdkWebJsGeneratorStatus_create(p0: *mut R4SdkWebJsGeneratorStatus, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebJsGeneratorStatus_inspectNative(p0: *const R4SdkWebJsGeneratorStatus) -> R4SdkWebSlot;
     pub fn R4SdkWebJsGeneratorResumeKind_create(p0: *mut R4SdkWebJsGeneratorResumeKind, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebJsGeneratorResumeKind_inspectNative(p0: *const R4SdkWebJsGeneratorResumeKind) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue348_create(p0: *mut R4SdkWebNativeValue348, p1: *const R4SdkWebNativeValue348) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue348_inspectNative(p0: *const R4SdkWebNativeValue348, p1: *mut R4SdkWebNativeValue348) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue349_create(p0: *mut R4SdkWebNativeValue349, p1: *const R4SdkWebNativeValue349) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue349_inspectNative(p0: *const R4SdkWebNativeValue349, p1: *mut R4SdkWebNativeValue349) -> R4SdkWebSlot;
     pub fn R4SdkWebJsAsyncGeneratorRequest_create(p0: *mut R4SdkWebJsAsyncGeneratorRequest) -> R4SdkWebSlot;
     pub fn R4SdkWebJsAsyncGeneratorRequest_from_fields(p0: *mut R4SdkWebJsAsyncGeneratorRequest, p1: u32, p2: *const R4SdkWebJsValue, p3: u16) -> R4SdkWebSlot;
     pub fn R4SdkWebJsAsyncGeneratorRequest_get_kind(p0: *const R4SdkWebJsAsyncGeneratorRequest) -> R4SdkWebSlot;
@@ -35033,7 +35048,7 @@ unsafe extern "C" {
     pub fn R4SdkWebJsAsyncGeneratorRequest_set_promise(p0: *mut R4SdkWebJsAsyncGeneratorRequest, p1: u16) -> R4SdkWebSlot;
     pub fn R4SdkWebJsAsyncGeneratorRequest_inspectNative(p0: *const R4SdkWebJsAsyncGeneratorRequest) -> R4SdkWebSlot;
     pub fn R4SdkWebJsFiberContext_create(p0: *mut R4SdkWebJsFiberContext) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsFiberContext_from_fields(p0: *mut R4SdkWebJsFiberContext, p1: u64, p2: u64, p3: u64, p4: u64, p5: u64, p6: u64, p7: u64, p8: u64, p9: u64, p10: u64, p11: u64, p12: u32, p13: u16, p14: *const R4SdkWebNativeValue351, p15: *const R4SdkWebNativeValue352) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsFiberContext_from_fields(p0: *mut R4SdkWebJsFiberContext, p1: u64, p2: u64, p3: u64, p4: u64, p5: u64, p6: u64, p7: u64, p8: u64, p9: u64, p10: u64, p11: u64, p12: u32, p13: u16, p14: *const R4SdkWebNativeValue352, p15: *const R4SdkWebNativeValue353) -> R4SdkWebSlot;
     pub fn R4SdkWebJsFiberContext_get_rsp(p0: *const R4SdkWebJsFiberContext) -> R4SdkWebSlot;
     pub fn R4SdkWebJsFiberContext_set_rsp(p0: *mut R4SdkWebJsFiberContext, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebJsFiberContext_get_rbx(p0: *const R4SdkWebJsFiberContext) -> R4SdkWebSlot;
@@ -35060,19 +35075,19 @@ unsafe extern "C" {
     pub fn R4SdkWebJsFiberContext_set_mxcsr(p0: *mut R4SdkWebJsFiberContext, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebJsFiberContext_get_x87_control(p0: *const R4SdkWebJsFiberContext) -> R4SdkWebSlot;
     pub fn R4SdkWebJsFiberContext_set_x87_control(p0: *mut R4SdkWebJsFiberContext, p1: u16) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsFiberContext_get_padding(p0: *const R4SdkWebJsFiberContext, p1: *mut R4SdkWebNativeValue351) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsFiberContext_set_padding(p0: *mut R4SdkWebJsFiberContext, p1: *const R4SdkWebNativeValue351) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsFiberContext_get_xmm(p0: *const R4SdkWebJsFiberContext, p1: *mut R4SdkWebNativeValue352) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsFiberContext_set_xmm(p0: *mut R4SdkWebJsFiberContext, p1: *const R4SdkWebNativeValue352) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsFiberContext_get_padding(p0: *const R4SdkWebJsFiberContext, p1: *mut R4SdkWebNativeValue352) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsFiberContext_set_padding(p0: *mut R4SdkWebJsFiberContext, p1: *const R4SdkWebNativeValue352) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsFiberContext_get_xmm(p0: *const R4SdkWebJsFiberContext, p1: *mut R4SdkWebNativeValue353) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsFiberContext_set_xmm(p0: *mut R4SdkWebJsFiberContext, p1: *const R4SdkWebNativeValue353) -> R4SdkWebSlot;
     pub fn R4SdkWebJsFiberContext_inspectNative(p0: *const R4SdkWebJsFiberContext) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue351_create(p0: *mut R4SdkWebNativeValue351, p1: *const R4SdkWebNativeValue351) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue351_inspectNative(p0: *const R4SdkWebNativeValue351, p1: *mut R4SdkWebNativeValue351) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue352_create(p0: *mut R4SdkWebNativeValue352, p1: *const R4SdkWebNativeValue352) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue352_inspectNative(p0: *const R4SdkWebNativeValue352, p1: *mut R4SdkWebNativeValue352) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue353_create(p0: *mut R4SdkWebNativeValue353, p1: *const R4SdkWebNativeValue353) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue353_inspectNative(p0: *const R4SdkWebNativeValue353, p1: *mut R4SdkWebNativeValue353) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue354_create(p0: *mut R4SdkWebNativeValue354, p1: *const R4SdkWebNativeValue354) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue354_inspectNative(p0: *const R4SdkWebNativeValue354, p1: *mut R4SdkWebNativeValue354) -> R4SdkWebSlot;
     pub fn R4SdkWebJsExecutionSnapshot_create(p0: *mut R4SdkWebJsExecutionSnapshot) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsExecutionSnapshot_from_fields(p0: *mut R4SdkWebJsExecutionSnapshot, p1: R4SdkWebSlot, p2: u16, p3: u16, p4: u16, p5: R4SdkWebSlot, p6: R4SdkWebSlot, p7: *const R4SdkWebNativeValue337, p8: u64, p9: *const R4SdkWebNativeValue337, p10: u64, p11: *const R4SdkWebNativeValue338, p12: u64, p13: *const R4SdkWebNativeValue360, p14: u64, p15: *const R4SdkWebJsValue, p16: *const R4SdkWebJsValue, p17: *const R4SdkWebNativeValue175, p18: u64, p19: *const R4SdkWebNativeValue361, p20: u64, p21: *const R4SdkWebNativeValue175, p22: u64, p23: R4SdkWebSlot, p24: u16, p25: u32, p26: *const R4SdkWebJsValue, p27: u32, p28: u64, p29: u64, p30: u32, p31: *const R4SdkWebNativeValue162, p32: u64, p33: *const R4SdkWebNativeValue275, p34: u64, p35: u32, p36: u32, p37: *const R4SdkWebNativeValue362, p38: u64) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsExecutionSnapshot_from_fields(p0: *mut R4SdkWebJsExecutionSnapshot, p1: R4SdkWebSlot, p2: u16, p3: u16, p4: u16, p5: R4SdkWebSlot, p6: R4SdkWebSlot, p7: *const R4SdkWebNativeValue338, p8: u64, p9: *const R4SdkWebNativeValue338, p10: u64, p11: *const R4SdkWebNativeValue339, p12: u64, p13: *const R4SdkWebNativeValue361, p14: u64, p15: *const R4SdkWebJsValue, p16: *const R4SdkWebJsValue, p17: *const R4SdkWebNativeValue175, p18: u64, p19: *const R4SdkWebNativeValue362, p20: u64, p21: *const R4SdkWebNativeValue175, p22: u64, p23: R4SdkWebSlot, p24: u16, p25: u32, p26: *const R4SdkWebJsValue, p27: u32, p28: u64, p29: u64, p30: u32, p31: *const R4SdkWebNativeValue162, p32: u64, p33: *const R4SdkWebNativeValue276, p34: u64, p35: u32, p36: u32, p37: *const R4SdkWebNativeValue363, p38: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebJsExecutionSnapshot_get_active_program(p0: *const R4SdkWebJsExecutionSnapshot) -> R4SdkWebSlot;
     pub fn R4SdkWebJsExecutionSnapshot_set_active_program(p0: *mut R4SdkWebJsExecutionSnapshot, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebJsExecutionSnapshot_get_active_env(p0: *const R4SdkWebJsExecutionSnapshot) -> R4SdkWebSlot;
@@ -35085,20 +35100,20 @@ unsafe extern "C" {
     pub fn R4SdkWebJsExecutionSnapshot_set_active_generator_state(p0: *mut R4SdkWebJsExecutionSnapshot, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebJsExecutionSnapshot_get_active_async_state(p0: *const R4SdkWebJsExecutionSnapshot) -> R4SdkWebSlot;
     pub fn R4SdkWebJsExecutionSnapshot_set_active_async_state(p0: *mut R4SdkWebJsExecutionSnapshot, p1: R4SdkWebSlot) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsExecutionSnapshot_get_roots(p0: *const R4SdkWebJsExecutionSnapshot, p1: *mut R4SdkWebNativeValue337) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsExecutionSnapshot_set_roots(p0: *mut R4SdkWebJsExecutionSnapshot, p1: *const R4SdkWebNativeValue337) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsExecutionSnapshot_get_roots(p0: *const R4SdkWebJsExecutionSnapshot, p1: *mut R4SdkWebNativeValue338) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsExecutionSnapshot_set_roots(p0: *mut R4SdkWebJsExecutionSnapshot, p1: *const R4SdkWebNativeValue338) -> R4SdkWebSlot;
     pub fn R4SdkWebJsExecutionSnapshot_get_root_count(p0: *const R4SdkWebJsExecutionSnapshot) -> R4SdkWebSlot;
     pub fn R4SdkWebJsExecutionSnapshot_set_root_count(p0: *mut R4SdkWebJsExecutionSnapshot, p1: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsExecutionSnapshot_get_bytecode_values(p0: *const R4SdkWebJsExecutionSnapshot, p1: *mut R4SdkWebNativeValue337) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsExecutionSnapshot_set_bytecode_values(p0: *mut R4SdkWebJsExecutionSnapshot, p1: *const R4SdkWebNativeValue337) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsExecutionSnapshot_get_bytecode_values(p0: *const R4SdkWebJsExecutionSnapshot, p1: *mut R4SdkWebNativeValue338) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsExecutionSnapshot_set_bytecode_values(p0: *mut R4SdkWebJsExecutionSnapshot, p1: *const R4SdkWebNativeValue338) -> R4SdkWebSlot;
     pub fn R4SdkWebJsExecutionSnapshot_get_bytecode_value_count(p0: *const R4SdkWebJsExecutionSnapshot) -> R4SdkWebSlot;
     pub fn R4SdkWebJsExecutionSnapshot_set_bytecode_value_count(p0: *mut R4SdkWebJsExecutionSnapshot, p1: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsExecutionSnapshot_get_bytecode_frames(p0: *const R4SdkWebJsExecutionSnapshot, p1: *mut R4SdkWebNativeValue338) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsExecutionSnapshot_set_bytecode_frames(p0: *mut R4SdkWebJsExecutionSnapshot, p1: *const R4SdkWebNativeValue338) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsExecutionSnapshot_get_bytecode_frames(p0: *const R4SdkWebJsExecutionSnapshot, p1: *mut R4SdkWebNativeValue339) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsExecutionSnapshot_set_bytecode_frames(p0: *mut R4SdkWebJsExecutionSnapshot, p1: *const R4SdkWebNativeValue339) -> R4SdkWebSlot;
     pub fn R4SdkWebJsExecutionSnapshot_get_bytecode_frame_count(p0: *const R4SdkWebJsExecutionSnapshot) -> R4SdkWebSlot;
     pub fn R4SdkWebJsExecutionSnapshot_set_bytecode_frame_count(p0: *mut R4SdkWebJsExecutionSnapshot, p1: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsExecutionSnapshot_get_call_environments(p0: *const R4SdkWebJsExecutionSnapshot, p1: *mut R4SdkWebNativeValue360) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsExecutionSnapshot_set_call_environments(p0: *mut R4SdkWebJsExecutionSnapshot, p1: *const R4SdkWebNativeValue360) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsExecutionSnapshot_get_call_environments(p0: *const R4SdkWebJsExecutionSnapshot, p1: *mut R4SdkWebNativeValue361) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsExecutionSnapshot_set_call_environments(p0: *mut R4SdkWebJsExecutionSnapshot, p1: *const R4SdkWebNativeValue361) -> R4SdkWebSlot;
     pub fn R4SdkWebJsExecutionSnapshot_get_call_depth(p0: *const R4SdkWebJsExecutionSnapshot) -> R4SdkWebSlot;
     pub fn R4SdkWebJsExecutionSnapshot_set_call_depth(p0: *mut R4SdkWebJsExecutionSnapshot, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebJsExecutionSnapshot_get_pending_exception(p0: *const R4SdkWebJsExecutionSnapshot, p1: *mut R4SdkWebJsValue) -> R4SdkWebSlot;
@@ -35109,8 +35124,8 @@ unsafe extern "C" {
     pub fn R4SdkWebJsExecutionSnapshot_set_diagnostic_name(p0: *mut R4SdkWebJsExecutionSnapshot, p1: *const R4SdkWebNativeValue175) -> R4SdkWebSlot;
     pub fn R4SdkWebJsExecutionSnapshot_get_diagnostic_name_len(p0: *const R4SdkWebJsExecutionSnapshot) -> R4SdkWebSlot;
     pub fn R4SdkWebJsExecutionSnapshot_set_diagnostic_name_len(p0: *mut R4SdkWebJsExecutionSnapshot, p1: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsExecutionSnapshot_get_diagnostic_context(p0: *const R4SdkWebJsExecutionSnapshot, p1: *mut R4SdkWebNativeValue361) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsExecutionSnapshot_set_diagnostic_context(p0: *mut R4SdkWebJsExecutionSnapshot, p1: *const R4SdkWebNativeValue361) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsExecutionSnapshot_get_diagnostic_context(p0: *const R4SdkWebJsExecutionSnapshot, p1: *mut R4SdkWebNativeValue362) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsExecutionSnapshot_set_diagnostic_context(p0: *mut R4SdkWebJsExecutionSnapshot, p1: *const R4SdkWebNativeValue362) -> R4SdkWebSlot;
     pub fn R4SdkWebJsExecutionSnapshot_get_diagnostic_context_len(p0: *const R4SdkWebJsExecutionSnapshot) -> R4SdkWebSlot;
     pub fn R4SdkWebJsExecutionSnapshot_set_diagnostic_context_len(p0: *mut R4SdkWebJsExecutionSnapshot, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebJsExecutionSnapshot_get_diagnostic_call_name(p0: *const R4SdkWebJsExecutionSnapshot, p1: *mut R4SdkWebNativeValue175) -> R4SdkWebSlot;
@@ -35137,25 +35152,25 @@ unsafe extern "C" {
     pub fn R4SdkWebJsExecutionSnapshot_set_diagnostic_error_name(p0: *mut R4SdkWebJsExecutionSnapshot, p1: *const R4SdkWebNativeValue162) -> R4SdkWebSlot;
     pub fn R4SdkWebJsExecutionSnapshot_get_diagnostic_error_name_len(p0: *const R4SdkWebJsExecutionSnapshot) -> R4SdkWebSlot;
     pub fn R4SdkWebJsExecutionSnapshot_set_diagnostic_error_name_len(p0: *mut R4SdkWebJsExecutionSnapshot, p1: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsExecutionSnapshot_get_diagnostic_source_name(p0: *const R4SdkWebJsExecutionSnapshot, p1: *mut R4SdkWebNativeValue275) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsExecutionSnapshot_set_diagnostic_source_name(p0: *mut R4SdkWebJsExecutionSnapshot, p1: *const R4SdkWebNativeValue275) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsExecutionSnapshot_get_diagnostic_source_name(p0: *const R4SdkWebJsExecutionSnapshot, p1: *mut R4SdkWebNativeValue276) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsExecutionSnapshot_set_diagnostic_source_name(p0: *mut R4SdkWebJsExecutionSnapshot, p1: *const R4SdkWebNativeValue276) -> R4SdkWebSlot;
     pub fn R4SdkWebJsExecutionSnapshot_get_diagnostic_source_name_len(p0: *const R4SdkWebJsExecutionSnapshot) -> R4SdkWebSlot;
     pub fn R4SdkWebJsExecutionSnapshot_set_diagnostic_source_name_len(p0: *mut R4SdkWebJsExecutionSnapshot, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebJsExecutionSnapshot_get_diagnostic_line(p0: *const R4SdkWebJsExecutionSnapshot) -> R4SdkWebSlot;
     pub fn R4SdkWebJsExecutionSnapshot_set_diagnostic_line(p0: *mut R4SdkWebJsExecutionSnapshot, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebJsExecutionSnapshot_get_diagnostic_column(p0: *const R4SdkWebJsExecutionSnapshot) -> R4SdkWebSlot;
     pub fn R4SdkWebJsExecutionSnapshot_set_diagnostic_column(p0: *mut R4SdkWebJsExecutionSnapshot, p1: u32) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsExecutionSnapshot_get_diagnostic_stack(p0: *const R4SdkWebJsExecutionSnapshot, p1: *mut R4SdkWebNativeValue362) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsExecutionSnapshot_set_diagnostic_stack(p0: *mut R4SdkWebJsExecutionSnapshot, p1: *const R4SdkWebNativeValue362) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsExecutionSnapshot_get_diagnostic_stack(p0: *const R4SdkWebJsExecutionSnapshot, p1: *mut R4SdkWebNativeValue363) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsExecutionSnapshot_set_diagnostic_stack(p0: *mut R4SdkWebJsExecutionSnapshot, p1: *const R4SdkWebNativeValue363) -> R4SdkWebSlot;
     pub fn R4SdkWebJsExecutionSnapshot_get_diagnostic_stack_len(p0: *const R4SdkWebJsExecutionSnapshot) -> R4SdkWebSlot;
     pub fn R4SdkWebJsExecutionSnapshot_set_diagnostic_stack_len(p0: *mut R4SdkWebJsExecutionSnapshot, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebJsExecutionSnapshot_inspectNative(p0: *const R4SdkWebJsExecutionSnapshot) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue355_create(p0: *mut R4SdkWebNativeValue355, p1: R4SdkWebSlot) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue355_inspectNative(p0: *const R4SdkWebNativeValue355) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue356_create(p0: *mut R4SdkWebNativeValue356, p1: *mut R4SdkWebJsAsyncFiberState) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue356_create(p0: *mut R4SdkWebNativeValue356, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue356_inspectNative(p0: *const R4SdkWebNativeValue356) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue357_create(p0: *mut R4SdkWebNativeValue357, p1: *mut R4SdkWebJsAsyncFiberState) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue357_inspectNative(p0: *const R4SdkWebNativeValue357) -> R4SdkWebSlot;
     pub fn R4SdkWebJsAsyncFiberState_create(p0: *mut R4SdkWebJsAsyncFiberState) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsAsyncFiberState_from_fields(p0: *mut R4SdkWebJsAsyncFiberState, p1: u8, p2: u16, p3: u16, p4: R4SdkWebSlot, p5: *const R4SdkWebJsValue, p6: *const R4SdkWebNativeValue345, p7: u64, p8: u32, p9: u8, p10: u8, p11: *const R4SdkWebJsValue, p12: *const R4SdkWebJsValue, p13: R4SdkWebSlot, p14: R4SdkWebSlot, p15: R4SdkWebSlot, p16: *const R4SdkWebJsFiberContext, p17: *const R4SdkWebJsFiberContext, p18: *const R4SdkWebJsExecutionSnapshot, p19: *const R4SdkWebJsExecutionSnapshot, p20: R4SdkWebSlot) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsAsyncFiberState_from_fields(p0: *mut R4SdkWebJsAsyncFiberState, p1: u8, p2: u16, p3: u16, p4: R4SdkWebSlot, p5: *const R4SdkWebJsValue, p6: *const R4SdkWebNativeValue346, p7: u64, p8: u32, p9: u8, p10: u8, p11: *const R4SdkWebJsValue, p12: *const R4SdkWebJsValue, p13: R4SdkWebSlot, p14: R4SdkWebSlot, p15: R4SdkWebSlot, p16: *const R4SdkWebJsFiberContext, p17: *const R4SdkWebJsFiberContext, p18: *const R4SdkWebJsExecutionSnapshot, p19: *const R4SdkWebJsExecutionSnapshot, p20: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebJsAsyncFiberState_get_occupied(p0: *const R4SdkWebJsAsyncFiberState) -> R4SdkWebSlot;
     pub fn R4SdkWebJsAsyncFiberState_set_occupied(p0: *mut R4SdkWebJsAsyncFiberState, p1: u8) -> R4SdkWebSlot;
     pub fn R4SdkWebJsAsyncFiberState_get_owner_promise(p0: *const R4SdkWebJsAsyncFiberState) -> R4SdkWebSlot;
@@ -35166,8 +35181,8 @@ unsafe extern "C" {
     pub fn R4SdkWebJsAsyncFiberState_set_program(p0: *mut R4SdkWebJsAsyncFiberState, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebJsAsyncFiberState_get_receiver(p0: *const R4SdkWebJsAsyncFiberState, p1: *mut R4SdkWebJsValue) -> R4SdkWebSlot;
     pub fn R4SdkWebJsAsyncFiberState_set_receiver(p0: *mut R4SdkWebJsAsyncFiberState, p1: *const R4SdkWebJsValue) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsAsyncFiberState_get_arguments(p0: *const R4SdkWebJsAsyncFiberState, p1: *mut R4SdkWebNativeValue345) -> R4SdkWebSlot;
-    pub fn R4SdkWebJsAsyncFiberState_set_arguments(p0: *mut R4SdkWebJsAsyncFiberState, p1: *const R4SdkWebNativeValue345) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsAsyncFiberState_get_arguments(p0: *const R4SdkWebJsAsyncFiberState, p1: *mut R4SdkWebNativeValue346) -> R4SdkWebSlot;
+    pub fn R4SdkWebJsAsyncFiberState_set_arguments(p0: *mut R4SdkWebJsAsyncFiberState, p1: *const R4SdkWebNativeValue346) -> R4SdkWebSlot;
     pub fn R4SdkWebJsAsyncFiberState_get_argument_count(p0: *const R4SdkWebJsAsyncFiberState) -> R4SdkWebSlot;
     pub fn R4SdkWebJsAsyncFiberState_set_argument_count(p0: *mut R4SdkWebJsAsyncFiberState, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebJsAsyncFiberState_get_status(p0: *const R4SdkWebJsAsyncFiberState) -> R4SdkWebSlot;
@@ -35199,16 +35214,16 @@ unsafe extern "C" {
     pub fn R4SdkWebJsAsyncFiberState_inspectNative(p0: *const R4SdkWebJsAsyncFiberState) -> R4SdkWebSlot;
     pub fn R4SdkWebJsAsyncStatus_create(p0: *mut R4SdkWebJsAsyncStatus, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebJsAsyncStatus_inspectNative(p0: *const R4SdkWebJsAsyncStatus) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue359_create(p0: *mut R4SdkWebNativeValue359, p1: R4SdkWebSlot) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue359_inspectNative(p0: *const R4SdkWebNativeValue359) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue360_create(p0: *mut R4SdkWebNativeValue360, p1: *const R4SdkWebNativeValue360) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue360_inspectNative(p0: *const R4SdkWebNativeValue360, p1: *mut R4SdkWebNativeValue360) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue360_create(p0: *mut R4SdkWebNativeValue360, p1: R4SdkWebSlot) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue360_inspectNative(p0: *const R4SdkWebNativeValue360) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue361_create(p0: *mut R4SdkWebNativeValue361, p1: *const R4SdkWebNativeValue361) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue361_inspectNative(p0: *const R4SdkWebNativeValue361, p1: *mut R4SdkWebNativeValue361) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue362_create(p0: *mut R4SdkWebNativeValue362, p1: *const R4SdkWebNativeValue362) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue362_inspectNative(p0: *const R4SdkWebNativeValue362, p1: *mut R4SdkWebNativeValue362) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue363_create(p0: *mut R4SdkWebNativeValue363, p1: *const R4SdkWebNativeValue363) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue363_inspectNative(p0: *const R4SdkWebNativeValue363, p1: *mut R4SdkWebNativeValue363) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue364_create(p0: *mut R4SdkWebNativeValue364, p1: *const R4SdkWebNativeValue364) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue364_inspectNative(p0: *const R4SdkWebNativeValue364, p1: *mut R4SdkWebNativeValue364) -> R4SdkWebSlot;
     pub fn R4SdkWebJsTemplateObjectCache_create(p0: *mut R4SdkWebJsTemplateObjectCache) -> R4SdkWebSlot;
     pub fn R4SdkWebJsTemplateObjectCache_from_fields(p0: *mut R4SdkWebJsTemplateObjectCache, p1: R4SdkWebSlot, p2: u64, p3: u16, p4: *const R4SdkWebJsValue) -> R4SdkWebSlot;
     pub fn R4SdkWebJsTemplateObjectCache_get_program(p0: *const R4SdkWebJsTemplateObjectCache) -> R4SdkWebSlot;
@@ -35220,12 +35235,12 @@ unsafe extern "C" {
     pub fn R4SdkWebJsTemplateObjectCache_get_value(p0: *const R4SdkWebJsTemplateObjectCache, p1: *mut R4SdkWebJsValue) -> R4SdkWebSlot;
     pub fn R4SdkWebJsTemplateObjectCache_set_value(p0: *mut R4SdkWebJsTemplateObjectCache, p1: *const R4SdkWebJsValue) -> R4SdkWebSlot;
     pub fn R4SdkWebJsTemplateObjectCache_inspectNative(p0: *const R4SdkWebJsTemplateObjectCache) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue365_create(p0: *mut R4SdkWebNativeValue365, p1: *const R4SdkWebNativeValue365) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue365_inspectNative(p0: *const R4SdkWebNativeValue365, p1: *mut R4SdkWebNativeValue365) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue366_create(p0: *mut R4SdkWebNativeValue366, p1: *const R4SdkWebNativeValue366) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue366_inspectNative(p0: *const R4SdkWebNativeValue366, p1: *mut R4SdkWebNativeValue366) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue367_create(p0: *mut R4SdkWebNativeValue367, p1: *const R4SdkWebNativeValue367) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue367_inspectNative(p0: *const R4SdkWebNativeValue367, p1: *mut R4SdkWebNativeValue367) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue368_create(p0: *mut R4SdkWebNativeValue368, p1: *const R4SdkWebNativeValue368) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue368_inspectNative(p0: *const R4SdkWebNativeValue368, p1: *mut R4SdkWebNativeValue368) -> R4SdkWebSlot;
     pub fn R4SdkWebJsSymbolRegistryEntry_create(p0: *mut R4SdkWebJsSymbolRegistryEntry) -> R4SdkWebSlot;
     pub fn R4SdkWebJsSymbolRegistryEntry_from_fields(p0: *mut R4SdkWebJsSymbolRegistryEntry, p1: *const R4SdkWebJsStringRef, p2: *const R4SdkWebJsStringRef) -> R4SdkWebSlot;
     pub fn R4SdkWebJsSymbolRegistryEntry_get_key(p0: *const R4SdkWebJsSymbolRegistryEntry, p1: *mut R4SdkWebJsStringRef) -> R4SdkWebSlot;
@@ -35233,8 +35248,8 @@ unsafe extern "C" {
     pub fn R4SdkWebJsSymbolRegistryEntry_get_symbol(p0: *const R4SdkWebJsSymbolRegistryEntry, p1: *mut R4SdkWebJsStringRef) -> R4SdkWebSlot;
     pub fn R4SdkWebJsSymbolRegistryEntry_set_symbol(p0: *mut R4SdkWebJsSymbolRegistryEntry, p1: *const R4SdkWebJsStringRef) -> R4SdkWebSlot;
     pub fn R4SdkWebJsSymbolRegistryEntry_inspectNative(p0: *const R4SdkWebJsSymbolRegistryEntry) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue369_create(p0: *mut R4SdkWebNativeValue369, p1: *const R4SdkWebNativeValue369) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue369_inspectNative(p0: *const R4SdkWebNativeValue369, p1: *mut R4SdkWebNativeValue369) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue370_create(p0: *mut R4SdkWebNativeValue370, p1: *const R4SdkWebNativeValue370) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue370_inspectNative(p0: *const R4SdkWebNativeValue370, p1: *mut R4SdkWebNativeValue370) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_response_cache_Mode_create(p0: *mut R4SdkWebNative_web_response_cache_Mode, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_response_cache_Mode_inspectNative(p0: *const R4SdkWebNative_web_response_cache_Mode) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeRequestKind_create(p0: *mut R4SdkWebRuntimeRequestKind, p1: u32) -> R4SdkWebSlot;
@@ -35244,7 +35259,7 @@ unsafe extern "C" {
     pub fn R4SdkWebRuntimeFetchRedirectMode_create(p0: *mut R4SdkWebRuntimeFetchRedirectMode, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeFetchRedirectMode_inspectNative(p0: *const R4SdkWebRuntimeFetchRedirectMode) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimePendingRequest_create(p0: *mut R4SdkWebRuntimePendingRequest) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimePendingRequest_from_fields(p0: *mut R4SdkWebRuntimePendingRequest, p1: u32, p2: u8, p3: u32, p4: u32, p5: u32, p6: u32, p7: u32, p8: u32, p9: u32, p10: u32, p11: *const R4SdkWebNativeValue378, p12: u64, p13: *const R4SdkWebJsValue, p14: *const R4SdkWebNavigationUrl, p15: *const R4SdkWebNative_web_security_Origin, p16: *const R4SdkWebJsValue, p17: *const R4SdkWebJsValue, p18: u8, p19: u8, p20: u16, p21: u8, p22: u8, p23: u8, p24: *const R4SdkWebNativeValue164, p25: u64, p26: *const R4SdkWebNativeValue382, p27: u64, p28: *const R4SdkWebNativeValue378, p29: u64, p30: *const R4SdkWebNativeValue362, p31: u64, p32: *const R4SdkWebNativeValue18, p33: u64, p34: u64, p35: u64) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimePendingRequest_from_fields(p0: *mut R4SdkWebRuntimePendingRequest, p1: u32, p2: u8, p3: u32, p4: u32, p5: u32, p6: u32, p7: u32, p8: u32, p9: u32, p10: u32, p11: *const R4SdkWebNativeValue379, p12: u64, p13: *const R4SdkWebJsValue, p14: *const R4SdkWebNavigationUrl, p15: *const R4SdkWebNative_web_security_Origin, p16: *const R4SdkWebJsValue, p17: *const R4SdkWebJsValue, p18: u8, p19: u8, p20: u16, p21: u8, p22: u8, p23: u8, p24: *const R4SdkWebNativeValue164, p25: u64, p26: *const R4SdkWebNativeValue383, p27: u64, p28: *const R4SdkWebNativeValue379, p29: u64, p30: *const R4SdkWebNativeValue363, p31: u64, p32: *const R4SdkWebNativeValue18, p33: u64, p34: u64, p35: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimePendingRequest_get_state(p0: *const R4SdkWebRuntimePendingRequest) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimePendingRequest_set_state(p0: *mut R4SdkWebRuntimePendingRequest, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimePendingRequest_get_delivering(p0: *const R4SdkWebRuntimePendingRequest) -> R4SdkWebSlot;
@@ -35265,8 +35280,8 @@ unsafe extern "C" {
     pub fn R4SdkWebRuntimePendingRequest_set_redirect(p0: *mut R4SdkWebRuntimePendingRequest, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimePendingRequest_get_cache_mode(p0: *const R4SdkWebRuntimePendingRequest) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimePendingRequest_set_cache_mode(p0: *mut R4SdkWebRuntimePendingRequest, p1: u32) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimePendingRequest_get_request_headers(p0: *const R4SdkWebRuntimePendingRequest, p1: *mut R4SdkWebNativeValue378) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimePendingRequest_set_request_headers(p0: *mut R4SdkWebRuntimePendingRequest, p1: *const R4SdkWebNativeValue378) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimePendingRequest_get_request_headers(p0: *const R4SdkWebRuntimePendingRequest, p1: *mut R4SdkWebNativeValue379) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimePendingRequest_set_request_headers(p0: *mut R4SdkWebRuntimePendingRequest, p1: *const R4SdkWebNativeValue379) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimePendingRequest_get_request_headers_len(p0: *const R4SdkWebRuntimePendingRequest) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimePendingRequest_set_request_headers_len(p0: *mut R4SdkWebRuntimePendingRequest, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimePendingRequest_get_signal(p0: *const R4SdkWebRuntimePendingRequest, p1: *mut R4SdkWebJsValue) -> R4SdkWebSlot;
@@ -35295,16 +35310,16 @@ unsafe extern "C" {
     pub fn R4SdkWebRuntimePendingRequest_set_response_url(p0: *mut R4SdkWebRuntimePendingRequest, p1: *const R4SdkWebNativeValue164) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimePendingRequest_get_response_url_len(p0: *const R4SdkWebRuntimePendingRequest) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimePendingRequest_set_response_url_len(p0: *mut R4SdkWebRuntimePendingRequest, p1: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimePendingRequest_get_response_content_type(p0: *const R4SdkWebRuntimePendingRequest, p1: *mut R4SdkWebNativeValue382) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimePendingRequest_set_response_content_type(p0: *mut R4SdkWebRuntimePendingRequest, p1: *const R4SdkWebNativeValue382) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimePendingRequest_get_response_content_type(p0: *const R4SdkWebRuntimePendingRequest, p1: *mut R4SdkWebNativeValue383) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimePendingRequest_set_response_content_type(p0: *mut R4SdkWebRuntimePendingRequest, p1: *const R4SdkWebNativeValue383) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimePendingRequest_get_response_content_type_len(p0: *const R4SdkWebRuntimePendingRequest) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimePendingRequest_set_response_content_type_len(p0: *mut R4SdkWebRuntimePendingRequest, p1: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimePendingRequest_get_response_headers(p0: *const R4SdkWebRuntimePendingRequest, p1: *mut R4SdkWebNativeValue378) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimePendingRequest_set_response_headers(p0: *mut R4SdkWebRuntimePendingRequest, p1: *const R4SdkWebNativeValue378) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimePendingRequest_get_response_headers(p0: *const R4SdkWebRuntimePendingRequest, p1: *mut R4SdkWebNativeValue379) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimePendingRequest_set_response_headers(p0: *mut R4SdkWebRuntimePendingRequest, p1: *const R4SdkWebNativeValue379) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimePendingRequest_get_response_headers_len(p0: *const R4SdkWebRuntimePendingRequest) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimePendingRequest_set_response_headers_len(p0: *mut R4SdkWebRuntimePendingRequest, p1: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimePendingRequest_get_response_csp(p0: *const R4SdkWebRuntimePendingRequest, p1: *mut R4SdkWebNativeValue362) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimePendingRequest_set_response_csp(p0: *mut R4SdkWebRuntimePendingRequest, p1: *const R4SdkWebNativeValue362) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimePendingRequest_get_response_csp(p0: *const R4SdkWebRuntimePendingRequest, p1: *mut R4SdkWebNativeValue363) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimePendingRequest_set_response_csp(p0: *mut R4SdkWebRuntimePendingRequest, p1: *const R4SdkWebNativeValue363) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimePendingRequest_get_response_csp_len(p0: *const R4SdkWebRuntimePendingRequest) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimePendingRequest_set_response_csp_len(p0: *mut R4SdkWebRuntimePendingRequest, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimePendingRequest_get_body(p0: *const R4SdkWebRuntimePendingRequest, p1: *mut R4SdkWebNativeValue18) -> R4SdkWebSlot;
@@ -35322,14 +35337,14 @@ unsafe extern "C" {
     pub fn R4SdkWebNative_web_security_CredentialsMode_inspectNative(p0: *const R4SdkWebNative_web_security_CredentialsMode) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_http_Method_create(p0: *mut R4SdkWebNative_http_Method, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_http_Method_inspectNative(p0: *const R4SdkWebNative_http_Method) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue378_create(p0: *mut R4SdkWebNativeValue378, p1: *const R4SdkWebNativeValue378) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue378_inspectNative(p0: *const R4SdkWebNativeValue378, p1: *mut R4SdkWebNativeValue378) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue379_create(p0: *mut R4SdkWebNativeValue379, p1: *const R4SdkWebNativeValue379) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue379_inspectNative(p0: *const R4SdkWebNativeValue379, p1: *mut R4SdkWebNativeValue379) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Origin_create(p0: *mut R4SdkWebNative_web_security_Origin) -> R4SdkWebSlot;
-    pub fn R4SdkWebNative_web_security_Origin_from_fields(p0: *mut R4SdkWebNative_web_security_Origin, p1: u32, p2: *const R4SdkWebNativeValue381, p3: u64, p4: u16, p5: u32) -> R4SdkWebSlot;
+    pub fn R4SdkWebNative_web_security_Origin_from_fields(p0: *mut R4SdkWebNative_web_security_Origin, p1: u32, p2: *const R4SdkWebNativeValue382, p3: u64, p4: u16, p5: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Origin_get_scheme(p0: *const R4SdkWebNative_web_security_Origin) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Origin_set_scheme(p0: *mut R4SdkWebNative_web_security_Origin, p1: u32) -> R4SdkWebSlot;
-    pub fn R4SdkWebNative_web_security_Origin_get_host(p0: *const R4SdkWebNative_web_security_Origin, p1: *mut R4SdkWebNativeValue381) -> R4SdkWebSlot;
-    pub fn R4SdkWebNative_web_security_Origin_set_host(p0: *mut R4SdkWebNative_web_security_Origin, p1: *const R4SdkWebNativeValue381) -> R4SdkWebSlot;
+    pub fn R4SdkWebNative_web_security_Origin_get_host(p0: *const R4SdkWebNative_web_security_Origin, p1: *mut R4SdkWebNativeValue382) -> R4SdkWebSlot;
+    pub fn R4SdkWebNative_web_security_Origin_set_host(p0: *mut R4SdkWebNative_web_security_Origin, p1: *const R4SdkWebNativeValue382) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Origin_get_host_len(p0: *const R4SdkWebNative_web_security_Origin) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Origin_set_host_len(p0: *mut R4SdkWebNative_web_security_Origin, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Origin_get_port(p0: *const R4SdkWebNative_web_security_Origin) -> R4SdkWebSlot;
@@ -35339,12 +35354,12 @@ unsafe extern "C" {
     pub fn R4SdkWebNative_web_security_Origin_inspectNative(p0: *const R4SdkWebNative_web_security_Origin) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_OriginScheme_create(p0: *mut R4SdkWebNative_web_security_OriginScheme, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_OriginScheme_inspectNative(p0: *const R4SdkWebNative_web_security_OriginScheme) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue381_create(p0: *mut R4SdkWebNativeValue381, p1: *const R4SdkWebNativeValue381) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue381_inspectNative(p0: *const R4SdkWebNativeValue381, p1: *mut R4SdkWebNativeValue381) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue382_create(p0: *mut R4SdkWebNativeValue382, p1: *const R4SdkWebNativeValue382) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue382_inspectNative(p0: *const R4SdkWebNativeValue382, p1: *mut R4SdkWebNativeValue382) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue383_create(p0: *mut R4SdkWebNativeValue383, p1: *const R4SdkWebNativeValue383) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue383_inspectNative(p0: *const R4SdkWebNativeValue383, p1: *mut R4SdkWebNativeValue383) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeResponseMeta_create(p0: *mut R4SdkWebRuntimeResponseMeta, p1: u16, p2: u8) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeResponseMeta_from_fields(p0: *mut R4SdkWebRuntimeResponseMeta, p1: u16, p2: u8, p3: *const u8, p4: u64, p5: *const u8, p6: u64, p7: *const u8, p8: u64, p9: u8, p10: *const u8, p11: u64, p12: *const u8, p13: u64, p14: u8, p15: *const R4SdkWebNativeValue384, p16: u64, p17: u8, p18: u8, p19: u64) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeResponseMeta_from_fields(p0: *mut R4SdkWebRuntimeResponseMeta, p1: u16, p2: u8, p3: *const u8, p4: u64, p5: *const u8, p6: u64, p7: *const u8, p8: u64, p9: u8, p10: *const u8, p11: u64, p12: *const u8, p13: u64, p14: u8, p15: *const R4SdkWebNativeValue385, p16: u64, p17: u8, p18: u8, p19: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeResponseMeta_get_status(p0: *const R4SdkWebRuntimeResponseMeta) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeResponseMeta_set_status(p0: *mut R4SdkWebRuntimeResponseMeta, p1: u16) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeResponseMeta_get_secure(p0: *const R4SdkWebRuntimeResponseMeta) -> R4SdkWebSlot;
@@ -35363,8 +35378,8 @@ unsafe extern "C" {
     pub fn R4SdkWebRuntimeResponseMeta_set_access_control_allow_origin(p0: *mut R4SdkWebRuntimeResponseMeta, p1: *const u8, p2: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeResponseMeta_get_access_control_allow_credentials(p0: *const R4SdkWebRuntimeResponseMeta) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeResponseMeta_set_access_control_allow_credentials(p0: *mut R4SdkWebRuntimeResponseMeta, p1: u8) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeResponseMeta_get_set_cookies(p0: *const R4SdkWebRuntimeResponseMeta, p1: *mut R4SdkWebNativeValue384) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeResponseMeta_set_set_cookies(p0: *mut R4SdkWebRuntimeResponseMeta, p1: *const R4SdkWebNativeValue384) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeResponseMeta_get_set_cookies(p0: *const R4SdkWebRuntimeResponseMeta, p1: *mut R4SdkWebNativeValue385) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeResponseMeta_set_set_cookies(p0: *mut R4SdkWebRuntimeResponseMeta, p1: *const R4SdkWebNativeValue385) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeResponseMeta_get_set_cookie_count(p0: *const R4SdkWebRuntimeResponseMeta) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeResponseMeta_set_set_cookie_count(p0: *mut R4SdkWebRuntimeResponseMeta, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeResponseMeta_get_manual_redirect(p0: *const R4SdkWebRuntimeResponseMeta) -> R4SdkWebSlot;
@@ -35374,8 +35389,8 @@ unsafe extern "C" {
     pub fn R4SdkWebRuntimeResponseMeta_get_response_identity(p0: *const R4SdkWebRuntimeResponseMeta) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeResponseMeta_set_response_identity(p0: *mut R4SdkWebRuntimeResponseMeta, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeResponseMeta_inspectNative(p0: *const R4SdkWebRuntimeResponseMeta) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue384_create(p0: *mut R4SdkWebNativeValue384, p1: *const R4SdkWebNativeValue384) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue384_inspectNative(p0: *const R4SdkWebNativeValue384, p1: *mut R4SdkWebNativeValue384) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue385_create(p0: *mut R4SdkWebNativeValue385, p1: *const R4SdkWebNativeValue385) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue385_inspectNative(p0: *const R4SdkWebNativeValue385, p1: *mut R4SdkWebNativeValue385) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeResourceCompletion_create(p0: *mut R4SdkWebRuntimeResourceCompletion, p1: u32, p2: u32, p3: u16, p4: u32, p5: *const R4SdkWebNavigationUrl, p6: *const R4SdkWebNavigationUrl, p7: *const R4SdkWebNavigationUrl, p8: u16, p9: u8, p10: *const u8, p11: u64, p12: *const u8, p13: u64, p14: *const u8, p15: u64, p16: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeResourceCompletion_from_fields(p0: *mut R4SdkWebRuntimeResourceCompletion, p1: u32, p2: u32, p3: u16, p4: u32, p5: u32, p6: *const R4SdkWebNavigationUrl, p7: *const R4SdkWebNavigationUrl, p8: *const R4SdkWebNavigationUrl, p9: u16, p10: u8, p11: *const u8, p12: u64, p13: *const u8, p14: u64, p15: *const u8, p16: u64, p17: u64, p18: u64, p19: u16, p20: u8, p21: u32, p22: u32, p23: *const R4SdkWebNative_web_security_Origin) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeResourceCompletion_get_generation(p0: *const R4SdkWebRuntimeResourceCompletion) -> R4SdkWebSlot;
@@ -35432,8 +35447,8 @@ unsafe extern "C" {
     pub fn R4SdkWebRuntimeResourceHandler_get_complete(p0: *const R4SdkWebRuntimeResourceHandler) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeResourceHandler_set_complete(p0: *mut R4SdkWebRuntimeResourceHandler, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeResourceHandler_inspectNative(p0: *const R4SdkWebRuntimeResourceHandler) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue390_create(p0: *mut R4SdkWebNativeValue390, p1: R4SdkWebSlot) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue390_inspectNative(p0: *const R4SdkWebNativeValue390) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue391_create(p0: *mut R4SdkWebNativeValue391, p1: R4SdkWebSlot) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue391_inspectNative(p0: *const R4SdkWebNativeValue391) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeFontDemand_create(p0: *mut R4SdkWebRuntimeFontDemand, p1: *const u8, p2: u64, p3: *const u8, p4: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeFontDemand_from_fields(p0: *mut R4SdkWebRuntimeFontDemand, p1: *const u8, p2: u64, p3: *const u8, p4: u64, p5: u16, p6: u32, p7: i16, p8: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeFontDemand_get_family_list(p0: *const R4SdkWebRuntimeFontDemand) -> R4SdkWebSlot;
@@ -35494,10 +35509,10 @@ unsafe extern "C" {
     pub fn R4SdkWebRuntimeFontSourceHandler_get_cached_available(p0: *const R4SdkWebRuntimeFontSourceHandler) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeFontSourceHandler_set_cached_available(p0: *mut R4SdkWebRuntimeFontSourceHandler, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeFontSourceHandler_inspectNative(p0: *const R4SdkWebRuntimeFontSourceHandler) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue396_create(p0: *mut R4SdkWebNativeValue396, p1: R4SdkWebSlot) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue396_inspectNative(p0: *const R4SdkWebNativeValue396) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue397_create(p0: *mut R4SdkWebNativeValue397, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue397_inspectNative(p0: *const R4SdkWebNativeValue397) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue398_create(p0: *mut R4SdkWebNativeValue398, p1: R4SdkWebSlot) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue398_inspectNative(p0: *const R4SdkWebNativeValue398) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeCssImageSource_create(p0: *mut R4SdkWebRuntimeCssImageSource, p1: u16, p2: *const u8, p3: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeCssImageSource_from_fields(p0: *mut R4SdkWebRuntimeCssImageSource, p1: u16, p2: *const u8, p3: u64, p4: *const u8, p5: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeCssImageSource_get_node(p0: *const R4SdkWebRuntimeCssImageSource) -> R4SdkWebSlot;
@@ -35525,14 +35540,14 @@ unsafe extern "C" {
     pub fn R4SdkWebRuntimeResourceFailure_create(p0: *mut R4SdkWebRuntimeResourceFailure, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeResourceFailure_inspectNative(p0: *const R4SdkWebRuntimeResourceFailure) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Fixed_256__create(p0: *mut R4SdkWebNative_web_security_Fixed_256_) -> R4SdkWebSlot;
-    pub fn R4SdkWebNative_web_security_Fixed_256__from_fields(p0: *mut R4SdkWebNative_web_security_Fixed_256_, p1: *const R4SdkWebNativeValue403, p2: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebNative_web_security_Fixed_256__get_storage(p0: *const R4SdkWebNative_web_security_Fixed_256_, p1: *mut R4SdkWebNativeValue403) -> R4SdkWebSlot;
-    pub fn R4SdkWebNative_web_security_Fixed_256__set_storage(p0: *mut R4SdkWebNative_web_security_Fixed_256_, p1: *const R4SdkWebNativeValue403) -> R4SdkWebSlot;
+    pub fn R4SdkWebNative_web_security_Fixed_256__from_fields(p0: *mut R4SdkWebNative_web_security_Fixed_256_, p1: *const R4SdkWebNativeValue404, p2: u64) -> R4SdkWebSlot;
+    pub fn R4SdkWebNative_web_security_Fixed_256__get_storage(p0: *const R4SdkWebNative_web_security_Fixed_256_, p1: *mut R4SdkWebNativeValue404) -> R4SdkWebSlot;
+    pub fn R4SdkWebNative_web_security_Fixed_256__set_storage(p0: *mut R4SdkWebNative_web_security_Fixed_256_, p1: *const R4SdkWebNativeValue404) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Fixed_256__get_len(p0: *const R4SdkWebNative_web_security_Fixed_256_) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Fixed_256__set_len(p0: *mut R4SdkWebNative_web_security_Fixed_256_, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Fixed_256__inspectNative(p0: *const R4SdkWebNative_web_security_Fixed_256_) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue403_create(p0: *mut R4SdkWebNativeValue403, p1: *const R4SdkWebNativeValue403) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue403_inspectNative(p0: *const R4SdkWebNativeValue403, p1: *mut R4SdkWebNativeValue403) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue404_create(p0: *mut R4SdkWebNativeValue404, p1: *const R4SdkWebNativeValue404) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue404_inspectNative(p0: *const R4SdkWebNativeValue404, p1: *mut R4SdkWebNativeValue404) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeResourceEvent_create(p0: *mut R4SdkWebRuntimeResourceEvent, p1: u32, p2: u32, p3: u32, p4: u16, p5: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeResourceEvent_from_fields(p0: *mut R4SdkWebRuntimeResourceEvent, p1: u32, p2: u32, p3: u32, p4: u32, p5: u32, p6: u16, p7: u32, p8: u32, p9: *const R4SdkWebNavigationUrl, p10: *const R4SdkWebNavigationUrl, p11: u16, p12: u8, p13: *const R4SdkWebNative_web_security_Fixed_256_, p14: u64, p15: u16, p16: u8, p17: u32, p18: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeResourceEvent_get_phase(p0: *const R4SdkWebRuntimeResourceEvent) -> R4SdkWebSlot;
@@ -35579,8 +35594,8 @@ unsafe extern "C" {
     pub fn R4SdkWebRuntimeResourceObserver_get_report(p0: *const R4SdkWebRuntimeResourceObserver) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeResourceObserver_set_report(p0: *mut R4SdkWebRuntimeResourceObserver, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeResourceObserver_inspectNative(p0: *const R4SdkWebRuntimeResourceObserver) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue406_create(p0: *mut R4SdkWebNativeValue406, p1: R4SdkWebSlot) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue406_inspectNative(p0: *const R4SdkWebNativeValue406) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue407_create(p0: *mut R4SdkWebNativeValue407, p1: R4SdkWebSlot) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue407_inspectNative(p0: *const R4SdkWebNativeValue407) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeFrameInfo_create(p0: *mut R4SdkWebRuntimeFrameInfo, p1: *const R4SdkWebNavigationUrl, p2: u8, p3: u8) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeFrameInfo_from_fields(p0: *mut R4SdkWebRuntimeFrameInfo, p1: *const R4SdkWebNavigationUrl, p2: u8, p3: u8, p4: R4SdkWebSlot, p5: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeFrameInfo_get_url(p0: *const R4SdkWebRuntimeFrameInfo, p1: *mut R4SdkWebNavigationUrl) -> R4SdkWebSlot;
@@ -35594,22 +35609,22 @@ unsafe extern "C" {
     pub fn R4SdkWebRuntimeFrameInfo_get_runtime(p0: *const R4SdkWebRuntimeFrameInfo) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeFrameInfo_set_runtime(p0: *mut R4SdkWebRuntimeFrameInfo, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeFrameInfo_inspectNative(p0: *const R4SdkWebRuntimeFrameInfo) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue408_create(p0: *mut R4SdkWebNativeValue408, p1: R4SdkWebSlot) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue408_inspectNative(p0: *const R4SdkWebNativeValue408) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue409_create(p0: *mut R4SdkWebNativeValue409, p1: *mut R4SdkWebHtmlDocument) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue409_create(p0: *mut R4SdkWebNativeValue409, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue409_inspectNative(p0: *const R4SdkWebNativeValue409) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue410_create(p0: *mut R4SdkWebNativeValue410, p1: R4SdkWebSlot) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue410_create(p0: *mut R4SdkWebNativeValue410, p1: *mut R4SdkWebHtmlDocument) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue410_inspectNative(p0: *const R4SdkWebNativeValue410) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue411_create(p0: *mut R4SdkWebNativeValue411, p1: *mut R4SdkWebRuntimeWebRuntime) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue411_create(p0: *mut R4SdkWebNativeValue411, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue411_inspectNative(p0: *const R4SdkWebNativeValue411) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue412_create(p0: *mut R4SdkWebNativeValue412, p1: *mut R4SdkWebRuntimeWebRuntime) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue412_inspectNative(p0: *const R4SdkWebNativeValue412) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_create(p0: *mut R4SdkWebRuntimeWebRuntime) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_from_fields(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebJsRuntime, p2: R4SdkWebSlot, p3: *const R4SdkWebNativeValue414, p4: u64, p5: R4SdkWebSlot, p6: *const R4SdkWebJsProgramAllocator, p7: *const R4SdkWebJsStop, p8: u64, p9: *const R4SdkWebRuntimeScriptObserver, p10: *const R4SdkWebRuntimeMonotonicClock, p11: R4SdkWebSlot, p12: R4SdkWebSlot, p13: u32, p14: *const R4SdkWebNative_web_security_SecurityContext, p15: *const R4SdkWebNavigationUrl, p16: *const R4SdkWebNativeValue246, p17: *const R4SdkWebNativeValue442, p18: *const R4SdkWebNativeValue443, p19: *const R4SdkWebNativeValue247, p20: u64, p21: *const R4SdkWebNativeValue442, p22: *const R4SdkWebJsValue, p23: u64, p24: u64, p25: u8, p26: *const R4SdkWebNativeValue444, p27: *const R4SdkWebNativeValue448, p28: *const R4SdkWebNativeValue450, p29: *const R4SdkWebNativeValue452, p30: *const R4SdkWebNativeValue454, p31: *const R4SdkWebNative_web_resources_Scheduler, p32: *const R4SdkWebNativeValue460, p33: *const R4SdkWebNativeValue463, p34: *const R4SdkWebNativeValue463, p35: u64, p36: u64, p37: *const R4SdkWebRuntimeResourceHandler, p38: *const R4SdkWebRuntimeResourceObserver, p39: *const R4SdkWebRuntimeFontSourceHandler, p40: *const R4SdkWebNativeValue464, p41: *const R4SdkWebNativeValue467, p42: *const R4SdkWebNativeValue469, p43: R4SdkWebSlot, p44: u64, p45: *const R4SdkWebRuntimeFrameLookup, p46: *const R4SdkWebNativeValue475, p47: u64, p48: *const R4SdkWebNativeValue478, p49: *const R4SdkWebNativeValue480, p50: *const R4SdkWebNativeValue488, p51: *const R4SdkWebNativeValue488, p52: *const R4SdkWebNativeValue488, p53: *const R4SdkWebNativeValue489, p54: u32, p55: u64, p56: *const f64, p57: *const f64, p58: i32, p59: u32, p60: *const R4SdkWebRuntimeTiming, p61: u32, p62: *const R4SdkWebNativeValue18, p63: *const R4SdkWebNativeValue18, p64: *const R4SdkWebNativeValue493, p65: u32, p66: u64, p67: u32, p68: *const R4SdkWebNative_web_security_Fixed_64_, p69: *const R4SdkWebNative_web_security_Fixed_767_, p70: u32, p71: u32, p72: *const R4SdkWebRuntimeEnvironment, p73: *const R4SdkWebCanvasManager, p74: *const R4SdkWebNativeValue507, p75: u8, p76: u8, p77: u32, p78: u32) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_from_fields(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebJsRuntime, p2: R4SdkWebSlot, p3: *const R4SdkWebNativeValue415, p4: u64, p5: R4SdkWebSlot, p6: *const R4SdkWebJsProgramAllocator, p7: *const R4SdkWebJsStop, p8: u64, p9: *const R4SdkWebRuntimeScriptObserver, p10: *const R4SdkWebRuntimeMonotonicClock, p11: R4SdkWebSlot, p12: R4SdkWebSlot, p13: u32, p14: *const R4SdkWebNative_web_security_SecurityContext, p15: *const R4SdkWebNavigationUrl, p16: *const R4SdkWebNativeValue246, p17: *const R4SdkWebNativeValue443, p18: *const R4SdkWebNativeValue444, p19: *const R4SdkWebNativeValue247, p20: u64, p21: *const R4SdkWebNativeValue443, p22: *const R4SdkWebJsValue, p23: u64, p24: u64, p25: u8, p26: *const R4SdkWebNativeValue445, p27: *const R4SdkWebNativeValue449, p28: *const R4SdkWebNativeValue451, p29: *const R4SdkWebNativeValue453, p30: *const R4SdkWebNativeValue455, p31: *const R4SdkWebNative_web_resources_Scheduler, p32: *const R4SdkWebNativeValue461, p33: *const R4SdkWebNativeValue464, p34: *const R4SdkWebNativeValue464, p35: u64, p36: u64, p37: *const R4SdkWebRuntimeResourceHandler, p38: *const R4SdkWebRuntimeResourceObserver, p39: *const R4SdkWebRuntimeFontSourceHandler, p40: *const R4SdkWebNativeValue465, p41: *const R4SdkWebNativeValue468, p42: *const R4SdkWebNativeValue470, p43: R4SdkWebSlot, p44: u64, p45: *const R4SdkWebRuntimeFrameLookup, p46: *const R4SdkWebNativeValue476, p47: u64, p48: *const R4SdkWebNativeValue479, p49: *const R4SdkWebNativeValue481, p50: *const R4SdkWebNativeValue489, p51: *const R4SdkWebNativeValue489, p52: *const R4SdkWebNativeValue489, p53: *const R4SdkWebNativeValue490, p54: u32, p55: u64, p56: *const f64, p57: *const f64, p58: i32, p59: u32, p60: *const R4SdkWebRuntimeTiming, p61: u32, p62: *const R4SdkWebNativeValue18, p63: *const R4SdkWebNativeValue18, p64: *const R4SdkWebNativeValue494, p65: u32, p66: u64, p67: u32, p68: *const R4SdkWebNative_web_security_Fixed_64_, p69: *const R4SdkWebNative_web_security_Fixed_767_, p70: u32, p71: u32, p72: *const R4SdkWebRuntimeEnvironment, p73: *const R4SdkWebCanvasManager, p74: *const R4SdkWebNativeValue508, p75: u8, p76: u8, p77: u32, p78: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_get_runtime(p0: *const R4SdkWebRuntimeWebRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_set_runtime(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebJsRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_get_runtime_memory(p0: *const R4SdkWebRuntimeWebRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_set_runtime_memory(p0: *mut R4SdkWebRuntimeWebRuntime, p1: R4SdkWebSlot) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_get_programs(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue414) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_set_programs(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue414) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_get_programs(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue415) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_set_programs(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue415) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_get_program_count(p0: *const R4SdkWebRuntimeWebRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_set_program_count(p0: *mut R4SdkWebRuntimeWebRuntime, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_get_platform_program(p0: *const R4SdkWebRuntimeWebRuntime) -> R4SdkWebSlot;
@@ -35636,16 +35651,16 @@ unsafe extern "C" {
     pub fn R4SdkWebRuntimeWebRuntime_set_document_url(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNavigationUrl) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_get_history_urls(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue246) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_set_history_urls(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue246) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_get_history_states(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue442) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_set_history_states(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue442) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_get_history_same_document(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue443) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_set_history_same_document(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue443) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_get_history_states(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue443) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_set_history_states(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue443) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_get_history_same_document(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue444) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_set_history_same_document(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue444) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_get_history_ids(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue247) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_set_history_ids(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue247) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_get_next_history_id(p0: *const R4SdkWebRuntimeWebRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_set_next_history_id(p0: *mut R4SdkWebRuntimeWebRuntime, p1: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_get_navigation_entry_objects(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue442) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_set_navigation_entry_objects(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue442) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_get_navigation_entry_objects(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue443) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_set_navigation_entry_objects(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue443) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_get_performance_navigation_entry(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebJsValue) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_set_performance_navigation_entry(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebJsValue) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_get_history_count(p0: *const R4SdkWebRuntimeWebRuntime) -> R4SdkWebSlot;
@@ -35654,24 +35669,24 @@ unsafe extern "C" {
     pub fn R4SdkWebRuntimeWebRuntime_set_history_index(p0: *mut R4SdkWebRuntimeWebRuntime, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_get_history_scroll_manual(p0: *const R4SdkWebRuntimeWebRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_set_history_scroll_manual(p0: *mut R4SdkWebRuntimeWebRuntime, p1: u8) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_get_listeners(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue444) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_set_listeners(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue444) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_get_timers(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue448) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_set_timers(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue448) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_get_abort_deadlines(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue450) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_set_abort_deadlines(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue450) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_get_abort_followers(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue452) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_set_abort_followers(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue452) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_get_requests(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue454) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_set_requests(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue454) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_get_listeners(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue445) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_set_listeners(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue445) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_get_timers(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue449) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_set_timers(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue449) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_get_abort_deadlines(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue451) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_set_abort_deadlines(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue451) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_get_abort_followers(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue453) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_set_abort_followers(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue453) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_get_requests(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue455) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_set_requests(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue455) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_get_resources(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNative_web_resources_Scheduler) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_set_resources(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNative_web_resources_Scheduler) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_get_modules(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue460) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_set_modules(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue460) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_get_module_roots(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue463) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_set_module_roots(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue463) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_get_module_root_modules(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue463) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_set_module_root_modules(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue463) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_get_modules(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue461) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_set_modules(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue461) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_get_module_roots(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue464) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_set_module_roots(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue464) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_get_module_root_modules(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue464) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_set_module_root_modules(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue464) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_get_module_count(p0: *const R4SdkWebRuntimeWebRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_set_module_count(p0: *mut R4SdkWebRuntimeWebRuntime, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_get_module_root_count(p0: *const R4SdkWebRuntimeWebRuntime) -> R4SdkWebSlot;
@@ -35682,34 +35697,34 @@ unsafe extern "C" {
     pub fn R4SdkWebRuntimeWebRuntime_set_resource_observer(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebRuntimeResourceObserver) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_get_font_source_handler(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebRuntimeFontSourceHandler) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_set_font_source_handler(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebRuntimeFontSourceHandler) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_get_image_resources(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue464) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_set_image_resources(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue464) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_get_font_resources(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue467) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_set_font_resources(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue467) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_get_font_faces(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue469) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_set_font_faces(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue469) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_get_image_resources(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue465) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_set_image_resources(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue465) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_get_font_resources(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue468) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_set_font_resources(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue468) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_get_font_faces(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue470) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_set_font_faces(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue470) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_get_font_registry(p0: *const R4SdkWebRuntimeWebRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_set_font_registry(p0: *mut R4SdkWebRuntimeWebRuntime, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_get_font_document_id(p0: *const R4SdkWebRuntimeWebRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_set_font_document_id(p0: *mut R4SdkWebRuntimeWebRuntime, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_get_frame_lookup(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebRuntimeFrameLookup) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_set_frame_lookup(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebRuntimeFrameLookup) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_get_actions(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue475) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_set_actions(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue475) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_get_actions(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue476) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_set_actions(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue476) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_get_action_count(p0: *const R4SdkWebRuntimeWebRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_set_action_count(p0: *mut R4SdkWebRuntimeWebRuntime, p1: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_get_xhrs(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue478) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_set_xhrs(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue478) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_get_mutation_observers(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue480) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_set_mutation_observers(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue480) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_get_node_objects(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue488) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_set_node_objects(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue488) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_get_frame_document_objects(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue488) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_set_frame_document_objects(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue488) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_get_frame_window_objects(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue488) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_set_frame_window_objects(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue488) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_get_frame_node_objects(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue489) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_set_frame_node_objects(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue489) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_get_xhrs(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue479) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_set_xhrs(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue479) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_get_mutation_observers(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue481) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_set_mutation_observers(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue481) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_get_node_objects(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue489) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_set_node_objects(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue489) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_get_frame_document_objects(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue489) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_set_frame_document_objects(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue489) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_get_frame_window_objects(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue489) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_set_frame_window_objects(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue489) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_get_frame_node_objects(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue490) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_set_frame_node_objects(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue490) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_get_next_timer_id(p0: *const R4SdkWebRuntimeWebRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_set_next_timer_id(p0: *mut R4SdkWebRuntimeWebRuntime, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_get_timer_pump_cursor(p0: *const R4SdkWebRuntimeWebRuntime) -> R4SdkWebSlot;
@@ -35730,8 +35745,8 @@ unsafe extern "C" {
     pub fn R4SdkWebRuntimeWebRuntime_set_script_scratch(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue18) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_get_encoding_input(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue18) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_set_encoding_input(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue18) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_get_encoding_output(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue493) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_set_encoding_output(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue493) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_get_encoding_output(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue494) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_set_encoding_output(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue494) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_get_last_block_reason(p0: *const R4SdkWebRuntimeWebRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_set_last_block_reason(p0: *mut R4SdkWebRuntimeWebRuntime, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_get_script_error_count(p0: *const R4SdkWebRuntimeWebRuntime) -> R4SdkWebSlot;
@@ -35750,8 +35765,8 @@ unsafe extern "C" {
     pub fn R4SdkWebRuntimeWebRuntime_set_environment(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebRuntimeEnvironment) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_get_canvases(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebCanvasManager) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_set_canvases(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebCanvasManager) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_get_canvas_contexts(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue507) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeWebRuntime_set_canvas_contexts(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue507) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_get_canvas_contexts(p0: *const R4SdkWebRuntimeWebRuntime, p1: *mut R4SdkWebNativeValue508) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeWebRuntime_set_canvas_contexts(p0: *mut R4SdkWebRuntimeWebRuntime, p1: *const R4SdkWebNativeValue508) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_get_dom_dirty(p0: *const R4SdkWebRuntimeWebRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_set_dom_dirty(p0: *mut R4SdkWebRuntimeWebRuntime, p1: u8) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_get_dom_action_pending(p0: *const R4SdkWebRuntimeWebRuntime) -> R4SdkWebSlot;
@@ -35761,10 +35776,10 @@ unsafe extern "C" {
     pub fn R4SdkWebRuntimeWebRuntime_get_cancelled_event_serial(p0: *const R4SdkWebRuntimeWebRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_set_cancelled_event_serial(p0: *mut R4SdkWebRuntimeWebRuntime, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeWebRuntime_inspectNative(p0: *const R4SdkWebRuntimeWebRuntime) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue413_create(p0: *mut R4SdkWebNativeValue413, p1: *mut R4SdkWebJsRuntime) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue413_inspectNative(p0: *const R4SdkWebNativeValue413) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue414_create(p0: *mut R4SdkWebNativeValue414, p1: *const R4SdkWebNativeValue414) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue414_inspectNative(p0: *const R4SdkWebNativeValue414, p1: *mut R4SdkWebNativeValue414) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue414_create(p0: *mut R4SdkWebNativeValue414, p1: *mut R4SdkWebJsRuntime) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue414_inspectNative(p0: *const R4SdkWebNativeValue414) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue415_create(p0: *mut R4SdkWebNativeValue415, p1: *const R4SdkWebNativeValue415) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue415_inspectNative(p0: *const R4SdkWebNativeValue415, p1: *mut R4SdkWebNativeValue415) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeScriptObserver_create(p0: *mut R4SdkWebRuntimeScriptObserver) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeScriptObserver_from_fields(p0: *mut R4SdkWebRuntimeScriptObserver, p1: R4SdkWebSlot, p2: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeScriptObserver_get_context(p0: *const R4SdkWebRuntimeScriptObserver) -> R4SdkWebSlot;
@@ -35772,8 +35787,8 @@ unsafe extern "C" {
     pub fn R4SdkWebRuntimeScriptObserver_get_report(p0: *const R4SdkWebRuntimeScriptObserver) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeScriptObserver_set_report(p0: *mut R4SdkWebRuntimeScriptObserver, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeScriptObserver_inspectNative(p0: *const R4SdkWebRuntimeScriptObserver) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue416_create(p0: *mut R4SdkWebNativeValue416, p1: R4SdkWebSlot) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue416_inspectNative(p0: *const R4SdkWebNativeValue416) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue417_create(p0: *mut R4SdkWebNativeValue417, p1: R4SdkWebSlot) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue417_inspectNative(p0: *const R4SdkWebNativeValue417) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeMonotonicClock_create(p0: *mut R4SdkWebRuntimeMonotonicClock) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeMonotonicClock_from_fields(p0: *mut R4SdkWebRuntimeMonotonicClock, p1: R4SdkWebSlot, p2: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeMonotonicClock_get_context(p0: *const R4SdkWebRuntimeMonotonicClock) -> R4SdkWebSlot;
@@ -35781,10 +35796,10 @@ unsafe extern "C" {
     pub fn R4SdkWebRuntimeMonotonicClock_get_now_milliseconds(p0: *const R4SdkWebRuntimeMonotonicClock) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeMonotonicClock_set_now_milliseconds(p0: *mut R4SdkWebRuntimeMonotonicClock, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeMonotonicClock_inspectNative(p0: *const R4SdkWebRuntimeMonotonicClock) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue418_create(p0: *mut R4SdkWebNativeValue418, p1: R4SdkWebSlot) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue418_inspectNative(p0: *const R4SdkWebNativeValue418) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue419_create(p0: *mut R4SdkWebNativeValue419, p1: *mut R4SdkWebNative_web_security_BrowserStorage) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue419_create(p0: *mut R4SdkWebNativeValue419, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue419_inspectNative(p0: *const R4SdkWebNativeValue419) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue420_create(p0: *mut R4SdkWebNativeValue420, p1: *mut R4SdkWebNative_web_security_BrowserStorage) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue420_inspectNative(p0: *const R4SdkWebNativeValue420) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_BrowserStorage_create(p0: *mut R4SdkWebNative_web_security_BrowserStorage) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_BrowserStorage_from_fields(p0: *mut R4SdkWebNative_web_security_BrowserStorage, p1: *const R4SdkWebNative_web_security_CookieJar, p2: *const R4SdkWebNative_web_security_StorageSet, p3: *const R4SdkWebNative_web_security_StorageSet) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_BrowserStorage_get_cookies(p0: *const R4SdkWebNative_web_security_BrowserStorage, p1: *mut R4SdkWebNative_web_security_CookieJar) -> R4SdkWebSlot;
@@ -35795,14 +35810,14 @@ unsafe extern "C" {
     pub fn R4SdkWebNative_web_security_BrowserStorage_set_session(p0: *mut R4SdkWebNative_web_security_BrowserStorage, p1: *const R4SdkWebNative_web_security_StorageSet) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_BrowserStorage_inspectNative(p0: *const R4SdkWebNative_web_security_BrowserStorage) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_CookieJar_create(p0: *mut R4SdkWebNative_web_security_CookieJar) -> R4SdkWebSlot;
-    pub fn R4SdkWebNative_web_security_CookieJar_from_fields(p0: *mut R4SdkWebNative_web_security_CookieJar, p1: *const R4SdkWebNativeValue422, p2: u32) -> R4SdkWebSlot;
-    pub fn R4SdkWebNative_web_security_CookieJar_get_entries(p0: *const R4SdkWebNative_web_security_CookieJar, p1: *mut R4SdkWebNativeValue422) -> R4SdkWebSlot;
-    pub fn R4SdkWebNative_web_security_CookieJar_set_entries(p0: *mut R4SdkWebNative_web_security_CookieJar, p1: *const R4SdkWebNativeValue422) -> R4SdkWebSlot;
+    pub fn R4SdkWebNative_web_security_CookieJar_from_fields(p0: *mut R4SdkWebNative_web_security_CookieJar, p1: *const R4SdkWebNativeValue423, p2: u32) -> R4SdkWebSlot;
+    pub fn R4SdkWebNative_web_security_CookieJar_get_entries(p0: *const R4SdkWebNative_web_security_CookieJar, p1: *mut R4SdkWebNativeValue423) -> R4SdkWebSlot;
+    pub fn R4SdkWebNative_web_security_CookieJar_set_entries(p0: *mut R4SdkWebNative_web_security_CookieJar, p1: *const R4SdkWebNativeValue423) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_CookieJar_get_next_sequence(p0: *const R4SdkWebNative_web_security_CookieJar) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_CookieJar_set_next_sequence(p0: *mut R4SdkWebNative_web_security_CookieJar, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_CookieJar_inspectNative(p0: *const R4SdkWebNative_web_security_CookieJar) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue422_create(p0: *mut R4SdkWebNativeValue422, p1: *const R4SdkWebNativeValue422) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue422_inspectNative(p0: *const R4SdkWebNativeValue422, p1: *mut R4SdkWebNativeValue422) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue423_create(p0: *mut R4SdkWebNativeValue423, p1: *const R4SdkWebNativeValue423) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue423_inspectNative(p0: *const R4SdkWebNativeValue423, p1: *mut R4SdkWebNativeValue423) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Cookie_create(p0: *mut R4SdkWebNative_web_security_Cookie) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Cookie_from_fields(p0: *mut R4SdkWebNative_web_security_Cookie, p1: u8, p2: *const R4SdkWebNative_web_security_Fixed_64_, p3: *const R4SdkWebNative_web_security_Fixed_4096_, p4: *const R4SdkWebNative_web_security_Fixed_253_, p5: *const R4SdkWebNative_web_security_Fixed_256_, p6: u8, p7: u8, p8: u8, p9: u8, p10: u32, p11: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Cookie_get_occupied(p0: *const R4SdkWebNative_web_security_Cookie) -> R4SdkWebSlot;
@@ -35829,50 +35844,50 @@ unsafe extern "C" {
     pub fn R4SdkWebNative_web_security_Cookie_set_sequence(p0: *mut R4SdkWebNative_web_security_Cookie, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Cookie_inspectNative(p0: *const R4SdkWebNative_web_security_Cookie) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Fixed_64__create(p0: *mut R4SdkWebNative_web_security_Fixed_64_) -> R4SdkWebSlot;
-    pub fn R4SdkWebNative_web_security_Fixed_64__from_fields(p0: *mut R4SdkWebNative_web_security_Fixed_64_, p1: *const R4SdkWebNativeValue425, p2: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebNative_web_security_Fixed_64__get_storage(p0: *const R4SdkWebNative_web_security_Fixed_64_, p1: *mut R4SdkWebNativeValue425) -> R4SdkWebSlot;
-    pub fn R4SdkWebNative_web_security_Fixed_64__set_storage(p0: *mut R4SdkWebNative_web_security_Fixed_64_, p1: *const R4SdkWebNativeValue425) -> R4SdkWebSlot;
+    pub fn R4SdkWebNative_web_security_Fixed_64__from_fields(p0: *mut R4SdkWebNative_web_security_Fixed_64_, p1: *const R4SdkWebNativeValue426, p2: u64) -> R4SdkWebSlot;
+    pub fn R4SdkWebNative_web_security_Fixed_64__get_storage(p0: *const R4SdkWebNative_web_security_Fixed_64_, p1: *mut R4SdkWebNativeValue426) -> R4SdkWebSlot;
+    pub fn R4SdkWebNative_web_security_Fixed_64__set_storage(p0: *mut R4SdkWebNative_web_security_Fixed_64_, p1: *const R4SdkWebNativeValue426) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Fixed_64__get_len(p0: *const R4SdkWebNative_web_security_Fixed_64_) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Fixed_64__set_len(p0: *mut R4SdkWebNative_web_security_Fixed_64_, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Fixed_64__inspectNative(p0: *const R4SdkWebNative_web_security_Fixed_64_) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue425_create(p0: *mut R4SdkWebNativeValue425, p1: *const R4SdkWebNativeValue425) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue425_inspectNative(p0: *const R4SdkWebNativeValue425, p1: *mut R4SdkWebNativeValue425) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue426_create(p0: *mut R4SdkWebNativeValue426, p1: *const R4SdkWebNativeValue426) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue426_inspectNative(p0: *const R4SdkWebNativeValue426, p1: *mut R4SdkWebNativeValue426) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Fixed_4096__create(p0: *mut R4SdkWebNative_web_security_Fixed_4096_) -> R4SdkWebSlot;
-    pub fn R4SdkWebNative_web_security_Fixed_4096__from_fields(p0: *mut R4SdkWebNative_web_security_Fixed_4096_, p1: *const R4SdkWebNativeValue427, p2: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebNative_web_security_Fixed_4096__get_storage(p0: *const R4SdkWebNative_web_security_Fixed_4096_, p1: *mut R4SdkWebNativeValue427) -> R4SdkWebSlot;
-    pub fn R4SdkWebNative_web_security_Fixed_4096__set_storage(p0: *mut R4SdkWebNative_web_security_Fixed_4096_, p1: *const R4SdkWebNativeValue427) -> R4SdkWebSlot;
+    pub fn R4SdkWebNative_web_security_Fixed_4096__from_fields(p0: *mut R4SdkWebNative_web_security_Fixed_4096_, p1: *const R4SdkWebNativeValue428, p2: u64) -> R4SdkWebSlot;
+    pub fn R4SdkWebNative_web_security_Fixed_4096__get_storage(p0: *const R4SdkWebNative_web_security_Fixed_4096_, p1: *mut R4SdkWebNativeValue428) -> R4SdkWebSlot;
+    pub fn R4SdkWebNative_web_security_Fixed_4096__set_storage(p0: *mut R4SdkWebNative_web_security_Fixed_4096_, p1: *const R4SdkWebNativeValue428) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Fixed_4096__get_len(p0: *const R4SdkWebNative_web_security_Fixed_4096_) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Fixed_4096__set_len(p0: *mut R4SdkWebNative_web_security_Fixed_4096_, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Fixed_4096__inspectNative(p0: *const R4SdkWebNative_web_security_Fixed_4096_) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue427_create(p0: *mut R4SdkWebNativeValue427, p1: *const R4SdkWebNativeValue427) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue427_inspectNative(p0: *const R4SdkWebNativeValue427, p1: *mut R4SdkWebNativeValue427) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue428_create(p0: *mut R4SdkWebNativeValue428, p1: *const R4SdkWebNativeValue428) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue428_inspectNative(p0: *const R4SdkWebNativeValue428, p1: *mut R4SdkWebNativeValue428) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Fixed_253__create(p0: *mut R4SdkWebNative_web_security_Fixed_253_) -> R4SdkWebSlot;
-    pub fn R4SdkWebNative_web_security_Fixed_253__from_fields(p0: *mut R4SdkWebNative_web_security_Fixed_253_, p1: *const R4SdkWebNativeValue381, p2: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebNative_web_security_Fixed_253__get_storage(p0: *const R4SdkWebNative_web_security_Fixed_253_, p1: *mut R4SdkWebNativeValue381) -> R4SdkWebSlot;
-    pub fn R4SdkWebNative_web_security_Fixed_253__set_storage(p0: *mut R4SdkWebNative_web_security_Fixed_253_, p1: *const R4SdkWebNativeValue381) -> R4SdkWebSlot;
+    pub fn R4SdkWebNative_web_security_Fixed_253__from_fields(p0: *mut R4SdkWebNative_web_security_Fixed_253_, p1: *const R4SdkWebNativeValue382, p2: u64) -> R4SdkWebSlot;
+    pub fn R4SdkWebNative_web_security_Fixed_253__get_storage(p0: *const R4SdkWebNative_web_security_Fixed_253_, p1: *mut R4SdkWebNativeValue382) -> R4SdkWebSlot;
+    pub fn R4SdkWebNative_web_security_Fixed_253__set_storage(p0: *mut R4SdkWebNative_web_security_Fixed_253_, p1: *const R4SdkWebNativeValue382) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Fixed_253__get_len(p0: *const R4SdkWebNative_web_security_Fixed_253_) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Fixed_253__set_len(p0: *mut R4SdkWebNative_web_security_Fixed_253_, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Fixed_253__inspectNative(p0: *const R4SdkWebNative_web_security_Fixed_253_) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_SameSite_create(p0: *mut R4SdkWebNative_web_security_SameSite, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_SameSite_inspectNative(p0: *const R4SdkWebNative_web_security_SameSite) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_StorageSet_create(p0: *mut R4SdkWebNative_web_security_StorageSet) -> R4SdkWebSlot;
-    pub fn R4SdkWebNative_web_security_StorageSet_from_fields(p0: *mut R4SdkWebNative_web_security_StorageSet, p1: *const R4SdkWebNativeValue431) -> R4SdkWebSlot;
-    pub fn R4SdkWebNative_web_security_StorageSet_get_areas(p0: *const R4SdkWebNative_web_security_StorageSet, p1: *mut R4SdkWebNativeValue431) -> R4SdkWebSlot;
-    pub fn R4SdkWebNative_web_security_StorageSet_set_areas(p0: *mut R4SdkWebNative_web_security_StorageSet, p1: *const R4SdkWebNativeValue431) -> R4SdkWebSlot;
+    pub fn R4SdkWebNative_web_security_StorageSet_from_fields(p0: *mut R4SdkWebNative_web_security_StorageSet, p1: *const R4SdkWebNativeValue432) -> R4SdkWebSlot;
+    pub fn R4SdkWebNative_web_security_StorageSet_get_areas(p0: *const R4SdkWebNative_web_security_StorageSet, p1: *mut R4SdkWebNativeValue432) -> R4SdkWebSlot;
+    pub fn R4SdkWebNative_web_security_StorageSet_set_areas(p0: *mut R4SdkWebNative_web_security_StorageSet, p1: *const R4SdkWebNativeValue432) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_StorageSet_inspectNative(p0: *const R4SdkWebNative_web_security_StorageSet) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue431_create(p0: *mut R4SdkWebNativeValue431, p1: *const R4SdkWebNativeValue431) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue431_inspectNative(p0: *const R4SdkWebNativeValue431, p1: *mut R4SdkWebNativeValue431) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue432_create(p0: *mut R4SdkWebNativeValue432, p1: *const R4SdkWebNativeValue432) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue432_inspectNative(p0: *const R4SdkWebNativeValue432, p1: *mut R4SdkWebNativeValue432) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_StorageArea_create(p0: *mut R4SdkWebNative_web_security_StorageArea) -> R4SdkWebSlot;
-    pub fn R4SdkWebNative_web_security_StorageArea_from_fields(p0: *mut R4SdkWebNative_web_security_StorageArea, p1: u8, p2: *const R4SdkWebNative_web_security_Origin, p3: *const R4SdkWebNativeValue433) -> R4SdkWebSlot;
+    pub fn R4SdkWebNative_web_security_StorageArea_from_fields(p0: *mut R4SdkWebNative_web_security_StorageArea, p1: u8, p2: *const R4SdkWebNative_web_security_Origin, p3: *const R4SdkWebNativeValue434) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_StorageArea_get_occupied(p0: *const R4SdkWebNative_web_security_StorageArea) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_StorageArea_set_occupied(p0: *mut R4SdkWebNative_web_security_StorageArea, p1: u8) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_StorageArea_get_origin(p0: *const R4SdkWebNative_web_security_StorageArea, p1: *mut R4SdkWebNative_web_security_Origin) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_StorageArea_set_origin(p0: *mut R4SdkWebNative_web_security_StorageArea, p1: *const R4SdkWebNative_web_security_Origin) -> R4SdkWebSlot;
-    pub fn R4SdkWebNative_web_security_StorageArea_get_entries(p0: *const R4SdkWebNative_web_security_StorageArea, p1: *mut R4SdkWebNativeValue433) -> R4SdkWebSlot;
-    pub fn R4SdkWebNative_web_security_StorageArea_set_entries(p0: *mut R4SdkWebNative_web_security_StorageArea, p1: *const R4SdkWebNativeValue433) -> R4SdkWebSlot;
+    pub fn R4SdkWebNative_web_security_StorageArea_get_entries(p0: *const R4SdkWebNative_web_security_StorageArea, p1: *mut R4SdkWebNativeValue434) -> R4SdkWebSlot;
+    pub fn R4SdkWebNative_web_security_StorageArea_set_entries(p0: *mut R4SdkWebNative_web_security_StorageArea, p1: *const R4SdkWebNativeValue434) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_StorageArea_inspectNative(p0: *const R4SdkWebNative_web_security_StorageArea) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue433_create(p0: *mut R4SdkWebNativeValue433, p1: *const R4SdkWebNativeValue433) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue433_inspectNative(p0: *const R4SdkWebNativeValue433, p1: *mut R4SdkWebNativeValue433) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue434_create(p0: *mut R4SdkWebNativeValue434, p1: *const R4SdkWebNativeValue434) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue434_inspectNative(p0: *const R4SdkWebNativeValue434, p1: *mut R4SdkWebNativeValue434) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_StorageEntry_create(p0: *mut R4SdkWebNative_web_security_StorageEntry) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_StorageEntry_from_fields(p0: *mut R4SdkWebNative_web_security_StorageEntry, p1: u8, p2: *const R4SdkWebNative_web_security_Fixed_96_, p3: *const R4SdkWebNative_web_security_Fixed_512_) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_StorageEntry_get_occupied(p0: *const R4SdkWebNative_web_security_StorageEntry) -> R4SdkWebSlot;
@@ -35883,23 +35898,23 @@ unsafe extern "C" {
     pub fn R4SdkWebNative_web_security_StorageEntry_set_value(p0: *mut R4SdkWebNative_web_security_StorageEntry, p1: *const R4SdkWebNative_web_security_Fixed_512_) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_StorageEntry_inspectNative(p0: *const R4SdkWebNative_web_security_StorageEntry) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Fixed_96__create(p0: *mut R4SdkWebNative_web_security_Fixed_96_) -> R4SdkWebSlot;
-    pub fn R4SdkWebNative_web_security_Fixed_96__from_fields(p0: *mut R4SdkWebNative_web_security_Fixed_96_, p1: *const R4SdkWebNativeValue436, p2: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebNative_web_security_Fixed_96__get_storage(p0: *const R4SdkWebNative_web_security_Fixed_96_, p1: *mut R4SdkWebNativeValue436) -> R4SdkWebSlot;
-    pub fn R4SdkWebNative_web_security_Fixed_96__set_storage(p0: *mut R4SdkWebNative_web_security_Fixed_96_, p1: *const R4SdkWebNativeValue436) -> R4SdkWebSlot;
+    pub fn R4SdkWebNative_web_security_Fixed_96__from_fields(p0: *mut R4SdkWebNative_web_security_Fixed_96_, p1: *const R4SdkWebNativeValue437, p2: u64) -> R4SdkWebSlot;
+    pub fn R4SdkWebNative_web_security_Fixed_96__get_storage(p0: *const R4SdkWebNative_web_security_Fixed_96_, p1: *mut R4SdkWebNativeValue437) -> R4SdkWebSlot;
+    pub fn R4SdkWebNative_web_security_Fixed_96__set_storage(p0: *mut R4SdkWebNative_web_security_Fixed_96_, p1: *const R4SdkWebNativeValue437) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Fixed_96__get_len(p0: *const R4SdkWebNative_web_security_Fixed_96_) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Fixed_96__set_len(p0: *mut R4SdkWebNative_web_security_Fixed_96_, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Fixed_96__inspectNative(p0: *const R4SdkWebNative_web_security_Fixed_96_) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue436_create(p0: *mut R4SdkWebNativeValue436, p1: *const R4SdkWebNativeValue436) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue436_inspectNative(p0: *const R4SdkWebNativeValue436, p1: *mut R4SdkWebNativeValue436) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue437_create(p0: *mut R4SdkWebNativeValue437, p1: *const R4SdkWebNativeValue437) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue437_inspectNative(p0: *const R4SdkWebNativeValue437, p1: *mut R4SdkWebNativeValue437) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Fixed_512__create(p0: *mut R4SdkWebNative_web_security_Fixed_512_) -> R4SdkWebSlot;
-    pub fn R4SdkWebNative_web_security_Fixed_512__from_fields(p0: *mut R4SdkWebNative_web_security_Fixed_512_, p1: *const R4SdkWebNativeValue438, p2: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebNative_web_security_Fixed_512__get_storage(p0: *const R4SdkWebNative_web_security_Fixed_512_, p1: *mut R4SdkWebNativeValue438) -> R4SdkWebSlot;
-    pub fn R4SdkWebNative_web_security_Fixed_512__set_storage(p0: *mut R4SdkWebNative_web_security_Fixed_512_, p1: *const R4SdkWebNativeValue438) -> R4SdkWebSlot;
+    pub fn R4SdkWebNative_web_security_Fixed_512__from_fields(p0: *mut R4SdkWebNative_web_security_Fixed_512_, p1: *const R4SdkWebNativeValue439, p2: u64) -> R4SdkWebSlot;
+    pub fn R4SdkWebNative_web_security_Fixed_512__get_storage(p0: *const R4SdkWebNative_web_security_Fixed_512_, p1: *mut R4SdkWebNativeValue439) -> R4SdkWebSlot;
+    pub fn R4SdkWebNative_web_security_Fixed_512__set_storage(p0: *mut R4SdkWebNative_web_security_Fixed_512_, p1: *const R4SdkWebNativeValue439) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Fixed_512__get_len(p0: *const R4SdkWebNative_web_security_Fixed_512_) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Fixed_512__set_len(p0: *mut R4SdkWebNative_web_security_Fixed_512_, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Fixed_512__inspectNative(p0: *const R4SdkWebNative_web_security_Fixed_512_) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue438_create(p0: *mut R4SdkWebNativeValue438, p1: *const R4SdkWebNativeValue438) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue438_inspectNative(p0: *const R4SdkWebNativeValue438, p1: *mut R4SdkWebNativeValue438) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue439_create(p0: *mut R4SdkWebNativeValue439, p1: *const R4SdkWebNativeValue439) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue439_inspectNative(p0: *const R4SdkWebNativeValue439, p1: *mut R4SdkWebNativeValue439) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_SecurityContext_create(p0: *mut R4SdkWebNative_web_security_SecurityContext) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_SecurityContext_from_fields(p0: *mut R4SdkWebNative_web_security_SecurityContext, p1: u32, p2: *const R4SdkWebNative_web_security_Origin, p3: u8, p4: *const R4SdkWebNative_web_security_ContentSecurityPolicy) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_SecurityContext_get_generation(p0: *const R4SdkWebNative_web_security_SecurityContext) -> R4SdkWebSlot;
@@ -35912,9 +35927,9 @@ unsafe extern "C" {
     pub fn R4SdkWebNative_web_security_SecurityContext_set_policy(p0: *mut R4SdkWebNative_web_security_SecurityContext, p1: *const R4SdkWebNative_web_security_ContentSecurityPolicy) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_SecurityContext_inspectNative(p0: *const R4SdkWebNative_web_security_SecurityContext) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_ContentSecurityPolicy_create(p0: *mut R4SdkWebNative_web_security_ContentSecurityPolicy) -> R4SdkWebSlot;
-    pub fn R4SdkWebNative_web_security_ContentSecurityPolicy_from_fields(p0: *mut R4SdkWebNative_web_security_ContentSecurityPolicy, p1: *const R4SdkWebNativeValue362, p2: u64, p3: *const R4SdkWebNative_web_security_ContentSecurityPolicy_Slice, p4: *const R4SdkWebNative_web_security_ContentSecurityPolicy_Slice, p5: *const R4SdkWebNative_web_security_ContentSecurityPolicy_Slice, p6: *const R4SdkWebNative_web_security_ContentSecurityPolicy_Slice, p7: *const R4SdkWebNative_web_security_ContentSecurityPolicy_Slice, p8: *const R4SdkWebNative_web_security_ContentSecurityPolicy_Slice, p9: *const R4SdkWebNative_web_security_ContentSecurityPolicy_Slice, p10: *const R4SdkWebNative_web_security_ContentSecurityPolicy_Slice, p11: u8, p12: u8, p13: u8, p14: u8, p15: u8, p16: u8, p17: u8, p18: u8) -> R4SdkWebSlot;
-    pub fn R4SdkWebNative_web_security_ContentSecurityPolicy_get_bytes(p0: *const R4SdkWebNative_web_security_ContentSecurityPolicy, p1: *mut R4SdkWebNativeValue362) -> R4SdkWebSlot;
-    pub fn R4SdkWebNative_web_security_ContentSecurityPolicy_set_bytes(p0: *mut R4SdkWebNative_web_security_ContentSecurityPolicy, p1: *const R4SdkWebNativeValue362) -> R4SdkWebSlot;
+    pub fn R4SdkWebNative_web_security_ContentSecurityPolicy_from_fields(p0: *mut R4SdkWebNative_web_security_ContentSecurityPolicy, p1: *const R4SdkWebNativeValue363, p2: u64, p3: *const R4SdkWebNative_web_security_ContentSecurityPolicy_Slice, p4: *const R4SdkWebNative_web_security_ContentSecurityPolicy_Slice, p5: *const R4SdkWebNative_web_security_ContentSecurityPolicy_Slice, p6: *const R4SdkWebNative_web_security_ContentSecurityPolicy_Slice, p7: *const R4SdkWebNative_web_security_ContentSecurityPolicy_Slice, p8: *const R4SdkWebNative_web_security_ContentSecurityPolicy_Slice, p9: *const R4SdkWebNative_web_security_ContentSecurityPolicy_Slice, p10: *const R4SdkWebNative_web_security_ContentSecurityPolicy_Slice, p11: u8, p12: u8, p13: u8, p14: u8, p15: u8, p16: u8, p17: u8, p18: u8) -> R4SdkWebSlot;
+    pub fn R4SdkWebNative_web_security_ContentSecurityPolicy_get_bytes(p0: *const R4SdkWebNative_web_security_ContentSecurityPolicy, p1: *mut R4SdkWebNativeValue363) -> R4SdkWebSlot;
+    pub fn R4SdkWebNative_web_security_ContentSecurityPolicy_set_bytes(p0: *mut R4SdkWebNative_web_security_ContentSecurityPolicy, p1: *const R4SdkWebNativeValue363) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_ContentSecurityPolicy_get_len(p0: *const R4SdkWebNative_web_security_ContentSecurityPolicy) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_ContentSecurityPolicy_set_len(p0: *mut R4SdkWebNative_web_security_ContentSecurityPolicy, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_ContentSecurityPolicy_get_default_src(p0: *const R4SdkWebNative_web_security_ContentSecurityPolicy, p1: *mut R4SdkWebNative_web_security_ContentSecurityPolicy_Slice) -> R4SdkWebSlot;
@@ -35957,12 +35972,12 @@ unsafe extern "C" {
     pub fn R4SdkWebNative_web_security_ContentSecurityPolicy_Slice_get_len(p0: *const R4SdkWebNative_web_security_ContentSecurityPolicy_Slice) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_ContentSecurityPolicy_Slice_set_len(p0: *mut R4SdkWebNative_web_security_ContentSecurityPolicy_Slice, p1: u16) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_ContentSecurityPolicy_Slice_inspectNative(p0: *const R4SdkWebNative_web_security_ContentSecurityPolicy_Slice) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue442_create(p0: *mut R4SdkWebNativeValue442, p1: *const R4SdkWebNativeValue442) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue442_inspectNative(p0: *const R4SdkWebNativeValue442, p1: *mut R4SdkWebNativeValue442) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue443_create(p0: *mut R4SdkWebNativeValue443, p1: *const R4SdkWebNativeValue443) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue443_inspectNative(p0: *const R4SdkWebNativeValue443, p1: *mut R4SdkWebNativeValue443) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue444_create(p0: *mut R4SdkWebNativeValue444, p1: *const R4SdkWebNativeValue444) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue444_inspectNative(p0: *const R4SdkWebNativeValue444, p1: *mut R4SdkWebNativeValue444) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue445_create(p0: *mut R4SdkWebNativeValue445, p1: *const R4SdkWebNativeValue445) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue445_inspectNative(p0: *const R4SdkWebNativeValue445, p1: *mut R4SdkWebNativeValue445) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeListener_create(p0: *mut R4SdkWebRuntimeListener) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeListener_from_fields(p0: *mut R4SdkWebRuntimeListener, p1: u8, p2: u32, p3: u32, p4: *const R4SdkWebNative_web_security_Fixed_32_, p5: *const R4SdkWebJsValue, p6: u8, p7: u8) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeListener_get_occupied(p0: *const R4SdkWebRuntimeListener) -> R4SdkWebSlot;
@@ -35981,16 +35996,16 @@ unsafe extern "C" {
     pub fn R4SdkWebRuntimeListener_set_capture(p0: *mut R4SdkWebRuntimeListener, p1: u8) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeListener_inspectNative(p0: *const R4SdkWebRuntimeListener) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Fixed_32__create(p0: *mut R4SdkWebNative_web_security_Fixed_32_) -> R4SdkWebSlot;
-    pub fn R4SdkWebNative_web_security_Fixed_32__from_fields(p0: *mut R4SdkWebNative_web_security_Fixed_32_, p1: *const R4SdkWebNativeValue447, p2: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebNative_web_security_Fixed_32__get_storage(p0: *const R4SdkWebNative_web_security_Fixed_32_, p1: *mut R4SdkWebNativeValue447) -> R4SdkWebSlot;
-    pub fn R4SdkWebNative_web_security_Fixed_32__set_storage(p0: *mut R4SdkWebNative_web_security_Fixed_32_, p1: *const R4SdkWebNativeValue447) -> R4SdkWebSlot;
+    pub fn R4SdkWebNative_web_security_Fixed_32__from_fields(p0: *mut R4SdkWebNative_web_security_Fixed_32_, p1: *const R4SdkWebNativeValue448, p2: u64) -> R4SdkWebSlot;
+    pub fn R4SdkWebNative_web_security_Fixed_32__get_storage(p0: *const R4SdkWebNative_web_security_Fixed_32_, p1: *mut R4SdkWebNativeValue448) -> R4SdkWebSlot;
+    pub fn R4SdkWebNative_web_security_Fixed_32__set_storage(p0: *mut R4SdkWebNative_web_security_Fixed_32_, p1: *const R4SdkWebNativeValue448) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Fixed_32__get_len(p0: *const R4SdkWebNative_web_security_Fixed_32_) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Fixed_32__set_len(p0: *mut R4SdkWebNative_web_security_Fixed_32_, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Fixed_32__inspectNative(p0: *const R4SdkWebNative_web_security_Fixed_32_) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue447_create(p0: *mut R4SdkWebNativeValue447, p1: *const R4SdkWebNativeValue447) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue447_inspectNative(p0: *const R4SdkWebNativeValue447, p1: *mut R4SdkWebNativeValue447) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue448_create(p0: *mut R4SdkWebNativeValue448, p1: *const R4SdkWebNativeValue448) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue448_inspectNative(p0: *const R4SdkWebNativeValue448, p1: *mut R4SdkWebNativeValue448) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue449_create(p0: *mut R4SdkWebNativeValue449, p1: *const R4SdkWebNativeValue449) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue449_inspectNative(p0: *const R4SdkWebNativeValue449, p1: *mut R4SdkWebNativeValue449) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeTimer_create(p0: *mut R4SdkWebRuntimeTimer) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeTimer_from_fields(p0: *mut R4SdkWebRuntimeTimer, p1: u8, p2: u32, p3: u32, p4: *const f64, p5: *const f64, p6: *const R4SdkWebJsValue) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeTimer_get_occupied(p0: *const R4SdkWebRuntimeTimer) -> R4SdkWebSlot;
@@ -36006,8 +36021,8 @@ unsafe extern "C" {
     pub fn R4SdkWebRuntimeTimer_get_callback(p0: *const R4SdkWebRuntimeTimer, p1: *mut R4SdkWebJsValue) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeTimer_set_callback(p0: *mut R4SdkWebRuntimeTimer, p1: *const R4SdkWebJsValue) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeTimer_inspectNative(p0: *const R4SdkWebRuntimeTimer) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue450_create(p0: *mut R4SdkWebNativeValue450, p1: *const R4SdkWebNativeValue450) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue450_inspectNative(p0: *const R4SdkWebNativeValue450, p1: *mut R4SdkWebNativeValue450) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue451_create(p0: *mut R4SdkWebNativeValue451, p1: *const R4SdkWebNativeValue451) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue451_inspectNative(p0: *const R4SdkWebNativeValue451, p1: *mut R4SdkWebNativeValue451) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeAbortDeadline_create(p0: *mut R4SdkWebRuntimeAbortDeadline) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeAbortDeadline_from_fields(p0: *mut R4SdkWebRuntimeAbortDeadline, p1: u8, p2: u32, p3: *const f64, p4: *const R4SdkWebJsValue) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeAbortDeadline_get_occupied(p0: *const R4SdkWebRuntimeAbortDeadline) -> R4SdkWebSlot;
@@ -36019,8 +36034,8 @@ unsafe extern "C" {
     pub fn R4SdkWebRuntimeAbortDeadline_get_signal(p0: *const R4SdkWebRuntimeAbortDeadline, p1: *mut R4SdkWebJsValue) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeAbortDeadline_set_signal(p0: *mut R4SdkWebRuntimeAbortDeadline, p1: *const R4SdkWebJsValue) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeAbortDeadline_inspectNative(p0: *const R4SdkWebRuntimeAbortDeadline) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue452_create(p0: *mut R4SdkWebNativeValue452, p1: *const R4SdkWebNativeValue452) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue452_inspectNative(p0: *const R4SdkWebNativeValue452, p1: *mut R4SdkWebNativeValue452) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue453_create(p0: *mut R4SdkWebNativeValue453, p1: *const R4SdkWebNativeValue453) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue453_inspectNative(p0: *const R4SdkWebNativeValue453, p1: *mut R4SdkWebNativeValue453) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeAbortFollower_create(p0: *mut R4SdkWebRuntimeAbortFollower) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeAbortFollower_from_fields(p0: *mut R4SdkWebRuntimeAbortFollower, p1: u8, p2: u32, p3: *const R4SdkWebJsValue, p4: *const R4SdkWebJsValue) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeAbortFollower_get_occupied(p0: *const R4SdkWebRuntimeAbortFollower) -> R4SdkWebSlot;
@@ -36032,14 +36047,14 @@ unsafe extern "C" {
     pub fn R4SdkWebRuntimeAbortFollower_get_target(p0: *const R4SdkWebRuntimeAbortFollower, p1: *mut R4SdkWebJsValue) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeAbortFollower_set_target(p0: *mut R4SdkWebRuntimeAbortFollower, p1: *const R4SdkWebJsValue) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeAbortFollower_inspectNative(p0: *const R4SdkWebRuntimeAbortFollower) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue454_create(p0: *mut R4SdkWebNativeValue454, p1: *const R4SdkWebNativeValue454) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue454_inspectNative(p0: *const R4SdkWebNativeValue454, p1: *mut R4SdkWebNativeValue454) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue455_create(p0: *mut R4SdkWebNativeValue455, p1: *const R4SdkWebNativeValue455) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue455_inspectNative(p0: *const R4SdkWebNativeValue455, p1: *mut R4SdkWebNativeValue455) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_resources_Scheduler_create(p0: *mut R4SdkWebNative_web_resources_Scheduler) -> R4SdkWebSlot;
-    pub fn R4SdkWebNative_web_resources_Scheduler_from_fields(p0: *mut R4SdkWebNative_web_resources_Scheduler, p1: u32, p2: *const R4SdkWebNativeValue456, p3: u64, p4: u32, p5: u8, p6: u64) -> R4SdkWebSlot;
+    pub fn R4SdkWebNative_web_resources_Scheduler_from_fields(p0: *mut R4SdkWebNative_web_resources_Scheduler, p1: u32, p2: *const R4SdkWebNativeValue457, p3: u64, p4: u32, p5: u8, p6: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_resources_Scheduler_get_generation(p0: *const R4SdkWebNative_web_resources_Scheduler) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_resources_Scheduler_set_generation(p0: *mut R4SdkWebNative_web_resources_Scheduler, p1: u32) -> R4SdkWebSlot;
-    pub fn R4SdkWebNative_web_resources_Scheduler_get_entries(p0: *const R4SdkWebNative_web_resources_Scheduler, p1: *mut R4SdkWebNativeValue456) -> R4SdkWebSlot;
-    pub fn R4SdkWebNative_web_resources_Scheduler_set_entries(p0: *mut R4SdkWebNative_web_resources_Scheduler, p1: *const R4SdkWebNativeValue456) -> R4SdkWebSlot;
+    pub fn R4SdkWebNative_web_resources_Scheduler_get_entries(p0: *const R4SdkWebNative_web_resources_Scheduler, p1: *mut R4SdkWebNativeValue457) -> R4SdkWebSlot;
+    pub fn R4SdkWebNative_web_resources_Scheduler_set_entries(p0: *mut R4SdkWebNative_web_resources_Scheduler, p1: *const R4SdkWebNativeValue457) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_resources_Scheduler_get_count(p0: *const R4SdkWebNative_web_resources_Scheduler) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_resources_Scheduler_set_count(p0: *mut R4SdkWebNative_web_resources_Scheduler, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_resources_Scheduler_get_next_id(p0: *const R4SdkWebNative_web_resources_Scheduler) -> R4SdkWebSlot;
@@ -36049,8 +36064,8 @@ unsafe extern "C" {
     pub fn R4SdkWebNative_web_resources_Scheduler_get_ready_cursor(p0: *const R4SdkWebNative_web_resources_Scheduler) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_resources_Scheduler_set_ready_cursor(p0: *mut R4SdkWebNative_web_resources_Scheduler, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_resources_Scheduler_inspectNative(p0: *const R4SdkWebNative_web_resources_Scheduler) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue456_create(p0: *mut R4SdkWebNativeValue456, p1: *const R4SdkWebNativeValue456) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue456_inspectNative(p0: *const R4SdkWebNativeValue456, p1: *mut R4SdkWebNativeValue456) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue457_create(p0: *mut R4SdkWebNativeValue457, p1: *const R4SdkWebNativeValue457) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue457_inspectNative(p0: *const R4SdkWebNativeValue457, p1: *mut R4SdkWebNativeValue457) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_resources_Entry_create(p0: *mut R4SdkWebNative_web_resources_Entry) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_resources_Entry_from_fields(p0: *mut R4SdkWebNative_web_resources_Entry, p1: u32, p2: u32, p3: u16, p4: u16, p5: u32, p6: u32, p7: u8, p8: u32, p9: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_resources_Entry_get_id(p0: *const R4SdkWebNative_web_resources_Entry) -> R4SdkWebSlot;
@@ -36076,8 +36091,8 @@ unsafe extern "C" {
     pub fn R4SdkWebNative_web_resources_ScriptMode_inspectNative(p0: *const R4SdkWebNative_web_resources_ScriptMode) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_resources_State_create(p0: *mut R4SdkWebNative_web_resources_State, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_resources_State_inspectNative(p0: *const R4SdkWebNative_web_resources_State) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue460_create(p0: *mut R4SdkWebNativeValue460, p1: *const R4SdkWebNativeValue460) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue460_inspectNative(p0: *const R4SdkWebNativeValue460, p1: *mut R4SdkWebNativeValue460) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue461_create(p0: *mut R4SdkWebNativeValue461, p1: *const R4SdkWebNativeValue461) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue461_inspectNative(p0: *const R4SdkWebNativeValue461, p1: *mut R4SdkWebNativeValue461) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeModuleLoad_create(p0: *mut R4SdkWebRuntimeModuleLoad) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeModuleLoad_from_fields(p0: *mut R4SdkWebRuntimeModuleLoad, p1: u32, p2: u32, p3: *const R4SdkWebNavigationUrl, p4: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeModuleLoad_get_state(p0: *const R4SdkWebRuntimeModuleLoad) -> R4SdkWebSlot;
@@ -36091,10 +36106,10 @@ unsafe extern "C" {
     pub fn R4SdkWebRuntimeModuleLoad_inspectNative(p0: *const R4SdkWebRuntimeModuleLoad) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeModuleLoadState_create(p0: *mut R4SdkWebRuntimeModuleLoadState, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeModuleLoadState_inspectNative(p0: *const R4SdkWebRuntimeModuleLoadState) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue463_create(p0: *mut R4SdkWebNativeValue463, p1: *const R4SdkWebNativeValue463) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue463_inspectNative(p0: *const R4SdkWebNativeValue463, p1: *mut R4SdkWebNativeValue463) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue464_create(p0: *mut R4SdkWebNativeValue464, p1: *const R4SdkWebNativeValue464) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue464_inspectNative(p0: *const R4SdkWebNativeValue464, p1: *mut R4SdkWebNativeValue464) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue465_create(p0: *mut R4SdkWebNativeValue465, p1: *const R4SdkWebNativeValue465) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue465_inspectNative(p0: *const R4SdkWebNativeValue465, p1: *mut R4SdkWebNativeValue465) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeImageResourceState_create(p0: *mut R4SdkWebRuntimeImageResourceState) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeImageResourceState_from_fields(p0: *mut R4SdkWebRuntimeImageResourceState, p1: u32, p2: u32, p3: *const R4SdkWebNative_web_security_Fixed_767_, p4: u64, p5: u64, p6: *const R4SdkWebNavigationUrl, p7: u8) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeImageResourceState_get_resource_id(p0: *const R4SdkWebRuntimeImageResourceState) -> R4SdkWebSlot;
@@ -36119,8 +36134,8 @@ unsafe extern "C" {
     pub fn R4SdkWebNative_web_security_Fixed_767__get_len(p0: *const R4SdkWebNative_web_security_Fixed_767_) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Fixed_767__set_len(p0: *mut R4SdkWebNative_web_security_Fixed_767_, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Fixed_767__inspectNative(p0: *const R4SdkWebNative_web_security_Fixed_767_) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue467_create(p0: *mut R4SdkWebNativeValue467, p1: *const R4SdkWebNativeValue467) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue467_inspectNative(p0: *const R4SdkWebNativeValue467, p1: *mut R4SdkWebNativeValue467) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue468_create(p0: *mut R4SdkWebNativeValue468, p1: *const R4SdkWebNativeValue468) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue468_inspectNative(p0: *const R4SdkWebNativeValue468, p1: *mut R4SdkWebNativeValue468) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeFontResourceState_create(p0: *mut R4SdkWebRuntimeFontResourceState) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeFontResourceState_from_fields(p0: *mut R4SdkWebRuntimeFontResourceState, p1: u32, p2: u16, p3: u8, p4: u32, p5: *const R4SdkWebNavigationUrl, p6: *const R4SdkWebNavigationUrl, p7: u32, p8: u8, p9: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeFontResourceState_get_resource_id(p0: *const R4SdkWebRuntimeFontResourceState) -> R4SdkWebSlot;
@@ -36142,8 +36157,8 @@ unsafe extern "C" {
     pub fn R4SdkWebRuntimeFontResourceState_get_response_byte_count(p0: *const R4SdkWebRuntimeFontResourceState) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeFontResourceState_set_response_byte_count(p0: *mut R4SdkWebRuntimeFontResourceState, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeFontResourceState_inspectNative(p0: *const R4SdkWebRuntimeFontResourceState) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue469_create(p0: *mut R4SdkWebNativeValue469, p1: *const R4SdkWebNativeValue469) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue469_inspectNative(p0: *const R4SdkWebNativeValue469, p1: *mut R4SdkWebNativeValue469) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue470_create(p0: *mut R4SdkWebNativeValue470, p1: *const R4SdkWebNativeValue470) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue470_inspectNative(p0: *const R4SdkWebNativeValue470, p1: *mut R4SdkWebNativeValue470) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeFontFaceResourceState_create(p0: *mut R4SdkWebRuntimeFontFaceResourceState) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeFontFaceResourceState_from_fields(p0: *mut R4SdkWebRuntimeFontFaceResourceState, p1: u32, p2: u16, p3: u8, p4: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeFontFaceResourceState_get_phase(p0: *const R4SdkWebRuntimeFontFaceResourceState) -> R4SdkWebSlot;
@@ -36157,8 +36172,8 @@ unsafe extern "C" {
     pub fn R4SdkWebRuntimeFontFaceResourceState_inspectNative(p0: *const R4SdkWebRuntimeFontFaceResourceState) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeFontFacePhase_create(p0: *mut R4SdkWebRuntimeFontFacePhase, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeFontFacePhase_inspectNative(p0: *const R4SdkWebRuntimeFontFacePhase) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue472_create(p0: *mut R4SdkWebNativeValue472, p1: R4SdkWebSlot) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue472_inspectNative(p0: *const R4SdkWebNativeValue472) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue473_create(p0: *mut R4SdkWebNativeValue473, p1: R4SdkWebSlot) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue473_inspectNative(p0: *const R4SdkWebNativeValue473) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeFrameLookup_create(p0: *mut R4SdkWebRuntimeFrameLookup) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeFrameLookup_from_fields(p0: *mut R4SdkWebRuntimeFrameLookup, p1: R4SdkWebSlot, p2: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeFrameLookup_get_context(p0: *const R4SdkWebRuntimeFrameLookup) -> R4SdkWebSlot;
@@ -36166,10 +36181,10 @@ unsafe extern "C" {
     pub fn R4SdkWebRuntimeFrameLookup_get_inspect(p0: *const R4SdkWebRuntimeFrameLookup) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeFrameLookup_set_inspect(p0: *mut R4SdkWebRuntimeFrameLookup, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeFrameLookup_inspectNative(p0: *const R4SdkWebRuntimeFrameLookup) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue474_create(p0: *mut R4SdkWebNativeValue474, p1: R4SdkWebSlot) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue474_inspectNative(p0: *const R4SdkWebNativeValue474) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue475_create(p0: *mut R4SdkWebNativeValue475, p1: *const R4SdkWebNativeValue475) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue475_inspectNative(p0: *const R4SdkWebNativeValue475, p1: *mut R4SdkWebNativeValue475) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue475_create(p0: *mut R4SdkWebNativeValue475, p1: R4SdkWebSlot) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue475_inspectNative(p0: *const R4SdkWebNativeValue475) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue476_create(p0: *mut R4SdkWebNativeValue476, p1: *const R4SdkWebNativeValue476) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue476_inspectNative(p0: *const R4SdkWebNativeValue476, p1: *mut R4SdkWebNativeValue476) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeAction_create(p0: *mut R4SdkWebRuntimeAction) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeAction_from_fields(p0: *mut R4SdkWebRuntimeAction, p1: u32, p2: u32, p3: u16, p4: i32, p5: *const R4SdkWebNavigationUrl) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeAction_get_kind(p0: *const R4SdkWebRuntimeAction) -> R4SdkWebSlot;
@@ -36185,18 +36200,18 @@ unsafe extern "C" {
     pub fn R4SdkWebRuntimeAction_inspectNative(p0: *const R4SdkWebRuntimeAction) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeActionKind_create(p0: *mut R4SdkWebRuntimeActionKind, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeActionKind_inspectNative(p0: *const R4SdkWebRuntimeActionKind) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue478_create(p0: *mut R4SdkWebNativeValue478, p1: *const R4SdkWebNativeValue478) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue478_inspectNative(p0: *const R4SdkWebNativeValue478, p1: *mut R4SdkWebNativeValue478) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue479_create(p0: *mut R4SdkWebNativeValue479, p1: *const R4SdkWebNativeValue479) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue479_inspectNative(p0: *const R4SdkWebNativeValue479, p1: *mut R4SdkWebNativeValue479) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeXhr_create(p0: *mut R4SdkWebRuntimeXhr) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeXhr_from_fields(p0: *mut R4SdkWebRuntimeXhr, p1: u8, p2: u32, p3: *const R4SdkWebJsValue, p4: *const R4SdkWebNativeValue463, p5: u64, p6: *const R4SdkWebNavigationUrl, p7: u32) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeXhr_from_fields(p0: *mut R4SdkWebRuntimeXhr, p1: u8, p2: u32, p3: *const R4SdkWebJsValue, p4: *const R4SdkWebNativeValue464, p5: u64, p6: *const R4SdkWebNavigationUrl, p7: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeXhr_get_occupied(p0: *const R4SdkWebRuntimeXhr) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeXhr_set_occupied(p0: *mut R4SdkWebRuntimeXhr, p1: u8) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeXhr_get_generation(p0: *const R4SdkWebRuntimeXhr) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeXhr_set_generation(p0: *mut R4SdkWebRuntimeXhr, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeXhr_get_object(p0: *const R4SdkWebRuntimeXhr, p1: *mut R4SdkWebJsValue) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeXhr_set_object(p0: *mut R4SdkWebRuntimeXhr, p1: *const R4SdkWebJsValue) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeXhr_get_method(p0: *const R4SdkWebRuntimeXhr, p1: *mut R4SdkWebNativeValue463) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeXhr_set_method(p0: *mut R4SdkWebRuntimeXhr, p1: *const R4SdkWebNativeValue463) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeXhr_get_method(p0: *const R4SdkWebRuntimeXhr, p1: *mut R4SdkWebNativeValue464) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeXhr_set_method(p0: *mut R4SdkWebRuntimeXhr, p1: *const R4SdkWebNativeValue464) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeXhr_get_method_len(p0: *const R4SdkWebRuntimeXhr) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeXhr_set_method_len(p0: *mut R4SdkWebRuntimeXhr, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeXhr_get_url(p0: *const R4SdkWebRuntimeXhr, p1: *mut R4SdkWebNavigationUrl) -> R4SdkWebSlot;
@@ -36204,10 +36219,10 @@ unsafe extern "C" {
     pub fn R4SdkWebRuntimeXhr_get_mode(p0: *const R4SdkWebRuntimeXhr) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeXhr_set_mode(p0: *mut R4SdkWebRuntimeXhr, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeXhr_inspectNative(p0: *const R4SdkWebRuntimeXhr) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue480_create(p0: *mut R4SdkWebNativeValue480, p1: *const R4SdkWebNativeValue480) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue480_inspectNative(p0: *const R4SdkWebNativeValue480, p1: *mut R4SdkWebNativeValue480) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue481_create(p0: *mut R4SdkWebNativeValue481, p1: *const R4SdkWebNativeValue481) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue481_inspectNative(p0: *const R4SdkWebNativeValue481, p1: *mut R4SdkWebNativeValue481) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeMutationObserverState_create(p0: *mut R4SdkWebRuntimeMutationObserverState) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeMutationObserverState_from_fields(p0: *mut R4SdkWebRuntimeMutationObserverState, p1: u8, p2: *const R4SdkWebJsValue, p3: *const R4SdkWebJsValue, p4: *const R4SdkWebJsValue, p5: *const R4SdkWebNativeValue482, p6: u64, p7: *const R4SdkWebNativeValue485, p8: u64, p9: *const R4SdkWebNativeValue486, p10: u64, p11: u8) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeMutationObserverState_from_fields(p0: *mut R4SdkWebRuntimeMutationObserverState, p1: u8, p2: *const R4SdkWebJsValue, p3: *const R4SdkWebJsValue, p4: *const R4SdkWebJsValue, p5: *const R4SdkWebNativeValue483, p6: u64, p7: *const R4SdkWebNativeValue486, p8: u64, p9: *const R4SdkWebNativeValue487, p10: u64, p11: u8) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeMutationObserverState_get_occupied(p0: *const R4SdkWebRuntimeMutationObserverState) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeMutationObserverState_set_occupied(p0: *mut R4SdkWebRuntimeMutationObserverState, p1: u8) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeMutationObserverState_get_object(p0: *const R4SdkWebRuntimeMutationObserverState, p1: *mut R4SdkWebJsValue) -> R4SdkWebSlot;
@@ -36216,25 +36231,25 @@ unsafe extern "C" {
     pub fn R4SdkWebRuntimeMutationObserverState_set_callback(p0: *mut R4SdkWebRuntimeMutationObserverState, p1: *const R4SdkWebJsValue) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeMutationObserverState_get_delivery(p0: *const R4SdkWebRuntimeMutationObserverState, p1: *mut R4SdkWebJsValue) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeMutationObserverState_set_delivery(p0: *mut R4SdkWebRuntimeMutationObserverState, p1: *const R4SdkWebJsValue) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeMutationObserverState_get_registrations(p0: *const R4SdkWebRuntimeMutationObserverState, p1: *mut R4SdkWebNativeValue482) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeMutationObserverState_set_registrations(p0: *mut R4SdkWebRuntimeMutationObserverState, p1: *const R4SdkWebNativeValue482) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeMutationObserverState_get_registrations(p0: *const R4SdkWebRuntimeMutationObserverState, p1: *mut R4SdkWebNativeValue483) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeMutationObserverState_set_registrations(p0: *mut R4SdkWebRuntimeMutationObserverState, p1: *const R4SdkWebNativeValue483) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeMutationObserverState_get_registration_count(p0: *const R4SdkWebRuntimeMutationObserverState) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeMutationObserverState_set_registration_count(p0: *mut R4SdkWebRuntimeMutationObserverState, p1: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeMutationObserverState_get_records(p0: *const R4SdkWebRuntimeMutationObserverState, p1: *mut R4SdkWebNativeValue485) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeMutationObserverState_set_records(p0: *mut R4SdkWebRuntimeMutationObserverState, p1: *const R4SdkWebNativeValue485) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeMutationObserverState_get_records(p0: *const R4SdkWebRuntimeMutationObserverState, p1: *mut R4SdkWebNativeValue486) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeMutationObserverState_set_records(p0: *mut R4SdkWebRuntimeMutationObserverState, p1: *const R4SdkWebNativeValue486) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeMutationObserverState_get_record_count(p0: *const R4SdkWebRuntimeMutationObserverState) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeMutationObserverState_set_record_count(p0: *mut R4SdkWebRuntimeMutationObserverState, p1: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeMutationObserverState_get_transient_roots(p0: *const R4SdkWebRuntimeMutationObserverState, p1: *mut R4SdkWebNativeValue486) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeMutationObserverState_set_transient_roots(p0: *mut R4SdkWebRuntimeMutationObserverState, p1: *const R4SdkWebNativeValue486) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeMutationObserverState_get_transient_roots(p0: *const R4SdkWebRuntimeMutationObserverState, p1: *mut R4SdkWebNativeValue487) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeMutationObserverState_set_transient_roots(p0: *mut R4SdkWebRuntimeMutationObserverState, p1: *const R4SdkWebNativeValue487) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeMutationObserverState_get_transient_root_count(p0: *const R4SdkWebRuntimeMutationObserverState) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeMutationObserverState_set_transient_root_count(p0: *mut R4SdkWebRuntimeMutationObserverState, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeMutationObserverState_get_delivery_queued(p0: *const R4SdkWebRuntimeMutationObserverState) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeMutationObserverState_set_delivery_queued(p0: *mut R4SdkWebRuntimeMutationObserverState, p1: u8) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeMutationObserverState_inspectNative(p0: *const R4SdkWebRuntimeMutationObserverState) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue482_create(p0: *mut R4SdkWebNativeValue482, p1: *const R4SdkWebNativeValue482) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue482_inspectNative(p0: *const R4SdkWebNativeValue482, p1: *mut R4SdkWebNativeValue482) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue483_create(p0: *mut R4SdkWebNativeValue483, p1: *const R4SdkWebNativeValue483) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue483_inspectNative(p0: *const R4SdkWebNativeValue483, p1: *mut R4SdkWebNativeValue483) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeMutationRegistration_create(p0: *mut R4SdkWebRuntimeMutationRegistration) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeMutationRegistration_from_fields(p0: *mut R4SdkWebRuntimeMutationRegistration, p1: u16, p2: u8, p3: u8, p4: u8, p5: u8, p6: u8, p7: u8, p8: *const R4SdkWebNativeValue484, p9: u64, p10: u8) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeMutationRegistration_from_fields(p0: *mut R4SdkWebRuntimeMutationRegistration, p1: u16, p2: u8, p3: u8, p4: u8, p5: u8, p6: u8, p7: u8, p8: *const R4SdkWebNativeValue485, p9: u64, p10: u8) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeMutationRegistration_get_target(p0: *const R4SdkWebRuntimeMutationRegistration) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeMutationRegistration_set_target(p0: *mut R4SdkWebRuntimeMutationRegistration, p1: u16) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeMutationRegistration_get_child_list(p0: *const R4SdkWebRuntimeMutationRegistration) -> R4SdkWebSlot;
@@ -36249,19 +36264,19 @@ unsafe extern "C" {
     pub fn R4SdkWebRuntimeMutationRegistration_set_attribute_old_value(p0: *mut R4SdkWebRuntimeMutationRegistration, p1: u8) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeMutationRegistration_get_character_data_old_value(p0: *const R4SdkWebRuntimeMutationRegistration) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeMutationRegistration_set_character_data_old_value(p0: *mut R4SdkWebRuntimeMutationRegistration, p1: u8) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeMutationRegistration_get_attribute_filter(p0: *const R4SdkWebRuntimeMutationRegistration, p1: *mut R4SdkWebNativeValue484) -> R4SdkWebSlot;
-    pub fn R4SdkWebRuntimeMutationRegistration_set_attribute_filter(p0: *mut R4SdkWebRuntimeMutationRegistration, p1: *const R4SdkWebNativeValue484) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeMutationRegistration_get_attribute_filter(p0: *const R4SdkWebRuntimeMutationRegistration, p1: *mut R4SdkWebNativeValue485) -> R4SdkWebSlot;
+    pub fn R4SdkWebRuntimeMutationRegistration_set_attribute_filter(p0: *mut R4SdkWebRuntimeMutationRegistration, p1: *const R4SdkWebNativeValue485) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeMutationRegistration_get_attribute_filter_count(p0: *const R4SdkWebRuntimeMutationRegistration) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeMutationRegistration_set_attribute_filter_count(p0: *mut R4SdkWebRuntimeMutationRegistration, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeMutationRegistration_get_attribute_filter_present(p0: *const R4SdkWebRuntimeMutationRegistration) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeMutationRegistration_set_attribute_filter_present(p0: *mut R4SdkWebRuntimeMutationRegistration, p1: u8) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeMutationRegistration_inspectNative(p0: *const R4SdkWebRuntimeMutationRegistration) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue484_create(p0: *mut R4SdkWebNativeValue484, p1: *const R4SdkWebNativeValue484) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue484_inspectNative(p0: *const R4SdkWebNativeValue484, p1: *mut R4SdkWebNativeValue484) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue485_create(p0: *mut R4SdkWebNativeValue485, p1: *const R4SdkWebNativeValue485) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue485_inspectNative(p0: *const R4SdkWebNativeValue485, p1: *mut R4SdkWebNativeValue485) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue486_create(p0: *mut R4SdkWebNativeValue486, p1: *const R4SdkWebNativeValue486) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue486_inspectNative(p0: *const R4SdkWebNativeValue486, p1: *mut R4SdkWebNativeValue486) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue487_create(p0: *mut R4SdkWebNativeValue487, p1: *const R4SdkWebNativeValue487) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue487_inspectNative(p0: *const R4SdkWebNativeValue487, p1: *mut R4SdkWebNativeValue487) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeTransientMutationRoot_create(p0: *mut R4SdkWebRuntimeTransientMutationRoot) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeTransientMutationRoot_from_fields(p0: *mut R4SdkWebRuntimeTransientMutationRoot, p1: u16, p2: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeTransientMutationRoot_get_root(p0: *const R4SdkWebRuntimeTransientMutationRoot) -> R4SdkWebSlot;
@@ -36269,10 +36284,10 @@ unsafe extern "C" {
     pub fn R4SdkWebRuntimeTransientMutationRoot_get_registration(p0: *const R4SdkWebRuntimeTransientMutationRoot) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeTransientMutationRoot_set_registration(p0: *mut R4SdkWebRuntimeTransientMutationRoot, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeTransientMutationRoot_inspectNative(p0: *const R4SdkWebRuntimeTransientMutationRoot) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue488_create(p0: *mut R4SdkWebNativeValue488, p1: *const R4SdkWebNativeValue488) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue488_inspectNative(p0: *const R4SdkWebNativeValue488, p1: *mut R4SdkWebNativeValue488) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue489_create(p0: *mut R4SdkWebNativeValue489, p1: *const R4SdkWebNativeValue489) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue489_inspectNative(p0: *const R4SdkWebNativeValue489, p1: *mut R4SdkWebNativeValue489) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue490_create(p0: *mut R4SdkWebNativeValue490, p1: *const R4SdkWebNativeValue490) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue490_inspectNative(p0: *const R4SdkWebNativeValue490, p1: *mut R4SdkWebNativeValue490) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeFrameNodeCache_create(p0: *mut R4SdkWebRuntimeFrameNodeCache) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeFrameNodeCache_from_fields(p0: *mut R4SdkWebRuntimeFrameNodeCache, p1: u16, p2: u16, p3: *const R4SdkWebJsValue) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeFrameNodeCache_get_iframe_node(p0: *const R4SdkWebRuntimeFrameNodeCache) -> R4SdkWebSlot;
@@ -36313,8 +36328,8 @@ unsafe extern "C" {
     pub fn R4SdkWebRuntimeTiming_inspectNative(p0: *const R4SdkWebRuntimeTiming) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeDocumentReadyState_create(p0: *mut R4SdkWebRuntimeDocumentReadyState, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeDocumentReadyState_inspectNative(p0: *const R4SdkWebRuntimeDocumentReadyState) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue493_create(p0: *mut R4SdkWebNativeValue493, p1: *const R4SdkWebNativeValue493) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue493_inspectNative(p0: *const R4SdkWebNativeValue493, p1: *mut R4SdkWebNativeValue493) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue494_create(p0: *mut R4SdkWebNativeValue494, p1: *const R4SdkWebNativeValue494) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue494_inspectNative(p0: *const R4SdkWebNativeValue494, p1: *mut R4SdkWebNativeValue494) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_BlockReason_create(p0: *mut R4SdkWebNative_web_security_BlockReason, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_BlockReason_inspectNative(p0: *const R4SdkWebNative_web_security_BlockReason) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeEnvironment_create(p0: *mut R4SdkWebRuntimeEnvironment) -> R4SdkWebSlot;
@@ -36341,11 +36356,11 @@ unsafe extern "C" {
     pub fn R4SdkWebRuntimeEnvironment_set_platform(p0: *mut R4SdkWebRuntimeEnvironment, p1: *const u8, p2: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeEnvironment_inspectNative(p0: *const R4SdkWebRuntimeEnvironment) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasManager_create(p0: *mut R4SdkWebCanvasManager) -> R4SdkWebSlot;
-    pub fn R4SdkWebCanvasManager_from_fields(p0: *mut R4SdkWebCanvasManager, p1: *const R4SdkWebCanvasAllocator, p2: *const R4SdkWebNativeValue498) -> R4SdkWebSlot;
+    pub fn R4SdkWebCanvasManager_from_fields(p0: *mut R4SdkWebCanvasManager, p1: *const R4SdkWebCanvasAllocator, p2: *const R4SdkWebNativeValue499) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasManager_get_allocator(p0: *const R4SdkWebCanvasManager, p1: *mut R4SdkWebCanvasAllocator) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasManager_set_allocator(p0: *mut R4SdkWebCanvasManager, p1: *const R4SdkWebCanvasAllocator) -> R4SdkWebSlot;
-    pub fn R4SdkWebCanvasManager_get_surfaces(p0: *const R4SdkWebCanvasManager, p1: *mut R4SdkWebNativeValue498) -> R4SdkWebSlot;
-    pub fn R4SdkWebCanvasManager_set_surfaces(p0: *mut R4SdkWebCanvasManager, p1: *const R4SdkWebNativeValue498) -> R4SdkWebSlot;
+    pub fn R4SdkWebCanvasManager_get_surfaces(p0: *const R4SdkWebCanvasManager, p1: *mut R4SdkWebNativeValue499) -> R4SdkWebSlot;
+    pub fn R4SdkWebCanvasManager_set_surfaces(p0: *mut R4SdkWebCanvasManager, p1: *const R4SdkWebNativeValue499) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasManager_inspectNative(p0: *const R4SdkWebCanvasManager) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasAllocator_create(p0: *mut R4SdkWebCanvasAllocator, p1: *mut core::ffi::c_void, p2: u64, p3: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasAllocator_from_fields(p0: *mut R4SdkWebCanvasAllocator, p1: *mut core::ffi::c_void, p2: u64, p3: u64) -> R4SdkWebSlot;
@@ -36356,10 +36371,10 @@ unsafe extern "C" {
     pub fn R4SdkWebCanvasAllocator_get_free(p0: *const R4SdkWebCanvasAllocator) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasAllocator_set_free(p0: *mut R4SdkWebCanvasAllocator, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasAllocator_inspectNative(p0: *const R4SdkWebCanvasAllocator) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue498_create(p0: *mut R4SdkWebNativeValue498, p1: *const R4SdkWebNativeValue498) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue498_inspectNative(p0: *const R4SdkWebNativeValue498, p1: *mut R4SdkWebNativeValue498) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue499_create(p0: *mut R4SdkWebNativeValue499, p1: *const R4SdkWebNativeValue499) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue499_inspectNative(p0: *const R4SdkWebNativeValue499, p1: *mut R4SdkWebNativeValue499) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasSurface_create(p0: *mut R4SdkWebCanvasSurface) -> R4SdkWebSlot;
-    pub fn R4SdkWebCanvasSurface_from_fields(p0: *mut R4SdkWebCanvasSurface, p1: u16, p2: u32, p3: u32, p4: R4SdkWebSlot, p5: u64, p6: u32, p7: u32, p8: *const f64, p9: *const R4SdkWebNativeValue500, p10: *const R4SdkWebNativeValue501, p11: u64, p12: *const R4SdkWebNativeValue503, p13: u64, p14: *const R4SdkWebNativeValue505, p15: u64) -> R4SdkWebSlot;
+    pub fn R4SdkWebCanvasSurface_from_fields(p0: *mut R4SdkWebCanvasSurface, p1: u16, p2: u32, p3: u32, p4: R4SdkWebSlot, p5: u64, p6: u32, p7: u32, p8: *const f64, p9: *const R4SdkWebNativeValue501, p10: *const R4SdkWebNativeValue502, p11: u64, p12: *const R4SdkWebNativeValue504, p13: u64, p14: *const R4SdkWebNativeValue506, p15: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasSurface_get_node(p0: *const R4SdkWebCanvasSurface) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasSurface_set_node(p0: *mut R4SdkWebCanvasSurface, p1: u16) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasSurface_get_width(p0: *const R4SdkWebCanvasSurface) -> R4SdkWebSlot;
@@ -36376,25 +36391,25 @@ unsafe extern "C" {
     pub fn R4SdkWebCanvasSurface_set_stroke_style(p0: *mut R4SdkWebCanvasSurface, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasSurface_get_line_width(p0: *const R4SdkWebCanvasSurface, p1: *mut f64) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasSurface_set_line_width(p0: *mut R4SdkWebCanvasSurface, p1: *const f64) -> R4SdkWebSlot;
-    pub fn R4SdkWebCanvasSurface_get_transform(p0: *const R4SdkWebCanvasSurface, p1: *mut R4SdkWebNativeValue500) -> R4SdkWebSlot;
-    pub fn R4SdkWebCanvasSurface_set_transform(p0: *mut R4SdkWebCanvasSurface, p1: *const R4SdkWebNativeValue500) -> R4SdkWebSlot;
-    pub fn R4SdkWebCanvasSurface_get_path(p0: *const R4SdkWebCanvasSurface, p1: *mut R4SdkWebNativeValue501) -> R4SdkWebSlot;
-    pub fn R4SdkWebCanvasSurface_set_path(p0: *mut R4SdkWebCanvasSurface, p1: *const R4SdkWebNativeValue501) -> R4SdkWebSlot;
+    pub fn R4SdkWebCanvasSurface_get_transform(p0: *const R4SdkWebCanvasSurface, p1: *mut R4SdkWebNativeValue501) -> R4SdkWebSlot;
+    pub fn R4SdkWebCanvasSurface_set_transform(p0: *mut R4SdkWebCanvasSurface, p1: *const R4SdkWebNativeValue501) -> R4SdkWebSlot;
+    pub fn R4SdkWebCanvasSurface_get_path(p0: *const R4SdkWebCanvasSurface, p1: *mut R4SdkWebNativeValue502) -> R4SdkWebSlot;
+    pub fn R4SdkWebCanvasSurface_set_path(p0: *mut R4SdkWebCanvasSurface, p1: *const R4SdkWebNativeValue502) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasSurface_get_path_count(p0: *const R4SdkWebCanvasSurface) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasSurface_set_path_count(p0: *mut R4SdkWebCanvasSurface, p1: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebCanvasSurface_get_text_ops(p0: *const R4SdkWebCanvasSurface, p1: *mut R4SdkWebNativeValue503) -> R4SdkWebSlot;
-    pub fn R4SdkWebCanvasSurface_set_text_ops(p0: *mut R4SdkWebCanvasSurface, p1: *const R4SdkWebNativeValue503) -> R4SdkWebSlot;
+    pub fn R4SdkWebCanvasSurface_get_text_ops(p0: *const R4SdkWebCanvasSurface, p1: *mut R4SdkWebNativeValue504) -> R4SdkWebSlot;
+    pub fn R4SdkWebCanvasSurface_set_text_ops(p0: *mut R4SdkWebCanvasSurface, p1: *const R4SdkWebNativeValue504) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasSurface_get_text_count(p0: *const R4SdkWebCanvasSurface) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasSurface_set_text_count(p0: *mut R4SdkWebCanvasSurface, p1: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebCanvasSurface_get_states(p0: *const R4SdkWebCanvasSurface, p1: *mut R4SdkWebNativeValue505) -> R4SdkWebSlot;
-    pub fn R4SdkWebCanvasSurface_set_states(p0: *mut R4SdkWebCanvasSurface, p1: *const R4SdkWebNativeValue505) -> R4SdkWebSlot;
+    pub fn R4SdkWebCanvasSurface_get_states(p0: *const R4SdkWebCanvasSurface, p1: *mut R4SdkWebNativeValue506) -> R4SdkWebSlot;
+    pub fn R4SdkWebCanvasSurface_set_states(p0: *mut R4SdkWebCanvasSurface, p1: *const R4SdkWebNativeValue506) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasSurface_get_state_count(p0: *const R4SdkWebCanvasSurface) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasSurface_set_state_count(p0: *mut R4SdkWebCanvasSurface, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasSurface_inspectNative(p0: *const R4SdkWebCanvasSurface) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue500_create(p0: *mut R4SdkWebNativeValue500, p1: *const R4SdkWebNativeValue500) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue500_inspectNative(p0: *const R4SdkWebNativeValue500, p1: *mut R4SdkWebNativeValue500) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue501_create(p0: *mut R4SdkWebNativeValue501, p1: *const R4SdkWebNativeValue501) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue501_inspectNative(p0: *const R4SdkWebNativeValue501, p1: *mut R4SdkWebNativeValue501) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue502_create(p0: *mut R4SdkWebNativeValue502, p1: *const R4SdkWebNativeValue502) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue502_inspectNative(p0: *const R4SdkWebNativeValue502, p1: *mut R4SdkWebNativeValue502) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasPoint_create(p0: *mut R4SdkWebCanvasPoint) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasPoint_from_fields(p0: *mut R4SdkWebCanvasPoint, p1: *const f64, p2: *const f64, p3: u8) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasPoint_get_x(p0: *const R4SdkWebCanvasPoint, p1: *mut f64) -> R4SdkWebSlot;
@@ -36404,10 +36419,10 @@ unsafe extern "C" {
     pub fn R4SdkWebCanvasPoint_get_move(p0: *const R4SdkWebCanvasPoint) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasPoint_set_move(p0: *mut R4SdkWebCanvasPoint, p1: u8) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasPoint_inspectNative(p0: *const R4SdkWebCanvasPoint) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue503_create(p0: *mut R4SdkWebNativeValue503, p1: *const R4SdkWebNativeValue503) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue503_inspectNative(p0: *const R4SdkWebNativeValue503, p1: *mut R4SdkWebNativeValue503) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue504_create(p0: *mut R4SdkWebNativeValue504, p1: *const R4SdkWebNativeValue504) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue504_inspectNative(p0: *const R4SdkWebNativeValue504, p1: *mut R4SdkWebNativeValue504) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasTextOp_create(p0: *mut R4SdkWebCanvasTextOp) -> R4SdkWebSlot;
-    pub fn R4SdkWebCanvasTextOp_from_fields(p0: *mut R4SdkWebCanvasTextOp, p1: i32, p2: i32, p3: u32, p4: u8, p5: *const R4SdkWebNativeValue361) -> R4SdkWebSlot;
+    pub fn R4SdkWebCanvasTextOp_from_fields(p0: *mut R4SdkWebCanvasTextOp, p1: i32, p2: i32, p3: u32, p4: u8, p5: *const R4SdkWebNativeValue362) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasTextOp_get_x(p0: *const R4SdkWebCanvasTextOp) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasTextOp_set_x(p0: *mut R4SdkWebCanvasTextOp, p1: i32) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasTextOp_get_y(p0: *const R4SdkWebCanvasTextOp) -> R4SdkWebSlot;
@@ -36416,24 +36431,24 @@ unsafe extern "C" {
     pub fn R4SdkWebCanvasTextOp_set_color(p0: *mut R4SdkWebCanvasTextOp, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasTextOp_get_length(p0: *const R4SdkWebCanvasTextOp) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasTextOp_set_length(p0: *mut R4SdkWebCanvasTextOp, p1: u8) -> R4SdkWebSlot;
-    pub fn R4SdkWebCanvasTextOp_get_bytes(p0: *const R4SdkWebCanvasTextOp, p1: *mut R4SdkWebNativeValue361) -> R4SdkWebSlot;
-    pub fn R4SdkWebCanvasTextOp_set_bytes(p0: *mut R4SdkWebCanvasTextOp, p1: *const R4SdkWebNativeValue361) -> R4SdkWebSlot;
+    pub fn R4SdkWebCanvasTextOp_get_bytes(p0: *const R4SdkWebCanvasTextOp, p1: *mut R4SdkWebNativeValue362) -> R4SdkWebSlot;
+    pub fn R4SdkWebCanvasTextOp_set_bytes(p0: *mut R4SdkWebCanvasTextOp, p1: *const R4SdkWebNativeValue362) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasTextOp_inspectNative(p0: *const R4SdkWebCanvasTextOp) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue505_create(p0: *mut R4SdkWebNativeValue505, p1: *const R4SdkWebNativeValue505) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue505_inspectNative(p0: *const R4SdkWebNativeValue505, p1: *mut R4SdkWebNativeValue505) -> R4SdkWebSlot;
-    pub fn R4SdkWebCanvasDrawState_create(p0: *mut R4SdkWebCanvasDrawState, p1: u32, p2: u32, p3: *const f64, p4: *const R4SdkWebNativeValue500) -> R4SdkWebSlot;
-    pub fn R4SdkWebCanvasDrawState_from_fields(p0: *mut R4SdkWebCanvasDrawState, p1: u32, p2: u32, p3: *const f64, p4: *const R4SdkWebNativeValue500) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue506_create(p0: *mut R4SdkWebNativeValue506, p1: *const R4SdkWebNativeValue506) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue506_inspectNative(p0: *const R4SdkWebNativeValue506, p1: *mut R4SdkWebNativeValue506) -> R4SdkWebSlot;
+    pub fn R4SdkWebCanvasDrawState_create(p0: *mut R4SdkWebCanvasDrawState, p1: u32, p2: u32, p3: *const f64, p4: *const R4SdkWebNativeValue501) -> R4SdkWebSlot;
+    pub fn R4SdkWebCanvasDrawState_from_fields(p0: *mut R4SdkWebCanvasDrawState, p1: u32, p2: u32, p3: *const f64, p4: *const R4SdkWebNativeValue501) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasDrawState_get_fill_style(p0: *const R4SdkWebCanvasDrawState) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasDrawState_set_fill_style(p0: *mut R4SdkWebCanvasDrawState, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasDrawState_get_stroke_style(p0: *const R4SdkWebCanvasDrawState) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasDrawState_set_stroke_style(p0: *mut R4SdkWebCanvasDrawState, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasDrawState_get_line_width(p0: *const R4SdkWebCanvasDrawState, p1: *mut f64) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasDrawState_set_line_width(p0: *mut R4SdkWebCanvasDrawState, p1: *const f64) -> R4SdkWebSlot;
-    pub fn R4SdkWebCanvasDrawState_get_transform(p0: *const R4SdkWebCanvasDrawState, p1: *mut R4SdkWebNativeValue500) -> R4SdkWebSlot;
-    pub fn R4SdkWebCanvasDrawState_set_transform(p0: *mut R4SdkWebCanvasDrawState, p1: *const R4SdkWebNativeValue500) -> R4SdkWebSlot;
+    pub fn R4SdkWebCanvasDrawState_get_transform(p0: *const R4SdkWebCanvasDrawState, p1: *mut R4SdkWebNativeValue501) -> R4SdkWebSlot;
+    pub fn R4SdkWebCanvasDrawState_set_transform(p0: *mut R4SdkWebCanvasDrawState, p1: *const R4SdkWebNativeValue501) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasDrawState_inspectNative(p0: *const R4SdkWebCanvasDrawState) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue507_create(p0: *mut R4SdkWebNativeValue507, p1: *const R4SdkWebNativeValue507) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue507_inspectNative(p0: *const R4SdkWebNativeValue507, p1: *mut R4SdkWebNativeValue507) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue508_create(p0: *mut R4SdkWebNativeValue508, p1: *const R4SdkWebNativeValue508) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue508_inspectNative(p0: *const R4SdkWebNativeValue508, p1: *mut R4SdkWebNativeValue508) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeScriptDiagnostics_create(p0: *mut R4SdkWebRuntimeScriptDiagnostics) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeScriptDiagnostics_from_fields(p0: *mut R4SdkWebRuntimeScriptDiagnostics, p1: u64, p2: u32, p3: *const u8, p4: u64, p5: *const u8, p6: u64, p7: u32, p8: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebRuntimeScriptDiagnostics_get_error_count(p0: *const R4SdkWebRuntimeScriptDiagnostics) -> R4SdkWebSlot;
@@ -36497,8 +36512,8 @@ unsafe extern "C" {
     pub fn R4SdkWebCanvasSurfaceView_get_text_ops(p0: *const R4SdkWebCanvasSurfaceView) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasSurfaceView_set_text_ops(p0: *mut R4SdkWebCanvasSurfaceView, p1: *const R4SdkWebCanvasTextOp, p2: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebCanvasSurfaceView_inspectNative(p0: *const R4SdkWebCanvasSurfaceView) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue515_create(p0: *mut R4SdkWebNativeValue515, p1: *const R4SdkWebCanvasTextOp, p2: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue515_inspectNative(p0: *const R4SdkWebNativeValue515) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue516_create(p0: *mut R4SdkWebNativeValue516, p1: *const R4SdkWebCanvasTextOp, p2: u64) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue516_inspectNative(p0: *const R4SdkWebNativeValue516) -> R4SdkWebSlot;
     pub fn R4SdkWebCallbackKind_create(p0: *mut R4SdkWebCallbackKind, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebCallbackKind_inspectNative(p0: *const R4SdkWebCallbackKind) -> R4SdkWebSlot;
     pub fn R4SdkWebCallbackTable_create(p0: *mut R4SdkWebCallbackTable) -> R4SdkWebSlot;
@@ -36510,13 +36525,13 @@ unsafe extern "C" {
     pub fn R4SdkWebCallbackTable_get_invoke(p0: *const R4SdkWebCallbackTable) -> R4SdkWebSlot;
     pub fn R4SdkWebCallbackTable_set_invoke(p0: *mut R4SdkWebCallbackTable, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebCallbackTable_inspectNative(p0: *const R4SdkWebCallbackTable) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue518_create(p0: *mut R4SdkWebNativeValue518, p1: R4SdkWebSlot) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue518_inspectNative(p0: *const R4SdkWebNativeValue518) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue519_create(p0: *mut R4SdkWebNativeValue519, p1: *const R4SdkWebCallbackTable) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue519_create(p0: *mut R4SdkWebNativeValue519, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue519_inspectNative(p0: *const R4SdkWebNativeValue519) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue520_inspectNative(p0: *const R4SdkWebNativeValue520, p1: *mut R4SdkWebRunResolver) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue520_create(p0: *mut R4SdkWebNativeValue520, p1: *const R4SdkWebCallbackTable) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue520_inspectNative(p0: *const R4SdkWebNativeValue520) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue521_inspectNative(p0: *const R4SdkWebNativeValue521, p1: *mut R4SdkWebRunResolver) -> R4SdkWebSlot;
     pub fn R4SdkWebRunResolver_create(p0: *mut R4SdkWebRunResolver, p1: u64, p2: *const u8, p3: u64, p4: i32, p5: u16, p6: u8) -> R4SdkWebSlot;
-    pub fn R4SdkWebRunResolver_from_fields(p0: *mut R4SdkWebRunResolver, p1: R4SdkWebSlot, p2: u64, p3: *const u8, p4: u64, p5: i32, p6: u16, p7: u8, p8: *const R4SdkWebNativeValue522, p9: u64, p10: u64) -> R4SdkWebSlot;
+    pub fn R4SdkWebRunResolver_from_fields(p0: *mut R4SdkWebRunResolver, p1: R4SdkWebSlot, p2: u64, p3: *const u8, p4: u64, p5: i32, p6: u16, p7: u8, p8: *const R4SdkWebNativeValue523, p9: u64, p10: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebRunResolver_get_context(p0: *const R4SdkWebRunResolver) -> R4SdkWebSlot;
     pub fn R4SdkWebRunResolver_set_context(p0: *mut R4SdkWebRunResolver, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebRunResolver_get_callback(p0: *const R4SdkWebRunResolver) -> R4SdkWebSlot;
@@ -36529,15 +36544,15 @@ unsafe extern "C" {
     pub fn R4SdkWebRunResolver_set_weight(p0: *mut R4SdkWebRunResolver, p1: u16) -> R4SdkWebSlot;
     pub fn R4SdkWebRunResolver_get_italic(p0: *const R4SdkWebRunResolver) -> R4SdkWebSlot;
     pub fn R4SdkWebRunResolver_set_italic(p0: *mut R4SdkWebRunResolver, p1: u8) -> R4SdkWebSlot;
-    pub fn R4SdkWebRunResolver_get_entries(p0: *const R4SdkWebRunResolver, p1: *mut R4SdkWebNativeValue522) -> R4SdkWebSlot;
-    pub fn R4SdkWebRunResolver_set_entries(p0: *mut R4SdkWebRunResolver, p1: *const R4SdkWebNativeValue522) -> R4SdkWebSlot;
+    pub fn R4SdkWebRunResolver_get_entries(p0: *const R4SdkWebRunResolver, p1: *mut R4SdkWebNativeValue523) -> R4SdkWebSlot;
+    pub fn R4SdkWebRunResolver_set_entries(p0: *mut R4SdkWebRunResolver, p1: *const R4SdkWebNativeValue523) -> R4SdkWebSlot;
     pub fn R4SdkWebRunResolver_get_calls(p0: *const R4SdkWebRunResolver) -> R4SdkWebSlot;
     pub fn R4SdkWebRunResolver_set_calls(p0: *mut R4SdkWebRunResolver, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebRunResolver_get_hits(p0: *const R4SdkWebRunResolver) -> R4SdkWebSlot;
     pub fn R4SdkWebRunResolver_set_hits(p0: *mut R4SdkWebRunResolver, p1: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebRunResolver_inspectNative(p0: *const R4SdkWebRunResolver) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue522_create(p0: *mut R4SdkWebNativeValue522, p1: *const R4SdkWebNativeValue522) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue522_inspectNative(p0: *const R4SdkWebNativeValue522, p1: *mut R4SdkWebNativeValue522) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue523_create(p0: *mut R4SdkWebNativeValue523, p1: *const R4SdkWebNativeValue523) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue523_inspectNative(p0: *const R4SdkWebNativeValue523, p1: *mut R4SdkWebNativeValue523) -> R4SdkWebSlot;
     pub fn R4SdkWebFontRunResolver_web_layout_FontFace__Entry_create(p0: *mut R4SdkWebFontRunResolver_web_layout_FontFace__Entry) -> R4SdkWebSlot;
     pub fn R4SdkWebFontRunResolver_web_layout_FontFace__Entry_from_fields(p0: *mut R4SdkWebFontRunResolver_web_layout_FontFace__Entry, p1: u8, p2: u32, p3: *const R4SdkWebLayoutFontFace) -> R4SdkWebSlot;
     pub fn R4SdkWebFontRunResolver_web_layout_FontFace__Entry_get_valid(p0: *const R4SdkWebFontRunResolver_web_layout_FontFace__Entry) -> R4SdkWebSlot;
@@ -36547,79 +36562,79 @@ unsafe extern "C" {
     pub fn R4SdkWebFontRunResolver_web_layout_FontFace__Entry_get_face(p0: *const R4SdkWebFontRunResolver_web_layout_FontFace__Entry, p1: *mut R4SdkWebLayoutFontFace) -> R4SdkWebSlot;
     pub fn R4SdkWebFontRunResolver_web_layout_FontFace__Entry_set_face(p0: *mut R4SdkWebFontRunResolver_web_layout_FontFace__Entry, p1: *const R4SdkWebLayoutFontFace) -> R4SdkWebSlot;
     pub fn R4SdkWebFontRunResolver_web_layout_FontFace__Entry_inspectNative(p0: *const R4SdkWebFontRunResolver_web_layout_FontFace__Entry) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue524_inspectNative(p0: *const R4SdkWebNativeValue524, p1: *mut R4SdkWebFontCatalogReader) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue525_inspectNative(p0: *const R4SdkWebNativeValue525, p1: *mut R4SdkWebJsProgramAllocator) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue526_inspectNative(p0: *const R4SdkWebNativeValue526, p1: *mut R4SdkWebCanvasAllocator) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue525_inspectNative(p0: *const R4SdkWebNativeValue525, p1: *mut R4SdkWebFontCatalogReader) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue526_inspectNative(p0: *const R4SdkWebNativeValue526, p1: *mut R4SdkWebJsProgramAllocator) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue527_inspectNative(p0: *const R4SdkWebNativeValue527, p1: *mut R4SdkWebCanvasAllocator) -> R4SdkWebSlot;
     pub fn R4SdkWebMemory_create(p0: *mut R4SdkWebMemory, p1: *const R4SdkDataAllocator) -> R4SdkWebSlot;
     pub fn R4SdkWebMemory_from_fields(p0: *mut R4SdkWebMemory, p1: *const R4SdkDataAllocator) -> R4SdkWebSlot;
     pub fn R4SdkWebMemory_get_allocator(p0: *const R4SdkWebMemory, p1: *mut R4SdkDataAllocator) -> R4SdkWebSlot;
     pub fn R4SdkWebMemory_set_allocator(p0: *mut R4SdkWebMemory, p1: *const R4SdkDataAllocator) -> R4SdkWebSlot;
     pub fn R4SdkWebMemory_inspectNative(p0: *const R4SdkWebMemory) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue529_create(p0: *mut R4SdkWebNativeValue529, p1: *mut R4SdkWebMemory) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue529_inspectNative(p0: *const R4SdkWebNativeValue529) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue530_create(p0: *mut R4SdkWebNativeValue530, p1: *mut R4SdkWebRunResolver) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue530_create(p0: *mut R4SdkWebNativeValue530, p1: *mut R4SdkWebMemory) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue530_inspectNative(p0: *const R4SdkWebNativeValue530) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue531_create(p0: *mut R4SdkWebNativeValue531, p1: *mut R4GuiFontInfo) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue531_create(p0: *mut R4SdkWebNativeValue531, p1: *mut R4SdkWebRunResolver) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue531_inspectNative(p0: *const R4SdkWebNativeValue531) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue532_create(p0: *mut R4SdkWebNativeValue532, p1: *const R4SdkWebJsValue, p2: u64) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue532_create(p0: *mut R4SdkWebNativeValue532, p1: *mut R4GuiFontInfo) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue532_inspectNative(p0: *const R4SdkWebNativeValue532) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue533_inspectNative(p0: *const R4SdkWebNativeValue533, p1: *mut R4SdkWebJsValue) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue533_create(p0: *mut R4SdkWebNativeValue533, p1: *const R4SdkWebJsValue, p2: u64) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue533_inspectNative(p0: *const R4SdkWebNativeValue533) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue534_inspectNative(p0: *const R4SdkWebNativeValue534, p1: *mut R4SdkWebJsValue) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue535_create(p0: *mut R4SdkWebNativeValue535, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue535_inspectNative(p0: *const R4SdkWebNativeValue535, p1: *mut R4SdkWebJsValue) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue536_inspectNative(p0: *const R4SdkWebNativeValue536) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue537_create(p0: *mut R4SdkWebNativeValue537, p1: *mut R4SdkWebNavigationUrl) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue536_create(p0: *mut R4SdkWebNativeValue536, p1: R4SdkWebSlot) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue536_inspectNative(p0: *const R4SdkWebNativeValue536, p1: *mut R4SdkWebJsValue) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue537_inspectNative(p0: *const R4SdkWebNativeValue537) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue538_create(p0: *mut R4SdkWebNativeValue538, p1: R4SdkWebSlot) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue538_inspectNative(p0: *const R4SdkWebNativeValue538, p1: *mut R4SdkWebRuntimeFrameInfo) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue539_inspectNative(p0: *const R4SdkWebNativeValue539, p1: *mut R4SdkWebHtmlParseStats) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue540_create(p0: *mut R4SdkWebNativeValue540, p1: R4SdkWebSlot) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue540_inspectNative(p0: *const R4SdkWebNativeValue540) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue538_create(p0: *mut R4SdkWebNativeValue538, p1: *mut R4SdkWebNavigationUrl) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue538_inspectNative(p0: *const R4SdkWebNativeValue538) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue539_create(p0: *mut R4SdkWebNativeValue539, p1: R4SdkWebSlot) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue539_inspectNative(p0: *const R4SdkWebNativeValue539, p1: *mut R4SdkWebRuntimeFrameInfo) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue540_inspectNative(p0: *const R4SdkWebNativeValue540, p1: *mut R4SdkWebHtmlParseStats) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue541_create(p0: *mut R4SdkWebNativeValue541, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue541_inspectNative(p0: *const R4SdkWebNativeValue541) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue542_inspectNative(p0: *const R4SdkWebNativeValue542) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue543_inspectNative(p0: *const R4SdkWebNativeValue543) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue544_inspectNative(p0: *const R4SdkWebNativeValue544) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue545_create(p0: *mut R4SdkWebNativeValue545, p1: *mut R4SdkWebHtmlPlainView) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue545_inspectNative(p0: *const R4SdkWebNativeValue545) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue546_create(p0: *mut R4SdkWebNativeValue546, p1: *const R4SdkWebHtmlPlainView) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue546_create(p0: *mut R4SdkWebNativeValue546, p1: *mut R4SdkWebHtmlPlainView) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue546_inspectNative(p0: *const R4SdkWebNativeValue546) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue547_create(p0: *mut R4SdkWebNativeValue547, p1: R4SdkWebSlot) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue547_inspectNative(p0: *const R4SdkWebNativeValue547, p1: *mut R4SdkWebHtmlViewLine) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue548_create(p0: *mut R4SdkWebNativeValue548, p1: *mut R4SdkWebCssActiveFontFaceRuleIterator) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue548_inspectNative(p0: *const R4SdkWebNativeValue548) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue549_create(p0: *mut R4SdkWebNativeValue549, p1: R4SdkWebSlot) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue549_inspectNative(p0: *const R4SdkWebNativeValue549, p1: *mut R4SdkWebCssActiveFontFaceRule) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue550_create(p0: *mut R4SdkWebNativeValue550, p1: *mut R4SdkWebCssStylesheet) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue550_inspectNative(p0: *const R4SdkWebNativeValue550) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue551_inspectNative(p0: *const R4SdkWebNativeValue551, p1: *mut R4SdkWebCssParseStats) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue552_inspectNative(p0: *const R4SdkWebNativeValue552) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue553_create(p0: *mut R4SdkWebNativeValue553, p1: R4SdkWebSlot) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue547_create(p0: *mut R4SdkWebNativeValue547, p1: *const R4SdkWebHtmlPlainView) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue547_inspectNative(p0: *const R4SdkWebNativeValue547) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue548_create(p0: *mut R4SdkWebNativeValue548, p1: R4SdkWebSlot) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue548_inspectNative(p0: *const R4SdkWebNativeValue548, p1: *mut R4SdkWebHtmlViewLine) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue549_create(p0: *mut R4SdkWebNativeValue549, p1: *mut R4SdkWebCssActiveFontFaceRuleIterator) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue549_inspectNative(p0: *const R4SdkWebNativeValue549) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue550_create(p0: *mut R4SdkWebNativeValue550, p1: R4SdkWebSlot) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue550_inspectNative(p0: *const R4SdkWebNativeValue550, p1: *mut R4SdkWebCssActiveFontFaceRule) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue551_create(p0: *mut R4SdkWebNativeValue551, p1: *mut R4SdkWebCssStylesheet) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue551_inspectNative(p0: *const R4SdkWebNativeValue551) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue552_inspectNative(p0: *const R4SdkWebNativeValue552, p1: *mut R4SdkWebCssParseStats) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue553_inspectNative(p0: *const R4SdkWebNativeValue553) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue554_create(p0: *mut R4SdkWebNativeValue554, p1: *const R4SdkWebCssComputedStyle) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue554_create(p0: *mut R4SdkWebNativeValue554, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue554_inspectNative(p0: *const R4SdkWebNativeValue554) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue555_create(p0: *mut R4SdkWebNativeValue555, p1: R4SdkWebSlot) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue555_create(p0: *mut R4SdkWebNativeValue555, p1: *const R4SdkWebCssComputedStyle) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue555_inspectNative(p0: *const R4SdkWebNativeValue555) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue556_create(p0: *mut R4SdkWebNativeValue556, p1: *const R4SdkWebCssSiblingIndex) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue556_create(p0: *mut R4SdkWebNativeValue556, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue556_inspectNative(p0: *const R4SdkWebNativeValue556) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue557_create(p0: *mut R4SdkWebNativeValue557, p1: *const R4SdkWebCssBoxShadow) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue557_create(p0: *mut R4SdkWebNativeValue557, p1: *const R4SdkWebCssSiblingIndex) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue557_inspectNative(p0: *const R4SdkWebNativeValue557) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue558_create(p0: *mut R4SdkWebNativeValue558, p1: *const R4SdkWebCssBoxShadowLayer, p2: u64) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue558_create(p0: *mut R4SdkWebNativeValue558, p1: *const R4SdkWebCssBoxShadow) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue558_inspectNative(p0: *const R4SdkWebNativeValue558) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue559_create(p0: *mut R4SdkWebNativeValue559, p1: *mut R4SdkWebCssSiblingIndex) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue559_create(p0: *mut R4SdkWebNativeValue559, p1: *const R4SdkWebCssBoxShadowLayer, p2: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue559_inspectNative(p0: *const R4SdkWebNativeValue559) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue560_create(p0: *mut R4SdkWebNativeValue560, p1: *mut R4SdkWebLayoutLayout) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue560_create(p0: *mut R4SdkWebNativeValue560, p1: *mut R4SdkWebCssSiblingIndex) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue560_inspectNative(p0: *const R4SdkWebNativeValue560) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue561_inspectNative(p0: *const R4SdkWebNativeValue561, p1: *mut R4SdkWebLayoutLayoutStats) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue562_create(p0: *mut R4SdkWebNativeValue562, p1: *const R4SdkWebLayoutLayout) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue562_inspectNative(p0: *const R4SdkWebNativeValue562) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue563_create(p0: *mut R4SdkWebNativeValue563, p1: R4SdkWebSlot) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue563_inspectNative(p0: *const R4SdkWebNativeValue563, p1: *mut R4SdkWebFontFace) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue564_create(p0: *mut R4SdkWebNativeValue564, p1: *mut R4SdkWebFontSupportCache) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue564_inspectNative(p0: *const R4SdkWebNativeValue564) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue565_create(p0: *mut R4SdkWebNativeValue565, p1: *mut R4GuiFontInfo, p2: u64) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue561_create(p0: *mut R4SdkWebNativeValue561, p1: *mut R4SdkWebLayoutLayout) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue561_inspectNative(p0: *const R4SdkWebNativeValue561) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue562_inspectNative(p0: *const R4SdkWebNativeValue562, p1: *mut R4SdkWebLayoutLayoutStats) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue563_create(p0: *mut R4SdkWebNativeValue563, p1: *const R4SdkWebLayoutLayout) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue563_inspectNative(p0: *const R4SdkWebNativeValue563) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue564_create(p0: *mut R4SdkWebNativeValue564, p1: R4SdkWebSlot) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue564_inspectNative(p0: *const R4SdkWebNativeValue564, p1: *mut R4SdkWebFontFace) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue565_create(p0: *mut R4SdkWebNativeValue565, p1: *mut R4SdkWebFontSupportCache) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue565_inspectNative(p0: *const R4SdkWebNativeValue565) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue566_create(p0: *mut R4SdkWebNativeValue566, p1: R4SdkWebSlot) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue566_inspectNative(p0: *const R4SdkWebNativeValue566, p1: *mut R4SdkWebFontCatalogReader_Snapshot) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue566_create(p0: *mut R4SdkWebNativeValue566, p1: *mut R4GuiFontInfo, p2: u64) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue566_inspectNative(p0: *const R4SdkWebNativeValue566) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue567_create(p0: *mut R4SdkWebNativeValue567, p1: R4SdkWebSlot) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue567_inspectNative(p0: *const R4SdkWebNativeValue567, p1: *mut R4SdkWebFontCatalogReader_Snapshot) -> R4SdkWebSlot;
     pub fn R4SdkWebFontCatalogReader_Snapshot_create(p0: *mut R4SdkWebFontCatalogReader_Snapshot, p1: u64, p2: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebFontCatalogReader_Snapshot_from_fields(p0: *mut R4SdkWebFontCatalogReader_Snapshot, p1: u64, p2: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebFontCatalogReader_Snapshot_get_count(p0: *const R4SdkWebFontCatalogReader_Snapshot) -> R4SdkWebSlot;
@@ -36627,169 +36642,169 @@ unsafe extern "C" {
     pub fn R4SdkWebFontCatalogReader_Snapshot_get_revision(p0: *const R4SdkWebFontCatalogReader_Snapshot) -> R4SdkWebSlot;
     pub fn R4SdkWebFontCatalogReader_Snapshot_set_revision(p0: *mut R4SdkWebFontCatalogReader_Snapshot, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebFontCatalogReader_Snapshot_inspectNative(p0: *const R4SdkWebFontCatalogReader_Snapshot) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue568_create(p0: *mut R4SdkWebNativeValue568, p1: *mut R4SdkWebFontsNeededRunIterator) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue568_inspectNative(p0: *const R4SdkWebNativeValue568) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue569_create(p0: *mut R4SdkWebNativeValue569, p1: R4SdkWebSlot) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue569_inspectNative(p0: *const R4SdkWebNativeValue569, p1: *mut R4SdkWebFontsNeededRun) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue570_create(p0: *mut R4SdkWebNativeValue570, p1: *mut R4SdkWebFontsRegistry) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue570_inspectNative(p0: *const R4SdkWebNativeValue570) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue571_inspectNative(p0: *const R4SdkWebNativeValue571, p1: *mut R4SdkWebFontsParseStats) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue572_create(p0: *mut R4SdkWebNativeValue572, p1: R4SdkWebSlot) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue572_inspectNative(p0: *const R4SdkWebNativeValue572, p1: *mut R4SdkWebFontsFontSource) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue573_inspectNative(p0: *const R4SdkWebNativeValue573, p1: *mut R4SdkWebFontsNeededRunIterator) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue574_create(p0: *mut R4SdkWebNativeValue574, p1: *mut u16, p2: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue574_inspectNative(p0: *const R4SdkWebNativeValue574) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue569_create(p0: *mut R4SdkWebNativeValue569, p1: *mut R4SdkWebFontsNeededRunIterator) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue569_inspectNative(p0: *const R4SdkWebNativeValue569) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue570_create(p0: *mut R4SdkWebNativeValue570, p1: R4SdkWebSlot) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue570_inspectNative(p0: *const R4SdkWebNativeValue570, p1: *mut R4SdkWebFontsNeededRun) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue571_create(p0: *mut R4SdkWebNativeValue571, p1: *mut R4SdkWebFontsRegistry) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue571_inspectNative(p0: *const R4SdkWebNativeValue571) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue572_inspectNative(p0: *const R4SdkWebNativeValue572, p1: *mut R4SdkWebFontsParseStats) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue573_create(p0: *mut R4SdkWebNativeValue573, p1: R4SdkWebSlot) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue573_inspectNative(p0: *const R4SdkWebNativeValue573, p1: *mut R4SdkWebFontsFontSource) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue574_inspectNative(p0: *const R4SdkWebNativeValue574, p1: *mut R4SdkWebFontsNeededRunIterator) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue575_create(p0: *mut R4SdkWebNativeValue575, p1: *mut u16, p2: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue575_inspectNative(p0: *const R4SdkWebNativeValue575) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue576_create(p0: *mut R4SdkWebNativeValue576, p1: R4SdkWebSlot) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue576_inspectNative(p0: *const R4SdkWebNativeValue576, p1: *mut R4SdkWebFontsFaceMatch) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue577_create(p0: *mut R4SdkWebNativeValue577, p1: *mut R4SdkWebFontCacheFixed_767_) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue577_inspectNative(p0: *const R4SdkWebNativeValue577) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue578_create(p0: *mut R4SdkWebNativeValue578, p1: *const R4SdkWebFontCacheFixed_767_) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue576_inspectNative(p0: *const R4SdkWebNativeValue576) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue577_create(p0: *mut R4SdkWebNativeValue577, p1: R4SdkWebSlot) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue577_inspectNative(p0: *const R4SdkWebNativeValue577, p1: *mut R4SdkWebFontsFaceMatch) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue578_create(p0: *mut R4SdkWebNativeValue578, p1: *mut R4SdkWebFontCacheFixed_767_) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue578_inspectNative(p0: *const R4SdkWebNativeValue578) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue579_create(p0: *mut R4SdkWebNativeValue579, p1: *mut R4SdkWebFontCacheFixed_95_) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue579_create(p0: *mut R4SdkWebNativeValue579, p1: *const R4SdkWebFontCacheFixed_767_) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue579_inspectNative(p0: *const R4SdkWebNativeValue579) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue580_create(p0: *mut R4SdkWebNativeValue580, p1: *const R4SdkWebFontCacheFixed_95_) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue580_create(p0: *mut R4SdkWebNativeValue580, p1: *mut R4SdkWebFontCacheFixed_95_) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue580_inspectNative(p0: *const R4SdkWebNativeValue580) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue581_create(p0: *mut R4SdkWebNativeValue581, p1: *mut R4SdkWebFontCacheFixed_239_) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue581_create(p0: *mut R4SdkWebNativeValue581, p1: *const R4SdkWebFontCacheFixed_95_) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue581_inspectNative(p0: *const R4SdkWebNativeValue581) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue582_create(p0: *mut R4SdkWebNativeValue582, p1: *const R4SdkWebFontCacheFixed_239_) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue582_create(p0: *mut R4SdkWebNativeValue582, p1: *mut R4SdkWebFontCacheFixed_239_) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue582_inspectNative(p0: *const R4SdkWebNativeValue582) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue583_create(p0: *mut R4SdkWebNativeValue583, p1: *const R4SdkWebFontCacheMetadata) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue583_create(p0: *mut R4SdkWebNativeValue583, p1: *const R4SdkWebFontCacheFixed_239_) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue583_inspectNative(p0: *const R4SdkWebNativeValue583) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue584_create(p0: *mut R4SdkWebNativeValue584, p1: *const R4SdkWebFontCacheMetadata) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue584_inspectNative(p0: *const R4SdkWebNativeValue584) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue585_create(p0: *mut R4SdkWebNativeValue585, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue585_inspectNative(p0: *const R4SdkWebNativeValue585) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue586_create(p0: *mut R4SdkWebNativeValue586, p1: R4SdkWebSlot) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue586_inspectNative(p0: *const R4SdkWebNativeValue586, p1: *mut R4SdkWebFontCacheMetadata) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue587_create(p0: *mut R4SdkWebNativeValue587, p1: *mut R4SdkWebFontActivationCoordinator) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue587_inspectNative(p0: *const R4SdkWebNativeValue587) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue588_create(p0: *mut R4SdkWebNativeValue588, p1: *const R4SdkWebFontActivationDemand, p2: u64) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue586_inspectNative(p0: *const R4SdkWebNativeValue586) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue587_create(p0: *mut R4SdkWebNativeValue587, p1: R4SdkWebSlot) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue587_inspectNative(p0: *const R4SdkWebNativeValue587, p1: *mut R4SdkWebFontCacheMetadata) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue588_create(p0: *mut R4SdkWebNativeValue588, p1: *mut R4SdkWebFontActivationCoordinator) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue588_inspectNative(p0: *const R4SdkWebNativeValue588) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue589_create(p0: *mut R4SdkWebNativeValue589, p1: *const R4SdkWebFontActivationDemand, p2: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue589_inspectNative(p0: *const R4SdkWebNativeValue589) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue590_create(p0: *mut R4SdkWebNativeValue590, p1: *const R4SdkWebFontActivationCoordinator) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue590_inspectNative(p0: *const R4SdkWebNativeValue590) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue591_create(p0: *mut R4SdkWebNativeValue591, p1: R4SdkWebSlot) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue591_create(p0: *mut R4SdkWebNativeValue591, p1: *const R4SdkWebFontActivationCoordinator) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue591_inspectNative(p0: *const R4SdkWebNativeValue591) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue592_create(p0: *mut R4SdkWebNativeValue592, p1: *const R4SdkWebFormsControl) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue592_create(p0: *mut R4SdkWebNativeValue592, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue592_inspectNative(p0: *const R4SdkWebNativeValue592) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue593_create(p0: *mut R4SdkWebNativeValue593, p1: *mut R4SdkWebFormsControl) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue593_create(p0: *mut R4SdkWebNativeValue593, p1: *const R4SdkWebFormsControl) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue593_inspectNative(p0: *const R4SdkWebNativeValue593) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue594_create(p0: *mut R4SdkWebNativeValue594, p1: *mut R4SdkWebFormsControl) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue594_inspectNative(p0: *const R4SdkWebNativeValue594) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue595_create(p0: *mut R4SdkWebNativeValue595, p1: *mut R4SdkWebFormsInteraction) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue595_inspectNative(p0: *const R4SdkWebNativeValue595) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue596_create(p0: *mut R4SdkWebNativeValue596, p1: R4SdkWebSlot) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue596_create(p0: *mut R4SdkWebNativeValue596, p1: *mut R4SdkWebFormsInteraction) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue596_inspectNative(p0: *const R4SdkWebNativeValue596) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue597_create(p0: *mut R4SdkWebNativeValue597, p1: *const R4SdkWebFormsInteraction) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue597_create(p0: *mut R4SdkWebNativeValue597, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue597_inspectNative(p0: *const R4SdkWebNativeValue597) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue598_create(p0: *mut R4SdkWebNativeValue598, p1: R4SdkWebSlot) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue598_create(p0: *mut R4SdkWebNativeValue598, p1: *const R4SdkWebFormsInteraction) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue598_inspectNative(p0: *const R4SdkWebNativeValue598) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue599_create(p0: *mut R4SdkWebNativeValue599, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue599_inspectNative(p0: *const R4SdkWebNativeValue599) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue600_create(p0: *mut R4SdkWebNativeValue600, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue600_inspectNative(p0: *const R4SdkWebNativeValue600) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue601_inspectNative(p0: *const R4SdkWebNativeValue601, p1: *mut R4SdkWebFormsSubmission) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue602_create(p0: *mut R4SdkWebNativeValue602, p1: *const u8) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue602_inspectNative(p0: *const R4SdkWebNativeValue602) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue603_create(p0: *mut R4SdkWebNativeValue603, p1: *const R4SdkWebNavigationHistory) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue601_create(p0: *mut R4SdkWebNativeValue601, p1: u32) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue601_inspectNative(p0: *const R4SdkWebNativeValue601) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue602_inspectNative(p0: *const R4SdkWebNativeValue602, p1: *mut R4SdkWebFormsSubmission) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue603_create(p0: *mut R4SdkWebNativeValue603, p1: *const u8) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue603_inspectNative(p0: *const R4SdkWebNativeValue603) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue604_create(p0: *mut R4SdkWebNativeValue604, p1: *mut R4SdkWebNavigationHistory) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue604_create(p0: *mut R4SdkWebNativeValue604, p1: *const R4SdkWebNavigationHistory) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue604_inspectNative(p0: *const R4SdkWebNativeValue604) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue605_inspectNative(p0: *const R4SdkWebNativeValue605, p1: *mut R4SdkWebJsParseStats) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue606_inspectNative(p0: *const R4SdkWebNativeValue606) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue607_create(p0: *mut R4SdkWebNativeValue607, p1: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue605_create(p0: *mut R4SdkWebNativeValue605, p1: *mut R4SdkWebNavigationHistory) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue605_inspectNative(p0: *const R4SdkWebNativeValue605) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue606_inspectNative(p0: *const R4SdkWebNativeValue606, p1: *mut R4SdkWebJsParseStats) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue607_inspectNative(p0: *const R4SdkWebNativeValue607) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue608_create(p0: *mut R4SdkWebNativeValue608, p1: R4SdkWebSlot) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue608_inspectNative(p0: *const R4SdkWebNativeValue608, p1: *mut R4SdkWebJsExecutionSite) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue609_create(p0: *mut R4SdkWebNativeValue609, p1: *mut R4SdkWebNativeValue8, p2: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue609_inspectNative(p0: *const R4SdkWebNativeValue609) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue608_create(p0: *mut R4SdkWebNativeValue608, p1: *const R4SdkWebJsRuntime) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue608_inspectNative(p0: *const R4SdkWebNativeValue608) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue609_create(p0: *mut R4SdkWebNativeValue609, p1: R4SdkWebSlot) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue609_inspectNative(p0: *const R4SdkWebNativeValue609, p1: *mut R4SdkWebJsExecutionSite) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue610_create(p0: *mut R4SdkWebNativeValue610, p1: *mut R4SdkWebNativeValue8, p2: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue610_inspectNative(p0: *const R4SdkWebNativeValue610) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue611_inspectNative(p0: *const R4SdkWebNativeValue611, p1: *mut f64) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue612_inspectNative(p0: *const R4SdkWebNativeValue612) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue611_inspectNative(p0: *const R4SdkWebNativeValue611) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue612_inspectNative(p0: *const R4SdkWebNativeValue612, p1: *mut f64) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue613_inspectNative(p0: *const R4SdkWebNativeValue613) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue614_inspectNative(p0: *const R4SdkWebNativeValue614, p1: *mut R4SdkWebNativeValue615) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue615_create(p0: *mut R4SdkWebNativeValue615, p1: *const R4SdkWebNativeValue615) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue615_inspectNative(p0: *const R4SdkWebNativeValue615, p1: *mut R4SdkWebNativeValue615) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue616_inspectNative(p0: *const R4SdkWebNativeValue616) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue617_create(p0: *mut R4SdkWebNativeValue617, p1: R4SdkWebSlot) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue614_inspectNative(p0: *const R4SdkWebNativeValue614) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue615_inspectNative(p0: *const R4SdkWebNativeValue615, p1: *mut R4SdkWebNativeValue616) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue616_create(p0: *mut R4SdkWebNativeValue616, p1: *const R4SdkWebNativeValue616) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue616_inspectNative(p0: *const R4SdkWebNativeValue616, p1: *mut R4SdkWebNativeValue616) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue617_inspectNative(p0: *const R4SdkWebNativeValue617) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue618_create(p0: *mut R4SdkWebNativeValue618, p1: *const R4SdkWebRuntimePendingRequest) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue618_create(p0: *mut R4SdkWebNativeValue618, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue618_inspectNative(p0: *const R4SdkWebNativeValue618) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue619_inspectNative(p0: *const R4SdkWebNativeValue619, p1: *mut R4SdkWebNative_web_security_Origin) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue620_create(p0: *mut R4SdkWebNativeValue620, p1: *const R4SdkWebNative_web_security_Origin) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue620_inspectNative(p0: *const R4SdkWebNativeValue620) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue621_create(p0: *mut R4SdkWebNativeValue621, p1: *const R4SdkWebNative_web_security_Fixed_256_) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue619_create(p0: *mut R4SdkWebNativeValue619, p1: *const R4SdkWebRuntimePendingRequest) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue619_inspectNative(p0: *const R4SdkWebNativeValue619) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue620_inspectNative(p0: *const R4SdkWebNativeValue620, p1: *mut R4SdkWebNative_web_security_Origin) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue621_create(p0: *mut R4SdkWebNativeValue621, p1: *const R4SdkWebNative_web_security_Origin) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue621_inspectNative(p0: *const R4SdkWebNativeValue621) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue622_create(p0: *mut R4SdkWebNativeValue622, p1: *mut R4SdkWebNative_web_security_Fixed_256_) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue622_create(p0: *mut R4SdkWebNativeValue622, p1: *const R4SdkWebNative_web_security_Fixed_256_) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue622_inspectNative(p0: *const R4SdkWebNativeValue622) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue623_create(p0: *mut R4SdkWebNativeValue623, p1: *mut R4SdkWebNative_web_security_Fixed_256_) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue623_inspectNative(p0: *const R4SdkWebNativeValue623) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue624_create(p0: *mut R4SdkWebNativeValue624, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue624_inspectNative(p0: *const R4SdkWebNativeValue624) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue625_create(p0: *mut R4SdkWebNativeValue625, p1: *const R4SdkWebRuntimeWebRuntime) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue625_create(p0: *mut R4SdkWebNativeValue625, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue625_inspectNative(p0: *const R4SdkWebNativeValue625) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue626_create(p0: *mut R4SdkWebNativeValue626, p1: *const R4SdkWebRuntimeCssImageSource, p2: u64) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue626_create(p0: *mut R4SdkWebNativeValue626, p1: *const R4SdkWebRuntimeWebRuntime) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue626_inspectNative(p0: *const R4SdkWebNativeValue626) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue627_inspectNative(p0: *const R4SdkWebNativeValue627, p1: *mut R4SdkWebRuntimeCssImageSyncStats) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue628_create(p0: *mut R4SdkWebNativeValue628, p1: *const R4SdkWebRuntimeFontDemand, p2: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue628_inspectNative(p0: *const R4SdkWebNativeValue628) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue629_inspectNative(p0: *const R4SdkWebNativeValue629, p1: *mut R4SdkWebRuntimeFontDemandSyncStats) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue630_create(p0: *mut R4SdkWebNativeValue630, p1: *const u16, p2: u64) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue630_inspectNative(p0: *const R4SdkWebNativeValue630) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue631_create(p0: *mut R4SdkWebNativeValue631, p1: *const R4SdkWebNavigationUrl, p2: u64) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue627_create(p0: *mut R4SdkWebNativeValue627, p1: *const R4SdkWebRuntimeCssImageSource, p2: u64) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue627_inspectNative(p0: *const R4SdkWebNativeValue627) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue628_inspectNative(p0: *const R4SdkWebNativeValue628, p1: *mut R4SdkWebRuntimeCssImageSyncStats) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue629_create(p0: *mut R4SdkWebNativeValue629, p1: *const R4SdkWebRuntimeFontDemand, p2: u64) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue629_inspectNative(p0: *const R4SdkWebNativeValue629) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue630_inspectNative(p0: *const R4SdkWebNativeValue630, p1: *mut R4SdkWebRuntimeFontDemandSyncStats) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue631_create(p0: *mut R4SdkWebNativeValue631, p1: *const u16, p2: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue631_inspectNative(p0: *const R4SdkWebNativeValue631) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue632_create(p0: *mut R4SdkWebNativeValue632, p1: *const u64, p2: u64) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue632_create(p0: *mut R4SdkWebNativeValue632, p1: *const R4SdkWebNavigationUrl, p2: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue632_inspectNative(p0: *const R4SdkWebNativeValue632) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue633_create(p0: *mut R4SdkWebNativeValue633, p1: *const u64, p2: u64) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue633_inspectNative(p0: *const R4SdkWebNativeValue633) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue634_inspectNative(p0: *const R4SdkWebNativeValue634) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue635_inspectNative(p0: *const R4SdkWebNativeValue635, p1: *mut R4SdkWebJsValue) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue636_inspectNative(p0: *const R4SdkWebNativeValue636, p1: *mut R4SdkWebRuntimeDispatch) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue637_create(p0: *mut R4SdkWebNativeValue637, p1: R4SdkWebSlot) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue637_inspectNative(p0: *const R4SdkWebNativeValue637) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue638_create(p0: *mut R4SdkWebNativeValue638, p1: *mut R4SdkWebRuntimePendingRequest) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue635_inspectNative(p0: *const R4SdkWebNativeValue635) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue636_inspectNative(p0: *const R4SdkWebNativeValue636, p1: *mut R4SdkWebJsValue) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue637_inspectNative(p0: *const R4SdkWebNativeValue637, p1: *mut R4SdkWebRuntimeDispatch) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue638_create(p0: *mut R4SdkWebNativeValue638, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue638_inspectNative(p0: *const R4SdkWebNativeValue638) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue639_create(p0: *mut R4SdkWebNativeValue639, p1: *mut R4SdkWebNativeValue640) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue639_create(p0: *mut R4SdkWebNativeValue639, p1: *mut R4SdkWebRuntimePendingRequest) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue639_inspectNative(p0: *const R4SdkWebNativeValue639) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue640_create(p0: *mut R4SdkWebNativeValue640, p1: *const R4SdkWebNativeValue640) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue640_inspectNative(p0: *const R4SdkWebNativeValue640, p1: *mut R4SdkWebNativeValue640) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue641_create(p0: *mut R4SdkWebNativeValue641, p1: R4SdkWebSlot) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue641_inspectNative(p0: *const R4SdkWebNativeValue641, p1: *mut R4SdkWebRuntimeAction) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue640_create(p0: *mut R4SdkWebNativeValue640, p1: *mut R4SdkWebNativeValue641) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue640_inspectNative(p0: *const R4SdkWebNativeValue640) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue641_create(p0: *mut R4SdkWebNativeValue641, p1: *const R4SdkWebNativeValue641) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue641_inspectNative(p0: *const R4SdkWebNativeValue641, p1: *mut R4SdkWebNativeValue641) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue642_create(p0: *mut R4SdkWebNativeValue642, p1: R4SdkWebSlot) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue642_inspectNative(p0: *const R4SdkWebNativeValue642, p1: *mut R4SdkWebCanvasSurfaceView) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue643_create(p0: *mut R4SdkWebNativeValue643, p1: *const R4SdkWebNative_web_security_BrowserStorage) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue643_inspectNative(p0: *const R4SdkWebNativeValue643) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue642_inspectNative(p0: *const R4SdkWebNativeValue642, p1: *mut R4SdkWebRuntimeAction) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue643_create(p0: *mut R4SdkWebNativeValue643, p1: R4SdkWebSlot) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue643_inspectNative(p0: *const R4SdkWebNativeValue643, p1: *mut R4SdkWebCanvasSurfaceView) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue644_create(p0: *mut R4SdkWebNativeValue644, p1: *const R4SdkWebNative_web_security_BrowserStorage) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue644_inspectNative(p0: *const R4SdkWebNativeValue644) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue645_create(p0: *mut R4SdkWebNativeValue645, p1: *mut R4SdkWebNative_web_security_CookieJar) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue645_inspectNative(p0: *const R4SdkWebNativeValue645) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue646_create(p0: *mut R4SdkWebNativeValue646, p1: *const R4SdkWebNative_web_security_CookieJar) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue646_create(p0: *mut R4SdkWebNativeValue646, p1: *mut R4SdkWebNative_web_security_CookieJar) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue646_inspectNative(p0: *const R4SdkWebNativeValue646) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue647_create(p0: *mut R4SdkWebNativeValue647, p1: *const R4SdkWebNative_web_security_Fixed_64_) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue647_create(p0: *mut R4SdkWebNativeValue647, p1: *const R4SdkWebNative_web_security_CookieJar) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue647_inspectNative(p0: *const R4SdkWebNativeValue647) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue648_create(p0: *mut R4SdkWebNativeValue648, p1: *mut R4SdkWebNative_web_security_Fixed_64_) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue648_create(p0: *mut R4SdkWebNativeValue648, p1: *const R4SdkWebNative_web_security_Fixed_64_) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue648_inspectNative(p0: *const R4SdkWebNativeValue648) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue649_create(p0: *mut R4SdkWebNativeValue649, p1: *const R4SdkWebNative_web_security_Fixed_4096_) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue649_create(p0: *mut R4SdkWebNativeValue649, p1: *mut R4SdkWebNative_web_security_Fixed_64_) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue649_inspectNative(p0: *const R4SdkWebNativeValue649) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue650_create(p0: *mut R4SdkWebNativeValue650, p1: *mut R4SdkWebNative_web_security_Fixed_4096_) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue650_create(p0: *mut R4SdkWebNativeValue650, p1: *const R4SdkWebNative_web_security_Fixed_4096_) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue650_inspectNative(p0: *const R4SdkWebNativeValue650) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue651_create(p0: *mut R4SdkWebNativeValue651, p1: *const R4SdkWebNative_web_security_Fixed_253_) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue651_create(p0: *mut R4SdkWebNativeValue651, p1: *mut R4SdkWebNative_web_security_Fixed_4096_) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue651_inspectNative(p0: *const R4SdkWebNativeValue651) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue652_create(p0: *mut R4SdkWebNativeValue652, p1: *mut R4SdkWebNative_web_security_Fixed_253_) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue652_create(p0: *mut R4SdkWebNativeValue652, p1: *const R4SdkWebNative_web_security_Fixed_253_) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue652_inspectNative(p0: *const R4SdkWebNativeValue652) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue653_create(p0: *mut R4SdkWebNativeValue653, p1: *mut R4SdkWebNative_web_security_StorageSet) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue653_create(p0: *mut R4SdkWebNativeValue653, p1: *mut R4SdkWebNative_web_security_Fixed_253_) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue653_inspectNative(p0: *const R4SdkWebNativeValue653) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue654_create(p0: *mut R4SdkWebNativeValue654, p1: *mut R4SdkWebNative_web_security_StorageSet) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue654_inspectNative(p0: *const R4SdkWebNativeValue654) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue655_create(p0: *mut R4SdkWebNativeValue655, p1: *mut R4SdkWebNative_web_security_StorageArea) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue655_inspectNative(p0: *const R4SdkWebNativeValue655) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue656_create(p0: *mut R4SdkWebNativeValue656, p1: *const R4SdkWebNative_web_security_StorageArea) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue656_create(p0: *mut R4SdkWebNativeValue656, p1: *mut R4SdkWebNative_web_security_StorageArea) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue656_inspectNative(p0: *const R4SdkWebNativeValue656) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue657_create(p0: *mut R4SdkWebNativeValue657, p1: *const R4SdkWebNative_web_security_Fixed_96_) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue657_create(p0: *mut R4SdkWebNativeValue657, p1: *const R4SdkWebNative_web_security_StorageArea) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue657_inspectNative(p0: *const R4SdkWebNativeValue657) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue658_create(p0: *mut R4SdkWebNativeValue658, p1: *mut R4SdkWebNative_web_security_Fixed_96_) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue658_create(p0: *mut R4SdkWebNativeValue658, p1: *const R4SdkWebNative_web_security_Fixed_96_) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue658_inspectNative(p0: *const R4SdkWebNativeValue658) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue659_create(p0: *mut R4SdkWebNativeValue659, p1: *const R4SdkWebNative_web_security_Fixed_512_) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue659_create(p0: *mut R4SdkWebNativeValue659, p1: *mut R4SdkWebNative_web_security_Fixed_96_) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue659_inspectNative(p0: *const R4SdkWebNativeValue659) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue660_create(p0: *mut R4SdkWebNativeValue660, p1: *mut R4SdkWebNative_web_security_Fixed_512_) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue660_create(p0: *mut R4SdkWebNativeValue660, p1: *const R4SdkWebNative_web_security_Fixed_512_) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue660_inspectNative(p0: *const R4SdkWebNativeValue660) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue661_inspectNative(p0: *const R4SdkWebNativeValue661, p1: *mut R4SdkWebNative_web_security_SecurityContext) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue662_create(p0: *mut R4SdkWebNativeValue662, p1: *const R4SdkWebNative_web_security_SecurityContext) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue662_inspectNative(p0: *const R4SdkWebNativeValue662) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue661_create(p0: *mut R4SdkWebNativeValue661, p1: *mut R4SdkWebNative_web_security_Fixed_512_) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue661_inspectNative(p0: *const R4SdkWebNativeValue661) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue662_inspectNative(p0: *const R4SdkWebNativeValue662, p1: *mut R4SdkWebNative_web_security_SecurityContext) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue663_create(p0: *mut R4SdkWebNativeValue663, p1: *const R4SdkWebNative_web_security_SecurityContext) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue663_inspectNative(p0: *const R4SdkWebNativeValue663) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_ResourceKind_create(p0: *mut R4SdkWebNative_web_security_ResourceKind, p1: u32) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_ResourceKind_inspectNative(p0: *const R4SdkWebNative_web_security_ResourceKind) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Decision_create(p0: *mut R4SdkWebNative_web_security_Decision, p1: u8) -> R4SdkWebSlot;
@@ -36801,36 +36816,36 @@ unsafe extern "C" {
     pub fn R4SdkWebNative_web_security_Decision_get_target(p0: *const R4SdkWebNative_web_security_Decision, p1: *mut R4SdkWebNative_web_security_Origin) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Decision_set_target(p0: *mut R4SdkWebNative_web_security_Decision, p1: *const R4SdkWebNative_web_security_Origin) -> R4SdkWebSlot;
     pub fn R4SdkWebNative_web_security_Decision_inspectNative(p0: *const R4SdkWebNative_web_security_Decision) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue665_inspectNative(p0: *const R4SdkWebNativeValue665, p1: *mut R4SdkWebNative_web_security_ContentSecurityPolicy) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue666_create(p0: *mut R4SdkWebNativeValue666, p1: *const R4SdkWebNative_web_security_ContentSecurityPolicy) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue666_inspectNative(p0: *const R4SdkWebNativeValue666) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue667_create(p0: *mut R4SdkWebNativeValue667, p1: *const R4SdkWebNative_web_security_Fixed_32_) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue666_inspectNative(p0: *const R4SdkWebNativeValue666, p1: *mut R4SdkWebNative_web_security_ContentSecurityPolicy) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue667_create(p0: *mut R4SdkWebNativeValue667, p1: *const R4SdkWebNative_web_security_ContentSecurityPolicy) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue667_inspectNative(p0: *const R4SdkWebNativeValue667) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue668_create(p0: *mut R4SdkWebNativeValue668, p1: *mut R4SdkWebNative_web_security_Fixed_32_) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue668_create(p0: *mut R4SdkWebNativeValue668, p1: *const R4SdkWebNative_web_security_Fixed_32_) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue668_inspectNative(p0: *const R4SdkWebNativeValue668) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue669_create(p0: *mut R4SdkWebNativeValue669, p1: *mut R4SdkWebNative_web_resources_Scheduler) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue669_create(p0: *mut R4SdkWebNativeValue669, p1: *mut R4SdkWebNative_web_security_Fixed_32_) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue669_inspectNative(p0: *const R4SdkWebNativeValue669) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue670_create(p0: *mut R4SdkWebNativeValue670, p1: *mut R4SdkWebNative_web_resources_Scheduler) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue670_inspectNative(p0: *const R4SdkWebNativeValue670) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue671_inspectNative(p0: *const R4SdkWebNativeValue671) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue672_create(p0: *mut R4SdkWebNativeValue672, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue672_inspectNative(p0: *const R4SdkWebNativeValue672) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue673_create(p0: *mut R4SdkWebNativeValue673, p1: *const R4SdkWebNative_web_resources_Scheduler) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue673_create(p0: *mut R4SdkWebNativeValue673, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue673_inspectNative(p0: *const R4SdkWebNativeValue673) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue674_create(p0: *mut R4SdkWebNativeValue674, p1: *const R4SdkWebNative_web_security_Fixed_767_) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue674_create(p0: *mut R4SdkWebNativeValue674, p1: *const R4SdkWebNative_web_resources_Scheduler) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue674_inspectNative(p0: *const R4SdkWebNativeValue674) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue675_create(p0: *mut R4SdkWebNativeValue675, p1: *mut R4SdkWebNative_web_security_Fixed_767_) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue675_create(p0: *mut R4SdkWebNativeValue675, p1: *const R4SdkWebNative_web_security_Fixed_767_) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue675_inspectNative(p0: *const R4SdkWebNativeValue675) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue676_create(p0: *mut R4SdkWebNativeValue676, p1: *mut R4SdkWebCanvasManager) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue676_create(p0: *mut R4SdkWebNativeValue676, p1: *mut R4SdkWebNative_web_security_Fixed_767_) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue676_inspectNative(p0: *const R4SdkWebNativeValue676) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue677_create(p0: *mut R4SdkWebNativeValue677, p1: *mut R4SdkWebCanvasManager) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue677_inspectNative(p0: *const R4SdkWebNativeValue677) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue678_create(p0: *mut R4SdkWebNativeValue678, p1: *mut R4SdkWebCanvasSurface) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue678_inspectNative(p0: *const R4SdkWebNativeValue678) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue679_create(p0: *mut R4SdkWebNativeValue679, p1: R4SdkWebSlot) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue679_create(p0: *mut R4SdkWebNativeValue679, p1: *mut R4SdkWebCanvasSurface) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue679_inspectNative(p0: *const R4SdkWebNativeValue679) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue680_create(p0: *mut R4SdkWebNativeValue680, p1: *const R4SdkWebCanvasManager) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue680_create(p0: *mut R4SdkWebNativeValue680, p1: R4SdkWebSlot) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue680_inspectNative(p0: *const R4SdkWebNativeValue680) -> R4SdkWebSlot;
-    pub fn R4SdkWebNativeValue681_create(p0: *mut R4SdkWebNativeValue681, p1: *const R4SdkWebCanvasTextOp) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue681_create(p0: *mut R4SdkWebNativeValue681, p1: *const R4SdkWebCanvasManager) -> R4SdkWebSlot;
     pub fn R4SdkWebNativeValue681_inspectNative(p0: *const R4SdkWebNativeValue681) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue682_create(p0: *mut R4SdkWebNativeValue682, p1: *const R4SdkWebCanvasTextOp) -> R4SdkWebSlot;
+    pub fn R4SdkWebNativeValue682_inspectNative(p0: *const R4SdkWebNativeValue682) -> R4SdkWebSlot;
     pub fn R4SdkTransportInvoke(p0: u64, p1: u32, p2: *const R4SdkTransportSlot, p3: u32, p4: *mut core::ffi::c_void) -> R4SdkTransportSlot;
     pub fn R4SdkTransportConstruct(p0: u64, p1: u32, p2: *const R4SdkTransportSlot, p3: u32, p4: *mut core::ffi::c_void) -> R4SdkTransportSlot;
     pub fn R4SdkTransportInspect(p0: u64, p1: u32, p2: *mut core::ffi::c_void, p3: *mut core::ffi::c_void) -> R4SdkTransportSlot;
@@ -37142,9 +37157,9 @@ unsafe extern "C" {
     pub fn R4SdkTransportNativeValue23_create(p0: *mut R4SdkTransportNativeValue23, p1: *const R4SdkTransportNativeValue23) -> R4SdkTransportSlot;
     pub fn R4SdkTransportNativeValue23_inspectNative(p0: *const R4SdkTransportNativeValue23, p1: *mut R4SdkTransportNativeValue23) -> R4SdkTransportSlot;
     pub fn R4SdkTransportSessionPool_Preflight_create(p0: *mut R4SdkTransportSessionPool_Preflight) -> R4SdkTransportSlot;
-    pub fn R4SdkTransportSessionPool_Preflight_from_fields(p0: *mut R4SdkTransportSessionPool_Preflight, p1: *const R4SdkWebNativeValue378, p2: u64, p3: u64, p4: u64) -> R4SdkTransportSlot;
-    pub fn R4SdkTransportSessionPool_Preflight_get_key(p0: *const R4SdkTransportSessionPool_Preflight, p1: *mut R4SdkWebNativeValue378) -> R4SdkTransportSlot;
-    pub fn R4SdkTransportSessionPool_Preflight_set_key(p0: *mut R4SdkTransportSessionPool_Preflight, p1: *const R4SdkWebNativeValue378) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_Preflight_from_fields(p0: *mut R4SdkTransportSessionPool_Preflight, p1: *const R4SdkWebNativeValue379, p2: u64, p3: u64, p4: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_Preflight_get_key(p0: *const R4SdkTransportSessionPool_Preflight, p1: *mut R4SdkWebNativeValue379) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportSessionPool_Preflight_set_key(p0: *mut R4SdkTransportSessionPool_Preflight, p1: *const R4SdkWebNativeValue379) -> R4SdkTransportSlot;
     pub fn R4SdkTransportSessionPool_Preflight_get_key_len(p0: *const R4SdkTransportSessionPool_Preflight) -> R4SdkTransportSlot;
     pub fn R4SdkTransportSessionPool_Preflight_set_key_len(p0: *mut R4SdkTransportSessionPool_Preflight, p1: u64) -> R4SdkTransportSlot;
     pub fn R4SdkTransportSessionPool_Preflight_get_expires(p0: *const R4SdkTransportSessionPool_Preflight) -> R4SdkTransportSlot;
@@ -37170,8 +37185,8 @@ unsafe extern "C" {
     pub fn R4SdkTransportNativeValue39_inspectNative(p0: *const R4SdkTransportNativeValue39) -> R4SdkTransportSlot;
     pub fn R4SdkTransportNativeValue40_create(p0: *mut R4SdkTransportNativeValue40, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
     pub fn R4SdkTransportNativeValue40_inspectNative(p0: *const R4SdkTransportNativeValue40) -> R4SdkTransportSlot;
-    pub fn R4SdkTransportFetchResponse_create(p0: *mut R4SdkTransportFetchResponse, p1: u16, p2: *mut u8, p3: u64, p4: *const u8, p5: u64, p6: R4SdkTransportSlot, p7: R4SdkTransportSlot, p8: R4SdkTransportSlot, p9: u8, p10: R4SdkTransportSlot, p11: *const R4SdkWebNativeValue384, p12: u64, p13: u8, p14: u8, p15: u8, p16: *const R4SdkTransportFinalUrl) -> R4SdkTransportSlot;
-    pub fn R4SdkTransportFetchResponse_from_fields(p0: *mut R4SdkTransportFetchResponse, p1: u16, p2: *mut u8, p3: u64, p4: *const u8, p5: u64, p6: R4SdkTransportSlot, p7: R4SdkTransportSlot, p8: R4SdkTransportSlot, p9: u8, p10: R4SdkTransportSlot, p11: *const R4SdkWebNativeValue384, p12: u64, p13: u8, p14: u8, p15: u8, p16: *const R4SdkTransportFinalUrl) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchResponse_create(p0: *mut R4SdkTransportFetchResponse, p1: u16, p2: *mut u8, p3: u64, p4: *const u8, p5: u64, p6: R4SdkTransportSlot, p7: R4SdkTransportSlot, p8: R4SdkTransportSlot, p9: u8, p10: R4SdkTransportSlot, p11: *const R4SdkWebNativeValue385, p12: u64, p13: u8, p14: u8, p15: u8, p16: *const R4SdkTransportFinalUrl) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchResponse_from_fields(p0: *mut R4SdkTransportFetchResponse, p1: u16, p2: *mut u8, p3: u64, p4: *const u8, p5: u64, p6: R4SdkTransportSlot, p7: R4SdkTransportSlot, p8: R4SdkTransportSlot, p9: u8, p10: R4SdkTransportSlot, p11: *const R4SdkWebNativeValue385, p12: u64, p13: u8, p14: u8, p15: u8, p16: *const R4SdkTransportFinalUrl) -> R4SdkTransportSlot;
     pub fn R4SdkTransportFetchResponse_get_status(p0: *const R4SdkTransportFetchResponse) -> R4SdkTransportSlot;
     pub fn R4SdkTransportFetchResponse_set_status(p0: *mut R4SdkTransportFetchResponse, p1: u16) -> R4SdkTransportSlot;
     pub fn R4SdkTransportFetchResponse_get_body(p0: *const R4SdkTransportFetchResponse) -> R4SdkTransportSlot;
@@ -37188,8 +37203,8 @@ unsafe extern "C" {
     pub fn R4SdkTransportFetchResponse_set_access_control_allow_credentials(p0: *mut R4SdkTransportFetchResponse, p1: u8) -> R4SdkTransportSlot;
     pub fn R4SdkTransportFetchResponse_get_set_cookie(p0: *const R4SdkTransportFetchResponse) -> R4SdkTransportSlot;
     pub fn R4SdkTransportFetchResponse_set_set_cookie(p0: *mut R4SdkTransportFetchResponse, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
-    pub fn R4SdkTransportFetchResponse_get_set_cookies(p0: *const R4SdkTransportFetchResponse, p1: *mut R4SdkWebNativeValue384) -> R4SdkTransportSlot;
-    pub fn R4SdkTransportFetchResponse_set_set_cookies(p0: *mut R4SdkTransportFetchResponse, p1: *const R4SdkWebNativeValue384) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchResponse_get_set_cookies(p0: *const R4SdkTransportFetchResponse, p1: *mut R4SdkWebNativeValue385) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchResponse_set_set_cookies(p0: *mut R4SdkTransportFetchResponse, p1: *const R4SdkWebNativeValue385) -> R4SdkTransportSlot;
     pub fn R4SdkTransportFetchResponse_get_set_cookie_count(p0: *const R4SdkTransportFetchResponse) -> R4SdkTransportSlot;
     pub fn R4SdkTransportFetchResponse_set_set_cookie_count(p0: *mut R4SdkTransportFetchResponse, p1: u64) -> R4SdkTransportSlot;
     pub fn R4SdkTransportFetchResponse_get_redirects(p0: *const R4SdkTransportFetchResponse) -> R4SdkTransportSlot;
@@ -37508,8 +37523,8 @@ unsafe extern "C" {
     pub fn R4SdkTransportHttpBuildResult_inspectNative(p0: *const R4SdkTransportHttpBuildResult) -> R4SdkTransportSlot;
     pub fn R4SdkTransportNative__typeInfo_http_BuildResult____union__tag_type___create(p0: *mut R4SdkTransportNative__typeInfo_http_BuildResult____union__tag_type__, p1: u32) -> R4SdkTransportSlot;
     pub fn R4SdkTransportNative__typeInfo_http_BuildResult____union__tag_type___inspectNative(p0: *const R4SdkTransportNative__typeInfo_http_BuildResult____union__tag_type__) -> R4SdkTransportSlot;
-    pub fn R4SdkTransportHttpResponse_create(p0: *mut R4SdkTransportHttpResponse, p1: u16, p2: u32, p3: *mut u8, p4: u64, p5: *const u8, p6: u64, p7: R4SdkTransportSlot, p8: R4SdkTransportSlot, p9: R4SdkTransportSlot, p10: R4SdkTransportSlot, p11: u8, p12: R4SdkTransportSlot, p13: *const R4SdkWebNativeValue384, p14: u64, p15: R4SdkTransportSlot, p16: u64) -> R4SdkTransportSlot;
-    pub fn R4SdkTransportHttpResponse_from_fields(p0: *mut R4SdkTransportHttpResponse, p1: u16, p2: u32, p3: *mut u8, p4: u64, p5: *const u8, p6: u64, p7: R4SdkTransportSlot, p8: R4SdkTransportSlot, p9: R4SdkTransportSlot, p10: R4SdkTransportSlot, p11: u8, p12: R4SdkTransportSlot, p13: *const R4SdkWebNativeValue384, p14: u64, p15: R4SdkTransportSlot, p16: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponse_create(p0: *mut R4SdkTransportHttpResponse, p1: u16, p2: u32, p3: *mut u8, p4: u64, p5: *const u8, p6: u64, p7: R4SdkTransportSlot, p8: R4SdkTransportSlot, p9: R4SdkTransportSlot, p10: R4SdkTransportSlot, p11: u8, p12: R4SdkTransportSlot, p13: *const R4SdkWebNativeValue385, p14: u64, p15: R4SdkTransportSlot, p16: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponse_from_fields(p0: *mut R4SdkTransportHttpResponse, p1: u16, p2: u32, p3: *mut u8, p4: u64, p5: *const u8, p6: u64, p7: R4SdkTransportSlot, p8: R4SdkTransportSlot, p9: R4SdkTransportSlot, p10: R4SdkTransportSlot, p11: u8, p12: R4SdkTransportSlot, p13: *const R4SdkWebNativeValue385, p14: u64, p15: R4SdkTransportSlot, p16: u64) -> R4SdkTransportSlot;
     pub fn R4SdkTransportHttpResponse_get_status(p0: *const R4SdkTransportHttpResponse) -> R4SdkTransportSlot;
     pub fn R4SdkTransportHttpResponse_set_status(p0: *mut R4SdkTransportHttpResponse, p1: u16) -> R4SdkTransportSlot;
     pub fn R4SdkTransportHttpResponse_get_transfer(p0: *const R4SdkTransportHttpResponse) -> R4SdkTransportSlot;
@@ -37530,8 +37545,8 @@ unsafe extern "C" {
     pub fn R4SdkTransportHttpResponse_set_access_control_allow_credentials(p0: *mut R4SdkTransportHttpResponse, p1: u8) -> R4SdkTransportSlot;
     pub fn R4SdkTransportHttpResponse_get_set_cookie(p0: *const R4SdkTransportHttpResponse) -> R4SdkTransportSlot;
     pub fn R4SdkTransportHttpResponse_set_set_cookie(p0: *mut R4SdkTransportHttpResponse, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
-    pub fn R4SdkTransportHttpResponse_get_set_cookies(p0: *const R4SdkTransportHttpResponse, p1: *mut R4SdkWebNativeValue384) -> R4SdkTransportSlot;
-    pub fn R4SdkTransportHttpResponse_set_set_cookies(p0: *mut R4SdkTransportHttpResponse, p1: *const R4SdkWebNativeValue384) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponse_get_set_cookies(p0: *const R4SdkTransportHttpResponse, p1: *mut R4SdkWebNativeValue385) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpResponse_set_set_cookies(p0: *mut R4SdkTransportHttpResponse, p1: *const R4SdkWebNativeValue385) -> R4SdkTransportSlot;
     pub fn R4SdkTransportHttpResponse_get_set_cookie_count(p0: *const R4SdkTransportHttpResponse) -> R4SdkTransportSlot;
     pub fn R4SdkTransportHttpResponse_set_set_cookie_count(p0: *mut R4SdkTransportHttpResponse, p1: u64) -> R4SdkTransportSlot;
     pub fn R4SdkTransportHttpResponse_get_content_range(p0: *const R4SdkTransportHttpResponse, p1: *mut R4SdkTransportHttpContentRange) -> R4SdkTransportSlot;
@@ -37585,8 +37600,8 @@ unsafe extern "C" {
     pub fn R4SdkTransportHttpResponseDecoder_inspectNative(p0: *const R4SdkTransportHttpResponseDecoder) -> R4SdkTransportSlot;
     pub fn R4SdkTransportNativeValue93_create(p0: *mut R4SdkTransportNativeValue93, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
     pub fn R4SdkTransportNativeValue93_inspectNative(p0: *const R4SdkTransportNativeValue93, p1: *mut R4SdkTransportHttpParsedHead) -> R4SdkTransportSlot;
-    pub fn R4SdkTransportHttpParsedHead_create(p0: *mut R4SdkTransportHttpParsedHead, p1: u16, p2: u64, p3: u32, p4: u64, p5: *const u8, p6: u64, p7: R4SdkTransportSlot, p8: R4SdkTransportSlot, p9: R4SdkTransportSlot, p10: R4SdkTransportSlot, p11: u8, p12: R4SdkTransportSlot, p13: *const R4SdkWebNativeValue384, p14: u64, p15: R4SdkTransportSlot) -> R4SdkTransportSlot;
-    pub fn R4SdkTransportHttpParsedHead_from_fields(p0: *mut R4SdkTransportHttpParsedHead, p1: u16, p2: u64, p3: u32, p4: u64, p5: *const u8, p6: u64, p7: R4SdkTransportSlot, p8: R4SdkTransportSlot, p9: R4SdkTransportSlot, p10: R4SdkTransportSlot, p11: u8, p12: R4SdkTransportSlot, p13: *const R4SdkWebNativeValue384, p14: u64, p15: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedHead_create(p0: *mut R4SdkTransportHttpParsedHead, p1: u16, p2: u64, p3: u32, p4: u64, p5: *const u8, p6: u64, p7: R4SdkTransportSlot, p8: R4SdkTransportSlot, p9: R4SdkTransportSlot, p10: R4SdkTransportSlot, p11: u8, p12: R4SdkTransportSlot, p13: *const R4SdkWebNativeValue385, p14: u64, p15: R4SdkTransportSlot) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedHead_from_fields(p0: *mut R4SdkTransportHttpParsedHead, p1: u16, p2: u64, p3: u32, p4: u64, p5: *const u8, p6: u64, p7: R4SdkTransportSlot, p8: R4SdkTransportSlot, p9: R4SdkTransportSlot, p10: R4SdkTransportSlot, p11: u8, p12: R4SdkTransportSlot, p13: *const R4SdkWebNativeValue385, p14: u64, p15: R4SdkTransportSlot) -> R4SdkTransportSlot;
     pub fn R4SdkTransportHttpParsedHead_get_status(p0: *const R4SdkTransportHttpParsedHead) -> R4SdkTransportSlot;
     pub fn R4SdkTransportHttpParsedHead_set_status(p0: *mut R4SdkTransportHttpParsedHead, p1: u16) -> R4SdkTransportSlot;
     pub fn R4SdkTransportHttpParsedHead_get_body_start(p0: *const R4SdkTransportHttpParsedHead) -> R4SdkTransportSlot;
@@ -37609,8 +37624,8 @@ unsafe extern "C" {
     pub fn R4SdkTransportHttpParsedHead_set_access_control_allow_credentials(p0: *mut R4SdkTransportHttpParsedHead, p1: u8) -> R4SdkTransportSlot;
     pub fn R4SdkTransportHttpParsedHead_get_set_cookie(p0: *const R4SdkTransportHttpParsedHead) -> R4SdkTransportSlot;
     pub fn R4SdkTransportHttpParsedHead_set_set_cookie(p0: *mut R4SdkTransportHttpParsedHead, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
-    pub fn R4SdkTransportHttpParsedHead_get_set_cookies(p0: *const R4SdkTransportHttpParsedHead, p1: *mut R4SdkWebNativeValue384) -> R4SdkTransportSlot;
-    pub fn R4SdkTransportHttpParsedHead_set_set_cookies(p0: *mut R4SdkTransportHttpParsedHead, p1: *const R4SdkWebNativeValue384) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedHead_get_set_cookies(p0: *const R4SdkTransportHttpParsedHead, p1: *mut R4SdkWebNativeValue385) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpParsedHead_set_set_cookies(p0: *mut R4SdkTransportHttpParsedHead, p1: *const R4SdkWebNativeValue385) -> R4SdkTransportSlot;
     pub fn R4SdkTransportHttpParsedHead_get_set_cookie_count(p0: *const R4SdkTransportHttpParsedHead) -> R4SdkTransportSlot;
     pub fn R4SdkTransportHttpParsedHead_set_set_cookie_count(p0: *mut R4SdkTransportHttpParsedHead, p1: u64) -> R4SdkTransportSlot;
     pub fn R4SdkTransportHttpParsedHead_get_content_range(p0: *const R4SdkTransportHttpParsedHead, p1: *mut R4SdkTransportHttpContentRange) -> R4SdkTransportSlot;
@@ -37685,7 +37700,7 @@ unsafe extern "C" {
     pub fn R4SdkTransportHttpPayloadStreamStep_set_failure(p0: *mut R4SdkTransportHttpPayloadStreamStep, p1: R4SdkTransportSlot) -> R4SdkTransportSlot;
     pub fn R4SdkTransportHttpPayloadStreamStep_inspectNative(p0: *const R4SdkTransportHttpPayloadStreamStep) -> R4SdkTransportSlot;
     pub fn R4SdkTransportHttpPayloadStreamDecoder_create(p0: *mut R4SdkTransportHttpPayloadStreamDecoder, p1: *mut u8, p2: u64, p3: u32, p4: *const R4SdkTransportHttpPayloadStreamLimits) -> R4SdkTransportSlot;
-    pub fn R4SdkTransportHttpPayloadStreamDecoder_from_fields(p0: *mut R4SdkTransportHttpPayloadStreamDecoder, p1: *mut u8, p2: u64, p3: u32, p4: *const R4SdkTransportHttpPayloadStreamLimits, p5: R4SdkTransportSlot, p6: u64, p7: u64, p8: u64, p9: *const R4SdkWebNativeValue362, p10: u64, p11: u64, p12: u64, p13: u8, p14: u8, p15: u32, p16: u32) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpPayloadStreamDecoder_from_fields(p0: *mut R4SdkTransportHttpPayloadStreamDecoder, p1: *mut u8, p2: u64, p3: u32, p4: *const R4SdkTransportHttpPayloadStreamLimits, p5: R4SdkTransportSlot, p6: u64, p7: u64, p8: u64, p9: *const R4SdkWebNativeValue363, p10: u64, p11: u64, p12: u64, p13: u8, p14: u8, p15: u32, p16: u32) -> R4SdkTransportSlot;
     pub fn R4SdkTransportHttpPayloadStreamDecoder_get_header_buffer(p0: *const R4SdkTransportHttpPayloadStreamDecoder) -> R4SdkTransportSlot;
     pub fn R4SdkTransportHttpPayloadStreamDecoder_set_header_buffer(p0: *mut R4SdkTransportHttpPayloadStreamDecoder, p1: *mut u8, p2: u64) -> R4SdkTransportSlot;
     pub fn R4SdkTransportHttpPayloadStreamDecoder_get_method(p0: *const R4SdkTransportHttpPayloadStreamDecoder) -> R4SdkTransportSlot;
@@ -37700,8 +37715,8 @@ unsafe extern "C" {
     pub fn R4SdkTransportHttpPayloadStreamDecoder_set_received(p0: *mut R4SdkTransportHttpPayloadStreamDecoder, p1: u64) -> R4SdkTransportSlot;
     pub fn R4SdkTransportHttpPayloadStreamDecoder_get_remaining(p0: *const R4SdkTransportHttpPayloadStreamDecoder) -> R4SdkTransportSlot;
     pub fn R4SdkTransportHttpPayloadStreamDecoder_set_remaining(p0: *mut R4SdkTransportHttpPayloadStreamDecoder, p1: u64) -> R4SdkTransportSlot;
-    pub fn R4SdkTransportHttpPayloadStreamDecoder_get_line(p0: *const R4SdkTransportHttpPayloadStreamDecoder, p1: *mut R4SdkWebNativeValue362) -> R4SdkTransportSlot;
-    pub fn R4SdkTransportHttpPayloadStreamDecoder_set_line(p0: *mut R4SdkTransportHttpPayloadStreamDecoder, p1: *const R4SdkWebNativeValue362) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpPayloadStreamDecoder_get_line(p0: *const R4SdkTransportHttpPayloadStreamDecoder, p1: *mut R4SdkWebNativeValue363) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportHttpPayloadStreamDecoder_set_line(p0: *mut R4SdkTransportHttpPayloadStreamDecoder, p1: *const R4SdkWebNativeValue363) -> R4SdkTransportSlot;
     pub fn R4SdkTransportHttpPayloadStreamDecoder_get_line_len(p0: *const R4SdkTransportHttpPayloadStreamDecoder) -> R4SdkTransportSlot;
     pub fn R4SdkTransportHttpPayloadStreamDecoder_set_line_len(p0: *mut R4SdkTransportHttpPayloadStreamDecoder, p1: u64) -> R4SdkTransportSlot;
     pub fn R4SdkTransportHttpPayloadStreamDecoder_get_trailer_bytes(p0: *const R4SdkTransportHttpPayloadStreamDecoder) -> R4SdkTransportSlot;
@@ -37925,7 +37940,7 @@ unsafe extern "C" {
     pub fn R4SdkTransportRuntimeJobsOwner_set_find(p0: *mut R4SdkTransportRuntimeJobsOwner, p1: u64) -> R4SdkTransportSlot;
     pub fn R4SdkTransportRuntimeJobsOwner_inspectNative(p0: *const R4SdkTransportRuntimeJobsOwner) -> R4SdkTransportSlot;
     pub fn R4SdkTransportRuntimeJobsRequestJob_create(p0: *mut R4SdkTransportRuntimeJobsRequestJob, p1: *const R4SdkTransportJobsJob, p2: *const R4SdkTransportRuntimeJobsOwner, p3: *const R4SdkDataAllocator) -> R4SdkTransportSlot;
-    pub fn R4SdkTransportRuntimeJobsRequestJob_from_fields(p0: *mut R4SdkTransportRuntimeJobsRequestJob, p1: *const R4SdkTransportJobsJob, p2: *const R4SdkTransportRuntimeJobsOwner, p3: *const R4SdkDataAllocator, p4: *mut u8, p5: u64, p6: u8, p7: u32, p8: *const R4SdkWebNativeValue640, p9: u64, p10: u32, p11: u32, p12: u32, p13: u32, p14: *const R4SdkWebNative_web_security_Origin, p15: *const R4SdkTransportNativeValue156, p16: *const R4SdkWebNativeValue237, p17: *const R4SdkWebNavigationUrl, p18: *const R4SdkTransportFetchOptions) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_from_fields(p0: *mut R4SdkTransportRuntimeJobsRequestJob, p1: *const R4SdkTransportJobsJob, p2: *const R4SdkTransportRuntimeJobsOwner, p3: *const R4SdkDataAllocator, p4: *mut u8, p5: u64, p6: u8, p7: u32, p8: *const R4SdkWebNativeValue641, p9: u64, p10: u32, p11: u32, p12: u32, p13: u32, p14: *const R4SdkWebNative_web_security_Origin, p15: *const R4SdkTransportNativeValue156, p16: *const R4SdkWebNativeValue237, p17: *const R4SdkWebNavigationUrl, p18: *const R4SdkTransportFetchOptions) -> R4SdkTransportSlot;
     pub fn R4SdkTransportRuntimeJobsRequestJob_get_job(p0: *const R4SdkTransportRuntimeJobsRequestJob, p1: *mut R4SdkTransportJobsJob) -> R4SdkTransportSlot;
     pub fn R4SdkTransportRuntimeJobsRequestJob_set_job(p0: *mut R4SdkTransportRuntimeJobsRequestJob, p1: *const R4SdkTransportJobsJob) -> R4SdkTransportSlot;
     pub fn R4SdkTransportRuntimeJobsRequestJob_get_owner(p0: *const R4SdkTransportRuntimeJobsRequestJob, p1: *mut R4SdkTransportRuntimeJobsOwner) -> R4SdkTransportSlot;
@@ -37938,8 +37953,8 @@ unsafe extern "C" {
     pub fn R4SdkTransportRuntimeJobsRequestJob_set_active(p0: *mut R4SdkTransportRuntimeJobsRequestJob, p1: u8) -> R4SdkTransportSlot;
     pub fn R4SdkTransportRuntimeJobsRequestJob_get_generation(p0: *const R4SdkTransportRuntimeJobsRequestJob) -> R4SdkTransportSlot;
     pub fn R4SdkTransportRuntimeJobsRequestJob_set_generation(p0: *mut R4SdkTransportRuntimeJobsRequestJob, p1: u32) -> R4SdkTransportSlot;
-    pub fn R4SdkTransportRuntimeJobsRequestJob_get_ids(p0: *const R4SdkTransportRuntimeJobsRequestJob, p1: *mut R4SdkWebNativeValue640) -> R4SdkTransportSlot;
-    pub fn R4SdkTransportRuntimeJobsRequestJob_set_ids(p0: *mut R4SdkTransportRuntimeJobsRequestJob, p1: *const R4SdkWebNativeValue640) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_get_ids(p0: *const R4SdkTransportRuntimeJobsRequestJob, p1: *mut R4SdkWebNativeValue641) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportRuntimeJobsRequestJob_set_ids(p0: *mut R4SdkTransportRuntimeJobsRequestJob, p1: *const R4SdkWebNativeValue641) -> R4SdkTransportSlot;
     pub fn R4SdkTransportRuntimeJobsRequestJob_get_count(p0: *const R4SdkTransportRuntimeJobsRequestJob) -> R4SdkTransportSlot;
     pub fn R4SdkTransportRuntimeJobsRequestJob_set_count(p0: *mut R4SdkTransportRuntimeJobsRequestJob, p1: u64) -> R4SdkTransportSlot;
     pub fn R4SdkTransportRuntimeJobsRequestJob_get_kind(p0: *const R4SdkTransportRuntimeJobsRequestJob) -> R4SdkTransportSlot;
@@ -38021,13 +38036,13 @@ unsafe extern "C" {
     pub fn R4SdkTransportNativeValue179_create(p0: *mut R4SdkTransportNativeValue179, p1: *const R4SdkTransportNativeValue179) -> R4SdkTransportSlot;
     pub fn R4SdkTransportNativeValue179_inspectNative(p0: *const R4SdkTransportNativeValue179, p1: *mut R4SdkTransportNativeValue179) -> R4SdkTransportSlot;
     pub fn R4SdkTransportFetchHeader_create(p0: *mut R4SdkTransportFetchHeader) -> R4SdkTransportSlot;
-    pub fn R4SdkTransportFetchHeader_from_fields(p0: *mut R4SdkTransportFetchHeader, p1: *const R4SdkWebNativeValue175, p2: u64, p3: *const R4SdkWebNativeValue362, p4: u64) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchHeader_from_fields(p0: *mut R4SdkTransportFetchHeader, p1: *const R4SdkWebNativeValue175, p2: u64, p3: *const R4SdkWebNativeValue363, p4: u64) -> R4SdkTransportSlot;
     pub fn R4SdkTransportFetchHeader_get_name(p0: *const R4SdkTransportFetchHeader, p1: *mut R4SdkWebNativeValue175) -> R4SdkTransportSlot;
     pub fn R4SdkTransportFetchHeader_set_name(p0: *mut R4SdkTransportFetchHeader, p1: *const R4SdkWebNativeValue175) -> R4SdkTransportSlot;
     pub fn R4SdkTransportFetchHeader_get_name_len(p0: *const R4SdkTransportFetchHeader) -> R4SdkTransportSlot;
     pub fn R4SdkTransportFetchHeader_set_name_len(p0: *mut R4SdkTransportFetchHeader, p1: u64) -> R4SdkTransportSlot;
-    pub fn R4SdkTransportFetchHeader_get_value(p0: *const R4SdkTransportFetchHeader, p1: *mut R4SdkWebNativeValue362) -> R4SdkTransportSlot;
-    pub fn R4SdkTransportFetchHeader_set_value(p0: *mut R4SdkTransportFetchHeader, p1: *const R4SdkWebNativeValue362) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchHeader_get_value(p0: *const R4SdkTransportFetchHeader, p1: *mut R4SdkWebNativeValue363) -> R4SdkTransportSlot;
+    pub fn R4SdkTransportFetchHeader_set_value(p0: *mut R4SdkTransportFetchHeader, p1: *const R4SdkWebNativeValue363) -> R4SdkTransportSlot;
     pub fn R4SdkTransportFetchHeader_get_value_len(p0: *const R4SdkTransportFetchHeader) -> R4SdkTransportSlot;
     pub fn R4SdkTransportFetchHeader_set_value_len(p0: *mut R4SdkTransportFetchHeader, p1: u64) -> R4SdkTransportSlot;
     pub fn R4SdkTransportFetchHeader_inspectNative(p0: *const R4SdkTransportFetchHeader) -> R4SdkTransportSlot;

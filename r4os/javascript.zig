@@ -34,6 +34,8 @@ pub const max_dynamic_programs: usize = 4;
 pub const max_jobs: usize = 128;
 pub const max_roots: usize = 512;
 pub const max_call_depth: usize = 64;
+/// Shared front-end recursion bound; runtime function calls retain their own limit.
+pub const max_syntax_depth: usize = 128;
 pub const max_template_objects: usize = 128;
 const max_regex_captures: usize = 32;
 const max_regex_states: usize = 64;
@@ -630,7 +632,22 @@ pub const DiagnosticPhase = enum(u8) {
     host,
 };
 
+const SyntaxDepth = struct {
+    value: usize = 0,
+
+    fn enter(self: *SyntaxDepth) Error!void {
+        if (self.value >= max_syntax_depth) return error.CallDepth;
+        self.value += 1;
+    }
+
+    fn leave(self: *SyntaxDepth) void {
+        std.debug.assert(self.value != 0);
+        self.value -= 1;
+    }
+};
+
 pub const Program = struct {
+    syntax_depth: SyntaxDepth = .{},
     source: [max_source_bytes]u8 = undefined,
     identifier_storage: [max_source_bytes]u8 = undefined,
     workspace: ProgramWorkspace = undefined,
@@ -658,6 +675,7 @@ pub const Program = struct {
     diagnostic_offset: usize = 0,
 
     pub fn reset(self: *Program) void {
+        self.syntax_depth = .{};
         self.source_len = 0;
         self.identifier_len = 0;
         self.token_count = 0;
@@ -874,6 +892,8 @@ pub const Program = struct {
     }
 
     fn compileStatementSegment(self: *Program, index: u16) Error!u16 {
+        try self.syntax_depth.enter();
+        defer self.syntax_depth.leave();
         if (index == none or index >= self.node_count) return error.BytecodeInvalid;
         if (self.workspace.compiled.node_segments[index] != none) return self.workspace.compiled.node_segments[index];
         const node = self.nodes[index];
@@ -901,6 +921,8 @@ pub const Program = struct {
     }
 
     fn compileExpressionSegment(self: *Program, index: u16) Error!u16 {
+        try self.syntax_depth.enter();
+        defer self.syntax_depth.leave();
         if (index == none or index >= self.node_count) return error.BytecodeInvalid;
         if (self.workspace.compiled.node_segments[index] != none) return self.workspace.compiled.node_segments[index];
         const segment_index = try self.addBytecodeSegment(index, .expression);
@@ -1032,6 +1054,8 @@ pub const Program = struct {
     }
 
     fn preparePatternDependencies(self: *Program, index: u16, binding: bool) Error!void {
+        try self.syntax_depth.enter();
+        defer self.syntax_depth.leave();
         if (index == none or index >= self.node_count) return error.BytecodeInvalid;
         const pattern = self.nodes[index];
         switch (pattern.kind) {
@@ -1076,6 +1100,8 @@ pub const Program = struct {
     }
 
     fn prepareExpressionDependencies(self: *Program, index: u16) Error!void {
+        try self.syntax_depth.enter();
+        defer self.syntax_depth.leave();
         if (index == none) return;
         const node = self.nodes[index];
         switch (node.kind) {
@@ -1224,6 +1250,8 @@ pub const Program = struct {
     }
 
     fn emitVarHoists(self: *Program, first: u16) Error!void {
+        try self.syntax_depth.enter();
+        defer self.syntax_depth.leave();
         var current = first;
         while (current != none) : (current = self.nodes[current].next) {
             const node = self.nodes[current];
@@ -1264,6 +1292,8 @@ pub const Program = struct {
     }
 
     fn emitPatternVarHoists(self: *Program, index: u16) Error!void {
+        try self.syntax_depth.enter();
+        defer self.syntax_depth.leave();
         if (index == none or index >= self.node_count) return error.BytecodeInvalid;
         const pattern = self.nodes[index];
         if (pattern.kind == .identifier) {
@@ -1307,6 +1337,8 @@ pub const Program = struct {
     }
 
     fn compileStatement(self: *Program, index: u16) Error!void {
+        try self.syntax_depth.enter();
+        defer self.syntax_depth.leave();
         const node = self.nodes[index];
         switch (node.kind) {
             .empty => {
@@ -1591,6 +1623,8 @@ pub const Program = struct {
     }
 
     fn compileExpression(self: *Program, index: u16) Error!void {
+        try self.syntax_depth.enter();
+        defer self.syntax_depth.leave();
         if (index != none and index < self.node_count) {
             const node = self.nodes[index];
             const kind = node.kind;
@@ -2730,6 +2764,7 @@ const ActiveLabel = struct {
 };
 
 const Parser = struct {
+    syntax_depth: SyntaxDepth = .{},
     program: *Program,
     current: usize = 0,
     furthest: usize = 0,
@@ -2810,6 +2845,8 @@ const Parser = struct {
     }
 
     fn validateStrictPattern(self: *Parser, index: u16) Error!void {
+        try self.syntax_depth.enter();
+        defer self.syntax_depth.leave();
         if (index == none) return;
         const pattern = self.program.nodes[index];
         if (pattern.kind == .identifier) {
@@ -2848,6 +2885,8 @@ const Parser = struct {
     }
 
     fn parseStatementListItem(self: *Parser, top_level: bool) Error!u16 {
+        try self.syntax_depth.enter();
+        defer self.syntax_depth.leave();
         if (self.at(.kw_let) or self.at(.kw_const)) return self.parseVariable(false, true);
         if (self.at(.kw_function) or (self.at(.kw_async) and self.peekKind(1) == .kw_function and self.tokensShareLine(self.current, self.current + 1))) return self.parseFunctionDeclaration(false);
         if (self.match(.kw_class)) return self.parseClassDefinition(true, false);
@@ -2865,6 +2904,8 @@ const Parser = struct {
     }
 
     fn parseStatement(self: *Parser) Error!u16 {
+        try self.syntax_depth.enter();
+        defer self.syntax_depth.leave();
         if (self.match(.semicolon)) return self.program.addNode(.{ .kind = .empty });
         if (self.at(.l_brace)) return self.parseBlock();
         if (self.at(.identifier) and self.peekKind(1) == .colon) {
@@ -2986,6 +3027,8 @@ const Parser = struct {
     }
 
     fn appendUniquePatternNames(self: *Parser, pattern_index: u16, names: []StringRef, count: *usize) Error!void {
+        try self.syntax_depth.enter();
+        defer self.syntax_depth.leave();
         if (pattern_index == none or pattern_index >= self.program.node_count) return error.SyntaxError;
         const pattern = self.program.nodes[pattern_index];
         if (pattern.kind == .identifier) {
@@ -3002,6 +3045,8 @@ const Parser = struct {
     }
 
     fn appendDirectLexicalNames(self: *Parser, statement: u16, function_body: bool, names: []StringRef, count: *usize) Error!void {
+        try self.syntax_depth.enter();
+        defer self.syntax_depth.leave();
         if (statement == none) return;
         const node = self.program.nodes[statement];
         if (node.kind == .block and node.flags & flag_declaration_list != 0) {
@@ -3026,6 +3071,8 @@ const Parser = struct {
     }
 
     fn appendRecursiveVarNames(self: *Parser, statement: u16, names: []StringRef, count: *usize) Error!void {
+        try self.syntax_depth.enter();
+        defer self.syntax_depth.leave();
         if (statement == none) return;
         const node = self.program.nodes[statement];
         switch (node.kind) {
@@ -3157,6 +3204,8 @@ const Parser = struct {
     }
 
     fn parseBindingTarget(self: *Parser) Error!u16 {
+        try self.syntax_depth.enter();
+        defer self.syntax_depth.leave();
         if (self.at(.identifier)) {
             const identifier = self.advance();
             if (self.yield_reserved and self.identifierEquals(identifier, "yield")) return error.SyntaxError;
@@ -3697,6 +3746,8 @@ const Parser = struct {
     }
 
     fn collectPatternNames(self: *Parser, index: u16, names: []StringRef, count: *usize) Error!void {
+        try self.syntax_depth.enter();
+        defer self.syntax_depth.leave();
         if (index == none or index >= self.program.node_count) return error.SyntaxError;
         const pattern = self.program.nodes[index];
         if (pattern.kind == .identifier) {
@@ -4106,6 +4157,8 @@ const Parser = struct {
     }
 
     fn parseAssignment(self: *Parser) Error!u16 {
+        try self.syntax_depth.enter();
+        defer self.syntax_depth.leave();
         if (self.allow_yield and self.atUnescapedIdentifier("yield")) return self.parseYieldExpression();
         var left = try self.parseConditional();
         const operation: ?AssignmentOp = switch (self.peek().kind) {
@@ -4160,6 +4213,8 @@ const Parser = struct {
     }
 
     fn convertAssignmentTarget(self: *Parser, index: u16) Error!u16 {
+        try self.syntax_depth.enter();
+        defer self.syntax_depth.leave();
         return switch (self.program.nodes[index].kind) {
             .identifier, .member => index,
             .group => self.convertAssignmentTarget(self.program.nodes[index].a),
@@ -4259,6 +4314,8 @@ const Parser = struct {
     }
 
     fn parseBinary(self: *Parser, minimum_precedence: u8) Error!u16 {
+        try self.syntax_depth.enter();
+        defer self.syntax_depth.leave();
         var left = try self.parseUnary();
         while (binaryInfo(self.peek().kind)) |info| {
             if (info.operation == .in and !self.allow_in) break;
@@ -4296,6 +4353,8 @@ const Parser = struct {
     }
 
     fn parseUnary(self: *Parser) Error!u16 {
+        try self.syntax_depth.enter();
+        defer self.syntax_depth.leave();
         if (self.allow_await and self.atUnescapedIdentifier("await")) {
             _ = self.advance();
             return self.program.addNode(.{ .kind = .await_expression, .a = try self.parseUnary() });
@@ -31775,4 +31834,67 @@ test "array and function primitive conversion observes hints order and failures"
         "callable.valueOf=function(){throw 'observed';};try{callable+1;}catch(e){thrown=e==='observed';}" ++
         "return results.join('|')+':'+[fallback,exotic,ordinary,order,nonprimitive,thrown,String([3,4]),String(function plain(){}).indexOf('function plain')===0].join(':');");
     try std.testing.expectEqualStrings("42|array-custom|43|function-custom|avasfvfs:17:7:17:vsdefaultvs:true:true:3,4:true", runtime.valueString(value));
+}
+
+test "JavaScript front-end bounds recursive syntax and recovers after rejection" {
+    const allocator = std.testing.allocator;
+    const program = try allocator.create(Program);
+    defer allocator.destroy(program);
+    program.* = .{};
+    const Family = struct { prefix: []const u8 = "", open: []const u8, middle: []const u8, close: []const u8, suffix: []const u8 = ";", deep: usize = 4096 };
+    const families = [_]Family{
+        .{ .open = "(", .middle = "1", .close = ")" },
+        .{ .open = "[", .middle = "1", .close = "]" },
+        .{ .open = "{", .middle = ";", .close = "}", .suffix = "" },
+        .{ .open = "!", .middle = "1", .close = "" },
+        .{ .prefix = "let ", .open = "[", .middle = "a", .close = "]", .suffix = "=x;" },
+        .{ .open = "class A{static{", .middle = ";", .close = "}}", .suffix = "", .deep = 512 },
+    };
+    for (families) |family| {
+        for ([_]usize{ 4, family.deep }) |depth| {
+            var source: std.ArrayList(u8) = .empty;
+            defer source.deinit(allocator);
+            try source.appendSlice(allocator, family.prefix);
+            for (0..depth) |_| try source.appendSlice(allocator, family.open);
+            try source.appendSlice(allocator, family.middle);
+            for (0..depth) |_| try source.appendSlice(allocator, family.close);
+            try source.appendSlice(allocator, family.suffix);
+            try std.testing.expect(source.items.len < max_source_bytes);
+            if (depth == 4) {
+                _ = try program.parse(source.items);
+                try std.testing.expect(program.bytecodeReady());
+            } else {
+                try std.testing.expectError(error.CallDepth, program.parse(source.items));
+                try std.testing.expect(!program.bytecodeReady());
+                try std.testing.expectEqual(DiagnosticPhase.parser, program.diagnostic_phase);
+            }
+            try std.testing.expectEqual(@as(usize, 0), program.syntax_depth.value);
+            _ = try program.parse("let recovered=1+2; recovered;");
+            try std.testing.expect(program.bytecodeReady());
+        }
+    }
+}
+
+test "JavaScript front-end bounds flat deep AST walks while retaining flat statement lists" {
+    const allocator = std.testing.allocator;
+    const program = try allocator.create(Program);
+    defer allocator.destroy(program);
+    program.* = .{};
+    for ([_][]const u8{ "+1", ".x" }) |tail| {
+        var source: std.ArrayList(u8) = .empty;
+        defer source.deinit(allocator);
+        try source.appendSlice(allocator, if (tail[0] == '+') "1" else "a");
+        for (0..4096) |_| try source.appendSlice(allocator, tail);
+        try source.append(allocator, ';');
+        try std.testing.expectError(error.CallDepth, program.parse(source.items));
+        try std.testing.expectEqual(DiagnosticPhase.compiler, program.diagnostic_phase);
+        try std.testing.expect(!program.bytecodeReady());
+        try std.testing.expectEqual(@as(usize, 0), program.syntax_depth.value);
+    }
+    var flat: std.ArrayList(u8) = .empty;
+    defer flat.deinit(allocator);
+    for (0..1000) |_| try flat.appendSlice(allocator, "1;");
+    _ = try program.parse(flat.items);
+    try std.testing.expect(program.bytecodeReady());
+    try std.testing.expectEqual(@as(usize, 0), program.syntax_depth.value);
 }

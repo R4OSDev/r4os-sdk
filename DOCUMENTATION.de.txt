@@ -1992,3 +1992,15 @@ berechnete Stile erhalten keinen persistenten Cache. Der Index vergroessert
 ein Stylesheet um 147584 Bytes. C- und Rust-Webprojektionen und ihr lokaler
 SDK-Fingerprint werden aus dem Compilerlayout neu erzeugt; der zentrale
 Plattformvertrag und die R4L-Versionen bleiben gleich.
+
+JavaScript-Frontend ab SDK 0.64.225 (R4OS 0.91.29)
+-------------------------------------------------
+Parser und rekursive AST-/Compilerbesuche zaehlen geschuetzte Aufrufe mit
+Obergrenze128. Der Wert beschreibt diese Eintritte, keine fuer alle
+Sprachkonstrukte identische Anzahl logischer Klammer-/Blockebenen.
+Zu tiefe Eingaben liefern den vorhandenen Fehler CallDepth; jede
+Rueckkehr gibt ihren Zaehler frei und verworfener Bytecode bleibt ungueltig.
+Flache Anweisungslisten verbrauchen keine fortlaufende Tiefenquote.
+Die unabhaengige Laufzeitgrenze fuer Funktionsaufrufe bleibt64.
+C-/Rust-Webprojektionen und abhaengige Transport-Verweise folgen dem
+neuen privaten Programmlayout; die R4JS-Abbildung auf result_limit bleibt.

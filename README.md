@@ -3,6 +3,13 @@
 The active compiler/component selection is defined only by `Profiles/`.
 Version-specific notes below describe their dated changes.
 
+SDK 0.64.225 bounds protected JavaScript parser and recursive AST/compiler
+entries with a shared front-end limit of128. Excess depth returns the
+existing CallDepth error and leaves bytecode invalid; normal parsing can
+resume afterward. Runtime function calls keep their independent64 limit.
+The compiler-generated C/Rust web layout and dependent transport references
+follow the private Program layout; platform Contract97 remains unchanged.
+
 SDK 0.64.224 prepares CSS top-level selector parts and ordered candidate
 indexes when a stylesheet is loaded. Exact matching and the existing cascade
 remain authoritative; state, DOM attributes and viewport are read on every
