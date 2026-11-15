@@ -142,7 +142,7 @@
     },
     "libraries": {
       "repository": "https://github.com/R4OSDev/r4os-libraries.git",
-      "commit": "e21521c3e2b016fc0fdbb0f864dcdde5957c3a69",
+      "commit": "ba73d99dc1a58a7139fc5af1b601c94e81c298e7",
       "version": "0.64.66",
       "files": {
         "build.zig.zon": "75c6960234741f31b507b2fe02ecc23d33ea122b34bca5161a0bcf5d88d32acb",
@@ -150,7 +150,7 @@
       },
       "tree": {
         "algorithm": "r4os-files-sha256-lf-v1",
-        "sha256": "572ab89ca61cb198a9aefaa00d77ea4e49107f25655e8c7b14876693fe9af6fe",
+        "sha256": "b6c4885eb14b96ba81c0fdf250bf4b0fc9167730b06bd75e5217a058b3972165",
         "files": [
           ".gitattributes",
           ".gitignore",
@@ -2609,8 +2609,8 @@
           "consumer_oracles.zig"
         ]
       },
-      "zig_hash": "r4os_libraries-0.64.66-dH4fNSJ9ewNGA6LbJNEnNfphSgRJldDjzSsmxafZQfpq",
-      "archive_url": "https://github.com/R4OSDev/r4os-libraries/archive/e21521c3e2b016fc0fdbb0f864dcdde5957c3a69.tar.gz",
+      "zig_hash": "r4os_libraries-0.64.66-dH4fNal7ewPWMvyd0rCiUBbKDeW_JRbXaelCb-1T9eau",
+      "archive_url": "https://github.com/R4OSDev/r4os-libraries/archive/ba73d99dc1a58a7139fc5af1b601c94e81c298e7.tar.gz",
       "archive_format": "tar.gz"
     },
     "recovery-contract": {
