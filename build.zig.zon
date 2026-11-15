@@ -5,8 +5,8 @@
     .minimum_zig_version = "0.16.0",
     .dependencies = .{
         .r4os_libraries = .{
-            .url = "https://github.com/R4OSDev/r4os-libraries/archive/1eb97d18e97cdd7ef25358cdc1275dad6d168ca8.tar.gz",
-            .hash = "r4os_libraries-0.64.67-dH4fNTCGewMVMydicpFC0Tl-rNteF68I1Sa6UjpzggLS",
+            .url = "https://github.com/R4OSDev/r4os-libraries/archive/b612869f9115033d4f6825095a50647279f3be46.tar.gz",
+            .hash = "r4os_libraries-0.64.67-dH4fNdKHewNRGWBQx4Zt9qTV-PW5P1dqKu8WArkP6OX0",
             .lazy = true,
         },
         // Bootstrap projection of Profiles/Components.json. The host starters map the actual
