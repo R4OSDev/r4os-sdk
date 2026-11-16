@@ -374,6 +374,17 @@ impl Endpoint<'_> {
             _ => Err(Error::Raw(result.raw_code)),
         }
     }
+    /// Observe the original full caller without pinning or reopening its ID.
+    pub fn client(&self, request_id: u32) -> Result<abi::ProgramProcessHandle> {
+        let value = self.raw();
+        let mut output = abi::ProgramProcessHandle::default();
+        let rc = unsafe { c::r4_service_endpoint_client(&value, request_id, &mut output) };
+        if rc == 0 {
+            Ok(output)
+        } else {
+            Err(Error::Raw(rc))
+        }
+    }
     pub fn reply(&self, request_id: u32, status: i32, bytes: &[u8]) -> i32 {
         let Ok(n) = length(bytes.len()) else {
             return abi::service_api_result_payload_too_large;

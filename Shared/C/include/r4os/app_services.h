@@ -252,6 +252,15 @@ static inline R4EndpointReceiveResult r4_service_endpoint_recv(R4ServiceEndpoint
     return result;
 }
 
+/* Borrowed original caller snapshot; never a process pin or numeric-ID lookup. */
+static inline int32_t r4_service_endpoint_client(const R4ServiceEndpoint *endpoint, uint32_t request_id, R4ProgramProcessHandle *out) {
+    if (!r4_service_endpoint_valid(endpoint)) return R4OS_ERR_CLOSED;
+    if (out == 0) return R4OS_SERVICE_API_RESULT_INVALID;
+    const R4Sys *sys = &endpoint->app->system;
+    if (!R4SYS_HAS(sys, service_endpoint_client)) return R4OS_ERR_NO_FN;
+    return ((R4SysServiceEndpointClientFn)(uintptr_t)R4SYS_SLOT(sys, service_endpoint_client))(endpoint->raw, request_id, out);
+}
+
 static inline int32_t r4_service_endpoint_reply(R4ServiceEndpoint *endpoint, uint32_t request_id, int32_t status, const void *payload, uint32_t payload_len) {
     if (!r4_service_endpoint_valid(endpoint)) return R4OS_ERR_CLOSED;
     if (payload_len > R4OS_SERVICE_API_MAX_PAYLOAD || (payload_len != 0u && payload == 0)) return R4OS_SERVICE_API_RESULT_PAYLOAD_TOO_LARGE;

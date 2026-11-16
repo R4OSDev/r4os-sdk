@@ -3223,6 +3223,12 @@ pub const Context = struct {
         return table_fn(handle, header, out.ptr, @intCast(out.len));
     }
 
+    /// Original request identity snapshot; no process pin or numeric-ID reopen.
+    pub fn serviceEndpointClient(self: *const Context, handle: u32, request_id: u32, out: *abi.ProgramProcessHandle) i32 {
+        const table_fn = self.sysFn("service_endpoint_client") orelse return self.unavailable("sys");
+        return table_fn(handle, request_id, out);
+    }
+
     pub fn serviceEndpointReply(self: *const Context, handle: u32, request_id: u32, status: i32, payload: []const u8) i32 {
         if (payload.len > abi.service_api_max_payload) return abi.service_api_result_payload_too_large;
         const table_fn = self.sysFn("service_endpoint_reply") orelse return self.unavailable("sys");
@@ -5665,6 +5671,35 @@ test "firmware transport negotiates its own optional slot and preserves an uncer
     try std.testing.expectEqual(@as(u32, 2), out.cpu_index);
     try std.testing.expectEqual(@as(u64, 19), out.epoch);
 }
+fn testOriginalServiceClient(handle: u32, request_id: u32, out: *abi.ProgramProcessHandle) callconv(.c) i32 {
+    if (handle != 73 or request_id != 91) return abi.service_api_result_not_found;
+    out.* = .{ .instance_id = 11, .generation = 0x9136_0000_1234_5678 };
+    return abi.service_api_result_ok;
+}
+test "original service client optional tail preserves output on absent slot and missing request" {
+    const actual = @import("r4os_contract2");
+    var raw: actual.R4XStartContext2 = .{};
+    var table: actual.R4XStartR4Sys2 = .{};
+    var bundle: Bundle = .{ .raw = &raw, .sys = &table };
+    const ctx = Context.initBundle(&bundle);
+    const sentinel: u64 = 0xaabbaa_1234567890;
+    var output: extern struct { process: abi.ProgramProcessHandle, canary: u64 } = .{ .process = .{ .generation = sentinel }, .canary = sentinel };
+    table.service_endpoint_client = @intFromPtr(&testOriginalServiceClient);
+    table.size = @offsetOf(actual.R4XStartR4Sys2, "service_endpoint_client");
+    try std.testing.expectEqual(abi.err_no_fn, ctx.serviceEndpointClient(73, 91, &output.process));
+    try std.testing.expectEqual(sentinel, output.process.generation);
+    table.size = @sizeOf(actual.R4XStartR4Sys2);
+    table.service_endpoint_client = 0;
+    try std.testing.expectEqual(abi.err_no_fn, ctx.serviceEndpointClient(73, 91, &output.process));
+    table.service_endpoint_client = @intFromPtr(&testOriginalServiceClient);
+    try std.testing.expectEqual(abi.service_api_result_not_found, ctx.serviceEndpointClient(73, 92, &output.process));
+    try std.testing.expectEqual(sentinel, output.process.generation);
+    try std.testing.expectEqual(abi.service_api_result_ok, ctx.serviceEndpointClient(73, 91, &output.process));
+    try std.testing.expectEqual(@as(u32, 11), output.process.instance_id);
+    try std.testing.expectEqual(@as(u64, 0x9136_0000_1234_5678), output.process.generation);
+    try std.testing.expectEqual(sentinel, output.canary);
+}
+
 test "program context accepts present fields in a shorter append-only table" {
     var raw: @import("r4os_contract2").R4XStartContext2 = .{};
     var table: @import("r4os_contract2").R4XStartR4Sys2 = .{};

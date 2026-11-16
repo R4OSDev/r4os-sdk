@@ -1256,6 +1256,11 @@ pub const Context = struct {
         return self.base.serviceEndpointRecv(handle, header, out);
     }
 
+    /// Original request identity snapshot; no process pin or numeric-ID reopen.
+    pub fn serviceEndpointClient(self: *const Context, handle: u32, request_id: u32, out: *abi.ProgramProcessHandle) i32 {
+        return self.base.serviceEndpointClient(handle, request_id, out);
+    }
+
     pub fn serviceEndpointReply(self: *const Context, handle: u32, request_id: u32, status: i32, payload: []const u8) i32 {
         return self.base.serviceEndpointReply(handle, request_id, status, payload);
     }

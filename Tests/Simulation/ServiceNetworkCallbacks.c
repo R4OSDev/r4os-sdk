@@ -43,6 +43,12 @@ static int32_t endpoint_wait(uint32_t handle,uint64_t timeout){last_wait=timeout
 static int32_t endpoint_poll(uint32_t handle){return endpoint_wait(handle,0);}
 static int32_t endpoint_recv(uint32_t handle,R4ServiceMessageHeader *header,uint8_t *out,uint32_t capacity){endpoint_ready=queued!=0;int32_t rc=fake_recv(handle,header,out,capacity);if(rc>=0&&queued)--queued;return rc;}
 static int32_t endpoint_reply(uint32_t handle,uint32_t id,int32_t status,const uint8_t *bytes,uint32_t n){if(reply_cancelled)return R4OS_SERVICE_API_RESULT_NOT_FOUND;return fake_reply(handle,id,status,bytes,n);}
+static int32_t endpoint_client(uint32_t handle,uint32_t id,R4ProgramProcessHandle *out){
+    if(handle!=201||!endpoint_registered)return R4OS_SERVICE_API_RESULT_BAD_HANDLE;
+    if(id!=88||reply_cancelled)return R4OS_SERVICE_API_RESULT_NOT_FOUND;
+    *out=(R4ProgramProcessHandle){.instance_id=11,.generation=UINT64_C(0x9136000012345678)};
+    return 0;
+}
 static int32_t io_begin(uint32_t handle,uint16_t op,const uint8_t *in,uint32_t n,R4ServiceMessageHeader *header,uint8_t *out,uint32_t capacity,uint64_t timeout,uint32_t flags,uint32_t *id){
     assert((handle==102||handle==103)&&capacity>=sizeof(R4NetServiceTcpResult)+2&&flags==0&&!io_live);
     if(op==37)assert(n==4&&memcmp(in,"PING",4)==0&&timeout==17);
@@ -122,7 +128,7 @@ void sdk_service_tables(R4XStartR4Sys2 *sys,R4XStartR4Net2 *net,R4XStartR4Desk2 
     sys->abi_version=sys_version;net->abi_version=net_version;
     sys->ticks=(uintptr_t)&ticks;sys->time_state=(uintptr_t)&time_state;sys->program_should_close=(uintptr_t)&should_close;sys->task_yield=(uintptr_t)&task_yield;
     sys->monotonic_clock=(uintptr_t)&service2_clock;
-    sys->service_endpoint_wait=(uintptr_t)&endpoint_wait;sys->service_endpoint_poll=(uintptr_t)&endpoint_poll;sys->service_endpoint_recv=(uintptr_t)&endpoint_recv;sys->service_endpoint_reply=(uintptr_t)&endpoint_reply;
+    sys->service_endpoint_wait=(uintptr_t)&endpoint_wait;sys->service_endpoint_poll=(uintptr_t)&endpoint_poll;sys->service_endpoint_recv=(uintptr_t)&endpoint_recv;sys->service_endpoint_reply=(uintptr_t)&endpoint_reply;sys->service_endpoint_client=(uintptr_t)&endpoint_client;
     sys->io_service_call=(uintptr_t)&io_begin;sys->io_status=(uintptr_t)&io_status;sys->io_wait=(uintptr_t)&io_wait;sys->io_close=(uintptr_t)&io_close;
     sdk_service_bound_reset();sys->service_bound_detail=(uintptr_t)&managed_bound_detail;sys->service_stop_bound=(uintptr_t)&managed_stop_bound;
     *desk=(R4XStartR4Desk2){.magic=R4OS2_R4DESK_MAGIC,.abi_version=desk_version,.size=sizeof(*desk)};
@@ -396,6 +402,7 @@ void sdk_service2_tables(R4XStartR4Sys2 *sys,R4XStartR4Net2 *net){
  sys->service_endpoint_poll=old.service_endpoint_poll;
  sys->service_endpoint_recv=old.service_endpoint_recv;
  sys->service_endpoint_reply=old.service_endpoint_reply;
+ sys->service_endpoint_client=old.service_endpoint_client;
  sys->ticks=old.ticks;
  sys->task_yield=old.task_yield;
  sys->io_service_call=old.io_service_call;

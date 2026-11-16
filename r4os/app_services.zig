@@ -684,6 +684,12 @@ pub const ServiceEndpoint = struct {
         };
     }
 
+    /// Borrowed original caller snapshot; no process pin or numeric-ID reopen.
+    pub fn client(self: *const ServiceEndpoint, request_id: u32, out: *abi.ProgramProcessHandle) i32 {
+        if (!self.valid()) return abi.err_closed;
+        return self.sys.serviceEndpointClient(self.raw, request_id, out);
+    }
+
     pub fn reply(self: *ServiceEndpoint, request_id: u32, status: i32, payload: []const u8) i32 {
         if (!self.valid()) return abi.err_closed;
         const raw = self.sys.serviceEndpointReply(self.raw, request_id, status, payload);

@@ -473,6 +473,8 @@ fn service_network_serial_deadline_owners_and_retained_requests() {
 
 fn check_service_loop(services: &Services<'_>, response: &mut [u8]) {
     let mut endpoint = services.register(c"EXAMPLE", 0).unwrap();
+    let original = endpoint.client(88).unwrap();
+    assert_eq!((original.instance_id, original.reserved, original.generation), (11, 0, 0x9136000012345678));
     assert_eq!(endpoint.wait(Timeout::Poll).unwrap(), None);
     let mut loop_owner = endpoint.service_loop(200, 2).unwrap();
     assert!(matches!(
@@ -513,6 +515,7 @@ fn check_service_loop(services: &Services<'_>, response: &mut [u8]) {
     let n = loop_owner.format_report(b"EXAMPLE", &mut report).unwrap();
     assert!(report[..n].starts_with(b"SVCLOOP|1|EXAMPLE|"));
     unsafe { sdk_service_cancel_reply(1) };
+    assert!(matches!(endpoint.client(88), Err(r4os_sdk::storage::Error::Raw(code)) if code == abi::service_api_result_not_found));
     assert_eq!(
         endpoint.reply(88, 0, &[]),
         abi::service_api_result_not_found
