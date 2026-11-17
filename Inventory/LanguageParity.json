@@ -59444,6 +59444,104 @@
         "Repositories/SDK/r4os/generated/web_fingerprint.zig",
         "Repositories/SDK/r4os/javascript.zig"
       ]
+    },
+    "performance_bindings_09212_publication_review": {
+      "complete": true,
+      "performed_in": "0.92.12-release",
+      "sdk": "0.64.230",
+      "contract": "0.64.99",
+      "libraries": "0.64.69",
+      "kind": "scoped_review_of_retained_C_Rust_Zig_projection_and_ABI_qualification",
+      "report": "Docs/SDK/LanguageParity.txt#Freigabe-0.92.12",
+      "scope": "Seventeen drifted inputs reviewed against the last admitted SDK226 source: Contract99 adds only operation12 present_region, generated C/Rust/Zig keep existing layouts and constants; DEVICE_V1 revision11 appends slot34 at304, table312, preserving prior slot offsets. C/Rust/Zig bindings agree. Shared Rust raw library projection follows the canonical current ABI; SDK profiles and package identities bind the actual sources. Original0.92.10 Contract check/test includes eight successful C/Rust/Zig ABI/callback cases, Rust host/bare/Clippy, and existing R4GFX provider/prefix cases; these executions retain SDK229 identities. This metadata repair does not execute new callbacks, GPU work or hardware qualification. Fresh extracted SDK230 package and new C/Zig/Rust console builds are separately required.",
+      "evidence_archive": "ExFiles/Reports/Desktop/0.92.10/host/0.92.10-abi-qualification.json; ExFiles/Reports/Desktop/0.92.10/host/0.92.10-contract-test.log",
+      "reviewed_files": [
+        {
+          "path": "Repositories/Contract/API/ApiContract.baseline.json",
+          "before": "db6f4e35df746cdde29be161d38ca45e12e6ce921e5ea1012b8233e9f979a455",
+          "after": "23996999c81965eeb0ce0add3610d47564cbc73050c81525980fbd3f5c817702"
+        },
+        {
+          "path": "Repositories/Contract/API/ApiContract.json",
+          "before": "db6f4e35df746cdde29be161d38ca45e12e6ce921e5ea1012b8233e9f979a455",
+          "after": "23996999c81965eeb0ce0add3610d47564cbc73050c81525980fbd3f5c817702"
+        },
+        {
+          "path": "Repositories/Contract/Generated/Inventory/RustABI.json",
+          "before": "f68daab378e047bc3db25de7ef567ee1c3fc68ffa60ff6c0179a7e34298dcaf2",
+          "after": "d7eaf5dde7dedecb6fabb6b285ae40d562abc8fa96dd66264d725673ed099162"
+        },
+        {
+          "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_generated.h",
+          "before": "7e22ea5513f6422b186374970e02948f36191c64915034792770d4898a16e66e",
+          "after": "d371739b7c42881625295509914fa231155a12f3eed64bc62d2cac7cc50d9490"
+        },
+        {
+          "path": "Repositories/Contract/Generated/SDK/Rust/src/lib.rs",
+          "before": "47f45bf9484fffc8b6c9179efd9659295e67b9746ee9b2679f01720e0cda9776",
+          "after": "da211ea5c8188abdfab7423158f2fac7d2ab5dc126c6f077dcc9cba3d56a23d8"
+        },
+        {
+          "path": "Repositories/Contract/Generated/SDK/Zig/abi.zig",
+          "before": "c4e263aa6fb7cf621048fb976ea34e5bb9fcfca606d81acd1360a864c9dbd987",
+          "after": "2e803c1186aca57e31d076762893b7738ce7d7243e5b74dea38ccfbc4d55c1fc"
+        },
+        {
+          "path": "Repositories/Contract/Generated/SDK/Zig/abi_exports.zig",
+          "before": "9d5f4b2926df3c85425a3ec712f69bcee0aee4e8af499a4c285a87949c4ff9ac",
+          "after": "1be5e6e9f2518f3ada1896020072be95c9e1906600fe14c866381637ed397741"
+        },
+        {
+          "path": "Repositories/Contract/Generated/SDK/Zig/abi_generated.zig",
+          "before": "8ee8f44659588ed05748c59682305d655b023c41d8d33e56230a249160edb533",
+          "after": "f0b517d768b025a4c53c3bf8c67992e1d61146922b767c2b4da82e3d46f06a17"
+        },
+        {
+          "path": "Repositories/Libraries/R4GFX/Bindings/C/r4gfx.h",
+          "before": "2e0cdf7fa79cd765617039945d698ed9d9ca48bc647bbc672b0ddc3659484a63",
+          "after": "372305a6cf44a05f4c21f0d1975871cee852121a2365dc1c2fed643b7da66116"
+        },
+        {
+          "path": "Repositories/Libraries/R4GFX/Bindings/Rust/src/lib.rs",
+          "before": "c064c099e0aa91fb25c33420db43f482ecce1b17213bd6dfb1e9704190b97ad8",
+          "after": "3717b2010848d3cd61f499d53a9288db476b21d41b537316a9d849b5418388ef"
+        },
+        {
+          "path": "Repositories/Libraries/R4GFX/Bindings/Zig/r4gfx_abi.zig",
+          "before": "1d840fa66d79fd7975042a224d116394d9ad33ca9017ddf9ab6b6c699ea38a0e",
+          "after": "3eaeaf788c92b32a79a5e4d654c7bf88cf04336a25eddf42a3aa0b9494bb580a"
+        },
+        {
+          "path": "Repositories/Libraries/R4GFX/Contract/Generated/implementation_abi.zig",
+          "before": "5a604d4ecd9e2d95e8f1e8d429d1400b4b3af4fb97dfd388f25d10dd15d4b4de",
+          "after": "86c5c52456d90e1bd47ec4283d6cda16d49277b1821427edad1c908ac2ffc26a"
+        },
+        {
+          "path": "Repositories/Libraries/R4GFX/Contract/LibraryContract.baseline.json",
+          "before": "588b3f5c69d25722fbd93f12765b215e599fff6ad35204abf31b7c7b53f0a31d",
+          "after": "8eaa9a9eb5346df339fa381dd0d0077b864c975706dcd00c9740afa011268476"
+        },
+        {
+          "path": "Repositories/Libraries/R4GFX/Contract/LibraryContract.json",
+          "before": "588b3f5c69d25722fbd93f12765b215e599fff6ad35204abf31b7c7b53f0a31d",
+          "after": "8eaa9a9eb5346df339fa381dd0d0077b864c975706dcd00c9740afa011268476"
+        },
+        {
+          "path": "Repositories/Libraries/Shared/Rust/src/raw.rs",
+          "before": "c4e97d724711f5dedb8c3838e86ed472255f843711b22966e4b0fa2b59b796bd",
+          "after": "481cbe79ae1d4358d679cb9ddf1ade2bf6f315030a3e7e5efcefbcc0d1171e83"
+        },
+        {
+          "path": "Repositories/SDK/Profiles/Components.json",
+          "before": "42b05403ded86e1bbecc6f6f29b35b46424ca23e842f21babaab262c95a98445",
+          "after": "d4247255c7d018b0edc4ed491f256fb2318195741b7693e9e9e76ac76178dad3"
+        },
+        {
+          "path": "Repositories/SDK/build.zig.zon",
+          "before": "c06dfe386a988943d526a96701ae5e00982684ca23c3b954a635ded7089d18d0",
+          "after": "1e361a3685532d974b3899e547b3f05f052074f5e76d2747a31fc95834d9eea2"
+        }
+      ]
     }
   },
   "wave_bindings": [
@@ -59696,19 +59794,19 @@
   "test_policy": "47: reine Quellenanalyse, keine Produktbuilds/Gaeste/STANDARD. Folgewellen nur betroffene vorhandene Tests; moegliche normale Laufzeitwirkung genau einen finalen STANDARD SMP4 mit vollem DevCenterreadback, reine Host-/Generator-/Diagnosearbeit ohne Produktlaufzeitwirkung ohne zusaetzlichen STANDARD.",
   "open_acceptance": "Current source/host language review is qualified only in its explicit bounded scopes. Final SDK/source/normal artifacts/Recovery/current native90 and soleSTANDARD90 remain required; no Windows/hardware claim.",
   "current_review": {
-    "performed_in": "0.91.36",
-    "sdk": "0.64.226",
-    "contract": "0.64.98",
-    "libraries": "0.64.67",
-    "evidence": "service_original_caller_snapshot_09136",
+    "performed_in": "0.92.12-release",
+    "sdk": "0.64.230",
+    "contract": "0.64.99",
+    "libraries": "0.64.69",
+    "evidence": "performance_bindings_09212_publication_review",
     "historical_snapshot_retained": true,
     "prepared_only": false,
-    "scope": "Scoped original-caller snapshot and actual C/Zig/Rust service host qualification. Previously completed browser source receipts are retained by exact source equality. Other capability scopes and exports retain their existing bounded qualifications; final normal owner builds, native lifecycle probe and sole STANDARD are separate."
+    "scope": "Reviewed retained current C/Rust/Zig contract/library projections and seventeen source digests. No new public functions, runtime/module bodies, templates or capability coverage introduced by this inventory repair. Actual fresh SDK package qualification remains separate."
   },
   "drift_guard": {
     "schema": 1,
     "hash_mode": "utf8-bomless-lf",
-    "reviewed_in": "0.91.36",
+    "reviewed_in": "0.92.12-release",
     "policy": "Conservative review gate over actual owner bodies, compiler projections and real C/Rust entry sources. No automatic refresh/PASS: changed inputs require the affected implementation and functional proof review; unchanged bounded evidence may be reused. This does not execute tests or certify semantics, hardware, Windows or performance.",
     "watch": [
       "Repositories/Contract/API",
@@ -59817,11 +59915,11 @@
     "files": [
       {
         "path": "Repositories/Contract/API/ApiContract.baseline.json",
-        "sha256": "db6f4e35df746cdde29be161d38ca45e12e6ce921e5ea1012b8233e9f979a455"
+        "sha256": "23996999c81965eeb0ce0add3610d47564cbc73050c81525980fbd3f5c817702"
       },
       {
         "path": "Repositories/Contract/API/ApiContract.json",
-        "sha256": "db6f4e35df746cdde29be161d38ca45e12e6ce921e5ea1012b8233e9f979a455"
+        "sha256": "23996999c81965eeb0ce0add3610d47564cbc73050c81525980fbd3f5c817702"
       },
       {
         "path": "Repositories/Contract/API/Generation2.baseline.json",
@@ -59857,11 +59955,11 @@
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/RustABI.json",
-        "sha256": "f68daab378e047bc3db25de7ef567ee1c3fc68ffa60ff6c0179a7e34298dcaf2"
+        "sha256": "d7eaf5dde7dedecb6fabb6b285ae40d562abc8fa96dd66264d725673ed099162"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_generated.h",
-        "sha256": "7e22ea5513f6422b186374970e02948f36191c64915034792770d4898a16e66e"
+        "sha256": "d371739b7c42881625295509914fa231155a12f3eed64bc62d2cac7cc50d9490"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_technical_generated.h",
@@ -59873,19 +59971,19 @@
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Rust/src/lib.rs",
-        "sha256": "47f45bf9484fffc8b6c9179efd9659295e67b9746ee9b2679f01720e0cda9776"
+        "sha256": "da211ea5c8188abdfab7423158f2fac7d2ab5dc126c6f077dcc9cba3d56a23d8"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi.zig",
-        "sha256": "c4e263aa6fb7cf621048fb976ea34e5bb9fcfca606d81acd1360a864c9dbd987"
+        "sha256": "2e803c1186aca57e31d076762893b7738ce7d7243e5b74dea38ccfbc4d55c1fc"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_exports.zig",
-        "sha256": "9d5f4b2926df3c85425a3ec712f69bcee0aee4e8af499a4c285a87949c4ff9ac"
+        "sha256": "1be5e6e9f2518f3ada1896020072be95c9e1906600fe14c866381637ed397741"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_generated.zig",
-        "sha256": "8ee8f44659588ed05748c59682305d655b023c41d8d33e56230a249160edb533"
+        "sha256": "f0b517d768b025a4c53c3bf8c67992e1d61146922b767c2b4da82e3d46f06a17"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/package.zig",
@@ -60117,7 +60215,7 @@
       },
       {
         "path": "Repositories/Libraries/R4GFX/Bindings/C/r4gfx.h",
-        "sha256": "2e0cdf7fa79cd765617039945d698ed9d9ca48bc647bbc672b0ddc3659484a63"
+        "sha256": "372305a6cf44a05f4c21f0d1975871cee852121a2365dc1c2fed643b7da66116"
       },
       {
         "path": "Repositories/Libraries/R4GFX/Bindings/C/r4gfx_helpers.h",
@@ -60133,7 +60231,7 @@
       },
       {
         "path": "Repositories/Libraries/R4GFX/Bindings/Rust/src/lib.rs",
-        "sha256": "c064c099e0aa91fb25c33420db43f482ecce1b17213bd6dfb1e9704190b97ad8"
+        "sha256": "3717b2010848d3cd61f499d53a9288db476b21d41b537316a9d849b5418388ef"
       },
       {
         "path": "Repositories/Libraries/R4GFX/Bindings/Zig/outputs.zig",
@@ -60145,19 +60243,19 @@
       },
       {
         "path": "Repositories/Libraries/R4GFX/Bindings/Zig/r4gfx_abi.zig",
-        "sha256": "1d840fa66d79fd7975042a224d116394d9ad33ca9017ddf9ab6b6c699ea38a0e"
+        "sha256": "3eaeaf788c92b32a79a5e4d654c7bf88cf04336a25eddf42a3aa0b9494bb580a"
       },
       {
         "path": "Repositories/Libraries/R4GFX/Contract/Generated/implementation_abi.zig",
-        "sha256": "5a604d4ecd9e2d95e8f1e8d429d1400b4b3af4fb97dfd388f25d10dd15d4b4de"
+        "sha256": "86c5c52456d90e1bd47ec4283d6cda16d49277b1821427edad1c908ac2ffc26a"
       },
       {
         "path": "Repositories/Libraries/R4GFX/Contract/LibraryContract.baseline.json",
-        "sha256": "588b3f5c69d25722fbd93f12765b215e599fff6ad35204abf31b7c7b53f0a31d"
+        "sha256": "8eaa9a9eb5346df339fa381dd0d0077b864c975706dcd00c9740afa011268476"
       },
       {
         "path": "Repositories/Libraries/R4GFX/Contract/LibraryContract.json",
-        "sha256": "588b3f5c69d25722fbd93f12765b215e599fff6ad35204abf31b7c7b53f0a31d"
+        "sha256": "8eaa9a9eb5346df339fa381dd0d0077b864c975706dcd00c9740afa011268476"
       },
       {
         "path": "Repositories/Libraries/R4GFX/Display/Rust/Cargo.toml",
@@ -61333,7 +61431,7 @@
       },
       {
         "path": "Repositories/Libraries/Shared/Rust/src/raw.rs",
-        "sha256": "c4e97d724711f5dedb8c3838e86ed472255f843711b22966e4b0fa2b59b796bd"
+        "sha256": "481cbe79ae1d4358d679cb9ddf1ade2bf6f315030a3e7e5efcefbcc0d1171e83"
       },
       {
         "path": "Repositories/Libraries/Shared/Tests/Consumer/Cargo.toml",
@@ -61429,7 +61527,7 @@
       },
       {
         "path": "Repositories/SDK/Profiles/Components.json",
-        "sha256": "42b05403ded86e1bbecc6f6f29b35b46424ca23e842f21babaab262c95a98445"
+        "sha256": "d4247255c7d018b0edc4ed491f256fb2318195741b7693e9e9e76ac76178dad3"
       },
       {
         "path": "Repositories/SDK/Profiles/Tools.json",
@@ -63193,7 +63291,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "c06dfe386a988943d526a96701ae5e00982684ca23c3b954a635ded7089d18d0"
+        "sha256": "1e361a3685532d974b3899e547b3f05f052074f5e76d2747a31fc95834d9eea2"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -64462,7 +64560,8 @@
           "sdk_current_only_09090",
           "contract_docs_current_09090",
           "deferred_level_irq_09123",
-          "service_original_caller_snapshot_09136"
+          "service_original_caller_snapshot_09136",
+          "performance_bindings_09212_publication_review"
         ]
       },
       {
@@ -65616,7 +65715,8 @@
           "tooling_templates_generation2_09044",
           "canonical_text_font_image_generation2_09045",
           "remaining_positive_generation2_consumers_09087",
-          "library_current_only_09090"
+          "library_current_only_09090",
+          "performance_bindings_09212_publication_review"
         ]
       },
       {
@@ -67189,6 +67289,16 @@
       "historical_snapshot_retained": true,
       "prepared_only": false,
       "scope": "Reviewed24 prior/current changed inputs plus driver-host build selection; prior audio progress96 and R4IMG reentrancy15/16 source evidence retained. No other capability requalified, and no new Windows/hardware/global SDK performance assertion. Existing35 capability scopes/219 root exports remain."
+    },
+    {
+      "performed_in": "0.91.36",
+      "sdk": "0.64.226",
+      "contract": "0.64.98",
+      "libraries": "0.64.67",
+      "evidence": "service_original_caller_snapshot_09136",
+      "historical_snapshot_retained": true,
+      "prepared_only": false,
+      "scope": "Scoped original-caller snapshot and actual C/Zig/Rust service host qualification. Previously completed browser source receipts are retained by exact source equality. Other capability scopes and exports retain their existing bounded qualifications; final normal owner builds, native lifecycle probe and sole STANDARD are separate."
     }
   ],
   "source_inventory_scope": "Historical declaration census retained at its explicit row epochs. Current reviewed source identities are drift_guard.files; counts and names do not qualify implementations.",
