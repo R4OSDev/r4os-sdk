@@ -142,15 +142,15 @@
     },
     "libraries": {
       "repository": "https://github.com/R4OSDev/r4os-libraries.git",
-      "commit": "855a3b4ab3e71c0cf90305e9d5c2ed0321a7592d",
-      "version": "0.64.69",
+      "commit": "a9b9cf1fcf255f229e5feb3ef6875f9dff5f8564",
+      "version": "0.64.70",
       "files": {
-        "build.zig.zon": "a0e6435a5bec7dc60612f088b0320f1f640e0cbc6efea7983950ee9a193edda2",
+        "build.zig.zon": "c4e020e34f5943a2e19422b455ea6b2430dd9ee80ac5b56c95133537d06eb682",
         "Shared/Rust/Cargo.toml": "431c38bac8b28467b0dad7842d1626397bb061eeb94f54f604276dc81036aec4"
       },
       "tree": {
         "algorithm": "r4os-files-sha256-lf-v1",
-        "sha256": "bba8d14203141850f48e07d602eb05942294c4b971129012664342351f34afc4",
+        "sha256": "813f481faa2b6a8e7409ab7113eb38801ff0dfaba1d8aedec491e401f6dff8ba",
         "files": [
           ".gitattributes",
           ".gitignore",
@@ -2609,8 +2609,8 @@
           "consumer_oracles.zig"
         ]
       },
-      "zig_hash": "r4os_libraries-0.64.69-dH4fNevHewPNg33Ii1WDFmHYduKgI0dyMn1qG8gSDLTM",
-      "archive_url": "https://github.com/R4OSDev/r4os-libraries/archive/855a3b4ab3e71c0cf90305e9d5c2ed0321a7592d.tar.gz",
+      "zig_hash": "r4os_libraries-0.64.70-dH4fNYzKewNUQX_SUvJtiMFIHYOJqJ4_wSV7AZbGJgSL",
+      "archive_url": "https://github.com/R4OSDev/r4os-libraries/archive/a9b9cf1fcf255f229e5feb3ef6875f9dff5f8564.tar.gz",
       "archive_format": "tar.gz"
     },
     "recovery-contract": {
@@ -6411,9 +6411,9 @@
       "name": "R4ENC",
       "repository": "libraries",
       "path": "R4ENC",
-      "version": "0.1.14",
+      "version": "0.1.15",
       "target": "/R4OS/LIBS/R4ENC.R4L",
-      "manifest_sha256": "d7fed684519762e8e0b5448ce6326f1fba07e07e6ba3b0241472797f288da1ff"
+      "manifest_sha256": "fe2ea98aac9eba0e83f236710499a04086aad71e2c7fbacef7a7f8641fc120ae"
     },
     "r4font": {
       "name": "R4FONT",
@@ -6435,9 +6435,9 @@
       "name": "R4GL",
       "repository": "libraries",
       "path": "R4GL",
-      "version": "0.1.37",
+      "version": "0.1.38",
       "target": "/R4OS/LIBS/R4GL.R4L",
-      "manifest_sha256": "864974a17c812cae458d5da015f1aa8fb58403bdfde485f0ddce26e89f19f30e"
+      "manifest_sha256": "8ee6e5bf129ecaa815101c089b3e02fd751028a9d3239b7e69ae1cb0fd6e62e3"
     },
     "r4img": {
       "name": "R4IMG",
@@ -6475,17 +6475,17 @@
       "name": "R4VIDEO",
       "repository": "libraries",
       "path": "R4VIDEO",
-      "version": "0.1.19",
+      "version": "0.1.20",
       "target": "/R4OS/LIBS/R4VIDEO.R4L",
-      "manifest_sha256": "f8654bc8be37c93bb108cce8a7e63cab1b851e560ebd26910797b5b74889450e"
+      "manifest_sha256": "48b053ebd1cbb13fb0d53e6a64c7206d392c2f2994943d8bcb87314c150c0c7f"
     },
     "r4vk": {
       "name": "R4VK",
       "repository": "libraries",
       "path": "R4VK",
-      "version": "0.1.51",
+      "version": "0.1.52",
       "target": "/R4OS/LIBS/R4VK.R4L",
-      "manifest_sha256": "450cdcd860b309fb7f61c2ea18b752bdcabbbad9cb0787b4a39dafc5466d255d"
+      "manifest_sha256": "b9c923fc595ea075b98506041e7d1420f276436fa96601a33d4ffc349bb30ae0"
     }
   },
   "sets": {
