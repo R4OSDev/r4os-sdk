@@ -61211,7 +61211,7 @@
       },
       {
         "path": "Repositories/Libraries/Shared/Native/BuildPortability.ps1",
-        "sha256": "469bab6c8df5751119cb2423680c9dd1983b2c3b6f64a2d342f9d9844e3aa4cd"
+        "sha256": "b09d0d6afc0d5e7b174c9b4b6bb9eccb38a426551b4f853b348633536814b54c"
       },
       {
         "path": "Repositories/Libraries/Shared/Native/Math/Build.ps1",
@@ -61399,7 +61399,7 @@
       },
       {
         "path": "Repositories/Libraries/Shared/Native/threading.zig",
-        "sha256": "04995ce6d801b47a8d9dca8ac9104a938624616f60aaae5f0e267ac7a71456cf"
+        "sha256": "2b57e985a68ed79704104cd04b1d0deb0ad9f4c0143601fddbfe3bcbeab54b12"
       },
       {
         "path": "Repositories/Libraries/Shared/Native/threads.zig",
@@ -61527,7 +61527,7 @@
       },
       {
         "path": "Repositories/SDK/Profiles/Components.json",
-        "sha256": "d4247255c7d018b0edc4ed491f256fb2318195741b7693e9e9e76ac76178dad3"
+        "sha256": "6a9f6415bbd393bc595a3c59e7174dc891b77de9de91e9778178f19028476ea2"
       },
       {
         "path": "Repositories/SDK/Profiles/Tools.json",
@@ -63291,7 +63291,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "1e361a3685532d974b3899e547b3f05f052074f5e76d2747a31fc95834d9eea2"
+        "sha256": "6e5febf7bbbc446b1b751a89c60b816e05278843686c20e5eafdf3979dd05165"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
