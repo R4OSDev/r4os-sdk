@@ -26,25 +26,25 @@
   "repositories": {
     "contract": {
       "repository": "https://github.com/R4OSDev/r4os-contract.git",
-      "commit": "527eb829afb1d2c810908d686b57b892336f8c55",
-      "version": "0.64.98",
+      "commit": "5cdd8ff5384bc4e55f3a28c147858542fc1df9a6",
+      "version": "0.64.99",
       "files": {
-        "build.zig.zon": "617b1020f44d51f602a03d4c04fe16e58f32311edc688a1819bab0ee6c8654b6",
-        "API/ApiContract.json": "db6f4e35df746cdde29be161d38ca45e12e6ce921e5ea1012b8233e9f979a455",
+        "build.zig.zon": "ff34cd7d9268da5ebb692058d89b31ff9b8c2b91fc0effed64ab28ac220b5db1",
+        "API/ApiContract.json": "23996999c81965eeb0ce0add3610d47564cbc73050c81525980fbd3f5c817702",
         "Module/CpuBaseline.json": "eeeee03aa8fd41051c09e61e9d70ca35660f2b413c3f878fb6e5a3bb51aad10c",
         "Generated/SDK/Rust/Cargo.toml": "de464f2f9243e3d153c06b701a2126839c3e8a921a6d466467d3042370023263",
-        "Generated/SDK/Rust/src/lib.rs": "47f45bf9484fffc8b6c9179efd9659295e67b9746ee9b2679f01720e0cda9776",
+        "Generated/SDK/Rust/src/lib.rs": "da211ea5c8188abdfab7423158f2fac7d2ab5dc126c6f077dcc9cba3d56a23d8",
         "API/Generation2.json": "a68c412b94492a394956463aa55d76b1865a8378839ef1859ed49bad9e5c9e2c",
         "Generated/Generation2/Inventory.json": "8f4f9e4d5fd073e069d48ba7d83a4b8829ce9db4e628ff282006069a929bbcde",
         "API/Generation2.baseline.json": "a68c412b94492a394956463aa55d76b1865a8378839ef1859ed49bad9e5c9e2c",
         "API/LegacyProjection.json": "dfea92dc5967ca7594d3f1679bdce69440b01b5771826e6635e07e7e5f27bce7"
       },
-      "zig_hash": "r4os_contract-0.64.98-ELhbYRghcwFV8aWP3Sx9DPt6SnFRQwJMNxHkVNEa6PK3",
-      "archive_url": "https://github.com/R4OSDev/r4os-contract/archive/527eb829afb1d2c810908d686b57b892336f8c55.tar.gz",
+      "zig_hash": "r4os_contract-0.64.99-ELhbYdgqcwETm2RbybP4uQwtuCc3WRUXzIh5M9Pb5PvF",
+      "archive_url": "https://github.com/R4OSDev/r4os-contract/archive/5cdd8ff5384bc4e55f3a28c147858542fc1df9a6.tar.gz",
       "archive_format": "tar.gz",
       "tree": {
         "algorithm": "r4os-files-sha256-lf-v1",
-        "sha256": "e5a71322c746eccaf5c274242d1abb7a4cba9441a1ad9f2dedd155c876f3bab1",
+        "sha256": "38b22c21f097923e77dfb2b27874baf95804f8d4234d609f8a45ce4b25c0d904",
         "files": [
           ".gitattributes",
           ".gitignore",
@@ -142,15 +142,15 @@
     },
     "libraries": {
       "repository": "https://github.com/R4OSDev/r4os-libraries.git",
-      "commit": "3c4a7152be8e5e351d8dfb2d4c7eb3f0919f8609",
-      "version": "0.64.68",
+      "commit": "855a3b4ab3e71c0cf90305e9d5c2ed0321a7592d",
+      "version": "0.64.69",
       "files": {
-        "build.zig.zon": "0aee53aa63e74f3a7e9e903e534540ec63f3d1f56e4a8a2293d12e70001a10b7",
+        "build.zig.zon": "a0e6435a5bec7dc60612f088b0320f1f640e0cbc6efea7983950ee9a193edda2",
         "Shared/Rust/Cargo.toml": "431c38bac8b28467b0dad7842d1626397bb061eeb94f54f604276dc81036aec4"
       },
       "tree": {
         "algorithm": "r4os-files-sha256-lf-v1",
-        "sha256": "a1954443dd1e3e04a2beac56c863f1d8c170f561cf41a0b55894d4f945f4f8e5",
+        "sha256": "bba8d14203141850f48e07d602eb05942294c4b971129012664342351f34afc4",
         "files": [
           ".gitattributes",
           ".gitignore",
@@ -2609,8 +2609,8 @@
           "consumer_oracles.zig"
         ]
       },
-      "zig_hash": "r4os_libraries-0.64.68-dH4fNcqMewOzFFFsZvOoKMu9ZC078xBOLoG7ayki1rxO",
-      "archive_url": "https://github.com/R4OSDev/r4os-libraries/archive/3c4a7152be8e5e351d8dfb2d4c7eb3f0919f8609.tar.gz",
+      "zig_hash": "r4os_libraries-0.64.69-dH4fNevHewPNg33Ii1WDFmHYduKgI0dyMn1qG8gSDLTM",
+      "archive_url": "https://github.com/R4OSDev/r4os-libraries/archive/855a3b4ab3e71c0cf90305e9d5c2ed0321a7592d.tar.gz",
       "archive_format": "tar.gz"
     },
     "recovery-contract": {
@@ -6427,9 +6427,9 @@
       "name": "R4GFX",
       "repository": "libraries",
       "path": "R4GFX",
-      "version": "0.1.43",
+      "version": "0.1.44",
       "target": "/R4OS/LIBS/R4GFX.R4L",
-      "manifest_sha256": "e9e7400864d63962ab97f3c42b9f04fd32c7b1a67687a749fbc2db283786dc9c"
+      "manifest_sha256": "bada7ff260a34cf3ae41f3e481c4ed5d5f1d0e2edde70366e1fb2fa01eb4cfd7"
     },
     "r4gl": {
       "name": "R4GL",
