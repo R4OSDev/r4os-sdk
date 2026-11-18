@@ -61559,7 +61559,7 @@
       },
       {
         "path": "Repositories/SDK/Rust/src/c_facades.rs",
-        "sha256": "b17f94f41d73bfcec11befe65adb184d293a7683f409073f8b3dbe38e9ec0adb"
+        "sha256": "36b08e040abadd3eb4522fa9882b47f3c34a3545a05ee7f44af4fd7e2e8de548"
       },
       {
         "path": "Repositories/SDK/Rust/src/cli.rs",
@@ -62079,7 +62079,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/gui_bridge.h",
-        "sha256": "1ebee214292e32bd4eeae86ed495bb01db598b66bc755634a4ac992874ab8ce0"
+        "sha256": "6e247cf71244d6d31d8c4e4be002d7b59cf44f0a68bab5cd5162f63f50c57d88"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/heap.h",
@@ -62219,7 +62219,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/subsystem_helpers.h",
-        "sha256": "44673f90be1d283ff532274b4d446d84bdcc18a6f77f296aa79e55bc0f2a4a6f"
+        "sha256": "3faa5f8dd54ebb14b44075defe46109ae033b94edfb54c781ebcd0c35eecaade"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/technical2.h",
@@ -63647,7 +63647,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/generated/gui_fingerprint.zig",
-        "sha256": "9155c07d9f552ff3d8a4dd888c9ae3b017b777126296f8a778eb201db7e831cd"
+        "sha256": "b3ae2dfdaf7ad00c21bbbff49ce7cb21a5f7f4910d959f34cb2c3cd6035d6630"
       },
       {
         "path": "Repositories/SDK/r4os/generated/net_facade.zig",
@@ -63659,7 +63659,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/generated/subsystem_fingerprint.zig",
-        "sha256": "30208785759607a0eeb9763fbde30f28c2c728ebf17a8433208487ae4a7d3e81"
+        "sha256": "51b9f4118f6ddd2f7c3a080f58d1acc69b3dccab2ed6b61035571bad477893df"
       },
       {
         "path": "Repositories/SDK/r4os/generated/transport_fingerprint.zig",
