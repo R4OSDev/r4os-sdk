@@ -3,6 +3,11 @@
 The active compiler/component selection is defined only by `Profiles/`.
 Version-specific notes below describe their dated changes.
 
+SDK 0.64.234 reads the R4RD v2 recent-document list. Reading an older or
+unknown list returns an empty history and preserves the registry value. The
+next successful document registration starts a v2 list. A failed write
+leaves the stored history intact. Current v2 records keep their ordering.
+
 SDK 0.64.233 removes the unused `SdkOptions.libraries_dependency` field.
 In Zig build scripts, remove `.libraries_dependency = libraries_dep` from the
 options passed to `sdk_build.sdk`. If it was the only field, the initializer

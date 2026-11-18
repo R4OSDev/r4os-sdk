@@ -63291,7 +63291,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "ce98abf6107a931403e9f6a0daae63644ca979a2091313b8fc68ec2a57312838"
+        "sha256": "f623489d185ed17b3e6d0dcbc860527686d8a57c9e7573493eb28112e85b47a7"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -63991,7 +63991,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/recent_documents.zig",
-        "sha256": "13000dfecbbc7c952efa5f055e1201c6fa52b3dda61e051295e0e3acb6b88c01"
+        "sha256": "1fd9f9841e8e868fb60033a959a1342673c687b096e9b459a42af7af96f36601"
       },
       {
         "path": "Repositories/SDK/r4os/registry.zig",
