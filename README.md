@@ -3,6 +3,12 @@
 The active compiler/component selection is defined only by `Profiles/`.
 Version-specific notes below describe their dated changes.
 
+SDK 0.64.233 removes the unused `SdkOptions.libraries_dependency` field.
+In Zig build scripts, remove `.libraries_dependency = libraries_dep` from the
+options passed to `sdk_build.sdk`. If it was the only field, the initializer
+becomes `sdk_build.sdk(b, sdk_dep, .{})`. A project that consumes library
+sources through its own dependency keeps that dependency in its build graph.
+
 SDK 0.64.225 bounds protected JavaScript parser and recursive AST/compiler
 entries with a shared front-end limit of128. Excess depth returns the
 existing CallDepth error and leaves bytecode invalid; normal parsing can
