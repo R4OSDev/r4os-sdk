@@ -142,15 +142,15 @@
     },
     "libraries": {
       "repository": "https://github.com/R4OSDev/r4os-libraries.git",
-      "commit": "7a8ff50f44ad5cadd414a8531a1c35dc5d740a89",
-      "version": "0.64.71",
+      "commit": "497bc3aee08d04f080d91e9727305a537071f1c4",
+      "version": "0.64.72",
       "files": {
-        "build.zig.zon": "65d988d0b79a28fee48b20b991f54cafff39fab239fc00810813c5c44ba1a5fe",
+        "build.zig.zon": "eea8895758ce0aeb951a4f90c9bfa498db30975a348d038a62e7939c8af852fd",
         "Shared/Rust/Cargo.toml": "431c38bac8b28467b0dad7842d1626397bb061eeb94f54f604276dc81036aec4"
       },
       "tree": {
         "algorithm": "r4os-files-sha256-lf-v1",
-        "sha256": "62a9659929dc7ad8580db3645f30aae7ba5fba3b9b92a7de15b559696c670b74",
+        "sha256": "ca2243e75376b474cc3b6ec2c26cddeeac7941f25f2ea63c6e0a791ac432d5e2",
         "files": [
           ".gitattributes",
           ".gitignore",
@@ -2609,8 +2609,8 @@
           "consumer_oracles.zig"
         ]
       },
-      "zig_hash": "r4os_libraries-0.64.71-dH4fNYvGewP6GR8c9mQvjk9HDkL_-1bWqgrdl0xxMpP1",
-      "archive_url": "https://github.com/R4OSDev/r4os-libraries/archive/7a8ff50f44ad5cadd414a8531a1c35dc5d740a89.tar.gz",
+      "zig_hash": "r4os_libraries-0.64.72-dH4fNYnGewM-boia8tyspWcisGfnj7k2f2mTeQ4hZB-1",
+      "archive_url": "https://github.com/R4OSDev/r4os-libraries/archive/497bc3aee08d04f080d91e9727305a537071f1c4.tar.gz",
       "archive_format": "tar.gz"
     },
     "recovery-contract": {
@@ -6443,9 +6443,9 @@
       "name": "R4IMG",
       "repository": "libraries",
       "path": "R4IMG",
-      "version": "0.3.9",
+      "version": "0.3.10",
       "target": "/R4OS/LIBS/R4IMG.R4L",
-      "manifest_sha256": "a1f450a0ff386d65d97d14fe64f9e69bef703dcc5718ef6150afa160acf410c0"
+      "manifest_sha256": "67f575eb323b210431858b04ed531a19ebe21f3a106e4f26c82fcbf23b370561"
     },
     "r4nak": {
       "name": "R4NAK",
