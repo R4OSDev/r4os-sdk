@@ -59915,11 +59915,11 @@
     "files": [
       {
         "path": "Repositories/Contract/API/ApiContract.baseline.json",
-        "sha256": "23996999c81965eeb0ce0add3610d47564cbc73050c81525980fbd3f5c817702"
+        "sha256": "0f7eee2d8d6fbeac49a1ceae89d65201717c2f12ba6dd419ce0b8ba02b0c89f4"
       },
       {
         "path": "Repositories/Contract/API/ApiContract.json",
-        "sha256": "23996999c81965eeb0ce0add3610d47564cbc73050c81525980fbd3f5c817702"
+        "sha256": "0f7eee2d8d6fbeac49a1ceae89d65201717c2f12ba6dd419ce0b8ba02b0c89f4"
       },
       {
         "path": "Repositories/Contract/API/Generation2.baseline.json",
@@ -59955,11 +59955,11 @@
       },
       {
         "path": "Repositories/Contract/Generated/Inventory/RustABI.json",
-        "sha256": "d7eaf5dde7dedecb6fabb6b285ae40d562abc8fa96dd66264d725673ed099162"
+        "sha256": "1cd8f8ac0b93c5474e24f19a13847878da0991805ac86a72f9fecdc634af9882"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_generated.h",
-        "sha256": "d371739b7c42881625295509914fa231155a12f3eed64bc62d2cac7cc50d9490"
+        "sha256": "67e353bd737f8a4cb921350ccaa30669abfa60d7dbe97f9ffb171c960726f1c9"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/C/include/r4os/abi_technical_generated.h",
@@ -59971,19 +59971,19 @@
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Rust/src/lib.rs",
-        "sha256": "da211ea5c8188abdfab7423158f2fac7d2ab5dc126c6f077dcc9cba3d56a23d8"
+        "sha256": "9f982631549f2df0c55b1055649057472e671f8e7f5ff45c0255a000522ff4fd"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi.zig",
-        "sha256": "2e803c1186aca57e31d076762893b7738ce7d7243e5b74dea38ccfbc4d55c1fc"
+        "sha256": "bf353acb217f1fffc2dfa9a2c7ecbe4858cb5b16be491adc7f574c4fd45afee4"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_exports.zig",
-        "sha256": "1be5e6e9f2518f3ada1896020072be95c9e1906600fe14c866381637ed397741"
+        "sha256": "f15fd6c355b3fd46d39aa357652a57f71ccdb0244aed6c84e067900302ee68ee"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/abi_generated.zig",
-        "sha256": "f0b517d768b025a4c53c3bf8c67992e1d61146922b767c2b4da82e3d46f06a17"
+        "sha256": "7d4444b29db5f86c3e05f8031f2a439f1d98d1dddfe0493fd61428a6ba1ec578"
       },
       {
         "path": "Repositories/Contract/Generated/SDK/Zig/package.zig",
@@ -61527,7 +61527,7 @@
       },
       {
         "path": "Repositories/SDK/Profiles/Components.json",
-        "sha256": "ebfe42aeaa16c6b98bb0610e8f20126fd229344f4ae9bc745383eb3d9b2dc437"
+        "sha256": "c4ae535b4449181a7157f8e2b30fd9b445df6bb818ebe01320d9e6bf208a7c6e"
       },
       {
         "path": "Repositories/SDK/Profiles/Tools.json",
@@ -62907,7 +62907,7 @@
       },
       {
         "path": "Repositories/SDK/Tests/Conformance/ServiceNetworkFacadePrototype05826.zig",
-        "sha256": "d3396a8f833e592fdd11aa021ceeb551813d5bb29779c8ce2f9d3dcbf89b77ec"
+        "sha256": "78f46e3ac19d43d1d8a8540deccb768a77ba81f945ecf9dc47adfb4adad65a19"
       },
       {
         "path": "Repositories/SDK/Tests/Conformance/TextCompositionABI.c",
@@ -63291,7 +63291,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "f623489d185ed17b3e6d0dcbc860527686d8a57c9e7573493eb28112e85b47a7"
+        "sha256": "839ce369d32d0f252fe1fb8533bd54f9486c4ba0ee6cdef02263fda2db3192fe"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
@@ -63343,7 +63343,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/app_services.zig",
-        "sha256": "0acf6510202956fbf6ef5bd9d8bee4d8b9e91211ed67a33a86e83d1d6e448473"
+        "sha256": "14e5e93968a40283fb1d9f8e14076db868dd52fae1e920e406df5e648e64dd5a"
       },
       {
         "path": "Repositories/SDK/r4os/app_storage.zig",

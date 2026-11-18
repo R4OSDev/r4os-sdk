@@ -352,8 +352,8 @@ const WaitBudget = struct {
 
 /// Gemeinsame Hauptschleifenmechanik fuer R4X-Dienste. Fachliche Arbeit und
 /// deren naechste absolute Tickdeadline bleiben beim jeweiligen Dienst.
-/// Der endliche Stopcheck bleibt eine Sicherheitsgrenze; regulaere SERVMAN-
-/// Stopps invalidieren den Endpoint und wecken dessen WaitQueue unmittelbar.
+/// Anbieter mit Stop-Wecksignal wecken den eigenen Endpoint auch bei direktem
+/// Prozess-Stop. Aeltere Anbieter behalten den endlichen Stopcheck.
 pub const ServiceLoop = struct {
     sys: r4sys.Context,
     endpoint_handle: u32,
@@ -365,20 +365,24 @@ pub const ServiceLoop = struct {
     init_error: i32 = 0,
 
     pub fn init(sys: r4sys.Context, endpoint_handle: u32, options: ServiceLoopOptions) ServiceLoop {
-        if (sys.base.generation2 != null) {
+        if (sys.base.generation2) |actual| {
             var loop: ServiceLoop = .{ .sys = sys, .endpoint_handle = endpoint_handle, .started_tick = 0, .stop_check_ticks = 1, .drain_limit = normalizeDrainLimit(options.drain_limit) };
             const sample = sys.base.clockSampleChecked() catch |err| {
                 loop.init_error = checkedFailure(err);
                 return loop;
             };
-            const stop = checked.millisecondsToTicks(options.stop_check_ms, sample.identity.tick_hz) catch |err| {
-                loop.init_error = checkedFailure(err);
-                return loop;
-            };
-            loop.stop_check_ticks = checked.toWaitTicks(.{ .kind = 1, .value = @max(stop, 1) }) catch |err| {
-                loop.init_error = checkedFailure(err);
-                return loop;
-            };
+            if (actual.raw.flags & abi.r4xstart_flag_endpoint_stop_wake != 0) {
+                loop.stop_check_ticks = abi.io_wait_forever;
+            } else {
+                const stop = checked.millisecondsToTicks(options.stop_check_ms, sample.identity.tick_hz) catch |err| {
+                    loop.init_error = checkedFailure(err);
+                    return loop;
+                };
+                loop.stop_check_ticks = checked.toWaitTicks(.{ .kind = 1, .value = @max(stop, 1) }) catch |err| {
+                    loop.init_error = checkedFailure(err);
+                    return loop;
+                };
+            }
             if (!sys.hasFn("ticks")) {
                 loop.init_error = checkedFailure(error.ClockUnavailable);
                 return loop;
@@ -387,7 +391,6 @@ pub const ServiceLoop = struct {
             // Its rebased tick counter is not instant_ns * requested_hz.
             loop.started_tick = sys.ticks();
             // An indefinite service lifetime still binds one actual source.
-            // Each endpoint wait retains its finite bounded Stop check.
             loop.clock_guard = checked.DeadlineBudget.init(sample, .{ .kind = abi.timeout_kind_forever }) catch |err| {
                 loop.init_error = checkedFailure(err);
                 return loop;
@@ -405,7 +408,7 @@ pub const ServiceLoop = struct {
     }
 
     /// Wartet bis zu einem Endpointrequest, einer absoluten fachlichen
-    /// Deadline oder dem zentral begrenzten Stopcheck. Ein null-Deadlinewert
+    /// Deadline oder Prozess-Stop. Ein null-Deadlinewert
     /// bezeichnet einen reinen Endpointdienst ohne periodische Facharbeit.
     pub fn wait(self: *ServiceLoop, deadline_tick: ?u64) ServiceLoopWake {
         if (self.sys.programShouldClose()) {
@@ -611,7 +614,7 @@ fn serviceLoopWaitBudget(now: u64, deadline_tick: ?u64, stop_check_ticks: u64) W
     const stop_ticks = if (stop_check_ticks == 0) 1 else stop_check_ticks;
     const deadline = deadline_tick orelse return .{ .ticks = stop_ticks, .deadline_due = false };
     if (now >= deadline) return .{ .ticks = 0, .deadline_due = true };
-    return .{ .ticks = @min(stop_ticks, deadline - now), .deadline_due = false };
+    return .{ .ticks = @min(stop_ticks, deadline - now, abi.io_wait_forever - 1), .deadline_due = false };
 }
 
 fn normalizeDrainLimit(configured: u32) u32 {

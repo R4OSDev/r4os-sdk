@@ -940,3 +940,70 @@ test "service inventory rejects endless restart, missing END, repeated identity,
     try std.testing.expect(!r4os.app_services.inventoryAvailable(&facades.services.sys));
     try std.testing.expectEqual(f.abi.err_no_fn, r4os.app_services.readInventory(&facades.services.sys, std.testing.allocator).failure);
 }
+
+test "service loop negotiates endpoint stop wakes without shortening application deadlines" {
+    const a = r4os.abi;
+    const p = r4os.platform2;
+    const Fake = struct {
+        var tick: u64 = 1000;
+        var requested: u64 = 0;
+        var calls: u32 = 0;
+        var closing: bool = false;
+        var action: enum { message, close, timer, idle } = .message;
+        fn clock(out: *a.MonotonicClockInfo) callconv(.c) i32 {
+            out.* = .{ .flags = a.monotonic_clock_flag_valid, .source = 1, .generation = 1, .frequency_hz = a.monotonic_clock_frequency_hz, .resolution_ns = 1, .instant_ns = tick * 1_000_000, .event_requested_hz = 1000, .event_effective_hz = 1000 };
+            return 1;
+        }
+        fn ticks() callconv(.c) u64 {
+            return tick;
+        }
+        fn shouldClose(_: *const p.abi.R4XStartContext2) callconv(.c) u32 {
+            return @intFromBool(closing);
+        }
+        fn wait(endpoint: u32, timeout: u64) callconv(.c) i32 {
+            std.debug.assert(endpoint == 7);
+            calls += 1;
+            requested = timeout;
+            switch (action) {
+                .message => return 1,
+                .close => closing = true,
+                .timer, .idle => tick += timeout,
+            }
+            return 0;
+        }
+    };
+    var sys: p.abi.R4XStartR4Sys2 = .{};
+    sys.monotonic_clock = @intFromPtr(&Fake.clock);
+    sys.ticks = @intFromPtr(&Fake.ticks);
+    sys.service_endpoint_wait = @intFromPtr(&Fake.wait);
+    var imports = [_]a.R4XStartImport{.{ .group_id = 1, .resolved_version = 2, .table = @intFromPtr(&sys) }};
+    var raw: p.abi.R4XStartContext2 = .{ .instance_id = 7, .app_class = 3, .flags = a.r4xstart_flag_imports_valid | a.r4xstart_flag_close_supported, .should_close = @intFromPtr(&Fake.shouldClose), .imports = @intFromPtr(&imports), .import_count = imports.len };
+    var app = switch (r4os.App2.init(&raw, .service)) {
+        .value => |value| value,
+        .failure => return error.App2,
+    };
+    Fake.tick = 1000;
+    Fake.calls = 0;
+    Fake.closing = false;
+    Fake.action = .idle;
+    var legacy = r4os.ServiceLoop.init(app.system(), 7, .{});
+    try std.testing.expect(legacy.wait(null) == .idle);
+    try std.testing.expectEqual(@as(u64, 200), Fake.requested);
+    raw.flags |= a.r4xstart_flag_endpoint_stop_wake;
+    var loop = r4os.ServiceLoop.init(app.system(), 7, .{});
+    Fake.action = .message;
+    try std.testing.expectEqual(@as(u32, 1), loop.wait(null).requests);
+    try std.testing.expectEqual(a.io_wait_forever, Fake.requested);
+    Fake.action = .timer;
+    try std.testing.expect(loop.wait(Fake.tick + 1200) == .deadline);
+    try std.testing.expectEqual(@as(u64, 1200), Fake.requested);
+    const calls = Fake.calls;
+    try std.testing.expect(loop.wait(Fake.tick) == .deadline);
+    try std.testing.expectEqual(calls, Fake.calls);
+    Fake.action = .close;
+    try std.testing.expect(loop.wait(null) == .stop);
+    try std.testing.expectEqual(a.io_wait_forever, Fake.requested);
+    try std.testing.expect(loop.wait(null) == .stop);
+    try std.testing.expectEqual(calls + 1, Fake.calls);
+    try std.testing.expectEqual(@as(u64, 0), loop.metrics.idle_wakes);
+}
