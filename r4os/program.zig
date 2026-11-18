@@ -856,6 +856,11 @@ pub const Context = struct {
         return out;
     }
 
+    pub fn displayBlitCheck(self: *const Context) i32 {
+        const check = self.devFn("display_blit_check") orelse return self.unavailable("dev");
+        return check();
+    }
+
     pub fn displaySummary(self: *const Context) ?abi.DisplaySummary {
         var out: abi.DisplaySummary = .{};
         const table_fn = self.devFn("display_summary") orelse return null;

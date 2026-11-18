@@ -340,6 +340,10 @@ pub const Context = struct {
         return self.base.pagingSummary();
     }
 
+    pub fn displayBlitCheck(self: *const Context) i32 {
+        return self.base.displayBlitCheck();
+    }
+
     pub fn displaySummary(self: *const Context) ?abi.DisplaySummary {
         return self.base.displaySummary();
     }
