@@ -1,19 +1,19 @@
 .{
     .name = .r4os_sdk,
-    .version = "0.64.238",
+    .version = "0.64.239",
     .fingerprint = 0x8e8330db02f37336,
     .minimum_zig_version = "0.16.0",
     .dependencies = .{
         .r4os_libraries = .{
-            .url = "https://github.com/R4OSDev/r4os-libraries/archive/cc01abe006e41f4722902c8c0c331ce87e045b73.tar.gz",
-            .hash = "r4os_libraries-0.64.73-dH4fNdXGewOaeZNp5dH7hYDa34NCMdvp7Tl_6qu0nJQ2",
+            .url = "https://github.com/R4OSDev/r4os-libraries/archive/67467a81944a9e95be1fb6081ec14371c25e8659.tar.gz",
+            .hash = "r4os_libraries-0.64.74-dH4fNVvKewOtd7JU8cE4h1Cx6Q6vtMqLJM__V0dCo7_y",
             .lazy = true,
         },
         // Bootstrap projection of Profiles/Components.json. The host starters map the actual
         // checkout from Settings.R4S and provide it as a local Zig fork.
         .r4os_contract = .{
-            .url = "https://github.com/R4OSDev/r4os-contract/archive/9960b65b2e9b7744c1a9465c6f837067a7fb1af4.tar.gz",
-            .hash = "r4os_contract-0.64.101-ELhbYa9WcwGPs9Wp-Lcx03CNTsRP3Gd90Dn4_2JLyfCk",
+            .url = "https://github.com/R4OSDev/r4os-contract/archive/6466d705e337d05a757babcfe3d20fe16c8ac902.tar.gz",
+            .hash = "r4os_contract-0.64.102-ELhbYerPcwFN1lth775W7QgK32DLbgWoLuc92B-sTZFW",
         },
     },
     .paths = .{

@@ -768,8 +768,8 @@ typedef struct R4SdkSubsystemNativeValue280 { _Alignas(8) uint8_t opaque_bytes[8
 /* *const abi.R4XStartR4Dev2; native size 8, alignment 8. */
 typedef struct R4SdkSubsystemNativeValue281 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkSubsystemNativeValue281;
 #define R4SdkSubsystemNativeValue281_TYPE 281u
-/* abi.R4XStartR4Dev2; native size 728, alignment 8. */
-typedef struct R4SdkSubsystemNative_abi_R4XStartR4Dev2 { _Alignas(8) uint8_t opaque_bytes[728]; } R4SdkSubsystemNative_abi_R4XStartR4Dev2;
+/* abi.R4XStartR4Dev2; native size 736, alignment 8. */
+typedef struct R4SdkSubsystemNative_abi_R4XStartR4Dev2 { _Alignas(8) uint8_t opaque_bytes[736]; } R4SdkSubsystemNative_abi_R4XStartR4Dev2;
 #define R4SdkSubsystemNative_abi_R4XStartR4Dev2_TYPE 282u
 /* ?*const abi_generated.R4XStartImport; native size 8, alignment 8. */
 typedef struct R4SdkSubsystemNativeValue283 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkSubsystemNativeValue283;
@@ -783,7 +783,7 @@ typedef struct R4SdkSubsystemNativeValue286 { _Alignas(8) uint8_t opaque_bytes[8
 /* *const allocator_source.Memory; native size 8, alignment 8. */
 typedef struct R4SdkSubsystemNativeValue287 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkSubsystemNativeValue287;
 #define R4SdkSubsystemNativeValue287_TYPE 287u
-#define R4SdkSubsystem_ABI_FINGERPRINT UINT64_C(18232775207760991657)
+#define R4SdkSubsystem_ABI_FINGERPRINT UINT64_C(3031191196409205970)
 int32_t R4SdkSubsystemVerifyAbi(uint64_t);
 #define R4SdkSubsystemCatalog_max_entries (192)
 #define R4SdkSubsystemCatalog_max_candidates (128)
@@ -9538,7 +9538,7 @@ static inline R4SdkSubsystemSlot R4SdkSubsystemNativeValue281_create(R4SdkSubsys
  return R4SdkSubsystemConstruct(R4SdkSubsystem_ABI_FINGERPRINT,281u,a,1u,output); }
 static inline R4SdkSubsystemSlot R4SdkSubsystemNativeValue281_inspectNative(const R4SdkSubsystemNativeValue281 *self) { return R4SdkSubsystemInspect(R4SdkSubsystem_ABI_FINGERPRINT,281u,(void *)self,0); }
 static inline R4SdkSubsystemSlot R4SdkSubsystemNative_abi_R4XStartR4Dev2_create(R4SdkSubsystemNative_abi_R4XStartR4Dev2 *output) {
- R4SdkSubsystemSlot a[93]={0};
+ R4SdkSubsystemSlot a[94]={0};
  a[0].flags=R4SDKSUBSYSTEM_DEFAULT;
  a[1].flags=R4SDKSUBSYSTEM_DEFAULT;
  a[2].flags=R4SDKSUBSYSTEM_DEFAULT;
@@ -9632,10 +9632,11 @@ static inline R4SdkSubsystemSlot R4SdkSubsystemNative_abi_R4XStartR4Dev2_create(
  a[90].flags=R4SDKSUBSYSTEM_DEFAULT;
  a[91].flags=R4SDKSUBSYSTEM_DEFAULT;
  a[92].flags=R4SDKSUBSYSTEM_DEFAULT;
- return R4SdkSubsystemConstruct(R4SdkSubsystem_ABI_FINGERPRINT,282u,a,93u,output);
+ a[93].flags=R4SDKSUBSYSTEM_DEFAULT;
+ return R4SdkSubsystemConstruct(R4SdkSubsystem_ABI_FINGERPRINT,282u,a,94u,output);
 }
-static inline R4SdkSubsystemSlot R4SdkSubsystemNative_abi_R4XStartR4Dev2_from_fields(R4SdkSubsystemNative_abi_R4XStartR4Dev2 *output, uint32_t p0, uint32_t p1, uint32_t p2, uint32_t p3, uint64_t p4, uint64_t p5, uint64_t p6, uint64_t p7, uint64_t p8, uint64_t p9, uint64_t p10, uint64_t p11, uint64_t p12, uint64_t p13, uint64_t p14, uint64_t p15, uint64_t p16, uint64_t p17, uint64_t p18, uint64_t p19, uint64_t p20, uint64_t p21, uint64_t p22, uint64_t p23, uint64_t p24, uint64_t p25, uint64_t p26, uint64_t p27, uint64_t p28, uint64_t p29, uint64_t p30, uint64_t p31, uint64_t p32, uint64_t p33, uint64_t p34, uint64_t p35, uint64_t p36, uint64_t p37, uint64_t p38, uint64_t p39, uint64_t p40, uint64_t p41, uint64_t p42, uint64_t p43, uint64_t p44, uint64_t p45, uint64_t p46, uint64_t p47, uint64_t p48, uint64_t p49, uint64_t p50, uint64_t p51, uint64_t p52, uint64_t p53, uint64_t p54, uint64_t p55, uint64_t p56, uint64_t p57, uint64_t p58, uint64_t p59, uint64_t p60, uint64_t p61, uint64_t p62, uint64_t p63, uint64_t p64, uint64_t p65, uint64_t p66, uint64_t p67, uint64_t p68, uint64_t p69, uint64_t p70, uint64_t p71, uint64_t p72, uint64_t p73, uint64_t p74, uint64_t p75, uint64_t p76, uint64_t p77, uint64_t p78, uint64_t p79, uint64_t p80, uint64_t p81, uint64_t p82, uint64_t p83, uint64_t p84, uint64_t p85, uint64_t p86, uint64_t p87, uint64_t p88, uint64_t p89, uint64_t p90, uint64_t p91, uint64_t p92) {
- R4SdkSubsystemSlot a[93]={0};
+static inline R4SdkSubsystemSlot R4SdkSubsystemNative_abi_R4XStartR4Dev2_from_fields(R4SdkSubsystemNative_abi_R4XStartR4Dev2 *output, uint32_t p0, uint32_t p1, uint32_t p2, uint32_t p3, uint64_t p4, uint64_t p5, uint64_t p6, uint64_t p7, uint64_t p8, uint64_t p9, uint64_t p10, uint64_t p11, uint64_t p12, uint64_t p13, uint64_t p14, uint64_t p15, uint64_t p16, uint64_t p17, uint64_t p18, uint64_t p19, uint64_t p20, uint64_t p21, uint64_t p22, uint64_t p23, uint64_t p24, uint64_t p25, uint64_t p26, uint64_t p27, uint64_t p28, uint64_t p29, uint64_t p30, uint64_t p31, uint64_t p32, uint64_t p33, uint64_t p34, uint64_t p35, uint64_t p36, uint64_t p37, uint64_t p38, uint64_t p39, uint64_t p40, uint64_t p41, uint64_t p42, uint64_t p43, uint64_t p44, uint64_t p45, uint64_t p46, uint64_t p47, uint64_t p48, uint64_t p49, uint64_t p50, uint64_t p51, uint64_t p52, uint64_t p53, uint64_t p54, uint64_t p55, uint64_t p56, uint64_t p57, uint64_t p58, uint64_t p59, uint64_t p60, uint64_t p61, uint64_t p62, uint64_t p63, uint64_t p64, uint64_t p65, uint64_t p66, uint64_t p67, uint64_t p68, uint64_t p69, uint64_t p70, uint64_t p71, uint64_t p72, uint64_t p73, uint64_t p74, uint64_t p75, uint64_t p76, uint64_t p77, uint64_t p78, uint64_t p79, uint64_t p80, uint64_t p81, uint64_t p82, uint64_t p83, uint64_t p84, uint64_t p85, uint64_t p86, uint64_t p87, uint64_t p88, uint64_t p89, uint64_t p90, uint64_t p91, uint64_t p92, uint64_t p93) {
+ R4SdkSubsystemSlot a[94]={0};
  a[0] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[1] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[2] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDKSUBSYSTEM_PRESENT};
@@ -9729,7 +9730,8 @@ static inline R4SdkSubsystemSlot R4SdkSubsystemNative_abi_R4XStartR4Dev2_from_fi
  a[90] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p90,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[91] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p91,.flags=R4SDKSUBSYSTEM_PRESENT};
  a[92] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p92,.flags=R4SDKSUBSYSTEM_PRESENT};
- return R4SdkSubsystemConstruct(R4SdkSubsystem_ABI_FINGERPRINT,282u,a,93u,output);
+ a[93] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p93,.flags=R4SDKSUBSYSTEM_PRESENT};
+ return R4SdkSubsystemConstruct(R4SdkSubsystem_ABI_FINGERPRINT,282u,a,94u,output);
 }
 static inline R4SdkSubsystemSlot R4SdkSubsystemNative_abi_R4XStartR4Dev2_get_magic(const R4SdkSubsystemNative_abi_R4XStartR4Dev2 *self) { return R4SdkSubsystemField(R4SdkSubsystem_ABI_FINGERPRINT,282u,0u,(void *)self,0,0); }
 static inline R4SdkSubsystemSlot R4SdkSubsystemNative_abi_R4XStartR4Dev2_set_magic(R4SdkSubsystemNative_abi_R4XStartR4Dev2 *self, uint32_t p0) { R4SdkSubsystemSlot a[1]={0};
@@ -10103,6 +10105,10 @@ static inline R4SdkSubsystemSlot R4SdkSubsystemNative_abi_R4XStartR4Dev2_get_dis
 static inline R4SdkSubsystemSlot R4SdkSubsystemNative_abi_R4XStartR4Dev2_set_display_blit_check(R4SdkSubsystemNative_abi_R4XStartR4Dev2 *self, uint64_t p0) { R4SdkSubsystemSlot a[1]={0};
  a[0] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
  return R4SdkSubsystemField(R4SdkSubsystem_ABI_FINGERPRINT,282u,92u,self,a,0); }
+static inline R4SdkSubsystemSlot R4SdkSubsystemNative_abi_R4XStartR4Dev2_get_cpu_time_info(const R4SdkSubsystemNative_abi_R4XStartR4Dev2 *self) { return R4SdkSubsystemField(R4SdkSubsystem_ABI_FINGERPRINT,282u,93u,(void *)self,0,0); }
+static inline R4SdkSubsystemSlot R4SdkSubsystemNative_abi_R4XStartR4Dev2_set_cpu_time_info(R4SdkSubsystemNative_abi_R4XStartR4Dev2 *self, uint64_t p0) { R4SdkSubsystemSlot a[1]={0};
+ a[0] = (R4SdkSubsystemSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDKSUBSYSTEM_PRESENT};
+ return R4SdkSubsystemField(R4SdkSubsystem_ABI_FINGERPRINT,282u,93u,self,a,0); }
 static inline R4SdkSubsystemSlot R4SdkSubsystemNative_abi_R4XStartR4Dev2_inspectNative(const R4SdkSubsystemNative_abi_R4XStartR4Dev2 *self) { return R4SdkSubsystemInspect(R4SdkSubsystem_ABI_FINGERPRINT,282u,(void *)self,0); }
 static inline R4SdkSubsystemSlot R4SdkSubsystemNativeValue283_create(R4SdkSubsystemNativeValue283 *output, R4SdkSubsystemSlot p0) { R4SdkSubsystemSlot a[1]={0};
  a[0] = p0;

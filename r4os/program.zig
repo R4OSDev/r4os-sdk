@@ -516,6 +516,11 @@ pub const Context = struct {
         const function = self.devFn("cpu_idle_info") orelse return self.unavailable("dev");
         return function(cpu, out);
     }
+    /// Passive scheduler time and completed idle waits for one logical CPU.
+    pub fn cpuTimeInfo(self: *const Context, cpu: u32, out: *abi.CpuTimeInfo) i32 {
+        const function = self.devFn("cpu_time_info") orelse return self.unavailable("dev");
+        return function(cpu, out);
+    }
     /// Passive boot/terminal MCA receipt; never initiates a hardware read.
     pub fn cpuMachineInfo(self: *const Context, cpu: u32, out: *abi.CpuMachineInfo) i32 {
         const function = self.devFn("cpu_machine_info") orelse return self.unavailable("dev");

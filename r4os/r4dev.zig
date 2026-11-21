@@ -159,6 +159,10 @@ pub const Context = struct {
     pub fn cpuIdleInfo(self: *const Context, cpu: u32, out: *abi.CpuIdleInfo) i32 {
         return self.base.cpuIdleInfo(cpu, out);
     }
+    /// Passive scheduler time and completed idle waits for one logical CPU.
+    pub fn cpuTimeInfo(self: *const Context, cpu: u32, out: *abi.CpuTimeInfo) i32 {
+        return self.base.cpuTimeInfo(cpu, out);
+    }
     pub fn cpuMachineInfo(self: *const Context, cpu: u32, out: *abi.CpuMachineInfo) i32 {
         return self.base.cpuMachineInfo(cpu, out);
     }
