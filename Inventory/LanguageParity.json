@@ -61431,7 +61431,7 @@
       },
       {
         "path": "Repositories/Libraries/Shared/Rust/src/raw.rs",
-        "sha256": "481cbe79ae1d4358d679cb9ddf1ade2bf6f315030a3e7e5efcefbcc0d1171e83"
+        "sha256": "c2445df09bf638db5e9e409554cf14e335bcc3da9e90cf6257776d032d94e07b"
       },
       {
         "path": "Repositories/Libraries/Shared/Tests/Consumer/Cargo.toml",
@@ -61527,7 +61527,7 @@
       },
       {
         "path": "Repositories/SDK/Profiles/Components.json",
-        "sha256": "a23e190ec7fe8f906207d5b777d9e7e1e131723879dbac4f19b45a3a391f7e77"
+        "sha256": "5959d79e30e949f7cd06bad5802f4f585b719ac1226592d8eab8db9a1537e242"
       },
       {
         "path": "Repositories/SDK/Profiles/Tools.json",
@@ -63291,7 +63291,7 @@
       },
       {
         "path": "Repositories/SDK/build.zig.zon",
-        "sha256": "4d8a9845833029a1f59cdf479d53d4f5bddb7750d834d6b652650e2955fa4cd3"
+        "sha256": "672d5aa12c9412c9075ec44408bd98673dbafcd1744629177371606bf4889d9e"
       },
       {
         "path": "Repositories/SDK/r4os.zig",
