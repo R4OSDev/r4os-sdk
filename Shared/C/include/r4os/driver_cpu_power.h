@@ -86,5 +86,11 @@ static inline int32_t r4driver_cpu_power_rank_publish(const R4DriverCpuPowerApi 
     return ((Fn)(uintptr_t)t->rank_publish)(input, sequence);
 }
 
+static inline int32_t r4driver_cpu_power_dram_register(const R4DriverCpuPowerApi *t, uint64_t cookie, uint32_t signature, uint32_t first, uint32_t second) {
+    if (!R4_CPU_POWER_HAS(t, dram_register)) return R4OS_ERR_NO_FN;
+    typedef int32_t (*Fn)(uint64_t, uint32_t, uint32_t, uint32_t);
+    return ((Fn)(uintptr_t)t->dram_register)(cookie, signature, first, second);
+}
+
 #undef R4_CPU_POWER_HAS
 #endif

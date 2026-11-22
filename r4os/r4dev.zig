@@ -96,6 +96,11 @@ pub const Context = struct {
         return self.base.physicalMemoryUsage(total_bytes, free_bytes);
     }
 
+    /// Pass 0 to sample a process-owned counter lease, or 1 to release it.
+    pub fn dramTraffic(self: *const Context, operation: u32, bytes: *u64, stamp_ns: *u64, epoch: *u64) i32 {
+        return self.base.dramTraffic(operation, bytes, stamp_ns, epoch);
+    }
+
     pub fn memoryBlockCount(self: *const Context) u32 {
         return self.base.memoryBlockCount();
     }

@@ -197,6 +197,20 @@ static inline int32_t r4dev_cpu_cache_topology(const R4Dev *dev, uint32_t cpu_in
     return ((R4DevCpuCacheTopologyFn)(uintptr_t)R4DEV_SLOT(dev, cpu_cache_topology))(cpu_index, cache_index, out);
 }
 
+static inline int32_t r4dev_physical_memory_usage(const R4Dev *dev, uint64_t *total_bytes, uint64_t *free_bytes) {
+    if (!total_bytes || !free_bytes) return R4OS_ERROR_INVALID;
+    uint64_t slot = R4DEV_SLOT(dev, physical_memory_usage);
+    if (!slot) return R4OS_ERR_NO_FN;
+    return ((R4DevPhysicalMemoryUsageFn)(uintptr_t)slot)(total_bytes, free_bytes);
+}
+
+static inline int32_t r4dev_dram_traffic(const R4Dev *dev, uint32_t operation, uint64_t *bytes, uint64_t *stamp_ns, uint64_t *epoch) {
+    if (!bytes || !stamp_ns || !epoch) return R4OS_ERROR_INVALID;
+    uint64_t slot = R4DEV_SLOT(dev, dram_traffic);
+    if (!slot) return R4OS_ERR_NO_FN;
+    return ((R4DevDramTrafficFn)(uintptr_t)slot)(operation, bytes, stamp_ns, epoch);
+}
+
 static inline int32_t r4dev_memory_pressure_snapshot(const R4Dev *dev, R4ProgramMemoryPressureSnapshot *out) {
     if (out == 0) return R4OS_ERROR_INVALID;
     if (!r4dev_available(dev) ||

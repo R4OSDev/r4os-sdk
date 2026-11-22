@@ -89,6 +89,13 @@ pub const Context = struct {
         const call: *const fn (u64) callconv(.c) i32 = @ptrFromInt(self.table.unregister_backend);
         return call(cookie);
     }
+    /// Publish the qualified pair of AMD DF memory-controller events at init.
+    pub fn registerDram(self: *const Context, cookie: u64, signature: u32, first: u32, second: u32) i32 {
+        if (!self.has("dram_register")) return a.cpu_capabilities_error_unsupported;
+        const call: *const fn (u64, u32, u32, u32) callconv(.c) i32 = @ptrFromInt(self.table.dram_register);
+        return call(cookie, signature, first, second);
+    }
+
     pub fn currentCpu(self: *const Context) u32 {
         if (!self.has("current_cpu")) return a.cpu_power_cpu_none;
         const call: *const fn () callconv(.c) u32 = @ptrFromInt(self.table.current_cpu);
