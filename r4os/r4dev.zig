@@ -92,6 +92,10 @@ pub const Context = struct {
         return self.base.memorySummary();
     }
 
+    pub fn physicalMemoryUsage(self: *const Context, total_bytes: *u64, free_bytes: *u64) i32 {
+        return self.base.physicalMemoryUsage(total_bytes, free_bytes);
+    }
+
     pub fn memoryBlockCount(self: *const Context) u32 {
         return self.base.memoryBlockCount();
     }

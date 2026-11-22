@@ -421,6 +421,11 @@ pub const Context = struct {
         return out;
     }
 
+    pub fn physicalMemoryUsage(self: *const Context, total_bytes: *u64, free_bytes: *u64) i32 {
+        const function = self.devFn("physical_memory_usage") orelse return self.unavailable("dev");
+        return function(total_bytes, free_bytes);
+    }
+
     pub fn memoryBlockCount(self: *const Context) u32 {
         const table_fn = self.devFn("memory_block_count") orelse return 0;
         return table_fn();
