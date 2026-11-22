@@ -17538,7 +17538,7 @@ pub const R4SdkGuiType741_TYPE: u32 = 741;
 pub const R4SdkGuiType743_TYPE: u32 = 743;
 pub const R4SdkGuiType744_TYPE: u32 = 744;
 pub const R4SdkGuiType745_TYPE: u32 = 745;
-pub const R4SdkGui_ABI_FINGERPRINT: u64 = 10490674016809042228;
+pub const R4SdkGui_ABI_FINGERPRINT: u64 = 14568878922178305652;
 pub const R4SdkGui_font_w: i32 = 8;
 pub const R4SdkGui_font_h: i32 = 8;
 pub const R4SdkGuiChart_turns_per_circle: i32 = 65536;
@@ -21795,7 +21795,7 @@ pub const R4SdkDriverNativeValue278_TYPE: u32 = 278;
 pub const R4SdkDriverNativeValue280_TYPE: u32 = 280;
 pub const R4SdkDriverNativeValue282_TYPE: u32 = 282;
 pub const R4SdkDriverNativeValue284_TYPE: u32 = 284;
-pub const R4SdkDriver_ABI_FINGERPRINT: u64 = 9526549514819542062;
+pub const R4SdkDriver_ABI_FINGERPRINT: u64 = 2709009282185962684;
 pub const R4SdkDriver_r4d_shutdown_entry_offset: i32 = 5;
 unsafe extern "C" {
     pub fn r4serial_callback(p0: *const R4Serial, p1: u64) -> u64;
@@ -23915,7 +23915,7 @@ unsafe extern "C" {
     pub fn R4SdkGuiScrollbarStep_set_part(p0: *mut R4SdkGuiScrollbarStep, p1: u32) -> R4SdkGuiSlot;
     pub fn R4SdkGuiScrollbarStep_inspect(p0: *const R4SdkGuiScrollbarStep) -> R4SdkGuiSlot;
     pub fn R4SdkGuiScrollbar_create(p0: *mut R4SdkGuiScrollbar, p1: *const R4SdkGuiRect) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiScrollbar_from_fields(p0: *mut R4SdkGuiScrollbar, p1: *const R4SdkGuiRect, p2: u32, p3: u64, p4: u64, p5: u64, p6: u8, p7: *const R4SdkGuiPalette) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiScrollbar_from_fields(p0: *mut R4SdkGuiScrollbar, p1: *const R4SdkGuiRect, p2: u32, p3: u64, p4: u64, p5: u64, p6: u8, p7: *const R4SdkGuiPalette, p8: u8) -> R4SdkGuiSlot;
     pub fn R4SdkGuiScrollbar_get_rect(p0: *const R4SdkGuiScrollbar, p1: *mut R4SdkGuiRect) -> R4SdkGuiSlot;
     pub fn R4SdkGuiScrollbar_set_rect(p0: *mut R4SdkGuiScrollbar, p1: *const R4SdkGuiRect) -> R4SdkGuiSlot;
     pub fn R4SdkGuiScrollbar_get_orientation(p0: *const R4SdkGuiScrollbar) -> R4SdkGuiSlot;
@@ -23930,6 +23930,8 @@ unsafe extern "C" {
     pub fn R4SdkGuiScrollbar_set_disabled(p0: *mut R4SdkGuiScrollbar, p1: u8) -> R4SdkGuiSlot;
     pub fn R4SdkGuiScrollbar_get_palette(p0: *const R4SdkGuiScrollbar, p1: *mut R4SdkGuiPalette) -> R4SdkGuiSlot;
     pub fn R4SdkGuiScrollbar_set_palette(p0: *mut R4SdkGuiScrollbar, p1: *const R4SdkGuiPalette) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiScrollbar_get_compact(p0: *const R4SdkGuiScrollbar) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiScrollbar_set_compact(p0: *mut R4SdkGuiScrollbar, p1: u8) -> R4SdkGuiSlot;
     pub fn R4SdkGuiScrollbar_inspect(p0: *const R4SdkGuiScrollbar) -> R4SdkGuiSlot;
     pub fn R4SdkGuiToolbarButton_create(p0: *mut R4SdkGuiToolbarButton, p1: *const R4SdkGuiRect, p2: *const u8, p3: u64) -> R4SdkGuiSlot;
     pub fn R4SdkGuiToolbarButton_from_fields(p0: *mut R4SdkGuiToolbarButton, p1: *const R4SdkGuiRect, p2: *const u8, p3: u64, p4: u32, p5: u8, p6: u8, p7: u8, p8: *const R4SdkGuiPalette) -> R4SdkGuiSlot;
@@ -38423,6 +38425,7 @@ unsafe extern "C" {
     pub fn R4SdkDriver2Context_serial(p0: u32, p1: *const R4SdkDriver2Context, p2: *mut R4SdkDriverSerialContext) -> R4SdkDriverSlot;
     pub fn R4SdkDriver2Context_memory(p0: u32, p1: *const R4SdkDriver2Context, p2: *mut R4SdkDriverMemoryContext) -> R4SdkDriverSlot;
     pub fn R4SdkDriver2Context_getOption(p0: u32, p1: *const R4SdkDriver2Context, p2: *const u8, p3: *const u8) -> R4SdkDriverSlot;
+    pub fn R4SdkDriver2Context_netPublishMedia(p0: u32, p1: *const R4SdkDriver2Context, p2: i32, p3: u8, p4: u8, p5: u64, p6: u64) -> R4SdkDriverSlot;
     pub fn R4SdkDriver2Context_registerNetBackend(p0: u32, p1: *const R4SdkDriver2Context, p2: *const u8, p3: *const R4NetBackend) -> R4SdkDriverSlot;
     pub fn R4SdkDriver2Context_netReceiveFrame(p0: u32, p1: *const R4SdkDriver2Context, p2: i32, p3: *const u8, p4: u64) -> R4SdkDriverSlot;
     pub fn R4SdkDriver2Context_netScheduleRx(p0: u32, p1: *const R4SdkDriver2Context, p2: i32) -> R4SdkDriverSlot;
