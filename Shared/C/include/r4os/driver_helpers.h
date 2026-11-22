@@ -63,8 +63,8 @@ typedef struct R4SdkDriverThreadsContext { _Alignas(8) uint8_t opaque_bytes[88];
 /* driver_semaphores.Context; native size 64, alignment 8. */
 typedef struct R4SdkDriverSemaphoresContext { _Alignas(8) uint8_t opaque_bytes[64]; } R4SdkDriverSemaphoresContext;
 #define R4SdkDriverSemaphoresContext_TYPE 25u
-/* driver_cpu_power.Context; native size 184, alignment 8. */
-typedef struct R4SdkDriverCpuPowerContext { _Alignas(8) uint8_t opaque_bytes[184]; } R4SdkDriverCpuPowerContext;
+/* driver_cpu_power.Context; native size 192, alignment 8. */
+typedef struct R4SdkDriverCpuPowerContext { _Alignas(8) uint8_t opaque_bytes[192]; } R4SdkDriverCpuPowerContext;
 #define R4SdkDriverCpuPowerContext_TYPE 27u
 /* *const driver2.Context; native size 8, alignment 8. */
 typedef struct R4SdkDriverNativeValue29 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkDriverNativeValue29;
@@ -273,8 +273,8 @@ typedef struct R4SdkDriverNativeValue139 { _Alignas(8) uint8_t opaque_bytes[8]; 
 /* ?driver_entropy.Context; native size 40, alignment 8. */
 typedef struct R4SdkDriverNativeValue140 { _Alignas(8) uint8_t opaque_bytes[40]; } R4SdkDriverNativeValue140;
 #define R4SdkDriverNativeValue140_TYPE 140u
-/* ?driver_cpu_power.Context; native size 192, alignment 8. */
-typedef struct R4SdkDriverNativeValue141 { _Alignas(8) uint8_t opaque_bytes[192]; } R4SdkDriverNativeValue141;
+/* ?driver_cpu_power.Context; native size 200, alignment 8. */
+typedef struct R4SdkDriverNativeValue141 { _Alignas(8) uint8_t opaque_bytes[200]; } R4SdkDriverNativeValue141;
 #define R4SdkDriverNativeValue141_TYPE 141u
 /* ?driver_resources.Platform; native size 40, alignment 8. */
 typedef struct R4SdkDriverNativeValue142 { _Alignas(8) uint8_t opaque_bytes[40]; } R4SdkDriverNativeValue142;
@@ -513,7 +513,7 @@ typedef struct R4SdkDriverNativeValue282 { _Alignas(8) uint8_t opaque_bytes[8]; 
 /* *abi_generated.CpuPowerCounters; native size 8, alignment 8. */
 typedef struct R4SdkDriverNativeValue284 { _Alignas(8) uint8_t opaque_bytes[8]; } R4SdkDriverNativeValue284;
 #define R4SdkDriverNativeValue284_TYPE 284u
-#define R4SdkDriver_ABI_FINGERPRINT UINT64_C(4367062783033944654)
+#define R4SdkDriver_ABI_FINGERPRINT UINT64_C(9526549514819542062)
 int32_t R4SdkDriverVerifyAbi(uint64_t);
 #define R4SdkDriver_r4d_shutdown_entry_offset (5)
 #include "r4os/update_helpers.h"
@@ -2433,11 +2433,21 @@ static inline R4SdkDriverSlot R4SdkDriverCpuPowerContext_unregister(uint32_t res
  a[1] = (R4SdkDriverSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKDRIVER_PRESENT};
  return R4SdkDriverInvoke(R4SdkDriver_ABI_FINGERPRINT,249u,a,2u,0);
 }
+/* driver_cpu_power.Context.registerDram -> i32 */
+static inline R4SdkDriverSlot R4SdkDriverCpuPowerContext_registerDram(uint32_t reserved, const R4SdkDriverCpuPowerContext * p0, uint64_t p1, uint32_t p2, uint32_t p3, uint32_t p4) {
+ (void)reserved; R4SdkDriverSlot a[5]={0};
+ a[0] = (R4SdkDriverSlot){.ptr=(void *)p0,.flags=R4SDKDRIVER_PRESENT};
+ a[1] = (R4SdkDriverSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKDRIVER_PRESENT};
+ a[2] = (R4SdkDriverSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDKDRIVER_PRESENT};
+ a[3] = (R4SdkDriverSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDKDRIVER_PRESENT};
+ a[4] = (R4SdkDriverSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDKDRIVER_PRESENT};
+ return R4SdkDriverInvoke(R4SdkDriver_ABI_FINGERPRINT,250u,a,5u,0);
+}
 /* driver_cpu_power.Context.currentCpu -> u32 */
 static inline R4SdkDriverSlot R4SdkDriverCpuPowerContext_currentCpu(uint32_t reserved, const R4SdkDriverCpuPowerContext * p0) {
  (void)reserved; R4SdkDriverSlot a[1]={0};
  a[0] = (R4SdkDriverSlot){.ptr=(void *)p0,.flags=R4SDKDRIVER_PRESENT};
- return R4SdkDriverInvoke(R4SdkDriver_ABI_FINGERPRINT,250u,a,1u,0);
+ return R4SdkDriverInvoke(R4SdkDriver_ABI_FINGERPRINT,251u,a,1u,0);
 }
 /* driver_cpu_power.Context.capabilities -> i32 */
 static inline R4SdkDriverSlot R4SdkDriverCpuPowerContext_capabilities(uint32_t reserved, const R4SdkDriverCpuPowerContext * p0, uint32_t p1, R4CpuCapabilitiesInfo * p2) {
@@ -2445,7 +2455,7 @@ static inline R4SdkDriverSlot R4SdkDriverCpuPowerContext_capabilities(uint32_t r
  a[0] = (R4SdkDriverSlot){.ptr=(void *)p0,.flags=R4SDKDRIVER_PRESENT};
  a[1] = (R4SdkDriverSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKDRIVER_PRESENT};
  a[2] = (R4SdkDriverSlot){.ptr=(void *)p2,.flags=R4SDKDRIVER_PRESENT};
- return R4SdkDriverInvoke(R4SdkDriver_ABI_FINGERPRINT,251u,a,3u,0);
+ return R4SdkDriverInvoke(R4SdkDriver_ABI_FINGERPRINT,252u,a,3u,0);
 }
 /* driver_cpu_power.Context.topology -> i32 */
 static inline R4SdkDriverSlot R4SdkDriverCpuPowerContext_topology(uint32_t reserved, const R4SdkDriverCpuPowerContext * p0, uint32_t p1, R4CpuTopologyInfo * p2) {
@@ -2453,7 +2463,7 @@ static inline R4SdkDriverSlot R4SdkDriverCpuPowerContext_topology(uint32_t reser
  a[0] = (R4SdkDriverSlot){.ptr=(void *)p0,.flags=R4SDKDRIVER_PRESENT};
  a[1] = (R4SdkDriverSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKDRIVER_PRESENT};
  a[2] = (R4SdkDriverSlot){.ptr=(void *)p2,.flags=R4SDKDRIVER_PRESENT};
- return R4SdkDriverInvoke(R4SdkDriver_ABI_FINGERPRINT,252u,a,3u,0);
+ return R4SdkDriverInvoke(R4SdkDriver_ABI_FINGERPRINT,253u,a,3u,0);
 }
 /* driver_cpu_power.Context.registerRead -> i32 */
 static inline R4SdkDriverSlot R4SdkDriverCpuPowerContext_registerRead(uint32_t reserved, const R4SdkDriverCpuPowerContext * p0, uint32_t p1, uint64_t p2, uint32_t p3, R4CpuRegisterInfo * p4) {
@@ -2463,14 +2473,14 @@ static inline R4SdkDriverSlot R4SdkDriverCpuPowerContext_registerRead(uint32_t r
  a[2] = (R4SdkDriverSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDKDRIVER_PRESENT};
  a[3] = (R4SdkDriverSlot){.bits=(uint64_t)(int64_t)p3,.flags=R4SDKDRIVER_PRESENT};
  a[4] = (R4SdkDriverSlot){.ptr=(void *)p4,.flags=R4SDKDRIVER_PRESENT};
- return R4SdkDriverInvoke(R4SdkDriver_ABI_FINGERPRINT,253u,a,5u,0);
+ return R4SdkDriverInvoke(R4SdkDriver_ABI_FINGERPRINT,254u,a,5u,0);
 }
 /* driver_cpu_power.Context.clock -> i32 */
 static inline R4SdkDriverSlot R4SdkDriverCpuPowerContext_clock(uint32_t reserved, const R4SdkDriverCpuPowerContext * p0, R4MonotonicClockInfo * p1) {
  (void)reserved; R4SdkDriverSlot a[2]={0};
  a[0] = (R4SdkDriverSlot){.ptr=(void *)p0,.flags=R4SDKDRIVER_PRESENT};
  a[1] = (R4SdkDriverSlot){.ptr=(void *)p1,.flags=R4SDKDRIVER_PRESENT};
- return R4SdkDriverInvoke(R4SdkDriver_ABI_FINGERPRINT,254u,a,2u,0);
+ return R4SdkDriverInvoke(R4SdkDriver_ABI_FINGERPRINT,255u,a,2u,0);
 }
 /* driver_cpu_power.Context.countersRead -> i32 */
 static inline R4SdkDriverSlot R4SdkDriverCpuPowerContext_countersRead(uint32_t reserved, const R4SdkDriverCpuPowerContext * p0, uint32_t p1, uint64_t p2, R4CpuPowerCounters * p3) {
@@ -2479,7 +2489,7 @@ static inline R4SdkDriverSlot R4SdkDriverCpuPowerContext_countersRead(uint32_t r
  a[1] = (R4SdkDriverSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDKDRIVER_PRESENT};
  a[2] = (R4SdkDriverSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDKDRIVER_PRESENT};
  a[3] = (R4SdkDriverSlot){.ptr=(void *)p3,.flags=R4SDKDRIVER_PRESENT};
- return R4SdkDriverInvoke(R4SdkDriver_ABI_FINGERPRINT,255u,a,4u,0);
+ return R4SdkDriverInvoke(R4SdkDriver_ABI_FINGERPRINT,256u,a,4u,0);
 }
 static inline R4SdkDriverSlot R4SdkDriverSharedDmaBuffer_constructNative(R4SdkDriverSharedDmaBuffer *output, const R4DmaBuffer * p0, uint32_t p2) {
  R4SdkDriverSlot a[3]={0};
