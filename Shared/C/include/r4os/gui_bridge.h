@@ -1615,7 +1615,7 @@ typedef struct R4SdkGuiType744 { _Alignas(2) uint8_t opaque_bytes[2]; } R4SdkGui
 /* error{BudgetOverflow,ClockChanged,ClockRegressed,ClockUnavailable,InvalidBudget,InvalidTimeout,UnknownFrequency}!u64; native size 16, alignment 8. */
 typedef struct R4SdkGuiType745 { _Alignas(8) uint8_t opaque_bytes[16]; } R4SdkGuiType745;
 #define R4SdkGuiType745_TYPE 745u
-#define R4SdkGui_ABI_FINGERPRINT UINT64_C(10490674016809042228)
+#define R4SdkGui_ABI_FINGERPRINT UINT64_C(14568878922178305652)
 int32_t R4SdkGuiVerifyAbi(uint64_t);
 #define R4SdkGui_font_w (8)
 #define R4SdkGui_font_h (8)
@@ -10862,7 +10862,7 @@ static inline R4SdkGuiSlot R4SdkGuiScrollbarStep_set_part(R4SdkGuiScrollbarStep 
  return R4SdkGuiField(R4SdkGui_ABI_FINGERPRINT,63u,2u,self,a,0); }
 static inline R4SdkGuiSlot R4SdkGuiScrollbarStep_inspect(const R4SdkGuiScrollbarStep *self) { return R4SdkGuiInspect(R4SdkGui_ABI_FINGERPRINT,63u,(void *)self,0); }
 static inline R4SdkGuiSlot R4SdkGuiScrollbar_create(R4SdkGuiScrollbar *output, const R4SdkGuiRect * p0) {
- R4SdkGuiSlot a[7]={0};
+ R4SdkGuiSlot a[8]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1].flags=R4SDK_GUI_DEFAULT;
  a[2].flags=R4SDK_GUI_DEFAULT;
@@ -10870,10 +10870,11 @@ static inline R4SdkGuiSlot R4SdkGuiScrollbar_create(R4SdkGuiScrollbar *output, c
  a[4].flags=R4SDK_GUI_DEFAULT;
  a[5].flags=R4SDK_GUI_DEFAULT;
  a[6].flags=R4SDK_GUI_DEFAULT;
- return R4SdkGuiConstruct(R4SdkGui_ABI_FINGERPRINT,64u,a,7u,output);
+ a[7].flags=R4SDK_GUI_DEFAULT;
+ return R4SdkGuiConstruct(R4SdkGui_ABI_FINGERPRINT,64u,a,8u,output);
 }
-static inline R4SdkGuiSlot R4SdkGuiScrollbar_from_fields(R4SdkGuiScrollbar *output, const R4SdkGuiRect * p0, uint32_t p1, uint64_t p2, uint64_t p3, uint64_t p4, uint8_t p5, const R4SdkGuiPalette * p6) {
- R4SdkGuiSlot a[7]={0};
+static inline R4SdkGuiSlot R4SdkGuiScrollbar_from_fields(R4SdkGuiScrollbar *output, const R4SdkGuiRect * p0, uint32_t p1, uint64_t p2, uint64_t p3, uint64_t p4, uint8_t p5, const R4SdkGuiPalette * p6, uint8_t p7) {
+ R4SdkGuiSlot a[8]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  a[1] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p1,.flags=R4SDK_GUI_PRESENT};
  a[2] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p2,.flags=R4SDK_GUI_PRESENT};
@@ -10881,7 +10882,8 @@ static inline R4SdkGuiSlot R4SdkGuiScrollbar_from_fields(R4SdkGuiScrollbar *outp
  a[4] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p4,.flags=R4SDK_GUI_PRESENT};
  a[5] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p5,.flags=R4SDK_GUI_PRESENT};
  a[6] = (R4SdkGuiSlot){.ptr=(void *)p6,.flags=R4SDK_GUI_PRESENT};
- return R4SdkGuiConstruct(R4SdkGui_ABI_FINGERPRINT,64u,a,7u,output);
+ a[7] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p7,.flags=R4SDK_GUI_PRESENT};
+ return R4SdkGuiConstruct(R4SdkGui_ABI_FINGERPRINT,64u,a,8u,output);
 }
 static inline R4SdkGuiSlot R4SdkGuiScrollbar_get_rect(const R4SdkGuiScrollbar *self, R4SdkGuiRect *output) { return R4SdkGuiField(R4SdkGui_ABI_FINGERPRINT,64u,0u,(void *)self,0,output); }
 static inline R4SdkGuiSlot R4SdkGuiScrollbar_set_rect(R4SdkGuiScrollbar *self, const R4SdkGuiRect * p0) { R4SdkGuiSlot a[1]={0};
@@ -10911,6 +10913,10 @@ static inline R4SdkGuiSlot R4SdkGuiScrollbar_get_palette(const R4SdkGuiScrollbar
 static inline R4SdkGuiSlot R4SdkGuiScrollbar_set_palette(R4SdkGuiScrollbar *self, const R4SdkGuiPalette * p0) { R4SdkGuiSlot a[1]={0};
  a[0] = (R4SdkGuiSlot){.ptr=(void *)p0,.flags=R4SDK_GUI_PRESENT};
  return R4SdkGuiField(R4SdkGui_ABI_FINGERPRINT,64u,6u,self,a,0); }
+static inline R4SdkGuiSlot R4SdkGuiScrollbar_get_compact(const R4SdkGuiScrollbar *self) { return R4SdkGuiField(R4SdkGui_ABI_FINGERPRINT,64u,7u,(void *)self,0,0); }
+static inline R4SdkGuiSlot R4SdkGuiScrollbar_set_compact(R4SdkGuiScrollbar *self, uint8_t p0) { R4SdkGuiSlot a[1]={0};
+ a[0] = (R4SdkGuiSlot){.bits=(uint64_t)(int64_t)p0,.flags=R4SDK_GUI_PRESENT};
+ return R4SdkGuiField(R4SdkGui_ABI_FINGERPRINT,64u,7u,self,a,0); }
 static inline R4SdkGuiSlot R4SdkGuiScrollbar_inspect(const R4SdkGuiScrollbar *self) { return R4SdkGuiInspect(R4SdkGui_ABI_FINGERPRINT,64u,(void *)self,0); }
 static inline R4SdkGuiSlot R4SdkGuiToolbarButton_create(R4SdkGuiToolbarButton *output, const R4SdkGuiRect * p0, const uint8_t * p1, uintptr_t n1) {
  R4SdkGuiSlot a[7]={0};
