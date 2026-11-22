@@ -511,6 +511,9 @@ pub const Scrollbar = struct {
     disabled: bool = false,
     palette: Palette = default_palette,
 
+    /// A track and thumb without arrow buttons. The full rect remains interactive.
+    compact: bool = false,
+
     pub fn draw(self: Scrollbar, canvas: Canvas, scratch: []u8) i32 {
         return drawScrollbar(canvas, self, scratch);
     }
@@ -525,19 +528,21 @@ pub const Scrollbar = struct {
     }
 
     pub fn decrementRect(self: Scrollbar) Rect {
+        if (self.compact) return .{};
         return scrollbarButtonRect(self.rect, self.orientation, .decrement);
     }
 
     pub fn incrementRect(self: Scrollbar) Rect {
+        if (self.compact) return .{};
         return scrollbarButtonRect(self.rect, self.orientation, .increment);
     }
 
     pub fn trackRect(self: Scrollbar) Rect {
-        return scrollbarTrackRect(self.rect, self.orientation);
+        return if (self.compact) self.rect else scrollbarTrackRect(self.rect, self.orientation);
     }
 
     pub fn thumbRect(self: Scrollbar) Rect {
-        return scrollbarThumbRect(self.rect, self.orientation, self.total_items, self.visible_items, self.first_index);
+        return thumbOnTrack(self.trackRect(), self.orientation, self.total_items, self.visible_items, self.first_index, if (self.compact) 22 else 8);
     }
 
     pub fn partAt(self: Scrollbar, x: i32, y: i32) ScrollbarPart {
@@ -3735,6 +3740,15 @@ pub fn drawListEx(canvas: Canvas, rect: Rect, scratch: []u8, items: []const []co
 
 pub fn drawScrollbar(canvas: Canvas, item: Scrollbar, scratch: []u8) i32 {
     if (item.rect.isEmpty()) return 0;
+    if (item.compact) {
+        const vertical = item.orientation == .vertical;
+        const cross = if (vertical) item.rect.w else item.rect.h;
+        const track_pad = @divFloor(@max(0, cross - 3), 2);
+        const thumb_pad = @divFloor(@max(0, cross - 5), 2);
+        _ = canvas.rect(item.rect.inset(if (vertical) track_pad else 0, if (vertical) 0 else track_pad), item.palette.face);
+        if (!item.disabled) return canvas.rect(item.thumbRect().inset(if (vertical) thumb_pad else 0, if (vertical) 0 else thumb_pad), item.palette.text);
+        return 0;
+    }
     const state: ButtonState = if (item.disabled) .disabled else .normal;
     const decrement = item.decrementRect();
     const increment = item.incrementRect();
@@ -4557,11 +4571,14 @@ pub fn scrollbarTrackRect(rect: Rect, orientation: Orientation) Rect {
 }
 
 pub fn scrollbarThumbRect(rect: Rect, orientation: Orientation, total_items: usize, visible_items: usize, first_index: usize) Rect {
-    const track = scrollbarTrackRect(rect, orientation);
+    return thumbOnTrack(scrollbarTrackRect(rect, orientation), orientation, total_items, visible_items, first_index, 8);
+}
+
+fn thumbOnTrack(track: Rect, orientation: Orientation, total_items: usize, visible_items: usize, first_index: usize, minimum: i32) Rect {
     if (track.isEmpty() or total_items == 0 or visible_items == 0 or total_items <= visible_items) return track;
 
     const track_len = if (orientation == .vertical) track.h else track.w;
-    const min_thumb = @min(track_len, 8);
+    const min_thumb = @min(track_len, minimum);
     const raw_thumb: i32 = @intCast(@divTrunc(@as(u64, @intCast(track_len)) * @as(u64, @intCast(visible_items)), @as(u64, @intCast(total_items))));
     const thumb_len = @min(track_len, @max(min_thumb, raw_thumb));
     const max_first = total_items - visible_items;
