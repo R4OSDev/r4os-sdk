@@ -14,6 +14,7 @@ const composition = @import("text_composition.zig");
 pub const TextClipboard = text_control.Clipboard;
 pub const Style = modern.Style;
 pub const FontSet = modern.FontSet;
+pub const FontRuns = @import("gui_font_runs.zig").FontRuns;
 pub const TextRole = modern.TextRole;
 pub const SurfaceRole = modern.SurfaceRole;
 pub const Card = modern.Card;
