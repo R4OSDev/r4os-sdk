@@ -62031,7 +62031,7 @@
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/driver_helpers.h",
-        "sha256": "fb7aa4487dcf0ac1b06ae20772a97f398e247fabd96699a5393e0d3085f3562b"
+        "sha256": "5e60b2977bde824efb03cf3c5140ed767f241fd17465bcc3341b8f243970c138"
       },
       {
         "path": "Repositories/SDK/Shared/C/include/r4os/driver_lifecycle.h",
@@ -63643,7 +63643,7 @@
       },
       {
         "path": "Repositories/SDK/r4os/generated/driver_fingerprint.zig",
-        "sha256": "9bb1599f699d69f47a9979fd39569ffbb5e4e27475eb2566bb3f1a900073d339"
+        "sha256": "e5607c814a4168dde10aa7015d495c70c3902ae9a1f87f413e0ef971b2ebefe7"
       },
       {
         "path": "Repositories/SDK/r4os/generated/gui_fingerprint.zig",
