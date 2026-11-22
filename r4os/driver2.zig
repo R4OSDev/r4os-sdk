@@ -143,6 +143,12 @@ pub const Context = struct {
     pub fn getOption(self: *const Context, driver_name: [*:0]const u8, key: [*:0]const u8) [*:0]const u8 {
         return self.required("get_option")(driver_name, key);
     }
+    /// Publish negotiated media after bind or a configuration-change event.
+    pub fn netPublishMedia(self: *const Context, id: i32, link: u8, duplex: u8, rx_bps: u64, tx_bps: u64) void {
+        const publish = self.function("net_publish_media") orelse return;
+        _ = publish(id, @as(u32, link) | (@as(u32, duplex) << 8), rx_bps, tx_bps);
+    }
+
     pub fn registerNetBackend(self: *const Context, name: [*:0]const u8, backend: *const abi.NetBackend) i32 {
         return self.required("register_net_backend")(name, backend);
     }

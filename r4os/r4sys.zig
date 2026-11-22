@@ -875,6 +875,11 @@ pub const Context = struct {
         return self.base.platformInputSnapshot(out);
     }
 
+    /// Returns the required record count. A short buffer receives no partial enumeration.
+    pub fn storageActivity(self: *const Context, names: bool, out: []abi.StorageActivitySample) i32 {
+        return self.base.storageActivity(names, out);
+    }
+
     pub fn monotonicClock(self: *const Context, out: *abi.MonotonicClockInfo) i32 {
         return self.base.monotonicClock(out);
     }

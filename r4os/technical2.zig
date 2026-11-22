@@ -99,7 +99,7 @@ test "technical2 views reject wrong generations and short records without invoki
     driver.irq_rearm = undefined;
     // A partial optional function pointer is never read. Every byte of the
     // old 672-byte provider prefix remains usable by a new consumer.
-    for (progress_end..@sizeOf(abi.DriverApi2)) |size| {
+    for (progress_end..@offsetOf(abi.DriverApi2, "net_publish_media")) |size| {
         driver.size = @intCast(size);
         const old = Driver.init(&driver) orelse return error.OriginalDriverPrefixRejected;
         try std.testing.expect(old.function("audio_output_progress") != null);

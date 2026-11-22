@@ -42,6 +42,12 @@ static inline uintptr_t r4net_callback(const R4Net *value, size_t offset) {
 #define R4NET_REACHES(value, field) r4net_reaches((value), offsetof(R4XStartR4Net2, field))
 #define R4NET_SLOT(value, field) r4net_callback((value), offsetof(R4XStartR4Net2, field))
 #define R4NET_HAS(value, field) (R4NET_SLOT((value), field) != 0)
+
+static inline int32_t r4net_network_traffic(const R4Net *context, uint32_t names, R4NetworkTrafficSample *out, uint32_t capacity) {
+    uintptr_t slot = R4NET_SLOT(context, network_traffic);
+    if (!slot) return R4OS_ERR_NO_FN;
+    return ((R4NetNetworkTrafficFn)slot)(names, out, capacity);
+}
 static inline int32_t r4net_init2(const R4OS2Context *context, R4Net *out) {
     if (!out || !context || !R4OS2ContextGroup(context, 4)) return R4OS_ERR_NO_GROUP;
     *out = (R4Net){.table = NULL, .generation2 = context};

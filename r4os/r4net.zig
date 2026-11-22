@@ -611,6 +611,11 @@ pub const Context = struct {
         return self.base.netDhcpStatus(out);
     }
 
+    /// Returns the required record count. A short buffer receives no partial enumeration.
+    pub fn networkTraffic(self: *const Context, names: bool, out: []abi.NetworkTrafficSample) i32 {
+        return self.base.networkTraffic(names, out);
+    }
+
     pub fn netDetailGet(self: *const Context, adapter_index: u32, out: *abi.NetDetailSnapshot) i32 {
         return self.base.netDetailGet(adapter_index, out);
     }

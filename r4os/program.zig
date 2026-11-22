@@ -1082,6 +1082,11 @@ pub const Context = struct {
         return table_fn(out);
     }
 
+    pub fn storageActivity(self: *const Context, names: bool, out: []abi.StorageActivitySample) i32 {
+        const call = self.sysFn("storage_activity") orelse return self.unavailable("sys");
+        return call(@intFromBool(names), out.ptr, @intCast(@min(out.len, 0xffffffff)));
+    }
+
     pub fn monotonicClock(self: *const Context, out: *abi.MonotonicClockInfo) i32 {
         out.* = .{};
         const table_fn = self.sysFn("monotonic_clock") orelse return self.unavailable("sys");
@@ -4938,6 +4943,11 @@ pub const Context = struct {
     pub fn netDhcpStatus(self: *const Context, out: *abi.DhcpStatus) i32 {
         const table_fn = self.netFn("net_dhcp_status") orelse return self.unavailable("net");
         return table_fn(out);
+    }
+
+    pub fn networkTraffic(self: *const Context, names: bool, out: []abi.NetworkTrafficSample) i32 {
+        const call = self.netFn("network_traffic") orelse return self.unavailable("net");
+        return call(@intFromBool(names), out.ptr, @intCast(@min(out.len, 0xffffffff)));
     }
 
     pub fn netDetailGet(self: *const Context, adapter_index: u32, out: *abi.NetDetailSnapshot) i32 {

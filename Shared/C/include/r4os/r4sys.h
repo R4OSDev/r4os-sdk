@@ -44,6 +44,12 @@ static inline uintptr_t r4sys_callback(const R4Sys *sys, size_t offset) {
 #define R4SYS_SLOT(sys, field) r4sys_callback((sys), offsetof(R4XStartR4Sys2, field))
 #define R4SYS_HAS(sys, field) (R4SYS_SLOT((sys), field) != 0)
 
+static inline int32_t r4sys_storage_activity(const R4Sys *context, uint32_t names, R4StorageActivitySample *out, uint32_t capacity) {
+    uintptr_t slot = R4SYS_SLOT(context, storage_activity);
+    if (!slot) return R4OS_ERR_NO_FN;
+    return ((R4SysStorageActivityFn)slot)(names, out, capacity);
+}
+
 /* The caller keeps this actual context view and its tables resident while
  * operations, worker callbacks and buffers borrow the system facade. */
 static inline int32_t r4sys_init2(const R4OS2Context *context, const R4App2Memory *memory, R4Sys *out) {
