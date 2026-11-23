@@ -6,6 +6,7 @@ const abi = @import("r4os_contract").abi;
 
 pub const Run = struct {
     advance: i32,
+    truncated: bool = false,
     width: u32,
     height: u32,
     top: i32,
@@ -13,6 +14,10 @@ pub const Run = struct {
 
     /// The caller supplies the typographic baseline and the horizontal cell.
     pub fn draw(self: Run, canvas: gui.Canvas, x: i32, baseline: i32, cell_width: i32, alignment: gui.Align, color: u32) void {
+        _ = self.drawChecked(canvas, x, baseline, cell_width, alignment, color);
+    }
+
+    pub fn drawChecked(self: Run, canvas: gui.Canvas, x: i32, baseline: i32, cell_width: i32, alignment: gui.Align, color: u32) i32 {
         const left = x + switch (alignment) {
             .left => @as(i32, 0),
             .center => @divFloor(cell_width - self.advance, 2),
@@ -29,11 +34,13 @@ pub const Run = struct {
             while (y < self.height) {
                 const height = @min(rows, self.height - y);
                 const offset = @as(usize, y) * self.width + column;
-                _ = canvas.blendAlpha8(left + @as(i32, @intCast(column)), baseline + self.top + @as(i32, @intCast(y)), width, height, self.width, color, self.mask[offset..]);
+                const result = canvas.blendAlpha8(left + @as(i32, @intCast(column)), baseline + self.top + @as(i32, @intCast(y)), width, height, self.width, color, self.mask[offset..]);
+                if (result < 0) return result;
                 y += height;
             }
             column += width;
         }
+        return 0;
     }
 };
 
@@ -67,7 +74,7 @@ pub fn FontRuns(comptime fonts: type) type {
         pub fn prepare(self: *Self, store: *fonts.FaceStore, face: Face, size: u32, limit: i32, text: []const u8) !Run {
             if (limit < 0 or text.len > 4096) return error.TooLarge;
             for (&self.entries) |*slot| if (slot.*) |entry| {
-                if (entry.size == size and entry.limit == limit and std.meta.eql(entry.face, face) and std.mem.eql(u8, entry.text, text)) return entry.run;
+                if (entry.size == size and (entry.limit == limit or (!entry.run.truncated and entry.run.advance <= limit)) and std.meta.eql(entry.face, face) and std.mem.eql(u8, entry.text, text)) return entry.run;
             };
             const run = try self.make(store, face, size, limit, text);
             errdefer self.allocator.free(run.mask);
@@ -99,10 +106,12 @@ pub fn FontRuns(comptime fonts: type) type {
         }
         fn make(self: *Self, store: *fonts.FaceStore, face: Face, size: u32, limit: i32, text: []const u8) !Run {
             self.positions.clearRetainingCapacity();
+            var truncated = false;
             var iter = (try std.unicode.Utf8View.init(text)).iterator();
             while (iter.nextCodepoint()) |cp| {
                 const index = (try store.glyphIndex(face, cp)) orelse return error.MissingGlyph;
                 if (try self.add(store, face, size, index, limit)) continue;
+                truncated = true;
                 const ellipsis = (try store.glyphIndex(face, '…')) orelse return error.MissingGlyph;
                 while (!try self.add(store, face, size, ellipsis, limit)) {
                     if (self.positions.pop() == null) break;
@@ -138,7 +147,7 @@ pub fn FontRuns(comptime fonts: type) type {
                     for (mask[row..][0 .. end - begin], g.alpha[source..][0 .. end - begin]) |*dst, a| dst.* = @max(dst.*, a);
                 }
             }
-            return .{ .advance = if (self.positions.getLastOrNull()) |last| pixels(last.end) else 0, .width = width, .height = height, .top = top, .mask = mask };
+            return .{ .truncated = truncated or right > limit, .advance = if (self.positions.getLastOrNull()) |last| pixels(last.end) else 0, .width = width, .height = height, .top = top, .mask = mask };
         }
     };
 }

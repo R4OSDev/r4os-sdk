@@ -593,13 +593,14 @@ pub const TabBar = struct {
     palette: Palette = default_palette,
     /// Keep the classic eight-pixel default; modern callers use Canvas.layoutTabs.
     text_advance: i32 = font_w,
+    measure_canvas: ?Canvas = null,
 
     pub fn draw(self: TabBar, canvas: Canvas, scratch: []u8) i32 {
         return drawTabBar(canvas, self, scratch);
     }
 
     pub fn tabRect(self: TabBar, index: usize) Rect {
-        return tabBarItemRectWithAdvance(self.rect, self.items, index, self.tab_h, self.text_advance);
+        return tabItemRect(self.rect, self.items, index, self.tab_h, self.text_advance, self.measure_canvas);
     }
 
     pub fn indexAt(self: TabBar, x: i32, y: i32) ?usize {
@@ -2616,7 +2617,18 @@ pub const FrameCanvas = struct {
     }
 };
 
+/// Local typography for applications using SDK controls. Returning null hands
+/// an unsupported string to the resident font. The owner outlives the canvas.
+pub const ControlText = struct {
+    context: *anyopaque,
+    metrics: *const fn (*anyopaque, TextRole) ?FontMetrics,
+    width: *const fn (*anyopaque, TextRole, []const u8) ?i32,
+    draw: *const fn (*anyopaque, Canvas, TextRole, Rect, []const u8, Align, u32) ?i32,
+};
+
 pub const Canvas = struct {
+    control_text: ?ControlText = null,
+    text_role: TextRole = .body,
     ctx: *const r4draw.Context,
     w: i32,
     h: i32,
@@ -2652,6 +2664,7 @@ pub const Canvas = struct {
 
     pub fn withFontId(self: Canvas, font_id: u32) Canvas {
         var next = self;
+        next.control_text = null;
         next.font = fontMetricsForId(self.ctx, font_id);
         return next;
     }
@@ -2670,13 +2683,34 @@ pub const Canvas = struct {
     }
 
     pub fn withTextRole(self: Canvas, role: TextRole) Canvas {
-        if (self.style) |style| return self.withFontId(style.fonts.id(role));
-        return self;
+        var next = self;
+        next.text_role = role;
+        if (next.control_text) |custom| {
+            if (custom.metrics(custom.context, role)) |metrics| {
+                next.font = metrics;
+                return next;
+            }
+        }
+        if (next.style) |style| return next.withFontId(style.fonts.id(role));
+        return next;
+    }
+
+    pub fn withControlText(self: Canvas, custom: ControlText) Canvas {
+        var next = self;
+        next.control_text = custom;
+        return next.withTextRole(self.text_role);
+    }
+
+    fn residentText(self: Canvas) Canvas {
+        var next = self;
+        next.control_text = null;
+        return next.withTextRole(self.text_role);
     }
 
     pub fn layoutTabs(self: Canvas, tabs: TabBar) TabBar {
         var result = tabs;
         result.text_advance = self.font.max_advance;
+        if (self.control_text != null) result.measure_canvas = self;
         if (self.style) |style| result.tab_h = @max(result.tab_h, style.controlHeight(self.font));
         return result;
     }
@@ -2790,6 +2824,9 @@ pub const Canvas = struct {
     }
 
     pub fn textWidthZ(self: Canvas, value: [*:0]const u8) i32 {
+        if (self.control_text) |custom| {
+            return custom.width(custom.context, self.text_role, std.mem.span(value)) orelse self.residentText().textWidthZ(value);
+        }
         var metrics: abi.GuiTextMetrics = .{};
         if (self.ctx.fontMeasure(self.font.id, value, &metrics) >= 0) return clampU32ToI32(metrics.width);
         return fallbackTextWidthZ(value, self.font.max_advance);
@@ -2825,6 +2862,11 @@ pub const Canvas = struct {
     /// Failure preserves output. Context2 never calls the old prefix algorithm.
     pub fn textIndexChecked(self: Canvas, value: []const u8, x: i32, out: *usize) i32 {
         if (value.len > abi.font_metrics2_max_bytes) return abi.font_metrics2_capacity;
+        if (self.control_text) |custom| {
+            if (custom.width(custom.context, self.text_role, value) == null) return self.residentText().textIndexChecked(value, x, out);
+            out.* = self.originalTextIndexAt(value, x);
+            return 0;
+        }
         if (self.text_metrics_cache) |cache| {
             const key = self.text_metrics_key;
             if (key.source_address != @intFromPtr(value.ptr) or key.text_bytes != value.len or key.font_id != self.font.id) return abi.font_metrics2_stale;
@@ -2854,6 +2896,21 @@ pub const Canvas = struct {
         const result = cache.hit(key, x) catch |err| return text_metrics_runtime.code(err);
         out.* = result;
         return 0;
+    }
+
+    /// The same visible UTF-8 slice and padding as a drawn single-line field.
+    pub fn fieldTextIndex(self: Canvas, area: Rect, value: []const u8, cursor: usize, x: i32, out: *usize) i32 {
+        const inner = area.inset(default_metrics.text_pad_x, default_metrics.text_pad_y);
+        if (self.control_text) |custom| {
+            if (custom.width(custom.context, self.text_role, value) != null) {
+                const first = fieldFirst(self, value, cursor, inner.w);
+                var offset: usize = 0;
+                const rc = self.textIndexChecked(value[first..], x - inner.x, &offset);
+                if (rc >= 0) out.* = first + offset;
+                return rc;
+            }
+        }
+        return self.textIndexChecked(value, x - inner.x, out);
     }
 
     fn originalTextIndexAt(self: Canvas, value: []const u8, x: i32) usize {
@@ -3340,6 +3397,10 @@ fn utf8ByteIndexForColumns(value: []const u8, start: usize, end: usize, columns:
 
 pub fn drawTextInRect(canvas: Canvas, rect: Rect, scratch: []u8, text: []const u8, alignment: Align, fg: u32, bg: u32) i32 {
     if (rect.isEmpty()) return 0;
+    if (canvas.control_text) |custom| {
+        return custom.draw(custom.context, canvas, canvas.text_role, rect, text, alignment, fg) orelse
+            drawTextInRect(canvas.residentText(), rect, scratch, text, alignment, fg, bg);
+    }
     const fitted = copyEllipsizedForCanvas(canvas, scratch, text, rect.w);
     if (fitted.len == 0) return 0;
     const x = alignedTextXWidth(rect, canvas.textWidthZ(@ptrCast(scratch.ptr)), alignment);
@@ -3400,8 +3461,57 @@ pub fn drawTextField(canvas: Canvas, rect: Rect, scratch: []u8, value: []const u
     return drawTextFieldEx(canvas, rect, scratch, value, value.len, .{ .start = value.len, .end = value.len }, focused, disabled, palette);
 }
 
+fn fieldFirst(canvas: Canvas, value: []const u8, cursor: usize, width: i32) usize {
+    const end = graphemeFloor(value, @min(cursor, value.len));
+    if (displayPrefixWidth(canvas, value[0..end]) <= @max(0, width - 1)) return 0;
+    var first = end;
+    while (first > 0) {
+        const previous = graphemePrevious(value, first);
+        if (displayPrefixWidth(canvas, value[previous..end]) > @max(0, width - 1)) break;
+        first = previous;
+    }
+    return first;
+}
+
+fn drawAppField(canvas: Canvas, rect: Rect, scratch: []u8, value: []const u8, cursor: usize, selection: TextRange, focus: bool, palette: Palette, bg: u32) i32 {
+    const first = fieldFirst(canvas, value, cursor, rect.w);
+    var end = value.len;
+    if (displayPrefixWidth(canvas, value[first..]) > rect.w) {
+        var it = DisplayIterator{ .inner = .{ .bytes = value[first..] } };
+        end = first;
+        while (it.next()) |cluster| {
+            if (displayPrefixWidth(canvas, value[first..][0..cluster.end]) > rect.w) break;
+            end = first + cluster.end;
+        }
+    }
+    const selected_start = std.math.clamp(selection.start, first, end);
+    const selected_end = std.math.clamp(selection.end, selected_start, end);
+    if (selected_end > selected_start) {
+        const left = displayPrefixWidth(canvas, value[first..selected_start]);
+        const right = displayPrefixWidth(canvas, value[first..selected_end]);
+        const rc = canvas.rect(.{ .x = rect.x + left, .y = rect.y, .w = right - left, .h = rect.h }, palette.select_bg);
+        if (rc < 0) return rc;
+    }
+    for ([_]TextRange{ .{ .start = first, .end = selected_start }, .{ .start = selected_start, .end = selected_end }, .{ .start = selected_end, .end = end } }, 0..) |part, i| {
+        if (part.start == part.end) continue;
+        const offset = displayPrefixWidth(canvas, value[first..part.start]);
+        const rc = drawTextInRect(canvas, .{ .x = rect.x + offset, .y = rect.y, .w = rect.w - offset, .h = rect.h }, scratch, value[part.start..part.end], .left, if (i == 1) palette.select_text else palette.text, bg);
+        if (rc < 0) return rc;
+    }
+    if (focus) {
+        const pos = std.math.clamp(cursor, first, end);
+        const x = @min(@max(0, rect.w - 1), displayPrefixWidth(canvas, value[first..pos]));
+        return canvas.rect(.{ .x = rect.x + x, .y = rect.y + 2, .w = 1, .h = @max(1, rect.h - 4) }, palette.text);
+    }
+    return 0;
+}
+
 pub fn drawTextFieldEx(canvas: Canvas, rect: Rect, scratch: []u8, value: []const u8, cursor: usize, selection: anytype, focused: bool, disabled: bool, original_palette: Palette) i32 {
     if (rect.isEmpty()) return 0;
+    if (canvas.control_text) |custom| {
+        if (custom.width(custom.context, canvas.text_role, value) == null)
+            return drawTextFieldEx(canvas.residentText(), rect, scratch, value, cursor, selection, focused, disabled, original_palette);
+    }
     const palette = if (canvas.style) |style| style.palette() else original_palette;
     const bg = if (disabled) palette.face else palette.client_bg;
     if (canvas.style) |style| {
@@ -3417,6 +3527,11 @@ pub fn drawTextFieldEx(canvas: Canvas, rect: Rect, scratch: []u8, value: []const
     }
 
     const text_rect = rect.inset(default_metrics.text_pad_x, default_metrics.text_pad_y);
+    if (canvas.control_text != null) {
+        var colors = palette;
+        if (disabled) colors.text = palette.disabled_text;
+        return drawAppField(canvas, text_rect, scratch, value, cursor, if (disabled) .{ .start = 0, .end = 0 } else .{ .start = selection.start, .end = selection.end }, focused and !disabled, colors, bg);
+    }
     const fitted = copyEllipsizedForCanvas(canvas, scratch, value, text_rect.w);
     const fitted_is_full = fitted.len == value.len and std.mem.eql(u8, fitted, value);
     const visible_value_end = if (fitted_is_full)
@@ -4629,13 +4744,22 @@ pub fn tabBarItemRect(rect: Rect, items: []const TabItem, index: usize, tab_h: i
 }
 
 pub fn tabBarItemRectWithAdvance(rect: Rect, items: []const TabItem, index: usize, tab_h: i32, advance: i32) Rect {
+    return tabItemRect(rect, items, index, tab_h, advance, null);
+}
+
+fn tabItemWidth(value: []const u8, advance: i32, canvas: ?Canvas) i32 {
+    if (canvas) |c| return @max(48, displayPrefixWidth(c, value) +| default_metrics.text_pad_x * 4);
+    return tabWidthWithAdvance(value, advance);
+}
+
+fn tabItemRect(rect: Rect, items: []const TabItem, index: usize, tab_h: i32, advance: i32, canvas: ?Canvas) Rect {
     if (index >= items.len) return .{};
     var x = rect.x;
     var i: usize = 0;
     while (i < index) : (i += 1) {
-        x += tabWidthWithAdvance(items[i].text, advance);
+        x +|= tabItemWidth(items[i].text, advance, canvas);
     }
-    const w = @min(tabWidthWithAdvance(items[index].text, advance), @max(0, rect.right() - x));
+    const w = @min(tabItemWidth(items[index].text, advance, canvas), @max(0, rect.right() - x));
     return .{ .x = x, .y = rect.y, .w = w, .h = @min(tabHeight(tab_h), @max(0, rect.h)) };
 }
 

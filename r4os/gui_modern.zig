@@ -132,6 +132,7 @@ pub const Card = struct {
     focused: bool = false,
     /// Reserve an area for an existing raster/Alpha8/icon resource drawn by the caller.
     icon_width: i32 = 0,
+    title_role: TextRole = .body,
 
     pub fn contains(self: Card, x: i32, y: i32) bool {
         return self.state != .disabled and self.rect.contains(x, y);
@@ -157,7 +158,7 @@ pub const Card = struct {
             body.x += skip;
             body.w -= skip;
         }
-        const title_canvas = canvas.withTextRole(.body);
+        const title_canvas = canvas.withTextRole(self.title_role);
         const top = gui.Rect{ .x = body.x, .y = body.y, .w = body.w, .h = @min(body.h, title_canvas.font.line_height + 4) };
         const result = gui.drawTextInRect(title_canvas, top, scratch, self.title, .left, if (self.state == .disabled) style.disabled else style.text, bg);
         if (result < 0) return result;

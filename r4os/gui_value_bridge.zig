@@ -71,7 +71,9 @@ fn decode(comptime T: type, value: Slot) Error!T {
                 break :blk items[0..@intCast(value.length)];
             }
             const ptr = value.ptr orelse return error.InvalidArgument;
-            if (@typeInfo(p.child) != .@"fn" and @intFromPtr(ptr) % @alignOf(p.child) != 0) return error.InvalidArgument;
+            // Opaque callback contexts have no pointee layout. Concrete fields
+            // retain the native alignment check before reconstruction.
+            if (@typeInfo(p.child) != .@"fn" and @typeInfo(p.child) != .@"opaque" and @intFromPtr(ptr) % @alignOf(p.child) != 0) return error.InvalidArgument;
             break :blk @ptrCast(@alignCast(ptr));
         },
         .optional => |o| if ((value.flags & present) == 0) null else try decode(o.child, value),
