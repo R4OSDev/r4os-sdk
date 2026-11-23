@@ -2666,27 +2666,15 @@ const _: () = { assert!(core::mem::size_of::<R4SdkGuiCanvas>() == 216); assert!(
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiType45 {
-    pub r#opaque_bytes: [u8; 40],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType45>() == 40); assert!(core::mem::align_of::<R4SdkGuiType45>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType45, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkGuiControlText {
-    pub r#opaque_bytes: [u8; 32],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiControlText>() == 32); assert!(core::mem::align_of::<R4SdkGuiControlText>() == 8); assert!(core::mem::offset_of!(R4SdkGuiControlText, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkGuiType47 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType47>() == 8); assert!(core::mem::align_of::<R4SdkGuiType47>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType47, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType45>() == 8); assert!(core::mem::align_of::<R4SdkGuiType45>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType45, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkGuiType48 {
+pub struct R4SdkGuiType46 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType48>() == 8); assert!(core::mem::align_of::<R4SdkGuiType48>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType48, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType46>() == 8); assert!(core::mem::align_of::<R4SdkGuiType46>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType46, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiFrameCanvas {
@@ -2695,16 +2683,16 @@ pub struct R4SdkGuiFrameCanvas {
 const _: () = { assert!(core::mem::size_of::<R4SdkGuiFrameCanvas>() == 120); assert!(core::mem::align_of::<R4SdkGuiFrameCanvas>() == 8); assert!(core::mem::offset_of!(R4SdkGuiFrameCanvas, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
+pub struct R4SdkGuiType48 {
+    pub r#opaque_bytes: [u8; 16],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType48>() == 16); assert!(core::mem::align_of::<R4SdkGuiType48>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType48, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
 pub struct R4SdkGuiType50 {
     pub r#opaque_bytes: [u8; 16],
 }
 const _: () = { assert!(core::mem::size_of::<R4SdkGuiType50>() == 16); assert!(core::mem::align_of::<R4SdkGuiType50>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType50, r#opaque_bytes) == 0); };
-#[repr(C, align(8))]
-#[derive(Clone, Copy)]
-pub struct R4SdkGuiType52 {
-    pub r#opaque_bytes: [u8; 16],
-}
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType52>() == 16); assert!(core::mem::align_of::<R4SdkGuiType52>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType52, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiFrameCanvasStats {
@@ -2713,22 +2701,34 @@ pub struct R4SdkGuiFrameCanvasStats {
 const _: () = { assert!(core::mem::size_of::<R4SdkGuiFrameCanvasStats>() == 56); assert!(core::mem::align_of::<R4SdkGuiFrameCanvasStats>() == 8); assert!(core::mem::offset_of!(R4SdkGuiFrameCanvasStats, r#opaque_bytes) == 0); };
 #[repr(C, align(4))]
 #[derive(Clone, Copy)]
-pub struct R4SdkGuiType54 {
+pub struct R4SdkGuiType52 {
     pub r#opaque_bytes: [u8; 84],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType54>() == 84); assert!(core::mem::align_of::<R4SdkGuiType54>() == 4); assert!(core::mem::offset_of!(R4SdkGuiType54, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType52>() == 84); assert!(core::mem::align_of::<R4SdkGuiType52>() == 4); assert!(core::mem::offset_of!(R4SdkGuiType52, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkGuiType55 {
+pub struct R4SdkGuiType53 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType55>() == 8); assert!(core::mem::align_of::<R4SdkGuiType55>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType55, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType53>() == 8); assert!(core::mem::align_of::<R4SdkGuiType53>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType53, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
-pub struct R4SdkGuiType56 {
+pub struct R4SdkGuiType54 {
     pub r#opaque_bytes: [u8; 8],
 }
-const _: () = { assert!(core::mem::size_of::<R4SdkGuiType56>() == 8); assert!(core::mem::align_of::<R4SdkGuiType56>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType56, r#opaque_bytes) == 0); };
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType54>() == 8); assert!(core::mem::align_of::<R4SdkGuiType54>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType54, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkGuiType57 {
+    pub r#opaque_bytes: [u8; 40],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiType57>() == 40); assert!(core::mem::align_of::<R4SdkGuiType57>() == 8); assert!(core::mem::offset_of!(R4SdkGuiType57, r#opaque_bytes) == 0); };
+#[repr(C, align(8))]
+#[derive(Clone, Copy)]
+pub struct R4SdkGuiControlText {
+    pub r#opaque_bytes: [u8; 32],
+}
+const _: () = { assert!(core::mem::size_of::<R4SdkGuiControlText>() == 32); assert!(core::mem::align_of::<R4SdkGuiControlText>() == 8); assert!(core::mem::offset_of!(R4SdkGuiControlText, r#opaque_bytes) == 0); };
 #[repr(C, align(8))]
 #[derive(Clone, Copy)]
 pub struct R4SdkGuiLabel {
@@ -17069,16 +17069,16 @@ pub const R4SdkGuiLayoutCursor_TYPE: u32 = 41;
 pub const R4SdkGuiHostedAppFrame_TYPE: u32 = 42;
 pub const R4SdkGuiCanvas_TYPE: u32 = 44;
 pub const R4SdkGuiType45_TYPE: u32 = 45;
-pub const R4SdkGuiControlText_TYPE: u32 = 46;
-pub const R4SdkGuiType47_TYPE: u32 = 47;
+pub const R4SdkGuiType46_TYPE: u32 = 46;
+pub const R4SdkGuiFrameCanvas_TYPE: u32 = 47;
 pub const R4SdkGuiType48_TYPE: u32 = 48;
-pub const R4SdkGuiFrameCanvas_TYPE: u32 = 49;
 pub const R4SdkGuiType50_TYPE: u32 = 50;
+pub const R4SdkGuiFrameCanvasStats_TYPE: u32 = 51;
 pub const R4SdkGuiType52_TYPE: u32 = 52;
-pub const R4SdkGuiFrameCanvasStats_TYPE: u32 = 53;
+pub const R4SdkGuiType53_TYPE: u32 = 53;
 pub const R4SdkGuiType54_TYPE: u32 = 54;
-pub const R4SdkGuiType55_TYPE: u32 = 55;
-pub const R4SdkGuiType56_TYPE: u32 = 56;
+pub const R4SdkGuiType57_TYPE: u32 = 57;
+pub const R4SdkGuiControlText_TYPE: u32 = 58;
 pub const R4SdkGuiLabel_TYPE: u32 = 59;
 pub const R4SdkGuiButton_TYPE: u32 = 60;
 pub const R4SdkGuiList_TYPE: u32 = 61;
@@ -17559,7 +17559,7 @@ pub const R4SdkGuiType744_TYPE: u32 = 744;
 pub const R4SdkGuiType746_TYPE: u32 = 746;
 pub const R4SdkGuiType747_TYPE: u32 = 747;
 pub const R4SdkGuiType748_TYPE: u32 = 748;
-pub const R4SdkGui_ABI_FINGERPRINT: u64 = 15652508344380804624;
+pub const R4SdkGui_ABI_FINGERPRINT: u64 = 13053032828878010836;
 pub const R4SdkGui_font_w: i32 = 8;
 pub const R4SdkGui_font_h: i32 = 8;
 pub const R4SdkGuiChart_turns_per_circle: i32 = 65536;
@@ -23797,11 +23797,7 @@ unsafe extern "C" {
     pub fn R4SdkGuiHostedAppFrame_set_should_close(p0: *mut R4SdkGuiHostedAppFrame, p1: u8) -> R4SdkGuiSlot;
     pub fn R4SdkGuiHostedAppFrame_inspect(p0: *const R4SdkGuiHostedAppFrame) -> R4SdkGuiSlot;
     pub fn R4SdkGuiCanvas_create(p0: *mut R4SdkGuiCanvas, p1: *const R4SdkGuiDrawContext, p2: i32, p3: i32) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiCanvas_from_fields(p0: *mut R4SdkGuiCanvas, p1: R4SdkGuiSlot, p2: u32, p3: *const R4SdkGuiDrawContext, p4: i32, p5: i32) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiCanvas_get_control_text(p0: *const R4SdkGuiCanvas, p1: *mut R4SdkGuiControlText) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiCanvas_set_control_text(p0: *mut R4SdkGuiCanvas, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiCanvas_get_text_role(p0: *const R4SdkGuiCanvas) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiCanvas_set_text_role(p0: *mut R4SdkGuiCanvas, p1: u32) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiCanvas_from_fields(p0: *mut R4SdkGuiCanvas, p1: *const R4SdkGuiDrawContext, p2: i32, p3: i32, p4: *const R4SdkGuiFontMetrics, p5: R4SdkGuiSlot) -> R4SdkGuiSlot;
     pub fn R4SdkGuiCanvas_get_ctx(p0: *const R4SdkGuiCanvas) -> R4SdkGuiSlot;
     pub fn R4SdkGuiCanvas_set_ctx(p0: *mut R4SdkGuiCanvas, p1: *const R4SdkGuiDrawContext) -> R4SdkGuiSlot;
     pub fn R4SdkGuiCanvas_get_w(p0: *const R4SdkGuiCanvas) -> R4SdkGuiSlot;
@@ -23818,24 +23814,15 @@ unsafe extern "C" {
     pub fn R4SdkGuiCanvas_set_text_metrics_cache(p0: *mut R4SdkGuiCanvas, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
     pub fn R4SdkGuiCanvas_get_text_metrics_key(p0: *const R4SdkGuiCanvas, p1: *mut R4SdkTextMetricsKey) -> R4SdkGuiSlot;
     pub fn R4SdkGuiCanvas_set_text_metrics_key(p0: *mut R4SdkGuiCanvas, p1: *const R4SdkTextMetricsKey) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiCanvas_get_control_text(p0: *const R4SdkGuiCanvas, p1: *mut R4SdkGuiControlText) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiCanvas_set_control_text(p0: *mut R4SdkGuiCanvas, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiCanvas_get_text_role(p0: *const R4SdkGuiCanvas) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiCanvas_set_text_role(p0: *mut R4SdkGuiCanvas, p1: u32) -> R4SdkGuiSlot;
     pub fn R4SdkGuiCanvas_inspect(p0: *const R4SdkGuiCanvas) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType45_create(p0: *mut R4SdkGuiType45, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType45_inspect(p0: *const R4SdkGuiType45, p1: *mut R4SdkGuiControlText) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiControlText_create(p0: *mut R4SdkGuiControlText, p1: *mut core::ffi::c_void, p2: u64, p3: u64, p4: u64) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiControlText_from_fields(p0: *mut R4SdkGuiControlText, p1: *mut core::ffi::c_void, p2: u64, p3: u64, p4: u64) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiControlText_get_context(p0: *const R4SdkGuiControlText) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiControlText_set_context(p0: *mut R4SdkGuiControlText, p1: *mut core::ffi::c_void) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiControlText_get_metrics(p0: *const R4SdkGuiControlText) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiControlText_set_metrics(p0: *mut R4SdkGuiControlText, p1: u64) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiControlText_get_width(p0: *const R4SdkGuiControlText) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiControlText_set_width(p0: *mut R4SdkGuiControlText, p1: u64) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiControlText_get_draw(p0: *const R4SdkGuiControlText) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiControlText_set_draw(p0: *mut R4SdkGuiControlText, p1: u64) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiControlText_inspect(p0: *const R4SdkGuiControlText) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType47_create(p0: *mut R4SdkGuiType47, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType47_inspect(p0: *const R4SdkGuiType47) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType48_create(p0: *mut R4SdkGuiType48, p1: *mut R4SdkGuiFrameCanvas) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType48_inspect(p0: *const R4SdkGuiType48) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType45_inspect(p0: *const R4SdkGuiType45) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType46_create(p0: *mut R4SdkGuiType46, p1: *mut R4SdkGuiFrameCanvas) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType46_inspect(p0: *const R4SdkGuiType46) -> R4SdkGuiSlot;
     pub fn R4SdkGuiFrameCanvas_create(p0: *mut R4SdkGuiFrameCanvas, p1: *const R4SdkGuiDrawContext, p2: *mut R4GuiFrameCommand, p3: u64, p4: *mut u8, p5: u64, p6: u8) -> R4SdkGuiSlot;
     pub fn R4SdkGuiFrameCanvas_from_fields(p0: *mut R4SdkGuiFrameCanvas, p1: *const R4SdkGuiDrawContext, p2: *mut R4GuiFrameCommand, p3: u64, p4: *mut u8, p5: u64, p6: u8, p7: u64, p8: u64, p9: u8, p10: u8, p11: i32, p12: *const R4SdkGuiFrameCanvasStats) -> R4SdkGuiSlot;
     pub fn R4SdkGuiFrameCanvas_get_ctx(p0: *const R4SdkGuiFrameCanvas) -> R4SdkGuiSlot;
@@ -23859,10 +23846,10 @@ unsafe extern "C" {
     pub fn R4SdkGuiFrameCanvas_get_stats(p0: *const R4SdkGuiFrameCanvas, p1: *mut R4SdkGuiFrameCanvasStats) -> R4SdkGuiSlot;
     pub fn R4SdkGuiFrameCanvas_set_stats(p0: *mut R4SdkGuiFrameCanvas, p1: *const R4SdkGuiFrameCanvasStats) -> R4SdkGuiSlot;
     pub fn R4SdkGuiFrameCanvas_inspect(p0: *const R4SdkGuiFrameCanvas) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType50_create(p0: *mut R4SdkGuiType50, p1: *mut R4GuiFrameCommand, p2: u64) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType48_create(p0: *mut R4SdkGuiType48, p1: *mut R4GuiFrameCommand, p2: u64) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType48_inspect(p0: *const R4SdkGuiType48) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType50_create(p0: *mut R4SdkGuiType50, p1: *mut u8, p2: u64) -> R4SdkGuiSlot;
     pub fn R4SdkGuiType50_inspect(p0: *const R4SdkGuiType50) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType52_create(p0: *mut R4SdkGuiType52, p1: *mut u8, p2: u64) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType52_inspect(p0: *const R4SdkGuiType52) -> R4SdkGuiSlot;
     pub fn R4SdkGuiFrameCanvasStats_create(p0: *mut R4SdkGuiFrameCanvasStats) -> R4SdkGuiSlot;
     pub fn R4SdkGuiFrameCanvasStats_from_fields(p0: *mut R4SdkGuiFrameCanvasStats, p1: u64, p2: u64, p3: u64, p4: u64, p5: u64, p6: u64, p7: u64) -> R4SdkGuiSlot;
     pub fn R4SdkGuiFrameCanvasStats_get_logical_commands(p0: *const R4SdkGuiFrameCanvasStats) -> R4SdkGuiSlot;
@@ -23880,12 +23867,25 @@ unsafe extern "C" {
     pub fn R4SdkGuiFrameCanvasStats_get_failed_calls(p0: *const R4SdkGuiFrameCanvasStats) -> R4SdkGuiSlot;
     pub fn R4SdkGuiFrameCanvasStats_set_failed_calls(p0: *mut R4SdkGuiFrameCanvasStats, p1: u64) -> R4SdkGuiSlot;
     pub fn R4SdkGuiFrameCanvasStats_inspect(p0: *const R4SdkGuiFrameCanvasStats) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType54_create(p0: *mut R4SdkGuiType54, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType54_inspect(p0: *const R4SdkGuiType54, p1: *mut R4SdkGuiStyle) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType55_create(p0: *mut R4SdkGuiType55, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType55_inspect(p0: *const R4SdkGuiType55) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType56_create(p0: *mut R4SdkGuiType56, p1: *const R4SdkTextMetrics) -> R4SdkGuiSlot;
-    pub fn R4SdkGuiType56_inspect(p0: *const R4SdkGuiType56) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType52_create(p0: *mut R4SdkGuiType52, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType52_inspect(p0: *const R4SdkGuiType52, p1: *mut R4SdkGuiStyle) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType53_create(p0: *mut R4SdkGuiType53, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType53_inspect(p0: *const R4SdkGuiType53) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType54_create(p0: *mut R4SdkGuiType54, p1: *const R4SdkTextMetrics) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType54_inspect(p0: *const R4SdkGuiType54) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType57_create(p0: *mut R4SdkGuiType57, p1: R4SdkGuiSlot) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiType57_inspect(p0: *const R4SdkGuiType57, p1: *mut R4SdkGuiControlText) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiControlText_create(p0: *mut R4SdkGuiControlText, p1: *mut core::ffi::c_void, p2: u64, p3: u64, p4: u64) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiControlText_from_fields(p0: *mut R4SdkGuiControlText, p1: *mut core::ffi::c_void, p2: u64, p3: u64, p4: u64) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiControlText_get_context(p0: *const R4SdkGuiControlText) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiControlText_set_context(p0: *mut R4SdkGuiControlText, p1: *mut core::ffi::c_void) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiControlText_get_metrics(p0: *const R4SdkGuiControlText) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiControlText_set_metrics(p0: *mut R4SdkGuiControlText, p1: u64) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiControlText_get_width(p0: *const R4SdkGuiControlText) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiControlText_set_width(p0: *mut R4SdkGuiControlText, p1: u64) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiControlText_get_draw(p0: *const R4SdkGuiControlText) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiControlText_set_draw(p0: *mut R4SdkGuiControlText, p1: u64) -> R4SdkGuiSlot;
+    pub fn R4SdkGuiControlText_inspect(p0: *const R4SdkGuiControlText) -> R4SdkGuiSlot;
     pub fn R4SdkGuiLabel_create(p0: *mut R4SdkGuiLabel, p1: *const R4SdkGuiRect, p2: *const u8, p3: u64) -> R4SdkGuiSlot;
     pub fn R4SdkGuiLabel_from_fields(p0: *mut R4SdkGuiLabel, p1: *const R4SdkGuiRect, p2: *const u8, p3: u64, p4: u32, p5: u8, p6: u32, p7: u32, p8: *const R4SdkGuiPalette) -> R4SdkGuiSlot;
     pub fn R4SdkGuiLabel_get_rect(p0: *const R4SdkGuiLabel, p1: *mut R4SdkGuiRect) -> R4SdkGuiSlot;

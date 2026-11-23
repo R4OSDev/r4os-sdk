@@ -2627,8 +2627,6 @@ pub const ControlText = struct {
 };
 
 pub const Canvas = struct {
-    control_text: ?ControlText = null,
-    text_role: TextRole = .body,
     ctx: *const r4draw.Context,
     w: i32,
     h: i32,
@@ -2640,6 +2638,8 @@ pub const Canvas = struct {
     /// Font publication requires explicit ValidateFont/reprepare or clear.
     text_metrics_cache: ?*const text_metrics.Cache = null,
     text_metrics_key: text_metrics.Key = .{},
+    control_text: ?ControlText = null,
+    text_role: TextRole = .body,
 
     pub fn init(ctx: *const r4draw.Context, info: abi.GuiWindowInfo) Canvas {
         return initSize(ctx, info.client_w, info.client_h);
